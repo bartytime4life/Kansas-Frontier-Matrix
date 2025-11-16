@@ -1,7 +1,7 @@
 ---
 title: "🧩 Kansas Frontier Matrix — Web Components Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/README.md"
-version: "v10.4.0"
+version: "v10.4.1"
 last_updated: "2025-11-15"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
@@ -12,7 +12,7 @@ telemetry_schema: "../../../schemas/telemetry/web-components-readme-v1.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v10.4.1"
 status: "Active / Enforced"
 doc_kind: "Overview"
 intent: "web-components-overview"
@@ -35,7 +35,7 @@ ontology_alignment:
   prov_o: "prov:Plan"
 json_schema_ref: "../../../schemas/json/web-components-readme.schema.json"
 shape_schema_ref: "../../../schemas/shacl/web-components-readme-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-components-readme-v10.4.0"
+doc_uuid: "urn:kfm:doc:web-components-readme-v10.4.1"
 semantic_document_id: "kfm-doc-web-components-readme"
 event_source_id: "ledger:web/src/components/README.md"
 immutability_status: "version-pinned"
@@ -43,8 +43,8 @@ doc_integrity_checksum: "<sha256>"
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "a11y-adaptations"
   - "semantic-highlighting"
+  - "a11y-adaptations"
 ai_transform_prohibited:
   - "summaries"
   - "speculative additions"
@@ -65,11 +65,11 @@ sunset_policy: "Superseded upon next component-layer revision"
 `web/src/components/README.md`
 
 **Purpose:**  
-Define the structure, responsibilities, accessibility rules, governance requirements,  
-and telemetry expectations for all reusable **React UI components** used across the  
-KFM Web Platform (`web/src/components/**`).  
-Components are the atomic UI building blocks from which features, pipelines,  
-and pages are constructed.
+Provide the authoritative, FAIR+CARE-aligned directory and structural overview for all UI components  
+within the Kansas Frontier Matrix Web Platform.  
+This document defines the **canonical component hierarchy**, **responsibilities**,  
+**accessibility requirements**, **governance rules**, and **telemetry expectations** for  
+every component within `web/src/components/**`.
 
 </div>
 
@@ -77,261 +77,239 @@ and pages are constructed.
 
 # 📘 Overview
 
-Components in this directory:
+All UI components inside this directory:
 
-- Render **visual UI elements** only  
-- Consume hook/state/pipeline outputs  
-- Must remain **pure and deterministic**  
-- Must not contain business logic  
-- Must follow **FAIR+CARE governance rules**  
-- Must be fully **WCAG 2.1 AA–compliant**  
-- Must emit relevant **telemetry events** (via props or hooks)  
-- Must avoid storing internal mutable state except for UI-only interaction patterns  
-- Must integrate with MapLibre, Cesium, Focus Mode, Story Node v3, STAC/DCAT flows, and governance overlays  
+- Are **presentation-only**, containing no business logic  
+- Are deterministic, testable, and governed  
+- Integrate with:
+  - **MapLibre + Cesium**
+  - **Story Node v3**
+  - **Focus Mode v2.5**
+  - **STAC/DCAT metadata**
+  - **Governance & CARE layers**
+  - **A11y tokens + design system**
+  - **Telemetry hooks**
+- Must meet **WCAG 2.1 AA** accessibility  
+- Must follow **KFM-MDP v10.4.1** documentation, formatting & metadata standards  
+- Must pass governance validation for:
+  - CARE labeling  
+  - Provenance chain visibility  
+  - Sovereignty masking  
+  - AI narrative restrictions
 
-Components are responsible for **presentation**, not computation.
+Components serve as **atomic UI building blocks** used by features, pipelines, pages, and maps.
 
 ---
 
-# 🧱 Directory Structure
+# 🧱 Directory Structure (with labeled component purposes)
 
 ~~~text
 web/src/components/
-│└── MapView/                           # Canonical 2D map system
-│    ├── MapViewContainer.tsx           # Top-level orchestrator
-│    ├── MapCanvas.tsx                  # MapLibre canvas lifecycle
-│    ├── LayerManager.tsx               # Layer composition & ordering
-│    ├── LegendPanel.tsx                # New legend container
-│    ├── MapControls.tsx                # New controls container
-│    ├── StoryNodeLayer.tsx             # Story Node v3 overlays
-│    ├── FocusHighlightLayer.tsx        # Focus Mode highlight layer
-│    ├── DatasetFootprintLayer.tsx      # STAC footprints
-│    ├── SovereigntyMaskLayer.tsx       # Sovereignty/H3 masking grids
-│    ├── CursorHUD.tsx                  # HUD readouts (coarse coords, state)
-│    │
-│    └── primitives/                    # Old map/ primitives live here
-│        ├── MapContainer.tsx           # Legacy base map wrapper
-│        ├── LayerToggle.tsx            # Legacy layer control primitive
-│        ├── Legend.tsx                 # Legacy legend primitive
-│        └── FeatureHighlight.tsx       # Legacy highlight primitive
-│
-│
-├── TimelineView/                  # Full-page timeline experience (replaces old timeline/)
-│   ├── TimelineViewContainer.tsx
-│   ├── TimelinePrimary.tsx
-│   ├── TimelineMarkersLayer.tsx
-│   ├── TimelineControls.tsx
-│   ├── TimelineA11yHelpers.tsx
-│   ├── TimelineCallouts.tsx
+
+├── MapView/                                   # Full MapLibre 2D map system
+│   ├── MapViewContainer.tsx                   # Assembles map + contexts + lifecycle
+│   ├── MapCanvas.tsx                          # MapLibre canvas mount + rendering surface
+│   ├── LayerManager.tsx                       # Dynamically loads/unloads map layers
+│   ├── LegendPanel.tsx                        # CARE-aware legend UI
+│   ├── MapControls.tsx                        # Zoom/rotate/reset controls (A11y-compliant)
+│   ├── StoryNodeLayer.tsx                     # Story Node v3 spatial overlays
+│   ├── FocusHighlightLayer.tsx                # Focus Mode highlight geometry
+│   ├── DatasetFootprintLayer.tsx              # STAC footprint visualizations
+│   ├── SovereigntyMaskLayer.tsx               # H3-based sensitivity masking grids
+│   ├── CursorHUD.tsx                          # Coarse readout for coords + state
 │   │
-│   └── primitives/                   # <— canonical home for legacy files
-│       ├── TimelineBar.tsx
-│       ├── TimelineHandle.tsx
-│       ├── TimelineMarkers.tsx
-│       └── GranularityControls.tsx
+│   └── primitives/                            # Legacy map primitives (still supported)
+│       ├── MapContainer.tsx                   # Legacy base map wrapper
+│       ├── LayerToggle.tsx                    # Per-layer toggle primitive
+│       ├── Legend.tsx                         # Legacy legend rendering
+│       └── FeatureHighlight.tsx               # Legacy highlight visualization
 │
-├── FocusMode/                     # Focus Mode v2.5 UI suite (replaces old focus/)
-│   ├── FocusContainer.tsx
-│   ├── FocusHeader.tsx
-│   ├── FocusSummary.tsx
-│   ├── FocusTabs.tsx
-│   ├── RelationsPanel.tsx
-│   ├── RelationCard.tsx
-│   ├── NarrativeSection.tsx
-│   ├── ExplainabilitySection.tsx
-│   ├── SpatialPanel.tsx
-│   ├── ProvenancePanel.tsx
-│   ├── WarningsPanel.tsx
+├── TimelineView/                              # Full-page timeline feature
+│   ├── TimelineViewContainer.tsx              # Top-level timeline page wrapper
+│   ├── TimelinePrimary.tsx                    # Main visual timeline axis + active range
+│   ├── TimelineMarkersLayer.tsx               # Events + STAC + Story Node markers
+│   ├── TimelineControls.tsx                   # Granularity, zoom, generalization controls
+│   ├── TimelineA11yHelpers.tsx                # SR descriptions + keyboard overlays
+│   ├── TimelineCallouts.tsx                   # CARE warnings for temporal restrictions
 │   │
-│   └── primitives/                     # ← old folder goes here
-│       ├── FocusPanel.tsx
-│       ├── RelatedEntityCard.tsx
-│       ├── FocusNarrative.tsx
-│       ├── ExplanationBlock.tsx
-│       └── CARENotices.tsx
+│   └── primitives/                            # Legacy timeline primitives
+│       ├── TimelineBar.tsx                    # Core axis renderer
+│       ├── TimelineHandle.tsx                 # Draggable timeline select handle
+│       ├── TimelineMarkers.tsx                # Low-level marker renderer
+│       └── GranularityControls.tsx            # Base granularity switcher
 │
-├── DetailDrawer/                  # Universal slide-out detail view system
-│   ├── DetailDrawer.tsx
-│   ├── DrawerHeader.tsx
-│   ├── DrawerSection.tsx
-│   ├── DrawerMetadata.tsx
-│   ├── DrawerProvenance.tsx
-│   ├── DrawerCAREBlock.tsx
-│   ├── DrawerFooter.tsx
-│   └── DrawerA11yHelpers.tsx
+├── FocusMode/                                 # Focus Mode v2.5 UI suite
+│   ├── FocusContainer.tsx                     # Full Focus Mode workspace container
+│   ├── FocusHeader.tsx                        # CARE, provenance, entity header
+│   ├── FocusSummary.tsx                       # Narrative summary (AI-labeled when present)
+│   ├── FocusTabs.tsx                          # Navigation tabs between focus modules
+│   ├── RelationsPanel.tsx                     # Related entities grouped by type
+│   ├── RelationCard.tsx                       # Individual related-entity card
+│   ├── NarrativeSection.tsx                   # Detailed narrative + governance checks
+│   ├── ExplainabilitySection.tsx              # SHAP/LIME explainability visual block
+│   ├── SpatialPanel.tsx                       # Map footprint preview + highlight toggle
+│   ├── ProvenancePanel.tsx                    # Full provenance chain viewer
+│   ├── WarningsPanel.tsx                      # CARE + sovereignty + ethics notices
+│   │
+│   └── primitives/                            # Legacy focus primitives
+│       ├── FocusPanel.tsx                     # Old unified focus panel block
+│       ├── RelatedEntityCard.tsx              # Pre-refactor relation card
+│       ├── FocusNarrative.tsx                 # Legacy narrative renderer
+│       ├── ExplanationBlock.tsx               # Legacy explainability block
+│       └── CARENotices.tsx                    # Legacy care/ethics banner
 │
-├── DataCards/                     # Dataset / asset / metadata card system
-│   ├── DataCard.tsx
-│   ├── DataCardHeader.tsx
-│   ├── DataCardMetadata.tsx
-│   ├── DataCardPreview.tsx
-│   ├── DataCardFooter.tsx
-│   ├── DataCardA11yHelpers.tsx
-│   └── DataCardSkeleton.tsx
+├── DetailDrawer/                              # General-purpose slide-out drawer system
+│   ├── DetailDrawer.tsx                       # Drawer container (focus-trapping dialog)
+│   ├── DrawerHeader.tsx                       # Title + CARE + provenance
+│   ├── DrawerSection.tsx                      # A11y-friendly section wrapper
+│   ├── DrawerMetadata.tsx                     # Metadata list block
+│   ├── DrawerProvenance.tsx                   # Provenance graph + lineage
+│   ├── DrawerCAREBlock.tsx                    # Cultural + sovereign data warnings
+│   ├── DrawerFooter.tsx                       # Actions / navigation
+│   └── DrawerA11yHelpers.tsx                  # SR text + ARIA attributes
 │
-├── story/                         # Story Node v3 UI components
-│   ├── StoryCard.tsx
-│   ├── StoryDetail.tsx
-│   ├── StoryMedia.tsx
-│   ├── StoryMapPreview.tsx
-│   └── StoryRelations.tsx
+├── DataCards/                                 # Dataset/asset summary card framework
+│   ├── DataCard.tsx                           # Full card wrapper
+│   ├── DataCardHeader.tsx                     # Title + CARE + provenance chip
+│   ├── DataCardMetadata.tsx                   # Key-value metadata list
+│   ├── DataCardPreview.tsx                    # Spatial or temporal miniature preview
+│   ├── DataCardFooter.tsx                     # Actions (open / preview / map)
+│   ├── DataCardA11yHelpers.tsx                # ARIA labels + SR descriptions
+│   └── DataCardSkeleton.tsx                   # Low-motion loading placeholder
 │
-├── governance/                    # Governance & CARE UI components
-│   ├── CAREBadge.tsx
-│   ├── LicenseTag.tsx
-│   ├── ProvenanceChip.tsx
-│   ├── ProvenanceTrail.tsx
-│   ├── SovereigntyNotice.tsx
-│   ├── MaskingIndicator.tsx
-│   └── GovernanceDrawer.tsx
+├── story/                                     # Story Node v3 UI components
+│   ├── StoryCard.tsx                          # Compact narrative preview
+│   ├── StoryDetail.tsx                        # Full narrative + provenance
+│   ├── StoryMedia.tsx                         # Media carousel (maps, documents)
+│   ├── StoryMapPreview.tsx                    # Generalized spatial preview
+│   └── StoryRelations.tsx                     # Related entities list
 │
-├── stac/                          # STAC/DCAT dataset exploration UI
-│   ├── DatasetCard.tsx
-│   ├── DatasetList.tsx
-│   ├── ItemPreview.tsx
-│   ├── AssetMetadata.tsx
-│   └── ExtentPreview.tsx
+├── governance/                                # Governance & CARE presentation
+│   ├── CAREBadge.tsx                          # CARE classification badge
+│   ├── LicenseTag.tsx                         # SPDX license label
+│   ├── ProvenanceChip.tsx                     # Inline provenance tag
+│   ├── ProvenanceTrail.tsx                    # Full provenance chain visualization
+│   ├── SovereigntyNotice.tsx                  # Sovereignty governance banner
+│   ├── MaskingIndicator.tsx                   # Masking/generalization applied indicator
+│   └── GovernanceDrawer.tsx                   # Complete governance detail drawer
 │
-├── layout/                        # Global layout components
-│   ├── Header.tsx
-│   ├── Sidebar.tsx
-│   ├── Panel.tsx
-│   ├── PageContainer.tsx
-│   └── SplitView.tsx
+├── stac/                                      # STAC/DCAT dataset exploration suite
+│   ├── DatasetCard.tsx                        # Top-level dataset summary
+│   ├── DatasetList.tsx                        # Paginated dataset list
+│   ├── ItemPreview.tsx                        # STAC Item preview (spatial/temporal)
+│   ├── AssetMetadata.tsx                      # Asset-level metadata
+│   └── ExtentPreview.tsx                      # Spatiotemporal extent visualization
 │
-└── shared/                        # Reusable UI primitives
-    ├── Button.tsx
-    ├── IconButton.tsx
-    ├── Dropdown.tsx
-    ├── Tabs.tsx
-    ├── Modal.tsx
-    ├── Tooltip.tsx
-    ├── Spinner.tsx
-    ├── Badge.tsx
-    ├── Card.tsx
-    └── FormControls/
-        ├── TextInput.tsx
-        ├── Checkbox.tsx
-        ├── RadioGroup.tsx
-        ├── Select.tsx
-        ├── ToggleSwitch.tsx
-        └── FieldLabel.tsx
+├── layout/                                    # Global application layout components
+│   ├── Header.tsx                             # Top navigation + governance link
+│   ├── Sidebar.tsx                            # Collapsible navigation sidebar
+│   ├── Panel.tsx                              # Panel wrapper used across UI
+│   ├── PageContainer.tsx                      # Semantic page wrapper
+│   └── SplitView.tsx                          # Resizable split-pane layout
+│
+└── shared/                                    # Reusable low-level UI primitives
+    ├── Button.tsx                             # Accessible button component
+    ├── IconButton.tsx                         # Icon-only button with ARIA labels
+    ├── Dropdown.tsx                           # Menu / listbox pattern
+    ├── Tabs.tsx                               # Accessible tab interface
+    ├── Modal.tsx                              # Focus-trapped modal
+    ├── Tooltip.tsx                            # ARIA-compliant tooltip
+    ├── Spinner.tsx                            # Reduced-motion loading indicator
+    ├── Badge.tsx                              # General-purpose tag
+    ├── Card.tsx                               # Generic card wrapper
+    └── FormControls/                          
+        ├── TextInput.tsx                      # Accessible text input
+        ├── Checkbox.tsx                       # WCAG AA checkbox control
+        ├── RadioGroup.tsx                     # Mutually exclusive options
+        ├── Select.tsx                         # Keyboard navigable dropdown
+        ├── ToggleSwitch.tsx                   # ARIA switch component
+        └── FieldLabel.tsx                     # Label + description wrapper
 ~~~
+
 ---
 
 # 🧩 Component Responsibilities
 
-## 1. **Rendering**
-Components must render UI with:
+## 1. Rendering
+- Deterministic  
+- Presentation-only  
+- No business logic  
+- No global state mutation  
 
-- Deterministic patterns  
-- Clear state boundaries  
-- No side effects outside UI  
-
-## 2. **Accessibility (WCAG 2.1 AA)**  
-Components *must* have:
-
-- Semantic HTML  
-- ARIA roles/labels  
-- Keyboard navigation  
+## 2. Accessibility (WCAG 2.1 AA)
+All components **must** provide:
+- Proper ARIA roles  
+- Focus indicators  
+- High-contrast colors  
 - Reduced-motion support  
-- High-contrast token usage  
-- Alt text for images  
-- Screen-reader-safe content  
+- Full keyboard navigation  
+- Alt text or SR equivalents  
 
-## 3. **Governance**
-Components must:
+## 3. Governance
+Every component handling content or data must:
+- Display CARE classification  
+- Show provenance chips  
+- Respect sovereignty restrictions  
+- Mask sensitive spatial/temporal data  
+- Label AI-generated segments  
 
-- Display CARE flags  
-- Show provenance chips where required  
-- Obey sovereignty masking rules  
-- Annotate AI-generated text  
+## 4. Telemetry
+Components must trigger:
+- Interaction telemetry  
+- Navigation telemetry  
+- Focus Mode events  
+- Map events  
+- Story Node events  
+- Dataset browsing events  
 
-## 4. **Telemetry**
-Components must emit contextual events such as:
-
-- `"ui:click"`  
-- `"ui:open"` / `"ui:close"`  
-- `"ui:navigation"`  
-- `"focus:entity-selected"`  
-- `"story:card-open"`  
-- `"map:layer-toggle"`  
-
-All telemetry must be:
-
-- Non-PII  
-- Schema-valid  
-- Version-linked  
-- Stored via the telemetry pipeline  
+Telemetry must be **schema-valid, non-PII, CARE-aware**.
 
 ---
 
 # 🔐 Governance Enforcement
 
-Every component that displays:
+Rendering unsafe content is prohibited:
+- Sensitive coordinates  
+- Unmasked sovereignty sites  
+- Unverified historical claims  
+- Unlabeled AI narratives  
 
-- Dataset info  
-- Story Node content  
-- Focus Mode narrative  
-- Spatial overlays  
-- Historical material  
-
-Must apply:
-
-- CARE metadata  
-- Provenance metadata  
-- Rights-holder labels  
-- Sovereignty masking indications  
-
-Governance failures **block merges** via CI workflows.
+Violations → **CI BLOCK**
 
 ---
 
 # ♿ Accessibility Enforcement
 
-A component cannot ship unless:
+Fails if:
+- Keyboard navigation breaks  
+- SR labels missing  
+- Color contrast < AA  
+- Motion not respecting preferences  
 
-- Keyboard navigation works  
-- ARIA tags are correct  
-- Color contrast meets AA  
-- Reduced-motion animations tested  
-- Screen-reader announcements validated  
-
-Accessibility failures **fail CI**.
+Accessibility failures → **CI BLOCK**
 
 ---
 
 # 🔗 Interaction With Other Layers
 
-Components receive inputs from:
+Components interact **indirectly** via:
+- Hooks  
+- Pipeline outputs  
+- Context providers  
+- Services  
 
-- Hooks (`useMap`, `useTimeline`, `useFocus`, etc.)
-- Feature slices (`focus-mode/**`, `story-nodes/**`)
-- Pipelines (`focusPipeline`, `timelinePipeline`)
-- Services (`stacService`, `apiClient`)
-- Context providers (Time, Focus, A11y, Theme, Governance)
-
-They should **never** directly call backend APIs or modify global state.
+They **never** directly hit APIs.
 
 ---
 
 # 🧪 Testing Expectations
 
-Every component must have:
-
+Every component must include:
 - Unit tests  
-- Accessibility tests  
-- Visual regression tests (optional)  
-- Governance metadata tests (if applicable)  
-- Telemetry emission tests  
-- Snapshot tests (only for stable visual components)  
-
-Tests live under:
-
-~~~text
-tests/unit/web/components/**
-tests/integration/web/components/**
-~~~
+- A11y tests  
+- Governance tests  
+- Telemetry tests  
+- Snapshot tests (when appropriate)  
 
 ---
 
@@ -339,16 +317,17 @@ tests/integration/web/components/**
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Full KFM-MDP v10.4 rewrite; governance, A11y, telemetry rules; expanded component taxonomy |
-| v10.3.2 | 2025-11-14 | Map + Story Node + governance UI updates |
-| v10.3.1 | 2025-11-13 | Initial components overview documentation |
+| v10.4.1 | 2025-11-15 | Updated directory structure with labels; added primitives alignment for MapView, TimelineView, and FocusMode |
+| v10.4.0 | 2025-11-15 | Full KFM-MDP v10.4 documentation overhaul |
+| v10.3.2 | 2025-11-14 | Map + Story Node + governance updates |
+| v10.3.1 | 2025-11-13 | Initial components overview |
 
 ---
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-Reviewed under MCP-DL v6.3 and KFM-MDP v10.4  
 FAIR+CARE Certified · Public Document · Version-Pinned  
+Validated under MCP-DL v6.3 & KFM-MDP v10.4.1  
 
 </div>
