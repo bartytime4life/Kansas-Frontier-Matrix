@@ -1,18 +1,25 @@
 ---
-title: "🌐 Kansas Frontier Matrix — Pipeline Publishing Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🌐 Kansas Frontier Matrix — Pipeline Publishing Guide (STAC·DCAT·Neo4j·RDF·CARE v2) (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/pipelines/publishing-guide.md"
-version: "v10.3.1"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly · FAIR+CARE Council"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/pipelines-publishing-guide-v1.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/publishing-guide-v2.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-kfm_markdown_protocol: "docs/standards/kfm_markdown_output_protocol.md"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "publishing-pipelines"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E1"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
 ---
 
 <div align="center">
@@ -21,360 +28,405 @@ kfm_markdown_protocol: "docs/standards/kfm_markdown_output_protocol.md"
 `docs/guides/pipelines/publishing-guide.md`
 
 **Purpose:**  
-Provide the authoritative publishing workflow for all KFM pipelines — including **STAC**, **DCAT**, **Neo4j**, **RDF/GeoSPARQL**, and **public data release promotion** — ensuring **FAIR+CARE**, **lineage**, **provenance**, and **MCP-DL v6.3** compliance.
+Define the **official KFM Publishing Standard** for converting validated, FAIR+CARE-compliant,  
+checksum-locked datasets into public-facing **STAC**, **DCAT**, **Neo4j graph nodes**,  
+and **RDF/GeoSPARQL Linked Data**, with complete lineage, provenance, and governance.
 
-This guide defines how validated data becomes official KFM **published assets**.
-
-<img alt="Publish" src="https://img.shields.io/badge/Publish-STAC·DCAT·Neo4j·RDF-blue"/>
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Enforced-orange"/>
-<img alt="Linked Data" src="https://img.shields.io/badge/Linked_Data-GeoSPARQL-green"/>
-<img alt="Status" src="https://img.shields.io/badge/Status-Active-success"/>
+**Scope:**  
+This guide describes the **final stage** of every KFM pipeline:  
+**Processed → Versioned → Published → Registered → Immutable**.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-Publishing represents the **final and irreversible step** of a KFM pipeline.
+Publishing is the **irreversible promotion** of a dataset into the Kansas Frontier Matrix public knowledge system.
 
-Published assets MUST be:
+All published assets MUST be:
 
-- FAIR+CARE–certified  
-- Fully validated (GX + schema + governance)  
-- Lineage-complete  
-- Telemetry-linked  
-- Immutable (version-locked)  
-- Discoverable via **STAC**, **DCAT**, **Neo4j**, and **Linked Data endpoints**  
+- **FAIR+CARE-certified**  
+- **Schema-validated** (GX, JSON Schema, STAC/DCAT)  
+- **Lineage-complete** (JSON-LD provenance)  
+- **Checksum-locked** (SHA-256 → multihash)  
+- **Version-pinned** (SemVer X.Y.Z)  
+- **Discoverable** (STAC, DCAT, Neo4j, RDF endpoints)  
+- **Observable** (telemetry v2 signals)  
+- **Immutable** once published  
 
-Only data in `data/processed/` may be published.
+Only datasets inside:
 
----
-
-## 🗂️ Directory Layout (Publishing Layer)
-
-~~~~~text
-data/
-├── processed/                           # Finished FAIR+CARE-approved datasets
-├── stac/
-│   ├── published/
-│   │   ├── items/<collection>/<id>.json
-│   │   └── collections/<collection>.json
-├── dcat/
-│   └── datasets/<dataset>.jsonld
-├── rdf/
-│   └── <dataset>/<version>/*.ttl
-└── lineage/
-    └── <dataset>/<version>.jsonld
-~~~~~
-
----
-
-## 🧩 Publishing Architecture (Indented Mermaid)
-
-~~~~~mermaid
-flowchart TD
-  A["Staging → Processed<br/>Validated · CARE-labeled · Checksum-locked"] --> B["Publish Gate<br/>FAIR+CARE + Provenance Checks"]
-  B -->|PASS| C["Write STAC Items/Collections"]
-  B -->|PASS| D["Write DCAT Datasets<br/>JSON-LD"]
-  B -->|PASS| E["Upsert Neo4j Graph Nodes<br/>Scene · Event · Place"]
-  B -->|PASS| F["Export RDF<br/>GeoSPARQL Linked Data"]
-  F --> G["Governance Ledger<br/>Append Entry"]
-  G --> H["Telemetry Export<br/>Publish Metrics"]
-~~~~~
-
----
-
-# 🛠 1. Publishing Gate Requirements
-
-No dataset may be published unless ALL of the following are true:
-
-### Validation Requirements
-- GX validation: **ALL PASS**, **no warnings**  
-- Schema validation: STAC/DCAT/JSONSchema complete  
-- CARE checks: no unresolved sovereignty or masking violations  
-- Provenance: lineage JSON-LD valid  
-- Telemetry: required fields present  
-
-### Required Metadata
-Each published asset MUST include:
-
-| Field | Description |
-|-------|-------------|
-| `kfm:version` | Semantic dataset version |
-| `kfm:processingSteps[]` | full pipeline trace |
-| `kfm:checksum_sha256` | integrity lock |
-| `kfm:careLabel` | public / sensitive / restricted |
-| `kfm:maskingStrategy` | required for sensitive+restricted |
-| `kfm:lineageRef` | path to JSON-LD lineage |
-| `kfm:telemetryRef` | NDJSON summary |
-| `kfm:provenanceRef` | governance ledger link |
-
-### Mandatory Inputs
-
-Only datasets under:
-
-~~~~~text
+~~~text
 data/processed/<dataset>/<version>/
-~~~~~
+~~~
 
 are eligible for publication.
 
 ---
 
-# 📦 2. STAC Publishing
+# 🗂️ Directory Layout (Publishing Layer · KFM-Aligned)
 
-Publishing requires writing:
-
-### 2.1 Collections
-
-~~~~~text
-data/stac/published/collections/<collection_id>.json
-~~~~~
-
-Requirements:
-
-- Complete STAC 1.0 structure  
-- Valid spatial & temporal extents  
-- Asset summaries  
-- Provider metadata  
-- License, citation, DOIs  
-- CARE extensions embedded  
-- Links:  
-  - `root`  
-  - `self`  
-  - `items`  
-
-### 2.2 Items
-
-~~~~~text
-data/stac/published/items/<collection_id>/<item_id>.json
-~~~~~
-
-Each Item MUST:
-
-- Include normalized geometry  
-- Include datetime, bbox, EO/SAR fields  
-- Reference lineage and telemetry  
-- Include `kfm:ingest_version` & `kfm:publish_version`  
-- Be checksum-locked  
+~~~text
+data/
+├── processed/                               # Final FAIR+CARE-approved datasets
+│   └── <dataset>/<version>/                 # Version-pinned payloads
+│       ├── data.parquet                     # Typed, deterministic artifact
+│       ├── lineage.jsonld                   # Provenance (PROV-O / CIDOC / CARE)
+│       ├── telemetry.ndjson                 # Run telemetry v2
+│       └── checksums.txt                    # SHA-256 and multihash registry
+│
+├── stac/
+│   └── published/
+│       ├── collections/<collection>.json    # STAC Collections
+│       └── items/<collection>/<id>.json     # STAC Items
+│
+├── dcat/
+│   └── datasets/<dataset>.jsonld            # DCAT Dataset JSON-LD
+│
+├── rdf/
+│   └── <dataset>/<version>/*.ttl            # RDF + GeoSPARQL triples
+│
+└── lineage/
+    └── <dataset>/<version>.jsonld           # Lineage index (dataset-level)
+~~~
 
 ---
 
-# 📚 3. DCAT Publishing
+# 🧩 Publishing Architecture (KFM-Styled Mermaid)
 
-Each dataset generates a **DCAT Dataset JSON-LD**:
+```mermaid
+flowchart TD
 
-~~~~~text
-data/dcat/datasets/<dataset_id>.jsonld
-~~~~~
+  subgraph STAGING["Staging → Processed"]
+    A["Validated Data<br/>CARE-labeled · checksum-locked"]
+  end
+
+  subgraph GATE["Publish Gate"]
+    B["FAIR+CARE<br/>+ Provenance Checks"]
+  end
+
+  subgraph EXPORT["Exporters"]
+    C["STAC Items/Collections"]
+    D["DCAT Datasets<br/>JSON-LD"]
+    E["Neo4j Nodes + Edges"]
+    F["RDF Export<br/>GeoSPARQL Linked Data"]
+  end
+
+  subgraph GOVERN["Governance & Observability"]
+    G["Governance Ledger<br/>Append Entry"]
+    H["Telemetry v2<br/>Publish Metrics"]
+  end
+
+  A --> B
+  B -->|PASS| C
+  B -->|PASS| D
+  B -->|PASS| E
+  B -->|PASS| F
+  F --> G
+  G --> H
+
+  classDef staging fill:#ebf8ff,stroke:#2b6cb0,color:#1a365d;
+  classDef gate fill:#fefcbf,stroke:#b7791f,color:#744210;
+  classDef export fill:#e9d8fd,stroke:#6b46c1,color:#44337a;
+  classDef govern fill:#f0fff4,stroke:#2f855a,color:#22543d;
+
+  class STAGING staging;
+  class GATE gate;
+  class EXPORT export;
+  class GOVERN govern;
+````
+
+---
+
+# 🛠 1. Publishing Gate Requirements
+
+Datasets must meet ALL:
+
+## ✔ Validation
+
+* **GX validation:** all tests pass
+* **JSON Schema / STAC / DCAT validation:** 100% compliant
+* **Linked Data validation:** RDF + GeoSPARQL + PROV-O shape checks
+* **Accessibility metadata:** required alt-text/titles
+* **Energy/Carbon metadata:** embedding telemetry v2
+
+## ✔ Governance (CARE v2)
+
+* No unresolved sovereignty/masking violations
+* `kfm:careLabel` present
+* `kfm:maskingStrategy` present for sensitive/restricted
+* Indigenous data sovereignty rules applied
+
+## ✔ Provenance
+
+* `lineage.jsonld` valid (CIDOC CRM + PROV-O + CARE)
+* Versioned processingSteps[]
+* Attestations (SLSA-style) generated
+
+## ✔ Required Metadata Fields
+
+| Field                   | Description                   |
+| ----------------------- | ----------------------------- |
+| `kfm:version`           | Dataset SemVer                |
+| `kfm:checksum_sha256`   | Integrity lock                |
+| `kfm:careLabel`         | CARE v2 classification        |
+| `kfm:maskingStrategy`   | H3 / bounding / centroid-only |
+| `kfm:lineageRef`        | Path to JSON-LD lineage       |
+| `kfm:telemetryRef`      | Path to NDJSON telemetry      |
+| `kfm:processingSteps[]` | Pipeline phase trace          |
+| `kfm:provenanceRef`     | Governance ledger link        |
+
+---
+
+# 📦 2. STAC Publishing (Collections + Items)
+
+## Collections
+
+Path:
+
+```text
+data/stac/published/collections/<collection>.json
+```
 
 Must include:
 
-- `dct:title`, `dct:description`  
-- `dct:creator`, `dct:publisher`  
-- `dct:temporal`, `dct:spatial`  
-- `dct:provenance` (lineageRef)  
-- `dct:license`  
-- `dcat:distribution` referencing STAC assets  
-- CARE statements  
+* STAC 1.0 compliant schema
+* `extent.spatial` / `extent.temporal` normalized
+* Asset summaries
+* Providers + licenses
+* KFM extensions:
 
-DCAT exports must pass CI validator:  
+  * `kfm:version`
+  * `kfm:careLabel`
+  * `kfm:lineageRef`
+  * `kfm:stacVersionHistory[]`
+
+## Items
+
+```text
+data/stac/published/items/<collection>/<item>.json
+```
+
+Requirements:
+
+* Geometry normalized
+* `datetime`, `bbox`, EO fields
+* `kfm:*` metadata populated
+* Checksum multihash (blake3 OR sha256-multihash)
+* Links:
+
+  * `collection`
+  * `self`
+  * `root`
+  * `lineage`
+  * `telemetry`
+
+---
+
+# 📚 3. DCAT Publishing (JSON-LD)
+
+Path:
+
+```text
+data/dcat/datasets/<dataset>.jsonld
+```
+
+Must include:
+
+* `dct:title`, `dct:description`, `dct:creator`, `dct:license`
+* `dct:temporal`, `dct:spatial`
+* `dcat:distribution[]` referencing STAC items
+* CARE + provenance metadata
+* `kfm:version`
+
+Validation:
 `dcat-validate.yml`
 
 ---
 
-# 🌐 4. Neo4j Publishing
+# 🌐 4. Neo4j Publishing (Graph)
 
-Publishing requires updating graph entities:
+## Entities
 
-### Scene Nodes
+### Scene
+
 `(:Scene {id})`
 
-Set:
+Properties:
 
-- `datetime`  
-- `collection`  
-- `cloud_cover`  
-- `centroid` (POINT)  
-- `geom` (WKT or GeoJSON)  
-- `aoi_overlaps[]`  
-- CARE flags  
+* `geom` (WKT/GeoJSON)
+* `centroid` (POINT)
+* `temporal_bounds`
+* `collection_id`
+* CARE flags
+* provenance refs
 
-### Dataset Nodes
+### Dataset
+
 `(:Dataset {id})`
 
-- Version  
-- Title  
-- License  
-- STAC/ DCAT references  
+* Semantic version
+* License
+* STAC/DCAT references
 
-### Relationships
+## Relationships
 
-- `(:Scene)-[:INTERSECTS]->(:County)`  
-- `(:Scene)-[:WITHIN]->(:AOI)`  
-- `(:Scene)-[:HAS_DERIVATIVE]->(:IndexLayer)`  
+* `(:Scene)-[:INTERSECTS]->(:County)`
+* `(:Scene)-[:WITHIN]->(:AOI)`
+* `(:Scene)-[:CREATED_FROM]->(:Dataset)`
 
-All writes must be **idempotent**:
+Writes must be **idempotent**:
 
-~~~~~text
-MERGE … ON MATCH SET …
-~~~~~
-
-Graph writes must occur **after** lineage has been generated.
+```text
+MERGE ... ON MATCH SET ...
+```
 
 ---
 
 # 🌐 5. RDF / GeoSPARQL Publishing
 
-Generated per dataset:
+Path:
 
-~~~~~text
+```text
 data/rdf/<dataset>/<version>/*.ttl
-~~~~~
+```
 
-Includes:
+Triples include:
 
-- scene features  
-- geometry (`geo:asWKT`)  
-- AOI relationships (`geo:sfIntersects`)  
-- provenance (`prov:wasGeneratedBy`)  
-- dataset → STAC/DCAT MADS mappings  
+* `geo:asWKT`
+* `geo:sfIntersects` / `geo:sfWithin`
+* PROV-O: `prov:wasGeneratedBy`
+* Dataset-level PROV + CARE statements
 
-Graphs must validate with:
+Validation:
 
-- `geosparql_context.jsonld`
-- `prov_o_context.jsonld`
-- `cidoc_crm_context.jsonld`
-
-CI enforcement: `linked-data-validate.yml` (future)
+* `prov_o_context.jsonld`
+* `cidoc_crm_context.jsonld`
+* `geosparql_context.jsonld`
 
 ---
 
-# 🧬 6. Lineage & Provenance Integration
+# 🧬 6. Lineage (PROV-O + CIDOC + CARE)
 
-Every published dataset MUST link:
+Stored here:
 
-- STAC files → lineageRef  
-- DCAT → lineageRef  
-- Neo4j nodes → lineage attributes  
-- RDF → lineage metadata  
+```text
+data/processed/<dataset>/<version>/lineage.jsonld
+```
 
-Lineage stored at:
+Requirements:
 
-~~~~~text
-data/processed/lineage/<dataset>/<version>.jsonld
-~~~~~
-
-Validated against:
-
-~~~~~text
-src/pipelines/remote-sensing/lineage/schemas/lineage.schema.json
-~~~~~
+* PROV-O chains (`prov:Activity`, `prov:Entity`, `prov:Agent`)
+* CARE metadata
+* Full pipeline trace (`processingSteps[]`)
+* Input → Output derivation paths
+* Collection-wide lineage mirrored to:
+  `data/lineage/<dataset>/<version>.jsonld`
 
 ---
 
-# 📡 7. Telemetry Integration
+# 📡 7. Telemetry (v2)
 
-Every publishing pipeline MUST emit NDJSON containing:
+Telemetry NDJSON:
 
-- `stage: "publish"`  
-- `items_published`  
-- `collections_updated`  
-- `graph_nodes_written`  
-- `rdf_files_written`  
-- `energy_wh`, `co2_g`  
-- `care_violations`  
-- `duration_ms`  
+```text
+data/processed/<dataset>/<version>/telemetry.ndjson
+```
 
-Stored at:
+Contains fields:
 
-~~~~~text
-data/processed/telemetry/<pipeline>.ndjson
-~~~~~
+* `run_id`
+* `event` (`publish`)
+* `dataset_id` / `version`
+* counts: items/collections/graph_nodes/rdf_files
+* energy metrics (ISO 50001)
+* CO₂e estimates (ISO 14064)
+* care violations
+* duration_ms
+* semantic flags
 
 Aggregated to:
 
-~~~~~text
-../../../releases/v10.3.0/focus-telemetry.json
-~~~~~
+```text
+releases/v10.4.2/pipeline-telemetry.json
+```
 
 ---
 
-# 🛡 8. Governance Ledger Integration
+# 🛡 8. Governance Ledger (Append-Only)
 
-Every publish event MUST append to:
+Path:
 
-~~~~~text
-docs/reports/audit/data_provenance_ledger.json
-~~~~~
+```text
+docs/reports/audit/data_provenance_ledger.jsonl
+```
 
-Fields recorded:
+Record includes:
 
-- dataset ID  
-- version  
-- CARE label / masking strategy  
-- lineageRef  
-- telemetryRef  
-- stacRef / dcatRef / graphRef / rdfRef  
-- sbomRef  
-- slsaRef  
-- CI workflow IDs  
+* dataset ID
+* version
+* CARE label + masking
+* lineageRef
+* telemetryRef
+* stacRef / dcatRef / graphRef / rdfRef
+* sbomRef
+* attestationRef (SLSA)
+* reviewers
+* CI workflow IDs
 
-Governance ledger entries are **append-only**.
-
----
-
-# 🔒 9. CI Enforcement
-
-The following workflows **must pass** before publication:
-
-| Workflow | Responsibility |
-|----------|----------------|
-| `stac-validate.yml` | STAC schema validation |
-| `dcat-validate.yml` | DCAT JSON-LD validation |
-| `neo4j-schema-guard.yml` | Graph constraints & node shape |
-| `faircare-validate.yml` | CARE & governance compliance |
-| `telemetry-export.yml` | Metadata & telemetry completeness |
-| `docs-lint.yml` | KFM Markdown rules |
-| `sbom-validate.yml` | Match SBOM to published artifacts |
-| `slsa-verify.yml` | Provenance attestation validation |
-
-Merge is blocked unless **all** are green.
+Ledger entries must be **append-only**.
 
 ---
 
-# 🧭 10. Developer Publishing Checklist
+# 🔒 9. CI Enforcement (Publishing Gate)
 
-Before running publish:
+Before merge → publish:
 
-- [ ] Staging → Processed promotion succeeded  
-- [ ] All GX validation passed  
-- [ ] CARE masking applied & verified  
-- [ ] Sovereignty overlays checked  
-- [ ] Lineage JSON-LD generated & validated  
-- [ ] Telemetry NDJSON complete  
-- [ ] Checksums verified  
-- [ ] STAC/DCAT metadata complete  
-- [ ] RDF exports valid  
-- [ ] Neo4j writes tested  
-- [ ] Governance ledger updated  
+| Workflow                   | Purpose                    |
+| -------------------------- | -------------------------- |
+| `stac-validate.yml`        | STAC 1.0 validation        |
+| `dcat-validate.yml`        | DCAT JSON-LD validation    |
+| `linked-data-validate.yml` | RDF/GeoSPARQL validation   |
+| `neo4j-schema-guard.yml`   | Graph constraints          |
+| `faircare-validate.yml`    | CARE, sovereignty, masking |
+| `sbom-validate.yml`        | SBOM and supply-chain      |
+| `telemetry-export.yml`     | Telemetry completeness     |
+| `docs-lint.yml`            | KFM MDP enforcement        |
+
+Publications are **blocked** unless all workflows pass.
 
 ---
 
-## 🕰️ Version History
+# 🧭 Developer Publishing Checklist
 
-| Version | Date       | Author               | Summary |
-|---------|------------|----------------------|---------|
-| v10.3.1 | 2025-11-14 | Publishing Governance Team | Initial Publishing Guide; full STAC/DCAT/Neo4j/RDF/CARE integration. |
+* [ ] Validation (GX/Schema/FAIR+CARE) complete
+* [ ] CARE flags + masking correct
+* [ ] Lineage JSON-LD valid
+* [ ] Telemetry fields populated
+* [ ] Checksums validated
+* [ ] STAC/DCAT/RDF graphs generated & pass validation
+* [ ] Neo4j writes validated
+* [ ] Governance ledger updated
+* [ ] SBOM present
+* [ ] CHANGELOG updated if version changed
+
+---
+
+# 🕰️ Version History
+
+| Version | Date       | Summary                                                                                                      |
+| ------: | ---------- | ------------------------------------------------------------------------------------------------------------ |
+| v10.4.2 | 2025-11-16 | Full KFM-MDP v10.4.2 upgrade; STAC/DCAT enhancements; lineage v2; telemetry v2; governance ledger extensions |
+| v10.3.1 | 2025-11-14 | Initial Publishing Guide; STAC/DCAT/Neo4j/RDF/CARE v1 integration                                            |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Publishing Guide**  
-FAIR+CARE Publishing × Immutable Provenance × STAC/DCAT/Graph/RDF Harmony  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+**Kansas Frontier Matrix — Canonical Publishing Standard**
+FAIR+CARE Data Publishing × Immutable Provenance × STAC/DCAT/Graph/RDF Integration
+© 2025 KFM — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
+```
