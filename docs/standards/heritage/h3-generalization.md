@@ -29,7 +29,6 @@ Define the **KFM-protected workflow** for converting precise archaeological coor
 
 </div>
 
-
 ---
 
 ## 📘 Overview
@@ -47,6 +46,7 @@ Compliance anchors:
 
 ### 🗂️ Directory Layout
 
+```plaintext
     docs/
     └── standards/
         └── heritage/
@@ -58,6 +58,7 @@ Compliance anchors:
             └── assets/
                 └── diagrams/
                     └── h3-protection-flow.svg
+````
 
 ---
 
@@ -65,15 +66,16 @@ Compliance anchors:
 
 ### ⭐ Resolution Selection
 
-| H3 Resolution | Cell Area (approx.) | Use Case |
-|--------------|---------------------|----------|
-| **r5** | ~150 km² | Broad summaries + maximum confidentiality |
-| **r6** | ~25 km² | County or regional analysis |
-| **r7** | ~5.16 km² | **KFM default for sensitive archaeology** |
-| **r8** | ~0.74 km² | Only for non-sensitive or already-public features |
+| H3 Resolution | Cell Area (approx.) | Use Case                                          |
+| ------------- | ------------------- | ------------------------------------------------- |
+| **r5**        | ~150 km²            | Broad summaries + maximum confidentiality         |
+| **r6**        | ~25 km²             | County or regional analysis                       |
+| **r7**        | ~5.16 km²           | **KFM default for sensitive archaeology**         |
+| **r8**        | ~0.74 km²           | Only for non-sensitive or already-public features |
 
-### 🎯 KFM Default Resolution  
-**r7 H3** for **any culturally sensitive, protected, or confidential archaeological location**.  
+### 🎯 KFM Default Resolution
+
+**r7 H3** for **any culturally sensitive, protected, or confidential archaeological location**.
 Lower resolutions require FAIR+CARE Council exemption.
 
 ---
@@ -82,30 +84,31 @@ Lower resolutions require FAIR+CARE Council exemption.
 
 ### 🔒 Raw Coordinates — NEVER Released
 
-- Removed in ETL from all Story Nodes, STAC Items, and DCAT feeds.  
-- Stored only in **tier-1 secure internal layers**.  
-- Exported datasets include only:
-  - `h3_id`
-  - `h3_resolution`
-  - Aggregated site counts  
-  - Non-sensitive contextual attributes
+* Removed in ETL from all Story Nodes, STAC Items, and DCAT feeds.
+* Stored only in **tier-1 secure internal layers**.
+* Exported datasets include only:
+
+  * `h3_id`
+  * `h3_resolution`
+  * Aggregated site counts
+  * Non-sensitive contextual attributes
 
 ### 🧱 H3 Cell Metadata Requirements
 
 Indexed fields:
 
-- `h3_id`
-- `h3_resolution`
-- `generalization_method = "H3"`
-- `heritage_protected = true`
-- `raw_coordinates_removed = true`
+* `h3_id`
+* `h3_resolution`
+* `generalization_method = "H3"`
+* `heritage_protected = true`
+* `raw_coordinates_removed = true`
 
 Used in:
 
-- Focus Mode overlays  
-- Public map layers  
-- STAC catalogs  
-- DCAT metadata packages  
+* Focus Mode overlays
+* Public map layers
+* STAC catalogs
+* DCAT metadata packages
 
 ---
 
@@ -115,17 +118,18 @@ Used in:
 
 Internal-only pipeline:
 
-- Stored in `data/work/staging/heritage/raw/`  
-- Tagged with:
-  - `mcp_protected = true`
-  - `access_level = "tier1-secure"`
+* Stored in `data/work/staging/heritage/raw/`
+* Tagged with:
+
+  * `mcp_protected = true`
+  * `access_level = "tier1-secure"`
 
 ### 🛠️ Step 2 — Convert to H3 Cell
 
 Call:
 
-- `h3.latlng_to_cell(lat, lon, RES)`  
-- Use **RES = 7** for sensitive features.
+* `h3.latlng_to_cell(lat, lon, RES)`
+* Use **RES = 7** for sensitive features.
 
 ### 🛠️ Step 3 — Drop Coordinates (Mandatory)
 
@@ -135,46 +139,48 @@ Strip `latitude`, `longitude`, `geometry` fields before any export.
 
 Aggregate:
 
-- count of unique features  
-- distinct periods / cultural phases  
-- optional classification roll-ups  
+* count of unique features
+* distinct periods / cultural phases
+* optional classification roll-ups
 
 ### 🛠️ Step 5 — Export Aggregated Data
 
 Write hex-only data to:
 
-- `data/public/heritage/h3/`  
-- `data/catalog/stac/heritage/h3/`  
-- KFM DCAT datasets  
-- Focus Mode overlays  
+* `data/public/heritage/h3/`
+* `data/catalog/stac/heritage/h3/`
+* KFM DCAT datasets
+* Focus Mode overlays
 
 ---
 
 ## 🧪 Example Python Pipeline (Indented Only)
 
-    import h3
-    import pandas as pd
+```python
+import h3
+import pandas as pd
 
-    RES = 7  # Required default resolution for sensitive heritage
+RES = 7  # Required default resolution for sensitive heritage
 
-    df = pd.read_csv("sites_raw.csv")
+df = pd.read_csv("sites_raw.csv")
 
-    df["h3_resolution"] = RES
-    df["h3_id"] = df.apply(
-        lambda r: h3.latlng_to_cell(r["latitude"], r["longitude"], RES),
-        axis=1
-    )
+df["h3_resolution"] = RES
+df["h3_id"] = df.apply(
+    lambda r: h3.latlng_to_cell(r["latitude"], r["longitude"], RES),
+    axis=1
+)
 
-    # Aggregate for public release
-    pub = (
-        df.groupby(["h3_id", "h3_resolution"], as_index=False)
-          .agg(
-              site_count=("site_id", "nunique"),
-              periods=("period", lambda s: sorted(set(s)))
-          )
-    )
+# Aggregate for public release
+pub = (
+    df.groupby(["h3_id", "h3_resolution"], as_index=False)
+      .agg(
+          site_count=("site_id", "nunique"),
+          periods=("period", lambda s: sorted(set(s)))
+      )
+)
 
-    pub.to_csv("sites_generalized_h3.csv", index=False)
+pub.to_csv("sites_generalized_h3.csv", index=False)
+```
 
 ---
 
@@ -184,20 +190,22 @@ Write hex-only data to:
 
 Add to `properties`:
 
-    {
-      "heritage_protected": true,
-      "generalization_method": "H3",
-      "h3_resolution": 7,
-      "raw_coordinates_removed": true,
-      "legal_basis": "NHPA Section 304",
-      "care_level": "Level III"
-    }
+```json
+{
+  "heritage_protected": true,
+  "generalization_method": "H3",
+  "h3_resolution": 7,
+  "raw_coordinates_removed": true,
+  "legal_basis": "NHPA Section 304",
+  "care_level": "Level III"
+}
+```
 
 ### 📄 DCAT Fields
 
-- `dct:spatialResolution = "H3-r7"`
-- `dct:provenance = "Generalized from protected archaeological coordinates"`  
-- `dct:conformsTo = "KFM H3 Heritage Generalization Standard"`
+* `dct:spatialResolution = "H3-r7"`
+* `dct:provenance = "Generalized from protected archaeological coordinates"`
+* `dct:conformsTo = "KFM H3 Heritage Generalization Standard"`
 
 ---
 
@@ -205,31 +213,32 @@ Add to `properties`:
 
 ### 🗺️ MapLibre
 
-- Render **hex polygons**, not point approximations  
-- Disable popups showing pseudo-coordinates  
-- Aggregate-only summaries (min 3 features per hex required)
+* Render **hex polygons**, not point approximations
+* Disable popups showing pseudo-coordinates
+* Aggregate-only summaries (min 3 features per hex required)
 
 ### 🛰️ Cesium 3D
 
-- Extrude hexes using **site_count**  
-- Maintain confidentiality rules identical to MapLibre  
+* Extrude hexes using **site_count**
+* Maintain confidentiality rules identical to MapLibre
 
 ---
 
 ## ⚖️ Risk Mitigation Matrix
 
-| Threat | Mitigation |
-|--------|------------|
-| Reverse-engineering locations | r7 → ≥5 km² spatial masking |
-| Site clustering reveals pattern | Minimum 3-site aggregation |
-| Coordinate leak | Mandatory coordinate-drop rule |
-| Resolution too fine | Governance lock at r7 |
+| Threat                          | Mitigation                     |
+| ------------------------------- | ------------------------------ |
+| Reverse-engineering locations   | r7 → ≥5 km² spatial masking    |
+| Site clustering reveals pattern | Minimum 3-site aggregation     |
+| Coordinate leak                 | Mandatory coordinate-drop rule |
+| Resolution too fine             | Governance lock at r7          |
 
 ---
 
 ## 🕒 Version History
 
-| Version | Date       | Description |
-|---------|------------|-------------|
-| v10.2.2 | 2025-11-13 | Initial release of H3 heritage generalization standard |
+| Version | Date       | Description                                                   |
+| ------- | ---------- | ------------------------------------------------------------- |
+| v10.2.2 | 2025-11-13 | Initial release of H3 heritage generalization standard        |
 | v10.2.3 | 2025-11-13 | Updated to full KFM memory-rule compliance + directory layout |
+
