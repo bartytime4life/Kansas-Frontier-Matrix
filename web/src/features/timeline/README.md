@@ -1,350 +1,291 @@
 ---
-title: "🕰️ Kansas Frontier Matrix — Timeline Feature Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "⏱️ Kansas Frontier Matrix — Timeline Feature Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/features/timeline/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-timeline-v2.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
+sbom_ref: "../../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-feature-timeline-v1.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Feature Overview"
+intent: "timeline-feature"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+provenance_chain:
+  - "web/src/features/timeline/README.md@v10.3.2"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E52 Time-Span"
+  schema_org: "WebApplication"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../../schemas/json/web-feature-timeline.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/web-feature-timeline-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-feature-timeline-v10.4.0"
+semantic_document_id: "kfm-doc-web-feature-timeline"
+event_source_id: "ledger:web/src/features/timeline/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summaries"
+  - "a11y-adaptations"
+  - "semantic-highlighting"
+ai_transform_prohibited:
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public Document"
+role: "feature-overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review each release cycle"
+sunset_policy: "Superseded upon next timeline feature revision"
 ---
+
 <div align="center">
 
-# 🕰️ **Kansas Frontier Matrix — Timeline Feature Architecture**  
+# ⏱️ **Kansas Frontier Matrix — Timeline Feature Overview**  
 `web/src/features/timeline/README.md`
 
 **Purpose:**  
-Define the **Diamond⁹ Ω / Crown∞Ω Ultimate Certified deep architecture** for the Timeline feature in the Kansas Frontier Matrix (KFM) v10.3.2 web platform.  
-This module binds **temporal navigation** (slider, playback, bands) to **MapLibre** and **Cesium** style layers, synchronizes with **Focus Mode v2.5**, **Story Nodes**, and **Diff-First** views, and enforces **FAIR+CARE**, **WCAG 2.1 AA**, and **MCP-DL v6.3** compliance.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Timeline-orange)]()  
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+Document the architecture, responsibilities, accessibility rules, governance interactions,  
+data flows, and telemetry expectations for the **Timeline Feature** of the  
+KFM Web Platform — responsible for temporal navigation, time-window filtering,  
+map synchronization, Story Node alignment, and Focus Mode v2.5 integrations.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The **Timeline Feature** provides:
+The **Timeline Feature** is one of the core interaction surfaces of the  
+Kansas Frontier Matrix Web Platform. It powers:
 
-- A **global temporal control** (`currentYear` and ranges)  
-- Real-time binding of **year** to **MapLibre/Cesium** style variables & filters  
-- Integration with **Diff-First Entity** modules (change over releases)  
-- Temporal alignment with **Focus Mode v2.5** and Story Nodes  
-- Predictive-band support (2030–2100 SSP scenarios)  
-- FAIR+CARE-aware temporal masking and governance cues  
-- Accessibility-first temporal UI (keyboard, screenreader, high-contrast)  
-- Telemetry emission for temporal interactions and energy modeling  
+- Time-range selection  
+- Temporal navigation  
+- Synchronization of narrative + spatial layers  
+- Filtering of Story Nodes, STAC assets, and vector layers  
+- OWL-Time–aligned interpretation of dataset intervals  
+- Temporal slices for 2D maps and 3D Cesium views  
+- Integration with Focus Mode timelines  
+- Telemetry for time-based exploration  
+- Accessibility-compliant controls and keyboard interactions  
 
-The Timeline feature is the primary **time-navigation plane** for KFM.
+The timeline is tightly connected to:
+
+- `TimeContext`  
+- `useTimeline.ts`  
+- `timelinePipeline.ts`  
+- Story Node v3 metadata  
+- STAC/DCAT temporal extents  
+- Governance metadata (for sensitive temporal ranges)
 
 ---
 
-## 🗂️ Directory Layout
+# 🧱 Directory Structure
 
-```text
+~~~text
 web/src/features/timeline/
-├── README.md
-├── timeline.ts             # Binding logic, style variable integration, telemetry hooks
-├── slider.tsx              # React slider UI (WCAG-compliant)
-├── styles/
-│   ├── timeline-style.json # MapLibre style with temporal expressions
-│   └── palette.json        # Era palettes and temporal token definitions
-└── datasets/
-    ├── landcover.pmtiles
-    ├── hydrology.pmtiles
-    └── settlements.pmtiles
-````
+├── components/                    # Timeline UI components
+│   ├── TimelineBar.tsx            # Main temporal axis
+│   ├── TimelineHandle.tsx         # Drag/select handle
+│   ├── TimelineMarkers.tsx        # Story Node + dataset markers
+│   ├── GranularityControls.tsx    # Year/decade/century zoom levels
+│   └── TimelineA11y.tsx           # Accessibility-specific timeline helpers
+│
+├── hooks/                         # Feature-specific logic
+│   ├── useTimelineFeature.ts      # Timeline state + pipeline integration
+│   └── useTemporalZoom.ts         # Controls temporal granularity
+│
+├── pipelines/                     # Timeline orchestration logic
+│   └── timelinePipeline.ts        # Timeline → Map → Focus Mode sync
+│
+└── telemetry/                     # Timeline telemetry signals
+    ├── timelineEvents.ts          # Event taxonomy ("timeline:range-change", etc.)
+    └── timelinePerformance.ts     # FPS/interaction stats (non-PII)
+~~~
 
 ---
 
-## 🧩 High-Level Timeline Architecture
+# 🧩 Responsibilities
 
-```mermaid
-flowchart TD
-    UI[Slider and Controls] --> TLSTATE[Timeline State<br/>currentYear · bands]
-    TLSTATE --> MAPARB[Map Binding<br/>MapLibre · Cesium]
-    TLSTATE --> FOCUSALIGN[Focus Mode Align]
-    TLSTATE --> STORYALIGN[Story Node Align]
-    TLSTATE --> DIFFSYNC[Diff-First Sync]
-    TLSTATE --> TEL[Telemetry Emit]
-    TLSTATE --> GOV[Governance Check<br/>FAIRCARE temporal rules]
-```
+The Timeline Feature coordinates several interacting systems:
 
----
+## 1. **Temporal Navigation**
+- Users select a time window.  
+- Supports:
+  - Year-level  
+  - Decade-level  
+  - Century-level  
+  - Custom intervals  
+- Provides smooth scrubbing interactions.  
 
-## 🧬 Timeline State Model
+## 2. **Map Synchronization**
+All spatial layers update automatically:
 
-The **Timeline State** exposes:
+- STAC footprints  
+- Story Node footprints  
+- Environmental layers  
+- Archaeological layers  
+- Focus Mode entity highlights  
 
-* `currentYear` — primary year for all temporal expressions
-* `range` — selected time window (for brushing)
-* `mode` — historic | predictive | mixed
-* `playback` — playing | paused
-* `bands` — predictive period definitions (2030–2050, 2050–2100, etc.)
+MapLibre & Cesium views receive deterministic updates from `TimeContext`.
 
-```ts
-export type TimelineState = {
-  currentYear: number;
-  range?: { start: number; end: number };
-  mode: "historic" | "predictive" | "mixed";
-  playback: "playing" | "paused";
-  bands?: { label: string; start: number; end: number; predictive: boolean }[];
-};
-```
+## 3. **Story Node v3 Alignment**
+Timeline determines:
 
----
+- Active Story Nodes  
+- Narrative boundaries  
+- Temporal overlays  
+- Visual Highlights (range bands, markers)
 
-## 🗺️ Temporal Binding to MapLibre & Cesium
+## 4. **Focus Mode v2.5 Integration**
+Timeline modifies:
 
-The Timeline feature controls map rendering via:
+- Which events/entities are highlighted  
+- Which narratives appear in Focus Mode  
+- Which Story Nodes are suggested  
+- How temporal clusters are grouped  
 
-* **style variables** (preferred) in `timeline-style.json`
-* **fallback filter updates** when style vars are unavailable
-
-```mermaid
-flowchart TD
-    YEAR[currentYear] --> VARBIND[Style Variable Setter]
-    VARBIND --> MAPSTYLE[MapLibre Style Expressions]
-    YEAR --> TERRBIND[Cesium Time Materials]
-    TERRBIND --> TERRAIN[3D Terrain Timeline]
-```
-
-### Style Variable Example (`timeline-style.json`)
-
-```json
-{
-  "version": 8,
-  "metadata": { "vars": { "currentYear": 1900 } },
-  "sources": {
-    "settlements": { "type": "vector", "url": "pmtiles://datasets/settlements.pmtiles" }
-  },
-  "layers": [
-    {
-      "id": "settlements-dots",
-      "type": "circle",
-      "source": "settlements",
-      "source-layer": "settlements",
-      "filter": ["all",
-        ["<=", ["get","year_start"], ["var","currentYear"]],
-        [">=", ["coalesce", ["get","year_end"], 9999], ["var","currentYear"]]
-      ]
-    }
-  ]
-}
-```
-
----
-
-## ⚙️ Binding Logic — `timeline.ts`
-
-```ts
-import maplibregl from "maplibre-gl";
-
-export function initTimeline(map: maplibregl.Map, initialYear = 1900) {
-  if ((map as any).setStyleVar) (map as any).setStyleVar("currentYear", initialYear);
-  (map as any).__currentYear = initialYear;
-
-  function setYear(year: number) {
-    (map as any).__currentYear = year;
-    if ((map as any).setStyleVar) {
-      (map as any).setStyleVar("currentYear", year);
-    } else {
-      updateFiltersFallback(map, year);
-    }
-    window.dispatchEvent(
-      new CustomEvent("kfm:timeline:year", { detail: { year } })
-    );
-  }
-
-  function getYear() {
-    if ((map as any).getStyleVar) {
-      return (map as any).getStyleVar("currentYear") as number;
-    }
-    return (map as any).__currentYear ?? initialYear;
-  }
-
-  return { setYear, getYear };
-}
-
-export function updateFiltersFallback(map: maplibregl.Map, year: number) {
-  (map as any).__currentYear = year;
-  const layers = ["settlements-dots"];
-  for (const id of layers) {
-    const filter = [
-      "all",
-      ["<=", ["get", "year_start"], year],
-      [">=", ["coalesce", ["get", "year_end"], 9999], year]
-    ];
-    map.setFilter(id, filter as any);
-  }
-}
-```
-
----
-
-## 🎚 Slider UI — `slider.tsx`
-
-```tsx
-import React from "react";
-
-export function YearSlider({
-  year,
-  setYear,
-  min = 1700,
-  max = 2100
-}: {
-  year: number;
-  setYear: (y: number) => void;
-  min?: number;
-  max?: number;
-}) {
-  return (
-    <section aria-labelledby="timeline-heading" className="timeline-slider">
-      <h2 id="timeline-heading">Interactive Timeline</h2>
-      <label>
-        <span className="sr-only">Year</span>
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={year}
-          onChange={(e) => setYear(parseInt(e.target.value, 10))}
-          aria-valuenow={year}
-          aria-valuemin={min}
-          aria-valuemax={max}
-          aria-label="Timeline year"
-        />
-      </label>
-      <p aria-live="polite">Year: {year}</p>
-    </section>
-  );
-}
-```
-
----
-
-## 🔁 Focus Mode & Story Node Synchronization
-
-```mermaid
-flowchart TD
-    FSELECT[Focus Event Selection] --> DATE[Extract Event Date]
-    DATE --> SY[Set Year]
-    SY --> MAPSYNC[Map Temporal Filter]
-    SY --> STORYSYNC[Story Node Focus]
-```
-
----
-
-## 🔐 FAIR+CARE Temporal Governance
-
-Temporal governance must:
-
-* mask or generalize sensitive periods
-* make explicit when narratives cross trauma-heavy eras
-* clearly label predictive vs observed periods
-
-```mermaid
-flowchart TD
-    TSTATE[Timeline State] --> TGOV[Temporal Governance Rules]
-    TGOV --> TVIS[Timeline Visualization]
-```
-
-Governance events logged to:
-
-```text
-../../../docs/reports/audit/web-timeline-governance-ledger.json
-```
-
----
-
-## ♿ Accessibility Architecture (WCAG 2.1 AA)
-
+## 5. **Governance & CARE Controls**
 Timeline must:
 
-* support keyboard interaction (`Tab`, arrows, Home/End, PgUp/PgDn)
-* announce year changes via live regions
-* use high-contrast handles and rails
-* respect `prefers-reduced-motion`
-
-```mermaid
-flowchart TD
-    TLSTATE[Timeline State] --> A11Y[a11y Decorator]
-    A11Y --> TUI[Accessible Timeline UI]
-```
+- Respect CARE-sensitive temporal ranges  
+- Show warnings when data is restricted  
+- Provide provenance metadata for datasets bound to time  
 
 ---
 
-## 📡 Telemetry & Sustainability
+# ♿ Accessibility Requirements (WCAG 2.1 AA)
 
-Telemetry recorded:
+Timeline UI MUST:
 
-* `timeline_year_change`
-* number of layers updated
-* energy estimate for scrubbing
-* frame rate under scrubbing
+- Support full keyboard navigation  
+- Provide visible focus states  
+- Offer high-contrast, accessible color ramps  
+- Respect `prefers-reduced-motion`  
+- Offer textual descriptions for Story Node markers  
+- Expose ARIA labels for handles + temporal controls  
 
-All exported to:
-
-```text
-../../../releases/v10.3.2/focus-telemetry.json
-```
+Accessibility regressions block CI merges.
 
 ---
 
-## ⚙️ CI / Validation Requirements
+# 🔐 Governance Integration
 
-| Layer      | Validator                |
-| ---------- | ------------------------ |
-| Docs       | `docs-lint.yml`          |
-| A11y       | `accessibility_scan.yml` |
-| Governance | `faircare-validate.yml`  |
-| Telemetry  | `telemetry-export.yml`   |
-| Types      | TS strict mode           |
-| Security   | CodeQL + Trivy           |
+Timeline components must surface:
 
----
+- CARE labels for sensitive narratives  
+- Provenance for historical ranges  
+- Warnings for culturally sensitive periods  
+- Masks or reduced granularity when required  
 
-## 🧾 Example Timeline Feature Metadata Record
+If temporal data is restricted:
 
-```json
-{
-  "id": "web_timeline_feature_v10.3.2",
-  "min_year": 1700,
-  "max_year": 2100,
-  "a11y_score": 98.9,
-  "care_compliance": "certified",
-  "telemetry_synced": true,
-  "energy_profile_wh": 0.31,
-  "timestamp": "2025-11-14T22:01:00Z"
-}
-```
+- H3 masking rules may apply to spatial overlays  
+- Timeline defaults to “generalized” bands  
+- UI reveals the reason (CARE notice)
 
 ---
 
-## 🕰️ Version History
+# 📈 Telemetry Responsibilities
 
-| Version | Date       | Summary                                                                                                                                                    |
-| ------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| v10.3.2 | 2025-11-14 | Deep-architecture rebuild: MapLibre/Cesium time-binding, Focus Mode and Story Node alignment, predictive-band support, governance + telemetry integration. |
-| v9.7.0  | 2025-11-08 | Initial KFM-ready MapLibre timeline playbook.                                                                                                              |
+Timeline generates telemetry for:
+
+- `"timeline:range-change"`  
+- `"timeline:granularity-change"`  
+- `"timeline:focus-sync"`  
+- `"timeline:storynode-highlight"`  
+- `"timeline:drag-start"` / `"drag-end"`  
+
+Telemetry must:
+
+- Be non-PII  
+- Follow schemas in telemetry config  
+- Record sustainability metrics when expensive operations occur  
+- Include governance metadata when masking occurs
+
+Telemetry flows to:
+
+`releases/<version>/focus-telemetry.json`
+
+---
+
+# 🧪 Testing Requirements
+
+Timeline Feature MUST include:
+
+- Unit tests (`TimelineBar`, `Markers`, accessibility helpers)  
+- Integration tests (timeline → map → focus sync)  
+- Schema tests for temporal metadata  
+- Governance tests for sensitive period handling  
+- A11y tests (keyboard, reduced-motion, labels)  
+- Telemetry correctness tests  
+- State propagation tests (TimeContext interactions)
+
+Test directories:
+
+~~~text
+tests/unit/web/features/timeline/**
+tests/integration/web/features/timeline/**
+tests/e2e/web/features/timeline/**
+~~~
+
+---
+
+# 🧠 Pipeline Flow (Conceptual)
+
+~~~text
+User Adjusts Timeline Handle
+        │
+        ▼
+useTimelineFeature.ts
+        │
+        ▼
+timelinePipeline.ts
+        │
+        ├──► MapLibre layers filtered
+        ├──► Cesium time slices updated
+        ├──► Story Node v3 list filtered
+        └──► Focus Mode narrative recalculated
+        │
+        ▼
+Telemetry + governance + provenance recording
+~~~
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Full rewrite for KFM-MDP v10.4; added governance, A11y, STAC, Story Node, Focus Mode sync |
+| v10.3.2 | 2025-11-14 | Improved granularity logic + temporal sync |
+| v10.3.1 | 2025-11-13 | Initial timeline feature overview |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Timeline Feature Architecture**
-🕰️ Temporal Intelligence · 🌐 FAIR+CARE Governance · 🔗 Provenance-Aware Navigation · 🧠 AI-Synchronized Context
-© 2025 Kansas Frontier Matrix — MIT License
-
-[Back to Web Features](../README.md)
+© 2025 Kansas Frontier Matrix — MIT License  
+FAIR+CARE Certified · Public Document · Version-Pinned  
+Validated under MCP-DL v6.3 and KFM-MDP v10.4  
 
 </div>
