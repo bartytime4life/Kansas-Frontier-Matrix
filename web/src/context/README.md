@@ -1,341 +1,327 @@
 ---
-title: "🧩 Kansas Frontier Matrix — Web Context & State Management Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧠 Kansas Frontier Matrix — Web Context System Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/context/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-context-v2.json"
+sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-context-readme-v1.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Overview"
+intent: "web-context-overview"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk (logic-only)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+provenance_chain:
+  - "web/src/context/README.md@v10.3.2"
+  - "web/src/context/README.md@v10.3.1"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "SoftwareSourceCode"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../schemas/json/web-context-readme.schema.json"
+shape_schema_ref: "../../../schemas/shacl/web-context-readme-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-context-readme-v10.4.0"
+semantic_document_id: "kfm-doc-web-context-readme"
+event_source_id: "ledger:web/src/context/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "summaries"
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "United States / Kansas"
+classification: "Public Document"
+role: "overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review each release"
+sunset_policy: "Superseded upon next state-layer overhaul"
 ---
 
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — Web Context & State Management Architecture**  
+# 🧠 **Kansas Frontier Matrix — Web Context System Overview**  
 `web/src/context/README.md`
 
 **Purpose:**  
-Define the complete **deep-architecture specification** of the global context and state management system powering the Kansas Frontier Matrix (KFM) v10.3.2 web platform.  
-This subsystem synchronizes AI explainability, FAIR+CARE governance, telemetry, provenance, accessibility tokens, sustainability metrics, and cross-component state across the entire front-end environment.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Context_Layer-orange)]()
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+Document the **state management layer** of the Kansas Frontier Matrix Web Platform — including  
+the contexts that manage time, focus, governance, accessibility, theming, and spatial/narrative  
+synchronization across the entire frontend application.  
+React Contexts in this directory serve as the *global, ethical, and deterministic state backbone*  
+for all features, components, and pipelines.
 
 </div>
 
 ---
 
-# 📘 Executive Summary
+# 📘 Overview
 
-The **Context Layer** forms the **ethical, semantic, and operational brainstem** of the entire KFM front-end.  
-It centralizes:
+Contexts in `web/src/context/` provide:
 
-- Global Focus Mode v2.5 AI reasoning state  
-- FAIR+CARE governance rules & decision engines  
-- Provenance & lineage chains (PROV-O, STAC, DCAT)  
-- Sustainability + performance telemetry (ISO 50001)  
-- A11y preferences, high-contrast themes, reduced motion  
-- Temporal & spatial sync between Map, Timeline, Focus Mode, and Story Nodes  
-- Application-wide reactive event bus  
+- **Global state containers** shared across the Web Platform  
+- Deterministic, typed state transitions  
+- Mandatory governance (CARE/provenance) checks  
+- Accessibility-first system settings  
+- Synchronization for:
+  - Timeline → Map  
+  - Focus Mode → Story Nodes  
+  - Governance → UI visibility  
+  - Theme → Design system tokens  
+- Centralized, predictable state orchestration  
+- Telemetry-aware updates (non-PII)  
 
-The architecture ensures **deterministic, ethical, inclusive, and reproducible** front-end behavior.
+Contexts must remain:
+
+- Pure  
+- Type-safe  
+- Predictable  
+- Immutable state where possible  
+- FAIR+CARE compliant  
+- A11y aligned  
+- Non-speculative  
+- Free from UI logic  
 
 ---
 
-# 🗂️ Directory Layout (Authoritative v10.3.2)
+# 🧱 Directory Structure
 
-```text
+~~~text
 web/src/context/
-├── README.md
-├── AppContext.tsx
-├── FocusModeContext.tsx
-├── GovernanceContext.tsx
-├── TelemetryContext.tsx
-├── ThemeContext.tsx
-└── metadata.json
-```
-
-Each context operates within the **Context Orchestration Plane**.
+├── TimeContext.tsx             # Controls global timeline range + fuzzy intervals
+├── FocusContext.tsx            # Entity in focus + narrative bundle + geometry
+├── ThemeContext.tsx            # Light/dark + high-contrast-aware theme state
+├── A11yContext.tsx             # Reduced-motion, high-contrast, large-text modes
+├── GovernanceContext.tsx       # CARE, provenance, sovereignty flags + warnings
+├── MapContext.tsx              # MapLibre + Cesium viewport + camera state
+└── UIContext.tsx               # UI toggles (sidebars, panels, modals)
+~~~
 
 ---
 
-# 🧩 Global Context Orchestration Architecture
+# 🧩 Context Responsibilities
 
-```mermaid
-flowchart TD
-    USER[User Interaction] --> APP[AppContext<br/>global runtime]
-    APP --> FOCUS[FocusModeContext<br/>AI reasoning · CARE flags]
-    FOCUS --> GOV[GovernanceContext<br/>FAIRCARE · provenance]
-    GOV --> TEL[TelemetryContext<br/>energy · ethics · a11y]
-    TEL --> THEME[ThemeContext<br/>contrast · motion · tokens]
-    THEME --> UI[UI Components<br/>layout · cards · maps · focus]
-    UI --> GOVSYNC[Ledger Sync<br/>governance ledgers]
-```
+## ⏱️ **TimeContext**
+Responsible for:
 
----
+- Current timeline window  
+- OWL-Time interval normalization  
+- Granularity (year/decade/century)  
+- Temporal filters for:
+  - Story Nodes  
+  - STAC Items  
+  - Map layers  
+  - Focus Mode ranges  
 
-# 🧬 Context Deep Specifications
+Guarantees:
 
-## 1️⃣ AppContext — Root Runtime & Ethical Backbone
-
-### Responsibilities
-- Bootstraps all other contexts  
-- Normalizes user roles + permissions  
-- Provides the app-wide FAIR+CARE runtime environment  
-- Exposes global event bus for:
-  - navigation  
-  - dataset activation  
-  - focus/temporal updates  
-  - governance signals  
-
-```mermaid
-flowchart LR
-    INIT[Initialization] --> ROLE[Role Resolver]
-    ROLE --> STATE[Runtime State]
-    STATE --> CHILD[All Nested Contexts]
-```
+- No inconsistent temporal state  
+- Fuzzy/uncertain dates handled ethically  
+- Telemetry events: `"timeline:update"`  
 
 ---
 
-## 2️⃣ FocusModeContext — Explainable AI State Engine
+## 🎯 **FocusContext**
+Responsible for:
 
-### Responsibilities
-- Stores Focus Mode v2.5 results  
-- Tracks:
-  - narrative  
-  - explainability tokens  
-  - provenance bundles  
-  - ethics_flags  
-  - care_labels  
-  - subgraph metadata  
+- Focus Mode v2.5 state  
+- Selected entity + type  
+- Narrative metadata (AI-labeled)  
+- Graph neighbors  
+- Story Node suggestions  
+- Map highlight geometry  
 
-- Responsible for:
-  - temporal alignment  
-  - spatial highlight triggers  
-  - CARE-based content filtering  
+Governance:
 
-```mermaid
-flowchart TD
-    FREQ[Focus Query Event] --> FETCH[Focus Payload]
-    FETCH --> XAI[Explainability State]
-    FETCH --> CARE[CARE Filter]
-    XAI --> SYNC[Map · Timeline · Drawer Sync]
-```
+- CARE labeling  
+- Provenance chips  
+- Sovereignty-safe footprint handling  
+
+Telemetry: `"focus:activate"`, `"focus:relation-select"`
 
 ---
 
-## 3️⃣ GovernanceContext — CARE, Provenance & Ledger Sync
-
-Manages:
-
-- CARE enforcement state  
-- License + rights metadata  
-- Sovereignty rules  
-- Provenance references  
-- Ledger submission  
-
-### Governance Flow
-
-```mermaid
-flowchart LR
-    META[Metadata + CARE Labels] --> DEC[CARE Decision Engine]
-    DEC --> OK[Allow]
-    DEC --> RED[Redact]
-    DEC --> BLK[Block]
-    OK --> LEDGER[Ledger Sync]
-    RED --> LEDGER
-    BLK --> LEDGER
-```
-
-Governance ledger:
-
-```
-../../../docs/reports/audit/web-context-governance-ledger.json
-```
-
----
-
-## 4️⃣ TelemetryContext — Sustainability + Performance Observability
-
-Tracks:
-
-- render time  
-- CPU/GPU load approximation  
-- energy estimate (Wh)  
-- carbon gCO₂e  
-- CARE masking events  
-- A11y compliance  
-- Focus Mode usage metrics  
-
-```mermaid
-flowchart TD
-    EVT[Context Events] --> METRIC[Metric Collector]
-    METRIC --> EXPORT[Telemetry Sink]
-```
-
-Exports to:
-
-```
-../../../releases/v10.3.2/focus-telemetry.json
-```
-
----
-
-## 5️⃣ ThemeContext — Accessibility & Design Token Authority
-
+## 🎨 **ThemeContext**
 Controls:
 
-- high contrast  
-- reduced motion  
-- colorblind-safe tokens  
-- typography scaling  
-- map-legend colors  
-- CARE symbol mappings  
+- Light/dark modes  
+- High-contrast variants  
+- Design tokens for color/spacing/typography  
+- Tailwind variable hydration  
 
-```mermaid
-flowchart LR
-    TOK[Design Tokens] --> THEME
-    THEME --> UI[UI Components]
-    THEME --> TEL_A11Y[A11y Telemetry]
-```
+A11y:
+
+- Must respect `prefers-color-scheme`  
+- Must ensure WCAG AA contrast  
 
 ---
 
-# 🌐 Cross-Context Synchronization Architecture
+## ♿ **A11yContext**
+Tracks:
 
-Contexts collectively coordinate:
+- Reduced-motion  
+- High-contrast preference  
+- Large-text mode  
+- Screen-reader flags  
 
-- story-node highlighting  
-- timeline centering  
-- map layer filtering  
-- Focus highlight paths  
-- drawer display updates  
+Context triggers A11y-safe component updates.
 
-```mermaid
-flowchart TD
-    Y[currentYear] --> FCTX[FocusModeContext]
-    FCTX --> MCTX[GovernanceContext]
-    MCTX --> SCTX[TelemetryContext]
-    SCTX --> TCTX[ThemeContext]
-```
+Telemetry: `"a11y:preference-change"`
 
 ---
 
-# 🔍 Provenance Integration (PROV-O + STAC + DCAT)
+## 🛡 **GovernanceContext**
+Responsible for:
 
-Each context surfaces and maintains provenance:
+- CARE metadata  
+- Sovereignty rules  
+- Masking flags (H3 generalization)  
+- Provenance display state  
+- AI generation warnings  
+- Data classification (Public / Restricted / Indigenous-controlled)
 
-- dataset lineage  
-- STAC item/collection metadata  
-- checksum registry links  
-- source & temporal coverage  
-- Story Node relationships  
+GovernanceContext MUST:
 
-```mermaid
-flowchart LR
-    DS[Dataset] --> STAC
-    STAC --> PROV[Provenance State]
-    PROV --> UI_CON[Contexts Rendering Provenance]
-```
+- Never expose restricted coordinates  
+- Always propagate CARE flags to UI components  
+- Block unsafe render flows  
 
----
-
-# ♿ Accessibility Architecture (WCAG 2.1 AA)
-
-The context layer:
-
-- tracks user preferences  
-- enforces color contrast  
-- preserves motion-safety  
-- injects ARIA token guidance  
-- logs A11y telemetry  
-
-```mermaid
-flowchart TD
-    PREF[User Prefs] --> A11Y[A11y State]
-    A11Y --> UI[Accessible UI]
-    UI --> A11YTEL[A11y Telemetry]
-```
+Telemetry: `"governance:warning-shown"`
 
 ---
 
-# 📡 Sustainability & Energy Modeling (ISO 50001)
+## 🗺️ **MapContext**
+Stores:
 
-Context-layer energy tracking computes:
+- MapLibre viewport  
+- Cesium camera position/time slice  
+- Active layers  
+- Highlight geometries  
+- Map interaction state  
 
-- `session_energy_wh`  
-- `interaction_energy_wh`  
-- carbon estimate  
-- GPU/CPU render deltas  
+Used by:
 
-Telemetry exported via:
+- useMap  
+- focusPipeline  
+- storyPipeline  
+- stacPipeline  
 
-```
-../../../releases/v10.3.2/focus-telemetry.json
-```
-
----
-
-# ⚙️ CI / Validation Requirements
-
-| Category | Validator |
-|----------|-----------|
-| Governance | faircare-validate.yml |
-| Accessibility | accessibility_scan.yml |
-| Telemetry | telemetry-export.yml |
-| Documentation | docs-lint.yml |
-| Schema | metadata.json validation |
-| Security | CodeQL + Trivy |
-
-Any failure → merge blocked.
+Telemetry: `"map:pan"`, `"map:zoom"`, `"map:layer-toggle"`
 
 ---
 
-# 🧾 Example Context Metadata Record
+## 🖥️ **UIContext**
+Controls:
 
-```json
-{
-  "id": "web_context_state_v10.3.2",
-  "contexts": [
-    "AppContext",
-    "FocusModeContext",
-    "GovernanceContext",
-    "TelemetryContext",
-    "ThemeContext"
-  ],
-  "a11y_score": 99.7,
-  "sustainability_score": 98.8,
-  "care_events": 17,
-  "checksum_verified": true,
-  "telemetry_synced": true,
-  "timestamp": "2025-11-14T21:31:00Z"
-}
-```
+- Sidebar open/close  
+- Drawer states  
+- Modal visibility  
+- Toolbars  
+- Panel layouts (e.g., SplitView)  
+
+Ensures consistent UI transitions and predictable accessibility behavior.
 
 ---
 
-# 🕰️ Version History
+# 🔐 FAIR+CARE & Governance Integration
 
-| Version | Date | Summary |
-|--------|--------|---------|
-| v10.3.2 | 2025-11-14 | Full deep-architecture rebuild: CARE engine, governance pipeline, telemetry system, and cross-context synchronization. |
-| v9.7.0 | 2025-11-05 | Previous version. |
+Every context must:
+
+- Enforce CARE flags  
+- Respect sovereignty restrictions  
+- Annotate AI-generated narrative sections  
+- Prevent improper spatial or narrative exposure  
+- Emit governance metadata for downstream UI layers  
+
+Governance failures **block merges**.
+
+---
+
+# ♿ Accessibility Requirements
+
+Contexts must:
+
+- Respect system-level preferences  
+- Guarantee predictable keyboard focus paths  
+- Centralize accessibility preferences for all components  
+- Not break screen-reader interactions  
+
+A11y regressions fail CI.
+
+---
+
+# 📈 Telemetry Responsibilities
+
+Each context must generate telemetry when:
+
+- Global state changes  
+- User interacts with time/focus/map/theme  
+- Governance warnings are shown  
+- A11y preferences updated  
+
+Telemetry rules:
+
+- Must follow schema  
+- Must be non-PII  
+- Must carry no sensitive coordinates  
+- Stored in `focus-telemetry.json`
+
+---
+
+# 🧪 Testing Requirements
+
+Each context requires:
+
+- Unit tests for state transitions  
+- Integration tests for cross-context sync  
+- Telemetry correctness tests  
+- Governance compliance  
+- A11y preference propagation tests  
+- Map/time/focus consistency tests  
+
+Location:
+
+~~~text
+tests/unit/web/context/**
+tests/integration/web/context/**
+~~~
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Fully rewritten for KFM-MDP v10.4; added governance, A11y, telemetry, Focus Mode v2.5 alignment |
+| v10.3.2 | 2025-11-14 | Added sovereignty + provenance integration |
+| v10.3.1 | 2025-11-13 | Initial context layer documentation |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Context Architecture**  
-🧩 Ethical State Management · 🧠 AI Reasoning Sync · 🌐 FAIR+CARE · 🔗 Provenance Integrity  
 © 2025 Kansas Frontier Matrix — MIT License  
-
-[Back to Web Source](../README.md)
+Validated under MCP-DL v6.3 and KFM-MDP v10.4  
+FAIR+CARE Certified · Public Document · Version-Pinned  
 
 </div>
