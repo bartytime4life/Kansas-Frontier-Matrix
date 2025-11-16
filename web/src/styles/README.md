@@ -1,346 +1,353 @@
 ---
-title: "🎨 Kansas Frontier Matrix — Web Styles Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🎨 Kansas Frontier Matrix — Web Styles & Design System Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/styles/README.md"
-version: "v10.4.2"
+version: "v10.4.0"
 last_updated: "2025-11-15"
-review_cycle: "Quarterly / Autonomous · FAIR+CARE Council Oversight"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.4.2/manifest.zip"
-telemetry_ref: "../../../releases/v10.4.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-styles-v1.json"
+sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-styles-readme-v1.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v10.4"
 status: "Active / Enforced"
-doc_kind: "Architecture"
-intent: "web-styles"
-fair_category: "F1-A1-I1"
+doc_kind: "Overview"
+intent: "web-styles-overview"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk (style-only)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+provenance_chain:
+  - "web/src/styles/README.md@v10.3.2"
+  - "web/src/styles/README.md@v10.3.1"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "WebPageElement"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../schemas/json/web-styles-readme.schema.json"
+shape_schema_ref: "../../../schemas/shacl/web-styles-readme-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-styles-readme-v10.4.0"
+semantic_document_id: "kfm-doc-web-styles-readme"
+event_source_id: "ledger:web/src/styles/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "a11y-adaptations"
+  - "semantic-highlighting"
+ai_transform_prohibited:
+  - "summaries"
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public Document"
+role: "overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review every 12 months"
+sunset_policy: "Superseded upon next style-system update"
 ---
 
 <div align="center">
 
-# 🎨 **Kansas Frontier Matrix — Web Styles Architecture**  
+# 🎨 **Kansas Frontier Matrix — Web Styles & Design System Overview**  
 `web/src/styles/README.md`
 
 **Purpose:**  
-Define the global styling system for the Kansas Frontier Matrix (KFM) web client, including design tokens,
-themes, mixins, map styles, accessibility rules, and Focus Mode visuals. This keeps all frontend components
-consistent, reproducible, FAIR+CARE-aligned, and Focus Mode–aware.
-
-Documentation standard: MCP v6.3  
-License: MIT  
-FAIR+CARE status: Active / Enforced  
+Document the **design system architecture** for the Kansas Frontier Matrix Web Platform—defining  
+tokens, themes, maps styling, accessibility layers, layout rules, and governance-aware visual  
+constraints that ensure a consistent, ethical, accessible, and FAIR+CARE-aligned UI.
 
 </div>
 
 ---
 
-## 📚 Overview
+# 📘 Overview
 
-The `web/src/styles` module is the **single source of truth** for styling in the KFM web application.
+The **Styles Layer** provides:
 
-It standardizes:
+- Design tokens (color, spacing, typography, radii, shadows)  
+- Light/dark theme configuration  
+- Accessibility-first color choices  
+- CARE-compliant color semantics (sovereignty, masking, provenance)  
+- MapLibre styling rules  
+- Layout spacing & grid rules  
+- Component-level visual patterns  
+- WCAG 2.1 AA guaranteed palettes  
+- Deterministic theming utilities integrated with Tailwind  
 
-- Design tokens (colors, spacing, typography, radii, shadows)  
-- Light/dark themes and future variants  
-- Shared mixins (buttons, layout primitives, Focus Mode effects)  
-- MapLibre-specific styling (basemap and legend)  
-- Accessibility guarantees (WCAG 2.1 AA)  
-- Visual language for Story Nodes and Focus Mode
-
-All style changes must pass CI linting and validation before merge.
-
----
-
-## 🧩 Directory Layout
-
-    web/src/styles/
-    ├── tokens/                 # Design tokens: colors, spacing, typography, radii, shadows
-    │   ├── color.tokens.js
-    │   ├── spacing.tokens.js
-    │   └── typography.tokens.js
-    ├── themes/                 # Theme entrypoints (light, dark, future variants)
-    │   ├── light.css
-    │   └── dark.css
-    ├── mixins/                 # Shared CSS utilities and component patterns
-    │   ├── focus-mode.css
-    │   ├── buttons.css
-    │   └── layout.css
-    ├── maps/                   # MapLibre-specific style modules
-    │   ├── basemap.css
-    │   └── legend.css
-    └── index.css               # Master global stylesheet imported by React entrypoint
-
-Any new global styling artifact must live under `web/src/styles/` and be referenced through `index.css` or
-a theme entrypoint, not imported ad hoc from components.
+This layer **must be stable**, **machine-extractable**, and **fully testable**, with no inline  
+magic or ad-hoc styles across the codebase.
 
 ---
 
-## 🏗 Style System Architecture
+# 🧱 Directory Structure
 
-KFM styling is layered:
-
-1. **Tokens (`tokens/`)**  
-   Implementation-agnostic values for color, spacing, typography, radii, and shadows.
-
-2. **Themes (`themes/`)**  
-   Map tokens to concrete CSS variables (e.g. `--kfm-bg`, `--kfm-text`, `--kfm-primary-strong`) per
-   theme (light, dark, high-contrast, etc.).
-
-3. **Mixins (`mixins/`)**  
-   Reusable CSS utility classes and component patterns (buttons, layout shells, Focus Mode visuals).
-
-4. **Map Styles (`maps/`)**  
-   Styles targeted at MapLibre, using the same token set so the map matches the UI.
-
-5. **Global Entry (`index.css`)**  
-   Root stylesheet that imports themes, mixins, and any Tailwind layers; defines base element styles.
-
-This architecture yields testable, modular, and themed styling with clear responsibilities.
-
----
-
-## 🎨 Design Tokens (`tokens/`)
-
-Tokens are plain JS modules plus CSS variable bindings. They are semantically named and theme-agnostic.
-
-### Color Tokens (`color.tokens.js`)
-
-Semantic prefixes:
-
-- `kfm-primary-*` — primary UI actions and highlights  
-- `kfm-secondary-*` — secondary actions and subtle accents  
-- `kfm-neutral-*` — backgrounds, borders, base text  
-- `kfm-status-*` — success/warn/error/info states  
-- `kfm-map-*` — map land, water, boundaries, overlays  
-- `kfm-focus-*` — Focus Mode halos, outlines, pulses  
-- `kfm-care-*` — markers and overlays for CARE-sensitive entities  
-
-Each token is documented with:
-
-- Intended usage (e.g. “primary button fill”, “timeline active segment”)  
-- Contrasts for light/dark themes  
-- Any mapping to STAC/DCAT layer semantics (for map colors)
-
-### Spacing Tokens (`spacing.tokens.js`)
-
-A simple, consistent scale:
-
-- `kfm-space-0` = 0px  
-- `kfm-space-1` = 4px  
-- `kfm-space-2` = 8px  
-- `kfm-space-3` = 12px  
-- `kfm-space-4` = 16px  
-- …and so on
-
-Used for paddings, margins, gutters, and icon+label spacing; no ad-hoc pixel values in components.
-
-### Typography Tokens (`typography.tokens.js`)
-
-Define:
-
-- Font families: `kfm-font-sans`, `kfm-font-serif`, `kfm-font-mono`  
-- Text styles: `kfm-text-xs`…`kfm-text-2xl` (font-size, line-height, weight)  
-- Heading styles: `kfm-heading-sm`, `kfm-heading-md`, `kfm-heading-lg`  
-
-Base narrative text should be at least 16px (`kfm-text-md`) in sidebars and story-node bodies.
+~~~text
+web/src/styles/
+├── tokens/                     # Base design primitives for KFM UI
+│   ├── color.tokens.ts         # WCAG AA palette + CARE colors
+│   ├── spacing.tokens.ts       # Spacing scale (4px/8px grid)
+│   ├── typography.tokens.ts    # Type scale, font weights, line-height rules
+│   ├── radii.tokens.ts         # Border radius scale
+│   ├── shadow.tokens.ts        # Shadow elevation system
+│   └── zindex.tokens.ts        # Z-layer mapping (map > modal > drawer > HUD)
+│
+├── themes/                     # Light/dark mode themes
+│   ├── light.ts                # Light mode CSS variables
+│   └── dark.ts                 # Dark mode CSS variables
+│
+├── mixins/                     # Reusable patterns for CSS/Tailwind
+│   ├── focus-ring.ts           # Visible focus indicators (A11y)
+│   ├── card.ts                 # Standardized card layout
+│   ├── panel.ts                # Panel shell mixins
+│   └── transitions.ts          # Reduced-motion-safe transitions
+│
+├── maps/                       # MapLibre & Cesium styles
+│   ├── maplibre.css            # Map UI, controls, popup styling
+│   ├── layers.css              # Layer coloring, outlines, highlights
+│   └── legend.css              # Accessible legend color ramps
+│
+└── globals.css                 # Base resets, Tailwind layers, variable mounts
+~~~
 
 ---
 
-## 🌗 Themes (`themes/`)
+# 🎨 Design System Philosophy
 
-Themes resolve tokens into CSS variables.
+The design system is based on:
 
-Example pattern:
+- **Functional consistency** across all features  
+- **Accessibility-first design** (WCAG 2.1 AA)  
+- **Ethical visualization**  
+- **Semantic meaning through color**  
+- **Predictable spacing + grids**  
+- **Dark/light parity**  
+- **Governance-aware theming**  
 
-    :root[data-theme="light"] {
-      --kfm-bg: #ffffff;
-      --kfm-fg: #111827;
-      --kfm-primary-strong: #2563eb;
-      --kfm-primary-soft: #dbeafe;
-      /* … */
-    }
-
-    :root[data-theme="dark"] {
-      --kfm-bg: #020617;
-      --kfm-fg: #e5e7eb;
-      --kfm-primary-strong: #60a5fa;
-      --kfm-primary-soft: #0b1120;
-      /* … */
-    }
-
-Guidelines:
-
-- Theme is switched via `data-theme="light|dark|..."` on `<html>` or `<body>`.  
-- Components must only reference CSS variables, not raw hex values.  
-- Any new theme must define the full base variable set (`--kfm-bg`, `--kfm-fg`, `--kfm-primary-*`,
-  `--kfm-neutral-*`, etc.) and be contrast-tested.
+Color and shape are not merely aesthetic—they convey governance, focus, and data-quality meaning.
 
 ---
 
-## 🧱 Mixins & Utilities (`mixins/`)
+# 🎨 Tokens
 
-### Buttons (`mixins/buttons.css`)
+Tokens define the **visual language** of the platform.
 
-Provides canonical button classes:
+## 🎨 Color Tokens (`color.tokens.ts`)
 
-- `.kfm-btn-primary`  
-- `.kfm-btn-secondary`  
-- `.kfm-btn-ghost`  
-- `.kfm-btn-icon`
+Includes:
 
-Each defines:
+- Primary + secondary brand palette  
+- High-contrast variants  
+- CARE colors:
+  - Public  
+  - Low-Risk  
+  - Restricted  
+  - Sovereignty-Controlled  
+  - Masked (H3)  
+- Map highlight colors  
+- A11y-safe gradients  
+- Semantic statuses (error, warning, info)
 
-- Background/border/text colors via CSS variables  
-- Hover / active / focus-visible states  
-- Disabled state (reduced opacity, no pointer events)  
+All tokens must:
 
-Components should use or extend these button classes rather than redefining their own.
-
-### Layout (`mixins/layout.css`)
-
-Defines core layout primitives:
-
-- `.kfm-shell` — app shell container (header + main + sidebar layouts)  
-- `.kfm-sidebar` — side panels (Focus Mode, filters, story nodes)  
-- `.kfm-main` — primary map/timeline content area  
-
-Layout utilities must:
-
-- Keep timeline and map visible and synchronized  
-- Support responsive breakpoints (mobile ↔ desktop)  
-- Avoid overlapping critical map regions (focus halos, legends)
-
-### Focus Mode (`mixins/focus-mode.css`)
-
-Focus Mode visuals:
-
-- `.kfm-focus-ring` — keyboard focus outline for components  
-- `.kfm-focus-halo` — subtle glow around focused entities (cards, markers, timeline items)  
-- `.kfm-focus-related` — lighter emphasis for related nodes  
-- `.kfm-focus-ai-explanation` — container for AI-generated summaries or insights  
-
-Animations must respect `prefers-reduced-motion`.
+- Meet 4.5:1 minimum contrast  
+- Work in dark/light themes  
+- Avoid cultural misappropriation  
+- Be accessible for color-blind users  
 
 ---
 
-## 🗺 Map Styles (`maps/`)
+## 🔡 Typography Tokens (`typography.tokens.ts`)
 
-Map styles align MapLibre with UI tokens to avoid visual dissonance.
+Defines:
 
-### Basemap (`maps/basemap.css`)
+- Heading scale  
+- Body text size  
+- Line-height  
+- Letter spacing  
+- Narrative text presets for Story Nodes  
 
-Controls:
+Requirements:
 
-- Land/water colors via `--kfm-map-land`, `--kfm-map-water`  
-- Boundary colors (counties, reservations, treaty areas)  
-- Road and rail hues  
-- Label contrast and legibility in both themes
-
-### Legend (`maps/legend.css`)
-
-Legend styling:
-
-- `.kfm-legend` — container  
-- `.kfm-legend-item` — row for a single symbol plus label  
-- `.kfm-legend-swatch` — symbol sample  
-
-Legends should:
-
-- Be keyboard navigable  
-- Use consistent spacing and typography tokens  
-- Display source metadata when appropriate (dataset name, temporal extent, license icon)
+- Maintain readable text size across DPI  
+- Support long historical names/labels  
+- Provide large text mode for A11y  
 
 ---
 
-## 🧠 Story Nodes & Focus Mode Integration
+## 📏 Spacing Tokens (`spacing.tokens.ts`)
 
-Story Nodes represent narrative units with spacetime grounding.
-
-Styling must:
-
-- Render story nodes as cards with:
-
-  - Title using `kfm-heading-md`  
-  - Summary text (`kfm-text-sm` or `kfm-text-md`)  
-  - Time range and place labels as a metadata row  
-  - Relations as chip-style tags
-
-- Use `.kfm-focus-halo` and `.kfm-focus-ring` when a story node is the active Focus entity  
-- Clearly separate:
-
-  - Archival quotes (blockquote styling)  
-  - AI summaries (`.kfm-focus-ai-explanation`, distinct background and icon)  
-
-Screen readers distinguish AI-generated content vs primary sources through component ARIA attributes;
-styles cannot rely solely on color.
+- 4px modular scale  
+- Consistent vertical rhythm  
+- Accessible target sizes (min 44×44px)  
 
 ---
 
-## ♿ Accessibility & FAIR+CARE Styling
+## 🧩 Shape & Layout Tokens
 
-Accessibility constraints:
+### Radii (`radii.tokens.ts`)
+- Soft round corners for cards/panels  
+- Accessible tap/drag zones  
 
-- Minimum contrast ratio 4.5:1 in both light and dark themes for body text  
-- Focus outlines must be visible independent of color perception (width and pattern)  
-- `prefers-reduced-motion: reduce` disables non-essential animations (Focus pulses become static)  
-- Interactive targets (buttons, toggles) aim for at least 44×44 px
+### Shadows (`shadow.tokens.ts`)
+- Shallow elevation scheme  
+- No excessive parallax  
+- Reduced-motion friendly  
 
-FAIR+CARE considerations:
+### Z-index (`zindex.tokens.ts`)
+Defines:
 
-- CARE-sensitive entities (e.g., sacred sites) are styled non-sensationally:
+- Map  
+- HUD  
+- Modal  
+- Governance drawer  
+- Tooltips  
 
-  - Neutral color palettes  
-  - Optional blur/generalization overlays when zoomed in too far  
-  - Clear textual notices in the UI about any redaction or generalization  
-
-- H3-generalized geometries are rendered as soft regions, not pinpoint icons.
-
----
-
-## 🧪 Validation & CI
-
-Style hygiene is enforced via:
-
-- Stylelint on all files under `web/src/styles/`  
-- Token schema validation against `tokens.schema.json`  
-- Map style validation against the MapLibre style schema (for any generated JSON)  
-- Optional visual regression tests for key components (buttons, Focus Mode states, story node cards)
-
-Any failure blocks merges until fixed.
+Order enforced consistently.
 
 ---
 
-## 📦 Usage Guidelines for Developers
+# 🌗 Themes
 
-1. Do not hard-code hex colors, font sizes, or spacing in components. Use tokens and CSS variables.  
-2. When creating a new component:
+Themes are **CSS variable maps** for light/dark modes.
 
-   - Use existing button/layout mixins if possible  
-   - For new patterns, implement them under `mixins/` and reference them from components  
-   - Confirm accessibility (contrast, focus, motion) before shipping
+## 🌞 Light Mode (`light.ts`)
+- High contrast  
+- Low visual noise  
+- Soft neutrals for long reading sessions  
 
-3. When adding a new theme:
+## 🌙 Dark Mode (`dark.ts`)
+- WCAG-safe dark backgrounds  
+- Desaturated neutrals  
+- Careful highlight colors (avoid neon/harsh colors)  
 
-   - Copy from an existing theme as a base  
-   - Define the complete base variable set  
-   - Run contrast checks and manual smoke tests in both map and story-node contexts
+Theme switching must:
 
-4. When changing tokens:
+- Respect `prefers-color-scheme`  
+- Transition with reduced-motion patterns  
+- Maintain same information hierarchy  
 
-   - Consider downstream effects on map layers, legends, Focus Mode, and accessibility  
-   - Coordinate with design/UX and data viz maintainers if colors encode particular semantics.
+---
+
+# 🗺️ Map Styling
+
+Styles under `maps/` govern MapLibre + Cesium:
+
+- Layer outlines  
+- Highlight states  
+- Sovereignty/masking indicators  
+- Story Node footprints  
+- Raster preview frames  
+- Accessible map controls  
+- Color ramps for environmental layers  
+
+All maps must avoid:
+
+- Misleading visual interpretations  
+- Overly saturated colors  
+- Confusing color ramps  
+- Indistinguishable boundaries  
+
+Governance colors must remain **consistent** with CARE tokens.
 
 ---
 
-## 🕰 Version History
+# ♿ Accessibility Requirements
 
-| Version | Date       | Author / Maintainer | Summary                                                                 |
-|--------|------------|---------------------|-------------------------------------------------------------------------|
-| v10.4.2| 2025-11-15 | Lead Programmer     | Removed badge-style markup, stabilized header formatting                |
-| v10.4.1| 2025-11-15 | Lead Programmer     | Rebuilt README into single-box format; tightened layout and usage       |
-| v10.4.0| 2025-11-14 | Lead Programmer     | Initial creation of styles architecture doc and directory layout        |
+The Styles Layer must:
+
+- Enforce visible focus rings  
+- Guarantee accessible color contrast  
+- Support reduced-motion  
+- Use predictable spacing  
+- Avoid text embedded in images  
+- Provide alternative color tokens for:
+  - Color-blind users  
+  - High-contrast mode  
+
+A11y failures → CI block.
 
 ---
+
+# 🛡 Governance & FAIR+CARE Integration
+
+Visual layers must:
+
+- Clearly identify masked areas  
+- Use CARE-compliant coloring  
+- Avoid representing sensitive spatial features precisely  
+- Mark AI-generated graphics  
+- Provide sovereignty warnings  
+- Avoid cultural misuse in icons or color choices  
+
+All visual patterns undergo FAIR+CARE review.
+
+---
+
+# 📈 Telemetry Responsibilities
+
+Styles influence telemetry through:
+
+- Theme change events  
+- High-contrast mode activations  
+- Reduced-motion toggles  
+- Map layer/legend interactions  
+
+Telemetry must be:
+
+- Non-PII  
+- Schema-valid  
+- Logged by `useTelemetry.ts`  
+- Stored in `focus-telemetry.json`
+
+---
+
+# 🧪 Testing Requirements
+
+Tests for the Styles Layer must include:
+
+- WCAG contrast checks  
+- Reduced-motion validation  
+- Token integrity tests (no duplicates, no broken variables)  
+- CSS snapshot tests (optional)  
+- Governance color mapping tests  
+- Map style consistency checks  
+
+Location:
+
+~~~text
+tests/unit/web/styles/**
+tests/integration/web/styles/**
+~~~
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Full KFM-MDP v10.4 rewrite; added CARE/A11y theming rules, map style architecture, token system |
+| v10.3.2 | 2025-11-14 | Updated color tokens + Story Node typography presets |
+| v10.3.1 | 2025-11-13 | Initial styles overview |
+
+---
+
+<div align="center">
+
+© 2025 Kansas Frontier Matrix — MIT License  
+Reviewed under MCP-DL v6.3 and KFM-MDP v10.4  
+FAIR+CARE Certified · Public Document · Version-Pinned  
+
+</div>
