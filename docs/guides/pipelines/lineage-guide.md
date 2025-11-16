@@ -128,7 +128,7 @@ A --> B --> C --> D --> E --> F --> G
 
 %% make spacer nodes invisible
 classDef hidden fill:transparent,stroke-width:0,color:transparent
-
+```
 ---
 
 # 🧬 Lineage Model (v10.4.2)
