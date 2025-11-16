@@ -256,4 +256,25 @@ describe("maskGeometry", () => {
     expect(result.type).toBe("FeatureCollection");
   });
 });
+````
 
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary                                                                  |
+| ------: | ---------- | ------------------------------------------------------------------------ |
+| v10.4.0 | 2025-11-15 | Created synthetic masking fixture specification for geospatial pipelines |
+| v10.3.2 | 2025-11-14 | Added multi-level masking + sovereignty test cases                       |
+| v10.3.1 | 2025-11-13 | Initial masking fixtures directory established                           |
+
+---
+
+<div align="center">
+
+© 2025 Kansas Frontier Matrix — MIT License
+Synthetic Masking Fixtures · FAIR+CARE Certified · Version-Pinned
+Validated under MCP-DL v6.3 & KFM-MDP v10.4.1
+
+</div>
+```
