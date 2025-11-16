@@ -1,210 +1,197 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — Workflow Automation & FAIR+CARE Validation Guides (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/workflows/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/docs-guides-workflows-v1.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/docs-guides-workflows-v2.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Guide Index"
+intent: "workflow-automation-index"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E1"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
 ---
 
 <div align="center">
 
-# ⚙️ **Kansas Frontier Matrix — Workflow Automation & FAIR+CARE Validation Guides**
+# ⚙️ **Kansas Frontier Matrix — Workflow Automation & FAIR+CARE Validation Guides**  
 `docs/guides/workflows/README.md`
 
-**Purpose:**  
-Document and standardize all **CI/CD, validation, and governance workflows** used across the Kansas Frontier Matrix (KFM).  
-Defines automation pipelines for **FAIR+CARE compliance**, **ISO sustainability validation**, and **telemetry synchronization** within the KFM monorepo.
+**Purpose**  
+Serve as the **master index** for all **CI/CD, validation, telemetry, and governance workflows**  
+across the Kansas Frontier Matrix (KFM).  
+Defines how automation pipelines implement **FAIR+CARE v2**, **ISO sustainability validation**,  
+and **Telemetry v2** synchronization within the KFM monorepo.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Automation-orange)](../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Stable_Build-brightgreen)](../../../releases/)
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The **Workflow Guides** define how automated processes in KFM ensure consistency, governance compliance, and reproducibility.  
-These workflows span continuous integration (CI), data validation, telemetry tracking, and FAIR+CARE auditing — guaranteeing ethical automation under **MCP-DL v6.3**.
+The **Workflow Guides** standardize KFM’s automation and validation patterns.
 
-**Goals**
-- Automate governance and validation routines  
-- Ensure sustainable and ethical system operations  
-- Maintain transparency and traceability across pipelines  
-- Integrate FAIR+CARE, ISO, and MCP protocols into CI/CD  
+Workflows documented here:
+
+- Enforce **CI quality gates** (build, test, lint, security)  
+- Run **FAIR+CARE v2 validation** across datasets, models, and visualizations  
+- Synchronize **Telemetry v2** (energy, CO₂e, errors, coverage)  
+- Append immutable entries to the **Governance Ledger**  
+- Ensure full alignment with **MCP-DL v6.3**, **ISO 50001/14064**, and **KFM Governance Charter**
+
+This index ties together:
+
+- CI Pipeline Guide  
+- Validation Workflows Guide  
+- Telemetry Sync Guide  
+- Governance Ledger Pipeline Guide  
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (Workflow Guides)
 
-```plaintext
+~~~text
 docs/guides/workflows/
-├── README.md                          # This overview
-├── ci-pipeline.md                     # Continuous Integration and validation automation
-├── validation-workflows.md            # FAIR+CARE & ISO data validation pipelines
-├── telemetry-sync.md                  # Workflow for telemetry export and governance linkage
-├── governance-ledger-pipeline.md      # Governance Ledger synchronization process
-└── reports/                           # Workflow run summaries and audit logs
-```
+├── README.md                         # THIS overview
+├── ci-pipeline.md                    # CI pipeline & FAIR+CARE validation framework
+├── validation-workflows.md           # FAIR+CARE v2 data/AI/UI validation pipelines
+├── telemetry-sync.md                 # Telemetry v2 export & governance linkage
+├── governance-ledger-pipeline.md     # Governance Ledger synchronization workflows
+└── reports/                          # Workflow run summaries, audits, dashboard inputs
+    ├── ci/
+    ├── validation/
+    ├── telemetry/
+    └── governance/
+~~~
 
 ---
 
-## 🧩 Workflow Architecture
+# 🧩 Workflow Architecture (GitHub-Safe Mermaid)
 
 ```mermaid
 flowchart TD
-A["Code Commit / Data Update"] --> B["CI Pipeline (Pre-Commit Validation)"]
-B --> C["FAIR+CARE Audit Workflows (Ethics + Sustainability)"]
-C --> D["Governance Ledger Sync (SHA256 Hashes + Telemetry)"]
-D --> E["Public Artifacts (Reports, SBOMs, Telemetry JSON)"]
-```
+
+SRC["Code / Data / Config Changes"] --> CI["CI Pipeline<br/>build · test · lint"]
+CI --> VAL["Validation Workflows<br/>FAIR+CARE v2 · schema · lineage"]
+VAL --> TEL["Telemetry Sync<br/>Telemetry v2 · sustainability"]
+TEL --> LED["Governance Ledger Pipeline<br/>append-only records"]
+LED --> PUB["Public Artifacts<br/>reports · SBOMs · telemetry.json"]
+````
 
 ---
 
-## ⚙️ Core Workflow Types
+# ⚙️ Core Workflow Types (Indexed)
 
-| Workflow | Function | Key Output | Location |
-|-----------|-----------|------------|-----------|
-| **Build & Validate** | Runs environment builds and schema checks | `reports/ci-build-report.json` | `.github/workflows/build.yml` |
-| **FAIR+CARE Validation** | Performs ethical and sustainability audits | `reports/faircare-validation.json` | `.github/workflows/faircare-validate.yml` |
-| **Telemetry Export** | Logs runtime performance and environmental metrics | `releases/v*/focus-telemetry.json` | `.github/workflows/telemetry-export.yml` |
-| **Governance Sync** | Commits validated hashes to ledger | `docs/standards/governance/LEDGER/*.json` | `.github/workflows/ledger-sync.yml` |
-| **Provenance Trace** | Validates lineage and provenance consistency | `reports/provenance-audit.json` | `.github/workflows/provenance-validate.yml` |
+| Guide                           | Workflow Focus                                   | Key Outputs                                          |
+| ------------------------------- | ------------------------------------------------ | ---------------------------------------------------- |
+| `ci-pipeline.md`                | CI builds, tests, FAIR+CARE v2 integration       | CI reports, SBOM, CI Telemetry v2, ledger entries    |
+| `validation-workflows.md`       | Data/AI/UI validation + FAIR+CARE v2             | Validation reports, lineage updates, audit artifacts |
+| `telemetry-sync.md`             | Telemetry v2 collection, aggregation, validation | Telemetry NDJSON, release telemetry JSON, audits     |
+| `governance-ledger-pipeline.md` | Governance Ledger entry generation & validation  | Updated ledger JSONL, governance audit reports       |
 
----
+Each guide provides:
 
-## ⚖️ FAIR+CARE Integration Framework
-
-| Principle | Implementation | Validation Artifact |
-|------------|----------------|--------------------|
-| **Findable** | Workflow IDs, reports, and outputs indexed in ledger | `ledger-sync.yml` |
-| **Accessible** | All CI/CD outputs published under CC-BY 4.0 | Repository `/reports` |
-| **Interoperable** | YAML workflows aligned with FAIR+CARE schema | `telemetry_schema` |
-| **Reusable** | Automation templates reused across pipeline families | `.github/workflows/` |
-| **Collective Benefit** | Transparent automation benefits research reproducibility | FAIR+CARE audit |
-| **Authority to Control** | Council approval required for production workflows | `governance-ledger-pipeline.md` |
-| **Responsibility** | Logs energy + ethics telemetry per CI run | `telemetry_ref` |
-| **Ethics** | All automated actions validated before release | FAIR+CARE Council Review |
+* Directory layouts
+* Mermaid diagrams
+* Example GitHub Actions workflows
+* Governance & sustainability targets
+* Developer checklists
 
 ---
 
-## 🧾 Example Workflow Run Log
+# ⚖️ FAIR+CARE v2 & Automation
+
+All workflows must embed **governance logic**:
+
+* CARE v2 labels and masking strategies passed through validation and CI stages
+* Telemetry v2 events collected in each workflow (e.g., `ci`, `validation`, `telemetry-sync`, `ledger-sync`)
+* Governance Ledger pipeline appends records for:
+
+  * CI runs
+  * validation cycles
+  * telemetry sync operations
+  * publishing events
+
+The **Workflow Guides** are the top-level documentation for these patterns.
+
+---
+
+# 🧾 Example Workflow Run Log (High-Level)
 
 ```json
 {
-  "workflow_id": "ci-pipeline-2025-11-09-0008",
-  "trigger": "push to main",
+  "workflow_id": "ci-pipeline-2025-11-16-0008",
+  "trigger": "push",
+  "branch": "main",
   "steps": [
-    "Validate YAML + Markdown",
-    "Build Micromamba Environment",
-    "Run FAIR+CARE Validation",
-    "Sync Governance Ledger"
+    "lint",
+    "build-environment",
+    "run-tests",
+    "faircare-ci-audit",
+    "export-ci-telemetry",
+    "sync-ci-ledger"
   ],
   "metrics": {
     "runtime_minutes": 17.3,
-    "energy_joules": 9.7,
+    "energy_wh": 0.011,
     "carbon_gCO2e": 0.0043
   },
-  "faircare_status": "Pass",
-  "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T12:45:00Z"
+  "faircare_status": "pass",
+  "timestamp": "2025-11-16T12:45:00Z"
 }
 ```
 
 ---
 
-## 🧠 Workflow → Governance Ledger Mapping
+# 🧠 How to Use These Guides
 
-| Workflow | Ledger Target | Description |
-|-----------|----------------|-------------|
-| `build.yml` | `build-ledger.json` | Tracks reproducible builds and SBOM integrity |
-| `faircare-validate.yml` | `faircare-ledger.json` | Logs FAIR+CARE audit approvals |
-| `telemetry-export.yml` | `telemetry-ledger.json` | Syncs energy, carbon, and performance metrics |
-| `ledger-sync.yml` | `governance-ledger.json` | Commits all validated outputs to master ledger |
-| `iso-audit.yml` | `sustainability-ledger.json` | Reports ISO 50001/14064 certification trace |
+When adding or modifying workflows:
 
----
+1. Start from this index to identify the type of workflow:
 
-## ⚙️ Validation Workflows
+   * CI, validation, telemetry, or governance.
+2. Open the relevant guide file:
 
-| Stage | Function | Validation Target | Output |
-|--------|-----------|-------------------|---------|
-| **Pre-Commit Validation** | Checks schema and format | YAML, JSON, Markdown | `reports/pre-commit.json` |
-| **Data Validation** | Validates STAC/DCAT and FAIR+CARE metadata | Metadata | `reports/data-validation.json` |
-| **Telemetry Check** | Verifies energy and carbon thresholds | Environmental | `reports/telemetry-validation.json` |
-| **Governance Audit** | Ensures ledger and SBOM integrity | Governance | `reports/ledger-validation.json` |
+   * e.g., telemetry workflows → `telemetry-sync.md`.
+3. Follow:
 
----
+   * directory layout guidance
+   * CI skeletons
+   * telemetry schema references
+   * ledger integration patterns
+   * FAIR+CARE v2 requirements
 
-## 🧩 Governance Ledger Example Record
+Workflows SHOULD be:
 
-```json
-{
-  "ledger_id": "workflow-ledger-2025-11-09-0003",
-  "workflows": [
-    "build.yml",
-    "faircare-validate.yml",
-    "telemetry-export.yml"
-  ],
-  "sha256": "f9b38e12c4a5...",
-  "energy_joules": 8.9,
-  "carbon_gCO2e": 0.0038,
-  "faircare_status": "Pass",
-  "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T13:00:00Z"
-}
-```
+* Template-based (reusing patterns under `.github/workflows/`)
+* Version-aware (tied to releases and SBOM)
+* Governed (explicit Governance refs in YAML & docs)
 
 ---
 
-## ⚙️ FAIR+CARE Validation Flow
+# 🕰 Version History
 
-```mermaid
-flowchart LR
-A["CI Workflow Execution"] --> B["FAIR+CARE Validator (Ethics + Energy)"]
-B --> C["Telemetry Export + ISO Metrics"]
-C --> D["Governance Ledger Update (SHA256 Signature)"]
-D --> E["Public FAIR+CARE Compliance Dashboard"]
-```
-
----
-
-## ⚖️ Continuous Improvement Targets
-
-| Metric | Description | Target |
-|---------|--------------|---------|
-| **Workflow Energy (J)** | Joules used per CI/CD run | ≤ 15 |
-| **Audit Pass Rate (%)** | FAIR+CARE validation success | 100 |
-| **Carbon Output (gCO₂e)** | Per pipeline execution | ≤ 0.006 |
-| **Ledger Update Success (%)** | Governance sync reliability | 100 |
-| **Transparency Score** | Report publication rate | 100 |
-
----
-
-## 🕰️ Version History
-
-| Version | Date | Author | Summary |
-|----------|------|--------|----------|
-| v10.0.0 | 2025-11-09 | Core Team | Added unified workflow automation guide with FAIR+CARE and ISO governance integration |
-| v9.7.0  | 2025-11-03 | A. Barta | Introduced core CI/CD, telemetry, and governance validation workflows |
+| Version | Date       | Summary                                                                                                |
+| ------: | ---------- | ------------------------------------------------------------------------------------------------------ |
+| v10.4.2 | 2025-11-16 | Upgraded to KFM-MDP v10.4.2; Telemetry v2, CARE v2, ISO-aligned targets, index aligned with new guides |
+| v10.0.0 | 2025-11-09 | Initial workflow automation index with FAIR+CARE and ISO governance integration                        |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Guides Index](../README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+**Kansas Frontier Matrix — Workflow Automation & Governance (v10.4.2)**
+CI/CD × FAIR+CARE v2 × ISO Sustainability × Telemetry v2 × Immutable Governance
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
