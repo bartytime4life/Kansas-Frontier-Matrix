@@ -1,180 +1,257 @@
 ---
 title: "🖼️ Kansas Frontier Matrix — Visualization & Interface Design Guides (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/visualization/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/docs-guides-visualization-v1.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/docs-guides-visualization-v2.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Guide Index"
+intent: "visualization-guides-index"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E1"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
 ---
 
 <div align="center">
 
-# 🖼️ **Kansas Frontier Matrix — Visualization & Interface Design Guides**
+# 🖼️ **Kansas Frontier Matrix — Visualization & Interface Design Guides**  
 `docs/guides/visualization/README.md`
 
-**Purpose:**  
-Provide a unified, FAIR+CARE-aligned framework for all **visual and interactive systems** in the Kansas Frontier Matrix (KFM).  
-This documentation governs **MapLibre interfaces**, **timeline storytelling**, **AI explainability dashboards**, and **accessibility standards**, ensuring ethical, transparent, and performant design under **MCP-DL v6.3**.
+**Purpose**  
+Provide a unified, FAIR+CARE v2–aligned framework for all **visual and interactive systems** in the Kansas Frontier Matrix (KFM).  
+This index ties together **MapLibre interfaces**, **timeline storytelling**, **AI explainability dashboards**,  
+and **accessibility standards**, ensuring ethical, transparent, and performant design under **MCP-DL v6.3**  
+and the **KFM Governance Charter**.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Accessible_Design-orange)](../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Stable_Build-brightgreen)](../../../releases/)
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The **Visualization Guides** define standards for **interactive storytelling and data presentation** across the KFM interface ecosystem.  
-From spatial exploration in MapLibre to AI explainability panels, each visualization element is governed by FAIR+CARE accessibility and telemetry tracking to ensure reproducibility, sustainability, and inclusion.
+The **Visualization Guides** describe how KFM presents complex data as:
+
+- **Maps** (MapLibre GL · 2D spatial layers)  
+- **Timelines** (temporal exploration & storytelling)  
+- **Explainability dashboards** (AI insights · SHAP · LIME · counterfactuals)  
+- **Accessibility-centric UI** (WCAG 2.1 AA + CARE v2)  
+
+Each visualization surface:
+
+- Uses **design tokens** and theming for consistency  
+- Integrates **FAIR+CARE v2** and **sustainability** goals  
+- Emits **Telemetry v2** events for performance + ethics  
+- Links into **Lineage v2** and **Governance Ledger** entries
+
+This document is the **entrypoint** for all visualization-related design and governance documentation.
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (Visualization Guides)
 
-```plaintext
+~~~text
 docs/guides/visualization/
-├── README.md                             # This overview
-├── maplibre-ui-design.md                 # MapLibre interface architecture & FAIR+CARE integration
-├── timeline-visualization.md             # Temporal data storytelling & historical playback
-├── accessibility-standards.md            # WCAG + FAIR+CARE accessibility framework
-├── explainability-dashboard.md           # Visual interpretation of AI reasoning layers
-└── reports/                              # Accessibility, telemetry, and validation reports
-```
+├── README.md                             # THIS overview
+├── maplibre-ui-design.md                 # MapLibre UI architecture & interaction
+├── timeline-visualization.md             # Temporal data storytelling & playback
+├── explainability-dashboard.md           # AI reasoning & explainability visualization
+├── accessibility-standards.md            # Accessibility & inclusive design standards
+└── lidar-relief-visualization.md         # LiDAR SVF/LRM terrain visualization guideline
+~~~
 
 ---
 
-## 🧩 Visualization Architecture Overview
+# 🧩 Visualization Architecture Overview (GitHub-Safe Mermaid)
 
 ```mermaid
 flowchart TD
-A["MapLibre GL + React Components"] --> B["Timeline Visualization Engine"]
-B --> C["AI Explainability Dashboard (SHAP / LIME)"]
-C --> D["Accessibility & FAIR+CARE Validator"]
-D --> E["Telemetry Exporter (Performance + Energy)"]
-E --> F["Governance Ledger & Council Review"]
-```
+
+MAP["MapLibre UI<br/>2D maps · layers · overlays"] --> TIME["Timeline Visualization<br/>temporal navigation"]
+TIME --> EXPL["Explainability Dashboard<br/>AI insights · SHAP/LIME"]
+EXPL --> A11Y["Accessibility & Inclusive Design<br/>WCAG 2.1 AA · FAIR+CARE v2"]
+A11Y --> TEL["Telemetry v2 & Sustainability<br/>FPS · energy · CO₂ · usage"]
+TEL --> GOV["Governance & Lineage<br/>ledger · lineage v2 · audits"]
+````
 
 ---
 
-## 🧮 Component Principles
+# 🧮 Core Design Principles
 
-| Principle | Description | Implementation |
-|------------|-------------|----------------|
-| **Declarative Design** | All UIs built as reusable, version-controlled React components | `web/src/components/` |
-| **Data-Driven Rendering** | Components dynamically render map & timeline data via APIs | REST / WebSocket streams |
-| **Thematic Consistency** | Unified visual tokens for typography, colors, and grids | Design Tokens System |
-| **Accessibility First** | WCAG 2.1 AA and ARIA role integration | `accessibility-standards.md` |
-| **Telemetry Embedded** | Track latency, FPS, and accessibility usage | `focus-telemetry.json` |
-
----
-
-## 🎨 Design Token System
-
-| Token | Purpose | Example |
-|--------|----------|----------|
-| `--color-primary` | Primary UI color | `#003366` |
-| `--color-accent` | Accent or highlight color | `#E89C1E` |
-| `--font-family` | Global font set | `"Inter", sans-serif` |
-| `--border-radius` | Corner rounding for visual elements | `0.5rem` |
-| `--spacing-unit` | Consistent padding/margin spacing | `8px` |
-
-> Tokens are stored in `web/public/css/tokens.css` and applied across React and MapLibre elements.
+| Principle                | Description                                                   | Implementation                                     |
+| ------------------------ | ------------------------------------------------------------- | -------------------------------------------------- |
+| **Declarative Design**   | UIs built using reusable, version-controlled React components | `web/src/components/**`                            |
+| **Data-Driven**          | Visualization reacts to STAC/DCAT, graph, and API data        | KFM APIs, GraphQL, STAC Services                   |
+| **Thematic Consistency** | Colors, fonts, spacing driven by design tokens                | `web/src/styles/tokens/**`                         |
+| **Accessibility First**  | WCAG 2.1 AA + FAIR+CARE v2 integrated through all flows       | `accessibility-standards.md` + CI workflows        |
+| **Telemetry Embedded**   | Telemetry v2 baked into UI interactions & performance stats   | `pipeline-telemetry.json`                          |
+| **Governance-Aware**     | Visualizations expose CARE labels, sources, and masking       | CARE v2 overlays, governance badges, provenance UI |
 
 ---
 
-## ⚙️ Core Visualization Layers
+# 🎨 Design Token System (High Level)
 
-| Layer | Description | Tools / Standards |
-|-------|--------------|-------------------|
-| **MapLibre Interface** | Map-based exploration of historical + environmental layers | MapLibre GL JS, PMTiles, React |
-| **Timeline Canvas** | Temporal playback of events, datasets, and narratives | D3.js, Recharts, Framer Motion |
-| **Explainability Dashboard** | AI transparency and interpretability visualizations | Plotly, ECharts, Vega-Lite |
-| **Accessibility Framework** | Inclusive interaction and compliance enforcement | WCAG 2.1 AA, ARIA, FAIR+CARE |
-| **Performance Telemetry** | Tracks FPS, latency, and sustainability metrics | `focus-telemetry.json` |
+Tokens supply a **shared visual language** across Map, Timeline, and Panels:
+
+| Token                        | Purpose                      | Example               |
+| ---------------------------- | ---------------------------- | --------------------- |
+| `color.ui.background`        | Base panel background        | `#0B0C0E`             |
+| `color.ui.accent`            | Primary UI accent            | `#2B6CB0`             |
+| `color.map.land.fill`        | Land fill color in MapLibre  | `#121417`             |
+| `color.map.water.fill`       | Water fill color in MapLibre | `#164B73`             |
+| `font.ui.body.family`        | Body text typeface           | `"Inter", sans-serif` |
+| `font.map.label.size`        | Map label font size          | `14`                  |
+| `size.ui.borderRadius`       | Panel rounding               | `0.75rem`             |
+| `size.timeline.handle.width` | Timeline handle width        | `12`                  |
+
+Tokens are defined and validated in:
+
+* `web/src/styles/tokens/**/*.ts`
+* `web/src/styles/themes/**`
+
+and consumed by:
+
+* MapLibre (runtime theming)
+* Timeline UI
+* Explainability dashboards
+* General components
 
 ---
 
-## ♿ Accessibility & FAIR+CARE Integration
+# ⚙️ Core Visualization Layers (Per Guide)
 
-| Principle | Implementation | Validation Artifact |
-|------------|----------------|--------------------|
-| **Findable** | Components registered with semantic ARIA roles | WCAG 2.1 Audit |
-| **Accessible** | High-contrast colors and motion-safe UI | `accessibility-standards.md` |
-| **Interoperable** | WCAG + FAIR+CARE dual schema validation | CI pipeline reports |
-| **Reusable** | Design tokens reused across visualization modules | React component registry |
-| **Collective Benefit** | Promotes inclusive historical storytelling | FAIR+CARE audit |
-| **Authority to Control** | User-managed filters for sensitive cultural layers | `data-generalization/README.md` |
-| **Responsibility** | Performance + accessibility telemetry logged | `focus-telemetry.json` |
-| **Ethics** | Council review for visual data publication | Governance Ledger |
+| Guide                           | Layer / Focus                                 | Tools / Standards                                |
+| ------------------------------- | --------------------------------------------- | ------------------------------------------------ |
+| `maplibre-ui-design.md`         | MapLibre map UI, controls, overlays           | MapLibre GL, React, design tokens                |
+| `timeline-visualization.md`     | Time-series, event playback, temporal context | React + D3/Recharts + A11y slider patterns       |
+| `explainability-dashboard.md`   | AI transparency and feature attribution       | SHAP/LIME, Plotly/Charting libs, FAIR+CARE AI    |
+| `accessibility-standards.md`    | WCAG 2.1 AA & inclusive design                | ARIA, Telemetry v2, CARE v2, Council audits      |
+| `lidar-relief-visualization.md` | SVF/LRM terrain visualization integrations    | COGs, MapLibre, CARE v2 for sensitive landscapes |
+
+Use this index to choose the appropriate guide when designing or updating visualization capabilities.
 
 ---
 
-## 📊 Example Telemetry Snapshot
+# ♿ Accessibility & FAIR+CARE v2 Integration
+
+Visualizations must:
+
+* Comply with **WCAG 2.1 AA** (contrast, keyboard nav, structure).
+* Reflect **CARE v2** labels and masking decisions (e.g., restricted archaeological sites).
+* Display **data provenance** and **source context** in legends and panels.
+* Provide textual narratives or accessible alternatives for complex visuals.
+* Respect user preferences (reduced motion, high contrast, larger text).
+
+The detailed accessibility rules live in:
+
+* `docs/guides/visualization/accessibility-standards.md`
+
+---
+
+# 📡 Telemetry & Sustainability
+
+Each visualization surface must emit Telemetry v2 events that track:
+
+* **Performance:** FPS, frame latency, render errors.
+* **Usage:** interactions (clicks, hovers, keyboard events, toggles).
+* **A11y:** high contrast mode usage, screen reader detection, reduced-motion usage.
+* **Sustainability:** estimated energy usage (Wh), CO₂ (g), session duration.
+
+These events are:
+
+* aggregated into `releases/<version>/pipeline-telemetry.json`
+* validated via `telemetry-sync.md` workflows
+* referenced in Governance Ledger entries and dashboards
+
+---
+
+# 🧾 Example Visualization Telemetry Snapshot
 
 ```json
 {
-  "component": "MapLibre Timeline",
-  "fps": 58,
-  "frame_latency_ms": 15.3,
-  "cpu_percent": 63.5,
-  "gpu_percent": 61.1,
-  "accessibility_compliance": "AA",
-  "faircare_status": "Pass",
-  "energy_joules": 1.19,
-  "timestamp": "2025-11-09T12:00:00Z"
+  "pipeline": "web-ui",
+  "stage": "runtime",
+  "component": "MapLibre Timeline View",
+  "run_id": "viz-session-2025-11-16-0002",
+  "status": "success",
+  "fps_min": 32,
+  "frame_latency_ms_avg": 17.2,
+  "energy_wh": 0.013,
+  "co2_g": 0.0051,
+  "a11y_flags": {
+    "high_contrast_enabled": true,
+    "screen_reader_active": false,
+    "reduced_motion": false
+  },
+  "care_violations": 0,
+  "timestamp": "2025-11-16T12:05:00Z"
 }
 ```
 
 ---
 
-## 🧾 Validation & CI/CD Workflows
+# ⚖️ CI/CD Validation & Governance Hooks
 
-| Workflow | Function | Output |
-|-----------|-----------|--------|
-| `ui-accessibility-validate.yml` | WCAG + FAIR+CARE validation for UI | `reports/accessibility.json` |
-| `ui-telemetry-export.yml` | Exports rendering and energy metrics | `releases/v*/focus-telemetry.json` |
-| `ui-faircare-audit.yml` | Ethical + cultural validation for UI elements | `reports/faircare/ui-audit.json` |
-| `ledger-sync.yml` | Commits checksums to Governance Ledger | `docs/standards/governance/LEDGER/ui-ledger.json` |
+UI and visualization changes are governed by the workflow guides at:
 
----
+* `docs/guides/workflows/README.md`
+* `docs/guides/workflows/validation-workflows.md`
+* `docs/guides/workflows/telemetry-sync.md`
+* `docs/guides/workflows/governance-ledger-pipeline.md`
 
-## ⚖️ Governance Hooks
+These workflows ensure:
 
-All visualization systems:
-- Include **FAIR+CARE metadata fields** in UI component telemetry  
-- Log **accessibility performance + ethics audits** to the Governance Ledger  
-- Undergo **quarterly validation** for compliance with MCP-DL v6.3  
-
-Deployment requirements:
-1. **WCAG 2.1 AA accessibility validation**  
-2. **FAIR+CARE ethical compliance audit**  
-3. **Governance Ledger checksum and signature**  
+* **Accessibility audits** pass before merging
+* **FAIR+CARE v2** constraints are satisfied (UI text, data context)
+* **Telemetry v2** is emitted and aggregated correctly
+* **Governance Ledger** is updated for significant visualization changes
 
 ---
 
-## 🕰️ Version History
+# 🧭 Developer Usage
 
-| Version | Date | Author | Summary |
-|----------|------|--------|----------|
-| v10.0.0 | 2025-11-09 | Core Team | Updated visualization framework with FAIR+CARE-led accessibility, telemetry, and governance |
-| v9.7.0  | 2025-11-03 | A. Barta | Introduced explainability + timeline visualization integration standards |
+When working on visualization:
+
+1. Identify your surface:
+
+   * Map (MapLibre) → `maplibre-ui-design.md`
+   * Timeline → `timeline-visualization.md`
+   * Explainability → `explainability-dashboard.md`
+   * Accessibility-specific changes → `accessibility-standards.md`
+
+2. Ensure:
+
+   * Design tokens used consistently
+   * FAIR+CARE v2 metadata surfaced/handled correctly
+   * Telemetry v2 events wired in
+   * CI & governance workflows updated if necessary
+
+3. Run local A11y checks and UI tests before opening a PR.
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary                                                                                                 |
+| ------: | ---------- | ------------------------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Upgraded to KFM-MDP v10.4.2; added Telemetry v2, CARE v2, Lineage v2 references, and per-guide indexing |
+| v10.0.0 | 2025-11-09 | Initial visualization index with FAIR+CARE accessible design and telemetry integration                  |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Guides Index](../README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+**Kansas Frontier Matrix — Visualization & Interface Design Guides (v10.4.2)**
+Story-Driven Visualization × FAIR+CARE v2 × Accessible & Sustainable UI × Governance-Aware Design
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
