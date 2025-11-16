@@ -73,7 +73,7 @@ docs/
     ├── ui_accessibility.md
     ├── telemetry_standards.md     # This document
     └── ...
-```
+````
 
 Associated telemetry outputs:
 
@@ -117,23 +117,23 @@ Each telemetry record follows a unified, JSON Schema–validated structure:
 }
 ```
 
-> All telemetry events must validate against `schemas/telemetry/**.json`  
+> All telemetry events must validate against `schemas/telemetry/**.json`
 > before being merged into the global ledger (`focus-telemetry.json`).
 
 ---
 
 ## ⚖️ FAIR+CARE Telemetry Alignment
 
-| Principle | Implementation | Validation Source |
-|---|---|---|
-| **Findable** | UUID-tagged events, `event_type`, indexed manifests | `focus-telemetry.json`, `manifest_ref` |
-| **Accessible** | Unified ledger, exported dashboards, CC-BY license | `telemetry_ref` |
-| **Interoperable** | JSON Schema, optional JSON-LD, DCAT-compatible | `telemetry_schema` |
-| **Reusable** | Open license, rich context, versioned schemas | `license`, `mcp_version` |
-| **CARE – Collective Benefit** | Public visibility of sustainability & fairness metrics | Governance dashboard |
-| **CARE – Authority to Control** | FAIR+CARE Council oversight on telemetry policies | `governance_ref` |
-| **CARE – Responsibility** | Continuous validation of accuracy and ethics | CI/CD workflows |
-| **CARE – Ethics** | Telemetry logs contain no user PII; aggregated where needed | `faircare-validate.yml` |
+| Principle                       | Implementation                                              | Validation Artifact                    |
+| ------------------------------- | ----------------------------------------------------------- | -------------------------------------- |
+| **Findable**                    | Telemetry logs versioned and UUID-indexed                   | `focus-telemetry.json`, `manifest_ref` |
+| **Accessible**                  | Unified ledger, exported dashboards, CC-BY license          | `telemetry_ref`                        |
+| **Interoperable**               | JSON Schema, optional JSON-LD, DCAT-compatible              | `telemetry_schema`                     |
+| **Reusable**                    | Renewable energy baselines reused for lifecycle reports     | `manifest_ref`                         |
+| **CARE – Collective Benefit**   | Public visibility of sustainability & fairness metrics      | Governance dashboard                   |
+| **CARE – Authority to Control** | FAIR+CARE Council oversight on telemetry policies           | `governance_ref`                       |
+| **CARE – Responsibility**       | Continuous validation of accuracy and ethics                | CI/CD workflows                        |
+| **CARE – Ethics**               | Telemetry logs contain no user PII; aggregated where needed | `faircare-validate.yml`                |
 
 ---
 
@@ -141,56 +141,56 @@ Each telemetry record follows a unified, JSON Schema–validated structure:
 
 ### 1️⃣ System Performance
 
-| Metric | Unit | Source |
-|---|---|---|
-| `duration_sec` | seconds | GitHub Actions runtime |
-| `steps_success` | count | CI logs |
-| `cache_hit_ratio` | percent | `actions/cache` stats |
-| `memory_mb` | megabytes | Runner stats (optional) |
+| Metric            | Unit      | Source                  |
+| ----------------- | --------- | ----------------------- |
+| `duration_sec`    | seconds   | GitHub Actions runtime  |
+| `steps_success`   | count     | CI logs                 |
+| `cache_hit_ratio` | percent   | `actions/cache` stats   |
+| `memory_mb`       | megabytes | Runner stats (optional) |
 
 ### 2️⃣ Sustainability
 
-| Metric | Unit | Description |
-|---|---|---|
-| `energy_wh` | Wh | Derived from runtime * runner wattage |
-| `carbon_gco2e` | gCO₂e | `energy_wh * region_intensity` |
-| `offset_pct` | percent | Renewable energy offset applied |
+| Metric         | Unit    | Description                           |
+| -------------- | ------- | ------------------------------------- |
+| `energy_wh`    | Wh      | Derived from runtime * runner wattage |
+| `carbon_gco2e` | gCO₂e   | `energy_wh * region_intensity`        |
+| `offset_pct`   | percent | Renewable energy offset applied       |
 
 ### 3️⃣ FAIR+CARE Governance
 
-| Metric | Unit | Description |
-|---|---|---|
-| `datasets_scanned` | count | FAIR+CARE validator inputs |
-| `violations_found` | count | FAIR+CARE failures |
+| Metric                 | Unit  | Description                               |
+| ---------------------- | ----- | ----------------------------------------- |
+| `datasets_scanned`     | count | FAIR+CARE validator inputs                |
+| `violations_found`     | count | FAIR+CARE failures                        |
 | `quarantined_datasets` | count | Assets moved to `abandonment_candidates/` |
-| `care_review_pending` | count | Items awaiting council review |
+| `care_review_pending`  | count | Items awaiting council review             |
 
 ### 4️⃣ AI Ethics & Explainability
 
-| Metric | Unit | Description |
-|---|---|---|
-| `bias_score` | 0–1 | Mean bias index across groups |
-| `drift_flag` | bool | True if model drift detected |
-| `explainability_stability` | percent | SHAP/LIME stability score |
+| Metric                     | Unit    | Description                   |
+| -------------------------- | ------- | ----------------------------- |
+| `bias_score`               | 0–1     | Mean bias index across groups |
+| `drift_flag`               | bool    | True if model drift detected  |
+| `explainability_stability` | percent | SHAP/LIME stability score     |
 
 ### 5️⃣ Accessibility & Equity
 
-| Metric | Unit | Description |
-|---|---|---|
-| `a11y_compliance` | percent | Accessibility score (WCAG 2.1 AA) |
-| `a11y_warnings` | count | Issues from axe/Pa11y/Lighthouse |
-| `inclusive_language_score` | percent | Inclusive language audit output |
+| Metric                     | Unit    | Description                       |
+| -------------------------- | ------- | --------------------------------- |
+| `a11y_compliance`          | percent | Accessibility score (WCAG 2.1 AA) |
+| `a11y_warnings`            | count   | Issues from axe/Pa11y/Lighthouse  |
+| `inclusive_language_score` | percent | Inclusive language audit output   |
 
 ---
 
 ## ♻️ Retention Policy
 
-| Data Type | Retention Period | Governance Action |
-|---|---|---|
-| Raw workflow telemetry | 30 days | Archived/rolled into summaries |
-| Unified `focus-telemetry.json` | 12 months | Immutable; part of release artifacts |
-| Sustainability metrics | 24 months | Used for trend analysis & reporting |
-| Governance ledger snapshot | Permanent | FAIR+CARE archival record |
+| Data Type                      | Retention Period | Governance Action                    |
+| ------------------------------ | ---------------- | ------------------------------------ |
+| Raw workflow telemetry         | 30 days          | Archived/rolled into summaries       |
+| Unified `focus-telemetry.json` | 12 months        | Immutable; part of release artifacts |
+| Sustainability metrics         | 24 months        | Used for trend analysis & reporting  |
+| Governance ledger snapshot     | Permanent        | FAIR+CARE archival record            |
 
 ---
 
@@ -198,27 +198,27 @@ Each telemetry record follows a unified, JSON Schema–validated structure:
 
 Under **ISO 50001** and **ISO 14064-1**, KFM:
 
-- Uses telemetry to identify high-energy workflows and prioritize optimizations.  
-- Estimates energy per CI job and multiplies by regional carbon intensity.  
-- Reports monthly metrics to FAIR+CARE sustainability dashboard.  
-- Targets carbon-neutral operation for core CI/CD pipelines.
+* Uses telemetry to identify high-energy workflows and prioritize optimizations.
+* Estimates energy per CI job and multiplies by regional carbon intensity.
+* Reports monthly metrics to FAIR+CARE sustainability dashboard.
+* Targets carbon-neutral operation for core CI/CD pipelines.
 
 **Sample thresholds (v10.2.0):**
 
-| Metric | Goal | Reporting Workflow |
-|---|---|---|
-| Energy per workflow | ≤ 45 Wh | `telemetry-export.yml` |
-| Avg CI build time | ≤ 12 min | build/test workflows |
-| Emission offset | 100% (RE100) | governance + sustainability reports |
-| FAIR+CARE telemetry coverage | 100% | `telemetry-export.yml` |
+| Metric                       | Goal         | Reporting Workflow                  |
+| ---------------------------- | ------------ | ----------------------------------- |
+| Energy per workflow          | ≤ 45 Wh      | `telemetry-export.yml`              |
+| Avg CI build time            | ≤ 12 min     | build/test workflows                |
+| Emission offset              | 100% (RE100) | governance + sustainability reports |
+| FAIR+CARE telemetry coverage | 100%         | `telemetry-export.yml`              |
 
 ---
 
 ## 🔐 Security & Provenance
 
-- Telemetry and related artifacts may be signed with **Sigstore Cosign** and linked via **SLSA** attestations.  
-- Checksums are tracked in `data/checksums/manifest.json` and referenced from manifests.  
-- Governance reviews ensure that telemetry does not inadvertently expose sensitive operational or user data.
+* Telemetry and related artifacts may be signed with **Sigstore Cosign** and linked via **SLSA** attestations.
+* Checksums are tracked in `data/checksums/manifest.json` and referenced from manifests.
+* Governance reviews ensure that telemetry does not inadvertently expose sensitive operational or user data.
 
 ---
 
@@ -237,18 +237,18 @@ flowchart LR
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.2.2 | 2025-11-12 | `@kfm-sustainability` | Updated references to v10.2.0; clarified metric categories, retention, and ISO 50001/14064 linkage; aligned with telemetry-export v3 behavior. |
+| Version | Date       | Author                | Summary                                                                                                                                           |
+| ------- | ---------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v10.2.2 | 2025-11-12 | `@kfm-sustainability` | Updated references to v10.2.0; clarified metric categories, retention, and ISO 50001/14064 linkage; aligned with telemetry-export v3 behavior.    |
 | v10.0.0 | 2025-11-10 | `@kfm-sustainability` | Established telemetry governance standard; introduced unified schema, sustainability metrics, FAIR+CARE integration; adopted telemetry schema v2. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix**  
-*Sustainable Metrics × FAIR+CARE Ethics × Transparent Governance*  
-© 2025 Kansas Frontier Matrix · CC-BY 4.0 · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix**
+*Sustainable Metrics × FAIR+CARE Ethics × Transparent Governance*
+© 2025 Kansas Frontier Matrix · CC-BY 4.0 · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 [Back to Standards Index](README.md) · [Governance Charter](governance/ROOT-GOVERNANCE.md)
 
