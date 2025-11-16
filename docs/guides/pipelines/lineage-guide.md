@@ -118,7 +118,7 @@ subgraph GOVERN["Governance Ledger"]
 end
 
 A --> B --> C --> D --> E --> F --> G
-
+```
 ---
 
 # 🧬 Lineage Model (v10.4.2)
