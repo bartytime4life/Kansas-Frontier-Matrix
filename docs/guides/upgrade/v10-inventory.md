@@ -63,44 +63,49 @@ This document captures **what changed**, **what was retained**, and **what was m
 
 ~~~text
 kfm/
-  .github/                        # CI/CD workflows · governance · docs-lint
-  docs/
-    architecture/                 # System + module architecture READMEs
-    guides/
-      upgrade/                    # v10 readiness, inventory, upgrade docs
-      workflows/                  # CI/validation/telemetry/governance guides
-      visualization/              # MapLibre, timeline, explainability, accessibility
-      pipelines/                  # Ingestion, validation, analytics, publishing
-    standards/                    # FAIR+CARE v2, MCP, markdown, governance
-    contracts/                    # Data & API contracts v3
-  src/
-    api/                          # FastAPI/GraphQL endpoints
-    graph/                        # Neo4j schema, loaders, ontology mapping
-    pipelines/                    # ETL, predictive, governance, telemetry
-      ingestion/
-      validation/
-      reliable_auto_release/
-      remote-sensing/
-      analytics/
-      governance/
-      lineage/
-    ai/                           # Focus transformer v2, explainability, QA
-    telemetry/                    # Pipeline & runtime Telemetry v2
-    web/                          # React + MapLibre web client
-  data/
-    sources/                      # Data Contracts v3 definitions
-    raw/                          # Raw datasets (LFS-managed)
-    work/                         # Staging, temp, intermediate
-    processed/                    # Validated, CARE-tagged assets
-    stac/                         # STAC catalogs mirrored to DCAT
-    lineage/                      # Lineage v2 bundles
-  tools/                          # CLIs (STAC↔DCAT bridge, validation, publishing)
-  tests/                          # Unit/integration/e2e tests
-  LICENSE
-  CONTRIBUTING.md
-  Makefile
+├── .github/                               # CI/CD workflows · governance · docs-lint · ledger sync
+│
+├── docs/                                  # Documentation corpus (FAIR+CARE v2 · MCP-DL v6.3)
+│   ├── architecture/                      # System + module architecture
+│   ├── guides/                            # How-to and reference guides
+│   │   ├── upgrade/                       # v10 readiness, inventory, consolidation
+│   │   ├── workflows/                     # CI · validation · telemetry · governance
+│   │   ├── visualization/                 # MapLibre · Timeline · XAI · Accessibility
+│   │   └── pipelines/                     # ETL · streaming · predictive · publishing
+│   ├── standards/                         # FAIR+CARE v2 · markdown protocol · governance rules
+│   └── contracts/                         # Data Contract v3 · API schemas · JSON schemas
+│
+├── src/                                   # Core application logic & backend systems
+│   ├── api/                               # FastAPI + GraphQL service layer
+│   ├── graph/                             # Neo4j loaders · CIDOC CRM · GeoSPARQL · OWL-Time
+│   ├── pipelines/                         # Deterministic ETL + predictive + governance
+│   │   ├── ingestion/                     # Watchers · conditional fetch · idempotency
+│   │   ├── validation/                    # GX checks · schema validation · CARE gates
+│   │   ├── reliable_auto_release/         # ETag-driven deterministic release pipelines
+│   │   ├── remote_sensing/                # SVF · LRM · harmonization · RTC · bandstacks
+│   │   ├── analytics/                     # Indices · hazards · trends · predictive modeling
+│   │   ├── governance/                    # CARE v2 · sovereignty · masking · ledger
+│   │   └── lineage/                       # Lineage v2 (PROV-O · CIDOC · GeoSPARQL)
+│   ├── ai/                                # Focus Transformer v2 · explainability · embeddings
+│   ├── telemetry/                         # Telemetry v2: energy · CO₂ · latency · A11y · CARE
+│   └── web/                               # React + MapLibre web platform (v10 UI architecture)
+│
+├── data/                                  # FAIR+CARE-governed data hierarchy
+│   ├── sources/                           # Data Contract v3 source manifests (STAC/DCAT)
+│   ├── raw/                               # Raw downloaded datasets (LFS managed)
+│   ├── work/                              # Staging · temp · checkpoints · telemetry · ledger
+│   ├── processed/                         # Validated · CARE-tagged · publication-ready assets
+│   ├── stac/                              # STAC Items/Collections · DCAT mirrors
+│   └── lineage/                           # Lineage v2 JSON-LD bundles
+│
+├── tools/                                 # CLI utilities (STAC↔DCAT sync · ingestion · validation)
+│
+├── tests/                                 # Unit · integration · ETL · lineage · telemetry tests
+│
+├── LICENSE                                # MIT (code) · CC-BY 4.0 (docs & data)
+├── CONTRIBUTING.md                        # Developer protocol (MCP-DL · Platinum Template)
+└── Makefile                               # Standardized entrypoint for builds & pipelines
 ~~~
-
 ---
 
 # 🧩 v10 Core Additions & Deltas (Summary)
