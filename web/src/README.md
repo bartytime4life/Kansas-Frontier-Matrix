@@ -1,18 +1,18 @@
 ---
 title: "💻 Kansas Frontier Matrix — Web Source Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/README.md"
-version: "v10.4.0"
+version: "v10.4.1"
 last_updated: "2025-11-15"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../releases/v10.4.0/focus-telemetry.json"
+sbom_ref: "../../releases/v10.4.1/sbom.spdx.json"
+manifest_ref: "../../releases/v10.4.1/manifest.zip"
+telemetry_ref: "../../releases/v10.4.1/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/web-src-readme-v1.json"
 governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v10.4.1"
 status: "Active / Enforced"
 doc_kind: "Overview"
 intent: "web-src-overview"
@@ -35,7 +35,7 @@ ontology_alignment:
   prov_o: "prov:Plan"
 json_schema_ref: "../../schemas/json/web-src-readme.schema.json"
 shape_schema_ref: "../../schemas/shacl/web-src-readme-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-src-readme-v10.4.0"
+doc_uuid: "urn:kfm:doc:web-src-readme-v10.4.1"
 semantic_document_id: "kfm-doc-web-src-readme"
 event_source_id: "ledger:web/src/README.md"
 immutability_status: "version-pinned"
@@ -43,7 +43,6 @@ doc_integrity_checksum: "<sha256>"
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summaries"
   - "semantic-highlighting"
   - "a11y-adaptations"
 ai_transform_prohibited:
@@ -65,10 +64,10 @@ sunset_policy: "Superseded upon next web/src overhaul"
 `web/src/README.md`
 
 **Purpose:**  
-Provide a clear, architecture-aligned, FAIR+CARE-compliant overview of the **web source directory**  
-(`web/src/**`) powering the Kansas Frontier Matrix (KFM) Web Platform:  
-React, MapLibre, Cesium, Focus Mode v2.5, Story Node v3, accessibility, governance layers,  
-state management, services, pipelines, and utilities.
+Provide a complete, FAIR+CARE-governed, WCAG-compliant architectural overview of  
+`web/src/**`, the full frontend application layer of the Kansas Frontier Matrix (KFM).  
+All React components, state systems, pipelines, governance layers, services, styling,  
+and utilities live here.
 
 </div>
 
@@ -76,187 +75,277 @@ state management, services, pipelines, and utilities.
 
 # 📘 Overview
 
-The `web/src/` directory contains **all frontend application logic** for the KFM Web Platform, including:
+`web/src/` contains:
 
-- React 18 + TypeScript (strict mode)  
-- Tailwind-based design system  
-- **MapLibre GL** for 2D rendering  
-- **CesiumJS** for 3D terrain & deep-time visualization  
-- **Focus Mode v2.5** reasoning UI  
-- **Story Node v3** rendering engine  
-- Timeline & time-based filtering  
-- STAC/DCAT explorers  
-- Governance overlays (CARE, provenance, licensing)  
-- Accessibility-first UI (WCAG 2.1 AA)  
-- Telemetry hooks (energy, carbon, A11y, usage, Focus Mode traces)
+- React 18 + TypeScript strict mode  
+- Tailwind design system + WCAG tokens  
+- MapLibre (2D) & Cesium (3D)  
+- Story Node v3 system  
+- Focus Mode v2.5  
+- TimelineView v2  
+- STAC/DCAT dataset explorers  
+- Governance/CARE overlays  
+- Telemetry capture (WebVitals, A11y, Focus Mode usage, energy/carbon)  
+- Context/state management, pipelines, services, and utilities  
 
-This directory is where **all web UI features** are implemented.
+It is the **core application logic** for the entire KFM frontend.
 
 ---
 
-# 🧱 Directory Structure
+# 🧱 Directory Structure (inline-labeled, compact)
 
 ~~~text
-web/src/                           # Frontend application source code
-├── README.md                      # This overview
-├── ARCHITECTURE.md                # Full source architecture specification
+web/src/
+├── README.md                          # This document
+├── ARCHITECTURE.md                    # Full system architecture specification
 │
-├── components/                    # Reusable React components
-│   ├── map/                       # MapLibre layers, controls, overlays
-│   ├── timeline/                  # Timeline, scrubbing, markers
-│   ├── focus/                     # Focus Mode panels & controls
-│   ├── story/                     # Story Node v3 cards & details
-│   ├── governance/                # CARE/provenance/UI overlays
-│   ├── stac/                      # STAC/DCAT UI components
-│   └── layout/                    # Headers, shells, responsive containers
+├── components/                        # All React UI components (presentational only)
+│   ├── MapView/                       # Canonical 2D map system (MapLibre)
+│   │   ├── MapViewContainer.tsx       # Map orchestration + contexts
+│   │   ├── MapCanvas.tsx              # MapLibre mount + render surface
+│   │   ├── LayerManager.tsx           # Loads/unloads layers deterministically
+│   │   ├── LegendPanel.tsx            # CARE-aware legend panel
+│   │   ├── MapControls.tsx            # Zoom/rotate/reset controls
+│   │   ├── StoryNodeLayer.tsx         # Story Node v3 footprint rendering
+│   │   ├── FocusHighlightLayer.tsx    # Focus Mode spatial highlight
+│   │   ├── DatasetFootprintLayer.tsx  # STAC/DCAT footprint overlays
+│   │   ├── SovereigntyMaskLayer.tsx   # H3 r7+ masking for sensitive sites
+│   │   └── primitives/                # Map primitives (legacy-compatible)
+│   │       ├── MapContainer.tsx       # Legacy map wrapper
+│   │       ├── LayerToggle.tsx        # Legacy layer toggle
+│   │       ├── Legend.tsx             # Legacy legend component
+│   │       └── FeatureHighlight.tsx   # Legacy highlight implementation
+│   │
+│   ├── TimelineView/                  # Full timeline navigation system
+│   │   ├── TimelineViewContainer.tsx  # Top-level timeline shell
+│   │   ├── TimelinePrimary.tsx        # Core timeline axis renderer
+│   │   ├── TimelineMarkersLayer.tsx   # StoryNode/STAC markers
+│   │   ├── TimelineControls.tsx       # Granularity + zoom
+│   │   ├── TimelineA11yHelpers.tsx    # Screen-reader labeling
+│   │   ├── TimelineCallouts.tsx       # CARE temporal warnings
+│   │   └── primitives/                # Timeline primitives (legacy-compatible)
+│   │       ├── TimelineBar.tsx        # Base axis visuals
+│   │       ├── TimelineHandle.tsx     # Adjustable handle
+│   │       ├── TimelineMarkers.tsx    # Marker renderer
+│   │       └── GranularityControls.tsx# Base granularity component
+│   │
+│   ├── FocusMode/                     # Focus Mode v2.5 advanced reasoning UI
+│   │   ├── FocusContainer.tsx         # Primary focus viewport
+│   │   ├── FocusHeader.tsx            # Entity header + CARE/provenance
+│   │   ├── FocusSummary.tsx           # Summary (AI-labeled if applicable)
+│   │   ├── FocusTabs.tsx              # Overview/Relations/Spatial/Prov tabs
+│   │   ├── RelationsPanel.tsx         # Related entity groups
+│   │   ├── RelationCard.tsx           # Individual relation card
+│   │   ├── NarrativeSection.tsx       # Narrative + governance text
+│   │   ├── ExplainabilitySection.tsx  # SHAP/LIME explainability
+│   │   ├── SpatialPanel.tsx           # Map footprint preview
+│   │   ├── ProvenancePanel.tsx        # Full provenance chain
+│   │   ├── WarningsPanel.tsx          # CARE/sovereignty warnings
+│   │   └── primitives/                # Focus primitives (legacy-compatible)
+│   │       ├── FocusPanel.tsx
+│   │       ├── RelatedEntityCard.tsx
+│   │       ├── FocusNarrative.tsx
+│   │       ├── ExplanationBlock.tsx
+│   │       └── CARENotices.tsx
+│   │
+│   ├── DetailDrawer/                  # Universal slide-out detail drawer
+│   │   ├── DetailDrawer.tsx
+│   │   ├── DrawerHeader.tsx
+│   │   ├── DrawerSection.tsx
+│   │   ├── DrawerMetadata.tsx
+│   │   ├── DrawerProvenance.tsx
+│   │   ├── DrawerCAREBlock.tsx
+│   │   ├── DrawerFooter.tsx
+│   │   └── DrawerA11yHelpers.tsx
+│   │
+│   ├── DataCards/                     # Dataset/asset metadata cards
+│   │   ├── DataCard.tsx
+│   │   ├── DataCardHeader.tsx
+│   │   ├── DataCardMetadata.tsx
+│   │   ├── DataCardPreview.tsx
+│   │   ├── DataCardFooter.tsx
+│   │   ├── DataCardA11yHelpers.tsx
+│   │   └── DataCardSkeleton.tsx
+│   │
+│   ├── story/                         # Story Node v3 narrative components
+│   │   ├── StoryCard.tsx
+│   │   ├── StoryDetail.tsx
+│   │   ├── StoryMedia.tsx
+│   │   ├── StoryMapPreview.tsx
+│   │   └── StoryRelations.tsx
+│   │
+│   ├── governance/                    # Governance & CARE UI
+│   │   ├── CAREBadge.tsx
+│   │   ├── LicenseTag.tsx
+│   │   ├── ProvenanceChip.tsx
+│   │   ├── ProvenanceTrail.tsx
+│   │   ├── SovereigntyNotice.tsx
+│   │   ├── MaskingIndicator.tsx
+│   │   └── GovernanceDrawer.tsx
+│   │
+│   ├── stac/                          # STAC/DCAT UI suite
+│   │   ├── DatasetCard.tsx
+│   │   ├── DatasetList.tsx
+│   │   ├── ItemPreview.tsx
+│   │   ├── AssetMetadata.tsx
+│   │   └── ExtentPreview.tsx
+│   │
+│   ├── layout/                        # Page shells & navigation
+│   │   ├── Header.tsx
+│   │   ├── Sidebar.tsx
+│   │   ├── Panel.tsx
+│   │   ├── PageContainer.tsx
+│   │   └── SplitView.tsx
+│   │
+│   └── shared/                        # Low-level UI primitives
+│       ├── Button.tsx
+│       ├── IconButton.tsx
+│       ├── Dropdown.tsx
+│       ├── Tabs.tsx
+│       ├── Modal.tsx
+│       ├── Tooltip.tsx
+│       ├── Spinner.tsx
+│       ├── Badge.tsx
+│       ├── Card.tsx
+│       └── FormControls/
+│           ├── TextInput.tsx
+│           ├── Checkbox.tsx
+│           ├── RadioGroup.tsx
+│           ├── Select.tsx
+│           ├── ToggleSwitch.tsx
+│           └── FieldLabel.tsx
 │
-├── pages/                         # Top-level route views
+├── pages/                             # SPA route views (Map, Timeline, Focus, Story)
 │
-├── hooks/                         # Custom hooks (data + state + UI logic)
-│   ├── useMap.ts                  # MapLibre synchronization  
-│   ├── useTimeline.ts             # Timeline → map → focus sync  
-│   ├── useFocus.ts                # Focus Mode v2.5 orchestration  
-│   ├── useStac.ts                 # STAC/DCAT API integration  
-│   └── useTelemetry.ts            # WebVitals + A11y telemetry  
+├── hooks/                             # Reusable logic (cross-feature)
+│   ├── useMap.ts
+│   ├── useTimeline.ts
+│   ├── useFocus.ts
+│   ├── useStac.ts
+│   └── useTelemetry.ts
 │
-├── context/                       # React Context providers
+├── context/                           # Global React state containers
 │   ├── TimeContext.tsx
 │   ├── FocusContext.tsx
 │   ├── ThemeContext.tsx
 │   ├── A11yContext.tsx
-│   └── GovernanceContext.tsx
+│   ├── GovernanceContext.tsx
+│   ├── MapContext.tsx
+│   └── UIContext.tsx
 │
-├── services/                      # API and backend communication
-│   ├── apiClient.ts               # REST + GraphQL wrapper
-│   ├── stacService.ts             # STAC integration
-│   ├── dcatService.ts             # DCAT integration
-│   ├── telemetryService.ts        # Telemetry export
-│   └── governanceService.ts       # Licence/CARE/provenance lookup
+├── services/                          # Backend & metadata communication
+│   ├── apiClient.ts
+│   ├── stacService.ts
+│   ├── dcatService.ts
+│   ├── telemetryService.ts
+│   └── governanceService.ts
 │
-├── pipelines/                     # Frontend orchestration pipelines
-│   ├── focusPipeline.ts           # Focus Mode v2.5 logic composition
-│   ├── stacPipeline.ts            # STAC dataset flows
-│   ├── storyPipeline.ts           # Story Node + focus interactions
-│   └── timelinePipeline.ts        # Timeline → map → narrative sync
+├── pipelines/                         # Client-side orchestration systems
+│   ├── focusPipeline.ts
+│   ├── stacPipeline.ts
+│   ├── storyPipeline.ts
+│   └── timelinePipeline.ts
 │
-├── utils/                         # Utility helpers
-│   ├── formatters.ts              # String/number/date utilities
-│   ├── jsonld.ts                  # JSON-LD generators
-│   ├── guards.ts                  # Type + schema guards
-│   ├── bbox.ts                    # Spatial helpers
-│   └── a11y.ts                    # Accessibility helpers
+├── utils/                             # Pure helper modules
+│   ├── formatters.ts
+│   ├── jsonld.ts
+│   ├── guards.ts
+│   ├── bbox.ts
+│   ├── a11y.ts
+│   ├── color.ts
+│   └── temporal.ts
 │
-├── styles/                        # Global styling system
-│   ├── tokens/                    # Design tokens
-│   ├── themes/                    # Light/dark themes
-│   ├── mixins/                    # Layout + component CSS utilities
-│   └── maps/                      # MapLibre-specific CSS
+├── styles/                            # Design tokens + global styling
+│   ├── tokens/
+│   ├── themes/
+│   ├── mixins/
+│   └── maps/
 │
-├── types/                         # Shared TypeScript types
-│   ├── api.ts                     # API DTO typings
-│   ├── domain.ts                  # Story Nodes, Focus, timelines
-│   └── stac.ts                    # STAC/DCAT typings
+├── types/                             # Shared TS types (DTOs + domain models)
+│   ├── api.ts
+│   ├── domain.ts
+│   ├── governance.ts
+│   ├── spatial.ts
+│   ├── temporal.ts
+│   ├── ui.ts
+│   ├── telemetry.ts
+│   ├── focus.ts
+│   ├── story.ts
+│   ├── stac.ts
+│   ├── dcat.ts
+│   └── index.ts
 │
-├── main.tsx                       # Entry point (React DOM mount)
-└── App.tsx                        # Root layout, routing, theme provider
+├── main.tsx                           # React entrypoint
+└── App.tsx                            # Root shell, routing, context providers
 ~~~
 
 ---
 
-# 🧩 Responsibilities of `web/src/**`
+# 🔐 Governance (FAIR+CARE)
 
-### 1. UI Rendering  
-- MapLibre overlays  
-- Cesium globe  
-- Story Node cards & detail views  
-- Focus Mode interactive panels  
-- STAC/DCAT dataset views  
+All modules must:
 
-### 2. State Synchronization  
-- TimeContext → timeline, map, story nodes, focus  
-- FocusContext → map highlight + narrative update  
-- Theme + A11y → CSS token propagation  
-
-### 3. Data Integration  
-- REST / GraphQL  
-- STAC/DCAT endpoints  
-- Telemetry ingest/output  
-- Governance metadata (CARE, licenses, provenance)  
-
-### 4. Accessibility Architecture  
-- ARIA-first UI  
-- High contrast + reduced motion  
-- Keyboard accessibility  
-- A11y tokens  
-
-### 5. Governance & Ethics  
 - Display CARE labels  
-- No rendering of protected coordinates  
-- Masking via H3 generalization  
-- Annotate AI-derived content  
+- Respect sovereignty boundaries  
+- Apply H3 r7+ generalization for sensitive coordinates  
+- Annotate AI-generated content  
+- Surface provenance metadata  
+- Avoid speculative or unverified historical claims  
 
----
-
-# 🔐 FAIR+CARE Integration
-
-Every component in `web/src/**` must:
-
-- Respect CARE metadata  
-- Apply masking for sensitive sites  
-- Display provenance chips  
-- Mark AI-generated content  
-- Avoid speculative claims  
-- Support ethical visualization  
-- Use accessible map layers  
-
-Governance violations **block merges in CI**.
+Governance violations = **CI BLOCKER**.
 
 ---
 
 # ♿ Accessibility (WCAG 2.1 AA)
 
-Required across all components:
+Requirements across all code:
 
 - Keyboard operability  
-- ARIA labels + roles  
-- High contrast visual tokens  
-- Reduced motion mode  
-- Proper heading structure  
-- Alt-text for images  
-- Accessible map interactions  
+- ARIA roles & labels  
+- High-contrast tokens  
+- Reduced-motion support  
+- Semantic HTML structure  
+- Screen-reader-safe content  
+
+Accessibility regressions = **merge blocked**.
 
 ---
 
-# 📈 Telemetry Responsibilities
+# 📈 Telemetry Requirements
 
-Telemetry collected in this layer includes:
+Telemetry captured here includes:
 
-- WebVitals (LCP, CLS, FID, TTI)  
-- Focus Mode interactions  
-- Story Node usage  
-- Map interactions (pan/zoom/layer toggles)  
+- Map interactions  
+- Timeline scrubs  
+- Focus Mode activity  
+- Story Node interactions  
 - A11y usage  
-- Sustainability metrics  
+- Energy & carbon metrics  
+- Performance (WebVitals)  
 
-Data is exported to the release bundle:
+Exported to:
 
-`releases/<version>/focus-telemetry.json`
+```
+
+releases/<version>/focus-telemetry.json
+
+```
 
 ---
 
-# 🧪 Testing Expectations
+# 🧪 Testing Requirements
 
-All code within `web/src/**` must satisfy:
+Every feature must implement:
 
 - Unit tests  
 - Integration tests  
-- Visual UI tests (optional)  
 - A11y tests  
-- Schema/type guards  
-- Governance checks  
-- Timeline/map synchrony tests  
+- Governance tests  
+- Telemetry tests  
+- Schema/type guard tests  
+- Timeline ↔ Map ↔ Focus sync tests  
 
-Testing failures **block PRs**.
+Testing failures block merges under CI/CD.
 
 ---
 
@@ -264,8 +353,9 @@ Testing failures **block PRs**.
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Full compliant rewrite for KFM-MDP v10.4; aligned with web/src architecture |
-| v10.3.2 | 2025-11-14 | Updated with governance/Focus Mode v2.5 flows |
+| v10.4.1 | 2025-11-15 | Fully aligned + polished to reflect new MapView, TimelineView, FocusMode, primitives structure |
+| v10.4.0 | 2025-11-15 | Rewritten to match v10.4 architecture |
+| v10.3.2 | 2025-11-14 | Added governance & accessibility enhancements |
 | v10.3.1 | 2025-11-13 | Initial baseline README |
 
 ---
@@ -273,7 +363,7 @@ Testing failures **block PRs**.
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-Reviewed under MCP-DL v6.3 and KFM-MDP v10.4  
 FAIR+CARE Certified · Public Document · Version-Pinned  
+Validated under MCP-DL v6.3 & KFM-MDP v10.4.1  
 
 </div>
