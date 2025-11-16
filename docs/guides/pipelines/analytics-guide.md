@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "📊 Kansas Frontier Matrix — Analytics Pipeline Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/pipelines/analytics-guide.md"
