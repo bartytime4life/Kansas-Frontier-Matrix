@@ -97,25 +97,57 @@ Components are responsible for **presentation**, not computation.
 
 ~~~text
 web/src/components/
-├── map/                           # 2D MapLibre components
-│   ├── MapContainer.tsx           # Base map instance
-│   ├── LayerToggle.tsx            # Layer controls
-│   ├── Legend.tsx                 # Accessible legend UI
-│   ├── FeatureHighlight.tsx       # Highlight for Focus Mode + Story Nodes
-│   └── ProvenanceOverlay.tsx      # CARE/licensing/provenance indicators
+├── MapView/                       # Full MapLibre-based map system (replaces old map/)
+│   ├── MapViewContainer.tsx
+│   ├── MapCanvas.tsx
+│   ├── LayerManager.tsx
+│   ├── LegendPanel.tsx
+│   ├── MapControls.tsx
+│   ├── StoryNodeLayer.tsx
+│   ├── FocusHighlightLayer.tsx
+│   ├── DatasetFootprintLayer.tsx
+│   ├── SovereigntyMaskLayer.tsx
+│   └── CursorHUD.tsx
 │
-├── timeline/                      # Timeline UI primitives
-│   ├── TimelineBar.tsx
-│   ├── TimelineHandle.tsx
-│   ├── TimelineMarkers.tsx
-│   └── GranularityControls.tsx
+├── TimelineView/                  # Full-page timeline experience (replaces old timeline/)
+│   ├── TimelineViewContainer.tsx
+│   ├── TimelinePrimary.tsx
+│   ├── TimelineMarkersLayer.tsx
+│   ├── TimelineControls.tsx
+│   ├── TimelineA11yHelpers.tsx
+│   └── TimelineCallouts.tsx
 │
-├── focus/                         # Focus Mode v2.5 UI elements
-│   ├── FocusPanel.tsx
-│   ├── RelatedEntityCard.tsx
-│   ├── FocusNarrative.tsx
-│   ├── ExplanationBlock.tsx       # SHAP/LIME explanations
-│   └── CARENotices.tsx            # Ethical context + data sovereignty
+├── FocusMode/                     # Focus Mode v2.5 UI suite (replaces old focus/)
+│   ├── FocusContainer.tsx
+│   ├── FocusHeader.tsx
+│   ├── FocusSummary.tsx
+│   ├── FocusTabs.tsx
+│   ├── RelationsPanel.tsx
+│   ├── RelationCard.tsx
+│   ├── NarrativeSection.tsx
+│   ├── ExplainabilitySection.tsx
+│   ├── SpatialPanel.tsx
+│   ├── ProvenancePanel.tsx
+│   └── WarningsPanel.tsx
+│
+├── DetailDrawer/                  # Universal slide-out detail view system
+│   ├── DetailDrawer.tsx
+│   ├── DrawerHeader.tsx
+│   ├── DrawerSection.tsx
+│   ├── DrawerMetadata.tsx
+│   ├── DrawerProvenance.tsx
+│   ├── DrawerCAREBlock.tsx
+│   ├── DrawerFooter.tsx
+│   └── DrawerA11yHelpers.tsx
+│
+├── DataCards/                     # Dataset / asset / metadata card system
+│   ├── DataCard.tsx
+│   ├── DataCardHeader.tsx
+│   ├── DataCardMetadata.tsx
+│   ├── DataCardPreview.tsx
+│   ├── DataCardFooter.tsx
+│   ├── DataCardA11yHelpers.tsx
+│   └── DataCardSkeleton.tsx
 │
 ├── story/                         # Story Node v3 UI components
 │   ├── StoryCard.tsx
@@ -128,28 +160,43 @@ web/src/components/
 │   ├── CAREBadge.tsx
 │   ├── LicenseTag.tsx
 │   ├── ProvenanceChip.tsx
+│   ├── ProvenanceTrail.tsx
+│   ├── SovereigntyNotice.tsx
+│   ├── MaskingIndicator.tsx
 │   └── GovernanceDrawer.tsx
 │
 ├── stac/                          # STAC/DCAT dataset exploration UI
 │   ├── DatasetCard.tsx
+│   ├── DatasetList.tsx
 │   ├── ItemPreview.tsx
 │   ├── AssetMetadata.tsx
 │   └── ExtentPreview.tsx
 │
-├── layout/                        # Layout and global shell components
+├── layout/                        # Global layout components
 │   ├── Header.tsx
 │   ├── Sidebar.tsx
 │   ├── Panel.tsx
-│   └── PageContainer.tsx
+│   ├── PageContainer.tsx
+│   └── SplitView.tsx
 │
-└── shared/                        # Cross-platform shared UI primitives
+└── shared/                        # Reusable UI primitives
     ├── Button.tsx
-    ├── Modal.tsx
+    ├── IconButton.tsx
     ├── Dropdown.tsx
     ├── Tabs.tsx
-    └── Spinner.tsx
+    ├── Modal.tsx
+    ├── Tooltip.tsx
+    ├── Spinner.tsx
+    ├── Badge.tsx
+    ├── Card.tsx
+    └── FormControls/
+        ├── TextInput.tsx
+        ├── Checkbox.tsx
+        ├── RadioGroup.tsx
+        ├── Select.tsx
+        ├── ToggleSwitch.tsx
+        └── FieldLabel.tsx
 ~~~
-
 ---
 
 # 🧩 Component Responsibilities
