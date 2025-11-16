@@ -86,49 +86,60 @@ src/
 
 ## 🌐 Full-Page Lineage Architecture (KFM-Styled Mermaid)
 
-```mermaid
 flowchart TD
 
-subgraph INGEST["Source Acquisition<br/><span style='font-size:12px'>STAC · Raster · Vector · External Providers</span>"]
-    X0[" "]:::hidden
-    A["Source Entities"]
+%% ------------------------------------------------------------
+%%  SOURCE ACQUISITION
+%% ------------------------------------------------------------
+subgraph INGEST["Source Acquisition"]
+    A["Source Entities<br/>STAC · Raster · Vector · External Providers"]
 end
 
-subgraph ACTIVITIES["Pipeline Activities<br/><span style='font-size:12px'>Ingest · Preprocess · Analytics · Validate · Publish</span>"]
-    X1[" "]:::hidden
-    B["Activities (prov:Activity)"]
+%% ------------------------------------------------------------
+%%  PIPELINE ACTIVITIES
+%% ------------------------------------------------------------
+subgraph ACTIVITIES["Pipeline Activities"]
+    B["Activities (prov:Activity)<br/>Ingest · Preprocess · Analytics · Validate · Publish"]
 end
 
-subgraph VALIDATE["Validation Gate<br/><span style='font-size:12px'>GX · CARE v2 · Schema · Geometry · Telemetry</span>"]
-    X2[" "]:::hidden
-    C["Validation Checks"]
+%% ------------------------------------------------------------
+%%  VALIDATION GATE
+%% ------------------------------------------------------------
+subgraph VALIDATE["Validation Gate"]
+    C["Validation Checks<br/>GX · CARE v2 · Schema · Geometry · Telemetry"]
 end
 
-subgraph PROMOTE["Promotion<br/><span style='font-size:12px'>Staging → Processed</span>"]
-    X3[" "]:::hidden
-    D["Promoted Entities<br/><span style='font-size:12px'>Checksum-locked + CARE-labeled</span>"]
+%% ------------------------------------------------------------
+%%  PROMOTION
+%% ------------------------------------------------------------
+subgraph PROMOTE["Promotion"]
+    D["Promoted Entities<br/>Checksum-locked · CARE-labeled"]
 end
 
-subgraph PUBLISH["Publishing<br/><span style='font-size:12px'>STAC · DCAT · RDF · Neo4j</span>"]
-    X4[" "]:::hidden
-    E["Published Outputs<br/><span style='font-size:12px'>multi-surface release</span>"]
+%% ------------------------------------------------------------
+%%  PUBLISHING
+%% ------------------------------------------------------------
+subgraph PUBLISH["Publishing"]
+    E["Published Outputs<br/>multi-surface release"]
 end
 
-subgraph LINEAGE["Lineage Export<br/><span style='font-size:12px'>JSON-LD · PROV-O · CIDOC · GeoSPARQL · CARE v2</span>"]
-    X5[" "]:::hidden
-    F["Lineage Bundle"]
+%% ------------------------------------------------------------
+%%  LINEAGE EXPORT
+%% ------------------------------------------------------------
+subgraph LINEAGE["Lineage Export"]
+    F["Lineage Bundle<br/>JSON-LD · PROV-O · CIDOC · GeoSPARQL · CARE v2"]
 end
 
-subgraph GOVERN["Governance Ledger<br/><span style='font-size:12px'>Append-only provenance entries</span>"]
-    X6[" "]:::hidden
-    G["Ledger Entry"]
+%% ------------------------------------------------------------
+%%  GOVERNANCE LEDGER
+%% ------------------------------------------------------------
+subgraph GOVERN["Governance Ledger"]
+    G["Ledger Entry<br/>Append-only provenance"]
 end
 
+%% FLOW
 A --> B --> C --> D --> E --> F --> G
 
-%% make spacer nodes invisible
-classDef hidden fill:transparent,stroke-width:0,color:transparent
-```
 ---
 
 # 🧬 Lineage Model (v10.4.2)
