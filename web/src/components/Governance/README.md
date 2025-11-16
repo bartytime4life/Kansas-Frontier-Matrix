@@ -1,326 +1,342 @@
 ---
-title: "⚖️ Kansas Frontier Matrix — Governance UI Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🛡️ Kansas Frontier Matrix — Governance UI Components Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/Governance/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-components-governance-v2.json"
+sbom_ref: "../../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-components-governance-v1.json"
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Component Overview"
+intent: "web-components-governance"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Medium (dependent on dataset sensitivity)"
+sensitivity_level: "Mixed"
+public_exposure_risk: "Dataset-dependent"
+indigenous_rights_flag: "Conditional"
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Mixed"
+redaction_required: true
+provenance_chain:
+  - "web/src/components/Governance/README.md@v10.3.2"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E30 Right"
+  schema_org: "CreativeWork"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Entity"
+json_schema_ref: "../../../../schemas/json/web-components-governance-readme.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/web-components-governance-readme-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-components-governance-readme-v10.4.0"
+semantic_document_id: "kfm-doc-web-components-governance-readme"
+event_source_id: "ledger:web/src/components/Governance/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "summaries"
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public (with CARE-governed exceptions)"
+role: "overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review every 12 months"
+sunset_policy: "Superseded on next governance-component update"
 ---
 
 <div align="center">
 
-# ⚖️ **Kansas Frontier Matrix — Governance UI Architecture**  
+# 🛡️ **Kansas Frontier Matrix — Governance UI Components Overview**  
 `web/src/components/Governance/README.md`
 
 **Purpose:**  
-Define the **deep-architecture specification** for Governance UI components in KFM v10.3.2, enabling transparency, provenance surfacing, ethical AI review, and CARE-led cultural sensitivity controls.  
-These components unify provenance datasets, FAIR+CARE audits, explainability systems, sustainability telemetry, and KFM’s governance ledgers into a single visual and ethical oversight layer.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance-orange)]()
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+Define the complete set of **governance- and ethics-oriented UI components** used throughout  
+the KFM Web Platform to display CARE metadata, provenance chains, sovereignty warnings, masking  
+information, license metadata, and ethical context requirements.  
+These components ensure the frontend displays sensitive data ethically, transparently, and in  
+strict compliance with FAIR+CARE Council policies.
 
 </div>
 
 ---
 
-# 📘 Executive Summary
+# 📘 Overview
 
-Governance UI components serve as the **ethical nervous system** of the Kansas Frontier Matrix, ensuring:
+Governance UI components enforce **ethical transparency** across the Web Platform by:
 
-- Transparent provenance  
-- FAIR+CARE validation & reporting  
-- Ethical AI audit visibility  
-- Cultural sensitivity indicators  
-- Bias & drift summaries  
-- Sustainability metrics  
-- Ledger-level history + lineage tracking  
-- Accessible and inclusive governance dashboards  
+- Showing CARE labels  
+- Displaying provenance chips & chains  
+- Warning users about sovereignty or masking rules  
+- Surfacing dataset licensing  
+- Documenting transformation lineage  
+- Marking AI-generated content  
+- Showing sensitive-site generalization notices  
+- Rendering governance drawers or modals with detailed metadata  
 
-This architecture provides the **visual oversight layer** connecting the KFM platform to its FAIR+CARE Council & governance workflows.
+These components appear in:
+
+- Focus Mode v2.5  
+- Story Node v3 views  
+- STAC/DCAT explorers  
+- Map overlays  
+- Dataset detail panels  
+- Timeline contextual warnings  
+- Any location where sensitive or regulated data appears  
 
 ---
 
-# 🗂️ Directory Layout (Authoritative v10.3.2)
+# 🧱 Directory Structure
 
-```text
+~~~text
 web/src/components/Governance/
-├── README.md
-├── GovernanceDashboard.tsx
-├── ValidationPanel.tsx
-├── EthicsSummary.tsx
-└── metadata.json
-```
-
-Each component participates in the **KFM Governance Dataflow Plane**.
-
----
-
-# 🧩 High-Level Governance UI Architecture
-
-```mermaid
-flowchart TD
-    VALREP[Validation Reports<br/>FAIRCARE · Schema · Checksums · AI Audits] --> GD[GovernanceDashboard]
-    GD --> VP[ValidationPanel]
-    VP --> ES[EthicsSummary]
-    ES --> LEDGER[Governance Ledger<br/>provenance · CARE · audit]
-    LEDGER --> TEL[Telemetry Export<br/>energy · ethics · transparency]
-```
+├── CAREBadge.tsx                 # CARE classification tag with tooltip context
+├── LicenseTag.tsx                # SPDX license display
+├── ProvenanceChip.tsx            # Inline chip showing provenance & lineage
+├── ProvenanceTrail.tsx           # Expanded provenance visual graph
+├── SovereigntyNotice.tsx         # Warning UI for Indigenous/sovereignty-governed data
+├── MaskingIndicator.tsx          # Indicates H3 masking/redaction applied
+├── GovernanceDrawer.tsx          # Slide-out panel with full governance metadata
+├── AIGeneratedTag.tsx            # Marks AI-generated narrative segments
+└── EthicsContextBlock.tsx        # Required ethical disclaimers + CARE explanations
+~~~
 
 ---
 
-# 🧬 Component Deep Architecture
+# 🧩 Component Responsibilities
 
-## 1️⃣ GovernanceDashboard.tsx — Oversight & Provenance Hub
+## 🎫 **CAREBadge.tsx**
+Displays the CARE classification of the dataset or entity:
 
-### Responsibilities
-- Aggregate results from:
-  - FAIR+CARE audits  
-  - Schema + checksum validators  
-  - AI ethics + explainability testers  
-  - Pipeline provenance chains  
-  - Sustainability + energy telemetry  
-- Expose visual “governance-at-a-glance” state  
+- Public  
+- Low-Risk  
+- Restricted  
+- Sovereignty-Controlled  
+- Cultural Protocol Required  
 
-### Architecture
+Must show:
 
-```mermaid
-flowchart TD
-    AUD[Audit Data] --> DASH[GovernanceDashboard]
-    PROV[Provenance Metadata] --> DASH
-    CARE[CARE Flags] --> DASH
-    ETH[Ethics Signals] --> DASH
-    SUST[Sustainability Metrics] --> DASH
-```
+- Tooltip with CARE principles  
+- Link to governance reference  
+- Color-coded WCAG-compliant palette  
 
 ---
 
-## 2️⃣ ValidationPanel.tsx — Schema + FAIR+CARE Validator
+## 📄 **LicenseTag.tsx**
+Displays SPDX license metadata:
 
-Displays:
+- MIT  
+- CC-BY  
+- Public Domain  
+- Custom dataset licenses  
 
-- Schema validity  
-- STAC/DCAT compliance  
-- License consistency  
-- Checksums + cryptographic verification  
-- CARE masking correctness  
-- Bias/drift warnings for AI artifacts  
+Must include:
 
-### Architecture
-
-```mermaid
-flowchart TD
-    SCH[Schema Checks] --> PANEL[ValidationPanel]
-    SUM[Checksum Audit] --> PANEL
-    CAREF[CARE Enforcement Logs] --> PANEL
-    XAI[Explainability Test Results] --> PANEL
-```
+- Tooltip for license text  
+- Link to official SPDX reference  
 
 ---
 
-## 3️⃣ EthicsSummary.tsx — Cultural, Social & AI Ethics Capsule
+## 🧬 **ProvenanceChip.tsx**
+Shows immediate provenance metadata:
 
-Summaries include:
+- Source  
+- Rights-holder  
+- Transformation step  
+- Tool + version that generated the data  
 
-- CARE compliance snapshot  
-- AI explainability notes  
-- Bias drift indicators  
-- Cultural-sensitivity signals  
-- Environmental justice alignment  
-- Governance flag triggers  
-
-### Architecture
-
-```mermaid
-flowchart TD
-    META[Ethics Metadata] --> ESUM[EthicsSummary]
-    CARE1[CARE Labels] --> ESUM
-    LEDT[Ledger Trends] --> ESUM
-```
+Interactive: opens `ProvenanceTrail`.
 
 ---
 
-# 🧠 Provenance & Lineage Architecture (ISO 19115 + PROV-O)
+## 🪢 **ProvenanceTrail.tsx**
+Expanded provenance graph:
 
-Governance components surface:
-
-- upstream pipeline lineage  
-- dataset provenance  
-- model training lineage  
-- checksum registry links  
-- dataset → collection → source chain  
-- witness references for tribal sovereignty data  
-
-## Provenance Flow
-
-```mermaid
-flowchart LR
-    DS[Dataset] --> STAC[STAC Metadata]
-    STAC --> PROV[Provenance Builder]
-    PROV --> GOVUI[Governance Components]
-```
+- PROV-O aligned  
+- Chronological transformation chain  
+- CARE and license metadata per step  
+- Optional JSON-LD download  
 
 ---
 
-# 🔐 CARE Governance Integration
+## 🛑 **SovereigntyNotice.tsx**
+Shown when data intersects:
 
-Governance UI is responsible for surfacing:
+- Tribal jurisdictions  
+- Indigenous-controlled data  
+- Sovereignty-governed cultural assets  
 
-- CARE labels (public, sensitive, restricted)  
-- Sovereignty banners  
-- Masking indicators  
-- Restricted data warnings  
-- Heritage protection notices  
+Must include:
 
-## CARE Enforcement Model
-
-```mermaid
-flowchart TD
-    MET[Metadata CARE Label] --> DEC[CARE Decision Engine]
-    DEC --> UI1[Show Warning]
-    DEC --> UI2[Hide or Mask Resource]
-```
+- Clear warning  
+- Explanation text  
+- Link to CARE principles  
+- Alternative generalization guidance  
 
 ---
 
-# 🧮 Ethical AI Oversight (Focus Mode v2.5)
+## 🟡 **MaskingIndicator.tsx**
+Shows that geometry has been:
 
-Governance components integrate:
+- H3-generalized (default r7)  
+- Masked or blurred  
+- Coarse-gridded  
+- Time-bucketed  
 
-- AI reasoning audits  
-- Explainability model summaries  
-- SHAP/LIME justification pairs  
-- Bias-checking metrics  
-- Drift monitoring  
-- Content safety & alignment vetting  
+Must include:
 
-### AI Governance Flow
-
-```mermaid
-flowchart LR
-    FP[FocusMode Output] --> ETHX[Explainability & Bias Checks]
-    ETHX --> GOVUI[Governance Panels]
-```
+- Reason for masking  
+- What was removed  
+- CARE justification  
 
 ---
 
-# 📊 Sustainability & Energy Metrics
+## 🧰 **GovernanceDrawer.tsx**
+A drawer displaying full governance metadata:
 
-Governance UI exposes:
+- CARE classification  
+- License  
+- Rights-holder  
+- Provenance chain  
+- Sovereignty rules  
+- Dataset lineage  
+- AI generation markers  
 
-- energy per render (Wh)  
-- carbon estimations (gCO₂e)  
-- renewable energy compliance (RE100)  
-- ethical design energy thresholds  
-
-### Sustainability Flow
-
-```mermaid
-flowchart TD
-    TELM[Telemetry Metrics] --> SUST[Governance Sustainability Panel]
-```
+Accessible via keyboard and screen readers.
 
 ---
 
-# ♿ Accessibility Governance
+## 🤖 **AIGeneratedTag.tsx**
+Marks content generated by AI:
 
-Components enforce:
+- Summaries  
+- Highlights  
+- Explanatory narratives  
 
-- ARIA labels  
-- semantic structure  
-- WCAG contrast ≥ 4.5:1  
-- focus-visible tokens  
-- tab-order integrity  
-- accessible metadata for charts and ethical reports  
+Must:
 
-Accessibility compliance is required at the **governance level** because ethical transparency must be inclusive.
-
----
-
-# 📡 Telemetry & Ledger Synchronization
-
-Governance UIs record:
-
-- `governance_event_count`  
-- `fairstatus_changes`  
-- `ethics_flag_occurrences`  
-- `license_conflicts`  
-- `checksum_failures`  
-- `a11y_warnings`  
-
-Telemetry written to:
-
-```
-../../../../releases/v10.3.2/focus-telemetry.json
-```
-
-Ledger updates written to:
-
-```
-../../../../docs/reports/audit/web-governance-ledger.json
-```
+- Display model label  
+- Include confidence or availability of provenance  
+- Include hover text: *“AI-generated. Confirm with provenance sources.”*
 
 ---
 
-# ⚙️ CI/CD Validation
+## 📢 **EthicsContextBlock.tsx**
+Displays legally or ethically required disclaimers:
 
-| Validator | Purpose |
-|----------|----------|
-| `faircare-validate.yml` | CARE + ethics enforcement |
-| `telemetry-export.yml` | energy + ethics telemetry generation |
-| `docs-lint.yml` | documentation compliance |
-| `accessibility_scan.yml` | WCAG 2.1 AA validation |
-| `schema_validate.yml` | metadata + provenance schema checks |
-| `codeql.yml` | security checks |
+- Cultural sensitivity warnings  
+- Sovereignty statements  
+- Historical uncertainty indicators  
+- Explanatory safeguards for AI-derived narrative  
 
-Any failure → merge blocked.
+All text must be:
 
----
-
-# 🧾 Sample Governance Metadata Record
-
-```json
-{
-  "id": "governance_components_v10.3.2",
-  "components": [
-    "GovernanceDashboard",
-    "ValidationPanel",
-    "EthicsSummary"
-  ],
-  "a11y_score": 99.7,
-  "fairstatus": "certified",
-  "checksum_verified": true,
-  "care_warnings": 3,
-  "energy_use_wh": 1.03,
-  "timestamp": "2025-11-14T10:40:00Z"
-}
-```
+- Plain-language  
+- Screen-reader-friendly  
+- Non-speculative  
 
 ---
 
-# 🕰️ Version History
+# 🔐 Governance Enforcement Logic
 
-| Version | Date | Summary |
-|---------|--------|---------|
-| v10.3.2 | 2025-11-14 | Complete deep-architecture rebuild; added lineage model, CARE decision engine, explainability integration, telemetry + sustainability surfacing, CI enforcement updates. |
-| v9.7.0 | 2025-11-05 | Previous version. |
+All components MUST:
+
+- Respect `ai_transform_prohibited` rules  
+- Never display precise restricted coordinates  
+- Never show unmasked sensitive sites  
+- Always include provenance  
+- Always include CARE labels  
+- Render A11y-compliant warnings  
+- Use color palettes with contrast ≥ 4.5:1  
+- Be fully keyboard-operable  
+
+Violation of these rules → CI blocks merge.
+
+---
+
+# ♿ Accessibility Requirements
+
+Governance components have **strict** A11y rules:
+
+- Screen-reader friendly tooltips  
+- ARIA-expanded regions for drawers  
+- WCAG AA color tokens  
+- No motion without `prefers-reduced-motion` check  
+- Short, understandable explanatory text  
+
+A11y failures → **Immediate CI failure**.
+
+---
+
+# 📈 Telemetry Responsibilities
+
+Governance UI emits telemetry on:
+
+- `"governance:view"`  
+- `"governance:provenance-expanded"`  
+- `"care:badge-hover"`  
+- `"sovereignty:warning-shown"`  
+- `"ai:disclaimer-shown"`  
+- `"masking:indicator-toggle"`  
+
+All telemetry must be:
+
+- Non-PII  
+- Schema-valid  
+- Linked to release-level telemetry bundles  
+
+Stored in:
+
+`releases/<version>/focus-telemetry.json`
+
+---
+
+# 🧪 Testing Requirements
+
+Each governance component requires:
+
+- Unit tests  
+- Accessibility tests (tooltips, drawers, aria, focus trapping)  
+- Governance rule tests (CARE, provenance, masking)  
+- Telemetry correctness tests  
+- Snapshot tests (optional)  
+
+Tests located at:
+
+~~~text
+tests/unit/web/components/governance/**
+tests/integration/web/components/governance/**
+~~~
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Full governance component documentation; added CARE, AI-label, provenance, sovereignty, masking rules |
+| v10.3.2 | 2025-11-14 | Expanded governance interactions + improved provenance UI |
+| v10.3.1 | 2025-11-13 | Initial governance component overview |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Governance UI Architecture**  
-⚖️ Ethical Visualization · 🔗 Provenance Integrity · 🌐 FAIR+CARE Governance · 🧠 AI Accountability  
 © 2025 Kansas Frontier Matrix — MIT License  
-
-[Back to Components Index](../README.md)
+FAIR+CARE Certified · Public Document · Version-Pinned  
+Validated under MCP-DL v6.3 and KFM-MDP v10.4  
 
 </div>
