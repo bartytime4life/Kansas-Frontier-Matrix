@@ -1,18 +1,25 @@
 ---
 title: "🧼 Kansas Frontier Matrix — Remote Sensing Preprocessing Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/pipelines/preprocessing-guide.md"
-version: "v10.3.1"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly · FAIR+CARE Council"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/pipelines-preprocessing-guide-v1.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/preprocessing-guide-v2.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-kfm_markdown_protocol: "docs/standards/kfm_markdown_output_protocol.md"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "remote-sensing-preprocessing"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E1"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
 ---
 
 <div align="center">
@@ -21,210 +28,284 @@ kfm_markdown_protocol: "docs/standards/kfm_markdown_output_protocol.md"
 `docs/guides/pipelines/preprocessing-guide.md`
 
 **Purpose:**  
-Define the authoritative **preprocessing layer** for all Remote Sensing pipelines in the Kansas Frontier Matrix (KFM).  
-This layer prepares ingested STAC items for analytics, AI summaries, hazards, indices, and graph/RDF publishing through FAIR+CARE-aligned, deterministic, reproducible transformations.
+Define the authoritative **preprocessing standard** for Remote Sensing pipelines within the Kansas Frontier Matrix (KFM).  
+Preprocessing transforms raw STAC assets into **deterministic, harmonized, CARE-safe, lineage-complete** geospatial  
+products suitable for analytics, hazard modeling, AI summarization, and multi-surface publishing (STAC, DCAT, Neo4j, RDF).
 
-This guide covers:
-
-- Cloud/shadow/snow masking  
-- GSD harmonization  
-- Reprojection (GDAL/PROJ)  
-- Radiometric normalization  
-- Terrain correction (SAR RTC)  
-- Bandstack standardization  
-- Masking & sovereignty protections  
-- CARE-aligned geometry adjustments  
-- Preprocessing telemetry & lineage  
-- Validation → staging integration (GX)
+This guide replaces the v10.3.1 version with a **fully upgraded KFM v10.4.2 specification**.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-Preprocessing is the **bridge between ingestion and analytics**, converting raw STAC assets into:
+Remote sensing preprocessing is the **bridge between ingestion and analytics**.  
+It standardizes diverse sensor inputs into consistent, validated outputs aligned with:
 
-- Harmonized rasters  
-- Cloud-free pixel masks  
-- Multi-sensor bandstacks  
-- Terrain-corrected SAR  
-- Normalized optical/spectral surfaces  
-- CARE-safe geospatial derivatives  
-- Telemetry + lineage-tracked intermediate products  
+- Deterministic transforms  
+- FAIR+CARE v2 governance  
+- Semantic versioning  
+- Telemetry v2 (energy, CO₂e, masking metrics)  
+- SLSA-style provenance + lineage  
+- Raster integrity and spatial correctness  
+- Multi-sensor harmonization (optical, SAR, thermal, multispectral, DEM)  
 
-All steps MUST be deterministic, schema-validated, and reproducible under MCP-DL v6.3.
+Outputs are placed into:
+
+~~~text
+data/processed/<dataset>/<version>/
+~~~
+
+and become eligible for **staging → publishing** workflows.
 
 ---
 
-## 🗂️ Directory Layout (Authoritative)
+# 🗂️ Directory Layout (Canonical KFM Preprocessing Layer)
 
-~~~~~text
+~~~text
 src/pipelines/remote-sensing/preprocessing/
-├── preprocess.py                     # Entrypoint for pipeline-specific orchestrations
-├── cloud_mask.py                     # Cloud/shadow/snow mask generation
-├── harmonize_gsd.py                  # Resample to common GSD resolution
-├── reprojection.py                   # Reproject rasters (GDAL/PROJ)
-├── sar_rtc.py                        # Sentinel-1 Terrain Correction (RTC)
-├── radiometric_normalization.py      # Optical/spectral normalization
-├── bandstack.py                      # Create unified bandstacks for analytics
-├── masks/                            # Shared mask operations & utilities
-└── utils/                            # Low-level GDAL/numpy helpers
-~~~~~
+├── preprocess.py                        # Pipeline orchestrator
+├── cloud_mask.py                        # Cloud/shadow/snow/cirrus mask logic
+├── harmonize_gsd.py                     # Resample to target GSD (10m/30m/etc.)
+├── reprojection.py                      # Reproject using GDAL/PROJ
+├── sar_rtc.py                           # RTC for Sentinel-1 GRD
+├── radiometric_normalization.py         # TOA, SR, emissivity, normalization
+├── bandstack.py                         # Unified bandstack + metadata
+├── masks/                               # Shared mask functions + sovereignty
+│   ├── sovereignty_mask.py              # CARE v2 masking logic (H3 R7/R5)
+│   └── aoi_mask.py                      # AOI-based exclusion masks
+└── utils/                               # GDAL, rasterio, numpy helpers
+~~~
 
 ---
 
-## 🧩 Preprocessing Architecture (Indented Mermaid)
+# 🌐 Full-Page Preprocessing Architecture (KFM-Styled Mermaid)
 
-~~~~~mermaid
+```mermaid
 flowchart TD
-  A["STAC Ingest<br/>raw bands + metadata"] --> B["Masking<br/>cloud · shadow · snow"]
-  B --> C["Reprojection<br/>EPSG:4326 or target CRS"]
-  C --> D["GSD Harmonization<br/>10m · 30m · 100m"]
-  D --> E["Radiometric Normalization<br/>TOA · SR · log-scale"]
-  E --> F["Terrain Correction (SAR)"]
-  F --> G["Bandstack Assembly<br/>analytics-ready surfaces"]
-  G --> H["Staging<br/>GX-validated + CARE-labeled"]
-~~~~~
+
+subgraph INGEST["STAC Ingest<br/><span style='font-size:12px'>raw bands · metadata · geometry</span>"]
+    A["Raw STAC Assets"]
+end
+
+subgraph MASKS["Cloud / Shadow / Snow / Sovereignty Masks"]
+    B["Cloud & Shadow Masking<br/><span style='font-size:12px'>SCL · QA_PIXEL · QC flags</span>"]
+    B2["Sovereignty Masking<br/><span style='font-size:12px'>CARE v2 · H3 Generalization</span>"]
+end
+
+A --> B --> B2
+
+subgraph REPROJ["Reprojection<br/><span style='font-size:12px'>Native CRS → Target CRS (EPSG:4326)</span>"]
+    C["GDAL / PROJ Warp<br/><span style='font-size:12px'>grid-aligned affine</span>"]
+end
+
+B2 --> C
+
+subgraph GSD["GSD Harmonization<br/><span style='font-size:12px'>10m · 30m · 100m</span>"]
+    D["Resample & Align<br/><span style='font-size:12px'>nearest/bilinear</span>"]
+end
+
+C --> D
+
+subgraph RADIO["Radiometric Normalization"]
+    E["TOA / SR / log-scale<br/><span style='font-size:12px'>sensor-specific correction</span>"]
+end
+
+D --> E
+
+subgraph SAR["SAR Terrain Correction (RTC)"]
+    F["Sigma0 RTC<br/><span style='font-size:12px'>DEM · layover/shadow mask</span>"]
+end
+
+E --> F
+
+subgraph BANDS["Bandstack Assembly<br/><span style='font-size:12px'>analytics-ready surfaces</span>"]
+    G["Stack Bands + Masks<br/><span style='font-size:12px'>optical · SAR · masks</span>"]
+end
+
+F --> G
+
+subgraph STAGING["Staging<br/><span style='font-size:12px'>GX-validated · CARE-labeled · checksum-locked</span>"]
+    H["Ready for Publish / Analytics"]
+end
+
+G --> H
+
+classDef ingest fill:#ebf8ff,stroke:#2b6cb0,color:#1a365d;
+classDef masks fill:#fff5f5,stroke:#e53e3e,color:#742a2a;
+classDef reproj fill:#faf5ff,stroke:#805ad5,color:#553c9a;
+classDef gsd fill:#f0fff4,stroke:#38a169,color:#22543d;
+classDef radio fill:#fffbea,stroke:#dd6b20,color:#7b341e;
+classDef sar fill:#e6fffa,stroke:#319795,color:#285e61;
+classDef bands fill:#f7fafc,stroke:#4a5568,color:#2d3748;
+classDef staging fill:#fefcbf,stroke:#b7791f,color:#744210;
+
+class INGEST ingest;
+class MASKS masks;
+class REPROJ reproj;
+class GSD gsd;
+class RADIO radio;
+class SAR sar;
+class BANDS bands;
+class STAGING staging;
+````
 
 ---
 
 # 🧼 1. Cloud, Shadow & Snow Masking
 
-Masking is **mandatory** for:
+Masking is **mandatory** for all optical sensors.
 
-- Landsat 
-- Sentinel-2  
-- NAIP (where cloud metadata exists)  
-- MODIS/VIIRS (QC flags)  
+## Sources per sensor
 
-### Required cloud-mask sources
-
-| Sensor | Mask Source |
-|--------|-------------|
-| Landsat C2 L2 | QA_PIXEL, QA_RADSAT |
+| Sensor         | Mask Input                       |
+| -------------- | -------------------------------- |
+| Landsat C2 L2  | QA_PIXEL / QA_RADSAT             |
 | Sentinel-2 L2A | SCL (Scene Classification Layer) |
-| NAIP | QA metadata |
-| MODIS/VIIRS | QC flags |
-
-### Output
-
-- Mask raster (`cloud_mask.tif`)
-- Valid-pixel raster (`valid_mask.tif`)
-- Telemetry:
-  - `cloud_pct`
-  - `shadow_pct`
-  - `snow_pct`
-  - `valid_pct`
-
----
-
-# 📐 2. GSD Harmonization
-
-All analytics require harmonized resolution:
-
-- Landsat     → 30m  
-- Sentinel-2  → 10m  
-- Sentinel-1  → 10m  
-- NAIP        → 1m/60cm  
-- MODIS/VIIRS → 250m/500m/1km depending on product  
-
-Harmonization procedure:
-
-1. Resample using **nearest** for masks, **bilinear** for reflectance  
-2. Align to **grid-aligned affine** using reference metadata  
-3. Validate GSD target using GX suite: `gsd_check >= required_res`
-
----
-
-# 🌐 3. Reprojection (GDAL / PROJ)
-
-KFM uses:
-
-- **EPSG:4326** for all published datasets  
-- **Native CRS** during processing for accuracy  
-
-Reprojection performed via:
-
-- GDAL Warp (`gdalwarp`)
-- Python rasterio warp
-- PROJ error resolution via dataset metadata
+| MODIS/VIIRS    | QC Flags                         |
+| NAIP           | QA metadata                      |
+| PlanetScope    | UDM2                             |
 
 Outputs:
 
-- `*_reproj.tif`
-- Telemetry:  
-  - `warp_duration_ms`  
-  - `pixels_reprojected`
+* `cloud_mask.tif`
+* `shadow_mask.tif`
+* `snow_mask.tif`
+* `valid_mask.tif`
+
+Telemetry v2:
+
+* `cloud_pct`, `shadow_pct`, `snow_pct`, `valid_pct`
+* `mask_duration_ms`
 
 ---
 
-# 🛰 4. Radiometric Normalization
+# 🛡 2. Sovereignty & CARE v2 Masking (Mandatory)
 
-Normalization steps vary by sensor:
+CARE v2 rules require:
 
-### Landsat SR
-- Scale factors (0.0000275, -0.2)  
-- Saturation correction  
-- TOA reflectance for missing SR assets  
+* **H3 R7** generalization for sensitive sites
+* **H3 R5** generalization for restricted sites
+* Complete removal of exact pixel values in protected AOIs
+* Optional centroid substitution
 
-### Sentinel-2 L2A
-- Divide by 10,000 scale factor  
-- Apply scene classification filtering  
+Outputs:
 
-### Thermal Products
-- Brightness temperature conversion (using metadata K1/K2)  
+* `sovereignty_mask.tif`
+* CARE attributes embedded in metadata
 
 Telemetry:
 
-- `radiometric_min/max`
-- `radiometric_clipped_pixels`
-- `radiometric_valid_pct`
+* `care_violations`
+* `masked_pixels`
+* `sovereignty_conflicts`
 
 ---
 
-# 🗻 5. SAR Terrain Correction (RTC)
+# 📐 3. GSD Harmonization
 
-Required for **Sentinel-1 GRD**:
+All datasets must harmonize to:
 
-- Remove geometric distortions  
-- Normalize backscatter  
-- Apply DEM: USGS 3DEP → COG  
-- Apply radiometric calibration  
-- Generate incidence-angle layers  
-- Multi-looking (optional)  
-- Mask layover + shadow
+* 10m (Sentinel-1/2)
+* 30m (Landsat)
+* 1m/60cm (NAIP)
+* 250–1000m (MODIS)
+
+Procedure:
+
+1. Resample (nearest for masks, bilinear for rasters)
+2. Align to reference grid
+3. Confirm target GSD via GX: `gsd_check.min_resolution`
 
 Outputs:
 
-- RTC raster (`rtc_sigma0.tif`)
-- Mask raster (`rtc_mask.tif`)
-- Telemetry fields:
-  - `rtc_duration_ms`
-  - `laid_over_pct`
-  - `shadow_pct`
+* `*_gsd.tif`
+* Telemetry: `pixels_resampled`
 
 ---
 
-# 🧱 6. Bandstack Generation
+# 🌐 4. Reprojection (GDAL/PROJ)
 
-Bandstacks unify spectral/SAR layers:
+KFM publishes everything in **EPSG:4326**.
 
-- Landsat: B1–B7 + QA  
-- Sentinel-2: B02, B03, B04, B08, B11, B12  
-- Sentinel-1: VV, VH + RTC masks  
-- Thermal bands (LST, emissivity)
-- Mask layers (cloud, shadow, snow)
+Requirements:
 
-Bandstack requirements:
+* Use GDAL Warp with `-t_srs EPSG:4326`
+* Preserve pixel alignment
+* Ensure affine transform stability
 
-- Must align to **exact grid**  
-- Must include **valid_mask**  
-- Must include **metadata.json** in same directory
+Outputs:
 
-Example structure:
+* `*_reproj.tif`
 
-~~~~~text
+Telemetry:
+
+* `warp_duration_ms`
+* `pixels_reprojected`
+
+---
+
+# 🛰 5. Radiometric Normalization
+
+### Landsat
+
+* Apply scale factors
+* Convert TOA → SR when needed
+* Handle RADCOR flags
+
+### Sentinel-2
+
+* Divide by 10,000
+* Handle saturation and negative outliers
+
+### Thermal products
+
+* Use K1/K2 constants
+
+Telemetry:
+
+* `radiometric_valid_pct`
+* `clipped_pixels`
+
+---
+
+# 🗻 6. SAR Terrain Correction (RTC)
+
+RTC includes:
+
+* DEM resampling (USGS 3DEP COG)
+* Radiometric calibration
+* Geometry correction
+* Layover & shadow mask
+* Optional multi-looking
+
+Outputs:
+
+* `rtc_sigma0.tif`
+* `rtc_mask.tif`
+
+Telemetry:
+
+* `rtc_duration_ms`
+* `layover_pct`
+* `shadow_pct`
+
+---
+
+# 🧱 7. Bandstack Generation
+
+Bandstacks unify:
+
+* Spectral bands
+* RTC SAR
+* Masks
+* Thermal bands
+* Metadata
+
+Directory:
+
+```text
 bandstack/
 ├── B02.tif
 ├── B03.tif
@@ -233,136 +314,129 @@ bandstack/
 ├── cloud_mask.tif
 ├── valid_mask.tif
 └── metadata.json
-~~~~~
+```
 
 ---
 
-# 🛡 7. CARE & Sovereignty Masking (Mandatory)
+# 🛡 8. CARE & Governance Metadata Injection
 
-Before entering staging:
+Required metadata fields in bandstack and rasters:
 
-- Mask or generalize sensitive AOIs  
-- Apply H3 generalization (R7 or R5) for restricted labels  
-- Inject governance metadata:
-  - `kfm:careLabel`
-  - `kfm:maskingStrategy`
-  - `kfm:sovereigntyFlags[]`
-
-Telemetry MUST include:
-
-- `care_violations`  
-- `sovereignty_conflicts`  
-- `masking_applied`  
+* `kfm:careLabel`
+* `kfm:maskingStrategy`
+* `kfm:sovereigntyFlags[]`
+* `kfm:processingSteps[]`
+* `kfm:checksum_sha256`
+* `kfm:lineageRef`
+* `kfm:telemetryRef`
 
 ---
 
-# 📊 8. Preprocessing Telemetry Requirements
+# 📡 9. Telemetry v2 (NDJSON)
 
-Each step MUST emit NDJSON to:
+Saved at:
 
-~~~~~text
-data/processed/telemetry/<pipeline>.ndjson
-~~~~~
+```text
+data/processed/<dataset>/<version>/telemetry.ndjson
+```
 
-Required telemetry fields:
+Must include:
 
-- `stage`
-- `duration_ms`
-- `pixels_processed`
-- `pixels_valid`
-- `pixels_masked`
-- `energy_wh`
-- `co2_g`
-- `care_violations`
-- `errors[]`
+* stage
+* duration_ms
+* pixels_processed
+* masked_pct
+* energy_wh
+* co2_g
+* care_violations
+* sovereignty_conflicts
+* memory_mb
 
-Telemetry aggregated to:
+Aggregated to:
 
-~~~~~text
-../../../releases/v10.3.0/focus-telemetry.json
-~~~~~
+```text
+releases/v10.4.2/pipeline-telemetry.json
+```
 
 ---
 
-# 🧬 9. Lineage Requirements
+# 🧬 10. Lineage (CIDOC + PROV-O + CARE v2)
 
-Every preprocessing stage MUST append lineage:
+Stored at:
 
-~~~~~text
-data/processed/lineage/<dataset>/<version>.jsonld
-~~~~~
+```text
+data/processed/<dataset>/<version>/lineage.jsonld
+```
 
-Lineage MUST include:
+Includes:
 
-- PROV-O Activities  
-- Entities (STAC source + derived outputs)  
-- GeoSPARQL geometries  
-- CIDOC CRM semantics (if applicable)  
-- CARE fields  
-- Checksums for each raster  
+* PROV `prov:Activity`, `prov:Entity`, `prov:Agent`
+* CARE metadata
+* Input → Output derivation
+* Sensor-specific processing metadata
+* Spatial footprint lineage
 
 Validated against:
 
-~~~~~text
+```text
 src/pipelines/remote-sensing/lineage/schemas/lineage.schema.json
-~~~~~
+```
 
 ---
 
-# 🧪 10. GX Staging Validation
+# 🧪 11. GX Validation (Staging Gate)
 
-After preprocessing, datasets enter:
+Must validate in:
 
-~~~~~text
+```text
 data/work/staging/<pipeline>/
-~~~~~
+```
 
-GX suite must validate:
+Checks:
 
-- Schema  
-- GSD  
-- Mask presence  
-- Geometry boundaries  
-- Value ranges  
-- Required metadata keys  
-- CARE compliance  
+* GSD correctness
+* Band presence
+* Mask correctness
+* Value range checks
+* Metadata completeness
+* CARE compliance
 
-Passing → eligible for promotion  
-Failing → moved to quarantine
+Pass → eligible for publishing.
+Fail → quarantined.
 
 ---
 
-# 🧭 Developer Workflow (Local)
+# 🧭 Developer Workflow
 
-~~~~~bash
-# 1. Preprocess
+```bash
+# Preprocess
 python preprocess.py --config <config>
 
-# 2. Validate via GX
+# Validate via GX
 great_expectations checkpoint run preprocessing_suite
 
-# 3. Promote if valid
+# Promote to processed/
 python promote.py
 
-# 4. Publish (optional)
+# Optional: publish
 python publish.py
-~~~~~
+```
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
-| Version | Date       | Author | Summary |
-|---------|------------|--------|---------|
-| v10.3.1 | 2025-11-14 | Remote Sensing Team | Initial Remote Sensing Preprocessing Guide; aligned with CARE, lineage, telemetry, and KFM Protocol. |
+| Version | Date       | Summary                                                                                                                      |
+| ------: | ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Full KFM v10.4.2 rewrite: CARE v2, telemetry v2, lineage v2, SAR RTC upgrade, harmonization improvements, KFM-styled diagram |
+| v10.3.1 | 2025-11-14 | Initial preprocessing guide                                                                                                  |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Preprocessing Guide**  
-Deterministic Remote Sensing × FAIR+CARE × Provenance × Geospatial Integrity  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+**Kansas Frontier Matrix — Remote Sensing Preprocessing Guide (v10.4.2)**
+Deterministic Remote Sensing × FAIR+CARE v2 × Provenance Integrity × Geospatial Trust
+© 2025 KFM — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
