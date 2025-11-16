@@ -1,214 +1,268 @@
 ---
-title: "🚀 Kansas Frontier Matrix — v10 Readiness & Upgrade Guide"
+title: "🚀 Kansas Frontier Matrix — v10 Readiness & Upgrade Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/upgrade/v10-readiness.md"
-version: "v10.0.0"
-last_updated: "2025-11-08"
-review_cycle: "Pre-Release / Continuous"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Pre-Release / Continuous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/upgrade-v10-readiness.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/upgrade-v10-readiness-v2.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT / CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Upgrade Guide"
+intent: "v9.7-to-v10-readiness"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E1"
+machine_extractable: true
+ai_focusmode_usage: "Allowed with restrictions"
+ttl_policy: "Review each release"
+sunset_policy: "Superseded by v11 readiness guide"
+doc_uuid: "urn:kfm:doc:v10-readiness-10.4.2"
+semantic_document_id: "kfm-doc-upgrade-readiness"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
 ---
 
 <div align="center">
 
-# 🚀 **Kansas Frontier Matrix — v10 Readiness & Upgrade Guide**
+# 🚀 **Kansas Frontier Matrix — v10 Readiness & Upgrade Guide**  
 `docs/guides/upgrade/v10-readiness.md`
 
-**Purpose:** Provide a comprehensive readiness checklist, feature summary, and migration path for developers and maintainers upgrading the Kansas Frontier Matrix (KFM) from **v9.7.x → v10.0.0**.  
-Ensures alignment with new containerized architecture, streaming ETL, predictive pipelines, FAIR+CARE governance, and MCP v6.3 standards.
+**Purpose**  
+Provide the comprehensive readiness checklist, system deltas, and migration roadmap required to upgrade any Kansas Frontier Matrix (KFM) environment from **v9.7.x → v10.x**.  
+This guide ensures alignment with:
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP-blue)](../../standards/markdown_rules.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Certified-orange)](../../standards/faircare.md)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-brightgreen)]()
+- **Streaming ETL v10 (Kafka/Webhooks)**  
+- **Predictive Pipelines v10**  
+- **Focus Mode v2.5 (Explainability + CARE gates)**  
+- **Telemetry v2 (energy · carbon · A11y · CARE)**  
+- **Lineage v2 (PROV-O · CIDOC · GeoSPARQL)**  
+- **FAIR+CARE v2 governance**  
+- **KFM-MDP v10.4.2 documentation system**  
+- **MCP-DL v6.3 (Master Coder Protocol)**  
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-KFM **v10.0** represents the platform’s evolution from a static, batch-based MVP into a **real-time, federated, AI-driven knowledge system**.  
-It introduces predictive modeling, Focus Mode v2, live data ingestion, a reorganized monorepo, and stricter governance pipelines.  
+KFM v10 introduces:
 
-This guide outlines the **required preparation, migration steps, and validation tasks** for environments currently running any **v9.7.x** branch.
+- **Deterministic streaming ETL** and idempotent watchers  
+- **Predictive pipelines** generating future STAC Items  
+- **Focus Mode v2.5** with explainability overlays & CARE masking  
+- **Reorganized monorepo** with strict directory patterns  
+- **Telemetry v2** for pipelines, web UI, ETL, and energy audits  
+- **Live STAC↔DCAT sync** (bidirectional catalog parity)  
+- **Governance Ledger automation** with SHA-256 signatures  
+
+This guide ensures you validate and prepare your v9.7.x environment for a safe upgrade without breaking lineage, provenance, or CARE datasets.
 
 ---
 
-## 🗂️ Directory Layout (v10 Reference)
+# 🗂️ Directory Layout (v10 Reference — Upgraded Lined Style)
 
-```bash
+~~~text
 KansasFrontierMatrix/
 ├── src/
-│   ├── ai/                 # AI/ML models & explainability
-│   ├── api/                # FastAPI / GraphQL services
-│   ├── graph/              # Neo4j schema, Cypher utilities
-│   ├── pipelines/
-│   │   ├── etl/            # Batch ETL
-│   │   ├── etl/streaming/  # Kafka-based live ingestion
-│   │   └── predictive/     # ML-driven forecast generation
-│   ├── telemetry/          # Metrics & governance logs
-│   └── web/                # React + MapLibre frontend
+│   ├── ai/                               # Focus Transformer v2 · embeddings · explainability
+│   ├── api/                              # FastAPI · GraphQL hybrid service layer
+│   ├── graph/                            # Neo4j schema · CIDOC CRM · GeoSPARQL · OWL-Time
+│   ├── pipelines/                        # Deterministic ETL + streaming + predictive
+│   │   ├── ingestion/                    # Watchers · conditional GET · idempotency keys
+│   │   ├── validation/                   # GX + schema + CARE v2 validation
+│   │   ├── reliable_auto_release/        # ETag-based publish pipelines (v10 standard)
+│   │   ├── remote_sensing/               # SVF · LRM · harmonization · RTC · bandstack
+│   │   ├── analytics/                    # Hazards · trends · indices · predictive models
+│   │   ├── governance/                   # CARE v2 · sovereignty · masking · ledger entries
+│   │   └── lineage/                      # Lineage v2 JSON-LD builder
+│   ├── telemetry/                        # Telemetry v2 (energy · CO₂ · runtime · A11y)
+│   └── web/                              # React + MapLibre v10 UI (Focus Mode v2.5)
+│
 ├── data/
-│   ├── sources/            # v3 data contracts (with streaming fields)
-│   ├── processed/
-│   └── stac/               # Live STAC/DCAT bridge catalog
+│   ├── sources/                           # Data Contract v3 sources (streaming + batch)
+│   ├── raw/                               # Raw datasets (LFS-tracked)
+│   ├── work/                              # Staging · temp · ledger · checkpoints
+│   ├── processed/                         # Validated, CARE-tagged assets
+│   ├── stac/                              # STAC Items/Collections + DCAT mirror
+│   └── lineage/                           # Lineage v2 bundles (PROV-O · GeoSPARQL)
+│
 ├── docs/
-│   ├── guides/upgrade/
-│   └── standards/
-├── tests/
-├── docker-compose.yml
-└── Makefile
+│   ├── guides/                            # All KFM guides (visualization · workflows · pipelines)
+│   │   ├── upgrade/                       # v10 readiness, inventory, consolidation reports
+│   │   ├── workflows/                     # CI · FAIR+CARE · telemetry · governance
+│   │   ├── visualization/                 # MapLibre · Timeline · Explainability · Accessibility
+│   │   └── pipelines/                     # Ingestion · analytics · publishing · validation
+│   ├── standards/                         # FAIR+CARE v2 · governance · markdown protocol
+│   └── contracts/                         # Data Contract v3 · API schemas
+│
+├── tools/                                 # CLI utilities (STAC↔DCAT sync · validate · ingest)
+├── tests/                                 # Unit · integration · telemetry · lineage tests
+├── docker-compose.yml                      # Full v10 stack (Kafka · Neo4j 5.x · API · web)
+├── Makefile                                # Standardized entrypoint for CI + dev tasks
+├── CONTRIBUTING.md
+└── LICENSE
+~~~
+
+---
+
+# 🧩 Core Upgrades from v9.7.x → v10.x
+
+| Domain | v9.7.x | v10.x Enhancement |
+|--------|--------|-------------------|
+| **Architecture** | Static ETL | Streaming ETL + idempotent WAL |
+| **Predictive Modeling** | None | Predictive pipelines (hazards, climate) |
+| **Focus Mode** | Narrative v1 | Focus Mode v2.5 + explainability + CARE gates |
+| **Catalog Sync** | STAC only | Live STAC↔DCAT v3 mirror |
+| **Governance** | Manual FAIR checks | Automated FAIR+CARE v2 + sovereignty masking |
+| **Lineage** | v1 basic | Lineage v2 (CIDOC · PROV-O · GeoSPARQL) |
+| **Telemetry** | Basic metrics | Telemetry v2 (energy · CO₂ · A11y · CARE violations) |
+| **Docs** | Inconsistent | MCP-DL v6.3 + KFM-MDP v10.4.2 |
+| **Web** | 2D map UI | MapLibre v10 UI + 3D overlays + Focus Mode integration |
+
+---
+
+# ⚙️ Pre-Upgrade Readiness Checklist
+
+## **1. Baseline Validation**
+- [ ] All STAC Items validate against v10 schemas  
+- [ ] All DCAT datasets validate using JSON-LD SHACL  
+- [ ] Run lineage validation (`make lineage-validate`)  
+- [ ] Run FAIR+CARE validation (`make faircare-validate`)
+
+## **2. Neo4j Readiness**
+- [ ] Export pre-upgrade graph snapshot  
+- [ ] Ensure APOC 5.x is available  
+- [ ] Check orphan nodes:  
+```
+
+MATCH (n) WHERE NOT (n)--() RETURN count(n)
+
+````
+
+## **3. Data Contract v3 Migration**
+- [ ] All source manifests updated  
+- [ ] Streaming schemas added (`"streaming": {...}`)  
+- [ ] CARE v2 fields added
+
+## **4. Web v10 UI Requirements**
+- [ ] React 18 + TypeScript strict mode  
+- [ ] MapLibre style placeholders replaced with tokenized theming  
+- [ ] Focus Mode v2.5 tested
+
+## **5. Governance & Telemetry**
+- [ ] Governance ledger validation passes  
+- [ ] Telemetry schema upgraded to Telemetry v2  
+- [ ] All pipelines emit non-PII telemetry
+
+---
+
+# 🔄 Upgrade Steps (v9.7 → v10)
+
+## 1. Switch to v10 Branch
+```bash
+git fetch origin
+git checkout v10.0.0
+````
+
+## 2. Rebuild Full Stack
+
+```bash
+docker compose down
+docker compose build --no-cache
+docker compose up -d
+```
+
+## 3. Apply v10 Graph Migration
+
+```bash
+make migrate-graph
+```
+
+## 4. Refresh Catalog Mirrors
+
+```bash
+make stac-rebuild
+make dcat-validate
+```
+
+## 5. Reinitialize Streaming ETL
+
+```bash
+python src/pipelines/ingestion/watchers/ks_weather_watcher.py
+```
+
+## 6. Validate Predictive Pipelines
+
+```bash
+pytest tests/pipelines/predictive -v
+```
+
+## 7. Full Validation Sweep
+
+```bash
+make validate-all
 ```
 
 ---
 
-## 🧩 Core Upgrades from v9.7.x
+# 🧠 Developer Notes (v10.x)
 
-| Area | v9.7.x | v10.0 Enhancement |
-|------|---------|-------------------|
-| **Architecture** | Static containers, single-node graph | Multi-service Docker Compose stack with HA Neo4j cluster & Kafka streaming |
-| **ETL Pipelines** | Batch-only ingestion | Dual-mode ETL: batch + streaming (Kafka topics, WebSocket feeds) |
-| **Predictive Modeling** | None | ML-based predictive ETL producing simulated datasets (e.g., 2030–2100) |
-| **Focus Mode** | v1 (LLM summaries) | v2 “Focus Transformer” with dual-encoder AI, explainability graphs |
-| **API** | REST endpoints only | REST + GraphQL hybrid, JWT/OAuth2 support |
-| **Data Standards** | STAC 1.0, partial DCAT 2.0 | Full STAC↔DCAT 3.0 bridge, auto-publishing STAC Items |
-| **Governance** | FAIR+CARE (manual audit) | FAIR+CARE automated ledger validation + telemetry schema |
-| **Docs & CI** | Semi-manual validation | Full docs-lint, FAIR audit, SBOM/manifest enforcement in CI |
-| **Frontend** | 2D map/timeline | 3D time-aware map layers + adaptive Focus Mode panels |
+* Predictive pipelines **must** emit future-dated STAC Items
+* Streaming ETL requires **idempotency keys** and **conditional GET**
+* Focus Mode v2.5 integrates:
 
----
+  * Evidence chips
+  * Sovereignty masking
+  * Subgraph explainability
+* All visual layers must use **design tokens**
+* Governance ledger entries require SHA-256 checksums for:
 
-## ⚙️ Pre-Upgrade Checklist
-
-Before migration, verify the following in the **v9.7.x** environment:
-
-1. **Data Integrity**
-   - [ ] Run `make data-validate` to ensure all STAC Items and DCAT contracts pass schema checks.  
-   - [ ] Verify no orphan nodes exist in the Neo4j graph (`MATCH (n) WHERE NOT (n)--() RETURN count(n)` → expect 0).
-
-2. **Container Baseline**
-   - [ ] Back up Neo4j volumes (`neo4j-admin dump`).
-   - [ ] Export `.env` configuration for reuse (API keys, ports, etc.).
-   - [ ] Remove deprecated environment variables: `KFM_LEGACY_PATHS`, `AI_MODEL_V1`.
-
-3. **Documentation Synchronization**
-   - [ ] Update local documentation to the new Markdown compliance rules (`make docs-lint`).
-   - [ ] Confirm each module’s README includes YAML front-matter and version tags.
-
-4. **Governance & FAIR+CARE**
-   - [ ] Ensure `docs/standards/faircare.md` and `data/contracts/*.json` reflect current ethics & license.
-   - [ ] Run governance ledger verification: `make governance-validate`.
-
-5. **Dependencies**
-   - [ ] Python ≥ 3.12, Node ≥ 20.x, Docker ≥ 26.x, Compose v2.  
-   - [ ] Neo4j 5.x and Kafka 3.x installed or containerized.  
-   - [ ] Rebuild virtual environments: `make install-deps`.
+  * lineage bundles
+  * telemetry bundles
+  * STAC Items
+  * predictive outputs
 
 ---
 
-## 🔄 Upgrade Steps
+# ✅ Post-Upgrade Verification
 
-1. **Pull Latest Monorepo**
-   ```bash
-   git fetch origin main
-   git checkout v10.0.0
-   ```
-
-2. **Rebuild Containers**
-   ```bash
-   docker compose down
-   docker compose build --no-cache
-   docker compose up -d
-   ```
-
-3. **Run Database Migration**
-   ```bash
-   make migrate-graph
-   ```
-   This applies new schema updates (`Dataset`, `SensorStream`, `FEDERATED_WITH` relationships).
-
-4. **Reinitialize STAC/DCAT Bridge**
-   ```bash
-   make data-stac-rebuild
-   make data-dcat-validate
-   ```
-
-5. **Test Streaming ETL**
-   ```bash
-   python src/pipelines/etl/streaming/consume.py --topic weather.ks
-   ```
-   Confirm live ingestion events appear in Neo4j.
-
-6. **Validate Focus Mode v2**
-   ```bash
-   pytest tests/ai/focus_v2_test.py -v
-   ```
-
-7. **Run Full CI Verification**
-   ```bash
-   make validate-all
-   ```
+| Check      | Command                     | Expected     |
+| ---------- | --------------------------- | ------------ |
+| API health | `curl :8000/health`         | `status: ok` |
+| Graph      | `MATCH (n) RETURN count(n)` | > 0          |
+| STAC       | `make stac-validate`        | Pass         |
+| Focus v2   | `pytest tests/ai/focus`     | Pass         |
+| FAIR+CARE  | `make faircare-audit`       | 0 violations |
+| Lineage    | `make lineage-validate`     | v2 compliant |
+| Telemetry  | `make telemetry-validate`   | v2 compliant |
 
 ---
 
-## 🧠 Developer Notes
+# 🕰 Version History
 
-- **Predictive ETL Integration:**  
-  Models trained under `src/ai/predictive/` now produce STAC Items with `datetime` in the future.  
-  Ensure outputs include `"temporal": {"start": "2030-01-01"}` fields for validation.
-
-- **Streaming Pipelines:**  
-  Kafka configuration located in `config/kafka.yml`. Each feed defines a topic, schema, and retention.  
-  To add new feeds, append entries in `data/sources/*.json` with `"streaming": {"topic": "..."}`.
-
-- **Graph Schema Extensions:**  
-  Neo4j constraints and indexes auto-applied via `src/graph/schema/migrate_v10.cypher`.  
-  Review these if adding new entity classes.
-
-- **Focus Mode AI Model:**  
-  Focus Transformer v2 uses cross-modal attention for summaries and explanations.  
-  Model weights are in `src/ai/models/focus_transformer_v2/weights/`.
-
-- **Security Enhancements:**  
-  OAuth2 + JWT roles introduced. Configure `.env` roles:  
-  ```
-  ADMIN_ROLES=admin,maintainer
-  READONLY_ROLES=viewer,guest
-  ```
-
----
-
-## ✅ Post-Upgrade Validation
-
-| Task | Command | Expected Result |
-|------|----------|----------------|
-| API health check | `curl http://localhost:8000/health` | `{status:"ok", version:"10.0.0"}` |
-| Graph count | `MATCH (n) RETURN count(n)` | Non-zero; same order as v9.7 backup |
-| STAC validation | `make stac-validate` | All items valid (exit 0) |
-| Focus Mode summary test | `pytest tests/ai/focus_v2_test.py` | Passes 100% |
-| FAIR+CARE audit | `make faircare-audit` | 0 violations |
-| Docs lint | `make docs-lint` | All compliant |
-
----
-
-## 🧾 Version History
-
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.0.0 | 2025-11-08 | Core Dev Team | Initial release – containerized architecture, streaming ETL, Focus Mode v2 |
-| v9.7.0 | 2025-05-01 | Core Dev Team | Stable MVP with AI Focus Mode v1, FAIR+CARE audit workflows |
-| v9.5.0 | 2025-02-12 | DevOps Council | Full STAC/DCAT 2.0 alignment, governance ledger introduced |
+| Version | Date       | Summary                                                                 |
+| ------: | ---------- | ----------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Upgraded to Telemetry v2, CARE v2, Lineage v2, directory layout v10.4.2 |
+| v10.0.0 | 2025-11-08 | Initial v10 readiness guide                                             |
+|  v9.7.x | 2025-05-01 | Pre-upgrade baseline                                                    |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3  
-**FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified**  
-[Back to Guides Index](../README.md) · [Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix
+Master Coder Protocol v6.3 · FAIR+CARE v2 Certified
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+
+[Back to Upgrade Guides](../README.md) · [Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
+```
