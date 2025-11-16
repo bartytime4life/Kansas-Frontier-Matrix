@@ -1,114 +1,168 @@
 ---
-title: "🗺️ MapLibre GL — Rendering Performance Playbook (Offline MBTiles/PMTiles)"
+title: "🗺️ MapLibre GL — Rendering Performance Playbook (Offline MBTiles/PMTiles · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/perf/maplibre-rendering-playbook.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/web-render-perf-v1.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-render-perf-v2.json"
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT / CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Performance Guide"
+intent: "maplibre-rendering-perf"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E1"
+sensitivity_level: "System-level performance"
+machine_extractable: true
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+semantic_document_id: "kfm-doc-maplibre-rendering-playbook"
+doc_uuid: "urn:kfm:doc:perf:maplibre-rendering-playbook-v10.4.2"
 ---
 
 <div align="center">
 
-# 🗺️ **MapLibre GL — Rendering Performance Playbook**  
+# 🗺️ **MapLibre GL — Rendering Performance Playbook (Offline MBTiles/PMTiles)**  
 `docs/guides/perf/maplibre-rendering-playbook.md`
 
-**Purpose:**  
-Optimized handbook for **offline-first MapLibre GL** deployments in KFM — targeting MBTiles/PMTiles rendering, tile cache control, frame-time profiling, and performance tuning for high-density vector/raster maps across web and Electron.  
+**Purpose**  
+Provide an optimized, FAIR+CARE-aware handbook for **offline-first MapLibre GL** deployments in KFM —  
+focusing on **MBTiles/PMTiles rendering**, tile cache control, frame-time profiling, and performance tuning  
+for high-density vector/raster maps in the web client and Electron apps.  
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../..)
-[![License](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../standards)
-[![Status](https://img.shields.io/badge/Status-Stable_Build-brightgreen)](#)
+This playbook integrates with **Telemetry v2** and **FAIR+CARE v2** so that performance work remains  
+**sustainable, transparent, and ethically governed**.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-This guide provides actionable patterns to achieve **60 FPS rendering** with large **offline MBTiles/PMTiles** datasets.  
-It details cost factors (I/O, layout, paint, geometry, overdraw), offers profiling workflows, and gives style/layer optimization recipes suitable for KFM’s high-resolution frontier datasets and 3D timeline overlays.
+This guide describes how to achieve and maintain:
 
----
+- ~**60 FPS** rendering for heavy **offline MBTiles/PMTiles** scenes  
+- Stable performance for **frontier-scale datasets** and **timeline overlays**  
+- Reproducible **profiling results**, with Telemetry v2 metrics (energy, CO₂e, latency)  
+- FAIR+CARE v2–aligned rendering that respects accessibility and sovereignty constraints  
 
-## 🗂️ Directory Layout (drop-in for KFM)
+It covers:
 
-```plaintext
-docs/
-└── guides/
-    └── perf/
-        ├── maplibre-rendering-playbook.md   # This guide
-        ├── profiles/                        # Performance profiles (.json/.cpuprofile)
-        ├── styles/                          # Before/after style JSONs
-        └── snippets/                        # TypeScript/JS benchmark utilities
-```
+- Rendering cost model and hot spots  
+- Profiling workflows and small scripts  
+- Tile cache strategies and PMTiles specifics  
+- Layer & style optimization tactics  
+- Integration with KFM’s telemetry & governance workflows  
 
 ---
 
-## 🔎 Rendering Cost Model
+# 🗂️ Directory Layout
 
-| Stage | Description | Typical Mitigation |
-|--------|--------------|--------------------|
-| **Tile I/O** | Reading + decoding tiles (SQLite/HTTP range) | PMTiles protocol handler, cache warmup |
-| **Layout** | Label placement, text shaping | Limit fonts, reuse glyphs, `text-size` scaling |
-| **Paint** | Fill, stroke, opacity compositing | Merge similar layers, minimize overdraw |
-| **Geometry** | Vertex + feature count | Simplify upstream, limit zoom range |
-| **Overdraw** | Redundant pixel writes | Order layers, remove hidden fills |
-| **Style Thrash** | Data-driven zoom transitions | Replace with static steps when possible |
+~~~text
+docs/guides/perf/
+│
+├── telemetry-profiling.md             # Telemetry profiling & benchmark framework
+├── maplibre-rendering-playbook.md     # ← THIS GUIDE
+├── gdal-3.12-upgrade.md               # GDAL / geoprocessing performance patterns
+└── reports/                           # Benchmark JSONs and perf telemetry logs
+~~~
 
 ---
 
-## ⏱️ Profiling Workflow (10-Minute Loop)
+# 🔎 Rendering Cost Model
 
-1. **Enable HUD**
+MapLibre rendering cost can be approximated as:
+
+- **Tile I/O** — reading & decoding tile data (PMTiles/MBTiles/HTTP)  
+- **Layout** — label placement, glyph shaping, collision checks  
+- **Paint** — applying fills, strokes, halos, opacities, patterns  
+- **Geometry** — vertex & feature counts per tile  
+- **Overdraw** — redundant pixel writes from complex layers  
+- **Style Thrash** — too many zoom-/data-driven transitions  
+
+| Stage        | Description                              | Typical Mitigation                          |
+|--------------|------------------------------------------|---------------------------------------------|
+| **Tile I/O** | Reading+decoding tiles                   | PMTiles, cache warmup, fewer sources        |
+| **Layout**   | Label placement & shaping                | Fewer fonts, reuse glyphs, simpler labels   |
+| **Paint**    | Fills, strokes, opacity, haloes          | Merge layers, reduce alpha stacking         |
+| **Geometry** | Vertex count & feature density           | Upstream simplification, filtered zooms     |
+| **Overdraw** | Layers rendering atop each other         | Reorder layers, hide fully covered layers   |
+| **Style Thrash** | Frequent dynamic style calculations | Favor stepped functions over continuous     |
+
+---
+
+# ⏱️ Profiling Workflow (10-Minute Loop)
+
+1. **Enable MapLibre’s Internal Debug Helpers**
+
    ```js
    const map = new maplibregl.Map({...});
    map.showTileBoundaries = true;
    map.showCollisionBoxes = true;
-   ```
-2. **Record CPU Profile (Chrome/Edge)**
-   * Open *DevTools → Performance* → record panning/zooming.
-   * Save trace → `docs/guides/perf/profiles/<scene>.json`.
+````
+
+2. **Profile in DevTools**
+
+   * Open Chrome/Edge **Performance** panel
+   * Record 10–20 seconds of panning & zooming
+   * Save trace to:
+     `docs/guides/perf/reports/maplibre/<scene>-trace.json`
+
 3. **Layer Isolation**
-   * Binary-search visible layers; hide half → measure → repeat.
+
+   * Hide half of the layers → test
+   * Binary search to find expensive layers
+   * Document problem layers in perf reports
+
 4. **Zoom Sweep**
-   * Capture z = 6, 10, 12, 14, 16; note ms spikes.
-5. **Set Performance Targets**
-   * **P90 ≤ 16 ms**, **P99 ≤ 24 ms** (smooth 60 FPS).
+
+   * Test z = 6, 10, 12, 14, 16
+   * Note spikes in CPU/GPU per zoom level
+
+5. **Targets**
+
+   * **p90 frame time ≤ 16 ms**, **p99 ≤ 24 ms**
+   * Strong frame-time stability across pans & zooms
 
 ---
 
-## 🧰 Tile Cache & Source Tuning
+# 🧰 Tile Cache & Source Tuning
 
-### Vector (PMTiles/MBTiles)
+## Vector Tiles (PMTiles/MBTiles)
 
 ```ts
 import maplibregl from "maplibre-gl";
 import { Protocol } from "pmtiles";
 
-maplibregl.addProtocol("pmtiles", new Protocol().tile);
+const protocol = new Protocol();
+maplibregl.addProtocol("pmtiles", protocol.tile);
+
+const map = new maplibregl.Map({ container: "map", style });
+
 map.addSource("roads", {
   type: "vector",
   url: "pmtiles://file:///data/tiles/roads.pmtiles",
   minzoom: 0,
   maxzoom: 14
 });
+
 map.setMaxTileCacheSize(1024);
 ```
 
-**Tips**
-- **PMTiles** > MBTiles for range requests & web streaming.
-- Match **`maxzoom`** to data fidelity.
-- Trim low-value zooms (e.g., parcels ≥ z13).
+**Guidelines**
 
-### Raster DEM / Orthos
+* Prefer **PMTiles** for offline + range-based loading
+* Match `maxzoom` to **actual data fidelity**
+* Drop highly detailed layers at low zooms (e.g., parcels only at z≥13)
+* Use a **sane `maxTileCacheSize`**; tradeoff RAM vs. smoothness
+
+## Raster / DEM
 
 ```js
 map.addSource("dem", {
@@ -116,41 +170,60 @@ map.addSource("dem", {
   url: "pmtiles://file:///data/dem.pmtiles",
   tileSize: 512
 });
-map.addLayer({ id: "hillshade", type: "hillshade", source: "dem" });
+
+map.addLayer({
+  id: "hillshade",
+  type: "hillshade",
+  source: "dem"
+});
 ```
 
-*512 px tiles → fewer fetches; pre-generate overviews.*
+* 512 px tiles reduce fetches
+* Precompute overviews; do not rely on implicit resampling for performance-critical views
 
 ---
 
-## 🧱 Layer Simplification Tactics
+# 🧱 Layer Simplification Tactics
 
-1. **Generalize early** (`tippecanoe --drop-densest-as-needed`).
-2. **Merge** layers with identical paint/layout via filters.
-3. **Delay render** until meaningful zooms (`minzoom`/`maxzoom`).
-4. **Avoid costly props:** `dasharray`, wide halos, patterned fills.
+1. **Generalize upstream**
+
+   * Use `tippecanoe` or similar to reduce vertices.
+
+2. **Merge paint-equivalent layers**
+
+   * Replace multiple similarly styled layers with one layer, using filters.
+
+3. **Constrain zoom ranges**
+
+   * `minzoom` and `maxzoom` to avoid showing dense layers at low zoom.
+
+4. **Avoid heavy features**
+
+   * Limit use of `line-dasharray`, wide halos, and patterned fills unless essential.
 
 ---
 
-## 🔤 Label Optimization
+# 🔤 Label Optimization (High Impact)
 
-* Limit `text-size`; prefer single font stack.  
-* Disable `text-allow-overlap` unless vital.  
-* Use `symbol-sort-key` for priority ordering.  
-* Cache glyph ranges; reduce re-layout.
+* Limit font families (ideally one or two).
+* Avoid `text-allow-overlap: true` unless absolutely required.
+* Use simple `text-size` functions (e.g., 2-step zoom interpolation).
+* Use `symbol-sort-key` to control important label priority.
 
 ```json
 {
   "id": "road-labels",
   "type": "symbol",
   "source": "roads",
+  "source-layer": "road_labels",
   "layout": {
     "text-field": ["get", "name"],
-    "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 16, 14]
+    "text-size": ["interpolate", ["linear"], ["zoom"], 10, 10, 16, 14],
+    "text-padding": 2
   },
   "paint": {
-    "text-color": "#333",
-    "text-halo-color": "#fff",
+    "text-color": "#333333",
+    "text-halo-color": "#ffffff",
     "text-halo-width": 0.5
   }
 }
@@ -158,7 +231,7 @@ map.addLayer({ id: "hillshade", type: "hillshade", source: "dem" });
 
 ---
 
-## ⚙️ Map Settings & Flags
+# ⚙️ Map Settings & Runtime Flags
 
 ```js
 const map = new maplibregl.Map({
@@ -168,88 +241,139 @@ const map = new maplibregl.Map({
   fadeDuration: 100,
   maxTileCacheSize: 1024
 });
-map.setPrefersReducedMotion(true);
-```
 
-| Option | Impact |
-|--------|---------|
-| `antialias: false` | ↓ GPU cost |
-| `fadeDuration: 100` | ↓ blending overhead |
-| `maxTileCacheSize` | trade RAM ↔ smoothness |
-
----
-
-## 🧪 Automated Benchmark Snippet
-
-```ts
-export async function runBenchmark(map) {
-  const t = [];
-  let rAF;
-  function loop(ts){t.push(performance.now()-ts);rAF=requestAnimationFrame(loop);}
-  rAF=requestAnimationFrame(loop);
-  await map.easeTo({center:[-98,38.5],zoom:12,duration:2000});
-  cancelAnimationFrame(rAF);
-  t.sort((a,b)=>a-b);
-  const p=q=>t[Math.floor(t.length*q)];
-  return {p50:p(.5),p90:p(.9),p99:p(.99)};
+// Respect OS reduced-motion setting
+if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  map.setPrefersReducedMotion(true);
 }
 ```
 
----
-
-## 🧮 Tile Build Recommendations
-
-| Tool | Flag | Effect |
-|------|------|--------|
-| `tippecanoe` | `--drop-densest-as-needed` | Fewer vertices |
-| `--maximum-tile-bytes` | cap tile size |
-| `--coalesce` | merge geometries |
-| `--detect-shared-borders` | optimize boundaries |
+| Option              | Impact                                |
+| ------------------- | ------------------------------------- |
+| `antialias: false`  | lowers GPU load                       |
+| `fadeDuration: 100` | reduces blending                      |
+| `maxTileCacheSize`  | controls memory ↔ smoothness tradeoff |
 
 ---
 
-## 🧩 “One-Line Wins”
+# 🧪 Automated Benchmark Snippet
 
-- Add `minzoom` to hidden layers.  
-- Remove deprecated style entries.  
-- Replace translucent fills with solids.  
-- Disable unused symbol layers.  
+A small utility that uses `requestAnimationFrame` to capture frame times for a scripted camera move:
+
+```ts
+export async function runBenchmark(map: maplibregl.Map) {
+  const samples: number[] = [];
+  let id: number;
+
+  function loop(prev: number) {
+    const now = performance.now();
+    samples.push(now - prev);
+    id = requestAnimationFrame(() => loop(now));
+  }
+
+  id = requestAnimationFrame((ts) => loop(ts));
+
+  await map.easeTo({
+    center: [-98, 38.5],
+    zoom: 12,
+    duration: 2000
+  });
+
+  cancelAnimationFrame(id);
+  samples.sort((a, b) => a - b);
+
+  const p = (q: number) => samples[Math.floor(samples.length * q)] || 0;
+
+  return {
+    p50: p(0.5),
+    p90: p(0.9),
+    p99: p(0.99)
+  };
+}
+```
+
+Attach these metrics to Telemetry v2 for reproducible, run-to-run comparisons.
 
 ---
 
-## 🛠️ Troubleshooting Matrix
+# 🧮 Tile Build Recommendations
 
-| Symptom | Likely Cause | Fix |
-|----------|--------------|-----|
-| Stutter on pan | Cache small / antialias on | raise cache / disable AA |
-| Label lag | heavy halos / overlap true | shrink halos / allow collide |
-| GPU spikes | overdraw, extrusions | flatten order, disable 3D |
-| Memory growth | orphaned sources | `removeSource` before re-add |
+| Tool         | Flag/Setting                 | Effect                      |
+| ------------ | ---------------------------- | --------------------------- |
+| `tippecanoe` | `--drop-densest-as-needed`   | Drops only densest features |
+|              | `--maximum-tile-bytes=50000` | Caps tile size              |
+|              | `--coalesce`                 | Merges adjacent geometries  |
+|              | `--detect-shared-borders`    | Optimizes shared boundaries |
 
----
+Keep performance configs under version control, e.g.:
 
-## ♿ Accessibility & FAIR+CARE Notes
-
-* Honor OS **reduced motion** preferences.  
-* Maintain **text legibility** across DPIs.  
-* Record all tile provenance & simplification metadata in STAC items.  
+* `docs/guides/perf/styles/`
+* `docs/guides/perf/profiles/`
 
 ---
 
-## 🕰 Version History
+# 🧰 “One-Line Wins”
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.0.0 | 2025-11-09 | A. Barta | Upgraded for KFM v10; aligns with FAIR+CARE + new telemetry schema. |
-| v1.0.0 | 2025-11-09 | KFM Assistant | Initial release of MapLibre performance guide. |
+* Add `minzoom` to layers that are invisible at small scales.
+* Remove unused or legacy layers from styles.
+* Replace partially transparent fills with solid versions where possible.
+* Disable debug layers in production builds.
+
+---
+
+# ♿ Accessibility, FAIR+CARE & Map Rendering
+
+* Respect user preferences (`prefers-reduced-motion` and high contrast themes).
+* Ensure label fonts + sizes remain legible across DPIs and zooms.
+* When simplifying / hiding layers that involve sensitive cultural sites, coordinate with CARE v2 policies:
+
+  * Some data must remain generalized/hidden even at high zooms.
+* Origin & transformation metadata for tiles should be reflected in:
+
+  * STAC Items for the tileset
+  * Telemetry & lineage logs for the pipelines
+
+---
+
+# 🧩 Telemetry v2 + Benchmark Integration
+
+Map rendering benchmarks should emit Telemetry v2 entries:
+
+* `energy_wh` / `co2_g` for render test runs
+* Benchmark FPS and frame-time percentiles (`p50`, `p90`, `p99`)
+* Context: style version, tileset version, device/runtime profile
+
+These feed into:
+
+* `docs/guides/perf/reports/benchmark-results.json`
+* `releases/<version>/pipeline-telemetry.json`
+
+and are validated via:
+
+* `telemetry-validate.yml`
+* `faircare-validate.yml`
+* `ledger-sync.yml`
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Author     | Summary                                                                                 |
+| ------: | ---------- | ---------- | --------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Core Team  | Upgraded to Telemetry v2 & FAIR+CARE v2; inset directory layout; ISO-aligned perf notes |
+| v10.0.0 | 2025-11-09 | A. Barta   | Initial MapLibre perf playbook for KFM v10                                              |
+|  v1.0.0 | 2025-11-09 | KFM Assist | Original base version of MapLibre performance tips                                      |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix — MapLibre Rendering Performance Playbook (v10.4.2)**
+High-Fidelity Maps × FAIR+CARE v2 × Sustainable Rendering × Telemetry v2
 
-[Back to Docs Index](../..) · [Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+
+[Back to Performance Guides](./README.md) ·
+[Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
