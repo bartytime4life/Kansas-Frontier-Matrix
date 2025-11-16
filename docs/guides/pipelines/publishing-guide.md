@@ -429,4 +429,3 @@ FAIR+CARE Data Publishing × Immutable Provenance × STAC/DCAT/Graph/RDF Integra
 © 2025 KFM — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-```
