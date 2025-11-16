@@ -1,373 +1,286 @@
 ---
-title: "🧩 Kansas Frontier Matrix — Web Feature Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "✨ Kansas Frontier Matrix — Web Features Layer Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/features/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / FAIR+CARE Council"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-features-v2.json"
+sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-features-readme-v1.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Overview"
+intent: "web-features-overview"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Mixed (feature-dependent)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+provenance_chain:
+  - "web/src/features/README.md@v10.3.2"
+  - "web/src/features/README.md@v10.3.1"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "SoftwareApplication"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../schemas/json/web-features-readme.schema.json"
+shape_schema_ref: "../../../schemas/shacl/web-features-readme-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-features-readme-v10.4.0"
+semantic_document_id: "kfm-doc-web-features-readme"
+event_source_id: "ledger:web/src/features/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "speculative additions"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public Document"
+role: "overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review annually"
+sunset_policy: "Superseded on next feature-architecture revision"
 ---
+
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — Web Feature Architecture**  
+# ✨ **Kansas Frontier Matrix — Web Features Overview**  
 `web/src/features/README.md`
 
 **Purpose:**  
-Define the **Diamond⁹ Ω / Crown∞Ω Ultimate Certified deep architecture** governing all **web features** in the Kansas Frontier Matrix (KFM) v10.3.2.  
-This document formalizes the interaction model between **map**, **timeline**, **focus**, **story**, **search**, **telemetry**, **accessibility**, and **governance** modules.  
-All modules follow **FAIR+CARE**, **WCAG 2.1 AA**, and **MCP-DL v6.3** standards, and are fully traceable through telemetry, governance ledgers, and provenance metadata.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Feature_Compliant-orange)]()  
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+Provide a comprehensive, FAIR+CARE-governed overview of the **Features Layer** within the  
+KFM Web Platform (`web/src/features/**`) — encapsulating self-contained functional modules  
+that integrate UI components, hooks, pipelines, governance metadata, geospatial logic, and  
+telemetry instrumentation.
 
 </div>
 
 ---
 
-## 📘 Executive Overview
+# 📘 What Are “Features” in the KFM Web Platform?
 
-The **Web Feature Architecture** organizes all interactive subsystems into coherent, governed feature slices unified under:
+The **Features Layer** groups functionality into **modular, domain-focused slices** that  
+combine components, hooks, services, governance overlays, and pipelines into cohesive  
+experience units.
 
-- React 18 + Context + Hooks  
-- MapLibre GL + CesiumJS  
-- Focus Mode v2.5 (AI-assisted reasoning engine)  
-- TimelineView (temporal navigation)  
-- Story Nodes (narrative graph)  
-- FAIR+CARE governance enforcement  
-- Accessibility & inclusive design pipelines  
-- Telemetry-driven sustainability monitoring  
-- Provenance and lineage propagation  
+A Feature = *User-facing capability* with:
 
-Each feature is isolated, typed, reproducible, and coordinated via global contexts and event buses.
+- Its own internal logic  
+- Reusable components  
+- Routing entry points  
+- Governance + CARE metadata  
+- A11y requirements  
+- Telemetry instrumentation  
+- Schema + provenance constraints  
+
+Examples include: Focus Mode, Story Nodes, Data Explorer, Map Tools, Legends, and more.
 
 ---
 
-## 🗂️ Directory Layout (Authoritative v10.3.2)
+# 🧱 Directory Structure
 
-```text
+~~~text
 web/src/features/
-├── README.md
+├── focus-mode/                    # Focus Mode v2.5 entity-centered reasoning
+│   ├── components/                # Focus panels, related entities, AI explanations
+│   ├── hooks/                     # useFocusFeature, useRelatedEntities, etc.
+│   ├── pipelines/                 # Composition of focusPipeline + governance rules
+│   ├── governance/                # CARE badge logic for focus flows
+│   └── telemetry/                 # Focus Mode usage + A11y event reporting
 │
-├── timeline/           # Temporal navigation & time-centric reasoning
-├── focus/              # Focus Mode v2.5 (narratives, explainability, governance)
-├── search/             # Semantic + keyword search, filters, relevance engine
-├── map/                # MapLibre + Cesium visualization stack
-├── story/              # Story Nodes (narrative graph + timeline sync)
-├── diff-first/         # Entity diff viewer (release-to-release evolution)
-├── telemetry/          # Performance, energy, ethics, and A11y telemetry
-├── admin/              # Governance dashboards, audit review tools
-└── accessibility/      # A11y utilities, ARIA normalizers, keyboard pathways
-````
+├── story-nodes/                   # Story Node v3 feature slice
+│   ├── components/                # Cards, detail views, micro-maps
+│   ├── hooks/                     # useStoryNodeFeature, useStoryRelations
+│   ├── pipelines/                 # storyPipeline.ts integration
+│   ├── geospatial/                # Story Node footprint transforms
+│   └── telemetry/                 # Story Node reading + interaction analytics
+│
+├── data-explorer/                 # STAC/DCAT dataset exploration
+│   ├── components/                # Filters, dataset cards, previews
+│   ├── hooks/                     # useDatasetSearch, useDatasetPreview
+│   ├── pipelines/                 # stacPipeline.ts integration
+│   ├── governance/                # Dataset licensing, CARE metadata
+│   └── telemetry/                 # Dataset browsing usage metrics
+│
+├── map-tools/                     # Map interactions, legends, layer toggles
+│   ├── components/                # Cursor inspector, layer toggles, legend UI
+│   ├── hooks/                     # useMapTools, useLegend
+│   ├── configs/                   # Legend definitions, color ramps
+│   └── telemetry/                 # Map tool usage metrics
+│
+├── timeline/                      # Timeline feature slice
+│   ├── components/                # Timeline UI, range sliders, granularity controls
+│   ├── hooks/                     # useTimelineFeature
+│   ├── pipelines/                 # timelinePipeline.ts integration
+│   └── telemetry/                 # Temporal navigation metrics
+│
+└── governance/                    # Governance viewer (CARE/Provenance/etc.)
+    ├── components/                # Rights-holder info, stewardship data
+    ├── hooks/                     # useGovernanceFeature
+    ├── schemas/                   # Governance JSON-LD schemas
+    └── telemetry/                 # Governance viewer engagement stats
+~~~
 
 ---
 
-## 🧩 High-Level Web Feature Architecture
+# 🧩 Feature Layer Responsibilities
 
-```mermaid
-flowchart TD
-    UI[User Interaction] --> STATE[React States<br/>Context & Hooks]
-    STATE --> DATA[Data Fetch Layer<br/>REST · GraphQL · STAC/DCAT]
-    DATA --> FEATURES[Feature Modules<br/>timeline · focus · story · map]
-    FEATURES --> GOV[Governance Engine<br/>CARE · consent · sovereignty]
-    FEATURES --> TEL[Telemetry Engine<br/>perf · energy · ethics]
-    FEATURES --> PROV[Provenance Layer<br/>STAC · DCAT · PROV-O]
-    FEATURES --> A11Y[Accessibility Layer<br/>WCAG 2.1 AA]
-    GOV --> LEDGER[Governance Ledger]
-    TEL --> SNAP[Telemetry Snapshot<br/>focus-telemetry.json]
-```
+## 1. **User-Focused Architecture**
+Features define *what a user can do*:
 
----
+- View a Story Node  
+- Explore a dataset  
+- Toggle map layers  
+- Enter Focus Mode  
+- Inspect provenance  
+- Navigate timeline ranges  
 
-## 🧠 Feature Domains (Deep Architecture)
-
-### 1️⃣ Timeline Feature — Temporal Intelligence
-
-Handles:
-
-* temporal brushing & zoom
-* predictive period overlays (2030–2100)
-* bi-directional sync with Focus Mode & MapView
-* generates timeline events for telemetry
-
-```mermaid
-flowchart LR
-    YEAR[currentYear] --> TCTX[TimelineContext]
-    TCTX --> MAPSYNC[Map Time Filter]
-    TCTX --> FOCSYNC[Focus Time Alignment]
-    TCTX --> TELT[Telemetry]
-```
+Each of these experiences is isolated into its own feature slice.
 
 ---
 
-### 2️⃣ Focus Feature — AI Reasoning & Explainability (v2.5)
+## 2. **Feature Composition Pattern**
 
-Provides:
+Each feature commonly provides:
 
-* narrative reasoning
-* explainability deltas
-* CARE-sensitive narrative filtration
-* provenance citation surfaces
+- `components/` → UI building blocks  
+- `hooks/` → Feature-specific logic  
+- `pipelines/` → Orchestration logic  
+- `governance/` → CARE + provenance metadata  
+- `telemetry/` → Usage + performance signals  
+- `configs/` → Feature-specific rules (optional)  
+- `schemas/` → Validation schemas (optional)  
+- `geospatial/` → Spatial-specific logic (optional)
 
-```mermaid
-flowchart TD
-    FOCUSREQ[Focus Request] --> FAI[Focus API]
-    FAI --> XAI[Explainability Builder]
-    XAI --> CAREPROC[CARE Processor]
-    CAREPROC --> FOUT[Focus Output]
-    FOUT --> UI[Focus Panel Rendering]
-```
+This ensures predictable, reproducible structure across the Web Platform.
 
 ---
 
-### 3️⃣ Search Feature — Semantic & Filtered Discovery
+# 🧠 Integration With Other Layers
 
-Search must support:
+Features **bridge**:
 
-* keyword vector search
-* entity-type filters
-* timeline-aware ranking
-* accessibility-mode search tokens
+- Hooks → State management  
+- Pipelines → Data orchestration  
+- Services → API & STAC/DCAT communication  
+- Context → Time, Focus, A11y, Governance  
+- Components → UI  
+- Geospatial Pipelines → Map/3D interactions  
+- Telemetry → Observability  
 
-```mermaid
-flowchart LR
-    Q[Query] --> SVC[Search Service]
-    SVC --> RES[Search Results]
-    RES --> FOCUSLINK[Entity → Focus]
-```
+Features **may use** other features but must not create circular dependencies.
 
 ---
 
-### 4️⃣ Map Feature — Spatial Visualization Layer
-
-Handles:
-
-* MapLibre GL rendering
-* Cesium 3D globe mode
-* layer registry + STAC asset loaders
-* CARE geometry masking
-
-```mermaid
-flowchart TD
-    UI_MAP[Map Controls] --> MAPCORE[Map Engine]
-    MAPCORE --> LAYERS[Layer Registry]
-    LAYERS --> GOVMASK[Geometry Masking]
-```
-
----
-
-### 5️⃣ Story Feature — Narrative Graph Engine
-
-Implements:
-
-* narrative Story Nodes
-* place/people/event connections
-* map + timeline syncing
-* governance-aware narrative filtering
-
-```mermaid
-flowchart LR
-    SNODE[Story Node] --> LINK[Linked Entities]
-    LINK --> STY[Story View]
-```
-
----
-
-### 6️⃣ Diff-First Feature — Release-to-Release Change Detection
-
-Provides:
-
-* entity diffs across releases
-* governance & explainability deltas
-* semantic property, relation, and text diffs
-* integration with Focus Mode & Timeline
-
-```mermaid
-flowchart TD
-    RELPREV[R_prev] --> DIFFENG[Diff Engine]
-    RELCURR[R_curr] --> DIFFENG
-    DIFFENG --> DIFFUI[Diff Components]
-```
-
----
-
-### 7️⃣ Telemetry Feature — Sustainability & Ethics Engine
-
-Logs:
-
-* page load times
-* energy estimates (Wh)
-* accessibility violations
-* governance rule triggers
-* user interactions
-
-```mermaid
-flowchart LR
-    EVENT[Feature Event] --> TCOLLECT[Telemetry Collector]
-    TCOLLECT --> SNAPSHOT[focus-telemetry.json]
-```
-
----
-
-### 8️⃣ Admin Feature — Governance Review & Audit Tools
-
-Provides:
-
-* CARE label review
-* provenance chain inspection
-* dataset-level governance dashboards
-* entity audit trails
-* release data verification
-
----
-
-### 9️⃣ Accessibility Feature — WCAG-Driven Enforcement
-
-Implements:
-
-* `prefers-reduced-motion` compliance
-* ARIA normalization
-* skip links & keyboard navigation
-* accessible announcements
-* color contrast validation
-
----
-
-## 🧱 Cross-Feature Integration Architecture
-
-```mermaid
-flowchart TD
-    TIM[Timeline] --> FOC[Focus Mode]
-    FOC --> MAP[Map Feature]
-    MAP --> STORY[Story Nodes]
-    STORY --> TIM
-    TIM --> DIFF[Diff-First]
-    DIFF --> GOV[Governance]
-    GOV --> TEL[Telemetry]
-    TEL --> ALL[All Features Telemetry Unification]
-```
-
-Events create **cascading UI updates** through React Context, using:
-
-* TimelineContext
-* FocusContext
-* ReleaseContext
-* MapContext
-* TelemetryContext
-* GovernanceContext
-
----
-
-## ♿ Accessibility Architecture (WCAG 2.1 AA)
+# 🔐 Governance & FAIR+CARE Responsibilities
 
 All features must:
 
-* include ARIA roles & regions
-* provide alternative text and labels
-* avoid color-only semantics
-* maintain a consistent `<h1>–<h4>` hierarchy
-* support reduced-motion rendering
-* emit A11y telemetry events
+- Display correct CARE labels  
+- Respect sovereignty redaction rules  
+- Prevent sensitive geometry exposure  
+- Annotate AI-generated narratives  
+- Preserve provenance metadata  
+- Obey `ai_transform_prohibited` constraints  
+- Ensure no harmful interpretations are surfaced  
 
-```mermaid
-flowchart TD
-    FEATURE[Feature Output] --> A11Y[a11y Validator]
-    A11Y --> UI[Accessible Rendering]
-```
+Governance failures **block merges in CI**.
 
 ---
 
-## 📡 Telemetry & Sustainability Integration
+# ♿ Accessibility (WCAG 2.1 AA)
 
-All features log:
+Each feature MUST:
 
-* energy cost per interaction
-* CPU/GPU-time estimation
-* network latency
-* a11y score contribution
-* governance rule invocations
+- Provide keyboard navigation  
+- Apply proper ARIA roles  
+- Include alt text for icons/images  
+- Respect reduced-motion settings  
+- Use A11y tokens  
+- Provide accessible color ramps in legends & visualizations  
 
-Telemetry stored in:
-
-```text
-../../../releases/v10.3.2/focus-telemetry.json
-```
+A11y regressions **fail CI**.
 
 ---
 
-## 🔐 Governance Integration (FAIR+CARE)
+# 📈 Telemetry Responsibilities
 
-Governance rules ensure:
+Features generate telemetry for:
 
-* respect for sovereignty
-* consent-aware rendering
-* redaction of sensitive entities
-* lineage & licensing visibility
-* ethical explainability boundaries
+- User flow initiation  
+- Feature-specific interactions  
+- Sustainability metrics  
+- A11y usage metrics  
+- Narrative + spatial exploration  
+- Focus Mode usage  
+- Dataset browsing  
 
-Governance logs recorded at:
+Telemetry MUST be:
 
-```text
-../../../docs/reports/audit/web-features-governance.json
-```
+- Schema-valid  
+- Non-PII  
+- Aggregated  
+- Release-exported  
 
----
+Telemetry appears in:
 
-## ⚙️ CI / Validation Requirements
-
-| Layer         | Validator                |
-| ------------- | ------------------------ |
-| Documentation | `docs-lint.yml`          |
-| Accessibility | `accessibility_scan.yml` |
-| Governance    | `faircare-validate.yml`  |
-| Telemetry     | `telemetry-export.yml`   |
-| Types         | TypeScript strict mode   |
-| Security      | CodeQL + Trivy           |
-| Performance   | Web vitals thresholds    |
-
-All feature modules must pass **all validation steps before merge**.
+`releases/<version>/focus-telemetry.json`
 
 ---
 
-## 🧾 Example Feature Metadata Record
+# 🧪 Testing Requirements
 
-```json
-{
-  "id": "web_features_v10.3.2",
-  "feature_count": 9,
-  "a11y_score": 98.7,
-  "care_compliance": "certified",
-  "telemetry_synced": true,
-  "governance_events_logged": 425,
-  "energy_score": 97.1,
-  "timestamp": "2025-11-14T23:42:00Z"
-}
-```
+Each feature must include:
+
+- Unit tests  
+- Integration tests  
+- E2E tests for user flows  
+- Governance tests  
+- A11y tests  
+- Telemetry tests  
+- Schema validation tests (if applicable)  
+
+Test structure:
+
+~~~text
+tests/unit/web/features/<feature>/**
+tests/integration/web/features/<feature>/**
+tests/e2e/web/features/<feature>/**
+~~~
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
-| Version | Date       | Summary                                                                                                                                                      |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| v10.3.2 | 2025-11-14 | Full deep-architecture rewrite (Diamond⁹ Ω). Unified all feature subsystems, updated governance/telemetry pipelines, added timeline→map→focus sync diagrams. |
-| v9.9.0  | 2025-11-08 | Previous architecture.                                                                                                                                       |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Complete rewrite under KFM-MDP v10.4; added structure for Focus, Story Nodes, STAC/DCAT, governance, and telemetry features |
+| v10.3.2 | 2025-11-14 | Added governance + dataset explorer alignment |
+| v10.3.1 | 2025-11-13 | Initial baseline structure |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Web Features Architecture**
-🧩 Modular Intelligence · 🔐 FAIR+CARE Compliance · 🔗 Provenance Fidelity · 🧠 Explainability-Ready
-© 2025 Kansas Frontier Matrix — MIT License
-
-[Back to Web Source](../README.md)
+© 2025 Kansas Frontier Matrix — MIT License  
+Validated under MCP-DL v6.3 and KFM-MDP v10.4  
+FAIR+CARE Certified · Public Document · Version-Pinned  
 
 </div>
