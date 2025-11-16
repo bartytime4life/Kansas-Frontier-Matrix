@@ -333,7 +333,7 @@ Client-side Focus Mode architecture:
 
 ~~~mermaid
 flowchart LR
-    U[User selects entity] --> C[useFocus (Focus Controller)]
+    U[User selects entity] --> C["useFocus (Focus Controller)"]
     C --> Q["/api/focus/{id}"]
     Q --> R[Focus DTO<br/>Narrative + Context]
     R --> N[StoryNode Composer]
