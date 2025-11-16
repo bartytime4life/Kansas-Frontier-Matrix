@@ -123,6 +123,7 @@ web/src/components/
 │   ├── TimelineControls.tsx
 │   ├── TimelineA11yHelpers.tsx
 │   ├── TimelineCallouts.tsx
+│   │
 │   └── primitives/                   # <— canonical home for legacy files
 │       ├── TimelineBar.tsx
 │       ├── TimelineHandle.tsx
@@ -141,6 +142,7 @@ web/src/components/
 │   ├── SpatialPanel.tsx
 │   ├── ProvenancePanel.tsx
 │   ├── WarningsPanel.tsx
+│   │
 │   └── primitives/                     # ← old folder goes here
 │       ├── FocusPanel.tsx
 │       ├── RelatedEntityCard.tsx
