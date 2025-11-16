@@ -82,7 +82,7 @@ All licenses must use identifiers from the official **SPDX License List**.
   "licenseFile": "LICENSE",
   "copyright": "© 2025 Kansas Frontier Matrix"
 }
-```
+````
 
 ---
 
@@ -90,12 +90,12 @@ All licenses must use identifiers from the official **SPDX License List**.
 
 Every dataset manifest (e.g., `data/sources/*.json`) must include explicit licensing.
 
-| Field | Description | Example |
-|---|---|---|
-| `license` | SPDX identifier | `"CC-BY-4.0"` |
-| `license_text` | Human-readable summary | `"Creative Commons Attribution 4.0 International"` |
-| `provenance` | Data owner/source | `"NOAA National Centers for Environmental Information"` |
-| `attribution` | Credit statement | `"Data courtesy of NOAA and the Kansas Frontier Matrix Project"` |
+| Field          | Description            | Example                                                          |
+| -------------- | ---------------------- | ---------------------------------------------------------------- |
+| `license`      | SPDX identifier        | `"CC-BY-4.0"`                                                    |
+| `license_text` | Human-readable summary | `"Creative Commons Attribution 4.0 International"`               |
+| `provenance`   | Data owner/source      | `"NOAA National Centers for Environmental Information"`          |
+| `attribution`  | Credit statement       | `"Data courtesy of NOAA and the Kansas Frontier Matrix Project"` |
 
 **Example Manifest**
 
@@ -122,12 +122,12 @@ flowchart TD
   E --> F["Governance Ledger Append (data_provenance_ledger.json)"]
 ```
 
-| Workflow | Purpose | Output |
-|---|---|---|
-| `faircare-validate.yml` | Check SPDX presence/validity in manifests & front-matter | `reports/fair/faircare_summary.json` |
-| `stac-validate.yml` | Ensure STAC/DCAT includes valid `license` fields | `reports/self-validation/stac_validation.json` |
-| `docs-lint.yml` | Confirm license badge/footer in Markdown docs | `reports/self-validation/docs/lint_summary.json` |
-| `telemetry-export.yml` | Publish license coverage metrics | `releases/v10.2.0/focus-telemetry.json` |
+| Workflow                | Purpose                                                  | Output                                           |
+| ----------------------- | -------------------------------------------------------- | ------------------------------------------------ |
+| `faircare-validate.yml` | Check SPDX presence/validity in manifests & front-matter | `reports/fair/faircare_summary.json`             |
+| `stac-validate.yml`     | Ensure STAC/DCAT includes valid `license` fields         | `reports/self-validation/stac_validation.json`   |
+| `docs-lint.yml`         | Confirm license badge/footer in Markdown docs            | `reports/self-validation/docs/lint_summary.json` |
+| `telemetry-export.yml`  | Publish license coverage metrics                         | `releases/v10.2.0/focus-telemetry.json`          |
 
 All results are appended to:
 
@@ -139,12 +139,12 @@ reports/audit/github-workflows-ledger.json
 
 ## 🧭 Attribution Standards
 
-| Asset Type | Attribution Format |
-|---|---|
-| **Code** | “© 2025 Kansas Frontier Matrix, released under the MIT License.” |
-| **Data** | “Data courtesy of [Source]. Licensed under CC-BY 4.0.” |
-| **Models** | “Model released by the KFM AI Team under CC-BY-SA 4.0.” |
-| **Documentation** | “This documentation is available under CC-BY 4.0.” |
+| Asset Type        | Attribution Format                                               |
+| ----------------- | ---------------------------------------------------------------- |
+| **Code**          | “© 2025 Kansas Frontier Matrix, released under the MIT License.” |
+| **Data**          | “Data courtesy of [Source]. Licensed under CC-BY 4.0.”           |
+| **Models**        | “Model released by the KFM AI Team under CC-BY-SA 4.0.”          |
+| **Documentation** | “This documentation is available under CC-BY 4.0.”               |
 
 **Footer Snippet**
 
@@ -159,11 +159,11 @@ Built under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ 
 
 While KFM promotes openness, some assets may carry **ethical/cultural restrictions**.
 
-| Restriction | Condition | Handling |
-|---|---|---|
-| **Restricted** | Sensitive Indigenous/cultural content | Access requires FAIR+CARE Council approval; add CARE block in metadata |
+| Restriction            | Condition                                       | Handling                                                                    |
+| ---------------------- | ----------------------------------------------- | --------------------------------------------------------------------------- |
+| **Restricted**         | Sensitive Indigenous/cultural content           | Access requires FAIR+CARE Council approval; add CARE block in metadata      |
 | **Conditionally Open** | Attribution or use-limit terms from communities | Include CARE note + conditions in metadata; may require custom license text |
-| **Fully Open** | No restrictions beyond default license | Publish under default open license |
+| **Fully Open**         | No restrictions beyond default license          | Publish under default open license                                          |
 
 **CARE Metadata Example**
 
@@ -183,12 +183,12 @@ While KFM promotes openness, some assets may carry **ethical/cultural restrictio
 
 Licensing data is unified across release metadata for audit and reproducibility.
 
-| File | Description |
-|---|---|
-| `releases/v10.2.0/sbom.spdx.json` | SPDX license inventory for code, data, and models |
-| `releases/v10.2.0/manifest.zip` | Release bundle including license manifests & notices |
-| `reports/audit/release-manifest-log.json` | Immutable log of license compliance checks |
-| `docs/reports/telemetry/governance_scorecard.json` | License coverage & compliance KPIs |
+| File                                               | Description                                          |
+| -------------------------------------------------- | ---------------------------------------------------- |
+| `releases/v10.2.0/sbom.spdx.json`                  | SPDX license inventory for code, data, and models    |
+| `releases/v10.2.0/manifest.zip`                    | Release bundle including license manifests & notices |
+| `reports/audit/release-manifest-log.json`          | Immutable log of license compliance checks           |
+| `docs/reports/telemetry/governance_scorecard.json` | License coverage & compliance KPIs                   |
 
 ---
 
@@ -196,10 +196,10 @@ Licensing data is unified across release metadata for audit and reproducibility.
 
 KFM dashboards visualize:
 
-- % of assets with valid SPDX licenses  
-- Open vs. restricted license distribution  
-- CARE-restricted dataset counts  
-- Attribution completeness across domains  
+* % of assets with valid SPDX licenses
+* Open vs. restricted license distribution
+* CARE-restricted dataset counts
+* Attribution completeness across domains
 
 **Example Governance Score**
 
@@ -216,32 +216,32 @@ KFM dashboards visualize:
 
 ## ⚖️ FAIR+CARE Alignment
 
-| Principle | Licensing Implementation |
-|---|---|
-| **Findable** | License fields required in front-matter, manifests, and STAC/DCAT metadata. |
-| **Accessible** | Licenses documented in human- and machine-readable formats; SBOMs published. |
-| **Interoperable** | SPDX IDs map cleanly to SBOM/STAC/DCAT fields and external catalog systems. |
-| **Reusable** | Clear terms in SBOM/manifest; telemetry tracks license coverage and compliance. |
-| **CARE** | CARE metadata supplement legal licenses where cultural or ethical constraints exist; Council retains authority to control sensitive use. |
+| Principle         | Licensing Implementation                                                                                                                 |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **Findable**      | License fields required in front-matter, manifests, and STAC/DCAT metadata.                                                              |
+| **Accessible**    | Licenses documented in human- and machine-readable formats; SBOMs published.                                                             |
+| **Interoperable** | SPDX IDs map cleanly to SBOM/STAC/DCAT fields and external catalog systems.                                                              |
+| **Reusable**      | Clear terms in SBOM/manifest; telemetry tracks license coverage and compliance.                                                          |
+| **CARE**          | CARE metadata supplement legal licenses where cultural or ethical constraints exist; Council retains authority to control sensitive use. |
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.2.2 | 2025-11-12 | A. Barta | Updated references to v10.2.0 releases; clarified SBOM/manifest integration and CARE metadata usage; aligned with telemetry v2. |
-| v10.0.0 | 2025-11-10 | A. Barta | Upgraded to v10.0.0; v10 SBOM/manifest/telemetry refs; added `telemetry_schema` v2 and CARE integration clarifications. |
-| v9.7.0 | 2025-11-05 | A. Barta | Unified licensing & IP standard with SBOM integration and FAIR+CARE mapping. |
-| v9.5.0 | 2025-10-20 | A. Barta | Added CARE restriction section and SPDX alignment. |
-| v9.0.0 | 2025-06-01 | KFM Core Team | Established open license policy framework. |
+| Version | Date       | Author        | Summary                                                                                                                       |
+| ------- | ---------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| v10.2.2 | 2025-11-12 | A. Barta      | Updated references to v10.2.0; clarified SBOM/manifest integration and CARE metadata usage; aligned with telemetry-export v2. |
+| v10.0.0 | 2025-11-10 | A. Barta      | Upgraded to v10.0.0; v10 SBOM/manifest/telemetry refs; added `telemetry_schema` v2 and CARE integration clarifications.       |
+| v9.7.0  | 2025-11-05 | A. Barta      | Unified licensing & IP standard with SBOM integration and FAIR+CARE mapping.                                                  |
+| v9.5.0  | 2025-10-20 | A. Barta      | Added CARE restriction section and SPDX alignment.                                                                            |
+| v9.0.0  | 2025-06-01 | KFM Core Team | Established open license policy framework.                                                                                    |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**
+Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 [Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
