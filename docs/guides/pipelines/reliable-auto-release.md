@@ -139,17 +139,86 @@ or publishes a **tagged Release**. Slack receives a summary with `run_id` and ar
 
 ```mermaid
 flowchart TD
-  W[Watcher\n(webhook/cron)] --> F[Fetch\nETag/Last-Modified]
-  F -->|304| N[NOOP\nshort-circuit]
-  F -->|200 w/ Body| V[Validate\nschemas & rules]
-  V --> T[Transform\ndeterministic]
-  T --> D[Diff Classifier\npatch/minor/major]
-  D --> S[SemVer Bump\nupdate version]
-  S --> C[Changelog & Manifest\ngenerate artifacts]
-  C --> P[Publish\nPR or Release]
-  P --> L[Ledger & Telemetry\nrun_id, fingerprints]
-  P --> H[Notify\nSlack webhook]
-  N --> L
+
+  %% -------------------------------
+  %% Subgraphs (Logical Phases)
+  %% -------------------------------
+
+  subgraph TRIGGER["Trigger & Watch"]
+    W["Watcher<br/>webhook or cron"]
+  end
+
+  subgraph FETCH["Fetch & Idempotency"]
+    F["Fetch<br/>ETag / Last-Modified"]
+    N["NOOP<br/>short-circuit"]
+    W --> F
+    F -->|304 NOT_MODIFIED| N
+  end
+
+  subgraph VALIDATE["Validation"]
+    V["Validate<br/>schemas & rules"]
+    F -->|200 OK| V
+  end
+
+  subgraph TRANSFORM["Deterministic Transform"]
+    T["Transform<br/>deterministic"]
+    V --> T
+  end
+
+  subgraph DIFF_SEMVER["Diff & SemVer"]
+    D["Diff classifier<br/>row / column deltas"]
+    S["SemVer bump<br/>major / minor / patch"]
+    T --> D
+    D --> S
+  end
+
+  subgraph ARTIFACTS["Artifacts"]
+    C["Changelog + manifest<br/>generate artifacts"]
+    S --> C
+  end
+
+  subgraph PUBLISHING["Publish"]
+    P["Publish<br/>PR or Release"]
+    C --> P
+  end
+
+  subgraph LEDGER_AND_TELEMETRY["Ledger & Telemetry"]
+    L["Ledger + telemetry<br/>run_id · hashes · status"]
+    N --> L
+    P --> L
+  end
+
+  subgraph NOTIFY["Notify"]
+    H["Notify<br/>Slack webhook"]
+    P --> H
+  end
+
+  %% -------------------------------
+  %% Class Definitions (KFM Styling)
+  %% -------------------------------
+
+  classDef triggerPhase fill:#edf2ff,stroke:#4c6fff,stroke-width:1px,color:#1a2b6c;
+  classDef fetchPhase fill:#f0fff4,stroke:#2f855a,stroke-width:1px,color:#22543d;
+  classDef validatePhase fill:#fffaf0,stroke:#dd6b20,stroke-width:1px,color:#7b341e;
+  classDef transformPhase fill:#f7fafc,stroke:#4a5568,stroke-width:1px,color:#2d3748;
+  classDef diffPhase fill:#ebf8ff,stroke:#3182ce,stroke-width:1px,color:#2b6cb0;
+  classDef artifactsPhase fill:#faf5ff,stroke:#805ad5,stroke-width:1px,color:#44337a;
+  classDef publishPhase fill:#f0fff4,stroke:#38a169,stroke-width:1px,color:#22543d;
+  classDef ledgerPhase fill:#fffff0,stroke:#b7791f,stroke-width:1px,color:#744210;
+  classDef notifyPhase fill:#fff5f5,stroke:#e53e3e,stroke-width:1px,color:#742a2a;
+  classDef noopPhase fill:#e2e8f0,stroke:#4a5568,stroke-width:1px,color:#1a202c;
+
+  class TRIGGER triggerPhase;
+  class FETCH fetchPhase;
+  class VALIDATE validatePhase;
+  class TRANSFORM transformPhase;
+  class DIFF_SEMVER diffPhase;
+  class ARTIFACTS artifactsPhase;
+  class PUBLISHING publishPhase;
+  class LEDGER_AND_TELEMETRY ledgerPhase;
+  class NOTIFY notifyPhase;
+  class N noopPhase;
+
 ````
 
 ---
