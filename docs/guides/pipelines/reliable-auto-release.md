@@ -1,22 +1,174 @@
-# ======================================================================
-#  🔁 reliable-auto-release.yml
-#  Kansas Frontier Matrix — Reliable Auto-Release Runner
-#  Schedule + Webhook → Watch → Fetch → Validate → Transform → Diff → SemVer → Publish
-#  Idempotent · FAIR+CARE Safe · Deterministic · Fully Auditable
-# ======================================================================
+---
+title: "🔁 Kansas Frontier Matrix — Reliable Auto-Release Pipeline (Watchers, Idempotency, and Governance) (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "docs/guides/pipelines/reliable-auto-release.md"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+commit_sha: "<latest-commit-hash>"
+sbom_ref: "../../releases/v10.4.x/sbom.spdx.json"
+manifest_ref: "../../releases/v10.4.x/manifest.zip"
+telemetry_ref: "../../releases/v10.4.x/pipeline-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/reliable-auto-release-v1.json"
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "reliable-pipelines"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R1-E1"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
+---
 
+<div align="center">
+
+# 🔁 **Reliable Auto-Release Pipeline — Watchers, Idempotency, and Governance**  
+`docs/guides/pipelines/reliable-auto-release.md`
+
+**Purpose:**  
+Provide a **ready-to-run pattern** for continuously watching upstream sources, deterministically transforming data,  
+**bumping SemVer**, generating **CHANGELOG + manifest**, and **publishing** a PR or tagged **Release** — with  
+**idempotency, safety, and governance** baked in.
+
+**Scope:**  
+This guide standardizes watchers (webhooks/cron), HTTP conditional fetches (ETag/Last-Modified), schema validation,  
+deterministic transforms, artifact stamping, CI/CD concurrency, retries, and notifications.
+
+</div>
+
+---
+
+## ✅ Outcomes
+
+- **Zero-duplicate** runs with **idempotent artifacts** and **deterministic versioning**  
+- **Auditable** changes with `CHANGELOG.md`, SBOM, STAC/DCAT manifests, and governance links  
+- **Safe** publishes gated by validation, concurrency locks, and dry-runs  
+- **Observable** pipeline with run IDs, diffs, and telemetry events
+
+---
+
+## 🧩 Canonical Components (KFM-Standard)
+
+- **Watcher:** HTTP webhook (preferred) or `cron` (`*/15 * * * *`)  
+- **Fetcher:** Conditional GET using **ETag / If-None-Match** and **If-Modified-Since**  
+- **Validator:** Schema + rules (JSON Schema, STAC, FAIR+CARE checks)  
+- **Transformer:** Pure, deterministic functions (same input → same output)  
+- **Versioner:** Deterministic SemVer bump (**patch/minor/major**) from classified diffs  
+- **Publisher:** Pull Request or Git Tag + GitHub Release (with assets)  
+- **Notifier:** Slack webhook with `run_id`, diff summary, and links  
+- **Observability:** Telemetry events, run ledger, artifact fingerprints  
+- **Governance:** SBOM (SPDX), manifests, attestation, CI policy gates  
+
+---
+
+## 🧠 Idempotency & Reliability Rules
+
+- **Single-flight execution:** Use a **concurrency group/lock** per pipeline name + source.  
+- **Deterministic run identity:**  
+  `run_id = sha256(source_url + content_hash + period)`  
+- **Short-circuit:** If identical artifact exists, **skip** publish; mark as **NOOP**.  
+- **Bounded retries:** Exponential backoff, request timeouts, and circuit-breaker for upstream flakiness.  
+- **Checkpointing:** Persist phase markers so re-runs **resume** safely.  
+- **Full dry-run path:** Every phase runnable in `--dry-run` with identical logs and previews.
+
+---
+
+## 🗂️ Directory Layout (Excerpt, Canonical)
+
+~~~text
+.github/workflows/
+└── reliable-auto-release.yml                  # CI workflow wiring watcher → pipeline
+
+src/
+└── pipelines/
+    └── reliable_auto_release/                 # Python pipeline entrypoints
+        ├── watcher.py                         # Detects upstream changes, emits changed/no-change
+        ├── fetch.py                           # Conditional GET (ETag/Last-Modified)
+        ├── validate.py                        # Schema + FAIR+CARE validation
+        ├── transform.py                       # Deterministic transform (e.g., CSV → Parquet)
+        ├── diff_classify.py                   # Row/column diff + change classification
+        ├── versioner.py                       # SemVer bump decision (patch/minor/major)
+        ├── publish.py                         # PR/Release creation + asset staging
+        ├── notify.py                          # Slack (or other) notifications
+        └── telemetry.py                       # Telemetry emission for runs
+
+data/
+└── work/
+    └── reliable_auto_release/                 # Ephemeral working directory for pipeline
+        ├── cache/                             # ETag / Last-Modified cache, content hashes
+        ├── checkpoints/                       # Phase markers for resuming jobs
+        ├── input.dat                          # Latest fetched raw input
+        ├── output.parquet                     # Latest transform output
+        └── logs/                              # Fetch/validate/transform logs
+
+releases/
+└── reliable_auto_release/                     # Series-specific releases (if using dedicated folder)
+    ├── manifest.zip                           # Release manifest bundle
+    ├── sbom.spdx.json                         # SBOM for pipeline runtime/tooling
+    └── CHANGELOG.md                           # Aggregate changelog for this series
+
+docs/
+└── guides/
+    └── pipelines/
+        └── reliable-auto-release.md           # This guide
+
+schemas/
+└── reliable-auto-release/                     # Schema contracts for pipeline validation
+    ├── dataset.schema.json                    # Data schema
+    └── diff.schema.json                       # Diff / SemVer decision schema
+
+telemetry/
+└── reliable-auto-release-v1.json              # Telemetry event schema for this pipeline
+~~~
+
+---
+
+## 🧭 Flow (High-Level)
+
+### Description
+
+The watcher triggers on upstream change or on schedule.  
+The fetcher issues a **conditional request**; **304 Not Modified** yields a NOOP.  
+If new content arrives, the validator checks schemas and rules; transform runs deterministically;  
+diffs are classified into **SemVer bump**; the system builds `CHANGELOG` and `manifest`, then opens a PR  
+or publishes a **tagged Release**. Slack receives a summary with `run_id` and artifact links.
+
+### Diagram
+
+```mermaid
+flowchart TD
+  W[Watcher\n(webhook/cron)] --> F[Fetch\nETag/Last-Modified]
+  F -->|304| N[NOOP\nshort-circuit]
+  F -->|200 w/ Body| V[Validate\nschemas & rules]
+  V --> T[Transform\ndeterministic]
+  T --> D[Diff Classifier\npatch/minor/major]
+  D --> S[SemVer Bump\nupdate version]
+  S --> C[Changelog & Manifest\ngenerate artifacts]
+  C --> P[Publish\nPR or Release]
+  P --> L[Ledger & Telemetry\nrun_id, fingerprints]
+  P --> H[Notify\nSlack webhook]
+  N --> L
+````
+
+---
+
+## ⚙️ GitHub Actions — Workflow Skeleton
+
+```yaml
 name: reliable-auto-release
 
 on:
   schedule:
-    - cron: "*/15 * * * *"              # Every 15 minutes
-  workflow_dispatch: {}                 # Manual trigger
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
   repository_dispatch:
-    types: [upstream_changed]           # Webhook → GHA fan-in event
+    types: [upstream_changed]   # For webhooks → Actions fan-in
 
 concurrency:
-  group: reliable-auto-release-${{ github.ref }}   # Per-branch isolation
-  cancel-in-progress: false                        # Never cancel mid-run
+  group: reliable-auto-release-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -24,59 +176,33 @@ permissions:
 
 jobs:
   run:
-    name: Reliable Auto-Release Pipeline
     runs-on: ubuntu-latest
-
     steps:
-
-      # ---------------------------------------------------------------
-      # Checkout repo (full history for SemVer, changelogs, diffing)
-      # ---------------------------------------------------------------
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # ---------------------------------------------------------------
-      # Python runtime
-      # ---------------------------------------------------------------
-      - name: Setup Python 3.11
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # ---------------------------------------------------------------
-      # Install pipeline dependencies
-      # ---------------------------------------------------------------
-      - name: Install pipeline dependencies
+      - name: Install deps
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      # ---------------------------------------------------------------
-      # Watch → Fetch
-      # If the source ETag has not changed, no further steps should run.
-      # ---------------------------------------------------------------
       - name: Watch & Fetch (conditional)
         id: fetch
-        env:
-          SOURCE_URL: ${{ vars.SOURCE_URL }}
         run: |
-          set -euo pipefail
-
-          python -m src.pipelines.reliable_auto_release.watcher \
-            --emit-dispatch=false
-
+          python -m src.pipelines.reliable_auto_release.watcher --emit-dispatch=false
           python -m src.pipelines.reliable_auto_release.fetch \
             --url "$SOURCE_URL" \
             --etag-cache data/work/reliable_auto_release/cache/etag.json \
             --out data/work/reliable_auto_release/input.dat \
             --log data/work/reliable_auto_release/fetch.log
 
-      # ---------------------------------------------------------------
-      # Validation
-      # ---------------------------------------------------------------
-      - name: Validate dataset
+      - name: Validate
         if: steps.fetch.outputs.changed == 'true'
         run: |
           python -m src.pipelines.reliable_auto_release.validate \
@@ -84,9 +210,6 @@ jobs:
             --schemas schemas/ \
             --log data/work/reliable_auto_release/validate.log
 
-      # ---------------------------------------------------------------
-      # Transform (deterministic)
-      # ---------------------------------------------------------------
       - name: Transform (deterministic)
         if: steps.fetch.outputs.changed == 'true'
         run: |
@@ -95,27 +218,18 @@ jobs:
             --out data/work/reliable_auto_release/output.parquet \
             --log data/work/reliable_auto_release/transform.log
 
-      # ---------------------------------------------------------------
-      # Diff + SemVer classification
-      # ---------------------------------------------------------------
       - name: Diff & Version
         if: steps.fetch.outputs.changed == 'true'
         id: version
         run: |
-          # Diff old vs new to classify column / row deltas
           python -m src.pipelines.reliable_auto_release.diff_classify \
             --new data/work/reliable_auto_release/output.parquet \
             --old releases/latest/output.parquet || true
-
-          # Deterministic SemVer bump (major/minor/patch)
           python -m src.pipelines.reliable_auto_release.versioner \
             --strategy deterministic \
             --out .version
 
-      # ---------------------------------------------------------------
-      # Prepare artifacts (CHANGELOG, manifest, SBOM)
-      # ---------------------------------------------------------------
-      - name: Prepare Release Artifacts (CHANGELOG, manifest, SBOM)
+      - name: Artifacts (CHANGELOG, manifest, SBOM)
         if: steps.fetch.outputs.changed == 'true'
         run: |
           python -m src.pipelines.reliable_auto_release.publish \
@@ -125,18 +239,12 @@ jobs:
             --sbom releases/${{ steps.version.outputs.version }}/sbom.spdx.json \
             --stage-only
 
-      # ---------------------------------------------------------------
-      # Publish PR or Release
-      # ---------------------------------------------------------------
       - name: Publish PR or Release
         if: steps.fetch.outputs.changed == 'true'
         run: |
           python -m src.pipelines.reliable_auto_release.publish --do-publish
 
-      # ---------------------------------------------------------------
-      # Telemetry + Notification
-      # ---------------------------------------------------------------
-      - name: Emit Telemetry & Notify
+      - name: Telemetry & Notify
         if: steps.fetch.outputs.changed == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -144,5 +252,125 @@ jobs:
           python -m src.pipelines.reliable_auto_release.telemetry --emit
           python -m src.pipelines.reliable_auto_release.notify \
             --slack-webhook "$SLACK_WEBHOOK_URL"
+```
 
+---
 
+## 🧪 Determinism & Versioning
+
+**Deterministic transforms**
+
+* Pure functions (no global state, no time-dependent logic)
+* Pinned dependencies
+* Stable sorting (rows and columns)
+* Fixed locale/timezone and encoding
+
+**SemVer from diffs**
+
+* `patch` — corrections, non-breaking fixes
+* `minor` — additive columns or data, no contract change
+* `major` — schema/contract changes, removed fields, breaking semantics
+
+**Example CHANGELOG entry**
+
+```text
+## vX.Y.Z — 2025-11-16
+- Type: minor
+- Source: https://example.org/daily-stations.csv
+- Diff: +1,243 records; schema unchanged
+- Checks: schemas ✓  stac ✓  fair+care ✓  security ✓
+- Artifacts: manifest.zip, sbom.spdx.json, telemetry.json
+```
+
+---
+
+## 🛡️ Validation Gates (must pass)
+
+* **Schema** — JSON Schema, STAC, or domain-specific contracts
+* **FAIR+CARE** — metadata completeness, CARE alignment, consent signals
+* **Security** — dependency and container scans (CodeQL, Trivy, etc.)
+* **Accessibility** — where UI assets change, ensure docs + visual assets follow WCAG
+* **Energy/Carbon** — optional: energy/CO₂ telemetry for each run (ISO 50001/14064 compatible)
+
+---
+
+## 📡 Telemetry & Run Ledger
+
+Minimum fields in `reliable-auto-release-v1.json`:
+
+* `run_id`, `pipeline`, `source_url`, `trigger` (`webhook|cron|manual`)
+* `input_hash`, `artifact_hash`, `semver`, `diff_class`
+* `status` (`noop|success|failed`)
+* `duration_ms`, `attempt`, `retries`
+* `energy_kwh_est`, `co2e_kg_est` (if enabled)
+* `links` (PR, Release, CHANGELOG, SBOM, manifest)
+
+These are appended to a **run ledger** and shipped as telemetry.
+
+---
+
+## 🔔 Slack Notification Template (JSON)
+
+```json
+{
+  "text": "KFM Auto-Release",
+  "blocks": [
+    {
+      "type": "header",
+      "text": { "type": "plain_text", "text": "✅ KFM Auto-Release vX.Y.Z" }
+    },
+    {
+      "type": "section",
+      "fields": [
+        { "type": "mrkdwn", "text": "*Pipeline:* reliable-auto-release" },
+        { "type": "mrkdwn", "text": "*Run ID:* `{{run_id}}`" },
+        { "type": "mrkdwn", "text": "*Diff:* {{diff_class}} ({{summary}})" },
+        { "type": "mrkdwn", "text": "*Status:* {{status}}" }
+      ]
+    },
+    {
+      "type": "actions",
+      "elements": [
+        { "type": "button", "text": { "type": "plain_text", "text": "PR/Release" }, "url": "{{publish_url}}" },
+        { "type": "button", "text": { "type": "plain_text", "text": "CHANGELOG" }, "url": "{{changelog_url}}" }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## 🧰 Implementation Notes
+
+* Prefer **ETag** and `If-None-Match` for content identity; use `Last-Modified` as advisory.
+* Always compute a deterministic **SHA-256 content hash** over normalized bytes.
+* Use stable row ordering + column ordering to avoid unnecessary SemVer bumps.
+* Make additive columns nullable and document them in dataset metadata (STAC, DCAT, schemas).
+
+---
+
+## ✅ Checklist (For Pipeline Setup)
+
+* [ ] Webhook or cron watcher configured
+* [ ] Conditional fetch (ETag/Last-Modified) implemented
+* [ ] Schema + FAIR+CARE validators wired into CI
+* [ ] Deterministic transform implemented (pinned dependencies)
+* [ ] Diff + SemVer classification logic in place
+* [ ] CHANGELOG + manifest + SBOM generation wired
+* [ ] Concurrency locks configured
+* [ ] Retries + backoff + timeouts configured
+* [ ] Dry-run path tested in CI
+* [ ] Slack notifications validated
+* [ ] Telemetry schema + dashboards configured
+
+---
+
+## 📜 Version History
+
+| Version | Date       | Summary                                                                                  |
+| ------: | ---------- | ---------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Added KFM-style canonical directory tree; aligned layout with KFM-MDP v10.4.x tree rules |
+| v10.4.1 | 2025-11-16 | Initial KFM guide for reliable auto-release pipelines                                    |
+
+---
