@@ -89,56 +89,34 @@ src/
 ```mermaid
 flowchart TD
 
-%% ------------------------------------------------------------
-%%  SOURCE ACQUISITION
-%% ------------------------------------------------------------
 subgraph INGEST["Source Acquisition"]
     A["Source Entities<br/>STAC · Raster · Vector · External Providers"]
 end
 
-%% ------------------------------------------------------------
-%%  PIPELINE ACTIVITIES
-%% ------------------------------------------------------------
 subgraph ACTIVITIES["Pipeline Activities"]
     B["Activities (prov:Activity)<br/>Ingest · Preprocess · Analytics · Validate · Publish"]
 end
 
-%% ------------------------------------------------------------
-%%  VALIDATION GATE
-%% ------------------------------------------------------------
 subgraph VALIDATE["Validation Gate"]
     C["Validation Checks<br/>GX · CARE v2 · Schema · Geometry · Telemetry"]
 end
 
-%% ------------------------------------------------------------
-%%  PROMOTION
-%% ------------------------------------------------------------
 subgraph PROMOTE["Promotion"]
     D["Promoted Entities<br/>Checksum-locked · CARE-labeled"]
 end
 
-%% ------------------------------------------------------------
-%%  PUBLISHING
-%% ------------------------------------------------------------
 subgraph PUBLISH["Publishing"]
     E["Published Outputs<br/>multi-surface release"]
 end
 
-%% ------------------------------------------------------------
-%%  LINEAGE EXPORT
-%% ------------------------------------------------------------
 subgraph LINEAGE["Lineage Export"]
     F["Lineage Bundle<br/>JSON-LD · PROV-O · CIDOC · GeoSPARQL · CARE v2"]
 end
 
-%% ------------------------------------------------------------
-%%  GOVERNANCE LEDGER
-%% ------------------------------------------------------------
 subgraph GOVERN["Governance Ledger"]
     G["Ledger Entry<br/>Append-only provenance"]
 end
 
-%% FLOW
 A --> B --> C --> D --> E --> F --> G
 
 ---
