@@ -1,248 +1,354 @@
 ---
-title: "📡 Kansas Frontier Matrix — Telemetry Synchronization & FAIR+CARE Governance Workflow"
+title: "📡 Kansas Frontier Matrix — Telemetry Synchronization & FAIR+CARE Governance Workflow (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/workflows/telemetry-sync.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Quarterly / Autonomous"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/workflows-telemetry-sync-v1.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/workflows-telemetry-sync-v2.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "telemetry-sync"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E1"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
 ---
 
 <div align="center">
 
-# 📡 **Kansas Frontier Matrix — Telemetry Synchronization & FAIR+CARE Governance Workflow**
+# 📡 **Kansas Frontier Matrix — Telemetry Synchronization & FAIR+CARE Governance Workflow**  
 `docs/guides/workflows/telemetry-sync.md`
 
-**Purpose:**  
-Define the automated workflow for **telemetry collection, aggregation, and synchronization** across Kansas Frontier Matrix (KFM) systems.  
-Ensures that all sustainability, performance, and ethical metrics are properly recorded, validated, and committed to the **Governance Ledger** under **FAIR+CARE** and **ISO 50001/14064** compliance.
+**Purpose**  
+Define the **automated workflow** for **telemetry v2** collection, aggregation, validation, and synchronization  
+across Kansas Frontier Matrix (KFM) systems.  
+Ensures that sustainability, performance, governance, and ethical metrics are properly recorded,  
+validated, and committed to the **Governance Ledger** under **FAIR+CARE v2** and  
+**ISO 50001 / 14064** compliance.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Telemetry_Sync-orange)](../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Operational-brightgreen)](../../../releases/)
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The **Telemetry Sync Workflow** automates telemetry exports from KFM services — including AI, ETL, and visualization — and synchronizes them with the FAIR+CARE Governance Ledger.  
-It ensures reproducibility, traceability, and ethical transparency through continuous observability and sustainability validation.
+The **Telemetry Sync Workflow**:
 
-**Key Objectives**
-- Collect telemetry data from multiple systems in real time  
-- Validate energy, carbon, and ethics metrics before governance sync  
-- Commit telemetry hashes and FAIR+CARE status to the Governance Ledger  
-- Publish validated telemetry datasets for Council and public review  
+- Collects telemetry records from:
+  - AI pipelines (Focus Mode, agent runs)
+  - ETL/data pipelines
+  - Web/MapLibre frontends
+  - Validation workflows
+- Validates **Telem v2** records (schema + ethics + sustainability)
+- Aggregates and **signs** metrics into release-level telemetry files
+- Synchronizes validated telemetry into the **Governance Ledger**
+- Provides rich inputs for:
+  - FAIR+CARE Council reviews
+  - Sustainability dashboards
+  - Model & pipeline cards
+  - Lineage v2 bundles
+
+Telemetry is treated as **first-class data** with its own schema, lineage, and governance.
 
 ---
 
-## 🗂️ Directory Context
+# 🗂️ Directory Context
 
-```plaintext
+~~~text
 docs/guides/workflows/
-├── README.md                          # Workflow overview
-├── ci-pipeline.md                     # Continuous Integration process
+├── README.md                          # Workflow overview index
 ├── validation-workflows.md            # FAIR+CARE validation stages
-├── telemetry-sync.md                  # This document
+├── telemetry-sync.md                  # THIS DOCUMENT
+├── ci-pipeline.md                     # CI/CD orchestration
 ├── governance-ledger-pipeline.md      # Governance synchronization workflows
-└── reports/                           # Telemetry audit summaries
-```
+└── reports/                           # Telemetry & FAIR+CARE audit summaries
+~~~
 
 ---
 
-## 🧩 Telemetry Sync Architecture
+# 🧩 Telemetry Sync Architecture (GitHub-Safe Mermaid)
 
 ```mermaid
 flowchart TD
-A["Telemetry Sources (AI / ETL / Visualization)"] --> B["Telemetry Collector (Focus Telemetry API)"]
-B --> C["FAIR+CARE Validator (ISO 50001 / 14064)"]
-C --> D["Telemetry Sync Workflow (telemetry-sync.yml)"]
-D --> E["Governance Ledger Entry (Signed JSON-LD)"]
-E --> F["FAIR+CARE Council Review + Public Dashboard"]
+
+A["Telemetry Sources<br/>AI · ETL · Web · Validation"] --> B["Telemetry Collector<br/>gather & normalize events"]
+B --> C["Telemetry v2 Validator<br/>schema · FAIR+CARE · ISO"]
+C --> D["Telemetry Sync Workflow<br/>telemetry-sync.yml"]
+D --> E["Governance Ledger Entry<br/>append-only record"]
+E --> F["FAIR+CARE Council & Dashboards<br/>review · monitoring"]
+````
+
+---
+
+# 1️⃣ Telemetry v2 Schema
+
+Telemetry v2 events are JSON objects, usually stored as NDJSON.
+
+**Core fields (per event):**
+
+* `pipeline` – e.g. `"ingestion"`, `"analytics"`, `"focus-mode"`, `"telemetry-sync"`
+* `stage` – `"ingest"|"preprocess"|"validate"|"promote"|"publish"|"runtime"`
+* `run_id` – unique run identifier (tied to pipeline & lineage)
+* `dataset_id` / `collection_id` / `component_id`
+* `timestamp`
+* `status` – `"success"|"failure"|"noop"`
+* `duration_ms`
+* `rows_processed` or `pixels_processed` (where applicable)
+* `energy_wh` (energy usage estimate or measured)
+* `co2_g` (CO₂e estimate)
+* `care_violations` (count)
+* `sovereigntyConflicts` (count)
+* `maskingApplied` (boolean)
+* `error_codes[]` (if any)
+* `links` (optional) – PR, Release, dashboard URLs
+
+Schema is defined at:
+
+```text
+../../../schemas/telemetry/workflows-telemetry-sync-v2.json
 ```
 
 ---
 
-## ⚙️ Workflow Stages
+# 2️⃣ Telemetry Sources
 
-| Stage | Description | FAIR+CARE Integration |
-|--------|-------------|-----------------------|
-| **Collection** | Gather telemetry data from KFM components | Prometheus + Focus Telemetry API |
-| **Validation** | Check FAIR+CARE alignment and ISO energy metrics | `faircare-validate.yml` |
-| **Synchronization** | Append verified telemetry to Governance Ledger | SHA256-signature validation |
-| **Publication** | Release public telemetry reports for Council review | CC-BY 4.0 transparency reports |
+Telemetry is produced by multiple layers:
+
+* **Pipelines** (Python/Node-based)
+* **Web clients** (MapLibre, Focus Mode, Story Node interactions)
+* **Validation workflows** (GX, FAIR+CARE audits)
+* **Publishing flows** (STAC/DCAT/Neo4j/RDF)
+
+Common storage patterns:
+
+```text
+data/telemetry/
+├── ingestion.ndjson
+├── analytics.ndjson
+├── focus-mode.ndjson
+├── validation.ndjson
+└── telemetry-sync.ndjson
+```
+
+Release-level aggregation:
+
+```text
+releases/v10.4.2/pipeline-telemetry.json
+```
 
 ---
 
-## 🧾 Example Telemetry Sync Workflow (GitHub Actions)
+# 3️⃣ Telemetry Sync Workflow (GitHub Actions Skeleton)
 
 ```yaml
 name: Telemetry Sync Workflow
+
 on:
   schedule:
-    - cron: "0 3 * * 1"  # Weekly sync
+    - cron: "0 3 * * 1"    # Weekly sync
   workflow_dispatch:
+
 jobs:
   telemetry-sync:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Collect Telemetry
-        run: python src/pipelines/telemetry/collect_focus_data.py
-      - name: FAIR+CARE Validation
-        run: python src/pipelines/validation/faircare_validate.py
+        run: python src/pipelines/telemetry/collect_all_sources.py \
+               --out data/telemetry/aggregated.ndjson
+
+      - name: Validate Telemetry v2
+        run: python src/pipelines/telemetry/validate_v2.py \
+               --schema schemas/telemetry/workflows-telemetry-sync-v2.json \
+               --in data/telemetry/aggregated.ndjson
+
+      - name: FAIR+CARE & Sustainability Audit
+        run: python src/pipelines/telemetry/faircare_sustainability_audit.py \
+               --in data/telemetry/aggregated.ndjson \
+               --out docs/guides/workflows/reports/telemetry-audit.json
+
       - name: Sync Telemetry to Governance Ledger
-        run: python src/pipelines/governance/sync_telemetry_ledger.py
-      - name: Upload Telemetry Report
+        run: python src/pipelines/governance/sync_telemetry_ledger.py \
+               --in data/telemetry/aggregated.ndjson \
+               --audit docs/guides/workflows/reports/telemetry-audit.json
+
+      - name: Write Release Telemetry Summary
+        run: python src/pipelines/telemetry/write_release_summary.py \
+               --in data/telemetry/aggregated.ndjson \
+               --out releases/v10.4.2/pipeline-telemetry.json
+
+      - name: Upload Telemetry Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: focus-telemetry
-          path: releases/v10.0.0/focus-telemetry.json
+          name: telemetry-v2
+          path: |
+            data/telemetry/aggregated.ndjson
+            docs/guides/workflows/reports/telemetry-audit.json
+            releases/v10.4.2/pipeline-telemetry.json
 ```
 
 ---
 
-## ⚖️ FAIR+CARE Integration Matrix
+# 4️⃣ FAIR+CARE Integration
 
-| Principle | Implementation | Validation Artifact |
-|------------|----------------|--------------------|
-| **Findable** | Telemetry reports indexed by workflow UUID | `focus-telemetry.json` |
-| **Accessible** | Published under CC-BY license for audit transparency | `releases/v*/focus-telemetry.json` |
-| **Interoperable** | FAIR+CARE JSON-LD schema + ISO 50001 alignment | `telemetry_schema` |
-| **Reusable** | Energy + ethics metrics reused for sustainability dashboards | `manifest_ref` |
-| **Collective Benefit** | Enables open sustainability analytics | FAIR+CARE Council audits |
-| **Authority to Control** | Council approval for telemetry publication | Governance Charter |
-| **Responsibility** | Continuous environmental observability | `telemetry_ref` |
-| **Ethics** | Ensures telemetry contains no sensitive or private data | FAIR+CARE audit pipeline |
+Telemetry must be:
 
----
+* **Non-PII** — No personal identifiers, no raw user data.
+* **Ethics-aware** — Capture fairness and responsibility signals (e.g., model refusal rates, bias metrics).
+* **Sovereignty-aware** — Record whether pipeline touches sensitive or sovereign data.
+* **Transparent** — Telemetry summaries should be publishable under CC-BY where possible.
 
-## 🧩 Example Telemetry Sync Report
+Example FAIR+CARE-focused fields:
 
 ```json
 {
-  "sync_id": "telemetry-sync-2025-11-09-0003",
-  "systems_synced": ["AI Focus Mode", "ETL Hydrology", "Visualization Dashboard"],
-  "metrics": {
-    "energy_joules": 46.7,
-    "carbon_gCO2e": 0.019,
-    "faircare_pass_rate_percent": 100
-  },
-  "telemetry_files": [
-    "releases/v10.0.0/focus-telemetry.json",
-    "reports/faircare/sustainability-audit.json"
-  ],
-  "faircare_status": "Pass",
-  "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T12:30:00Z"
+  "pipeline": "focus-mode",
+  "stage": "runtime",
+  "run_id": "focus-2025-11-16-0001",
+  "status": "success",
+  "duration_ms": 235,
+  "energy_wh": 0.0004,
+  "co2_g": 0.0001,
+  "care_violations": 0,
+  "sovereigntyConflicts": 0,
+  "maskingApplied": true
 }
 ```
 
 ---
 
-## ⚙️ Governance Ledger Record Example
+# 5️⃣ Sustainability Validation (ISO 50001 / 14064)
+
+Telemetry sync must validate:
+
+* **Energy usage** (Wh) within policy bounds
+* **CO₂e** consistent with environment and pipeline estimates
+* **Sustainability over time** (trends per release)
+
+Sustainability audit output:
+
+```text
+docs/guides/workflows/reports/sustainability-telemetry-audit.json
+```
+
+Sample snippet:
 
 ```json
 {
-  "ledger_id": "telemetry-ledger-2025-11-09-0005",
-  "component": "Telemetry Synchronization Pipeline",
-  "linked_reports": [
-    "focus-telemetry.json",
-    "faircare-telemetry-audit.json"
+  "audit_id": "sustainability-telemetry-2025-11-16-0001",
+  "window": "2025-11-09T00:00:00Z/2025-11-16T00:00:00Z",
+  "pipelines": [
+    {
+      "pipeline": "ingestion",
+      "energy_wh_total": 12.4,
+      "carbon_gCO2e_total": 0.0061
+    },
+    {
+      "pipeline": "focus-mode",
+      "energy_wh_total": 3.1,
+      "carbon_gCO2e_total": 0.0012
+    }
   ],
-  "energy_joules": 46.7,
-  "carbon_gCO2e": 0.019,
-  "faircare_status": "Pass",
+  "iso_alignment": ["ISO 50001", "ISO 14064"],
+  "status": "pass",
+  "timestamp": "2025-11-16T13:42:00Z"
+}
+```
+
+---
+
+# 6️⃣ Governance Ledger Examples
+
+Telemetry sync must append summarized records to the Governance Ledger:
+
+```text
+docs/reports/audit/data_provenance_ledger.jsonl
+```
+
+Example entry:
+
+```json
+{
+  "ledger_id": "telemetry-ledger-2025-11-16-0003",
+  "stage": "telemetry-sync",
+  "pipelines_covered": ["ingestion", "analytics", "focus-mode", "validation"],
+  "telemetry_summary_ref": "releases/v10.4.2/pipeline-telemetry.json",
+  "sustainability_audit_ref": "docs/guides/workflows/reports/sustainability-telemetry-audit.json",
+  "faircare_status": "pass",
+  "energy_wh_total": 18.7,
+  "carbon_gCO2e_total": 0.0073,
   "iso_alignment": ["ISO 50001", "ISO 14064"],
   "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T12:50:00Z"
+  "timestamp": "2025-11-16T14:00:00Z"
 }
 ```
 
 ---
 
-## ⚙️ Validation Workflows
+# 7️⃣ Validation Workflows for Telemetry Sync
 
-| Workflow | Function | Output |
-|-----------|-----------|--------|
-| `telemetry-export.yml` | Aggregates and exports telemetry logs | `releases/v*/focus-telemetry.json` |
-| `faircare-validate.yml` | Runs ethics and sustainability validation | `reports/faircare/telemetry-validation.json` |
-| `ledger-sync.yml` | Commits telemetry entries to Governance Ledger | `docs/standards/governance/LEDGER/telemetry-ledger.json` |
-| `energy-monitor.yml` | Tracks ISO 50001 energy metrics | `reports/telemetry/energy-monitor.json` |
-| `carbon-audit.yml` | Validates ISO 14064 carbon output | `reports/telemetry/carbon-audit.json` |
+Recommended workflows:
+
+| Workflow                   | Responsibility                                           | Output                                           |
+| -------------------------- | -------------------------------------------------------- | ------------------------------------------------ |
+| `telemetry-export.yml`     | Aggregates and exports telemetry NDJSON per pipeline     | `data/telemetry/*.ndjson`                        |
+| `telemetry-validate.yml`   | Validates Telemetry v2 against JSON Schema               | `reports/telemetry-validation.json`              |
+| `faircare-validate.yml`    | Validates FAIR+CARE v2 compliance for telemetry          | `reports/faircare/telemetry-validation.json`     |
+| `sustainability-audit.yml` | Computes energy/CO₂ metrics and validates them           | `reports/sustainability-telemetry-audit.json`    |
+| `ledger-sync.yml`          | Commits telemetry-derived summaries to Governance Ledger | ledger entries in `data_provenance_ledger.jsonl` |
 
 ---
 
-## 🧠 Telemetry Synchronization Flow
+# 8️⃣ Telemetry Sync Flow (High-Level Mermaid)
 
 ```mermaid
 flowchart LR
-A["Focus Telemetry Collection"] --> B["FAIR+CARE Validation (Ethics + Sustainability)"]
-B --> C["ISO 50001 / 14064 Compliance Check"]
-C --> D["Governance Ledger Entry (Immutable Hash)"]
-D --> E["FAIR+CARE Council Review + Public Report"]
+
+SRC["Sources<br/>pipelines · web · validation"] --> COL["Collect & Normalize Telemetry"]
+COL --> VAL["Validate Telemetry v2<br/>schema · ethics · sustainability"]
+VAL --> SYNC["Sync Summaries<br/>release-level telemetry.json"]
+SYNC --> LEDGER["Update Governance Ledger<br/>append signed entries"]
+LEDGER --> COUNCIL["FAIR+CARE Council & Dashboards"]
 ```
 
 ---
 
-## ⚖️ Sustainability & Governance Targets
+# 9️⃣ Developer Checklist
 
-| Metric | Target | Validation Source |
-|---------|---------|-------------------|
-| **Energy per Sync (J)** | ≤ 15 | `telemetry-export.yml` |
-| **Carbon Output (gCO₂e)** | ≤ 0.006 | `carbon-audit.yml` |
-| **FAIR+CARE Validation (%)** | 100 | `faircare-validate.yml` |
-| **Ledger Sync Success (%)** | 100 | `ledger-sync.yml` |
-| **Publication Frequency** | Weekly | `telemetry-sync.yml` |
+Before Telemetry Sync is considered compliant:
 
----
-
-## 🧾 FAIR+CARE Audit Record Example
-
-```json
-{
-  "audit_id": "faircare-telemetry-sync-2025-11-09-0004",
-  "audited_pipelines": [
-    "AI Focus Mode",
-    "ETL Hydrology",
-    "Visualization"
-  ],
-  "energy_total_joules": 46.7,
-  "carbon_total_gCO2e": 0.019,
-  "renewable_percent": 83,
-  "faircare_status": "Pass",
-  "iso_alignment": ["ISO 50001", "ISO 14064"],
-  "auditor": "FAIR+CARE Council",
-  "timestamp": "2025-11-09T13:00:00Z"
-}
-```
+* [ ] Telemetry v2 schema defined and validated for all emitting pipelines.
+* [ ] Telemetry is **non-PII** and free of sensitive personal data.
+* [ ] Sustainability metrics (energy, CO₂e) computed and audited.
+* [ ] Aggregated release telemetry file written to `releases/<version>/pipeline-telemetry.json`.
+* [ ] Governance Ledger entries updated and validated.
+* [ ] Telemetry sync workflows pass CI (`telemetry-validate`, `faircare-validate`, `ledger-sync`).
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
-| Version | Date | Author | Summary |
-|----------|------|--------|----------|
-| v10.0.0 | 2025-11-09 | Core Team | Added FAIR+CARE telemetry synchronization pipeline documentation with ISO validation |
-| v9.7.0  | 2025-11-03 | A. Barta | Introduced automated telemetry export and governance integration workflow |
+| Version | Date       | Summary                                                                                              |
+| ------: | ---------- | ---------------------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Upgraded to KFM-MDP v10.4.2; Telemetry v2 integration, FAIR+CARE v2 alignment, ISO 50001/14064 hooks |
+| v10.0.0 | 2025-11-09 | Initial Telemetry Sync Workflow; FAIR+CARE + ISO integration                                         |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Workflow Guides](./README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+**Kansas Frontier Matrix — Telemetry Synchronization (v10.4.2)**
+Continuous Observability × FAIR+CARE v2 × ISO-aligned Sustainability × Immutable Governance
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
