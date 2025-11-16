@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "⏱️ Kansas Frontier Matrix — TimelineView Component Suite Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/TimelineView/README.md"
