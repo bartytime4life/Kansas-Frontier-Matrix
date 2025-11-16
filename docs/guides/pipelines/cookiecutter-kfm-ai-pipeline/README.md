@@ -1,18 +1,25 @@
 ---
 title: "🍪 Kansas Frontier Matrix — Cookiecutter Template for AI/ETL Pipelines (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/pipelines/cookiecutter-kfm-ai-pipeline/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly · Autonomous"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/pipelines-cookiecutter-ai-v1.json"
+sbom_ref: "../../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/pipelines-cookiecutter-ai-v2.json"
 governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-kfm_markdown_protocol: "docs/standards/kfm_markdown_output_protocol.md"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Template Guide"
+intent: "cookiecutter-ai-etl"
+fair_category: "F1-A1-I1-R1"
+care_label: "C2-A2-R2-E1"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
 ---
 
 <div align="center">
@@ -20,257 +27,346 @@ kfm_markdown_protocol: "docs/standards/kfm_markdown_output_protocol.md"
 # 🍪 **Kansas Frontier Matrix — Cookiecutter Template for AI/ETL Pipelines**  
 `docs/guides/pipelines/cookiecutter-kfm-ai-pipeline/README.md`
 
-**Purpose:**  
-Provide the **official Cookiecutter scaffolding** for building new **AI**, **ETL**, **STAC**, **geospatial**, or **remote-sensing** pipelines inside the Kansas Frontier Matrix (KFM).  
-All generated pipelines automatically conform to **FAIR+CARE**, **MCP-DL v6.3**, **STAC/DCAT**, **Neo4j**, **RDF/GeoSPARQL**, **lineage**, **telemetry**, and **governance** requirements.
+**Purpose**  
+Provide the **official Cookiecutter scaffolding** for building new **AI**, **ETL**, **STAC**,  
+**geospatial**, or **remote-sensing** pipelines inside the Kansas Frontier Matrix (KFM).  
 
-This template is the *only approved starting point* for creating new pipelines.
+All generated pipelines automatically conform to **FAIR+CARE v2**, **MCP-DL v6.3**,  
+**STAC/DCAT**, **Neo4j**, **RDF/GeoSPARQL**, **Lineage v2**, **Telemetry v2**, and  
+**Governance** requirements.
 
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Enforced-orange"/>
-<img alt="Pipeline" src="https://img.shields.io/badge/Pipeline-Scaffold-blue"/>
-<img alt="AI" src="https://img.shields.io/badge/AI-Explainable-green"/>
-<img alt="Status" src="https://img.shields.io/badge/Status-Ready-success"/>
+This template is the **only approved starting point** for creating new KFM pipelines.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-This Cookiecutter project generates a complete, compliant pipeline containing:
+The **Cookiecutter KFM AI Pipeline template** generates a pipeline that includes:
 
-- 📁 Directory structure (ingest → preprocess → analytics → validate → promote → publish)  
-- 🧬 Lineage templates (PROV-O · GeoSPARQL · CIDOC)  
-- 🧪 GX validation suite stubs  
-- ⚖️ FAIR+CARE masking, sovereignty checks, governance hooks  
-- 🛰 STAC/DCAT metadata generators  
-- 🌐 Neo4j upsert + spatial indexing boilerplate  
-- 🧠 AI summarization module (Focus Mode v2-compatible)  
-- 📡 Telemetry emitters (energy, CO₂, metrics)  
-- 🔐 SBOM + SLSA attestation placeholders  
-- 📜 Full MCP-DL v6.3 documentation stubs  
-- 🧱 Idempotent Makefile tasks  
-- 🛠 CI workflow templates  
+- ✅ Canonical directory structure:  
+  `ingest → preprocess → analytics → validate → promote → publish`
+- 🧬 Lineage v2 stubs (PROV-O · GeoSPARQL · CIDOC · CARE v2)
+- 🧪 Great Expectations (GX) validation checkpoint stubs
+- ⚖️ FAIR+CARE v2 masking, sovereignty checks, governance hooks
+- 🛰 STAC/DCAT metadata creation helpers
+- 🌐 Neo4j upsert + spatial indexing boilerplate
+- 🧠 Optional AI module (agent-assisted transform / summarization)
+- 📡 Telemetry v2 emitters (energy, CO₂, metrics, violations)
+- 🔐 SBOM + SLSA attestation placeholders
+- 🧱 Idempotent Makefile tasks
+- 🛠 CI workflow templates (lint, tests, schemas, governance)
 
-The resulting pipeline is **deployment-ready**, **testable**, **documented**, and **reproducible**.
+The resulting project is **deployment-ready**, **testable**, **documented**, **governed**, and **reproducible**.
 
 ---
 
-## 📁 Directory Layout (Generated)
+# 📁 Directory Layout (Generated Pipeline Skeleton)
 
-~~~~~text
-{{ pipeline_name }}/
-├── README.md
+~~~text
+{{ cookiecutter.project_slug }}/
+├── README.md                               # Pipeline-specific README
+├── pyproject.toml                          # Project metadata & dependencies
 ├── config/
-│   ├── pipeline.config.yaml
-│   └── ai_prompt.txt
+│   ├── pipeline.config.yaml                # Domain/pipeline configuration
+│   └── ai_prompt.txt                       # Optional AI prompt template
 ├── ingest/
-│   ├── fetch.py
+│   ├── fetch.py                            # HTTP/S3/FS ingest logic
 │   ├── schema/
-│   │   └── ingest.schema.json
-│   └── utils.py
+│   │   └── ingest.schema.json              # Ingest manifest/data schema (JSON Schema)
+│   └── utils.py                            # Shared ingest helpers
 ├── preprocessing/
-│   ├── cloud_mask.py
-│   ├── reprojection.py
-│   ├── harmonize_gsd.py
-│   └── utils.py
+│   ├── cloud_mask.py                       # Cloud/shadow/snow masking (optional)
+│   ├── reprojection.py                     # CRS transforms (GDAL/PROJ)
+│   ├── harmonize_gsd.py                    # Resolution harmonization
+│   └── utils.py                            # Preprocessing helpers
 ├── analytics/
-│   ├── ndvi.py
-│   ├── flood_extent.py
-│   ├── trend.py
-│   └── utils.py
+│   ├── ndvi.py                             # Example analytic (placeholder)
+│   ├── flood_extent.py                     # Example analytic (placeholder)
+│   ├── trend.py                            # Example analytic (placeholder)
+│   └── utils.py                            # Analytics helpers
 ├── validate/
-│   ├── great_expectations.yml
+│   ├── great_expectations.yml              # GX config
 │   ├── checkpoints/
-│   │   └── pipeline_schema.yml
+│   │   └── pipeline_schema.yml             # Example checkpoint
 │   └── expectations/
-│       └── schema_{{ pipeline_name }}.json
+│       └── schema_{{ cookiecutter.project_slug }}.json  # Example expectations
 ├── promote/
-│   ├── promote.py
-│   └── metadata.json
+│   ├── promote.py                          # Move staging → processed (Validate→Promote)
+│   └── metadata.json                       # Promotion config/metadata stub
 ├── publish/
-│   ├── stac_publish.py
-│   ├── neo4j_publish.py
-│   └── rdf_export.py
+│   ├── stac_publish.py                     # STAC Items/Collections creation
+│   ├── neo4j_publish.py                    # Graph upsert logic (Neo4j)
+│   └── rdf_export.py                       # RDF + GeoSPARQL export
 ├── lineage/
-│   ├── build_lineage.py
-│   ├── lineage.context.jsonld
-│   └── lineage.schema.json
+│   ├── build_lineage.py                    # Lineage v2 JSON-LD builder
+│   ├── lineage.context.jsonld              # JSON-LD context for KFM lineage
+│   └── lineage.schema.json                 # Lineage schema for validation
 ├── telemetry/
-│   └── writer.py
+│   └── writer.py                           # Telemetry v2 writer (NDJSON)
 ├── governance/
-│   ├── care_rules.json
-│   ├── sovereignty_masks.geojson
-│   └── audit_hooks.py
+│   ├── care_rules.json                     # CARE v2 rules config
+│   ├── sovereignty_masks.geojson           # Sovereignty AOI overlays (synthetic stub)
+│   └── audit_hooks.py                      # Governance hooks for pipeline
 ├── tests/
-│   ├── test_ingest.py
-│   ├── test_preproc.py
-│   ├── test_analytics.py
-│   ├── test_validate.py
-│   ├── test_publish.py
-│   └── data/
-└── Makefile
-~~~~~
+│   ├── test_ingest.py                      # Ingest smoke tests
+│   ├── test_preproc.py                     # Preprocessing tests
+│   ├── test_analytics.py                   # Analytics tests
+│   ├── test_validate.py                    # GX validation tests
+│   ├── test_publish.py                     # STAC/graph/RDF tests (stubs)
+│   └── data/                               # Test fixtures
+└── Makefile                                # Idempotent entrypoints
+~~~
 
 ---
 
-## 🧩 Architecture Model (Indented Mermaid)
+# 🧩 Architecture Model (Conceptual Flow)
 
-~~~~~mermaid
-flowchart TD
-   A["Ingest<br/>STAC · Raw Data"] --> B["Preprocess<br/>Mask · Reproject · Normalize"]
-   B --> C["Analytics<br/>Indices · Hazards · Trends"]
-   C --> D["GX Validation<br/>Schema · Ranges · CARE Checks"]
-   D -->|PASS| E["Promote<br/>Processed Layer"]
-   D -->|FAIL| Q["Quarantine<br/>Issue · Telemetry"]
-   E --> F["Publish<br/>STAC · Neo4j · RDF"]
-   F --> G["Lineage Export<br/>PROV-O · GeoSPARQL"]
-   G --> H["Governance Ledger<br/>Append Entry"]
-~~~~~
+```text
+Ingest → Preprocess → Analytics → Validate (GX) → Promote → Publish → Lineage → Governance
+````
 
----
-
-## 🧱 Required Cookiecutter Variables
-
-The template expects:
-
-| Variable | Description |
-|----------|-------------|
-| `pipeline_name` | snake_case name of pipeline |
-| `description` | human-readable pipeline purpose |
-| `domain` | remote_sensing, hydrology, hazards, historical, etc. |
-| `care_label` | public / sensitive / restricted |
-| `stac_collections` | list of collections for ingest |
-| `analytics_enabled` | yes/no |
-| `ai_enabled` | yes/no |
-| `publish_modes` | [stac, dcat, neo4j, rdf] |
+* **Ingest** — Controlled data acquisition with ETag, checksums, manifests.
+* **Preprocess** — Harmonize, clean, transform, enforce CARE early mask hints.
+* **Analytics** — Domain-specific computation, hazard/climate/historical models.
+* **Validate (GX)** — Schema + integrity + FAIR+CARE checks.
+* **Promote** — Move from staging → processed (Validate→Promote pattern).
+* **Publish** — STAC/DCAT/Neo4j/RDF exports (optional per pipeline).
+* **Lineage** — Lineage v2 bundle (JSON-LD) linking everything.
+* **Governance** — Append to governance ledger; integrate SBOM and SLSA.
 
 ---
 
-## 🧪 Included GX Validation Stubs
+# ⚙️ Required Cookiecutter Variables
 
-Each generated pipeline contains:
+The template prompts for:
 
-- Schema suite  
-- Integrity suite  
-- Ranges suite  
-- CARE checks suite  
-- Temporal/geospatial boundary suite  
-
-These stubs **must be expanded**, but the structure is CI-ready.
-
----
-
-## 🔐 Governance Integration (Automatic)
-
-Every Cookiecutter pipeline includes:
-
-- CARE label enforcement  
-- Sovereignty overlay intersection code  
-- Masking strategy injection  
-- Governance ledger writer  
-- Provenance header block generators  
-- SBOM & SLSA attachment placeholders  
+| Variable              | Description                                                  |
+| --------------------- | ------------------------------------------------------------ |
+| `project_name`        | Human-readable project name                                  |
+| `project_slug`        | Python package + directory name                              |
+| `project_description` | Short description of the pipeline                            |
+| `domain`              | `remote_sensing`, `hazards`, `hydrology`, `historical`, etc. |
+| `care_label_default`  | Default CARE label: `public`, `sensitive`, or `restricted`   |
+| `stac_collections`    | Comma-separated list of STAC collections to integrate with   |
+| `ai_enabled`          | `y/n` — whether to include AI/agent modules                  |
+| `use_github_actions`  | `y/n` — include CI workflow                                  |
+| `license`             | Project license (default: MIT)                               |
 
 ---
 
-## 🌱 AI Module (Optional)
+# 🧪 Validation & GX Integration
 
-If `ai_enabled = yes`, pipeline includes:
+The template provides a baseline **Great Expectations** structure:
 
-- Prompt template  
-- Summarization module  
-- Tag classifier  
-- FAIR+CARE AI guardrails  
-- Telemetry fields for AI refusals & depth  
+* `great_expectations.yml` — project config stub.
+* `checkpoints/pipeline_schema.yml` — example checkpoint.
+* `expectations/schema_{{ project_slug }}.json` — starter expectations.
 
----
+### Standard expectation suites to extend:
 
-## 📡 Telemetry Emitters
+* Schema expectations (required columns, types).
+* Value range checks.
+* Nullability rules.
+* CARE-related expectations (flags, AOI intersection status).
+* Temporal expectations (monotonic time for timeseries).
 
-All pipelines include a standard telemetry writer that records:
-
-- stage  
-- duration  
-- energy_wh  
-- co2_g  
-- pixel/row counts  
-- care_violations  
-- errors[]  
-
-Aggregated into:
-
-~~~~~text
-../../../../releases/v10.3.0/focus-telemetry.json
-~~~~~
+Pipelines instantiated from this template should then tighten these expectations based on domain requirements.
 
 ---
 
-## 🛰 STAC / DCAT / Neo4j / RDF Output Modules
+# ⚖️ Governance & CARE v2 Integration
 
-Generated pipelines automatically support:
+The generated pipeline contains governance stubs in `governance/`:
 
-- STAC Item/Collection creation  
-- DCAT dataset export  
-- Neo4j upserts  
-- RDF + GeoSPARQL JSON-LD serialization  
+* `care_rules.json` — defines CARE v2 policy profile for the pipeline.
+* `sovereignty_masks.geojson` — synthetic AOI overlay example.
+* `audit_hooks.py` — Python hooks to:
 
-These modules must be extended with pipeline-specific logic.
+  * enrich metadata with CARE v2 fields
+  * run sovereignty intersection checks
+  * apply masking strategies (e.g., H3, centroid-only)
+  * append governance entries to the ledger
 
----
+Developers must:
 
-## 🧪 Testing Framework
-
-Tests use:
-
-- Pytest  
-- JSON-schema validation  
-- Golden files (expected raster/JSON outputs)  
-- CARE masking tests  
-- STAC/DCAT structural tests  
-- Telemetry schema tests  
-- Lineage validation  
-
-All tests run under CI.
+* Configure `care_rules.json` per domain.
+* Replace synthetic AOIs with real overlays in controlled repos.
+* Integrate `audit_hooks.py` into preprocess / publish steps.
 
 ---
 
-## 🚀 Usage
+# 🧬 Lineage v2 Stubs
 
-Generate a new pipeline:
+The `lineage/` folder contains:
 
-~~~~~bash
-cookiecutter https://github.com/bartytime4life/Kansas-Frontier-Matrix/cookiecutters/kfm-ai-pipeline
-~~~~~
+* `build_lineage.py` — to generate lineage JSON-LD bundles.
+* `lineage.context.jsonld` — KFM lineage context (PROV-O + GeoSPARQL + CARE v2).
+* `lineage.schema.json` — schema for validating lineage bundles.
 
-Fill out prompts and the scaffold will appear under:
+Every pipeline is expected to:
 
-~~~~~text
-src/pipelines/<pipeline_name>/
-~~~~~
+* Call `build_lineage.py` during Promote or Publish.
+* Update the lineage bundle with:
 
-Run initial validation:
+  * input datasets
+  * steps performed
+  * transformations
+  * CARE decisions
+  * telemetry summary
+  * published STAC/DCAT/Graph/RDF references
 
-~~~~~bash
+---
+
+# 📡 Telemetry v2
+
+The `telemetry/writer.py` module:
+
+* Writes Telemetry v2 entries into NDJSON:
+
+```text
+data/telemetry/<project_slug>.ndjson
+```
+
+* Fields include:
+
+  * `pipeline`, `stage`, `run_id`
+  * `status`
+  * `duration_ms`
+  * `rows_processed` / `pixels_processed`
+  * `energy_wh`, `co2_g`
+  * `care_violations`, `sovereigntyConflicts`
+  * `errors[]`
+
+These are aggregated into:
+
+```text
+releases/v10.4.2/pipeline-telemetry.json
+```
+
+The exact aggregator & schema must be wired in the main KFM repo once the pipeline is installed.
+
+---
+
+# 🛰 STAC / DCAT / Neo4j / RDF Exports
+
+The template provides:
+
+* `publish/stac_publish.py` — helper to write STAC Items/Collections.
+* `publish/neo4j_publish.py` — helper to upsert Nodes and relationships.
+* `publish/rdf_export.py` — helper to write RDF + GeoSPARQL TTL or JSON-LD.
+
+These are **stubs**, deliberately minimal but:
+
+* Use official KFM paths.
+* Carry forward the `kfm:*` metadata.
+* Accept published artifact and manifest as inputs.
+* Should be extended with domain-specific mapping (e.g., Scenes, Places, Events).
+
+---
+
+# 🧪 Tests & CI Templates
+
+The template includes:
+
+* Pytest tests in `tests/`:
+
+  * `test_ingest.py`, `test_preproc.py`, `test_analytics.py`, `test_validate.py`, `test_publish.py`.
+  * Schema and lineage tests.
+
+* A CI workflow stub in `.github/workflows/ci.yml` that runs:
+
+  * Python setup
+  * `pip install -e .[dev]`
+  * Lint (e.g., `ruff`)
+  * Tests (`pytest`)
+  * JSON Schema validation for `schemas/` and `lineage/`
+
+Each new pipeline can adjust CI but **must keep governance checks** in place.
+
+---
+
+# 🚀 Usage
+
+## 1. Generate a New Pipeline
+
+From the repo root (or dedicated tools directory):
+
+```bash
+pip install cookiecutter
+cookiecutter docs/guides/pipelines/cookiecutter-kfm-ai-pipeline
+```
+
+Answer prompts to define:
+
+* `project_name`
+* `project_slug`
+* domain, CARE defaults, and publishing modes.
+
+The scaffold will appear as:
+
+```text
+{{ project_slug }}/
+```
+
+You may then move or rename it under KFM’s canonical pipeline space, e.g.:
+
+```text
+src/pipelines/{{ project_slug }}/
+```
+
+## 2. Initialize
+
+```bash
+cd {{ project_slug }}
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
+
+## 3. First Validation Run
+
+```bash
 make validate
 make test
-~~~~~
+```
+
+Fix any schema, CARE, or test failures before integrating into the main KFM repo.
 
 ---
 
-## 🕰️ Version History
+# 🧭 Relationship to `kfm-ai-pipeline-cookiecutter` Guide
 
-| Version | Date | Author | Summary |
-|---------|------|--------|---------|
-| v10.3.1 | 2025-11-14 | Pipeline Engineering Team | Initial cookiecutter template documentation; fully aligned to FAIR+CARE, governance, telemetry, STAC, Neo4j, RDF, and MCP Protocol. |
+This README documents the **template itself**.
+
+For design rationale and higher-level architecture, see:
+
+```text
+docs/guides/pipelines/kfm-ai-pipeline-cookiecutter.md
+```
+
+That document explains:
+
+* Why RunContext + ledger exist
+* The conceptual Ingest → Validate → Transform (Agent) → Publish lifecycle
+* How to use the template within KFM pipelines and CI
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary                                                                                           |
+| ------: | ---------- | ------------------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Upgraded to KFM-MDP v10.4.2; added Telemetry v2, CARE v2, lineage v2, updated paths & CI guidance |
+| v10.3.1 | 2025-11-14 | Initial cookiecutter template documentation; aligned with FAIR+CARE, governance, telemetry, STAC  |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Cookiecutter AI/ETL Pipeline Template**  
-Reproducible Pipelines × FAIR+CARE × Provenance × AI Safety  
-© 2025 Kansas Frontier Matrix — MIT License  
+**Kansas Frontier Matrix — Cookiecutter AI/ETL Pipeline Template (v10.4.2)**
+Reproducible Pipelines × FAIR+CARE v2 × Provenance × AI Safety × STAC/DCAT/Graph/RDF
+© 2025 Kansas Frontier Matrix — MIT License
 
 </div>
-
