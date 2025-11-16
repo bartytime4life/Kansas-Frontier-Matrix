@@ -85,6 +85,8 @@ src/
 ---
 
 # 🌐 Full-Page Lineage Architecture (KFM-Styled Mermaid)
+
+---mermaid
 flowchart TD
 
 subgraph INGEST["Source Acquisition<br/><span style='font-size:12px'>STAC · Raster · Vector · External Providers</span>"]
