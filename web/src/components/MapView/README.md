@@ -1,344 +1,393 @@
 ---
-title: "🗺️ Kansas Frontier Matrix — MapView Architecture & Rendering System (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🗺️ Kansas Frontier Matrix — MapView Component Suite Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/MapView/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-components-mapview-v2.json"
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/web-components-mapview-v1.json"
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Component Overview"
+intent: "web-components-mapview"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Mixed (dataset-dependent)"
+sensitivity_level: "Variable (spatial data)"
+public_exposure_risk: "Medium"
+indigenous_rights_flag: "Conditional"
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Mixed"
+redaction_required: true
+provenance_chain:
+  - "web/src/components/MapView/README.md@v10.3.2"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E34 Inscription"
+  schema_org: "Map"
+  owl_time: "TemporalEntity"
+  geosparql: "geo:Feature"
+  prov_o: "prov:Entity"
+json_schema_ref: "../../../../../schemas/json/web-components-mapview-readme.schema.json"
+shape_schema_ref: "../../../../../schemas/shacl/web-components-mapview-readme-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-components-mapview-readme-v10.4.0"
+semantic_document_id: "kfm-doc-web-components-mapview-readme"
+event_source_id: "ledger:web/src/components/MapView/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions (no invented geography)"
+ai_transform_permissions:
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "coordinate hallucination"
+  - "speculative spatial inference"
+  - "unverified historical claims"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "United States / Kansas"
+classification: "Public / Spatial Data"
+role: "overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review with each KFM release"
+sunset_policy: "Superseded upon next MapView system update"
 ---
 
 <div align="center">
 
-# 🗺️ **Kansas Frontier Matrix — MapView Architecture & Rendering System**  
+# 🗺️ **Kansas Frontier Matrix — MapView Component Suite Overview**  
 `web/src/components/MapView/README.md`
 
 **Purpose:**  
-Define the complete **deep-architecture rendering system** for MapView in the Kansas Frontier Matrix (KFM) v10.3.2 web platform.  
-MapView unifies **MapLibre GL**, **CesiumJS**, **FAIR+CARE geospatial governance**, **STAC/DCAT layer metadata**, **Focus Mode v2.5 alignment**, **predictive temporal overlays (2030–2100)**, and **full telemetry instrumentation** into a single deterministic and ethical mapping engine.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geospatial-orange)]()
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+Define the architecture, responsibilities, accessibility, telemetry, and FAIR+CARE governance rules  
+for the **MapView** component suite — the primary 2D map rendering layer in the  
+Kansas Frontier Matrix (KFM) Web Platform.  
+MapView components orchestrate MapLibre rendering, spatial overlays, time-sync, governance masking,  
+and Focus Mode v2.5 / Story Node v3 integration.
 
 </div>
 
 ---
 
-# 📘 Executive Summary
+# 📘 Overview
 
-The **MapView Rendering System** is the front-end geospatial engine for KFM, providing:
+MapView components are the **core spatial UI** for KFM.
 
-- 2D map rendering (MapLibre)  
-- 3D terrain + deep-time visualization (CesiumJS)  
-- Layer stack orchestration (STAC/DCAT)  
-- Governance overlays (CARE, sovereignty, masking rules)  
-- Focus Mode v2.5 spatial sync  
-- Timeline sync (year → map layers)  
-- Predictive SSP overlays (2030–2100)  
-- Legend + symbology engine (WCAG-tested)  
-- Interactive layer controls  
-- Telemetry + sustainability instrumentation  
-- Accessibility compliance (WCAG 2.1 AA)  
+They provide:
 
-This document codifies *every* component, pipeline link, and governance rule involved in MapView.
+- MapLibre GL initialization  
+- Spatial layer rendering (STAC footprints, Story Nodes, vector tiles)  
+- Generalized masking overlays (H3 r7+)  
+- CARE/sovereignty governance indicators  
+- Timeline → Map synchronization  
+- Focus Mode spatial highlights  
+- Accessible map controls  
+- Telemetry instrumentation for spatial usage  
+- Integration with:
+  - `useMap.ts`
+  - `mapPipeline.ts`
+  - `geospatial pipelines`
+  - Governance + A11y contexts
+
+MapView is a *high-governance*, *high-sensitivity* layer.
 
 ---
 
-# 🗂️ Directory Layout (Authoritative v10.3.2)
+# 🧱 Directory Structure
 
-```text
+~~~text
 web/src/components/MapView/
-├── README.md
-├── MapCanvas.tsx
-├── LayerControls.tsx
-├── Legend.tsx
-├── TimelineSlider.tsx
-└── metadata.json
-```
-
-Each component participates in the **Geospatial Rendering Control Plane**.
-
----
-
-# 🌐 High-Level Map Rendering Architecture
-
-```mermaid
-flowchart TD
-    UI[User Input<br/>keyboard · pointer · screenreader] --> CTRL[LayerControls]
-    CTRL --> STACK[Layer Stack Builder]
-    STACK --> MAP2D[MapLibre Engine]
-    STACK --> MAP3D[Cesium Engine]
-    MAP2D --> LEG[Legend]
-    MAP3D --> LEG
-    MAP2D --> GOV[Governance Overlay]
-    MAP3D --> GOV
-    GOV --> TEL[Telemetry<br/>energy · ethics · a11y · render cost]
-```
+├── MapViewContainer.tsx        # Top-level orchestrator (map instance, contexts)
+├── MapCanvas.tsx               # MapLibre canvas mount + lifecycle
+├── LayerManager.tsx            # Dynamically loads/unloads spatial layers
+├── LegendPanel.tsx             # Accessible legend w/ CARE-aware color ramps
+├── MapControls.tsx             # Zoom, reset, rotate, toggle controls
+├── StoryNodeLayer.tsx          # Story Node v3 footprints + temporal fading
+├── FocusHighlightLayer.tsx     # Focus Mode entity highlight rendering
+├── DatasetFootprintLayer.tsx   # STAC footprint preview layer
+├── SovereigntyMaskLayer.tsx    # H3 masking grids + sovereignty notices
+├── CursorHUD.tsx               # Coarse cursor readout + map state information
+└── AttributionBar.tsx          # Map metadata, licensing, provenance
+~~~
 
 ---
 
-# 🧬 1. MapCanvas.tsx — Dual Rendering Engine
-
-MapCanvas unifies **MapLibre GL (2D)** with **CesiumJS (3D)** while enforcing:
-
-- Layer filtering  
-- Temporal sync  
-- Predictive overlays  
-- Terrain blending  
-- Ethical masking  
-
-## Dual Engine Architecture
-
-```mermaid
-flowchart LR
-    LS[LayerState] --> M2[MapLibre Renderer]
-    LS --> M3[Cesium Renderer]
-    M3 --> DEM[Terrain Engine]
-    DEM --> BLEND[DEM Imagery Blend]
-    M2 --> PRED[Predictive Overlay Shader]
-```
-
-### Responsibilities
-- Manage WebGL contexts (2D + 3D)  
-- Apply CARE masking before draw  
-- Attach predictive temporal materials  
-- Broadcast map events (`kfm:map:layer-change`)  
-- Provide render-cost telemetry  
+# 🧩 Component Responsibilities
 
 ---
 
-# 🎛️ 2. LayerControls.tsx — Semantic Layer Stack Orchestrator
+## 🧭 **MapViewContainer.tsx**
+Provides:
 
-Controls all:
+- Context hydration (Time, Focus, Governance, A11y)
+- MapLibre initialization
+- Layer assembly pipeline
+- Spatial orchestration with geospatial pipelines
 
-- layer toggles  
-- opacity  
-- ordering  
-- metadata expansion  
-- provenance visibility  
-- CARE enforcement gating  
+Governance:
 
-## Layer Stack Architecture
+- Blocks rendering when data is prohibited  
+- Loads masking overlays first  
+- Displays governance banners
 
-```mermaid
-flowchart TD
-    UI[User Panel] --> CFG[Layer Controls]
-    CFG --> PIPE[layerPipeline Output]
-    PIPE --> STACK[Layer Stack State]
-    STACK --> MAP[MapCanvas]
-```
+Telemetry:
 
-### Governance Enforcement
-From `masking.json` + CARE labels:
-- restricted → block  
-- sensitive → generalize/fuzz  
-- public → full resolution  
+- `"mapview:load"`  
+- `"mapview:context-sync"`  
 
 ---
 
-# 🎨 3. Legend.tsx — Symbology + FAIR+CARE Plate
+## 🗺️ **MapCanvas.tsx**
+Renders the actual MapLibre canvas.
 
-Legend displays:
+Requirements:
 
-- WCAG-compliant symbology  
-- predictive band fills  
-- CARE icons  
-- provenance chips (data source, license, checksum)  
-- color scales mapped from `symbology.json`  
-
-## Legend Architecture
-
-```mermaid
-flowchart LR
-    SYM[symbology.json] --> LEGEND
-    META[layer metadata] --> LEGEND
-    CARE[CARE Flags] --> LEGEND
-```
+- Respect reduced-motion for transitions  
+- Provide appropriate ARIA roles  
+- Guarantee 4.5:1 contrast for overlays  
+- Handle resize + accessibility scaling  
 
 ---
 
-# 🕰️ 4. TimelineSlider.tsx — Temporal-Map Synchronization
+## 🗂️ **LayerManager.tsx**
+Handles:
 
-A temporal slider linked to the global `currentYear` broadcast.
+- Layer ordering  
+- Rendering STAC footprints  
+- Loading line, polygon, raster layers  
+- Conflict resolution among overlapping layers  
 
-### Responsibilities
-- Update map visible layers by year  
-- Trigger predictive temporal overlays  
-- Sync Focus Mode + Story Nodes  
+Governance:
 
-## Temporal Map Architecture
-
-```mermaid
-flowchart LR
-    T[currentYear] --> MAP2D
-    T --> MAP3D
-    T --> LEGEND
-```
+- Ensures sensitive layers are masked  
+- Applies CARE label–based styling  
 
 ---
 
-# 🌋 Rendering Pipelines (Deep Architecture)
+## 🎨 **LegendPanel.tsx**
+Displays:
 
-## 2D Map Pipeline — MapLibre
+- CARE-aware legend categories  
+- Accessible color ramps  
+- Layer descriptions  
+- Masking indicators  
 
-```mermaid
-flowchart TD
-    LS[Layer Stack] --> FLT[Temporal Filter<br/>STAC datetime]
-    FLT --> MASK[CARE Mask Engine<br/>H3 · Fuzzing]
-    MASK --> DRAW2D[MapLibre Draw<br/>vector · raster]
-```
+Must:
 
-## 3D Map Pipeline — Cesium
+- Be accessible via keyboard  
+- Contain SR-only descriptions of map categories  
 
-```mermaid
-flowchart TD
-    LS3[Layer Stack] --> TERR[Terrain Provider]
-    TERR --> MAT[Time Materials<br/>predictive shaders]
-    MAT --> DRAW3D[Cesium Renderer]
-```
+Telemetry: `"mapview:legend-open"`
 
 ---
 
-# 🧠 Focus Mode v2.5 Spatial Alignment
+## 🔧 **MapControls.tsx**
+Controls include:
 
-Components interact with Focus Mode via:
+- Zoom  
+- Rotate  
+- Reset view  
+- Toggle markers/layers  
 
-- event-based triggers  
-- spatial highlighting  
-- timeline binding  
-- provenance-driven filters  
+A11y:
 
-## Focus Sync Architecture
+- ARIA-compliant button roles  
+- Keyboard shortcuts (`+`, `-`, `r`)  
 
-```mermaid
-flowchart LR
-    FOCUS[Focus Payload] --> MAPHL[Map Highlight]
-    MAPHL --> LEGEND
-    MAPHL --> LAYER[Layer Filtering]
-```
+Telemetry: `"mapview:control-interact"`
 
 ---
 
-# 🔐 FAIR+CARE Spatial Governance
+## 🗺️ **StoryNodeLayer.tsx**
+Renders Story Node v3 footprints:
 
-| Rule | Enforcement |
-|------|-------------|
-| No sensitive coordinates exposed | CARE mask engine inside LayerControls + MapCanvas |
-| Sovereignty boundaries protected | H3 + buffer masking |
-| Restricted layers hidden by default | CARE gating |
-| Provenance required for every layer | Legend + metadata.json |
-| Ethical colors & accessibility | WCAG-tested color ramps |
+- Generalized polygons  
+- Temporal fading based on TimeContext  
+- CARE labels + provenance chips  
 
-Governance ledger:
+Governance:
 
-```
-../../../../docs/reports/audit/web-mapview-governance-ledger.json
-```
+- Never expose original archaeological/sacred site coordinates  
+- Always display ethical context  
+
+Telemetry: `"mapview:storynode-hover"`
 
 ---
 
-# ♿ Accessibility Architecture (WCAG 2.1 AA)
+## 🎯 **FocusHighlightLayer.tsx**
+Highlights:
 
-All MapView components implement:
+- Focus Mode entity geometry  
+- Related entities  
+- Spatial neighborhood  
 
-- keyboard navigation for all toggles and map pan/zoom  
-- ARIA roles (`region`, `toolbar`, `slider`, `status`)  
-- focus-visible tokens  
-- high-contrast symbology  
-- reduced-motion camera transitions  
-- zoom-to-feature announcements via live regions  
+Requirements:
 
-## A11y Architecture
+- H3 generalization  
+- No speculative shapes  
+- Accurate but privacy-preserving representation  
 
-```mermaid
-flowchart TD
-    TOK[A11y Tokens] --> UI1[LayerControls]
-    TOK --> UI2[Legend]
-    TOK --> UI3[TimelineSlider]
-```
+Telemetry: `"mapview:focus-highlight"`
 
 ---
 
-# 📡 Telemetry & Sustainability System
+## 📦 **DatasetFootprintLayer.tsx**
+Displays STAC footprints:
 
-Telemetry includes:
+- COG boundary polygons  
+- Dataset temporal extent shading  
+- CARE overlays  
 
-- `map_render_ms`  
-- `layer_toggle_latency_ms`  
-- `terrain_shader_cost_ms`  
-- `energy_estimate_wh`  
-- `a11y_compliance`  
-- `care_masking_events`  
+Governance:
 
-Telemetry destination:
+- Apply masking to sensitive datasets  
+- Show sovereignty notices  
 
-```
-../../../../releases/v10.3.2/focus-telemetry.json
-```
-
-Energy estimation uses ISO 50001-compliant browser models.
+Telemetry: `"mapview:dataset-footprint"`
 
 ---
 
-# ⚙️ CI/CD & Validation
+## 🛡️ **SovereigntyMaskLayer.tsx**
+Displays:
 
-| Mechanism | Ensures |
-|-----------|---------|
-| `docs-lint.yml` | Documentation compliance |
-| `faircare-validate.yml` | Governance & CARE correctness |
-| `accessibility_scan.yml` | WCAG 2.1 AA compliance |
-| `stac-validate.yml` | Metadata correctness |
-| `telemetry-export.yml` | Sustainability & energy metrics |
-| `codeql.yml` | Security safety |
+- H3 r7+ masking cells  
+- Sovereignty boundaries  
+- Cultural protection overlays  
 
-Failures block merge automatically.
+Governance:
 
----
+- Mandatory for any culturally restricted data  
+- Always displayed ABOVE base layers  
 
-# 🧾 Example Metadata Record
-
-```json
-{
-  "id": "mapview_v10.3.2",
-  "layers": [
-    "hazards_timeseries.stac.json",
-    "climate_ssp2050_cog.json",
-    "hydrology_basins.parquet"
-  ],
-  "avg_render_time_ms": 112.4,
-  "energy_use_wh": 0.83,
-  "a11y_compliant": true,
-  "care_events": 12,
-  "checksum_verified": true,
-  "timestamp": "2025-11-14T10:21:00Z"
-}
-```
+Telemetry: `"mapview:masking-applied"`
 
 ---
 
-# 🕰️ Version History
+## 📍 **CursorHUD.tsx**
+Shows:
 
-| Version | Date | Summary |
-|--------|--------|---------|
-| v10.3.2 | 2025-11-14 | Full deep-architecture rebuild; added dual-engine rendering, predictive overlays, governance masking, and telemetry integration. |
-| v9.7.0 | 2025-11-05 | Previous version. |
+- Mouse position (coarse-rounded if sensitive)  
+- Active layer name  
+- Temporal slice  
+
+Governance:
+
+- MUST generalize coordinates over sensitive areas  
+
+Telemetry: `"mapview:cursor-move"`
+
+---
+
+## 📝 **AttributionBar.tsx**
+Displays:
+
+- Map tile licenses  
+- Dataset rights-holder metadata  
+- Provenance chips  
+- FAIR+CARE documentation links  
+
+Governance:
+
+- Must always be visible  
+- Must include machine-readable licensing metadata  
+
+---
+
+# 🔐 Governance & FAIR+CARE Integration
+
+MapView components MUST:
+
+- Enforce all CARE classifications  
+- Apply sovereignty-based masking (H3 r7 minimum)  
+- Generalize coordinates  
+- Display ethical warnings  
+- Label AI-generated overlays  
+- Blur/remove sensitive geometry  
+- Expose provenance metadata consistently  
+
+Governance violations = **CI BLOCK**.
+
+---
+
+# ♿ Accessibility Requirements (WCAG 2.1 AA)
+
+MapView MUST:
+
+- Provide keyboard navigation for map controls  
+- Avoid color-only information  
+- Respect motion-reduction preferences  
+- Provide text equivalents for layers + legends  
+- Use strong, visible focus rings  
+- Ensure readable contrast  
+
+A11y violations block merges.
+
+---
+
+# 📈 Telemetry Responsibilities
+
+Telemetry events include:
+
+- `"mapview:load"`  
+- `"mapview:pan"` / `"mapview:zoom"`  
+- `"mapview:layer-toggle"`  
+- `"mapview:legend-open"`  
+- `"mapview:masking-applied"`  
+- `"mapview:dataset-footprint"`  
+- `"mapview:storynode-hover"`  
+- `"mapview:focus-highlight"`
+
+Telemetry must:
+
+- Be non-PII  
+- Follow schema  
+- Be FAIR+CARE-aware  
+- Flow to:  
+  `releases/<version>/focus-telemetry.json`
+
+---
+
+# 🧪 Testing Requirements
+
+Tests MUST cover:
+
+- Rendering correctness  
+- Timeline synchronization  
+- Governance enforcement  
+- Coordinate generalization  
+- Accessibility (ARIA, keyboard, contrast)  
+- Telemetry events  
+- Integration with STAC, Focus Mode, Story Nodes  
+
+Tests located at:
+
+~~~text
+tests/unit/web/components/MapView/**
+tests/integration/web/components/MapView/**
+~~~
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Complete rewrite under KFM-MDP v10.4; full spatial governance, A11y, and telemetry integration |
+| v10.3.2 | 2025-11-14 | Improved footprint rendering + CARE masking |
+| v10.3.1 | 2025-11-13 | Initial MapView architecture overview |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — MapView Architecture**  
-🗺️ Ethical Spatial Rendering · 🌐 FAIR+CARE · 🧠 AI-Aligned · 🔗 Provenance-Secured  
 © 2025 Kansas Frontier Matrix — MIT License  
-
-[Back to Components Index](../README.md)
+FAIR+CARE Certified · Public Document · Version-Pinned  
+Validated under MCP-DL v6.3 & KFM-MDP v10.4  
 
 </div>
