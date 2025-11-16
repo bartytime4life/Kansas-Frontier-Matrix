@@ -1,244 +1,457 @@
 ---
-title: "🧩 Kansas Frontier Matrix — GDAL 3.12 Upgrade & Performance Validation Playbook (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "docs/guides/perf/gdal-3.12-upgrade.md"
-version: "v10.0.1"
-last_updated: "2025-11-10"
-review_cycle: "Quarterly / Autonomous"
+title: "📑 Kansas Frontier Matrix — Markdown Structural & Formatting Rules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "docs/standards/markdown_rules.md"
+version: "v10.4.3"
+last_updated: "2025-11-16"
+review_cycle: "Annual / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.1/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.1/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.1/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/perf-gdal-upgrade-v1.json"
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
+sbom_ref: "../../releases/v10.4.3/sbom.spdx.json"
+manifest_ref: "../../releases/v10.4.3/manifest.zip"
+telemetry_ref: "../../releases/v10.4.3/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-markdown-rules-v4.json"
+governance_ref: "governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v10.4.3"
 status: "Active / Enforced"
-doc_kind: "Performance Guide"
-intent: "gdal-upgrade-validation"
+doc_kind: "Standard"
+intent: "markdown-governance"
+semantic_document_id: "kfm-doc-markdown-rules"
+doc_uuid: "urn:kfm:docs:standards:markdown-rules-v10.4.3"
+accessibility_compliance: "WCAG 2.1 AA"
+machine_extractable: true
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-semantic_document_id: "kfm-doc-gdal-3-12-upgrade"
-doc_uuid: "urn:kfm:docs:perf:gdal-3-12-upgrade-v10.0.1"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+immutability_status: "version-pinned"
 ---
 
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — GDAL 3.12 Upgrade & Performance Validation Playbook**  
-`docs/guides/perf/gdal-3.12-upgrade.md`
+# 📑 **Kansas Frontier Matrix — Markdown Structural & Formatting Rules**  
+`docs/standards/markdown_rules.md`
 
-**Purpose**  
-Provide a complete, reproducible, FAIR+CARE-aligned upgrade pathway for **GDAL 3.12** across the Kansas Frontier Matrix (KFM), including environment updates, Docker/Micromamba builds, CLI umbrella usage, structured benchmarks, telemetry export, and governance integration.
-
-[![MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](#)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Sustainable·GeoOps-orange)](#)
-[![ISO](https://img.shields.io/badge/ISO-50001·14064-green)](#)
-[![Status](https://img.shields.io/badge/Status-Operational-brightgreen)](#)
+**Purpose:**  
+Define the authoritative, enforced Markdown documentation standard for the Kansas Frontier Matrix (KFM).  
+All documentation must comply with **KFM-MDP v10.4.3**, **MCP-DL v6.3**, and the **Diamond⁹ Ω / Crown∞Ω Ultimate Certification** framework.  
+This governs every README, guide, standard, architecture file, and reference document in the repository.
 
 </div>
 
 ---
 
-# 🗂️ Directory Context (Deep-Inset Lined Format)
+# 📘 Overview
+
+These rules ensure:
+
+- Absolute consistency across every markdown file  
+- Predictable parsing by CI, lineage, telemetry, and governance validators  
+- Machine extractability for STAC/DCAT, FAIR+CARE, and AI systems  
+- Accessibility compliance (WCAG 2.1 AA)  
+- Immutable documentation lineage for governance ledger synchronization  
+
+Any Markdown violating these rules **fails CI**.
+
+---
+
+# 🧱 Section 1 — Required Layout & Ordering
+
+Every document **must** follow this global ordering:
+
+1. **YAML Front-Matter Block**  
+2. **Centered Title Block**  
+3. **Horizontal Rule (`---`)**  
+4. **Overview Section**  
+5. **Directory Context (if applicable)**  
+6. **Main Content Sections**  
+7. **Tables, Diagrams, Examples**  
+8. **Version History**  
+9. **Footer / Licensing Block**
+
+If a file uses headings, the order must follow:
+
+```
+
+# (H1 – one per document)
+
+## (H2 – major sections)
+
+### (H3 – inner sections)
+
+#### (H4 – optional nested details)
+
+````
+
+No other heading levels are permitted.
+
+---
+
+# 🧱 Section 2 — YAML Front-Matter Requirements
+
+Each file **must begin** with YAML front-matter enclosed by `---` fences.
+
+Minimum required fields:
+
+```yaml
+title:
+path:
+version:
+last_updated:
+review_cycle:
+commit_sha:
+sbom_ref:
+manifest_ref:
+telemetry_ref:
+telemetry_schema:
+governance_ref:
+license:
+mcp_version:
+markdown_protocol_version:
+status:
+doc_kind:
+intent:
+semantic_document_id:
+doc_uuid:
+accessibility_compliance:
+machine_extractable:
+````
+
+Optional fields for governance:
+
+```yaml
+care_label:
+fair_category:
+immutability_status:
+ai_focusmode_usage:
+ai_transform_permissions:
+ai_transform_prohibited:
+```
+
+Front-matter **must not** contain:
+
+* Tabs
+* Trailing spaces
+* Mismatched indentation
+* Unregistered fields
+
+---
+
+# 🧱 Section 3 — Centered Header Block Rules
+
+Immediately after YAML, include:
+
+```html
+<div align="center">
+
+# TITLE HERE  
+`path/to/file.md`
+
+**Purpose:**  
+Short description here.
+
+</div>
+```
+
+Rules:
+
+* Title must include an emoji
+* Path must be in backticks
+* Purpose must be 1–4 lines maximum
+* No extraneous whitespace
+
+---
+
+# 🧱 Section 4 — Directory Layout Blocks (Lined Format)
+
+The lined directory block is **standardized** in KFM-MDP v10.4.3.
+
+Syntax:
 
 ```text
-docs/
-└── guides/
-    └── perf/
-        ├── gdal-3.12-upgrade.md                  # This document
-        ├── telemetry-profiling.md                # System-wide perf & energy profiling
-        ├── maplibre-rendering-playbook.md        # Rendering performance patterns
-        └── reports/
-            ├── gdal-3.12/
-            │   ├── cli-benchmarks.json
-            │   ├── perf-summary.json
-            │   └── energy-audit.json
-            └── perf-telemetry.json
+root/
+│
+├── folder/                # comment
+│   ├── subfolder/         # comment
+│   └── file.md            # comment
+└── other/                 # comment
 ```
+
+Rules:
+
+* Use **vertical lines (`│`)**, **L-shaped connectors (`├──`, `└──`)**
+* Must include **comments on every line**
+* Use the **blank root separator `│`** after root/
+* No tabs. Spaces only.
+* No trailing whitespace.
+* Must be wrapped in a fenced block (```text).
+
+This block style is **mandatory** for all architecture, features, telemetry, pipelines, and web documentation files.
+
+---
+
+# 🧱 Section 5 — Mermaid Diagram Standards
+
+All diagrams must:
+
+* Use fenced blocks:
+
+  ```mermaid
+  flowchart TD
+  ...
+  ```
+* Never include HTML `<span>` or inline styling (breaks CI)
+* Use explicit node brackets like:
+  `A["Label"] --> B["Label"]`
+* Use `<br/>` for line breaks inside nodes
+* End with no blank lines inside the block
+
+Forbidden:
+
+* Markdown interpolation inside Mermaid
+* Raw HTML attributes
+* Unicode arrows not supported by Mermaid
+
+---
+
+# 🧱 Section 6 — Tables
+
+Rules:
+
+* Must use GitHub-flavored markdown tables
+* First row = headers
+* Must have separator row with `---`
+* No merged cells
+* No HTML tables
+
+Disallowed:
+
+```
+| A | B |
+|---|---|
+| *No nested formatting that breaks table* |
+```
+
+Allowed:
+
+```
+| Field | Description |
+|-------|-------------|
+| cpu_usage_percent | CPU load (%) |
+```
+
+---
+
+# 🧱 Section 7 — Code Fences & Example Blocks
+
+Rules:
+
+* Always use **triple backticks**
+* Use explicit language tags: `json`, `yaml`, `text`, `bash`, `ts`, `python`
+* Never mix tabs and spaces
+* No indentation outside the code fence
+
+Correct:
+
+```json
+{
+  "key": "value"
+}
+```
+
+Incorrect:
+
+````
+    ```json
+    { invalid }
+    ```
+````
+
+---
+
+# 🧱 Section 8 — Accessibility & FAIR+CARE Governance
+
+All Markdown must:
+
+* Follow WCAG 2.1 AA standards
+* Include alt-text for all images
+* Use inclusive, non-speculative language
+* Label sensitive data sections with CARE tags
+* Include provenance: STAC/DCAT references where applicable
+* Avoid decorative emojis in headings beyond the first emoji
+* Use readable contrast ratios in embedded examples
+
+Images:
+
+```
+![Alt text — required and descriptive](path)
+```
+
+---
+
+# 🧱 Section 9 — Telemetry Enforcement (Docs Build)
+
+CI validates Markdown using:
+
+* `docs-lint.yml`
+* `faircare-validate.yml`
+* `telemetry-export.yml`
+
+Each file is:
+
+* Parsed
+* Checked for headings & YAML
+* Checked for invalid inline HTML
+* Checked for governance metadata completeness
+* Has telemetry usage recorded in
+  `releases/<version>/focus-telemetry.json`
+
+---
+
+# 🧱 Section 10 — AI Safety & Content Boundaries
+
+All Markdown must exclude:
+
+* Speculative claims
+* Fabricated historical facts
+* Unverified datasets
+* Unattributed quotes
+* Unnotated AI-generated summaries (must include provenance)
+
+If a section includes AI reasoning outputs, annotate:
+
+```
+> **AI-Generated Content:**  
+> Produced by Focus Transformer v2, validated under FAIR+CARE.
+```
+
+---
+
+# 🧱 Section 11 — Prohibited Formatting
+
+Not allowed anywhere:
+
+* HTML tables
+* HTML `<style>` blocks
+* Non-YAML metadata at document start
+* Multiple H1 headers
+* Mixing tabs + spaces
+* Emoji-only headings
+* Footnotes breaking accessibility
+* Screenshots without alt text
+
+---
+
+# 🧱 Section 12 — Versioning & Immutability
+
+Every Markdown document:
+
+* Is version-pinned
+* Must update `version:` and `last_updated:` when changed
+* Must update `doc_uuid:` when version increments
+* Must include a **Version History Table**
+
+Templated:
+
+| Version | Date | Author | Summary |
+| ------: | ---- | ------ | ------- |
+
+---
+
+# 🧱 Section 13 — Example Full Document Skeleton
+
+Below is the **canonical reference skeleton**:
+
+````markdown
+---
+title: "🧩 Example Document"
+path: "docs/example/README.md"
+version: "vX.Y.Z"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly"
+commit_sha: "<commit>"
+sbom_ref: "../../releases/vX.Y.Z/sbom.spdx.json"
+manifest_ref: "../../releases/vX.Y.Z/manifest.zip"
+telemetry_ref: "../../releases/vX.Y.Z/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/example.schema.json"
+governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.3"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "example"
+semantic_document_id: "kfm-doc-example"
+doc_uuid: "urn:kfm:docs:example-vX.Y.Z"
+machine_extractable: true
+---
+
+<div align="center">
+
+# 🧩 **Example Document Title**  
+`docs/example/README.md`
+
+**Purpose:**  
+Short description.
+
+</div>
 
 ---
 
 # 📘 Overview
 
-The KFM upgrade to **GDAL 3.12** introduces a high-performance, pipeline-oriented geoprocessing environment with:
+Text...
 
-- ⚡ Faster raster algebra, resampling, and COG creation  
-- 🌐 New `gdal pipeline` umbrella executor  
-- 🧩 Vector Parquet append/edit support  
-- 🛰️ GPU-aware paths (via drivers)  
-- 🧭 Provenance metadata + energy telemetry hooks  
-- 🔐 FAIR+CARE compliance carried forward into all ETL pipelines  
+# 🗂️ Directory Layout
 
-This playbook documents the **upgrade**, **validation**, and **benchmark verification** phases.
+```text
+docs/example/
+│
+├── file.md        # comment
+└── sub/           # comment
+````
 
----
+# Content Sections …
 
-# 🧱 Environment Setup (Reproducible Builds)
+# 🕰️ Version History
 
-## ### 1. Conda/Micromamba Environment
+| Version | Date       | Author | Summary |
+| ------: | ---------- | ------ | ------- |
+|  vX.Y.Z | 2025-11-16 | Team   | Initial |
 
-```bash
-# environment.yml — pinned for reproducibility
-name: kfm-geo
-channels:
-  - conda-forge
-dependencies:
-  - python=3.11
-  - gdal=3.12.*
-  - pyproj
-  - geopandas
-  - rasterio
-  - rio-cogeo
-  - fiona
-  - shapely
-  - pyarrow
-```
-
-**Create & Verify**
-
-```bash
-micromamba env create -f environment.yml
-python - << 'PY'
-from osgeo import gdal
-print("GDAL_VERSION=", gdal.VersionInfo())
-PY
 ```
 
 ---
 
-## ### 2. Docker Build (CI/CD + KFM Pipelines)
+# 🧱 Section 14 — Enforcement
 
-```dockerfile
-# docker/geo.Dockerfile
-FROM mambaorg/micromamba:1.5.7
-ARG MAMBA_DOCKERFILE_ACTIVATE=1
-COPY environment.yml /tmp/env.yml
-RUN micromamba install -y -n base -f /tmp/env.yml && micromamba clean --all --yes
-RUN python - << 'PY'
-from osgeo import gdal
-print("GDAL_VERSION=", gdal.VersionInfo())
-PY
-```
+Violations trigger:
 
-**Build & Test**
+- ❌ CI block  
+- ❌ FAIR+CARE governance failure  
+- ❌ Telemetry non-compliance  
+- ❌ Documentation quality failure  
 
-```bash
-docker build -t kfm-gdal:3.12 -f docker/geo.Dockerfile .
-docker run --rm kfm-gdal:3.12 python - << 'PY'
-from osgeo import gdal; print(gdal.VersionInfo())
-PY
-```
+Only compliant documents receive:
 
----
-
-# 🔧 New GDAL 3.12 CLI Umbrella
-
-| Command | Purpose | Example |
-|--------|---------|---------|
-| `gdal raster zonal-stats` | Fast zonal statistics | `gdal raster zonal-stats -zones zones.gpkg -raster dem.tif` |
-| `gdal raster proximity` | Proximity map | `gdal raster proximity rivers.gpkg out.tif` |
-| `gdal vector simplify-coverage` | Topology repair + simplify | `gdal vector simplify-coverage parcels.gpkg out.gpkg` |
-| `gdal pipeline` | Declarative ETL | `gdal pipeline flow→proximity→zonal` |
-
-These commands fully integrate with **GDAL provenance** and **FAIR+CARE telemetry** hooks.
-
----
-
-# ⚡ Performance Benchmarks (v9.7 → v10 GDAL 3.12)
-
-All tests run under **identical hardware** with telemetry exported to  
-`docs/guides/perf/reports/gdal-3.12/cli-benchmarks.json`.
-
-| Task | GDAL 3.8 | GDAL 3.12 | Δ Speed | Δ Energy |
-|------|----------|-----------|---------|----------|
-| Raster Zonal Stats (100MB) | 12.8 s | **8.4 s** | ↓ 34% | ↓ 22% |
-| Vector Simplify (10k ftrs) | 6.2 s | **4.1 s** | ↓ 34% | ↓ 17% |
-| COG Conversion | 9.9 s | **6.3 s** | ↓ 36% | ↓ 25% |
-| Pipeline DAG | 15.7 s | **9.8 s** | ↓ 38% | ↓ 28% |
-
----
-
-# 🧪 Benchmark Telemetry Example (KFM Standard)
-
-```json
-{
-  "benchmark_id": "kfm-gdal-3.12-validate-2025-11-10",
-  "component": "gdal-cli",
-  "metrics": {
-    "raster_zonal_stats_ms": 8400,
-    "vector_simplify_ms": 4100,
-    "energy_joules": 12.4,
-    "cpu_util": 87.2,
-    "memory_mb": 435
-  },
-  "faircare_status": "Pass",
-  "iso_alignment": ["ISO 50001", "ISO 14064"],
-  "timestamp": "2025-11-10T12:00:00Z"
-}
-```
-
----
-
-# 🛰️ CI/CD Integration (FAIR+CARE Validated)
-
-| Workflow | Function | Artifact |
-|----------|----------|----------|
-| `geo-upgrade-validate.yml` | Run GDAL 3.12 CLI & perf tests | `reports/gdal-3.12/cli-benchmarks.json` |
-| `telemetry-export.yml` | Capture CPU/GPU/Energy | `focus-telemetry.json` |
-| `ledger-sync.yml` | Append provenance hashes | `ledger/gdal-upgrade.json` |
-| `faircare-validate.yml` | Ethics + sustainability audit | `reports/faircare/geo-audit.json` |
-
-All workflows must pass before merging GDAL upgrade PRs.
-
----
-
-# 🛡 FAIR+CARE Integration Matrix
-
-| Principle | Implementation |
-|----------|----------------|
-| **Findable** | GDAL version pinned in SBOM; provenance logged |
-| **Accessible** | Benchmark results stored under CC-BY |
-| **Interoperable** | Aligns with OGC, STAC, DCAT |
-| **Reusable** | Performance profiles redistributed across KFM |
-| **Collective Benefit** | Reduced energy footprint for geoprocessing |
-| **Authority to Control** | Council-verified upgrade approval |
-| **Responsibility** | Full telemetry + lineage emitted |
-| **Ethics** | ISO carbon rules + data governance compliance |
-
----
-
-# 🧭 Troubleshooting Matrix (Expert Tier)
-
-| Symptom | Likely Cause | Fix |
-|--------|--------------|-----|
-| Slow COG builds | Block sizes or compression mismatch | Use `-co BLOCKSIZE=512 -co COMPRESS=ZSTD` |
-| Memory spikes | Raster VRT pyramid missing | Build overviews first |
-| Raster I/O bottleneck | MBTiles with big tiles | Convert → PMTiles or COG |
-| Polygon simplify failures | Mixed geometry types | Run `gdal vector repair` first |
+- ✅ Diamond⁹ Ω Certification  
+- ✅ MCP-DL v6.3 compliance  
+- ✅ FAIR+CARE approval  
 
 ---
 
 # 🕰️ Version History
 
-| Version | Date | Summary |
-|--------:|------|---------|
-| v10.0.1 | 2025-11-10 | Full rebuild in KFM-MDP v10.4 lined-inset style; added FAIR+CARE/ISO matrices |
-| v10.0.0 | 2025-11-09 | Initial GDAL 3.12 upgrade guide |
-|  v9.7.0 | 2025-11-03 | Legacy GDAL optimization notes |
+| Version | Date | Author | Summary |
+|--------:|------------|---------|---------|
+| v10.4.3 | 2025-11-16 | Core Team | Complete rewrite to match KFM-MDP v10.4.3, deep inset styling, global lined directory format, strict CI-enforced rules. |
+| v10.4.2 | 2025-11-15 | Core Team | Incremental rule expansion for telemetry alignment. |
+| v10.4.0 | 2025-11-14 | Documentation Council | Initial Markdown Ruleset. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
 Master Coder Protocol v6.3 · FAIR+CARE Certified  
 Diamond⁹ Ω / Crown∞Ω Ultimate Certified
-
-[Back to Performance Guides](./README.md) ·  
-[Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
