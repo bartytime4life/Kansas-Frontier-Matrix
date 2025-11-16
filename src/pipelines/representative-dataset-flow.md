@@ -367,34 +367,53 @@ Slack message includes:
 
 ~~~text
 data/
-  raw/daily-stations.csv
-  processed/stations/stations.parquet
-  stac/stations/stac.json
+├── raw/
+│   └── daily-stations.csv                 # Raw source file synced from remote ETag
+│
+├── processed/
+│   └── stations/
+│       ├── stations.parquet               # Deterministic column-typed Parquet artifact
+│       ├── stac.json                      # Updated STAC Item with SemVer + checksums
+│       └── checksums.txt                  # SHA-256 file integrity + lineage hashes
+│
+└── stac/
+    └── stations/
+        └── stac.json                      # Previous STAC descriptor (for diff + history)
 
 pipelines/
-  watcher/
-  validator/
-  transformer/
-  delta/
-  release/
-  ledger/idempotency.sqlite
+├── watcher/                                # Detect remote changes via ETag or webhook
+├── validator/                              # Schema + content validator
+├── transformer/                            # CSV → Parquet conversion + STAC update
+├── delta/                                  # Row/column diff computation
+├── release/                                # PR creation, Release assets, tagging
+│
+└── ledger/
+    └── idempotency.sqlite                  # Ensures no-op behavior on identical content runs
 
 artifacts/
-  validation/validation_report.json
-  delta/column_diff.md
-  delta/row_diff_summary.json
-  delta/semver_decision.json
+├── validation/
+│   ├── validation_report.json              # Full validator output (schema + content)
+│   ├── schema_expected.json                # Expected schema contract version
+│   └── sample_rows.csv                     # Extract of rows for human governance review
+│
+└── delta/
+    ├── column_diff.md                      # Human-readable column changes
+    ├── row_diff_summary.json               # Machine-readable row deltas
+    └── semver_decision.json                # SemVer major/minor/patch decision record
 
-releases/datasets/stations/vX.Y.Z/
-  stations.parquet
-  stac.json
-  checksums.txt
-  validation_report.json
-  column_diff.md
-  row_diff_summary.json
-  semver_decision.json
-  manifest.zip
-  sbom.spdx.json
+releases/
+└── datasets/
+    └── stations/
+        └── vX.Y.Z/
+            ├── stations.parquet            # Release-published Parquet artifact
+            ├── stac.json                   # Release-pinned STAC item
+            ├── checksums.txt               # Hashes for Parquet, STAC, and metadata
+            ├── validation_report.json      # Validator output for auditors
+            ├── column_diff.md              # Column-level change summary
+            ├── row_diff_summary.json       # Row-level delta summary
+            ├── semver_decision.json        # Version decision + rationale
+            ├── manifest.zip                # Release manifest bundle
+            └── sbom.spdx.json              # SBOM for pipeline tools + environment
 ~~~
 
 ---
