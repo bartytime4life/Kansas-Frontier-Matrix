@@ -62,38 +62,43 @@ This document provides:
 
 ---
 
-# 🗂️ v9.7 → v10 Repository Refactor (Top-Level)
-
-Below is the **canonical ASCII “lined” diff-style mapping** that matches your preferred style.
-
 ~~~text
+# ──────────────────────────────────────────────────────────────
+#  Kansas Frontier Matrix — Directory Mapping Format Standard  
+# ──────────────────────────────────────────────────────────────
+
 v9.7/                                          →       v10/
-----------------------------------------------------------------------------------------
+──────────────────────────────────────────────────────────────────────────────
 src/                                           →       src/
-  api/                                         →         api/                       (same)
-  etl/                                         →         pipelines/ingestion/        (moved)
-  rs/ (remote sensing)                         →         pipelines/remote_sensing/  (renamed)
-  ai/                                          →         ai/                         (expanded: focus_v2)
-  graph/                                       →         graph/                      (same; schema v2)
-  telemetry/                                   →         telemetry/                 (expanded: Telemetry v2)
-  web/                                         →         web/                        (refactored components/features)
+│   ├── api/                                   →       │   ├── api/                     # same module
+│   ├── etl/                                   →       │   ├── pipelines/ingestion/      # moved
+│   ├── rs/ (remote sensing)                   →       │   ├── pipelines/remote_sensing/ # renamed
+│   ├── ai/                                    →       │   ├── ai/                        # expanded (focus_v2)
+│   ├── graph/                                 →       │   ├── graph/                     # same (schema v2)
+│   ├── telemetry/                             →       │   ├── telemetry/                 # expanded (Telemetry v2)
+│   └── web/                                   →       │   └── web/                       # refactored components/features
+│
 data/                                          →       data/
-  raw/                                         →         raw/                        (same)
-  processed/                                   →         processed/                  (same)
-  stac/                                        →         stac/                       (enhanced: DCAT mirror)
-  lineage/                                     →         lineage/                    (Lineage v2)
+│   ├── raw/                                   →       │   ├── raw/                       # same
+│   ├── processed/                             →       │   ├── processed/                 # same
+│   ├── stac/                                  →       │   ├── stac/                      # enhanced: DCAT mirror
+│   └── lineage/                               →       │   └── lineage/                   # Lineage v2 schema
+│
 docs/                                          →       docs/
-  api/                                         →         standards/api/ (merged)
-  pipelines/                                   →         guides/pipelines/ (split across new guides)
-  rs/                                          →         guides/visualization/ (SVF/LRM separated)
-  governance/                                  →         standards/governance/
+│   ├── api/                                   →       │   ├── standards/api/             # merged
+│   ├── pipelines/                             →       │   ├── guides/pipelines/          # reorganized
+│   ├── rs/                                    →       │   ├── guides/visualization/      # SVF/LRM separated
+│   └── governance/                            →       │   └── standards/governance/      # governance v2
+│
 .github/                                       →       .github/
-  workflows/                                   →         workflows/ (updated: 11 validators)
-tools/                                         →       tools/                        (same; reorganized)
-tests/                                         →       tests/                        (new hierarchy by subsystem)
-Makefile                                       →       Makefile                      (commands updated for v10)
-docker-compose.yml                             →       docker-compose.yml            (Kafka/Neo4j 5.x added)
-~~~
+│   └── workflows/                             →           └── workflows/                  # updated: 11 validators
+│
+tools/                                         →       tools/                              # same; reorganized
+tests/                                         →       tests/                              # hierarchy expanded
+Makefile                                       →       Makefile                            # command targets updated
+docker-compose.yml                             →       docker-compose.yml                  # Kafka + Neo4j 5.x added
+~~~ 
+
 
 ---
 
