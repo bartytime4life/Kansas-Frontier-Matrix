@@ -1,195 +1,323 @@
 ---
-title: "🗺️ Kansas Frontier Matrix — MapLibre UI Design & Interaction Framework"
+title: "🗺️ Kansas Frontier Matrix — MapLibre UI Design & Interaction Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/guides/visualization/maplibre-ui-design.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Quarterly / FAIR+CARE Council"
+version: "v10.4.2"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/visualization-maplibre-ui-v1.json"
+sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.2/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.2/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/visualization-maplibre-ui-v2.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.2"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "maplibre-ui-design"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Mixed"
+kfm_readme_template: "Platinum v7.1"
+ci_enforced: true
 ---
 
 <div align="center">
 
-# 🗺️ **Kansas Frontier Matrix — MapLibre UI Design & Interaction Framework**
+# 🗺️ **Kansas Frontier Matrix — MapLibre UI Design & Interaction Framework**  
 `docs/guides/visualization/maplibre-ui-design.md`
 
-**Purpose:**  
-Define the **user interface, component layout, and interaction model** for the MapLibre-based visualization layer of the Kansas Frontier Matrix (KFM).  
-Ensures accessible, performant, and FAIR+CARE-compliant map experiences across browsers and devices.
+**Purpose**  
+Define the **user interface, component layout, interaction model, and governance rules**  
+for the MapLibre-based visualization layer of the Kansas Frontier Matrix (KFM).  
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Accessible_UI-orange)](../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Operational-brightgreen)](../../../releases/)
+Ensures that map experiences are:
+
+- **Accessible** (WCAG 2.1 AA + KFM A11y standards)  
+- **Governed** (CARE v2, sovereignty, masking)  
+- **Performant** (FPS, latency, memory budgets)  
+- **Consistent** (token-driven theming · MapLibre + React alignment)  
+
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-This guide defines the **MapLibre UI structure and design framework** for the KFM visualization stack.  
-The interface supports **layered geographic storytelling**, **AI explainability overlays**, and **accessibility features** under FAIR+CARE governance.  
+The **MapLibre UI Design Framework** describes:
 
-Design priorities include:
-- Spatial clarity and minimal visual clutter  
-- Efficient rendering for offline PMTiles / MBTiles sources  
-- Accessible controls that meet **WCAG 2.1 AA** standards  
-- Integrated **Focus Mode overlays** for temporal and AI-driven insights  
+- How the web app renders maps using MapLibre GL JS  
+- How React components structure map layout and controls  
+- How layers are orchestrated (MapView + LayerManager)  
+- How Focus Mode v2 and Story Nodes integrate onto the map  
+- How runtime theming & accessibility are handled (tokens, themes, A11y/sustainability)  
+- How Telemetry v2 and governance signals (CARE, sovereignty, provenance) are captured
+
+This guide is tightly coupled with:
+
+- `docs/guides/maplibre/README.md` (integration)  
+- `docs/guides/maplibre/runtime-theming/README.md`  
+- `docs/guides/visualization/timeline-visualization.md`  
 
 ---
 
-## 🗂️ Directory Context
+# 🗂️ Directory Context
 
-```plaintext
+~~~text
 docs/guides/visualization/
-├── README.md                         # Visualization & Design overview
-├── maplibre-ui-design.md             # This document
+├── README.md                         # Visualization overview
+├── maplibre-ui-design.md             # THIS document
 ├── timeline-visualization.md         # Temporal storytelling interface
-├── explainability-dashboard.md       # SHAP/LIME visualization integration
-└── accessibility-standards.md        # WCAG & FAIR+CARE compliance rules
-```
+├── explainability-dashboard.md       # AI explainability visualization
+└── accessibility-standards.md        # WCAG & CARE v2 UI standards
+~~~
+
+Frontend code lives at:
+
+~~~text
+web/src/components/MapView/
+web/src/features/map/
+web/src/styles/tokens/map.tokens.ts
+web/src/styles/themes/
+~~~
 
 ---
 
-## 🧩 UI Architecture Overview
+# 🧩 UI Architecture Overview (GitHub-Safe Mermaid)
 
 ```mermaid
 flowchart TD
-A["MapLibre GL JS (Base Map)"] --> B["Layer Manager (Vector/Raster)"]
-B --> C["UI Panels (Legend, Controls, Metadata)"]
-C --> D["Focus Mode Overlay (AI Insights + Explainability)"]
-D --> E["Telemetry Hooks (FPS, Latency, Interaction)"]
-E --> F["FAIR+CARE Validation & Accessibility Reports"]
+
+BASE["MapLibre GL JS<br/>Base Map Canvas"] --> LM["Layer Manager<br/>sources · layers · ordering"]
+LM --> PANELS["UI Panels<br/>legend · controls · metadata"]
+PANELS --> FOCUS["Focus & Story Overlays<br/>AI insights · Story Node footprints"]
+FOCUS --> TELE["Telemetry Hooks<br/>FPS · latency · interactions · CARE flags"]
+TELE --> GOV["FAIR+CARE & A11y Reports<br/>governance · accessibility"]
+````
+
+---
+
+# 1️⃣ Component Structure (React + MapLibre)
+
+| Component                    | Description                                        | Key Concerns                         |
+| ---------------------------- | -------------------------------------------------- | ------------------------------------ |
+| `MapViewContainer`           | High-level container for map + panels              | Layout, A11y regions, theming hooks  |
+| `MapCanvas`                  | Wraps MapLibre map instance                        | WebGL init, error boundaries         |
+| `LayerManager`               | Registers sources + layers and controls draw order | Determinism, governance layering     |
+| `LegendPanel`                | Shows symbology + provenance + CARE labels         | WCAG contrast, screen-reader support |
+| `MapControls`                | Zoom, basemap, layer toggles, focus reset          | Keyboard nav, hit area, A11y tokens  |
+| `TimelineOverlay` (optional) | Time slider overlay integrated with TimelineView   | A11y slider patterns, reduced motion |
+| `FocusHighlightLayer`        | Highlights Focus Mode v2 entities                  | CARE/sovereignty-aware overlays      |
+| `StoryNodeLayer`             | Story Node v3 footprints                           | generalized for sensitive sites      |
+| `CursorHUD`                  | Shows coordinates, values, selection info          | Non-PII text, high contrast          |
+
+---
+
+# 2️⃣ Layout & Regions
+
+The map UI is typically structured into regions:
+
+* **Map Canvas** — central map area (`<main>` or landmark with ARIA)
+* **Left / Right Panels** — legend, layers, governance
+* **Bottom/Top Bars** — timeline, status, context hints
+* **HUD** — lean overlay with coordinates, scale, debug info
+
+All interactive elements must be reachable via keyboard, and map-specific interactions
+must not break or trap focus.
+
+---
+
+# 3️⃣ Layer Interaction Guidelines
+
+| Interaction           | Expected Behavior                                           | FAIR+CARE v2 Alignment                                 |
+| --------------------- | ----------------------------------------------------------- | ------------------------------------------------------ |
+| Hover / Tooltip       | Show concise info: title, dataset, key value, provenance    | Provide citations, avoid hidden meaning                |
+| Click / Focus         | Open detailed panel: narrative, metadata, Story Nodes links | Allow keyboard activation, show CARE labels            |
+| Zoom Range Visibility | Enable/disable layers at specific zoom levels               | Prevent clutter, limit overdraw & GPU use              |
+| Sensitive Layers      | Require explicit toggle + warning banner                    | Protect sovereignty & sensitive cultural data          |
+| Timeline Sync         | Layer visibility & styling responds to time window          | Transparent historical shifts, highlight uncertainties |
+
+Sensitive layers MUST be visually marked and associated with CARE v2 metadata
+(e.g., `careLabel: "restricted"`).
+
+---
+
+# 4️⃣ Design Tokens & Theming (MapUI)
+
+Map UI uses token-driven design:
+
+| Token                   | Purpose               | Example   |
+| ----------------------- | --------------------- | --------- |
+| `color.ui.bg`           | Panel background      | `#0b0c0e` |
+| `color.ui.accent`       | Primary action color  | `#2b6cb0` |
+| `color.map.land.fill`   | Land fill color       | `#121417` |
+| `color.map.water.fill`  | Water fill color      | `#164B73` |
+| `color.map.label.text`  | Map label text color  | `#EAECEF` |
+| `font.ui.body`          | Base UI font family   | `"Inter"` |
+| `font.map.label.family` | Map label font family | `"Inter"` |
+| `size.ui.borderRadius`  | Panel border radius   | `0.75rem` |
+| `size.map.label.halo`   | Label halo width      | `1.2`     |
+
+Tokens are defined in:
+
+* `web/src/styles/tokens/color.tokens.ts`
+* `web/src/styles/tokens/typography.tokens.ts`
+* `web/src/styles/tokens/map.tokens.ts`
+
+and theme modules in `web/src/styles/themes/`.
+
+---
+
+# 5️⃣ Focus Mode & Story Node Integration
+
+Map UI must support **Focus Mode v2** and **Story Node v3**:
+
+* **FocusHighlightLayer**:
+
+  * Highlights the focused entity geometry.
+  * Fades non-focused layers for context.
+  * Respects masking strategies (no raw coordinates for restricted features).
+
+* **StoryNodeLayer**:
+
+  * Draws Story Node footprints (point/polygon shapes).
+  * Aligns colors and styles with domain semantics (e.g., treaties vs. hazards).
+  * Interacts with timeline: filtered by `when` intervals.
+
+All Focus/Story overlays must:
+
+* Provide readable tooltips for events
+* Annotate provenance and sources
+* Make CARE v2 classification visible in LegendPanel and overlays
+
+---
+
+# 6️⃣ Telemetry v2 & Performance
+
+Map UI interactions contribute to Telemetry v2:
+
+* `map:init` — map initialization stats
+* `map:move` — panning and zoom events
+* `map:layer-toggle` — layer visibility changes
+* `map:focus-entity` — when focus moves to a new entity
+* `map:error` — errors from MapLibre or data sources
+
+Each event should report:
+
+* `fps` or `frame_latency_ms_avg`
+* approximate `energy_wh` (client-side estimate optional)
+* `a11y_flags` (high-contrast, large labels, reduced motion)
+* `care_flags` (presence of restricted overlays)
+
+These are aggregated under:
+
+```text
+releases/<version>/pipeline-telemetry.json
 ```
 
----
-
-## ⚙️ Component Structure (React + MapLibre)
-
-| Component | Description | Key Features |
-|------------|--------------|---------------|
-| **MapContainer** | Initializes and renders MapLibre map | Binds map state, handles resize, and telemetry hooks |
-| **LayerControlPanel** | Toggles thematic layers (terrain, hydrology, history) | Uses FAIR+CARE tagging for sensitive layers |
-| **LegendPanel** | Displays symbology and data provenance | Pulls metadata from STAC/DCAT catalogs |
-| **TimelineOverlay** | Synchronizes temporal data across map and UI | Animated playback with accessibility options |
-| **AIExplainabilityOverlay** | Displays Focus Mode AI outputs | Includes explainable context via SHAP/LIME data |
-| **TelemetryMonitor** | Logs render performance and energy metrics | Records FPS, CPU/GPU, and accessibility usage |
-| **AccessibilityToolbar** | High-contrast toggle, screen reader hints | Ensures WCAG 2.1 AA compliance |
+which is then checked by `telemetry-sync.yml`.
 
 ---
 
-## 🎨 Design Tokens & Theming
+# 7️⃣ Accessibility (WCAG 2.1 AA) for Map UI
 
-| Token | Purpose | Example |
-|--------|----------|----------|
-| `--color-background` | Map panel base color | `#FFFFFF` |
-| `--color-primary` | Primary UI accent | `#00509E` |
-| `--color-secondary` | Highlight or selection color | `#E8A317` |
-| `--font-family` | Global typeface | `"Inter", sans-serif` |
-| `--border-radius` | Panel rounding for modern aesthetic | `0.5rem` |
-| `--transition-speed` | UI interaction speed | `0.25s ease` |
+Core requirements:
 
-All design tokens are stored under `web/public/css/tokens.css` and are used globally across the visualization system.
+* All buttons, toggles, and panels:
+
+  * have accessible labels and ARIA roles
+  * are keyboard operable
+  * show focus outlines
+
+* Map overlays:
+
+  * avoid conveying information **only via color**
+  * use patterns or icons for critical differences if needed
+
+* Legends:
+
+  * use high-contrast swatches and text
+  * supply text equivalents for color & pattern semantics
+
+* Reduced Motion:
+
+  * limit map animation when user prefers reduced motion
+  * avoid long continuous auto-zoom or bounce effects
+
+Accessibility testing integrated via:
+
+* `ui-accessibility-validate.yml`
+* Lighthouse + axe checks in CI
 
 ---
 
-## 🧮 Layer Interaction Guidelines
+# 8️⃣ CI/CD Checks for Map UI
 
-| Interaction | Expected Behavior | FAIR+CARE Alignment |
-|--------------|------------------|----------------------|
-| **Hover / Tooltip** | Shows dataset name, source, and metadata | Provenance transparency |
-| **Click / Focus** | Expands contextual information | Accessible keyboard navigation |
-| **Zoom Range Visibility** | Automatically enables or disables dense layers | Reduces overdraw and energy usage |
-| **Sensitive Layers** | Requires opt-in acknowledgment (CARE flag) | Protects community data |
-| **Timeline Sync** | Adjusts map features dynamically over time | Historical transparency with interpretive control |
+Recommended workflows:
+
+| Workflow                        | Purpose                                     | Artifact                                   |
+| ------------------------------- | ------------------------------------------- | ------------------------------------------ |
+| `ui-accessibility-validate.yml` | A11y & FAIR+CARE UI checks (Lighthouse/axe) | `reports/accessibility/maplibre-ui.json`   |
+| `ui-performance-benchmark.yml`  | FPS, latency, resource usage benchmarks     | `reports/perf/maplibre-ui-benchmark.json`  |
+| `telemetry-export.yml`          | Telemetry v2 export for map interactions    | `data/telemetry/web-ui.ndjson`             |
+| `faircare-validate.yml`         | Ethical and CARE v2 UI checks               | `reports/faircare/ui-ethics-maplibre.json` |
+
+All must be configured as required checks for UI-impacting changes.
 
 ---
 
-## 📊 Accessibility & Performance Telemetry
+# 9️⃣ Example FAIR+CARE Map UI Report
 
 ```json
 {
+  "report_id": "maplibre-ui-2025-11-16-0001",
   "component": "MapLibre UI",
-  "fps": 60,
-  "cpu_percent": 68,
-  "gpu_load": 63,
+  "metrics": {
+    "frame_latency_ms_avg": 16.8,
+    "fps_min": 34,
+    "energy_wh": 0.012,
+    "co2_g": 0.0049
+  },
   "accessibility_compliance": "AA",
-  "user_interactions": 142,
-  "energy_joules": 1.18,
-  "faircare_status": "Pass",
-  "timestamp": "2025-11-09T12:00:00Z"
-}
-```
-
-Telemetry is automatically logged through the **Focus Telemetry Collector**, contributing to FAIR+CARE sustainability audits.
-
----
-
-## ♿ Accessibility & FAIR+CARE Integration
-
-| Principle | Implementation | Validation Artifact |
-|------------|----------------|--------------------|
-| **Findable** | All UI elements labeled with ARIA roles | `accessibility-standards.md` |
-| **Accessible** | Keyboard + screen reader tested | `reports/accessibility.json` |
-| **Interoperable** | MapLibre/React components conform to WCAG 2.1 AA | CI Accessibility Audit |
-| **Reusable** | Modular, themable UI components | Component library |
-| **Collective Benefit** | Promotes inclusivity in public historical exploration | FAIR+CARE audit report |
-| **Authority to Control** | Visibility toggles for sensitive spatial data | `data-generalization/README.md` |
-| **Responsibility** | Logs performance & accessibility metrics | `focus-telemetry.json` |
-| **Ethics** | FAIR+CARE Council reviews interface design | Governance Ledger |
-
----
-
-## ⚙️ CI/CD Validation Workflows
-
-| Workflow | Purpose | Output |
-|-----------|----------|--------|
-| `ui-accessibility-validate.yml` | Runs Lighthouse + WCAG 2.1 AA tests | `reports/accessibility.json` |
-| `ui-performance-benchmark.yml` | Measures FPS, latency, and resource load | `reports/perf/maplibre-ui-benchmark.json` |
-| `telemetry-export.yml` | Logs interaction and energy telemetry | `releases/v*/focus-telemetry.json` |
-| `faircare-validate.yml` | Ensures design ethics and sensitivity controls | `reports/faircare/ui-ethics.json` |
-
----
-
-## 🧩 Example FAIR+CARE Ledger Entry
-
-```json
-{
-  "ledger_id": "ui-ledger-2025-11-09-001",
-  "component": "MapLibre UI",
-  "version": "v10.0.0",
-  "wcag_compliance": "AA",
-  "fps": 59.8,
-  "energy_joules": 1.21,
-  "faircare_status": "Pass",
-  "auditors": ["FAIR+CARE Council"],
-  "timestamp": "2025-11-09T12:00:00Z"
+  "faircare_status": "pass",
+  "a11y_flags": {
+    "high_contrast_enabled": true,
+    "reduced_motion": false
+  },
+  "care_flags": 1,
+  "timestamp": "2025-11-16T12:00:00Z"
 }
 ```
 
 ---
 
-## 🕰️ Version History
+# 🔟 Developer Checklist (MapLibre UI)
 
-| Version | Date | Author | Summary |
-|----------|------|--------|----------|
-| v10.0.0 | 2025-11-09 | Core Team | Established MapLibre UI design framework with FAIR+CARE accessibility and telemetry integration |
-| v9.7.0  | 2025-11-03 | A. Barta | Introduced base layer interaction and responsive map interface design |
+Before merging changes that impact Map UI:
+
+* [ ] Map layout works for desktop and mobile viewports.
+* [ ] Map controls are fully keyboard-accessible.
+* [ ] A11y + FAIR+CARE UI workflows pass in CI.
+* [ ] Sensitive layers are clearly labeled and require explicit user activation.
+* [ ] Focus Mode and Story Node overlays correctly honor CARE v2 masking.
+* [ ] Telemetry v2 events are emitted for key interactions.
+* [ ] Performance is within defined budgets (FPS, latency, memory).
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary                                                                               |
+| ------: | ---------- | ------------------------------------------------------------------------------------- |
+| v10.4.2 | 2025-11-16 | Upgraded to KFM-MDP v10.4.2; integrated Telemetry v2, CARE v2, and CI+A11y validation |
+| v10.0.0 | 2025-11-09 | Initial MapLibre UI design framework with FAIR+CARE accessibility and telemetry       |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Visualization Guides](./README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+**Kansas Frontier Matrix — MapLibre UI Design (v10.4.2)**
+Spatial Storytelling × FAIR+CARE v2 × Accessible & Sustainable Map Interfaces
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
