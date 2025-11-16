@@ -97,17 +97,24 @@ Components are responsible for **presentation**, not computation.
 
 ~~~text
 web/src/components/
-├── MapView/                       # Full MapLibre-based map system (replaces old map/)
-│   ├── MapViewContainer.tsx
-│   ├── MapCanvas.tsx
-│   ├── LayerManager.tsx
-│   ├── LegendPanel.tsx
-│   ├── MapControls.tsx
-│   ├── StoryNodeLayer.tsx
-│   ├── FocusHighlightLayer.tsx
-│   ├── DatasetFootprintLayer.tsx
-│   ├── SovereigntyMaskLayer.tsx
-│   └── CursorHUD.tsx
+│└── MapView/                           # Canonical 2D map system
+│    ├── MapViewContainer.tsx           # Top-level orchestrator
+│    ├── MapCanvas.tsx                  # MapLibre canvas lifecycle
+│    ├── LayerManager.tsx               # Layer composition & ordering
+│    ├── LegendPanel.tsx                # New legend container
+│    ├── MapControls.tsx                # New controls container
+│    ├── StoryNodeLayer.tsx             # Story Node v3 overlays
+│    ├── FocusHighlightLayer.tsx        # Focus Mode highlight layer
+│    ├── DatasetFootprintLayer.tsx      # STAC footprints
+│    ├── SovereigntyMaskLayer.tsx       # Sovereignty/H3 masking grids
+│    ├── CursorHUD.tsx                  # HUD readouts (coarse coords, state)
+│    │
+│    └── primitives/                    # Old map/ primitives live here
+│        ├── MapContainer.tsx           # Legacy base map wrapper
+│        ├── LayerToggle.tsx            # Legacy layer control primitive
+│        ├── Legend.tsx                 # Legacy legend primitive
+│        └── FeatureHighlight.tsx       # Legacy highlight primitive
+│
 │
 ├── TimelineView/                  # Full-page timeline experience (replaces old timeline/)
 │   ├── TimelineViewContainer.tsx
