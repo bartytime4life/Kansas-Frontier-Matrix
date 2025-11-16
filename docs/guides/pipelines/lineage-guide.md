@@ -85,56 +85,46 @@ src/
 ---
 
 # 🌐 Full-Page Lineage Architecture (KFM-Styled Mermaid)
-
-```mermaid
 flowchart TD
 
 subgraph INGEST["Source Acquisition<br/><span style='font-size:12px'>STAC · Raster · Vector · External Providers</span>"]
+    X0[" "]:::hidden
     A["Source Entities"]
 end
 
 subgraph ACTIVITIES["Pipeline Activities<br/><span style='font-size:12px'>Ingest · Preprocess · Analytics · Validate · Publish</span>"]
+    X1[" "]:::hidden
     B["Activities (prov:Activity)"]
 end
 
 subgraph VALIDATE["Validation Gate<br/><span style='font-size:12px'>GX · CARE v2 · Schema · Geometry · Telemetry</span>"]
+    X2[" "]:::hidden
     C["Validation Checks"]
 end
 
 subgraph PROMOTE["Promotion<br/><span style='font-size:12px'>Staging → Processed</span>"]
+    X3[" "]:::hidden
     D["Promoted Entities<br/><span style='font-size:12px'>Checksum-locked + CARE-labeled</span>"]
 end
 
 subgraph PUBLISH["Publishing<br/><span style='font-size:12px'>STAC · DCAT · RDF · Neo4j</span>"]
+    X4[" "]:::hidden
     E["Published Outputs<br/><span style='font-size:12px'>multi-surface release</span>"]
 end
 
 subgraph LINEAGE["Lineage Export<br/><span style='font-size:12px'>JSON-LD · PROV-O · CIDOC · GeoSPARQL · CARE v2</span>"]
+    X5[" "]:::hidden
     F["Lineage Bundle"]
 end
 
 subgraph GOVERN["Governance Ledger<br/><span style='font-size:12px'>Append-only provenance entries</span>"]
+    X6[" "]:::hidden
     G["Ledger Entry"]
 end
 
 A --> B --> C --> D --> E --> F --> G
 
-classDef ingest fill:#ebf8ff,stroke:#2b6cb0,color:#1a365d;
-classDef activities fill:#faf5ff,stroke:#805ad5,color:#44337a;
-classDef validate fill:#fffbea,stroke:#dd6b20,color:#7b341e;
-classDef promote fill:#f0fff4,stroke:#38a169,color:#22543d;
-classDef publish fill:#fff5f5,stroke:#e53e3e,color:#742a2a;
-classDef lineage fill:#e6fffa,stroke:#319795,color:#285e61;
-classDef govern fill:#fefcbf,stroke:#b7791f,color:#744210;
-
-class INGEST ingest;
-class ACTIVITIES activities;
-class VALIDATE validate;
-class PROMOTE promote;
-class PUBLISH publish;
-class LINEAGE lineage;
-class GOVERN govern;
-````
+classDef hidden display:none;
 
 ---
 
