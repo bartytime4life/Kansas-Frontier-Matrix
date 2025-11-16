@@ -277,4 +277,3 @@ Synthetic Masking Fixtures · FAIR+CARE Certified · Version-Pinned
 Validated under MCP-DL v6.3 & KFM-MDP v10.4.1
 
 </div>
-```
