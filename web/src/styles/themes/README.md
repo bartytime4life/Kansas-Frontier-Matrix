@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "🌗 Kansas Frontier Matrix — Theme Configuration Specification (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/styles/themes/README.md"
@@ -287,5 +286,3 @@ FAIR+CARE Certified · Public Document · Version-Pinned
 Validated under MCP-DL v6.3 & KFM-MDP v10.4.1  
 
 </div>
-```
-
