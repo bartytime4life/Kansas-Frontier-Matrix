@@ -1,276 +1,318 @@
 ---
-title: "🗂️ Kansas Frontier Matrix — DataCards Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🗃️ Kansas Frontier Matrix — DataCards Component Suite Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/DataCards/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly / Autonomous + FAIR+CARE Council"
+version: "v10.4.0"
+last_updated: "2025-11-15"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.3.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.3.2/manifest.zip"
-telemetry_ref: "../../../../releases/v10.3.2/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-components-datacards-v2.json"
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/web-components-datacards-v1.json"
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Component Overview"
+intent: "web-components-datacards"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Dataset-dependent"
+sensitivity_level: "Variable"
+public_exposure_risk: "Medium"
+indigenous_rights_flag: "Conditional"
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Mixed"
+redaction_required: true
+provenance_chain:
+  - "web/src/components/DataCards/README.md@v10.3.2"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E31 Document"
+  schema_org: "Dataset"
+  owl_time: "TemporalEntity"
+  geosparql: "geo:Feature"
+  prov_o: "prov:Entity"
+json_schema_ref: "../../../../../schemas/json/web-components-datacards-readme.schema.json"
+shape_schema_ref: "../../../../../schemas/shacl/web-components-datacards-readme-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-components-datacards-readme-v10.4.0"
+semantic_document_id: "kfm-doc-web-components-datacards-readme"
+event_source_id: "ledger:web/src/components/DataCards/README.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with strict guardrails"
+ai_transform_permissions:
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "unverified historical claims"
+  - "speculative dataset descriptions"
+  - "hallucinated metadata"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "United States / Kansas"
+classification: "Public / Dataset-Sensitive"
+role: "overview"
+lifecycle_stage: "stable"
+ttl_policy: "Review every 12 months"
+sunset_policy: "Superseded upon next data-card system upgrade"
 ---
 
 <div align="center">
 
-# 🗂️ **Kansas Frontier Matrix — DataCards Architecture**  
+# 🗃️ **Kansas Frontier Matrix — DataCards Component Suite Overview**  
 `web/src/components/DataCards/README.md`
 
 **Purpose:**  
-Provide the **deep-architecture specification** for DataCards components in KFM v10.3.2 — modular, FAIR+CARE-certified UI units that summarize environmental, historical, and governance datasets with explainability, provenance, and sustainability telemetry.  
-DataCards bridge **STAC/DCAT metadata**, **Focus Mode v2.5 narratives**, and **governance ledgers** into accessible, ethical, and energy-aware visual summaries.
+Document the entire **DataCards UI component suite**, used across the Kansas Frontier Matrix Web Platform  
+for presenting FAIR+CARE-governed dataset summaries, metadata, governance labels, spatial previews,  
+temporal indicators, and provenance in compact, reusable card layouts.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-DataCards-orange)]()
-[![Status](https://img.shields.io/badge/Status-Stable-success)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+DataCards power dataset browsing (STAC/DCAT), Story Node asset previews, and Focus Mode supplemental datasets.
 
 </div>
 
 ---
 
-# 📘 Executive Summary
+# 📘 Overview
 
-**DataCards** are reusable React components that:
+DataCards provide:
 
-- Render key metrics for climate, hazards, hydrology, and provenance  
-- Visualize FAIR+CARE, license, and checksum status  
-- Overlay Focus Mode v2.5 explainability and ethics flags  
-- Propagate provenance (PROV-O, STAC, DCAT)  
-- Emit telemetry on usage, performance, and sustainability  
-- Enforce accessibility and ethical visualization standards  
+- Standardized card UI for datasets, assets, or metadata bundles  
+- WCAG AA–compliant visual design  
+- CARE-aware metadata display  
+- Provenance chip integration  
+- Spatial/temporal mini-previews  
+- Interaction telemetry  
+- No speculative, inferred, or fabricated metadata  
+- Deterministic and schema-validated rendering  
 
-They form the **information tiles** used across dashboards, governance views, focus panels, and story-node contexts.
+They appear in:
+
+- STAC/DCAT dataset lists  
+- Story Node asset panels  
+- Focus Mode related-datasets sections  
+- DetailDrawer subviews  
+- Map-adjacent resource listings  
 
 ---
 
-# 🗂️ Directory Layout (Authoritative v10.3.2)
+# 🧱 Directory Structure
 
-```text
+~~~text
 web/src/components/DataCards/
-├── README.md
-├── ClimateCard.tsx
-├── HazardsCard.tsx
-├── HydrologyCard.tsx
-├── ProvenanceCard.tsx
-└── metadata.json
-```
+├── DataCard.tsx                    # Universal dataset/narrative card
+├── DataCardHeader.tsx              # Title, dataset type, CARE badge, provenance chip
+├── DataCardMetadata.tsx            # List of key fields (publisher, license, time, bbox)
+├── DataCardPreview.tsx             # Spatial/temporal mini-map/interval preview
+├── DataCardFooter.tsx              # Actions: open, explore, preview in map
+├── DataCardA11yHelpers.tsx         # Accessible descriptions + ARIA scaffolding
+└── DataCardSkeleton.tsx            # Loading skeleton component (reduced-motion safe)
+~~~
 
 ---
 
-# 🧩 High-Level DataCards Flow
+# 🧩 Component Responsibilities
 
-```mermaid
-flowchart TD
-    IN[Dataset Summaries<br/>STAC · DCAT · Graph] --> CARDS[DataCards<br/>climate · hazards · hydrology · provenance]
-    CARDS --> FOCUS[Focus Mode Overlay]
-    CARDS --> GOV[Governance Surfacing]
-    CARDS --> TEL[Telemetry Logging<br/>energy · ethics · a11y]
-```
+## 🗃️ **DataCard.tsx**
+The container that assembles all card sections.
 
----
+Responsibilities:
 
-# 🧬 Component Families (Deep Specification)
+- Provide consistent layout (padding, spacing, tokens)  
+- Load governance + CARE labels  
+- Render metadata fields safely  
+- Trigger telemetry on interactions  
+- Allow keyboard focus + screen-reader structure  
 
-## 1️⃣ ClimateCard.tsx — Climate Insight Capsule
+Governance:
 
-### Inputs
-- STAC collections of climate metrics  
-- Temporal aggregate metrics (mean, anomalies, extremes)  
-- FAIR+CARE flags  
-- Provenance references  
+- Must block rendering if dataset is sovereignty-controlled and redaction required  
+- Must display masking/generalization notices  
 
-### Outputs
-- Visual summary (bars/charts)  
-- CARE label indicator (public, sensitive, restricted)  
-- Provenance link chips  
+Telemetry:
 
-```mermaid
-flowchart LR
-    C1[Climate Dataset] --> C2[Metric Extractor]
-    C2 --> C3[ClimateCard Renderer]
-    C3 --> C4[Focus Mode Context]
-    C3 --> C5[Governance Signals]
-```
+- `"datacard:open"`  
+- `"datacard:hover"`  
+- `"datacard:action"`  
 
 ---
 
-## 2️⃣ HazardsCard.tsx — Risk & Hazard Overview
+## 🏷️ **DataCardHeader.tsx**
+Displays:
 
-### Inputs
-- Storm events, flood histories, tornado tracks  
-- Derived hazard indexes  
-- spatial coverage, time windows  
+- Dataset or asset title  
+- CAREBadge  
+- ProvenanceChip  
+- Dataset classification  
 
-### Outputs
-- hazard scores  
-- risk level badges  
-- FAIR+CARE warnings if vulnerability data is sensitive  
+A11y:
 
-```mermaid
-flowchart LR
-    H1[Hazards Dataset] --> H2[Risk Computation]
-    H2 --> H3[HazardsCard Renderer]
-    H3 --> H4[Ethics Warnings]
-```
+- `<header>` landmark  
+- Clear labeling  
+- High-contrast token use  
 
 ---
 
-## 3️⃣ HydrologyCard.tsx — Water Resource Snapshot
+## 🧾 **DataCardMetadata.tsx**
+Shows:
 
-### Inputs
-- aquifer levels  
-- streamflow time series  
-- watershed metrics  
+- Publisher  
+- Rights-holder  
+- License  
+- Temporal extent  
+- Spatial extent (generalized when sensitive)  
+- Data type  
 
-### Outputs
-- water-availability panels  
-- trend indicators  
-- provenance chips referencing hydrologic sources  
+Governance rules:
 
-```mermaid
-flowchart LR
-    W1[Hydrology Dataset] --> W2[Hydrologic Summary]
-    W2 --> W3[HydrologyCard Renderer]
-```
+- Sensitive metadata fields must show a redaction tooltip  
+- Must indicate when fields are generalized  
 
 ---
 
-## 4️⃣ ProvenanceCard.tsx — Lineage & Governance Surface
+## 🗺️ **DataCardPreview.tsx**
+Renders optional previews:
 
-### Inputs
-- dataset provenance (PROV-O)  
-- checksums  
-- license  
-- governance ledger references  
+- Mini spatial footprint (H3 r7+ compliant)  
+- Temporal bar/interval preview  
+- Coverage thumbnails  
 
-### Outputs
-- lineage timeline snippet  
-- license tags  
-- checksum verification status  
-- FAIR+CARE summary  
+Governance:
 
-```mermaid
-flowchart LR
-    P1[Provenance Graph] --> P2[Lineage Formatter]
-    P2 --> P3[ProvenanceCard Renderer]
-```
+- MUST generalize coordinates  
+- MUST display sovereignty notices  
+
+A11y:
+
+- Provide textual equivalents for spatial visualizations  
 
 ---
 
-# 🔐 FAIR+CARE Governance Architecture
+## 🦶 **DataCardFooter.tsx**
+Contains common actions:
 
-Each DataCard enforces:
+- View dataset  
+- Open DetailDrawer  
+- Open in MapView  
+- View provenance  
 
-- CARE visibility logic for sensitive indicators  
-- Sovereignty-respecting aggregations  
-- Clear labeling of risk & uncertainty  
-- Display of license & rights holders  
-- Governance summary for dataset use  
+Governance:
 
-```mermaid
-flowchart TD
-    META[Dataset Metadata] --> CARE[CARE Rule Engine]
-    CARE --> CARD[DataCard Rendering]
-    CARD --> LEDGER[Governance Ledger Reference]
-```
+- Disable actions for restricted datasets  
+- Display tooltips explaining restrictions  
 
-Governance logs:
+Telemetry:
 
-```
-../../../../docs/reports/audit/web-datacards-governance-ledger.json
-```
+- `"datacard:action"`  
 
 ---
 
-# ♿ Accessibility Architecture (WCAG 2.1 AA)
+## ♿ **DataCardA11yHelpers.tsx**
+Provides:
 
-Data visualizations in DataCards must:
+- ARIA labels  
+- Screen-reader context blocks  
+- Keyboard navigation scaffolding  
+- Reduced-motion paths  
 
-- use WCAG-compliant color ramps  
-- support keyboard navigation  
-- provide alt-text and ARIA labels for charts and badges  
-- avoid color-only encodings for critical information  
-- respect prefers-reduced-motion  
-
-```mermaid
-flowchart TD
-    TOK[A11y Tokens] --> DC[DataCards]
-    DC --> TEL_A11Y[A11y Telemetry]
-```
+Mandatory for WCAG AA compliance.
 
 ---
 
-# 📡 Telemetry & Sustainability Integration
+## 🧱 **DataCardSkeleton.tsx**
+Loading skeleton:
 
-Telemetry captured for DataCards:
-
-- `datacard_render_ms`  
-- `datacard_energy_wh`  
-- `a11y_coverage_score`  
-- `care_warning_events`  
-- `focus_overlay_usage`  
-
-Telemetry destination:
-
-```
-../../../../releases/v10.3.2/focus-telemetry.json
-```
+- Reduced-motion–adapted shimmer  
+- High-contrast placeholders  
+- Does not reveal sensitive shapes or content  
 
 ---
 
-# ⚙️ CI/CD Validation
+# 🔐 Governance & FAIR+CARE Integration
 
-| Area | Validation |
-|------|------------|
-| Types | TS strict mode |
-| A11y | axe-core + Lighthouse |
-| Governance | faircare-validate.yml |
-| Telemetry | telemetry-export.yml |
-| Docs | docs-lint.yml |
+DataCards MUST:
 
----
+- Respect sovereignty + CARE classifications  
+- Mask/map-generalize geographic previews  
+- Prevent exposure of restricted metadata  
+- Display provenance metadata for each dataset  
+- Label any AI-generated summary segments  
+- Never speculate about dataset origins, meaning, or history  
 
-# 🧾 Example DataCards Metadata Record
-
-```json
-{
-  "id": "datacards_v10.3.2",
-  "cards": [
-    "ClimateCard",
-    "HazardsCard",
-    "HydrologyCard",
-    "ProvenanceCard"
-  ],
-  "a11y_score": 99.3,
-  "fairstatus": "certified",
-  "ai_explainability": true,
-  "energy_use_wh": 0.81,
-  "telemetry_synced": true,
-  "timestamp": "2025-11-14T19:05:00Z"
-}
-```
+Governance failures → **CI BLOCK**.
 
 ---
 
-# 🕰️ Version History
+# ♿ Accessibility Requirements (WCAG 2.1 AA)
 
-| Version | Date | Summary |
-|--------|--------|---------|
-| v10.3.2 | 2025-11-14 | Deep architecture rebuild; integrated Focus Mode v2.5 overlay, governance DAG, sustainability telemetry, and updated schemas. |
-| v9.7.0 | 2025-11-05 | Previous version. |
+DataCards must:
+
+- Use semantic HTML regions  
+- Provide proper ARIA labeling  
+- Not rely solely on color  
+- Support full keyboard navigation  
+- Maintain ≥ 4.5:1 color contrast  
+- Respect reduced-motion preferences  
+
+A11y violations block merges.
+
+---
+
+# 📈 Telemetry Responsibilities
+
+DataCards emit:
+
+- `"datacard:open"`  
+- `"datacard:hover"`  
+- `"datacard:action"`  
+- `"datacard:care-warning"`  
+- `"datacard:provenance-expand"`  
+
+Telemetry must be:
+
+- Non-PII  
+- Schema-valid  
+- CARE-aware  
+- Stored in release bundles  
+
+---
+
+# 🧪 Testing Requirements
+
+Must include:
+
+- Unit tests (rendering, props, metadata behavior)  
+- Integration tests (story + focus + STAC lists)  
+- Governance enforcement checks  
+- A11y keyboard + ARIA tests  
+- Telemetry emission tests  
+- Snapshot tests (optional)  
+
+Locations:
+
+~~~text
+tests/unit/web/components/DataCards/**
+tests/integration/web/components/DataCards/**
+~~~
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v10.4.0 | 2025-11-15 | Full DataCards suite documentation; added governance, A11y, preview rules |
+| v10.3.2 | 2025-11-14 | Improved metadata + CARE disclosure patterns |
+| v10.3.1 | 2025-11-13 | Initial DataCards component overview |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — DataCards Architecture**  
-🗂️ Insight Tiles · 🌐 FAIR+CARE · 🔗 Provenance · ♿ Accessible Visualization  
 © 2025 Kansas Frontier Matrix — MIT License  
-
-[Back to Components Index](../README.md)
+FAIR+CARE Certified · Public Document · Version-Pinned  
+Validated under MCP-DL v6.3 & KFM-MDP v10.4  
 
 </div>
