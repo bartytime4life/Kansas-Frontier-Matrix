@@ -86,6 +86,7 @@ src/
 
 ## 🌐 Full-Page Lineage Architecture (KFM-Styled Mermaid)
 
+```mermaid
 flowchart TD
 
 %% ------------------------------------------------------------
@@ -163,7 +164,7 @@ KFM lineage bundles MUST integrate:
 6. **Lineage summary**
 7. **Links to STAC/DCAT/RDF/Graph**
 8. **Governance ledger reference**
-
+```
 ---
 
 # 🧱 JSON-LD Context Requirements
