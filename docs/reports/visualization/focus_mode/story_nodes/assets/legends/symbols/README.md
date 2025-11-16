@@ -78,51 +78,54 @@ symbols/
     ├── README.md
     ├── field_definitions.md
     └── examples/
-```
+````
 
 ---
 
 ## 🧩 Symbol Categories
 
-| Category | Description | CARE Governance Notes |
-|---------|-------------|------------------------|
+| Category           | Description                                                         | CARE Governance Notes                                      |
+| ------------------ | ------------------------------------------------------------------- | ---------------------------------------------------------- |
 | **Archaeological** | Icons marking heritage sites, excavation units, habitation clusters | Must be generalized; sensitive sites require CARE approval |
-| **Hydrology** | Wells, aquifers, watersheds, flood extent markers | Mask well locations; ethics review for groundwater layers |
-| **Climate** | Temperature, anomaly, drought/precip symbols | No restrictions unless culturally sensitive overlays |
-| **Landcover** | Vegetation, biome, and ecological zone icons | Standard FAIR usage |
-| **Events** | Indigenous routes, treaties, conflict sites | CARE review required for culturally sensitive event types |
+| **Hydrology**      | Wells, aquifers, watersheds, flood extent markers                   | Mask well locations; ethics review for groundwater layers  |
+| **Climate**        | Temperature, anomaly, drought/precip symbols                        | No restrictions unless culturally sensitive overlays       |
+| **Landcover**      | Vegetation, biome, and ecological zone icons                        | Standard FAIR usage                                        |
+| **Events**         | Indigenous routes, treaties, conflict sites                         | CARE review required for culturally sensitive event types  |
 
 ---
 
 ## 🧠 Symbol Design Requirements
 
 ### Accessibility (WCAG 2.1 AA)
-- Minimum **3:1 contrast ratio** for icons on standard basemaps  
-- Scalable vector format (SVG mandatory)  
-- Support for **dark/light mode** and high-contrast modes  
-- Proper `role="img"` + accessible title/desc metadata for UI use  
+
+* Minimum **3:1 contrast ratio** for icons on standard basemaps
+* Scalable vector format (SVG mandatory)
+* Support for **dark/light mode** and high-contrast modes
+* Proper `role="img"` + accessible title/desc metadata for UI use
 
 ### Icon Formatting
-- Use **2px stroke** equivalent at 24px base scale  
-- Prefer **round line caps**  
-- SVG viewBox: `0 0 24 24`  
-- No embedded raster images  
+
+* Use **2px stroke** equivalent at 24px base scale
+* Prefer **round line caps**
+* SVG viewBox: `0 0 24 24`
+* No embedded raster images
 
 ---
 
 ## 🔐 CARE Safeguards for Sensitive Symbols
 
 Symbols referencing:
-- **Burial sites**  
-- **Sacred areas**  
-- **Tribal restricted zones**  
-- **Sensitive archaeological sites**
+
+* **Burial sites**
+* **Sacred areas**
+* **Tribal restricted zones**
+* **Sensitive archaeological sites**
 
 …must include:
 
-- CARE metadata block (status: `"restricted"` or `"approved"` after review)  
-- Upstream generalization (≥5–10 km spatial uncertainty)  
-- Governance ledger entry sign-off prior to publication  
+* CARE metadata block (status: `"restricted"` or `"approved"` after review)
+* Upstream generalization (≥5–10 km spatial uncertainty)
+* Governance ledger entry sign-off prior to publication
 
 ---
 
@@ -156,38 +159,39 @@ docs/reports/visualization/focus_mode/story_nodes/assets/legends/symbols/metadat
 ```
 
 Validation workflows:
-- `faircare-validate.yml`  
-- `stac-validate.yml`  
-- `docs-lint.yml`  
-- `telemetry-export.yml`  
+
+* `faircare-validate.yml`
+* `stac-validate.yml`
+* `docs-lint.yml`
+* `telemetry-export.yml`
 
 ---
 
 ## 🛠️ Reproducibility & Provenance
 
 All symbol assets must:
-- Be version-tracked  
-- Include SHA-256 checksum in metadata  
-- Link to the processing workflow or design source  
-- Be referenced by Story Node metadata and Focus Mode pipelines  
+
+* Be version-tracked
+* Include SHA-256 checksum in metadata
+* Link to the processing workflow or design source
+* Be referenced by Story Node metadata and Focus Mode pipelines
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---------|------|--------|---------|
+| Version | Date       | Author                  | Summary                                                                            |
+| ------- | ---------- | ----------------------- | ---------------------------------------------------------------------------------- |
 | v10.2.0 | 2025-11-12 | KFM Visualization Board | Created symbol asset index with FAIR+CARE safeguards and v10 metadata integration. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE Certified · Master Coder Protocol v6.3  
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**
+FAIR+CARE Certified · Master Coder Protocol v6.3
 **Diamond⁹ Ω / Crown∞Ω Ultimate Certified**
 
 [⬅ Back to Legend Assets](../README.md)
 
 </div>
-
