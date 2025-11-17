@@ -1,32 +1,77 @@
 ---
 title: "🪐 Kansas Frontier Matrix — Accessible Astronomy, Space Weather, and Celestial Observation Standards (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/accessibility/patterns/astronomy-spaceweather.md"
-version: "v10.0.0"
-last_updated: "2025-11-11"
-review_cycle: "Quarterly / FAIR+CARE Council"
+version: "v10.4.1"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly / FAIR+CARE Council · Cultural Stewardship Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
+sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/a11y-astronomy-spaceweather-v1.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.3"
+status: "Active / Enforced"
+doc_kind: "Pattern"
+intent: "astronomy-spaceweather"
+fair_category: "F1-A1-I1-R1"
+care_label: "Cultural / Scientific"
+sensitivity_level: "Medium"
+public_exposure_risk: "Low"
+indigenous_rights_flag: true
+data_steward: "KFM Astronomy Working Group · FAIR+CARE Council · Tribal Cultural Representatives"
+risk_category: "Moderate"
+redaction_required: false
+provenance_chain:
+  - "docs/accessibility/patterns/astronomy-spaceweather.md@v10.0.0"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E28 Conceptual Object"
+  schema_org: "Observation"
+  prov_o: "prov:Plan"
+  owl_time: "Instant"
+json_schema_ref: "../../../schemas/json/a11y-astronomy-spaceweather.schema.json"
+shape_schema_ref: "../../../schemas/shacl/a11y-astronomy-spaceweather-shape.ttl"
+doc_uuid: "urn:kfm:doc:a11y-astronomy-spaceweather-v10.4.1"
+semantic_document_id: "kfm-doc-a11y-astronomy-spaceweather"
+event_source_id: "ledger:docs/accessibility/patterns/astronomy-spaceweather.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Restricted"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "generate speculative astronomical claims"
+  - "remove cultural consent warnings"
+  - "invent cosmological narratives"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+classification: "Astronomy · Space Weather · Accessibility · Cultural Ethics"
+jurisdiction: "Kansas / Tribal Nations / NASA–NOAA Open Data Charter"
+role: "astronomy-accessibility-pattern"
+lifecycle_stage: "stable"
+ttl_policy: "Annual Review"
+sunset_policy: "Superseded upon next astronomy pattern revision"
 ---
 
 <div align="center">
 
-# 🪐 **Kansas Frontier Matrix — Accessible Astronomy, Space Weather, and Celestial Observation Standards**
+# 🪐 **Kansas Frontier Matrix — Accessible Astronomy, Space Weather, and Celestial Observation Standards**  
 `docs/accessibility/patterns/astronomy-spaceweather.md`
 
 **Purpose:**  
-Define accessibility, visualization, and ethical data-handling standards for **astronomy**, **space weather**, and **celestial observation datasets** integrated in Kansas Frontier Matrix (KFM).  
-These standards ensure cosmic and atmospheric phenomena are rendered and narrated in a **scientifically accurate**, **culturally respectful**, and **FAIR+CARE-governed** manner compliant with **WCAG 2.1 AA** and **ISO 19115-1** spatial metadata standards.
+Define accessibility, scientific accuracy, and ethical governance rules for **astronomy**, **space weather**, and **celestial observation interfaces** across the Kansas Frontier Matrix (KFM).  
+Ensure all cosmic, atmospheric, and cultural sky-related data are communicated **accurately**, **accessibly**, and **respectfully**, under **FAIR+CARE**, **Indigenous Sky Knowledge protocols**, and **MCP-DL v6.3** documentation-first standards.
 
-![Badge Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)
-![Badge FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)
-![Badge License](https://img.shields.io/badge/License-CC--BY%204.0-green)
-![Badge Status](https://img.shields.io/badge/Status-Active-success)
+![Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)
+![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)
+![License](https://img.shields.io/badge/License-CC--BY%204.0-green)
+![Status](https://img.shields.io/badge/Status-Active-success)
 
 </div>
 
@@ -34,79 +79,72 @@ These standards ensure cosmic and atmospheric phenomena are rendered and narrate
 
 ## 📘 Overview
 
-Astronomical datasets within KFM include **planetary observations**, **solar radiation**, **aurora events**, and **space weather impacts** on terrestrial systems.  
-This accessibility pattern ensures such visualizations support **assistive technology**, maintain **high contrast for celestial imagery**, and communicate cosmic data through **inclusive, ethical storytelling**.
+Astronomical datasets within KFM include:
+
+- solar flare and geomagnetic storm activity  
+- auroral arc forecasting  
+- meteor shower events  
+- deep-sky bodies (nebulae, galaxies, star clusters)  
+- planetary and lunar observational data  
+- Indigenous sky stories and community star knowledge  
+- satellite ephemerides and space environment telemetry  
+
+This pattern ensures KFM’s astronomy interfaces maintain **high accessibility**, **scientific rigor**, and **cultural consent** for celestial knowledge.
 
 ---
 
-## 🧩 Accessibility & Astronomical Data Principles
+## 🧩 Celestial Accessibility Principles
 
-| Principle | Description | Standard Reference |
-|------------|--------------|--------------------|
-| **Semantic Annotation** | Celestial bodies labeled with `aria-label` and accessible text equivalents. | WCAG 1.3.1 |
-| **Contrast & Color Legibility** | Dark-sky and spectral imagery maintain ≥4.5:1 contrast for all annotations. | WCAG 1.4.3 |
-| **Motion Sensitivity** | Rotating or orbit animations paused by default; user-controlled playback. | WCAG 2.3.3 |
-| **Alt Text & ARIA Descriptions** | Every image and animation includes detailed descriptive alternatives. | WCAG 1.1.1 |
-| **Cultural Sensitivity** | Indigenous constellations and sky stories displayed only with consent. | CARE A-2 / E-1 |
-| **Transparency & Provenance** | Data sources (e.g., NASA, NOAA SWPC, ESA) documented with timestamps. | FAIR F-2 |
+| Principle | Description | Standard |
+|----------|-------------|----------|
+| **Semantic Annotation** | ARIA-labeled celestial bodies, sky layers, and event markers. | WCAG 1.3.1 |
+| **Spectral Contrast** | Star fields, auroras, and solar images meet text/annotation contrast standards. | WCAG 1.4.3 |
+| **Motion Safety** | Rotations, parallax, or orbital motion default to paused. | WCAG 2.3.3 |
+| **Descriptive Alternatives** | All cosmic visuals include alt-text and long descriptions. | WCAG 1.1.1 |
+| **Cultural Consent** | Indigenous constellations shown only with explicit authorization. | CARE A-2 |
+| **Scientific Provenance** | Data provenance (instrument, timestamp, calibration) required. | FAIR F-2 |
 
 ---
 
-## 🧭 Example Implementation (Celestial Viewer)
+## 🧭 Example Implementation (Astronomy Dashboard)
 
 ```html
-<section aria-labelledby="astro-dashboard-title" role="region">
-  <h2 id="astro-dashboard-title">Kansas Astronomical & Space Weather Dashboard</h2>
+<section aria-labelledby="astro-title" role="region">
+  <h2 id="astro-title">Kansas Frontier — Astronomy & Space Weather Dashboard</h2>
 
-  <div role="application" aria-roledescription="Celestial map viewer">
-    <button aria-label="Toggle solar flare activity">☀️ Solar Activity</button>
-    <button aria-label="Toggle aurora forecast map">🌌 Aurora Forecast</button>
-    <button aria-label="Toggle meteor observation layer">☄️ Meteor Showers</button>
+  <div role="application" aria-roledescription="Celestial observation viewer">
+    <button aria-label="Toggle solar flare visualization">☀️ Solar Flares</button>
+    <button aria-label="Toggle aurora forecast layer">🌌 Aurora Forecast</button>
+    <button aria-label="Toggle meteor activity">☄️ Meteors</button>
   </div>
 
-  <div id="spaceweather-status" role="status" aria-live="polite">
-    Solar flux index: 173 · Minor geomagnetic storm watch in effect (Kp = 5).
+  <div id="astro-status" role="status" aria-live="polite">
+    Solar flux index: 173 · Kp Index = 5 (Minor Geomagnetic Storm Watch)
   </div>
 
   <p role="note">
-    Data sourced from NASA’s Solar Dynamics Observatory, NOAA SWPC, and FAIR+CARE observational partners.
+    NASA SDO · NOAA SWPC · Tribal Sky Knowledge Consortium · FAIR+CARE Ethics Verified.
   </p>
 </section>
 ```
 
-**Implementation Guidelines**
-- All celestial visualizations must include ARIA descriptors (`aria-roledescription="Celestial map viewer"`).  
-- Use descriptive `aria-live` regions for dynamic solar or aurora data.  
-- Images include cultural context and technical provenance.  
-- Animations default paused; motion toggle included for playback.
-
 ---
 
-## 🎨 Design Tokens
+## 🎨 Design Tokens for Astronomy Interfaces
 
-| Token | Description | Example Value |
-|--------|--------------|----------------|
-| `astro.bg.color` | Dark-sky background | `#0D1117` |
-| `astro.sun.color` | Solar event marker | `#FFB300` |
-| `astro.aurora.color` | Aurora arc highlight | `#4FC3F7` |
-| `astro.meteor.color` | Meteor trail color | `#FFD54F` |
-| `astro.focus.color` | Focus outline for controls | `#E1F5FE` |
-| `astro.alert.color` | Geomagnetic storm alert | `#E53935` |
+| Token | Description | Example |
+|-------|-------------|---------|
+| `astro.bg.color` | Space background | `#0D1117` |
+| `astro.sun.color` | Solar event indicators | `#FFB300` |
+| `astro.aurora.color` | Aurora visual overlays | `#4FC3F7` |
+| `astro.meteor.color` | Meteor trail highlights | `#FFD54F` |
+| `astro.focus.color` | Focus outline | `#E1F5FE` |
+| `astro.alert.color` | Storm or space hazard alerts | `#D32F2F` |
 
 ---
 
 ## 🧾 FAIR+CARE Astronomical Metadata Schema
 
-| Field | Description | Example |
-|--------|--------------|----------|
-| `data-origin` | Data provider | “NASA / NOAA SWPC / ESA” |
-| `data-license` | License type | “CC-BY 4.0 / OpenSpaceData” |
-| `data-consent` | Display consent for cultural sky data | `true` |
-| `data-ethics-reviewed` | FAIR+CARE validation status | `true` |
-| `data-provenance` | Data lineage | “SDO/AIA imagery processed 2025-11-10T12:00Z” |
-| `data-sensitivity` | Classification | “Low / Public Science” |
-
-Example JSON:
 ```json
 {
   "data-origin": "NASA / NOAA SWPC / ESA",
@@ -114,58 +152,79 @@ Example JSON:
   "data-consent": true,
   "data-ethics-reviewed": true,
   "data-provenance": "SDO/AIA imagery processed 2025-11-10T12:00Z",
-  "data-sensitivity": "Low / Public Science"
+  "data-sensitivity": "Low / Public Science",
+  "indigenous-sky-knowledge-consent": "required"
 }
 ```
 
 ---
 
-## ⚙️ Keyboard & ARIA Behavior Matrix
+## ⚙️ Keyboard & ARIA Interaction Matrix
 
 | Key | Function | Feedback |
 |------|-----------|----------|
-| `Tab` | Navigate between celestial toggles and map panels | Sequential focus |
-| `Enter` | Activate layer | “Aurora forecast layer activated.” |
-| `Arrow Keys` | Move view orientation | “Panned northward 15°.” |
-| `Space` | Pause or resume animation | Announces playback state |
-| `aria-live="polite"` | Announces solar or geomagnetic updates | “Solar flare class M detected.” |
+| `Tab` | Focus between celestial controls | Sequential focus order |
+| `Enter` | Activate layer | “Aurora forecast enabled.” |
+| `Arrow Keys` | Rotate or pan sky viewport | Degrees announced |
+| `Space` | Pause or resume animation | “Orbit motion paused.” |
+| `Esc` | Exit 3D or map view | Focus returns to heading |
+| `aria-live="polite"` | Updates solar or meteor data | “New solar flare detected.” |
+
+---
+
+## ⚠️ Cultural Knowledge Handling Rules
+
+### Indigenous Sky Knowledge Must:
+
+- show **consent status banner**  
+- attribute community knowledge custodians  
+- avoid conflating Western + Indigenous constellations without context  
+- include **dual naming** (e.g., “Nikanaki — Moon”)  
+- include long-form contextual description  
+
+### Forbidden Actions
+
+- generating new “Indigenous sky stories” via AI  
+- modifying or interpolating cultural sky patterns  
+- displaying culturally restricted constellations without authorization  
 
 ---
 
 ## 🧪 Validation Workflows
 
 | Tool | Scope | Output |
-|-------|--------|--------|
-| **axe-core** | Accessibility and ARIA testing for visual viewer | `reports/self-validation/web/a11y_astronomy.json` |
-| **Lighthouse CI** | Motion control and color validation | `reports/ui/lighthouse_astronomy.json` |
-| **jest-axe** | Component-level a11y validation | `reports/ui/a11y_astronomy_components.json` |
-| **Faircare Ethics Script** | Cultural and consent metadata audit | `reports/faircare/astronomy_ethics.json` |
+|------|--------|--------|
+| axe-core | ARIA & structural validation | `a11y_astronomy.json` |
+| Lighthouse | Motion & contrast | `lighthouse_astronomy.json` |
+| jest-axe | Component coverage | `a11y_astronomy_components.json` |
+| FAIR+CARE Cultural Audit | Consent & cultural safety checks | `astronomy_ethics.json` |
 
 ---
 
 ## ⚖️ FAIR+CARE Integration
 
 | Principle | Implementation |
-|------------|----------------|
-| **Collective Benefit** | Observational data supports education and citizen science. |
-| **Authority to Control** | Cultural sky data displayed only with authorized consent. |
-| **Responsibility** | Solar and cosmic event data timestamped and validated ethically. |
-| **Ethics** | Avoid sensationalism; highlight scientific and cultural balance. |
+|-----------|---------------|
+| **Collective Benefit** | Space weather data used for education & safety. |
+| **Authority to Control** | Cultural sky knowledge governed by Indigenous custodians. |
+| **Responsibility** | Timestamped provenance for every cosmic dataset. |
+| **Ethics** | Avoid sensationalism or culturally inappropriate cosmic framing. |
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.0.0 | 2025-11-11 | FAIR+CARE Council | Introduced astronomy and space weather accessibility pattern with ethical cultural consent schema, ARIA compliance, and motion-safe visualization standards. |
+|--------|-------|---------|---------|
+| v10.4.1 | 2025-11-16 | FAIR+CARE Council · Astronomy Working Group | Upgraded to MDP v10.4.3; added Indigenous sky consent flags, AI restrictions, and enhanced motion-safety rules. |
+| v10.0.0 | 2025-11-11 | FAIR+CARE Council | Initial astronomy accessibility pattern. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Developed under **Master Coder Protocol v6.3** · Verified by **FAIR+CARE Council**  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+Validated under **Master Coder Protocol v6.3** · FAIR+CARE & Cultural Stewardship Council Approved  
 [⬅ Back to Accessibility Index](README.md)
 
 </div>
