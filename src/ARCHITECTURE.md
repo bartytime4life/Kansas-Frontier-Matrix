@@ -1,17 +1,19 @@
 ---
-title: "🏛️ Kansas Frontier Matrix Architecture (v10.4.0)"
+title: "🏛️ Kansas Frontier Matrix — Architecture Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/ARCHITECTURE.md"
 version: "v10.4.0"
-last_updated: "2025-11-15"
-review_cycle: "Annual / Council"
+last_updated: "2025-11-16"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/docs-architecture-v3.json"
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-architecture-v3.json"
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
 ---
 
 <div align="center">
@@ -332,16 +334,6 @@ Frontend Focus Panel includes:
 - **Ethical overlays:** Icons or banners when content is redacted, generalized, or flagged as sensitive.
 - **Graph spotlight:** An optional mode where relevant nodes/edges in the map and timeline visually pulse or glow while the narrative is read.
 
-Developers can introspect the underlying attributions (stored as part of the Focus output payload) for testing and auditing.
-
-### 🔁 Multi-Entity & Streaming Focus
-
-Focus Mode supports:
-
-- **All major entity types:** Person, Place, Event, Document, Dataset, StoryNode, SensorStream.
-- **Side-by-side comparison:** Two Focus panels for comparing entities.
-- **Live updates:** For `SensorStream` or recent events, Focus can auto-refresh summaries as streaming ETL injects new Observations; the backend emits notifications via WebSockets or SSE, and the frontend refreshes only the changed parts.
-
 ---
 
 ## ☁️ Deployment & Multi-Cloud Infrastructure
@@ -431,7 +423,7 @@ CARE:
 
 ### 🔍 Provenance & Versioning
 
-Every artifact in KFM (code, data, stories) has:
+Every artifact in KFM (code, data, and docs) has:
 
 - Explicit version,
 - Origin (source, authors),
@@ -443,8 +435,6 @@ This is captured by:
 - Data manifests (`source_url`, `license`, `hash`),
 - ETL logs and notebooks,
 - Graph properties and relationships like `:Observation-[:DERIVED_FROM]->:Dataset`.
-
-This makes it possible to go from **any visual element** in the UI (a map layer, a story, a Focus narrative) back to the underlying data and processing chain.
 
 ---
 
@@ -458,7 +448,7 @@ This makes it possible to go from **any visual element** in the UI (a map layer,
 - **OWL-Time:** Temporal ontology for instants/intervals.  
 - **GeoSPARQL:** OGC standard for geospatial RDF.  
 - **Story Node:** Schema-driven narrative object linking text, time, and space.  
-- **Focus Mode:** AI context mode centering UI and narrative on a selected entity.  
+- **Focus Mode:** AI reasoning engine.  
 - **Diamond⁹ Ω / Crown∞Ω:** Internal labels for top-tier quality and governance compliance.  
 - **MCP:** Master Coder Protocol (v6.3) – documentation-first project methodology.  
 - **FAIR:** Data principles (Findable, Accessible, Interoperable, Reusable).  
@@ -470,8 +460,18 @@ This makes it possible to go from **any visual element** in the UI (a map layer,
 
 | Version   | Date       | Notes                                                                                     |
 |----------|------------|-------------------------------------------------------------------------------------------|
-| v10.4.0  | 2025-11-15 | Full rewrite for KFM v10.4.0; integrated Story Nodes, Focus v2.5, streaming ETL, FAIR+CARE. |
-| v10.3.1  | 2025-11-14 | Prior deep-layer architecture; pre-streaming predictive ETL and partial narrative support. |
+| v10.4.0  | 2025-11-16 | Full rewrite for KFM v10.4.0; integrated Story Nodes, Focus v2.5, streaming ETL, FAIR+CARE. |
+| v10.3.2  | 2025-11-14 | Prior deep-layer architecture; pre-streaming predictive ETL and partial narrative support. |
 | v10.0.0  | 2025-09-01 | Major v10 upgrade; predictive modeling, Focus Mode v2, 3D visualization, STAC/DCAT bridge. |
 | v9.7.x   | 2025-03-xx | Developer guide architecture; Focus Mode v1, initial Story Node support, stable ETL/graph. |
 | ≤ v9.x   | 2023-2024  | Early system architecture drafts; single-cloud focus, basic FAIR support, pre-MCP v6.3.     |
+
+---
+
+<div align="center">
+
+**© 2025 Kansas Frontier Matrix — MIT License**  
+Diamond⁹ Ω / Crown∞Ω Certified · FAIR+CARE Compliant · MCP-DL v6.3  
+[Back to Documentation Index](../docs/README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
