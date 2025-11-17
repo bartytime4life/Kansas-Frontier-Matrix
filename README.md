@@ -93,7 +93,6 @@ KFM v10.4 transforms the state’s past, present, and projected future into a **
 
 ### 🌐 High-Level Diagram
 
-```mermaid
 flowchart LR
     subgraph ExternalData[External Data Sources]
         NOAA[(NOAA Climate)]
@@ -104,14 +103,15 @@ flowchart LR
         GBIF[(Biodiversity Data)]
     end
 
-    ExternalData --> ETL[ETL + AI Pipeline<br/>(OCR, NER, Geocoding, ML, Predictive Models)]
+    ExternalData --> ETL[ETL + AI Pipeline (OCR, NER, Geocoding, ML, Predictive Models)]
 
-    ETL --> Graph[(Neo4j Knowledge Graph<br/>CIDOC CRM · GeoSPARQL · OWL-Time)]
+    ETL --> Graph[(Neo4j Knowledge Graph CIDOC CRM · GeoSPARQL · OWL-Time)]
 
     Graph --> API{{FastAPI / GraphQL}}
-    API --> Frontend[React + MapLibre + Cesium<br/>Timeline · Map · Story Nodes · Focus Mode]
+    API --> Frontend[React + MapLibre + Cesium Timeline · Map · Story Nodes · Focus Mode]
 
-    API <-- Telemetry[Telemetry v3<br/>Energy · Carbon · Drift · FAIR+CARE Signals]
+    API <-- Telemetry[Telemetry v3 Energy · Carbon · Drift · FAIR+CARE Signals]
+
 ````
 
 ---
