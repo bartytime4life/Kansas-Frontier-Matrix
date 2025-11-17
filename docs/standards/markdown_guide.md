@@ -1,27 +1,30 @@
 ---
 title: "📑 Kansas Frontier Matrix — Markdown Authoring Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/markdown_guide.md"
-version: "v10.4.2"
+version: "v10.4.3"
 last_updated: "2025-11-16"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.4.2/sbom.spdx.json"
-manifest_ref: "../../releases/v10.4.2/manifest.zip"
-telemetry_ref: "../../releases/v10.4.2/focus-telemetry.json"
+sbom_ref: "../../releases/v10.4.3/sbom.spdx.json"
+manifest_ref: "../../releases/v10.4.3/manifest.zip"
+telemetry_ref: "../../releases/v10.4.3/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/markdown-standard-v1.json"
-governance_ref: "./governance/ROOT-GOVERNANCE.md"
+governance_ref: "governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.2"
+markdown_protocol_version: "KFM-MDP v10.4.3"
 status: "Active / Enforced"
 doc_kind: "Standard"
 intent: "markdown-authoring"
 fair_category: "F1-A1-I1-R1"
-care_label: "Public"
+care_label: "Public / Low-Risk"
 semantic_document_id: "kfm-doc-markdown-guide"
-doc_uuid: "urn:kfm:doc:markdown-guide-v10.4.2"
+doc_uuid: "urn:kfm:doc:markdown-guide-v10.4.3"
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA"
+immutability_status: "version-pinned"
+ai_transform_permissions: "summarize, refactor, quote-short"
+ai_transform_prohibited: "change-meaning, fabricate, strip-provenance"
 ---
 
 <div align="center">
@@ -31,7 +34,7 @@ accessibility_compliance: "WCAG 2.1 AA"
 
 **Purpose**  
 Define the **authoritative writing, structure, and formatting rules** for all Kansas Frontier Matrix (KFM) Markdown documents.  
-These rules ensure **consistency, accessibility, governance compliance, version integrity**, and full alignment with **KFM-MDP v10.4.2**.
+These rules ensure **consistency, accessibility, governance compliance, version integrity**, and full alignment with **KFM-MDP v10.4.3**.
 
 </div>
 
@@ -58,20 +61,18 @@ All Markdown files in KFM MUST comply with these standards or they will be rejec
 
 Every Markdown file MUST follow this structure:
 
-```
-
+```markdown
 ---
-
 <YAML front matter metadata>
 ---
 
 <div align="center">
 
-# <Document Title with Emoji>
-
+# <Document Title with Emoji>  
 `<repo/path/to/file.md>`
 
-**Purpose:** <One or two sentences max explaining purpose.>
+**Purpose:**  
+<One or two sentences max explaining purpose.>
 
 </div>
 
@@ -100,7 +101,7 @@ Every Markdown file MUST follow this structure:
 # 🕰️ Version History
 
 <Table must follow KFM style>
-```
+````
 
 Anything outside this structure is disallowed.
 
@@ -123,6 +124,7 @@ Every Markdown MUST include YAML with the following:
 | `sbom_ref`                  | SPDX reference                                 |
 | `manifest_ref`              | Release manifest                               |
 | `telemetry_ref`             | Telemetry JSON reference                       |
+| `telemetry_schema`          | Telemetry JSON Schema reference                |
 | `governance_ref`            | Governance root reference                      |
 | `license`                   | MIT or CC-BY                                   |
 | `mcp_version`               | MCP-DL version                                 |
@@ -133,18 +135,20 @@ Every Markdown MUST include YAML with the following:
 | `semantic_document_id`      | Stable doc identifier                          |
 | `doc_uuid`                  | Global URN                                     |
 | `machine_extractable`       | true/false                                     |
+| `fair_category`             | FAIR category code (e.g. `F1-A1-I1-R1`)        |
+| `care_label`                | CARE label (e.g. `Public / Low-Risk`)          |
+| `accessibility_compliance`  | Accessibility standard (e.g. `WCAG 2.1 AA`)    |
+| `immutability_status`       | Immutability status (e.g. `version-pinned`)    |
 
 ### **Optional Fields**
 
-* `fair_category`
-* `care_label`
 * `ontology_alignment`
 * `ai_transform_permissions`
 * `ai_transform_prohibited`
-* `accessibility_compliance`
-* `immutability_status`
+* `ai_focusmode_usage`
 
 > ❗ **YAML front matter must be the first content in the file. No whitespace above it.**
+> ❗ **No tabs, no trailing spaces, no unregistered fields.**
 
 ---
 
@@ -166,9 +170,9 @@ docs/
 
 Rules:
 
-* Use **│**, **└──**, **┌**, **├──** for tree lines.
+* Use **│**, **├──**, **└──** for tree lines.
 * Indentation MUST be consistent (4 spaces).
-* Comments appear after two spaces.
+* Comments appear after two spaces following the path.
 * The final code fence MUST NOT have blank lines inside.
 
 ---
@@ -177,11 +181,10 @@ Rules:
 
 ### ✔️ Allowed
 
-```
+```markdown
 # (document title)
-# Section
-## Subsection
-### Tertiary subsection
+## Section
+### Subsection
 ```
 
 ### ❌ Forbidden
@@ -224,7 +227,7 @@ flowchart TD
 
 ### Mermaid DOs
 
-* Use **TD or LR** direction only
+* Use **TD** or **LR** direction only
 * Style-free: **NO CSS**, no Mermaid theme overrides
 * No parentheses around node names
 * No trailing blank lines inside the code fence
@@ -232,7 +235,7 @@ flowchart TD
 ### Mermaid DON’Ts
 
 * No complex styling (colors, classes)
-* No spaces after code-fence start
+* No spaces after the code-fence start
 * No multiline HTML in Mermaid nodes
 
 ---
@@ -240,7 +243,7 @@ flowchart TD
 # 📝 Code & JSON Block Standards
 
 * Use **triple backticks**, no indentation.
-* Always specify language: `ts`, `json`, `text`, `bash`, etc.
+* Always specify language: `ts`, `json`, `text`, `bash`, `python`, etc.
 * No trailing whitespace.
 * JSON MUST be valid (CI checks).
 
@@ -279,12 +282,12 @@ All Markdown content MUST:
 
 * Indicate any **cultural sensitivity warnings**
 * Avoid disclosing coordinates of sensitive sites
-* Only include icons, symbols, or maps that pass CARE level checks
+* Only include icons, symbols, or maps that pass CARE-level checks
 * Declare licensing clearly (MIT for code, CC-BY for docs)
 
 If content involves Indigenous data:
 
-```
+```yaml
 care_label: "C2-A2-R2-E2"
 sensitivity_level: "High"
 public_exposure_risk: "Medium"
@@ -299,7 +302,7 @@ Markdown is automatically validated via:
 * `docs-lint.yml` → formatting, headings, front matter
 * `faircare-validate.yml` → ethics & governance
 * `broken-link-check.yml` → internal & external link validation
-* `markdown-protocol-validate.yml` → KFM-MDP v10.4 enforcement
+* `markdown-protocol-validate.yml` → KFM-MDP v10.4.x enforcement
 
 Documents that fail ANY check cannot be merged.
 
@@ -331,16 +334,21 @@ commit_sha: "<latest>"
 sbom_ref: "../../releases/v1/sbom.spdx.json"
 manifest_ref: "../../releases/v1/manifest.zip"
 telemetry_ref: "../../releases/v1/telemetry.json"
+telemetry_schema: "../../schemas/telemetry/example.schema.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.2"
+markdown_protocol_version: "KFM-MDP v10.4.3"
 status: "Active"
 doc_kind: "Guide"
 intent: "example"
 semantic_document_id: "kfm-doc-example"
 doc_uuid: "urn:kfm:doc:example-v1.0.0"
 machine_extractable: true
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk"
+accessibility_compliance: "WCAG 2.1 AA"
+immutability_status: "version-pinned"
 ---
 
 <div align="center">
@@ -356,37 +364,40 @@ Demonstrate the minimal structure required by KFM-MDP.
 ---
 
 # 📘 Overview
+
 This is an example.
 
 # 🗂️ Directory Layout
+
 ```text
 docs/
 └── examples/
     └── example.md
-````
+```
 
-# 🕰 Version History
+# 🕰️ Version History
 
 | Version | Date       | Summary |
-| ------: | ---------- | ------- |
-|  v1.0.0 | 2025-11-16 | Initial |
-
+|--------:|------------|---------|
+| v1.0.0  | 2025-11-16 | Initial |
 ```
+````
 
 ---
 
-# 🕰 Version History
+# 🕰️ Version History
 
-| Version | Date       | Author                    | Summary |
-|--------:|------------|---------------------------|---------|
-| v10.4.2 | 2025-11-16 | KFM Documentation Council | Fully rewritten for KFM-MDP v10.4.2 with lined directory diagrams, Mermaid rules, CI enforcement. |
-| v10.3.0 | 2025-11-10 | KFM Assistant             | Added structured heading & diagram rules. |
-| v10.0.0 | 2025-11-01 | FAIR+CARE Council         | Initial version of unified Markdown Guide. |
+| Version | Date       | Author                    | Summary                                                                                                                                                                                                                  |
+| ------: | ---------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| v10.4.3 | 2025-11-16 | KFM Documentation Council | Added missing required YAML fields (`telemetry_schema`, `fair_category`, `care_label`, `accessibility_compliance`, `immutability_status`), updated protocol version to v10.4.3, and aligned guide with `markdown_rules`. |
+| v10.4.2 | 2025-11-16 | KFM Documentation Council | Fully rewritten for KFM-MDP v10.4.2 with lined directory diagrams, Mermaid rules, CI enforcement.                                                                                                                        |
+| v10.3.0 | 2025-11-10 | KFM Assistant             | Added structured heading & diagram rules.                                                                                                                                                                                |
+| v10.0.0 | 2025-11-01 | FAIR+CARE Council         | Initial version of unified Markdown Guide.                                                                                                                                                                               |
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-Master Coder Protocol v6.3 · FAIR+CARE Certified  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0
+Master Coder Protocol v6.3 · FAIR+CARE Certified
 Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
