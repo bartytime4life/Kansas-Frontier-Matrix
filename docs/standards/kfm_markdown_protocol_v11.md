@@ -706,5 +706,5 @@ v10.4.3	2025-11-16	Docs Council	Minor revision – Refinements to rules (telemet
 v10.4.0	2025-11-14	Docs Council	Original KFM Markdown Protocol governance release (baseline 80-component standard under MCP v6.3).
 <div align="center"> © 2025 Kansas Frontier Matrix — CC-BY 4.0
 Master Coder Protocol v6.3 Compatible · FAIR+CARE Certified
-Diamond⁹ Ω / Crown∞Ω Ultimate Certified (Draft v11.0) </div> ```
-All Sources
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified (Draft v11.0)
+</div> ```
