@@ -115,7 +115,7 @@ flowchart LR
     Graph --> API[FastAPI / GraphQL API]
     API --> Frontend[React + MapLibre + Cesium]
 
-    API <-- Telemetry[Telemetry v3]
+    API --> Telemetry[Telemetry v3]
 ```
 
 ## 🧭 Repository Structure
