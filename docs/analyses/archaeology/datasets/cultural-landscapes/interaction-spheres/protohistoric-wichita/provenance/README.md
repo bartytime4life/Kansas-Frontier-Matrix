@@ -22,12 +22,12 @@ care_label: "CARE-High-Sensitivity"
 
 <div align="center">
 
-# 🪶🧬 **Protohistoric Wichita Interaction Sphere — Provenance Logs**  
+# 🪶🧬 **Protohistoric Wichita Interaction Sphere — Provenance Logs**
 `docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/protohistoric-wichita/provenance/README.md`
 
 **Purpose:**  
-Serve as the authoritative provenance catalog for the **Protohistoric Wichita Interaction Sphere**, a **high-sensitivity** cultural dataset requiring the strictest cultural governance within the Kansas Frontier Matrix (KFM).  
-This directory contains validated **PROV-O JSON-LD lineage records** documenting all transformations, ethical decisions, tribal-review checkpoints, and generalization steps applied to the dataset.
+Provide the authoritative **provenance documentation** for the **Protohistoric Wichita Interaction Sphere**, a culturally sensitive dataset requiring **mandatory tribal review**, full CARE compliance, and rigorous FAIR+CARE auditability.  
+These provenance records ensure transparent lineage tracking for all raw → generalized → processed transformations.
 
 </div>
 
@@ -35,25 +35,20 @@ This directory contains validated **PROV-O JSON-LD lineage records** documenting
 
 ## 📘 Overview
 
-The provenance logs here describe:
+The provenance logs capture:
 
-- Raw inputs used in constructing the interaction sphere  
-- Generalization (H3-level ≥6, polygon → H3-only conversion)  
-- Removal of sacred, ceremonial, or descendant-relevant content  
-- Tribal advisory review outcomes (required)  
-- FAIR+CARE oversight details  
-- All GIS processing and metadata generation  
-- Versioning and lineage from raw → generalized → processed datasets  
-- Cultural risk assessment notes  
-- Ethical decision pathways recorded for audit and transparency  
+- Original data sources (PD + tribal-approved content)
+- GIS generalization workflows (H3-only)
+- Removal of sensitive cultural knowledge
+- Ethical + cultural review procedures
+- Tribal review sign-off (required)
+- FAIR+CARE audit metadata
+- Cultural risk assessment
+- Versioned lineage (PROV-O JSON-LD)
+- Script, tool, and environment metadata
+- Data transformation reproducibility
 
-This dataset is **high sensitivity**.  
-Provenance is not merely optional—it is **mandatory**, and all updates must pass:
-
-- Tribal Review  
-- FAIR+CARE review  
-- MCP-DL v6.3 documentation-first governance  
-- KFM-MDP v10.4 formatting verification  
+This dataset is **high-sensitivity** and cannot be included in any public KFM release without **complete tribal approval**.
 
 ---
 
@@ -67,118 +62,118 @@ docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/proto
 
 ---
 
-# 🧩 Required PROV-O Structure
+# 🧩 Required PROV-O Components
 
-All provenance logs for the Protohistoric Wichita sphere must include the following PROV-O components:
+Each provenance file must adhere to the PROV-O JSON-LD specification and KFM provenance rules.
 
 ---
 
-## ✔ `@context` (Mandatory)
+## ✔ `@context`
 
 Must define:
 
-- `prov` — W3C PROV-O ontology  
-- `care` — CARE cultural-safety extension  
-- `kfm` — KFM archaeology extension  
-- `dct` — DCAT crosswalk  
-- `crm` — (optional) CIDOC-CRM alignment  
+- `prov` — W3C PROV-O vocabulary  
+- `care` — Cultural-sensitivity extension  
+- `kfm` — KFM archaeology metadata vocabulary  
+- `dct` — DCAT terms  
+- `crm` — (Optional) CIDOC-CRM mapping  
 
 ---
 
 ## ✔ `prov:Entity`
 
-Required entity definitions:
+Required:
 
 | Entity | Description |
 |---|---|
-| **raw** | Raw, public-domain, or tribal-approved content used as input |
-| **generalized** | H3-mosaic output with all sensitive details removed |
-| **processed** | Final validated dataset used by KFM |
-| **interpretive** | (Optional) synthetic/harmonized cultural models |
+| **raw** | PD + tribal-approved input materials |
+| **generalized** | H3-6/7 generalized output (mandatory) |
+| **processed** | Final published KFM-compatible dataset |
+| **interpretive** | (Optional) generated cultural synthesis layers |
 
-The **raw** entity **must never** include:
-
-- Exact village/settlement coordinates  
-- Sacred or ceremonial areas  
-- Restricted tribal knowledge  
-- Highly specific ethnohistorical detail  
+### Forbidden in `raw`:
+- Exact settlement coordinates  
+- Ceremonial/sacred geography  
+- Unapproved oral histories  
+- Restricted ethnographic content  
+- High-resolution archaeological data  
 
 ---
 
 ## ✔ `prov:Activity`
 
-Activities must trace all processing, including:
+Activities must document all transformations, including:
 
 | Activity | Description |
 |---|---|
-| `generalization` | Converting polygons → H3-only mosaic, removing all spatially sensitive detail |
-| `cleaning` | Data harmonization, CRS enforcement, type normalization |
-| `ethics_review` | FAIR+CARE ethical audit of dataset |
-| `tribal_review` | Mandatory review by affiliated tribal nation(s) |
-| `integration` | Combining archaeological, ecological, and ethnohistoric sources |
-| `filtering` | Removing or masking high-risk cultural information |
+| `generalization` | H3 mosaic generation, polygon suppression |
+| `filtering` | Removal of sensitive variables |
+| `cleaning` | Data normalization, CRS standardization |
+| `integration` | Combining multi-source PD + tribal-approved content |
+| `tribal_review` | Required phase verifying cultural safety |
+| `faircare_review` | Ethical oversight by FAIR+CARE Council |
 
-Each activity must contain:
+Activity metadata must include:
 
-- `prov:type`  
-- `prov:startTime`  
-- `prov:endTime`  
-- `kfm:steps` (array of procedural steps)  
+- `prov:type`
+- `prov:startTime`
+- `prov:endTime`
+- `kfm:steps` (array describing pipeline actions)
 
 ---
 
 ## ✔ `prov:Agent`
 
-Agents must represent:
+Agents represent responsible contributors:
 
-| Agent Type | Required |
+| Type | Required |
 |---|---|
-| Analyst | GIS/archaeology specialist |
-| FAIR+CARE Reviewer | Yes |
-| Tribal Reviewer | **Mandatory** |
+| Analyst | GIS or archaeology specialist |
+| Tribal Reviewer | **Required** for dataset approval |
+| FAIR+CARE Reviewer | Required |
 | Source Institution | If applicable |
 
-Agent identities must be provided according to FAIR+CARE privacy and sovereignty rules.
+Agents must follow privacy/sovereignty guidelines.
 
 ---
 
 ## ✔ Lineage Relationships
 
-Every provenance file must include:
+Each provenance file MUST include:
 
-- `prov:wasDerivedFrom` — raw → generalized → processed  
-- `prov:wasGeneratedBy`  
-- `prov:used`  
-- `prov:wasAttributedTo`  
+- `prov:wasDerivedFrom`
+- `prov:wasGeneratedBy`
+- `prov:used`
+- `prov:wasAttributedTo`
 
-These describe the full transformation lineage.
+These describe the complete lineage of dataset creation.
 
 ---
 
-# ⚖️ CARE Cultural Safety Requirements
+# ⚖️ CARE Cultural-Safety Protocols
 
-The Protohistoric Wichita dataset is classified as **restricted-generalized**, the highest allowed level for public release.
+This dataset is rated **restricted-generalized**.
 
-### Required CARE fields:
+### Required
 
 | Field | Value |
 |---|---|
 | `care:sensitivity` | `"restricted-generalized"` |
 | `care:review` | `"tribal"` |
-| `care:notes` | Documenting all removed/filter content and rationale |
+| `care:notes` | Must explain all cultural-safety decisions |
 | `care:visibility_rules` | `"h3-only"` |
 
-### Forbidden:
+### Forbidden
 
-- `"restricted"`  
-- Exact cultural boundaries  
-- Precise movement corridors  
-- Any sacred/ceremonial spatial information  
-- Ethnohistoric content lacking explicit tribal approval  
+- `"restricted"` classification  
+- Any exact geometries  
+- Polygon boundaries  
+- Sensitive oral histories without approval  
+- Any non-generalized spatial features  
 
 ---
 
-# 🧪 Example Provenance Snippet (Excerpt)
+# 🧪 Example PROV-O Record (Excerpt)
 
 ~~~json
 {
@@ -192,17 +187,17 @@ The Protohistoric Wichita dataset is classified as **restricted-generalized**, t
     "raw": {
       "prov:type": "Dataset",
       "prov:label": "Protohistoric Wichita synthesis (PD + tribal-approved)",
-      "kfm:source": "Open literature synthesis + tribal-approved summaries"
+      "kfm:source": "Ethnohistoric summaries approved for public generalized use"
     },
     "generalized": {
       "prov:type": "Dataset",
-      "prov:label": "H3 generalized dataset (level 7)",
-      "care:notes": "Removed ceremonial references; H3 mosaic used for all geometries."
+      "prov:label": "H3-only generalized dataset (level 7)",
+      "care:notes": "Removed ceremonial references, precise pathways, and sacred knowledge."
     },
     "processed": {
       "prov:type": "Dataset",
-      "kfm:provenance_version": "v1",
-      "prov:label": "Protohistoric Wichita Interaction Sphere v1"
+      "prov:label": "Protohistoric Wichita Interaction Sphere v1",
+      "kfm:provenance_version": "v1"
     }
   },
   "prov:Activity": {
@@ -211,19 +206,19 @@ The Protohistoric Wichita dataset is classified as **restricted-generalized**, t
       "prov:startTime": "2025-10-18T10:32:00Z",
       "prov:endTime": "2025-10-18T11:12:00Z",
       "kfm:steps": [
-        "H3 mosaic (level 7)",
-        "polygon removal",
+        "H3 mosaic generation (level 7)",
+        "polygon suppression",
         "boundary smoothing",
-        "sensitive-feature filtering"
+        "removal of sensitive cultural features"
       ]
     },
     "tribal_review": {
       "prov:type": "Review",
       "prov:endTime": "2025-10-20T17:40:00Z",
       "kfm:steps": [
-        "Ethical content verification",
-        "Approval for generalized-only release",
-        "Cultural risk assessment"
+        "Ethical content inspection",
+        "Ancestral sovereignty compliance",
+        "Approval for generalized-only release"
       ]
     }
   },
@@ -246,7 +241,67 @@ The Protohistoric Wichita dataset is classified as **restricted-generalized**, t
 
 # 🧠 KFM Knowledge Graph Integration
 
-Nodes created:
+### Nodes Created
+- InteractionSphere  
+- CulturalPhase  
+- GeneralizedRegion  
+- CulturalSensitivityLevel  
+- MetadataRecord  
+- ProvenanceActivity  
+- ReviewEvent  
 
-- `InteractionSphere`  
-- `
+### Relationships Formed
+- `HAS_METADATA`  
+- `HAS_PROVENANCE`  
+- `CARE_SENSITIVITY`  
+- `GENERALIZED_FROM`  
+- `REVIEWED_BY`  
+- `OCCURRED_DURING`  
+- `ASSOCIATED_WITH`  
+
+These relationships ensure strong temporal alignment, cultural-sovereign compliance, and interpretive clarity across KFM.
+
+---
+
+# 🎛️ Story Nodes & Focus Mode Integration
+
+- Powers Protohistoric Wichita storyline modules  
+- Triggers sovereignty warnings  
+- Displays provenance chips  
+- Enforces H3-only rendering  
+- Provides contextual interpretive overlays  
+- Carries uncertainty & ethical metadata into Focus Mode  
+
+---
+
+# 📊 Dataset Status Summary
+
+| Field | Value |
+|---|---|
+| Version | v1 |
+| Sensitivity | restricted-generalized |
+| Review | Tribal (mandatory) |
+| Spatial Visibility | H3-only |
+| Provenance | Complete |
+| FAIR+CARE | Verified |
+| Publication | 🟡 Pending tribal approval |
+
+---
+
+# 🕰️ Version History
+
+| Version | Date | Author | Summary |
+|---|---|---|---|
+| v1 | 2025-11-17 | Cultural Landscape WG · FAIR+CARE Council · Tribal Advisors | Initial high-sensitivity provenance documentation |
+| v0.1 | 2025-11-12 | Landscape Provenance Team | Prototype lineage and generalization workflow |
+
+---
+
+<div align="center">
+
+**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+Tribal Oversight Required · FAIR+CARE Governance  
+MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[⬅ Back to Protohistoric Wichita Dataset](../README.md)
+
+</div>
