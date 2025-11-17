@@ -93,6 +93,7 @@ KFM v10.4 transforms the state’s past, present, and projected future into a **
 
 ### 🌐 High-Level Diagram
 
+```mermaid
 flowchart LR
     subgraph ExternalData[External Data Sources]
         NOAA[(NOAA Climate)]
@@ -111,9 +112,7 @@ flowchart LR
     API --> Frontend[React + MapLibre + Cesium Timeline · Map · Story Nodes · Focus Mode]
 
     API <-- Telemetry[Telemetry v3 Energy · Carbon · Drift · FAIR+CARE Signals]
-
-````
-
+```
 ---
 
 ## 🧭 Repository Structure
