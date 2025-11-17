@@ -1,8 +1,8 @@
 ---
 title: "🧠 Kansas Frontier Matrix — Source Code & ETL Pipelines (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-13"
+version: "v10.3.2"
+last_updated: "2025-11-16"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../releases/v10.3.0/sbom.spdx.json"
@@ -17,6 +17,17 @@ validation_reports:
 governance_ref: "../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.3"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "src-etl-overview"
+semantic_document_id: "kfm-doc-src-readme"
+doc_uuid: "urn:kfm:src:readme-v10.3.2"
+accessibility_compliance: "WCAG 2.1 AA"
+machine_extractable: true
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk"
+immutability_status: "version-pinned"
 ---
 
 <div align="center">
@@ -56,190 +67,207 @@ All code under `src/`:
 
 ---
 
+## 🗂️ Directory Layout
+
+```text
+src/
+│
+├── README.md                        # Source Code & ETL overview (this document)
+├── ARCHITECTURE.md                  # Detailed source architecture & flows
+│
+├── pipelines/                       # FAIR+CARE automation (ETL · AI · Validation · Governance)
+│   ├── etl/                         # Ingestion + transformation (batch + streaming)
+│   ├── ai/                          # Focus Transformer v2.x models + explainability
+│   ├── validation/                  # Schema, checksum, FAIR+CARE audits
+│   ├── governance/                  # Ledger, provenance, and manifest synchronization
+│   ├── telemetry/                   # Runtime, energy, and carbon metrics collectors
+│   └── utils/                       # Shared STAC/DCAT/JSON utilities
+│
+├── graph/                           # Neo4j graph schema, ingest, queries, federation
+│   ├── schema/                      # Ontology mappings, constraints (CIDOC, GeoSPARQL, OWL-Time)
+│   ├── ingest/                      # Graph ingestion + provenance sync jobs
+│   ├── queries/                     # Focus Mode & analytical Cypher templates
+│   └── utils/                       # Graph helpers, checksum + metadata bridges
+│
+├── agents/                          # LangGraph DAGs + CrewAI MCP bindings
+│   ├── hydrology_dag.py             # Hydrology-focused DAG
+│   ├── climate_dag.py               # Climate-focused DAG
+│   ├── archives_dag.py              # Archives & document DAG
+│   └── heritage_dag.py              # Heritage & archaeology DAG
+│
+├── design-tokens/                   # UI tokens used by internal tools
+├── metadata.json                    # Provenance & checksum registry metadata (auto-generated)
+└── tests/                           # Unit/integration tests for pipelines & graph logic
+````
+
+---
+
 ## 🧩 Core Responsibilities
 
-- Automate ETL workflows for **geospatial, historical, environmental, and heritage** data.  
-- Power **Focus Mode reasoning** and AI explainability (Focus Transformer v2.x).  
-- Maintain **provenance synchronization** through governance-ledger pipelines.  
-- Generate **sustainability and performance telemetry** for ISO/FAIR+CARE compliance.  
-- Enforce **schema, ethics, and checksum validation** for each data lifecycle stage.  
+* Automate ETL workflows for **geospatial, historical, environmental, and heritage** data.
+* Power **Focus Mode reasoning** and AI explainability (Focus Transformer v2.x).
+* Maintain **provenance synchronization** through governance-ledger pipelines.
+* Generate **sustainability and performance telemetry** for ISO/FAIR+CARE compliance.
+* Enforce **schema, ethics, and checksum validation** for each data lifecycle stage.
 
 ---
 
-## 🗂️ Source Tree Layout
+## 🧠 End-to-End Automation Flow
 
-    src/
-    ├── README.md                        # This document
-    ├── ARCHITECTURE.md                  # Detailed source architecture & flows
-    │
-    ├── pipelines/                       # FAIR+CARE automation (ETL · AI · Validation · Governance)
-    │   ├── etl/                         # Ingestion + transformation (batch + streaming)
-    │   ├── ai/                          # Focus Transformer v2.x models + explainability
-    │   ├── validation/                  # Schema, checksum, FAIR+CARE audits
-    │   ├── governance/                  # Ledger, provenance, and manifest synchronization
-    │   ├── telemetry/                   # Runtime, energy, and carbon metrics collectors
-    │   └── utils/                       # Shared STAC/DCAT/JSON utilities
-    │
-    ├── graph/                           # Neo4j graph schema, ingest, queries, federation
-    │   ├── schema/                      # Ontology mappings, constraints (CIDOC, GeoSPARQL, OWL-Time)
-    │   ├── ingest/                      # Graph ingestion + provenance sync jobs
-    │   ├── queries/                     # Focus Mode & analytical Cypher templates
-    │   └── utils/                       # Graph helpers, checksum + metadata bridges
-    │
-    ├── agents/                          # LangGraph DAGs + CrewAI MCP bindings
-    │   ├── hydrology_dag.py
-    │   ├── climate_dag.py
-    │   ├── archives_dag.py
-    │   └── heritage_dag.py
-    │
-    ├── design-tokens/                   # (Optional) UI tokens used by internal tools
-    ├── metadata.json                    # Provenance & checksum registry metadata (auto-generated)
-    └── tests/                           # Unit/integration tests for pipelines & graph logic
-
----
-
-## 🧠 End-to-End Automation Flow (Indented Mermaid)
-
-    flowchart LR
-      A["Raw Data Sources (NOAA · USGS · FEMA · Archives · Sensors)"]
-        --> B["ETL Pipelines (src/pipelines/etl/*)"]
-      B --> C["Validation (Schema · FAIR+CARE · Checksums)"]
-      C --> D["Governance (Provenance · Ledger Sync)"]
-      D --> E["AI Reasoning (Focus Transformer v2.x · XAI)"]
-      E --> F["Telemetry (Runtime · Energy · FAIR+CARE Metrics)"]
+```mermaid
+flowchart LR
+  A["Raw Data Sources (NOAA · USGS · FEMA · Archives · Sensors)"]
+    --> B["ETL Pipelines (src/pipelines/etl/*)"]
+  B --> C["Validation (Schema · FAIR+CARE · Checksums)"]
+  C --> D["Governance (Provenance · Ledger Sync)"]
+  D --> E["AI Reasoning (Focus Transformer v2.x · XAI)"]
+  E --> F["Telemetry (Runtime · Energy · FAIR+CARE Metrics)"]
+```
 
 Flow summary:
 
-1. **ETL (`pipelines/etl/`)**  
-   - Ingests and harmonizes raw data into standardized structures.  
-   - Writes STAC/DCAT-compliant metadata.  
+1. **ETL (`pipelines/etl/`)**
 
-2. **Validation (`pipelines/validation/`)**  
-   - Executes schema checks (JSON Schema, Pydantic).  
-   - Confirms checksums for raw, processed, and published forms.  
-   - Runs FAIR+CARE validation (license, consent, sensitivity, accessibility).  
+   * Ingests and harmonizes raw data into standardized structures.
+   * Writes STAC/DCAT-compliant metadata.
 
-3. **Governance (`pipelines/governance/`)**  
-   - Syncs provenance to ledgers and manifests.  
-   - Bridges to `releases/*/manifest.zip` and SBOM.  
+2. **Validation (`pipelines/validation/`)**
 
-4. **AI Reasoning (`pipelines/ai/`)**  
-   - Runs Focus Transformer v2.x for entity-centric reasoning.  
-   - Performs SHAP/LIME explainability and drift checks.  
+   * Executes schema checks (JSON Schema, Pydantic).
+   * Confirms checksums for raw, processed, and published forms.
+   * Runs FAIR+CARE validation (license, consent, sensitivity, accessibility).
 
-5. **Telemetry (`pipelines/telemetry/`)**  
-   - Emits runtime, energy, and fairness metrics.  
-   - Writes release-level telemetry to `../releases/v10.3.0/focus-telemetry.json`.  
+3. **Governance (`pipelines/governance/`)**
+
+   * Syncs provenance to ledgers and manifests.
+   * Bridges to `releases/*/manifest.zip` and SBOM.
+
+4. **AI Reasoning (`pipelines/ai/`)**
+
+   * Runs Focus Transformer v2.x for entity-centric reasoning.
+   * Performs SHAP/LIME explainability and drift checks.
+
+5. **Telemetry (`pipelines/telemetry/`)**
+
+   * Emits runtime, energy, and fairness metrics.
+   * Writes release-level telemetry to `../releases/v10.3.0/focus-telemetry.json`.
 
 ---
 
 ## 🧾 Example Registry Metadata
 
-    {
-      "id": "src_registry_v10.3.1_2025Q4",
-      "pipelines_registered": [
-        "climate_stream_etl.py",
-        "focus_transformer_v2.py",
-        "governance_sync.py",
-        "telemetry_reporter.py"
-      ],
-      "executions_logged": 148,
-      "checksum_verified": true,
-      "fair_status": "certified",
-      "ai_explainability_score": 0.997,
-      "sustainability_index": 0.992,
-      "governance_registered": true,
-      "telemetry_ref": "releases/v10.3.0/focus-telemetry.json",
-      "governance_ref": "reports/audit/ai_src_ledger.json",
-      "created": "2025-11-13T12:00:00Z",
-      "validator": "@kfm-src-core"
-    }
+```json
+{
+  "id": "src_registry_v10.3.1_2025Q4",
+  "pipelines_registered": [
+    "climate_stream_etl.py",
+    "focus_transformer_v2.py",
+    "governance_sync.py",
+    "telemetry_reporter.py"
+  ],
+  "executions_logged": 148,
+  "checksum_verified": true,
+  "fair_status": "certified",
+  "ai_explainability_score": 0.997,
+  "sustainability_index": 0.992,
+  "governance_registered": true,
+  "telemetry_ref": "releases/v10.3.0/focus-telemetry.json",
+  "governance_ref": "reports/audit/ai_src_ledger.json",
+  "created": "2025-11-13T12:00:00Z",
+  "validator": "@kfm-src-core"
+}
+```
 
 ---
 
 ## 🧮 FAIR+CARE Governance Matrix
 
-| Principle             | Implementation                                                        | Oversight           |
-|-----------------------|------------------------------------------------------------------------|---------------------|
-| **Findable**          | Pipelines indexed in `metadata.json`, STAC/DCAT catalogs, and CI logs.| @kfm-data           |
-| **Accessible**        | MIT-licensed source, reproducible configs, public metadata.           | @kfm-accessibility  |
-| **Interoperable**     | STAC 1.0 / DCAT 3.0 / ISO 19115 alignment across artifacts.           | @kfm-architecture   |
-| **Reusable**          | Modular, versioned, container-friendly pipeline design.               | @kfm-design         |
-| **Collective Benefit**| Automation serves public and research communities with transparency.  | @faircare-council   |
-| **Authority to Control** | Governance Council reviews contracts & ethics-critical changes.   | @kfm-governance     |
-| **Responsibility**    | Maintainers document impacts, ensure traceability, monitor drift.     | @kfm-security       |
-| **Ethics**            | AI bias + drift safeguards; explainability and A11y tests.            | @kfm-ethics         |
+| Principle                | Implementation                                                         | Oversight          |
+| ------------------------ | ---------------------------------------------------------------------- | ------------------ |
+| **Findable**             | Pipelines indexed in `metadata.json`, STAC/DCAT catalogs, and CI logs. | @kfm-data          |
+| **Accessible**           | MIT-licensed source, reproducible configs, public metadata.            | @kfm-accessibility |
+| **Interoperable**        | STAC 1.0 / DCAT 3.0 / ISO 19115 alignment across artifacts.            | @kfm-architecture  |
+| **Reusable**             | Modular, versioned, container-friendly pipeline design.                | @kfm-design        |
+| **Collective Benefit**   | Automation serves public and research communities with transparency.   | @faircare-council  |
+| **Authority to Control** | Governance Council reviews contracts & ethics-critical changes.        | @kfm-governance    |
+| **Responsibility**       | Maintainers document impacts, ensure traceability, monitor drift.      | @kfm-security      |
+| **Ethics**               | AI bias + drift safeguards; explainability and A11y tests.             | @kfm-ethics        |
 
 Audit references:
 
-- `../reports/audit/ai_src_ledger.json`  
-- `../reports/fair/src_summary.json`  
-- `../reports/self-validation/work-src-validation.json`  
+* `../reports/audit/ai_src_ledger.json`
+* `../reports/fair/src_summary.json`
+* `../reports/self-validation/work-src-validation.json`
 
 ---
 
 ## ⚙️ Core Dependencies (Conceptual)
 
-| Domain     | Frameworks                               | Purpose                                       |
-|-----------|-------------------------------------------|-----------------------------------------------|
-| ETL       | Pandas, GDAL, PyArrow, GeoPandas          | Multi-source ingestion and geospatial transforms |
-| AI/XAI    | PyTorch, Transformers, SHAP, LIME         | Explainable Focus reasoning and bias detection |
-| Validation| JSONSchema, Pydantic, FAIR+CARE validator | Structural + ethical conformance              |
-| Governance| Neo4j, STAC/DCAT utilities                | Provenance and catalog sync                   |
-| Telemetry | OpenTelemetry, Prometheus/Grafana         | Observability and sustainability metrics      |
+| Domain     | Frameworks                                | Purpose                                          |
+| ---------- | ----------------------------------------- | ------------------------------------------------ |
+| ETL        | Pandas, GDAL, PyArrow, GeoPandas          | Multi-source ingestion and geospatial transforms |
+| AI/XAI     | PyTorch, Transformers, SHAP, LIME         | Explainable Focus reasoning and bias detection   |
+| Validation | JSONSchema, Pydantic, FAIR+CARE validator | Structural + ethical conformance                 |
+| Governance | Neo4j, STAC/DCAT utilities                | Provenance and catalog sync                      |
+| Telemetry  | OpenTelemetry, Prometheus/Grafana         | Observability and sustainability metrics         |
 
 ---
 
 ## 🌱 Sustainability Metrics (v10.3.x)
 
-| Metric                  | Target        | Verified By           |
-|-------------------------|--------------|-----------------------|
-| Avg Runtime / Pipeline  | ≤ 3.0 min    | Telemetry / CI        |
-| Energy / Run            | ≤ 0.90 Wh    | Telemetry collectors  |
-| Carbon Output / Run     | ≤ 0.08 g CO₂e| Sustainability monitors|
-| Renewable Energy Share  | 100 % (RE100)| Infra audits          |
-| FAIR+CARE Compliance    | 100 %        | FAIR+CARE Council     |
+| Metric                 | Target        | Verified By             |
+| ---------------------- | ------------- | ----------------------- |
+| Avg Runtime / Pipeline | ≤ 3.0 min     | Telemetry / CI          |
+| Energy / Run           | ≤ 0.90 Wh     | Telemetry collectors    |
+| Carbon Output / Run    | ≤ 0.08 g CO₂e | Sustainability monitors |
+| Renewable Energy Share | 100 % (RE100) | Infra audits            |
+| FAIR+CARE Compliance   | 100 %         | FAIR+CARE Council       |
 
 Aggregated telemetry:
 
-    ../releases/v10.3.0/focus-telemetry.json
+```text
+../releases/v10.3.0/focus-telemetry.json
+```
 
 ---
 
 ## 🧩 Validation Workflows
 
-| Workflow               | Purpose                                      | Output                                                   |
-|------------------------|----------------------------------------------|----------------------------------------------------------|
-| `etl-sync.yml`         | Validate ETL lineage + checksum integrity    | `../reports/self-validation/work-src-validation.json`   |
-| `faircare-validate.yml`| FAIR+CARE / ethics conformance audit         | `../reports/fair/src_summary.json`                      |
-| `governance-ledger.yml`| Append provenance & AI audit entries         | `../reports/audit/ai_src_ledger.json`                   |
-| `telemetry-export.yml` | Publish performance + energy metrics         | `../releases/v10.3.0/focus-telemetry.json`              |
+| Workflow                | Purpose                                   | Output                                                |
+| ----------------------- | ----------------------------------------- | ----------------------------------------------------- |
+| `etl-sync.yml`          | Validate ETL lineage + checksum integrity | `../reports/self-validation/work-src-validation.json` |
+| `faircare-validate.yml` | FAIR+CARE / ethics conformance audit      | `../reports/fair/src_summary.json`                    |
+| `governance-ledger.yml` | Append provenance & AI audit entries      | `../reports/audit/ai_src_ledger.json`                 |
+| `telemetry-export.yml`  | Publish performance + energy metrics      | `../releases/v10.3.0/focus-telemetry.json`            |
 
 ---
 
 ## 🧾 Citation
 
-    Kansas Frontier Matrix (2025). Source Code & ETL Pipelines (v10.3.1).
-    Core automation and AI reasoning framework ensuring reproducibility, ethics, and sustainability under Master Coder Protocol v6.3 and FAIR+CARE governance.
+```text
+Kansas Frontier Matrix (2025). Source Code & ETL Pipelines (v10.3.2).
+Core automation and AI reasoning framework ensuring reproducibility, ethics, and sustainability under Master Coder Protocol v6.3 and FAIR+CARE governance.
+```
 
 ---
 
 ## 🕰️ Version History
 
-| Version  | Date       | Summary                                                                                     |
-|----------|------------|---------------------------------------------------------------------------------------------|
-| v10.3.1  | 2025-11-13 | Updated to LangGraph + MCP-ready architecture; aligned telemetry/governance refs; rule-aligned doc. |
-| v10.1.0  | 2025-11-10 | Refactored streaming ETL + Focus Transformer v2; improved sustainability metrics and DCAT/STAC bridge. |
-| v10.0.0  | 2025-11-08 | Added AI reasoning, telemetry, and sustainability tracking; full FAIR+CARE certification.   |
-| v9.7.0   | 2025-11-05 | Enhanced telemetry schema and governance synchronization.                                   |
-| v9.6.0   | 2025-11-04 | Integrated explainability and performance reporting.                                        |
+| Version | Date       | Author | Summary                                                                                                |
+| ------- | ---------- | ------ | ------------------------------------------------------------------------------------------------------ |
+| v10.3.2 | 2025-11-16 | KFM    | Updated to comply with KFM-MDP v10.4.3 (YAML fields, directory layout, Mermaid, metadata).             |
+| v10.3.1 | 2025-11-13 | KFM    | Updated to LangGraph + MCP-ready architecture; aligned telemetry/governance refs; rule-aligned doc.    |
+| v10.1.0 | 2025-11-10 | KFM    | Refactored streaming ETL + Focus Transformer v2; improved sustainability metrics and DCAT/STAC bridge. |
+| v10.0.0 | 2025-11-08 | KFM    | Added AI reasoning, telemetry, and sustainability tracking; full FAIR+CARE certification.              |
+| v9.7.0  | 2025-11-05 | KFM    | Enhanced telemetry schema and governance synchronization.                                              |
+| v9.6.0  | 2025-11-04 | KFM    | Integrated explainability and performance reporting.                                                   |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT License**  
-*Autonomous Pipelines × Explainable AI × Sustainable Governance*  
+**© 2025 Kansas Frontier Matrix — MIT License**
+*Autonomous Pipelines × Explainable AI × Sustainable Governance*
 [Back to Source Architecture](./ARCHITECTURE.md) · [Docs Portal](../docs/) · [Governance Charter](../docs/standards/governance/DATA-GOVERNANCE.md)
 
 </div>
