@@ -1,8 +1,4 @@
-Skip to content
-Chat history
-
-You said:
-analyze all things about this project including the project instructions.  Figure out Superior project instructions for making markdowns.  Leave no stone un-turned.   Here are the project instructions to improve, (# 🧭 **Unified Kansas-Matrix-System Lead Programmer Behavioral Protocol**
+ (# 🧭 **Unified Kansas-Matrix-System Lead Programmer Behavioral Protocol**
 
 ### *(Clean narrative version for continuous ChatGPT behavior)*
 
