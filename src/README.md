@@ -35,7 +35,6 @@ Describe the **core source tree** for the Kansas Frontier Matrix (KFM) — inclu
 
 </div>
 
-
 ---
 
 ## 📘 Overview
