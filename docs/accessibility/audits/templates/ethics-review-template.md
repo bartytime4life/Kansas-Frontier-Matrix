@@ -1,31 +1,37 @@
 ---
 title: "⚖️ Kansas Frontier Matrix — Accessibility & Ethics Review Template (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/accessibility/audits/templates/ethics-review-template.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
+version: "v10.4.0"
+last_updated: "2025-11-17"
 review_cycle: "Biannual / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/a11y-ethics-review-v1.json"
+sbom_ref: "../../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../../releases/v10.4.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/a11y-ethics-review-v2.json"
 governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4"
+status: "Active / Enforced"
+doc_kind: "Template"
+intent: "ethics-a11y-review"
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE-Compliant"
 ---
 
 <div align="center">
 
-# ⚖️ **Kansas Frontier Matrix — Accessibility & Ethics Review Template**
+# ⚖️ **Kansas Frontier Matrix — Accessibility & Ethics Review Template**  
 `docs/accessibility/audits/templates/ethics-review-template.md`
 
 **Purpose:**  
 Provide a repeatable **Ethical Accessibility Review Template** for analyzing **tone, inclusion, and cultural representation** across all **KFM user interfaces, AI narratives, and documentation artifacts**, under **FAIR+CARE** principles and **ISO 26000** ethical design guidelines.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../standards/faircare.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](../../../../releases/v10.0.0/manifest.zip)
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../standards/faircare.md)  
+[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)  
+[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../../releases/v10.4.0/manifest.zip)
 
 </div>
 
@@ -33,22 +39,22 @@ Provide a repeatable **Ethical Accessibility Review Template** for analyzing **t
 
 ## 📘 Overview
 
-This template ensures every accessibility audit includes an **ethical layer of review** that evaluates *not just functional accessibility*, but *cultural sensitivity, emotional safety, and equity of representation*.  
+This template ensures every accessibility audit includes an **ethical layer of review** that evaluates *not just functional accessibility*, but also *cultural sensitivity, emotional safety, and equity of representation*.  
 The review complements WCAG 2.1 AA validation by assessing human and social implications in alignment with **FAIR+CARE**, **UNESCO AI Ethics**, and **ISO 9241-210**.
 
-Use this markdown template to document the **narrative tone**, **AI content inclusivity**, **cultural representations**, and **visual or linguistic ethics** found during each release cycle.
+Use this Markdown template to document **narrative tone**, **AI content inclusivity**, **cultural representations**, and **visual or linguistic ethics** found during each release cycle.
 
 ---
 
 ## 🗂️ Directory Context
 
-```
+~~~text
 docs/accessibility/audits/templates/
 ├── audit-template.md
 ├── checklist-wcag2.1aa.md
 ├── ethics-review-template.md   # ← This file
 └── summary-template.json
-```
+~~~
 
 ---
 
@@ -75,7 +81,8 @@ docs/accessibility/audits/templates/
 | **Ethics** |  |  |
 
 ### Review Guidance
-- **Collective Benefit:** Does accessibility improvement benefit all communities, not just the majority user base?  
+
+- **Collective Benefit:** Do accessibility and design changes benefit all communities, not just the majority user base?  
 - **Authority to Control:** Are Indigenous, marginalized, or affected groups given representation and consent in data or visuals?  
 - **Responsibility:** Were known accessibility or ethical issues addressed responsibly and transparently?  
 - **Ethics:** Does narrative tone respect human dignity, cultural sovereignty, and emotional sensitivity?
@@ -99,11 +106,11 @@ docs/accessibility/audits/templates/
 
 | Checkpoint | Description | Result | Notes |
 |---|---|---|---|
-| **Readability Index (FK Grade)** | AI summaries ≤ Grade 8 reading level. |  |  |
-| **Bias Detection** | NLP audit of tone for cultural or gender bias. |  |  |
-| **Provenance Chips** | Narrative includes consent and citation metadata. |  |  |
-| **Cultural Awareness** | Tribal or heritage sites contextualized with appropriate language. |  |  |
-| **Emotionally Neutral Output** | No emotionally manipulative or alarmist phrasing. |  |  |
+| **Readability Index (FK Grade)** | AI summaries aim for ≤ Grade 8 reading level. |  |  |
+| **Bias Detection** | NLP audit of tone for cultural, gender, or disability bias. |  |  |
+| **Provenance Chips** | Narrative includes consent and citation metadata indicators. |  |  |
+| **Cultural Awareness** | Tribal or heritage sites contextualized with appropriate language and links to primary sources. |  |  |
+| **Emotionally Neutral Output** | No emotionally manipulative, sensationalist, or alarmist phrasing. |  |  |
 
 ---
 
@@ -112,7 +119,7 @@ docs/accessibility/audits/templates/
 | Criterion | Pass | Observation |
 |---|---|---|
 | **Alt Text Respectful** |  |  |
-| **Iconography Culturally Neutral** |  |  |
+| **Iconography Culturally Neutral / Contextualized** |  |  |
 | **Media Provenance Verified** |  |  |
 | **Avoids Harmful Stereotypes** |  |  |
 | **Color Associations Non-Biased** |  |  |
@@ -120,6 +127,8 @@ docs/accessibility/audits/templates/
 ---
 
 ## 📊 Ethical Findings Summary
+
+> Use this section **after** completing tables above to consolidate key metrics.
 
 | Metric | Result | Threshold | Status |
 |---|---|---|---|
@@ -129,33 +138,38 @@ docs/accessibility/audits/templates/
 | Readability Index (FK Grade) | 7.8 | ≤ 8.0 | ✅ |
 | Open Consent Provenance | 100% | 100% | ✅ |
 
+*(Replace example values with actual audit results.)*
+
 ---
 
 ## 🧩 Corrective Actions & Recommendations
 
-1. **Revise** AI summary tone for clarity and neutrality.  
-2. **Replace** any culturally ambiguous imagery with verified, attributed visuals.  
-3. **Document** consent and provenance for Indigenous site references.  
-4. **Update** FAIR+CARE validation schema to include new audit criteria.  
+Describe actions required to resolve any **Needs Review** / **Fail** findings:
+
+- Revise AI summary tone for clarity, neutrality, and cultural respect.  
+- Replace or re-caption any culturally ambiguous imagery with verified, attributed visuals.  
+- Document consent and provenance for Indigenous or sensitive site references.  
+- Update FAIR+CARE validation schema and Story Node guidance where new ethical criteria arise.  
 
 ---
 
 ## 📑 Sign-Off Summary
 
 **Reviewed By:** FAIR+CARE Ethics Council  
-**Date Completed:** 2025-06-20  
-**Next Review Cycle:** Q4 2025  
-**Certification Status:** ✅ FAIR+CARE Verified — Ethical & Inclusive Design Compliant  
+**Date Completed:** `YYYY-MM-DD`  
+**Next Review Cycle:** `YYYY-QX`  
+**Certification Status:** `FAIR+CARE Verified / Needs Follow-up`
 
 ---
 
 ## 🧾 Appendix (Optional Attachments)
 
-Attach supporting files, such as:
+Attach supporting artifacts as needed:
+
 - AI bias detection logs  
 - Focus Mode narrative samples  
 - Annotated screenshots of cultural imagery  
-- NVDA or Lighthouse accessibility artifacts  
+- NVDA / Lighthouse / axe-core output summaries  
 
 ---
 
@@ -163,7 +177,8 @@ Attach supporting files, such as:
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| v10.0.0 | 2025-11-10 | FAIR+CARE Council | Created biannual ethics review template combining WCAG, FAIR+CARE, and AI narrative ethical assessment for accessibility audits. |
+| v10.4.0 | 2025-11-17 | FAIR+CARE Council | Upgraded to KFM-MDP v10.4; converted all inner fences to tildes to prevent box-breaking; added narrative & provenance checkpoints |
+| v10.0.0 | 2025-11-10 | FAIR+CARE Council | Initial biannual ethics review template combining WCAG, FAIR+CARE, and AI narrative assessment |
 
 ---
 
@@ -171,6 +186,6 @@ Attach supporting files, such as:
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
 Maintained under **Master Coder Protocol v6.3** · Verified by **FAIR+CARE Council**  
-[⬅ Back to Templates Index](README.md) · [Summary Template →](summary-template.json)
+[⬅ Back to Templates Index](README.md) • [Summary Template →](summary-template.json)
 
 </div>
