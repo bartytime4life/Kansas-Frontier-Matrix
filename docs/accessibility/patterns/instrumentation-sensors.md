@@ -1,27 +1,72 @@
 ---
 title: "⚗️ Kansas Frontier Matrix — Accessible Instrumentation, Calibration, and Sensor Network Standards (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/accessibility/patterns/instrumentation-sensors.md"
-version: "v10.0.0"
-last_updated: "2025-11-11"
+version: "v10.4.1"
+last_updated: "2025-11-16"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
+sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/a11y-instrumentation-sensors-v1.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.3"
+status: "Active / Enforced"
+doc_kind: "Pattern"
+intent: "a11y-instrumentation-sensors"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk"
+sensitivity_level: "Low"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM Accessibility Council · FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+provenance_chain:
+  - "docs/accessibility/patterns/instrumentation-sensors.md@v10.0.0"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "CreativeWork"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../schemas/json/a11y-instrumentation-sensors.schema.json"
+shape_schema_ref: "../../../schemas/shacl/a11y-instrumentation-sensors-shape.ttl"
+doc_uuid: "urn:kfm:doc:a11y-instrumentation-sensors-v10.4.1"
+semantic_document_id: "kfm-doc-a11y-instrumentation-sensors"
+event_source_id: "ledger:docs/accessibility/patterns/instrumentation-sensors.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "speculative additions"
+  - "fabricated calibration records"
+  - "alteration of instrument metadata"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+classification: "Public / Environmental Instrumentation"
+jurisdiction: "United States / Kansas"
+role: "a11y-pattern-instrumentation-sensors"
+lifecycle_stage: "stable"
+ttl_policy: "Quarterly review"
+sunset_policy: "Superseded upon next instrumentation/sensor standard update"
 ---
 
 <div align="center">
 
-# ⚗️ **Kansas Frontier Matrix — Accessible Instrumentation, Calibration, and Sensor Network Standards**
+# ⚗️ **Kansas Frontier Matrix — Accessible Instrumentation, Calibration, and Sensor Network Standards**  
 `docs/accessibility/patterns/instrumentation-sensors.md`
 
 **Purpose:**  
-Provide accessibility, transparency, and ethical governance standards for **field instrumentation**, **sensor networks**, and **calibration datasets** within Kansas Frontier Matrix (KFM).  
-Ensure every data-collecting device — from meteorological probes to hydro sensors — adheres to **FAIR+CARE** principles and **WCAG 2.1 AA** digital interface requirements, supporting transparent calibration, data provenance, and inclusive monitoring design.
+Provide accessibility, transparency, and ethical governance standards for field instrumentation, sensor networks, and calibration datasets within Kansas Frontier Matrix (KFM).  
+Ensure every data-collecting device — from meteorological probes to hydrologic gauges — adheres to **FAIR+CARE** principles and **WCAG 2.1 AA** digital interface requirements, supporting transparent calibration, data provenance, and inclusive monitoring design.
 
 ![Badge Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)
 ![Badge FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)
@@ -34,27 +79,51 @@ Ensure every data-collecting device — from meteorological probes to hydro sens
 
 ## 📘 Overview
 
-The **KFM Instrumentation Framework** manages thousands of environmental sensors and scientific instruments across Kansas.  
-This pattern guarantees that hardware metadata, calibration records, and real-time telemetry streams are **accessible**, **auditable**, and **ethically managed** — ensuring equity in data interpretation and reproducibility.
+The **KFM Instrumentation Framework** orchestrates thousands of environmental sensors and scientific instruments across Kansas.
+
+This pattern ensures that:
+
+- Sensor metadata and calibration histories are **accessible and auditable**  
+- Instrument dashboards are **usable with keyboard and screen readers**  
+- Deployment on tribal or heritage lands adheres to **FAIR+CARE consent**  
+- All telemetry streams and logs support **transparent uncertainty and provenance**  
+
+---
+
+## 🗂️ Directory Context
+
+```text
+docs/accessibility/
+│
+├── README.md
+├── testing-guide.md
+├── tokens.md
+└── patterns/
+    ├── instrumentation-sensors.md        # This file
+    ├── laboratory-methods.md
+    ├── telemetry-streams.md
+    ├── network-infrastructure.md
+    ├── ...
+```
 
 ---
 
 ## 🧩 Accessibility & Sensor Governance Principles
 
-| Principle | Description | Standard Reference |
-|------------|--------------|--------------------|
-| **Semantic Device Metadata** | Each sensor labeled with ARIA and textual context in dashboards. | WCAG 1.3.1 |
-| **Keyboard & AT Operability** | Sensor controls and plots accessible by keyboard and screen readers. | WCAG 2.1.1 |
-| **Calibration Transparency** | Each reading linked to calibration timestamp, instrument ID, and accuracy. | FAIR F-2 |
-| **Consent & Cultural Awareness** | Sensors on heritage or tribal lands require local authorization. | CARE A-2 |
-| **Color & Contrast Integrity** | Measurement charts meet ≥4.5:1 ratio and use non-color redundancy. | WCAG 1.4.3 |
-| **Plain Language Technical Notes** | Summaries provided for calibration and uncertainty data. | WCAG 3.1.5 |
+| Principle                | Description                                                                 | Standard Reference |
+|--------------------------|-----------------------------------------------------------------------------|--------------------|
+| Semantic Device Metadata | Each sensor labeled with ARIA and textual context in dashboards.          | WCAG 1.3.1         |
+| Keyboard & AT Operability| Sensor controls and plots accessible by keyboard & assistive tech.        | WCAG 2.1.1         |
+| Calibration Transparency | Each reading linked to calibration timestamp, instrument ID, and accuracy. | FAIR F-2           |
+| Consent & Cultural Awareness | Sensors on heritage/tribal lands require local authorization.        | CARE A-2           |
+| Color & Contrast Integrity| Measurement charts meet ≥4.5:1 contrast with non-color redundancies.     | WCAG 1.4.3         |
+| Plain-Language Notes     | Clear summaries of calibration & uncertainty for all users.                | WCAG 3.1.5         |
 
 ---
 
 ## 🧭 Example Implementation (Sensor Dashboard)
 
-```html
+~~~html
 <section aria-labelledby="sensor-dashboard-title" role="region">
   <h2 id="sensor-dashboard-title">Kansas Environmental Sensor Network</h2>
 
@@ -72,43 +141,45 @@ This pattern guarantees that hardware metadata, calibration records, and real-ti
     Data collected via KFM Sensor Network, NOAA Climate Monitoring Program, and USGS HydroWatch.
   </p>
 </section>
-```
+~~~
 
-**Implementation Highlights**
-- Use `aria-roledescription="Sensor map viewer"` for assistive context.  
-- Provide `Last calibration` and `accuracy ±` metadata in accessible text.  
-- Live updates describe dataset context without rapid flashing.  
-- Ensure each sensor dataset is grouped logically for screen-reader traversal.
+### Implementation Highlights
+
+- `aria-roledescription="Sensor map viewer"` clarifies AT context.  
+- Expose calibration date, uncertainty (±), and units in **visible text**.  
+- Live region announces **meaningful** state changes only (avoid noise).  
+- Sensor groups should be navigable via keyboard in a predictable order.  
 
 ---
 
 ## 🎨 Design Tokens for Sensor Interfaces
 
-| Token | Description | Example Value |
-|--------|--------------|----------------|
-| `sensor.bg.color` | Map or dashboard background | `#E3F2FD` |
-| `sensor.temp.color` | Temperature data line | `#FF7043` |
-| `sensor.moisture.color` | Soil moisture plot color | `#4FC3F7` |
-| `sensor.stream.color` | Streamflow gauge color | `#43A047` |
-| `sensor.focus.color` | Focus ring | `#FFD54F` |
-| `sensor.alert.color` | Calibration or ethics warning | `#E53935` |
+| Token                  | Description                         | Example Value |
+|------------------------|-------------------------------------|---------------|
+| sensor.bg.color        | Sensor dashboard background         | #E3F2FD       |
+| sensor.temp.color      | Temperature series color            | #FF7043       |
+| sensor.moisture.color  | Soil moisture series color          | #4FC3F7       |
+| sensor.stream.color    | Streamflow gauge color              | #43A047       |
+| sensor.focus.color     | Focus ring color                    | #FFD54F       |
+| sensor.alert.color     | Calibration/ethics warning color    | #E53935       |
 
 ---
 
 ## 🧾 FAIR+CARE Sensor Metadata Schema
 
-| Field | Description | Example |
-|--------|--------------|----------|
-| `data-origin` | Source agency or network | “KFM SensorNet / NOAA / USGS” |
-| `data-license` | License | “CC-BY 4.0” |
-| `data-consent` | Landowner or cultural consent flag | `true` |
-| `data-ethics-reviewed` | FAIR+CARE audit flag | `true` |
-| `data-provenance` | Calibration and maintenance lineage | “Sensor ID 0427: Calibrated 2025-10-31 · ±0.1°C” |
-| `data-sensitivity` | Data privacy level | “Public / Environmental” |
-| `data-units` | Units of measurement | “°C / % Vol / m³/s” |
+| Field              | Description                             | Example                                      |
+|--------------------|-----------------------------------------|----------------------------------------------|
+| data-origin        | Source agency or network                | "KFM SensorNet / NOAA / USGS"                |
+| data-license       | License                                 | "CC-BY 4.0"                                   |
+| data-consent       | Landowner / cultural consent flag       | true                                         |
+| data-ethics-reviewed | FAIR+CARE audit flag                  | true                                         |
+| data-provenance    | Calibration & maintenance lineage       | "Sensor ID 0427: Calibrated 2025-10-31 · ±0.1°C" |
+| data-sensitivity   | Data privacy level                      | "Public / Environmental"                     |
+| data-units         | Units of measurement                    | "°C / % Vol / m³/s"                          |
 
-**Example JSON:**
-```json
+### Example JSON
+
+~~~json
 {
   "data-origin": "KFM SensorNet / NOAA / USGS",
   "data-license": "CC-BY 4.0",
@@ -118,56 +189,63 @@ This pattern guarantees that hardware metadata, calibration records, and real-ti
   "data-sensitivity": "Public / Environmental",
   "data-units": "°C / % Vol / m³/s"
 }
-```
+~~~
 
 ---
 
 ## ⚙️ Keyboard & ARIA Behavior Matrix
 
-| Key | Function | Feedback |
-|------|-----------|----------|
-| `Tab` | Navigate through dataset toggles and sensors | Sequential order |
-| `Enter` | Activate sensor layer | “Soil moisture sensors enabled.” |
-| `Arrow Keys` | Move across map sensors | Announces sensor ID and reading |
-| `Space` | Pause auto-refresh | “Telemetry paused.” |
-| `aria-live="polite"` | Announces calibration or data updates | “Temperature dataset updated.” |
+| Key / Attribute    | Function                                | Feedback                                |
+|--------------------|-----------------------------------------|-----------------------------------------|
+| Tab                | Navigate dataset toggles and panels     | Sequential focus order                  |
+| Enter              | Activate sensor layer / control         | "Soil moisture sensors enabled."        |
+| Arrow Keys         | Move between sensor points or rows      | Announces sensor ID, metric, and units  |
+| Space              | Pause auto-refresh                       | "Telemetry paused."                     |
+| aria-live="polite" | Announces updates & calibration events  | "Temperature dataset updated."          |
 
 ---
 
 ## 🧪 Validation Workflows
 
-| Tool | Scope | Output |
-|-------|--------|--------|
-| **axe-core** | Sensor map ARIA and keyboard testing | `reports/self-validation/web/a11y_instrumentation.json` |
-| **Lighthouse CI** | Focus and color audit | `reports/ui/lighthouse_instrumentation.json` |
-| **jest-axe** | Component-level accessibility | `reports/ui/a11y_instrumentation_components.json` |
-| **Faircare Audit Script** | Calibration and consent metadata validation | `reports/faircare/instrumentation_ethics.json` |
+| Tool             | Scope                                       | Output                                        |
+|------------------|----------------------------------------------|-----------------------------------------------|
+| axe-core         | ARIA roles, focus order, live regions       | a11y_instrumentation.json                     |
+| Lighthouse CI    | Keyboard navigation and contrast audit      | lighthouse_instrumentation.json               |
+| jest-axe         | Component-level sensor widget tests         | a11y_instrumentation_components.json          |
+| Faircare Script  | Calibration, consent, and ethics validation | instrumentation_ethics.json                   |
+
+Validation confirms:
+
+- All major sensor filters and controls are keyboard accessible.  
+- Live-region behavior follows best practice (no spam, clear messaging).  
+- Calibration lineage and consent metadata exist for all sensitive deployments.  
 
 ---
 
 ## ⚖️ FAIR+CARE Integration
 
-| Principle | Implementation |
-|------------|----------------|
-| **Collective Benefit** | Data supports open climate adaptation and community resilience. |
-| **Authority to Control** | Custodians govern sensor access and ethical boundaries. |
-| **Responsibility** | Calibration lineage logged in immutable FAIR+CARE ledgers. |
-| **Ethics** | Sensor placement and data sharing respect ecological and cultural boundaries. |
+| Principle           | Implementation                                                                 |
+|---------------------|---------------------------------------------------------------------------------|
+| Collective Benefit  | Sensor data supports shared climate awareness and hazard readiness.            |
+| Authority to Control| Custodians and communities approve sensor placement and data policies.         |
+| Responsibility      | Calibration details logged and auditable via governance ledgers.               |
+| Ethics              | Sensor networks avoid reinforcing environmental injustice or cultural harm.    |
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.0.0 | 2025-11-11 | FAIR+CARE Council | Added instrumentation and sensor network accessibility pattern; included calibration metadata schema, consent governance, and ARIA-compliant monitoring UI design. |
+| Version | Date       | Author             | Summary                                                                                         |
+|--------:|------------|--------------------|-------------------------------------------------------------------------------------------------|
+| v10.4.1 | 2025-11-16 | Accessibility Council | Upgraded to KFM-MDP v10.4.3; added extended metadata, clarified calibration/consent semantics, and ensured one-box-safe formatting. |
+| v10.0.0 | 2025-11-11 | FAIR+CARE Council  | Added instrumentation and sensor network accessibility pattern with calibration metadata and ARIA-compliant dashboards. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
 Developed under **Master Coder Protocol v6.3** · Verified by **FAIR+CARE Council**  
-[⬅ Back to Accessibility Index](README.md)
+[⬅ Back to Accessibility Patterns Index](../README.md)
 
 </div>
