@@ -104,16 +104,19 @@ flowchart LR
         GBIF[(Biodiversity Data)]
     end
 
-    ExternalData --> ETL[ETL + AI Pipeline (OCR, NER, Geocoding, ML, Predictive Models)]
+    ExternalData --> ETL[ETL + AI Pipeline]
+    ETL --> OCR[OCR]
+    ETL --> NER[NER]
+    ETL --> Geocoding[Geocoding]
+    ETL --> ML[ML]
+    ETL --> PredictiveModels[Predictive Models]
 
-    ETL --> Graph[(Neo4j Knowledge Graph CIDOC CRM · GeoSPARQL · OWL-Time)]
+    ETL --> Graph[Neo4j Knowledge Graph]
+    Graph --> API[FastAPI / GraphQL API]
+    API --> Frontend[React + MapLibre + Cesium]
 
-    Graph --> API{{FastAPI / GraphQL}}
-    API --> Frontend[React + MapLibre + Cesium Timeline · Map · Story Nodes · Focus Mode]
-
-    API <-- Telemetry[Telemetry v3 Energy · Carbon · Drift · FAIR+CARE Signals]
+    API <-- Telemetry[Telemetry v3]
 ```
----
 
 ## 🧭 Repository Structure
 
