@@ -1,32 +1,76 @@
 ---
 title: "🌾 Kansas Frontier Matrix — Accessible Agriculture, Land, and Resource Data Standards (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/accessibility/patterns/agriculture-resources.md"
-version: "v10.0.0"
-last_updated: "2025-11-11"
+version: "v10.4.1"
+last_updated: "2025-11-16"
 review_cycle: "Quarterly / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
+sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v10.4.0/manifest.zip"
+telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/a11y-agriculture-resources-v1.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v10.4.3"
+status: "Active / Enforced"
+doc_kind: "Pattern"
+intent: "agriculture-resources-a11y"
+fair_category: "F1-A1-I1-R1"
+care_label: "Agriculture / Land / Resource Data"
+sensitivity_level: "Medium"
+public_exposure_risk: "Low"
+indigenous_rights_flag: true
+data_steward: "KFM Agriculture & Resources Working Group · FAIR+CARE Council"
+risk_category: "Medium"
+redaction_required: true
+provenance_chain:
+  - "docs/accessibility/patterns/agriculture-resources.md@v10.0.0"
+previous_version_hash: "<previous-sha256>"
+ontology_alignment:
+  schema_org: "Dataset"
+  cidoc: "E26 Physical Feature"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+json_schema_ref: "../../../schemas/json/a11y-agriculture-resources.schema.json"
+shape_schema_ref: "../../../schemas/shacl/a11y-agriculture-resources-shape.ttl"
+doc_uuid: "urn:kfm:doc:a11y-agriculture-resources-v10.4.1"
+semantic_document_id: "kfm-doc-a11y-agriculture-resources"
+event_source_id: "ledger:docs/accessibility/patterns/agriculture-resources.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Restricted"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "inventing crop yields or ownership"
+  - "removing consent or sensitivity flags"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+classification: "Agriculture · Land · Resources"
+jurisdiction: "Kansas / Tribal Nations / United States"
+role: "a11y-pattern-agriculture-resources"
+lifecycle_stage: "stable"
+ttl_policy: "Quarterly review"
+sunset_policy: "Superseded upon next agriculture-resources pattern update"
 ---
 
 <div align="center">
 
-# 🌾 **Kansas Frontier Matrix — Accessible Agriculture, Land, and Resource Data Standards**
+# 🌾 **Kansas Frontier Matrix — Accessible Agriculture, Land, and Resource Data Standards**  
 `docs/accessibility/patterns/agriculture-resources.md`
 
 **Purpose:**  
 Define accessibility and FAIR+CARE governance standards for **agricultural, ecological, and resource management interfaces** in Kansas Frontier Matrix (KFM).  
-Ensures all agricultural and land-related data — including crop reports, soil analysis, irrigation metrics, and land ownership records — are **presented ethically**, **readable by assistive technologies**, and **traceable through open metadata**.
+Ensure all agricultural and land-related data — including crop reports, soil analysis, irrigation metrics, and land ownership/tenure records — are **presented ethically**, **readable by assistive technologies**, and **traceable through open metadata**.
 
-![Badge Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)
-![Badge FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)
-![Badge License](https://img.shields.io/badge/License-CC--BY%204.0-green)
-![Badge Status](https://img.shields.io/badge/Status-Active-success)
+![Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)
+![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)
+![License](https://img.shields.io/badge/License-CC--BY%204.0-green)
+![Status](https://img.shields.io/badge/Status-Active-success)
 
 </div>
 
@@ -34,21 +78,43 @@ Ensures all agricultural and land-related data — including crop reports, soil 
 
 ## 📘 Overview
 
-Agriculture and land data are key layers in KFM’s environmental and economic systems.  
-This standard ensures data interfaces and visualizations representing **crop yields, soil types, irrigation zones, resource rights, and land tenure** meet **FAIR+CARE**, **WCAG 2.1 AA**, and **ISO 14064 sustainability reporting** accessibility requirements.
+Agriculture and land data are key layers in KFM’s environmental, historical, and economic systems.  
+This standard ensures that visualizations and UIs representing:
+
+- Crop yields and rotations  
+- Soil types, fertility indices, and erosion risk  
+- Irrigation zones and water allocations  
+- Resource rights, land tenure, and stewardship agreements  
+
+adhere to **FAIR+CARE**, **WCAG 2.1 AA**, and **ISO 14064** sustainability reporting requirements for accessibility and ethics.
+
+---
+
+## 🗂️ Directory Context
+
+```text
+docs/accessibility/
+│
+└── patterns/
+    ├── agriculture-resources.md      # This file
+    ├── soil-health.md
+    ├── agroforestry-biomass.md
+    ├── water-rights (future)
+    └── ...
+```
 
 ---
 
 ## 🧩 Agricultural Accessibility Principles
 
-| Principle | Description | WCAG / FAIR+CARE Reference |
-|------------|--------------|-----------------------------|
-| **Semantic Tables** | Data tables include captions, scope attributes, and unit descriptions. | WCAG 1.3.1 |
-| **Colorblind-Safe Layers** | Use pattern fills and contrast color pairs in maps and graphs. | WCAG 1.4.1 |
-| **Unit Consistency** | Units clearly labeled (bushels, acres, mm). | ISO 80000 |
-| **Geospatial Accessibility** | Map controls labeled with crop and soil identifiers. | WCAG 2.4.6 |
-| **Consent for Ownership Data** | Private ownership or tribal data masked without authorization. | CARE A-2 |
-| **Sustainability Context** | Include emissions and water use metadata in summaries. | ISO 14064 / FAIR R-1 |
+| Principle              | Description                                                   | WCAG / FAIR+CARE Reference |
+|------------------------|---------------------------------------------------------------|-----------------------------|
+| Semantic Tables        | Tables use captions, scopes, and units for AT users.         | WCAG 1.3.1                  |
+| Colorblind-Safe Layers | Maps & charts use patterns and safe palettes.                | WCAG 1.4.1                  |
+| Unit Consistency       | Units clearly labeled (e.g., bushels/acre, acres, mm).       | ISO 80000                   |
+| Geospatial Accessibility | Map controls labeled with crop, soil, and region identifiers.| WCAG 2.4.6                |
+| Consent for Ownership Data | Private or tribal land info masked without consent.      | CARE A-2                    |
+| Sustainability Context | Surface emissions, inputs, and water use in summaries.       | ISO 14064 / FAIR R-1        |
 
 ---
 
@@ -81,42 +147,37 @@ This standard ensures data interfaces and visualizations representing **crop yie
     </tbody>
   </table>
 
-  <p id="table-description">Data derived from USDA NASS and state agricultural reports. FAIR+CARE-reviewed for data privacy compliance.</p>
+  <p id="table-description">
+    Data derived from USDA NASS and state agricultural reports.  
+    FAIR+CARE-reviewed for data privacy and ownership compliance.
+  </p>
 </section>
 ```
 
-**Accessibility Notes**
-- Provide a `<caption>` for all agricultural data tables.  
-- Use `<th scope="col">` and `<td>` for semantic screen reader compatibility.  
-- Crop and region labels announced via `aria-describedby`.  
-- Sensitive ownership or tribal land data masked unless consent verified.
+### Accessibility Notes
+
+- Always include a `<caption>` and `aria-describedby` for context.  
+- Use `<th scope="col">` and `<th scope="row">` as appropriate.  
+- Mask or generalize ownership and tribal land details unless consent and governance protocols allow explicit display.
 
 ---
 
 ## 🎨 Design Tokens
 
-| Token | Description | Example |
-|--------|--------------|----------|
-| `agri.bg.color` | Background color for tables and charts | `#FAFAF5` |
-| `agri.text.color` | Table text color | `#212121` |
-| `agri.chart.green` | Crop yield chart line color | `#4CAF50` |
-| `agri.chart.orange` | Drought or soil depletion line color | `#FFB300` |
-| `agri.focus.color` | Keyboard focus outline color | `#FFD54F` |
+| Token               | Description                            | Example Value |
+|---------------------|----------------------------------------|---------------|
+| `agri.bg.color`     | Table/chart background                 | `#FAFAF5`     |
+| `agri.text.color`   | Text color                             | `#212121`     |
+| `agri.chart.green`  | Crop yield series color                | `#4CAF50`     |
+| `agri.chart.orange` | Drought/depletion series color         | `#FFB300`     |
+| `agri.focus.color`  | Keyboard focus outline                 | `#FFD54F`     |
+
+Tokens must be defined and validated in `web/src/theme/tokens.json` and mapped to both light and dark modes.
 
 ---
 
 ## 🧾 FAIR+CARE Agricultural Metadata Schema
 
-| Field | Description | Example |
-|--------|--------------|----------|
-| `data-origin` | Source institution | “USDA NASS” |
-| `data-custodian` | Managing entity | “Kansas Dept. of Agriculture” |
-| `data-fair-consent` | Consent status | `true` |
-| `data-license` | Reuse license | “CC-BY 4.0” |
-| `data-sensitivity` | Data privacy level | “Medium” |
-| `data-ethics-reviewed` | Council review flag | `true` |
-
-**Example JSON Metadata:**
 ```json
 {
   "data-origin": "USDA NASS",
@@ -124,58 +185,76 @@ This standard ensures data interfaces and visualizations representing **crop yie
   "data-fair-consent": true,
   "data-license": "CC-BY 4.0",
   "data-sensitivity": "Medium",
-  "data-ethics-reviewed": true
+  "data-ethics-reviewed": true,
+  "data-provenance": "County-level yield statistics 1980–2025; extracted 2025-10-12",
+  "data-units": "bushels/acre",
+  "land-ownership-masked": true
 }
 ```
+
+Required elements:
+
+- Origin and custodian  
+- Consent and license fields  
+- Sensitivity classification  
+- Provenance, including extraction dates and transformations  
+- Explicit recording of masking/aggregation for ownership or tribal data  
 
 ---
 
 ## ⚙️ Keyboard & ARIA Behavior Matrix
 
-| Key | Behavior | Description |
-|------|-----------|-------------|
-| `Tab` | Navigate between data regions | Focus ordered by field importance |
-| `Arrow Keys` | Move across cells in tables | Maintain readable order |
-| `Enter` | Toggle data filter or expand regional details | Activates chart update |
-| `Esc` | Return to dataset overview | Prevents navigation lock |
-| `aria-live` | Announce updates to data summaries | Recommended for live agricultural feeds |
+| Key / Attribute    | Behavior                              | Description                                |
+|--------------------|----------------------------------------|--------------------------------------------|
+| `Tab`              | Navigate between data regions & filters| Focus ordered by semantic importance       |
+| `Arrow Keys`       | Move across table/grid cells           | Maintain logical reading order             |
+| `Enter`            | Toggle filters or expand regional info | Triggers chart or table update             |
+| `Esc`              | Close detail views, return to overview | Prevent user from getting “trapped”        |
+| `aria-live="polite"` | Announce live updates to summaries   | Recommended for streaming ag feeds         |
 
 ---
 
 ## 🧪 Testing & Validation Workflows
 
-| Tool | Scope | Output |
-|-------|--------|--------|
-| **axe-core** | Table, form, and ARIA validation | `reports/self-validation/web/a11y_agriculture.json` |
-| **Lighthouse CI** | Chart color contrast & performance | `reports/ui/lighthouse_agriculture.json` |
-| **jest-axe** | React component-level accessibility | `reports/ui/a11y_agriculture_components.json` |
-| **Faircare Audit Script** | Consent metadata & bias verification | `reports/faircare/agriculture_audit.json` |
+| Tool           | Scope                                          | Output                                       |
+|----------------|------------------------------------------------|----------------------------------------------|
+| **axe-core**   | Tables, forms, and ARIA for ag dashboards      | `a11y_agriculture.json`                     |
+| **Lighthouse** | Chart color contrast & keyboard flows          | `lighthouse_agriculture.json`               |
+| **jest-axe**   | Component-level React accessibility tests      | `a11y_agriculture_components.json`          |
+| **Faircare Script** | Consent, bias, and narrative framing audit| `agriculture_audit.json`                    |
+
+Validation must show:
+
+- Correct table semantics and accessible filters.  
+- No color-only encodings for drought or fertility statuses.  
+- FAIR+CARE compliance for ownership and tribal land data representation.
 
 ---
 
 ## ⚖️ FAIR+CARE Integration
 
-| Principle | Implementation |
-|------------|----------------|
-| **Collective Benefit** | Data promotes sustainable land use and shared knowledge. |
-| **Authority to Control** | Custodians manage visibility of private ownership data. |
-| **Responsibility** | FAIR metadata attached to all visual and tabular data. |
-| **Ethics** | Agricultural narratives validated for neutrality and consent. |
+| Principle           | Implementation                                                                 |
+|---------------------|---------------------------------------------------------------------------------|
+| Collective Benefit  | Data supports sustainable agriculture and community decision-making.           |
+| Authority to Control| Custodians and land stewards control visibility of sensitive land attributes.  |
+| Responsibility      | All visualizations attach FAIR metadata and consent context.                   |
+| Ethics              | Agricultural narratives and metrics vetted for neutrality and consent-aware framing.|
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.0.0 | 2025-11-11 | FAIR+CARE Council | Introduced accessible agriculture and land resource data standard; defined ethical visualization, keyboard schema, and FAIR metadata structure. |
+| Version | Date       | Author             | Summary                                                                                          |
+|--------:|------------|--------------------|--------------------------------------------------------------------------------------------------|
+| v10.4.1 | 2025-11-16 | FAIR+CARE Council  | Upgraded for KFM-MDP v10.4.3; added extended YAML, masking flags, and enhanced ethics checks.   |
+| v10.0.0 | 2025-11-11 | FAIR+CARE Council  | Initial agriculture & land resource accessibility standard with FAIR+CARE metadata schema.       |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Developed under **Master Coder Protocol v6.3** · Verified by **FAIR+CARE Council**  
-[⬅ Back to Accessibility Index](README.md)
+Maintained under **Master Coder Protocol v6.3** · Verified by **FAIR+CARE Council**  
+[⬅ Back to Accessibility Patterns Index](../README.md)
 
 </div>
