@@ -1,8 +1,8 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — GitHub Infrastructure Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
+version: "v10.4.1"
+last_updated: "2025-11-16"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../releases/v10.4.0/sbom.spdx.json"
@@ -12,7 +12,7 @@ telemetry_schema: "../schemas/telemetry/github-readme-v1.json"
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v10.4.3"
 status: "Active / Enforced"
 doc_kind: "Overview"
 intent: "github-infrastructure"
@@ -27,6 +27,7 @@ redaction_required: false
 provenance_chain:
   - ".github/README.md@v10.0.0"
   - ".github/README.md@v10.3.2"
+  - ".github/README.md@v10.4.0"
 previous_version_hash: "<previous-sha256>"
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -35,7 +36,7 @@ ontology_alignment:
   prov_o: "prov:Plan"
 json_schema_ref: "../schemas/json/github-readme.schema.json"
 shape_schema_ref: "../schemas/shacl/github-readme-shape.ttl"
-doc_uuid: "urn:kfm:doc:github-readme-v10.4.0"
+doc_uuid: "urn:kfm:doc:github-readme-v10.4.1"
 semantic_document_id: "kfm-doc-github-readme"
 event_source_id: "ledger:.github/README.md"
 immutability_status: "version-pinned"
@@ -73,7 +74,7 @@ exports, security policies, and repository-level automation.
 
 ---
 
-## 📘 Introduction
+## 📘 Overview
 
 The `.github/` directory contains the **automated intelligence layer** of the KFM monorepo, enabling:
 
@@ -91,18 +92,17 @@ This directory is not ancillary — it is a core subsystem of the platform.
 
 ---
 
-## 🧱 Directory Structure
+## 🧱 Directory Layout
 
-A stable, KFM-MDP-compliant directory tree (`~~~text` block):
-
-~~~text
+```text
 .github/
+│
 ├── ARCHITECTURE.md               # CI/CD & governance architecture
 ├── README.md                     # This overview document
 │
 ├── workflows/                    # GitHub Actions automation
 │   ├── ci.yml                    # CI: lint, typecheck, test, schema, build
-│   ├── docs_validate.yml         # Markdown governance (KFM-MDP v10.4)
+│   ├── docs_validate.yml         # Markdown governance (KFM-MDP v10.4.3)
 │   ├── stac_validate.yml         # STAC schema validation
 │   ├── faircare_validate.yml     # FAIR+CARE validation checks
 │   ├── telemetry_export.yml      # Telemetry bundling for releases
@@ -120,7 +120,7 @@ A stable, KFM-MDP-compliant directory tree (`~~~text` block):
 ├── CODEOWNERS                    # Review & trust boundaries (per subsystem)
 ├── dependabot.yml                # Automated dependency updates
 └── SECURITY.md                   # Repo-wide security and vulnerability policy
-~~~
+````
 
 ---
 
@@ -128,36 +128,41 @@ A stable, KFM-MDP-compliant directory tree (`~~~text` block):
 
 The GitHub infrastructure acts as the **validation and governance firewall** for KFM.
 
-### Roles:
+### Roles
 
-- **Validate**  
-  - Markdown structure  
-  - Schemas (Story Node v3, STAC, DCAT, telemetry, governance metadata)  
-  - Types, builds, linting  
-  - Nondiscriminatory AI outputs  
+* **Validate**
 
-- **Govern**  
-  - CARE compliance rules  
-  - Sovereignty restrictions  
-  - Provenance logs  
-  - License audits  
+  * Markdown structure
+  * Schemas (Story Node v3, STAC, DCAT, telemetry, governance metadata)
+  * Types, builds, linting
+  * Nondiscriminatory AI outputs
 
-- **Audit**  
-  - Automated security scanning  
-  - Drift detection for dependencies  
-  - SBOM verification  
+* **Govern**
 
-- **Observe**  
-  - Telemetry export  
-  - CI performance metrics  
-  - Sustainability metrics  
+  * CARE compliance rules
+  * Sovereignty restrictions
+  * Provenance logs
+  * License audits
 
-- **Deploy**  
-  - Web app  
-  - Docs site  
-  - Release bundles  
+* **Audit**
 
-Everything inside `.github/` must be considered **architecture-bound, version-pinned automation**.
+  * Automated security scanning
+  * Drift detection for dependencies
+  * SBOM verification
+
+* **Observe**
+
+  * Telemetry export
+  * CI performance metrics
+  * Sustainability metrics
+
+* **Deploy**
+
+  * Web app
+  * Docs site
+  * Release bundles
+
+Everything inside `.github/` is **architecture-bound, version-pinned automation**.
 
 ---
 
@@ -165,45 +170,51 @@ Everything inside `.github/` must be considered **architecture-bound, version-pi
 
 The KFM CI/CD pipeline is **multi-layered and governance-aware**:
 
-### Stage 1 — Lint & Style  
-- ESLint, Prettier  
-- Stylelint  
-- Markdown rules (KFM-MDP v10.4)
+### Stage 1 — Lint & Style
 
-### Stage 2 — Schema Validation  
-- Story Node v3  
-- STAC Items & Collections  
-- DCAT Datasets  
-- Telemetry  
-- Provenance/CARE metadata  
-- Front-matter checks
+* ESLint, Prettier
+* Stylelint
+* Markdown rules (KFM-MDP v10.4.3)
 
-### Stage 3 — Testing  
-- Unit tests  
-- Integration tests  
-- E2E tests  
-- Schema test suites  
-- A11y tests (axe-core, Lighthouse)
+### Stage 2 — Schema Validation
 
-### Stage 4 — Governance Enforcement  
-- FAIR+CARE validation  
-- Sensitive dataset detection  
-- Masking/H3 checks  
-- Cultural sovereignty rules  
-- Provenance lineage validation  
+* Story Node v3
+* STAC Items & Collections
+* DCAT Datasets
+* Telemetry payloads
+* Provenance/CARE metadata
+* Front-matter checks
 
-### Stage 5 — Security  
-- Dependabot  
-- OSV scanning  
-- Workflow integrity  
-- SBOM verification  
-- SLSA supply chain checks  
+### Stage 3 — Testing
 
-### Stage 6 — Build & Deploy  
-- Web build (Vite)  
-- Docs build  
-- Release bundle assembly  
-- CI signing & artifact integrity  
+* Unit tests
+* Integration tests
+* E2E tests
+* Schema test suites
+* A11y tests (axe-core, Lighthouse)
+
+### Stage 4 — Governance Enforcement
+
+* FAIR+CARE validation
+* Sensitive dataset detection
+* H3 masking checks for sensitive locations
+* Cultural sovereignty rules
+* Provenance lineage validation
+
+### Stage 5 — Security
+
+* Dependabot
+* OSV / vulnerability scanning
+* Workflow integrity checks
+* SBOM verification
+* SLSA supply chain checks
+
+### Stage 6 — Build & Deploy
+
+* Web build (e.g., Vite)
+* Docs build
+* Release bundle assembly
+* CI signing & artifact integrity
 
 ---
 
@@ -211,19 +222,19 @@ The KFM CI/CD pipeline is **multi-layered and governance-aware**:
 
 Each PR triggers:
 
-- CARE classification prompt  
-- Provenance annotations  
-- A11y impact review  
-- Telemetry impact summary  
-- Data sovereignty checks  
-- License compatibility checks  
+* CARE classification prompt
+* Provenance annotations
+* A11y impact review
+* Telemetry impact summary
+* Data sovereignty checks
+* License compatibility checks
 
 The checks in `.github/workflows/faircare_validate.yml` enforce:
 
-- **No unverified historical claims**  
-- **No disallowed coordinates**  
-- **No missing provenance chains**  
-- **No AI-generated content without labels**  
+* **No unverified historical claims**
+* **No disallowed coordinates**
+* **No missing provenance chains**
+* **No AI-generated content without labels**
 
 Any violation → **PR blocked**.
 
@@ -233,18 +244,18 @@ Any violation → **PR blocked**.
 
 GitHub Actions automatically runs:
 
-- `tests/unit/**`  
-- `tests/integration/**`  
-- `tests/e2e/**`  
-- `tests/schemas/**`  
-- A11y evaluations  
-- Visual diff tests (if configured)  
+* `tests/unit/**`
+* `tests/integration/**`
+* `tests/e2e/**`
+* `tests/schemas/**`
+* A11y evaluations
+* Visual diff tests (if configured)
 
 After test execution:
 
-- Telemetry is exported  
-- Governance logs are updated  
-- CI metadata is written to the release manifest  
+* Telemetry is exported
+* Governance logs are updated
+* CI metadata is written to the release manifest
 
 Testing failures **block merges, releases, and governance certification**.
 
@@ -254,23 +265,25 @@ Testing failures **block merges, releases, and governance certification**.
 
 GitHub workflows export telemetry covering:
 
-- CI duration  
-- Energy usage  
-- Carbon estimates  
-- Build stability  
-- Test pass/fail patterns  
-- Governance validation stats  
-- A11y usage metrics  
+* CI duration
+* Energy usage
+* Carbon estimates
+* Build stability
+* Test pass/fail patterns
+* Governance validation stats
+* A11y usage metrics
 
 Telemetry is aggregated into:
 
-`releases/<version>/focus-telemetry.json`
+```text
+releases/<version>/focus-telemetry.json
+```
 
 And integrated with:
 
-- FAIR+CARE dashboards  
-- Observability views  
-- Governance audit trails  
+* FAIR+CARE dashboards
+* Observability views
+* Governance audit trails
 
 ---
 
@@ -278,61 +291,62 @@ And integrated with:
 
 KFM enforces:
 
-- CODEOWNERS constraints  
-- Protected branches  
-- Mandatory reviews  
-- Workflow signature policies  
-- Secret scanning  
-- Dependency version pinning  
-- SBOM generation & verification  
+* CODEOWNERS constraints
+* Protected branches
+* Mandatory reviews
+* Workflow signature policies
+* Secret scanning
+* Dependency version pinning
+* SBOM generation & verification
 
 Workflows must **never**:
 
-- Expose secrets  
-- Download untrusted code  
-- Run arbitrary user scripts  
-- Disable schema or FAIR+CARE validation  
+* Expose secrets
+* Download untrusted code
+* Run arbitrary user scripts
+* Disable schema or FAIR+CARE validation
 
 ---
 
 ## 📁 Issue / PR Governance
 
-### Issue Templates enforce:
+### Issue Templates enforce
 
-- CARE classification  
-- Provenance requirements  
-- A11y intent  
-- Expected impact  
-- Dataset sensitivity (when applicable)
+* CARE classification
+* Provenance requirements
+* A11y intent
+* Expected impact
+* Dataset sensitivity (when applicable)
 
-### PR Template requires:
+### PR Template requires
 
-- CARE label  
-- Provenance declaration  
-- A11y impact  
-- Telemetry implications  
-- Schema alignment  
-- Governance reviewer  
-- Sustainability notes  
+* CARE label
+* Provenance declaration
+* A11y impact
+* Telemetry implications
+* Schema alignment
+* Governance reviewer
+* Sustainability notes
 
 These templates ensure ethical, structured, and reviewable development.
 
 ---
 
-## 🕰 Version History
+## 🕰️ Version History
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Full rewrite aligned with KFM-MDP v10.4; expanded CI/CD, governance, security, telemetry architecture |
-| v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, telemetry integration |
-| v10.3.1 | 2025-11-13 | Initial GitHub infrastructure outline |
+| Version | Date       | Summary                                                                                                |
+| ------: | ---------- | ------------------------------------------------------------------------------------------------------ |
+| v10.4.1 | 2025-11-16 | Upgraded to KFM-MDP v10.4.3; added extended governance/AI metadata and KFM-lined directory block.      |
+| v10.4.0 | 2025-11-15 | Full rewrite aligned with KFM-MDP v10.4; expanded CI/CD, governance, security, telemetry architecture. |
+| v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, telemetry integration.                                                   |
+| v10.3.1 | 2025-11-13 | Initial GitHub infrastructure outline.                                                                 |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MIT License  
-Validated under MCP-DL v6.3 and KFM-MDP v10.4  
-FAIR+CARE Certified · Public Document · Version-Pinned  
+© 2025 Kansas Frontier Matrix — MIT License
+Validated under MCP-DL v6.3 and KFM-MDP v10.4.3
+FAIR+CARE Certified · Public Document · Version-Pinned
 
 </div>
