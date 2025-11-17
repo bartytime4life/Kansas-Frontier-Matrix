@@ -64,13 +64,8 @@ sunset_policy: "Superseded upon next accessibility policy update"
 `docs/accessibility/testing-guide.md`
 
 **Purpose:**  
-Provide a complete reference for automated, manual, and assistive technology testing of the Kansas Frontier Matrix (KFM).  
-Ensures repeatable WCAG 2.1 AA + FAIR+CARE validation across web UI, documentation, and AI narrative layers.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../standards/faircare.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](../../releases/v10.4.0/manifest.zip)
+Provide a complete reference for automated, manual, and assistive-technology testing of the Kansas Frontier Matrix (KFM).  
+Ensures repeatable WCAG 2.1 AA + FAIR+CARE validation across all UI layers, documentation, and AI narratives.
 
 </div>
 
@@ -78,39 +73,39 @@ Ensures repeatable WCAG 2.1 AA + FAIR+CARE validation across web UI, documentati
 
 ## 📘 Overview
 
-Accessibility testing is a continuous verification workflow ensuring KFM remains inclusive as new features, datasets, and UI components are introduced.
+Accessibility testing ensures the KFM platform remains inclusive, ethical, and compliant as it evolves.
 
 This guide defines:
 
-- Tools and frameworks  
-- Automated CI pipelines  
-- Manual validation procedures  
-- AI narrative accessibility checks  
-- FAIR+CARE ethics validation  
+- Automated tests  
+- Manual assistive-technology workflows  
+- AI Focus Mode accessibility checks  
+- FAIR+CARE ethical validation  
+- CI-integrated metrics & dashboards  
 
-Testing spans:
+Testing covers:
 
-1. Automated validation  
-2. Manual verification  
-3. AI ethics and inclusivity checks  
-4. Regression analysis  
+1. Automated CI/CD validation  
+2. Manual assistive-technology testing  
+3. AI narrative ethics and readability  
+4. Regression tracking  
 5. Design token compliance  
 
 ---
 
 ## 🗂️ Directory Layout
 
-~~~text
+```text
 docs/accessibility/
 │
 ├── README.md
-├── testing-guide.md                # This file
+├── testing-guide.md                  # This file
 ├── tokens.md
 ├── audits/
 │   ├── README.md
 │   └── templates/
 └── patterns/
-~~~
+```
 
 ---
 
@@ -118,27 +113,29 @@ docs/accessibility/
 
 | Test Type | Tools | Scope | Frequency | Output |
 |----------|--------|--------|-----------|--------|
-| Automated Static | axe-core, pa11y, Lighthouse | HTML, ARIA, alt text, color contrast | Per PR / CI | a11y_summary.json |
-| Manual Assistive Tech | NVDA, VoiceOver, TalkBack | Focus, navigation, reading order | Quarterly | audits/YYYY-QX_a11y_report.json |
-| AI Narrative Review | Textstat, NLP bias | Readability, tone, inclusivity | Biannual | audits/YYYY-QX_focus_ethics.md |
-| Token Validation | WCAG Contrast Checker | Color, typography, focus | Per Release | color-contrast.json |
-| Regression | Cypress, Playwright | Revalidate fixed issues | Continuous | CI logs |
-| Ethical Review | FAIR+CARE Council | CARE compliance | Biannual | faircare-report.md |
+| Automated Static | axe-core, pa11y, Lighthouse | HTML, ARIA, headings, alt text, color contrast | Per PR / CI | a11y_summary.json |
+| Manual Assistive Tech | NVDA, VoiceOver, TalkBack | Focus, screen reader behavior, reading order | Quarterly | audits/YYYY-QX_a11y_report.json |
+| AI Narrative Review | Textstat, bias detector | Readability, tone, inclusivity, provenance | Biannual | audits/YYYY-QX_focus_ethics.md |
+| Design Token Validation | WCAG analyzer | Contrast tokens, typography, focus | Per Release | color-contrast.json |
+| Regression Testing | Cypress, Playwright | Revalidate resolved issues | Continuous | CI logs |
+| Ethical Validation | FAIR+CARE Council | Tone, consent checks, cultural sensitivity | Biannual | faircare-report.md |
 
 ---
 
 ## ⚙️ Automated CI Testing Workflows
 
-### Primary CI Workflows
+Automated checks run during PRs, commits, and releases.
 
-| Workflow | Description | Artifact |
-|----------|-------------|-----------|
-| accessibility_scan.yml | Runs Lighthouse + axe-core on each PR | a11y_summary.json |
-| storybook-a11y.yml | Jest-axe audits on Storybook components | a11y_component_audits.json |
-| color-contrast.yml | Validates token contrast ratio >= 4.5:1 | color-contrast.json |
-| faircare-audit.yml | Checks ethical/consent markers | faircare-validation.json |
+### CI Workflows
 
-All automated tests must pass before releases may be certified under FAIR+CARE.
+| Workflow | Description | Output |
+|----------|-------------|--------|
+| accessibility_scan.yml | Lighthouse + axe-core | a11y_summary.json |
+| storybook-a11y.yml | Jest-axe on Storybook components | a11y_component_audits.json |
+| color-contrast.yml | Validates color tokens | color-contrast.json |
+| faircare-audit.yml | CARE & ethics checks | faircare-validation.json |
+
+All must pass before a release may be certified.
 
 ---
 
@@ -146,42 +143,42 @@ All automated tests must pass before releases may be certified under FAIR+CARE.
 
 ### Keyboard Navigation
 
-- Test navigation with Tab, Shift+Tab, Enter, Space.  
-- Ensure visible focus rings >= 3px.  
-- Verify skip links (“Skip to content”) route correctly.  
-- Ensure no keyboard traps.
+- Test using Tab, Shift+Tab, Enter, Space  
+- Ensure visible focus rings (>= 3px)  
+- Verify skip navigation (Skip to Content)  
+- Ensure no keyboard traps  
 
 ### Screen Reader Validation
 
-| Screen Reader | Platform | Tests |
-|---------------|----------|--------|
-| NVDA | Windows 11 + Firefox | Landmark roles, labels, announcements |
-| VoiceOver | macOS + Safari | Focus order, headings, alt text |
-| TalkBack | Android | Touch exploration, live regions |
+| Screen Reader | Platform | Validation Focus |
+|---------------|-----------|------------------|
+| NVDA | Windows + Firefox | ARIA landmarks, labels, announcements |
+| VoiceOver | macOS / Safari | Focus order, semantics |
+| TalkBack | Android | Touch exploration, live-region updates |
 
 ### Reduced Motion
 
-- Verify prefers-reduced-motion disables non-essential animations.  
-- Ensure transitions remain perceivable but non-intrusive.
+- `prefers-reduced-motion` must disable non-essential movement  
+- Essential UI transitions must remain perceivable  
 
-### Color & Visual Validation
+### Color & Visual Checks
 
-- Use tokens from `docs/accessibility/tokens.md`.  
-- Confirm contrast >= 4.5:1 in all states (default, hover, pressed, disabled).
+- Validate WCAG AA contrast (>= 4.5:1)  
+- Verify all states (hover, active, focus, disabled)  
 
 ---
 
 ## 🧾 AI Focus Mode Accessibility Testing
 
 | Test | Description | Metric |
-|------|-------------|---------|
-| Readability | Flesch-Kincaid grade level | <= 8.0 |
-| Tone Neutrality | NLP bias/tone detection | >= 90% neutrality |
-| Provenance Chips | Presence of source indicators | 100% |
-| Consent Checks | Proper CARE labels included | 100% |
-| Narrative Length | Max length for SR usability | <= 200 words |
+|------|-------------|--------|
+| Readability | Flesch-Kincaid Grade Level | <= 8.0 |
+| Tone & Bias | NLP bias detection | >= 90% neutrality |
+| Provenance | Ensure source indication chip exists | 100% |
+| Consent Flags | CARE metadata presence | 100% |
+| Narrative Length | Max length for accessibility | <= 200 words |
 
-Stored in:
+All results stored in:
 
 `releases/v10.4.0/focus-telemetry.json`
 
@@ -189,14 +186,12 @@ Stored in:
 
 ## 🔍 FAIR+CARE Ethical Validation
 
-| CARE Principle | Validation | Method |
-|----------------|------------|--------|
-| Collective Benefit | Multi-device A11y compliance | Manual A11y Council |
-| Authority to Control | Consent metadata validation | CARE Review |
-| Responsibility | Regression checks | CI Regression Tracker |
-| Ethics | AI tone safety | AI Narrative Review |
-
-Pass requirement: **>= 90% CARE compliance**.
+| CARE Principle | Validation Task | Method |
+|----------------|------------------|--------|
+| Collective Benefit | Multi-device A11y validation | Accessibility Council |
+| Authority to Control | Consent, redaction, provenance | CARE Review |
+| Responsibility | Regression verification | CI Regression Tracker |
+| Ethics | AI tone safety | Narrative Audit |
 
 ---
 
@@ -204,57 +199,54 @@ Pass requirement: **>= 90% CARE compliance**.
 
 | Metric | Target | Verified By |
 |--------|--------|--------------|
-| WCAG AA Pass Rate | >= 98% | CI + Manual |
-| Lighthouse A11y Score | >= 95 | accessibility_scan.yml |
-| Contrast Token Compliance | 100% | color-contrast.yml |
-| AI Readability | <= Grade 8 | Textstat |
-| Ethical Narrative Compliance | >= 90% | FAIR+CARE Council |
-| Regression Fix Rate | 100% | CI |
+| WCAG Pass Rate | >= 98% | CI + Manual |
+| Lighthouse Score | >= 95 | accessibility_scan.yml |
+| Token Contrast Compliance | 100% | color-contrast.yml |
+| Narrative Readability | <= Grade 8 | Textstat |
+| Ethical Review Compliance | >= 90% | FAIR+CARE Council |
+| Regression Fix Rate | 100% | CI Tracker |
 
 ---
 
 ## 🧩 Pre-Release Checklist
 
 | Step | Description | Owner |
-|------|-------------|----------|
-| 1 | CI A11y workflows pass | DevOps |
-| 2 | Manual keyboard + SR testing | A11y Council |
-| 3 | FAIR+CARE narrative audit | Ethics Council |
-| 4 | Token contrast validation | Design |
-| 5 | Archive audits under `/docs/accessibility/audits/` | Docs |
-| 6 | Publish quarterly summary | Governance Lead |
+|------|-------------|--------|
+| 1 | All automated tests pass | DevOps |
+| 2 | Manual A11y testing completed | Accessibility Council |
+| 3 | AI ethics + narrative compliance reviewed | FAIR+CARE Council |
+| 4 | Token validation complete | Design Team |
+| 5 | Audits archived | Documentation Team |
+| 6 | Quarterly summary published | Governance Lead |
 
 ---
 
 ## 🧠 Continuous Improvement Loop
 
-````mermaid
+```mermaid
 flowchart LR
-  A["Automated CI A11y Tests"]
-    --> B["Manual Accessibility Review"]
+  A["Automated CI A11y Tests"] --> B["Manual Accessibility Review"]
   B --> C["AI Tone & Narrative Audit"]
   C --> D["Quarterly Council Audit"]
   D --> E["Regression Fixes + Token Updates"]
   E --> A
-````
+```
 
-⸻
+---
 
-🕰️ Version History
+## 🕰️ Version History
 
-Version	Date	Author	Summary
-v10.4.1	2025-11-16	Accessibility Council	Updated to KFM-MDP v10.4.3; stabilized codebox formatting; improved CI references.
-v10.0.0	2025-11-10	FAIR+CARE Council	Initial accessibility testing standard established.
+| Version | Date | Author | Summary |
+|--------:|------------|---------|----------|
+| v10.4.1 | 2025-11-16 | Accessibility Council | Updated to KFM-MDP v10.4.3; corrected formatting; stabilized nested code blocks for Apple/GitHub. |
+| v10.0.0 | 2025-11-10 | FAIR+CARE Council | Initial accessibility testing standard. |
 
-
-⸻
-
+---
 
 <div align="center">
 
-
-© 2025 Kansas Frontier Matrix — CC-BY 4.0
-Validated under MCP-DL v6.3 · FAIR+CARE Certified
-Back to Accessibility Index￼
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+Validated under MCP-DL v6.3 · FAIR+CARE Council Certified  
+[Back to Accessibility Index](README.md)
 
 </div>
