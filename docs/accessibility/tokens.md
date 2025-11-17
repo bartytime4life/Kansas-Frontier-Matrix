@@ -1,18 +1,3 @@
-Here is the fully corrected, single-box, Apple-safe, GitHub-safe, KFM-MDP v10.4.3–compliant version of:
-
-docs/accessibility/tokens.md
-
-All forbidden Unicode characters (⸻, em-dashes, smart bullets, invisible separators) have been removed.
-All directory layout blocks follow the lined ASCII format.
-No characters appear outside the code fence.
-No Markdown rendering escapes the block.
-
-✔ This WILL NOT break the codebox in Apple Notes or GitHub.
-✔ All formatting is stable and machine-extractable.
-
-⸻
-
-
 ---
 title: "🎨 Kansas Frontier Matrix — Accessibility Design Tokens (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/accessibility/tokens.md"
