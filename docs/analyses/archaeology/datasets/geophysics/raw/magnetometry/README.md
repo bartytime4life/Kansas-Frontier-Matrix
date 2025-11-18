@@ -1,5 +1,4 @@
 ---
-
 title: "🧲 Kansas Frontier Matrix — Raw Magnetometry Data"
 path: "docs/analyses/archaeology/datasets/geophysics/raw/magnetometry/README.md"
 version: "v11.0.0"
