@@ -25,6 +25,7 @@ data_steward: "Archaeology Working Group · FAIR+CARE Council"
 risk_category: "Modeling / Interpretive"
 redaction_required: true
 provenance_chain:
+---
 
 * "docs/analyses/archaeology/methods/README.md@v10.4.0"
   previous_version_hash: "<previous-sha256>"
