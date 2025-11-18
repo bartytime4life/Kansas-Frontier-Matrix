@@ -4,7 +4,7 @@ title: "🧲 Kansas Frontier Matrix — Raw Magnetometry Data"
 path: "docs/analyses/archaeology/datasets/geophysics/raw/magnetometry/README.md"
 version: "v11.0.0"
 last_updated: "2025-11-17"
-review_cycle: "Annual / Archaeology · Geophysics Leads"
+review_cycle: "Annual / Archaeology / Geophysics Leads"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../../../../../releases/v11.0.0/sbom.spdx.json"
 manifest_ref: "../../../../../../../releases/v11.0.0/manifest.zip"
@@ -68,7 +68,7 @@ Each `<survey-id>` corresponds to a unique magnetometry field collection event.
 
 ### Magnetometry Instrument Data
 
-* `.dat`, `.bin`, `.g858` (Geometric G-858/G-859)
+* `.dat`, `.bin`, `.g858` (Geometric G-858 / G-859)
 * `.dat`, `.raw`, `.txt` (FM256)
 * `.xyz`, `.dat` (GEM Systems)
 * `.txt`, `.csv` (Bartington)
@@ -96,30 +96,48 @@ Each `<survey-id>` corresponds to a unique magnetometry field collection event.
 
 Every survey must include:
 
-### **STAC Item**
+### STAC Item
+
+Stored under:
+
+```text
+magnetometry/<survey-id>/metadata/stac-item.json
+```
+
+Must define:
 
 * `id`, `datetime`, `bbox`, `geometry`
-* instrument model, sampling frequency
-* complete asset listing pointing to raw files
+* instrument model and sampling characteristics
+* asset listings for all raw files
 
-### **DCAT Dataset**
+### DCAT Dataset
 
-* title, description
-* rights, license, access constraints
+Stored under:
+
+```text
+magnetometry/<survey-id>/metadata/dcat.json
+```
+
+Must define:
+
+* dataset title, description
+* rights, license, and access constraints
 * instrument specifications
 * distribution metadata
 
-### **PROV-O Lineage**
+### PROV-O Lineage
+
+Stored under:
+
+```text
+magnetometry/<survey-id>/provenance/
+```
+
+Must define:
 
 * **Entity:** raw files, GPS logs, field notes
 * **Activity:** magnetometry acquisition event
-* **Agent:** field crew, PI, institution
-
-Place all metadata in:
-
-```
-magnetometry/<survey-id>/metadata/
-```
+* **Agent:** field crew, principal investigator, institution
 
 ---
 
@@ -127,7 +145,7 @@ magnetometry/<survey-id>/metadata/
 
 Provenance documentation must live in:
 
-```
+```text
 magnetometry/<survey-id>/provenance/
 ```
 
@@ -136,12 +154,12 @@ Include:
 * acquisition notes
 * crew roles
 * instrument configuration
-* drift/diurnal conditions
+* drift and diurnal conditions
 * anomalies encountered
 * missing or corrupted lines
-* GPS/instrument sync notes
+* GPS and instrument synchronization notes
 
-Downstream datasets must reference these raw files in their lineage.
+Downstream processed datasets must reference these raw files in their lineage.
 
 ---
 
@@ -156,10 +174,10 @@ Raw magnetometry data may reveal culturally sensitive subsurface features such a
 
 **Rules:**
 
-* Raw magnetometry data must **never** be publicly released without CARE review
-* Spatial generalization may be required
-* Restricted surveys must be identified in `metadata/access-control.yml`
-* Story Nodes must reference **generalized** derived rasters, not raw data
+* Raw magnetometry data must **never** be publicly released without CARE review.
+* Spatial generalization may be required for shared or published derivatives.
+* Restricted surveys must be identified in `metadata/access-control.yml`.
+* Story Nodes must reference **generalized** derived rasters or vector products, not raw data.
 
 ---
 
@@ -167,26 +185,26 @@ Raw magnetometry data may reveal culturally sensitive subsurface features such a
 
 Raw magnetometry data is processed by:
 
-```
+```text
 src/pipelines/geophysics/magnetometry/
 ```
 
 Standard ETL flow:
 
-1. Import raw instrument files
-2. Parse sensor headers + GPS logs
-3. Merge positional and magnetic data
-4. Apply drift and diurnal corrections
-5. Interpolate and grid
-6. Optional noise reduction
-7. Export GeoTIFF rasters and anomaly vectors
-8. Generate STAC Items
-9. Update PROV-O lineage
+1. Import raw instrument files.
+2. Parse sensor headers and GPS logs.
+3. Merge positional and magnetic data.
+4. Apply drift and diurnal corrections.
+5. Interpolate and grid.
+6. Apply optional noise reduction.
+7. Export GeoTIFF rasters and anomaly vectors.
+8. Generate STAC Items.
+9. Update PROV-O lineage and provenance records.
 
 Every ETL step must be logged in:
 
-```
-provenance/transformations-log.csv
+```text
+magnetometry/<survey-id>/provenance/transformations-log.csv
 ```
 
 ---
@@ -196,4 +214,3 @@ provenance/transformations-log.csv
 | Version | Date       | Summary                                              |
 | ------- | ---------- | ---------------------------------------------------- |
 | v11.0.0 | 2025-11-17 | Initial creation of raw magnetometry dataset README. |
-
