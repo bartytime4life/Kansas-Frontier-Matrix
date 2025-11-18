@@ -1,5 +1,4 @@
 ---
-
 title: "🛰️ Kansas Frontier Matrix — Data Validation & Observability Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/pipelines/validation-observability/README.md"
 version: "v11.0.0"
