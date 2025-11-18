@@ -25,9 +25,7 @@ data_steward: "Archaeology Working Group · FAIR+CARE Council"
 risk_category: "Modeling / Interpretive"
 redaction_required: true
 provenance_chain:
----
-
-* "docs/analyses/archaeology/methods/README.md@v10.4.0"
+"docs/analyses/archaeology/methods/README.md@v10.4.0"
   previous_version_hash: "<previous-sha256>"
   ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -60,7 +58,6 @@ provenance_chain:
   lifecycle_stage: "draft"
   ttl_policy: "Review every 12 months or upon major model change"
   sunset_policy: "Superseded when v11.x predictive modeling framework is adopted"
-
 ---
 
 <div align="center">
