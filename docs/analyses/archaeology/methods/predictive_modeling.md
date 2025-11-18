@@ -1,16 +1,3 @@
-Understood.
-Here is the **FULL FILE**, regenerated cleanly, with the **YAML title fixed**, using the **ASCII-safe colon separator** that your GitHub YAML parser will always accept.
-
-No em-dash.
-No unicode dash.
-No YAML-breaking characters.
-No extra wrappers.
-No commentary.
-
-This is a **fully valid KFM-MDP v11 markdown file**.
-
----
-
 ---
 
 title: "📊 Kansas Frontier Matrix: Archaeology Predictive Modeling Methods"
