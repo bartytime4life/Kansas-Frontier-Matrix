@@ -1,5 +1,5 @@
 ---
-title: "🔁 Kansas Frontier Matrix — Unified Reliable Pipeline Architecture v11 (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🔁 Kansas Frontier Matrix — Unified Reliable Pipelines & Blue/Green Promotion Architecture v11 (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/architecture/reliable-pipelines.md"
 version: "v11.0.0"
 last_updated: "2025-11-18"
@@ -15,12 +15,12 @@ mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.0.0"
 status: "Active / Enforced"
 doc_kind: "Architecture · Standard"
-intent: "pipelines-reliability"
+intent: "reliable-pipelines"
 fair_category: "F1-A1-I1-R1"
-care_label: "Collective benefit · Authority to control · Responsibility · Ethics"
+care_label: "CARE / Indigenous-partnered · Operational Safety"
 sensitivity_level: "Medium"
 public_exposure_risk: "Low"
-indigenous_rights_flag: false
+indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Operational Reliability"
 redaction_required: false
@@ -29,6 +29,7 @@ provenance_chain:
   - "src/pipelines/architecture/reliable-pipelines.md@v10.3.1"
   - "src/pipelines/architecture/reliable-pipelines.md@v10.4.0"
   - "src/pipelines/architecture/reliable-pipelines.md@v10.4.1"
+  - "src/pipelines/architecture/reliable-pipelines.md@v10.4.2"
 previous_version_hash: "<previous-sha256>"
 ontology_alignment:
   cidoc: "E7 Activity"
@@ -64,59 +65,50 @@ sunset_policy: "Superseded upon new protocol release"
 
 <div align="center">
 
-# 🔁 **Kansas Frontier Matrix — Unified Reliable Pipeline Architecture v11**  
+# 🔁 **Kansas Frontier Matrix — Unified Reliable Pipelines & Blue/Green Promotion Architecture v11**  
 `src/pipelines/architecture/reliable-pipelines.md`
 
 **Purpose**  
-Define the *authoritative, enforceable* reliability standard and architecture for all KFM pipelines and updaters:
-
-> **Triggers → light AI (schema only) → deterministic ETL → validation gates → idempotent upsert → metadata/versioning → blue/green publish → alerts & telemetry**,  
-> with **safe retries, rollback, and resume** enforced at the architecture level.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](../../LICENSE)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Operational-orange)](../../docs/standards/faircare.md)  
-[![Status: Enforced](https://img.shields.io/badge/Status-Enforced-success)](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+Define the reliable pipelines pattern for KFM: **blue/green dataset promotion, WAL checkpoints, retries, lineage diffs, and instant rollback**, wired into CI/CD, telemetry, and governance, and aligned with **Data & AI pipeline reliability**.
 
 </div>
 
----
+--- ✦ ---
 
 ## 📘 1. Overview
 
-This document specifies the **Unified Reliable Pipeline Architecture** for Kansas Frontier Matrix (KFM).  
-It merges and supersedes all prior “Reliable Updaters” and “Reliable Pipeline Architecture” guides into a single **Diamond⁹ Ω / Crown∞Ω Ultimate Certified** v11 architecture + standard.
+This document defines the canonical “boringly safe” data and model update pattern for the Kansas Frontier Matrix (KFM):
 
-Reliable pipelines in KFM are:
+> Always build and validate on a non-live **green** copy, then atomically flip the pointer from **blue → green** when it’s proven safe, with **WAL-backed retries and instant rollback**.
 
-- **Deterministic** — same inputs + same config → same outputs.  
-- **Idempotent** — safe under at-least-once triggers, with exactly-once effects at the publish boundary.  
-- **Rollback-safe** — blue/green pointer flips, never destructive edits.  
-- **Observable** — structured logs, metrics, traces, FAIR+CARE telemetry.  
-- **Replayable** — checkpoints + immutable artifacts enable safe re-runs.  
-- **Governed** — FAIR+CARE + governance gates applied before publish.  
+**Scope**
 
-Any pipeline that does not comply with this standard MUST NOT be deployed.
+- **Datasets:** tabular, vector, raster, tiles, embeddings, graph loads.  
+- **Metadata:** STAC/DCAT, JSON-LD, PROV-O, Neo4j graph projections.  
+- **AI/ML:** embeddings, classifiers, Focus Mode models, explainability overlays.  
+- **Downstream:** web maps (MapLibre), 3D (Cesium), Story Nodes, Focus Mode v2.5+.
+
+All pipelines described here MUST comply with:
+
+- **MCP-DL v6.3** (documentation-first)  
+- **KFM-MDP v11** (Markdown & docs protocol)  
+- **FAIR+CARE**, energy & carbon telemetry, and immutable provenance  
 
 ---
 
-## 🎯 2. Purpose
+## 🎯 2. Purpose & Consumers
 
-The purposes of this standard are to:
+The purposes of this architecture are to:
 
 - Provide a **single, enforceable pattern** for all KFM pipelines and updaters.  
 - Ensure **idempotent, observable, rollback-safe** behavior across ingestion, ETL, graph updates, and publishing.  
-- Align pipeline design with:
-  - **Master Coder Protocol (MCP-DL v6.3)**  
-  - **Markdown Structural & Formatting Rules v11**  
-  - **FAIR+CARE governance**  
-  - **STAC/DCAT/PROV-O/OpenLineage**  
+- Serve as **the single source of truth** for blue/green dataset promotion and rollback.
 
-**Primary consumers:**
+**Primary consumers**
 
 - Pipeline authors (Python, SQL, Neo4j, STAC tooling).  
 - Architecture and SRE teams.  
-- FAIR+CARE Council and governance bodies verifying reliability posture.  
+- FAIR+CARE Council and governance bodies reviewing reliability & cultural risk.
 
 ---
 
@@ -124,7 +116,7 @@ The purposes of this standard are to:
 
 ### In Scope
 
-All code and configuration under `src/pipelines/**` that:
+All pipeline code under `src/pipelines/**` that:
 
 - Reads from `data/sources/**`, `data/raw/**`, or external APIs/streams.  
 - Writes to `data/work/**`, `data/processed/**`, `data/stac/**`, or Neo4j.  
@@ -132,463 +124,461 @@ All code and configuration under `src/pipelines/**` that:
 All pipelines that:
 
 - Perform ETL (batch or streaming).  
-- Update KFM knowledge graph or STAC/DCAT catalogs.  
-- Affect user-facing maps, timelines, Focus Mode, or Story Nodes.
+- Update KFM knowledge graph or catalogs.  
+- Feed Focus Mode, Story Nodes, maps, tiles, or public APIs.
 
 ### Out of Scope
 
-- Pure frontend logic that does not depend on pipeline guarantees.  
-- Ad-hoc notebooks used solely for one-off analysis (not used in production).  
-- External upstream providers’ internal architectures.
-
-**Related documents:**
-
-- `src/ARCHITECTURE.md` — global system architecture.  
-- `src/pipelines/architecture/observability/README.md` — observability standard.  
-- `docs/standards/markdown_rules.md` — Markdown protocol.  
+- Pure frontend logic with no pipeline involvement.  
+- One-off notebooks that never promote artifacts or models to production.  
+- External providers’ internal architectures.
 
 ---
 
 ## 📚 4. Definitions
 
-- **Pipeline / Updater** — repeatable process that ingests, transforms, validates, and publishes data or knowledge into KFM.  
-- **Trigger** — mechanism that starts a run (cron, event, manual), bundled with a *trigger envelope*.  
-- **Idempotency Key (run-level)** — deterministic hash of the trigger envelope used to prevent double-processing of the same run.  
-- **Natural Key (record-level)** — minimal, stable business identity for each record (e.g., `(station_id, date)`).  
-- **Content Hash** — hash of the **normalized record without runtime fields** (no timestamps, no ephemeral IDs).  
-- **Blue/Green** — dual dataset pattern where one version serves (blue) and another is candidate (green).  
-- **Checkpoint** — persisted cursor (date/page/offset) for resume.  
-- **DLQ (Dead Letter Queue)** — durable storage for work items that failed beyond allowed retries.  
-- **Artifact** — any derived dataset (COG, Parquet, CSV, GeoJSON, STAC item, etc.) whose integrity is tracked.  
-- **Run ID** — unique identifier of a single pipeline execution derived from content and configuration.
+- **Pipeline / Updater** — repeatable process ingesting, transforming, validating, and publishing data/knowledge into KFM.  
+- **Trigger** — Cron, event, or manual signal that launches a run, encapsulated in a trigger envelope.  
+- **Idempotency Key (run-level)** — hash derived from trigger envelope and config to prevent duplicate processing.  
+- **Natural Key (record-level)** — minimal, stable identity (e.g., `(station_id, date)`).  
+- **Content Hash** — hash of the normalized, non-ephemeral record.  
+- **Blue Dataset** — currently live dataset bundle.  
+- **Green Dataset** — candidate bundle under validation.  
+- **Checkpoint** — persisted cursor for safe resume (offset, page, date).  
+- **WAL** — append-only log of intended effects and steps prior to mutation.  
+- **Promotion Contract** — machine-readable “what must be true before green goes live.”  
+- **Lineage Diff** — machine and human readable summary of changes between blue and green.  
 
 ---
 
-## 🏗 5. Architecture / Context
+## 🏗 5. Directory Layout (Reference Pattern)
 
-### 5.1 System Context
-
-~~~mermaid
-flowchart TD
-  subgraph External_Sources[External Sources]
-    S1["Archives / APIs"]
-    S2["STAC / HTTP"]
-    S3["DBs / Files"]
-  end
-
-  subgraph Pipelines["Reliable Pipeline (this standard)"]
-    T["Trigger<br/>cron · event · manual"]
-    AI["Light AI (Optional)<br/>schema hints only"]
-    E["Deterministic ETL<br/>pure transforms"]
-    V["Validation & QA<br/>schema · spatial · temporal · drift · FAIR+CARE"]
-    U["Idempotent Upsert<br/>natural key · content hash"]
-    M["Metadata & Versioning<br/>STAC · DCAT · PROV"]
-    B["Blue/Green Publish<br/>pointer flip"]
-    O["Observability & Telemetry<br/>logs · metrics · traces"]
-  end
-
-  subgraph Stores["KFM Stores"]
-    G[(Neo4j Graph)]
-    D[(data/processed-blue / data/processed-green)]
-    C[(data/stac/ STAC Catalog)]
-  end
-
-  S1 --> T
-  S2 --> T
-  S3 --> T
-  T --> AI
-  AI --> E
-  E --> V
-  V -->|pass| U
-  V -->|fail| O
-  U --> M
-  M --> B
-  B --> G
-  B --> D
-  B --> C
-  Pipelines --> O
-~~~
-
-### 5.2 Repository Context
+This layout shows where reliable-pipeline assets live and how they relate to data, WAL, manifests, and CI.
 
 ~~~text
-src/pipelines/
-├── architecture/
-│   └── reliable-pipelines.md
-├── <pipeline_name>/
-│   ├── run.py
-│   ├── idempotency.py
-│   ├── stac_io.py
-│   ├── staging_writer.py
-│   ├── validators/
-│   │   ├── gx_checkpoint.yml
-│   │   ├── semantic_rules.yml
-│   │   └── faircare_rules.yml
-│   ├── neo4j_commit.py
-│   ├── lineage.py
-│   ├── telemetry.py
-│   ├── flags.py
-│   └── tests/
-│       ├── test_idempotency.py
-│       ├── test_e2e_small.py
-│       └── test_validation_contracts.py
+src/
+  pipelines/
+    architecture/
+      reliable-pipelines.md       ← this file
+    cli/
+      kfm-dataset-build.py        ← builds green (ingest → normalize → index → embed → tile)
+      kfm-dataset-validate.py     ← runs gates, writes validation reports
+      kfm-dataset-promote.py      ← atomic blue/green promotion + rollback hooks
+      kfm-lineage-diff.py         ← computes PROV-O + STAC/DCAT diffs (blue vs green)
+    libs/
+      wal/
+        wal_writer.py             ← append-only write-ahead log helpers
+        wal_reader.py             ← replay / debug
+      promotion/
+        promotion_plan.py         ← promotion contract model
+        pointer_switch.py         ← file/registry/graph pointer flips
+      validation/
+        schema_check.py           ← schema + contract checks
+        stac_dcat_check.py        ← metadata checks
+        geo_spatial_check.py      ← GeoJSON/GeoTIFF/GeoSPARQL checks
+        ai_drift_bias_check.py    ← model drift & bias gates
+        energy_a11y_check.py      ← telemetry budgets & a11y gates
+
+data/
+  work/
+    staging/
+      hydrology_v10/
+        v10.4.2-green/            ← build target (non-live)
+        logs/
+          wal/
+            2025-11-18T02-31Z_ingest.ndjson
+            2025-11-18T02-42Z_normalize.ndjson
+            2025-11-18T02-55Z_embed.ndjson
+        validation/
+          schema.json
+          stac.json
+          ai_drift.json
+          energy_a11y.json
+
+  releases/
+    hydrology_v10/
+      blue/                       ← currently live dataset bundle
+      green/                      ← candidate live; promoted after checks
+      current -> ./blue           ← atomic symlink / pointer to live
+      history/
+        v10.4.1/
+          manifest.zip
+          sbom.spdx.json
+          lineage.graph.jsonld
+        v10.4.2/
+          manifest.zip
+          sbom.spdx.json
+          lineage.graph.jsonld
+          lineage.diff.json       ← computed by kfm-lineage-diff.py
+
+wal/
+  hydrology_v10/
+    2025-11-18T02-31Z_ingest.ndjson
+    2025-11-18T02-42Z_normalize.ndjson
+    2025-11-18T02-55Z_embed.ndjson
+
+.github/
+  workflows/
+    dataset-promotion-hydrology.yml   ← reference GitHub Action (Appendix A)
 ~~~
 
 ---
 
-## ⚙️ 6. Trigger & Run Identity
+## 🔑 6. Core Concepts
 
-### 6.1 Trigger Envelope
+### 6.1 Blue/Green Datasets
 
-Every run MUST start from a **trigger envelope**:
+- **Blue** — the currently live, query-facing dataset bundle.  
+  - Used by Neo4j loaders, APIs, web, Story Nodes, Focus Mode.  
+  - Always healthy and fully validated.  
+
+- **Green** — the candidate replacement for blue.  
+  - Built in staging (`data/work/staging/.../v{N}-green`).  
+  - Subject to all validation gates, drift/bias checks, and governance approval.  
+  - Becomes live **only** via atomic pointer flip.  
+
+**Implementation Patterns**
+
+1. **Filesystem pointer**
+
+- `data/releases/{dataset}/{blue,green}/`  
+- `data/releases/{dataset}/current -> ./blue` or `./green`  
+
+2. **Registry / graph pointer**
+
+- `(:Dataset {slug:"hydrology_v10"})-[:LIVE_AT]->(:Release {version:"v10.4.2"})`
+
+### 6.2 Write-Ahead Log (WAL)
+
+Every critical step writes a WAL entry before mutating state:
 
 ~~~json
 {
-  "trigger_id": "cron-2025-11-15T00:00Z-kgs-wells",
-  "trigger_kind": "cron",
-  "dataset_id": "kgs_wells",
-  "source_uri": "https://example.org/kgs/wells",
-  "requested_range": {
-    "start": "1900-01-01",
-    "end": "2025-11-01"
+  "wal_version": "v1",
+  "dataset": "hydrology_v10",
+  "release": "v10.4.2",
+  "step_id": "normalize",
+  "seq": 2,
+  "inputs": [
+    "s3://kfm-raw/hydrology/noaa/...",
+    "file://data/work/staging/hydrology_v10/v10.4.2-green/raw/*.parquet"
+  ],
+  "outputs": [
+    "file://data/work/staging/hydrology_v10/v10.4.2-green/normalized/*.parquet"
+  ],
+  "started_at": "2025-11-18T02:42:10Z",
+  "finished_at": "2025-11-18T02:42:42Z",
+  "exit_code": 0,
+  "hashes": {
+    "inputs_sha256": "...",
+    "outputs_sha256": "..."
   },
-  "idempotency_key": "sha256(dataset_id|requested_range|source_uri)"
+  "telemetry": {
+    "energy_kwh": 0.12,
+    "carbon_kgco2e": 0.03,
+    "node": "etl-node-01"
+  }
 }
 ~~~
 
-### 6.2 Deterministic Run ID (v11)
+**WAL guarantees**
 
-~~~text
-run_id = sha256(
-    STAC_Item.id +
-    sorted_asset_checksums +
-    pipeline_semver +
-    normalized_config +
-    code_fingerprint
-)[:16]
-~~~
+- **Replayability** — re-run from last successful step (seq) without guessing state.  
+- **Auditability** — full trace of inputs/outputs and resource use.  
+- **Debuggability** — post-mortem of failures.
 
-Properties:
+### 6.3 Promotion Contracts
 
-- Same inputs + same config + same code ⇒ same `run_id`.  
-- Used as pipeline-level idempotency key.  
-- Used in staging namespaces, telemetry, and lineage.
+Promotion contracts define what must be true before green becomes live:
 
----
+- Identity: `dataset_slug`, `candidate_version`, `blue_version`.  
+- Required checks:
+  - Schema & data contracts.  
+  - STAC/DCAT completeness and validity.  
+  - Spatial & temporal sanity.  
+  - AI drift & bias thresholds.  
+  - Energy & carbon budgets.  
+  - A11y & UX contracts (where applicable).  
+- Approval policy:
+  - Auto-approve if all gates pass & diffs within allowed bounds.  
+  - Manual review for sensitive or high-impact deltas; FAIR+CARE review if needed.  
 
-## 🧮 7. Deterministic ETL
+Contracts live as:
 
-- All core transforms MUST be **pure and stateless**.  
-- No unseeded randomness; any randomness MUST be seeded and recorded.  
-- Inputs are normalized into artifact tables and feature sets with:
-  - Explicit unit conversions.  
-  - CRS reprojection.  
-  - Controlled vocabularies and enumerations.  
+- Schema: `schemas/pipelines/promotion-contract-v1.json`  
+- Instances: `data/releases/{dataset}/{version}/promotion-contract.json`
 
----
+### 6.4 Lineage Diff (Blue vs Green)
 
-## ✅ 8. Validation Layer
+For each candidate release:
 
-Validation occurs **after staging**, **before publish**.
+1. Capture lineage:
 
-### 8.1 Data Quality (e.g., Great Expectations)
+- `lineage-blue.graph.jsonld`  
+- `lineage-green.graph.jsonld`  
 
-Required checks:
+2. Run `kfm-lineage-diff.py` to produce:
 
-- Row counts within tolerance.  
-- Geometry validity (no self-intersections; CRS correct).  
-- Temporal ranges match STAC Item.  
-- Required fields present and typed.  
-- Distribution checks against calibration baselines.
+- `lineage.diff.json` (machine-readable)  
+- `lineage.diff.md` (human-readable, linked into governance docs)  
 
-### 8.2 Semantic & Ontology Validation
+Diff focuses on:
 
-- CIDOC-CRM / GeoSPARQL / OWL-Time mapping validated.  
-- Graph topology rules (no illegal relationships).  
-- Deduplication semantics enforced.  
-- Reference integrity:
-  - STAC → graph.  
-  - Graph → PROV-O.  
+- Entity & count changes (features, sites, tiles, rasters, embeddings, nodes/edges).  
+- Spatial changes (bboxes, H3 coverage deltas).  
+- Temporal changes (slices added/removed, coverage shifts).  
+- Model & pipeline hashes (model version, hyperparameters, training-data snapshots).  
+- Governance flags (Indigenous/tribal/community-sensitive impacts).
 
-### 8.3 FAIR+CARE / Governance Validation
+### 6.5 Retry & Rollback Model
 
-- CARE labels respected.  
-- Sensitive datasets generalized (e.g., via H3 masking).  
-- No restricted content flows into public artifacts.  
+- **Retry**  
+  - Each step may be retried N times with backoff.  
+  - WAL consulted to identify failed step and safe resume point.  
 
-### 8.4 Validation Gate
-
-A pipeline **cannot promote** unless:
-
-~~~text
-VALIDATION_STATUS = PASS
-~~~
-
-On failure:
-
-- Emit `FAILED_VALIDATION` lineage event.  
-- Persist validation artifacts (e.g., GE Data Docs).  
-- Halt execution with no promotion into production graph or processed data.
+- **Rollback**  
+  - If post-promote monitors deem green unhealthy:
+    - Immediately flip pointer back to blue.  
+    - Emit rollback WAL entry and governance event.  
+    - Blue must remain intact and queryable at all times.  
 
 ---
 
-## 🧱 9. Staging Model
+## 🔁 7. Lifecycle: From Staging to Live
 
-All pipelines follow:
+### 7.1 High-Level Flow (Mermaid)
 
-~~~text
-Extract → Transform → Validate → Stage → Promote → Finalize
+~~~mermaid
+flowchart LR
+  subgraph Staging
+    A[Ingest to staging vN-green]
+    B[Transform / Normalize]
+    C[Index / Embed / Tile]
+  end
+
+  subgraph Validation
+    D[Schema & Contracts]
+    E[STAC/DCAT & Geo Checks]
+    F[AI Drift & Bias Gates]
+    G[Energy & A11y Budgets]
+  end
+
+  subgraph Promotion
+    H[Lineage Diff (blue vs green)]
+    I[Approval (Auto/Manual)]
+    J[Atomic Pointer Flip<br/>blue → green]
+  end
+
+  subgraph PostPromote
+    K[Canary Queries & Dashboards]
+    L[Runtime Error & Latency Monitors]
+    M[Focus Mode / Story Node Smoke Tests]
+  end
+
+  A --> B --> C --> D
+  D --> E --> F --> G --> H --> I --> J --> K --> L --> M
+
+  I -->|reject| R[Fail / Rollback (stay on blue)]
+  K -->|alert| R
+  L -->|alert| R
+  M -->|alert| R
 ~~~
 
-### 9.1 Staging Namespace
+### 7.2 Detailed Steps
 
-Write NOTHING directly to production graph or `data/processed/**`.
+1. **Stage (Build Green)**  
+   - CLI: `kfm-dataset-build.py`  
+   - Ingest raw data → staging `v{N}-green/raw/`  
+   - Transform/normalize → curated schema  
+   - Index, embed, tile as needed  
+   - Write WAL entries for each step  
 
-All writes are labeled / namespaced:
+2. **Validate (Run Gates)**  
+   - CLI: `kfm-dataset-validate.py`  
+   - Gates:
+     - Schema & contracts (`docs/contracts/data-contract-*.json`)  
+     - STAC/DCAT validity (schemas, extents, license, provenance)  
+     - Spatial/Geo: topology, projection, GeoSPARQL  
+     - AI Drift & Bias: metrics vs blue  
+     - Telemetry: energy, carbon, runtime, storage vs budgets  
+   - Outputs: `validation/*.json` and CI artifacts  
 
-- Graph labels: `:Staging_<run_id>`  
-- Object storage: `.../<pipeline>/<run_id>/<asset>.<ext>`  
-- Work tables: `data/work/<pipeline>/<run_id>/...`
+3. **Lineage Diff**  
+   - CLI: `kfm-lineage-diff.py`  
+   - Inputs: blue/green lineage graphs  
+   - Outputs: `lineage.diff.json`, `lineage.diff.md`  
 
-Staging must be:
+4. **Review & Approval**  
+   - Auto-approval when low-risk.  
+   - Manual review for larger diffs or CARE-sensitive changes.  
 
-- Fully reconstructable.  
-- Self-contained.  
-- Free of references to production nodes.
+5. **Atomic Pointer Flip**  
+   - CLI: `kfm-dataset-promote.py`  
+   - Flip filesystem/registry pointer in a single operation.  
+   - Update registry/graph pointers transactionally.  
+   - Append new release to `history/`.  
+
+6. **Post-Promote Monitoring**  
+   - Canary queries (APIs, maps, Story Nodes, Focus Mode).  
+   - Monitors: error rates, latency, cache misses, tile failures, ML performance canaries.  
+   - If instability → rollback to blue, record incident.
 
 ---
 
-## 🔁 10. Idempotency Protocol
+## ✅ 8. Reliability Guarantees
 
-### 10.1 Run-Level Idempotency
+The reliable pipelines architecture guarantees:
 
-~~~text
-Condition                     → Behavior
-------------------------------------------------
-Run ID exists & finalized      → Skip entire pipeline
-Run ID exists & partial        → Retry from last durable checkpoint
-Run ID missing                 → Execute full pipeline
-~~~
+1. **Safety**
 
-### 10.2 Record-Level Idempotency
+- No direct writes to live blue data.  
+- Always promote via green + pointer flip.  
+- Blue remains viable for immediate rollback.
 
-- Use **natural key + content hash** per record.  
-- Skip any record where `prev_content_hash == new_content_hash`.  
-- Ensure exactly-once behavior at the **publish boundary**.
+2. **Determinism & Reproducibility**
 
----
+- WAL logs deterministic steps with hashes.  
+- Each release has **manifest + SBOM + lineage**.  
+- Re-running with same inputs & config produces identical hashes or explicit diffs.
 
-## 🌉 11. Blue/Green Publish & Rollback
+3. **Governance & Provenance**
 
-### 11.1 Namespaces
+- Every promotion emits:
+  - Promotion contract instance.  
+  - Lineage diff.  
+  - Telemetry summary.  
+- These are attached to:
+  - Governance ledger.  
+  - FAIR+CARE evaluations.  
+  - Story Node / Focus Mode release logs.
 
-- `data/processed-blue/**`  
-- `data/processed-green/**`  
+4. **Observability**
 
-### 11.2 Flow
-
-1. Write new artifacts into `processed-green`.  
-2. Validate and smoke-test.  
-3. Flip pointer so that `blue` ↔ `green` roles swap.  
-4. Monitor metrics for the stability window (24h by default).  
-
-### 11.3 Rollback
-
-- Flip pointer back to previous blue.  
-- Delete or quarantine green artifacts from the failed attempt.  
-- Emit `ROLLBACK` lineage event describing cause and scope.
+- Telemetry wired via YAML `telemetry_ref` & `telemetry_schema`.  
+- Dashboards show:
+  - Energy/carbon time series.  
+  - Success/failure rates, retries, DLQ entries.  
+  - Promotion history & rollbacks.
 
 ---
 
-## 🧬 12. Lineage & Metadata
+## 🧪 9. CI/CD Integration Model (Hydrology v10 Example)
 
-### 12.1 STAC / DCAT
+The reference GitHub Action orchestrates blue/green promotion for `hydrology_v10`:
 
-- All inputs declared via STAC Items/Collections.  
-- All outputs described in STAC/DCAT with:
-  - `kfm:pipeline_id`  
-  - `kfm:run_id`  
-  - Temporal and spatial extents.  
-  - CARE labels and license.  
+- **Trigger sources**: `workflow_dispatch`, `push`, scheduled.  
+- **Jobs**:
+  1. `build-green`  
+  2. `validate-green`  
+  3. `lineage-diff`  
+  4. `promote-green`  
+  5. `post-promote`  
 
-### 12.2 PROV-O Lineage
+Each job:
 
-Attach to promoted entities:
+- Runs in a clean environment.  
+- Uses `python -m` or `kfm-*` CLIs.  
+- Uploads reports and artifacts.  
+- Fails hard on any gate violation.
 
-~~~text
-:GeneratedBy {
-  run_id,
-  job_name,
-  pipeline_semver,
-  config_hash,
-  startedAt,
-  endedAt,
-  stac_item_id,
-  commit_sha
-}
-~~~
-
-### 12.3 OpenLineage
-
-Send run events:
-
-- `namespace = "kfm"`  
-- `job = "pipelines/<pipeline_name>"`  
-- `run_id`  
-- Inputs: STAC hrefs.  
-- Outputs: URIs for graph and storage locations.  
-
-### 12.4 Provenance Persistence
-
-~~~text
-provenance/<pipeline>/<run_id>/lineage.json
-~~~
+(See the full YAML in the snippet you provided; this doc defines the architecture and patterns those workflows must follow.)
 
 ---
 
-## 📡 13. Telemetry & Observability
+## ✅ 10. Promotion Checklist (Copy-Paste)
 
-Every run MUST emit:
+Use this checklist in governance templates, PRs, and CI logs for any dataset promotion.
 
-- Runtime per stage.  
-- Memory and CPU profile.  
-- Row/node/edge counts changed.  
-- Storage footprints (bytes added/removed).  
-- Energy + carbon estimates.  
-- Retry counts and DLQ entries (if any).  
+1. **Build Green**
 
-Telemetry is serialized to:
+- [ ] Raw data ingested to `staging/.../v{N}-green`.  
+- [ ] Transform/normalize completed.  
+- [ ] Indexes/tiles/embeddings built.  
+- [ ] WAL entries present for all steps.  
 
-~~~text
-telemetry/<pipeline>/<run_id>/metrics.json
-~~~
+2. **Run Gates**
 
-and validated against:
+- [ ] Schema & contract checks PASSED.  
+- [ ] STAC/DCAT valid; extents and licenses consistent.  
+- [ ] Geo & topology checks PASSED.  
+- [ ] AI drift & bias within thresholds.  
+- [ ] Energy & carbon within budgets.  
+- [ ] A11y/UX checks (if applicable) PASSED.  
 
-~~~text
-schemas/telemetry/pipelines-reliable-v2.json
-~~~
+3. **Lineage Diff**
 
----
+- [ ] Blue vs green diffs computed.  
+- [ ] High-risk changes reviewed.  
+- [ ] FAIR+CARE implications assessed.  
 
-## 🔐 14. Security & Privacy
+4. **Approval**
 
-- No secrets in code or plain YAML; use Vault / secret manager.  
-- No PII or sensitive cultural data in logs.  
-- Pipelines operate within least-privilege roles.  
-- Environments are containerized and pinned.  
+- [ ] Promotion contract satisfied.  
+- [ ] Required sign-offs recorded (including Indigenous-partnered/CARE approvals where relevant).  
 
-Logs and DLQ contents must obey retention policies specified in governance.
+5. **Atomic Promotion**
 
----
+- [ ] Pointer flipped (blue → green).  
+- [ ] New release recorded in history with manifest + SBOM.  
+- [ ] CI green.  
 
-## 💥 15. Failure Modes & Recovery
+6. **Post-Promote**
 
-Three canonical failure categories:
-
-~~~text
-Failure Type         → Behavior
-------------------------------------------------
-Extract failure       → Stop immediately, no staging
-Validation failure    → Stop, emit lineage, keep staging for debug
-Promotion failure     → Auto-rollback, no partial promotions
-~~~
-
-### 15.1 Retriable (Automatic)
-
-- Transient DB failures.  
-- Network blips.  
-- Storage errors.  
-- Short-term resource saturation.  
-
-Controlled via:
-
-~~~text
-max_retries: 3
-retry_backoff: exponential
-retryable_errors: [TransientDBError, NetworkError, StorageTransientError]
-~~~
-
-Non-retriable failures must halt and require manual intervention.
+- [ ] Canary queries OK.  
+- [ ] Monitors stable (no elevated errors/latency).  
+- [ ] Focus Mode / Story Node smoke tests pass.  
+- [ ] No rollback triggered within observation window.
 
 ---
 
-## 📁 16. Required Repo Structure
+## 🧯 11. Failure Modes & Playbook
 
-~~~text
-src/pipelines/
-  architecture/
-    reliable-pipelines.md   ← this file
-  <pipeline_name>/
-    run.py
-    idempotency.py
-    stac_io.py
-    staging_writer.py
-    validators/
-      gx_checkpoint.yml
-      semantic_rules.yml
-      faircare_rules.yml
-    neo4j_commit.py
-    lineage.py
-    telemetry.py
-    flags.py
-    tests/
-      test_idempotency.py
-      test_e2e_small.py
-      test_validation_contracts.py
+### 11.1 Build Failure (Staging)
 
-data/
-  sources/
-  raw/
-  work/
-  processed/
-    blue/
-    green/
-~~~
+- Signal: `kfm-dataset-build` exits non-zero; WAL entries show `exit_code != 0`.  
+- Actions:
+  - Do not modify blue or green pointers.  
+  - Use WAL to pinpoint broken step and inputs.  
+  - Fix cause; rerun from last successful `seq`.  
 
----
+### 11.2 Validation Gate Failure
 
-## ✅ 17. Promotion Checklist
+- Signal: `kfm-dataset-validate` marks gate(s) failed.  
+- Actions:
+  - Promotion contract fails.  
+  - No pointer flip allowed.  
+  - Investigate; if CARE gate fails, notify FAIR+CARE Council.
 
-This checklist MUST be attached to run logs and surfaced in dashboards:
+### 11.3 Post-Promote Regression
 
-~~~text
-[ ] Deterministic run_id computed
-[ ] Staging written (0 errors)
-[ ] Great Expectations / data-quality PASS
-[ ] Semantic validators PASS
-[ ] FAIR+CARE / governance validators PASS
-[ ] STAC/DCAT metadata updated with run_id
-[ ] OpenLineage + PROV-O emitted
-[ ] Telemetry metrics generated and stored
-[ ] Transactional promotion executed successfully
-[ ] Blue/green pointer flipped
-[ ] Stability window observed
-[ ] Rollback executed (if required)
-~~~
+- Signal: canaries or monitors detect elevated error/latency or ML drift.  
+- Actions:
+  - Flip pointer back to blue (rollback).  
+  - Emit rollback WAL + governance event.  
+  - Attach lineage diff, WAL subset, and telemetry to postmortem.
+
+### 11.4 Mixed State
+
+- Design goal: never mix blue and green under a single live pointer.  
+- If detected:
+  - Roll back to last known-good blue release.  
+  - Block further promotions until state is corrected.
 
 ---
 
-## 🧪 18. Minimal Example Workflow
+## 🎯 12. Integration with Focus Mode & Story Nodes
 
-~~~text
-python run.py \
-  --stac-item path/to/item.json \
-  --config config.yml \
-  --commit true \
-  --emit-lineage true
-~~~
+Reliable pipelines provide stable, reproducible targets for:
 
-Pipeline actions:
+- **Story Nodes v3**  
+  - Nodes reference explicit dataset releases and lineage snapshots.  
+  - Narratives can safely reference “Hydrology v10.4.2 (green→live on 2025-11-18)” with context.
 
-1. Compute `run_id`.  
-2. Extract and transform into normalized structures.  
-3. Write to staging under `:Staging_<run_id>` and staging storage paths.  
-4. Run data-quality, semantic, FAIR+CARE, and metadata validators.  
-5. If all PASS → transactional promotion into blue/green namespace.  
-6. Emit OpenLineage + PROV-O + STAC/DCAT updates.  
-7. Generate telemetry and persist metrics.  
-8. Flip pointer and observe stability window.
+- **Focus Mode v2.5+**  
+  - Predictive overlays (e.g., climate futures) tied to specific releases.  
+  - Explainability overlays (SHAP/LIME) bound to model versions & data snapshots.  
+
+Reliability patterns ensure Focus Mode can always reconstruct the data context for any prior narrative.
 
 ---
 
@@ -596,10 +586,11 @@ Pipeline actions:
 
 | Version | Date       | Author                               | Summary                                                                                     |
 |--------:|------------|----------------------------------------|---------------------------------------------------------------------------------------------|
-| v11.0.0 | 2025-11-18 | FAIR+CARE Council · Architecture WG   | Rebuilt Unified Reliable Pipeline Architecture for KFM-MDP v11; merged v1.0.0, v10.3.1, v10.4.x; added OpenLineage/FAIR+CARE/telemetry v2 integration. |
+| v11.0.0 | 2025-11-18 | FAIR+CARE Council · Architecture WG   | Merged all prior reliable pipeline & blue/green patterns into a unified v11 architecture; added WAL, promotion contracts, lineage diffs, and telemetry v2 alignment. |
+| v10.4.2 | 2025-11-18 | Architecture WG                       | Added Reliable Pipelines & Blue/Green Dataset Promotion spec; WAL, promotion contracts, lineage diffs, CI templates. |
 | v10.4.1 | 2025-11-18 | Architecture WG                       | Refined v10.4 architecture; clarified orchestration patterns for Airflow/Dagster/Temporal. |
 | v10.4.0 | 2025-11-15 | Pipeline Architecture Team            | Unified reliable pipeline spec; aligned with Markdown MDP v10.4 and ontology mappings.      |
-| v10.3.1 | 2025-11-13 | Pipeline Architecture Team            | Previous “Reliable Pipeline Architecture Guide”.                                            |
+| v10.3.1 | 2025-11-13 | Pipeline Architecture Team            | “Reliable Pipeline Architecture Guide”.                                                     |
 | v1.0.0  | 2025-11-15 | ETL/Updaters Working Group            | Initial “Reliable Updaters” pattern.                                                        |
 
 ---
@@ -607,7 +598,7 @@ Pipeline actions:
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-Unified Reliable Pipeline Architecture v11 · FAIR+CARE Certified · Sovereignty-Aware  
+Unified Reliable Pipelines & Blue/Green Promotion Architecture v11 · FAIR+CARE Certified · Indigenous-Partnered · Sovereignty-Aware  
 Diamond⁹ Ω / Crown∞Ω Ultimate Certified · MCP-DL v6.3  
 
 [Back to Pipeline Architecture](../README.md)
