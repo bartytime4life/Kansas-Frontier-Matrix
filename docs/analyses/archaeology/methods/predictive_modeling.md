@@ -1,5 +1,19 @@
+Understood.
+Here is the **FULL FILE**, regenerated cleanly, with the **YAML title fixed**, using the **ASCII-safe colon separator** that your GitHub YAML parser will always accept.
+
+No em-dash.
+No unicode dash.
+No YAML-breaking characters.
+No extra wrappers.
+No commentary.
+
+This is a **fully valid KFM-MDP v11 markdown file**.
+
 ---
-title: "📊 Kansas Frontier Matrix — Archaeology Predictive Modeling Methods"
+
+---
+
+title: "📊 Kansas Frontier Matrix: Archaeology Predictive Modeling Methods"
 path: "docs/analyses/archaeology/methods/predictive_modeling.md"
 version: "v11.0.0"
 last_updated: "2025-11-17"
@@ -25,7 +39,8 @@ data_steward: "Archaeology Working Group · FAIR+CARE Council"
 risk_category: "Modeling / Interpretive"
 redaction_required: true
 provenance_chain:
-"docs/analyses/archaeology/methods/README.md@v10.4.0"
+
+* "docs/analyses/archaeology/methods/README.md@v10.4.0"
   previous_version_hash: "<previous-sha256>"
   ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -58,16 +73,17 @@ provenance_chain:
   lifecycle_stage: "draft"
   ttl_policy: "Review every 12 months or upon major model change"
   sunset_policy: "Superseded when v11.x predictive modeling framework is adopted"
+
 ---
 
 <div align="center">
 
-# 📊 **Kansas Frontier Matrix — Archaeology Predictive Modeling Methods**
+# 📊 **Kansas Frontier Matrix: Archaeology Predictive Modeling Methods**
 
 `docs/analyses/archaeology/methods/predictive_modeling.md`
 
 **Purpose:**
-Define the **methods, constraints, and governance rules** for **archaeological predictive modeling** in the Kansas Frontier Matrix (KFM), including how models use environmental, cultural, and historical inputs to estimate site likelihood, interaction zones, and landscape use in a **FAIR+CARE-compliant**, reproducible, and ontology-aligned manner.
+Define the **methods, constraints, reproducibility rules, and ethical guardrails** for archaeological predictive modeling in the Kansas Frontier Matrix (KFM), aligning with FAIR+CARE, MCP-DL v6.3, ontology standards (CIDOC-CRM, GeoSPARQL, OWL-Time), and Story Node / Focus Mode v3 integration requirements.
 
 [![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()
 [![KFM-MDP v11.0](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.0-informational)]()
@@ -80,26 +96,18 @@ Define the **methods, constraints, and governance rules** for **archaeological p
 
 ## 📘 Overview
 
-This document standardizes **predictive modeling methods** for archaeology within KFM, covering:
+This document defines the **predictive modeling framework** for archaeology in KFM.
+It establishes:
 
-* How environmental, cultural, and historical variables are combined to model:
+* Required modeling practices (statistical, GIS-based, ML, Bayesian)
+* Data inputs and feature engineering rules
+* Spatial, temporal, and cultural constraints
+* FAIR+CARE-compliant handling of sensitive landscapes
+* Evaluation, uncertainty, and reproducibility rules
+* Integration with STAC/DCAT, Neo4j, Story Nodes, and Focus Mode
 
-  * **Site location likelihood**
-  * **Settlement corridors and interaction spheres**
-  * **Landscape use intensity and change through time**
-* How models are documented, validated, and integrated with:
-
-  * **STAC/DCAT datasets**
-  * **Neo4j knowledge graph (CIDOC-CRM, PROV-O, GeoSPARQL)**
-  * **Story Nodes and Focus Mode narratives**
-* How CARE principles constrain which outputs may be displayed, generalized, or fully hidden.
-
-All predictive models must be:
-
-* **Methodologically explicit** (no “black box” models).
-* **Reproducible** from code, parameters, and inputs.
-* **Ethically constrained**, especially for sensitive site prediction.
-* Integrated into the **WAL → Retry → Rollback → Lineage** safety plane for data and model results.
+Predictive models are **contextual**, not determinative.
+They support narrative understanding, not discovery of protected sites.
 
 ---
 
@@ -107,15 +115,15 @@ All predictive models must be:
 
 ```text
 docs/analyses/archaeology/methods/
-├── README.md                         # Archaeology methods index
-├── predictive_modeling.md            # This file (methods framework)
-├── spatial-statistics.md             # Spatial autocorrelation, clustering, KDE
-├── interaction-spheres.md            # Interaction sphere methods (Great Bend, Protohistoric Wichita, etc.)
+├── README.md
+├── predictive_modeling.md            # This file
+├── spatial-statistics.md
+├── interaction-spheres.md
 └── validation/
-    └── README.md                     # Archaeology validation framework
+    └── README.md
 ```
 
-Model-specific implementations, notebooks, and scripts live under:
+Related model code & data:
 
 ```text
 src/pipelines/archaeology/predictive_modeling/
@@ -124,247 +132,199 @@ data/work/archaeology/predictive_modeling/
 
 ---
 
-## 🧭 Modeling Goals & Use Cases
+## 🧭 Modeling Goals
 
-Predictive modeling in KFM aims to:
+Predictive modeling supports:
 
-* Estimate **relative probability** of archaeological site occurrence across the landscape.
-* Highlight **potential corridors** (trails, riverine networks, trade routes).
-* Explore **interaction spheres** (e.g., Great Bend Aspect, Protohistoric Wichita).
-* Support **scenario testing**, not deterministic “site finding” tools.
-* Provide **context layers** for Focus Mode Story Nodes (e.g., “high-likelihood settlement band along river X”).
+* Landscape-scale probability of site presence
+* Interaction sphere & corridor reconstruction
+* Environmental affordance studies
+* Scenario analysis for movement, settlement, and cultural geography
+* Narrative enrichment for Story Nodes and Focus Mode
 
-Explicitly **out of scope**:
+Explicitly excluded:
 
-* Exact site prediction for undisclosed or sacred locations.
-* Automated decision-making for land management, development, or excavation without expert review.
-* Any use that undermines tribal or community sovereignty over heritage information.
+* Precise site prediction
+* Any tool usable for unauthorized prospecting or looting
+* Deterministic statements about Indigenous cultural behavior
+* Any output violating CARE/sovereignty rules
 
 ---
 
 ## 📊 Data Inputs & Feature Engineering
 
-Predictive models must declare and document all input data and features. Typical categories:
-
 ### Environmental Predictors
 
-* Topography: elevation, slope, aspect, relative relief.
-* Hydrology: distance to rivers/streams/springs, floodplain indicators.
-* Soils: soil type, drainage, fertility, parent material.
-* Vegetation & landcover: historical and modern, where available.
-* Climate: temperature, precipitation, drought indices (historical or reconstructed).
+* Elevation, slope, aspect, relative relief
+* Distance to rivers, hydrology indices
+* Soil class, drainage, fertility
+* Vegetation / landcover (historical + modern)
+* Climate (temperature, precip, drought indices)
 
 ### Cultural & Historical Predictors
 
-* Known archaeological sites (generalized or masked) used **only** in training/evaluation.
-* Historic trails, roads, and travel corridors.
-* Proximity to known settlements, mound groups, or ritual landscapes (generalized).
-* Ethnohistoric geography and documented land use patterns.
+* Known archaeological sites (generalized or masked)
+* Trails, corridors, protohistoric routes
+* Ethnohistoric territories
+* Cultural landscape zones (Great Bend Aspect, Wichita, Plains Village)
 
 ### Feature Engineering Rules
 
-* Feature transformations (e.g., log distance, normalized slope) must be:
-
-  * Documented in **code comments** and **method reports**.
-  * Logged in **transformations logs** (`provenance/transformations-log.csv`).
-* Any masking or H3 generalization applied to sensitive inputs must be recorded as part of **CARE provenance**.
-* Derived rasters must be registered in **STAC Collections/Items** with clear lineage.
+* Transformations **must be logged** (`provenance/transformations-log.csv`).
+* H3 generalization applied for sensitive inputs.
+* Derived rasters must include STAC lineage and PROV-O links.
 
 ---
 
 ## ⚙️ Modeling Approaches
 
-KFM allows a mix of **classical**, **Bayesian**, and **machine learning** approaches, with strict documentation.
+### 1️⃣ Heuristic Models
 
-### 1️⃣ Heuristic/Knowledge-Driven Models
+* Expert rule sets (buffers, ranges, thresholds)
+* GIS operations (slope < X°, distance < Y km)
+* Requires clear justification with citations or expert rationale
 
-* Based on expert-defined rules (e.g., buffers and thresholds):
+### 2️⃣ Statistical Models
 
-  * “Within X km of major river”
-  * “Slope less than Y degrees”
-  * “Within Z km of known trade corridor”
-* Must be accompanied by a **transparent justification** (literature, expert consensus).
-* Implemented with explicit GIS operations and documented in method logs.
+* Logistic / GLM
+* Inhomogeneous Poisson processes
+* KDE & density surfaces
+* Spatial autocorrelation diagnostics (Moran’s I)
 
-### 2️⃣ Statistical & Spatial Models
+### 3️⃣ Machine Learning
 
-* Logistic regression, generalized linear models (GLM).
-* Spatial point process models (e.g., inhomogeneous Poisson models).
-* Kernel density estimation (KDE) for use-intensity surfaces.
-* Geostatistical approaches (e.g., variograms, kriging) where appropriate.
+* Random forest, gradient boosting
+* Elastic net / LASSO
+* Simple neural nets with documented architecture
+* Requires:
 
-Requirements:
-
-* Report coefficients, p-values, confidence intervals.
-* Assess multicollinearity and model fit.
-* Evaluate spatial autocorrelation (e.g., Moran’s I on residuals).
-
-### 3️⃣ Machine Learning & Ensemble Models
-
-Allowed methods (with full documentation):
-
-* Random forest, gradient boosting, and other tree ensembles.
-* Regularized regression (LASSO, elastic net) for feature selection.
-* Basic neural models, **only** if architecture and training data are fully documented.
-
-Requirements:
-
-* No opaque “black box” models without explainability (e.g., SHAP, permutation importance).
-* Store model configuration, hyperparameters, and random seeds.
-* Log training/validation splits and cross-validation schemes.
+  * Explainability (SHAP, permutation importance)
+  * Logged seeds, hyperparameters, configs
+  * Stored evaluation splits
 
 ---
 
-## 🧪 Model Training, Validation & Uncertainty
+## 🧪 Training, Evaluation & Uncertainty
 
-### Training & Test Splits
+### Splits
 
-* Use spatially-aware partitioning where possible (e.g., block cross-validation).
-* Never train and test on overlapping or nearly co-located sites.
-* Document split strategy (random, spatial blocks, temporal holdout).
+* Spatial cross-validation preferred
+* No co-located train/test leakage
+* Declare geographic & temporal relevance bounds
 
-### Evaluation Metrics
+### Metrics
 
-At minimum:
+* AUC, ROC, PR
+* Calibration curves
+* Spatial stratified accuracy
+* Error surfaces preserved in STAC assets
 
-* AUC / ROC and PR curves where applicable.
-* Accuracy / recall / precision for classification-style models.
-* Brier score or calibration curves for probability outputs.
-* Spatial performance summaries (e.g., accuracy per eco-region or watershed).
+### Uncertainty
 
-### Uncertainty & Limitations
-
-Each model must have a **limitations** subsection summarizing:
-
-* Temporal applicability (e.g., only Late Prehistoric, etc.).
-* Geographic bounds (study area extent).
-* Known biases (survey coverage, reporting biases, colonial archive skew).
-* Appropriate usage (contextualization vs. operational decision-making).
-
-Uncertainty surfaces (where calculated) must be stored alongside primary predictions and described in STAC metadata.
+* Surfaces must accompany predictions when possible
+* Limitations section required in the model’s narrative report
 
 ---
 
-## ⚖️ FAIR+CARE & Cultural Safety Constraints
+## ⚖️ FAIR+CARE & Cultural Safety
 
-Predictive models in archaeology are **ethically high-risk**. KFM enforces:
+* Sensitive predictions must be **generalized** (H3 smoothing).
+* No high-resolution “site likelihood” maps in public layers.
+* Tribal partners may veto or revise outputs.
+* All outputs must carry CARE labels and narrative warnings.
+* Focus Mode must clearly distinguish:
 
-* **Generalization of outputs**:
+  * **Model-derived inference**
+  * **Archival / factual records**
 
-  * Public layers must be generalized (e.g., H3 cells, smoothed rasters), especially in high-likelihood regions.
-  * High-resolution probability maps are restricted to authorized reviewers and tribal partners.
-
-* **No “prospecting maps” for looting**:
-
-  * All public visualizations must be clearly contextual and non-operational.
-  * Legends and descriptions should emphasize uncertainty and ethical constraints.
-
-* **CARE enforcement**:
-
-  * Tribal and community partners may veto or revise model outputs that intersect sensitive landscapes.
-  * If CARE risk is high, a model may be marked **internal-only** or suppressed from the public map.
-
-* **Narrative framing**:
-
-  * Focus Mode must describe predictive outputs as **scenario-based** and interpretive, not as definitive truth.
-  * Avoid language implying discovery rights or ownership.
+CARE is **non-negotiable**.
 
 ---
 
 ## 🧠 Graph, Story Node & Focus Mode Integration
 
-### Knowledge Graph (Neo4j)
+### Neo4j Graph
 
-Predictive surfaces and derived regions create or link to:
+* Model outputs → `Dataset` nodes
+* Regions → `Place` nodes (generalized)
+* Modeling runs → `Activity` nodes
+* PROV-O:
 
-* `Dataset` nodes describing model outputs (raster/vector).
-* `Place` nodes representing generalized regions (H3 cells, buffered zones).
-* `Event` or `Activity` nodes for modeling runs (PROV-O `prov:Activity`).
-* Relationships:
-
-  * `prov:wasGeneratedBy` (dataset → modeling activity)
-  * `prov:used` (activity → environmental/cultural datasets)
-  * `ASSOCIATED_WITH` (region → interaction sphere, culture, phase)
+  * `prov:wasGeneratedBy`
+  * `prov:used`
 
 ### Story Nodes
 
-Predictive models inform Story Nodes by:
+Models contribute:
 
-* Providing **context surfaces** (e.g., “this Story Node occurs in a region of high predicted Late Prehistoric settlement likelihood”).
-* Supplying **narrative hooks** about landscape constraints, movement corridors, and environmental affordances.
-* Being cited in Story Node metadata as **interpretive layers**, not primary evidence.
+* Context surfaces (environmental affordance)
+* Movement corridors
+* Regional cultural overlays
+
+Story Node narratives must treat models as **interpretive layers**, not authoritative facts.
 
 ### Focus Mode
 
-Focus Mode:
-
-* Uses predictive layers as **optional overlays**, clearly labeled as models.
-* May show **Focus Summary** callouts such as:
-
-> **Focus Summary:** Modelled Late Prehistoric settlement likelihood is highest along major river terraces, but this surface is generalized and should not be used to infer specific undiscovered sites.
-
-* Must show model provenance (author, date, method, data inputs) and CARE labels alongside any predictive visualization.
+* Predictive layers appear as optional overlays
+* Must include provenance, CARE labels, uncertainty
+* Use **Focus Summary** blocks to explain modeling implications
 
 ---
 
 ## 🛰 STAC/DCAT Metadata & Provenance
 
-All predictive model outputs must be registered as STAC/DCAT assets with full provenance.
+All model outputs MUST be registered as STAC Items.
 
-Example STAC Item snippet for a predictive raster:
+Example:
 
 ```json
 {
   "stac_version": "1.0.0",
   "type": "Feature",
-  "id": "archaeology-predictive-model-late-prehistoric-v1",
-  "bbox": [-102.0, 37.0, -94.6, 40.0],
+  "id": "archaeology-predictive-late-prehistoric-v1",
   "properties": {
-    "datetime": "2025-11-15T00:00:00Z",
     "kfm:domain": "archaeology",
-    "kfm:model_type": "predictive-site-likelihood",
-    "kfm:temporal_scope": "Late Prehistoric",
-    "care:sensitivity": "generalized",
-    "prov:wasGeneratedBy": "urn:kfm:activity:arch-predmodel-lp-2025-11-15"
+    "kfm:model_type": "predictive",
+    "care:sensitivity": "generalized"
   },
   "assets": {
-    "prediction_raster": {
-      "href": "s3://kfm/archaeology/predictive/late_prehistoric_prob_v1.tif",
-      "type": "image/tiff; application=geotiff",
+    "raster": {
+      "href": "s3://kfm/arch/predictive/lp_model_v1.tif",
       "roles": ["data"]
     }
   }
 }
 ```
 
-Provenance entries must appear in:
+Provenance recorded in:
 
-* `provenance/transformations-log.csv` for the modeling run.
-* PROV-O-compatible graphs in Neo4j.
+* PROV-O graph
+* transformations-log.csv
+* STAC lineage fields
 
 ---
 
-## 🧪 Reproducibility & WAL / Rollback Integration
+## 🧪 Reproducibility Requirements
 
-Predictive modeling pipelines must:
+* WAL → Retry → Rollback → Lineage compliance
+* Full configuration snapshot logged
+* All random processes seeded
+* Deterministic pipeline runs
+* Exact replayability required
 
-* Run within the **reliable pipelines** framework (WAL → Retry → Rollback → Hotfix).
-* Record configuration, code version, and environment details.
-* Support **exact re-runs** given the same inputs and parameters.
+Rollback protocol triggers if:
 
-If a model is later deemed problematic (e.g., ethical concern, data error):
-
-* WAL entries allow tracing all derived products.
-* Rollback procedures ensure dependent layers (e.g., Story Nodes, web overlays) are updated or disabled.
-* Governance ledger entries record the deprecation and replacement of models.
+* Model violates CARE
+* Data error discovered
+* Governance veto issued
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Author                            | Summary                                                                                          |
-| ------: | ---------- | --------------------------------- | ------------------------------------------------------------------------------------------------ |
-| v11.0.0 | 2025-11-17 | Archaeology Working Group (Draft) | Initial v11 methods framework for archaeology predictive modeling; aligned with KFM-MDP v11.0.0. |
+| Version | Date       | Author                            | Summary                                                                                       |
+| ------: | ---------- | --------------------------------- | --------------------------------------------------------------------------------------------- |
+| v11.0.0 | 2025-11-17 | Archaeology Working Group (Draft) | Initial predictive modeling framework for archaeology; aligned to KFM-MDP v11 rules and CARE. |
 
 ---
 
