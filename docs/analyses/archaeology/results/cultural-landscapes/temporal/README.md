@@ -1,43 +1,43 @@
 ---
-title: "🗂️🌾 Kansas Frontier Matrix — Cultural Landscape Results: STAC Registry (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "docs/analyses/archaeology/results/cultural-landscapes/stac/README.md"
+title: "🕰️🌾 Kansas Frontier Matrix — Cultural Landscapes: Temporal Landscape Results (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "docs/analyses/archaeology/results/cultural-landscapes/temporal/README.md"
 version: "v11.0.0"
 last_updated: "2025-11-17"
 review_cycle: "Quarterly / Archaeology WG · Cultural Landscape WG · FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../../../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/archaeology-cultural-landscape-stac-v1.json"
-governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/archaeology-cultural-landscapes-temporal-v1.json"
+governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.0.0"
 status: "Active / Enforced"
-doc_kind: "STAC Registry"
-intent: "archaeology-cultural-landscape-stac"
+doc_kind: "Results"
+intent: "archaeology-cultural-landscape-temporal"
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Governed / Spatial Metadata"
+care_label: "CARE-Governed / Time-Based Landscape Modeling"
 sensitivity_level: "High"
 public_exposure_risk: "Medium"
 indigenous_rights_flag: true
 data_steward: "Archaeology WG · FAIR+CARE Council"
-risk_category: "Spatial Metadata with Cultural Sensitivity"
+risk_category: "Temporal Landscape Interpretation"
 redaction_required: true
 provenance_chain:
-  - "docs/analyses/archaeology/results/cultural-landscapes/stac/README.md@v10.4.0"
+  - "docs/analyses/archaeology/results/cultural-landscapes/temporal/README.md@v10.4.0"
 previous_version_hash: "<previous-sha256>"
 ontology_alignment:
-  cidoc: "E31 Document"
+  cidoc: "E2 Temporal Entity"
   schema_org: "Dataset"
   prov_o: "prov:Entity"
-  geosparql: "geo:FeatureCollection"
   owl_time: "TemporalEntity"
-json_schema_ref: "../../../../../../schemas/json/archaeology-cultural-landscape-stac.schema.json"
-shape_schema_ref: "../../../../../../schemas/shacl/archaeology-cultural-landscape-stac-shape.ttl"
-doc_uuid: "urn:kfm:doc:archaeology:cultural-landscapes:stac-v11.0.0"
-semantic_document_id: "kfm-arch-cultural-landscapes-stac"
-event_source_id: "ledger:docs/analyses/archaeology/results/cultural-landscapes/stac/README.md"
+  geosparql: "geo:FeatureCollection"
+json_schema_ref: "../../../../../schemas/json/archaeology-cultural-landscapes-temporal.schema.json"
+shape_schema_ref: "../../../../../schemas/shacl/archaeology-cultural-landscapes-temporal-shape.ttl"
+doc_uuid: "urn:kfm:doc:archaeology:cultural-landscapes:temporal-results-v11.0.0"
+semantic_document_id: "kfm-arch-cultural-landscapes-temporal-results"
+event_source_id: "ledger:docs/analyses/archaeology/results/cultural-landscapes/temporal/README.md"
 immutability_status: "version-pinned"
 doc_integrity_checksum: "<sha256>"
 ai_training_inclusion: false
@@ -45,28 +45,28 @@ ai_focusmode_usage: "Restricted"
 ai_transform_permissions:
   - "summaries"
   - "semantic-highlighting"
+  - "time-contextualization"
 ai_transform_prohibited:
-  - "precision-location-inference"
-  - "boundary-reconstruction"
+  - "precise-chronology-inference"
+  - "cultural-sequence-reconstruction"
   - "identity-attribution"
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA"
 jurisdiction: "Kansas / United States"
 classification: "Internal / CARE-Governed"
-role: "archaeology-cultural-landscapes-stac-root"
+role: "archaeology-cultural-landscapes-temporal-root"
 lifecycle_stage: "stable"
 ttl_policy: "Review every 6 months"
-sunset_policy: "Superseded upon next STAC schema update"
+sunset_policy: "Superseded with next temporal-landscape synthesis"
 ---
 
 <div align="center">
 
-# 🗂️🌾 **Cultural Landscape Results — STAC Registry**  
-`docs/analyses/archaeology/results/cultural-landscapes/stac/README.md`
+# 🕰️🌾 **Cultural Landscapes — Temporal Landscape Results**  
+`docs/analyses/archaeology/results/cultural-landscapes/temporal/README.md`
 
 **Purpose:**  
-Provide the authoritative **STAC (SpatioTemporal Asset Catalog) registry** for all cultural landscape result datasets—interaction spheres, corridors, ecological affordances, predictive models, temporal landscapes—generated within the Kansas Frontier Matrix (KFM).  
-This registry ensures **machine-readable metadata**, **generalized spatial geometry**, **CARE-compliant classification**, and full **provenance integration**.
+Provide a FAIR+CARE–aligned, environmentally grounded registry of **temporal cultural-landscape results**, describing generalized landscape tendencies across archaeological time (Late Prehistoric → Protohistoric → Historic), using **OWL-Time** and strictly generalized environmental modeling.
 
 </div>
 
@@ -74,166 +74,176 @@ This registry ensures **machine-readable metadata**, **generalized spatial geome
 
 ## 📘 Overview
 
-Every cultural landscape result layer must be represented as a **STAC Item** and grouped under one or more **STAC Collections**.  
-STAC metadata ensures:
+Temporal cultural-landscape results provide:
 
-- discoverability across KFM systems  
-- consistent geometry and temporal definitions  
-- shared crosswalks with DCAT and PROV-O  
-- sovereignty-safe spatial generalization (H3 r7+)  
-- FAIR metadata requirements  
-- Focus Mode v3 & Story Node v3 compatibility  
-- uncertainty + explainability integration (if applicable)  
+- long-term environmental change summaries  
+- multi-period landscape-use tendencies  
+- generalized transitions in corridor, affordance, and interaction-sphere patterns  
+- time-aware environmental context blocks for Focus Mode and Story Nodes  
+- uncertainty-aware narratives of landscape evolution  
 
-No STAC Item may contain:
+They rely on:
 
-- exact coordinates  
-- reconstructed boundaries  
-- sacred/restricted geographies  
-- cultural identity associations  
-- site-level geometry or proxies for exact locations  
+- paleoenvironmental reconstructions  
+- hydrology & terrain temporal models  
+- vegetation & ecozone shifts  
+- climate seasonality transitions  
+- H3 r7+ generalized settlement-pattern summaries  
+
+They **never** include:
+
+- specific cultural chronologies  
+- tribal/historic identity attribution  
+- site-level temporal analysis  
+- sacred or restricted time-linked knowledge  
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-docs/analyses/archaeology/results/cultural-landscapes/stac/
-├── README.md                                       # This file
-├── items/                                          # Individual STAC Items
-│   ├── interaction-spheres/                        # Interaction sphere STAC Items
-│   ├── corridors/                                  # Corridor modeling STAC Items
-│   ├── ecological-affordances/                     # Environmental affordance Item layers
-│   ├── settlement-patterns/                        # Settlement-pattern generalized items
-│   └── temporal-landscapes/                        # Time-based cultural landscape items
-├── collections/                                    # Grouped STAC Collections
-│   ├── interaction-spheres-collection.json
-│   ├── corridors-collection.json
-│   ├── ecological-affordances-collection.json
-│   ├── settlement-patterns-collection.json
-│   └── temporal-landscapes-collection.json
-├── templates/                                      # Reusable templates for new items/collections
-│   ├── stac-item-template.json
-│   └── stac-collection-template.json
-├── metadata/                                       # Crosswalk + extension schemas
-│   ├── dcat-crosswalk.json
-│   ├── stac-kfm-extensions.schema.json
-│   └── stac-cultural-landscape-extension.schema.json
-└── validation/                                     # Validation outputs for STAC metadata
-    ├── stac-validation-report.json
-    ├── schema-validation.json
-    └── stac-integrity-results.json
+docs/analyses/archaeology/results/cultural-landscapes/temporal/
+├── README.md                                 # This file
+├── intervals/                                # OWL-Time aligned temporal intervals
+├── transitions/                              # Climate/hydrology/vegetation transitions
+├── multi-period/                             # Cross-period comparative landscape sequences
+├── paleoenvironment-links/                   # Paleoenvironment → landscape temporal links
+├── settlement-patterns/                      # Generalized time-linked settlement tendencies
+├── uncertainty/                              # Temporal uncertainty layers
+├── stac/                                     # STAC Items for temporal landscape layers
+├── metadata/                                 # DCAT + JSON-LD metadata
+└── provenance/                               # PROV-O lineage & modeling logs
 ~~~
 
 ---
 
-## 🧬 STAC Requirements for Cultural Landscape Results
+## ⏳ Temporal Result Categories
 
-Every STAC Item must include:
+### **1️⃣ Temporal Intervals (`intervals/`)**
+Contain OWL-Time aligned intervals describing:
 
-### **1️⃣ Core STAC Fields**
-- `stac_version: "1.0.0"`  
-- `type: "Feature"`  
-- unique `id`  
-- `bbox` derived from H3 geometry  
-- `geometry` ONLY as **H3 multipolygon generalization**  
-- `properties.datetime` or OWL-Time interval reference  
+- generalized environmental windows  
+- hydrology-stable vs hydrology-volatile periods  
+- ecozone transition intervals  
+- climate variability periods  
 
-### **2️⃣ KFM Cultural Landscape Extensions**
-STAC Items must include the following:
-
-- `kfm:landscape_type` (sphere, corridor, affordance, pattern, temporal)  
-- `kfm:uncertainty` fields  
-- `kfm:drivers` (hydrology, soils, vegetation, climate, terrain)  
-- `kfm:care_classification`  
-- `kfm:ai_explainability` (if AI-supported)  
-- `kfm:domain = "archaeology"`  
-- `kfm:lineage_ref` → PROV-O bundle  
-
-### **3️⃣ Assets**
-Assets may include:
-
-- raster predictions  
-- H3 vector layers  
-- uncertainty grids  
-- environmental driver surfaces  
-- SHAP/LIME layers (if applicable)  
-- linkage to narrative-ready text (via JSON-LD)  
-
-### **4️⃣ Collections**
-Collections must group STAC Items by:
-
-- cultural landscape domain  
-- environmental driver  
-- modeling approach (KDE, H3, ML, GAM)  
-- temporal coverage  
-- uncertainty classification  
+No cultural periodization is inferred.
 
 ---
 
-## 🧭 STAC–DCAT–PROV Crosswalk
+### **2️⃣ Environmental Transitions (`transitions/`)**
+Represent:
 
-Metadata in `metadata/` ensures alignment between:
+- hydrology changes  
+- vegetation/ecozone shifts  
+- climate transitions  
+- combined multi-factor change envelopes  
 
-- STac Items → DCAT datasets  
-- DCAT datasets → PROV-O bundles  
-- STAC Items → PROV-O relationships  
-
-Crosswalk rules define:
-
-- spatial/temporal harmonization  
-- shared metadata keys  
-- consistent CARE labeling  
-- safety-compliant dataset grouping  
+All generalized, no site-linked data.
 
 ---
 
-## 🧪 Validation Requirements
+### **3️⃣ Multi-Period Temporal Landscapes (`multi-period/`)**
+Include:
 
-STAC must pass:
+- cross-period landscape comparisons  
+- long-term environmental stability zones  
+- generalized mobility/affordance persistence  
 
-- JSON Schema validation  
-- STAC 1.0.0 compliance suite  
-- KFM STAC extension validation  
-- H3 geometry integrity checks  
-- uncertainty/driver metadata checks  
-- CARE classification consistency  
-- PROV linkage verification  
+No cultural continuity or identity claims.
 
-Any STAC entry that fails validation is **rejected**.
+---
+
+### **4️⃣ Paleoenvironment Temporal Links (`paleoenvironment-links/`)**
+Summaries connecting:
+
+- drought/wet cycles to environment-only changes  
+- seasonal variability  
+- vegetation–hydrology combined shifts  
+
+Never tied to cultural groups.
+
+---
+
+### **5️⃣ Temporal Settlement Tendencies (`settlement-patterns/`)**
+Include:
+
+- broad H3-based settlement trends  
+- environmental correlation changes over time  
+- non-predictive, non-cultural interpretations  
+
+---
+
+## ⚠️ Temporal Uncertainty (`uncertainty/`)
+Stores:
+
+- uncertainty intervals  
+- proxy disagreement  
+- environmental reconstruction variance  
+- model agreement metrics  
+
+Displayed in Focus Mode as **Temporal Confidence Chips**.
+
+---
+
+## 🧬 Metadata & Provenance
+
+### **STAC (`stac/`)**  
+Temporal STAC Items include:
+
+- OWL-Time intervals  
+- H3 generalized geometry  
+- environmental driver metadata  
+- uncertainty descriptors  
+- lineage references  
+
+### **DCAT (`metadata/`)**  
+Contains:
+
+- dataset descriptions  
+- time-based classification  
+- FAIR+CARE governance  
+- distribution & licensing  
+
+### **PROV-O (`provenance/`)**
+Documents:
+
+- environmental/landscape datasets used  
+- temporal modeling operations  
+- generalization & masking steps  
+- uncertainty propagation  
+- WAL → Retry → Lineage tracking  
 
 ---
 
 ## 🧠 Focus Mode Integration
 
-STAC metadata powers:
+Temporal landscape datasets power:
 
-- Focus Mode map-layer registry  
-- context-aware narrative generation  
-- uncertainty chips & environmental driver explanations  
-- 3D/temporal scene previews  
-- Story Node spatial anchoring  
+- time-sliced map overlays  
+- contextual Story Node environmental backdrops  
+- generalized landscape-evolution explanations  
+- non-speculative, environmental-only narratives  
 
 Example Focus Summary:
 
 > **Focus Summary:**  
-> STAC metadata documents generalized geometry, environmental drivers, and provenance for this cultural-landscape dataset, ensuring safe, transparent integration into Focus Mode narrative systems.
+> Temporal landscape models indicate broad eco-hydrological trends across Kansas, showing long-term environmental shifts relevant to generalized cultural-landscape interpretation. All outputs are generalized and CARE-reviewed.
 
 ---
 
-## 🛡️ CARE & Ethical Safeguards
+## 🛡️ CARE & Ethical Requirements
 
-All STAC records must:
+Temporal landscape outputs must:
 
-- avoid precise geometry  
-- pass sovereignty review  
-- disclose uncertainty  
-- avoid cultural identity inference  
-- reflect environmental frameworks only  
-- follow tribal governance directives  
-- comply with FAIR+CARE policies  
+- avoid cultural or tribal identity inference  
+- avoid precise temporal claims  
+- avoid restricted temporal-geographic information  
+- disclose uncertainty clearly  
+- follow H3 r7+ generalization  
+- pass FAIR+CARE Council review  
 
-If STAC metadata introduces cultural risk → it must be corrected or removed.
+If unsafe temporal interpretations arise → dataset must be masked or excluded.
 
 ---
 
@@ -241,14 +251,14 @@ If STAC metadata introduces cultural risk → it must be corrected or removed.
 
 | Version | Date       | Author                                   | Summary |
 |--------:|------------|------------------------------------------|---------|
-| v11.0.0 | 2025-11-17 | Archaeology WG · Cultural Landscape WG · FAIR+CARE Council | Initial cultural landscape STAC registry. |
+| v11.0.0 | 2025-11-17 | Archaeology WG · Cultural Landscape WG · FAIR+CARE Council | Initial temporal landscape results registry under KFM-MDP v11. |
 
 ---
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
-Cultural Landscape STAC Registry · CARE-Governed · FAIR+CARE Certified  
+Temporal Landscape Results · CARE-Governed · FAIR+CARE Certified  
 MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
 [Back to Cultural Landscape Results](../README.md)
