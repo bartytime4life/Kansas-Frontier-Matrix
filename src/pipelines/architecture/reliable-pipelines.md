@@ -5,19 +5,19 @@ version: "v11.0.0"
 last_updated: "2025-11-18"
 review_cycle: "Quarterly / Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/reliable-pipelines-v2.json"
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/pipelines-reliable-v2.json"
+governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.0.0"
 status: "Active / Enforced"
 doc_kind: "Architecture · Standard"
-intent: "pipeline-reliability"
+intent: "pipelines-reliability"
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant / Operational Safety"
+care_label: "Collective benefit · Authority to control · Responsibility · Ethics"
 sensitivity_level: "Medium"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
@@ -28,15 +28,16 @@ provenance_chain:
   - "src/pipelines/architecture/reliable-pipelines.md@v1.0.0"
   - "src/pipelines/architecture/reliable-pipelines.md@v10.3.1"
   - "src/pipelines/architecture/reliable-pipelines.md@v10.4.0"
+  - "src/pipelines/architecture/reliable-pipelines.md@v10.4.1"
 previous_version_hash: "<previous-sha256>"
 ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "HowTo"
+  cidoc: "E7 Activity"
+  schema_org: "TechArticle"
   owl_time: "TemporalEntity"
   prov_o: "prov:Plan"
   geosparql: "geo:FeatureCollection"
-json_schema_ref: "../../../schemas/json/pipelines-reliable-pipelines-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/pipelines-reliable-pipelines-v11-shape.ttl"
+json_schema_ref: "../../schemas/json/pipelines-reliable-pipelines-v11.schema.json"
+shape_schema_ref: "../../schemas/shacl/pipelines-reliable-pipelines-v11-shape.ttl"
 doc_uuid: "urn:kfm:doc:pipelines-reliable-pipelines-v11.0.0"
 semantic_document_id: "kfm-doc-pipelines-reliable-pipelines"
 event_source_id: "ledger:src/pipelines/architecture/reliable-pipelines.md"
@@ -66,7 +67,7 @@ sunset_policy: "Superseded upon new protocol release"
 # 🔁 **Kansas Frontier Matrix — Unified Reliable Pipeline Architecture v11**  
 `src/pipelines/architecture/reliable-pipelines.md`
 
-**Purpose:**  
+**Purpose**  
 Define the *authoritative, enforceable* reliability standard and architecture for all KFM pipelines and updaters:
 
 > **Triggers → light AI (schema only) → deterministic ETL → validation gates → idempotent upsert → metadata/versioning → blue/green publish → alerts & telemetry**,  
@@ -159,7 +160,7 @@ All pipelines that:
 - **Checkpoint** — persisted cursor (date/page/offset) for resume.  
 - **DLQ (Dead Letter Queue)** — durable storage for work items that failed beyond allowed retries.  
 - **Artifact** — any derived dataset (COG, Parquet, CSV, GeoJSON, STAC item, etc.) whose integrity is tracked.  
-- **Run ID** — unique identifier of a single pipeline execution derived from content.
+- **Run ID** — unique identifier of a single pipeline execution derived from content and configuration.
 
 ---
 
@@ -255,7 +256,7 @@ Every run MUST start from a **trigger envelope**:
 }
 ~~~
 
-### 6.2 Deterministic Run ID
+### 6.2 Deterministic Run ID (v11)
 
 ~~~text
 run_id = sha256(
@@ -465,7 +466,7 @@ telemetry/<pipeline>/<run_id>/metrics.json
 and validated against:
 
 ~~~text
-schemas/telemetry/reliable-pipelines-v2.json
+schemas/telemetry/pipelines-reliable-v2.json
 ~~~
 
 ---
@@ -593,12 +594,13 @@ Pipeline actions:
 
 ## 🕰️ Version History
 
-| Version | Date       | Author                               | Summary                                                                                 |
-|--------:|------------|----------------------------------------|-----------------------------------------------------------------------------------------|
-| v11.0.0 | 2025-11-18 | FAIR+CARE Council · Autonomous Pipelines Division | Rebuilt Unified Reliable Pipeline Architecture for KFM-MDP v11; merged v1.0.0, v10.3.1, v10.4.0; added OpenLineage/FAIR+CARE/telemetry v2 integration. |
-| v10.4.0 | 2025-11-15 | Pipeline Architecture Team            | Unified reliable pipeline spec; aligned with Markdown MDP v10.4 and ontology mappings.  |
-| v10.3.1 | 2025-11-13 | Pipeline Architecture Team            | Previous “Reliable Pipeline Architecture Guide”.                                        |
-| v1.0.0  | 2025-11-15 | ETL/Updaters Working Group            | Initial “Reliable Updaters” pattern.                                                    |
+| Version | Date       | Author                               | Summary                                                                                     |
+|--------:|------------|----------------------------------------|---------------------------------------------------------------------------------------------|
+| v11.0.0 | 2025-11-18 | FAIR+CARE Council · Architecture WG   | Rebuilt Unified Reliable Pipeline Architecture for KFM-MDP v11; merged v1.0.0, v10.3.1, v10.4.x; added OpenLineage/FAIR+CARE/telemetry v2 integration. |
+| v10.4.1 | 2025-11-18 | Architecture WG                       | Refined v10.4 architecture; clarified orchestration patterns for Airflow/Dagster/Temporal. |
+| v10.4.0 | 2025-11-15 | Pipeline Architecture Team            | Unified reliable pipeline spec; aligned with Markdown MDP v10.4 and ontology mappings.      |
+| v10.3.1 | 2025-11-13 | Pipeline Architecture Team            | Previous “Reliable Pipeline Architecture Guide”.                                            |
+| v1.0.0  | 2025-11-15 | ETL/Updaters Working Group            | Initial “Reliable Updaters” pattern.                                                        |
 
 ---
 
