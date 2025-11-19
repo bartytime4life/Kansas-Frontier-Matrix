@@ -351,4 +351,8 @@ watershed, and drought indicators aligned to STAC/DCAT 3.0 and KFM-OP v11.
 
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
 
+[⬅️ Back to Processed Layer](../README.md) ·  
+[📐 Data Architecture](../../ARCHITECTURE.md) ·  
+[⚖️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+
 </div>
