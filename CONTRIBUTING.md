@@ -1,45 +1,60 @@
 ---
 title: "🤝 Kansas Frontier Matrix — Contribution Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "CONTRIBUTING.md"
-version: "v10.4.1"
-last_updated: "2025-11-15"
+version: "v11.0.0"
+last_updated: "2025-11-18"
+
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "releases/v10.4.0/manifest.zip"
-telemetry_ref: "releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/contributing-v1.json"
+
+sbom_ref: "releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "releases/v11.0.0/manifest.zip"
+telemetry_ref: "releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/contributing-v2.json"
+
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v11.0.0"
+
 status: "Active / Enforced"
 doc_kind: "Governance"
 intent: "contributor-workflow"
+role: "governance"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Mixed Dataset Classification"
 sensitivity_level: "Contribution-dependent"
 public_exposure_risk: "Low to Medium"
-indigenous_rights_flag: "Conditional"
+indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Mixed"
 redaction_required: false
+
 provenance_chain:
-  - "CONTRIBUTING.md@v10.3.2"
   - "CONTRIBUTING.md@v10.3.1"
+  - "CONTRIBUTING.md@v10.3.2"
+  - "CONTRIBUTING.md@v10.4.1"
+
 previous_version_hash: "<previous-sha256>"
+
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "HowTo"
   owl_time: "TemporalEntity"
   prov_o: "prov:Plan"
-json_schema_ref: "schemas/json/contributing.schema.json"
-shape_schema_ref: "schemas/shacl/contributing-shape.ttl"
-doc_uuid: "urn:kfm:doc:contributing-v10.4.1"
+  geosparql: "geo:FeatureCollection"
+
+json_schema_ref: "schemas/json/contributing-v11.schema.json"
+shape_schema_ref: "schemas/shacl/contributing-v11-shape.ttl"
+
+doc_uuid: "urn:kfm:doc:contributing-v11.0.0"
 semantic_document_id: "kfm-doc-contributing"
 event_source_id: "ledger:CONTRIBUTING.md"
-immutability_status: "version-pinned"
+immutability_status: "mutable-plan"
 doc_integrity_checksum: "<sha256>"
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with strict controls"
 ai_transform_permissions:
@@ -49,11 +64,11 @@ ai_transform_permissions:
 ai_transform_prohibited:
   - "speculative additions"
   - "unverified historical claims"
+
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA"
 jurisdiction: "Kansas / United States"
 classification: "Public Document"
-role: "governance"
 lifecycle_stage: "stable"
 ttl_policy: "Annual review"
 sunset_policy: "Superseded upon next contributor-guideline update"
@@ -61,285 +76,399 @@ sunset_policy: "Superseded upon next contributor-guideline update"
 
 <div align="center">
 
-# 🤝 **Kansas Frontier Matrix — Contributor Guide**  
+# 🤝 **Kansas Frontier Matrix — Contribution Guide**  
 `CONTRIBUTING.md`
 
-**Purpose:**  
-Provide a unified, FAIR+CARE-governed, reproducible, ethical, and schema-aligned workflow for contributing to the  
-Kansas Frontier Matrix (KFM).  
-This guide ensures transparency, provenance integrity, CARE compliance, accessibility, and CI/CD validation across all
-contributions.
+**A documentation-first, FAIR+CARE-governed, reproducible workflow for contributing to the Kansas Frontier Matrix (KFM).**
+
+[![KFM-MDP v11](https://img.shields.io/badge/Markdown-KFM--MDP_v11.0.0-informational)](docs/standards/kfm_markdown_protocol_v11.md)  
+[![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](docs/standards/faircare.md)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)  
 
 </div>
 
----
+--- ✦ ---
 
-# 📘 Introduction
+## 📘 Introduction
 
-Thank you for contributing to the **Kansas Frontier Matrix**.  
-All contributions must follow KFM’s architectural, ethical, accessibility, and governance standards:
+Thank you for your interest in contributing to the **Kansas Frontier Matrix**.
 
-- **MCP-DL v6.3**  
-- **KFM-MDP v10.4**  
-- **FAIR+CARE**  
-- **WCAG 2.1 AA**  
-- **CIDOC / PROV-O / OWL-Time alignment**  
-- **Version pinning & provenance logging**  
+This guide defines the **v11 contributor workflow**, aligned with:
 
----
+- **MCP-DL v6.3** — Master Coder Protocol, documentation-first  
+- **KFM-MDP v11.0.0** — Markdown & documentation protocol  
+- **FAIR+CARE** — data ethics and governance  
+- **WCAG 2.1 AA** — accessibility baseline  
+- **CIDOC-CRM / OWL-Time / GeoSPARQL / PROV-O** — semantic modeling  
+- **Diamond⁹ Ω / Crown∞Ω** — internal reliability & governance labels  
 
-# 🧱 Contribution Types
+All contributions (code, data, docs, analyses, story content) must comply with these standards.
 
-KFM accepts contributions in:
+--- ✦ ---
 
-- Code (web, pipelines, tools, validation, governance)  
-- Documentation (architecture, standards, analyses, guides)  
-- Data (datasets, metadata, lineage, STAC/DCAT entries)  
-- Testing (unit/integration/E2E/schema/A11y)  
-- Governance & CARE metadata improvements  
+## 🧱 Contribution Types
 
----
+You can contribute in many ways:
 
-# 🛠 Environment Setup
+- **Code**
+  - Web frontend (React + MapLibre + Cesium)
+  - ETL & AI pipelines
+  - Validation & telemetry tools
+  - Graph / API utilities
 
-## Clone
+- **Documentation**
+  - Architecture & design docs
+  - Standards & governance docs
+  - How-to guides and tutorials
+  - Story Node authoring guides
 
-~~~bash
+- **Data & Metadata**
+  - New datasets (maps, tables, documents)
+  - STAC/DCAT entries and lineage records
+  - Ontology/graph mappings and schema updates
+
+- **Testing & Validation**
+  - Unit / integration / E2E tests
+  - Schema & ontology tests
+  - A11y and usability tests
+  - Validation & observability improvements
+
+- **Governance & Ethics**
+  - CARE metadata
+  - Provenance and licensing checks
+  - Documentation of community or tribal guidance
+
+All contributions are subject to **FAIR+CARE** and **KFM governance**.
+
+--- ✦ ---
+
+## 🛠 Environment Setup
+
+### 1. Clone the repository
+
+```bash
 git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
 cd Kansas-Frontier-Matrix
-~~~
+```
 
-## Install dependencies
+### 2. Install dependencies
 
-~~~bash
-npm install                     # Web platform & frontend tooling
-pip install -r requirements.txt # Backend ETL & tools
-~~~
+```bash
+# Frontend & tools
+npm install
 
-## Recommended tools
+# Backend, ETL, AI, validation tools
+pip install -r requirements.txt
+```
 
-- Node 18+  
-- Python 3.10+  
-- Docker (optional: ETL, Neo4j testing, spatial pipelines)  
-- make (optional automation)  
+### 3. Recommended tools
 
----
+- Node.js **18+**
+- Python **3.10+**
+- Docker (for Neo4j, ETL, and spatial tools)
+- `make` (optional, for scripted tasks)
+- A markdown editor that supports **YAML front-matter** and **Mermaid** (e.g., VS Code)
 
-# 🌾 Project Structure (Quick Overview)
+--- ✦ ---
 
-~~~text
+## 🌾 Project Structure (High-Level)
+
+```text
 .
-├── data/            # Data system (raw → work → processed → STAC/DCAT)
-├── docs/            # Documentation, standards, governance, analyses
-├── web/             # Web platform (React + MapLibre + Cesium)
-├── tools/           # CLI, audits, validation, governance, telemetry
-├── tests/           # Unit, integration, E2E, schema, governance, A11y
-├── releases/        # SBOM, manifest, telemetry
-└── schemas/         # JSON/SHACL/ontology schemas
-~~~
+├── data/            # Raw, work, processed, STAC/DCAT, lineage manifests
+├── docs/            # Architecture, standards, analyses, strategy, pipelines
+├── web/             # React + MapLibre + Cesium web application
+├── src/             # ETL, AI pipelines, graph, API, utilities
+├── tools/           # CLI tools, audits, validation, governance, telemetry
+├── schemas/         # JSON, SHACL, ontology schemas & shapes
+├── tests/           # Unit, integration, E2E, schema, governance, a11y tests
+├── releases/        # Manifests, SBOMs, telemetry for each version
+└── .github/         # CI/CD, governance, validation, security automation
+```
 
----
+For orientation:
 
-# 🧩 Branching Model
+- Start with `README.md` and `docs/README.md`
+- See `.github/README.md` for CI/CD & governance
+- See `docs/standards/kfm_markdown_protocol_v11.md` for markdown rules
 
-### main  
-- Always deployable  
-- Fully validated  
-- Protected by governance + CI  
+--- ✦ ---
 
-### feature/*  
-For new features; requires review, validation, and CARE classification.
+## 🌿 Branching & Workflow Model
 
-### fix/*  
-For bug/security fixes.
+### Branches
 
-### docs/*  
-Docs-only PRs.
+- **`main`**
+  - Always deployable
+  - Fully validated and governed
+  - Protected branch
 
-### data/*  
-For dataset ingestion, metadata changes (requires CARE & provenance checks).
+- **`feature/*`**
+  - New features
+  - Must be focused and documented
 
----
+- **`fix/*`**
+  - Bug and security fixes
 
-# 📥 Pull Request Requirements
+- **`docs/*`**
+  - Documentation-only changes
 
-All PRs MUST pass:
+- **`data/*`**
+  - New datasets or major metadata changes
+  - Requires CARE & provenance review
 
-- TypeScript strict mode  
-- ESLint/Prettier/Stylelint  
-- Markdown rules (KFM-MDP v10.4)  
-- JSON/YAML schema validation  
-- Unit + integration tests  
-- A11y tests  
-- FAIR+CARE validation  
-- Governance/provenance checks  
-- Telemetry schema validation  
-- SBOM/manifest verification  
+### Workflow Overview
 
-A PR is **blocked** if ANY requirement fails.
+```mermaid
+flowchart LR
+  A[Fork or New Branch] --> B[Implement Changes]
+  B --> C[Run Local Tests & Validation]
+  C --> D[Open Pull Request]
+  D --> E[GitHub Actions · CI/CD<br/>Lint · Tests · Schemas · FAIR+CARE · Security]
+  E -->|pass| F[Review & Governance Check]
+  F -->|approve| G[Merge to main]
+```
 
-## PR Template (Required Fields)
+--- ✦ ---
 
-You MUST complete:
+## 📥 Pull Request Requirements (v11)
 
-- CARE classification  
-- Provenance notes  
-- A11y impact  
-- Telemetry impact  
-- Schema impacts  
-- Sensitive-site risk  
-- Sustainability considerations  
+Every PR **must**:
 
----
+- Target an appropriate branch (usually `main` from `feature/*` or `fix/*`)
+- Include a clear, concise description
+- Link related issues (if any)
+- Be **small and scoped** where possible
 
-# 🔐 Governance, CARE & Sovereignty Requirements
+### Required checks
 
-### CARE Principles  
-Contributors must ensure:
+All of the following **must pass** before merging:
 
-- No exposure of restricted coordinates  
-- H3 generalization for heritage sites (default r7)  
-- Cultural & Indigenous data reviewed by FAIR+CARE Council  
-- No misuse of cultural symbols or iconography  
-- Positive, contextual, respectful framing  
+- TypeScript compilation (for web)
+- ESLint / Prettier / Stylelint
+- Python formatting & linting (e.g., `black`, `ruff` or `flake8` as configured)
+- Markdown validation (KFM-MDP v11 rules + YAML front-matter)
+- JSON / YAML schema validation
+- Story Node / Focus Mode payload validation (if affected)
+- STAC / DCAT validation (if data/metadata affected)
+- Unit tests
+- Integration / E2E tests (where relevant)
+- Accessibility tests (a11y)
+- FAIR+CARE checks (data, content, and documentation)
+- SBOM & manifest verification for release-sensitive PRs
 
-### Provenance  
-Every addition must include:
+If **any** of these fail, the PR is blocked until resolved.
 
-- Source  
-- License  
-- Rights-holder  
-- Transformation lineage  
-- SBOM/manifest updates if applicable  
+### PR Template (Required Fields)
 
-### Ethical AI  
-Focus Mode & AI-related contributions must not:
+The PR template will prompt you for:
 
-- Invent historical events  
-- Fabricate causal claims  
-- Produce unverified summaries  
-- Introduce hallucinated citations  
+- **Summary of change**
+- **Type** (bugfix, feature, docs, data, refactor, governance, etc.)
+- **CARE classification** (does it touch sensitive data?)
+- **Provenance notes** (data and narrative sources)
+- **A11y impact** (UI/UX changes)
+- **Telemetry impact** (performance, energy, logging)
+- **Schema & ontology impact** (new fields, relationships, types)
+- **Security considerations** (if any)
+- **Testing performed**
 
----
+Complete these fields honestly and thoroughly.
 
-# ♿ Accessibility Requirements (WCAG 2.1 AA)
+--- ✦ ---
 
-All contributions must maintain or improve A11y:
+## 🔐 Governance, FAIR+CARE & Sovereignty
 
-- Keyboard operability  
-- Proper ARIA roles  
-- High-contrast colors  
-- Reduced-motion support  
-- Alt text for images  
-- Semantic HTML structure  
-- Accessible map colors & overlays  
+The Kansas Frontier Matrix is committed to **ethical, governed use of historical and contemporary data**, especially Indigenous and sensitive materials.
 
-A11y failures → PR blocked.
+### CARE & Sovereignty Guidelines
 
----
+- Do **not** expose exact coordinates for:
+  - Sensitive archaeological sites
+  - Sacred or restricted locations
+  - Locations flagged by tribal or community partners
+- Use **H3 generalization** or similar masking where required
+- Respect community-specific data-sharing agreements
+- Seek FAIR+CARE Council guidance when in doubt
+- Avoid extracting or re-framing Indigenous knowledge without proper context, consent, and governance
 
-# 🗃 Dataset Contribution Rules
+### Provenance & Licensing
 
-### Required metadata:
-- License  
-- Source + provenance  
-- CARE classification  
-- Spatial extent (bbox + CRS)  
-- Temporal extent  
-- STAC/DCAT metadata (if applicable)  
+Every contribution that touches data or narrative content must:
 
-### Sensitive datasets:
-- Require FAIR+CARE Council review  
-- Require masking or H3 r7+ generalization  
-- Require clear contextual documentation  
+- Include explicit **source** references (archive, dataset, article, community input, etc.)
+- Provide **license** information (public domain, CC-BY, etc.)
+- Respect rights-holders and data stewards
+- Add or update provenance metadata in appropriate STAC/DCAT or PROV-O structures
+- Avoid including proprietary or closed data unless explicitly allowed
 
----
+### Ethical AI
 
-# 🧪 Testing Requirements
+For Focus Mode, Story Nodes, or AI-generated content:
 
-You MUST run:
+- No invented events or people
+- No unverified claims about causes or motives
+- No hallucinated citations or references
+- Summaries must be **traceable back to data or sources in the graph**
+- AI-generated narrations must be clearly attributable and versioned
 
-~~~bash
+--- ✦ ---
+
+## ♿ Accessibility Requirements (WCAG 2.1 AA)
+
+Accessibility is **non-optional**. All UI and content changes must:
+
+- Support keyboard navigation and focus management
+- Use semantic HTML (headings, landmarks, lists, tables)
+- Provide descriptive alt text for images and icons
+- Maintain sufficient color contrast
+- Respect reduced-motion preferences
+- Avoid relying solely on color to convey meaning
+- Ensure map and 3D visualizations have accessible descriptions and alternative views where feasible
+
+When you modify UI or content:
+
+- Run the configured a11y tests (e.g., `npm run test:a11y`)
+- Manually verify keyboard interactions at least for new components
+- Document any intentional exceptions (and they must be justified and reviewed)
+
+--- ✦ ---
+
+## 🗃 Dataset & Metadata Contributions
+
+When adding or updating datasets:
+
+### Required Metadata
+
+- Dataset title and description
+- Source and publisher
+- License and usage rights
+- Spatial extent (bbox + CRS)
+- Temporal extent (time range and precision)
+- STAC Item/Collection entries for geospatial assets
+- DCAT metadata for tabular or catalog entries
+- CARE classification and Indigenous rights considerations
+- Processing steps (how the dataset was created or transformed)
+
+### Sensitive & Restricted Data
+
+- Must be explicitly labeled and documented
+- Must go through FAIR+CARE Council review
+- Must be masked, generalized, or fully withheld in public builds as appropriate
+- Should avoid personally identifiable information (PII) whenever possible
+
+### Integration with the Graph
+
+If the dataset integrates into the Neo4j graph:
+
+- Ensure nodes and relationships align with CIDOC-CRM / OWL-Time / GeoSPARQL / PROV-O modeling
+- Update any relevant schema documents or SHACL shapes in `schemas/`
+- Provide example Cypher queries (in docs) for typical use cases if appropriate
+
+--- ✦ ---
+
+## 🧪 Testing & Validation (Contributor Expectations)
+
+Before pushing or opening a PR, you should run at least:
+
+```bash
+# Frontend
+npm run lint
 npm run test
+
+# Backend / ETL
 pytest
+
+# Accessibility (where configured)
 npm run test:a11y
-~~~
+```
 
-Additionally:
+If your change affects:
 
-- Story Node v3 payloads must validate  
-- Focus Mode v2.5 payloads must validate  
-- STAC/DCAT metadata must be schema-align  
-- No regressions in performance/drift/ethics metrics  
+- **Schemas / Ontologies** → run the schema validation suite  
+- **STAC/DCAT / Data** → run STAC/DCAT validators and Great Expectations checks  
+- **Focus Mode / Story Nodes** → run tests for Story Node v3 and Focus payloads  
+- **GitHub workflows** → run a dry-run or limited test where possible
 
----
+--- ✦ ---
 
-# 📈 Telemetry Responsibilities
+## 📈 Telemetry & Sustainability
 
-Major contributions MUST evaluate:
+Major contributions that impact performance or infrastructure should consider:
 
-- Energy usage impacts  
-- Carbon impacts  
-- A11y telemetry changes  
-- Governance telemetry implications  
-- WebVitals implications  
-- Data pipeline runtime impacts  
+- Runtime changes (ETL, web, API)
+- Memory and CPU/GPU usage
+- Network and storage implications
+- Estimated energy and carbon impact (where captured in telemetry)
+- Changes in logging volume or telemetry cardinality
 
-Telemetry is exported to:
+Telemetry is aggregated in:
 
-`releases/<version>/focus-telemetry.json`
+```text
+releases/<version>/focus-telemetry.json
+```
 
----
+Use this to monitor how your contributions affect the system’s footprint over time.
 
-# 🧾 Legal & Licensing
+--- ✦ ---
 
-All contributions are:
+## 🧾 Legal & Licensing Notes
 
-**Licensed under MIT**, unless otherwise stated.
+By contributing:
 
-You MUST verify:
+- Your code contributions are licensed under the **MIT License**
+- Documentation is generally licensed under **CC-BY 4.0**, unless otherwise noted
+- You should:
+  - Verify that any third-party code, libraries, or data are compatible with these licenses
+  - Attribute sources where required
+  - Avoid including proprietary content unless it is clearly licensed for such use and documented accordingly
 
-- External data licenses  
-- Attribution requirements  
-- CARE + rights-holder compliance  
+If you are unsure about licensing, raise the question in the PR or an issue before proceeding.
 
----
+--- ✦ ---
 
-# 🧠 Code, Design & Documentation Standards
+## 📐 Code, Design & Documentation Standards
 
 ### Code
-- TypeScript strict  
-- PEP8  
-- No dead code  
-- Deterministic behavior  
-- Strong typing  
-- No business logic in components  
-- No global mutable state  
+
+- TypeScript: strict mode enabled for frontend
+- Python: PEP8 style, typed where feasible, deterministic behavior
+- No unnecessary global mutable state
+- Configuration via environment or structured config files, not hard-coded constants
+- Logging is structured and non-sensitive
 
 ### Documentation
-- All files MUST follow KFM-MDP v10.4  
-- Must include YAML front-matter  
-- Directory trees MUST use `~~~text`  
-- No nested backticks  
-- Semantic headings maintained  
 
----
+- Every new doc must:
+  - Follow **KFM-MDP v11.0.0**
+  - Include a fully populated YAML front-matter block
+  - Use consistent headings and emoji bars (where appropriate)
+  - Include directory layouts using fenced code blocks
+  - Ensure no broken fences or unclosed HTML tags
+- Docs should be:
+  - Concise but complete
+  - Machine-readable and human-readable
+  - Linked from relevant index files (`docs/README.md`, etc.)
 
-# 🕰 Version History
+--- ✦ ---
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v10.4.1 | 2025-11-15 | Fixed all nested code fences; aligned with KFM-MDP v10.4.1; fully one-box-safe |
-| v10.4.0 | 2025-11-15 | Initial KFM v10.4 rewrite with CARE/A11y telemetry standards |
-| v10.3.2 | 2025-11-14 | Governance + telemetry integrations |
-| v10.3.1 | 2025-11-13 | Initial CONTRIBUTING framework |
+## 🕰 Version History
 
----
+| Version  | Date         | Summary                                                                                                       |
+|---------:|-------------:|--------------------------------------------------------------------------------------------------------------|
+| v11.0.0  | 2025-11-18   | Ground-up v11 rebuild: aligned with KFM-MDP v11, GitHub infra v11, updated ethics, telemetry, and A11y rules. |
+| v10.4.1  | 2025-11-15   | One-box-safe formatting; improved CARE/A11y fields; stronger governance hooks.                               |
+| v10.4.0  | 2025-11-15   | Major rewrite for KFM v10.4; structured contributor workflow, governance, and telemetry expectations.        |
+| v10.3.2  | 2025-11-14   | Added governance + telemetry integration details.                                                            |
+| v10.3.1  | 2025-11-13   | Initial CONTRIBUTING framework.                                                                              |
+
+--- ✦ ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MIT License  
-Governed under MCP-DL v6.3 and KFM-MDP v10.4.1  
-FAIR+CARE Certified · Public Document · Version-Pinned  
+**© 2025 Kansas Frontier Matrix — MIT License**  
+Governed under **MCP-DL v6.3** and **KFM-MDP v11.0.0**  
+**FAIR+CARE Certified · Public Document · Contributor Workflow v11**
 
 </div>
+````
