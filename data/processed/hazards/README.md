@@ -1,197 +1,134 @@
+Weights are dataset-dependent.
+
+Outputs stored in:
+
+~~~~text
+hazard_intensity_index_v11.0.0.csv
+~~~~
+
 ---
-title: "⚠️ Kansas Frontier Matrix — **Processed Hazards Data** (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "data/processed/hazards/README.md"
-version: "v10.2.2"
-last_updated: "2025-11-12"
-review_cycle: "Continuous / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.2.0/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v10.2.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-hazards-processed-v10.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0 / FAIR+CARE Certified"
-mcp_version: "MCP-DL v6.3"
+
+# 8. 🧍 Exposure & Vulnerability Modeling
+
+Exposure datasets quantify:
+
+- Population  
+- Buildings  
+- Infrastructure  
+- Agriculture  
+- Land use  
+
+Spatial units:
+
+- Census tracts  
+- Block groups  
+- H3 cells  
+
+Example fields:
+
+~~~~text
+tract_id, pop, pop_age65, pop_under5, structures, ag_value, exposure_score
+~~~~
+
 ---
+
+# 9. 🔐 Governance Architecture (FAIR+CARE v11)
+
+Governance flows for hazards:
+
+### Required:
+
+- CARE assessment for human-impact metrics (fatalities, injuries)  
+- Sovereignty filtering for tribal lands  
+- Masking for sensitive facility locations  
+- Public exposure risk scoring  
+
+Governance artifacts:
+
+~~~~text
+metadata/faircare_certification.json
+metadata/masking_policies.json
+docs/reports/audit/data_provenance_ledger.json
+~~~~
+
+---
+
+# 10. 🧮 Integrity Architecture (Checksums)
+
+Every file in this directory has an entry in:
+
+~~~~text
+data/archive/2025Q4/checksums/hazards_checksums.json
+data/checksums/manifest.json
+~~~~
+
+Rules:
+
+- SHA-256 with prefix `sha256-`  
+- File path must be exact  
+- Dataset ID must match STAC/DCAT  
+
+---
+
+# 11. 🛰 STAC/DCAT Publication Requirements
+
+Hazards have a domain-level STAC Collection:
+
+~~~~text
+data/processed/hazards/stac_collection.json
+~~~~
+
+Each dataset has:
+
+- STAC Item  
+- DCAT Dataset  
+- JSON-LD provenance  
+- Quality & sustainability metadata  
+
+---
+
+# 12. 🔍 Focus Mode v3 Integration
+
+Hazards datasets power:
+
+- Time-slider hazard timelines  
+- Narrative hazard sequences  
+- Story Node v3 generation  
+- Predictive hazard overlays  
+- Risk mosaics and explainability overlays  
+
+All hazards must include:
+
+- Temporal precision  
+- Geometry validity  
+- Domain-specific annotations  
+
+---
+
+# 13. 📜 Internal Reference Citation
+
+~~~~text
+Kansas Frontier Matrix (2025). Processed Hazards Data (v11.0.0).
+FAIR+CARE-certified, checksum-verified hazards datasets integrating tornado,
+flood, drought, wildfire, and exposure domains. Aligned to STAC/DCAT, ISO 19115,
+and KFM-OP v11 ontology for scientific and public resilience applications.
+~~~~
+
+---
+
+# 14. 🕰 Version History
+
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v11.0.0 | 2025-11-19 | Full v11 hazards architecture: schema tables, ontology, lineage, exposure modeling, STAC/DCAT integration. |
+| v10.2.2 | 2025-11-12 | Added Focus v2.1, Streaming-STAC support, telemetry v2. |
+| v10.0.0 | 2025-11-09 | Initial hazards processed layer structure. |
 
 <div align="center">
 
-# ⚠️ Kansas Frontier Matrix — **Processed Hazards Data**  
-`data/processed/hazards/README.md`
+**Kansas Frontier Matrix — Hazards Domain**  
+FAIR+CARE Certified · Sustainability Validated · Diamond⁹ Ω / Crown∞Ω  
 
-**Purpose:**  
-Authoritative repository of **FAIR+CARE-certified multi-hazard datasets** harmonized from FEMA, NOAA (NCEI/SPC), USGS, KDHE, and allied state sources.  
-This layer provides validated, reproducible, and ethically governed datasets for public use, risk modeling, and **Focus Mode v2.1** hazard intelligence.
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/README.md)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Hazards%20Certified-gold.svg)](../../../docs/standards/faircare.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green.svg)]()
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../LICENSE)
-
-</div>
-
----
-
-## 📘 Overview
-
-The **Processed Hazards Layer** stores final, schema-validated, and FAIR+CARE-certified datasets representing **hazard events, exposure models, risk indices, and derived analytics** across Kansas.  
-All layers are normalized to **EPSG:4326**, enriched with **ISO 19115 / PROV-O** lineage, and cataloged to **STAC 1.0 / DCAT 3.0** for global discovery and reuse.
-
-**v10.2.2 Upgrades**
-- **Streaming STAC** registration where sources provide near-real-time updates.  
-- **Focus v2.1** alignment (explainability overlays, citations, CARE ethics flags).  
-- **Telemetry v2** energy/CO₂ and validation coverage exported per release.
-
-### Core Objectives
-- Maintain **finalized, publication-ready** hazard datasets.  
-- Enforce **FAIR+CARE**, **schema**, and **checksum** verification with governance logs.  
-- Link **provenance & lineage** via append-only ledgers and SBOM/manifest artifacts.  
-- Support **AI-assisted Focus v2.1** visualization, explainability, and forecasting.
-
----
-
-## 🗂️ Directory Layout
-
-```plaintext
-data/processed/hazards/
-├── README.md                                # This file — processed hazard datasets overview
-│
-├── hazards_composite_v10.2.2.geojson        # Multi-hazard integrated (flood, tornado, drought, severe storm)
-├── hazard_intensity_index_v10.2.2.csv       # Statewide hazard severity index (normalized 0–10)
-├── hazard_event_frequency_v10.2.2.csv       # Historical frequency by type/region (rolling & cumulative)
-├── flood_risk_zones_v10.2.2.geojson         # FEMA NFHL-derived flood hazard (processed)
-├── tornado_tracks_1950_2025_v10.2.2.geojson # Historical tornado tracks (NOAA Storm Events + SPC)
-├── exposure_pop_tract_v10.2.2.parquet       # Population exposure by census tract
-├── metadata.json                            # STAC/DCAT/ISO 19115 metadata + FAIR+CARE certification
-└── stac_collection.json                     # STAC 1.0 collection for processed hazards datasets
-```
-
-> Optional per release: `lightning_density.tif`, `drought_footprint.geojson`, `debrisflow_susceptibility.tif`, etc.
-
----
-
-## 🧭 Data Summary
-
-| Dataset                         | Records | Source                           | Schema                     | Status      | License |
-|---------------------------------|--------:|----------------------------------|----------------------------|-------------|---------|
-| Hazards Composite               | 34,987  | FEMA, NOAA NCEI/SPC, USGS, KDHE  | `hazards_composite_v3.2.0` | ✅ Certified | CC-BY 4.0 |
-| Hazard Intensity Index          | 1,214   | FEMA, NCEI                       | `hazard_index_v3.1.0`      | ✅ Certified | CC-BY 4.0 |
-| Event Frequency (Hist + Rolling)| 23,406  | NOAA, SPC                        | `hazard_events_v3.1.0`     | ✅ Certified | CC-BY 4.0 |
-| Flood Risk Zones (NFHL)         | 4,122   | FEMA NFHL                        | `flood_zones_v3.2.1`       | ✅ Certified | CC-BY 4.0 |
-| Tornado Tracks 1950–2025        | 11,502  | NOAA SPC/NCEI                    | `tornado_tracks_v3.1.0`    | ✅ Certified | CC-BY 4.0 |
-| Pop Exposure (Tracts)           | 1,378   | ACS (derived join)               | `exposure_pop_v1.0.0`      | ✅ Certified | CC-BY 4.0 |
-
-> All datasets are **SHA-256 checksum-verified** and **registered** in the KFM Governance Ledger.
-
----
-
-## ⚙️ Processed Hazards Workflow
-
-```mermaid
-flowchart TD
-    STAGE["Staging Layer (data/work/staging/hazards/*)"] --> FAIR["FAIR+CARE Validation & Ethics Certification"]
-    FAIR --> SCHEMA["Schema Alignment (JSON Schema · ISO 19115)"]
-    SCHEMA --> CHECK["Checksum Verification (SHA-256) & Ledger Logging"]
-    CHECK --> PUB["Publication (data/processed/hazards/*)"]
-    PUB --> CATALOG["STAC/DCAT Sync + Streaming STAC + Focus v2.1 Enablement"]
-```
-
-### Validation & Governance Artifacts
-- **Schema Validation:** `data/reports/validation/schema_validation_summary.json`  
-- **Checksums:** `data/processed/metadata/checksums_hazards_v10.2.2.json`  
-- **FAIR+CARE Certification:** `data/reports/fair/data_care_assessment.json`  
-- **Provenance Ledger:** `data/reports/audit/data_provenance_ledger.json`  
-- **SBOM & Manifest:** `releases/v10.2.0/sbom.spdx.json`, `releases/v10.2.0/manifest.zip`
-
----
-
-## 🧩 Example Processed Metadata Record
-
-```json
-{
-  "id": "processed_hazards_composite_v10.2.2",
-  "domain": "hazards",
-  "source_stage": "data/work/staging/hazards/",
-  "records_total": 34987,
-  "schema_version": "v3.2.0",
-  "fairstatus": "certified",
-  "checksum_sha256": "sha256:cd19f4e23b79d1c8a7f5b3e9e5f7c8b9e3d2b5c6a9f1e7b2d3a6b5c9e2f7d1a4",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json",
-  "validator": "@kfm-hazards-lab",
-  "license": "CC-BY 4.0",
-  "created": "2025-11-12T21:25:00Z"
-}
-```
-
----
-
-## 🧠 FAIR+CARE Certification Matrix
-
-| Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | STAC/DCAT metadata with spatiotemporal keywords & UUIDs. | `@kfm-data` |
-| **Accessible** | Open GeoJSON/COG/Parquet; HTTP range-gets for large rasters. | `@kfm-accessibility` |
-| **Interoperable** | ISO 19115 lineage; CRS normalized (EPSG:4326); STAC 1.0 best practices. | `@kfm-architecture` |
-| **Reusable** | Checksums, licensing, and lineage recorded in `metadata/`. | `@kfm-design` |
-| **Collective Benefit** | Underpins risk reduction, planning, equitable resilience. | `@faircare-council` |
-| **Authority to Control** | FAIR+CARE Council certifies final releases. | `@kfm-governance` |
-| **Responsibility** | Continuous QA, CRS audits, schema compliance, checksum registration. | `@kfm-security` |
-
----
-
-## ⚙️ Validation & Catalog Publication
-
-| Step | Description | Output |
-|---|---|---|
-| **Schema Validation** | Structural conformance checks. | `schema_validation_summary.json` |
-| **Checksum Verification** | Integrity & reproducibility proof. | `checksums_hazards_v10.2.2.json` |
-| **FAIR+CARE Audit** | Ethics & accessibility certification. | `faircare_certification_report.json` |
-| **Ledger Sync** | Append-only provenance entries. | `data_provenance_ledger.json` |
-| **STAC/DCAT Registration** | Catalog inclusion for discovery. | `stac_collection.json` |
-
-> Governance automation: `hazards_processed_sync.yml`
-
----
-
-## 📊 Sustainability & Telemetry
-
-| Metric | Target | Result (v10.2.2) | Verified By |
-|---|---:|---:|---|
-| Energy per certification | ≤ 18 Wh | 15.2 Wh | `@kfm-sustainability` |
-| CO₂e per certification | ≤ 20 g | 17.9 g | `@kfm-infrastructure` |
-| FAIR+CARE compliance | 100% | ✅ | `@faircare-council` |
-
-**Telemetry reference:** `releases/v10.2.0/focus-telemetry.json`
-
----
-
-## 🧾 Internal Use Citation
-
-```text
-Kansas Frontier Matrix (2025). Processed Hazards Data (v10.2.2).
-FAIR+CARE-certified, schema-validated, and provenance-registered hazards datasets for open geospatial analysis and Focus Mode v2.1 applications.
-Compliant with ISO 19115 · STAC 1.0 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certification.
-```
-
----
-
-## 🕰️ Version History
-
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.2.2 | 2025-11-12 | `@kfm-hazards` | Streaming STAC sync, Focus v2.1 integration, telemetry/schema v2, governance path updates. |
-| v10.0.0 | 2025-11-09 | `@kfm-hazards` | Streaming STAC baseline, Focus v2 enablement, telemetry/schema v2. |
-
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Hazard Intelligence × FAIR+CARE Governance × Provenance Certification*  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Data Index](../README.md) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
 
 </div>
