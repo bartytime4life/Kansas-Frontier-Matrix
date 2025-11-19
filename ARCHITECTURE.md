@@ -1,6 +1,6 @@
 ---
-title: "🧩 Kansas Frontier Matrix — Graph Write Patterns & Lineage-Safe Upserts (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "docs/graph/write-patterns.md"
+title: "🏗️ Kansas Frontier Matrix — Repository Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "ARCHITECTURE.md"
 
 # Versioning & Release
 version: "v11.0.0"
@@ -8,27 +8,27 @@ last_updated: "2025-11-19"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
-backward_compatibility: "Guaranteed for all v10.x → v11.x pipelines"
+backward_compatibility: "Full v10.x → v11.x compatibility"
 
-# Git Commit & Integrity
+# Integrity & Attestations
 commit_sha: "<latest-commit-hash>"
-signature_ref: "../../releases/v11.0.0/signature.sig"
-attestation_ref: "../../releases/v11.0.0/slsa-attestation.json"
+signature_ref: "releases/v11.0.0/signature.sig"
+attestation_ref: "releases/v11.0.0/slsa-attestation.json"
 
-# SBOM, Manifest, Telemetry
-sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/graph-write-patterns-v1.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
+# Release Artifacts
+sbom_ref: "releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "releases/v11.0.0/manifest.zip"
+telemetry_ref: "releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/root-architecture-v1.json"
+energy_schema: "schemas/telemetry/energy-v2.json"
+carbon_schema: "schemas/telemetry/carbon-v2.json"
 
 # Governance & Standards
-governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
+governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
-sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-risk_profile: "Low Risk · Automatic Lineage Enforcement · Strict Provenance Required"
+risk_profile: "High Governance · Requires Full Provenance · Auto-Masked Sensitive Data"
 
 # Protocol Versions
 license: "MIT"
@@ -36,419 +36,335 @@ mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.0"
 ontology_protocol_version: "KFM-OP v11.0"
 pipeline_contract_version: "KFM-PDC v11.0"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
 
 # Document Classification
 status: "Active / Enforced"
 doc_kind: "Architecture"
-intent: "graph-write-patterns"
-category: "Graph · Lineage · Write Safety"
-sensitivity: "General (Non-sensitive) — auto-masked for protected datasets"
+intent: "repository-architecture"
+category: "System Architecture · Repository Design · Global Dataflow"
+sensitivity: "General (non-sensitive, but applies masking to protected datasets)"
 
-# Lineage, Ontology, Metadata
+# Ontology, Lineage, Metadata
 prov_profile: "PROV-O Core + KFM Lineage Extensions"
 openlineage_profile: "OpenLineage v2.5 + KFM Extensions"
 ontology_ref:
-  - "../graph/ontology/cidoc-crm-mapping.md"
-  - "../graph/ontology/spatial-temporal-patterns.md"
-  - "../graph/ontology/core-entities.md"
+  - "docs/graph/ontology/core-entities.md"
+  - "docs/graph/ontology/cidoc-crm-mapping.md"
+  - "docs/graph/ontology/spatial-temporal-patterns.md"
 metadata_profiles:
-  - "../../schemas/dcat/kfm-dcat-v11.json"
-  - "../../schemas/stac/kfm-stac-v11.json"
-  - "../../schemas/jsonld/kfm-context-v11.json"
+  - "schemas/stac/kfm-stac-v11.json"
+  - "schemas/dcat/kfm-dcat-v11.json"
+  - "schemas/jsonld/kfm-context-v11.json"
 
-# Validation & CI
+# CI Validation
 validation_profiles:
   - "docs-lint-v11"
   - "schema-lint-v11"
   - "lineage-audit-v11"
   - "governance-audit-v11"
 ci_integration:
-  workflow: ".github/workflows/kfm-pipelines.yml"
-  environment: "staging → production (governed promotion)"
-
-# FAIR + CARE
-fair_category: "F1-A1-I1-R1"
-care_compliance: "CARE-Compliant · Provenance-Enforced · Sensitivity-Aware"
+  workflow: ".github/workflows/kfm-ci.yml"
+  environment: "dev → staging → production"
 
 # Runtime Infrastructure
 runtime:
-  graph_engine: "Neo4j Enterprise v5.x"
+  compute: "KFM Multi-Cloud Mesh (AWS + GCP + On-Prem)"
+  graph_engine: "Neo4j Enterprise v5.x Cluster"
+  api_stack: "FastAPI + GraphQL Gateway (GovHooks v4)"
+  frontend_stack: "React · MapLibre · Cesium · Vite Build"
   lineage_bus: "OpenLineage v2.5"
-  governance_hooks: "GovHooks v4"
-  reliability_framework: "Reliable Pipelines v11 — WAL · Retry · Rollback · Hotfix · Lineage"
-  ai_agents: "LangGraph Autonomous Updater v11"
+  reliability_engine: "Reliable Pipelines v11 — WAL · Retry · Rollback · Hotfix · Lineage"
+  agents: "LangGraph Autonomous Updater v11"
 
 ---
+
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix**  
-## **Graph Write Patterns & Lineage-Safe Upserts**  
-`docs/graph/write-patterns.md`
+# 🏗️ **Kansas Frontier Matrix**  
+## **Repository Architecture & System Blueprint (v11 LTS)**  
+`ARCHITECTURE.md`
 
-[![Docs – MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-4B32C3)](#)
-[![License – MIT](https://img.shields.io/badge/License-MIT-2EA44F)](#)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Aligned-009688)](#)
-[![Status – Diamond⁹ Ω / Crown∞Ω](https://img.shields.io/badge/Status-Diamond⁹%20Ω%20%2F%20Crown∞Ω-512DA8)](#)
-[![Neo4j Graph](https://img.shields.io/badge/Backend-Neo4j%20Graph-008CC1)](#)
-[![Reliability](https://img.shields.io/badge/Pipelines-Reliable%20Upserts%20%2F%20Rollback-795548)](#)
+[![Docs – MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](#)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](#)
+[![Status: Active](https://img.shields.io/badge/Status-Active-success)](#)
+[![SBOM](https://img.shields.io/badge/SBOM-SPDX-blueviolet)](#)
+[![Sustainability](https://img.shields.io/badge/Telemetry-Energy%20%2F%20Carbon-009688)](#)
 
 </div>
 
 --- ✦ ---
 
-## 1. 🧭 Overview
+# 📘 Executive Summary
 
-This document defines the **v11 canonical graph write patterns** for the Kansas Frontier Matrix (KFM), governing:
+The **Kansas Frontier Matrix (KFM)** is a **FAIR+CARE-governed semantic geospatial operating system**, integrating:
 
-- deterministic & idempotent writes  
-- lineage-safe upserts  
-- PROV-O + OpenLineage integration  
-- rollback-ready versioning  
-- ontology-aligned entity modeling  
-- Focus Mode v3 compatibility  
-- reliability (WAL → Retry → Rollback → Hotfix → Lineage)
+- Historical, cultural, environmental, hydrological, geological, and predictive datasets  
+- Neo4j + CIDOC-CRM + GeoSPARQL + OWL-Time + PROV-O + KFM Ontology v11  
+- LangGraph ETL DAGs with WAL/Retry/Rollback/Hotfix/Lineage  
+- AI reasoning and narrative generation (Focus Mode v3)  
+- Real-time hydrology, hazards, climate, and environmental feeds  
+- 3D visualization (MapLibre + Cesium)  
+- Sovereignty-aware governance and sensitive site masking  
 
-All writes follow:
-
-> `data → ETL/AI pipelines → Neo4j Graph → FastAPI/GraphQL → React+MapLibre → Story Nodes → Focus Mode`
-
-These patterns are **mandatory** for:
-
-- ETL pipelines (`src/pipelines/graph/*`)  
-- Autonomous updaters (LangGraph)  
-- CI/CD workflows performing graph mutations  
-- Ontology-governed ingest operations  
+This file defines the **complete v11 repository architecture**.
 
 --- ✦ ---
 
-## 2. 🎯 Scope & Intended Audience
+# 🏛️ 1. High-Level System Architecture
 
-**Applies to:**
+```mermaid
+flowchart TD
+    A["External Data Sources
+    NOAA · USGS · KHS · Tribal Archives · Sensors"]
+        --> B["LangGraph DAG Pipelines
+        ETL · OCR · NER · RasterOps · QAQC"]
 
-- Neo4j writes (nodes, relationships, properties)  
-- Provenance edges (PROV-O / KFM lineage extensions)  
-- OpenLineage emission  
-- Versioning & soft deletion  
-- Other pipeline components that perform mutations  
+    B --> C["Validated Staging
+    STAC v11 · DCAT v11 · JSON-LD"]
 
-**Excludes:**
+    C --> D["Knowledge Graph
+    Neo4j · CIDOC-CRM · GeoSPARQL · OWL-Time · PROV-O · KFM Ontology"]
 
-- Ontology deep spec → `docs/graph/ontology/*.md`  
-- API read-patterns → `web/ARCHITECTURE.md`  
-- Reliability plane internals → `docs/pipelines/reliable-pipelines.md`  
+    D --> E["API Gateway
+    FastAPI · GraphQL · GovHooks v4"]
 
---- ✦ ---
+    E --> F["Frontend
+    React · MapLibre · Cesium · Focus Mode v3"]
 
-## 3. 🏛️ Architecture at a Glance
+    %% Governance Plane
+    B --> G["Governance Plane
+    FAIR+CARE · SBOM · SLSA · Ledger v4"]
+    D --> G
+    E --> G
+    F --> G
 
-~~~mermaid
-graph TD
-  A[Raw Datasets · NOAA · USGS · KSHS · Tribal Archives] --> B[ETL / AI Pipelines<br/>LangGraph · CrewAI · Python]
-  B --> C[Validated Staging<br/>STAC · DCAT · JSON-LD]
-  C --> D[Idempotent Upserts<br/>Neo4j MERGE Patterns]
-  D --> E[Lineage Layer<br/>PROV-O · OpenLineage]
-  E --> F[Knowledge APIs<br/>FastAPI · GraphQL]
-  F --> G[Focus Mode v3 · Story Nodes<br/>MapLibre · Cesium · Timeline]
-~~~
-
---- ✦ ---
-
-## 4. 🧱 Design Principles (v11)
-
-1. **Stable IDs (`kfm_id`)**  
-   Deterministic, ontology-aligned, used for every MERGE.
-
-2. **Pre-declared Constraints**  
-   All entity types must have uniqueness constraints before pipelines run.
-
-3. **Idempotent Writes**  
-   Retriable, atomic, deterministic.
-
-4. **Lineage-Embedded**  
-   Every write links to:
-   - Source (Dataset, Collection, Archive)  
-   - Run (IngestRun / TransformRun)  
-
-5. **OpenLineage-Driven**  
-   All pipelines emit START → COMPLETE/FAIL for governance transparency.
-
-6. **Temporal Safety**  
-   Soft versioning using `v`, `v_from`, `v_to`, `v_tag`.
-
-7. **Rollback-Compatible**  
-   No destructive deletes—soft deletes with provenance.
+    %% Telemetry
+    B --> H["Telemetry Layer
+    Energy · Carbon · Bias · Drift · Accessibility"]
+    D --> H
+    E --> H
+    F --> H
+```
 
 --- ✦ ---
 
-## 5. 🧩 Node Upsert Pattern (Idempotent MERGE)
+# 🔍 2. Data Layer
 
-### 5.1 Minimal Pattern
+### Domains
+- Historical archives, treaties, manuscripts, maps, diaries  
+- Tribally-governed cultural assets (masked & sovereignty-controlled)  
+- NOAA climate records  
+- USGS hydrology & geological datasets  
+- Remote sensing (NAIP, Landsat, DEMs)  
+- Hazard layers (storms, floods, wildfire)  
+- Ecology (GBIF, eBird, wetlands)  
+- Live sensors (Mesonet, USGS gauges)
 
-~~~cypher
-MERGE (p:Place {kfm_id: $kfm_id})
-  ON CREATE SET
-    p.name        = $name,
-    p.created_at  = datetime(),
-    p.v           = $version,
-    p.source      = $source,
-    p.kind        = $kind,
-    p.geom_wkt    = $geom_wkt
-  ON MATCH SET
-    p.name        = coalesce($name, p.name),
-    p.updated_at  = datetime(),
-    p.v           = $version;
-~~~
-
-### 5.2 Constraint (Required)
-
-~~~cypher
-CREATE CONSTRAINT place_kfm_id_unique IF NOT EXISTS
-FOR (p:Place)
-REQUIRE p.kfm_id IS UNIQUE;
-~~~
+### Guarantees
+- STAC/DCAT v11 normalization  
+- CARE labels attached at ingest  
+- Provenance-first ingestion  
+- ISO 50001/14064 energy & carbon metrics logged  
 
 --- ✦ ---
 
-## 6. 🔗 Relationship Upsert Patterns
+# 🛠️ 3. ETL Layer (LangGraph v11 DAG Engine)
 
-### 6.1 With Stable ID
+```mermaid
+flowchart LR
+    A[Raw Inputs]
+        --> B[OCR]
+        --> C[NER + Entity Linking]
+        --> D[Spatialization]
+        --> E[RasterOps (GDAL)]
+        --> F[STAC/DCAT Validation]
+        --> G[Load to Knowledge Graph]
+```
 
-~~~cypher
-MATCH (a:Place {kfm_id: $a_id})
-MATCH (b:Place {kfm_id: $b_id})
-
-MERGE (a)-[r:CONNECTED_TO {kfm_id: $rel_id}]->(b)
-  ON CREATE SET r.strength = $strength, r.kind = $kind, r.created_at = datetime(), r.v = $version
-  ON MATCH  SET r.strength = $strength, r.updated_at = datetime(), r.v = $version;
-~~~
-
-Constraint:
-
-~~~cypher
-CREATE CONSTRAINT rel_connected_to_kfm_id_unique IF NOT EXISTS
-FOR ()-[r:CONNECTED_TO]-()
-REQUIRE r.kfm_id IS UNIQUE;
-~~~
-
-### 6.2 Without Stable ID
-
-~~~cypher
-MATCH (a:Dataset {kfm_id: $dataset_id})
-MATCH (b:Place   {kfm_id: $place_id})
-
-MERGE (a)-[r:COVERS]->(b)
-  ON CREATE SET r.created_at = datetime(), r.v = $version
-  ON MATCH  SET r.updated_at = datetime(), r.v = $version;
-~~~
+Features:
+- Deterministic DAGs  
+- Full reproducibility via WAL checkpoints  
+- Automatic retry + rollback  
+- OpenLineage v2.5 emissions  
 
 --- ✦ ---
 
-## 7. 🧬 Lineage: PROV-O Patterns
+# 🧠 4. AI Layer — Focus Mode v3
 
-### 7.1 Source Provenance
+- Ontology-aware narrative generation  
+- Story Node synthesis  
+- Bias & drift detection  
+- SHAP/LIME explainability  
+- Multi-temporal reasoning (past ↔ present ↔ future)
 
-~~~cypher
-MERGE (src:Source {uri: $source_uri})
-  ON CREATE SET src.name = $source_name, src.kind = $source_kind, src.created_at = datetime()
-  ON MATCH SET src.last_seen_at = datetime();
-
-MATCH (p:Place {kfm_id: $kfm_id})
-MERGE (p)-[:`prov:wasDerivedFrom`]->(src);
-~~~
-
-### 7.2 Run-Level Provenance
-
-~~~cypher
-MERGE (run:IngestRun {run_id: $run_id})
-  ON CREATE SET
-    run.job_name   = $job_name,
-    run.started_at = datetime($run_started_at),
-    run.env        = $env,
-    run.commit_sha = $commit_sha,
-    run.pipeline   = $pipeline_name
-  ON MATCH SET run.last_seen_at = datetime();
-
-MATCH (p:Place {kfm_id: $kfm_id})
-MERGE (p)-[:`prov:wasGeneratedBy`]->(run);
-~~~
+```mermaid
+flowchart LR
+    A[Entities] --> B[Focus Reasoner v3]
+    B --> C[Story Nodes]
+    C --> D[Timeline & Map Overlays]
+```
 
 --- ✦ ---
 
-## 8. ⏱️ Soft Versioning & Time-Travel
+# 🧩 5. Knowledge Graph Layer (Neo4j v5)
 
-### 8.1 Version Windowing
+### Ontology Stack
+- CIDOC-CRM  
+- GeoSPARQL  
+- OWL-Time  
+- PROV-O  
+- KFM Ontology v11  
 
-~~~cypher
-MATCH (p:Place {kfm_id: $kfm_id})
-SET p.v_tag = $version_tag,
-    p.v_from = coalesce(p.v_from, datetime()),
-    p.v_to = null;
-~~~
+### Entity Overview
 
-### 8.2 Soft Delete
-
-~~~cypher
-MATCH (p:Place {kfm_id: $kfm_id})
-SET p.deleted = true,
-    p.deleted_at = datetime(),
-    p.deleted_by = $run_id,
-    p.v_to = coalesce(p.v_to, datetime());
-~~~
+| KFM Entity | CIDOC CRM | Temporal | Spatial | Provenance |
+|-----------|------------|----------|---------|------------|
+| Event | E5 | Yes | Yes | Yes |
+| Place | E53 | No | Geometry | Yes |
+| Dataset | E73 | No | — | Yes |
+| Document | E31 | No | — | Yes |
+| StoryNode | Custom | Yes | Yes | Activity |
 
 --- ✦ ---
 
-## 9. 📡 OpenLineage Pattern
+# 🧰 6. API Layer (FastAPI + GraphQL)
 
-~~~json
-{
-  "eventType": "COMPLETE",
-  "job": { "namespace": "kfm.ingest", "name": "places_upsert" },
-  "run": { "runId": "<run-id>" },
-  "inputs": [
-    { "namespace": "s3://kfm-staging", "name": "places.parquet" }
-  ],
-  "outputs": [
-    { "namespace": "neo4j://kfm", "name": "Place" }
-  ],
-  "producer": "kfm://pipelines/v11.0.0"
-}
-~~~
+Endpoints include:
+- `/focus`  
+- `/events`  
+- `/datasets`  
+- `/graph`  
+- `/ops`  
+
+### GovHooks v4 enforces:
+- CARE & sovereignty rules  
+- lineage-required writes  
+- risk policies  
+- sensitive data masking  
 
 --- ✦ ---
 
-## 10. 🔁 CI/CD Integration
+# 🗺️ 7. Frontend Layer (React + MapLibre + Cesium)
 
-Stages:
-
-1. **Validate** (STAC/DCAT/JSON-LD)  
-2. **Dry-run graph upsert** (`--dry-run`)  
-3. **Reliability guards** (WAL/Retry/Rollback)  
-4. **Apply** (`--apply` + OpenLineage events)
-
---- ✦ ---
-
-## 11. 📐 Required Constraints
-
-~~~cypher
-CREATE CONSTRAINT place_kfm_id_unique IF NOT EXISTS
-FOR (p:Place)
-REQUIRE p.kfm_id IS UNIQUE;
-
-CREATE CONSTRAINT source_uri_unique IF NOT EXISTS
-FOR (s:Source)
-REQUIRE s.uri IS UNIQUE;
-
-CREATE CONSTRAINT dataset_kfm_id_unique IF NOT EXISTS
-FOR (d:Dataset)
-REQUIRE d.kfm_id IS UNIQUE;
-
-CREATE CONSTRAINT ingest_run_id_unique IF NOT EXISTS
-FOR (r:IngestRun)
-REQUIRE r.run_id IS UNIQUE;
-
-CREATE CONSTRAINT connected_to_kfm_id_unique IF NOT EXISTS
-FOR ()-[r:CONNECTED_TO]-()
-REQUIRE r.kfm_id IS UNIQUE;
-~~~
+Features:
+- STAC-driven layer catalog  
+- 3D terrain  
+- Story Node timeline  
+- Focus Mode v3 overlays  
+- H3 r7 cultural site masking  
+- WCAG 2.1 AA accessibility  
 
 --- ✦ ---
 
-## 12. 🗂️ Directory Layout
+# 🛡️ 8. Governance & Sovereignty Plane
+
+```mermaid
+flowchart LR
+  A[Pipeline Output] --> B[Ledger v4]
+  B --> C[FAIR+CARE Audit]
+  C --> D[Governance Gate]
+  D --> E[Catalog Update]
+```
+
+--- ✦ ---
+
+# 📡 9. Telemetry & Sustainability Layer
+
+Tracks:
+- Energy (Wh)  
+- Carbon (gCO₂e)  
+- Bias & Drift  
+- Accessibility metrics  
+- Focus Mode reasoning metrics  
+- Provenance completeness  
+
+--- ✦ ---
+
+# 🔁 10. Operational Safety (Reliable Pipelines v11)
+
+```mermaid
+flowchart LR
+    W[WAL] --> R1[Retry]
+    R1 --> R2[Rollback]
+    R2 --> H[Hotfix]
+    H --> L[Lineage]
+    L --> T[Determinism Tests]
+```
+
+Guarantees:
+- Atomicity  
+- Durable WAL  
+- Safe recovery  
+- Undo/redo  
+- Immutable lineage  
+
+--- ✦ ---
+
+# 🗂️ 11. Repository Layout
 
 ~~~text
-docs/
-└── graph/
-    ├── write-patterns.md
-    └── ontology/
-        ├── README.md
-        ├── cidoc-crm-mapping.md
-        └── spatial-temporal-patterns.md
-
-src/
-└── pipelines/
-    ├── graph/
-    │   ├── upsert_places.py
-    │   ├── upsert_datasets.py
-    │   ├── upsert_relationships.py
-    │   └── lineage/
-    │       ├── openlineage_emitter.py
-    │       └── prov_links.py
-    └── reliability/
-        ├── wal/
-        ├── rollback/
-        └── retry/
-
-.github/
-└── workflows/
-    └── kfm-pipelines.yml
-
-schemas/
-└── telemetry/
-    └── graph-write-patterns-v1.json
+.
+├── ARCHITECTURE.md
+├── README.md
+├── data/
+│   ├── sources/
+│   └── staging/
+├── docs/
+│   ├── graph/
+│   ├── pipelines/
+│   ├── standards/
+│   └── analyses/
+├── schemas/
+│   ├── telemetry/
+│   ├── stac/
+│   ├── dcat/
+│   └── jsonld/
+├── src/
+│   ├── pipelines/
+│   ├── api/
+│   ├── utils/
+│   └── web/
+├── web/
+│   ├── src/
+│   ├── public/
+│   └── meta/
+└── .github/
+    └── workflows/
 ~~~
 
 --- ✦ ---
 
-## 13. ✅ Implementation Checklist
+# 🧾 12. Release Lifecycle
 
-- [ ] Stable IDs (`kfm_id`)  
-- [ ] Constraints present  
-- [ ] MERGE-based upserts  
-- [ ] Lineage links (Source + Run)  
-- [ ] Versioning tags  
-- [ ] Soft-delete instead of hard-delete  
-- [ ] OpenLineage events emitted  
-- [ ] Reliability guards active  
-- [ ] CI validation passes  
+Each release includes:
+- SBOM  
+- Manifest  
+- Telemetry snapshot  
+- FAIR+CARE audit  
+- Full lineage export  
+- SLSA attestation  
 
 --- ✦ ---
 
-## 14. 🛡️ Evolution & Governance
+# 🕰️ 13. Version History
 
-All changes must pass:
-
-- **FAIR+CARE review**  
-- **Ontology integrity check**  
-- **Lineage completeness audit**  
-- **CI docs-lint + schema-lint**  
-- **Governed promotion (staging → production)**  
+| Version | Date | Notes |
+|---------|-------|--------|
+| **v11.0.0** | 2025-11-19 | Complete v11 architecture. |
+| **v10.4.x** | 2025 | Pre-v11 alignment and ontology consolidation. |
 
 --- ✦ ---
-
-## 15. 🧰 Quick Snippets
-
-### Node Upsert + Lineage
-
-~~~cypher
-MERGE (p:Place {kfm_id: $kfm_id})
-  ON CREATE SET p.name = $name, p.created_at = datetime(), p.v = $version
-  ON MATCH SET  p.name = coalesce($name, p.name), p.updated_at = datetime(), p.v = $version;
-
-MERGE (src:Source {uri: $source_uri})
-MERGE (p)-[:`prov:wasDerivedFrom`]->(src);
-
-MERGE (run:IngestRun {run_id: $run_id})
-MERGE (p)-[:`prov:wasGeneratedBy`]->(run);
-~~~
-
---- ✦ ---
-
-## 16. 🕰️ Version History
-
-| Version   | Date       | Notes |
-|-----------|------------|-------|
-| v11.0.0   | 2025-11-19 | Full v11 upgrade (MDP v11.0, OP v11.0, PDC v11.0). Expanded metadata, governance, sustainability schemas, and lineage extensions. |
-| v10.4.3   | 2025-11-19 | Initial lineage-safe write patterns. |
-
----
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — MIT License**  
-🧩 Lineage-Safe Graph Writes · Diamond⁹ Ω / Crown∞Ω Certified  
-FAIR+CARE Compliant · MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0  
+🏗️ System Architecture · Diamond⁹ Ω / Crown∞Ω Certified  
+FAIR+CARE Compliant · Sovereignty-Aware · MCP-DL v6.3 · KFM-MDP v11.0  
 
-[⬅ Back to Documentation Index](../README.md) ·  
-[Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+[Return to Root README](README.md) ·  
+[Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
