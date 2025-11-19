@@ -1,289 +1,422 @@
 ---
-title: "📚 Kansas Frontier Matrix — Documentation Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "docs/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-13"
-review_cycle: "Quarterly / FAIR+CARE Council"
+
+title: "🌾 Kansas Frontier Matrix — Monorepo Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "/README.md"
+version: "v11.0.0"
+last_updated: "2025-11-18"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/docs-index-v3.json"
-governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
+sbom_ref: "releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "releases/v11.0.0/manifest.zip"
+telemetry_ref: "releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/root-readme-v11.json"
+governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
 mcp_version: "MCP-DL v6.3"
----
+markdown_protocol_version: "KFM-MDP v11.0.0"
+status: "Active / Enforced"
+doc_kind: "Overview"
+intent: "root-readme"
+fair_category: "F1-A1-I1-R1"
+----------------------------
 
 <div align="center">
 
-# 📚 **Kansas Frontier Matrix — Documentation Index**  
-`docs/README.md`
+# 🌾 **Kansas Frontier Matrix**
 
-**Purpose:**  
-Serve as the **central navigation hub** for all Kansas Frontier Matrix (KFM) documentation — standards, architecture, workflows, governance, AI systems, pipelines, datasets, analyses, security, and developer guides — maintained under **MCP-DL v6.3**, **FAIR+CARE**, and **ISO 19115** alignment.
+`/README.md`
 
-<img alt="Docs · MCP_v6.3" src="https://img.shields.io/badge/Docs·MCP-v6.3-blue" />
-<img alt="License: CC-BY 4.0" src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Certified-orange" />
-<img alt="Status: Stable" src="https://img.shields.io/badge/Status-Stable-success" />
+**A semantic historical–geospatial platform blending Kansas data into an interactive map, timeline, and narrative knowledge graph.**
+
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue)](#-architecture-overview)
+[![KFM-MDP v11.0](https://img.shields.io/badge/Markdown-KFM--MDP_v11.0-informational)](docs/standards/kfm_markdown_protocol_v11.md)
+[![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](docs/standards/faircare.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Status: Active](https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen)](#-version-history)
 
 </div>
 
+---
+
+## 🧭 Overview
+
+Kansas Frontier Matrix (KFM) is an open-source semantic geospatial–historical platform that fuses Kansas’s environmental, cultural, and historical data into a unified interactive experience. It combines:
+
+* A **map** (MapLibre GL) synchronized with a **timeline**
+* An **AI-enriched ETL pipeline** that turns raw archives into structured facts
+* A **Neo4j knowledge graph** aligned with CIDOC-CRM, OWL-Time, GeoSPARQL, and PROV-O
+* A **React frontend** with **Focus Mode v3** and **Story Nodes** for narrative exploration
+* A **predictive analytics layer** extending from deep past to future scenarios
+
+The goal is a “living atlas” of Kansas: a place where you can see wagon trails, treaties, floods, railroads, prairies, fossils, and future climate projections in one coherent, explorable system.
 
 ---
 
-## 📘 Overview
+## 🧱 Architecture Overview
 
-The **KFM documentation ecosystem** is a **schema-aware, telemetry-enabled knowledge graph of Markdown documents**.
+KFM follows a layered, metadata-driven architecture:
 
-Each file includes:
+* **Data Sources**
+  Historical documents, maps, Kansas GIS archives, climate and hydrology datasets, BLM land patents, biodiversity and archaeology data, local and tribal archives.
 
-- YAML front-matter for **validation**, **telemetry**, and **governance**  
-- Stable paths for cross-referencing between README files and code  
-- FAIR+CARE metadata and governance references
+* **Backend ETL & AI Pipeline (Python)**
+  Deterministic ETL workflows that:
 
-Aligned frameworks:
+  * Fetch raw data (files, APIs, GIS services)
+  * OCR and parse text
+  * Run NLP (NER, geoparsing, summarization)
+  * Normalize dates, places, people, and events
+  * Upsert entities and relationships into Neo4j
 
-- **Master Coder Protocol (MCP-DL v6.3)**  
-- **FAIR+CARE Governance**  
-- **Platinum README Template v7.1**  
-- **ISO 19115**, **DCAT 3.0**, **CIDOC CRM**  
+* **Knowledge Graph (Neo4j)**
+  A semantic graph of:
 
----
+  * **Entities**: `Person`, `Place`, `Event`, `Document`, `Dataset`, `StoryNode`
+  * **Relationships**: `ATTENDED`, `LOCATED_AT`, `MENTIONS`, `CITED_BY`, `PART_OF`, etc.
+  * Temporal and spatial properties wired to OWL-Time and GeoSPARQL
 
-## 🗂️ Directory Layout
+* **API Layer (FastAPI / GraphQL)**
+  Well-defined queries to:
 
-    docs/
-    ├── README.md                          # Central documentation index
-    ├── glossary.md                        # Glossary of technical, governance, and domain terms
-    │
-    ├── architecture/                      # Architecture, systems, and design docs
-    │   ├── data-architecture.md           # Data model, STAC/DCAT schemas, and ontologies
-    │   ├── web-ui.md                      # Frontend structure, components, accessibility
-    │   ├── github-architecture.md         # CI/CD and automation architecture
-    │   └── api-architecture.md            # API and knowledge graph integration
-    │
-    ├── standards/                         # FAIR+CARE, governance, compliance, and style rules
-    │   ├── faircare.md                    # FAIR+CARE ethical framework
-    │   ├── markdown_rules.md              # Platinum README & markdown rules
-    │   ├── markdown_guide.md              # Style and formatting conventions
-    │   ├── ui_accessibility.md            # WCAG 2.1 AA + inclusive design standards
-    │   ├── licensing.md                   # SPDX / CC licensing references
-    │   ├── data-contracts.md              # Data contract schema reference
-    │   ├── telemetry_standards.md         # System telemetry and sustainability metrics
-    │   └── governance/
-    │       └── ROOT-GOVERNANCE.md         # Root governance charter and oversight policies
-    │
-    ├── workflows/                         # GitHub workflow documentation
-    │   ├── README.md                      # Workflow index
-    │   ├── docs-lint.yml.md               # Markdown linting & validation workflow
-    │   ├── faircare-validate.yml.md       # FAIR+CARE audit pipeline
-    │   ├── telemetry-export.yml.md        # Metrics export and energy tracking
-    │   ├── stac-validate.yml.md           # STAC/DCAT metadata validator
-    │   └── ai-train.yml.md                # AI training + governance alignment pipeline
-    │
-    ├── guides/                            # Topical guidebooks (AI, Geo, Data, etc.)
-    │   ├── ai/README.md                   # AI & Focus Mode guide index
-    │   ├── geo/README.md                  # Geospatial pipelines & tooling
-    │   ├── data/README.md                 # Data ingestion & FAIR+CARE standards
-    │   ├── deployment/README.md           # CI/CD & infrastructure automation
-    │   ├── governance/README.md           # Oversight, ethics, and ledger integration
-    │   ├── integration/README.md          # STAC/DCAT ↔ API ↔ Neo4j interoperability
-    │   ├── sustainability/README.md       # Energy, carbon, and renewable strategy
-    │   ├── telemetry/README.md            # Observability and audit telemetry
-    │   ├── visualization/README.md        # MapLibre, timelines, UI & accessibility
-    │   └── workflows/README.md            # Automation & validation guides
-    │
-    ├── analyses/                          # Domain analyses (end-user science outputs)
-    │   ├── README.md                      # Analyses overview & navigation
-    │   ├── hydrology/                     # Drought–flood correlation & hydrology methods
-    │   ├── climatology/                   # Trend, projection, and climate datasets
-    │   ├── geology/                       # Stratigraphy, seismic, geomorphology
-    │   ├── ecology/                       # SDM, landcover, ecosystem services
-    │   └── historical/                    # Archives, treaties, cultural landscapes
-    │
-    ├── security/                          # Security, threat modeling, and supply chain integrity
-    │   ├── README.md                      # Security overview
-    │   ├── threat-model.md                # STRIDE/LINDDUN threat model & mitigations
-    │   ├── secrets-policy.md              # Secrets handling, KMS/HSM, and rotation policy
-    │   ├── supply-chain.md                # SBOM, SLSA, provenance, dependency governance
-    │   └── vulnerability-management.md    # Reporting, triage, CVSS, patch SLAs
-    │
-    ├── templates/                         # Authoring and documentation templates
-    │   ├── model_card.md                  # AI model card template
-    │   ├── sop.md                         # Standard Operating Procedure template
-    │   ├── experiment.md                  # Experiment report template
-    │   └── workflow_template.md           # YAML workflow documentation template
-    │
-    └── reports/                           # Validation and audit outputs
-        ├── faircare_summary.json          # FAIR+CARE audit snapshot
-        ├── stac_validation.json           # STAC/DCAT validation report
-        ├── governance_audit.json          # Governance compliance summary
-        └── telemetry/                     # Energy, latency, and a11y metrics
-            ├── docs_telemetry.json
-            └── sustainability_metrics.json
+  * Pull subgraphs around entities (used by Focus Mode)
+  * Power the map and timeline
+  * Serve Story Nodes and site dossiers
+
+* **Frontend (React + MapLibre + Cesium)**
+
+  * 2D map (MapLibre) with synchronized timeline
+  * 3D globe (Cesium) for time-layered visualization
+  * Focus Mode panel, Story Node viewer, filters and legends
+
+High-level flow:
+
+```mermaid
+flowchart LR
+  A[External Data<br/>NOAA · USGS · KGS · KHS · BLM · GBIF · Archives] --> B[Python ETL & AI]
+  B --> C[Neo4j Knowledge Graph]
+  C --> D[FastAPI / GraphQL API]
+  D --> E[React Frontend<br/>MapLibre · Timeline · Cesium]
+  E --> F[Focus Mode v3<br/>Story Nodes]
+```
 
 ---
 
-## 🔎 What’s New (v10.3.1)
+## 🗺 Interactive Map & Timeline
 
-- Aligned all references to **v10.3.0** release artifacts (SBOM, manifest, telemetry).  
-- Ensured **analyses/** and **security/** sections are present in the directory map and cross-linked from topical guides.  
-- Updated **badges** and **telemetry_schema** to the current docs index schema.  
+At the heart of KFM is the **linked map + timeline interface**:
 
----
+* **Map (MapLibre GL)**
 
-## ⚙️ Workflows Documentation
+  * Base layers: modern basemaps, Kansas boundaries, elevation, hydrology
+  * Historical overlays: topographic maps, county atlases, treaty boundaries, trails, land surveys
+  * Themed layers: forts, towns, reservations, railroads, archaeological sites, wildlife distributions
 
-The **`docs/workflows/`** directory provides annotated companions for each **GitHub Actions workflow**.
+* **Timeline**
 
-| Workflow Doc                    | Description                                               |
-|---------------------------------|-----------------------------------------------------------|
-| `docs-lint.yml.md`             | Lints Markdown + YAML against MCP and Platinum rules.    |
-| `faircare-validate.yml.md`     | Runs FAIR+CARE audits and ethical metadata checks.        |
-| `telemetry-export.yml.md`      | Aggregates build metrics, energy use, and latency.        |
-| `stac-validate.yml.md`         | Validates STAC/DCAT metadata and linkage.                 |
-| `ai-train.yml.md`              | AI model training, registry, and governance alignment.    |
+  * Scrollable, zoomable time axis (deep past → present → future)
+  * Events grouped and color-coded by theme (political, environmental, cultural, hazards, etc.)
+  * Tight synchronization:
 
-These documents make CI/CD flows **transparent and auditable**.
+    * Moving the timeline filters visible layers on the map
+    * Selecting an event highlights its geographic footprint
 
----
+Examples of interactive views:
 
-## 🧱 Documentation Standards (Front-Matter)
+* Drag across **1854–1861** → see Kansas Territory drawn, forts and early towns appear, “Bleeding Kansas” conflicts cluster in time and space.
+* Enable “Dust Bowl” layer and drag through the 1930s → vegetation indices and dust-storm reports animate across western Kansas.
+* Jump to **Cretaceous** → see ancient shorelines of the Western Interior Seaway and fossil discovery sites from Niobrara Chalk.
 
-All docs include front-matter with references to:
-
-- SBOM, manifests, telemetry refs  
-- Governance and data contracts  
-- Telemetry schemas for automated validation  
-
-Example front-matter pattern:
-
-    ---
-    title: "🏗️ Kansas Frontier Matrix — System Architecture"
-    path: "src/ARCHITECTURE.md"
-    version: "v10.3.1"
-    last_updated: "2025-11-13"
-    review_cycle: "Quarterly / FAIR+CARE Council"
-    commit_sha: "<latest-commit-hash>"
-    sbom_ref: "releases/v10.3.0/sbom.spdx.json"
-    manifest_ref: "releases/v10.3.0/manifest.zip"
-    telemetry_ref: "releases/v10.3.0/focus-telemetry.json"
-    telemetry_schema: "schemas/telemetry/system-architecture-v1.json"
-    governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
-    license: "CC-BY 4.0"
-    mcp_version: "MCP-DL v6.3"
-    ---
-
-See `standards/markdown_rules.md` for granular rules.
+The map and timeline are designed to be **WCAG 2.1 AA+** accessible, with keyboard navigation, descriptive labels, and high-contrast options.
 
 ---
 
-## 🧩 Core Documentation Sections
+## 🎯 Focus Mode (AI-Powered Context View)
 
-### 🏗 Architecture & Systems
+**Focus Mode v3** is an AI-assisted, entity-centric view that pivots the entire interface around a single focus:
 
-| Document                                            | Description                                      |
-|-----------------------------------------------------|--------------------------------------------------|
-| `architecture/data-architecture.md`                | Data model, STAC/DCAT schemas, and ontologies.  |
-| `architecture/web-ui.md`                           | Frontend structure, components, accessibility.  |
-| `architecture/github-architecture.md`              | CI/CD & workflow automation architecture.       |
-| `architecture/api-architecture.md`                 | API / Neo4j integration and query design.       |
+* **Choose a focus**: a `Person`, `Place`, `Event`, `Tribe`, `Treaty`, `Trail`, `Town`, or `StoryNode`
+* **Graph-driven subgraph**: backend Cypher queries fetch the neighborhood around that entity:
 
----
+  * Events involving this person or place
+  * Linked documents (letters, newspapers, treaties)
+  * Related people, groups, datasets, and Story Nodes
+* **The UI reconfigures**:
 
-### ⚖ Governance & Ethics
+  * Timeline zooms to the relevant lifespan or event window
+  * Map recenters and highlights associated locations
+  * A right-hand **Focus Panel** shows:
 
-| Document                                             | Description                                    |
-|------------------------------------------------------|------------------------------------------------|
-| `standards/faircare.md`                              | FAIR+CARE ethical governance framework.       |
-| `standards/data-contracts.md`                        | Dataset contracts and schema expectations.    |
-| `standards/ui_accessibility.md`                      | UI accessibility and inclusive design rules.  |
-| `standards/governance/ROOT-GOVERNANCE.md`            | Root governance charter and oversight.        |
+    * AI summary (data-grounded, source-aware)
+    * Lists of related events, places, people, and documents
+    * Suggested navigation: “Before/after”, “Nearby places”, “Related stories”
 
----
+Focus Mode behaves like an intelligent lens:
 
-### 🔄 Pipelines & Workflows
+* Focusing on **“1867 Medicine Lodge Treaty”**:
 
-| Document                                      | Description                               |
-|-----------------------------------------------|-------------------------------------------|
-| `../src/pipelines/README.md`                  | Pipeline architecture and modules.       |
-| `../src/pipelines/etl/README.md`              | ETL ingestion and transform details.     |
-| `../src/pipelines/validation/README.md`       | Validation, FAIR+CARE certification.     |
-| `workflows/README.md`                         | CI/CD workflows and governance flows.    |
+  * Timeline tightens around the 1860s–1870s
+  * Map highlights treaty sites and tribal homelands
+  * Panel summarizes the treaty, participating nations, and downstream consequences
+* Focusing on **“Fort Larned”**:
 
----
+  * Map zooms to the fort and trails converging there
+  * Timeline surfaces events and treaties linked to the fort
+  * Panel links to Story Nodes about the Santa Fe Trail and Indian Wars
 
-### 🧠 AI & Focus Mode
-
-| Document                                                 | Description                             |
-|----------------------------------------------------------|-----------------------------------------|
-| `../src/ai/README.md`                                    | AI systems, models, and governance.     |
-| `../src/ai/models/focus_transformer_v2/README.md`        | Focus Transformer v2 model card.        |
-| `../src/ai/explainability/README.md`                     | Explainability pipelines + metrics.     |
+All Focus Mode narratives are treated as **first-class data**: versioned, schema-validated, and tied to underlying sources via PROV-O provenance chains.
 
 ---
 
-### 🎨 Design, Web Interface & Accessibility
+## 🧬 AI/ML Data Pipeline & Knowledge Graph
 
-| Document                                   | Description                              |
-|--------------------------------------------|------------------------------------------|
-| `../web/README.md`                         | Web platform overview.                   |
-| `../web/ARCHITECTURE.md`                  | Web architecture & component flows.      |
-| `../web/public/README.md`                 | Public assets, icons, and infographics.  |
-| `standards/ui_accessibility.md`           | Formal accessibility standard.           |
+The backend pipeline converts messy archives into graph-ready facts:
+
+* **Extract**
+
+  * Download GIS layers (ArcGIS REST, GeoTIFF, Shapefiles)
+  * Ingest CSV, JSON, and NetCDF data from NOAA, USGS, FEMA, Census, GBIF, etc.
+  * Fetch scanned maps and documents (PDF, TIFF, JPEG) from Kansas archives and libraries
+
+* **Transform**
+
+  * **OCR** on scanned documents and maps
+  * **NLP (spaCy + transformers)**:
+
+    * Named Entity Recognition (PERSON, GPE, ORG, EVENT, DATE, TRIBE, FORT, TREATY…)
+    * Geoparsing and geocoding via GNIS / GeoNames / OSM
+    * Temporal normalization: “Spring 1850s” → approximate date range with precision tags
+    * Summarization of long texts into Focus Mode-friendly abstracts
+  * **Data normalization**:
+
+    * Standard IDs for entities (UUIDs, ARKs, or URNs)
+    * Cleaned schemas for climate, hydrology, hazards, demographics
+
+* **Load**
+
+  * Upsert nodes and relationships into Neo4j
+  * Attach provenance (`prov:wasDerivedFrom`, `prov:used`) and confidence scores
+  * Generate STAC Items for maps and rasters, and DCAT entries for tabular datasets
+
+The knowledge graph lets KFM answer rich questions:
+
+* “Show all events involving the Cheyenne within 50 km of this point between 1850 and 1875.”
+* “List all documents that mention ‘Arkansas River’ AND overlap with known flood events.”
+* “What treaties are linked to the shrinking of this reservation polygon over time?”
 
 ---
 
-### 🔐 Security
+## 🌐 Data Integration & Open Standards
 
-| Document                                   | Description                                  |
-|--------------------------------------------|----------------------------------------------|
-| `security/README.md`                       | Security posture and responsibilities.       |
-| `security/threat-model.md`                 | Threat modeling (STRIDE/LINDDUN).            |
-| `security/secrets-policy.md`               | Secrets, KMS, and rotation policies.         |
-| `security/supply-chain.md`                 | SBOM, SLSA, provenance, dependency policies. |
-| `security/vulnerability-management.md`     | Reporting, triage, remediation SLAs.         |
+KFM is built on **open data and open standards** so that everything is reusable and interoperable:
+
+* **SpatioTemporal Asset Catalog (STAC)**
+
+  * `data/stac/` describes all geospatial assets (raster and vector)
+  * Each Item has spatial extent, temporal range, license, and links back to source manifests
+  * Integrates with STAC tooling (PySTAC, stactools) for validation and discovery
+
+* **DCAT & schema.org**
+
+  * Dataset-level metadata uses DCAT 3.0 fields (title, description, publisher, license, keywords)
+  * Documentation YAML is aligned with dct:title, dct:license, dct:modified, etc.
+
+* **CIDOC-CRM, OWL-Time, GeoSPARQL, PROV-O**
+
+  * Graph schema modeled to support:
+
+    * Cultural heritage and historical events (CIDOC-CRM)
+    * Temporal intervals and instants (OWL-Time)
+    * Geometries and spatial relations (GeoSPARQL)
+    * Lineage and activity chains (PROV-O)
+
+* **FAIR + CARE**
+
+  * FAIR: Findable, Accessible, Interoperable, Reusable
+  * CARE: Collective benefit, Authority to control, Responsibility, Ethics
+  * Sensitive locations (e.g., sacred sites, archaeological coordinates) can be generalized or withheld according to ethical and tribal guidance.
 
 ---
 
-## 🧮 Validation & CI/CD Compliance
+## 📚 Story Nodes & Narrative Layer
 
-Documentation is validated by:
+**Story Nodes** are curated narrative “tracks” that live alongside the raw data:
 
-- `docs-lint.yml` — front-matter, headings, link correctness  
-- `faircare-validate.yml` — ethical and governance metadata checks  
-- `telemetry-export.yml` — ensures docs metrics are recorded in telemetry  
+* Each Story Node:
 
-Primary reports:
+  * Has an ID, title, summary, and full narrative (Markdown)
+  * Includes a spacetime footprint (GeoJSON geometry + temporal range)
+  * Lists related entities (people, places, events, datasets)
+  * Can be exported as a STAC-like item for integration and reuse
 
-- `../reports/self-validation/docs/lint_summary.json`  
-- `../reports/fair/docs_summary.json` (if present)  
-- `../releases/v10.3.0/focus-telemetry.json` (docs section)
+Examples:
+
+* **“The Santa Fe Trail”** Story Node:
+
+  * Sequence of key waypoints and encounters
+  * Map transitions along the trail; timeline jumps to each era
+* **“Bleeding Kansas”** Story Node:
+
+  * Narrative linking events in Lawrence, Topeka, Lecompton, and the national context
+* **“Ecological Change on the Plains”** Story Node:
+
+  * Shows land-cover conversion from tallgrass prairie to farmland
+  * Overlays wildlife range maps and climate anomalies
+
+In the UI, choosing a Story Node runs a guided tour:
+
+* The map pans through locations,
+* The timeline jumps through key dates,
+* The narrative panel scrolls section by section,
+* Focus Mode remains active, so you can pivot from a story beat to a specific entity.
 
 ---
 
-## 🕰️ Version History
+## 🔮 Predictive Analytics & Change Detection
 
-| Version  | Date       | Author        | Summary                                                                          |
-|----------|------------|---------------|----------------------------------------------------------------------------------|
-| v10.3.1  | 2025-11-13 | @kfm-docs     | Updated to v10.3 release paths; ensured analyses & security dirs in layout map. |
-| v10.2.3  | 2025-11-09 | @kfm-docs     | Added analyses/ and security/ sections; refreshed metadata and cross-links.     |
-| v10.2.2  | 2025-11-09 | @kfm-docs     | Aligned to v10.2; updated schemas and governance refs.                          |
-| v10.0.0  | 2025-11-09 | @kfm-docs     | Upgraded to v10; added AI, Geo, Data, Deployment, Governance, Integration, etc. |
-| v9.9.0   | 2025-11-08 | @kfm-docs     | Added workflows/ documentation set and updated architecture categories.         |
-| v9.7.0   | 2025-11-05 | @kfm-core     | Standardized telemetry schema and governance references.                        |
-| v9.5.0   | 2025-10-20 | @kfm-core     | Integrated FAIR+CARE metadata validation hooks.                                  |
-| v9.0.0   | 2025-06-01 | @kfm-core     | Initial documentation index established.                                         |
+KFM is not only about the past:
+
+* **Predictive Modeling v2**
+
+  * Uses historical climate, hydrology, demographics, and land-use trends
+  * Integrates downscaled climate projections (e.g., CMIP) for Kansas up to 2100
+  * Allows scenario exploration (low vs high emissions)
+
+* **Change Detection**
+
+  * Compares map layers across time slices:
+
+    * Land cover (prairie → cropland)
+    * River courses and floodplains
+    * Urban expansion and infrastructure
+  * Identifies “hotspots” of environmental or social change
+
+Use cases:
+
+* Visualize how **Dust Bowl-era** land use and drought overlapped
+* See predicted **future heatwaves** and drought frequency in specific regions
+* Identify counties that have experienced repeated flood disasters and how their infrastructure changed after each event
+
+All forward-looking views are clearly labeled as **projections** with model and scenario metadata attached. No black-box forecasting: assumptions and training data are documented via model cards and STAC metadata.
+
+---
+
+## 🌏 3D Time-Layered Visualization
+
+For immersive exploration, KFM includes a **3D globe mode**:
+
+* Built on **CesiumJS**, integrated into the same React app
+* Shows:
+
+  * Terrain using DEMs (e.g., SRTM, state DEMs)
+  * Time-aware overlays:
+
+    * Historical maps draped over terrain
+    * River extent changes
+    * Dust Bowl vegetation indices
+    * Future climate fields (e.g., temperature anomalies)
+
+Interactions:
+
+* Tilt and orbit around Kansas while scrubbing the timeline to see landscapes transform
+* Fly-follow along trails, railroads, rivers, or Story Nodes
+* Stack time layers to create “time tunnels” through the landscape
+
+The 3D view is synchronized with Focus Mode: focusing on an entity in 2D can prompt a 3D jump to its location and time slice.
+
+---
+
+## 🤝 Open-Source Ethos & Contribution
+
+KFM is a **documentation-first**, **open-source** project under the **Master Coder Protocol (MCP-DL v6.3)**:
+
+* **Code & Data**
+
+  * Code licensed under **MIT**
+  * Documentation under **CC-BY 4.0**
+  * Data licenses follow their sources (public domain, CC-BY, etc.), always captured in metadata
+
+* **Monorepo Structure**
+
+  * `src/` — ETL, AI/ML, graph and API code
+  * `web/` — React + MapLibre + Cesium frontend
+  * `data/` — sources manifests, processed outputs, STAC catalogs
+  * `docs/` — standards, architecture, SOPs, guides, Story Node schemas
+  * `tests/` — unit and integration tests
+  * `tools/` — helper scripts, one-off utilities
+
+* **Contribution Guidelines**
+
+  * Follow `CONTRIBUTING.md`
+  * Use **KFM-MDP v11** for all Markdown
+  * Document-before-code, include tests, and respect FAIR+CARE constraints
+  * PRs must pass CI: lint, tests, schema, STAC, FAIR/CARE, MCP checks
+
+We welcome contributions from:
+
+* Historians, archaeologists, tribal historians
+* GIS and data engineers
+* ML/AI practitioners
+* Educators and students
+
+---
+
+## 🗓 Version History
+
+| Version | Date       | Highlights                                                                                            |
+| ------- | ---------- | ----------------------------------------------------------------------------------------------------- |
+| 9.0.0   | 2024-??-?? | Initial open-source release. Core ETL → Neo4j → React+MapLibre stack; basic datasets and CI.          |
+| 9.7.0   | 2025-??-?? | Introduced Focus Mode, Story Nodes, semantic search, initial predictive analytics, provenance.        |
+| 10.0.0  | 2025-11-18 | Extended temporal scope (prehistoric → 2100), 3D Cesium globe, stronger FAIR/CARE, refactored API.    |
+| 11.0.0  | 2025-11-18 | Upgraded to KFM-MDP v11, strengthened metadata and accessibility, consolidated docs, v11 root README. |
+
+> Note: See Git tags and release manifests for exact dates and full changelogs.
+
+---
+
+## ⚖ License & Governance
+
+* **Code License**: MIT — see `LICENSE` for details.
+* **Docs License**: CC-BY 4.0 — free to reuse with attribution.
+* **Data Licenses**: Dataset-specific; always consult STAC/DCAT metadata and source documentation before reuse.
+
+**Governance**
+
+* Oversight by the **FAIR+CARE Council** and the **Focus Mode Board**
+* Documentation and architecture standards defined in:
+
+  * `docs/standards/markdown_rules.md`
+  * `docs/standards/kfm_markdown_protocol_v11.md`
+  * `docs/standards/faircare.md`
+  * `docs/standards/data_architecture.md`
+* Major architectural decisions are recorded via ADRs and design docs in `docs/architecture/`.
+
+---
+
+## 🔗 Further Reading & Design References
+
+For deeper dives into the system:
+
+* **AI System & Developer Docs**
+  `docs/architecture/Kansas Frontier Matrix AI System – Developer Documentation.pdf`
+
+* **Focus Mode Design**
+  `docs/architecture/AI-Powered Focus Mode for the Kansas Frontier Matrix.pdf`
+
+* **Data Architecture & STAC Integration**
+
+  * `docs/architecture/File and Data Architecture for the Kansas Frontier Matrix Project.pdf`
+  * `docs/standards/OGC STAC Community Standard — Complete Overview (for KFM Integration).pdf`
+
+* **Expansion Plans & New Data Sources**
+
+  * `docs/strategy/Expanding the Kansas Frontier Matrix.pdf`
+  * `docs/strategy/Expanding the Kansas Frontier Matrix: New Data Sources and Features.pdf`
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix Documentation**  
-*Governed Knowledge × FAIR+CARE Certification × Sustainable Transparency*  
-© 2025 Kansas Frontier Matrix · CC-BY 4.0 · Master Coder Protocol v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Root README](../README.md) · [Governance Charter](standards/governance/ROOT-GOVERNANCE.md)
+<small>© 2025 Kansas Frontier Matrix contributors. Code and documentation are open-source as described above. Data sources are credited to their providers.
+*Ad astra per data — to the stars through data.*</small>
 
 </div>
