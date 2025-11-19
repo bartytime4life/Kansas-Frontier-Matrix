@@ -1,197 +1,354 @@
 ---
-title: "💧 Kansas Frontier Matrix — **Processed Hydrology Data** (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "💧 Kansas Frontier Matrix — Processed Hydrology Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/processed/hydrology/README.md"
-version: "v10.2.2"
-last_updated: "2025-11-12"
-review_cycle: "Continuous / Autonomous"
+
+version: "v11.0.0"
+last_updated: "2025-11-19"
+release_stage: "Stable / Governed"
+review_cycle: "Continuous · FAIR+CARE Council Oversight"
+lifecycle: "Long-Term Support (LTS)"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.2.0/manifest.zip"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+doc_uuid: "urn:kfm:doc:data-processed-hydrology-v11.0.0"
+semantic_document_id: "kfm-doc-data-processed-hydrology-readme"
+event_source_id: "ledger:data/processed/hydrology/README.md"
+immutability_status: "version-pinned"
+
+sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.0.0/manifest.zip"
+
+telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-hydrology-processed-v11.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v10.2.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-hydrology-processed-v10.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
+hydrology_contract_version: "hydrology-schema-v4.0.0"
+
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "CC-BY 4.0 / FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
+status: "Active / Enforced"
+doc_kind: "Domain Architecture"
+intent: "processed-hydrology-datasets"
+role: "hydrology-domain"
+category: "Data · Hydrology · FAIR+CARE · Processed"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "Variable — hydrological sensitivity varies by dataset"
+sensitivity_level: "Low–Moderate"
+indigenous_rights_flag: "Dataset-dependent"
+public_exposure_risk: "Dataset-level"
+redaction_required: false
+risk_category: "Low–Moderate"
+data_steward: "KFM FAIR+CARE Council"
+
+ontology_alignment:
+  cidoc: "E73 Information Object"
+  schema_org: "Dataset"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Entity"
+  geosparql: "geo:FeatureCollection"
+
+json_schema_ref: "../../../schemas/json/data-hydrology-processed-v11.schema.json"
+shape_schema_ref: "../../../schemas/shacl/data-hydrology-processed-v11-shape.ttl"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Restricted"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "speculative"
+  - "unverified claims"
+
+machine_extractable: true
+classification: "Public Data / Mixed Sensitivity"
+jurisdiction: "Kansas / United States"
+ttl_policy: "Permanent"
+sunset_policy: "Superseded upon next hydrology-domain update"
+accessibility_compliance: "WCAG 2.1 AA"
 ---
 
 <div align="center">
 
-# 💧 Kansas Frontier Matrix — **Processed Hydrology Data**  
+# 💧 **Kansas Frontier Matrix — Processed Hydrology Data**  
 `data/processed/hydrology/README.md`
 
 **Purpose:**  
-Official repository for **FAIR+CARE-certified hydrological datasets** derived from **USGS, EPA, KDHE, and Kansas DASC** sources.  
-This layer contains harmonized, validated, and lineage-certified datasets supporting water-resource management, groundwater modeling, and sustainable hydrological research, with **Focus Mode v2.1** analytics and explainability.
+FAIR+CARE-certified hydrology datasets enabling:
 
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/README.md)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Hydrology%20Certified-gold.svg)](../../../docs/standards/faircare.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green.svg)]()
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../LICENSE)
+- 🌊 Water resource management  
+- 🧠 Focus Mode v3 hydrologic narratives  
+- 📡 STAC/DCAT 3.0 discovery & machine integration  
+- 🛰 Groundwater & streamflow modeling  
+- ♻️ Sustainability & resilience research  
+
+All datasets are **schema-aligned**, **checksum-verified**, **provenance-linked**, and **ethically governed**.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 1. 📘 Overview
 
-The **Processed Hydrology Layer** provides **finalized, schema-validated, checksum-verified** datasets ready for open access and analytical use.  
-Each dataset here is **provenance-registered** (append-only governance ledger), **FAIR+CARE-audited**, and **STAC/DCAT 3.0** catalog-ready for interoperable discovery.
+The **Processed Hydrology Layer** is the authoritative publication-ready repository for hydrologic datasets derived from:
 
-**v10.2.2 Upgrades**
-- **Streaming STAC** registration supported where sources provide near-real-time feeds.  
-- **Focus Mode v2.1** alignment: explainability overlays, citations, and CARE ethics flags.  
-- **Telemetry v2**: energy/CO₂ and validation coverage exported per release.
+- **USGS NWIS** (streamflow, groundwater, water quality)  
+- **EPA WQP** (water chemistry, contaminants)  
+- **KDHE** (state monitoring wells, aquifer surveys)  
+- **Kansas DASC** hydrologic boundaries & mapping services  
 
-### Core Objectives
+Each dataset here is:
 
-- Publish **canonical** hydrology datasets for public and programmatic use.  
-- Enforce **schema, checksum, and FAIR+CARE** validation with governance logs.  
-- Maintain **provenance & lineage** across raw → staging → processed transitions.  
-- Enable **AI/Focus Mode v2.1** water-systems analytics and explainability.
+- ✔ Fully validated against **Hydrology Schema v4.0.0**  
+- ✔ FAIR+CARE-certified with sovereignty-aware masking  
+- ✔ Traceable via PROV-O lineage  
+- ✔ Included in STAC Collection: `hydrology_v11_collection.json`  
+- ✔ Indexed in DCAT 3.0 catalogs  
 
 ---
 
-## 🗂️ Directory Layout
+# 2. 🗂️ Directory Layout (GitHub-Safe)
 
-```plaintext
+~~~~text
 data/processed/hydrology/
-├── README.md                              # This document
-├── hydrology_summary_v10.2.2.parquet      # Aggregated statewide hydrological indicators
-├── groundwater_trends_v10.2.2.csv         # Annual groundwater level & anomaly records (station-level)
-├── watershed_boundaries_v10.2.2.geojson   # Final watershed boundary dataset (HUC levels)
-├── aquifer_health_index_v10.2.2.csv       # FAIR+CARE-certified aquifer sustainability index
-├── streamflow_annual_stats_v10.2.2.csv    # Derived streamflow statistics (percentiles/thresholds)
-├── metadata.json                          # STAC/DCAT/ISO 19115 metadata + FAIR+CARE certification
-└── stac_collection.json                   # STAC 1.0 collection for processed hydrology datasets
-```
+├── README.md
+│
+├── hydrology_summary_v11.0.0.parquet
+├── groundwater_trends_v11.0.0.csv
+├── watershed_boundaries_v11.0.0.geojson
+├── aquifer_health_index_v11.0.0.csv
+├── streamflow_annual_stats_v11.0.0.csv
+│
+├── stac_collection.json
+└── metadata/
+    ├── checksums.json
+    ├── faircare_certification.json
+    ├── provenance.json
+    └── schema_validation.json
+~~~~
 
 ---
 
-## 🧭 Data Summary
+# 3. 🔄 Hydrology Processing Lifecycle
 
-| Dataset | Records | Source | Schema | Status | License |
-|---|---:|---|---|---|---|
-| Hydrology Summary | 44,106 | USGS, EPA, KDHE | `hydrology_summary_v3.1.0` | ✅ Certified | CC-BY 4.0 |
-| Groundwater Trends | 13,284 | KDHE, USGS | `groundwater_trends_v3.2.0` | ✅ Certified | CC-BY 4.0 |
-| Watershed Boundaries | 1,221 | EPA WBD, DASC | `watershed_boundaries_v3.1.0` | ✅ Certified | CC-BY 4.0 |
-| Aquifer Health Index | 8,742 | KDHE, EPA | `aquifer_health_index_v3.1.0` | ✅ Certified | CC-BY 4.0 |
-| Streamflow Statistics | 7,018 | USGS NWIS | `streamflow_stats_v3.1.0` | ✅ Certified | CC-BY 4.0 |
-
-> All files are **SHA-256 checksum-verified** and **registered** in the KFM Governance Ledger.
-
----
-
-## ⚙️ Processed Hydrology Workflow
-
-```mermaid
+~~~~mermaid
 flowchart TD
-    STAGE["Staging Layer (data/work/staging/hydrology/*)"] --> FAIR["FAIR+CARE Validation & Ethics Certification"]
-    FAIR --> SCHEMA["Schema Alignment (JSON Schema · ISO 19115)"]
-    SCHEMA --> CHECK["Checksum Verification (SHA-256) & Ledger Logging"]
-    CHECK --> PUB["Publication (data/processed/hydrology/*)"]
-    PUB --> CATALOG["STAC/DCAT Sync + Streaming STAC + Focus v2.1 Enablement"]
-```
-
-### Validation & Governance Artifacts
-
-- **Schema Validation:** `data/reports/validation/schema_validation_summary.json`  
-- **Checksums:** `data/processed/metadata/checksums_hydrology_v10.2.2.json`  
-- **FAIR+CARE Certification:** `data/reports/fair/data_care_assessment.json`  
-- **Provenance Ledger:** `data/reports/audit/data_provenance_ledger.json`  
-- **SBOM & Manifest:** `releases/v10.2.0/sbom.spdx.json`, `releases/v10.2.0/manifest.zip`
+  A["raw/hydrology/*"] --> B["staging/\nCRS normalization · QAQC · dedupe"]
+  B --> C["validation/\nschema + FAIR+CARE + quality checks"]
+  C --> D["processing/\nderived metrics + harmonization"]
+  D --> E["checksums/\nSHA-256 + SBOM parity"]
+  E --> F["publication/\ndata/processed/hydrology/*"]
+  F --> G["catalog-sync/\nSTAC · DCAT · Streaming STAC"]
+~~~~
 
 ---
 
-## 🧩 Example Processed Metadata Record
+# 4. 💧 Hydrology Domain Schema Requirements
 
-```json
-{
-  "id": "processed_hydrology_summary_v10.2.2",
-  "domain": "hydrology",
-  "source_stage": "data/work/staging/hydrology/",
-  "records_total": 44106,
-  "schema_version": "v3.1.0",
-  "fairstatus": "certified",
-  "checksum_sha256": "sha256:7e4d9f8b13e2a9c1d5f4b6e9c2d8f1e7a3b9d2a4c6f7b8e3d9a1b7f5e2c3d8a4",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json",
-  "validator": "@kfm-hydro-lab",
-  "license": "CC-BY 4.0",
-  "created": "2025-11-12T21:40:00Z"
-}
-```
+## 4.1 Common Fields (all hydrology datasets)
+
+~~~~text
+kfm_id               string       stable hydrology ID  
+domain               string       always "hydrology"  
+schema_version       string       e.g., "v4.0.0"  
+created              datetime     ISO 8601  
+source               string       USGS / EPA / KDHE / DASC  
+checksum             string       sha256-...  
+fairstatus           string       certified/pending  
+governance_ref       string       ledger path  
+~~~~
 
 ---
 
-## 🧠 FAIR+CARE Certification Matrix
+# 5. 🌊 Domain-Specific Schema Tables
 
-| Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | STAC/DCAT indexing; persistent IDs per dataset/version. | `@kfm-data` |
-| **Accessible** | CC-BY 4.0; bulk & API download endpoints. | `@kfm-accessibility` |
-| **Interoperable** | ISO 19115 & DCAT 3.0 compliant metadata; STAC 1.0. | `@kfm-architecture` |
-| **Reusable** | Full provenance, schema, and checksum metadata. | `@kfm-design` |
-| **Collective Benefit** | Supports sustainable water policy & research. | `@faircare-council` |
-| **Authority to Control** | FAIR+CARE Council approves releases. | `@kfm-governance` |
-| **Responsibility** | Data stewards maintain QA and checksum integrity. | `@kfm-security` |
-| **Ethics** | Sensitive well/site privacy protected via aggregation/anonymization. | `@kfm-ethics` |
+## 5.1 Streamflow Annual Statistics
+
+~~~~text
+Field                 Type        Notes
+--------------------- ----------- ----------------------------------------
+site_id               string      USGS NWIS station ID
+year                  integer     water year
+mean_cfs              float       annual mean flow
+p10_cfs               float       10th percentile
+p90_cfs               float       90th percentile
+anomaly               float       deviation from long-term mean
+geometry              GeoJSON     station coordinates
+source                string      USGS NWIS
+checksum              string      sha256-...
+~~~~
+
+## 5.2 Groundwater Trends
+
+~~~~text
+Field                 Type        Notes
+--------------------- ----------- ----------------------------------------
+well_id               string      monitoring well ID
+timestamp             datetime    ISO 8601
+water_level_m         float       depth to water table
+trend_category        string      rising/stable/declining
+aquifer               string      aquifer name
+geometry              GeoJSON     well location
+source                string      KDHE / USGS
+checksum              string      sha256-...
+~~~~
+
+## 5.3 Watershed Boundaries
+
+~~~~text
+Field                 Type        Notes
+--------------------- ----------- ----------------------------------------
+huc_code              string      hydrologic unit code
+level                 string      HUC2–HUC12
+geometry              GeoJSON     watershed polygon
+source                string      EPA WBD / DASC
+area_sqkm             float       computed area
+checksum              string      sha256-...
+~~~~
+
+## 5.4 Aquifer Health Index
+
+~~~~text
+Field                 Type        Notes
+--------------------- ----------- ----------------------------------------
+aquifer_id            string      unique aquifer identifier
+sustainability_score  float       normalized 0–10
+stress_indicator      float       extraction stress factor
+recharge_rate_mmyr    float       recharge estimate
+water_quality_index   float       derived from WQP chemistry
+checksum              string      sha256-...
+~~~~
+
+## 5.5 Hydrology Summary (Integrated Indicators)
+
+~~~~text
+Field                 Type        Notes
+--------------------- ----------- ----------------------------------------
+unit_id               string      county/H3/watershed ID
+mean_streamflow       float       aggregated mean cfs
+groundwater_trend     string      rising/stable/declining
+drought_score         float       normalized 0–10
+aquifer_health        float       normalized 0–10
+integrated_score      float       composite hydrology indicator (0–10)
+checksum              string      sha256-...
+~~~~
 
 ---
 
-## ⚙️ Validation & Catalog Publication
+# 6. 🔬 FAIR+CARE Governance (Hydrology Domain)
 
-| Step | Description | Output |
-|---|---|---|
-| **Schema Validation** | Structural conformance checks. | `schema_validation_summary.json` |
-| **Checksum Verification** | Integrity & reproducibility proof. | `checksums_hydrology_v10.2.2.json` |
-| **FAIR+CARE Audit** | Ethics & accessibility certification. | `faircare_certification_report.json` |
-| **Ledger Sync** | Append-only provenance entries. | `data_provenance_ledger.json` |
-| **STAC/DCAT Registration** | Catalog inclusion for discovery. | `stac_collection.json` |
+Hydrology datasets intersect communities, water rights, and sovereign territories.
 
-> Governance automation: `hydrology_processed_sync.yml`
+### Governance Requirements
+- Tribal groundwater datasets may require masking or aggregation  
+- Sensitive well locations may be generalized to H3 cells  
+- Water quality data with health implications must include CARE context  
 
----
+Governance artifacts:
 
-## ♻️ Retention & Sustainability
-
-| Data Type | Retention | Policy |
-|---|---|---|
-| Processed Hydrology Datasets | Permanent | Canonical datasets under CC-BY 4.0 |
-| FAIR+CARE Reports | Permanent | Retained for governance & reproducibility |
-| Checksum Records | Permanent | Stored & verified each release |
-| Metadata & Lineage | Permanent | ISO 19115 lineage protocols |
-| Logs | 365 Days | Rotated annually per policy |
-
-**Telemetry:** `releases/v10.2.0/focus-telemetry.json`
+~~~~text
+data/processed/hydrology/metadata/faircare_certification.json
+docs/reports/audit/data_provenance_ledger.json
+~~~~
 
 ---
 
-## 🧾 Internal Use Citation
+# 7. 🔐 Integrity & Lineage
 
-```text
-Kansas Frontier Matrix (2025). Processed Hydrology Data (v10.2.2).
-Final FAIR+CARE-certified hydrological datasets integrating USGS, EPA, KDHE, and DASC sources.
-Checksum-verified, schema-aligned, and governance-certified for public use and Focus Mode v2.1 hydrological modeling.
-```
+### Checksum Verification
+All hydrology datasets must appear in:
+
+~~~~text
+data/checksums/manifest.json
+data/archive/2025Q4/checksums/hydrology_checksums.json
+~~~~
+
+### Provenance (PROV-O)
+Exports include:
+
+~~~~text
+data/processed/hydrology/metadata/provenance.json
+~~~~
+
+Each processed dataset includes:
+
+- `prov:wasDerivedFrom` → raw/staging datasets  
+- `prov:wasGeneratedBy` → hydrology ETL pipeline run  
+- `prov:used` → configs, models, transformations  
 
 ---
 
-## 🕰️ Version History
+# 8. ♻️ Telemetry & Sustainability
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.2.2 | 2025-11-12 | `@kfm-hydro` | Align to v10.2: Streaming STAC, Focus v2.1 compatibility, telemetry/schema v2, governance paths updated. |
-| v10.0.0 | 2025-11-09 | `@kfm-hydro` | Streaming STAC support, Focus v2 baseline, telemetry/schema v2. |
+Tracked for each dataset:
+
+- `energy_wh`  
+- `carbon_gCO2e`  
+- `runtime_sec`  
+- `validation_failures`  
+- `records_processed`  
+
+Logged to:
+
+~~~~text
+releases/v11.0.0/focus-telemetry.json
+docs/reports/telemetry/data-hydrology-processed-v11.json
+~~~~
 
 ---
+
+# 9. 🌐 STAC/DCAT Integration
+
+Each dataset has:
+
+- A **STAC Item**  
+- Inclusion in **hydrology_v11 STAC Collection**  
+- A **DCAT Dataset** in `data/dcat/`  
+- JSON-LD metadata linking:
+  - spatial extent  
+  - temporal extent  
+  - lineage  
+  - checksum  
+  - CARE tags  
+
+---
+
+# 10. 🧾 Internal Citation
+
+~~~~text
+Kansas Frontier Matrix (2025). Processed Hydrology Data (v11.0.0).
+FAIR+CARE-certified, checksum-verified hydrological datasets for Kansas water
+research, policy, and resilience. Includes streamflow, groundwater, aquifer,
+watershed, and drought indicators aligned to STAC/DCAT 3.0 and KFM-OP v11.
+~~~~
+
+---
+
+# 11. 🕰 Version History
+
+| Version | Date       | Summary                                                                                     |
+|--------:|------------|---------------------------------------------------------------------------------------------|
+| v11.0.0 | 2025-11-19 | Full v11 upgrade: schema tables, STAC/DCAT v11, provenance v11, sustainability v4 added.   |
+| v10.2.2 | 2025-11-12 | Streaming STAC expansion, Focus Mode improvements, telemetry v2 updates.                   |
+| v10.0.0 | 2025-11-09 | Initial hydrology processed layer documentation.                                            |
 
 <div align="center">
 
-**Kansas Frontier Matrix**  
-*Water Intelligence × FAIR+CARE Governance × Provenance Assurance*  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix — Hydrology Domain**  
+💧 FAIR+CARE Certified · ♻️ Sustainability Verified · 🛰 STAC/DCAT Ready · 🧠 Focus Mode Enabled  
 
-[Back to Data Index](../README.md) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
 
 </div>
