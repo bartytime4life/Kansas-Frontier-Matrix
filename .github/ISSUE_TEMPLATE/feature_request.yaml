@@ -1,8 +1,8 @@
-# 💡 Kansas Frontier Matrix — Feature Request Template  
-# File: .github/ISSUE_TEMPLATE/feature_request.yaml  
-# Purpose: Collect structured requests for new features, enhancements, or improvements to the KFM system.  
-# Aligned with Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω  
-# SPDX-License-Identifier: CC-BY-4.0  
+# 💡 Kansas Frontier Matrix — Feature Request Template
+# File: .github/ISSUE_TEMPLATE/feature_request.yaml
+# Purpose: Collect structured requests for new features, enhancements, or improvements to the KFM system.
+# Alignment: MCP-DL v6.3 · KFM-MDP v11.0 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω
+# SPDX-License-Identifier: CC-BY-4.0
 
 name: "💡 Feature Request"
 description: "Propose a new feature, enhancement, or improvement to the Kansas Frontier Matrix project."
@@ -17,15 +17,15 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## 💡 Kansas Frontier Matrix — Feature Request Form  
-        Use this form to suggest new functionality, UI improvements, pipeline features, or AI/ETL enhancements.  
-        All feature proposals must follow **MCP-DL v6.3** and are reviewed during the **Quarterly Architecture Review Cycle**.
+        ## 💡 Kansas Frontier Matrix — Feature Request Form
+        Use this form to suggest new functionality, UI improvements, data/ETL features, or AI/graph enhancements.
+        All feature proposals are reviewed under **MCP-DL v6.3**, **KFM-MDP v11**, and **FAIR+CARE** governance.
 
   - type: input
     id: feature_title
     attributes:
       label: "Feature Title"
-      description: "Provide a short and descriptive title for the requested feature."
+      description: "Short, descriptive title for the requested feature."
       placeholder: "e.g. Add AI-assisted entity linking for treaty documents"
     validations:
       required: true
@@ -34,11 +34,11 @@ body:
     id: feature_summary
     attributes:
       label: "Summary"
-      description: "Briefly summarize the purpose and scope of this feature."
+      description: "Summarize the purpose and scope of this feature."
       placeholder: |
         Example:
-        This feature adds an NLP-based entity linking module that automatically connects people, places, and treaties
-        within the Kansas Frontier Matrix knowledge graph.
+        This feature adds an NLP-based entity linking module that automatically connects
+        people, places, and treaties within the Kansas Frontier Matrix knowledge graph.
     validations:
       required: true
 
@@ -46,11 +46,11 @@ body:
     id: problem_statement
     attributes:
       label: "Problem or Opportunity"
-      description: "Describe the problem this feature solves or the opportunity it creates."
+      description: "Describe the problem this feature solves or the opportunity it enables."
       placeholder: |
         Example:
         Manual linking of historical entities is time-consuming and inconsistent.
-        Automating entity relationships improves accuracy and discoverability across datasets.
+        Automating these relationships improves accuracy and discoverability across datasets.
     validations:
       required: true
 
@@ -58,11 +58,12 @@ body:
     id: proposed_solution
     attributes:
       label: "Proposed Solution"
-      description: "Explain your proposed implementation, including technologies, algorithms, or UI concepts."
+      description: "Outline the proposed implementation (conceptual design, algorithms, UI ideas, or system changes)."
       placeholder: |
         Example:
-        Implement a `focus_transformer_v2` model in `src/ai/models/` that uses transformer embeddings
-        to detect and link semantic entities. Integrate with Neo4j graph database via Cypher query templates.
+        Implement an entity-linking module under `src/ai/models/` that uses transformer-based embeddings
+        to detect and link semantic entities (people, places, events). Expose results via a GraphQL endpoint
+        and integrate with Focus Mode v3 and Neo4j through Cypher query templates.
     validations:
       required: true
 
@@ -70,14 +71,14 @@ body:
     id: component_area
     attributes:
       label: "Affected Component Area"
-      description: "Select which part of the system the proposed feature affects."
+      description: "Select where this feature will primarily apply."
       options:
         - "ETL / Data Pipelines"
-        - "AI / NLP Models"
+        - "AI / NLP / Focus Mode"
         - "API Layer (FastAPI / GraphQL)"
-        - "Frontend (React / MapLibre)"
-        - "Documentation / Governance"
-        - "Infrastructure / CI-CD"
+        - "Frontend (React / MapLibre / Cesium)"
+        - "Documentation / Governance / Story Nodes"
+        - "Infrastructure / CI-CD / GitHub Workflows"
       default: 1
     validations:
       required: true
@@ -86,11 +87,11 @@ body:
     id: impact_level
     attributes:
       label: "Estimated Impact Level"
-      description: "Select the overall impact of this feature."
+      description: "How impactful is this feature to the system or users?"
       options:
-        - "High — Core functionality enhancement"
-        - "Medium — Improves usability or automation"
-        - "Low — Minor improvement or refactor"
+        - "High — Core functionality or major architecture impact"
+        - "Medium — Significant usability or automation improvement"
+        - "Low — Minor enhancement, refactor, or convenience"
       default: 1
     validations:
       required: true
@@ -99,12 +100,12 @@ body:
     id: dependencies
     attributes:
       label: "Dependencies or Related Work"
-      description: "List any related datasets, models, or workflows that may be affected or required."
+      description: "List related datasets, models, workflows, or components this feature depends on or affects."
       placeholder: |
-        Example:
+        Examples:
         - Depends on `src/graph/queries/link_entities.cypher`
-        - Builds on `focus_transformer_v1`
-        - Requires additional STAC metadata fields for linked documents
+        - Builds on `focus_transformer_v2`
+        - Requires new STAC metadata fields for linked documents
     validations:
       required: false
 
@@ -112,12 +113,12 @@ body:
     id: risks
     attributes:
       label: "Potential Risks or Considerations"
-      description: "Identify any challenges, data sensitivity, or technical limitations to consider."
+      description: "Identify data sensitivity, bias, performance, or technical risks."
       placeholder: |
-        Example:
-        - Model bias must be tested before production
-        - New dependencies increase container size
-        - May require additional FAIR+CARE governance review
+        Examples:
+        - New model may introduce or amplify bias; requires FAIR+CARE review.
+        - Increased compute or memory requirements for Focus Mode v3.
+        - Needs additional consent review for cultural/Indigenous data usage.
     validations:
       required: false
 
@@ -125,12 +126,13 @@ body:
     id: acceptance_criteria
     attributes:
       label: "Acceptance Criteria"
-      description: "Define measurable success criteria or deliverables."
+      description: "Define measurable success criteria and done-conditions."
       placeholder: |
-        Example:
-        - Entity linking achieves 90% accuracy on test corpus.
+        Examples:
+        - Entity linking achieves ≥ 90% accuracy on evaluation corpus.
         - Users can filter by linked entities in the Focus Mode UI.
-        - Documentation updated under `docs/ai/focus_transformer.md`.
+        - Documentation added under `docs/ai/` and `docs/graph/`.
+        - New telemetry fields added and visible in governance dashboards.
     validations:
       required: true
 
@@ -138,41 +140,44 @@ body:
     id: compliance_checklist
     attributes:
       label: "Governance & Compliance Checklist"
-      description: "Confirm compliance with governance requirements."
+      description: "Confirm you understand governance and documentation expectations."
       options:
-        - label: "I confirm this proposal follows Master Coder Protocol v6.3 (documentation-first design)."
+        - label: "This proposal will be documented following Master Coder Protocol v6.3 (documentation-first)."
           required: true
-        - label: "I confirm this feature will comply with FAIR+CARE principles."
+        - label: "This feature will comply with FAIR+CARE principles and sovereignty policies."
           required: true
-        - label: "I will update or create relevant documentation in `docs/` and `src/` upon implementation."
+        - label: "I will update or create all relevant docs in `docs/` and `src/` upon implementation."
           required: true
-        - label: "I understand this request may require approval during the next architecture review cycle."
+        - label: "I understand this request may require approval during an architecture/governance review cycle."
           required: true
 
   - type: markdown
     attributes:
       value: |
-        ---
-        ### 🧭 Architecture Review & Validation Workflow  
-        Submitted feature requests automatically enter KFM’s governance workflow:
+        ## 🧭 Architecture Review & Validation Workflow
 
-        - **`docs-lint.yml`** → Validates proposal formatting + Markdown structure  
-        - **`stac-validate.yml`** → (If metadata-related) validates STAC/DCAT interoperability  
-        - **`faircare-validate.yml`** → Ensures FAIR+CARE compliance for new data resources  
-        - **`build-and-deploy.yml`** → (Post-approval) integrates feature into dev build  
+        Feature requests help guide roadmap and architecture decisions. After submission, automation may:
 
-        Approved proposals are logged in:
+        - Run **docs_validate.yml** to ensure the proposal and follow-up docs conform to **KFM-MDP v11**.  
+        - Run **stac_validate.yml** / **dcat_validate.yml** if new metadata patterns or catalogs are proposed.  
+        - Run **faircare_validate.yml** to flag FAIR+CARE implications, especially for data- or AI-related features.  
+        - Feed into **telemetry_export.yml** for governance and roadmap telemetry (e.g., feature backlog, complexity).  
 
-        ```text
-        reports/audit/github-workflows-ledger.json
+        Architecture and governance decisions are recorded in:
+
+        ```
+        docs/reports/audit/github-workflows-ledger.json
         ```
 
-        and linked to system telemetry:
+        and may be reflected in telemetry snapshots:
 
-        ```text
-        releases/v10.3.0/focus-telemetry.json
+        ```
+        releases/v11.0.1/focus-telemetry.json
         ```
 
-        **Thank you for helping shape the future of the Kansas Frontier Matrix.**  
-        Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
-        **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**
+        Thank you for helping shape the **Kansas Frontier Matrix**.
+        Your proposal contributes to a transparent, ethical, and reproducible system.
+
+        **© 2025 Kansas Frontier Matrix — MIT / CC-BY-4.0**  
+        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0  
+        Diamond⁹ Ω / Crown∞Ω Ultimate Certified
