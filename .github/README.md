@@ -110,7 +110,6 @@ ai_transform_prohibited:
 
 </div>
 
---- ✦ ---
 
 ## 🧭 Purpose
 
@@ -131,7 +130,6 @@ Nothing reaches:
 
 without successfully passing through `.github/` workflows.
 
---- ✦ ---
 
 ## 🗂️ Directory Layout
 
@@ -164,7 +162,6 @@ without successfully passing through `.github/` workflows.
 └── SECURITY.md                 # Security & vulnerability disclosure policy
 ```
 
---- ✦ ---
 
 ## 🧬 Role in the KFM Stack
 
@@ -197,7 +194,6 @@ The `.github/` directory is a **first-class subsystem**, not an afterthought. It
 - Guards the **software and data supply chain**  
 - Produces **telemetry and governance artifacts** used across the platform  
 
---- ✦ ---
 
 ## 🧪 CI/CD Stages (v11)
 
@@ -287,7 +283,6 @@ Security is continuously enforced at the workflow level.
 
 Only artifacts that pass all previous stages may be **deployed or published**.
 
---- ✦ ---
 
 ## 🧩 Governance & Policy Hooks
 
@@ -323,7 +318,6 @@ Pull requests must declare:
 
 This enforces **documentation-first, governance-first** development.
 
---- ✦ ---
 
 ## 🔒 Security Model
 
@@ -338,7 +332,6 @@ Core security controls:
 
 Security is treated as part of the **normal development lifecycle**, not an afterthought.
 
---- ✦ ---
 
 ## 📊 Telemetry & Observability
 
@@ -358,7 +351,6 @@ These metrics power:
 - Focus Mode “system introspection” Story Nodes  
 - Release engineering retrospectives  
 
---- ✦ ---
 
 ## 🕰️ Version History
 
@@ -370,7 +362,6 @@ These metrics power:
 | v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, and telemetry integration.                                            |
 | v10.0.0 | 2025-11-10 | Initial GitHub infrastructure overview.                                                             |
 
---- ✦ ---
 
 <div align="center">
 
