@@ -210,19 +210,24 @@ releases/v11.0.1/focus-telemetry.json
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
-|--------:|------|---------|
-| v11.0.1 | 2025-11-19 | Fixed Directory Layout fence; added v11 telemetry schema v4; updated metadata density. |
-| v11.0.0 | 2025-11-18 | First v11 CI/CD overview. |
-| v10.4.1 | 2025-11-16 | Added AI audit workflow & sustainability metrics. |
-| v10.3.1 | 2025-11-13 | Improved validation for STAC/DCAT. |
-| v10.2.2 | 2025-11-12 | Added CVE gating & parity diffs. |
-| v10.0.0 | 2025-11-09 | Initial CI/CD architecture doc. |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v11.0.1 | 2025-11-19 | Updated metadata density, fixed Directory Layout block, aligned workflows with v11 telemetry schemas. |
+| v11.0.0 | 2025-11-18 | First v11 CI/CD overview: added FAIR+CARE, sustainability, and governance integrations. |
+| v10.4.1 | 2025-11-16 | Added AI audit workflows and extended governance checks. |
+| v10.3.1 | 2025-11-13 | Improved STAC/DCAT validation, expanded telemetry export doc. |
+| v10.2.2 | 2025-11-12 | Introduced CVE gating, catalog parity diffs, sustainability metrics. |
+| v10.0.0 | 2025-11-09 | Initial CI/CD workflow documentation. |
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
-MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0
+CI/CD Workflows Overview · FAIR+CARE Compliant  
+MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[Back to GitHub Architecture](../ARCHITECTURE.md)  
+[Back to .github Overview](../README.md)  
+[Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
