@@ -1,426 +1,383 @@
 ---
-title: "🛰️ Kansas Frontier Matrix — Data Validation & Observability Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "docs/pipelines/validation-observability/README.md"
+title: "🌾 Kansas Frontier Matrix — Monorepo Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "/README.md"
 version: "v11.0.0"
 last_updated: "2025-11-18"
-review_cycle: "Quarterly / FAIR+CARE Council"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/validation-observability-v1.json"
-governance_ref: "../../standards/governance/DATA-GOVERNANCE.md"
+sbom_ref: "releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "releases/v11.0.0/manifest.zip"
+telemetry_ref: "releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/root-readme-v11.json"
+governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.0.0"
 status: "Active / Enforced"
-doc_kind: "Architecture"
-intent: "etl-validation"
-fair_category: "F1-A2-I1"
-care_label: "CARE-Data-Quality"
-sensitivity_level: "Medium"
-public_exposure_risk: "Low"
-indigenous_rights_flag: true
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Data Quality & Observability"
-redaction_required: false
-provenance_chain:
-  - "docs/pipelines/validation-observability/README.md@v10.4.x"
-previous_version_hash: "<previous-sha256>"
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
-json_schema_ref: "../../../schemas/json/validation-observability-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/validation-observability-v11-shape.ttl"
-doc_uuid: "urn:kfm:doc:pipelines:validation-observability-v11.0.0"
-semantic_document_id: "kfm-doc-pipelines-validation-observability"
-event_source_id: "ledger:docs/pipelines/validation-observability/README.md"
-immutability_status: "mutable-plan"
-doc_integrity_checksum: "<sha256>"
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
-ai_transform_permissions:
-  - "summaries"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-ai_transform_prohibited:
-  - "speculative additions"
-  - "unverified historical claims"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-jurisdiction: "Kansas / United States"
-classification: "Public Document"
-role: "architecture"
-lifecycle_stage: "stable"
-ttl_policy: "Review required every 12 months"
-sunset_policy: "Superseded upon new protocol release"
+doc_kind: "Overview"
+intent: "root-readme"
+fair_category: "F1-A1-I1-R1"
 ---
 
 <div align="center">
 
-# 🛰️ **Kansas Frontier Matrix — Data Validation & Observability Framework**
+# 🌾 **Kansas Frontier Matrix**
 
-`docs/pipelines/validation-observability/README.md`
+`/README.md`
 
-**Purpose**  
-Define the **complete KFM v11 validation–observability–lineage framework** used to ensure every dataset is trustworthy, reproducible, FAIR+CARE aligned, and safely promotable through **ETL → AI → Knowledge Graph → STAC → Story Nodes → Focus Mode**.
+**A semantic historical–geospatial platform blending Kansas data into an interactive map, timeline, and narrative knowledge graph.**
+
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue)](#-architecture-overview)  
+[![KFM-MDP v11.0](https://img.shields.io/badge/Markdown-KFM--MDP_v11.0-informational)](docs/standards/kfm_markdown_protocol_v11.md)  
+[![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](docs/standards/faircare.md)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)  
+[![Status: Active](https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen)](#-version-history)
 
 </div>
 
---- ✦ ---
+---
 
-## 1. Overview
+## 🧭 Overview
 
-KFM uses a **multi-layer validation stack** paired with **full observability and lineage instrumentation**:
+Kansas Frontier Matrix (KFM) is an open-source semantic geospatial–historical platform that fuses Kansas’s environmental, cultural, and historical data into a unified interactive experience. It combines:
 
-1. **Frictionless** — ingest-level schema contracts  
-2. **pandera** — transform-level DataFrame schemas  
-3. **Great Expectations (GE)** — publish-level expectation suites + Data Docs  
-4. **Observability** — cron/run health & job duration (e.g., Sentry Cron, metrics)  
-5. **Lineage** — OpenLineage events + Marquez (or equivalent) UI  
-6. **Provenance** — validation & telemetry outputs linked into STAC, PROV-O, Story Nodes, and Focus Mode narratives  
+- A **map** (MapLibre GL) synchronized with a **timeline**
+- An **AI-enriched ETL pipeline** that turns raw archives into structured facts
+- A **Neo4j knowledge graph** aligned with CIDOC-CRM, OWL-Time, GeoSPARQL, and PROV-O
+- A **React frontend** with **Focus Mode v3** and **Story Nodes** for narrative exploration
+- A **predictive analytics layer** extending from deep past to future scenarios
 
-Every pipeline must pass all required layers before promotion to any **blue/green** release.
+The goal is a “living atlas” of Kansas: a place where you can see wagon trails, treaties, floods, railroads, prairies, fossils, and future climate projections in one coherent, explorable system.
 
 ---
 
-## 2. Directory Layout
+## 🧱 Architecture Overview
 
-~~~text
-src/pipelines/
-├── _validation/
-│   ├── contracts/              # Frictionless tabular-level schemas
-│   ├── schemas/                # pandera schemas for DF transforms
-│   ├── expectations/           # Great Expectations suites + checkpoints
-│   ├── docs/                   # GE Data Docs build artifacts
-│   └── reports/                # JSON outputs from all validators
-├── ingest/
-├── transform/
-├── publish/
-└── monitoring/
-    ├── lineage/                # OpenLineage emitters
-    └── cron/                   # Cron monitoring wrappers (e.g., Sentry, Prometheus jobs)
-~~~
+KFM follows a layered, metadata-driven architecture:
 
-Provenance/telemetry layout:
+- **Data Sources**  
+  Historical documents, maps, Kansas GIS archives, climate and hydrology datasets, BLM land patents, biodiversity and archaeology data, local and tribal archives.
 
-~~~text
-provenance/
-  validation/
-    frictionless/
-    pandera/
-    great_expectations/
-  lineage/
-  telemetry/
-~~~
+- **Backend ETL & AI Pipeline (Python)**  
+  Deterministic ETL workflows that:
+  - Fetch raw data (files, APIs, GIS services)
+  - OCR and parse text
+  - Run NLP (NER, geoparsing, summarization)
+  - Normalize dates, places, people, and events
+  - Upsert entities and relationships into Neo4j
 
----
+- **Knowledge Graph (Neo4j)**  
+  A semantic graph of:
+  - **Entities**: `Person`, `Place`, `Event`, `Document`, `Dataset`, `StoryNode`
+  - **Relationships**: `ATTENDED`, `LOCATED_AT`, `MENTIONS`, `CITED_BY`, `PART_OF`, etc.
+  - Temporal and spatial properties wired to OWL-Time and GeoSPARQL
 
-## 3. Layer 1 — Frictionless Ingest Contracts
+- **API Layer (FastAPI / GraphQL)**  
+  Well-defined queries to:
+  - Pull subgraphs around entities (used by Focus Mode)
+  - Power the map and timeline
+  - Serve Story Nodes and site dossiers
 
-**Purpose:** Validate **external incoming data** at the system boundary.
+- **Frontend (React + MapLibre + Cesium)**  
+  - 2D map (MapLibre) with synchronized timeline
+  - 3D globe (Cesium) for time-layered visualization
+  - Focus Mode panel, Story Node viewer, filters and legends
 
-- All STAC sources, CSVs, Parquets, shapefiles, and remote-sensing derivatives must include a **`datapackage.yaml`** contract.  
-- Pipelines run `frictionless validate datapackage.yaml` before loading anything.  
-- Validation produces a **machine-readable JSON report** stored at:
+High-level flow:
 
-~~~text
-provenance/validation/frictionless/<run_id>.json
-~~~
-
-**Failure behavior:** Hard block ingest. Nothing flows into `data/raw/**` or staging if Frictionless fails.
-
-**STAC Integration:**
-
-~~~json
-{ "rel": "validation", "href": "./provenance/validation/frictionless/<run_id>.json" }
-~~~
+```mermaid
+flowchart LR
+  A[External Data<br/>NOAA · USGS · KGS · KHS · BLM · GBIF · Archives] --> B[Python ETL & AI]
+  B --> C[Neo4j Knowledge Graph]
+  C --> D[FastAPI / GraphQL API]
+  D --> E[React Frontend<br/>MapLibre · Timeline · Cesium]
+  E --> F[Focus Mode v3<br/>Story Nodes]
+```
 
 ---
 
-## 4. Layer 2 — pandera Transform Schemas
+## 🗺 Interactive Map & Timeline
 
-**Purpose:** Guarantee types, constraints, geographic boundaries, and temporal correctness **within transformations**.
+At the heart of KFM is the **linked map + timeline interface**:
 
-- Supported backends: **pandas, Dask, Polars**  
-- Schemas live in: `src/pipelines/_validation/schemas/`  
+- **Map (MapLibre GL)**  
+  - Base layers: modern basemaps, Kansas boundaries, elevation, hydrology
+  - Historical overlays: topographic maps, county atlases, treaty boundaries, trails, land surveys
+  - Themed layers: forts, towns, reservations, railroads, archaeological sites, wildlife distributions
 
-Required checks (domain-dependent):
+- **Timeline**  
+  - Scrollable, zoomable time axis (deep past → present → future)
+  - Events grouped and color-coded by theme (political, environmental, cultural, hazards, etc.)
+  - Tight synchronization:
+    - Moving the timeline filters visible layers on the map
+    - Selecting an event highlights its geographic footprint
 
-- Type coercion & non-null constraints  
-- Unique IDs / natural keys  
-- Bounding boxes within Kansas (and subregions, if defined in contracts)  
-- Temporal validity and ordering (no impossible or overlapping intervals)  
+Examples of interactive views:
 
-Example (simplified):
+- Drag across **1854–1861** → see Kansas Territory drawn, forts and early towns appear, “Bleeding Kansas” conflicts cluster in time and space.
+- Enable “Dust Bowl” layer and drag through the 1930s → vegetation indices and dust-storm reports animate across western Kansas.
+- Jump to **Cretaceous** → see ancient shorelines of the Western Interior Seaway and fossil discovery sites from Niobrara Chalk.
 
-~~~python
-import pandera as pa
-from pandera import typing as pat
-
-class ClimateStations(pa.SchemaModel):
-    station_id: pat.Series[int] = pa.Field(unique=True)
-    lat: pat.Series[float] = pa.Field(ge=36.5, le=40.5)
-    lon: pat.Series[float] = pa.Field(ge=-102.1, le=-94.6)
-    date: pat.Series[pa.DateTime] = pa.Field(nullable=False)
-~~~
-
-**Failure behavior:** Transform aborts; error details are serialized to:
-
-~~~text
-provenance/validation/pandera/<run_id>.json
-~~~
+The map and timeline are designed to be **WCAG 2.1 AA+** accessible, with keyboard navigation, descriptive labels, and high-contrast options.
 
 ---
 
-## 5. Layer 3 — Great Expectations (GE) Publish Gate
+## 🎯 Focus Mode (AI-Powered Context View)
 
-**Purpose:** Validate **post-transform outputs** before loading into:
+**Focus Mode v3** is an AI-assisted, entity-centric view that pivots the entire interface around a single focus:
 
-- Neo4j knowledge graph  
-- STAC datasets & DCAT catalogs  
-- Story Node assets  
-- AI training/evaluation corpora  
+- **Choose a focus**: a `Person`, `Place`, `Event`, `Tribe`, `Treaty`, `Trail`, `Town`, or `StoryNode`
+- **Graph-driven subgraph**: backend Cypher queries fetch the neighborhood around that entity:
+  - Events involving this person or place
+  - Linked documents (letters, newspapers, treaties)
+  - Related people, groups, datasets, and Story Nodes
+- **The UI reconfigures**:
+  - Timeline zooms to the relevant lifespan or event window
+  - Map recenters and highlights associated locations
+  - A right-hand **Focus Panel** shows:
+    - AI summary (data-grounded, source-aware)
+    - Lists of related events, places, people, and documents
+    - Suggested navigation: “Before/after”, “Nearby places”, “Related stories”
 
-**Artifacts:**
+Focus Mode behaves like an intelligent lens:
 
-- Expectation Suites: `src/pipelines/_validation/expectations/*.json`  
-- Checkpoints: `src/pipelines/_validation/expectations/checkpoints/*.yml`  
-- Data Docs: built under `src/pipelines/_validation/docs/` and uploaded as CI artifacts  
+- Focusing on **“1867 Medicine Lodge Treaty”**:
+  - Timeline tightens around the 1860s–1870s
+  - Map highlights treaty sites and tribal homelands
+  - Panel summarizes the treaty, participating nations, and downstream consequences
+- Focusing on **“Fort Larned”**:
+  - Map zooms to the fort and trails converging there
+  - Timeline surfaces events and treaties linked to the fort
+  - Panel links to Story Nodes about the Santa Fe Trail and Indian Wars
 
-Example checkpoint run:
-
-~~~text
-ge checkpoint run --name kfm_pre_publish --runtime_variables batch_id=<sha>
-~~~
-
-**Failure behavior:** CI hard block. Promotion to any **blue/green** tier is denied.
-
----
-
-## 6. Observability Layer
-
-### 6.1 Cron / Job Monitoring
-
-Every scheduled pipeline job MUST register:
-
-- `status = in_progress` at start  
-- `status = ok` on success  
-- `status = error` on failure  
-- `duration` (required for energy/carbon telemetry)  
-
-Cron wrappers under:
-
-~~~text
-src/pipelines/monitoring/cron/<job>.py
-~~~
-
-may update Sentry, Prometheus, or custom metrics sinks.
-
-### 6.2 Metrics Captured
-
-Core metrics:
-
-- Run frequency and on-time execution  
-- Missed or delayed runs  
-- Runtime distribution & anomalies  
-- Error signatures (stack traces, categorized causes)  
-- Energy usage & carbon estimates (ISO 50001 / 14064-aligned)  
-
-These metrics flow into telemetry as specified in `telemetry_schema`.
+All Focus Mode narratives are treated as **first-class data**: versioned, schema-validated, and tied to underlying sources via PROV-O provenance chains.
 
 ---
 
-## 7. Lineage Layer — OpenLineage & UI
+## 🧬 AI/ML Data Pipeline & Knowledge Graph
 
-All pipelines emit **OpenLineage events** containing:
+The backend pipeline converts messy archives into graph-ready facts:
 
-- Job name  
-- `run_id`  
-- Input dataset URIs (STAC assets, tables, etc.)  
-- Output dataset URIs  
-- Schema fingerprints / hashes  
-- `commit_sha` and pipeline version  
+- **Extract**
+  - Download GIS layers (ArcGIS REST, GeoTIFF, Shapefiles)
+  - Ingest CSV, JSON, and NetCDF data from NOAA, USGS, FEMA, Census, GBIF, etc.
+  - Fetch scanned maps and documents (PDF, TIFF, JPEG) from Kansas archives and libraries
 
-A lineage UI (Marquez or equivalent) MUST support:
+- **Transform**
+  - **OCR** on scanned documents and maps
+  - **NLP (spaCy + transformers)**:
+    - Named Entity Recognition (PERSON, GPE, ORG, EVENT, DATE, TRIBE, FORT, TREATY…)
+    - Geoparsing and geocoding via GNIS / GeoNames / OSM
+    - Temporal normalization: “Spring 1850s” → approximate date range with precision tags
+    - Summarization of long texts into Focus Mode-friendly abstracts
+  - **Data normalization**:
+    - Standard IDs for entities (UUIDs, ARKs, or URNs)
+    - Cleaned schemas for climate, hydrology, hazards, demographics
 
-- Full **graph of lineage** across datasets, runs, models, and Story Nodes  
-- Dataset impact analysis (for changes & rollbacks)  
-- Run-level metadata (durations, parameters, environment)  
-- Governance/audit views for FAIR+CARE reviews  
+- **Load**
+  - Upsert nodes and relationships into Neo4j
+  - Attach provenance (`prov:wasDerivedFrom`, `prov:used`) and confidence scores
+  - Generate STAC Items for maps and rasters, and DCAT entries for tabular datasets
 
-**STAC Integration:**
+The knowledge graph lets KFM answer rich questions:
 
-~~~json
-{ "rel": "lineage", "href": "./provenance/lineage/<run_id>.json" }
-~~~
-
----
-
-## 8. Provenance Integration (FAIR+CARE)
-
-All validation + observability outputs MUST be stored under a common provenance tree:
-
-~~~text
-provenance/
-  validation/
-    frictionless/
-    pandera/
-    great_expectations/
-  lineage/
-  telemetry/
-~~~
-
-**PROV-O modeling:**
-
-- `prov:Activity` → pipeline job / run  
-- `prov:Entity` → datasets, artifacts, models  
-- `prov:Agent` → pipeline owners / automation agents  
-- `prov:wasGeneratedBy` → `run_id`  
-- `prov:qualifiedUsage` → validation reports, telemetry references  
-
-Story Nodes and Focus Mode v3 reference validation + telemetry evidence to support **narrative transparency**, e.g.:
-
-> “This overlay uses data that passed Frictionless + pandera + GE validation on 2025-11-18, with telemetry-confirmed runtime behavior and documented lineage.”
+- “Show all events involving the Cheyenne within 50 km of this point between 1850 and 1875.”
+- “List all documents that mention ‘Arkansas River’ AND overlap with known flood events.”
+- “What treaties are linked to the shrinking of this reservation polygon over time?”
 
 ---
 
-## 9. CI / CD Enforcement
+## 🌐 Data Integration & Open Standards
 
-CI MUST:
+KFM is built on **open data and open standards** so that everything is reusable and interoperable:
 
-1. Run **Frictionless** validation on ingest data changed in a PR.  
-2. Run **pandera** checks on modified transformations.  
-3. Run **GE Checkpoints** on any publish-ready data.  
-4. Upload artifacts: validation reports (JSON) + GE Data Docs.  
-5. Block merge on ANY validation failure.
+- **SpatioTemporal Asset Catalog (STAC)**  
+  - `data/stac/` describes all geospatial assets (raster and vector)
+  - Each Item has spatial extent, temporal range, license, and links back to source manifests
+  - Integrates with STAC tooling (PySTAC, stactools) for validation and discovery
 
-On release:
+- **DCAT & schema.org**  
+  - Dataset-level metadata uses DCAT 3.0 fields (title, description, publisher, license, keywords)
+  - Documentation YAML is aligned with dct:title, dct:license, dct:modified, etc.
 
-- All validation artifacts are included or referenced in the **release manifest**:
-  - `manifest.zip`  
-  - STAC/DCAT metadata with `rel: "validation"` and `rel: "lineage"` links  
-- Telemetry summaries (including energy/carbon) are referenced via `telemetry_ref` and `telemetry_schema`.
+- **CIDOC-CRM, OWL-Time, GeoSPARQL, PROV-O**  
+  - Graph schema modeled to support:
+    - Cultural heritage and historical events (CIDOC-CRM)
+    - Temporal intervals and instants (OWL-Time)
+    - Geometries and spatial relations (GeoSPARQL)
+    - Lineage and activity chains (PROV-O)
 
----
-
-## 10. Minimal Code Examples (Pseudocode)
-
-### 10.1 pandera Schema
-
-~~~python
-class ClimateStations(pa.SchemaModel):
-    station_id: pat.Series[int] = pa.Field(unique=True)
-    lat: pat.Series[float] = pa.Field(ge=36.5, le=40.5)
-    lon: pat.Series[float] = pa.Field(ge=-102.1, le=-94.6)
-    date: pat.Series[pa.DateTime]
-~~~
-
-### 10.2 Great Expectations Checkpoint Run
-
-~~~text
-ge checkpoint run --name kfm_pre_publish --runtime_variables batch_id=<sha>
-~~~
-
-### 10.3 Frictionless Validation
-
-~~~text
-frictionless validate datapackage.yaml --json > reports/frictionless_<run_id>.json
-~~~
-
-### 10.4 OpenLineage Event (Conceptual)
-
-~~~text
-emit_event(
-  job="ingest-noaa",
-  run_id=new_run_id(),
-  inputs=[...],
-  outputs=[...],
-  commit_sha="<commit>",
-  pipeline_version="v11.0.0"
-)
-~~~
+- **FAIR + CARE**  
+  - FAIR: Findable, Accessible, Interoperable, Reusable
+  - CARE: Collective benefit, Authority to control, Responsibility, Ethics
+  - Sensitive locations (e.g., sacred sites, archaeological coordinates) can be generalized or withheld according to ethical and tribal guidance.
 
 ---
 
-## 11. Required Pipeline Wiring
+## 📚 Story Nodes & Narrative Layer
 
-Every production pipeline MUST wire:
+**Story Nodes** are curated narrative “tracks” that live alongside the raw data:
 
-- `validate_ingest()` → Frictionless contracts  
-- `validate_transform()` → pandera schemas  
-- `validate_publish()` → GE checkpoint  
-- `record_lineage()` → OpenLineage + PROV-O events  
-- `record_telemetry()` → runtime + energy/carbon metrics  
-- `write_provenance()` → validation + telemetry reports under `provenance/**`  
+- Each Story Node:
+  - Has an ID, title, summary, and full narrative (Markdown)
+  - Includes a spacetime footprint (GeoJSON geometry + temporal range)
+  - Lists related entities (people, places, events, datasets)
+  - Can be exported as a STAC-like item for integration and reuse
 
-No dataset or model is allowed to bypass these gates on its path into a public or blue/green release.
+Examples:
 
----
+- **“The Santa Fe Trail”** Story Node:
+  - Sequence of key waypoints and encounters
+  - Map transitions along the trail; timeline jumps to each era
+- **“Bleeding Kansas”** Story Node:
+  - Narrative linking events in Lawrence, Topeka, Lecompton, and the national context
+- **“Ecological Change on the Plains”** Story Node:
+  - Shows land-cover conversion from tallgrass prairie to farmland
+  - Overlays wildlife range maps and climate anomalies
 
-## 12. Governance Compliance
-
-This framework implements and makes enforceable:
-
-- **MCP-DL v6.3** — pipeline behavior & validation are fully documented.  
-- **FAIR** — validation outputs are stored with well-structured metadata and resolvable references.  
-- **CARE** —  
-  - Collective Benefit: higher-quality data reduces downstream harm.  
-  - Authority to Control: Indigenous-partnered rules for sensitive gates & datasets.  
-  - Responsibility: explicit monitoring & remediation when gates fail.  
-  - Ethics: transparent, auditable, non-extractive data usage.  
-- **Diamond⁹ Ω / Crown∞Ω certification** — reliability, transparency, and sustainability of validation operations.  
-
----
-
-## 13. Versioning & Backwards Compatibility
-
-All validation schemas/configs (Frictionless, pandera, GE) MUST specify:
-
-- `schema_version`  
-- `last_modified`  
-- `breaking_change = true|false`  
-
-Before applying updates:
-
-- Run compatibility checks on representative historical data.  
-- For breaking changes:
-  - Update governance notes.  
-  - Update STAC/DCAT metadata where required.  
-  - Document impact in release notes.
+In the UI, choosing a Story Node runs a guided tour:
+- The map pans through locations,
+- The timeline jumps through key dates,
+- The narrative panel scrolls section by section,
+- Focus Mode remains active, so you can pivot from a story beat to a specific entity.
 
 ---
 
-## 14. Future Extensions (v11.3+ Roadmap)
+## 🔮 Predictive Analytics & Change Detection
 
-Planned enhancements:
+KFM is not only about the past:
 
-- ML-specific validation:
-  - SHAP drift detection  
-  - Embedding stability metrics  
-- Temporal anomaly detection on ETL durations & resource usage  
-- Focus Mode v3 narratives with **inline validation evidence** and **telemetry overlays**  
-- AI assistants that propose contract/expectation updates from repeated failure patterns  
+- **Predictive Modeling v2**
+  - Uses historical climate, hydrology, demographics, and land-use trends
+  - Integrates downscaled climate projections (e.g., CMIP) for Kansas up to 2100
+  - Allows scenario exploration (low vs high emissions)
+
+- **Change Detection**
+  - Compares map layers across time slices:
+    - Land cover (prairie → cropland)
+    - River courses and floodplains
+    - Urban expansion and infrastructure
+  - Identifies “hotspots” of environmental or social change
+
+Use cases:
+
+- Visualize how **Dust Bowl-era** land use and drought overlapped
+- See predicted **future heatwaves** and drought frequency in specific regions
+- Identify counties that have experienced repeated flood disasters and how their infrastructure changed after each event
+
+All forward-looking views are clearly labeled as **projections** with model and scenario metadata attached. No black-box forecasting: assumptions and training data are documented via model cards and STAC metadata.
 
 ---
 
-## 🕰️ Version History
+## 🌏 3D Time-Layered Visualization
 
-| Version | Date       | Author                               | Summary                                                                                     |
-|--------:|------------|----------------------------------------|---------------------------------------------------------------------------------------------|
-| v11.0.0 | 2025-11-18 | FAIR+CARE Council · Architecture WG   | Upgraded Data Validation & Observability Framework to KFM-MDP v11; added FAIR+CARE, OpenLineage, telemetry v1 alignment, and provenance integration. |
+For immersive exploration, KFM includes a **3D globe mode**:
+
+- Built on **CesiumJS**, integrated into the same React app
+- Shows:
+  - Terrain using DEMs (e.g., SRTM, state DEMs)
+  - Time-aware overlays:
+    - Historical maps draped over terrain
+    - River extent changes
+    - Dust Bowl vegetation indices
+    - Future climate fields (e.g., temperature anomalies)
+
+Interactions:
+
+- Tilt and orbit around Kansas while scrubbing the timeline to see landscapes transform
+- Fly-follow along trails, railroads, rivers, or Story Nodes
+- Stack time layers to create “time tunnels” through the landscape
+
+The 3D view is synchronized with Focus Mode: focusing on an entity in 2D can prompt a 3D jump to its location and time slice.
+
+---
+
+## 🤝 Open-Source Ethos & Contribution
+
+KFM is a **documentation-first**, **open-source** project under the **Master Coder Protocol (MCP-DL v6.3)**:
+
+- **Code & Data**
+  - Code licensed under **MIT**
+  - Documentation under **CC-BY 4.0**
+  - Data licenses follow their sources (public domain, CC-BY, etc.), always captured in metadata
+
+- **Monorepo Structure**
+  - `src/` — ETL, AI/ML, graph and API code
+  - `web/` — React + MapLibre + Cesium frontend
+  - `data/` — sources manifests, processed outputs, STAC catalogs
+  - `docs/` — standards, architecture, SOPs, guides, Story Node schemas
+  - `tests/` — unit and integration tests
+  - `tools/` — helper scripts, one-off utilities
+
+- **Contribution Guidelines**
+  - Follow `CONTRIBUTING.md`
+  - Use **KFM-MDP v11** for all Markdown
+  - Document-before-code, include tests, and respect FAIR+CARE constraints
+  - PRs must pass CI: lint, tests, schema, STAC, FAIR/CARE, MCP checks
+
+We welcome contributions from:
+
+- Historians, archaeologists, tribal historians
+- GIS and data engineers
+- ML/AI practitioners
+- Educators and students
+
+---
+
+## 🗓 Version History
+
+| Version | Date         | Highlights                                                                                         |
+|--------|--------------|-----------------------------------------------------------------------------------------------------|
+| 9.0.0  | 2024-??-??   | Initial open-source release. Core ETL → Neo4j → React+MapLibre stack; basic datasets and CI.       |
+| 9.7.0  | 2025-??-??   | Introduced Focus Mode, Story Nodes, semantic search, initial predictive analytics, provenance.     |
+| 10.0.0 | 2025-11-18   | Extended temporal scope (prehistoric → 2100), 3D Cesium globe, stronger FAIR/CARE, refactored API. |
+| 11.0.0 | 2025-11-18   | Upgraded to KFM-MDP v11, strengthened metadata and accessibility, consolidated docs, v11 root README.|
+
+> Note: See Git tags and release manifests for exact dates and full changelogs.
+
+---
+
+## ⚖ License & Governance
+
+- **Code License**: MIT — see `LICENSE` for details.  
+- **Docs License**: CC-BY 4.0 — free to reuse with attribution.  
+- **Data Licenses**: Dataset-specific; always consult STAC/DCAT metadata and source documentation before reuse.
+
+**Governance**
+
+- Oversight by the **FAIR+CARE Council** and the **Focus Mode Board**
+- Documentation and architecture standards defined in:
+  - `docs/standards/markdown_rules.md`
+  - `docs/standards/kfm_markdown_protocol_v11.md`
+  - `docs/standards/faircare.md`
+  - `docs/standards/data_architecture.md`
+- Major architectural decisions are recorded via ADRs and design docs in `docs/architecture/`.
+
+---
+
+## 🔗 Further Reading & Design References
+
+For deeper dives into the system:
+
+- **AI System & Developer Docs**  
+  `docs/architecture/Kansas Frontier Matrix AI System – Developer Documentation.pdf`
+
+- **Focus Mode Design**  
+  `docs/architecture/AI-Powered Focus Mode for the Kansas Frontier Matrix.pdf`
+
+- **Data Architecture & STAC Integration**  
+  - `docs/architecture/File and Data Architecture for the Kansas Frontier Matrix Project.pdf`  
+  - `docs/standards/OGC STAC Community Standard — Complete Overview (for KFM Integration).pdf`
+
+- **Expansion Plans & New Data Sources**  
+  - `docs/strategy/Expanding the Kansas Frontier Matrix.pdf`  
+  - `docs/strategy/Expanding the Kansas Frontier Matrix: New Data Sources and Features.pdf`
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MIT License  
-Data Validation & Observability Framework v11 · FAIR+CARE Certified · Sovereignty-Aware  
-Diamond⁹ Ω / Crown∞Ω Ultimate Certified · MCP-DL v6.3  
-
-[Back to Pipelines Documentation](../README.md)
+<small>© 2025 Kansas Frontier Matrix contributors. Code and documentation are open-source as described above. Data sources are credited to their providers.  
+*Ad astra per data — to the stars through data.*</small>
 
 </div>
