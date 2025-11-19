@@ -82,11 +82,11 @@ sunset_policy: "Superseded upon next hazards-domain update"
 
 Authoritative, FAIR+CARE-certified multi-hazard datasets for:
 
-- Public risk communication  
-- Research & planning  
-- Focus Mode v3 hazard narratives  
-- STAC/DCAT-based discovery  
-- Neo4j hazard graph integration  
+- 🌍 Public risk communication  
+- 🧪 Research & planning  
+- 🧠 Focus Mode v3 hazard narratives  
+- 🌐 STAC/DCAT-based discovery  
+- 🕸 Neo4j hazard graph integration  
 
 All layers are **checksum-verified, schema-aligned, and ethically governed**.
 
@@ -94,7 +94,7 @@ All layers are **checksum-verified, schema-aligned, and ethically governed**.
 
 ---
 
-## 1. Domain Overview
+## 1. 🌋 Domain Overview
 
 The **hazards domain** covers geospatial and tabular datasets describing:
 
@@ -122,7 +122,7 @@ All processed hazards datasets:
 
 ---
 
-## 2. Directory Layout (GitHub-Safe)
+## 2. 🗂️ Directory Layout (GitHub-Safe)
 
 ~~~~text
 data/processed/hazards/
@@ -147,7 +147,7 @@ data/processed/hazards/
 
 ---
 
-## 3. Hazards Data Lifecycle
+## 3. 🔄 Hazards Data Lifecycle
 
 ~~~~mermaid
 flowchart TD
@@ -171,7 +171,7 @@ A dataset can move into `data/processed/hazards/` **only** when:
 
 ---
 
-## 4. Core Hazards Datasets
+## 4. 📊 Core Hazards Datasets
 
 | Dataset File                           | Description                                    | Example Use Cases                           |
 |----------------------------------------|-----------------------------------------------|---------------------------------------------|
@@ -186,11 +186,11 @@ A dataset can move into `data/processed/hazards/` **only** when:
 
 ---
 
-## 5. Hazards Schema Requirements (v11)
+## 5. 🧩 Hazards Schema Requirements (v11)
 
 All hazards datasets must conform to **data-contract** schemas under `schemas/processed/hazards/`.
 
-### 5.1 Common Fields
+### 5.1 🧱 Common Fields
 
 All hazards datasets must include:
 
@@ -203,7 +203,7 @@ All hazards datasets must include:
 - `fairstatus` — `"certified"`, `"pending"`, or `"restricted"`  
 - `governance_ref` — path to governance ledger entry  
 
-### 5.2 Tornado Tracks Schema
+### 5.2 🌪 Tornado Tracks Schema
 
 ~~~~text
 Field            Type        Notes
@@ -221,21 +221,21 @@ source           string      NOAA SPC / NCEI
 checksum         string      sha256-…
 ~~~~
 
-### 5.3 Flood Risk Zones Schema
+### 5.3 🌊 Flood Risk Zones Schema
 
 ~~~~text
 Field            Type        Notes
 ---------------  ----------  -----------------------------------------
 flood_id         string      NFHL polygon ID
 zone             string      Flood zone code (A, AE, AO, VE, X, etc.)
-risk_class       string      High/Moderate/Low
+risk_class       string      High / Moderate / Low
 geometry         GeoJSON     Polygon
 source           string      FEMA NFHL / USGS
 updated_at       datetime    ISO 8601
 checksum         string      sha256-…
 ~~~~
 
-### 5.4 Wildfire Events Schema
+### 5.4 🔥 Wildfire Events Schema
 
 ~~~~text
 Field            Type        Notes
@@ -250,7 +250,7 @@ source           string      USGS / state agency
 checksum         string      sha256-…
 ~~~~
 
-### 5.5 Drought Severity Schema
+### 5.5 🌵 Drought Severity Schema
 
 ~~~~text
 Field            Type        Notes
@@ -266,7 +266,7 @@ checksum         string      sha256-…
 
 ---
 
-## 6. Hazard Intensity Index (HII v4.0)
+## 6. 💠 Hazard Intensity Index (HII v4.0)
 
 The **Hazard Intensity Index (HII)** provides a unified severity metric per spatial unit.
 
@@ -293,7 +293,7 @@ HII is used for:
 
 ---
 
-## 7. Exposure & Vulnerability Modeling
+## 7. 🧍 Exposure & Vulnerability Modeling
 
 Exposure datasets quantify:
 
@@ -315,16 +315,16 @@ Outputs typically live in:
 
 ---
 
-## 8. FAIR+CARE Governance — Hazards Domain
+## 8. ⚖️ FAIR+CARE Governance — Hazards Domain
 
 Given the sensitive nature of hazard impacts on communities, the hazards domain applies **strong governance**:
 
-- **CARE Principles:**  
-  - Accounting for differential impacts on marginalized and Indigenous communities  
-  - Ensuring respectful representation of loss, displacement, and trauma  
-  - Documenting decision-making processes in `faircare` reports  
+- **CARE Principles**  
+  - Consider impacts on Indigenous and marginalized communities  
+  - Document community benefit and potential risks  
+  - Provide contextual information about limitations and biases  
 
-- **Sovereignty Controls:**  
+- **Sovereignty Controls**  
   - Tribal lands and culturally sensitive sites are masked or aggregated via H3  
   - Any disaggregated data for Indigenous communities require explicit approval  
 
@@ -338,20 +338,20 @@ docs/standards/faircare/HAZARDS-GUIDE.md
 
 ---
 
-## 9. Integrity & Lineage
+## 9. 🔐 Integrity & Lineage
 
 Integrity is maintained via:
 
-- **Checksums:**  
+- **Checksums**  
   - All files in `data/processed/hazards/` have SHA-256 checksums in:  
     - `data/checksums/manifest.json`  
-    - `data/archive/2025Q4/checksums/hazards_checksums.json`  
+    - `data/archive/2025Q4/checksums/hazards_checksums.json`
 
-- **Lineage (PROV-O):**  
-  - Each hazard dataset has a corresponding `prov:Entity` with:  
+- **Lineage (PROV-O)**  
+  - Each hazard dataset is a `prov:Entity` with:  
     - `prov:wasDerivedFrom` → raw and staged datasets  
-    - `prov:used` → ETL pipeline scripts, model configurations  
-    - `prov:wasGeneratedBy` → ETL/AI runs (with timestamps + environment)  
+    - `prov:used` → ETL scripts, model configurations  
+    - `prov:wasGeneratedBy` → ETL/AI runs  
 
 Lineage exports:
 
@@ -362,51 +362,51 @@ docs/reports/audit/data_provenance_ledger.json
 
 ---
 
-## 10. Telemetry & Sustainability
+## 10. 🌱 Telemetry & Sustainability
 
-The hazards domain contributes to KFM’s **sustainability and reliability metrics**:
+For each hazards ETL/validation run:
 
-Tracked for each major ETL/validation run:
+- Metrics collected:
+  - `energy_wh`  
+  - `carbon_gCO2e`  
+  - `runtime_sec`  
+  - `records_processed`  
+  - `validation_failures`  
 
-- `energy_wh` — energy consumed  
-- `carbon_gCO2e` — carbon-equivalent emissions  
-- `runtime_sec` — processing duration  
-- `records_processed` — number of features/rows  
-- `validation_failures` — count and category  
-
-Telemetry is aggregated into:
+Telemetry aggregated into:
 
 ~~~~text
 releases/v11.0.0/focus-telemetry.json
 docs/reports/telemetry/data-hazards-processed-v11.json
 ~~~~
 
-These metrics inform:
+These metrics support:
 
-- Governance decisions (e.g., resource prioritization)  
-- Optimization of ETL & hazard modeling workflows  
+- Carbon accounting and optimization  
+- Governance dashboards  
+- Performance tuning and risk assessment  
 
 ---
 
-## 11. STAC/DCAT & Focus Mode Integration
+## 11. 🌐 STAC/DCAT & Focus Mode Integration
 
 Hazards datasets are exposed via:
 
-- **STAC:**  
+- **STAC**  
   - Collection: `data/processed/hazards/stac_collection.json`  
   - Items: one per dataset or per spatiotemporal slice  
 
-- **DCAT:**  
-  - Hazards datasets are registered in `data/dcat/*.jsonld`  
-  - `dct:temporal`, `dct:spatial`, `dct:license`, `dct:provenance` populated  
+- **DCAT**  
+  - Hazards datasets defined in `data/dcat/*.jsonld`  
+  - Includes `dct:temporal`, `dct:spatial`, `dct:license`, and provenance links  
 
-- **Focus Mode:**  
+- **Focus Mode**  
   - Uses hazards layers for map overlays, timelines, and narrative context  
-  - Requires stable `kfm_id`, spatial geometries, and temporal fields  
+  - Requires high-quality metadata and geometry for explanations  
 
 ---
 
-## 12. Internal Reference & Citation
+## 12. 🧾 Internal Reference & Citation
 
 ~~~~text
 Kansas Frontier Matrix (2025). Processed Hazards Data (v11.0.0).
@@ -417,7 +417,7 @@ ISO 19115, and KFM-OP v11 with full provenance and sustainability metrics.
 
 ---
 
-## 13. Version History
+## 13. 🕰️ Version History
 
 | Version | Date       | Summary                                                                                   |
 |--------:|------------|-------------------------------------------------------------------------------------------|
@@ -428,7 +428,7 @@ ISO 19115, and KFM-OP v11 with full provenance and sustainability metrics.
 <div align="center">
 
 **Kansas Frontier Matrix — Hazards Domain**  
-FAIR+CARE Certified · Integrity-Verified · Diamond⁹ Ω / Crown∞Ω  
+⚠️ FAIR+CARE Certified · Integrity-Verified · Diamond⁹ Ω / Crown∞Ω  
 
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
 
