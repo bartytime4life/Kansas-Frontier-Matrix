@@ -1,8 +1,8 @@
-# 🐞 Kansas Frontier Matrix — Bug Report Template  
-# File: .github/ISSUE_TEMPLATE/bug_report.yaml  
-# Purpose: Standardized issue form for reporting software, data, or workflow bugs.  
-# Alignment: Master Coder Protocol (MCP v6.3) · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω  
-# SPDX-License-Identifier: CC-BY-4.0  
+# 🐞 Kansas Frontier Matrix — Bug Report Template
+# File: .github/ISSUE_TEMPLATE/bug_report.yaml
+# Purpose: Standardized issue form for reporting software, data, or workflow errors.
+# Alignment: MCP-DL v6.3 · KFM-MDP v11.0 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω
+# SPDX-License-Identifier: CC-BY-4.0
 
 name: "🐞 Bug Report"
 description: "Report an error, malfunction, or unexpected behavior in the Kansas Frontier Matrix system."
@@ -14,20 +14,20 @@ assignees:
   - "bartytime4life"
 
 body:
+
   - type: markdown
     attributes:
       value: |
-        ## 🐞 Bug Report  
-        Please use this form to describe the issue in detail.  
-        Ensure your report is **clear, reproducible, and complete**.  
-        This helps maintainers verify the problem quickly and preserve project stability under the **Master Coder Protocol (MCP v6.3)**.
+        ## 🐞 Bug Report
+        Please describe the issue clearly and reproducibly.
+        Reports should comply with **MCP-DL v6.3**, **KFM-MDP v11**, and **FAIR+CARE** governance.
 
   - type: input
     id: summary
     attributes:
       label: "Summary"
-      description: "Provide a short summary of the issue."
-      placeholder: "Example: Timeline map fails to render events on load."
+      description: "Short summary of the issue."
+      placeholder: "Example: Treaty polygons fail to load on initial map render."
     validations:
       required: true
 
@@ -35,7 +35,7 @@ body:
     id: steps_to_reproduce
     attributes:
       label: "Steps to Reproduce"
-      description: "List all necessary steps to reproduce the issue."
+      description: "List all steps needed to consistently reproduce the issue."
       placeholder: |
         1. Open http://localhost:3000
         2. Enable 'Historical Treaties' layer
@@ -49,7 +49,7 @@ body:
     attributes:
       label: "Expected Behavior"
       description: "What should have happened?"
-      placeholder: "Example: Map should load and display all treaty polygons without errors."
+      placeholder: "Example: Map should load and display all treaty polygons."
     validations:
       required: true
 
@@ -58,7 +58,7 @@ body:
     attributes:
       label: "Actual Behavior"
       description: "What actually happened?"
-      placeholder: "Example: Console displays `TypeError: Cannot read property 'coordinates' of undefined`."
+      placeholder: "Example: Console shows `TypeError: Cannot read property 'coordinates' of undefined`."
     validations:
       required: true
 
@@ -66,7 +66,7 @@ body:
     id: logs
     attributes:
       label: "Relevant Logs or Screenshots"
-      description: "Attach console logs, stack traces, or screenshots to help reproduce the issue."
+      description: "Console logs, stack traces, error objects, screenshots."
       placeholder: |
         ```bash
         Traceback (most recent call last):
@@ -81,8 +81,8 @@ body:
     id: environment
     attributes:
       label: "Environment Details"
-      description: "System or environment where this bug occurred."
-      placeholder: "e.g. macOS 14.0, Chrome 120, Python 3.11, Node.js 18"
+      description: "Platform and version where this issue occurred."
+      placeholder: "macOS 14 · Chrome 120 · Python 3.11 · Node 18"
     validations:
       required: true
 
@@ -90,12 +90,12 @@ body:
     id: severity
     attributes:
       label: "Severity Level"
-      description: "Rate the impact of this issue."
+      description: "How severe is this issue?"
       options:
         - "🟥 Critical — System crash or data loss"
-        - "🟧 High — Major function broken"
-        - "🟨 Medium — Minor function or visual defect"
-        - "🟩 Low — Cosmetic or documentation issue"
+        - "🟧 High — Major workflow or feature broken"
+        - "🟨 Medium — Partial functionality broken"
+        - "🟩 Low — Minor or cosmetic issue"
       default: 2
     validations:
       required: true
@@ -104,14 +104,14 @@ body:
     id: component
     attributes:
       label: "Affected Component"
-      description: "Select the area of the system where the issue occurs."
+      description: "Where is this issue occurring?"
       options:
         - "ETL Pipeline (data ingestion/validation)"
         - "AI/ML Components (Focus Mode, NER, summarization)"
         - "API Layer (FastAPI/GraphQL)"
-        - "Frontend (React/MapLibre)"
+        - "Frontend (React/MapLibre/Cesium)"
         - "Docs/Workflows (.github actions)"
-        - "Other (please describe below)"
+        - "Other (explain in 'Related Files')"
       default: 0
     validations:
       required: true
@@ -120,10 +120,10 @@ body:
     id: related_files
     attributes:
       label: "Related Files or Directories"
-      description: "If applicable, specify file paths affected by this issue."
+      description: "If relevant, list affected paths."
       placeholder: |
-        Example:
-        - src/pipelines/etl/noaa_ingest.py  
+        e.g.
+        - src/pipelines/etl/noaa_ingest.py
         - web/src/components/TimelineView/index.tsx
     validations:
       required: false
@@ -132,35 +132,43 @@ body:
     id: validation_steps
     attributes:
       label: "Pre-Submission Checklist"
-      description: "Please confirm you’ve completed the following before submitting:"
+      description: "Confirm the following before submitting:"
       options:
         - label: "I have reproduced the issue at least twice."
           required: true
-        - label: "I have confirmed the issue persists on the latest `main` branch."
+        - label: "I verified the issue still occurs on the latest `main` branch."
           required: true
-        - label: "I have reviewed open issues to ensure this bug has not been reported."
+        - label: "I checked open issues to prevent duplicates."
           required: true
-        - label: "I have provided clear reproduction steps and relevant logs."
+        - label: "I included complete reproduction steps and logs."
           required: true
 
   - type: markdown
     attributes:
       value: |
-        ---
-        ### 🧩 Validation & Governance Workflow  
-        Submitting this bug automatically triggers the following CI/CD pipelines:
+        ## 🧩 Validation, Governance & Telemetry
 
-        - **`codeql.yml`** → Static code analysis & security scanning  
-        - **`docs-lint.yml`** → Documentation & metadata validation  
-        - **`faircare-validate.yml`** → Ethical/CARE compliance review  
+        Submitting this bug triggers automated CI/CD workflows:
 
-        If relevant, this issue will also appear in the **Governance Ledger**:
+        - **codeql.yml** — Static analysis & security scanning  
+        - **docs_validate.yml** — KFM-MDP v11 doc & metadata validation  
+        - **faircare_validate.yml** — FAIR+CARE governance checks  
+        - **security_audit.yml** — Dependency & container scanning  
+        - **telemetry_export.yml** — CI/CD & sustainability telemetry logging  
 
-        ```text
-        reports/audit/github-workflows-ledger.json
+        Governance & telemetry artifacts update automatically:
+
+        ```
+        docs/reports/audit/github-workflows-ledger.json
+        releases/*/focus-telemetry.json
         ```
 
-        **Thank you for strengthening the Kansas Frontier Matrix.**  
-        Your report helps maintain a secure, ethical, and reproducible platform aligned with **MCP v6.3** and **FAIR+CARE**.
+        Your report strengthens the KFM ecosystem by ensuring:
+        - Reliability  
+        - Ethical compliance  
+        - Reproducibility  
+        - Safety  
 
-        **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**
+        **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
+        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0  
+        Diamond⁹ Ω / Crown∞Ω Ultimate Certified
