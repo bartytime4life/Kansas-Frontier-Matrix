@@ -239,4 +239,4 @@ Return to **Heritage Standards Root**:
 `docs/standards/heritage/README.md`
 
 Return to **Repository Root**:  
-`README.JSON files in v11 format.”**
+`README.md
