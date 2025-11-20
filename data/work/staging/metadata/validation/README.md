@@ -1,187 +1,193 @@
 ---
-title: "✅ Kansas Frontier Matrix — Metadata Validation Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧪 Kansas Frontier Matrix — Metadata Validation Workspace (Diamond9 Omega / CrownInfinityOmega Ultimate Certified)"
 path: "data/work/staging/metadata/validation/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Continuous / Autonomous"
+version: "v11.1.0"
+last_updated: "2025-11-19"
+review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.0.0/manifest.zip"
-data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-metadata-validation-v10.json"
-governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+sbom_ref: "../../../../../releases/v11.1.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.1.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.1.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-metadata-validation-v11.json"
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11"
+status: "Active / Enforced"
+doc_kind: "Validation Layer"
+intent: "staging-metadata-validation"
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE-Verified"
 ---
 
 <div align="center">
 
-# ✅ Kansas Frontier Matrix — **Metadata Validation Workspace**
+# 🧪 **Kansas Frontier Matrix — Metadata Validation Workspace**  
 `data/work/staging/metadata/validation/README.md`
 
 **Purpose:**  
-Governed environment for **FAIR+CARE compliance, schema validation, and STAC/DCAT interoperability testing** of metadata within the Kansas Frontier Matrix (KFM).  
-This workspace certifies metadata readiness for processed publication through ethical and technical validation standards, with **telemetry v2** and **Streaming STAC** link checks.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
-[![FAIR+CARE Validated](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Validated-gold.svg)](../../../../../docs/standards/faircare-validation.md)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
-[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Aligned-7e57c2.svg)]()
-[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance%20Layer-grey.svg)](../../../../../LICENSE)
+Define the **validation-phase metadata workspace** where all KFM metadata undergo rigorous **schema checks**, **FAIR+CARE ethics validation**, **checksum verification**, **STAC/DCAT conformance checks**, **PROV-O structural validation**, and **telemetry accounting** prior to promotion to the Processed Metadata Layer.
 
 </div>
 
----
-
 ## 📘 Overview
-The **Metadata Validation Workspace** provides a structured environment for auditing, validating, and certifying metadata consistency across the KFM ecosystem.  
-It ensures records are **complete, accessible, ethically compliant, and interoperable** with STAC and DCAT catalogs prior to promotion to the processed metadata layer.
+This workspace performs the **formal validation cycle** for metadata produced in the TMP workspace.  
+It provides:
 
-**v10 Enhancements**
-- Telemetry v2 fields (energy/CO₂, validation coverage) captured per run.  
-- Streaming STAC link checks incorporated into validation.  
-- Unified JSON-LD result schema for Focus Mode v2 dashboards.
+* JSON-schema validation for all metadata artifacts  
+* FAIR+CARE audit execution  
+* PROV-O structural and relationship verification  
+* STAC and DCAT crosswalk validation  
+* Checksum and integrity verification  
+* Governance review and certification readiness checks  
+* Telemetry v11 energy/carbon accounting  
+* Pre-promotion provenance chain stamping  
 
-### Core Objectives
-- Validate structure, syntax, and content against **FAIR+CARE** governance standards.  
-- Confirm cross-schema consistency across **STAC**, **DCAT**, and **PROV-O**.  
-- Generate machine- and human-readable validation artifacts for certification.  
-- Register governance ledger entries for transparency and reproducibility.  
-
----
+All validation results produced here are immutable once recorded.
 
 ## 🗂️ Directory Layout
 ```plaintext
 data/work/staging/metadata/validation/
-├── README.md                          # This file — metadata validation workspace overview
-│
-├── schema_validation_summary.json     # JSON Schema + ISO 19115 structural integrity checks
-├── faircare_metadata_audit.json       # FAIR+CARE ethics and stewardship audit results
-├── stac_link_check.log                # STAC/DCAT cross-reference & link integrity log
-├── metadata_qa_summary.md             # Consolidated human-readable QA & audit summary
-└── metadata.json                      # Provenance, checksums, telemetry, and governance linkage
+├── README.md
+├── schema_validation_summary.json
+├── faircare_metadata_audit.json
+├── stac_link_check.log
+└── metadata_qa_summary.md
 ```
 
----
+## 🌍 Domain Overview
+This validation workspace covers:
 
-## ⚙️ Metadata Validation Workflow
-```mermaid
-flowchart TD
-    "Metadata from TMP (data/work/staging/metadata/tmp/)" --> "Schema Validation (STAC · DCAT · PROV-O)"
-    "Schema Validation (STAC · DCAT · PROV-O)" --> "FAIR + CARE Ethics Audit"
-    "FAIR + CARE Ethics Audit" --> "Checksum + Provenance Verification"
-    "Checksum + Provenance Verification" --> "Generate Validation Reports + QA Summary"
-    "Generate Validation Reports + QA Summary" --> "Governance Ledger Sync + Certification Approval"
+* STAC collection/item metadata  
+* DCAT dataset/distribution metadata  
+* PROV-O lineage metadata  
+* Metadata derived from climate, hazards, hydrology, spatial, and tabular domains  
+* CARE-sensitive metadata structures requiring ethical review  
+
+Outputs here inform the **promotion decision** for entry into:
+
+`data/work/processed/metadata/`
+
+## 🔗 Entity Requirements (PROV-O)
+All metadata validation artifacts must map to a `prov:Entity` with:
+
+* Entity ID (ASCII UUID or ID string)  
+* Associated TMP entity reference  
+* SHA256 checksum of the validated file  
+* Validation status (`passed`, `failed`, `in_review`)  
+* FAIR+CARE certification state  
+* Schema version  
+* Governance reference pointer  
+* Telemetry block (energy_wh, carbon_gco2e, validation_coverage_pct)  
+* Timestamp (ASCII ISO 8601)  
+
+Entities recorded here become **immutable**.
+
+## ⚙️ Activity Requirements
+Validation-phase activities include:
+
+* Schema validation runs  
+* Ethics + FAIR+CARE audit execution  
+* STAC/DCAT link-check and field crosswalk evaluation  
+* Checksum verification and manifest reconciliation  
+* Provenance chain restructuring and validation  
+* Governance pre-certification workflows  
+* Telemetry assignment  
+
+Each `prov:Activity` must record:
+
+* Pipeline ID and version  
+* Parameter digest (ASCII hash)  
+* Execution timestamp range  
+* Validation coverage percent  
+* Issues detected (warnings, errors)  
+* Resulting status (`passed`, `failed`, `in_review`)  
+* Agents involved  
+
+## 🧑‍💼 Agent Requirements
+Agents participating in validation:
+
+* `@kfm-metadata-lab` — validation execution and schema QA  
+* `@kfm-architecture` — schema/standard alignment oversight  
+* `@kfm-security` — checksum and integrity verification  
+* `@faircare-council` — ethical and cultural validation  
+* `@kfm-data` — governance pre-certification management  
+
+Agents are recorded under PROV-O `prov:Agent`.
+
+## 🧪 Validation Requirements
+Required checks before metadata can be promoted:
+
+* JSON schema conformance  
+* FAIR+CARE ethics validation  
+* DCAT field presence and cardinality validation  
+* STAC link and SKU conformity  
+* Checksum confirmation  
+* Provenance graph structural correctness  
+* Telemetry completeness  
+* License review (e.g., CC-BY 4.0 readiness)  
+* CARE-sensitive metadata screening  
+
+Results stored under:
+
+* `data/reports/validation/`  
+* `data/reports/fair/`  
+* `data/reports/audit/`
+
+## 📥 Retrieval Examples
+
+### Python
+```python
+import json
+with open("data/work/staging/metadata/validation/schema_validation_summary.json") as f:
+    summary = json.load(f)
+print(summary.get("schema_status"))
 ```
 
-### Steps
-1. **Schema Validation** — Field-level & structural checks across STAC/DCAT/PROV-O.  
-2. **FAIR+CARE Audit** — Validation of openness, attribution, and ethical context.  
-3. **Verification** — SHA-256 checksums confirmed against manifests & ledgers.  
-4. **Reporting** — Produce JSON artifacts and Markdown QA summaries.  
-5. **Certification** — Record decisions in governance ledgers; mark metadata as ready.
+### Bash
+```bash
+cat data/work/staging/metadata/validation/faircare_metadata_audit.json
+```
 
----
+### Cypher
+```cypher
+MATCH (m:MetadataValidation)
+RETURN m.id, m.validation_status, m.fairstatus, m.checksum_sha256;
+```
 
-## 🧩 Example Validation Metadata Record
+## 🛣️ Roadmap
+* v11.2 — Automated ontology alignment validator  
+* v11.3 — Fine-grained CARE-sensitive field validator  
+* v11.4 — Multi-metadata STAC/DCAT consistency checker  
+* v11.5 — Predictive metadata integrity scoring for autonomous promotion decisions  
+
+## 🧩 Example Metadata Validation Record
 ```json
 {
-  "id": "metadata_validation_tabular_v10.0.0",
-  "source_file": "data/work/staging/metadata/tmp/metadata_merge_preview.json",
-  "schemas_validated": ["STAC 1.0.0", "DCAT 3.0", "PROV-O"],
+  "id": "metadata_validation_climate_v11.1.0",
+  "source_tmp_ref": "data/work/staging/metadata/tmp/metadata_merge_preview.json",
   "validation_status": "passed",
-  "issues_detected": 0,
-  "faircare_score": 99.3,
-  "checksum_verified": true,
+  "checksum_sha256": "sha256:d7c045428aa53f06ae18c247c8253492122abf82cb0d12a50c41804d3cb32b77",
   "fairstatus": "certified",
-  "validator": "@kfm-metadata-lab",
-  "created": "2025-11-09T23:38:00Z",
+  "schema_version": "v3.3.0",
   "telemetry": {
-    "energy_wh": 0.6,
-    "co2_g": 0.9,
+    "energy_wh": 0.5,
+    "co2_g": 0.7,
     "validation_coverage_pct": 100
   },
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
+  "governance_ref": "data/reports/audit/data_provenance_ledger.json",
+  "created": "2025-11-19T20:25:00Z"
 }
 ```
 
----
-
-## 🧠 FAIR+CARE Governance Matrix
-| Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | STAC/DCAT identifiers validated; versioned entries indexed. | `@kfm-data` |
-| **Accessible** | JSON-LD & Markdown outputs available to reviewers. | `@kfm-accessibility` |
-| **Interoperable** | Conforms to STAC/DCAT/PROV-O & ISO 19115. | `@kfm-architecture` |
-| **Reusable** | Integrity verified; provenance/attribution embedded. | `@kfm-design` |
-| **Collective Benefit** | Transparent documentation enables equitable reuse. | `@faircare-council` |
-| **Authority to Control** | Council sign-off required before promotion. | `@kfm-governance` |
-| **Responsibility** | Validators maintain audit trails & certification artifacts. | `@kfm-security` |
-| **Ethics** | Reviewed for inclusivity, cultural sensitivity, and openness. | `@kfm-ethics` |
-
-**Cross-references:**  
-`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
-
----
-
-## ⚙️ Validation & Certification Artifacts
-| Artifact                         | Description                                   | Format |
-|---|---|---|
-| `schema_validation_summary.json` | Field-level validation results & conformance  | JSON   |
-| `faircare_metadata_audit.json`   | Ethics + governance compliance record         | JSON   |
-| `stac_link_check.log`            | Link integrity across catalogs                | Text   |
-| `metadata_qa_summary.md`         | Human-readable validation & audit summary     | Markdown |
-| `metadata.json`                  | Context, checksums, telemetry, and ledger refs| JSON   |
-
-Automation: `metadata_validation_sync.yml`.
-
----
-
-## ♻️ Retention & Lifecycle Policy
-| Data Type            | Retention | Policy                                              |
-|---|---:|---|
-| Validation Reports  | 365 Days  | Retained for audits and FAIR+CARE reviews.          |
-| FAIR+CARE Audits    | Permanent | Archived for ethics certification tracking.         |
-| Governance Logs     | 365 Days  | Stored for lineage & reproducibility.               |
-| Metadata Records    | Permanent | Maintained for transparent governance continuity.   |
-
-**Telemetry:** `../../../../../releases/v10.0.0/focus-telemetry.json`
-
----
-
-## 🌱 Sustainability Metrics
-| Metric | Value | Verified By |
-|---|---:|---|
-| Energy (per validation cycle) | 0.6 Wh | `@kfm-sustainability` |
-| Carbon Output | 0.9 gCO₂e | `@kfm-security` |
-| Renewable Power | 100% (RE100) | `@kfm-infrastructure` |
-| FAIR+CARE Validation | 100% | `@faircare-council` |
-
----
-
-## 🧾 Internal Use Citation
-```text
-Kansas Frontier Matrix (2025). Metadata Validation Workspace (v10.0.0).
-Governed environment for auditing, validating, and FAIR+CARE-certifying metadata under STAC/DCAT/PROV-O standards—ensuring reproducibility, ethics compliance, and open-data interoperability across all KFM domains.
-```
-
----
-
 ## 🕰️ Version History
-| Version | Date       | Author                | Summary |
-|---|---|---|---|
-| v10.0.0  | 2025-11-09 | `@kfm-metadata`       | Upgraded to v10: telemetry v2 capture, Streaming STAC link checks, unified JSON-LD results. |
-| v9.7.0   | 2025-11-06 | `@kfm-metadata`       | Telemetry/schema refs aligned; workflows & matrices refreshed. |
+| Version | Date | Author | Summary |
+|--------|------|--------|---------|
+| v11.1.0 | 2025-11-19 | `@kfm-metadata` | Full KFM-MDP v11 upgrade; schema validation expansion; PROV-O linking; telemetry v11 integration. |
+| v11.0.0 | 2025-11-15 | `@kfm-metadata` | Initial v11 validation workspace module. |
+| v10.0.0 | 2025-11-09 | `@kfm-metadata` | Original metadata validation workspace definition. |
 
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Metadata Integrity × FAIR+CARE Ethics × Provenance Certification*  
-© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Metadata Staging](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+## 🔗 Footer
+[⬅️ Back to Metadata Staging](../README.md) ·  
+[📐 Data Architecture](../../../../../docs/ARCHITECTURE.md) ·  
+[⚖️ Governance Charter](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
