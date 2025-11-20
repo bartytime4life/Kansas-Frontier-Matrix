@@ -1,351 +1,425 @@
 ---
-title: "♿ Kansas Frontier Matrix — User Interface Accessibility & Inclusion Standards (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "♿ Kansas Frontier Matrix — UI Accessibility & Inclusion Super-Standard (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/ui_accessibility.md"
-version: "v10.4.2"
-last_updated: "2025-11-16"
-review_cycle: "Annual · FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-20"
+review_cycle: "Annual / FAIR+CARE Council & Accessibility Board"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.4.2/sbom.spdx.json"
-manifest_ref: "../../releases/v10.4.2/manifest.zip"
-telemetry_ref: "../../releases/v10.4.2/pipeline-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-ui-accessibility-v3.json"
+sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-ui-accessibility-v11.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.2"
+markdown_protocol_version: "KFM-MDP v11.0.0"
 status: "Active / Enforced"
-doc_kind: "Standard"
-intent: "ui-accessibility"
-fair_category: "F1-A1-I1-R1"
-care_label: "C2-A2-R2-E1"
-sensitivity_level: "User-facing interfaces"
-public_exposure_risk: "Low"
-semantic_document_id: "kfm-doc-ui-accessibility"
-doc_uuid: "urn:kfm:docs:standards:ui-accessibility-v10.4.2"
+doc_kind: "Governance Standard"
+intent: "ui-accessibility-superstandard"
+semantic_document_id: "kfm-ui-accessibility-superstandard"
+doc_uuid: "urn:kfm:docs:standards:ui-accessibility-superstandard-v11.0.0"
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Medium-Sensitivity"
 immutability_status: "version-pinned"
 doc_integrity_checksum: "<sha256>"
 ---
 
 <div align="center">
 
-# ♿ **Kansas Frontier Matrix — User Interface Accessibility & Inclusion Standards**  
+# ♿ **Kansas Frontier Matrix — UI Accessibility & Inclusion Super-Standard**  
+### *KFM-MDP v11.0.0 · FAIR+CARE v11 · WCAG 2.1 AA+ · ISO 30071-1*  
 `docs/standards/ui_accessibility.md`
 
 **Purpose**  
-Establish enforceable standards so that all Kansas Frontier Matrix (KFM) user interfaces, web applications, and documentation are **accessible, inclusive, and equitable**, aligned with **WCAG 2.1 AA**, **Section 508**, and **FAIR+CARE v2**.  
+Define the **authoritative, governance-enforced accessibility & inclusion standard** for all interfaces, documentation, dashboards, maps, explainability views, and user-facing interactions across the Kansas Frontier Matrix (KFM).  
 
-Accessibility is a core pillar of **Master Coder Protocol (MCP-DL v6.3)** and KFM governance — not an optional enhancement.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Inclusion-orange)](faircare.md)
-[![Status: Active](https://img.shields.io/badge/Status-Compliant-success)]()
+Accessibility is not optional—  
+It is **governance**, **equity**, and **sovereignty-aware design**, grounded in **FAIR+CARE**, **inclusive UX**, and **Master Coder Protocol (MCP-DL v6.3)**.
 
 </div>
 
 ---
 
-# 📘 Overview
+# 📘 1. Scope & Applicability (Normative)
 
-This standard applies to:
+This super-standard governs accessibility for **all user-facing KFM systems**, including:
 
-- **Web applications** (`web/` directory)  
-- **Public dashboards & maps** (`web/src/components/`)  
-- **Documentation** (`docs/`)  
-- **Data visualizations & AI explanations** (`web/src/components`, `src/ai/explainability/`)  
+- React & MapLibre UIs (`web/`)  
+- Story Node v3 narrative interfaces (`web/src/focus/`)  
+- Focus Mode v3 environmental reconstructions  
+- Documentation (`docs/`) and rendered HTML  
+- AI explainability dashboards  
+- Cesium 3D scenes  
+- D3 visualizations & charts  
+- Internal operations dashboards  
 
-All user-facing surfaces MUST:
+All components MUST meet:
 
-- Meet or exceed **WCAG 2.1 AA**  
-- Integrate **FAIR+CARE v2 inclusion principles**  
-- Pass automated & manual accessibility audits  
-- Be traceable in governance records with telemetry for compliance  
+- **WCAG 2.1 AA** minimum  
+- **Accessible Rich Internet Applications (WAI-ARIA)** spec  
+- **Section 508** baseline  
+- **ISO 30071-1** digital accessibility process guidance  
+- **FAIR+CARE v11** equity & inclusion principles  
+- **KFM-MDP v11** documentation + metadata compliance  
 
 ---
 
-# 🗂️ Directory Context
+# 🧱 2. Accessibility Principles (KFM v11)
 
-~~~text
+KFM extends the WCAG POUR model with two additional principles:
+
+| Principle | Origin | Requirement |
+|----------|--------|-------------|
+| **Perceivable** | WCAG | Info & UI must be visible, audible, or alternative-presentable |
+| **Operable** | WCAG | All controls usable with keyboard & AT |
+| **Understandable** | WCAG | Clear language, predictable interaction |
+| **Robust** | WCAG | Compatible with assistive tech |
+| **Respectful** | FAIR+CARE | Cultural sensitivity & inclusive phrasing |
+| **Equitable** | KFM v11 | Supports users with diverse cognitive, sensory, and cultural backgrounds |
+
+These six principles MUST anchor all UI decisions.
+
+---
+
+# 🧭 3. Directory Context
+
+```text
 docs/
-│
 └── standards/
-    │
-    ├── ui_accessibility.md             # ← THIS STANDARD
+    ├── ui_accessibility.md        # ← THIS DOCUMENT
     ├── markdown_rules.md
     ├── markdown_guide.md
+    ├── faircare.md
     └── governance/
         └── ROOT-GOVERNANCE.md
-~~~
+```
 
 ---
 
-# 🧱 Accessibility Framework Overview
+# 🎯 4. Global UI Standards (Mandatory for All Components)
 
-KFM adopts the WCAG POUR model:
+## 4.1 Keyboard Requirements (Critical)
 
-| Principle        | WCAG Mapping | KFM Implementation Examples                                     |
-|------------------|--------------|------------------------------------------------------------------|
-| **Perceivable**  | 1.1–1.4      | Alt text, captions, scalable design, high contrast               |
-| **Operable**     | 2.1–2.5      | Keyboard navigation, focus states, skip links, no traps         |
-| **Understandable** | 3.1–3.3    | Plain language, clear messages, consistent layouts              |
-| **Robust**       | 4.1–4.2      | Semantic HTML, proper ARIA, assistive tech compatibility        |
-
-All KFM UIs MUST satisfy these principles.
-
----
-
-# 🧩 Web UI Accessibility Standards
-
-## 1️⃣ Keyboard Navigation & Focus
-
-**Requirements**
-
-- All interactive elements (links, buttons, toggles, menus, tabs, dialogs) must be operable via keyboard:
-  - Navigation via `Tab` / `Shift+Tab`  
-  - Activation via `Enter` and/or `Space`  
-  - Arrow keys for menus, sliders, and other complex widgets  
-- Focus indicators MUST be visible and obvious (outline, underline, or highlight).  
-- No keyboard traps — focus can always move in and out of widgets and dialogs.  
-
-**Example**
-
-```html
-<button type="button" tabindex="0" aria-label="Open dataset list">Datasets</button>
-````
-
----
-
-## 2️⃣ Color, Contrast & Visual Design
-
-**Requirements**
-
-* Text contrast ratio **≥ 4.5:1** for regular text and **≥ 3:1** for large text (≥18pt or 14pt bold).
-* Do NOT rely on color alone to convey meaning (use icons, labels, patterns, or shapes).
-* Provide **high-contrast themes** and respect `prefers-color-scheme` when possible.
-
-**Example Token Usage**
+- All interactive elements MUST be reachable via `Tab` / `Shift+Tab`.
+- Activation MUST work with `Enter` and/or `Space`.
+- Arrow keys MUST operate:
+  - Dropdowns  
+  - Menus  
+  - Sliders  
+  - Radio groups  
+  - Map controls (if implemented)  
+- Focus MUST be:
+  - **Visible** (≥3px outline or equivalent)
+  - **Consistent** across themes
+  - **Never suppressed**
 
 ```css
-:root {
-  --color-text-primary: #0d47a1;
-  --color-bg-surface: #ffffff;
-}
-.text-primary {
-  color: var(--color-text-primary);
-  background-color: var(--color-bg-surface);
-}
+:focus-visible { outline: 3px solid #2e7dff; outline-offset: 3px; }
 ```
 
 ---
 
-## 3️⃣ Text Alternatives (Images, Icons, & SVGs)
+## 4.2 Color, Contrast & Themes
 
-**Requirements**
+- Text contrast ≥ **4.5:1**  
+- Large text contrast ≥ **3:1**  
+- Icons MUST incorporate:
+  - Shape  
+  - Pattern  
+  - Position cues  
+- Dark mode & light mode MUST both meet contrast requirements.
 
-* All meaningful images, icons, and SVGs MUST have alternative text:
+---
 
-  * `alt` attributes on `<img>`
-  * `aria-label` or `aria-labelledby` on `<svg>` or icon wrappers
-* Decorative images should have empty `alt=""` (for screen-reader skipping).
+## 4.3 Alternative Text Requirements
 
-**Example**
+- All `<img>` MUST have meaningful `alt` text.
+- `<svg>` MUST have `aria-label` or `title`.
+- Decorative icons MUST have `alt=""`.
+
+Example:
 
 ```html
-<img src="/assets/maps/kansas_relief.png"
-     alt="Topographic map of Kansas showing elevation and major rivers" />
+<img src="/img/treaty_map.png" alt="Map of 19th-century treaties in Kansas" />
 ```
 
 ---
 
-## 4️⃣ Semantic HTML & ARIA
+## 4.4 Semantic HTML & ARIA
 
-**Requirements**
+### Use native elements:
+- `<button>`
+- `<nav>`
+- `<main>`
+- `<footer>`
+- `<ul>` / `<li>`
+- `<table>` with `<thead>` / `<tbody>`
 
-* Use semantic HTML for structure:
+### ARIA:  
+Only when needed.  
+NEVER duplicate semantics.
 
-  * `<main>`, `<header>`, `<nav>`, `<section>`, `<aside>`, `<footer>`
-* Use ARIA roles sparingly and only when native semantics are insufficient.
-* Labels and roles should match behavior (e.g., `button` not misused as `div`).
-
-**Example**
+Correct:
 
 ```html
-<nav aria-label="Main navigation">
-  <ul>
-    <li><a href="/datasets">Datasets</a></li>
-    <li><a href="/timeline">Timeline</a></li>
-    <li><a href="/accessibility">Accessibility</a></li>
-  </ul>
-</nav>
+<button aria-label="Open timeline view">Timeline</button>
 ```
 
----
-
-## 5️⃣ Map & Visualization Accessibility
-
-**Applies to:** MapLibre, D3, Cesium, charting libraries.
-
-**Requirements**
-
-* Map canvas must have `role="region"` or `role="application"` with a descriptive `aria-label`.
-* Provide keyboard support for essential map actions (zoom, pan, layer toggle).
-* Always offer a **non-visual alternative**: tables, lists, or summaries.
-* Legends must be accessible:
-
-  * Focusable entries
-  * Text descriptions for symbol colors & patterns
-
-**Example**
+Incorrect:
 
 ```html
-<div role="region" aria-label="Kansas archaeological map" tabindex="0">
-  <!-- MapLibre canvas -->
-</div>
+<div role="button">Timeline</div>  <!-- Violates KFM standard -->
 ```
 
 ---
 
-## 6️⃣ Motion, Animation & Reduced Motion
+# 🗺️ 5. MapLibre, D3, Cesium & Visualization Accessibility
 
-**Requirements**
+## 5.1 MapLibre
 
-* Honor `prefers-reduced-motion: reduce`.
+Maps MUST provide:
 
-  * Disable or reduce non-essential animations for users with reduced motion preference.
-* No auto-play looping animations that cannot be paused.
-* Avoid flashing content that violates WCAG thresholds (no more than 3 flashes per second in a small area).
+- Fallback textual summaries  
+- Keyboard zoom/pan:
+  - `+` = Zoom in  
+  - `-` = Zoom out  
+  - Arrow keys = Pan  
+- Focusable layer toggles  
+- Accessible legend with text descriptions of colors & symbology
 
-**Example**
+```html
+<div role="region" aria-label="Kansas hydrology map" tabindex="0"></div>
+```
 
-```css
-@media (prefers-reduced-motion: reduce) {
-  .animated {
-    transition: none;
-    animation: none;
-  }
+---
+
+## 5.2 D3 Charts
+
+Requirements:
+
+- `<title>` + `<desc>` inside `<svg>`
+- Keyboard-accessible legend
+- Sufficient color contrast
+- Tooltip alternatives for screen readers
+
+```html
+<svg aria-labelledby="chartTitle chartDesc">
+  <title id="chartTitle">Kansas River Flow</title>
+  <desc id="chartDesc">Line chart showing flow rates from 1900 to 2020.</desc>
+</svg>
+```
+
+---
+
+## 5.3 Cesium 3D Scenes
+
+- MUST support reduced-motion mode
+- Camera animation disabled when `prefers-reduced-motion` is active
+- Provide non-3D textual equivalent for each 3D layer
+- Provide keyboard navigation for essential interactions
+
+---
+
+# 🧠 6. Focus Mode v3 Accessibility
+
+Focus Mode integrates:
+
+- Story Node v3  
+- Spatial/temporal anchors  
+- UI transitions  
+- Narratives  
+- Evidence overlays  
+
+Accessibility rules:
+
+- All narrative text MUST meet readability guidelines  
+- Audio narration MUST include captions  
+- Keyboard MUST control:
+  - Story Node progression  
+  - Map movements  
+  - Timeline navigation  
+- Reduced-motion version MUST be available  
+- Screen readers MUST announce:
+  - Section titles  
+  - Event times  
+  - Map context summaries  
+
+---
+
+# 📚 7. Story Node v3 (Narrative Accessibility)
+
+Story Nodes MUST include:
+
+- `storyNode:title`  
+- `storyNode:summary`  
+- `storyNode:readingOrder`  
+- `storyNode:altText`  
+- `storyNode:regionContext`  
+- `storyNode:sensoryModifiers` (reduced motion, alt audio, alt visuals)
+
+Accessibility rules:
+
+- No uncaptioned media  
+- All map anchors MUST be region-level (never precise)  
+- Avoid cultural generalization unless community reviewed  
+- All reading order MUST be linear & screen-reader compatible
+
+---
+
+# ♿ 8. Cognitive Accessibility
+
+KFM MUST support:
+
+- Clear and simple language (~Grade 8 reading level)  
+- Chunked content  
+- Predictable navigation  
+- Visible affordances  
+- Avoidance of “mystery meat navigation”  
+- Avoid time-limited interactions unless essential  
+
+---
+
+# 🧪 9. CI/CD Accessibility Validation
+
+KFM CI includes:
+
+| Tool | Purpose | Output |
+|------|---------|--------|
+| `axe-core` | HTML/ARIA validation | `a11y_axe.json` |
+| `Pa11y` | WCAG 2.1 AA audits | `a11y_pa11y.json` |
+| `Lighthouse` | A11y + performance scoring | `a11y_lighthouse.json` |
+| `docs-lint.yml` | Markdown structure & alt text checks | `docs_lint.json` |
+| `storynode-validate.yml` | Story Node accessibility | `storynode_a11y.json` |
+
+All outputs merged into:
+
+```
+releases/v11.0.0/focus-telemetry.json
+```
+
+---
+
+# 🧾 10. Accessibility Telemetry (v11)
+
+Telemetry MUST record:
+
+```json
+{
+  "a11y_compliance": 96.4,
+  "a11y_warnings": 2,
+  "inclusive_language_score": 98,
+  "storybook_components_reviewed": 162,
+  "focus_mode_a11y_score": 92
 }
 ```
 
 ---
 
-# 🧠 Documentation & Content Accessibility
-
-## 7️⃣ Readability & Language
-
-* Aim for **plain English** at ≈ Grade 8 reading level.
-* Avoid heavy jargon or explain it inline or via glossary links.
-
-## 8️⃣ Headings, Lists & Links
-
-* Maintain a logical hierarchy: `#`, `##`, `###`.
-* Use descriptive link text (no “click here”).
-
-**Example**
-
-```markdown
-## 📘 Overview
-
-Explore [Kansas Data Layers](../data/README.md) for hydrology, climate, and historic maps.
-```
-
-## 9️⃣ Alt Text & Tables
-
-* All images in docs MUST have meaningful `alt` text.
-* Tables MUST have header rows and be used for structured data, not layout.
-
----
-
-# 🧪 Automated Accessibility Testing & Telemetry
-
-KFM uses automated tools integrated into CI:
-
-| Tool       | Purpose                             | Output Path                                   |
-| ---------- | ----------------------------------- | --------------------------------------------- |
-| `axe-core` | HTML/ARIA rule checks               | `docs/reports/telemetry/a11y_axe.json`        |
-| `Pa11y`    | WCAG 2.1 AA validation              | `docs/reports/telemetry/a11y_pa11y.json`      |
-| Lighthouse | Performance + accessibility scoring | `docs/reports/telemetry/a11y_lighthouse.json` |
-
-These outputs are aggregated into:
-
-* `releases/vX.Y.Z/pipeline-telemetry.json`
-* Governance ledger entries tracking **accessibility compliance** over time.
-
----
-
-# ⚖️ FAIR+CARE v2 Integration
-
-Accessibility is deeply linked with FAIR+CARE:
-
-| Principle         | Accessibility Implication                                      |
-| ----------------- | -------------------------------------------------------------- |
-| **Findable**      | Clear headings, navigation, and landmarks support orientation. |
-| **Accessible**    | WCAG compliance ensures disabled users can fully use KFM.      |
-| **Interoperable** | Semantic HTML and ARIA enable assistive tech compatibility.    |
-| **Reusable**      | Accessible components reused across modules.                   |
-| **CARE (Ethics)** | Interfaces avoid exclusionary design and harmful patterns.     |
-
----
-
-# 📋 Compliance Checklist (UI Components)
-
-| Check                            | Status Requirement |
-| -------------------------------- | ------------------ |
-| All controls keyboard accessible | 100%               |
-| Focus styles visible             | 100%               |
-| Text contrast ≥ 4.5:1            | 100% of text       |
-| Alt text coverage                | 100% of images     |
-| ARIA labels correct & minimal    | 100% of needed     |
-| Reduced-motion handling          | Implemented        |
-| A11y tests in CI                 | Required           |
-
-Any UI component failing these checks must be fixed before release.
-
----
-
-# 🧭 Governance & Review Process
+# 🔐 11. Governance & Oversight
 
 Accessibility governance flows:
 
 ```mermaid
-flowchart LR
-  A["Design & Implementation"] --> B["Automated A11y Tests"]
-  B --> C["Manual Review (Accessibility Board)"]
-  C --> D["Governance Ledger Entry"]
-  D --> E["Public Reporting & Telemetry Dashboards"]
+flowchart TD
+A["UI Build or Release"] --> B["Automated A11y Tests"]
+B --> C{"Pass?"}
+C -->|No| D["Reject · Log to Governance Ledger"]
+C -->|Yes| E["Accessibility Board Review"]
+E --> F["Publish + Update Telemetry"]
 ```
 
-Example governance entry:
+Every audit MUST have:
 
 ```json
 {
   "event": "accessibility_audit",
-  "reviewed_components": 164,
-  "issues_found": 3,
-  "compliance_rate": 98.2,
-  "timestamp": "2025-11-16T20:00:00Z",
-  "audited_by": "Accessibility Board"
+  "components_tested": 213,
+  "issues_found": 4,
+  "timestamp": "2025-11-20T10:11:00Z",
+  "audited_by": "KFM Accessibility Board"
 }
 ```
 
 ---
 
-# 🕰️ Version History
+# 📝 12. Inclusive Language Standard (Annex A)
 
-| Version | Date       | Author    | Summary                                                                                                         |
-| ------: | ---------- | --------- | --------------------------------------------------------------------------------------------------------------- |
-| v10.4.2 | 2025-11-16 | Core Team | Upgraded to KFM-MDP v10.4.2; deep-inset directory style; Telemetry v2 alignment; explicit FAIR+CARE v2 mapping. |
-| v10.2.2 | 2025-11-12 | A. Barta  | Updated telemetry references; clarified CI integration and governance flow.                                     |
-| v10.0.0 | 2025-11-10 | A. Barta  | Initial UI accessibility standard for KFM v10 aligned with WCAG 2.1 AA.                                         |
-|  v9.7.0 | 2025-11-05 | A. Barta  | Baseline accessibility & inclusion standard for earlier KFM versions.                                           |
+Rules:
+
+- Avoid idioms & jargon  
+- Avoid metaphors referencing ability (“see”, “walk through”)  
+- Avoid culturally insensitive terms  
+- Use person-first or community-requested terminology
+
+Example replacements:
+
+| Avoid | Use Instead |
+|-------|-------------|
+| “walk through the UI” | “navigate the UI” |
+| “see details below” | “details are provided below” |
+| “tribe” (if incorrect) | the specific Nation name |
+
+---
+
+# 📋 13. Master A11y Checklist (Annex B)
+
+Checklist includes (abbreviated):
+
+- [ ] Keyboard accessible  
+- [ ] Visible focus  
+- [ ] Alt text for all images  
+- [ ] ARIA roles correct  
+- [ ] Adequate contrast  
+- [ ] Skip navigation links  
+- [ ] Captioned media  
+- [ ] Reduced-motion support  
+- [ ] Accessible error messages  
+- [ ] Color not sole indicator  
+- [ ] Screen-reader-friendly HTML  
+- [ ] Semantic headings  
+
+---
+
+# 📚 14. Testing Suite (Annex C)
+
+Required tests:
+
+- Keyboard-only navigation paths  
+- Screen reader tests  
+- Color blindness simulation (deuteranopia, protanopia, tritanopia)  
+- High contrast mode  
+- Dark theme + light theme  
+- Reduced-motion mode  
+- Mobile + desktop testing  
+- Story Node reading-order tests  
+- Focus Mode semantic announcement tests  
+
+---
+
+# 🕰 15. Version History
+
+| Version | Date | Author | Summary |
+|--------:|------------|---------|---------|
+| v11.0.0 | 2025-11-20 | Accessibility Board | Full Super-Standard upgrade; WCAG 2.1 AA+, ISO 30071-1 integration, FAIR+CARE v11, A11y telemetry, Focus Mode v3 & Story Node v3 rules, testing annexes, governance pipelines. |
+| v10.4.2 | 2025-11-16 | Core Team | MDP v10.4.2 alignment |
+| v10.0.0 | 2025-11-10 | A. Barta | Baseline UI A11y standard |
+| v9.7.0 | 2025-11-05 | Early Team | Initial KFM UI accessibility rules |
+
+---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE v2 Certified
-Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+♿ **Kansas Frontier Matrix — UI Accessibility & Inclusion Super-Standard**  
+“Accessibility is governance. Inclusion is architecture.”
 
-[Back to Standards Index](README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+Master Coder Protocol v6.3 · FAIR+CARE Certified
+
+[⬅ Back to Standards Index](README.md)  
+[⚖ Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
+~~~~markdown
