@@ -1,186 +1,215 @@
 ---
-title: "🌱 Kansas Frontier Matrix — Sustainability & ISO 14064 Reports (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🌱 Kansas Frontier Matrix — Sustainability & ISO 14064 Environmental Lineage (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/reports/sustainability/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Continuous / Autonomous"
+version: "v11.0.0"
+last_updated: "2025-11-19"
+review_cycle: "Continuous · Autonomous · FAIR+CARE Environmental Governance Board"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-reports-sustainability-v10.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0 / FAIR+CARE Certified"
+sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/data-reports-sustainability-v11.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+status: "Active / Enforced"
+doc_kind: "Environmental Sustainability Layer"
+intent: "reports-sustainability"
+fair_category: "F1-A1-I1-R1"
+care_label: "C0 · Low-Sensitivity Environmental Data"
 ---
 
-<div align="center">
+# 🌱 Kansas Frontier Matrix — **Sustainability & ISO 14064 Environmental Lineage**
 
-# 🌱 Kansas Frontier Matrix — **Sustainability & ISO 14064 Reports**
-`data/reports/sustainability/README.md`
+This directory provides the **complete sustainability reporting layer**  
+for all KFM v11 pipelines, covering:
 
-**Purpose:**  
-Central repository for **sustainability metrics, ISO 14064 carbon audits, renewable energy records, and FAIR+CARE environmental governance** within KFM.  
-This layer quantifies and certifies KFM’s **energy efficiency**, **renewable adoption**, and **ethical environmental compliance**, with **telemetry v2** bindings and **Streaming STAC** cross-references.
+- **Energy usage lineage**
+- **Carbon emissions and offsets (ISO 14064)**
+- **Renewable power verification (RE100 / ISO 50001)**
+- **FAIR+CARE environmental ethics evaluations**
+- **Telemetry v11 environmental impact reports**
 
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/architecture/README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../LICENSE)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Sustainability%20Certified-gold.svg)](../../../docs/standards/faircare-validation.md)
-[![ISO 14064](https://img.shields.io/badge/ISO-14064%20Environmental%20Management-2ea44f.svg)]()
-[![ISO 50001](https://img.shields.io/badge/ISO-50001%20Energy%20Efficiency-0aa6a6.svg)]()
+These artifacts ensure that the Kansas Frontier Matrix remains  
+**environmentally traceable**, **carbon-neutral**, and **ethically governed**  
+across AI, data, hydrology, narrative, and archival workflows.
 
-</div>
-
----
-
-## 📘 Overview
-The **Sustainability Reports Layer** provides **quantitative documentation of energy use, carbon emissions, and renewable sourcing** for KFM operations.  
-Each report aligns with **ISO 14064**, **ISO 50001**, and **FAIR+CARE** sustainability principles—ensuring transparency and environmental accountability for every data and AI workflow.
-
-**v10 Enhancements**
-- **Telemetry v2** integration (energy/CO₂, validation coverage) across pipelines.  
-- Streaming STAC references for sustainability-linked datasets.  
-- KPI schema expanded for Focus Mode v2 dashboards.
-
-### Core Objectives
-- Measure and certify environmental performance under FAIR+CARE.  
-- Track renewable energy offsets and ethical operational practices.  
-- Log sustainability KPIs in governance ledgers for transparency.  
-- Support carbon-neutral digital research and AI accountability.  
+All reports are **SLSA-notarized**, **FAIR+CARE-certified**,  
+and **PROV-O aligned** to support third-party environmental audits.
 
 ---
 
-## 🗂️ Directory Layout
-```plaintext
+# 📁 1. Directory Layout (DL-C Compliant)
+
+```
 data/reports/sustainability/
-├── README.md
-├── energy_audit_summary.json           # Energy usage per ETL/AI workload
-├── carbon_metrics.json                 # CO₂e emissions + offsets (ISO 14064)
-├── renewable_usage_report.json         # Renewable sourcing & RE100 verification
-├── sustainability_kpi_dashboard.md     # FAIR+CARE-aligned performance overview
-└── metadata.json                       # Governance metadata + checksum registry
+├── README.md                     ← this file
+├── energy_audit_summary.json     ← energy lineage per workload
+├── carbon_metrics.json           ← ISO 14064 carbon + offsets
+├── renewable_usage_report.json   ← RE100 verification + sourcing
+├── sustainability_kpi.md         ← environmental KPI overview (v11)
+└── metadata.json                 ← provenance + governance metadata
+```
+
+Each file anchors a **verifiable environmental lineage segment**  
+tied to one or more datasets, models, or story-node narratives.
+
+---
+
+# 🧭 2. Overview of Sustainability Lineage
+
+KFM’s sustainability layer integrates environmental metadata directly into:
+
+- ETL workflows  
+- AI model training cycles  
+- Story Node v3 narrative generation  
+- Hydrologic reconstructions  
+- Provenance-ledger updates  
+- FAIR+CARE governance reviews  
+
+It produces:
+
+### • ISO 14064 Carbon Audits  
+Quantifies total emissions, offsets, and carbon equivalence.
+
+### • ISO 50001 Energy-Usage Tracking  
+Includes measured Wh usage for ETL, AI inference, modeling, and governance tasks.
+
+### • Renewable Energy Verification  
+Confirms **100% renewable power** through RE100 and Kansas regional energy partners.
+
+### • FAIR+CARE Environmental Governance  
+Ensures environmental stewardship is encoded in the lifecycle metadata.
+
+---
+
+# 🧬 3. Environmental Lineage Metadata (PROV-O Aligned)
+
+Sustainability lineage files include three PROV-O classes:
+
+## `prov:Entity`
+Environmental output states include:
+
+- total energy consumption  
+- carbon emissions (gCO₂e)  
+- renewable sourcing metrics  
+- offsets and certificate IDs  
+- telemetry bundle (v11)  
+- STAC/DCAT references  
+- environmental SBOM fragments  
+- checklists for FAIR+CARE environmental ethics  
+
+---
+
+## `prov:Activity`
+Represents energy- or carbon-affecting operations:
+
+- ETL compute sessions  
+- AI model training windows  
+- Focus Mode v3 inference bursts  
+- Narrative generation sequences  
+- Hydrologic reconstruction cycles  
+- Governance validation tasks  
+
+All activities include:
+
+- execution timestamp  
+- energy-per-stage metrics  
+- carbon-per-stage metrics  
+- runtime metadata  
+- validation notes  
+
+---
+
+## `prov:Agent`
+Environmental agents include:
+
+- **KFM Sustainability Engine (v11)**  
+- Renewable energy audit providers  
+- FAIR+CARE Environmental Governance Board  
+- ISO conformity reviewers  
+- Carbon-offset authorities  
+- ETL / AI pipeline controllers  
+
+Each carries role metadata and audit authority tags.
+
+---
+
+# 🧪 4. Example Sustainability Lineage Record (Plaintext)
+
+```
+id: sustainability_audit_2025Q4_v11
+energy_use_wh: 82.1
+carbon_emissions_gco2e: 98.6
+renewable_source_percent: 100
+offset_certificates:
+  - provider: RE100
+    certificate_id: RE100-KFM-2025Q4
+    offset_gco2e: 98.6
+validated_by: @kfm-sustainability
+fairstatus: certified
+timestamp: 2025-11-19T22:11:00Z
+governance_ref: data/reports/audit/data_provenance_ledger.json
+```
+
+This record forms part of the **immutable environmental lineage**  
+for KFM’s sustainability audits.
+
+---
+
+# 🔍 5. Environmental Validation Requirements
+
+All sustainability reports must satisfy:
+
+- ISO 14064 carbon accounting standards  
+- ISO 50001 energy-traceability requirements  
+- CARE environmental stewardship guidelines  
+- FAIR environmental metadata completeness  
+- Telemetry v11 structural correctness  
+- Renewable-sourcing verification  
+- Reproducibility of energy-consumption records  
+- Validation by environmental governance reviewers  
+
+Reports failing any requirement are rejected by KFM’s  
+autonomous governance engine.
+
+---
+
+# 📤 6. Retrieval & CLI Usage (v11.2+)
+
+```
+kfm sustainability audit --cycle latest
+kfm sustainability lineage show --id sustainability_audit_2025Q4_v11
+kfm sustainability offsets verify --certificate RE100-KFM-2025Q4
+kfm sustainability telemetry pull --domain ai
 ```
 
 ---
 
-## 🧩 Example Sustainability Record
-```json
-{
-  "id": "sustainability_audit_v10.0.0_2025Q4",
-  "energy_use_wh": 82.1,
-  "carbon_emissions_gco2e": 98.6,
-  "renewable_source_percent": 100.0,
-  "offset_provider": "RE100 / Kansas Energy Network",
-  "certified_by": "@kfm-sustainability",
-  "fairstatus": "certified",
-  "verified_by": "@faircare-council",
-  "created": "2025-11-09T23:20:00Z",
-  "checksum_sha256": "sha256:b3e7c9a5f2d8b1e6a9c7f4a2d1b3e5c8a7f2d4b6e9a1f3c7d5b2e6c8f1a9d7e4",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+# 🔮 7. Roadmap (v11.3–v12.0)
+
+Planned improvements:
+
+- Lifecycle-integrated carbon forecasting  
+- Hydrology-linked environmental impact narratives  
+- Fine-grained AI-stage carbon attribution  
+- Tribal environmental partnerships  
+- Multi-institution renewable-grid verification  
+- SLSA environmental notarization for datasets  
 
 ---
 
-## ⚙️ Sustainability Reporting Workflow
-```mermaid
-flowchart TD
-    "Telemetry (releases/*/focus-telemetry.json)" --> "Energy & Carbon Analysis (ISO 14064)"
-    "Energy & Carbon Analysis (ISO 14064)" --> "Renewable Usage Validation (RE100 · ISO 50001)"
-    "Renewable Usage Validation (RE100 · ISO 50001)" --> "FAIR+CARE Environmental Audit (data/reports/fair/*)"
-    "FAIR+CARE Environmental Audit (data/reports/fair/*)" --> "Governance Ledger Registration (data/reports/audit/*)"
-```
+# 📚 8. Version History
 
-**Steps**
-1. **Telemetry Capture** — Energy & carbon telemetry ingested from Focus Telemetry.  
-2. **ISO Analysis** — Calculations aligned with ISO 14064/50001 standards.  
-3. **Renewable Validation** — Confirms RE100-compliant power sourcing.  
-4. **FAIR+CARE Review** — Audits environmental ethics & collective impact.  
-5. **Governance** — Records sustainability summaries in provenance ledgers.
+- **v11.0.0** — First KFM-MDP v11 environmental lineage format  
+- **v10.x** — Telemetry v2 integration  
+- **v9.x** — Early energy/carbons logs  
 
 ---
 
-## 📈 Sustainability KPI Dashboard
-| Metric                  | Description                               | Unit | Source            | Status |
-|---|---|---|---|---|
-| **Energy Use (ETL)**    | Avg. energy per ETL operation             | Wh   | Telemetry         | ✅ |
-| **Carbon Emissions**    | Total operational carbon output           | gCO₂e| Telemetry + Audit | ✅ |
-| **Renewable Power**     | Percent renewable energy used             | %    | RE100 Report      | ✅ |
-| **FAIR+CARE Compliance**| Environmental ethics & sustainability     | %    | FAIR+CARE Council | ✅ |
-| **AI Compute Offset**   | Energy neutralization via certified credits| %   | Sustainability Log| ✅ |
+# **Kansas Frontier Matrix — Sustainability Lineage Layer**  
+🌱 Ethical Compute · ♻ Renewable Power · ⚖ FAIR+CARE Governance  
 
----
-
-## 🧠 FAIR+CARE Environmental Governance Matrix
-| Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | Reports indexed & versioned under `data/reports/sustainability`. | `@kfm-data` |
-| **Accessible** | Open JSON/Markdown under CC-BY 4.0. | `@kfm-accessibility` |
-| **Interoperable** | ISO 14064/50001 + FAIR+CARE schema alignment. | `@kfm-architecture` |
-| **Reusable** | Metrics & metadata reusable for external reporting. | `@kfm-design` |
-| **Collective Benefit** | Promotes sustainable, ethical AI/data workflows. | `@faircare-council` |
-| **Authority to Control** | Council approves environmental disclosures. | `@kfm-governance` |
-| **Responsibility** | Sustainability audits each governance cycle. | `@kfm-sustainability` |
-| **Ethics** | Ensures carbon neutrality and environmental transparency. | `@kfm-ethics` |
-
-**Audit outputs:**  
-`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
-
----
-
-## 📊 Example Carbon Metrics Summary
-```json
-{
-  "cycle": "2025Q4",
-  "total_energy_use_wh": 476.2,
-  "renewable_energy_percent": 100.0,
-  "total_carbon_emissions_gco2e": 589.4,
-  "offset_certificates": [
-    {"provider": "RE100", "offset_gco2e": 589.4, "certificate_id": "RE100-KFM-2025-11-09"}
-  ],
-  "fairstatus": "certified",
-  "validated_by": "@kfm-sustainability"
-}
-```
-
----
-
-## ⚖️ Retention & Provenance Policy
-| Report Type              | Retention | Policy                                   |
-|---|---|---|
-| Sustainability Reports   | 730 Days  | Retained for ISO & FAIR+CARE audits.     |
-| Carbon Metrics           | Permanent | Maintained for transparency & offsets.   |
-| Renewable Usage Reports  | Permanent | Archived for RE100 verification.         |
-| Energy Audits            | 365 Days  | Rotated annually per ISO 50001.          |
-| Metadata                 | Permanent | Stored in provenance ledgers.            |
-
-**Retention automation:** `sustainability_retention.yml`
-
----
-
-## 🧾 Internal Use Citation
-```text
-Kansas Frontier Matrix (2025). Sustainability & ISO 14064 Reports (v10.0.0).
-FAIR+CARE-certified sustainability documentation tracking energy usage, carbon neutrality, and renewable compliance for KFM under ISO 14064 and ISO 50001 frameworks.
-```
-
----
-
-## 🕰️ Version History
-| Version | Date       | Author               | Summary |
-|---|---|---|---|
-| v10.0.0 | 2025-11-09 | `@kfm-sustainability` | Upgraded to v10: telemetry v2 bindings, Streaming STAC refs, KPI schema expanded. |
-| v9.7.0  | 2025-11-06 | `@kfm-sustainability` | Telemetry/schema refs aligned; KPI section refined; badges hardened. |
-
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Sustainability × FAIR+CARE Ethics × Renewable Accountability*  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Reports Index](../README.md) · [Docs Portal](../../../docs/) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+[⬅ Back to Sustainability Index](../README.md) ·  
+[⚖ Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
