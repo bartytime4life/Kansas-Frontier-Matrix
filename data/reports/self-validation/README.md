@@ -3,7 +3,7 @@ title: "🧮 Kansas Frontier Matrix — Self-Validation Reports (Diamond⁹ Ω /
 path: "data/reports/self-validation/README.md"
 version: "v11.0.0"
 last_updated: "2025-11-19"
-review_cycle: "Continuous / Autonomous"
+review_cycle: "Continuous / Autonomous QA Cycle"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
 manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
@@ -17,12 +17,12 @@ status: "Active / Enforced"
 doc_kind: "Autonomous QA"
 intent: "self-validation"
 fair_category: "F1-A1-I1-R1"
-care_label: "Low-Risk / Autonomous Validation"
+care_label: "Low-Risk / Automated Validation"
 sensitivity_level: "None"
 ontology_alignment:
   schema_org: "Report"
-  dcat: "dcat:Dataset"
   prov_o: "prov:Entity"
+  dcat: "dcat:Dataset"
 story_node_refs: []
 provenance_chain:
   - "data/reports/self-validation/README.md@v10.0.0"
@@ -33,11 +33,11 @@ metadata_profiles:
   - "ISO 19115"
 doc_uuid: "urn:kfm:data:reports:self_validation:v11"
 semantic_document_id: "kfm-self-validation"
-event_source_id: "ledger:self_validation_cycle"
+event_source_id: "ledger:self_validation_q4_2025"
 immutability_status: "mutable"
 doc_integrity_checksum: "<sha256>"
 ai_training_inclusion: false
-ai_focusmode_usage: "Allowed"
+ai_focusmode_usage: "Allowed (qa-context only)"
 ai_transform_permissions:
   - "summary"
   - "timeline-generation"
@@ -57,9 +57,9 @@ sunset_policy: "Annual Review"
 `data/reports/self-validation/README.md`
 
 Purpose:  
-Define the autonomous, continuous validation system used by KFM v11 to ensure  
-schema safety, data integrity, FAIR+CARE alignment, explainability compliance, and  
-governance-grade reproducibility across all pipelines.
+Define the autonomous validation system responsible for schema checking,  
+checksum verification, FAIR+CARE alignment, model bias/drift detection,  
+and telemetry-linked reproducibility across all KFM v11 data pipelines.
 
 </div>
 
@@ -67,29 +67,33 @@ governance-grade reproducibility across all pipelines.
 
 ## 📘 Overview
 
-The Self-Validation Layer operates as KFM’s autonomous QA engine.  
-It continuously performs:
+The Self-Validation Layer acts as the **autonomous QA engine** for KFM.  
+All validation occurs without manual intervention and follows deterministic,  
+CI-enforced pipelines ensuring:
 
-- Schema conformance checks  
-- Checksum and reproducibility validation  
+- Schema correctness  
+- Checksum and lineage integrity  
 - FAIR+CARE internal scoring  
-- AI drift and bias detection  
-- Accessibility and metadata completeness checks  
-- Telemetry v3 logging (energy, CO2, records processed)  
+- AI bias, drift, and explainability safety  
+- Accessibility and metadata completeness  
+- Sustainability tracking (energy Wh, carbon gCO2e, records processed)  
 
-All outputs feed governance dashboards, Focus Mode v3 ethics context,  
-and append-only provenance ledgers.
+All results feed:
+
+- Governance ledgers  
+- FAIR+CARE dashboards  
+- Focus Mode v3 narrative safety indicators  
 
 ---
 
 ## 🧭 Self-Validation Workflow (ASCII Diagram)
 
   KFM SELF-VALIDATION WORKFLOW
-  ----------------------------------------------------------
-  [1] ETL Outputs Generated
+  ---------------------------------------------------------
+  [1] ETL Outputs Produced
         |
         v
-  [2] Schema Validation
+  [2] Schema Compliance Validation
         |
         v
   [3] Checksum and FAIR+CARE Verification
@@ -101,7 +105,7 @@ and append-only provenance ledgers.
   [5] Autonomous Report Generation
         |
         v
-  [6] Governance Ledger Sync
+  [6] Governance Ledger Append
 
 ---
 
@@ -119,7 +123,7 @@ and append-only provenance ledgers.
 
 ---
 
-## 📊 ASCII Table: Validation Summary (Q4 2025)
+## 📊 Validation Summary (ASCII Table)
 
 +-----------+------------+----------+------------+--------+--------------+
 | Domain    | FAIRCARE   | Schema   | Checksums  | Drift  | Final Status |
@@ -136,7 +140,7 @@ and append-only provenance ledgers.
 
 ## 🧩 Example Self-Validation Record (v11 Format)
 
-(Displayed as plain text to preserve box integrity)
+(Shown as plain text for stability)
 
   id: self_validation_hazards_v11.0.0  
   domain: hazards  
@@ -157,18 +161,18 @@ and append-only provenance ledgers.
 
 ## ⚖️ FAIR+CARE Governance Alignment
 
-+----------------------+-------------------------------------------------------+----------------------+
-| Principle            | Implementation                                        | Oversight            |
-+----------------------+-------------------------------------------------------+----------------------+
-| Findable             | Indexed by domain/version in ledger manifests        | @kfm-data           |
-| Accessible           | Open JSON, machine-readable outputs                  | @kfm-accessibility  |
-| Interoperable        | ISO 19115, DCAT 3.0, PROV-O alignment                | @kfm-architecture   |
-| Reusable             | Provenance, checksum, ethics status                  | @kfm-design         |
-| Collective Benefit   | Transparent public QA improves trust                 | FAIR+CARE Council   |
-| Authority to Control | Council reviews AI ethics and governance cycles      | @kfm-governance     |
-| Responsibility       | Pipelines enforce ethics autonomously                | @kfm-security       |
-| Ethics               | Bias/drift validated per cycle                       | @kfm-ethics         |
-+----------------------+-------------------------------------------------------+----------------------+
++----------------------+-----------------------------------------------------------+---------------------+
+| Principle            | Implementation                                            | Oversight           |
++----------------------+-----------------------------------------------------------+---------------------+
+| Findable             | Reports indexed by domain/version                         | @kfm-data           |
+| Accessible           | Open JSON, structured metadata                            | @kfm-accessibility  |
+| Interoperable        | ISO 19115, DCAT 3.0, PROV-O alignment                     | @kfm-architecture   |
+| Reusable             | Checksums, provenance, FAIR+CARE metadata                 | @kfm-design         |
+| Collective Benefit   | Public transparency into QA processes                     | FAIR+CARE Council   |
+| Authority to Control | Council validates ethics and governance cycles            | @kfm-governance     |
+| Responsibility       | Autonomous bias checks and reproducibility enforcement    | @kfm-security       |
+| Ethics               | Drift/bias checks feed ethics dashboards                  | @kfm-ethics         |
++----------------------+-----------------------------------------------------------+---------------------+
 
 ---
 
@@ -176,7 +180,7 @@ and append-only provenance ledgers.
 
   energy_wh: 9.3  
   carbon_gco2e: 11.8  
-  renewable_power: 100 percent (RE100)  
+  renewable_power: 100 percent  
   records_processed: 184233  
   faircare_compliance: 100 percent  
 
@@ -186,27 +190,27 @@ and append-only provenance ledgers.
 
   Kansas Frontier Matrix (2025).  
   Self-Validation Reports (v11.0.0).  
-  Autonomous FAIR+CARE-aligned validation and reproducibility checks across  
-  all KFM pipelines and datasets.
+  Autonomous FAIR+CARE-aligned validation system ensuring  
+  reproducibility and ethical integrity across all KFM pipelines.
 
 ---
 
 ## 🕰️ Version History
 
-+-----------+------------+----------------------+-----------------------------------------------------------+
-| Version   | Date       | Author               | Summary                                                   |
-+-----------+------------+----------------------+-----------------------------------------------------------+
-| v11.0.0   | 2025-11-19 | Lead Programmer      | KFM-MDP v11 rebuild; ASCII tables; extended metadata      |
-| v10.0.0   | 2025-11-09 | @kfm-autonomous      | Telemetry v2; Streaming STAC integration                  |
-| v9.7.0    | 2025-11-06 | @kfm-autonomous      | Initial autonomous QA module                              |
-+-----------+------------+----------------------+-----------------------------------------------------------+
++-----------+------------+----------------------+----------------------------------------------+
+| Version   | Date       | Author               | Summary                                      |
++-----------+------------+----------------------+----------------------------------------------+
+| v11.0.0   | 2025-11-19 | Lead Programmer      | KFM-MDP v11 rebuild; ASCII tables; metadata  |
+| v10.0.0   | 2025-11-09 | @kfm-autonomous      | Telemetry v2; streaming STAC integration     |
+| v9.7.0    | 2025-11-06 | @kfm-autonomous      | Initial autonomous QA module                 |
++-----------+------------+----------------------+----------------------------------------------+
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Autonomous QA Layer**  
-🧮 *Continuous Validation · FAIR+CARE Stewardship · Ethical Data Integrity*
+🧮 *Continuous Validation · FAIR+CARE Governance · Ethical Reliability*
 
 [⬅ Back to Reports Index](../README.md)  
 [⚖ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
