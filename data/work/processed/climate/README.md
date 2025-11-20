@@ -1,182 +1,188 @@
 ---
-title: "🌦️ Kansas Frontier Matrix — Processed Climate Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🌦️ Kansas Frontier Matrix — Processed Climate Data (Diamond9 Omega / CrownInfinityOmega Ultimate Certified)"
 path: "data/work/processed/climate/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Continuous / Autonomous"
+version: "v11.1.0"
+last_updated: "2025-11-19"
+review_cycle: "Continuous / Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
-data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/data-work-processed-climate-v10.json"
-governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0 / FAIR+CARE Certified"
+sbom_ref: "../../../../releases/v11.1.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.1.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.1.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/data-work-processed-climate-v11.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0 · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11"
+status: "Active / Enforced"
+doc_kind: "Processed Dataset Layer"
+intent: "processed-climate"
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE-Verified"
 ---
 
 <div align="center">
 
-# 🌦️ Kansas Frontier Matrix — **Processed Climate Data**
+# 🌦️ **Kansas Frontier Matrix — Processed Climate Data**  
 `data/work/processed/climate/README.md`
 
 **Purpose:**  
-Repository for final, **FAIR+CARE-certified** climate datasets produced by KFM ETL and governance workflows.  
-Provides canonical climate products for open research, historical analysis, and **Focus Mode v2** visualization, with **Streaming STAC** and **telemetry v2** references.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../docs/architecture/README.md)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Climate%20Certified-gold.svg)](../../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2ea44f.svg)]()
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../../LICENSE)
+Define the canonical, FAIR+CARE-certified **Processed Climate Data Layer**, containing fully validated, checksum-verified, reproducible climate datasets derived through KFM’s deterministic ETL, schema harmonization, AI validation, and governance workflows.  
+This is the authoritative climate dataset layer for **STAC/DCAT catalogs**, **Focus Mode v3**, and **graph-integrated climate analytics**.
 
 </div>
 
----
-
 ## 📘 Overview
-The **Processed Climate Layer** stores fully validated and FAIR+CARE-certified datasets derived from **NOAA, NIDIS, USDM/CPC, Daymet/ORNL** and allied sources.  
-Each dataset is **checksum-verified**, **schema-aligned**, and ready for **STAC/DCAT** catalog inclusion and Focus Mode v2 analytics.
+The Processed Climate Data Layer includes all final climate datasets promoted from staging and certified under:
 
-**v10 Enhancements**
-- Streaming STAC hooks for weekly/seasonal feeds (e.g., USDM, CPC).  
-- Telemetry v2 metrics (energy/CO₂, validation coverage) attached to certification.  
-- CF/ISO harmonization for gridded products (NetCDF/COG rasters).
+* FAIR+CARE governance  
+* ISO 19115 + CF conventions  
+* DCAT + STAC metadata crosswalks  
+* Complete provenance lineage (PROV-O)  
+* Checksum and manifest verification  
+* Telemetry sustainability metrics  
 
-### Key Objectives
-- Maintain harmonized, validated climate datasets.  
-- Certify outputs for FAIR+CARE ethics and open governance.  
-- Provide standard formats (CSV, Parquet, GeoJSON/COG, NetCDF) for analysis.  
-- Register provenance and checksums within governance ledgers.  
-
----
+All datasets are **immutable**, **traceable**, and **publication-ready**.
 
 ## 🗂️ Directory Layout
 ```plaintext
 data/work/processed/climate/
 ├── README.md
-├── climate_summary_v10.0.0.parquet          # Aggregated indicators (NOAA, NIDIS)
-├── drought_monitor_annual_v10.0.0.csv       # Annual drought index (USDM)
-├── temperature_anomalies_1900_2025.csv      # Historical temperature anomalies
-├── precipitation_timeseries_v10.0.0.parquet # Monthly/daily precipitation trends
-└── metadata.json                             # Provenance, checksum, FAIR+CARE certification
+├── climate_summary_v11.1.0.parquet
+├── drought_monitor_annual_v11.1.0.csv
+├── temperature_anomalies_1900_2025.csv
+├── precipitation_timeseries_v11.1.0.parquet
+└── metadata/
 ```
 
----
+## 🌍 Domain Overview
+Processed climate datasets integrate multiple authoritative sources:
 
-## ⚙️ Climate Processing Workflow
-```mermaid
-flowchart TD
-    "Staged Climate (data/work/staging/climate/)" --> "Schema Harmonization & Unit Normalization"
-    "Schema Harmonization & Unit Normalization" --> "FAIR+CARE Certification & Provenance Registration"
-    "FAIR+CARE Certification & Provenance Registration" --> "Checksum Verification & Governance Sync"
-    "Checksum Verification & Governance Sync" --> "Publication + STAC/DCAT Catalog Integration"
+* NOAA  
+* NIDIS  
+* USDM / CPC  
+* Daymet / ORNL  
+* PRISM (where licensed)  
+* KFM-derived derivatives  
+
+Domains include:
+
+* 🌡️ Temperature trends and anomaly diagnostics  
+* 🌧️ Precipitation timeseries and seasonal accumulation  
+* 🌵 Drought indicators and multi-scalar composites  
+* ❄️ Snow/ice when available  
+* 🌫️ Extreme events indexing  
+
+All products adhere to climate-science metadata standards.
+
+## 🔗 Entity Requirements (PROV-O)
+Entities in `processed/climate/` must include:
+
+* Canonical dataset ID  
+* SHA256 checksum (ASCII only)  
+* CF-convention metadata (for gridded datasets)  
+* Dataset UUID  
+* Telemetry block: energy_wh, carbon_gco2e  
+* FAIR+CARE certification tag  
+* Creation timestamp in ISO 8601 ASCII  
+* Governance reference pointer  
+* `prov:wasDerivedFrom` staging dataset IDs  
+
+## ⚙️ Activity Requirements
+Climate processing pipelines must capture:
+
+* Pipeline execution metadata  
+* Parameter digest (ASCII hash)  
+* Validation coverage  
+* Certification audit records  
+* Bias/explainability logs (AI-assisted QC)  
+* Staging-to-processed promotion timestamp  
+
+All processing actions are `prov:Activity`.
+
+## 🧑‍💼 Agent Requirements
+Agents participating in climate processing:
+
+* `@kfm-climate` — domain stewards  
+* `@kfm-architecture` — schema harmonization  
+* `@faircare-council` — ethics and CARE oversight  
+* `@kfm-security` — checksum/integrity  
+* `@kfm-data` — metadata lifecycle  
+
+Agents are PROV-O `prov:Agent`.
+
+## 🧪 Validation Requirements
+Climate datasets must pass:
+
+* CF-convention conformance (for NetCDF/grid data)  
+* ISO 19115 metadata completeness  
+* FAIR+CARE certification audit  
+* Provenance chain linkage (entity → activity → agent)  
+* Telemetry calculation  
+* Checksum reconciliation with manifest  
+* STAC/DCAT record alignment  
+
+Outputs stored under:
+
+* `data/reports/validation/`  
+* `data/reports/fair/`  
+* `data/reports/audit/`
+
+## 📥 Retrieval Examples
+
+### Python
+```python
+import pandas as pd
+df = pd.read_csv("data/work/processed/climate/drought_monitor_annual_v11.1.0.csv")
+print(df.head())
 ```
 
-### Summary
-1. **Harmonize** — Normalize structures/units and CF conventions.  
-2. **Validate** — FAIR+CARE audits for openness & transparency.  
-3. **Certify** — Governance ledger registration with checksums.  
-4. **Publish** — Sync to catalogs and Focus Mode v2.
+### Bash
+```bash
+ls data/work/processed/climate/
+```
 
----
+### Cypher (graph lineage)
+```cypher
+MATCH (c:ProcessedClimate)
+RETURN c.id, c.temporal_start, c.temporal_end, c.checksum_sha256;
+```
+
+## 🛣️ Roadmap
+* v11.2 — Climate anomaly-tracking lineage extensions  
+* v11.3 — Integrated bias-correction scoring  
+* v11.4 — Multi-resolution tiling for Focus Mode 3 climate surfaces  
+* v11.5 — Streaming STAC real-time updates for precipitation and drought feeds  
 
 ## 🧩 Example Processed Climate Metadata Record
 ```json
 {
-  "id": "processed_climate_summary_v10.0.0",
+  "id": "processed_climate_summary_v11.1.0",
+  "domain": "climate",
   "source_stage": "data/work/staging/climate/",
-  "records_total": 125904,
-  "schema_version": "v3.2.0",
-  "checksum_sha256": "sha256:b6d1f8a2e3a7c5d9f4a2b8e1c3d5f7a9b2e4c6a7d1b3f8e5c4a7b9f6a2d1e8b4",
+  "records_total": 129112,
+  "schema_version": "v3.3.0",
+  "checksum_sha256": "sha256:5f9a3b17d1c2942fde4a8df55f8b416d02c7401ec4f4e954e2d1b53d29e1134a",
   "fairstatus": "certified",
-  "validator": "@kfm-climate-lab",
   "license": "CC-BY 4.0",
-  "created": "2025-11-09T23:25:00Z",
+  "validator": "@kfm-climate-lab",
   "telemetry": {
-    "energy_wh": 12.8,
-    "co2_g": 17.1,
+    "energy_wh": 14.7,
+    "co2_g": 19.2,
     "validation_coverage_pct": 100
   },
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
+  "governance_ref": "data/reports/audit/data_provenance_ledger.json",
+  "created": "2025-11-19T18:55:00Z"
 }
 ```
 
----
-
-## 🧠 FAIR+CARE Governance Matrix
-| Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | Indexed in STAC/DCAT catalogs. | `@kfm-data` |
-| **Accessible** | CC-BY 4.0; public catalogs & APIs. | `@kfm-accessibility` |
-| **Interoperable** | ISO 19115 / DCAT 3.0 / CF conventions. | `@kfm-architecture` |
-| **Reusable** | Includes checksum, provenance, and audit trail. | `@kfm-design` |
-| **Collective Benefit** | Supports climate resilience & education. | `@faircare-council` |
-| **Authority to Control** | Council reviews certification outputs. | `@kfm-governance` |
-| **Responsibility** | Validators ensure ethics compliance & reproducibility. | `@kfm-security` |
-| **Ethics** | Verified for equity, inclusivity, and open governance. | `@kfm-ethics` |
-
-**FAIR+CARE results:**  
-`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
-
----
-
-## ⚙️ Validation & Certification Artifacts
-| Report | Description | Format |
-|---|---|---|
-| `schema_validation_summary.json` | Field-level schema integrity. | JSON |
-| `faircare_certification_report.json` | FAIR+CARE certification audit. | JSON |
-| `checksums.json` | Integrity verification of processed files. | JSON |
-| `catalog_sync.log` | Publication log for STAC/DCAT integration. | Text |
-
-Automation: `climate_processed_sync.yml`.
-
----
-
-## 📊 Climate Dataset Summary (v10.0.0)
-| Dataset                    | Records | Temporal Coverage | FAIR+CARE | License  |
-|---|---:|---|---|---|
-| Climate Summary           | 125,904 | 1900–2025         | ✅        | CC-BY 4.0 |
-| Drought Monitor           | 10,412  | 2000–2025         | ✅        | CC-BY 4.0 |
-| Temperature Anomalies     | 12,480  | 1900–2025         | ✅        | CC-BY 4.0 |
-| Precipitation Timeseries  |  9,362  | 1950–2025         | ✅        | CC-BY 4.0 |
-
----
-
-## ♻️ Retention & Sustainability
-| Data Type | Retention | Policy |
-|---|---:|---|
-| Processed Climate Data | Permanent | Archived for reproducibility & FAIR+CARE compliance. |
-| Metadata | Permanent | Stored in governance ledger & checksum manifest. |
-| FAIR+CARE Reports | Permanent | Retained for ethics & audit cycles. |
-| Logs | 365 Days | Rotated for governance QA & verification. |
-
-**Telemetry:** `../../../../releases/v10.0.0/focus-telemetry.json`
-
----
-
-## 🧾 Internal Use Citation
-```text
-Kansas Frontier Matrix (2025). Processed Climate Data (v10.0.0).
-FAIR+CARE-certified climate datasets (temperature, precipitation, drought) derived from NOAA/NIDIS/USDM/CPC/Daymet sources.
-Checksum-verified, schema-aligned, and governance-certified for reproducible climate research and Focus Mode v2 analytics.
-```
-
----
-
 ## 🕰️ Version History
-| Version | Date       | Author            | Summary |
-|---|---|---|---|
-| v10.0.0  | 2025-11-09 | `@kfm-climate`    | Upgraded to v10: Streaming STAC hooks, telemetry v2 bundling, CF/ISO harmonization. |
-| v9.7.0  | 2025-11-06 | `@kfm-climate`    | Telemetry/schema refs aligned; directory & metrics updated; badges hardened. |
+| Version | Date | Author | Summary |
+|--------|------|--------|---------|
+| v11.1.0 | 2025-11-19 | `@kfm-climate` | Full migration to v11 metadata; PROV-O alignment; new telemetry schema; updated directory structure. |
+| v11.0.0 | 2025-11-15 | `@kfm-climate` | Initial v11 climate layer implementation. |
+| v10.0.0 | 2025-11-09 | `@kfm-climate` | Initial processed climate dataset definition. |
 
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Climate Science × FAIR+CARE Governance × Provenance Transparency*  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Work → Processed](../README.md) · [Governance Charter](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+## 🔗 Footer
+[⬅️ Back to Processed Layer](../README.md) ·  
+[📐 Data Architecture](../../../../docs/ARCHITECTURE.md) ·  
+[⚖️ Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
