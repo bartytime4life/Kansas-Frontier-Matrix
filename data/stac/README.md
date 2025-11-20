@@ -1,222 +1,164 @@
 ---
-title: "🗃️ Kansas Frontier Matrix — STAC Catalog (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🗃️ Kansas Frontier Matrix — STAC Catalog (Diamond9 Omega / CrownInfinityOmega Ultimate Certified)"
 path: "data/stac/README.md"
-version: "v10.2.2"
-last_updated: "2025-11-12"
-review_cycle: "Continuous / Autonomous"
+version: "v11.1.0"
+last_updated: "2025-11-19"
+review_cycle: "Continuous / Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.2.0/manifest.zip"
-data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/data-stac-v10.json"
-governance_ref: "../../docs/standards/governance/DATA-GOVERNANCE.md"
+sbom_ref: "../../releases/v11.1.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.1.0/manifest.zip"
+telemetry_ref: "../../releases/v11.1.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/data-stac-v11.json"
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0 / FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11"
+status: "Active / Enforced"
+doc_kind: "Data Catalog"
+intent: "stac-metadata"
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE-Verified"
 ---
 
 <div align="center">
 
-# 🗃️ Kansas Frontier Matrix — **STAC Catalog**  
+# 🗃️ **Kansas Frontier Matrix — STAC Catalog**  
 `data/stac/README.md`
 
 **Purpose:**  
-Centralized **SpatioTemporal Asset Catalog (STAC)** for all FAIR+CARE-certified spatial, tabular, and environmental datasets within the Kansas Frontier Matrix (KFM).  
-Provides global discoverability, schema-aligned metadata, and governance-certified provenance integration for all open-access KFM assets, with **Streaming STAC** and **telemetry v2** references.
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../docs/README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../LICENSE)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-STAC%20Governed-gold.svg)](../../docs/standards/faircare.md)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-blue.svg)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2ea44f.svg)]()
+Authoritative SpatioTemporal Asset Catalog (STAC) for all Kansas Frontier Matrix datasets.  
+Implements FAIR+CARE governance, PROV-O lineage, checksum verification, DCAT 3.0 alignment, ISO 19115 metadata, and **Streaming STAC** for continuously-updating Items.
 
 </div>
 
----
-
 ## 📘 Overview
+The KFM STAC Catalog is the primary metadata index for all validated climatology, hydrology, hazards, landcover, spatial raster/vector, and tabular datasets.  
+It ensures:
 
-The **Kansas Frontier Matrix STAC Catalog** serves as the interoperable metadata backbone linking all climate, hazards, hydrology, landcover, and tabular data collections.  
-Each STAC record is **FAIR+CARE-certified**, **checksum-verified**, and **governance-linked** for ethical, transparent, and reproducible scientific use.
-
-**v10.2.2 Enhancements**
-- **Streaming STAC** integration for continuously updated Items (e.g., real-time hydrology).  
-- Telemetry v2 fields embedded in catalog build reports; JSON-LD pointers to governance ledgers.  
-- DCAT 3.0 crosswalk refreshed for tabular collections and mixed-media datasets.
-
-### Core Objectives
-- Index validated datasets for FAIR+CARE global discoverability.  
-- Maintain compliance with **STAC 1.0**, **DCAT 3.0**, and **ISO 19115** metadata standards.  
-- Integrate checksum validation, provenance lineage, and governance approval.  
-- Enable **Focus Mode v2** AI analytics and geospatial narrative visualization.
-
----
+* FAIR+CARE certification  
+* Governance-led provenance and checksum lineage  
+* STAC 1.0 + DCAT 3.0 cross-compatibility  
+* JSON-LD semantic linkage into the knowledge graph  
+* Energy/carbon telemetry for sustainability accountability  
+* Streaming STAC updates for real-time datasets
 
 ## 🗂️ Directory Layout
-
 ```plaintext
 data/stac/
 ├── README.md
-├── catalog.json                     # Root STAC manifest for all KFM datasets
-├── collection_climate.json          # STAC 1.0 collection — climate datasets
-├── collection_hazards.json          # STAC 1.0 collection — hazards datasets
-├── collection_hydrology.json        # STAC 1.0 collection — hydrology datasets
-├── collection_landcover.json        # STAC 1.0 collection — landcover datasets
-├── collection_spatial.json          # Composite geospatial datasets (raster/vector)
-├── collection_tabular.json          # Tabular datasets via DCAT crosswalk
-└── metadata.json                    # Governance & checksum registry for STAC layer
+├── catalog.json
+├── collection_climate.json
+├── collection_hazards.json
+├── collection_hydrology.json
+├── collection_landcover.json
+├── collection_spatial.json
+├── collection_tabular.json
+└── metadata.json
 ```
 
----
+## 🌍 Domain Overview
+The STAC catalog unifies all spatial and temporal datasets across the Kansas Frontier Matrix.  
+Domain targets include:
 
-## 🧩 Example STAC Collection Metadata
+* 🌡️ Climate normals and projections  
+* 🌊 Hydrology, streamflow, watersheds  
+* ⚠️ Hazards: tornado, drought, seismic, flood  
+* 🗺️ Raster and vector spatial composites  
+* 🗂️ Tabular datasets mapped to DCAT  
+* 🧩 Mixed-media layers (LiDAR, scanning, surveys)
 
-```json
-{
-  "stac_version": "1.0.0",
-  "type": "Collection",
-  "id": "kfm_hazards_v10.2.2",
-  "title": "Kansas Frontier Matrix — Hazards Data Collection",
-  "description": "Certified FAIR+CARE hazards datasets including tornado, flood, drought, and seismic layers.",
-  "extent": {
-    "spatial": { "bbox": [[-102.05, 36.99, -94.61, 40.00]] },
-    "temporal": { "interval": [["1950-01-01T00:00:00Z", "2025-11-12T23:59:59Z"]] }
-  },
-  "license": "CC-BY-4.0",
-  "providers": [
-    { "name": "Kansas Frontier Matrix", "roles": ["producer", "licensor", "processor"] },
-    { "name": "FAIR+CARE Council", "roles": ["governance", "certifier"] }
-  ],
-  "summaries": {
-    "themes": ["hazards", "climate", "governance"],
-    "data_quality": ["FAIR+CARE certified", "ISO 19115 aligned"]
-  },
-  "links": [
-    { "rel": "root", "href": "../catalog.json" },
-    { "rel": "license", "href": "https://creativecommons.org/licenses/by/4.0/" },
-    { "rel": "governance", "href": "../../data/reports/audit/data_provenance_ledger.json" }
-  ]
-}
+All datasets attach:  
+STAC → DCAT → JSON-LD → PROV-O → Neo4j Graph → Story Node v3 → Focus Mode integration.
+
+## 🔗 Entity Requirements (PROV-O)
+All STAC entities must declare:
+
+* `prov:Entity` (dataset or collection)  
+* `prov:Location` (canonical KFM path)  
+* `prov:wasGeneratedBy` (ETL pipeline reference)  
+* `prov:wasAttributedTo` (agent)  
+* `prov:wasDerivedFrom` (source dataset IDs)  
+* `prov:qualifiedAttribution` (governance approval entry)
+
+Checksum rules:
+
+* SHA256 only  
+* Stored within `metadata.json`  
+* Matched to `manifest.zip`
+
+## ⚙️ Activity Requirements
+Each dataset must include:
+
+* Extraction method  
+* Transformation pipeline ID  
+* Validation workflow ID  
+* Publication timestamp (UTC, ISO 8601 ASCII only)  
+* Telemetry bundle (energy_wh, carbon_gco2e)
+
+Pipelines must be deterministic and reproducible.
+
+## 🧑‍💼 Agent Requirements
+Agents contributing to STAC entries include:
+
+* `@kfm-architecture` (schema)  
+* `@kfm-data` (pipelines)  
+* `@kfm-governance` (approvals)  
+* `@faircare-council` (ethics)  
+* `@kfm-security` (checksum integrity)
+
+Agents are PROV-O `prov:Agent`.
+
+## 🧪 Validation Requirements
+Every collection and item must pass:
+
+* STAC 1.0 conformance  
+* DCAT 3.0 crosswalk validation  
+* ISO 19115 field check  
+* FAIR+CARE compliance  
+* Checksum integrity  
+* Schema verification (JSON schema)  
+* Governance approval step (append-only ledger)
+
+Outputs stored under:
+
+* `data/reports/audit/…`  
+* `data/reports/fair/…`  
+* `data/reports/validation/…`
+
+## 📥 Retrieval Examples
+### Python (pystac-client)
+```python
+from pystac_client import Client
+catalog = Client.open("https://kfm.example.org/catalog.json")
+hydro = catalog.get_collection("kfm_hydrology")
+items = list(hydro.get_items())
 ```
 
----
-
-## ⚙️ STAC Governance Workflow
-
-```mermaid
-flowchart TD
-    PROC["Processed Data (data/processed/*)"] --> HARM["Metadata Harmonization (STAC/DCAT)"]
-    HARM --> FAIR["FAIR+CARE Certification (data/reports/fair/*)"]
-    FAIR --> CHK["Checksum & Provenance Validation (data/reports/audit/*)"]
-    CHK --> PUB["STAC Catalog Publication (data/stac/collection_*.json)"]
+### CURL
+```bash
+curl -s https://kfm.example.org/data/stac/catalog.json
 ```
 
-### Workflow Description
-
-1. **Metadata Extraction** — Processed datasets summarized and normalized to STAC schema.  
-2. **FAIR+CARE Validation** — Audited for accessibility, licensing, and ethics.  
-3. **Checksum Linking** — Each record tied to cryptographic manifest and provenance ledger.  
-4. **Publication** — Finalized catalogs released as globally discoverable STAC collections.
-
----
-
-## 🧠 FAIR+CARE Governance Matrix
-
-| Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | STAC/DCAT APIs index & search datasets by UUID, theme, & time. | `@kfm-data` |
-| **Accessible** | Datasets are CC-BY 4.0; public JSON & JSON-LD catalog exports. | `@kfm-accessibility` |
-| **Interoperable** | Aligns with STAC 1.0 · DCAT 3.0 · ISO 19115 schema & vocab. | `@kfm-architecture` |
-| **Reusable** | Each Item includes provenance, checksum, and FAIR+CARE tags. | `@kfm-design` |
-| **Collective Benefit** | Enables equitable, open scientific discovery. | `@faircare-council` |
-| **Authority to Control** | Council approval required for collection publication. | `@kfm-governance` |
-| **Responsibility** | Validators maintain metadata lineage & schema integrity. | `@kfm-security` |
-| **Ethics** | Governance linkage ensures ethical data stewardship. | `@kfm-ethics` |
-
-**Linked Governance Sources:**  
-`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
-
----
-
-## 📊 Catalog Overview (v10.2.2)
-
-| Collection | Records | CRS | FAIR+CARE | License |
-|---|---:|---|---|---|
-| Climate | 13 | EPSG:4326 | ✅ Certified | CC-BY 4.0 |
-| Hazards | 12 | EPSG:4326 | ✅ Certified | CC-BY 4.0 |
-| Hydrology | 10 | EPSG:4326 | ✅ Certified | CC-BY 4.0 |
-| Landcover | 8 | EPSG:4326 | ✅ Certified | CC-BY 4.0 |
-| Spatial | 11 | EPSG:4326 | ✅ Certified | CC-BY 4.0 |
-| Tabular | 6 | — | ✅ Certified | CC-BY 4.0 |
-
----
-
-## ⚙️ Validation & Publication Artifacts
-
-| File | Description | Format |
-|---|---|---|
-| `catalog.json` | Root STAC manifest linking all collections | JSON |
-| `collection_*.json` | Domain-specific STAC 1.0 collections | JSON |
-| `metadata.json` | Governance, checksum, and ethics registry | JSON |
-| `stac_validation_report.json` | STAC conformance & metadata integrity results | JSON |
-
-**Automation Workflow:** `stac_catalog_sync.yml`
-
----
-
-## ⚖️ Retention & Provenance Policy
-
-| Data Type | Retention | Policy |
-|---|---|---|
-| STAC Catalogs | Permanent | Archived for transparency & reproducibility |
-| FAIR+CARE Audits | Permanent | Retained for certification & review |
-| Metadata | Permanent | Append-only governance ledger |
-| Logs | 365 Days | Rotated quarterly via governance automation |
-
-Retention automation: `stac_retention_cleanup.yml`.
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Value | Verified By |
-|---|---:|---|
-| Energy Use (catalog build) | 6.9 Wh | `@kfm-sustainability` |
-| Carbon Output | 9.1 gCO₂e | `@kfm-security` |
-| Renewable Power | 100% (RE100) | `@kfm-infrastructure` |
-| FAIR+CARE Compliance | 100% | `@faircare-council` |
-
-**Telemetry Source:**  
-`../../releases/v10.2.0/focus-telemetry.json`
-
----
-
-## 🧾 Internal Use Citation
-
-```text
-Kansas Frontier Matrix (2025). STAC Catalog (v10.2.2).
-FAIR+CARE-certified SpatioTemporal Asset Catalog integrating metadata across KFM datasets under STAC 1.0, DCAT 3.0, and ISO 19115 standards.
-Checksum-verified, governance-audited, and globally discoverable for open science and education.
+### Neo4j Cypher
+```cypher
+MATCH (c:StacCollection {id: "kfm_hazards_v11_1"})
+RETURN c.title, c.temporal_extent_start, c.temporal_extent_end;
 ```
 
----
+## 🛣️ Roadmap
+* v11.2 — Real-time streaming STAC WebSocket bridge  
+* v11.3 — Automated provenance embedding within STAC items  
+* v11.4 — H3-based spatial generalization for ethical masking  
+* v11.5 — Multi-resolution tiling integration for Focus Mode v3  
 
 ## 🕰️ Version History
-
 | Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.2.2 | 2025-11-12 | `@kfm-architecture` | Align to v10.2: streaming STAC bridge, JSON-LD linkage to ledgers, refreshed DCAT crosswalk. |
-| v10.0.0 | 2025-11-09 | `@kfm-architecture` | Telemetry v2 schema; Streaming STAC integration; DCAT crosswalk refresh; examples updated. |
-| v9.7.0 | 2025-11-06 | `@kfm-architecture` | Telemetry schema added; metadata refactor; tabular DCAT mapping alignment. |
+|--------|------|--------|---------|
+| v11.1.0 | 2025-11-19 | `@kfm-architecture` | Full KFM-MDP v11 upgrade, governance strengthening, directory alignment. |
+| v11.0.0 | 2025-11-15 | `@kfm-architecture` | Initial v11 metadata migration. |
+| v10.2.2 | 2025-11-12 | `@kfm-architecture` | Streaming STAC and telemetry v2. |
 
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Spatial Intelligence × FAIR+CARE Governance × Provenance Traceability*  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Data Index](../README.md) · [Governance Charter](../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+## 🔗 Footer
+[⬅️ Back to Data Index](../README.md) ·  
+[📐 Data Architecture](../../docs/ARCHITECTURE.md) ·  
+[⚖️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
