@@ -249,4 +249,3 @@ When you introduce new terminology:
 [Back to Documentation Hub](README.md) · [Back to Standards](standards/README.md) · [Back to Repository Root](../README.md)
 
 </div>
-~~~~markdown
