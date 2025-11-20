@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "📚 Kansas Frontier Matrix — Raw Data Metadata Registry (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/metadata/README.md"
@@ -288,4 +287,3 @@ and reproducible open data governance.
 [⚖️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-```
