@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "💧 Kansas Frontier Matrix — Processed Hydrology Data (Diamond9 Omega / CrownInfinityOmega Ultimate Certified)"
 path: "data/work/processed/hydrology/README.md"
