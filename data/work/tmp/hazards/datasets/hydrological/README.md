@@ -8,7 +8,7 @@ release_stage: "Stable · Governed"
 review_cycle: "Continuous / Autonomous"
 
 commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-README-sha>"
+previous_version_hash: "<previous-README-sha256>"
 doc_integrity_checksum: "<sha256-of-this-file>"
 doc_uuid: "urn:kfm:doc:data-work-tmp-hazards-datasets-hydrological-v11.0.0"
 semantic_document_id: "kfm-doc-data-work-tmp-hazards-datasets-hydrological-readme"
@@ -56,13 +56,13 @@ ontology_alignment:
   geosparql: "geo:FeatureCollection"
 
 ai_training_inclusion: false
-ai_focusmode_usage: "Restricted"
+ai_focusmode_usage: "Restricted to internal hydrological modeling & QA"
 ai_transform_permissions:
   - "summaries"
   - "hydrology-oriented contextual analysis"
 ai_transform_prohibited:
   - "public flood-risk rankings without governance approval"
-  - "asset-level hazard targeting"
+  - "asset-level or individual-specific risk scoring"
 
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA"
@@ -79,20 +79,20 @@ sunset_policy: "Auto-cleared after promotion → transforms/"
 `data/work/tmp/hazards/datasets/hydrological/README.md`
 
 **Purpose:**  
-Temporary FAIR+CARE-governed workspace for hydrological hazard dataset ingestion:
+Temporary FAIR+CARE-governed workspace for **hydrological hazard dataset ingestion and pre-validation**, including:
 
 - Floodplain extents & flood risk layers  
 - Drought severity and anomaly indices  
-- Groundwater stress & depletion metrics  
+- Groundwater stress and depletion metrics  
 - Streamflow/riverine hazard indicators  
-- Water resource pressure layers (NIDIS, USGS, NOAA)
+- Water resource pressure & availability layers (NIDIS, USGS, NOAA, FEMA)
 
-This TMP environment ensures:
+This TMP workspace enforces:
 
-- Valid schema + metadata alignment  
-- Ethics & sovereignty compliance  
+- Schema + metadata alignment  
+- FAIR+CARE + sovereignty compliance  
 - Telemetry v2 sustainability logging  
-- Fully traceable ingestion → validation pathway  
+- Full provenance × checksum × lineage traceability  
 
 [![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v11.0-blue.svg)]()  
 [![FAIR+CARE Hydrology](https://img.shields.io/badge/FAIR%2FCARE-Hydrology%20Governed-gold.svg)]()  
@@ -105,21 +105,23 @@ This TMP environment ensures:
 
 ## 1. 📘 Overview
 
-The Hydrological Hazard Datasets TMP Workspace is the **first stop** for water-related hazard data entering KFM.  
+The Hydrological Hazard Datasets TMP Workspace is the **entry point** for water-focused hazard data across KFM.  
 It performs:
 
-- Schema validation  
-- FAIR+CARE ethics screening  
-- Basic QA checks (geometry, units, ranges)  
-- Telemetry & checksum registration  
-- Early detection of sensitive or sovereignty-governed water insights  
+- 🧩 **Schema contract enforcement**  
+- 🛡️ **Ethics + sovereignty validation**  
+- 📊 **Basic QA checks** (geometry, units, ranges, completeness)  
+- 🔐 **Checksum generation & validation**  
+- 🌱 **Telemetry v2 reporting** (energy, carbon, runtime, coverage)  
+- 📜 **Provenance registration for reproducibility**
 
-This workspace guarantees reproducibility and ethical stewardship of:
+All approved outputs flow into:
 
-- Flood hazard layers (FEMA NFHL, NOAA)  
-- Drought indicators (NIDIS, USDM)  
-- Groundwater stress indices (USGS, KGS)  
-- Riverine hazard datasets (streamflow anomalies, flood recurrence)  
+```
+data/work/tmp/hazards/transforms/
+```
+
+for reprojection, harmonization, CF alignment, and AI-driven hazard modeling.
 
 ---
 
@@ -134,13 +136,12 @@ data/work/tmp/hazards/datasets/hydrological/
 └── metadata.json                      # Dataset-level ingest metadata
 ```
 
-Each file MUST be:
+Every file must be:
 
 - Checksum-verified  
-- Schema-aligned  
-- FAIR+CARE pre-audited  
-- Telemetry-logged  
-- Recorded in `metadata.json`  
+- Schema-compliant  
+- FAIR+CARE-screened  
+- Represented in `metadata.json`  
 
 ---
 
@@ -150,28 +151,24 @@ Each file MUST be:
 flowchart TD
     RAW["Raw Hydrological (NOAA · USGS · NIDIS · FEMA)"]
         --> INGEST["TMP Ingestion (datasets/hydrological/)"]
-    INGEST --> VALIDATE["Schema + FAIR+CARE Pre-Validation"]
-    VALIDATE --> LOG["Checksum + Telemetry Logging"]
+    INGEST --> PREVAL["Schema + FAIR+CARE Pre-Validation"]
+    PREVAL --> LOG["Checksum + Telemetry Logging"]
     LOG --> TRANSFORM["→ data/work/tmp/hazards/transforms/ (Harmonization)"]
 ```
 
-### Step Summary
+### Steps Explained
 
 1. **Ingestion**  
-   Raw hydrology hazard data are copied, normalized, and described in `metadata.json`.
+   Raw hydrological hazard datasets are collected & normalized.
 
 2. **Schema + FAIR+CARE Validation**  
-   Contract checks:
-   - Required variables  
-   - Units & ranges  
-   - Spatial validity  
-   - Privacy/cultural sensitivity audits  
+   Contract checks + ethics screening + sovereignty masking.
 
 3. **Checksum + Telemetry Logging**  
-   Electrical & carbon footprint recorded per ingestion run.
+   SHA-256 integrity + sustainability metrics recorded per ingestion cycle.
 
-4. **Promotion to Transforms**  
-   Outputs move to harmonization phase.
+4. **Promotion → Transforms**  
+   Only validated files move to harmonization workflows.
 
 ---
 
@@ -202,62 +199,55 @@ flowchart TD
 
 ---
 
-## 5. 🧠 FAIR+CARE Governance Matrix — Hydrological TMP
+## 5. 🧠 FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
 |----------|----------------|-----------|
 | **Findable** | Indexed by domain, hazard type, checksum, version | `@kfm-data` |
-| **Accessible** | FAIR+CARE-governed internal access | `@kfm-accessibility` |
-| **Interoperable** | STAC/DCAT, ISO 19115, CIDOC-CRM HazardExt aligned | `@kfm-architecture` |
-| **Reusable** | Checksums + telemetry + provenance preserved | `@kfm-design` |
-| **Collective Benefit** | Supports water resilience, community planning | `@faircare-council` |
-| **Authority to Control** | Governance Council authorizes public release | `@kfm-governance` |
-| **Responsibility** | Validators maintain schema & ethics logs | `@kfm-security` |
-| **Ethics** | Water-rights & cultural site masking applied | `@kfm-ethics` |
-
-Audit References:
-
-- `data/reports/fair/data_care_assessment.json`  
-- `data/reports/audit/data_provenance_ledger.json`
+| **Accessible** | Internal FAIR+CARE-gated accessibility | `@kfm-accessibility` |
+| **Interoperable** | STAC/DCAT, ISO 19115, HazardExt ontology alignment | `@kfm-architecture` |
+| **Reusable** | Telemetry + checksum + provenance preserved | `@kfm-design` |
+| **Collective Benefit** | Supports statewide resilience & water governance | `@faircare-council` |
+| **Authority to Control** | Release governed by Council + sovereignty rules | `@kfm-governance` |
+| **Responsibility** | Validators maintain schema integrity & ethics logs | `@kfm-security` |
+| **Ethics** | Water-rights + cultural site masking per policy | `@kfm-ethics` |
 
 ---
 
 ## 6. 🧪 Validation & QA Artifacts
 
-Located in this or related TMP subdirectories:
-
 | Artifact | Description | Format |
 |---------|-------------|--------|
 | `metadata.json` | Ingestion provenance + telemetry + checksum | JSON |
-| `schema_validation_summary.json` | Schema contract compliance | JSON |
-| `faircare_audit_report.json` | Ethics review outcome | JSON |
-| `checksum_registry.json` | File integrity registry | JSON |
+| `schema_validation_summary.json` | Contract compliance | JSON |
+| `faircare_audit_report.json` | Ethics & sensitivity pre-validation | JSON |
+| `checksum_registry.json` | SHA-256 integrity registry | JSON |
 
-Automation:
-
-- `hydrological_datasets_sync_v2.yml`
+Automation:  
+`hydrological_datasets_sync_v2.yml`
 
 ---
 
 ## 7. ♻️ Retention & Sustainability
 
-TMP hydrological datasets follow the v11 retention policy:
-
 | Type | Retention | Policy |
 |------|----------:|--------|
-| Hydrology TMP Data | 7 days | Deleted after promotion or expiry |
-| Validation Logs | 30 days | Archived for audit tracing |
-| Metadata | 365 days | Retained under ledger governance |
-| Ledger Entries | Permanent | Immutable |
+| TMP Hydrology Data | 7 days | Purged after promotion |
+| Validation Logs | 30 days | Archived for audit |
+| Metadata | 365 days | Governance retention |
+| Ledger Entries | Permanent | Immutable chain record |
 
 Telemetry Source:  
 `../../../../../../releases/v11.0.0/focus-telemetry.json`
 
-**Typical ingestion run:**  
-- **Energy:** ~8.0 Wh  
-- **Carbon:** ~9.1 gCO₂e  
-- **Renewable Power:** 100%  
-- **FAIR+CARE compliance:** 100%  
+Example ingestion metrics:
+
+| Metric | Value | Verified By |
+|--------|------:|-------------|
+| Energy | 8.0 Wh | `@kfm-sustainability` |
+| Carbon | 9.1 gCO₂e | `@kfm-security` |
+| Renewable | 100% | `@kfm-infrastructure` |
+| Ethics Compliance | 100% | `@faircare-council` |
 
 ---
 
@@ -266,16 +256,26 @@ Telemetry Source:
 ```text
 Kansas Frontier Matrix (2025). Hydrological Hazard Datasets TMP Workspace (v11.0.0).
 Temporary FAIR+CARE workspace for ingesting, validating, and harmonizing hydrological
-hazard datasets (flood, drought, groundwater stress), with retention, telemetry,
-and governance-backed provenance aligned with MCP-DL v11 and KFM-PDC v11.
+hazard datasets (floods, droughts, groundwater stress), with telemetry,
+ontology alignment, and governance-backed provenance under MCP-DL v11 and KFM-PDC v11.
 ```
+
+---
+
+## 🕰️ Version History
+
+| Version | Date       | Author           | Summary                                                                 |
+|--------:|------------|------------------|-------------------------------------------------------------------------|
+| v11.0.0 | 2025-11-20 | `@kfm-hazards`   | Upgraded to v11 preferred formatting; added governance, telemetry v2, FAIR+CARE enhancements, ontology alignment. |
+| v10.0.0 | 2025-11-09 | `@kfm-hazards`   | Added TMP ingestion workspace, telemetry v2, schema & FAIR+CARE validators. |
+| v9.7.0  | 2025-11-06 | `@kfm-hazards`   | Added schema harmonization rules and early FAIR+CARE checks.            |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Hydrological Hazard Datasets TMP Workspace**  
-💧 FAIR+CARE Certified · Hazard Ingestion & QA Layer · Diamond⁹ Ω / Crown∞Ω  
+**Kansas Frontier Matrix — Hydrological Hazard TMP Workspace**  
+💧 FAIR+CARE Certified · Hazard Ingestion & QA Layer · Diamond⁹ Ω / Crown⁹ Ω  
 
 [Back to Hazard Datasets](../README.md) · [Hydrology Domain Architecture](../../../../ARCHITECTURE.md) · [Governance Charter](../../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
 
