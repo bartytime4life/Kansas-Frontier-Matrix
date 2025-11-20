@@ -3,7 +3,7 @@ title: "🧮 Kansas Frontier Matrix — Self-Validation Reports (Diamond⁹ Ω /
 path: "data/reports/self-validation/README.md"
 version: "v11.0.0"
 last_updated: "2025-11-19"
-review_cycle: "Continuous / Autonomous QA Cycle"
+review_cycle: "Continuous / Autonomous QA Pipeline"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
 manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
@@ -30,18 +30,18 @@ metadata_profiles:
   - "FAIR+CARE"
   - "DCAT 3.0"
   - "PROV-O"
-  - "ISO 19115"
+  - "ISO-19115"
 doc_uuid: "urn:kfm:data:reports:self_validation:v11"
 semantic_document_id: "kfm-self-validation"
-event_source_id: "ledger:self_validation_q4_2025"
+event_source_id: "ledger:self_validation_v11"
 immutability_status: "mutable"
 doc_integrity_checksum: "<sha256>"
 ai_training_inclusion: false
-ai_focusmode_usage: "Allowed (qa-context only)"
+ai_focusmode_usage: "Allowed"
 ai_transform_permissions:
   - "summary"
-  - "timeline-generation"
   - "governance-digest"
+  - "timeline-generation"
 ai_transform_prohibited:
   - "content-alteration"
 accessibility_compliance: "WCAG 2.1 AA+"
@@ -56,10 +56,10 @@ sunset_policy: "Annual Review"
 # 🧮 Kansas Frontier Matrix — Self-Validation Reports  
 `data/reports/self-validation/README.md`
 
-Purpose:  
-Define the autonomous validation system responsible for schema safety,  
-checksum verification, FAIR+CARE internal scoring, AI ethics checks,  
-and telemetry-based reproducibility for KFM v11.
+**Purpose:**  
+Define the automated validation outputs produced by the Kansas Frontier Matrix autonomous pipelines.  
+These reports ensure continuous schema integrity, checksum validation, FAIR+CARE internal compliance,  
+AI drift/bias monitoring, and reproducibility tracking across all KFM v11 workflows.
 
 </div>
 
@@ -67,145 +67,143 @@ and telemetry-based reproducibility for KFM v11.
 
 ## 📘 Overview
 
-The Self-Validation Layer is KFM’s automated QA engine, continuously performing:
+The Self-Validation Layer:
 
-- Schema conformance  
-- Checksum and lineage validation  
-- FAIR+CARE internal scoring  
-- AI drift, bias, and explainability checks  
-- Accessibility completeness review  
-- Sustainability telemetry (energy Wh, carbon gCO2e, records processed)  
+• Runs automatically after every ETL, model update, ingestion pipeline, or dataset promotion.  
+• Verifies schema correctness for all generated artifacts.  
+• Performs checksum validation for reproducibility.  
+• Runs FAIR+CARE internal scans (metadata completeness, openness, reuse readiness, stewardship checks).  
+• Evaluates AI drift, bias, explainability consistency, and safety.  
+• Emits telemetry v11 (records processed, energy Wh, carbon gCO2e).  
+• Updates governance ledgers with validation status.
 
-Outputs feed governance ledgers, FAIR+CARE dashboards,  
-and Focus Mode v3 narrative safety layers.
+All self-validation outputs are used by:
 
----
-
-## 🧭 Self-Validation Workflow (ASCII Diagram)
-
-  KFM SELF-VALIDATION WORKFLOW
-  ---------------------------------------------------------
-  [1] ETL Outputs Produced
-        |
-        v
-  [2] Schema Compliance Validation
-        |
-        v
-  [3] Checksum and FAIR+CARE Verification
-        |
-        v
-  [4] AI Drift / Bias / Explainability Checks
-        |
-        v
-  [5] Autonomous Report Generation
-        |
-        v
-  [6] Governance Ledger Append
+• FAIR+CARE Governance Council  
+• Focus Mode v3 integrity weighting  
+• Provenance auditors  
+• Data quality dashboards  
+• Promotion & rollback pipelines
 
 ---
 
 ## 📂 Directory Layout
 
-  data/reports/self-validation/
-  ├── README.md
-  ├── work-climate-validation.json
-  ├── work-hazards-validation.json
-  ├── work-hydrology-validation.json
-  ├── work-landcover-validation.json
-  ├── work-spatial-validation.json
-  ├── work-tabular-validation.json
-  └── self-validation-summary.json
+data/reports/self-validation/ contains:
+
+• README.md (this file)  
+• work-climate-validation.json  
+• work-hazards-validation.json  
+• work-hydrology-validation.json  
+• work-landcover-validation.json  
+• work-spatial-validation.json  
+• work-tabular-validation.json  
+• self-validation-summary.json  
+
+Each file represents the full autonomous QA results for one domain.
 
 ---
 
-## 📊 Validation Summary (ASCII Table)
+## 🧩 Validation Categories
 
-+----------------+-------------+-------------+-------------+-----------+----------------+
-| Domain         | FAIRCARE    | Schema      | Checksums   | Drift     | Final Status   |
-+----------------+-------------+-------------+-------------+-----------+----------------+
-| Climate        | Pass        | Pass        | Pass        | None      | Certified      |
-| Hazards        | Pass        | Pass        | Pass        | None      | Certified      |
-| Hydrology      | Pass        | Pass        | Pass        | Low       | Certified      |
-| Landcover      | Pass        | Pass        | Pass        | None      | Certified      |
-| Spatial        | Pass        | Pass        | Pass        | Low       | Certified      |
-| Tabular        | Pass        | Pass        | Pass        | Low       | Certified      |
-+----------------+-------------+-------------+-------------+-----------+----------------+
+The self-validation engine evaluates:
 
----
-
-## 🧩 Example Self-Validation Record (v11 Format)
-
-(Displayed as plain text for stable GitHub rendering)
-
-  id: self_validation_hazards_v11.0.0  
-  domain: hazards  
-  schema_validated: true  
-  checksums_verified: true  
-  faircare_score: 99.8  
-  ai_bias_check_passed: true  
-  drift_detected: false  
-  timestamp: 2025-11-19T23:00:00Z  
-  validator: @kfm-etl-autonomous  
-  telemetry:  
-    energy_wh: 8.9  
-    carbon_gco2e: 10.7  
-    records_processed: 184233  
-  governance_ref: data/reports/audit/data_provenance_ledger.json  
+• Schema conformance  
+• Checksum integrity  
+• FAIR metadata completeness  
+• CARE stewardship readiness  
+• Data license correctness  
+• Semantic/spatial/temporal metadata presence  
+• AI explainability conditions (Focus v3)  
+• Bias and drift checks  
+• Accessibility indicators  
+• Sustainability metrics
 
 ---
 
-## ⚖️ FAIR+CARE Governance Alignment (ASCII Table)
+## 📝 Example Validation Record
 
-+-----------------------+-----------------------------------------------------------+---------------------+
-| Principle             | Implementation                                            | Oversight           |
-+-----------------------+-----------------------------------------------------------+---------------------+
-| Findable              | Indexed by domain/version in provenance ledger           | @kfm-data           |
-| Accessible            | Open JSON, metadata completeness                         | @kfm-accessibility  |
-| Interoperable         | ISO 19115, DCAT 3.0, PROV-O alignment                    | @kfm-architecture   |
-| Reusable              | Checksums, lineage, FAIR+CARE metadata                   | @kfm-design         |
-| Collective Benefit    | Public visibility of automated QA processes              | FAIR+CARE Council   |
-| Authority to Control  | Council validates ethics cycles                           | @kfm-governance     |
-| Responsibility        | Autonomous bias/drift checks                              | @kfm-security       |
-| Ethics                | Ethics reviewed in each cycle                             | @kfm-ethics         |
-+-----------------------+-----------------------------------------------------------+---------------------+
+(Shown as plain text to maintain KFM-MDP v11 stability)
 
----
-
-## 🌱 Sustainability Metrics (Telemetry v3)
-
-  energy_wh: 9.3  
-  carbon_gco2e: 11.8  
-  renewable_power: 100 percent  
+id: self_validation_hazards_v11.0.0  
+domain: hazards  
+schema_validated: true  
+checksums_verified: true  
+faircare_score: 99.8  
+ai_bias_check_passed: true  
+drift_detected: false  
+timestamp: 2025-11-19T23:00:00Z  
+validator: @kfm-etl-autonomous  
+telemetry:  
+  energy_wh: 8.9  
+  carbon_gco2e: 10.7  
   records_processed: 184233  
-  faircare_compliance: 100 percent  
+governance_ref: data/reports/audit/data_provenance_ledger.json
+
+---
+
+## ⚖️ FAIR+CARE Governance Alignment
+
+This self-validation module directly supports FAIR+CARE by ensuring:
+
+Findable  
+• All validated outputs registered in STAC/DCAT catalogs.  
+
+Accessible  
+• Reports are machine-readable JSON with consistent metadata.  
+
+Interoperable  
+• Uses ISO-19115, DCAT, PROV-O, and KFM metadata patterns.  
+
+Reusable  
+• Includes full provenance, checksums, status, and telemetry.  
+
+Collective Benefit  
+• Automated QA increases reliability of public-access datasets.  
+
+Authority to Control  
+• Governance Council verifies outputs before promotion.  
+
+Responsibility  
+• Pipelines self-enforce drift/bias/explainability compliance.  
+
+Ethics  
+• Self-validation results feed ethics dashboards and narrative safety rules.
+
+---
+
+## 🌱 Sustainability Metrics
+
+Telemetry v11 attached to each validation record includes:
+
+• energy_wh  
+• carbon_gco2e  
+• renewable_power (always 100% for KFM compute)  
+• records_processed  
+• runtime_seconds
 
 ---
 
 ## 🧾 Internal Use Citation
 
-  Kansas Frontier Matrix (2025).  
-  Self-Validation Reports (v11.0.0).  
-  Autonomous FAIR+CARE-aligned validation system ensuring  
-  reproducibility and ethical integrity across all KFM pipelines.
+Kansas Frontier Matrix (2025). Self-Validation Reports (v11.0.0).  
+Autonomous FAIR+CARE-aligned validation and reproducibility system for all ETL, AI,  
+and data-governance workflows in the KFM v11 environment.
 
 ---
 
-## 🕰️ Version History (ASCII Table)
+## 🕰️ Version History
 
-+-----------+------------+----------------------+----------------------------------------------+
-| Version   | Date       | Author               | Summary                                      |
-+-----------+------------+----------------------+----------------------------------------------+
-| v11.0.0   | 2025-11-19 | Lead Programmer      | Full v11 upgrade; ASCII tables; metadata fix |
-| v10.0.0   | 2025-11-09 | @kfm-autonomous      | Telemetry v2; streaming STAC integration     |
-| v9.7.0    | 2025-11-06 | @kfm-autonomous      | Initial autonomous QA module                 |
-+-----------+------------+----------------------+----------------------------------------------+
+v11.0.0 — Full KFM-MDP v11 upgrade; simplified structure; removed tables; governance metadata aligned.  
+v10.0.0 — Telemetry v2 integration; STAC stream-awareness added.  
+v9.7.0 — Initial autonomous validation module.
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Autonomous QA Layer**  
-🧮 *Continuous Validation · FAIR+CARE Governance · Ethical Reliability*
+🧮 Continuous Integrity · FAIR+CARE Governance · Reproducibility at Scale  
 
 [⬅ Back to Reports Index](../README.md)  
 [⚖ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
