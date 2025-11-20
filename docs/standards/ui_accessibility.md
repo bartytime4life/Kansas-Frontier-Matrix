@@ -422,4 +422,3 @@ Master Coder Protocol v6.3 · FAIR+CARE Certified
 [⚖ Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
-~~~~markdown
