@@ -1,33 +1,64 @@
 ---
 title: "⚖️ Kansas Frontier Matrix — FAIR+CARE Ethics Review Summary (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/reports/fair/ethics_review_summary.md"
-version: "v9.7.0"
-last_updated: "2025-11-06"
+version: "v11.0.0"
+last_updated: "2025-11-19"
 review_cycle: "Quarterly / FAIR+CARE Governance Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v9.7.0/manifest.zip"
-data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/data-reports-fair-ethics-v9.json"
+sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/data-reports-fair-ethics-v11.json"
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0 / FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0.0"
+status: "Active / Enforced"
+doc_kind: "FAIR+CARE Governance"
+intent: "ethics-summary"
+fair_category: "F1-A1-I1-R1"
+care_label: "Medium—Ethics & Stewardship"
+sensitivity_level: "Contextual"
+ontology_alignment:
+  schema_org: "Report"
+  prov_o: "prov:Entity"
+  dcat: "dcat:Dataset"
+  faircare: "FAIR+CARE Ethics Artifact"
+story_node_refs: []
+provenance_chain:
+  - "data/reports/fair/ethics_review_summary.md@v9.7.0"
+metadata_profiles:
+  - "FAIR+CARE"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "ISO 19115"
+doc_uuid: "urn:kfm:data:reports:fair:ethics_review_summary:v11"
+semantic_document_id: "kfm-ethics-review-summary"
+event_source_id: "ledger:ethics_review_q4_2025"
+immutability_status: "mutable"
+doc_integrity_checksum: "<sha256>"
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed (governance-only)"
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "governance-digest"
+ai_transform_prohibited:
+  - "content-alteration"
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public"
+lifecycle_stage: "active"
+ttl_policy: "Permanent"
+sunset_policy: "Annual Review"
 ---
 
 <div align="center">
 
-# ⚖️ Kansas Frontier Matrix — **FAIR+CARE Ethics Review Summary**
+# ⚖️ FAIR+CARE Ethics Review Summary — Kansas Frontier Matrix  
 `data/reports/fair/ethics_review_summary.md`
 
 **Purpose:**  
-Summarizes quarterly **FAIR+CARE Council** ethical evaluations of all datasets, AI models, and publications in the Kansas Frontier Matrix (KFM).  
-Ensures transparency, accountability, and cultural sensitivity in every workflow and release.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../docs/architecture/README.md)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Diamond%E2%81%B9%E2%84%AA-gold.svg)](../../../../docs/standards/faircare-validation.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../../LICENSE)
-[![Governance Workflow](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/faircare-validate.yml/badge.svg)](../../../../.github/workflows/faircare-validate.yml)
+Provide the quarterly **FAIR+CARE Council ethics evaluation** for all KFM datasets, models, and narrative outputs, ensuring cultural respect, provenance trust, accessibility, and ethical AI compliance across KFM v11.
 
 </div>
 
@@ -35,125 +66,131 @@ Ensures transparency, accountability, and cultural sensitivity in every workflow
 
 ## 📘 Overview
 
-The **Ethics Review Summary** consolidates governance findings from **quarterly FAIR+CARE audits**.  
-Each review covers:
-- Data ethics and community engagement outcomes.  
-- AI bias and explainability verification.  
-- Provenance, licensing, and consent audits.  
-- Compliance with **MCP-DL v6.3** and KFM’s governance charter.
+This summary consolidates:
 
-Ethics reports derive from automated `faircare-validate.yml` workflows and manual reviews by the FAIR+CARE Council.
+- FAIR+CARE Council governance evaluations  
+- Community / Indigenous stewardship reviews  
+- AI ethics audits (including Focus Mode v3 explainability and drift checks)  
+- Provenance integrity (licensing, lineage, checksums)  
+- Accessibility and sustainability metrics  
+- Governance decisions, signatures, and public release status  
 
----
-
-## 🧩 Governance Workflow
-
-```mermaid
-flowchart TD
-  A["Dataset / AI Model Submitted"] --> B["Automated FAIR+CARE Validation"]
-  B --> C["Council Review (Data Sensitivity, Provenance)"]
-  C --> D["Community / Indigenous Stewardship Checks"]
-  D --> E["Governance Decision & Ledger Entry"]
-  E --> F["Public Ethics Summary Publication"]
-```
-
-### Steps
-1. **Submission:** New dataset or model triggers automated FAIR+CARE validation.  
-2. **Council Review:** Council assesses ethics, provenance, and license compliance.  
-3. **Cultural Review:** Community/Indigenous data reviewed under CARE principles.  
-4. **Decision Logging:** Stored in `data/reports/fair/data_care_assessment.json`.  
-5. **Publication:** Public summary added to this ethics report.
+Ethics results combine automated FAIR/CARE checks with Council-led manual review and structured community input.
 
 ---
 
-## 🧭 Review Categories
+## 🧭 Governance Workflow (ASCII Diagram)
 
-| Category | Description | Status | Reviewer |
-|-----------|-------------|---------|-----------|
-| **Data Provenance** | Source verification, checksum lineage, license validation. | ✅ Approved | `@kfm-architecture` |
-| **AI Model Ethics** | Bias, explainability, drift safeguards verified. | ✅ Approved | `@kfm-ai-lab` |
-| **Community Stewardship** | Culturally sensitive or Indigenous data review. | ⚠️ Under Review | `@kfm-data-lab` |
-| **Environmental Impact** | Resource use, energy efficiency, sustainability review. | ✅ Approved | `@kfm-etl-ops` |
-| **Accessibility & Equity** | Inclusive UX and public access conformance (WCAG 2.2). | ✅ Approved | `@kfm-architecture` |
-| **Legal & License Compliance** | Licensing validation (CC-BY, Public Domain). | ✅ Approved | `@bartytime4life` |
-
-> ⚠️ *“Under Review”* indicates pending council sign-off in Q1 2026 cycle.
-
----
-
-## 🧠 FAIR+CARE Audit Highlights — Q4 2025
-
-| Category | Metric | Value | Trend |
-|-----------|---------|--------|--------|
-| FAIR Metadata Completeness | — | 99.5% | ⬆ Improved |
-| CARE Compliance | — | 98.9% | ↔ Stable |
-| AI Model Drift Detection | Stability Index | 99.1% | ⬆ Improved |
-| Accessibility (WCAG 2.2) | Score | 100% | ✅ Consistent |
-| Cultural Stewardship | Consultations Active | 4 / 4 Archives | ✅ Complete |
-
-### Key Findings
-- Metadata completeness improved by **2.1%** from Q3 2025.  
-- FAIR+CARE compliance remains **above 98%** for all validated datasets.  
-- Implemented new **Consent & Attribution Flags** for community-led data.  
-- Enhanced provenance traceability via **DCAT JSON-LD** export.  
-- Expanded **tribal consultation** for historical archives and treaties.
+  KFM FAIR+CARE ETHICS WORKFLOW
+  -----------------------------------------------
+  [1] Dataset / Model Submitted
+        |
+        v
+  [2] Automated FAIR+CARE Validation
+        |
+        v
+  [3] Council Ethics Review
+        |
+        v
+  [4] Indigenous / Community Stewardship Evaluation
+        |
+        v
+  [5] Governance Decision + Ledger Append
+        |
+        v
+  [6] Public Ethics Summary (this file)
 
 ---
 
-## ⚖️ Ethical Principles Alignment
+## 📂 Review Categories
 
-| Principle | Implementation Evidence | Governance Source |
-|-----------|--------------------------|-------------------|
-| **Findable** | Indexed in STAC/DCAT catalogs, resolvable DOIs. | `data/meta/` |
-| **Accessible** | Open access (CC-BY/Public Domain) with full metadata. | `data/sources/` |
-| **Interoperable** | FAIR-compliant JSON-LD + ISO 19115 alignment. | `data/reports/validation/` |
-| **Reusable** | Provenance, checksums, and FAIR+CARE certification logged. | `data/reports/audit/` |
-| **Collective Benefit** | Promotes equitable knowledge sharing. | FAIR+CARE Council |
-| **Authority to Control** | Acknowledges Indigenous/community data rights. | CARE Council |
-| **Responsibility** | Audits ensure transparency, bias mitigation, and accuracy. | Governance Ledger |
-| **Ethics** | Annual council review ensures cultural and scientific integrity. | Ethics Council |
+| Category                  | Description                                   | Status          | Reviewer               |
+|---------------------------|-----------------------------------------------|-----------------|------------------------|
+| Data Provenance           | Lineage, checksums, license integrity         | Approved        | `@kfm-architecture`    |
+| AI Ethics                 | Bias, drift, explainability, risk flags       | Approved        | `@kfm-ai-lab`          |
+| Community Stewardship     | Indigenous and cultural sensitivity review    | Under Review    | `@tribal-consultation` |
+| Environmental Impact      | Energy, CO₂ and sustainability checks         | Approved        | `@kfm-etl-ops`         |
+| Accessibility and Equity  | WCAG 2.1/2.2 conformance and inclusive design | Approved        | `@kfm-accessibility`   |
+| Legal Compliance          | CC-BY / Public Domain license validation      | Approved        | `@bartytime4life`      |
 
 ---
 
-## 🧾 Governance & Provenance Linkages
+## 🧠 FAIR+CARE Ethics Highlights — Q4 2025
 
-| Artifact | Description | Location |
-|-----------|-------------|----------|
-| **Data CARE Assessment** | Governance outcomes per dataset. | `data/reports/fair/data_care_assessment.json` |
-| **FAIR Audit Summary** | Aggregated FAIR metadata scoring. | `data/reports/fair/data_fair_summary.json` |
-| **Governance Ledger** | Provenance & sign-off records. | `data/reports/audit/data_provenance_ledger.json` |
-| **Ethics Summary** | Council-approved public decisions. | `data/reports/fair/ethics_review_summary.md` |
-| **Telemetry Schema** | Telemetry validation schema for ethics metrics. | `schemas/telemetry/data-reports-fair-ethics-v9.json` |
+| Metric                     | Value  | Trend      |
+|----------------------------|--------|-----------|
+| FAIR metadata completeness | 99.5%  | Improving |
+| CARE compliance score      | 98.9%  | Stable    |
+| AI drift stability index   | 99.1%  | Improving |
+| Accessibility score        | 100%   | Consistent|
+| Cultural consultations     | 4 / 4  | Complete  |
+
+### 🔍 Key Findings
+
+- CARE consent and attribution flags deployed to sensitive historical materials.  
+- DCAT JSON-LD provenance export enables external audit traceability.  
+- Tribal consultation expanded for treaty-era archives and culturally sensitive collections.  
+- Focus Mode v3 surfaces ethics and explainability status in narrative overlays.  
+- Sensitivity classifications were updated for several datasets to guide narrative-safe usage.
 
 ---
 
-## 🧩 Ethics Council Signatures
+## ⚖️ Alignment with FAIR+CARE Principles
 
-| Role | Reviewer | Date | Decision |
-|------|-----------|------|----------|
-| **Governance Lead** | `@kfm-architecture` | 2025-11-06 | ✅ Approved |
-| **FAIR+CARE Data Steward** | `@kfm-data-lab` | 2025-11-05 | ✅ Approved |
-| **AI Ethics Reviewer** | `@kfm-ai-lab` | 2025-11-05 | ✅ Approved |
-| **Repository Maintainer** | `@bartytime4life` | 2025-11-06 | ✅ Released to Public |
-| **Community Representative** | `@tribal-consultation` | 2025-11-04 | ⚠️ Conditional (Attribution Revision Pending) |
+| Principle              | Implementation Evidence                                 | Governance Source                       |
+|------------------------|---------------------------------------------------------|-----------------------------------------|
+| Findable               | Indexed in STAC/DCAT catalogs; URNs/DOIs assigned      | `data/meta/`                            |
+| Accessible             | Open formats, clear licenses, alt text and captions    | `data/sources/`                         |
+| Interoperable          | JSON-LD, ISO 19115, CIDOC-CRM aligned schemas          | `data/reports/validation/`              |
+| Reusable               | Checksums, provenance, FAIR+CARE scoring               | `data/reports/audit/`                   |
+| Collective Benefit     | Community benefit and positive impact documented       | FAIR+CARE Council                       |
+| Authority to Control   | Indigenous and community rights acknowledged           | CARE Council and community protocols    |
+| Responsibility         | Bias mitigation and oversight logs                     | Governance Ledgers                      |
+| Ethics                 | Cultural respect, transparent processes, annual review | Ethics Council                          |
+
+---
+
+## 🔗 Governance and Provenance Linkages
+
+| Artifact               | Description                       | Location                                          |
+|------------------------|-----------------------------------|---------------------------------------------------|
+| Data CARE Assessment  | CARE evaluations per dataset      | `data/reports/fair/data_care_assessment.json`     |
+| FAIR Audit Summary    | FAIR scoring per dataset          | `data/reports/fair/data_fair_summary.json`        |
+| Governance Ledger     | Decisions, signatures, provenance | `data/reports/audit/data_provenance_ledger.json`  |
+| AI Ethics Ledger      | Drift, bias, explainability logs  | `data/reports/audit/ai_hazards_ledger.json`       |
+| Telemetry v3          | Energy, carbon, records processed | `releases/v11.0.0/focus-telemetry.json`          |
+
+---
+
+## ✍️ Ethics Council Signatures — Q4 2025
+
+| Role                    | Reviewer               | Date       | Decision                     |
+|-------------------------|------------------------|------------|------------------------------|
+| Governance Lead         | `@kfm-architecture`    | 2025-11-06 | Approved                     |
+| FAIR+CARE Data Steward  | `@kfm-data-lab`       | 2025-11-05 | Approved                     |
+| AI Ethics Reviewer      | `@kfm-ai-lab`         | 2025-11-05 | Approved                     |
+| Repository Maintainer   | `@bartytime4life`     | 2025-11-06 | Released to public           |
+| Community Representative| `@tribal-consultation`| 2025-11-04 | Conditional (attribution fix)|
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|--------:|------|---------|----------|
-| v9.7.0 | 2025-11-06 | `@kfm-governance` | Upgraded to v9.7.0; telemetry/schema integration; enhanced metrics table & council signature records. |
-| v9.5.1 | 2025-10-30 | `@kfm-data-lab` | Initial quarterly FAIR+CARE Ethics Review Summary release under Diamond⁹ Ω Certification. |
+| Version | Date       | Author           | Summary                                                  |
+|---------|------------|------------------|----------------------------------------------------------|
+| v11.0.0 | 2025-11-19 | Lead Programmer  | KFM-MDP v11 rebuild; ASCII workflow; DCAT 3.0 alignment  |
+| v9.7.0  | 2025-11-06 | `@kfm-governance`| Telemetry/schema integration; metrics and signatures     |
+| v9.5.1  | 2025-10-30 | `@kfm-data-lab`  | Initial FAIR+CARE Ethics Review Summary                  |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix**  
-*FAIR+CARE Governance × Ethical AI × Sustainable Data Stewardship*  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 / FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix — Ethics Governance Layer**  
+⚖️ *Cultural Respect · Ethical AI · Transparent Stewardship*
 
-[Back to FAIR+CARE Reports](./README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅️ Back to FAIR+CARE Reports](./README.md)  
+[📐 Data Architecture](../../ARCHITECTURE.md)  
+[⚖️ Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
