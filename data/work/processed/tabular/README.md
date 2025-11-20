@@ -1,183 +1,185 @@
 ---
-title: "📊 Kansas Frontier Matrix — Processed Tabular Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📊 Kansas Frontier Matrix — Processed Tabular Data (Diamond9 Omega / CrownInfinityOmega Ultimate Certified)"
 path: "data/work/processed/tabular/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Continuous / Autonomous"
+version: "v11.1.0"
+last_updated: "2025-11-19"
+review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
-data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/data-work-processed-tabular-v10.json"
-governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0 / FAIR+CARE Certified"
+sbom_ref: "../../../../releases/v11.1.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.1.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.1.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/data-work-processed-tabular-v11.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0 · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11"
+status: "Active / Enforced"
+doc_kind: "Processed Dataset Layer"
+intent: "processed-tabular"
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE-Verified"
 ---
 
 <div align="center">
 
-# 📊 Kansas Frontier Matrix — **Processed Tabular Data**
+# 📊 **Kansas Frontier Matrix — Processed Tabular Data**  
 `data/work/processed/tabular/README.md`
 
 **Purpose:**  
-Canonical repository of **FAIR+CARE-certified** tabular datasets produced by KFM pipelines.  
-Datasets are final, schema-aligned, checksum-verified, and governance-certified for open research, AI analytics, and **Focus Mode v2** visualization—now with **Streaming STAC** and **telemetry v2** references.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../docs/architecture/README.md)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Tabular%20Certified-gold.svg)](../../../../docs/standards/faircare-validation.md)
-[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Compliant-0052cc.svg)]()
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2ea44f.svg)]()
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)](../../../../LICENSE)
+Define the authoritative **processed tabular dataset layer** for the Kansas Frontier Matrix.  
+This directory contains **FAIR+CARE-certified**, **checksum-verified**, **schema-aligned**, and **provenance-documented** structured tables used across **AI analytics**, **Focus Mode v3**, **graph ingest**, **DCAT catalogs**, and **public open-data releases**.
 
 </div>
 
----
-
 ## 📘 Overview
-The **Processed Tabular Layer** hosts final structured tables verified under **FAIR+CARE** governance.  
-All datasets are **ethically certified**, **checksum-verified**, and **schema-compliant**—suitable for reuse, analysis, and publication under open-access standards.
+The Processed Tabular Data Layer holds all final structured datasets generated after:
 
-**v10 Enhancements**
-- Streaming STAC-aware catalog sync for frequently refreshed tables.  
-- Telemetry v2 bundling (energy/CO₂, validation coverage) with certification.  
-- DCAT JSON-LD profiles enriched for Focus Mode v2.
+* Deterministic ETL pipelines  
+* FAIR+CARE certification  
+* Schema normalization & DCAT 3.0 alignment  
+* Telemetry v11 sustainability tracking  
+* PROV-O lineage encoding  
+* Checksum & SBOM-backed verification  
+* Governance approval  
 
-### Core Objectives
-- Publish validated tabular datasets with **DCAT** interoperability.  
-- Maintain schema-aligned and checksum-audited tables.  
-- Register lineage and governance approvals for reproducibility.  
-- Enable integration with AI models and public dashboards.  
-
----
+All datasets here are ready for open publication, long-term archival, and integration into KFM’s knowledge graph.
 
 ## 🗂️ Directory Layout
 ```plaintext
 data/work/processed/tabular/
 ├── README.md
-├── environmental_indicators_v10.0.0.csv     # Aggregated climate/hydrology/hazard indicators
-├── treaties_aggregated_v10.0.0.csv          # Normalized treaty metadata crosswalks
-├── socioeconomic_summary_v10.0.0.parquet    # Aggregated socioeconomic & demographic metrics
-└── metadata.json                             # FAIR+CARE provenance, schema, checksum registry
+├── environmental_indicators_v11.1.0.csv
+├── treaties_aggregated_v11.1.0.csv
+├── socioeconomic_summary_v11.1.0.parquet
+└── metadata/
 ```
 
----
+## 🌍 Domain Overview
+Tabular datasets capture:
 
-## ⚙️ Tabular Processing Workflow
-```mermaid
-flowchart TD
-    "Validated Tabular (data/work/staging/tabular/)" --> "Schema Harmonization & Normalization"
-    "Schema Harmonization & Normalization" --> "FAIR+CARE Ethics & Accessibility Certification"
-    "FAIR+CARE Ethics & Accessibility Certification" --> "Checksum Verification & Provenance Logging"
-    "Checksum Verification & Provenance Logging" --> "Catalog Sync (DCAT 3.0 / STAC linkage)"
-    "Catalog Sync (DCAT 3.0 / STAC linkage)" --> "Final Publication (data/work/processed/tabular/)"
+* 🌿 Environmental indicators (climate, hydrology, hazards)  
+* 📜 Treaty and historical metadata crosswalks  
+* 📈 Socioeconomic aggregates  
+* 🧭 Mixed-domain composite indicators  
+* 🧪 Derived metrics for Focus Mode and analytics  
+
+All files are schema-validated and machine-readable (CSV or Parquet).
+
+## 🔗 Entity Requirements (PROV-O)
+Every processed tabular dataset must include:
+
+* Unique `prov:Entity` identifier  
+* Stable dataset UUID  
+* SHA256 checksum  
+* Schema version  
+* FAIR+CARE certification metadata  
+* Telemetry block (energy_wh, carbon_gco2e)  
+* DCAT metadata fields (theme, keywords, temporal, spatial)  
+* Provenance chain (`prov:wasDerivedFrom`)  
+* Governance ledger reference  
+* ASCII-only timestamp (ISO 8601)  
+
+Entities are immutable after publication.
+
+## ⚙️ Activity Requirements
+Generation of processed tabular datasets must capture:
+
+* ETL pipeline name & version  
+* Parameter digest (ASCII hash)  
+* Validation coverage  
+* FAIR+CARE certification ID  
+* Execution timestamp  
+* DCAT/STAC synchronization event  
+* SBOM & checksum registry reference  
+* Associated human+AI agents  
+
+Activities are encoded as PROV-O `prov:Activity`.
+
+## 🧑‍💼 Agent Requirements
+Agents overseeing tabular workflows:
+
+* `@kfm-tabular-lab` — structured data stewards  
+* `@kfm-architecture` — schema + DCAT alignment  
+* `@kfm-security` — checksum/integrity validation  
+* `@faircare-council` — ethics governance  
+* `@kfm-data` — lifecycle + metadata coordination  
+
+Agents are stored as `prov:Agent`.
+
+## 🧪 Validation Requirements
+Before tabular datasets enter this layer, they must pass:
+
+* DCAT 3.0 schema alignment  
+* JSON schema structural validation  
+* FAIR+CARE certification  
+* Telemetry completion  
+* Provenance chain validation  
+* Checksum/manifest verification  
+* Licensing verification (CC-BY 4.0)  
+* CARE checks for culturally sensitive indicators  
+
+Validation outputs stored in:
+
+* `data/reports/validation/`  
+* `data/reports/audit/`  
+* `data/reports/fair/`
+
+## 📥 Retrieval Examples
+
+### Python
+```python
+import pandas as pd
+df = pd.read_csv("data/work/processed/tabular/environmental_indicators_v11.1.0.csv")
+print(df.head())
 ```
 
-### Steps
-1. **Normalization** — Align fields with **DCAT 3.0** & JSON Schema.  
-2. **Certification** — FAIR+CARE validates ethical compliance & reuse readiness.  
-3. **Verification** — Integrity cross-checked via manifest-linked checksums.  
-4. **Publication** — Certified tables exported to processed layer.  
-5. **Synchronization** — Registered in **DCAT/STAC** catalogs & governance ledgers.
+### Bash
+```bash
+ls data/work/processed/tabular/
+```
 
----
+### Cypher (graph linkage)
+```cypher
+MATCH (t:ProcessedTable)
+RETURN t.id, t.schema_version, t.checksum_sha256;
+```
+
+## 🛣️ Roadmap
+* v11.2 — Composite environmental scoring engine  
+* v11.3 — Multi-domain tabular linking for Focus Mode v3  
+* v11.4 — Column-level provenance (fine-grained lineage)  
+* v11.5 — Real-time Streaming STAC support for rapidly updated tables  
 
 ## 🧩 Example Processed Tabular Metadata Record
 ```json
 {
-  "id": "processed_tabular_environmental_indicators_v10.0.0",
+  "id": "processed_tabular_environmental_indicators_v11.1.0",
+  "domain": "tabular",
   "source_stage": "data/work/staging/tabular/",
-  "records_total": 57412,
-  "schema_version": "v3.2.0",
-  "checksum_sha256": "sha256:a1b3e7d9c5f2a8b7d6e9a4f3b8c2a1e7b9d4f6e3c8a2b1f7e9a4c3b2f5d7a8e1",
+  "records_total": 58914,
+  "schema_version": "v3.3.0",
+  "checksum_sha256": "sha256:0402e449e975f3e189a625db4cbdd0b0a67f7e64790dc4f01cc32c84d6f40435",
   "fairstatus": "certified",
-  "validator": "@kfm-tabular-lab",
   "license": "CC-BY 4.0",
-  "created": "2025-11-09T23:55:00Z",
+  "validator": "@kfm-tabular-lab",
   "telemetry": {
-    "energy_wh": 6.8,
-    "co2_g": 9.4,
+    "energy_wh": 7.1,
+    "co2_g": 9.8,
     "validation_coverage_pct": 100
   },
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
+  "governance_ref": "data/reports/audit/data_provenance_ledger.json",
+  "created": "2025-11-19T19:52:00Z"
 }
 ```
 
----
-
-## 🧠 FAIR+CARE Governance Matrix
-| Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | DCAT catalog entries + governance linkages. | `@kfm-data` |
-| **Accessible** | Open CSV/Parquet; public retrieval instructions. | `@kfm-accessibility` |
-| **Interoperable** | JSON Schema + **DCAT 3.0** fields captured. | `@kfm-architecture` |
-| **Reusable** | Provenance, license, schema, and checksums included. | `@kfm-design` |
-| **Collective Benefit** | Enables open access to structured Kansas datasets. | `@faircare-council` |
-| **Authority to Control** | Council certifies schema promotion & release. | `@kfm-governance` |
-| **Responsibility** | Stewards record schema changes & audit results. | `@kfm-security` |
-| **Ethics** | Reviewed for equity, privacy, and cultural sensitivity. | `@kfm-ethics` |
-
-**Governance artifacts:**  
-`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
-
----
-
-## ⚙️ Validation & Certification Artifacts
-| Artifact                         | Description                                | Format |
-|---|---|---|
-| `schema_validation_summary.json` | Field/structure integrity audit            | JSON   |
-| `faircare_certification_report.json` | FAIR+CARE audit & certification        | JSON   |
-| `checksums.json`                 | SHA-256 integrity registry                  | JSON   |
-| `catalog_sync.log`               | Governance publication synchronization log | Text   |
-
-Automation: `tabular_processed_sync.yml`.
-
----
-
-## 📊 Processed Tabular Summary (v10.0.0)
-| Dataset                   | Records | Schema  | FAIR+CARE | License  |
-|---|---:|---|---|---|
-| Environmental Indicators | 57,412  | v3.2.0  | ✅        | CC-BY 4.0 |
-| Treaties Aggregated      | 12,614  | v3.2.0  | ✅        | CC-BY 4.0 |
-| Socioeconomic Summary    | 10,214  | v3.2.0  | ✅        | CC-BY 4.0 |
-
----
-
-## ♻️ Retention & Sustainability
-| Data Type | Retention | Policy |
-|---|---:|---|
-| Processed Tabular Data | Permanent | Canonical open datasets (FAIR+CARE). |
-| Metadata               | Permanent | Ledger-tracked lineage & checksums.  |
-| Validation Reports     | 365 Days  | Reproducibility audits.              |
-| FAIR+CARE Reports      | Permanent | Ethics & certification records.      |
-
-**Telemetry:** `../../../../releases/v10.0.0/focus-telemetry.json`
-
----
-
-## 🧾 Internal Use Citation
-```text
-Kansas Frontier Matrix (2025). Processed Tabular Data (v10.0.0).
-FAIR+CARE-certified environmental indicators, treaty aggregates, and socioeconomic summaries.
-Checksum-verified, schema-aligned, and governance-certified for open data reuse, Focus Mode v2 analytics, and reproducible research.
-```
-
----
-
 ## 🕰️ Version History
-| Version | Date       | Author          | Summary |
-|---|---|---|---|
-| v10.0.0  | 2025-11-09 | `@kfm-tabular`  | Upgraded to v10: Streaming STAC-aware sync, telemetry v2 bundling, DCAT JSON-LD enrichment. |
-| v9.7.0   | 2025-11-06 | `@kfm-tabular`  | Telemetry/schema refs aligned; filenames & counts refreshed. |
+| Version | Date | Author | Summary |
+|--------|------|--------|---------|
+| v11.1.0 | 2025-11-19 | `@kfm-tabular` | Full KFM-MDP v11 upgrade; schema harmonization; PROV-O alignment; telemetry v11 integration. |
+| v11.0.0 | 2025-11-15 | `@kfm-tabular` | Initial v11 migration of tabular layer. |
+| v10.0.0 | 2025-11-09 | `@kfm-tabular` | Original processed tabular dataset definition. |
 
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Structured Data × FAIR+CARE Governance × Provenance Certification*  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Work → Processed](../README.md) · [Governance Charter](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+## 🔗 Footer
+[⬅️ Back to Processed Layer](../README.md) ·  
+[📐 Data Architecture](../../../../docs/ARCHITECTURE.md) ·  
+[⚖️ Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
