@@ -297,4 +297,3 @@ As you add historical content, consider:
 [Back to Docs Hub](README.md) · [Master Guide](MASTER_GUIDE_v11.md) · [Standards](standards/README.md)
 
 </div>
-~~~~markdown
