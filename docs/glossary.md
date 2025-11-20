@@ -72,6 +72,8 @@ sunset_policy: "Superseded upon next glossary-wide terminology update"
 # 📘 **Kansas Frontier Matrix — Glossary & Terminology Index**  
 `docs/glossary.md`
 
+**Status:** Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
 **Purpose**  
 Provide a standardized, machine-parseable vocabulary for contributors and researchers working within the Kansas Frontier Matrix (KFM).  
 Aligned with **MCP-DL v6.3**, **KFM-MDP v11.0.0**, **FAIR+CARE**, **STAC/DCAT**, **CIDOC-CRM**, **OWL-Time**, and **GeoSPARQL** to ensure consistent terminology across documentation, APIs, pipelines, and Story Nodes.
@@ -83,7 +85,7 @@ Aligned with **MCP-DL v6.3**, **KFM-MDP v11.0.0**, **FAIR+CARE**, **STAC/DCAT**,
 
 </div>
 
---- ✦ ---
+---
 
 ## 📘 Overview
 
@@ -102,7 +104,7 @@ When adding or editing a term:
 - Avoid project-internal jargon where an existing standard term exists  
 - Respect **FAIR+CARE** and Indigenous data sovereignty in any domain description  
 
---- ✦ ---
+---
 
 ## 📚 Core Project Terms
 
@@ -116,7 +118,7 @@ When adding or editing a term:
 | **Focus Mode** | AI-assisted, entity-centric interface that synchronizes map, timeline, and narrative insights while enforcing provenance, explainability, and CARE constraints. | `web/`, `src/ai/`, `docs/architecture/` |
 | **Story Node** | A narrative unit representing a curated story with spatial footprint, temporal span, and linked entities/documents, backed by graph data and STAC/DCAT metadata. | `docs/architecture/`, `docs/analyses/`, `schemas/` |
 
---- ✦ ---
+---
 
 ## ⚙️ Technical & Pipeline Vocabulary
 
@@ -133,7 +135,7 @@ When adding or editing a term:
 | **MCP Server** | Service exposing internal tools (e.g., Neo4j, STAC, GDAL) to AI frameworks through standardized tool interfaces. | `docs/architecture/api-architecture.md` |
 | **Write-Ahead Log (WAL)** | Append-only log of transformations and promotions, used for reproducibility, rollback, and audits. | `docs/pipelines/reliable-pipelines.md` |
 
---- ✦ ---
+---
 
 ## 🛡️ Security & Governance Terms
 
@@ -148,7 +150,7 @@ When adding or editing a term:
 | **Governance Ledger** | Append-only record of governance decisions, reviews, and audits related to datasets, models, and narratives. | `docs/reports/audit/`, `docs/standards/governance/` |
 | **Public Document** | A document classified as suitable for general public release, usually licensed CC-BY or MIT. | YAML front-matter `classification` field |
 
---- ✦ ---
+---
 
 ## 🧠 AI & Semantic Frameworks
 
@@ -163,7 +165,7 @@ When adding or editing a term:
 | **Focus Transformer** | Specialized model (or model stack) tuned to generate Focus Mode narratives and summaries from graph context. | `src/ai/models/focus_transformer_v*/` |
 | **Hallucination Guardrail** | Set of checks ensuring AI output is grounded in actual data and sources, rejecting unverifiable statements. | `docs/pipelines/validation-observability/`, `src/ai/` |
 
---- ✦ ---
+---
 
 ## 🗺 Geospatial & Historical Terms
 
@@ -179,22 +181,22 @@ When adding or editing a term:
 | **DCAT JSON-LD** | JSON-LD encoding of DCAT dataset metadata, enabling linked data integration. | Catalog exports, `docs/data/` |
 | **Temporal Interval** | Time span defined by a start and end instant, aligned with OWL-Time. | Graph events, timeline UI |
 
---- ✦ ---
+---
 
 ## 🔗 Cross-Standard References
 
-| Standard       | Governing Body   | KFM Usage                                  |
-|----------------|------------------|--------------------------------------------|
+| Standard       | Governing Body     | KFM Usage                                  |
+|----------------|--------------------|--------------------------------------------|
 | **STAC 1.x**   | OGC / Radiant Earth | Cataloging geospatial assets            |
-| **DCAT 3.0**   | W3C              | Dataset metadata and catalogs             |
-| **CIDOC-CRM**  | ICOM / ISO       | Cultural heritage entity & event modeling |
-| **OWL-Time**   | W3C              | Temporal instants and intervals           |
-| **GeoSPARQL 1.1** | OGC           | Spatial relationships in the knowledge graph |
-| **PROV-O**     | W3C              | Provenance modeling for entities and activities |
-| **SPDX 2.3**   | Linux Foundation | Software bill of materials (SBOM)         |
-| **CycloneDX**  | OWASP            | Alternative SBOM format for security tools |
+| **DCAT 3.0**   | W3C                | Dataset metadata and catalogs             |
+| **CIDOC-CRM**  | ICOM / ISO         | Cultural heritage entity & event modeling |
+| **OWL-Time**   | W3C                | Temporal instants and intervals           |
+| **GeoSPARQL 1.1** | OGC             | Spatial relationships in the knowledge graph |
+| **PROV-O**     | W3C                | Provenance modeling for entities and activities |
+| **SPDX 2.3**   | Linux Foundation   | Software bill of materials (SBOM)         |
+| **CycloneDX**  | OWASP              | Alternative SBOM format for security tools |
 
---- ✦ ---
+---
 
 ## 🧩 Controlled Vocabulary (Selected Fields)
 
@@ -210,7 +212,7 @@ Use these controlled values in front-matter and metadata to reduce ambiguity:
 | `crs`        | `EPSG:4326` (default)                         | Other CRS require explicit documentation |
 | `a11y.level` | `AA` · `AAA`                                  | Target WCAG conformance level           |
 
---- ✦ ---
+---
 
 ## 🧭 Usage Guidelines
 
@@ -222,7 +224,7 @@ When you introduce new terminology:
 4. Include at least one **Related Component** or **Reference** so others can find practical usage.  
 5. If a term relates to Indigenous knowledge, governance, or sensitive heritage, ensure it is reviewed in line with **CARE** and relevant community guidance.
 
---- ✦ ---
+---
 
 ## 🕰️ Version History
 
@@ -237,13 +239,14 @@ When you introduce new terminology:
 | v9.3.0   | 2025-08-12   | KFM Core Team | Expanded technical and pipeline entries.                                                         |
 | v9.0.0   | 2025-06-01   | KFM Core Team | Initial glossary framework.                                                                      |
 
---- ✦ ---
+---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** and **KFM-MDP v11.0.0**  
-FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Documentation Hub](README.md) · [Governance Charter](standards/governance/ROOT-GOVERNANCE.md)
+**Kansas Frontier Matrix — Glossary & Terminology Index v11**  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+
+[Back to Documentation Hub](README.md) · [Back to Standards](standards/README.md) · [Back to Repository Root](../README.md)
 
 </div>
+~~~~markdown
