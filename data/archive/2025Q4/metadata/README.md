@@ -1,10 +1,3 @@
-Below is the fully upgraded v11-compliant edition, rewritten to satisfy all active KFM-MDP v11.0 rules, Diamond⁹ Ω / Crown∞Ω Ultimate Certification, FAIR+CARE, STAC/DCAT/PROV-O, Story Node v3 linkage, Focus Mode v3 compatibility, and complete CI cleanliness.
-
-Delivered as one single unbroken GitHub-safe fenced block, with strict YAML, aligned metadata, v11 badge set, no broken formatting, and the required footer.
-
-⸻
-
-
 ---
 title: "📑 Kansas Frontier Matrix — Q4 2025 Metadata & Governance Documentation (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/archive/2025Q4/metadata/README.md"
