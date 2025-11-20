@@ -1,196 +1,214 @@
 ---
-title: "🌊 Kansas Frontier Matrix — KS Mainstem Streamflow Lineage (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "docs/archives/provenance/chains/dataset-lineage/hydrology/streamflow/ks_mainstem/README.md"
+title: "🌊 Kansas Frontier Matrix — Smoky Hill River Streamflow Lineage (1910–2020) (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "docs/archives/provenance/chains/dataset-lineage/hydrology/streamflow/ks_mainstem/smoky-hill-river/1910_2020/README.md"
 version: "v11.0.1"
-last_updated: "2025-11-19"
+last_updated: "2025-11-20"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Governance Board"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../../../../../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../../schemas/telemetry/archives-provenance-streamflow-ks-mainstem-v1.json"
-governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../../../../../../../../../../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../../../../../../../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../../../../../../../../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../../../../../../../../../../schemas/telemetry/archives-provenance-smokyhill-1910-2020-v1.json"
+governance_ref: "../../../../../../../../../../../standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.0"
 status: "Active / Enforced"
-doc_kind: "Provenance Dataset Detail"
-intent: "archives-provenance-streamflow-ks-mainstem"
+doc_kind: "Provenance Dataset Instance"
+intent: "archives-provenance-streamflow-smokyhill-1910-2020"
 fair_category: "F1-A1-I1-R1"
 care_label: "C1 · Indigenous Knowledge Protection Enabled"
 ---
 
-# 🌊 Kansas Frontier Matrix — **KS Mainstem Streamflow Lineage**
+# 🌊 Kansas Frontier Matrix — **Smoky Hill River Streamflow Lineage (1910–2020)**
 
-This directory stores the **complete PROV-O lineage chains** for all streamflow datasets  
-associated with Kansas’s *primary river systems* — the **Kansas River**, **Arkansas River**,  
-**Republican River**, **Smoky Hill River**, and **Neosho River**.
+This directory contains the **authoritative PROV-O JSON-LD lineage chain** for  
+**Smoky Hill River streamflow datasets spanning 1910–2020**, documenting  
+110 years of hydrologic measurements across western & central Kansas.
 
-These mainstem systems form Kansas’s hydrologic backbone. Their datasets influence:
+The Smoky Hill River is a **semi-arid, high-variability basin**, where  
+precipitation scarcity, snowpack influences, irrigation withdrawals, and  
+reservoir regulation (Cedar Bluff, Kanopolis) all significantly affect  
+discharge behavior.  
 
-- Floodplain modeling  
-- Basin-scale hydrologic planning  
-- Water rights evaluations  
-- Ecological flow analysis  
-- Tribal and community water governance  
-- Climate impact scenarios  
-- AI-generated hydrologic reconstructions  
-
-All lineage chains in this directory follow:
-
-- **PROV-O JSON-LD**  
-- **FAIR+CARE principles**  
-- **MCP-DL v6.3**  
-- **KFM reconstruction rules (ASCII-only, GitHub-safe)**  
-- **STAC/DCAT + SBOM + SLSA** metadata integrity standards  
+This lineage ensures that every transformation—raw → calibrated → processed →  
+AI-enhanced → archived—is traceable, reconstructible, FAIR+CARE aligned,  
+and cryptographically validated.
 
 ---
 
 # 📁 1. Directory Layout (DL-C Compliant)
 
 ```
-docs/archives/provenance/chains/dataset-lineage/hydrology/streamflow/ks_mainstem/
+docs/.../smoky-hill-river/1910_2020/
 ├── README.md                     ← this file
-├── kansas-river/
-│   └── ... lineage graphs (PROV-O JSON-LD)
-├── arkansas-river/
-│   └── ... lineage graphs
-├── republican-river/
-│   └── ... lineage graphs
-├── smoky-hill-river/
-│   └── ... lineage graphs
-└── neosho-river/
-    └── ... lineage graphs
+└── lineage.jsonld                ← canonical PROV-O dataset lineage
 ```
 
-Each folder contains *immutable*, *hash-verified* provenance chains for the corresponding  
-mainstem river dataset.
+`lineage.jsonld` is the **single source of truth** for the entire  
+Smoky Hill River 1910–2020 hydrologic provenance record.
 
 ---
 
-# 🧬 2. Mainstem Lineage Scope
+# 🧬 2. Dataset Overview
 
-Mainstem hydrology lineage documents the *entire life-cycle* of streamflow datasets, including:
+### Temporal Coverage  
+**1910–2020** (110 years)
 
-### 📡 Raw Measurements  
-- USGS gauge records  
-- Tribal & state hydrometry networks  
-- Sensor metadata (installation date, maintenance logs)  
-- Digitization notes for historic gauges  
+### Spatial Extent  
+Key Kansas reaches including:  
+- Cedar Bluff Reservoir region  
+- Kanopolis Lake inflow/outflow  
+- Saline/tributary confluence area  
 
-### 🧪 Calibration & Cleaning  
-- Time alignment & unit standardization  
-- Drift correction  
-- Ice-effect adjustments  
-- Low-flow/high-flow bias corrections  
-- Outlier detection and event harmonization  
-- Gap-filling (statistical, ML-based, or AI-based)  
-
-### 🛰️ Hydrologic Modeling  
-- HEC-HMS rainfall-runoff simulations  
-- SWAT watershed-scale models  
-- Flood frequency analysis  
-- Baseflow separation  
-- Peak discharge modeling  
-- Story Node v3 reconstructed hydrologic scenarios  
-
-### 📦 Archival Metadata  
-- Spatial coverage (river reach, gauge coordinates)  
-- Temporal coverage  
-- PID and persistent identifiers  
-- CARE metadata when associated with tribal water rights or cultural water systems  
-- Governance decisions & license notes  
-
-Each dataset state must include reproducible ASCII-only instructions for reconstruction.
+### Data Sources  
+- USGS and KDHE gauge networks  
+- Irrigation district monitoring  
+- Reservoir management logs  
+- Climate station precipitation/temperature series  
+- Satellite hydrometry (post-1980)  
+- Tribal water observations (CARE protected)  
+- Historical analog charts and notebooks  
 
 ---
 
-# 🔗 3. PROV-O Requirements
+# 📜 3. PROV-O Entity Structure (`prov:Entity`)
 
-A valid mainstem streamflow lineage must include:
+Each dataset state includes:
 
-### `prov:Entity`  
-Each dataset state must define:
+### **Raw (1910–1950)**  
+- Handwritten gauge logs  
+- Early strip-chart hydrographs  
+- Municipal/township engineering ledgers  
 
-- SHA-256 digest  
-- Timestamp  
-- Data schema  
-- Spatial/temporal extent  
-- CARE metadata (if applicable)  
-- SBOM reference  
-- Reconstruction steps  
+### **Calibrated (1950–1990)**  
+- Pressure-sensor corrections  
+- Stage–discharge curve unification  
+- Ice-affected and sediment-laden corrections  
 
-### `prov:Activity`  
-Transformation stages must document:
+### **Processed (1990–2020)**  
+- High-frequency digital records  
+- Multi-station drift correction  
+- Outlier/event range validation  
 
-- Calibration procedures  
-- QA/QC routines  
-- Hydrologic models and parameters  
-- AI reconstruction parameters  
-- Execution environments  
-- Hyperparameters & toolchains  
-- Energy/carbon telemetry  
+### **AI-Enhanced (Focus Mode v2.5 / ML-Fusion / Story Node v3)**  
+- Gap-fill and anomaly smoothing  
+- Satellite/gauge fusion  
+- Narrative-temporal climate-conditioned reconstructions  
 
-### `prov:Agent`  
-Agents may include:
-
-- Hydrologists, technicians, and data stewards  
-- Tribal hydrology review boards  
-- Focus Mode v2.5 and Story Node v3  
-- ETL pipelines and workflow engines  
-
-Each agent must have a defined role and accountability.
+### **Archived (Final)**  
+Each final state includes:  
+- SHA-256 hash  
+- PID  
+- STAC/DCAT descriptors  
+- CARE metadata  
+- SBOM/SLSA links  
+- ASCII-only reconstruction instructions  
 
 ---
 
-# 🧪 4. Validation Requirements
+# ⚙️ 4. PROV-O Activity Structure (`prov:Activity`)
 
-Before acceptance into the KS Mainstem lineage archive, every chain must pass:
+Activities recorded include:
 
-- JSON-LD schema validation  
-- PROV-O graph continuity  
-- SHA-256 digest verification  
-- SBOM + SLSA integrity checks  
-- Temporal monotonicity checks  
-- Governance + CARE review  
-- Synthetic rebuild audit  
+### 🖨 Digitization  
+- OCR + manual validation  
+- Microfilm/scan corrections  
+- CARE review for tribal hydrology  
 
-Only fully valid chains are admitted.
+### 🧪 Calibration  
+- Stage/discharge re-derivation  
+- Datum harmonization  
+- Noise filtering  
+- Winter flow correction  
+
+### 🛠 Processing  
+- Hydrologic smoothing  
+- Multi-station alignment  
+- Event classification (flood/drought regimes)  
+
+### 🛰 Modeling  
+- HEC-HMS  
+- Watershed response models (semi-arid basin)  
+- Drought persistence models  
+
+### 🤖 AI Enhancement  
+- Focus Mode v2.5 inference  
+- ML-Fusion climate/satellite blending  
+- Story Node v3 hydrologic narrative generation  
+
+### 🗄 Archival Integration  
+- FAIR+CARE review  
+- Governance approval  
+- SBOM/SLSA attestations  
+- Reconstruction testing  
+- Telemetry embedding  
 
 ---
 
-# 🔎 5. Retrieval Examples (v11.2+)
+# 👤 5. PROV-O Agents (`prov:Agent`)
+
+Agents include:
+
+- USGS hydrologists  
+- KDHE water analysts  
+- Irrigation district operators  
+- Tribal water-knowledge stewards (CARE)  
+- Focus Mode v2.5 (AI agent)  
+- Story Node v3 (narrative generator)  
+- KFM lineage engine  
+- Governance/ethics reviewers  
+
+Each agent is fully documented with role, responsibility, and authority metadata.
+
+---
+
+# 🧪 6. Validation Requirements
+
+This lineage must pass:
+
+- PROV-O schema validation  
+- SHA-256 hash-chain checks  
+- SLSA/SBOM verification  
+- Hydrologic plausibility checks (semi-arid basin behavior)  
+- Temporal continuity audits  
+- CARE governance approval  
+- ASCII reproduction validation  
+
+Only **complete, error-free** lineages enter the Archive.
+
+---
+
+# 🔎 7. Retrieval Examples (v11.2+)
 
 ```
-kfm provenance chains expand --dataset hydrology/streamflow/ks_mainstem/kansas-river/1910_2020
-kfm provenance chains reconstruct --id hydrology/streamflow/ks_mainstem/neosho-river/1988_2024
+kfm provenance chains expand --dataset hydrology/streamflow/ks_mainstem/smoky-hill-river/1910_2020
+kfm provenance chains reconstruct --id hydrology/.../smoky-hill-river/1910_2020
 kfm provenance chains agent --name "FocusMode v2.5"
 ```
 
 ---
 
-# 🔮 6. Roadmap (v11.3–v12.0)
+# 🔮 8. Roadmap (v11.3–v12.0)
 
-- Full-river-network lineage fusion  
-- Dynamic Story Node v3 hydrologic replay (flow over time)  
-- Spatial-temporal 3D lineage visualizations  
-- AI-based anomaly detection within lineage chains  
-- Cross-institutional lineage federation (tribal/state archives)  
-
----
-
-# 📚 7. Version History
-
-- **v11.0.1** — First KFM-MDP v11-compliant KS Mainstem lineage overview  
-- **v10.4.x** — Preliminary hydrology lineage preparation  
-- **v10.x** — Initial dataset-lineage hydrology tree created  
+- Semi-arid regime hydrologic continuity lineage  
+- AI-enhanced drought reconstruction lineage  
+- Integration with ecological corridor datasets  
+- CARE-governed tribal hydrology partnerships  
+- 4D visualization (time × flow × climate × uncertainty)  
 
 ---
 
-# **Kansas Frontier Matrix — KS Mainstem Streamflow Lineage**  
-🌊 Hydrologic Integrity · 🧬 PROV-O Chains · ⚖️ Governance-Compliant
+# 📚 9. Version History
 
-[⬅️ Back to Streamflow Lineage](../README.md) ·  
-[📁 Hydrology Lineage Root](../../README.md) ·  
-[⚖️ Governance Charter](../../../../../../../standards/governance/ROOT-GOVERNANCE.md)
+- **v11.0.1** — First Smoky Hill 1910–2020 lineage entry (KFM-MDP v11)  
+- **v10.x** — Legacy hydrology stored pre–v11  
 
+---
+
+# **Kansas Frontier Matrix — Smoky Hill River Lineage (1910–2020)**  
+🌊 Semi-Arid Basin Hydrology · 🧬 Immutable Provenance · ⚖️ FAIR+CARE Governance  
+
+[⬅️ Back to Smoky Hill River Lineage](../README.md) ·  
+[📁 Mainstem Hydrology Root](../../README.md) ·  
+[⚖️ Governance Charter](../../../../../../../../../../../standards/governance/ROOT-GOVERNANCE.md)
