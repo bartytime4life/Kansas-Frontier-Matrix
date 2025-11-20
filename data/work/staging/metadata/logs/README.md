@@ -1,95 +1,170 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Metadata Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧾 Kansas Frontier Matrix — Metadata Logs (Diamond9 Omega / CrownInfinityOmega Ultimate Certified)"
 path: "data/work/staging/metadata/logs/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Continuous / Autonomous"
+version: "v11.1.0"
+last_updated: "2025-11-19"
+review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.0.0/manifest.zip"
-data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-metadata-logs-v10.json"
-governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+sbom_ref: "../../../../../releases/v11.1.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.1.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.1.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-metadata-logs-v11.json"
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11"
+status: "Active / Enforced"
+doc_kind: "Metadata Layer"
+intent: "staging-metadata-logs"
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE-Verified"
 ---
 
 <div align="center">
 
-# 🧾 Kansas Frontier Matrix — **Metadata Logs**
+# 🧾 **Kansas Frontier Matrix — Metadata Logs**  
 `data/work/staging/metadata/logs/README.md`
 
 **Purpose:**  
-Central repository for all **metadata harmonization, validation, and governance synchronization logs** in the Kansas Frontier Matrix (KFM).  
-Ensures transparent traceability of FAIR+CARE audits, schema transformations, and checksum ledger events under **Diamond⁹ Ω / Crown∞Ω** governance, with **telemetry v2** linkages.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Audited-gold.svg)](../../../../../docs/standards/faircare-validation.md)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
-[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Aligned-7e57c2.svg)]()
-[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance%20Layer-grey.svg)](../../../../../LICENSE)
+Define the **authoritative logging workspace** for all metadata harmonization, validation, governance sync, and checksum events within the **Metadata Staging Workspace**.  
+This directory provides a **FAIR+CARE-governed audit trail** for STAC, DCAT, PROV-O, and ISO 19115 metadata operations, with telemetry-linked sustainability metrics and governance-aligned retention.
 
 </div>
 
----
-
 ## 📘 Overview
-The **Metadata Logs Workspace** provides a full **audit trail** for all metadata validation and harmonization activities within the staging layer.  
-It captures field mappings, FAIR+CARE audits, governance synchronization, and checksum verification events to preserve complete lineage transparency.
+The Metadata Logs workspace captures **every significant event** in the metadata staging lifecycle, including:
 
-**v10 Enhancements**
-- Telemetry v2 fields (energy/CO₂, validation coverage) appended per log session.  
-- Streaming STAC link-check traces captured for continuously updated Items.  
-- Log integrity hashing standardized for ledger signatures.
+* Schema validation outcomes  
+* FAIR+CARE ethics and accessibility audits  
+* STAC and DCAT crosswalk traces  
+* Governance ledger synchronization events  
+* Checksum registry updates  
+* Telemetry (energy_wh, carbon_gCO2e) per logging session  
 
-### Core Objectives
-- Track **crosswalk operations** between STAC, DCAT, and PROV-O.  
-- Record FAIR+CARE audits and ethics outcomes for metadata.  
-- Maintain **checksum registry syncs** and ledger logs.  
-- Ensure reproducibility, sustainability, and governance accountability.  
-
----
+These logs provide the **forensic backbone** for reconstructing, auditing, and explaining how metadata moved from raw descriptors through staging into the processed metadata layer and catalogs.
 
 ## 🗂️ Directory Layout
 ```plaintext
 data/work/staging/metadata/logs/
 ├── README.md
-├── metadata_validation.log                # Records schema, field-level validation, FAIR+CARE results
-├── governance_sync.log                    # Governance ledger registration + checksum synchronization
-├── stac_dcat_crosswalk_trace.json         # Field-level mapping + validation across STAC/DCAT schemas
-└── metadata.json                          # Provenance, runtime checksum, telemetry, and session metadata
+├── metadata_validation.log
+├── governance_sync.log
+├── stac_dcat_crosswalk_trace.json
+└── metadata.json
 ```
 
----
+## 🌍 Domain Overview
+This directory logs metadata operations across all KFM domains:
 
-## ⚙️ Metadata Logging Workflow
-```mermaid
-flowchart TD
-    "Metadata Harmonization (TMP)" --> "Schema Validation + FAIR+CARE Audit"
-    "Schema Validation + FAIR+CARE Audit" --> "Generate Logs (data/work/staging/metadata/logs/)"
-    "Generate Logs (data/work/staging/metadata/logs/)" --> "Governance Ledger + Checksum Sync"
-    "Governance Ledger + Checksum Sync" --> "Archive Logs + Certification to Provenance Ledger"
+* 🧾 Metadata harmonization and crosswalking (STAC, DCAT, PROV-O, ISO 19115)  
+* 📊 Validation of schema, structure, and FAIR+CARE fields  
+* ⚖️ Governance registration events and checksum syncing  
+* 🌱 Telemetry summarization for sustainability reporting  
+
+Log content must be:
+
+* Internally accessible only  
+* Structured enough to support machine parsing  
+* Clear enough to allow human auditors to interpret events over time  
+
+## 🔗 Entity Requirements (PROV-O)
+Each log session recorded in this directory should be representable as a `prov:Entity` with:
+
+* Stable log ID (ASCII UUID or ID string)  
+* Component or pipeline name (for example `metadata_harmonization_pipeline`)  
+* SHA256 checksum of the log bundle or key artifacts  
+* Telemetry summary (energy_wh, carbon_gCO2e, validation_coverage_pct)  
+* FAIR+CARE status for logging completeness (for example `certified`)  
+* Governance reference (path to provenance ledger entry)  
+* Created timestamp in ASCII ISO 8601 format  
+
+Entities should be treated as **append-only**: once a log entity is recorded and checksummed, it must not be modified.
+
+## ⚙️ Activity Requirements
+Logging is produced by `prov:Activity` instances such as:
+
+* Metadata harmonization runs  
+* Schema and JSON-schema validation passes  
+* FAIR+CARE audit executions  
+* Governance ledger synchronization jobs  
+* STAC and DCAT crosswalk checks  
+* Telemetry export routines  
+
+Each activity must track:
+
+* Pipeline name and version  
+* Parameter digest (ASCII hash of configuration)  
+* Timestamp range of the session  
+* Number of events logged  
+* Issues detected and their severity  
+* Associated agents (human and system)  
+
+Activities must be reconstructable from `metadata.json` and related log files.
+
+## 🧑‍💼 Agent Requirements
+Agents responsible for metadata logging include:
+
+* `@kfm-metadata` — metadata engineering and maintenance  
+* `@kfm-architecture` — schema and standards governance  
+* `@kfm-security` — integrity validation, log hashing, access control  
+* `@faircare-council` — ethics and CARE oversight on log content  
+* `@kfm-data` — governance lifecycle and ledger coordination  
+
+All agents must be representable as PROV-O `prov:Agent` nodes in the graph.
+
+## 🧪 Validation Requirements
+Metadata log artifacts must satisfy:
+
+* JSON schema validation for `stac_dcat_crosswalk_trace.json` and `metadata.json`  
+* Structural checks on `.log` files (expected fields, severity markers)  
+* Telemetry presence and completeness for each logging session  
+* Checksum generation and verification for critical artifacts  
+* Provenance linkage: every log must be reachably connected to a staging or processed metadata entity  
+* Retention policy enforcement (per log type and age)  
+
+Validation results are stored in:
+
+* `data/reports/validation/`  
+* `data/reports/audit/`  
+* `data/reports/fair/`
+
+## 📥 Retrieval Examples
+
+### Python
+```python
+with open("data/work/staging/metadata/logs/metadata_validation.log") as f:
+    for i, line in enumerate(f):
+        if i < 5:
+            print(line.strip())
 ```
 
-### Process Summary
-1. **Crosswalk Logging** — Captures STAC/DCAT/PROV-O mapping transformations.  
-2. **Validation Auditing** — Logs FAIR+CARE metadata reviews & schema compliance.  
-3. **Governance Sync** — Tracks checksum validation and ledger entries.  
-4. **Archival** — Logs signed, hashed, and archived for governance reproducibility.
+### Bash
+```bash
+ls data/work/staging/metadata/logs/
+```
 
----
+### Cypher
+```cypher
+MATCH (l:MetadataLog)
+RETURN l.id, l.component, l.fairstatus, l.telemetry_energy_wh;
+```
 
-## 🧩 Example Log Record
+## 🛣️ Roadmap
+* v11.2 — Structured log schema upgrade for easier graph ingestion  
+* v11.3 — Automated anomaly detection across log streams  
+* v11.4 — Consolidated log dashboards in Focus Mode telemetry views  
+* v11.5 — Cross-system log correlation with ETL and staging events  
+
+## 🧩 Example Metadata Log Record
 ```json
 {
-  "id": "metadata_log_climate_v10.0.0",
+  "id": "metadata_log_climate_v11.1.0",
   "component": "metadata_harmonization_pipeline",
-  "created": "2025-11-09T23:40:00Z",
+  "created": "2025-11-19T20:20:00Z",
   "validator": "@kfm-metadata-lab",
   "events_logged": 52,
   "issues_detected": 0,
-  "checksum_sha256": "sha256:b9a7c5d1f2a8e3c6b5f9d7a2e4c1b8a6d9f2c3a5e1b7f6d4c8e3b9a2f5d4e7b1",
+  "checksum_sha256": "sha256:9b7a1a77d9f5e1b9c21e225054fcb9efb1e0c8a9bd5e9a1b1ea350e0240e9ac3",
   "telemetry": {
     "energy_wh": 0.5,
     "co2_g": 0.7,
@@ -100,84 +175,14 @@ flowchart TD
 }
 ```
 
----
-
-## 🧠 FAIR+CARE Governance Matrix
-| Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | Logs indexed by metadata ID, schema, and timestamp. | `@kfm-data` |
-| **Accessible** | Stored as open text/JSON for FAIR+CARE audit visibility. | `@kfm-accessibility` |
-| **Interoperable** | Logging schema conforms to FAIR+CARE + MCP-DL v6.3. | `@kfm-architecture` |
-| **Reusable** | Logs preserved for re-validation and pipeline reproducibility. | `@kfm-design` |
-| **Collective Benefit** | Enables governance transparency for metadata audits. | `@faircare-council` |
-| **Authority to Control** | Council reviews and signs log integrity validation. | `@kfm-governance` |
-| **Responsibility** | Maintainers capture all schema and ethics operations. | `@kfm-security` |
-| **Ethics** | Logs redacted for sensitive or internal identifiers. | `@kfm-ethics` |
-
-**Audits stored in:**  
-`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
-
----
-
-## ⚙️ Log Types & Governance Artifacts
-| Log File | Description | Format |
-|---|---|---|
-| `metadata_validation.log` | Schema validation, harmonization, and FAIR+CARE trace. | Text |
-| `governance_sync.log` | Records governance and checksum sync events. | Text |
-| `stac_dcat_crosswalk_trace.json` | Mapping audit of STAC↔DCAT field equivalence. | JSON |
-| `metadata.json` | Session-level provenance, telemetry, and checksum record. | JSON |
-
-Automation via `metadata_log_sync.yml`.
-
----
-
-## ♻️ Retention & Lifecycle Policy
-| Log Type | Retention | Policy |
-|---|---:|---|
-| Validation Logs | 180 Days | Retained for FAIR+CARE re-audit tracking. |
-| Governance Logs | 365 Days | Maintained for lineage and checksum ledger sync. |
-| Crosswalk Logs | 90 Days | Purged after schema revisions. |
-| Metadata Records | Permanent | Immutable ledger-linked archival. |
-
-Cleanup workflow: `metadata_logs_cleanup.yml`.
-
----
-
-## 🌱 Sustainability Metrics
-| Metric | Value | Verified By |
-|---|---:|---|
-| Energy Use (per log session) | 4.9 Wh | `@kfm-sustainability` |
-| Carbon Output | 6.8 gCO₂e | `@kfm-security` |
-| Renewable Power | 100% (RE100) | `@kfm-infrastructure` |
-| FAIR+CARE Logging Certification | 100% | `@faircare-council` |
-
-**Telemetry:** `../../../../../releases/v10.0.0/focus-telemetry.json`
-
----
-
-## 🧾 Internal Use Citation
-```text
-Kansas Frontier Matrix (2025). Metadata Logs (v10.0.0).
-FAIR+CARE-governed audit trail for metadata harmonization, validation, and governance synchronization.
-Enables traceable, reproducible, and ethically certified metadata lineage under open governance protocols.
-```
-
----
-
 ## 🕰️ Version History
-| Version | Date       | Author             | Summary |
-|---|---|---|---|
-| v10.0.0  | 2025-11-09 | `@kfm-metadata`    | Upgraded to v10: telemetry v2 fields, Streaming STAC traces, standardized integrity hashing. |
-| v9.7.0   | 2025-11-06 | `@kfm-metadata`    | Telemetry/schema aligned; retention & sustainability metrics updated. |
+| Version | Date | Author | Summary |
+|--------|------|--------|---------|
+| v11.1.0 | 2025-11-19 | `@kfm-metadata` | KFM-MDP v11 upgrade; PROV-O alignment; telemetry v11 integration; retention rules reaffirmed. |
+| v11.0.0 | 2025-11-15 | `@kfm-metadata` | Initial v11 migration of metadata logging workspace. |
+| v10.0.0 | 2025-11-09 | `@kfm-metadata` | Original metadata logging layer definition with telemetry v2 and Streaming STAC traces. |
 
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Metadata Traceability × FAIR+CARE Governance × Provenance Integrity*  
-© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Metadata Staging](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+## 🔗 Footer
+[⬅️ Back to Metadata Staging](../README.md) ·  
+[📐 Data Architecture](../../../../../docs/ARCHITECTURE.md) ·  
+[⚖️ Governance Charter](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
