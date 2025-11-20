@@ -1,24 +1,24 @@
 ---
 title: "📑 Kansas Frontier Matrix — Markdown Structural & Formatting Rules (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/markdown_rules.md"
-version: "v10.4.3"
-last_updated: "2025-11-16"
+version: "v11.0.0"
+last_updated: "2025-11-20"
 review_cycle: "Annual / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.4.3/sbom.spdx.json"
-manifest_ref: "../../releases/v10.4.3/manifest.zip"
-telemetry_ref: "../../releases/v10.4.3/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-markdown-rules-v4.json"
+sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-markdown-rules-v11.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.3"
+markdown_protocol_version: "KFM-MDP v11.0.0"
 status: "Active / Enforced"
 doc_kind: "Standard"
 intent: "markdown-governance"
-semantic_document_id: "kfm-doc-markdown-rules"
-doc_uuid: "urn:kfm:docs:standards:markdown-rules-v10.4.3"
-accessibility_compliance: "WCAG 2.1 AA"
+semantic_document_id: "kfm-doc-markdown-rules-v11"
+doc_uuid: "urn:kfm:docs:standards:markdown-rules-v11"
+accessibility_compliance: "WCAG 2.1 AA+"
 machine_extractable: true
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk"
@@ -27,13 +27,17 @@ immutability_status: "version-pinned"
 
 <div align="center">
 
-# 📑 **Kansas Frontier Matrix — Markdown Structural & Formatting Rules**  
+# 📑 **Kansas Frontier Matrix — Markdown Structural & Formatting Rules (v11.0)**  
 `docs/standards/markdown_rules.md`
 
 **Purpose:**  
-Define the authoritative, enforced Markdown documentation standard for the Kansas Frontier Matrix (KFM).  
-All documentation must comply with **KFM-MDP v10.4.3**, **MCP-DL v6.3**, and the **Diamond⁹ Ω / Crown∞Ω Ultimate Certification** framework.  
-This governs every README, guide, standard, architecture file, and reference document in the repository.
+Define the **mandatory Markdown authoring rules for KFM v11**, upgraded from v10.4.3 to support:  
+• **KFM-MDP v11 metadata extensions**  
+• **Focus Mode v3 narrative hooks**  
+• **Story Node v3 schema alignment**  
+• **STAC/DCAT/PROV-O enrichment**  
+• **Full WCAG 2.1 AA+ accessibility compliance**  
+• **Monorepo traceability + CI/CD enforcement**  
 
 </div>
 
@@ -41,57 +45,55 @@ This governs every README, guide, standard, architecture file, and reference doc
 
 # 📘 Overview
 
-These rules ensure:
+KFM-MDP v11.0 governs **all Markdown documentation** in the Kansas Frontier Matrix repository.  
+Every file must be:
 
-- Absolute consistency across every markdown file  
-- Predictable parsing by CI, lineage, telemetry, and governance validators  
-- Machine extractability for STAC/DCAT, FAIR+CARE, and AI systems  
-- Accessibility compliance (WCAG 2.1 AA)  
-- Immutable documentation lineage for governance ledger synchronization  
+• Documentation-first (MCP-DL v6.3)  
+• Machine-extractable  
+• Semantically structured  
+• FAIR+CARE compliant  
+• STAC/DCAT/PROV-O aligned  
+• Focus Mode v3 compatible  
+• Validated by CI (docs-lint, schema-lint, FAIR+CARE audit, metadata validator)
 
-Any Markdown violating these rules **fails CI**.
+Any violation → **CI failure** → PR is rejected.
 
 ---
 
 # 🧱 Section 1 — Required Layout & Ordering
 
-Every document **must** follow this global ordering:
+All KFM v11 Markdown files MUST follow this exact structure:
 
-1. **YAML Front-Matter Block**  
-2. **Centered Title Block**  
-3. **Horizontal Rule (`---`)**  
-4. **Overview Section**  
-5. **Directory Context (if applicable)**  
-6. **Main Content Sections**  
-7. **Tables, Diagrams, Examples**  
-8. **Version History**  
-9. **Footer / Licensing Block**
+1. **YAML front-matter block (mandatory, strict)**  
+2. **Centered title block** (title + path + short purpose)  
+3. **Horizontal rule (`---`)**  
+4. **📘 Overview** (H2)  
+5. **🗂 Directory Context** (if applicable)  
+6. **Main Content Sections** (H2/H3/H4 only)  
+7. **Tables, diagrams, examples**  
+8. **Focus Mode v3 + Story Node hooks** (if relevant)  
+9. **Version History**  
+10. **Footer (copyright + certification)**
 
-If a file uses headings, the order must follow:
+### Heading rules
 
-```
-
-# (H1 – one per document)
-
-## (H2 – major sections)
-
-### (H3 – inner sections)
-
-#### (H4 – optional nested details)
-
-````
-
-No other heading levels are permitted.
+• Only H1–H4  
+• One H1 per document  
+• H2 for primary sections  
+• H3 for subsections  
+• H4 for deep detail  
+• Emojis encouraged but must be followed by text  
+• No empty or duplicated headings
 
 ---
 
-# 🧱 Section 2 — YAML Front-Matter Requirements
+# 🧱 Section 2 — YAML Front-Matter Requirements (v11 Expanded)
 
-Each file **must begin** with YAML front-matter enclosed by `---` fences.
+The YAML block **must begin the file** (no blank lines above).
 
-Minimum required fields:
+Required fields:
 
-```yaml
+```
 title:
 path:
 version:
@@ -113,275 +115,238 @@ semantic_document_id:
 doc_uuid:
 accessibility_compliance:
 machine_extractable:
-````
-
-Optional fields for governance:
-
-```yaml
-care_label:
 fair_category:
+care_label:
 immutability_status:
-ai_focusmode_usage:
-ai_transform_permissions:
-ai_transform_prohibited:
 ```
 
-Front-matter **must not** contain:
+### v11 Additions (new mandatory fields)
 
-* Tabs
-* Trailing spaces
-* Mismatched indentation
-* Unregistered fields
+```
+markdown_protocol_version:
+semantic_document_id:
+doc_uuid:
+accessibility_compliance:
+machine_extractable:
+fair_category:
+care_label:
+immutability_status:
+```
+
+These support:
+
+• STAC/DCAT catalog export  
+• Knowledge-graph document indexing  
+• FAIR+CARE ethics audit  
+• Focus Mode v3 document targeting  
+• Story Node binding
+
+Any missing field → **CI stops merge**.
 
 ---
 
-# 🧱 Section 3 — Centered Header Block Rules
+# 🧱 Section 3 — Centered Header Block
 
-Immediately after YAML, include:
+Immediately after YAML, insert:
 
-```html
+```
 <div align="center">
 
-# TITLE HERE  
+# TITLE  
 `path/to/file.md`
 
 **Purpose:**  
-Short description here.
+Short purpose (1–4 lines).
 
 </div>
 ```
 
 Rules:
 
-* Title must include an emoji
-* Path must be in backticks
-* Purpose must be 1–4 lines maximum
-* No extraneous whitespace
+• Title must start with an emoji  
+• Path must be monospace  
+• Purpose must be concise  
+• No trailing spaces or blank lines inside the block
 
 ---
 
-# 🧱 Section 4 — Directory Layout Blocks (Lined Format)
+# 🗂 Section 4 — Directory Layout Blocks (DL-C v11)
 
-The lined directory block is **standardized** in KFM-MDP v10.4.3.
+Use the lined ASCII tree format:
 
-Syntax:
-
-```text
-root/
+```
+docs/
 │
-├── folder/                # comment
-│   ├── subfolder/         # comment
-│   └── file.md            # comment
-└── other/                 # comment
+├── standards/          # governance rules
+│   └── markdown/       # this file
+└── guides/             # how-tos and SOPs
 ```
 
 Rules:
 
-* Use **vertical lines (`│`)**, **L-shaped connectors (`├──`, `└──`)**
-* Must include **comments on every line**
-* Use the **blank root separator `│`** after root/
-* No tabs. Spaces only.
-* No trailing whitespace.
-* Must be wrapped in a fenced block (```text).
-
-This block style is **mandatory** for all architecture, features, telemetry, pipelines, and web documentation files.
+• Use `│`, `├──`, `└──` only  
+• Every line MUST have a comment  
+• Fenced with ```text  
+• No tabs, no trailing whitespace  
+• Must be vertically aligned and GitHub-safe
 
 ---
 
-# 🧱 Section 5 — Mermaid Diagram Standards
+# 🧩 Section 5 — Mermaid Diagram Standards
 
-All diagrams must:
-
-* Use fenced blocks:
-
-  ```mermaid
-  flowchart TD
-  ...
-  ```
-* Never include HTML `<span>` or inline styling (breaks CI)
-* Use explicit node brackets like:
-  `A["Label"] --> B["Label"]`
-* Use `<br/>` for line breaks inside nodes
-* End with no blank lines inside the block
-
-Forbidden:
-
-* Markdown interpolation inside Mermaid
-* Raw HTML attributes
-* Unicode arrows not supported by Mermaid
+• Use fenced ` ```mermaid `  
+• No HTML span/style tags  
+• Use explicit node brackets (A["Label"])  
+• Use `<br/>` for forced line breaks  
+• No blank lines inside the block  
+• No non-ASCII arrows or Unicode characters that break CI
 
 ---
 
-# 🧱 Section 6 — Tables
+# 📊 Section 6 — Tables
 
-Rules:
+• GitHub-flavored tables only  
+• Header row required  
+• Alignment row required  
+• No merged cells  
+• No nested markdown that breaks parsing
 
-* Must use GitHub-flavored markdown tables
-* First row = headers
-* Must have separator row with `---`
-* No merged cells
-* No HTML tables
-
-Disallowed:
-
-```
-| A | B |
-|---|---|
-| *No nested formatting that breaks table* |
-```
-
-Allowed:
+Example:
 
 ```
 | Field | Description |
-|-------|-------------|
+|------:|-------------|
 | cpu_usage_percent | CPU load (%) |
 ```
 
 ---
 
-# 🧱 Section 7 — Code Fences & Example Blocks
+# 🧾 Section 7 — Code Fences
 
-Rules:
-
-* Always use **triple backticks**
-* Use explicit language tags: `json`, `yaml`, `text`, `bash`, `ts`, `python`
-* Never mix tabs and spaces
-* No indentation outside the code fence
-
-Correct:
-
-```json
-{
-  "key": "value"
-}
-```
-
-Incorrect:
-
-````
-    ```json
-    { invalid }
-    ```
-````
+• Always use triple backticks  
+• Always specify the language: `yaml`, `json`, `text`, `bash`, `ts`, `python`  
+• No indentation before backticks  
+• Code MUST validate if schema-aware (JSON, YAML)
 
 ---
 
-# 🧱 Section 8 — Accessibility & FAIR+CARE Governance
+# ♿ Section 8 — Accessibility (WCAG 2.1 AA+)
 
-All Markdown must:
-
-* Follow WCAG 2.1 AA standards
-* Include alt-text for all images
-* Use inclusive, non-speculative language
-* Label sensitive data sections with CARE tags
-* Include provenance: STAC/DCAT references where applicable
-* Avoid decorative emojis in headings beyond the first emoji
-* Use readable contrast ratios in embedded examples
-
-Images:
-
-```
-![Alt text — required and descriptive](path)
-```
+• Alt-text for all images  
+• Descriptive link text (no “click here”)  
+• Proper heading order  
+• Sufficient color contrast in examples  
+• No emoji-only headings  
+• All tables must have headers  
+• All diagrams must have description context
 
 ---
 
-# 🧱 Section 9 — Telemetry Enforcement (Docs Build)
+# ⚖️ Section 9 — FAIR+CARE Governance Enforcement
 
-CI validates Markdown using:
+Markdown must reflect:
 
-* `docs-lint.yml`
-* `faircare-validate.yml`
-* `telemetry-export.yml`
+• FAIR (Findable, Accessible, Interoperable, Reusable)  
+• CARE (Collective Benefit, Authority to Control, Responsibility, Ethics)  
 
-Each file is:
+Required:
 
-* Parsed
-* Checked for headings & YAML
-* Checked for invalid inline HTML
-* Checked for governance metadata completeness
-* Has telemetry usage recorded in
-  `releases/<version>/focus-telemetry.json`
+• License declaration (SPDX)  
+• Source attribution  
+• Provenance metadata  
+• Sensitive cultural data masked or generalized  
+• No speculation about Indigenous communities or individuals  
+• No unlicensed images or datasets
 
 ---
 
-# 🧱 Section 10 — AI Safety & Content Boundaries
+# 🔍 Section 10 — CI Validation Requirements
 
-All Markdown must exclude:
+Files are validated by:
 
-* Speculative claims
-* Fabricated historical facts
-* Unverified datasets
-* Unattributed quotes
-* Unnotated AI-generated summaries (must include provenance)
+• docs-lint.yml  
+• markdown-structure-validator  
+• metadata-validator (YAML schema)  
+• link-checker  
+• stac-metadata-checker  
+• faircare-validate.yml  
+• focusmode-validate.yml  
 
-If a section includes AI reasoning outputs, annotate:
+Any failure blocks merge.
+
+---
+
+# 🔭 Section 11 — Focus Mode v3 Integration (New for v11)
+
+Markdown must support:
+
+• Inline Focus Hooks  
 
 ```
-> **AI-Generated Content:**  
-> Produced by Focus Transformer v2, validated under FAIR+CARE.
+> **Focus Hook:** entity:kansas_river event:1851_flood
 ```
 
----
+• Narrative anchors (for AI contextualization)  
+• Story Node v3 linkouts  
+• Temporal indexing for Focus Mode queries  
+• Spatial references resolvable to GeoJSON/graph IDs
 
-# 🧱 Section 11 — Prohibited Formatting
-
-Not allowed anywhere:
-
-* HTML tables
-* HTML `<style>` blocks
-* Non-YAML metadata at document start
-* Multiple H1 headers
-* Mixing tabs + spaces
-* Emoji-only headings
-* Footnotes breaking accessibility
-* Screenshots without alt text
+Violations lead to **Focus Mode parsing errors** in CI.
 
 ---
 
-# 🧱 Section 12 — Versioning & Immutability
+# 📚 Section 12 — Story Node v3 Compatibility
 
-Every Markdown document:
+Documents containing narratives MUST:
 
-* Is version-pinned
-* Must update `version:` and `last_updated:` when changed
-* Must update `doc_uuid:` when version increments
-* Must include a **Version History Table**
-
-Templated:
-
-| Version | Date | Author | Summary |
-| ------: | ---- | ------ | ------- |
+• Use clean extractable prose  
+• Avoid ambiguous pronouns (they, it) where context is unclear  
+• Include temporal markers (YYYY or YYYY-MM-DD)  
+• Include spatial markers resolvable via GNIS/KFM IDs  
+• Be free of emojis inside narrative paragraphs (allowed in headings only)
 
 ---
 
-# 🧱 Section 13 — Example Full Document Skeleton
+# 🕰️ Section 13 — Versioning & Immutability
 
-Below is the **canonical reference skeleton**:
+Each update requires:
+
+• Incremented `version:`  
+• Updated `last_updated:`  
+• Updated `commit_sha:`  
+• Updated `doc_uuid:` (new version = new UUID)  
+• Version history entry appended at bottom
+
+---
+
+# 🧩 Section 14 — Example Full Document Skeleton (v11)
 
 ````markdown
 ---
 title: "🧩 Example Document"
 path: "docs/example/README.md"
-version: "vX.Y.Z"
-last_updated: "2025-11-16"
-review_cycle: "Quarterly"
+version: "v1.2.0"
+last_updated: "2025-11-20"
+review_cycle: "Quarterly / Autonomous"
 commit_sha: "<commit>"
-sbom_ref: "../../releases/vX.Y.Z/sbom.spdx.json"
-manifest_ref: "../../releases/vX.Y.Z/manifest.zip"
-telemetry_ref: "../../releases/vX.Y.Z/focus-telemetry.json"
+sbom_ref: "../../releases/v1.2.0/sbom.spdx.json"
+manifest_ref: "../../releases/v1.2.0/manifest.zip"
+telemetry_ref: "../../releases/v1.2.0/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/example.schema.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.3"
-status: "Active / Enforced"
+markdown_protocol_version: "KFM-MDP v11.0.0"
+status: "Active"
 doc_kind: "Guide"
 intent: "example"
 semantic_document_id: "kfm-doc-example"
-doc_uuid: "urn:kfm:docs:example-vX.Y.Z"
+doc_uuid: "urn:kfm:docs:example-v1.2.0"
 machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk"
+immutability_status: "version-pinned"
 ---
 
 <div align="center">
@@ -397,54 +362,32 @@ Short description.
 ---
 
 # 📘 Overview
+Example text.
 
-Text...
-
-# 🗂️ Directory Layout
+# 🗂 Directory Layout
 
 ```text
 docs/example/
 │
-├── file.md        # comment
-└── sub/           # comment
-````
-
-# Content Sections …
+├── file.md          # comment
+└── sub/             # comment
+```
 
 # 🕰️ Version History
 
-| Version | Date       | Author | Summary |
-| ------: | ---------- | ------ | ------- |
-|  vX.Y.Z | 2025-11-16 | Team   | Initial |
-
-```
-
----
-
-# 🧱 Section 14 — Enforcement
-
-Violations trigger:
-
-- ❌ CI block  
-- ❌ FAIR+CARE governance failure  
-- ❌ Telemetry non-compliance  
-- ❌ Documentation quality failure  
-
-Only compliant documents receive:
-
-- ✅ Diamond⁹ Ω Certification  
-- ✅ MCP-DL v6.3 compliance  
-- ✅ FAIR+CARE approval  
+| Version | Date | Author | Summary |
+|-------:|------------|--------|---------|
+| v1.2.0 | 2025-11-20 | Team | Updated for v11 |
+````
 
 ---
 
 # 🕰️ Version History
 
 | Version | Date | Author | Summary |
-|--------:|------------|---------|---------|
-| v10.4.3 | 2025-11-16 | Core Team | Complete rewrite to match KFM-MDP v10.4.3, deep inset styling, global lined directory format, strict CI-enforced rules. |
-| v10.4.2 | 2025-11-15 | Core Team | Incremental rule expansion for telemetry alignment. |
-| v10.4.0 | 2025-11-14 | Documentation Council | Initial Markdown Ruleset. |
+|-------:|------------|--------|---------|
+| v11.0.0 | 2025-11-20 | Core Team | Full upgrade to KFM-MDP v11.0; added Story Nodes v3, Focus Mode v3, STAC/DCAT/PROV-O expansion, FAIR+CARE v11 enforcement. |
+| v10.4.3 | 2025-11-16 | Core Team | Previous stable version. |
 
 ---
 
