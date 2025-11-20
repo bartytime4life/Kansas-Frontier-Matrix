@@ -1,10 +1,3 @@
-Below is the **v11-compliant upgrade**, rewritten to full **KFM-MDP v11.0**, **FAIR+CARE enforced**, **STAC/DCAT/PROV-O aligned**, and consistent with all **Lead Programmer v11** behavioral rules.
-
-All formatting, metadata, semantic headings, and governance structure have been upgraded to v11 standards.
-
----
-
-```
 ---
 title: "📜 Kansas Frontier Matrix — Raw Text & Document Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/text/README.md"
@@ -251,4 +244,3 @@ Checksum-verified, FAIR+CARE aligned, and governed under MCP-DL v6.3 and KFM-MDP
 [⚖️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-```
