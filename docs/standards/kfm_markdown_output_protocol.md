@@ -1,29 +1,56 @@
 ---
 title: "📑 Kansas Frontier Matrix — Markdown Output Protocol (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/kfm_markdown_output_protocol.md"
-version: "v10.4.3"
-last_updated: "2025-11-16"
-review_cycle: "Annual · FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-20"
+review_cycle: "Annual / FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.4.3/sbom.spdx.json"
-manifest_ref: "../../releases/v10.4.3/manifest.zip"
-telemetry_ref: "../../releases/v10.4.3/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-markdown-protocol-v2.json"
+sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-markdown-protocol-v11.json"
 governance_ref: "governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.3"
+markdown_protocol_version: "KFM-MDP v11.0.0"
 status: "Active / Enforced"
 doc_kind: "Standard"
 intent: "markdown-output-protocol"
 semantic_document_id: "kfm-doc-kfm-markdown-output-protocol"
-doc_uuid: "urn:kfm:docs:standards:kfm-markdown-output-protocol-v10.4.3"
+doc_uuid: "urn:kfm:docs:standards:kfm-markdown-output-protocol-v11.0.0"
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk"
 immutability_status: "version-pinned"
 doc_integrity_checksum: "<sha256>"
+provenance_chain:
+  - "docs/standards/kfm_markdown_output_protocol.md@v10.4.3"
+  - "docs/standards/markdown_rules.md@v10.4.3"
+  - "docs/standards/markdown_guide.md@v10.4.3"
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  prov_o: "prov:Plan"
+metadata_profiles:
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+story_node_refs: []
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with enhancements"
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "3d-context-render"
+ai_transform_prohibited:
+  - "content-alteration"
+jurisdiction: "Kansas / United States"
+classification: "Public"
+lifecycle_stage: "stable"
+ttl_policy: "24 months"
+sunset_policy: "Supersedes KFM-MDP v10.4 after adoption"
 ---
 
 <div align="center">
@@ -33,272 +60,327 @@ doc_integrity_checksum: "<sha256>"
 **Diamond⁹ Ω / Crown∞Ω Ultimate Certified**
 
 **Purpose**  
-Define the *authoritative, CI-enforced Markdown output contract* for all content generators used by the Kansas Frontier Matrix (KFM), including AI systems and human authors who follow automated templates.  
-This protocol operationalizes the rules in **`markdown_rules.md`** and **`markdown_guide.md`** into a concrete “how to output Markdown” specification.
+Define the **authoritative, CI-enforced Markdown output contract** for all content generators used by the Kansas Frontier Matrix (KFM), including AI systems and code-based generators.  
+This protocol operationalizes **`markdown_rules.md`** and **`markdown_guide.md`** into a concrete “how to emit Markdown” specification for deterministic, GitHub-safe, machine-extractable output.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../faircare.md)
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)  
+[![KFM-MDP v11.0](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.0-informational)]()  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../faircare.md)  
+[![WCAG 2.1 AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet)]()  
 [![Status: Enforced](https://img.shields.io/badge/Status-Enforced-success)]()
 
 </div>
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
-This protocol governs **how Markdown is emitted**, not just how it should look.  
-It is aimed at:
+This protocol governs **how Markdown is emitted**, not just how it should look.
 
-- AI systems (e.g., ChatGPT agents)  
+It applies to:
+
+- AI systems (e.g. ChatGPT-based agents used in KFM workflows)  
 - Code generators and CLIs  
-- Documentation scripts and templates  
+- Documentation scaffolding scripts and templating tools  
 
-It requires that all generated Markdown:
+All generated Markdown MUST:
 
-- Conforms to **`docs/standards/markdown_rules.md`** (structure, headings, YAML, etc.)  
-- Uses **`docs/standards/markdown_guide.md`** for authoring styles and idioms  
-- Is **GitHub-safe** and **single-block safe** when requested  
-- Is **machine-extractable** and **FAIR+CARE aligned**  
+- Conform to **`docs/standards/markdown_rules.md`** (structure & metadata)  
+- Follow **`docs/standards/markdown_guide.md`** (authoring idioms & patterns)  
+- Respect **KFM-MDP v11.0.0** heading and layout requirements  
+- Be **GitHub-safe** and **single-block safe** when requested  
+- Be **machine-extractable**, **WCAG 2.1 AA+ aligned**, and **FAIR+CARE compliant**
 
-Any generator that violates this protocol is considered **non-compliant** and must be corrected or disabled.
+Any generator that violates this protocol is considered **non-compliant** and MUST be corrected, disabled, or quarantined by CI.
 
 ---
 
-# 🗂️ Standards Directory Context
+## 🗂️ Standards Directory Context
 
-~~~text
+```text
+docs/
+│
+└── standards/
+    │
+    ├── markdown_rules.md                 # Structural & formatting standard (what docs must look like)
+    ├── markdown_guide.md                 # Human authoring guide (how humans should write)
+    ├── kfm_markdown_output_protocol.md   # ← THIS OUTPUT PROTOCOL (how systems must emit markdown)
+    ├── kfm_markdown_protocol_v11.md      # Markdown authoring protocol (governing spec)
+    └── governance/
+        └── ROOT-GOVERNANCE.md
+```
+
+---
+
+## 🧩 Relationship to Other Markdown Standards
+
+- **`markdown_rules.md`**  
+  > Defines **what valid KFM Markdown looks like**: structure, YAML, headings, directory trees, tables, mermaid, etc.
+
+- **`markdown_guide.md`**  
+  > Explains **how humans should write Markdown**: tone, examples, patterns.
+
+- **`kfm_markdown_protocol_v11.md`**  
+  > Defines the **authoring protocol** (semantic headings, Focus Mode hooks, extended metadata).
+
+- **`kfm_markdown_output_protocol.md` (THIS DOC)**  
+  > Defines **how systems must output Markdown**: block boundaries, YAML placement, directory layout style, safety constraints.
+
+If there is a conflict:
+
+1. `markdown_rules.md` (structure) **wins**.  
+2. `kfm_markdown_protocol_v11.md` (authoring protocol) **clarifies** semantics.  
+3. `kfm_markdown_output_protocol.md` (this file) governs generator behavior.  
+4. `markdown_guide.md` (style) is advisory but strongly encouraged.
+
+---
+
+## 🧱 Section 1 — Global Output Contract
+
+These rules apply to **all** KFM-aware generators.
+
+### 1.1 One-Block Rule (When Explicitly Requested)
+
+When a caller explicitly requests:
+
+- “one markdown block / box”
+- “single fenced block”
+- “single GitHub-safe markdown fence”
+- or equivalent language,
+
+the generator MUST:
+
+- Emit exactly **one** fenced block of the form:
+
+  ```markdown
+  ```markdown
+  ... all content ...
+  ```
+  ```
+
+- Place **all content inside that fence**.  
+- Emit **no text before or after** the fence (no explanations, no logs, no trailing comments).  
+- Avoid splitting content across multiple fences.
+
+Violation ⇒ integration failure; upstream tools MAY terminate or quarantine that output.
+
+> Note: For this protocol file itself in the repo, we use standard fences as content. The “one-block rule” governs *runtime output* of generators, not internal repository usage.
+
+### 1.2 YAML Must Be First Inside the Block
+
+Within a full-document response:
+
+- The first non-empty line inside the fenced block MUST be `---`.  
+- No commentary, logging, or explanations may precede YAML.  
+- YAML must conform to the v11 fields defined in `markdown_rules.md` and `kfm_markdown_protocol_v11.md`.
+
+---
+
+## 🧱 Section 2 — Structural Output Requirements
+
+Generators MUST:
+
+- Emit **exactly one H1**, inside the centered `<div>` block.  
+- Use headings **H2–H4** only beyond that.  
+- Follow standard section ordering (for full documents):
+
+  1. YAML front matter  
+  2. Centered title & purpose block  
+  3. Horizontal rule (`---`)  
+  4. `## 📘 Overview`  
+  5. Context / directory layout (if applicable)  
+  6. Main content sections  
+  7. `## 🕰️ Version History`  
+  8. Footer
+
+- Ensure all headings are descriptive and not duplicated within the same document.
+
+Generators SHOULD:
+
+- Reuse canonical heading phrases from `markdown_rules.md` and `markdown_guide.md` where sensible (Overview, Directory Layout, Version History, etc.).
+
+---
+
+## 🗂️ Section 3 — Directory Layout Output Rules
+
+Whenever a generator emits a directory layout, it MUST:
+
+- Use the **lined ASCII tree** format:
+
+```text
 docs/
 │
 └── standards/
     │
     ├── markdown_rules.md                 # Structural & formatting standard
     ├── markdown_guide.md                 # Human authoring guide
-    ├── kfm_markdown_output_protocol.md   # ← THIS OUTPUT PROTOCOL
+    ├── kfm_markdown_output_protocol.md   # Output behavior contract
     └── governance/
         └── ROOT-GOVERNANCE.md
-~~~
+```
+
+- Fence the tree in:
+
+```markdown
+```text
+<tree here>
+```
+```
+
+- Use 4 spaces for indentation.  
+- Use `│`, `├──`, `└──` and never `|--`, `+--`, or tabs.  
+- Avoid trailing whitespace or blank lines inside the tree.
 
 ---
 
-# 🧩 Relationship to Other Standards
-
-- **`markdown_rules.md`**  
-  > Defines *what valid Markdown looks like* (structure, headings, YAML, tables, mermaid, etc.).
-
-- **`markdown_guide.md`**  
-  > Explains *how humans should write Markdown* (tone, patterns, examples).
-
-- **`kfm_markdown_output_protocol.md` (THIS DOC)**  
-  > Defines *how systems must output Markdown* (block boundaries, no stray text, directory layout style, etc.).
-
-If there is a conflict:
-
-1. `markdown_rules.md` (structure) wins.  
-2. `kfm_markdown_output_protocol.md` (output behavior) resolves ties for generators.  
-3. `markdown_guide.md` (style) is advisory but strongly encouraged.
-
----
-
-# 🧱 Output Contract — Global Rules
-
-## 1. One-Block Rule (When Requested)
-
-When a consumer explicitly requests **“one markdown box,” “single block,” or equivalent**, the generator MUST:
-
-- Output exactly **one fenced ` ```markdown ... ``` ` block**.  
-- Include **all content inside the fence**.  
-- Not emit **any text before or after** the fence.  
-- Not split content across multiple fences.
-
-Violation ⇒ CI and/or integration failure for that run.
-
----
-
-## 2. YAML Front-Matter Must Be First
-
-- The first non-empty line inside the markdown block MUST be `---`.  
-- No text before YAML.  
-- YAML MUST satisfy the required fields from `markdown_rules.md`.  
-- The generator MUST NOT place commentary or explanations above YAML.
-
----
-
-## 3. Centered Title Block Immediately After YAML
-
-Immediately following YAML:
-
-- Insert `<div align="center">` title block as specified in `markdown_rules.md`.  
-- Then a closing `</div>`.  
-- Then a horizontal rule `---` on its own line.  
-
-The generator MUST always emit this pattern unless the target file is a very small fragment (e.g., an included partial), in which case separate rules may apply.
-
----
-
-## 4. Heading Hierarchy in Output
+## 💻 Section 4 — Code, JSON, and Example Output
 
 Generators MUST:
 
-- Use a single H1 (the title in the center block).  
-- Use `#`, `##`, `###` consistently:  
-  - `#` not used again after the centered title.  
-  - `##` for major sections (Overview, Directory, etc.).  
-  - `###` for technical subsections (e.g., “Vector Tiles”, “Workflow Steps”).  
-- Avoid H4+ in generated docs unless the target spec explicitly allows it.
+- Use triple backticks for code/examples.  
+- Tag fenced blocks with an appropriate language:
 
----
+  - `json`, `yaml`, `bash`, `text`, `ts`, `python`, `mermaid`, `markdown`, etc.
 
-# 🗂️ Directory Layout Output Rules
+- Emit syntactically valid examples where feasible (e.g. valid JSON, valid YAML structures).  
+- Avoid commentary inside the code fences unless it is valid syntax (e.g. `# comment` in bash, `// comment` in TS).
 
-All directory layouts emitted by generators MUST:
-
-- Use the **deep-inset lined ASCII style**:
-
-~~~text
-docs/
-│
-└── guides/
-    │
-    ├── telemetry/
-    │   └── README.md
-    └── perf/
-        ├── telemetry-profiling.md
-        └── maplibre-rendering-playbook.md
-~~~
-
-- Be fenced with ` ```text` fences.  
-- Avoid trailing blank lines inside the fence.  
-- Use vertical bars `│`, corner connectors `├──`, `└──`.  
-- Align indentation with 4-space blocks.
-
-Generators MUST NOT emit mixed styles (e.g., `|--` or tab-indented trees).
-
----
-
-# 🧮 Code & Example Output Rules
-
-- Always use **triple backticks**, not tildes, unless explicitly requested for doc examples.  
-- Supply a language tag (`json`, `ts`, `text`, `bash`, `yaml`, `mermaid`, etc.).  
-- Never indent the fence itself.  
-- Do not include extraneous commentary inside code fences (e.g., “here is the code you requested”).  
-- Ensure JSON examples are valid whenever possible.
-
-Example:
+Example (correct):
 
 ```json
 {
-  "ok": true,
-  "note": "Valid JSON example"
+  "id": "example",
+  "active": true,
+  "note": "Valid JSON code block for documentation."
 }
-````
+```
+
+Generators MUST NOT:
+
+- Emit partial JSON/ YAML without clearly marking it as partial or pseudo (`"..."` etc.) if it would not validate.  
+- Mix code and prose inside the same fenced block.  
+- Include stack traces or internal logs inside documentation fences.
 
 ---
 
-# 🧠 Mermaid Output Rules
+## 🧠 Section 5 — Mermaid Diagrams
 
-Generators MUST:
+If a generator emits Mermaid:
 
-* Use ` ```mermaid` fences.
-* Start diagrams with a graph directive (`flowchart TD`, `flowchart LR`, etc.).
-* Avoid any custom styling, CSS, or Mermaid theme overrides.
-* Not use HTML inside Mermaid nodes beyond simple `<br/>` line breaks.
-* Ensure diagrams do not break due to invalid syntax.
+- It MUST use ` ```mermaid` fences.  
+- It MUST start diagrams with a directive, e.g. `flowchart TD`.  
+- It MUST avoid CSS styling and Mermaid theme overrides.  
+- It MUST avoid HTML inside nodes beyond `<br/>`.  
+- It SHOULD keep diagrams small and focused.
 
-Correct:
+Example:
 
+```markdown
 ```mermaid
 flowchart TD
   A["Input"] --> B["Processor"]
   B --> C["Output"]
 ```
+```
+
+Invalid output (will likely break CI):
+
+- Mermaid blocks with unknown keywords.  
+- Mermaid blocks containing unmatched quotes or backticks.  
+- Mermaid blocks with custom CSS and no clear justification.
 
 ---
 
-# 🧭 FAIR+CARE & Safety Constraints on Output
+## ♿ Section 6 — Accessibility & Inclusive Output
 
-When generating content for KFM:
+Generators must uphold **WCAG 2.1 AA+** standards, in alignment with `accessibility_compliance: "WCAG 2.1 AA+"`.
 
-* Do NOT fabricate or speculate about cultural heritage, archaeological interpretations, or Indigenous histories.
-* For any content that references sensitive sites, use generalized language; never output raw coordinates unless explicitly permitted and marked as such.
-* Respect `care_label` and `sensitivity_level` from YAML (if present) and adjust examples accordingly.
-* When generating examples, prefer **safe synthetic data** or clearly anonymized/pseudonymous forms.
+Output MUST:
 
-If a document concerns sensitive data:
+- Include alt-text for images:
 
-* The generator SHOULD include an **Ethics & CARE** section.
-* The generator MUST NOT show exact localities that would violate site protection norms.
+  ```markdown
+  ![Timeline and map UI showing Kansas treaties over time](./images/timeline-map.png)
+  ```
 
----
+- Use descriptive text for links:
 
-# 🧪 CI/Validation Integration Behavior
+  ```markdown
+  See the [Markdown Rules Standard](./markdown_rules.md) for normative requirements.
+  ```
 
-Generators should assume:
+- Avoid color-only references (e.g. “click the red button”) without textual qualifiers.  
+- Avoid language that is exclusionary, disrespectful, or harmful.
 
-* `docs-lint.yml` will reject:
+Generators SHOULD:
 
-  * Missing YAML fields
-  * Multiple H1s
-  * Incorrect directory block style
-  * HTML outside allowed `<div align="center">` blocks
-* `faircare-validate.yml` may reject:
-
-  * Sensitive coordinates
-  * Unethical or harmful examples
-  * Violations of `care_label` policies
-* `telemetry-export.yml` will log:
-
-  * Metadata about generated docs
-  * Structural compliance metrics
-
-Thus, generators SHOULD:
-
-* Be conservative with examples
-* Avoid raw data with unknown provenance
-* Clearly label any AI-generated narratives as such when appropriate
+- Prefer shorter sentences and clear structure for screen readers.  
+- Introduce acronyms on first use with expansion (e.g. “ETL (Extract-Transform-Load)”).
 
 ---
 
-# 🧱 Output Behavior Modes
+## ⚖️ Section 7 — FAIR+CARE & Safety Constraints on Output
 
-The protocol defines several **modes** for generators:
+All generated content MUST:
 
-## 1. **Full Document Mode**
+- Respect **FAIR** and **CARE** principles described in `faircare.md`.  
+- Avoid disclosing **sensitive coordinates** of archaeological / sacred sites unless explicitly permitted by governance and appropriately labeled.  
+- Clearly mark synthetic or illustrative examples, especially when they resemble real people, places, or events.
 
-Used when creating a full spec, guide, or README:
+Generators MUST NOT:
 
-* MUST include YAML → Title → Overview → Directory Layout → Content → Version History → Footer.
-* MUST use deep-inset directory layout where appropriate.
-* MUST include Version History table.
+- Fabricate historical or cultural details without labeling them as hypothetical or illustrative.  
+- Output unlicensed proprietary content as if it were open data.  
+- Suggest or demonstrate unsafe patterns (e.g., ignoring licenses, disregarding CARE labels).
 
-## 2. **Section Mode**
+If a doc’s YAML declares a stricter `care_label` or non-public classification, generators MUST:
 
-Used when only a section of a larger file is being generated:
-
-* MUST follow heading hierarchy (e.g., `##` or `###` as requested).
-* MUST NOT duplicate YAML or centered title block.
-* MUST remain structurally compatible with surrounding doc.
-
-## 3. **Fragment Mode**
-
-Used for ultra-small pieces (a snippet, a table, or a small example):
-
-* MUST avoid YAML.
-* MUST clearly be a structural subset (e.g., table, code fence).
-* Should still follow KFM table/code rules.
+- Treat that classification as a **hard guardrail**.  
+- Avoid emitting content that violates confidentiality, sovereignty, or ethical handling constraints.
 
 ---
 
-# 🧩 Example: Full Document Output Template
+## 🧭 Section 8 — Output Behavior Modes
 
-Generators MAY use the following template when producing a brand-new KFM doc:
+This protocol defines three canonical generator modes:
 
-````markdown
+### 8.1 Full-Document Mode
+
+Used when asked to emit a **complete, standalone document**:
+
+- MUST include YAML, centered title block, Overview, main sections, Version History, footer.  
+- MUST respect the “one-block rule” when requested for single-fence output.  
+- SHOULD ensure Version History includes at least one entry describing the current change.
+
+### 8.2 Section Mode
+
+Used when asked to emit a **section** of a larger file:
+
+- MUST start with an appropriate heading (`##` or `###`), not YAML.  
+- MUST respect heading hierarchy requested by caller.  
+- MUST NOT duplicate title blocks or Version History unless explicitly asked.
+
+### 8.3 Fragment Mode
+
+Used for **small snippets** (tables, code, diagrams):
+
+- MUST NOT include YAML.  
+- MUST be structurally correct for the snippet type (valid table, valid code block, etc.).  
+- SHOULD state clearly (in surrounding prose or comments from the caller) how it fits into the parent doc.
+
 ---
-title: "🧩 Example KFM Document"
-path: "docs/examples/example.md"
+
+## 🧩 Section 9 — Example: Output-Compliant Full Document
+
+Generators MAY use this pattern for new doc generation:
+
+```markdown
+```markdown
+---
+title: "🧭 Example KFM Doc"
+path: "docs/examples/example_kfm_doc.md"
 version: "v1.0.0"
-last_updated: "2025-11-16"
+last_updated: "2025-11-20"
 review_cycle: "Annual"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../releases/v1.0.0/sbom.spdx.json"
@@ -308,66 +390,71 @@ telemetry_schema: "../../schemas/telemetry/example-doc-v1.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.2"
-status: "Active / Enforced"
+markdown_protocol_version: "KFM-MDP v11.0.0"
+status: "Active"
 doc_kind: "Guide"
 intent: "example-doc"
-semantic_document_id: "kfm-doc-example"
-doc_uuid: "urn:kfm:doc:example-v1.0.0"
+semantic_document_id: "kfm-doc-example-kfm-doc"
+doc_uuid: "urn:kfm:docs:examples:example-kfm-doc-v1.0.0"
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public / Low-Risk"
+immutability_status: "version-pinned"
 ---
 
 <div align="center">
 
-# 🧩 **Example KFM Document**  
-`docs/examples/example.md`
+# 🧭 **Example KFM Document**  
+`docs/examples/example_kfm_doc.md`
 
 **Purpose**  
-Brief one–two sentence doc description.
+Demonstrate a KFM-compliant full-document output payload.
 
 </div>
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
 ...
 
-# 🗂️ Directory Layout
+## 🗂️ Directory Layout
 
 ```text
 docs/
 └── examples/
-    └── example.md
-````
+    └── example_kfm_doc.md
+```
 
-# 🧩 Main Sections
+## 🧩 Main Content
 
 ...
 
-# 🕰️ Version History
+## 🕰️ Version History
 
 | Version | Date       | Author | Summary        |
-| ------: | ---------- | ------ | -------------- |
-|  v1.0.0 | 2025-11-16 | Team   | Initial draft. |
+|-------: |------------|--------|----------------|
+| v1.0.0  | 2025-11-20 | Team   | Initial draft. |
 
+```
 ```
 
 ---
 
-# 🕰️ Version History
+## 🕰️ Version History
 
-| Version | Date       | Author      | Summary                                                                                  |
-|--------:|------------|------------|------------------------------------------------------------------------------------------|
-| v10.4.3 | 2025-11-16 | Core Team  | Upgraded to align with `markdown_rules.md` v10.4.3 and `markdown_guide.md`; deep-inset directory layout, explicit generator modes. |
-| v10.3.0 | 2025-11-13 | A. Barta   | Harmonized original Markdown Output Protocol with FAIR+CARE and STAC/DCAT alignment.     |
-| v10.2.x | 2025-11-10 | A. Barta   | Introduced Diamond⁹ Ω / Crown∞Ω structure and tilde fence safety pattern.               |
+| Version | Date       | Author     | Summary                                                                                                                                                    |
+|-------: |------------|-----------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| v11.0.0 | 2025-11-20 | Core Team | Upgraded output protocol to KFM-MDP v11.0.0; added extended YAML expectations, WCAG 2.1 AA+ alignment, explicit generator modes, and Focus Mode-aware output rules. |
+| v10.4.3 | 2025-11-16 | Core Team | v10.4.3 alignment with `markdown_rules.md` and `markdown_guide.md`; deep-inset directory layout; explicit single-block and directory layout constraints.            |
+| v10.3.0 | 2025-11-13 | A. Barta  | Harmonized original Markdown Output Protocol with FAIR+CARE and STAC/DCAT alignment.                                                                      |
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
-Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+Validated under **Master Coder Protocol v6.3** · FAIR+CARE Certified  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
 [Back to Standards Index](../README.md) · [Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
