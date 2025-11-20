@@ -1,182 +1,260 @@
 ---
 title: "🧮 Kansas Frontier Matrix — Temporary Work Environment (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/work/tmp/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Continuous / Autonomous"
+
+version: "v11.0.0"
+last_updated: "2025-11-20"
+release_stage: "Stable / Governed"
+review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+doc_uuid: "urn:kfm:doc:data-work-tmp-v11.0.0"
+semantic_document_id: "kfm-doc-data-work-tmp-readme"
+event_source_id: "ledger:data/work/tmp/README.md"
+immutability_status: "version-pinned"
+
+sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.0.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-work-tmp-v10.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
+
+telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-work-tmp-v11.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "Internal · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
+status: "Active / Enforced"
+doc_kind: "Operational Workspace"
+intent: "temporary-etl-environment"
+role: "etl-core-domain"
+category: "Data · ETL · Workspace · Temporary"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "Low–Medium — dependent on domain outputs"
+sensitivity_level: "Dataset-dependent"
+indigenous_rights_flag: "Dataset-dependent"
+redaction_required: true
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Medium"
+
+ontology_alignment:
+  cidoc: "E73 Information Object"
+  schema_org: "DataFeed"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Activity"
+  geosparql: "geo:FeatureCollection"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Restricted"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+ai_transform_prohibited:
+  - "speculative additions"
+  - "synthetic content generation"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+classification: "Internal Processing Layer"
+jurisdiction: "Kansas / United States"
+lifecycle_stage: "transient"
+ttl_policy: "7–30 days (domain-dependent)"
+sunset_policy: "Auto-deleted after staging promotion"
 ---
 
 <div align="center">
 
-# 🧮 Kansas Frontier Matrix — **Temporary Work Environment**
+# 🧮 **Kansas Frontier Matrix — Temporary Work Environment (TMP)**  
 `data/work/tmp/README.md`
 
-**Purpose:**  
-Ephemeral FAIR+CARE-governed workspace for **intermediate ETL operations, AI model outputs, telemetry v2 records, and validation checkpoints** across all KFM domains.  
-Ensures transparency, reproducibility, and ethical data processing during computational workflows, with energy, carbon, and governance metrics logged per session.
+Internal FAIR+CARE-governed workspace for:
 
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../docs/architecture/README.md)
-[![FAIR+CARE Transient](https://img.shields.io/badge/FAIR%2BCARE-Transient%20Governed-gold.svg)](../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-2e7d32.svg)]()
-[![License: Internal](https://img.shields.io/badge/License-Internal%20Processing%20Layer-grey.svg)](../../../LICENSE)
+- 🧪 ETL transformations  
+- 🧠 AI/ML model intermediate outputs  
+- 📊 Validation checkpoints & schema alignment  
+- 🔍 Telemetry metrics (energy, carbon, runtime)  
+- 🔐 Pre-staging integrity checks & provenance logging  
+
+The TMP ensures **safe processing, reproducibility, and ethical handling** of all intermediate computational artifacts.
 
 </div>
 
 ---
 
-## 📘 Overview
-The **Temporary Work Environment (TMP)** is KFM’s operational sandbox for FAIR+CARE-compliant data transformation.  
-It manages short-lived ETL workflows, AI/ML outputs, and ethics validation events—acting as a transient bridge between **raw ingestion** and **staging certification**.
+## 1. 📘 Purpose
 
-**v10.0 Enhancements**
-- Added **telemetry v2 fields**: energy, CO₂e, validation coverage.  
-- Integrated AI explainability & model drift checkpointing.  
-- Expanded FAIR+CARE compliance hooks with JSON-LD tracebacks.
+The **Temporary Work Environment (TMP)** is the KFM’s controlled operational sandbox.  
+Its mission is to ensure:
 
-### Core Responsibilities
-- Host intermediate ETL, AI, and telemetry outputs.  
-- Maintain reproducibility and FAIR+CARE governance traceability.  
-- Capture energy, carbon, and runtime validation metrics.  
-- Validate schema alignment prior to staging promotion.  
+- SAFE intermediate data transformations  
+- ETHICAL handling of domain-sensitive datasets  
+- REPRODUCIBLE AI/ETL workflows  
+- CONTROLLED life cycle for high-risk intermediate data  
+- TRACEABILITY for all processing operations  
+
+TMP functions as the **bridge** between:
+
+`data/raw/` → `data/work/tmp/` → `data/work/staging/` → `data/processed/`
+
+Only data that passes TMP governance checks may proceed to staging.
 
 ---
 
-## 🗂️ Directory Layout
-```plaintext
+## 2. 🗂️ Directory Layout (GitHub-Safe)
+
+```text
 data/work/tmp/
 ├── README.md
 ├── climate/
 ├── hazards/
 ├── hydrology/
 ├── landcover/
+├── spatial/
 ├── tabular/
 ├── terrain/
 └── text/
 ```
 
+Each domain folder contains:
+
+- Intermediate ETL artifacts  
+- AI/ML outputs awaiting validation  
+- Temporary logs + metrics  
+- Validation checkpoint files  
+- Pre-staging governance evidence  
+
 ---
 
-## ⚙️ TMP Workflow Overview
+## 3. ⚙️ TMP Workflow Overview
+
 ```mermaid
 flowchart TD
-    "Raw Data (data/raw/*)" --> "ETL Processing (data/work/tmp/*)"
-    "ETL Processing (data/work/tmp/*)" --> "FAIR + CARE Pre-Validation + Checksums"
-    "FAIR + CARE Pre-Validation + Checksums" --> "Telemetry Logging + Governance Sync"
-    "Telemetry Logging + Governance Sync" --> "Promotion → Staging (data/work/staging/*)"
-    "Promotion → Staging (data/work/staging/*)" --> "Provenance Ledger Registration"
+    RAW["data/raw/*"] --> TMP["data/work/tmp/*"]
+    TMP --> PREVAL["FAIR+CARE Pre-Validation + Schema Checks"]
+    PREVAL --> TELEMETRY["Telemetry Sync (Energy, Carbon, Runtime)"]
+    TELEMETRY --> STAGING["Promotion to Staging"]
+    STAGING --> LEDGER["Provenance Ledger Registration"]
 ```
 
-### Workflow Steps
-1. **Extraction** — Load domain data into the TMP workspace.  
-2. **Transformation** — Apply schema normalization, cleaning, and AI modeling.  
-3. **FAIR+CARE Audit** — Execute automated pre-validation routines.  
-4. **Telemetry Sync** — Capture sustainability and validation metrics.  
-5. **Promotion** — Move verified outputs to staging for certification.  
+### Workflow Summary
+1. **Extraction** — Load raw inputs into TMP.  
+2. **Transformation** — Normalize schemas, model outputs, and prepare intermediate layers.  
+3. **FAIR+CARE Pre-Validation** — Ethical compliance & schema verification.  
+4. **Telemetry Logging** — Capture efficiency (Wh), carbon (gCO₂e), runtime, memory.  
+5. **Promotion** — Move stable, compliant results to staging.  
+6. **Ledger Sync** — Register operations in PROV-O/ISO lineage logs.
 
 ---
 
-## 🧩 Example TMP Metadata Record
+## 4. 🧩 Example TMP Metadata Record
+
 ```json
 {
-  "id": "tmp_hazards_workspace_v10.0.0",
-  "domain": "hazards",
-  "records_processed": 12419,
-  "workflow": "etl_hazards_pipeline_v4",
+  "id": "tmp_tabular_work_v11.0.0",
+  "domain": "tabular",
+  "records_processed": 41200,
+  "workflow": "etl_tabular_pipeline_v11",
   "validation_status": "in_review",
   "fairstatus": "compliant",
-  "telemetry": { "energy_wh": 0.8, "carbon_gco2e": 1.2, "validation_coverage_pct": 98.5 },
-  "created": "2025-11-09T23:59:00Z",
-  "checksum_sha256": "sha256:9b2e4f6c8d7a3b9f1e5a2d4b7c6f8a3d2e9b1c5a7f4d8b2a6c3e9a5b7d1c4e6f",
+  "telemetry": {
+    "energy_wh": 1.3,
+    "carbon_gco2e": 1.9,
+    "runtime_sec": 42,
+    "validation_coverage_pct": 96.1
+  },
+  "created": "2025-11-20T01:22:00Z",
+  "checksum_sha256": "sha256:e1ccf8ea...9d0c7b8a",
   "governance_ref": "data/reports/audit/data_provenance_ledger.json"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Governance Matrix
+## 5. 🧠 FAIR+CARE Governance Matrix
+
 | Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | TMP outputs indexed by schema + checksum ID. | `@kfm-data` |
-| **Accessible** | JSON/Parquet formats accessible for internal audits. | `@kfm-accessibility` |
-| **Interoperable** | JSON Schema, DCAT, STAC, and FAIR+CARE alignment ensured. | `@kfm-architecture` |
-| **Reusable** | Linked lineage and telemetry logs maintained. | `@kfm-design` |
-| **Collective Benefit** | Ethical AI and ETL transparency ensured. | `@faircare-council` |
-| **Authority to Control** | Council defines TMP lifecycle retention. | `@kfm-governance` |
-| **Responsibility** | Engineers document all TMP transformations. | `@kfm-security` |
-| **Ethics** | PII + cultural data anonymized and protected. | `@kfm-ethics` |
+|----------|----------------|-----------|
+| **Findable** | TMP outputs indexed by ID + workflow. | `@kfm-data` |
+| **Accessible** | Internal-only JSON/Parquet. | `@kfm-accessibility` |
+| **Interoperable** | JSON Schema, PROV-O, DCAT, STAC references. | `@kfm-architecture` |
+| **Reusable** | Traceability logs + lineage preserved. | `@kfm-design` |
+| **Collective Benefit** | Ethical AI + transparent ETL. | `@faircare-council` |
+| **Authority to Control** | Lifecycle rules enforced. | `@kfm-governance` |
+| **Responsibility** | Domain engineers tag all outputs. | `@kfm-security` |
+| **Ethics** | Sensitive attributes masked or redacted. | `@kfm-ethics` |
 
-**Audit References:**  
-`data/reports/audit/data_provenance_ledger.json` · `data/reports/fair/data_care_assessment.json`
-
----
-
-## ⚙️ TMP Lifecycle & Automation
-| Process        | Description                               | Output |
-|---|---|---|
-| Extraction     | Import + standardize from raw datasets    | CSV, Parquet |
-| Transformation | Harmonize schema + run AI pre-validation  | JSON, Parquet |
-| FAIR+CARE Audit| Execute ethics and schema pre-validation  | JSON Reports |
-| Telemetry Sync | Record sustainability metrics             | JSON Logs |
-| Promotion      | Transfer certified TMP datasets           | Staging Data |
-
-**Automation Workflow:** `tmp_sync_v2.yml`
+Governance artifacts:  
+`data/reports/audit/data_provenance_ledger.json`  
+`data/reports/fair/data_care_assessment.json`
 
 ---
 
-## ♻️ Retention & Sustainability
+## 6. ⚙️ TMP Lifecycle & Automation
+
+| Stage | Description | Output |
+|-------|-------------|---------|
+| Extraction | Import & normalize raw inputs | CSV, Parquet |
+| Transformation | Clean + model + merge | Intermediate files |
+| FAIR+CARE Audit | Ethics + schema pre-validation | Compliance reports |
+| Telemetry Sync | Sustainability & performance metrics | JSON logs |
+| Promotion | Move to staging | Certified data |
+
+Automation Workflows:  
+- `tmp_sync_v2.yml`  
+- `etl_validation_v3.yml`
+
+---
+
+## 7. ♻️ Retention & Sustainability
+
 | Category | Retention | Policy |
-|---|---:|---|
-| TMP Data | 7 Days | Auto-cleared after staging promotion. |
-| AI/ML Outputs | 14 Days | Retained for reproducibility review. |
-| Logs + QA Reports | 30 Days | Archived in system log register. |
-| Metadata & Checksums | 365 Days | Immutable in governance ledger. |
+|----------|-----------|--------|
+| TMP Data | 7 Days | Auto-cleared post-staging. |
+| AI Outputs | 14 Days | Needed for reproducibility audits. |
+| Logs & QA | 30 Days | Archived system-wide. |
+| Metadata | 365 Days | Immutable in governance ledger. |
 
-**Telemetry Reference:**  
-`../../../releases/v10.0.0/focus-telemetry.json`
+Telemetry Example Source:  
+`../../../releases/v11.0.0/focus-telemetry.json`
 
 ---
 
-## 🌱 Sustainability Metrics
+## 8. 🌱 Sustainability Metrics
+
 | Metric | Value | Verified By |
-|---|---:|---|
-| Energy (per TMP cycle) | 6.8 Wh | `@kfm-sustainability` |
-| Carbon Output | 8.3 gCO₂e | `@kfm-security` |
-| Renewable Power | 100% (RE100 Verified) | `@kfm-infrastructure` |
+|--------|------:|-------------|
+| Energy Use (per cycle) | 6.8 Wh | `@kfm-sustainability` |
+| Carbon Output | 8.1 gCO₂e | `@kfm-infra` |
+| Renewable Supply | 100% (RE100 Verified) | `@kfm-power` |
 | FAIR+CARE Compliance | 100% | `@faircare-council` |
 
 ---
 
-## 🧾 Internal Citation
-```text
-Kansas Frontier Matrix (2025). Temporary Work Environment (v10.0.0).
-FAIR+CARE-certified transient workspace enabling AI-driven, telemetry-integrated ETL transformations with ethical governance and reproducible lineage under MCP-DL v6.3.
-```
+## 9. 🕰️ Version History
 
----
-
-## 🕰️ Version History
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.0.0 | 2025-11-09 | `@kfm-ops` | Upgraded to telemetry v2; AI explainability + JSON-LD lineage added. |
-| v9.7.0 | 2025-11-06 | `@kfm-ops` | Added telemetry schema and retention refresh. |
-
----
+| Version | Date       | Summary                                                |
+|--------:|------------|--------------------------------------------------------|
+| v11.0.0 | 2025-11-20 | Upgraded to v11 preferred formatting; governance added |
+| v10.0.0 | 2025-11-09 | TMP telemetry v2 & pre-validation enhancements         |
 
 <div align="center">
 
-**Kansas Frontier Matrix**  
-*Transient Data × FAIR+CARE Ethics × Provenance Assurance*  
-© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix — Temporary Work Environment**  
+🧮 FAIR+CARE Certified · Ethics-Governed · Diamond⁹ Ω / Crown∞Ω  
 
-[Back to Work Layer](../README.md) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — Internal Layer  
+
+[Back to Work Layer](../README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
