@@ -42,10 +42,10 @@ category: "Data · Climate · Integrity · Processed"
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk"
 sensitivity_level: "Dataset-dependent"
-indigenous_rights_flag: "Low — environmental signals only"
+indigenous_rights_flag: "Low — environmental-only signals"
 redaction_required: false
 data_steward: "KFM FAIR+CARE Council"
-risk_category: "Low–Medium (downstream use dependent)"
+risk_category: "Low–Medium"
 
 ontology_alignment:
   cidoc: "E73 Information Object"
@@ -80,15 +80,16 @@ sunset_policy: "Superseded upon next climate-domain checksums update"
 # 🌡️ **Kansas Frontier Matrix — Processed Climate Checksums**  
 `data/processed/climate/checksums/README.md`
 
-Authoritative, FAIR+CARE-certified **checksum registry** for:
+Official, FAIR+CARE-certified climate checksum registry supporting:
 
-- 🌍 Processed climate layers (temperature, precipitation, drought, ET)  
-- 📦 Multi-format climate products (COG, Parquet, GeoJSON, NetCDF)  
-- 🧪 Reproducible climate analyses & models  
-- 🧠 Focus Mode v3 climate narratives & anomaly stories  
-- 🌐 STAC/DCAT-based integrity verification  
+- 🌡️ Gridded temperature composites  
+- 🌧️ Precipitation intensity & totals  
+- 🌵 Drought indices (SPI/SPEI/NDVI/soil moisture)  
+- 🔥 Derived hazard drivers (ET, freeze risk, heatwaves)  
+- 🧠 Focus Mode v3 narratives & anomaly explanations  
+- 🌐 STAC/DCAT discoverability, dataset integrity & reproducibility  
 
-All entries are **SHA-256 verified, pipeline-deterministic, schema-aligned, and ethically governed**.
+All assets listed here are **SHA-256 verified, provenance-linked, lineage-documented, and governance-approved**.
 
 </div>
 
@@ -96,41 +97,166 @@ All entries are **SHA-256 verified, pipeline-deterministic, schema-aligned, and 
 
 ## 1. 🌎 Domain Overview
 
-The **processed climate checksums registry** governs integrity for all climate products residing under:
+This registry governs all processed climate outputs in:
 
-- `data/processed/climate/` (Q4 2025 and onward)
+```
+data/processed/climate/
+```
 
-This includes cryptographic checksums for:
+**Purpose:**
 
-- Gridded temperature and precipitation composites (Daymet / PRISM / reanalysis blends)  
-- Drought indices (SPI, SPEI, soil-moisture, NDVI-derived drought signals)  
-- Evapotranspiration, heat index, and derived comfort/heatwave indicators  
-- Climate hazard drivers (e.g., freeze risk, heatwave recurrence)  
-- Long-term climatologies and anomalies relative to a baseline (e.g., 1991–2020 normals)  
+- Provide cryptographic verification for climate rasters, time-series, derived indicators  
+- Anchor pipeline determinism  
+- Support anomaly detection & Focus Mode v3 reasoning  
+- Register STAC Items & DCAT Datasets with validated checksums  
+- Integrate ISO 19115 lineage + PROV-O chains  
+- Facilitate environmental reproducibility, downstream modeling, and external audit  
 
-Key properties:
+All files referenced must:
 
-- All climate files referenced here are normalized to **EPSG:4326** (unless explicitly documented)  
-- Each file is covered by:
-  - **ISO 19115** lineage entries  
-  - **PROV-O** entity/activity/agent relationships  
-  - **STAC** Item references and **DCAT** Dataset entries  
-- Checksums provide a **hard integrity bound** for:
-  - Reproducible ETL runs  
-  - Model input validation  
-  - External re-use by downstream tools and partners  
+- Pass schema validation  
+- Be present in `manifest.json`  
+- Include FAIR+CARE ethical metadata  
+- Be accessible under CC-BY 4.0  
 
 ---
 
-## 2. 🗂️ Directory Layout (GitHub-Safe)
+## 2. 🗂️ Directory Layout (GitHub-Safe, Mobile-Safe)
 
-~~~~text
+```text
 data/processed/climate/checksums/
-├── README.md                               ← this file
-│
-├── temp_composites_v11.0.0.sha256          ← Temperature raster checksums
-├── precip_composites_v11.0.0.sha256        ← Precipitation raster checksums
-├── drought_indices_v11.0.0.sha256          ← SPI/SPEI/soil moisture/NDVI drought checksums
-├── climate_derivatives_v11.0.0.sha256      ← Derived hazard and comfort indicators
-│
-└── manifest.json                           ← Domain-level checksum manifest (JSON)
+├── README.md
+├── temp_composites_v11.0.0.sha256
+├── precip_composites_v11.0.0.sha256
+├── drought_indices_v11.0.0.sha256
+├── climate_derivatives_v11.0.0.sha256
+└── manifest.json
+```
+
+**Note:** Any additional `.sha256` files MUST:
+
+- Be included in `manifest.json`
+- Pass schema & governance validation  
+- Include full provenance references  
+
+---
+
+## 3. 🔐 Role of Checksums in Climate Pipelines
+
+Checksums uphold:
+
+### 1. 🔁 Determinism  
+Same pipeline → same outputs → same hashes.
+
+### 2. 🧬 Provenance  
+Every checksum file is a `prov:Entity` linked to:
+
+- Generating ETL activity  
+- Input datasets  
+- Software version & configuration  
+- KFM Data Council as responsible agent  
+
+### 3. 🧠 Focus Mode Reliability  
+Guarantees climate anomaly layers used in narratives are stable & validated.
+
+### 4. 📦 External Reproducibility  
+Third parties can validate file authenticity & reproduction.
+
+---
+
+## 4. 📊 Climate Asset Groups
+
+| Group                 | Description                                | Formats                          |
+|----------------------|--------------------------------------------|----------------------------------|
+| temp_composites      | Temp fields (daily/monthly)                | COG GeoTIFF, NetCDF, Parquet     |
+| precip_composites    | Precip intensity, totals, anomalies        | COG GeoTIFF, NetCDF, Parquet     |
+| drought_indices      | SPI, SPEI, soil moisture, NDVI drought     | Parquet, GeoTIFF, CSV            |
+| climate_derivatives  | Heatwaves, freeze risk, ET, composites     | Parquet, GeoTIFF, CSV            |
+
+Each file’s checksum appears in its respective `.sha256` file.
+
+---
+
+## 5. 🧩 Checksum Manifest (Schema Requirements)
+
+The domain manifest:
+
+```
+data/processed/climate/checksums/manifest.json
+```
+
+**MUST** include:
+
+- Stable KFM ID  
+- Domain = `"climate"`  
+- Schema version  
+- ISO timestamp of generation  
+- Source pipeline ID  
+- Per-asset entries with:
+  - `asset_id`
+  - `relative_path`
+  - `sha256`
+  - `source_pipeline`
+  - `fairstatus`
+  - Governance ledger reference  
+
+---
+
+## 6. ⚖️ FAIR+CARE Governance Requirements
+
+Climate checksums are classified as:
+
+- **FAIR:** Fully open, reusable, indexed  
+- **CARE:** Low-risk but reviewed for misuse, misinterpretation, or harm to communities  
+
+Governance files:
+
+```
+docs/standards/faircare/FAIRCARE-GUIDE.md
+docs/reports/audit/data_provenance_ledger.json
+```
+
+---
+
+## 7. 🔄 Validation, Telemetry & Sustainability
+
+### Validation
+- `checksum-generate.py`
+- `checksum-verify.yml`
+- `schema-validation.yml`
+
+### Telemetry Collected
+- `records_processed`
+- `energy_wh`
+- `carbon_gCO2e`
+- `runtime_sec`
+
+### Sustainability Thresholds
+- ≤ 4.0 Wh per 1,000 assets hashed  
+
+Aggregated into:
+
+```
+releases/v11.0.0/focus-telemetry.json
+docs/reports/telemetry/data-climate-checksums-v11.json
+```
+
+---
+
+## 8. 🕰️ Version History
+
+| Version | Date       | Summary                                                 |
+|--------:|------------|---------------------------------------------------------|
+| v11.0.0 | 2025-11-20 | Full superset v11 rewrite; corrected directory layout   |
+| v10.0.0 | 2025-11-10 | Initial registry & manifest                             |
+
+<div align="center">
+
+**Kansas Frontier Matrix — Climate Domain**  
+🌡️ FAIR+CARE Certified · Integrity-Verified · Diamond⁹ Ω / Crown∞Ω  
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+
+[Back to Climate](../README.md) · [Data Architecture](../../ARCHITECTURE.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
