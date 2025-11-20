@@ -1,98 +1,172 @@
 ---
-title: "🧩 Kansas Frontier Matrix — Metadata TMP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧩 Kansas Frontier Matrix — Metadata TMP Workspace (Diamond9 Omega / CrownInfinityOmega Ultimate Certified)"
 path: "data/work/staging/metadata/tmp/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-09"
-review_cycle: "Continuous / Autonomous"
+version: "v11.1.0"
+last_updated: "2025-11-19"
+review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.0.0/manifest.zip"
-data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-metadata-tmp-v10.json"
-governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
+sbom_ref: "../../../../../releases/v11.1.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.1.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.1.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/data-work-staging-metadata-tmp-v11.json"
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "Internal · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11"
+status: "Active / Enforced"
+doc_kind: "Metadata Layer"
+intent: "staging-metadata-tmp"
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE-Verified"
 ---
 
 <div align="center">
 
-# 🧩 Kansas Frontier Matrix — **Metadata TMP Workspace**
+# 🧩 **Kansas Frontier Matrix — Metadata TMP Workspace**  
 `data/work/staging/metadata/tmp/README.md`
 
 **Purpose:**  
-Temporary workspace for harmonizing, crosswalking, and transforming metadata between **STAC**, **DCAT**, and **PROV-O** before FAIR+CARE validation and governance ledger registration.  
-This layer enables metadata interoperability and schema unification across the Kansas Frontier Matrix (KFM) ecosystem, now integrated with **telemetry v2** and **streaming crosswalk automation**.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs%20·%20MCP-v6.3-blue.svg)](../../../../../docs/architecture/README.md)
-[![FAIR+CARE Pre-Validation](https://img.shields.io/badge/FAIR%2BCARE-Metadata%20Pre--Validation%20Compliant-gold.svg)](../../../../../docs/standards/faircare-validation.md)
-[![STAC 1.0](https://img.shields.io/badge/STAC-1.0%20Compliant-0052cc.svg)]()
-[![DCAT 3.0](https://img.shields.io/badge/DCAT-3.0%20Aligned-7e57c2.svg)]()
-[![License: Internal](https://img.shields.io/badge/License-Internal%20Governance%20Layer-grey.svg)](../../../../../LICENSE)
+Define the **transient metadata harmonization workspace** used to **crosswalk, merge, and transform metadata** between **STAC**, **DCAT**, **PROV-O**, and **ISO 19115** before FAIR+CARE validation and governance registration.  
+This directory supports **cross-standard interoperability**, **schema unification**, and **pre-validation ethics checks** for all KFM metadata.
 
 </div>
 
----
-
 ## 📘 Overview
-The **Metadata TMP Workspace** is a transient harmonization environment for reconciling metadata structures and ensuring cross-standard interoperability.  
-Transformations include **schema mapping**, **lineage enrichment (PROV-O)**, and **cross-standard alignment (STAC/DCAT)** ahead of validation.
+The Metadata TMP Workspace is the **first stop** for metadata entering the staging environment.  
+It is used to:
 
-**v10 Enhancements**
-- Added **telemetry v2 tracking** (energy/CO₂ per merge event).  
-- Introduced **auto-patching governance hooks** from FAIR+CARE audit logs.  
-- Real-time JSON-LD validation for crosswalk previews.
+* Align metadata across STAC, DCAT, PROV-O, and ISO schemas  
+* Generate unified preview records for FAIR+CARE audits  
+* Perform early integrity and consistency checks  
+* Attach telemetry data (energy_wh, carbon_gco2e) at merge time  
+* Prepare metadata for the `validation/` stage and eventual promotion to `processed/metadata/`  
 
-### Core Responsibilities
-- Crosswalk metadata between STAC, DCAT, and PROV-O.  
-- Prepare unified metadata for FAIR+CARE validation.  
-- Execute initial ethics, completeness, and checksum checks.  
-- Generate transformation previews for governance audit.  
-
----
+Data in this directory is **ephemeral** and may change freely until promoted.
 
 ## 🗂️ Directory Layout
 ```plaintext
 data/work/staging/metadata/tmp/
 ├── README.md
-├── stac_to_dcat_crosswalk.json         # STAC↔DCAT field mapping table
-├── provenance_mapping.json             # PROV-O lineage and relationship references
-├── metadata_merge_preview.json         # Unified metadata preview before validation
-├── metadata_patch_queue.json           # Corrections pending governance review
-└── metadata.json                       # TMP session provenance, telemetry, and checksum record
+├── stac_to_dcat_crosswalk.json
+├── provenance_mapping.json
+├── metadata_merge_preview.json
+├── metadata_patch_queue.json
+└── metadata.json
 ```
 
----
+## 🌍 Domain Overview
+This workspace covers metadata operations for all KFM domains:
 
-## ⚙️ Metadata TMP Workflow
-```mermaid
-flowchart TD
-    "Incoming Metadata (STAC · DCAT · PROV-O)" --> "Schema Crosswalk & Field Alignment"
-    "Schema Crosswalk & Field Alignment" --> "Merge Records & Generate Unified Preview"
-    "Merge Records & Generate Unified Preview" --> "FAIR + CARE Ethics Pre-Validation"
-    "FAIR + CARE Ethics Pre-Validation" --> "Checksum Verification & Metadata Review"
-    "Checksum Verification & Metadata Review" --> "Promotion to Validation Workspace"
+* STAC collection and item descriptors  
+* DCAT dataset and distribution metadata  
+* PROV-O provenance chains and relationships  
+* ISO 19115 spatial and temporal descriptors  
+
+Typical use cases:
+
+* Building and testing STAC ↔ DCAT field mappings  
+* Merging heterogeneous metadata sources into coherent previews  
+* Queuing patch operations prior to governance review  
+* Capturing temporary provenance for intermediate transformations  
+
+## 🔗 Entity Requirements (PROV-O)
+Each TMP session must be representable as a `prov:Entity` with:
+
+* Unique entity ID (ASCII UUID or ID string)  
+* References to applied crosswalk artifacts (for example `stac_to_dcat_crosswalk.json`, `provenance_mapping.json`)  
+* Number of merged fields or records  
+* SHA256 checksum of the merged preview or session bundle  
+* Telemetry block (energy_wh, carbon_gco2e, validation_coverage_pct)  
+* Governance status (`pending`, `in_review`)  
+* Governance reference path (for example `data/reports/audit/data_provenance_ledger.json`)  
+* Creation timestamp in ASCII ISO 8601 format  
+
+TMP entities are **not immutable**; only promoted metadata in `staging/validation` and `processed/metadata` becomes permanent.
+
+## ⚙️ Activity Requirements
+TMP-level activities are `prov:Activity` instances such as:
+
+* Schema crosswalk execution (STAC ↔ DCAT)  
+* Provenance mapping enrichment (PROV-O relationships)  
+* Merge and preview generation  
+* Initial ethics and completeness checks  
+* Checksum computation for previews  
+* Patch-queue construction for governance review  
+
+Each activity must log:
+
+* Pipeline or tool ID and version  
+* Parameter digest (ASCII hash of configuration)  
+* Execution timestamp  
+* Count of records and fields impacted  
+* Issues detected and severity classification  
+* Associated agents (human and system)  
+
+## 🧑‍💼 Agent Requirements
+Agents participating in TMP operations include:
+
+* `@kfm-metadata` — metadata engineers and maintainers  
+* `@kfm-architecture` — schema alignment and standards governance  
+* `@kfm-security` — checksum integrity and access controls  
+* `@faircare-council` — FAIR+CARE and CARE supervision for sensitive fields  
+* `@kfm-data` — lifecycle and governance coordination  
+
+All agents are represented as PROV-O `prov:Agent`.
+
+## 🧪 Validation Requirements
+TMP workspace outputs must undergo **basic pre-validation** before moving into `validation/`:
+
+* Crosswalk completeness checks (expected fields mapped)  
+* JSON structure validation for all JSON artifacts  
+* Preliminary FAIR+CARE checks (presence of critical ethics fields)  
+* Basic integrity checks (non-empty essential fields, IDs, and timestamps)  
+* Checksum computation and storage in `metadata.json`  
+* Telemetry recording for each TMP session  
+
+Full FAIR+CARE certification, deep schema validation, and governance registration occur in the **staging/validation** and **staging/logs** layers.
+
+## 📥 Retrieval Examples
+
+### Python
+```python
+import json
+
+with open("data/work/staging/metadata/tmp/metadata_merge_preview.json") as f:
+    preview = json.load(f)
+
+print(preview.get("id"), preview.get("title"))
 ```
 
-### Steps
-1. **Crosswalk Alignment** — Reconcile schema differences across standards.  
-2. **Merge & Preview** — Combine records for FAIR+CARE audit preparation.  
-3. **Ethical Pre-Validation** — Check accessibility & provenance accuracy.  
-4. **Checksum Verify** — Ensure structural/data integrity.  
-5. **Promote** — Forward harmonized metadata to **staging/validation**.
+### Bash
+```bash
+ls data/work/staging/metadata/tmp/
+```
 
----
+### Cypher
+```cypher
+MATCH (m:MetadataTmp)
+RETURN m.id, m.crosswalks_applied, m.governance_status;
+```
+
+## 🛣️ Roadmap
+* v11.2 — Automated field-level anomaly detection for crosswalks  
+* v11.3 — Interactive diff tooling for metadata patches (graph-integrated)  
+* v11.4 — Auto-suggestion of PROV-O relationships from raw logs  
+* v11.5 — Streaming metadata crosswalk support for high-frequency updates  
 
 ## 🧩 Example TMP Metadata Record
 ```json
 {
-  "id": "metadata_tmp_hazards_v10.0.0",
-  "crosswalks_applied": ["stac_to_dcat_crosswalk.json", "provenance_mapping.json"],
+  "id": "metadata_tmp_hazards_v11.1.0",
+  "crosswalks_applied": [
+    "stac_to_dcat_crosswalk.json",
+    "provenance_mapping.json"
+  ],
   "merged_fields": 42,
   "issues_detected": 0,
   "validator": "@kfm-metadata-lab",
-  "created": "2025-11-09T23:35:00Z",
-  "checksum_sha256": "sha256:a5b3d9e7c4f8a1b2e9c6f5d4a3b7c2e8f1d6a9b4e7c8b3a2d9f5c6e1b8f7a4d2",
+  "created": "2025-11-19T20:18:00Z",
+  "checksum_sha256": "sha256:7f01a4ab9b38a9908deaea381a25c55b49f2506fcf0e45ad3169e4e32e1be4d4",
   "telemetry": {
     "energy_wh": 0.4,
     "co2_g": 0.5,
@@ -103,82 +177,14 @@ flowchart TD
 }
 ```
 
----
-
-## 🧠 FAIR+CARE Governance Matrix
-| Principle | Implementation | Oversight |
-|---|---|---|
-| **Findable** | Harmonized with global IDs & cross-schema mappings. | `@kfm-data` |
-| **Accessible** | JSON-LD artifacts for internal FAIR reviews. | `@kfm-accessibility` |
-| **Interoperable** | STAC ↔ DCAT ↔ PROV-O alignment. | `@kfm-architecture` |
-| **Reusable** | Enriched with provenance, checksum, and schema linkages. | `@kfm-design` |
-| **Collective Benefit** | Transparent metadata reuse across datasets. | `@faircare-council` |
-| **Authority to Control** | Council validates crosswalk outputs. | `@kfm-governance` |
-| **Responsibility** | Maintainers document merges & ethical reviews. | `@kfm-security` |
-| **Ethics** | Screened for integrity and cultural appropriateness. | `@kfm-ethics` |
-
-**Audit refs:**  
-`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
-
----
-
-## ⚙️ TMP Artifacts
-| Artifact                     | Description                                   | Format |
-|---|---|---|
-| `stac_to_dcat_crosswalk.json` | Field mapping between STAC and DCAT          | JSON   |
-| `provenance_mapping.json`     | PROV-O lineage & relationship definitions    | JSON   |
-| `metadata_merge_preview.json` | Pre-validation merged record preview         | JSON   |
-| `metadata_patch_queue.json`   | Pending fixes awaiting governance review     | JSON   |
-| `metadata.json`               | TMP session provenance, telemetry & checksum | JSON   |
-
-**Automation:** `metadata_tmp_sync.yml`
-
----
-
-## ♻️ Retention & Lifecycle Policy
-| File Type        | Retention | Policy                                   |
-|---|---:|---|
-| Crosswalk Files  | 30 Days   | Retained for schema versioning history.  |
-| Merge Previews   | 14 Days   | Cleared post validation/certification.   |
-| Patch Queues     | 7 Days    | Purged after governance resolution.      |
-| Metadata Records | 365 Days  | Archived for lineage & audit continuity. |
-
-**Telemetry:** `../../../../../releases/v10.0.0/focus-telemetry.json`
-
----
-
-## 🌱 Sustainability Metrics
-| Metric | Value | Verified By |
-|---|---:|---|
-| Energy Use (per merge cycle) | 0.4 Wh | `@kfm-sustainability` |
-| Carbon Output | 0.5 gCO₂e | `@kfm-security` |
-| Renewable Power | 100% (RE100) | `@kfm-infrastructure` |
-| FAIR+CARE Validation | 100% | `@faircare-council` |
-
----
-
-## 🧾 Internal Use Citation
-```text
-Kansas Frontier Matrix (2025). Metadata TMP Workspace (v10.0.0).
-Transient harmonization workspace for crosswalking and aligning metadata across STAC, DCAT, and PROV-O under FAIR+CARE governance—ensuring interoperability and ethical compliance before publication.
-```
-
----
-
 ## 🕰️ Version History
-| Version | Date       | Author              | Summary |
-|---|---|---|---|
-| v10.0.0  | 2025-11-09 | `@kfm-metadata`     | Upgraded to v10: telemetry v2 tracking, JSON-LD real-time validation, auto-patching from FAIR+CARE logs. |
-| v9.7.0   | 2025-11-06 | `@kfm-metadata`     | Telemetry/schema refs aligned; retention & badges updated. |
+| Version | Date | Author | Summary |
+|--------|------|--------|---------|
+| v11.1.0 | 2025-11-19 | `@kfm-metadata` | KFM-MDP v11 upgrade; PROV-O integration; telemetry v11 alignment; retention and TMP semantics clarified. |
+| v11.0.0 | 2025-11-15 | `@kfm-metadata` | Initial migration of TMP workspace into v11 model. |
+| v10.0.0 | 2025-11-09 | `@kfm-metadata` | Original TMP workspace definition with telemetry v2 and JSON-LD pre-validation. |
 
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Metadata Interoperability × FAIR+CARE Ethics × Provenance Assurance*  
-© 2025 Kansas Frontier Matrix — Internal · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[Back to Metadata Staging](../README.md) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+## 🔗 Footer
+[⬅️ Back to Metadata Staging](../README.md) ·  
+[📐 Data Architecture](../../../../../docs/ARCHITECTURE.md) ·  
+[⚖️ Governance Charter](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
