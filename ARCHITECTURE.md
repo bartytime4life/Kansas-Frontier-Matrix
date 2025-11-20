@@ -287,16 +287,16 @@ Story Nodes may be generated automatically when:
 
 # 🕰 Version History
 
-- **v11.1.0 — 2025-11-20**  
-  Full upgrade for alignment with ARCHITECTURE.md v11 LTS, including governance, telemetry, sovereignty, and sustainability fields.
-
-- **v11.0.0 — 2025-11-20**  
-  Initial release of Reliable Pipelines v11 specification.
+| Version   | Date         | Notes                                                                 |
+|----------:|-------------:|-----------------------------------------------------------------------|
+| v11.1.0   | 2025-11-20   | Alignment with ARCHITECTURE.md v11 LTS. Added governance, telemetry, |
+|           |              | sovereignty, sustainability metadata, and runtime stack references.   |
+| v11.0.0   | 2025-11-20   | Initial Reliable Pipelines v11 specification release.                |
 
 ---
 
 # 🔗 Footer
 
-**Back to Standards:** `docs/standards/README.md`  
+**Back to Root:** `/README.md`  
 **Back to Architecture:** `docs/architecture/system_overview.md`  
-**Back to Root:** `/README.md`
+**Back to Standards:** `docs/standards/README.md`
