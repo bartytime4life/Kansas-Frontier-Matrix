@@ -57,9 +57,9 @@ sunset_policy: "Annual Review"
 `data/reports/self-validation/README.md`
 
 Purpose:  
-Define the autonomous validation system responsible for schema checking,  
-checksum verification, FAIR+CARE alignment, model bias/drift detection,  
-and telemetry-linked reproducibility across all KFM v11 data pipelines.
+Define the autonomous validation system responsible for schema safety,  
+checksum verification, FAIR+CARE internal scoring, AI ethics checks,  
+and telemetry-based reproducibility for KFM v11.
 
 </div>
 
@@ -67,22 +67,17 @@ and telemetry-linked reproducibility across all KFM v11 data pipelines.
 
 ## 📘 Overview
 
-The Self-Validation Layer acts as the **autonomous QA engine** for KFM.  
-All validation occurs without manual intervention and follows deterministic,  
-CI-enforced pipelines ensuring:
+The Self-Validation Layer is KFM’s automated QA engine, continuously performing:
 
-- Schema correctness  
-- Checksum and lineage integrity  
+- Schema conformance  
+- Checksum and lineage validation  
 - FAIR+CARE internal scoring  
-- AI bias, drift, and explainability safety  
-- Accessibility and metadata completeness  
-- Sustainability tracking (energy Wh, carbon gCO2e, records processed)  
+- AI drift, bias, and explainability checks  
+- Accessibility completeness review  
+- Sustainability telemetry (energy Wh, carbon gCO2e, records processed)  
 
-All results feed:
-
-- Governance ledgers  
-- FAIR+CARE dashboards  
-- Focus Mode v3 narrative safety indicators  
+Outputs feed governance ledgers, FAIR+CARE dashboards,  
+and Focus Mode v3 narrative safety layers.
 
 ---
 
@@ -109,7 +104,7 @@ All results feed:
 
 ---
 
-## 📂 Directory Layout (ASCII)
+## 📂 Directory Layout
 
   data/reports/self-validation/
   ├── README.md
@@ -125,22 +120,22 @@ All results feed:
 
 ## 📊 Validation Summary (ASCII Table)
 
-+-----------+------------+----------+------------+--------+--------------+
-| Domain    | FAIRCARE   | Schema   | Checksums  | Drift  | Final Status |
-+-----------+------------+----------+------------+--------+--------------+
-| Climate   | Pass       | Pass     | Pass       | None   | Certified    |
-| Hazards   | Pass       | Pass     | Pass       | None   | Certified    |
-| Hydrology | Pass       | Pass     | Pass       | Low    | Certified    |
-| Landcover | Pass       | Pass     | Pass       | None   | Certified    |
-| Spatial   | Pass       | Pass     | Pass       | Low    | Certified    |
-| Tabular   | Pass       | Pass     | Pass       | Low    | Certified    |
-+-----------+------------+----------+------------+--------+--------------+
++----------------+-------------+-------------+-------------+-----------+----------------+
+| Domain         | FAIRCARE    | Schema      | Checksums   | Drift     | Final Status   |
++----------------+-------------+-------------+-------------+-----------+----------------+
+| Climate        | Pass        | Pass        | Pass        | None      | Certified      |
+| Hazards        | Pass        | Pass        | Pass        | None      | Certified      |
+| Hydrology      | Pass        | Pass        | Pass        | Low       | Certified      |
+| Landcover      | Pass        | Pass        | Pass        | None      | Certified      |
+| Spatial        | Pass        | Pass        | Pass        | Low       | Certified      |
+| Tabular        | Pass        | Pass        | Pass        | Low       | Certified      |
++----------------+-------------+-------------+-------------+-----------+----------------+
 
 ---
 
 ## 🧩 Example Self-Validation Record (v11 Format)
 
-(Shown as plain text for stability)
+(Displayed as plain text for stable GitHub rendering)
 
   id: self_validation_hazards_v11.0.0  
   domain: hazards  
@@ -159,20 +154,20 @@ All results feed:
 
 ---
 
-## ⚖️ FAIR+CARE Governance Alignment
+## ⚖️ FAIR+CARE Governance Alignment (ASCII Table)
 
-+----------------------+-----------------------------------------------------------+---------------------+
-| Principle            | Implementation                                            | Oversight           |
-+----------------------+-----------------------------------------------------------+---------------------+
-| Findable             | Reports indexed by domain/version                         | @kfm-data           |
-| Accessible           | Open JSON, structured metadata                            | @kfm-accessibility  |
-| Interoperable        | ISO 19115, DCAT 3.0, PROV-O alignment                     | @kfm-architecture   |
-| Reusable             | Checksums, provenance, FAIR+CARE metadata                 | @kfm-design         |
-| Collective Benefit   | Public transparency into QA processes                     | FAIR+CARE Council   |
-| Authority to Control | Council validates ethics and governance cycles            | @kfm-governance     |
-| Responsibility       | Autonomous bias checks and reproducibility enforcement    | @kfm-security       |
-| Ethics               | Drift/bias checks feed ethics dashboards                  | @kfm-ethics         |
-+----------------------+-----------------------------------------------------------+---------------------+
++-----------------------+-----------------------------------------------------------+---------------------+
+| Principle             | Implementation                                            | Oversight           |
++-----------------------+-----------------------------------------------------------+---------------------+
+| Findable              | Indexed by domain/version in provenance ledger           | @kfm-data           |
+| Accessible            | Open JSON, metadata completeness                         | @kfm-accessibility  |
+| Interoperable         | ISO 19115, DCAT 3.0, PROV-O alignment                    | @kfm-architecture   |
+| Reusable              | Checksums, lineage, FAIR+CARE metadata                   | @kfm-design         |
+| Collective Benefit    | Public visibility of automated QA processes              | FAIR+CARE Council   |
+| Authority to Control  | Council validates ethics cycles                           | @kfm-governance     |
+| Responsibility        | Autonomous bias/drift checks                              | @kfm-security       |
+| Ethics                | Ethics reviewed in each cycle                             | @kfm-ethics         |
++-----------------------+-----------------------------------------------------------+---------------------+
 
 ---
 
@@ -195,12 +190,12 @@ All results feed:
 
 ---
 
-## 🕰️ Version History
+## 🕰️ Version History (ASCII Table)
 
 +-----------+------------+----------------------+----------------------------------------------+
 | Version   | Date       | Author               | Summary                                      |
 +-----------+------------+----------------------+----------------------------------------------+
-| v11.0.0   | 2025-11-19 | Lead Programmer      | KFM-MDP v11 rebuild; ASCII tables; metadata  |
+| v11.0.0   | 2025-11-19 | Lead Programmer      | Full v11 upgrade; ASCII tables; metadata fix |
 | v10.0.0   | 2025-11-09 | @kfm-autonomous      | Telemetry v2; streaming STAC integration     |
 | v9.7.0    | 2025-11-06 | @kfm-autonomous      | Initial autonomous QA module                 |
 +-----------+------------+----------------------+----------------------------------------------+
