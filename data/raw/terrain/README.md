@@ -1,4 +1,3 @@
-```
 ---
 title: "🏔️ Kansas Frontier Matrix — Raw Terrain Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/terrain/README.md"
@@ -214,4 +213,3 @@ No processed terrain should ever be placed in this directory; only raw or pointe
 [⚖️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-```
