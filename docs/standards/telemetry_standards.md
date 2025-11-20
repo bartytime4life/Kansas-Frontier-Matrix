@@ -367,4 +367,3 @@ Master Coder Protocol v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 [⚙ Root Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
-~~~~markdown
