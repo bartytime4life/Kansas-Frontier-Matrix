@@ -1,13 +1,3 @@
-Below is your **CI-safe**, **GitHub-safe**, **KFM-MDP v11.0.0–compliant**,
-**Diamond⁹ Ω / Crown∞Ω Ultimate Certified** document for:
-
-**`docs/pipelines/validation-observability/tests/plans/semantic/temporal/narratives/sovereignty/masking/propagation/ai/embeddings/anomaly/clustering/governance/remediation/governance/documentation/clearance/completeness/cross_references/entities/graph_resolution/existence/canonicality/README.md`**
-
-One fenced block.
-Perfect directory alignment.
-Metadata structure matches all upstream modules.
-
-````markdown
 ---
 title: "🏷️ Kansas Frontier Matrix — Canonicality Tests for Entity Graph-Resolution (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/pipelines/validation-observability/tests/plans/semantic/temporal/narratives/sovereignty/masking/propagation/ai/embeddings/anomaly/clustering/governance/remediation/governance/documentation/clearance/completeness/cross_references/entities/graph_resolution/existence/canonicality/README.md"
