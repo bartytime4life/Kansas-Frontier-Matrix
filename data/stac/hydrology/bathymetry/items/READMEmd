@@ -1,210 +1,136 @@
 ---
-title: "🗺️ Kansas Frontier Matrix — Bathymetry STAC Items Index (Hydrology Domain, v11 Super-Edition)"
+title: "🌊 Kansas Frontier Matrix — Bathymetry STAC Items (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/stac/hydrology/bathymetry/items/README.md"
 version: "v11.0.0"
 last_updated: "2025-11-21"
-review_cycle: "Annual • Hydrology & Sediment Council"
+review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../../../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/data-stac-hydro-bathymetry-items-v1.json"
-governance_ref: "../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/stac-hydrology-bathymetry-items-v1.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.0.0"
-status: "Active • Enforced"
-doc_kind: "STAC Items Index"
-intent: "stac-hydrology-bathymetry-items-index"
-semantic_document_id: "kfm-stac-hydrology-bathymetry-items-index"
-doc_uuid: "urn:kfm:stac:hydrology:bathymetry:items:index:v11.0.0"
+status: "Active / Enforced"
+doc_kind: "Collection-Items-README"
+intent: "stac-items-hydrology-bathymetry"
+semantic_document_id: "kfm-data-stac-hydrology-bathymetry-items"
+doc_uuid: "urn:kfm:data:stac:hydrology:bathymetry:items"
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 fair_category: "F1-A1-I1-R1"
-care_label: "Public-Low-Risk"
+care_label: "Public / Low-Risk"
 immutability_status: "version-pinned"
 ---
 
 <div align="center">
 
-# 🗺️ **Bathymetry STAC Items Index (Hydrology Domain — v11 Super-Edition)**  
+# 🌊 **Hydrology · Bathymetry — STAC Items Directory**  
 `data/stac/hydrology/bathymetry/items/README.md`
 
 **Purpose:**  
-Serve as the **complete metadata, ontology, and STAC governance layer** for all bathymetry‐related  
-Items in the Kansas Frontier Matrix (KFM). Covers DEM rasters, Difference-of-DEM (DoD),  
-shoreline & delta geometries, depth grids, interpolated surfaces, sonar tracks, and derived  
-sedimentation state datasets across all Kansas reservoirs.
+Define, register, and govern all *bathymetric STAC Items* under Hydrology for KFM v11.  
+These Items represent reservoir/lake depth grids, sonar-derived rasters, elevation-below-water DEMs, and hydro-safety–aligned depth models.  
 
 </div>
 
 ---
 
-# 📘 0. Overview
+# 📘 Overview
 
-Bathymetry Items represent the **bedrock geospatial layer** for hydrology & sedimentation analysis.  
-They support:
+This directory contains **STAC Item JSON files** describing *individual bathymetric assets* across Kansas reservoirs and hydrologic systems.  
+Each Item adheres to:
 
-- Reservoir sedimentation history  
-- Forebay & delta evolution  
-- WID density-current routing  
-- Hydrodynamic model calibration  
-- Storage-capacity calculations  
-- Long-term sediment budgeting  
-- Shoreline erosion & geomorphic change  
+- **STAC 1.0.0** core specification  
+- **KFM STAC Extensions v11** (hydrology, provenance, energy–carbon telemetry)  
+- **FAIR+CARE requirements**  
+- **CIDOC-CRM / GeoSPARQL / OWL-Time alignment**  
+- **Diamond⁹ Ω / Crown∞Ω metadata certification**  
 
-This Items index defines all metadata, schemas, and ontology mappings required for bathymetry STAC Items.
+Bathymetry data typically originates from:
+- USACE depth surveys  
+- USGS hydrography & submerged topo datasets  
+- State bathymetric lidar/sonar surveys  
+- AI-reconstructed subaqueous DEMs (Focus Mode v3 hydro-model outputs)  
+
+All Items must be machine-validated at commit time.
 
 ---
 
-# 🗂️ 1. Directory Structure
+# 🗂 Directory Layout
 
 ```text
-data/
-└── stac/
-    └── hydrology/
-        └── bathymetry/
-            ├── collection.json
-            └── items/
-                ├── bathy-1962.json
-                ├── bathy-1975.json
-                ├── bathy-1993.json
-                ├── bathy-2010.json
-                ├── bathy-2019.json
-                ├── bathy-2024.json
-                ├── dod-1962-1993.json
-                ├── dod-1993-2010.json
-                ├── dod-2010-2024.json
-                ├── shoreline-extent.json
-                ├── delta-extent.json
-                ├── sonar-tracklines.json
-                └── bathy-interpolated-surfaces.json
+data/stac/hydrology/bathymetry/items/
+│
+├── clinton_2020_bathymetry.json        # Clinton Lake depth model
+├── perry_2018_multibeam.json           # Perry Lake multibeam sonar dataset
+├── milford_2022_bathymetry.json        # Milford Lake high-resolution DEM
+├── tuttle_2019_ai_reconstructed.json   # AI-enhanced bathymetry (KFM hydro-model)
+└── README.md                           # This file
 ```
 
 ---
 
-# 🌊 2. Bathymetry Dataset Classes
+# 🧩 STAC Item Requirements (v11)
 
-## ✔ Native Bathymetry DEMs  
-- Multibeam DEM rasters  
-- Single-beam digitized historical surfaces  
-- Georeferenced contour-derived DEMs  
+Every bathymetry Item MUST include:
 
-## ✔ DoD Surfaces  
-- Elevation gain/loss between years  
-- Used for sediment accumulation quantification  
+### Core Fields
+- `stac_version`: `"1.0.0"`
+- `type`: `"Feature"`
+- `id`: globally unique ID  
+- `bbox`, `geometry`
+- `properties.datetime` OR time range
+- `assets` with complete metadata (checksum, roles, type, href)
 
-## ✔ Morphologic Geometry  
-- Delta polygons  
-- Forebay outlines  
-- Shoreline migration  
+### Mandatory Extensions
+- `proj` — CRS, transform, resolution  
+- `raster` — band metadata (depth units, nodata, classification)  
+- `scientific` — citations, DOI (if applicable)  
+- `version` — dataset versioning  
+- `checksum` — SHA-256 required  
+- `kfm-hydro` — hydrology domain metadata (depth type, measurement method, uncertainty)  
+- `kfm-provenance` — PROV-O lineage entities and activities  
 
-## ✔ Sonar & Track Data  
-- Raw point-clouds (future LAS/LAZ STAC Items)  
-- Trackline vectors  
-- QA/QC metadata  
-
-## ✔ Interpolated Surfaces  
-- IDW/kriging/gridding outputs  
-- Derived modeling surfaces  
-
----
-
-# 🧭 3. Required STAC Metadata (Bathymetry v11 Profile)
-
-## ✔ Core STAC fields
-```
-stac_version
-type = "Feature"
-id
-collection
-geometry
-bbox
-properties.datetime
-assets
-```
-
-## ✔ Required `kfm:*` bathymetry fields
-
-| Field | Meaning |
-|-------|---------|
-| `kfm:parameter` | bathymetry, dod, shoreline, delta |
-| `kfm:units` | meters, meters_difference |
-| `kfm:provider` | USACE, KWO, KFM |
-| `kfm:method` | multibeam, singlebeam, digitized_contours, interpolation |
-| `kfm:site` | reservoir/region/delta identifier |
-| `kfm:lineage` | ETL provenance chain |
-| `kfm:quality` | QA category |
-| `kfm:hydro_region` | reservoir/tailwater |
-| `kfm:project` | Sedimentation-History, Bathymetry-Core |
-| `kfm:crs` | horizontal CRS |
-| `kfm:vertical_datum` | vertical datum metadata |
+### Required Metadata
+- Spatial coverage (GeoJSON)
+- Temporal extent (survey date or multi-year composites)
+- Depth units (meters preferred)
+- Survey method  
+- Source agency  
+- Contact + licensing  
+- CARE compliance (mask sensitive underwater cultural features if present)
 
 ---
 
-# 🗃️ 4. Asset Types & Schemas
-
-## ✔ COG Rasters  
-For:
-- DEM  
-- DoD  
-- Depth surfaces  
-- Sediment accumulation grids  
-
-Must include:
-- `proj:*` fields  
-- Internal tiling + overviews  
-- SHA-256 checksums  
-
-## ✔ GeoJSON  
-For:
-- Delta extent polygons  
-- Shoreline outlines  
-- Sonar tracklines  
-
-## ✔ CSV/CSVW  
-For:
-- Sediment volume tables  
-- Bathymetry metadata  
-- Core metadata used in interpolations  
-
-## ✔ NetCDF (future)  
-For:
-- 3D bathymetry/hydrodynamic modeling outputs  
-
----
-
-# 🧪 5. Example STAC Items
-
-## 5.1 Bathymetry DEM (2019)
+# 🛠 Example STAC Item (Template)
 
 ```json
 {
-  "stac_version":"1.0.0",
-  "type":"Feature",
-  "id":"bathy-2019",
-  "collection":"bathymetry-hydrology",
-  "geometry":{"type":"Polygon","coordinates":[...]},
-  "bbox":[...],
-  "properties":{
-    "datetime":"2019-09-30T00:00:00Z",
-    "kfm:parameter":"bathymetry",
-    "kfm:units":"meters",
-    "kfm:provider":"USACE",
-    "kfm:method":"multibeam",
-    "kfm:site":"Tuttle_Creek_Reservoir",
-    "kfm:lineage":"etl/bathy2019_v1",
-    "kfm:quality":"A",
-    "kfm:hydro_region":"Tuttle_Creek",
-    "kfm:project":"Sedimentation-History",
-    "kfm:crs":"EPSG:4326",
-    "kfm:vertical_datum":"NAVD88"
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "milford_bathymetry_2022",
+  "collection": "hydrology-bathymetry",
+  "bbox": [-96.95, 39.00, -96.65, 39.25],
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [...]
   },
-  "assets":{
-    "cog":{
-      "href":"no_uploaded_file_available",
-      "type":"image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles":["data"]
+  "properties": {
+    "datetime": "2022-07-15T00:00:00Z",
+    "kfm:depth_type": "bathymetric_dem",
+    "kfm:survey_method": "multibeam_sonar",
+    "kfm:uncertainty_m": 0.15
+  },
+  "assets": {
+    "data": {
+      "href": "https://example.com/milford_2022_bathy_cog.tif",
+      "type": "image/tiff; application=geotiff",
+      "roles": ["data", "depth-model"],
+      "proj:epsg": 4326,
+      "checksum:sha256": "<sha256>"
     }
   }
 }
@@ -212,137 +138,38 @@ For:
 
 ---
 
-## 5.2 DoD (1993 → 2010)
+# ⚙ Validation & CI Requirements
 
-```json
-{
-  "stac_version":"1.0.0",
-  "type":"Feature",
-  "id":"dod-1993-2010",
-  "collection":"bathymetry-hydrology",
-  "geometry":{"type":"Polygon","coordinates":[...]},
-  "bbox":[...],
-  "properties":{
-    "datetime":"2010-01-01T00:00:00Z",
-    "kfm:parameter":"dod",
-    "kfm:units":"meters_difference",
-    "kfm:provider":"USACE",
-    "kfm:method":"difference_of_dem",
-    "kfm:site":"Tuttle_Creek_Forebay",
-    "kfm:lineage":"etl/dod_1993_2010_v1",
-    "kfm:quality":"A",
-    "kfm:hydro_region":"Tuttle_Creek",
-    "kfm:project":"Sedimentation-History"
-  },
-  "assets":{
-    "cog":{
-      "href":"no_uploaded_file_available",
-      "type":"image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles":["data"]
-    }
-  }
-}
-```
+All Items MUST pass:
 
----
+- `stac-validate` (STAC 1.0.0)  
+- KFM custom JSON Schema for Hydrology–Bathymetry  
+- FAIR+CARE audit (metadata completeness + ethics flags)  
+- SPDX license checker  
+- KFM Telemetry schema validation (energy + carbon footprint)  
+- Path and naming rule validation  
+- Commit-level provenance injection  
 
-# 🧠 6. Ontology Mapping (CIDOC-CRM • GeoSPARQL • OWL-Time • PROV-O)
-
-## CIDOC-CRM
-- `E73 InformationObject` → bathymetry Item  
-- `E53 Place` → reservoir polygon  
-- `E7 Activity` → bathymetry survey  
-- `E3 ConditionState` → bed elevation state  
-- `E39 Actor` → USACE field team  
-
-## GeoSPARQL  
-- `geo:hasGeometry`  
-- `geo:sfWithin`  
-
-## OWL-Time  
-- Timestamped DEM states  
-- Intervals for bathymetric campaigns  
-
-## PROV-O  
-- `prov:wasGeneratedBy` → ETL pipeline  
-- `prov:used` → raw sonar data  
-- `prov:wasAttributedTo` → survey provider  
-
----
-
-# 🛰️ 7. ETL → STAC → Graph Workflow
-
-```
-Raw sonar/contour data
-    ↓ extract
-QC + interpolation + reprojection
-    ↓ transform
-COG / GeoJSON / CSV asset creation
-    ↓ annotate-stac
-STAC Item JSON
-    ↓ stac-validate
-Neo4j ingestion (CIDOC + GeoSPARQL)
-    ↓
-Focus Mode & Story Node v3 integration
-```
-
-ETL runs must be documented under:
-
-```
-mcp/experiments/hydrology/bathymetry/
-```
-
----
-
-# 🎯 8. Focus Mode v3 Integration
-
-Bathymetry Items drive:
-
-- 3D reservoir base views  
-- Delta migration visualization  
-- Sediment accumulation timelines  
-- Forebay elevation changes  
-- Storage capacity analytics  
-- WID hydrodynamics routing  
-
----
-
-# 📖 9. Story Node v3 Integration
-
-Supported narratives include:
-
-- **“A Reservoir Filling From the Bottom Up”**  
-- **“Shifting Channels: The Story of a Delta”**  
-- **“Bathymetry & the Birth of Density Currents”**
-
-Linked via:
-
-```json
-{
-  "rel":"uses-dataset",
-  "target":"bathy-2019"
-}
-```
-
----
-
-# 🚀 10. Expansion Roadmap
-
-Future Items:
-
-- 3D point-cloud `.las`/`.laz` datasets  
-- UAV bathymetry photogrammetry  
-- Annual DEM updates  
-- Predictive sedimentation DEMs (2030–2100)  
-- ML-driven bathymetry interpolation surfaces  
-- Delta evolution ML models  
+Non-compliant Items are **rejected automatically**.
 
 ---
 
 # 🕰 Version History
 
-- **v11.0.0 (2025-11-21)** — Initial bathymetry Items Super-Edition created.
+| Version | Date | Notes |
+|--------|-------|-------|
+| v11.0.0 | 2025-11-21 | Initial creation under KFM v11 standards |
 
 ---
 
-[⬅ Back to Bathymetry STAC Collection](../README.md) • [⬅ Hydrology STAC Domain](../../README.md) • [🏠 KFM Master Guide](../../../../../docs/reference/kfm_v11_master_documentation.md)
+# 🔗 Footer
+
+**Back to Hydrology STAC:**  
+`../../README.md`  
+
+**Back to STAC Root:**  
+`../../../README.md`  
+
+**Back to KFM Documentation Hub:**  
+`/docs/MASTER_GUIDE_v11.md`
+
