@@ -30,7 +30,7 @@ ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0"
+markdown_protocol_version: "KFM-MDP v11.0.0"
 ontology_protocol_version: "KFM-OP v11.0"
 pipeline_contract_version: "KFM-PDC v11.0"
 
@@ -77,7 +77,7 @@ semantic_document_id: "kfm-doc-github-readme"
 event_source_id: "ledger:.github/README.md"
 immutability_status: "mutable-plan"
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "United States / Kansas"
 lifecycle_stage: "stable"
 ttl_policy: "Annual review"
@@ -93,7 +93,6 @@ ai_transform_permissions:
 ai_transform_prohibited:
   - "speculative additions"
   - "unverified historical claims"
-
 ---
 
 <div align="center">
@@ -109,7 +108,6 @@ ai_transform_prohibited:
 [![Status: Active](https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen)](#-version-history)
 
 </div>
-
 
 ## 🧭 Purpose
 
@@ -129,7 +127,6 @@ Nothing reaches:
 - the **published STAC/DCAT catalogs**
 
 without successfully passing through `.github/` workflows.
-
 
 ## 🗂️ Directory Layout
 
@@ -162,7 +159,6 @@ without successfully passing through `.github/` workflows.
 └── SECURITY.md                 # Security & vulnerability disclosure policy
 ```
 
-
 ## 🧬 Role in the KFM Stack
 
 ```mermaid
@@ -194,7 +190,6 @@ The `.github/` directory is a **first-class subsystem**, not an afterthought. It
 - Guards the **software and data supply chain**  
 - Produces **telemetry and governance artifacts** used across the platform  
 
-
 ## 🧪 CI/CD Stages (v11)
 
 All workflows together implement a **multi-stage, governance-aware CI/CD pipeline**.
@@ -210,8 +205,6 @@ All workflows together implement a **multi-stage, governance-aware CI/CD pipelin
 
 Any lint failure → **PR blocked**.
 
----
-
 ### 2️⃣ Schema & Metadata Validation
 
 Ensures all persisted artifacts are **schema-conformant**:
@@ -225,8 +218,6 @@ Ensures all persisted artifacts are **schema-conformant**:
 
 Metadata that fails validation **never reaches main**.
 
----
-
 ### 3️⃣ Testing (Unit → Integration → E2E)
 
 - **Unit tests**: core libraries, ETL utilities, map helpers, graph adapters  
@@ -236,8 +227,6 @@ Metadata that fails validation **never reaches main**.
 - **Data tests**: Great Expectations / similar for tabular & raster outputs  
 
 No green test matrix → **no merges**.
-
----
 
 ### 4️⃣ Governance & Ethics Enforcement
 
@@ -252,8 +241,6 @@ Driven by `faircare_validate.yml` and policy docs:
 
 Governance failures require **explicit FAIR+CARE Council or delegate sign-off**.
 
----
-
 ### 5️⃣ Security & Supply Chain
 
 Using `security_audit.yml`, `dependabot.yml`, and `sbom_verify.yml`:
@@ -265,8 +252,6 @@ Using `security_audit.yml`, `dependabot.yml`, and `sbom_verify.yml`:
 - Automatic PRs for dependency bumps with CODEOWNER review  
 
 Security is continuously enforced at the workflow level.
-
----
 
 ### 6️⃣ Build, Package & Deploy
 
@@ -282,7 +267,6 @@ Security is continuously enforced at the workflow level.
   - data portals / STAC endpoints  
 
 Only artifacts that pass all previous stages may be **deployed or published**.
-
 
 ## 🧩 Governance & Policy Hooks
 
@@ -318,7 +302,6 @@ Pull requests must declare:
 
 This enforces **documentation-first, governance-first** development.
 
-
 ## 🔒 Security Model
 
 Core security controls:
@@ -331,7 +314,6 @@ Core security controls:
 - Clear vulnerability disclosure policy in `SECURITY.md`  
 
 Security is treated as part of the **normal development lifecycle**, not an afterthought.
-
 
 ## 📊 Telemetry & Observability
 
@@ -351,7 +333,6 @@ These metrics power:
 - Focus Mode “system introspection” Story Nodes  
 - Release engineering retrospectives  
 
-
 ## 🕰️ Version History
 
 | Version | Date       | Summary                                                                                              |
@@ -362,12 +343,11 @@ These metrics power:
 | v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, and telemetry integration.                                            |
 | v10.0.0 | 2025-11-10 | Initial GitHub infrastructure overview.                                                             |
 
-
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — MIT License**  
 ⚙️ GitHub Infrastructure Plane · Diamond⁹ Ω / Crown∞Ω Certified  
-FAIR+CARE Compliant · MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0  
+FAIR+CARE Compliant · MCP-DL v6.3 · KFM-MDP v11.0.0 · KFM-OP v11.0  
 
 [Back to Repository Architecture](../ARCHITECTURE.md) ·  
 [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
