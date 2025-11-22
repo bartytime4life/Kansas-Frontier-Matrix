@@ -1,116 +1,184 @@
 ---
-title: "📚 Kansas Frontier Matrix — AI Model Suite Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧠 Kansas Frontier Matrix — AI Model Suite Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/ai/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-08"
+version: "v11.0.0"
+last_updated: "2025-11-21"
 review_cycle: "Continuous / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/src-ai-models-v1.json"
+sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/src-ai-models-v11.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0.0"
+status: "Active / Enforced"
+doc_kind: "Subsystem-README"
+intent: "ai-model-suite"
+semantic_document_id: "kfm-ai-model-suite"
+doc_uuid: "urn:kfm:ai:model-suite:v11"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+fair_category: "F1-A1-I1-R1"
+care_label: "Low-Risk / Public"
+immutability_status: "version-pinned"
 ---
 
 <div align="center">
 
-# 📚 **Kansas Frontier Matrix — AI Model Suite Overview**  
+# 🧠 **Kansas Frontier Matrix — AI Model Suite Overview**  
 `src/ai/README.md`
 
 **Purpose:**  
-Document the overall architecture, training workflows, and governance controls for the **Kansas Frontier Matrix (KFM)** AI model suite.  
-This suite integrates **multi-modal AI systems** for spatial analysis, entity classification, and text processing under **FAIR+CARE** governance, **ISO 50001 sustainability** metrics, and **MCP-DL v6.3 reproducibility** standards.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../../../docs/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Certified-orange)](../../../docs/standards/faircare.md)
-[![Status: Active](https://img.shields.io/badge/Status-Operational-brightgreen)](#)
+Define the complete architecture, governance, training lifecycle, telemetry, and interoperability specifications for the **Kansas Frontier Matrix v11 AI Model Suite**, including all multi-modal transformers, classifiers, and embedding systems.  
+All models conform to **MCP-DL v6.3**, **FAIR+CARE**, **STAC/DCAT metadata**, and **KFM-MDP v11** documentation standards.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The **AI Model Suite** in the **Kansas Frontier Matrix (KFM)** includes a range of **machine learning models**, **neural networks**, and **transformer-based systems** designed to process geospatial, historical, and cultural data.
+The **AI Model Suite** powers all machine intelligence capabilities in **KFM v11**, including:
 
-Models within this suite include:
-- **Entity Classification:** Identifying and tagging entities like people, places, and events within the KFM Knowledge Graph.  
-- **Text Classification:** Analyzing and categorizing historical documents, treaties, and OCR-extracted texts.  
-- **Spatial Classification:** Classifying geospatial data such as landcover, hydrology, and terrain features using satellite imagery and DEMs.  
-- **Focus Transformer:** A multi-modal model combining textual, graphical, and temporal data for narrative generation and entity linking.
+- Entity extraction & classification  
+- Temporal-spatial-text alignment  
+- Multi-modal embeddings  
+- Narrative reasoning (Focus Mode v3)  
+- AI-based validation, metadata enrichment, and Story Node generation  
 
-Key Features:
-- 🧠 **Transformer-based architectures** (BERT, RoBERTa, ViT, etc.) for high-performance tasks.  
-- ⚖️ **FAIR+CARE governance** ensures ethical AI development and transparency.  
-- ♻️ **ISO 50001** sustainability standards for energy consumption and carbon tracking.  
-- 🔄 **Cross-model integration** with KFM’s **Knowledge Graph** and **Focus Mode AI**.
+These models operate within KFM’s unified system stack:
+
+**data → ETL/AI pipelines → Neo4j Graph → API → React/MapLibre/Cesium → Story Nodes → Focus Mode v3**
+
+Every model is:
+
+- **Provenance-complete** (PROV-O lineage)
+- **Deterministic** where applicable
+- **Fully auditable**
+- **ETHICS-bound** under FAIR+CARE
+- **Energy + Carbon metered** (ISO 50001 / 14064)
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂 Directory Layout
 
-```plaintext
+```text
 src/ai/
-├── README.md                          # This file — documentation for AI model suite
 │
-├── models/                            # Core model directories
-│   ├── embeddings/                    # Text, Graph, Spatial embedding models
-│   ├── classification/                # Text, Spatial, and Entity classification models
-│   └── focus_transformer_v2/          # Focus Mode v2 multi-modal transformer model
+├── README.md                            # This file
 │
-└── telemetry/                         # Sustainability and governance tracking
-    ├── focus-telemetry.json           # Energy, CO2, and bias tracking data
-    └── model-specific/                # Model-level telemetry (embedding, classification, etc.)
+├── models/
+│   ├── embeddings/                      # Text, graph, spatial embedding models
+│   ├── classification/                  # Entity, spatial, document classifiers
+│   └── focus_transformer_v3/            # Focus Mode v3 multi-modal reasoning engine
+│
+└── telemetry/
+    ├── focus-telemetry.json             # Global AI telemetry bundle
+    └── model-specific/                  # Model-level energy, drift, fairness logs
 ```
 
 ---
 
-## 🧩 Key Components
+# 🧩 AI Model Categories
 
-### 🧠 **Model Categories**
-- **Embeddings:** Multi-modal embeddings for text, graph, and spatial data.
-- **Classification:** Entity, text, and spatial classification models for structured data.
-- **Focus Transformer:** Multi-modal AI combining text, graph, and temporal reasoning.
+## 🧬 Embedding Models
+- **Text embeddings** (BERT/RoBERTa)
+- **Graph embeddings** (Node2Vec, GNNs)
+- **Spatial embeddings** (ViT, CNN, raster encoders)
+- **Hybrid embeddings** aligned to OWL-Time + GeoSPARQL
 
-### ⚖️ **Governance & Ethics**
-- **FAIR+CARE:** Framework for managing cultural sensitivity, transparency, and data ethics.
-- **ISO 50001:** Telemetry for monitoring energy consumption and carbon footprint in AI models.
-- **MCP-DL v6.3:** Documentation-first development for reproducible AI research and transparent governance.
+## 🧭 Classification Models
+- **Named Entity Classification (NEC)**
+- **Text classification (topics, genres, treaty types, risk labels)**
+- **Spatial classification (landcover, hydrology, geology)**
 
----
+## 🔮 Focus Transformer v3 (Multi-Modal)
+Integrates:
 
-## ⚙️ Model Training and Evaluation
+- Time × Space × Text × Graph  
+- Cross-modal attention  
+- Embedded explainability (SHAP/LIME)  
+- CARE-filtered narrative layers  
+- Story Node v3 compliance  
+- STAC-aware asset reasoning  
 
-- **Model Training:** Configuration files for training each model type are located within their respective subdirectories.  
-- **Hyperparameters:** Each model comes with a predefined set of hyperparameters and configurable options for optimization.
-- **Evaluation Metrics:** Includes **accuracy**, **precision**, **recall**, **F1 score**, **bias index**, and **FairCARE scores** for each model.
-- **Explainability:** All models integrate explainability tools such as **SHAP** and **LIME** for fairness and transparency.
-
----
-
-## 🔐 Provenance & Telemetry
-
-- **Provenance Tracking:** All models maintain a **provenance trace** for reproducibility, model weights, and training configurations.  
-- **Telemetry Logging:** Energy usage, carbon emissions, and model drift are logged as per **ISO 50001** and **FAIR+CARE** standards.
-- **Ledger Integration:** Models are verified by the **FAIR+CARE Council**, and every checkpoint is recorded in the **Governance Ledger**.
+This model powers **Focus Mode v3**, the narrative engine that binds the knowledge graph and 3D timeline.
 
 ---
 
-## 🧠 Focus Transformer Integration
+# ⚖️ Governance & Ethics
 
-The **Focus Transformer v2** combines data across **spatial**, **textual**, and **graphical** sources to provide **contextual summarization** and **narrative generation** in the **Kansas Frontier Matrix**.
+All AI components must comply with:
 
-Key Features:
-- **Cross-modal attention layers** for spatial and textual data alignment.  
-- **Focus Mode** integration for entity linking and temporal reasoning.  
-- **SHAP** for global model interpretability and transparency in narrative generation.
+### 📜 FAIR+CARE  
+- Cultural sensitivity filters  
+- Authority-to-Control for tribal data  
+- Ethical refusal for sensitive content  
+- Reproducibility + transparency guarantees  
+
+### 🧾 MCP-DL v6.3  
+- Documentation-first  
+- Schema-safe JSON/YAML artifacts  
+- Experiment logs, SOPs, Model Cards  
+
+### 🌍 Sustainability  
+- ISO 50001: Energy reporting  
+- ISO 14064: Carbon accounting  
+- Telemetry emitted per inference + training job  
 
 ---
 
-## 🧩 Example: Text Classification Configuration (`src/ai/models/classification/text_classification/configs/text_classification_train.yaml`)
+# ⚙️ Training, Evaluation, and Provenance
+
+## 🚀 Training
+- Declarative config files  
+- Deterministic seeds  
+- Hydra/Lightning orchestration  
+- GPU/TPU/CPU uniformity profiles  
+
+## 📊 Evaluation Metrics
+- Accuracy, Precision, Recall, F1  
+- Confusion matrices  
+- FairCARE scoring  
+- Drift indices  
+- Explainability deltas  
+
+## 🧬 Provenance (PROV-O)
+Each model tracks:
+
+- Input datasets  
+- Preprocessing chain  
+- Hyperparameters  
+- Code commit SHA  
+- Dependency tree (SBOM)  
+- Telemetry bundle references  
+
+---
+
+# 🔐 Telemetry & Sustainability
+
+Each model outputs:
+
+- Energy (Wh)  
+- Carbon (gCO₂e)  
+- Model-drift metrics  
+- Fairness tests  
+- Bias indicators  
+- Focus-mode narrative quality tests  
+
+Telemetry is stored in:
+
+```
+src/ai/telemetry/
+```
+
+And referenced in STAC/DCAT metadata.
+
+---
+
+# 🧠 Example: Text Classification Config
 
 ```yaml
 model:
@@ -128,31 +196,30 @@ data:
 
 telemetry:
   enable_energy_tracking: true
-  telemetry_ref: "../../../../../../../releases/v10.0.0/focus-telemetry.json"
+  telemetry_ref: "../../../telemetry/model-specific/text_classifier_energy.json"
 
 ethics:
   reviewer: "@faircare-council"
   care_tag: "restricted"
-  governance_ref: "../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+  governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ```
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
 | Version | Date | Author | Summary |
-|---------:|------|--------|----------|
-| v10.0.0 | 2025-11-08 | `@kfm-ai` | Created AI Model Suite documentation for KFM, outlining governance, reproducibility, and sustainability integration. |
+|--------:|------|--------|---------|
+| v11.0.0 | 2025-11-21 | `@kfm-ai` | Full v11 rebuild. Converted to MDP v11.0.0, added Focus v3, telemetry schema v11, ethics expansion, STAC/DCAT/PROV-O integration. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix**  
-*Multi-Modal AI × FAIR+CARE Governance × Sustainable Intelligence*  
-© 2025 Kansas Frontier Matrix · MIT · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix — AI Systems v11**  
+*Multi-Modal Intelligence × Ethical Governance × Semantically Linked Narratives*  
 
-[Back to AI Models Index](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[Back to AI Subsystem](../README.md) ·  
+[Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
