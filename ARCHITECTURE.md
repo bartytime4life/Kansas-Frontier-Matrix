@@ -207,11 +207,11 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    A[Raw Inputs] --> B[OCR]
-    B --> C[NER + Entity Linking]
-    C --> D[Spatialization]
-    D --> E[RasterOps (GDAL)]
-    E --> F[STAC/DCAT Validation]
+    A[Raw Inputs] --> B[OCR]<br/>
+    B --> C[NER + Entity Linking]<br/>
+    C --> D[Spatialization]<br/>
+    D --> E[RasterOps (GDAL)]<br/>
+    E --> F[STAC/DCAT Validation]<br/>
     F --> G[Load to Knowledge Graph]
 ```
 
