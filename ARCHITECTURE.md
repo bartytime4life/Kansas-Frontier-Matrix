@@ -214,7 +214,6 @@ flowchart LR
     E --> F[STAC/DCAT Validation]
     F --> G[Load to Knowledge Graph]
 ```
-```
 
 ### 3.1 Features
 
