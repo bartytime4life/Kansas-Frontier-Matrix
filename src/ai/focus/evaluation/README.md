@@ -1,13 +1,13 @@
 ---
 title: "🧪 Kansas Frontier Matrix — Focus Mode Evaluation Suite (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/ai/focus/evaluation/README.md"
-version: "v11.0.0"
+version: "v11.1.0"
 last_updated: "2025-11-21"
 review_cycle: "Quarterly / Autonomous"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../../releases/v11.0.0/focus-telemetry.json"
+sbom_ref: "../../../../releases/v11.1.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.1.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.1.0/focus-telemetry.json"
 telemetry_schema: "../../../../schemas/telemetry/focus-evaluation-suite-v11.json"
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
@@ -17,7 +17,7 @@ status: "Active / Enforced"
 doc_kind: "Subsystem-Evaluation"
 intent: "focus-mode-eval"
 semantic_document_id: "kfm-focus-evaluation"
-doc_uuid: "urn:kfm:ai:focus:evaluation:v11"
+doc_uuid: "urn:kfm:ai:focus:evaluation:v11_1_0"
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 fair_category: "F1-A1-I1-R1"
@@ -31,8 +31,8 @@ immutability_status: "version-pinned"
 `src/ai/focus/evaluation/README.md`
 
 **Purpose:**  
-Define the full evaluation, validation, bias-testing, safety-gating, and telemetry instrumentation used to certify **Focus Mode v3** and the **Focus Transformer** models.  
-This suite measures *semantic accuracy*, *spatiotemporal grounding*, *narrative ethics*, *CARE safety*, *model drift*, *carbon/energy budgets*, and *Story Node v3 compliance*.
+Provide the **complete evaluation, validation, ethics gating**, and **telemetry instrumentation** required to certify **Focus Mode v3** and the **Focus Transformer v3**.  
+This ensures that Focus narratives and Story Nodes are **accurate**, **ethical**, **spatiotemporally grounded**, **graph-safe**, and **FAIR+CARE compliant**.
 
 </div>
 
@@ -40,166 +40,165 @@ This suite measures *semantic accuracy*, *spatiotemporal grounding*, *narrative 
 
 # 📘 Overview
 
-The **Focus Mode Evaluation Suite** provides a unified testing harness for:
+The **Focus Mode Evaluation Suite** is the **authoritative certification system** for all KFM narrative-generation models.
 
-- **Focus Transformer v3** (multi-modal: text + timeline + geography + graph)
-- **Story Node generation & narrative linking**
-- **Semantic entity alignment** with the Neo4j knowledge graph
-- **Temporal grounding** (OWL-Time)
-- **Spatial grounding** (GeoSPARQL)
-- **Narrative ethics & cultural safety** (FAIR+CARE)
-- **AI explainability** (SHAP, LIME, attention audit)
-- **Telemetry emissions** (ISO 50001 energy, ISO 14064 carbon)
+It evaluates:
 
-All evaluations must pass before a Focus Transformer checkpoint can be promoted or deployed.
+- 🧠 **Multi-modal reasoning** (text × graph × spatial × temporal)  
+- 🗺 **Geographic grounding** (GeoSPARQL, CRS validation)  
+- 🕰 **Time alignment** (OWL-Time interval consistency)  
+- 🔎 **Explainability** (SHAP, attention maps, drift signatures)  
+- 🧡 **Cultural safety & CARE-S filters**  
+- 🧾 **Story Node v3 schema compliance**  
+- ♻ **ISO 50001 / ISO 14064 telemetry**  
+- 📡 **STAC metadata enrichment for narrative assets**
+
+A Focus Transformer checkpoint **cannot be promoted** unless it passes *all* critical gates.
 
 ---
 
-# 🗂 Directory Layout
+# 🗂 Directory Layout (v11.1)
 
 ```text
 src/ai/focus/evaluation/
 │
-├── README.md                           # This file — documentation for the evaluation suite
+├── README.md                           # This file
 │
-├── metrics/                            # Metric definitions, calculators, scoring schemas
-│   ├── semantic_accuracy.py
-│   ├── temporal_grounding.py
-│   ├── spatial_precision.py
-│   ├── fairness_care_eval.py
-│   └── narrative_quality.py
+├── metrics/                            # Evaluation metric implementations
+│   ├── semantic_accuracy.py             # Neo4j entity/relation checks
+│   ├── temporal_grounding.py            # OWL-Time validations
+│   ├── spatial_precision.py             # Geodesic + polygon alignment
+│   ├── fairness_care_eval.py            # CARE-S & ethics gating
+│   └── narrative_quality.py             # Story Node v3 structure & coherence
 │
-├── tests/                              # Automated tests
+├── tests/                              # PyTest suite for automated gating
 │   ├── test_semantic_alignment.py
 │   ├── test_focus_storynode_schema.py
 │   ├── test_bias_care_filters.py
 │   ├── test_time_range_alignment.py
 │   └── test_explainability_drift.py
 │
-├── configs/                            # Evaluation configuration templates
+├── configs/                            # Declarative evaluation configuration
 │   └── eval_config_v3.yaml
 │
-└── reports/                            # Auto-generated evaluation outputs
-    ├── latest.json
-    └── history/
+└── reports/                            # Machine-generated evaluation reports
+    ├── latest.json                     # Current certification snapshot
+    └── history/                        # All previous evaluations (immutable)
 ```
 
 ---
 
 # 🧩 Focus Mode Evaluation Pillars
 
-## 1. 🧭 Semantic Alignment (Knowledge Graph Coherence)
-Ensures that Focus summaries and Story Nodes:
+## 1. 🧭 Semantic Alignment (Graph Coherence)
+Ensures outputs:
 
-- Correctly reference Neo4j entities  
-- Avoid hallucinated people, places, or events  
-- Maintain 2-hop graph coherence  
-- Match canonical entity labels, dates, and relations  
-
-Scored via:
-
-- ❇ Graph Consistency Index (GCI)  
-- ❇ Entity Precision/Recall  
-- ❇ Relation Correctness Rate (RCR)  
-
----
-
-## 2. 🕰 Temporal Grounding (OWL-Time Compliance)
-Tests ensure generated narratives:
-
-- Obey historical time bounds  
-- Correctly express eras, ranges, and uncertainties  
-- Respect event chronologies  
-- Do not imply future knowledge about past entities  
+- Only reference **existing entities**  
+- Maintain **2-hop local graph safety**  
+- Correctly state entity roles + relationships  
+- Avoid hallucinations  
 
 Metrics:
 
-- ❇ Time Consistency Score  
-- ❇ Chronology Error Rate (must be zero for promotion)  
+- **GCI — Graph Consistency Index**  
+- **RCR — Relation Correctness Rate**  
+- **Precision/Recall for Entity References**
+
+---
+
+## 2. 🕰 Temporal Grounding (OWL-Time)
+Validates:
+
+- Time ranges are correct  
+- No forward-looking anachronisms  
+- No reverse-ordered event chains  
+- Proper uncertainty annotations (“circa”, “before”, “after”)  
+
+**Chronology Error Rate must be ZERO.**
 
 ---
 
 ## 3. 🌍 Spatial Accuracy (GeoSPARQL)
-Evaluates:
+Checks:
 
-- Spatial footprint correctness  
-- Place-to-entity relationships  
-- Relative spatial reasoning (e.g., “west of”, “within watershed”)  
-- Polygon/point alignment  
+- CRS normalization  
+- Geodesic accuracy  
+- Named-place correctness  
+- Spatial relationships: within, intersects, adjacent_to  
 
-Metrics:
+Metrics include:
 
-- ❇ Spatial Precision Score  
-- ❇ Geodesic Reasoning Accuracy  
+- **Spatial Precision Score**  
+- **Polygon/Point Alignment Accuracy**
 
 ---
 
 ## 4. 🧡 Ethics, CARE Filters & Cultural Safety
-Ensures narratives:
+Enforces:
 
-- Do **not** infer sensitive tribal histories  
-- Mask restricted sites  
-- Avoid speculation about heritage or identities  
-- Provide transparency for uncertainties  
+- No speculation about tribal identities  
+- No exposure of protected site coordinates  
+- No sensitive inference about individuals/families  
+- Automatic CARE-S override where needed  
 
-Safety Tests:
+Evaluated by:
 
-- ❇ CARE-S Compliance  
-- ❇ Harm-Score (must pass threshold)  
-- ❇ Cultural Attribution Accuracy  
+- **CARE-S Compliance**  
+- **Harm Index Score**  
+- **Attribution Transparency Score**
 
 ---
 
 ## 5. ✍ Narrative Integrity (Story Node v3)
-Ensures generated Story Nodes:
+Ensures outputs meet:
 
-- Match strict JSON schema  
-- Contain valid `spacetime` geometry + time ranges  
-- Provide citations for all factual claims  
-- Conform to narrative section rules  
+- Strict JSON Schema  
+- Valid `spacetime` block  
+- Citation requirements  
+- Narrative structural requirements  
 
 Metrics:
 
-- ❇ Node Schema Validation Rate  
-- ❇ Narrative Coherence Score  
-- ❇ Citation Coverage %
+- **Node Schema Validation Rate**  
+- **Narrative Coherence Score**  
+- **Citation Coverage %**
 
 ---
 
 ## 6. 🔍 Explainability & Drift Detection
-Evaluates:
+Monitors:
 
-- SHAP signature stability  
-- Textual + spatial attention maps  
-- Drift of embeddings or model weights  
-- Change in reasoning path quality  
+- SHAP signature consistency  
+- Attention distribution uniformity  
+- Embedding drift  
+- Reasoning-path invariants  
 
 Outputs:
 
-- ❇ SHAP Consistency Index  
-- ❇ Attention Divergence Score  
-- ❇ Drift Risk Rating  
+- **SHAP Consistency Index**  
+- **Attention Divergence Score**  
+- **Drift Risk Rating** (must be low)
 
 ---
 
-## 7. ♻ Telemetry (Energy/Carbon)
-Every evaluation run emits:
+## 7. ♻ Telemetry (Energy + Carbon)
+Tracks:
 
-- Energy consumed (Wh)  
-- Carbon emissions (gCO₂e)  
+- Energy cost (Wh)  
+- Carbon output (gCO₂e)  
 - Hardware profile  
-- Evaluation time  
-- Model version → telemetry lineage  
+- Evaluation runtime  
+- Model lineage → telemetry chain  
 
-All metrics stored in:
+All stored under:
 
 ```
-src/ai/focus/evaluation/reports/latest.json
+reports/latest.json
 ```
 
 ---
 
-# ⚙ Evaluation Configuration Template
+# ⚙ Evaluation Configuration Template (v11.1)
 
 ```yaml
 evaluation:
@@ -230,20 +229,37 @@ governance:
 
 ---
 
-# 🛠 Promotion Gate (v11)
-
-A Focus Transformer checkpoint can **ONLY** be promoted if:
+# 🛡 Promotion Gate (Mandatory for Model Release)
 
 | Requirement | Threshold |
 |------------|-----------|
-| Graph Consistency Index | ≥ 0.98 |
-| Entity Precision/Recall | ≥ 0.95 |
-| Time Error Rate | 0 |
-| Spatial Accuracy | ≥ 0.92 |
-| CARE-S Compliance | 100% |
-| Story Node Schema Valid | 100% |
-| Drift Risk Rating | Low |
-| Telemetry Logged | Required |
+| Graph Consistency Index | ≥ **0.98** |
+| Entity Precision/Recall | ≥ **0.95** |
+| Chronology Error Rate | **0** |
+| Spatial Accuracy | ≥ **0.92** |
+| CARE-S Compliance | **100%** |
+| Story Node Schema Validation | **100%** |
+| Drift Rating | **Low** |
+| Telemetry Logged | **Required** |
+
+---
+
+# 🧪 Required CI Enforcement (v11)
+
+The evaluation suite integrates with:
+
+- **focus-eval.yml** (GitHub Actions)  
+- **model-promotion-gate.yml**  
+- **faircare-audit.yml**  
+- **stac-enrichment.yml**  
+
+CI will **block merges** if:
+
+- Any metric is missing  
+- Any CARE-S rule is violated  
+- Telemetry is incomplete  
+- Story Node schema fails  
+- Drift detection indicates moderate/high risk  
 
 ---
 
@@ -251,18 +267,18 @@ A Focus Transformer checkpoint can **ONLY** be promoted if:
 
 | Version | Date | Author | Summary |
 |--------:|------|--------|---------|
-| v11.0.0 | 2025-11-21 | `@kfm-ai` | Initial v11-compliant evaluation suite README creation; added CARE safety tests, Story Node v3 checks, drift evaluation, and telemetry integration. |
+| v11.1.0 | 2025-11-21 | `@kfm-ai` | v11 upgrade: added CI requirements, STAC/DCAT integration, stronger CARE-S tests, expanded drift metrics, and v11 directory refinements. |
+| v11.0.0 | 2025-11-21 | `@kfm-ai` | Initial creation for Focus Mode v3 evaluation suite. |
 
 ---
 
 <div align="center">
 
 **Kansas Frontier Matrix — Focus Mode v3 Evaluation Suite**  
-*Semantic Reasoning × Ethical AI × Verified Narratives*
+*Semantic Reasoning × Ethical AI × Verified Narratives × Provenance-Complete Intelligence*
 
 [Back to Focus Mode](../README.md) ·  
 [AI Model Suite](../../README.md) ·  
 [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
