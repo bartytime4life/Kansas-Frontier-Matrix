@@ -104,7 +104,7 @@ ai_transform_prohibited:
   - "modifying normative requirements"
 
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
 classification: "Public Document"
 lifecycle_stage: "stable"
@@ -183,27 +183,27 @@ flowchart TD
 
 # 🔍 2. Data Layer
 
-### Domains
+### 2.1 Domain Coverage
 
 - Historical archives, treaties, manuscripts, maps, diaries  
 - Tribally-governed cultural assets (masked & sovereignty-controlled)  
-- NOAA climate records  
-- USGS hydrology & geological datasets  
-- Remote sensing (NAIP, Landsat, DEMs)  
-- Hazard layers (storms, floods, wildfire)  
-- Ecology (GBIF, eBird, wetlands)  
-- Live sensors (Mesonet, USGS gauges)
+- NOAA climate records & projections  
+- USGS hydrology and geological datasets  
+- Remote-sensing imagery (NAIP, Landsat, Sentinel, DEMs)  
+- Hazard layers (storms, floods, wildfire, drought)  
+- Ecology and biodiversity (GBIF, eBird, wetlands, species ranges)  
+- Live sensors (Mesonet, USGS gauges, IoT feeds)  
 
-### Guarantees
+### 2.2 Data Guarantees
 
-- STAC/DCAT v11 normalization  
-- CARE labels attached at ingest  
-- Provenance-first ingestion  
-- ISO 50001/14064 energy & carbon metrics logged  
+- **STAC v11** Items/Collections + **DCAT v11** Datasets/Distributions  
+- CARE labels and sovereignty flags at ingest  
+- Provenance-first ingestion (source URLs, time ranges, lineage)  
+- ISO 50001 / ISO 14064 energy & carbon telemetry for heavy pipelines  
 
 ---
 
-# 🛠️ 3. ETL Layer (LangGraph v11 DAG Engine)
+# 🛠️ 3. ETL Layer — LangGraph v11 DAG Engine
 
 ```mermaid
 flowchart LR
@@ -216,83 +216,117 @@ flowchart LR
         --> G[Load to Knowledge Graph]
 ```
 
-Features:
+### 3.1 Features
 
-- Deterministic DAGs  
-- Full reproducibility via WAL checkpoints  
-- Automatic retry + rollback  
-- OpenLineage v2.5 emissions  
+- Deterministic DAGs with explicit node configs  
+- Write-Ahead Logging (WAL) for restartable runs  
+- Automatic **Retry**, **Rollback**, **Hotfix** insertion, and **Lineage** tracking  
+- OpenLineage v2.5 events for all ETL steps  
+- FAIR+CARE & sovereignty validation hooks at boundary nodes  
+
+### 3.2 Pipeline Classes
+
+- **Ingest Pipelines**: raw → staging STAC/DCAT  
+- **Normalize Pipelines**: staging → canonical KFM schemas  
+- **Enrich Pipelines**: NER, geocoding, ontology mapping, QA/QC  
+- **Publish Pipelines**: canonical → graph + public catalogs  
+- **Telemetry Pipelines**: pipeline stats → observability layer  
 
 ---
 
-# 🧠 4. AI Layer — Focus Mode v3
+# 🧠 4. AI Layer — Focus Mode v3 & Model Suite
 
-- Ontology-aware narrative generation  
-- Story Node synthesis  
-- Bias & drift detection  
-- SHAP/LIME explainability  
-- Multi-temporal reasoning (past ↔ present ↔ future)
+### 4.1 Focus Mode v3
+
+- Ontology-aware multi-hop reasoning over the KG  
+- Story Node v3 synthesis with spacetime + provenance + narrative blocks  
+- Temporal reasoning (past ↔ present ↔ future) with OWL-Time  
+- Bias, drift, OOD, and narrative safety checks  
+- SHAP/LIME explainability for narrative and classification models  
 
 ```mermaid
 flowchart LR
-    A[Entities] --> B[Focus Reasoner v3]
-    B --> C[Story Nodes]
+    A[KG Entities & Datasets] --> B[Focus Reasoner v3]
+    B --> C[Story Nodes v3]
     C --> D[Timeline & Map Overlays]
 ```
 
----
+### 4.2 Model Types
 
-# 🧩 5. Knowledge Graph Layer (Neo4j v5)
+- Embedding models (text/graph/spatial)  
+- Classification models (entity, text, spatial, hazards)  
+- Generative models (summaries, explanations, Story Nodes)  
+- Anomaly models (bias, drift, OOD, reasoning pathologies)  
 
-### Ontology Stack
+All models:
 
-- CIDOC-CRM  
-- GeoSPARQL  
-- OWL-Time  
-- PROV-O  
-- KFM Ontology v11  
-
-### Entity Overview
-
-| KFM Entity | CIDOC CRM | Temporal | Spatial | Provenance |
-|-----------|------------|----------|---------|------------|
-| Event     | E5         | Yes      | Yes     | Yes        |
-| Place     | E53        | No       | Geometry| Yes        |
-| Dataset   | E73        | No       | —       | Yes        |
-| Document  | E31        | No       | —       | Yes        |
-| StoryNode | Custom     | Yes      | Yes     | Activity   |
+- Are **documented** (Model Cards, provenance)  
+- Emit **telemetry** (energy, carbon, metrics)  
+- Are gated by FAIR+CARE & CARE-S governance  
 
 ---
 
-# 🧰 6. API Layer (FastAPI + GraphQL)
+# 🧩 5. Knowledge Graph Layer — Neo4j v5 Cluster
 
-Endpoints include:
+### 5.1 Ontology Stack
 
-- `/focus`  
-- `/events`  
-- `/datasets`  
-- `/graph`  
-- `/ops`  
+- **CIDOC-CRM** (heritage + events)  
+- **GeoSPARQL** (spatial geometry + topology)  
+- **OWL-Time** (intervals, instants, temporal relations)  
+- **PROV-O** (lineage, activities, agents)  
+- **KFM Ontology v11** (Kansas-specific entities + Focus constructs)  
 
-### GovHooks v4 enforces:
+### 5.2 Core Entities
 
-- CARE & sovereignty rules  
-- Lineage-required writes  
-- Risk policies  
-- Sensitive data masking  
+| KFM Entity | CIDOC Class | Temporal | Spatial | Provenance |
+|-----------:|-------------|----------|---------|------------|
+| Event      | E5 Event    | Yes      | Yes     | Yes        |
+| Place      | E53 Place   | Optional | Geometry| Yes        |
+| Dataset    | E73 InfoObj | No       | —       | Yes        |
+| Document   | E31 Doc     | No       | —       | Yes        |
+| StoryNode  | Custom      | Yes      | Yes     | Activity   |
+
+### 5.3 Graph Guarantees
+
+- Every node has **type**, **provenance**, and optionally **spacetime**  
+- All relationships respect ontology domain/range  
+- All sensitive entities are H3-masked or generalized  
 
 ---
 
-# 🗺️ 7. Frontend Layer (React + MapLibre + Cesium)
+# 🧰 6. API Layer — FastAPI + GraphQL Gateway (GovHooks v4)
 
-Features:
+### 6.1 Responsibilities
 
-- STAC-driven layer catalog  
-- 3D terrain  
-- Story Node timeline  
-- Focus Mode v3 overlays  
-- H3 r7 cultural site masking  
-- WCAG 2.1 AA accessibility  
+- Expose KG queries and dataset search  
+- Serve Focus Mode v3 endpoints  
+- Provide geospatial API for Web + external clients  
+- Implement **GovHooks** for governance enforcement  
+
+### 6.2 GovHooks v4
+
+- CARE & sovereignty filtering  
+- Lineage-required writes (no orphaned entities)  
+- Risk and policy checks for AI outputs  
+- Automatic stubbing/masking for sensitive payloads  
+
+---
+
+# 🗺️ 7. Frontend Layer — React · MapLibre · Cesium · Vite
+
+### 7.1 Features
+
+- STAC-driven tiles and layer catalog  
+- 2D/3D maps (MapLibre + Cesium)  
+- Timeline UI synchronized with Story Nodes & Focus Mode  
+- H3 r7 masking for sensitive Indigenous/archaeology sites  
+- WCAG 2.1 AA+ accessibility  
+
+### 7.2 Dynamic Views
+
+- **Focus Mode View**: entity-centric narrative + map + timeline  
+- **Data Explorer**: dataset search, STAC/DCAT detail  
+- **Governance Dashboards**: FAIR+CARE, bias/drift, telemetry  
 
 ---
 
@@ -300,38 +334,42 @@ Features:
 
 ```mermaid
 flowchart LR
-  A[Pipeline Output] --> B[Ledger v4]
-  B --> C[FAIR+CARE Audit]
-  C --> D[Governance Gate]
-  D --> E[Catalog Update]
+  P[Pipeline Outputs] --> L[Ledger v4
+  Events · Decisions · Provenance]
+  L --> A[FAIR+CARE & CARE-S Audit]
+  A --> G[Governance Gate]
+  G --> C[Catalog & Graph Promotion]
 ```
 
-This plane:
+### 8.1 Governance Functions
 
-- Logs all promotions, retractions, and decisions  
-- Ensures sensitive datasets cannot bypass masking or CARE review  
-
----
-
-# 📡 9. Telemetry & Sustainability Layer
-
-Tracks:
-
-- Energy (Wh)  
-- Carbon (gCO₂e)  
-- Bias & drift indicators  
-- Accessibility metrics  
-- Focus Mode reasoning metrics  
-- Provenance completeness  
-
-Emits:
-
-- JSON telemetry bundles  
-- STAC/DCAT metadata about telemetry datasets  
+- FAIR+CARE & CARE-S evaluations for data and AI  
+- SBOM & SLSA-based software integrity checks  
+- Lineage audits (PROV-O, OpenLineage)  
+- Policy-change propagation to CI workflows and APIs  
 
 ---
 
-# 🔁 10. Operational Safety (Reliable Pipelines v11)
+# 📡 9. Telemetry & Observability Layer
+
+### 9.1 Metrics Captured
+
+- Pipeline runtimes, failure modes, test coverage  
+- Energy Wh and Carbon gCO₂e per operation  
+- Model performance (accuracy, bias, drift)  
+- Accessibility metrics (a11y error counts)  
+- Governance events (policy hits, violations, overrides)  
+
+### 9.2 Uses
+
+- Sustainability dashboards  
+- FAIR+CARE governance dashboards  
+- Release health reports  
+- Focus Mode introspection stories  
+
+---
+
+# 🔁 10. Reliable Pipelines v11
 
 ```mermaid
 flowchart LR
@@ -342,25 +380,27 @@ flowchart LR
     L --> T[Determinism Tests]
 ```
 
-Guarantees:
+### 10.1 Reliability Guarantees
 
-- Atomicity  
-- Durable WAL  
-- Safe recovery  
-- Undo/redo  
-- Immutable lineage  
+- WAL-backed recovery  
+- Automated retries with backoff  
+- Rollback and hotfix support  
+- Determinism checks for reproducible runs  
 
 ---
 
-# 🗂️ 11. Repository Layout
+# 🗂️ 11. Repository Layout (v11)
 
 ```text
 .
 ├── ARCHITECTURE.md
 ├── README.md
+├── .github/
+│   └── workflows/
 ├── data/
 │   ├── sources/
-│   └── staging/
+│   ├── staging/
+│   └── stac/
 ├── docs/
 │   ├── graph/
 │   ├── pipelines/
@@ -374,30 +414,34 @@ Guarantees:
 ├── src/
 │   ├── pipelines/
 │   ├── api/
+│   ├── graph/
 │   ├── utils/
 │   └── web/
-├── web/
-│   ├── src/
-│   ├── public/
-│   └── meta/
-└── .github/
-    └── workflows/
+└── web/
+    ├── src/
+    ├── public/
+    └── meta/
 ```
 
 ---
 
-# 🧾 12. Release Lifecycle
+# 🧾 12. Release Lifecycle & Validation
 
-Each release includes:
+Each release **must** include:
 
-- SBOM  
-- Manifest  
-- Telemetry snapshot  
-- FAIR+CARE audit  
-- Full lineage export  
-- SLSA attestation  
+- SBOM (`sbom.spdx.json`)  
+- `manifest.zip` (data + code artifact listing)  
+- `focus-telemetry.json` (energy/carbon + governance metrics)  
+- FAIR+CARE governance report  
+- Lineage export (PROV-O, OpenLineage)  
+- SLSA-style attestation  
 
-Release validation is bound to the profiles listed in `validation_profiles`.
+Validation profiles:
+
+- `docs-lint-v11`  
+- `schema-lint-v11`  
+- `lineage-audit-v11`  
+- `governance-audit-v11`  
 
 ---
 
