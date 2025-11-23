@@ -94,7 +94,7 @@ This runbook applies to:
   - STAC/DCAT catalogs  
   - Neo4j dumps / graph snapshots  
   - ML models and configs  
-  - Configuration bundles
+  - Configuration bundles  
 
 Core principles:
 
@@ -111,14 +111,11 @@ Before initiating rollback, verify:
 
 - The need for rollback is **confirmed** (from gates, telemetry, incident response, or governance request).  
 - The target run is clearly identified:
-
   - `pipeline_id`  
   - `run_id`  
   - `release_version`  
-
-- **Last known good artifacts** are known and accessible (see Section 5.1).  
+- **Last known good artifacts** are known and accessible (see Section 7.1).  
 - You have access to:
-
   - Orchestrator UI/CLI  
   - Storage buckets / data lake  
   - Neo4j admin tools  
@@ -132,7 +129,7 @@ Before initiating rollback, verify:
   orchestrator/state/<pipeline_id>/freeze.flag = true
 ````
 
-* Stakeholders are informed that rollback is being initiated (see Section 6).
+* Stakeholders are informed that rollback is being initiated (see Section 5).
 
 ---
 
@@ -333,12 +330,10 @@ If data artifacts are corrupted:
 
      * Swap prefixes or rewrite symlinks
      * Copy last_good data to the `current/` location
-
    * Databases:
 
      * Restore from backup or snapshot
      * Run down-migrations if required
-
    * Index/search:
 
      * Reindex from last_good data
