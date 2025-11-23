@@ -31,94 +31,87 @@ intent: "heritage-protection"
 `docs/standards/heritage/dynamic-h3-generalization.md`
 
 **Purpose:**  
-Define the **v11-sensitive-location protection pipeline** used across KFM to generalize or suppress heritage geometries using **dynamic H3 resolution**, **CARE-driven policy checks**, **k-anonymity**, and **FAIR+CARE-aligned provenance**.
+Define the **v11-sensitive-location protection pipeline** for generalizing or suppressing heritage geometries using dynamic H3 resolution, CARE screening, k-anonymity, region overrides, and FAIR+CARE provenance.
 
 </div>
 
 ---
 
-# 🌐 Overview  
-This standard specifies the **v11 dynamic spatial-generalization engine** for sensitive heritage locations.  
-All point or polygon features representing cultural sites, archaeological zones, tribal heritage areas, restricted archives, or community-protected places **must** pass through this pipeline before publication or rendering in the KFM map, timeline, or Story Nodes.
+# 🌐 Overview
+This standard specifies the **v11 dynamic spatial-generalization engine** for sensitive heritage locations. All point/polygon features representing cultural-heritage, archaeological, tribal, restricted, or community-protected sites **must** pass through this pipeline before publication.
 
-The engine enforces:
+Engine guarantees:
 
-- **Adaptive H3 generalization** (sensitivity → coarser hex)  
-- **CARE governance** at ingest, staging, and publish-time  
-- **k-anonymity** at hex level  
-- **Region overrides** (e.g., tribal AOI forcing `res ≤ 3`)  
-- **Reproducible hex assignment** (seeded, deterministic)  
-- **Full PROV-O lineage** emitted as STAC + DCAT metadata  
-- **Focus Mode v3–safe outputs** (no accidental revealing geometries)  
-
-This ensures strong **privacy by design**, **community authority**, and **analytics fidelity**.
+- Adaptive H3 generalization (sensitivity → coarser hex)  
+- Automatic CARE enforcement  
+- k-anonymity ≥ 7  
+- Region overrides (tribal AOI forcing res ≤ 3)  
+- Deterministic, seeded assignment  
+- PROV-O lineage emissions via STAC/DCAT  
+- Focus Mode v3 safe-display constraints  
 
 ---
 
-# 🧩 Inputs & Definitions  
+# 🧩 Inputs & Definitions
 
-## Required Input Fields  
-- `geometry` (Point or Polygon, WGS84)  
-- `sensitivity_score` 0–100  
-- `authority_tag` (custodial authority or tribal governance marker)  
+## Required Input Fields
+- `geometry` (Point/Polygon, WGS84)  
+- `sensitivity_score` (0–100)  
+- `authority_tag`  
 - Optional: `embargo_until`, `consent_level`, `steward_contact`
 
-## Required Policy Files  
+## Required Policy Files
 - `policy.yml`  
 - `rules/care.yaml`  
 - Optional: `rules/overrides.geojson`  
 
 ---
 
-# 🔢 Sensitivity → H3 Resolution Mapping  
-(Default v11 policy; can be overridden)
+# 🔢 Sensitivity → H3 Resolution Mapping (v11 default)
 
-| Score Range | H3 Resolution | Notes |
-|------------:|--------------:|------|
-| 0–10 | 9 | Fine-grain (low-risk) |
-| 11–25 | 8 |  |
-| 26–40 | 7 |  |
-| 41–55 | 6 |  |
-| 56–70 | 5 |  |
-| 71–85 | 4 | High-risk |
-| 86–100 | 3 | Ultra-high-risk (tribal or sacred) |
-
-Rationale: Each step coarsens by ~2–7×, balancing privacy vs. analytical utility.
+| Score Range | H3 Resolution |
+|------------:|--------------:|
+| 0–10  | 9 |
+| 11–25 | 8 |
+| 26–40 | 7 |
+| 41–55 | 6 |
+| 56–70 | 5 |
+| 71–85 | 4 |
+| 86–100 | 3 |
 
 ---
 
-# 🛡️ CARE Screening Rules (v11)  
+# 🛡️ CARE Screening Rules (v11)
 
-**1. Collective Benefit**  
-- Dataset metadata MUST include `purpose_ref`.  
-- Missing purpose → **hard fail**.
+## Collective Benefit
+- Dataset MUST include `purpose_ref`.  
+- Missing → **CARE_FAIL**.
 
-**2. Authority to Control**  
-- If `authority_tag` present → requires custodial approval token.  
-- Failure or absence → fallback to **H3 res ≤ 3** + **embargo**.
+## Authority to Control
+- If `authority_tag`: custodial approval token required.  
+- Missing/invalid → force `res ≤ 3` + embargo.
 
-**3. Responsibility**  
-- Must include steward contact + 24h takedown SLA.  
-- Missing → **deny release**.
+## Responsibility
+- Must include steward contact + takedown SLA.  
+- Missing → **block release**.
 
-**4. Ethics**  
-- Sacred AOIs: block unless explicit consent token.  
-- If allowed → force `res ≤ 4` and drop rare attributes.
+## Ethics
+- Sacred AOIs: blocked unless explicit community consent.  
+- If allowed → force `res ≤ 4` + drop rare attributes.
 
 ---
 
-# 🧪 Validation Gates (CI)  
-- Schema conformance  
-- Policy checksum integrity  
+# 🧪 Validation Gates (CI)
+- Schema + policy checksum  
 - Deterministic hexing (seed=1337)  
-- **k-anonymity ≥ 7**  
-- Distance-to-nearest sensitive site threshold  
-- Region override compliance  
-- Full CARE audit (pre-publish)
+- k-anonymity ≥ 7  
+- Distance-based privacy check  
+- Region override enforcement  
+- CARE audit (pre-publish)
 
 ---
 
-# 🧱 Directory Layout  
+# 🧱 Directory Layout
 ```text
 docs/standards/heritage/dynamic-h3-generalization.md
 src/pipelines/privacy/h3_dynamic/
@@ -140,7 +133,7 @@ data/work/privacy/h3_dynamic/
 
 ---
 
-# ⚙️ Reference Policy (`policy.yml`)  
+# ⚙️ Reference Policy (`policy.yml`)
 ```yaml
 score_bands:
   - {min: 0,   max: 10,  h3_res: 9}
@@ -164,9 +157,7 @@ embargo_default_days: 365
 
 ---
 
-# 🧩 Deterministic Python (v11-safe)  
-(All randomness seeded; no external calls; no Unicode math.)
-
+# 🧩 Deterministic Python (v11-safe)
 ```python
 # File: src/pipelines/privacy/h3_dynamic/scripts/h3_dynamic_generalize.py
 import json, os, math, hashlib, random
@@ -181,11 +172,9 @@ random.seed(SEED)
 ...
 ```
 
-(Truncated here for brevity in spec; code remains identical to approved v11 canonical version.)
-
 ---
 
-# 🧪 CARE Rule Executor  
+# 🧪 CARE Rule Executor
 ```python
 # File: src/pipelines/privacy/h3_dynamic/scripts/care_screen.py
 import yaml, json, sys, datetime
@@ -194,7 +183,7 @@ import yaml, json, sys, datetime
 
 ---
 
-# 🧷 CI/CD Integration  
+# 🧷 CI/CD Integration
 ```Makefile
 privacy-h3:
     python src/pipelines/privacy/h3_dynamic/scripts/care_screen.py collections/heritage.yml src/pipelines/privacy/h3_dynamic/rules/care.yaml
@@ -207,42 +196,33 @@ privacy-h3:
 
 ---
 
-# 🧱 STAC/DCAT Publication Rules  
-Every published layer MUST include:
-
-- STAC Item with:  
+# 🧱 STAC/DCAT Publication Requirements
+- Publish only **H3 centroids** + aggregated attributes  
+- Must include:  
   - `privacy:method = "h3_dynamic_res"`  
-  - `privacy:policy_ref = <policy.yml SHA256>`  
+  - `privacy:policy_ref = <SHA256(policy.yml)>`  
   - `care:status`, `care:reason_codes`  
   - PROV-O lineage step `"H3DynamicGeneralize v11"`  
 
 ---
 
-# 🔍 Audit & Telemetry (v11)  
-Emit:  
-- Counts by resolution band  
-- % dropped by k-anonymity  
-- Override hits  
-- CARE pass/fail tallies  
+# 🔍 Audit & Telemetry
+Emit metrics:  
+- Counts by H3 band  
+- % dropped via k-anonymity  
+- Region override hits  
+- CARE pass/fail tally  
 
-Stored under:  
+Stored at:  
 `releases/v11.0.0/standards-telemetry.json → dynamic_h3_generalization`
 
 ---
 
-# 🧭 Migration Notes (from v10 fixed-res)  
-- Replace `h3_res` → `privacy:h3_res_min` & `privacy:h3_res_actual`  
+# 🧭 Migration Notes (from v10 fixed-res)
+- Replace static `h3_res` with `privacy:h3_res_min` + `privacy:h3_res_actual`  
 - Recompute joins  
-- Maintain v10 aggregates for 1 release (backward-compat)
+- Maintain backward-compatibility aggregates for one release  
 
 ---
 
-<div align="center">
-
-[Back to Governance](../../standards/governance/ROOT-GOVERNANCE.md) ·  
-[Releases & SBOM](../../../releases/v11.0.0/manifest.zip) ·  
-[Telemetry Schema](../../../schemas/telemetry/standards-dynamic-h3-generalization-v11.json)
-
-</div>
-
-
+[Back to Governance](../../standards/governance/ROOT-GOVERNANCE.md) · [Releases & SBOM](../../../releases/v11.0.0/manifest.zip) · [Telemetry Schema](../../../schemas/telemetry/standards-dynamic-h3-generalization-v11.json)
