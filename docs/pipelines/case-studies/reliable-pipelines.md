@@ -140,10 +140,10 @@ KFM needed **OpenLineage** + **SLSA v1.0** + **SBOM** end-to-end coverage.
 
 ~~~mermaid
 flowchart TD
-  A[ETL Output] --> B[Validation Engine\nStructural, Semantic, Spatial, Temporal, Ethics]
-  B -->|pass| C[Observability Engine\nPerformance, Drift, Telemetry]
-  C --> D[Promotion Gate (OPA)]
-  D -->|approve| E[Graph Updater and STAC/DCAT Publisher]
+  A[ETL Output] --> B[Validation Engine]
+  B -->|pass| C[Observability Engine]
+  C --> D[Promotion Gate OPA]
+  D -->|approve| E[Graph Updater and Publisher]
   D -->|reject| F[Rollback Manager]
   B -->|fail| F
   C --> G[Governance Dashboard]
