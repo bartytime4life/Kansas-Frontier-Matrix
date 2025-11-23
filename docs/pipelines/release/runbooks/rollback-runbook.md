@@ -82,80 +82,61 @@ Rollback is a **governed action** and must be fully instrumented, auditable, and
 
 # 🧭 1. Scope & Principles
 
-This runbook applies to:
+This runbook applies to all release-bound pipelines:  
+- ETL (ingestion, transformation, publishing)  
+- AI/ML pipelines  
+- Hydrology, climate, hazards, spatial/heritage  
+- Story Node v3, Focus Mode v3  
+- All release-environment pipelines (`main`, `release/*`, prod-like)
 
-- All **release-bound pipelines**:
-  - ETL (data ingestion, transformation, publishing)  
-  - AI/ML (models, inference pipelines)  
-  - Hydrology, climate, hazards, spatial/heritage, Story Node v3, Focus Mode v3  
-- All **environments with promotion gates** (`main`, `release/*`, prod-like environments)  
-- All **artifacts**:
-  - Data files (parquet/CSV/NetCDF/etc.)  
-  - STAC/DCAT catalogs  
-  - Neo4j dumps / graph snapshots  
-  - ML models and configs  
-  - Configuration bundles  
+Artifacts covered:
+- Data files: parquet/CSV/NetCDF  
+- STAC/DCAT catalogs  
+- Neo4j dumps & snapshots  
+- ML models + configs  
+- Config bundles
 
-Core principles:
-
-- **Safety over speed:** Rollback takes precedence when user impact, legal, or governance concerns exist.  
-- **Determinism:** All rollback actions must be idempotent, scriptable, and reproducible.  
-- **Governance & FAIR+CARE:** Rollback must *not* introduce new violations; all steps must be traceable via PROV-O and the governance ledger.  
-- **Fast feedback:** Rollback is designed for **fast, safe reversion** with clear telemetry and alerts.
+**Core principles:**  
+- **Safety over speed**  
+- **Determinism**  
+- **Governance & FAIR+CARE**  
+- **Fast feedback**  
 
 ---
 
 # ✅ 2. Preconditions
 
-Before initiating rollback, verify:
+Before rollback:  
+- Rollback need **confirmed** (gates, telemetry, governance request).  
+- Identify target run (`pipeline_id`, `run_id`, `release_version`).  
+- Determine **last_good** artifacts.  
+- Access orchestrator, storage, Neo4j admin, STAC/DCAT repos, monitoring dashboards.  
+- Freeze pipeline (per Freeze Runbook):
 
-- The need for rollback is **confirmed** (from gates, telemetry, incident response, or governance request).  
-- The target run is clearly identified:
-  - `pipeline_id`  
-  - `run_id`  
-  - `release_version`  
-- **Last known good artifacts** are known and accessible (see Section 7.1).  
-- You have access to:
-  - Orchestrator UI/CLI  
-  - Storage buckets / data lake  
-  - Neo4j admin tools  
-  - Model registry / artifact store  
-  - STAC/DCAT repositories  
-  - Monitoring dashboards  
+```text
+orchestrator/state/<pipeline_id>/freeze.flag = true
+```
 
-- The pipeline is **frozen** per the Freeze Runbook:
-
-  ```text
-  orchestrator/state/<pipeline_id>/freeze.flag = true
-````
-
-* Stakeholders are informed that rollback is being initiated (see Section 5).
+- Inform stakeholders.
 
 ---
 
 # 🧬 3. Rollback Types & Decision Tree
 
-Determine which rollback path applies:
+**Config-only**  
+**Model-only**  
+**Data-only**  
+**Full rollback**
 
-| Type              | When to Use                                                               | Typical Triggers                                    |
-| ----------------- | ------------------------------------------------------------------------- | --------------------------------------------------- |
-| **Config-only**   | Misconfiguration without data corruption or schema change                 | Wrong parameter, minor logic bug, feature toggles   |
-| **Model-only**    | ML model performance/hallucination issues; data intact                    | Drift breach, wrong model version, bad weights      |
-| **Data-only**     | ETL produced bad data but schema intact; model & config unchanged         | DQ failure, partial corruption, out-of-range values |
-| **Full rollback** | Structural or multi-layer issue; schema/contract break, severe governance | schema drift, CARE violation, security incident     |
-
-**Rule of thumb:**
-
-* If **schema/CARE/security/sovereignty** is implicated → choose **Full rollback**.
-* If only a **subset of rows/partitions** is affected and schema is stable → consider **Data-only rollback**.
-* If the issue is limited to model behavior, not data → choose **Model-only rollback**.
-* If only configuration is incorrect → choose **Config-only rollback**.
-
-Document the chosen type in the incident record.
+Rules:  
+- CARE/security/schema → always **Full rollback**.  
+- Partial bad data → **Data-only**.  
+- Model issues → **Model-only**.  
+- Misconfig → **Config-only**.
 
 ---
 
-# 🔀 4. High-Level Rollback Flow
+# 🔀 4. High-Level Flow
 
 ```mermaid
 flowchart TD
@@ -170,59 +151,23 @@ flowchart TD
       G -->|No| I["Maintain Freeze · Escalate · Iterate Fix/Retry"]
 ```
 
-Rollback MUST be coordinated with:
-
-* `freeze-runbook.md`
-* `incident-response.md`
-* `phased-rollout-playbook.md`
-
 ---
 
 # 📣 5. Communication & Governance
 
-## 5.1 Notify Stakeholders
+Notify:  
+- Reliability on-call  
+- Domain leads  
+- FAIR+CARE Council (if applicable)  
+- Product/operations owners  
 
-At rollback initiation:
-
-* Post in the relevant channels (e.g. `#kfm-incidents`, `#kfm-releases`)
-* Notify:
-
-  * Reliability Engineering on-call
-  * Domain leads (Data, ML, Spatial, Story Node)
-  * FAIR+CARE Council representative (if CARE/sensitive data impacted)
-  * Product/operations owners (if user-facing impact exists)
-
-Use the **incident response template** in:
-
-```text
-docs/pipelines/release/runbooks/incident-response.md
-```
-
-## 5.2 Governance & CARE Coordination
-
-If incident is **Tier A** (CARE/sovereignty/legal):
-
-* Immediately notify FAIR+CARE Council
-* Engage relevant tribal/community liaisons per `INDIGENOUS-DATA-PROTECTION.md`
-* Document all communications in the governance ledger:
-
-```text
-docs/reports/audit/governance-ledger.json
-```
-
-Include:
-
-* Incident ID
-* Rollback type
-* Rationale
-* Stakeholders
-* Approvals
+Record all communications in the governance ledger.
 
 ---
 
 # 🧾 6. Identify & Record Context
 
-In the governance ledger, append:
+Append to governance ledger:
 
 ```text
 {
@@ -243,57 +188,26 @@ In the governance ledger, append:
 }
 ```
 
-Ensure:
-
-* Freeze state is active
-* Stakeholders are aware of rollback context
-
 ---
 
 # 📂 7. Execute Rollback — Detailed Steps
 
-## 7.1 Confirm `last_good` Artifacts
+## 7.1 Identify `last_good`
 
-Using `manifest.json`:
+Use `manifest.json`:
 
 ```text
 cat releases/<pipeline_id>/manifest.json | jq '.versions[] | select(.status=="last_good")'
 ```
 
-Capture:
-
-* `version_id`
-* Artifact URIs
-* Timestamp
-* Checksums
-
-Add an entry to:
-
-```text
-docs/pipelines/<pipeline_id>/CHANGELOG.md
-```
-
-Example:
-
-```text
-## [<good_version>] - YYYY-MM-DD
-- Marked as last_good for rollback
-- Linked incident: <incident_id>
-- Reviewer: <name>
-```
+Record version, artifacts, checksums.  
+Update appropriate CHANGELOG.
 
 ---
 
-## 7.2 Switch Read Pointers to `last_good`
+## 7.2 Switch Serving Pointers
 
-Update all **serving endpoints** to point to `last_good`:
-
-* Data lake / warehouse views
-* Neo4j read replicas
-* Model-serving endpoints
-* STAC/DCAT “current” references
-
-Example (warehouse pseudocode):
+Update:
 
 ```text
 UPDATE reference_table
@@ -301,218 +215,98 @@ SET active_version = '<good_version>'
 WHERE pipeline_id = '<pipeline_id>';
 ```
 
-Verify:
-
-* Downstream jobs now read from `last_good`
-* No new reads depend on `bad_version` artifacts
-
-Log pointer changes in:
-
-```text
-docs/pipelines/release/runbooks/rollback-events/<timestamp>_<pipeline_id>.json
-```
+Record in rollback-events log.
 
 ---
 
-## 7.3 Data Rollback (Data-only / Full)
+## 7.3 Data Rollback
 
-If data artifacts are corrupted:
-
-1. **Disable new writes** to impacted tables/buckets:
-
-   ```text
-   analytics/<pipeline_id>/writes_enabled = false
-   ```
-
-2. **Restore or remap** data to `last_good`:
-
-   * Object storage:
-
-     * Swap prefixes or rewrite symlinks
-     * Copy last_good data to the `current/` location
-   * Databases:
-
-     * Restore from backup or snapshot
-     * Run down-migrations if required
-   * Index/search:
-
-     * Reindex from last_good data
-
-3. **Re-run data checks**:
-
-   * Row counts
-   * Key distributions
-   * Spatial coverage
-   * DQ gates in **diagnostic** mode
+- Disable writes  
+- Restore or remap data  
+- Re-run DQ checks  
 
 ---
 
-## 7.4 Model Rollback (Model-only / Full)
+## 7.4 Model Rollback
 
-If an ML model is implicated:
-
-1. Identify last_good model artifact:
-
-   ```text
-   models/<pipeline_id>/<good_version>/model.tar.gz
-   ```
-
-2. Set active version in model registry:
-
-   ```text
-   kfmctl model set-active \
-     --pipeline <pipeline_id> \
-     --version <good_version>
-   ```
-
-3. Invalidate/refresh:
-
-   * Embedding caches
-   * Feature stores
-   * Batch inference outputs (if necessary)
-
-4. Run post-rollback tests:
-
-   * Known-good eval set
-   * SHAP/LIME sanity checks
-   * Drift metrics
-
-Confirm Story Node v3 and Focus Mode outputs are stable and safe.
+- Identify model artifact  
+- Set active model  
+- Refresh caches & feature stores  
+- Re-run evals, drift checks, SHAP/LIME tests  
 
 ---
 
 ## 7.5 Config-Only Rollback
 
-For configuration-only errors:
+Revert with:
 
-1. Identify bad config change:
+```text
+git revert <bad_config_commit_sha>
+```
 
-   ```text
-   git log -p -- docs/pipelines/<pipeline_id>/config/*
-   ```
-
-2. Revert to last_known_good:
-
-   ```text
-   git revert <bad_config_commit_sha>
-   ```
-
-3. Re-run CI (`ci.yml`) and any domain-specific tests.
-
-4. Document config rollback in:
-
-   ```text
-   docs/pipelines/<pipeline_id>/CHANGELOG.md
-   docs/pipelines/<pipeline_id>/README.md
-   ```
+Re-run CI + domain tests.
 
 ---
 
 # ✔ 8. Post-Rollback Validation
 
-After all rollback actions:
+Run shadow pipeline:
 
-1. Run **shadow pipeline** on `last_good`:
+```text
+orchestrator run <pipeline_id> --mode shadow --version <good_version>
+```
 
-   ```text
-   orchestrator run <pipeline_id> --mode shadow --version <good_version>
-   ```
+Validate:  
+- Schema  
+- DQ  
+- Drift  
+- CARE/sovereignty  
+- SLOs & performance  
 
-2. Execute validation suite:
-
-   * Schema gates (column parity, constraints, STAC/DCAT)
-   * DQ gates (bounds, rules, expectations)
-   * Drift gates (PSI/KL/KS/SHAP)
-   * CARE/Sovereignty gates
-   * Performance and cost checks
-
-3. Update SLO dashboards:
-
-   * Mark rollback window
-   * Confirm SLI recovery
-
-4. Confirm:
-
-   * No active alerts
-   * Downstream pipelines stable
-   * User-facing systems healthy
-
-If **any check fails**:
-
-* Keep the pipeline frozen
-* Escalate per `incident-response.md`
-* Consider extended RCA, additional fixes, or deeper rollback.
+Failures → freeze remains; escalate.
 
 ---
 
 # 📓 9. Documentation & Governance Updates
 
-After a successful rollback:
+Update:  
+- CHANGELOG  
+- README statuses  
+- Governance ledger  
 
-* Update:
+Append record:
 
-  * `docs/pipelines/<pipeline_id>/CHANGELOG.md`
-  * `docs/pipelines/<pipeline_id>/README.md` (status, last_good)
-  * Any related runbooks if procedure changed
-
-* Append event to governance ledger:
-
-  ```text
-  {
-    "event": "rollback_completed",
-    "pipeline_id": "<pipeline_id>",
-    "from_version": "<bad_version>",
-    "to_version": "<good_version>",
-    "timestamp_utc": "<ISO8601>",
-    "approved_by": ["<names>"],
-    "notes": "<summary_of_actions_and_rationale>"
-  }
-  ```
-
-* If CARE/sovereignty involved, include:
-
-  * Council decision references
-  * Any follow-up obligations
+```text
+{
+  "event": "rollback_completed",
+  "pipeline_id": "<pipeline_id>",
+  "from_version": "<bad_version>",
+  "to_version": "<good_version>",
+  "timestamp_utc": "<ISO8601>",
+  "approved_by": ["<names>"],
+  "notes": "<summary>"
+}
+```
 
 ---
 
 # 📊 10. Telemetry & Metrics
 
-Rollback events MUST emit:
+Emit:  
+- `rollback_initiated`  
+- `rollback_duration_sec`  
+- `rollback_type`  
+- Post-rollback SLI/SLO + DQ + CARE + drift statuses  
 
-* `rollback_initiated` (timestamp, pipeline_id, versions)
-* `rollback_duration_sec`
-* `rollback_type` (config/model/data/full)
-* `post_rollback_sli_metrics`
-* `post_rollback_care_status`
-* `post_rollback_dq_status`
-* `post_rollback_drift_status`
-* `post_rollback_incident_closed` flag
-
-Telemetry is written to:
-
-```text
-releases/<version>/focus-telemetry.json
-docs/reports/telemetry/pipelines/rollback/<pipeline_id>.json
-```
-
-Used by:
-
-* Reliability dashboards
-* Governance / CARE reports
-* Quarterly reliability reviews
+Stored in telemetry JSONs.
 
 ---
 
 # 🕰️ 11. Version History
 
-| Version |       Date | Notes                                                                       |
-| ------: | ---------: | --------------------------------------------------------------------------- |
-| v11.0.1 | 2025-11-23 | Reformatted to KFM-MDP v11; fixed fences, paths, and governance references. |
-| v11.0.0 | 2025-11-23 | Initial v11 rollback runbook based on Reliable Pipelines v11 playbook.      |
+| Version | Date | Notes |
+|--------|------|--------|
+| v11.0.1 | 2025-11-23 | Reformatted to KFM-MDP v11; fixed fences & governance references. |
+| v11.0.0 | 2025-11-23 | Initial v11 rollback runbook. |
 
 ---
-
-[Back to Runbooks Index](README.md) · [Release Pipelines Overview](../README.md) · [Governance Charter](../../../standards/governance/ROOT-GOVERNANCE.md)
-
-```
