@@ -3,26 +3,20 @@ title: "🛡️ Kansas Frontier Matrix — Security Policy & Vulnerability Discl
 path: ".github/SECURITY.md"
 version: "v11.0.0"
 last_updated: "2025-11-18"
-
 review_cycle: "Annual / Autonomous · FAIR+CARE Council Oversight"
-
 commit_sha: "<latest-commit-hash>"
-
 sbom_ref: "../releases/v11.0.0/sbom.spdx.json"
 manifest_ref: "../releases/v11.0.0/manifest.zip"
 telemetry_ref: "../releases/v11.0.0/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/security-policy-v1.json"
-
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.0.0"
-
 status: "Active / Enforced"
 doc_kind: "SecurityPolicy"
 intent: "security-and-disclosure"
 role: "security-policy"
-
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk"
 sensitivity_level: "Low"
@@ -31,28 +25,22 @@ indigenous_rights_flag: false
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Security"
 redaction_required: false
-
 provenance_chain:
   - ".github/SECURITY.md@v10.0.0"
-
 previous_version_hash: "<previous-sha256>"
-
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "CreativeWork"
   owl_time: "TemporalEntity"
   prov_o: "prov:Plan"
   geosparql: "geo:FeatureCollection"
-
 json_schema_ref: "../schemas/json/security-policy-v11.schema.json"
 shape_schema_ref: "../schemas/shacl/security-policy-v11-shape.ttl"
-
 doc_uuid: "urn:kfm:doc:security-policy-v11.0.0"
 semantic_document_id: "kfm-security-policy"
 event_source_id: "ledger:.github/SECURITY.md"
 immutability_status: "mutable-plan"
 doc_integrity_checksum: "<sha256>"
-
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
@@ -62,7 +50,6 @@ ai_transform_permissions:
 ai_transform_prohibited:
   - "speculative additions"
   - "unverified historical claims"
-
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA"
 jurisdiction: "United States / Kansas"
@@ -82,9 +69,9 @@ Define how the Kansas Frontier Matrix (KFM) community reports and handles securi
 
 </div>
 
---- ✦ ---
+---
 
-## 📘 Scope
+# 📘 Scope
 
 This policy applies to:
 
@@ -93,213 +80,303 @@ This policy applies to:
 - Scripts and tools under `src/`, `web/`, `tools/`, and `data/` that could impact security  
 - The handling and representation of **data** (especially sensitive and governed datasets)  
 
-This policy does **not** grant permission to attack infrastructure outside of this repository or associated demo environments.
+This policy does **not** grant permission to attack infrastructure outside of:
 
---- ✦ ---
+- This repository  
+- Official demo or test environments explicitly provided by the project  
 
-## 📮 Reporting a Vulnerability
+---
+
+# 🗂 Repository Security Context
+
+```text
+Kansas-Frontier-Matrix/
+│
+├── .github/                               # GitHub config, CI/CD, security configuration
+│   ├── SECURITY.md                        # This security policy & vulnerability disclosure document
+│   ├── workflows/                         # CI/CD workflows (lint, tests, scans, governance)
+│   └── ISSUE_TEMPLATE/                    # Issue and security-report templates
+│
+├── releases/                              # Release artifacts
+│   ├── v11.0.0/
+│   │   ├── sbom.spdx.json                 # Software Bill of Materials (SBOM)
+│   │   ├── manifest.zip                   # Release manifest
+│   │   └── focus-telemetry.json           # Telemetry (including security-related metrics)
+│   └── ...                                # Other versions
+│
+├── schemas/                               # Schemas for security-related telemetry and governance
+│   ├── telemetry/
+│   │   └── security-policy-v1.json        # Telemetry schema used by this SECURITY policy
+│   └── ...                                # Additional schemas (energy, carbon, lineage, etc.)
+│
+└── docs/                                  # Governance and standards
+    └── standards/
+        └── governance/
+            └── ROOT-GOVERNANCE.md         # Global governance charter referenced by this policy
+````
+
+---
+
+# 📮 Reporting a Vulnerability
 
 If you believe you have found a security or privacy issue:
 
-1. **Do not** open a public GitHub issue with sensitive details.  
-2. Contact the maintainers via the designated private channel (for example, GitHub Security Advisory or a listed email in the repo profile).  
-3. Provide the following information:
-   - A clear description of the issue  
-   - Steps to reproduce  
-   - Affected components (paths, services, datasets)  
-   - Impact assessment (what could an attacker do?)  
-   - Any suggested mitigations  
+1. **Do not** open a public GitHub issue containing sensitive details.
+2. Use one of the following private channels (example patterns; check repo profile for the active ones):
+
+   * GitHub Security Advisory workflow
+   * A dedicated security email (e.g., `security@<project-domain>`)
+3. Provide as much detail as you can:
+
+   * A clear description of the issue
+   * Steps to reproduce
+   * Affected components (paths, services, datasets)
+   * Impact assessment (what an attacker could do)
+   * Any suggested mitigations or workarounds
 
 We will:
 
-- Acknowledge receipt as soon as reasonably possible  
-- Triage and validate the issue  
-- Coordinate on a fix and an appropriate disclosure timeline  
-- Credit researchers, if desired and consistent with privacy and safety
+* Acknowledge receipt as soon as reasonably possible
+* Triage and validate the issue
+* Coordinate on a fix and appropriate disclosure timeline
+* Credit researchers, if desired and consistent with privacy and safety
 
-> Do **not** attempt to access data you are not authorized to access, exploit the issue in production, or pivot to third-party systems.
+> Please **do not** attempt to:
+>
+> * Access data you are not authorized to view
+> * Exploit the issue in production environments
+> * Pivot to third-party systems or infrastructure
 
---- ✦ ---
+---
 
-## 🔐 Security Principles
+# 🔐 Security Principles
 
 KFM follows these core security principles:
 
-1. **Least Privilege** — CI/CD, scripts, and services are given the minimum access required.  
-2. **Defense in Depth** — multiple layers: code validation, CI checks, dependency scanning, and manual review.  
-3. **Secure Defaults** — conservative defaults for access, logging, and network use.  
-    4. **No Secrets in Repo** — secrets must never be committed; use GitHub secrets / OIDC / key management systems.  
-5. **Privacy by Design** — avoid ingesting or exposing PII; anonymize and aggregate where possible.  
-6. **Transparency** — security fixes are documented in release notes and, when safe, in issues or advisories.
+1. **Least Privilege**
+   CI/CD, scripts, and services are granted the minimum access needed to function.
 
---- ✦ ---
+2. **Defense in Depth**
+   Multiple layers of controls: code validation, CI checks, dependency scanning, and manual review.
 
-## 🧱 Threat Model (High-Level)
+3. **Secure Defaults**
+   Conservative defaults for access, logging, network egress, and feature flags.
 
-KFM is primarily concerned with:
+4. **No Secrets in Repo**
+   Secrets must never be committed. Use:
 
-- **Supply-chain risks**  
-  - Compromised dependencies (npm/pip)  
-  - Malicious GitHub Actions or workflow steps  
-  - Tampered SBOM or manifest files  
+   * GitHub Secrets
+   * OIDC-based federation
+   * External secret managers (e.g., AWS/GCP secret stores)
 
-- **Data integrity & provenance**  
-  - Unauthorized modification of datasets or STAC/DCAT metadata  
-  - Corruption of knowledge-graph content  
-  - Inaccurate or malicious Story Node narratives  
+5. **Privacy by Design**
+   KFM avoids ingesting or exposing PII whenever possible; anonymization and aggregation are preferred when context allows.
 
-- **CI/CD pipeline misuse**  
-  - Unauthorized changes to workflows  
-  - Use of CI runners to exfiltrate secrets or data  
-  - Abuse of automation to publish unsafe artifacts  
+6. **Transparency**
+   Security fixes are documented in:
 
-- **Privacy & ethical risks**  
-  - Exposure of sensitive location data (e.g., heritage sites)  
-  - Inadvertent inclusion of PII in datasets or logs  
+   * Release notes
+   * Security advisories (when appropriate)
+   * Standards or policy documentation (e.g., this file)
 
---- ✦ ---
+---
 
-## 🔒 Protections in Place
+# 🧱 Threat Model (High-Level)
 
-### 1. Repository Protections
+KFM’s primary security concerns include:
 
-- Protected `main` and `release/*` branches  
-- Required status checks for critical CI workflows  
-- Required reviews for changes in:
-  - `.github/**`
-  - `schemas/**`
-  - `src/graph/**`
-  - `data/**` and STAC/DCAT catalogs  
+## 1. Supply-Chain Risks
 
-### 2. Dependency & Supply Chain Security
+* Compromised or malicious dependencies (npm, pip, system packages)
+* Malicious or misconfigured GitHub Actions
+* Tampered SBOM or manifest files
 
-- **Dependabot** for:
-  - `github-actions`  
-  - `npm` (`/web`, root)  
-  - `pip` (root and `/tools`)  
-- SBOM generation and verification (`sbom.spdx.json`) per release  
-- Vulnerability scanning via:
-  - `codeql.yml` for static code analysis  
-  - `trivy.yml` (or equivalent) for CVE scanning of images/lockfiles  
+## 2. Data Integrity & Provenance
 
-### 3. CI/CD Integrity
+* Unauthorized modification of datasets or STAC/DCAT metadata
+* Corruption or injection attacks on the knowledge graph (Neo4j)
+* Inaccurate or malicious Story Node or Focus Mode narratives
 
-- No plaintext secrets or tokens in workflow files  
-- Use of GitHub Secrets and/or OIDC-based authentication  
-- Restricted permissions for GitHub Actions tokens  
-- Peer review required for changes to workflows and security policy
+## 3. CI/CD Pipeline Misuse
 
---- ✦ ---
+* Unauthorized changes to workflows under `.github/workflows/`
+* Abuse of CI runners to exfiltrate secrets or sensitive data
+* Use of pipeline automation to publish unsafe or unvalidated artifacts
 
-## 🧠 AI & Focus Mode Safeguards
+## 4. Privacy & Ethical Risks
 
-While not traditional “security” in the cyber sense, AI misuse can cause **informational harm**:
+* Exposure of sensitive location data (e.g., cultural heritage sites, sacred places)
+* Inadvertent inclusion of PII/PHI in datasets or logs
+* Narrative harms (e.g., AI content that misrepresents communities or events)
 
-- AI-powered narratives must be grounded in actual data and sources  
-- No speculative or fabricated events or attributions  
-- No generation of targeted or sensitive information about real individuals  
-- Internal guardrails and validators check:
-  - Grounding of answers  
-  - Exclusion of prohibited data categories  
-  - Explicit labeling of limitations  
+---
 
-Potential AI-related concerns should be reported through the same security channel if they result in **harmful outputs, leakage of sensitive information, or governance violations**.
+# 🔒 Protections in Place
 
---- ✦ ---
+## 1. Repository Protections
 
-## 📊 Logging, Telemetry & Privacy
+* Protected `main` and `release/*` branches
+* Required status checks for critical CI workflows
+* Required code review for changes to:
 
-KFM aims for **useful observability** without compromising privacy:
+  * `.github/**`
+  * `schemas/**`
+  * `src/graph/**`
+  * `data/**` and STAC/DCAT catalogs
 
-- CI logs capture:
-  - Build results  
-  - Test and validation outcomes  
-  - Workflow metadata (IDs, durations)  
+## 2. Dependency & Supply-Chain Security
 
-- CI logs intentionally avoid:
-  - Secrets  
-  - Sensitive dataset contents  
-  - PII  
+* **Dependabot** is configured for:
 
-Telemetry:
+  * `github-actions`
+  * `npm` (frontend + root)
+  * `pip` (backend + tools)
 
-- Aggregated into `releases/<version>/focus-telemetry.json`  
-- Used to monitor:
-  - Reliability and performance  
-  - FAIR+CARE validation rates  
-  - Security and validation failures  
+* **SBOM**:
 
-Telemetry is **not** used to track individuals.
+  * `releases/<version>/sbom.spdx.json` generated per release
+  * SBOM verification as part of release validation
 
---- ✦ ---
+* Vulnerability scanning:
 
-## 🧩 Responsible Use of Data
+  * `codeql` for language-level static analysis
+  * Container/image and lockfile scanning (e.g., `trivy` or equivalent)
 
-Certain datasets may involve:
+## 3. CI/CD Integrity
 
-- Cultural heritage sites  
-- Archaeological locations  
-- Indigenous lands and histories  
-- Sensitive ecological data (e.g., endangered species locations)  
+* No plaintext secrets or tokens inside workflow files
+* Use of:
 
-For these, security is also ethical:
+  * GitHub Secrets
+  * OIDC-based identity with cloud providers
+* Restrictive permissions on `GITHUB_TOKEN` and ephemeral credentials
+* Peer review and governance review required for:
 
-- Coordinates may be generalized (e.g., via H3)  
-- Sensitive detail may be omitted from public graphs and STAC catalogs  
-- Access may be limited or fully withheld in public builds  
+  * Workflow changes
+  * Security policy changes
 
-If you notice that data appears to violate these constraints, please report it as a **security/ethics issue**.
+---
 
---- ✦ ---
+# 🧠 AI & Focus Mode Safeguards
 
-## 🚨 When We Issue Advisories
+While not a traditional cyber vulnerability, harmful AI outputs are treated as **security & ethics concerns** in KFM:
+
+* AI-generated narratives must be grounded in actual data and graph facts
+* No fabrication of events, people, or causal links
+* No targeted or sensitive profiling of real individuals
+* Narrative and QA layers include:
+
+  * Grounding checks against KG entities
+  * Prohibited-topic filters
+  * CARE and sovereignty-aware constraints
+
+You should report AI safety issues (e.g., harmful or leaking content) through the same security channel, especially if:
+
+* They reveal sensitive locations or private data
+* They misrepresent communities in harmful ways
+* They violate FAIR+CARE or KFM governance policies
+
+---
+
+# 📊 Logging, Telemetry & Privacy
+
+KFM aims for **high observability** without compromising privacy.
+
+## Logging
+
+CI and runtime logs contain:
+
+* Build/test outcomes
+* Validation results
+* Pipeline identifiers and timing
+
+Logs are designed **not** to include:
+
+* Secrets
+* PII/PHI
+* Sensitive raw dataset contents
+
+## Telemetry
+
+Metrics, including some security-related events, are aggregated into:
+
+```text
+releases/<version>/focus-telemetry.json
+```
+
+Telemetry is used to monitor:
+
+* Reliability and performance
+* FAIR+CARE validation outcomes
+* Security-related validation failures
+
+Telemetry is **not** used to track individual users.
+
+---
+
+# 🧩 Responsible Use of Data
+
+Certain KFM datasets involve:
+
+* Cultural heritage sites
+* Archaeological data
+* Indigenous lands and histories
+* Sensitive ecological information (e.g., endangered species locations)
+
+For these:
+
+* Coordinates may be generalized (e.g., via H3 masking)
+* Sensitive detail may be omitted from public graphs and catalogs
+* Access to detailed data may be limited or withheld entirely
+
+If you notice data that appears to violate these constraints, please report it as a **security and ethics issue**.
+
+---
+
+# 🚨 Security Advisories & Disclosure
 
 We may publish:
 
-- GitHub Security Advisories  
-- Release notes with security sections  
-- Documentation updates reflecting mitigation or policy changes  
+* GitHub Security Advisories
+* Release notes with dedicated **Security** sections
+* Updates to this SECURITY policy
 
 Advisories are appropriate when:
 
-- A vulnerability has realistic exploitation potential  
-- Fixes or mitigations are available  
-- Transparency does not materially increase risk  
+* A vulnerability has realistic exploitation potential
+* Fixes or mitigations are available
+* Public disclosure does not significantly increase risk
 
---- ✦ ---
+We strive for **coordinated vulnerability disclosure** with reporters.
 
-## 🧭 Maintainer Responsibilities
+---
+
+# 🧭 Maintainer Responsibilities
 
 Maintainers are expected to:
 
-- Follow this policy when responding to reports  
-- Treat reporters with respect, and maintain confidentiality where requested and appropriate  
-- Avoid downplaying issues; if in doubt, triage thoroughly  
-- Ensure fixes are reviewed and pass:
-  - CI/CD workflows  
-  - FAIR+CARE validation  
-  - Security scans  
-  - Documentation requirements  
+* Follow this policy when responding to reports
+* Treat reporters with respect and maintain confidentiality when requested and appropriate
+* Avoid downplaying issues; triage thoroughly and conservatively
+* Ensure that fixes:
 
-Whenever feasible, maintainers should also add **regression tests** or validations to prevent reintroduction.
+  * Are properly reviewed
+  * Pass CI, tests, and governance checks
+  * Include regression tests or validations where applicable
 
---- ✦ ---
+When security issues intersect with FAIR+CARE or sovereignty concerns, maintainers must also coordinate with the **FAIR+CARE Council** and relevant community stewards.
 
-## 🕰️ Version History
+---
 
-| Version  | Date         | Author            | Summary                                           |
-|---------:|-------------:|------------------|---------------------------------------------------|
-| v11.0.0  | 2025-11-18   | KFM Core Team     | Upgraded to KFM-MDP v11; expanded threat model and AI safeguards. |
-| v10.0.0  | 2025-??-??   | KFM Core Team     | Initial SECURITY.md, basic disclosure and policy. |
+# 🕰 Version History
 
---- ✦ ---
+| Version |       Date | Author        | Summary                                                                            |
+| ------: | ---------: | ------------- | ---------------------------------------------------------------------------------- |
+| v11.0.0 | 2025-11-18 | KFM Core Team | Upgraded to KFM-MDP v11; expanded threat model, AI safeguards, and CI integration. |
+| v10.0.0 | 2025-??-?? | KFM Core Team | Initial SECURITY.md, basic disclosure and repository protections.                  |
 
-<div align="center">
+---
 
-**© 2025 Kansas Frontier Matrix — MIT**  
-Governed under **Master Coder Protocol v6.3** and **KFM-MDP v11.0.0**  
-FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+[Root README](../README.md) · [Architecture](../ARCHITECTURE.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
-[Back to GitHub Overview](README.md) · [CI/CD Architecture](ARCHITECTURE.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+```
