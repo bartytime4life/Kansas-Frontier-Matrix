@@ -1,251 +1,266 @@
 ---
 title: "📚 Kansas Frontier Matrix — Pipelines Case Studies Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/pipelines/case-studies/README.md"
-version: "v11.0.3"
+version: "v11.0.1"
 last_updated: "2025-11-23"
 review_cycle: "Annual · FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../releases/v11.0.1/sbom.spdx.json"
 manifest_ref: "../../../releases/v11.0.1/manifest.zip"
-telemetry_ref: "../../../releases/v11.0.1/pipelines-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/pipelines-case-studies-v11.json"
+telemetry_ref: "../../../schemas/telemetry/pipelines-case-studies-v11.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
+mcp_version: "MCP-DL v11.0"
+markdown_protocol_version: "KFM-MDP v11.0"
 status: "Active · Under Expansion"
 doc_kind: "Pipelines Case Study Index"
-semantic_document_id: "kfm-doc:pipelines-case-studies-index:v11"
-doc_uuid: "urn:kfm:pipelines:case-studies:index:v11.0.3"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Integrated · Data-Quality"
-sensitivity_level: "Medium"
-public_exposure_risk: "Low"
-indigenous_rights_flag: true
-redaction_required: false
-classification: "Public Document"
-jurisdiction: "Kansas / United States"
-risk_category: "Operational Reliability"
-data_steward: "KFM FAIR+CARE Council"
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
-ai_transform_permissions:
-  - "summaries"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-ai_transform_prohibited:
-  - "speculative additions"
-  - "unverified historical claims"
-lifecycle_stage: "stable"
-ttl_policy: "Review required every 12 months"
-sunset_policy: "Superseded upon new protocol release"
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
 ---
 
-<div align="center">
+# 📚 Kansas Frontier Matrix — Pipelines Case Studies Index
 
-# 📚 **Kansas Frontier Matrix — Pipelines Case Studies Index**  
-`docs/pipelines/case-studies/README.md`
+Welcome to the **KFM v11 pipelines case studies hub**. This directory collects real-world and internal case studies that document:
 
-**A unified, structured library of pipeline case studies documenting  
-real-world ETL/AI workflows, engineering rationale, governance patterns,  
-and FAIR+CARE ethics lessons for KFM v11.**
+- How complex ETL/AI workflows are orchestrated
+- Why specific orchestration technologies were chosen
+- How reliability, lineage, and FAIR+CARE governance are enforced in practice
+- What lessons apply directly to the Kansas Frontier Matrix (KFM) pipeline stack
 
-</div>
+Use this index to discover existing case studies and to add new ones in a consistent, v11-compliant way.
 
 ---
 
-# 📘 1. Purpose & Scope
+## 🎯 Purpose & Scope
 
-This directory contains **architectural case studies** used to guide the design of  
-KFM v11 pipelines. These documents illustrate:
+This directory exists to:
 
-- How real organizations run scalable ETL/AI workflows  
-- Why pipeline technologies (LangGraph, Prefect, Airflow, etc.) are chosen  
-- How reliability, reproducibility, and compliance are enforced  
-- How FAIR+CARE ethics shape engineering decisions  
-- How these lessons directly inform Kansas Frontier Matrix workflows  
+- Document **end-to-end pipeline migrations and architectures** (internal and external)
+- Capture **design rationales** behind KFM’s orchestration and reliability decisions
+- Provide **reference patterns** for new pipelines (autonomous refresh, AI, ETL, Story Nodes)
+- Support **FAIR+CARE and governance reviews** with concrete, example-driven evidence
 
-Case studies must help current and future contributors design pipelines that are:
+Case studies here should be:
 
-- Reliable  
-- Lineage-complete  
-- Governance-aligned  
-- FAIR+CARE compliant  
-- Easy for domain experts to adapt  
+- Narrative and architectural (not just code snippets)
+- Focused on **workflow orchestration**, **reliability**, and **governance**
+- Explicit about **trade-offs** and **lessons learned for KFM**
 
 ---
 
-# 🗂 2. Directory Layout (Aligned to KFM v11 Standards)
+## 🏗️ Directory Layout
+
+This README documents the **case-studies** directory:
 
 ```text
-docs/
+docs/pipelines/case-studies/
 │
-└── pipelines/
-    │
-    ├── README.md
-    ├── reliable-pipelines.md
-    │
-    ├── ai/
-    │   └── README.md
-    │
-    ├── validation-observability/
-    │   └── README.md
-    │
-    └── case-studies/
-        ├── README.md                           ← you are here
-        ├── snorkel-ai-prefect.md               ← planned
-        ├── climate-policy-radar-prefect.md     ← planned
-        └── _templates/
-            └── case-study-template-v11.md      ← planned template
+├── README.md                         ← this file
+├── ai/
+│   └── README.md                     ← AI-specific pipeline case studies index
+├── snorkel-ai-prefect.md             ← external case study (planned)
+├── climate-policy-radar-prefect.md   ← external case study (planned)
+└── _templates/
+    └── case-study-template-v11.md    ← authoring template (planned)
 ```
 
-All case studies **must** appear under this directory and include valid  
-`path:` metadata pointing to the exact file location.
+You can safely add new case study files under `docs/pipelines/case-studies/` as long as they:
+
+- Use KFM-MDP v11 formatting
+- Include full YAML front-matter metadata
+- Follow the structure defined in the template section below
 
 ---
 
-# 📂 3. Case Studies (Current & Planned)
+## 📂 Current and Planned Case Studies
 
-## 🤖 Snorkel AI — Migration to Prefect *(Planned)*
+### 🤖 Snorkel AI — Migration to Prefect (Planned)
 
-**Planned path:**  
+**File (planned):**  
 `docs/pipelines/case-studies/snorkel-ai-prefect.md`
 
-**Themes:**
+**Focus:**
 
-- Migration from custom orchestration → Prefect  
-- Running thousands of ML jobs/day  
-- Removing home-grown queueing & retry plumbing  
+- Migration from home-grown orchestration (Redis Queue + custom plumbing) to Prefect
+- Executing thousands of workflows per day
+- Eliminating hand-rolled mechanisms for:
+  - queueing
+  - retries
+  - worker management
+  - basic telemetry
 - Lessons for KFM:
-  - High-throughput ML ETL patterns  
-  - Python-native DAG ergonomics  
-  - Reliability & governance integration  
-  - Mapping Snorkel patterns → LangGraph v11 + OpenLineage
+  - High-throughput autonomous refresh patterns
+  - Elastic workers vs static worker pools
+  - Python-native DAGs for complex ML workflows
+
+This case study should explicitly map Snorkel’s experience to:
+
+- KFM’s **AI/ETL pipelines**
+- **LangGraph DAG patterns**
+- OpenLineage and PROV-O integration for KFM v11
 
 ---
 
-## 🌍 Climate Policy Radar — Step Functions → Prefect *(Planned)*
+### 🌍 Climate Policy Radar — From AWS Step Functions to Prefect (Planned)
 
-**Planned path:**  
+**File (planned):**  
 `docs/pipelines/case-studies/climate-policy-radar-prefect.md`
 
-**Themes:**
+**Focus:**
 
-- Migrating from AWS Step Functions + Lambdas  
-- Processing 25k+ long-form climate-policy documents  
-- Researcher-driven pipeline development  
-- Lessons for KFM:
-  - Document-centric processing patterns  
-  - Conditional branching & long-running tasks  
-  - Multi-repo workflow design for domain experts  
+- Large-scale processing of ~25k+ climate-policy documents
+- Migration from:
+  - AWS Step Functions (JSON state machines)
+  - Lambda functions
+  - Cron jobs
+- To:
+  - Python-based Prefect flows
+  - Multi-repository pipeline architecture
+- Key themes:
+  - Enabling researchers and data scientists to own workflows
+  - Handling long-running, multi-stage document pipelines
+  - Flexible branching, conditionals, and runtime parameters
 
----
+Lessons for KFM:
 
-## 🧪 Internal KFM Case Studies (Recommended)
-
-Future internal case studies should cover:
-
-- 💧 **Hydrology**  
-  - Autonomous streamflow reconstruction  
-  - Multi-source fusion, anomaly smoothing, WSEL logic  
-- 🌾 **Climate / Land Surface**  
-  - Downscaling, NDVI/LC compositing  
-- ⚠️ **Hazards**  
-  - Wildfire + energy hazard ETL → AI modeling → Story Nodes  
-- 🏛️ **Archaeology**  
-  - Geophysics ETL, H3 generalization, sovereignty constraints  
-- 🧠 **AI Governance**  
-  - Focus Mode v3 pipelines, bias/drift detection, explainability chains  
-
-All internal case studies must scrutinize:
-
-- Retries, WAL, rollback  
-- STAC/DCAT generation  
-- OpenLineage evidence  
-- SLSA provenance  
-- FAIR+CARE ethics controls  
-- Indigenous rights considerations  
+- How to structure KFM’s pipelines so **domain experts** (hydrology, climate, hazards, archaeology) can author and evolve flows
+- Why Python-native orchestration fits KFM’s **multi-repo, multi-team** structure
+- Patterns for processing **large, document-like corpora** (e.g., reports, PDFs, historical documents)
 
 ---
 
-# 🧱 4. Case Study Structure (v11 Template)
+## 🧱 Case Study Structure (Template)
 
-All case studies must follow this exact structure:
+All case studies in this directory should follow a consistent, v11-aligned structure.  
+When you create a new file (for example, `my-pipeline-case-study.md`), structure it as follows:
 
-1. **YAML Front-Matter**
-   - Full metadata: version, sbom_ref, manifest_ref, governance_ref, telemetry, etc.
+1. **Title and Metadata**
+   - YAML front-matter with:
+     - `title`, `path`, `version`, `last_updated`, `review_cycle`
+     - `sbom_ref`, `manifest_ref`, `telemetry_ref`, `telemetry_schema`
+     - `governance_ref`, `license`, `mcp_version`, `markdown_protocol_version`, `status`, `doc_kind`
 
 2. **Overview**
-   - Context, motivation, systems involved
+   - Short, non-technical summary
+   - System or organization context
+   - Why this case study matters to KFM
 
 3. **Legacy Architecture**
-   - Prior workflow, pains, scaling issues, governance gaps
+   - What existed before migration or redesign
+   - Key pain points:
+     - scalability
+     - reliability
+     - governance
+     - developer experience
 
 4. **Migration Drivers / Design Motivations**
-   - Technical + ethical + operational reasons for change
+   - Why change was necessary
+   - Constraints (cost, skills, time, compliance)
+   - Selection criteria for the new orchestration/architecture
 
 5. **Target Architecture**
-   - DAG engine, repos, runtime, observability  
-   - Where lineage/provenance is enforced  
-   - FAIR+CARE roles
+   - High-level DAG and orchestration model
+   - Orchestration platform (for example, Prefect, LangGraph-based)
+   - Where telemetry, lineage, SBOM, and SLSA are enforced
+   - Multi-repo and multi-team boundaries (if relevant)
 
 6. **Reliability & Governance Features**
-   - Retries, backoff, WAL, SLSA, SBOM, OpenLineage  
-   - Data Contract v3 alignment  
-   - Ethical safeguards
+   - Retries, backoff, idempotency
+   - WAL, checkpointing, rollback strategies
+   - FAIR+CARE checks, sensitivity filters, sovereignty labels
+   - PROV-O and OpenLineage emissions and their usage in KFM
 
 7. **Operational Results**
-   - Throughput, latency, cost, auditability, reproducibility
+   - Qualitative and/or quantitative improvements:
+     - throughput
+     - failure rates
+     - latency
+     - reproducibility
+     - auditability
+   - Impact on developer workflows and governance reviews
 
 8. **Lessons for KFM v11**
-   - Clear, actionable guidance  
-   - Anti-patterns to avoid  
-   - Patterns to adopt KFM-wide
+   - Concrete recommendations for:
+     - KFM orchestration patterns
+     - KFM telemetry and lineage contracts
+     - Contributor ergonomics and templates
+   - Anti-patterns and pitfalls to avoid in KFM pipelines
 
 9. **Implementation Notes & Next Steps**
-   - Where in KFM these lessons will be integrated  
-   - Template or tooling recommendations
+   - How this pattern will be reused, generalized, or codified into:
+     - templates
+     - shared libraries
+     - governance rules
+     - training materials
 
-A future `_templates/case-study-template-v11.md` will provide a copy-ready skeleton.
+A shared template file will be maintained at:
 
----
-
-# 🔗 5. Related Pipeline Documentation
-
-Case studies must reference:
-
-- `docs/pipelines/reliable-pipelines.md`  
-- `docs/pipelines/validation-observability/README.md`  
-- `docs/pipelines/ai/README.md`  
-- Root `ARCHITECTURE.md`  
-- Relevant standards under `docs/standards/`
+```text
+docs/pipelines/case-studies/_templates/case-study-template-v11.md
+```
 
 ---
 
-# 🕰 6. Version History
+## 🔗 Related Pipeline Documentation
 
-- **v11.0.3 (2025-11-23)** — Upgraded to full directory-tree alignment, KFM-MDP v11 compliance.  
-- **v11.0.2 (2025-11-23)** — Initial v11-compliant regeneration.  
-- **v11.0.1** — Original metadata version.
+For deeper context and to align new case studies with the rest of the KFM pipeline stack, see:
+
+- 🧬 **Reliable Pipelines Architecture & Operations Guide**  
+  `docs/pipelines/reliable-pipelines.md`
+
+- 🧠 **AI Pipelines & Autonomous Workers**  
+  `docs/pipelines/ai/README.md` (planned)
+
+- 📊 **Validation & Observability for Pipelines**  
+  `docs/pipelines/validation-observability/README.md`
+
+- 🧭 **KFM Repository Architecture Overview**  
+  `ARCHITECTURE.md` (at the repository root; see also `docs/architecture/`)
+
+When adding a new case study, ensure it:
+
+- Links back to this index (`docs/pipelines/case-studies/README.md`)
+- References relevant standards under `docs/standards/`
+- References relevant pipeline guides under `docs/pipelines/`
 
 ---
 
-<div align="center">
+## ✅ Contribution Checklist for New Case Studies
 
-**Kansas Frontier Matrix — Pipelines Case Studies Index (v11)**  
-*Architecture · Governance · FAIR+CARE Ethics · Reproducible Engineering*
+Before opening a PR with a new case study under `docs/pipelines/case-studies/`, verify:
 
-</div>
+1. **File & Path**
+   - File is created under `docs/pipelines/case-studies/` (or a clearly defined subdirectory)
+   - `path` in front-matter matches the actual file location
+
+2. **Metadata**
+   - Uses KFM-MDP v11-compliant YAML front-matter
+   - `version` and `last_updated` are set and maintained
+   - `sbom_ref`, `manifest_ref`, `telemetry_ref`, `telemetry_schema` use correct relative paths
+   - `governance_ref` points to the appropriate governance standard
+
+3. **Formatting**
+   - Uses GitHub-safe fenced blocks (tilde fences recommended)
+   - No nested fences that could break rendering
+   - Emojis in headings follow KFM v11 style guidelines
+   - No decorative separators outside of the standard section breaks
+
+4. **Content Quality**
+   - Includes all required sections (Overview, Legacy, Drivers, Target Architecture, Reliability & Governance, Lessons, Next Steps)
+   - Uses clear, precise, and neutral language
+   - Distinguishes clearly between **facts**, **assumptions**, and **recommendations**
+
+5. **Governance & Ethics**
+   - Describes how telemetry, lineage, and FAIR+CARE are implemented
+   - Explicitly flags any handling of sensitive or Indigenous data and associated safeguards
+   - Aligns with:
+     - `docs/standards/faircare.md`
+     - `docs/standards/security/checksum-sbom-provenance.md`
+     - `docs/standards/security/slsa-attestation-standard.md`
+
+6. **Cross-Links**
+   - Adds this case study to any relevant indices (for example, this README)
+   - Links to related pipeline specs and standards
+   - References any associated audit or provenance documents under `docs/archives/provenance/`
 
 ---
 
-### 🔗 Footer  
-[⬅ Back to Pipelines Docs](../README.md) · [📚 Documentation Index](../../README.md) · [🧬 Reliable Pipelines Guide](../reliable-pipelines.md)
+[⬅ Back to Pipelines Docs](../README.md) · [📚 KFM Documentation Index](../../README.md) · [🧬 Reliable Pipelines Guide](../reliable-pipelines.md)
