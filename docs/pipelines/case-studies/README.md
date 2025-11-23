@@ -55,20 +55,25 @@ This README describes the directory:
 
 Planned and example layout:
 
-- `docs/`
-  - `pipelines/`
-    - `README.md`
-    - `reliable-pipelines.md`
-    - `ai/`
-      - `README.md`
-    - `validation-observability/`
-      - `README.md`
-    - `case-studies/`
-      - `README.md`                          ← you are here
-      - `snorkel-ai-prefect.md`             ← external case study (planned)
-      - `climate-policy-radar-prefect.md`   ← external case study (planned)
-      - `_templates/`
-        - `case-study-template-v11.md`      ← authoring template (planned)
+docs/
+│
+└── pipelines/
+    │
+    ├── README.md
+    ├── reliable-pipelines.md
+    ├── ai/
+    │   └── README.md
+    │
+    ├── validation-observability/
+    │   └── README.md
+    │
+    └── case-studies/
+        ├── README.md                         ← you are here
+        ├── snorkel-ai-prefect.md             ← external case study (planned)
+        ├── climate-policy-radar-prefect.md   ← external case study (planned)
+        └── _templates/
+            └── case-study-template-v11.md    ← authoring template (planned)
+
 
 You can safely add new case study files under `docs/pipelines/case-studies/` as long as they:
 
