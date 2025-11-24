@@ -1,304 +1,316 @@
 ---
-title: "🛠️ Kansas Frontier Matrix — Operations Pipelines & Reliability Toolkit (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🛠️ KFM v11 — Operations Pipelines & Reliability Toolkit (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/operations/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly · FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · Reliability Engineering · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/pipelines-operations-v1.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.0.0/operations-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/pipelines-operations-v11.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+status: "Active · Enforced"
+doc_kind: "Pipeline Module"
+intent: "operations-reliability"
+semantic_document_id: "kfm-ops-reliability"
+doc_uuid: "urn:kfm:pipelines:operations:toolkit:v11.0.0"
+machine_extractable: true
+classification: "Reliability Architecture"
+sensitivity: "Low"
+fair_category: "F1-A1-I2-R3"
+care_label: "Responsible · Ethics · Stewardship"
+immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AA"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by Ops v12"
+jurisdiction: "Kansas / United States"
 ---
 
 <div align="center">
 
-# 🛠️ **Kansas Frontier Matrix — Operations Pipelines & Reliability Toolkit**  
+# 🛠️ **KFM v11 — Operations Pipelines & Reliability Toolkit**  
 `src/pipelines/operations/README.md`
 
-**Purpose:**  
-Define the **operational control layer** for the Kansas Frontier Matrix (KFM), including **retries**, **rollback**, **hotfix & repair operations**, **WAL/lineage-backed changes**, and **FAIR+CARE-governed production interventions**.  
-This toolkit makes operational actions **deterministic**, **auditable**, **telemetry-rich**, and **Diamond⁹ Ω / Crown∞Ω** compliant.
+### **WAL · Idempotency · Advisory Locks · Rollback · Hotfix · Sovereignty Rules · FAIR+CARE Controls**
 
-<img alt="Ops" src="https://img.shields.io/badge/Operations-Reliability-blue"/>
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Enforced-orange"/>
-<img alt="SLSA" src="https://img.shields.io/badge/SLSA-Provenance-green"/>
-<img alt="Status" src="https://img.shields.io/badge/Status-Active-success"/>
+The Operations & Reliability Toolkit is the **governed operational backbone** of KFM v11.  
+It ensures that all post-ingest system interventions — rollback, hotfix, repair, freeze, resume — are:
+
+**deterministic · auditable · lineage-backed · FAIR+CARE-compliant · sovereignty-safe · telemetry-rich · SLO-aware**
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Purpose
 
-The **Operations Pipelines & Reliability Toolkit** provides engineered primitives for:
+Operations Pipelines manage:
 
-- **Resilient execution:** standardized retry & backoff policies  
-- **Safe rollback:** lineage-driven, WAL-backed, STAC/Neo4j-aware reversions  
-- **Hotfix operations:** tightly-scoped corrections with full provenance  
-- **Policy enforcement:** FAIR+CARE checks for all production interventions  
-- **Observability:** telemetry, alerts, SLO tracking for operational actions  
-- **Rehearsal & simulation:** dry-run modes for rollback, repair, and migration
+- Rollback & reversion (STAC, Neo4j, index, cache, metadata)  
+- WAL-backed safety checks  
+- Hotfix operations (guided, governed, reversible)  
+- Retry/backoff logic across all domains  
+- SLO/Error-Budget–aware operational gates  
+- Governance ledger integration  
+- FAIR+CARE sovereignty protections  
+- Telemetry emission (OTel v11, energy, carbon)  
 
-Ops tooling is designed to work **with** the rest of the KFM stack (ingest, preprocessing, analytics, publishing) and never bypasses governance or telemetry.
+Ops actions are **first-class governed activities**: logged, provenanced, and reversible.
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂️ 2. Directory Layout (v11)
 
-~~~~~text
+```text
 src/pipelines/operations/
-├── README.md                          # This file
 │
-├── trustworthy-rollback.md            # STAC/graph rollback architecture & playbook
+├── README.md                             # This file — v11 operations overview
 │
-├── wal/                               # Write-Ahead Log support
-│   ├── __init__.py
-│   ├── models.py                      # WAL record dataclasses & schema bindings
-│   └── storage.py                     # WAL persistence (object store / DB adapters)
+├── trustworthy-rollback.md                # Official rollback playbook (v11)
 │
-├── lineage/                           # Ops-focused lineage helpers
-│   ├── __init__.py
-│   ├── model.py                       # Entities, relations, publish units
-│   └── resolvers.py                   # Scope resolution for rollback/repair
+├── wal/                                   # Write-Ahead Logging subsystem
+│   ├── models.py                          # WAL schemas
+│   └── storage.py                         # Atomic WAL persistence
 │
-├── rollback/                          # Rollback orchestration & domain-specific ops
-│   ├── __init__.py
-│   ├── engine.py                      # RollbackEngine: plan/dry-run/execute
-│   ├── stac_ops.py                    # STAC link swaps & version reverts
-│   ├── graph_ops.py                   # Neo4j/KG subgraph reversion
-│   ├── search_ops.py                  # Index alias swaps, reindex plans
-│   ├── cache_ops.py                   # Read-model & cache invalidation/rebuild
-│   └── policy.py                      # FAIR+CARE & governance policy checks
+├── lineage/                               # Ops lineage resolvers
+│   ├── model.py
+│   └── resolvers.py
 │
-├── hotfix/                            # Guided “surgical” operations
-│   ├── __init__.py
-│   ├── patch_stac.py                  # Controlled fixes to STAC metadata (with WAL+lineage)
-│   ├── patch_graph.py                 # Controlled graph edits with before/after snapshots
-│   └── policy.py                      # Hotfix safety & approval rules
+├── rollback/                              # Reversion engine
+│   ├── engine.py                          # RollbackEngine v11
+│   ├── stac_ops.py                        # STAC link & version reversions
+│   ├── graph_ops.py                       # Neo4j graph rollback
+│   ├── search_ops.py                      # Search alias/index rollback
+│   ├── cache_ops.py                       # Cache rebuild logic
+│   └── policy.py                          # FAIR+CARE + sovereignty gating
 │
-├── retries/                           # Cross-cutting retry/timeout helpers
-│   ├── __init__.py
-│   ├── patterns.py                    # Exponential backoff, jitter, circuit-breakers
-│   └── decorators.py                  # @retry, @with_backoff, @circuit_breaker
+├── hotfix/                                # Guided, reversible corrections
+│   ├── patch_stac.py
+│   ├── patch_graph.py
+│   └── policy.py
 │
-├── cli/                               # Operator CLIs
-│   ├── kfm_rollback_cli.py            # `kfm rollback plan/execute/status`
-│   └── kfm_hotfix_cli.py              # `kfm hotfix ...` guarded interventions
+├── retries/                               # Retry/circuit-breaker tools
+│   ├── patterns.py
+│   └── decorators.py
 │
-└── tests/
+├── cli/                                   # Operational CLIs
+│   ├── kfm_rollback_cli.py
+│   └── kfm_hotfix_cli.py
+│
+└── tests/                                 # Reliability contract tests
     ├── test_wal_roundtrip.py
     ├── test_lineage_traversal.py
     ├── test_rollback_end_to_end.py
     ├── test_retry_patterns.py
     └── test_hotfix_policies.py
-~~~~~
+```
 
 ---
 
-## 🧱 Design Goals
+## 🧱 3. Design Principles (v11)
 
-1. **Operational Safety by Default**  
-   All ops actions must be **reversible**, **logged**, and **governance-aware** — no “cowboy shell edits”.
+### ✔ 3.1 **Operational Safety by Default**
+All ops actions must be:
 
-2. **Immutable Data, Mutable References**  
-   Data (tiles, COGs, vectors, tables) is never mutated in place. Ops tools only adjust **links**, **aliases**, and **versions**, aligning with STAC, DCAT, and Neo4j versioning rules.
+- reversible  
+- logged  
+- provenanced  
+- validated  
+- sovereignty-safe  
 
-3. **Lineage & WAL First**  
-   Any operation that changes visible state must:
-   - Record a **WAL entry**  
-   - Bind to **lineage** and **telemetry**  
-   - Be referenceable from governance ledgers  
-
-4. **FAIR+CARE at Ops Time**  
-   Operations never downgrade security, privacy, or cultural protections. Rollback and hotfix actions re-run CARE checks and never **fail open**.
-
-5. **Observability & SLOs**  
-   All operations emit telemetry and can be analyzed against SLOs (rollback MTTR, broken-link rate, orphan rate, etc.).
+**No unlogged direct mutations** are permitted.
 
 ---
 
-## 🔁 Retry Toolkit Integration
+### ✔ 3.2 **Immutable Data, Mutable References**
+Data is **never** modified in place.  
+Ops pipelines mutate:
 
-Operations pipelines rely on standardized retry behavior defined in:
+- version pointers  
+- STAC links  
+- Neo4j graph relationships  
+- search aliases  
+- read-model caches  
 
-- `src/pipelines/architecture/retries/patterns.md`  
-- `src/pipelines/architecture/retries/rules.md`
+This ensures:
 
-Key features:
-
-- Exponential backoff + full jitter  
-- Circuit breakers for failing dependencies  
-- Distinction between **retryable** vs **non-retryable** errors  
-- Telemetry fields: `retry_attempt`, `retry_delay_ms`, `circuit_open`, `error_class`  
-
-These utilities are designed for use in:
-
-- STAC polling & ingest hotfixes  
-- Neo4j maintenance jobs  
-- Index rebuilds & migrations  
-- Rollback engine internals  
+- lineage correctness  
+- governance bookkeeping  
+- reproducibility  
 
 ---
 
-## 🧵 Rollback Toolkit (Trustworthy Reversion)
+### ✔ 3.3 **WAL + Lineage First**
+Every mutating operation:
 
-The detailed rollback playbook lives in:
-
-- `src/pipelines/operations/trustworthy-rollback.md`
-
-Core components:
-
-- **WAL**: Append-only records of each publish  
-- **Lineage resolvers**: Determine rollback scope via dependency graph  
-- **Rollback engine**: Plan/dry-run/execute operations  
-- **Domain ops**: STAC, Neo4j, search, cache operations  
-- **Policy module**: FAIR+CARE, governance, and risk checks  
-
-Ops teams use CLI commands:
-
-~~~~~bash
-kfm rollback plan --publish-id <publish_id>
-kfm rollback execute --publish-id <publish_id> --reason "<reason>"
-kfm rollback status --rollback-id <rollback_id>
-~~~~~
-
-Every rollback generates:
-
-- A **rollback manifest**  
-- Telemetry NDJSON  
-- Governance ledger entries  
+1. writes a WAL pre-record  
+2. executes under retry/backoff rules  
+3. writes WAL finalization  
+4. emits OpenLineage + PROV-O  
+5. updates governance ledger  
 
 ---
 
-## 🔧 Hotfix Framework
+### ✔ 3.4 **FAIR+CARE at Ops Time**
+Operations **must** re-evaluate:
 
-Hotfix modules provide **guided, constrained** interventions such as:
+- CARE classification  
+- sovereignty constraints  
+- masking (H3 R7–R9 for heritage datasets)  
+- ethics gates  
+- provenance completeness  
 
-- Correcting a specific STAC metadata field across a known scope  
-- Fixing a mis-tagged Neo4j node property  
-- Adjusting an index mapping without destructive changes  
-
-Principles:
-
-- All hotfixes:
-  - Use WAL + lineage  
-  - Are **reviewable** and **replayable**  
-  - Emit telemetry and governance logs  
-
-- **Forbidden**: Arbitrary direct edits with no WAL/lineage.
-
-Example CLI:
-
-~~~~~bash
-kfm hotfix stac \
-  --collection landsat-c2-l2 \
-  --field properties.license \
-  --from "UNKNOWN" \
-  --to "CC-BY-4.0" \
-  --reason "Correct license per source"
-~~~~~
+No ops action may “fail open.”
 
 ---
 
-## 📡 Telemetry & Governance
+### ✔ 3.5 **Observability & SLO Integration**
+Operational actions emit:
 
-All operations pipelines must emit NDJSON telemetry:
+- latency  
+- retries  
+- lineage deltas  
+- broken/orphan link counts  
+- fairness/stewardship signals  
+- energy and carbon cost  
 
-~~~~~text
-data/processed/telemetry/ops_<tool>.ndjson
-~~~~~
+These metrics feed:
 
-Telemetry records (per operation) include:
-
-- `stage` (e.g., `rollback_plan`, `rollback_execute`, `hotfix_apply`)  
-- `status`  
-- `duration_ms`  
-- `entities_touched`  
-- `broken_links_before/after`  
-- `orphan_count_before/after`  
-- `care_violations` (must stay 0)  
-- `requested_by` (for ops-facing actions)  
-
-Aggregated to:
-
-~~~~~text
-../../releases/v10.3.0/focus-telemetry.json
-~~~~~
-
-Governance ledger integration:
-
-- Every rollback/hotfix appends to:
-
-  ~~~~~text
-  docs/reports/audit/data_provenance_ledger.json
-  ~~~~~
-
-- Entries include:
-  - `operation_type` (`rollback`, `hotfix`)  
-  - `publish_id` / `rollback_id` / `hotfix_id`  
-  - `reason`  
-  - `risk_level`  
-  - `policy_snapshot_ref`  
-  - `sbom_ref`, `manifest_ref`  
+- rollback SLOs  
+- reliability dashboards  
+- quarterly FAIR+CARE reviews  
 
 ---
 
-## 🧪 Testing & CI Expectations
+## 🔁 4. Retry Toolkit (v11)
 
-Operations modules must be covered by:
+Retry logic integrates with:
 
-- Unit tests:
-  - WAL roundtrip  
-  - Lineage resolution  
-  - Retry pattern behavior  
-  - Policy enforcement  
+- **LangGraph Reliable Nodes**  
+- **Idempotency Keys**  
+- **Advisory Locks**  
+- **GE Checkpoints**  
+- **Kill-switch behavior** (red state)
 
-- Integration tests:
-  - End-to-end rollback simulation  
-  - Hotfix with before/after verification  
+Features:
 
-CI workflows:
-
-- `codeql.yml` — static analysis  
-- `trivy.yml` — CVE scans  
-- `telemetry-export.yml` — telemetry schema validation  
-- `faircare-validate.yml` — governance adherence  
-- `rollback-sim.yml` (future) — simulated rollback tests  
-- `docs-lint.yml` — Markdown protocol compliance  
-
-Any deviation from WAL/lineage/FAIR+CARE telemetry rules must **block merges**.
+- exponential backoff  
+- jitter  
+- retryable vs non-retryable errors  
+- circuit breakers  
+- per-op retry budgets  
+- telemetry for every attempt  
 
 ---
 
-## 🔗 Related Specs & Guides
+## 🧵 5. Rollback Toolkit (v11)
 
-- `src/pipelines/operations/trustworthy-rollback.md`  
-- `src/pipelines/architecture/retries/patterns.md`  
-- `src/pipelines/architecture/retries/rules.md`  
-- `docs/guides/pipelines/gx-validate-promote.md`  
-- `docs/guides/pipelines/governance-integration.md`  
-- `docs/guides/pipelines/lineage-guide.md`  
-- `docs/guides/pipelines/publishing-guide.md`  
+The rollback subsystem provides:
+
+- **RollbackEngine v11** with WAL, lineage, and FAIR+CARE gates  
+- **Dry-run simulations** with full audit reports  
+- **STAC/Neo4j/search/cache reversion** modules  
+- **Rollback manifests** for governance auditors  
+
+Key principle:
+
+**Rollback = deterministic, reversible, reproducible.**
 
 ---
 
-## 🕰️ Version History
+## 🔧 6. Hotfix Framework (v11)
 
-| Version  | Date       | Author             | Summary                                                                 |
-|----------|------------|-------------------|-------------------------------------------------------------------------|
-| v10.3.1 | 2025-11-14 | Platform Ops Team | Initial operations toolkit README; aligned with retry, rollback, WAL, lineage, telemetry, FAIR+CARE governance. |
+Hotfix modules allow:
+
+- precise STAC metadata corrections  
+- graph node/edge repairs  
+- cache rebuilds  
+- index mapping adjustments  
+
+All hotfixes:
+
+- produce WAL  
+- include before/after snapshots  
+- include FAIR+CARE review  
+- emit governance ledger entries  
+- run under advisory locks  
+- emit telemetry  
+
+Forbidden:
+
+- unlogged mutations  
+- edits lacking lineage  
+- unsafe sovereignty bypasses  
+
+---
+
+## 📡 7. Telemetry & Governance
+
+Ops pipelines emit:
+
+- `kfm.ops_latency_ms`  
+- `kfm.ops_retry_count`  
+- `kfm.ops_wal_entries`  
+- `kfm.ops_care_flags`  
+- `kfm.ops_sovereignty_escalations`  
+- `kfm.ops_energy_wh`  
+- `kfm.ops_carbon_gco2e`  
+- `kfm.ops_broken_links`  
+
+Governance Ledger stores:
+
+```
+docs/reports/audit/data_provenance_ledger.json
+```
+
+Each entry contains:
+
+- op_type (rollback/hotfix)  
+- wal_ids  
+- lineage refs  
+- sovereignty findings  
+- care review status  
+- reason & operator metadata  
+
+---
+
+## 🧪 8. CI Expectations
+
+Operations code must pass:
+
+- unit tests (WAL, lineage, retry, policy engine)  
+- integration rollback tests  
+- sovereignty compliance  
+- FAIR+CARE validation  
+- telemetry schema checks  
+- SLSA/SBOM security scans  
+- docs-lint (KFM-MDP v11)  
+
+Failures **block merges**.
+
+---
+
+## 🕰️ 9. Version History
+
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.0 | 2025-11-24 | Full KFM-MDP v11 rebuild with WAL, lineage, sovereignty gating, retry toolkit, hotfix engine, and governance telemetry. |
+| v10.3.1 | 2025-11-14 | Original operations toolkit definition (pre-v11). |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Operations & Reliability Toolkit**  
-Engineered Rollbacks × Safe Hotfixes × FAIR+CARE × Full Observability  
-© 2025 Kansas Frontier Matrix — MIT License  
+© 2025 Kansas Frontier Matrix  
+**Reliable Pipelines v11 · Governance-Safe Operations · FAIR+CARE · Sovereignty-Aware**  
+“Rollback is a science. Hotfix is a contract. Reliability is a promise.”
 
 </div>
-
