@@ -1,240 +1,296 @@
 ---
-title: "🔁 KFM Updater Runners — Idempotent Schedulers, Webhooks & Dry-Run Safety (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🔁 KFM v11 — Updater Runners (Idempotent Schedulers · Webhooks · Dry-Run Safety · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/updater/README.md"
-version: "v10.4.2"
-last_updated: "2025-11-16"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · FAIR+CARE Council · Reliability Engineering"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.4.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.4.2/manifest.zip"
-telemetry_ref: "../../../releases/v10.4.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/pipelines-updater-v1.json"
+sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../releases/v11.0.0/updater-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/pipelines-updater-v11.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+status: "Active · Enforced"
 doc_kind: "Architecture"
 intent: "updater-scheduling-and-webhooks"
-fair_category: "F1-A1-I1-R1"
-care_label: "C1-A1-R1-E1"
+semantic_document_id: "kfm-updater-runners"
+doc_uuid: "urn:kfm:pipelines:updater:runners:v11.0.0"
+machine_extractable: true
+classification: "Updater Scheduling Architecture"
+sensitivity: "Mixed"
+fair_category: "F1-A1-I2-R2"
+care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
+immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AA+"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by Updater Runners v12"
 ---
 
 <div align="center">
 
-# 🔁 **KFM Updater Runners — Idempotent Schedulers, Webhooks & Dry-Run Safety**  
+# 🔁 **KFM Updater Runners — Idempotent Schedulers, Webhooks & Dry-Run Safety (v11 LTS)**  
 `src/pipelines/updater/README.md`
 
-**Purpose**  
-Define standardized **Python** and **Node.js** update runners for dataset refresh jobs with **idempotency**,  
-**dry-run safety**, **structured JSON logs**, **concurrency fencing**, **artifact export**, and  
-**HMAC-validated webhook ingestion**.  
-All mutating behavior flows through a **Publisher** abstraction that supports full no-op during `--dry-run`.
+### **Deterministic · Governed · Telemetry-Rich · FAIR+CARE Enforced · Concurrency-Safe**
+
+Updater Runners form the **executive automation layer** for KFM’s dataset refresh, metadata updates, multi-source ETL synchronizations, STAC polling, and governance-aware refresh cycles.
+
+They guarantee:
+
+- **Idempotency**  
+- **Dry-run safety**  
+- **Structured JSON logs**  
+- **HMAC-verified webhook ingestion**  
+- **Concurrency fencing**  
+- **Telemetry + lineage + governance logging**  
+- **No-op correctness under freeze/kill-switch modes**  
 
 </div>
 
 ---
 
-# 🎯 Design Goals
+## 📘 1. Purpose
 
-- **Idempotent execution**  
-  Compute a stable key (e.g., `sha256(source_url|etag|window|pipeline_version)`) to prevent duplicate work.
+Updater Runners standardize **Python + Node.js** execution for autonomous update cycles across:
 
-- **Dry-run safety**  
-  All writing operations are routed through a `Publisher` that becomes a **no-op** when `--dry-run` is active.
+- Ingest pipelines  
+- STAC pipelines  
+- ETL pipelines  
+- Metadata refresh flows  
+- Focus Mode v3 context generation  
+- Remote-sensing deltas  
+- Story Node v3 content regeneration  
+- Governance-led data corrections  
 
-- **Audit & reproducibility**  
-  Emit structured JSON logs (`run.jsonl`) and upload all artifacts for PR review.
+They ensure **deterministic, reversible, reproducible** automation with full integration into:
 
-- **Deterministic scheduling**  
-  GitHub Actions **cron**, **scheduled dispatch**, and **HMAC-validated webhooks** (fan-in).  
-  Uses **concurrency groups** to prevent overlapping runs.
-
-- **Runtime-agnostic**  
-  Python + Node.js CLIs expose identical flags, idempotency logic, and publisher semantics.
-
----
-
-# 🧰 CLI Entrypoints
-
-## Python
-```bash
-python -m updater run --config config.yml --dry-run
-````
-
-## Node.js
-
-```bash
-node updater.mjs run --config config.yml --dry-run
-```
-
-**Shared flags:**
-
-| Flag              | Description                                        |
-| ----------------- | -------------------------------------------------- |
-| `--config CONFIG` | Load YAML/JSON configuration                       |
-| `--dry-run`       | Disable all mutating side-effects                  |
-| `--window`        | Optional “lookback period” for incremental sources |
-| `--verbose`       | Human-readable logs in addition to JSONL           |
-| `--force`         | Override idempotency for debugging                 |
+- WAL  
+- Retry/backoff  
+- CARE/sovereignty gates  
+- Governance ledger  
+- OpenLineage v2.5  
+- OTel telemetry v11  
+- SLO/error-budget systems  
 
 ---
 
-# 📦 Runtime Folder Layout
+## 🧩 2. Core Design Requirements
 
-```text
-src/pipelines/updater/
-├── README.md                             # This document
-│
-├── runner.py                              # Python entrypoint (dispatcher)
-├── runner.mjs                             # Node.js entrypoint (dispatcher)
-│
-├── idempotency/
-│   ├── keygen.py                          # Stable key generator
-│   ├── keygen.mjs                         # Mirror implementation for Node.js
-│   ├── ledger.py                          # SQLite/JSONL idempotency store
-│   └── ledger.mjs                         # JS equivalent
-│
-├── publisher/
-│   ├── base.py                            # Publisher interface (Python)
-│   ├── base.mjs                           # Publisher interface (Node)
-│   ├── noop.py                            # No-op publisher for --dry-run
-│   ├── noop.mjs                           # JS version
-│   ├── github_actions.py                  # Publisher for GH artifact upload + outputs
-│   └── github_actions.mjs                 # JS version
-│
-├── scheduler/
-│   ├── cron.yml                           # GitHub cron entry
-│   ├── webhook_validator.py               # HMAC validation logic
-│   └── webhook_validator.mjs              # JS version
-│
-└── config_templates/
-    ├── config.example.yml                 # Example configuration
-    └── sources.example.json               # Multi-source incremental fetch example
-```
-
----
-
-# 🔐 Webhook Security (HMAC)
-
-**Required header:**
-
-```
-X-KFM-Signature: sha256=<hex>
-```
-
-**Process:**
-
-1. Extract raw request body
-2. Compute `sha256(secret | body)`
-3. Compare with provided signature
-4. Reject if mismatch (403)
-5. Log failure into `webhook_failures.jsonl`
-
-Webhook requests MUST also include:
-
-* `source_id`
-* `trigger`
-* `sent_at`
-* `event_type`
-* `integrity.version`
-
----
-
-# 🔁 Idempotency Model
-
-### Key design
+### 2.1 Idempotent Execution
 
 ```
 idempotency_key = sha256(source_url | etag | window | pipeline_version)
 ```
 
-### Ledger behavior
+Prevents duplicate processing, ensures WAL-safe replay, and preserves lineage integrity.
 
-* If key exists → mark job as **NOOP**
-* If key is new → record and continue
-* Ledger entries contain:
+### 2.2 Dry-Run Safety
 
-  * `run_id`
-  * `dataset_id`
-  * `key`
-  * `timestamp`
-  * `source_metadata`
-  * `pipeline_version`
+All mutating actions route through a **Publisher abstraction**, guaranteeing:
 
-Ledger implementation:
+- Zero mutations on disk  
+- Zero API writes  
+- Complete JSONL logging  
+- Full reproducibility of what *would* have happened  
 
-* `ledger/idempotency.sqlite` (preferred)
-* JSONL fallback (`ledger.jsonl`) for environments without SQLite
+### 2.3 Concurrency Fencing
 
----
+All runners must:
 
-# 🧮 Publisher Abstraction
+- Use **GitHub Actions concurrency groups**  
+- Respect **dataset-scoped locks**  
+- Avoid multiple overlapping executions for the same pipeline  
 
-All side effects must flow through the **Publisher** interface.
+### 2.4 Governed Execution
 
-### Required methods
+All actions must pass:
 
-| Method                         | Description                       |
-| ------------------------------ | --------------------------------- |
-| `write_file(path, bytes)`      | Write file or artifact            |
-| `emit_event(name, payload)`    | Emit telemetry event              |
-| `update_metadata(key, value)`  | Update state/metadata             |
-| `publish_release(tag, assets)` | Attach files to GH Release        |
-| `noop_guard()`                 | Ensure no side-effects if dry-run |
-
-### Dry-run mode
-
-* All mutating operations routed to `noop`
-* Logging still enabled
-* Artifacts optionally written to a temp folder
-* Telemetry events labeled with `"dry_run": true`
-
-### GitHub Actions publisher
-
-* Writes artifacts using `ACTIONS_RUNTIME_TOKEN`
-* Exposes outputs via `set-output`
-* Applies concurrency fences automatically
+- FAIR+CARE gates  
+- Sovereignty rules (H3 R7→R9 masking)  
+- Data Contract v11 checks  
+- Governance ledger updates  
+- Telemetry emission compliance  
 
 ---
 
-# 🧪 Logs & Artifacts
+## 🧰 3. CLI Entrypoints (Python + Node)
 
-Every run must emit:
+### **Python**
 
-```
-run.jsonl
-event_log.jsonl
-idempotency.json
-publisher_trace.jsonl
+```bash
+python -m updater run --config config.yml --dry-run
 ```
 
-Artifacts folder structure:
+### **Node.js**
+
+```bash
+node updater.mjs run --config config.yml --dry-run
+```
+
+### **Shared Flags**
+
+| Flag        | Description |
+|-------------|-------------|
+| `--config`  | Load YAML/JSON configuration file |
+| `--dry-run` | Route all writes to noop publisher |
+| `--window`  | Incremental lookback window |
+| `--force`   | Override idempotency for debugging |
+| `--verbose` | Human-readable logs alongside JSONL |
+
+Runners **must behave identically across languages**, with canonical JSONL outputs.
+
+---
+
+## 📦 4. Runtime Folder Layout (v11)
+
+```text
+src/pipelines/updater/
+│
+├── README.md
+│
+├── runner.py
+├── runner.mjs
+│
+├── idempotency/
+│   ├── keygen.py
+│   ├── keygen.mjs
+│   ├── ledger.py
+│   └── ledger.mjs
+│
+├── publisher/
+│   ├── base.py
+│   ├── base.mjs
+│   ├── noop.py
+│   ├── noop.mjs
+│   ├── github_actions.py
+│   ├── github_actions.mjs
+│
+├── scheduler/
+│   ├── cron.yml
+│   ├── webhook_validator.py
+│   └── webhook_validator.mjs
+│
+└── config_templates/
+    ├── config.example.yml
+    └── sources.example.json
+```
+
+---
+
+## 🔐 5. Webhook Security (HMAC)
+
+### Required Header
+
+```
+X-KFM-Signature: sha256=<hex>
+```
+
+### Verification Process
+
+1. Extract raw request body  
+2. Compute `sha256(secret + body)`  
+3. Compare to provided signature  
+4. Reject with `403` on mismatch  
+5. Log details to `webhook_failures.jsonl`  
+
+Webhooks must include:
+
+- `source_id`  
+- `trigger`  
+- `event_type`  
+- `sent_at`  
+- `integrity.version`  
+
+---
+
+## 🔁 6. Idempotency Model (v11)
+
+Idempotency ledger stores:
+
+- `run_id`  
+- `dataset_id`  
+- `idempotency_key`  
+- `timestamp`  
+- `source_metadata`  
+- `pipeline_version`  
+
+Backends:
+
+- **SQLite** (preferred)  
+- **JSONL** fallback  
+
+Duplicate keys → NOOP execution.
+
+---
+
+## 🧮 7. Publisher Abstraction (v11)
+
+All side-effects **must** go through a Publisher.
+
+### Required Interface Methods
+
+| Method | Description |
+|--------|-------------|
+| `write_file` | Write or update artifact |
+| `emit_event` | Emit telemetry event |
+| `update_metadata` | Modify state metadata |
+| `publish_release` | Upload GH artifacts |
+| `noop_guard` | Prevent accidental side effects |
+
+### Dry-Run Mode Guarantees
+
+- All writes become NOOP  
+- Telemetry labeled with `"dry_run": true`  
+- All potential mutations logged in publisher trace  
+
+---
+
+## 🧪 8. Logs & Artifacts (v11)
+
+Every run produces:
 
 ```text
 artifacts/
-├── run.jsonl                        # All structured logs from the run
-├── event_log.jsonl                  # Telemetry-like event firehose
-├── idempotency.json                 # idempotency key + ledger state
-└── publisher_trace.jsonl            # Ordered record of publisher activity
+├── run.jsonl
+├── event_log.jsonl
+├── idempotency.json
+└── publisher_trace.jsonl
 ```
+
+All logs must be:
+
+- Deterministic  
+- Structured  
+- Ordered by timestamp  
+- Validated via JSON Schema  
+- Attached to GitHub Actions artifacts  
 
 ---
 
-# 🧭 Scheduling Model
+## 🧭 9. Scheduling Model
 
 ### GitHub Actions
 
-* **cron-based**: `0 * * * *` (hourly)
-* **repository_dispatch** from webhook fan-in
-* **workflow_dispatch** for manual testing
-* **concurrency:** `pipelines-updater-${{ matrix.dataset }}`
+- `cron` (hourly or domain-specific)  
+- `repository_dispatch` (webhook)  
+- `workflow_dispatch` (manual)  
+- Concurrency groups:  
+  ```
+  concurrency: updater-${{ matrix.dataset }}
+  ```
 
-### Webhook fan-in
+### Webhook Fan-In
 
-All incoming webhook events (various external providers) normalize into a unified schema:
+Unified schema:
 
-```
+```json
 {
   "source_id": "noaa-stations",
   "trigger": "etag-change",
@@ -250,125 +306,87 @@ All incoming webhook events (various external providers) normalize into a unifie
 
 ---
 
-# 🧩 Standard Run Lifecycle
+## 🧩 10. Standard Run Lifecycle (v11)
 
 ```text
-Watcher/Event → Idempotency → Validator → Transform → Publish → Telemetry → Ledger
+Watcher/Event → Idempotency → Validation → Transform → Publish → Telemetry → Ledger
 ```
 
-### 1. Trigger
+---
 
-Webhook or cron schedules the run.
+## 📈 11. Telemetry Requirements (v11)
 
-### 2. Idempotency
+Events must include:
 
-If previously processed → no-op.
+- `run_id`  
+- `duration_ms`  
+- `dataset`  
+- `source_id`  
+- `trigger`  
+- `idempotency_state`  
+- `artifact_count`  
+- `dry_run` flag  
+- `errors`  
 
-### 3. Validate
+Telemetry bundles stored in:
 
-Config + schema + content checks.
-
-### 4. Transform
-
-Normalize → convert → update metadata.
-
-### 5. Publish
-
-Artifacts, Releases, PR comments (if enabled).
-
-### 6. Telemetry
-
-Structured events appended to `event_log.jsonl`.
-
-### 7. Ledger update
-
-Record the completed state.
+```
+releases/<version>/updater-telemetry.json
+```
 
 ---
 
-# 📈 Telemetry & Observability
+## ⚖️ 12. Governance Requirements (FAIR+CARE + Sovereignty)
 
-Telemetry events must follow:
+Updater pipelines must:
 
-* `types/telemetry.ts` schemas
-* Include `"dry_run": true` when applicable
-* Store in `publisher_trace.jsonl`
-* Send to the observability backend (optional)
-* Exclude PII and sensitive file paths
-* Include:
+- Respect dataset CARE labels  
+- Apply sovereignty masking  
+- Include governance metadata in logs  
+- Write ledger entries for:
+  - failures  
+  - escalations  
+  - sovereignty conflicts  
+- Reject malformed deltas or ambiguous evidence  
+- Never mutate protected locations in dry-run  
 
-  * `run_id`
-  * `duration_ms`
-  * `dataset`
-  * `source_id`
-  * `trigger`
-  * `idempotency_state`
-  * `artifact_count`
+Governance failures = **CI BLOCK + Review Required**.
 
 ---
 
-# 📜 Governance & FAIR+CARE Requirements
-
-All updater runners must:
-
-### ✔ Follow CARE-labeled data access rules
-
-### ✔ Prevent unreviewed data propagation
-
-### ✔ Attach provenance metadata to all artifacts
-
-### ✔ Validate license information
-
-### ✔ Emit ethical review signals when anomalies appear
-
-### ✔ Reject malformed artifacts or ambiguous deltas
-
-### ✔ Ensure dry-run never mutates protected locations
-
-Governance failures → **CI BLOCK**.
-
----
-
-# 🧪 Testing Requirements
+## 🧪 13. Testing Requirements
 
 ### Unit Tests
 
-* idempotency keygen
-* webhook validation
-* publisher no-op behavior
-* configuration loading
-* JSON logging
+- idempotency  
+- webhook signature verification  
+- publisher NOOP behavior  
+- artifact writing  
+- structured logs  
+- dry-run flag propagation  
 
 ### Integration Tests
 
-* “cron → updater → artifacts → ledger”
-* concurrency fences
-* dry-run safety
-* event emission + artifact layout
-
-### Negative-path Tests
-
-* malformed webhook
-* invalid signature
-* publisher write failures (should not crash)
-* corrupted ledger entries
-* invalid config file
-
-Test structure:
-
-```text
-tests/
-├── unit/pipelines/updater/
-└── integration/pipelines/updater/
-```
+- “cron → run → artifacts → ledger”  
+- concurrency group tests  
+- error injection + graceful recovery  
 
 ---
 
-# 🕰 Version History
+## 🕰️ 14. Version History
 
-| Version | Date       | Summary                                                                                      |
-| ------: | ---------- | -------------------------------------------------------------------------------------------- |
-| v10.4.2 | 2025-11-16 | Added full architecture, folder trees, governance rules, runtime parity, and scheduler model |
-| v10.4.1 | 2025-11-15 | Initial updater runner README                                                                |
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.0 | 2025-11-24 | Complete KFM-MDP v11 rewrite with governance, 
+lineage, sovereignty, WAL, concurrency, and telemetry integration. |
+| v10.4.2 | 2025-11-16 | Prior version: initial architecture & updater model. |
 
-```
+---
+
+<div align="center">
+
+© 2025 Kansas Frontier Matrix  
+**Reliable Automation × Idempotent Scheduling × Governance-Safe Delivery**  
+FAIR+CARE · Diamond⁹ Ω / Crown∞Ω · MCP-DL v6.3
+
+</div>
