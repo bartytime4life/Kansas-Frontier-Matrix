@@ -1,28 +1,49 @@
 ---
 title: "✅ Kansas Frontier Matrix — Validation Pipelines (Schema · FAIR+CARE · AI Audit · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/validation/README.md"
-version: "v10.1.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · FAIR+CARE Council · Reliability Engineering"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.1.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.1.0/manifest.zip"
+sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-telemetry_ref: "../../../../releases/v10.1.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/src-validation-v3.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+telemetry_ref: "../../../../releases/v11.0.0/validation-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/src-validation-v11.json"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+status: "Active · Enforced"
+doc_kind: "Pipeline Module"
+intent: "validation-pipelines-overview"
+semantic_document_id: "kfm-validation-pipelines"
+doc_uuid: "urn:kfm:pipelines:validation:overview:v11.0.0"
+machine_extractable: true
+classification: "Quality & Governance Pipelines"
+sensitivity: "Mixed"
+fair_category: "F1-A1-I2-R3"
+care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
+immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AA+"
+public_exposure_risk: "Medium"
+jurisdiction: "Kansas · United States"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by Validation Pipelines v12"
 ---
 
 <div align="center">
 
-# ✅ Kansas Frontier Matrix — **Validation Pipelines**
+# ✅ Kansas Frontier Matrix — **Validation Pipelines (v11 LTS)**  
 `src/pipelines/validation/README.md`
 
 **Purpose:**  
-Operate the **schema, checksum, FAIR+CARE, and AI audit pipelines** that guarantee data quality, ethical compliance, and reproducibility across KFM.  
-These pipelines form an **auditable quality-control backbone** so every dataset and model meets FAIR+CARE, ISO, and governance standards **before release**.
+Operate the **schema, checksum, FAIR+CARE, sovereignty, and AI audit pipelines** that guarantee data quality, ethical compliance, and reproducibility across KFM v11.  
+These pipelines form an **auditable quality-control backbone** so every dataset, model, and narrative meets FAIR+CARE, ISO, and governance standards **before promotion or release**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blueviolet)](../../../../docs/standards/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
@@ -34,59 +55,71 @@ These pipelines form an **auditable quality-control backbone** so every dataset 
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview
 
-The **Validation Pipelines** enforce KFM’s governance and reproducibility standards.  
-They verify **schema integrity**, **checksum lineage**, **FAIR+CARE compliance**, and **explainability & bias** for AI outputs, then **register proofs** to the governance ledger and **export telemetry**.
+The **Validation Pipelines** enforce KFM’s **governance**, **quality**, and **reproducibility** standards.
 
-### Core Responsibilities
-- ✅ **Schema & metadata validation** (JSON Schema / Pydantic)  
-- 🔐 **Checksum lineage** (SHA-256 for all artifacts)  
-- 🧩 **FAIR+CARE ethics, accessibility, sustainability** audits  
-- 🤖 **AI explainability, bias, and drift** evaluations (SHAP / LIME)  
-- 🔗 **Governance proofs** (IPFS + blockchain) and **telemetry export**  
+They verify:
+
+- **Schema integrity** and metadata completeness  
+- **Checksum lineage** (sha256 for all artifacts)  
+- **FAIR+CARE compliance & sovereignty rules**  
+- **AI explainability, bias, and drift**  
+- **Contract adherence** (KFM-PDC v11)  
+
+Then they:
+
+- **Register proofs** to the governance ledger(s)  
+- Write **PROV-O + OpenLineage** lineage  
+- **Emit telemetry** for reliability & sustainability dashboards  
+- Provide **Focus Mode v3** with quality and ethics context flags  
+
+Validation is the **gate** between “work-in-progress” and “governed KFM assets.”
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂️ 2. Directory Layout (v11)
 
-```plaintext
+```text
 src/pipelines/validation/
+│
 ├── README.md                      # This document
-├── schema_validation.py            # Data/model schema conformance
-├── checksum_audit.py               # SHA-256 generation and verification
-├── faircare_audit_runner.py        # FAIR+CARE compliance & ethics checks
-├── ai_explainability_validator.py  # Explainability, bias, and drift tests
-└── metadata.json                   # Pipeline provenance & registry metadata
+│
+├── schema_validation.py           # Data/model schema conformance (JSON Schema / Pydantic)
+├── checksum_audit.py              # SHA-256 generation and verification
+├── faircare_audit_runner.py       # FAIR+CARE & sovereignty audits
+├── ai_explainability_validator.py # Explainability, bias, and drift evaluations
+└── metadata.json                  # Validation pipeline provenance & registry metadata
 ```
 
 ---
 
-## ⚙️ Validation Workflow
+## ⚙️ 3. Validation Workflow (v11)
 
 ```mermaid
 flowchart LR
-    A["Raw or Staged Artifact"] --> B["Schema Validation"]
-    B --> C["Checksum Verification"]
-    C --> D["FAIR+CARE Ethical Audit"]
-    D --> E["AI Explainability and Drift Audit"]
-    E --> F["Governance Ledger Registration · Telemetry Export"]
+    A["Raw or Staged Artifact"] --> B["📐 Schema Validation"]
+    B --> C["🔐 Checksum Verification"]
+    C --> D["🧩 FAIR+CARE & Sovereignty Audit"]
+    D --> E["🤖 AI Explainability & Drift Audit"]
+    E --> F["🏛 Governance Ledger Registration · 📡 Telemetry Export"]
 ```
 
-### Workflow Summary
-1. **Schema Validation:** Structural and field-level checks (JSON Schema / Pydantic).  
-2. **Checksum Audit:** SHA-256 lineage confirmation per artifact.  
-3. **FAIR+CARE Audit:** Reviews accessibility, attribution, authority to control, and sustainability notes.  
-4. **AI Audit:** Explains predictions (SHAP/LIME), checks bias thresholds, and monitors drift.  
-5. **Governance & Telemetry:** Writes proofs to IPFS + blockchain; exports runtime/energy/carbon & FAIR metrics.
+### Summary
+
+1. **Schema Validation** — structural and field-level checks (JSON Schema / Pydantic).  
+2. **Checksum Audit** — sha256 lineage confirmation for every output artifact.  
+3. **FAIR+CARE & Sovereignty Audit** — ensures ethical, accessible, and sovereign-safe data.  
+4. **AI Audit** — reasonability, explainability, bias & drift checks (SHAP/LIME/other XAI).  
+5. **Governance & Telemetry** — writes proofs to governance ledgers, updates lineage, and emits telemetry.
 
 ---
 
-## 🧩 Example Validation Metadata Record
+## 🧩 4. Example Validation Metadata Record (v11)
 
 ```json
 {
-  "id": "validation_registry_v10.1.0",
+  "id": "validation_registry_v11.0.0",
   "pipelines_executed": [
     "schema_validation.py",
     "checksum_audit.py",
@@ -101,57 +134,58 @@ flowchart LR
   "faircare_score": 0.996,
   "total_records_validated": 297540,
   "governance_registered": true,
-  "created": "2025-11-10T00:00:00Z",
+  "created": "2025-11-24T00:00:00Z",
   "validator": "@kfm-validation"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Governance Matrix
+## 🧠 5. FAIR+CARE Governance Matrix
 
 | Principle | Implementation | Oversight |
 |-----------|----------------|-----------|
 | **Findable** | Validation outputs indexed with unique ledger & checksum IDs. | `@kfm-data` |
-| **Accessible** | Reports emitted as JSON/CSV/Markdown for public review. | `@kfm-accessibility` |
-| **Interoperable** | Aligns with ISO 19115, STAC 1.0, DCAT 3.0, OWL-Time. | `@kfm-architecture` |
-| **Reusable** | MIT-licensed outputs for community verification. | `@kfm-design` |
+| **Accessible** | Reports (JSON/CSV/markdown) available for internal/public review as appropriate. | `@kfm-accessibility` |
+| **Interoperable** | Aligns with ISO 19115, STAC 1.0, DCAT 3.0, OWL-Time, CIDOC-CRM. | `@kfm-architecture` |
+| **Reusable** | MIT-licensed outputs for community validation & reuse. | `@kfm-design` |
 | **Collective Benefit** | Transparent quality audits build public trust. | `@faircare-council` |
-| **Authority to Control** | Council-governed rule updates & exceptions. | `@kfm-governance` |
-| **Responsibility** | Engineers maintain schema & ethical validations. | `@kfm-sustainability` |
-| **Ethics** | Bias, inclusivity, and accessibility checks per cycle. | `@kfm-ethics` |
+| **Authority to Control** | Council-governed rule updates & overrides tracked in ledgers. | `@kfm-governance` |
+| **Responsibility** | Engineering maintains schemas et al. and responds to flagged issues. | `@kfm-sustainability` |
+| **Ethics** | Bias, inclusivity, and accessibility checks performed for critical datasets/models. | `@kfm-ethics` |
 
-Governance records:  
-`data/reports/fair/data_care_assessment.json`  
-`data/reports/audit/data_provenance_ledger.json`
+Governance records:
+
+- `data/reports/fair/data_care_assessment.json`  
+- `data/reports/audit/data_provenance_ledger.json`
 
 ---
 
-## 🧮 Validation Module Summary
+## 🧮 6. Validation Modules Summary
 
 | Module | Function | FAIR+CARE Role | Standards |
 |--------|----------|----------------|-----------|
-| `schema_validation.py` | Data/model schema integrity | Data Integrity | JSON Schema · ISO 19115 |
-| `checksum_audit.py` | SHA-256 lineage verification | Provenance | STAC · DCAT |
-| `faircare_audit_runner.py` | FAIR+CARE compliance checks | Ethics Certification | MCP-DL v6.3 |
-| `ai_explainability_validator.py` | Explainability & drift audit | Transparency | SHAP · LIME |
+| `schema_validation.py` | Data/model schema integrity checks | Data Integrity | JSON Schema · ISO 19115 |
+| `checksum_audit.py` | SHA-256 lineage verification | Provenance | STAC · DCAT · PROV-O |
+| `faircare_audit_runner.py` | FAIR+CARE + sovereignty compliance | Ethics Certification | MCP-DL v6.3 |
+| `ai_explainability_validator.py` | Explainability & drift audit | Transparency | SHAP · LIME · XAI tools |
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ⚖️ 7. Retention & Provenance Policy
 
 | Record Type | Retention | Policy |
 |-------------|-----------|--------|
-| Validation Reports | 365 Days | Retained for reproducibility and audit. |
-| FAIR+CARE Certifications | Permanent | Immutable in blockchain-ledger proofs. |
-| Checksum Registries | Permanent | Stored in provenance logs and manifests. |
-| AI Audit Logs | 180 Days | Rotated per retraining cycle. |
+| Validation Reports | 365 days | Kept for reproducibility & internal/public audits. |
+| FAIR+CARE Certifications | Permanent | Anchored in governance ledgers (optionally on-chain). |
+| Checksum Registries | Permanent | Stored in provenance logs & manifests. |
+| AI Audit Logs | 180 days | Rotated per AI retraining & model-card update cycles. |
 
 Retention automated via `.github/workflows/validation_sync.yml`.
 
 ---
 
-## 🌿 Sustainability Metrics (Q4 2025)
+## 🌿 8. Sustainability Metrics (Q4 2025, Example)
 
 | Metric | Value | Verified By |
 |--------|-------|-------------|
@@ -161,27 +195,31 @@ Retention automated via `.github/workflows/validation_sync.yml`.
 | Renewable Energy | 100% (RE100) | `@kfm-infrastructure` |
 | FAIR+CARE Compliance | 100% | `@faircare-council` |
 
-Telemetry reference:  
-`../../../../releases/v10.1.0/focus-telemetry.json`
+Telemetry reference:
+
+```
+../../../../releases/v11.0.0/validation-telemetry.json
+```
 
 ---
 
-## 🧾 Internal Citation
+## 🧾 9. Internal Citation
 
 ```text
-Kansas Frontier Matrix (2025). Validation Pipelines (v10.1.0).
-Automated schema, checksum, FAIR+CARE, and AI explainability validation ensuring transparent,
-reproducible, and ethical governance across the Kansas Frontier Matrix.
+Kansas Frontier Matrix (2025). Validation Pipelines (v11.0.0).
+Automated schema, checksum, FAIR+CARE, sovereignty, and AI explainability validation
+ensuring transparent, reproducible, and ethical governance across the Kansas Frontier Matrix.
 Compliant with MCP-DL v6.3 · ISO 19115 · Diamond⁹ Ω / Crown∞Ω Ultimate Certification.
 ```
 
 ---
 
-## 🕰️ Version History
+## 🕰️ 10. Version History
 
 | Version | Date | Author | Summary |
 |---------|------|--------|---------|
-| **v10.1.0** | 2025-11-10 | `@kfm-validation` | Upgraded to v10.1.0: added streaming validations, improved DCAT/STAC checks, enhanced energy metrics export. |
+| **v11.0.0** | 2025-11-24 | `@kfm-validation` | Upgraded to KFM-MDP v11; added sovereignty checks, telemetry v11, Data Contracts v11, and OpenLineage v2.5 integration. |
+| **v10.1.0** | 2025-11-10 | `@kfm-validation` | Streaming validations, improved STAC/DCAT checks, enhanced energy metrics export. |
 | **v10.0.0** | 2025-11-08 | `@kfm-validation` | Integrated AI explainability gates and governance proof sync. |
 | **v9.7.0** | 2025-11-06 | `@kfm-validation` | Telemetry v3 schema; ISO-aligned automation hooks. |
 
@@ -190,9 +228,9 @@ Compliant with MCP-DL v6.3 · ISO 19115 · Diamond⁹ Ω / Crown∞Ω Ultimate C
 <div align="center">
 
 **Kansas Frontier Matrix**  
-*Quality Assurance × FAIR+CARE Ethics × Transparent Validation Automation*  
+*Quality Assurance × FAIR+CARE Ethics × Sovereignty-Safe Validation Automation*  
 © 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
-[Back to Pipelines Index](../README.md) · [Governance Charter](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+[Back to Pipelines Index](../README.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
