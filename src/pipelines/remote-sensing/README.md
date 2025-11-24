@@ -1,87 +1,97 @@
 ---
 title: "🛰️ Kansas Frontier Matrix — Remote Sensing Pipelines (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/remote-sensing/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly · FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · FAIR+CARE Council · Geospatial Domain Board"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/pipelines-remote-sensing-v1.json"
+sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../releases/v11.0.0/remote-sensing-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/pipelines-remote-sensing-v11.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+status: "Active · Enforced"
+doc_kind: "Pipeline Module"
+intent: "remote-sensing-overview"
+semantic_document_id: "kfm-remote-sensing-pipelines"
+doc_uuid: "urn:kfm:pipelines:remote-sensing:overview:v11.0.0"
+machine_extractable: true
+classification: "Remote Sensing ETL Architecture"
+sensitivity: "Mixed"
+fair_category: "F1-A1-I2-R3"
+care_label: "Collective Benefit · Responsibility · Stewardship"
+immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AA"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by Remote Sensing v12"
+jurisdiction: "Kansas · United States"
 ---
 
 <div align="center">
 
-# 🛰️ **Kansas Frontier Matrix — Remote Sensing Pipelines**  
+# 🛰️ **KFM v11 — Remote Sensing Pipelines**  
 `src/pipelines/remote-sensing/README.md`
 
-**Purpose:**  
-Define the complete remote-sensing ETL architecture for KFM — ingestion, preprocessing, harmonization, analysis, STAC publication, provenance, CARE-aware masking, and Neo4j integration of satellite-derived geospatial products (optical, multispectral, SAR, DEM, climate composites, hazards, and ecological indicators).  
+### **Multispectral · SAR · Thermal · Elevation · Hazard · Ecological Indicators**  
+### **STAC/DCAT · FAIR+CARE · Sovereignty · Lineage · GDAL 3.12+ · COG/Parquet**
 
-These pipelines convert **raw satellite products** into **FAIR+CARE-certified, STAC/DCAT-aligned, provenance-tracked geospatial assets** powering KFM’s map layers, climate/ecology analyses, and Focus Mode narratives.
-
-<img alt="Remote Sensing" src="https://img.shields.io/badge/Remote_Sensing-ETL-blue"/>
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Integrated-orange"/>
-<img alt="GDAL" src="https://img.shields.io/badge/GDAL-3.12-green"/>
-<img alt="Status" src="https://img.shields.io/badge/Status-Active-success"/>
+Remote-sensing pipelines transform **raw satellite & aerial imagery** into  
+**FAIR+CARE-certified, provenance-tracked, catalog-ready geospatial datasets**  
+that power KFM’s map layers, hazard models, ecological analyses, hydrological reasoning,  
+and Focus Mode v3 narratives.
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Purpose
 
-KFM remote-sensing pipelines incorporate:
+This module defines KFM v11’s **end-to-end remote sensing architecture**:
 
-- **Satellite providers**: LANDSAT, Sentinel-1/2, NAIP, MODIS, VIIRS  
-- **Geospatial tools**: GDAL 3.12, rasterio, GeoParquet, xarray, dask  
-- **Specialized processing**:  
-  - Atmospheric correction  
-  - Cloud/shadow masking  
-  - Terrain correction for SAR  
-  - Temporal compositing (monthly/seasonal)  
-  - Change detection  
-  - VI, NDVI, NDMI, NDWI, SAVI  
-  - Hazard extraction (burn scars, flood extents, drought indicators)
+- Sensor ingestion (LANDSAT · Sentinel-1/2 · NAIP · MODIS · VIIRS)  
+- Preprocessing (cloud mask · atmo correction · SAR terrain correction)  
+- Raster harmonization (projection · alignment · normalization)  
+- Derivative analyses (NDVI · NDMI · NDWI · burn scars · floods · drought)  
+- STAC/DCAT publication  
+- PROV-O + OpenLineage lineage  
+- Sovereignty-aware raster masking  
+- OTel v11 telemetry & energy/carbon reporting  
+- Auto-integration into Focus Mode v3 & Story Node v3  
 
-Pipelines output:
-
-- Processed COGs  
-- GeoParquet vectors  
-- STAC Items/Collections  
-- Provenance lineages  
-- AI-ready arrays for downstream models  
-- MapLibre/Cesium tiles (when configured)
-
-All outputs satisfy FAIR+CARE, provenance, and MCP-DL v6.3.
+These pipelines comply with **MCP-DL v6.3**, **KFM-PDC v11**,  
+and the **Heritage & Sovereignty Protection Standards**.
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂️ 2. Directory Layout (v11)
 
-~~~~~text
+```text
 src/pipelines/remote-sensing/
-├── README.md                          # This file
 │
-├── ingest/                            # Fetch + stage provider assets
+├── README.md
+│
+├── ingest/                         # Provider-specific ingestion
 │   ├── landsat_ingest.py
 │   ├── sentinel2_ingest.py
 │   ├── sentinel1_ingest.py
 │   ├── naip_ingest.py
 │   └── modis_ingest.py
 │
-├── preprocessing/                     # Sensor-specific corrections
+├── preprocessing/                  # Sensor correction modules
 │   ├── cloud_mask.py
 │   ├── atmospheric_correction.py
 │   ├── sar_terrain_correction.py
 │   ├── reprojection.py
 │   └── harmonization.py
 │
-├── analytics/                         # Derivative products
+├── analytics/                      # Derivative products
 │   ├── ndvi.py
 │   ├── ndmi.py
 │   ├── ndwi.py
@@ -89,199 +99,205 @@ src/pipelines/remote-sensing/
 │   ├── flood_extent.py
 │   └── change_detection.py
 │
-├── stac/                              # STAC integration tools
+├── stac/                           # STAC/DCAT publication logic
 │   ├── build_item.py
 │   ├── build_collection.py
 │   ├── validate_item.py
 │   └── publish.py
 │
-├── lineage/                           # PROV-O + checksum generation
+├── lineage/                        # Lineage + checksums
 │   ├── lineage_builder.py
 │   ├── checksum_tools.py
 │   └── provenance.jsonld
 │
-└── utils/                             # Shared helpers
+└── utils/
     ├── read_write.py
     ├── geospatial.py
     ├── masking.py
     └── timestamps.py
-~~~~~
+```
 
 ---
 
-## 🧩 Remote Sensing ETL Architecture (Indented Mermaid)
+## 🧩 3. v11 Remote Sensing DAG Architecture
 
-~~~~~mermaid
+```mermaid
 flowchart TD
-  A["Provider API / Bucket<br/>LANDSAT · Sentinel · MODIS · NAIP"] --> B["ingest/*"]
-  B --> C["preprocessing/*<br/>Cloud Mask · AtmoCorr · TerrainCorr"]
-  C --> D["analytics/*<br/>NDVI · NDMI · Change Detection"]
-  D --> E["stac/build_item.py<br/>STAC Item Construction"]
-  E --> F["stac/validate_item.py<br/>STAC Schema + GE Gate"]
-  F -->|PASS| G["stac/publish.py<br/>COG/Parquet → Catalog"]
-  F -->|FAIL| H["Quarantine<br/>Governance Review"]
-  G --> I["lineage/*<br/>PROV-O · Checksums"]
-  I --> J["Graph Hydration<br/>Scenes → Datasets → Themes"]
-  G --> K["Focus Mode v2.4<br/>Narratives · Explanations"]
-~~~~~
+  A["📥 Provider API / Bucket<br/> LANDSAT · Sentinel · MODIS · NAIP"] --> B["🗂 ingest/"]
+  B --> C["🛠 preprocessing/<br/> CloudMask · AtmoCorr · TerrainCorr"]
+  C --> D["📊 analytics/<br/> NDVI · NDMI · NDWI · Change Detection"]
+  D --> E["📦 stac/build_item.py<br/> Construct Item"]
+  E --> F["🧪 stac/validate_item.py<br/> GE + Schema + CARE Gate"]
+  F -->|PASS| G["🚀 publish.py<br/> COG/Parquet → STAC Catalog"]
+  F -->|FAIL| H["🛑 quarantine/<br/> Governance Review"]
+  G --> I["🧬 lineage/<br/> PROV-O · OpenLineage · Checksums"]
+  I --> J["🔗 Neo4j Graph Hydration"]
+  G --> K["🧠 Focus Mode v3 Narrative Context"]
+```
 
 ---
 
-## 🌐 Supported Sensor Families
+## 🌐 4. Supported Sensor Families (v11)
 
-### 🛰️ Optical (Multispectral)
-- **LANDSAT Collection 2 Level-2**
-- **Sentinel-2 MSI**
-- **NAIP aerial imagery**
+### 🛰️ Optical Multispectral  
+LANDSAT C2 L2 · Sentinel-2 MSI · NAIP
 
-Corrections & preprocessing:
-- Cloud + shadow masks (FMask/S2Cloudless)  
-- TOA → BOA reflectance  
-- GSD normalization (10m/30m harmonization)
+Includes:
+- Cloud/shadow masks (FMask / S2Cloudless)  
+- Atmospheric correction (LaSRC / Sen2Cor equivalent settings)  
+- GSD harmonization (10m → 30m normalization)  
 
-### 📡 SAR
-- **Sentinel-1 GRD**
+### 📡 SAR (Sentinel-1 GRD)
 - Terrain correction  
+- Gamma-nought calibration  
 - Speckle filtering  
-- Backscatter normalization (σ° / γ°)  
+- Coherence-based products (optional)  
 
-### 🌏 Thermal / Environmental
-- **MODIS**, **VIIRS**
-- LST, thermal anomalies, drought composites
+### 🔥 Thermal / Environmental  
+MODIS · VIIRS  
+- LST  
+- Drought indicators  
+- Environmental anomaly layers  
 
 ---
 
-## ⚙️ Preprocessing Standards
+## ⚙️ 5. Preprocessing Standards (v11)
 
-All pipelines MUST:
+All pipelines must:
 
 - Reproject to **EPSG:4326**  
-- Store COG output using:
-  - `compress=DEFLATE`, `predictor=yes`, `tiled=true`, `overviews=auto`  
-- Produce GeoParquet using:
-  - `geometry: WGS84`  
-  - `statistics=enabled`  
-  - `dictionary-encoded strings`  
+- Write COGs with:
+  - `compress=DEFLATE`, `predictor=yes`, `tiled=true`
+  - pyramids/overviews required  
+- Use GeoParquet with:
+  - WGS84 geometry  
+  - dictionary encoding  
+  - statistics enabled  
 
-Cloud/shadow masking:
-- CLOUD_MASK, SHADOW_MASK, QA_BAND required  
-- No unmasked invalid data may pass validation
+Mandatory masks:
+- `CLOUD_MASK`  
+- `SHADOW_MASK`  
+- `QA_BAND`  
+
+No invalid pixels may pass validation.
 
 ---
 
-## 🔎 Analysis Modules (Derivatives)
+## 🧠 6. Analysis Modules
 
-### NDVI / NDMI / NDWI  
-Computed using normalized formulas with sensor-appropriate coefficients.
+### Vegetation Indices  
+- `ndvi.py`  
+- `ndmi.py`  
+- `ndwi.py`  
+Sensor-specific coefficients required.
 
 ### Change Detection  
-Supports:
-- Post-fire
-- Flood extent  
-- Drought monitoring  
-- Agriculture health shifts  
+- burn scar mapping  
+- flood extent delta imagery  
+- NDVI temporal deltas  
+- agriculture transition  
 
 ### SAR Flood Extraction  
-Combines:
-- Backscatter calibration  
-- Thresholding  
-- Terrain correction  
-- Hysteresis filters  
+- terrain-corrected backscatter  
+- thresholding + hysteresis  
+- optional coherence filters  
 
 ---
 
-## 📦 STAC Publication Workflow
+## 📦 7. STAC Publication (v11)
 
-All processed assets MUST:
+STAC Items must include:
 
-- Include EO, SAR, PROJ, and Raster STAC extensions as appropriate  
-- Include STAC Item fields:
-  - `proj:shape`, `proj:transform`  
-  - `raster:bands`  
-  - `eo:bands`  
-  - `kfm:*` metadata (provenance, lineage, ingest version)  
-- Be validated with:
-  - JSON Schema  
-  - Great Expectations checkpoint  
-  - CARE governance validator  
+- EO, SAR, RASTER, PROJ extensions  
+- `proj:shape`, `proj:transform`  
+- `raster:bands` with band metadata  
+- `kfm:*` lineage/contract metadata  
+- CARE + sovereignty metadata  
 
----
+Validation through:
 
-## 🧬 Provenance & Lineage Requirements
-
-All pipelines MUST:
-
-- Generate `kfm:checksum` using sha256  
-- Produce lineage JSON-LD following PROV-O:  
-  - `prov:Entity` (input rasters)  
-  - `prov:Activity` (ETL stages)  
-  - `prov:wasGeneratedBy`  
-  - `prov:used`  
-- Reference upstream STAC Items when applicable  
-- Link to versioning & governance ledgers
+- JSON Schema  
+- Great Expectations (GE) Checkpoints  
+- CARE governance validator  
+- STAC/DCAT crosswalk auditor  
 
 ---
 
-## ⚖️ FAIR+CARE Governance Requirements
+## 🧬 8. Lineage & Checksums (v11)
 
-### Masking Rules  
-Remote sensing pipelines must enforce:
+All processing must emit:
 
-- No unmasked precise coordinates for **restricted** datasets  
-- H3-based generalization where required  
-- Raster masking for cultural/tribal sensitive areas  
+- sha256 checksums  
+- PROV-O lineage graph  
+- OpenLineage events (`start`, `complete`, `fail`)  
+- Upstream STAC item references  
+- Versioned `kfm:ingest_hash` and `kfm:process_hash`  
 
-### CARE Enforcement  
-- CARE labels must propagate from input → derivative  
-- Sovereignty conflicts must be logged  
-- Governance escalations must halt publication
+Stored under:
 
----
-
-## 📡 Telemetry Integration
-
-Remote-sensing telemetry MUST include:
-
-- `rows_processed`, `raster_pixels_processed`  
-- `processing_time_sec`  
-- `energy_wh`, `co2_g`  
-- `validation_passed`, `care_violations`  
-- `publish_latency_ms`  
-- Inputs & outputs checksums
-
-Telemetry written to:
-
-~~~~~text
-../../../releases/v10.3.0/focus-telemetry.json
-~~~~~
+```
+lineage/provenance.jsonld
+```
 
 ---
 
-## 🧪 Local Development
+## ⚖️ 9. FAIR+CARE & Sovereignty Rules
 
-~~~~~bash
-# Example: Sentinel-2 ingest + NDVI + STAC publish
-python src/pipelines/remote-sensing/ingest/sentinel2_ingest.py --aoi data/geometry/kansas_aoi.geojson
-python src/pipelines/remote-sensing/preprocessing/cloud_mask.py
-python src/pipelines/remote-sensing/analytics/ndvi.py
-python src/pipelines/remote-sensing/stac/build_item.py
-python src/pipelines/remote-sensing/stac/publish.py
-~~~~~
+### Required protections:
+- H3-based masking for sovereign/heritage zones  
+- No raw coordinates for sensitive features  
+- CARE review on publication  
+- Accurate CARE classification  
+- Sovereignty escalation on conflict  
+
+These pipelines must never **fail open**.
 
 ---
 
-## 🕰️ Version History
+## 📡 10. Telemetry (OTel v11)
 
-| Version | Date       | Author | Summary |
-|---------|------------|--------|---------|
-| v10.3.1 | 2025-11-14 | Remote Sensing Team | Full remote-sensing pipeline architecture added with STAC, provenance, CARE, and telemetry integration. |
+Metrics required:
+
+- `kfm.rs_latency_ms`  
+- `kfm.rs_pixels_processed`  
+- `kfm.rs_energy_wh`  
+- `kfm.rs_carbon_gco2e`  
+- `kfm.rs_validation_failures`  
+- `kfm.rs_care_flags`  
+
+Telemetry bundles stored under:
+
+```
+releases/<version>/remote-sensing-telemetry.json
+```
+
+---
+
+## 🧪 11. Local Development
+
+```bash
+python ingest/sentinel2_ingest.py --aoi data/kansas.geojson
+python preprocessing/cloud_mask.py
+python analytics/ndvi.py
+python stac/build_item.py
+python stac/publish.py
+```
+
+---
+
+## 🕰️ 12. Version History
+
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.0 | 2025-11-24 | Full KFM-MDP v11 rebuild; STAC/DCAT alignment; CARE/Sovereignty integration; telemetry v11; lineage & reliability enhancements. |
+| v10.3.1 | 2025-11-14 | Initial remote-sensing architecture. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Remote Sensing Pipelines**  
-High-Integrity Geospatial ETL × FAIR+CARE Governance × Scientific Reproducibility  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+© 2025 Kansas Frontier Matrix  
+**Remote Sensing × FAIR+CARE × Sovereignty × Lineage × Scientific Rigor**  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
