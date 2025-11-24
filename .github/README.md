@@ -1,8 +1,8 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — GitHub Infrastructure Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/README.md"
-version: "v11.0.0"
-last_updated: "2025-11-19"
+version: "v11.0.1"
+last_updated: "2025-11-23"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
@@ -46,6 +46,7 @@ provenance_chain:
   - ".github/README.md@v10.3.2"
   - ".github/README.md@v10.4.0"
   - ".github/README.md@v10.4.1"
+  - ".github/README.md@v11.0.0"
 prov_profile: "PROV-O Plan + KFM Governance Extensions"
 openlineage_profile: "OpenLineage v2.5 · CI/CD events only"
 ontology_alignment:
@@ -56,7 +57,7 @@ ontology_alignment:
   geosparql: "geo:FeatureCollection"
 json_schema_ref: "../schemas/json/github-readme-v11.schema.json"
 shape_schema_ref: "../schemas/shacl/github-readme-v11-shape.ttl"
-doc_uuid: "urn:kfm:doc:github-readme-v11.0.0"
+doc_uuid: "urn:kfm:doc:github-readme-v11.0.1"
 semantic_document_id: "kfm-doc-github-readme"
 event_source_id: "ledger:.github/README.md"
 immutability_status: "mutable-plan"
@@ -82,7 +83,7 @@ ai_transform_prohibited:
 # ⚙️ **Kansas Frontier Matrix — GitHub Infrastructure Overview**  
 `.github/README.md`
 
-**The governed CI/CD, validation, and automation backbone of the Kansas Frontier Matrix monorepo.**
+**The governed CI/CD, reliability, FAIR+CARE, supply-chain, and automation backbone of the Kansas Frontier Matrix monorepo.**
 
 [![KFM-MDP v11](https://img.shields.io/badge/Markdown-KFM--MDP_v11.0.0-informational)](../docs/standards/kfm_markdown_protocol_superstandard.md)  
 [![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](../docs/standards/faircare/FAIRCARE-GUIDE.md)  
@@ -93,254 +94,228 @@ ai_transform_prohibited:
 
 ---
 
-# 🧭 Purpose
+# 📘 Overview
 
-The `.github/` directory implements the **GitHub infrastructure plane** of the Kansas Frontier Matrix (KFM):
+This document defines the **GitHub Infrastructure Plane** for KFM v11—governing all CI/CD, metadata validation, supply-chain hardening, and compliance automation.
 
-- CI/CD pipelines that build, test, validate, and deploy the system  
-- FAIR+CARE and governance enforcement for **every change**  
-- STAC/DCAT, ontology, and JSON-LD schema validation  
-- Security & supply-chain hardening (SBOM, SLSA-style attestations, vulnerability scanning)  
-- Telemetry capture for Focus Mode, governance dashboards, and sustainability metrics  
-- Issue / PR templates encoding documentation-first and ethics-first rules  
+The `.github/` subsystem enforces:
 
-Nothing reaches:
+- Documentation-first (MCP-DL v6.3)  
+- FAIR+CARE & sovereignty  
+- STAC 1.x / DCAT 3.0 / JSON-LD schema compliance  
+- OpenLineage provenance injection  
+- Accessibility & ethics screening  
+- Reliability/SLO gates  
+- Security governance  
+- Release integrity & attestations  
+- Telemetry export for Focus Mode v3 & governance dashboards  
 
-- Protected branches (`main`, `release/*`)  
-- The **Neo4j knowledge graph**  
-- The **published STAC/DCAT catalogs**  
-
-without successfully passing through `.github/` workflows.
+This is the **single automated gatekeeper** between contributions and the governed production system.
 
 ---
 
-# 🗂️ Directory Layout
+# 🗂 Directory Layout
 
 ```text
-.github/                               # GitHub infrastructure plane
+.github/                               # GitHub governance & automation subsystem
 │
-├── README.md                          # This overview document
-├── ARCHITECTURE.md                    # (Optional) CI/CD & governance deep-dive
+├── README.md                          # This document
+├── ARCHITECTURE.md                    # Extended CI/CD & standards deep-dive
 │
-├── workflows/                         # GitHub Actions automation
-│   ├── ci.yml                         # Core CI: lint, typecheck, test, build, schemas
-│   ├── docs_validate.yml              # Markdown + YAML + KFM-MDP v11 validation
-│   ├── stac_validate.yml              # STAC collection/item validation
-│   ├── dcat_validate.yml              # DCAT dataset validation
-│   ├── faircare_validate.yml          # FAIR+CARE & ethics checks
-│   ├── data_pipeline.yml              # ETL/data workflows & lineage checks
-│   ├── telemetry_export.yml           # Telemetry bundling for releases
-│   ├── sbom_verify.yml                # SBOM + checksum + SLSA provenance
-│   ├── site.yml                       # Docs + web build and deployment
-│   └── security_audit.yml             # Dependency & workflow security scanning
+├── workflows/                         # GitHub Actions pipelines
+│   ├── ci.yml                         # Full pipeline: lint, tests, build, schema-validate
+│   ├── docs_validate.yml              # KFM-MDP v11 structural validation
+│   ├── stac_validate.yml              # STAC 1.x validation of Items/Collections
+│   ├── dcat_validate.yml              # DCAT 3.0 dataset validation
+│   ├── jsonld_validate.yml            # JSON-LD, schema.org, PROV-O, ontology validation
+│   ├── faircare_validate.yml          # FAIR+CARE ethics & sovereignty validation
+│   ├── h3_generalization.yml          # Dynamic H3 generalization for sensitive coordinates
+│   ├── security_audit.yml             # Dependency + secret scanning
+│   ├── sbom_verify.yml                # SBOM verification (SLSA-style integrity)
+│   ├── data_pipeline.yml              # ETL + metadata pipeline tests + lineage validation
+│   ├── ai_behavior_check.yml          # AI compliance: explainability, drift, forbidden outputs
+│   ├── telemetry_export.yml           # Telemetry → releases/<version>/focus-telemetry.json
+│   └── site.yml                       # Docs + web build & deploy
 │
-├── ISSUE_TEMPLATE/                    # Issue templates (governance-aware)
-│   ├── bug_report.md                  # For defects in code or data behavior
-│   ├── feature_request.md             # New features / enhancements
-│   └── data_issue.md                  # Dataset issues + CARE classification
+├── ISSUE_TEMPLATE/                    # Governance-aware issue templates
+│   ├── bug_report.md                  # Defects in code/data/narrative
+│   ├── feature_request.md             # Enhancements (with CARE/a11y/perf prompts)
+│   └── data_issue.md                  # Dataset lineage/sensitivity reporting
 │
-├── PULL_REQUEST_TEMPLATE.md           # Required metadata: CARE, provenance, a11y, telemetry
-├── CODEOWNERS                         # Module ownership & review boundaries
-├── dependabot.yml                     # Automated dependency updates
-└── SECURITY.md                        # Security & vulnerability disclosure policy
-````
-
----
-
-# 🧬 Role in the KFM Stack
-
-```mermaid
-flowchart TB
-  subgraph Dev ["Developer & Data Contributor Space"]
-    A["Code & Data Changes<br/>src · web · data · docs"] --> B["Pull Request"]
-  end
-
-  subgraph Hub ["GitHub Infrastructure Plane (.github)"]
-    B --> C["Workflows<br/>.github/workflows/*"]
-    C --> D["Validation & Governance<br/>Lint · Tests · Schemas · FAIR+CARE · Security"]
-    D --> E["Artifacts & Telemetry<br/>SBOM · Reports · Focus Telemetry"]
-  end
-
-  E --> F["Protected Branches<br/>main · release/*"]
-  F --> G["Deployments<br/>Graph · Web · Docs · Data Releases"]
+├── PULL_REQUEST_TEMPLATE.md           # Required metadata: CARE, provenance, SBOM impact
+├── CODEOWNERS                         # Ownership boundaries for reviews
+├── dependabot.yml                     # Supply-chain update automation
+└── SECURITY.md                        # Vulnerability disclosure & responsible reporting
 ```
 
-The `.github/` directory is a **first-class subsystem**. It:
+---
 
-* Encodes the **policies and standards** described in `ARCHITECTURE.md` and `docs/standards/*`
-* Enforces **FAIR+CARE**, sovereignty, and reliability rules at the CI/CD level
-* Guards the **software and data supply chain**
-* Produces **telemetry and governance artifacts** used across the platform
+# ⚙️ CI/CD Architecture (Governed v11 Pipeline)
+
+KFM v11 uses a **multi-stage, ontology-aware, FAIR+CARE-enforced CI/CD engine.**  
+Every workflow feeds **OpenLineage v2.5** events for governance and reproducibility.
+
+## 🧩 Stage 1 — Lint & Style  
+- Prettier / ESLint / TypeScript  
+- Stylelint  
+- Markdown/Docs (KFM-MDP v11) structure enforcement  
+- YAML front-matter validation  
+- Fence integrity checker  
+- No-tabs-no-trailing-whitespace auditor  
+
+Any violation blocks merge.
 
 ---
 
-# 🧪 CI/CD Stages (v11)
+## 📐 Stage 2 — Schema, Ontology & Metadata Validation  
+Covers:
 
-All workflows together implement a **multi-stage, governance-aware CI/CD pipeline**.
+- JSON Schema  
+- STAC (Item/Collection)  
+- DCAT Dataset  
+- Story Node v3  
+- Focus Mode v3 narrative schema  
+- GeoSPARQL geometry validity  
+- PROV-O lineage completeness  
+- JSON-LD contexts: CIDOC/OWL-Time alignment  
 
-## 1️⃣ Lint & Style
-
-* **Code**: ESLint, Prettier, TypeScript checks
-* **CSS/Styles**: Stylelint and design-token lints
-* **Markdown**:
-
-  * KFM-MDP v11 conformance
-  * YAML front-matter validation (required keys, valid paths)
-  * Fence integrity (no broken boxes, valid inner code blocks)
-
-Any lint failure → **PR blocked**.
-
-## 2️⃣ Schema & Metadata Validation
-
-Ensures all persisted artifacts are **schema-conformant**:
-
-* STAC Items & Collections (`schemas/stac/*`)
-* DCAT Datasets (`schemas/dcat/*`)
-* Telemetry payloads (`schemas/telemetry/*`)
-* JSON-LD contexts (`schemas/jsonld/*`)
-* Story Node v3 & Focus Mode schemas
-* GitHub-doc JSON/SHACL shapes (including this file’s schema)
-
-Any schema violation → **no merge**.
-
-## 3️⃣ Testing (Unit → Integration → E2E)
-
-* Unit tests (backend, frontend, pipelines)
-* Integration tests (API↔graph↔data)
-* E2E tests for key flows
-* Accessibility tests (where configured)
-* Data validation tests for ETL outputs
-
-No green test matrix → **no merges**.
-
-## 4️⃣ Governance & Ethics Enforcement
-
-Via `faircare_validate.yml` and linked standards:
-
-* FAIR metrics (F1–A1–I1–R1)
-* CARE classification and enforcement for sensitive data
-* Coordinate masking and generalization rules (H3 standards)
-* License & usage rights checks
-* Provenance completeness and integrity
-
-Governance failures require FAIR+CARE Council or delegate review.
-
-## 5️⃣ Security & Supply Chain
-
-Using `security_audit.yml`, `dependabot.yml`, `sbom_verify.yml`:
-
-* Dependency vulnerability scanning
-* SBOM generation and signature verification
-* SLSA-style provenance for releases
-* Workflows scanned for:
-
-  * Unsafe permissions
-  * Secret exposures
-  * Dangerous patterns
-
-Security is baked into the CI/CD process, not bolted on later.
-
-## 6️⃣ Build, Package & Deploy
-
-* Web client build (React + MapLibre + Cesium)
-* Documentation site build
-* Packaging:
-
-  * `manifest.zip`
-  * `sbom.spdx.json`
-  * `focus-telemetry.json`
-
-Only artifacts passing all previous stages may be deployed or published.
+KFM v11 requires *all* schemas to validate before PR acceptance.
 
 ---
 
-# 🧩 Governance & Policy Hooks
+## 🧪 Stage 3 — Testing  
+- Unit tests (src, pipelines, web, graph)  
+- Integration tests (graph, API, ETL nodes)  
+- E2E tests  
+- a11y (WCAG 2.1 AA+) automated screening  
+- Data validation tests (e.g., metadata contract tests)  
 
-## Issue Templates (`ISSUE_TEMPLATE/`)
-
-Each template encodes governance prompts:
-
-* **Bug Report**:
-
-  * Impacted subsystem (src, web, data, docs, pipelines)
-  * Severity and potential data/UX impact
-
-* **Feature Request**:
-
-  * User story and beneficiaries
-  * A11y, performance, and governance implications
-
-* **Data Issue**:
-
-  * Dataset identifiers (STAC/DCAT IDs)
-  * CARE classification and sovereignty notes
-  * Requested changes (masking, removal, correction)
-
-## PR Template (`PULL_REQUEST_TEMPLATE.md`)
-
-Pull requests must capture:
-
-* CARE / sensitivity classification
-* Provenance & licensing for data / narrative content
-* Schema & ontology impacts
-* Accessibility impacts
-* Telemetry / Observability changes
-* Required reviewers (CODEOWNERS + governance delegates as needed)
-
-This enforces **documentation-first** and **governance-first** development.
+Any failed stage halts the pipeline.
 
 ---
 
-# 🔒 Security Model
+## 🛡️ Stage 4 — FAIR+CARE & Sovereignty Enforcement  
+Implements rules defined in:
 
-Core controls:
+- `FAIRCARE-GUIDE.md`  
+- `INDIGENOUS-DATA-PROTECTION.md`  
+- Dynamic H3 Generalization Standard v11  
 
-* Protected branches (`main`, `release/*`) with required checks
-* CODEOWNERS for critical directories (e.g., `.github/**`, `schemas/**`, `data/**`)
-* Restricted permissions for workflow tokens and environment secrets
-* Security scanning and SBOM verification integrated into CI
-* A documented **security and disclosure policy** in `.github/SECURITY.md`
+Enforces:
 
-Security issues are handled per that policy, with coordinated disclosure when appropriate.
+- CARE classification  
+- Coordinate masking for sensitive datasets  
+- Sovereignty restrictions  
+- Ethical filters for AI/narrative generation  
+- License validation  
+
+Governance violations → escalated to CARE Council.
 
 ---
 
-# 📊 Telemetry & Observability
+## 🔒 Stage 5 — Security & Supply-Chain Integrity  
+Includes:
 
-`.github` workflows feed telemetry into the KFM observability layer:
+- SBOM verification  
+- SLSA-style attestation checks  
+- Vulnerability scanning  
+- Secret scanning  
+- Workflow hardening & permission minimization  
+- Dependency update automation (Dependabot)  
 
-* CI duration and flakiness
-* Validation and test failure patterns
-* Governance violation counts and resolution times
-* Energy and carbon estimates for workflow runs
-* A11y and performance signal summaries
+Security failures → PR blocked.
 
-Telemetry is consolidated into:
+---
+
+## 📦 Stage 6 — Build, Package & Release  
+Outputs:
+
+- Web client build (React + MapLibre + Cesium)  
+- Docs site  
+- `manifest.zip`  
+- `sbom.spdx.json` (signed)  
+- `focus-telemetry.json`  
+- Release artifacts with provenance  
+
+Only green builds and governance-approved changes deploy.
+
+---
+
+# 🧬 Integration with Governance, Ontologies & Lineage
+
+`.github/` enforces alignment with:
+
+- **CIDOC-CRM** (events, documents, procedures)  
+- **OWL-Time** (temporal validity of changes)  
+- **GeoSPARQL** (geometry validity in spatial datasets)  
+- **PROV-O** (plan → activity → entity lineage)  
+- **DCAT/JSON-LD** (dataset discoverability)  
+- **OpenLineage** (pipeline event emission)  
+
+Each CI stage drops lineage entries to the governance ledger.
+
+---
+
+# 🛰 Telemetry, Reporting & Observability
+
+Workflows emit:
+
+- CI duration & reliability  
+- Governance event summaries  
+- FAIR+CARE enforcement metrics  
+- Schema violation statistics  
+- a11y reports  
+- Energy/carbon estimates  
+- Build/test flakiness metrics  
+
+Stored in:
 
 ```text
 releases/<version>/focus-telemetry.json
 ```
 
-and used to power:
+Used for:
 
-* FAIR+CARE governance dashboards
-* Reliability & sustainability reports
-* System-level Story Nodes for Focus Mode v3
+- Governance dashboards  
+- SLO/SLI/Reliability scoring  
+- Sustainability analysis  
+- Focus Mode v3 reasoning context  
+
+---
+
+# 🧭 How `.github/` Connects with the Larger KFM Stack
+
+`.github` is the **policy and enforcement layer** controlling:
+
+- Data ingestion  
+- ETL + metadata pipelines  
+- Graph schema evolution  
+- Document standards  
+- Web app deployment  
+- Story Node/Focus Mode narrative safety  
+
+It ensures that **nothing unsafe or non-compliant enters the system.**
 
 ---
 
 # 🕰 Version History
 
-| Version |       Date | Summary                                                                                               |
-| ------: | ---------: | ----------------------------------------------------------------------------------------------------- |
-| v11.0.0 | 2025-11-19 | v11 upgrade; aligned with KFM-MDP v11, extended metadata, telemetry hooks, and CI/CD governance docs. |
-| v10.4.1 | 2025-11-16 | Extended governance/AI metadata and refined directory overview.                                       |
-| v10.4.0 | 2025-11-15 | Rewrote for KFM-MDP v10.4; clarified CI/CD + governance + telemetry architecture.                     |
-| v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, and telemetry integration.                                              |
-| v10.0.0 | 2025-11-10 | Initial GitHub infrastructure overview.                                                               |
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.1 | 2025-11-23 | Semantic + structural v11 upgrade; enriched ontology, governance, lineage, AI behavior, telemetry, and security integration. |
+| v11.0.0 | 2025-11-19 | Initial v11 migration with baseline metadata and CI/CD alignment. |
+| v10.4.1 | 2025-11-16 | Extended governance/AI metadata and refined directory overview. |
+| v10.4.0 | 2025-11-15 | KFM-MDP v10.4 rewrite; clarified CI/CD + governance + telemetry architecture. |
+| v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, and telemetry integration. |
+| v10.0.0 | 2025-11-10 | Initial GitHub infrastructure overview. |
 
 ---
 
-[Root README](../README.md) · [Architecture](../ARCHITECTURE.md) · [Security Policy](./SECURITY.md)
+<div align="center">
 
-```
+© 2025 Kansas Frontier Matrix — MIT License  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+FAIR+CARE · MCP-DL v6.3 · KFM-MDP v11.0  
+Back to: Root README · Architecture · Security Policy
+
+</div>
