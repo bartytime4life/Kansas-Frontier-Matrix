@@ -1,197 +1,269 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — ETL Pipelines (Extract · Transform · Load · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/etl/README.md"
-version: "v10.1.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · Autonomous Systems · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.1.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.1.0/manifest.zip"
+sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-telemetry_ref: "../../../../releases/v10.1.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/src-etl-v3.json"
+telemetry_ref: "../../../../releases/v11.0.0/etl-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/src-etl-v11.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+status: "Active · Enforced"
+doc_kind: "Pipeline Module"
+intent: "etl-pipelines-overview"
+semantic_document_id: "kfm-etl-pipelines"
+doc_uuid: "urn:kfm:pipelines:etl:overview:v11.0.0"
+machine_extractable: true
+classification: "FAIR+CARE Governed ETL System"
+sensitivity: "Mixed"
+fair_category: "F1-A1-I2-R3"
+care_label: "Mixed · Collective Benefit · Responsibility · Ethics"
+immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AA+"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by ETL v12"
+jurisdiction: "Kansas · United States"
 ---
 
 <div align="center">
 
-# ⚙️ **Kansas Frontier Matrix — ETL Pipelines (Extract · Transform · Load)**
+# ⚙️ **KFM v11 — ETL Pipelines (Extract · Transform · Load)**  
 `src/pipelines/etl/README.md`
 
-**Purpose:**  
-Operate FAIR+CARE-certified **ingestion, transformation, and loading** pipelines that power the Kansas Frontier Matrix (KFM) knowledge ecosystem.  
-Every ETL process is **checksum-locked**, **blockchain-synced**, and **sustainability-audited** to ensure transparent, reproducible, and ethical data stewardship.
+### **Deterministic · FAIR+CARE Aligned · Lineage-Governed · Sustainability-Audited**
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blueviolet)](../../../../docs/standards/)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Certified-gold)](../../../../docs/standards/faircare-validation.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Compliant-blue)]()
-[![STAC/DCAT](https://img.shields.io/badge/STAC%201.0%20%2F%20DCAT%203.0-Integrated-lightgrey)]()
+ETL pipelines are the **entry point** to KFM’s knowledge ecosystem.  
+All ingest → normalize → validate → load operations run through:
+
+- **LangGraph v11 Reliable Node Engine**  
+- **Write-Ahead Logging (WAL)**  
+- **Idempotency Keys + Advisory Locks**  
+- **FAIR+CARE governance**  
+- **STAC/DCAT metadata contracts**  
+- **Schema and value gates (GE Checkpoints)**  
+- **Energy & carbon telemetry recording**
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview — The ETL Layer in KFM v11
 
-The ETL layer forms the **foundation of KFM’s reproducible data engineering**.  
-Pipelines automate extraction, normalization, and loading for **climate, hydrology, hazards, terrain, text, and tabular** data, embedding FAIR+CARE, checksum, and governance validations at each stage.
+ETL pipelines convert raw environmental, cultural, geospatial, hydrologic, hazard, terrain, archival, and tabular datasets into:
 
-### Core Responsibilities
-- Extract open-source environmental and historical datasets from trusted repositories.  
-- Transform and harmonize into **FAIR+CARE-compliant formats** (GeoJSON, Parquet, CSV).  
-- Validate schemas and append **SHA-256 lineage** for provenance tracking.  
-- Load outputs into **staging**, **processed**, and **STAC/DCAT catalogs**.  
-- Log ethics and sustainability metrics to **Focus Telemetry** and **Governance Ledgers**.  
+- **FAIR+CARE–certified data products**  
+- **STAC Items & Collections**  
+- **DCAT Datasets**  
+- **COGs, GeoParquets, NetCDFs**  
+- **Neo4j graph entities & relations**  
+- **AI-ready feature layers**  
+- **Story Node v3 & Focus Mode v3 inputs**  
+
+Each ETL run must be:
+
+- Deterministic  
+- Reproducible  
+- Governed  
+- Explainable  
+- Energy-measured  
+- Sovereignty safe  
+- Provenance complete  
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂 2. ETL Directory Layout (v11)
 
-```plaintext
+```text
 src/pipelines/etl/
-├── README.md
 │
-├── climate_etl.py            # NOAA, NASA Daymet, and NIDIS harmonization
-├── hazards_etl.py            # FEMA, NOAA, USGS hazard integration
-├── hydrology_etl.py          # Streamflow, aquifer, and watershed data pipelines
-├── tabular_etl.py            # Normalized census, statistics, and tabular datasets
-├── terrain_etl.py            # DEM, slope, and elevation rasters
-├── text_etl.py               # OCR and archival text ingestion
-└── metadata.json             # Provenance registry + FAIR+CARE metadata
+├── README.md                          # This file — ETL system overview
+│
+├── climate_etl.py                     # NOAA · PRISM · ERA5 harmonization
+├── hazards_etl.py                     # FEMA · NOAA · USGS hazard integration
+├── hydrology_etl.py                   # Flows · aquifers · reservoirs · watershed ETL
+├── tabular_etl.py                     # Census · socioeconomic · statistical integration
+├── terrain_etl.py                     # DEM · slope · curvature · hillshade
+├── text_etl.py                        # OCR · NLP extraction · archival text ingestion
+│
+└── metadata.json                      # ETL model + dataset registry (STAC/DCAT/PROV-O)
 ```
 
 ---
 
-## ⚙️ ETL Workflow
+## 🔧 3. ETL Architecture (v11)
+
+### The ETL engine integrates:
+
+- **LangGraph v11 DAG execution**  
+- **Reliable Node Runner (WAL + retry + compensation)**  
+- **Data Contracts v11**  
+- **STAC / DCAT generation**  
+- **GeoSPARQL + CIDOC-CRM graph alignment**  
+- **FAIR+CARE sovereign governance filters**  
+- **GE Checkpoints + OTel metrics**  
+- **Energy/carbon telemetry**  
+- **OpenLineage v2.5 + PROV-O lineage**  
+
+---
+
+## 🔄 4. ETL Workflow (v11)
 
 ```mermaid
 flowchart LR
-    A["Raw Data (NOAA · USGS · FEMA · Archives)"] --> B["Extract + Schema Detection"]
-    B --> C["Normalize (GeoJSON · Parquet · CSV)"]
-    C --> D["Validate (Schema · FAIR+CARE · Checksum)"]
-    D --> E["Register (Governance · Blockchain Proofs)"]
-    E --> F["Load (Processed · STAC/DCAT Catalogs)"]
-```
-
-1. **Extract:** Download or stream data from open APIs and archives.  
-2. **Transform:** Normalize using schema alignment and spatial projection (EPSG:4326).  
-3. **Validate:** Run FAIR+CARE audits, checksum verification, and ethics checks.  
-4. **Register:** Write lineage and proofs to governance ledgers (Neo4j/IPFS).  
-5. **Load:** Publish cleaned datasets into STAC/DCAT catalog layers.  
-
----
-
-## 🧾 Example ETL Metadata Record
-
-```json
-{
-  "id": "etl_registry_v10.1.0",
-  "pipelines": [
-    "climate_etl.py",
-    "hazards_etl.py",
-    "hydrology_etl.py",
-    "terrain_etl.py"
-  ],
-  "fairstatus": "certified",
-  "schema_validated": true,
-  "checksum_verified": true,
-  "total_records_processed": 311245,
-  "energy_usage_wh": 1.48,
-  "carbon_output_gco2e": 0.17,
-  "telemetry_logged": true,
-  "governance_registered": true,
-  "created": "2025-11-10T11:50:00Z",
-  "validator": "@kfm-etl-ops"
-}
+    A["Raw Data (NOAA · USGS · FEMA · Archives)"] 
+        --> B["Extract<br/>Download · API · Streaming · OCR"]
+    B --> C["Transform<br/>Normalize · Reproject · Harmonize · Contract Bind"]
+    C --> D["Validate<br/>Schema · FAIR+CARE · STAC/DCAT · GE Checkpoints"]
+    D --> E["Register<br/>Governance Ledger · Lineage Bundle · Checksum"]
+    E --> F["Load<br/>Processed · STAC/DCAT · Neo4j Graph · AI Feature Stores"]
 ```
 
 ---
 
-## 🧠 FAIR+CARE Governance Matrix
+## 🧠 5. Semantic Responsibilities
 
-| Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
-| **Findable** | Outputs indexed in manifests and checksum registries. | @kfm-data |
-| **Accessible** | Published under MIT/CC-BY with open endpoints. | @kfm-accessibility |
-| **Interoperable** | ISO 19115, STAC 1.0, DCAT 3.0, OWL-Time alignment. | @kfm-architecture |
-| **Reusable** | Modular ETL recipes reproducible with documented configs. | @kfm-design |
-| **Collective Benefit** | Public environmental data processed transparently. | @faircare-council |
-| **Authority to Control** | FAIR+CARE Council governs schema changes. | @kfm-governance |
-| **Responsibility** | Teams uphold checksum accuracy and sustainability metrics. | @kfm-sustainability |
-| **Ethics** | Pipeline code and datasets reviewed for cultural and privacy ethics. | @kfm-ethics |
+### ✔ Extraction
+- External API ingest  
+- File-based acquisition  
+- OCR/text extraction for archives  
+- Raw dataset retention policies  
 
-Audit sources:  
-`../../../../data/reports/fair/data_care_assessment.json` · `../../../../data/reports/audit/data_provenance_ledger.json`
+### ✔ Transformation
+- Reprojection → EPSG:4326  
+- Raster alignment (GDAL 3.12+)  
+- Attribute harmonization  
+- Categorical normalization  
+- Unit conversion  
+- Temporal interpolation  
 
----
+### ✔ Validation
+- Schema-driven checks  
+- FAIR+CARE screening  
+- GE Checkpoints enforcement  
+- Sovereignty/H3 masking  
+- Contract compliance  
+- Ethics filters (archival content)  
 
-## ⚙️ ETL Pipelines Summary
-
-| Pipeline | Description | FAIR+CARE Role | Sources |
-|----------|-------------|----------------|---------|
-| `climate_etl.py` | Ingests and harmonizes climate feeds. | Environmental transparency | NOAA, NASA, NIDIS |
-| `hazards_etl.py` | Merges multi-hazard datasets (floods, droughts, storms). | Risk & resilience ethics | FEMA, NOAA, USGS |
-| `hydrology_etl.py` | Processes water resource datasets. | Sustainable water stewardship | USGS, EPA |
-| `tabular_etl.py` | Integrates demographic & statistical data. | Inclusivity & transparency | U.S. Census, KSHS |
-| `terrain_etl.py` | Loads topography & elevation rasters. | Geospatial compliance | USGS, NASA |
-| `text_etl.py` | OCR + text normalization for archives. | Accessibility & ethical digitization | KHS, NARA |
-
----
-
-## ⚖️ Retention & Provenance Policy
-
-| Artifact | Retention | Policy |
-|---------|-----------|--------|
-| Extraction Logs | 30 Days | Auto-purge after checksum validation. |
-| Transform Records | 180 Days | Retained for reproducibility audits. |
-| FAIR+CARE Reports | 365 Days | Maintained in governance ledger. |
-| Processed Outputs | Permanent | Immutable, checksum-locked storage. |
-
-Retention managed via `etl_pipeline_sync.yml`.
+### ✔ Load
+- STAC/DCAT publishing  
+- COG/Parquet/NetCDF materialization  
+- Neo4j ingestion (CIDOC-CRM + GeoSPARQL)  
+- AI-ready dataset emission  
 
 ---
 
-## 🌱 Sustainability Metrics (v10.1.0)
+## 🔐 6. Required ETL Metadata (v11)
 
-| Metric | Value | Verified By |
-|--------|-------|-------------|
-| Avg Runtime | 2.3 minutes | @kfm-ops |
-| Energy Usage | 1.48 Wh | @kfm-sustainability |
-| Carbon Output | 0.17 g CO₂e | @kfm-security |
-| Renewable Energy | 100% (RE100) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
+| Field | Required | Description |
+|-------|----------|-------------|
+| `etl_run_id` | ✔ | Deterministic operation hash |
+| `sources` | ✔ | STAC/DCAT dataset IDs |
+| `checksum` | ✔ | SHA-256 of final output |
+| `runtime_sec` | ✔ | Execution duration |
+| `energy_wh` | ✔ | Estimated energy use |
+| `co2_g` | ✔ | Estimated carbon intensity |
+| `care_label` | ✔ | CARE classification |
+| `sovereignty_notes` | ✔ | Tribal/heritage rules applied |
+| `lineage` | ✔ | PROV-O chain |
+| `stac_item` | ☐ | Optional link to artifact |
+| `error_budget_status` | ✔ | Green/Yellow/Red gating |
 
-Telemetry source:  
-`../../../../releases/v10.1.0/focus-telemetry.json`
+All ETL metadata must validate against:
 
----
-
-## 🧾 Internal Citation
-
-```text
-Kansas Frontier Matrix (2025). ETL Pipelines (v10.1.0).
-FAIR+CARE-certified Extract–Transform–Load framework ensuring transparent, sustainable, and reproducible data processing within the Kansas Frontier Matrix.
+```
+schemas/telemetry/src-etl-v11.json
 ```
 
 ---
 
-## 🕰️ Version History
+## 📦 7. ETL Pipelines Summary
 
-| Version | Date | Notes |
-|--------|------|------|
-| **v10.1.0** | 2025-11-10 | Upgraded to streaming ETL integration; enhanced DCAT/STAC bridge and improved sustainability metrics. |
-| **v10.0.0** | 2025-11-08 | Added schema self-healing, DCAT 3.0 compliance, and provenance hooks. |
-| **v9.7.0** | 2025-11-05 | Improved schema audit coverage and hazard module performance. |
+| Pipeline | Description | FAIR+CARE Role | Key Sources |
+|----------|-------------|----------------|-------------|
+| `climate_etl.py` | Climate harmonization | Ecological benefit | NOAA · PRISM · ERA5 |
+| `hazards_etl.py` | Multi-hazard ingestion | Risk ethics | FEMA · USGS |
+| `hydrology_etl.py` | Water systems ETL | Sustainable water stewardship | USGS · EPA |
+| `tabular_etl.py` | Census/statistical ingestion | Social transparency | Census Bureau |
+| `terrain_etl.py` | DEM + terrain metrics | Geospatial compliance | USGS |
+| `text_etl.py` | OCR + historical text | Ethical digitization | KSHS · NARA |
+
+---
+
+## ⚖️ 8. Governance: FAIR+CARE + Sovereignty
+
+ETL pipelines must:
+
+- Obey sovereignty restrictions on tribal datasets  
+- Mask sensitive coordinates via **H3 R7 → R9**  
+- Enforce CARE principles  
+- Retain provenance auditability  
+- Respect historical & cultural data ethics  
+
+Governance events are recorded in:
+
+```
+docs/reports/audit/etl_governance_ledger.json
+```
+
+---
+
+## 📊 9. Telemetry (OTel v11)
+
+ETL pipelines **must** emit:
+
+- `kfm.etl_latency_ms`  
+- `kfm.etl_rows_processed`  
+- `kfm.etl_energy_wh`  
+- `kfm.etl_carbon_gco2e`  
+- `kfm.etl_validation_failures`  
+- `kfm.etl_care_violations`  
+- `kfm.etl_error_budget_burn`  
+
+---
+
+## 🧯 10. Failure Modes & Recovery
+
+### Typical Failures
+- Schema drift  
+- COG raster corruption  
+- Temporal inconsistencies  
+- FAIR+CARE flags  
+- Coordinate leakage  
+- Sovereignty restriction violation  
+
+### Recovery Moves
+- Replay via WAL  
+- Rebuild STAC metadata  
+- Re-run GE Checkpoints  
+- Re-ingest raw dataset  
+- Apply sovereignty filter patch  
+- Governance-led review  
+
+---
+
+## 🕰 11. Version History
+
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.0 | 2025-11-24 | Full KFM-MDP v11 rebuild with reliability, lineage, sovereignty, FAIR+CARE, telemetry, and deterministic DAG integration. |
+| v10.1.0 | 2025-11-10 | Legacy v10 generation. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT License**  
-*Reproducible Data Pipelines × FAIR+CARE Ethics × Sustainable Provenance*  
-[Back to Pipelines](../README.md) · [Docs Portal](../../../../docs/) · [Governance Ledger](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix  
+FAIR+CARE · Diamond⁹ Ω / Crown∞Ω · MCP-DL v6.3  
+Deterministic ETL × Ethical Stewardship × Provenance Safety
 
 </div>
