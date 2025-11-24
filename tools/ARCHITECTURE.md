@@ -1,308 +1,212 @@
 ---
 title: "🛠️ Kansas Frontier Matrix — Tools Platform Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tools/ARCHITECTURE.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
-review_cycle: "Continuous / Autonomous · FAIR+CARE Council Oversight"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/tools-architecture-v1.json"
+sbom_ref: "../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/tools-architecture-v11.json"
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
+markdown_protocol_version: "KFM-MDP v11.0"
+status: "Active · Enforced"
 doc_kind: "Architecture"
 intent: "tools-platform-architecture"
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-indigenous_rights_flag: false
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Low"
-redaction_required: false
-provenance_chain:
-  - "tools/ARCHITECTURE.md@v10.0.0"
-  - "tools/ARCHITECTURE.md@v10.3.2"
-previous_version_hash: "<previous-sha256>"
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "SoftwareSourceCode"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-json_schema_ref: "../schemas/json/tools-architecture.schema.json"
-shape_schema_ref: "../schemas/shacl/tools-architecture-shape.ttl"
-doc_uuid: "urn:kfm:doc:tools-architecture-v10.4.0"
-semantic_document_id: "kfm-doc-tools-architecture"
-event_source_id: "ledger:tools/ARCHITECTURE.md"
-immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
-ai_transform_permissions:
-  - "summaries"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-ai_transform_prohibited:
-  - "speculative additions"
-  - "unverified historical claims"
+classification: "Public Document"
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA"
-jurisdiction: "Kansas / United States"
-classification: "Public Document"
-role: "architecture"
-lifecycle_stage: "stable"
-ttl_policy: "Review required every 6 months"
+immutability_status: "version-pinned"
+ttl_policy: "6 months"
 sunset_policy: "Superseded upon next major tools-platform architecture update"
 ---
 
 <div align="center">
 
-# 🛠️ **Kansas Frontier Matrix — Tools Platform Architecture**  
+# 🛠️ **Kansas Frontier Matrix — Tools Platform Architecture (v11)**  
 `tools/ARCHITECTURE.md`
 
 **Purpose:**  
-Define the **complete architectural specification** for the Tools Platform (`tools/**`) — the automation, governance,
-validation, audit, and telemetry backbone of the Kansas Frontier Matrix (KFM).  
-This document governs all contributors working on operational tooling, ensuring reproducibility, ethical automation,
-FAIR+CARE alignment, and deterministic metadata governance.
+Define the authoritative **v11 Tools Platform** architecture: all automation, validation, governance, AI-audit,  
+and telemetry systems under `tools/**`.  
+Built for **deterministic reproducibility**, **FAIR+CARE compliance**, **idempotent operations**, and **v11 reliability standards**.
 
 </div>
 
 ---
 
-## 📘 Overview
-
-The KFM **Tools Platform** is an integrated suite of:
-
-- Validation tools (schema, metadata, provenance, FAIR+CARE)  
-- Governance and certification tools (ledger sync, compliance audits)  
-- AI explainability and drift detection tools  
-- Telemetry collectors (performance, energy, carbon, ethics, A11y usage)  
-- CI/CD orchestration scripts and helpers  
-- Operator-facing CLI utilities for ETL, dataset management, and metadata controls  
-
-The Tools Platform enforces **trust, correctness, ethics, reproducibility, and auditability** at every stage of the KFM
-ecosystem — from dataset ingestion to Focus Mode reasoning pipelines.
-
----
-
-## 🧱 Directory Structure
-
-A single canonical directory tree using `~~~text` (KFM-MDP v10.4):
+# 🧱 1. Directory Structure (v11 canonical)
 
 ~~~text
 tools/                              # Tools Platform root
-├── ARCHITECTURE.md                 # This architecture specification
-├── README.md                       # High-level overview of tools
+├── ARCHITECTURE.md                 # This specification
+├── README.md                       # High-level overview
 │
-├── ai/                             # AI auditing and explainability tools
-│   ├── focus_audit.py              # Focus Mode reasoning audits
-│   ├── bias_check.py               # Bias & fairness testing
-│   └── drift_monitor.py            # Drift/semantic-shift detection
+├── ai/                             # AI audit & assurance layer
+│   ├── focus_audit.py              # Focus Mode explainability audits
+│   ├── bias_check.py               # Bias & fairness validator
+│   └── drift_monitor.py            # Drift & semantic shift detection
 │
-├── ci/                             # CI/CD runners and workflow helpers
-│   ├── docs_validate.yml           # Documentation + schema lint
-│   ├── checksum_verify.yml         # SBOM/manifest checksum verification
-│   └── site_deploy.yml             # Automated deployment pipeline helpers
+├── ci/                             # CI/CD workflow helpers
+│   ├── docs_validate.yml           # Markdown + schema validation
+│   ├── checksum_verify.yml         # SBOM/manifest integrity gates
+│   └── site_deploy.yml             # Web/docs deployment orchestrator
 │
-├── cli/                            # Command-line interfaces
-│   ├── kfm_cli.py                  # Main CLI entrypoint for ops
-│   └── metadata_manager.py         # Dataset + manifest metadata tooling
+├── cli/                            # Operator-facing command-line tools
+│   ├── kfm_cli.py                  # Universal KFM CLI
+│   └── metadata_manager.py         # Dataset + manifest metadata utilities
 │
 ├── governance/                     # Governance, provenance, and compliance
-│   ├── governance_sync.py          # Synchronize provenance ledgers
-│   ├── ledger_update.py            # Append-only certification entries
-│   └── certification_audit.py      # FAIR+CARE certification validator
+│   ├── governance_sync.py          # Ledger/manifest prover
+│   ├── ledger_update.py            # Append-only provenance entries
+│   └── certification_audit.py      # FAIR+CARE/ethics certification
 │
 ├── telemetry/                      # Observability + sustainability
-│   ├── telemetry_collector.py      # Collect performance + ethics metrics
-│   ├── performance_analyzer.py     # Hotspot and scoring analysis
-│   └── sustainability_reporter.py  # Energy/CO₂ evaluation
+│   ├── telemetry_collector.py      # Runtime + energy/CO₂ metrics
+│   ├── performance_analyzer.py     # Hotspot detection & scoring
+│   └── sustainability_reporter.py  # ISO 50001-aligned sustainability summaries
 │
-└── validation/                     # FAIR+CARE + schema validators
-    ├── faircare_validator.py       # CARE + ethical constraints
-    ├── schema_check.py             # JSON/YAML schema validation
-    └── ai_explainability_audit.py  # SHAP/LIME consistency + metadata checks
+└── validation/                     # Schema, STAC/DCAT, and CARE validators
+    ├── faircare_validator.py       # CARE + Indigenous data sovereignty rules
+    ├── schema_check.py             # JSON/YAML/STAC/DCAT schema validation
+    └── ai_explainability_audit.py  # SHAP/LIME consistency + metadata guards
 ~~~
 
 ---
 
-## 🧩 Architectural Context
+# 🧬 2. Toolchain Architecture Model (v11)
 
-The Tools Platform forms the **operational backbone** of KFM:
-
-- It guarantees **metadata integrity**, **CARE compliance**, and **provenance traceability**.  
-- It forms the bridge between:
-  - CI/CD  
-  - FAIR+CARE governance  
-  - Telemetry pipelines  
-  - Dataset curation and transformation workflows  
-  - AI reasoning audits  
-
-It is used by:
-
-- Operators  
-- CI runners  
-- Pipelines  
-- Governance reviewers  
-- Telemetry collectors  
-- FAIR+CARE Council  
-
----
-
-## 🏗 Tools Platform Architecture Model
-
-### Layer Breakdown
-
-1. **Execution Layer**  
-   CLI tools in `tools/cli/*` invoked by operators or CI workflows.
-
-2. **Validation Layer**  
-   Schema, metadata, checksum, FAIR+CARE validation.
-
-3. **Governance Layer**  
-   Ledger synchronization, provenance writing, certification checks.
-
-4. **AI Assurance Layer**  
-   Bias, drift, explainability audits feeding into governance + telemetry systems.
-
-5. **Telemetry Layer**  
-   Energy, performance, carbon, accessibility signals exported into release telemetry bundles.
-
-6. **CI Integration Layer**  
-   GitHub Action workflows orchestrating automation across KFM.
-
-### Conceptual Flow
+All tools integrate through the **deterministic governance pipeline**:
 
 ~~~text
-Operator/CI
+CI/Operator
    │
    ▼
-CLI (tools/cli)
+tools/cli
    │
    ▼
-Validation (tools/validation)
+tools/validation
    │
    ▼
-Governance Sync (tools/governance)
+tools/governance
    │
    ▼
-Telemetry Export (tools/telemetry)
+tools/telemetry
    │
    ▼
-AI Audits (tools/ai)
+tools/ai
+   │
+   ▼
+Release Artifacts
+(STAC/DCAT · Ledgers · Telemetry · SBOM · Manifests)
 ~~~
 
----
-
-## ⚙️ Component Responsibilities
-
-### **CLI Tools**
-- Provide consistent UX for operators.  
-- Accept typed arguments and configuration.  
-- Emit structured logs with provenance metadata.
-
-### **Validation Tools**
-- Enforce KFM schema correctness.  
-- Validate JSON/YAML integrity.  
-- Guard against improper transformations.  
-- Block CI merges when violations occur.
-
-### **Governance Tools**
-- Append entries to governance ledgers.  
-- Synchronize provenance across releases.  
-- Ensure every artifact has an authoritative audit trail.  
-- Enforce CARE rules for datasets and derived outputs.
-
-### **AI Audit Tools**
-- Inspect reasoning drift for Focus Mode.  
-- Validate explainability metadata (SHAP/LIME).  
-- Score fairness, bias, and dataset representativeness.
-
-### **Telemetry Tools**
-- Collect performance (WebVitals + server metrics).  
-- Estimate energy/CO₂ usage of tools in pipelines.  
-- Produce sustainability summaries for release bundles.
+This block is guaranteed unbroken, GitHub-safe, and stable under v11 protocol rules.
 
 ---
 
-## ⚖️ FAIR+CARE Enforcement Architecture
+# 🧩 3. Tools Platform Context in KFM v11
 
-KFM tools **must enforce**:
+The Tools Platform enforces that:
 
-| Principle | Enforcement |
-|----------|-------------|
-| Findable | Registered in manifest + SBOM |
-| Accessible | MIT license, documented CLI |
-| Interoperable | JSON, YAML, SPDX, STAC/DCAT |
-| Reusable | Modular code, typed inputs/outputs |
-| Authority to Control | Ledger approvals, CARE rules |
-| Responsibility | Telemetry + sustainability tracking |
-| Ethics | Bias, drift, and explainability audits |
-
-All actions must generate reproducible artifacts and telemetry traces.
+- Every dataset transformation is **schema-valid**, **FAIR+CARE-compliant**, and **ethically governed**.  
+- Every AI output is **explainable**, **audited**, and **bias-scored**.  
+- Every provenance update enters **append-only ledgers**.  
+- Every run emits **energy**, **carbon**, **A11y**, and **performance** telemetry.  
+- Every release contains reproducible metadata (`sbom.spdx.json`, `manifest.zip`, `focus-telemetry.json`).  
 
 ---
 
-## 🧪 Testing & CI/CD Validation
+# ⚙️ 4. Component Responsibilities (v11)
 
-The Tools Platform is validated through:
+### **CLI Layer (`tools/cli`)**
+- Operator-safe orchestration of ETL, validation, governance, and release tasks  
+- Structured JSON logs with deterministic run IDs  
+- Supports dry-run/no-op safety  
 
-- Type checking (Python + YAML/JSON schemas)  
-- Linting + formatting standards  
-- Schema validation test suites  
-- FAIR+CARE test harness  
-- AI explainability validation  
-- CI workflows enforcing correctness  
+### **Validation Layer (`tools/validation`)**
+- STAC/DCAT schema verification  
+- CARE masking + sovereignty enforcement  
+- SHACL/JSON-Schema validators for Story Nodes, telemetry, manifests  
 
-Failures **block merges and releases**.
+### **Governance Layer (`tools/governance`)**
+- Provenance ledger updates  
+- Certification & review workflows  
+- Immutable hash-linked audit chains  
+
+### **AI Assurance Layer (`tools/ai`)**
+- Bias detection & fairness scoring  
+- Drift/semantic shift monitoring  
+- SHAP/LIME/attention export verification  
+
+### **Telemetry Layer (`tools/telemetry`)**
+- OTel v11 metrics  
+- Energy (Wh) and Carbon (gCO₂e) reporting  
+- A11y usage, performance, anomaly detection  
 
 ---
 
-## 🔒 Security & Privacy
+# ⚖️ 5. FAIR+CARE Enforcement (v11)
+
+| Principle | Enforcement Mechanism |
+|----------|------------------------|
+| Findable | Tools registered in SBOM + manifest |
+| Accessible | MIT license, documented CLI UX |
+| Interoperable | JSON · YAML · STAC · DCAT · SPDX |
+| Reusable | Modular, deterministic utilities |
+| Authority to Control | CARE rules + ledger approvals |
+| Responsibility | Telemetry + error taxonomy |
+| Ethics | Bias, drift, explainability audits |
+
+All tool actions must produce reproducible, hash-verifiable artifacts.
+
+---
+
+# 🔒 6. Security & Privacy Baselines
 
 Tools must:
 
-- Avoid PII ingestion  
-- Sanitize all error logs  
-- Perform secure hashing (SHA256)  
-- Use append-only governance logs  
-- Not embed secrets or credentials  
-- Conform to KFM operational security baselines  
+- Never ingest or emit PII  
+- Sanitize error logs  
+- Use SHA-256 for all provenance checks  
+- Maintain sandbox boundaries  
+- Avoid leaking paths, secrets, or internal identifiers  
+- Issue redaction warnings when sovereign datasets are involved  
 
 ---
 
-## 🧾 Retention Policy
+# 🗃️ 7. Retention & Rotation
 
-| Artifact Type | Retention | Rule |
-|---------------|-----------|------|
+| Artifact | Retention | Notes |
+|----------|-----------|-------|
 | Governance Logs | Permanent | Append-only |
 | Tool Metadata | Permanent | SBOM + manifest |
-| Validation Reports | 1 year | Deleted after audit window |
-| Telemetry | 90 days | Summaries preserved |
+| Validation Reports | 1 year | Archived after audit window |
+| Telemetry Logs | 90 days | Summaries persisted |
 
-Rotation is handled by CI automation (`tools_cleanup.yml`).
+Rotation via `tools_cleanup.yml`.
 
 ---
 
-## 🕰 Version History
+# 🕰️ 8. Version History (v11)
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Full rebuild to KFM-MDP v10.4; stable directory tree; FAIR+CARE + AI audit architecture |
-| v10.3.2 | 2025-11-14 | Enhanced telemetry and governance alignment |
-| v10.3.1 | 2025-11-13 | Initial tools architecture outline |
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.0 | 2025-11-24 | Full upgrade to **KFM-MDP v11**; box-safe diagrams, deterministic layout, semantic enrichment |
+| v10.4.0 | 2025-11-15 | Pre-v11 architecture; partial FAIR+CARE alignment |
+| v10.3.x | 2025-11-13/14 | Early tools directory formalization |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MIT License  
-Validated under MCP-DL v6.3 and KFM-MDP v10.4  
-FAIR+CARE Certified · Public Document · Version-Pinned  
+**© 2025 Kansas Frontier Matrix — MIT License**  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified · KFM-MDP v11 Compliant  
+FAIR+CARE Enforced · Reproducible · Deterministic · Ethics-Governed
 
 </div>
