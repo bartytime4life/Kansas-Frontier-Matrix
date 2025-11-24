@@ -1,45 +1,44 @@
 ---
 title: "🗂️ Kansas Frontier Matrix — Web Public Assets Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/public/ARCHITECTURE.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
-review_cycle: "Quarterly / Autonomous · FAIR+CARE Council Oversight"
+version: "v11.0.0"
+last_updated: "2025-11-25"
+release_stage: "Stable · Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Annual · FAIR+CARE Council Oversight"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/web-public-architecture-v1.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
-doc_kind: "Architecture"
-intent: "web-public-architecture"
-fair_category: "F1-A1-I1-R1"
-care_label: "Public / Low-Risk"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-indigenous_rights_flag: false
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Low"
-redaction_required: false
-provenance_chain:
-  - "web/public/ARCHITECTURE.md@v10.0.0"
-previous_version_hash: "<previous-sha256>"
-ontology_alignment:
-  cidoc: "E31 Document"
-  schema_org: "CreativeWork"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "N/A"
-json_schema_ref: "../../schemas/json/web-public-architecture.schema.json"
-shape_schema_ref: "../../schemas/shacl/web-public-architecture-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-public-architecture-v10.4.0"
+previous_version_hash: "<previous-version-sha>"
+doc_uuid: "urn:kfm:web-public-architecture-v11.0.0"
 semantic_document_id: "kfm-doc-web-public-architecture"
-event_source_id: "ledger:web/public/ARCHITECTURE.md"
-immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
+doc_kind: "Architecture"
+intent: "web-public-assets-architecture"
+
+sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.0.0/manifest.zip"
+
+telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/web-public-architecture-v4.json"
+energy_schema: "../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "MIT / CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE-P · Public-Safe"
+sensitivity_level: "Low"
+indigenous_data_flag: false
+risk_category: "Low"
+public_benefit_level: "High"
+
+accessibility_compliance: "WCAG 2.1 AA"
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
@@ -47,276 +46,251 @@ ai_transform_permissions:
   - "semantic-highlighting"
   - "a11y-adaptations"
 ai_transform_prohibited:
-  - "speculative additions"
-  - "unverified historical claims"
+  - "speculative-additions"
+  - "fabricated-historical-content"
+
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-jurisdiction: "Kansas / United States"
+immutability_status: "version-pinned"
+ttl_policy: "12 months"
+sunset_policy: "Superseded upon next major update"
+jurisdiction: "United States · Kansas"
 classification: "Public Document"
-role: "architecture"
-lifecycle_stage: "stable"
-ttl_policy: "Review required every 12 months"
-sunset_policy: "Superseded upon next major web/public architecture update"
 ---
 
 <div align="center">
 
-# 🗂️ **Kansas Frontier Matrix — Web Public Assets Architecture**  
+# 🗂️ **Kansas Frontier Matrix — Web Public Assets Architecture (v11)**  
 `web/public/ARCHITECTURE.md`
 
 **Purpose:**  
-Define the **complete static assets architecture** for `web/public/**` in the Kansas Frontier Matrix (KFM) Web
-Platform — including HTML shell, PWA manifest, robots configuration, icons, images, and their integration into the
-build pipeline, governance, accessibility, and Focus Mode–aware UI.
+Define the **complete static-assets architecture** for `web/public/**` —  
+including SPA shell, PWA metadata, icons, images, and public-safe governance rules.  
+All assets follow **KFM-MDP v11**, **FAIR+CARE-P**, accessibility, sustainability, and  
+telemetry v4 compliance.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-The `web/public/` directory contains **all static assets** that are served directly by the web server or CDN
-without going through the React/TypeScript build step. These assets participate in:
+`web/public/**` contains all **immutable, pre-compiled, CDN-served assets**:
 
-- React SPA bootstrapping (`index.html`)  
-- Progressive Web App behavior (`manifest.json`, icons, favicon)  
-- Search engine and crawler behavior (`robots.txt`)  
-- Shared imagery for the UI (logos, hero art, simple map thumbnails)  
+- `index.html` — SPA shell  
+- `manifest.json` — PWA metadata  
+- Icons — PWA + platform branding  
+- Images — non-sensitive UI artwork, map thumbnails, hero images  
+- `robots.txt` — crawler rules  
+- `favicon.ico` — primary site icon  
 
-Although these assets are not compiled TypeScript, they are part of the **Web Platform architecture** and must comply
-with KFM’s FAIR+CARE, governance, and accessibility rules. This document describes how `web/public/**` fits into
-the overall system and how contributions to public assets are governed.
+In KFM v11, **public assets must be**:
 
----
-
-## 🎯 Purpose
-
-This specification:
-
-- Describes the structure and responsibilities of `web/public/**`.  
-- Explains how public assets integrate with:
-  - The React SPA in `web/src/**`  
-  - The build system (Vite)  
-  - PWA behavior and metadata  
-  - Governance and FAIR+CARE requirements  
-- Provides clear guidance for adding or modifying public assets (images, icons, HTML shell).
+- License-clear (MIT / CC-BY)  
+- Accessible (alt text, ARIA patterns)  
+- Public-safe per **CARE-P**  
+- Energy/carbon-profiled (telemetry v4)  
+- Provenance-tracked (checksum + ledger)  
 
 ---
 
-## 📍 Scope
+# 🗂️ Directory Layout (v11 canonical)
 
-### In Scope
+Directory rendered with **inline comments**, safe `~~~~text` fence:
 
-- All files under `web/public/**`, including:
-  - `index.html`  
-  - `manifest.json`  
-  - `robots.txt`  
-  - `favicon.ico`  
-  - `icons/**`  
-  - `images/**` (and other static asset subfolders)  
-- How these assets are referenced from `web/src/**` and the build system.  
-- Governance, licensing, and accessibility expectations for static resources.
+~~~~text
+web/public/                          # Static, CDN-served public assets (no build step)
+│
+├── ARCHITECTURE.md                  # This architecture document (v11)
+├── README.md                        # Public-assets overview + governance notes
+│
+├── index.html                       # SPA shell + React mount point (#root)
+│
+├── manifest.json                    # PWA manifest (name, theme, icons, scope)
+├── robots.txt                       # Search engine crawl directives
+├── favicon.ico                      # Primary favicon (32×32)
+│
+├── icons/                           # PWA + platform iconography (FAIR+CARE-P safe)
+│   ├── icon-192.png                 # PWA install icon (192×192)
+│   ├── icon-512.png                 # PWA install icon (512×512)
+│   ├── maskable-512.png             # Maskable icon for Android install surfaces
+│   └── metadata.json                # Checksums · licenses · a11y tags · provenance
+│
+└── images/                          # Public-safe imagery for UI (not sensitive)
+    ├── logo-full.png                # Full KFM brandmark
+    ├── logo-mark.png                # Compact logo mark
+    ├── hero/                        # Hero images for landing/splash sections
+    ├── maps/                        # Simple/low-sensitivity map thumbnails
+    ├── ui/                          # UI illustrations · onboarding visuals
+    └── metadata.json                # FAIR+CARE-P annotations · license · SHA-256
+~~~~
 
-### Out of Scope
-
-- Frontend source code in `web/src/**` (covered by `web/src/ARCHITECTURE.md`).  
-- Backend APIs and data pipelines.  
-- CDN and edge cache configuration (documented at infra level).
-
----
-
-## 🧱 Directory Structure
-
-Static assets are arranged as follows:
-
-~~~text
-web/public/                      # Static assets served directly
-├── index.html                   # SPA entry HTML shell for React
-├── manifest.json                # Web App Manifest (PWA metadata)
-├── robots.txt                   # Crawler and indexing directives
-├── favicon.ico                  # Primary favicon
-├── icons/                       # Platform/App icons (various sizes)
-│   ├── icon-192.png             # PWA icon (192×192)
-│   ├── icon-512.png             # PWA icon (512×512)
-│   └── ...                      # Additional platform-specific icons
-└── images/                      # Shared images used by the UI
-    ├── logo-full.png            # KFM logo used on landing/splash
-    ├── logo-mark.png            # Compact logo mark
-    ├── hero-*.jpg               # Hero/cover imagery
-    └── ...                      # Other non-sensitive static imagery
-~~~
-
-**Rule:** Any new static asset must be placed in an appropriate subdirectory under `web/public/` and referenced
-using the correct public path (e.g., `/images/...`, `/icons/...`) according to the build system.
+All assets are **immutable** and must maintain **public-safety guarantees**.
 
 ---
 
-## 🧩 Role in the Web Platform
+# 🌐 Architectural Role
 
-`web/public/` plays these architectural roles:
+### 1. SPA Bootstrap (index.html)
 
-- **Bootstrap Shell**  
-  - `index.html` is the base document loaded by browsers.  
-  - It includes the root `<div>` where React mounts (`#root` or similar).  
-  - Global `<meta>` tags (charset, viewport, theme-color, basic SEO) reside here.
+- Defines `<meta>` tags for accessibility, color scheme, and theme-color.  
+- Provides React mount root (`<div id="root">`).  
+- Loads build output from Vite.  
+- Must **never** embed secrets or internal URLs.
 
-- **PWA & Installability**  
-  - `manifest.json` declares app name, icons, theme colors, and start URL.  
-  - References icons in `icons/` and drives “install to home screen” behavior.  
+### 2. PWA Infrastructure
 
-- **Branding & Visual Identity**  
-  - `favicon.ico`, icons, and `images/` maintain a consistent KFM brand across pages and devices.  
+`manifest.json` defines:
 
-- **Crawling & Indexing**  
-  - `robots.txt` controls indexing and crawling, aligning with governance decisions (what is meant to be discoverable).  
+- App name, icons, orientation  
+- Theme and background color  
+- Display mode (`standalone`)  
+- Start URL and scope  
+- Maskable icons for adaptive systems  
 
-- **Performance & Caching**  
-  - Public assets are typically cached by the CDN or browser with long-lived headers, so modifications can have broad
-    impact. Filenames and hash-based naming should be used where appropriate.
+Icons must meet:
 
----
+- Square format  
+- Required PWA sizes: **192×192**, **512×512**  
+- High contrast and WCAG-safe palette  
+- Public-generalizable symbolism (no restricted cultural motifs)
 
-## 🧱 Index HTML Architecture
+### 3. Public Imagery
 
-Key architectural aspects of `index.html`:
+Images are:
 
-- Provides a minimal HTML shell.  
-- Contains no application logic; all behavior comes from the compiled React bundle.  
-- Must include:
+- Public-safe  
+- License-compliant  
+- Accessibility-audited  
+- Vetted for CARE-P compliance  
+- Energy-optimized (WebP/AVIF preferred)  
 
-  - `<meta charset="utf-8">`  
-  - `<meta name="viewport" content="width=device-width, initial-scale=1">`  
-  - `<meta name="theme-color" content="#000000">` (kept in sync with theming)  
-  - `<link rel="manifest" href="/manifest.json">`  
-  - `<link rel="icon" type="image/x-icon" href="/favicon.ico">`  
-  - A root mount container for React, e.g.:
+Governance rules prohibit:
 
-    - `<div id="root"></div>`
-
-- Must not embed secrets or privileged configuration; any configuration is obtained by the SPA at runtime (e.g., via
-  environment variables baked into the bundle, not public HTML).
+- Sensitive heritage photography  
+- Unreviewed Indigenous cultural imagery  
+- Exact depictions of restricted sites  
 
 ---
 
-## 📱 Manifest & Icons Architecture
+# ♿ Accessibility Requirements (WCAG 2.1 AA)
 
-The **Web App Manifest** (`manifest.json`) specifies:
+**All images must include:**
 
-- `name` and `short_name` for KFM.  
-- `start_url` (usually `/` or a specific route).  
-- `display` mode (e.g., `standalone`).  
-- `theme_color` and `background_color` (must be visually and A11y-aligned with React theming).  
-- `icons` array referencing `icons/**`.
+- `alt` text describing meaning or purpose  
+- Or `alt=""` if decorative and marked via CSS  
 
-Architectural rules:
+**Icons**:
 
-- All icons referenced in `manifest.json` must exist under `web/public/icons/`.  
-- Icon sizes must satisfy platform recommendations (e.g., 192×192, 512×512).  
-- Icons should have adequate contrast on various device backgrounds.  
-- Where symbols appear in contexts related to Indigenous or sensitive data, governance guidance must be followed for
-  iconography (no misappropriation of symbols).
+- Decorative icons: hidden via ARIA  
+- Semantic icons: paired with visible text or ARIA label  
 
----
+**Theme Color Considerations**:
 
-## 🔐 Governance & FAIR+CARE Expectations
-
-Although `web/public/` typically holds non-sensitive resources, the same **governance principles** apply:
-
-- All images and icons must have clear licensing and provenance:
-  - Prefer original KFM assets or open-licensed assets with attribution tracked in `manifest_ref` or in a per-asset log.  
-- No sensitive or restricted imagery (e.g., photographs of protected sites) should be placed in `web/public/images/`
-  without CARE review.  
-- For imagery illustrating Indigenous history or sacred sites:
-  - CARE considerations must be reviewed by the FAIR+CARE Council before inclusion.  
-  - Images may be generalized, stylized, or replaced with neutral illustrations when appropriate.  
-
-The architecture assumes that all content in `web/public/` is **public-safe** and consistent with the declared
-`care_label` and `classification`.
+- `manifest.json` theme color MAY NOT reduce contrast  
+- Must align with the Web UI’s high-contrast modes  
 
 ---
 
-## ♿ Accessibility Architecture
+# ⚖️ Governance · FAIR+CARE-P Model
 
-Accessibility for public assets focuses on:
+CARE-P (Public) rules:
 
-- **Logo and imagery usage**  
-  - React components using images in `web/public/images/` must supply appropriate `alt` text.  
-  - Decorative images should explicitly use empty `alt` attributes (and be styled via CSS) to avoid noisy screen reader
-    output.  
+- No sensitive Indigenous imagery  
+- No exact coordinates of protected places  
+- Avoid culturally significant iconography unless approved  
+- All assets must include:  
+  - `license`  
+  - `checksum_sha256`  
+  - `alt_text`  
+  - `care_label: "Public"`  
+  - `sensitive: false`  
 
-- **Icons**  
-  - Icons used purely as decoration can rely on CSS background images and be hidden from assistive tech where needed.  
-  - Icons carrying semantic meaning (e.g., warning, info) must be paired with text or ARIA labeling; the icon alone is
-    not considered sufficient.
+Governance metadata lives in:
 
-- **Color & Contrast**  
-  - Icons and branding images must be chosen to work with the high-contrast modes offered by the SPA.  
-  - Theme color in `manifest.json` should not cause text/icons to become illegible in browser UI or OS surfaces.
+~~~~text
+web/public/icons/metadata.json
+web/public/images/metadata.json
+~~~~
 
-No standalone A11y behavior lives in `web/public/**`, but its contents must support the A11y story implemented in
-`web/src/**`.
+Governance ledger references are appended to:
 
----
-
-## 📈 Integration with Build & Runtime
-
-From a build/runtime perspective:
-
-- Vite serves `index.html` as the SPA entry and injects built JS/CSS bundles.  
-- Paths like `/images/...` and `/icons/...` are resolved relative to the public root.  
-- When new assets are added:
-  - They should be referenced from React components via `/images/...` or `/icons/...` (not relative `../public/...`).
-  - Rebuilds of the web app should ensure no broken links (GitHub Actions can run asset existence checks).
-
-Public assets are versioned along with the rest of KFM via the same Git history and SBOM manifests.
+~~~~text
+docs/reports/audit/web_public_assets.json
+~~~~
 
 ---
 
-## 🔒 Security & Privacy
+# 🌿 Sustainability & Telemetry v4
 
-The public assets architecture must:
+Telemetry collects (non-PII):
 
-- Avoid embedding any secrets, keys, or sensitive endpoints in `index.html`, `manifest.json`, or image metadata.  
-- Ensure that any pre-configured URLs in the manifest are non-sensitive and safe to expose.  
-- Treat all content in `web/public/` as world-readable; security controls are applied at other layers (e.g., backend).
+- **Bytes served** per asset  
+- **Estimated energy (Wh)** using energy schema v2  
+- **CO₂ (gCO₂e)** using carbon schema v2  
+- **Cache hit rate**  
+- **Format efficiency** scoring (PNG → WebP/AVIF)  
+- **A11y usage patterns**
 
----
+Telemetry exported to:
 
-## 📁 Directory Layout Summary
+~~~~text
+../../releases/v11.0.0/focus-telemetry.json
+docs/reports/telemetry/web_public_assets/*.json
+~~~~
 
-For quick reference, here is the `web/public/` layout with roles:
+Performance requirements (v11):
 
-~~~text
-web/public/
-├── ARCHITECTURE.md               # This architecture document for public assets
-├── index.html                    # Static SPA shell, React mount point
-├── manifest.json                 # PWA metadata, icons, and display preferences
-├── robots.txt                    # Crawler directives for search engines
-├── favicon.ico                   # Default site favicon
-├── icons/                        # App/platform icons referenced by manifest
-│   ├── icon-192.png              # PWA icon (192×192)
-│   ├── icon-512.png              # PWA icon (512×512)
-│   └── ...                       # Additional icon sizes/variants
-└── images/                       # Non-sensitive UI imagery
-    ├── logo-full.png             # Primary KFM logo
-    ├── logo-mark.png             # Compact icon-like logo
-    ├── hero-*.jpg                # Hero images for landing sections
-    └── ...                       # Other shared illustrations/graphics
-~~~
+| Metric | Target |
+|--------|--------|
+| Avg image weight | ≤ 350 KB |
+| Energy render cost | ≤ 0.03 Wh |
+| Carbon per view | ≤ 0.04 gCO₂e |
+| RE100 hosting compliance | Required |
+| Lighthouse Perf | ≥ 95 |
 
 ---
 
-## 🕰 Version History
+# 🔒 Privacy & Security
 
-| Version | Date       | Summary                                                                                   |
-|--------:|------------|-------------------------------------------------------------------------------------------|
-| v10.4.0 | 2025-11-15 | Initial `web/public` static assets architecture for KFM v10.4; aligned with KFM-MDP v10.4 |
+- All public files are **world-readable**, must contain no sensitive content.  
+- No secrets or internal environment keys allowed in any asset.  
+- Filenames must not encode sensitive concepts (e.g., “grave-site.png”).  
+- `robots.txt` must reflect FAIR+CARE governance decisions.
+
+---
+
+# 🧪 CI/CD Validation
+
+CI workflows enforce:
+
+- Required fields in asset metadata:  
+  - `checksum_sha256`  
+  - `license`  
+  - `alt_text`  
+  - `faircare_label`  
+- Accessibility scan (Lighthouse + axe)  
+- Telemetry schema validation  
+- Broken-link scan for images/icons  
+- Cache-immUtability checks  
+
+Failures block release.
+
+---
+
+# 🕰 Version History
+
+| Version | Date | Summary |
+|--------:|------|---------|
+| **v11.0.0** | 2025-11-25 | Fully upgraded to v11; telemetry v4; sustainability v2; new metadata schema; FAIR+CARE-P enforcement; stable directory layout. |
+| v10.4.0 | 2025-11-15 | Initial public-assets architecture for v10.4. |
+| v10.0.0 | 2025-11-09 | First organized public asset spec. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MIT License  
-Validated under MCP-DL v6.3 and KFM-MDP v10.4 · FAIR+CARE Certified · Public Document · Version-Pinned  
+**© 2025 Kansas Frontier Matrix**  
+MIT / CC-BY 4.0 · FAIR+CARE-P Compliant · Diamond⁹ Ω / Crown∞Ω  
+KFM-MDP v11 · KFM-OP v11 · MCP-DL v6.3
 
 </div>
