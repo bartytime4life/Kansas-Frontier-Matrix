@@ -1,272 +1,245 @@
 ---
 title: "🛰️ Kansas Frontier Matrix — STAC Pipelines Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/stac/README.md"
-version: "v10.3.1"
-last_updated: "2025-11-14"
-review_cycle: "Quarterly · FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · FAIR+CARE Council · Reliability Board"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/pipelines-stac-overview-v1.json"
+sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../releases/v11.0.0/stac-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/pipelines-stac-overview-v11.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+status: "Active · Enforced"
+doc_kind: "Pipeline Module"
+intent: "stac-pipelines-overview"
+semantic_document_id: "kfm-stac-overview"
+doc_uuid: "urn:kfm:pipelines:stac:overview:v11.0.0"
+machine_extractable: true
+classification: "STAC Ingestion Architecture"
+sensitivity: "Mixed"
+fair_category: "F1-A1-I2-R3"
+care_label: "Collective Benefit · Responsibility · Ethics"
+immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AA+"
+public_exposure_risk: "Medium"
+jurisdiction: "Kansas · United States"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by STAC Pipelines v12"
 ---
 
 <div align="center">
 
-# 🛰️ **Kansas Frontier Matrix — STAC Pipelines Overview**  
+# 🛰️ **KFM v11 — STAC Pipelines Overview**  
 `src/pipelines/stac/README.md`
 
-**Purpose:**  
-Provide the top-level architecture, directory structure, standards, FAIR+CARE governance requirements, and telemetry integration for all **STAC-related pipelines** within the Kansas Frontier Matrix (KFM).  
-This includes monitoring, validation, normalization, publishing, lineage capture, and governance-linked storage of STAC Items and Collections.
+### **Continuous Ingestion · Schema Validation · FAIR+CARE · Sovereignty · Immutable Publishing · Telemetry · Lineage**
 
-<img alt="STAC" src="https://img.shields.io/badge/STAC-1.0_Compliant-blue"/>
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Enforced-orange"/>
-<img alt="Telemetry" src="https://img.shields.io/badge/Telemetry-Linked-green"/>
-<img alt="Status" src="https://img.shields.io/badge/Status-Active-success"/>
+KFM v11 STAC Pipelines convert **external and internal spatiotemporal datasets**  
+into **fully-governed, STAC/DCAT-compliant, sovereignty-safe, lineage-tracked** Items & Collections  
+that power the Kansas Frontier Matrix mapping, analytics, and narrative engines.
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Purpose
 
-KFM STAC pipelines provide:
+This module defines the **full architecture** for:
 
-- **Continuous ingestion** of STAC Items from NOAA/USGS/NASA/other providers  
-- **Conditional polling** using HTTP ETag / If-None-Match  
-- **Great Expectations validation** with schema + semantic rules  
-- **FAIR+CARE governance enforcement** and sovereignty safety checks  
-- **Normalization and augmentation** into KFM-compliant STAC metadata  
-- **Immutable publishing** to the KFM STAC catalog  
-- **Neo4j graph hydration** for Scenes, Datasets, Themes  
-- **Telemetry logging** (operational + sustainability + CARE signals)
+- STAC ingestion (polling + deltas + ETags)  
+- GE validation gates (schema + semantics + governance)  
+- CARE + sovereignty enforcement  
+- Normalization & metadata augmentation  
+- Publication to the KFM STAC Catalog  
+- Neo4j graph hydration  
+- Telemetry + sustainability reporting  
+- Lineage & checksum recording (sha256)  
 
-These pipelines form the backbone of the geospatial ingestion layer for the Kansas Frontier Matrix.
+All pipelines are aligned with:
+
+- **MCP-DL v6.3**  
+- **KFM-MDP v11**  
+- **KFM-PDC v11 (Data Contracts)**  
+- **STAC 1.0.0 + Extensions**  
+- **FAIR+CARE governance**  
+- **CIDOC-CRM · PROV-O · GeoSPARQL**  
 
 ---
 
-## 🗂️ Directory Layout (Authoritative)
+## 🗂️ 2. Directory Layout (v11)
 
-~~~~~text
+```text
 src/pipelines/stac/
+│
 ├── README.md
 │
-├── monitor-validate-publish/        # STAC ingestion orchestrator (poll → validate → publish)
+├── monitor-validate-publish/              
 │   ├── README.md
-│   ├── monitor.py
-│   ├── publish.py
-│   ├── transform.py
-│   ├── etag_cache.json
-│   ├── expectations/
-│   │   ├── great_expectations.yml
-│   │   ├── checkpoints/
-│   │   └── expectations/
-│   ├── data/
-│   │   ├── incoming/
-│   │   ├── quarantine/
-│   │   ├── published/
-│   │   ├── geometry/
-│   │   └── telemetry/
-│   └── .github/
-│       ├── README.md
-│       └── workflows/
-│           └── README.md
+│   ├── monitor.py                         # ETag polling
+│   ├── transform.py                       # Normalize + enhance + mask
+│   ├── publish.py                         # Immutable publishing
+│   ├── expectations/                      # GE expectations + checkpoints
+│   ├── data/                              # incoming → quarantine → published
+│   └── .github/workflows/README.md        # CI rules for validation gating
 │
-└── utils/                           # Optional helpers for STAC filtering, merging, metadata extension
+└── utils/
     ├── stac_helpers.py
     ├── asset_tools.py
     └── metadata_tools.py
-~~~~~
+```
 
 ---
 
-## 🧩 High-Level Pipeline Architecture
+## 🧩 3. High-Level STAC Pipeline Flow (v11)
 
-~~~~~mermaid
+```mermaid
 flowchart TD
-  A["STAC Provider API<br/>Item Search"] --> B["Monitor.py<br/>ETag Polling"]
+  A["🔍 Provider STAC API<br/>Search + ETag"] --> B["📥 monitor.py<br/>Conditional Polling"]
   B -->|304| Z["No Change · Telemetry Only"]
-  B -->|200| C["Incoming Batch<br/>data/incoming/**"]
-  C --> D["Validation Gate<br/>Great Expectations"]
-  D -->|FAIL| Q["Quarantine<br/>data/quarantine/**"]
-  D -->|PASS| E["Normalize<br/>transform.py"]
-  E --> F["Publish<br/>data/published/**"]
-  F --> G["Hydrate Neo4j<br/>Scenes · Datasets · Themes"]
-  G --> H["Telemetry Export<br/>JSONL → focus-telemetry.json"]
+  B -->|200| C["📦 Incoming Batch"]
+  C --> D["🧪 GE Validation<br/>Schema + Semantics + CARE"]
+  D -->|FAIL| Q["🚫 Quarantine<br/>Governance Review"]
+  D -->|PASS| E["🔧 transform.py<br/>Normalize + Enrich + Sovereignty Mask"]
+  E --> F["🚀 publish.py<br/>Immutable STAC Publish"]
+  F --> G["🔗 Neo4j Hydration<br/>Scenes · Datasets · Themes"]
+  G --> H["📡 Telemetry Export<br/>ETL + CARE + Energy/Carbon"]
   Q --> H
-~~~~~
+```
 
 ---
 
-## ⚙️ Pipeline Responsibilities
+## ⚙️ 4. Responsibilities of STAC Pipelines (v11)
 
-### 1. **monitor.py**
-- Poll STAC API Item Search  
-- Use **ETags** for conditional requests  
-- Write raw batches to `data/incoming/`  
-- Emit telemetry (fetch count, 304 status, latency, CO₂e, energy)
+### **1. monitor.py**
+- ETag-based conditional polling  
+- Rate-limited batch ingestion  
+- Governance-aware AOI filtering  
+- Telemetry for:
+  - latency  
+  - HTTP status distribution  
+  - carbon/energy cost  
 
-### 2. **Great Expectations Validation**
+### **2. GE Validation Layer**
 Validates:
 
-- Schema  
-- Link relation correctness  
+- Schema compliance  
+- Spatial/temporal correctness  
+- Asset href integrity  
 - Projection metadata  
-- Cloud cover / sensor ranges  
-- CARE label presence  
-- Sovereignty intersection checks  
-- KFM metadata compliance
+- Bounding box vs AOI  
+- CARE & sovereignty rules  
+- Required KFM fields (`kfm:*`)  
 
-### 3. **transform.py**
-- Normalize STAC Items (datetime, roles, MIME types)  
-- Inject KFM metadata (`kfm:*` fields)  
-- Fix broken hrefs  
-- Add ingest version and provenance skeletons  
-- Apply CARE masking (if needed)
+### **3. transform.py**
+Adds:
 
-### 4. **publish.py**
-- Write immutable STAC Collections & Items  
-- Ensure SemVer versioning for dataset roots  
-- Hydrate Neo4j graph nodes/relationships  
-- Emit publishing telemetry
-
-### 5. **Governance**
-- Quarantine failures  
-- Sovereignty / tribal territory checks  
-- CARE restrictions  
-- Provenance completeness  
-- Versioning ledger updates  
-
----
-
-## 📦 Storage Model
-
-### Incoming (untrusted)
-
-~~~~~text
-data/stac/incoming/<timestamp>/items.jsonl
-~~~~~
-
-### Quarantine (blocked)
-
-~~~~~text
-data/stac/quarantine/<timestamp>/
-~~~~~
-
-### Published (immutable)
-
-~~~~~text
-data/stac/published/collections/<collection>.json
-data/stac/published/items/<collection>/<item>.json
-~~~~~
-
-### Geometry (authoritative AOI)
-
-~~~~~text
-data/geometry/kansas_aoi.geojson
-~~~~~
-
-### Telemetry
-
-~~~~~text
-data/telemetry/<timestamp>.jsonl
-../../releases/v10.3.0/focus-telemetry.json
-~~~~~
-
----
-
-## 🧠 FAIR+CARE Governance Rules
-
-### Required for ALL STAC Items/Collections:
-
-- `kfm:care_label`  
 - `kfm:checksum`  
 - `kfm:ingest_version`  
-- `kfm:provenance`  
-- Masking rules for sensitive datasets  
-- Sovereignty notes (if applicable)  
-- No unmasked archaeological/cultural points  
+- `kfm:care_label`  
+- `kfm:sovereignty_notes`  
+- `kfm:provenance` skeleton  
+- Data Contract v11 bindings  
+- Masking of sensitive geometries  
+- Role normalization  
 
-### Governance ledgers impacted:
+### **4. publish.py**
+- Writes immutable STAC Collections & Items  
+- Ensures semantic versioning  
+- Generates thumbnails (optional)  
+- Emits OpenLineage `publish` events  
+- Triggers Neo4j hydration  
 
-~~~~~text
-docs/reports/audit/versioning_ledger.json
-docs/reports/audit/data_provenance_ledger.json
-docs/reports/fair/data_care_assessment.json
-~~~~~
-
----
-
-## 📡 Telemetry Specification
-
-Each orchestrator run logs:
-
-- STAC polling counts  
-- Schema/CARE failures  
-- Publish counts  
-- Graph hydration success  
-- ETag behavior  
-- Energy usage (Wh)  
-- Carbon emissions (gCO₂e)  
-- Governance status  
-
-Telemetry aggregated into:
-
-~~~~~text
-../../../releases/v10.3.0/focus-telemetry.json
-~~~~~
+### **5. Governance & Quarantine**
+- CARE violation → quarantine  
+- Sovereignty zone conflicts → review  
+- Invalid metadata → blocked  
+- Governance ledger entry created  
 
 ---
 
-## 🛠️ Tools & Dependencies
+## 📦 5. Storage Model (v11)
 
-Required Python libs:
+```text
+data/stac/incoming/<ts>/items.jsonl
+data/stac/quarantine/<ts>/
+data/stac/published/collections/<collection>.json
+data/stac/published/items/<collection>/<item>.json
+data/geometry/kansas_aoi.geojson
+data/telemetry/stac_<ts>.jsonl
+```
 
-~~~~~text
-requests
-jsonschema
-great-expectations
-neo4j
-shapely
-h3
-~~~~~
-
-Optional:
-
-- geopandas  
-- rasterio (for asset inspection)  
-- planetary-computer SDKs  
+Published STAC data is **immutable**.
 
 ---
 
-## 🧪 Local Development
+## 🧠 6. FAIR+CARE & Sovereignty Enforcement
 
-~~~~~bash
-python src/pipelines/stac/monitor-validate-publish/monitor.py
-great_expectations checkpoint run stac_items \
-  --config src/pipelines/stac/monitor-validate-publish/expectations/great_expectations.yml \
-  --suite stac_item_suite
-python src/pipelines/stac/monitor-validate-publish/publish.py
-~~~~~
+STAC pipelines must:
+
+- Mask coordinates for sensitive datasets  
+- Include CARE labels for all items  
+- Enforce tribal data governance rules  
+- Stop publication on sovereignty conflict  
+- Annotate items with:
+  - `kfm:sovereignty_notes`  
+  - `kfm:care_label`  
+  - `kfm:ethical_risk`  
+
+Quarantined items require council review.
 
 ---
 
-## 🕰️ Version History
+## 📡 7. Telemetry & Reliability Integration
 
-| Version | Date       | Author | Summary |
-|---------|------------|--------|---------|
-| v10.3.1 | 2025-11-14 | STAC Pipelines Team | Complete top-level STAC pipeline overview; aligned with FAIR+CARE, telemetry v1, and orchestrator updates. |
+Metrics emitted (OTel v11):
+
+- `kfm.stac_latency_ms`  
+- `kfm.stac_items_processed`  
+- `kfm.stac_validation_failures`  
+- `kfm.stac_care_flags`  
+- `kfm.stac_energy_wh`  
+- `kfm.stac_carbon_gco2e`  
+- ETag hit/miss counts  
+
+Telemetry aggregated at:
+
+```
+releases/<version>/stac-telemetry.json
+```
+
+---
+
+## 📜 8. Local Development
+
+```bash
+python monitor-validate-publish/monitor.py
+great_expectations checkpoint run stac_item_suite
+python monitor-validate-publish/publish.py
+```
+
+---
+
+## 🕰️ 9. Version History
+
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.0 | 2025-11-24 | Full KFM-MDP v11 upgrade: FAIR+CARE, sovereignty, reliability, lineage, telemetry v11. |
+| v10.3.1 | 2025-11-14 | Initial overview of STAC ingestion & validation pipelines. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — STAC Pipelines Overview**  
-Continuous Ingestion × Immutable Publishing × FAIR+CARE Governance × Telemetry Provenance  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+© 2025 Kansas Frontier Matrix  
+**STAC Pipelines · Provenance · Sovereignty · FAIR+CARE · Reliability**  
+Diamond⁹ Ω / Crown∞Ω  
 
 </div>
