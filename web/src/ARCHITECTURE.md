@@ -1,46 +1,56 @@
 ---
 title: "💻 Kansas Frontier Matrix — Web Source Architecture Specification (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/ARCHITECTURE.md"
-version: "v10.4.1"
-last_updated: "2025-11-15"
-review_cycle: "Quarterly / Autonomous · FAIR+CARE Council Oversight"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.4.1/sbom.spdx.json"
-manifest_ref: "../../releases/v10.4.1/manifest.zip"
-telemetry_ref: "../../releases/v10.4.1/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/web-src-architecture-v3.json"
+previous_version_hash: "<previous-sha256>"
+
+sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/web-src-architecture-v11.json"
 governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.1"
-status: "Active / Enforced"
+markdown_protocol_version: "KFM-MDP v11.0"
+status: "Active · Enforced"
 doc_kind: "Architecture"
 intent: "web-src-architecture"
-fair_category: "F1-A1-I1-R1"
-care_label: "Public / Low-Risk"
-sensitivity_level: "None"
+
+fair_category: "F1-A1-I2-R3"
+care_label: "Public · Low-Risk"
+sensitivity_level: "Low"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Low"
 redaction_required: false
+
 provenance_chain:
   - "web/src/ARCHITECTURE.md@v10.0.0"
   - "web/src/ARCHITECTURE.md@v10.3.2"
-previous_version_hash: "<previous-sha256>"
+  - "web/src/ARCHITECTURE.md@v10.4.1"
+
 ontology_alignment:
   cidoc: "E31 Document"
   schema_org: "SoftwareSourceCode"
   owl_time: "TemporalEntity"
   prov_o: "prov:Plan"
   geosparql: "N/A"
-json_schema_ref: "../../schemas/json/web-src-architecture.schema.json"
-shape_schema_ref: "../../schemas/shacl/web-src-architecture-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-src-architecture-v10.4.1"
+
+json_schema_ref: "../../schemas/json/web-src-architecture-v11.schema.json"
+shape_schema_ref: "../../schemas/shacl/web-src-architecture-v11-shape.ttl"
+
+doc_uuid: "urn:kfm:doc:web-src-architecture-v11.0.0"
 semantic_document_id: "kfm-doc-web-src-architecture"
 event_source_id: "ledger:web/src/ARCHITECTURE.md"
 immutability_status: "version-pinned"
 doc_integrity_checksum: "<sha256>"
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
@@ -50,8 +60,9 @@ ai_transform_permissions:
 ai_transform_prohibited:
   - "speculative additions"
   - "unverified historical claims"
+
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
 classification: "Public Document"
 role: "architecture"
@@ -62,33 +73,32 @@ sunset_policy: "Superseded upon next major web-src architecture update"
 
 <div align="center">
 
-# 💻 **Kansas Frontier Matrix — Web Source Architecture Specification**  
+# 💻 **Kansas Frontier Matrix — Web Source Architecture Specification (v11)**  
 `web/src/ARCHITECTURE.md`
 
-**Purpose:**  
-Define the complete **source-level technical architecture** for `web/src/**` in the Kansas Frontier Matrix (KFM)
-Web Platform — including UI composition, state management, Focus Mode v2.5 flows, 2D/3D rendering pipelines,
-accessibility architecture, FAIR+CARE enforcement, provenance visibility, typed DTO boundaries, STAC/DCAT
-integration, and telemetry & sustainability instrumentation.  
+**Purpose**  
+Define the complete, source-level **technical architecture** for `web/src/**` in the Kansas Frontier Matrix (KFM) Web Platform —  
+including UI composition, state management, Focus Mode v3 flows, 2D/3D rendering pipelines, accessibility architecture,  
+FAIR+CARE enforcement, provenance visibility, typed DTO boundaries, STAC/DCAT integration, and telemetry & sustainability instrumentation.  
 This document governs all contributors modifying `web/src/`.
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview
 
-The `web/src/` directory contains all **frontend source code** that powers the KFM Web Platform UI:
+The `web/src/` directory contains all **frontend source code** driving the KFM Web Platform UI:
 
 - React 18 + TypeScript (strict mode)  
-- Tailwind-based design system & A11y tokens  
+- Tailwind + design tokens for accessible styling  
 - MapLibre GL for 2D cartography and STAC-driven layers  
 - CesiumJS for 3D terrain, paleogeography, and future overlays  
-- Focus Mode v2.5 entity reasoning flows (narrative, explainability, CARE gating)  
-- Story Node v3 rendering synced to map and timeline  
+- Focus Mode v3 entity reasoning flows (narrative, explainability, CARE gating)  
+- Story Node v3 rendering synchronized with map and timeline  
 - STAC/DCAT dataset explorers and layer controls  
 - Governance UI (CARE labels, sovereignty, licenses, provenance trails)  
-- Accessibility (WCAG 2.1 AA) as a hard requirement  
+- Accessibility (WCAG 2.1 AA+) as a hard architectural requirement  
 - Telemetry & sustainability instrumentation (WebVitals, ethics, A11y events)  
 
 The architecture ensures that changes in `web/src/**` are:
@@ -96,455 +106,360 @@ The architecture ensures that changes in `web/src/**` are:
 - Deterministic and type-safe  
 - Ethically governed and CARE-aware  
 - Accessible and observable  
-- Compatible with KFM’s global architecture (`src/ARCHITECTURE.md`)
+- Compatible with KFM’s global architecture (`src/ARCHITECTURE.md`) and Tools Platform (`tools/ARCHITECTURE.md`)
 
 ---
 
-## 🎯 Purpose
+## 🎯 2. Purpose
 
 This specification:
 
-- Defines the **source-layer architecture** for `web/src/**`.  
-- Establishes boundaries and responsibilities for components, hooks, context, services, and pipelines.  
-- Ensures the source code implements:
-  - Focus Mode v2.5 requirements  
+- Defines the **source-layer architecture** for `web/src/**`  
+- Establishes boundaries and responsibilities for components, hooks, contexts, services, pipelines, and utilities  
+- Ensures the code implements:
+
+  - Focus Mode v3 UI requirements  
   - Story Node v3 rendering rules  
   - STAC/DCAT integration contracts  
   - A11y & FAIR+CARE governance overlays  
   - Telemetry and observability contracts  
 
-**Primary consumers:** web engineers, architects, FAIR+CARE reviewers, SRE/observability teams, and maintainers
-responsible for `web/src/**`.
+**Primary consumers**: web engineers, architects, FAIR+CARE reviewers, SRE/observability teams, and maintainers of `web/src/**`.
 
 ---
 
-## 📍 Scope
+## 📍 3. Scope
 
-### In Scope
+### 3.1 In Scope
 
 - All source files under `web/src/**`, including:
-  - `components/**`, `context/**`, `entities/**`, `features/**`, `hooks/**`, `pages/**`, `pipelines/**`, `services/**`,
-    `styles/**`, `utils/**`, `types/**`  
-- UI-level pipelines (client-only orchestration)  
-- Governance and A11y integration at the UI layer  
-- Telemetry emission from the web client  
 
-### Out of Scope
+  - `components/**`, `context/**`, `hooks/**`, `pages/**`, `pipelines/**`, `services/**`, `styles/**`, `types/**`, `utils/**`  
 
-- Backend ETL, AI, and pipeline architecture (covered under `src/pipelines/**`)  
-- System deployment and infra specifics (CDN, gateways, etc.)  
-- Neo4j schema and backend-only modeling details  
+- Frontend-only pipelines (client orchestration flows)  
+- Governance overlays and A11y integration at the UI layer  
+- Telemetry emission and error taxonomy from the web client  
 
----
+### 3.2 Out of Scope
 
-## 📚 Definitions
-
-- **Source Architecture** — organization, responsibilities, and constraints of `web/src/**` modules.  
-- **Feature Slice** — a vertical domain module (e.g., `focus-mode`, `data-explorer`) with related components/hooks/services.  
-- **Context Provider** — top-level React provider that manages global state (focus, a11y, theme, time, governance).  
-- **Service** — module under `services/` encapsulating calls to REST/GraphQL/STAC/DCAT endpoints.  
-- **Pipeline (frontend)** — client-only orchestration layer combining hooks, services, and state to implement flows (e.g.,
-  `focusPipeline`, `stacPipeline`, `storyPipeline`, `timelinePipeline`).  
-- **Story Node v3** — narrative + spatial + temporal unit rendered by Story Node components, conforming to the Story Node
-  schema.  
-- **Focus Mode v2.5** — frontend orchestrator that calls backend reasoning endpoints; no heavy AI models run in-browser.
+- Backend ETL, AI, and pipeline architecture (`src/pipelines/**`)  
+- Infra & deployment details (CDN, gateways, container orchestration)  
+- Neo4j schema design and backend-only modeling  
 
 ---
 
-## 🧱 High-Level Module Layout
+## 📚 4. Definitions
 
-~~~text
+- **Source Architecture** — Organizational and behavioral contracts of `web/src/**` modules.  
+- **Feature Slice** — Vertical domain module (e.g., `focus-mode`, `data-explorer`) with tightly related components/hooks/services.  
+- **Context Provider** — React provider wrapping the app tree that manages shared state (focus, A11y, theme, time, governance).  
+- **Service** — Module in `services/` encapsulating network calls (REST/GraphQL/STAC/DCAT/telemetry/governance).  
+- **Frontend Pipeline** — Client orchestration that combines hooks, services, and contexts into user flows (e.g., `focusPipeline.ts`).  
+- **Story Node v3** — Structured narrative + spatial + temporal unit rendered by Story components and enforced by the Story Node schema.  
+- **Focus Mode v3** — Frontend orchestrator that calls backend reasoning endpoints, never running heavy AI models in-browser.  
+
+---
+
+## 🧱 5. High-Level Module Layout
+
+```text
 web/src/
 ├── components/    # Presentational React components
 ├── context/       # Global React Context providers
-├── entities/      # Domain-level helpers & adapters
-├── features/      # Feature slices (Focus, Timeline, Story, Data Explorer, etc.)
+├── features/      # Feature slices (Map, Timeline, Focus, Story, Data Explorer, etc.)
 ├── hooks/         # Shared hooks (logic, no JSX)
-├── pages/         # Route containers (Map, Focus, Story, etc.)
-├── pipelines/     # Frontend orchestration pipelines
+├── pages/         # Route containers (Map, Focus, Story, Explore, About, etc.)
+├── pipelines/     # Frontend orchestration pipelines (Focus, STAC, Story, Timeline)
 ├── services/      # API, STAC/DCAT, telemetry, governance clients
 ├── styles/        # Tokens, themes, global styles
 ├── types/         # Shared TypeScript types and DTOs
 └── utils/         # Stateless helper modules
-~~~
-
----
-
-## 🏗 Architecture / Context
-
-### Source Architecture in Context
-
-~~~mermaid
-flowchart TD
-    UI[UI Components<br/>React · Tailwind] --> CTX[Context Providers]
-    UI --> FEAT[Feature Slices]
-    UI --> MAP[MapView]
-    UI --> TL[TimelineView]
-    UI --> FM[Focus Mode]
-    UI --> STORY[Story Node Renderer]
-    UI --> GOVUI[Governance & A11y UI]
-
-    FEAT --> HK[Custom Hooks]
-    HK --> SVC[Services Layer]
-    MAP --> SVC
-    TL --> SVC
-    FM --> SVC
-    STORY --> SVC
-
-    SVC --> API[Backend APIs<br/>REST · GraphQL · STAC · DCAT]
-~~~
-
-The code in `web/src/**` sits between user interactions and backend APIs, enforcing:
-
-- Type safety (TypeScript + runtime guards)  
-- Governance (CARE, sovereignty, provenance)  
-- Accessibility (WCAG 2.1 AA)  
-
-at the UI boundary.
-
----
-
-## ⚙️ Implementation Pattern
-
-Source code implementation follows this layered pattern:
-
-- **Components (`components/**`)**  
-  Presentational React components  
-  - No business logic  
-  - No direct API calls  
-  - Receive props from hooks/contexts/pipelines  
-  - Emit callback events upward  
-
-- **Hooks (`hooks/**`)**  
-  Encapsulate data fetching, transient state, and side-effects  
-  - `useMap`, `useTimeline`, `useFocus`, `useStac`, `useTelemetry`, etc.  
-
-- **Context (`context/**`)**  
-  Provide global, shared state  
-  - TimeContext, FocusContext, ThemeContext, A11yContext, GovernanceContext, MapContext, UIContext  
-
-- **Pipelines (`pipelines/**`)**  
-  Compose hooks and services into end-to-end flows  
-  - `focusPipeline.ts`  
-  - `stacPipeline.ts`  
-  - `storyPipeline.ts`  
-  - `timelinePipeline.ts`  
-
-- **Services (`services/**`)**  
-  Provide typed, governance-aware gateway to backend and catalogs  
-  - `apiClient.ts`, `stacService.ts`, `dcatService.ts`, `telemetryService.ts`, `governanceService.ts`  
-
-All changes must respect:
-
-- TypeScript strictness  
-- Schema guard validation before rendering  
-- Governance and CARE rules  
-- WCAG 2.1 AA accessibility  
-
----
-
-## 📑 Data Contracts & Schemas
-
-`web/src/**` operates on **structured data contracts** rather than untyped blobs:
-
-- API DTOs defined in `types/api.ts`  
-- Domain types defined in `types/domain.ts`  
-- Governance types in `types/governance.ts`  
-- Spatial/temporal types in `types/spatial.ts`, `types/temporal.ts`  
-- Story Node v3 types in `types/story.ts`  
-- Focus Mode types in `types/focus.ts`  
-- STAC & DCAT types in `types/stac.ts`, `types/dcat.ts`  
-- Telemetry events in `types/telemetry.ts`  
-
-Runtime validation:
-
-- `utils/guards.ts` (schema / type guards) ensures backend responses conform to expectations  
-- Invalid responses are handled via:
-  - User-friendly error states  
-  - Governance-safe fallbacks (e.g., hiding restricted content)  
-  - Telemetry error events for observability  
-
-Contracts map directly to backend JSON Schemas, STAC/DCAT specs, and GraphQL schemas to ensure strong alignment.
-
----
-
-## 🧬 Ontology Alignment
-
-The web source aligns with KFM’s ontology strategy:
-
-| System     | Mapping                                                          |
-|-----------:|------------------------------------------------------------------|
-| CIDOC-CRM  | UI-level interactions and Story Nodes bound to CIDOC entities    |
-| OWL-Time   | Timeline ranges and temporal fields as `time:TemporalEntity`     |
-| PROV-O     | ProvenanceChip / ProvenanceTrail reflect `prov:Entity` links     |
-| schema.org | App described as `WebApplication`; Story Nodes as `CreativeWork` |
-| STAC/DCAT  | Dataset browsing follows STAC 1.0 and DCAT 3.0 semantics         |
-
-The frontend does not invent ontology; it reflects ontologies exposed by the backend and documentation.
-
----
-
-## 🛰 STAC/DCAT Metadata
-
-The frontend **consumes**, but does not author, STAC/DCAT metadata:
-
-- `stacService.ts` handles:
-  - Collections & Items  
-  - Asset metadata  
-  - Spatial/temporal extent extraction  
-
-- `dcatService.ts` handles:
-  - DCAT v3 Datasets & Distributions  
-  - Publisher/licensing metadata  
-
-All flows are:
-
-- Strongly typed against `types/stac.ts` and `types/dcat.ts`  
-- Validated via `utils/guards.ts`  
-- CARE-governed via `useGovernance.ts` and GovernanceContext  
-
----
-
-## 📖 Story Node Integration
-
-Story Node v3 integration includes:
-
-- UI components in `components/story/**`:
-  - `StoryCard`, `StoryDetail`, `StoryMedia`, `StoryMapPreview`, `StoryRelations`  
-
-- Types in `types/story.ts`:  
-  - Narrative, spatial, temporal, and relations structures  
-
-- Pipelines in `pipelines/storyPipeline.ts`:
-  - Connect Story Nodes to Focus Mode  
-  - Sync with TimeContext and MapContext  
-
-Architectural invariants:
-
-- Story Nodes must pass schema + type checks before rendering  
-- CARE labels and provenance chips must be visible where content appears  
-- Map and timeline must highlight Story Node footprints and time spans consistently  
-
----
-
-## 🧠 Focus Mode v2.5 Integration
-
-Client-side Focus Mode architecture:
-
-~~~mermaid
-flowchart LR
-    U[User selects entity] --> C["useFocus (Focus Controller)"]
-    C --> Q["/api/focus/{id}"]
-    Q --> R[Focus DTO<br/>Narrative + Context]
-    R --> N[StoryNode Composer]
-    R --> X[Explainability Layer]
-    R --> E[Ethics & CARE Guard]
-    N --> MV[MapView Highlights]
-    N --> TL[Timeline Highlights]
-~~~
-
-- `hooks/useFocus.ts` manages:
-  - Active focus entity + type  
-  - Loading/error state  
-  - Governance/A11y constraints  
-
-- `pipelines/focusPipeline.ts` orchestrates:
-  - Focus API calls  
-  - Story Node suggestions  
-  - Map and timeline highlights  
-  - Explainability metadata injection  
-
-No AI model runs in-browser; all AI content comes from backend services and is labeled as such.
-
----
-
-## 🔐 Ethics & CARE Requirements
-
-`web/src/**` must:
-
-- Apply CARE labels when rendering content about:
-  - Indigenous data  
-  - Sovereignty-related places  
-  - Culturally sensitive sites  
-
-- Use H3 (or similar) spatial generalization for sensitive sites  
-- Avoid revealing:
-  - Exact coordinates  
-  - Overly precise temporal labels without proper context  
-
-- Show:
-  - SovereigntyNotice for relevant layers  
-  - CAREBadge and MaskingIndicator where masking is in effect  
-  - AIGeneratedTag or equivalent for AI-derived text  
-
-Speculative narrative or invented history at the UI layer is **prohibited**.
-
----
-
-## 🛡 Governance Architecture
-
-The source architecture enforces governance by:
-
-- Rendering license, provenance, and CARE metadata via governance components  
-- Using GovernanceContext + `useGovernance.ts` to:
-  - Check rules before rendering  
-  - Gate or generalize restricted content  
-  - Emit governance telemetry events  
-
-- Enforcing:
-  - No bypass of masking/generalization in MapView  
-  - No bypass of CARE warnings in Focus Mode or Story Nodes  
-  - No bypass of licensing display requirements in dataset UIs  
-
-Governance rules are validated by CI via `faircare-validate` workflows.
-
----
-
-## 🧪 Validation & Testing
-
-Validation in `web/src/**` includes:
-
-- **TypeScript strict** (`npm run typecheck`)  
-- **Linting** (`npm run lint`)  
-- **Unit tests** (components/hooks/utils)  
-- **Integration tests**:
-  - Map + Timeline + Focus sync  
-  - Story + Focus + Map interplay  
-- **A11y tests** (axe-core, Jest integration)  
-- **Governance tests**:
-  - CARE enforcement  
-  - Sovereignty masking  
-  - Provenance visibility  
-- **Telemetry tests**:
-  - Event shape validity  
-  - Aggregation behavior  
-
-CI workflows:
-
-- `web-build.yml` — build + typecheck  
-- `web-lint.yml` — lint + format checks  
-- `web-test.yml` — unit + integration tests  
-- `telemetry-export.yml` — telemetry integrity  
-- `faircare-validate.yml` — CARE and governance compliance  
-
----
-
-## 📈 Telemetry Architecture
-
-Telemetry in `web/src/**` is handled by:
-
-- `hooks/useTelemetry.ts` — collects:
-  - WebVitals  
-  - UI interactions  
-  - Map/timeline events  
-  - Focus Mode usage  
-  - Story Node engagement  
-  - A11y preference usage  
-
-- `services/telemetryService.ts` — sends:
-  - Non-PII, aggregate events  
-  - Schema-validated payloads  
-  - Release-bundled metrics  
-
-Telemetry feeds:
-
-```text
-releases/<version>/focus-telemetry.json
-````
-
-and drives sustainability and UX dashboards.
-
----
-
-## 🎧 Accessibility (WCAG 2.1 AA)
-
-Accessibility principles are enforced at the architecture level:
-
-* All interactive components must be:
-
-  * Keyboard operable
-  * Screen-reader friendly
-  * Focus-visible
-  * Respectful of reduced-motion preferences
-
-* Styles must:
-
-  * Use WCAG AA-compliant color contrasts
-  * Provide accessible color ramps for map & charts
-
-* Layout must:
-
-  * Organize content with semantic landmarks (`<main>`, `<nav>`, `<header>`, `<aside>`)
-  * Maintain logical heading order
-
-A11y test failures are treated as **release-blocking**.
-
----
-
-## 🤖 Machine Extractability
-
-This document and all architecture docs are:
-
-* YAML-front-matter tagged
-* Heading-structured for NLP/AI ingestion
-* Free of nested conflicting fences (inner code uses `~~~`)
-* Suitable for tools that:
-
-  * Build architecture diagrams
-  * Validate module boundaries
-  * Index documentation for search
-
----
-
-## 🛡 Privacy & Security
-
-`web/src/**` must:
-
-* Avoid logging PII
-* Not embed secrets or privileged tokens
-* Respect CSP and security headers from infra
-* Use safe defaults in API clients (timeouts, retries, error redaction)
-
-Security-sensitive docs live in `.github/SECURITY.md` and backend security specs; `web/src/` must not contradict them.
-
----
-
-## 📁 Directory Layout (Summary)
-
-```text
-web/src/
-├── ARCHITECTURE.md    # This document
-├── README.md          # Developer overview
-├── components/        # UI components
-├── context/           # Context providers
-├── entities/          # Domain helpers
-├── features/          # Feature slices
-├── hooks/             # Custom hooks
-├── pages/             # Route containers
-├── pipelines/         # Orchestration pipelines
-├── services/          # API + STAC/DCAT + telemetry clients
-├── styles/            # Styling system
-├── types/             # Shared TS types
-└── utils/             # Stateless helpers
 ```
 
 ---
 
-## 🕰 Version History
+## 🏗 6. Source Architecture in Context
 
-| Version | Date       | Author / Team     | Summary                                                                                            |
-| ------: | ---------- | ----------------- | -------------------------------------------------------------------------------------------------- |
-| v10.4.1 | 2025-11-15 | Web Platform Team | Aligned architecture spec with new MapView/TimelineView/FocusMode structures and updated pipelines |
-| v10.4.0 | 2025-11-15 | Web Platform Team | Upgraded to KFM-MDP v10.4; full YAML metadata; clarified ontology & CARE integration               |
-| v10.3.2 | 2025-11-14 | Web Platform Team | Deep source architecture clarification for v10.3.2                                                 |
-| v10.3.1 | 2025-11-13 | Web Platform Team | Initial source architecture outline for `web/src`                                                  |
+```mermaid
+flowchart TD
+    UI[UI Components<br/>React · Tailwind] --> CTX[Context Providers]
+    UI --> FEAT[Feature Slices]
+    UI --> MAP[Map Feature]
+    UI --> TL[Timeline Feature]
+    UI --> FM[Focus Mode Feature]
+    UI --> STORY[Story Feature]
+    UI --> GOVUI[Governance & A11y UI]
+
+    FEAT --> HK[Custom Hooks]
+    HK --> SVC[Services Layer]
+
+    MAP --> HK
+    TL  --> HK
+    FM  --> HK
+    STORY --> HK
+
+    SVC --> API[Backend APIs<br/>REST · GraphQL · STAC · DCAT · Telemetry]
+```
+
+**Key architectural principles:**
+
+- Components are **dumb**: they render what they are told (via props/context) and emit events.  
+- Hooks are **smart**: they implement logic, call services, and interact with contexts.  
+- Services are **boundaries**: they enforce contracts, schemas, and governance rules when talking to the backend.  
+- Pipelines coordinate flows across hooks, services, and contexts.
+
+---
+
+## ⚙️ 7. Implementation Pattern
+
+### 7.1 Components (`components/**`)
+
+- Pure rendering; no direct fetch logic  
+- Receive typed props, including CARE/provenance flags  
+- Emit events upward (e.g., `onSelectDataset`, `onFocusEntity`)  
+- Must be A11y compliant (labels, keyboard, contrast)  
+
+### 7.2 Hooks (`hooks/**`)
+
+- Encapsulate side-effects and data fetching  
+- Implement derived state (e.g., filtered layers, time windows)  
+- Wrap calls to services with consistent error handling  
+- Provide strongly typed results and callback APIs  
+
+### 7.3 Context (`context/**`)
+
+- Provide:
+
+  - TimeContext — active temporal window + granularity  
+  - FocusContext — active entity/story focus  
+  - ThemeContext — light/dark/high-contrast  
+  - A11yContext — reduced motion, font-size preferences, etc.  
+  - GovernanceContext — CARE labels, sovereignty flags, license & risk levels  
+  - MapContext — viewport, active layers, base map  
+
+- Keep contexts small and well-defined to avoid re-render storms  
+
+### 7.4 Pipelines (`pipelines/**`)
+
+- Orchestrate multi-step flows:
+
+  - Focus Mode fl ows (`focusPipeline.ts`)  
+  - Story Node flows (`storyPipeline.ts`)  
+  - Timeline coordination (`timelinePipeline.ts`)  
+  - STAC/DCAT browsing flows (`stacPipeline.ts`)  
+
+- Must not bypass governance or schema guards  
+
+### 7.5 Services (`services/**`)
+
+- API clients defined here (REST, GraphQL, STAC/DCAT, telemetry, governance)  
+- Must honor data contracts and type definitions from `types/**`  
+- Use runtime guards to validate responses before passing into UI  
+
+---
+
+## 📑 8. Data Contracts & Schemas
+
+`web/src/**` relies on **structured contracts**, not ad hoc JSON:
+
+- DTO definitions for:
+
+  - API responses: `types/api.ts`  
+  - Domain entities: `types/domain.ts`  
+  - Story Nodes: `types/story.ts`  
+  - Focus Mode: `types/focus.ts`  
+  - Governance metadata: `types/governance.ts`  
+  - STAC/DCAT: `types/stac.ts`, `types/dcat.ts`  
+  - Telemetry: `types/telemetry.ts`  
+
+- `utils/guards.ts` provides:
+
+  - Type guards for each DTO type  
+  - Schema-based validation (where applicable)  
+
+Failures in validation:
+
+- Must result in safe, non-crashing behavior  
+- Must emit telemetry errors  
+- May display user-friendly error states  
+
+---
+
+## 🧬 9. Ontology Alignment
+
+The frontend aligns with KFM’s ontology design:
+
+| Ontology   | Mapping                                                               |
+|-----------:|-----------------------------------------------------------------------|
+| CIDOC-CRM  | Interactions mapped to activities over Story Nodes and datasets       |
+| OWL-Time   | Timeline state mapped to `time:TemporalEntity` semantics              |
+| PROV-O     | Provenance overlays reflect `prov:Entity` and `prov:wasDerivedFrom`   |
+| schema.org | Views described as `WebApplication`, `CreativeWork` where applicable  |
+| STAC/DCAT  | Datasets + Items modeled via STAC 1.x and DCAT 3.0                    |
+
+Frontend must not reinterpret ontologies; it follows backend and schema definitions.
+
+---
+
+## 🛰 10. STAC/DCAT Integration
+
+### 10.1 STAC
+
+- `stacService.ts` and related hooks:
+  - Retrieve Collections/Items  
+  - Provide typed results to UI  
+- `stacPipeline.ts`:
+  - Coordinates search, filter, and preview flows  
+  - Connects STAC results to MapView and StoryNode flows  
+
+### 10.2 DCAT
+
+- `dcatService.ts`:
+  - Integrates DCAT 3.0 Datasets/Distributions  
+- DCAT entries are used for:
+
+  - Browsing by theme/keyword/publisher  
+  - Linking to STAC assets or other endpoints  
+
+---
+
+## 📖 11. Story Node v3 Integration
+
+Story Node v3 integration is implemented across:
+
+- `components/story/**`  
+- `pipelines/storyPipeline.ts`  
+- `types/story.ts`  
+
+Architectural contracts:
+
+- Story Node data must be schema-valid before rendering  
+- Story Node UI must present:
+
+  - Title, summary, narrative, media  
+  - Time and space context (chips, mini maps)  
+  - Provenance and CARE overlays  
+
+- Story Nodes must interact with:
+
+  - `MapContext` for spatial highlighting  
+  - `TimeContext` for temporal highlighting  
+  - `FocusContext` for entity-centric narratives  
+
+---
+
+## 🧠 12. Focus Mode Integration
+
+Focus Mode front-end integration relies on:
+
+- `hooks/useFocus.ts`  
+- `context/FocusContext.tsx`  
+- `pipelines/focusPipeline.ts`  
+- `services/focusService.ts`  
+
+The architecture ensures:
+
+- Focus flows are **data-driven**, not model-driven on the client  
+- UI shows provenance, CARE labels, and risk indicators  
+- AI-generated content is clearly identified and can be disabled or filtered  
+
+---
+
+## ⚖️ 13. Ethics, CARE & Sovereignty in `web/src/**`
+
+Architecture-level safeguards:
+
+- Use `GovernanceContext` to determine which elements:
+
+  - Should be masked or generalized  
+  - Require CARE badges or sovereignty notices  
+
+- Sensitive geometries (e.g., heritage sites) must be:
+
+  - Generalized using H3 or equivalent  
+  - Marked clearly as generalized/masked  
+
+- Components must not:
+
+  - Show disallowed coordinates  
+  - Remove governance indicators  
+  - Render unverified historical claims  
+
+Any governance failure is treated as a serious regression.
+
+---
+
+## ♿ 14. Accessibility Architecture
+
+Accessibility is enforced via:
+
+- Shared A11y primitives (`components/Shared/*`, `utils/a11y.ts`)  
+- `A11yContext` for user prefs and environment signals  
+- Screen-reader only text helpers  
+- Focus management utilities  
+
+All new features must include A11y considerations and tests. Accessibility regressions are CI-blocking.
+
+---
+
+## 📈 15. Telemetry & Sustainability
+
+Telemetry is integrated via:
+
+- `hooks/useTelemetry.ts`  
+- `services/telemetryService.ts`  
+
+Metrics must be:
+
+- Non-PII and aggregated  
+- Schema-conformant (per `types/telemetry.ts` and relevant schemas)  
+
+Focus Mode, Story Nodes, STAC explorers, and governance overlays contribute events for:
+
+- Performance  
+- Usage  
+- A11y  
+- Energy/CO₂ approximation (where supported)  
+
+---
+
+## 🧪 16. Testing Expectations
+
+All changes in `web/src/**` must be covered by:
+
+- Unit tests (components, hooks, utils)  
+- Integration tests (end-to-end flows in the frontend domain)  
+- A11y tests (Lighthouse/Axe)  
+- Governance tests (CARE, masking, provenance)  
+- Telemetry tests (event shape, frequency, and routing)  
+
+CI workflows fail on:
+
+- Broken type checks  
+- Lint errors  
+- Test failures  
+- A11y regression  
+
+---
+
+## 🕰 17. Version History
+
+| Version | Date       | Author / Team     | Summary                                                                                     |
+|--------:|------------|-------------------|---------------------------------------------------------------------------------------------|
+| v11.0.0 | 2025-11-24 | Web Platform Team | Upgraded to KFM-MDP v11; clarified layers, governance & A11y roles, telemetry v11 integration. |
+| v10.4.1 | 2025-11-15 | Web Platform Team | Aligned architecture spec with MapView/TimelineView/FocusMode structures and updated pipelines. |
+| v10.4.0 | 2025-11-15 | Web Platform Team | Upgraded to KFM-MDP v10.4; full YAML metadata; explicit ontology & CARE integration.        |
+| v10.3.2 | 2025-11-14 | Web Platform Team | Deep source architecture clarification for v10.3.2.                                         |
+| v10.0.0 | 2025-11-09 | Web Platform Team | Initial source architecture outline for `web/src`.                                          |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MIT License
-Validated under Master Coder Protocol (MCP-DL v6.3) and KFM-MDP v10.4.1
-FAIR+CARE Certified · Public Document · Version-Pinned
+© 2025 Kansas Frontier Matrix — MIT License  
+Validated under Master Coder Protocol (MCP-DL v6.3) and KFM-MDP v11.0  
+FAIR+CARE Certified · Public Document · Version-Pinned  
+
+[Back to Web Source Overview](./README.md) · [Web Platform Overview](../README.md) · [System Architecture](../../src/ARCHITECTURE.md)
 
 </div>
