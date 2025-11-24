@@ -1,63 +1,96 @@
 ---
 title: "🏗️ Kansas Frontier Matrix — Pipeline Architecture Specification (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/pipelines/architecture/README.md"
-version: "v10.3.2"
-last_updated: "2025-11-13"
-review_cycle: "Quarterly / Autonomous"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.3.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.3.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.3.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/src-pipeline-architecture-v1.json"
+sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../releases/v11.0.0/pipeline-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/src-pipeline-architecture-v11.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+status: "Active / Enforced"
+doc_kind: "Architecture"
+intent: "pipeline-architecture-root"
+semantic_document_id: "kfm-pipeline-architecture"
+doc_uuid: "urn:kfm:pipeline:architecture:root:v11.0.0"
+machine_extractable: true
+classification: "Internal Architecture Document"
+sensitivity: "Low"
+fair_category: "F1-A1-I2-R2"
+care_label: "Responsible · Stewardship · Ethics"
+immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AA+"
+public_exposure_risk: "Low"
+jurisdiction: "Kansas / United States"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by next architecture redesign"
 ---
 
 <div align="center">
 
-# 🏗️ **Kansas Frontier Matrix — Pipeline Architecture Specification**  
+# 🏗️ **KFM v11 — Pipeline Architecture Specification**  
 `src/pipelines/architecture/README.md`
 
-**Purpose:**  
-Define the **foundational architecture** of all ingestion, transformation, validation, AI, geospatial, and governance-driven pipelines used in the Kansas Frontier Matrix (KFM).  
-This document describes **pipeline design patterns**, **FAIR+CARE integration**, **metadata lineage**, **telemetry**, and **MCP-compliant execution standards** that every ETL/processing module must follow.
+**Purpose**  
+Define the **canonical KFM v11 pipeline architecture** spanning data ingestion, ETL, geospatial processing, AI, validation, lineage, FAIR+CARE governance, reliability guarantees (WAL · Retry · Rollback · Idempotency), and publication workflows.
 
-<img alt="Docs" src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
-<img alt="License" src="https://img.shields.io/badge/License-MIT-green" />
-<img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%2BCARE-Certified-orange" />
-<img alt="Status" src="https://img.shields.io/badge/Status-Architected-success" />
+Powered by **LangGraph v11**, **Reliable Nodes**, **KFM-PDC v11**,  
+**CIDOC-CRM · GeoSPARQL · PROV-O · OWL-Time**,  
+and governed by **FAIR+CARE + Sovereignty policies**.
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview
 
-The **Pipeline Architecture Layer** defines how KFM converts raw, historical, ecological, hydrologic, geospatial, archival, and cultural datasets into:
+The **Pipeline Architecture Layer** governs how KFM v11 converts raw, heterogeneous, multi-domain datasets into:
 
-- FAIR+CARE–certified STAC/DCAT resources  
-- Neo4j knowledge graph nodes and relationships  
-- Processed geospatial derivatives (COG, GeoParquet, NetCDF)  
-- AI-ready inputs for Focus Mode v2.4  
-- Telemetry-linked, reproducible scientific assets  
+- **FAIR+CARE-certified outputs**  
+- **STAC/DCAT collections & items**  
+- **Neo4j graph entities & relationships**  
+- **COG / GeoParquet / NetCDF geospatial assets**  
+- **AI-ready normalized features**  
+- **Story Node v3 & Focus Mode v3 context data**  
+- **Full lineage bundles + OTel telemetry**  
 
-This architecture enforces **determinism**, **traceability**, **documentation-first MCP workflows**, and full **FAIR+CARE governance**.
+This specification describes:
+
+- Pipeline classes  
+- Execution models (LangGraph v11)  
+- Reliability core (WAL · Retry · Resume · Compensation)  
+- H3 generalization (heritage-safe)  
+- Sovereignty constraints  
+- Data Contracts v11  
+- Metadata + lineage  
+- Telemetry + dashboards  
+- CI/CD enforcement & promotion gates  
+- Templates for consistent pipeline design  
 
 ---
 
-### 📁 Directory Layout
+## 🗂 2. Directory Layout (v11)
 
-~~~~~text
+```text
 src/pipelines/architecture/
-├── README.md
 │
-├── pipeline_patterns.md
-├── validation_standards.md
-├── metadata_lineage.md
-├── governance_contracts.md
-├── telemetry_spec.md
-├── reliable-pipelines.md
+├── README.md                        # Root architecture spec (this file)
+│
+├── pipeline_patterns.md             # DAG patterns, stages, event lifecycles
+├── validation_standards.md          # Schema, FAIR+CARE, GE checkpoints, governance rules
+├── metadata_lineage.md              # STAC/DCAT/PROV-O/OpenLineage integration
+├── governance_contracts.md          # Contracts governing pipeline behavior
+├── telemetry_spec.md                # OTel metrics, SLO/SLA, sustainability
+├── reliable-pipelines.md            # WAL + Retry + Idempotency rules
 │
 ├── event-models/
 │   └── README.md
@@ -79,167 +112,188 @@ src/pipelines/architecture/
     ├── lineage_flow.mmd
     ├── retries_flow.mmd
     └── telemetry_flow.mmd
-~~~~~
+```
 
 ---
 
-## 🧩 High-Level Architecture
+## 🧩 3. High-Level Architecture (v11)
 
-~~~~~mermaid
+```mermaid
 flowchart TD
-  RAW["Raw Sources<br/>NOAA · USGS · KHS · Archives · Sensors"]
-    --> ETL["ETL Pipelines<br/>OCR · NER · Clean · Normalize"]
-  ETL --> VAL["Validation Layer<br/>FAIR+CARE · STAC/DCAT · Schema"]
-  VAL --> LOAD["Load Layer<br/>Neo4j · STAC Catalog · COG/Parquet"]
-  LOAD --> AI["AI Pipelines<br/>Summaries · Explainability · Models"]
-  AI --> PUB["Publication Layer<br/>Processed Data · STAC/DCAT"]
-  PUB --> TEL["Telemetry<br/>Energy · FAIR+CARE · Provenance"]
-  TEL --> GOV["Governance Ledger<br/>Immutable Records"]
-~~~~~
+  RAW["🗃 Raw Inputs<br/>NOAA · USGS · KHS · Archives · Sensors"]
+    --> ETL["🔧 ETL Pipelines<br/>OCR · NER · Geospatial Normalize · Contract Bind"]
+  ETL --> VAL["🛡 Validation Layer<br/>FAIR+CARE · STAC/DCAT · Schema · SLO Gates"]
+  VAL --> REL["♻ Reliable Execution<br/>WAL · Retry · Resume · Idempotency"]
+  REL --> LOAD["🔗 Load Layer<br/>Neo4j · STAC Catalog · COG/Parquet/NetCDF"]
+  LOAD --> AI["🧠 AI Pipelines<br/>Explainability · Bias · Drift · Context Reasoning"]
+  AI --> PUB["📦 Publication<br/>Releases · Artifacts · Catalog Updates"]
+  PUB --> TEL["📊 Telemetry<br/>OTel · Energy · Carbon · Governance"]
+  TEL --> GOV["🏛 Governance<br/>Lineage Ledger · Sovereignty · CARE Audit"]
+```
 
 ---
 
-## 🧠 Pipeline Architecture Principles
+## 🧠 4. Pipeline Architecture Principles (v11)
 
-### 1️⃣ Determinism
-- Identical inputs + config → identical outputs.  
-- All parameters MUST be logged in lineage metadata.
+### 4.1 Determinism  
+Every pipeline MUST satisfy:
 
-### 2️⃣ Documentation-First (MCP-DL v6.3)
-No PR may merge without:
-- README  
-- validation rules  
-- lineage manifest  
-- telemetry contract  
-- governance contract  
+- Deterministic LangGraph execution  
+- Deterministic WAL-based replay  
+- Deterministic idempotency (operation identity hashing)  
 
-### 3️⃣ FAIR+CARE Enforcement
-Pipelines must:
-- assign `care_label`  
-- mask protected coordinates  
-- apply sovereignty rules  
-- maintain metadata interoperability  
+### 4.2 Documentation-First (MCP-DL v6.3)  
+No pipeline merges unless all required artifacts exist:
 
-### 4️⃣ Provenance (PROV-O / CIDOC CRM)
-All transformations emit:
-- source IDs  
-- lineage chain  
-- checksums  
-- STAC/DCAT references  
+- README (this doc)  
+- Validation specification  
+- Telemetry contract  
+- Data Contract v11  
+- Governance contract  
+- Lineage specification  
 
-### 5️⃣ Telemetry Integration
-Telemetry includes:
-- runtime  
+### 4.3 FAIR+CARE & Sovereignty by Default  
+
+Pipelines MUST:
+
+- Assign `care_label`  
+- Apply sovereignty masking (H3-R7→R9)  
+- Honor tribal governance constraints  
+- Respect cultural sensitivity gates  
+- Ensure ethical narrative extraction (Story Node/Focus Mode)  
+
+### 4.4 Provenance (PROV-O + OpenLineage v2.5)  
+
+All pipelines MUST emit:
+
+- `prov:Entity` inputs  
+- `prov:Activity` transforms  
+- `prov:wasGeneratedBy` records  
+- OpenLineage events (start/success/failure)  
+- STAC/DCAT lineage references  
+
+### 4.5 Telemetry Integration  
+Pipelines MUST produce:
+
+- latency (ms)  
 - energy (Wh)  
-- CO₂e  
-- validation failures  
-- CARE conflicts  
-- data volume metrics  
+- carbon (gCO₂e)  
+- SLO status  
+- error counts  
+- retry counts  
+- validation pass/fail  
 
-Stored in:
+Telemetry stored in:
 
-~~~~~text
-../../../releases/v10.3.0/focus-telemetry.json
-~~~~~
-
----
-
-## ⚙️ Pipeline Classes
-
-| Type | Description |
-|------|-------------|
-| **ETL Pipelines** | OCR, NER, cleaning, normalization |
-| **Geospatial Pipelines** | GDAL 3.12+ raster/vector processing |
-| **AI Pipelines** | Focus Mode v2.4 summarization & explainability |
-| **Metadata Pipelines** | STAC/DCAT generation |
-| **Graph Pipelines** | Neo4j + CIDOC CRM + GeoSPARQL |
-| **Governance Pipelines** | CARE labels, sovereignty masking |
+```
+releases/<version>/pipeline-telemetry.json
+```
 
 ---
 
-## 🧬 Pipeline Pattern Template
+## ⚙️ 5. Pipeline Classes (v11)
 
-~~~~~text
-pipeline/
-├── config.json
-├── run.py
-├── transform.py
-├── validate.py
-├── lineage.json
-└── output/
-~~~~~
+| Type | Description | Examples |
+|------|-------------|----------|
+| **ETL Pipelines** | extract/clean/normalize | OCR, NER, climate, hydrology, geography |
+| **Geospatial Pipelines** | raster/vector ops | DEM, bathymetry, COG, GeoParquet |
+| **AI Pipelines** | inference/explainability | Focus Mode v3, Story Node v3 |
+| **Metadata Pipelines** | STAC/DCAT generation | dataset registration |
+| **Graph Pipelines** | Neo4j ingestion | CIDOC-CRM, GeoSPARQL |
+| **Governance Pipelines** | sovereignty/CARE screening | sensitive heritage |
+| **Autonomous Pipelines** | AUL v11 | nightly refresh, anomaly rebuild |
+| **Release Pipelines** | artifact bundling | manifest + sbom + telemetry |
 
 ---
 
-## 📦 Required Metadata Fields
+## 🧬 6. Required Metadata Fields (v11)
 
 | Field | Req | Description |
 |-------|-----|-------------|
-| `id` | ✔ | Pipeline run ID |
+| `id` | ✔ | pipeline run ID |
 | `sources` | ✔ | STAC/DCAT IDs |
-| `checksum` | ✔ | sha256 of output |
-| `runtime_sec` | ✔ | Execution time |
-| `energy_wh` | ✔ | Energy cost |
-| `co2_g` | ✔ | Carbon estimate |
-| `care_label` | ✔ | public/sensitive/restricted |
-| `lineage` | ✔ | PROV-O chain |
-| `stac_item` | optional | Linked STAC item |
+| `checksum` | ✔ | sha256 of outputs |
+| `runtime_sec` | ✔ | runtime |
+| `energy_wh` | ✔ | energy |
+| `co2_g` | ✔ | carbon |
+| `care_label` | ✔ | CARE classification |
+| `lineage` | ✔ | PROV-O trace |
+| `stac_item` | opt | linked STAC item |
+| `sovereignty_notes` | opt | tribal policies triggered |
 
 ---
 
-## ⚖️ Validation & CI Rules
+## 🔒 7. Validation & CI/CD Rules (v11)
 
-All pipelines must pass:
+Pipelines must pass:
 
-- schema_check  
-- FAIR+CARE validator  
-- checksum audit  
-- explainability audit (AI outputs)  
+- **Schema validation**  
+- **STAC/DCAT checks**  
+- **GE Checkpoint validation** (if defined)  
+- **Governance validation** (CARE + sovereignty)  
+- **Telemetry schema validation**  
+- **Lineage completeness check**  
 
-CI workflows:
-- stac-validate.yml  
-- faircare-validate.yml  
-- docs-lint.yml  
-- neo4j-schema-guard.yml  
-- telemetry-export.yml  
+CI workflows that enforce this:
 
-Failures block merge.
+- `stac-validate.yml`  
+- `faircare-validate.yml`  
+- `reliability-checks.yml`  
+- `docs-lint.yml`  
+- `telemetry-export.yml`  
+- `neo4j-schema-guard.yml`  
 
 ---
 
-## 📡 Example Lineage Record
+## 🔗 8. Lineage Example (v11-compliant)
 
-~~~~~json
+```json
 {
-  "pipeline_id": "etl_hydrology_2025_11_13_v10.3.1",
-  "sources": ["noaa_stations_ks", "usgs_streamflow_ks"],
+  "pipeline_id": "etl_hydrology_v11_2025_11_24",
+  "sources": ["stac:climate/prism", "stac:hydrology/usgs_daily"],
   "steps": ["extract", "clean", "normalize", "validate", "publish"],
   "checksum": "sha256:abcd1234...",
   "lineage": ["prov:Entity", "prov:Activity", "prov:wasGeneratedBy"],
   "care_label": "public",
-  "energy_wh": 14.3,
-  "co2_g": 0.006,
-  "governance_ref": "docs/reports/audit/data_provenance_ledger.json"
+  "energy_wh": 12.8,
+  "co2_g": 0.004,
+  "sovereignty_notes": "no tribal datasets used",
+  "governance_ref": "docs/reports/audit/pipeline_ledger.json"
 }
-~~~~~
+```
 
 ---
 
-## 🕰️ Version History
+## 🧯 9. Failure Modes & Recovery
 
-| Version | Date | Author | Summary |
-|---------|--------|--------|---------|
-| v10.3.2 | 2025-11-13 | Pipeline Architecture Team | Rebuilt using **tilde fences** to fix Markdown split; ensured full compliance with KFM Markdown Protocol. |
-| v10.3.1 | 2025-11-13 | Pipeline Architecture Team | Initial v10 architecture specification. |
+- Idempotency stale key → reset + replay  
+- Governance violation → freeze pipeline; manual review  
+- Drift/bias anomaly → retraining or corrected splits  
+- COG/GeoParquet spatial corruption → reproject + retry  
+- Neo4j write-block → run through WAL replay  
+- STAC/DCAT mismatch → regenerate metadata  
+
+Recovery always involves:
+
+- WAL + lineage audit  
+- Rebuild from `last_good`  
+- Governance sign-off (when necessary)  
+
+---
+
+## 🕰️ 10. Version History
+
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.0 | 2025-11-24 | Fully upgraded to KFM-MDP v11 with deterministic pipelines, reliability, FAIR+CARE, sovereignty, lineage, and telemetry integration. |
+| v10.3.2 | 2025-11-13 | Legacy v10 architecture specification. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Pipeline Architecture Layer**  
-Deterministic ETL × FAIR+CARE Ethics × Provenance × Sustainability  
-© 2025 Kansas Frontier Matrix — MIT License  
-
-[Back to Pipelines Root](../README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix  
+Diamond⁹ Ω / Crown∞Ω · FAIR+CARE · MCP-DL v6.3  
+Deterministic Pipelines × Sovereignty-Aware Governance × Provenance-First Architecture
 
 </div>
