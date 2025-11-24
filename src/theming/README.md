@@ -1,213 +1,211 @@
 ---
 title: "🌈 Kansas Frontier Matrix — Theming & Adaptive UI Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/theming/README.md"
-version: "v10.0.1"
-last_updated: "2025-11-16"
-review_cycle: "Continuous / Autonomous"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · FAIR+CARE Council · UI/UX Governance Board"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/src-theming-v1.json"
+sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../releases/v11.0.0/theming-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/src-theming-v11.json"
 governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.3"
-status: "Active / Enforced"
-doc_kind: "Guide"
-intent: "theming-framework"
-semantic_document_id: "kfm-doc-src-theming"
-doc_uuid: "urn:kfm:src:theming-readme-v10.0.1"
-accessibility_compliance: "WCAG 2.1 AA"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+status: "Active · Enforced"
+doc_kind: "Theming Framework"
+intent: "adaptive-ui-system"
+semantic_document_id: "kfm-theming-framework"
+doc_uuid: "urn:kfm:theming:framework:v11.0.0"
 machine_extractable: true
+classification: "UI/UX · Accessibility · Theming"
+sensitivity: "Public"
 fair_category: "F1-A1-I1-R1"
-care_label: "Public / Low-Risk"
+care_label: "Inclusive · Ethical · Public Utility"
 immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AAA"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by KFM v12 Theming Architecture"
 ---
 
 <div align="center">
 
-# 🌈 **Kansas Frontier Matrix — Theming & Adaptive UI Framework**  
+# 🌈 **Kansas Frontier Matrix — Theming & Adaptive UI Framework (v11)**  
 `src/theming/README.md`
 
-**Purpose:**  
-Define the **responsive design, color system, and adaptive UI theming framework** for the Kansas Frontier Matrix (KFM) web and visualization environments.  
-Integrates **design tokens**, **accessibility standards**, and **telemetry feedback** for ethically inclusive and sustainable interface design.
+### **Accessibility · FAIR+CARE · Sovereignty-Aware UI · Adaptive Systems · Sustainability**
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-A11y%20Certified-orange)](../../docs/standards/faircare.md)
-[![Status: Active](https://img.shields.io/badge/Status-Theming%20Engine-success)]()
+The KFM v11 Theming Framework defines a **token-driven, accessibility-first, sovereignty-respecting, and telemetry-powered UI system** that governs all interface layers:
+
+- React UI (`web/src/`)
+- MapLibre visual layers
+- Cesium 3D scenes
+- Documentation and dashboards
+- Focus Mode v3 narrative interfaces
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 1. Purpose
 
-The **Theming Framework** provides a dynamic, token-driven approach to color, spacing, and typography adaptation across KFM’s user interfaces — from dashboards and map views to documentation sites.  
-It ensures **accessibility (WCAG 2.1 AA)**, **sustainability telemetry (ISO 50001)**, and **ethical inclusivity (FAIR+CARE)** are continuously upheld.
+The framework ensures:
 
-Themes are automatically generated from `src/design-tokens/` and distributed across:
+- **WCAG 2.1 AA/AAA** compliance  
+- **Ethical + inclusive design** (FAIR+CARE)  
+- **Sovereignty-sensitive color systems**  
+- **Token-based determinism** across environments  
+- **Energy + performance** telemetry for sustainable UIs  
+- **Auto-responsive** adaptation across devices and OS modes  
+- **Design governance** via provenance/metadata and versioning  
 
-- React front-end components (`web/src/`)  
-- Markdown documentation styles (`docs/`)  
-- Cesium + MapLibre visualization systems (`src/maps/`)  
+The system harmonizes UI behavior across both **static documentation** and **interactive geospatial interfaces**.
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ 2. Directory Layout (v11)
 
 ```text
 src/theming/
 │
-├── README.md                          # Theming framework overview (this document)
-├── base.css                           # Default global theme styles
-├── dark.css                           # Dark theme variant (low-light, high-contrast)
-├── light.css                          # Light theme variant (neutral, print-ready)
-├── high-contrast.css                  # Accessibility-focused high-contrast theme
-├── theme.js                           # Dynamic JS theme switcher for React and dashboard apps
-└── metadata.json                      # Theme provenance, configuration, and governance metadata
-````
+├── README.md                # This document
+├── base.css                 # Global base styling
+├── light.css                # Light theme (docs-first)
+├── dark.css                 # Low-light theme (map-focused)
+├── high-contrast.css        # AAA compliance theme
+├── theme.js                 # Runtime adaptive theme controller
+└── metadata.json            # Provenance + FAIR+CARE + A11y metadata
+```
 
 ---
 
-## 🎨 Theme Variants
+# 🎨 3. Theme Variants (v11)
 
-| Theme               | Description                                                     | Accessibility Rating | Energy Efficiency |
-| ------------------- | --------------------------------------------------------------- | -------------------- | ----------------- |
-| **Light**           | Default, documentation-optimized palette with high readability. | WCAG 2.1 AA          | 92% efficient     |
-| **Dark**            | Low-light UI for dashboards and Focus Mode.                     | WCAG 2.1 AA          | 95% efficient     |
-| **High-Contrast**   | Enhanced contrast and outlines for vision accessibility.        | WCAG 2.1 AAA         | 88% efficient     |
-| **System Adaptive** | Auto-adjusts based on OS or device theme preference.            | Adaptive             | 94% efficient     |
+| Theme | Description | WCAG Rating | Energy Efficiency |
+|-------|-------------|-------------|-------------------|
+| **Light** | Documentation & reading-optimized palette with stable luminance. | AA | 92% |
+| **Dark** | Dashboard/Focus Mode, low-light, user fatigue reduction. | AA | 95% |
+| **High-Contrast** | Visual accessibility + AAA contrast guarantees. | AAA | 88% |
+| **Adaptive/System** | Follows OS theme + device preferences automatically. | Auto | 94% |
 
 ---
 
-## 🧩 Example Token Imports
+# 🧩 4. Token-Based Architecture
 
-Each theme is generated by importing JSON tokens from `src/design-tokens/tokens/`:
+Design tokens sourced from:
+
+```
+src/design-tokens/tokens/*.json
+```
+
+are compiled to deterministic CSS/JS variables.
+
+### CSS Example
 
 ```css
 @import "../design-tokens/generated/tokens.css";
 
 :root {
-  --color-background: var(--color-surface-default);
-  --color-text: var(--color-text-primary);
-  --font-family: var(--font-family-base);
+  --color-background: var(--surface-default);
+  --color-text: var(--text-primary);
+  --font-family: var(--font-base);
 }
 ```
 
-**Dynamic React Example:**
+### JS Example
 
 ```js
-import { colorBrandPrimary } from "../design-tokens/generated/tokens.js";
-
-document.body.style.backgroundColor = colorBrandPrimary;
+import { brandPrimary } from "../design-tokens/generated/tokens.js";
+document.body.style.backgroundColor = brandPrimary;
 ```
 
 ---
 
-## 🧠 Theme Architecture
+# 🔧 5. Runtime Architecture
 
 ```mermaid
 flowchart TD
-  A["Design Tokens (src/design-tokens/tokens/*.json)"] --> B["Theme Builder (src/theming/theme.js)"]
-  B --> C["CSS / JS Theme Outputs"]
-  C --> D["React + MapLibre + Docs Integration"]
-  D --> E["Telemetry Feedback (focus-telemetry.json)"]
+  A["Design Tokens"] --> B["Theme Builder (theme.js)"]
+  B --> C["CSS Outputs · JS Vars"]
+  C --> D["React · MapLibre · Cesium · Docs"]
+  D --> E["Telemetry · A11y Reports · Energy Metrics"]
 ```
 
 ---
 
-## ⚙️ Theming Engine Configuration
+# ♿ 6. Accessibility & Inclusion (v11)
 
-| Parameter              | Description                                    | Example  |
-| ---------------------- | ---------------------------------------------- | -------- |
-| `themeMode`            | Selected theme mode (`light`, `dark`, `auto`). | `"auto"` |
-| `contrastLevel`        | Adjusts color contrast and luminance levels.   | `"high"` |
-| `a11yEnabled`          | Enables accessibility checks before switching. | `true`   |
-| `prefersReducedMotion` | Respects system-level motion preferences.      | `true`   |
+| Rule | Target | Validator |
+|------|--------|-----------|
+| Contrast | ≥ 4.5:1 | Lighthouse · axe-core |
+| High-Contrast Mode | Required | ui-accessibility.yml |
+| Keyboard Nav | 100% coverage | Manual + CI |
+| Reduced Motion | Required | `prefers-reduced-motion` |
+| Alt Text | Required for all images | Docs checker |
+| Indigenous Language Support | Optional prompts: Kansa, Osage | Docs/localization |
 
-**Stored in:** `src/theming/metadata.json`
-
----
-
-## ♿ Accessibility & Inclusion Metrics
-
-| Rule                            | Target                                 | Validated By           |
-| ------------------------------- | -------------------------------------- | ---------------------- |
-| **Color Contrast**              | ≥ 4.5:1                                | `ui-accessibility.yml` |
-| **Keyboard Navigation Support** | 100%                                   | Manual & CI audit      |
-| **Reduced Motion**              | Supported via `prefers-reduced-motion` | Browser API            |
-| **Screen Reader Support**       | Full ARIA compatibility                | Lighthouse / axe-core  |
-| **Multilingual Readability**    | English, Spanish, Kansa, Osage         | Docs Localization      |
-
-Images must include descriptive alt text:
-
-```markdown
-![Theme preview showing light and dark UI variants](./assets/theme-preview.png)
+**Accessibility metadata** is recorded in:  
+```
+src/theming/metadata.json
 ```
 
 ---
 
-## 🧮 Sustainability Metrics
+# 🌿 7. Sustainability Telemetry (ISO 50001)
 
-| Metric                       | Description                                | Target   |
-| ---------------------------- | ------------------------------------------ | -------- |
-| `energy_render_wh`           | Average energy use per theme render        | ≤ 0.3 Wh |
-| `carbon_output_gco2e`        | CO₂ equivalent per page load               | ≤ 0.4 g  |
-| `contrast_energy_efficiency` | High-contrast rendering efficiency         | ≥ 85%    |
-| `theme_reuse_rate`           | % of shared design variables across themes | ≥ 90%    |
+The theming engine tracks:
 
-Telemetry recorded in:
+- `energy_render_wh`  
+- `carbon_output_gco2e`  
+- `contrast_energy_efficiency`  
+- `theme_reuse_rate`  
 
-```text
-releases/v10.0.0/focus-telemetry.json
+Telemetry exported to:
+
+```
+releases/v11.0.0/theming-telemetry.json
 ```
 
 ---
 
-## ⚖️ FAIR+CARE Theming Matrix
+# ⚖️ 8. FAIR+CARE & Sovereignty Alignment
 
-| Principle         | Implementation                                                                   |
-| ----------------- | -------------------------------------------------------------------------------- |
-| **Findable**      | Theme assets referenced in manifests and design indexes.                         |
-| **Accessible**    | WCAG 2.1 AA verified; supports high contrast and reduced motion preferences.     |
-| **Interoperable** | CSS variables exported to all rendering environments.                            |
-| **Reusable**      | CC-BY 4.0 license and JSON provenance tracking for all token sets.               |
-| **CARE**          | Design inclusive of Indigenous color symbolism and cultural sensitivity reviews. |
-
-Governance reports:
-
-```text
-docs/reports/telemetry/governance_scorecard.json
-```
+- Avoid culturally sensitive color associations without review  
+- Honor Indigenous color symbolism when applicable  
+- Provide A2C (Authority to Control) metadata in theme definitions  
+- Ensure no UI state exposes sensitive location/origin data  
+- All theming updates require governance checks (CI-based)  
 
 ---
 
-## 🧩 Validation Workflows
+# 🧪 9. Validation Workflows
 
-| Workflow                    | Description                                             | Output                                          |
-| --------------------------- | ------------------------------------------------------- | ----------------------------------------------- |
-| `design-token-validate.yml` | Validates imported token references and color contrast. | `reports/self-validation/ui/design_tokens.json` |
-| `ui-accessibility.yml`      | Runs a11y and WCAG compliance audits.                   | `reports/self-validation/ui/a11y_summary.json`  |
-| `telemetry-export.yml`      | Exports theming performance and sustainability metrics. | `releases/v10.0.0/focus-telemetry.json`         |
+| Workflow | Purpose | Output |
+|----------|---------|--------|
+| `design-token-validate.yml` | Validate token usage + references | `reports/self-validation/ui/tokens.json` |
+| `ui-accessibility.yml` | Run WCAG AA/AAA audits | `reports/self-validation/ui/a11y.json` |
+| `telemetry-export.yml` | Export energy/sustainability metrics | `releases/.../theming-telemetry.json` |
 
 ---
 
-## 🕰️ Version History
+# 🕰️ 10. Version History
 
-| Version | Date       | Author               | Summary                                                                                                         |
-| ------: | ---------- | -------------------- | --------------------------------------------------------------------------------------------------------------- |
-| v10.0.1 | 2025-11-16 | `@kfm-design-system` | Upgraded to **KFM-MDP v10.4.3**; added extended YAML metadata, lined directory layout, and CI-aligned sections. |
-| v10.0.0 | 2025-11-10 | `@kfm-design-system` | Introduced adaptive theming framework with accessibility validation and sustainability telemetry.               |
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.0 | 2025-11-24 | Complete KFM-MDP v11 rewrite: sovereignty, sustainability, a11y AAA, telemetry v11, design governance. |
+| v10.0.1 | 2025-11-16 | Previous theming architecture (v10). |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**
-Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
-[Back to Source Index](../README.md) · [Design Tokens](../design-tokens/README.md) · [Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+**Kansas Frontier Matrix — Theming Framework v11**  
+*Accessible · Ethical · Sustainable · Sovereign-Aware UI Engineering*  
+Diamond⁹ Ω / Crown∞Ω Certified
 
 </div>
