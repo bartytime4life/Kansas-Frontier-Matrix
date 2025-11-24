@@ -1,7 +1,7 @@
 ---
 title: "📊 KFM v11 — GE Checkpoints + OpenTelemetry Metrics Integration (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/pipelines/validation-observability/checkpoints-otel/README.md"
-version: "v11.0.1"
+version: "v11.0.2"
 last_updated: "2025-11-24"
 review_cycle: "Quarterly · Reliability Engineering · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
@@ -10,176 +10,299 @@ manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
 telemetry_ref: "../../../../releases/v11.0.0/validation-observability-telemetry.json"
 telemetry_schema: "../../../../schemas/telemetry/validation-observability-v11.json"
 governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
 status: "Active / Enforced"
+doc_kind: "Pipeline Module"
+intent: "validation-observability-checkpoints-otel"
+semantic_document_id: "kfm-doc-validation-observability-checkpoints-otel"
+doc_uuid: "urn:kfm:pipeline:validation-observability:checkpoints-otel:v11.0.2"
+machine_extractable: true
+classification: "Internal Pipeline Specification"
+sensitivity: "Low"
+fair_category: "F1-A1-I2-R2"
+care_label: "Responsible · Ethics · Stewardship"
+immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AA+"
+jurisdiction: "Kansas / United States"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by next validation/observability redesign"
 ---
 
-# 📊 GE Checkpoints + OpenTelemetry Metrics  
-### **Deterministic Validation · Metric Emissions · SLO Enforcement**
+<div align="center">
 
-This folder documents how **Great Expectations (GE)** and **OpenTelemetry (OTel)** combine to provide **uniform, cross-pipeline validation and observability** in KFM v11.
+# 📊 **KFM v11 — GE Checkpoints + OpenTelemetry Metrics Integration**  
+`docs/pipelines/validation-observability/checkpoints-otel/README.md`
 
-Every autonomous update, ETL batch, and AI pipeline is required to wrap data mutation steps with:
+**Purpose:**  
+Provide the authoritative specification for integrating **Great Expectations (GE)** and **OpenTelemetry (OTel)** into all KFM v11 data pipelines—enforcing deterministic validation, governed metric emissions, lineage logging, FAIR+CARE observability, and CI-driven promotion gating.
 
-1. **GE Checkpoint Execution**  
-2. **Metric Emission (OTel Counter + Histogram)**  
-3. **Promotion Gating** based on failed expectations  
-
-This subsystem is part of the **Reliable Pipelines v11** strategy and feeds into dashboards, SLOs, error budgets, and the pipeline kill-switch.
+</div>
 
 ---
 
-# 📁 Directory Layout
+## 📘 1. Overview
+
+This module defines how **GE Checkpoints** and **OTel metrics** wrap every data-mutating operation within:
+
+- ETL pipelines  
+- AI/ML inference runs  
+- Harmonization flows  
+- Story Node & Focus Mode generation pipelines  
+- Conditional ingestion flows  
+- Reliable Pipelines v11 DAGs  
+
+The integration provides:
+
+- Deterministic validation  
+- Governance-aligned enforcement  
+- Real-time metric emission  
+- SLO/SLA alignment  
+- Promotion gating  
+- Audit-ready provenance  
+- FAIR+CARE compliance signals  
+- Sustainability and error-budget tracking  
+
+---
+
+## 🗂 2. Directory Layout
 
 ```text
 docs/pipelines/validation-observability/checkpoints-otel/
 │
-├── README.md
-│   # This file — full specification of GE + OTel integration
+├── README.md                      # Full specification (this file)
 │
-├── examples/
-│   # Minimal runnable examples used by CI and developers
+├── examples/                      # Example Checkpoints, runners, CI dry-runs
+│   ├── climate_ingest_example.md
+│   ├── hydrology_ingest_example.md
+│   └── ...
 │
-├── suites/
-│   # GE Expectation Suites (KFM structured)
-│   # One suite per dataset or pipeline stage
+├── suites/                        # GE Expectation Suites (one per domain)
+│   ├── kfm_climate_core.json
+│   ├── kfm_hydrology_core.json
+│   ├── kfm_heritage_masked.json
+│   └── ...
 │
-├── checkpoints/
-│   # GE Checkpoint YAMLs following naming: kfm_<stage>_ckpt.yml
+├── checkpoints/                   # Checkpoint YAMLs
+│   ├── kfm_ingest_ckpt.yml
+│   ├── kfm_harmonize_ckpt.yml
+│   ├── kfm_publish_ckpt.yml
+│   └── ...
 │
-└── runners/
-    # Python runners for pipeline-level integration
-    # Emits OTel metrics after executing Checkpoints
+└── runners/                       # Python/Ops runners
+    ├── run_checkpoint.py
+    ├── emit_metrics.py
+    └── provenance_hooks.py
 ```
 
 ---
 
-# 🎯 Purpose
+## 🎯 3. Goals
 
-KFM v11 enforces **deterministic, audit-ready validation** for every data-changing operation.
+This subsystem ensures:
 
-This module ensures:
-
-- ✔ **Schema & value constraints** are validated before promotion  
-- ✔ **Freshness, drift, reference integrity** are continuously tested  
-- ✔ **Errors are observable** through consistent OTel metric names  
-- ✔ **Promotion gates** fail CI/CD when expectations fail  
-- ✔ **Dashboards** unify pass/fail counts, latency, and row deltas  
-- ✔ **Root-cause analysis** is supported via Checkpoint result stores  
+- 🔒 **Governed validation** before any data persists  
+- 📈 **Uniform metrics** for reliability dashboards  
+- 🚦 **Promotion gating** using SLO/error budget rules  
+- 🧪 **Consistent test harness** for pipelines  
+- 📜 **Complete lineage logs** for audits  
+- 🛡 **FAIR+CARE and sovereignty compliance** enforced via validation  
+- ♻ **Sustainability metrics** (energy/carbon) accessible to governance  
 
 ---
 
-# 📦 Required Metric Names (OTel v11 Spec)
+## 🧩 4. GE Checkpoint Contract (v11 Standard)
+
+All GE Checkpoints MUST:
+
+- Use `StoreValidationResultAction`  
+- Use `UpdateDataDocsAction`  
+- Reference a suite under `/suites/`  
+- Use naming format:  
+  ```
+  kfm_<stage>_ckpt.yml
+  ```
+- Output deterministic, machine-parseable validation results  
+- Emit row-level and table-level stats  
+- Produce an error summary JSON to:  
+  ```
+  data/work/validation/<pipeline>/<timestamp>.json
+  ```
+
+### Required Expectation Types
+- Schema consistency  
+- Null checks  
+- Range checks  
+- Unique keys where expected  
+- Temporal continuity  
+- CRS & spatial metadata presence  
+- Data Contract conformance  
+
+### Optional (Domain-Specific)
+- Climate anomaly distribution checks  
+- Hydrology hydrograph continuity  
+- Story Node JSON schema validation  
+- Hazard quantile boundary validation  
+
+---
+
+## 📦 5. OTel Metrics (v11 Contract)
 
 Pipelines MUST emit:
 
-- `kfm.update_errors` – number of failed expectations  
-- `kfm.rows_ingested` – rows committed during this run  
-- `kfm.latency_ms` – full task runtime in milliseconds  
+### Required Metrics
+| Metric Name | Type | Description |
+|-------------|-------|-------------|
+| `kfm.update_errors` | Counter | Failed expectations count |
+| `kfm.rows_ingested` | Counter | Number of rows committed |
+| `kfm.latency_ms` | Histogram | Pipeline duration (ms) |
+| `kfm.validation_failures` | Counter | Aggregated checkpoint failures |
+| `kfm.error_budget_burn` | Gauge | SLO error budget consumption |
 
-Labels (required):
-
+### Required Labels
 - `pipeline`  
 - `stage`  
 - `table`  
 - `env`  
+- `dataset_id` (optional, recommended)  
+- `contract_version`  
 
-Example:
-
+### Example
 ```
-kfm.update_errors{pipeline="ingest_v11", stage="validate", table="my_table", env="prod"} = 3
-```
-
----
-
-# 🧩 GE Checkpoint Contract
-
-All KFM checkpoints MUST:
-
-- Use `StoreValidationResultAction`  
-- Include `UpdateDataDocsAction`  
-- Reference a valid suite under `suites/`  
-- Follow naming conventions:  
-
-```
-kfm_ingest_ckpt.yml
-kfm_harmonize_ckpt.yml
-kfm_publish_ckpt.yml
+kfm.update_errors{
+  pipeline="climate_ingest",
+  stage="validate",
+  table="climate_raw",
+  env="prod"
+} = 3
 ```
 
 ---
 
-# 🐍 Python Runner Standard (v11)
+## 🐍 6. Python Runner Standard (v11)
 
-Runners in `/runners/` must:
+Python runners MUST:
 
-1. Load and run a GE Checkpoint  
-2. Parse statistics  
-3. Emit metrics via OTel  
-4. Exit non-zero if failures occur  
-5. Emit row deltas (if available)  
-6. Log PROV-O lineage entries to the pipeline ledger  
+1. Load the GE checkpoint  
+2. Execute deterministically using LangGraph v11 runtime  
+3. Parse results into:
+   - pass/fail  
+   - validation statistics  
+   - suite lineage  
+4. Emit OTel metrics  
+5. Update OpenLineage + PROV-O provenance  
+6. Write results to:
+   ```
+   data/work/validation/<pipeline>/<timestamp>.json
+   ```
+7. Exit `1` on any failure  
+8. Emit sustainability telemetry (energy/carbon)
 
-Runners **must not mutate data** before GE execution.
-
----
-
-# 📊 Dashboards & SLO Alignment
-
-This module feeds the following dashboards:
-
-- SLO Latency (p50/p95/p99)
-- Validation Failures over Time
-- Row Drift / Volume Change Detection
-- Autonomous Update Safety Checks
-
-Dashboards consuming this module follow the contract defined in:
-
-`docs/pipelines/reliability/slo-error-budgets.md`
+All runners MUST avoid **pre-validation mutation** of data.
 
 ---
 
-# 🧪 Testing & CI/CD Enforcement
+## 🧠 7. Integration with Reliable Pipelines v11
+
+This subsystem plugs into:
+
+- **Retry logic**  
+- **Rollback triggers**  
+- **Hotfix gates**  
+- **Freeze/unfreeze state**  
+- **Promotion eligibility**  
+- **Autonomous update rules**  
+- **Kill-switch enforcement**  
+
+When a checkpoint fails:
+
+- Pipeline auto-halts  
+- OTel emits `kfm.update_errors > 0`  
+- Error budget burn increases  
+- Governance ledger receives an event  
+- Optional Slack/Teams page triggered  
+
+---
+
+## 📊 8. Dashboards & Observability Alignment
+
+Dashboards consuming this module MUST include:
+
+- SLO latency (p50/p95/p99)  
+- Checkpoint success/failure counts  
+- Drift detection summaries  
+- Row volume changes  
+- Contract compliance percentage  
+- Governance flag violations  
+- Carbon/energy footprints of validation runs  
+
+Dashboards follow schema in:
+
+```
+docs/pipelines/reliability/slo-error-budgets.md
+```
+
+---
+
+## 🔒 9. Governance, FAIR+CARE, and Sovereignty
+
+Validation + OTel results feed into:
+
+- CARE compliance reviews  
+- Sovereignty redaction & masking checks  
+- Sensitive-site spatial tests (H3 R7–9)  
+- License validation results  
+- Quarterly FAIR+CARE accountability reports  
+
+Checkpoint failures automatically produce a **governance ledger entry** in:
+
+```
+docs/reports/audit/governance-ledger.json
+```
+
+---
+
+## 🧪 10. Testing & CI/CD Enforcement
 
 CI performs:
 
+- GE suite validation  
 - Checkpoint syntax validation  
-- Expectation suite linting  
-- Dry-run of OTel metric emission  
-- YAML + schema validation via JSONSchema  
+- OTel metric schema dry-runs  
+- JSON Schema validation for:
+  - validation results  
+  - GE suite definitions  
+  - Checkpoint YAMLs  
 
 Promotion is **blocked** if:
 
-- Any suite has >0 failed expectations  
-- Any OTel metric fails emission schema  
-- Runners do not exit deterministically  
+- Any checkpoint has >0 failures  
+- Any pipeline omits metric emission  
+- Any payload violates `validation-observability-v11.json`  
+- Lineage incomplete  
+- Runner non-deterministic behavior detected  
 
 ---
 
-# 🔒 Provenance, FAIR+CARE, and Ethical Handling
+## 🕰 11. Version History
 
-All validation results are:
-
-- Stored with timestamps and commit SHAs  
-- Linked to PROV-O lineage records  
-- Included in quarterly FAIR+CARE audits  
-- Exported as JSON-LD for long-term reproducibility  
-
----
-
-# 📌 Related Documents
-
-- `reliable-pipelines.md`  
-- `slo-error-budgets.md`  
-- `validation-observability/README.md`  
-- `standards/governance/ROOT-GOVERNANCE.md`  
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.2 | 2025-11-24 | v11 enriched edition; added error-budget ties, sustainability metrics, sovereignty filters. |
+| v11.0.1 | 2025-11-23 | Added GE suite directory structure and OTel label requirements. |
+| v11.0.0 | 2025-11-23 | Initial module specification. |
 
 ---
 
-# 🔗 Footer
+<div align="center">
 
-**[⬅ Back to Validation & Observability](../README.md)** ·  
-**[📚 Standards Index](../../../standards/README.md)** ·  
-**[🏠 KFM Root](../../../../README.md)**
+© 2025 Kansas Frontier Matrix — Reliable Pipelines v11  
+FAIR+CARE · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Certified  
+“Validation is governance. Metrics are accountability.”  
+
+</div>
