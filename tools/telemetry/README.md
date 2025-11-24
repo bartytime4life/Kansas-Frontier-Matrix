@@ -1,201 +1,350 @@
 ---
 title: "📡 Kansas Frontier Matrix — Telemetry & Sustainability Tools (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tools/telemetry/README.md"
-version: "v10.2.2"
-last_updated: "2025-11-12"
-review_cycle: "Continuous / Autonomous"
+version: "v11.1.0"
+last_updated: "2025-11-24"
+review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.2.0/manifest.zip"
+
+sbom_ref: "../../../releases/v11.1.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.1.0/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v10.2.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/tools-telemetry-v2.json"
+
+telemetry_ref: "../../../releases/v11.1.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/tools-telemetry-v4.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
+doc_kind: "Architecture"
+intent: "tools-telemetry-platform"
+role: "telemetry-registry"
+category: "Telemetry · Sustainability · Governance"
+
+fair_category: "F1-A1-I2-R2"
+care_label: "Public · Low-Risk"
+sensitivity: "General"
+sensitivity_level: "Low"
+public_benefit_level: "High"
+indigenous_data_flag: false
+risk_category: "Low"
+redaction_required: false
+
+provenance_chain:
+  - "tools/telemetry/README.md@v10.0.0"
+  - "tools/telemetry/README.md@v10.2.2"
+  - "tools/telemetry/README.md@v11.0.0"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "CreativeWork"
+  owl_time: "ProperInterval"
+  prov_o: "prov:Activity"
+  geosparql: "N/A"
+
+json_schema_ref: "../../../schemas/json/tools-telemetry-readme-v11.json"
+shape_schema_ref: "../../../schemas/shacl/tools-telemetry-readme-v11.shape.ttl"
+
+event_source_id: "ledger:tools/telemetry/README.md"
+immutability_status: "mutable-plan"
+
+ai_training_allowed: false
+ai_training_guidance: "Do not use telemetry logs as model training data."
+ai_outputs_require_explainability: true
+ai_outputs_require_bias_audit: false
+
+machine_readable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "United States · Kansas"
+lifecycle_stage: "operational"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next telemetry-tools architecture update"
 ---
 
 <div align="center">
 
-# 📡 **Kansas Frontier Matrix — Telemetry & Sustainability Tools**  
+# 📡 **Kansas Frontier Matrix — Telemetry & Sustainability Tools (v11.1.0)**  
 `tools/telemetry/README.md`
 
-**Purpose:**  
-FAIR+CARE-certified telemetry suite monitoring, logging, and reporting **performance, energy, carbon, and ethics** metrics across all Kansas Frontier Matrix (KFM) systems.  
-Implements **ISO 14064**, **ISO 50001**, and **RE100** standards for transparent, reproducible, and ethical sustainability tracking under **MCP-DL v6.3**.
+**Purpose**  
+Provide the **canonical telemetry and sustainability architecture** for KFM’s tools-platform — measuring and reporting:
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Telemetry%20Certified-gold)](../../../docs/standards/faircare.md)
-[![ISO 14064](https://img.shields.io/badge/ISO-14064%20Sustainability-green)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](../../../docs/README.md)
+- Runtime & performance characteristics  
+- Energy usage (Wh) & carbon emissions (gCO₂e)  
+- FAIR+CARE-aligned ethics metrics (A11y, governance outcomes)  
+- Reliability & error budgets for tools and pipelines  
+
+Telemetry & Sustainability Tools are the **observability anchor** for Reliable Pipelines v11, FAIR+CARE governance, and the Tools Platform (`tools/**`).
+
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Telemetry%20Certified-gold)](#)
+[![ISO 14064](https://img.shields.io/badge/ISO-14064%20Sustainability-green)](#)
+[![ISO 50001](https://img.shields.io/badge/ISO-50001%20Energy%20Mgmt-lightgrey)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](#)
+[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)](#)
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview
 
-The **Telemetry & Sustainability Tools** module is KFM’s observability and performance analytics core.  
-It quantifies computational, environmental, and ethical impacts across data, AI, and CI/CD workflows, linking results directly to **FAIR+CARE** sustainability metrics and governance ledgers for public accountability.
+The **Telemetry & Sustainability Tools** module:
 
-**v10.2.2 Enhancements**
-- Added real-time **ISO 50001 energy intensity** logging.  
-- Introduced **GPU telemetry & focus-inference benchmarks**.  
-- Extended **carbon and sustainability dashboards** with JSON-LD provenance links.  
-- Aligned telemetry schema with **telemetry-report.yml** CI pipelines and FAIR+CARE dashboards.
+- Collects **operational metrics** from:
+  - ETL/AI pipelines,
+  - Tools Platform,
+  - Test Platform,
+  - Focus Mode v3,
+  - Story Nodes v3 flows,
+  - Neo4j + STAC/DCAT subsystems
+- Computes **energy and carbon** footprints per execution  
+- Aggregates and normalizes metrics into **OpenTelemetry v11** streams  
+- Exports **ISO 14064 / ISO 50001** aligned sustainability reports  
+- Writes telemetry bundles into release artifacts (`focus-telemetry.json`)  
+- Integrates with **Tools Platform Architecture** and **Validation Tools** for end-to-end governance  
 
----
+In v11.1.0, Telemetry Tools are fully integrated with:
 
-## 🗂️ Directory Layout
-
-```plaintext
-tools/telemetry/
-├── README.md
-│
-├── telemetry_collector.py            # Collects metrics from Focus Mode + pipeline execution
-├── performance_analyzer.py           # Evaluates latency, throughput, resource utilization
-├── sustainability_reporter.py        # Generates ISO 14064-compliant sustainability reports
-├── telemetry_dashboard_snapshot.json # Export snapshot for dashboards (JSON-LD)
-└── metadata.json                     # Provenance metadata + checksum lineage
-```
+- **Reliable Pipelines v11** (SLOs, error budgets)  
+- **Tools/ARCHITECTURE.md** & `tools/README.md`  
+- **tools/validation/README.md** (validation & FAIR+CARE tools)  
 
 ---
 
-## ⚙️ Telemetry Lifecycle
+## 🗂️ 2. Directory Layout (v11 · Box-Safe)
 
-```mermaid
+~~~~text
+tools/
+└── telemetry/
+    ├── README.md                     # This document
+    │
+    ├── telemetry_collector.py        # Metric ingestion from tools & pipelines
+    ├── performance_analyzer.py       # Latency, throughput, error rate, SLO scoring
+    ├── sustainability_reporter.py    # ISO 14064/50001 sustainability reports
+    │
+    ├── telemetry_dashboard.json      # Snapshot for dashboards (JSON-LD)
+    └── metadata.json                 # Telemetry schema, lineage, and governance config
+~~~~
+
+All files are treated as **governed tools** and must follow Tools Platform v11 rules.
+
+---
+
+## 🧬 3. Telemetry Architecture (v11)
+
+#### Conceptual Flow
+
+~~~~mermaid
 flowchart TD
-A["Focus Mode / Pipelines / CI"] --> B["telemetry_collector.py (Collect Metrics)"]
-B --> C["performance_analyzer.py (Runtime, Energy, Latency)"]
-C --> D["sustainability_reporter.py (Carbon + RE100 Reports)"]
-D --> E["Governance Sync (Append to FAIR+CARE Ledger)"]
-E --> F["Export (focus-telemetry.json + Dashboard Snapshot)"]
-```
+  A["Pipelines · Tools · Tests · Focus Mode v3"]
+    --> B["telemetry_collector.py\nCollect Metrics (OTel v11)"]
+  B --> C["performance_analyzer.py\nLatency · SLO · Error Budgets"]
+  C --> D["sustainability_reporter.py\nEnergy · Carbon · ISO 14064/50001"]
+  D --> E["Governance Sync\n(FAIR+CARE Ledgers)"]
+  E --> F["Export\nfocus-telemetry.json · telemetry_dashboard.json"]
+~~~~
 
-1. **Collection** — Capture runtime, hardware, and AI inference metrics.  
-2. **Analysis** — Compute efficiency, latency, and throughput.  
-3. **Reporting** — Quantify Wh, gCO₂e, and energy mix under ISO standards.  
-4. **Sync** — Append sustainability logs to the **governance ledger**.  
-5. **Export** — Publish telemetry bundles for transparency dashboards.
+**Inputs**
+
+- Runtime metrics (duration, CPU, memory, I/O)  
+- AI-level metrics (inference counts, error rates)  
+- Pipeline-level states (success/fail, retries, rollbacks)  
+- Energy/Carbon signals (from energy schema)  
+- A11y usage metrics (for web UI)  
+
+**Outputs**
+
+- Telemetry bundles associated with each **release** and **architecture version**  
+- Sustainability dashboards and FAIR+CARE scorecards  
+- Tools-level SLO & error budget evaluations  
 
 ---
 
-## 🧾 Example Telemetry Record
+## ⚙️ 4. Telemetry Collector (`telemetry_collector.py`)
 
-```json
+**Responsibilities**
+
+- Connect to tool/pipeline/agent instrumentation points  
+- Normalize metric names & labels for OTel v11  
+- Respect data contracts:
+  - `energy_schema`
+  - `carbon_schema`
+  - `telemetry_schema` (`tools-telemetry-v4.json`)  
+
+**Example Data Categories**
+
+- `kfm.tools.exec_time_ms`  
+- `kfm.tools.energy_wh`  
+- `kfm.tools.carbon_gco2e`  
+- `kfm.tools.error_count`  
+- `kfm.tools.warning_count`  
+- `kfm.tools.calls`  
+- `kfm.tools.care_flags`  
+
+All metrics are stored temporarily using `metadata.json`-defined backends and then aggregated for releases.
+
+---
+
+## 📊 5. Performance Analyzer (`performance_analyzer.py`)
+
+**Key Features**
+
+- Latency distribution analysis (p50/p95/p99)  
+- Success vs. failure ratio  
+- Error budget calculations (aligned with Reliability Pipelines v11)  
+- SLO scoring per tool or group of tools  
+- Outlier detection and anomaly flags  
+
+Metrics are summarized as:
+
+- **Per-tool performance summary**  
+- **Per-pipeline performance summary**  
+- **Release-wide performance indicators**  
+
+These feed into Focus Mode v3 for explaining reliability context to users and governance boards.
+
+---
+
+## 🌱 6. Sustainability Reporter (`sustainability_reporter.py`)
+
+**Role**
+
+- Compute energy and carbon emissions based on:
+  - runtime,
+  - hardware type (CPU/GPU),
+  - region- or provider-specific carbon intensity  
+- Align with **ISO 14064** and **ISO 50001** standards  
+
+**Outputs**
+
+- Sustainability reports (JSON/JSON-LD)  
+- RE100 and renewable energy usage metrics  
+- Per-tool and per-pipeline environmental scores  
+
+Example fields:
+
+- `energy_wh`, `carbon_gco2e`  
+- `renewable_power_pct`  
+- `sustainability_score`  
+- `iso_14064_compliance`, `iso_50001_compliance`  
+
+These are recorded in `telemetry_dashboard.json` and release-level telemetry.
+
+---
+
+## 📦 7. Example Telemetry Record (v11.1.0)
+
+~~~~json
 {
   "@context": "https://schema.org/",
   "@type": "Dataset",
-  "id": "telemetry_session_v10.2.2",
+  "id": "telemetry_session_v11.1.0",
   "components_monitored": [
-    "focus_mode_ai_v7",
-    "remote_sensing_etl_v6",
-    "ci_pipeline_v10"
+    "tools/validation/faircare_validator.py",
+    "tools/ai/focus_audit.py",
+    "tools/ci/docs_validate.yml"
   ],
-  "avg_runtime_seconds": 497.6,
-  "energy_usage_wh": 11.9,
-  "carbon_output_gco2e": 14.1,
+  "avg_runtime_seconds": 142.7,
+  "energy_usage_wh": 4.8,
+  "carbon_output_gco2e": 5.3,
   "renewable_power_offset": "100%",
-  "hardware_type": "NVIDIA T4 / Intel Xeon",
+  "hardware_type": "NVIDIA T4 · Intel Xeon",
   "fairstatus": "certified",
-  "sustainability_compliance": "ISO 14064 / RE100",
+  "sustainability_compliance": "ISO 14064 · ISO 50001 · RE100",
   "checksum_verified": true,
   "governance_registered": true,
   "validator": "@kfm-telemetry",
-  "created": "2025-11-12T09:00:00Z",
+  "created": "2025-11-24T09:45:00Z",
   "governance_ref": "docs/reports/audit/data_provenance_ledger.json"
 }
-```
+~~~~
 
 ---
 
-## 🧠 FAIR+CARE Governance Matrix
+## 🧠 8. FAIR+CARE Governance Matrix (Telemetry Tools)
 
-| Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
-| **Findable** | Telemetry JSONs logged in releases & DCAT catalogs. | @kfm-data |
-| **Accessible** | JSON-LD & ISO metadata accessible via GitHub & dashboards. | @kfm-accessibility |
-| **Interoperable** | Conforms to FAIR+CARE, ISO 14064, ISO 50001, RE100. | @kfm-architecture |
-| **Reusable** | Machine-readable metrics enable reproducibility audits. | @kfm-design |
-| **Collective Benefit** | Open sustainability transparency benefits researchers. | @faircare-council |
-| **Authority to Control** | Council certifies sustainability and CO₂ audits. | @kfm-governance |
-| **Responsibility** | Auditors validate Wh/gCO₂ data and renewable sourcing. | @kfm-security |
-| **Ethics** | Advocates for low-impact computing and open environmental data. | @kfm-ethics |
-
-**References:**  
-`docs/reports/fair/data_care_assessment.json` · `docs/reports/audit/data_provenance_ledger.json`
+| Principle           | Implementation                                                      | Oversight          |
+|---------------------|----------------------------------------------------------------------|--------------------|
+| **Findable**        | Telemetry bundles indexed by ID & release in manifests/DCAT.        | @kfm-data          |
+| **Accessible**      | JSON-LD + CC-BY; public dashboards where appropriate.               | @kfm-accessibility |
+| **Interoperable**   | Conforms to FAIR+CARE, ISO 14064/50001, DCAT 3.0.                   | @kfm-architecture  |
+| **Reusable**        | Machine-readable, version-pinned metric schemas.                    | @kfm-design        |
+| **Collective Benefit** | Sustainability transparency for research & public insight.      | @faircare-council  |
+| **Authority to Control** | Governance Council approves sustainability definitions and thresholds. | @kfm-governance    |
+| **Responsibility**  | Telemetry owners validate Wh/gCO₂ and RE100 claims.                 | @kfm-security      |
+| **Ethics**          | Promotes efficient, low-impact computation; flags unsustainable patterns. | @kfm-ethics   |
 
 ---
 
-## ⚙️ Key Tool Summary
+## 🧰 9. Tool Summary
 
-| Tool | Description | Role |
-|------|-------------|------|
-| `telemetry_collector.py` | Captures runtime, energy, and GPU/CPU utilization. | Monitoring |
-| `performance_analyzer.py` | Computes latency, throughput, and model efficiency. | Analytics |
-| `sustainability_reporter.py` | Generates FAIR+CARE + ISO-compliant reports. | Accountability |
-| `telemetry_dashboard_snapshot.json` | Visualization-ready data for FAIR+CARE dashboards. | Transparency |
-| `metadata.json` | Logs governance lineage and telemetry provenance. | Traceability |
-
-Automated via **`telemetry_sync.yml`** in CI/CD pipelines.
+| Tool                      | Role                                      | Outputs                                   |
+|---------------------------|-------------------------------------------|-------------------------------------------|
+| `telemetry_collector.py`  | Metric ingestion & normalization          | Raw OTel v11 streams                      |
+| `performance_analyzer.py` | Latency & reliability analysis            | SLO reports, anomaly flags                |
+| `sustainability_reporter.py` | Energy & carbon reporting              | Sustainability + ISO-aligned summaries    |
+| `telemetry_dashboard.json`| Dashboard-ready, aggregated telemetry     | Visualization layer inputs                |
+| `metadata.json`           | Telemetry schema & provenance config      | Validation + ingestion config             |
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## ⚖️ 10. Retention & Provenance
 
-| Data Type | Retention | Policy |
-|-----------|-----------:|-------|
-| Telemetry Logs | 180 Days | Retained for reproducibility validation |
-| Sustainability Reports | 365 Days | Archived for re-certification |
-| Metadata | Permanent | Immutable ledger inclusion |
-| Dashboard Snapshots | 90 Days | Rotating refresh per CI cycle |
+| Artifact                 | Retention | Notes                               |
+|--------------------------|-----------|--------------------------------------|
+| Telemetry raw logs       | 90 days   | Rotated after aggregation           |
+| Telemetry summaries      | 365 days  | Retained for audits                 |
+| Sustainability reports   | 365 days  | For re-certification cycles         |
+| Governance-linked metrics| Permanent | Treated as provenance                |
+| Telemetry schemas        | Permanent | Located in `schemas/telemetry/*`    |
 
-Cleanup performed by `telemetry_cleanup.yml`.
+Cleanup: handled via CI workflows that:
 
----
-
-## 🌱 Sustainability Metrics (v10.2.2 Benchmarks)
-
-| Metric | Target | Verified By |
-|--------|-------:|-------------|
-| Avg Power Use | ≤ 12 Wh | `sustainability_reporter.py` |
-| Carbon Output | ≤ 15 gCO₂e | `telemetry_collector.py` |
-| Renewable Energy | 100% RE100 | Infra Audit |
-| FAIR+CARE Compliance | 100% | `certification_audit.py` |
-| ISO 14064 Alignment | ✅ Certified | @kfm-governance |
-
-Telemetry recorded at:  
-`../../../releases/v10.2.0/focus-telemetry.json`
+- Drop raw logs after summarization  
+- Ensure no PII enters long-term storage  
+- Preserve only derived aggregates & governance-safe telemetry  
 
 ---
 
-## 🧾 Citation
+## 🌍 11. Sustainability Targets (v11.1.0)
 
-```text
-Kansas Frontier Matrix (2025). Telemetry & Sustainability Tools (v10.2.2).
-FAIR+CARE and ISO-aligned telemetry system measuring runtime, energy, and carbon efficiency for ethical, transparent, and reproducible operations under MCP-DL v6.3.
-```
+| Metric                         | Target (per run) |
+|--------------------------------|------------------|
+| Energy Usage                   | ≤ 6 Wh           |
+| Carbon Output                  | ≤ 8 gCO₂e        |
+| Renewable Energy Utilization   | 100% (RE100)     |
+| FAIR+CARE Telemetry Compliance | 100%             |
+
+These targets are configurable via `metadata.json` and data contracts.
 
 ---
 
-## 🕰️ Version History
+## 🕰️ 12. Version History
 
-| Version | Date | Summary |
-|----------|------|---------|
-| v10.2.2 | 2025-11-12 | Added ISO 50001 energy intensity metrics, GPU telemetry, and JSON-LD dashboard exports. |
-| v10.0.0 | 2025-11-10 | Upgraded telemetry schema v2; expanded dashboard snapshot & governance hooks. |
-| v9.7.0 | 2025-11-05 | Enhanced sustainability schema & RE100 validation logic. |
-| v9.6.0 | 2025-11-03 | Added AI inference telemetry & ISO certification sync. |
-| v9.5.0 | 2025-11-02 | Linked sustainability logs to Governance Ledger. |
+| Version | Date       | Summary                                                                                 |
+|--------:|------------|-----------------------------------------------------------------------------------------|
+| v11.1.0 | 2025-11-24 | Telemetry Tools fully integrated with Tools v11; OTel v11, energy v2, carbon v2, FAIR+CARE v11. |
+| v11.0.0 | 2025-11-20 | First v11 telemetry uplift; initial integration with Reliable Pipelines v11.            |
+| v10.2.2 | 2025-11-12 | Added ISO 50001 energy metrics, GPU telemetry, JSON-LD dashboard exports.               |
+| v10.0.0 | 2025-11-10 | Telemetry v2 schema; sustainability dashboards; RE100 validation logic.                 |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix**  
-*Telemetry Integrity × FAIR+CARE Governance × Sustainable Automation*  
-© 2025 Kansas Frontier Matrix — MIT License  
+**© 2025 Kansas Frontier Matrix — MIT License**  
+**Telemetry & Sustainability Tools v11.1.0**  
+FAIR+CARE Certified · ISO 14064 / 50001 Aligned · OTel v11 · Diamond⁹ Ω / Crown∞Ω  
 
-[Back to Tools Index](../README.md) · [Docs Portal](../../../docs/) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[Back to Tools Index](../README.md) · [Tools Platform Architecture](../ARCHITECTURE.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
