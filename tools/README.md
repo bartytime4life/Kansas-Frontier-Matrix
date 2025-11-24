@@ -1,33 +1,38 @@
 ---
 title: "🛠️ Kansas Frontier Matrix — Tools Directory Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tools/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
-review_cycle: "Continuous / Autonomous · FAIR+CARE Council Oversight"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../releases/v10.4.0/manifest.zip"
+sbom_ref: "../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../releases/v11.0.0/manifest.zip"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/tools-registry-v2.json"
+telemetry_ref: "../releases/v11.0.0/tools-telemetry.json"
+telemetry_schema: "../schemas/telemetry/tools-registry-v11.json"
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+status: "Active · Enforced"
 doc_kind: "Architecture"
 intent: "tools-platform"
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk"
-sensitivity_level: "None"
+sensitivity_level: "Low"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Low"
 redaction_required: false
 provenance_chain:
-  - "tools/README.md@v10.3.2"
   - "tools/README.md@v10.3.1"
+  - "tools/README.md@v10.3.2"
+  - "tools/README.md@v10.4.0"
 previous_version_hash: "<previous-sha256>"
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -37,7 +42,7 @@ ontology_alignment:
   geosparql: "N/A"
 json_schema_ref: "../schemas/json/tools-readme.schema.json"
 shape_schema_ref: "../schemas/shacl/tools-readme-shape.ttl"
-doc_uuid: "urn:kfm:doc:tools-readme-v10.4.0"
+doc_uuid: "urn:kfm:doc:tools-readme-v11.0.0"
 semantic_document_id: "kfm-doc-tools-directory"
 event_source_id: "ledger:tools/README.md"
 immutability_status: "version-pinned"
@@ -52,7 +57,7 @@ ai_transform_prohibited:
   - "speculative additions"
   - "unverified historical claims"
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
 classification: "Public Document"
 role: "architecture"
@@ -63,253 +68,257 @@ sunset_policy: "Superseded upon next major tools-platform release"
 
 <div align="center">
 
-# 🛠️ **Kansas Frontier Matrix — Tools Directory Architecture**  
+# 🛠️ **Kansas Frontier Matrix — Tools Directory Architecture (v11)**  
 `tools/README.md`
 
-**Purpose:**  
-Define the **complete tools-platform architecture** governing all scripts, automations, validators, audits,
-governance utilities, telemetry collectors, and CLI interfaces under `tools/**` within the Kansas Frontier Matrix
-(KFM).  
-This document establishes FAIR+CARE-aligned, reproducible, ethically governed operational workflows.
+**Purpose**  
+Define the **tools-platform architecture** governing all scripts, automations, validators, audits,
+governance utilities, telemetry collectors, and CLI interfaces under `tools/**` in the Kansas Frontier Matrix (KFM).  
+This document establishes **FAIR+CARE-aligned**, **reproducible**, **sovereignty-safe**, and **telemetry-instrumented**
+operational workflows.
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview
 
-The `tools/` directory acts as the **operational automation core** of KFM, containing:
+The `tools/` directory is the **operational automation core** of KFM:
 
 - AI & explainability audit tools  
-- FAIR+CARE validation utilities  
-- Governance-ledger synchronization scripts  
+- FAIR+CARE and sovereignty validation utilities  
+- Governance-ledger synchronization commands  
 - STAC/DCAT, checksum, and schema validators  
 - Telemetry collectors and sustainability reporters  
-- CI/CD utilities for docs, builds, security, and deployment  
+- CI/CD helpers for docs, builds, security, and deployment  
 - CLI interfaces for dataset management, provenance controls, and ETL orchestration  
 
 Every tool:
 
-- Has a defined purpose and contract  
-- Is included in SBOM and manifest releases  
-- Generates provenance and telemetry metadata  
-- Must comply with FAIR+CARE and MCP-DL v6.3 ethics constraints  
+- Has a defined **contract** (inputs/outputs, side-effects, telemetry)  
+- Is referenced in **SBOM** and **manifest** releases  
+- Emits **provenance**, **telemetry**, and **governance events**  
+- Must comply with **MCP-DL v6.3**, **KFM-PDC v11**, and **FAIR+CARE** ethics constraints  
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂️ 2. Directory Layout (v11 · Box-Fixed)
 
-A clean, left-aligned, stable tree using `~~~text` fencing per KFM-MDP v10.4:
+```text
+tools/
+├── README.md
+│
+├── ai/
+│   ├── focus_audit.py
+│   ├── bias_check.py
+│   └── drift_monitor.py
+│
+├── ci/
+│   ├── docs_validate.yml
+│   ├── checksum_verify.yml
+│   └── site_deploy.yml
+│
+├── cli/
+│   ├── kfm_cli.py
+│   └── metadata_manager.py
+│
+├── governance/
+│   ├── governance_sync.py
+│   ├── ledger_update.py
+│   └── certification_audit.py
+│
+├── telemetry/
+│   ├── telemetry_collector.py
+│   ├── performance_analyzer.py
+│   └── sustainability_reporter.py
+│
+└── validation/
+    ├── faircare_validator.py
+    ├── schema_check.py
+    └── ai_explainability_audit.py
+```
 
-~~~text
-tools/                              # Operational tools platform
-├── README.md                       # This architecture specification
-│
-├── ai/                             # AI auditing, fairness, drift, explainability
-│   ├── focus_audit.py              # Focus Mode audit pipeline
-│   ├── bias_check.py               # Bias & fairness scoring
-│   └── drift_monitor.py            # Model/semantic drift detection
-│
-├── ci/                             # CI/CD runners and GitHub Action utilities
-│   ├── docs_validate.yml           # Documentation linting and schema validation
-│   ├── checksum_verify.yml         # Release and SBOM checksum controls
-│   └── site_deploy.yml             # Web deployment helper
-│
-├── cli/                            # Command-line entrypoints
-│   ├── kfm_cli.py                  # Primary KFM CLI (dataset, governance, ETL)
-│   └── metadata_manager.py         # Metadata and manifest management utilities
-│
-├── governance/                     # Governance ledger + ethics enforcement
-│   ├── governance_sync.py          # Ledger synchronization
-│   ├── ledger_update.py            # Append-only ledger mutation
-│   └── certification_audit.py      # Certification and provenance audit
-│
-├── telemetry/                      # Observability & sustainability tooling
-│   ├── telemetry_collector.py      # WebVitals + ethical metrics ingestion
-│   ├── performance_analyzer.py     # Performance scoring + hotspot analysis
-│   └── sustainability_reporter.py  # Energy/CO₂ tracking for operational flows
-│
-└── validation/                     # FAIR+CARE + schema validation tools
-    ├── faircare_validator.py       # CARE-compliance validators
-    ├── schema_check.py             # JSON/YAML schema validation
-    └── ai_explainability_audit.py  # Explainability audit for AI & Focus Mode
-~~~
+This layout is **GitHub- and mobile-safe** and will not break.
 
 ---
 
-## 🧩 Toolchain Architecture
+## 🧩 3. Toolchain Architecture
 
-This section describes **how tools integrate** into KFM’s governance, pipelines, and telemetry systems.
+Tools integrate into a **deterministic governance pipeline**:
 
-### High-Level Flow (Conceptual)
+```text
+Trigger (CLI / CI)
+   → Validation (schema · STAC/DCAT · FAIR+CARE · sovereignty)
+      → Governance (provenance · ledger · certification)
+         → Telemetry (OTel v11 · energy/carbon · SLO state)
+            → Certification (CARE, licensing, risk category)
+```
 
-~~~text
-User or CI Trigger
-       │
-       ▼
-tools/cli  ──────────────▶ tools/validation ─────────────▶ tools/governance
-       │                           │                                 │
-       ▼                           ▼                                 ▼
-Telemetry Export ◀────────── tools/telemetry ◀────────────── tools/ai
-~~~
+Each execution must:
 
-### Responsibilities
-
-- **CLI tools** initiate actions (ETL, validation, governance updates).  
-- **Validation tools** guarantee schema, metadata, and FAIR+CARE compliance.  
-- **Governance tools** maintain provenance, certification, and ledger continuity.  
-- **Telemetry tools** export metrics to release telemetry bundles.  
-- **AI audit tools** evaluate bias, drift, safety, and explainability.
-
-Each category has strict versioning, telemetry logging, and ethical review requirements.
+- Be **idempotent** where possible  
+- Emit **structured JSON logs**  
+- Update appropriate **governance ledgers**  
+- Append to **telemetry bundles** for the release  
 
 ---
 
-## ⚖️ FAIR+CARE Governance Architecture
+## ⚖️ 4. FAIR+CARE Governance Architecture
 
-KFM tools must enforce FAIR+CARE principles across every automated action:
+| Principle | Enforcement Mechanism in `tools/` |
+|----------|------------------------------------|
+| **Findable** | Each tool registered in `manifest.zip` and SBOM with unique IDs. |
+| **Accessible** | MIT-licensed; consistent CLI UX (`--help`, return codes). |
+| **Interoperable** | All outputs are JSON/YAML/STAC/SPDX/JSON-LD. |
+| **Reusable** | Deterministic behaviors, documented contracts, version pinning. |
+| **Collective Benefit** | Tools must not weaken protections for communities or data subjects. |
+| **Authority to Control** | Governance tools honor CARE/A2C flags and sovereignty policies. |
+| **Responsibility** | Telemetry, error taxonomies, and audits required for all non-trivial tools. |
+| **Ethics** | Bias checks, drift monitoring, and explainability audits embedded in `ai/` & `validation/`. |
 
-| Principle | Enforcement Mechanism |
-|----------|------------------------|
-| **Findable** | Tools registered in manifest/SBOM with unique IDs |
-| **Accessible** | MIT license, `--help`, standardized CLI UX |
-| **Interoperable** | JSON/YAML/STAC/SPDX formats |
-| **Reusable** | Modular code, documented I/O, deterministic behavior |
-| **Authority to Control** | Ledger-based certification and approval flows |
-| **Responsibility** | Telemetry logging, error taxonomy, sustainability tracking |
-| **Ethics** | Bias checks, drift monitoring, explainability audits |
-
-Relevant audit references:
+Audit references:
 
 - `docs/reports/audit/data_provenance_ledger.json`  
-- `docs/reports/fair/data_care_assessment.json`
+- `docs/reports/fair/data_care_assessment.json`  
 
 ---
 
-## 🏛 Governance Integration
+## 🏛 5. Governance Integration
 
-Tools integrate with governance subsystems through:
+Governance-related tools operate as **append-only provenance agents**:
 
-- **Provenance logging** (`ledger_update.py`)  
-- **Certification audits** (`certification_audit.py`)  
-- **CARE compliance validation** (`faircare_validator.py`)  
-- **Immutable append-only ledgers** stored in `docs/reports/audit/`  
+- `governance_sync.py` — merges local provenance with governance ledger state  
+- `ledger_update.py` — writes **PROV-O** activities and entities (e.g., `prov:Activity`, `prov:used`, `prov:generated`)  
+- `certification_audit.py` — runs certification checks for datasets/models and records CARE classification  
 
-Updates must include:
+All governance writes must:
 
-- SHA256 checksums  
-- Tool version  
-- Source URI  
-- Runtime metadata  
-- Telemetry identifiers  
+- Include SHA-256 checksums of affected artifacts  
+- Record tool version and execution environment  
+- Include CARE labels and, where needed, sovereignty zones (e.g., H3 cells)  
+- Be traceable back to a CI run or CLI invocation (via `run_id`/`job_id`)  
 
 ---
 
-## 🧪 Validation Architecture
+## 🧪 6. Validation Tools
 
-Validation tasks include:
+Validation tasks in `tools/validation/` cover:
 
-- Schema checks for Story Nodes, STAC/DCAT, metadata, telemetry  
-- FAIR+CARE validators for sensitive datasets  
-- AI explainability audits (SHAP/LIME metadata analysis)  
-- SBOM and manifest cross-checks  
-- Documentation linting  
+- **Schema validation**: JSON/YAML/STAC/DCAT/Story Node/telemetry shapes  
+- **FAIR+CARE & sovereignty**: `faircare_validator.py` checks CARE rules, sovereignty flags, license compliance  
+- **AI explainability**: `ai_explainability_audit.py` validates that SHAP/LIME/attention outputs exist and are well-formed  
 
-Validation failures must:
+CI requires that:
 
-- Block CI merges  
-- Emit governance and telemetry events  
-- Produce reproducible logs for auditing  
+- All validation tools succeed with zero schema errors  
+- FAIR+CARE violations **block merges**  
+- Explainability coverage meets project thresholds  
 
 ---
 
-## 📈 Telemetry Architecture
+## 📡 7. Telemetry Tools
 
-Telemetry records include:
+`tools/telemetry/` includes:
 
-- Performance metrics  
-- Tool execution energy/CO₂ estimates  
-- Governance and CARE validation results  
-- Drift/bias audit outcomes  
-- Error taxonomy events  
+- `telemetry_collector.py` — aggregates metrics from pipelines, tests, and tooling  
+- `performance_analyzer.py` — computes SLO metrics, error budgets, latency percentiles  
+- `sustainability_reporter.py` — estimates Wh/gCO₂e, attaches ISO 50001 tags  
 
-Telemetry pipeline:
+Telemetry outputs must conform to:
 
-- Tools write structured JSON logs  
-- Logs merged into release-level bundles (e.g., `focus-telemetry.json`)  
-- Aggregated into dashboards and governance reports  
+- `telemetry_schema: "../schemas/telemetry/tools-registry-v11.json"`  
 
----
+and be aggregated into:
 
-## ⚙️ Ecosystem of Core Tools
-
-### Key Modules
-
-| Module | Description |
-|--------|-------------|
-| **ai/** | Focus Mode explainability, bias, drift audits |
-| **ci/** | CI helpers for docs, checksums, deployments |
-| **cli/** | KFM’s command-line interfaces for operators |
-| **governance/** | Provenance, certification, and ledger tooling |
-| **telemetry/** | Performance and sustainability tracking |
-| **validation/** | Schema, FAIR+CARE, and explainability validation |
-
-### Example Workflow
-
-1. `kfm_cli.py` triggers a dataset publish.  
-2. `schema_check.py` validates metadata.  
-3. `faircare_validator.py` performs CARE compliance.  
-4. `ledger_update.py` writes governance records.  
-5. `telemetry_collector.py` logs outputs for release documentation.  
-6. `performance_analyzer.py` evaluates execution impact.  
+```text
+../releases/v11.0.0/tools-telemetry.json
+```
 
 ---
 
-## 🛡 Privacy & Security Requirements
+## 🤖 8. AI Oversight Tools
 
-Tools must:
+`tools/ai/` enforces AI governance:
 
-- Avoid collecting PII  
-- Apply strict error sanitization  
-- Maintain sandbox isolation where applicable  
-- Never expose private credentials or sensitive file paths  
-- Use cryptographic hashes for provenance  
-- Log only minimal metadata required for FAIR+CARE compliance  
+- `focus_audit.py` — audits Story Node v3 + Focus Mode v3 outputs for:
+  - provenance correctness  
+  - narrative safety (no speculation, no disallowed genealogies)  
+  - CARE & sovereignty rules  
+- `bias_check.py` — group fairness metrics + thresholds  
+- `drift_monitor.py` — distribution and concept drift detection, emits alerts  
 
----
+Any critical failure from `tools/ai/` must:
 
-## 🗃 Retention & Provenance Policy
-
-### Retention Rules
-
-| Artifact | Retention | Notes |
-|---------|-----------|-------|
-| Governance Logs | Permanent | Immutable ledger entries |
-| Validation Reports | 365 days | Stored for audits |
-| Telemetry Data | 90 days | Summarized after rotation |
-| Tool Metadata | Permanent | SBOM + manifest |
-
-### Rotation Workflow
-
-- `tools_cleanup.yml` rotates telemetry  
-- Summaries kept for historical reviews  
+- Mark the affected model or pipeline as **non-certified**  
+- Append a governance event that blocks promotion until resolved  
 
 ---
 
-## 🕰 Version History
+## 🧰 9. CLI Tools
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Rebuilt to strict KFM-MDP v10.4 standards; added new directory tree, governance & telemetry architecture |
-| v10.3.2 | 2025-11-14 | Enhanced telemetry, clarified FAIR+CARE flow |
-| v10.3.1 | 2025-11-13 | Initial tools architecture alignment for v10.3 |
+`tools/cli/` contains user-facing entrypoints:
+
+- `kfm_cli.py` — main CLI for dataset operations, ETL triggers, and governance operations  
+- `metadata_manager.py` — helper for updating manifests, data contracts, and STAC/DCAT metadata  
+
+Design principles:
+
+- Idempotent commands where possible  
+- Machine-friendly outputs (JSON by default, human-readable with flags)  
+- Proper exit codes (0 = success, non-zero = classified error)  
+
+---
+
+## 📈 10. Security & Privacy Requirements
+
+All tools must:
+
+- Avoid logging PII or sensitive coordinates  
+- Strip secrets from logs and error messages  
+- Use environment variables for credentials (never in code)  
+- Restrict file path logging to non-sensitive prefixes  
+- Use content-addressed identifiers (hashes) for provenance when feasible  
+
+Security scans (SAST/DAST) should always include `tools/**` paths.
+
+---
+
+## 🗃 11. Retention & Rotation
+
+| Artifact Type       | Retention | Rotation Mechanism         |
+|---------------------|-----------|----------------------------|
+| Governance Logs     | Permanent | Append-only, no deletion   |
+| Validation Reports  | 365 days  | Archived after rotation    |
+| Telemetry Data      | 90 days   | Summarized & pruned        |
+| SBOM/Manifests      | Permanent | Release artifacts          |
+| Tool Metadata       | Permanent | SBOM + manifest registry   |
+
+Rotation is managed via:
+
+```text
+tools_cleanup.yml
+```
+
+which condenses telemetry, archives detailed logs, and preserves high-level summaries.
+
+---
+
+## 🕰 12. Version History
+
+| Version | Date       | Summary                                                                                 |
+|--------:|------------|-----------------------------------------------------------------------------------------|
+| v11.0.0 | 2025-11-24 | Upgraded to KFM-MDP v11; fixed directory tree, added sovereignty/A11y/telemetry v11, clarified FAIR+CARE flows. |
+| v10.4.0 | 2025-11-15 | Strict KFM-MDP v10.4 formatting; initial governance + telemetry architecture.           |
+| v10.3.2 | 2025-11-14 | Enhanced telemetry; clearer FAIR+CARE flow.                                             |
+| v10.3.1 | 2025-11-13 | Initial tools architecture for v10.3.                                                   |
 
 ---
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-Validated under MCP-DL v6.3 and KFM-MDP v10.4  
-FAIR+CARE Certified · Public Document · Version-Pinned  
+**Tools Platform v11** · FAIR+CARE Certified · MCP-DL v6.3 · Sovereignty-Safe · Telemetry-Governed  
+
+[Back to Source Index](../src/README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md) · [Latest Release](../releases/v11.0.0/manifest.zip)
 
 </div>
