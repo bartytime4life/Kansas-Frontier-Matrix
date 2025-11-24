@@ -1,188 +1,287 @@
 ---
-title: "⚖️ Kansas Frontier Matrix — Governance Pipelines (Provenance · FAIR+CARE · Ledger Automation · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "⚖️ Kansas Frontier Matrix — Governance Pipelines (FAIR+CARE · Sovereignty · Provenance Ledger · Diamond⁹ Ω / Crown∞Ω Certified)"
 path: "src/pipelines/governance/README.md"
-version: "v10.1.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+review_cycle: "Quarterly · FAIR+CARE Council · Governance & Ethics Board"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.1.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.1.0/manifest.zip"
+sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.0.0/governance-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/src-governance-v11.json"
 data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-telemetry_ref: "../../../../releases/v10.1.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/src-governance-v3.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+doc_kind: "Pipeline Module"
+intent: "governance-pipelines-overview"
+semantic_document_id: "kfm-governance-pipelines"
+doc_uuid: "urn:kfm:pipelines:governance:overview:v11.0.0"
+machine_extractable: true
+classification: "Governance Document · FAIR+CARE · Public Accountability"
+sensitivity: "Mixed"
+fair_category: "F1-A1-I3-R3"
+care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
+immutability_status: "version-pinned"
+accessibility_compliance: "WCAG 2.1 AA+"
+public_exposure_risk: "Medium"
+jurisdiction: "Kansas / United States"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded by Governance v12"
 ---
 
 <div align="center">
 
-# ⚖️ **Kansas Frontier Matrix — Governance Pipelines**
+# ⚖️ **KFM v11 — Governance Pipelines**  
 `src/pipelines/governance/README.md`
 
-**Purpose:**  
-Automate **provenance registration, checksum lineage, and FAIR+CARE certification** for every dataset, model, and validation artifact in KFM.  
-Guarantee **blockchain-linked immutability** and **transparent ethics governance** under MCP-DL v6.3 and ISO 19115.
+### **Provenance · FAIR+CARE · Sovereignty · Immutable Ledger · Multi-Ledger Certification**
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blueviolet)](../../../../docs/standards/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Certified-gold)](../../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO%2019115-Metadata%20Compliant-blue)]()
-[![Blockchain Provenance](https://img.shields.io/badge/Blockchain-Traceable-teal)]()
+Governance Pipelines enforce **ethical, lineage-first, sovereign-aware data stewardship** across the entire Kansas Frontier Matrix.  
+They ensure every dataset, model, validation result, narrative artifact, and pipeline output is:
+
+**FAIR+CARE certified · Sovereignty compliant · Provenance-complete · Blockchain anchored · Telemetry audited · Publicly accountable**
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview
 
-KFM’s **Governance Pipelines** are the ethics and lineage backbone of the platform—recording transformations, validations, and explainability results to an immutable ledger.  
-Each run is **checksum-locked**, **telemetry-reported**, and **publicly auditable**.
+Governance pipelines:
 
-### Core Responsibilities
-- Sync FAIR+CARE audit artifacts to the Governance Ledger.  
-- Register dataset lineages and **SHA-256 checksum chains**.  
-- Append **blockchain proofs** for validations and releases.  
-- Manage **ethics approvals** and certification renewals.  
-- Publish **sustainability + governance telemetry** for dashboards.  
+- Register **lineage** for every dataset, model, experiment, SOP, and pipeline run  
+- Verify **checksums + Merkle-chain integrity**  
+- Perform **FAIR+CARE classification & sovereignty policy gating**  
+- Produce immutable **ledger entries** (IPFS / Ethereum optional)  
+- Update **Neo4j governance graph** (CIDOC-CRM alignment)  
+- Export **telemetry**: ethics, energy, carbon, validation state  
+- Provide **public transparency mechanisms** for KFM releases  
+
+They are invoked:
+
+- At the end of every ETL/AI pipeline  
+- In release workflows  
+- In FAIR+CARE quarterly audits  
+- In autonomous governance refresh cycles  
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂 2. Directory Structure (v11)
 
-```plaintext
+```text
 src/pipelines/governance/
-├── README.md
 │
-├── governance_sync.py         # Collate FAIR+CARE + validation outputs for certification
-├── ledger_update.py           # Append immutable blockchain entries with checksums
-├── checksum_registry.py       # Validate + maintain end-to-end checksum lineage
-└── metadata.json              # Governance pipeline provenance + configuration
+├── README.md                          # This document
+│
+├── governance_sync.py                 # Consolidates all validation + fairness + CARE outputs
+├── ledger_update.py                   # Immutable ledger writer (IPFS · Ethereum optional)
+├── checksum_registry.py               # End-to-end checksum chain manager
+│
+└── metadata.json                      # Governance pipeline configuration + provenance
 ```
 
 ---
 
-## ⚙️ Governance Workflow
+## 🛠️ 3. Governance Pipeline Workflow (v11)
 
 ```mermaid
 flowchart LR
-    A["FAIR+CARE Validation Outputs"] --> B["Checksum Verification · Metadata Hashing"]
-    B --> C["Blockchain Registration (ledger_update.py)"]
-    C --> D["Governance Sync (Neo4j · IPFS)"]
-    D --> E["Telemetry Export · Dashboard Publishing"]
+    A["FAIR+CARE + Validation Outputs"] --> B["Checksum Verification"]
+    B --> C["Metadata Harmonization (DCAT · STAC · CRM)"]
+    C --> D["Immutable Ledger (IPFS/Ethereum)"]
+    D --> E["Governance Sync (Neo4j CIDOC-CRM)"]
+    E --> F["Telemetry Export · Energy · Carbon · Ethics"]
 ```
 
-1. **Ingest:** Accept validation and ethics artifacts.  
-2. **Verify:** Compute/verify SHA-256; attach lineage metadata.  
-3. **Register:** Write immutable entries to blockchain-backed ledger.  
-4. **Sync:** Update Neo4j/IPFS mirrors and governance registries.  
-5. **Publish:** Export metrics to `focus-telemetry.json` and dashboards.
+### Pipeline Responsibilities
+
+- **Checksum lineage**: dataset → transform → output  
+- **Governance bundle assembly**: FAIR+CARE, bias/drift, explainability, validation results  
+- **Sovereignty enforcement**: H3 masking, tribal review flags  
+- **Ethics evaluation** for narrative/text outputs  
+- **Blockchain anchoring** for critical artifacts  
+- **Governance graph updates** via CIDOC-CRM mappings  
 
 ---
 
-## 🧾 Example Governance Record
+## 🧬 4. Governance Metadata Model (v11)
+
+Governance records include:
+
+- `governance_id`  
+- `checksum_chain`  
+- `care_label`  
+- `sovereignty_classification`  
+- `validation_results`  
+- `explainability_audits`  
+- `bias_drift_assessment`  
+- `blockchain_anchor` (CID)  
+- `runtime_sec`  
+- `energy_wh`, `carbon_gco2e`  
+- `governance_decision` (approve / reject / escalate)  
+- `ledger_ref`  
+
+Stored in:
+
+```
+data/reports/audit/governance_ledger.json
+```
+
+---
+
+## 🏛 5. FAIR+CARE & Sovereignty Enforcement
+
+### CARE principles enforced:
+
+- **Collective Benefit** → Transparent provenance  
+- **Authority to Control** → Tribal review + sovereignty gating  
+- **Responsibility** → Energy + carbon metrics  
+- **Ethics** → No culturally harmful interpretations  
+
+### Sovereignty rules:
+
+- All sensitive spatial datasets masked (H3 R7→R9)  
+- No publication of raw coordinates for sacred / tribal sites  
+- Datasets touching sovereignty domains require Council approval  
+
+### FAIR requirements:
+
+- STAC/DCAT metadata alignment  
+- JSON-LD contexts for governance bundles  
+- Machine-actionable metadata for audits & dashboards  
+
+---
+
+## 📦 6. Core Modules
+
+### ✔ `governance_sync.py`
+Aggregates and normalizes:
+
+- FAIR+CARE evaluations  
+- Explainability artifacts (SHAP/LIME/etc.)  
+- GE checkpoint results  
+- Drift/bias metrics  
+- Schema compliance reports  
+
+Outputs:
+
+- Governance bundle (`governance_<timestamp>.json`)  
+- Neo4j governance graph updates  
+- STAC/DCAT governance extensions  
+
+---
+
+### ✔ `ledger_update.py`
+Features:
+
+- Append immutable ledger entries  
+- Generate IPFS CID  
+- Optional Ethereum anchor  
+- Maintain Merkle-chain integrity  
+- Link entries to OpenLineage job + run IDs  
+- Preserve historical lineage fully  
+
+---
+
+### ✔ `checksum_registry.py`
+Maintains:
+
+- Cross-run checksum chains  
+- Per-dataset hash genealogy  
+- Model training artifact hashes  
+- Experiment + SOP hash lineage  
+
+Used in:
+
+- Releases  
+- Data drift audits  
+- Integrity investigations  
+- SBOM/manifest verification  
+
+---
+
+## 📊 7. Telemetry (OTel v11)
+
+Governance pipelines emit:
+
+- `kfm.gov_latency_ms`  
+- `kfm.gov_checksum_failures`  
+- `kfm.gov_lineage_events`  
+- `kfm.gov_energy_wh`  
+- `kfm.gov_carbon_gco2e`  
+- `kfm.gov_care_flags`  
+- `kfm.gov_blockchain_anchor`  
+- `kfm.gov_sovereignty_escalations`  
+
+Telemetry conforms to:
+
+```
+schemas/telemetry/src-governance-v11.json
+```
+
+---
+
+## 📑 8. Example Governance Record (v11)
 
 ```json
 {
-  "id": "governance_ledger_registry_v10.1.0",
-  "governance_entries": [
-    "data/reports/audit/data_provenance_ledger.json",
-    "data/reports/fair/data_care_assessment.json"
-  ],
-  "checksum_registry_updated": true,
-  "blockchain_registration": "verified",
-  "fairstatus": "certified",
-  "total_validations_logged": 118,
-  "ai_explainability_audits": 19,
-  "energy_usage_wh": 1.04,
-  "carbon_output_gco2e": 0.07,
-  "governance_registered": true,
-  "created": "2025-11-10T12:10:00Z",
+  "governance_id": "gov_2025_11_24_v11",
+  "checksum_verified": true,
+  "care_label": "public",
+  "sovereignty_review": "pass",
+  "blockchain_anchor": "cid:QmHashExample",
+  "lineage_events_logged": 144,
+  "validation_failures": 0,
+  "energy_wh": 0.88,
+  "carbon_gco2e": 0.04,
+  "telemetry_emitted": true,
+  "created": "2025-11-24T13:55:00Z",
   "validator": "@kfm-governance"
 }
 ```
 
 ---
 
-## 🧠 FAIR+CARE Governance Matrix
+## 🧯 9. Failure Modes & Recovery
 
-| Principle | Implementation | Oversight |
-|-----------|----------------|-----------|
-| **Findable** | Entries indexed by UUID + blockchain hash. | @kfm-data |
-| **Accessible** | Machine-readable ledgers; public audit access. | @kfm-accessibility |
-| **Interoperable** | Conforms to FAIR+CARE + ISO 19115 metadata. | @kfm-architecture |
-| **Reusable** | Logs + manifests MIT-licensed for reuse. | @kfm-design |
-| **Collective Benefit** | Trustworthy lineage and ethics governance. | @faircare-council |
-| **Authority to Control** | Council approves certifications and renewals. | @kfm-governance |
-| **Responsibility** | Engineers sustain checksum + energy audit quality. | @kfm-sustainability |
-| **Ethics** | Workflows reviewed for inclusivity and openness. | @kfm-ethics |
+### Possible failures
+- Checksum chain mismatch  
+- IPFS anchor failure  
+- CARE rule violation  
+- Sovereignty policy conflict  
+- Missing explainability proofs  
+- Invalid STAC/DCAT governance extension  
+- Ledger divergence  
 
-Related artifacts:  
-`../../../../data/reports/audit/data_provenance_ledger.json` · `../../../../data/reports/fair/data_care_assessment.json`
-
----
-
-## ⚙️ Pipeline Modules
-
-| Script | Function | FAIR+CARE Role | Systems |
-|-------|----------|----------------|---------|
-| `governance_sync.py` | Collate validation + FAIR results | Certification | Neo4j · IPFS |
-| `ledger_update.py` | Append immutable ledger entries | Provenance | IPFS · Ethereum |
-| `checksum_registry.py` | Maintain checksum chains | Integrity | Git · Manifest |
+### Recovery patterns
+- Recompute checksum chain  
+- Regenerate governance bundle  
+- Trigger CARE Council review  
+- Replay ledger operations via WAL  
+- Freeze related pipelines  
+- Regenerate STAC/DCAT governance metadata  
 
 ---
 
-## ⚖️ Retention & Provenance Policy
+## 🕰 10. Version History
 
-| Artifact | Retention | Policy |
-|---------|-----------|-------|
-| Governance Ledgers | Permanent | Blockchain-backed immutability |
-| FAIR+CARE Reports | 365 Days | Quarterly renewal & review |
-| Checksum Registers | Permanent | Versioned + cryptographically linked |
-| Sustainability Metrics | 180 Days | Refreshed per release cycle |
-
-Cleanup managed by `governance_sync.yml`.
-
----
-
-## 🌱 Sustainability Metrics (v10.1.0)
-
-| Metric | Value | Verified By |
-|--------|-------|-------------|
-| Avg Runtime | 1.4 minutes | @kfm-ops |
-| Energy Usage | 1.04 Wh | @kfm-sustainability |
-| Carbon Output | 0.07 g CO₂e | @kfm-security |
-| Renewable Energy | 100% (RE100) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-Telemetry source:  
-`../../../../releases/v10.1.0/focus-telemetry.json`
-
----
-
-## 🧾 Internal Use Citation
-
-```text
-Kansas Frontier Matrix (2025). Governance Pipelines (v10.1.0).
-Automated FAIR+CARE + blockchain governance layer ensuring checksum lineage, provenance integrity, and ethical reproducibility across KFM.
-```
-
----
-
-## 🕰️ Version History
-
-| Version | Date | Notes |
-|--------|------|------|
-| **v10.1.0** | 2025-11-10 | Upgraded to telemetry v3; stronger DCAT/STAC bridge; improved chain proofs and energy metrics. |
-| **v10.0.0** | 2025-11-08 | Added on-chain proofs for validations and releases; expanded certification collation. |
-| **v9.7.0** | 2025-11-05 | Improved blockchain hooks; initial telemetry v2 alignment. |
+| Version | Date | Summary |
+|--------:|------|---------|
+| v11.0.0 | 2025-11-24 | Fully upgraded to KFM-MDP v11 with sovereignty, FAIR+CARE, checksum lineage, blockchain anchoring, reliability ties, and OTel v11 integration. |
+| v10.1.0 | 2025-11-10 | Previous governance pipeline baseline. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT License**  
-*Ethical Governance × FAIR+CARE Provenance × Blockchain Traceability*  
-[Back to Pipelines](../README.md) • [Docs Portal](../../../../docs/) • [Governance Ledger](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix  
+FAIR+CARE · Sovereignty Respect · Immutable Provenance · Diamond⁹ Ω / Crown∞Ω  
+“Governance is the contract between the data, the people, and history.”  
 
 </div>
