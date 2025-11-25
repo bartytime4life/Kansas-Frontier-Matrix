@@ -1,258 +1,326 @@
 ---
 title: "🗂️ Kansas Frontier Matrix — Archaeology STAC Catalog (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/stac/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
+version: "v11.0.0"
+last_updated: "2025-11-25"
 review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/archaeology-stac-v1.json"
+sbom_ref: "../../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/archaeology-stac-v11.json"
 governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v11.0.0"
 status: "Active / Enforced"
 doc_kind: "STAC Catalog"
 intent: "archaeology-stac"
 fair_category: "F1-A1-I1-R1"
 care_label: "CARE-Compliant"
+immutability_status: "version-pinned"
+semantic_document_id: "kfm-archaeology-stac-v11"
+doc_uuid: "urn:kfm:docs:archaeology:stac:catalog:v11"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
 ---
 
 <div align="center">
 
-# 🗂️ **Kansas Frontier Matrix — Archaeology STAC Catalog**  
+# 🗂️ **Kansas Frontier Matrix — Archaeology STAC Catalog (v11.0.0)**  
 `docs/analyses/archaeology/datasets/stac/README.md`
 
 **Purpose:**  
-Provide the **canonical STAC (SpatioTemporal Asset Catalog) index** for all archaeological datasets in the Kansas Frontier Matrix (KFM).  
-This catalog ensures machine-discoverability, FAIR+CARE metadata completeness, reproducibility, cultural safety, and alignment with **STAC 1.0**, **DCAT 3.0**, **CIDOC-CRM**, **GeoSPARQL**, and **MCP-DL v6.3**.
-
-STAC Items and Collections within this directory represent the authoritative metadata and access points for:
-
-- Site Gazetteers  
-- Artifact Inventories  
-- Paleoenvironmental Datasets  
-- Geophysical Survey Grids  
-- Cultural Landscape Models  
-- Derived Analytical Products  
-- AI-Assisted Archaeology Outputs  
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../standards/faircare.md)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../../../releases/v10.4.0/manifest.zip)
+Define the authoritative STAC 1.0.0 catalog for archaeology datasets in KFM v11, ensuring CARE-compliant generalization, Story Node v3 and Focus Mode v3 compatibility, and strict adherence to FAIR+CARE and MCP-DL v6.3.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-This directory houses **all STAC Items and Collections** describing archaeological datasets within the KFM ecosystem.
+This catalog governs the creation, validation, and publication of STAC Collections and Items for all archaeology-related datasets within the Kansas Frontier Matrix (KFM).
 
-Each STAC entry must meet:
+KFM v11 requires:
 
-- **STAC 1.0.0 core specification**
-- **Projection (`proj`) extension**
-- **Scientific extension** (`sci:`)
-- **Versioning extension** (`version:`)
-- **Checksum extension**  
-- **CARE metadata extension (`care:`)**  
-- **KFM custom extensions** (`kfm:*` for archaeology domain attributes)
+- STAC 1.0.0 compliance  
+- DCAT 3.0 alignment  
+- GeoJSON correctness  
+- OWL-Time temporal semantics  
+- GeoSPARQL geometry semantics  
+- CIDOC-CRM compatible cultural-heritage fields  
+- CARE masking and generalization for sensitive locations  
+- Provenance via PROV-O  
+- Mandatory checksums, versioning, and immutability  
+- Focus Mode v3 narrative binding  
+- Story Node v3 attachment safety  
 
-This ensures datasets are:
+Scope of this catalog:
 
-- Fully traceable  
-- Ethically governed  
-- Machine-readable  
-- Compatible with KFM map layers, ETL pipelines, and Focus Mode v2  
-- Indexable via static STAC browsing + future STAC API integration  
+- Generalized site gazetteers  
+- Public-domain artifact inventories (non-sensitive, non-identifying subsets)  
+- Cultural landscape and interaction-sphere regional models  
+- Geophysical survey products (magnetometry, GPR, resistivity)  
+- Paleoenvironmental datasets (cores, pollen, charcoal, proxies)  
+- AI-assisted derived analytics and interpretive products  
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂 Directory Layout (Indent Style B — ASCII Only)
 
-~~~text
 docs/analyses/archaeology/datasets/stac/
-├── README.md                           # This file
-├── collections/                        # STAC Collections: grouped datasets
-├── items/                              # Individual STAC Items
-├── schemas/                            # JSON Schemas for STAC validation
-└── examples/                           # Sample STAC items & annotated examples
-~~~
+ |
+ +-- README.md
+ |
+ +-- collections/
+ |   +-- site-gazetteers.json
+ |   +-- artifact-inventories.json
+ |   +-- cultural-landscapes.json
+ |   +-- geophysics.json
+ |   +-- paleoenvironment.json
+ |
+ +-- items/
+ |   +-- site-gazetteer-*.json
+ |   +-- artifacts-*.json
+ |   +-- landscape-*.json
+ |   +-- geophysics-*.json
+ |   +-- paleo-*.json
+ |
+ +-- schemas/
+ |   +-- kfm-archaeology-schema.json
+ |   +-- care-generalization-schema.json
+ |   +-- provenance-lineage-schema.json
+ |
+ +-- examples/
+     +-- example-generalized-site.json
+     +-- example-landscape.json
+     +-- example-paleo.json
+
+All filenames are normative and MUST be used exactly as shown to satisfy automated discovery, STAC validation, and Focus Mode v3 lookups.
 
 ---
 
-## 🔖 STAC Collections (Required)
+# 🔖 STAC Collections
 
-Each archaeological subdomain must have a STAC **Collection**, placed under `collections/`.
+Each archaeology subdomain MUST define a STAC Collection including at least:
 
-| Collection Name | Purpose | Example File |
-|---|---|---|
-| **Site Gazetteers** | Generalized archaeological site lists | `collections/site-gazetteers.json` |
-| **Artifact Inventories** | Public-domain artifact datasets | `collections/artifact-inventories.json` |
-| **Cultural Landscapes** | Regions, routes, interaction spheres | `collections/cultural-landscapes.json` |
-| **Geophysics Surveys** | Magnetometry, GPR, LiDAR | `collections/geophysics.json` |
-| **Paleoenvironment** | Pollen, charcoal, dendrochronology | `collections/paleoenvironment.json` |
+- `id`, `title`, `description`, `keywords`  
+- `license`, `providers`  
+- `extent.spatial` (CARE-generalized; no precise coordinates)  
+- `extent.temporal` (OWL-Time compatible intervals)  
+- `summaries` for key archaeology fields (e.g., culture phase, site types, datatypes)  
+- `care:*` sensitivity metadata and review origin  
+- Links to Items, schemas, and provenance resources  
 
-Collections must include:
+Collection registry:
 
-- Temporal extent  
-- Spatial extent  
-- License  
-- Provider  
-- Keywords  
-- Version history  
-- CARE sensitivity summary  
-- Linkage to STAC Items  
+| Collection            | Description                                  | File                                      |
+|----------------------|----------------------------------------------|-------------------------------------------|
+| Site Gazetteers      | Generalized site-level records               | `collections/site-gazetteers.json`        |
+| Artifact Inventories | Public-domain artifact inventory summaries   | `collections/artifact-inventories.json`   |
+| Cultural Landscapes  | Interaction spheres, corridors, regions      | `collections/cultural-landscapes.json`    |
+| Geophysics           | Magnetometry, GPR, resistivity geophysics    | `collections/geophysics.json`             |
+| Paleoenvironment     | Cores, pollen, charcoal, multi-proxy records | `collections/paleoenvironment.json`       |
 
----
+Collection-level `summaries` SHOULD cover, where applicable:
 
-## 📦 STAC Item Requirements (All Archaeology Datasets)
-
-Every STAC Item in `items/` must include:
-
-### **Core Fields**
-
-| Field | Requirement |
-|---|---|
-| `id` | Unique, stable identifier |
-| `type` | `"Feature"` |
-| `bbox` | Spatial bounding box (generalized if needed) |
-| `geometry` | Only generalized polygons or multipoints |
-| `stac_version` | `"1.0.0"` |
-| `properties.datetime` | Null or start time |
-| `properties.start_datetime/end_datetime` | OWL-Time coverage |
-| `assets` | Valid links to data files |
-| `links` | `collection`, `parent`, `root` |
-
-### **Required Extensions**
-
-| Extension | Purpose |
-|---|---|
-| `proj` | CRS & raster metadata |
-| `version` | Dataset versioning |
-| `checksum` | SHA-256 verification |
-| `scientific` (`sci:`) | Citation + DOI + scientific metadata |
-| `kfm:` | Custom KFM archaeology metadata |
-| `care:` | Cultural sensitivity metadata |
-
-### **KFM Archaeology Extension Fields (`kfm:*`)**
-
-| Field | Example |
-|---|---|
-| `kfm:culture_phase` | `"Late Prehistoric"` |
-| `kfm:site_type` | `"village"` |
-| `kfm:datatype` | `"magnetometry-grid"` |
-| `kfm:source` | `"Kansas Geological Survey"` |
-| `kfm:provenance` | Path to PROV-O file |
-
-### **CARE Metadata Fields (`care:`)**
-
-Required for all archaeological datasets:
-
-| Field | Allowed Values |
-|---|---|
-| `care:sensitivity` | `general`, `generalized`, `restricted` |
-| `care:notes` | Text description |
-| `care:review` | `"tribal"`, `"faircare"`, `"none-required"` |
+- `kfm:culture_phase` (enumerated period codes)  
+- `kfm:site_type` (controlled vocabulary)  
+- `kfm:datatype` (magnetometry-grid, artifact-inventory, pollen-series, etc.)  
+- `care:sensitivity` distribution across Items  
+- `proj:epsg` CRS codes for assets  
 
 ---
 
-## 🌍 Spatial/Temporal Requirements
+# 📦 STAC Item Requirements
 
-| Component | Requirement |
-|---|---|
-| **CRS** | EPSG:4326 unless justified |
-| **Geometry** | Generalized via H3 or simplified polygon |
-| **Temporal Extent** | OWL-Time |
-| **Sensitivity** | Coordinate precision must align with CARE classification |
+## Core Required Fields
 
-Sensitive datasets must be generalized:
+Every archaeology STAC Item MUST contain:
 
-- **H3 Level 5–7**  
-- Topological simplification for polygons  
-- Removal of fine-grained features  
+Field             | Requirement
+-----------------|------------
+`stac_version`   | `"1.0.0"`
+`type`           | `"Feature"`
+`id`             | Stable, versioned ID, e.g. `kfm-arch-<domain>-<slug>-vN`
+`geometry`       | Generalized GeoJSON geometry (never precise site centroids)
+`bbox`           | CARE-compliant generalized bounding box
+`properties`     | Includes time interval, domain fields, CARE fields
+`start_datetime` | OWL-Time interval start
+`end_datetime`   | OWL-Time interval end (or equal to start)
+`assets`         | MUST include at least `data` and `provenance`
+`links`          | MUST include `root`, `self`, `collection`, and `provenance`
 
----
+## Required Extensions
 
-## 🔗 Example STAC Item (Archaeology — Generalized)
+The following STAC extensions are REQUIRED for all archaeology Items:
 
-~~~json
-{
-  "stac_version": "1.0.0",
-  "type": "Feature",
-  "id": "kfm-cultural-landscape-great-bend-v2",
-  "bbox": [-101.5, 37.5, -96.0, 39.5],
-  "geometry": {
-    "type": "Polygon",
-    "coordinates": [[[ /* generalized */ ]]]
-  },
-  "properties": {
-    "start_datetime": "1200-01-01T00:00:00Z",
-    "end_datetime": "1450-01-01T00:00:00Z",
-    "kfm:culture_phase": "Late Prehistoric",
-    "care:sensitivity": "generalized",
-    "kfm:provenance": "provenance/great-bend-v2.json"
-  },
-  "assets": {
-    "data": {
-      "href": "https://example.com/cultural_landscapes/great_bend_aspect_v2.geojson",
-      "type": "application/geo+json",
-      "roles": ["data"]
-    }
-  }
-}
-~~~
+- `proj` (projection metadata)  
+- `version` (semantic versioning of assets)  
+- `checksum` (e.g. SHA-256 digests)  
+- `scientific` (citations, DOIs)  
+- `kfm:archaeology` (domain-specific fields)  
+- `care` (sensitivity and review metadata)  
 
----
+## Archaeology Extension (`kfm:*`) Fields
 
-## 🧪 Validation Requirements
+These properties live under `properties` and MUST be used where applicable:
 
-All STAC items must pass:
+Field                | Description
+---------------------|------------
+`kfm:culture_phase`  | Archaeological period or taxonomy (controlled vocabulary)
+`kfm:site_type`      | Site class (e.g. village, mound, camp, quarry, ritual, landscape-region)
+`kfm:datatype`       | Dataset type (e.g. magnetometry-grid, artifact-inventory, pollen-series)
+`kfm:source`         | Origin institution, project, or repository
+`kfm:provenance`     | Path or URI to PROV-O lineage bundle for this Item
 
-- **STAC JSON schema validation**  
-- **KFM Archaeology Extension schema validation**  
-- **CARE sensitivity validation**  
-- **Checksum verification**  
-- **DCAT crosswalk check**  
-- **Spatial/Temporal alignment**  
-- **Provenance completeness**  
+Values MUST come from controlled vocabularies defined in `kfm-archaeology-schema.json`.
 
-Validation workflows are in:
+## CARE Extension (`care:*`) Fields
 
-- `docs/analyses/archaeology/validation/`  
-- `.github/workflows/stac-validate.yml`
+Field            | Description
+-----------------|------------
+`care:sensitivity` | One of `generalized`, `restricted`, or `public`
+`care:notes`       | Non-sensitive explanatory text (no coordinates, no identifying info)
+`care:review`      | One of `tribal`, `faircare`, or `none-required`
+
+Rules:
+
+- Items with `care:sensitivity = restricted` MUST NOT be made public; they are for internal governance only.  
+- All public-facing Items MUST have `care:sensitivity = generalized` or `public`.  
+- `care:review = tribal` MUST be set where any tribal governance review has occurred.  
 
 ---
 
-## 📊 STAC Catalog Index
+# 🌍 Spatial & Temporal Rules
 
-| Category | Collection | Examples |
-|---|---|---|
-| **Site Gazetteers** | `collections/site-gazetteers.json` | `items/site-gazetteer-v1.json` |
-| **Artifact Inventories** | `collections/artifacts.json` | `items/artifacts-flint-hills-v1.json` |
-| **Cultural Landscapes** | `collections/cultural-landscapes.json` | `items/great-bend-aspect-v2.json` |
-| **Geophysics** | `collections/geophysics.json` | `items/magnetometry-north-ks-v1.json` |
-| **Paleoenvironment** | `collections/paleoenvironment.json` | `items/pollen-flint-hills-v1.json` |
+## Coordinate Reference System
+
+- Default CRS is EPSG:4326 (WGS84 longitude/latitude).  
+- Any deviation (e.g., local projected CRS for geophysics) MUST be declared in `proj:*` extension fields and in asset metadata.  
+
+## CARE-Compliant Generalization
+
+For all archaeology Items:
+
+- Never publish precise site coordinates or small bounding boxes that reveal exact site locations.  
+- Use:
+  - Enlarged envelopes (buffering sites to region polygons).  
+  - Aggregated centroids at landscape scale (e.g., county-level or broader).  
+- When in doubt, err towards coarser generalization and stricter `care:sensitivity`.  
+
+## Temporal Modeling (OWL-Time Compatible)
+
+- `start_datetime` and `end_datetime` MUST be valid ISO-8601 datetimes.  
+- When only an approximate date is known:
+  - Set `start_datetime` to earliest plausible bound.  
+  - Set `end_datetime` to latest plausible bound.  
+  - Include a human-readable range label in a separate property (e.g., `kfm:time_label = "ca. 1200–1450 CE"`).  
+- All temporal extents MUST represent intervals, not just points, even when `start_datetime == end_datetime`.  
 
 ---
 
-## 🕰️ Version History
+# 🔗 Example STAC Item (Generalized Cultural Landscape)
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Archaeology WG · FAIR+CARE Council | Created STAC catalog framework; added KFM archaeology extensions; ensured box-safe formatting |
-| v10.0.0 | 2025-11-10 | Archaeology Metadata Team | Initial structure & baseline STAC requirements |
+Example Item for a generalized cultural landscape, suitable for the `cultural-landscapes` Collection:
+
+id: kfm-arch-landscape-great-bend-v2
+
+stac_version: "1.0.0"  
+type: "Feature"  
+
+bbox:
+-101.5, 37.5, -96.0, 39.5  
+
+geometry:
+type: "Polygon"  
+coordinates: [[[ /* generalized polygon coordinates elided for brevity */ ]]]  
+
+properties:
+  start_datetime: "1200-01-01T00:00:00Z"  
+  end_datetime: "1450-01-01T00:00:00Z"  
+  kfm:culture_phase: "Late Prehistoric"  
+  kfm:site_type: "landscape-region"  
+  kfm:datatype: "regional-model"  
+  kfm:source: "Example Source Institution"  
+  kfm:provenance: "provenance/great-bend-v2.json"  
+  kfm:time_label: "ca. 1200–1450 CE"  
+  care:sensitivity: "generalized"  
+  care:notes: "Geometry generalized to regional scale to protect sensitive locations."  
+  care:review: "tribal"  
+
+assets:
+  data:
+    href: "https://example.org/data/great_bend_landscape_v2.geojson"  
+    type: "application/geo+json"  
+    roles: ["data"]  
+
+  provenance:
+    href: "provenance/great-bend-v2.json"  
+    type: "application/json"  
+    roles: ["provenance"]  
+
+links:
+  - rel: "collection"
+    href: "../collections/cultural-landscapes.json"  
+
+  - rel: "root"
+    href: "../README.md"  
+
+  - rel: "self"
+    href: "../items/landscape-great-bend-v2.json"  
+
+This example is normative for structure; actual geometries and URLs MUST be replaced with real values.
+
+---
+
+# 🧪 Validation & CI Requirements
+
+All archaeology STAC content MUST pass the following checks in CI:
+
+- STAC 1.0.0 JSON Schema validation for:
+  - `collections/*.json`  
+  - `items/*.json`  
+- Domain schema validation:
+  - `schemas/kfm-archaeology-schema.json`  
+  - `schemas/care-generalization-schema.json`  
+  - `schemas/provenance-lineage-schema.json`  
+- Checksum verification:
+  - Assets MUST include `checksum:sha256` fields and MUST match actual file hashes.  
+- DCAT 3.0 crosswalk validation for Collections:
+  - Map STAC Collections to DCAT datasets and verify mandatory DCAT fields are present.  
+- GeoSPARQL geometry checks:
+  - Validate all geometries are well-formed and non-self-intersecting at published generalization levels.  
+- OWL-Time interval checks:
+  - Ensure `start_datetime <= end_datetime`.  
+- PROV-O lineage completeness:
+  - Every Item MUST have a corresponding PROV-O bundle or link in `kfm:provenance`.  
+- Focus Mode v3 readiness:
+  - Items MUST expose sufficient metadata for Focus Mode to:
+    - Bind events and regions to Story Nodes.  
+    - Generate entity timelines without leaking sensitive locations.  
+- Story Node v3 extraction safety:
+  - Ensure that any automated Story Node generation from Items does not include restricted attributes.  
+
+CI job identifier:
+
+- `stac-validate.yml` (or equivalent) MUST be configured to run on every PR touching this directory.
+
+---
+
+# 🕰 Version History
+
+| Version | Date       | Author                                  | Notes                                                                 |
+|---------|------------|-----------------------------------------|-----------------------------------------------------------------------|
+| v11.0.0 | 2025-11-25 | Archaeology Working Group · FAIR+CARE Council | Full v11 rewrite; one-box output rule; ASCII-only tree; MDP v11 alignment |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[⬅ Back to Archaeology Datasets](../README.md)
+FAIR+CARE · MCP-DL v6.3 · STAC 1.0.0 · DCAT 3.0  
+
+[⬅ Back to Archaeology Datasets](../README.md) · [KFM Metadata Standards](../../../../standards/README.md) · [KFM Master Guide v11](../../../../reference/kfm_v11_master_documentation.md)
 
 </div>
