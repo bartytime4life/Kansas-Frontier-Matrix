@@ -1,175 +1,185 @@
 ---
 title: "🌿 Kansas Frontier Matrix — Paleoenvironment Datasets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/paleoenvironment/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
-review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council · Sovereignty Review Board"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/archaeology-paleoenvironment-v1.json"
-governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
+previous_version_hash: "<previous-version-hash>"
+doc_guid: "urn:kfm:doc:archaeology-paleoenvironment-v11.0.0"
 doc_kind: "Dataset Category"
 intent: "archaeology-paleoenvironment-datasets"
+semantic_document_id: "kfm-doc-archaeology-paleoenvironment"
+
+sbom_ref: "../../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/archaeology-paleoenvironment-v11.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+care_label: "CARE-Compliant · Sovereignty-Governed"
+sensitivity: "Environmental · Archaeological"
+sensitivity_level: "Low–Moderate"
+indigenous_data_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+classification: "Governed Public"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
 ---
 
 <div align="center">
 
-# 🌿 **Kansas Frontier Matrix — Paleoenvironment Datasets**  
+# 🌿 **Kansas Frontier Matrix — Paleoenvironment Datasets (v11)**  
 `docs/analyses/archaeology/datasets/paleoenvironment/README.md`
 
-**Purpose:**  
-Define, index, and govern all **paleoenvironmental datasets** used in the Kansas Frontier Matrix (KFM) for reconstructing climate, ecology, hydrology, and environmental contexts relevant to prehistoric and historic cultural landscapes.  
-These datasets support:
-
-- Eco-cultural correlation  
-- Occupation phase modeling  
-- Climate-driven archaeological interpretations  
-- Story Nodes & Focus Mode v2  
-- MapLibre & Cesium environmental reconstructions  
-- AI-assisted trend detection (pollen, charcoal, macrofossils)
-
-Only datasets that are **open-access**, **public-domain**, or ethically cleared through **FAIR+CARE** review may be included.
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../standards/faircare.md)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../../../releases/v10.4.0/manifest.zip)
+FAIR+CARE v11 · Sovereignty-Governed  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview (v11)
 
-Paleoenvironment datasets in KFM include:
+The **Paleoenvironment Layer** provides environmental context for archaeological interpretation across prehistoric, protohistoric, and historic Kansas.  
+This includes:
 
-- **Pollen cores**  
-- **Charcoal deposits & fire histories**  
-- **Macrofossil & fauna records**  
-- **Lake sediment cores**  
-- **Dendrochronology (tree-ring) datasets**  
-- **Hydrology-linked eco proxies**  
-- **Climate variance indicators (SPEI, PDSI, anomalies)**  
-- **AI-augmented paleoenvironment reconstructions**
+- Pollen and macrofossil reconstruction  
+- Charcoal accumulation → fire regime inference  
+- Lake/river sediment geochemistry  
+- Dendrochronological climate series  
+- Hydroclimate proxies (SPEI, PDSI, RCS anomalies)  
+- Paleoecological AI-assisted reconstructions (v11 explainability-required)
 
-These datasets provide **environmental context** for archaeological phenomena such as:
+All datasets are:
 
-- Settlement shifts  
-- Subsistence transitions  
-- Fire regimes and prairie dynamics  
-- Cultural adaptation to drought/flood cycles  
+- **FAIR+CARE v11 certified**  
+- **Culturally reviewed** (if relevant)  
+- **PROV-O v11 lineage recorded**  
+- **STAC/DCAT v11 compliant**  
+- **Generalized via H3 r7–r10** when eco-cultural sensitivity applies  
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂 Directory Layout (v11 · ASCII-only · Box-safe)
 
 ~~~text
 docs/analyses/archaeology/datasets/paleoenvironment/
-├── README.md                          # This file
-├── pollen/                            # Pollen core datasets & interpretations
-├── charcoal/                          # Charcoal & fire-history proxies
-├── fauna/                             # Open-access faunal paleo datasets
-├── sediments/                         # Sediment-core profiles + geochemistry
-├── dendrochronology/                  # Tree-ring climate reconstructions
-├── climate-proxies/                   # Derived drought/flood indices
-├── stac/                              # STAC Items/Collections for paleo datasets
-├── metadata/                          # DCAT + CARE metadata
-└── provenance/                        # Processing lineage (PROV-O)
+├── README.md                  # This file
+├── pollen/                    # Pollen cores, vegetation proxies
+├── charcoal/                  # Charcoal/fire histories
+├── fauna/                     # Open-access fauna-only paleo data
+├── sediments/                 # Lake/river cores, geochemistry
+├── dendrochronology/          # Tree-ring climate signals
+├── climate-proxies/           # SPEI/PDSI/temperature/hydro indicators
+├── stac/                      # STAC v11 items + collections
+├── metadata/                  # DCAT 3.0 + CARE v11 metadata
+└── provenance/                # PROV-O v11 lineage bundles
 ~~~
 
 ---
 
-## 🧭 Paleoenvironment Dataset Categories
+# 🧭 Paleoenvironment Dataset Categories (v11)
 
-| Category | Description | Allowed | Notes |
-|---|---|---|---|
-| **Pollen Cores** | Vegetation reconstruction over time | ✅ | Must include depth–age model |
-| **Charcoal** | Fire history & prairie burning indicators | ✅ | Requires temporal calibration |
-| **Faunal Paleo Data** | Pleistocene/Holocene fauna indicators | ⚠️ | No sensitive species unless PD |
-| **Sediment Cores** | Lake/river basin environmental records | ✅ | Geochemical profiles allowed |
-| **Dendrochronology** | Tree-ring temperature/precip signals | ✅ | PD datasets only |
-| **Climate Proxy Layers** | Drought, moisture, temp proxies | ✅ | Downscaled derivatives must cite algorithms |
-| **Ancient Hydrology** | Paleo flood/drought cycles | ⚠️ | Must avoid sensitive tribal water data |
+| Category | Description | CARE Level | Allowed | Notes |
+|---------|-------------|------------|---------|------|
+| **Pollen Cores** | Vegetation composition through time | C1 | Yes | Must include depth–age model |
+| **Charcoal Proxies** | Fire frequency & biomass burning | C1 | Yes | Temporal calibration required |
+| **Faunal Paleo Data** | Fauna shifts, extinction markers | C2 | Conditional | Sacred species must be excluded |
+| **Sediment Cores** | Basin stratigraphy & geochemistry | C1 | Yes | May require H3 generalization |
+| **Dendrochronology** | Tree-ring climate series | C1 | Yes | PD datasets only |
+| **Climate Proxy Layers** | Aridity, drought, and hydrology indices | C1 | Yes | Derivative models must include metadata |
+| **Ancient Hydrology** | Paleo flood/drought cycles | C2–C3 | Conditional | Must avoid sensitive tribal hydrology |
 
-Forbidden:
+Forbidden (v11):
 
-- Restricted paleofaunal data from protected sites  
-- Human remains or burial-linked eco samples  
-- Unverified proprietary core datasets  
-- Tribal-restricted water or ecology datasets  
-
----
-
-## 📦 Required Metadata (All Paleoenvironment Datasets)
-
-### ✔ STAC 1.0 Item Requirements
-
-| Field | Description |
-|---|---|
-| `id` | Global unique identifier |
-| `bbox` | Generalized bounding box or H3 mosaic |
-| `geometry` | Point/Polygon (generalized if sensitive) |
-| `properties.datetime` | Core start/end or proxy interval |
-| `kfm:proxy_type` | `"pollen"`, `"charcoal"`, `"tree_rings"`, etc. |
-| `care:sensitivity` | `"general"`, `"generalized"`, `"restricted"` |
-| `assets` | Data file links (CSV, GeoJSON, COG) |
-
-### ✔ DCAT 3.0 Metadata
-
-| Field | Example |
-|---|---|
-| `dct:title` | "Pollen Core – Flint Hills Basin" |
-| `dct:license` | `"CC-BY 4.0"` |
-| `dct:temporal` | OWL-Time time range |
-| `dcat:distribution` | GeoJSON/CSV/COG |
-
-### ✔ PROV-O Provenance
-
-Includes:
-
-- Original archive source  
-- Sampling metadata  
-- Lab methods  
-- Calibration model (age-depth, Bayesian, etc.)  
-- Processing parameters & scripts  
-- Analyst + review cycle  
+- Burial-associated eco-samples  
+- Tribal-restricted hydrology or ecology datasets  
+- Proprietary or unvalidated core datasets  
+- Faunal records containing sacred species metadata  
+- Exact coordinates for protected ecological features  
 
 ---
 
-## 🧪 Data Preparation Requirements
+# 📦 Metadata Requirements (v11)
 
-All paleoenvironment datasets must:
+## STAC v11 Item Requirements
 
-- Include **depth–age models** for cores  
-- Specify **sampling resolution** and **calibration curve**  
-- Include **error bounds** for dating (σ, confidence intervals)  
-- Use standardized schema fields  
-- Provide climate proxy metadata (e.g., `biomass_fire_proxy`, `aridity_index`)  
-- Pass cultural and environmental ethics review  
-- Include PROV-O logs in `provenance/`  
+Fields required:
 
-Generalization rules (for sensitive eco-cultural regions):
+- `stac_version: "1.0.0"`
+- Unique `id`
+- H3-generalized `bbox`
+- Polygon or point geometry (generalized)
+- OWL-Time `start_datetime` / `end_datetime`
+- `care:sensitivity`, `care:sovereignty`, `care:consent_status`
+- `kfm:proxy_type` (pollen, charcoal, etc.)
+- `kfm:generalization` (H3-r7 to H3-r10)
+- `kfm:provenance` → PROV-O file
+- Asset links for CSV/COG/GeoJSON
 
-- Replace exact coordinates with H3 regions  
-- Omit exact lake/pond identifiers if culturally sensitive  
-- Remove detailed fauna data if species is sacred or restricted  
+## DCAT 3.0 Requirements
+
+- `dct:title`, `dct:description`
+- `dct:temporal`
+- `dct:license` (CC-BY/CC0/PD)
+- `dcat:distribution` entries
+- Keywords for “paleoenvironment”, “archaeology”, “climate proxy”
+
+## CARE v11 Requirements
+
+- Cultural notes for eco-cultural relevance  
+- Sovereignty governance route  
+- Consent verification & review board  
+- Eco-cultural sensitivity flagging  
+- Required masking for sensitive fauna or hydrology  
 
 ---
 
-## 🛰️ Integration Into KFM
+# 🧪 Data Preparation Requirements (v11)
 
-### **Knowledge Graph (Neo4j)**
+All datasets must include:
+
+- **Depth–age modeling** (Bayesian, linear, or RCS)  
+- **Error bounds** (σ or CI)  
+- **Sampling metadata** (interval, lab method, calibration curve)  
+- **Climate proxy metadata** (`aridity_index`, `charcoal_flux`, `pollen_pct`)  
+- **Standardized schema fields**  
+- **PROV-O v11 lineage bundle**
+
+Generalization rules:
+
+- Replace exact lake/pond coordinates with H3 r7–r10 mosaic  
+- Remove sacred or restricted fauna flags  
+- Remove exact locations of culturally protected eco-features  
+
+---
+
+# 🛰 KFM System Integration (v11)
+
+## Neo4j Knowledge Graph
 
 Nodes:
-
 - `PaleoRecord`
 - `PollenCore`
 - `CharcoalProxy`
@@ -179,67 +189,68 @@ Nodes:
 - `HydroProxy`
 
 Relationships:
-
 - `INDICATES`
 - `CORRELATED_WITH`
-- `OCCURRED_DURING`
 - `LOCATED_AT`
+- `OCCURRED_DURING`
 - `GENERALIZED_FROM`
+- `SUPPORTED_BY_PROVENANCE`
 
-### **Focus Mode v2**
+## Story Node v3 Integration
 
-Paleo datasets power:
+- Environmental context for cultural timelines  
+- Fire regime transitions  
+- Climate-linked occupation shifts  
+- Ecology–culture narratives  
 
-- Climate–culture correlations  
-- Eco-cultural story nodes  
-- Narrative explanations of environmental shifts  
-- Confidence bands and proxy uncertainty overlays  
+## Focus Mode v3 Integration
 
-All Focus Mode narratives undergo tone + cultural validation.
+- AI-assisted summaries with required provenance chips  
+- Uncertainty bands for proxy data  
+- CARE-governed tone filters  
+- Explainability overlays (SHAP/IG)  
 
-### **Visualization Outputs**
+## Visualization
 
-Typical derivative layers:
-
-- Pollen distribution reconstructions  
-- Charcoal accumulation maps  
-- Paleo flood/drought layers  
-- Time-slice environmental visualizations  
-- Cesium 3D sediment-core renderings  
-
-All visual layers must follow `visualization` and `validation` standards.
-
----
-
-## 📊 Dataset Index
-
-| Dataset | Category | Location | Status | Last Review | Notes |
-|---|---|---|---|---|---|
-| `pollen/flint-hills-core-v1` | Pollen | `pollen/` | 🟢 Active | 2025-11 | Depth–age model validated |
-| `charcoal/prairie-fire-history-v1` | Charcoal | `charcoal/` | 🟢 Active | 2025-11 | Proxy normalization complete |
-| `fauna/pleistocene-fauna-v1` | Faunal | `fauna/` | 🟡 Needs Review | 2025-09 | Verify sacred species exclusions |
-| `sediments/smoky-hill-core-v2` | Sediments | `sediments/` | 🟢 Active | 2025-11 | Geochem metadata validated |
+- Pollen density reconstructions  
+- Charcoal flux rasters  
+- Hydroclimate anomaly tiles  
+- Cesium 3D sediment models  
 
 ---
 
-## 🧠 Example STAC Item (Pollen Core)
+# 📊 Dataset Index (v11)
+
+| Dataset | Category | Status | Review | Notes |
+|--------|----------|--------|--------|-------|
+| `pollen/flint-hills-core-v2` | Pollen | 🟢 Active | 2025-11 | Depth–age model validated |
+| `charcoal/prairie-fire-history-v2` | Charcoal | 🟢 Active | 2025-11 | Proxy normalization validated |
+| `fauna/pleistocene-fauna-v1` | Faunal | 🟡 Needs Review | 2025-09 | Sacred species check required |
+| `sediments/smoky-hill-core-v3` | Sediments | 🟢 Active | 2025-11 | Geochemical metadata v11-complete |
+
+---
+
+# 🧠 Example STAC Item (v11)
 
 ~~~json
 {
   "stac_version": "1.0.0",
   "type": "Feature",
-  "id": "pollen-flint-hills-v1",
+  "id": "pollen-flint-hills-v2",
   "bbox": [-101.2, 37.5, -95.4, 40.1],
   "properties": {
     "kfm:proxy_type": "pollen",
     "care:sensitivity": "generalized",
+    "care:sovereignty": "approved",
+    "care:consent_status": "verified",
     "start_datetime": "8500-01-01T00:00:00Z",
-    "end_datetime": "0-01-01T00:00:00Z",
-    "kfm:provenance": "provenance/pollen-flint-hills-v1.json"
+    "end_datetime": "2020-01-01T00:00:00Z",
+    "kfm:generalization": "H3-r8",
+    "kfm:provenance": "provenance/pollen-flint-hills-v2.json"
   },
   "assets": {
     "core_data": {
-      "href": "https://example.com/pollen/flint_hills_core_v1.csv",
+      "href": "https://example.org/paleo/pollen/flint_hills_core_v2.csv",
       "type": "text/csv",
       "roles": ["data"]
     }
@@ -249,19 +260,22 @@ All visual layers must follow `visualization` and `validation` standards.
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Archaeology WG · FAIR+CARE Council | Created paleoenvironment dataset index; added ethical + scientific metadata rules; ensured box-safe formatting |
-| v10.0.0 | 2025-11-10 | Paleoenvironment Dataset Team | Initial conceptual structure |
+| Version | Date | Summary |
+|--------:|------|---------|
+| **v11.0.0** | 2025-11-24 | Full v11 rebuild: sovereignty gates, CARE v11, H3 r7–r10, PROV-O v11, STAC/DCAT v11, telemetry v11 |
+| v10.4.0 | 2025-11-17 | First complete v10 paleoenvironment index |
+| v10.0.0 | 2025-11-10 | Initial dataset structure |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+FAIR+CARE v11 · Sovereignty-Governed  
+MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω  
+
 [⬅ Back to Archaeology Datasets](../README.md)
 
 </div>
