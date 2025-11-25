@@ -1,221 +1,232 @@
 ---
 title: "🏞️ Kansas Frontier Matrix — Cultural Landscape Datasets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/cultural-landscapes/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
-review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Biannual · FAIR+CARE Council · Tribal Sovereignty Review Board"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/archaeology-cultural-landscapes-v1.json"
-governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
+previous_version_hash: "<previous-version-hash>"
+doc_guid: "urn:kfm:doc:archaeology-cultural-landscapes-v11.0.0"
 doc_kind: "Dataset Category"
 intent: "archaeology-cultural-landscapes"
+semantic_document_id: "kfm-doc-archaeology-cultural-landscapes"
+
+sbom_ref: "../../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/archaeology-cultural-landscapes-v11.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Cultural / Historical / Archaeological"
+sensitivity_level: "Medium"
+indigenous_data_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+classification: "Governed Public"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
 ---
 
 <div align="center">
 
-# 🏞️ **Kansas Frontier Matrix — Cultural Landscape Datasets**  
+# 🏞️ **Kansas Frontier Matrix — Cultural Landscape Datasets (v11)**  
 `docs/analyses/archaeology/datasets/cultural-landscapes/README.md`
 
+**FAIR+CARE Certified · Sovereignty-Governed · Diamond⁹ Ω / Crown∞Ω**
+
 **Purpose:**  
-Provide a **FAIR+CARE-governed, MCP-compliant index** of all cultural landscape datasets used in the Kansas Frontier Matrix (KFM).  
-These datasets support archaeological reconstruction of **settlements**, **movement**, **territories**, **resource zones**, and **cultural interaction spheres** across Kansas’ prehistoric, protohistoric, and historic eras.
+Define and govern all **cultural landscape datasets** used in KFM v11, covering:  
+settlement systems, movement corridors, territorial extents, interaction spheres, and resource-procurement landscapes across Kansas.
 
-Cultural landscape datasets integrate into:
-
-- Site distribution reconstruction  
-- Artifact pattern interpretation  
-- Story Nodes (culture timelines)  
-- Focus Mode v2 cultural narratives  
-- Cesium 3D reconstructions  
-- MapLibre time-aware landscape layers  
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../standards/faircare.md)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../../../releases/v10.4.0/manifest.zip)
+These datasets feed directly into:  
+**Story Node v3 · Focus Mode v3 · Cesium 3D Reconstructions · MapLibre time-aware layers · Neo4j cultural-region graph models**
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 v11 Overview
 
-Cultural landscape datasets represent **human-environment relationships** through time, including:
+Cultural landscapes in KFM represent **human–land relationships across time**, including:
 
-- Ancient routes & mobility corridors  
-- Settlement regions & hinterlands  
-- Tribal territories & interaction zones  
-- Cultural phases & occupation extents  
-- Sacred landscapes (appropriately generalized)  
-- Resource procurement areas (stone, clay, fauna)  
-- Ethnohistoric pathways documented in archival sources  
+- Ancient & protohistoric **mobility corridors**  
+- Cultural-phase **settlement regions**  
+- **Interaction spheres** (e.g., Great Bend aspect)  
+- **Territorial boundaries** (generalized; sovereignty-governed)  
+- **Resource procurement zones** (e.g., chert, clay, fauna)  
+- **Sacred / cultural landscapes** (when permitted under sovereignty rules)  
 
-Only datasets that are **public-domain**, **open-license**, or **approved through tribal review** may be included.
+**v11 introduces:**
 
-Restricted or culturally protected information must be:
+- Mandatory **H3 r7–r10 generalization**  
+- Cultural & sovereignty AI governance filters  
+- Expanded CARE labels & consent flags  
+- PROV-O enriched lineage bundles  
+- DCAT 3.0 / STAC 1.0 v11-compliant metadata  
+- Sustainability metrics per dataset (energy, carbon)
 
-- **Generalized using H3 (levels 5–7)**  
-- **Stripped of specific sacred-site coordinates**  
-- **Reviewed by FAIR+CARE + Tribal Representatives**  
+Restricted, sacred, or sovereignty-governed data must follow strict redaction rules.
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (v11)
 
 ~~~text
 docs/analyses/archaeology/datasets/cultural-landscapes/
-├── README.md                          # This file
-├── regions/                           # Polygons of settlement regions, tribal areas (generalized)
-├── routes/                            # Ancient mobility paths, seasonal routes
-├── interaction-spheres/               # Cultural zones (e.g., Great Bend aspect)
-├── resource-areas/                    # Procurement zones (e.g., chert, clay)
-├── stac/                              # STAC Items/Collections for all landscape layers
-├── metadata/                          # DCAT, CARE, and geospatial metadata
-└── provenance/                        # PROV-O lineage logs
+├── README.md                    # This file
+├── regions/                     # Settlement regions, tribal/cultural areas (generalized)
+├── routes/                      # Mobility corridors, seasonal pathways
+├── interaction-spheres/         # Cultural influence zones (Great Bend, Pawnee, etc.)
+├── resource-areas/              # Procurement zones (stone, clay, fauna)
+├── stac/                        # STAC Items/Collections (v11 spec)
+├── metadata/                    # DCAT 3.0 + CARE metadata
+└── provenance/                  # PROV-O lineage + sovereignty review logs
 ~~~
 
 ---
 
-## 🌄 Cultural Landscape Categories
+# 🌄 Cultural Landscape Categories (v11)
 
-| Category | Description | Allowed | Notes |
-|---|---|---|---|
-| **Settlement Regions** | Cultural-phase habitation zones | ✅ | Must be generalized; tribal review recommended |
-| **Territorial Boundaries** | Tribal, political, or cultural extents | ⚠️ | Must be generalized + approved for public display |
-| **Mobility Routes** | Trails, migration paths, war/peace routes | ✅ | Based on ethnohistoric + archaeological data |
-| **Interaction Spheres** | Regions of shared material culture | ✅ | E.g., Great Bend aspect |
-| **Resource Procurement Areas** | Quarries, clay beds, hunting zones | ⚠️ | Sensitive ecological or sacred areas must be generalized |
-| **Sacred Landscapes** | Ceremonial regions, mythic geographies | 🔴 Prohibited unless approved | Must not include coordinates or shapes without tribal consent |
+| Category | Description | CARE Level | Sovereignty Required | Status |
+|---------|-------------|------------|-----------------------|--------|
+| **Settlement Regions** | Phase-specific habitation surfaces | C2 | Yes | Allowed (generalized) |
+| **Territorial Boundaries** | Cultural/tribal extents | C3–C4 | Yes | Conditional |
+| **Mobility Routes** | Trails, trade, conflict/peace routes | C1–C2 | Sometimes | Allowed |
+| **Interaction Spheres** | Material-culture influence zones | C2 | Yes | Allowed |
+| **Resource Areas** | Chert quarries, clay beds, hunting zones | C2 | Yes | Conditional |
+| **Sacred Landscapes** | Ceremonial or mythic geographies | C4 | Yes | Restricted / Not Public |
 
-Prohibited content in this directory:
-
-- Precise ceremonial site locations  
-- Burial grounds  
-- Restricted tribal knowledge  
-- Non-consented ethnohistorical information  
-
----
-
-## 📦 Required Metadata (All Cultural Landscape Layers)
-
-### ✔ STAC Item / Collection
-Each dataset MUST include:
-
-| Field | Description |
-|---|---|
-| `id` | Unique identifier |
-| `bbox` | H3 generalized bounding box |
-| `geometry` | Polygon/MultiPolygon only |
-| `start_datetime` / `end_datetime` | Temporal extent |
-| `care:sensitivity` | Cultural sensitivity classification |
-| `kfm:culture_phase` | Associated culture or occupation period |
-| `assets` | Links to GeoJSON/COG/tilesets |
-| `proj:*` | CRS, resolution, projection metadata |
-| `kfm:provenance` | Reference to PROV-O lineage file |
-
-### ✔ DCAT 3.0 Metadata
-
-| Field | Example |
-|---|---|
-| `dct:title` | "Great Bend Aspect — Cultural Landscape" |
-| `dct:license` | `"CC-BY 4.0"` |
-| `dcat:distribution` | GeoJSON, vector tiles, or COG |
-| `dct:temporal` | OWL-Time date span |
-| `dcat:keyword` | `["archaeology", "cultural-landscape"]` |
-
-### ✔ CARE Requirements
-
-- Clear cultural notes  
-- Explicit consent provenance  
-- Sensitivity classification (`general`, `generalized`, `restricted`)  
-- Removal of restricted cultural knowledge  
+**v11 Prohibits:**  
+- Precise coordinates for sacred landscapes  
+- Non-consented tribal knowledge  
+- Burial grounds, funerary objects, or ritual geographies  
+- Unreviewed ethnographic testimonies  
+- Any dataset lacking sovereignty sign-off
 
 ---
 
-## 🧪 Data Preparation Requirements
+# 📦 Required Metadata (v11 Hard Requirements)
 
-All cultural landscape datasets must:
+Every dataset MUST include:
 
-- Use **generalized geometries** (H3 or topological simplification)  
-- Include **temporal phase** or cultural period  
-- Use consistent schema fields (`region_id`, `culture_phase`, `geometry`, `sources`)  
-- Provide **citation list** (archaeology, ethnohistory, tribal consultation)  
-- Include a **provenance log**:
-  - Data sources  
-  - GIS processes  
-  - Simplification parameters  
-  - Review notes  
+## ✔ STAC Item / Collection (v11)
+Fields:
+
+- `id`  
+- `bbox` (H3 generalized)  
+- `geometry` (polygon/multipolygon only)  
+- `start_datetime` / `end_datetime`  
+- `care:sensitivity`, `care:sovereignty`, `care:consent_status`  
+- `proj:*` CRS metadata  
+- `kfm:culture_phase`  
+- `kfm:generalization`: `"H3-r7"` → `"H3-r10"`  
+- `kfm:provenance`: PROV-O bundle link  
+- Assets for GeoJSON, COG, vector tiles  
+
+## ✔ DCAT 3.0 Metadata
+
+## ✔ CARE v11 Metadata
+
+Must include:
+
+- Sensitivity class  
+- Cultural notes  
+- Sovereignty decision path  
+- Consent provenance  
+- Reviewer identity (tribal + FAIR+CARE)
 
 ---
 
-## 🛰️ Integration Into KFM Systems
+# 🧪 Data Preparation Requirements (v11)
 
-### **Knowledge Graph (Neo4j)**
+All datasets must:
+
+- Use generalized polygons (H3 or topological simplification)  
+- Strip all non-public cultural information  
+- Use controlled vocabularies:
+  - `culture_phase`
+  - `region_type`
+  - `route_type`
+  - `interaction_type`  
+- Provide temporal phases (OWL-Time compatible)  
+- Include a TRU (Tribal Review Unit) record in provenance logs  
+- Include dataset-level sustainability telemetry (Wh, gCO₂e)
+
+---
+
+# 🛰 Integration Into KFM Systems (v11)
+
+## Neo4j Graph
+
 Nodes:
-
-- `CulturalRegion`
-- `Route`
-- `ResourceArea`
-- `InteractionSphere`
+- `CulturalRegion`, `Route`, `InteractionSphere`, `ResourceArea`
 
 Relationships:
-
-- `OCCUPIED_DURING`
 - `TRAVERSED_BY`
+- `OCCUPIED_DURING`
 - `ASSOCIATED_WITH`
 - `GENERALIZED_FROM`
+- `CULTURAL_CONTINUUM_WITH`
 
-### **Story Nodes & Focus Mode v2**
-Cultural landscape layers generate:
+## Story Node v3
+- Cultural narratives  
+- Region evolution sequences  
+- Mobility + trade storylines  
+- Time-aligned cultural region overlays  
 
-- Cultural-phase summaries  
-- Movement narratives  
-- Settlement expansion sequences  
-- Provenance-linked interpretations  
+## Focus Mode v3
+- Sovereignty-aware narrative filters  
+- Cultural bias monitoring  
+- Explainability and provenance chips  
+- Consent-based redaction layers  
 
-### **Visualization Layers**
-Produced visualizations include:
-
-- Polygon cultural-region layers  
-- H3 density mosaics  
-- Vector route lines  
-- Cesium 3D landscape models  
-
-All visual layers must follow:
-
-- `visualization` standards (`docs/analyses/archaeology/visualization/README.md`)  
-- `validation` rules (`docs/analyses/archaeology/validation/README.md`)
+## Mapping (MapLibre + Cesium)
+- Polygon layers  
+- Time-enabled region evolution  
+- 3D cultural landscapes  
+- Animated movement routes  
 
 ---
 
-## 📊 Dataset Index
+# 📊 Dataset Index (v11)
 
-| Dataset | Category | Location | Status | Last Review | Notes |
+| Dataset | Category | CARE | Sovereignty | Status | Notes |
 |---|---|---|---|---|---|
-| `regions/great-bend-aspect-v2` | Interaction Sphere | `regions/` | 🟢 Active | 2025-11 | Generalized + reviewed |
-| `routes/ancient-prairie-traverse-v1` | Mobility Route | `routes/` | 🟢 Active | 2025-10 | Based on open-source ethnohistory |
-| `resource-areas/flint-hills-chert-v1` | Procurement Area | `resource-areas/` | 🟡 Needs Review | 2025-09 | Check ecological sensitivity |
-| `regions/pawnee-territory-v1` | Territorial Region | `regions/` | 🔴 Hold | Requires tribal consultation |
+| `regions/great-bend-aspect-v3` | Interaction Sphere | C2 | Yes | 🟢 Active | Generalized polygons |
+| `routes/ancient-prairie-corridor-v2` | Mobility | C1 | Partial | 🟢 Active | Ethnohistoric + archaeological synthesis |
+| `resource-areas/flint-hills-chert-v2` | Resource Area | C2 | Yes | 🟡 Review | Ecological sensitivity review needed |
+| `regions/pawnee-territory-v2` | Territorial | C3–C4 | Yes | 🔒 Hold | Requires Tribal Sovereignty Board approval |
 
 ---
 
-## 🧠 Example STAC Item (Generalized Cultural Region)
+# 🧠 Example STAC Item (v11 Cultural Region)
 
 ~~~json
 {
   "stac_version": "1.0.0",
   "type": "Feature",
-  "id": "great-bend-aspect-v2",
-  "bbox": [-101.8, 37.0, -95.3, 40.5],
+  "id": "great-bend-aspect-v3",
+  "bbox": [-101.7, 37.1, -95.2, 40.4],
   "geometry": {
     "type": "MultiPolygon",
     "coordinates": [[[ ... ]]]
@@ -223,13 +234,16 @@ All visual layers must follow:
   "properties": {
     "kfm:culture_phase": "Late Prehistoric",
     "care:sensitivity": "generalized",
+    "care:sovereignty": "protected",
+    "care:consent_status": "approved",
+    "kfm:generalization": "H3-r8",
     "start_datetime": "1200-01-01T00:00:00Z",
     "end_datetime": "1450-01-01T00:00:00Z",
-    "kfm:provenance": "provenance/great-bend-aspect-v2.json"
+    "kfm:provenance": "provenance/great-bend-aspect-v3.json"
   },
   "assets": {
     "data": {
-      "href": "https://example.com/cultural_landscapes/great_bend_aspect_v2.geojson",
+      "href": "https://example.org/cl-v3/great_bend_aspect_v3.geojson",
       "type": "application/geo+json",
       "roles": ["data"]
     }
@@ -239,19 +253,22 @@ All visual layers must follow:
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Archaeology WG · FAIR+CARE Council | Created dataset index; added cultural governance, metadata & generalization rules; ensured box-safe formatting |
-| v10.0.0 | 2025-11-10 | Archaeology Dataset Team | Initial directory structure & dataset categorization |
+| Version | Date | Summary |
+|--------:|------|---------|
+| **v11.0.0** | 2025-11-24 | Sovereignty-governed v11 rebuild; H3 r7–r10 generalization; CARE v11 metadata; PROV-O enriched lineage; AI governance integration |
+| v10.4.0 | 2025-11-17 | v10 cultural landscape index |
+| v10.0.0 | 2025-11-10 | Initial dataset structure |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+FAIR+CARE Certified · Sovereignty-Governed  
+KFM-MDP v11 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω  
+
 [⬅ Back to Archaeology Datasets](../README.md)
 
 </div>
