@@ -152,10 +152,10 @@ branding_registry:
 Define the canonical, enforceable Markdown standard for the Kansas Frontier Matrix (KFM) v11.2.1, governing structure, metadata, diagrams, accessibility, AI governance, provenance, and CI/CD compliance across the entire monorepo.  
 This update adds profile systems (header, footer, diagram), heading registry, transform registry, provenance hardening, and directory-tree indentation rules.
 
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![KFM-MDP v11.2.1](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.1-informational)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)]()  
-[![Accessibility WCAG 2.1 AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet)]()  
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]() ·
+[![KFM-MDP v11.2.1](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.1-informational)]() ·
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)]() ·
+[![WCAG AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet)]() ·
 [![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen)]()
 
 </div>
@@ -181,7 +181,7 @@ All governed Markdown in KFM MUST comply.
 
 ## 🧱 1. Required Document Structure
 
-Every governed Markdown file MUST follow the v11.2.1 structure:
+Every governed Markdown file MUST follow this structure:
 
 1. YAML metadata  
 2. Centered header block  
@@ -199,10 +199,11 @@ Every governed Markdown file MUST follow the v11.2.1 structure:
 
 - Exactly **one H1** inside the header block  
 - Only **H1–H4**; no H5/H6  
-- Headings must come from the **heading_registry**  
-- Directory trees use **4-space indents**, NOT fenced blocks  
-- No nested fences inside large fences  
-- Emojis strongly recommended  
+- Headings SHOULD come from the **heading_registry** for standards  
+- Directory trees use **4-space indents**, not fenced blocks inside fenced contexts  
+- Emojis strongly encouraged  
+- No bare URLs  
+- No nested fences inside top-level fences in ChatGPT-generated content  
 
 ---
 
@@ -210,11 +211,11 @@ Every governed Markdown file MUST follow the v11.2.1 structure:
 
 Directory trees MUST follow this format:
 
-- ASCII connector characters only  
+- ASCII connector characters (│, ├──, └──)  
 - 4-space indentation  
-- No fenced code blocks inside fenced contexts  
+- No fenced blocks inside the main fence in templates  
 
-**Example (safe indentation mode):**
+Example (safe indentation mode):
 
     docs/
         ├── standards/
@@ -224,70 +225,70 @@ Directory trees MUST follow this format:
         ├── analyses/
         └── templates/
 
-This is the ONLY approved directory layout format.
+This is the ONLY approved directory layout format for KFM documentation.
 
 ---
 
 ## 🗺️ 3. Diagram Specification (Mermaid + Diagram Profiles)
 
-Mermaid diagrams are permitted, but MUST follow the v11.2.1 profile rules:
+Mermaid diagrams are encouraged, but they MUST follow v11.2.1 diagram profiles.
 
-### Allowed diagram types:
+### Allowed diagram semantic types:
+
 - pipeline-flow  
 - ci-flow  
 - entity-relationship-slice  
 - timeline  
 - sequence  
 
-### Requirements:
-- MUST appear under `## 🗺️ Diagrams`  
-- MUST include:
-  - Diagram title  
-  - Caption  
-  - Summary paragraph (for accessibility)  
-- MUST be referenced by a diagram profile in metadata  
+Each diagram MUST:
 
-### Accessibility:
-- Every diagram MUST have a text equivalent  
-- Screen-reader compatibility required  
+- Appear under `## 🗺️ Diagrams`  
+- Include:
+  - Title (as text near the diagram)  
+  - Caption  
+  - Summary paragraph for accessibility  
+- Be logically tied to a `diagram_profiles` entry in YAML  
+
+Accessibility:
+
+- Every diagram MUST have a text description  
+- Diagrams MUST NOT be the only source of normative rules  
 
 ---
 
 ## 🧠 4. Story Node & Focus Mode Integration
 
-Documents MAY reference Story Nodes:
+Documents MAY reference story nodes:
 
     story_node_refs:
       - "urn:kfm:story-node:example"
 
 Rules:
 
-- Avoid ambiguous pronouns  
-- Use ISO-8601 dates  
-- Use resolvable GNIS/KFM entities  
-- Optionally provide Focus Summary blocks  
+- Avoid ambiguous pronouns in normative sections  
+- Use ISO-8601 for dates  
+- Refer to entities using graph-resolvable IDs or names  
+- Optionally provide Focus Summary blocks for Focus Mode:
+
+> **Focus Summary:** This protocol defines how all KFM Markdown documents are authored, structured, and validated in v11.2.1, including AI governance, provenance, and accessibility rules.
+
+Focus Mode v3 uses this information for guided exploration.
 
 ---
 
 ## 🧩 5. YAML Metadata Layer Model
 
-v11.2.1 formalizes a **profile-based metadata system**:
+v11.2.1 uses a layered and profile-based metadata model:
 
-### Metadata layers:
-- Core Identity  
-- Governance & Risk  
-- Supply Chain & Telemetry  
-- Ontology & Schema  
-- Runtime & Stack  
-- AI Governance  
-- Integrity & Identity  
-- Provenance Chain  
-- Story Node Links  
-- Header & Footer Profiles  
-- Diagram Profiles  
-- Branding Registry  
+- **Header profiles** (`header_profile`) for identity & layout  
+- **Footer profiles** (`footer_profile`) for navigation & branding  
+- **Diagram profiles** (`diagram_profiles`) for diagram semantics  
+- **Transform registry** (`transform_registry`) for AI behavior  
+- **Heading registry** (`heading_registry`) for heading conformity  
+- **Test profiles** (`test_profiles`) for validation requirements  
 
-All keys are schema-validated via `json_schema_ref`.
+All metadata MUST comply with `json_schema_ref`/`shape_schema_ref`.
 
 ---
 
@@ -295,22 +296,27 @@ All keys are schema-validated via `json_schema_ref`.
 
 All documents MUST:
 
-- Provide alt-text  
-- Provide diagram text equivalents  
-- Maintain logical heading order  
-- Use descriptive links  
-- Avoid color-only indicators  
-- Define jargon or link to glossary  
+- Provide alt-text on images  
+- Provide text equivalents for diagrams  
+- Use descriptive link text  
+- Maintain logical heading hierarchy  
+- Avoid color-only indications  
+- Define jargon or link to a glossary  
 
-The **accessibility-check** test profile enforces this.
+The `accessibility-check` test profile enforces these rules.
 
 ---
 
 ## 🔐 7. AI Governance & Transform Registry
 
-The v11.2.1 Transform Registry defines ALL allowed and prohibited transforms.
+The AI governance block and `transform_registry` define:
 
-### Allowed:
+- Which transforms are allowed  
+- Which transforms are prohibited  
+- How Focus Mode and other AI tools may interact with the document  
+
+Allowed transforms (examples):
+
 - summary  
 - timeline-generation  
 - semantic-highlighting  
@@ -319,20 +325,21 @@ The v11.2.1 Transform Registry defines ALL allowed and prohibited transforms.
 - diagram-extraction  
 - metadata-extraction  
 
-### Prohibited:
+Prohibited transforms (examples):
+
 - content-alteration  
 - speculative-additions  
 - unverified-architectural-claims  
 - narrative-fabrication  
 - governance-override  
 
-Focus Mode MUST enforce the registry.
+Focus Mode MUST obey this registry.
 
 ---
 
 ## 🧪 8. Validation & CI/CD Requirements
 
-Each governed doc must pass:
+Each governed Markdown document MUST pass the `test_profiles` declared in this spec:
 
 - markdown-lint  
 - schema-lint  
@@ -342,7 +349,15 @@ Each governed doc must pass:
 - metadata-check  
 - provenance-check  
 
-A failure blocks merge.
+A failing profile blocks merge to main. This ensures:
+
+- Structural correctness  
+- Schema alignment  
+- Footer and navigation integrity  
+- Accessibility  
+- Diagram semantics and text pairing  
+- Metadata completeness  
+- Provenance correctness  
 
 ---
 
@@ -352,7 +367,7 @@ A failure blocks merge.
 |--------:|------------|------------------------------------------------------------------------------------------------------|
 | v11.2.1 | 2025-11-26 | Added header/footer/diagram profiles, transform registry, heading registry, provenance hardening.    |
 | v11.2.0 | 2025-11-25 | Major structural overhaul, adaptive footers, metadata layers, diagram rules, accessibility.          |
-| v11.0.1 | 2025-11-20 | Previous major version.                                                                               |
+| v11.0.1 | 2025-11-20 | Previous major Markdown protocol version.                                                            |
 
 ---
 
