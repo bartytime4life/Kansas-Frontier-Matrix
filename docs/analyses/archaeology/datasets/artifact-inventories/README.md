@@ -1,232 +1,270 @@
 ---
 title: "🏺 Kansas Frontier Matrix — Artifact Inventories (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/artifact-inventories/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
-review_cycle: "Biannual / Archaeology Working Group · FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Biannual · FAIR+CARE Council · Tribal Sovereignty Review Board"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/archaeology-artifact-inventories-v1.json"
-governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
+previous_version_hash: "<previous-version-hash>"
+doc_guid: "urn:kfm:doc:archaeology-artifact-inventories-v11.0.0"
 doc_kind: "Dataset Category"
 intent: "archaeology-artifact-inventories"
+semantic_document_id: "kfm-doc-archaeology-artifact-inventories"
+
+sbom_ref: "../../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/archaeology-artifact-inventories-v11.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Cultural / Archaeological / Heritage"
+indigenous_data_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+classification: "Governed Public"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
 ---
 
 <div align="center">
 
-# 🏺 **Kansas Frontier Matrix — Artifact Inventories**  
+# 🏺 **Kansas Frontier Matrix — Artifact Inventories (v11)**  
 `docs/analyses/archaeology/datasets/artifact-inventories/README.md`
 
+**FAIR+CARE Certified · Sovereignty-Aligned · Diamond⁹ Ω / Crown∞Ω**
+
 **Purpose:**  
-Document, index, and govern the **public-domain archaeological artifact inventories** used in the Kansas Frontier Matrix (KFM), ensuring that all datasets are **FAIR+CARE aligned**, **ethically handled**, **culturally respectful**, and **compatible with KFM’s metadata, graph, and visualization pipelines**.
-
-Artifact inventories support:
-
-- Cultural landscape reconstruction  
-- Chronological phase modeling  
-- Material culture classification  
-- AI-assisted pattern recognition  
-- Story Node generation & Focus Mode v2 summaries  
-
-Only **public-domain or openly licensed** artifact datasets are permitted.
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../standards/faircare.md)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../../../releases/v10.4.0/manifest.zip)
+Define the full **governed, ethically filtered, sovereignty-compliant artifact inventory corpus** included in KFM v11.  
+Only **public-domain** and **open-license** artifact datasets are permitted.  
+All provenance must be verifiable.  
+All culturally sensitive materials must be **excluded**, **generalized**, or **sovereignty-gated**.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 v11 Overview
 
-This directory contains artifact inventory datasets that have passed:
+Artifact inventories support:
 
-- **Scientific validation** (classification standards, methods transparency)  
-- **Cultural validation** (CARE-compliant; excludes restricted materials)  
-- **Metadata validation** (STAC, DCAT, CIDOC-CRM mapping)  
-- **Spatial/temporal validation** (generalized coordinates, OWL-Time coverage)  
+- Cultural landscape reconstructions  
+- Chronological + occupation-phase modeling  
+- Lithic & ceramic classification  
+- AI-assisted Focus Mode v3 reasoning  
+- Story Node v3 evidence linking  
+- Settlement + trade network inference  
+- H3-based spatial generalization for cultural safety
 
-Prohibited datasets include:
+**v11 expands**:
 
-- Human remains or funerary objects  
-- Sacred or restricted ceremonial items  
-- Unprovenanced artifacts  
-- Culturally sensitive tribal belongings  
-- Exact provenience data for protected sites  
+- CARE Level definitions  
+- Sovereignty governance  
+- H3 r7–r10 spatial safety rules  
+- AI explainability metadata  
+- PROV-O enriched lineage  
+- DCAT 3.0 compliance  
+- STAC 1.0 Collection upgrades  
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (v11)
 
-~~~text
+```text
 docs/analyses/archaeology/datasets/artifact-inventories/
-├── README.md                           # This file
-├── inventories/                        # Cleaned + validated artifact tables
-├── stac/                               # STAC Items/Collections for artifact datasets
-├── metadata/                           # DCAT + CARE metadata
-└── provenance/                         # PROV-O lineage & processing logs
-~~~
+├── README.md                       # This file
+├── inventories/                    # Cleaned, vetted, standardized inventories
+├── stac/                           # STAC Items/Collections (v11 schema)
+├── metadata/                       # DCAT + CARE metadata, licensing, lineage
+└── provenance/                     # PROV-O bundles (entity → activity → agent)
+```
 
 ---
 
-## 🧭 Artifact Inventory Categories
+# 🧭 Artifact Inventory Categories (v11)
 
-| Category | Description | Allowed | Notes |
-|---|---|---|---|
-| **Lithics** | Chipped stone, ground stone, debitage | ✅ | Public-domain lithic catalogs only |
-| **Ceramics** | Sherds, vessel types, decorative motifs | ✅ | Typology data must not expose restricted tribal knowledge |
-| **Faunal Remains (PD only)** | Open-source zooarchaeological datasets | ⚠️ | Must not include sacred species where restricted |
-| **Metal Artifacts** | Trade metals, tools, hardware | ✅ | Provenance must be verifiable |
-| **Protohistoric Items** | Contact-era artifacts | ⚠️ | Must undergo tribal review |
-| **Misc. Material Culture** | Beads, ornaments, tools | ⚠️ | Only when confirmed public-domain / open-license |
+| Category | Description | CARE Level | Allowed | Notes |
+|---------|-------------|------------|---------|-------|
+| **Lithics** | Chipped/ground stone, debitage | C1–C2 | ✅ | Public-domain only |
+| **Ceramics** | Sherds, vessels, motifs | C2–C3 | ⚠️ | Decorations cannot expose restricted tribal knowledge |
+| **Faunal (PD)** | Open-license zooarchaeology | C1–C2 | ⚠️ | Sacred species removed or generalized |
+| **Metal Artifacts** | Contact-era metals, tools | C1 | ✅ | Requires provenance verification |
+| **Protohistoric Items** | Trade goods, contact artifacts | C2–C4 | 🔒 Review | Tribal sovereignty review required |
+| **Misc. Material Culture** | Beads, ornaments, tools | C1–C3 | ⚠️ | Allowed only with PD documentation |
 
-Excluded categories: funerary goods, human remains, ritual objects, or anything requiring restricted access.
+**Strictly forbidden:**  
+- Human remains or funerary objects  
+- Sacred/ceremonial items  
+- Tribal-restricted belongings  
+- Exact provenience for sensitive sites  
+- Unprovenanced artifacts (any chain break)
 
 ---
 
-## 📦 Required Metadata (All Artifact Inventories)
+# 📦 Required Metadata (v11 Hard Requirements)
 
-Each inventory **MUST** have:
+Every inventory must include:
 
-### ✔ STAC Item (Mandatory)
-Fields:
+## ✔ STAC Item (v11)
+Required fields:
 
 | Field | Description |
 |---|---|
-| `id` | Dataset identifier |
-| `assets.data.href` | Artifact dataset file |
+| `id` | Dataset unique ID |
+| `bbox` | H3 generalized footprint |
 | `properties.kfm:phase` | Cultural/temporal phase |
-| `care:sensitivity` | Always `general` or `restricted-generalized` |
-| `bbox` | H3-generalized site spatial extent |
+| `properties.care:*` | Sensitivity, sovereignty, consent |
+| `assets.data.href` | PD/open dataset link |
 
-### ✔ DCAT Dataset (Mandatory)
+---
 
+## ✔ DCAT Dataset (v11)
 | Field | Description |
 |---|---|
-| `dct:title` | Name of artifact inventory |
-| `dct:license` | License (PD or CC-BY required) |
-| `dcat:distribution` | File download or repository reference |
-| `dct:temporal` | Occupation or cultural phase dates |
-
-### ✔ PROV-O Provenance
-
-Every dataset must include:
-
-- Original source (museum, academic archive, PD repository)  
-- Processing steps  
-- Classification methods  
-- Version history  
-- Analyst + review cycle  
+| `dct:title` | Dataset title |
+| `dct:license` | Must be PD, CC0, or CC-BY |
+| `dcat:distribution[]` | Access paths |
+| `dct:temporal` | Phase or occupation date range |
+| `dct:spatial` | Generalized footprint |
 
 ---
 
-## 🛡️ Cultural Safety (FAIR+CARE)
+## ✔ PROV-O Provenance (v11)
+Must include:
 
-Artifact datasets must respect:
-
-- **Authority to Control** — No tribal-restricted materials  
-- **Responsible Use** — Avoid sensationalizing or decontextualizing cultural objects  
-- **Ethics** — No objectification, exploitation, or colonial framing  
-- **Collective Benefit** — Data serves educational, preservation, or research goals  
-
-Sensitive coordinates MUST be generalized using **H3 levels 5–7**.
-
-Any dataset flagged as **C4 (Ethics)** or **C2 (Authority to Control)** requires tribal council review before inclusion.
+- `prov:wasDerivedFrom` (source)  
+- `prov:wasGeneratedBy` (KFM ingestion pipeline)  
+- `prov:used` (classification standards)  
+- `prov:qualifiedAttribution` (analyst + reviewer)  
+- Full chain from **source → processing → validation → publication**
 
 ---
 
-## 🧪 Data Preparation Requirements
+# 🛡 Cultural & Sovereignty Safety (v11)
 
-Each inventory must:
+Artifact inventories must **not** expose:
 
-- Be cleaned into standardized schema fields  
-- Use controlled vocabularies for material, type, decoration, cultural phase  
-- Reference classification authorities (e.g., Wedel, Lehmer, Strong)  
-- Use **UUIDs** for artifact IDs  
-- Provide **temporal bounding** (e.g., `1200–1450 CE`)  
-- Remove any provenance that reveals restricted site locations  
-- Include column-level documentation  
+- Restricted tribal heritage  
+- Ritual objects or sacred motifs  
+- Sensitive species or symbolic animals  
+- Exact findspots or provenience  
+- Contextual associations that imply sacred geography
+
+### Required Enforcement
+- H3 r7–r10 spatial generalization  
+- CARE labels embedded in metadata  
+- Sovereignty rules checked via AI Governance filters  
+- Redaction logs stored in `provenance/`  
+- Public datasets must be PD-safe  
 
 ---
 
-## 🛰️ Integration Into KFM (Pipelines & Graph)
+# 🧪 Data Preparation Requirements (v11)
 
-Artifact datasets map into KFM through:
+Artifact inventory tables must:
 
-### **Knowledge Graph (Neo4j)**  
-Nodes created:
+- Use **UUIDs** for all artifact IDs  
+- Provide controlled vocabularies:  
+  - `material`  
+  - `artifact_type`  
+  - `decoration`  
+  - `phase`  
+  - `culture`  
+- Include:  
+  - `temporal_bounds` (start, end, precision)  
+  - `context_description` (generalized)  
+  - `collection_source`  
+- Strip all restricted fields:
+  - site names  
+  - field notes  
+  - researcher personal data  
+  - unsafe media attachments
 
-- `Artifact`
-- `ArtifactType`
-- `Material`
-- `Culture`
-- `OccupationPhase`
-- `Site` (generalized)
+---
+
+# 🛰 Integration Into KFM (v11 Architecture)
+
+## Neo4j Knowledge Graph (v11)
+Nodes:
+- `Artifact`, `ArtifactType`, `Material`, `Culture`,  
+- `OccupationPhase`, `GeneralizedSite`, `StoryNode`.
 
 Relationships:
-
-- `BELONGS_TO`  
 - `FOUND_AT` (H3 region)  
+- `BELONGS_TO`  
 - `ASSOCIATED_WITH`  
 - `DATED_TO`  
+- `HAS_MATERIAL`  
 
-### **Story Nodes & Focus Mode v2**
+## Focus Mode v3
+- Uses artifact inventories to support cultural inferences  
+- AI outputs undergo:  
+  - tone audit  
+  - cultural sensitivity audit  
+  - sovereignty masking  
+- Provenance chips link each summary line to artifact evidence
 
-Artifact inventories feed:
+## Story Node v3
+- Material-culture evidence  
+- Trade network reconstructions  
+- Settlement phases  
+- Interaction spheres
 
-- Cultural-phase Story Nodes  
-- Material-culture timelines  
-- Focus Mode explanations linking artifacts to settlement patterns  
-
-All AI summaries require **tone and cultural review**.
-
-### **Map Layers**
-
-Artifact visualizations (generalized) include:
-
-- H3 artifact-density grids  
-- Material distributions  
-- Temporal spread maps  
+## Map & 3D Layers
+- Artifact density (H3)  
+- Material-typed choropleths  
+- Temporal sliders (OWL-Time)
 
 ---
 
-## 📊 Artifact Inventory Index
+# 📊 Artifact Dataset Status Matrix (v11)
 
-| Dataset | Category | Location | Status | Last Review | Notes |
+| Dataset | Category | CARE Level | Sovereignty | Status | Notes |
 |---|---|---|---|---|---|
-| `lithics/flint-hills-lithics-v1` | Lithics | `inventories/` | 🟢 Active | 2025-11 | PD dataset |
-| `ceramics/prairie-ceramics-v1` | Ceramics | `inventories/` | 🟢 Active | 2025-10 | Decoration categories validated |
-| `faunal/fauna-kansas-v1` | Faunal | `inventories/` | 🟡 Needs Review | 2025-09 | Verify sacred species exclusions |
-| `protohistoric/contact-era-v1` | Protohistoric | `inventories/` | 🔴 Hold | Pending tribal review |
+| `lithics/flint-hills-v11` | Lithics | C1 | Yes | 🟢 Active | PD dataset, H3 r7 |
+| `ceramics/prairie-v11` | Ceramics | C2 | Yes | 🟢 Active | Decorations reviewed |
+| `faunal/open-fauna-v11` | Faunal | C1 | No | 🟡 Review | Sacred species filter |
+| `protohistoric/contact-v11` | Protohistoric | C3–C4 | Yes | 🔒 Hold | Requires sovereignty signoff |
 
 ---
 
-## 🧠 Example STAC Item (Artifact Inventory)
+# 🧠 Example v11 STAC Item
 
 ~~~json
 {
   "stac_version": "1.0.0",
   "type": "Feature",
-  "id": "artifact-inventory-flint-hills-lithics-v1",
-  "bbox": [-101.2, 37.5, -95.4, 40.1],
+  "id": "artifact-inventory-flint-hills-lithics-v11",
+  "bbox": [-101.3, 37.6, -95.3, 40.1],
   "properties": {
     "kfm:phase": "Late Prehistoric",
     "care:sensitivity": "generalized",
+    "care:sovereignty": "protected",
+    "kfm:generalization": "H3-r7",
     "datetime": null
   },
   "assets": {
     "data": {
-      "href": "https://example.com/artifacts/flint_hills_lithics_v1.csv",
+      "href": "https://example.org/artifacts/flint_hills_lithics_v11.csv",
       "type": "text/csv",
       "roles": ["data"]
     }
@@ -236,19 +274,22 @@ Artifact visualizations (generalized) include:
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Archaeology WG · FAIR+CARE Council | Created artifact inventories index; added CARE safeguards, metadata rules, and KFM graph/visualization integration details |
-| v10.0.0 | 2025-11-10 | Archaeology Dataset Team | Initial structure outline |
+| Version | Date | Summary |
+|--------:|------|---------|
+| **v11.0.0** | 2025-11-24 | Full v11 rebuild · sovereignty enforcement · H3 r7–r10 rules · cultural safety expansion · PROV-O upgrades |
+| v10.4.0 | 2025-11-17 | v10 archaeology dataset framework |
+| v10.0.0 | 2025-11-10 | Initial structure |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+FAIR+CARE Certified · Sovereignty-Governed  
+KFM-MDP v11 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω  
+
 [⬅ Back to Archaeology Datasets](../README.md)
 
 </div>
