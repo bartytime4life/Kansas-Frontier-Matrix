@@ -1,23 +1,77 @@
 ---
 title: "📍 Kansas Frontier Matrix — Site Gazetteer Datasets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/site-gazetteers/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
+version: "v11.0.0"
+last_updated: "2025-11-25"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/archaeology-site-gazetteers-v1.json"
-governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
+previous_version_hash: "<previous-sha256>"
+doc_uuid: "urn:kfm:archaeology:site-gazetteers:v11.0.0"
+semantic_document_id: "kfm-doc-arch-site-gazetteers"
 doc_kind: "Dataset Category"
 intent: "archaeology-site-gazetteers"
+role: "dataset-governance"
+
+sbom_ref: "../../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/archaeology-site-gazetteers-v4.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "CARE-Compliant"
+sensitivity_level: "Generalized"
+public_exposure_risk: "Low"
+indigenous_data_flag: true
+cultural_sensitivity: "Moderate"
+risk_category: "Low"
+redaction_required: true
+
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/site-gazetteers/README.md@v10.4.0"
+  - "docs/analyses/archaeology/datasets/site-gazetteers/README.md@v10.0.0"
+
+ontology_alignment:
+  cidoc: "E53 Place"
+  schema_org: "Place"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Collection"
+  geosparql: "geo:FeatureCollection"
+
+json_schema_ref: "../../../../../schemas/json/archaeology-site-gazetteers-v11.json"
+shape_schema_ref: "../../../../../schemas/shacl/archaeology-site-gazetteers-v11.shape.ttl"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summaries"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "speculative additions"
+  - "unverified historical claims"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+jurisdiction: "Kansas / United States"
+classification: "Public Document"
+lifecycle_stage: "stable"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next major archaeology datasets release"
 ---
 
 <div align="center">
@@ -26,187 +80,174 @@ care_label: "CARE-Compliant"
 `docs/analyses/archaeology/datasets/site-gazetteers/README.md`
 
 **Purpose:**  
-Define, index, and govern all **archaeological site gazetteer datasets** used in the Kansas Frontier Matrix (KFM).  
-Site gazetteers provide **generalized**, FAIR+CARE–aligned references for:
-
-- Prehistoric, protohistoric, and historic site locations  
-- Cultural-phase place associations  
-- Spatial units for analysis (H3 grids, generalized centroids)  
-- Focus Mode v2 entity grounding  
-- Story Node map anchors  
-- Archaeological landscape reconstruction  
-
-Only **generalized, open-license, non-restricted** site information is permitted.
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../standards/faircare.md)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../../../releases/v10.4.0/manifest.zip)
+Provide a **FAIR+CARE-compliant**, sovereignty-respecting, and STAC/DCAT-aligned index of **generalized archaeological site gazetteers** used across the Kansas Frontier Matrix (KFM).  
+These datasets supply the **spatial anchors** for Focus Mode v3, Story Node v3, cultural-phase modeling, and all archaeology-driven geospatial reasoning.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview
 
-Site gazetteers in KFM include:
+Site Gazetteers represent **culturally safe**, **generalized**, and **governed** archaeological place references.  
+They intentionally exclude sensitive details while preserving:
 
-- Generalized archaeological site coordinates (H3 grid only)  
-- Public-domain or academic registry sites  
-- Tribal-approved generalized cultural locations  
-- GNIS-linked features relevant to archaeological interpretation  
-- Gazetteer-style entries describing cultural phases, site types, and confidence levels  
+- Cultural-phase significance  
+- Spatial reasoning capability (H3 generalization)  
+- Temporal alignment (OWL-Time)  
+- Provenance and licensing transparency  
+- CARE + sovereignty compliance  
+- Cross-domain compatibility (hydrology, ecology, paleoenvironment)
 
-These datasets **do not** include:
+Forbidden in v11:
 
-- Precise coordinates of protected or sensitive sites  
-- Burial locations  
-- Ceremonial landscapes  
-- Restricted tribal heritage data  
-- Locational metadata obtained under confidentiality  
+- Exact coordinates  
+- Burial grounds  
+- Ceremonial/sacred sites  
+- Restricted tribal knowledge  
+- Proprietary/confidential survey data  
+- Any site lacking confirmed provenance or consent  
+- Any dataset with non-CARE-compliant origins
 
-All spatial precision is reduced using **H3 level 5–7**, depending on sensitivity.
+The v11 version enforces **KFM Sovereignty Mode** + **Generalization Mode** (H3 r5–r7).
 
 ---
 
-## 🗂️ Directory Layout
+# 📦 Directory Structure (Stable v11 Format)
 
-~~~text
+~~~~text
 docs/analyses/archaeology/datasets/site-gazetteers/
-├── README.md                          # This file
-├── gazetteers/                        # Cleaned, generalized site lists
-├── stac/                              # STAC Items & Collections
-├── metadata/                          # DCAT + CARE metadata
-└── provenance/                        # PROV-O lineage logs
-~~~
+├── README.md            # This file
+├── gazetteers/          # Cleaned, generalized site lists (H3-only)
+├── stac/                # STAC Items/Collections (v11 schema)
+├── metadata/            # DCAT, CARE, sensitivity, temporal metadata
+└── provenance/          # PROV-O lineage logs + processing history
+~~~~
 
 ---
 
-## 🧭 Gazetteer Dataset Categories
+# 🧭 Dataset Classification (v11)
 
-| Category | Description | Allowed | Notes |
-|---|---|---|---|
-| **Public-Domain Site Lists** | GNIS + PD archaeological site records | ✅ | Must be generalized |
-| **Academic Gazetteers (PD)** | University research gazetteers (open-license) | ✅ | Requires citation |
-| **Tribal-Reviewed Generalized Locations** | Sites approved for high-level public display | ⚠️ | Must follow tribal guidance |
-| **Historic Sites** | Public historic register data | ✅ | Usually low sensitivity |
-| **Cultural Phase Anchors** | Canonical sites tied to cultural periods | ⚠️ | Must be generalized; no coordinates |
-
-Forbidden categories:
-
-- Restricted site databases  
-- Confidential site files  
-- Raw survey points or high-precision coordinates  
-- Sensitive ceremonial site information  
+| Category | Description |
+|---------|-------------|
+| **Public-Domain Sites** | GNIS + public-domain archaeology entries (generalized required) |
+| **Open Academic Gazetteers** | University datasets with PD/CC-BY licensing |
+| **Tribal-Reviewed Generalized Sites** | High-level culturally safe boundaries; no specific coordinates |
+| **Historic Register Sites** | National/State historic registers (already public) |
+| **Cultural Phase Anchors** | Canonical archaeological sites tied to cultural periods (generalization mandatory) |
 
 ---
 
-## 📦 Required Metadata (All Gazetteers)
+# 🧬 Metadata Requirements (v11)
 
-### ✔ STAC 1.0 Item Requirements
+## STAC 1.0 / KFM-STAC v11 Fields (Mandatory)
 
 | Field | Description |
-|---|---|
+|-------|-------------|
 | `id` | Gazetteer dataset ID |
-| `bbox` | H3-generalized bounding box |
-| `geometry` | Generalized polygons or centroids |
-| `properties.kfm:site_type` | e.g., `"village"`, `"camp"`, `"resource"`, `"mound"` |
-| `care:sensitivity` | `"generalized"`, `"restricted-generalized"` |
-| `assets` | URLs to gazetteer files |
-| `kfm:provenance` | Processing lineage reference |
+| `bbox` | H3 generalized bounding region |
+| `geometry` | MultiPoint / MultiPolygon of generalized cells |
+| `kfm:site_type` | Cultural classification |
+| `kfm:culture_phase` | Cultural/chronological period |
+| `care:sensitivity` | `"generalized"` or `"restricted-generalized"` |
+| `assets.gazetteer.href` | Link to CSV/GeoJSON site list |
+| `kfm:provenance` | PROV-O reference file |
 
-### ✔ DCAT 3.0 Metadata
+## DCAT 3.0 Requirements (Mandatory)
 
-| Field | Example |
-|---|---|
-| `dct:title` | "Kansas Archaeological Gazetteer (Generalized)" |
-| `dct:license` | `"CC-BY 4.0"` |
-| `dcat:distribution` | Link to generalized site list |
-| `dct:temporal` | Cultural/historic periods linked to sites |
-| `dcat:keyword` | `["archaeology", "gazetteer", "site"]` |
+| Field | Required |
+|-------|----------|
+| `dct:title` | Name of dataset |
+| `dct:license` | CC-BY or PD only |
+| `dcat:distribution` | GeoJSON/CSV/H3 list |
+| `dct:temporal` | OWL-Time interval or multi-period |
 
-### ✔ CARE Requirements
+## CARE + Sovereignty Requirements
 
-- Coordinates generalized to H3  
-- Cultural roles documented  
-- Tribal review if applicable  
-- Culturally sensitive sites marked `"restricted"` even when generalized  
-- Avoid colonial framing (“discovery”, “primitive”, etc.)
+- All coordinates → **H3 grid only**  
+- Restricted sites → **excluded or generalized**  
+- Tribal-reviewed datasets → labeled with consent metadata  
+- No colonial framing or decontextualized language  
+- Cultural roles + risk context must be included  
+- All datasets receive `care_label` + `sensitivity_level` tags  
 
 ---
 
-## 🧪 Data Preparation Requirements
+# 🧪 Data Preparation (v11 Rules)
 
 All site gazetteers must:
 
-- Use **standard schema fields**  
-  - `site_id`, `name`, `culture_phase`, `site_type`, `location_h3`, `confidence_level`, `sources`
-- Include **temporal data** (OWL-Time)
-- Provide full **citation and provenance**
-- Remove or generalize any sensitive descriptors
-- Include shapefiles/GeoJSON only in generalized form
-- Validate against:
-  - CIDOC-CRM for cultural place entities  
-  - STAC schema for spatial representation  
-  - CARE schema for sensitivity handling  
+- Use schema fields:  
+  `site_id`, `name`, `culture_phase`, `site_type`, `location_h3`, `confidence_level`, `sources`
+- Include OWL-Time temporal fields  
+- Include full PROV-O lineage  
+- Strip all raw coordinates  
+- Validate against:  
+  - STAC v11 schema  
+  - DCAT 3.0  
+  - CIDOC-CRM (E53, E7, E27 mappings)  
+  - CARE/Sovereignty rules  
+- Pass FAIR+CARE Council review
 
-Generalization rules:
+Generalization thresholds:
 
-- All sensitive coordinates → convert to H3(level 5–7)  
-- Sites inside tribal boundaries require review  
-- No raw point locations in any dataset  
+- High sensitivity → H3 r7  
+- Medium sensitivity → H3 r6  
+- Low sensitivity → H3 r5  
 
 ---
 
-## 🛰️ Integration Into KFM Systems
+# 🛰 Integration in KFM (Focus Mode · Story Nodes · Graph)
 
-### **Knowledge Graph (Neo4j)**
+## Knowledge Graph (Neo4j)
 
-Gazetteers generate:
+Nodes:
 
-Nodes:  
-- `Site`  
-- `CulturalPhase`  
-- `PlaceName`  
-- `LandscapeUnit`  
+- `Site`
+- `CulturalPhase`
+- `PlaceName`
+- `LandscapeUnit`
 
-Relationships:  
-- `LOCATED_AT` (via H3 region)  
-- `BELONGS_TO`  
-- `ASSOCIATED_WITH`  
-- `MENTIONED_IN` (for documents)  
+Relationships:
 
-### **Story Nodes**
+- `LOCATED_AT` (H3 region)
+- `BELONGS_TO`
+- `ASSOCIATED_WITH`
+- `MENTIONED_IN`
+
+## Story Nodes v3
+
+Gazetteers supply:
+
+- Cultural anchors  
+- Spatial grounding for narratives  
+- Time-aligned cultural sequences  
+
+## Focus Mode v3
+
 Gazetteers provide:
 
-- Geographic anchors  
-- Cultural timeline placement  
-- High-level summaries for prehistoric/historic phases  
-
-### **Focus Mode v2**
-Gazetteers support:
-
-- Entity grounding  
-- Spatial filtering  
-- Cultural context statements  
-- CARE tone guarantees  
+- Spatial context  
+- Cultural-phase relevance  
+- Provenance chips  
+- Sovereignty-aware tone filters  
 
 ---
 
-## 📊 Dataset Index
+# 📊 Dataset Index (v11)
 
-| Dataset | Category | Location | Status | Last Review | Notes |
-|---|---|---|---|---|---|
-| `gnis/archaeology-gnis-v1` | Public-Domain List | `gazetteers/` | 🟢 Active | 2025-11 | GNIS-linked features curated |
-| `academic/open-kansas-sites-v1` | Academic PD | `gazetteers/` | 🟢 Active | 2025-10 | Cultural phases added |
+| Dataset | Category | Location | Status | Review | Notes |
+|--------|----------|----------|--------|--------|-------|
+| `gnis/archaeology-gnis-v1` | Public-Domain | `gazetteers/` | 🟢 Active | 2025-11 | GNIS-linked, generalized |
+| `academic/open-kansas-sites-v1` | Academic PD | `gazetteers/` | 🟢 Active | 2025-10 | Culture phases added |
 | `tribal/generalized-list-v1` | Tribal-Reviewed | `gazetteers/` | 🟡 Needs Review | 2025-09 | Awaiting updated consent policy |
-| `historic/registered-sites-v1` | Historic Sites | `gazetteers/` | 🟢 Active | 2025-11 | Public register compliant |
+| `historic/registered-sites-v1` | Historic | `gazetteers/` | 🟢 Active | 2025-11 | Public register compliant |
 
 ---
 
-## 🧠 Example STAC Item (Generalized Archaeological Gazetteer)
+# 🧠 Example STAC Item (v11 Format)
 
-~~~json
+~~~~json
 {
   "stac_version": "1.0.0",
   "type": "Feature",
@@ -214,7 +255,7 @@ Gazetteers support:
   "bbox": [-101.2, 37.4, -95.7, 40.1],
   "geometry": {
     "type": "MultiPoint",
-    "coordinates": [[/* generalized */]]
+    "coordinates": [[ "H3-R7-GENERALIZED" ]]
   },
   "properties": {
     "kfm:site_type": "village",
@@ -230,23 +271,24 @@ Gazetteers support:
     }
   }
 }
-~~~
+~~~~
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
 | Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Archaeology WG · FAIR+CARE Council | Created site gazetteer dataset index; added CARE rules, STAC/DCAT requirements, and KFM integration |
-| v10.0.0 | 2025-11-10 | Archaeology Dataset Team | Initial directory structure + definitions |
+|---------|------|--------|---------|
+| v11.0.0 | 2025-11-25 | Archaeology WG · FAIR+CARE Council | Full regeneration under KFM-MDP v11; added sovereignty mode, H3 generalization tiers, enriched ontology links, telemetry v4, and stability-safe fencing |
+| v10.4.0 | 2025-11-17 | Archaeology WG | Previous version (pre-v11 rules) |
+| v10.0.0 | 2025-11-10 | Archaeology Dataset Team | Initial directory |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.0 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 [⬅ Back to Archaeology Datasets](../README.md)
 
 </div>
