@@ -1,141 +1,165 @@
 ---
 title: "🏺 Kansas Frontier Matrix — Archaeology Dataset Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
-review_cycle: "Biannual / FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Biannual · FAIR+CARE Council · Tribal Sovereignty Review Board"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/archaeology-datasets-v1.json"
-governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
+previous_version_hash: "<previous-version-hash>"
+doc_guid: "urn:kfm:doc:archaeology-datasets-index-v11.0.0"
+doc_kind: "Domain Dataset Index"
+intent: "archaeology-datasets"
+semantic_document_id: "kfm-doc-analyses-archaeology-datasets"
+category: "Archaeology · Cultural Landscapes · Heritage Data"
+
+sbom_ref: "../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/archaeology-datasets-v11.json"
+energy_schema: "../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
-doc_kind: "Dataset Index"
-intent: "archaeology-datasets"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+care_label: "High-Sensitivity · Sovereignty-Restricted"
+sensitivity: "Cultural / Archaeology / Heritage"
+indigenous_data_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
 ---
 
 <div align="center">
 
-# 🏺 **Kansas Frontier Matrix — Archaeology Dataset Index**  
+# 🏺 **Kansas Frontier Matrix — Archaeology Dataset Index (v11)**  
 `docs/analyses/archaeology/datasets/README.md`
 
+**FAIR+CARE Certified · Sovereignty-Aligned  
+Diamond⁹ Ω · Crown∞Ω Ultimate Certified**
+
 **Purpose:**  
-Provide a FAIR+CARE–aligned, MCP-compliant index of all archaeological datasets integrated into the Kansas Frontier Matrix (KFM).  
-Datasets span **prehistoric, protohistoric, and historic** periods and include **site gazetteers, artifact inventories, stratigraphic data, geophysical surveys, environmental samples**, and **cultural landscape maps**.
-
-This index ensures consistent documentation, provenance, ethical handling of sensitive cultural information, and compatibility with **Story Nodes**, **Focus Mode**, **Neo4j graph ingestion**, and **STAC/DCAT metadata standards**.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../standards/faircare.md)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../../releases/v10.4.0/manifest.zip)
+Define the *complete, governed, sovereignty-aligned dataset index* for all archaeological data in KFM v11.  
+Includes: remote sensing, geophysical surveys, cultural landscapes, artifact inventories, historical maps, NER-extracted archival entities, sovereignty-governed heritage records, and their **STAC/DCAT metadata**, **provenance chains**, and **H3-generalized spatial footprints**.
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 v11 Overview
 
-This directory contains all **archaeological datasets**, metadata manifests, and prepared derivatives used in KFM’s:
+The KFM Archaeology Datasets Layer integrates multi-source archaeological evidence:
 
-- **Archaeology Analysis Pipeline**
-- **Cultural Landscape Reconstruction**
-- **Prehistoric + Historic Timeline Layers**
-- **AI-assisted Focus Mode (v2)**  
-- **Story Node generation**  
-- **Geo-temporal visualizations (MapLibre + Cesium)**  
+- 🛰 **LiDAR + SAR + thermal IR**  
+- 🧭 **Historic plats, treaties, surveys, and diaries**  
+- 🧬 **OCR → NER → GeoLink entity datasets**  
+- 🌿 **Paleoenvironmental proxies**  
+- 🧱 **Stratigraphic layers and soil horizons**  
+- 🧲 **Magnetometry, resistivity, GPR (governed)**  
+- 🏞 **Settlement landscapes and cultural corridors**  
+- 🔐 **CARE & Sovereignty-restricted cultural data**
 
-Each dataset must include:
+All archaeology datasets in v11 must be:
 
-- **STAC Item or Collection**
-- **DCAT metadata**
-- **CARE attributes** (consent, sensitivity classification, cultural rules)
-- **Checksum & provenance chain**
-- **Spatial extent, temporal coverage, and CRS specification**
+- **FAIR+CARE certified**
+- **Sovereignty governed**
+- **Spatially generalized (H3 r7–r9)**
+- **Provenance-linked (PROV-O)**
+- **STAC/DCAT represented**
+- **Ethically validated before publication**
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (v11)
 
-~~~text
+```text
 docs/analyses/archaeology/datasets/
-├── README.md                       # This file
-├── site-gazetteers/                # GNIS + academic site lists + tribal heritage mappings
-├── artifact-inventories/           # Itemized artifact datasets (public-domain only)
-├── stratigraphy/                   # Stratigraphic logs, soil layers, profiles
-├── paleoenvironment/               # Pollen, charcoal, fauna, eco-samples (open datasets)
-├── geophysics/                     # Magnetometry, GPR, LiDAR-derived features
-├── cultural-landscapes/            # Ancient trails, settlements, mound distributions
-├── stac/                           # STAC Items/Collections for all archaeology data
-└── metadata/                       # DCAT + CARE metadata, provenance logs
-~~~
+├── README.md
+│
+├── lidar/                         # DEM derivatives, hillshade, slope, curvature
+├── sar/                           # SAR moisture & coherence signals
+├── geophysics/                    # Magnetometry, GPR, resistivity (governed)
+│   ├── magnetometry/
+│   ├── gpr/
+│   └── resistivity/
+│
+├── historical_maps/               # Plats, treaty boundaries, surveys, map scans
+├── manuscripts/                   # NER-extracted archival entities (OCR → NER → STAC)
+├── stratigraphy/                  # Soil horizons, KGS & USDA profiles
+├── paleoenvironment/              # Pollen, charcoal, fauna, lake cores
+├── cultural_landscapes/           # Trails, settlements, mound distributions
+├── sovereignty/                   # High-sensitivity Indigenous datasets (generalized)
+│
+├── stac/                          # STAC Items/Collections for all archaeology data
+└── metadata/                      # DCAT + CARE metadata + provenance bundles
+```
 
 ---
 
-## 🧭 Dataset Categories & Descriptions
+# 🧭 Dataset Categories (v11 Expanded)
 
-| Category | Description | Examples | Notes |
-|---|---|---|---|
-| **Site Gazetteers** | Tabular or spatial datasets listing known archaeological sites | GNIS feature lists, academic site identifiers | Sensitive coordinates generalized via **H3 mosaic** per CARE |
-| **Artifact Inventories** | Public-domain artifact counts, lithics, ceramics | WSU open-access catalogs, museum PD datasets | No restricted or provenance-sensitive items included |
-| **Stratigraphy** | Soil horizons, excavation layer logs | KGS open soil layers, USDA soil pits | Used for reconstructing occupational phases |
-| **Paleoenvironment** | Environmental proxies | Pollen cores, lake stratigraphy, fauna | Tied into climate + ecosystem timelines |
-| **Geophysics** | Non-invasive survey datasets | Magnetometry PNGs/GeoTIFFs, GPR slices | Generalized for H3 grid privacy |
-| **Cultural Landscapes** | Settlement distributions, ancient roads, territorial extents | Great Bend aspect distributions, protohistoric routes | Includes tribal requests for generalized boundaries |
-
----
-
-## 🌐 External Data Sources (Open Access Only)
-
-| Source | Domain | URL | Notes |
-|---|---|---|---|
-| **Open Context** | Global archaeological datasets | https://opencontext.org | CC-BY, structured JSON-LD |
-| **ADS (UK Archaeology Data Service)** | Surveys & archives | https://archaeologydataservice.ac.uk | Select datasets relevant for comparative analysis |
-| **Kansas Historical Society – Kansas Memory** | Photos, artifacts, documents | https://kansasmemory.org | Only PD/licensed materials included |
-| **USGS / KGS** | Soil, stratigraphy, geologic data | https://kgs.ku.edu | Basis for landscape reconstructions |
-| **Smithsonian Open Access** | Digitized artifacts | https://si.edu/openaccess | CC0 / CC-BY datasets only |
-
-_All restricted, tribal, or culturally-sensitive datasets must go through FAIR+CARE review before ingestion._
+| Category | Description | Sensitivity | CARE Rules |
+|---------|-------------|-------------|------------|
+| **LiDAR / SAR** | Landscape geometry + soil moisture anomalies | Medium | Generalize hillshade derivatives |
+| **Geophysics** | Magnetometry / GPR / resistivity | High | H3 r8–r10 generalization; sovereignty board approval |
+| **Historical Maps** | Treaty, plats, surveys | Low–High | Treaty data requires contextual CARE notes |
+| **Manuscripts → NER** | People, places, events extracted from text | Medium | Remove personal identifiers; cultural review |
+| **Stratigraphy** | Soil profiles, depositional contexts | Low | Standard FAIR rules |
+| **Paleoenvironment** | Pollen, fauna, charcoal, cores | Low | Ecological only; safe |
+| **Cultural Landscapes** | Settlements, trails, interaction spheres | High | H3 generalization; sovereignty masking |
+| **Sovereignty Datasets** | Tribal heritage datasets | Highest | Strict CARE; no public coordinates |
 
 ---
 
-## 🧩 Metadata & STAC Requirements
+# 🌐 Required Metadata (v11 Standards)
 
-Each dataset must include:
+Every dataset must include:
 
-| Requirement | Standard | Status |
-|---|---|---|
-| **Spatial Extent** | GeoJSON / bbox | Required |
-| **Temporal Coverage** | OWL-Time (`start`, `end`, `precision`) | Required |
-| **CRS** | EPSG:4326 default | Required |
-| **Checksum** | SHA-256 | Required |
-| **Provenance** | PROV-O (`wasDerivedFrom`) | Required |
-| **CARE Flags** | Sensitivity, consent, cultural notes | Required |
-| **STAC Item** | `stac_version: 1.0.0` | Required |
-| **DCAT Dataset** | `dct:title`, `dct:license`, `dcat:distribution` | Required |
+| Requirement | Standard |
+|------------|----------|
+| Spatial Extent | GeoJSON bbox + H3 footprint |
+| Temporal Extent | OWL-Time interval + precision |
+| CRS | EPSG:4326 (required) |
+| Checksum | SHA-256 |
+| Provenance | PROV-O bundle |
+| Cultural Sensitivity | CARE flags + sovereignty notes |
+| STAC Item | `stac_version: 1.0.0` |
+| DCAT Dataset | `dcat:Dataset` |
 
-Example STAC snippet:
+Example STAC Item (properly nested for v11):
 
 ~~~json
 {
   "stac_version": "1.0.0",
   "type": "Feature",
-  "id": "archaeology-site-gazetteer-v1",
-  "bbox": [-102.0, 37.0, -94.6, 40.0],
+  "id": "archaeology-cultural-landscapes-v11",
+  "bbox": [-102, 37, -94.6, 40],
   "properties": {
-    "datetime": null,
+    "kfm:domain": "archaeology",
     "kfm:temporal": "multi-period",
-    "care:sensitivity": "generalized"
+    "care:sensitivity": "high",
+    "care:sovereignty": "protected",
+    "kfm:generalization": "H3-r8"
   },
   "assets": {
-    "data": {
-      "href": "https://example.com/site-gazetteer.geojson",
+    "footprint": {
+      "href": "https://example.com/cultural_landscape_h3.geojson",
       "type": "application/geo+json",
       "roles": ["data"]
     }
@@ -145,72 +169,99 @@ Example STAC snippet:
 
 ---
 
-## ⚖️ FAIR+CARE Cultural Responsibility
+# 🧩 How These Datasets Feed KFM v11
 
-Archaeological datasets **must** adhere to:
+## 🔄 Neo4j Knowledge Graph
+Nodes:
+- `Site`, `Artifact`, `Culture`, `OccupationPhase`,  
+- `LandscapeUnit`, `GeomorphUnit`, `HydroUnit`,  
+- `StoryNode`, `Document`, `Event`.
 
-- **CARE Principles** (Collective Benefit, Authority to Control, Responsibility, Ethics)  
-- **Tribal consultation requirements**  
-- **H3 generalization** for any culturally sensitive coordinates  
-- **Ethical narrative framing** in Focus Mode + Story Nodes
+Edges:
+- `LOCATED_AT`, `INFERRED_FROM`,  
+- `OCCURRED_IN`, `ASSOCIATED_WITH`,  
+- `MENTIONED_IN`, `HAS_PROVENANCE`.
 
-Forbidden inclusions:
+## 🧠 Focus Mode v3
+- AI summaries with cultural sensitivity gating  
+- Explainability overlays (what data influenced what insight)  
+- Sovereignty-aware behavior
 
-- Exact coordinates for sacred sites  
-- Restricted tribal heritage records  
-- Provenance-uncertain artifacts  
-- Human remains or sensitive burial records  
-
----
-
-## 📊 Dataset Status Tracking
-
-| Dataset | Category | Status | Last Review | Notes |
-|---|---|---|---|---|
-| `site-gazetteers/statewide-v1` | Sites | 🟢 Active | 2025-11 | Coordinates generalized |
-| `stratigraphy/flint-hills-v2` | Soil/Stratigraphy | 🟢 Active | 2025-10 | STAC + DCAT validated |
-| `paleoenvironment/charcoal-cores-v1` | Eco | 🟡 Needs Review | 2025-09 | Add CARE consent info |
-| `artifact-catalogs/ks-museum-v1` | Artifacts | 🟢 Active | 2025-11 | Public-domain verified |
+## 🗺 MapLibre & Cesium Layers
+- H3-generalized footprints  
+- Cultural corridors  
+- Geophysics anomaly overlays  
+- Historical alignments  
 
 ---
 
-## 🧠 How Datasets Integrate Into KFM
+# 🔐 CARE + Sovereignty Enforcement
 
-Archaeology datasets feed into:
+## Prohibited Without Review
+- Exact coordinates of sacred sites  
+- Burial mounds / human remains  
+- Restricted tribal archives  
+- Non-consensual heritage datasets  
+- Any geometry below H3 r7  
 
-- **Neo4j Knowledge Graph**  
-  - Nodes: `Site`, `Artifact`, `Culture`, `OccupationPhase`, `StratLayer`, `Landscape`  
-  - Relationships: `OCCURRED_IN`, `BELONGS_TO`, `ASSOCIATED_WITH`, `LOCATED_AT`
-
-- **Story Nodes**  
-  - Time-anchored site narratives  
-  - Cultural-landscape evolution sequences  
-
-- **Focus Mode v2**  
-  - AI summaries with cultural safety filters  
-  - Provenance chips and inclusivity scoring  
-
-- **Map Layers**  
-  - Site density heatmaps  
-  - Cultural region polygons  
-  - Stratigraphic layers  
-  - LiDAR-derived mound features  
+## Required
+- CARE annotation in metadata  
+- Sovereignty notice chips in UI  
+- Generalization logs  
+- Consent or cultural custodial review  
 
 ---
 
-## 🕰️ Version History
+# 📊 Dataset Status Summary (v11)
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | FAIR+CARE + Archaeology Working Group | Added dataset index, STAC/DCAT requirements, cultural safety guidance; fixed all box-breaker issues |
-| v10.0.0 | 2025-11-10 | Archaeology Group | Initial dataset structure proposal |
+| Dataset | Category | CARE Level | Sovereignty | Status | Notes |
+|--------|----------|------------|-------------|--------|-------|
+| `statewide-gazetteer-v11` | Gazetteers | Medium | Yes | 🟢 Active | Coordinates generalized |
+| `magnetometry-ks-river-v11` | Geophysics | High | Yes | 🟡 Review | Needs sovereignty re-check |
+| `paleo-charcoal-v11` | Environment | Low | No | 🟢 Active | Clean & FAIR |
+| `protohistoric-routes-v11` | Cultural Landscapes | High | Yes | 🟢 Active | H3 r8 geometry |
+
+---
+
+# 🧾 Example v11 Dataset Provenance Record
+
+```json
+{
+  "id": "arch_dataset_v11_protohistoric_routes",
+  "checksum_sha256": "a0c4ce5012bd...",
+  "care_level": "high",
+  "sovereignty_protected": true,
+  "generalization_method": "H3-r8",
+  "derived_from": [
+    "historical_maps/1850_plats.tif",
+    "manuscripts/diaries_ocr_v4.json"
+  ],
+  "validated_by": [
+    "FAIR+CARE Council",
+    "Tribal Sovereignty Review Board"
+  ],
+  "timestamp": "2025-11-24T14:00:00Z"
+}
+```
+
+---
+
+# 🕰 Version History
+
+| Version | Date | Summary |
+|--------:|------|---------|
+| **v11.0.0** | 2025-11-24 | Full v11 rebuild; sovereignty dataset class; expanded STAC/DCAT; H3 r7–r10 rules; cultural safety expansion. |
+| v10.4.0 | 2025-11-17 | v10 final: dataset index, STAC/DCAT requirements. |
+| v10.0.0 | 2025-11-10 | Initial dataset structure. |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[⬅ Back to Archaeology Analysis](../README.md)
+FAIR+CARE Certified · Sovereignty Aligned  
+MCP-DL v6.3 · KFM-MDP v11 · Diamond⁹ Ω / Crown∞Ω  
+
+[⬅ Back to Archaeology Analyses](../README.md)
 
 </div>
