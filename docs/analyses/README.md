@@ -1,184 +1,252 @@
----
-title: "📘 Kansas Frontier Matrix — Analyses Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "docs/analyses/README.md"
-version: "v10.2.2"
-last_updated: "2025-11-10"
-review_cycle: "Quarterly / FAIR+CARE Council"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.2.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.2.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/analyses-overview-v3.json"
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
----
+---  
+title: "📘 Kansas Frontier Matrix — Analyses Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"  
+path: "docs/analyses/README.md"  
+version: "v11.0.0"  
+last_updated: "2025-11-24"  
+release_stage: "Stable / Governed"  
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"  
+commit_sha: "<latest-commit-hash>"  
+previous_version_hash: "<previous-version-hash>"  
+doc_uuid: "urn:kfm:doc:analyses-overview-v11.0.0"  
+semantic_document_id: "kfm-doc-analyses-overview"  
+doc_kind: "Overview"  
+intent: "analyses-index"  
+lifecycle: "LTS"  
+
+sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"  
+manifest_ref: "../../../releases/v11.0.0/manifest.zip"  
+telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"  
+telemetry_schema: "../../../schemas/telemetry/analyses-overview-v4.json"  
+
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"  
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"  
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"  
+
+license: "CC-BY 4.0"  
+mcp_version: "MCP-DL v6.3"  
+markdown_protocol_version: "KFM-MDP v11.0"  
+ontology_protocol_version: "KFM-OP v11.0"  
+pipeline_contract_version: "KFM-PDC v11.0"  
+
+fair_category: "F1-A1-I1-R1"  
+care_label: "Public · Low-Risk"  
+sensitivity: "General"  
+risk_category: "Low"  
+redaction_required: false  
+
+machine_extractable: true  
+accessibility_compliance: "WCAG 2.1 AA"  
+classification: "Public Document"  
+jurisdiction: "United States · Kansas"  
+immutability_status: "version-pinned"  
+---  
 
 <div align="center">
 
-# 📘 **Kansas Frontier Matrix — Analyses Overview**
-`docs/analyses/README.md`
+# 📘 **Kansas Frontier Matrix — Analyses Overview (v11.0.0)**  
+`docs/analyses/README.md`  
 
 **Purpose:**  
-Provide a comprehensive directory and governance summary for all analytical frameworks and workflows within the **Kansas Frontier Matrix (KFM)**.  
-Each analytical stream—hydrology, climatology, geology, ecology, and historical-environmental correlation—adheres to **FAIR+CARE**, **ISO 19115**, and **MCP-DL v6.3** standards for reproducibility, sustainability, and ethical governance.
+Provide the **canonical entry point** for all analytical domains within the **Kansas Frontier Matrix (KFM)** — the  
+environmental, historical, geospatial, ecological, and cross-domain research system built under **Diamond⁹ Ω /  
+Crown∞Ω** governance.  
 
-[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Analyses-orange)](../../../docs/standards/README.md)
-[![Status](https://img.shields.io/badge/Status-Active_Build-brightgreen)](../../../releases/)
+All analytical workflows follow:  
+- **FAIR+CARE governance**  
+- **ISO 19115 / ISO 50001 / ISO 14064 sustainability**  
+- **MCP-DL v6.3 reproducibility standards**  
+- **KFM-MDP v11 formatting & metadata**  
+- **KFM-OP v11 ontology alignment**  
+
 </div>
 
 ---
 
-## 🧭 Overview
+# 🧭 Overview
 
-The **Analyses Layer** consolidates all domain-specific and cross-domain research modules within the KFM ecosystem.  
-Each analytical pipeline includes:
-- **datasets/** — FAIR+CARE-registered raw and derived data  
-- **methods/** — reproducible workflows and algorithms  
-- **results/** — validated outputs and visualizations  
-- **metadata/** — provenance and telemetry tracking  
+The **Analyses Layer** is where KFM transforms **data** into **insight**.  
+It integrates:
 
-All workflows follow the **NASA-grade structured analytical model** with sustainability metrics and energy-carbon tracking through ISO 50001 telemetry.
+- Hydrology & watershed analysis  
+- Climatology & anomaly modeling  
+- Geology & geophysics  
+- Ecology & biodiversity intelligence  
+- Historical–environmental correlation  
+- Cross-domain synthesis and multi-modal reasoning  
+
+Every analysis is:
+
+- **Versioned**  
+- **Checksum-verified**  
+- **Sustainability-audited**  
+- **Linked to STAC/DCAT datasets**  
+- **Governed under FAIR+CARE**  
+
+Telemetry from each workflow (energy, carbon, runtime, ethics status) is published into  
+`releases/v11.0.0/focus-telemetry.json`.
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (Aligned · ASCII · Annotated)
 
-```
-docs/analyses/
-├── README.md                                   # This document
-├── hydrology/                                  # Hydrology, drought, and flood analytics
+~~~text
+docs/analyses/                          # Root of all analytical domains
+│
+├── README.md                           # This v11 overview file
+│
+├── hydrology/                          # 🌊 Hydrology & streamflow analytics
+│   ├── README.md                       # Domain overview
+│   ├── datasets/                       # STAC/DCAT-indexed hydrology datasets
+│   ├── methods/                        # Drought-flood models, ETL, harmonization
+│   ├── results/                        # Derived metrics, visualizations
+│   └── metadata/                       # Lineage + FAIR+CARE registry
+│
+├── climatology/                        # 🌦 Climate trends & future projections
 │   ├── README.md
-│   ├── drought-flood-correlation/
-│   │   ├── datasets/
-│   │   ├── methods/
-│   │   ├── results/
-│   │   └── metadata/
-├── climatology/                               # Climate trend and projection analyses
-│   ├── README.md
-│   ├── datasets/
-│   ├── methods/
+│   ├── datasets/                       # Climate rasters (NetCDF/COG)
+│   ├── methods/                        # Anomaly models, heat index, teleconnections
 │   ├── results/
-│   └── validation.md
-├── geology/                                   # Geophysical and geological modeling
-│   ├── README.md
-│   ├── datasets/
-│   ├── methods/
-│   ├── results/
-│   └── metadata/
-├── ecology/                                   # Biodiversity and ecosystem models
-│   ├── README.md
-│   ├── datasets/
-│   ├── methods/
-│   ├── results/
-│   └── metadata/
-├── historical/                                # Historical–environmental correlation analyses
-│   ├── README.md
-│   ├── datasets/
-│   ├── methods/
-│   ├── results/
-│   └── governance.md
-├── cross-domain/                              # Integrated, multi-domain analyses
+│   └── validation.md                   # Schema + ethics validation
+│
+├── geology/                            # 🪨 Geology, soils, geomorphology
 │   ├── README.md
 │   ├── datasets/
 │   ├── methods/
 │   ├── results/
 │   └── metadata/
-└── metadata/                                  # FAIR+CARE provenance & audit registry
+│
+├── ecology/                            # 🌱 Biodiversity & ecological modeling
+│   ├── README.md
+│   ├── datasets/
+│   ├── methods/
+│   ├── results/
+│   └── metadata/
+│
+├── historical/                         # 🏛 Historical + archival environmental linkage
+│   ├── README.md
+│   ├── datasets/
+│   ├── methods/
+│   ├── results/
+│   └── governance.md                   # Ethics, sovereignty & archival CARE notes
+│
+├── cross-domain/                       # 🔗 Integrated multi-domain analytics
+│   ├── README.md
+│   ├── datasets/
+│   ├── methods/
+│   ├── results/
+│   └── metadata/
+│
+└── metadata/                           # 🗄️ Global analyses-level metadata
     ├── README.md
-    └── audit-reports/
-```
+    └── audit-reports/                  # FAIR+CARE + sustainability audit registry
+~~~  
 
 ---
 
-## 🧩 Analytical Governance Workflow
+# 🔬 Analytical Governance Workflow
 
-```mermaid
+~~~mermaid
 flowchart TD
-  A["Raw Data (Environmental, Geological, Historical)"] --> B["ETL + FAIR+CARE Validation"]
-  B --> C["Analytical Pipelines (Domain & Cross-Domain Models)"]
-  C --> D["Results Generation (Visuals, Models, Correlations)"]
-  D --> E["Validation (FAIR+CARE Audit + ISO 19115/50001)"]
-  E --> F["Telemetry Export (Energy, Carbon, Provenance)"]
-  F --> G["Governance Ledger Update + Council Review"]
-```
+  A["Raw Multidomain Data<br/>(Hydrology · Climate · Ecology · History)"]
+    --> B["ETL Harmonization<br/>STAC/DCAT Registration"]
+  B --> C["Domain Analysis Pipelines<br/>(Methods/*)"]
+  C --> D["Results + Visualizations<br/>(Results/*)"]
+  D --> E["Validation & FAIR+CARE Audit<br/>ISO 19115 · ISO 50001"]
+  E --> F["Telemetry Export<br/>(Runtime · Energy · CO₂e · Ethics)"]
+  F --> G["Governance Ledger Update<br/>Diamond⁹ Ω / Crown∞Ω"]
+~~~  
+
+This flow is enforced by CI/CD and MCP-DL v6.3.
 
 ---
 
-## ⚙️ FAIR+CARE Integration Across Analyses
+# ⚖️ FAIR+CARE Integration (v11)
 
-| Pillar | Implementation | Verification Source |
-|--------|----------------|--------------------|
-| **Findable** | STAC/DCAT-indexed metadata and dataset registry | `datasets/metadata/` |
-| **Accessible** | Public FAIR+CARE portal access to approved datasets | Governance Ledger |
-| **Interoperable** | Common geospatial and temporal schemas (EPSG:4326, UTC) | Telemetry Schema |
-| **Reusable** | Provenance, licensing, and versioning stored in manifest | `manifest_ref` |
-| **Collective Benefit** | Results support sustainable and equitable resource management | FAIR+CARE Council |
-| **Authority to Control** | IDGB verifies consent for all restricted cultural datasets | Governance Charter |
-| **Responsibility** | Energy & carbon telemetry integrated for sustainability | `telemetry_ref` |
-| **Ethics** | AI outputs audited for bias, context, and cultural sensitivity | FAIR+CARE Ethics Review |
+| Pillar | Enforcement | Source |
+|--------|-------------|--------|
+| **F1 Findable** | STAC/DCAT metadata; UUID-linked lineage | `datasets/metadata/` |
+| **A1 Accessible** | Public FAIR+CARE review; clear licensing | Governance Ledger |
+| **I1 Interoperable** | EPSG:4326, NetCDF/COG/GeoJSON standards | Telemetry Schema |
+| **R1 Reusable** | Manifest versioning; SPDX licensing | `manifest_ref` |
+| **Collective Benefit** | Analyses designed to support community & research | FAIR+CARE Council |
+| **Authority to Control** | Sovereignty checks for cultural/historical data | IDGB Policy |
+| **Responsibility** | Energy/carbon metrics logged per run | `telemetry_ref` |
+| **Ethics** | AI-assisted outputs undergo bias/context audits | `ethics_ref` |
 
 ---
 
-## 🌍 Key Analytical Datasets
+# 🌍 Primary Analytical Data Sources (v11 Standardized)
 
 | Source | Description | Format | FAIR+CARE Status |
-|--------|-------------|---------|------------------|
-| **NOAA / Daymet / USGS** | Hydrology, precipitation, drought, and streamflow datasets | CSV / NetCDF | ✅ Certified |
-| **NASA EarthData / PRISM** | Climate anomalies and trend projections | NetCDF / GeoTIFF | ✅ Certified |
-| **NRCS SSURGO / STATSGO** | Soil structure and infiltration metrics | GeoPackage | ✅ Certified |
-| **KU Biodiversity / GBIF** | Species occurrence and ecological diversity data | CSV / JSON-LD | ✅ Certified |
-| **KHS / DPLA / Chronicling America** | Historical and cultural environmental archives | JSON-LD / OCR | ✅ Certified |
+|--------|-------------|--------|------------------|
+| **NOAA / NCEI** | Climate normals, precipitation, drought indexes | NetCDF | Certified |
+| **Daymet / PRISM** | Gridded daily climate | TIFF/NetCDF | Certified |
+| **USGS NWIS** | Streamflow & hydrology | CSV/JSON | Certified |
+| **NASA EarthData** | RS imagery & anomaly layers | COG/NetCDF | Certified |
+| **NRCS SSURGO** | Soil & infiltration maps | GeoPackage | Certified |
+| **GBIF / KU Biodiversity** | Species occurrence | CSV/JSON-LD | Certified |
+| **Kansas Historical Society** | Scanned archival material | JSON-LD | Certified |
 
 ---
 
-## 🧮 Sustainability & Telemetry Metrics
+# 🧮 Sustainability & Telemetry (ISO 50001/14064)
 
-| Metric | Description | Target | Unit |
-|---------|-------------|---------|------|
-| **Energy Usage (E)** | Mean energy consumption per workflow | ≤ 15 | Joules |
-| **Carbon Emissions (C)** | CO₂ equivalent per analysis | ≤ 0.006 | gCO₂e |
-| **Telemetry Coverage** | Percentage of analyses with full telemetry | ≥ 95 | % |
-| **FAIR+CARE Validation Pass Rate** | Successful audit rate | 100 | % |
+| Metric | Target (v11) | Unit | Source |
+|--------|--------------|-------|--------|
+| Energy / workflow | ≤ 12 | Wh | Energy schema |
+| Carbon footprint | ≤ 0.005 | gCO₂e | Carbon schema |
+| Telemetry completeness | ≥ 98% | % | Telemetry job |
+| FAIR+CARE audit pass | 100% | % | Governance sync |
 
-Telemetry logs are stored in `focus-telemetry.json` and validated against ISO 50001 sustainability metrics.
+All telemetry exports to:  
+`releases/v11.0.0/focus-telemetry.json`.
 
 ---
 
-## 🧾 Governance Ledger Snapshot (JSON)
+# 🧾 Example v11 Governance Ledger Entry
 
-```json
+~~~json
 {
-  "ledger_id": "kfm-analyses-ledger-v10.2.2",
-  "analyses": ["Hydrology", "Climatology", "Geology", "Ecology", "Historical", "Cross-Domain"],
-  "energy_joules": 68.2,
-  "carbon_gCO2e": 0.024,
-  "faircare_status": "Certified",
-  "validation_status": "Passed",
-  "validated_by": ["FAIR+CARE Council", "Governance Secretariat"],
-  "timestamp": "2025-11-10T15:30:00Z"
+  "ledger_id": "kfm-analyses-ledger-v11.0.0",
+  "domains": [
+    "Hydrology",
+    "Climatology",
+    "Ecology",
+    "Geology",
+    "Historical",
+    "Cross-Domain"
+  ],
+  "energy_wh": 58.4,
+  "carbon_gco2e": 0.021,
+  "faircare_compliance": "certified",
+  "validation_status": "passed",
+  "record_created": "2025-11-24T13:00:00Z",
+  "governance_ref": "docs/reports/audit/analyses-governance-ledger.json"
 }
-```
+~~~  
+
+This format is **v11-safe** and will not cause broken fences in GitHub.
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.2.2 | 2025-11-10 | FAIR+CARE Council | Updated directory alignment, added cross-domain governance integration, and ISO telemetry metrics. |
-| v10.2.0 | 2025-11-09 | KFM Data Governance Group | Linked metadata registry and FAIR+CARE validation modules across analyses. |
-| v10.1.0 | 2025-11-08 | KFM Core Team | Established analyses index with hydrology, ecology, and governance pathways. |
+| Version | Date | Summary |
+|--------:|------|---------|
+| **v11.0.0** | 2025-11-24 | Full v11 upgrade · New telemetry schema v4 · Expanded FAIR+CARE matrix · Nonbreaking directory tree |
+| v10.2.2 | 2025-11-10 | Added cross-domain integration + ISO metrics |
+| v10.2.0 | 2025-11-09 | Linked metadata registry + FAIR+CARE pipelines |
+| v10.1.0 | 2025-11-08 | Established analyses index |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Kansas Frontier Matrix**  
+*Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence*  
 
-[⬅ Back to Documentation Index](../README.md) · [Governance Charter →](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅ Back to Documentation Index](../README.md) ·  
+[📜 Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md) ·  
+[🛰 Telemetry Overview](../../docs/telemetry/README.md)
 
 </div>
