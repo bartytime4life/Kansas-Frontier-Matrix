@@ -1,250 +1,268 @@
 ---
 title: "🧲 Kansas Frontier Matrix — Archaeological Geophysics Datasets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/geophysics/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
-review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council"
+version: "v11.0.0"
+last_updated: "2025-11-24"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council · Tribal Sovereignty Board"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/archaeology-geophysics-datasets-v1.json"
-governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
+previous_version_hash: "<previous-version-hash>"
+doc_guid: "urn:kfm:doc:archaeology-geophysics-datasets-v11.0.0"
 doc_kind: "Dataset Category"
 intent: "archaeology-geophysics-datasets"
+semantic_document_id: "kfm-doc-archaeology-geophysics-datasets"
+
+sbom_ref: "../../../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.0.0/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/archaeology-geophysics-datasets-v11.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.0"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Archaeological / Cultural"
+sensitivity_level: "Medium"
+indigenous_data_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+classification: "Governed Public"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
 ---
 
 <div align="center">
 
-# 🧲 **Kansas Frontier Matrix — Archaeological Geophysics Datasets**  
+# 🧲 **Kansas Frontier Matrix — Archaeological Geophysics Datasets (v11)**  
 `docs/analyses/archaeology/datasets/geophysics/README.md`
 
-**Purpose:**  
-Provide a comprehensive, FAIR+CARE–aligned, MCP-compliant index of **archaeological geophysics datasets** in the Kansas Frontier Matrix (KFM).  
-Includes **magnetometry**, **ground-penetrating radar (GPR)**, **electrical resistivity**, **LiDAR-derived archaeological features**, and **derived interpretative surfaces** used for cultural landscape reconstruction.
-
-These datasets support:
-
-- Non-invasive archaeological site detection  
-- Cultural landscape mapping  
-- Artifact and feature correlation  
-- 2D + 3D visualization (MapLibre + Cesium)  
-- Story Nodes & Focus Mode v2 interpretations  
-- Graph-based spatial reasoning (Neo4j + GeoSPARQL)
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../standards/faircare.md)  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../../../releases/v10.4.0/manifest.zip)
+FAIR+CARE Certified · Sovereignty-Governed  
+Diamond⁹ Ω / Crown∞Ω · MCP-DL v6.3 · KFM-MDP v11
 
 </div>
 
 ---
 
-## 📘 Overview
+# 📘 Overview (v11)
 
-Archaeological geophysics datasets in KFM include:
+The **Archaeological Geophysics Layer** in KFM v11 integrates:
 
-- **Magnetometry grids** (PNG, GeoTIFF, COG)  
-- **Ground-penetrating radar time-slices**  
-- **Electrical resistivity transects**  
+- **Magnetometry** (gradiometer surveys, anomaly grids)  
+- **Ground-Penetrating Radar (GPR)** time-slices  
+- **Electrical resistivity** transects & grids  
 - **LiDAR-derived archaeological features** (generalized)  
-- **Raster anomalies detected with AI-assisted scripts**  
-- **Interpreted features** (borrow pits, palisades, house basins, earthworks)  
+- **AI-assisted anomaly detection** (explainability-linked)  
+- **Human-validated interpretations** (features, boundaries, structures)
 
-Only **open-access**, **public-domain**, or **explicitly permitted** datasets may be included.
+These datasets feed into:
 
-Restricted datasets (raw sacred features, unreviewed tribal landscapes) **must not appear** in this directory.
+- Settlement detection  
+- Cultural landscape reconstruction  
+- Time-aligned Story Node v3 narratives  
+- Focus Mode v3 explainability + provenance  
+- MapLibre 2D & Cesium 3D layers  
+- Neo4j graph entities (`GeophysicsSurvey`, `InterpretedFeature`, `LiDARFeature`)
+
+All datasets must pass:
+
+- **FAIR+CARE v11 cultural governance**  
+- **Tribal sovereignty review** (when required)  
+- **Spatial generalization** (H3 r7–r10)  
+- **PROV-O lineage compliance**  
+- **DCAT 3.0 / STAC 1.0 v11 metadata validation**
 
 ---
 
-## 🗂️ Directory Layout
+# 🗂️ Directory Layout (ASCII-Aligned, v11)
 
 ~~~text
 docs/analyses/archaeology/datasets/geophysics/
-├── README.md                          # This file
-├── raw/                               # Open-access source grids (PD-only)
-├── processed/                         # Cleaned, filtered, generalized geophysics data
-├── interpreted/                       # Human-verified interpretations (feature outlines)
-├── stac/                              # STAC Items & Collections for geophysics datasets
-├── metadata/                          # DCAT + CARE metadata files
-└── provenance/                        # PROV-O lineage for geophysics datasets
+├── README.md                     # This document
+├── raw/                          # Open-access PD-only sensor grids
+├── processed/                    # Cleaned + filtered + generalized outputs
+├── interpreted/                  # Human-validated archaeological feature masks
+├── stac/                         # STAC Items/Collections (v11-compliant)
+├── metadata/                     # DCAT 3.0 + CARE v11 metadata
+└── provenance/                   # PROV-O lineage + sovereignty review bundles
 ~~~
 
 ---
 
-## 🧭 Geophysics Dataset Categories
+# 🧭 Dataset Categories (v11)
 
-| Category | Description | Allowed | Notes |
-|---|---|---|---|
-| **Magnetometry** | Magnetic field anomalies; excellent for detecting pits, ditches, structures | ✅ | Must be generalized & processed |
-| **GPR** | Subsurface slices showing floors, pits, features | ⚠️ | Only publicly released slices; depth > 30 cm generalized |
-| **Electrical Resistivity** | Soil moisture contrasts; reveals ditches/buildings | ✅ | PD-only datasets |
-| **LiDAR Features** | DEM-derived earthworks, mounds, landscape forms | ⚠️ | Must avoid showing protected burial mounds |
-| **AI-Detected Features** | ML outputs highlighting anomalies | ⚠️ | Requires validation notebook |
-| **Interpretation Layers** | Human-validated features (polygons/lines) | ✅ | Must include justification and metadata |
+| Category | Description | CARE Level | Allowed | Notes |
+|---------|-------------|-----------|---------|-------|
+| **Magnetometry** | Magnetic anomalies for feature detection | C2 | Yes | Must be generalized (H3 r7≥) |
+| **GPR Time-Slices** | Subsurface reflections | C2–C3 | Conditional | Depth > 30cm only, PD slices only |
+| **Electrical Resistivity** | Moisture/soil contrast patterns | C1–C2 | Yes | PD-only |
+| **LiDAR Archaeological Features** | DEM-derived structures | C3 | Conditional | Burial/sacred must be excluded |
+| **AI-Detected Features** | ML anomaly grids | C2 | Yes | Requires model card + explainability |
+| **Human Interpretations** | Verified outlines of features | C2 | Yes | Requires justification metadata |
 
-Forbidden:
+**Strictly Prohibited:**
 
-- Unapproved raw GPR volumes  
-- Unprocessed sensitive LiDAR tiles  
-- Any burial information or sacred features  
-- Exact coordinates of protected archaeological features  
-
----
-
-## 📦 Required Metadata for All Geophysics Datasets
-
-### ✔ STAC Item Requirements
-
-| Field | Description |
-|---|---|
-| `id` | Unique ID |
-| `bbox` | H3 generalized bounding box |
-| `geometry` | Polygon/MultiPolygon |
-| `start_datetime` / `end_datetime` | Applicable if temporal context known |
-| `care:sensitivity` | `generalized`, `restricted-generalized` |
-| `assets` | Links to raster grids, interpretations, tilesets |
-| `proj:*` | CRS, resolution, transform |
-| `kfm:provenance` | PROV-O JSON file |
-
-### ✔ DCAT Metadata Requirements
-
-| Field | Example |
-|---|---|
-| `dct:title` | "North Kansas Magnetometry Survey (PD)" |
-| `dcat:distribution` | COG raster tileset |
-| `dct:license` | `"CC-BY 4.0"` or `"CC0"` |
-| `dct:temporal` | OWL-Time interval |
-| `dcat:keyword` | `["geophysics", "magnetometry", "archaeology"]` |
-
-### ✔ CARE Requirements
-
-- No depiction of protected sacred landscapes  
-- Coordinate generalization & obfuscation mandatory  
-- All interpretations require **cultural review**  
-- Clear notes on cultural sensitivity levels  
+- Burial mound locations  
+- Sacred ceremonial features  
+- Unreviewed raw GPR volumes  
+- High-resolution LiDAR showing sensitive cultural features  
+- Any dataset lacking sovereignty approval
 
 ---
 
-## 🧪 Data Preparation Requirements
+# 📦 v11 Metadata Requirements
 
-All datasets must:
+## STAC v11 Requirements
 
-- Be filtered, corrected, and cleaned  
-- Use standardized naming conventions  
-- Remove grid noise (if needed)  
-- Use **H3 spatial generalization** for sensitive areas  
-- Include processing logs in `provenance/`  
-- Document all classification parameters  
+Each dataset must include:
 
-Generalization rules:
+- `id`  
+- H3-generalized `bbox`  
+- Polygon geometries only  
+- `start_datetime`, `end_datetime` (OWL-Time)  
+- `care:sensitivity`  
+- `care:sovereignty`  
+- `care:consent_status`  
+- CRS metadata (`proj:*`)  
+- `kfm:generalization` (H3-r7 to r10)  
+- `kfm:survey_type` (magnetometry, GPR, etc.)  
+- Assets for data/interpretation/tilesets  
+- PROV-O lineage reference
 
-- Never display feature-level resolution for sensitive sites  
-- Earthwork locations must be blurred, offset, or polygon-generalized  
-- Raster resolution must be degraded when needed (e.g., > 2 m/pixel)
+## DCAT 3.0 Requirements
+
+- `dct:title`  
+- `dct:license` (PD, CC-BY, CC0)  
+- `dcat:distribution`  
+- `dct:temporal`  
+- `dcat:keyword`  
+- `dct:provenance`  
+
+## CARE v11 Requirements
+
+- Cultural sensitivity level  
+- Sovereignty governance pathway  
+- Consent verification  
+- Required masking notes  
+- Cultural context description  
 
 ---
 
-## 🛰️ Integration Into KFM Systems
+# 🧪 Processing Requirements (v11)
 
-### **Knowledge Graph (Neo4j)**
+All geophysical datasets must be:
+
+- Cleaned and noise-filtered  
+- Spatially generalized using:
+  - H3 r7 (minimum)
+  - H3 r10 (maximum detail allowed)  
+- Provenance-documented (PROV-O bundle required)  
+- Validated through FAIR+CARE + sovereignty review  
+- Converted to open, accessible formats:
+  - COG  
+  - GeoTIFF  
+  - Generalized PNG (for interpreted features)  
+  - GeoJSON for feature outlines  
+- Accompanied by:
+  - Processing notes  
+  - QC logs  
+  - Model cards (for ML outputs)  
+
+---
+
+# 🛰 Integration Into KFM Systems (v11)
+
+## Neo4j Graph Entities
 
 Nodes:
-
 - `GeophysicsSurvey`
 - `MagnetometryGrid`
 - `GPRSlice`
-- `InterpretedFeature`
+- `ResistivityTransect`
 - `LiDARFeature`
-- `LandscapeUnit`
+- `InterpretedFeature`
 
 Relationships:
-
 - `DETECTS_FEATURE`
 - `LOCATED_AT`
-- `ASSOCIATED_WITH`
 - `GENERALIZED_FROM`
+- `ASSOCIATED_WITH`
+- `CULTURALLY_FILTERED_VIA`
 
-### **Focus Mode v2**
+## Story Node v3 Integration
 
-Geophysics datasets produce:
+Geophysics data supports:
 
-- Interpretive overlays  
-- Confidence-weighted anomaly maps  
-- Explanatory summaries with provenance chips  
-- Bias-mitigated descriptions  
+- Cultural landscape chapters  
+- Feature-based narratives  
+- Settlement expansion timelines  
+- AI explainability overlays  
+- Provenance chips & sovereignty disclaimers  
 
-### **Story Nodes**
+## Focus Mode v3 Integration
 
-Geophysics contributes to:
+- AI narratives gated by sovereignty rules  
+- High-sensitivity redaction filters  
+- Explainability (SHAP / IG)  
+- Confidence-weighted anomaly summaries  
 
-- Cultural reconstruction narratives  
-- Archaeological feature timelines  
-- Settlement explanations  
+## Mapping Integration
 
-All narratives undergo **CARE tone review**.
-
----
-
-## 🌄 Visualization Standards
-
-Geophysics visual outputs must follow:
-
-- `docs/analyses/archaeology/visualization/README.md`  
-- Raster formats: **COG**, **GeoTIFF**, generalized PNG  
-- Vector formats: **GeoJSON**, **Vector Tiles**  
-- 3D formats: **Cesium Tilesets** for allowed features  
-
-Every visual layer must include:
-
-| Field | Requirement |
-|---|---|
-| CRS | EPSG:4326 |
-| Temporal extent | OWL-Time compliant |
-| Sensitivity | CARE flag |
-| Provenance | PROV-O trace |
-| STAC item reference | Required |
+- MapLibre 2D generalized grids  
+- Cesium 3D elevation + feature extrusions  
+- Time-enabled archaeological layers  
 
 ---
 
-## 📊 Dataset Index
+# 📊 Dataset Index (v11)
 
-| Dataset | Category | Location | Status | Last Review | Notes |
-|---|---|---|---|---|---|
-| `magnetometry/north-ks-survey-v1` | Magnetometry | `processed/` | 🟢 Active | 2025-11 | Fully generalized |
-| `gpr/high-plains-slice-v2` | GPR | `processed/` | 🟡 Needs Review | 2025-09 | Validate depth range |
-| `lidar/prairie-mounds-v1` | LiDAR | `interpreted/` | 🔴 Hold | Requires cultural approval |
-| `interpretations/central-ks-v1` | Interpretation | `interpreted/` | 🟢 Active | 2025-11 | Review completed |
+| Dataset | Category | CARE | Sovereignty | Status | Last Review | Notes |
+|---|---|---|---|---|---|---|
+| `magnetometry/north-ks-v2` | Magnetometry | C2 | Yes | 🟢 Active | 2025-11 | Fully generalized |
+| `gpr/high-plains-v3` | GPR | C3 | Yes | 🟡 Review | 2025-10 | Depth + sovereignty review pending |
+| `lidar/prairie-features-v2` | LiDAR | C3–C4 | Yes | 🔒 Hold | 2025-11 | Potential burial features detected |
+| `interpretations/central-ks-v2` | Interpretation | C2 | Yes | 🟢 Active | 2025-11 | Cultural review completed |
 
 ---
 
-## 🧠 Example STAC Item (Generalized Geophysics Dataset)
+# 🧠 Example STAC Item (v11)
 
 ~~~json
 {
   "stac_version": "1.0.0",
   "type": "Feature",
-  "id": "magnetometry-north-ks-v1",
+  "id": "magnetometry-north-ks-v2",
   "bbox": [-101.8, 37.4, -95.8, 40.1],
   "geometry": {
     "type": "Polygon",
     "coordinates": [[[ ... ]]]
   },
   "properties": {
-    "care:sensitivity": "generalized",
     "kfm:survey_type": "magnetometry",
-    "kfm:provenance": "provenance/mag-north-ks-v1.json"
+    "care:sensitivity": "generalized",
+    "care:sovereignty": "protected",
+    "care:consent_status": "approved",
+    "kfm:generalization": "H3-r8",
+    "kfm:provenance": "provenance/mag-north-ks-v2.json"
   },
   "assets": {
     "grid": {
-      "href": "https://example.com/geophysics/mag_north_ks_v1.tif",
+      "href": "https://example.org/geophysics/mag_north_ks_v2.tif",
       "type": "image/tiff; application=geotiff",
       "roles": ["data"]
     }
@@ -254,19 +272,23 @@ Every visual layer must include:
 
 ---
 
-## 🕰️ Version History
+# 🕰 Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Archaeology WG · FAIR+CARE Council | Created geophysics dataset index; added generalization rules + STAC/DCAT metadata requirements; ensured box-safe formatting |
-| v10.0.0 | 2025-11-10 | Geophysics Dataset Team | Initial conceptual structure |
+| Version | Date | Summary |
+|--------:|------|---------|
+| **v11.0.0** | 2025-11-24 | Full v11 rebuild; CARE v11; sovereignty gating; H3 r7–r10; STAC/DCAT v11; PROV-O lineage v11 |
+| v10.4.0 | 2025-11-17 | First complete v10 index |
+| v10.0.0 | 2025-11-10 | Initial geophysics dataset structure |
 
 ---
 
 <div align="center">
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+FAIR+CARE v11 · Sovereignty-Governed  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+KFM-MDP v11.0 · MCP-DL v6.3  
+
 [⬅ Back to Archaeology Datasets](../README.md)
 
 </div>
