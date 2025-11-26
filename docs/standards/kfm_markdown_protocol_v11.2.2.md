@@ -145,6 +145,15 @@ branding_registry:
   pipeline: "Deterministic Pipelines · Explainable AI · Open Provenance"
   telemetry: "Transparent Systems · Ethical Metrics · Sustainable Intelligence"
   graph: "Semantics × Provenance × Spatial Intelligence"
+# New preferences & patterns inferred from v11 usage
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+badge_profiles:
+  - "root-centered-badge-row"
+requires_purpose_block: true
+requires_version_history: true
+requires_directory_layout_section: true
+requires_governance_links_in_footer: true
 deprecated_fields:
   - "old_markdown_standard_v10.4"
 ---
@@ -181,6 +190,7 @@ This version:
 - Adds **semantic intent**, **doc_kind**, and **transform registry** metadata for AI Focus Mode.
 - Tightens **provenance rules** and version linking so every doc is traceable.
 - Clarifies **anti-patterns** (forbidden constructs) that will be rejected by CI.
+- Encodes stylistic patterns consistently used across v11 (purpose block, badges row, directory layout, version history, governance footer).
 - Maintains compatibility with **MCP-DL v6.3**, **KFM-OP v11**, **STAC 1.0.0**, and **DCAT 3.0**.
 
 All other documentation standards (e.g. domain-specific SOPs, experiment templates) must build on top of this, not override it.
@@ -197,10 +207,13 @@ All other documentation standards (e.g. domain-specific SOPs, experiment templat
    Front-matter + consistent headings + well-formed lists and tables allow automated extraction into DCAT/STAC catalogs and knowledge graph ingestion.
 
 4. **Human-Friendly Narrative**  
-   Although machine-compatible, docs must remain readable to humans: clear language, consistent sections, meaningful headings, and explanatory context.
+   Although machine-compatible, docs must remain readable to humans: clear language, consistent sections, meaningful headings, and explanatory context, including a visible “Purpose” block near the top.
 
 5. **Ethical & Sovereignty-Aware**  
    The protocol embeds FAIR+CARE, CIDOC-CRM semantics, and Indigenous sovereignty flags to ensure all documentation respects governance constraints.
+
+6. **Predictable Layout & Navigation**  
+   Root title + badges row, directory layout, and version history sections are expected for standards and architecture documents, enabling consistent navigation and UI rendering (e.g. in Focus Mode).
 
 ---
 
@@ -233,6 +246,39 @@ KansasFrontierMatrix/
 - Domain reports and analyses (e.g. archaeology, hydrology) live in `docs/analyses/` or respective subtrees.
 - There MUST be a `README.md` in any directory intended as a public or developer-facing entry point.
 
+### Recommended Directory Snippet Pattern (v11 “Immediate + One Branch”, with Emojis + Descriptions)
+
+When showing directory layouts in Markdown, KFM v11 favors a **compact, one-level-deep tree** with emojis and inline descriptions, for consistency and readability. Documents MAY adopt the following style:
+
+```text
+📁 docs/                                        — Project documentation root
+│   📂 standards/                               — Standards & policies (Markdown, FAIR+CARE, governance)
+│       ↳ This protocol and related standards
+
+📁 src/                                         — Backend source code
+│   📂 pipelines/                               — ETL, AI, and orchestration implementations
+│       ↳ LangGraph, Airflow DAGs, and helpers
+
+📁 data/                                        — Data lifecycle (raw → work → processed → releases)
+│   📂 releases/                                — Versioned bundles (manifest · telemetry · SBOM)
+│       ↳ Stable, governed data exports
+
+📁 schemas/                                     — Shared JSON, STAC, DCAT, JSON-LD, telemetry schemas
+│   📂 telemetry/                               — Telemetry schemas (lineage · energy · carbon)
+│       ↳ Used by CI and orchestration pipelines
+
+📁 .github/                                     — CI/CD automation & governance checks
+    📂 workflows/                               — Validation, lineage, and governance CI workflows
+        ↳ kfm-ci · docs-lint · lineage-audit · governance-check
+```
+
+**Directory layout guidance:**
+
+- Use this pattern for **standards, architecture, and pipeline docs** when showing where things live.
+- Keep to **one level beneath each directory** for clarity.
+- Include **short descriptions** after an em dash (`—`) for each entry.
+- Use emojis (`📁` for root folders, `📂` for subfolders) where they improve readability without overwhelming.
+
 ---
 
 ## 🧭 Context
@@ -252,7 +298,8 @@ The Markdown rules are intentionally **strict** so that:
 
 When in doubt:  
 - Prefer **more structure** (headings, lists, tables) over ad-hoc formatting.  
-- Prefer **explicit metadata** over implicit context.
+- Prefer **explicit metadata** over implicit context.  
+- Prefer **directory layout + version history** sections where appropriate.
 
 ---
 
@@ -493,6 +540,12 @@ For `doc_kind: "Standard"`, the following metadata fields are REQUIRED (already 
   - `ci_integration`
   - `branding_registry`
   - `deprecated_fields`
+  - `layout_profiles`
+  - `badge_profiles`
+  - `requires_purpose_block`
+  - `requires_version_history`
+  - `requires_directory_layout_section`
+  - `requires_governance_links_in_footer`
 
 ### 2. Semantic Alignment
 
@@ -513,7 +566,7 @@ This protocol is designed to be easily mapped into semantic web and graph repres
 From the perspective of repository architecture, this protocol defines:
 
 1. **Entry Points**  
-   - Any new standard MUST declare its path and be referenced in `docs/README.md` and, if relevant, in the architecture and governance docs.
+   - Any new standard MUST declare its path and be referenced in `docs/README.md` and, where relevant, in `docs/architecture/` and `docs/standards/ROOT-STANDARDS.md`.
 
 2. **Dependencies**  
    - This file depends on:
@@ -521,7 +574,7 @@ From the perspective of repository architecture, this protocol defines:
      - Governance charter (for policy).
      - FAIR+CARE guide (for ethics).
      - Sovereignty policy (for Indigenous data considerations).
-   - Other standards (e.g. data contracts, ETL conventions) depend on this file for structural rules.
+   - Other standards (e.g. data contracts, ETL conventions, telemetry standards, UI accessibility) depend on this file for structural rules.
 
 3. **Update Process**  
    - Propose changes via PR with:
@@ -536,6 +589,7 @@ From the perspective of repository architecture, this protocol defines:
      - `heading_registry` to build navigation.
      - `semantic_intent` to index docs by role (governance vs analysis).
      - `test_profiles` to determine which CI jobs to run for a given doc.
+     - `layout_profiles` and `badge_profiles` to apply consistent rendering patterns.
 
 ---
 
@@ -586,7 +640,7 @@ This standard enforces FAIR and CARE through structural requirements:
 
 | Version | Date       | Summary                                                                                                  |
 |--------:|------------|----------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Added semantic intent, stability tiers, macro/transform registry, heading registry, and expanded guidance. |
+| v11.2.2 | 2025-11-27 | Added semantic intent, stability tiers, transform registry, layout/badge/section requirements, and expanded guidance. |
 | v11.2.1 | 2025-11-26 | Introduced profile system, provenance hardening, and stronger DCAT/STAC metadata requirements.          |
 | v11.2.0 | 2025-11-25 | Major structural overhaul: new YAML layout, header/footer profiles, test profiles, and diagram rules.    |
 | v11.0.1 | 2025-11-20 | Initial v11 consolidation of markdown rules under the new ontology and governance structures.            |
