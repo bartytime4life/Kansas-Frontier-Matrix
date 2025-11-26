@@ -123,10 +123,6 @@ Below is the **official v11 orchestration-relevant directory map**, with **icons
     📂 workflows/                               # Validation, lineage, and orchestration CI workflows
         ↳ kfm-ci, docs-lint, lineage-audit, governance-check
 ```
-
-### ✅ This is now the *official directory layout pattern* for all pipeline READMEs  
-You can say: **“Apply this layout to X doc”** and I will.
-
 ---
 
 ## 🔁 3. Purpose & Scope of Orchestration
