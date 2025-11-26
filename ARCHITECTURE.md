@@ -1,7 +1,7 @@
 ---
 title: "🏗️ Kansas Frontier Matrix — Repository Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "ARCHITECTURE.md"
-version: "v11.1.0"
+version: "v11.1.1"
 last_updated: "2025-11-27"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -73,7 +73,7 @@ ontology_alignment:
   geosparql: "geo:FeatureCollection"
 json_schema_ref: "schemas/json/root-architecture-v11.schema.json"
 shape_schema_ref: "schemas/shacl/root-architecture-v11-shape.ttl"
-doc_uuid: "urn:kfm:doc:architecture:repository:v11.1.0"
+doc_uuid: "urn:kfm:doc:architecture:repository:v11.1.1"
 semantic_document_id: "kfm-repository-architecture"
 event_source_id: "ledger:ARCHITECTURE.md"
 immutability_status: "version-pinned"
@@ -101,14 +101,9 @@ sunset_policy: "Superseded upon next major architecture and repository redesign"
 
 # 🏗️ **Kansas Frontier Matrix**  
 ## **Repository Architecture & System Blueprint (v11 LTS)**  
-`ARCHITECTURE.md`
+`ARCHITECTURE.md`  
 
-[![Docs – MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](#)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](#)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](#)
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](#)
-[![SBOM](https://img.shields.io/badge/SBOM-SPDX-blueviolet)](#)
-[![Sustainability](https://img.shields.io/badge/Telemetry-Energy%20%2F%20Carbon-009688)](#)
+[Docs – MCP v6.3](#) · [FAIR+CARE](#) · [License: MIT](LICENSE) · [Status: Active](#-11-version-history) · [SBOM](releases/v11.0.0/sbom.spdx.json) · [Telemetry](releases/v11.0.0/focus-telemetry.json)
 
 </div>
 
@@ -158,12 +153,12 @@ KFM v11 adheres to several core principles:
   ETL and AI flows use WAL, configuration, and OpenLineage events for reproducibility.
 
 - **Governance-by-default**  
-  FAIR+CARE, sovereignty, and data contracts are baked into pipelines, CI, and deployment workflows.
+  FAIR+CARE, sovereignty, and data contracts are embedded into pipelines, CI, and deployment workflows.
 
 - **Monorepo cohesion**  
   A single, cohesive repository with modular subtrees and strict standards, allowing atomic updates across code, data, and docs.
 
-This document is the blueprint describing how those principles map onto the physical layout and runtime structure.
+This document is the blueprint describing how those principles map onto the repository layout, runtime stacks, and CI/CD integration.
 
 ---
 
@@ -229,36 +224,31 @@ This layout is optimized for clarity, modularity, and governance in a single mon
 KFM data flows through a consistent lifecycle:
 
 1. **Raw (`data/raw/`)**  
-   - Immutable ingests from external providers (e.g., NOAA, USGS, archives).  
-   - Typically not checked in fully; managed via DVC/LFS or external storage.  
-   - Cataloged via `data/sources/**` manifests + STAC Collections.
+   - Immutable ingests from external providers (NOAA, USGS, archives, etc.).  
+   - Managed via DVC/LFS or cloud storage, referenced in `data/sources/**` manifests.  
 
 2. **Work (`data/work/`)**  
    - ETL staging and intermediate artifacts.  
-   - Intended to be ephemeral and reproducible from raw + pipeline configs.  
+   - Ephemeral and reproducible from raw + pipeline configuration.  
 
 3. **Processed (`data/processed/`)**  
    - Cleaned, harmonized, contract-compliant outputs.  
-   - JSON/GeoJSON/COG GeoTIFF/Parquet and similar.  
+   - Stored in interoperable formats (GeoJSON, COG GeoTIFF, Parquet, CSV).  
 
 4. **Releases (`data/releases/`)**  
-   - Versioned data bundles for public or internal release.  
-   - Each release includes:
-     - `manifest.zip`  
-     - `sbom.spdx.json`  
-     - `focus-telemetry.json`  
+   - Versioned data bundles with SBOM, manifest, and telemetry.  
 
 5. **Provenance (`data/provenance/`)**  
    - PROV-O datasets and OpenLineage logs.  
-   - FAIR+CARE annotations, and H3-mask metadata for sensitive layers.
+   - FAIR+CARE annotations and H3-masking metadata for sensitive layers.
 
-STAC and DCAT schemas in `schemas/stac/` and `schemas/dcat/` define how all of this is represented in metadata.
+STAC and DCAT definitions in `schemas/stac/` and `schemas/dcat/` ensure this lifecycle is reflected in machine-readable catalogs.
 
 ---
 
 ## 🧬 5. Ontology, Knowledge Graph, and Alignment
 
-The `ontology_ref` entries:
+Ontology references:
 
 - `docs/graph/ontology/core-entities.md`  
 - `docs/graph/ontology/cidoc-crm-mapping.md`  
@@ -267,102 +257,103 @@ The `ontology_ref` entries:
 define:
 
 - Core entity types (Place, Event, Dataset, Observation, Story Node, Agent).  
-- CIDOC-CRM mappings (e.g., E29 Design or Procedure for standards like this).  
-- Spatial and temporal patterns (e.g., H3 generalization rules, OWL-Time intervals).  
+- Mappings into CIDOC-CRM, OWL-Time, and PROV-O.  
+- Spatial-temporal patterns (e.g., H3 generalization rules, time intervals).
 
-`ontology_alignment` captures cross-standard mapping:
+`ontology_alignment` fields describe how this architecture:
 
-- `cidoc: "E29 Design or Procedure"` – this document is a design/procedure instruction.  
-- `schema_org: "TechArticle"` – external semantic consumer view.  
-- `owl_time: "ProperInterval"` – architecture state valid for a time interval.  
-- `prov_o: "prov:Plan"` – it is a plan that guides activities.  
-- `geosparql: "geo:FeatureCollection"` – relevant for geospatial architectural components.
+- Is a **CIDOC E29 Design or Procedure**.  
+- Exposes as a **schema.org TechArticle** to external consumers.  
+- Represents a **ProperInterval** in OWL-Time (v11 LTS window).  
+- Functions as a **prov:Plan** describing KFM’s infrastructure.  
+- References geospatial aspects as a **geo:FeatureCollection**.
 
-The Neo4j schema lives in `src/graph/` and is the canonical implementation of these ontologies.
+The Neo4j schema in `src/graph/` is the concrete implementation of these ontologies.
 
 ---
 
 ## 🧠 6. Pipelines, Agents, and Reliability Engine
 
-The architecture is explicitly tied to:
+The runtime block encodes:
 
 - `reliability_engine: "Reliable Pipelines v11 — WAL · Retry · Rollback · Hotfix · Lineage"`  
 - `agents: "LangGraph Autonomous Updater v11"`  
 - `lineage_bus: "OpenLineage v2.5"`  
 
-This implies:
+Implications:
 
-- All pipelines are structured as **LangGraph DAGs** under `src/pipelines/`.  
-- Each node in a DAG:
-  - Logs inputs/outputs to `data/work/` or `data/processed/`.  
-  - Emits OpenLineage events with PROV-O alignment.  
-  - Writes WAL entries enabling replay/rollback.  
+- All ETL and AI pipelines are LangGraph DAGs (`src/pipelines/`).  
+- Each DAG node:
+  - Emits OpenLineage events.  
+  - Writes WAL entries for rollback and replay.  
+  - Produces contract-validated outputs.  
 
-- Autonomous Updater agents:
-  - Periodically re-run DAGs for data refresh (subject to governance).  
-  - Regenerate STAC/DCAT metadata from contracts + graph.  
-  - Propose new Story Nodes based on updated data.  
+- Autonomous agents:
+  - Run governed data refresh jobs.  
+  - Regenerate STAC/DCAT views.  
+  - Propose new Story Nodes and Focus Mode narratives, subject to governance.
 
-Reliability pipelines are documented in `docs/pipelines/reliable-pipelines.md`.
-
----
-
-## 🧰 7. API & Frontend Runtime
-
-`runtime.api_stack` and `runtime.frontend_stack` define:
-
-- **Server layer** (`src/server/`):
-
-  - FastAPI services for REST endpoints.  
-  - GraphQL gateway for graph-centric queries.  
-  - Governance hooks (GovHooks v4) that:
-    - Enforce CARE & sovereignty policies.  
-    - Filter or generalize responses for sensitive content.  
-    - Log all governance decisions to `data/provenance/`.
-
-- **Frontend layer** (`web/`):
-
-  - React-based SPA.  
-  - MapLibre for 2D base maps and data overlays.  
-  - Cesium for 3D scenes and time-dynamic views.  
-  - Vite build for fast dev and optimized bundles.
-
-This separation ensures clean boundaries while enabling shared telemetry and provenance across backend and frontend.
+Detailed reliability patterns are documented in `docs/pipelines/reliable-pipelines.md`.
 
 ---
 
-## 🔗 8. Provenance, OpenLineage, and Telemetry
+## 🧰 7. API, Frontend, and Runtime Stacks
 
-`prov_profile` and `openlineage_profile` indicate that:
+From `runtime`:
 
-- PROV-O is the logical model used to describe:
-  - Activities (ETL runs, training runs).  
-  - Entities (datasets, models, docs).  
-  - Agents (users, runners, services).  
+- **Compute:**  
+  - Multi-cloud mesh (AWS+GCP+On-Prem), enabling flexible deployment topologies.
 
-- OpenLineage is the implementation used for:
-  - Emitting events from pipelines in `src/pipelines/`.  
-  - Aggregating lineage in `data/provenance/`.  
-  - Powering lineage-aware dashboards and audits.  
+- **Graph Engine:**  
+  - Neo4j Enterprise v5.x cluster, backing all knowledge graph operations.
 
-Telemetry schemas in `schemas/telemetry/`:
+- **API Stack:**  
+  - FastAPI + GraphQL Gateway (GovHooks v4) for:
+    - Graph-centric queries.  
+    - Governance hooks that apply CARE/sovereignty masking and log decisions.
 
-- `root-architecture-v1.json` – architecture-level telemetry.  
-- `energy-v2.json` – energy usage modeling for jobs.  
-- `carbon-v2.json` – carbon intensity and emissions estimates.
+- **Frontend Stack:**  
+  - React + MapLibre + Cesium, built via Vite.  
+  - Supports 2D and 3D views, timeline integration, Story Nodes, and Focus Mode.
 
-CI pipelines and runtime services use these schemas to produce validated telemetry records, which are then merged into `releases/<version>/focus-telemetry.json`.
+All stacks share:
+
+- Telemetry emission to `data/provenance/` and `releases/<version>/focus-telemetry.json`.  
+- Governance integration for sensitive content and routes.
+
+---
+
+## 🔗 8. Provenance, Lineage, and Telemetry
+
+`prov_profile` and `openlineage_profile` specify:
+
+- PROV-O for conceptual lineage and plan/activity/entity modeling.  
+- OpenLineage v2.5 + KFM Extensions for implementation detail.
+
+Telemetry schemas:
+
+- `schemas/telemetry/root-architecture-v1.json`  
+- `schemas/telemetry/energy-v2.json`  
+- `schemas/telemetry/carbon-v2.json`  
+
+are used by pipelines and CI to produce:
+
+- Architecture-level telemetry.  
+- Energy and carbon estimates per job.  
+- Governance and validation statistics.
+
+Telemetry is consolidated into `releases/<version>/focus-telemetry.json`.
 
 ---
 
 ## 🧪 9. Validation, CI/CD, and Governance Integration
 
-The `validation_profiles` list:
+`validation_profiles`:
 
-- `docs-lint-v11` – ensures Markdown structure follows KFM-MDP v11.2.2.  
-- `schema-lint-v11` – guarantees JSON/YAML/LD syntax and schema conformance.  
-- `lineage-audit-v11` – checks that all pipelines emit required lineage events.  
-- `governance-audit-v11` – verifies FAIR+CARE and sovereignty compliance.
+- `docs-lint-v11` – enforces KFM-MDP v11.2.2 structure and style.  
+- `schema-lint-v11` – validates all JSON/YAML/LD artifacts.  
+- `lineage-audit-v11` – ensures pipeline runs emit adequate lineage.  
+- `governance-audit-v11` – checks FAIR+CARE, sovereignty, and license compliance.
 
 `ci_integration`:
 
@@ -371,26 +362,27 @@ workflow: ".github/workflows/kfm-ci.yml"
 environment: "dev → staging → production"
 ```
 
-This ensures:
+ensures:
 
-- All PRs must pass docs/schema/lineage/governance checks.  
-- Deployments are gated on successful validation.  
-- Architecture and standards documents like this one are enforced by CI and cannot drift silently.
+- All changes are validated before touching protected branches.  
+- Architecture and standards documents are kept in sync with code, data, and schemas.  
+- Governance audits are part of the normal CI cycle.
 
 ---
 
 ## 🧾 10. Version History
 
-| Version | Date       | Summary                                                                                                                   |
-|--------:|------------|---------------------------------------------------------------------------------------------------------------------------|
-| v11.1.0 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; clarified ontology alignment, CI integration, telemetry schemas, and reliability/agent runtime. |
-| v11.0.1 | 2025-11-23 | Aligned to v11 repo layout; documented runtime stacks, LangGraph & OpenLineage integration, and FAIR+CARE governance.    |
-| v11.0.0 | 2025-11-19 | First v11 architecture blueprint; integrated ontology, CI, and runtime metadata.                                          |
+| Version | Date       | Summary                                                                                                                    |
+|--------:|------------|----------------------------------------------------------------------------------------------------------------------------|
+| v11.1.1 | 2025-11-27 | Updated badges to single-line layout, aligned metadata with KFM-MDP v11.2.2, clarified runtime and validation profiles.    |
+| v11.1.0 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; refreshed ontology references, runtime block, and CI integration metadata.                    |
+| v11.0.1 | 2025-11-23 | Aligned to v11 repo layout; documented runtime stacks, LangGraph & OpenLineage integration, and FAIR+CARE governance.     |
+| v11.0.0 | 2025-11-19 | Introduced v11 architecture blueprint integrating ontology, CI, data lifecycle, and monorepo design.                        |
 
 ---
 
 <div align="center">
 
-[⬅ Root README](README.md) · [📚 Docs Home](docs/README.md) · [⚖ Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
+[Root README](README.md) · [📚 Docs Home](docs/README.md) · [⚖ Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
