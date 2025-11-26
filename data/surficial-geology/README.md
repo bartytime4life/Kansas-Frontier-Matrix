@@ -124,9 +124,16 @@ sunset_policy: "Superseded by surficial-geology-v12"
 # 🪨 **Surficial Geology of Kansas — Ingest, Harmonization & STAC Publishing Hub**  
 `data/geo/surficial-geology/`
 
+[![Geo Data](https://img.shields.io/badge/Domain-Geology%20%2F%20GIS-795548)]()
+[![STAC](https://img.shields.io/badge/STAC-v1.0.0-4caf50)]()
+[![Lineage](https://img.shields.io/badge/OpenLineage-v2.5-9c27b0)]()
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)]()
+[![License](https://img.shields.io/badge/License-KGS%20Open%20Data%20%2B%20MIT-blue)]()
+
 **Primary Source:** Kansas Geological Survey (KGS), Surficial Geology (Map M-118 lineage)  
+
 **Purpose:**  
-Provide clean ingest, deterministic normalization, CRS harmonization, topology repair, H3 indexing, and STAC-publishable GeoParquet for statewide surficial units under KFM v11.2 governance.
+Provide clean ingest, deterministic normalization, CRS harmonization, topology repair, H3 indexing, and STAC-ready GeoParquet for statewide surficial units under KFM v11.2 governance and FAIR+CARE oversight.
 
 </div>
 
@@ -155,7 +162,7 @@ It supports:
 ```text
 📁 data/geo/surficial-geology/                  — Surficial geology ingest & processing root
 │   📂 raw/                                     — Raw KGS GIS inputs (immutable, checksum-verified)
-│   📂 work/                                    — Harmonization, CRS ops, topology fixes
+│   📂 work/                                    — Harmonization, CRS ops, topology fixes, H3 prep
 │   📂 outputs/                                 — GeoParquet + tiles + derived unit dictionaries
 │   📂 stac/                                    — STAC Collection + Item JSON documents
 │   📂 lineage/                                 — PROV-O + JSON-LD lineage outputs
@@ -167,97 +174,94 @@ It supports:
 ## 🧬 3. Ingest & Normalization Workflow (v11.2)
 
 ### 3.1 Acquire Raw KGS Data  
-- Stored 1:1 under `/raw/`  
-- SHA256 checksum required  
-- Logged in provenance events  
+- Stored 1:1 under `/raw/`.  
+- SHA256 checksum required; stored in a checksum manifest.  
+- Logged via provenance events and OpenLineage.
 
 ### 3.2 Standardize Schema (Geo Schema v11.2)  
 Fields include:  
 - `unit_code`  
 - `unit_desc`  
 - `map_symbol`  
-- `color_hex` (derived via DMU-lite table)
+- `color_hex` (from DMU-lite color tables)
 
 ### 3.3 CRS Harmonization  
-- Convert geometry to **EPSG:5070**  
-- Visualization derivatives use **EPSG:4326** or tile-native projections  
-- All transforms logged to lineage
+- Convert all geometries to **EPSG:5070** for analysis.  
+- Derive visualization derivatives in **EPSG:4326** or tiling-native CRSs.  
+- Document all transforms in lineage metadata.
 
 ### 3.4 Topology QA  
-- Validate geometries (`is_valid`)  
-- Repair invalid polygons via `buffer(0)`  
-- Remove slivers < tolerance  
-- Dissolve by `unit_code` to produce stable unit geometries  
+- Validate geometries (`is_valid`).  
+- Repair invalid polygons via `buffer(0)` or equivalent.  
+- Remove slivers below a configured tolerance.  
+- Dissolve by `unit_code` to build stable unit geometries.
 
 ### 3.5 H3 Index Assignment  
-- Centroid-based indexing at R8–R10  
-- CARE screening ensures no sensitive contextual inference is violated  
-- Facilitates geoprocessing, clustering, and environmental overlays
+- Compute centroids and assign H3 indices at R8–R10.  
+- CARE-controlled: ensure no inference about sensitive cultural or sacred contexts is possible via unit/H3 overlays.  
+- Used for spatial filtering, clustering, and cross-domain overlays.
 
 ### 3.6 GeoParquet Emission  
-- Partitioned  
-- Metadata-rich  
-- Follows **KFM-STAC v11** soil/geology extension rules  
-- Includes provenance + QA + telemetry inside Item properties
+- Emit partitioned, metadata-rich GeoParquet files.  
+- Embed references to STAC Items, CRS, and source lineage.  
+- Comply with KFM-STAC v11 geologic extension conventions.
 
 ---
 
 ## 🌐 4. STAC Publishing Requirements
 
-### Collection MUST include:
-- Source attribution: **Kansas Geological Survey (KGS)**  
-- `proj:epsg=5070` for GeoParquet  
-- `proj:epsg=4326` for visualization tiles  
-- Full PROV-O lineage chain  
-- Processing steps + QA  
-- Energy/carbon telemetry  
+### 4.1 STAC Collection MUST Include
 
-### Items MUST cover:
-- Final GeoParquet  
-- DMU-lite unit dictionary  
-- Optional PMTiles/XYZ tiles  
+- Source attribution: **Kansas Geological Survey (KGS)**.  
+- `proj:epsg=5070` for analysis assets (GeoParquet).  
+- `proj:epsg=4326` for visualization tiles (if produced).  
+- Complete lineage chain (link to `lineage/*.jsonld`).  
+- QA metrics (geometry validity, sliver removal counts).  
+- Telemetry summary (energy, carbon, run metadata).
+
+### 4.2 STAC Items MUST Cover
+
+- Final GeoParquet dataset.  
+- DMU-lite unit dictionary.  
+- Optional PMTiles/XYZ tiles (if generated).  
 
 All Items MUST validate against:
 
-- STAC v1.0.0  
-- KFM-STAC v11 Geology Extension  
-- geo-surficial-v11 schema  
+- STAC v1.0.0.  
+- KFM-STAC v11 Geology Extension.  
+- `geo-surficial-v11` JSON schema.
 
 ---
 
 ## 🧪 5. Quality & Compliance Requirements
 
-Every release MUST pass:
+Each governed release MUST achieve:
 
-- **Geometry validity:** ≥ 99.999%  
-- **Attribute completeness:** 100% for `unit_code` + `unit_desc`  
-- **Lineage:** complete PROV-O chain with timestamps  
-- **Telemetry:** energy & carbon logs populated  
-- **CARE:** H3 masking rules evaluated (no sensitive cultural inference)
+- **Geometry validity:** ≥ 99.999% of polygons valid.  
+- **Attribute completeness:** 100% for `unit_code` + `unit_desc`.  
+- **Lineage coverage:** full PROV-O chain covering ingest → harmonization → QA → output.  
+- **Telemetry:** energy & carbon logs populated and schema-valid.  
+- **CARE compliance:** H3 usage reviewed and approved by FAIR+CARE governance guidelines.
 
 ---
 
 ## 🤖 6. AI / Focus-Mode Integration
 
-Surficial geology layers provide:
+Surficial geology provides key **context layers** for:
 
-- **Story Node v3 context:**  
-  - Terrain–unit interactions  
-  - Soil/erosion suitability  
-  - Landform evolution cues  
+- Terrain–unit narratives (e.g., loess vs bedrock exposures).  
+- Hazard and erosion risk overlays.  
+- Ecological suitability narratives (in combination with soils, climate, and hydrology).  
 
-- **Embeddable H3 tiles:**  
-  - AI-safe generalizations  
-  - Used by Focus Mode to render geology-aware narratives  
+Focus Mode v3:
 
-- **Environmental affordance layers:**  
-  - Inputs to climate, hydrology, hazard narratives  
-
-Focus Mode MUST NOT fabricate geological chronology; all context MUST link to real provenance.
+- MAY surface this dataset as **supporting context** when explaining landforms and surficial processes.  
+- MUST NOT fabricate geological sequences; all descriptions MUST link back to real units and provenance.  
+- MAY consume H3/GeoParquet derivatives as input for map overlays and narrative highlight regions.
 
 ---
 
-## 🧪 7. Example (Reference Only · Not Executed in Pipelines)
+## 🧪 7. Example (Reference Only · Not the Production Pipeline)
 
 ```python
 import geopandas as gpd
@@ -275,7 +279,8 @@ g["h3_9"] = g.centroid.apply(lambda c: h3.geo_to_h3(c.y, c.x, 9))
 g.to_parquet("outputs/geoparquet/surficial.parquet", index=False)
 ```
 
-*(Allowed: single-level fenced code block. Nested fences prohibited.)*
+> This example demonstrates the shape of the workflow.  
+> The production implementation uses KFM’s Reliable Pipelines v11, lakeFS, and OpenLineage for controlled runs.
 
 ---
 
@@ -283,16 +288,16 @@ g.to_parquet("outputs/geoparquet/surficial.parquet", index=False)
 
 All transformations MUST produce:
 
-- `lineage/<timestamp>.jsonld` (PROV-O)  
-- WAL entries for deterministic replay  
-- Energy + carbon telemetry (ISO 14064 alignment)  
-- Immutable raw source checksums (`/raw/checksums.txt`)  
+- `lineage/<timestamp>.jsonld` (PROV-O) capturing activities, entities, and agents.  
+- WAL entries suitable for deterministic replay under Reliable Pipelines v11.  
+- Energy + carbon telemetry aligned with ISO 14064-1.  
+- Immutable raw source checksums in `/raw/`.
 
-Governed by:  
-- **FAIR+CARE**  
-- **KFM-OP v11**  
-- **KGS data-use expectations**  
-- **KFM Sovereignty Policy**  
+Governance:
+
+- FAIR+CARE-aligned (no misuse of geology to infer sensitive cultural data).  
+- Sovereignty and heritage policies apply when geology is combined with sensitive cultural datasets.  
+- All governance decisions regarding masking/generalization recorded in lineage.
 
 ---
 
@@ -300,8 +305,8 @@ Governed by:
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| **v11.2.0** | 2025-11-27 | Upgraded to fully compliant KFM-MDP v11.2.2 formatting, added directory layout enhancements, AI governance rules, telemetry schema alignment. |
-| **v11.1.0** | 2025-11-26 | Initial v11 ingest hub with CRS/QA/H3/DMU-lite structure. |
+| **v11.2.0** | 2025-11-27 | Upgraded to KFM-MDP v11.2.2, added badges, v11 directory layout, telemetry & governance integration refinements. |
+| **v11.1.0** | 2025-11-26 | Initial KFM v11 uplift, new CRS/QA/H3/DMU-lite structure. |
 
 ---
 
@@ -311,7 +316,8 @@ Governed by:
 *Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence*
 
 [⬅ Back to Geo Index](../README.md) ·  
-[📜 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·  
+[🏗 Repository Architecture](../../../ARCHITECTURE.md) ·  
+[⚖ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·  
 [🛰 Telemetry Schema](../../../schemas/telemetry/geo-surficial-v11.json)
 
 </div>
