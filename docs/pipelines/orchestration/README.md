@@ -1,35 +1,46 @@
 ---
 title: "🔧 Kansas Frontier Matrix — Orchestration Pipelines Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/pipelines/orchestration/README.md"
-version: "v11.0.0"
+version: "v11.1.1"
 last_updated: "2025-11-27"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Reliability Engineering · FAIR+CARE Council Oversight"
+backward_compatibility: "Full v10.x → v11.x compatibility"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v11.0.0/pipelines-telemetry.json"
+signature_ref: "../../../releases/v11.1.1/signature.sig"
+attestation_ref: "../../../releases/v11.1.1/slsa-attestation.json"
+sbom_ref: "../../../releases/v11.1.1/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.1.1/manifest.zip"
+telemetry_ref: "../../../releases/v11.1.1/pipelines-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/orchestration-index-v11.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.2"
 status: "Active / Enforced"
 doc_kind: "Pipeline Architecture"
 intent: "orchestration-index"
+semantic_document_id: "kfm-orchestration-index"
+doc_uuid: "urn:kfm:doc:pipelines:orchestration:index:v11.1.1"
+machine_extractable: true
 fair_category: "F1-A1-I2-R1"
 care_label: "CARE-Aware · Low-Risk"
 sensitivity_level: "Low"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
-data_steward: "KFM FAIR+CARE Council"
 risk_category: "Low"
 redaction_required: false
 provenance_chain:
   - "docs/pipelines/orchestration/README.md@v10.4.0"
   - "docs/pipelines/orchestration/README.md@v10.4.1"
   - "docs/pipelines/orchestration/README.md@v11.0.0"
+  - "docs/pipelines/orchestration/README.md@v11.1.0"
+  - "docs/pipelines/orchestration/README.md@v11.1.1"
 previous_version_hash: "<previous-sha256>"
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -39,146 +50,292 @@ ontology_alignment:
   geosparql: "geo:FeatureCollection"
 json_schema_ref: "../../../schemas/json/orchestration-index-v11.schema.json"
 shape_schema_ref: "../../../schemas/shacl/orchestration-index-v11-shape.ttl"
-doc_uuid: "urn:kfm:doc:pipelines:orchestration:index:v11.0.0"
-semantic_document_id: "kfm-orchestration-index"
 event_source_id: "ledger:docs/pipelines/orchestration/README.md"
 immutability_status: "version-pinned"
 doc_integrity_checksum: "<sha256>"
-machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas · United States"
 classification: "Public Document"
 role: "architecture"
 lifecycle_stage: "stable"
 ttl_policy: "Review required every 12 months"
-sunset_policy: "Superseded upon orchestration-platform-v12"
+sunset_policy: "Superseded by orchestration-platform-v12"
 ---
 
-# 🔧 Kansas Frontier Matrix — Orchestration Pipelines Overview (v11)
+<div align="center">
 
-This document provides the governed overview of orchestration pipelines in the Kansas Frontier Matrix (KFM) repository. It defines the scope, responsibilities, and directory patterns for Airflow-based pipeline orchestration, lakeFS branching workflows, OpenLineage-enabled provenance, reliability integration, and promotion/rollback structures.
+# 🔧 **Kansas Frontier Matrix — Orchestration Pipelines Overview (v11.1.1)**  
+`docs/pipelines/orchestration/README.md`
 
-## 📘 Overview
+[![Pipelines](https://img.shields.io/badge/KFM-Pipelines-v11-blue)](#)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](#)
+[![OpenLineage](https://img.shields.io/badge/OpenLineage-v2.5-9c27b0)](#)
+[![Reliability](https://img.shields.io/badge/Reliable%20Pipelines-v11-4caf50)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](#)
 
-Orchestration pipelines coordinate multi-stage data transformations, branching workflows, and lineage-aware promotion of validated datasets into governed production branches. They ensure deterministic processing, reproducibility, and adherence to FAIR+CARE requirements.
+**Purpose**  
+Provide the **canonical, governed, v11-standard overview** of KFM orchestration pipelines, integrating Airflow DAGs, lakeFS branching workflows, Reliability Engine v11, CARE-governed data transitions, deterministic execution, and OpenLineage/PROV-O provenance capture.
 
-The orchestration subsystem includes:
+</div>
 
-- Airflow DAGs under `src/pipelines/orchestration/airflow/`.  
-- Architecture and runbook documentation under `docs/pipelines/orchestration/airflow/`.  
-- Shared lineage and lakeFS utilities under `src/pipelines/orchestration/airflow/utils/`.  
-- Telemetry schemas and validation rules in `schemas/telemetry/`.  
+---
 
-All orchestration components must pass KFM’s governance, lineage, reliability, and metadata validation requirements.
+## 📘 1. Introduction
 
-## 🧱 Orchestration Directory Structure
+Orchestration pipelines form the **control plane** of the Kansas Frontier Matrix.
+
+They coordinate:
+
+- Multi-stage ETL  
+- lakeFS branching and promotion workflows  
+- Deterministic transformations  
+- FAIR+CARE governance gates  
+- Reliability primitives (WAL · Retry · Rollback · Hotfix)  
+- OpenLineage-based provenance  
+- Energy + carbon telemetry  
+- Data Contract validation  
+
+Every orchestrated dataset move is:
+
+1. **Defined** (Airflow DAG)  
+2. **Validated** (Data Contract v3)  
+3. **Governed** (FAIR+CARE)  
+4. **Versioned** (lakeFS)  
+5. **Provenanced** (PROV-O + OpenLineage)  
+6. **Released** with full metadata, SBOM, & telemetry  
+
+---
+
+## 🗂 2. v11 Repository Layout (Applied to Orchestration)
+
+The orchestration subsystem uses the **standard v11 repository architecture**:
 
 ```text
-docs/
-  pipelines/
-    orchestration/
-      README.md                          # This file
-      airflow/
-        kfm-v11-branch-based-promotion.md
-        <future-dag-documents>.md
-
-src/
-  pipelines/
-    orchestration/
-      airflow/
-        dags/
-          <airflow-dags>.py
-        utils/
-          lineage.py
-          lakefs.py
+Kansas-Frontier-Matrix/
+│
+├── data/
+│   ├── raw/
+│   ├── work/
+│   ├── processed/
+│   ├── stac/
+│   ├── provenance/
+│   └── releases/
+│
+├── src/
+│   ├── pipelines/
+│   │   └── orchestration/
+│   │       └── airflow/
+│   │           ├── dags/
+│   │           │   └── <airflow-dags>.py
+│   │           └── utils/
+│   │               ├── lineage.py
+│   │               └── lakefs.py
+│   ├── ai/
+│   ├── graph/
+│   ├── server/
+│   └── telemetry/
+│
+├── web/
+│   ├── src/
+│   ├── public/
+│   └── meta/
+│
+├── docs/
+│   ├── pipelines/
+│   │   └── orchestration/
+│   │       ├── README.md                 # ← This document
+│   │       └── airflow/
+│   │           └── kfm-v11-branch-based-promotion.md
+│   ├── architecture/
+│   ├── standards/
+│   ├── analyses/
+│   ├── governance/
+│   └── templates/
+│
+├── schemas/
+│   ├── telemetry/
+│   ├── stac/
+│   ├── dcat/
+│   └── jsonld/
+│
+├── mcp/
+│   ├── experiments/
+│   ├── sops/
+│   ├── model_cards/
+│   └── MCP-README.md
+│
+└── .github/
+    ├── README.md
+    ├── ARCHITECTURE.md
+    └── workflows/
 ```
 
-This layout is normative for all KFM v11 orchestration pipelines.
+This directory structure is **authoritative** for orchestrated pipelines under KFM v11.
 
-## 🔁 Pipeline Architecture Scope
+---
 
-Orchestration pipelines serve the following functions:
+## 🔁 3. Purpose & Scope of Orchestration
 
-- Define Airflow DAGs that manage extraction, transformation, validation, commit, and merge flows.  
-- Use lakeFS as the authoritative data versioning and promotion engine.  
-- Emit OpenLineage events for all tasks and dataset transitions.  
-- Integrate with reliability, SLO, and rollback policies.  
-- Apply FAIR+CARE governance to both raw and curated datasets.  
-- Provide deterministic, documented operations for all data domains.  
+Orchestration pipelines ensure:
 
-These pipelines enable reproducible releases and safe lineage-tracked promotions for geospatial, environmental, cultural, and derived analytical datasets.
+- Deterministic multi-stage ETL  
+- Version-controlled dataset transitions (lakeFS)  
+- Promotion and rollback sequences  
+- Record-level and dataset-level lineage  
+- Reproducibility (WAL checkpoints)  
+- Governance (FAIR+CARE, sovereignty filters)  
+- Energy + carbon sustainability telemetry  
+- Structured release artifacts  
+- Safe autonomous updates  
 
-## 🛠 Orchestration Components
+They act as the **control layer** tying KFM’s data, AI, lineage, and governance systems together.
 
-### DAG Definitions
+---
 
-Located in:
+## 🛠 4. Components of Orchestration (v11)
 
-- `src/pipelines/orchestration/airflow/dags/`
+### 4.1 Airflow DAGs  
+**Location:**  
+`src/pipelines/orchestration/airflow/dags/`
 
-Must include:
+Requirements:
 
-- Deterministic ordering.  
-- Idempotent ETL tasks.  
-- Branch-based promotion logic (lakeFS).  
-- OpenLineage instrumentation.  
-- Config hash binding and version tagging.
+- Deterministic DAG structure  
+- Idempotent tasks  
+- Branch-based promotion flows  
+- Version-tagged DAG builds  
+- Full OpenLineage instrumentation  
+- Config-hash binding  
+- Reliable Pipelines v11 hotfix + rollback support  
 
-### Documentation
+---
 
-Located in:
+### 4.2 Documentation  
+**Location:**  
+`docs/pipelines/orchestration/airflow/`
 
-- `docs/pipelines/orchestration/airflow/`
+Every DAG MUST include:
 
-Each DAG requires:
+- A dedicated architecture README  
+- YAML front-matter metadata  
+- Behavior specs (promotion, validation, failure modes)  
+- Provenance mappings  
+- FAIR+CARE governance considerations  
 
-- A fully governed architecture document.  
-- Versioned YAML metadata.  
-- Clear behavioral specifications for merge, rollback, and lineage.  
+---
 
-### Utilities and Shared Logic
+### 4.3 Shared Utilities  
 
-Located in:
+**Location:**  
+`src/pipelines/orchestration/airflow/utils/`
 
-- `src/pipelines/orchestration/airflow/utils/`
+- `lineage.py`  
+  - PROV-O mapping  
+  - OpenLineage event generation  
+  - STAC/DCAT lineage facet construction  
 
-Includes:
+- `lakefs.py`  
+  - Branch creation  
+  - Commit / merge  
+  - Promotion sequencing  
+  - Rollback via WAL-compatible operations  
 
-- `lineage.py` for dataset facets, PROV-O mapping, and STAC/DCAT linkage.  
-- `lakefs.py` for branch creation, commit, merge, and revert operations.  
+Utilities MUST be:
 
-All utilities must be purely functional, deterministic, and covered by tests.
+- Pure  
+- Deterministic  
+- Fully tested  
 
-## 📊 Telemetry Integration
+---
 
-Orchestration pipelines must emit:
+## 📊 5. Telemetry Requirements (v11)
 
-- Run-level metrics (latency, task durations).  
-- Lineage event summaries.  
-- Promotion and rollback counts.  
-- Energy and carbon metrics (if enabled).  
+Telemetry MUST record:
 
-Outputs are collected in:
+- Task durations  
+- End-to-end workflow run time  
+- Fail/Retry/Success counts  
+- Promotion + rollback events  
+- Energy (`energy_wh`)  
+- Carbon (`carbon_gco2e`)  
+- Lineage event totals  
 
-- `releases/<version>/pipelines-telemetry.json`
+Telemetry MUST be exported to:
 
-Telemetry must conform to the corresponding telemetry schema.
+```
+releases/<version>/pipelines-telemetry.json
+```
 
-## ⚖ FAIR+CARE and Governance Requirements
+and validated via:
 
-Every orchestration pipeline must:
+```
+schemas/telemetry/orchestration-index-v11.json
+```
 
-- Respect CARE labels and H3 generalization where applicable.  
-- Enforce data contracts validated during the `validate` step.  
-- Avoid promoting datasets that violate sovereignty or licensing constraints.  
-- Produce provenance entries suitable for downstream narrative and audit use.  
+Energy and carbon telemetry MUST follow KFM v11 sustainability schemas.
 
-Changes to pipeline structure require governance review.
+---
 
-## 🕰 Version History
+## ⚖️ 6. Governance & FAIR+CARE Compliance
+
+Orchestration pipelines MUST:
+
+- Respect CARE labels on data  
+- Enforce sovereignty and masking rules (H3)  
+- Validate data contracts before promotion  
+- Quarantine failed datasets  
+- Emit governance decisions as PROV-O events  
+- Avoid promoting datasets lacking:
+  - Metadata completeness  
+  - Provenance chains  
+  - License definitions  
+  - Sovereignty classification  
+
+All structural changes require governance review.
+
+---
+
+## 🔒 7. Reliability Engine Integration
+
+Reliable Pipelines v11 MUST be used for:
+
+- WAL-backed retries  
+- Failure-aware branching  
+- Automatic rollback on invalid states  
+- Hotfix branch injection  
+- Checkpoint-based restoration  
+- Promotion safety enforcement  
+
+---
+
+## 🧩 8. Linked Pipeline Standards
+
+This document is integrated with:
+
+- `docs/pipelines/reliability/README.md`  
+- `docs/pipelines/promotions/README.md`  
+- `docs/standards/telemetry_standards.md`  
+- `docs/standards/h3-generalization.md`  
+- `docs/graph/write-patterns.md`  
+
+All orchestrated pipelines MUST comply with these standards.
+
+---
+
+## 🕰 9. Version History
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v11.0.0 | 2025-11-27 | Initial v11 orchestration index; aligned with KFM-MDP v11.2.2; established normative directory structure and governance rules. |
+| v11.1.1 | 2025-11-27 | Full v11 regeneration; applied canonical v11 directory layout; enforced MDP v11.2.2 structure; updated governance/lineage/telemetry integration. |
+| v11.1.0 | 2025-11-27 | Added telemetry + reliability expansions; aligned with upgraded architecture. |
+| v11.0.0 | 2025-11-27 | Initial v11 orchestration index; established normative directory patterns and governance rules. |
 
-[Back to Pipelines Index](../README.md) · [Repository Architecture](../../../ARCHITECTURE.md) · [Governance Standards](../../standards/README.md)
+---
+
+<div align="center">
+
+[⬅ Back to Pipelines Index](../README.md) ·  
+[🏗 Repository Architecture](../../../ARCHITECTURE.md) ·  
+[⚖ Governance Standards](../../standards/README.md)
+
+</div>
