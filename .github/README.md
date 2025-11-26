@@ -86,10 +86,7 @@ ai_transform_prohibited:
 
 **The governed CI/CD, reliability, FAIR+CARE, supply-chain, and automation backbone of the Kansas Frontier Matrix monorepo.**
 
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-informational)](../docs/standards/kfm_markdown_protocol_v11.2.2.md)  
-[![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](../docs/standards/faircare/FAIRCARE-GUIDE.md)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)  
-[![Status: Active](https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen)](#-version-history)
+[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-informational)](../docs/standards/kfm_markdown_protocol_v11.2.2.md) · [![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](../docs/standards/faircare/FAIRCARE-GUIDE.md) · [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE) · [![Status: Active](https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen)](#-version-history)
 
 </div>
 
@@ -160,7 +157,7 @@ Every workflow feeds **OpenLineage v2.5** events for governance and reproducibil
 
 - Prettier / ESLint / TypeScript  
 - Stylelint  
-- Markdown/Docs (KFM-MDP v11.2.2) structure enforcement  
+- Markdown/Docs (**KFM-MDP v11.2.2**) structure enforcement  
 - YAML front-matter validation  
 - Fence integrity checker  
 - No-tabs-no-trailing-whitespace auditor  
@@ -309,18 +306,18 @@ It ensures that **nothing unsafe or non-compliant enters the system.**
 
 | Version | Date       | Summary                                                                                                                        |
 |--------:|------------|--------------------------------------------------------------------------------------------------------------------------------|
-| v11.0.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2, tightened CI references, and aligned badges/anchors with current markdown protocol semantics.     |
-| v11.0.1 | 2025-11-23 | Semantic + structural v11 upgrade; enriched ontology, governance, lineage, AI behavior, telemetry, and security integration.    |
-| v11.0.0 | 2025-11-19 | Initial v11 migration with baseline metadata and CI/CD alignment.                                                              |
-| v10.4.1 | 2025-11-16 | Extended governance/AI metadata and refined directory overview.                                                                |
-| v10.4.0 | 2025-11-15 | KFM-MDP v10.4 rewrite; clarified CI/CD + governance + telemetry architecture.                                                 |
-| v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, and telemetry integration.                                                                      |
-| v10.0.0 | 2025-11-10 | Initial GitHub infrastructure overview.                                                                                       |
+| v11.0.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2, corrected inline badge layout and footer, and aligned CI references with current markdown rules. |
+| v11.0.1 | 2025-11-23 | Semantic + structural v11 upgrade; enriched ontology, governance, lineage, AI behavior, telemetry, and security integration.   |
+| v11.0.0 | 2025-11-19 | Initial v11 migration with baseline metadata and CI/CD alignment.                                                             |
+| v10.4.1 | 2025-11-16 | Extended governance/AI metadata and refined directory overview.                                                               |
+| v10.4.0 | 2025-11-15 | KFM-MDP v10.4 rewrite; clarified CI/CD + governance + telemetry architecture.                                                |
+| v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, and telemetry integration.                                                                     |
+| v10.0.0 | 2025-11-10 | Initial GitHub infrastructure overview.                                                                                      |
 
 ---
 
 <div align="center">
 
-[Root README](../README.md) · [Architecture](ARCHITECTURE.md) · [Security Policy](SECURITY.md)
+[Root README](../README.md) · [CI/CD Architecture](ARCHITECTURE.md) · [Security Policy](SECURITY.md)
 
 </div>
