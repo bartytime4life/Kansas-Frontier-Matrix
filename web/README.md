@@ -162,25 +162,25 @@ These concepts must be implemented in a way that is consistent with backend gove
 
 ```mermaid
 flowchart TD
-    UI[UI Layer (React · State Mgmt)] --> MV[MapView (MapLibre GL)]
+    UI[UI Layer (React / State Mgmt)] --> MV[MapView (MapLibre GL)]
     UI --> CV[CesiumView (3D Terrain)]
     UI --> FP[FocusPanel (Focus Mode v3)]
     UI --> SN[StoryNode Cards (Story Node v3)]
     UI --> TL[TimelineView]
-    UI --> LX[Layer Explorer (STAC/DCAT)]
+    UI --> LX[Layer Explorer (STAC / DCAT)]
 
-    FP --> API[API Client (REST · GraphQL · JSON-LD)]
+    FP --> API[API Client (REST / GraphQL / JSON-LD)]
     MV --> API
     CV --> API
     TL --> API
     SN --> API
     LX --> API
 
-    API --> BE[Backend Services (FastAPI · GraphQL · Governed Endpoints)]
+    API --> BE[Backend Services (FastAPI / GraphQL / Governed Endpoints)]
     BE --> KG[Knowledge Graph (Neo4j)]
-    BE --> STAC[STAC/DCAT Catalogs]
-    BE --> GOV[Governance Ledgers (FAIR+CARE · SBOM · SLSA)]
-    BE --> TEL[Telemetry Backend (OTel v11 · Energy · Carbon · Drift · A11y)]
+    BE --> STAC[STAC / DCAT Catalogs]
+    BE --> GOV[Governance Ledgers (FAIR+CARE / SBOM / SLSA)]
+    BE --> TEL[Telemetry Backend (OTel v11 / Energy / Carbon / Drift / A11y)]
 ```
 
 The Web Platform is **read-only** with respect to core datasets (aside from user preferences and session state), and must never bypass backend governance or CARE enforcement.
