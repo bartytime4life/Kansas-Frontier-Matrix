@@ -98,9 +98,7 @@ They coordinate multi-stage ETL, enforce Data Contract v3 validation, run lakeFS
 
 ---
 
-## 🗂 2. Directory Layout (v11 “Immediate + One Branch”, with Emojis + Descriptions)
-
-Below is the **official v11 orchestration-relevant directory map**, with **icons** and **descriptions**, showing each **top-level directory** and **one level beneath it**:
+## 🗂 2. Directory Layout
 
 ```text
 📁 docs/                                        # Project documentation root
