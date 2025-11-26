@@ -1,8 +1,8 @@
 ---
 title: "⚙️ Kansas Frontier Matrix — GitHub Infrastructure Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/README.md"
-version: "v11.0.1"
-last_updated: "2025-11-23"
+version: "v11.0.2"
+last_updated: "2025-11-27"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
@@ -23,7 +23,7 @@ ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
+markdown_protocol_version: "KFM-MDP v11.2.2"
 ontology_protocol_version: "KFM-OP v11.0"
 pipeline_contract_version: "KFM-PDC v11.0"
 status: "Active / Enforced"
@@ -47,6 +47,7 @@ provenance_chain:
   - ".github/README.md@v10.4.0"
   - ".github/README.md@v10.4.1"
   - ".github/README.md@v11.0.0"
+  - ".github/README.md@v11.0.1"
 prov_profile: "PROV-O Plan + KFM Governance Extensions"
 openlineage_profile: "OpenLineage v2.5 · CI/CD events only"
 ontology_alignment:
@@ -57,7 +58,7 @@ ontology_alignment:
   geosparql: "geo:FeatureCollection"
 json_schema_ref: "../schemas/json/github-readme-v11.schema.json"
 shape_schema_ref: "../schemas/shacl/github-readme-v11-shape.ttl"
-doc_uuid: "urn:kfm:doc:github-readme-v11.0.1"
+doc_uuid: "urn:kfm:doc:github-readme-v11.0.2"
 semantic_document_id: "kfm-doc-github-readme"
 event_source_id: "ledger:.github/README.md"
 immutability_status: "mutable-plan"
@@ -85,7 +86,7 @@ ai_transform_prohibited:
 
 **The governed CI/CD, reliability, FAIR+CARE, supply-chain, and automation backbone of the Kansas Frontier Matrix monorepo.**
 
-[![KFM-MDP v11](https://img.shields.io/badge/Markdown-KFM--MDP_v11.0.0-informational)](../docs/standards/kfm_markdown_protocol_superstandard.md)  
+[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-informational)](../docs/standards/kfm_markdown_protocol_v11.2.2.md)  
 [![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](../docs/standards/faircare/FAIRCARE-GUIDE.md)  
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)  
 [![Status: Active](https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen)](#-version-history)
@@ -94,7 +95,7 @@ ai_transform_prohibited:
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
 This document defines the **GitHub Infrastructure Plane** for KFM v11—governing all CI/CD, metadata validation, supply-chain hardening, and compliance automation.
 
@@ -114,7 +115,7 @@ This is the **single automated gatekeeper** between contributions and the govern
 
 ---
 
-# 🗂 Directory Layout
+## 🗂 Directory Layout
 
 ```text
 .github/                               # GitHub governance & automation subsystem
@@ -150,15 +151,16 @@ This is the **single automated gatekeeper** between contributions and the govern
 
 ---
 
-# ⚙️ CI/CD Architecture (Governed v11 Pipeline)
+## ⚙️ CI/CD Architecture (Governed v11 Pipeline)
 
 KFM v11 uses a **multi-stage, ontology-aware, FAIR+CARE-enforced CI/CD engine.**  
 Every workflow feeds **OpenLineage v2.5** events for governance and reproducibility.
 
-## 🧩 Stage 1 — Lint & Style  
+### 🧩 Stage 1 — Lint & Style
+
 - Prettier / ESLint / TypeScript  
 - Stylelint  
-- Markdown/Docs (KFM-MDP v11) structure enforcement  
+- Markdown/Docs (KFM-MDP v11.2.2) structure enforcement  
 - YAML front-matter validation  
 - Fence integrity checker  
 - No-tabs-no-trailing-whitespace auditor  
@@ -167,7 +169,8 @@ Any violation blocks merge.
 
 ---
 
-## 📐 Stage 2 — Schema, Ontology & Metadata Validation  
+### 📐 Stage 2 — Schema, Ontology & Metadata Validation
+
 Covers:
 
 - JSON Schema  
@@ -183,7 +186,8 @@ KFM v11 requires *all* schemas to validate before PR acceptance.
 
 ---
 
-## 🧪 Stage 3 — Testing  
+### 🧪 Stage 3 — Testing
+
 - Unit tests (src, pipelines, web, graph)  
 - Integration tests (graph, API, ETL nodes)  
 - E2E tests  
@@ -194,7 +198,8 @@ Any failed stage halts the pipeline.
 
 ---
 
-## 🛡️ Stage 4 — FAIR+CARE & Sovereignty Enforcement  
+### 🛡️ Stage 4 — FAIR+CARE & Sovereignty Enforcement
+
 Implements rules defined in:
 
 - `FAIRCARE-GUIDE.md`  
@@ -213,7 +218,8 @@ Governance violations → escalated to CARE Council.
 
 ---
 
-## 🔒 Stage 5 — Security & Supply-Chain Integrity  
+### 🔒 Stage 5 — Security & Supply-Chain Integrity
+
 Includes:
 
 - SBOM verification  
@@ -227,7 +233,8 @@ Security failures → PR blocked.
 
 ---
 
-## 📦 Stage 6 — Build, Package & Release  
+### 📦 Stage 6 — Build, Package & Release
+
 Outputs:
 
 - Web client build (React + MapLibre + Cesium)  
@@ -241,7 +248,7 @@ Only green builds and governance-approved changes deploy.
 
 ---
 
-# 🧬 Integration with Governance, Ontologies & Lineage
+## 🧬 Integration with Governance, Ontologies & Lineage
 
 `.github/` enforces alignment with:
 
@@ -256,7 +263,7 @@ Each CI stage drops lineage entries to the governance ledger.
 
 ---
 
-# 🛰 Telemetry, Reporting & Observability
+## 🛰 Telemetry, Reporting & Observability
 
 Workflows emit:
 
@@ -283,7 +290,7 @@ Used for:
 
 ---
 
-# 🧭 How `.github/` Connects with the Larger KFM Stack
+## 🧭 How `.github/` Connects with the Larger KFM Stack
 
 `.github` is the **policy and enforcement layer** controlling:
 
@@ -298,24 +305,22 @@ It ensures that **nothing unsafe or non-compliant enters the system.**
 
 ---
 
-# 🕰 Version History
+## 🕰 Version History
 
-| Version | Date | Summary |
-|--------:|------|---------|
-| v11.0.1 | 2025-11-23 | Semantic + structural v11 upgrade; enriched ontology, governance, lineage, AI behavior, telemetry, and security integration. |
-| v11.0.0 | 2025-11-19 | Initial v11 migration with baseline metadata and CI/CD alignment. |
-| v10.4.1 | 2025-11-16 | Extended governance/AI metadata and refined directory overview. |
-| v10.4.0 | 2025-11-15 | KFM-MDP v10.4 rewrite; clarified CI/CD + governance + telemetry architecture. |
-| v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, and telemetry integration. |
-| v10.0.0 | 2025-11-10 | Initial GitHub infrastructure overview. |
+| Version | Date       | Summary                                                                                                                        |
+|--------:|------------|--------------------------------------------------------------------------------------------------------------------------------|
+| v11.0.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2, tightened CI references, and aligned badges/anchors with current markdown protocol semantics.     |
+| v11.0.1 | 2025-11-23 | Semantic + structural v11 upgrade; enriched ontology, governance, lineage, AI behavior, telemetry, and security integration.    |
+| v11.0.0 | 2025-11-19 | Initial v11 migration with baseline metadata and CI/CD alignment.                                                              |
+| v10.4.1 | 2025-11-16 | Extended governance/AI metadata and refined directory overview.                                                                |
+| v10.4.0 | 2025-11-15 | KFM-MDP v10.4 rewrite; clarified CI/CD + governance + telemetry architecture.                                                 |
+| v10.3.2 | 2025-11-14 | Added STAC, DCAT, governance, and telemetry integration.                                                                      |
+| v10.0.0 | 2025-11-10 | Initial GitHub infrastructure overview.                                                                                       |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MIT License  
-Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-FAIR+CARE · MCP-DL v6.3 · KFM-MDP v11.0  
-Back to: Root README · Architecture · Security Policy
+[Root README](../README.md) · [Architecture](ARCHITECTURE.md) · [Security Policy](SECURITY.md)
 
 </div>
