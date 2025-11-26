@@ -1,7 +1,7 @@
 ---
 title: "🌌 Kansas Frontier Matrix — v11 System Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "README.md"
-version: "v11.1.0"
+version: "v11.1.1"
 last_updated: "2025-11-27"
 review_cycle: "Annual · FAIR+CARE Council & Architecture Board"
 commit_sha: "<latest-commit-hash>"
@@ -17,7 +17,7 @@ status: "Active / Enforced"
 doc_kind: "Overview"
 intent: "kfm-root-overview"
 semantic_document_id: "kfm-doc-root-overview"
-doc_uuid: "urn:kfm:readme:root:v11.1.0"
+doc_uuid: "urn:kfm:readme:root:v11.1.1"
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 fair_category: "F1-A1-I2-R3"
@@ -430,6 +430,7 @@ for full participation details.
 
 | Version | Date       | Summary                                                                                     |
 |--------:|------------|---------------------------------------------------------------------------------------------|
+| v11.1.1 | 2025-11-27 | Aligned root README with KFM-MDP v11.2.2 header semantics; minor metadata and CI notes tuned. |
 | v11.1.0 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; clarified repo architecture, provenance/telemetry, and governance hooks. |
 | v11.0.1 | 2025-11-23 | Enriched with repository layout, governance, and AI/ETL descriptions.                       |
 | v11.0.0 | 2025-11-23 | Initial v11 root overview; defined KFM v11 mission, domains, and high-level architecture.   |
