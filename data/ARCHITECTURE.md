@@ -2,49 +2,44 @@
 title: "🗄️ Kansas Frontier Matrix — Data System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/ARCHITECTURE.md"
 
-# Versioning & Release
-version: "v11.0.0"
-last_updated: "2025-11-19"
+version: "v11.2.2"
+last_updated: "2025-11-27"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+content_stability: "stable"
 
-# Integrity & Provenance
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
-doc_uuid: "urn:kfm:doc:data-architecture-v11.0.0"
+doc_uuid: "urn:kfm:doc:data-architecture:v11.2.2"
 semantic_document_id: "kfm-doc-data-architecture"
 event_source_id: "ledger:data/ARCHITECTURE.md"
 immutability_status: "version-pinned"
 
-# Release Artifacts
-sbom_ref: "../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/data-architecture-v2.json"
+sbom_ref: "../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../releases/v11.2.2/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/data-architecture-v11.2.2.json"
 energy_schema: "../schemas/telemetry/energy-v2.json"
 carbon_schema: "../schemas/telemetry/carbon-v2.json"
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
 
-# Governance & Ethics
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
 
-# Document Classification
 status: "Active / Enforced"
 doc_kind: "Architecture"
 intent: "data-system-architecture"
 role: "data-platform-architecture"
 category: "Data · ETL · Governance · FAIR+CARE"
 
-# FAIR + CARE
 fair_category: "F1-A1-I1-R1"
 care_label: "Variable — Dataset Dependent"
 sensitivity_level: "Mixed"
@@ -54,7 +49,6 @@ data_steward: "KFM FAIR+CARE Council"
 risk_category: "Mixed"
 redaction_required: false
 
-# Ontology Alignment
 ontology_alignment:
   cidoc: "E73 Information Object"
   schema_org: "Dataset"
@@ -65,7 +59,6 @@ ontology_alignment:
 json_schema_ref: "../schemas/json/data-architecture.schema.json"
 shape_schema_ref: "../schemas/shacl/data-architecture-shape.ttl"
 
-# AI Usage
 ai_training_inclusion: false
 ai_focusmode_usage: "Restricted"
 ai_transform_permissions:
@@ -76,7 +69,6 @@ ai_transform_prohibited:
   - "speculative additions"
   - "unverified historical claims"
 
-# Accessibility & Lifecycle
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA"
 jurisdiction: "Kansas / United States"
@@ -84,6 +76,15 @@ classification: "Varies by dataset"
 lifecycle_stage: "stable"
 ttl_policy: "Annual review"
 sunset_policy: "Superseded upon next data-platform architecture update"
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+badge_profiles:
+  - "root-centered-badge-row"
+requires_purpose_block: true
+requires_directory_layout_section: true
+requires_version_history: true
+requires_governance_links_in_footer: true
 ---
 
 <div align="center">
@@ -92,487 +93,457 @@ sunset_policy: "Superseded upon next data-platform architecture update"
 `data/ARCHITECTURE.md`
 
 **Purpose**  
-Define the **complete v11 architecture** for KFM data ingestion, storage, governance, validation, lineage, STAC/DCAT catalogs, AI enrichment, and graph loading.  
+Define the **complete v11.2.2 architecture** for KFM data ingestion, storage, validation, governance, lineage, STAC/DCAT cataloging, AI enrichment, and graph loading.  
 
-This document is the **canonical reference** for all contributors touching `data/**`:
+This is the **canonical reference** for everyone touching `data/**`:
 - ETL engineers  
 - AI/ML practitioners  
 - GIS specialists  
 - Governance & FAIR+CARE reviewers  
 - Focus Mode architects  
 
-It is designed to be **machine-readable**, **governance-enforced**, and **GitHub-safe**.
+Designed to be **machine-readable**, **governance-enforced**, and **GitHub-safe**.
 
 </div>
 
 ---
 
-## 1. 📘 High-Level Overview
+## 📘 1. High-Level Overview
 
 The KFM Data System:
 
-- Integrates **heterogeneous historical, environmental, cultural, and geologic data**  
-- Normalizes it to a **common spatial, temporal, and semantic frame**  
-- Encodes it in **STAC/DCAT/JSON-LD** with FAIR+CARE governance metadata  
-- Loads it into a **Neo4j knowledge graph** aligned with CIDOC-CRM, GeoSPARQL, OWL-Time, PROV-O, and KFM-OP v11  
-- Tracks **lineage, integrity, governance decisions, and sustainability metrics**  
-- Exposes results to **Focus Mode**, Story Nodes v3, and public-facing catalogs  
+- Integrates **heterogeneous historical, environmental, cultural, and geologic data**.  
+- Normalizes everything to a **common spatial, temporal, and semantic frame**.  
+- Represents datasets via **STAC**, **DCAT**, and **JSON-LD** with FAIR+CARE governance metadata.  
+- Loads results into a **Neo4j knowledge graph** aligned with:
+  - CIDOC-CRM  
+  - GeoSPARQL  
+  - OWL-Time  
+  - PROV-O  
+  - KFM-OP v11  
+- Tracks **lineage, integrity, governance decisions, and sustainability metrics**.  
+- Exposes data to:
+  - Focus Mode v3  
+  - Story Nodes v3  
+  - KFM APIs and web UIs  
+  - Public-facing STAC/DCAT catalogs  
 
 Core goals:
 
-- Reproducible ETL  
-- Transparent governance  
+- Reproducible ETL and transformations  
+- Transparent, auditable governance  
 - Ethical and sovereign data use  
-- Robust sustainability reporting  
-- Seamless integration with KFM’s AI and visualization layers  
+- Robust sustainability accounting  
+- Tight integration with AI + visualization layers  
 
 ---
 
-## 2. 🧱 Data System Directory Architecture
+## 🗂️ 2. Data System Directory Architecture
 
-The `data/` tree is the **physical backbone** of the data platform.
+The `data/` tree is the **physical backbone** of the KFM data platform. It follows the same canonical layout used across the project.
 
-~~~~text
-data/
-├── ARCHITECTURE.md             ← this document
-├── README.md                   ← user-facing data overview
+```text
+📁 data/
+│   📄 ARCHITECTURE.md             — This document (data system architecture)
+│   📄 README.md                   — Data directory overview
 │
-├── raw/                        ← original source datasets (immutable)
-│   ├── hydrology/
-│   ├── geology/
-│   ├── history/
-│   ├── remote-sensing/
-│   └── sovereignty/
+│   📁 sources/                    — External dataset manifests and configs
 │
-├── staging/                    ← cleaned & normalized intermediates
-│   ├── tables/                 ← CSV/Parquet after normalization
-│   ├── spatial/                ← GeoJSON, GPKG, temporary tiles
-│   └── metadata/               ← pre-STAC/DCAT JSON/JSON-LD
+│   📁 raw/                        — Original source datasets (immutable, append-only)
+│   │   📁 hydrology/
+│   │   📁 geology/
+│   │   📁 history/
+│   │   📁 remote-sensing/
+│   │   📁 sovereignty/
+│   │   📁 environmental/
 │
-├── processed/                  ← ETL outputs ready for publication/graph
-│   ├── hydrology/
-│   ├── climate/
-│   ├── ecology/
-│   ├── historical/
-│   └── storynodes/
+│   📁 work/                       — Cleaned, normalized, enriched intermediates
+│   │   📁 tables/                 — Normalized tabular data (CSV, Parquet)
+│   │   📁 spatial/                — Intermediate GeoJSON/GPKG/rasters
+│   │   📁 metadata/               — Pre-STAC/DCAT JSON/JSON-LD
 │
-├── stac/                       ← STAC Items & Collections
-│   ├── items/
-│   ├── collections/
-│   └── catalog.json
+│   📁 processed/                  — Deterministic ETL outputs (analysis-ready)
+│   │   📁 hydrology/
+│   │   📁 climate/
+│   │   📁 ecology/
+│   │   📁 historical/
+│   │   📁 hazards/
+│   │   📁 storynodes/
 │
-├── dcat/                       ← DCAT 3.0 JSON-LD datasets & catalogs
+│   📁 stac/                       — STAC Items & Collections
+│   │   📄 README.md               — STAC catalog overview
+│   │   📄 catalog.json            — STAC root
+│   │   📁 missions/               — EO mission namespaces (Sentinel, Landsat, etc.)
+│   │   📁 hydrology/              — Hydrology STAC domain
+│   │   📁 climate/                — Climate STAC domain
+│   │   📁 hazards/                — Hazards STAC domain
+│   │   📁 landcover/              — Landcover/Land use STAC domain
+│   │   📁 tabular/                — Tabular STAC domain
 │
-├── checksums/                  ← SHA-256 lineage & integrity tracking
-│   ├── raw/
-│   ├── processed/
-│   └── stac/
+│   📁 dcat/                       — DCAT 3.0 catalogs (JSON-LD)
+│   │   📄 catalog.jsonld          — Root DCAT catalog
+│   │   📁 datasets/               — DCAT dataset descriptions
 │
-├── reports/                    ← validation, FAIR+CARE, and quality outputs
-│   ├── self-validation/
-│   └── telemetry/
+│   📁 archive/                    — Versioned, retired, superseded datasets
 │
-├── archive/                    ← retired or superseded datasets (versioned)
+│   📁 checksums/                  — SHA-256 lineage and integrity tracking
+│   │   📁 raw/
+│   │   📁 processed/
+│   │   📁 stac/
 │
-└── work/                       ← scratch / dev-only staging (not production)
-~~~~
+│   📁 reports/                    — Validation, FAIR+CARE, audit, and telemetry outputs
+│   │   📁 self-validation/        — Schema, CARE, checksum reports
+│   │   📁 telemetry/              — Sustainability & performance telemetry
+│   │   📁 audit/                  — Governance & compliance audits
+│
+└── 📁 tmp/                        — Scratch / dev-only; never used in production pipelines
+```
 
 Key architectural guarantees:
 
-- **`raw/` is append-only and immutable**  
-- **`processed/` is deterministic** (recomputed from raw + configs)  
-- **`stac/` and `dcat/` are always schema-valid**  
-- **`checksums/` and `reports/` are governance-enforced**  
+- `raw/` is **append-only and immutable**.  
+- `processed/` is **deterministic**, derived solely from raw + configs.  
+- `stac/` & `dcat/` are **schema-valid and governance-approved**.  
+- `checksums/` and `reports/` provide integrity and governance evidence.
 
 ---
 
-## 3. 🔄 End-to-End Data Lifecycle
+## 🔄 3. End-to-End Data Lifecycle
 
-The Data System follows a **multi-phase lifecycle**.
+KFM’s data lifecycle follows a strict, multi-phase pattern:
 
-~~~~mermaid
+```mermaid
 flowchart TD
-  A["raw/\n(immutable sources)"]
-    --> B["staging/\n(cleaning & normalization)"]
-  B --> C["processed/\n(ETL products)"]
-  C --> D["stac/ + dcat/\n(metadata catalogs)"]
-  D --> E["checksums/\nSHA-256 lineage"]
-  E --> F["reports/\nself-validation + FAIR+CARE"]
-  F --> G["graph ingest\n(Neo4j · CIDOC-CRM · GeoSPARQL · PROV-O)"]
+  A["📁 raw/\n(immutable sources)"]
+    --> B["📁 work/\n(cleaning & normalization)"]
+  B --> C["📁 processed/\n(ETL products)"]
+  C --> D["📁 stac/ + 📁 dcat/\n(metadata catalogs)"]
+  D --> E["📁 checksums/\n(SHA-256 lineage)"]
+  E --> F["📁 reports/\nself-validation + FAIR+CARE"]
+  F --> G["Graph ingest\n(Neo4j · CIDOC-CRM · GeoSPARQL · PROV-O)"]
   G --> H["Focus Mode · Story Nodes · Public Catalogs"]
-~~~~
+```
 
 Phases:
 
-1. **Ingest & Capture (raw/)**  
-2. **Clean & Normalize (staging/)**  
-3. **Transform & Harmonize (processed/)**  
-4. **Catalog (stac/, dcat/)**  
-5. **Verify & Govern (checksums/, reports/)**  
-6. **Load & Publish (graph, portals, Focus Mode)**  
+1. **Ingest (raw/)**: Acquire and freeze external data.  
+2. **Normalize (work/)**: Clean, conform, and enrich.  
+3. **Transform (processed/)**: Produce stable products.  
+4. **Catalog (stac/, dcat/)**: Emit STAC/DCAT metadata.  
+5. **Verify & Govern (checksums/, reports/)**: Ensure integrity and ethics.  
+6. **Load & Publish**: Insert into graph; surface via UI and APIs.
 
-Each phase has **strict entry/exit criteria** enforced by CI/CD and governance workflows.
+Each phase has **explicit entry/exit criteria** enforced by CI/CD and governance.
 
 ---
 
-## 4. 🌍 Spatial Architecture (CRS, Tilings, H3)
+## 🌍 4. Spatial Architecture (CRS, Geometry, H3)
 
-### 4.1 Coordinate Reference Systems
+### 4.1 CRS Policy
 
-Canonical CRS:
+Canonical published CRS:
 
-- **EPSG:4326** (WGS84) for all STAC & DCAT spatial extents  
-- Support for additional CRSs at processing stage:
-  - Equal-area projections for statistics  
-  - UTM for local geometries  
-  - Custom CRSs for legacy maps, with explicit transforms  
+- **EPSG:4326 (WGS84)** for all STAC and DCAT spatial extents.
 
-All published spatial products must:
+Working CRSs in `work/` and `processed/` may include:
 
-- Declare CRS  
-- Document transform steps  
-- Validate geometry integrity  
+- Equal-area projections for statistics.  
+- UTM for local-site precision.  
+- Historical CRSs for legacy maps (with explicit transform metadata).
+
+All spatial datasets MUST:
+
+- Declare CRS explicitly.  
+- Record transformation steps between CRSs.  
+- Pass geometry validity checks (no self-intersections, no invalid polygons).
 
 ### 4.2 H3 Integration
 
 H3 is used for:
 
-- Sensitive site generalization  
-- Multi-scale aggregation  
-- Efficient spatial indexing  
+- Generalization of sensitive locations.  
+- Multi-scale aggregation and lightweight indexing.  
 
 Rules:
 
-- Culturally sensitive or restricted features → stored as generalized H3 cells in public layers  
-- High-resolution geometries only accessible in governed contexts (non-public, with explicit approvals)  
+- Sensitive or sacred sites → generalized to H3 cells in public-facing datasets.  
+- Full-resolution coordinates may only be accessible in governed, restricted contexts.
 
 ---
 
-## 5. ⏱ Temporal Architecture (OWL-Time Alignment)
+## ⏱ 5. Temporal Architecture (OWL-Time)
 
-Temporal data is modeled using OWL-Time and KFM’s temporal norms:
+Temporal modeling via OWL-Time:
 
-- Every dataset must specify:
+- Datasets MUST specify:
   - `temporal_start`  
   - `temporal_end`  
-  - Optional uncertainty bounds  
+  - Optional uncertainty field(s).  
 
-STAC and DCAT mapping:
+Mappings:
 
 - STAC → `extent.temporal.interval`  
-- DCAT → `dct:temporal`  
+- DCAT → `dct:temporal` (TimePeriod)  
 
-Events and processes in the graph:
+Graph representation:
 
-- Use `time:Instant` or `time:Interval`  
-- Map to CIDOC events over time ranges  
-- Support historical calendar nuances where needed  
+- `time:Instant` for single-point events.  
+- `time:Interval` for ranges (e.g., multi-year series, paleoclimate epochs).  
+
+These are leveraged by Focus Mode timelines and Story Node temporal scopes.
 
 ---
 
-## 6. 📊 Metadata Systems (STAC, DCAT, JSON-LD)
+## 📊 6. Metadata Systems — STAC, DCAT, JSON-LD
 
 ### 6.1 STAC
 
-Requirements:
+STAC is the primary schema for geospatial/temporal assets:
 
-- STAC Items for spatial assets (rasters, vectors, tiles)  
-- STAC Collections for grouped datasets  
-- STAC Catalog as root index  
+- Collections define dataset families.  
+- Items define specific assets (rasters, vectors, scenes).
 
-Paths:
+KFM-STAC v11.2 extends STAC with:
 
-- Items: `data/stac/items/`  
-- Collections: `data/stac/collections/`  
-- Root catalog: `data/stac/catalog.json`  
+- `kfm_id`, FAIR+CARE flags, and lineage fields.  
+- Domain-specific attributes (hydrology, climate, hazards, etc.).
 
 ### 6.2 DCAT
 
-DCAT 3.0 JSON-LD used for:
+DCAT 3.0 catalogs:
 
-- High-level dataset descriptions  
-- Distributions and access URLs  
-- Licensing and rights statements  
+- Provide a web-native description of KFM datasets for external interoperability.  
+- Map STAC datasets into DCAT `dcat:Dataset` and `dcat:Distribution` records.  
 
-Paths:
+### 6.3 JSON-LD
 
-- `data/dcat/*.jsonld`  
+Every DCAT catalog uses JSON-LD with a KFM-specific context:
 
-### 6.3 JSON-LD Contexts
-
-Custom KFM context includes:
-
-- `kfm_id` for stable dataset IDs  
-- CARE metadata for sovereignty and ethics  
-- PROV-O, CIDOC-CRM, GeoSPARQL references  
+- Connects internal ontology terms (KFM-OP v11).  
+- Enables knowledge graph alignment.  
+- Encodes PROV-O, FAIR+CARE, and license metadata.
 
 ---
 
-## 7. 🧠 AI / Enrichment Architecture
+## 🧠 7. AI & Enrichment Architecture
 
-AI pipelines:
+AI components are used to:
 
-- OCR for scanned documents and maps  
-- NER and entity linking for treaties, events, people, places  
-- Topic modeling and clustering for Story Node enrichment  
-- Predictive modeling (e.g., climate/hydrology projections)  
+- OCR historical maps and manuscripts.  
+- Extract entities (people, places, events) from text.  
+- Derive thematic layers (e.g., hazard indices, projections).  
+- Support Focus Mode summarization and evidence linking.
 
-All AI-derived products in `data/processed/` must include:
+Constraints:
 
-- Model name + version  
-- Training dataset references  
-- Limitations and known risks  
-- AI-driven fields clearly labeled  
+- All AI outputs used in data layer MUST:
+  - Record model name + version.  
+  - Reference training data sources.  
+  - Document known limitations and biases.  
+  - Be clearly flagged as AI-derived in metadata.
 
-AI metrics stored in:
+AI governance is described in:
 
-- `data/reports/self-validation/ai/`  
-- `docs/reports/audit/ai_model_audits.json`  
-
----
-
-## 8. 🧮 ETL Architecture (Pipelines)
-
-Pipelines live under `src/pipelines/**` and use `data/**` as their storage backbone.
-
-High-level ETL stages:
-
-1. **Extract** → copy or stream into `data/raw/`  
-2. **Transform** → normalize into `data/staging/` and then `data/processed/`  
-3. **Load** → push to `data/stac/`, `data/dcat/`, and then graph  
-
-All pipelines must:
-
-- Be deterministic (no external randomness without seeds)  
-- Log transformations and decisions  
-- Write validation results to `data/reports/self-validation/`  
+- `docs/standards/faircare.md`  
+- `docs/standards/ai-law-coevolution.md` (if present)
 
 ---
 
-## 9. 🧬 Lineage & PROV-O Architecture
+## 🧮 8. ETL Architecture (Pipelines)
 
-Lineage is described via PROV-O:
+Pipelines live in `src/pipelines/` and use `data/**` as the storage backbone:
 
-- Entities: datasets, files, derived layers (prov:Entity)  
-- Activities: ETL runs, AI inferences (prov:Activity)  
-- Agents: pipelines, operators, institutions (prov:Agent)  
+- Extract:
+  - Download or stream into `data/raw/` or `data/sources/` referenced entries.  
+- Transform:
+  - Normalize into `data/work/`, enrich, join, compute metrics.  
+- Load:
+  - Write deterministic outputs into `data/processed/`.  
+  - Build STAC Items and Collections in `data/stac/`.  
+  - Build DCAT catalog entries in `data/dcat/`.  
+  - Trigger graph ingest.
 
-Exports stored in:
+All pipelines must be:
 
-- `data/lineage/prov/` (if present; or equivalent namespace)  
-- `docs/reports/audit/data_provenance_ledger.json`  
-
-Lineage rules:
-
-- Every major transformation must include:
-  - Source datasets  
-  - Parameters/configs  
-  - Tool and version  
-  - Time of execution  
-
-Checksums support lineage verification (see checksums/).
+- Deterministic and reproducible.  
+- Logged with configuration, timestamps, and outputs.  
+- Governed via CI/CD and governance workflows.
 
 ---
 
-## 10. ⚖️ Governance, FAIR+CARE & Sovereignty
+## 🧬 9. Lineage & PROV-O Architecture
 
-FAIR+CARE governance is applied **per dataset** and **per transformation**.
+Lineage is modeled with PROV-O, emitted via:
 
-Governance artifacts:
+- OpenLineage events.  
+- JSON-LD provenance descriptions.  
 
-- CARE metadata stored alongside STAC/DCAT  
-- Governance decisions logged to `docs/reports/audit/governance-ledger.json`  
-- Indigenous data flagged via `indigenous_rights_flag` in STAC/DCAT extensions  
+Key patterns:
 
-Rules:
+- `prov:Entity` — datasets, products, assets.  
+- `prov:Activity` — ETL runs, AI inferences, human curation.  
+- `prov:Agent` — pipelines, services, or organizations.
 
-- No sensitive Indigenous or cultural data is published without explicit governance review  
-- Masking/generalization must be applied as per `sovereignty_policy` configs  
+Lineage data stored in:
+
+- `data/reports/audit/`  
+- `data/reports/self-validation/lineage/`  
+- KFM graph (`:Entity`, `:Activity`, `:Agent` nodes and edges).
+
+Every important ETL step MUST:
+
+- Record upstream sources.  
+- Record configuration or parameter sets.  
+- Record responsible agent(s).  
 
 ---
 
-## 11. 🌱 Sustainability & Telemetry Architecture
+## ⚖️ 10. Governance, FAIR+CARE, & Sovereignty
 
-Sustainability metrics include:
+The data architecture is governed by:
 
-- Energy per ETL run (Wh)  
-- Carbon estimates (gCO₂e)  
-- Storage usage  
-- Data and model drift indicators  
+- `governance_ref` (ROOT-GOVERNANCE.md)  
+- FAIR+CARE guidance (`faircare.md`)  
+- Sovereignty policy (`INDIGENOUS-DATA-PROTECTION.md`)
 
-Telemetry stored in:
+Applied at:
+
+- Dataset design  
+- Ingestion  
+- Publication  
+- Public API exposure  
+
+Governance aspects:
+
+- Sensitive data flagged and masked/generalized.  
+- Public exposure risk assessed per dataset.  
+- Indigenous rights and custodial control respected.  
+
+---
+
+## 🌱 11. Sustainability & Telemetry
+
+Sustainability telemetry:
+
+- `energy_wh` — energy usage of pipelines.  
+- `carbon_gco2e` — estimated emissions.  
+- Efficiency metrics (records per Wh, etc.).
+
+Telemetry location:
 
 - `data/reports/telemetry/`  
-- `releases/<version>/focus-telemetry.json`  
+- `../releases/<version>/focus-telemetry.json`
 
-Collected from:
+Used to:
 
-- CI/CD workflows  
-- Validation tools  
-- Runtime measurement hooks  
+- Monitor long-term resource usage.  
+- Support governance on sustainable computing.  
 
 ---
 
-## 12. 📈 Data Quality & ISO 19157
+## 📈 12. Data Quality (ISO 19157)
 
-Quality dimensions:
+Quality dimensions tracked:
 
 - Completeness  
-- Consistency  
-- Accuracy  
-- Timeliness  
-- Validity  
+- Logical consistency  
+- Positional accuracy  
+- Temporal accuracy  
+- Thematic accuracy  
 
-Metrics recorded in:
+Quality results stored under:
 
-- `data/reports/self-validation/quality/`  
+- `data/reports/self-validation/quality/`
 
-Validated against:
+Used to:
 
-- ISO 19157 quality measures  
-- Internal KFM rules for each dataset type  
-
----
-
-## 13. 🧩 Data Ontology — Entity Classes
-
-This section defines the **data ontology** for KFM’s data layer.  
-
-Each class is mapped to:
-
-- CIDOC-CRM  
-- DCAT  
-- Schema.org  
-- PROV-O  
-- GeoSPARQL  
-
-### 13.1 Core Entities
-
-| KFM Entity        | Description                          | CIDOC-CRM | Schema.org | DCAT      | GeoSPARQL | PROV-O   |
-|-------------------|--------------------------------------|-----------|------------|-----------|-----------|----------|
-| Dataset           | Logical dataset                      | E73       | Dataset    | dcat:Dataset | n/a     | Entity   |
-| Layer             | Spatial layer (raster/vector)        | E36/E53   | Dataset    | dcat:Distribution | FeatureCollection | Entity |
-| Feature           | Individual spatial feature           | E53       | Place      | n/a       | Feature   | Entity   |
-| Scan              | Image of document/map                | E38       | ImageObject| dcat:Distribution | n/a  | Entity   |
-| RasterTile        | Tiled raster asset (COG tile, etc.)  | E36/E73   | Dataset    | dcat:Distribution | n/a | Entity   |
-| Table             | Tabular dataset (Parquet, CSV)       | E73       | Dataset    | dcat:Distribution | n/a | Entity   |
-| StoryNodeData     | Data slice used by Story Nodes       | E31/E73   | CreativeWork | n/a      | FeatureCollection | Entity |
-| SensorStream      | Time-series sensor data              | E16       | Dataset    | dcat:Dataset | n/a   | Entity   |
+- Assess fitness-for-use for analyses.  
+- Inform Focus Mode/Story Nodes about confidence and limitations.
 
 ---
 
-## 14. 🔗 Ontology Property Mapping (STAC/DCAT → Graph)
+## 🧩 13. Data Ontology — Entity Classes
 
-Mapping examples:
+Data layer entity types:
 
-- STAC `id` → `kfm_id` (graph node)  
-- STAC `properties.datetime` → OWL-Time `time:Instant`  
-- STAC `bbox` → GeoSPARQL `geosparql:hasGeometry`  
-- DCAT `dct:license` → PROV-O / license property on Dataset  
-- DCAT `dct:temporal` → OWL-Time Interval on Dataset  
+| KFM Entity    | Description                               | CIDOC | Schema.org | DCAT          | PROV-O    |
+|---------------|-------------------------------------------|-------|------------|---------------|-----------|
+| Dataset       | Logical grouped data product              | E73   | Dataset    | dcat:Dataset  | Entity    |
+| Distribution  | Particular file/asset of a dataset        | E73   | DataDownload | dcat:Distribution | Entity |
+| Feature       | Spatial feature (vector)                  | E53   | Place      | n/a           | Entity    |
+| RasterLayer   | Spatial raster layer                      | E36/E73 | Dataset   | dcat:Distribution | Entity |
+| Table         | Tabular dataset                           | E73   | Dataset    | dcat:Distribution | Entity |
+| SensorStream  | Time-series stream                        | E16   | Dataset    | dcat:Dataset  | Entity    |
 
-This ensures **semantic continuity** from `data/**` to the graph layer.
-
----
-
-## 15. 🧮 STAC/DCAT Promotion Flow
-
-Promotion from `raw/` to STAC/DCAT:
-
-1. Dataset ingested into `raw/`  
-2. Cleaned/normalized into `staging/`  
-3. Processed into `processed/`  
-4. STAC Item + Collection generated under `stac/`  
-5. DCAT Dataset created under `dcat/`  
-6. Validation & governance checks run (schema + FAIR+CARE)  
-7. Telemetry & lineage recorded  
-8. Graph ingestion authorized  
+These classes are used consistently across STAC, DCAT, JSON-LD, and the graph.
 
 ---
 
-## 16. 🧰 Validation Tool Integration
+## 🔗 14. STAC/DCAT → Graph Mapping
 
-Validation tools from `tools/validation/` integrate with `data/**`:
+Mappings from STAC/DCAT to graph nodes:
 
-- `schema_check.py` → validates STAC/DCAT + contracts  
-- `faircare_validator.py` → inspects CARE & license metadata  
-- `checksum_audit.py` → ensures SHA-256 chain integrity  
-- `ai_explainability_audit.py` → AI metrics for enriched datasets  
+- STAC `collection.id` → `:Dataset {kfm_id}`  
+- STAC `item.id` → `:Distribution` or `:DatasetInstance`  
+- STAC `geometry` and `bbox` → `:Geometry` nodes with GeoSPARQL shapes  
+- DCAT `dct:license` → license property on dataset and distribution nodes  
+- DCAT `dct:temporal` → OWL-Time interval nodes  
 
-Architecture ensures that **no dataset** is promoted without:
-
-- Schema validity  
-- Governance approval (where needed)  
-- Integrity guarantees  
+Ensures **semantic continuity** from `data/**` to the graph.
 
 ---
 
-## 17. 🔁 ETL & Data System in CI/CD
+## 🧰 15. Validation Toolchain
 
-`.github/workflows/*` enforce:
+Validation tools integrate with the Data System to ensure everything stays correct:
 
-- Data schema validation on PRs touching `data/**`  
-- Governance routing for CARE-sensitive data  
-- Telemetry export for ETL workloads  
-- Dependency and security checks for ETL tools  
-
-Data System architecture is **tightly coupled** with CI/CD via:
-
-- STAC/DCAT validators  
+- Schema validators (JSON Schema, SHACL)  
+- Spatial validators (geometry tests)  
 - FAIR+CARE validators  
-- Telemetry exporters  
+- Checksum auditors  
+- Telemetry summarizers  
+
+Outputs live in:
+
+- `data/reports/self-validation/`  
+- `data/reports/audit/`  
+
+CI pipelines block merges when critical validation fails.
 
 ---
 
-## 18. 🔍 Observability & Dashboards
+## 🧭 16. Contributor Workflow Summary
 
-Observability provides:
+When modifying data architecture or adding data:
 
-- ETL run histories  
-- Validation pass/fail trends  
-- Governance decisions over time  
-- Energy and carbon metrics by pipeline  
-- Data drift over time and geography  
-
-Dashboards read from:
-
-- `docs/reports/telemetry/`  
-- `docs/reports/audit/`  
-- `releases/*/focus-telemetry.json`  
+1. Place files in correct part of `data/`.  
+2. Update ETL pipeline definitions if needed.  
+3. Update or create STAC/DCAT metadata.  
+4. Run validation (locally if possible).  
+5. Submit PR and let CI/CD do full checks.  
+6. Respond to governance review where applicable.
 
 ---
 
-## 19. 🧭 Contributor Workflow
+## 🕰️ 17. Version History
 
-For data contributors:
-
-1. Propose new dataset via `data_submission` issue template  
-2. Add files under `data/raw/` or `data/staging/`  
-3. Implement or update ETL pipeline under `src/pipelines/**`  
-4. Run local validation (where possible)  
-5. Open PR  
-6. Let CI/CD handle validation, governance, and telemetry  
-7. Resolve any validation or governance issues  
-
-All steps must be tracked through PR templates and CI reports.
+| Version | Date       | Summary                                                                                         |
+|--------:|------------|-------------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; canonical directory layout applied; telemetry/schema refs updated; governance and ontology alignment tightened. |
+| v11.0.0 | 2025-11-19 | Initial v11 data system architecture; defined core lifecycle, governance, and ETL patterns.     |
 
 ---
-
-## 20. 🕰️ Version History
-
-| Version | Date       | Summary                                                                                     |
-|--------:|------------|---------------------------------------------------------------------------------------------|
-| v11.0.0 | 2025-11-19 | Full v11 data system rebuild; added ontology tables, sustainability, governance, and CI/CD coupling. |
-| v10.4.0 | 2025-11-15 | v10.4 data architecture; lifecycle & governance integration.                               |
-| v10.3.2 | 2025-11-14 | Added drift + sustainability tracking and extended provenance.                             |
-| v10.0.0 | 2025-11-10 | Initial data platform architecture under v10.                                              |
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT License**  
-Data System Architecture · FAIR+CARE Certified  
-MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0 · Diamond⁹ Ω / Crown∞Ω  
+**Kansas Frontier Matrix — Data System Architecture v11.2.2**  
+“Data is the substrate. Architecture is how it breathes.”
 
-[Back to Data Overview](README.md) · [Repository Root](../README.md) · [Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — MIT License  
+MCP-DL v6.3 · KFM-MDP v11.2.2 · KFM-OP v11  
+
+[⬅ Back to Data Overview](README.md) ·  
+[⬅ Back to Repository Root](../README.md) ·  
+[⚖ Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
