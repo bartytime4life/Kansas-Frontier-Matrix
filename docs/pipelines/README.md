@@ -77,6 +77,7 @@ ai_transform_prohibited:
   - "speculative additions"
   - "rewriting pipeline logic"
   - "unverified operational claims"
+
 transform_registry:
   allowed:
     - "summaries"
@@ -108,14 +109,16 @@ sunset_policy: "Superseded upon next major pipeline architecture revision"
 # 🛠️ **Kansas Frontier Matrix — Pipelines Overview & Operations Guide (v11.2.2)**  
 `docs/pipelines/README.md`
 
-**Purpose:**  
+**Purpose**  
 Define the authoritative **v11.2.2 operational architecture** for all Kansas Frontier Matrix pipelines—ETL, AI/ML–enriched, autonomous, streaming, and batch—ensuring reliability, sovereignty protection, FAIR+CARE integrity, deterministic transformations, and full governance compliance.
 
-[![Pipelines · MCP-DL v6.3](https://img.shields.io/badge/Pipelines-MCP--DL_v6.3-blue)]() ·
-[![Markdown · KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-purple)]() ·
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)]() ·
-[![OpenLineage](https://img.shields.io/badge/Lineage-OpenLineage_v2.5-orange)]() ·
-[![Status: Active](https://img.shields.io/badge/Status-Active-success.svg)]()
+  
+<!-- Badge Row -->
+<img src="https://img.shields.io/badge/Pipelines-MCP--DL_v6.3-blue" />
+<img src="https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-purple" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold" />
+<img src="https://img.shields.io/badge/Lineage-OpenLineage_v2.5-orange" />
+<img src="https://img.shields.io/badge/Metadata-STAC%20%2F%20DCAT%20%2F%20JSON--LD-lightgrey" />
 
 </div>
 
@@ -123,32 +126,37 @@ Define the authoritative **v11.2.2 operational architecture** for all Kansas Fro
 
 ## 📘 Overview
 
-### Purpose  
-This document defines the **end-to-end architecture and operational expectations** for all KFM pipelines. It ensures every dataset and AI-enriched transformation moves through a reproducible, sovereign-safe, FAIR+CARE–aligned lifecycle from raw ingest → work → processed → knowledge graph → UI systems.
+### Purpose
 
-### Executive Summary  
+This document defines the **end-to-end architecture and operational expectations** for all KFM pipelines. It ensures every dataset and AI-enriched transformation moves through a reproducible, sovereign-safe, FAIR+CARE–aligned lifecycle from **raw ingest → work → processed → catalogs → knowledge graph → UI systems**.
+
+### Executive Summary
+
 Pipelines in KFM v11.2.2 operate under a strict operational paradigm:
 
 - Deterministic ETL & AI behavior  
 - Mandatory structural, semantic, sovereignty, and governance validation  
 - Full lineage (OpenLineage v2.5 + PROV-O extensions)  
 - Strict data masking & Indigenous rights protections  
-- AI guardrails for NER/OCR/summarization/feature extraction  
+- AI guardrails for OCR/NER/summarization/feature extraction  
 - Immutable promotion rules and dataset versioning  
 - Autonomous drift/bias detection and reliability enforcement  
 - Sustainability telemetry (energy, carbon, data movement costs)  
 
-KFM pipelines are designed to be **self-governing, self-validating, and self-auditing**, producing datasets that meet the highest standards of transparency, ethics, and reproducibility.
+KFM pipelines are designed to be **self-governing, self-validating, and self-auditing**, producing datasets that meet high standards of transparency, ethics, and reproducibility.
 
-### Scope  
-Applicable to all pipelines in:  
+### Scope
+
+Applies to all pipelines in:
+
 - ETL (batch + streaming)  
-- AI automation  
+- AI/ML automation  
 - Validation & observability  
 - Provenance & lineage  
 - Story Node + Focus Mode ingestion pipelines  
 
-### Audience  
+### Audience
+
 Reliability engineers · Data architects · AI/ML engineers · FAIR+CARE governance · Knowledge graph engineers · Focus Mode developers
 
 ---
@@ -158,59 +166,66 @@ Reliability engineers · Data architects · AI/ML engineers · FAIR+CARE governa
 ```text
 📁 KansasFrontierMatrix/                     — Monorepo root
 │
-├── 📂 docs/                                 — All documentation (standards, guides, analyses)
-│   ├── 📂 pipelines/                        — Pipeline documentation (this file)
-│   ├── 📂 standards/                        — Governance, Markdown, FAIR+CARE, sovereignty
-│   ├── 📂 architecture/                     — System + subsystem architecture designs
-│   ├── 📂 data/                             — Data contracts, STAC/DCAT catalogs
-│   ├── 📂 analyses/                         — Domain-specific research
-│   └── 📄 glossary.md                       — Unified term glossary
+📁 docs/                                     — All documentation
+│   📁 pipelines/                            — Pipeline documentation (this file + domain docs)
+│   │   📄 README.md                         — ← Pipelines overview & operations guide
+│   │   📁 meteorology/                      — Meteorology pipeline docs (HRRR, NDFD, GRIB2/Zarr)
+│   │   📁 hydrology/                        — Hydrology pipeline docs (streamflow, reservoirs, WID)
+│   │   📁 hazards/                          — Hazard pipeline docs (wildfire, tornado, drought)
+│   │   📁 archaeology/                      — Archaeology pipeline docs (geophysics, surveys)
+│   │   📁 reliability/                      — SLOs, error budgets, rollback, hotfix patterns
+│   │   📁 case-studies/                     — Real-world pipeline incident and upgrade case studies
+│   📁 standards/                            — Governance, Markdown, FAIR+CARE, sovereignty
+│   📁 architecture/                         — System & subsystem architecture designs
+│   📁 data/                                 — Data contracts, STAC/DCAT catalogs, provenance docs
+│   📁 analyses/                             — Domain research & analysis
+│   📄 glossary.md                           — Unified terms
 │
-├── 📂 src/                                  — Backend source
-│   ├── 📂 pipelines/                        — ETL, autonomous, batch, streaming, AI
-│   ├── 📂 graph/                            — Neo4j schema, loaders, query engines
-│   ├── 📂 api/                              — FastAPI services, GraphQL gateway
-│   └── 📂 tools/                            — Utilities, migrations
+📁 src/                                      — Backend code
+│   📁 pipelines/                            — ETL, autonomous, batch, streaming, AI flows
+│   │   📁 watchers/                         — Watchers that detect upstream data changes
+│   │   📁 updater/                          — Updater Runners (schedulers, webhooks)
+│   │   📁 domain/                           — Domain-specific ETL (hydrology, meteorology, hazards, etc.)
+│   │   📁 reliability/                      — Shared reliability primitives
+│   📁 graph/                                — Neo4j schema, loaders, queries
+│   📁 api/                                  — FastAPI, GraphQL gateways
+│   📁 tools/                                — Utility modules and scripts
 │
-├── 📂 data/                                 — Full data lifecycle
-│   ├── 📂 sources/                          — Source manifests (external data catalog)
-│   ├── 📂 raw/                              — Immutable raw data (DVC/LFS)
-│   ├── 📂 work/                             — Normalized, enriched intermediate data
-│   ├── 📂 processed/                        — Validated, FAIR+CARE-compliant outputs
-│   └── 📂 stac/                             — STAC v11 catalog
-│
-├── 📂 schemas/                              — STAC, DCAT, JSON-LD, SHACL, telemetry schemas
-│   ├── 📂 telemetry/                        — Energy, carbon, lineage schemas
-│   └── 📂 json/                             — Validation schemas for pipelines
-│
-└── 📂 .github/                              — CI/CD workflows (kfm-ci, lineage-audit, governance)
+📁 data/                                     — Data lifecycle (raw → work → processed → stac/dcat)
+📁 schemas/                                  — JSON, STAC, DCAT, SHACL, telemetry schemas
+📁 .github/                                  — CI/CD workflows and policy-as-code
 ```
 
 ---
 
 ## 🧭 Context
 
-The pipelines subsystem is central to KFM’s **semantic data lifecycle**, enforcing:
+The pipeline layer connects:
 
-- Ontological alignment (CIDOC-CRM, OWL-Time, GeoSPARQL)  
-- Governance obligations (FAIR+CARE, sovereignty, licensing)  
-- Technical guarantees (reproducibility, determinism, drift defense)  
-- Narrative fidelity (Focus Mode + Story Node inputs)  
+- **Data** ←→ **Ontology** ←→ **UI + Focus Mode**
 
-This guide defines how pipelines integrate with the broader system architecture.
+It must align to:
+
+- Ontologies: CIDOC-CRM, GeoSPARQL, OWL-Time, PROV-O  
+- Governance & ethics: FAIR+CARE, sovereignty policies, licensing  
+- Tech standards: STAC, DCAT, JSON-LD, CF conventions  
+- Operational standards: SLOs, error budgets, idempotency, WAL, concurrency safety  
+
+This guide is the **root document** for pipeline-related architecture decisions.
 
 ---
 
 ## 🗺️ Diagrams
 
-### Pipeline Lifecycle (Raw → Work → Processed → Graph)
+### Pipeline Lifecycle (Data Plane)
 
 ```mermaid
 flowchart LR
-    A[Raw Data] --> B[Work Layer]
-    B --> C[Processed Layer]
-    C --> D[Graph Loader]
-    D --> E[UI + Story Nodes + Focus Mode]
+    A[Raw Data · External Sources] --> B[Work Layer · Normalization & Enrichment]
+    B --> C[Processed Layer · Deterministic Outputs]
+    C --> D[STAC/DCAT Catalogs · Data Products]
+    D --> E[Graph Loaders · Neo4j]
+    E --> F[UI · Focus Mode · Story Nodes]
 ```
 
 ### Reliability & Observability Flow
@@ -218,148 +233,159 @@ flowchart LR
 ```mermaid
 flowchart TD
     X[Pipeline Node] --> Y[Validation Gates]
-    Y --> Z[OpenLineage Event]
-    Z --> G[Governance Plane]
+    Y --> Z[OpenLineage Events]
+    Z --> G[Governance Plane · Ledgers]
+    G --> H[Alerts · Dashboards · FAIR+CARE Audits]
 ```
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Validated pipeline outputs directly feed Story Node & Focus Mode layers:
+Pipelines feed Focus Mode and Story Nodes:
 
-- Only **validated, sovereign-safe graph entities** are eligible  
-- All narrative generation requires:
-  - OWL-Time temporal validity  
-  - GeoSPARQL spatial consistency  
-  - Provenance anchoring (`prov:wasDerivedFrom`)  
-  - AI guardrail success (non-speculative summaries)  
+- Only **validated, sovereignty-compliant entities** are visible.  
+- Narrative generation depends on:
+  - Temporal consistency via OWL-Time  
+  - Spatial validity via GeoSPARQL  
+  - Provenance via PROV-O (`prov:wasDerivedFrom`, `prov:used`, `prov:generatedBy`)  
+  - AI guardrails ensuring no speculative content  
 
-Focus Mode is allowed to:
+Focus Mode can:
 
-- Summarize pipeline health  
-- Extract metadata  
-- Highlight lineage and validation status  
+- Summarize pipeline states & health  
+- Show key lineage chains  
+- Visualize releases and promotions over time  
 
-But cannot:
+Focus Mode cannot:
 
-- Alter normative pipeline definitions  
-- Invent non-existent pipeline behavior  
-- Generate synthetic governance details  
+- Reinterpret or overwrite normative pipeline definitions  
+- Invent new pipeline stages or data sources  
+- Circumvent governance or kill-switch states  
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-### Validation Layers  
+### Validation Layers
 
-- **Structural**: schema checks, CRS validation, STAC/DCAT compatibility  
-- **Semantic**: SHACL, ontology inference  
-- **Sovereignty**: H3 r7 generalization, cultural masking  
-- **FAIR+CARE**: labels, licensing, exposure risk  
-- **Operational**: latency, throughput, retries, WAL recovery readiness  
-- **AI**: hallucination guardrails, explanation provenance  
+- **Structural** — schema, types, shape, CRS  
+- **Semantic** — ontology, SHACL, domain rules  
+- **Sovereignty** — H3-based masking, restricted-site rules  
+- **FAIR+CARE** — licensing, CARE labels, risk categories  
+- **Operational** — SLOs, latency, throughput, retry patterns  
+- **AI** — label drift, bias, hallucination detection, explanation logging  
 
-### CI Integration  
+### CI Integration
 
-- `docs-lint-v11`  
-- `schema-lint-v11`  
-- `lineage-audit-v11`  
-- `governance-audit-v11`  
-- `etl-validation-v11`  
+Typical CI jobs include:
 
-Any failure → promotion blocked.
+- `docs-lint-v11` — Markdown structure + YAML spec checks  
+- `schema-lint-v11` — JSON/SHACL schemas  
+- `pipeline-lint-v11` — structural checks for ETL configs  
+- `lineage-audit-v11` — OpenLineage + PROV-O completeness  
+- `governance-audit-v11` — FAIR+CARE & sovereignty compliance  
+- `etl-validation-v11` — data-contract-level validations  
 
----
-
-## 📦 Data & Metadata
-
-All pipeline outputs must include:
-
-- STAC Items  
-- DCAT Dataset metadata  
-- JSON-LD with KFM context  
-- Provenance packets (PROV-O)  
-- Telemetry bundles (lineage, energy, carbon)  
-
-Metadata fields MUST document:
-
-- License  
-- Spatial/temporal extent  
-- Source lineage  
-- CARE & sovereignty labels  
-- Dataset version + run_id  
-- SHA-256 checksums  
+Any failure **blocks promotion** and requires governance review.
 
 ---
 
-## 🧱 Architecture
+## 📦 Data & Metadata Expectations
 
-### Pipeline Classes  
+Pipeline outputs MUST:
 
-- **Extract**: ingestion, licensing checks, raw snapshots  
-- **Transform**: normalization, enrichment, geocoding, OCR/NER, metadata generation  
-- **Validate**: structural, semantic, sovereignty, FAIR+CARE, AI guardrails  
-- **Load**: Neo4j ingestion, STAC/DCAT publishing, dataset finalization  
+- Emit STAC Items & Collections (where geospatial).  
+- Emit DCAT dataset records (for higher-level dataset definition).  
+- Attach JSON-LD contexts referencing KFM ontologies.  
+- Store cryptographic checksums (SHA-256) of canonical artifacts.  
+- Provide machine-readable provenance.
 
-### Promotion Lifecycle  
+Metadata details:
 
-```
-raw → work → processed → graph → platform
-```
+- Spatial extent (`bbox`, `geometry`).  
+- Temporal extent (`start_datetime`, `end_datetime`, OWL-Time).  
+- Source datasets and their licenses.  
+- FAIR+CARE attributes and risk categories.  
+- Version identifiers and run IDs.
 
-Promotion requires:
+---
 
-- Complete validation suite  
-- Full lineage  
-- No sovereignty violations  
-- No drift/bias failures  
-- Successful WAL state  
+## 🧱 Architectural Classes of Pipelines
+
+1. **Extract Pipelines**  
+   - Acquire data from external API, bucket, or flat-file source.  
+   - Enforce license & usage policies on ingest.
+
+2. **Transform Pipelines**  
+   - Normalize schemas, units, and CRS.  
+   - Run AI steps (OCR/NER/summarization) with guardrails.  
+   - Emphasize determinism and repeatability.
+
+3. **Validation Pipelines**  
+   - Perform Great Expectations, schema checks, and FAIR+CARE/sovereignty validations.  
+   - Output validation reports to `data/reports/`.
+
+4. **Load Pipelines**  
+   - Publish final artifacts to STAC/DCAT.  
+   - Load graph nodes and relationships.  
+   - Attach provenance and telemetry.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-### FAIR  
-- Findable: UUIDs, semantic IDs  
-- Accessible: open licensing  
-- Interoperable: STAC/DCAT/JSON-LD  
-- Reusable: provenance + licensing  
+Pipelines are designed to uphold:
 
-### CARE  
-- Authority to control  
-- Collective benefit  
-- Responsibility  
-- Ethics  
+### FAIR
 
-### Governance Engine (GovHooks v4)  
+- **Findable:** KFM IDs, STAC/DCAT indexing, search.  
+- **Accessible:** Controlled but open-sharing where legally allowed.  
+- **Interoperable:** Uses STAC, DCAT, CF, and KFM ontologies.  
+- **Reusable:** Rich provenance and metadata.
 
-Enforces:
+### CARE
 
-- Masking rules  
-- Licensing compliance  
-- Risk scoring  
-- Provenance verification  
-- Promotion approvals  
+- **Collective Benefit:** Data pipelines serve communities, not exploitation.  
+- **Authority to Control:** Indigenous and local communities retain control over use of their data.  
+- **Responsibility:** Operators enforce masking & sovereignty rules.  
+- **Ethics:** Transparent limitations and hazards documented.
+
+Governance engine (GovHooks):
+
+- Attaches governance metadata per run.  
+- Enforces kill-switches and freeze windows.  
+- Logs decisions in governance ledgers.
 
 ---
 
-## 🕰️ Version History
+## 🕰 Version History
 
-| Version | Date       | Notes                                                   |
-|--------:|-----------:|---------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Full rewrite under KFM-MDP v11.2.2; governance hardening |
-| v11.0.0 | 2025-11-20 | Initial v11 pipelines overview                          |
+| Version | Date       | Summary                                                                                         |
+|--------:|------------|-------------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-27 | Canonical v11.2.2 rewrite; badge/footer alignment; layout normalized; telemetry & governance hooks updated. |
+| v11.0.0 | 2025-11-20 | Initial v11 pipelines overview; established basic architecture and governance linkages.        |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Pipelines Overview & Operations Guide v11.2.2**  
-Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence  
+## 🛠️ **Kansas Frontier Matrix — Pipelines Overview & Operations Guide (v11.2.2)**  
+*Deterministic pipelines · Governed automation · FAIR+CARE-aligned data flow*
 
-[⬅ Back to Pipelines](README.md) ·  
-[📚 Documentation Root](../README.md) ·  
-[🌐 Project Homepage](../../README.md)
+  
+<img src="https://img.shields.io/badge/Pipelines-MCP--DL_v6.3-blue" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.2-purple" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold" />
+<img src="https://img.shields.io/badge/Lineage-OpenLineage_v2.5-orange" />
+<img src="https://img.shields.io/badge/Metadata-STAC%20%2F%20DCAT%20%2F%20JSON--LD-lightgrey" />
+
+  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+MCP-DL v6.3 · KFM-MDP v11.2.2 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
+
+[⬅ Back to Pipelines Home](README.md) ·  
+[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·  
+[📘 KFM Documentation Home](../README.md)
 
 </div>
