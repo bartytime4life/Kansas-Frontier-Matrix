@@ -2,21 +2,23 @@
 title: "🛰️ Kansas Frontier Matrix — Pipeline Validation & Observability Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/pipelines/validation-observability.md"
 
-version: "v11.0.0"
-last_updated: "2025-11-20"
+version: "v11.2.2"
+last_updated: "2025-11-27"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+content_stability: "stable"
 backward_compatibility: "Full v10.x → v11.x compatibility"
 
 commit_sha: "<latest-commit-hash>"
-signature_ref: "../../releases/v11.0.0/signature.sig"
-attestation_ref: "../../releases/v11.0.0/slsa-attestation.json"
+previous_version_hash: "<previous-sha256>"
+signature_ref: "../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../releases/v11.2.2/slsa-attestation.json"
 
-sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/pipelines-validation-v11.json"
+sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../releases/v11.2.2/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/pipelines-validation-v11.2.2.json"
 energy_schema: "../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../schemas/telemetry/carbon-v2.json"
 
@@ -28,9 +30,9 @@ risk_profile: "High Governance · Requires Full Provenance · Auto-Masked Sensit
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
 
@@ -39,8 +41,13 @@ doc_kind: "Architecture"
 intent: "pipeline-validation-observability"
 category: "Pipelines · Validation · Observability · Lineage"
 sensitivity: "General (auto-masking for protected datasets)"
-classification: "Public Document"
+sensitivity_level: "Low"
+classification: "Public"
 jurisdiction: "Kansas / United States"
+public_exposure_risk: "Low to Medium"
+indigenous_rights_flag: true
+data_steward: "KFM FAIR+CARE Council"
+redaction_required: false
 
 prov_profile: "PROV-O Core + KFM Lineage Extensions"
 openlineage_profile: "OpenLineage v2.5 + KFM Extensions"
@@ -75,29 +82,6 @@ runtime:
   reliability_engine: "Reliable Pipelines v11 — WAL · Retry · Rollback · Hotfix · Lineage"
   agents: "LangGraph Autonomous Updater v11"
 
-fair_category: "F1-A1-I1-R1"
-sensitivity_level: "Low"
-public_exposure_risk: "Low to Medium"
-indigenous_rights_flag: true
-data_steward: "KFM FAIR+CARE Council"
-redaction_required: false
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  owl_time: "ProperInterval"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../../schemas/json/pipelines-validation-v11.schema.json"
-shape_schema_ref: "../../schemas/shacl/pipelines-validation-v11-shape.ttl"
-
-doc_uuid: "urn:kfm:docs:pipelines:validation-observability:v11.0.0"
-semantic_document_id: "kfm-pipelines-validation-observability"
-event_source_id: "ledger:docs/pipelines/validation-observability.md"
-immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
-
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
@@ -108,6 +92,41 @@ ai_transform_prohibited:
   - "speculative additions"
   - "unverified architectural claims"
   - "modifying normative requirements"
+transform_registry:
+  allowed:
+    - "summaries"
+    - "semantic-highlighting"
+    - "a11y-adaptations"
+  prohibited:
+    - "speculative additions"
+    - "unverified architectural claims"
+    - "modifying normative requirements"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  owl_time: "ProperInterval"
+  prov_o: "prov:Plan"
+  geosparql: "geo:FeatureCollection"
+
+json_schema_ref: "../../schemas/json/pipelines-validation-v11.2.2.schema.json"
+shape_schema_ref: "../../schemas/shacl/pipelines-validation-v11.2.2-shape.ttl"
+
+doc_uuid: "urn:kfm:docs:pipelines:validation-observability:v11.2.2"
+semantic_document_id: "kfm-pipelines-validation-observability"
+event_source_id: "ledger:docs/pipelines/validation-observability.md"
+immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+badge_profiles:
+  - "root-centered-badge-row"
+
+requires_purpose_block: true
+requires_version_history: true
+requires_directory_layout_section: true
+requires_governance_links_in_footer: true
 
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
@@ -117,105 +136,114 @@ sunset_policy: "Superseded upon v12 pipeline redesign"
 
 <div align="center">
 
-# 🛰️ **Kansas Frontier Matrix — Pipeline Validation & Observability Guide (v11.0.0)**  
+# 🛰️ **Kansas Frontier Matrix — Pipeline Validation & Observability Guide (v11.2.2)**  
 `docs/pipelines/validation-observability.md`
 
 **Purpose:**  
-Define the full **v11 LTS** validation, observability, lineage-governance, and QA/QC requirements for all KFM ETL, AI/ML, streaming, and batch pipelines. Ensures deterministic quality gates, continuous lineage capture, FAIR+CARE adherence, sovereignty compliance, sustainability telemetry, and platform-wide traceability.
+Define the **v11.2.2 long-term validation & observability architecture** governing every KFM ETL, AI/ML, batch, and streaming pipeline. Establish deterministic quality gates, sovereign-safe lineage capture, FAIR+CARE compliance, sustainability telemetry, and governance enforcement across all data and model flows.
+
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP--DL_v6.3-informational)]() ·
+[![Markdown · KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-blue)]() ·
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)]() ·
+[![OpenLineage](https://img.shields.io/badge/Lineage-OpenLineage_v2.5-orange)]() ·
+[![WCAG AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet)]()  
 
 </div>
 
 ---
 
-## 📘 Executive Summary
+## 📘 Overview
 
-Pipeline validation and observability in KFM v11 enforce:
+### Purpose  
+This guide defines the **governed infrastructure** responsible for ensuring all pipelines in the Kansas Frontier Matrix meet strict v11.2.2 requirements for integrity, lineage, safety, sovereignty, environmental impact, reproducibility, and explainability.
 
-- Deterministic, reproducible transformations  
-- Full lineage (PROV-O + OpenLineage v2.5)  
-- FAIR+CARE + Indigenous sovereignty protection  
-- Quality gates enforced at every DAG node  
-- Rigorous schema validation (STAC, DCAT, JSON-LD, CIDOC-CRM, GeoSPARQL, OWL-Time)  
-- Sustainability metrics (energy, carbon, environmental cost)  
-- Automated governance gates (GovHooks v4)  
-- Real-time monitoring of pipeline drift, bias, latency, and failure domains  
+### Executive Summary  
+KFM v11.2.2 establishes a **self-auditing, self-governing pipeline ecosystem** with:
 
-The result: **a self-auditing, self-governing ETL system** with complete traceability and observability from ingest → graph → APIs → UI → Story Nodes → Focus Mode.
+- Deterministic transformations  
+- Comprehensive lineage (`prov:Activity`, OpenLineage v2.5)  
+- FAIR+CARE enforcement at each stage  
+- H3 r7 sovereignty masking for cultural/custodial datasets  
+- Semantic validation across STAC/DCAT/GeoJSON/CIDOC/OWL-Time  
+- Sustainability telemetry (energy, carbon, environmental cost)  
+- Reliability engine (WAL, retry, rollback, hotfix, impact gating)  
+- Real-time drift, bias, and failure pattern detection  
+- Compliance surfaces to Focus Mode & Story Nodes  
 
----
+This creates a **closed-loop validation and observability mesh** spanning ingest → ETL → graph → APIs → UI → narrative systems.
 
-## 🧪 1. Validation Architecture
+### Scope  
+Applies to all KFM pipelines (ETL, AI/ML, streaming, batch, autonomous, hybrid). Covers standards, schemas, lineage, governance, and environmental metrics.
 
-Validation occurs at three layers:
-
-### 1.1 Structural Validation  
-
-Ensures all ingested and transformed data conforms to:
-
-- STAC v11  
-- DCAT v11  
-- JSON-LD w/ KFM context  
-- GeoJSON  
-- CIDOC-CRM compatible graph nodes  
-- OWL-Time temporal logic  
-- PROV-O lineage  
-- CRS and bounding box checks  
-
-Tools:  
-
-- `schema-lint-v11`  
-- `geojson-lint`  
-- `crs-check`  
-- `bbox-check`  
+### Audience  
+Pipeline architects, reliability engineers, governance reviewers, FAIR+CARE council members, graph engineers, and Focus Mode integrators.
 
 ---
 
-### 1.2 Semantic Validation  
+## 🗂️ Directory Layout
 
-Verifies:
-
-- Required ontology fields present  
-- Temporal reasoning consistency  
-- Spatial consistency and topology rules  
-- FAIR+CARE labels applied  
-- Sovereignty compliance (H3 r7 generalization for cultural sites)  
-- Entity uniqueness, canonical IDs, and URI consistency  
-
-Tools:  
-
-- SHACL (shape_schema_ref)  
-- Ontology-reasoning inference tests  
-- `lineage-audit-v11`  
+```text
+📁 KansasFrontierMatrix/                     — Monorepo root
+│
+├── 📂 docs/                                 — Documentation (standards, guides, analyses)
+│   ├── 📂 standards/                        — Governance, FAIR+CARE, Markdown, sovereignty
+│   ├── 📂 architecture/                     — System + subsystem architecture specs
+│   ├── 📂 pipelines/                        — Pipeline-related docs (this file)
+│   ├── 📂 data/                             — Data contracts, STAC/DCAT catalogs
+│   ├── 📂 analyses/                         — Domain analyses (hydrology, archaeology, climate)
+│   └── 📄 glossary.md                       — Shared terminology
+│
+├── 📂 src/                                  — Backend source (ETL, AI/ML, graph, APIs)
+│   ├── 📂 pipelines/                        — ETL and AI pipelines (batch · streaming · autonomous)
+│   ├── 📂 graph/                            — Neo4j schema, loader, query engines
+│   ├── 📂 api/                              — FastAPI services, GraphQL gateway
+│   └── 📂 tools/                            — Utilities, migration scripts, helpers
+│
+├── 📂 data/                                 — Full data lifecycle
+│   ├── 📂 sources/                          — External dataset manifests
+│   ├── 📂 raw/                              — Raw ingested files (LFS/DVC pointers)
+│   ├── 📂 work/                             — Intermediate processing
+│   ├── 📂 processed/                        — Validated + normalized outputs
+│   └── 📂 stac/                             — STAC v11 collections and items
+│
+├── 📂 schemas/                              — STAC, DCAT, JSON-LD, SHACL, telemetry schemas
+│   ├── 📂 telemetry/                        — Energy, carbon, lineage schemas
+│   └── 📂 json/                             — Pipeline validation + governance schemas
+│
+├── 📂 .github/                              — CI/CD governance
+│   └── 📂 workflows/                        — kfm-ci · lineage-audit · governance-check
+│
+└── 📂 mcp/                                  — Master Coder Protocol artifacts
+    ├── 📂 experiments/                      — Experiment logs
+    ├── 📂 model_cards/                      — Model documentation
+    └── 📂 sops/                             — Standard operating procedures
+```
 
 ---
 
-### 1.3 Operational Validation  
+## 🧭 Context
 
-Monitors:
+The v11.2.2 pipeline observability framework integrates:
 
-- Latency thresholds  
-- Throughput  
-- Retry success/failure  
-- Dead-letter queues  
-- Energy & carbon cost per pipeline step  
-- Reliability engine metrics (WAL, rollback counts, lineage gaps)  
+- **Ontological rigor**  
+  CIDOC-CRM, OWL-Time, GeoSPARQL, STAC/DCAT alignment.
 
-Metrics are sent to the lineage/telemetry bus automatically.
+- **Governance rigor**  
+  FAIR+CARE, Indigenous data sovereignty, license adherence, risk scoring.
+
+- **Technical rigor**  
+  OpenLineage v2.5, Neo4j provenance graph, Prometheus telemetry, reliability engine instrumentation.
+
+- **Narrative rigor**  
+  Focus Mode + Story Nodes rely on validated graph entities, requiring impeccable provenance.
+
+This document defines the **normative requirements** ensuring that data, models, lineage, and narratives remain trustworthy.
 
 ---
 
-## 🔭 2. Observability Architecture
+## 🗺️ Diagrams
 
-Observability comes from:
-
-- OpenLineage v2.5 bus  
-- Neo4j lineage nodes (`prov:Activity`)  
-- Time-series telemetry (Prometheus/Grafana)  
-- Sustainability instrumentation  
-- AI/ML explainability logs (SHAP/LIME)  
-- Error and exception propagation chain  
-- Policy audit logs (GovHooks v4)  
-- Masking / redaction logs  
+### Pipeline → Lineage → Governance Flow
 
 ```mermaid
 flowchart LR
@@ -225,92 +253,229 @@ flowchart LR
     D --> E[Governance Plane]
 ```
 
----
+### Validation Layering
 
-## 📊 3. Quality Gates (QG-11)
-
-Every pipeline node MUST pass:
-
-1. **Structural Gate**  
-2. **Semantic Gate**  
-3. **Sovereignty Gate**  
-4. **FAIR+CARE Gate**  
-5. **Sustainability Gate**  
-6. **Lineage Completeness Gate**  
-7. **Downstream Impact Gate**  
-
-Failure at any gate → WAL rollback + quarantine.
+```mermaid
+flowchart TD
+    S[Structural Validation] --> M[Semantic Validation]
+    M --> O[Operational Validation]
+    O --> G[Governance Gate]
+```
 
 ---
 
-## 🧱 4. Drift, Bias & Stability Monitoring
+## 🧠 Story Node & Focus Mode Integration
 
-AI/ML pipelines undergo:
+### Validated Graph as Narrative Substrate  
+Focus Mode and Story Nodes can only operate on entities that have passed:
 
-- Bias profiling  
-- Drift detection (concept + data drift)  
-- Model age & staleness checks  
-- Confidence distribution monitoring  
-- Explainability freshness (SHAP decay)  
+- Temporal validation (OWL-Time)
+- Spatial validation (GeoSPARQL)
+- Semantic shape validation (SHACL)
+- Sovereignty gate (H3 r7 generalization)
+- Lineage completeness (PROV-O)
 
-Results feed into the governance ledger and are surfaced in observability dashboards.
+### Narrative Provenance  
+All narrative output MUST include:
 
----
+- Source entity IDs  
+- Temporal scope  
+- STAC/DCAT references where appropriate  
+- Model explainability provenance (SHAP summaries)  
 
-## 🛰️ 5. Sustainability Telemetry
+### AI Constraints  
+Focus Mode is permitted to:
 
-Tracked per pipeline run:
+- Summarize pipeline validation results  
+- Highlight anomalies  
+- Extract metadata  
 
-- Energy consumption (Wh)  
-- Carbon emissions (gCO₂e)  
-- Compute intensity  
-- Memory and disk IO  
-- Data movement cost  
-- Network carbon impact  
+It is prohibited from:
 
-These are published as STAC Items in `data/stac/telemetry/` and linked into governance and sustainability reports.
-
----
-
-## 🧭 6. Focus Mode & Story Node Integration
-
-Validation ensures:
-
-- Focus Mode summaries only use **validated** graph entities  
-- Story Nodes derive only from validated narratives and entities  
-- All narrative generation includes explicit provenance links  
-- All temporal assertions pass OWL-Time checks  
-- All spatial assertions pass GeoSPARQL checks  
-
-This guarantees that AI-driven narratives sit atop a fully validated, traceable data substrate.
+- Modifying normative requirements  
+- Generating speculative architectural claims  
+- Falsifying lineage  
 
 ---
 
-## 🛡️ 7. Governance Plane Enforcement
+## 🧪 Validation & CI/CD
 
-GovHooks v4 enforces:
+Validation is enforced across three layers:
 
-- CARE/sovereignty restrictions  
-- Data masking requirements  
-- License validation  
-- Risk scoring  
-- Pipeline promotion approvals  
+### Structural Validation  
+Ensures compatibility with:
+
+- STAC v11  
+- DCAT v11  
+- JSON-LD (KFM context)  
+- GeoJSON  
+- CRS/bbox correctness  
+- CIDOC-CRM/OWL-Time mapping  
+
+Tools:  
+- `schema-lint-v11`  
+- `geojson-lint`  
+- `crs-check`  
+- `bbox-check`  
+
+---
+
+### Semantic Validation  
+Verifies:
+
+- Ontology compliance  
+- Spatial/temporal topology consistency  
+- Entity uniqueness  
+- Sovereignty and FAIR+CARE labeling  
+- Masking rules (H3 r7)  
+
+Tools:  
+- SHACL shapes  
+- Ontology inference tests  
+- `lineage-audit-v11`  
+
+---
+
+### Operational Validation  
+Tracks:
+
+- Latency  
+- Throughput  
+- Retry/rollback counts  
+- Dead-letter queues  
+- Energy / carbon cost  
+- Drift/bias detection  
+
+Metrics flow via the OpenLineage bus and are stored in the Neo4j provenance graph.
+
+---
+
+## 📦 Data & Metadata
+
+Every pipeline generates:
+
+- STAC Items  
+- DCAT dataset entries  
+- JSON-LD metadata  
+- Telemetry bundles (energy, carbon, lineage)  
+- Provenance packets (PROV-O)  
+
+Metadata MUST include:
+
+- Dataset identity & licensing  
+- Spatial & temporal extent  
+- Lineage chain  
+- FAIR+CARE labels  
+- Masking & sovereignty flags  
+- Model explainability references (when applicable)
+
+---
+
+## 🧱 Architecture
+
+### Validation Architecture (Merged Content)  
+
+KFM v11.2.2 organizes validation into three normative layers:
+
+- **Structural**: schema correctness, CRS, STAC/DCAT compliance, CIDOC mapping.  
+- **Semantic**: ontology integrity, shape validation, sovereignty rules, FAIR+CARE gates.  
+- **Operational**: runtime metrics, reliability metrics, energy/carbon telemetry.
+
+### Observability Architecture (Merged Content)  
+
+Observability is achieved through:
+
+- OpenLineage v2.5 bus  
+- Neo4j lineage graph (`prov:Activity`)  
+- Prometheus/Grafana telemetry  
+- SHAP/LIME explainability logs  
+- Reliability engine events (WAL, retry, rollback, hotfix)  
+- Governance plane audit logs  
+
+### Quality Gates (QG-11)  
+
+Every node MUST pass:
+
+1. Structural Gate  
+2. Semantic Gate  
+3. Sovereignty Gate  
+4. FAIR+CARE Gate  
+5. Sustainability Gate  
+6. Lineage Completeness Gate  
+7. Downstream Impact Gate  
+
+Failure triggers WAL rollback and quarantining.
+
+### Drift, Bias & Stability  
+
+AI/ML pipelines must track:
+
+- Data + concept drift  
+- Bias profiles  
+- SHAP explainability freshness  
+- Confidence distribution stability  
+- Model age & staleness  
+
+### Sustainability Telemetry  
+
+Track:
+
+- Energy (Wh)  
+- Carbon (gCO₂e)  
+- IO intensity  
+- Memory/disk/network cost  
+
+Published as STAC telemetry entries.
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+### FAIR  
+Ensures:
+
+- Findability (UUIDs, semantic IDs)  
+- Accessibility (public docs, clear licensing)  
+- Interoperability (STAC/DCAT/JSON-LD)  
+- Reusability (consistent metadata, provenance, open licensing)
+
+### CARE  
+Ensures:
+
+- Collective benefit  
+- Authority to control  
+- Responsibility  
+- Ethics  
+
+### Governance Enforcement  
+GovHooks v4 manages:
+
+- Masking & sovereignty policies  
+- Licensing restrictions  
 - Lineage immutability  
+- Promotion approvals  
+- Risk scoring  
 
-Any violation → automatic failure of pipeline promotion and emission of a governance incident record.
+Any violation → automatic fail.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Notes                                                                 |
-|--------:|-----------:|-----------------------------------------------------------------------|
-| v11.0.0 | 2025-11-20 | Initial release of the v11 Pipeline Validation & Observability Guide. |
+| Version | Date       | Notes                                                         |
+|--------:|-----------:|---------------------------------------------------------------|
+| v11.2.2 | 2025-11-27 | Fully rewritten for v11.2.2. Adopted strict heading registry. |
+| v11.0.0 | 2025-11-20 | Initial v11 release of validation & observability guide.      |
 
 ---
 
-## 🔗 Footer
+<div align="center">
 
-**• [⬅ Back to Pipelines](README.md)** ·  
-**[📚 KFM Documentation Root](../README.md)** ·  
-**[🌐 Project Homepage](../../README.md)**  
+**Kansas Frontier Matrix**  
+Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence  
+
+[⬅ Back to Pipelines](README.md) ·  
+[📚 Documentation Root](../README.md) ·  
+[🌐 Project Homepage](../../README.md)
+
+</div>
