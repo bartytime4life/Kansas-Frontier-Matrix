@@ -1,113 +1,203 @@
 ---
 title: "🌀 KFM v11.1 — Airflow Branch-Based Promotion DAG (lakeFS + OpenLineage · Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/pipelines/orchestration/airflow/kfm-v11-branch-based-promotion.md"
-version: "v11.1.1"
+version: "v11.2.0"
 last_updated: "2025-11-27"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Reliability Engineering · FAIR+CARE Council Oversight"
+content_stability: "stable"
+
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256-of-this-file>"
-sbom_ref: "../../../../releases/v11.1.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.1.0/manifest.zip"
-telemetry_ref: "../../../../releases/v11.1.0/pipelines-telemetry.json"
+
+sbom_ref: "../../../../releases/v11.2.0/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.0/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.0/pipelines-telemetry.json"
 telemetry_schema: "../../../../schemas/telemetry/airflow-branch-based-promotion-v11.1.json"
 energy_schema: "../../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
 governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 data_contract_ref: "../../../contracts/data-contract-v3.json"
+
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+
 status: "Active / Enforced"
 doc_kind: "Pipeline Architecture"
 intent: "airflow-branch-based-promotion-dag"
-fair_category: "Pipelines · Orchestration · Lineage"
+category: "Pipelines · Orchestration · Lineage"
+
+fair_category: "F1-A1-I2-R1"
 care_label: "CARE-Aware · No Direct Cultural Content"
+sensitivity_level: "Low"
+public_exposure_risk: "Low"
+indigenous_rights_flag: false
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Low"
+redaction_required: false
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+  geosparql: "geo:FeatureCollection"
+
+metadata_profiles:
+  - "PROV-O"
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/pipelines/orchestration/airflow/kfm-v11-branch-based-promotion.md@v11.1.1"
+  - "docs/pipelines/orchestration/airflow/kfm-v11-branch-based-promotion.md@v11.1.0"
+  - "docs/pipelines/orchestration/airflow/README.md@v11.0.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+json_schema_ref: "../../../../schemas/json/airflow-index-v11.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/airflow-index-v11-shape.ttl"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summary"
+  - "semantic-highlighting"
+  - "diagram-extraction"
+  - "metadata-extraction"
+ai_transform_prohibited:
+  - "speculative-additions"
+  - "content-alteration"
+  - "governance-override"
+  - "narrative-fabrication"
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+badge_profiles:
+  - "root-centered-badge-row"
+requires_purpose_block: true
+requires_directory_layout_section: false
+requires_version_history: true
+requires_governance_links_in_footer: true
+
+doc_uuid: "urn:kfm:doc:pipelines:orchestration:airflow:branch-based-promotion:v11.2.0"
+semantic_document_id: "kfm-airflow-branch-based-promotion"
+event_source_id: "ledger:docs/pipelines/orchestration/airflow/kfm-v11-branch-based-promotion.md"
+immutability_status: "version-pinned"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+
+jurisdiction: "Kansas · United States"
+lifecycle_stage: "stable"
+ttl_policy: "Review required every 12 months"
+sunset_policy: "Superseded upon orchestration-platform-v12"
 ---
 
 <div align="center">
 
-# 🌀 KFM v11.1 — Airflow Branch-Based Promotion DAG  
+# 🌀 **KFM v11.1 — Airflow Branch-Based Promotion DAG**  
 lakeFS Branches · OpenLineage Provenance · Safe Rollback  
 
 `docs/pipelines/orchestration/airflow/kfm-v11-branch-based-promotion.md`  
 
 DAG ID: `kfm_v11_branch_based_promotion` · Runtime: Apache Airflow 2.11.x · lakeFS v1.x · OpenLineage v1.20+  
 
-[Docs – MCP-DL v6.3](../../../../ARCHITECTURE.md) · [Markdown – KFM-MDP v11.2.2](../../../standards/markdown/kfm-mdp-v11.md) · [FAIR+CARE Governance](../../../standards/governance/ROOT-GOVERNANCE.md) · [License: MIT](../../../../LICENSE)
+[📚 CI/CD Architecture](../../../../.github/ARCHITECTURE.md) ·  
+[📝 Markdown — KFM-MDP v11.2.2](../../../standards/kfm_markdown_protocol_v11.2.2.md) ·  
+[⚖ FAIR+CARE Governance](../../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[📜 License: MIT](../../../../LICENSE)
 
 </div>
 
 ---
 
-## 1. Purpose and Scope
+## 📘 1. Purpose & Scope
 
 This document defines the **KFM v11.1 branch-based promotion DAG** implemented in Airflow, using:
 
-- lakeFS for Git-like data versioning and branch-based promotion.  
-- OpenLineage for dataset-level and run-level provenance.  
-- Deterministic ETL tasks that are idempotent, WAL-aware, and rollback-safe.  
+- **lakeFS** for Git-like data versioning and branch-based promotion.  
+- **OpenLineage** for dataset-level and run-level provenance.  
+- **Deterministic, idempotent ETL tasks** that are WAL-aware and rollback-safe.  
 
-The DAG is the reference pattern for:
+The DAG is the **reference pattern** for:
 
-- Ingesting and transforming geospatial and heritage-adjacent datasets.  
-- Validating them against data contracts and FAIR+CARE checks.  
-- Promoting only validated data from a feature branch into the main branch.  
+- Ingesting and transforming geospatial, environmental, and heritage-adjacent datasets.  
+- Validating against **Data Contracts v3**, FAIR+CARE rules, and sovereignty constraints.  
+- Promoting only validated data from a **feature branch** into the **`main`** branch.  
 - Providing a controlled rollback path when promotion fails.  
 
-The pattern is generic and can be reused for:
+It is reusable for:
 
-- Hydrology (streamflow, bathymetry, reservoir operations).  
-- Terrain and land-cover updates.  
-- Archaeology-derived geospatial products (subject to H3 + CARE rules).  
-- Climate and hazard layers (wildfire, flood, heat, severe weather).  
+- Hydrology (streamflow, bathymetry, reservoir operations)  
+- Terrain and land-cover updates  
+- Archaeology-derived geospatial products (subject to H3 + CARE rules)  
+- Climate and hazard layers (wildfire, flood, heat, severe weather)  
 
 ---
 
-## 2. Runtime and File Locations
+## 🧭 2. Runtime & Locations
 
 ### 2.1 DAG Python File
 
-The canonical Airflow DAG file must live under the orchestration tree:
+The canonical DAG lives under the orchestration tree:
 
-- `src/pipelines/orchestration/airflow/dags/kfm_v11_branch_based_promotion.py`
+```text
+src/pipelines/orchestration/airflow/dags/kfm_v11_branch_based_promotion.py
+```
 
-That file hosts:
+This file contains:
 
-- DAG definition using `openlineage.airflow.DAG` (aliased as `OL_DAG`).  
-- Task functions `extract`, `transform`, `validate`.  
-- lakeFS operators for branch operations, commit, merge, revert, and cleanup.  
+- DAG definition using `openlineage.airflow.DAG` (often aliased as `OL_DAG`)  
+- Core tasks: `create_feature_branch`, `copy_ingest_data`, `extract`, `transform`, `validate`, `commit`, `merge`, `rollback`, `cleanup`  
+- lakeFS operators for branch operations, commit, merge, revert, cleanup  
 
 ### 2.2 Documentation File
 
-This document is the authoritative reference for the DAG:
+This document is the **authoritative reference** for the DAG:
 
-- `docs/pipelines/orchestration/airflow/kfm-v11-branch-based-promotion.md` (this file).  
+```text
+docs/pipelines/orchestration/airflow/kfm-v11-branch-based-promotion.md
+```
 
-Any behavioral change to the DAG (branch naming, rollback semantics, lineage configuration) must:
+Any behavioral change MUST:
 
 1. Update the DAG file.  
 2. Update this document.  
-3. Bump `version` and `previous_version_hash` in the front-matter.  
-4. Pass v11.2.2 documentation checks in CI.  
+3. Bump `version` + `previous_version_hash`.  
+4. Pass KFM-MDP v11.2.2 documentation checks in CI.  
 
 ---
 
-## 3. High-Level Flow
+## 🔁 3. High-Level Flow
 
 ### 3.1 Conceptual Steps
 
 1. Create feature branch from `main`.  
-2. Copy or materialize inputs (for example raw ingest) into the feature branch.  
-3. Run ETL tasks (`extract` → `transform` → `validate`).  
-4. Commit processed state on the feature branch.  
+2. Copy or materialize inputs (raw ingest) onto the feature branch.  
+3. Run ETL tasks: `extract` → `transform` → `validate`.  
+4. Commit processed state to the feature branch.  
 5. Merge the validated commit into `main`.  
-6. Rollback `main` if merge or post-merge checks fail.  
-7. Delete feature branch in all cases (success or failure).  
+6. Run post-merge checks (contract + governance).  
+7. Rollback `main` if post-merge checks fail.  
+8. Delete feature branch (success or failure).  
 
-### 3.2 DAG Topology (Logical)
+### 3.2 Logical DAG Topology
 
-Logical task sequence:
+Tasks (simplified):
 
 - `create_feature_branch`  
 - `copy_ingest_data`  
@@ -116,281 +206,182 @@ Logical task sequence:
 - `validate` (@task)  
 - `commit_feature_branch`  
 - `merge_to_main`  
-- `rollback_main` (triggered only on failure)  
-- `delete_feature_branch` (triggered on `all_done`)  
+- `post_merge_checks`  
+- `rollback_main` (triggered `one_failed`)  
+- `delete_feature_branch` (`all_done`)  
 
-The DAG is non-scheduled (`schedule_interval=None`) and is intended for:
+The DAG is typically **manually or event-triggered** (`schedule_interval=None`), used for:
 
-- Event-based triggers (webhooks, Git pushes, upstream stage completion).  
-- Manual runs from Airflow or CLI for controlled promotions.  
+- Controlled promotions after staging validation  
+- Domain-specific release flows (geology, hydrology, atmospheric, etc.)
 
 ---
 
-## 4. lakeFS Branching Model
+## 🌿 4. lakeFS Branching Model
 
 ### 4.1 Branch Naming
 
-- Repository: `kfm-datalake`.  
-- Mainline branch: `main`.  
-- Feature branch pattern: `feature/ingest-<domain>`.  
-  - Example: `feature/ingest-geodata`.  
+- Repository: `kfm-datalake`  
+- Mainline: `main`  
+- Feature branch pattern: `feature/ingest-<domain>-<timestamp>-<run_id>`  
+  - Example: `feature/ingest-hydrology-20251127-abcdef`  
 
-Branch naming must:
+Branch naming MUST:
 
-- Be deterministic and discoverable from run context (for example Airflow run ID, dataset ID).  
-- Avoid collisions across concurrent runs (optional suffix by date or run UUID).  
+- Be derivable from Airflow run context  
+- Avoid collisions across concurrent runs  
 
-Example pattern:
+### 4.2 Path Conventions
 
-- `feature/ingest-geodata-{{ ds_nodash }}-{{ run_id }}`  
+Examples:
 
-### 4.2 Paths
+- `incoming/<domain>/raw/` → raw ingest
+- `curated/<domain>/` → validated outputs
 
-Typical path mapping in the DAG:
+Domain DAGs SHOULD maintain clear separation between `incoming/` vs `curated/` and ensure:
 
-- `incoming/geodata/raw/` → raw ingest.  
-- `curated/geodata/` → derived and validated outputs.  
+- Paths align with STAC/DCAT metadata  
+- Paths align with Data Contract v3 schemas  
 
-Domain-specific DAGs should maintain:
+### 4.3 Commit & Merge Semantics
 
-- A clear distinction between `incoming/` and `curated/`.  
-- Consistent naming across STAC/DCAT metadata and contracts.  
+- `LakeFSCommitOperator` records a commit on the feature branch after `validate`.  
+- `LakeFSMergeOperator` merges that commit into `main` with structured metadata.  
+- `LakeFSRevertOperator` rolls back `main` if post-merge checks fail.  
 
-### 4.3 Commit and Merge Semantics
+Guarantees:
 
-- `LakeFSCommitOperator` creates a commit on the feature branch after ETL and validation.  
-- `LakeFSMergeOperator` merges that commit into `main` with a promotion message.  
-- `LakeFSRevertOperator` can revert `main` to the previous commit if a failure occurs.  
-
-Key guarantees:
-
-- Promotion is atomic at the branch level.  
-- If post-merge checks fail, `rollback_main` reverts the last commit on `main`.  
-- No direct writes to `main` outside merges from controlled feature branches.  
+- Promotions are **atomic** at the branch level.  
+- `main` is modified only via merges from controlled feature branches.  
 
 ---
 
-## 5. OpenLineage and Provenance
+## 🛰️ 5. OpenLineage Provenance Pattern
 
-This DAG uses `openlineage.airflow.DAG` (aliased as `OL_DAG`) to:
+The DAG MUST:
 
-- Emit job and run metadata for each task.  
-- Attach input and output datasets for ETL tasks and lakeFS operators.  
-- Record namespace, job name, and run ID consistently.  
+- Use `openlineage.airflow.DAG` or equivalent integration  
+- Emit run-level OpenLineage events for:
+
+  - DAG run start/complete/fail  
+  - Task-level lineage (input/output datasets)  
 
 ### 5.1 Dataset Modeling
 
-Each logical dataset should map to an OpenLineage dataset with:
+For each dataset:
 
-- `namespace`: KFM-wide URI (for example `kfm://lakefs/kfm-datalake`).  
-- `name`: lakeFS path plus branch (for example `kfm-datalake/main/curated/geodata/`).  
+- `namespace`: `kfm://lakefs/kfm-datalake`  
+- `name`: e.g. `kfm-datalake/main/curated/hydrology/streamflow/`  
 
-Additional facets:
+Facets SHOULD include:
 
-- STAC / DCAT reference IDs.  
-- JSON-LD context for heritage or geo semantics.  
-- PROV-O entities and activities.  
+- STAC Collection & Item IDs  
+- DCAT dataset ID  
+- CARE labels when relevant  
+- FAIR maturity annotations  
 
-### 5.2 Minimum Required Facets per Run
+### 5.2 Required Facets per Run
 
-At minimum, each DAG run must emit:
+Each run MUST emit:
 
-- **Run facet**:
-
-  - KFM pipeline ID.  
-  - Git commit reference of the DAG file.  
-  - Configuration hash (for example ETL YAML or JSON configuration).  
-
-- **Job facet**:
-
-  - Domain (`hydrology`, `terrain`, `archaeology`, etc.).  
-  - Data contract reference (same as `data_contract_ref` in this document).  
-
-- **Dataset facets**:
-
-  - STAC Item and Collection IDs for sources and targets.  
-  - CARE labels when heritage or Indigenous data is involved.  
-  - FAIR maturity hints (for example findable index flag).  
+- **Run facet**: DAG version, git commit of DAG file, config hash  
+- **Job facet**: domain, KFM pipeline ID, data contract reference  
+- **Dataset facets**: sources, targets, and their CARE/FAIR metadata  
 
 ---
 
-## 6. Reliability and Rollback Semantics
+## 🧱 6. Reliability & Rollback Semantics
 
-This DAG follows KFM v11.1 reliability standards and aligns with:
+This DAG adheres to KFM’s **Reliable Pipelines v11** guidelines:
 
-- `docs/pipelines/reliability/slo-error-budgets.md`  
-- `docs/pipelines/release/runbooks/rollback-runbook.md`  
+- Idempotent ETL operations  
+- WAL-backed intermediate states (as appropriate)  
+- Configurable retries on transient failures  
+- Strict boundaries at commit/merge steps  
 
-### 6.1 Idempotency and WAL
+### 6.1 WAL & Idempotency
 
-ETL tasks (`extract`, `transform`, `validate`) must be:
+ETL tasks MUST:
 
-- Pure or idempotent with respect to inputs.  
-- Backed by WAL-style checkpoints in lakeFS or object storage.  
+- Use WAL or checkpoint markers as needed  
+- Make re-runs safe with respect to:
 
-Re-running the DAG for the same logical input should produce:
+  - Idempotent writes  
+  - No duplication of derived data  
+  - Reproducible outputs for given inputs  
 
-- The same outputs (or a controlled overwrite with a new commit).  
-- A consistent provenance trail in OpenLineage and PROV-O.  
+### 6.2 Rollback Behavior
 
-### 6.2 Retry and Failure Handling
+If `merge_to_main` or `post_merge_checks` fail:
 
-- Default retries: `retries=3`, `retry_delay=10 minutes` (tunable).  
-- `merge_to_main` is a critical reliability boundary:
+- `rollback_main` MUST revert `main` to the previous stable commit  
+- Rollback MUST be recorded in OpenLineage and PROV-O lineage models  
+- A governance record should capture:
 
-  - On merge failure, `rollback_main` is triggered with `trigger_rule="one_failed"`.  
-  - `rollback_main` must be treated as a safety net, not part of the normal success path.  
-
-### 6.3 SLO Hooks
-
-DAG-level SLO hooks (shared utilities) should:
-
-- Emit:
-
-  - Success and failure counts.  
-  - End-to-end latency distributions.  
-  - Promotion versus rollback ratio.  
-
-- Feed:
-
-  - Reliability dashboards.  
-  - Error budget and SLO policy enforcement.  
-  - Auto-pause or kill-switch behavior when SLOs are violated.  
+  - Reasons for rollback  
+  - SLO and error-budget impact  
 
 ---
 
-## 7. Directory Layout
+## 🧂 7. Governance, FAIR+CARE, and Data Contracts
 
-Reference layout for Airflow orchestration and this DAG:
+The DAG MUST respect:
 
-```text
-docs/
-  pipelines/
-    orchestration/
-      airflow/
-        kfm-v11-branch-based-promotion.md   # This file (architecture + runbook)
+- Data contract specified in `data_contract_ref`  
+- FAIR+CARE guidelines for all datasets  
+- Sovereignty policies when dealing with heritage layers  
 
-src/
-  pipelines/
-    orchestration/
-      airflow/
-        dags/
-          kfm_v11_branch_based_promotion.py # DAG definition
-        utils/
-          lineage.py                         # OpenLineage helpers (dataset facets, STAC/DCAT)
-          lakefs.py                          # lakeFS helpers (branch naming, repo config)
+### 7.1 Governance Integration
 
-releases/
-  v11.1.0/
-    sbom.spdx.json
-    manifest.zip
+Before promotion:
 
-schemas/
-  telemetry/
-    airflow-branch-based-promotion-v11.1.json
-    energy-v2.json
-    carbon-gco2e-v1.json
-```
+- Data contracts MUST validate (schema, types, allowed ranges)  
+- CARE labels MUST be present when needed  
+- Sensitive coordinates MUST be properly generalized (H3 or equivalent)  
 
-This layout is normative for DAGs following the branch-based promotion pattern.
+Promotion MUST NOT:
+
+- Introduce unreviewed sensitive heritage data into curated branches  
+- Violate licensing terms or dataset sharing policies  
 
 ---
 
-## 8. Configuration and Parameters
+## 🧬 8. Story Nodes, Focus Mode & Narrative Hooks
 
-### 8.1 Required Configuration Keys
+This DAG supports narrative-level constructs by:
 
-Supplied via Airflow Variables, Connections, or environment variables:
+- Producing promotion events that can be surfaced in Story Nodes v3  
+- Providing Focus Mode with:
 
-- `KFM_LAKEFS_REPO` (default `kfm-datalake`).  
-- `KFM_LAKEFS_MAIN_BRANCH` (default `main`).  
-- `KFM_LAKEFS_FEATURE_BRANCH_TEMPLATE`.  
-- `KFM_LINEAGE_NAMESPACE`.  
-- `KFM_DOMAIN` (for example `hydrology`, `terrain`, `archaeology`).  
+  - Dataset update timing  
+  - Affected regions  
+  - Up/downstream chains (e.g. reservoir or basin)  
 
-### 8.2 Optional Parameters
+Implementations MAY add a final task to:
 
-- `KFM_ALLOW_AUTOMERGE`:
+- Push “promotion event” metadata into the graph  
+- Tag related Story Nodes with:
 
-  - If disabled, merge to `main` is gated by a human approval stage.  
-
-- `KFM_RUN_MODE`:
-
-  - `dry-run`: execute ETL and validation but skip commit and merge.  
-  - `promote`: perform full commit and merge sequence.  
-
-- `KFM_ENERGY_TELEMETRY_ENABLED`:
-
-  - Enables energy and carbon reporting for this DAG.  
+  - `last_promotion_time`  
+  - `promoted_branch`  
+  - `rollback_state` (if any)  
 
 ---
 
-## 9. Story Node and Focus Mode Integration
+## 🕰️ 9. Version History
 
-This DAG contributes to KFM’s narrative system by:
-
-- Producing traceable dataset updates that can be referenced in Story Nodes.  
-- Enabling Focus Mode v3 to surface dataset promotion events as part of context.  
-
-### 9.1 Story Node Metadata Hooks
-
-Each successful promotion may create or update a Story Node describing:
-
-- Dataset identity and domain.  
-- Promotion commit ID and time.  
-- If applicable, subsequent rollback events.  
-- Downstream impact regions (for example which reservoirs or basins).  
-
-Metadata hooks are typically implemented in shared helpers:
-
-- `src/pipelines/orchestration/airflow/utils/lineage.py`  
-
-When story linkage is enabled, the DAG should add a final task to publish or update Story Node metadata in the graph.
-
----
-
-## 10. Governance, Ethics, and CARE Alignment
-
-### 10.1 FAIR+CARE
-
-The DAG must:
-
-- Respect data contracts that encode:
-
-  - Coordinate generalization rules (for example H3).  
-  - Masking requirements for sensitive sites.  
-  - CARE labels and restrictions for cultural or Indigenous data.  
-
-- Emit CARE-related facets when:
-
-  - Source datasets include heritage or Indigenous content.  
-  - Derived products represent cultural or sacred landscapes.  
-
-### 10.2 Approvals and Change Control
-
-Structural changes to this DAG require:
-
-- Reliability Working Group review.  
-- FAIR+CARE Council sign-off for heritage-relevant flows.  
-
-Any change that weakens rollback or promotion guarantees must be accompanied by:
-
-- Updates to the rollback runbook.  
-- SLO and error-budget impact analysis.  
-
----
-
-## 11. Version History
-
-| Version | Date       | Summary                                                                                                   |
-|--------:|------------|-----------------------------------------------------------------------------------------------------------|
-| v11.1.1 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2 format; normalized header, badges, and clarified CI documentation expectations. |
-| v11.1.0 | 2025-11-26 | Initial v11.1 DAG documentation; defined lakeFS + OpenLineage pattern and Story Node / Focus integration. |
+| Version  | Date       | Summary                                                                                             |
+|---------:|------------|-----------------------------------------------------------------------------------------------------|
+| v11.2.0  | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; added governance/telemetry metadata, OTEL/OpenLineage alignment, and layout normalization. |
+| v11.1.1  | 2025-11-27 | Refined docs, clarified rollback semantics & documentation update rules.                           |
+| v11.1.0  | 2025-11-26 | Initial v11.1 DAG documentation; defined basic lakeFS + OpenLineage branch-based promotion pattern. |
 
 ---
 
 <div align="center">
 
-[Back to Repository Architecture](../../../../ARCHITECTURE.md) · [Pipelines and Reliability Index](../../README.md) · [Standards and Governance Index](../../../standards/README.md)
+[⬅ Back to Airflow Orchestration Index](README.md) ·  
+[📘 Pipelines Overview](../../README.md) ·  
+[⚖ Governance Standards](../../../standards/README.md)
 
 </div>
