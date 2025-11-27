@@ -1,28 +1,57 @@
 ---
 title: "💧 Kansas Frontier Matrix — Hydrology Data Domain Index (v11 Super-Edition)"
 path: "data/hydrology/README.md"
-version: "v11.0.0"
-last_updated: "2025-11-21"
-review_cycle: "Annual / Hydrology & Hazards Council"
+version: "v11.2.2"
+last_updated: "2025-11-27"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Annual · Hydrology & Hazards Council"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/data-hydrology-index-v1.json"
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
-status: "Active / Enforced"
-doc_kind: "Dataset Index"
-intent: "hydrology-dataset-domain-index"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
 semantic_document_id: "kfm-data-hydrology-domain-index"
 doc_uuid: "urn:kfm:data:hydrology:index:v11.0.0"
+event_source_id: "ledger:data/hydrology/README.md"
+immutability_status: "version-pinned"
+
+sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../releases/v11.2.2/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/data-hydrology-index-v1.json"
+
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
+status: "Active · Enforced"
+doc_kind: "Dataset Index"
+intent: "hydrology-dataset-domain-index"
+role: "archive-registry"
+category: "Data · Hydrology · Domain Index"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+sensitivity_level: "Mixed"
+public_exposure_risk: "Dataset-level"
+indigenous_rights_flag: "Dataset-level"
+data_steward: "KFM FAIR+CARE Council"
+risk_category: "Mixed"
+redaction_required: false
+
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
-fair_category: "F1-A1-I1-R1"
-care_label: "Public /Low-Risk"
-immutability_status: "version-pinned"
+jurisdiction: "Kansas / United States"
+classification: "Varies by dataset"
+lifecycle_stage: "stable"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next hydrology-domain update"
 ---
 
 <div align="center">
@@ -30,217 +59,283 @@ immutability_status: "version-pinned"
 # 💧 **Kansas Frontier Matrix — Hydrology Data Domain Index (Super-Edition)**  
 `data/hydrology/README.md`
 
-**Purpose:**  
-Serve as the authoritative **v11 hydrology domain index**, defining the dataset architecture,  
+**Purpose**  
+Serve as the authoritative **v11 hydrology domain index**, defining dataset architecture,  
 FAIR+CARE metadata, STAC integration, ETL lineage, schema rules, graph-ontology mapping,  
-and Focus Mode v3 linkages for **all hydrology data** across KFM.
+and Focus Mode v3 linkages for **all hydrology data** in KFM.
 
 </div>
 
 ---
 
-# 📘 0. Overview
+## 📘 1. Overview
 
-The **Hydrology Domain** within the Kansas Frontier Matrix includes all datasets related to:
+The **Hydrology Domain** within KFM includes all datasets related to:
 
-- Streamflow, inflows, outflows  
+- Streamflow (inflows, outflows, baseflows)  
 - Reservoir storage & operations  
 - Water quality (turbidity, TSS, DO, nutrients)  
-- Sediment transport  
+- Sediment transport & deposition  
 - Hydrodynamics & bathymetry  
 - Climate & hydroclimate drivers  
-- Dredging & sediment export (WID 2025)  
-- Downstream biological and geomorphic responses  
+- Dredging & sediment export (e.g., WID 2025)  
+- Downstream ecological and geomorphic responses  
 
 This README defines how hydrology datasets are structured, stored, validated, cataloged,  
-and connected to the knowledge graph and Story Nodes.
+and connected to the knowledge graph, Story Nodes, and Focus Mode v3.
 
 ---
 
-# 🗂 1. Directory Layout (Authoritative)
+## 🗂 2. Directory Layout (Authoritative · Emoji Style A)
 
 ```text
-data/
-└── hydrology/
-    ├── raw/
-    │   ├── inflows/
-    │   ├── outflows/
-    │   ├── bathymetry/
-    │   ├── sediment-cores/
-    │   ├── water-quality/
-    │   ├── wid-2025/
-    │   ├── climate/
-    │   └── downstream/
-    ├── processed/
-    │   ├── hydrology-timeseries/
-    │   ├── turbidity-do/
-    │   ├── bathymetry/
-    │   ├── sediment-volumes/
-    │   ├── ecological-surveys/
-    │   ├── wid/
-    │   └── hydroclimate/
-    └── stac/
-        ├── hydrology/
-        ├── bathymetry/
-        ├── sediment/
-        ├── wid-2025/
-        ├── downstream/
-        └── ecology/
+data/hydrology/
+├── 📄 README.md
+│
+├── 📂 raw/
+│   ├── 💧 inflows/
+│   ├── 💧 outflows/
+│   ├── 🗺️ bathymetry/
+│   ├── 🧪 sediment-cores/
+│   ├── 🧪 water-quality/
+│   ├── 🚜 wid-2025/
+│   ├── 🌦️ climate/
+│   └── 🌊 downstream/
+│
+├── 📂 processed/
+│   ├── 📈 hydrology-timeseries/
+│   ├── 🧪 turbidity-do/
+│   ├── 🗺️ bathymetry/
+│   ├── 📦 sediment-volumes/
+│   ├── 🪶 ecological-surveys/
+│   ├── 🚜 wid/
+│   └── 🌦️ hydroclimate/
+│
+└── 📂 stac/
+    ├── 💧 hydrology/
+    ├── 🗺️ bathymetry/
+    ├── 🧱 sediment/
+    ├── 🚜 wid-2025/
+    ├── 🌊 downstream/
+    └── 🌿 ecology/
 ```
 
-**raw/** = immutable inputs  
-**processed/** = harmonized, schema-validated outputs  
-**stac/** = STAC-compliant catalog + items  
+- **raw/** → immutable inputs from agencies & sensors  
+- **processed/** → harmonized, contract-validated outputs  
+- **stac/** → STAC collections/items & DCAT-aligned metadata  
 
 ---
 
-# 💧 2. Hydrology Dataset Classes (Full Taxonomy)
+## 💧 3. Hydrology Dataset Classes (Domain Taxonomy)
 
-## **2.1 Core Hydrology (USGS / USACE / Mesonet / NOAA)**
+### 3.1 Core Hydrology (USGS / USACE / Mesonet / NOAA)
+
 - Streamflows (cfs)  
 - Reservoir elevations (ft)  
 - Gate releases (cfs)  
-- Storage curves  
+- Storage curves / state-space representations  
 - Temperature, precipitation, soil moisture  
-- Climate normals, anomalies  
+- Climate normals, anomalies, indices  
 
-## **2.2 Water Quality**
+### 3.2 Water Quality
+
 - Turbidity (NTU)  
 - TSS (mg/L)  
 - DO (mg/L)  
 - Nutrients (TP, TN, NH₄, NO₃)  
 - Conductivity, pH, chlorophyll  
 
-## **2.3 Sediment & Bathymetry**
-- Multibeam DEMs  
-- DoD (Difference of DEM) rasters  
-- Sediment core stratigraphy  
-- Grain-size spectra (LISST)  
-- Watershed sediment yield datasets  
+### 3.3 Sediment & Bathymetry
 
-## **2.4 WID (Water Injection Dredging)**
-- Turbidity sensors (1–5 min)  
-- DO sensors (min-level)  
+- Multibeam bathymetric DEMs  
+- DoD (Difference of DEM) rasters  
+- Sediment core stratigraphy records  
+- Grain-size spectra (e.g., LISST)  
+- Watershed sediment yield data  
+
+### 3.4 WID (Water Injection Dredging)
+
+- Turbidity sensors (1–5 minute resolution)  
+- DO sensors (minute-level)  
 - ADCP plume transects  
 - Jet operations logs  
-- Density-current modeling data  
+- Density-current modeling outputs  
 
-## **2.5 Ecology & Downstream Effects**
-- Mussel beds  
-- Fish assemblage  
-- Macroinvertebrate  
-- Vegetation  
-- Habitat polygons  
+### 3.5 Ecology & Downstream Effects
 
-## **2.6 Climate & Hydroclimate**
-- PRISM  
-- NOAA NCEI  
-- Mesonet  
-- CMIP6 downscaled futures  
+- Mussel beds & locations  
+- Fish assemblage surveys  
+- Macroinvertebrate indices  
+- Vegetation & riparian habitat polygons  
 
----
+### 3.6 Climate & Hydroclimate
 
-# 🧪 3. Dataset Schema Rules (CSV, GeoJSON, COG, NetCDF)
-
-## **3.1 CSVW (Time Series)**
-Required fields:
-| column | description |
-|--------|-------------|
-| timestamp | ISO 8601 datetime |
-| value | numeric value |
-| units | SI / hydrology standard |
-| parameter | e.g., flow, turbidity, DO |
-| site_id | canonical KFM site ID |
-| provenance | ETL / dataset lineage |
+- PRISM precipitation/temperature  
+- NOAA NCEI station time series  
+- Mesonet station data (multiple depths)  
+- CMIP6 downscaled future scenarios  
 
 ---
 
-## **3.2 GeoJSON (Vector Data)**
-Required:
-- FeatureCollection  
-- CRS: WGS84  
-- geometry: Point / Line / Polygon  
-- properties: license, provider, parameter, timestamp  
+## 🧪 4. Dataset Schema Rules (CSV, GeoJSON, COG, NetCDF)
+
+### 4.1 CSVW (Time Series)
+
+**Required columns:**
+
+| column      | description                          |
+|-------------|--------------------------------------|
+| `timestamp` | ISO 8601 datetime                    |
+| `value`     | Numeric value                        |
+| `units`     | SI / hydrologic standard (e.g., cfs) |
+| `parameter` | e.g., `flow`, `turbidity`, `DO`      |
+| `site_id`   | Canonical KFM hydrology site ID      |
+| `provenance` | ETL / dataset lineage identifier    |
+
+CSV schemas must pass validation against the hydrology data contract derived from `data_contract_ref`.
 
 ---
 
-## **3.3 Cloud-Optimized GeoTIFF (COG)**
+### 4.2 GeoJSON (Vector Data)
+
+**Requirements:**
+
+- `type: "FeatureCollection"`  
+- CRS: WGS84 (EPSG:4326)  
+- `geometry`: `Point`, `LineString`, or `Polygon`  
+- `properties` MUST include:
+  - `license`  
+  - `provider`  
+  - `parameter` (e.g., `DO`, `turbidity`)  
+  - `timestamp` or `valid_time`  
+  - `kfm:dataset_id`  
+
+---
+
+### 4.3 Cloud-Optimized GeoTIFF (COG)
+
 Used for:
-- Bathymetry  
-- DoD rasters  
-- Sediment extent  
 
-Requirements:
-- Internal tiling  
-- Overviews  
-- EPSG:4326 or reservoir CRS  
-- Includes metadata tags:  
+- Bathymetry rasters  
+- DoD rasters  
+- Sediment extent / plume models  
+
+**Requirements:**
+
+- Internal tiling & overviews  
+- EPSG:4326 or reservoir-specific CRS with metadata  
+- Must include tags:
   - `kfm:dataset_type`  
   - `kfm:lineage`  
-  - `kfm:processing`  
+  - `kfm:processing_step`  
 
 ---
 
-## **3.4 NetCDF (Climate & Hydraulics)**
-Requirements:
-- CF-conformant  
-- Dimensions: time, lat, lon  
-- Variables: precipitation, temperature, hydraulic variables  
-- Full metadata including provenance  
+### 4.4 NetCDF (Climate & Hydraulics)
+
+**Requirements:**
+
+- CF-conformant NetCDF  
+- Dimensions: `time`, `lat`, `lon` (and optionally `depth`, `layer`)  
+- Variables: precipitation, temperature, hydraulic variables, etc.  
+- Full metadata:
+  - `source`  
+  - `history` (processing chain)  
+  - `institution`  
+  - `references`  
 
 ---
 
-# 🛠 4. ETL Pipeline Architecture (Hydrology Domain)
+## 🛠 5. ETL Pipeline Architecture (Hydrology Domain)
 
-### **Extraction**
-- USGS NWIS APIs  
-- KDHE WQ archives  
-- USACE choke-point data  
-- Mesonet API  
-- NOAA climate APIs  
-- Local CSV, PDF, DOC parsing  
+### 5.1 Extraction
 
-### **Transformation**
-- Harmonization to CSVW / GeoJSON / NetCDF  
-- QA/QC flagging  
-- Spatial reprojection  
-- Time-series interpolation/resampling  
-- Unit normalization  
-- Data validation against schemas  
+From:
 
-### **Loading**
-- Processed datasets written into data/hydrology/processed/  
-- STAC Items generated and placed into data/hydrology/stac/**  
-- Graph ingestion (Neo4j) using ETL lineage  
+- **USGS NWIS** APIs  
+- **KDHE** water-quality archives  
+- **USACE** choke-point/reservoir data  
+- **Kansas Mesonet** API  
+- **NOAA** climate services  
+- Local CSV, PDF, DOC, and other formats  
+
+### 5.2 Transformation
+
+- Harmonization to CSVW / GeoJSON / NetCDF as appropriate  
+- QA/QC flagging (e.g., `qflag` columns, BDL handling)  
+- Spatial reprojection to KFM-standard CRS  
+- Time-series interpolation/resampling (documented)  
+- Unit normalization (e.g., mg/L, cfs, °C)  
+- Validation against hydrology schemas & data contracts  
+
+### 5.3 Loading
+
+- Processed datasets → `data/hydrology/processed/**`  
+- STAC Items → `data/hydrology/stac/**`  
+- Graph ingestion:
+  - Nodes: Places, Events, Datasets, Observations  
+  - Edges: `prov:wasGeneratedBy`, `geo:hasGeometry`, `time:hasTime`  
 
 ---
 
-# 🛰 5. STAC Collections (Hydrology Domain)
+## 🛰 6. STAC Collections (Hydrology Domain · Emoji Style A)
 
 ```text
 data/hydrology/stac/
-├── hydrology/
-│   ├── collection.json
-│   └── items/
-├── bathymetry/
-├── wid-2025/
-├── sediment/
-├── ecology/
-└── downstream/
+├── 💧 hydrology/
+│   ├── 📁 collection.json
+│   └── 📂 items/
+│        ├── 💧 inflows/
+│        ├── 💧 outflows/
+│        ├── 📈 timeseries/
+│        └── 🧪 water-quality/
+│
+├── 🗺️ bathymetry/
+│   ├── 📁 collection.json
+│   └── 📂 items/
+│        ├── 🗺️ multibeam/
+│        ├── 🗺️ dod/
+│        └── 🧪 sediment-cores/
+│
+├── 🧱 sediment/
+│   ├── 📁 collection.json
+│   └── 📂 items/
+│        ├── 🧱 volumes/
+│        ├── 🧱 grain-size/
+│        └── 🧱 cores/
+│
+├── 🚜 wid-2025/
+│   ├── 📁 collection.json
+│   └── 📂 items/
+│        ├── 🚜 adcp/
+│        ├── 🚜 sensors/
+│        └── 🚜 operations/
+│
+├── 🌊 downstream/
+│   ├── 📁 collection.json
+│   └── 📂 items/
+│        ├── 🌊 turbidity/
+│        ├── 🌊 do/
+│        └── 🌿 ecology/
+│
+└── 🌿 ecology/
+    ├── 📁 collection.json
+    └── 📂 items/
+         ├── 🌿 fish/
+         ├── 🌿 mussels/
+         └── 🌿 macroinvertebrates/
 ```
 
-Each **collection.json** includes:
-- id, title, description  
-- spatial + temporal extents  
-- license  
-- providers  
-- DCAT & STAC compatibility  
-- PROV-O lineage  
-- Keywords (sediment, hydrology, climate, ecology, etc.)
+Each `collection.json` includes:
+
+- `id`, `title`, `description`  
+- spatial & temporal `extent`  
+- `license`, `providers`  
+- DCAT 3.0 alignment & PROV-O lineage summary  
 
 ---
 
-# 🛰️ 6. STAC Item Template (Hydrology)
+## 🛰️ 7. STAC Item Template (Hydrology)
 
 ```json
 {
@@ -270,96 +365,94 @@ Each **collection.json** includes:
 
 ---
 
-# 🕸 7. Knowledge Graph Ontology (CIDOC-CRM + GeoSPARQL + OWL-Time)
+## 🕸 8. Knowledge Graph Ontology (CIDOC-CRM + GeoSPARQL + OWL-Time)
 
-### **Entities**
+### 8.1 Entities
+
 - `E53 Place:Big_Blue_River`  
 - `E53 Place:Tuttle_Creek_Reservoir`  
 - `E5 Event:WID_2025`  
 - `E73 InformationObject:HydrologyDataset`  
-- `ObservationSeries:Hydro_Data_<Parameter>`  
-- `E3 ConditionState:Hydro_Condition_<Year>`
+- Observation series nodes (`ObservationSeries:Hydro_Data_<Parameter>`)  
+- `E3 ConditionState:Hydro_Condition_<Year>`  
 
-### **Relations**
-- `geo:hasGeometry` → Place geometry  
-- `time:hasTime` → dataset date/time  
-- `prov:wasGeneratedBy` → ETL pipeline  
-- `P70_documents` → source provenance  
-- `P7_took_place_at` → spatial grounding  
+### 8.2 Relations
+
+- `geo:hasGeometry` → spatial representation  
+- `time:hasTime` → temporal extent  
+- `prov:wasGeneratedBy` → ETL pipeline / model step  
+- `P70_documents` → link to source documentation  
+- `P7_took_place_at` → event-location link  
 
 ---
 
-# 🧬 8. FAIR+CARE Metadata Requirements
+## 🧬 9. FAIR+CARE Metadata Requirements
 
-### Every dataset MUST include:
+Hydrology datasets must include:
+
 - License  
 - Spatial footprint  
 - Temporal coverage  
-- Provenance (PROV-O)  
-- Processing lineage  
-- Creator/Provider roles  
-- Calibration metadata  
+- Provenance & lineage  
+- Creator & provider roles  
 - QA/QC flags  
-- DCAT 3.0 dataset fields  
-- Ethical checks (CARE)  
+- DCAT 3.0 fields  
+- CARE/sovereignty metadata where relevant  
 
 ---
 
-# 🎯 9. Focus Mode v3 Integration
+## 🎯 10. Focus Mode v3 Integration
 
-Focus Mode links datasets to:
+Focus Mode v3:
 
-- Places (reservoir, dam, channels)  
-- Events (WID 2025, floods, droughts)  
-- Observations (timeseries)  
-- Bathymetry and sediment layers  
-- Climate/hydroclimate drivers  
+- Uses hydrology datasets + graph context  
+- Gives narrative explanations for hydrologic events/trends  
+- Links to STAC and underlying files  
+- Always shows provenance chips and CARE labels  
 
-Focus Mode surfaces:
-- Plots  
-- Maps  
-- STAC assets  
-- Narrative summaries  
-- Dataset provenance  
+AI summaries must be **fully grounded** in data.
 
 ---
 
-# 📖 10. Story Node Integration
+## 📖 11. Story Node Integration
 
-Story Nodes using hydrology datasets:
+Story Nodes using hydrology:
 
-- **“A Reservoir Filling From the Bottom Up”**  
-  - bathymetry, sediment cores, inflows  
+- Represent events (floods, droughts, WID operations)  
+- Reference hydrology datasets by ID  
+- Provide time + place + narrative + supporting plots  
 
-- **“Downstream of the Dam”**  
-  - turbidity, DO, fish & mussel surveys  
+Examples:
 
-- **“The 2025 WID Demonstration”**  
-  - turbidity sensors, ADCP, nutrient datasets  
-
-Story Nodes reference dataset IDs using  
-`relations[].rel = "uses-dataset"`.
+- “A Reservoir Filling From the Bottom Up”  
+- “Downstream of the Dam”  
+- “The 2025 WID Demonstration”  
 
 ---
 
-# 🚀 11. Expansion Roadmap
+## 🚀 12. Expansion Roadmap
 
-Future dataset additions:
+Planned hydrology domain features:
 
-- 2D/3D hydrodynamic models  
-- Climate-sediment interaction models  
-- Reservoir bathymetry + sediment lidar (future USACE)  
-- Watershed erosion source fingerprinting  
-- Multisensor turbidity fusion (Sentinel-2 + USGS)  
-- Real-time streaming sensors (MQTT → STAC)  
+- 2D/3D hydrodynamic model integration  
+- Climate-sediment-coupled overlays  
+- Bathymetric change visualization timelines  
+- Streaming sensor ingestion & STAC streaming collections  
 
 ---
 
-# 🕰 Version History
+## 🕰 13. Version History
 
-- **v11.0.0 (2025-11-21):** Initial super-edition creation of hydrology domain dataset index.
+| Version | Date       | Notes                                                                                     |
+|--------:|-----------:|-------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-27 | Applied emoji styling to STAC collections; updated metadata; enforced KFM-MDP v11.2.2.   |
+| v11.0.0 | 2025-11-21 | Initial “Super-Edition” hydrology domain index & taxonomy.                                |
 
 ---
 
-[🏠 Back to KFM v11 Master Guide](../../docs/reference/kfm_v11_master_documentation.md) • [📂 Data Home](../README.md)
+<div align="center">
 
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+[⬅️ Back](../README.md) · [🗃️ Archive & Provenance](../archive/README.md) · [🛡️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
