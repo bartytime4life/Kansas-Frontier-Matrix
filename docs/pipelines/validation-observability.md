@@ -127,7 +127,7 @@ Define the full **v11 LTS** validation, observability, lineage-governance, and Q
 
 ---
 
-# 📘 Executive Summary
+## 📘 Executive Summary
 
 Pipeline validation and observability in KFM v11 enforce:
 
@@ -144,11 +144,12 @@ The result: **a self-auditing, self-governing ETL system** with complete traceab
 
 ---
 
-# 🧪 1. Validation Architecture
+## 🧪 1. Validation Architecture
 
 Validation occurs at three layers:
 
-## 1.1 Structural Validation  
+### 1.1 Structural Validation  
+
 Ensures all ingested and transformed data conforms to:
 
 - STAC v11  
@@ -161,14 +162,16 @@ Ensures all ingested and transformed data conforms to:
 - CRS and bounding box checks  
 
 Tools:  
+
 - `schema-lint-v11`  
 - `geojson-lint`  
 - `crs-check`  
-- `bbox-check`
+- `bbox-check`  
 
 ---
 
-## 1.2 Semantic Validation  
+### 1.2 Semantic Validation  
+
 Verifies:
 
 - Required ontology fields present  
@@ -179,13 +182,15 @@ Verifies:
 - Entity uniqueness, canonical IDs, and URI consistency  
 
 Tools:  
+
 - SHACL (shape_schema_ref)  
 - Ontology-reasoning inference tests  
 - `lineage-audit-v11`  
 
 ---
 
-## 1.3 Operational Validation  
+### 1.3 Operational Validation  
+
 Monitors:
 
 - Latency thresholds  
@@ -195,16 +200,16 @@ Monitors:
 - Energy & carbon cost per pipeline step  
 - Reliability engine metrics (WAL, rollback counts, lineage gaps)  
 
-Metrics sent to lineage/telemetry bus automatically.
+Metrics are sent to the lineage/telemetry bus automatically.
 
 ---
 
-# 🔭 2. Observability Architecture
+## 🔭 2. Observability Architecture
 
 Observability comes from:
 
 - OpenLineage v2.5 bus  
-- Neo4j lineage nodes (prov:Activity)  
+- Neo4j lineage nodes (`prov:Activity`)  
 - Time-series telemetry (Prometheus/Grafana)  
 - Sustainability instrumentation  
 - AI/ML explainability logs (SHAP/LIME)  
@@ -222,9 +227,9 @@ flowchart LR
 
 ---
 
-# 📊 3. Quality Gates (QG-11)
+## 📊 3. Quality Gates (QG-11)
 
-Every pipeline node must pass:
+Every pipeline node MUST pass:
 
 1. **Structural Gate**  
 2. **Semantic Gate**  
@@ -238,7 +243,7 @@ Failure at any gate → WAL rollback + quarantine.
 
 ---
 
-# 🧱 4. Drift, Bias & Stability Monitoring
+## 🧱 4. Drift, Bias & Stability Monitoring
 
 AI/ML pipelines undergo:
 
@@ -248,11 +253,11 @@ AI/ML pipelines undergo:
 - Confidence distribution monitoring  
 - Explainability freshness (SHAP decay)  
 
-Results feed into the governance ledger.
+Results feed into the governance ledger and are surfaced in observability dashboards.
 
 ---
 
-# 🛰️ 5. Sustainability Telemetry
+## 🛰️ 5. Sustainability Telemetry
 
 Tracked per pipeline run:
 
@@ -263,23 +268,25 @@ Tracked per pipeline run:
 - Data movement cost  
 - Network carbon impact  
 
-Published as STAC Items in `data/stac/telemetry/`.
+These are published as STAC Items in `data/stac/telemetry/` and linked into governance and sustainability reports.
 
 ---
 
-# 🧭 6. Focus Mode & Story Node Integration
+## 🧭 6. Focus Mode & Story Node Integration
 
 Validation ensures:
 
-- Focus Mode summaries only use validated graph entities  
-- Story Nodes derive only from validated narratives  
-- All narrative generation includes provenance  
+- Focus Mode summaries only use **validated** graph entities  
+- Story Nodes derive only from validated narratives and entities  
+- All narrative generation includes explicit provenance links  
 - All temporal assertions pass OWL-Time checks  
 - All spatial assertions pass GeoSPARQL checks  
 
+This guarantees that AI-driven narratives sit atop a fully validated, traceable data substrate.
+
 ---
 
-# 🛡️ 7. Governance Plane Enforcement
+## 🛡️ 7. Governance Plane Enforcement
 
 GovHooks v4 enforces:
 
@@ -290,11 +297,11 @@ GovHooks v4 enforces:
 - Pipeline promotion approvals  
 - Lineage immutability  
 
-Any violation → auto-fail of pipeline promotion.
+Any violation → automatic failure of pipeline promotion and emission of a governance incident record.
 
 ---
 
-# 🕰 Version History
+## 🕰️ Version History
 
 | Version | Date       | Notes                                                                 |
 |--------:|-----------:|-----------------------------------------------------------------------|
@@ -302,9 +309,8 @@ Any violation → auto-fail of pipeline promotion.
 
 ---
 
-# 🔗 Footer
+## 🔗 Footer
 
-**Back to Root:** `../../README.md`  
-**Back to Architecture:** `../architecture/system_overview.md`  
-**Back to Standards:** `../standards/README.md`
-
+**• [⬅ Back to Pipelines](README.md)** ·  
+**[📚 KFM Documentation Root](../README.md)** ·  
+**[🌐 Project Homepage](../../README.md)**  
