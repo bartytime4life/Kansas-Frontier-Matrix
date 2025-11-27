@@ -116,24 +116,24 @@ A minimal logical record (for dataset-focused telemetry) includes:
 
 | Field                    | Type    | Description                                   | Example                                      |
 |--------------------------|---------|-----------------------------------------------|----------------------------------------------|
-| `dataset_id`            | string  | Unique dataset identifier                    | `"usgs_historic_topo_1894"`                  |
-| `version`               | string  | Dataset or release version                   | `"v11.2.2"`                                  |
-| `ingested_at`           | string  | ISO-8601 UTC timestamp                       | `"2025-11-08T14:20:00Z"`                     |
-| `pipeline`              | string  | ETL/validation pipeline name or ID           | `"pipelines/topography/ingest_v3"`           |
-| `status`                | string  | Overall result (`success`, `failed`, `noop`) | `"success"`                                  |
-| `schema_compliance`     | number  | Schema conformity percentage                 | `100`                                        |
-| `metadata_completeness` | number  | % of metadata fields populated               | `98.5`                                       |
-| `provenance_verified`   | boolean | Whether provenance/consent was validated     | `true`                                       |
-| `faircare_score`        | number  | Combined FAIR+CARE compliance score (0–100)  | `96.5`                                       |
-| `dqi_score`             | number  | Data Quality Index (aggregated quality score)| `94.2`                                       |
-| `checksum`              | string  | SHA-256 hash of canonical artifact           | `"3b3c1f9e..."`                              |
-| `artifact_url`          | string  | Path/URL to dataset in STAC/DCAT or repo     | `"data/processed/topo_1894.tif"`             |
+| `dataset_id`             | string  | Unique dataset identifier                     | `"usgs_historic_topo_1894"`                  |
+| `version`                | string  | Dataset or release version                    | `"v11.2.2"`                                  |
+| `ingested_at`            | string  | ISO-8601 UTC timestamp                        | `"2025-11-08T14:20:00Z"`                     |
+| `pipeline`               | string  | ETL/validation pipeline name or ID            | `"pipelines/topography/ingest_v3"`           |
+| `status`                 | string  | Overall result (`success`, `failed`, `noop`)  | `"success"`                                  |
+| `schema_compliance`      | number  | Schema conformity percentage                  | `100`                                        |
+| `metadata_completeness`  | number  | % of metadata fields populated                | `98.5`                                       |
+| `provenance_verified`    | boolean | Whether provenance/consent was validated      | `true`                                       |
+| `faircare_score`         | number  | Combined FAIR+CARE compliance score (0–100)   | `96.5`                                       |
+| `dqi_score`              | number  | Data Quality Index (aggregated quality score) | `94.2`                                       |
+| `checksum`               | string  | SHA-256 hash of canonical artifact            | `"3b3c1f9e..."`                              |
+| `artifact_url`           | string  | Path/URL to dataset in STAC/DCAT or repo      | `"data/processed/topo_1894.tif"`             |
 
 Additional fields may include:
 
-- `energy_wh`, `carbon_gco2e` (sustainability metrics)  
-- `lineage_ref` — path to PROV-O/JSON-LD provenance documents  
-- `governance_decision_id` — link to FAIR+CARE review
+- `energy_wh`, `carbon_gco2e` (sustainability metrics).  
+- `lineage_ref` — path to PROV-O/JSON-LD provenance documents.  
+- `governance_decision_id` — link to FAIR+CARE review.
 
 ---
 
@@ -155,7 +155,7 @@ Lifecycle summary:
 2. Schemas and metadata are validated against contracts and standards.  
 3. FAIR+CARE audits run to validate ethical and sovereignty constraints.  
 4. Telemetry + lineage are written.  
-5. Release manifes​ts incorporate telemetry references.  
+5. Release manifests incorporate telemetry references.  
 6. Governance Council uses telemetry for decisions and certification.
 
 ---
@@ -177,13 +177,13 @@ This README describes **what** must exist; those docs describe **how** each work
 
 ## 📊 6. Key Telemetry Metrics & Targets
 
-| Metric                     | Description                                      | Target  | Verified By                    |
-|----------------------------|--------------------------------------------------|---------|--------------------------------|
-| Schema Compliance (%)      | Adherence to JSON/CSVW/NetCDF schema definitions| 100%    | `data-contract-validate`       |
-| Metadata Completeness (%)  | Proportion of mandatory fields populated        | ≥ 98%   | `metadata-lint`                |
-| FAIR+CARE Score            | Ethical/sovereignty compliance (0–100)          | ≥ 90    | `faircare-audit`               |
-| Data Quality Index (DQI)   | Weighted quality score across metrics           | ≥ 90    | `data-quality` workflows       |
-| Consent Verification (%)   | Datasets with explicit consent metadata         | 100%    | `data-provenance` workflows    |
+| Metric                     | Description                                      | Target  | Verified By              |
+|----------------------------|--------------------------------------------------|---------|--------------------------|
+| Schema Compliance (%)      | Adherence to JSON/CSVW/NetCDF schema definitions| 100%    | `data-contract-validate` |
+| Metadata Completeness (%)  | Proportion of mandatory fields populated        | ≥ 98%   | `metadata-lint`          |
+| FAIR+CARE Score            | Ethical/sovereignty compliance (0–100)          | ≥ 90    | `faircare-audit`         |
+| Data Quality Index (DQI)   | Weighted quality score across metrics           | ≥ 90    | `data-quality` workflows |
+| Consent Verification (%)   | Datasets with explicit consent metadata         | 100%    | `data-provenance`        |
 
 Failing targets triggers **governance review** and may block publication.
 
@@ -191,16 +191,16 @@ Failing targets triggers **governance review** and may block publication.
 
 ## 🧠 7. FAIR+CARE Telemetry Extensions
 
-To embed ethics into telemetry:
+Telemetry can embed ethics context via nested FAIR+CARE fields:
 
-| Field                         | Description                                          | Example                                     |
-|-------------------------------|------------------------------------------------------|---------------------------------------------|
-| `faircare.collective_benefit` | Describes community-facing benefits                 | `"Supports flood-risk education"`           |
-| `faircare.authority_to_control` | Records consent/permission status                 | `"tribal-approved"`                         |
-| `faircare.responsibility`     | Indicates steward or custodian for dataset          | `"FAIR+CARE Council"`                       |
-| `faircare.ethics`             | Result of ethics validation                         | `"passed"`                                  |
+| Field                         | Description                                  | Example                                     |
+|-------------------------------|----------------------------------------------|---------------------------------------------|
+| `faircare.collective_benefit` | Community-facing benefits                    | `"Supports flood-risk education"`           |
+| `faircare.authority_to_control` | Consent/permission status                 | `"tribal-approved"`                         |
+| `faircare.responsibility`     | Steward or custodian                         | `"FAIR+CARE Council"`                       |
+| `faircare.ethics`             | Ethics validation status                     | `"passed"`                                  |
 
-These fields help ensure data operations align with community and ethical expectations.
+These fields help ensure data operations align with community priorities and ethics.
 
 ---
 
@@ -235,20 +235,20 @@ These fields help ensure data operations align with community and ethical expect
 
 ## ⚖️ 9. Governance Integration
 
-Telemetry is not just metrics; it’s part of the governance record:
+Telemetry is part of the governance record:
 
-- **Release manifests** reference telemetry (e.g., in `manifest.zip`).  
-- **Governance ledger** uses telemetry to:
-  - Track changes between releases.  
-  - Document ethical compliance decisions.  
-  - Provide transparency to public and stakeholders.
+- **Release manifests** reference telemetry and lineage files.  
+- **Governance ledgers** use telemetry to:
+  - Monitor data changes across releases.  
+  - Evaluate ethical and sovereignty compliance over time.  
+  - Provide public transparency where permissible.
 
-Consumers of telemetry:
+Consumers of this telemetry:
 
 - FAIR+CARE Council  
-- Data governance boards  
-- External reviewers and researchers (where appropriate)  
-- Focus Mode to signal confidence and quality in narratives.
+- Data governance and risk boards  
+- External reviewers (if allowed by governance)  
+- Focus Mode (Confidence and quality cues for narratives)  
 
 ---
 
@@ -264,7 +264,7 @@ flowchart LR
     F --> A["Subsequent Updates"]
 ```
 
-Telemetry closes the loop: every dataset change leads to enriched metadata, governance checks, and updated confidence indicators.
+Every update triggers the same loop: validate → log → audit → review → certify.
 
 ---
 
@@ -272,7 +272,7 @@ Telemetry closes the loop: every dataset change leads to enriched metadata, gove
 
 | Version | Date       | Author                                | Summary                                                                                  |
 |--------:|------------|---------------------------------------|------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | FAIR+CARE Council · Data Engineering  | Upgraded to KFM-MDP v11.2.2; canonical layout; telemetry schema v11.2.2; FAIR+CARE extensions and sustainability fields added. |
+| v11.2.2 | 2025-11-27 | FAIR+CARE Council · Data Engineering  | Upgraded to KFM-MDP v11.2.2; canonical layout; telemetry schema v11.2.2; added FAIR+CARE extensions and sustainability fields. |
 | v10.0.0 | 2025-11-10 | FAIR+CARE Council · Data Engineering  | Initial telemetry & lineage framework integrating FAIR+CARE scoring and provenance verification. |
 
 ---
