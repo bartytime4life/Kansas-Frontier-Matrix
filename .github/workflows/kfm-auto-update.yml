@@ -1,0 +1,85 @@
+# .github/workflows/kfm-auto-update.yml
+name: kfm-auto-update
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # daily at 03:00 UTC
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Why are you running this manually?"
+        required: false
+        type: string
+
+# Prevent overlapping runs of this workflow
+concurrency:
+  group: kfm-auto-update
+  cancel-in-progress: false
+
+permissions:
+  contents: write    # needed for tagging/pushing tags
+  id-token: write    # needed if you use OIDC to cloud
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  ingest:
+    name: Ingest & Validate (stage)
+    runs-on: ubuntu-latest
+    environment: stage
+    timeout-minutes: 120
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies (locked)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run ingest agent (stage)
+        run: |
+          python run_agent.py --mode ingest --stage stage
+
+      - name: Validate (Great Expectations / OTEL)
+        run: |
+          python validate.py
+
+  promote:
+    name: Promote to prod (gated)
+    needs: ingest
+    runs-on: ubuntu-latest
+    environment:
+      name: prod         # gate with required reviewers / wait timer in repo Settings → Environments
+      url: https://kfm.example.org
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Promote artifacts
+        run: |
+          python promote.py --from stage --to prod
+
+      - name: Tag release
+        if: ${{ success() }}
+        run: |
+          ver=$(python scripts/print_version.py)
+          git tag -a "kfm-${ver}" -m "Automated promotion"
+          git push --tags
