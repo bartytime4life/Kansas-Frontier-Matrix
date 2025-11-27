@@ -1,32 +1,60 @@
 ---
 title: "🧮 Kansas Frontier Matrix — Data Quality & Validation Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/data/quality/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Quarterly / FAIR+CARE Council"
+version: "v11.2.2"
+last_updated: "2025-11-27"
+review_cycle: "Quarterly · FAIR+CARE Council"
+release_stage: "Stable / Governed"
+lifecycle: "LTS"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-quality-v1.json"
+sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-quality-v2.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+status: "Active / Enforced"
+doc_kind: "Quality Framework"
+header_profile: "standard"
+footer_profile: "standard"
+category: "Data · Quality · Validation"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+sensitivity: "General"
+classification: "Public"
+jurisdiction: "Kansas / United States"
+indigenous_rights_flag: true
+ttl_policy: "12 months"
+provenance_chain:
+  - "docs/data/quality/README.md@v10.0.0"
+  - "docs/data/quality/README.md@v11.0.0"
+  - "docs/data/quality/README.md@v11.1.0"
+  - "docs/data/quality/README.md@v11.2.1"
+doc_integrity_checksum: "<sha256>"
 ---
 
 <div align="center">
 
-# 🧮 **Kansas Frontier Matrix — Data Quality & Validation Framework**
+# 🧮 **Kansas Frontier Matrix — Data Quality & Validation Framework**  
 `docs/data/quality/README.md`
 
-**Purpose:**  
-Define how **data quality, completeness, and provenance integrity** are evaluated within the **Kansas Frontier Matrix (KFM)** ecosystem.  
-This framework ensures all datasets conform to **FAIR+CARE**, **ISO 19157**, and **Master Coder Protocol (MCP v6.3)** reproducibility requirements.
+**Purpose**  
+Define and enforce the complete **data quality, validation, and ethical auditing framework** for all datasets integrated into the Kansas Frontier Matrix (KFM).  
+Ensures compliance with **FAIR+CARE**, **ISO 19157**, **DCAT 3.0**, **STAC 1.0**, and **Master Coder Protocol (MCP-DL v6.3)**.
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../standards/faircare.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../standards/faircare/FAIRCARE-GUIDE.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](../../../releases/v10.0.0/manifest.zip)
+[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../releases/v11.2.2/manifest.zip)
 
 </div>
 
@@ -34,168 +62,177 @@ This framework ensures all datasets conform to **FAIR+CARE**, **ISO 19157**, and
 
 ## 📘 Overview
 
-Data quality in the Kansas Frontier Matrix (KFM) is a measurable, transparent, and ethical process that balances **scientific accuracy** with **cultural sensitivity**.  
-This document outlines how datasets undergo **automated validation**, **manual inspection**, and **FAIR+CARE ethical review** prior to ingestion into the KFM knowledge graph.
+The **KFM Data Quality & Validation Framework (DQVF)** defines how all datasets are:
 
-The validation pipeline assesses:
-- Schema and metadata completeness  
-- Provenance accuracy and lineage traceability  
-- FAIR+CARE ethical data handling  
-- Statistical and spatial integrity  
-- Version reproducibility  
+- Assessed for **structural integrity**  
+- Validated for **metadata completeness**  
+- Checked for **spatial accuracy** and CRS correctness  
+- Verified for **provenance, consent, and lineage integrity**  
+- Audited for **FAIR+CARE ethical quality**  
+- Scored via a unified **Data Quality Index (DQI)**  
+- Monitored continuously through telemetry + versioned audits  
+
+This guarantees **scientific rigor**, **ethical stewardship**, and **reproducible ingestion** across all KFM pipelines.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```
+~~~text
 docs/data/quality/
-├── README.md                      # This file
-├── completeness-audit.json        # Data completeness & field coverage metrics
-├── metadata-lint.json             # Metadata and schema validation report
-├── spatial-accuracy.json          # GIS precision and CRS conformity
-└── faircare-audit-summary.md      # Ethical data quality summary (CARE compliance)
-```
+├── 📄 README.md
+├── 📊 completeness-audit.json
+├── 🧩 metadata-lint.json
+├── 🗺️ spatial-accuracy.json
+└── 🧮 faircare-audit-summary.md
+~~~
 
 ---
 
 ## ⚙️ Data Validation Workflows
 
-| Workflow | Function | Frequency | Output |
-|---|---|---|---|
-| `data-quality.yml` | Validates completeness, accuracy, and precision for each dataset. | Quarterly | `reports/data/completeness.json` |
-| `metadata-lint.yml` | Checks metadata fields for required FAIR descriptors. | Continuous | `docs/data/quality/metadata-lint.json` |
-| `data-provenance.yml` | Verifies data lineage, licensing, and consent metadata. | Quarterly | `reports/data/provenance-summary.json` |
-| `faircare-audit.yml` | Conducts ethical quality validation against CARE standards. | Quarterly | `reports/data/faircare-validation.json` |
+| Workflow | Purpose | Frequency | Output |
+|----------|---------|-----------|---------|
+| `data-quality.yml` | Validates completeness, accuracy, & precision | Quarterly | `reports/data/completeness.json` |
+| `metadata-lint.yml` | Ensures required DCAT/FAIR metadata | Continuous | `docs/data/quality/metadata-lint.json` |
+| `data-provenance.yml` | Verifies lineage + consent metadata | Quarterly | `reports/data/provenance-summary.json` |
+| `faircare-audit.yml` | CARE-based ethical quality review | Quarterly | `reports/data/faircare-validation.json` |
 
-All quality reports are automatically versioned and linked to the corresponding release manifest.
+All reports are versioned and linked to the release manifest.
 
 ---
 
 ## 🧩 Validation Dimensions
 
 ### 1️⃣ Structural Integrity (Schema Compliance)
-- All datasets must align with **data-contract-v3.json**.  
-- JSON Schema validation ensures correct field types, null handling, and required keys.  
-- Cross-field consistency checks prevent orphaned metadata (e.g., missing spatial bounding box).  
+Every dataset must conform to **data-contract-v3.json**.
 
-**Example Failure:**
-```json
+Checks include:
+
+- JSON Schema Draft 2020-12 validation  
+- Required field presence  
+- Nullability + type enforcement  
+- Cross-field logic (e.g., temporal range structure)  
+
+Example failure:
+
+~~~json
 {
+  "dataset_id": "ks_soils_1967",
   "field": "temporal.end",
-  "error": "Invalid date format; expected ISO 8601.",
-  "dataset_id": "ks_soils_1967"
+  "error": "Invalid date format — expected ISO 8601"
 }
-```
+~~~
 
 ---
 
-### 2️⃣ Metadata Completeness
-KFM uses **ISO 19115-1** and **DCAT 3.0** fields to ensure metadata is descriptive and machine-readable.
+### 2️⃣ Metadata Completeness (DCAT 3.0 + ISO 19115-1)
 
 | Field | Required | Description |
-|---|---|---|
-| `title` | ✅ | Dataset title for identification. |
-| `description` | ✅ | Abstract summarizing dataset context. |
-| `spatial` | ✅ | Bounding box or CRS for spatial assets. |
-| `temporal` | ✅ | Time range covered by data. |
-| `provenance` | ✅ | Source, author, and consent metadata. |
-| `license` | ✅ | SPDX or CC identifier for reuse. |
-| `keywords` | — | Searchable descriptors for STAC/DCAT catalogs. |
+|------|----------|-------------|
+| `title` | ✅ | Dataset human-readable name |
+| `description` | ✅ | Abstract of dataset scope |
+| `spatial` | ✅ | Bounding box or footprint |
+| `temporal` | ✅ | Start/end or interval |
+| `provenance` | ✅ | Lineage + consent + authorship |
+| `license` | ✅ | SPDX or CC identifier |
+| `keywords` | — | For DCAT/STAC discovery |
 
-> Target completeness threshold: **≥ 98% metadata field coverage per dataset.**
+Target threshold: **≥ 98% metadata coverage**.
 
 ---
 
 ### 3️⃣ Spatial Accuracy & CRS Validation
-- Validates coordinate reference systems (EPSG:4326 or aligned CRS).  
-- Ensures GIS geometries (points, polygons) are valid and topologically correct.  
-- Measures horizontal positional accuracy within ±5 meters.  
-- Reprojects inconsistent coordinate systems automatically.
 
-**Tools:** GDAL, pyproj, QGIS CLI, GeoPandas validation utilities.
+- All datasets must declare CRS (EPSG:4326 default)  
+- Validate geometry with GeoPandas / Shapely  
+- Enforce topology correctness (no self-intersections)  
+- Reproject inconsistent CRS automatically  
+
+Accuracy Target: **± 5 meters** (horizontal).
+
+Tools: GDAL, pyproj, ogrinfo, QGIS CLI.
 
 ---
 
-### 4️⃣ Provenance & Consent Verification
-Every dataset must include **consent provenance metadata**:
-```json
+### 4️⃣ Provenance & Consent Verification (PROV-O)
+
+Required fields:
+
+~~~json
 "provenance": {
   "creator": "Kansas Geological Survey",
   "source_url": "https://archivehub.kansasgis.org/1894_topo",
+  "issued": "2025-04-02T00:00:00Z",
   "consent": "Approved under FAIR+CARE Council, 2025-Q2"
 }
-```
+~~~
 
-- Verified using `data-provenance.yml`.  
-- Consent, authorship, and checksum hashes stored in **telemetry lineage logs**.  
-- Datasets failing provenance validation cannot be promoted to production.
+Datasets failing provenance validation are **blocked from production**.
 
 ---
 
-### 5️⃣ FAIR+CARE Ethical Quality Checks
-CARE integration ensures that ethical obligations are treated as quality parameters.
+### 5️⃣ FAIR+CARE Ethical Quality Validation
 
-| CARE Principle | Quality Criteria | Pass Threshold |
-|---|---|---|
-| **Collective Benefit** | Dataset provides documented public or cultural value. | Required |
-| **Authority to Control** | Consent metadata verified. | 100% |
-| **Responsibility** | Review council and data stewards documented. | Required |
-| **Ethics** | Dataset language and imagery reviewed for cultural sensitivity. | 100% |
+| CARE Principle | Requirement | Pass Criteria |
+|---------------|-------------|---------------|
+| **Collective Benefit** | Document value to communities | Required |
+| **Authority to Control** | Verified cultural consent | 100% |
+| **Responsibility** | Stewardship + review body | Required |
+| **Ethics** | No harmful or sensitive content | 100% |
 
-> Any dataset failing **CARE validation** enters “restricted” status and is excluded from open release until compliance is achieved.
+CARE failures → dataset marked **restricted**.
 
 ---
 
-## 📊 Key Quality Metrics
+## 📊 Key Quality Metrics (DQI Dimensions)
 
 | Metric | Definition | Target |
-|---|---|---|
-| **Schema Conformance** | % of datasets passing JSON Schema validation. | 100% |
-| **Metadata Completeness** | % of mandatory metadata fields populated. | ≥ 98% |
-| **Spatial Accuracy** | Deviation from verified coordinate benchmarks. | ≤ 5m |
-| **Checksum Integrity** | % of verified SHA256 hashes. | 100% |
-| **FAIR+CARE Ethical Compliance** | Cultural and consent validation rate. | ≥ 90% |
+|--------|------------|---------|
+| Schema Conformance | JSON Schema pass rate | 100% |
+| Metadata Completeness | Required fields populated | ≥ 98% |
+| Spatial Accuracy | Deviation from truth benchmarks | ≤ 5m |
+| Checksum Integrity | Verified SHA256 hashes | 100% |
+| Ethical Compliance | CARE-aligned fields validated | ≥ 90% |
 
 ---
 
-## 🧮 Data Quality Scoring System
+## 🧮 Data Quality Index (DQI)
 
-KFM computes a **composite Data Quality Index (DQI)** per dataset:
+Weighted composite score:
 
-```math
+~~~text
 DQI = (S * 0.25) + (M * 0.25) + (P * 0.20) + (E * 0.30)
-```
+~~~
 
-Where:  
-- **S** = Schema Conformance (%)  
-- **M** = Metadata Completeness (%)  
-- **P** = Provenance Integrity (%)  
-- **E** = Ethical Compliance (%)  
+Where:
 
-**Passing Threshold:** DQI ≥ 90 → Eligible for public catalog release.  
-Scores < 80 trigger remediation workflows.
+- **S** = Schema Conformance  
+- **M** = Metadata Completeness  
+- **P** = Provenance Integrity  
+- **E** = Ethical Compliance  
+
+**Passing threshold:** DQI ≥ 90  
+**Remediation triggered:** DQI < 80
 
 ---
 
 ## 🧠 Continuous Validation Lifecycle
 
-```mermaid
+~~~mermaid
 flowchart LR
-A["Raw Dataset (source)"] --> B["Automated Validation (Schema + Metadata)"]
-B --> C["Ethical & Provenance Review (FAIR+CARE Council)"]
-C --> D["Lineage Logging + Telemetry"]
-D --> E["Release Inclusion (STAC/DCAT Catalog)"]
-E --> F["Quarterly Re-Audit & Metrics Reporting"]
-```
-
-All validation steps are fully auditable via logs in `reports/data/` and telemetry JSON files.
+A["📥 Raw Dataset"] --> B["⚙️ Schema + Metadata Validation"]
+B --> C["🧭 Ethical + Provenance Review"]
+C --> D["🧾 Telemetry + Lineage Logging"]
+D --> E["📦 STAC/DCAT Publication"]
+E --> F["🔁 Quarterly Re-Audit"]
+~~~
 
 ---
 
-## 🧾 Example Quality Report (Excerpt)
+## 🧾 Example Quality Report
 
-```json
+~~~json
 {
   "dataset_id": "usgs_historic_topo_1894",
   "schema_compliance": 100,
@@ -205,33 +242,33 @@ All validation steps are fully auditable via logs in `reports/data/` and telemet
   "dqi_score": 96.2,
   "status": "approved"
 }
-```
+~~~
 
 ---
 
 ## ⚖️ Governance & Reporting
 
 | Report | Maintainer | Frequency | Output |
-|---|---|---|---|
-| **Data Completeness Audit** | Data QA Team | Quarterly | `completeness-audit.json` |
-| **Metadata Lint Summary** | FAIR+CARE Council | Continuous | `metadata-lint.json` |
-| **Ethical Audit Report** | FAIR+CARE Council | Biannual | `faircare-audit-summary.md` |
-| **Spatial QA Validation** | GIS Engineers | Continuous | `spatial-accuracy.json` |
+|--------|------------|-----------|---------|
+| Completeness Audit | Data QA Team | Quarterly | `completeness-audit.json` |
+| Metadata Lint Summary | FAIR+CARE Council | Continuous | `metadata-lint.json` |
+| Ethical Audit Report | FAIR+CARE Council | Biannual | `faircare-audit-summary.md` |
+| Spatial QA Validation | GIS Engineers | Continuous | `spatial-accuracy.json` |
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.0.0 | 2025-11-10 | FAIR+CARE Data Quality Council | Created full data quality and validation framework, including DQI scoring, provenance checks, spatial accuracy, and CARE compliance integration. |
+| Version | Date | Summary |
+|---------|---------|----------|
+| v11.2.2 | 2025-11-27 | Updated to v11.2.2 standard; emoji directory; footer corrected; governance enhanced |
+| v10.0.0 | 2025-11-10 | Initial publication of KFM Data Quality Framework |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · Audited by **FAIR+CARE Data Quality Council**  
-[⬅ Back to Data Index](../README.md) · [Data Contracts →](../contracts/README.md)
+© 2025 Kansas Frontier Matrix  
+[⬅️ Back](../README.md) · [📜 Data Contracts](../contracts/README.md) · [🛡️ Governance](../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
