@@ -1,4 +1,3 @@
-````markdown
 ---
 title: "📑 Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.2"
 path: "docs/standards/kfm_markdown_protocol_v11.2.2.md"
