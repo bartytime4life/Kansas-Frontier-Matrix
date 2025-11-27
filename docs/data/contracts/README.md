@@ -1,32 +1,58 @@
 ---
 title: "📜 Kansas Frontier Matrix — Data Contracts & Schemas (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/data/contracts/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / FAIR+CARE Council"
+version: "v11.2.2"
+last_updated: "2025-11-27"
+review_cycle: "Continuous · FAIR+CARE Council"
+release_stage: "Stable / Governed"
+lifecycle: "LTS"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-contracts-v1.json"
+sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-contracts-v2.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+status: "Active / Enforced"
+doc_kind: "Schema"
+header_profile: "standard"
+footer_profile: "standard"
+category: "Data · Contracts · Validation"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+classification: "Public"
+jurisdiction: "Kansas / United States"
+indigenous_rights_flag: true
+ttl_policy: "12 months"
+provenance_chain:
+  - "docs/data/contracts/README.md@v10.0.0"
+  - "docs/data/contracts/README.md@v11.0.0"
+  - "docs/data/contracts/README.md@v11.1.0"
+  - "docs/data/contracts/README.md@v11.2.1"
+doc_integrity_checksum: "<sha256>"
 ---
 
 <div align="center">
 
-# 📜 **Kansas Frontier Matrix — Data Contracts & Schemas**
+# 📜 **Kansas Frontier Matrix — Data Contracts & Schemas**  
 `docs/data/contracts/README.md`
 
-**Purpose:**  
-Define and standardize **data contracts, validation schemas, and provenance specifications** used across all ingestion and ETL pipelines of the **Kansas Frontier Matrix (KFM)**.  
-These contracts guarantee interoperability, reproducibility, and **FAIR+CARE** ethical integrity across datasets and knowledge graph entities.
+**Purpose**  
+Define, enforce, and govern **data contracts, validation schemas, provenance standards, and FAIR+CARE requirements** for all KFM ETL pipelines, datasets, and knowledge-graph entities.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../standards/faircare.md)
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../standards/faircare/FAIRCARE-GUIDE.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](../../../releases/v10.0.0/manifest.zip)
+[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../../releases/v11.2.2/manifest.zip)
 
 </div>
 
@@ -34,152 +60,153 @@ These contracts guarantee interoperability, reproducibility, and **FAIR+CARE** e
 
 ## 📘 Overview
 
-**Data Contracts** serve as the foundation for **KFM’s ETL pipelines and knowledge graph ingestion**, providing explicit structure, validation, and ethical guarantees for every dataset.  
-They are JSON Schema–compliant definitions that describe:
-- Field names, data types, and validation rules  
-- Provenance metadata and licensing  
-- FAIR+CARE alignment and consent fields  
-- Dataset versioning and linkage to STAC/DCAT catalogs  
+KFM **data contracts** establish the required structure, metadata fields, provenance rules, and FAIR+CARE constraints that every dataset must satisfy before ingestion.
 
-Each data source integrated into KFM must conform to one of these contracts before being approved for ingestion.
+Contracts ensure:
+
+- Deterministic ETL pipelines  
+- Schema-safe Neo4j ingestion  
+- Ethical + sovereign handling of cultural data  
+- STAC/DCAT interoperability  
+- Complete, traceable PROV-O lineage  
+
+All datasets MUST conform to these contracts **before inclusion in the KFM knowledge graph**.
 
 ---
 
 ## 🗂️ Directory Layout
 
-```
+~~~text
 docs/data/contracts/
-├── README.md                      # This file
-├── data-contract-v3.json           # Current KFM global data contract schema
-├── metadata-schema.json            # Metadata structure for dataset-level fields
-├── provenance-spec.json            # Provenance and consent data model
-└── examples/
-    ├── topo-map-contract-example.json
-    ├── climate-data-contract-example.json
-    └── focus-narrative-contract-example.json
-```
+├── 📄 README.md
+├── 🧩 data-contract-v3.json
+├── 🧾 metadata-schema.json
+├── 🧬 provenance-spec.json
+└── 📚 examples/
+       ├── 🗺️ topo-map-contract-example.json
+       ├── 🌦️ climate-data-contract-example.json
+       └── 🧠 focus-narrative-contract-example.json
+~~~
 
 ---
 
 ## ⚙️ Contract Components
 
 | Component | Description | Format |
-|---|---|---|
-| **Metadata Schema** | Defines dataset identity, title, license, spatial/temporal coverage. | JSON Schema |
-| **Entity Contract** | Specifies entities, attributes, and relationships (Person, Place, Event). | JSON Schema / RDF |
-| **Provenance Spec** | Captures dataset origin, author, consent, and lineage. | JSON-LD / PROV-O |
-| **Ethical Use Fields** | FAIR+CARE extensions for consent and cultural control. | JSON Schema |
-| **Validation Rules** | Data type, range, required/optional fields. | JSON Schema Draft 2020-12 |
+|----------|-------------|---------|
+| **Metadata Schema** | Dataset identity, title, license, STAC/DCAT mappings | JSON Schema |
+| **Entity Contract** | Defines entities/attributes in KFM (Place, Person, Event, Artifact, Document) | JSON Schema / RDF |
+| **Provenance Spec** | Source, authorship, consent, lineage (PROV-O) | JSON-LD |
+| **Ethical Metadata** | FAIR+CARE fields for responsible data governance | JSON Schema |
+| **Validation Rules** | Required fields, types, enumerations | JSON Schema Draft 2020-12 |
 
 ---
 
 ## 🧩 Core Schema Fields (data-contract-v3.json)
 
 | Field | Type | Description | Required |
-|---|---|---|---|
-| `id` | string | Unique dataset identifier (UUID or slug). | ✅ |
-| `title` | string | Human-readable dataset name. | ✅ |
-| `description` | string | Brief summary of dataset content. | ✅ |
-| `license` | string | SPDX or Creative Commons identifier. | ✅ |
-| `spatial` | object | Bounding box or region metadata (GeoJSON). | ✅ |
-| `temporal` | object | Start/end ISO 8601 dates for dataset range. | ✅ |
-| `schema_version` | string | Semantic version of applied data contract. | ✅ |
-| `provenance` | object | Source, authorship, and consent metadata. | ✅ |
-| `quality` | object | Data completeness, precision, and accuracy indicators. | — |
-| `faircare` | object | FAIR+CARE ethical use metadata (below). | ✅ |
+|-------|--------|-------------|----------|
+| `id` | string | Unique dataset identifier | ✅ |
+| `title` | string | Human-readable name | ✅ |
+| `description` | string | Summary of dataset | ✅ |
+| `license` | string | SPDX/CC license identifier | ✅ |
+| `spatial` | object | GeoJSON bbox / footprint | ✅ |
+| `temporal` | object | ISO-8601 start/end | ✅ |
+| `schema_version` | string | Contract version | ✅ |
+| `provenance` | object | Authoring, consent, lineage | ✅ |
+| `faircare` | object | Ethical/sovereignty metadata | ✅ |
+| `quality` | object | Accuracy + completeness metrics | — |
 
 ---
 
-## ⚖️ FAIR+CARE Extensions (Embedded Fields)
+## ⚖️ FAIR+CARE Extensions
 
 | Field | Description | Example |
-|---|---|---|
-| `faircare.collective_benefit` | Describes intended community or societal benefit. | `"Supports open Kansas heritage research"` |
-| `faircare.authority_to_control` | Specifies consent or ownership for Indigenous or personal data. | `"Controlled by Kaw Nation"` |
-| `faircare.responsibility` | Declares stewardship and maintenance responsibilities. | `"FAIR+CARE Council"` |
-| `faircare.ethics` | Notes cultural or contextual sensitivity. | `"Restricted images — cultural significance"` |
+|-------|-------------|----------|
+| `collective_benefit` | Intended civic/scientific value | `"Supports Kansas historical research"` |
+| `authority_to_control` | Cultural consent/ownership | `"Controlled by Kaw Nation"` |
+| `responsibility` | Steward / maintainer | `"FAIR+CARE Council"` |
+| `ethics` | Sensitive/cultural notes | `"Contains culturally sensitive boundary data"` |
 
 ---
 
 ## 🔍 Provenance Specification (provenance-spec.json)
 
-KFM follows **W3C PROV-O** and **PAV (Provenance, Authoring, Versioning)** standards.
+Follows **PROV-O**, **PAV**, and **DCAT 3.0**.
 
-| Field | Description | Example |
-|---|---|---|
-| `source_url` | Original data location or API endpoint. | `"https://www.ncei.noaa.gov/data/ghcn"` |
-| `creator` | Dataset creator or institution. | `"NOAA NCEI"` |
-| `contributor` | Secondary data handlers or KFM ingesters. | `"KFM ETL Team"` |
-| `issued` | Publication date. | `"2025-04-02T00:00:00Z"` |
-| `modified` | Last modified date. | `"2025-11-10T00:00:00Z"` |
-| `license` | SPDX identifier for reuse. | `"CC-BY-4.0"` |
-| `checksum` | SHA256 hash for verification. | `"6f9b23f..."` |
-| `consent` | Declaration of ethical approval or cultural consent. | `"Approved under Kaw Nation data protocol"` |
+| Field | Description |
+|-------|-------------|
+| `source_url` | Original source or API endpoint |
+| `creator` | Dataset creator |
+| `contributor` | ETL or transformation actor |
+| `issued` | Publication timestamp |
+| `modified` | Last modified |
+| `license` | SPDX license |
+| `checksum` | SHA256 integrity value |
+| `consent` | Cultural/community approval |
 
 ---
 
 ## 🧾 Validation Workflows
 
-| Workflow | Function | Output Artifact |
-|---|---|---|
-| `data-contract-validate.yml` | Validates dataset against JSON Schema. | `reports/data/schema-validation.json` |
-| `data-provenance.yml` | Verifies lineage and consent fields. | `reports/data/provenance-summary.json` |
-| `faircare-audit.yml` | Ensures ethical metadata fields are populated. | `reports/data/faircare-validation.json` |
-| `data-quality.yml` | Measures completeness, accuracy, and consistency. | `reports/data/completeness.json` |
+| Workflow | Purpose | Output |
+|----------|---------|---------|
+| `data-contract-validate.yml` | JSON Schema validation | schema-validation.json |
+| `data-provenance.yml` | Lineage + consent verification | provenance-summary.json |
+| `faircare-audit.yml` | Ethical metadata enforcement | faircare-validation.json |
+| `data-quality.yml` | Completeness & accuracy | completeness.json |
 
 ---
 
 ## 🧠 Example Contract — Climate Data
 
-```json
+~~~json
 {
   "id": "noaa_ks_climate_1880_2025",
   "title": "NOAA Kansas Historical Climate Observations",
+  "description": "Daily temperature and precipitation across Kansas (1880–2025).",
   "license": "CC-BY-4.0",
-  "description": "Daily temperature and precipitation data across Kansas (1880–2025).",
-  "spatial": { "bbox": [-102.05, 37.0, -94.6, 40.0] },
+  "spatial": { "bbox": [-102.05, 37.00, -94.60, 40.00] },
   "temporal": { "start": "1880-01-01", "end": "2025-01-01" },
   "provenance": {
     "source_url": "https://www.ncei.noaa.gov/",
     "creator": "NOAA NCEI",
     "issued": "2025-01-05T00:00:00Z",
-    "consent": "Public domain — U.S. Government data."
+    "consent": "Public domain — no restrictions"
   },
   "faircare": {
-    "collective_benefit": "Supports climate and agriculture resilience research.",
-    "authority_to_control": "Open government dataset — unrestricted.",
-    "responsibility": "Maintained by KFM ETL team.",
-    "ethics": "No personal data or sensitive locations included."
+    "collective_benefit": "Supports climate resilience modeling",
+    "authority_to_control": "Open government dataset",
+    "responsibility": "KFM ETL Team",
+    "ethics": "Contains no personal or sensitive cultural data"
   }
 }
-```
+~~~
 
 ---
 
-## 📊 Data Contract Versioning & Governance
+## 📊 Contract Governance
 
-| Version | Type | Effective Date | Governance Body |
-|---|---|---|---|
-| **v1.0** | Initial | 2023-01-10 | KFM Data Standards Team |
-| **v2.0** | FAIR integration | 2024-03-25 | FAIR Council |
-| **v3.0** | FAIR+CARE expansion + consent schema | 2025-07-01 | FAIR+CARE Council |
-
-All new data contracts require **FAIR+CARE Council** and **Governance Committee** approval before deployment.
+| Version | Description | Effective | Body |
+|---------|-------------|-----------|--------|
+| v1.0 | Initial contract standard | 2023-01-10 | Data Standards Team |
+| v2.0 | FAIR integration | 2024-03-25 | FAIR Council |
+| v3.0 | FAIR+CARE + consent schema | 2025-07-01 | FAIR+CARE Council |
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.0.0 | 2025-11-10 | Data Engineering & FAIR+CARE Council | Established complete data contract documentation, including schema, provenance, and validation workflows. |
+| Version | Date | Summary |
+|---------|---------|----------|
+| v11.2.2 | 2025-11-27 | Upgraded to v11.2.2 standard; emoji layout fixed; footer style updated. |
+| v10.0.0 | 2025-11-10 | Initial data contracts + provenance + validation workflows. |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-Developed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[⬅ Back to Data Index](../README.md) · [Provenance Spec →](provenance-spec.json)
+© 2025 Kansas Frontier Matrix  
+[⬅️ Back](../README.md) · [📜 Provenance Spec](provenance-spec.json) · [🛡️ Governance](../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
