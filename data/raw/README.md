@@ -2,8 +2,8 @@
 title: "📥 Kansas Frontier Matrix — Raw Data Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/raw/README.md"
 
-version: "v11.0.0"
-last_updated: "2025-11-19"
+version: "v11.2.2"
+last_updated: "2025-11-27"
 release_stage: "Stable / Governed"
 review_cycle: "Continuous · FAIR+CARE Council Oversight"
 lifecycle: "Long-Term Support (LTS)"
@@ -16,11 +16,11 @@ semantic_document_id: "kfm-doc-data-raw-readme"
 event_source_id: "ledger:data/raw/README.md"
 immutability_status: "version-pinned"
 
-sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v11.0.0/manifest.zip"
+sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.2/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
 
-telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
+telemetry_ref: "../../releases/v11.2.2/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/data-raw-v11.json"
 energy_schema: "../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../schemas/telemetry/carbon-v2.json"
@@ -31,11 +31,11 @@ sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION
 
 license: "Open Data Commons / FAIR+CARE License"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0"
+markdown_protocol_version: "KFM-MDP v11.2.2"
 ontology_protocol_version: "KFM-OP v11.0"
 pipeline_contract_version: "KFM-PDC v11.0"
 
-status: "Active / Enforced"
+status: "Active · Enforced"
 doc_kind: "Domain Architecture"
 intent: "raw-data-layer"
 role: "raw-domain"
@@ -79,7 +79,7 @@ sunset_policy: "Superseded upon next raw-layer architecture update"
 
 <div align="center">
 
-# 📥 Kansas Frontier Matrix — **Raw Data Layer**  
+# 📥 **Kansas Frontier Matrix — Raw Data Layer**  
 `data/raw/README.md`
 
 **Purpose**  
@@ -96,7 +96,7 @@ The Raw Data Layer is the **foundation of KFM**, enabling:
 
 ---
 
-## 1. 📘 Overview
+## 📘 1. Overview
 
 The **Raw Data Layer** preserves all source datasets in their **original formats**, together with:
 
@@ -105,68 +105,97 @@ The **Raw Data Layer** preserves all source datasets in their **original formats
 - 🔐 SHA-256 checksums and integrity manifests  
 - 🧬 PROV-O and ISO 19115-compatible provenance  
 
-Raw data is **never modified** — any cleaning or transformation occurs downstream in `data/staging/` and beyond.  
+Raw data is **never modified** — any cleaning, normalization, or transformation happens downstream in `data/staging/`, `data/work/`, and `data/processed/`.  
+This layer provides the **trust anchor** for all higher-level products, including processed datasets, archives, Story Nodes, and Focus Mode narratives.
 
 ---
 
-## 2. 🗂️ Directory Layout (GitHub-Safe)
+## 🗂️ 2. Directory Layout (Emoji Style A)
 
-~~~~text
+```text
 data/raw/
-├── README.md
+├── 📄 README.md                           # This file
 │
-├── climate/          ← NOAA, NIDIS, CPC; temperature / precip / drought
-├── hazards/          ← FEMA, USGS, NOAA; floods / tornadoes / droughts
-├── hydrology/        ← USGS streamflow, aquifer, watershed datasets
-├── landcover/        ← MODIS/VIIRS, Landsat, NLCD; vegetation classification
-├── tabular/          ← historical, census, administrative records
-├── terrain/          ← DEMs, slope, elevation rasters
-├── text/             ← OCR-scanned documents, archival texts, reports
-└── metadata/         ← source provenance, checksums, data contracts, FAIR+CARE pre-audits
-~~~~
+├── 🌦️ climate/                           # NOAA, NIDIS, CPC; temperature · precip · drought indices
+├── 🌪️ hazards/                           # FEMA, USGS, NOAA; floods · tornadoes · drought · wildfire
+├── 💧 hydrology/                          # USGS streamflow, aquifer levels, watershed inputs
+├── 🌿 landcover/                          # MODIS/VIIRS, Landsat, NLCD; vegetation & landcover
+├── 📊 tabular/                            # Historical, census, administrative records
+├── 🗻 terrain/                            # DEMs, slope, elevation rasters
+├── 📜 text/                               # OCR-scanned docs, archives, reports
+└── 📑 metadata/                           # Source provenance, checksums, contracts, FAIR+CARE pre-audits
+```
 
-Each domain subfolder may include its own `README.md` describing source conventions.
+Each domain subfolder SHOULD have its own `README.md` describing:
+
+- Sources and acquisition methods  
+- Native formats and schemas  
+- FAIR+CARE and sovereignty notes  
+- Known quirks (units, null handling, etc.)  
 
 ---
 
-## 3. 🔄 Data Acquisition Workflow
+## 🔄 3. Data Acquisition Workflow
 
-~~~~mermaid
+```mermaid
 flowchart TD
-    SRC["External Sources\n(NOAA · USGS · FEMA · NASA · Archives · Tribal/State)"]
-      --> ING["Automated Ingestion\n(ETL jobs, scripts, or manual drops)"]
+    SRC["External Sources\n(NOAA · USGS · FEMA · NASA · KGS · Tribal/State · Archives)"]
+      --> ING["Ingestion\n(ETL jobs · scrapers · bulk downloads · manual drops)"]
 
     ING --> PRE["FAIR+CARE Pre-Audit\n(ethics · licensing · sovereignty)"]
     PRE --> REG["Checksum & Provenance Registration\n(data/raw/metadata/*)"]
-    REG --> PROMO["Promotion to Staging\n(data/staging/*)"]
-~~~~
+    REG --> PROMO["Promotion to Staging\n(data/staging/* · data/work/*)"]
+```
 
-### 3.1 Steps
+### 3.1 Acquisition
 
-1. **Acquisition**  
-   - Fetch via API/FTP/download/drive imports.  
-   - Capture **license** and **terms of use** from source.  
+- Sources include:
+  - Federal: NOAA, USGS, FEMA, NASA, USACE  
+  - State/tribal: KGS, KDHE, state agencies, tribal data stewards  
+  - Academic: KSU/KU datasets  
+  - Archives: libraries, historical societies, document collections  
 
-2. **Verification**  
-   - Verify vendor checksums and signatures where available.  
-   - Compute internal SHA-256 checksums for all raw files.  
+- Methods:
+  - HTTP/HTTPS APIs  
+  - FTP/bulk downloads  
+  - Cloud bucket sync  
+  - Manual transfers (with governance review)  
 
-3. **FAIR+CARE Pre-Audit**  
-   - Record sensitivity, licensing nuances, and consent or use restrictions.  
-   - Tag Indigenous or culturally sensitive sources.  
+### 3.2 Verification
 
-4. **Registration**  
-   - Write provenance entries in `data/raw/metadata/provenance.json`.  
-   - Update governance ledger with acquisition events and reviewers.  
+- Where upstream checksums/signatures exist, they are validated.  
+- KFM computes internal **SHA-256** checksums for every file.  
+- Results are logged under `data/raw/metadata/checksums.json`.
 
-5. **Promotion**  
-   - Copy unaltered files into `data/staging/` for normalization and ETL.  
+### 3.3 FAIR+CARE Pre-Audit
+
+- Licensing and terms-of-use documented verbatim.  
+- CARE and sovereignty flags added for:
+  - Indigenous datasets  
+  - Sensitive ecological or heritage data  
+  - Restricted-use archives  
+
+### 3.4 Registration
+
+- Provenance entries recorded in `data/raw/metadata/provenance.json`  
+- Append-only governance ledger entries created in:
+  ```text
+  docs/reports/audit/data_provenance_ledger.json
+  docs/reports/fair/data_care_assessment.json
+  ```
+
+### 3.5 Promotion
+
+- **Unaltered** files are copied or referenced into:
+  - `data/staging/` for normalization  
+  - `data/work/` for ETL processing  
+- Promotion is logged as a **new PROV-O activity** linking raw → staging/work.
 
 ---
 
-## 4. 🧩 Example Source Metadata Record (JSON)
+## 🧩 4. Example Source Metadata Record (JSON)
 
-~~~~json
+```json
 {
   "id": "noaa_temperature_1900_2025_raw",
   "domain": "climate",
@@ -186,153 +215,147 @@ flowchart TD
   },
   "governance_ref": "docs/reports/audit/data_provenance_ledger.json"
 }
-~~~~
+```
 
 ---
 
-## 5. ⚖️ FAIR+CARE Source Governance Matrix
+## ⚖️ 5. FAIR+CARE Source Governance Matrix
 
-| Principle            | Implementation                                                     | Oversight              |
-|----------------------|--------------------------------------------------------------------|------------------------|
-| 🧭 **Findable**      | STAC/DCAT index of raw sources in `data/raw/metadata/` (JSON-LD). | `@kfm-data`            |
-| 🔓 **Accessible**    | Original licensing preserved; access notes stored verbatim.        | `@kfm-accessibility`   |
-| 🔗 **Interoperable** | Native formats (CSV, GeoTIFF, NetCDF, JSON) with metadata crosswalks. | `@kfm-architecture` |
-| 🔁 **Reusable**      | Complete source notes, schema refs, license & consent.             | `@kfm-design`          |
-| 🤝 **Collective Benefit** | Supports transparent, equitable science & planning.          | `@faircare-council`    |
-| 🛡️ **Authority**     | Council validates ethics, attribution, and consent where needed.   | `@kfm-governance`      |
-| 📋 **Responsibility**| Ingestion logs + checksums recorded & reviewed.                    | `@kfm-security`        |
-| 🧠 **Ethics**        | Restricted or sensitive content quarantined and flagged.           | `@kfm-ethics`          |
+| Principle                     | Implementation                                                         | Oversight             |
+|-------------------------------|------------------------------------------------------------------------|-----------------------|
+| 🧭 **Findable**               | Raw source index + metadata under `data/raw/metadata/` (JSON/JSON-LD) | `@kfm-data`           |
+| 🔓 **Accessible**             | Original licensing preserved; access notes stored verbatim            | `@kfm-accessibility`  |
+| 🔗 **Interoperable**          | Native formats documented; crosswalks to target schemas               | `@kfm-architecture`   |
+| 🔁 **Reusable**               | Full source metadata, schema refs, and consent recorded               | `@kfm-design`         |
+| 🤝 **Collective Benefit**     | Use cases consistent with public and community benefit                 | `@faircare-council`   |
+| 🛡️ **Authority to Control**   | Council validates ethics, attribution, and consent                     | `@kfm-governance`     |
+| 📋 **Responsibility**         | Ingestion logs & checksums reviewed and archived                       | `@kfm-security`       |
+| 🧠 **Ethics**                 | Sensitive content tagged, quarantined, or restricted as needed         | `@kfm-ethics`         |
 
-Governance logs:
+Governance logs live in:
 
-~~~~text
+```text
 docs/reports/audit/data_provenance_ledger.json
 docs/reports/fair/data_care_assessment.json
-~~~~
+```
 
 ---
 
-## 6. 🔐 Data Integrity Verification
+## 🔐 6. Data Integrity Verification
 
 ### 6.1 Checksum Records
 
-Checksums for raw files are stored in:
+Raw file checksums are stored in:
 
-~~~~text
+```text
 data/raw/metadata/checksums.json
 data/checksums/manifest.json
-~~~~
+```
 
 Each entry includes:
 
-- `file` — relative path to raw file  
-- `checksum_sha256` — `sha256-...` format  
+- `file` — relative path to the raw file  
+- `checksum_sha256` — SHA-256 hex string (`sha256-...`)  
 - `validated` — boolean  
-- `verified_on` — timestamp  
-- `source_ref` — human-readable description of upstream source  
+- `verified_on` — ISO 8601 timestamp  
+- `source_ref` — description of upstream/source  
 
 ### 6.2 Provenance Logging
 
-Source-level provenance stored in:
+Source-level provenance is recorded in:
 
-~~~~text
+```text
 data/raw/metadata/provenance.json
-~~~~
+```
 
-And mirrored into:
-
-~~~~text
-docs/reports/audit/data_provenance_ledger.json
-~~~~
+and mirrored into **global governance ledgers** for long-term audits.
 
 ---
 
-## 7. 🧠 Raw Layer’s Role in the Data System
+## 🧠 7. Raw Layer’s Role in the Data System
 
-The raw layer is the **trust anchor** for:
+The raw layer is the **trust anchor** for everything above it:
 
-- All ETL pipelines under `src/pipelines/**`  
-- All processed data in `data/processed/**`  
-- All archived data in `data/archive/**`  
-- All Story Nodes and Focus Mode narratives  
+- All **ETL pipelines** in `src/pipelines/**` originate from raw inputs.  
+- All **processed datasets** reference raw sources in their provenance.  
+- All **archives** (`data/archive/**`) can be replayed back to raw ingests.  
+- All **Story Nodes & Focus Mode narratives** eventually point back to raw evidence.
 
-Rules:
+Core rules:
 
-- ✅ Raw files are not edited in-place  
-- ✅ Transformations only happen in `staging/`, `processed/`, etc.  
-- ✅ Any re-ingestion of updated source files is logged as a **new acquisition event**  
+- Raw files are **never modified in place**.  
+- Any new upstream download is a **new version**, not an overwrite.  
+- If a source retracts or changes data, this is recorded as a **new provenance event**, not a silent replacement.
 
 ---
 
-## 8. ♻️ Retention & Preservation Policy
+## ♻️ 8. Retention & Preservation Policy
 
-| Category         | Retention | Policy                                      |
-|------------------|----------:|---------------------------------------------|
-| Raw Data Files   | Permanent | Immutable archival for provenance & audits  |
-| Source Metadata  | Permanent | ISO 19115 / FAIR+CARE governance retention  |
-| Checksum Records | Permanent | Integrity evidence for every release        |
-| FAIR+CARE Pre-Audits | 5 years | Pre-ingestion ethics & licensing records |
-| Ingestion Logs   | 365 days  | Rotated per governance and infra policy     |
+| Category         | Retention | Policy                                                           |
+|------------------|----------:|------------------------------------------------------------------|
+| Raw Data Files   | Permanent | Immutable archive for provenance, science, and legal traceability |
+| Source Metadata  | Permanent | ISO 19115 / DCAT / FAIR+CARE metadata retained indefinitely      |
+| Checksum Records | Permanent | Integrity evidence for every release                             |
+| FAIR+CARE Pre-Audits | ≥ 5 years | Pre-ingestion ethics/licensing records                       |
+| Ingestion Logs   | ≥ 1 year  | Detailed logs rotated according to infra policy                  |
 
-Retention automation defined in:
+Retention automation is configured in:
 
-~~~~text
+```text
 data/raw/metadata/raw_data_retention.yml
-~~~~
+```
 
 ---
 
-## 9. 🌱 Sustainability Practices (Raw Ingestion)
+## 🌱 9. Sustainability Practices (Raw Ingestion)
 
-Sustainability metrics for ingestion include:
+Sustainability metrics for raw ingestion include:
 
-- Energy consumption per ingestion job (`energy_wh`)  
-- Carbon-equivalent emissions (`carbon_gCO2e`)  
-- Ingestion throughput (files/time, bytes/time)  
+- `energy_wh` per ingestion batch  
+- `carbon_gco2e` per ingestion batch  
+- `files_ingested` and `bytes_ingested`  
 
-Telemetry for raw ingestion flows into:
+Telemetry emitted to:
 
-~~~~text
-releases/v11.0.0/focus-telemetry.json
+```text
+releases/v11.2.2/focus-telemetry.json
 docs/reports/telemetry/data-raw-v11.json
-~~~~
+```
 
 Practices:
 
-- Prefer batching downloads to reduce overhead  
-- Use renewable-powered compute where available  
-- Minimize redundant fetches from upstream sources  
+- Batch large ingests to minimize overhead.  
+- Prefer energy-efficient time windows and cloud regions.  
+- Avoid redundant re-ingests when upstream data has not changed.
 
 ---
 
-## 10. 🧾 Internal Use Citation
+## 🧾 10. Internal Citation
 
-~~~~text
+```text
 Kansas Frontier Matrix (2025). Raw Data Layer (v11.0.0).
 Immutable FAIR+CARE-aligned repository for unaltered source datasets from NOAA,
-USGS, FEMA, NASA, KDHE, and public/archival providers. Implements checksum
-validation, ISO 19115 provenance logs, and open data ethics under MCP-DL v6.3
-and KFM-MDP v11.0.
-~~~~
+USGS, FEMA, NASA, KDHE, KGS, and archival providers. Implements checksum
+validation, ISO 19115 provenance, and open data ethics under MCP-DL v6.3
+and KFM-MDP v11.x.
+```
 
 ---
 
-## 11. 🕰 Version History
+## 🕰 11. Version History
 
 | Version | Date       | Summary                                                                                                         |
-|--------:|------------|-----------------------------------------------------------------------------------------------------------------|
+|--------:|-----------:|-----------------------------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; applied emoji directory layout and footer; expanded governance & sustainability.  |
 | v11.0.0 | 2025-11-19 | Full v11 upgrade: telemetry v4, FAIR+CARE pre-audits v11, ontology mapping, sustainability and governance v11. |
-| v10.2.2 | 2025-11-12 | Streaming STAC hooks, telemetry v2, expanded pre-audit fields (consent tokens, sensitivity flags).            |
-| v10.0.0 | 2025-11-09 | Streaming STAC baseline, telemetry schema references, lifecycle policy clarified.                              |
-| v9.7.0  | 2025-11-06 | Governance & retention clarifications; improved metadata patterns.                                             |
+| v10.2.2 | 2025-11-12 | Streaming STAC hooks, telemetry v2, expanded pre-audit fields (consent tokens, sensitivity flags).             |
+| v10.0.0 | 2025-11-09 | Initial raw-layer baseline; introduced retention policies & telemetry schemas.                                |
+
+---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Raw Data Layer**  
-📥 Open Data Integrity · ⚖️ FAIR+CARE Governance · 🧬 Provenance Accountability  
-
-[⬅️ Back to Data Index](../README.md) ·  
-[📐 Data Architecture](../ARCHITECTURE.md) ·  
-[⚖️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — Open Data Commons / FAIR+CARE License  
+[⬅️ Back](../README.md) · [📐 Data Architecture](../ARCHITECTURE.md) · [🛡️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
