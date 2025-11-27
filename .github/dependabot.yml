@@ -1,7 +1,7 @@
 # 🧩 Kansas Frontier Matrix — Dependabot Configuration (MCP v6.3 · FAIR+CARE Certified)
 # File: .github/dependabot.yml
-# Purpose: Automate dependency updates, security alert triage, and ecosystem version governance
-# Alignment: MCP-DL v6.3 · KFM-MDP v11.0 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# Purpose: Automate dependency updates, security alert triage, and ecosystem version governance.
+# Alignment: MCP-DL v6.3 · KFM-MDP v11.2.2 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 # SPDX-License-Identifier: MIT
 
 version: 2
@@ -32,11 +32,15 @@ updates:
     groups:
       python-security:
         applies-to: "security-updates"
-        patterns: ["*"]
+        patterns:
+          - "*"
       python-minor-patch:
         applies-to: "version-updates"
-        update-types: ["minor", "patch"]
-        patterns: ["*"]
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "*"
 
   # ============================================================
   # 🧱 Node.js — Web Frontend
@@ -59,19 +63,25 @@ updates:
       include: "scope"
     ignore:
       - dependency-name: "react"
-        versions: ["<18.0.0"]
+        versions:
+          - "<18.0.0"
       - dependency-name: "maplibre-gl"
-        versions: ["<3.0.0"]
+        versions:
+          - "<3.0.0"
     allow:
       - dependency-type: "direct"
     groups:
       frontend-security:
         applies-to: "security-updates"
-        patterns: ["*"]
+        patterns:
+          - "*"
       frontend-minor-patch:
         applies-to: "version-updates"
-        update-types: ["minor", "patch"]
-        patterns: ["*"]
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "*"
 
   # ============================================================
   # 🐳 Docker — Containerized Infrastructure
@@ -94,11 +104,14 @@ updates:
     groups:
       docker-security:
         applies-to: "security-updates"
-        patterns: ["*"]
+        patterns:
+          - "*"
       docker-patch:
         applies-to: "version-updates"
-        update-types: ["patch"]
-        patterns: ["*"]
+        update-types:
+          - "patch"
+        patterns:
+          - "*"
 
   # ============================================================
   # ⚙️ GitHub Actions — CI/CD Automation Dependencies
@@ -121,11 +134,15 @@ updates:
     groups:
       gha-security:
         applies-to: "security-updates"
-        patterns: ["*"]
+        patterns:
+          - "*"
       gha-minor-patch:
         applies-to: "version-updates"
-        update-types: ["minor", "patch"]
-        patterns: ["*"]
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "*"
 
   # ============================================================
   # 🧠 Neo4j / Graph Schema — Semantic Infrastructure
@@ -140,6 +157,7 @@ updates:
     labels: ["dependencies", "graph", "maintenance"]
     reviewers: ["bartytime4life"]
     assignees: ["bartytime4life"]
+    open-pull-requests-limit: 10
     rebase-strategy: "auto"
     versioning-strategy: "increase-if-necessary"
     commit-message:
@@ -148,8 +166,11 @@ updates:
     groups:
       graph-all:
         applies-to: "version-updates"
-        update-types: ["minor", "patch"]
-        patterns: ["*"]
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "*"
 
   # ============================================================
   # 📦 Data Validation — FAIR+CARE Compliance Tooling
@@ -164,6 +185,7 @@ updates:
     labels: ["dependencies", "data", "validation"]
     reviewers: ["bartytime4life"]
     assignees: ["bartytime4life"]
+    open-pull-requests-limit: 10
     rebase-strategy: "auto"
     versioning-strategy: "increase-if-necessary"
     commit-message:
@@ -172,23 +194,30 @@ updates:
     groups:
       validation-minor-patch:
         applies-to: "version-updates"
-        update-types: ["minor", "patch"]
-        patterns: ["*"]
+        update-types:
+          - "minor"
+          - "patch"
+        patterns:
+          - "*"
 
 # ============================================================
 # 🔒 Global Governance & Security Integration (v11)
 # ============================================================
 # • All Dependabot PRs are subject to the same CI/CD and governance gates as manual PRs:
-#    - .github/workflows/ci.yml               → lint, tests, core schema checks
-#    - .github/workflows/docs_validate.yml    → KFM-MDP v11 markdown & front-matter
-#    - .github/workflows/stac_validate.yml    → STAC Items/Collections (where relevant)
-#    - .github/workflows/dcat_validate.yml    → DCAT datasets (where relevant)
-#    - .github/workflows/faircare_validate.yml→ FAIR+CARE and sovereignty checks
-#    - .github/workflows/security_audit.yml   → static analysis, CVE scan (CRITICAL ⇒ block)
-#    - .github/workflows/sbom_verify.yml      → SBOM + manifest regeneration/verification
+#    - .github/workflows/kfm-ci.yml              → core lint, tests, schema checks
+#    - .github/workflows/docs_validate.yml       → KFM-MDP v11.2.2 markdown & front-matter
+#    - .github/workflows/stac_validate.yml       → STAC Items/Collections (where relevant)
+#    - .github/workflows/dcat_validate.yml       → DCAT datasets (where relevant)
+#    - .github/workflows/faircare_validate.yml   → FAIR+CARE and sovereignty checks
+#    - .github/workflows/security_audit.yml      → static analysis, CVE scan (CRITICAL ⇒ block)
+#    - .github/workflows/sbom_verify.yml         → SBOM + manifest regeneration/verification
+#
 # • On merge to protected branches:
 #    - SBOM (SPDX) and release manifest are rebuilt and verified.
 #    - Telemetry (including dependency update history) is written into focus-telemetry.json.
-# • Security alerts are routed to maintainers and the FAIR+CARE Council as appropriate.
+#
+# • Security alerts are routed to maintainers and, when appropriate, to the FAIR+CARE Council.
+#
 # • Commit messages use `deps(...)` prefixes for governance & audit classification.
+#
 # Governance Reference: docs/standards/governance/ROOT-GOVERNANCE.md
