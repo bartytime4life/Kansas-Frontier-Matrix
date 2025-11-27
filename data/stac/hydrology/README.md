@@ -1,366 +1,335 @@
 ---
-title: "🛰️ Kansas Frontier Matrix — Hydrology STAC Domain Index (v11 Super-Edition)"
+title: "🛰️ Kansas Frontier Matrix — Hydrology STAC Domain Index (v11.2.2 Super-Edition)"
 path: "data/stac/hydrology/README.md"
-version: "v11.0.0"
-last_updated: "2025-11-21"
-review_cycle: "Annual / Hydrology & Hazards Council"
+
+version: "v11.2.2"
+last_updated: "2025-11-27"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Annual · Hydrology & Hazards Council"
+content_stability: "stable"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-stac-hydrology-index-v1.json"
+previous_version_hash: "<previous-sha256>"
+sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.2/stac-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-stac-hydrology-index-v11.2.2.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
+
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+
 status: "Active / Enforced"
 doc_kind: "STAC Domain Index"
 intent: "stac-hydrology-domain-index"
 semantic_document_id: "kfm-stac-hydrology-domain-index"
-doc_uuid: "urn:kfm:stac:hydrology:index:v11.0.0"
+doc_uuid: "urn:kfm:stac:hydrology:index:v11.2.2"
+
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk"
 immutability_status: "version-pinned"
+doc_integrity_checksum: "<sha256>"
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+badge_profiles:
+  - "root-centered-badge-row"
+requires_purpose_block: true
+requires_directory_layout_section: true
+requires_version_history: true
+requires_governance_links_in_footer: true
 ---
 
 <div align="center">
 
-# 🛰️ **Hydrology STAC Domain Index (v11 Super-Edition)**  
+# 🛰️ **Hydrology STAC Domain Index (v11.2.2 Super-Edition)**  
 `data/stac/hydrology/README.md`
 
-**Purpose:**  
-Serve as the **master STAC domain index** for all hydrology-related datasets in KFM, including  
-reservoirs, rivers, sedimentation, bathymetry, flood operations, water quality, WID 2025,  
-downstream ecology, and statewide hydroclimate. Defines STAC metadata rules, asset  
-standards, ontology mapping, lineage protocols, and Focus Mode v3 integration for  
-hydrology datasets across Kansas.
+**Purpose**  
+Define the **STAC domain rules, directory structure, metadata requirements, and lineage model** for all **hydrology-related datasets** in KFM: reservoirs, rivers, sedimentation, bathymetry, WID, flood operations, water quality, downstream ecology, and statewide hydroclimate.
 
 </div>
 
 ---
 
-# 📘 0. Overview
+## 📘 Overview
 
-Hydrology is one of the largest and most data-intensive domains in the Kansas Frontier Matrix.  
-This README defines how hydrologic datasets must be cataloged using **STAC 1.0.0**,  
-ensuring:
+Hydrology is one of the heaviest data domains in KFM. This document specifies:
 
-- FAIR+CARE compliance  
-- DCAT 3.0 interoperability  
-- PROV-O lineage tracking  
-- Full GeoSPARQL spatial grounding  
-- OWL-Time temporal grounding  
-- CIDOC-CRM entity mapping  
-- KFM v11 UI compatibility (MapLibre, timeline, Focus Mode v3)  
-- Machine-readability and reproducible ETL pipelines  
+- How hydrologic datasets are organized under `data/stac/hydrology/`  
+- How they become **STAC 1.0+ Items and Collections**  
+- How they align with:
+  - **KFM-STAC v11.2**  
+  - **DCAT 3.0**  
+  - **PROV-O**  
+  - **CIDOC-CRM + GeoSPARQL + OWL-Time**  
+- How they feed:
+  - The Neo4j graph  
+  - Focus Mode v3  
+  - Story Node v3  
+  - MapLibre/3D UIs
 
-This STAC domain index is the root reference for ALL hydrology STAC Collections.
+This index is the root reference for **all hydrology STAC Collections** in KFM.
 
 ---
 
-# 🗂️ 1. Directory Layout (Canonical)
+## 🗂️ Directory Layout (Canonical)
 
 ```text
-data/
-└── stac/
-    └── hydrology/
-        ├── collection.json                     # (optional global hydrology collection)
-        ├── items/                              # cross-collection STAC Items
-        ├── tuttle-creek/                       # Tuttle Creek hydrology collection
-        ├── milford/                            # Milford Lake hydrology collection
-        ├── perry/                              # Perry Lake hydrology collection
-        ├── clinton/                            # Clinton Lake hydrology collection
-        ├── kansas-river/                       # Kansas River hydrology
-        ├── statewide/                          # statewide hydrology & hydroclimate
-        ├── sediment/                           # sedimentation datasets
-        ├── bathymetry/                         # statewide bathymetry & DEMs
-        ├── wid/                                # any reservoir’s WID datasets
-        └── ecology/                            # hydrology-linked ecological datasets
+📁 data/
+└── 📁 stac/
+    └── 📁 hydrology/
+        ├── 📄 README.md                 — ← This file (domain index)
+        ├── 📄 collection.json           — Optional overall hydrology collection
+        ├── 📁 items/                    — Cross-collection Items (if needed)
+        ├── 📁 tuttle-creek/             — Tuttle Creek hydrology collection
+        ├── 📁 milford/                  — Milford Lake hydrology collection
+        ├── 📁 perry/                    — Perry Lake hydrology collection
+        ├── 📁 clinton/                  — Clinton Lake hydrology collection
+        ├── 📁 kansas-river/             — Kansas River hydrology
+        ├── 📁 statewide/                — Statewide hydrology & hydroclimate
+        ├── 📁 sediment/                 — Sedimentation datasets
+        ├── 📁 bathymetry/               — Bathymetry, reservoir DEMs, DoDs
+        ├── 📁 wid/                      — Water Injection Dredging (WID) datasets
+        └── 📁 ecology/                  — Hydrology-linked ecological datasets
 ```
 
-This directory layout is **fully extensible** for future reservoirs, rivers, and state programs.
+This layout is stable and extendable for new reservoirs, rivers, and state programs.
 
 ---
 
-# 🌎 2. Hydrology STAC Domain Architecture
+## 🌎 Hydrology Domain Architecture
 
-The hydrology domain is composed of multiple **STAC Collections**, each organized by  
-reservoir, region, or topic.
+The hydrology STAC domain is structured as multiple **Collections**, each focused on a reservoir, river reach, or theme.
 
-### ✔ Spatial Subdomains
+### Spatial Subdomains
+
 - Tuttle Creek  
 - Milford  
 - Perry  
 - Clinton  
 - Kansas River  
-- Blue River  
-- Missouri Basin (lower Kansas context)  
-- Statewide hydroclimate
+- Statewide hydrology (all reservoirs + rivers + hydroclimate context)
 
-### ✔ Thematic Subdomains
-- Hydrology (inflows, outflows, stage, storage)  
-- Sedimentation (delta growth, sediment volumes, TSS)  
-- Bathymetry (1962–present)  
-- Water Quality (NTU, DO, nutrients)  
-- Flood Operations  
-- Climate Drivers (Mesonet, PRISM, NOAA NCEI)  
-- Ecological Responses  
-- WID 2025 (water injection dredging)  
+### Thematic Subdomains
 
-Each subdomain includes one or more STAC Collections.
+- **Hydrology** — inflows, outflows, stage, storage, hydrographs  
+- **Sedimentation** — delta growth, volume, TSS, sediment cores  
+- **Bathymetry** — historical and modern DEMs, difference-of-DEM (DoD)  
+- **Water Quality** — turbidity, DO, nutrients, temperature, conductivity  
+- **Flood Operations** — releases, gate operations, events  
+- **Climate Drivers** — Mesonet, PRISM, NCEI climate drivers for flows  
+- **Ecology** — hydrology → ecological response (fish, mussels, macroinvertebrates)  
+- **WID** — Water Injection Dredging operations and environmental response (2025+)  
+
+Each subdomain is implemented as one or more **STAC Collections** under the corresponding directory.
 
 ---
 
-# 🛰️ 3. Required STAC 1.0.0 Metadata (Domain Rules)
+## 🛰️ STAC Item Requirements (Hydrology)
 
-Every Item in this domain **must** include:
+All hydrology Items MUST meet **STAC 1.0+** (or 1.1) minimums and hydrology-specific extensions.
 
-### ✔ Core Fields
-- `stac_version`
-- `type`
-- `id`
-- `collection`
-- `geometry`
-- `bbox`
+### Core STAC Fields
+
+- `stac_version`  
+- `type` = `"Feature"`  
+- `id` (globally unique in domain)  
+- `collection`  
+- `geometry` (GeoJSON)  
+- `bbox`  
 - `properties.datetime`  
-- `properties.start_datetime`  
-- `properties.end_datetime`  
-- `assets` (at least one)
+- `properties.start_datetime` (if temporal extent)  
+- `properties.end_datetime` (if temporal extent)  
+- `assets` (≥1 asset)
 
-### ✔ Hydrology-Specific Required Fields
-| Field | Purpose |
-|------|---------|
-| `kfm:parameter` | Hydrologic variable (flow, turbidity, DO, depth, etc.) |
-| `kfm:units` | SI or domain standard |
-| `kfm:site` | Canonical KFM site code |
-| `kfm:provider` | Dataset owner/host |
-| `kfm:method` | Sensor/survey/algorithm |
-| `kfm:lineage` | ETL → STAC provenance |
-| `kfm:quality` | QA/QC flags |
-| `kfm:project` | e.g., “Sedimentation-History” |
+### Hydrology-Specific Fields (Required)
 
-### ✔ Strongly Recommended
+| Field             | Purpose                                              |
+|------------------|------------------------------------------------------|
+| `kfm:parameter`  | Hydrologic variable (flow, stage, turbidity, etc.)   |
+| `kfm:units`      | Units (SI / hydrology-standard)                      |
+| `kfm:site`       | Canonical KFM site code (e.g., USGS station ID)      |
+| `kfm:provider`   | Dataset owner/host (USACE, USGS, KWO, KDHE, etc.)    |
+| `kfm:method`     | Sensor/survey/algorithm/methodology                  |
+| `kfm:lineage`    | Short ETL → STAC provenance pointer                  |
+| `kfm:quality`    | QA/QC flags or score                                 |
+| `kfm:project`    | Project or initiative (e.g., `"WID-2025"`)           |
+
+### Strongly Recommended
+
 - `keywords`  
-- `summaries`  
-- `kfm:hydrologic_region`  
-- `kfm:license_text`  
-- `kfm:processing_history`
+- `summaries` in collection metadata for common fields  
+- `kfm:hydrologic_region` (e.g., `"Kansas River Basin"`)  
+- `kfm:license_text` (if more detailed license text needed)  
+- `kfm:processing_history` (summarized steps or version tags)
 
 ---
 
-# 📐 4. Asset Standards for Hydrology
+## 📐 Asset Standards (Hydrology)
 
-### ✔ Allowed Formats
-| Format | Use Case |
-|--------|-----------|
-| **COG (Cloud-Optimized GeoTIFF)** | Bathymetry, DoD rasters, sediment extents |
-| **GeoJSON** | Vector surveys, transects, plume polygons |
-| **CSV / CSVW** | Timeseries |
-| **NetCDF (CF-compliant)** | Climate, hydrodynamic rasters |
-| **MP4 (optional)** | ADCP plume videos |
+### Allowed Formats
 
-### ✔ Asset Fields
+| Format                         | Use Case                                      |
+|--------------------------------|-----------------------------------------------|
+| COG (Cloud-Optimized GeoTIFF)  | Bathymetry, DEMs, DoDs, flood depth grids     |
+| GeoJSON                        | Survey lines, plume polygons, station points  |
+| CSV / CSVW                     | Time series from gauges and sensors           |
+| NetCDF (CF-compliant)          | Gridded climate/hydrology fields              |
+| Parquet                        | High-volume tabular hydrology data            |
+
 Each asset MUST include:
-- `href`  
-- `type`  
-- `roles`  
-- `title` (recommended)  
-- `description` (recommended)  
+
+- `href` — stable path or URL  
+- `type` — MIME type (`"image/tiff; application=geotiff; profile=cloud-optimized"`, `"application/geo+json"`, `"text/csv"`, etc.)  
+- `roles` — e.g. `["data"]`, `["metadata"]`, `["thumbnail"]`  
+- `title` — human-readable label (recommended)  
+- `description` — short description (recommended)
 
 ---
 
-# 🧭 5. Collection-Level Metadata Rules
+## 🧭 Collection Metadata Rules
 
-### Required (in `collection.json`)
-- `"type": "Collection"`
-- `"stac_version": "1.0.0"`
-- `"id"` unique across hydrology domain
-- `"title"`
-- `"description"`
-- `"keywords"`
-- `"extent"` (spatial + temporal)
-- `"providers"`
-- `"license"`
-- `"assets"` (optional thumbnails, QA docs)
-- `"links"` (root, parent, items)
+Each hydrology Collection (e.g., `tuttle-creek/collection.json`) MUST include:
 
-### STAC Summaries
-Collections should define summaries for:
+- `"type": "Collection"`  
+- `"stac_version": "1.0.0"` or `"1.1.0"`  
+- `"id"` — unique within KFM STAC domain  
+- `"title"`  
+- `"description"`  
+- `"keywords"` — at least hydrology + location + parameter terms  
+- `"extent"` — spatial + temporal extents  
+- `"providers"` — including KFM and source agencies  
+- `"license"`  
+- `"links"` — including `root`, `parent`, `items`  
+
+### Summaries
+
+For faster search and filtering, `summaries` SHOULD include:
+
 - `kfm:parameter`  
 - `kfm:units`  
 - `kfm:site`  
 - `kfm:method`  
-- `datetime` ranges  
-
-This accelerates UI search and STAC API filtering.
+- `datetime` (range)  
 
 ---
 
-# 🕸 6. DCAT 3.0 Mappings (Hydrology Domain)
+## 🧬 Lineage & Ontology (PROV-O, DCAT, CIDOC, GeoSPARQL, OWL-Time)
 
-| STAC Field | DCAT Equivalent |
-|------------|-----------------|
-| `id` | `dct:identifier` |
-| `description` | `dct:description` |
-| `providers` | `dcat:contactPoint` |
-| `assets[].href` | `dcat:downloadURL` |
-| `extent.spatial` | `dct:spatial` |
-| `extent.temporal` | `dct:temporal` |
-| `keywords` | `dcat:keyword` |
-| `license` | `dct:license` |
+Hydrology STAC Items are not just files—they are hooked into the KFM semantics and lineage graph.
 
----
+### PROV-O
 
-# 🧬 7. PROV-O Lineage Mapping
+Each Item is a `prov:Entity` with:
 
-Every hydrology STAC Item creates:
+- `prov:wasGeneratedBy` → ETL or analysis `prov:Activity`  
+- `prov:wasDerivedFrom` → raw datasets (upstream sensors, grids, etc.)  
+- `prov:wasAttributedTo` → `prov:Agent` (agency, KFM pipeline)  
 
-### Entities
-- `prov:Entity` → the dataset  
-- `prov:Activity` → ETL process that generated it  
-- `prov:Agent` → USGS, USACE, KWO, KDHE, etc.
+### DCAT 3.0
 
-### Required relationships
-- `prov:wasGeneratedBy`  
-- `prov:wasAttributedTo`  
-- `prov:used` (raw sources)  
+Mapping from hydrology STAC to DCAT:
 
----
+| STAC Field          | DCAT Field        |
+|---------------------|-------------------|
+| `id`                | `dct:identifier`  |
+| `description`       | `dct:description` |
+| `providers`         | `dcat:contactPoint` |
+| `assets[].href`     | `dcat:downloadURL` |
+| `extent.spatial`    | `dct:spatial`     |
+| `extent.temporal`   | `dct:temporal`    |
+| `keywords`          | `dcat:keyword`    |
+| `license`           | `dct:license`     |
 
-# 🛰 8. Graph Ontology (CIDOC-CRM + GeoSPARQL + OWL-Time)
+### CIDOC-CRM / GeoSPARQL / OWL-Time
 
-Every STAC Item maps to:
+- `E73 InformationObject` → the dataset  
+- `E53 Place` → the basin/reservoir reach  
+- `E7 Activity` → major hydrologic events (e.g., WID operations)  
+- `geo:hasGeometry` → dataset geometry  
+- `time:hasBeginning` / `time:hasEnd` → dataset temporal extent  
 
-### CRM Entities
-- `E73 InformationObject` — dataset  
-- `E53 Place` — spatial grounding  
-- `E7 Activity` — events (e.g., WID 2025)  
-- `E3 ConditionState` — hydrologic condition summaries  
-- `ObservationSeries` — for time-series  
-
-### GeoSPARQL
-- `geo:hasGeometry`  
-- `geo:sfWithin`  
-- `geo:asWKT`
-
-### OWL-Time
-- `time:hasTime`  
-- `time:hasBeginning`  
-- `time:hasEnd`
+These mappings allow hydrology STAC Items to link directly into KFM’s historical narratives and Focus Mode.
 
 ---
 
-# 🔬 9. STAC → ETL → Graph Pipeline
+## 🔁 STAC → ETL → Graph Pipeline Pattern
 
-```
-Raw Dataset
-    ↓ (extract)
-Schema normalization
-    ↓ (transform)
-Asset production (CSVW, COG, GeoJSON)
-    ↓ (annotate-stac)
-STAC Items created
-    ↓ (validate)
-STAC → Graph ingestion
+```text
+Raw hydrology data (USGS/USACE/KWO/etc.)
+    ↓ extract
+Schema normalization + unit harmonization
+    ↓ transform
+Asset generation (COG, CSVW, GeoJSON, NetCDF)
+    ↓ stac-annotate
+STAC Items written under data/stac/hydrology/...
+    ↓ validate (STAC + JSON Schema + FAIR+CARE)
+Graph ingestion (Neo4j hydrology schema)
 ```
 
-All steps recorded in:
-`mcp/experiments/hydrology/stac_creation_<id>.md`
+Each ETL run is logged under `mcp/experiments/hydrology/...` and emits OpenLineage v2.5 events with energy/carbon telemetry if configured.
 
 ---
 
-# 🧪 10. Hydrology STAC Item Classes
+## 🎯 Focus Mode & Story Nodes
 
-### 10.1 Hydrology Core
-- inflows  
-- outflows  
-- stage  
-- storage  
-- hydrographs  
-- climate drivers  
+Hydrology STAC Items power:
 
-### 10.2 Bathymetry
-- DEM rasters  
-- DoD (difference-of-DEM)  
-- reservoir polygon updates  
+- **Focus Mode v3** views of:
+  - Reservoir operations over time  
+  - Flood events and downstream impacts  
+  - Sediment accumulation and dredging operations  
+  - Climate drivers and hydrologic response  
 
-### 10.3 Sedimentation
-- sediment cores  
-- volume timeseries  
-- delta position datasets  
+- **Story Node v3** narratives such as:
+  - “A Reservoir Filling From the Bottom Up”  
+  - “Downstream of the Dam”  
+  - “The 2025 WID Demonstration”  
+  - “Kansas Climate & Flow Regimes”  
 
-### 10.4 Water Quality
-- turbidity  
-- DO  
-- nutrients  
-- conductivity  
-
-### 10.5 WID 2025
-- turbidity sensors  
-- density-current ADCP  
-- nutrient samples  
-- jet operations metadata  
-
-### 10.6 Downstream Effects
-- tailwater DO  
-- tailwater turbidity  
-- plume propagation polygons  
-
-### 10.7 Ecology
-- fish surveys  
-- mussel polygons  
-- macroinvertebrate data  
+Story Nodes refer to hydrology datasets via `relation.rel = "uses-dataset"` and `relation.target` set to the STAC Item or Collection IDs.
 
 ---
 
-# 🎯 11. Focus Mode v3 Integration
+## 🛣 Roadmap
 
-Focus Mode uses STAC metadata to:
+Planned hydrology STAC enhancements:
 
-- Load hydrology time-series  
-- Render bathymetry maps  
-- Highlight WID turbidity pulses  
-- Summarize sedimentation  
-- Visualize downstream responses  
-- Link datasets → Story Nodes → timelines  
-
----
-
-# 📖 12. Story Node Integration
-
-Hydrology datasets provide foundational assets for:
-
-- **"A Reservoir Filling From the Bottom Up"**  
-- **"Downstream of the Dam"**  
-- **"The 2025 WID Demonstration"**  
-- **"Kansas Climate Cycles"**  
-- **"Sediment on the Move"**  
-
-Each Story Node references this hydrology domain via `relation.rel = "uses-dataset"`.
+- Ingestion of full 3D hydrodynamic model outputs (NetCDF/CF-compliant)  
+- Real-time streaming STAC Items for key gauges and reservoirs  
+- Climate-projection-based hydrology layers for 2030–2100  
+- Flood inundation maps based on combined SAR + gauge data  
+- Integration of Sentinel-1D InSAR-derived hydrology products  
+- Cross-reservoir sediment and nutrient transport datasets  
 
 ---
 
-# 🚀 13. Expansion Roadmap
+## 🕰 Version History
 
-Future hydrology STAC needs:
-
-- 3D hydrodynamic model outputs (NetCDF/GRIB)  
-- Real-time MQTT sensor streaming  
-- Climate vulnerability rasters (2030–2100)  
-- Flood inundation polygons  
-- Sentinel-2 turbidity rasters  
-- Lidar-derived water-surface models  
-- Cross-reservoir transport datasets  
+| Version  | Date       | Summary                                                                                  |
+|---------:|------------|------------------------------------------------------------------------------------------|
+| v11.2.2  | 2025-11-27 | Upgraded to v11.2.2; canonical directory layout; PROV/DCAT/CIDOC mapping hardened; Focus Mode hooks clarified. |
+| v11.0.0  | 2025-11-21 | Initial hydrology STAC domain index for v11; defined core layout and STAC metadata rules. |
 
 ---
 
-# 🕰 Version History
+<div align="center">
 
-- **v11.0.0 (2025-11-21):** Initial creation of hydrology STAC domain index (super-edition).
+**Kansas Frontier Matrix — Hydrology STAC Domain (v11.2.2)**  
+Hydrology as a first-class, semantically-governed STAC domain.
 
----
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
 
-[⬅️ Back to Data Home](../../README.md) • [🏠 KFM v11 Master Guide](../../../docs/reference/kfm_v11_master_documentation.md)
+[⬅ Back to STAC Root](../README.md) ·  
+[📐 Data Architecture](../../../docs/ARCHITECTURE.md) ·  
+[⚖ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
+</div>
