@@ -145,7 +145,6 @@ branding_registry:
   pipeline: "Deterministic Pipelines · Explainable AI · Open Provenance"
   telemetry: "Transparent Systems · Ethical Metrics · Sustainable Intelligence"
   graph: "Semantics × Provenance × Spatial Intelligence"
-# New preferences & patterns inferred from v11 usage
 layout_profiles:
   - "immediate-one-branch-with-descriptions-and-emojis"
 badge_profiles:
@@ -219,65 +218,52 @@ All other documentation standards (e.g. domain-specific SOPs, experiment templat
 
 ## 🗂️ Directory Layout
 
-All Markdown documents live within the monorepo’s main directory structure:
+KFM documents MUST represent the repository structure using a **consistent, project-wide layout pattern**. The canonical layout for standards, memory, and project files is:
 
 ```text
-KansasFrontierMatrix/
-├── src/                    # Code (ETL, AI, graph, API, tools)
-├── web/                    # Frontend (React, MapLibre, Cesium)
-├── data/                   # Data manifests, raw pointers, processed outputs, STAC
-├── docs/                   # Documentation (this protocol lives here)
-│   ├── standards/          # Standards & policies (Markdown, FAIR+CARE, governance, etc.)
-│   ├── architecture/       # System + subsystem design docs
-│   ├── guides/             # How-to guides and SOPs
-│   ├── data/               # Data source registry, data contracts
-│   ├── analyses/           # Domain analyses and case studies
-│   └── glossary.md         # Shared term glossary
-├── mcp/                    # Master Coder Protocol artifacts (experiments, SOPs, model cards)
-├── tests/                  # Test suites
-├── tools/                  # Utility scripts, CLIs, dev tools
-└── .github/                # CI/CD workflows and templates
+📁 KansasFrontierMatrix/                     — Monorepo root
+│
+├── 📂 docs/                                 — All documentation
+│   ├── 📂 standards/                        — Standards & policies (Markdown, FAIR+CARE, governance, etc.)
+│   ├── 📂 architecture/                     — System + subsystem designs
+│   ├── 📂 guides/                           — How-to guides and SOPs
+│   ├── 📂 data/                             — Data contracts, catalogs, data docs
+│   ├── 📂 analyses/                         — Domain analyses & case studies
+│   └── 📄 glossary.md                       — Shared term glossary
+│
+├── 📂 src/                                  — Backend & service code
+│   ├── 📂 pipelines/                        — ETL, AI, orchestration (LangGraph, Airflow, etc.)
+│   ├── 📂 graph/                            — Neo4j schema, loaders, queries
+│   ├── 📂 api/                              — FastAPI, GraphQL gateway
+│   └── 📂 tools/                            — Utilities, CLIs, migrations
+│
+├── 📂 data/                                 — Data lifecycle (raw → work → processed → releases)
+│   ├── 📂 sources/                          — External dataset manifests
+│   ├── 📂 raw/                              — Raw ingested data (LFS/DVC)
+│   ├── 📂 work/                             — Intermediate, normalized, enriched data
+│   ├── 📂 processed/                        — Validated, production-ready data
+│   └── 📂 stac/                             — STAC collections & items
+│
+├── 📂 schemas/                              — JSON, STAC, DCAT, JSON-LD, SHACL, telemetry schemas
+│   ├── 📂 json/                             — JSON schemas for docs/pipelines/etc.
+│   └── 📂 telemetry/                        — Energy, carbon, lineage, metrics schemas
+│
+├── 📂 mcp/                                  — Master Coder Protocol artifacts
+│   ├── 📂 experiments/                      — Experiment logs
+│   ├── 📂 model_cards/                      — Model documentation
+│   └── 📂 sops/                             — SOPs for processes
+│
+├── 📂 tests/                                — Automated tests
+├── 📂 tools/                                — Repo-level tools, dev utilities
+└── 📂 .github/                              — CI/CD workflows and templates
+    └── 📂 workflows/                        — CI pipelines (kfm-ci, docs-lint, lineage-audit, etc.)
 ```
 
-**Rules:**
+**Directory layout rules:**
 
-- All **standards** (like this one) MUST live under `docs/standards/`.
-- Architecture documents live under `docs/architecture/` and may reference this protocol but never redefine it.
-- Domain reports and analyses (e.g. archaeology, hydrology) live in `docs/analyses/` or respective subtrees.
-- There MUST be a `README.md` in any directory intended as a public or developer-facing entry point.
-
-### Recommended Directory Snippet Pattern (v11 “Immediate + One Branch”, with Emojis + Descriptions)
-
-When showing directory layouts in Markdown, KFM v11 favors a **compact, one-level-deep tree** with emojis and inline descriptions, for consistency and readability. Documents MAY adopt the following style:
-
-```text
-📁 docs/                                        — Project documentation root
-│   📂 standards/                               — Standards & policies (Markdown, FAIR+CARE, governance)
-│       ↳ This protocol and related standards
-
-📁 src/                                         — Backend source code
-│   📂 pipelines/                               — ETL, AI, and orchestration implementations
-│       ↳ LangGraph, Airflow DAGs, and helpers
-
-📁 data/                                        — Data lifecycle (raw → work → processed → releases)
-│   📂 releases/                                — Versioned bundles (manifest · telemetry · SBOM)
-│       ↳ Stable, governed data exports
-
-📁 schemas/                                     — Shared JSON, STAC, DCAT, JSON-LD, telemetry schemas
-│   📂 telemetry/                               — Telemetry schemas (lineage · energy · carbon)
-│       ↳ Used by CI and orchestration pipelines
-
-📁 .github/                                     — CI/CD automation & governance checks
-    📂 workflows/                               — Validation, lineage, and governance CI workflows
-        ↳ kfm-ci · docs-lint · lineage-audit · governance-check
-```
-
-**Directory layout guidance:**
-
-- Use this pattern for **standards, architecture, and pipeline docs** when showing where things live.
-- Keep to **one level beneath each directory** for clarity.
-- Include **short descriptions** after an em dash (`—`) for each entry.
-- Use emojis (`📁` for root folders, `📂` for subfolders) where they improve readability without overwhelming.
+- This pattern SHOULD be reused across all relevant docs (rules, standards, architecture, core project files) to avoid divergence.
+- Use emojis (`📁` for root, `📂` for subdirs) and short descriptions after `—` for readability.
+- Keep to **one level of depth** in standards/architecture docs unless deeper nesting is essential to the topic being described.
 
 ---
 
@@ -566,7 +552,7 @@ This protocol is designed to be easily mapped into semantic web and graph repres
 From the perspective of repository architecture, this protocol defines:
 
 1. **Entry Points**  
-   - Any new standard MUST declare its path and be referenced in `docs/README.md` and, where relevant, in `docs/architecture/` and `docs/standards/ROOT-STANDARDS.md`.
+   - Any new standard MUST declare its path and be referenced in `docs/README.md` and, where relevant, in `docs/architecture/` and `docs/standards/README.md`.
 
 2. **Dependencies**  
    - This file depends on:
@@ -640,7 +626,7 @@ This standard enforces FAIR and CARE through structural requirements:
 
 | Version | Date       | Summary                                                                                                  |
 |--------:|------------|----------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Added semantic intent, stability tiers, transform registry, layout/badge/section requirements, and expanded guidance. |
+| v11.2.2 | 2025-11-27 | Added semantic intent, stability tiers, transform registry, unified directory layout, and expanded governance hooks. |
 | v11.2.1 | 2025-11-26 | Introduced profile system, provenance hardening, and stronger DCAT/STAC metadata requirements.          |
 | v11.2.0 | 2025-11-25 | Major structural overhaul: new YAML layout, header/footer profiles, test profiles, and diagram rules.    |
 | v11.0.1 | 2025-11-20 | Initial v11 consolidation of markdown rules under the new ontology and governance structures.            |
@@ -658,4 +644,3 @@ This standard enforces FAIR and CARE through structural requirements:
 [🛰 Telemetry Overview](../../telemetry/README.md)
 
 </div>
-````
