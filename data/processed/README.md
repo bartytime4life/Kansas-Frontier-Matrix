@@ -2,10 +2,11 @@
 title: "🧾 Kansas Frontier Matrix — Processed Data Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "data/processed/README.md"
 
-version: "v11.0.0"
-last_updated: "2025-11-19"
+version: "v11.2.2"
+last_updated: "2025-11-27"
 release_stage: "Stable / Governed"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+lifecycle: "Long-Term Support (LTS)"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
@@ -15,10 +16,10 @@ semantic_document_id: "kfm-doc-data-processed-readme"
 event_source_id: "ledger:data/processed/README.md"
 immutability_status: "version-pinned"
 
-sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v11.0.0/manifest.zip"
+sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.2/manifest.zip"
 data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v11.0.0/focus-telemetry.json"
+telemetry_ref: "../../releases/v11.2.2/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/data-processed-v11.json"
 energy_schema: "../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../schemas/telemetry/carbon-v2.json"
@@ -29,7 +30,7 @@ sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION
 
 license: "CC-BY 4.0 / Open Data Commons Attribution License"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0"
+markdown_protocol_version: "KFM-MDP v11.2.2"
 ontology_protocol_version: "KFM-OP v11.0"
 pipeline_contract_version: "KFM-PDC v11.0"
 
@@ -79,7 +80,7 @@ sunset_policy: "Superseded upon next processed-layer update"
 
 <div align="center">
 
-# 🧾 Kansas Frontier Matrix — Processed Data Layer  
+# 🧾 **Kansas Frontier Matrix — Processed Data Layer**  
 `data/processed/README.md`
 
 The **Processed Data Layer** is the canonical, publication-ready dataset repository of the Kansas Frontier Matrix (KFM).  
@@ -104,47 +105,53 @@ These datasets support:
 
 ---
 
-# 1. 📘 Overview
+## 📘 1. Overview
 
-The Processed Data Layer contains **clean, normalized, validated, and certified datasets** that represent the final step before public release and graph ingestion.
+The **Processed Data Layer** contains **clean, normalized, validated, and certified datasets** that represent the final step before:
+
+- Public release  
+- Knowledge graph ingestion  
+- Narrative use in Story Nodes  
+- Focus Mode reasoning  
+- Long-term archive promotion (`data/archive/**`)  
 
 Its responsibilities:
 
-- Guarantee **reproducibility**  
-- Enforce **FAIR+CARE governance**  
-- Provide **STAC/DCAT-aligned metadata**  
-- Preserve **lineage and integrity**  
-- Deliver **machine-ready data** for pipelines, apps, and visualization  
+- Guarantee **reproducibility** (deterministic ETL + contracts)  
+- Enforce **FAIR+CARE governance** and sovereignty rules  
+- Provide **STAC/DCAT-aligned metadata & JSON-LD**  
+- Preserve **lineage and integrity** with checksums & SBOM parity  
+- Deliver **machine-ready data** for apps, pipelines, and visualization  
 
 ---
 
-# 2. 🗂️ Directory Layout (GitHub-Safe)
+## 🗂 2. Directory Layout (Emoji Style A)
 
-~~~~text
+```text
 data/processed/
-├── README.md                      ← this file
+├── 📄 README.md                         # This file (global processed-layer architecture)
 │
-├── climate/                       ← climate indices, normals, anomalies, rasters
-├── hazards/                       ← tornado tracks, storm events, wildfire perimeters
-├── hydrology/                     ← streamflow, groundwater, aquifer, water quality
-├── landcover/                     ← vegetation, NLCD classes, LCMS change
-├── ecology/                       ← biodiversity aggregates (GBIF/eBird)
-├── tabular/                       ← census, socioeconomic, treaty metadata
-├── spatial/                       ← geospatial layers (GeoJSON, Parquet, TopoJSON)
-└── metadata/                      ← FAIR+CARE-certified metadata bundles (JSON/JSON-LD)
-~~~~
+├── 🌦️ climate/                         # Climate indices, normals, anomalies, rasters
+├── 🌪️ hazards/                         # Tornado tracks, storm events, wildfires, drought areas
+├── 💧 hydrology/                        # Streamflow, groundwater, water quality, reservoir ops
+├── 🌿 landcover/                        # Vegetation, NLCD/LCMS, land-use change
+├── 🐾 ecology/                          # Biodiversity, species aggregates (GBIF/eBird/etc.)
+├── 📊 tabular/                          # Census, socioeconomic, treaties, tabular metadata
+├── 🗺️ spatial/                          # Geospatial layers (GeoJSON, Parquet, TopoJSON)
+└── 📑 metadata/                         # FAIR+CARE-certified metadata bundles (JSON/JSON-LD)
+```
 
-Each subdirectory requires:
+**Rules:**
 
-- `README.md` with domain-specific schema + examples  
-- At least one checksum manifest entry  
-- STAC/DCAT metadata references  
+- Each subdirectory MUST have its own `README.md` describing domain-specific schemas, provenance, and governance rules.  
+- Each dataset within subdirectories must have at least **one entry** in a checksum manifest (`data/checksums/**`).  
+- STAC/DCAT references MUST be present for geospatial datasets (`spatial/`, `hydrology/`, `hazards/`, `landcover/`, `ecology/`, etc.).
 
 ---
 
-# 3. 🔄 Processed Data Lifecycle
+## 🔄 3. Processed Data Lifecycle
 
-~~~~mermaid
+```mermaid
 flowchart TD
   A["raw/\n(immutable sources)"]
     --> B["staging/\n(cleaned + standardized)"]
@@ -153,86 +160,102 @@ flowchart TD
 
   C --> D["alignment/\n(STAC · DCAT · ISO 19115 · CRS/temporal)"]
 
-  D --> E["checksums/\nSHA-256 lineage + SBOM verification"]
+  D --> E["checksums/\nSHA-256 + SBOM verification"]
 
   E --> F["publication/\n(data/processed/*)"]
 
-  F --> G["catalog-sync/\n(STAC/DCAT + Focus Mode v3)"]
-~~~~
+  F --> G["catalog-sync/\n(STAC/DCAT + Focus Mode v3 + Neo4j)"]
+```
 
 ### Lifecycle Guarantees
 
-- No dataset enters `processed/` without verified integrity  
-- All processed datasets produce lineage edges for the Neo4j graph  
-- Telemetry records energy, carbon, and validation durations  
+- **No dataset** enters `data/processed/` until:
+  - Contract validation (JSON Schema, SHACL) passes  
+  - FAIR+CARE governance & sovereignty assessments pass  
+  - Checksums computed and recorded (with SBOM cross-checks)  
+
+- Every processed dataset:
+  - Has a **provenance trail** (PROV-O, OpenLineage)  
+  - Appears in **telemetry** (energy, carbon, validation metrics)  
+  - Has clearly documented **license and reuse** terms  
 
 ---
 
-# 4. 📐 Cross-Domain Architecture Standards
-
-All processed datasets must follow:
+## 📐 4. Cross-Domain Architecture Standards
 
 ### 4.1 Spatial Standards
-- CRS: **EPSG:4326**  
-- Optional internal CRS used during ETL, but final outputs must convert to WGS84  
-- GeoJSON → must use RFC 7946  
-- Parquet → geometry stored as WKB/WKT/Arrow Extension type  
-- Raster → must be **COG** with proper overviews  
+
+- Final outputs: **EPSG:4326** (WGS84) for geospatial files.  
+- GeoJSON must be RFC 7946-compliant (`FeatureCollection`, `[lon, lat]`).  
+- Parquet stores geometries as WKB/WKT or Arrow extension types with `geo:asWKT`.  
+- Rasters are stored as **COGs** (Cloud-Optimized GeoTIFF) with:
+  - Overviews  
+  - Internal tiling  
+  - Projection metadata  
 
 ### 4.2 Temporal Standards
-- Use ISO 8601 timestamps  
-- `start_time`, `end_time`, `temporal_accuracy` fields recommended  
-- Temporal intervals mapped to OWL-Time intervals in the graph  
+
+- Use ISO 8601 for all timestamps.  
+- Where possible, include:
+  - `time_start`  
+  - `time_end`  
+  - `time_resolution` or `temporal_accuracy`  
+
+These map to OWL-Time intervals and instants for graph querying and Focus Mode narratives.
 
 ### 4.3 Provenance Requirements
-- PROV-O fields:  
-  - `prov:wasDerivedFrom`  
-  - `prov:wasGeneratedBy`  
-  - `prov:used`  
-- Link to:  
-  - checksums  
-  - governance decisions  
-  - original STAC/DCAT entries  
+
+- For each dataset:
+  - `prov:wasDerivedFrom` links to raw/staging datasets  
+  - `prov:wasGeneratedBy` identifies the ETL pipeline or AI job  
+  - `prov:used` references critical tools/configurations  
+
+- Provenance entries must:
+  - Appear in JSON-LD metadata  
+  - Be ingestible into Neo4j  
+  - Align with entries in governance ledgers and telemetry files  
 
 ### 4.4 FAIR+CARE Rules
-- All sensitive data must have CARE tags  
-- Indigenous datasets must include sovereignty metadata  
-- Public exposure must match governance decisions  
+
+- FAIR (F1/A1/I1/R1) compliance is enforced via:
+  - DCAT 3.0 fields  
+  - Schema conformance  
+  - Discoverability via STAC/DCAT indexes  
+
+- CARE compliance requires:
+  - Sovereignty / consent metadata for any Indigenous or sensitive content  
+  - H3 generalization or redaction when required by policy  
+  - Clear description of any restrictions in dataset metadata  
 
 ---
 
-# 5. 🧩 Schema & Metadata Requirements
+## 🧩 5. Schema & Metadata Requirements (Global)
 
-All processed datasets must include:
+All processed datasets must include **base fields**:
 
-### Required fields:
-- `id`  
-- `kfm_id`  
-- `domain`  
-- `schema_version`  
-- `license`  
-- `checksum`  
-- `fairstatus`  
-- `created`  
+- `id` — source identifier (domain-specific)  
+- `kfm_id` — KFM-stable identifier  
+- `domain` — e.g., `climate`, `hazards`, `hydrology`, `ecology`  
+- `schema_version` — data contract/schema version used  
+- `license` — explicit license (SPDX/CC/ODC)  
+- `checksum` — `sha256-<hex>` value  
+- `fairstatus` — `certified` / `pending` / `internal`  
+- `created` — ISO 8601 creation timestamp  
 
-### Required metadata references:
-- `stac_ref`  
-- `dcat_ref`  
-- `governance_ref`  
-- `data_contract_ref`  
+And **metadata references**:
 
----
-
-# 6. 🧬 Domain-Level Schema Tables (v11)
-
-Below are **schema summaries** for each processed domain.  
-Full schemas live in `schemas/processed/**`.
+- `stac_ref` — STAC JSON for dataset/collection  
+- `dcat_ref` — DCAT JSON-LD dataset record  
+- `governance_ref` — path to governance/FAIR+CARE ledger entry  
+- `data_contract_ref` — contract used for schema validation (e.g., `data_contract_v3`)  
 
 ---
 
-## 6.1 🌦 Climate Domain Schema
+## 🧬 6. Domain-Level Schema Summaries (v11)
 
-~~~~text
+### 6.1 🌦 Climate (Processed)
+
+```text
 Field                Type          Notes
 -------------------  ------------  ----------------------------------------
 kfm_id               string        Stable ID
@@ -244,14 +267,12 @@ spatial_extent       array         [minLon, minLat, maxLon, maxLat]
 source               string        NOAA, PRISM, Daymet, USDM
 quality_flag         string        QC metadata
 checksum             string        sha256-…
-fairstatus           string        certified/pending
-~~~~
+fairstatus           string        certified/pending/internal
+```
 
----
+### 6.2 🌪 Hazards (Processed)
 
-## 6.2 🌪 Hazards Domain Schema
-
-~~~~text
+```text
 Field                Type          Notes
 -------------------  ------------  ----------------------------------------
 hazard_id            string        Unique event ID
@@ -259,190 +280,163 @@ hazard_type          string        tornado, hail, flood, wildfire, etc.
 start_time           datetime      ISO 8601
 end_time             datetime      ISO 8601
 geometry             GeoJSON       Polygon/LineString/Point
-intensity            string/float  Domain-specific metric (EF-scale, magnitude)
-source               string        NOAA SPC, USGS, FEMA
-area_sqkm            float         Computed area for polygons
-stac_ref             string        STAC item link
+intensity            string/float  EF-scale, magnitude, category, etc.
+source               string        NOAA SPC, USGS, FEMA, etc.
+area_sqkm            float         Geodesic area (if polygon)
+stac_ref             string        STAC item
 checksum             string        sha256-…
-~~~~
+```
 
----
+### 6.3 💧 Hydrology (Processed)
 
-## 6.3 💧 Hydrology Domain Schema
-
-~~~~text
+```text
 Field                Type          Notes
 -------------------  ------------  ----------------------------------------
-site_id              string        USGS NWIS site
+site_id              string        USGS NWIS or local hydrology site
 timestamp            datetime      ISO 8601
 discharge_cfs        float         Streamflow
-water_level_m        float         Depth/height
-water_quality        float/object  WQP or KDHE parameters
+water_level_m        float         Water level / stage
+water_quality        object/float  Parameter group or single value
 geometry             GeoJSON       Point
-source               string        USGS, EPA, KDHE, KGS
+source               string        USGS, KDHE, Mesonet, KWO, etc.
 checksum             string        sha256-…
-~~~~
+```
 
----
+### 6.4 🌿 Landcover (Processed)
 
-## 6.4 🌱 Landcover Domain Schema
-
-~~~~text
+```text
 Field                Type          Notes
 -------------------  ------------  ----------------------------------------
-pixel_id             string        Unique raster or tile ID
-landcover_class      integer       NLCD/LCMS class values
-class_name           string        Human-readable class
+pixel_id             string        Unique raster tile ID
+landcover_class      integer       NLCD/LCMS class/value
+class_name           string        Human-readable label
 geometry             GeoJSON       Polygon or pixel footprint
-acquisition_date     date          Data year (e.g., 2016)
-raster_ref           string        Link to COG raster
+acquisition_date     date          Data year (e.g., 2016, 2019)
+raster_ref           string        Link to COG or tile
 checksum             string        sha256-…
-~~~~
+```
 
----
+### 6.5 🐾 Ecology (Processed)
 
-## 6.5 🐦 Ecology Domain Schema
-
-~~~~text
+```text
 Field                Type          Notes
 -------------------  ------------  ----------------------------------------
 species              string        Latin species name
-count                integer       Observations
-geometry             GeoJSON       Point or aggregated H3 cell
+count                integer       Observed count
+geometry             GeoJSON       Point or aggregated cell
 observation_time     datetime      ISO 8601
-uncertainty_m        float         Spatial uncertainty
-source               string        GBIF, eBird, VEGMAP
+uncertainty_m        float         Spatial uncertainty radius
+source               string        GBIF, eBird, KBS field data, etc.
 checksum             string        sha256-…
-~~~~
+```
 
----
+### 6.6 📊 Tabular (Processed)
 
-## 6.6 📊 Tabular Domain Schema
-
-~~~~text
+```text
 Field                Type          Notes
 -------------------  ------------  ----------------------------------------
 kfm_id               string        Stable ID
 name                 string        Entity name
 value                any           Numeric or categorical
-date                 date          Standardized
-category             string        Census, economic, treaty metadata
-source               string        Census bureau, NARA, etc.
+date                 date          Normalized date
+category             string        Census, economics, treaties, etc.
+source               string        Census Bureau, NARA, state agencies
 checksum             string        sha256-…
-~~~~
+```
 
 ---
 
-# 7. ⚙️ Integrity Architecture
+## 🔐 7. Integrity & Checksum Architecture
 
-Processed datasets must undergo **checksum, schema, and governance validation**.
+Processed data integrity is rooted in:
 
-### Required validation steps:
+- `data/checksums/**` manifests  
+- `releases/<version>/sbom.spdx.json` SBOMs  
+- `manifest_ref` release manifests  
+- Governance & telemetry logs  
 
-- `checksum_audit.py` → SHA-256 verification  
-- `schema_check.py` → STAC/DCAT + Data Contract v3 schema validation  
-- `faircare_validator.py` → CARE, sovereignty, licensing, ethics  
-- `ai_explainability_audit.py` (if dataset uses ML)  
+### Required Validation
 
-Validation outputs stored in:
-
-~~~~text
-data/reports/self-validation/**
-data/reports/audit/**
-~~~~
+- **Checksum verification** (`checksum-verify.yml`)  
+- **SBOM parity** (`sbom_verify.yml`)  
+- **Schema & contract validation** (`schema-lint`, `data-contract-v3`)  
+- **FAIR+CARE + sovereignty checks** (`faircare_validate.yml`)  
 
 ---
 
-# 8. 🔐 Provenance Architecture (PROV-O)
+## 🧬 8. Provenance (PROV-O + OpenLineage)
 
-Each dataset in `processed/` must have:
+Each processed dataset must:
 
-- A `prov:Entity` representation  
-- Incoming edges:
-  - `prov:wasDerivedFrom` (source datasets)  
-  - `prov:used` (tools, configs)  
-- Outgoing edges:
-  - `prov:wasGeneratedBy` (ETL task or AI model)
+- Be a `prov:Entity` instance  
+- Reference its **raw and staging sources** via `prov:wasDerivedFrom`  
+- Reference its **ETL job** via `prov:wasGeneratedBy`  
+- OPTIONALLY reference algorithms or AI models used via `prov:used`  
 
-Stored in:
+This is tracked in:
 
-- JSON-LD metadata in `metadata/`  
-- Graph layer (Neo4j ingestion pipeline)  
+- JSON-LD metadata files under `data/processed/metadata/**`  
+- Neo4j graph ingestion pipelines (`src/graph/`)  
+- OpenLineage events  
 
 ---
 
-# 9. 🌱 Sustainability Architecture
+## 🌱 9. Sustainability & Telemetry
 
-Telemetry fields:
+Sustainability metrics:
 
-- `energy_wh`  
-- `carbon_gco2e`  
-- `runtime_sec`  
-- `validation_failures`  
-- `data_volume_mb`  
+- `energy_wh` per pipeline  
+- `carbon_gco2e` per dataset  
+- `runtime_sec` for processing  
+- Data volume and shape  
 
-Recorded into:
+Written to:
 
-~~~~text
-../../releases/v11.0.0/focus-telemetry.json
+```text
+../../releases/v11.2.2/focus-telemetry.json
 docs/reports/telemetry/data-processed-*.json
-~~~~
+```
 
-Dataset-level sustainability summaries included in STAC/DCAT where applicable.
+These feed dashboards for:
 
----
-
-# 10. 🧾 Example STAC/DCAT Linkage
-
-~~~~json
-{
-  "stac_ref": "data/stac/items/hazards_v11_2025Q4.json",
-  "dcat_ref": "data/dcat/hazards_v11_2025Q4.jsonld",
-  "provenance": {
-    "prov:wasDerivedFrom": ["data/staging/hazards/hazards_aggregate.parquet"],
-    "prov:wasGeneratedBy": "etl_hazards_pipeline_v11.0.0"
-  }
-}
-~~~~
+- Performance  
+- Carbon footprint  
+- Governance & compliance trends  
 
 ---
 
-# 11. 🧠 Focus Mode Integration
+## 🧠 10. Focus Mode & Story Nodes
 
-Processed datasets are the **primary source** for:
+The **Processed Layer** is the **source-of-truth** for:
 
-- Story Node v3 inputs  
-- Map layers in Focus Mode  
-- Temporal-scoped visualizations  
-- Multi-domain contextual overlays  
-- Predictive narratives (AI-assisted)  
+- Focus Mode v3:
+  - When querying for stories & explanations  
+  - When generating cross-domain overlays (climate × hydrology × hazards × ecology)  
 
-Focus Mode requires:
+- Story Node v3:
+  - Data-backed narratives  
+  - Card + detail views  
 
-- Clean geometry  
-- Unit consistency  
-- Thorough metadata  
-- Temporal precision  
+Constraints:
+
+- Focus Mode must not bypass processed-layer governance:  
+  - Only use datasets that pass all checks  
+  - Respect CARE/sovereignty metadata  
 
 ---
 
-# 12. 🕰️ Version History
+## 🕰 11. Version History
 
-| Version | Date       | Summary                                                                                         |
-|--------:|------------|-------------------------------------------------------------------------------------------------|
-| v11.0.0 | 2025-11-19 | Full v11 rewrite; added domain schema tables, ontology mapping, STAC/DCAT upgrades, telemetry. |
-| v10.2.2 | 2025-11-12 | Streaming STAC sync, telemetry v2 updates, governance path fixes.                               |
-| v10.0.0 | 2025-11-09 | Initial processed-layer structure; sustainability v2 equipped.                                  |
+| Version | Date       | Summary                                                                                             |
+|--------:|-----------:|-----------------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; applied emoji directory layout; expanded schema tables & governance.  |
+| v11.0.0 | 2025-11-19 | Initial v11 processed data layer architecture; lifecycle + integrity + FAIR+CARE enforcement.      |
+
+---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Processed Data Layer**  
-*FAIR+CARE Certified · Provenance Aligned · Open-Science Compliant*  
-
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 / ODC Attribution License  
-
-[Back to Data Architecture](../ARCHITECTURE.md) ·  
-[Back to Data Directory](../README.md) ·  
-[Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 / ODC Attribution  
+[⬅️ Back](../README.md) · [🗃️ Archive & Provenance](../archive/README.md) · [🛡️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
