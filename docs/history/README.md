@@ -1,71 +1,68 @@
 ---
 title: "📜 Kansas Frontier Matrix — Project History Archive (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/history/README.md"
-version: "v11.0.0"
-last_updated: "2025-11-20"
-
-review_cycle: "Annual / FAIR+CARE Council"
+version: "v11.2.2"
+last_updated: "2025-11-27"
+review_cycle: "Annual · FAIR+CARE Council"
+release_stage: "Stable / Governed"
+lifecycle: "LTS"
 commit_sha: "<latest-commit-hash>"
-
-sbom_ref: "../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/docs-history-v11.json"
-
-governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
+sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../releases/v11.2.2/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-history-v11.2.json"
+energy_schema: "../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../schemas/telemetry/carbon-v2.json"
+governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
-
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
-
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
 status: "Active / Enforced"
 doc_kind: "HistoryGuide"
 intent: "project-history-archive"
 role: "history-ledger-index"
-
+category: "Documentation · Historical Ledger"
 fair_category: "F1-A1-I1-R1"
-care_label: "Public / Mixed Dataset Classification"
+care_label: "Public · Low-Risk"
+classification: "Public"
 sensitivity_level: "Low"
 public_exposure_risk: "Low"
 indigenous_rights_flag: true
-data_steward: "KFM FAIR+CARE Council"
 risk_category: "Documentation / History"
 redaction_required: false
-
+json_schema_ref: "../../schemas/json/docs-history-v11.schema.json"
+shape_schema_ref: "../../schemas/shacl/docs-history-v11-shape.ttl"
 ontology_alignment:
   cidoc: "E31 Document"
   schema_org: "CreativeWork"
   owl_time: "ProperInterval"
   prov_o: "prov:Collection"
   geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../schemas/json/docs-history-v11.schema.json"
-shape_schema_ref: "../schemas/shacl/docs-history-v11-shape.ttl"
-
 doc_uuid: "urn:kfm:doc:history:index:v11"
 semantic_document_id: "kfm-docs-history-index"
 event_source_id: "ledger:docs/history/README.md"
 immutability_status: "version-pinned"
 doc_integrity_checksum: "<sha256>"
-
+machine_extractable: true
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summaries"
+  - "summary"
   - "semantic-highlighting"
   - "a11y-adaptations"
 ai_transform_prohibited:
   - "speculative additions"
   - "fabricated historical events"
   - "unverified architectural claims"
-
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
-classification: "Public Document"
-lifecycle_stage: "stable"
-ttl_policy: "Review required every 12 months"
-sunset_policy: "Superseded upon next major history-reorganization"
+ttl_policy: "12 months"
+sunset_policy: "Superseded upon next major archive reorganization"
 ---
 
 <div align="center">
@@ -73,15 +70,12 @@ sunset_policy: "Superseded upon next major history-reorganization"
 # 📜 **Kansas Frontier Matrix — Project History Archive**  
 `docs/history/README.md`
 
-**Status:** Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
 **Purpose**  
-Serve as the **central, machine-parseable archive** of the Kansas Frontier Matrix (KFM) project’s history.  
-Tracks major releases, architectural shifts, data model changes, FAIR+CARE governance milestones, and notable incidents across the lifetime of KFM v0 → v11+.
+Provide the **authoritative historical ledger** of the Kansas Frontier Matrix (KFM) project, tracking releases, architectural evolution, governance decisions, FAIR+CARE milestones, datasets, incidents, and long-term development eras.
 
-[![KFM-MDP v11](https://img.shields.io/badge/Markdown-KFM--MDP_v11.0.0-purple.svg)]()  
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue.svg)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Project%20History-gold.svg)]()
+[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-History-gold)]()  
+[![KFM-MDP](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-purple)]()
 
 </div>
 
@@ -89,211 +83,181 @@ Tracks major releases, architectural shifts, data model changes, FAIR+CARE gover
 
 ## 📘 Overview
 
-The **Project History Archive** captures:
+This history archive provides a **structured, machine-readable record** of:
 
-- Release timelines and **changelogs**  
-- Major **architecture and pipeline evolutions**  
-- **Dataset lifecycle** and schema migrations  
-- **Governance and FAIR+CARE policy milestones**  
-- **Incident reports**, mitigation notes, and lessons learned  
-- Links to Story Nodes and Focus Mode narratives that summarize key eras of project development  
+- Version releases (v0 → v11+)  
+- Major architectural changes (graph, pipelines, UI, Focus Mode)  
+- Dataset additions, migrations, and deprecations  
+- FAIR+CARE governance timeline  
+- System incidents, outages, remediations  
+- Provenance decisions and standards adoption  
+- Links to Story Nodes and eras  
 
-This directory is the **authoritative ledger** of how KFM has changed over time.
+The archive powers **Focus Mode “Project History”**, meta-timelines, and Story Node reconstructions.
 
 ---
 
 ## 🗂 Directory Layout
 
-To keep the tree stable on narrow displays, the root is kept short and comments are omitted.
-
-```text
-history/
+~~~text
+docs/history/
+├── 📄 README.md
 │
-├── README.md
+├── 🗃️ releases/
+│   ├── 📦 v10/
+│   └── 📦 v11/
 │
-├── releases/
-│   ├── v10/
-│   └── v11/
+├── 🧱 architecture/
+│   ├── 🧬 graph-evolution.md
+│   ├── ⚙️ pipelines-evolution.md
+│   └── 🖥️ web-ui-evolution.md
 │
-├── architecture/
-│   ├── graph-evolution.md
-│   ├── pipelines-evolution.md
-│   └── web-ui-evolution.md
+├── 🗺️ datasets/
+│   ├── 💧 hydrology-history.md
+│   ├── 🌦️ climate-history.md
+│   ├── 🪶 heritage-history.md
+│   └── 🌿 ecology-history.md
 │
-├── datasets/
-│   ├── hydrology-history.md
-│   ├── climate-history.md
-│   ├── heritage-history.md
-│   └── ecology-history.md
+├── 🛡️ governance/
+│   ├── 📜 faircare-timeline.md
+│   ├── 🧭 sovereignty-milestones.md
+│   └── ⚖️ ethics-decisions.md
 │
-├── governance/
-│   ├── faircare-timeline.md
-│   ├── sovereignty-milestones.md
-│   └── ethics-decisions.md
-│
-└── incidents/
-    ├── index.md
-    └── postmortems/
-```
-
-This layout is a **logical plan**; individual files and subfolders can be added as the archive grows.
+└── 🚨 incidents/
+    ├── 📄 index.md
+    └── 🧯 postmortems/
+~~~
 
 ---
 
 ## 🕰 Project History Scope
 
-The history archive is organized around several dimensions:
+The archive preserves time-ordered narratives across:
 
-- **Releases** — KFM version milestones (v0.x → v11.x)  
-- **Architecture** — how the system stack evolved (graph, ETL, web, AI)  
-- **Datasets** — when major dataset families were added, changed, or deprecated  
-- **Governance** — FAIR+CARE, sovereignty, and licensing decisions over time  
-- **Incidents** — outages, data issues, and mitigations  
+### 🧩 **1. Releases & Changelogs**  
+Documenting feature sets, schema changes, refactors, and system upgrades.
 
-Each document in `docs/history/` provides a **time-ordered narrative** plus machine-readable anchors (dates, versions) that Focus Mode and Story Nodes can use to build meta-histories.
+### 🧱 **2. Architecture Evolution**  
+Tracking graph schema, ETL frameworks, AI pipelines, infra decisions, and UI transformations.
+
+### 🌐 **3. Dataset Family Histories**  
+Hydrology · Climate · Ecology · Cultural Heritage · Geology etc.
+
+### 🛡️ **4. Governance Milestones**  
+FAIR+CARE policy adoption  
+Sovereignty protections  
+Ethical decisions  
+Council formation  
+
+### 🚨 **5. Incidents & Resolutions**  
+Outages, regressions, data failures, root causes, and remediation steps.
+
+Each dimension supports **machine extraction**, enabling meta-histories and Focus Mode timelines.
 
 ---
 
-## 📦 Releases History (High-Level)
+## 📦 Releases History (Pattern)
 
-A release-level overview may be expanded into separate documents under `history/releases/`.
-
-Example structure you can follow in `history/releases/v11/`:
+Release folders (e.g., `releases/v11/`) include:
 
 - `v11-overview.md`  
 - `v11.0.0-changelog.md`  
 - `v11.1.0-changelog.md`  
+- `v11.2.0-changelog.md`  
 
-Each release history should cover:
+Each document must include:
 
-- New features and major changes  
-- Schema and ontology updates  
-- Data migrations and deprecations  
-- FAIR+CARE and governance updates  
-- Notable bug fixes and performance improvements  
+- Summary of architectural impacts  
+- Schema updates  
+- Data migrations  
+- Governance changes  
+- Timeline of events  
+- Links to Story Nodes  
 
 ---
 
 ## 🏗 Architecture Evolution
 
-The **architecture** subdirectory tracks:
+Documents in `architecture/` describe:
 
-- Knowledge graph modeling changes  
-- Pipeline and ETL framework updates  
-- Web UI and Focus Mode evolutions  
-- Infrastructure and security enhancements  
+- Prior vs. updated behavior  
+- Design rationale  
+- PR / commit references  
+- Impact on datasets  
+- Migration notes  
 
-Each document should:
-
-- Describe the prior state  
-- Document the change (what, when, why)  
-- Reference related design docs and PRs  
-- Note any migrations or compatibility impacts  
+These serve as long-term, audit-friendly engineering chronologies.
 
 ---
 
-## 🌐 Dataset & Schema History
+## 🌐 Dataset & Schema Histories
 
-Under `history/datasets/`, track:
+Each dataset family’s evolution includes:
 
-- When key dataset families were introduced (hydrology, climate, heritage, ecology, etc.)  
-- Schema version changes affecting those datasets  
-- Deprecations and replacements  
-- Provenance and licensing changes (e.g., migrating from provisional to fully open data)  
-
-Each history file should align with:
-
+- Initial integration date  
+- Contract/schema version changes  
+- FAIR+CARE consent changes  
+- Deprecations, replacements  
 - STAC/DCAT metadata evolution  
-- FAIR+CARE classification changes  
-- Story Nodes or Focus narratives that showcase real-world impact  
+
+This enables dataset-level archaeology across releases.
 
 ---
 
 ## 🛡 Governance & FAIR+CARE Milestones
 
-Under `history/governance/`, store:
+Track:
 
-- Adoption of FAIR+CARE standards  
-- Sovereignty-related decisions and their rationale  
-- Changes to data classification policies  
-- Updates to governance structures (e.g., creation of councils, stewards)  
+- Policy adoption  
+- Compliance changes  
+- Sovereignty decisions  
+- Ethical rulings  
+- Council creation and transitions  
 
-These documents should:
-
-- Record **who decided what, when, and why**  
-- Reference relevant policy documents and external standards  
-- Provide neutral, fact-based descriptions suitable for public transparency  
+These form a transparent governance timeline.
 
 ---
 
 ## 🚨 Incidents & Lessons Learned
 
-The `history/incidents/` area chronicles:
+Documents must follow a consistent postmortem structure:
 
-- System incidents (outages, data errors, security events)  
-- Impact assessments (scope, severity, affected components)  
-- Root cause analysis summaries  
-- Remediation and follow-up actions  
+- Date / Version  
+- Impact  
+- Root Cause  
+- Fix  
+- Prevention  
+- References  
 
-Each incident write-up should:
-
-- Use a consistent template (date, description, impact, root cause, fix, prevention)  
-- Avoid sensitive details that could expose vulnerabilities or personal data  
-- Link to related pipeline, dataset, or architecture history entries  
+All sensitive or confidential material must be redacted per CARE protections.
 
 ---
 
-## 🧭 Authoring & Contribution Guidelines
+## 🧭 Authoring Guidelines
 
 When writing new history entries:
 
-1. **Be factual and neutral**.  
-2. Use **dates and versions** precisely (ISO 8601 for dates, SemVer for versions).  
-3. Link to:
-   - PRs or commits  
-   - Design docs (`docs/architecture/...`)  
-   - Relevant standards or governance docs  
-4. Avoid:
-   - Speculation about motives  
-   - Personal or sensitive details  
-   - Unverified attributions  
-
-Each new document under `docs/history/` should:
-
-- Include its own YAML front matter (v11 style)  
-- Have a clear H1 and section structure  
-- Add a line item to this README’s **Related Links** section (if relevant)  
-
----
-
-## 🔗 Related Links & Story Nodes
-
-The history archive is designed to work with:
-
-- **Story Nodes** that narrate important periods (e.g., the v11 architecture upgrade)  
-- **Focus Mode** views that summarize “What changed between v10 and v11?”  
-- Governance dashboards displaying **chronologies of decisions**  
-
-As you add historical content, consider:
-
-- Adding Story Nodes that reference history documents  
-- Linking from architecture and standards docs back into `docs/history/`  
+- Be factual and neutral  
+- Use ISO 8601 dates + SemVer  
+- Link to PRs or docs  
+- Avoid speculation  
+- Follow v11.2.2 Markdown Protocol  
+- Include full YAML front-matter  
 
 ---
 
 ## 🕰 Version History
 
-| Version | Date       | Author        | Notes                                            |
-|--------:|-----------:|---------------|--------------------------------------------------|
-| v11.0.0 | 2025-11-20 | KFM Docs AI   | Initial v11 project history archive README.      |
+| Version | Date | Summary |
+|---------|---------|----------|
+| v11.2.2 | 2025-11-27 | Updated to global v11.2.2 standard; emoji layout applied; footer standardized. |
+| v11.0.0 | 2025-11-20 | Initial v11 history archive index established. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — Project History Archive v11**  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-
-[Back to Docs Hub](README.md) · [Master Guide](MASTER_GUIDE_v11.md) · [Standards](standards/README.md)
+© 2025 Kansas Frontier Matrix  
+[⬅️ Back](../README.md) · [📦 Releases](releases/) · [🛡️ Governance](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
