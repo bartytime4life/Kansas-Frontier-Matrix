@@ -280,27 +280,46 @@ Conceptual stages for schema drift handling:
 
 ```mermaid
 flowchart TD
+  S1["Source Systems (Hydrology, Climate, Remote Sensing, Archival, etc.)"]
+  S2["Schema Snapshotter"]
+  S3["Schema Drift Detector"]
+  Q["SchemaDriftEvent Queue"]
 
-  S1[Source Systems (Hydrology, Climate, Remote Sensing, Archival, etc.)]
-  S1 --> S2[Schema Snapshotter]
-  S2 --> S3[Schema Drift Detector]
-  S3 --> Q[SchemaDriftEvent Queue]
+  OPS["Ops Notification / Slack / Email"]
+  F["Prefect Flow: kfm_schema_drift_steward"]
 
-  Q --> OPS[Ops Notification / Slack / Email]
-  Q --> F[Prefect Flow: kfm_schema_drift_steward]
+  LB["Task: Load Baseline Schemas"]
+  AG["Task: Run Schema Drift Steward Agent (Pydantic AI / LangGraph)"]
+  VP["Task: Validate Proposed Patch (tests, constraints)"]
+  AS["Task: Apply Patch in Shadow Env"]
+  RG["Task: Run Focused LangGraph DAG Subset"]
+  PR["Task: Promote Patch to Prod (if safe)"]
+  EM["Task: Emit Telemetry + PROV + Governance Events"]
 
-  F --> LB[Task: Load Baseline Schemas]
-  F --> AG[Task: Run Schema Drift Steward Agent (Pydantic AI / LangGraph)]
-  F --> VP[Task: Validate Proposed Patch (tests, constraints)]
-  F --> AS[Task: Apply Patch in Shadow Env]
-  F --> RG[Task: Run Focused LangGraph DAG Subset]
-  F --> PR[Task: Promote Patch to Prod (if safe)]
-  F --> EM[Task: Emit Telemetry + PROV + Governance Events]
+  U1["Updated STAC/DCAT"]
+  U2["Updated ETL Code"]
+  U3["Updated Neo4j Schema/Data"]
+  U4["Updated Focus Mode Narratives"]
 
-  PR --> U1[Updated STAC/DCAT]
-  PR --> U2[Updated ETL Code]
-  PR --> U3[Updated Neo4j Schema/Data]
-  PR --> U4[Updated Focus Mode Narratives]
+  S1 --> S2
+  S2 --> S3
+  S3 --> Q
+
+  Q --> OPS
+  Q --> F
+
+  F --> LB
+  F --> AG
+  F --> VP
+  F --> AS
+  F --> RG
+  F --> PR
+  F --> EM
+
+  PR --> U1
+  PR --> U2
+  PR --> U3
+  PR --> U4
 ```
   
 ---
