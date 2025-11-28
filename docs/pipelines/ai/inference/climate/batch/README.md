@@ -143,13 +143,13 @@ Combines ERA5, Daymet, NLDAS, HRRR, CMIP6 analog features.
 ```mermaid
 flowchart TD
     A[Fetch STAC Inputs] --> B[Load ML Climate Model]
-    B --> C[Deterministic Inference Run (Seed Locked)]
+    B --> C[Deterministic Inference Run - Seed Locked]
     C --> D[Bias Correction Module]
     D --> E[Generate Climate Drivers]
-    E --> F[Export GeoTIFF / NetCDF / Parquet]
+    E --> F[Export GeoTIFF - NetCDF - Parquet]
     F --> G[Generate JSON-LD XAI Bundles]
-    G --> H[Emit STAC Items + PROV-O Lineage]
-    H --> I[Telemetry + CARE / Sovereignty Checks]
+    G --> H[Emit STAC Items and PROV-O Lineage]
+    H --> I[Telemetry and CARE - Sovereignty Checks]
 ```
 
 ---
