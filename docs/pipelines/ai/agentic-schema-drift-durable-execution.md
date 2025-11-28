@@ -276,38 +276,28 @@ Conceptual stages for schema drift handling:
      - Neo4j schema and data.  
      - Focus Mode v3 narratives & Story Nodes describing schema transitions.  
 
-### 5.2 🧾 ASCII Architecture Sketch
+### 5.2 🧾 Architecture Flow 
+flowchart TD
+  S1[Source Systems<br/>(Hydrology, Climate, Remote Sensing, Archival, etc.)]
+  S1 --> S2[Schema Snapshotter]
+  S2 --> S3[Schema Drift Detector]
+  S3 --> Q[SchemaDriftEvent Queue]
+  Q --> OPS[Ops Notification / Slack / Email]
 
-    [1] Source Systems (Hydrology, Climate, Remote Sensing, Archival, etc.)
-        |
-        v
-    [2] Schema Snapshotter
-        |
-        v
-    [3] Schema Drift Detector
-        |
-        v
-    [4] SchemaDriftEvent Queue  --->  [Ops Notification / Slack / Email]
-        |
-        v
-    [5] Prefect Flow: kfm_schema_drift_steward
-        |
-        +--> Task: Load Baseline Schemas
-        |
-        +--> Task: Run Schema Drift Steward Agent (Pydantic AI / LangGraph)
-        |
-        +--> Task: Validate Proposed Patch (tests, constraints)
-        |
-        +--> Task: Apply Patch in Shadow Env
-        |
-        +--> Task: Run Focused LangGraph DAG Subset
-        |
-        +--> Task: Promote Patch to Prod (if safe)
-        |
-        +--> Task: Emit Telemetry + PROV + Governance Events
-        |
-        v
-    [6] Updated STAC/DCAT, ETL Code, Neo4j, Focus Mode Narratives
+  Q --> F[Prefect Flow: kfm_schema_drift_steward]
+
+  F --> LB[Task: Load Baseline Schemas]
+  F --> AG[Task: Run Schema Drift Steward Agent<br/>(Pydantic AI / LangGraph)]
+  F --> VP[Task: Validate Proposed Patch<br/>(tests, constraints)]
+  F --> AS[Task: Apply Patch in Shadow Env]
+  F --> RG[Task: Run Focused LangGraph DAG Subset]
+  F --> PR[Task: Promote Patch to Prod (if safe)]
+  F --> EM[Task: Emit Telemetry + PROV + Governance Events]
+
+  PR --> U1[Updated STAC/DCAT]
+  PR --> U2[Updated ETL Code]
+  PR --> U3[Updated Neo4j Schema/Data]
+  PR --> U4[Updated Focus Mode Narratives]
 
 ---
 
