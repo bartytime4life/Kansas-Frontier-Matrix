@@ -1,177 +1,282 @@
 ---
-title: "🤖 Kansas Frontier Matrix — Agentic Schema Drift Steward & Durable Execution Integration (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🤖 KFM v11.2.2 — Agentic Schema Drift Steward & Durable Execution Integration (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/pipelines/ai/agentic-schema-drift-durable-execution.md"
-version: "v11.0.0"
-last_updated: "2025-11-22"
-review_cycle: "Quarterly / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../releases/v11.0.0/agentic-schema-drift-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/agentic-schema-drift-v11.json"
-governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
+version: "v11.2.2"
+last_updated: "2025-11-28"
+release_stage: "Draft / Experimental"
+lifecycle: "Design Prototype"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council"
+content_stability: "experimental"
+
 status: "Draft / Experimental"
 doc_kind: "Architecture Guide"
+header_profile: "standard"
+footer_profile: "standard"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../releases/v11.2.2/agentic-schema-drift-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/agentic-schema-drift-v11.2.2.json"
+energy_schema: "../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Medium-Risk"
+sensitivity: "AI-Agent-Orchestration"
+sensitivity_level: "Medium"
+public_exposure_risk: "Moderate"
+immutability_status: "version-pinned"
+
+semantic_intent:
+  - "schema-drift"
+  - "agentic-etl"
+  - "durable-execution"
+  - "prefect-integration"
+  - "langgraph-integration"
+  - "governed-ai"
+  - "self-healing-pipelines"
+
+scope:
+  domain: "ai-agentic-schema-drift"
+  applies_to:
+    - "schema-drift-detection"
+    - "agentic-remediation"
+    - "prefect-flows"
+    - "langgraph-dags"
+    - "stac-dcat-updates"
+    - "graph-migrations"
+    - "governance-ledgers"
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+requires_purpose_block: true
+requires_directory_layout_section: true
+requires_version_history: true
+requires_governance_links_in_footer: true
+
+diagram_profiles:
+  - "mermaid-flowchart-v1"
+  - "mermaid-timeline-v1"
 ---
 
-# 🤖 Kansas Frontier Matrix — Agentic Schema Drift Steward & Durable Execution Integration
+<div align="center">
 
-This guide explains how to integrate:
+# 🤖 **KFM v11.2.2 — Agentic Schema Drift Steward & Durable Execution Integration**  
+`docs/pipelines/ai/agentic-schema-drift-durable-execution.md`
 
-- An **autonomous schema-drift maintenance agent** (inspired by “I Built an AI Agent That Maintains Our Data Pipeline”) :contentReference[oaicite:0]{index=0}  
-- **Durable execution for Pydantic AI agents with Prefect** (from Prefect’s “Build AI Agents That Resume from Failure with Pydantic AI”) :contentReference[oaicite:1]{index=1}  
+**Purpose:**  
+Describe how to integrate an **autonomous schema-drift maintenance agent** and **durable execution (Prefect + Pydantic AI)** into the KFM v11 stack so that ETL, STAC/DCAT metadata, Neo4j graph schemas, and Focus Mode narratives remain **self-healing, governed, and reproducible** under upstream schema changes.
 
-into the **KFM v11** stack:
+</div>
 
-data → ETL / LangGraph DAGs → Neo4j → APIs → React + MapLibre + Cesium → Story Nodes → Focus Mode v3
+---
 
+## 📘 0. Context in the KFM Stack
 
-## 1️⃣ Why This Matters For KFM v11
+Target architecture path:
 
-KFM is constantly pulling from evolving sources:
+- data  
+  → ETL / LangGraph DAGs  
+  → Neo4j  
+  → APIs  
+  → React + MapLibre + Cesium  
+  → Story Nodes v3  
+  → Focus Mode v3  
 
-- Hydrology and sediment datasets (USGS, Corps, DASC)
-- Climate normals and projections
-- Remote-sensing products (bathymetry, DEMs, geophysics)
-- Archival and heritage metadata (CIDOC-CRM, OWL-Time, GeoSPARQL)
+This guide introduces an **Agentic Schema Drift Steward** as a first-class v11.2.2 component, orchestrated by Prefect and optionally using LangGraph internally.
 
-Each time a **source schema changes** (new fields, changed types, renamed attributes), you currently pay a “tax”:
+---
 
-- Broken ETL DAGs
-- Invalid STAC / DCAT metadata
-- Downstream graph inconsistencies (Neo4j)
-- Focus Mode narratives that no longer match data realities
+## 🧭 1. Why This Matters For KFM v11
 
-The external work shows two key patterns:
+KFM continuously ingests evolving sources:
 
-1. Use an **agent** to detect schema drift and propose/implement safe changes instead of manual fire drills. :contentReference[oaicite:2]{index=2}  
-2. Wrap the agent in **Prefect durable execution** so that failures resume from the last successful step instead of restarting the whole workflow. :contentReference[oaicite:3]{index=3}  
+- Hydrology & sediment datasets (USGS, USACE, DASC)  
+- Climate normals & projections  
+- Remote-sensing products (bathymetry, DEMs, geophysics)  
+- Archival & heritage metadata (CIDOC-CRM, OWL-Time, GeoSPARQL)
 
-Together, these map almost perfectly onto KFM’s need for **self-healing ETL** and **governed, reproducible AI tooling**.
+When a **source schema drifts** (new fields, type changes, renames), the costs include:
 
+- Broken ETL DAGs  
+- Invalid STAC/DCAT metadata  
+- Neo4j graph inconsistencies  
+- Focus Mode narratives misaligned with reality  
 
-## 2️⃣ External Patterns Summarized (Mapped To KFM)
+External patterns show that we can:
 
-### 2.1 🧪 Autonomous Schema Drift Agent (Plain English article)
+1. Use an **agent** to detect schema drift and propose/implement safe changes instead of relying on ad-hoc manual fire drills.  
+2. Wrap that agent in **durable execution** (Prefect) so failures resume from the last successful step instead of restarting entire workflows.
 
-Key ideas from “I Built an AI Agent That Maintains Our Data Pipeline”: :contentReference[oaicite:4]{index=4}  
+KFM’s need: a **self-healing, governed control-plane** for schema drift that is:
 
-- Upstream systems (e.g., Salesforce) silently add fields or change types overnight.
-- Dashboards break even though data is still there; the pipeline does not “understand” the new schema.
-- The author builds an **agent** that:
-  - Monitors source schemas and diffs against a baseline.
-  - Identifies drift (new columns, missing columns, type changes, semantics).
-  - Proposes migration plans and transformation patches.
-  - Benchmarks different LLMs (GPT, Claude, Gemini) to choose the best model for the task.
-  - Automatically reruns the relevant parts of the pipeline after applying changes.
+- Deterministic in interface  
+- Durable and resumable  
+- Observable and auditable  
+- FAIR+CARE-aligned  
 
-For KFM, this pattern translates to:
+---
 
-- Monitor all **registered KFM collections** (STAC, DCAT, Neo4j schema) for drift.
-- Use an **agentic “Schema Drift Steward”** to:
-  - Propose STAC / DCAT changes.
-  - Propose ETL transformation patches (e.g., new column mapping, type casting).
-  - Generate graph-migration Cypher when nodes/relationships need to evolve.
+## 🧩 2. External Patterns (Mapped to KFM v11)
 
+### 2.1 🧪 Autonomous Schema Drift Agent
 
-### 2.2 🧷 Durable Execution For Pydantic AI Agents With Prefect
+Plain-English pattern:
 
-From Prefect’s “Build AI Agents That Resume from Failure with Pydantic AI”: :contentReference[oaicite:5]{index=5}  
+- Upstream systems periodically change schemas (add/remove fields, rename, change types).  
+- Pipelines break because the schema assumptions are stale.  
+- An **agent**:
+  - Monitors source schemas vs baselines.  
+  - Diffs and classifies drift (added/removed/renamed/type-changed).  
+  - Proposes migration plans and ETL/staging code patches.  
+  - Reruns impacted pipeline segments after patching.
 
-- AI agents are fragile: LLM timeouts, rate limits, tool failures, network flakiness.
-- Pydantic AI provides **typed agents with structured outputs**.
+KFM Mapping:
+
+- Monitor all **registered KFM collections**:
+  - STAC Collections & Items  
+  - DCAT datasets  
+  - Neo4j schema (constraints, labels, relationships)  
+  - Tabular schemas (KDW, external databases)  
+
+- Introduce an **agentic “Schema Drift Steward”**:
+  - Proposes STAC/DCAT field updates and schema evolution.  
+  - Proposes ETL transformation patches (column mapping, type casting, renames).  
+  - Generates Cypher migrations for Neo4j where needed.  
+
+### 2.2 🧷 Durable Execution for Pydantic AI Agents (Prefect + Pydantic AI)
+
+Pattern:
+
+- AI agents are fragile (LLM timeouts, rate limits, network failures).  
+- Pydantic AI gives **typed agents** with structured outputs.  
 - Prefect adds:
-  - **Durable execution**: workflows resume from the point of failure instead of restarting.
-  - **Task-level retries, caching, timeouts** for LLM calls and tool invocations.
-  - Standard **observability and scheduling** across AI and non-AI parts of the pipeline.
+  - Durable flows (resume from failure).  
+  - Task-level retries, caching, timeouts.  
+  - Observability & scheduling.
 
-Typical pattern:
+KFM Mapping:
 
-- Define a Pydantic AI `Agent` (e.g., `data_analyst`).
-- Wrap it with a `PrefectAgent` that:
-  - Exposes the agent as a Prefect flow.
-  - Treats each LLM call/tool call as a Prefect task with caching and retry policies. :contentReference[oaicite:6]{index=6}  
+- Wrap the **Schema Drift Steward** in a **Prefect flow**:  
+  - Each LLM call or tool invocation becomes a Prefect task.  
+  - Durable execution ensures we resume after partial failures.  
+  - Telemetry & lineage are emitted for council review.
 
-For KFM, this means the **Schema Drift Steward** is not just a script but a **Prefect-managed, type-safe, resumable component** in the data platform.
+---
 
+## 🧠 3. KFM v11 Agent Roles
 
-## 3️⃣ KFM v11 Agent Roles
+We define two primary agents:
 
-We define two primary agent roles, both implemented with Pydantic AI and orchestrated by Prefect:
+1. 🛰️ **Schema Drift Steward**  
+   - Watches KFM sources (STAC, DCAT, Neo4j, tabular schemas).  
+   - Detects & explains drift.  
+   - Proposes & optionally applies migration patches.  
+   - Emits PROV-O lineage and FAIR+CARE tags for each decision.
 
-1. 🛰️ **Schema Drift Steward**
-   - Watches KFM sources (STAC collections, tabular schemas, Neo4j constraints).
-   - Detects and explains drift.
-   - Proposes and optionally applies migration patches.
-   - Emits PROV-O lineage and FAIR+CARE tags for all decisions.
-
-2. 🧪 **Transform Benchmarker**
-   - Evaluates multiple candidate transform strategies/models when drift is non-trivial.
+2. 🧪 **Transform Benchmarker**  
+   - Evaluates multiple candidate transform strategies/models.  
    - Benchmarks:
-     - Data quality metrics (null rates, ranges, constraint violations).
-     - Model impact (if features feed downstream ML).
-     - Runtime / cost.
+     - Data quality (null rates, ranges, constraint violations).  
+     - Model impact (if features feed ML).  
+     - Runtime / cost.  
    - Outputs a **ranked, explainable recommendation**.
 
-Both roles must be:
+Both agents MUST be:
 
-- **Deterministic in interface** (Pydantic schemas).
-- **Durable and resumable** (Prefect flows and tasks).
-- **Governed** (linked to MCP-DL v6.3 and KFM governance ledgers).
-- **Observable** (exporting telemetry bundles for v11 dashboards).
+- Typed via Pydantic models.  
+- Resumable via Prefect.  
+- Governed (logged in governance ledgers, MCP-aligned).  
+- Observable (OpenTelemetry + OpenLineage).
 
+---
 
-## 4️⃣ Reference Architecture For KFM v11
+## 🗂️ 4. Directory Layout
 
-### 4.1 High-Level Flow
+    docs/pipelines/ai/
+    ├── 📄 agentic-schema-drift-durable-execution.md   # This file (architecture guide)
+    │
+    └── 📁 agentic-schema-drift/
+        ├── 📄 README.md                              # Implementation-specific details
+        ├── 📁 src/
+        │   ├── 📜 steward_agent.py                   # Pydantic AI agent definitions
+        │   ├── 📜 transform_benchmarker.py           # Benchmarking agent
+        │   └── 📜 schema_diff_detector.py            # Deterministic drift detector
+        ├── 📁 flows/
+        │   ├── 📜 prefect_schema_drift_flow.py       # Prefect durable flow
+        │   └── 📜 langgraph_subgraph.py              # LangGraph DAG for agent internal logic
+        ├── 📁 examples/
+        │   ├── 📄 schema_drift_event_sample.json
+        │   └── 📄 transform_patch_sample.json
+        └── 📁 tests/
+            ├── 📄 test_drift_detection.py
+            └── 📄 test_patch_governance.py
 
-Conceptual flow for schema drift handling:
+---
 
-1. **Detection Layer (non-AI, deterministic)**
-   - Compare current source schema (e.g., KDW table, external shapefile, NetCDF, STAC item) to registered baseline.
+## 🧱 5. Reference Architecture for KFM v11
+
+### 5.1 🔭 High-Level Flow
+
+Conceptual stages for schema drift handling:
+
+1. **Detection Layer (Non-AI, Deterministic)**  
+   - Compare current source schemas (KDW tables, STAC Items, NetCDF, Neo4j schema) with baselines.  
    - Produce a `SchemaDriftEvent` document:
-     - source_id
-     - old_schema
-     - new_schema
-     - change_diff
-     - severity (low, medium, high)
+     - `source_id`  
+     - `source_kind`  
+     - `old_schema`, `new_schema`  
+     - `change_diff`  
+     - `severity` (`low | medium | high`)  
 
-2. **Agent Layer (Pydantic AI + LangGraph DAG)**
-   - Input: `SchemaDriftEvent`.
+2. **Agent Layer (Pydantic AI + LangGraph)**  
+   - Input: `SchemaDriftEvent`.  
    - Tasks:
-     - Classify drift type (cosmetic vs structural vs semantic).
-     - Propose ETL transform patch.
-     - Propose STAC/DCAT schema updates.
-     - Propose Neo4j graph migration (if needed).
-     - Produce explanations and risk notes.
+     - Classify drift type (cosmetic / structural / semantic).  
+     - Propose ETL transform patch.  
+     - Propose STAC/DCAT updates.  
+     - Propose Neo4j graph migrations.  
+     - Emit explanations & risk notes.
 
-3. **Execution & Governance Layer (Prefect)**
-   - Wrap agent in a `PrefectAgent`-based flow.
-   - Each critical step is a Prefect task:
-     - Fetch baseline schemas and tests.
-     - Call agent.
-     - Validate patch against test suite.
-     - Apply patch in a **shadow environment**.
-     - Run focused regression subset of LangGraph DAG.
-   - If all checks pass, promote to production and emit:
-     - Telemetry bundle.
-     - PROV-O lineage update.
-     - Governance log entry.
+3. **Execution & Governance Layer (Prefect)**  
+   - Wrap agent in Prefect flows with:
+     - Durable task execution.  
+     - Retries, caching, timeouts.  
+   - Steps:
+     - Load baseline schemas & tests.  
+     - Call Schema Drift Steward agent.  
+     - Validate proposed patch against test suite.  
+     - Apply patch in a **shadow environment**.  
+     - Run focused subset of LangGraph DAG.  
+   - If checks pass:
+     - Promote patch to production.  
+     - Emit telemetry & PROV-O lineage.  
+     - Log governance decisions.
 
-4. **Downstream Integration**
+4. **Downstream Integration**  
    - Update:
-     - STAC / DCAT collections.
-     - Neo4j schema and data.
-     - Focus Mode v3 narrative templates and Story Nodes (e.g., “hydrology schema changes in 2025Q4”).
-   - Surface events in validation / observability dashboards.
+     - STAC/DCAT collections.  
+     - Neo4j schema and data.  
+     - Focus Mode v3 narratives & Story Nodes describing schema transitions.  
 
-
-### 4.2 ASCII Architecture Sketch
-
-This is a conceptual map (not a strict component diagram):
+### 5.2 🧾 ASCII Architecture Sketch
 
     [1] Source Systems (Hydrology, Climate, Remote Sensing, Archival, etc.)
         |
@@ -189,8 +294,7 @@ This is a conceptual map (not a strict component diagram):
         |
         +--> Task: Load Baseline Schemas
         |
-        +--> Task: Run Pydantic AI Schema Drift Steward Agent
-        |         (LLM calls, tools, retrieval)
+        +--> Task: Run Schema Drift Steward Agent (Pydantic AI / LangGraph)
         |
         +--> Task: Validate Proposed Patch (tests, constraints)
         |
@@ -205,39 +309,38 @@ This is a conceptual map (not a strict component diagram):
         v
     [6] Updated STAC/DCAT, ETL Code, Neo4j, Focus Mode Narratives
 
+---
 
-## 5️⃣ Minimal Implementation Blueprint (Pseudo-Code)
+## 🧬 6. Minimal Implementation Blueprint (Pseudo-Code)
 
-Below is implementation-flavored pseudo-code using Pydantic AI and Prefect. It is intentionally abstracted to keep KFM-specific paths and names flexible.
-
-### 5.1 Pydantic Models
+### 6.1 Pydantic Models
 
     from pydantic import BaseModel
     from typing import List, Dict, Optional
 
     class FieldChange(BaseModel):
         name: str
-        change_type: str  # "added", "removed", "type_changed", "renamed"
+        change_type: str          # "added", "removed", "type_changed", "renamed"
         old_type: Optional[str] = None
         new_type: Optional[str] = None
         notes: Optional[str] = None
 
     class SchemaDriftEvent(BaseModel):
         source_id: str
-        source_kind: str            # "stac", "tabular", "netcdf", "neo4j"
-        old_schema: Dict[str, str]  # name -> type
+        source_kind: str          # "stac", "tabular", "netcdf", "neo4j"
+        old_schema: Dict[str, str]
         new_schema: Dict[str, str]
-        detected_at: str            # ISO 8601
+        detected_at: str          # ISO 8601
         field_changes: List[FieldChange]
-        severity: str               # "low", "medium", "high"
+        severity: str             # "low", "medium", "high"
 
     class TransformPatch(BaseModel):
         etl_patch_id: str
         description: str
-        code_diff: str              # unified diff or patch instructions
+        code_diff: str            # unified diff or patch instructions
         stac_updates: Dict[str, str]
         graph_migration_cypher: Optional[str] = None
-        breaking_change_risk: str   # "low", "medium", "high"
+        breaking_change_risk: str # "low", "medium", "high"
 
     class PatchEvaluation(BaseModel):
         patch_id: str
@@ -247,13 +350,12 @@ Below is implementation-flavored pseudo-code using Pydantic AI and Prefect. It i
         model_impact_notes: str
         overall_recommendation: str  # "accept", "reject", "manual_review"
 
-
-### 5.2 Schema Drift Steward Agent (Pydantic AI)
+### 6.2 Schema Drift Steward Agent (Pydantic AI)
 
     from pydantic_ai import Agent
 
     schema_drift_steward = Agent(
-        model="openai:gpt-4.1-mini",   # example; model selection is configurable
+        model="openai:gpt-4.1-mini",  # configurable in KFM
         name="kfm_schema_drift_steward",
         system_prompt=(
             "You are the Schema Drift Steward for the Kansas Frontier Matrix (KFM). "
@@ -263,13 +365,10 @@ Below is implementation-flavored pseudo-code using Pydantic AI and Prefect. It i
         result_type=TransformPatch,
     )
 
-    # Example call (inside a Prefect task later):
+    # Example (inside a Prefect task):
     # patch: TransformPatch = schema_drift_steward.run(event)
 
-
-### 5.3 Prefect Durable Execution Wrapper
-
-Pattern adapted from the Prefect Pydantic AI integration: wrap the agent so that LLM/tool calls are **Prefect tasks** with caching and retries. :contentReference[oaicite:7]{index=7}  
+### 6.3 Prefect Durable Execution Wrapper
 
     from prefect import flow, task
     from pydantic_ai.providers.prefect import PrefectAgent, TaskConfig
@@ -290,34 +389,33 @@ Pattern adapted from the Prefect Pydantic AI integration: wrap the agent so that
 
     @task
     def load_baseline(event: SchemaDriftEvent):
-        # load baseline schema, tests, and governance constraints
-        # from KFM registries and Git-based ETL repo
+        # Load baseline schema, tests, and governance constraints
+        # from KFM registries and Git/lakeFS ETL/repos
         ...
 
     @task
     def validate_patch(patch: TransformPatch, event: SchemaDriftEvent) -> PatchEvaluation:
-        # run unit tests, data quality checks, and sample DAG runs
+        # Run unit tests, data quality checks, and targeted DAG runs
         ...
 
     @task
     def apply_patch_shadow(patch: TransformPatch, event: SchemaDriftEvent):
-        # apply patch in shadow environment (non-production)
+        # Apply patch in a non-production (shadow) environment
         ...
 
     @task
     def promote_patch(patch: TransformPatch, evaluation: PatchEvaluation):
-        # gated promotion logic with governance checks
+        # Gated promotion with governance checks and approvals
         ...
 
     @task
     def emit_governance(patch: TransformPatch, evaluation: PatchEvaluation, event: SchemaDriftEvent):
-        # write PROV-O, FAIR+CARE metadata, and telemetry bundle
+        # Emit PROV-O, FAIR+CARE metadata, and telemetry bundles
         ...
 
     @flow(name="kfm_schema_drift_steward_flow")
     def kfm_schema_drift_steward_flow(event: SchemaDriftEvent):
         baseline = load_baseline(event)
-        # durable execution: if the agent or tools fail, Prefect can resume here
         patch: TransformPatch = prefect_schema_drift_agent.run(event)
         evaluation = validate_patch(patch, event)
         apply_patch_shadow(patch, event)
@@ -325,142 +423,149 @@ Pattern adapted from the Prefect Pydantic AI integration: wrap the agent so that
         if evaluation.overall_recommendation == "accept":
             promote_patch(patch, evaluation)
         else:
-            # route to manual review workflow
+            # Route to manual review / governance workflow
             ...
 
         emit_governance(patch, evaluation, event)
 
+### 6.4 LangGraph Integration (Optional but Recommended)
 
-### 5.4 LangGraph Integration (Optional, Recommended)
+Within the agent logic itself, use **LangGraph** to:
 
-Inside the agent itself, you can still use **LangGraph** to orchestrate:
+- Route between tools (STAC validator, DCAT validator, Neo4j schema inspector, telemetry summarizer).  
+- Orchestrate multi-step reasoning.  
 
-- Retrieval of KFM registries and historical patches.
-- Tool calls for:
-  - STAC validation.
-  - DCAT validation.
-  - Graph schema introspection.
-  - Telemetry bundle summarization.
+Prefect remains the **outer durable orchestrator**; LangGraph serves as the **inner reasoning fabric**.
 
-Prefect remains the **outer workflow engine** with durable execution; LangGraph remains the **agent runtime** for complex reasoning and tool routing.
+---
 
+## 📊 7. Benchmarking & Safety in KFM
 
-## 6️⃣ Benchmarking & Safety In KFM Context
-
-The plain-english article benchmarks different LLMs (GPT, Claude, Gemini) for schema maintenance tasks and uses those results to pick the best fit. :contentReference[oaicite:8]{index=8}  
-
-For KFM, define an **internal benchmark harness**:
+KFM MUST maintain an **internal benchmark harness** for the Schema Drift Steward:
 
 - Tasks:
-  - Basic drift classification (added/removed/renamed/type-changed fields).
-  - Semantic mapping (e.g., `gage_height_ft` vs `water_level_m`).
-  - STAC property mapping (e.g., `gsd`, `platform`, `instruments`).
-  - Graph migration planning (node/edge additions).
+  - Drift classification accuracy.  
+  - Semantic mapping accuracy (e.g., `gage_height_ft` vs `water_level_m`).  
+  - STAC/DCAT mapping correctness.  
+  - Graph migration plan validity.  
 
 - Metrics:
-  - Accuracy of classification compared to a human-labeled gold set.
-  - Number of breaking patches caught by tests before promotion.
-  - Time-to-repair after drift.
-  - Token and runtime cost.
+  - Accuracy against human-labeled gold sets.  
+  - Number of unsafe patches caught by tests.  
+  - Time-to-repair after drift events.  
+  - Token/runtime cost for agent activity.  
 
 - Safety Policies:
-  - No direct production writes without:
-    - Passing a minimal test suite.
-    - Passing governance checks for FAIR+CARE and data ethics.
-  - For high-severity drift, **require human-in-the-loop** even if tests pass.
+  - No auto-apply patches to production without:
+    - Test suite passing.  
+    - Governance checks (FAIR+CARE).  
+  - High-severity drift requires **human approval** even if tests pass.
 
+---
 
-## 7️⃣ Focus Mode v3 & Story Node Integration
+## 🧭 8. Focus Mode v3 & Story Node Integration
 
-Every schema drift event and patch can itself become **knowledge**:
+Schema drift events become **first-class knowledge**:
 
-- Story Node v3:
-  - “How KFM adapted to the 2025 Kansas River bathymetry schema change.”
-  - “Why a new climate normal field was added and how we harmonized it.”
+- Story Node v3 examples:
+  - “How KFM adapted to the 2025 Kansas River bathymetry schema change.”  
+  - “How climate normal fields were harmonized in the 2025 refresh.”
 
-- Focus Mode v3:
-  - When a user is exploring **Kansas River hydrology in 1993–2007**, Focus Mode can:
-    - Overlay a timeline of important schema migrations that affect interpretation.
-    - Annotate charts or maps with “Data schema changed here; see patch KFM-SCHEMA-2025-11-003.”
+- Focus Mode v3 uses:
+  - Drift events as timeline overlays.  
+  - Patch IDs as anchors: KFM-SCHEMA-2025-11-003.  
+  - Context: “Interpretation changes at this point due to schema updates.”
 
-Implementation pattern:
+Implementation pattern in `emit_governance`:
 
-- When `emit_governance` runs, it:
-  - Writes a concise “narrative summary” of the change.
-  - Links to:
-    - Telemetry bundle.
-    - PROV chain for the impacted dataset.
-    - The Prefect run id.
-  - Registers a Story Node template entry that Focus Mode can pull into narratives.
+- Write a **concise narrative summary** of each accepted patch.  
+- Link to:
+  - Telemetry bundle.  
+  - PROV chain for the impacted dataset.  
+  - Prefect run ID and agent model version.  
+- Register a Story Node entry that Focus Mode can include in narratives.
 
+---
 
-## 8️⃣ Governance, Telemetry, FAIR+CARE Hooks
+## ⚖️ 9. Governance, Telemetry, FAIR+CARE Hooks
 
-The Schema Drift Steward and Transform Benchmarker must be **first-class governed components**:
+The Schema Drift Steward & Transform Benchmarker are **governed AI components**:
 
-- MCP-DL v6.3:
-  - All flows registered as governed pipelines.
+- **MCP-DL v6.3**  
+  - Flows registered in governance ledgers.  
   - Required metadata:
-    - agent_name, agent_version
-    - model_name, model_version
-    - tools used
-    - input and output schemas (Pydantic models)
+    - agent_name, agent_version  
+    - model_name, model_version  
+    - tools used  
+    - Pydantic schemas for inputs/outputs  
 
-- Telemetry Bundles:
-  - For each run:
-    - drift_event_id
-    - chosen_patch_id
-    - evaluation metrics
-    - Prefect run id
-    - LangGraph run id (if applicable)
-    - energy and carbon metrics (tied into existing energy/telemetry schemas)
+- **Telemetry**  
+  - Per-run telemetry bundle:
+    - `drift_event_id`  
+    - `chosen_patch_id`  
+    - Evaluation metrics  
+    - Prefect flow/task IDs  
+    - LangGraph run ID (if used)  
+    - `energy.kwh_estimate`, `carbon.gco2e_estimate`  
 
-- FAIR+CARE:
-  - Agent instructions must explicitly enforce:
-    - Preservation of data context and meaning.
-    - Protection of sensitive heritage locations (e.g., H3 generalization).
-    - Respect for tribal and community governance expectations.
+- **FAIR+CARE**  
+  - System prompts and tools MUST:
+    - Preserve data context and meaning.  
+    - Protect sensitive heritage locations (H3 generalization).  
+    - Respect tribal and community governance.  
 
-- Neo4j / PROV-O:
-  - Each patch becomes:
-    - A `prov:Activity` linked to:
-      - Previous and new dataset versions.
-      - Agents (software and human) involved.
-      - Governance decisions (e.g., manual overrides).
+- **Neo4j / PROV-O**  
+  - Each patch is a `prov:Activity` linking:
+    - Old and new dataset versions.  
+    - Agents (software + human) involved.  
+    - Governance decisions (manual overrides, council votes).
 
+---
 
-## 9️⃣ Rollout Plan For KFM v11
+## 🕰 10. Rollout Plan for KFM v11
 
-A pragmatic rollout strategy:
+Recommended rollout:
 
-1. 🥽 Phase 0 — Observation Only
-   - Build the Schema Drift Detector and emit `SchemaDriftEvent` objects.
-   - No agent, no auto-patching; just dashboards and alerts.
+1. 🥽 **Phase 0 — Observation Only**  
+   - Build Schema Drift Detector emitting `SchemaDriftEvent` objects.  
+   - No agents; only dashboards and alerts.
 
-2. 🧪 Phase 1 — Propose-Only Agent
-   - Run the Schema Drift Steward agent and produce `TransformPatch` proposals.
-   - Do not apply; compare to human patches and collect benchmarks.
+2. 🧪 **Phase 1 — Propose-Only Agent**  
+   - Run Schema Drift Steward to create `TransformPatch` proposals.  
+   - Do not apply; compare with human patches; benchmark.
 
-3. 🌓 Phase 2 — Shadow Apply
-   - Apply patches in a **shadow environment** only.
-   - Run a subset of LangGraph DAGs and Focus Mode stories to detect regressions.
+3. 🌓 **Phase 2 — Shadow Apply**  
+   - Apply patches only in **shadow environments**.  
+   - Run focused DAG + Focus Mode story subsets to detect regressions.
 
-4. 🚦 Phase 3 — Gated Auto-Apply
+4. 🚦 **Phase 3 — Gated Auto-Apply**  
    - Auto-apply low-risk patches that:
-     - Pass tests.
-     - Have high evaluation scores.
-     - Affect non-sensitive collections.
-   - Keep medium/high-risk drift behind manual approval.
+     - Pass tests.  
+     - Have strong evaluation metrics.  
+     - Affect non-sensitive data.  
+   - Medium/high-risk drift stays manual.
 
-5. 🌐 Phase 4 — Full Platform Integration
+5. 🌐 **Phase 4 — Full Platform Integration**  
    - Integrate with:
-     - KFM-wide validation and observability dashboards.
-     - Story Node v3 and Focus Mode v3 narrative surfaces.
-     - All relevant STAC/DCAT collections and Neo4j schemas.
+     - KFM validation dashboards.  
+     - Story Node v3 / Focus Mode v3.  
+     - All relevant STAC/DCAT collections & Neo4j schemas.
 
+---
 
-## 🔚 Standardized Footer (KFM v11 Navigation)
+## 🕰 Version History
 
-- ⬅️ [Back to Pipelines & Orchestration](../README.md)  
-- 🏛️ [KFM v11 Architecture Index](../../ARCHITECTURE.md)  
-- ⚖️ [FAIR+CARE & Governance Standards](../standards/governance/ROOT-GOVERNANCE.md)  
+| Version  | Date       | Notes                                                         |
+|----------|------------|---------------------------------------------------------------|
+| v11.2.2  | 2025-11-28 | Upgraded to KFM-MDP v11.2.2; added energy/carbon, emoji tree |
+| v11.0.0  | 2025-11-22 | Initial draft of Agentic Schema Drift Steward design          |
+
+---
+
+<div align="center">
+
+### 🔗 Footer  
+
+[⬅ Pipelines & AI Index](./README.md) · [🏛 KFM Architecture](../ARCHITECTURE.md) · [⚖ FAIR+CARE & Governance](../../standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
