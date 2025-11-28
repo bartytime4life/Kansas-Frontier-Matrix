@@ -278,6 +278,7 @@ Conceptual stages for schema drift handling:
 
 ### 5.2 🧾 Architecture Flow 
 
+---
 flowchart TD
   S1[Source Systems<br/>(Hydrology, Climate, Remote Sensing, Archival, etc.)]
   S1 --> S2[Schema Snapshotter]
@@ -299,7 +300,7 @@ flowchart TD
   PR --> U2[Updated ETL Code]
   PR --> U3[Updated Neo4j Schema/Data]
   PR --> U4[Updated Focus Mode Narratives]
-
+  
 ---
 
 ## 🧬 6. Minimal Implementation Blueprint (Pseudo-Code)
