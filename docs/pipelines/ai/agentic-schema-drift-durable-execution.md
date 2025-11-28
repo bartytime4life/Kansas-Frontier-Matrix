@@ -281,21 +281,21 @@ Conceptual stages for schema drift handling:
 ```mermaid
 flowchart TD
 
-  S1[Source Systems\\n(Hydrology, Climate, Remote Sensing, Archival, etc.)]
+  S1[Source Systems (Hydrology, Climate, Remote Sensing, Archival, etc.)]
   S1 --> S2[Schema Snapshotter]
   S2 --> S3[Schema Drift Detector]
   S3 --> Q[SchemaDriftEvent Queue]
 
-  Q --> OPS[Ops Notification\\nSlack / Email]
-  Q --> F[Prefect Flow:\\nkfm_schema_drift_steward]
+  Q --> OPS[Ops Notification / Slack / Email]
+  Q --> F[Prefect Flow: kfm_schema_drift_steward]
 
   F --> LB[Task: Load Baseline Schemas]
-  F --> AG[Task: Run Schema Drift Steward Agent\\n(Pydantic AI / LangGraph)]
-  F --> VP[Task: Validate Proposed Patch\\n(tests, constraints)]
+  F --> AG[Task: Run Schema Drift Steward Agent (Pydantic AI / LangGraph)]
+  F --> VP[Task: Validate Proposed Patch (tests, constraints)]
   F --> AS[Task: Apply Patch in Shadow Env]
   F --> RG[Task: Run Focused LangGraph DAG Subset]
-  F --> PR[Task: Promote Patch to Prod\\n(if safe)]
-  F --> EM[Task: Emit Telemetry + PROV\\n+ Governance Events]
+  F --> PR[Task: Promote Patch to Prod (if safe)]
+  F --> EM[Task: Emit Telemetry + PROV + Governance Events]
 
   PR --> U1[Updated STAC/DCAT]
   PR --> U2[Updated ETL Code]
