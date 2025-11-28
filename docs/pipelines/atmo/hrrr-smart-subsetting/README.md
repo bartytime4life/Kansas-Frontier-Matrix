@@ -89,7 +89,7 @@ diagram_profiles:
 `docs/pipelines/atmo/hrrr-smart-subsetting/README.md`
 
 **Purpose:**  
-Cost-optimized, deterministic, change-aware HRRR ETL producing KFM-STAC v11 Items with full lineage and FAIR+CARE ethics.
+Cost-optimized, deterministic, change-aware HRRR ETL for Kansas, publishing KFM-STAC v11 Items with complete PROV-O lineage and FAIR+CARE alignment.
 
 </div>
 
@@ -97,137 +97,184 @@ Cost-optimized, deterministic, change-aware HRRR ETL producing KFM-STAC v11 Item
 
 ## 📘 Overview
 
-The HRRR Smart Subsetting pipeline ingests NOAA HRRR (CONUS) from AWS Open Data and applies:
+This pipeline ingests NOAA HRRR CONUS from AWS Open Data and:
 
-1. **AOI-aware spatial clipping**  
-2. **Selective variable retention**  
-3. **Delta detection (change-aware)**  
-4. **STAC v11 Item publication with PROV-O lineage**
+1. Clips HRRR fields to Kansas AOIs (statewide, county dissolves, research AOIs).  
+2. Retains only variables needed for wind, smoke, visibility, temp, and cloud overlays.  
+3. Computes change-aware deltas and **skips lakeFS commits** when the atmosphere is essentially unchanged.  
+4. Publishes hourly STAC v11 Items with full provenance, telemetry, and grid metadata.
 
-Result: **>90% storage reduction** with preserved atmospheric signal.
+Outcome: **>90% storage reduction** with no loss of high-value atmospheric signal.
 
 ---
 
 ## 🧱 Architecture
 
-### 1. HRRR Loader
-- fsspec + zarr lazy reads  
+### 1. HRRR Loader (xarray/Zarr)
+
+- fsspec + zarr lazy chunk reads  
 - CF metadata normalization  
-- UTC alignment  
+- Units/time harmonization to KFM standards  
+- UTC alignment (Temporal Contract v11)
 
 ### 2. AOI Subsetting
-- CRS-correct `.rio.clip()`  
-- AOI masks stored in: `data/work/atmo/hrrr/aoi_masks/`
+
+- Uses rioxarray `.rio.clip()` with pre-transformed AOI geometries  
+- AOI masks cached under `data/work/atmo/hrrr/aoi_masks/`  
+- Output tiles reprojected to EPSG:4326 COGs, aligned with KFM web stack
 
 ### 3. Variable Selector
-- Wind, smoke, temp, clouds, visibility  
-- Configured via `variables.yaml`
 
-### 4. Delta Engine
-- Mean / Max / directional Δ  
-- Smoke class shifts  
-- Visibility drops  
-- Cloud layer transitions  
-- Commit only when thresholds exceeded  
+Default variable set:
+
+| Category | Variables |
+|---------|-----------|
+| Wind | `UGRD_10m`, `VGRD_10m`, `WINDgust_surface` |
+| Temp | `TMP_2m`, `DPT_2m` |
+| Visibility / Smoke | `VVIS_surface`, `PMTF*`, `HGT_surface` |
+| Clouds | `TCDC_low`, `TCDC_mid`, `TCDC_high` |
+
+Override via:
+
+- `src/pipelines/atmo/hrrr/config/variables.yaml`
+
+### 4. Delta Engine (Change-Aware)
+
+Per-tile metrics:
+
+- Mean and max Δ  
+- Directional Δ (wind)  
+- Percent-grid Δ above thresholds  
+- Smoke/visibility class transitions  
+- Cloud cover changes per layer  
+
+Only if thresholds are exceeded will a new snapshot be **committed and published**.
 
 ### 5. lakeFS Commit & Tagging
+
+Commit naming:
+
 - `hrrr-{YYYYMMDDHH}-subset`  
 - `hrrr-change-{YYYYMMDDHH}-{category}`  
 
-### 6. STAC v11 Output
-- CF variable spec  
-- `proj:*`, `grid:*` metadata  
-- Full provenance  
-- Per-asset checksums  
-- Energy/carbon telemetry  
+Categories: `wind-shift`, `temp-change`, `smoke-arrival`, `visibility-drop`, `cloud-transition`.
+
+### 6. STAC v11 Publication
+
+Emits STAC Items under:
+
+- `data/stac/atmo/hrrr/items/`
+
+Each Item includes:
+
+- `proj:epsg`, `grid:source`  
+- AOI identifiers (`kfm:aoi_id`)  
+- `derived_from` (HRRR source URI + lakeFS commit)  
+- Per-asset SHA256 checksums  
+- Energy (`energy_kwh`) and carbon (`carbon_gco2e`) telemetry  
+- CF variable metadata and temporal extents  
 
 ---
 
 ## 📦 Directory Layout
 
-    📁 docs/pipelines/atmo/hrrr-smart-subsetting/
-        └── 📄 README.md
-
-    📁 src/pipelines/atmo/hrrr/
-        ├── 📄 loader.py
-        ├── 📄 subsetter.py
-        ├── 📄 delta_engine.py
-        ├── 📄 publisher.py
-        └── 🗂️ config/
-            ├── 📄 variables.yaml
-            └── 📄 thresholds.yaml
-
-    📁 data/work/atmo/hrrr/
-        ├── 📁 aoi_masks/
-        └── 📁 subsets/
-
-    📁 data/stac/atmo/hrrr/
-        ├── 📄 collection.json
-        └── 📁 items/
-
-    📁 .github/workflows/
-        └── 📄 hrrr-smart-subsetting.yml
-
-*(Directory layout is rendered via 4-space indentation—fully box-safe, zero nested fences.)*
+    docs/pipelines/atmo/hrrr-smart-subsetting/
+    ├── 📄 README.md                           # This file
+    │
+    ├── 🧬 src/pipelines/atmo/hrrr/            # Code, referenced path (monorepo)
+    │   ├── 📜 loader.py                       # HRRR Zarr reader
+    │   ├── ✂️ subsetter.py                    # AOI clipping and CRS transforms
+    │   ├── 🔁 delta_engine.py                 # Change-detection thresholds
+    │   ├── 🌐 publisher.py                    # STAC item generator
+    │   └── 📁 config/
+    │       ├── 🧾 variables.yaml              # Variable selection set
+    │       └── 🧾 thresholds.yaml             # Delta thresholds
+    │
+    ├── 📁 data/work/atmo/hrrr/                # Work-layer outputs
+    │   ├── 🗺️ aoi_masks/                      # Pre-generated spatial masks
+    │   └── 🧩 subsets/                        # Hourly clipped HRRR tiles
+    │
+    ├── 📁 data/stac/atmo/hrrr/                # STAC metadata
+    │   ├── 🌐 collection.json                 # STAC collection definition
+    │   └── 📂 items/                          # Hourly STAC items
+    │
+    └── 🤖 .github/workflows/                  # CI integration
+        └── 🌀 hrrr-smart-subsetting.yml       # CI workflow (cron hourly)
 
 ---
 
 ## 🔧 Delta Thresholds (Default v11)
 
-| Variable | Condition |
-|---------|-----------|
-| Wind @10m | Max Δ ≥ 1.0 m/s OR direction shift ≥10° on ≥5% AOI |
-| Temp @2m | Mean Δ ≥ 0.5 K |
-| Visibility | Drop ≥ 1 km |
-| Smoke | Any class transition |
-| Cloud Cover | ≥20% change per layer |
+| Variable Class | Condition to Trigger Commit |
+|----------------|-----------------------------|
+| Wind @10m | Max Δ ≥ 1.0 m/s OR direction Δ ≥ 10° over ≥5% AOI |
+| Temperature @2m | Mean Δ ≥ 0.5 K |
+| Visibility | Drop ≥ 1 km anywhere in AOI |
+| Smoke | Any class/category shift in any cell |
+| Cloud Cover | ≥20% change in low/mid/high layer coverage |
+
+Override defaults via:
+
+- `src/pipelines/atmo/hrrr/config/thresholds.yaml`
 
 ---
 
-## 🧭 STAC Metadata Alignment
+## 🧭 STAC & Metadata Alignment
 
-Each STAC Item includes:
+Each HRRR STAC Item:
 
-- `stac_version: 1.0.0`  
-- Spatial + temporal extents  
-- PROV-O lineage (`prov:used`, `prov:wasGeneratedBy`)  
-- CF variables  
-- Grid metadata  
-- Energy & carbon metrics  
+- Conforms to **STAC 1.0.0** and **KFM-STAC v11**  
+- Includes spatial/temporal extents and AOI metadata  
+- Declares license, processing steps, and derived-from lineage  
+- Embeds PROV-O fields for ETL and lakeFS commit activities  
+- References energy/carbon telemetry schemas for sustainability tracing  
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-This pipeline enforces:
+The HRRR Smart Subsetting pipeline is covered by:
 
-- Deterministic ETL  
-- lakeFS reproducibility  
-- STAC schema validation  
-- FAIR+CARE audit  
-- Linting (flake8/mypy/black)  
-- Pipeline contract (`KFM-PDC v11`)  
+- **Unit tests** for loader, subsetter, delta engine, and publisher  
+- **Contract tests** (KFM-PDC v11) on variables and thresholds  
+- **STAC validation** via pystac/stac-validate  
+- **Linting** (flake8, black, mypy)  
+- **Telemetry checks** for energy and carbon fields  
+- **FAIR+CARE audit** to ensure open, non-sensitive data practices  
+
+CI workflow:
+
+- `.github/workflows/hrrr-smart-subsetting.yml`  
+- Runs on schedule (e.g., hourly) and on manual dispatch  
+- Reports metrics to `telemetry_ref` paths defined in front-matter  
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Story Nodes written from this pipeline include:
+This pipeline populates atmospheric Story Nodes and Focus Mode narratives:
 
-- Wind stress on landscapes  
-- Smoke transport interactions  
-- Visibility + corridor inference  
-- Temperature → settlement dynamics  
+- Wind stress on archaeological landscapes  
+- Smoke plumes intersecting hydrology interpretation clusters  
+- Visibility changes affecting travel corridors and affordances  
+- Temperature regime shifts tied to environmental interpretations  
 
-Stored in:  
-`data/story/atmo/hrrr/`
+Story Nodes are written to:
+
+- `data/story/atmo/hrrr/`
+
+Focus Mode v3:
+
+- Pulls HRRR-derived Story Nodes  
+- Cites corresponding STAC Items and lakeFS commits  
+- Enforces CARE filters (no sensitive locations; no re-identification of protected sites)  
 
 ---
 
 ## 🕰️ Version History
 
-- **v11.2.2** — Fixed nested-fence issue; emoji directory layout; full KFM-MDP v11.2.2 compliance  
-- **v11.0.0** — Original canonical release  
+- **v11.2.2** — Integrated emoji-enhanced full directory tree; enforced single-fence rule; upgraded to KFM-MDP v11.2.2.  
+- **v11.0.0** — Initial canonical release of HRRR Smart Subsetting & Change-Aware Storage pipeline.  
 
 ---
 
