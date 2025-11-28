@@ -277,6 +277,7 @@ Conceptual stages for schema drift handling:
      - Focus Mode v3 narratives & Story Nodes describing schema transitions.  
 
 ### 5.2 🧾 Architecture Flow 
+
 flowchart TD
   S1[Source Systems<br/>(Hydrology, Climate, Remote Sensing, Archival, etc.)]
   S1 --> S2[Schema Snapshotter]
