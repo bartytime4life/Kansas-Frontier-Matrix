@@ -276,8 +276,9 @@ Conceptual stages for schema drift handling:
      - Neo4j schema and data.  
      - Focus Mode v3 narratives & Story Nodes describing schema transitions.  
 
-### 5.2 🧾 Architecture Flow 
+### 5.2 🧾 Architecture Flow
 
+```mermaid
 flowchart TD
 
   S1[Source Systems<br/>(Hydrology, Climate, Remote Sensing, Archival, etc.)]
