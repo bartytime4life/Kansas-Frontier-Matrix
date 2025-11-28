@@ -46,12 +46,35 @@ sensitivity_level: "Medium"
 public_exposure_risk: "Moderate"
 immutability_status: "version-pinned"
 
+semantic_intent:
+  - "ai-pipelines"
+  - "training"
+  - "inference"
+  - "explainability"
+  - "focus-mode"
+  - "story-nodes"
+  - "agentic-schema-drift"
+  - "governed-ml"
+
+scope:
+  domain: "pipelines/ai"
+  applies_to:
+    - "ai-training"
+    - "ai-inference"
+    - "ai-models"
+    - "ai-explainability"
+    - "ai-templates"
+    - "focus-mode-v3"
+    - "story-node-v3"
+    - "agentic-schema-drift"
+
 layout_profiles:
   - "immediate-one-branch-with-descriptions-and-emojis"
 requires_purpose_block: true
 requires_directory_layout_section: true
 requires_version_history: true
 requires_governance_links_in_footer: true
+
 diagram_profiles:
   - "mermaid-flowchart-v1"
   - "mermaid-timeline-v1"
@@ -63,7 +86,7 @@ diagram_profiles:
 `docs/pipelines/ai/README.md`
 
 **Purpose:**  
-Define the **AI/ML pipeline architecture** for the Kansas Frontier Matrix v11, including model training, inference services, Focus Mode engines, Story Node generation, explainability overlays, and data-aligned semantic reasoning.  
+Define the **AI/ML pipeline architecture** for the Kansas Frontier Matrix v11, including model training, inference services, Focus Mode engines, Story Node generation, explainability overlays, agentic schema-drift stewardship, and data-aligned semantic reasoning.  
 This layer integrates tightly with **ETL**, **STAC**, **Neo4j**, **API**, **MapLibre/Cesium**, and **Focus Mode v3**.
 
 </div>
@@ -83,6 +106,7 @@ The **AI Pipeline Layer** is the intelligent processing engine that transforms r
 - Focus Mode v3 contextual reasoning  
 - Explainability overlays (e.g., SHAP, feature maps)  
 - Autonomous pattern detection / anomaly identification  
+- **Agentic schema drift detection and governed remediation (self-healing ETL controls)**  
 
 All AI pipelines strictly enforce:
 
@@ -101,7 +125,7 @@ All AI pipelines strictly enforce:
     docs/pipelines/ai/
     ├── 📄 README.md                         # This file (AI Pipeline Layer spec, v11.2.2)
     │
-    ├── 📁 models/                           # Model cards, training docs, references to checkpoints
+    ├── 📁 models/                           # Model families + model cards
     │   ├── 📁 climate/
     │   ├── 📁 hydrology/
     │   ├── 📁 hazards/
@@ -112,8 +136,10 @@ All AI pipelines strictly enforce:
     ├── 📁 training/                         # Training DAGs + configs
     │   ├── 📁 climate/
     │   ├── 📁 hydrology/
-    │   ├── 📁 archaeology/
-    │   └── 📁 nlp/
+    │   ├── 📁 hazards/
+    │   ├── 📁 nlp/
+    │   └── 📁 embeddings/
+    │       └── 📁 focus-mode/
     │
     ├── 📁 inference/                        # Inference pipelines, batch + on-demand
     │   ├── 📁 climate/
@@ -122,11 +148,24 @@ All AI pipelines strictly enforce:
     │   ├── 📁 embeddings/
     │   └── 📁 focus/
     │
-    ├── 📁 explainability/                   # SHAP, saliency maps, lineage-aware attribution
+    ├── 📁 explainability/                   # XAI pipelines (SHAP, saliency, IG, etc.)
     │   ├── 📁 climate/
     │   └── 📁 hydrology/
     │
-    └── 📁 templates/                        # SOPs, training configs, model metadata templates
+    ├── 📁 templates/                        # SOPs, training configs, model metadata templates
+    │   ├── 📁 model-cards/
+    │   ├── 📁 explainability/
+    │   ├── 📁 inference/
+    │   ├── 📁 story-nodes/
+    │   └── 📁 mlops/
+    │
+    └── 📁 agentic-schema-drift/             # Agentic schema-drift steward (Pydantic AI + Prefect + LangGraph)
+        ├── 📄 README.md                     # Implementation-layer index
+        ├── 📁 src/                          # Steward agents, drift detectors, governance hooks
+        ├── 📁 flows/                        # Prefect durable flows + LangGraph subgraphs
+        ├── 📁 examples/                     # Synthetic drift events, patches, evaluations, narratives
+        ├── 📁 tests/                        # Determinism + governance + lineage test suite
+        └── 📁 telemetry/                    # Telemetry + PROV-O + OpenLineage specs
 
 *(Model checkpoints themselves are not stored in the repo; only metadata, cards, and configs.)*
 
@@ -143,6 +182,8 @@ Extract place names, dates, people, events from unstructured text:
 - Links to Neo4j (CIDOC-CRM entities)  
 - Story Node term extraction and tagging  
 
+---
+
 ### 2. 🌐 Geospatial AI Pipelines
 
 - Land-use change detection  
@@ -156,12 +197,16 @@ Outputs always include:
 - STAC Items for geospatial outputs  
 - Graph entities for downstream interpretation  
 
+---
+
 ### 3. 🌡 Climate AI Pipelines
 
 - Downscaling and bias correction  
 - Seasonal anomaly detection  
 - Future climate projections (e.g., CMIP-like, Daymet-derived)  
 - Explainable forecasting (SHAP, attribution charts)  
+
+---
 
 ### 4. 💧 Hydrology AI Pipelines
 
@@ -170,12 +215,16 @@ Outputs always include:
 - Sediment flux estimation  
 - Scenario modeling for drought / flood risk  
 
+---
+
 ### 5. ⚡ Hazard & Wildfire AI Pipelines
 
 - Tornado/hail/wind risk modeling  
 - FEMA/NWS event severity prediction  
 - Wildfire probability and spread analysis  
 - Hazard clustering + anomaly alerts  
+
+---
 
 ### 6. 🧭 Focus Mode v3 (Semantic Core)
 
@@ -188,6 +237,8 @@ The AI reasoning engine powering Focus Mode:
 - CARE-restricted mask enforcement  
 - Automatic map/timeline filtering and highlighting  
 
+---
+
 ### 7. 📘 Story Node v3 Generation
 
 AI-assisted narrative generation **bounded by KFM data**:
@@ -197,6 +248,21 @@ AI-assisted narrative generation **bounded by KFM data**:
 - Provenance recorded for all statements  
 - Abstraction & CARE-compliant masking for sensitive content  
 - Optional multi-language variants  
+
+---
+
+### 8. 🤖 Agentic Schema-Drift & Reliability Pipelines
+
+Agentic reliability patterns that:
+
+- Detect schema drift across STAC/DCAT/Neo4j/tabular sources  
+- Propose schema & ETL patches via Pydantic AI agents  
+- Validate patches in shadow environments with LangGraph + tests  
+- Promote safe patches via Prefect durable flows  
+- Emit telemetry, PROV-O lineage, and Story Node v3 narratives describing schema evolution  
+
+See:  
+`docs/pipelines/ai/agentic-schema-drift/README.md` and subdirectories.
 
 ---
 
@@ -309,10 +375,10 @@ Pull requests failing any of the above are **blocked** from merging.
 
 ## 🕰 Version History
 
-| Version  | Date       | Notes                                                   |
-|----------|------------|---------------------------------------------------------|
-| v11.2.2  | 2025-11-28 | Upgraded to KFM-MDP v11.2.2; added energy/carbon v2 and emoji tree |
-| v11.0.0  | 2025-11-22 | Initial AI Pipeline Layer specification for KFM v11     |
+| Version  | Date       | Notes                                                                       |
+|----------|------------|-----------------------------------------------------------------------------|
+| v11.2.2  | 2025-11-28 | Upgraded to KFM-MDP v11.2.2; added agentic-schema-drift layout + semantics |
+| v11.0.0  | 2025-11-22 | Initial AI Pipeline Layer specification for KFM v11                         |
 
 ---
 
