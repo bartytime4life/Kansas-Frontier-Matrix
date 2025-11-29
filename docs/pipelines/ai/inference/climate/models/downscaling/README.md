@@ -9,11 +9,11 @@ lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Climate Working Group · FAIR+CARE Council"
 status: "Active / Enforced"
 content_stability: "stable"
-doc_kind: "Model Subcategory (Downscaling)"
+doc_kind: "Model Subcategory · Downscaling"
 
 commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha>"
-doc_integrity_checksum: "<sha256>"
+previous_version_hash: "<previous-version-hash>"
+doc_integrity_checksum: "<sha256-of-this-file>"
 
 sbom_ref: "../../../../../../../releases/v11.2.2/sbom.spdx.json"
 manifest_ref: "../../../../../../../releases/v11.2.2/manifest.zip"
@@ -42,14 +42,11 @@ immutability_status: "version-pinned"
 
 semantic_intent:
   - "downscaling-models"
-  - "high-resolution-climate-models"
-  - "unet-downscaling"
-  - "transformer-downscaling"
-  - "seed-locked-downscalers"
-  - "xai-ready-climate-models"
-  - "stac-xai-models"
-  - "story-node-climate"
-  - "focus-mode-climate"
+  - "climate-high-resolution"
+  - "unet-downscaler"
+  - "transformer-downscaler"
+  - "deterministic-seed-locked"
+  - "xai-ready-models"
 
 scope:
   domain: "pipelines/ai/inference/climate/models/downscaling"
@@ -57,17 +54,15 @@ scope:
     - "unet-downscaler.md"
     - "transformer-downscaler.md"
     - "deterministic-downscaling"
-    - "bias-aware-downscaling"
-    - "xai-compatible-downscalers"
+    - "xai-compatible-downscaling"
 
 layout_profiles:
   - "immediate-one-branch-with-descriptions-and-emojis"
 
 requires_directory_layout_section: true
-requires_version_history: true
 requires_purpose_block: true
+requires_version_history: true
 requires_governance_links_in_footer: true
-
 diagram_profiles:
   - "mermaid-flowchart-v1"
 ---
@@ -78,7 +73,7 @@ diagram_profiles:
 `docs/pipelines/ai/inference/climate/models/downscaling/README.md`
 
 **Purpose**  
-Define and govern the **high-resolution climate downscaling models** used for KFM realtime and batch inference, ensuring deterministic behaviour, XAI readiness, STAC-compatible outputs, and FAIR+CARE-compliant operation.
+Define, govern, and validate the downscaling models supporting **Climate AI inference**, producing **high-resolution climate surfaces** integrated across the KFM pipeline, Story Node v3, and Focus Mode v3.
 
 </div>
 
@@ -86,147 +81,122 @@ Define and govern the **high-resolution climate downscaling models** used for KF
 
 ## 📘 Overview
 
-Downscaling models convert **coarse-resolution climate fields** into **high-resolution gridded outputs** that drive:
+Downscaling models transform **coarse atmospheric or land-surface grids** into **fine-scale surfaces** used for statewide realtime and batch inference.
 
-- Realtime inference (tile-based downscaling for live maps)  
-- Batch pipelines (daily or monthly statewide/regional downscaled fields)  
-- Climate driver generation (inputs to hazard models)  
-- Story Node v3 semantic timelines and spatial narratives  
-- Focus Mode v3 climate overlays and context panes  
+Used in:
 
-All downscaling models in this directory:
+- Realtime map tile generation  
+- Batch statewide reanalysis  
+- Derived hazard drivers (CAPE, CIN, SRH, LLJ)  
+- Climate/meteorology-linked Story Nodes  
+- Focus Mode v3 dynamic narratives  
+- FAIR+CARE-compliant climate provenance  
+- STAC-XAI v11 catalog publishing  
 
-- Are **deterministic** when seed-locked  
-- Expose **XAI compatibility** (SHAP, IG, and/or CAM)  
-- Emit **CRS + vertical axis + STAC-XAI metadata** via the inference layer  
-- Include **CARE + sovereignty compliance statements** in their model cards  
-- Must pass **CI model-card validation** and governance review  
+All models MUST be:
 
-Model weights are not stored here; only **model cards and metadata**.
+- 🔒 **Deterministic** (strict seed-lock)  
+- 🧠 **XAI-ready** (SHAP, IG, CAM)  
+- 🌍 **CRS + vertical axis explicit**  
+- 🪶 **Lightweight + reproducible**  
+- 📦 **STAC v11 + DCAT v11 compliant**  
+- ⚖️ **FAIR+CARE + sovereignty aligned**  
 
 ---
 
 ## 🗂️ Directory Layout (v11.2.2)
 
+*(Indented block is fully safe — no box break, no parser break)*
+
     docs/pipelines/ai/inference/climate/models/downscaling/
-    ├── 📄 README.md                    # This file
-    │
-    ├── 📄 unet-downscaler.md           # U-Net based downscaling model card
-    └── 📄 transformer-downscaler.md    # Transformer-based downscaler model card
+        📄 README.md                    # This file
+        📄 unet-downscaler.md           # U-Net model card
+        📄 transformer-downscaler.md    # Transformer model card
 
 ---
 
-## 🧩 Downscaling Model Types
+## 🧩 Model Types
 
-### 1. 🧱 U-Net Downscaler
+### 🧱 U-Net Downscaler  
+- Encoder/decoder  
+- Strong spatial fidelity  
+- Good for temperature, RH, soil moisture  
+- CAM + IG support  
+- Seed-locked determinism  
 
-A convolutional encoder–decoder architecture tailored to climate gridded data.
-
-Characteristics:
-
-- High spatial fidelity for variables like temperature, RH, soil moisture  
-- Well-suited for static or short-window downscaling  
-- CAM and IG can be applied to inspect feature importance and spatial sensitivity  
-- Deterministic inference with fixed seeds and stable pre-processing  
-
-Typical uses:
-
-- Daily state-level downscaled grids  
-- Fine-scale diagnostics for Story Nodes and Focus Mode  
+### 🔮 Transformer Downscaler  
+- Temporal/context-aware  
+- Multivariate downscaling  
+- SHAP + IG compatible  
+- Stable non-autoregressive tile inference  
 
 ---
 
-### 2. 🔮 Transformer Downscaler
+## 🧬 Downscaling Pipeline Flow
 
-A sequence-aware architecture that captures temporal and multi-variate dependencies.
-
-Characteristics:
-
-- Handles multi-step temporal windows  
-- Supports joint downscaling of multiple climate fields  
-- SHAP and IG are used for feature and time-step attribution  
-- Effective for dynamic phenomena (e.g., frontal passages, heatwaves)  
-
-Typical uses:
-
-- Downscaled time series for anomaly detection  
-- Multi-day rolling downscaled climate sequences  
+```mermaid
+flowchart TD
+    A[Coarse Climate Input] --> B[Load Downscaling Model]
+    B --> C[Seed-Locked Inference]
+    C --> D[High-Resolution Grid]
+    D --> E[XAI Processing]
+    E --> F[STAC-XAI Metadata Assembly]
+    F --> G[Telemetry + PROV-O Lineage]
+```
+<!-- mermaid-end -->
 
 ---
 
-## 🎛 Downscaling Model Requirements
+## 🎛 Model Requirements
 
-All downscaling models MUST:
+Cards MUST specify:
 
-- Provide a **model card** including:
-  - Architecture description  
-  - Training dataset descriptions and licenses  
-  - Pre-processing & normalization details  
-  - Hyperparameters and random seeds  
-  - Evaluation metrics (RMSE, MAE, spatial correlation, bias indices)  
-  - Sustainability metrics (training energy Wh and gCO₂e)  
-
-- Declare **XAI compatibility**:
-  - SHAP global/local  
-  - IG global/local  
-  - CAM-based spatial attributions (when applicable)  
-
-- Provide **governance content**:
-  - CARE and sovereignty impact analysis  
-  - Statement of acceptable use  
-  - Known limitations and failure modes  
-
-- Support **STAC-XAI output**:
-  - `kfm:model_version`  
-  - `kfm:explainability:*` fields at inference-time  
-
----
-
-## 🧬 Conceptual Downscaling Flow
-
-(If you want a Mermaid block in the repo, add a `flowchart TD` fenced with ```mermaid directly there; here it is shown as plain text to preserve the single-box rule in chat.)
-
-    Coarse Climate Input
-        ↓
-    Load Downscaling Model (seed-locked)
-        ↓
-    Run Downscaling Inference
-        ↓
-    Postprocess and Enforce CRS / Vertical Axis
-        ↓
-    Optional XAI Processing (SHAP / IG / CAM)
-        ↓
-    Emit STAC-XAI Outputs and Telemetry
+- Architecture + hyperparameters  
+- Variables (input + output)  
+- Preprocessing + normalization  
+- Seed-lock parameters  
+- CRS (horizontal + vertical)  
+- Training datasets + licensing  
+- Metrics: RMSE, MAE, bias, corr  
+- XAI compatibility (SHAP/IG/CAM)  
+- Energy (Wh) + Carbon (gCO₂e) telemetry  
+- FAIR+CARE + sovereignty assessment  
+- STAC-XAI data asset description  
+- Deterministic inference test vector  
 
 ---
 
 ## 🧪 CI Validation
 
-CI for downscaling models MUST check:
+CI MUST enforce:
 
-- Model card schema compliance  
-- Deterministic output under identical seeds and inputs  
-- XAI readiness (at least one method supported and documented)  
-- CRS + vertical axis metadata consistency  
-- CARE and sovereignty fields populated and valid  
-- STAC-XAI compatibility metadata present in model references  
-- Sustainability metrics fields provided (training and inference, if available)  
+- Schema correctness (model card JSON schema)  
+- Deterministic reproduction via test vector  
+- FAIR+CARE compliance  
+- Sovereignty constraints  
+- XAI integration fields  
+- CRS + vertical metadata  
+- STAC-XAI metadata blocks  
+- PROV-O lineage  
 
-Any failure → **merge blocked** until the model card and metadata are corrected.
+CI failure → 🚫 merge blocked.
 
 ---
 
 ## 🕰 Version History
 
-| Version  | Date       | Notes                                               |
-|----------|------------|-----------------------------------------------------|
-| v11.2.2  | 2025-11-28 | Initial downscaling model subcategory documentation |
+| Version | Date       | Notes                                              |
+| ------- | ---------- | -------------------------------------------------- |
+| v11.2.2 | 2025-11-28 | Initial release of downscaling model documentation |
 
 ---
 
 <div align="center">
 
-### 🔗 Footer  
-[⬅ Back to Climate Models](../README.md) · [🌡️ Climate Pipeline Root](../../README.md) · [🏛 Governance](../../../../../standards/governance/ROOT-GOVERNANCE.md)
+### 🔗 Footer
+
+[⬅ Back to Climate Models](../README.md) ·  
+[🌡️ Climate Pipeline Root](../../README.md) ·  
+[🏛 Governance](../../../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
