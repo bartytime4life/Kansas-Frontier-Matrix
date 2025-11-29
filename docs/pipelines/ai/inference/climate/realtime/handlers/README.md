@@ -86,11 +86,29 @@ diagram_profiles:
 # 🌡️⚡📞 **Climate AI Realtime Inference — API Handlers**  
 `docs/pipelines/ai/inference/climate/realtime/handlers/README.md`
 
-**Purpose:**  
-Define the **API handler layer** for realtime climate inference.  
-This includes REST, WebSocket, and gRPC handlers that process user requests, validate inputs, route inference calls, attach FAIR+CARE safeguards, and return deterministic XAI-aware climate predictions.
+**Purpose**  
+Define the API handler layer for realtime climate inference.  
+REST, WebSocket, and gRPC handlers validate inputs, enforce FAIR+CARE, route inference calls, apply sovereignty masking, and return deterministic XAI-aware climate predictions.
 
 </div>
+
+---
+
+## 🗂️ Directory Layout (v11.2.2)
+
+    docs/pipelines/ai/inference/climate/realtime/handlers/
+        📄 README.md                     # This file
+        📄 rest-handler.md               # REST API handler
+        📄 websocket-handler.md          # WebSocket streaming handler
+        📄 grpc-handler.md               # gRPC binary protocol handler
+        📄 input-validation.md           # CRS, vertical, variables, windows, schema checks
+        📄 xai-handlers.md               # On-demand XAI processors
+        📄 care-governance.md            # CARE + sovereignty enforcement module
+        📄 prov-xai.md                   # PROV-O lineage assembly helpers
+        📄 stac-xai.md                   # STAC-XAI metadata packing
+        📄 rate-limiters.md              # Rate limits, throttling, backpressure logic
+        📄 authz.md                      # AuthZ + token scopes for climate inference
+        📄 streaming-handlers.md         # Streaming patterns (SSE-style, multiplexing)
 
 ---
 
@@ -98,16 +116,16 @@ This includes REST, WebSocket, and gRPC handlers that process user requests, val
 
 The realtime handler subsystem provides:
 
-- High-performance request processing  
+- High-throughput request processing  
 - Deterministic routing to inference engines  
 - XAI-aware output packaging  
-- STAC-XAI metadata binding  
+- STAC-XAI metadata construction  
 - CARE + sovereignty enforcement  
-- Input validation (CRS, vertical, variable sets, time windows)  
-- Safe streaming and backpressure mechanisms  
-- Story Node + Focus Mode integration hooks  
+- CRS + vertical axis validation  
+- Safe streaming + backpressure controls  
+- Hooks for Story Node v3 and Focus Mode v3  
 
-Handlers sit between clients and the realtime inference engine.
+Handlers function as the secure boundary between clients and the Climate AI inference layer.
 
 ---
 
@@ -122,45 +140,45 @@ Supports:
 - `/health`
 
 Responsibilities:
-- Parse & validate request payload  
-- Check CRS/vertical axis  
+- Parse + validate payload  
+- Check CRS + vertical axis  
 - Enforce rate limits  
 - Apply CARE + sovereignty filters  
 - Route to inference engine  
-- Serialize JSON-LD or array responses  
+- Serialize JSON-LD, arrays, tiles  
 - Emit OTel spans + PROV lineage  
 
 ---
 
 ### 2. 🔗 WebSocket Handler (`websocket_handler.py`)
-Provides streaming inference via:
+Provides:
 
-- WebSockets  
-- SSE-like continuous mode if allowed  
+- Persistent streaming inference  
+- SSE-like continuous mode (if allowed)  
+- On-demand XAI deltas  
 
 Responsibilities:
-- Maintain persistent session  
-- Stream climate predictions/tiles  
-- Push XAI deltas on-demand  
-- Enforce CARE masking for spatial data  
+- Maintain session state  
+- Stream predictions, tiles, drivers  
+- Enforce CARE spatial masking  
 - Track session-level PROV lineage  
-- Throttle based on client capability  
+- Apply backpressure + throttling  
 
 ---
 
 ### 3. 🛰️ gRPC Handler (`grpc_handler.py`)
 Optimized for:
 
-- High-throughput data ingestion  
-- Internal KFM service-to-service communication  
+- Internal service-to-service calls  
+- High-throughput ingestion  
 - Hazard pipeline dependencies  
 
 Responsibilities:
-- Strict protobuf schema validation  
+- Validate protobuf schemas  
 - Deterministic binary responses  
-- Built-in observability hooks  
-- CARE-transparent messaging  
-- Full STAC-XAI integration metadata  
+- Built-in observability instrumentation  
+- STAC-XAI metadata embedding  
+- CARE-compliant message routing  
 
 ---
 
@@ -169,13 +187,13 @@ Responsibilities:
 ```mermaid
 flowchart TD
     A[Incoming Request] --> B[Input Validation]
-    B --> C[CARE - Sovereignty Enforcement]
+    B --> C[CARE and Sovereignty Enforcement]
     C --> D[Inference Router]
     D --> E[Seed-Locked Climate Inference]
-    E --> F[Optional XAI Processing]
+    E --> F[XAI Processing Optional]
     F --> G[Response Formatter]
-    G --> H[Return Response to Client]
-    H --> I[Telemetry + PROV Lineage]
+    G --> H[Return Response]
+    H --> I[Telemetry and PROV Lineage]
 ```
 
 ---
@@ -184,65 +202,68 @@ flowchart TD
 
 Handlers MUST validate:
 
-- `variable_set`  
+- Variables requested  
 - Time windows (ISO-8601)  
-- CRS (`proj:epsg`) + vertical axis  
+- CRS (`proj:epsg`)  
+- Vertical axis definition  
 - Bounding boxes or grid indices  
 - Model version compatibility  
-- Request shape + required fields  
-- CARE violation patterns  
-- Sovereignty protection requirements  
+- Required fields present  
+- CARE compliance  
+- Sovereignty restrictions  
 
-Invalid requests → **reject with structured error**.
+Invalid requests → reject with structured error.
 
 ---
 
 ## 🔐 FAIR+CARE Safeguards
 
-Handlers MUST enforce:
+Handlers enforce:
 
 - H3 spatial masking  
-- Removal of sensitive geospatial context  
-- CARE scope tagging  
+- Removal of sensitive geospatial detail  
+- CARE scoping tags  
 - Non-speculative climate language  
 - Data Contract v3 compliance  
-- Community governance constraints  
+- Sovereignty protection policies  
 
 ---
 
 ## 🧩 XAI Integration
 
-Handlers may activate on-demand XAI:
+On-demand XAI capabilities:
 
-- SHAP local  
-- IG local  
-- CAM spatial  
+- SHAP  
+- IG  
+- CAM  
 - Spatial attribution  
 - Narrative driver extraction  
 
-All results MUST:
+Every XAI response MUST include:
 
-- Be wrapped in JSON-LD  
-- Include `kfm:model_version`, `kfm:input_items`, `checksum:multihash`  
-- Include CARE + sovereignty annotations  
-- Attach PROV lineage  
+- JSON-LD wrapper  
+- `kfm:model_version`  
+- `kfm:input_items`  
+- Multihash checksums  
+- CARE + sovereignty tags  
+- PROV-O lineage  
 
 ---
 
-## 🧪 CI & Test Requirements
+## 🧪 CI & Testing Requirements
 
 Tests MUST cover:
 
 - REST/WS/gRPC routing  
 - Input validation  
 - CRS + vertical checks  
-- Rate limiting  
-- Backpressure + session control  
+- Rate limiting + throttling  
+- Streaming backpressure  
 - XAI correctness  
 - CARE + sovereignty enforcement  
-- PROV + STAC-XAI metadata  
-- Telemetry span coverage  
-- Deterministic outputs under seed lock  
+- STAC-XAI metadata  
+- PROV lineage  
+- Deterministic outputs  
 
 ---
 
@@ -257,7 +278,8 @@ Tests MUST cover:
 <div align="center">
 
 ### 🔗 Footer  
-[⬅ Back to Realtime Inference](../README.md) · [🌡️ Climate Inference Root](../../README.md) · [🏛 Governance](../../../../standards/governance/ROOT-GOVERNANCE.md)
+[⬅ Back to Realtime Inference](../README.md) ·  
+[🌡️ Climate Inference Root](../../README.md) ·  
+[🏛 Governance](../../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
