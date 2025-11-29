@@ -1,45 +1,63 @@
 ---
 title: "🧰 Kansas Frontier Matrix — Web Utilities Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council"
+version: "v11.2.2"
+last_updated: "2025-11-28"
+review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-utils-readme-v1.json"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/web-utils-readme-v11.json"
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+
 status: "Active / Enforced"
 doc_kind: "Overview"
 intent: "web-utils-overview"
+role: "overview"
+category: "Web · Utilities · Architecture"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "Public / Low-Risk (logic-only)"
+care_label: "Public · Low-Risk"
 sensitivity_level: "None"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Low"
 redaction_required: false
+
 provenance_chain:
-  - "web/src/utils/README.md@v10.3.2"
   - "web/src/utils/README.md@v10.3.1"
-previous_version_hash: "<previous-sha256>"
+  - "web/src/utils/README.md@v10.3.2"
+  - "web/src/utils/README.md@v10.4.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "SoftwareSourceCode"
   owl_time: "TemporalEntity"
   prov_o: "prov:Plan"
+
 json_schema_ref: "../../../schemas/json/web-utils-readme.schema.json"
 shape_schema_ref: "../../../schemas/shacl/web-utils-readme-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-utils-readme-v10.4.0"
+
+doc_uuid: "urn:kfm:doc:web-utils-readme:v11.2.2"
 semantic_document_id: "kfm-doc-web-utils-readme"
 event_source_id: "ledger:web/src/utils/README.md"
 immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
@@ -47,28 +65,29 @@ ai_transform_permissions:
   - "a11y-adaptations"
 ai_transform_prohibited:
   - "summaries"
-  - "speculative additions"
-  - "unverified historical claims"
+  - "speculative-additions"
+  - "unverified-historical-claims"
+  - "governance-override"
+  - "content-alteration"
+
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
 classification: "Public Document"
-role: "overview"
-lifecycle_stage: "stable"
 ttl_policy: "Annual review"
 sunset_policy: "Superseded on next utils-layer revision"
 ---
 
 <div align="center">
 
-# 🧰 **Kansas Frontier Matrix — Web Utilities Overview**  
+# 🧰 **Kansas Frontier Matrix — Web Utilities Overview (v11.2.2)**  
 `web/src/utils/README.md`
 
-**Purpose:**  
+**Purpose**  
 Document the **utility modules** used across the Kansas Frontier Matrix (KFM) Web Platform — providing  
 pure, deterministic helper functions for formatting, schema guards, spatial math, JSON-LD generation,  
-accessibility utilities, URL building, and type validation.  
-Utilities ensure repeatable logic that supports all features, components, and pipelines.
+accessibility utilities, URL building, temporal logic, and type validation.  
+Utilities ensure repeatable, FAIR+CARE-safe logic supporting every component, pipeline, and feature in the web application.
 
 </div>
 
@@ -78,263 +97,208 @@ Utilities ensure repeatable logic that supports all features, components, and pi
 
 Utilities in `web/src/utils/**`:
 
-- Provide **stateless, deterministic** functions  
-- Contain **no UI logic**  
-- Contain **no side effects**  
-- Can be used anywhere (features, hooks, components, pipelines)  
-- Must be **heavily tested** with unit and integration tests  
-- Are required to be **FAIR+CARE-safe**, especially for spatial utilities  
-- Must follow **WCAG 2.1 AA** rules where A11y is involved  
-- Must correctly propagate **governance metadata** when appropriate  
-- Must avoid speculative or unverified transformations  
+- Provide **state-less, deterministic**, pure functions  
+- Contain **no UI logic** and **no side effects**  
+- Are imported everywhere (hooks, pipelines, components, services)  
+- Must be **FAIR+CARE-safe**, sovereign-safe, and governance-aware  
+- Must uphold **WCAG 2.1 AA+** accessibility patterns  
+- Must avoid speculative or unverified logic  
+- Must include **unit, integration, A11y, and governance tests**  
+- Must align with:
+  - KFM-OP v11 ontology expectations  
+  - KFM-PDC v11 data contracts  
+  - KFM-MDP v11.2.2 documentation rules  
 
-Utilities support:
-
-- Focus Mode v2.5  
-- Story Node v3  
-- STAC/DCAT payload handling  
-- Timeline + Map synchronization  
-- Telemetry  
-- Governance display  
-- Accessibility-first UI  
-- JSON-LD semantics  
-- Spatial/temporal calculations  
+Utilities form the **shared logic layer** that powers Focus Mode v3, Story Node v3, STAC/DCAT explorers, timeline interactions, and map synchronization.
 
 ---
 
-# 🧱 Directory Structure
+# 🧱 Directory Structure (Emoji-Rich · Box-Safe · v11.2.2)
 
 ~~~text
 web/src/utils/
-├── formatters.ts             # Formatting: numbers, units, dates, captions
-├── jsonld.ts                 # JSON-LD builders for entities, datasets, story nodes
-├── guards.ts                 # Schema + type guards (Story Node, STAC, Focus Mode)
-├── bbox.ts                   # Spatial bounding box utilities (merge, pad, validate)
-├── a11y.ts                   # Accessibility helpers (contrast, reduced-motion)
-├── provenance.ts             # Provenance-building utilities (PROV-O aligned)
-├── url.ts                    # URL-safe builders for routes/query params
-├── color.ts                  # WCAG-compliant color utilities
-├── temporal.ts               # OWL-Time aligned temporal math
-└── array.ts                  # Deterministic array helpers (unique, group, sort)
+├── ✨ formatters.ts             # Formatting: numbers, units, dates, captions, CARE-aware text
+├── 🧬 jsonld.ts                 # JSON-LD builders (Story Nodes, Datasets, Focus Mode governance)
+├── 🛡️ guards.ts                 # Type/schema guards (Story Node v3, STAC/DCAT, Focus, telemetry)
+├── 🗺️ bbox.ts                   # Spatial math (BBox merge, clamp, pad, safe extents, no leaks)
+├── ♿ a11y.ts                    # Accessibility helpers (contrast, motion, SR text, focus control)
+├── 🧾 provenance.ts             # Provenance-building utilities (PROV-O, SBOM/manifest linking)
+├── 🔗 url.ts                    # Governance-safe URL builders (no PK leaks, no raw coords)
+├── 🎨 color.ts                  # WCAG AA+ color utilities (contrast, tokens, CARE state colors)
+├── ⏳ temporal.ts               # OWL-Time aligned temporal logic (fuzzy ranges, intervals)
+└── 🔢 array.ts                  # Deterministic array helpers (unique, group, stable sort)
 ~~~
+
+All modules must remain **side-effect-free, deterministic, and safe across governance contexts**.
 
 ---
 
 # 🧩 Module Responsibilities
 
-## 📏 `formatters.ts`
-Provides formatting helpers:
-
-- Dates (UTC, historical, fuzzy intervals)  
-- Narrative captions  
-- Temporal ranges  
+## ✨ `formatters.ts`
+- Dates, ranges, time labels  
+- Accessible number formatting  
+- CARE-safe wording (“generalized location”, “restricted dataset”)  
 - Scientific units  
-- Accessibility-friendly number formatting  
-- CARE-sensitive wording (“generalized location”, “restricted”)  
+- Narrative microcopy  
 
-Guarantees:
-
-- No misleading or overly precise representations  
-- Consistency across pages and features  
+**Never:**  
+- invent precision  
+- override CARE/sovereignty wording  
+- produce inaccessible text  
 
 ---
 
 ## 🧬 `jsonld.ts`
-Generates JSON-LD blocks for:
+- Build JSON-LD for:
+  - Story Node v3  
+  - Focus Mode v3 focal entities  
+  - STAC/DCAT datasets  
+  - Governance metadata  
 
-- Story Node v3  
-- Focus Mode targets  
-- STAC/DCAT datasets  
-- Governance metadata  
-- Page-level semantic descriptors  
+Aligned with:
+- schema.org  
+- CIDOC-CRM  
+- PROV-O  
+- KFM-OP v11  
 
-Guarantees:
-
-- Schema.org + CIDOC-CRM alignment  
-- No speculative semantic relationships  
-- Valid machine-extractable metadata  
+**Never:**  
+- create speculative relationships  
+- output unverifiable provenance  
 
 ---
 
 ## 🛡️ `guards.ts`
-Provides strict runtime validation:
+- Validate:
+  - Story Nodes  
+  - STAC Items  
+  - DCAT datasets  
+  - Governance metadata  
+  - Telemetry events  
+  - Focus Mode payloads  
 
-- Story Node schema  
-- Focus Mode v2.5 payloads  
-- STAC Items & Collections  
-- Provenance objects  
-- Telemetry events  
-
-Guarantees:
-
-- Malformed data never reaches UI components  
-- Governance + CARE metadata is present before rendering  
+Guarantee:
+- invalid data is rejected before rendering  
+- governance metadata exists before sensitive output  
 
 ---
 
-## 📦 `bbox.ts`
-Spatial utilities for:
+## 🗺️ `bbox.ts`
+Spatial helpers for:
+- merging & padding  
+- safe extent calculation  
+- preventing map over-zoom of masked sites  
+- normalizing STAC bounding boxes  
 
-- BBox merging  
-- Expansion/padding  
-- Point-in-bounds checks  
-- GeoJSON validity checks  
-- Geodesic-safe calculations  
-
-Used in:
-
-- MapLibre layers  
-- Story Node footprints  
-- STAC preview extents  
-
-Governance:
-
-- Must enforce rules preventing exposure of restricted coordinates  
+**Must never:**
+- recreate precise coordinates for masked/generalized data  
 
 ---
 
 ## ♿ `a11y.ts`
-Accessibility utilities including:
+- Contrast utilities  
+- Screen-reader helpers  
+- Reduced-motion flows  
+- Keyboard focus utilities  
+- Label/ARIA helpers  
 
-- Reduced-motion helpers  
-- Contrast ratio checks  
-- Color token selection  
-- Screen-reader safe text formatting  
-
-Guarantees:
-
-- WCAG 2.1 AA compliance  
-- No inaccessible color ramps  
+Must satisfy:
+- WCAG 2.1 AA+  
+- high-contrast mapping  
 
 ---
 
 ## 🧾 `provenance.ts`
-Builds explicit provenance chains:
-
-- Rights-holder → source → tool → transformation  
-- Links to SBOM + manifest metadata  
-- Supports PROV-O graph creation  
-- Used by Story Nodes, datasets, Focus Mode  
-
-Guarantees:
-
-- Clear, non-invented provenance  
-- Ethical + transparent lineage  
+- Build PROV-O aligned traces  
+- Connect UI provenance to manifest/SBOM/lineage  
+- Provide UI-readable provenance descriptors  
 
 ---
 
 ## 🔗 `url.ts`
-Generates route-safe URLs:
-
-- Avoids leakage of sensitive IDs  
-- Encodes query params safely  
-- Supports timeline/map/focus deep links  
-- Used by Share buttons and navigation  
-
-Governance:
-
-- Must ensure masked datasets never expose raw coordinates in URLs  
+- URL generation for deep links (timeline, map, focus)  
+- Query encoding  
+- **Governance-safe**: no restricted IDs, no micro-coords  
+- Normalizes H3 masking and generalization  
 
 ---
 
 ## 🎨 `color.ts`
-Contains WCAG AA color utilities:
-
-- Accessible palettes  
-- CARE label color mapping  
-- Focus/Story Node highlight colors  
-- Light/dark token selection  
-
-Must meet:
-
-- 4.5:1 contrast ratio minimum  
-- Accessible theming in light/dark modes  
+- WCAG AA+ color contrast  
+- CARE-status mapping  
+- Light/dark/high-contrast themes  
+- Returns safe palettes only  
 
 ---
 
 ## ⏳ `temporal.ts`
-Temporal math helpers:
-
-- OWL-Time alignment  
-- Fuzzy intervals  
-- Range merging  
-- Story Node timeline calculations  
-- STAC/DCAT extent normalization  
-
-Guarantees:
-
-- Accurate, non-speculative temporal logic  
-- Governance-compliant text for uncertain dates  
+- OWL-Time aligned temporal ranges  
+- Fuzzy interval labeling  
+- STAC/DCAT → timeline conversions  
+- Timeline highlight intervals  
 
 ---
 
 ## 🔢 `array.ts`
-Provides deterministic array utilities:
-
-- Sorted uniqueness  
-- Stable grouping  
-- Map/filter/reduce helpers  
-- Sequence utilities for timeline aggregation  
-
-Guarantees:
-
-- No random/non-deterministic ordering  
-- Stable repeated renders  
+- Stable uniqueness  
+- Deterministic grouping  
+- Predictable sorting for Story Nodes, events, datasets  
+- Build timeline summary rows  
 
 ---
 
-# 🔐 Governance Considerations
+# 🔐 Governance Requirements
 
-All utilities MUST:
+All utilities must:
 
-- Respect CARE labels  
-- Avoid generating sensitive or precise coordinate values  
-- Avoid speculative interpretations of cultural/historical data  
-- Include provenance-building support where data is transformed  
-- Ensure masking/aggregation rules are not bypassed  
-- Follow `ai_transform_prohibited` constraints  
+- Respect CARE labels & sovereignty rules  
+- Honor masking/generalization constraints  
+- Include provenance features where applicable  
+- Avoid generating:
+  - speculative historical interpretations  
+  - overprecise coordinates  
+  - unverifiable narratives  
+
+Governance failures → CI failure (faircare_validate.yml).
 
 ---
 
 # ♿ Accessibility Requirements
 
-Utilities must:
+Utilities must always:
 
-- Apply accessible color rules  
-- Never return inaccessible tokens  
-- Support reduced-motion flows  
-- Support screen-reader-friendly outputs  
+- Maintain WCAG AA+ contrast  
+- Support keyboard navigation patterns  
+- Provide safe token combinations  
+- Be compatible with reduced-motion modes  
 
-A11y regressions block CI.
+A11y regressions → CI block.
 
 ---
 
 # 📈 Telemetry Responsibilities
 
-Utilities that produce telemetry signals must:
+Utilities must:
 
-- Use schema-valid event structures  
-- Include governance metadata where appropriate  
-- Avoid PII  
-- Support sustainability metrics  
-
-Telemetry flows into:
-
-`releases/<version>/focus-telemetry.json`
+- Produce schema-valid telemetry structures  
+- Support event classification  
+- Exclude PII  
+- Attach governance metadata where relevant  
+- Flow into `focus-telemetry.json`  
 
 ---
 
 # 🧪 Testing Requirements
 
-Each utility MUST have:
+Must include:
 
 - Unit tests  
-- Integration tests where applicable  
-- Schema tests (guards)  
-- A11y color contrast tests (color + a11y utils)  
-- Governance tests (provenance + masking)  
+- Integration tests (pipelines/UI interactions)  
+- Schema/type guard tests  
+- A11y contrast tests  
+- Governance tests (masking, sovereignty, provenance)  
 
-Tests located at:
+All under:
 
 ~~~text
 tests/unit/web/utils/**
@@ -347,7 +311,8 @@ tests/integration/web/utils/**
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Full rewrite to KFM-MDP v10.4; added governance, A11y, spatial, temporal, and JSON-LD modules |
+| v11.2.2 | 2025-11-28 | Complete emoji-restoration, governance alignment, MDP v11.2.2 upgrade, A11y/CARE overhaul |
+| v10.4.0 | 2025-11-15 | Full rewrite to KFM-MDP v10.4; added governance, A11y, spatial, temporal, JSON-LD modules |
 | v10.3.2 | 2025-11-14 | Added temporal + provenance utilities |
 | v10.3.1 | 2025-11-13 | Initial utilities overview |
 
@@ -356,7 +321,8 @@ tests/integration/web/utils/**
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-Validated under MCP-DL v6.3 and KFM-MDP v10.4  
 FAIR+CARE Certified · Public Document · Version-Pinned  
+
+[⬅️ Back to Web Source Overview](../README.md) · [🌐 Web Platform Overview](../../README.md) · [🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
