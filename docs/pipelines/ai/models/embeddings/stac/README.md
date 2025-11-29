@@ -170,13 +170,13 @@ docs/pipelines/ai/models/embeddings/stac/
 
 ```mermaid
 flowchart TD
-    A[🌐 Embeddings STAC Collection] --> B[📦 STAC Items (Per Domain + Version)]
-    B --> C[💡 XAI Assets (Importance · CAM · Attention)]
-    B --> D[📜 PROV-O Lineage]
-    B --> E[🛡️ CARE + Sovereignty Metadata]
-    B --> F[🔋 Energy + 🌍 Carbon Sustainability]
+    A[🌐 Embeddings STAC Collection] --> B[📦 STAC Items Per Domain And Version]
+    B --> C[💡 XAI Assets Importance CAM Attention]
+    B --> D[📜 PROV O Lineage]
+    B --> E[🛡️ CARE And Sovereignty Metadata]
+    B --> F[🔋 Energy And 🌍 Carbon Sustainability]
     B --> G[📄 Model Cards]
-    G --> H[🎯 Downstream Pipelines (Focus Mode · StoryNodes · Hazard/Hydro AI)]
+    G --> H[🎯 Downstream Pipelines Focus Mode StoryNodes Hazard Hydro AI]
 ```
 
 ---
