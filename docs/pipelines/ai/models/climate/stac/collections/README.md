@@ -107,7 +107,7 @@ Climate STAC Collections describe **categories of climate model artifacts**, inc
 - Spatial/temporal extent  
 - Domain variables  
 - Governance metadata  
-- Care + sovereignty rules  
+- CARE + sovereignty rules  
 - Links to STAC Items  
 - Lineage (PROV) and sustainability metadata  
 - XAI metadata inheritance rules  
@@ -137,9 +137,9 @@ flowchart TD
     A[📘 Climate STAC Collection] --> B[📦 Climate STAC Items]
     A --> C[💡 XAI Requirements]
     A --> D[📜 PROV Lineage Rules]
-    A --> E[🛡️ CARE + Sovereignty Metadata]
-    A --> F[🔋 Energy + 🌍 Carbon Metadata]
-    B --> G[🌡️ Downstream Workflows (Hazard Hydrology Focus Mode)]
+    A --> E[🛡️ CARE And Sovereignty Metadata]
+    A --> F[🔋 Energy And 🌍 Carbon Metadata]
+    B --> G[🌡️ Downstream Workflows · Hazard · Hydrology · Focus Mode]
 ```
 
 ---
@@ -155,7 +155,7 @@ Each Collection MUST include:
   "type": "Collection",
   "stac_version": "1.0.0",
   "id": "climate-downscaling",
-  "description": "KFM Climate Downscaling Models (U-Net, Transformer, Hybrid)"
+  "description": "KFM Climate Downscaling Models · U Net · Transformer · Hybrid"
 }
 ```
 
@@ -176,6 +176,7 @@ e.g. `"downscaling"`, `"climate-drivers"`, `"bias-correction"`, `"anomalies"`, `
 - Data contract  
 
 ### ✔ CARE block  
+
 ```json
 {
   "care": {
@@ -285,7 +286,7 @@ Failure → ❌ CI BLOCK.
 
 | Version | Date       | Notes                                      |
 |---------|------------|--------------------------------------------|
-| v11.2.2 | 2025-11-28 | Initial Climate STAC Collections Catalog    |
+| v11.2.2 | 2025-11-28 | Initial Climate STAC Collections Catalog   |
 
 ---
 
@@ -297,4 +298,3 @@ Failure → ❌ CI BLOCK.
 [🏛 Governance](../../../../../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
