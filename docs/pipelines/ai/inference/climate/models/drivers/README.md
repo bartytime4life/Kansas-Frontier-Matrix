@@ -163,7 +163,7 @@ Composite multi-driver products for:
 flowchart TD
     A[Downscaled Climate Fields] --> B[Driver Model Loader]
     B --> C[Seed-Locked Derived Computation]
-    C --> D[XAI Attribution (SHAP/IG/CAM)]
+    C --> D[XAI Attribution: SHAP · IG · CAM]
     D --> E[STAC-XAI Driver Metadata]
     E --> F[Telemetry + PROV-O Lineage]
 ```
