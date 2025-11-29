@@ -1,136 +1,208 @@
 ---
 title: "🧠 Kansas Frontier Matrix — Graph & Entity Utilities (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/graph/README.md"
-version: "v10.4.1"
-last_updated: "2025-11-15"
-review_cycle: "Quarterly / Autonomous · FAIR+CARE Council Oversight"
+version: "v11.2.2"
+last_updated: "2025-11-28"
+review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.4.1/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.4.1/manifest.zip"
-telemetry_ref: "../../../../releases/v10.4.1/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-utils-graph-v1.json"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.2/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-utils-graph-v11.json"
+
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11.0"
+
 status: "Active / Enforced"
 doc_kind: "Architecture"
 intent: "web-graph-utilities"
-fair_category: "F1-A1-I1-R1"
+role: "frontend-graph-normalization"
+category: "Web · Graph · Utilities · Focus Mode · Story Nodes"
+
+classification: "Public"
+fair_category: "F1-A2-I2-R3"
+care_label: "Public · Governed"
+sensitivity_level: "Low"
+public_exposure_risk: "Low"
+indigenous_rights_flag: true
+data_steward: "KFM FAIR+CARE Council"
+
+risk_category: "Low"
+redaction_required: false
+
+provenance_chain:
+  - "web/src/utils/graph/README.md@v10.3.1"
+  - "web/src/utils/graph/README.md@v10.3.2"
+  - "web/src/utils/graph/README.md@v10.4.1"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "SoftwareSourceCode"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+  geosparql: "geo:FeatureCollection"
+
+json_schema_ref: "../../../../schemas/json/web-utils-graph-readme-v11.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/web-utils-graph-readme-v11-shape.ttl"
+
+doc_uuid: "urn:kfm:doc:web-utils-graph-readme:v11.2.2"
+semantic_document_id: "kfm-doc-web-utils-graph-readme"
+event_source_id: "ledger:web/src/utils/graph/README.md"
+immutability_status: "version-pinned"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "summaries"
+  - "speculative-additions"
+  - "unverified-historical-claims"
+  - "relationship-fabrication"
+  - "governance-override"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next graph-utils revision"
+jurisdiction: "Kansas / United States"
 ---
 
 <div align="center">
 
-# 🧠 **Kansas Frontier Matrix — Graph & Entity Utilities**  
+# 🧠 **Kansas Frontier Matrix — Graph & Entity Utilities (v11.2.2)**  
 `web/src/utils/graph/README.md`
 
-**Purpose:**  
-Define the **frontend-side normalization, relationship flattening, subgraph extraction, and  
-Focus Mode v2 binding utilities** used by the KFM React client to convert Neo4j API responses  
-into stable UI-ready structures.  
-These utilities are deterministic, typed, FAIR+CARE-compliant, and central to timeline–map–Focus  
-synchronization.
+**Purpose**  
+Define the **frontend-side normalization, relationship flattening, subgraph extraction,  
+entity merging, provenance propagation, and Focus Mode v3 bindings** used by the KFM  
+Web Platform to transform Neo4j + API graph responses into **stable, deterministic,  
+governance-safe UI structures**.
+
+These utilities are:
+- deterministic  
+- typed  
+- FAIR+CARE-governed  
+- sovereignty-safe  
+- fully aligned with Story Node v3 + Focus Mode v3  
+- essential to map/timeline/focus synchronization  
 
 </div>
 
 ---
 
-## 🧭 Overview
+# 🧭 Overview
 
-The `web/src/utils/graph/` directory contains **pure TypeScript utilities** that:
+The `web/src/utils/graph/` directory contains **pure functional TypeScript modules** responsible for:
 
-- Normalize entities and relationships from Neo4j/FastAPI  
-- Convert nested graph subgraphs → flattened UI structures  
-- Bind graph entities to map/timeline highlighting (Focus Mode v2)  
-- Apply FAIR+CARE provenance metadata to all graph-derived fields  
-- Ensure consistent ordering, grouping, and ID resolution  
-- Provide deterministic data transforms across the entire React tree  
+- 🔄 **Normalizing** Neo4j graph nodes and relationships  
+- 🪢 **Flattening** and sanitizing subgraphs into UI-ready arrays  
+- 🧱 **Binding** graph entities to Focus Mode v3 + Story Node v3  
+- 📍 **Spatial + temporal** extraction from graph structures  
+- 🧬 **Provenance injection** (PROV-O, CARE labels, sovereignty flags)  
+- 🔐 **Governance filtering** (masking, generalization, sensitive relationship suppression)  
+- 🧊 **Deterministic ordering** for stable UI renders  
+- ⚡ **High-performance graph transforms** without side effects  
 
-These modules **never** call the network, mutate global state, or manipulate the DOM.
+These modules **NEVER**:
+- touch the DOM  
+- call the network  
+- mutate global state  
+- bypass FAIR+CARE constraints  
 
 ---
 
-## 📂 Directory Layout
+# 📂 Directory Layout (Emoji-Rich · v11.2.2)
 
-```
-
+~~~text
 web/src/utils/graph/
 │
-├── entityNormalize.ts     # Normalizes graph entities to UI-safe formats
-├── relationFlatten.ts     # Converts nested Neo4j-style subgraphs → flat relationships
-├── focusBindings.ts       # Binds Focus Mode v2 results to map/timeline selections
-├── idUtils.ts             # Stable ID creation, hashing, deduplication
-└── groupByType.ts         # Groups graph nodes by logical type (Place, Person, Event, Document)
-
-````
-
----
-
-## 🧱 Module Descriptions
-
-### 🧩 `entityNormalize.ts`
-
-Normalizes graph nodes returned by the API into a consistent shape used across the UI.
-
-Handles:
-
-- Node type canonicalization (`Place`, `Person`, `Event`, `Document`, `StoryNode`)  
-- Metadata merging from STAC/DCAT + graph properties  
-- FAIR provenance (`source`, `license`, `confidence`, `corroborationCount`)  
-- Temporal normalization (`when.start`, `when.end`, precision) via `utils/date`  
-- Geometry extraction for Places & Story Nodes  
-
-Example output:
-
-```ts
-interface NormalizedEntity {
-  id: string;
-  type: "Place" | "Event" | "Person" | "Document" | "StoryNode";
-  label: string;
-  description?: string;
-  temporal?: { start: string; end?: string; precision: string };
-  spatial?: GeoJSON.Geometry;
-  provenance: { source: string; license: string; confidence?: number };
-}
-````
-
-This is used by all entity cards, tooltips, Focus Mode, and search results.
+├── 🧩 entityNormalize.ts     # Canonicalizes entities (Place/Event/StoryNode/Document/etc.)
+├── 🔗 relationFlatten.ts     # Converts nested Neo4j subgraphs → flat edges + deduped nodes
+├── 🎯 focusBindings.ts       # Focus Mode v3 entity → map/timeline binding logic
+├── 🆔 idUtils.ts             # Stable ID hashing, deduplication, entity merging
+└── 🗂️ groupByType.ts         # Splits heterogeneous node arrays into typed buckets
+~~~
 
 ---
 
-### 🧩 `relationFlatten.ts`
+# 🧱 Module Descriptions
 
-Neo4j subgraphs are nested.
-The frontend requires clean arrays.
+## 🧩 `entityNormalize.ts`
 
-This utility:
+Normalizes raw Neo4j nodes into stable, UI-ready **canonical entities**.
 
-* Converts `{ nodes: [...], relationships: [...] }` → flat structures
-* Creates `edges: Array<{ from, to, type }>`
-* Deduplicates repeated nodes/edges
-* Sorts edges by relationship type (semantic ordering)
-* Applies CARE flags (e.g., hides restricted relationships in the UI)
+**Features**
 
-This is essential for:
+- Type canonicalization:  
+  `Place | Event | Person | Document | StoryNode | Dataset`
+- Temporal normalization (OWL-Time aligned)  
+- Spatial extraction (GeoJSON-safe)  
+- CARE-protected spatial masking (generalization)  
+- Provenance merging:  
+  - PROV-O `prov:used`, `prov:wasGeneratedBy`  
+  - license, rights-holder, SBOM origin  
+- Story Node v3 compatible shape  
+- Focus Mode v3 compatible narrative model  
 
-* Graph-based event summaries
-* Story Node narrative linking
-* Focus Mode v2 reasoning traces
-* Relationship graphs shown in detail sidebar
+**Guarantees**
+
+- No speculative fields  
+- No hidden precision leaks  
+- Deterministic output ordering  
 
 ---
 
-### 🧩 `focusBindings.ts`
+## 🔗 `relationFlatten.ts`
 
-The glue layer between **graph results** and **map/timeline selections**.
+Neo4j returns **deep nested subgraphs**.  
+The UI requires **predictable, flat structures**.
 
-Functionality:
+**Performs**
+- Extracts `{ nodes[], relationships[] }` → `{ flatNodes[], edges[] }`
+- Deduplicates repeated nodes/edges
+- Orders edges by semantic relationship importance  
+- Applies sensitivity masking:
+  - removes prohibited relationships  
+  - generalizes links with sovereignty restrictions  
 
-* Determines which Places, Events, Documents, and Story Nodes should be
-  highlighted for a selected entity
-* Computes **temporal windows** for Focus Mode
-* Computes **map extents** based on locations of related nodes
-* Outputs a stable `FocusContext` object:
+**Used by**
+
+- Story Node relation panels  
+- Focus Mode v3 evidence trails  
+- Graph-derived timelines  
+- “Related entities” UI modules  
+
+---
+
+## 🎯 `focusBindings.ts`
+
+The glue binding **graph entities → Focus Mode v3 context**.
+
+Computes:
+
+- Highlighted Places, Events, Story Nodes  
+- Time window for the focal entity  
+- Spatial extents (BBox safely clamped)  
+- Related entity clusters  
+- CARE/sovereignty narratives (for overlays)  
+- A stable `FocusContext`:
 
 ```ts
 interface FocusContext {
@@ -138,98 +210,119 @@ interface FocusContext {
   relatedPlaces: string[];
   relatedEvents: string[];
   relatedDocuments: string[];
-  timelineWindow: { start: string; end: string };
+  relatedStoryNodes: string[];
+  timelineWindow: { start: string; end?: string };
   bbox: [number, number, number, number] | null;
+  governance: { careLabel: string; sovereignty?: string };
 }
 ```
 
-This powers the synchronized UI experience for Focus Mode v2.
+---
+
+## 🆔 `idUtils.ts`
+
+Ensures **deterministic identity**:
+
+- ID hashing + normalization  
+- Deduplication of arrays and graphs  
+- Composite ID generation for multi-entity relationships  
+- Stable ordering for React key usage  
+
+**Guarantees**
+
+- No collisions  
+- No nondeterminism  
+- No sensitive key exposure in URLs  
 
 ---
 
-### 🧩 `idUtils.ts`
+## 🗂️ `groupByType.ts`
 
-Ensures stable, deterministic identification:
+Groups heterogeneous graph nodes into:
 
-* Hashes raw graph IDs into safe frontend IDs if needed
-* Deduplicates IDs across nested subgraph structures
-* Performs stable sorting for deterministic UIs
-* Encodes composite IDs for Story Node relationships
-
-Used everywhere IDs appear — search, highlighting, keying React lists.
-
----
-
-### 🧩 `groupByType.ts`
-
-Groups mixed node arrays into:
-
-```
+```ts
 {
   places: [...],
   events: [...],
-  people: [...],
   documents: [...],
-  storyNodes: [...]
+  storyNodes: [...],
+  datasets: [...],
+  people: [...]
 }
 ```
 
 Used by:
 
-* Focus Mode v2 summaries
-* Entity panels
-* Relationship graph visualization
-* Search results
+- Focus Mode v3 relation panels  
+- Story Node v3 contextual linking  
+- Graph-based search  
+- Relationship overlays  
 
 ---
 
-## 🧪 Testing Requirements
+# 🧪 Testing Requirements
 
-All tests are located under:
+All graph utilities MUST have:
 
-```
-tests/web/utils/graph/*.test.ts
-```
+- Deterministic normalization tests  
+- CARE-compliance tests (masking, sensitive suppression)  
+- Provenance propagation tests  
+- Temporal normalization tests  
+- Spatial extraction tests  
+- Relationship flattening truth tables  
+- ID stability tests  
+- FocusContext generation tests  
 
-Tests MUST verify:
+All located under:
 
-* Deterministic normalization across all node types
-* Correct flattening of nested subgraphs
-* ID stability across runs
-* CARE-compliant concealment of sensitive relationships
-* FAIR provenance propagation
-* Correct FocusContext generation across edge cases
-
----
-
-## ⚙️ Development Standards
-
-All modules in this directory MUST:
-
-* Be written strictly in TypeScript
-* Export pure, side-effect-free functions
-* Pass ESLint + Prettier + KFM Docs Lint
-* Retain all FAIR metadata and CARE sensitivity flags
-* Include complete JSDoc docstrings
-* Avoid MapLibre/DOM/React imports (data only)
-* Ensure compatibility with Story Node schema & Focus Mode v2
+~~~text
+tests/unit/web/utils/graph/**
+tests/integration/web/utils/graph/**
+~~~
 
 ---
 
-## 🧭 Future Extensions (v10.5+)
+# ⚙️ Development Standards
 
-* Graph federation adapters (multi-region knowledge graphs)
-* Temporal relationship density metrics for timeline heatmaps
-* Story Node merge/resolution helpers
-* Cross-entity confidence scoring matrices
-* AI narrative provenance trace integration
+Modules MUST:
+
+- Be pure, side-effect-free  
+- Use TypeScript strict mode  
+- Avoid DOM/React/MapLibre imports  
+- Follow KFM-PDC v11 data contracts  
+- Comply with FAIR+CARE & sovereignty rules  
+- Pass lint/format/test/MDP validation  
+- Implement JSDoc for all exported functions  
+- Remain cyber/sovereignty safe  
+
+---
+
+# 🧭 Future Extensions (v11.3+)
+
+- Cross-entity confidence inference for timelines  
+- Story Node cluster-merging heuristics  
+- Multi-graph federation adapters  
+- Contextual subgraph compression for mobile  
+- Provenance-guided color semantics  
 
 ---
 
-## 🏁 Version History
+# 🕰 Version History
 
-| Version | Date       | Changes                                         |
-| ------- | ---------- | ----------------------------------------------- |
-| v10.4.1 | 2025-11-15 | Initial creation using KFM-MDP v10.4 standards. |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v11.2.2 | 2025-11-28 | Full upgrade to KFM-MDP v11.2.2; emoji directory refresh; aligned with Focus Mode v3, Story Node v3, CARE masking, and CI/CD schema updates. |
+| v10.4.1 | 2025-11-15 | Initial v10.4 graph-utils documentation. |
+| v10.3.2 | 2025-11-14 | Early graph extraction logic. |
+| v10.3.1 | 2025-11-13 | Initial utilities overview. |
 
 ---
+
+<div align="center">
+
+© 2025 Kansas Frontier Matrix — MIT License  
+FAIR+CARE Certified · Public Document · Version-Pinned  
+
+[⬅️ Back to Web Source](../../README.md) · [🌐 Web Platform Overview](../../../README.md) · [🛡 Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
