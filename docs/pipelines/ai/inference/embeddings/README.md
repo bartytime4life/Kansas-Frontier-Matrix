@@ -154,12 +154,12 @@ docs/pipelines/ai/inference/embeddings/
 
 ```mermaid
 flowchart TD
-    A[📥 Raw Spatial Climate Hydro Hazard Inputs] --> B[🧽 Preprocessing + Normalization]
-    B --> C[🧠 Embedding Model (Transformer or CNN)]
-    C --> D[🔡 Vector Output (Seed-Locked)]
+    A[📥 Raw Spatial · Climate · Hydro · Hazard Inputs] --> B[🧽 Preprocessing And Normalization]
+    B --> C[🧠 Embedding Model · Transformer / CNN · Seed Locked]
+    C --> D[🔡 Vector Output · Deterministic]
     D --> E[🗂️ STAC Embedding Item Builder]
-    E --> F[📊 Embedding Telemetry + PROV-O]
-    F --> G[🛡️ CARE + Sovereignty Filters]
+    E --> F[📊 Embedding Telemetry And PROV Lineage]
+    F --> G[🛡️ CARE And Sovereignty Filters]
     G --> H[📦 Vector Index Registration]
 ```
 
