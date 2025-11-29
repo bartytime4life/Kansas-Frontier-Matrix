@@ -128,11 +128,11 @@ docs/pipelines/ai/inference/hydrology/
 
 ```mermaid
 flowchart TD
-    A[🌧️ Runoff Depth & RRHI] --> D[📏 Normalize Inputs]
+    A[🌧️ Runoff Depth And RRHI] --> D[📏 Normalize Inputs]
     B[🪴 Soil Moisture Saturation] --> D
     C[🗺️ Watershed Routing] --> D
     D --> E[🌊 Deterministic Discharge Calculation]
-    E --> F[⚡ Flow Rise Rate (ΔQ/Δt)]
+    E --> F[⚡ Flow Rise Rate Delta Q Over Delta Time]
     F --> G[💡 XAI Attribution]
     G --> H[🗂️ STAC XAI Metadata Assembly]
     H --> I[📊 Streamflow Outputs]
@@ -283,4 +283,3 @@ Failure → ❌ merge blocked.
 [🏛 Governance](../../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
