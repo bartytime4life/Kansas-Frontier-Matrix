@@ -96,15 +96,21 @@ It captures **full inference → XAI → response lineage**, enforces ethical sa
 
 This telemetry layer records:
 
-- Request validation  
-- Model load + version state  
-- Inference latency & throughput  
+- Request validation events  
+- Model load + version usage  
+- Realtime inference latency and throughput  
 - XAI computation events (SHAP, IG, CAM, Spatial Attribution)  
-- CARE & sovereignty masking events  
-- STAC-XAI compliance  
-- PROV-O lineage anchors  
-- Energy & carbon accounting  
-- Structured governance logs  
+- CARE + sovereignty masking logs  
+- STAC-XAI compliance checks  
+- PROV-O lineage anchors for all steps  
+- Sustainability metrics (energy + carbon)  
+- Structured logs for governance audits  
+
+Telemetry output is deterministic under seed-lock and is emitted as:
+
+- **Traces** (span chains)  
+- **Metrics** (quantitative indicators)  
+- **Logs** (policy, ethics, and system events)
 
 ---
 
@@ -114,11 +120,143 @@ This telemetry layer records:
 docs/pipelines/ai/inference/climate/realtime/telemetry/
 ├── 📄 README.md                    # This file
 │
-├── ⚙️ realtime-otel-config.yaml    # OTel resources, exporters, attributes
+├── ⚙️ realtime-otel-config.yaml    # OTel resources, exporters, sampling, attributes
 ├── 📊 metrics.json                 # Metric families (CI-validated)
 ├── 🧪 test-harness.py              # Telemetry + lineage compliance tests
 │
 └── 📁 examples/
     ├── 📄 span-climate-infer.json  # Example inference span
-    ├── 📄 span-xai.json            # Example XAI span
-    └── 📄 span-care-mask.json      # CARE / sovereignty masking span
+    ├── 📄 span-xai.json            # Example XAI span (SHAP / IG / CAM)
+    └── 📄 span-care-mask.json      # CARE / H3 masking governance event
+```
+
+---
+
+## 🛰️ Telemetry Architecture (Conceptual Flow)
+
+```mermaid
+flowchart TD
+    A[Realtime Request] --> B{Inputs Valid}
+    B -- No --> X[Reject Request And Log Error]
+    B -- Yes --> C[Inference Engine]
+
+    C --> D{XAI Enabled}
+    D -- No --> E[Package Response]
+    D -- Yes --> Y[Run XAI Subsystem]
+    Y --> E
+
+    E --> F[OTel Telemetry Export]
+    F --> G[Governance Reporting]
+    G --> H[Energy And Carbon Accounting]
+```
+
+---
+
+## 📊 Metric Categories
+
+### Core Runtime Metrics
+
+- `climate.inference.latency_ms`  
+- `climate.inference.throughput_rps`  
+- `climate.model.load_ms`  
+- `climate.cache.hit_ratio`  
+
+### XAI Metrics
+
+- `xai.shap.latency_ms`  
+- `xai.ig.latency_ms`  
+- `xai.cams.latency_ms`  
+- `xai.spatial.latency_ms`  
+
+### Governance Metrics
+
+- `care.masking.events`  
+- `sovereignty.flagged_regions`  
+- `faircare.policy_compliance`  
+
+### Sustainability Metrics
+
+- `energy.wh_estimate`  
+- `carbon.gco2e_estimate`  
+
+---
+
+## 🧩 Span Attribute Requirements
+
+All realtime inference spans MUST include:
+
+- `kfm:model_version`  
+- `kfm:inference_type = "realtime"`  
+- `prov:used`  
+- `prov:wasGeneratedBy`  
+- `prov:Agent`  
+- `care:scope`  
+- `sovereignty:flags`  
+- `xai:method` (when XAI is triggered)  
+
+Recommended:
+
+- `energy.wh_estimate`  
+- `carbon.gco2e_estimate`  
+
+---
+
+## 🔐 FAIR+CARE & Sovereignty Enforcement
+
+Every inference event MUST:
+
+- Log when **H3 masking** is applied  
+- Record a **CARE scope** and notes  
+- Record any **sovereignty constraints**  
+- Avoid logging sensitive geographic details  
+- Comply with Data Contract v3  
+- Log any policy violations for governance review  
+
+These logs provide a verifiable audit trail for ethical and sovereign-compliant operation.
+
+---
+
+## 📦 STAC-XAI Integration
+
+If realtime results are persisted:
+
+- Telemetry binds **OTel trace IDs** → STAC Item IDs.  
+- JSON-LD XAI bundles include span identifiers to link bundles back to traces.  
+- STAC Items embed `"kfm:explainability:*"` fields derived from telemetry and XAI spans.  
+
+This enables:
+
+- Story Node v3 to pull trace-driven evidence.  
+- Focus Mode v3 to correlate map overlays with inference spans.  
+
+---
+
+## 🧪 CI Requirements
+
+`test-harness.py` MUST validate:
+
+- Metric schema correctness (`metrics.json`).  
+- Presence of required OTel attributes in example spans.  
+- CARE + sovereignty fields in governance spans.  
+- H3 mask-related events are logged when masking is enabled.  
+- PROV chain completeness (e.g., inference span → XAI span → response span).  
+- Deterministic span naming/structure under fixed inputs.  
+
+Any CI failure → ❌ merge blocked until resolved.
+
+---
+
+## 🕰 Version History
+
+| Version  | Date       | Notes                                                          |
+|----------|------------|----------------------------------------------------------------|
+| v11.2.2  | 2025-11-28 | Fully rebuilt realtime telemetry spec (box-safe, drift-correct) |
+
+---
+
+<div align="center">
+
+### 🔗 Footer  
+[⬅ Back to Realtime Inference](../README.md) · [🌡️ Climate Inference Root](../../README.md) · [🏛 Governance](../../../../../standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
