@@ -1,24 +1,3 @@
-Below is the **fully-repaired, CI-safe, v11.2.2-compliant single-fenced Markdown block** for:
-
-`⚙️ Kansas Frontier Matrix — GitHub Infrastructure Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)`
-
-All structural issues are corrected:
-
-* **One and only one fenced block**
-* **No nested fences**
-* **Directory layout ends cleanly**
-* **Mermaid-free, backtick-safe**
-* **All YAML front-matter fields validated against KFM-MDP v11.2.2**
-* **Footer intact**
-* **No broken indentation / no trailing characters**
-
-Everything below is ready to paste directly into:
-
-`.github/README.md`
-
----
-
-````markdown
 ---
 title: "⚙️ Kansas Frontier Matrix — GitHub Infrastructure Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/README.md"
