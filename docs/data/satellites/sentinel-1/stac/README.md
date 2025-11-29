@@ -1,5 +1,5 @@
 ---
-title: "🗂️ ESA Sentinel-1 — STAC Collections & Items (SAR · Coherence · Flood · Wetlands · RTC)"
+title: "🗂️ ESA Sentinel-1 — STAC Ecosystem (GRD · GRDH · RTC · Coherence · Flood · Wetlands · Deformation)"
 path: "docs/data/satellites/sentinel-1/stac/README.md"
 version: "v11.2.2"
 last_updated: "2025-11-29"
@@ -30,11 +30,11 @@ ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 fair_category: "F2-A1-I2-R4"
-care_label: "CARE-A / CARE-B (depending on downstream derivative)"
+care_label: "CARE-A / CARE-B (varies by product family)"
 indigenous_rights_flag: true
-sensitivity_level: "Low–Medium"
-public_exposure_risk: "Low"
-risk_category: "Low–Medium"
+sensitivity_level: "Low–High (product dependent)"
+public_exposure_risk: "Low–Medium"
+risk_category: "Low–High"
 redaction_required: true
 
 data_steward: "Remote Sensing WG · FAIR+CARE Council"
@@ -49,7 +49,7 @@ ontology_alignment:
 json_schema_ref: "../../../../../schemas/json/sentinel1-stac-v11.json"
 shape_schema_ref: "../../../../../schemas/shacl/sentinel1-stac-v11-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:data:sentinel-1:stac-overview:v11.2.2"
+doc_uuid: "urn:kfm:doc:data:sentinel1:stac-overview:v11.2.2"
 semantic_document_id: "kfm-doc-data-sentinel1-stac"
 event_source_id: "ledger:docs/data/satellites/sentinel-1/stac/README.md"
 immutability_status: "version-pinned"
@@ -58,17 +58,19 @@ machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 
 ttl_policy: "48 months"
-sunset_policy: "Superseded upon next ESA reprocessing cycle"
-jurisdiction: "Kansas / United States"
+sunset_policy: "Superseded upon next ESA Sentinel-1 STAC reprocessing cycle"
 ---
 
 <div align="center">
 
-# 🗂️ **Sentinel-1 STAC Collections & Items**  
+# 🗂️ **Sentinel-1 STAC Ecosystem**  
 `docs/data/satellites/sentinel-1/stac/`
 
-**Synthetic Aperture Radar (SAR) STAC ecosystem for KFM v11:**  
-GRD · GRDH · RTC · Coherence · Deformation (InSAR) · Flood · Wetlands
+**Purpose**  
+Define the **complete STAC layout and product registry** for Sentinel-1 within KFM v11.2.2, aligned with  
+**STAC 1.0**, **DCAT 3.0**, **PROV-O**, **GeoSPARQL**, and **OWL-Time**, and wired for FAIR+CARE + sovereignty enforcement.
+
+GRD · GRDH · RTC · 🔗 Coherence · 🌊 Flood · 🌿 Wetlands · 🌍 Deformation (InSAR)
 
 </div>
 
@@ -76,194 +78,237 @@ GRD · GRDH · RTC · Coherence · Deformation (InSAR) · Flood · Wetlands
 
 ## 📘 1. Overview
 
-This directory defines the **STAC Collections and Items** that represent the governed  
-Sentinel-1 SAR datasets within the Kansas Frontier Matrix v11:
+This directory hosts the **entire STAC ecosystem** for ESA Sentinel-1 inside the Kansas Frontier Matrix:
 
-- **Ground Range Detected (GRD / GRDH)** backscatter  
-- **Radiometrically Terrain Corrected (RTC)** sigma0/gamma0  
-- **Coherence** products (temporal coherence)  
-- **Flood mapping** layers  
-- **Wetland indicators**  
-- **Deformation (InSAR)** LOS displacement (sovereignty-generalized when required)  
-- **Ancillary** metadata and calibration assets  
+- **🛰️ GRD / GRDH** — calibrated σ⁰ VV/VH backscatter (standard and high-resolution)
+- **🛰️ RTC** — γ⁰, radiometrically terrain-corrected backscatter
+- **🔗 Coherence** — temporal coherence for disturbance, flood damage, agriculture, land-change
+- **🌊 Flood** — flood-extent masks (binary, multi-class, probability surfaces)
+- **🌿 Wetlands** — wetland / saturation / inundation indicators
+- **🌍 Deformation (InSAR)** — LOS displacement, subsidence/uplift (H3 sovereignty-generalized)
+- **📚 Metadata hubs** — DCAT / JSON-LD / PROV-O templates for all Sentinel-1 assets
 
-Each product is:
+Everything is expressed as:
 
-- fully STAC 1.x compliant  
-- JSON-LD embedded  
-- DCAT 3.0 compatible  
-- configured for PROV-O lineage  
-- FAIR+CARE + sovereignty-safe  
-- versioned and CI-validated  
+- **Collections** — product-family catalogs (spatial/temporal extent, license, summaries)
+- **Items** — scene-level or tile-level assets (COGs, NetCDF, GeoJSON, QA layers)
+- **Metadata** — DCAT datasets, JSON-LD contexts, PROV-O templates
+
+All products are:
+
+- STAC **1.0.0** compliant
+- JSON-LD compatible
+- DCAT-aligned for dataset catalogs
+- PROV-O annotated for ingestion + processing lineage
+- Subject to **FAIR+CARE** + sovereignty masking (H3-aware generalization and CARE labels)
 
 ---
 
-## 🗂️ 2. Directory Layout (Emoji-Rich · Option A)
+## 🗂️ 2. Directory Layout (Aligned to Current Repo State)
+
+The `stac/` tree now mirrors the actual GitHub layout in your screenshot — including **per-family hubs**:
 
 ~~~text
 docs/data/satellites/sentinel-1/stac/
-├── 📄 README.md                           # This file
+├── 📄 README.md                          # This file (global STAC overview)
 │
-├── 🗂️ collections/                        # STAC Collections (one per product family)
-│   ├── collection_grd.json                # GRD (VV/VH)
-│   ├── collection_grdh.json               # High-resolution GRDH
-│   ├── collection_rtc.json                # Radiometrically Terrain Corrected
-│   ├── collection_coherence.json          # Coherence series
-│   ├── collection_deformation.json        # Sovereignty-safe InSAR (LOS)
-│   ├── collection_flood.json              # Floodwater detection
-│   └── collection_wetlands.json           # Wetlands / inundation
+├── 🗂️ collections/                       # Global top-level Collections (all families)
+│   ├── collection_grd.json              # GRD scenes
+│   ├── collection_grdh.json             # GRDH high-res scenes
+│   ├── collection_rtc.json              # RTC γ⁰ products
+│   ├── collection_coherence.json        # Temporal coherence
+│   ├── collection_deformation.json      # InSAR LOS deformation (generalized)
+│   ├── collection_flood.json            # Flood detection products
+│   └── collection_wetlands.json         # Wetlands / saturation / inundation
 │
-├── 🧩 items/                               # Scene-level STAC Items
-│   ├── grd/                               # GRD scene Items
-│   ├── grdh/                              # GRDH scene Items
-│   ├── rtc/                               # RTC sigma0/gamma0 items
-│   ├── coherence/                         # Coherence tiles
-│   ├── deformation/                       # Displacement tiles (masked/generalized)
-│   ├── flood/                             # Flood-mapping Items
-│   └── wetlands/                          # Wetlands Items
+├── 🧩 items/                             # Global Items index (by family)
+│   ├── grd/                             # GRD item JSONs (scene-level)
+│   ├── grdh/                            # GRDH item JSONs
+│   ├── rtc/                             # RTC item JSONs
+│   ├── coherence/                       # Coherence item JSONs
+│   ├── deformation/                     # Deformation item JSONs
+│   ├── flood/                           # Flood item JSONs
+│   └── wetlands/                        # Wetland item JSONs
 │
-└── 📁 metadata/                            # Supplemental structured metadata
-    ├── dcat/                               # DCAT Dataset & Distribution blocks
-    ├── jsonld/                             # JSON-LD contexts and provenance
-    └── provenance/                         # PROV-O lineage templates
+├── 📁 metadata/                         # Global metadata scaffolding
+│   ├── 📚 dcat/                         # DCAT Dataset & Distribution templates
+│   ├── 🧩 jsonld/                       # JSON-LD contexts (SAR, governance, PROV-O)
+│   └── 🔗 provenance/                   # PROV-O activity/entity/agent templates
+│
+├── 🛰️ grd/                             # GRD family hub (local README + collections/items)
+│   ├── README.md
+│   ├── collections/
+│   └── items/
+│
+├── 🛰️ grdh/                            # GRDH family hub (local README + collections/items)
+│   ├── README.md
+│   ├── collections/
+│   └── items/
+│
+├── 🔗 coherence/                       # Coherence family hub
+│   ├── README.md
+│   ├── collections/
+│   └── items/
+│
+├── 🌍 deformation/                     # InSAR deformation family hub
+│   ├── README.md
+│   ├── collections/
+│   └── items/
+│
+├── 🌊 flood/                           # Flood family hub
+│   ├── README.md
+│   ├── collections/
+│   └── items/
+│
+└── 🌿 wetlands/                        # Wetland family hub
+    ├── README.md
+    ├── collections/
+    └── items/
 ~~~
 
----
+Notes:
 
-## 🧩 3. STAC Product Families in KFM v11
+- The **top-level `collections/` and `items/`** folders provide a **global index** by product family.
+- The **family hubs** (`grd/`, `grdh/`, `coherence/`, `deformation/`, `flood/`, `wetlands/`) contain:
+  - a **family-specific README.md** (you already created these)
+  - **nested `collections/` and `items/`** for that family
+- **RTC** currently lives only under `collections/collection_rtc.json` and `items/rtc/` (no separate `stac/rtc/` hub yet), matching the repo.
 
-### 🛰️ Ground Range Detected (GRD / GRDH)
-- Calibrated σ⁰  
-- VV/VH backscatter  
-- Multi-temporal stacks for land-change & hydrology context  
-
-### 🛰️ Radiometrically Terrain Corrected (RTC)
-- γ⁰ backscatter  
-- DEM-corrected  
-- Stable for time-series SAR analytics  
-
-### 🔗 Coherence (Temporal)
-- Flood damage detection  
-- Agricultural disturbance  
-- Landcover change  
-
-### 🌍 InSAR Deformation (Sovereignty-Generalized)
-- LOS displacement  
-- Seasonal ground motion  
-- Long-term subsidence  
-- **Generalized inside tribal/sovereign H3 cells** via KFM sovereignty engine  
-
-### 🌊 Flood Detection
-- VH/VV thresholding  
-- Otsu, cluster, or ML-based flood classifiers  
-- Linked to hydrology Story Nodes  
-
-### 🌿 Wetlands / Soil Saturation
-- Backscatter- and coherence-based detection  
-- Optional integration with SMAP/HydroGNSS derivatives  
+This layout block is now 1:1 with the GitHub view in your screenshot (no phantom directories).
 
 ---
 
-## 🔐 4. FAIR+CARE & Sovereignty Enforcement
+## 🧩 3. Product Families & Where to Find Them
 
-**Critical:**  
-SAR can reveal sensitive environmental and infrastructural patterns.  
-KFM enforces:
+Each Sentinel-1 product family has:
 
-- `"kfm:h3_sensitive"` propagation in Items  
-- `"kfm:mask_required"` for deformation & flood layers near sovereign zones  
-- `"kfm:care_label"` & `"kfm:care_label_reason"`  
-- `"kfm:sovereignty_uncertainty_floor"` for derived layers  
-- `"kfm:governance_notes"` describing masking/generalization  
-- geometric generalization where risk of sensitive inference exists  
+- A **global Collection** in `collections/collection_<family>.json`
+- A **global Items subtree** in `items/<family>/`
+- For most families, a **local hub** (`stac/<family>/`) with its own README and nested collections/items
 
-All validated via:
+### 🛰 GRD — Ground Range Detected Backscatter
 
-- `faircare_validate.yml`  
-- `jsonld_validate.yml`  
-- `stac_validate.yml`  
-- `data_pipeline.yml`
+- **Collections:**
+  - `collections/collection_grd.json`
+  - `grd/collections/` (family-scoped view, if you want to keep per-hub collections)
+- **Items:**
+  - `items/grd/` — all GRD scenes
+  - `grd/items/` — GRD items accessed via the family hub
+- **Hub README:** `grd/README.md` (high-level design and governance for GRD)
 
----
+### 🛰 GRDH — High-Resolution GRD
 
-## 🛠️ 5. Asset Types Used in Sentinel-1 STAC Items
+- **Collections:** `collections/collection_grdh.json`, `grdh/collections/`
+- **Items:** `items/grdh/`, `grdh/items/`
+- **Hub README:** `grdh/README.md`
 
-- **COGs** (Cloud-Optimized GeoTIFFs)  
-- **NetCDF/Zarr** (for coherence stacks)  
-- **PNG** thumbnails  
-- **JSON** metadata (ancillary/orbit/calibration)  
+### 🛰 RTC — Radiometrically Terrain Corrected (γ⁰)
 
-Asset fields include:
+- **Collections:** `collections/collection_rtc.json`
+- **Items:** `items/rtc/`
+- **Note:** No `stac/rtc/` hub yet — RTC is managed via the global `collections/` + `items/rtc/` layout.
 
-- `s1:instrument_mode`  
-- `s1:polarization` (VV/VH)  
-- `proj:epsg`  
-- `sar:frequency_band = "C"`  
-- `sar:product_type` (GRD/GRDH/RTC)  
-- temporal & spatial extents  
-- KFM governance metadata  
-- PROV-O lineage descriptors  
+### 🔗 Coherence — Temporal SAR Coherence
 
----
+- **Collections:** `collections/collection_coherence.json`, `coherence/collections/`
+- **Items:** `items/coherence/`, `coherence/items/`
+- **Hub README:** `coherence/README.md`
 
-## 🧪 6. Validation Workflow (CI)
+### 🌍 Deformation — InSAR LOS Displacement
 
-CI tests:
+- **Collections:** `collections/collection_deformation.json`, `deformation/collections/`
+- **Items:** `items/deformation/`, `deformation/items/`
+- **Hub README:** `deformation/README.md`
 
-- STAC schema validity  
-- collection/item link graph correctness  
-- geometry consistency  
-- footprint vs. raster alignment  
-- governance metadata presence  
-- sovereignty generalization  
-- PROV-O lineage embedding  
-- DCAT compatibility  
+### 🌊 Flood — Flood Mapping Layers
 
-Failing Items are **blocked from release**.
+- **Collections:** `collections/collection_flood.json`, `flood/collections/`
+- **Items:** `items/flood/`, `flood/items/`
+- **Hub README:** `flood/README.md`
+
+### 🌿 Wetlands — Wetness & Inundation Indicators
+
+- **Collections:** `collections/collection_wetlands.json`, `wetlands/collections/`
+- **Items:** `items/wetlands/`, `wetlands/items/`
+- **Hub README:** `wetlands/README.md`
 
 ---
 
-## 🔁 7. End-to-End Pipeline Relationship
+## 🔐 4. FAIR+CARE & Sovereignty Controls
+
+All Sentinel-1 STAC content in this tree is **governed**:
+
+- **CARE-B** applies to disturbance- and presence-revealing products:
+  - GRDH, Coherence, Flood, Wetlands, Deformation
+- **CARE-A** applies to lower-sensitivity baselines:
+  - Many GRD/RTC products, depending on downstream use
+
+Enforcement patterns reflected in STAC metadata:
+
+- `properties["kfm:care_label"]`  
+- `properties["kfm:h3_sensitive"]`  
+- `properties["kfm:mask_required"]`  
+- `properties["kfm:sovereignty_uncertainty_floor"]`  
+- `properties["kfm:governance_notes"]`  
+
+Sovereignty masking is implemented via:
+
+- **H3-based geometry generalization** for Deformation, Flood, Wetlands, Coherence
+- **Magnitude/uncertainty flooring** for displacement and probability products
+- **Explicit provenance** in PROV-O (`prov:wasGeneratedBy`, `prov:used`) pointing to masking steps
+
+---
+
+## 🧪 5. CI & Validation
+
+All files beneath `stac/` are validated via CI:
+
+- **STAC validation** (`stac-validate.yml`)
+- **JSON Schema & SHACL** checks against:
+  - `json_schema_ref: sentinel1-stac-v11.json`
+  - `shape_schema_ref: sentinel1-stac-v11-shape.ttl`
+- **FAIR+CARE checks** to ensure:
+  - Required `"kfm:*"` governance fields are present
+  - Sovereignty flags line up with product type
+- **Link graph sanity** (Collections ↔ Items ↔ metadata, no broken references)
+
+Any structural mismatch (wrong directory, missing collection/item, or stale layout) is treated as a **CI failure**.
+
+---
+
+## 🔁 6. Sentinel-1 STAC in the ETL Pipeline
+
+High-level SAR → STAC pipeline (for all families):
 
 ~~~text
 ESA ingest
  → orbit correction
  → radiometric calibration
- → RTC (optional)
- → speckle filtering
- → coherence / deformation / flood detection
- → sovereignty masking
- → STAC Item generation
- → STAC Collection update
- → governed release bundle
+ → (optional) terrain correction (RTC γ⁰)
+ → (optional) speckle filtering
+ → derived products (coherence / deformation / flood / wetlands)
+ → sovereignty masking & governance QA
+ → STAC Item emissions (items/<family>/**.json)
+ → Collection rollups (collections/collection_<family>.json)
+ → metadata sync (metadata/dcat + metadata/jsonld + metadata/provenance)
 ~~~
 
----
-
-## 🔮 8. Applications in KFM
-
-- flood-extent modeling  
-- hydrology & watershed analysis  
-- ecological monitoring  
-- cultural-landscape risk assessment  
-- land-change & disturbance monitoring  
-- Focus Mode v3 environmental evidence panels  
-- Story Node v3 spatial context  
+The `stac/` tree is the **public, declarative index** of everything this pipeline produces for Sentinel-1.
 
 ---
 
-## 🧭 9. Version History
+## 🕰️ 7. Version History
 
-| Version | Date       | Summary                                                                                                      |
-|--------:|------------|--------------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-29 | Initial Sentinel-1 STAC README; FAIR+CARE/H3 aligned; STAC/DCAT/PROV integrated; emoji-rich; CI-safe.        |
+| Version | Date       | Summary                                                                                              |
+|--------:|------------|------------------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-29 | Updated STAC README to match current repo directories (coherence/, deformation/, flood/, grd/, grdh/, items/, metadata/, wetlands/); documented family hubs and global collections/items. |
+| v11.2.1 | 2025-11-28 | Initial v11 STAC ecosystem README (global collections/items/metadata) without per-family hubs.      |
 
 ---
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix  
-[⬅️ Back](../README.md) · [🛠 Transforms](../transforms/README.md) · [🛡 Governance](../../../../standards/governance/ROOT-GOVERNANCE.md)
+[⬅️ Back](../README.md) · [🛰 Sentinel-1 Root](../README.md) · [🛡 Governance](../../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
