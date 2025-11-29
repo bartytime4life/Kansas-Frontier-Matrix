@@ -127,26 +127,27 @@ Telemetry output is deterministic under seed-lock and is emitted as:
         ├── 📄 span-climate-infer.json  # Example inference span
         ├── 📄 span-xai.json            # Example XAI span (SHAP / IG / CAM)
         └── 📄 span-care-mask.json      # CARE / H3 masking governance event
+```
 
 ---
 
 ## 🛰️ Telemetry Architecture (Conceptual Flow)
 
-    Realtime Request
-        ↓
-    Input Validation
-        ↓
-    Inference Engine
-        ↓
-    XAI Subsystem (optional)
-        ↓
-    Response Packaging
-        ↓
-    OTel Exporter (traces, metrics, logs)
-        ↓
-    Governance Reporting (CARE / sovereignty)
-        ↓
-    Energy & Carbon Accounting
+```mermaid
+flowchart TD
+    A[Realtime Request] --> B{Inputs Valid}
+    B -- No --> X[Reject Request And Log Error]
+    B -- Yes --> C[Inference Engine]
+
+    C --> D{XAI Enabled}
+    D -- No --> E[Package Response]
+    D -- Yes --> Y[Run XAI Subsystem]
+    Y --> E
+
+    E --> F[OTel Telemetry Export]
+    F --> G[Governance Reporting]
+    G --> H[Energy And Carbon Accounting]
+
 
 ---
 
