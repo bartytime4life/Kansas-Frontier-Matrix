@@ -113,10 +113,10 @@ Bias-correction methods MUST be:
 ## 🗂️ Directory Layout (v11.2.2)
 
     docs/pipelines/ai/inference/climate/models/bias-correction/
-        📄 README.md                 # This file
-        📄 quantile-mapping.md       # Quantile mapping model card
-        📄 regression-correction.md  # Regression & error-model correction
-        📄 distribution-correction.md# Multi-moment distribution-based corrections
+        📄 README.md                  # This file
+        📄 quantile-mapping.md        # Quantile mapping model card
+        📄 regression-correction.md   # Regression & error-model correction
+        📄 distribution-correction.md # Multi-moment distribution-based corrections
 
 ---
 
@@ -133,7 +133,7 @@ Bias-correction methods MUST be:
 - Good for temperature, wind, pressure  
 
 ### 🧮 Distribution Adjustment (Multi-Moment)  
-- Aligns mean/variance/skewness  
+- Aligns mean, variance, skewness  
 - Stabilizes rare-event tails  
 - Supports hazard-driver fidelity  
 
@@ -143,11 +143,11 @@ Bias-correction methods MUST be:
 
 ```mermaid
 flowchart TD
-    A[Input Field (Realtime or Downscaled)] --> B[Bias-Correction Model]
+    A[Input Field: Realtime or Downscaled] --> B[Bias-Correction Model]
     B --> C[Seed-Locked Correction]
     C --> D[XAI Explanation: SHAP · IG]
     D --> E[STAC-XAI Metadata Packaging]
-    E --> F[Telemetry + PROV-O Lineage]
+    E --> F[Telemetry and PROV-O Lineage]
 ```
 <!-- mermaid-end -->
 
@@ -191,8 +191,8 @@ CI failure → 🚫 merge blocked.
 ## 🕰 Version History
 
 | Version | Date       | Notes                                           |
-| ------- | ---------- | ------------------------------------------------ |
-| v11.2.2 | 2025-11-28 | Initial bias-correction model documentation.     |
+| ------- | ---------- | ----------------------------------------------- |
+| v11.2.2 | 2025-11-28 | Initial bias-correction model documentation.    |
 
 ---
 
@@ -205,4 +205,3 @@ CI failure → 🚫 merge blocked.
 [🏛 Governance](../../../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
