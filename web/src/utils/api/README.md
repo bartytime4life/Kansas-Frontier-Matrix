@@ -1,6 +1,6 @@
 ---
-title: "📅 Kansas Frontier Matrix — Date & Timeline Utilities (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "web/src/utils/date/README.md"
+title: "🛰️ Kansas Frontier Matrix — API Utility Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "web/src/utils/api/README.md"
 version: "v11.2.2"
 last_updated: "2025-11-28"
 review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
@@ -14,7 +14,7 @@ doc_integrity_checksum: "<sha256>"
 sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
 manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
 telemetry_ref: "../../../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-utils-date-v11.json"
+telemetry_schema: "../../../../schemas/telemetry/web-utils-api-v11.json"
 
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
@@ -24,62 +24,79 @@ license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.2"
 ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
 
 status: "Active / Enforced"
 doc_kind: "Architecture"
-intent: "web-date-utilities"
-role: "timeline-temporal-logic"
-category: "Web · Utilities · Temporal"
+intent: "web-api-utils"
+role: "frontend-api-helpers"
+category: "Web · Utilities · API · Fetch Layer"
 
 classification: "Public Document"
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-sensitivity_level: "None"
-indigenous_rights_flag: false
+fair_category: "F1-A1-I2-R3"
+care_label: "Public · Governed"
+sensitivity_level: "Low"
 public_exposure_risk: "Low"
-data_steward: "KFM FAIR+CARE Council"
+indigenous_rights_flag: true
 risk_category: "Low"
 redaction_required: false
+data_steward: "KFM FAIR+CARE Council"
 
 provenance_chain:
-  - "web/src/utils/date/README.md@v10.4.1"
-  - "web/src/utils/date/README.md@v10.3.2"
+  - "web/src/utils/api/README.md@v10.3.0"
+  - "web/src/utils/api/README.md@v10.4.0"
+  - "web/src/utils/api/README.md@v11.0.0"
 provenance_requirements:
   versions_required: true
   newest_first: true
 
 ontology_alignment:
-  cidoc: "E52 Time-Span"
-  schema_org: "Date"
+  cidoc: "E29 Design or Procedure"
+  schema_org: "WebAPI"
   owl_time: "TemporalEntity"
   prov_o: "prov:Plan"
 
-json_schema_ref: "../../../../schemas/json/web-utils-date-readme-v11.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/web-utils-date-readme-v11-shape.ttl"
+json_schema_ref: "../../../../schemas/json/web-utils-api-readme-v11.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/web-utils-api-readme-v11-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:web-utils-date-readme:v11.2.2"
-semantic_document_id: "kfm-doc-web-utils-date-readme"
-event_source_id: "ledger:web/src/utils/date/README.md"
+doc_uuid: "urn:kfm:doc:web-utils-api-readme:v11.2.2"
+semantic_document_id: "kfm-doc-web-utils-api-readme"
+event_source_id: "ledger:web/src/utils/api/README.md"
 immutability_status: "version-pinned"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "speculative-additions"
+  - "unverified-historical-claims"
+  - "governance-override"
+  - "content-alteration"
 
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 ttl_policy: "Annual review"
-sunset_policy: "Superseded on next temporal-logic revision"
+sunset_policy: "Superseded upon next API-utils revision"
 jurisdiction: "Kansas / United States"
 ---
 
 <div align="center">
 
-# 📅 **Kansas Frontier Matrix — Date & Timeline Utilities (v11.2.2)**  
-`web/src/utils/date/README.md`
+# 🛰️ **Kansas Frontier Matrix — API Utility Layer (v11.2.2)**  
+`web/src/utils/api/README.md`
 
-**Purpose:**  
-Define and govern the **temporal utilities** powering KFM’s timeline,  
-OWL-Time–aligned intervals, Story Node v3 temporal reasoning,  
-Focus Mode v3 context windows, and timeline–map synchronization.  
-All utilities are **pure**, **deterministic**, **FAIR+CARE-governed**,  
-and implemented under strict TypeScript safety.
+**Purpose**  
+Define the deterministic, FAIR+CARE-governed, sovereignty-safe API utility layer used across the  
+KFM Web Platform for interacting with:  
+- REST endpoints  
+- GraphQL queries  
+- STAC/DCAT APIs  
+- Focus Mode & Story Node endpoints  
+- Telemetry sinks  
+- Governance lookups  
+This layer ensures consistent, safe, observable API behavior.
 
 </div>
 
@@ -87,221 +104,280 @@ and implemented under strict TypeScript safety.
 
 # 🧭 1. Overview
 
-The `utils/date/` module implements **core temporal logic** required by all major  
-web subsystems in KFM v11:
+The API utility layer in `web/src/utils/api/**` provides:
 
-- 🕒 **Timeline Engine** (multi-scale zoom + brushing)  
-- ✨ **Story Node v3** (temporal footprints, fuzzy ranges)  
-- 🎯 **Focus Mode v3** (temporal expansion & relevance windows)  
-- 🔗 **Map & timeline synchronization**  
-- 🧠 **Graph-derived event normalization**  
-- 📦 **STAC/DCAT temporal extent normalization**  
+- 🧩 **Standardized fetch wrappers** (retry, abort, timeouts)  
+- 🔐 **Governance-safe parameter handling** (no sensitive coordinate leakage)  
+- 🛡️ **CARE & sovereignty compliance**  
+- 🧾 **Provenance propagation** into responses  
+- 🧬 **JSON-LD friendly response shapes**  
+- 🛠 **Response validators** (STAC, DCAT, graph entity types)  
+- 🌩 **Telemetry hooks** for latency, errors, ethics flags  
+- 🧊 **Deterministic response normalization**  
+- 📜 **GraphQL wrapper** with type guards & error taxonomy  
 
-All functions:
+These utilities must remain:
 
-- Are **side-effect-free**  
-- Obey **OWL-Time** semantics  
-- Propagate FAIR/CARE metadata when temporal transformation occurs  
-- Never “sharpen” uncertain dates into more precise ones  
-- Produce deterministic output across all environments  
+- **Pure data-to-data transforms**  
+- Framework-agnostic (no React imports)  
+- Fully TypeScript-strict  
+- 🚫 No DOM, no window, no browser globals  
+
+They power:
+
+- Story Node v3 loading  
+- Focus Mode v3 entity fetches  
+- Map layer metadata fetches  
+- Dataset previews  
+- Timeline event hydration  
+- Governance overlay metadata lookups  
 
 ---
 
-# 🗂 2. Directory Layout (Emoji-Rich · v11.2.2)
+# 🗂 2. Directory Structure (Emoji-Rich · v11.2.2)
 
 ~~~text
-web/src/utils/date/
+web/src/utils/api/
 │
-├── 📅 parseDate.ts        # ISO/OWL-Time parser w/ fuzzy & uncertain-date support
-├── 🗓 formatDate.ts       # UI-safe, deterministic temporal formatting
-├── 🕒 timelineRange.ts    # Visible-window computation & padding logic
-├── 🎚 precision.ts        # Granularity evaluator (year → month → day → decade → century)
-├── 🔢 compareDates.ts     # Stable comparator for events, Story Nodes, STAC items
-└── 🔧 normalizeDate.ts    # Canonicalization + FAIR/CARE metadata retention
+├── 🌐 apiClient.ts          # Core fetch wrapper (retry, abort, headers, governance)
+├── 🧪 responseGuards.ts     # STAC/DCAT/StoryNode/GraphQL response validators
+├── 🧾 jsonRequest.ts        # Safe JSON POST/PUT/PATCH helpers with type guards
+├── 🧵 graphqlClient.ts      # GraphQL wrapper (query/mutate w/ deterministic transforms)
+├── 🧬 stacClient.ts         # STAC Item/Collection fetcher with schema validation
+├── 🗂 dcatClient.ts         # DCAT dataset/distribution fetcher
+├── 🎯 focusClient.ts        # Focus Mode v3 API requester (entity → context → narrative)
+├── 📚 storyClient.ts        # Story Node v3 fetcher (cards, details, relations)
+├── 🔐 governanceClient.ts   # CARE/sovereignty/license metadata lookups
+└── 📡 telemetryClient.ts    # Frontend telemetry event sender (OpenTelemetry v11)
 ~~~
+
+This directory **must not contain business logic** — only low-level API helpers.
 
 ---
 
 # 🧱 3. Module Descriptions
 
-## 📅 `parseDate.ts` — Temporal Parsing Engine
+## 🌐 `apiClient.ts` — Core Fetch Wrapper
 
-Parses:
+Provides a hardened wrapper around `fetch()`:
 
-- ISO 8601 (`1854-03-21`, `1870`, `1870-05`)  
-- OWL-Time Story Node fields (`when.start`, `when.end`, `precision`)  
-- Approximate expressions:  
-  - `"ca. 1850"`, `"~1860"`, `"early 1800s"`, `"late 19th century"`  
-- OCR-derived or ambiguous fields from archives  
-- Graph events with mixed precision  
+- Timeout + abort controllers  
+- Automatic JSON parsing  
+- Error taxonomy generation  
+- Consistent headers (versioning, provenance, governance flags)  
+- CARE-safe query parameter encoding  
+- Sovereignty-aware redactions in request paths  
 
-Returns:
+Guarantees:
 
-```ts
-interface DateMeta {
-  date: Date | null;
-  original: string;
-  precision: "year" | "month" | "day" | "decade" | "century" | "unknown";
-  approx: boolean;
-  provenance?: string;
-}
-```
-
-**FAIR rule:**  
-Never discard original input; always store `original` & `approx`.
+- No sensitive coordinate leakage  
+- Deterministic errors  
+- Telemetry hooks before/after fetch  
+- Enforced method/verb whitelisting  
 
 ---
 
-## 🗓 `formatDate.ts` — UI Temporal Formatting
+## 🧪 `responseGuards.ts` — Response Validators
 
-- Localized yet deterministic  
-- Handles approximate dates (`"c. 1850"`)  
-- Generates accessible labels for timeline bands  
-- Used by Story Node cards, Focus Mode summaries, dataset previews  
+Contains type guards + schema validators for:
 
-Examples:
+- Story Node v3  
+- Focus Mode v3 response shapes  
+- STAC Collections/Items  
+- DCAT datasets  
+- GraphQL entity payloads  
+- Temporal extents  
+- Governance metadata (`careLabel`, `sovereignty`, `license`)  
 
-| Input             | Output         |
-|-------------------|----------------|
-| `1854-03-21`      | `Mar 21, 1854` |
-| `ca. 1850`        | `c. 1850`      |
-| `{ decade: 1870 }`| `1870s`        |
-| `century: 19`     | `19th century` |
+Guarantees:
+
+- Malformed responses fail fast  
+- No rendering until governance validation passes  
 
 ---
 
-## 🕒 `timelineRange.ts` — Range Expansion & Visible Window Logic
+## 🧾 `jsonRequest.ts` — Safe JSON Helpers
 
-Used by:
+Features:
 
-- Focus Mode v3 context expansion  
-- Timeline zoom logic  
-- Map ↔ timeline synchronization  
+- Deterministic JSON encoding  
+- Automatic provenance stamping (e.g., `"via": "web-client-v11.2.2"`)  
+- CARE-aware sanitization of outgoing payloads  
+- Response validation via `responseGuards`  
+
+Supports:
+
+- POST/PUT/PATCH/DELETE  
+- Typed payloads and responses  
+
+---
+
+## 🧵 `graphqlClient.ts` — GraphQL Wrapper
 
 Capabilities:
 
-- Expands ranges by padding (years, months, days)  
-- Clips reversed or invalid ranges  
-- Merges overlapping intervals  
-- Guarantees deterministic window selection  
+- Query + mutation helpers  
+- Deterministic error formatting  
+- Strict response validation via GraphQL result schemas  
+- Mapping GraphQL → UI-ready shapes (no speculation)  
+- Automatic inclusion of:
+  - CARE labels  
+  - Sovereignty flags  
+  - Provenance metadata  
 
-Example:
+Must never:
 
-```ts
-computeTimelineWindow({ start: 1850, end: 1870 }, { padYears: 5 })
-→ { start: 1845, end: 1875 }
-```
-
-**Governance requirement:**  
-Timeline expansions for sensitive Story Nodes must NOT suggest false precision.
-
----
-
-## 🎚 `precision.ts` — Granularity Evaluation
-
-Determines how the UI renders a date:
-
-- Year-only → wide block  
-- Month → moderate block  
-- Day → point highlight  
-- Decade/century → abstract interval blocks  
-
-Supports Story Node v3 mixed-precision overlays and timeline aggregation.
+- Invent missing fields  
+- Sharpen uncertain temporal or spatial detail  
 
 ---
 
-## 🔢 `compareDates.ts` — Stable Comparator
+## 🧬 `stacClient.ts`
 
-Provides consistent ordering for:
+Loads and validates:
 
-- Story Node events  
-- Graph Events  
-- STAC date ranges  
-- Approximate and partial dates  
-- BCE/CE alignment  
+- STAC Collections  
+- STAC Items  
+- Assets, roles, extents  
+- Temporal/spatial metadata  
 
-Ensures:
+Applies:
 
-- No sorting jumps for BCE → CE transitions  
-- Comparators do not exaggerate precision  
-- Deterministic results across sessions  
-
----
-
-## 🔧 `normalizeDate.ts` — Canonical Temporal Normalization
-
-Creates a **FAIR, canonical** representation of any parsed date.
-
-Adds metadata:
-
-```ts
-{
-  value: "1854-03-21",
-  canonical: "1854-03-21",
-  precision: "day",
-  approx: false,
-  provenance: "graph-event"
-}
-```
-
-Also ensures:
-
-- APPROX flags are preserved  
-- CIDOC `time:hasTime` compatibility  
-- STAC/DCAT temporal extents are normalized without modification of meaning  
+- Coordinate masking  
+- Governance metadata merges  
+- Data contract alignment (`KFM-STAC v11`)  
 
 ---
 
-# 🧪 4. Testing Requirements
+## 🗂 `dcatClient.ts`
 
-All utilities must include tests under:
+Loads DCAT datasets/distributions:
+
+- Validates DCAT Dataset JSON-LD  
+- Extracts license, temporal coverage, spatial extents  
+- Aligns with `KFM-DCAT v11` profile  
+- Propagates FAIR metadata to consuming UIs  
+
+---
+
+## 🎯 `focusClient.ts`
+
+Requests Focus Mode v3:
+
+- Focal entity resolution  
+- Context window generation  
+- Narrative blocks  
+- Related entities  
+- Governance overlays  
+
+Applies **strict CARE/sovereignty filters** before returning data to the web UI.
+
+---
+
+## 📚 `storyClient.ts`
+
+Requests Story Node v3:
+
+- Cards  
+- Details  
+- Relations  
+- Provenance chains  
+- Temporal + spatial footprints  
+
+Validates Story Node v3 schema before returning results.
+
+---
+
+## 🔐 `governanceClient.ts`
+
+Used for:
+
+- CARE/sovereignty lookups  
+- License metadata  
+- Rights-holder identification  
+- Data-use restrictions  
+
+Must not:
+
+- Bypass global sovereignty rules  
+- Disclose restricted values  
+
+---
+
+## 📡 `telemetryClient.ts`
+
+Handles emission of:
+
+- WebVitals  
+- Navigation events  
+- Dataset previews  
+- Focus Mode context loads  
+- Error taxonomies  
+- A11y usage patterns  
+
+All events must conform to:
+
+- Telemetry schema (`web-utils-api-v11.json`)  
+- No PII  
+- No sensitive/tribal data  
+
+---
+
+# 🔐 4. Governance Rules
+
+API utilities MUST:
+
+- Reject unvalidated API responses  
+- Never expose restricted coordinates or IDs  
+- Enforce sovereignty masking  
+- Retain CARE metadata across transforms  
+- Apply STAC/DCAT/Fair metadata alignment  
+- Produce PROV-O friendly provenance fields  
+
+Governance violations → CI failure via:
+
+- `faircare_validate.yml`  
+- `jsonld_validate.yml`  
+- `security_audit.yml`  
+
+---
+
+# ♿ 5. Accessibility Expectations
+
+While these utilities don't render UI, they **feed A11y-sensitive components**:
+
+- Temporal text must align with A11y formatters  
+- Error messages must avoid ambiguity and be screen-reader safe  
+- Response guards must ensure missing A11y metadata is surfaced, not hidden  
+
+---
+
+# 🧪 6. Testing Requirements
+
+All utilities must have test coverage under:
 
 ~~~text
-tests/web/utils/date/**
+tests/unit/web/utils/api/**
+tests/integration/web/utils/api/**
 ~~~
 
-Tests MUST verify:
+Tests must verify:
 
-- Deterministic results for identical inputs  
-- Preservation of approximate/fuzzy dates  
-- OWL-Time alignment  
-- FAIR temporal metadata retention  
-- BCE/CE edge-case handling  
-- Correct grouping & ordering via `compareDates.ts`  
-- Timeline-range correctness (`timelineRange.ts`)  
-
----
-
-# 🧭 5. Development Standards
-
-Every module MUST:
-
-- Be pure TypeScript (`.ts`)  
-- Export pure functions  
-- Include JSDoc docstrings  
-- Avoid all side effects  
-- Pass ESLint + Prettier + Docs Lint  
-- Validate against telemetry schemas for any date-derived metrics  
-- Comply with FAIR+CARE & sovereignty rules  
-
----
-
-# 🔮 6. Future Extensions (v11.3+)
-
-- BCE support across all rendering engines  
-- Hybrid calendar support (Julian ↔ Gregorian)  
-- Prehistoric/paleoclimate fuzzy ranges  
-- Temporal-density heatmap generation  
-- Sub-daily precision for modern sensor data  
+- Deterministic fetch behavior  
+- Schema-validated responses  
+- Temporal/spatial governance compliance  
+- Provenance metadata retention  
+- No leakage of restricted attributes  
 
 ---
 
 # 🕰 7. Version History
 
-| Version | Date       | Changes                                                                                      |
-|--------:|------------|----------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Full v11.2.2 upgrade; emoji directory; Focus Mode v3 + Story Node v3 alignment; FAIR/CARE update. |
-| v10.4.1 | 2025-11-15 | Initial KFM-MDP v10.4 version.                                                               |
+| Version | Date       | Summary                                                                                 |
+|--------:|------------|-----------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-28 | Full v11.2.2 upgrade; new emoji layout; governance, sovereignty, CARE, STAC/DCAT, v3 alignment. |
+| v10.4.0 | 2025-11-15 | Early v10.4 API utils introduction.                                                    |
+| v10.3.0 | 2025-11-13 | Initial API utility block.                                                              |
 
 ---
 
@@ -310,6 +386,6 @@ Every module MUST:
 © 2025 Kansas Frontier Matrix — MIT License  
 FAIR+CARE Certified · Public Document · Version-Pinned  
 
-[⬅️ Back to Web Utils](../README.md) · [🧭 Web Source Overview](../../README.md) · [🌐 Web Platform Overview](../../../README.md)
+[⬅️ Back to Utils Overview](../README.md) · [🧭 Web Source Overview](../../README.md) · [🌐 Web Platform](../../../README.md)
 
 </div>
