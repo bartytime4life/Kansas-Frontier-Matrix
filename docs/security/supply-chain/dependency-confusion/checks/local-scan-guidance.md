@@ -3,19 +3,29 @@ title: "🔍 KFM v11.2.2 — Local Scan Guidance for Dependency-Confusion Defens
 path: "docs/security/supply-chain/dependency-confusion/checks/local-scan-guidance.md"
 version: "v11.2.2"
 last_updated: "2025-11-30"
+
+release_stage: "Stable · Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Supply-Chain Security Council"
+content_stability: "stable"
 status: "Active / Enforced"
 
 commit_sha: "<latest-commit>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
+signature_ref: "../../../../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
 sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
 manifest_ref: "../../../../../releases/v11.2.2/release-manifest.zip"
 telemetry_ref: "../../../../../releases/v11.2.2/security-telemetry.json"
 telemetry_schema: "../../../../../schemas/telemetry/security-v3.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
@@ -24,7 +34,85 @@ ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
+
 doc_kind: "Security · Local-Scan-Guidance"
+intent: "developer-local-scanning · early-detection · dependency-confusion-prevention"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE · Governance · Infrastructure Protection"
+classification: "Security · Developer Tooling · Local Validation"
+sensitivity: "Security-Sensitive (non-personal)"
+sensitivity_level: "Medium"
+public_exposure_risk: "Low"
+indigenous_rights_flag: true
+risk_category: "Medium"
+redaction_required: false
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+jurisdiction: "Kansas / United States"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next local-scan policy revision"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  prov_o: "prov:Plan"
+  owl_time: "ProperInterval"
+  geosparql: "geo:Feature"
+
+metadata_profiles:
+  - "DCAT 3.0"
+  - "STAC 1.0.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/security/supply-chain/dependency-confusion/checks/local-scan-guidance.md@v11.2.1"
+  - "docs/security/supply-chain/dependency-confusion/checks/local-scan-guidance.md@v11.2.0"
+  - "docs/security/supply-chain/dependency-confusion/checks/README.md"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+immutability_status: "version-pinned"
+doc_uuid: "urn:kfm:security:depconf:checks:local-scan-guidance:v11.2.2"
+semantic_document_id: "kfm-depconf-checks-local-scan-v11.2.2"
+event_source_id: "ledger:depconf.checks.localscan.v11.2.2"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "metadata-extraction"
+  - "semantic-highlighting"
+  - "timeline-generation"
+  - "diagram-extraction"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Layout"
+    - "🧩 Local Scan Tooling Provided"
+    - "🔧 Installation (KFM Developer Toolkit)"
+    - "🛰️ Running Local Namespace Scans"
+    - "🔒 Checking Registry Isolation Locally"
+    - "📦 Validating Dependency Pinning"
+    - "🧬 Verifying SBOM Drift Locally"
+    - "✍️ Local Provenance & Signature Verification"
+    - "🧯 Testing Fallback Activation"
+    - "🕰️ Version History"
 ---
 
 <div align="center">
@@ -34,9 +122,9 @@ doc_kind: "Security · Local-Scan-Guidance"
 
 **Purpose:**  
 Provide step-by-step instructions for developers, security engineers, and CI maintainers to run  
-manual/local dependency-confusion scans outside CI/CD.  
-These checks replicate KFM-CI behavior locally to detect namespace collisions, pinning drift,  
-signature failures, registry anomalies, and SBOM inconsistencies *before code is pushed*.
+manual/local dependency-confusion scans **before** code is pushed or pipelines are executed.  
+These checks mirror KFM-CI behavior to catch namespace collisions, pinning drift, signature failures,  
+registry anomalies, and SBOM inconsistencies at the earliest possible stage.
 
 </div>
 
@@ -44,43 +132,58 @@ signature failures, registry anomalies, and SBOM inconsistencies *before code is
 
 ## 📘 Overview
 
-While CI provides full enforcement, **local scanning empowers developers** to detect issues early.
+While CI enforces policy centrally, **local scanning empowers developers** to:
 
-Local scans allow you to:
+- Catch issues early  
+- Maintain deterministic, secure environments  
+- Prevent dependency-confusion vulnerabilities from ever reaching CI/CD  
 
-- Validate dependency pinning  
-- Detect registry-misconfiguration  
-- Identify namespace collisions  
-- Verify cryptographic signatures  
-- Compare local dependency graphs against SBOM  
-- Inspect potential typosquatting packages  
-- Pre-run provenance hooks  
-- Trigger fallback checks manually  
+Local scans help ensure:
 
-Local scans ensure development remains deterministic, compliant, and secure.
+- Correct dependency pinning  
+- Registry isolation  
+- Cryptographic integrity  
+- SBOM + dependency graph alignment  
+- Provenance correctness  
+- Proper fallback behaviors during degraded conditions  
+
+---
+
+## 🗂️ Directory Layout
+
+~~~text
+📁 dependency-confusion/
+└── 📁 checks/
+    ├── 📄 README.md                     # Automated checks index
+    ├── 📄 ci-validation-rules.md        # CI validation rules
+    ├── 📄 provenance-hooks.md           # Attestation/provenance hooks
+    ├── 📄 registry-anomaly-detection.md # Registry anomaly detection rules
+    ├── 📄 pre-commit-rules.md           # Developer-machine validation policies
+    └── 📄 local-scan-guidance.md        # This file — manual/local scan guidance
+~~~
 
 ---
 
 ## 🧩 Local Scan Tooling Provided
 
-KFM includes the following supported tools:
+KFM provides the following local tools via the **KFM Developer Toolkit (KFM-DTK)**:
 
-| Scan Type | Local Tool | Description |
-|----------|------------|-------------|
-| Namespace Collision | `kfm-ns-scan` | Scans public registries for KFM-like names |
-| Registry Isolation | `kfm-reg-audit` | Validates registry URLs + TLS pinning |
-| Pinning Integrity | `kfm-lock-verify` | Ensures lockfiles match SBOM & hash digests |
-| SBOM Drift | `kfm-sbom-diff` | Compares current deps to last sealed SBOM |
-| Provenance/Signatures | `kfm-provenance-verify` | Validates artifact & commit signatures |
-| Fallback Mode | `kfm-fallback-test` | Simulates degraded mirror conditions |
+| Scan Type            | Local Tool              | Description                                        |
+|----------------------|------------------------|----------------------------------------------------|
+| Namespace Collision  | `kfm-ns-scan`          | Scans public registries for KFM-like names         |
+| Registry Isolation   | `kfm-reg-audit`        | Validates registry URLs + TLS pinning              |
+| Pinning Integrity    | `kfm-lock-verify`      | Ensures lockfiles match SBOM & hashes              |
+| SBOM Drift           | `kfm-sbom-diff`        | Compares deps to last sealed SBOM                  |
+| Provenance/Signatures| `kfm-provenance-verify`| Validates artifact & commit signatures + provenance|
+| Fallback Mode        | `kfm-fallback-test`    | Simulates degraded mirror / fallback behavior      |
 
-These CLI tools run inside the KFM Developer Toolkit (KFM-DTK).
+These tools are designed to mirror CI checks, locally.
 
 ---
 
 ## 🔧 Installation (KFM Developer Toolkit)
 
-Install via:
+Install via PyPI:
 
 ```bash
 pip install kfm-dtk
@@ -100,7 +203,7 @@ pip install -e .
 
 ## 🛰️ Running Local Namespace Scans
 
-Detects public-package name collisions and suspicious variants.
+Detects public-package collisions and suspicious variants:
 
 ```bash
 kfm-ns-scan .
@@ -109,21 +212,21 @@ kfm-ns-scan .
 Flags:
 
 - First-publish collisions  
-- Typosquatting variants  
+- Typosquatting / homoglyph variants  
 - Suspicious namespace permutations  
-- Identical public names to internal packages  
+- Public names identical to internal packages  
 
-Results saved to:
+Results written to:
 
-```
-policy/evidence/namespace-scan.json
+```text
+docs/security/supply-chain/dependency-confusion/policy/evidence/namespace-scan.json
 ```
 
 ---
 
 ## 🔒 Checking Registry Isolation Locally
 
-Validate that your environment uses **only** KFM-approved mirrors.
+Validate that your environment uses **only** KFM-approved mirrors:
 
 ```bash
 kfm-reg-audit --strict
@@ -131,10 +234,10 @@ kfm-reg-audit --strict
 
 Checks:
 
-- No references to pypi.org / npmjs.org / crates.io  
-- TLS pinning  
-- Internal mirror whitelist  
-- No fallback resolutions  
+- No references to `pypi.org`, `registry.npmjs.org`, `crates.io`, etc.  
+- TLS pinning & CA correctness  
+- Mirror allow-list compliance  
+- No fallback registrar behavior  
 
 ---
 
@@ -144,11 +247,11 @@ Checks:
 kfm-lock-verify
 ```
 
-This ensures:
+Ensures:
 
-- All deps are fully pinned  
+- All deps are fully pinned (version + registry + hash)  
 - No floating versions  
-- Lockfile matches SBOM  
+- Lockfiles match SBOM  
 - No cross-registry contamination  
 
 ---
@@ -164,7 +267,7 @@ Detects:
 - Hash mismatches  
 - Package additions/removals  
 - Unapproved upgrades  
-- Shadow artifacts  
+- Potential shadow dependencies  
 
 ---
 
@@ -177,17 +280,17 @@ kfm-provenance-verify --all
 Validates:
 
 - Cosign signatures  
-- GPG signatures  
-- Provenance metadata  
-- SLSA attestations  
+- GPG commit/tag signatures  
+- SLSA provenance bundles  
+- Provenance metadata → SBOM → artifact consistency  
 
-Unsigned components → ERROR + instructions to remediate.
+Unsigned / unverifiable components → **ERROR** and remediation instructions.
 
 ---
 
 ## 🧯 Testing Fallback Activation
 
-Simulates failing mirrors or metadata drift:
+Simulate failing mirrors or metadata drift:
 
 ```bash
 kfm-fallback-test
@@ -199,30 +302,18 @@ Triggers:
 - Local-only artifact mode  
 - Registry quarantine simulation  
 
-Use for debugging registry failures.
-
----
-
-## 🗂️ Directory Layout
-
-~~~text
-📁 dependency-confusion/
-└── 📁 checks/
-    ├── 📄 README.md                     # Automated checks index
-    ├── 📄 ci-validation-rules.md        # CI validation rules
-    ├── 📄 provenance-hooks.md           # Attestation/provenance hooks
-    ├── 📄 registry-anomaly-detection.md # Registry anomaly detection rules
-    ├── 📄 pre-commit-rules.md           # (optional) Developer-machine validation policies
-    └── 📄 local-scan-guidance.md        # This file — manual/local scan guidance
-~~~
+Use this to debug registry failures and confirm fallback logic matches policy in  
+`../policy/fallback-controls.md`.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Notes |
-|---------|--------|--------|
-| v11.2.2 | 2025-11-30 | Initial creation of local/manual scan guidance |
+| Version  | Date       | Notes                                              |
+|----------|------------|----------------------------------------------------|
+| v11.2.2  | 2025-11-30 | Extended metadata; layout moved; v11.2.2 alignment |
+| v11.2.1  | 2025-10-18 | Added fallback simulation and provenance checks    |
+| v11.2.0  | 2025-09-02 | Initial local/manual scan guidance                 |
 
 ---
 
@@ -231,4 +322,3 @@ Use for debugging registry failures.
 🧪 [Automated Checks](./README.md) • 🔒 [Registry Isolation](../policy/registry-isolation.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
