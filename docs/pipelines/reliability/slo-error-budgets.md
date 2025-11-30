@@ -1,214 +1,266 @@
 ---
-title: "🧭 KFM v11 — SLOs, Error Budgets, Canaries, Alerts & Kill-Switch (Diamond⁹ Ω / Crown∞Ω)"
+title: "🧭 KFM v11.2.2 — SLOs, Error Budgets, Canaries, Alerts & Kill-Switch (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/pipelines/reliability/slo-error-budgets.md"
-version: "v11.0.2"
-last_updated: "2025-11-23"
-review_cycle: "Quarterly · FAIR+CARE Council Oversight"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../releases/v11.0.0/reliability-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/reliability-slo-v11.json"
-governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0"
+version: "v11.2.2"
+last_updated: "2025-11-30"
+
+release_stage: "Stable / Governed"
 status: "Active / Enforced"
+review_cycle: "Quarterly · Reliability Engineering Board · FAIR+CARE Council"
+lifecycle_stage: "LTS"
+backward_compatibility: "Guaranteed: v10.x → v11.x"
+
+commit_sha: "<latest-commit>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+doc_uuid: "urn:kfm:pipelines:reliability:slo-error-budgets:v11.2.2"
+semantic_document_id: "kfm-reliability-slo-errorbudgets"
+event_source_id: "ledger:pipelines/reliability/slo-error-budgets"
+immutability_status: "version-pinned"
+
+sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.2/manifest.zip"
+signature_ref: "../../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../../releases/v11.2.2/slsa-attestation.json"
+
+telemetry_ref: "../../../releases/v11.2.2/reliability-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/reliability-slo-v11.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+
 doc_kind: "Standard"
-semantic_document_id: "kfm-reliability-slo-v11"
-doc_uuid: "urn:kfm:docs:pipelines:reliability:slo-error-budgets:v11.0.2"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Internal · Safety-Critical"
+intent: "kfm-reliability-slo-governance"
 fair_category: "F1-A1-I1-R1"
 care_label: "Operational / Low-Risk"
-immutability_status: "version-pinned"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+ttl_policy: "48 months"
+sunset_policy: "Superseded by v12 Reliability Governance Standard"
 ---
 
 <div align="center">
 
-# 🧭 **KFM v11 — SLOs, Error Budgets, Canaries, Alerts & Kill-Switch**  
+# 🧭 **KFM v11.2.2 — SLOs, Error Budgets, Canaries, Alerts & Kill-Switch**  
 `docs/pipelines/reliability/slo-error-budgets.md`
 
-**Purpose:**  
-Define the complete v11 reliability governance standard covering SLOs, SLIs, Error Budgets, Canary/Smoke tests, SLO-based alerting, kill-switch operations, automated rollback rules, and STAC/DCAT/PROV-O metadata alignment for reliability artifacts.
+### **Diamond⁹ Ω / Crown∞Ω Ultimate Certified**
+
+**Purpose**  
+Define the **governed reliability standard** for the Kansas Frontier Matrix, covering  
+SLIs → SLOs → Error Budgets → Canary/Smoke Tests → Kill-Switch → Rollback/Replay  
+with **STAC/DCAT/PROV-O alignment**, **OpenTelemetry v11 energy/carbon**,  
+and **Story Node v3 integration**.
 
 </div>
 
 ---
 
 # 📘 Overview
-This document formalizes **Reliability v11** as a governed subsystem of the Kansas Frontier Matrix (KFM) pipeline architecture.  
-Reliability enforcement spans:
+
+This standard governs **Reliability v11** across:
 
 - Deterministic **ETL/AI pipelines**  
 - Neo4j **graph-write integrity envelopes**  
-- STAC/DCAT **dataset-level provenance**  
-- Focus Mode v3–aware reliability narratives  
-- FAIR+CARE controls for sacred/heritage-linked data  
-- OpenTelemetry-v11 energy/carbon tracking  
-- Automated rollback + kill-switch safety nets
+- STAC/DCAT **dataset-level reliability assets**  
+- Focus Mode v3 reliability narratives  
+- FAIR+CARE controls (especially for archaeological/cultural data impacts)  
+- OpenTelemetry v11 **energy/carbon tracing**  
+- Verified rollback + kill-switch recovery integration  
 
-Every reliability artifact must produce **STAC Items, PROV-O lineage, and DCAT distributions** capturing:  
-- SLO target  
-- SLI source dataset  
+Every reliability artifact must produce **STAC Items, DCAT datasets & PROV-O lineage** covering:
+
+- SLO definition  
+- SLI methodology  
 - burn-rate telemetry  
 - validation outcomes  
-- provenance (prov:used, prov:wasGeneratedBy)  
-- license, temporal extent, and bounding box (for geospatial SLIs)
+- provenance relations (`prov:used`, `prov:wasGeneratedBy`)  
+- time bounds + spatial extent (if applicable)  
+- licensing & governance metadata  
 
 ---
 
-# 📐 1. SLIs & SLOs
+# 📐 1. SLIs & SLOs (v11.2.2)
 
 ## 1.1 SLIs (Service Level Indicators)
-Measured continuously; all SLIs MUST map to STAC/DCAT dataset entries.
 
-**Core SLIs (v11):**
-- `api_success_ratio = good_requests / total_requests`
-- `p95_latency_ms`
-- `etl_on_time_ratio`
-- `metadata_validation_pass_rate`
-- `graph_write_success_ratio` (new in v11: integrity envelope)
-- `focus_render_success_ratio`
-- `ai_drift_score` (new in v11: must remain < threshold)
-- `energy_wh_per_1000_ops` & `carbon_gCO2e_per_1000_ops` (OpenTelemetry v11)
+All SLIs MUST map to **STAC Items** under:
 
-## 1.2 SLOs (v11 standard)
+`data/stac/reliability/collections/sli/`
+
+**Core SLIs:**
+
+- `api_success_ratio = good_requests / total_requests`  
+- `p95_latency_ms`  
+- `etl_on_time_ratio`  
+- `metadata_validation_pass_rate`  
+- `graph_write_success_ratio` (graph-integrity envelope)  
+- `focus_render_success_ratio`  
+- `ai_drift_score` (<— AI governance integration)  
+- `energy_wh_per_1000_ops`  
+- `carbon_gCO2e_per_1000_ops`  
+
+## 1.2 SLOs (v11.2.2)
+
 - API success ≥ **99.9%**  
 - P95 latency ≤ **350ms**  
-- ETL on-time ≥ **99.0%**  
+- ETL timeliness ≥ **99.0%**  
 - Metadata validation ≥ **99.95%**  
-- Graph write envelope validation ≥ **99.99%**  
-- AI-drift score < **0.02** over 24h window  
-- Carbon/energy budgets must remain within quarterly thresholds
+- Graph-write envelope ≥ **99.99%**  
+- AI drift < **0.02** (24h window)  
+- Energy/Carbon within quarterly budgets  
 
-All SLO records must be registered as **STAC Items** under `data/stac/reliability/collections/slo/`.
+All SLOs MUST be stored under:
+
+`data/stac/reliability/collections/slo/`
 
 ---
 
-# ⛔ 2. Error-Budget Governance (v11)
+# ⛔ 2. Error-Budget Governance (v11.2.2)
 
-### 2.1 Definition
+### 2.1 Formula  
 `error_budget = 1.0 - SLO_target`
 
-Tracked over:
+Tracked across:
+
 - 1h burn  
 - 24h burn  
 - 7d burn  
-- 28d composite burn
+- 28d composite burn  
 
-### 2.2 Release Gating (v11)
+### 2.2 Release Gating
+
 | Budget State | Criteria | Allowed Actions |
 |--------------|----------|-----------------|
-| 🟢 Green | ≥ 50% budget remaining | Normal deployment |
-| 🟡 Yellow | 20–50% | Canary-only, +1 reliability reviewer |
-| 🔴 Red | < 20% OR fast burn | **Freeze promotions**, hotfix-only |
-| ⚫ Black | breach detected | Auto-rollback, kill-switch evaluation |
+| 🟢 Green | ≥ 50% remaining | Normal deploy |
+| 🟡 Yellow | 20–50% | Canary-only, +1 reviewer |
+| 🔴 Red | < 20% or fast burn | Freeze promotions |
+| ⚫ Black | breach | Auto-rollback + Kill-Switch review |
 
-### 2.3 Unfreeze Conditions
+### 2.3 Recovery / Unfreeze
 - 72h stabilized burn < 10%  
-- Full Canary Suite → **green**  
-- No outstanding AI-drift alerts  
+- Canary suite “green”  
+- Drift low + graph-write envelope stable  
 
 ---
 
 # 🐤 3. Canary & Smoke Testing
 
-## 3.1 Smoke Suite (Minutes)
+## 3.1 Smoke Suite (Minutes-Level)
+
 - API reachability  
 - Auth  
 - STAC/DCAT validation  
-- Graph read/write sanity checks  
-- Focus Mode v3 rendering ping  
-- Energy/Carbon sample check
+- Graph write/read check  
+- Focus Mode v3 minimal render  
+- Energy/Carbon telemetry sample  
 
-## 3.2 Canary Suite (v11 enhancements)
-Traffic shadowing + progressive rollout: **5% → 25% → 50% → 100%**.
+## 3.2 Canary Suite (Shadow + Progressive Rollout)
 
-**Guardrails (v11):**
-- Success ratio drop < **0.05%**  
+Rollout: **5% → 25% → 50% → 100%**
+
+**v11.2.2 guardrails:**
+
+- Success drop < **0.0005**  
 - P95 regression < **5%**  
-- Validation failures ≤ baseline + **0.01%**  
-- Graph-write envelope mismatches = **0 allowed**  
-- AI-drift score change < **0.002**  
+- Validation failures ≤ baseline + **0.0001**  
+- Graph-write envelope mismatches → **0 allowed**  
+- Drift delta < **0.002**  
 
-All Canary output is stored as **PROV-O activities** linked to STAC Items.
-
----
-
-# 📟 4. SLO-Based Alerting (v11)
-
-### 4.1 Budget Burn Alerts
-- **Warning:** projected depletion < 14 days  
-- **Critical:** projected depletion < 3 days  
-
-### 4.2 SLI Breach Alerts
-- API success < SLO for 10m  
-- P95 > target by 10% for 15m  
-- Validation failure spike  
-- Graph-write integrity failures  
-- AI-drift anomaly events  
-
-Alerts routed via:  
-Primary → Secondary → FAIR+CARE Council escalation.
+All Canary events must emit **PROV-O** and **STAC Items**.
 
 ---
 
-# 🧨 5. Kill-Switch (v11 Hardened Ops)
+# 📟 4. SLO-Based Alerting
 
-Feature flags reloaded every 15 seconds.
+## 4.1 Burn Alerts
+- Warning: projected depletion < 14d  
+- Critical: projected depletion < 3d  
 
-### Kill-switch types:
-- `KFM_KILL_SWITCH_API` → read-only mode  
-- `KFM_KILL_SWITCH_ETL` → pause schedulers  
-- `KFM_KILL_SWITCH_GRAPH` → block writes, allow reads  
+## 4.2 SLI Breach Alerts
+- API success < target  
+- P95 > threshold  
+- Metadata validation anomalies  
+- Graph-write failures  
+- Drift anomalies  
+- Energy/Carbon spikes  
+
+Escalation: Primary → Secondary → FAIR+CARE Council.
+
+---
+
+# 🧨 5. Kill-Switch (v11.2.2)
+
+Feature flags refresh every 15 seconds.
+
+### Types
+
+- `KFM_KILL_SWITCH_API` → API enters read-only  
+- `KFM_KILL_SWITCH_ETL` → pause ETL scheduler  
+- `KFM_KILL_SWITCH_GRAPH` → block writes  
 - `KFM_KILL_SWITCH_FOCUS` → disable heavy render + AI summaries  
+- `KFM_KILL_SWITCH_MODEL` → stop model-serving endpoints  
 
-Kill-switch activation must generate:
-- PROV-O event  
+Kill-Switch activation must generate:
+
+- STAC Item  
 - DCAT dataset entry  
-- STAC Item with temporal instant  
+- PROV-O event  
+- Focus Mode reliability Story Node  
 
 ---
 
-# 📊 6. Dashboards & Telemetry (v11)
+# 📊 6. Dashboards & Telemetry
 
-Reliability dashboards MUST expose:
+All dashboards must expose:
+
 - SLO gauges  
-- Burn trends (1h/24h/7d/28d)  
+- Burn trends  
 - Canary diffs  
-- Graph-write envelope violations  
-- AI-drift score chart  
-- Energy/Carbon telemetry (OpenTelemetry v11)
+- Graph-envelope violations  
+- Drift charts  
+- Energy/Carbon telemetry  
+- Reliability Story Nodes  
+- Rollback/Retry/Replay correlation  
 
-All dashboard data originates from `data/stac/reliability/collections/telemetry/`.
+Source of truth:
+
+`data/stac/reliability/collections/telemetry/`
 
 ---
 
-# 🔒 7. CI/CD Integration (v11)
+# 🔒 7. CI/CD Integration (v11.2.2)
 
-### Pre-merge:
-- Smoke suite  
+## Pre-merge
 - Schema validation  
-- AI-drift precheck  
-- FAIR+CARE screening  
+- Smoke suite  
+- Drift precheck  
+- FAIR+CARE screen  
 
-### Pre-promote:
+## Pre-promote
 - Error-budget gate  
-- Canary report  
-- Graph-write envelope validation  
-- Carbon/Energy threshold check  
+- Canary approval  
+- Graph-envelope validation  
+- Energy/Carbon threshold  
 
-### Post-promote:
-- Gradual rollout  
+## Post-promote
+- Progressive rollout  
 - Auto-halt on breach  
 - PROV-O lineage emission  
+- Reliability Story Node generation  
 
 ---
 
-# 🧩 8. Minimum Configuration Templates
+# 🧩 8. Config Templates (Minimal Examples)
 
 ## 8.1 SLI Config
+
 ```yaml
 name: api_success_ratio
 query: good_requests / total_requests
@@ -217,6 +269,7 @@ labels: [service:api]
 ```
 
 ## 8.2 SLO Config
+
 ```yaml
 sli: api_success_ratio
 target: 0.999
@@ -227,11 +280,14 @@ alerting:
 ```
 
 ## 8.3 Error-Budget Gate
+
 ```bash
-python scripts/reliability/check_error_budget.py --slo ops/slos/api.yaml --window 30d
+python scripts/reliability/check_error_budget.py \
+  --slo ops/slos/api.yaml --window 30d
 ```
 
 ## 8.4 Canary Guardrails
+
 ```yaml
 max_success_drop: 0.0005
 max_p95_regression: 0.05
@@ -240,44 +296,68 @@ traffic_split: 0.1
 ```
 
 ## 8.5 Kill-Switch Toggle
+
 ```bash
-python scripts/ops/feature_flag.py set KFM_KILL_SWITCH_API true --reason "SLO breach; halting writes"
+python scripts/ops/feature_flag.py \
+  set KFM_KILL_SWITCH_API true \
+  --reason "SLO breach; halting writes"
 ```
 
 ---
 
-# 🧭 9. Story Nodes & Focus Mode v3 Alignment (v11)
+# 🧭 9. Story Nodes & Focus Mode Alignment
 
-All reliability events MUST generate a minimal **Story Node v3** for narrative integration:
+Every reliability event MUST create a **Story Node v3**:
 
 - `type: story-node`  
 - `spacetime.when.start = event_time`  
-- `narrative.body = reliability_summary`  
-- `relations += slis, slos, canary-events, kill-switch-events`  
-- `stac.as_item = true`
+- `narrative.body = reliability summary`  
+- relations include:  
+  - `sli:*`  
+  - `slo:*`  
+  - canary events  
+  - drift anomalies  
+  - kill-switch activations  
+  - rollback/replay references  
 
-Focus Mode v3 must be able to spotlight:
-- SLO breaches  
-- Kill-switch activations  
-- Burn-rate anomalies  
-- Canary failures  
-- AI-drift spikes  
+Focus Mode v3 must visualize:
+
+- burn-rate anomalies  
+- SLO/SLI failures  
+- Canary health  
+- Kill-switch history  
+- Rollback & Replay outcomes  
 
 ---
 
 # 🧭 10. Acceptance Checklist
 
-- [ ] SLIs/SLOs defined + versioned  
-- [ ] Error-budget policies established  
-- [ ] Canary + Smoke suites configured  
-- [ ] Graph-write integrity envelope enabled  
-- [ ] AI-drift detector configured  
-- [ ] Kill-switch ops live  
+- [ ] SLIs + SLOs defined  
+- [ ] Error-budget policies active  
+- [ ] Smoke suite operational  
+- [ ] Canary suite governed  
+- [ ] Graph-write envelope active  
+- [ ] Drift detector calibrated  
+- [ ] Kill-switch deployed  
 - [ ] STAC/DCAT metadata emitted  
 - [ ] PROV-O lineage logged  
-- [ ] Energy/Carbon telemetry enabled  
+- [ ] Energy/Carbon telemetry active  
 
 ---
 
-# 🔗 Footer
-**Back to:** [Repository Architecture](../../ARCHITECTURE.md) · [Release Manifest](../../../releases/v11.0.0/manifest.zip) · [SBOM](../../../releases/v11.0.0/sbom.spdx.json)
+# 🕰️ Version History
+
+| Version | Date       | Summary                                                       |
+|--------:|------------|---------------------------------------------------------------|
+| v11.2.2 | 2025-11-30 | Upgraded to MDP v11.2.2; added energy/carbon v2; governance fixes. |
+| v11.0.2 | 2025-11-23 | Earlier v11 baseline; pre–governance harmonization.          |
+| v11.0.0 | 2025-11-10 | Initial release of Reliability v11 spec.                      |
+
+---
+
+<div align="center">
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+[📚 Docs Home](../../README.md) · [📏 Standards Index](../../standards/README.md) · [🛡 Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
