@@ -2,11 +2,16 @@
 title: "🌐 Kansas Frontier Matrix — Web Application & Focus Mode Platform (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/README.md"
 version: "v11.2.2"
-last_updated: "2025-11-28"
+last_updated: "2025-11-30"
+
 review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
 release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
+status: "Active / Enforced"
+lifecycle_stage: "LTS"
+
 commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
 
 sbom_ref: "../releases/v11.2.2/sbom.spdx.json"
 manifest_ref: "../releases/v11.2.2/manifest.zip"
@@ -14,11 +19,13 @@ telemetry_ref: "../releases/v11.2.2/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/web-readme-v11.json"
 energy_schema: "../schemas/telemetry/energy-v2.json"
 carbon_schema: "../schemas/telemetry/carbon-v2.json"
+signature_ref: "../releases/v11.2.2/signature.sig"
+attestation_ref: "../releases/v11.2.2/slsa-attestation.json"
 
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-license: "MIT"
+license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.2"
@@ -26,7 +33,7 @@ ontology_protocol_version: "KFM-OP v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
 
-status: "Active / Enforced"
+status_category: "Architecture"
 doc_kind: "Architecture"
 intent: "web-platform"
 role: "architecture"
@@ -46,7 +53,6 @@ provenance_chain:
   - "web/README.md@v10.3.2"
   - "web/README.md@v10.4.0"
   - "web/README.md@v11.0.0"
-previous_version_hash: "<previous-sha256>"
 
 ontology_alignment:
   cidoc: "E31 Document"
@@ -62,7 +68,6 @@ doc_uuid: "urn:kfm:doc:web-readme-v11.2.2"
 semantic_document_id: "kfm-doc-web-platform"
 event_source_id: "ledger:web/README.md"
 immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -82,7 +87,6 @@ machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
 classification: "Public Document"
-lifecycle_stage: "stable"
 ttl_policy: "Review required every 12 months"
 sunset_policy: "Superseded upon next major KFM web platform protocol release"
 ---
@@ -97,7 +101,7 @@ UI/UX design system, 2D/3D rendering pipelines, **Focus Mode v3** intelligence, 
 
 [![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../mcp/MCP-README.md)
 · [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Aligned-orange)](../docs/standards/faircare/FAIRCARE-GUIDE.md)
-· [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)
+· [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY--4.0-green)](../LICENSE)
 
 </div>
 
@@ -131,16 +135,16 @@ The Web Platform is the **primary public entrypoint** into KFM and must consiste
 
 This specification:
 
-- Establishes the **v11 Web Platform architecture** for `web/**`  
+- Establishes the **v11 Web Platform architecture** for `web/**`.  
 - Aligns frontend implementation with:
   - System architecture (`../ARCHITECTURE.md`)  
   - GitHub infrastructure (`../.github/ARCHITECTURE.md`)  
-  - Data & validation contracts (`../docs/data/contracts/**`, `../schemas/**`)  
+  - Data & validation contracts (`../docs/data/contracts/**`, `../schemas/**`).  
 - Sets expectations for:
-  - Focus Mode v3 behavior and guardrails  
-  - Story Node v3 presentation and interaction patterns  
-  - STAC/DCAT exploration workflows  
-  - Governance overlays and telemetry hooks  
+  - Focus Mode v3 behavior and guardrails.  
+  - Story Node v3 presentation and interaction patterns.  
+  - STAC/DCAT exploration workflows.  
+  - Governance overlays, telemetry hooks, and AI usage constraints.  
 - Serves as the **review reference** for:
   - Frontend engineers  
   - FAIR+CARE and sovereignty reviewers  
@@ -155,23 +159,23 @@ This specification:
 
 All code and assets under `web/**`, including:
 
-- React components, pages, layouts, and routing  
-- Hooks, context providers, and state management  
-- MapLibre/Cesium integration and visualization layers  
-- Focus Mode v3 and Story Node v3 presentation logic  
-- STAC/DCAT explorer components and dataset previews  
-- Governance overlays (CARE labels, provenance, SBOM/SLSA)  
-- Telemetry emission for web events and performance metrics  
-- Theming, design tokens, and adaptive UI behaviors  
+- React components, pages, layouts, routing.  
+- Hooks, context providers, and state management.  
+- MapLibre/Cesium integration and visualization layers.  
+- Focus Mode v3 and Story Node v3 presentation logic.  
+- STAC/DCAT explorer components and dataset previews.  
+- Governance overlays (CARE labels, provenance, SBOM/SLSA).  
+- Telemetry emission for web events and performance metrics.  
+- Theming, design tokens, and adaptive UI behaviors.  
 
 ### 3.2 Out of Scope
 
-- Backend ETL/AI pipelines (see `src/pipelines/**`, `src/ai/**`)  
-- Low-level storage and indexing internals (DB schemas, data lake layout)  
-- CI/CD workflow definitions (see `.github/workflows/**`)  
-- Local Neo4j and API infrastructure setup (covered by backend docs)  
+- Backend ETL/AI pipelines (see `src/pipelines/**`, `src/ai/**`).  
+- Low-level storage and indexing internals (DB schemas, data lake layout).  
+- CI/CD workflow definitions (see `.github/workflows/**`).  
+- Local Neo4j and API infrastructure setup (covered by backend docs).  
 
-**Related Documents:**
+**Related Documents**
 
 - `../ARCHITECTURE.md`  
 - `../.github/ARCHITECTURE.md`  
@@ -183,13 +187,13 @@ All code and assets under `web/**`, including:
 ## 📚 4. Key Concepts & Definitions
 
 - **Focus Mode v3** — AI-assisted, entity-centric exploration interface that uses graph context, Story Nodes, and datasets to generate governance-safe explanations.  
-- **Story Node v3** — Structured narrative objects (text, time, space, relations) rendered as cards, overlays, and timeline entries (see Story Node schema in `docs/standards/story-nodes/**`).  
+- **Story Node v3** — Structured narrative objects (text, time, space, relations) rendered as cards, overlays, and timeline entries (see `docs/standards/story-nodes/**`).  
 - **STAC Explorer** — UI for browsing, filtering, and previewing STAC Collections/Items with map-based previews and lineage links.  
 - **DCAT Explorer** — UI for dataset-level metadata browsing, license awareness, and FAIR+CARE attributes.  
 - **Governance Overlay** — Visual layer carrying CARE labels, provenance icons, risk flags, and enforcement hints (e.g., masking, generalization).  
-- **Deep-Time Mode** — Combined timeline + 3D path mode that visualizes paleogeography and future scenarios (e.g., ancient seas, 2050 climate).  
+- **Deep-Time Mode** — Combined timeline + 3D mode that visualizes paleogeography and future scenarios (e.g., ancient seas, 2050 climate).  
 
-All concepts must align with the ontologies and policies referenced in `docs/standards/**`.
+All concepts must align with the ontologies and policies under `../docs/standards/**`.
 
 ---
 
@@ -223,31 +227,31 @@ The Web Platform is **read-only** against core content (except for local prefere
 
 ~~~text
 web/
-├── 📄 README.md                   # This web platform overview (architecture & behavior)
-├── 🧱 ARCHITECTURE.md             # Detailed web architecture specification
+├── 📄 README.md                      # This web platform overview (architecture & behavior)
+├── 🧱 ARCHITECTURE.md                # Detailed web architecture specification
 │
-├── 📦 public/                     # Static assets
-│   ├── 🖼️ images/
-│   ├── 🧿 icons/
-│   ├── 📜 manifest.json
-│   ├── 🤖 robots.txt
-│   └── 🪪 favicon.ico
+├── 📦 public/                        # Static assets
+│   ├── 🖼️ images/                    # Images, screenshots, logos
+│   ├── 🧿 icons/                     # Icons & favicons
+│   ├── 📜 manifest.json              # PWA manifest (if applicable)
+│   ├── 🤖 robots.txt                 # Crawler rules
+│   └── 🪪 favicon.ico                # Default favicon
 │
-├── 🧩 src/                        # React/TypeScript SPA
-│   ├── 🧱 components/             # Map, focus panel, story cards, overlays, dialogs
-│   ├── 📄 pages/                  # Route-level containers (Home, Explore, Focus, About)
-│   ├── 🧵 hooks/                  # useFocusMode, useTimeline, useMap, useStacExplorer, etc.
-│   ├── 🧠 context/                # Theme, Focus, Time, A11y, Governance state providers
-│   ├── 🌐 services/               # API clients: REST, GraphQL, STAC/DCAT, telemetry
-│   ├── 🛠 utils/                  # Helpers: formatting, schema/utils, JSON-LD builders
-│   └── 🎨 styles/                 # CSS/Tailwind, design tokens, map & 3D styles
+├── 🧩 src/                           # React/TypeScript SPA
+│   ├── 🧱 components/                # Map, focus panel, story cards, overlays, dialogs
+│   ├── 📄 pages/                     # Route-level containers (Home, Explore, Focus, About)
+│   ├── 🧵 hooks/                     # useFocusMode, useTimeline, useMap, useStacExplorer, etc.
+│   ├── 🧠 context/                   # Theme, Focus, Time, A11y, Governance state providers
+│   ├── 🌐 services/                  # API clients: REST, GraphQL, STAC/DCAT, telemetry
+│   ├── 🛠 utils/                     # Helpers: formatting, schema utils, JSON-LD builders
+│   └── 🎨 styles/                    # CSS/Tailwind, design tokens, map & 3D styles
 │
-├── 📦 package.json                # Dependencies & npm scripts
-├── 📦 package-lock.json           # Deterministic dependency lock
-└── ⚙️ vite.config.ts              # Build configuration (Vite)
+├── 📦 package.json                   # Dependencies & npm scripts
+├── 📦 package-lock.json              # Deterministic dependency lock
+└── ⚙️ vite.config.ts                 # Build configuration (Vite or equivalent)
 ~~~
 
-All structural changes MUST be reflected here and in `web/ARCHITECTURE.md`.
+Any structural changes to `web/**` MUST be reflected here and in `web/ARCHITECTURE.md`.
 
 ---
 
@@ -256,65 +260,70 @@ All structural changes MUST be reflected here and in `web/ARCHITECTURE.md`.
 ### 7.1 MapView (MapLibre GL)
 
 - Render basemaps, historical maps, and STAC-derived overlays.  
-- Respond to Focus Mode context (e.g., highlight focal places, events, H3 cells).  
-- Indicate generalized vs precise locations, with visual cues for masked sites.  
-- Support Story Node footprints (Points, Lines, Polygons, Multi* geometries).
+- Respond to Focus Mode context (highlight focal places, events, H3 cells).  
+- Indicate generalized vs precise locations (e.g., masked archaeological sites).  
+- Support Story Node footprints (Points, Lines, Polygons, Multi*).  
 
 ### 7.2 CesiumView (3D)
 
-- Provide 3D views for elevation, extruded features, and time-aware geometry changes.  
-- Host deep-time visualizations (e.g., ancient seas, future climate scenarios).  
-- Support “fly-through” narratives triggered by Story Nodes or Focus Mode.
+- Provide 3D views for terrain, extruded features, and time-aware geometry.  
+- Host deep-time visualizations and camera paths.  
+- Synchronize with timeline and Focus Mode for “fly-through” narratives.  
 
 ### 7.3 FocusPanel (Focus Mode v3)
 
 - Present AI-generated, governance-filtered narratives about the current focus entity.  
-- Show provenance chips, CARE labels, and data sources behind each narrative.  
-- Provide “Why am I seeing this?” pattern with links to underlying graph entities.  
-- Respect transform prohibitions (no speculative or unverified claims).
+- Show provenance chips, CARE labels, and references to underlying datasets.  
+- Provide “Why am I seeing this?” and “Show supporting data” affordances.  
+- Respect `ai_transform_prohibited` (no speculative additions, no governance override).  
 
 ### 7.4 StoryNode Cards (Story Node v3)
 
-- Render narrative cards with title, summary, spatial footprint, time range, and links.  
-- Synchronize with map & timeline (hover/click = highlight on map + timeline).  
-- Enforce sovereignty, sensitivity, and masking rules per Story Node metadata.
+- Render narrative cards with title, summary, spatial footprint, time range, and graph relations.  
+- Synchronize with map & timeline (hover/click → highlight on map/timeline).  
+- Enforce sovereignty, sensitivity, and masking rules per Story Node metadata.  
 
 ### 7.5 TimelineView
 
 - Implement multi-range brushing & zoom across full KFM temporal coverage.  
-- Coordinate time filters across MapView, CesiumView, FocusPanel, StoryNodes, and STAC layers.  
-- Distinguish historical data vs future projections via styling and captions.
+- Coordinate time filters across MapView, CesiumView, FocusPanel, StoryNodes, and layers.  
+- Distinguish historical vs modeled/future dynamics via styling and captioning.  
 
 ### 7.6 Layer Explorer (STAC/DCAT)
 
-- Query STAC Collections & Items (e.g., climate, hydrology, hazards) and DCAT Datasets.  
-- Filter by temporal coverage, spatial extent, license, FAIR+CARE attributes.  
-- Preview layers directly on MapView/CesiumView with provenance and risk badges.
+- Query STAC Collections/Items and DCAT Datasets.  
+- Filter by time, space, license, FAIR+CARE attributes, and dataset type.  
+- Preview layers directly on MapView/CesiumView with provenance + risk badges.  
 
 ### 7.7 GovernanceOverlay
 
-- Show CARE labels and sovereignty status for displayed data.  
-- Indicate redaction or generalization (e.g., “location generalized to H3 cell for protection”).  
-- Convey A11y hints (e.g., high-contrast mode active) and risk indications.
+- Show CARE labels, sovereignty status, and masking indicators for data.  
+- Convey risk and sensitivity visually (e.g., generalized location notices).  
+- Expose A11y and AI-behavior hints (e.g., “AI summarization limited for this content”).  
 
 ---
 
-## ⚖️ 8. Ethics, FAIR+CARE & Sovereignty
+## ⚖️ 8. Ethics, FAIR+CARE, Sovereignty & AI Behavior
 
 The web layer must:
 
-- Display CARE labels and sovereignty indicators on relevant content.  
-- Surface when data or narratives are masked/generalized/redacted.  
-- Clearly distinguish between:
-  - Archival content  
-  - Derived model output  
-  - AI-generated textual explanations  
-- Avoid manipulative UX patterns around sensitive topics, events, or communities.  
-- Follow all policies in:
-  - `../docs/standards/faircare/FAIRCARE-GUIDE.md`  
-  - `../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`  
+- Display CARE labels and sovereignty indicators where applicable.  
+- Clearly mark generalized/redacted content and why it is limited.  
+- Separate:
+  - archival content,  
+  - derived model output,  
+  - AI-generated text.  
+- Enforce **AI transform restrictions**:
+  - Only allowed transforms: summaries, semantic highlighting, A11y adaptations, diagram/metadata extraction.  
+  - Prohibited: speculative additions, unverified historical claims, governance override, content alteration.  
 
-Any new UI pattern that touches sensitive or governed content must undergo FAIR+CARE review.
+All AI behavior in Focus Mode must comply with:
+
+- `../docs/standards/faircare/FAIRCARE-GUIDE.md`  
+- `../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`  
+- `../docs/standards/governance/ROOT-GOVERNANCE.md`  
+
+Any new UI pattern touching governed content requires FAIR+CARE review.
 
 ---
 
@@ -322,45 +331,46 @@ Any new UI pattern that touches sensitive or governed content must undergo FAIR+
 
 Accessibility requirements include:
 
-- Full keyboard navigation (no trapped focus, logical tab order).  
+- Full keyboard navigation; no trapped focus; logical tab order.  
 - Screen reader support (semantic HTML, ARIA roles/labels).  
-- High-contrast theme; color is never the sole encoding for meaning.  
-- Optional reduced-motion behavior for animated/3D visualizations.  
-- Clear focus states, text scaling, and responsive layouts.
+- High-contrast theme; color is never the sole encoding.  
+- Reduced motion option for animation, camera fly-throughs, and 3D transitions.  
+- Clear focus states, text scaling, and responsive layout.  
 
-Accessibility is tested in CI (Axe, Lighthouse) and manually for key flows (Explore, Focus, Story Node).
+Accessibility is validated via CI (Axe, Lighthouse) and manual checks on key flows  
+(Explore, Focus, Story Node explore, STAC/DCAT browsing).
 
 ---
 
 ## 📈 10. Telemetry & Observability
 
-The Web Platform emits telemetry (via OpenTelemetry v11) for:
+The Web Platform emits telemetry (OpenTelemetry v11) for:
 
-- Performance metrics (LCP, TTFB, route transitions, render cost)  
-- Component-level usage (aggregated, non-PII)  
-- A11y usage signals (high contrast, keyboard-only, reduced motion)  
-- Focus Mode failures, fallback flows, and error boundaries  
+- Performance metrics (LCP, TTFB, route transitions, render cost).  
+- Component-level usage (aggregated, non-PII).  
+- A11y usage signals (high contrast, keyboard-only, reduced motion).  
+- Focus Mode failures, fallbacks, and error boundaries.  
 
-All telemetry:
+Telemetry:
 
-- Conforms to `../schemas/telemetry/web-readme-v11.json` and related schemas.  
-- Excludes PII and any prohibited attributes under FAIR+CARE.  
-- Is aggregated into `../releases/<version>/focus-telemetry.json` and the global `github-infra-telemetry.json` bundle.
+- Conforms to `../schemas/telemetry/web-readme-v11.json`.  
+- Is aggregated into `../releases/<version>/focus-telemetry.json`.  
+- Excludes PII and any attributes prohibited under FAIR+CARE and sovereignty policies.  
 
 ---
 
-## 🧪 11. Testing & QA
+## 🧪 11. Testing & QA Requirements
 
-KFM web code MUST be covered by:
+Changes to `web/**` MUST be covered by:
 
-- Unit tests (components, hooks, reducers, utils).  
-- Integration tests (map/timeline/focus interactions).  
-- E2E tests for canonical flows (Explore → Focus → Story Node → STAC).  
-- Snapshot tests for critical visual components (where stable).  
-- Accessibility tests (Axe, Lighthouse, keyboard-only).  
-- Telemetry schema tests (ensuring events match telemetry schemas).  
+- Unit tests (components, hooks, reducers, utilities).  
+- Integration tests (map–timeline–focus–story-node interactions).  
+- E2E tests for canonical workflows (Explore → Focus → Story Node → STAC).  
+- Snapshot tests for core visual components where stable.  
+- Accessibility tests (Axe, Lighthouse, keyboard-only E2E).  
+- Telemetry event-schema tests.  
 
-No changes to `web/**` may be merged without passing these tests in CI.
+No changes may be merged if these checks fail in CI.
 
 ---
 
@@ -368,18 +378,19 @@ No changes to `web/**` may be merged without passing these tests in CI.
 
 | Version | Date       | Summary                                                                                                  |
 |--------:|------------|----------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Updated metadata, directory layout, and architecture narrative; aligned with latest Focus Mode v3 & CI/CD. |
+| v11.2.2 | 2025-11-30 | Aligned with KFM-MDP v11.2.2; added signature/attestation, energy/carbon v2, AI behavior constraints.   |
+| v11.2.1 | 2025-11-28 | Updated metadata, directory layout, and architecture narrative; synced with latest Focus Mode v3.       |
 | v11.0.1 | 2025-11-27 | Web platform refinement; clarified Focus Mode v3 + Story Node v3 contracts.                             |
 | v11.0.0 | 2025-11-24 | v11 upgrade; integrated Focus Mode v3, Story Node v3, STAC/DCAT explorer, and telemetry v11.            |
 | v10.4.0 | 2025-11-15 | v10.4 architecture; Focus v2.5, Story Node v3, telemetry v3, FAIR+CARE overlays.                        |
-| v10.3.2 | 2025-11-14 | Deep rebuild; 3D integration and initial STAC/DCAT explorer flows.                                       |
+| v10.3.2 | 2025-11-14 | Deep rebuild; 3D integration and initial STAC/DCAT explorer flows.                                      |
 | v10.3.1 | 2025-11-13 | Early v10.3 web architecture and A11y improvements.                                                     |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix  
-[⬅️ Back](../README.md) · [🧭 System Architecture](../ARCHITECTURE.md) · [🛡 Governance](../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+[⬅️ Back to Repo Root](../README.md) · [🧭 System Architecture](../ARCHITECTURE.md) · [🛡 Governance](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
