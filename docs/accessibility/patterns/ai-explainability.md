@@ -1,42 +1,64 @@
 ---
-title: "🧠 Kansas Frontier Matrix — Accessible AI Models, Explainability, and Ethical Assistant Patterns (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧠 KFM v11 — Accessible AI Models, Explainability, and Ethical Assistant Patterns (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/accessibility/patterns/ai-explainability.md"
-version: "v10.4.1"
-last_updated: "2025-11-16"
-review_cycle: "Quarterly / FAIR+CARE Council"
+version: "v11.2.3"
+last_updated: "2025-11-29"
+
+release_stage: "Stable · Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Quarterly · FAIR+CARE Council"
+content_stability: "stable"
+status: "Active / Enforced"
+backward_compatibility: "Aligned with v10.x → v11.x AI explainability & governance contract"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/a11y-ai-explainability-v1.json"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.3/a11y-ai-explainability-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/a11y-ai-explainability-v2.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+ai_model_register_ref: "../../../models/register.json"
+
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.3"
-status: "Active / Enforced"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+
 doc_kind: "Pattern"
 intent: "ai-explainability"
 fair_category: "F1-A1-I1-R1"
-care_label: "AI Ethics / Explainability"
+care_label: "AI Ethics · Explainability · Sovereignty-Aware"
+
 sensitivity_level: "High"
 indigenous_rights_flag: true
 ai_system_safety_tier: "Tier 3 — High Interpretability Required"
-ai_model_register_ref: "../../../models/register.json"
 risk_category: "High"
-previous_version_hash: "<previous-sha256>"
+redaction_required: true
+
 provenance_chain:
   - "docs/accessibility/patterns/ai-explainability.md@v10.0.0"
+
 ontology_alignment:
   prov_o: "prov:Plan"
   schema_org: "Dataset"
   ml_schema: "mls:Model"
   owl_time: "TemporalEntity"
-shape_schema_ref: "../../../schemas/shacl/a11y-ai-explainability-shape.ttl"
+
 json_schema_ref: "../../../schemas/json/a11y-ai-explainability.schema.json"
-doc_uuid: "urn:kfm:doc:a11y-ai-explainability-v10.4.1"
+shape_schema_ref: "../../../schemas/shacl/a11y-ai-explainability-shape.ttl"
+
+doc_uuid: "urn:kfm:doc:a11y-ai-explainability-v11.2.3"
 semantic_document_id: "kfm-doc-a11y-ai-explainability"
+event_source_id: "ledger:docs/accessibility/patterns/ai-explainability.md"
 immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Restricted"
 ai_transform_permissions:
@@ -47,8 +69,9 @@ ai_transform_prohibited:
   - "speculative causal claims"
   - "risk exaggeration"
   - "removal of uncertainty"
+
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 classification: "AI Explainability · Model Governance · Ethical Assistants"
 jurisdiction: "Kansas / United States"
 role: "a11y-pattern-ai-explainability"
@@ -59,118 +82,133 @@ sunset_policy: "Replaced upon KFM AI governance update"
 
 <div align="center">
 
-# 🧠 **Kansas Frontier Matrix — Accessible AI Models, Explainability, and Ethical Assistant Patterns**  
+# 🧠 **KFM v11 — Accessible AI Models, Explainability, and Ethical Assistant Patterns**  
 `docs/accessibility/patterns/ai-explainability.md`
 
-**Purpose:**  
-Define accessible, transparent, and culturally respectful interaction patterns for all **AI-driven features in KFM**, including Focus Mode Assistants, predictive models, narrative generators, and background decision systems.  
-Ensures **interpretability, fairness, user control, and ethics** across all AI outputs under **FAIR+CARE Council governance**.
+**Purpose**  
+Define accessible, transparent, and culturally respectful interaction patterns for all **AI-driven features in KFM**:  
+Focus Mode assistants, predictive models, narrative generators, and background decision systems.  
 
-![Docs](https://img.shields.io/badge/Docs-MCP_v6.3-blue)
-![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)
-![License](https://img.shields.io/badge/License-CC--BY%204.0-green)
-![Status](https://img.shields.io/badge/Status-Active-success)
+Ensure **interpretability, fairness, user control, and ethics** across all AI outputs under  
+**FAIR+CARE Council** and **Indigenous Data Governance Board (IDGB)** governance.
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview
 
-AI in the Kansas Frontier Matrix provides:
+AI in the Kansas Frontier Matrix powers:
 
-- Predictive analytics (hydrology, climate, land use)  
-- Narrative generation for Story Nodes  
-- Focus Mode reasoning  
+- Predictive analytics (climate, hydrology, land use, air quality)  
+- Story Node narrative generation  
+- Focus Mode v3 reasoning overlays  
 - Text, image, map, and timeline augmentation  
-- Behavioral modeling and recommendation systems  
+- Recommender and decision-support systems  
 
-This pattern ensures that every model:
+This pattern ensures every model, assistant, and narrative layer:
 
-- **Explains its outputs in accessible language**  
-- **Reveals data sources and uncertainty**  
+- **Explains outputs in accessible, non-technical language**  
+- **Reveals sources, assumptions, and uncertainty**  
 - **Avoids cultural or historical distortion**  
-- **Respects Indigenous and community consent**  
-- **Logs interactions for ethical oversight**
+- **Respects Indigenous sovereignty and community consent**  
+- **Logs interactions for ethics and safety oversight**
 
 ---
 
-## 🧩 Explainability Principles
+## 🧩 2. Explainability Principles
 
-| Principle | Description | FAIR+CARE Reference |
-|----------|-------------|----------------------|
-| **Transparency** | Disclose model type, training data origin, and limits in plain language. | FAIR F-1 |
-| **Accessible Outputs** | Provide non-technical summaries with clear, simple explanations. | WCAG 3.1.5 |
-| **Cultural Fairness** | Models audited to avoid bias, harmful narratives, or misrepresentation. | CARE E-1 |
-| **Consent & User Control** | Users may opt out of AI influence per session or feature. | CARE A-2 |
-| **Auditability** | All AI usage logged with interpretable metadata and reasoning chain. | FAIR R-1 |
-| **Explainable Metadata** | Every inference includes contextual metadata, uncertainty, and origin. | ISO/IEC 24029 |
+| Principle              | Description                                                       | FAIR+CARE / Standard |
+|------------------------|-------------------------------------------------------------------|----------------------|
+| **Transparency**       | Disclose model type, training data origin, and scope in plain terms. | FAIR F-1 / ISO 24029 |
+| **Accessible Outputs** | Provide non-technical summaries with clear structure & headings. | WCAG 3.1.5           |
+| **Cultural Fairness**  | Audit for bias, harmful narratives, and misrepresentation.        | CARE E-1             |
+| **Consent & Control**  | Users can opt out of AI influence and switch to human-only views. | CARE A-2             |
+| **Auditability**       | AI usage logged with interpretable metadata and reasoning hooks.  | FAIR R-1             |
+| **Explainable Metadata** | Each inference carries contextual metadata + uncertainty.      | ISO/IEC 24029        |
+| **Sovereignty Safety** | No unauthorized inference about Indigenous lands/peoples.         | Indigenous Protocol  |
 
 ---
 
-## 🧭 Example Implementation (Focus Mode AI Summary Card)
+## 🧭 3. Example Implementation (Focus Mode AI Summary Card)
 
-```html
-<section role="region" aria-labelledby="ai-summary-title" data-ai-model="focus_transformer_v2">
+~~~html
+<section role="region"
+         aria-labelledby="ai-summary-title"
+         data-ai-model="focus_transformer_v3"
+         data-ai-explainer="shap-v11"
+         data-ai-uncertainty="±0.18 RMS">
   <h2 id="ai-summary-title">AI Insight: Hydrology Patterns (1890–1920)</h2>
 
   <p>
-    The model predicts a 14% increase in floodplain expansion during this period,
-    compared to the 1850–1889 baseline.
+    The model estimates a 14% increase in floodplain expansion during this period,
+    compared to the 1850–1889 baseline. This is an estimate and may not reflect
+    all local conditions.
   </p>
 
   <details>
     <summary>View Model Explanation</summary>
     <p>
       Derived from NOAA rainfall, USGS discharge records, and MODIS vegetation indices.
-      Weighted features: rainfall anomaly (+0.64), vegetation loss (+0.22),
-      watershed slope (+0.14).  
-      Model Type: Gradient Boosting Regression Trees (GBRT).
+      Most influential features for this insight: rainfall anomaly (+0.64),
+      vegetation loss (+0.22), watershed slope (+0.14).  
+      Model Type: Gradient Boosting Regression Trees (GBRT).  
+      Uncertainty: ±0.18 RMS relative to validation set.
     </p>
   </details>
 
-  <a href="/models/focus_transformer_v2-card.json" aria-label="Read model documentation">Model Card</a>
+  <a href="/models/focus_transformer_v3-card.json"
+     aria-label="Read detailed model documentation for focus_transformer_v3">
+     Model Card
+  </a>
 </section>
-```
+~~~
 
-### Accessibility Rules
+### Accessibility & Ethics Rules
 
-- `<details>` + `<summary>` for collapsible explanations  
-- `data-ai-model` required for audit lineage  
-- Every model card must exist as **JSON-LD** and **Markdown**  
-- Content must avoid deterministic or absolute phrasing  
-- Add uncertainty intervals whenever numerical predictions are shown  
-
----
-
-## 🎨 Design Tokens for AI Components
-
-| Token | Description | Example |
-|--------|-------------|---------|
-| `ai.focus.color` | Highlight color for AI text | `#FFD54F` |
-| `ai.model.bg` | AI card background | `#F5F5F5` |
-| `ai.alert.color` | Model caution tone | `#FFAB91` |
-| `ai.link.color` | Model card link | `#1976D2` |
-| `ai.banner.bg` | Transparency notice | `#FFF8E1` |
+- `<details>` + `<summary>` for collapsible explanations; summary must be descriptive.  
+- `data-ai-model`, `data-ai-explainer`, and `data-ai-uncertainty` are required for governance & telemetry.  
+- Model cards MUST exist as both **JSON-LD** and **Markdown** with FAIR+CARE & PROV-O metadata.  
+- Avoid deterministic phrasing (“will happen”); use probabilistic language (“the model estimates”).  
+- Always include uncertainty intervals or qualitative confidence ratings for numeric predictions.  
+- For Indigenous or culturally sensitive topics, additional CARE review is mandatory before display.
 
 ---
 
-## 🧾 FAIR+CARE AI Metadata Schema
+## 🎨 4. Design Tokens for AI Components
 
-| Field | Description | Example |
-|--------|-------------|---------|
-| `model_id` | Unique model identifier | `"focus_transformer_v2"` |
-| `model_type` | ML algorithm type | `"GBRT"` |
-| `data_sources` | Provenance | `["NOAA","USGS","MODIS"]` |
-| `uncertainty_range` | ± value | `"±0.18 RMS"` |
-| `bias_reviewed` | Boolean | `true` |
-| `ethical_risk_level` | Low / Medium / High | `"Low"` |
-| `explainability_score` | 0–1 metric | `0.93` |
-| `faircare_audit_hash` | Ledger reference | `"ab4fa1130"` |
+| Token            | Description                        | Example Value |
+|------------------|------------------------------------|---------------|
+| `ai.focus.color` | Highlight color for AI explanations| `#FFD54F`     |
+| `ai.model.bg`    | AI summary card background         | `#F5F5F5`     |
+| `ai.alert.color` | Caution / caveat tone color        | `#FFAB91`     |
+| `ai.link.color`  | Link color for model documentation | `#1976D2`     |
+| `ai.banner.bg`   | Transparency notice background     | `#FFF8E1`     |
 
-```json
+Tokens MUST be consistent with global accessibility tokens (see `docs/accessibility/tokens.md`) and pass:
+
+- Contrast validation (`color-contrast.yml`)  
+- Light/dark theme checks  
+- FAIR+CARE visual cues (for transparency and caveats)
+
+---
+
+## 🧾 5. FAIR+CARE AI Metadata Schema (Example)
+
+| Field                | Description                      | Example                  |
+|----------------------|----------------------------------|--------------------------|
+| `model_id`          | Unique model identifier          | `"focus_transformer_v3"` |
+| `model_type`        | ML algorithm type                | `"GBRT"`                 |
+| `data_sources`      | Upstream data provenance         | `["NOAA","USGS","MODIS"]`|
+| `uncertainty_range` | Numeric uncertainty description  | `"±0.18 RMS"`            |
+| `bias_reviewed`     | Whether bias review was performed| `true`                   |
+| `ethical_risk_level`| `"Low" / "Medium" / "High"`      | `"Low"`                  |
+| `explainability_score` | 0–1 interpretability metric  | `0.93`                   |
+| `faircare_audit_hash` | Governance ledger reference   | `"ab4fa1130"`            |
+
+~~~json
 {
-  "model_id": "focus_transformer_v2",
+  "model_id": "focus_transformer_v3",
   "model_type": "GradientBoostedTree",
   "data_sources": ["NOAA", "USGS", "MODIS"],
   "uncertainty_range": "±0.18 RMS",
@@ -179,65 +217,75 @@ This pattern ensures that every model:
   "explainability_score": 0.93,
   "faircare_audit_hash": "ab4fa1130"
 }
-```
+~~~
+
+This metadata MUST be:
+
+- Logged in the **model registry** (`models/register.json`)  
+- Attached to STAC/JSON-LD describing AI outputs  
+- Referenced in Story Nodes and Focus Mode narratives  
 
 ---
 
-## ⚙️ Interaction & ARIA Behavior Matrix
+## ⚙️ 6. Interaction & ARIA Behavior Matrix
 
-| Action | Behavior | Accessibility Rule |
-|--------|----------|--------------------|
-| Toggle Explainability | Expand `<details>` | `aria-expanded` reflects state |
-| Model Card Access | Opens documentation in new tab | Users warned with `title` or inline text |
-| Screen Reader Narration | Reads summary first, explanation second | Logical DOM order preserved |
-| Bias Disclosure Banner | Shown when risk > Low | Uses `role="alert"` |
-| Telemetry Logging | Logs model usage explicitly | Logged fields: user-choice, model_id, timestamp |
+| Action                    | Behavior                                  | Accessibility Rule                  |
+|---------------------------|-------------------------------------------|-------------------------------------|
+| Toggle Explainability     | Expand/collapse `<details>`               | `aria-expanded` reflects state      |
+| Model Card Access         | Opens model documentation                 | Warn if new tab (`title`/copy)      |
+| Screen Reader Narration   | Reads summary, then explanation section   | Logical DOM order & headings        |
+| Bias Disclosure Banner    | Shown when `ethical_risk_level != "Low"`  | Use `role="status"` or `role="alert"` thoughtfully |
+| Telemetry Logging         | Log model usage & user consent choice     | Required fields: user choice, model_id, timestamp |
 
----
-
-## 🧪 Validation & Testing Framework
-
-| Tool | Focus | Output |
-|-------|--------|--------|
-| **axe-core** | ARIA + structure | `a11y_ai.json` |
-| **Lighthouse** | Cognitive load + text clarity | `lighthouse_ai.json` |
-| **jest-axe** | Component a11y | `a11y_ai_components.json` |
-| **FairCARE Ethics Script** | Bias & tone review | `ai_model_audit.json` |
-| **Model Card Validator** | Schema compliance | `model_card_validation.json` |
-
-All explainability text must pass:
-
-- **Readability grade ≤ 10**  
-- **Bias wording scan**  
-- **Cultural context neutrality**  
-- **Cognitive load check (≤ 5 key points per section)**  
+ARIA patterns MUST follow WAI-ARIA Authoring Practices 1.2 for disclosure components.
 
 ---
 
-## ⚖️ FAIR+CARE Integration
+## 🧪 7. Validation & Testing Framework
 
-| Principle | Implementation |
-|-----------|----------------|
-| **Collective Benefit** | AI enhances community understanding, not decision replacement. |
-| **Authority to Control** | Users can disable AI and request human-only views. |
-| **Responsibility** | Full provenance chain and uncertainty disclosed. |
-| **Ethics** | No deterministic claims; no culturally harmful inferences. |
+| Tool / Workflow       | Focus                                    | Output                                 |
+|-----------------------|------------------------------------------|----------------------------------------|
+| **axe-core**          | ARIA + structural accessibility          | `a11y_ai.json`                         |
+| **Lighthouse**        | Readability + overall a11y/performance   | `lighthouse_ai.json`                   |
+| **jest-axe**          | Component a11y (cards, banners, dialogs) | `a11y_ai_components.json`              |
+| **faircare-ai-audit** | Bias, framing, & consent metadata checks | `ai_model_audit.json`                  |
+| **model-card-validator** | Model card schema compliance          | `model_card_validation.json`           |
+
+Explainability copy MUST pass:
+
+- **Readability:** Grade level ≤ 10 (preferably ≤ 8 for public-facing UI)  
+- **Bias scan:** No flagged harmful terms or stereotypes  
+- **Uncertainty:** Present for all numeric model outputs  
+- **Cognitive load:** ≤ 5 key points per explanation section  
 
 ---
 
-## 🕰️ Version History
+## ⚖️ 8. FAIR+CARE Integration (AI Context)
 
-| Version | Date | Author | Summary |
-|--------:|------------|---------|----------|
-| v10.4.1 | 2025-11-16 | FAIR+CARE Council | Upgraded for KFM-MDP v10.4.3 compliance; added uncertainty rules, new metadata schema, and strict explainability gating. |
-| v10.0.0 | 2025-11-11 | FAIR+CARE Council | Initial creation of AI explainability pattern, metadata schema, and governance tools. |
+| Principle             | Implementation                                                                 |
+|-----------------------|---------------------------------------------------------------------------------|
+| **Collective Benefit**| AI is used to enhance understanding and decision support, not supersede communities. |
+| **Authority to Control** | Users can disable AI overlays; affected communities can withdraw consent.   |
+| **Responsibility**    | Robust logs, model cards, and explainability metadata enabling audits.         |
+| **Ethics**            | No deterministic or stigmatizing narratives; culturally sensitive topics reviewed by IDGB and FAIR+CARE Council. |
+
+---
+
+## 🕰️ 9. Version History
+
+| Version | Date       | Author             | Summary                                                                                                   |
+|--------:|------------|--------------------|-----------------------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-11-29 | FAIR+CARE Council  | Upgraded to v11.2.3; telemetry v2; explicit model registry linkage; clarified uncertainty & sovereignty safeguards. |
+| v10.4.1 | 2025-11-16 | FAIR+CARE Council  | Updated for KFM-MDP v10.4.3; added uncertainty rules, metadata schema, and stricter explainability gating. |
+| v10.0.0 | 2025-11-11 | FAIR+CARE Council  | Initial AI explainability pattern, metadata schema, and governance tools.                                 |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
 Maintained under **Master Coder Protocol v6.3** · Verified by **FAIR+CARE Council**  
-[⬅ Back to Accessibility Patterns Index](../README.md)
+
+[⬅ Back to Accessibility Patterns Index](../README.md) · [🎨 A11y Tokens](../tokens.md) · [🛡 Governance](../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
