@@ -3,19 +3,29 @@ title: "🧹 KFM v11.2.2 — Pre-Commit Validation Rules for Dependency-Confusio
 path: "docs/security/supply-chain/dependency-confusion/checks/pre-commit-rules.md"
 version: "v11.2.2"
 last_updated: "2025-11-30"
-review_cycle: "Quarterly · Supply-Chain Security Council"
+
+release_stage: "Stable · Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Quarterly · Supply-Chain Security Council · FAIR+CARE"
+content_stability: "stable"
 status: "Active / Enforced"
 
 commit_sha: "<latest-commit>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
+signature_ref: "../../../../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
 sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
 manifest_ref: "../../../../../releases/v11.2.2/release-manifest.zip"
 telemetry_ref: "../../../../../releases/v11.2.2/security-telemetry.json"
 telemetry_schema: "../../../../../schemas/telemetry/security-v3.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
@@ -24,7 +34,80 @@ ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
+
 doc_kind: "Security · Pre-Commit-Rules"
+intent: "developer-local-enforcement · dependency-confusion-prevention"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE · Infrastructure Protection"
+classification: "Security · Developer Enforcement"
+sensitivity: "Security-Sensitive (non-personal)"
+sensitivity_level: "Medium"
+public_exposure_risk: "Low"
+indigenous_rights_flag: true
+risk_category: "Medium"
+redaction_required: false
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+jurisdiction: "Kansas / United States"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded when v11.3 pre-commit rules are released"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  prov_o: "prov:Plan"
+  owl_time: "ProperInterval"
+  geosparql: "geo:Feature"
+
+metadata_profiles:
+  - "DCAT 3.0"
+  - "STAC 1.0.0"
+  - "FAIR+CARE"
+  - "PROV-O"
+
+provenance_chain:
+  - "docs/security/supply-chain/dependency-confusion/checks/pre-commit-rules.md@v11.2.1"
+  - "docs/security/supply-chain/dependency-confusion/checks/pre-commit-rules.md@v11.2.0"
+  - "docs/security/supply-chain/dependency-confusion/checks/README.md"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+immutability_status: "version-pinned"
+doc_uuid: "urn:kfm:security:depconf:checks:precommit:v11.2.2"
+semantic_document_id: "kfm-depconf-precommit-rules-v11.2.2"
+event_source_id: "ledger:depconf.checks.precommit.v11.2.2"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "semantic-highlighting"
+  - "metadata-extraction"
+  - "timeline-generation"
+  - "diagram-extraction"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "narrative-fabrication"
+  - "unverified-architectural-claims"
+  - "governance-override"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Layout"
+    - "🛠️ Required Tools (KFM-DTK)"
+    - "🧹 Mandatory Pre-Commit Rule Set"
+    - "🔧 Installing Pre-Commit Hook"
+    - "🕰️ Version History"
 ---
 
 <div align="center">
@@ -33,11 +116,10 @@ doc_kind: "Security · Pre-Commit-Rules"
 `docs/security/supply-chain/dependency-confusion/checks/pre-commit-rules.md`
 
 **Purpose:**  
-Provide the mandatory local developer-side pre-commit validation rules that *must* run before  
-any commit is allowed into the KFM monorepo.  
-These rules prevent dependency-confusion vulnerabilities from being introduced during  
-development by ensuring pinning discipline, registry isolation, lockfile integrity, signature checks,  
-and SBOM consistency **before code ever reaches CI**.
+Define the mandatory developer-side enforcement layer that prevents dependency-confusion risks  
+*before* code reaches CI/CD pipelines.  
+These checks ensure pinning discipline, registry isolation, provenance integrity, and SBOM  
+alignment at the earliest point of change.
 
 </div>
 
@@ -45,177 +127,161 @@ and SBOM consistency **before code ever reaches CI**.
 
 ## 📘 Overview
 
-Pre-commit validation is the **developer-side enforcement layer** of KFM’s supply-chain defense.  
-It mirrors CI behavior with *local-only checks* that:
+Pre-commit validation is the **local enforcement tier** of KFM’s supply-chain defense.  
+It mirrors CI behavior using local-only checks that block commits when:
 
-- Detect unpinned dependencies  
-- Identify registry-misconfigurations  
-- Flag namespace-collision hazards  
-- Validate cryptographic signatures  
-- Prevent SBOM drift from entering PRs  
-- Ensure hermetic development environments  
-- Block commits lacking provenance metadata  
-- Trigger fallback logic in degraded developer environments  
+- Dependencies are unpinned  
+- Registries are misconfigured  
+- Namespace conflicts exist publicly  
+- Signatures or provenance are invalid  
+- SBOM and lockfile diverge  
+- Fallback logic must activate  
+- Governance exceptions are missing or expired  
 
-Pre-commit rules are always active and cannot be bypassed.
+Local enforcement reduces CI failures and maintains deterministic, secure development.
 
-Local compliance ensures deterministic development and reduces CI churn.
+---
+
+## 🗂️ Directory Layout
+
+~~~text
+📁 dependency-confusion/
+└── 📁 checks/
+    ├── 📄 README.md                     # Automated checks index
+    ├── 📄 ci-validation-rules.md        # CI validation rules
+    ├── 📄 provenance-hooks.md           # SLSA + attestation workflow hooks
+    ├── 📄 registry-anomaly-detection.md # Registry anomaly detection rules
+    ├── 📄 pre-commit-rules.md           # This file — developer-side enforcement
+    └── 📄 local-scan-guidance.md        # Manual/local scan instructions
+~~~
 
 ---
 
 ## 🛠️ Required Tools (KFM-DTK)
 
-All checks use the **KFM Developer Toolkit (DTK)**:
+Install the developer toolkit:
 
-```
+```bash
 pip install kfm-dtk
 ```
 
-Provides the following commands:
+Provides:
 
-- `kfm-ns-scan` – Namespace collision detection  
-- `kfm-reg-audit` – Registry isolation validation  
-- `kfm-lock-verify` – Pinning & lockfile integrity  
-- `kfm-sbom-diff` – SBOM drift detection  
-- `kfm-provenance-verify` – Signature enforcement  
-- `kfm-fallback-test` – Local fallback simulation  
+- `kfm-ns-scan` — namespace collision detection  
+- `kfm-reg-audit` — registry isolation validation  
+- `kfm-lock-verify` — pinning & lockfile integrity  
+- `kfm-sbom-diff` — SBOM drift detection  
+- `kfm-provenance-verify` — signature & provenance validation  
+- `kfm-fallback-test` — fallback simulation & hermetic testing  
 
 ---
 
 ## 🧹 Mandatory Pre-Commit Rule Set
 
-### 1. 🧩 Exact Pinning & Lockfile Integrity
-Before commit:
-
-- All dependencies MUST be fully pinned  
-- Lockfiles must include registry + version + digest  
-- Lockfile must match SBOM  
-- No floating deps  
-- No cross-registry substitutions  
-
-Command:
-
+### 1️⃣ 🧩 Exact Pinning & Lockfile Integrity  
 ```bash
 kfm-lock-verify
 ```
+Ensures:
 
-Commit blocked if:
+- Exact versions  
+- Exact registries  
+- Cryptographic digests  
+- Lockfile ↔ SBOM parity  
+- No floating deps  
+- No registry drift  
 
-- Lockfile changed without SBOM regeneration  
-- Dependencies lack hash integrity  
-- Registry mismatch detected
+Fail → commit blocked.
 
 ---
 
-### 2. 🔒 Registry Isolation Check
-Ensures no accidental public-registry usage.
-
-Checks for:
-
-- pypi.org  
-- registry.npmjs.org  
-- crates.io  
-- Maven Central  
-- NuGet public endpoints  
-
-Run:
-
+### 2️⃣ 🔒 Registry Isolation Enforcement  
 ```bash
 kfm-reg-audit --strict
 ```
 
-Commit blocked on *any external registry reference*.
+Detects:
+
+- Public registry usage  
+- Fallback to untrusted endpoints  
+- TLS or mirror mismatches  
+
+Fail → commit blocked.
 
 ---
 
-### 3. 🛰️ Namespace Collision Pre-Scan
-Searches all public registries for KFM-like names.
-
-Run:
-
+### 3️⃣ 🛰️ Namespace Collision Pre-Scan  
 ```bash
 kfm-ns-scan .
 ```
 
-Blocks commit when:
+Flags:
 
-- Similar public package exists  
-- Dangerous namespace patterns detected  
-- Typosquatting variants found  
+- Public first-publish attackers  
+- Typosquats  
+- Homoglyph patterns  
+- Namespace lookalikes  
 
-Warns developer to file a Security Block Declaration (SBD).
+Fail → SBD required + commit blocked.
 
 ---
 
-### 4. ✍️ Signature & Provenance Verification
-Ensures developer environment has valid:
-
-- GPG commit signing  
-- Verified Cosign signatures (for local artifacts)  
-- Matching provenance metadata for modified components  
-
-Run:
-
+### 4️⃣ ✍️ Signature & Provenance Verification  
 ```bash
 kfm-provenance-verify --local
 ```
 
-Commit blocked if:
+Validates:
 
-- Any signature invalid  
-- Any artifact unverifiable  
-- SLSA metadata missing  
+- Cosign artifact signatures  
+- GPG commit/tag signatures  
+- SLSA provenance bundles  
+- Provenance ↔ SBOM ↔ digest consistency  
+
+Fail → commit rejected.
 
 ---
 
-### 5. 🧬 Local SBOM Drift Check
-Ensures no unapproved dependency modifications.
-
-Run:
-
+### 5️⃣ 🧬 SBOM Drift Detection  
 ```bash
 kfm-sbom-diff --local
 ```
 
-Commit is **rejected** when:
+Detects:
 
-- New dependency appears outside policy  
-- Digest mismatch detected  
-- Lockfiles changed without matching SBOM update  
+- Shadow deps  
+- Hash drift  
+- Lockfile/graph mismatch  
+- External version injection  
+
+Fail → commit blocked.
 
 ---
 
-### 6. 🧱 Hermetic Sandbox Validation
-Ensures developer environments mimic CI hermeticity as closely as possible.
-
-Checks:
-
-- No outbound registry traffic  
-- No auto-installer plugins  
-- No implicit fallback to public registries  
-- No dynamic version resolution  
-
-Triggered via:
-
+### 6️⃣ 🧱 Hermetic Sandbox Validation  
 ```bash
 kfm-fallback-test --validate
 ```
 
----
-
-### 7. 🧭 Governance Constraint Validation
 Ensures:
 
-- Any dependency requiring exception is listed in `exceptions.md`  
-- Expired SERs prevent commit  
-- All policy documents are schema-valid  
-- Modified policy files include updated YAML headers  
+- Zero outbound registry access  
+- No auto-installers or update services  
+- No dependency-resolver fallback  
+- Fully deterministic environment  
 
-Run automatically via:
+Fail → commit denied.
 
-```bash
-kfm-governance-validate
-```
+---
+
+### 7️⃣ 🧭 Governance Constraint Validation  
+Automatically checks:
+
+- SER validity (active & unexpired)  
+- Correctness of YAML headers in policy files  
+- Schema compliance for registry/incident/exception docs  
+
+Fail → commit blocked.
 
 ---
 
@@ -240,30 +306,15 @@ Then activate:
 pre-commit install
 ```
 
-This ensures rules run automatically on every commit.
-
----
-
-## 🗂️ Directory Layout
-
-~~~text
-📁 dependency-confusion/
-└── 📁 checks/
-    ├── 📄 README.md                     # Automated checks index
-    ├── 📄 ci-validation-rules.md        # CI validation rules
-    ├── 📄 provenance-hooks.md           # Attestation/provenance hooks
-    ├── 📄 registry-anomaly-detection.md # Registry anomaly detection logic
-    ├── 📄 pre-commit-rules.md           # This file — developer-side enforcement rules
-    └── 📄 local-scan-guidance.md        # Manual/local scan instructions
-~~~
-
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Notes |
-|---------|--------|--------|
-| v11.2.2 | 2025-11-30 | Initial creation of Pre-Commit dependency-confusion ruleset |
+| Version  | Date       | Notes                                                     |
+|----------|------------|-----------------------------------------------------------|
+| v11.2.2  | 2025-11-30 | Extended metadata; layout moved; rules aligned with v11.2.2 |
+| v11.2.1  | 2025-10-17 | Added hermetic sandbox + fallback validation               |
+| v11.2.0  | 2025-09-05 | Initial developer pre-commit ruleset                       |
 
 ---
 
@@ -272,4 +323,3 @@ This ensures rules run automatically on every commit.
 🧪 [Automated Checks](./README.md) • 🧬 [Provenance Hooks](./provenance-hooks.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
