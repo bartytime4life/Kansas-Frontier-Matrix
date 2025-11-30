@@ -3,19 +3,27 @@ title: "⛓️ KFM v11.2.2 — Registry Fallback Attack (Dependency-Confusion Ex
 path: "docs/security/supply-chain/dependency-confusion/examples/registry-fallback.md"
 version: "v11.2.2"
 last_updated: "2025-11-30"
-review_cycle: "Quarterly · Security Council"
-status: "Active · Educational Example"
 
-commit_sha: "<latest-commit>"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+content_stability: "stable"
+
+commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
+signature_ref: "../../../../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
 sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.2.2/release-manifest.zip"
+manifest_ref: "../../../../../releases/v11.2.2/manifest.zip"
 telemetry_ref: "../../../../../releases/v11.2.2/security-telemetry.json"
 telemetry_schema: "../../../../../schemas/telemetry/security-v3.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
@@ -24,7 +32,62 @@ ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
-doc_kind: "Security · Example"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+sensitivity: "General (non-sensitive)"
+sensitivity_level: "Low"
+public_exposure_risk: "Low"
+classification: "Public"
+
+ontology_alignment:
+  cidoc: "E13 Attribute Assignment"
+  schema_org: "TechArticle"
+  prov_o: "prov:Entity"
+  owl_time: "ProperInterval"
+  geosparql: "geo:Feature"
+
+metadata_profiles:
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/security/supply-chain/dependency-confusion/examples/registry-fallback.md@v11.2.1"
+  - "docs/security/supply-chain/dependency-confusion/examples/registry-fallback.md@v11.2.0"
+  - "docs/security/supply-chain/dependency-confusion/examples/README.md"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+immutability_status: "version-pinned"
+doc_uuid: "urn:kfm:doc:security:dependency-confusion:examples:registry-fallback:v11.2.2"
+semantic_document_id: "kfm-depconf-examples-registryfallback-v11.2.2"
+event_source_id: "ledger:depconf.examples.registryfallback.v11.2.2"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "semantic-highlighting"
+  - "diagram-extraction"
+  - "metadata-extraction"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
 ---
 
 <div align="center">
@@ -33,10 +96,9 @@ doc_kind: "Security · Example"
 `docs/security/supply-chain/dependency-confusion/examples/registry-fallback.md`
 
 **Purpose:**  
-Illustrate how a resolver or build environment that silently **falls back** to a public registry  
-can trigger a full dependency-confusion compromise—even when internal mirrors exist  
-and internal packages are properly pinned.  
-This example demonstrates a common real-world misconfiguration scenario.
+Show how resolver fallback to public registries triggers silent dependency-confusion  
+compromise even when internal mirrors exist, highlighting a common and dangerous  
+real-world misconfiguration.
 
 </div>
 
@@ -44,132 +106,26 @@ This example demonstrates a common real-world misconfiguration scenario.
 
 ## 📘 Background
 
-A **registry fallback attack** occurs when:
+A **registry fallback attack** happens when:
 
-1. The primary (internal) registry or mirror returns an error (timeout, TLS mismatch, 404, etc.).
-2. The resolver attempts **secondary registries**, often including public ones.
-3. A malicious public package with the same name exists.
-4. The resolver installs the public package silently.
-5. SBOM, lockfile, or provenance checks are bypassed in misconfigured environments.
+1. The internal mirror fails (timeout, TLS error, 404).  
+2. Resolver automatically contacts second/third registries.  
+3. Public malicious package exists with the same name.  
+4. Resolver silently installs malicious version.  
+5. Lockfile + SBOM become invalid.  
+6. Provenance metadata missing.  
 
-This attack is extremely common in unsealed environments and early-stage CI systems.
+This attack is especially common in:
 
----
-
-## 🔗 Example Scenario
-
-### 🏛 Internal KFM Package (Expected)
-```
-package: kfm-routing-core
-version: 1.9.3
-registry: https://kfm-pypi.internal/simple
-hash: sha256:ee71bb12...
-```
-
-### 💣 Public Package (Malicious)
-```
-package: kfm-routing-core
-version: 88.0.0
-registry: https://pypi.org/simple
-hash: sha256:abee990e...
-payload: remote-exec, credential exfiltration
-```
-
-### ⚠️ Fallback Misconfiguration
-Example (pip config):
-
-```
-[global]
-timeout = 2
-extra-index-url = https://pypi.org/simple         # ❌ dangerous fallback
-trusted-host = pypi.org
-```
-
-Resolver behavior:
-
-1. Internal mirror → timeout after 2 seconds  
-2. Resolver falls back to PyPI  
-3. Installs malicious version (`88.0.0`)  
-4. Lockfile + SBOM become invalid  
-5. No provenance metadata  
+- pip (Python)  
+- npm (Node.js)  
+- Maven/Gradle  
+- Cargo  
+- developer laptops with mixed configs  
 
 ---
 
-## 🧪 Simulated CI Detection Output
-
-```text
-[registry-policy-check] FAIL: Public registry contact detected for "kfm-routing-core".
-[namespace-monitor]    WARNING: Public version outranks private version.
-[attestation-verify]   ERROR: No valid SLSA provenance for fetched artifact.
-[sbom-validate]        ERROR: SBOM mismatch with installed package.
-[policy]               FAIL: Registry fallback attack detected — quarantine required.
-```
-
-Evidence written to:
-
-- `policy/evidence/registry-audit.json`
-- `policy/evidence/namespace-scan.json`
-
----
-
-## 🚨 Why This Attack Works (in unprotected systems)
-
-- Resolver fallback behavior enabled  
-- Internal registry configured as non-blocking  
-- Short timeouts  
-- Public registry access allowed  
-- No SBOM or hash validation  
-- No provenance enforcement  
-- No namespace-scanning system  
-
----
-
-## 🛡️ How KFM v11.2.2 Prevents Registry Fallback Attacks
-
-### ✔ Registry Isolation (Mandatory)
-Public registries → **blocked**, never attempted.  
-Internal mirrors → **exclusive** source.
-
-### ✔ Hermetic Sandbox Enforcement  
-Resolvers cannot reach external endpoints.
-
-### ✔ Deterministic Pinning  
-Exact registry + version + digest ensures no fallback override.
-
-### ✔ Namespace Collision Detection  
-High-version public variants immediately flagged.
-
-### ✔ SBOM Drift Enforcement  
-Detects mismatch between expected & installed versions.
-
-### ✔ Provenance Requirements  
-Malicious public packages lack valid SLSA bundles or Cosign signatures.
-
-### ✔ Mirror Integrity Monitoring  
-Detects mirror failure *before* resolvers attempt fallback.
-
-### ✔ Fallback Tier Activation  
-If mirror issue detected → freezes dependency graph rather than falling back.
-
----
-
-## 🧭 Developer Guidance
-
-To prevent registry fallback issues:
-
-- **Never** use `extra-index-url` or `--index-url` pointing to public registries  
-- Avoid short `timeout` values  
-- Use only KFM-approved mirror configs  
-- Validate pip/npm/cargo settings with:
-  ```bash
-  kfm-reg-audit --strict
-  ```
-- Ensure pre-commit hooks prevent fallback-prone configs  
-- Treat fallback warnings as **critical incidents**  
-
----
-
-## 🗂️ Directory Layout
+## 🗂️ Directory Layout  
 
 ~~~text
 📁 dependency-confusion/
@@ -179,7 +135,7 @@ To prevent registry fallback issues:
     ├── 📄 namespace-collision-firstpublish.md
     ├── 📄 namespace-collision-versionrace.md
     ├── 📄 typosquat-examples.md
-    ├── 📄 registry-fallback.md           # This file
+    ├── 📄 registry-fallback.md        # This file
     ├── 📄 mirror-drift.md
     ├── 📄 sbom-drift-basic.json
     ├── 📄 lockfile-drift-attack.md
@@ -191,11 +147,115 @@ To prevent registry fallback issues:
 
 ---
 
+## 🔗 Example Scenario
+
+### 🏛 Internal KFM Package
+```
+package: kfm-routing-core
+version: 1.9.3
+registry: https://kfm-pypi.internal/simple
+hash: sha256:ee71bb12...
+```
+
+### 💣 Malicious Public Version
+```
+package: kfm-routing-core
+version: 88.0.0
+registry: https://pypi.org/simple
+payload: credential exfiltration, remote shell
+```
+
+### ⚠️ Dangerous pip config
+```
+[global]
+timeout = 2
+extra-index-url = https://pypi.org/simple
+```
+
+### Resolver sequence
+```
+internal-mirror: timeout  
+fallback → PyPI  
+selects version 88.0.0  
+installs malicious artifact  
+no provenance  
+SBOM mismatch  
+```
+
+---
+
+## 🧪 Simulated CI Detection Output
+
+```text
+[registry-policy-check] FAIL: Outbound public registry contacted for "kfm-routing-core"
+[namespace-monitor]    WARNING: public version outranks private version
+[attestation-verify]   ERROR: invalid or missing SLSA provenance
+[sbom-validate]        ERROR: SBOM mismatch vs installed dependency
+[policy]               FAIL: registry fallback attack detected
+```
+
+Evidence stored in:
+
+- `policy/evidence/registry-audit.json`
+- `policy/evidence/namespace-scan.json`
+
+---
+
+## 🛡️ Why It Works in Unprotected Systems
+
+- fallback behavior enabled  
+- short timeouts  
+- mixed registry configuration  
+- missing SBOM alignment  
+- no namespace scanning  
+- no provenance validation  
+- lockfile ignored  
+
+---
+
+## 🛡️ How KFM Prevents This Attack
+
+### ✔ Registry Isolation  
+Public registries permanently blocked.
+
+### ✔ Hermetic Sandbox  
+Outbound network → forbidden.
+
+### ✔ Exact Version + Registry + Digest  
+Removes version-precedence risk.
+
+### ✔ SBOM Drift Enforcement  
+Mismatch → build halted.
+
+### ✔ Provenance Enforcement  
+Attackers cannot forge SLSA & Cosign signing.
+
+### ✔ Namespace Monitoring  
+Detects high-version public publishes.
+
+### ✔ Fallback Tier Activation  
+Mirror failure triggers freeze mode, not fallback.
+
+---
+
+## 🧭 Developer Guidance
+
+- Never use `extra-index-url` or public indexes  
+- Run:
+  ```bash
+  kfm-reg-audit --strict
+  ```
+- Treat fallback warnings as critical  
+- Ensure pre-commit policies block fallback-prone configs  
+- Use sealed dependency snapshots  
+
+---
+
 ## 🕰️ Version History
 
 | Version | Date       | Notes |
 |---------|------------|--------|
-| v11.2.2 | 2025-11-30 | Initial registry-fallback example |
+| v11.2.2 | 2025-11-30 | Full extended metadata + updated layout placement |
 
 ---
 
@@ -204,4 +264,3 @@ To prevent registry fallback issues:
 📚 [Examples Index](./README.md) • 🧨 [Basic Collision](./namespace-collision-basic.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
