@@ -3,7 +3,7 @@ title: "🛡️ Kansas Frontier Matrix — Security Policy & Vulnerability Discl
 path: ".github/SECURITY.md"
 version: "v11.2.2"
 last_updated: "2025-11-27"
-review_cycle: "Annual · Autonomous · FAIR+CARE Council Oversight"
+review_cycle: "Annual · FAIR+CARE Security Council · Architecture Board"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 commit_sha: "<latest-commit-hash>"
@@ -24,13 +24,13 @@ sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11.0"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
 
 status: "Active / Enforced"
 doc_kind: "SecurityPolicy"
 intent: "security-and-disclosure"
-role: "security-policy"
-category: "Security · Governance · Disclosure"
+category: "Security · Governance · Supply Chain · Responsible Disclosure"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "Public · Low-Risk"
@@ -39,7 +39,7 @@ public_exposure_risk: "Low"
 risk_category: "Security"
 indigenous_rights_flag: false
 redaction_required: false
-data_steward: "KFM FAIR+CARE Council"
+data_steward: "KFM FAIR+CARE Security Council"
 
 provenance_chain:
   - ".github/SECURITY.md@v10.0.0"
@@ -68,13 +68,13 @@ ai_transform_permissions:
   - "a11y-adaptations"
 ai_transform_prohibited:
   - "speculative additions"
+  - "governance-override"
   - "unverified historical claims"
 
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "United States / Kansas"
 classification: "Public Document"
-lifecycle_stage: "stable"
+jurisdiction: "United States / Kansas"
 ttl_policy: "12 months"
 sunset_policy: "Superseded upon next security-policy update"
 ---
@@ -84,8 +84,12 @@ sunset_policy: "Superseded upon next security-policy update"
 # 🛡️ **Kansas Frontier Matrix — Security Policy & Vulnerability Disclosure**  
 `.github/SECURITY.md`
 
-**Purpose:**  
-Protect the Kansas Frontier Matrix (KFM) ecosystem through **governed security practices**, supply-chain integrity, FAIR+CARE compliance, and safe handling of all vulnerability reports.
+**Purpose**  
+Provide a clear, governed, and FAIR+CARE-aligned process for handling **vulnerabilities, supply-chain risks, incident response, and ethical security concerns** across the Kansas Frontier Matrix (KFM) ecosystem.
+
+[![Security Governance](https://img.shields.io/badge/Security-Governed-brightgreen)]() ·  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-orange)]() ·  
+[![SBOM](https://img.shields.io/badge/SBOM-SPDX_2.3-blue)]()  
 
 </div>
 
@@ -93,251 +97,289 @@ Protect the Kansas Frontier Matrix (KFM) ecosystem through **governed security p
 
 ## 📘 Overview
 
-This policy establishes how the KFM project handles:
+This policy defines how KFM manages:
 
-- Security vulnerabilities  
-- Supply-chain threats  
-- Data integrity and provenance concerns  
-- Privacy and ethical risks  
-- AI and narrative safety issues  
+- Security vulnerabilities and incident reports  
+- Supply-chain and dependency risks  
+- Data integrity and provenance threats  
+- Privacy, FAIR+CARE, and sovereignty-sensitive risks  
+- AI, Story Node, and Focus Mode v3 narrative safety issues  
 
-It is validated through:
+It is enforced via:
 
-- KFM-MDP v11.2.2  
-- FAIR+CARE governance  
-- CI/CD gating  
+- KFM-MDP v11.2.2 (Markdown & documentation rules)  
+- FAIR+CARE governance and sovereignty policies  
+- CI/CD gating and CODEOWNERS review  
 - SBOM + manifest verification  
-- Ontology and metadata checks  
-- OpenLineage provenance  
+- Schema/ontology validation (KFM-STAC/DCAT/JSON-LD)  
+- OpenLineage + PROV-O provenance checks  
 
-Nothing enters production without passing these governance layers.
+This file is the **public-facing entry point**. Deeper standards live in `docs/security/`.
 
 ---
 
-## 🗂 Repository Security Context  
-*(Emoji directory tree — Style A)*
+## 🗂️ Repository Security Context
 
 ~~~text
 Kansas-Frontier-Matrix/
+├── 🛡️ .github/                          # GitHub configuration, CI/CD, security policy
+│   ├── 🛡️ SECURITY.md                   # ← Public security & disclosure policy (this file)
+│   ├── 🤖 actions/                      # Composite CI actions (schema-lint, worm-defense, etc.)
+│   └── 🤖 workflows/                    # CI pipelines (lint, tests, scans, provenance, FAIR+CARE)
 │
-├── 🛡️ .github/                             # GitHub configs, CI/CD, security policies
-│   ├── 🛡️ SECURITY.md                      # This document
-│   ├── 🤖 workflows/                       # Lint, tests, scans, governance, telemetry
-│   └── 📄 ISSUE_TEMPLATE/                  # Issue templates (bug, feature, data, security)
+├── 📚 docs/
+│   └── 🔒 security/                     # Full security & supply-chain governance framework
+│       ├── 📄 README.md                 # Security & supply chain governance index
+│       ├── 📄 threat-model.md           # STRIDE/LINDDUN threat modeling
+│       ├── 📄 secrets-policy.md         # Secret lifecycle, encryption, rotation
+│       ├── 📄 supply-chain.md           # SBOM, SLSA, signing, provenance
+│       ├── 📄 vulnerability-management.md # CVE scanning, triage, patch SLAs
+│       ├── 📄 incident-response.md      # Incident lifecycle & postmortems
+│       └── 📂 supply-chain/
+│           ├── 📄 README.md             # NPM worm defense & supply-chain sub-framework
+│           └── 📂 npm-ignore-scripts/   # Lifecycle-script suppression standards
 │
-├── 📦 releases/                            # Versioned artifacts
-│   ├── 📂 v11.2.2/
-│   │   ├── 🧾 sbom.spdx.json               # Software Bill of Materials (signed)
-│   │   ├── 📜 manifest.zip                 # Release manifest
-│   │   └── 📊 focus-telemetry.json         # Telemetry (includes security & governance stats)
-│   └── 📂 v11.0.0/ …                       # Earlier versions
-│
-├── 🧪 schemas/                             # Schemas for governance and telemetry
-│   ├── 📊 telemetry/
-│   │   └── 🛡️ security-policy-v1.json      # Telemetry schema for this policy
-│   └── 🧩 ...                               # Energy, carbon, lineage, etc.
-│
-└── 📚 docs/                                # Governance reference
-    └── ⚖️ standards/
-        └── 🏛️ governance/
-            └── 📘 ROOT-GOVERNANCE.md       # Global governance charter
+└── 📦 releases/<version>/               # Versioned artifacts & telemetry
+    ├── 🧾 sbom.spdx.json               # SPDX SBOM
+    ├── 📜 manifest.zip                 # Release manifest
+    └── 📊 focus-telemetry.json         # Telemetry (incl. security & governance metrics)
 ~~~
+
+The documents under `docs/security/` are **normative** and referenced by this policy.
 
 ---
 
 ## 📮 Reporting a Vulnerability
 
-**Never disclose security issues publicly.**
+**Please do not disclose security issues publicly.**
 
-Use private channels:
+Use one of these private channels:
 
-- GitHub Security Advisory  
-- Project security email: `security@<domain>` (if provided)  
+1. **GitHub Security Advisory** (preferred)  
+2. **Security contact email**: `security@<domain>` (if listed in the repo profile)
 
-Include:
+When reporting, include:
 
-- Issue description  
-- Steps to reproduce  
-- Affected components  
-- Impact assessment  
-- Suggested mitigations  
+- Clear description of the issue  
+- Impact and severity (if known)  
+- Steps to reproduce (PoC if possible)  
+- Affected components (paths, services, or workflows)  
+- Any suggested mitigations or additional context  
+
+### Maintainer Response
 
 KFM maintainers will:
 
-- Acknowledge promptly  
-- Validate the issue  
-- Coordinate remediation  
-- Follow coordinated disclosure best practices  
-- Credit researchers when safe & permitted  
+- Acknowledge receipt promptly  
+- Validate the issue and assign severity  
+- Coordinate mitigation and patch development  
+- Create regression tests where appropriate  
+- Publish a security advisory and changelog entry once a fix is available  
+- Credit researchers when safe and permitted (opt-in)  
 
 **Do NOT:**
 
-- Attack production systems  
-- Attempt privilege escalation  
-- Access restricted datasets  
-- Probe unrelated infrastructure  
+- Attack production systems or unrelated infrastructure  
+- Attempt privilege escalation beyond proof-of-concept needs  
+- Access or attempt to access data you are not authorized to see  
+- Exfiltrate or share sensitive cultural, personal, or sovereign data  
 
 ---
 
-## 🔐 Security Principles
+## 🔐 Core Security Principles
 
-### 1️⃣ Least Privilege  
-Minimal required access across all CI, pipelines, and services.
+1. **Least Privilege**  
+   CI workflows, services, and human accounts operate with minimal required permissions.
 
-### 2️⃣ Defense in Depth  
-Layered enforcement: schemas → governance → CI → security scans → artifact validation.
+2. **Defense in Depth**  
+   Multiple layers of protection: schemas → static analysis → CI gating → SBOM/SLSA → runtime monitoring.
 
-### 3️⃣ Secure Defaults  
-Restrictive workflow permissions; conservative logging.
+3. **Secure Defaults**  
+   Conservative permissions on Actions tokens, locked-down branches, and mandatory review for sensitive areas.
 
-### 4️⃣ No Secrets in Repo  
-Use GitHub Secrets, OIDC, or cloud secret managers.
+4. **Zero Secrets in Repo**  
+   No secrets in committed code or configuration. Use GitHub Secrets, cloud KMS/Vault, or equivalent secure stores.
 
-### 5️⃣ Privacy By Design  
-Avoid PII; apply masking, aggregation, and H3 generalization as required.
+5. **Privacy & Sovereignty by Design**  
+   Avoid PII; apply masking, aggregation, and H3 generalization to sensitive geographies and heritage data in accordance with FAIR+CARE and sovereignty policies.
 
-### 6️⃣ Transparency  
-Security fixes documented via advisories, release notes, and governance reports.
-
----
-
-## 🧱 Threat Model
-
-### 1️⃣ Supply-Chain Risks
-- Malicious dependencies  
-- Misconfigured workflows  
-- Tampered manifests or SBOMs  
-
-### 2️⃣ Data Integrity Risks
-- Unauthorized modifications  
-- Graph injection attacks  
-- Malicious Story Node or Focus Mode narratives  
-
-### 3️⃣ CI/CD Misuse
-- Unauthorized edits to `.github/workflows/**`  
-- Abuse of CI runners to exfiltrate secrets  
-- Unsafe publishing of artifacts  
-
-### 4️⃣ Privacy & Ethical Risks
-- Leakage of culturally sensitive locations  
-- Accidental PII inclusion  
-- Narrative harms or misrepresentation  
+6. **AI & Narrative Safety**  
+   Story Nodes and Focus Mode narratives must be grounded in real data, avoid fabrication, and respect community and sovereignty constraints.
 
 ---
 
-## 🔒 Protections in Place
+## 🔎 Threat Model Alignment
 
-### 🏛️ Repository-Level
-- Protected branches (`main`, `release/*`)  
-- Required governance checks  
-- Mandatory code review  
-- Strict CODEOWNERS enforcement  
+KFM’s security program is designed around:
 
-### 🔗 Supply-Chain
-- Dependabot automation (npm, pip, GitHub Actions, docker)  
-- SBOM regeneration + signing  
-- Container/lockfile scanning  
+- **STRIDE** — spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege.  
+- **LINDDUN** — privacy threats (linkability, identifiability, non-repudiation, detectability, disclosure, content unawareness, policy non-compliance).  
+- **FAIR+CARE** — community and cultural impact framework for data and narratives.
 
-### ⚙️ CI/CD Integrity
-- No plaintext secrets  
-- OIDC-based identity  
-- Restricted token scopes  
-- Governance review for workflow changes  
+Detailed threat models: `docs/security/threat-model.md`.
 
 ---
 
-## 🧠 AI & Focus Mode Safeguards
+## 🔗 Supply-Chain & Dependency Integrity
 
-AI narrative outputs must:
+KFM enforces strict supply-chain controls, as specified in `docs/security/supply-chain.md` and related docs:
 
-- Be grounded in graph facts  
-- Contain no fabrications  
-- Respect sovereignty & CARE rules  
-- Avoid harmful or biased representations  
-- Avoid exposure of restricted coordinates  
+- **SBOMs**  
+  - SPDX 2.3 and (where applicable) CycloneDX 1.5 SBOMs for releases.  
 
-Report any unsafe AI behavior as a **security risk**.
+- **Provenance & Signing**  
+  - SLSA-style provenance attestations.  
+  - Cosign/Sigstore signatures and checksums for release artifacts.  
+
+- **Scanning & Policy**  
+  - Automated scanning with tools such as osv-scanner, Grype, and Trivy.  
+  - Dependency-confusion and registry anomaly detection (`docs/security/supply-chain/dependency-confusion/`).  
+  - NPM worm-defense (lifecycle-script suppression + anomaly rules) via `docs/security/supply-chain/npm-ignore-scripts/`.  
+
+Artifacts that fail integrity, signature, or policy checks **cannot be promoted to release**.
 
 ---
 
-## 📊 Logging, Telemetry & Privacy
+## 🧪 Vulnerability Management (SLAs)
 
-Telemetry is published to:
+KFM uses a CVSS-inspired severity model with the following **target SLAs**:
+
+| Severity | Detection SLA | Patch SLA | Notes                   |
+|--------: |--------------:|-----------|-------------------------|
+| Critical | 4 hours        | 24 hours  | Blocks CI/CD & releases |
+| High     | 24 hours       | 72 hours  | Requires expedited fix  |
+| Medium   | 48 hours       | 7 days    | Logged & monitored      |
+| Low      | Weekly sweep   | Next sprint | Best-effort remediation |
+
+The full vulnerability-management standard, including exception processes and scoring notes, is in:
+
+- `docs/security/vulnerability-management.md`
+
+---
+
+## 🚨 Incident Response
+
+KFM follows a NIST 800-61–inspired lifecycle:
+
+1. **Detection** — alerts, telemetry, reports  
+2. **Analysis** — confirm, scope, and classify the incident  
+3. **Containment** — stop further impact  
+4. **Eradication** — remove root cause  
+5. **Recovery** — restore systems and validate integrity  
+6. **Postmortem** — MCP-formatted analysis and follow-up actions  
+
+Incident reports and postmortems live under:
+
+~~~text
+docs/security/reports/incident-response/
+~~~
+
+Security incidents may also trigger:
+
+- Updates to `docs/security/` standards  
+- SBOM and manifest regeneration  
+- Governance ledger entries and FAIR+CARE review  
+
+---
+
+## 🧠 AI, Story Nodes & Focus Mode Safety
+
+AI-driven capabilities (Story Nodes & Focus Mode v3) are treated as part of the **attack surface**.
+
+KFM requires that:
+
+- AI outputs are grounded in graph-backed facts and approved datasets.  
+- Narratives do not fabricate historical events, individuals, or attributions.  
+- Indigenous and culturally sensitive narratives follow sovereignty policies and FAIR+CARE guidance.  
+- Protected site coordinates and sensitive locations are generalized or suppressed.  
+- Prompting and model behavior are monitored for harmful or biased patterns.
+
+If you observe dangerous or misleading AI behavior (e.g., leaking sensitive coordinates, fabricating events, or generating harmful narratives), report it using the same channels as other vulnerabilities and label the report **“AI / Narrative Safety”**.
+
+---
+
+## 📊 Telemetry, Logging & Sustainability
+
+Security-related telemetry contributes to:
 
 ~~~text
 releases/<version>/focus-telemetry.json
 ~~~
 
-Includes:
+This telemetry may include:
 
-- Governance validation  
-- FAIR+CARE enforcement  
-- Security workflow outcomes  
+- Security workflow outcomes (pass/fail and severity signals)  
+- Governance and FAIR+CARE checks  
+- SBOM and provenance verification status  
+- Energy and carbon metrics related to security and scanning workloads  
 
-Never includes:
+Telemetry **never** contains:
 
-- Secrets  
-- PII  
-- Sensitive geography  
+- Secrets or credentials  
+- PII or PHI  
+- Precise coordinates of protected heritage or sensitive sites  
+- Non-governed or raw incident data  
 
----
+Telemetry schemas:
 
-## 🧩 Responsible Use of Data
-
-Special protections apply for:
-
-- Cultural heritage sites  
-- Indigenous land boundaries  
-- Archaeological assets  
-- Ecology and endangered species locations  
-
-Controls:
-
-- H3 generalization  
-- Masking/omission  
-- Licensing & sovereignty constraints  
-- Ethical use enforcement  
+- `schemas/telemetry/security-policy-v1.json`  
+- `schemas/telemetry/energy-v2.json`  
+- `schemas/telemetry/carbon-v2.json`  
 
 ---
 
-## 🚨 Security Advisories & Coordinated Disclosure
+## 🧩 Responsible Use of Sensitive Data
 
-We may publish:
+Certain datasets require **heightened protection**:
 
-- GitHub Security Advisories  
-- Release-note security sections  
-- Updates to this policy  
+- Archaeological and cultural heritage sites  
+- Indigenous lands and sacred locations  
+- Sensitive ecology and endangered species habitats  
+- Any data flagged with sovereignty or high CARE sensitivity  
 
-Guided by coordinated disclosure best practices.
+Controls include:
+
+- H3-based spatial generalization and masking  
+- Removal of exact coordinates and identifiers from public releases  
+- Additional FAIR+CARE Council review before publishing new or modified layers  
+- Documented licensing and data-sharing agreements  
+
+Security reports involving these domains are jointly handled by:
+
+- Security maintainers  
+- FAIR+CARE Council  
+- Relevant sovereignty stewards and domain experts  
 
 ---
 
 ## 🧭 Maintainer Responsibilities
 
-Maintainers must:
+Maintainers are responsible for:
 
-- Triage reports promptly  
-- Respect confidentiality  
-- Apply governance rules  
-- Document fixes  
-- Push regression safeguards  
-- Coordinate with FAIR+CARE Council when required  
+- Monitoring private reporting channels and triaging reports promptly  
+- Respecting the confidentiality of reporters and affected communities  
+- Applying fixes consistently across affected branches/environments  
+- Ensuring regression tests, validators, and CI rules are updated as needed  
+- Updating SBOMs, manifests, IR logs, and telemetry to reflect changes  
+- Coordinating with governance bodies (Security Council, FAIR+CARE, Architecture Board) when risk intersects ethics, sovereignty, or major architectural choices  
 
 ---
 
-## 🕰 Version History
+## 🕰️ Version History
 
-| Version  | Date       | Summary                                                                                         |
-|---------:|-----------:|-------------------------------------------------------------------------------------------------|
-| v11.2.2  | 2025-11-27 | Added emoji directory tree; updated metadata; full alignment to KFM-MDP v11.2.2; refined AI & privacy sections. |
-| v11.0.0  | 2025-11-18 | Initial v11 SECURITY policy.                                                                    |
-| v10.0.0  | 2025-??-?? | Initial SECURITY.md baseline.                                                                    |
+| Version | Date       | Summary                                                                                                   |
+|--------:|------------|-----------------------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-27 | Rebuilt policy using `docs/security` governance; added supply-chain, SBOM/SLSA, NPM worm defense, and telemetry links. |
+| v11.0.0 | 2025-11-18 | Initial v11 security policy aligned with new CI/CD, FAIR+CARE, and sovereignty architecture.             |
+| v10.0.0 | Legacy     | Early SECURITY.md baseline prior to v11 repository restructure.                                           |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix  
-[⬅️ Back](../README.md) · [🏗️ Architecture](../ARCHITECTURE.md) · [🛡️ Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
+🛡️ **Kansas Frontier Matrix — Security Policy & Vulnerability Disclosure (v11.2.2)**  
+Secure by Design · FAIR+CARE-Governed · Provenance-First  
+
+[⬅️ Root README](../README.md) · [📚 Security Governance](../docs/security/README.md) · [🛡 Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
