@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "🧠 Kansas Frontier Matrix — System Story Nodes Overview"
 path: "docs/story-nodes/system/README.md"
