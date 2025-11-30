@@ -54,139 +54,221 @@ Provide the **canonical, high-level overview** of the Kansas Frontier Matrix v11
 
 ---
 
-## 🗂️ Repository Layout (KFM v11.2.2 · Emoji Profile A)
+## 🗂️ Directory Layout
 
 ~~~text
 Kansas-Frontier-Matrix/
-├── 📄 README.md                         # Root system overview (this file)
+├── 📄 README.md                         # Root overview (this file)
+├── 📄 ARCHITECTURE.md                   # High-level system & repo architecture
+├── 📄 CONTRIBUTING.md                   # Contribution guidelines & workflow
+│
+├── 📂 .github/                          # CI/CD, security, issue/workflow config
+│   ├── 📂 ISSUE_TEMPLATE/               # Issue templates
+│   ├── 📂 actions/                      # Reusable composite actions
+│   ├── 📂 workflows/                    # CI workflows (lint, build, tests, audits)
+│   ├── 📄 ARCHITECTURE.md              # GitHub infra design
+│   ├── 📄 PULL_REQUEST_TEMPLATE.md     # PR template
+│   ├── 📄 README.md                    # .github overview
+│   ├── 📄 SECURITY.md                  # Security policy
+│   └── 📄 dependabot.yml               # Dependency update rules
 │
 ├── 📂 data/                             # Data lifecycle & catalogs
-│   ├── 📂 sources/                      # External source manifests (no large files)
-│   ├── 📂 raw/                          # Downloaded raw data (DVC/LFS, ignored by git)
-│   ├── 📂 work/                         # Intermediate artifacts (ephemeral/regen)
-│   ├── 📂 processed/                    # Canonical processed outputs (GeoTIFF, GeoJSON, CSV)
-│   ├── 📂 stac/                         # STAC 1.x catalog (Collections + Items)
-│   ├── 📂 provenance/                   # PROV-O / lineage records (JSON-LD, RDF)
-│   └── 📂 releases/                     # Versioned release bundles (SBOM, manifest, telemetry)
+│   ├── 📂 air-quality/                  # Air quality sources & products
+│   ├── 📂 archive/                      # Archived / deprecated datasets
+│   ├── 📂 checksums/                    # Hashes for data integrity
+│   ├── 📂 hydrology/                    # Hydrology-related datasets & configs
+│   ├── 📂 processed/                    # Canonical processed outputs
+│   ├── 📂 raw/                          # Raw ingests (DVC/LFS-backed)
+│   ├── 📂 reports/                      # Data QA/QC & summary reports
+│   ├── 📂 stac/                         # STAC Collections & Items
+│   ├── 📂 surficial-geology/            # Surficial geology products
+│   ├── 📂 updates/                      # Incremental refresh payloads
+│   ├── 📂 work/                         # Intermediate / working artifacts
+│   ├── 📄 ARCHITECTURE.md              # Data architecture notes
+│   └── 📄 README.md                    # Data tree overview
 │
-├── 🧪 src/                              # Backend, ETL, AI/ML, graph integration, telemetry
-│   ├── 📂 pipelines/                    # LangGraph DAGs, ETL, reconciliation
-│   ├── 📂 ai/                           # Models, feature extractors, Focus Mode logic
-│   ├── 📂 graph/                        # Neo4j schema, queries, loaders
-│   ├── 📂 server/                       # API services (FastAPI/GraphQL, etc.)
-│   └── 📂 instrumentation/             # OpenLineage + OpenTelemetry helpers
+├── 📂 docs/                             # Human- & machine-readable documentation
+│   ├── 📂 accessibility/                # A11y rules & audits
+│   ├── 📂 analyses/                     # Domain analyses & case studies
+│   ├── 📂 architecture/                 # System & subsystem designs
+│   ├── 📂 archives/                     # Historical/archives documentation
+│   ├── 📂 data/                         # Data contracts, catalogs, schemas
+│   ├── 📂 design/                       # UX, UI, visual & interaction design
+│   ├── 📂 governance/                   # Governance charters, processes
+│   ├── 📂 graph/                        # Graph/ontology documentation
+│   ├── 📂 guides/                       # How-to guides & tutorials
+│   ├── 📂 history/                      # Historical context & timelines
+│   ├── 📂 pipelines/                    # Pipeline specs, SOPs, runbooks
+│   ├── 📂 reports/                      # Generated reports & whitepapers
+│   ├── 📂 search/                       # Search/indexing behavior docs
+│   ├── 📂 security/                     # Security, supply-chain, hardening
+│   ├── 📂 soil/                         # Soil/terrain domain docs
+│   ├── 📂 standards/                    # Protocols (KFM-MDP, FAIR+CARE, etc.)
+│   ├── 📂 telemetry/                    # Telemetry & observability standards
+│   ├── 📂 templates/                    # Doc & MCP templates
+│   ├── 📂 workflows/                    # Human workflows & process docs
+│   ├── 📄 ARCHITECTURE.md              # Docs architecture
+│   ├── 📄 MASTER_GUIDE_v10.md          # Legacy v10 master guide
+│   ├── 📄 MASTER_GUIDE_v11.md          # v11 master guide
+│   ├── 📄 README.md                    # Docs overview
+│   └── 📄 glossary.md                  # Shared terminology
 │
-├── 🌐 web/                              # Frontend (React + MapLibre + Cesium)
-│   ├── 📂 src/                          # Components (map, timeline, Focus Mode UI)
-│   ├── 📂 public/                       # Static assets
-│   └── 📂 meta/                         # SEO, link cards, manifest/config
+├── 📂 mcp/                              # Master Coder Protocol assets
+│   ├── 📂 experiments/                  # Experiment logs & configs
+│   ├── 📂 model_cards/                  # Model cards for AI/stat models
+│   ├── 📂 sops/                         # Standard operating procedures
+│   ├── 📄 MCP-README.md                # MCP-specific overview
+│   └── 📄 README.md                    # MCP root overview
 │
-├── 📚 docs/                             # Documentation (user, developer, governance)
-│   ├── 📂 standards/                    # KFM-MDP, FAIR+CARE, heritage, sovereignty policies
-│   ├── 📂 architecture/                 # System design, pipelines, web, graph
-│   ├── 📂 analyses/                     # Domain analyses and reports
-│   ├── 📂 governance/                   # Council processes, charters, decision logs
-│   └── 📂 templates/                    # Document & MCP templates
+├── 📂 src/                              # Backend & service code
+│   ├── 📂 ai/                           # AI/ML logic & Focus Mode services
+│   ├── 📂 design-tokens/                # Design tokens shared with web
+│   ├── 📂 graph/                        # Neo4j schema, loaders, queries
+│   ├── 📂 icons/                        # Shared icon assets
+│   ├── 📂 map/                          # Map-centric backend helpers
+│   ├── 📂 pipelines/                    # ETL & orchestration pipelines
+│   ├── 📂 tests/                        # Backend-focused tests
+│   ├── 📂 theming/                      # Theming helpers shared with web
+│   ├── 📄 ARCHITECTURE.md              # Backend architecture
+│   └── 📄 README.md                    # src overview
 │
-├── 🧬 mcp/                              # Master Coder Protocol (documentation-first assets)
-│   ├── 📂 experiments/                  # Experiment logs (ETL, AI, modeling)
-│   ├── 📂 sops/                         # Standard Operating Procedures
-│   ├── 📂 model_cards/                  # Model cards for AI & statistical models
-│   └── 📄 MCP-README.md                # MCP usage guide for KFM
+├── 📂 tests/                            # Cross-cutting test harnesses
+│   ├── 📂 fixtures/                     # Shared test fixtures
+│   ├── 📄 ARCHITECTURE.md              # Test architecture & strategy
+│   └── 📄 README.md                    # tests overview
 │
-├── 🧪 tests/                            # Unit, integration, and E2E tests
-│   ├── 📂 backend/
-│   ├── 📂 pipelines/
-│   ├── 📂 web/
-│   └── 📂 graph/
+├── 📂 tools/                            # Tooling & maintenance utilities
+│   ├── 📂 ai/                           # AI-related tools (eval, drift, etc.)
+│   ├── 📂 ci/                           # CI helper scripts/tools
+│   ├── 📂 cli/                          # Command-line utilities
+│   ├── 📂 governance/                   # Governance automation tools
+│   ├── 📂 telemetry/                    # Telemetry/metrics tools
+│   ├── 📂 validation/                   # Validators (STAC/DCAT, schemas, etc.)
+│   ├── 📄 ARCHITECTURE.md              # Tools architecture
+│   └── 📄 README.md                    # tools overview
 │
-├── 🛠 tools/                            # Utility scripts & notebooks (non-core code)
-│   ├── 📂 scripts/
-│   └── 📂 notebooks/
-│
-└── ⚙️ .github/                          # GitHub infrastructure, CI/CD & governance
-    ├── 📄 README.md                     # GitHub infra overview
-    ├── 🏗️ ARCHITECTURE.md               # CI/CD architecture spec
-    ├── 🤖 workflows/                    # CI/CD workflows (ci, docs, stac, dcat, AI, security, telemetry)
-    └── 🧱 actions/                      # Composite actions (markdown-lint, schema-validate, etc.)
+└── 🌐 web/                              # Frontend (React + MapLibre + Cesium)
+    ├── 📂 public/                       # Static assets
+    ├── 📂 src/                          # App code (UI, maps, Focus Mode)
+    ├── 📄 ARCHITECTURE.md              # Web architecture
+    └── 📄 README.md                    # web overview
 ~~~
 
 Author rules:
 
-- Every directory above MUST have a `README.md`.  
-- New top-level directories MUST be added here.  
-- Directory trees MUST use `~~~text` fences (no backtick fences inside).
+- Each directory shown MUST have (or gain) a `README.md` with local layout and purpose.  
+- New top-level directories MUST be added here with emoji + concise description.  
+- All directory layouts MUST use `~~~text` fences (no nested backtick fences).
 
 ---
 
-## 📘 What the System Is
+## 📘 Overview
 
-The **Kansas Frontier Matrix (KFM)** is a unified, multi-layer, multi-epoch knowledge system integrating geospatial data, historical archives, environmental models, AI pipelines, archaeology, cultural landscapes, hazard layers, ecological datasets, and narrative modes (Story Nodes & Focus Mode v3).
+The **Kansas Frontier Matrix (KFM)** is a unified, multi-layer, multi-epoch knowledge system integrating:
 
-Powered by **Neo4j**, governed by **FAIR+CARE**, and aligned with **CIDOC-CRM, GeoSPARQL, OWL-Time, PROV-O**, and **STAC/DCAT** catalogs.
+- 🗺️ Geospatial data (2D/3D maps, tiles, vectors, rasters, H3 cells)  
+- 🧠 AI pipelines & autonomous ETL (LangGraph DAGs, CrewAI workers, MLOps)  
+- 📜 Historical archives & newspapers (Kansas Memory, Chronicling America, etc.)  
+- 💧 Environmental & hydrological models (climate, rivers, groundwater, drought)  
+- 🏺 Archaeology & cultural landscapes (masked under CARE and sovereignty rules)  
+- ⚡ Hazards & infrastructure (tornadoes, floods, wildfire, energy grids, pipelines)  
+- 🌿 Ecology & land systems (grasslands, wetlands, species distributions)  
+- 📖 Narrative layers (Story Nodes & Focus Mode v3)  
 
-KFM v11 serves as a **state-scale Kansas digital twin** across space + time.
+Everything is wired through a **Neo4j knowledge graph**, governed by:
+
+- Ontologies: **CIDOC-CRM · GeoSPARQL · OWL-Time · PROV-O · ISO 19115**  
+- Catalogs: **STAC 1.x · DCAT 3.0 · CF conventions**  
+- Protocols: **KFM-MDP v11.2.2 · MCP-DL v6.3 · KFM-OP v11 · KFM-PDC v11**  
+- Ethics: **FAIR+CARE · Indigenous Data Sovereignty**  
 
 ---
 
 ## 🧱 Architecture
 
-KFM v11 uses a fully-governed stacked architecture:
+KFM v11 is structured as a deterministic, provenance-rich stack:
 
-1. **Data & Storage** — STAC/DCAT catalogs, DVC/LFS, CF-compliant rasters  
-2. **Pipelines** — LangGraph deterministic DAG ETL, CrewAI workers, OpenLineage  
-3. **Graph** — Neo4j v5 with CIDOC-CRM + GeoSPARQL + OWL-Time  
-4. **API Layer** — FastAPI/GraphQL with auth & rate limits  
-5. **Frontend** — React + MapLibre + Cesium 3D twin  
-6. **CI/CD & Governance** — AI governance, sovereignty checks, SBOM, telemetry  
+1. **Data & Storage**  
+   - `data/` with raw → work → processed → releases, plus STAC, checksums, and provenance.  
 
-All components are **reproducible** and **linked through PROV-O**.
+2. **Pipelines & AI**  
+   - `src/pipelines/` + `tools/ci/`, `tools/validation/` implementing LangGraph DAG ETL, schema checks, and OpenLineage emission.  
+
+3. **Graph & Semantics**  
+   - `src/graph/` and `docs/graph/` define Neo4j schema, CIDOC-CRM/GeoSPARQL mappings, and PROV-O integration.  
+
+4. **APIs & Services**  
+   - `src/` server components expose FastAPI/GraphQL endpoints for map layers, graph queries, and Focus Mode.  
+
+5. **Frontend Experience**  
+   - `web/` hosts React + MapLibre + Cesium apps, with shared design tokens and theming from `src/design-tokens/` and `src/theming/`.  
+
+6. **Governance & CI/CD**  
+   - `.github/` workflows and `tools/governance/` enforce security, FAIR+CARE, STAC/DCAT validity, and markdown protocol compliance.  
+
+All layers are **replayable** and **lineage-tracked** via PROV-O and telemetry.
 
 ---
 
 ## 📦 Data & Metadata
 
-All data is:
+KFM data is cataloged and governed as follows:
 
-- STAC-registered  
-- DCAT-cataloged  
-- PROV-O lineage-tracked  
-- FAIR+CARE-labeled  
-- Sovereignty-compliant  
+- **STAC** in `data/stac/` for spatiotemporal assets (rasters, vectors, tiles).  
+- **DCAT** in `docs/data/` and `data/releases/` for dataset-level metadata.  
+- **PROV-O** in `data/provenance/` for dataset, pipeline, and model lineage.  
+- **Checksums** in `data/checksums/` for integrity verification.  
 
-Metadata includes CRS, vertical datums, units, temporal ranges, and processing provenance.
+Every production dataset MUST declare:
+
+- Identity: title, description, version, license, steward.  
+- Spatial: CRS, bbox, resolution, vertical datum (if applicable).  
+- Temporal: `datetime` or interval, sampling frequency, known gaps.  
+- Lineage: sources, processing steps, parameters, and code references.  
+- FAIR+CARE & sovereignty attributes where culturally or ecologically sensitive.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Story Nodes (v3):
+KFM v11 uses **Story Nodes** (v3 schema) and **Focus Mode** as a core narrative layer:
 
-- Combine **geometry + time + narrative + graph links**  
-- Are governed by metadata, sovereignty, and narrative safety rules  
-- Feed **Focus Mode v3**, which provides context-aware narrative exploration backed entirely by data  
+- Story Nodes live in JSON and bind:
+  - `spacetime.geometry` (points, polygons, H3 cells)  
+  - `spacetime.when` (instant or interval)  
+  - narrative text  
+  - links to graph entities (places, events, datasets, documents)  
 
-No narrative may contradict underlying datasets or governance policies.
+- Focus Mode v3:
+  - Accepts a focus target (entity, dataset, Story Node).  
+  - Retrieves the two-hop neighborhood from Neo4j, plus STAC/DCAT links.  
+  - Generates strictly data-grounded narratives under governance rules.  
+
+Sensitive archaeological or cultural content is generalized (H3) or suppressed according to:
+
+- `docs/standards/faircare/FAIRCARE-GUIDE.md`  
+- `docs/standards/heritage/` (dynamic H3 generalization and masking)  
+- `docs/governance/` sovereignty policies  
 
 ---
 
-## ⚖ Governance
+## ⚖ FAIR+CARE & Governance
 
-KFM is governed by:
+KFM operates under explicit governance:
 
-- FAIR+CARE Council  
-- Architecture Board  
-- Data/Heritage Working Groups  
-- AI Safety & Narrative Governance Board  
+- **FAIR+CARE Council** — data ethics, Indigenous data sovereignty, community benefit.  
+- **Architecture Board** — technical decisions, performance, and reliability.  
+- **Data & Heritage Working Groups** — domain expertise and risk review.  
+- **AI Safety & Narrative Governance Board** — AI behavior, Focus Mode, Story Nodes.  
 
-All PRs must pass CI/CD enforcement:
+CI/CD workflows enforce:
 
-- Metadata checks  
-- AI governance  
-- STAC/DCAT validation  
-- Sovereignty / CARE compliance  
-- SBOM + security  
-- Markdown protocol validation  
+- Markdown protocol (KFM-MDP v11.2.2)  
+- Schema validity (STAC, DCAT, JSON-LD, Story Node, telemetry)  
+- FAIR+CARE & sovereignty checks (especially for archaeology and archives)  
+- Security & supply-chain constraints (SBOMs, dependency scanning)  
+
+Nothing ships to `data/releases/` without passing these gates.
 
 ---
 
@@ -194,8 +276,8 @@ All PRs must pass CI/CD enforcement:
 
 | Version | Date       | Summary                                                                                                             |
 |--------:|------------|---------------------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Elevated repository layout, aligned with KFM-MDP v11.2.2, clarified architecture & governance integration.          |
-| v11.1.2 | 2025-11-27 | Previous v11 root overview with initial digital twin framing.                                                       |
+| v11.2.2 | 2025-11-28 | Expanded two-level directory layout, aligned with current repo, tightened architecture & governance integration.    |
+| v11.1.2 | 2025-11-27 | Previous v11 root overview with initial digital twin framing and multi-domain scope.                               |
 
 ---
 
