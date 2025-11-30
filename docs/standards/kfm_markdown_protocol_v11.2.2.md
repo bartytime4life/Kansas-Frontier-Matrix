@@ -79,7 +79,7 @@ story_node_refs: []
 immutability_status: "version-pinned"
 doc_uuid: "urn:kfm:doc:standards:markdown-protocol:v11.2.2"
 semantic_document_id: "kfm-markdown-protocol-v11.2.2"
-event_source_id: "ledger:kfm-markdown-protocol-v11.2.2"
+event_source_id: "ledger:kfm:doc:standards:markdown-protocol:v11.2.2"
 doc_integrity_checksum: "<sha256>"
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -216,54 +216,44 @@ All other documentation standards (e.g. domain-specific SOPs, experiment templat
 
 ---
 
+KFM v11 monorepo layout MUST be documented consistently using the emoji-enhanced tree pattern below.
+
+---
+
 ## 🗂️ Directory Layout
 
-KFM documents MUST represent the repository structure using a **consistent, project-wide layout pattern**. The canonical layout for standards, memory, and project files is:
-
-```text
-📁 KansasFrontierMatrix/                     — Monorepo root
-│
-├── 📂 docs/                                 — All documentation
-│   ├── 📂 standards/                        — Standards & policies (Markdown, FAIR+CARE, governance, etc.)
-│   ├── 📂 architecture/                     — System + subsystem designs
-│   ├── 📂 guides/                           — How-to guides and SOPs
-│   ├── 📂 data/                             — Data contracts, catalogs, data docs
-│   ├── 📂 analyses/                         — Domain analyses & case studies
-│   └── 📄 glossary.md                       — Shared term glossary
-│
-├── 📂 src/                                  — Backend & service code
-│   ├── 📂 pipelines/                        — ETL, AI, orchestration (LangGraph, Airflow, etc.)
-│   ├── 📂 graph/                            — Neo4j schema, loaders, queries
-│   ├── 📂 api/                              — FastAPI, GraphQL gateway
-│   └── 📂 tools/                            — Utilities, CLIs, migrations
-│
-├── 📂 data/                                 — Data lifecycle (raw → work → processed → releases)
-│   ├── 📂 sources/                          — External dataset manifests
-│   ├── 📂 raw/                              — Raw ingested data (LFS/DVC)
-│   ├── 📂 work/                             — Intermediate, normalized, enriched data
-│   ├── 📂 processed/                        — Validated, production-ready data
-│   └── 📂 stac/                             — STAC collections & items
-│
-├── 📂 schemas/                              — JSON, STAC, DCAT, JSON-LD, SHACL, telemetry schemas
-│   ├── 📂 json/                             — JSON schemas for docs/pipelines/etc.
-│   └── 📂 telemetry/                        — Energy, carbon, lineage, metrics schemas
-│
-├── 📂 mcp/                                  — Master Coder Protocol artifacts
-│   ├── 📂 experiments/                      — Experiment logs
-│   ├── 📂 model_cards/                      — Model documentation
-│   └── 📂 sops/                             — SOPs for processes
-│
-├── 📂 tests/                                — Automated tests
-├── 📂 tools/                                — Repo-level tools, dev utilities
-└── 📂 .github/                              — CI/CD workflows and templates
-    └── 📂 workflows/                        — CI pipelines (kfm-ci, docs-lint, lineage-audit, etc.)
-```
-
-**Directory layout rules:**
-
-- This pattern SHOULD be reused across all relevant docs (rules, standards, architecture, core project files) to avoid divergence.
-- Use emojis (`📁` for root, `📂` for subdirs) and short descriptions after `—` for readability.
-- Keep to **one level of depth** in standards/architecture docs unless deeper nesting is essential to the topic being described.
+~~~text
+KansasFrontierMatrix/
+├── 📂 docs/                                  # All documentation
+│   ├── 📂 standards/                         # Standards & policies (Markdown, FAIR+CARE, governance, etc.)
+│   ├── 📂 architecture/                      # System & subsystem designs (ETL, graph, API, UI, Focus Mode)
+│   ├── 📂 guides/                            # How-to guides, tutorials, SOP-style walkthroughs
+│   ├── 📂 data/                              # Data contracts, source registries, schema notes
+│   ├── 📂 analyses/                          # Domain analyses & case studies (archaeology, hydrology, etc.)
+│   └── 📄 glossary.md                        # Shared glossary for KFM-wide terminology
+├── 📂 src/                                   # Backend & service code
+│   ├── 📂 pipelines/                         # ETL, AI/ML, orchestration (batch, streaming, LangGraph, Airflow)
+│   ├── 📂 graph/                             # Neo4j schema, loaders, queries, lineage helpers
+│   ├── 📂 api/                               # FastAPI / GraphQL gateway, auth, routing
+│   └── 📂 tools/                             # Backend utilities, CLIs, migrations
+├── 📂 data/                                  # Data lifecycle: raw → work → processed → releases
+│   ├── 📂 sources/                           # External dataset manifests (STAC/DCAT-aligned)
+│   ├── 📂 raw/                               # Raw ingested data (LFS/DVC; not committed directly)
+│   ├── 📂 work/                              # Intermediate normalized / enriched data
+│   ├── 📂 processed/                         # Production-ready GeoJSON, COGs, CSVs, graph exports
+│   └── 📂 stac/                              # STAC Collections & Items indexing processed assets
+├── 📂 schemas/                               # JSON, JSON-LD, STAC, DCAT, SHACL, telemetry schemas
+│   ├── 📂 json/                              # JSON schemas (docs, pipelines, Story Nodes, Focus telemetry)
+│   └── 📂 telemetry/                         # Energy, carbon, lineage, metrics schemas
+├── 📂 mcp/                                   # Master Coder Protocol artifacts
+│   ├── 📂 experiments/                       # Experiment logs (timestamped, domain-tagged)
+│   ├── 📂 model_cards/                       # Model documentation & evaluation cards
+│   └── 📂 sops/                              # SOPs for repeatable processes (ETL, modeling, deployment)
+├── 📂 tests/                                 # Automated test suites (Python, JS, integration)
+├── 📂 tools/                                 # Repo-level tools, dev utilities, maintenance scripts
+└── 📂 .github/                               # CI/CD workflows & GitHub configuration
+    └── 📂 workflows/                         # CI pipelines (kfm-ci, docs-lint, lineage-audit, energy/carbon)
+~~~
 
 ---
 
@@ -363,7 +353,7 @@ When a user focuses on this document (e.g., entity `kfm-markdown-protocol-v11.2.
 
 - Focus Mode MAY:
   - Summarize the doc (respecting `ai_transform_permissions`).
-  - Highlight key sections (Overview, Anti-Patterns, Validation).
+  - Highlight key sections (Overview, Diagrams, Validation & CI/CD).
   - Render relationships to other standards (e.g., Governance, FAIR+CARE policy).
 - Focus Mode MUST NOT:
   - Rewrite or alter this document’s content.
@@ -440,7 +430,7 @@ Every Markdown file MUST begin with a YAML front-matter block:
 
 ### 5. Code Blocks
 
-- Code blocks MUST use triple backticks fenced syntax or the repo’s agreed fencing strategy and MUST NOT be nested.
+- Code blocks MUST use fenced syntax and MUST NOT be nested.
 - Language identifiers SHOULD be used for code samples (e.g., `bash`, `json`, `python`) where appropriate.
 - Secrets (tokens, passwords, credentials) MUST NEVER be present in examples.
 
@@ -636,11 +626,9 @@ This standard enforces FAIR and CARE through structural requirements:
 
 <div align="center">
 
-**Kansas Frontier Matrix**  
-*Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence*  
+📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.2**  
+Scientific Insight · Documentation-First · FAIR+CARE  
 
-[⬅ Back to Standards Index](../README.md) ·  
-[📜 Governance Charter](../governance/ROOT-GOVERNANCE.md) ·  
-[🛰 Telemetry Overview](../../telemetry/README.md)
+[📘 Docs Root](..) · [📂 Standards Index](./README.md) · [⚖ Governance](../governance/ROOT-GOVERNANCE.md)
 
 </div>
