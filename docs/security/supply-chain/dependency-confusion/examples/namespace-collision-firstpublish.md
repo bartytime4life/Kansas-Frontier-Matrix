@@ -3,19 +3,27 @@ title: "🧨 KFM v11.2.2 — Namespace Collision (First-Publish Attack Example)"
 path: "docs/security/supply-chain/dependency-confusion/examples/namespace-collision-firstpublish.md"
 version: "v11.2.2"
 last_updated: "2025-11-30"
-review_cycle: "Quarterly · Security Council"
-status: "Active · Educational Example"
 
-commit_sha: "<latest-commit>"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+content_stability: "stable"
+
+commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
+signature_ref: "../../../../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
 sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.2.2/release-manifest.zip"
+manifest_ref: "../../../../../releases/v11.2.2/manifest.zip"
 telemetry_ref: "../../../../../releases/v11.2.2/security-telemetry.json"
 telemetry_schema: "../../../../../schemas/telemetry/security-v3.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
@@ -24,7 +32,73 @@ ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
-doc_kind: "Security · Example"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+sensitivity: "General (non-sensitive)"
+sensitivity_level: "Low"
+public_exposure_risk: "Low"
+classification: "Public"
+
+ontology_alignment:
+  cidoc: "E13 Attribute Assignment"
+  schema_org: "TechArticle"
+  prov_o: "prov:Entity"
+  owl_time: "ProperInterval"
+  geosparql: "geo:Feature"
+
+metadata_profiles:
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/security/supply-chain/dependency-confusion/examples/namespace-collision-firstpublish.md@v11.2.1"
+  - "docs/security/supply-chain/dependency-confusion/examples/namespace-collision-firstpublish.md@v11.2.0"
+  - "docs/security/supply-chain/dependency-confusion/examples/README.md"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+immutability_status: "version-pinned"
+doc_uuid: "urn:kfm:doc:security:dependency-confusion:examples:namespace-collision-firstpublish:v11.2.2"
+semantic_document_id: "kfm-depconf-examples-firstpublish-v11.2.2"
+event_source_id: "ledger:depconf.examples.firstpublish.v11.2.2"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "semantic-highlighting"
+  - "diagram-extraction"
+  - "metadata-extraction"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+
+heading_registry:
+  approved_h2:
+    - "📘 Background"
+    - "🗂️ Directory Layout"
+    - "🧨 Example Scenario"
+    - "🧪 Simulated CI Detection Output"
+    - "🚨 Why This Attack Works (Without KFM Protections)"
+    - "🛡️ How KFM v11.2.2 Blocks This Attack"
+    - "🧭 Developer Guidance"
+    - "🕰️ Version History"
 ---
 
 <div align="center">
@@ -33,9 +107,9 @@ doc_kind: "Security · Example"
 `docs/security/supply-chain/dependency-confusion/examples/namespace-collision-firstpublish.md`
 
 **Purpose:**  
-Demonstrate a classic *first-publish dependency-confusion attack*, where a malicious actor  
-publishes a public package *before* an internal KFM package is officially published externally,  
-exploiting resolver precedence rules and namespace shadowing vulnerabilities.
+Demonstrate the foundational *first-publish* dependency-confusion attack pattern,  
+where a malicious actor publishes a public package **before** the internal one,  
+tricking resolvers into selecting the wrong registry.
 
 </div>
 
@@ -43,114 +117,18 @@ exploiting resolver precedence rules and namespace shadowing vulnerabilities.
 
 ## 📘 Background
 
-A *first-publish attack* occurs when:
+A first-publish attack occurs when:
 
-1. KFM maintains a **private internal package** (e.g., `kfm-geo-core`).
-2. The package **does not exist** on public registries (PyPI/NPM/etc.).
-3. An attacker publishes a **public package using the same name**.
-4. Some resolvers (depending on configuration) may:
-   - Prefer public registry
-   - Check public registry first
-   - Or accept public metadata as authoritative
+1. KFM has a **private internal package** (e.g., `kfm-geo-core`).  
+2. It does **not** exist on PyPI/NPM/etc.  
+3. An attacker publishes a **public package with the same name**.  
+4. Resolver attempts public registry first or uses version precedence → attacker wins.  
 
-This can trigger a dependency-confusion compromise *even if the internal version is pinned*,  
-especially in misconfigured environments or during fallback conditions.
+This is one of the oldest and most effective dependency-confusion tactics.
 
 ---
 
-## 🧨 Example Scenario
-
-### Internal KFM Package
-```
-name: kfm-geo-core
-version: 3.8.0
-registry: https://kfm-pypi.internal/simple
-```
-
-### Attacker First-Publish on PyPI
-```
-name: kfm-geo-core
-version: 99.0.0
-registry: https://pypi.org/simple
-uploaded: 2025-11-04 02:13:05 UTC
-files: malicious wheel containing RAT payload
-```
-
-### Risk Factors
-
-- Internal package never published publicly  
-- Misconfigured environment attempts public registry  
-- Resolver compares version numbers  
-- “99.0.0” outranks “3.8.0” → attacker wins  
-- Without registry isolation, the malicious artifact replaces the internal one  
-
----
-
-## 🧪 Simulated CI Detection Output
-
-```text
-[namespace-monitor]   WARNING: First-publish detected for name "kfm-geo-core".
-[namespace-monitor]   Upstream version: 99.0.0 (public)
-[namespace-monitor]   Internal version: 3.8.0 (private)
-[namespace-monitor]   RISK: High — public version outranks private version.
-[policy]              FAIL: Namespace conflict. Quarantining name.
-[evidence]            Updated: namespace-scan.json
-[governance]          Incident stub created.
-```
-
----
-
-## 🚨 Why This Attack Works (Without KFM Protections)
-
-- Public registry is unrestricted  
-- Resolver defaults to public-first behavior  
-- No namespace-blocking  
-- No forced registry scoping  
-- No mirror enforcement  
-- No version-precedence override rules  
-
----
-
-## 🛡️ How KFM v11.2.2 Blocks This Attack
-
-### ✔ Registry Isolation  
-Public registries → **denied**.  
-Internal mirrors only → **allowed**.
-
-### ✔ Namespace Scanning  
-First-publish attempts are caught immediately.
-
-### ✔ SLSA Provenance  
-Attacker cannot forge valid provenance bundles.
-
-### ✔ Cosign & GPG Signatures  
-Attacker cannot sign using trusted KFM keys.
-
-### ✔ SBOM Locking  
-Attacker’s artifact digest → always mismatch.
-
-### ✔ Fallback Controls  
-No resolver fallback allowed during failures.
-
-### ✔ Automatic SBD Filing  
-A Security Block Declaration auto-quarantines suspicious namespaces.
-
----
-
-## 🧭 Developer Guidance
-
-If you see a namespace collision alert:
-
-1. **Do NOT attempt to install the package.**  
-2. Inspect `policy/evidence/namespace-scan.json`.  
-3. Verify that your environment uses the correct internal mirror.  
-4. Open the incident stub created for this namespace.  
-5. Notify the Security Council if not already triggered.  
-6. Avoid pinning public packages with KFM-like names.
-
----
-
-## 🗂️ Directory Layout
+## 🗂️ Directory Layout  
 
 ~~~text
 📁 dependency-confusion/
@@ -172,17 +150,105 @@ If you see a namespace collision alert:
 
 ---
 
+## 🧨 Example Scenario
+
+### Internal KFM Package
+```
+name: kfm-geo-core
+version: 3.8.0
+registry: https://kfm-pypi.internal/simple
+```
+
+### Attacker First-Publish on PyPI
+```
+package:   kfm-geo-core
+version:   99.0.0
+registry:  https://pypi.org/simple
+uploaded:  2025-11-04 02:13:05 UTC
+payload:   malicious wheel (RAT loader)
+```
+
+### Why It's Effective
+
+- Internal package has no public record  
+- Public registry is trusted by misconfigured resolvers  
+- Attacker uses inflated version (`99.0.0`)  
+- Resolver incorrectly chooses the public one  
+
+---
+
+## 🧪 Simulated CI Detection Output
+
+```text
+[namespace-monitor]   WARNING: First-publish detected: "kfm-geo-core"
+[namespace-monitor]   Internal version: 3.8.0
+[namespace-monitor]   Public version:   99.0.0
+[policy]              FAIL: namespace collision — quarantine name
+[evidence]            Updated: namespace-scan.json
+```
+
+---
+
+## 🚨 Why This Attack Works (Without KFM Protections)
+
+- Resolver defaults to public-first registry lookup  
+- Namespace shielding not enforced  
+- No registry isolation  
+- No SLSA provenance validation  
+- Version precedence favors attacker  
+- No SBOM enforcement  
+- No fallback protections  
+
+---
+
+## 🛡️ How KFM v11.2.2 Blocks This Attack
+
+### ✔ Registry Isolation  
+Public registries → blocked.
+
+### ✔ Namespace Monitoring  
+First-publish attempts detected instantly.
+
+### ✔ Exact Pinning  
+Resolver cannot float to higher versions.
+
+### ✔ SLSA + Cosign Validation  
+Attacker cannot produce valid provenance.
+
+### ✔ SBOM Drift Enforcement  
+Mismatch halts builds.
+
+### ✔ Fallback Tier  
+Mirror failure never falls back to public registry.
+
+### ✔ SBD Auto-Generation  
+Security Block Declaration quarantines namespace.
+
+---
+
+## 🧭 Developer Guidance
+
+- Never install packages not found in internal mirrors  
+- Run namespace scan:
+  ```bash
+  kfm-ns-scan .
+  ```
+- Treat first-publish alerts as CRITICAL  
+- Validate environment registry settings  
+- Ensure no resolver fallback behavior  
+
+---
+
 ## 🕰️ Version History
 
-| Version | Date       | Notes |
-|---------|------------|--------|
-| v11.2.2 | 2025-11-30 | Initial example created |
+| Version  | Date       | Notes |
+|----------|------------|--------|
+| v11.2.2  | 2025-11-30 | Full extended metadata upgrade; directory-layout repositioned |
 
 ---
 
 <div align="center">
 
-📚 [Examples Index](./README.md) • 🧐 [Basic Collision Example](./namespace-collision-basic.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
+📚 [Examples Index](./README.md) • 🧨 [Basic Collision](./namespace-collision-basic.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
