@@ -86,7 +86,7 @@ sunset_policy: "Superseded upon next PR-process update"
 <div align="center">
 
 # 🧾 **Kansas Frontier Matrix — Pull Request Template**  
-`/.github/PULL_REQUEST_TEMPLATE.md`
+`.github/PULL_REQUEST_TEMPLATE.md`
 
 Ensure every contribution meets **KFM-MDP v11.2.2**, **MCP-DL v6.3**, **FAIR+CARE**,  
 and **Diamond⁹ Ω / Crown∞Ω** governance requirements.
@@ -169,19 +169,19 @@ All PRs are:
 
 ### Code & Data Validation
 
-* [ ] Linting (Python/TS/MD)  
-* [ ] Unit + integration tests  
-* [ ] Schema validation  
-* [ ] STAC/DCAT validation (if applicable)  
-* [ ] SBOM impact reviewed  
-* [ ] No secrets or sensitive coordinates added  
+- [ ] Linting (Python/TS/MD)  
+- [ ] Unit + integration tests  
+- [ ] Schema validation (JSON/YAML)  
+- [ ] STAC/DCAT validation (if applicable)  
+- [ ] SBOM impact reviewed  
+- [ ] No secrets or sensitive coordinates added  
 
 ### Documentation Validation
 
-* [ ] Follows KFM-MDP v11.2.2  
-* [ ] Front-matter updated & valid  
-* [ ] Links verified  
-* [ ] Mermaid diagrams render (if applicable)  
+- [ ] Follows KFM-MDP v11.2.2  
+- [ ] Front-matter updated & valid  
+- [ ] Links verified  
+- [ ] Mermaid diagrams render (if applicable)  
 
 ---
 
@@ -189,13 +189,13 @@ All PRs are:
 
 If UI changes:
 
-* [ ] Keyboard navigation verified  
-* [ ] Focus states correct  
-* [ ] High-contrast mode compatible  
-* [ ] Alt text included  
-* [ ] Respects `prefers-reduced-motion`  
+- [ ] Keyboard navigation verified  
+- [ ] Focus states correct  
+- [ ] High-contrast mode compatible  
+- [ ] Alt text included where needed  
+- [ ] Respects `prefers-reduced-motion`  
 
-*A11y Notes:*  
+**A11y Notes:**  
 > _Write here._
 
 ---
@@ -204,45 +204,46 @@ If UI changes:
 
 ### FAIR Principles
 
-- [ ] **F1** Findable  
-- [ ] **A1** Accessible  
-- [ ] **I1** Interoperable  
-- [ ] **R1** Reusable  
+- [ ] **F1** Findable (IDs, metadata, indexing)  
+- [ ] **A1** Accessible (open formats, documented access)  
+- [ ] **I1** Interoperable (STAC/DCAT/JSON-LD aligned)  
+- [ ] **R1** Reusable (clear licensing & provenance)  
 
 ### CARE Principles
 
-- [ ] No unapproved Indigenous or cultural data  
-- [ ] CARE labels added/updated  
+- [ ] No unapproved Indigenous or cultural data added  
+- [ ] CARE labels added/updated where appropriate  
 - [ ] Sovereignty/masking rules respected (H3, generalization, redaction)  
 
 Governance references:
 
 - `../docs/standards/faircare/FAIRCARE-GUIDE.md`  
 - `../docs/standards/governance/ROOT-GOVERNANCE.md`  
+- `../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`  
 
 ---
 
 ## 🧠 AI / Model-Specific Changes (If Applicable)
 
-* [ ] Model card updated (`mcp/model_cards/...`)  
-* [ ] Training/eval datasets documented (`mcp/experiments/...`)  
-* [ ] Hallucination/grounding guards validated  
-* [ ] Focus Mode compatibility maintained  
+- [ ] Model card updated (`mcp/model_cards/...`)  
+- [ ] Training/eval datasets documented (`mcp/experiments/...`)  
+- [ ] Hallucination/grounding guards validated  
+- [ ] Focus Mode compatibility maintained  
 
-*AI Notes:*  
+**AI Notes:**  
 > _Write here._
 
 ---
 
-## 🗺️ Data & Metadata Changes
+## 🗺️ Data & Metadata Changes (If Applicable)
 
-* [ ] STAC Items/Collections updated  
-* [ ] DCAT JSON-LD updated  
-* [ ] Spatial extents updated (bbox/geometry)  
-* [ ] Temporal extents updated (OWL-Time aligned)  
-* [ ] Provenance/rights/licensing verified  
+- [ ] STAC Items/Collections updated (`data/stac/...`)  
+- [ ] DCAT JSON-LD updated (`docs/data/...`)  
+- [ ] Spatial extents updated (CRS + bbox; H3 masking checked)  
+- [ ] Temporal extents updated (OWL-Time aligned)  
+- [ ] Provenance/rights/licensing verified  
 
-*Data Notes:*  
+**Data Notes:**  
 > _Write here._
 
 ---
@@ -250,7 +251,7 @@ Governance references:
 ## 🧪 Test Results
 
 | Test Type            | Status | Notes |
-| -------------------- | ------ | ----- |
+|----------------------|--------|-------|
 | Unit Tests           |        |       |
 | Integration Tests    |        |       |
 | End-to-End Tests     |        |       |
@@ -259,20 +260,22 @@ Governance references:
 | FAIR+CARE Checks     |        |       |
 | Accessibility Tests  |        |       |
 
+Paste relevant logs or summaries if needed.
+
 ---
 
 ## 📦 Release & Deployment Considerations
 
-* [ ] Requires Docker rebuild  
-* [ ] Requires Neo4j migration  
-* [ ] Requires STAC/DCAT rebuild  
-* [ ] Requires re-running ETL pipelines  
-* [ ] Breaking change  
+- [ ] Requires Docker rebuild  
+- [ ] Requires Neo4j migration  
+- [ ] Requires STAC/DCAT rebuild or reindex  
+- [ ] Requires re-running ETL pipelines  
+- [ ] Breaking change  
 
 ### Breaking Change Notes
 
 ~~~text
-Describe…
+Describe the breaking change, affected consumers, and migration path.
 ~~~
 
 ---
@@ -281,9 +284,9 @@ Describe…
 
 Suggested SemVer bump:
 
-- [ ] Major  
-- [ ] Minor  
-- [ ] Patch  
+- [ ] Major (breaking changes, contract updates)  
+- [ ] Minor (new features, backwards compatible)  
+- [ ] Patch (bugfix / internal change)  
 
 Telemetry impact:
 
@@ -291,27 +294,34 @@ Telemetry impact:
 Describe modifications to telemetry fields, workload patterns, or governance dashboards.
 ~~~
 
+Provenance notes (optional):
+
+~~~text
+List major upstream sources, tools, or workflows involved in this change.
+~~~
+
 ---
 
 ## ✅ Reviewer Checklist (Maintainers)
 
-| Check                                 | Status | Notes |
+| Check                                | Status | Notes |
 |--------------------------------------|--------|-------|
 | CI/CD Passed                         |        |       |
 | FAIR+CARE Compliance Verified        |        |       |
-| SBOM Updated/Reviewed                |        |       |
+| Sovereignty/H3 Rules Verified        |        |       |
+| SBOM Updated/Reviewed (if needed)    |        |       |
 | Documentation Meets KFM-MDP v11.2.2  |        |       |
 | Sensitive Data Review Complete       |        |       |
 | Telemetry Impact Considered          |        |       |
-| Governance Ledger Updated            |        |       |
+| Governance Ledger Updated (if needed)|        |       |
 
 ---
 
 ## 🕰 Template History
 
 | Version | Date       | Notes                                                                                     |
-|--------:|-----------:|-------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Updated with global styling, emoji rules, KFM-MDP v11.2.2 alignment, footer v2 applied.  |
+|--------:|------------|-------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-27 | Updated with v11.2.2 metadata, FAIR+CARE + sovereignty blocks, and telemetry integration language. |
 | v11.0.1 | 2025-11-19 | Full v11 rebuild: governance, telemetry, sustainability.                                  |
 | v11.0.0 | 2025-11-18 | First v11 version aligned with KFM-MDP v11.                                               |
 | v10.4.1 | 2025-11-16 | Governance, metadata, and accessibility improvements.                                     |
@@ -322,6 +332,6 @@ Describe modifications to telemetry fields, workload patterns, or governance das
 <div align="center">
 
 © 2025 Kansas Frontier Matrix  
-[⬅️ Back](../README.md) · [⚙️ GitHub Infrastructure](./README.md) · [🛡️ Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅️ Back](../README.md) · [⚙️ GitHub Infrastructure](./README.md) · [🛡 Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
