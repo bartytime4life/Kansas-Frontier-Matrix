@@ -3,19 +3,29 @@ title: "🛰️ KFM v11.2.2 — Registry Anomaly Detection Rules (Diamond⁹ Ω 
 path: "docs/security/supply-chain/dependency-confusion/checks/registry-anomaly-detection.md"
 version: "v11.2.2"
 last_updated: "2025-11-30"
-review_cycle: "Quarterly · Supply-Chain Security Council"
+
+release_stage: "Stable · Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Quarterly · Supply-Chain Security Council · FAIR+CARE"
+content_stability: "stable"
 status: "Active / Enforced"
 
 commit_sha: "<latest-commit>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
+signature_ref: "../../../../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
 sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
 manifest_ref: "../../../../../releases/v11.2.2/release-manifest.zip"
 telemetry_ref: "../../../../../releases/v11.2.2/security-telemetry.json"
 telemetry_schema: "../../../../../schemas/telemetry/security-v3.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
@@ -24,7 +34,80 @@ ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
+
 doc_kind: "Security · Registry-Anomaly-Detection"
+intent: "registry-anomaly-detection · upstream-threat-detection · provenance-integrity"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE · Governance · Critical Infrastructure"
+classification: "Security · Automated Detection"
+sensitivity: "Security-Sensitive (Non-personal)"
+sensitivity_level: "High"
+public_exposure_risk: "Low"
+indigenous_rights_flag: true
+risk_category: "High"
+redaction_required: false
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+jurisdiction: "Kansas / United States"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next anomaly-detection revision"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  prov_o: "prov:Plan"
+  owl_time: "ProperInterval"
+  geosparql: "geo:Feature"
+
+metadata_profiles:
+  - "DCAT 3.0"
+  - "STAC 1.0.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/security/supply-chain/dependency-confusion/checks/registry-anomaly-detection.md@v11.2.1"
+  - "docs/security/supply-chain/dependency-confusion/checks/registry-anomaly-detection.md@v11.2.0"
+  - "docs/security/supply-chain/dependency-confusion/checks/README.md"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+immutability_status: "version-pinned"
+doc_uuid: "urn:kfm:security:depconf:checks:registry-anomaly-detection:v11.2.2"
+semantic_document_id: "kfm-depconf-registry-anomaly-v11.2.2"
+event_source_id: "ledger:depconf.checks.registryanomaly.v11.2.2"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "metadata-extraction"
+  - "semantic-highlighting"
+  - "diagram-extraction"
+  - "timeline-generation"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "narrative-fabrication"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "governance-override"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Layout"
+    - "🛰️ Detection Categories"
+    - "🗃️ Evidence Outputs"
+    - "🧪 CI Enforcement"
+    - "🕰️ Version History"
 ---
 
 <div align="center">
@@ -33,9 +116,9 @@ doc_kind: "Security · Registry-Anomaly-Detection"
 `docs/security/supply-chain/dependency-confusion/checks/registry-anomaly-detection.md`
 
 **Purpose:**  
-Define the automated anomaly-detection logic used by KFM-CI to identify, flag, quarantine,  
-and escalate suspicious registry behavior that may indicate dependency-confusion attempts,  
-registry poisoning, namespace hijacking, or compromise of upstream ecosystems.
+Define automated behavioral, statistical, and cryptographic anomaly-detection logic used by  
+KFM-CI to detect registry poisoning, namespace hijacking, dependency-confusion threats,  
+and upstream supply-chain compromise indicators.
 
 </div>
 
@@ -43,166 +126,178 @@ registry poisoning, namespace hijacking, or compromise of upstream ecosystems.
 
 ## 📘 Overview
 
-Registry anomaly detection is a core component of KFM’s multilayer protection strategy.  
-While registry isolation prevents most direct attacks, anomaly detection adds **behavioral and  
-statistical analysis** to uncover subtle or emerging threats.
+Registry anomaly detection is a **behavioral and metadata-driven threat detection layer** extending  
+KFM’s strict registry-isolation model.  
+It detects subtle, emergent, or adversarial upstream behavior, including:
 
-This detection engine monitors:
-
-- Namespace activity  
-- Package version patterns  
-- Registry metadata drift  
+- Namespace hijacks  
+- First-publish attacks  
+- Registry poisoning  
+- Digest drift  
+- Publisher compromise  
+- Typosquatting variants  
+- Suspicious publish-time patterns  
+- Metadata irregularities  
 - TLS & certificate anomalies  
-- Package publish-time anomalies  
-- Publisher-account irregularities  
-- Dependency-resolution deviations  
-- Typosquatting signatures  
-- Sudden first-publish events in public registries  
 
-All anomalies generate machine evidence, quarantine triggers, and CI-block events.
+Every anomaly generates:
+
+- Immutable machine evidence  
+- A CI hard-fail  
+- Namespace or registry quarantine  
+- A governance-required incident review  
+
+---
+
+## 🗂️ Directory Layout
+
+~~~text
+📁 dependency-confusion/
+└── 📁 checks/
+    ├── 📄 README.md                     # Automated checks overview
+    ├── 📄 ci-validation-rules.md        # CI validation rules
+    ├── 📄 provenance-hooks.md           # Attestation/provenance hooks
+    ├── 📄 registry-anomaly-detection.md # This file — anomaly detection rules
+    ├── 📄 pre-commit-rules.md           # Developer-machine enforcement
+    └── 📄 local-scan-guidance.md        # Manual/local scan procedures
+~~~
 
 ---
 
 ## 🛰️ Detection Categories
 
-### 1. 🧿 Namespace Activity Anomalies
-CI scans all registries for:
+### 1️⃣ 🧿 Namespace Activity Anomalies  
+Detects:
 
-- New packages matching internal KFM names  
-- Sudden creation of high-risk namespaces  
-- Suspicious subnames (e.g., `kfmmodule`, `k-fm`, `k_fm_utils`)  
-- Hyphen/dot/underscore permutations  
-- Shadow versions published immediately after KFM releases  
+- New external packages matching internal KFM names  
+- Rapid namespace creation  
+- Typosquatting shapes (hyphens, underscores, confusables)  
+- High-risk substring permutations  
+- Shadow-version releases timed near KFM internal releases  
 
 Actions:
 
-- Auto-block  
-- Name quarantine  
-- Evidence logged: `namespace-scan.json`  
-- Incident stub created  
+- Namespace quarantine  
+- SBD (Security Block Declaration)  
+- Evidence → `namespace-scan.json`  
+- Incident stub creation  
 
 ---
 
-### 2. ⏱️ Publish-Time Pattern Anomalies
-Detects unexpected version behavior:
+### 2️⃣ ⏱️ Publish-Time Anomalies  
+Detects:
 
-- High-frequency version spikes  
+- Rapid version spikes  
+- Suspicious major-version jumps  
 - Duplicate version numbers  
-- Unexpected major-version jumps  
-- Publish bursts at odd hours / coordinated time windows  
-- Version patterns matching malware campaigns  
+- Publish bursts consistent with malware campaigns  
+- Odd-hour coordinated pushes  
 
 Actions:
 
 - Version quarantine  
-- Pin rollback  
-- SBOM integrity recheck  
+- SBOM revalidation  
+- Provenance reevaluation  
 
 ---
 
-### 3. 🔐 TLS & Certificate Anomalies
-Ensures registry connectivity is:
+### 3️⃣ 🔐 TLS & Certificate Anomalies  
+Validates registry-connection safety:
 
-- Fully TLS-pinned  
-- Cert chain validated  
-- Not using unexpected issuers  
-- Using expected SAN entries  
-- Free of clock skew or stale certs  
-
-Anomalies → **connection denied + registry quarantine**
-
----
-
-### 4. 🧬 Metadata & Digest Drift Anomalies
-Compares upstream registry metadata with:
-
-- KFM-mirror metadata  
-- Known-good digests  
-- SLSA provenance logs  
-- Artifact checksum history  
-
-Drift indicates:
-
-- Registry poisoning  
-- Man-in-the-middle replacement  
-- Malicious re-upload  
-- Shadow artifact injection  
+- TLS pinning enforcement  
+- Certificate chain correctness  
+- Expected SAN entries  
+- No stale/intermediate cert abuse  
+- No clock-skew anomalies  
 
 Actions:
 
-- Immediate SBOM drift freeze  
-- Mirror quarantine  
-- Evidence stored in `sbom-diff.json`  
+- Connection block  
+- Registry quarantine  
+- Evidence → `registry-audit.json`  
 
 ---
 
-### 5. 🧩 Resolution Behavior Anomalies
-Detects unexpected resolver behavior:
+### 4️⃣ 🧬 Metadata & Digest Drift  
+Compares upstream metadata against:
 
-- Resolver attempting non-allow-listed registries  
-- Protocol changes (HTTP→HTTPS mismatches)  
+- KFM internal mirrors  
+- Sealed SBOM digests  
+- Known-good artifact history  
+- SLSA provenance metadata  
+
+Drift may indicate:
+
+- Registry poisoning  
+- MITM attacks  
+- Malicious overwrite  
+- Compromised publisher account  
+
+Actions:
+
+- SBOM drift freeze  
+- Mirror quarantine  
+- Evidence → `sbom-diff.json`  
+
+---
+
+### 5️⃣ 🧩 Resolution Behavior Anomalies  
+Detects:
+
+- Resolver attempting public registries  
+- Protocol drift (HTTP→HTTPS mismatch)  
 - Overridden source maps  
-- Inconsistent dependency graphs  
-- Unpinned / fallback resolutions  
+- Unpinned/fallback resolution attempts  
+- Unexpected dependency graph changes  
 
 Actions:
 
 - Resolution halt  
-- SBD (Security Block Declaration) issued  
-- Governance review  
+- Governance review required  
 
 ---
 
-### 6. 🕵️ Publisher Identity Anomalies
-Examines publisher metadata in upstream registries:
+### 6️⃣ 🕵️ Publisher Identity Anomalies  
+Detects:
 
+- Suspicious new publisher accounts  
+- Maintainer handoff anomalies  
+- Key-rotation irregularities  
+- Email/identity mismatch patterns  
+- Contributor behavior anomalies  
+
+May indicate upstream credential compromise.
+
+---
+
+### 7️⃣ 🔡 Typosquatting Indicators  
+Detects:
+
+- Levenshtein-distance near-matches  
+- Unicode homoglyph tricks  
+- Visual-similar namespace variants  
+- Prefix/suffix injection patterns  
+- Lookalike vendor prefixes  
+
+Examples:  
+`@kfm/core` → `@kfm-cor`, `@kfm0/core`, `@kfn/core`
+
+---
+
+### 8️⃣ 🚨 Sudden First-Publish Events  
 Flags:
 
-- New publishers with no history  
-- Publisher-email drift  
-- Maintainer handoff anomalies  
-- Unexpected key-rotation events  
-- Package-to-publisher mismatch patterns  
+- New public publishes that match internal module names  
+- Variants of KFM namespaces  
+- Names seen only internally appearing externally  
 
-May indicate targeted compromise.
-
----
-
-### 7. 🔡 Typosquatting Detection
-Detects near-miss names by:
-
-- Levenshtein distance  
-- Character substitution maps  
-- Prefix/suffix injection  
-- Unicode homoglyph detection  
-- Lookalike namespace heuristics  
-
-Example:  
-`@kfm/core` → suspicious: `@kfm-cor`, `@kfm/coree`, `@kfn/core`, `@kfm0/core`.
-
-Actions:
-
-- Block  
-- Quarantine  
-- Report to security council  
-
----
-
-### 8. 🚨 Sudden First-Publish Events
-Flags if external registries show first-ever publishes of:
-
-- KFM-like names  
-- Names identical to internal modules  
-- Known internal dependency names  
-- Variants of high-value namespaces  
-
-This is the most common dependency-confusion signal.
+This is the most well-known dependency-confusion attack vector.
 
 ---
 
 ## 🗃️ Evidence Outputs
 
-Evidence is written into:
+All anomalies generate evidence stored under:
 
 ```
 docs/security/supply-chain/dependency-confusion/policy/evidence/
@@ -215,19 +310,19 @@ Including:
 - 🧬 `sbom-diff.json`  
 - 🧾 `attestation-verify.json`  
 
-All evidence MUST be:
+Evidence must be:
 
-- FAIR+CARE compliant  
-- Immutable  
 - Timestamped  
+- Immutable  
 - Schema-validated  
-- Linked via PROV-O lineage  
+- FAIR+CARE compliant  
+- Linked via PROV-O (`prov:Entity`, `prov:Activity`, `prov:Agent`)  
 
 ---
 
 ## 🧪 CI Enforcement
 
-Registry anomaly detection participates directly in:
+Registry anomaly detection participates in:
 
 - `namespace-monitor.yml`  
 - `registry-policy-check.yml`  
@@ -235,35 +330,22 @@ Registry anomaly detection participates directly in:
 - `sbom-validate.yml`  
 - `slsa-attestation-verify.yml`  
 
-Any anomaly produces:
+Any anomaly triggers:
 
-- CI hard fail  
-- Quarantine activation  
-- Evidence storage  
-- Required governance review  
-
----
-
-## 🗂️ Directory Layout
-
-~~~text
-📁 dependency-confusion/
-└── 📁 checks/
-    ├── 📄 README.md                     # Automated checks index
-    ├── 📄 ci-validation-rules.md        # CI validation rules
-    ├── 📄 provenance-hooks.md           # Provenance & attestation hooks
-    ├── 📄 registry-anomaly-detection.md # This file — anomaly detection rules
-    ├── 📄 pre-commit-rules.md           # (optional) Developer-machine checks
-    └── 📄 local-scan-guidance.md        # (optional) Manual scanning guidance
-~~~
+- CI hard-fail  
+- Namespace or registry quarantine  
+- Incident stub  
+- Council review  
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Notes |
-|---------|--------|--------|
-| v11.2.2 | 2025-11-30 | Initial anomaly detection rule set |
+| Version  | Date       | Notes                                                          |
+|----------|------------|----------------------------------------------------------------|
+| v11.2.2  | 2025-11-30 | Extended metadata; layout moved; complete anomaly framework     |
+| v11.2.1  | 2025-10-16 | Added publisher-identity drift detection                        |
+| v11.2.0  | 2025-09-01 | Initial anomaly-detection ruleset                               |
 
 ---
 
@@ -272,4 +354,3 @@ Any anomaly produces:
 🧪 [Automated Checks](./README.md) • 🔒 [Registry Isolation](../policy/registry-isolation.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
