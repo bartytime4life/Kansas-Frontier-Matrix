@@ -33,10 +33,10 @@ doc_kind: "Security · Automated-Checks"
 `docs/security/supply-chain/dependency-confusion/checks/README.md`
 
 **Purpose:**  
-Document all automated KFM-CI checks that detect, prevent, block, and escalate  
-dependency-confusion threats across the entire KFM supply-chain.  
-These checks are deterministic, reproducible, and designed to protect all pipelines, registries,  
-lockfiles, and artifacts from namespace shadowing or malicious upstream interference.
+Define all automated checks executed by KFM-CI to detect, block, and escalate  
+dependency-confusion threats across every part of the KFM supply chain.  
+These checks are deterministic, reproducible, hermetic, and produce immutable security evidence  
+for long-term forensics, governance, and attestation workflows.
 
 </div>
 
@@ -44,133 +44,98 @@ lockfiles, and artifacts from namespace shadowing or malicious upstream interfer
 
 ## 📘 Overview
 
-The KFM dependency-confusion protections consist of **seven automated check families**,  
-executed continuously across:
+KFM v11.2.2 implements **ten** automated check families across:
 
 - CI/CD (GitHub Actions)  
 - Developer pre-commit hooks  
-- ETL & ingestion pipelines  
+- Local scanning tools (KFM-DTK)  
+- ETL pipelines  
+- Registry mirroring subsystems  
 - Release workflows  
-- Registry mirroring infrastructure  
+- SBOM & provenance infrastructure  
 
-Each automated check contributes to:
+Each automated check ensures:
 
-- Prevention of rogue package substitution  
-- Early detection of namespace collisions  
-- Enforcement of registry isolation  
-- SLSA provenance verification  
+- Namespace collision prevention  
+- Registry-isolation enforcement  
+- Deterministic dependency pinning  
+- Provenance validation (SLSA ≥ 3)  
 - SBOM drift detection  
-- Lockfile integrity and reproducibility  
-- Evidence generation for long-term forensics  
+- Lockfile & digest reproducibility  
+- Hermetic sandbox enforcement  
+- Fallback activation in degraded conditions  
 
-These checks cannot be disabled or bypassed.
+These protections **cannot be bypassed**.
 
 ---
 
 ## 🧬 Automated Check Families
 
 ### 1. 🛰️ **Namespace Collision Monitor**
-Workflow: `namespace-monitor.yml`
-
-Monitors for:
-
-- Public-package namespace collisions  
-- Suspicious first-time publishes  
-- Rogue shadow attempts  
-- Registry typo-squatting patterns  
-- High-risk namespace blocks
-
-Produces evidence:  
-`policy/evidence/namespace-scan.json`
+Workflow: `namespace-monitor.yml`  
+Detects collisions, shadow packages, typo-squatting, and dangerous upstream publishes.  
+Evidence: `policy/evidence/namespace-scan.json`
 
 ---
 
 ### 2. 🔒 **Registry Isolation Checker**
-Workflow: `registry-policy-check.yml`
-
-Enforces:
-
-- Strict allow-list  
-- No outbound registry access  
-- No implicit fallback to public registries  
-- Mirror integrity verification  
-
-Produces evidence:  
-`policy/evidence/registry-audit.json`
+Workflow: `registry-policy-check.yml`  
+Ensures strict allow-list usage, mirror integrity, and no external registry contact.  
+Evidence: `policy/evidence/registry-audit.json`
 
 ---
 
 ### 3. 🧩 **Dependency Pinning Validator**
-Workflow: `dependency-integrity.yml`
-
-Ensures:
-
-- Exact pinning (version + registry + hash)  
-- Lockfile consistency  
-- No floating or wildcard versioning  
-- No unauthorized registry references  
-
-Blocks on any drift.
+Workflow: `dependency-integrity.yml`  
+Validates exact pinning: (version + registry + digest), lockfile consistency, no floating versions.
 
 ---
 
 ### 4. 📦 **SBOM Drift Detector**
-Workflow: `sbom-validate.yml`
-
-Verifies:
-
-- Artifact digests  
-- SBOM inclusion  
-- Consistency with pinned dependency graph  
-- Mirror reproducibility  
-
-Produces evidence:  
-`policy/evidence/sbom-diff.json`
+Workflow: `sbom-validate.yml`  
+Validates digests, dependency graph consistency, and detects unapproved upgrades.  
+Evidence: `policy/evidence/sbom-diff.json`
 
 ---
 
 ### 5. ✍️ **Signature & Provenance Verification**
-Workflow: `slsa-attestation-verify.yml`
-
-Validates:
-
-- Cosign signatures  
-- GPG signatures  
-- SLSA v3+ provenance attestations  
-- Artifact immutability  
-
-Produces evidence:  
-`policy/evidence/attestation-verify.json`  
-(if enabled)
+Workflow: `slsa-attestation-verify.yml`  
+Validates Cosign, GPG, provenance bundles, SLSA metadata, and artifact signatures.  
+Evidence: `policy/evidence/attestation-verify.json`
 
 ---
 
 ### 6. 🧱 **Hermetic Sandbox Enforcement**
-Workflow: `hermetic-build-guard.yml`
-
-Ensures builds:
-
-- Have zero outbound network access  
-- Resolve only from internal mirrors  
-- Execute inside sealed sandboxes  
-- Use sealed dependency snapshots  
-
-Rejects any environment leakage.
+Workflow: `hermetic-build-guard.yml`  
+Ensures builds run inside sealed, zero-network sandboxes using only pinned dependencies.
 
 ---
 
 ### 7. 🧯 **Fallback-Control Trigger Engine**
-Workflow: `fallback-activation.yml`
+Workflow: `fallback-activation.yml`  
+Activates Tier 1 fallback controls when mirrors, SBOM validation, or provenance checks degrade.  
+See: `../policy/fallback-controls.md`
 
-Triggered when:
+---
 
-- Mirrors fail  
-- Namespace monitor degrades  
-- SBOM drift cannot be resolved  
-- Signature chain missing  
+### 8. 🕵️ **Registry Anomaly Detection**
+Workflow: integrated into multiple scans  
+Detects timing anomalies, digest drift, publisher-identity drift, TLS issues, metadata mismatches.  
+See: `registry-anomaly-detection.md`
 
-Automatically activates Tier 1 fallback controls  
-(see: `policy/fallback-controls.md`).
+---
+
+### 9. 🧬 **Provenance Hooks (Multi-Stage)**
+Workflow: integrated  
+Executes PF-Hook, FT-Hook, BT-Hook, AP-Hook, SA-Hook, SBOM-Hook, RS-Hook across build stages.  
+See: `provenance-hooks.md`
+
+---
+
+### 10. 🧹 **Pre-Commit Developer Validation**
+Executed before commit (mirrors CI on workstation).  
+Ensures early detection of pinning drift, registry leaks, SBOM mismatches, signature failures.  
+See: `pre-commit-rules.md`
 
 ---
 
@@ -192,22 +157,26 @@ Automatically activates Tier 1 fallback controls
 │       ├── 🔐 registry-audit.json
 │       └── 🧾 attestation-verify.json
 └── 📁 checks/
-    └── 📄 README.md     # This file — automated check documentation
+    ├── 📄 README.md                     # This file — automated checks overview
+    ├── 📄 ci-validation-rules.md
+    ├── 📄 provenance-hooks.md
+    ├── 📄 registry-anomaly-detection.md
+    ├── 📄 pre-commit-rules.md
+    └── 📄 local-scan-guidance.md
 ~~~
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Notes |
-|--------|--------|--------|
-| v11.2.2 | 2025-11-30 | Initial creation of automated checks registry |
+| Version | Date       | Notes |
+|--------|------------|-------|
+| v11.2.2 | 2025-11-30 | Expanded to 10 check families, aligned with new check docs, updated directory tree |
 
 ---
 
 <div align="center">
 
-🛡️ [Policy Overview](../policy/README.md) • 📏 [Rules](../policy/rules.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
+🛡️ [Policy Overview](../policy/README.md) • 🧬 [Provenance Hooks](./provenance-hooks.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
