@@ -214,6 +214,53 @@ All other documentation standards (e.g. domain-specific SOPs, experiment templat
 6. **Predictable Layout & Navigation**  
    Root title + badges row, directory layout, and version history sections are expected for standards and architecture documents, enabling consistent navigation and UI rendering (e.g. in Focus Mode).
 
+### 3. Author Quickstart (Human-Facing)
+
+Before writing or editing any KFM Markdown file, follow this checklist:
+
+1. **Copy a compatible template**  
+   Start from an existing doc of the same `doc_kind` (e.g. Standard, Reference, Guide) in `docs/standards/` or `docs/guides/`.
+
+2. **Fill in the YAML front-matter**  
+   - Set `title`, `path`, `version`, and `last_updated`.
+   - Confirm `license`, `mcp_version`, `markdown_protocol_version`, and governance refs.
+   - For standards, ensure `doc_kind`, `status`, and `review_cycle` are correct.
+
+3. **Add a centered Purpose block**  
+   Under the H1 title, provide a short Purpose paragraph explaining what this doc is for and who should use it.
+
+4. **Use approved H2 sections only**  
+   Choose from the `heading_registry.approved_h2` list for your main sections (Overview, Directory Layout, etc.). Add H3/H4 subsections as needed.
+
+5. **End with a versioned footer**  
+   Include a Version History table and a governance footer with links back to docs root, standards index, and governance charter.
+
+If in doubt: **start small, keep structure clean, and let CI tell you what to fix.**
+
+### 4. Author Quickstart (Machine-Facing)
+
+To keep docs maximally extractable and AI-friendly:
+
+- Always include **complete front-matter** with:
+  - stable IDs (`doc_uuid`, `semantic_document_id`, `event_source_id`),
+  - ontology alignment (`ontology_alignment`, `metadata_profiles`),
+  - AI transform permissions (`ai_transform_permissions`, `ai_transform_prohibited`, `transform_registry`).
+
+- Use **stable patterns**:
+  - Simple bullet lists and numbered lists (avoid nested list chaos).
+  - Short paragraphs (≤ 3–4 sentences) for easier sentence-level tagging.
+  - Tables for crosswalks (e.g. YAML field to DCAT term).
+
+- Avoid **ambiguous constructs**:
+  - No uncontrolled HTML layouts.
+  - No “ASCII art” that looks like code fences.
+  - No mixed heading levels (e.g. jumping from H2 to H4).
+
+- Ensure each doc is **Focus-Mode ready**:
+  - Clear Purpose block.
+  - Clean section boundaries.
+  - Minimal duplication with other standards.
+
 ---
 
 KFM v11 monorepo layout MUST be documented consistently using the emoji-enhanced tree pattern below.
@@ -254,6 +301,12 @@ KansasFrontierMatrix/
 └── 📂 .github/                               # CI/CD workflows & GitHub configuration
     └── 📂 workflows/                         # CI pipelines (kfm-ci, docs-lint, lineage-audit, energy/carbon)
 ~~~
+
+**Author rules:**
+
+- Every directory documented here MUST have a `README.md` describing its internal layout and purpose.
+- All new top-level directories MUST be added to this layout, with emojis and concise comments.
+- Directory trees inside docs MUST use `~~~text` fences exactly as above (no nested backtick fences).
 
 ---
 
@@ -297,29 +350,36 @@ Diagrams are allowed and encouraged, but must obey these rules:
 
 3. **Mermaid Flowchart Example**
 
-```mermaid
+~~~mermaid
 flowchart LR
     A[Markdown Author] --> B[Create/Update Doc]
     B --> C[Run CI Lint & Schema Checks]
     C -->|Pass| D[Merge to Main]
     C -->|Fail| E[Fix Issues & Re-run]
-```
+~~~
 
 4. **Mermaid Timeline Example**
 
-```mermaid
+~~~mermaid
 timeline
     title Markdown Protocol Evolution
     2023-11 : v10.4.3 : "Markdown Structural Rules"
     2025-11-25 : v11.2.0 : "Re-architecture & Profiles"
     2025-11-26 : v11.2.1 : "Provenance Hardening"
     2025-11-27 : v11.2.2 : "Heading Registry & Transform Rules"
-```
+~~~
 
-5. **Forbidden Diagram Practices**
-   - No ASCII-art boxes pretending to be code fences inside fenced blocks.
-   - No diagrams that encode secrets (keys, tokens, private endpoints).
-   - No diagrams with unlabeled nodes/edges in standards documents.
+5. **Accessibility & A11y Tips**
+
+- Ensure diagram text (node labels, axis labels) is readable with sufficient contrast.
+- Always summarize key diagram insights in prose immediately before or after the diagram.
+- Avoid relying on color alone to convey meaning; use shapes or labels as well.
+
+6. **Forbidden Diagram Practices**
+
+- No ASCII-art boxes pretending to be code fences inside fenced blocks.
+- No diagrams that encode secrets (keys, tokens, private endpoints).
+- No diagrams with unlabeled nodes/edges in standards documents.
 
 ---
 
@@ -338,9 +398,9 @@ A Story Node is a JSON object with narrative text and a spatiotemporal footprint
 - Be referenced by Story Nodes through `target` IDs (e.g., `kfm-markdown-protocol-v11.2.2`).
 - Embed Story Node IDs in the content where appropriate, e.g.:
 
-```text
+~~~text
 Related Story Node: urn:kfm:story-node:docs:markdown-protocol:overview
-```
+~~~
 
 Rules:
 
@@ -370,6 +430,16 @@ The `ai_transform_permissions` and `ai_transform_prohibited` fields in front-mat
   - Edits to content, speculative additions, unverified architectural claims, or anything that bypasses governance review.
 
 If additional transforms are later introduced, this protocol MUST be updated to declare them explicitly.
+
+### 4. Focus-Optimized Writing Patterns
+
+To keep docs “Focus-friendly”, authors SHOULD:
+
+- Use **clear topic sentences** at the start of each paragraph.
+- Keep sections **narrowly scoped** (one concept per H3/H4).
+- Use **descriptive link text** instead of “click here”.
+- Avoid ambiguous pronouns (e.g., say “this protocol” instead of “it” when possible).
+- Include at least one **short summary list** per major section so Focus Mode can present bullet summaries without guesswork.
 
 ---
 
@@ -430,9 +500,24 @@ Every Markdown file MUST begin with a YAML front-matter block:
 
 ### 5. Code Blocks
 
-- Code blocks MUST use fenced syntax and MUST NOT be nested.
+- Code blocks MUST use fenced syntax and MUST NOT be nested with backtick fences inside backtick fences.
+- Inner fenced blocks SHOULD use `~~~` where this standard is being applied in chat or tooling contexts that wrap the document in a larger fence.
 - Language identifiers SHOULD be used for code samples (e.g., `bash`, `json`, `python`) where appropriate.
 - Secrets (tokens, passwords, credentials) MUST NEVER be present in examples.
+
+### 6. Test Profiles Matrix (Machine-Readable)
+
+Authors and tools can rely on this mapping:
+
+| `test_profiles` entry  | Purpose                                     | Typical Tooling / Workflow Step           |
+|------------------------|----------------------------------------------|-------------------------------------------|
+| `markdown-lint`        | Enforce structural & style rules             | Markdownlint / custom Node/Python linters |
+| `schema-lint`          | Validate YAML front-matter schemas           | JSON Schema validator                     |
+| `metadata-check`       | Ensure required metadata fields              | Custom Python/JS validators                |
+| `diagram-check`        | Validate mermaid diagrams & captions         | Mermaid parser / syntax check             |
+| `accessibility-check`  | Verify alt text, heading order               | Axe / custom a11y script                  |
+| `provenance-check`     | Confirm provenance_chain & version history   | Provenance validator script               |
+| `footer-check`         | Confirm footer presence and structure        | Regex or AST-based doc scanner            |
 
 ---
 
@@ -485,6 +570,8 @@ For `doc_kind: "Standard"`, the following metadata fields are REQUIRED (already 
 
 - Provenance & catalogs:
   - `commit_sha`
+  - `signature_ref`
+  - `attestation_ref`
   - `sbom_ref`
   - `manifest_ref`
   - `telemetry_ref`
@@ -515,13 +602,15 @@ For `doc_kind: "Standard"`, the following metadata fields are REQUIRED (already 
   - `test_profiles`
   - `ci_integration`
   - `branding_registry`
-  - `deprecated_fields`
   - `layout_profiles`
   - `badge_profiles`
   - `requires_purpose_block`
   - `requires_version_history`
   - `requires_directory_layout_section`
   - `requires_governance_links_in_footer`
+  - `deprecated_fields`
+  - `machine_extractable`
+  - `accessibility_compliance`
 
 ### 2. Semantic Alignment
 
@@ -534,6 +623,18 @@ This protocol is designed to be easily mapped into semantic web and graph repres
   - `assets` referencing the markdown and PDF.
 - **PROV-O**: Use `prov:Plan` and `prov:wasDerivedFrom` to link this version to prior versions listed in `provenance_chain`.
 - **CIDOC-CRM**: Use `E29 Design or Procedure` as the CRM class for this document.
+
+### 3. Minimum Metadata Checklist (Per-Doc)
+
+For any new doc, at minimum:
+
+1. `title`, `path`, `version`, `last_updated`, `license`.
+2. `doc_kind`, `status`, `review_cycle`.
+3. `doc_uuid`, `semantic_document_id`, `event_source_id`.
+4. `provenance_chain` (with at least one entry) and `provenance_requirements`.
+5. For AI/Focus-dependent docs: `ai_focusmode_usage` and `ai_transform_permissions`.
+
+If any of these are missing, CI MUST flag the document.
 
 ---
 
@@ -617,7 +718,7 @@ This standard enforces FAIR and CARE through structural requirements:
 | Version | Date       | Summary                                                                                                  |
 |--------:|------------|----------------------------------------------------------------------------------------------------------|
 | v11.2.2 | 2025-11-27 | Added semantic intent, stability tiers, transform registry, unified directory layout, and expanded governance hooks. |
-| v11.2.1 | 2025-11-26 | Introduced profile system, provenance hardening, and stronger DCAT/STAC metadata requirements.          |
+| v11.2.1 | 2025-11-26 | Introduced profile system, provenance hardening, and stronger DCAT/STAC metadata requirements.           |
 | v11.2.0 | 2025-11-25 | Major structural overhaul: new YAML layout, header/footer profiles, test profiles, and diagram rules.    |
 | v11.0.1 | 2025-11-20 | Initial v11 consolidation of markdown rules under the new ontology and governance structures.            |
 | v10.4.3 | 2023-11-10 | Legacy markdown rules for H1–H4 headings, front-matter presence, and basic README templates.            |
