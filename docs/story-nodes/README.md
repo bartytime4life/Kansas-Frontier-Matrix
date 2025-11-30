@@ -101,6 +101,12 @@ requires_governance_links_in_footer: true
 # 🧠 **Kansas Frontier Matrix — Story Nodes Overview**  
 `docs/story-nodes/README.md`
 
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue "Master Coder Protocol v6.3")]() ·
+[![Story Nodes v3](https://img.shields.io/badge/Story%20Nodes-v3-informational "Story Node Schema v3")]() ·
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold "FAIR+CARE Compliant")]() ·
+[![WCAG AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet "WCAG 2.1 AA+")]() ·
+[![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen "Status: Active & Enforced")]()
+
 **Purpose**  
 Provide the **top-level index and architectural guide** for all **Story Nodes** in the Kansas Frontier Matrix (KFM) v11.2.2.  
 Story Nodes form the **semantic narrative layer** used by **Focus Mode v3** to connect text, space, time, data, and governance.
@@ -260,7 +266,7 @@ Sensitive nodes may require:
 
 | Version | Date       | Summary                                                                                          |
 |--------:|------------|--------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Rebuilt to mirror KFM-MDP v11.2.2 formatting; moved directory layout near top; fixed emoji discipline. |
+| v11.2.2 | 2025-11-28 | Rebuilt to mirror KFM-MDP v11.2.2 formatting; added badge row; moved directory layout near top; fixed emoji discipline. |
 | v11.2.1 | 2025-11-27 | Interim reorganization of system vs domain Story Node directories.                               |
 | v11.0.0 | 2025-11-20 | Initial Story Nodes README defining roles and basic directory structure.                         |
 
@@ -274,4 +280,3 @@ Semantic Narratives · Temporal Intelligence · FAIR+CARE-Governed
 [📘 Docs Root](../README.md) · [🧠 System Story Nodes](system/README.md) · [⚖ Governance](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
