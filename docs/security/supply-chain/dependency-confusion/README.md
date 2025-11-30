@@ -23,28 +23,83 @@ energy_schema: "../../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
 
 doc_kind: "Security Pattern"
 intent: "dependency-confusion-defense"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "CARE · Governance · Protection of Critical Infrastructure"
 
 classification: "Security · Supply Chain · Dependency Management"
 sensitivity_level: "High"
+sensitivity: "Security-Sensitive (Non-personal)"
 public_exposure_risk: "Low"
 indigenous_rights_flag: true
 risk_category: "High"
 redaction_required: false
+
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
 lifecycle_stage: "stable"
 ttl_policy: "Annual review"
 sunset_policy: "Superseded upon next supply-chain security revision"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  prov_o: "prov:Plan"
+  owl_time: "ProperInterval"
+  geosparql: "geo:FeatureCollection"
+
+metadata_profiles:
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/security/supply-chain/dependency-confusion/README.md@v11.2.2"
+  - "docs/security/supply-chain/dependency-confusion/README.md@v11.2.1"
+  - "docs/security/supply-chain/dependency-confusion/README.md@v11.0.0"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+immutability_status: "version-pinned"
+doc_uuid: "urn:kfm:doc:security:dependency-confusion:root:v11.2.3"
+semantic_document_id: "kfm-depconf-root-pattern-v11.2.3"
+event_source_id: "ledger:depconf.root.v11.2.3"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "semantic-highlighting"
+  - "diagram-extraction"
+  - "metadata-extraction"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
 ---
 
 <div align="center">
@@ -74,9 +129,55 @@ All defensive controls here are **mandatory** for **v11.2.x** supply-chain compl
 
 ---
 
-## 2️⃣ Threat Model — Registry-Based Substitution
+## 2️⃣ Directory Layout (Emoji-Prefix Standard)
 
-### 2.1 Attack Vector
+~~~text
+docs/security/supply-chain/dependency-confusion/
+├── 📄 README.md                        # This file — root pattern & overview
+│
+├── 📁 policy/                          # Registry, pinning, signatures, fallback policies
+│   ├── 📄 README.md                    # High-level policy overview
+│   ├── 📄 rules.md                     # Enforcement rules
+│   ├── 📄 registry-isolation.md        # Registry allow-list / isolation rules
+│   ├── 📄 signature-requirements.md    # Cryptographic signature & provenance rules
+│   ├── 📄 fallback-controls.md         # Degraded-mode and emergency controls
+│   ├── 📄 exceptions.md                # SER-approved exceptions
+│   ├── 📄 incidents.md                 # Incident log + forensics
+│   └── 📂 evidence/                    # Machine evidence vault
+│       ├── 🛰️ namespace-scan.json
+│       ├── 🧬 sbom-diff.json
+│       ├── 🔐 registry-audit.json
+│       └── 🧾 attestation-verify.json
+│
+├── 📁 checks/                          # CI/CD & local automated check definitions
+│   ├── 📄 README.md                    # Automated checks index
+│   ├── 📄 ci-validation-rules.md       # CI validation + fail conditions
+│   ├── 📄 provenance-hooks.md          # Provenance / SLSA hooks
+│   ├── 📄 registry-anomaly-detection.md# Registry anomaly detection logic
+│   ├── 📄 pre-commit-rules.md          # Developer pre-commit enforcement rules
+│   └── 📄 local-scan-guidance.md       # Local/manual scan guidance (KFM-DTK usage)
+│
+└── 📁 examples/                        # Concrete example scenarios & patterns
+    ├── 📄 README.md                    # Index of examples
+    ├── 📄 namespace-collision-basic.md
+    ├── 📄 namespace-collision-firstpublish.md
+    ├── 📄 namespace-collision-versionrace.md
+    ├── 📄 typosquat-examples.md
+    ├── 📄 registry-fallback.md
+    ├── 📄 mirror-drift.md
+    ├── 📄 sbom-drift-basic.json
+    ├── 📄 lockfile-drift-attack.md
+    ├── 📄 invalid-cosign.sig
+    ├── 📄 missing-provenance.json
+    ├── 📄 sandbox-network-leak.md
+    └── 📄 implicit-upgrade-attack.md
+~~~
+
+---
+
+## 3️⃣ Threat Model — Registry-Based Substitution
+
+### 3.1 Attack Vector
 
 Dependency confusion occurs when:
 
@@ -92,23 +193,24 @@ Many package managers may prefer the **public package**, allowing:
 - Lineage poisoning  
 - Malicious pipeline stage injection  
 
-### 2.2 Why KFM Is a High-Value Target
+### 3.2 Why KFM Is a High-Value Target
 
 Because KFM orchestrates:
 
-- Indigenous-rights-protected heritage datasets  
+- Indigenous-rights–protected heritage datasets  
 - High-resolution geospatial layers  
 - Sensitive archaeological and environmental coordinates  
 - Energy/carbon telemetry & sustainability reports  
 - Automated Focus Mode narratives and explainability overlays  
 
-…a registry hijack could compromise **ethical, scientific, and legal safety** and undermine **trust in KFM outputs**.
+…a registry hijack could compromise **ethical, scientific, and legal safety** and undermine  
+**trust in KFM outputs**.
 
 ---
 
-## 3️⃣ Mandatory Protective Controls
+## 4️⃣ Mandatory Protective Controls
 
-### 3.1 Registry Isolation Requirements
+### 4.1 Registry Isolation Requirements
 
 All KFM environments MUST:
 
@@ -120,17 +222,17 @@ All KFM environments MUST:
 
 Where possible, lock down:
 
-- `.npmrc` / `pnpm-workspace.yaml` / equivalent  
+- `.npmrc` / `.pip.conf` / `poetry.toml` / `Cargo.toml` / `settings.xml`  
 - Docker base images and build containers  
 - Local developer environments (with documented overrides only)
 
-### 3.2 Strict Version Pinning
+### 4.2 Strict Version Pinning
 
 Every module used in KFM MUST be:
 
-- **Pinned by exact version** (`"1.2.3"`, not `^1.2.3` or `~1.2.3`)  
+- **Pinned by exact version** (`"1.2.3"`; never `^1.2.3` or `~1.2.3`)  
 - **Backed by SBOM entries** (SPDX / CycloneDX)  
-- **Validated with integrity hashes** (e.g., `integrity` fields in lockfiles)  
+- **Validated with integrity hashes** (e.g., `integrity` in lockfiles, SHA-256 checksums)  
 - **Subject to deterministic rebuild verification** in CI  
 
 Lockfile changes MUST:
@@ -139,18 +241,18 @@ Lockfile changes MUST:
 - Be scanned for registry/URL anomalies  
 - Be tied to a governance ticket or PR label (`supply-chain-change`)
 
-### 3.3 Build-Time Verification Hooks
+### 4.3 Build-Time Verification Hooks
 
 CI/CD MUST integrate:
 
 - Registry-origin attestation checks  
 - SLSA-level provenance validation for build artifacts  
-- SHA-lock verification & lockfile drift detection  
+- Lockfile drift detection & SHA-lock verification  
 - OpenLineage-linked resolution logs for dependency graphs  
 - Registry metadata and maintainer-signature scanning  
 - Anomaly detection on new transitive dependencies  
 
-### 3.4 Metadata-Signature Enforcement
+### 4.4 Metadata-Signature Enforcement
 
 Every internal package MUST include:
 
@@ -158,29 +260,30 @@ Every internal package MUST include:
 - Maintainer keychain entries (GPG / Sigstore identities)  
 - Published SBOM fragments  
 - Build attestations  
-- Registry signature record (e.g., recorded in `rekor`)  
+- Registry signature records (e.g., `rekor` logs)  
 
 All MUST be validated during:
 
-- Package resolution step  
+- Package resolution steps  
 - Pipeline initialization  
-- DAG promotion stages (dev → stage → prod)  
-- Environment migration events (new clusters/runtimes)
+- DAG promotion (dev → stage → prod)  
+- Environment migration (new clusters/runtimes)
 
 ---
 
-## 4️⃣ KFM v11.2 Registry-Resolution Pipeline
+## 5️⃣ KFM v11.2 Registry-Resolution Pipeline
 
-### 4.1 Resolution Order (Enforced)
+### 5.1 Resolution Order (Enforced)
 
 1. **Internal Verified Registry (Primary)**  
 2. **Internal Fallback Mirror (Read-Only)**  
 3. **Local Cache (Signed, Verified)**  
 4. **Public Registry Sources (DISABLED for CI/CD)**  
 
-Public registries MAY be allowed only in **offline development mode** with clear documentation and local overrides, never in CI or production.
+Public registries MAY be allowed only in **offline development mode** with clear documentation and  
+local overrides — never in CI or production.
 
-### 4.2 Automatic Deployment Failures
+### 5.2 Automatic Deployment Failures
 
 CI MUST **abort** the build if:
 
@@ -198,9 +301,9 @@ CI MUST **abort** the build if:
 
 ---
 
-## 5️⃣ Provenance Integration (STAC · DCAT · JSON-LD · PROV-O)
+## 6️⃣ Provenance Integration (STAC · DCAT · JSON-LD · PROV-O)
 
-Dependency-resolution metadata is embedded into KFM lineage:
+Dependency metadata is integrated into KFM lineage:
 
 - Package identity → `prov:Entity`  
 - Build job → `prov:Activity`  
@@ -208,7 +311,7 @@ Dependency-resolution metadata is embedded into KFM lineage:
 - Hash integrity → `kfm:IntegrityDigest`  
 - Registry source → `kfm:RegistryURI`  
 
-This ensures traceability from:
+This ensures full traceability from:
 
 > **Git commit → dependency → build environment → pipeline stage → dataset → STAC Item**  
 
@@ -220,7 +323,7 @@ Governance tools MUST be able to answer:
 
 ---
 
-## 6️⃣ Governance & Policy Enforcement
+## 7️⃣ Governance & Policy Enforcement
 
 All controls here are governed by:
 
@@ -231,8 +334,8 @@ All controls here are governed by:
 Violations trigger automatic:
 
 - Build termination  
-- WAL rollback (if applicable)  
 - Canary rejection for risky deployments  
+- WAL rollback (where applicable)  
 - Multi-sig approval requirement for any override  
 - Security event logged under `ledger/security/supply-chain/`  
 
@@ -244,48 +347,19 @@ Recurring violations MUST trigger:
 
 ---
 
-## 7️⃣ Directory Layout (Emoji-Prefix Standard)
-
-~~~text
-docs/security/supply-chain/dependency-confusion/
-├── 📄 README.md                        # This file
-├── 📁 policy/                          # Registry & versioning policies
-│   ├── 📄 registry-isolation.md
-│   ├── 📄 version-pinning.md
-│   ├── 📄 signature-requirements.md
-│   └── 📄 fallback-controls.md
-│
-├── 📁 checks/                          # CI validation & detection rules
-│   ├── 📄 ci-validation-rules.md
-│   ├── 📄 provenance-hooks.md
-│   └── 📄 registry-anomaly-detection.md
-│
-├── 📁 examples/                        # Concrete configuration samples
-│   ├── 📄 npmrc-internal.example
-│   ├── 📄 pnpm-lock-integrity.json
-│   └── 📄 verification-failure-case.md
-│
-└── 📁 metadata/                        # Schemas & mapping tables
-    ├── 📄 provenance-schema.json
-    └── 📄 registry-source-mapping.json
-~~~
-
----
-
 ## 8️⃣ Version History
 
-| Version  | Date       | Summary                                                                 |
-|---------:|------------|-------------------------------------------------------------------------|
-| v11.2.3  | 2025-11-30 | Upgraded to KFM-MDP v11.2.2; telemetry v2; emoji directory layout; clarified multi-registry fail-closed behavior and governance hooks. |
-| v11.2.2  | 2025-11-30 | Full rewrite using KFM-MDP v11.2; added Diamond⁹ Ω certification.       |
-| v11.1.0  | 2025-10-15 | Added multi-registry fail-closed behavior.                             |
-| v11.0.0  | 2025-09-01 | Introduced mandatory signature & SBOM correlation.                      |
-| v10.x    | 2025-06-01 | Early detection rules; non-blocking warnings.                           |
+| Version | Date       | Summary                                                                                  |
+|--------:|------------|------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-11-30 | Upgraded to extended v11.2.2 metadata; aligned directory layout with policy/checks/examples. |
+| v11.2.2 | 2025-11-30 | Full rewrite using KFM-MDP v11.2.2; added Diamond⁹ Ω certification.                      |
+| v11.1.0 | 2025-10-15 | Added multi-registry fail-closed behavior and stronger CI gates.                         |
+| v11.0.0 | 2025-09-01 | Introduced mandatory signature & SBOM correlation.                                       |
 
 ---
 
 <div align="center">
 
-[📘 Documentation](../../../..) · [🧭 Governance](../../../standards/governance/ROOT-GOVERNANCE.md) · [⚙️ CI/CD Pipelines](../../../pipelines/README.md)
+🔐 [Policy Suite](./policy/README.md) • 🧪 [Automated Checks](./checks/README.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
