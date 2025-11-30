@@ -1,17 +1,47 @@
 ---
-title: "📡 Kansas Frontier Matrix — Telemetry & Provenance Logging Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📡 KFM v11 — Telemetry & Provenance Logging Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/telemetry/README.md"
-version: "v10.2.2"
-last_updated: "2025-11-12"
-review_cycle: "Continuous / FAIR+CARE Governance Secretariat"
+version: "v11.2.3"
+last_updated: "2025-11-29"
+
+release_stage: "Stable · Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Continuous · FAIR+CARE Governance Secretariat"
+content_stability: "stable"
+status: "Active / Enforced"
+backward_compatibility: "v10.x → v11.x compliant"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.2.0/manifest.zip"
-telemetry_ref: "../../releases/v10.2.0/focus-telemetry.json"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+signature_ref: "../../releases/v11.2.3/signature.sig"
+attestation_ref: "../../releases/v11.2.3/slsa-attestation.json"
+sbom_ref: "../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.3/manifest.zip"
+
+telemetry_ref: "../../releases/v11.2.3/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/system-telemetry-v1.json"
+energy_schema: "../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../schemas/telemetry/carbon-v2.json"
+
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE-Aware · Provenance-Logged · Responsible Computing"
+classification: "Public (Governed)"
+sensitivity: "Low/Moderate"
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+jurisdiction: "United States · Kansas"
 ---
 
 <div align="center">
@@ -19,147 +49,162 @@ mcp_version: "MCP-DL v6.3"
 # 📡 **Kansas Frontier Matrix — Telemetry & Provenance Logging Framework**  
 `docs/telemetry/README.md`
 
-**Purpose:**  
-Define the **data telemetry and provenance monitoring system** that governs real-time validation, ethics tracking, and performance metrics across the **Kansas Frontier Matrix (KFM)** ecosystem.  
-Telemetry ensures all datasets, models, and workflows remain transparent, traceable, and compliant with **FAIR+CARE** and **Master Coder Protocol (MCP-DL v6.3)** standards.
+**Purpose**  
+Define the **data telemetry and provenance monitoring framework** that governs real-time validation,  
+ethical oversight, and performance metrics across the **Kansas Frontier Matrix (KFM)** ecosystem.  
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../standards/faircare.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![Status: Verified](https://img.shields.io/badge/Status-Verified-success)](../../releases/v10.2.0/manifest.zip)
+Telemetry ensures all datasets, models, and workflows remain **transparent**, **traceable**, and **accountable**  
+to **FAIR+CARE** and **Master Coder Protocol (MCP-DL v6.3)** standards.
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview
 
-Telemetry is the **operational nervous system** of the Kansas Frontier Matrix, recording every validation event, governance action, and ethical outcome into structured JSON artifacts.  
-It bridges **governance**, **AI ethics**, **data validation**, **accessibility**, and **sustainability** systems — enabling real-time FAIR+CARE oversight and reproducibility.
+Telemetry is the **operational nervous system** of KFM:
 
-Telemetry performs three critical functions:
+- Recording validation events and CI outcomes  
+- Capturing provenance (who/what/when/how)  
+- Tracking FAIR+CARE compliance and ethical signals  
+- Measuring sustainability (energy, carbon, runtime, resource use)  
 
-1. **Audit & Validation Logging** — records success/failure states of CI and governance workflows.  
-2. **Ethical Accountability** — tracks cultural consent and FAIR+CARE compliance metrics.  
-3. **Sustainability Monitoring** — measures energy efficiency and environmental performance.
+Telemetry bridges:
+
+- **Governance & policy**  
+- **AI ethics**  
+- **Data validation**  
+- **Accessibility & inclusion**  
+- **Sustainability & performance**
 
 All telemetry conforms to:
 
 - **FAIR+CARE** ethical metadata schema  
 - **ISO 9001** (Quality Management)  
-- **ISO 50001** (Energy Efficiency) & **ISO 14064** (GHG accounting)  
-- **MCP-DL v6.3** and KFM’s **system-telemetry-v1** schema  
+- **ISO 50001** (Energy Management) & **ISO 14064** (GHG accounting)  
+- **MCP-DL v6.3** and KFM **system-telemetry-v1** schema  
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂️ 2. Directory Layout (Emoji-Prefix Standard)
 
-```plaintext
+~~~text
 docs/telemetry/
-├── README.md                       # This file
-├── governance-metrics.json         # Aggregated governance-level metrics
-├── ai-performance.json             # AI pipeline performance and explainability metrics
-├── accessibility-metrics.json      # Accessibility and inclusion telemetry
-├── sustainability.json             # Energy and carbon metrics
-└── provenance-ledger.json          # Provenance and validation traceability records
-```
+├── 📄 README.md                              # This file (telemetry root index)
+│
+├── 📜 etl-governance-events/                 # ETL governance event schema & examples
+│   ├── 📄 README.md
+│   ├── 📁 specs/
+│   ├── 📁 examples/
+│   ├── 🛠️ validators/
+│   └── 🗄️ storage/
+│
+├── 📊 governance-metrics.json                # Aggregated governance-level metrics (conceptual spec)
+├── 🤖 ai-performance.json                    # AI performance/drift/explainability metrics spec
+├── ♿ accessibility-metrics.json             # Accessibility & inclusion telemetry spec
+├── 🌱 sustainability.json                    # Energy & carbon metric spec
+└── 📚 provenance-ledger.json                 # Provenance & validation traceability spec
+~~~
 
-These files describe **how** telemetry is structured and interpreted; the canonical ledger per release is:
+These JSON specs describe **how telemetry streams are structured and interpreted**.  
+The canonical release-level ledger is stored under:
 
-```
-releases/v10.2.0/focus-telemetry.json
-```
+~~~text
+releases/v11.2.3/focus-telemetry.json
+~~~
 
 ---
 
-## ⚙️ Telemetry System Architecture
+## ⚙️ 3. Telemetry System Architecture
 
-```mermaid
+~~~mermaid
 flowchart TD
   A["CI/CD Workflows"] --> B["Validation Reports (JSON)"]
-  B --> C["Telemetry Export (normalize + merge)"]
-  C --> D["Unified Ledger (focus-telemetry.json)"]
-  D --> E["FAIR+CARE Dashboards & Public Reports"]
-  E --> F["Continuous Audit & Ethics Monitoring"]
-```
+  B --> C["Telemetry Export\n(normalize + merge)"]
+  C --> D["Unified Ledger\n(focus-telemetry.json)"]
+  D --> E["FAIR+CARE Dashboards\n& Public Reports"]
+  E --> F["Continuous Audit\n& Ethics Monitoring"]
+~~~
 
-Telemetry pipelines unify governance, ethics, accessibility, and performance data into a single transparent ledger available for each release.
-
----
-
-## 🧩 Core Telemetry Streams
-
-| Stream | Description | Source Workflow(s) | Primary Output |
-|---|---|---|---|
-| **Docs Validation** | Markdown front-matter, links, structure. | `docs-lint.yml` | `reports/self-validation/docs/lint_summary.json` |
-| **FAIR+CARE Audit** | Dataset & doc ethics compliance, PII checks. | `faircare-validate.yml` | `reports/fair/faircare_summary.json` |
-| **Catalog Integrity** | STAC/DCAT validation & asset checks. | `stac-validate.yml` | `reports/self-validation/stac_validation.json` |
-| **AI Training & Ethics** | Metrics, drift, explainability, energy. | `ai-train.yml` | `reports/ai/<model>/metrics.json` |
-| **Build & Performance** | Web builds, test runs, cache hits, runtime. | build/test workflows | `reports/telemetry/build_metrics.json` |
-
-All stream summaries are normalized and merged via `telemetry-export.yml` into:  
-`releases/v10.2.0/focus-telemetry.json`.
+Telemetry pipelines unify governance, ethics, accessibility, and performance data  
+into a single **transparent ledger** for each release.
 
 ---
 
-## 🧮 Telemetry Schema (system-telemetry-v1)
+## 🧩 4. Core Telemetry Streams
+
+| Stream             | Description                                      | Source Workflow(s)            | Primary Output                                           |
+|--------------------|--------------------------------------------------|-------------------------------|---------------------------------------------------------|
+| **Docs Validation**| Markdown structure, links, metadata checks       | `docs-lint.yml`               | `reports/self-validation/docs/lint_summary.json`        |
+| **FAIR+CARE Audit**| Dataset & doc ethics, PII & sensitivity checks  | `faircare-validate.yml`       | `reports/fair/faircare_summary.json`                    |
+| **Catalog Integrity**| STAC/DCAT validation, asset completeness      | `stac-validate.yml`           | `reports/self-validation/stac_validation.json`          |
+| **AI Training & Ethics**| Metrics, drift, explainability, energy     | `ai-train.yml`                | `reports/ai/<model>/metrics.json`                       |
+| **Build & Performance**| Builds, tests, cache usage, runtime         | build/test workflows          | `reports/telemetry/build_metrics.json`                  |
+| **ETL Governance Events**| ETL lineage & energy/carbon per run      | ETL workflows + export jobs   | `releases/v11.2.3/etl-governance-events.json`           |
+
+All stream summaries are normalized and merged (via `telemetry-export.yml`) into:  
+`releases/v11.2.3/focus-telemetry.json`.
+
+---
+
+## 🧮 5. Telemetry Schema (system-telemetry-v1)
 
 Each **event** in `focus-telemetry.json` conforms to `system-telemetry-v1`:
 
-| Field | Type | Description |
-|---|---|---|
-| `event_id` | string (UUIDv4) | Unique ID per telemetry event. |
-| `timestamp` | string (ISO 8601 UTC) | Event time. |
-| `category` | string | `docs` · `faircare` · `stac` · `ai` · `build` · `governance`. |
-| `status` | string | `success` · `warning` · `failure`. |
-| `branch` | string | Git ref / tag (`main`, `release/v10.2.0`). |
-| `run_id` | string | CI run identifier (GitHub Actions run ID). |
-| `duration_sec` | number | Workflow runtime in seconds. |
-| `energy_wh` | number | Estimated or measured energy usage (Wh). |
-| `carbon_gco2e` | number | Carbon equivalent emissions. |
-| `payload` | object | Workflow-specific fields (metrics, counts, etc.). |
+| Field           | Type              | Description                                            |
+|----------------|-------------------|--------------------------------------------------------|
+| `event_id`     | string (UUIDv4)   | Unique ID per telemetry event                          |
+| `timestamp`    | string (ISO 8601) | Event time (UTC)                                       |
+| `category`     | string            | `docs` · `faircare` · `stac` · `ai` · `build` · `etl`… |
+| `status`       | string            | `success` · `warning` · `failure`                      |
+| `branch`       | string            | Git ref / tag (`main`, `release/v11.2.3`)              |
+| `run_id`       | string            | CI run identifier (e.g., GitHub Actions run ID)        |
+| `duration_sec` | number            | Workflow runtime in seconds                            |
+| `energy_wh`    | number            | Estimated/observed energy usage (Wh)                   |
+| `carbon_gco2e` | number            | Carbon equivalent emissions                            |
+| `payload`      | object            | Workflow-specific fields (metrics, counts, etc.)       |
 
-A typical document-level summary in `docs-lint.yml` might populate `payload.docs_lint`.
-
----
-
-## ♿ Accessibility Telemetry Metrics
-
-Captured primarily via `accessibility_scan.yml` and web build workflows.
-
-| Metric | Target | Source |
-|---|---|---|
-| **WCAG 2.1 AA Score** | ≥ 95% | Lighthouse/axe scan |
-| **Keyboard Operability** | 100% elements reachable | Integration tests |
-| **Focus Visibility** | ≥ 3:1 contrast | Design token checks |
-| **Alt-text Coverage** | 100% UI images | Build-time a11y audit |
+`payload` carries stream-specific data (e.g., lint counts, FAIR+CARE scores, AI metrics).
 
 ---
 
-## 🧠 FAIR+CARE Ethical Telemetry
+## ♿ 6. Accessibility Telemetry Metrics
 
-Ethics metadata is embedded in each relevant event under `payload.ethics`.
+Captured via `accessibility_scan.yml` and web build workflows:
 
-| Principle | Field | Description |
-|---|---|---|
-| **Collective Benefit** | `payload.ethics.collective_benefit` | Captures societal/educational benefit of change. |
-| **Authority to Control** | `payload.ethics.authority_to_control` | Indicates responsible council/owner. |
-| **Responsibility** | `payload.ethics.responsibility` | Who audited and under which standard pack. |
-| **Ethics Score** | `payload.ethics.ethics_score` | Scaled 0–100 ethics assessment metric. |
-
-Example values are produced by `faircare-validate.yml` and AI governance flows.
+| Metric                | Target        | Source                    |
+|-----------------------|--------------:|---------------------------|
+| WCAG 2.1 AA Score     | ≥ 95%         | Lighthouse / axe scans    |
+| Keyboard Operability  | 100% elements | Integration tests         |
+| Focus Visibility      | ≥ 3:1 contrast| Token & CSS checks        |
+| Alt-text Coverage     | 100% images   | Build-time a11y audit     |
 
 ---
 
-## 🔍 Example Telemetry Event
+## 🧠 7. FAIR+CARE Ethical Telemetry
 
-```json
+Ethics metadata is embedded per event (`payload.ethics.*`):
+
+| Principle            | Field                                    | Description                              |
+|----------------------|------------------------------------------|------------------------------------------|
+| Collective Benefit   | `payload.ethics.collective_benefit`      | Societal/educational benefit             |
+| Authority to Control | `payload.ethics.authority_to_control`    | Responsible council/owner                |
+| Responsibility       | `payload.ethics.responsibility`          | Who audited & under which standard pack  |
+| Ethics Score         | `payload.ethics.ethics_score`            | 0–100 ethics assessment metric           |
+
+Produced by `faircare-validate.yml` and AI governance flows.
+
+---
+
+## 🔍 8. Example Telemetry Event
+
+~~~json
 {
   "event_id": "TEL-2025-0041",
-  "timestamp": "2025-11-12T22:16:00Z",
-  "category": "data_validation",
+  "timestamp": "2025-11-29T22:16:00Z",
+  "category": "faircare",
   "status": "success",
-  "branch": "release/v10.2.0",
+  "branch": "release/v11.2.3",
   "run_id": "github-actions-123456789",
   "duration_sec": 742,
   "energy_wh": 0.96,
@@ -177,76 +222,56 @@ Example values are produced by `faircare-validate.yml` and AI governance flows.
     }
   }
 }
-```
+~~~
 
 ---
 
-## 📊 Governance Telemetry Integration
+## 🌱 9. Sustainability & Performance (ISO 50001/14064)
 
-Telemetry outputs underpin KFM’s governance stack:
+KFM tracks sustainability at both **workflow** and **release** granularity:
 
-| Integration | Description | Target |
-|---|---|---|
-| **Governance Ledger** | Maintains append-only event history for audits. | `data/reports/audit/data_provenance_ledger.json` |
-| **Transparency Dashboards** | Visualize energy, error rates, FAIR+CARE scores. | `docs/governance/transparency-reports.md` |
-| **Release Manifests** | Reference telemetry snapshots for each release. | `releases/v10.2.0/manifest.zip` |
+| Metric               | Target     | Aggregation                  |
+|----------------------|-----------:|------------------------------|
+| Energy per CI Cycle  | ≤ 3 Wh     | Weekly/monthly rollups       |
+| CO₂e per Release     | Fully offset| Release-level ledger        |
+| Hotspot Workflows    | Identified | Telemetry alerts             |
+| Telemetry Size       | ≤ 5 MB     | Storage & SLO checks         |
 
----
+Telemetry is used to guide:
 
-## ⚙️ Workflows Producing Telemetry
-
-| Workflow | Category | Example Payload Key |
-|---|---|---|
-| `docs-lint.yml` | docs | `payload.docs_lint` |
-| `faircare-validate.yml` | faircare | `payload.faircare` |
-| `stac-validate.yml` | stac | `payload.stac_validate` |
-| `ai-train.yml` | ai | `payload.ai_train` |
-| `build-web.yml` | build | `payload.web_build` |
-| `telemetry-export.yml` | system | Full ledger merge operations |
-
-All flows are funneled through `telemetry-export.yml`, which enforces schema compliance.
+- Workflow optimization  
+- Hardware/infra choices  
+- Carbon budgeting and offsets  
 
 ---
 
-## 🌱 Sustainability & Performance (ISO 50001/14064)
+## 🧮 10. Telemetry Lifecycle
 
-KFM tracks sustainability at both **workflow** and **release** granularity.
-
-| Metric | Target | Aggregation |
-|---|---|---|
-| Energy per CI Cycle | ≤ 3 Wh | Telemetry rollups per week/month |
-| CO₂e per Release | 100% offset via RE100 providers | Release-level ledger |
-| Hotspot Workflows | Identified & flagged | Telemetry alerts |
-| Telemetry Size | ≤ 5 MB per release | Storage & SLO checks |
-
----
-
-## 🧮 Telemetry Lifecycle
-
-```mermaid
+~~~mermaid
 flowchart LR
   A["Validation & Build Workflows"] --> B["Per-job Telemetry JSON"]
-  B --> C["Normalization (per schema)"]
-  C --> D["Merged Ledger (focus-telemetry.json)"]
-  D --> E["Dashboards, Reports, Governance Reviews"]
-  E --> F["Optimization & Policy Updates"]
-```
+  B --> C["Normalization\n(system-telemetry-v1)"]
+  C --> D["Merged Ledger\n(focus-telemetry.json)"]
+  D --> E["Dashboards & Reports"]
+  E --> F["Optimization & Governance Updates"]
+~~~
 
 ---
 
-## 🕰️ Version History
+## 🕰️ 11. Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.2.2 | 2025-11-12 | FAIR+CARE Governance Secretariat | Aligned to v10.2.0 releases; documented system-telemetry-v1 schema; integrated sustainability + ethics fields; clarified workflow sources. |
-| v10.0.0 | 2025-11-10 | FAIR+CARE Governance Secretariat | Established full telemetry & provenance framework; integrated ethics scoring, accessibility metrics, energy performance, and governance audit linkage. |
+| Version | Date       | Summary                                                                                      |
+|--------:|------------|----------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-11-29 | Upgraded to v11.2.3; aligned with ETL governance events; applied safe-fence + emoji layouts. |
+| v10.2.2 | 2025-11-12 | Established system-telemetry-v1; integrated FAIR+CARE, a11y, sustainability metrics.         |
 
 ---
 
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Governed under **Master Coder Protocol v6.3** · Certified by **FAIR+CARE Council** · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[⬅ Back to Documentation Index](../README.md) · [Governance →](../standards/governance/ROOT-GOVERNANCE.md)
+📡 **Kansas Frontier Matrix — Telemetry & Provenance Logging Framework (v11.2.3)**  
+Provenance · Observability · Sustainable Intelligence  
+
+[📘 Docs Root](../..) · [📜 ETL Governance Events](./etl-governance-events/README.md) · [⚖ Governance](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
