@@ -151,4 +151,3 @@ All restricted examples live only in internal, access-controlled directories.
 [📚 Docs Home](../../../../README.md) · [📏 Standards Index](../../../standards/README.md) · [🛡 Governance Charter](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
