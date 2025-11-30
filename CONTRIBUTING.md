@@ -5,45 +5,55 @@ version: "v11.0.1"
 last_updated: "2025-11-27"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 commit_sha: "<latest-commit-hash>"
+
 sbom_ref: "releases/v11.0.0/sbom.spdx.json"
 manifest_ref: "releases/v11.0.0/manifest.zip"
 telemetry_ref: "releases/v11.0.0/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/contributing-v2.json"
+
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
 license: "MIT"
+
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.2"
+
 status: "Active / Enforced"
 doc_kind: "Governance"
 intent: "contributor-workflow"
 role: "governance"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Mixed Dataset Classification"
 sensitivity_level: "Contribution-dependent"
 public_exposure_risk: "Low to Medium"
-indigenous_rights_flag: true"
+indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Mixed"
 redaction_required: false
+
 provenance_chain:
   - "CONTRIBUTING.md@v10.3.1"
   - "CONTRIBUTING.md@v10.3.2"
   - "CONTRIBUTING.md@v10.4.1"
   - "CONTRIBUTING.md@v11.0.0"
 previous_version_hash: "<previous-sha256>"
+
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "HowTo"
   owl_time: "TemporalEntity"
   prov_o: "prov:Plan"
   geosparql: "geo:FeatureCollection"
+
 json_schema_ref: "schemas/json/contributing-v11.schema.json"
 shape_schema_ref: "schemas/shacl/contributing-v11-shape.ttl"
+
 doc_uuid: "urn:kfm:doc:contributing-v11.0.1"
 semantic_document_id: "kfm-doc-contributing"
 event_source_id: "ledger:CONTRIBUTING.md"
 immutability_status: "mutable-plan"
 doc_integrity_checksum: "<sha256>"
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with strict controls"
 ai_transform_permissions:
@@ -53,6 +63,7 @@ ai_transform_permissions:
 ai_transform_prohibited:
   - "speculative additions"
   - "unverified historical claims"
+
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA"
 jurisdiction: "Kansas / United States"
@@ -77,422 +88,330 @@ sunset_policy: "Superseded upon next contributor-guideline update"
 
 ---
 
-## 📘 Introduction
+## 📘 Overview
 
-Thank you for your interest in contributing to the **Kansas Frontier Matrix (KFM)**.
+This guide defines how to contribute to the **Kansas Frontier Matrix (KFM v11)**, a **state-scale, FAIR+CARE-governed knowledge system for Kansas**.
 
-This guide defines the **v11 contributor workflow**, aligned with:
+It is aligned with:
 
-- **MCP-DL v6.3** — Master Coder Protocol, documentation-first  
-- **KFM-MDP v11.2.2** — Markdown & documentation protocol  
-- **FAIR+CARE** — data ethics and governance  
+- **MCP-DL v6.3** — documentation-first engineering  
+- **KFM-MDP v11.2.2** — Markdown and documentation protocol  
+- **KFM-OP v11** — ontology and graph modeling protocol  
+- **KFM-PDC v11** — data contracts and validation  
+- **FAIR+CARE** — data ethics and Indigenous sovereignty  
 - **WCAG 2.1 AA** — accessibility baseline  
-- **CIDOC-CRM / OWL-Time / GeoSPARQL / PROV-O** — semantic modeling  
-- **Diamond⁹ Ω / Crown∞Ω** — internal reliability & governance labels  
 
-All contributions (code, data, docs, analyses, story content) must comply with these standards.
+If your change cannot pass these constraints, it cannot merge.
+
+---
+
+## 🗂 Project Layout (Contributor View)
+
+This is the **canonical v11 contributor view** of the repo, based on the current tree.
+
+~~~text
+Kansas-Frontier-Matrix/
+├── 📄 README.md                         # Root system overview
+├── 🏗️ ARCHITECTURE.md                   # Repository architecture & system blueprint
+├── 🤝 CONTRIBUTING.md                   # This contribution guide
+│
+├── ⚙️ .github/                          # CI/CD, security, and governance automation
+│   ├── 📂 ISSUE_TEMPLATE/               # Issue templates
+│   ├── 📂 actions/                      # Composite actions
+│   ├── 📂 workflows/                    # CI workflows (tests, lint, audits)
+│   ├── 📄 ARCHITECTURE.md              # CI/CD architecture
+│   ├── 📄 PULL_REQUEST_TEMPLATE.md     # PR checklist (governance + tests)
+│   ├── 📄 README.md                    # .github overview
+│   ├── 📄 SECURITY.md                  # Security policy
+│   └── 📄 dependabot.yml               # Dependency update rules
+│
+├── 🗃️ data/                            # Data lifecycle & catalogs
+│   ├── 🌫️ air-quality/                 # Air-quality sources & products
+│   ├── 🗄️ archive/                     # Archived/deprecated bundles
+│   ├── ✅ checksums/                   # Hashes for integrity verification
+│   ├── 💧 hydrology/                   # Hydrology datasets
+│   ├── 📊 processed/                   # Canonical processed outputs
+│   ├── 📥 raw/                         # Raw ingests (DVC/LFS-backed)
+│   ├── 📑 reports/                     # QA/QC & data reports
+│   ├── 🛰️ stac/                       # STAC Collections & Items
+│   ├── 🪨 surficial-geology/           # Surficial geology data
+│   ├── 🔁 updates/                     # Incremental refresh payloads
+│   ├── 🧪 work/                        # Intermediate working artifacts
+│   ├── 🏗️ ARCHITECTURE.md              # Data architecture
+│   └── 📄 README.md                    # data/ overview
+│
+├── 📚 docs/                            # Documentation (standards, guides, reports)
+│   ├── ♿ accessibility/               # Accessibility standards & audits
+│   ├── 📊 analyses/                    # Analyses & case studies
+│   ├── 🧱 architecture/                # System & subsystem designs
+│   ├── 🗃️ archives/                    # Historical/archive integration docs
+│   ├── 🗂️ data/                        # Data catalogs & contracts
+│   ├── 🎨 design/                      # Design system & UX guidelines
+│   ├── 🛡️ governance/                  # Governance charters & decisions
+│   ├── 🧠 graph/                       # Ontology & graph modeling
+│   ├── 📖 guides/                      # How-tos & tutorials
+│   ├── 🕰️ history/                     # Historical narratives & timelines
+│   ├── 🚰 pipelines/                   # Pipeline specs & runbooks
+│   ├── 📑 reports/                     # Reports & whitepapers
+│   ├── 🔍 search/                      # Search & discovery behavior
+│   ├── 🔒 security/                    # Security & supply-chain docs
+│   ├── 🌱 soil/                        # Soil/terrain domain docs
+│   ├── ⚖️ standards/                   # KFM standards (Markdown, FAIR+CARE, etc.)
+│   ├── 📡 telemetry/                   # Telemetry & observability standards
+│   ├── 🧩 templates/                   # Templates for docs/MCP/Story Nodes
+│   ├── 🔄 workflows/                   # Human processes & workflows
+│   ├── 🏗️ ARCHITECTURE.md              # docs/ architecture
+│   ├── 📘 MASTER_GUIDE_v10.md          # v10 master guide
+│   ├── 📘 MASTER_GUIDE_v11.md          # v11 master guide
+│   ├── 📄 README.md                    # docs/ overview
+│   └── 📖 glossary.md                  # Shared terms
+│
+├── 🧬 mcp/                            # Master Coder Protocol assets
+│   ├── 🔬 experiments/                # Experiment logs (inputs, configs, outputs)
+│   ├── 🧾 model_cards/                # AI/ML model cards
+│   ├── 📜 sops/                       # SOPs for repeatable tasks
+│   ├── 📄 MCP-README.md              # MCP-specific overview
+│   └── 📄 README.md                  # mcp/ overview
+│
+├── 🧠 src/                            # Backend, ETL, AI, graph, and shared code
+│   ├── 🤖 ai/                         # Focus Mode, AI services, workers
+│   ├── 🎨 design-tokens/             # Shared design tokens
+│   ├── 🧩 graph/                     # Neo4j schema & loaders
+│   ├── 🖼️ icons/                     # Shared icon set
+│   ├── 🗺️ map/                       # Map-related helpers
+│   ├── 🚰 pipelines/                 # ETL & orchestration logic
+│   ├── 🧪 tests/                     # Backend tests
+│   ├── 🎨 theming/                   # Shared theming utilities
+│   ├── 🏗️ ARCHITECTURE.md            # src/ architecture
+│   └── 📄 README.md                  # src/ overview
+│
+├── 🧪 tests/                         # Cross-cutting tests
+│   ├── 🧱 fixtures/                  # Test fixtures
+│   ├── 🏗️ ARCHITECTURE.md            # tests/ architecture
+│   └── 📄 README.md                  # tests/ overview
+│
+├── 🛠 tools/                         # Dev, governance, and validation tools
+│   ├── 🤖 ai/                        # AI evaluation & drift tools
+│   ├── ⚙️ ci/                        # CI support scripts
+│   ├── 💻 cli/                       # CLI utilities
+│   ├── 🏛️ governance/                # Governance automation
+│   ├── 📡 telemetry/                 # Telemetry collection/export tools
+│   ├── ✅ validation/                # Validators for STAC/DCAT/schemas/Story Nodes
+│   ├── 🏗️ ARCHITECTURE.md            # tools/ architecture
+│   └── 📄 README.md                  # tools/ overview
+│
+└── 🌐 web/                          # Frontend (React + MapLibre + Cesium)
+    ├── 📦 public/                   # Static assets
+    ├── 🧩 src/                      # Components, map/3D, Focus Mode UI
+    ├── 🏗️ ARCHITECTURE.md          # web/ architecture
+    └── 📄 README.md                # web/ overview
+~~~
+
+When in doubt, place files where they align with this layout and **update this tree** if a new top-level area is introduced.
 
 ---
 
 ## 🧱 Contribution Types
 
-You can contribute in many ways:
+You can contribute in several ways:
 
 - **Code**
-  - Web frontend (React + MapLibre + Cesium)
-  - ETL & AI pipelines (LangGraph / CrewAI)
-  - Validation & telemetry tools
-  - Graph / API utilities (Neo4j, FastAPI, GraphQL)
+  - Frontend: React, MapLibre, Cesium, accessibility improvements  
+  - Backend: FastAPI/GraphQL, ETL, AI services  
+  - Pipelines: LangGraph DAGs, data contracts, validation hooks  
+  - Tools: CLI, telemetry, governance, validation  
 
 - **Documentation**
-  - Architecture & design docs
-  - Standards & governance docs
-  - How-to guides and tutorials
-  - Story Node authoring guides and examples
+  - Standards, protocols, and governance docs  
+  - Architecture, pipeline, and Story Node guides  
+  - Analyses, reports, and narrative explanations  
 
 - **Data & Metadata**
-  - New datasets (maps, tables, documents, imagery)
-  - STAC/DCAT entries and lineage records
-  - Ontology/graph mappings and schema updates
+  - New datasets and derived products  
+  - STAC/DCAT metadata and PROV-O lineage  
+  - Ontology/graph mappings and constraints  
 
 - **Testing & Validation**
-  - Unit / integration / E2E tests
-  - Schema & ontology tests
-  - Accessibility and usability tests
-  - Validation & observability improvements
+  - Unit, integration, and E2E tests  
+  - Schema/ontology tests and validators  
+  - A11y and usability tests  
 
 - **Governance & Ethics**
-  - CARE metadata and sovereign data handling notes
-  - Provenance and licensing checks
-  - Documentation of community or tribal guidance and approvals
+  - CARE labels and sovereignty metadata  
+  - Risk assessments and redaction strategies  
+  - Governance process documentation  
 
-All contributions are subject to **FAIR+CARE** and **KFM governance**.
+All contributions must be **documentation-first**, **test-aware**, and **governance-compliant**.
 
 ---
 
-## 🛠 Environment Setup
+## 🛠 Setup & Local Development
 
-### 1. Clone the repository
+### 1. Fork and clone
 
-```bash
-git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
+~~~bash
+git clone https://github.com/<org>/Kansas-Frontier-Matrix.git
 cd Kansas-Frontier-Matrix
-```
+~~~
 
-### 2. Install dependencies
+### 2. Install dependencies (examples)
 
-(Exact commands may evolve; see `docs/pipelines/` and `ARCHITECTURE.md` for latest details.)
-
-```bash
+~~~bash
 # Frontend
+cd web
 npm install
 
-# Backend / ETL / AI (example)
-pip install -r requirements.txt
-```
+# Backend / pipelines
+cd ..
+pip install -r requirements.txt  # or uv/poetry equivalent
+~~~
 
-### 3. Recommended tools
+### 3. Run basic checks
 
-- Node.js **18+**  
-- Python **3.10+**  
-- Docker (for Neo4j, ETL, spatial tools)  
-- `make` (optional, for scripted tasks)  
-- A markdown editor with **YAML front-matter**, **Mermaid**, and **MD linting** support  
-
----
-
-## 🗂 Project Structure (High-Level)
-
-```text
-Kansas-Frontier-Matrix/                 # Monorepo root
-│
-├── README.md                           # Root system overview (KFM v11)
-├── ARCHITECTURE.md                     # Repository architecture & system blueprint
-├── CONTRIBUTING.md                     # This contribution guide
-│
-├── data/                               # Raw → work → processed → releases
-│   ├── raw/                            # Raw inputs (DVC/LFS pointers, not committed)
-│   ├── work/                           # ETL staging
-│   ├── processed/                      # Cleaned and analysis-ready datasets
-│   ├── stac/                           # STAC Items/Collections
-│   ├── provenance/                     # PROV-O + OpenLineage + FAIR+CARE records
-│   └── releases/                       # Versioned data bundles and telemetry artifacts
-│
-├── src/                                # Backend, ETL, AI, graph, API
-│   ├── pipelines/                      # LangGraph DAGs and ETL pipelines
-│   ├── ai/                             # CrewAI workers, prompts, model orchestration
-│   ├── graph/                          # Neo4j ingestion, schema, ontology mapping
-│   ├── server/                         # FastAPI + GraphQL + governance hooks
-│   └── telemetry/                      # Energy, carbon, IO, reliability metrics
-│
-├── web/                                # React + MapLibre + Cesium application
-│   ├── src/                            # Components, views, Focus Mode UI
-│   ├── public/                         # Static assets
-│   └── meta/                           # SEO, manifests, app-config metadata
-│
-├── docs/                               # Standards, analyses, architecture, governance
-│   ├── standards/                      # Governance standards (Markdown v11)
-│   ├── architecture/                   # Detailed architecture notes and diagrams
-│   ├── analyses/                       # Analytic reports and case studies
-│   ├── governance/                     # Governance charters and policy documents
-│   └── templates/                      # Docs templates (MCP experiments, Story Nodes, etc.)
-│
-├── schemas/                            # JSON, STAC, DCAT, JSON-LD, SHACL schemas
-│   ├── telemetry/                      # Telemetry schemas (energy, carbon, audits)
-│   ├── stac/                           # KFM-STAC v11 profiles
-│   ├── dcat/                           # KFM-DCAT v11 profiles
-│   └── jsonld/                         # KFM JSON-LD context files
-│
-├── mcp/                                # Master Coder Protocol assets
-│   ├── experiments/                    # Experiment logs and reproducibility bundles
-│   ├── sops/                           # SOPs for pipelines, AI, datasets, governance
-│   ├── model_cards/                    # AI/ML model cards
-│   └── MCP-README.md                   # Overview of MCP usage
-│
-├── tests/                              # Unit, integration, E2E, schema, governance, a11y tests
-├── tools/                              # CLI tools, governance and validation utilities
-└── .github/                            # CI/CD workflows, PR templates, governance automation
-```
-
-For orientation:
-
-- Start with `README.md` (root overview)  
-- Read `ARCHITECTURE.md` for system blueprint  
-- See `docs/README.md` and `docs/standards/ROOT-STANDARDS.md` for document indices  
-
----
-
-## 🌿 Branching & Workflow Model
-
-### Branches
-
-- **`main`**  
-  - Always deployable  
-  - Fully validated and governed  
-  - Protected branch  
-
-- **`feature/*`**  
-  - New features and enhancements  
-  - Must be focused and documented  
-
-- **`fix/*`**  
-  - Bug and security fixes  
-  - Small, targeted changes  
-
-- **`docs/*`**  
-  - Documentation-only changes  
-
-- **`data/*`**  
-  - New datasets or major metadata changes  
-  - Requires FAIR+CARE & provenance review  
-
-### Workflow Overview
-
-```mermaid
-flowchart LR
-  A[Fork or New Branch] --> B[Implement Changes]
-  B --> C[Run Local Tests & Validation]
-  C --> D[Open Pull Request]
-  D --> E[GitHub Actions CI/CD<br/>Lint · Tests · Schemas · FAIR+CARE · Security]
-  E -->|pass| F[Review & Governance Check]
-  F -->|approve| G[Merge to main]
-```
-
----
-
-## 📥 Pull Request Requirements (v11)
-
-Every PR **must**:
-
-- Target the correct branch (`main` via `feature/*`, `fix/*`, `docs/*`, or `data/*`)  
-- Have a clear, concise description and rationale  
-- Link any relevant issues  
-- Be as **scoped** and **small** as is reasonable  
-
-### Required Checks
-
-All of the following **must pass** before merging:
-
-- Frontend: TypeScript build + ESLint/Prettier/Stylelint  
-- Backend: Python formatting & linting (per repo config)  
-- Tests: unit + integration (and E2E as applicable)  
-- Markdown: **KFM-MDP v11.2.2** rules + YAML front-matter validation  
-- JSON/YAML schema validation  
-- STAC/DCAT validation for affected data/metadata  
-- Story Node v3 / Focus Mode schema validation (if touched)  
-- Accessibility tests (where configured)  
-- FAIR+CARE checks for new or changed datasets  
-- SBOM and manifest verification for release-sensitive changes  
-
-If **any** of these fail, the PR is blocked until issues are addressed.
-
-### PR Template Fields
-
-The PR template will typically ask you to describe:
-
-- **Summary of change**  
-- **Type of change** (bugfix, feature, docs, data, refactor, governance, etc.)  
-- **CARE / sovereignty impact**  
-- **Provenance & licensing** (data or narrative sources)  
-- **A11y impact**  
-- **Telemetry impact** (runtime, IO, energy)  
-- **Schema / ontology impact**  
-- **Security considerations**  
-- **Testing performed**  
-
-Answer these honestly and with enough detail for reviewers and future auditors.
-
----
-
-## 🔐 Governance, FAIR+CARE & Sovereignty
-
-### CARE & Sovereignty Guidelines
-
-- Do **not** expose precise coordinates for:
-
-  - Sensitive archaeological sites  
-  - Sacred or restricted locations  
-  - Tribal/Indigenous cultural sites without explicit governance approval  
-
-- Use **H3 spatial generalization** and masking as defined in:
-
-  - `docs/standards/heritage/h3-generalization.md`  
-  - `docs/standards/heritage/dynamic-h3-generalization.md`  
-
-- Respect community-specific data-sharing agreements and tribal sovereignty policies  
-- Seek FAIR+CARE Council guidance when any doubt exists  
-- Avoid re-framing or extracting Indigenous knowledge without proper context, consent, and governance  
-
-### Provenance & Licensing
-
-Any contribution involving data or narrative content must:
-
-- Declare **source** (archives, datasets, community input, research, etc.)  
-- Provide **license** information (public domain, CC-BY, etc.)  
-- Ensure licensing is compatible with **MIT** (code) and **CC-BY** (docs) defaults  
-- Update or create relevant STAC/DCAT/PROV-O records or provenance metadata  
-- Avoid including proprietary or unlicensed content  
-
-### Ethical AI and Narrative Content
-
-When contributions affect Focus Mode, Story Nodes, or AI behavior:
-
-- Do not invent events, people, or attributions  
-- Avoid unverified causal claims or speculation presented as fact  
-- Do not fabricate citations or references  
-- Ensure AI-generated content is traceable to underlying data and sources  
-- Mark AI-generated content where appropriate and keep it versioned  
-
----
-
-## ♿ Accessibility Requirements (WCAG 2.1 AA)
-
-All UI and content contributions must:
-
-- Provide keyboard-accessible functionality and focus management  
-- Use semantic HTML and appropriate ARIA attributes  
-- Include descriptive alt text for images and icons  
-- Maintain sufficient color contrast  
-- Respect reduced-motion preferences  
-- Avoid relying solely on color to convey meaning  
-- Provide accessible descriptions or alternatives for map and 3D content where feasible  
-
-Before submitting:
-
-- Run the configured a11y test suite (e.g., `npm run test:a11y`)  
-- Manually test keyboard navigation on affected components  
-- Document any deliberate deviations with clear rationale in the PR  
-
----
-
-## 🗃 Dataset & Metadata Contributions
-
-### Required Metadata
-
-Adding or updating a dataset typically requires:
-
-- Title, description, and thematic tags  
-- Source, publisher, and contact information  
-- License and terms of use  
-- Spatial extent (bbox, CRS)  
-- Temporal extent (time range and granularity)  
-- STAC Items/Collections for geospatial assets  
-- DCAT metadata for dataset-level description  
-- CARE classification and Indigenous sovereignty flags (where applicable)  
-- Processing documentation (how the dataset was created, transformed, or derived)  
-
-### Sensitive & Restricted Data
-
-For sensitive data:
-
-- Label clearly with CARE and sovereignty metadata  
-- Submit for review by FAIR+CARE Council and relevant community partners  
-- Ensure only masked/generalized data appear in public releases  
-- Avoid PII, PHI, or identifiable small-group demographics unless specifically allowed and governed  
-
-### Graph Integration
-
-If integrating with the Neo4j graph:
-
-- Ensure new nodes and edges respect CIDOC-CRM, GeoSPARQL, OWL-Time, and PROV-O mappings  
-- Update relevant ontology docs in `docs/graph/ontology/` and shape constraints in `schemas/`  
-- Optionally provide example Cypher or SPARQL queries in documentation  
-
----
-
-## 🧪 Testing & Validation Expectations
-
-Before opening a PR, run relevant tests, e.g.:
-
-```bash
+~~~bash
 # Frontend
+cd web
 npm run lint
-npm run test
+npm test
 
-# Backend / ETL / AI
+# Backend
+cd ..
 pytest
-```
+~~~
 
-And where applicable:
-
-- Schema validation (JSON/YAML, STAC/DCAT, Story Node v3)  
-- Great Expectations / data contract validation  
-- Accessibility tests (`npm run test:a11y`)  
-- Governance & FAIR+CARE validators  
-
-If your changes affect CI workflows, ensure dry runs or limited tests can be performed.
+Refer to `ARCHITECTURE.md` and `docs/architecture/` for precise environment details.
 
 ---
 
-## 📈 Telemetry & Sustainability
+## 🌿 Branching & Workflow
 
-Major changes affecting performance or infra should consider:
+### Branch naming
 
-- Runtime & memory usage  
-- Network and storage costs  
-- Impact on energy and carbon telemetry  
-- Changes in logging, metrics, and tracing volume  
+- `feature/<short-description>` — new features  
+- `fix/<short-description>` — bug fixes  
+- `docs/<short-description>` — documentation-focused changes  
+- `data/<short-description>` — data/metadata changes  
 
-Telemetry is collected under paths like:
+### Workflow (simplified)
 
-```text
-releases/<version>/focus-telemetry.json
-```
-
-Use these logs to understand and optimize the sustainability profile of your contributions.
-
----
-
-## 🧾 Legal & Licensing
-
-By contributing:
-
-- **Code** is licensed under **MIT** (unless otherwise specified)  
-- **Documentation** is generally under **CC-BY 4.0**  
-- You must ensure compatible licenses for any third-party code or data  
-- You must attribute external sources appropriately  
-- If unsure about licensing, raise the question in an issue or PR comment before proceeding  
+1. Create a branch from `main`.  
+2. Implement changes with small, focused commits.  
+3. Update docs, schemas, and tests alongside code.  
+4. Run relevant tests and validations.  
+5. Open a PR, complete the template, and request review.  
 
 ---
 
-## 📐 Code, Design & Documentation Standards
+## 📥 Pull Request Checklist
 
-### Code
+Every PR must:
 
-- TypeScript and Python should be **clean, well-structured, and tested**  
-- Prefer pure, deterministic functions and explicit configuration  
-- Avoid hidden globals and side effects  
-- Keep deployment/environment-specific concerns separate from core logic  
+- Target the correct branch and be appropriately scoped.  
+- Update relevant documentation (including YAML front-matter dates/versions).  
+- Include or update tests where appropriate.  
+- Pass CI:
 
-### Documentation
+  - Code linting (frontend/backend)  
+  - Markdown linting and schema checks  
+  - Unit/integration/E2E tests (where defined)  
+  - STAC/DCAT/Story Node/telemetry schema validation (if touched)  
+  - FAIR+CARE and sovereignty checks for data/narrative changes  
+  - Security checks and SBOM/manifest verification when needed  
 
-- All new docs **must** follow **KFM-MDP v11.2.2**:
+If something fails, fix it or explain why the check needs to be updated.
 
-  - YAML front-matter with required fields  
-  - Single H1 in centered title block  
-  - Emojis in H2+ headings where appropriate  
-  - Proper `text`-fenced directory trees with comments and connectors  
-  - Three-link footer on a single line  
+---
 
-- Documentation should:
+## ⚖ FAIR+CARE & Sovereignty
 
-  - Explain design intent, not just implementation  
-  - Be easy to navigate (linked from the right index docs)  
-  - Be kept in sync with the code and schemas  
+Key rules:
+
+- **Never commit precise coordinates** of sensitive archaeological or sacred sites.  
+- Use **H3 generalization and masking** as documented in `docs/standards/heritage/` for heritage-related data.  
+- Avoid speculative or sensational narratives about Indigenous communities; follow documented sources and governance guidance.  
+- When working with any content tied to Indigenous knowledge or sensitive cultural materials, coordinate with the **FAIR+CARE Council** and respect sovereignty policies.  
+
+If you are not sure whether something is sensitive, raise a question in an issue or PR before proceeding.
+
+---
+
+## 🗃 Data & Metadata Contributions
+
+When adding or modifying datasets:
+
+- Provide:
+
+  - Title, description, keywords  
+  - Source, publisher, contact  
+  - License and usage terms  
+  - Spatial extent (bbox, CRS, vertical datum if applicable)  
+  - Temporal extent (range and resolution)  
+  - STAC Items/Collections for spatial assets  
+  - DCAT dataset records  
+  - CARE labels, sovereignty flags, and any restrictions  
+  - Processing description (steps, tools, parameters)  
+
+- Ensure:
+
+  - Licensing is compatible with KFM’s use (MIT/CC-BY for code/docs).  
+  - No PII/PHI or ungoverned sensitive content is introduced.  
+  - Data contracts and validators are updated under `schemas/` and `tests/`.  
+
+---
+
+## 🧪 Testing & Validation
+
+Run tests appropriate to the scope of your change:
+
+- **Code:** unit, integration, and (where available) E2E tests.  
+- **Schemas:** JSON, JSON-LD, STAC, DCAT, Story Node v3, telemetry.  
+- **Docs:** markdown lint, front-matter validation, heading order checks.  
+- **A11y:** automated accessibility linting and manual keyboard checks.  
+
+Introduce new tests if your area has no coverage yet—especially for new standards, schemas, or governance rules.
+
+---
+
+## ♿ Accessibility Requirements
+
+All UI work must meet **WCAG 2.1 AA**:
+
+- Full keyboard accessibility and visible focus states  
+- Sufficient color contrast and non-color-only cues  
+- Semantic HTML structure with appropriate ARIA labels  
+- Descriptive alt text for images and icons  
+- Respect for `prefers-reduced-motion`  
+
+Document any known limitations or intentional exceptions in the PR and tag accessibility reviewers when appropriate.
+
+---
+
+## 📐 Documentation Standards
+
+All new or updated docs must follow **KFM-MDP v11.2.2**:
+
+- YAML front-matter at the top (no blank lines before `---`).  
+- Single H1 in a centered title block.  
+- Emojis in H2 headings where appropriate.  
+- Directory trees inside `~~~text` fences.  
+- Proper heading hierarchy (no jumps from H2 to H4).  
+- Three-link footer for governed docs.  
+
+When in doubt, copy an existing v11-compliant doc from `docs/standards/` and adapt.
 
 ---
 
 ## 🕰 Version History
 
-| Version |       Date | Summary                                                                                               |
-| ------: | ---------: | ----------------------------------------------------------------------------------------------------- |
-| v11.0.1 | 2025-11-27 | Updated to KFM-MDP v11.2.2, fixed heading levels, badges, and clarified CI & governance expectations. |
-| v11.0.0 | 2025-11-18 | v11 rebuild aligned with KFM-MDP v11, FAIR+CARE, ontology alignment, and CI/telemetry requirements.   |
-| v10.4.1 | 2025-11-15 | One-box-safe formatting; improved CARE/A11y guidance; stronger governance hooks.                      |
-| v10.4.0 | 2025-11-15 | Major rewrite for KFM v10.4; structured contributor workflow, governance, and telemetry expectations. |
-| v10.3.2 | 2025-11-14 | Added governance + telemetry integration details.                                                     |
+| Version | Date       | Summary                                                                                               |
+|--------:|------------|-------------------------------------------------------------------------------------------------------|
+| v11.0.1 | 2025-11-27 | Updated for KFM-MDP v11.2.2, aligned with current repo layout, clarified CI, FAIR+CARE, and a11y expectations. |
+| v11.0.0 | 2025-11-18 | v11 rebuild aligned with KFM-OP v11, KFM-PDC v11, and new governance/telemetry requirements.          |
+| v10.4.1 | 2025-11-15 | One-box-safe formatting; improved CARE/a11y guidance; stronger governance and telemetry hooks.        |
+| v10.4.0 | 2025-11-15 | Major restructuring of contributor workflow and alignment with v10.4 standards.                       |
+| v10.3.2 | 2025-11-14 | Added governance and telemetry integration details.                                                   |
 | v10.3.1 | 2025-11-13 | Initial CONTRIBUTING framework.                                                                       |
 
 ---
 
-[Root README](README.md) · [Architecture](ARCHITECTURE.md) · [Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
+[🏠 Root README](README.md) · [🏗 Architecture](ARCHITECTURE.md) · [🛡 Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
