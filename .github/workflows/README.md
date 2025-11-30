@@ -175,6 +175,7 @@ Workflows in this directory:
     ├── 🎯 focusmode_mlops.yml                # Focus Mode v3 MLOps (fusion, narrative safety, explainability)
     ├── 📊 telemetry_export.yml               # Telemetry aggregation → github-infra-telemetry.json
     ├── 🚀 release.yml                        # Signed release packaging, manifest, SBOM
+    ├── 🔄 kfm-auto-update.yml                # Scheduled auto-update & promotion orchestration
     ├── 🏷️ labeler.yml                        # Auto-label PRs by component/domain
     └── 🌐 site.yml                           # Web + docs build & deployment pipelines
 ~~~
@@ -182,7 +183,7 @@ Workflows in this directory:
 Any new workflow added to this directory MUST be:
 
 - Documented in this README.  
-- Wired into schemas under `schemas/telemetry/` where it affects telemetry.  
+- Wired into schemas under `schemas/telemetry/` when it affects telemetry.  
 - Aligned with FAIR+CARE and sovereignty policy documents.
 
 ---
@@ -198,12 +199,13 @@ flowchart TB
     C --> D["⚖ Governance\n faircare_validate · h3_generalization"]
     D --> E["🔐 Security & Supply Chain\n security_audit · sbom_verify"]
     E --> F["📦 Build & Release\n site · release"]
-    F --> G["📊 Telemetry & Lineage\n telemetry_export + OpenLineage"]
+    F --> G["🔄 Auto-Update & Promotion\n kfm-auto-update"]
+    G --> H["📊 Telemetry & Lineage\n telemetry_export + OpenLineage"]
 ~~~
 
 **Design principles:**
 
-- **Single-pass correctness**: each stage either passes or fails; no “best-effort” modes for core governance.  
+- **Single-pass correctness**: each stage either passes or fails; no “best-effort” modes for governed checks.  
 - **Path-aware execution**: workflows trigger only when relevant files change, but never skip required checks for those paths.  
 - **Provenance-first**: every critical step emits lineage and telemetry, forming an audit graph.  
 
@@ -217,7 +219,7 @@ flowchart TB
 - Responsibilities:
   - Linting (TS/JS/CSS/Python).  
   - Unit + integration tests.  
-  - Minimal schema checks (e.g., config files).  
+  - Minimal schema checks (e.g., core configs).  
 - Provides a **fast feedback loop** before deeper governance workflows.
 
 ---
@@ -227,23 +229,27 @@ flowchart TB
 **`docs_validate.yml`**
 
 - Enforces **KFM-MDP v11.2.2**, including:  
-  - YAML front-matter presence & shape.  
-  - Heading hierarchy & emoji usage.  
-  - Single fenced block rule (for generated docs) where applicable.  
-  - Directory layout & version history sections for governed docs.
+  - YAML front-matter presence & key fields.  
+  - Heading hierarchy & emoji usage at H2.  
+  - Directory layout + version history sections for governed docs.  
 
 **`stac_validate.yml` / `dcat_validate.yml` / `jsonld_validate.yml`**
 
-- Enforce KFM-STAC v11 & KFM-DCAT v11:
-  - Bounding boxes, datetimes, CRS, licenses, and assets for STAC.  
-  - Dataset metadata, distributions, and contexts for DCAT.  
+- **STAC**:
+  - Collections & Items under `data/stac/**`.  
+  - Bounding boxes, datetimes, CRS, licenses, asset metadata.  
 
-- Validate JSON-LD & ontology alignment:
-  - CIDOC-CRM classes and properties.  
-  - OWL-Time time instants/intervals for events & datasets.  
-  - GeoSPARQL geometry representation.
+- **DCAT**:
+  - Dataset JSON-LD (KFM-DCAT v11).  
+  - Distributions & references.  
 
-Failures anywhere in this block **block merges and releases**.
+- **JSON-LD / Ontology**:
+  - CIDOC-CRM classes/properties.  
+  - OWL-Time instants/intervals.  
+  - GeoSPARQL geometry & relationships.  
+  - PROV-O lineage relationships.
+
+Any failure **blocks merges and releases**.
 
 ---
 
@@ -252,17 +258,18 @@ Failures anywhere in this block **block merges and releases**.
 **`faircare_validate.yml`**
 
 - Validates:
-  - CARE labels and FAIR categories in metadata.  
-  - Sovereignty flags for Indigenous and culturally sensitive data.  
-  - Presence of references to relevant policy docs when required.  
+  - CARE labels & FAIR categories.  
+  - Sovereignty flags and policy references.  
+  - Presence of required governance metadata for high-sensitivity domains.  
 
 **`h3_generalization.yml`**
 
-- Automatically checks for high-precision coordinates in sensitive layers.  
-- Ensures they are generalized to H3 (or masked) as per policy.  
-- Validates metadata flags indicating generalization was applied.
+- Checks for:
+  - High-precision coordinates in sensitive datasets.  
+  - Proper H3 generalization and/or masking for archaeology and tribal sites.  
+  - Metadata fields indicating generalization applied.  
 
-Result: No PR can silently introduce high-risk site coordinates or ungoverned sensitive content.
+Failed FAIR+CARE or H3 checks → PR must be corrected or escalated via `governance_issue` template.
 
 ---
 
@@ -270,32 +277,34 @@ Result: No PR can silently introduce high-risk site coordinates or ungoverned se
 
 **`security_audit.yml`**
 
-- Performs:
-  - Dependency scanning (npm, Python, Actions).  
-  - Secret scanning (config, code, tests).  
-  - Optional container scanning.  
+- Runs:
+  - Secret scanners on code and configs.  
+  - Vulnerability scanners against dependencies.  
+  - Optional container scans.  
+
 - Policy:
-  - Critical CVEs → block.  
+  - Critical CVEs → block until resolved.  
   - High CVEs → require explicit governance sign-off.
 
 **`sbom_verify.yml`**
 
-- Checks:
-  - SBOM presence and schema.  
-  - Alignment with `manifest.zip`.  
-  - SLSA-style attestation presence.  
-- Ensures each release is **cryptographically and supply-chain sound**.
+- Ensures:
+  - SBOM (SPDX) exists and is valid.  
+  - SBOM matches `manifest.zip`.  
+  - SLSA-like attestations and signatures are present.  
+
+Results feed into security sections of the telemetry and governance ledgers.
 
 ---
 
 ### Data Pipelines & Lineage (`data_pipeline.yml`)
 
 - Ensures:
-  - Pipeline configs adhere to KFM-PDC v11 contracts.  
-  - Lineage events are emitted and can be joined to ETL assets.  
-  - Backfills and historical reconstructions are properly tagged.  
+  - Pipeline configurations follow KFM-PDC v11 data contracts.  
+  - Lineage events are consistently emitted.  
+  - Changes to ETL don’t silently break downstream contracts.  
 
-This workflow helps ensure that all ETL-derived products remain reproducible and explainable.
+This workflow helps keep ETL-derived products reproducible and well documented.
 
 ---
 
@@ -303,79 +312,98 @@ This workflow helps ensure that all ETL-derived products remain reproducible and
 
 **`ai_behavior_check.yml`**
 
-- Detects:
-  - Prohibited content patterns in AI outputs.  
-  - Inadequate grounding or missing citations.  
-  - Potential bias or harmful narrative patterns.  
+- Checks:
+  - Forbid patterns in AI outputs (e.g., speculative history, ungrounded claims).  
+  - Grounding and citation quality.  
+  - Bias and drift metrics where configured.  
 
 **`focusmode_mlops.yml`**
 
-- Validates:
-  - Story Node and Focus Mode model configurations.  
-  - Presence and freshness of model cards (`mcp/model_cards/**`).  
-  - Explainability artifacts for critical models (where required).  
+- Ensures:
+  - Story Node and Focus Mode v3 models are properly configured and versioned.  
+  - Model cards in `mcp/model_cards/**` are present & updated.  
+  - Explainability artifacts exist for critical models (where required).
 
-No AI or Focus Mode change is allowed to bypass governance or narrative-safety checks.
+No AI or Focus Mode change may skip these governance layers.
 
 ---
 
 ### Telemetry & Reporting (`telemetry_export.yml`)
 
-- Collects:
-  - Per-workflow pass/fail counts.  
-  - Governance violation counts.  
-  - Energy & carbon estimates per pipeline.  
-  - High-level SLO/SLA metrics.
+- Aggregates metrics into `github-infra-telemetry.json` using `github-workflows-v4.json` schema.  
+- Metrics include:
+  - Pass/fail rates and durations per workflow.  
+  - Governance & FAIR+CARE violation counts.  
+  - Energy & carbon estimations.  
+  - Security and supply-chain events (CVE/secret/attestation outcomes).  
 
-- Writes to `github-infra-telemetry.json` using `github-workflows-v4.json` schema.  
-- Enables governance dashboards and system health Story Nodes.
+Telemetry is a first-class artifact, not an afterthought.
 
 ---
 
 ### Site & Release Workflows (`site.yml`, `release.yml`)
 
-- **`site.yml`**
-  - Builds and optionally deploys:
-    - Web app (MapLibre/Cesium).  
+- **`site.yml`**:
+  - Builds & deploys:
+    - Web client (MapLibre/Cesium).  
     - Docs site.  
 
-- **`release.yml`**
-  - Creates signed GitHub Releases.  
-  - Attaches SBOM, manifest, and telemetry.  
-  - Emits final OpenLineage events marking release completion.
+- **`release.yml`**:
+  - Packages and signs releases.  
+  - Attaches SBOM, manifest, telemetry, and attestation files.  
+  - Emits final OpenLineage events that mark release completion.
+
+---
+
+### 🔄 Auto-Update & Promotion (`kfm-auto-update.yml`)
+
+- **Purpose**:
+  - Orchestrate **scheduled auto-updates** for data layers, models, or indexes (e.g., nightly or weekly refresh).  
+  - Coordinate safe promotion from freshly refreshed states → staging → production.
+
+- **Behavior**:
+  - Triggers on schedules (cron) or manual dispatch.  
+  - Runs subsets of:
+    - Data pipeline checks (ETL validation & lineage).  
+    - Metadata/ontology validation (STAC/DCAT/JSON-LD).  
+    - FAIR+CARE and H3 checks for affected assets.  
+    - Security & SBOM checks when release-like flows are involved.  
+
+- **Gating**:
+  - Promotion to production only when:
+    - All relevant workflows (ci/docs/stac/dcat/jsonld/faircare/h3/security/sbom) pass.  
+    - Governance-approved thresholds for drift, bias, or risk are satisfied.  
+
+- **Telemetry**:
+  - Emits additional signals for auto-refresh success rates and error budgets to telemetry.
 
 ---
 
 ## 📦 Data & Metadata
 
-This architecture treats workflows as first-class **metadata producers**:
+The workflows themselves are modeled as **metadata-producing infrastructure**:
 
-- Each workflow is a `prov:Activity` executing the CI/CD plan.  
-- Artifacts like SBOMs, manifests, telemetry JSON, and logs are `prov:Entity` instances.  
-- `telemetry_schema`, `energy_schema`, and `carbon_schema` define how performance, sustainability, and governance metrics are recorded.
+- Each workflow run = `prov:Activity` with a unique ID & timestamp.  
+- Artifacts (logs, SBOM, manifests, telemetry JSON) = `prov:Entity`.  
+- Links to docs & standards via `governance_ref`, `ethics_ref`, `sovereignty_policy`.  
 
-These artifacts:
+These elements can be exported into:
 
-- Are referenced from `data/releases/` and `docs/` for audit and reproducibility.  
-- Can be ingested into STAC/DCAT-like catalogs for release-level discovery.  
-- Provide Focus Mode with context for system health and reliability narratives.
+- DCAT catalogs for CI/CD artifacts.  
+- STAC-like registries of non-spatial pipeline outputs.  
+- The knowledge graph as infrastructure entities and events.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-Within CI/CD, FAIR+CARE is operationalized as:
+CI/CD enforces FAIR+CARE by:
 
-- **FAIR**  
-  - Metadata tests for findability, accessibility, interoperability, and reusability.  
-  - Required provenance (provenance_chain, doc_uuid, semantic_document_id).  
+- Ensuring proper metadata and licensing before assets are considered “valid”.  
+- Enforcing Indigenous data sovereignty and CARE constraints via `faircare_validate` and `h3_generalization`.  
+- Blocking changes when governance rules are not satisfied, rather than just logging warnings.
 
-- **CARE**  
-  - CARE labels enforced on relevant datasets.  
-  - Sovereignty policies applied via `faircare_validate` and `h3_generalization`.  
-  - Governance references checked and required for sensitive domains.
-
-Governance documents referenced in front-matter are **normative** for these workflows.
+CI/CD architecture is therefore a **governance tool**, not a purely technical system.
 
 ---
 
@@ -383,8 +411,8 @@ Governance documents referenced in front-matter are **normative** for these work
 
 | Version | Date       | Summary                                                                                                                                |
 |--------:|------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Deep v11.2.2 architecture update; aligned with updated GitHub Infra README; clarified workflow roles, telemetry, and FAIR+CARE wiring. |
-| v11.2.0 | 2025-11-27 | First v11.2 CI/CD master architecture; consolidated governance, security, AI, and telemetry views.                                     |
+| v11.2.2 | 2025-11-28 | Deep v11.2.2 architecture update; added `kfm-auto-update.yml` to layout & flows; aligned with GitHub Infra README and telemetry wiring. |
+| v11.2.0 | 2025-11-27 | First v11.2 master CI/CD architecture; consolidated governance, security, AI, and telemetry views.                                    |
 | v11.0.2 | 2025-11-19 | Expanded ETL and lineage workflows; added sustainability considerations.                                                               |
 | v11.0.1 | 2025-11-19 | Fixed directory layout; aligned schemas and telemetry references with GitHub infra docs.                                              |
 | v11.0.0 | 2025-11-18 | Initial v11 CI/CD overview with FAIR+CARE-aware workflows.                                                                             |
