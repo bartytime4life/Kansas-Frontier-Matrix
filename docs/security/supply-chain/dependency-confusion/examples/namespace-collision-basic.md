@@ -3,19 +3,27 @@ title: "🧨 KFM v11.2.2 — Namespace Collision (Basic Example)"
 path: "docs/security/supply-chain/dependency-confusion/examples/namespace-collision-basic.md"
 version: "v11.2.2"
 last_updated: "2025-11-30"
-review_cycle: "Quarterly · Security Council"
-status: "Active · Educational Example"
 
-commit_sha: "<latest-commit>"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+content_stability: "stable"
+
+commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
+signature_ref: "../../../../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
 sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.2.2/release-manifest.zip"
+manifest_ref: "../../../../../releases/v11.2.2/manifest.zip"
 telemetry_ref: "../../../../../releases/v11.2.2/security-telemetry.json"
 telemetry_schema: "../../../../../schemas/telemetry/security-v3.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
@@ -24,7 +32,73 @@ ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
-doc_kind: "Security · Example"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+sensitivity: "General (non-sensitive)"
+sensitivity_level: "Low"
+public_exposure_risk: "Low"
+classification: "Public"
+
+ontology_alignment:
+  cidoc: "E13 Attribute Assignment"
+  schema_org: "TechArticle"
+  prov_o: "prov:Entity"
+  owl_time: "ProperInterval"
+  geosparql: "geo:Feature"
+
+metadata_profiles:
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/security/supply-chain/dependency-confusion/examples/namespace-collision-basic.md@v11.2.1"
+  - "docs/security/supply-chain/dependency-confusion/examples/namespace-collision-basic.md@v11.2.0"
+  - "docs/security/supply-chain/dependency-confusion/examples/README.md"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+immutability_status: "version-pinned"
+doc_uuid: "urn:kfm:doc:security:dependency-confusion:examples:namespace-collision-basic:v11.2.2"
+semantic_document_id: "kfm-depconf-examples-basiccollision-v11.2.2"
+event_source_id: "ledger:depconf.examples.namespacecollisionbasic.v11.2.2"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "semantic-highlighting"
+  - "diagram-extraction"
+  - "metadata-extraction"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+
+heading_registry:
+  approved_h2:
+    - "📘 Background"
+    - "🗂️ Directory Layout"
+    - "🧨 Example Scenario"
+    - "🧪 Simulated CI Detection Output"
+    - "🚨 Why This Attack Works (Without Protection)"
+    - "🛡️ How KFM v11.2.2 Prevents Namespace Collisions"
+    - "🧭 Developer Guidance"
+    - "🕰️ Version History"
 ---
 
 <div align="center">
@@ -33,10 +107,9 @@ doc_kind: "Security · Example"
 `docs/security/supply-chain/dependency-confusion/examples/namespace-collision-basic.md`
 
 **Purpose:**  
-Provide a minimal, introductory example of how a namespace collision can lead to a  
-dependency-confusion vulnerability when registries, resolvers, or environments are  
-misconfigured or insufficiently isolated.  
-This example is used for baseline training, threat-modeling, and CI simulation.
+Demonstrate how a simple namespace collision between internal and public registries  
+can immediately trigger a dependency-confusion attack in misconfigured environments.  
+This is the *fundamental pattern* underlying many dependency-confusion exploits.
 
 </div>
 
@@ -46,101 +119,12 @@ This example is used for baseline training, threat-modeling, and CI simulation.
 
 A namespace collision occurs when:
 
-- A **public package** and an **internal KFM package** share the **same name**  
-- A resolver cannot distinguish between the two without registry isolation  
-- Version precedence or fallback behavior causes the wrong package to be chosen  
+- A **public package** uses the **same name** as a private KFM package  
+- A resolver checks public registries first or falls back  
+- Version precedence rules pick the attacker’s version  
+- Registry scoping is incomplete or misconfigured  
 
-This is the most foundational pattern in dependency-confusion exploitation.
-
----
-
-## 🧨 Example Scenario
-
-### 🏛 Internal KFM Package
-```
-name: kfm-data-core
-version: 2.3.0
-registry: https://kfm-pypi.internal/simple
-```
-
-### 💣 Public Package (Malicious or Accidental)
-```
-name: kfm-data-core
-version: 50.0.0
-registry: https://pypi.org/simple
-uploaded: 2025-11-28
-files: attacker_payload.whl
-```
-
-### 🤖 Misconfigured Resolver Behavior
-The resolver:
-
-1. Checks public registry first  
-2. Finds version `50.0.0`  
-3. Sees it satisfies version constraints (or outranks internal version)  
-4. Selects the public malicious package  
-
----
-
-## 🧪 Simulated CI Detection Output
-
-```text
-[namespace-monitor]   ERROR: Public registry collision detected for "kfm-data-core".
-[namespace-monitor]   Public version:   50.0.0
-[namespace-monitor]   Internal version: 2.3.0
-[policy]              FAIL: Namespace collision — high-risk.
-[evidence]            Updated: namespace-scan.json
-```
-
----
-
-## 🚨 Why This Attack Works (Without Protection)
-
-- Resolver does not enforce private registry usage  
-- No namespace blacklist  
-- Floating version specifiers  
-- No SBOM-lockfile alignment  
-- No provenance validation  
-- No mirror integrity checks  
-
----
-
-## 🛡️ How KFM v11.2.2 Prevents Namespace Collisions
-
-### ✔ Strict Registry Isolation  
-Public registries → **blocked**  
-Internal mirrors → **mandatory**
-
-### ✔ Namespace Collision Scanning  
-Public registry publishes using internal names are detected immediately.
-
-### ✔ Deterministic Pinning  
-Requires version + registry + digest consistency.
-
-### ✔ Provenance & Signature Enforcement  
-Malicious packages cannot satisfy SLSA or signature requirements.
-
-### ✔ SBOM Drift Checks  
-Ensures only sealed, known-good dependencies are allowed.
-
-### ✔ Hermetic Build Sandbox  
-Prevents unintended registry fallback behavior.
-
----
-
-## 🧭 Developer Guidance
-
-To avoid namespace collision risk:
-
-- Always rely on internal mirrors  
-- Never pin dependencies without registry specification  
-- Run local namespace scan before committing:
-  ```bash
-  kfm-ns-scan .
-  ```
-- Treat collision alerts as **high severity**  
-- Immediately escalate to the Security Council  
-- Validate your dev environment uses correct mirror URLs  
+This is the simplest and most widely exploited dependency-confusion mechanism.
 
 ---
 
@@ -150,7 +134,7 @@ To avoid namespace collision risk:
 📁 dependency-confusion/
 └── 📁 examples/
     ├── 📄 README.md
-    ├── 📄 namespace-collision-basic.md     # This file
+    ├── 📄 namespace-collision-basic.md       # This file
     ├── 📄 namespace-collision-firstpublish.md
     ├── 📄 namespace-collision-versionrace.md
     ├── 📄 typosquat-examples.md
@@ -166,11 +150,98 @@ To avoid namespace collision risk:
 
 ---
 
+## 🧨 Example Scenario
+
+### 🏛 Internal KFM Package
+```
+name: kfm-data-core
+version: 2.3.0
+registry: https://kfm-pypi.internal/simple
+```
+
+### 💣 Public Package
+```
+name: kfm-data-core
+version: 50.0.0
+registry: https://pypi.org/simple
+payload: attacker_payload.whl
+uploaded: 2025-11-28
+```
+
+### 🤖 Vulnerable Resolver Path
+
+1. Resolver queries **public registry first**  
+2. Detects version `50.0.0` (higher)  
+3. Prefers the public one  
+4. Installs malicious artifact  
+
+---
+
+## 🧪 Simulated CI Detection Output
+
+```text
+[namespace-monitor]   ERROR: Public registry collision detected: "kfm-data-core"
+[namespace-monitor]   Public version:   50.0.0
+[namespace-monitor]   Internal version: 2.3.0
+[policy]              FAIL: namespace collision — high severity
+[evidence]            Updated namespace-scan.json
+```
+
+---
+
+## 🚨 Why This Attack Works (Without Protection)
+
+- No strict registry isolation  
+- Public registry contact allowed  
+- Version-precedence issues  
+- No namespace-blocking  
+- Floating version specifiers  
+- Missing SBOM enforcement  
+- No provenance validation  
+
+---
+
+## 🛡️ How KFM v11.2.2 Prevents Namespace Collisions
+
+### ✔ Registry Isolation  
+Public registries → **blocked** always.
+
+### ✔ Namespace Scanning  
+Detects name collisions instantly.
+
+### ✔ Deterministic Pinning  
+Version + registry + digest eliminate ambiguity.
+
+### ✔ Provenance Enforcement  
+Attackers cannot simulate KFM signatures/SLSA.
+
+### ✔ SBOM Locking  
+Ensures internal dependency alignment.
+
+### ✔ Hermetic Sandbox Enforcement  
+No unintended fallback behavior.
+
+---
+
+## 🧭 Developer Guidance
+
+- Always install packages from KFM mirrors only  
+- Never rely on implicit registry resolution  
+- Run namespace scanning locally:
+  ```bash
+  kfm-ns-scan .
+  ```
+- Treat namespace collision alerts as critical  
+- Validate registry configs for correctness  
+- Avoid floating versions entirely  
+
+---
+
 ## 🕰️ Version History
 
-| Version | Date       | Notes |
-|---------|------------|--------|
-| v11.2.2 | 2025-11-30 | Initial creation of basic namespace collision example |
+| Version  | Date       | Notes |
+|----------|------------|--------|
+| v11.2.2  | 2025-11-30 | Full extended metadata + directory layout move |
 
 ---
 
@@ -179,4 +250,3 @@ To avoid namespace collision risk:
 📚 [Examples Index](./README.md) • 🧨 [First-Publish Example](./namespace-collision-firstpublish.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
