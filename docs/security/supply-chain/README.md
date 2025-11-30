@@ -2,8 +2,8 @@
 title: "🛡️ Kansas Frontier Matrix — Supply Chain Security, Provenance & NPM Worm Defense (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/security/supply-chain/README.md"
 
-version: "v11.2.2"
-last_updated: "2025-11-27"
+version: "v11.2.3"
+last_updated: "2025-11-29"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · FAIR+CARE Security Council"
@@ -13,9 +13,9 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
+sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.3/focus-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/docs-security-supply-chain-v4.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
@@ -110,8 +110,10 @@ sunset_policy: "Superseded by v12 supply-chain security standard"
 `docs/security/supply-chain/README.md`
 
 **Purpose**  
-Define the **end-to-end supply-chain security framework** for the Kansas Frontier Matrix, including **provenance, SBOM, artifact signing, dependency governance**, and the **NPM Worm Defense Suite**.  
-Ensure that all builds are **tamper-evident, reproducible, traceable, and governance-approved**, resistant to Shai-Hulud–class npm worms and emerging supply-chain threats.
+Define the **end-to-end supply-chain security framework** for the Kansas Frontier Matrix, covering  
+**provenance, SBOMs, artifact signing, dependency governance**, and the **Shai-Hulud 2.0 / NPM Worm Defense Suite**.  
+Ensure all builds are **tamper-evident, reproducible, traceable, and governance-approved**, resilient to Shai-Hulud–class  
+npm worms and emerging multi-ecosystem supply-chain threats.
 
 </div>
 
@@ -119,212 +121,235 @@ Ensure that all builds are **tamper-evident, reproducible, traceable, and govern
 
 ## 📘 1. Overview
 
-The KFM v11.2.2 supply-chain framework ensures:
+The KFM v11.2.x supply-chain framework ensures:
 
 - Every artifact originates from **signed, protected, reviewed source commits**.  
-- Every build generates:
+- Every build emits:
   - **SLSA-compliant provenance**
   - **SPDX & CycloneDX SBOMs**
   - **Cosign signatures + attestations**
 - All dependencies are validated for:
   - CVEs  
-  - Malware  
-  - Scripted worm behaviors  
-  - Registry spoofing  
-- Every CI/CD stage emits:
+  - Malware and worm-like behaviors  
+  - Registry spoofing / typosquatting  
+  - Lifecycle-script abuse (`preinstall`, `install`, `postinstall`, `prepare`, etc.)  
+- Every CI/CD stage produces:
   - Governance telemetry  
-  - FAIR+CARE compliance notes  
+  - FAIR+CARE impact notes  
   - Sustainability metrics (energy, carbon)  
 - Any deviation is:
-  - Blocked automatically  
-  - Logged to governance ledger  
+  - Automatically blocked  
+  - Logged to the governance ledger  
   - Exposed to Story Nodes + Focus Mode for auditability  
 
-This standard governs Node-based pipelines **and all other build systems** that import npm tools.
+This standard applies to **Node-based pipelines and any other build systems** that invoke npm or import npm tooling.
 
 ---
 
 ## 🗂️ 2. Directory Layout (Security Standards Context)
 
-```text
-📁 docs/
-└── 📁 security/
-    ├── 📄 README.md                        — Security overview index
-    └── 📁 supply-chain/
-        ├── 📄 README.md                    — ← This document
-        └── 📁 npm-ignore-scripts/          — Lifecycle-script suppression safeguard
-            ├── 📄 README.md
-            ├── 📄 policy.md
-            ├── 📁 examples/
-            ├── 📁 validation/
-            └── 📁 metadata/
-```
+~~~text
+docs/security/
+├── 📄 README.md                         # Security overview
+└── 📁 supply-chain/
+    ├── 📄 README.md                     # ← This document (governance & architecture)
+    ├── 🪱 shai-hulud-2.0/               # Shai-Hulud 2.0 defense suite (indicators, protections, reports)
+    │   ├── 📄 README.md
+    │   ├── 📊 indicators/
+    │   ├── 🛡️ protections/
+    │   ├── 🧬 provenance/
+    │   ├── 🔧 workflows/
+    │   ├── 📑 reports/
+    │   └── 📦 stac/
+    ├── 🧰 npm-ignore-scripts/          # Lifecycle-script suppression safeguard (policy + examples)
+    └── 🛡️ supply-chain-protection/     # Implementation modules (scanners, CI hooks, registries, tests)
+~~~
 
-Implementation for the full NPM Worm Defense Suite is housed under:
-
-```text
-📁 supply-chain-protection/
-    📄 README.md
-    📁 scanners/
-    📁 ci/
-    📁 policies/
-    📁 registry/
-    📁 monitoring/
-    📁 local-tools/
-    📁 ioc/
-    📁 tests/
-```
-
-This document provides the **governance specification**, while `supply-chain-protection/` contains **implementation modules**.
+- This **README** defines the **governance specification and architecture**.  
+- `shai-hulud-2.0/` defines the **concrete worm-defense model** (indicators, protections, provenance, workflows, reports).  
+- `npm-ignore-scripts/` and `supply-chain-protection/` provide **implementation-level policies and tools**.
 
 ---
 
-## 🧩 3. Supply Chain Security Flow (v11.2.2)
+## 🧩 3. Supply Chain Security Flow (v11.2)
 
-```mermaid
-flowchart TD
-  A["Source Control\nSigned Commits · Protected Branches"]
-    --> B["Reproducible Build\n(SLSA Provenance)"]
-  B --> C["Artifact Signing\nSigstore / Cosign"]
-  C --> D["SBOM Generation\nSPDX · CycloneDX"]
-  D --> E["Dependency Security\nCVE Scans · Worm Scanners · Registry Checks"]
-  E --> F["Policy Gates\nOPA · FAIR+CARE · Secret Safety"]
-  F --> G["Deployment\nKFM Services · Data Pipelines · AI Systems"]
-  G --> H["Governance Ledger\nTelemetry · Sustainability · Risk"]
-```
+~~~text
+Source Control  →  Reproducible Build  →  Signing & Attestation  →  SBOMs  
+             →  Dependency & Worm Scanning  →  Policy Gates  →  Deployment  
+             →  Governance & Telemetry  →  Story Nodes / Focus Mode
+~~~
 
-The NPM Worm Defense Suite hooks into **Dependency Security** and **Policy Gates**.
+Conceptually, this aligns with the following pipeline:
+
+- **Source Control**  
+  - Signed commits  
+  - Protected branches  
+- **Reproducible Build**  
+  - Deterministic tooling  
+  - SLSA provenance  
+- **Signing & Attestation**  
+  - Cosign signatures  
+  - SLSA provenance attestations  
+- **SBOM Generation**  
+  - SPDX + CycloneDX  
+- **Dependency & Worm Scanning**  
+  - CVE scanners  
+  - Shai-Hulud 2.0 / NPM worm detectors  
+  - Registry + publisher checks  
+- **Policy Gates**  
+  - OPA / Conftest rules  
+  - FAIR+CARE checks  
+  - Secret-safety rules  
+- **Deployment**  
+  - KFM services, pipelines, AI systems  
+- **Governance & Telemetry**  
+  - Audit logs  
+  - Energy/carbon metrics  
+  - Focus Mode / Story Node integration  
+
+The **Shai-Hulud 2.0 Defense Suite** attaches primarily to **Dependency & Worm Scanning** and **Policy Gates**.
 
 ---
 
-## 🛡️ 4. NPM Worm Defense Suite (Conceptual)
+## 🛡️ 4. Shai-Hulud 2.0 / NPM Worm Defense Suite (Conceptual)
 
-This suite protects against Shai-Hulud-class worms and other install-time malware by providing:
+The defense suite enforces **install-time and pipeline-time safety** by:
 
-### ✔ Lifecycle Script Suppression (CI)
-- `npm ci --ignore-scripts`
-- `NPM_CONFIG_IGNORE_SCRIPTS=true`
-- Mandatory in all CI/automation contexts  
-- Covers:
-  - `preinstall`
-  - `install`
-  - `postinstall`
-  - `prepare`
-  - All equivalent yarn/pnpm/Bun hooks  
+### ✔ Lifecycle Script Suppression in CI
+
+- CI MUST run with:
+  - `npm ci --ignore-scripts`
+  - `NPM_CONFIG_IGNORE_SCRIPTS=true`
+- Lifecycle hooks are not executed in CI:
+  - `preinstall`, `install`, `postinstall`, `prepare`, etc.  
+- Equivalent protections required for:
+  - Yarn / pnpm / Bun / custom runners  
 
 ### ✔ Malware & Worm Scanning
-Scanning includes:
 
-- Obfuscated or suspicious lifecycle scripts  
-- Dependency tampering or unverified version drift  
-- Unexpected `child_process` usage  
-- Network calls in install time  
-- Known malicious IoCs from `ioc/`  
+- Static and heuristic inspections for:
+  - Obfuscated lifecycle scripts  
+  - `child_process` + network usage in install-time code  
+  - Known Shai-Hulud 2.0 indicators (from `shai-hulud-2.0/indicators/`)  
+- Graph-based checks for:
+  - Dependency tree anomalies  
+  - Registry-switch behavior  
 
-### ✔ Controlled Internal Registry
-All CI npm traffic is routed through an approval-gated proxy which:
+### ✔ Controlled Internal Registries
 
-- Enforces package allow/deny lists  
-- Logs all installs  
-- Blocks high-risk dependency sources  
-- Supports package quarantine & review  
+- All CI npm traffic must go through an **approval-gated, auditable proxy**:
+  - Enforces allow/deny lists  
+  - Logs all package resolutions and versions  
+  - Supports quarantine and manual review  
 
-### ✔ Monitoring & Alerts
-Triggers on:
+### ✔ Registry & Publish Monitoring
 
-- Unexpected registry publishes  
-- New org-owned npm packages  
-- Install attempts containing lifecycle scripts  
-- Dependency trees changing without PR review  
+- Alerts when:
+  - New packages are published under KFM namespaces  
+  - Dependencies change outside approved PR flows  
+  - High-risk dependencies appear in lockfiles  
 
 ### ✔ Developer Hardening Tools
-- Git hooks preventing addition of lifecycle scripts  
-- CLI wrappers for safe installs  
-- Local malware/IoC scanners  
-- Warnings for risky actions  
+
+- Git hooks to prevent committing lifecycle scripts  
+- CLI wrappers for safe local installs  
+- Local scanners to detect suspicious install-time code  
+- Warnings for unapproved registries or package sources  
 
 ---
 
-## 🔐 5. Core Governance Policies
+## ⚖️ 5. Governance Policies (P1–P6)
 
-### P1 — SBOM Generation (Mandatory)
-All releases include SPDX + CycloneDX SBOMs.
+### **P1 — SBOM Generation (Mandatory)**
 
-### P2 — Signed Artifacts
-All artifacts must be signed with Cosign and logged to Rekor.
+Every release must include:
 
-### P3 — SLSA Provenance
-Builds must emit SLSA 1.0 provenance describing:
+- SPDX SBOM  
+- CycloneDX SBOM  
 
-- Builder  
-- Source repo + ref  
-- Inputs  
-- Dependencies  
-- Environment  
+### **P2 — Artifact Signing**
 
-### P4 — CVE + Worm Scanning
+All release artifacts must be:
+
+- Signed with Cosign  
+- Recorded in a transparency log (e.g., Rekor)  
+
+### **P3 — SLSA Provenance**
+
+All builds must emit SLSA v11-compliant provenance describing:
+
+- Builder identity  
+- Source repository + ref  
+- Inputs + dependencies  
+- Environment info  
+
+### **P4 — CVE + Worm Scanning**
+
 Before deployment:
 
-- All dependencies scanned  
-- High-risk components must be patched/removed  
-- Unknown or suspicious registry sources blocked  
+- All dependencies scanned for CVEs  
+- Shai-Hulud 2.0 / NPM worm patterns scanned  
+- High-risk packages must be patched, replaced, or blocked  
 
-### P5 — Policy-as-Code Gates
-OPA/Conftest govern:
+### **P5 — Policy-as-Code Gates**
 
-- Dependency validity  
-- SBOM presence  
-- Signing  
+OPA/Conftest enforce:
+
+- Presence of SBOM + provenance  
+- Proper signing  
 - Secrets isolation  
-- FAIR+CARE metadata  
+- FAIR+CARE metadata & impact tagging  
 
-### P6 — Telemetry Reporting
-All supply-chain events logged to:
+### **P6 — Telemetry & Governance Logging**
+
+All supply-chain events are logged to:
 
 - `focus-telemetry.json`  
-- Governance ledger  
+- Governance ledger (risk, energy, carbon, FAIR+CARE status)  
 
 ---
 
 ## 🧪 6. CI Integration Requirements
 
-### Mandatory flags
+### Mandatory Flags
+
 - `npm ci --ignore-scripts`  
-- `NPM_CONFIG_IGNORE_SCRIPTS=true`  
+- No bare `npm install` in CI  
 
-### Prohibited patterns
-- `npm install` (in CI)  
-- Any `prepare`, `preinstall`, `postinstall` triggered in CI  
-- Direct downloads from unapproved external registries  
+### Prohibited Patterns in CI
 
-### CI failure conditions
-- Missing SBOM  
-- Missing provenance  
-- Missing Cosign signature  
-- Any lifecycle-script detected during install  
-- Any registry-mismatch event  
-- FAIR+CARE violation indicators  
+- Execution of any lifecycle hooks  
+- Dynamic download of tools from unapproved URLs  
+- Direct registry usage bypassing the KFM proxy  
+
+### CI Failure Conditions
+
+- Missing SBOMs or provenance  
+- Missing Cosign signatures for artifacts  
+- Lifecycle scripts present in install path of CI  
+- Registry discrepancies or unapproved sources  
+- FAIR+CARE or governance violations  
 
 ---
 
 ## 📊 7. Telemetry Model
 
-Supply-chain telemetry includes:
+Supply-chain telemetry must record:
 
-- Audit pass/fail  
-- Number of dependencies scanned  
-- Count of worm-like behaviors detected  
+- Pass/fail for supply-chain audits  
+- Number of dependencies and scan coverage  
+- Presence/absence of worm-like behaviors  
 - Signing/attestation completeness  
 - SBOM coverage  
-- Energy & carbon cost of build  
-- FAIR+CARE impact markers  
+- Energy (Wh) and carbon (gCO2e) per build  
+- FAIR+CARE risk/impact indicators  
 
 Example event:
 
-```json
+~~~text
 {
   "event": "supply_chain_audit",
-  "timestamp": "2025-11-27T21:09:00Z",
+  "timestamp": "2025-11-29T21:09:00Z",
   "workflow": "ci-build.yml",
   "sbom_ok": true,
   "provenance_ok": true,
@@ -334,65 +359,58 @@ Example event:
   "energy_wh": 4.4,
   "carbon_gco2e": 0.0019
 }
-```
+~~~
 
 ---
 
 ## ⚖️ 8. FAIR+CARE Integration
 
-Supply-chain integrity is tied to FAIR+CARE because:
+Supply-chain security is ethically critical because:
 
-- Malicious packages can compromise community-serving tools.  
-- Corrupted STAC/DCAT metadata can propagate misinformation.  
-- Worms can alter ecological, hydrologic, or historical results.  
-- Secure builds protect Indigenous and community data from tampering.
+- Compromised pipelines can harm communities that rely on KFM insights.  
+- Malicious data paths can distort ecological, hydrologic, or historical interpretations.  
+- Data integrity is essential for representing Indigenous and community narratives accurately.  
 
-FAIR+CARE checks integrated into supply-chain workflows ensure:
+FAIR+CARE checks ensure:
 
-- Ethical downstream impact  
-- Responsible artifact distribution  
-- Transparency of provenance  
-- Alignment with KFM governance  
+- Provenance is transparent and verifiable.  
+- Risk to downstream communities is minimized.  
+- Sensitive or sovereign data is never altered by compromised tooling.  
 
 ---
 
 ## 🧠 9. Story Node & Focus Mode Integration
 
-This standard powers security storytelling in KFM:
+This standard underpins KFM’s security-focused narratives:
 
-- **Shielded Builds** — how CI prevents harmful packages  
-- **Hardened Dependency Chain** — before/after narratives  
-- **Supply Chain Incident Map** — IoCs and timeline data  
-- **“The Day the Worm Tried to Land”** — Story Node using telemetry data  
+- **“How the build stayed clean”** — supply-chain integrity stories  
+- **“Worm attempt averted”** — telemetry-backed incident avoidance  
+- **“From dependency to decision”** — end-to-end provenance narratives  
 
-Focus Mode surfaces:
+Focus Mode uses:
 
-- Artifact integrity  
-- Provenance scores  
-- SBOM completeness  
-- Supply-chain risk lenses  
+- Telemetry  
+- STAC Items  
+- SBOM/provenance graphs  
+- Shai-Hulud 2.0 indicators  
+
+to render **auditable, explainable stories** about supply-chain risk and governance.
 
 ---
 
-## 🕰️ 10. Version History
+## 🧭 10. Version History
 
-| Version | Date       | Summary                                                                                           |
-|--------:|------------|---------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Fully updated; canonical directory layout; telemetry and governance tightened; integrated NPM ignore-scripts standard. |
-| v11.2.0 | 2025-11-27 | Initial v11.2 supply-chain security + worm defense specification.                                  |
-| v10.2.4 | 2025-11-12 | v10.2 supply chain governance; aligned with SBOM and provenance pipelines.                        |
+| Version | Date       | Summary                                                                                                                   |
+|--------:|------------|---------------------------------------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-11-29 | Aligned with Shai-Hulud 2.0 subtree; updated directory layout; footer alignment; clarified CI + proxy requirements.       |
+| v11.2.2 | 2025-11-27 | Canonical v11.2.2 governance; telemetry and SBOM/provenance tightening; integrated NPM ignore-scripts standard.          |
+| v11.2.0 | 2025-11-27 | Initial v11.2 supply-chain security + worm defense specification.                                                        |
+| v10.2.4 | 2025-11-12 | v10.2 supply-chain governance; aligned with SBOM and provenance pipelines.                                              |
 
 ---
 
 <div align="center">
 
-🛡️ **Kansas Frontier Matrix — Supply Chain Security & NPM Worm Defense v11.2.2**  
-Supply-chain hardening as foundational governance.
-
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-FAIR+CARE Security Council · MCP-DL v6.3 · KFM-MDP v11.2.2  
-
-[⬅ Back to Security Overview](../README.md) ·  
-[⚖ Root Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](../../../../..) · [🧪 Pipelines](../../../../../pipelines) · [🌐 Governance](../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
