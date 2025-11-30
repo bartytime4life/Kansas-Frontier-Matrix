@@ -3,19 +3,29 @@ title: "🧪 KFM v11.2.2 — CI Validation Rules for Dependency-Confusion Defens
 path: "docs/security/supply-chain/dependency-confusion/checks/ci-validation-rules.md"
 version: "v11.2.2"
 last_updated: "2025-11-30"
+
+release_stage: "Stable · Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Supply-Chain Security Council"
+content_stability: "stable"
 status: "Active / Enforced"
 
 commit_sha: "<latest-commit>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
+signature_ref: "../../../../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
 sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
 manifest_ref: "../../../../../releases/v11.2.2/release-manifest.zip"
 telemetry_ref: "../../../../../releases/v11.2.2/security-telemetry.json"
 telemetry_schema: "../../../../../schemas/telemetry/security-v3.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
@@ -24,7 +34,78 @@ ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
+
 doc_kind: "Security · CI-Validation"
+intent: "automated-governance · dependency-confusion-defense · reproducibility-verification"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "CARE · Governance · Infrastructure Protection"
+classification: "Security · Supply Chain · Automated Enforcement"
+sensitivity: "Security-Sensitive (Non-personal)"
+sensitivity_level: "High"
+public_exposure_risk: "Low"
+indigenous_rights_flag: true
+risk_category: "High"
+redaction_required: false
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+jurisdiction: "Kansas / United States"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next CI validation revision"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  prov_o: "prov:Plan"
+  owl_time: "ProperInterval"
+  geosparql: "geo:Feature"
+
+metadata_profiles:
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "STAC 1.0.0"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/security/supply-chain/dependency-confusion/checks/ci-validation-rules.md@v11.2.1"
+  - "docs/security/supply-chain/dependency-confusion/checks/ci-validation-rules.md@v11.2.0"
+  - "docs/security/supply-chain/dependency-confusion/checks/README.md"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+immutability_status: "version-pinned"
+doc_uuid: "urn:kfm:security:depconf:ci-validation:v11.2.2"
+semantic_document_id: "kfm-depconf-ci-validation-rules-v11.2.2"
+event_source_id: "ledger:depconf.checks.ci.validation.v11.2.2"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "metadata-extraction"
+  - "semantic-highlighting"
+  - "timeline-generation"
+  - "diagram-extraction"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "narrative-fabrication"
+  - "unverified-architectural-claims"
+  - "governance-override"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Layout"
+    - "🧱 CI Validation Rule Categories"
+    - "🕰️ Version History"
 ---
 
 <div align="center">
@@ -33,10 +114,10 @@ doc_kind: "Security · CI-Validation"
 `docs/security/supply-chain/dependency-confusion/checks/ci-validation-rules.md`
 
 **Purpose:**  
-Define the *strict, automated CI/CD validation rules* required to ensure the integrity of KFM’s  
-dependency ecosystem.  
-These rules enforce registry isolation, pinning discipline, SLSA provenance integrity,  
-cryptographic signature verification, sandbox guarantees, fallback activation, and namespace safety.
+Define the *strict automated CI/CD validation rules* required to ensure deterministic,  
+secure, reproducible dependency resolution throughout the KFM supply chain.  
+These rules enforce registry isolation, version pinning, provenance integrity,  
+cryptographic signature verification, hermeticity, fallback logic, and namespace safety.
 
 </div>
 
@@ -44,148 +125,19 @@ cryptographic signature verification, sandbox guarantees, fallback activation, a
 
 ## 📘 Overview
 
-KFM v11.2.2 integrates a **rigorously deterministic security CI layer** that extends beyond typical  
-supply-chain scanning.  
-These rules define the CI/CD behaviors that MUST occur on every:
+KFM v11.2.2 integrates a **deterministic, hardened CI validation layer** that guarantees  
+no unverified or malicious dependencies enter **any** KFM execution environment.
 
-- commit  
-- pull request  
-- dependency update  
-- automated scheduled run  
-- release build  
+These CI rules apply to:
 
-CI validation ensures **no unverified or potentially malicious dependencies** enter *any* KFM environment.
+- All commits  
+- All pull requests  
+- All dependency updates  
+- All scheduled runs  
+- All ETL + DAG promotions  
+- All release builds  
 
-These rules are **non-optional**, **immutable**, and enforced automatically.
-
----
-
-## 🧱 CI Validation Rule Categories
-
-### 1. 🛰️ Namespace Collision Validation
-CI MUST validate:
-
-- No public-namespace collisions  
-- No new first-publish external packages with matching internal names  
-- No typo-squatting patterns  
-- No rogue or suspicious version spikes  
-
-Failure → **namespace-block + incident stub + merge blocked**
-
----
-
-### 2. 🔒 Registry Enforcement Validation
-CI MUST reject:
-
-- Any outbound request to forbidden registries  
-- Any fallback to public endpoints  
-- Any mismatch between allowed registry prefix and resolved dependency  
-
-Mirror validation MUST include:
-
-- TLS pinning  
-- Digest equivalence  
-- Provenance validation  
-
-Failure → **build quarantine**
-
----
-
-### 3. 📦 Deterministic Pinning Validation
-CI MUST ensure that:
-
-- All dependencies include exact version, registry, and digest  
-- All lockfiles are hash-matched to SBOM  
-- No floating versions exist  
-- No cross-registry changes occur  
-
-Failure → **immediate hard fail**
-
----
-
-### 4. 🧬 SBOM Drift Validation
-CI MUST:
-
-- Validate that all dependencies appear in SBOM  
-- Confirm digest accuracy  
-- Ensure no unapproved upgrades exist  
-- Detect artifact/package shadowing  
-
-Failure → **freeze mode** (`fallback-controls.md` Tier 1)
-
----
-
-### 5. ✍️ Cryptographic Signature Validation
-CI MUST enforce:
-
-- Cosign signatures for build artifacts  
-- GPG signatures for commits/tags  
-- SLSA provenance for all dependency bundles  
-- SHA256/512 digest verification  
-
-Unsigned components → **blocked + quarantined**
-
----
-
-### 6. 🧱 Hermetic Build Validation
-CI MUST ensure:
-
-- Zero outbound network connectivity  
-- No DNS resolution except to internal mirror  
-- Hermetic sandbox isolation  
-- Reproducible dependency resolution  
-- Local-only artifact caching during fallback  
-
-Any leak → **full build halt**
-
----
-
-### 7. 🧯 Fallback Activation Validation
-If upstream systems degrade (mirror down, namespace monitor failure, SBOM mismatch):
-
-- CI MUST automatically switch to fallback Tier 1  
-- CI MUST enforce lockfile freeze  
-- CI MUST generate evidence  
-- CI MUST escalate to Security Council if issue persists  
-
-Fallback logic is described in:  
-`../policy/fallback-controls.md`
-
----
-
-### 8. 🛑 Governance Enforcement Validation
-CI MUST:
-
-- Check for SER (Security Exception Request) matching any exception usage  
-- Reject exceptions older than 90 days  
-- Deny any dependencies not explicitly approved  
-- Block merges if exceptions registry is malformed  
-
-Governance-control file:  
-`../policy/exceptions.md`
-
----
-
-### 9. 🗃️ Evidence Logging Validation
-Every CI run MUST output machine evidence to:
-
-```
-docs/security/supply-chain/dependency-confusion/policy/evidence/
-```
-
-Including:
-
-- `namespace-scan.json`  
-- `registry-audit.json`  
-- `sbom-diff.json`  
-- `attestation-verify.json`  
-
-Evidence MUST be:
-
-- Timestamped  
-- Immutable  
-- Schema-validated  
-- FAIR+CARE compliant  
+They are **non-optional**, **CI-blocking**, and **governance-audited**.
 
 ---
 
@@ -196,17 +148,149 @@ Evidence MUST be:
 └── 📁 checks/
     ├── 📄 README.md                 # Automated checks overview
     ├── 📄 ci-validation-rules.md    # This file — CI validation rules
-    ├── 📄 pre-commit-rules.md       # (optional) Developer machine validation rules
-    └── 📄 local-scan-guidance.md    # (optional) Manual/local scan procedures
+    ├── 📄 provenance-hooks.md
+    ├── 📄 registry-anomaly-detection.md
+    ├── 📄 pre-commit-rules.md
+    └── 📄 local-scan-guidance.md
 ~~~
+
+---
+
+## 🧱 CI Validation Rule Categories
+
+### 1️⃣ 🛰️ Namespace Collision Validation  
+CI MUST validate that:
+
+- No public registry publishes a conflicting name  
+- No first-publish attack exists  
+- No typosquat or homoglyph variant appears  
+- No suspicious version spikes occur  
+
+Failures → **namespace-block + incident stub + governance review**
+
+---
+
+### 2️⃣ 🔒 Registry Enforcement Validation  
+CI MUST reject:
+
+- Any outbound request to forbidden registries  
+- Any fallback to public endpoints  
+- Any dependency whose resolved registry ≠ allowed mirror  
+
+Mirror validation MUST include:
+
+- TLS pinning  
+- Metadata-digest equivalence  
+- SLSA provenance matching  
+
+Registry mismatch → **build quarantine**
+
+---
+
+### 3️⃣ 📦 Deterministic Pinning Validation  
+CI MUST ensure:
+
+- Exact versions  
+- Exact registries  
+- Exact integrity digests  
+- No floating versions  
+- No transitive floating versions  
+
+Lockfiles must match pinned graph.  
+Pinning drift → **hard fail**
+
+---
+
+### 4️⃣ 🧬 SBOM Drift Validation  
+CI MUST:
+
+- Validate SBOM → lockfile → dependency graph alignment  
+- Detect hash mismatches  
+- Detect unexpected upgrades  
+- Detect shadow dependencies  
+
+SBOM drift → **fallback Tier 1 freeze**
+
+---
+
+### 5️⃣ ✍️ Cryptographic Signature Validation  
+CI MUST enforce:
+
+- Cosign signatures for build artifacts  
+- GPG signatures for commits/tags  
+- SLSA provenance for all artifacts  
+- SHA256/512 digest verification  
+
+Unverified components → **quarantined**
+
+---
+
+### 6️⃣ 🧱 Hermetic Build Validation  
+CI MUST ensure:
+
+- Zero outbound network  
+- No public DNS  
+- Sealed sandbox enforcement  
+- Reproducible builder environments  
+
+Leakage → **total build halt**
+
+---
+
+### 7️⃣ 🧯 Fallback Activation Validation  
+CI MUST activate fallback Tier 1 when:
+
+- Mirror unreachable  
+- Namespace monitor degradation  
+- SBOM drift persists  
+- Provenance chain breaks  
+
+Fallback logic → `../policy/fallback-controls.md`
+
+---
+
+### 8️⃣ 🛑 Governance Enforcement Validation  
+CI MUST:
+
+- Validate SER (Security Exception Request) entries  
+- Reject expired exceptions  
+- Block malformed exception definitions  
+- Deny unauthorized registry or package usage  
+
+Council rules → `../policy/exceptions.md`
+
+---
+
+### 9️⃣ 🗃️ Evidence Logging Validation  
+CI MUST generate evidence files:
+
+```
+docs/security/supply-chain/dependency-confusion/policy/evidence/
+```
+
+including:
+
+- namespace-scan.json  
+- registry-audit.json  
+- sbom-diff.json  
+- attestation-verify.json  
+
+Evidence MUST be:
+
+- Timestamped  
+- Schema-validated  
+- Immutable  
+- FAIR+CARE compliant  
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Notes |
-|---------|--------|--------|
-| v11.2.2 | 2025-11-30 | Initial release of CI validation rules for dependency-confusion defense |
+| Version  | Date       | Notes                                                         |
+|----------|------------|---------------------------------------------------------------|
+| v11.2.2  | 2025-11-30 | Directory layout moved; full extended metadata; v11.2.2 alignment |
+| v11.2.1  | 2025-10-22 | Added governance enforcement validation + fallback integration |
+| v11.2.0  | 2025-09-01 | Initial CI validation ruleset                                 |
 
 ---
 
@@ -215,4 +299,3 @@ Evidence MUST be:
 🧪 [Automated Checks](./README.md) • 🛡️ [Policy Overview](../policy/README.md) • 🧭 [Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
