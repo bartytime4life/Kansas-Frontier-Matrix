@@ -96,6 +96,7 @@ ai_transform_permissions:
   - "semantic-highlighting"
   - "a11y-adaptations"
   - "metadata-extraction"
+
 ai_transform_prohibited:
   - "content-alteration"
   - "speculative-additions"
@@ -147,64 +148,65 @@ Documentation Reliability ≥ 99% — Deterministic, Governed, FAIR+CARE-Aligned
 
 ## 🧭 Purpose & Scope
 
-This policy defines the **documentation reliability standard** for the Kansas Frontier Matrix (KFM).  
+This policy defines the governed **documentation reliability standard** for the Kansas Frontier Matrix (KFM).  
 It establishes:
 
-- The **SLO** for clean, deterministic markdown builds  
-- The **error-budget contract** governing failure tolerance  
-- The **merge gating controls** activated as budget burns  
-- Required **telemetry**, **CI wiring**, and **auto-remediation workflows**  
-- The **directory structure** and governance expectations for doc reliability components  
+- The SLO for deterministic markdown builds  
+- The error-budget contract  
+- Merge gating conditions  
+- CI integration requirements  
+- Telemetry and auditability expectations  
+- The directory layout defining how reliability docs are organized  
 
 Scope:
 
-- Applies to all Markdown under `docs/**` and any `README.md` within `web/**`  
-- Applies to CI pipelines responsible for linting, validating, and enforcing structure  
-- Applies to contributors and reviewers involved in documentation changes  
-- Governs SLO behavior for the v10.x → v11.x compatibility window  
-
-This is a **governed, enforceable reliability contract**.
+- Applies to all Markdown under docs/** and any README.md under web/**  
+- Applies to CI pipelines responsible for structure, linting, validation  
+- Applies to contributors, reviewers, and governance bodies  
+- Governs SLO enforcement for the v10.x → v11.x compatibility window  
 
 ---
 
 ## 🧾 Directory Layout
 
-docs/pipelines/reliability/  
-├── 📄 README.md  
-│       Reliability overview + root specs  
-├── 🎯 slo-error-budgets.md  
-│       Global SLO thresholds and error-budget policy  
-├── 🧪 slo-doc-lint.md  
-│       This file — doc-lint SLO + error-budget contract  
-│  
-├── 🧰 ci/  
-│   ├── 🧾 docs-lint-ruleset.yaml  
-│   │       Rule config: fences, frontmatter, badges, footers, mermaid  
-│   └── 📊 dashboards/  
-│       └── 📈 reliability-docs.json  
-│               SLO dashboards (OpenTelemetry views)  
-│  
-└── 📊 reports/  
-    ├── 📉 weekly-pareto.md  
-    │       Auto-generated failing-rule Pareto  
-    └── 🗂️ rca/  
-        └── 📝 2025-12-doclint-breach.md  
-                RCA template for documentation SLO breaches  
+~~~text
+docs/pipelines/reliability/
+├── 📄 README.md                     # Reliability overview + root specs
+├── 🎯 slo-error-budgets.md          # Global SLO thresholds & error-budget policy
+├── 🧪 slo-doc-lint.md               # This file — doc-lint SLO + error-budget contract
+│
+├── 🧰 ci/                           # CI configurations enforcing doc-lint rules
+│   ├── 🧾 docs-lint-ruleset.yaml    # Fences, frontmatter, badges, footers, mermaid checks
+│   └── 📊 dashboards/
+│       └── 📈 reliability-docs.json # Doc-lint SLO dashboards (OpenTelemetry)
+│
+└── 📊 reports/
+    ├── 📉 weekly-pareto.md          # Auto-generated failing-rule Pareto
+    └── 🗂️ rca/
+        └── 📝 2025-12-doclint-breach.md   # RCA template for documentation SLO breaches
+~~~
 
 ---
 
 ## 🎯 SLO
 
-- Target: 99%+ first-pass doc-lint success  
-- Window: 30 days  
-- Counted failures: any structural or formatting violation, including:
-  fence closure, footer correctness, YAML correctness, badge block presence, directory layout validity, and mermaid closure where used  
+Target: 99%+ first-pass doc-lint success  
+Window: 30 days  
+
+Failures counted include any violation related to:  
+- fence closure  
+- footer correctness  
+- YAML correctness  
+- badge-block correctness  
+- directory layout validity  
+- mermaid closure when used  
 
 ---
 
 ## 🧮 Error Budget
 
-Budget: 1% failure rate.  
+Budget: 1% failure rate across the rolling window  
+
 Formula:
 
 burn_rate = failed_doclint_prs / total_prs_with_docs_changes  
@@ -212,7 +214,7 @@ burn_rate = failed_doclint_prs / total_prs_with_docs_changes
 Exclusions:
 
 - CI infrastructure outages  
-- Upstream breakages requiring RCA and version pinning  
+- Upstream linter/formatter breakage requiring RCA and version pinning  
 
 ---
 
@@ -220,30 +222,30 @@ Exclusions:
 
 Burn ≥ 50%:
 
-- Require an additional Docs Council reviewer on docs-impacting PRs.  
+- Require additional Docs Council reviewer for documentation-impacting PRs  
 
 Burn ≥ 100% (breach):
 
-- Block merges for PRs failing doc-lint.  
-- Require `docs:lint` to be green as a mandatory check.  
-- Enable `mdfmt --verify` and a quick docs lint in pre-submit workflows.  
-- Restrict auto-merge for large PRs until doc-lint passes.
+- Block merges for PRs failing doc-lint  
+- Require docs:lint mandatory check  
+- Enable mdfmt --verify and lint:docs:quick  
+- Restrict auto-merge for size/L and size/XL PRs  
 
 ---
 
 ## 🔁 Auto-Remediation Playbook
 
-- Weekly Pareto analysis of failing rules.  
-- Auto-fix the top failing rules (soft → hard fail over time).  
-- Refresh and propagate Platinum README templates.  
-- Use a comment bot to explain failures and suggested fixes.  
-- Perform RCA on breach events with owners and deadlines.
+- Weekly Pareto of failing rules  
+- Auto-fixers for top violations  
+- Platinum README template refresh  
+- Comment bot education diffs  
+- RCA for breach events  
 
 ---
 
 ## 📈 Telemetry
 
-Emit:
+Emit metrics:
 
 - kfm.docs.lint.pass{rule=*,path=*}  
 - kfm.docs.lint.fail{rule=*,path=*}  
@@ -255,29 +257,32 @@ Track:
 
 Dashboard location:
 
-- dash/reliability-docs.json  
+dash/reliability-docs.json  
 
-Warn threshold: < 99.5%  
-Critical threshold: < 99%
+Warn < 99.5%  
+Critical < 99%
 
 ---
 
 ## 🧰 CI Wiring
 
-- Jobs:
-  - docs:lint  
-  - docs:lint:quick  
-  - docs:lint:auto-fix  
+Jobs:
 
-- Required checks (in breach conditions):
-  - docs:lint  
+- docs:lint  
+- docs:lint:quick  
+- docs:lint:auto-fix  
 
-- Hooks:
-  - mdfmt  
-  - frontmatter-verify  
-  - footer-verify  
-  - fence-guard  
-  - mermaid-close-check  
+Required when SLO breach active:
+
+- docs:lint must pass  
+
+Hooks:
+
+- mdfmt  
+- frontmatter-verify  
+- footer-verify  
+- fence-guard  
+- mermaid-close-check  
 
 ---
 
@@ -287,23 +292,20 @@ Markdown MUST pass:
 
 - frontmatter schema  
 - fence closure  
-- mermaid closure (when used)  
+- mermaid closure  
 - directory layout validity  
-- footer triple-link presence  
-- badge block inclusion for governed READMEs  
+- footer triple-link  
+- badge block (for governed README files)  
 
 ---
 
 ## 🔐 Governance
 
-- Docs Council: policy owner  
-- Reliability Engineering: SLO owner  
-- Infra Team: CI enforcement  
+Docs Council — policy owner  
+Reliability Engineering — SLO owner  
+Infra Team — CI enforcement  
 
-Changes to thresholds or behavior REQUIRE:
-
-- Governance approval  
-- A 2-week shadow trial before full enforcement  
+Changes require governance approval + 2-week shadow trial.
 
 ---
 
