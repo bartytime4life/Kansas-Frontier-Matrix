@@ -158,10 +158,10 @@ It establishes:
 
 Scope:
 
-- Applies to **all Markdown** under `docs/**` and any `README.md` within `web/**`  
-- Applies to **CI pipelines** responsible for linting, validating, and enforcing structure  
-- Applies to **contributors and reviewers** involved in documentation changes  
-- Governs SLO behavior for **v10.x → v11.x compatibility window**  
+- Applies to all Markdown under `docs/**` and any `README.md` within `web/**`  
+- Applies to CI pipelines responsible for linting, validating, and enforcing structure  
+- Applies to contributors and reviewers involved in documentation changes  
+- Governs SLO behavior for the v10.x → v11.x compatibility window  
 
 This is a **governed, enforceable reliability contract**.
 
@@ -195,83 +195,115 @@ docs/pipelines/reliability/
 
 ## 🎯 SLO
 
-- Target: **99%+ first-pass doc-lint success**  
-- Window: **30 days**  
-- Counted failures: any structure or formatting violation including:
-  fence closure, footer, YAML correctness, badge block, directory layout, mermaid closure  
+- Target: 99%+ first-pass doc-lint success  
+- Window: 30 days  
+- Counted failures: any structural or formatting violation, including:
+  fence closure, footer correctness, YAML correctness, badge block presence, directory layout validity, and mermaid closure where used  
 
 ---
 
 ## 🧮 Error Budget
 
-Budget: **1%** failure rate  
-Formula:  
+Budget: 1% failure rate.  
+Formula:
 
 burn_rate = failed_doclint_prs / total_prs_with_docs_changes  
 
-Exclusions: infra outages and upstream breakages requiring RCA + pin
+Exclusions:
+
+- CI infrastructure outages  
+- Upstream breakages requiring RCA and version pinning  
 
 ---
 
 ## 🚦 Merge Gating
 
-Burn ≥ 50%:  
-Require additional Docs Council reviewer  
+Burn ≥ 50%:
 
-Burn ≥ 100% (breach):  
-Block merges, require docs:lint green, enable mdfmt verification and quick lint, restrict auto-merge  
+- Require an additional Docs Council reviewer on docs-impacting PRs.  
+
+Burn ≥ 100% (breach):
+
+- Block merges for PRs failing doc-lint.  
+- Require `docs:lint` to be green as a mandatory check.  
+- Enable `mdfmt --verify` and a quick docs lint in pre-submit workflows.  
+- Restrict auto-merge for large PRs until doc-lint passes.
 
 ---
 
 ## 🔁 Auto-Remediation Playbook
 
-Weekly Pareto analysis  
-Auto-fix top failing rules  
-Refresh templates  
-Comment-bot education  
-RCA during breach  
+- Weekly Pareto analysis of failing rules.  
+- Auto-fix the top failing rules (soft → hard fail over time).  
+- Refresh and propagate Platinum README templates.  
+- Use a comment bot to explain failures and suggested fixes.  
+- Perform RCA on breach events with owners and deadlines.
 
 ---
 
 ## 📈 Telemetry
 
-Emit doclint pass/fail metrics  
-Track SLO pass rate and burn rate  
-Dashboard location:  
-dash/reliability-docs.json  
+Emit:
+
+- kfm.docs.lint.pass{rule=*,path=*}  
+- kfm.docs.lint.fail{rule=*,path=*}  
+
+Track:
+
+- SLO.doclint.p99_pass_rate  
+- SLO.doclint.burn_rate  
+
+Dashboard location:
+
+- dash/reliability-docs.json  
 
 Warn threshold: < 99.5%  
-Critical threshold: < 99%  
+Critical threshold: < 99%
 
 ---
 
 ## 🧰 CI Wiring
 
-jobs: docs:lint, docs:lint:quick, docs:lint:auto-fix  
-required_checks: docs:lint  
-hooks: mdfmt, frontmatter-verify, footer-verify, fence-guard, mermaid-close-check  
+- Jobs:
+  - docs:lint  
+  - docs:lint:quick  
+  - docs:lint:auto-fix  
+
+- Required checks (in breach conditions):
+  - docs:lint  
+
+- Hooks:
+  - mdfmt  
+  - frontmatter-verify  
+  - footer-verify  
+  - fence-guard  
+  - mermaid-close-check  
 
 ---
 
 ## ✅ Compliance Gates
 
-Markdown MUST pass:  
-frontmatter schema  
-fence closure  
-mermaid closure  
-directory layout validity  
-footer triple-link  
-badge block (governed READMEs)  
+Markdown MUST pass:
+
+- frontmatter schema  
+- fence closure  
+- mermaid closure (when used)  
+- directory layout validity  
+- footer triple-link presence  
+- badge block inclusion for governed READMEs  
 
 ---
 
 ## 🔐 Governance
 
-Docs Council: policy owner  
-Reliability Engineering: SLO owner  
-Infra Team: CI enforcement  
+- Docs Council: policy owner  
+- Reliability Engineering: SLO owner  
+- Infra Team: CI enforcement  
 
-Changes require 2-week shadow trial before activation.
+Changes to thresholds or behavior REQUIRE:
+
+- Governance approval  
+- A 2-week shadow trial before full enforcement  
 
 ---
 
