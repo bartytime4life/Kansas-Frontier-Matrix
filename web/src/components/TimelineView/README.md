@@ -1,61 +1,101 @@
 ---
 title: "⏱️ Kansas Frontier Matrix — TimelineView Component Suite Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/TimelineView/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
+version: "v11.2.2"
+last_updated: "2025-11-30"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+content_stability: "stable"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/web-components-timelineview-v1.json"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.2.2/web-timelineview-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/web-components-timelineview-v2.json"
+energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
+
 governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "MIT"
+classification: "Public Document (temporal-governed)"
+jurisdiction: "United States / Kansas"
+
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+
 status: "Active / Enforced"
 doc_kind: "Component Overview"
-intent: "web-components-timelineview"
+intent: "frontend-timelineview"
+semantic_intent:
+  - "timeline-ui"
+  - "temporal-navigation"
+  - "focus-integration"
+  - "storynode-alignment"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "Public / Temporal-Data Dependent"
+care_label: "Public / Temporal-Dependent"
 sensitivity_level: "Low"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Low"
 redaction_required: false
+
 provenance_chain:
+  - "web/src/components/TimelineView/README.md@v10.4.0"
   - "web/src/components/TimelineView/README.md@v10.3.2"
-previous_version_hash: "<previous-sha256>"
+  - "web/src/components/TimelineView/README.md@v10.3.1"
+
 ontology_alignment:
   cidoc: "E52 Time-Span"
   schema_org: "WebPageElement"
   owl_time: "TemporalEntity"
   prov_o: "prov:Entity"
-json_schema_ref: "../../../../../schemas/json/web-components-timelineview-readme.schema.json"
-shape_schema_ref: "../../../../../schemas/shacl/web-components-timelineview-readme-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-components-timelineview-readme-v10.4.0"
-semantic_document_id: "kfm-doc-web-components-timelineview-readme"
+
+json_schema_ref: "../../../../../schemas/json/web-components-timelineview-readme-v11.schema.json"
+shape_schema_ref: "../../../../../schemas/shacl/web-components-timelineview-readme-v11-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-components-timelineview-readme-v11.2.2"
+semantic_document_id: "kfm-doc-web-components-timelineview-readme-v11"
 event_source_id: "ledger:web/src/components/TimelineView/README.md"
 immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "a11y-adaptations"
   - "semantic-highlighting"
+  - "a11y-adaptations"
+  - "diagram-extraction"
 ai_transform_prohibited:
   - "summaries"
-  - "speculative additions"
-  - "unverified historical claims"
+  - "speculative-additions"
+  - "unverified-historical-claims"
+
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-jurisdiction: "United States / Kansas"
-classification: "Public Document"
-role: "overview"
-lifecycle_stage: "stable"
-ttl_policy: "Review each release cycle"
-sunset_policy: "Superseded upon next timeline system update"
+accessibility_compliance: "WCAG 2.1 AA+"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Structure"
+    - "🧩 Component Responsibilities"
+    - "🔐 Governance & FAIR+CARE Integration"
+    - "♿ Accessibility Requirements (WCAG 2.1 AA+)"
+    - "📈 Telemetry Responsibilities"
+    - "🧪 Testing Requirements"
+    - "🕰 Version History"
+    - "⚖️ Footer"
 ---
 
 <div align="center">
@@ -64,202 +104,234 @@ sunset_policy: "Superseded upon next timeline system update"
 `web/src/components/TimelineView/README.md`
 
 **Purpose:**  
-Document the high-level **TimelineView components** used to render the main temporal navigation system  
-within the Kansas Frontier Matrix Web Platform.  
-TimelineView is a composite feature built from timeline primitives, A11y helpers, governance-informed  
-temporal indicators, and synchronization hooks that unify time → map → narrative flows.
+Define the **complete TimelineView v3 suite**, responsible for temporal navigation,  
+timeline–map–narrative synchronization, temporal governance, CARE-aware time masking,  
+and provenance-linked temporal metadata rendering across the Kansas Frontier Matrix Web Platform.
+
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
+[![KFM-MDP v11.2.2](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.2-purple)]()  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Enforced-gold)]()  
+[![WCAG AA+](https://img.shields.io/badge/A11y-WCAG%202.1%20AA%2B-brightgreen)]()
 
 </div>
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
-TimelineView components:
+TimelineView v3 powers the **temporal interaction layer** of KFM:
 
-- Provide the complete timeline interaction surface  
-- Integrate with TimeContext  
-- Control map filtering, focus recomputation, and Story Node temporal alignment  
-- Render markers for events, Story Nodes, STAC datasets  
-- Allow temporal scrubbing, zooming, and range selection  
-- Apply CARE + sovereignty constraints when temporal ranges intersect restricted data  
-- Emit structured telemetry events  
-- Ensure all interactions are WCAG 2.1 AA–compliant  
-- Support non-speculative temporal interpretation  
+- Full-page timeline rendering  
+- TimeContext integration (canonical source of truth for time range)  
+- MapView synchronization  
+- Focus Mode entity alignment (Story Nodes, events, datasets)  
+- Provenance-linked temporal metadata  
+- CARE-aware masking for sensitive date ranges  
+- Keyboard- and SR-friendly navigation  
+- Telemetry-driven timeline analytics  
 
-TimelineView != timeline primitives—  
-it is the **assembled, full-page implementation** of the timeline experience.
+TimelineView components are **composed**, not primitive—  
+they orchestrate lower-level timeline primitives for a governed, accessible, deterministic temporal UI.
 
 ---
 
-# 🧱 Directory Structure
+## 🗂️ Directory Structure
 
 ~~~text
 web/src/components/TimelineView/
-├── TimelineViewContainer.tsx      # Top-level timeline-page scaffold
-├── TimelinePrimary.tsx            # Primary rendered timeline + range
-├── TimelineMarkersLayer.tsx       # Layer for Story Nodes, datasets, events
-├── TimelineControls.tsx           # Granularity + zoom + reset controls
-├── TimelineA11yHelpers.tsx        # Accessibility roles + descriptions
-└── TimelineCallouts.tsx           # CARE warnings, sovereignty notices, temporal notes
+│
+├── ⏱️ TimelineViewContainer.tsx    # Main temporal UI orchestrator
+├── 📊 TimelinePrimary.tsx           # Timeline axis + range + visual state
+├── 🏷️ TimelineMarkersLayer.tsx     # StoryNode/dataset/event markers
+├── 🎚️ TimelineControls.tsx         # Granularity, zoom, scrubbing controls
+├── ♿ TimelineA11yHelpers.tsx       # Accessible narration + SR context
+└── ⚠️ TimelineCallouts.tsx          # CARE-sensitive temporal warnings + provenance notes
 ~~~
+
+All subcomponents must be documented below.
 
 ---
 
-# 🧩 Component Responsibilities
+## 🧩 Component Responsibilities
 
-## 🧭 **TimelineViewContainer.tsx**
-Provides:
+### ⏱️ TimelineViewContainer.tsx
 
-- Page-level container for the timeline  
-- Integration with:
-  - TimeContext  
+**Role:**  
+Primary orchestrator for the timeline page/view.
+
+**Responsibilities:**
+
+- Hydrate and propagate TimeContext → timeline primitives  
+- Integrate with:
   - MapContext  
   - GovernanceContext  
   - FocusContext  
+- Apply global A11y tokens  
+- Trigger `"timeline:view-open"` telemetry  
+- Provide `<main>` region for the full timeline  
 
-Responsibilities:
+**Governance:**
 
-- Feed values to timeline primitives  
-- Manage accessibility structure  
-- Display global controls  
-- Trigger page-level telemetry (`"timeline:view-open"`)  
+- MUST block or generalize sensitive temporal ranges based on sovereignty/CARE metadata  
+- MUST show TimelineCallouts when overlapping restricted periods  
 
 ---
 
-## 📊 **TimelinePrimary.tsx**
-Renders:
+### 📊 TimelinePrimary.tsx
 
-- Main temporal axis  
+**Role:**  
+Render the main timeline bar, including:
+
+- Temporal axis  
 - Selected range  
-- Active/faded areas  
-- Time boundaries  
-- Visual highlighting for active clusters  
+- Active vs. inactive segments  
+- Visual markers for temporal density  
+- Time boundaries / caps  
 
-Rules:
+**Rules:**
 
-- Must use accessible colors  
-- Must not apply motion unless reduced-motion is off  
-- Must provide SR-only equivalents  
+- Use accessible colors and contrast levels  
+- Provide SR-only equivalents for temporal visuals (“Range: 1850 to 1890”)  
+- Respect reduced-motion when animating zoom or scrub  
 
-Governance:
+**Governance:**
 
-- Warn when active period overlaps sovereignty-controlled time blocks  
+- Highlight controlled periods with masking hatch patterns  
+- Disable overly precise scrubbing in restricted windows  
 
-Telemetry:
+**Telemetry:**
 
 - `"timeline:range-change"`  
 - `"timeline:drag"`  
 
 ---
 
-## 🏷️ **TimelineMarkersLayer.tsx**
-Displays markers for:
+### 🏷️ TimelineMarkersLayer.tsx
+
+**Role:**  
+Render temporal markers representing:
 
 - Story Nodes  
-- Focus Mode hints  
-- Datasets (STAC/DCAT)  
 - Events  
+- STAC datasets  
+- Focus Mode highlights  
 
-Must:
+**Capabilities:**
 
-- Generalize where needed (masked content)  
-- Include ARIA descriptions  
-- Provide CARE-based tooltips  
+- Tooltip with provenance + CARE data  
+- Click-to-view interactions  
+- Generalization of exact event times (rounded or bucketed)  
 
-Telemetry:
+**Governance:**
+
+- Remove or bucket timestamps for sovereignty-sensitive events  
+- Provide CARE-coded marker coloring  
+
+**Telemetry:**
 
 - `"timeline:marker-hover"`  
 - `"timeline:marker-click"`  
 
 ---
 
-## 🎚️ **TimelineControls.tsx**
-Controls timeline behavior:
+### 🎚️ TimelineControls.tsx
 
-- Granularity change  
-- Zoom in/out  
-- Reset range  
-- “Generalize temporal view” toggle (for sensitive content)
+**Role:**  
+Controls for temporal navigation.
 
-Accessibility:
+**Includes:**
 
-- Keyboard operable  
-- Proper ARIA roles  
-- High-contrast variants  
+- Zoom in/out of time  
+- Change granularity (year/decade/century)  
+- Reset view  
+- Toggle: “Generalize temporal view”  
 
-Telemetry:
+**Accessibility:**
+
+- Keyboard-accessible buttons with ARIA labels  
+- No color-only semantic pairing  
+
+**Telemetry:**
 
 - `"timeline:granularity-change"`  
 - `"timeline:zoom"`  
 
 ---
 
-## ♿ **TimelineA11yHelpers.tsx**
-Provides:
+### ♿ TimelineA11yHelpers.tsx
 
-- ARIA landmarks  
-- Screen-reader context explanations  
-- Keyboard instructions  
-- Conversion of visual intervals into text equivalents (“1850–1900, uncertain”)
+**Role:**  
+A11y support layer for timeline interactions.
 
-Required for WCAG compliance.
+**Capabilities:**
+
+- Provide ARIA roles (`role="region"`, `aria-describedby`)  
+- Convert visual time spans into text equivalents  
+- Provide keyboard instructions for scrubbing  
+- Offer SR-only telemetry cues when interacting with sensitive periods  
+
+**Required:**  
+Must be used consistently by all TimelineView components.
 
 ---
 
-## ⚠️ **TimelineCallouts.tsx**
-Displays:
+### ⚠️ TimelineCallouts.tsx
 
-- CARE-sensitive temporal warnings  
-- Sovereignty notices  
-- AI content disclaimers about uncertain periods  
-- Provenance notes for temporal metadata  
+**Role:**  
+Surface governance-critical temporal warnings.
 
-Governance:
+**Displays:**
 
-- MUST appear before content when time-range is culturally restricted  
-- MUST display reason codes + CARE documentation  
+- CARE-sensitive time-range warnings  
+- Sovereignty-controlled periods  
+- Historical uncertainty disclaimers  
+- Provenance notes  
+- AI-content disclaimers for time-series summarizations  
 
-Telemetry:
+**Governance:**
+
+- MUST appear before sensitive or constrained temporal areas  
+- MUST show reason codes + provenance if timelines are generalized  
+
+**Telemetry:**
 
 - `"timeline:care-warning"`  
 
 ---
 
-# 🔐 Governance & FAIR+CARE Integration
+## 🔐 Governance & FAIR+CARE Integration
+
+**Timeline governance rules:**
+
+- Generalize or mask sensitive periods (e.g., tribal histories, sacred timelines)  
+- Never infer temporal positions not present in source data  
+- Always mark AI-labeled temporal content (e.g., summaries, clusters)  
+- Provide provenance for all temporal metadata  
+- Mark uncertain or approximate dates with explicit indicators  
+- Surface sovereignty statements when relevant  
+
+Failures → **CI BLOCK**.
+
+---
+
+## ♿ Accessibility Requirements (WCAG 2.1 AA+)
 
 TimelineView MUST:
 
-- Apply temporal generalization for protected periods  
-- Display CARE labels clearly  
-- Surface provenance for all temporal metadata  
-- Warn when interacting with sovereignty-controlled historical windows  
-- Enforce non-speculative temporal interpretation  
-- Never infer dates not included in validated payloads  
+- Provide keyboard navigation for all controls  
+- Maintain meaningful heading hierarchy  
+- Provide SR-only equivalents for markers, ranges, clusters  
+- Respect reduced-motion during scrubbing or zoom transitions  
+- Never rely on color alone for meaning (add icons/labels)  
+- Maintain full 4.5:1 color contrast  
 
-Governance failures = **CI BLOCK**.
-
----
-
-# ♿ Accessibility Requirements (WCAG 2.1 AA)
-
-TimelineView must:
-
-- Present semantic structure  
-- Support full keyboard navigation  
-- Maintain 4.5:1 contrast  
-- Provide alternative labeling  
-- Respect reduced-motion  
-- Use accessible markers & colors  
-- Support screen-readers with SR annotations  
-
-A11y violations block merges.
+Accessibility regressions block merges.
 
 ---
 
-# 📈 Telemetry Responsibilities
+## 📈 Telemetry Responsibilities
 
-Emit telemetry for:
+TimelineView emits:
 
 - `"timeline:view-open"`  
 - `"timeline:range-change"`  
@@ -269,27 +341,28 @@ Emit telemetry for:
 - `"timeline:drag"`  
 - `"timeline:care-warning"`  
 
-Must be:
+Telemetry MUST:
 
-- Schema-valid  
-- Non-PII  
-- Exported to release bundles  
+- Be non-PII  
+- Follow `telemetry_schema`  
+- Include version tags  
 
 ---
 
-# 🧪 Testing Requirements
+## 🧪 Testing Requirements
 
-Tests must validate:
+Tests MUST cover:
 
-- Rendering correctness  
-- A11y behaviors  
-- Temporal generalization  
-- Governance rule enforcement  
-- Interaction with TimeContext + MapContext + FocusContext  
-- Telemetry emission  
-- Correct Story Node + STAC marker rendering  
+- Rendering correctness on desktop/mobile  
+- TimeContext integration (selected range → markers)  
+- Map sync (timeline → map filtering)  
+- Governance rules (masking + CARE callouts)  
+- Accessibility (keyboard, SR text, ARIA roles)  
+- Telemetry event shape and frequency  
+- Story Node marker rendering  
+- Dataset marker rendering  
 
-Tests located:
+Test file structure:
 
 ~~~text
 tests/unit/web/components/TimelineView/**
@@ -298,20 +371,29 @@ tests/integration/web/components/TimelineView/**
 
 ---
 
-# 🕰 Version History
+## 🕰 Version History
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Complete KFM-MDP 10.4-compliant rewrite; full TimelineView composition + governance + A11y |
-| v10.3.2 | 2025-11-14 | Improved marker rules + timeline sync |
-| v10.3.1 | 2025-11-13 | Initial TimelineView architecture |
+| Version | Date       | Summary                                                            |
+|--------:|------------|--------------------------------------------------------------------|
+| v11.2.2 | 2025-11-30 | Upgraded to v11.2.2; governance, A11y, telemetry v2, masking logic |
+| v10.4.0 | 2025-11-15 | Full TimelineView refactor under MDP v10.4                         |
+| v10.3.2 | 2025-11-14 | Improved markers + sync                                            |
+| v10.3.1 | 2025-11-13 | Initial TimelineView architecture                                  |
+
 ---
+
+## ⚖️ Footer
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MIT License  
-FAIR+CARE Certified · Public Document · Version-Pinned  
-Validated under MCP-DL v6.3 & KFM-MDP v10.4  
+**📚 Governance Links**  
+[Docs Root](../../../../../README.md) •  
+[Standards Index](../../../../../docs/standards/INDEX.md) •  
+[Governance Charter](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+
+**🔐 Compliance:**  
+FAIR+CARE · OWL-Time · CIDOC-CRM · STAC/DCAT · PROV-O · WCAG 2.1 AA+ · SLSA Level 3
+
+**End of Document**
 
 </div>
-```
