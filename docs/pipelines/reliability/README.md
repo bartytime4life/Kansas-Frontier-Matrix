@@ -50,6 +50,99 @@ accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
 ttl_policy: "Annual review"
 sunset_policy: "Superseded by next reliability redesign"
+
+header_profile: "standard"
+footer_profile: "standard"
+diagram_profiles:
+  - "mermaid-flowchart-v1"
+
+scope:
+  domain: "pipelines/reliability"
+  applies_to:
+    - "etl"
+    - "ai-pipelines"
+    - "governance"
+    - "telemetry"
+
+semantic_intent:
+  - "reliability"
+  - "governance"
+  - "operations"
+  - "observability"
+
+category: "Pipelines · Reliability · Operations"
+
+metadata_profiles:
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "OpenLineage"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/pipelines/reliability/README.md@v11.2.3"
+  - "docs/pipelines/reliability/README.md@v11.0.0"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+json_schema_ref: "../../schemas/json/kfm-reliability-root-v11.schema.json"
+shape_schema_ref: "../../schemas/shacl/kfm-reliability-root-v11-shape.ttl"
+
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+  - "metadata-extraction"
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+test_profiles:
+  - "markdown-lint"
+  - "schema-lint"
+  - "provenance-check"
+  - "telemetry-schema-check"
+  - "reliability-contract-check"
+
+ci_integration:
+  workflow: ".github/workflows/kfm-ci.yml"
+  environment: "dev → staging → production"
+
+branding_registry:
+  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Reliability"
+  pipeline: "Deterministic Pipelines · Explainable Ops · Open Provenance"
+  telemetry: "Transparent Systems · Ethical Metrics · Sustainable Intelligence"
+  graph: "Semantics × Provenance × Spatial Intelligence"
+
+heading_registry:
+  approved_h2:
+    - "📘 1. Overview — What “Reliability” Means in KFM v11"
+    - "🗂 2. Directory Structure (Emoji-Prefix Standard)"
+    - "🧩 3. Reliable Pipelines Framework (v11)"
+    - "🎯 4. Reliability Controls (Top-Level)"
+    - "📊 5. SLOs & Error Budget Integration"
+    - "🔒 6. Idempotency (Do-No-Harm Writes) & Concurrency"
+    - "🔁 7. Retry Discipline & Dead-Letter Queues"
+    - "🔁 8. WAL & Deterministic Replay"
+    - "🧪 9. Validation Layers"
+    - "🛰️ 10. Telemetry & Observability (OTel v11)"
+    - "🧬 11. FAIR+CARE & Sovereignty Requirements"
+    - "🧯 12. Failure Modes & Recovery"
+    - "📜 13. Provenance & STAC/PROV-O Lineage"
+    - "🔄 14. Backfills & Catch-Up Pipelines"
+    - "♻️ 15. Versioned Storage & Rollbacks (lakeFS/Obj-Store Strategy)"
+    - "✔️ 16. Operational Checklist"
+    - "📘 17. Minimal Code Blocks (Reference Snippets)"
+    - "🕰️ 18. Version History"
 ---
 
 <div align="center">
