@@ -1,62 +1,102 @@
 ---
 title: "🗂️ Kansas Frontier Matrix — STAC/DCAT UI Components Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/stac/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
+version: "v11.2.2"
+last_updated: "2025-11-30"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+content_stability: "stable"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-components-stac-v1.json"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.2/web-stac-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-components-stac-v2.json"
+energy_schema: "../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
+
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "MIT"
+classification: "Public / Dataset-sensitive"
+jurisdiction: "United States / Kansas"
+
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+
 status: "Active / Enforced"
 doc_kind: "Component Overview"
 intent: "web-components-stac"
+semantic_intent:
+  - "dataset-browsing"
+  - "stac-ui"
+  - "dcat-ui"
+  - "governance-aware-metadata"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Dataset-dependent"
 sensitivity_level: "Dataset-dependent"
 public_exposure_risk: "Medium"
-indigenous_rights_flag: "Conditional"
+indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Mixed"
 redaction_required: true
+
 provenance_chain:
+  - "web/src/components/stac/README.md@v10.4.0"
   - "web/src/components/stac/README.md@v10.3.2"
-previous_version_hash: "<previous-sha256>"
+
 ontology_alignment:
   cidoc: "E31 Document"
   schema_org: "Dataset"
   owl_time: "TemporalEntity"
   geosparql: "geo:Feature"
   prov_o: "prov:Entity"
-json_schema_ref: "../../../../schemas/json/web-components-stac-readme.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/web-components-stac-readme-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-components-stac-readme-v10.4.0"
-semantic_document_id: "kfm-doc-web-components-stac-readme"
+
+json_schema_ref: "../../../../schemas/json/web-components-stac-readme-v11.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/web-components-stac-readme-v11-shape.ttl"
+doc_uuid: "urn:kfm:doc:web-components-stac-readme-v11.2.2"
+semantic_document_id: "kfm-doc-web-components-stac-readme-v11"
 event_source_id: "ledger:web/src/components/stac/README.md"
 immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with strict constraints"
 ai_transform_permissions:
   - "semantic-highlighting"
   - "a11y-adaptations"
+  - "diagram-extraction"
 ai_transform_prohibited:
   - "summaries"
-  - "speculative additions"
-  - "unverified historical claims"
+  - "speculative-additions"
+  - "unverified-historical-claims"
+  - "coordinate-hallucination"
+
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-jurisdiction: "United States / Kansas"
-classification: "Public / Dataset-sensitive"
-role: "overview"
-lifecycle_stage: "stable"
-ttl_policy: "Review every 12 months"
-sunset_policy: "Superseded upon next STAC/DCAT UI overhaul"
+accessibility_compliance: "WCAG 2.1 AA+"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Structure"
+    - "🧩 Component Responsibilities"
+    - "🔐 Governance & FAIR+CARE Enforcement"
+    - "♿ Accessibility Requirements (WCAG 2.1 AA+)"
+    - "📈 Telemetry Responsibilities"
+    - "🧪 Testing Requirements"
+    - "🕰 Version History"
+    - "⚖️ Footer"
 ---
 
 <div align="center">
@@ -67,253 +107,326 @@ sunset_policy: "Superseded upon next STAC/DCAT UI overhaul"
 **Purpose:**  
 Define the UI components responsible for **STAC (SpatioTemporal Asset Catalog)** and **DCAT (Dataset Catalog v3)** browsing,  
 previewing, metadata display, governance surfacing, and telemetry generation in the KFM Web Platform.  
-These components must be **FAIR+CARE-governed**, fully **WCAG AA–accessible**, and  
+These components must be **FAIR+CARE-governed**, fully **WCAG AA+–accessible**, and  
 **geospatial-governance–aware**, especially where datasets carry sovereignty, license, or redaction constraints.
+
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
+[![KFM-MDP v11.2.2](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.2-purple)]()  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Dataset%20Sensitive-gold)]()  
+[![WCAG AA+](https://img.shields.io/badge/A11y-WCAG%202.1%20AA%2B-brightgreen)]()
 
 </div>
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
-STAC/DCAT components:
+**STAC/DCAT UI components** are the primary dataset exploration surfaces for KFM:
 
-- Display dataset-level metadata  
-- Preview spatial footprints (generalized when required)  
-- Integrate temporal metadata with TimeContext  
-- Support dataset browsing, filtering, and quick interactions  
-- Render provenance + CARE metadata inline  
-- Avoid showing restricted coordinates or sensitive detail  
-- Sync with Focus Mode & Story Node v3 where applicable  
+- Display dataset-level metadata (title, description, providers, rights)  
+- Preview spatial footprints (generalized when required by CARE or sovereignty rules)  
+- Integrate temporal metadata with `TimeContext` and `TimelineView`  
+- Support dataset browsing, filtering, sorting, and quick-detail views  
+- Render provenance (PROV-O) and CARE metadata inline  
+- Avoid showing restricted coordinates, internal IDs, or sensitive attributes  
+- Sync with:
+  - Focus Mode (dataset-focused narratives)  
+  - MapView (DatasetFootprintLayer)  
+  - Story Node v3 (asset references)  
 - Emit telemetry for dataset exploration and sustainability metrics  
-- Are fully accessible and ethics-aligned  
+- Are fully accessible (WCAG 2.1 AA+) and ethics-aligned  
 
-These components interact with:
-
-- `stacService.ts`  
-- `dcatService.ts`  
-- `stacPipeline.ts`  
-- Governance + CARE context  
-- Focus Mode v2.5 (dataset-based focus events)  
-- MapContext for footprint previews  
+They sit “between” the STAC/DCAT pipelines and the user, translating machine-readable catalogs into governed, human-usable UI.
 
 ---
 
-# 🧱 Directory Structure
+## 🗂️ Directory Structure
 
 ~~~text
 web/src/components/stac/
-├── DatasetCard.tsx               # High-level dataset summary card (STAC/DCAT)
-├── DatasetList.tsx               # Paginated dataset collection viewer
-├── ItemPreview.tsx               # Preview for STAC Item (footprint + metadata)
-├── AssetMetadata.tsx             # Detailed metadata: license, provenance, rights
-├── ExtentPreview.tsx             # Spatial + temporal extent visualization
-├── STACSearchBar.tsx             # Search/filter control (time, bbox, keywords)
-└── STACSortToolbar.tsx           # Sorting + filtering toolbar
+│
+├── 📦 DatasetCard.tsx            # High-level dataset summary card (STAC/DCAT)
+├── 📚 DatasetList.tsx            # Paginated dataset collection viewer
+├── 🗺️ ItemPreview.tsx            # Preview for STAC Item (footprint + core metadata)
+├── 🏷️ AssetMetadata.tsx          # Detailed asset metadata: license, provenance, rights
+├── 🗓️ ExtentPreview.tsx          # Spatial + temporal extent visualization (maps + bars)
+├── 🔍 STACSearchBar.tsx          # Search/filter control (time, bbox, keywords)
+└── 🔧 STACSortToolbar.tsx        # Sorting + filtering toolbar for STAC/DCAT views
 ~~~
 
----
-
-# 🧩 Component Responsibilities
+Any new component in this directory MUST be documented here.
 
 ---
 
-## 📦 **DatasetCard.tsx**
+## 🧩 Component Responsibilities
 
-Displays high-level dataset metadata:
+### 📦 DatasetCard.tsx
 
-- Title, description  
-- STAC/DCAT classification  
-- Publisher/creator  
-- CAREBadge  
-- Temporal coverage  
+**Role:**  
+Primary card for representing a dataset (STAC Collection, STAC Item, or DCAT Dataset).
+
+**Displays (as available):**
+
+- Dataset title and description  
+- Dataset type (STAC collection, STAC item, DCAT dataset)  
+- Publisher / creator / provider  
+- CAREBadge (classification)  
+- Temporal coverage summary  
 - LicenseTag  
 - ProvenanceChip  
 
-Must:
+**Requirements:**
 
-- Support keyboard navigation  
-- Use accessible headings  
-- Emit telemetry: `"stac:dataset-open"`  
+- Fully keyboard-focusable and screen-reader readable  
+- No dataset logic (filtering/sorting) inside; purely presentational  
 
----
+**Telemetry (via parent wiring):**
 
-## 📚 **DatasetList.tsx**
-
-Renders collections of datasets with:
-
-- Pagination  
-- Sorting controls  
-- Filters (time, bbox, keyword)  
-- CARE/sovereignty classification indicators  
-
-Governance:
-
-- Restricted datasets must display vulnerability warnings  
-- Indigenous-governed datasets must show sovereignty banners  
-
-Telemetry:
-
-- `"stac:list-scroll"`  
-- `"stac:filter-change"`  
+- `"stac:dataset-open"` when user opens dataset details  
 
 ---
 
-## 🗺️ **ItemPreview.tsx**
+### 📚 DatasetList.tsx
 
-Provides a mini-view of a STAC Item:
+**Role:**  
+Render collections of datasets, with navigation and filter integration.
 
-- Footprint preview (masked when sensitive)  
-- COG asset summary  
-- Bounding box  
-- Temporal interval  
-- CARE + provenance metadata  
+**Responsibilities:**
 
-Rules:
+- List dataset cards (DatasetCard) in paginated / infinite-scroll style  
+- Surface CARE/sovereignty classification for each dataset  
+- Integrate with:
+  - STAC search/filtering logic (from stacService/stacPipeline)  
+  - Sorting and filter state  
 
-- MUST generalize footprints if dataset marks sensitive geometry  
-- Must sync with MapContext when hovered or selected  
-- Must not expose exact coordinates for restricted data  
+**Governance:**
 
----
+- Restricted datasets must:
+  - Indicate the restriction  
+  - Not expose blocked fields (e.g., direct file URLs if disallowed)  
+- Sovereignty-controlled datasets must surface sovereignty labels and notices through Governance UI components.
 
-## 🏷️ **AssetMetadata.tsx**
+**Telemetry:**
 
-Displays:
-
-- Asset-level metadata (image, COG, GeoTIFF, vector layer)  
-- Rights-holder  
-- LicenseTag  
-- Provenance trail  
-- Data quality indicators  
-
-Care constraints:
-
-- Must label redacted or restricted fields  
-- Must prevent raw URLs from loading sensitive materials  
+- `"stac:list-scroll"` (if implemented)  
+- `"stac:filter-change"` (via attached toolbar/search bar)  
 
 ---
 
-## 🗓️ **ExtentPreview.tsx**
+### 🗺️ ItemPreview.tsx
 
-Shows spatiotemporal extent:
+**Role:**  
+Compact preview for a STAC Item.
 
-- Time range (OWL-Time aligned)  
-- Map footprint preview  
-- Bounding box visualization  
-- Temporal uncertainty blocks  
+**Displays:**
 
-Accessibility:
+- Generalized spatial footprint (for map preview)  
+- Bounding box (if allowed to be shown)  
+- Temporal range (aligned with OWL-Time / TimeContext)  
+- Asset summary (e.g., count/primary asset type)  
+- CARE and provenance summary snippets  
 
-- Must provide text equivalent for spatial previews  
-- Must avoid color-only cues  
+**Governance:**
 
-Governance:
-
-- Must show when extent is generalized or masked  
+- MUST generalize or hide footprints for sensitive datasets (e.g., sovereignty-controlled sites)  
+- MUST NOT expose raw coordinates or full-resolution extents of sensitive assets  
+- Must support hooking into MapView to highlight dataset footprints without leaking precision  
 
 ---
 
-## 🔍 **STACSearchBar.tsx**
+### 🏷️ AssetMetadata.tsx
 
-Controls:
+**Role:**  
+Detailed metadata view for individual assets (images, COGs, GeoTIFFs, vector layers, etc.).
 
-- Keyword search  
-- Temporal filters  
-- Spatial filters (bbox selection)  
-- Dataset type filters  
+**Displays (depending on metadata):**
 
-Accessibility:
+- Asset title / description  
+- Media type (MIME)  
+- LicenseTag & rights-holder  
+- ProvenanceTrail link or summary  
+- Data quality indicators (if available)  
 
-- Fully screen-reader operable  
-- All controls keyboard accessible  
-- High-contrast compliance  
+**Governance:**
 
-Telemetry:
+- MUST label redacted or restricted fields (e.g., “URL hidden due to sovereignty policy”)  
+- MUST NOT render raw asset URLs for sensitive datasets unless explicitly allowed by governance context  
+- Should provide cues when an asset has been derived or generalized from original resolution  
+
+---
+
+### 🗓️ ExtentPreview.tsx
+
+**Role:**  
+Visual and textual summary of spatial + temporal footprint.
+
+**Responsibilities:**
+
+- Render:
+  - Temporal interval bars (overall coverage)  
+  - Coarse spatial preview (e.g., bounding region)  
+- Provide textual equivalents:
+  - “Coverage: 1850–1900, Great Plains region”  
+
+**Governance:**
+
+- MUST indicate when footprints or intervals are generalized for CARE/sovereignty reasons  
+- MUST NOT show highly precise extents for sensitive data  
+
+**Accessibility:**
+
+- No color-only meaning for time ranges (use patterns, labels, icons)  
+- SR-only hints describing coverage  
+
+---
+
+### 🔍 STACSearchBar.tsx
+
+**Role:**  
+Search and filtering input component.
+
+**Responsibilities:**
+
+- Accept:
+  - Keyword input  
+  - Temporal filters (date-range pickers or presets)  
+  - Spatial filters (bbox or region selection)  
+  - Optional dataset-type filters (e.g., Datasets vs. Collections)  
+- Integrate with:
+  - FormControls primitives (`TextInput`, `Select`, etc.)  
+  - STAC search logic in parent container  
+
+**Accessibility:**
+
+- All controls keyboard-operable  
+- Labels and descriptions for filters  
+- Clear instructions for time and spatial fields  
+
+**Telemetry:**
 
 - `"stac:search"`  
 - `"stac:filter-change"`  
 
 ---
 
-## 🔧 **STACSortToolbar.tsx**
+### 🔧 STACSortToolbar.tsx
 
-Provides:
+**Role:**  
+Sorting and filter toolbar for dataset lists.
 
-- Sort-by (newest, oldest, alphabetical, temporal length)  
-- CARE-label filtering  
-- Rights-holder filtering  
-- Dataset-type filtering  
+**Responsibilities:**
 
-Governance:
+- Provide sorting controls:
+  - Newest / oldest first  
+  - Alphabetical  
+  - Temporal width  
+- Provide toggles or selects for:
+  - CARE classification filters  
+  - Rights-holder filters  
+  - Dataset type filters  
 
-- Must clearly mark restrictions on dataset visibility  
+**Governance:**
+
+- Must clearly indicate when certain datasets are hidden due to governance constraints (if parent provides that info)  
+
+**Telemetry:**
+
+- `"stac:sort-change"`  
+
+---
+
+## 🔐 Governance & FAIR+CARE Enforcement
+
+STAC/DCAT UI components are **dataset-sensitive** and MUST:
+
+- Display CARE classifications clearly for each dataset (via governance components)  
+- Warning surfaces:
+  - Sovereignty notices  
+  - Cultural sensitivity / sacred site warnings  
+- Mask or generalize:
+  - Spatial footprints for restricted datasets (no raw coordinates)  
+  - Temporal precision if necessary (e.g., year-only vs. full timestamp)  
+- Show provenance:
+  - ProvenanceChip / ProvenanceTrail links  
+  - clear association of dataset to its source/provider  
+
+These components MUST NOT:
+
+- Fabricate or guess dataset geography or time spans  
+- Display asset URLs or internal IDs when governance flags disallow it  
+- Show “example” coordinates for sensitive data (no placeholder-lies)  
+
+All governance failures (e.g., leaking exact coordinates for a sovereignty-controlled dataset) are **CI-blocking**.
+
+---
+
+## ♿ Accessibility Requirements (WCAG 2.1 AA+)
+
+All STAC/DCAT components MUST:
+
+- Use semantic HTML and ARIA roles for lists, cards, and controls  
+- Provide keyboard navigation for:
+  - dataset list scrolling  
+  - search and filter controls  
+  - sort toolbar interactions  
+- Maintain 4.5:1 contrast for text and visual encodings  
+- Provide textual equivalents where:
+  - spatial previews are shown (e.g., “Dataset covers southwestern Kansas”)  
+  - temporal extents are visualized  
+
+Respect `prefers-reduced-motion` for any animations (hover, highlight, or transitions).
+
+Accessibility regressions MUST block merges.
+
+---
+
+## 📈 Telemetry Responsibilities
+
+STAC/DCAT components MUST support emission (via parent) of:
+
+- `"stac:dataset-open"`  
+- `"stac:search"`  
+- `"stac:filter-change"`  
+- `"stac:sort-change"`  
+- `"stac:list-scroll"` (if used)  
+- `"stac:item-preview-open"`  
+- `"stac:care-warning-shown"`  
+- `"stac:provenance-expand"`  
 
 Telemetry:
 
-- `"stac:sort-change"`
+- MUST be non-PII  
+- MUST match schemas in `telemetry_schema`  
+- SHOULD include dataset IDs (where appropriate and safe) for analytics, but not raw secret tokens or URLs  
+- MUST be tied to this component’s version for debugging changes across releases  
 
 ---
 
-# 🔐 Governance & FAIR+CARE Enforcement
+## 🧪 Testing Requirements
 
-STAC/DCAT components MUST:
+Tests MUST cover:
 
-- Display CARE classifications prominently  
-- Warn when datasets have sovereignty restrictions  
-- Hide blocked assets  
-- Mask sensitive geometry with H3 r7+  
-- Show provenance chips for all metadata  
-- Provide context around AI-derived dataset summaries  
-- Never misrepresent or speculate about dataset geography/history  
+- **Unit tests**:
+  - Rendering of each component with typical and edge-case props  
+  - Behavior with different CARE/sovereignty flags  
 
-Governance violations → **CI-blocking error**.
+- **Integration tests**:
+  - STAC/DCAT lists integrated with search & sort  
+  - ItemPreview with MapView and TimelineView  
+  - Governance overlays and warnings  
 
----
+- **Accessibility tests**:
+  - Keyboard navigation across DatasetList, STACSearchBar, SortToolbar  
+  - ARIA attributes on DatasetCard, search fields, sort controls  
 
-# ♿ Accessibility Requirements (WCAG 2.1 AA)
+- **Governance tests**:
+  - Masking for sensitive datasets (no raw coordinates)  
+  - Restricted dataset fields hidden or labeled  
 
-All STAC components must:
+- **Telemetry tests**:
+  - Events emitted as expected on user interactions  
 
-- Use semantic HTML  
-- Provide proper ARIA labeling  
-- Respect reduced-motion  
-- Use accessible color ramps  
-- Provide textual equivalents for map previews  
-- Ensure keyboard navigation works fully  
-
----
-
-# 📈 Telemetry Responsibilities
-
-Components must emit non-PII telemetry for:
-
-- Dataset browsing  
-- Item previews  
-- Filtering/sorting changes  
-- Spatial/temporal extent interactions  
-- CARE warning displays  
-- Provenance expansion events  
-
-Stored in:
-
-`releases/<version>/focus-telemetry.json`
-
----
-
-# 🧪 Testing Requirements
-
-Tests must cover:
-
-- UI rendering  
-- Accessibility flows  
-- Governance rule enforcement  
-- Telemetry accuracy  
-- STAC schema validation  
-- Masking + sovereignty behavior  
-- Integration with MapContext + Timeline  
-
-Test locations:
+Test layout:
 
 ~~~text
 tests/unit/web/components/stac/**
@@ -322,21 +435,29 @@ tests/integration/web/components/stac/**
 
 ---
 
-# 🕰 Version History
+## 🕰 Version History
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Full KFM-MDP v10.4 rewrite; added governance, masking, A11y, temporal + spatial extent integration |
-| v10.3.2 | 2025-11-14 | Improved dataset list + item preview behaviors |
-| v10.3.1 | 2025-11-13 | Initial STAC/DCAT component overview |
+| Version | Date       | Summary                                                                                     |
+|--------:|------------|---------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-30 | Upgraded to v11.2.2; telemetry v2, FAIR+CARE clarifications, A11y refinements, masking rules |
+| v10.4.0 | 2025-11-15 | Full KFM-MDP v10.4 rewrite; governance, masking, A11y, temporal + spatial extent integration |
+| v10.3.2 | 2025-11-14 | Improved dataset list + item preview behaviors                                              |
+| v10.3.1 | 2025-11-13 | Initial STAC/DCAT component overview                                                        |
 
 ---
 
+## ⚖️ Footer
+
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MIT License  
-FAIR+CARE Certified · Public Document · Version-Pinned  
-Validated under MCP-DL v6.3 & KFM-MDP v10.4  
+**📚 Governance Links**  
+[Docs Root](../../../../README.md) •  
+[Standards Index](../../../../docs/standards/INDEX.md) •  
+[Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+
+**🔐 Compliance:**  
+FAIR+CARE · STAC/DCAT · GeoSPARQL · CIDOC-CRM · OWL-Time · PROV-O · WCAG 2.1 AA+ · SLSA Level 3
+
+**End of Document**
 
 </div>
-
