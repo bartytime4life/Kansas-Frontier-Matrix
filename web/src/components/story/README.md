@@ -4,10 +4,10 @@ path: "web/src/components/story/README.md"
 version: "v11.2.2"
 last_updated: "2025-11-30"
 
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 release_stage: "Stable / Governed"
-status: "Active / Enforced"
-lifecycle_stage: "LTS"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
@@ -25,7 +25,12 @@ license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
 
+status: "Active / Enforced"
 status_category: "Overview"
 doc_kind: "Component Overview"
 intent: "web-components-story"
@@ -68,18 +73,30 @@ ai_transform_permissions:
   - "metadata-extraction"
 ai_transform_prohibited:
   - "summaries"
-  - "speculative additions"
-  - "unverified historical claims"
+  - "speculative-additions"
+  - "unverified-historical-claims"
   - "governance-override"
   - "content-alteration"
 
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "United States / Kansas"
 classification: "Public UI Components (with CARE exceptions)"
 
 ttl_policy: "Review every major release"
 sunset_policy: "Superseded upon Story Node v4 upgrade"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Structure"
+    - "🧩 Component Responsibilities"
+    - "⚖️ Governance & FAIR+CARE Integration"
+    - "♿ Accessibility Requirements (WCAG 2.1 AA+)"
+    - "📈 Telemetry Responsibilities"
+    - "🧪 Testing Requirements"
+    - "🕰 Version History"
+    - "⚖️ Footer"
 ---
 
 <div align="center">
@@ -93,11 +110,16 @@ combining text, time, place, provenance, media, geospatial footprints, and gover
 Story Node components must be **ethically governed**, **WCAG-compliant**, and fully integrated  
 with Focus Mode v3, Timeline, STAC/DCAT data, and mapping pipelines.
 
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
+[![KFM-MDP v11.2.2](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.2-purple)]()  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Story%20Dependent-gold)]()  
+[![WCAG AA+](https://img.shields.io/badge/A11y-WCAG%202.1%20AA%2B-brightgreen)]()
+
 </div>
 
 ---
 
-## 📘 1. Overview
+## 📘 Overview
 
 Story Node components:
 
@@ -121,27 +143,28 @@ These components must **never**:
 
 ---
 
-## 🗂 2. Directory Structure
+## 🗂️ Directory Structure
 
 ~~~text
 web/src/components/story/
-├── 📄 StoryCard.tsx            # Compact Story Node summary card
-├── 📄 StoryDetail.tsx          # Full narrative view with media + provenance
-├── 📄 StoryMedia.tsx           # Media carousel (images, scans, maps)
-├── 📄 StoryMapPreview.tsx      # Mini-map with footprint (generalized as needed)
-├── 📄 StoryRelations.tsx       # Related entities (places, events, docs, datasets)
-├── 📄 StoryTimeline.tsx        # Optional temporal visualization block
-├── 📄 StoryProvenance.tsx      # PROV-O aligned provenance information
-└── 📄 StoryCareBlock.tsx       # CARE + sovereignty + ethics warning section
+│
+├── 📘 StoryCard.tsx           # Compact Story Node summary card
+├── 📖 StoryDetail.tsx         # Full narrative view with media + provenance
+├── 🖼️ StoryMedia.tsx          # Media carousel (images, scans, maps)
+├── 🗺️ StoryMapPreview.tsx     # Mini-map with generalized footprint
+├── 🔗 StoryRelations.tsx      # Related entities (places, events, docs, datasets)
+├── 🕰️ StoryTimeline.tsx       # Optional temporal visualization block
+├── 🧬 StoryProvenance.tsx     # PROV-O aligned provenance information
+└── ⚠️ StoryCareBlock.tsx      # CARE + sovereignty + ethics warning section
 ~~~
 
 All new Story Node UI components must be added under this directory, with this README updated accordingly.
 
 ---
 
-## 🧩 3. Component Responsibilities
+## 🧩 Component Responsibilities
 
-### 3.1 📘 `StoryCard.tsx`
+### 📘 StoryCard.tsx
 
 **Purpose**
 
@@ -153,21 +176,21 @@ All new Story Node UI components must be added under this directory, with this R
 - CARE badge / sovereignty indicator (if present).  
 - Time span label (e.g., “ca. 1450–1650 CE”).  
 - Generalized location label (region, watershed, county, etc.).  
-- Provenance chip (e.g., archive / collection / dataset).  
+- ProvenanceChip (e.g., archive / collection / dataset).  
 
 **Accessibility**
 
 - Proper heading level within card grid/list.  
-- Keyboard-selectable card (enter/space).  
+- Keyboard-selectable card (Enter/Space).  
 - High-contrast tokens; no color-only state.  
 
 **Telemetry**
 
-- Emits `story:card-open` when activated (non-PII, schema-compliant).
+- `story:card-open` (via parent wiring) when activated (non-PII, schema-compliant).
 
 ---
 
-### 3.2 📖 `StoryDetail.tsx`
+### 📖 StoryDetail.tsx
 
 **Purpose**
 
@@ -192,11 +215,11 @@ All new Story Node UI components must be added under this directory, with this R
 **Accessibility**
 
 - Semantic headings and section landmarks.  
-- Focusable sections for keyboard navigation.  
+- Focusable headings/sections for keyboard navigation.  
 
 ---
 
-### 3.3 🖼️ `StoryMedia.tsx`
+### 🖼️ StoryMedia.tsx
 
 **Purpose**
 
@@ -216,11 +239,11 @@ All new Story Node UI components must be added under this directory, with this R
 
 **Telemetry**
 
-- Emits `story:media-view` with media-type + Story Node identifier (non-PII).
+- `story:media-view` with media-type + Story Node identifier (non-PII).
 
 ---
 
-### 3.4 🗺️ `StoryMapPreview.tsx`
+### 🗺️ StoryMapPreview.tsx
 
 **Purpose**
 
@@ -229,7 +252,7 @@ All new Story Node UI components must be added under this directory, with this R
 **Behavior**
 
 - Uses generalized geometry when required (H3, county, region).  
-- Shows “location generalized” / “masking applied” indicators.  
+- Shows “location generalized / masking applied” indicators.  
 - Optionally animates footprint highlight in sync with Timeline & MapContext.  
 
 **Governance**
@@ -239,11 +262,11 @@ All new Story Node UI components must be added under this directory, with this R
 
 **Telemetry**
 
-- Emits `story:map-preview` interaction events.
+- `story:map-preview` interaction events (e.g., hover, click through).
 
 ---
 
-### 3.5 🔗 `StoryRelations.tsx`
+### 🔗 StoryRelations.tsx
 
 **Purpose**
 
@@ -263,11 +286,11 @@ All new Story Node UI components must be added under this directory, with this R
 
 **Telemetry**
 
-- Emits `story:relation-click` when users navigate via relations.
+- `story:relation-click` when users navigate via relations.
 
 ---
 
-### 3.6 🕰️ `StoryTimeline.tsx`
+### 🕰️ StoryTimeline.tsx
 
 **Purpose**
 
@@ -281,11 +304,11 @@ All new Story Node UI components must be added under this directory, with this R
 
 **Telemetry**
 
-- Emits `story:timeline-hover` or `story:timeline-scrub` events for engagement metrics.
+- `story:timeline-hover` / `story:timeline-scrub` for engagement metrics.
 
 ---
 
-### 3.7 🧬 `StoryProvenance.tsx`
+### 🧬 StoryProvenance.tsx
 
 **Purpose**
 
@@ -300,16 +323,16 @@ All new Story Node UI components must be added under this directory, with this R
 
 **Requirements**
 
-- Map to PROV-O concepts (`prov:Entity`, `prov:Activity`, `prov:Agent`).  
-- Offer optional JSON-LD export/download trigger (wired via services).  
+- Map to PROV-O (`prov:Entity`, `prov:Activity`, `prov:Agent`).  
+- Offer optional JSON-LD export/download triggers (via parent wiring).  
 
 **Telemetry**
 
-- Emits `story:provenance-expanded` when the user opens or expands provenance.
+- `story:provenance-expanded` when the user opens or expands provenance.
 
 ---
 
-### 3.8 ⚠️ `StoryCareBlock.tsx`
+### ⚠️ StoryCareBlock.tsx
 
 **Purpose**
 
@@ -329,43 +352,48 @@ All new Story Node UI components must be added under this directory, with this R
 
 **Telemetry**
 
-- Emits `story:care-warning-shown` when displayed.
+- `story:care-warning-shown` when displayed.
 
 ---
 
-## ⚖ 4. Governance Expectations
+## ⚖️ Governance & FAIR+CARE Integration
 
 All Story Node UI components must:
 
 - Enforce CARE and sovereignty flags passed from upstream.  
-- Display provenance chips in all relevant views.  
+- Display provenance chips/trails in all relevant views.  
 - Correctly generalize or omit sensitive spatial and media content.  
 - Label AI-generated text and never fabricate or speculate beyond data.  
 - Respect backend decisions on what may or may not be publicly rendered.  
 
-Governance regressions (e.g., rendering unmasked coordinates for protected sites)  
-are treated as **CI hard failures** and block merges.
+They must **never**:
+
+- Show unmasked coordinates for protected sites.  
+- Remove or hide governance metadata (CARE, sovereignty, lineage).  
+- Merge or split Story Nodes in the UI in a way that contradicts the underlying graph.
+
+Governance regressions are treated as **CI hard failures** and must block merges.
 
 ---
 
-## ♿ 5. Accessibility Requirements
+## ♿ Accessibility Requirements (WCAG 2.1 AA+)
 
 Each Story Node component must:
 
 - Use semantic HTML elements and headings.  
 - Provide alt text / SR descriptions for images and maps.  
 - Support keyboard navigation and logical focus order.  
-- Respect reduced-motion settings.  
+- Respect reduced-motion settings for animations.  
 - Provide descriptive labels for temporal and spatial information.  
-- Ensure visible focus indicators and color-contrast ≥ AA.  
+- Ensure visible focus indicators and color-contrast ≥ AA thresholds.  
 
-WCAG 2.1 AA conformance is mandatory for all Story UI components.
+WCAG 2.1 AA+ conformance is mandatory for all Story UI components; any regression blocks merges.
 
 ---
 
-## 📈 6. Telemetry Responsibilities
+## 📈 Telemetry Responsibilities
 
-Story Node components must emit the following (or a subset as appropriate):
+Story Node components must support emission of (via parent wiring):
 
 - `story:open`  
 - `story:card-open`  
@@ -376,24 +404,38 @@ Story Node components must emit the following (or a subset as appropriate):
 - `story:care-warning-shown`  
 - `story:provenance-expanded`  
 
-Telemetry MUST be:
+Telemetry MUST:
 
-- Non-PII and aggregated where possible.  
-- Schema-valid per `web-components-story-v1`.  
-- CARE-aware (sensitive node interactions flagged appropriately).  
-- Included in release telemetry bundles (`releases/<version>/focus-telemetry.json`).
+- Be non-PII and aggregated where possible.  
+- Conform to `telemetry_schema`.  
+- Be CARE-aware (e.g., mark interactions with sensitive Story Nodes).  
+- Be included in release telemetry bundles referenced by `telemetry_ref`.
 
 ---
 
-## 🧪 7. Testing Requirements
+## 🧪 Testing Requirements
 
-Each component must be covered by:
+Each Story Node component MUST be covered by:
 
-- **Unit tests** — render states, prop variations, governance logic.  
-- **Integration tests** — interactions with map/timeline (where applicable).  
-- **A11y tests** — ARIA roles, keyboard navigation, contrast.  
-- **Governance tests** — masking behavior, CARE block visibility.  
-- **Telemetry tests** — event emission and schema conformance for key interactions.  
+- **Unit tests**  
+  - Rendering states and prop combinations  
+  - Governance flags (e.g., redaction_required, sovereignty)  
+
+- **Integration tests**  
+  - Interactions with MapView and TimelineView where applicable  
+  - Focus Mode integration (Story-focused views)  
+
+- **Accessibility tests**  
+  - ARIA roles / labels  
+  - Keyboard navigation across sections and media  
+  - Contrast and reduced-motion behavior  
+
+- **Governance tests**  
+  - Masking behavior for sensitive spatial or media content  
+  - CARE block visibility when expected  
+
+- **Telemetry tests**  
+  - Event emission for key user actions  
 
 Recommended test locations:
 
@@ -404,7 +446,7 @@ tests/integration/web/components/story/**
 
 ---
 
-## 🕰 8. Version History
+## 🕰 Version History
 
 | Version | Date       | Summary                                                                                              |
 |--------:|------------|------------------------------------------------------------------------------------------------------|
@@ -414,9 +456,18 @@ tests/integration/web/components/story/**
 
 ---
 
+## ⚖️ Footer
+
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-[⬅️ Back to Components Overview](../README.md) · [💻 Web Source Architecture](../ARCHITECTURE.md) · [🛡 Governance](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+**📚 Governance Links**  
+[Docs Root](../../../../README.md) •  
+[Standards Index](../../../../docs/standards/INDEX.md) •  
+[Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+
+**🔐 Compliance:**  
+FAIR+CARE · CIDOC-CRM · OWL-Time · GeoSPARQL · PROV-O · WCAG 2.1 AA+ · SLSA Level 3
+
+**End of Document**
 
 </div>
