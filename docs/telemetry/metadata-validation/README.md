@@ -75,7 +75,7 @@ branding_registry:
 
 heading_registry:
   approved_h2:
-    - "🧭 Overview"
+    - "🧭 Purpose & Scope"
     - "🗂️ Directory Layout"
     - "🔍 Validator Coverage"
     - "🛡️ Trust Badge"
@@ -83,7 +83,6 @@ heading_registry:
     - "📘 Reference Scripts"
     - "🧩 Embedding in Other Modules"
     - "🧾 Version History"
-    - "🔐 Governance Footer"
 
 test_profiles:
   - "markdown-lint"
@@ -108,6 +107,7 @@ ai_transform_permissions:
   - "timeline-generation"
   - "semantic-highlighting"
   - "governance-warnings"
+
 ai_transform_prohibited:
   - "content-alteration"
   - "metadata-fabrication"
@@ -138,26 +138,31 @@ provenance_requirements:
 <div align="center">
 
 # 🔏 Metadata Validation & Trust Badge System  
-Automated STAC Validation · DCAT/JSON-LD Checks · Provenance Verification · FAIR+CARE Metadata Integrity
+Automated STAC, DCAT, JSON-LD, Provenance & FAIR+CARE Metadata Integrity Validation
+
+[![KFM Metadata Trust v11.2.3](https://img.shields.io/badge/KFM_Metadata_Trust-v11.2.3-6f42c1)]()  
+[![FAIR Verified](https://img.shields.io/badge/FAIR-Verified-2ea44f)]()  
+[![CARE Compliant](https://img.shields.io/badge/CARE-Compliant-0aa)]()  
+[![SLSA Attested](https://img.shields.io/badge/SLSA-Attested-005bbb)]()
 
 </div>
 
 ---
 
-## 🧭 Overview
+## 🧭 Purpose & Scope
 
-The Metadata Validation & Trust Badge System ensures that **every KFM dataset, directory, and metadata artifact** complies with:
+The Metadata Validation & Trust Badge System ensures every dataset, STAC Collection, STAC Item, pipeline output, and documentation artifact within KFM meets **governed metadata quality**, **provenance correctness**, and **FAIR+CARE ethical compliance**.
 
-• STAC / DCAT / JSON-LD schema rules  
-• Provenance requirements (SBOM, SLSA, signatures)  
-• FAIR+CARE ethical metadata rules  
-• KFM v11 Governance Standards  
+It delivers:
 
-It produces:
+• Automated metadata schema checks  
+• Provenance verification  
+• FAIR+CARE completeness  
+• JSON-LD expansion tests  
+• Trust Badge generation  
+• HTML audit reports for governance review  
 
-• A **metadata trust badge**  
-• A **validation report**  
-• CI evidence for governance review
+The system is mandatory for all v11 metadata-bearing directories.
 
 ---
 
@@ -167,25 +172,25 @@ It produces:
 docs/telemetry/metadata-validation/
 ├── 📄 README.md                          # This file
 │
-├── 🧪 checks/                             # Core schemas and rule definitions
-│   ├── stac-schema.json                   # STAC validator schema
+├── 🧪 checks/                             # Schemas & validation rule sets
+│   ├── stac-schema.json                   # STAC schema
 │   ├── dcat-schema.json                   # DCAT-JSON schema
-│   ├── jsonld-context.json                # JSON-LD context for expansion tests
-│   └── provenance-rules.yaml              # SBOM / SLSA / signature rules
+│   ├── jsonld-context.json                # JSON-LD expansion context
+│   └── provenance-rules.yaml              # SBOM / SLSA / signature enforcement rules
 │
-├── 🛠️ ci/                                 # CI validation workflows
-│   ├── metadata-badge.yml                 # Badge emitter + validator runner
-│   └── report-template.html               # HTML validation-report template
+├── 🛠️ ci/                                 # CI workflows
+│   ├── metadata-badge.yml                 # Validator + badge emitter
+│   └── report-template.html               # HTML template for validation reports
 │
-├── 📊 reports/                             # GitHub Pages–served output
-│   └── index.html                          # Latest validation report
+├── 📊 reports/                             # GitHub Pages–served validator results
+│   └── index.html                          # Current metadata validation report
 │
-├── 🎨 badges/                              # JSON badge outputs (for shields.io)
-│   └── metadata-badge.json
+├── 🎨 badges/                              # Dynamic badge JSON outputs
+│   └── metadata-badge.json                # Consumed by shields.io
 │
-└── 🐍 scripts/                             # CLI tools for metadata validation
+└── 🐍 scripts/                             # Validation CLI tools
     ├── validate_metadata.py               # STAC/DCAT/LD/provenance/FAIR+CARE checks
-    ├── render_report.py                   # HTML report builder
+    ├── render_report.py                   # HTML report generator
     └── utils.py                           # Shared helpers (context expansion, hashing)
 ~~~
 
@@ -193,90 +198,96 @@ docs/telemetry/metadata-validation/
 
 ## 🔍 Validator Coverage
 
-### STAC Compliance  
-• Structure validation  
-• Required fields  
-• Asset completeness  
+### STAC Compliance
+• Structural validity  
+• Required + recommended field validation  
+• Asset completeness & EO metadata checks  
 
-### DCAT / JSON-LD  
-• JSON-LD expansion  
-• Missing terms  
+### DCAT / JSON-LD
+• JSON-LD context expansion  
+• Missing vocabulary terms  
 • Semantic correctness  
-• PROV-O lineage integrity  
+• Broken PROV-O lineage references  
 
-### Provenance Integrity  
-• SHA256 hashing  
-• SBOM completeness  
-• SLSA predicate validation  
-• Signature checks  
+### Provenance Integrity
+• SHA256 file hashing  
+• SBOM presence & completeness  
+• SLSA v1.0 predicate validation  
+• Signature and attestation checks  
 
-### FAIR + CARE  
-• FAIR F1/F2/F3  
-• CARE-A / CARE-S / CARE-T  
-• Indigenous sovereignty metadata  
+### FAIR + CARE
+• FAIR F1/F2/F3 field completeness  
+• CARE-A/S/T compliance  
+• Indigenous Data Sovereignty protections  
 
 ---
 
 ## 🛡️ Trust Badge
 
-To embed a metadata trust badge in any README:
+Embed the Trust Badge in any module’s README:
 
-Badge URL:  
-https://img.shields.io/badge/metadata--validation-dynamic-blueviolet
+Badge:  
+https://img.shields.io/badge/metadata--validation-dynamic-blueviolet  
 
-Badge target page:  
-https://<pages-domain>/docs/telemetry/metadata-validation/reports/index.html
+Badge report target:  
+https://<pages-domain>/docs/telemetry/metadata-validation/reports/index.html  
 
-Badge state updates automatically after each CI run.
+The badge turns green or red depending on metadata validation status.
 
 ---
 
 ## ⚙️ CI Workflow Logic
 
-1. Run validators  
-2. Summarize metadata health  
-3. Emit badge JSON (status, color, path)  
-4. Publish HTML report  
-5. Attach governance evidence  
-6. Gate merges if badge is failing (per metadata-governance rules)
+Steps:
+
+1. Run metadata validators  
+2. Compute pass/fail state  
+3. Emit badge JSON  
+4. Publish HTML report to GitHub Pages  
+5. Attach validation evidence in CI UI  
+6. Gate merges when badge is failing  
 
 ---
 
 ## 📘 Reference Scripts
 
 validate_metadata.py  
-• Validates STAC/DCAT/JSON-LD/provenance/FAIR+CARE  
+• Runs STAC, DCAT, JSON-LD, provenance, FAIR+CARE validation  
 
 render_report.py  
-• Generates human-readable HTML  
-• Written into docs/telemetry/metadata-validation/reports/
+• Creates HTML validation reports served from /reports/  
 
-Scripts support selective validation via `--roots`.
+utils.py  
+• Hashing, context expansion, SBOM parsing, shared helpers  
 
 ---
 
 ## 🧩 Embedding in Other Modules
 
-Recommended directories to include the metadata trust badge:
+Recommended directories to include the Trust Badge:
 
-• Any docs/data/ subtree  
-• Any stac/ collection  
-• Any pipelines/ directory that produces data  
-• Any UI component that renders metadata  
+• docs/data/  
+• any stac/ collection  
+• any pipelines/ output directory  
+• any metadata-driven UI component  
 
 ---
 
 ## 🧾 Version History
 
-• v11.2.3 — Initial centralized metadata-validation system  
-• v11.2.2 — Schema consolidation  
-• v11.2.0 — FAIR+CARE validator logic finalized  
-• v10.4.x — Predecessor distributed validators  
+| Version | Date       | Summary                                                                |
+|--------:|------------|------------------------------------------------------------------------|
+| v11.2.3 | 2025-12-01 | Centralized metadata validator & Trust Badge system released.          |
+| v11.2.2 | 2025-11-12 | DCAT/LD expansion rules standardized; schema consolidation.            |
+| v11.2.0 | 2025-10-28 | FAIR+CARE rule integration completed; provenance model stabilized.     |
+| v10.4.x | 2025-08-xx | Early distributed validators prior to centralization.                  |
 
 ---
 
 <div align="center">
 
-[📘 Docs Root](../../..) · [🛡 Governance](../../../standards/governance/ROOT-GOVERNANCE.md) · [📡 Telemetry Protocol v11](../../../standards/telemetry/README.md)
+[📘 Docs Root](../../..) ·  
+[🛡 Governance](../../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[📡 Telemetry Protocol v11](../../../standards/telemetry/README.md)
 
 </div>
