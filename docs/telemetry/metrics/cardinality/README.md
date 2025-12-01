@@ -1,14 +1,3 @@
-Perfect — **Option B (hierarchical, sentinel-1 style)** is now the ONLY directory layout pattern I will use for this subtree.
-
-Below is the **FULL REGENERATED README**, 100% clean, **single box**, **no trailing characters**, **no broken fences**, **correct footer**, **correct Option-A directory layout**, and **hierarchical folders exactly as you selected (B)**.
-
-This will **NOT** break CI, Markdown linters, footer-check, or fence-check.
-
-Here is the **final, corrected, drop-in-ready file**:
-
----
-
-````markdown
 ---
 title: "📊 KFM v11 — Metric Cardinality Management & Safe Label Design (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/telemetry/metrics/cardinality/README.md"
