@@ -64,54 +64,52 @@ provenance_requirements:
   must_reference_origin_root: true
 ---
 
-<div align="center">
+# 🗂️ Kansas Frontier Matrix — Artifact Inventory STAC Catalog (v11)
 
-# 🗂️ **Kansas Frontier Matrix — Artifact Inventory STAC Catalog (v11)**  
 `docs/analyses/archaeology/datasets/artifact-inventories/stac/README.md`
 
-**Purpose:**  
-Define the **authoritative STAC (SpatioTemporal Asset Catalog)** for all **public-governed artifact inventory datasets** in KFM v11.  
+**Purpose**  
+Define the **authoritative STAC (SpatioTemporal Asset Catalog)** for all **public-governed artifact inventory datasets** in KFM v11.
 
-Ensures that artifact datasets are **machine-discoverable**, **metadata-complete**, **culturally safe**, and verifiably aligned with:
+Ensure that artifact datasets are:
 
-**STAC 1.0 · DCAT 3.0 · CIDOC-CRM · GeoSPARQL · OWL-Time · PROV-O · KFM-OP v11 · MCP-DL v6.3**
+- Machine-discoverable  
+- Metadata-complete  
+- Culturally safe and sovereignty-aligned  
+- Validated against: STAC 1.0, DCAT 3.0, CIDOC-CRM, GeoSPARQL, OWL-Time, PROV-O, KFM-OP v11, MCP-DL v6.3  
 
-This catalog enables:
+This catalog underpins:
 
 - Graph and ETL ingestion  
 - Artifact distribution modeling  
 - Cultural-phase correlation  
-- Story Node v3 + Focus Mode v3 contextualization  
+- Story Node v3 and Focus Mode v3 contextualization  
 - FAIR+CARE-governed metadata access  
-- Fully validated archaeological visualization layers  
-
-</div>
+- Archaeological visualization layers that are generalised and safe
 
 ---
 
 ## 📘 Overview
 
-The STAC entries in this directory provide **top-level, machine-readable metadata** for every **governed, public** artifact inventory dataset in KFM.
+The STAC entries in this directory provide **top-level metadata** for every **governed, public** artifact inventory dataset in KFM.
 
-Each STAC Item or Collection corresponds to a **cleaned, generalized, sovereignty-reviewed** dataset located under the parent directory:
+Each STAC Collection or Item corresponds to a **cleaned, generalized, sovereignty-reviewed** dataset located under:
 
-- `../inventories/` — standardized tabular artifact inventories  
-- `../metadata/` — DCAT/CARE/governance metadata  
-- `../provenance/` — PROV-O lineage bundles  
+- `../inventories/` – standardized artifact inventory tables  
+- `../metadata/` – DCAT and governance metadata  
+- `../provenance/` – PROV-O lineage bundles  
 
-Only datasets that are:
+Only datasets that meet all of the following are cataloged here:
 
-- **Public-domain** or **open-license (e.g., CC0, CC-BY)**  
-- **Culturally reviewed and sovereignty-approved**  
-- **Spatially generalized (H3-based)**  
+- Public-domain or open-license (for example: CC0, CC-BY)  
+- Culturally reviewed and sovereignty-approved  
+- Spatially generalized using H3-based methods  
 
-may be cataloged here.
-
-Sensitive or sovereignty-restricted artifact inventories are **not** represented in this public STAC catalog; they are maintained in **separate, governed registries** referenced only via generalized indicators.
+Sensitive or sovereignty-restricted inventories are maintained in **separate, governed registries** and are not exposed in this public STAC catalog.
 
 ---
 
-## 🗂️ Directory Layout (v11 · Normative)
+## 🗂️ Directory Layout
 
 ~~~text
 docs/analyses/archaeology/datasets/artifact-inventories/stac/
@@ -119,128 +117,128 @@ docs/analyses/archaeology/datasets/artifact-inventories/stac/
 ├── 📂 items/                             # STAC Items for each artifact inventory dataset
 ├── 📂 collections/                       # STAC Collections grouping related inventories
 ├── 📂 schemas/                           # JSON Schema for artifact-specific STAC validation
-└── 📂 examples/                          # Annotated STAC examples (documentation & testing)
+└── 📂 examples/                          # Annotated STAC examples (documentation and tests)
 ~~~
 
-This layout is **normative**; CI will fail if additional STAC-bearing directories appear here without documentation.
+This layout is **normative** for STAC structures in this directory.
 
 ---
 
-## 📦 STAC Collection Requirements (v11)
+## 📦 STAC Collections
 
-Every artifact inventory category MUST have at least one **STAC Collection**.
+Every artifact inventory category must have at least one **STAC Collection**.
 
 ### Required Collections
 
-| Collection                        | Purpose                                               |
-|----------------------------------|-------------------------------------------------------|
-| `artifact-inventories.json`      | Root-level index of all artifact inventory datasets   |
-| `lithics.json`                   | Lithic artifacts grouped collection                   |
-| `ceramics.json`                  | Ceramic datasets                                      |
-| `metals.json`                    | Contact/metal artifact inventories                    |
-| `faunal.json`                    | Public-domain faunal datasets                         |
+| Collection                   | Purpose                                               |
+|-----------------------------|-------------------------------------------------------|
+| `artifact-inventories.json` | Root-level index of all artifact inventory datasets   |
+| `lithics.json`              | Lithic artifact inventories                           |
+| `ceramics.json`             | Ceramic inventories                                   |
+| `metals.json`               | Contact/metal artifact inventories                    |
+| `faunal.json`               | Public-domain faunal inventories                      |
 
 ### Required Collection Fields
 
-Collections MUST include (STAC 1.0 + KFM extensions):
+Collections must include:
 
-- **Core:**
+- Core fields  
   - `id`, `type`, `stac_version`  
   - `description`, `license`, `keywords[]`  
-  - `extent.spatial` (generalized bbox)  
+  - `extent.spatial` (generalized bounding box)  
   - `extent.temporal` (OWL-Time compatible interval)  
 
-- **KFM / FAIR+CARE:**
+- KFM and FAIR+CARE fields  
   - `kfm:domain = "archaeology-artifact-inventories"`  
-  - `kfm:version` and `kfm:release_stage`  
-  - `care:sensitivity_rollup` (e.g., `"generalized-high"`)  
-  - `care:sovereignty` (e.g., `"governed"`)  
+  - `kfm:version`, `kfm:release_stage`  
+  - `care:sensitivity_rollup` (for example: `"generalized-high"`)  
+  - `care:sovereignty` (for example: `"governed"`)  
 
-- **Linkage:**
-  - `links[]` to:
-    - child Items  
-    - parent Collections  
-    - DCAT and PROV-O records  
-    - governance documentation  
+- Linkage  
+  - `links[]` pointing to:
+    - Child Items  
+    - Parent Collections (where present)  
+    - DCAT and PROV-O resources  
+    - Governance documentation and policies  
 
 ---
 
-## 📦 STAC Item Requirements (v11)
+## 📦 STAC Items
 
-Each STAC Item under `items/` must comply with **STAC 1.0.0** and KFM archaeology extension rules.
+Each STAC Item under `items/` must comply with **STAC 1.0.0** and KFM archaeology extensions.
 
-### Core Required Fields
+### Core Fields
 
-| Field                         | Requirement / Notes                                      |
-|-------------------------------|---------------------------------------------------------|
-| `id`                          | Unique artifact inventory identifier                    |
-| `type`                        | `"Feature"`                                             |
-| `stac_version`                | `"1.0.0"`                                               |
-| `bbox`                        | Generalized extent derived from H3 footprint            |
-| `geometry`                    | `MultiPoint` or simplified polygons (no exact sites)   |
-| `properties.datetime`         | `null` or representative mid-interval                   |
-| `assets.data.href`            | Inventory CSV/Parquet path (repository or remote)      |
-| `properties.kfm:phase`        | Cultural-phase attribution                              |
-| `properties.kfm:domain`       | `"archaeology-artifact-inventories"`                    |
-| `properties.care:sensitivity` | `"generalized"` / `"restricted-generalized"`            |
-| `properties.kfm:generalization` | e.g., `"H3-r7"` / `"H3-r8"`                           |
-| `properties.kfm:provenance`   | Path to PROV-O file in `../provenance/`                |
-| `properties.dct:license`      | SPDX code (`CC-BY-4.0`, `CC0-1.0`, etc.)               |
+| Field                           | Requirement / Notes                                      |
+|---------------------------------|---------------------------------------------------------|
+| `id`                            | Unique artifact inventory identifier                    |
+| `type`                          | `"Feature"`                                             |
+| `stac_version`                  | `"1.0.0"`                                               |
+| `bbox`                          | Generalized extent derived from H3 footprints           |
+| `geometry`                      | `MultiPoint` or simplified polygon geometry only        |
+| `properties.datetime`           | `null` or representative mid-interval                   |
+| `assets.data.href`              | Inventory CSV/Parquet path                              |
+| `properties.kfm:phase`          | Cultural-phase attribution                              |
+| `properties.kfm:domain`         | `"archaeology-artifact-inventories"`                    |
+| `properties.care:sensitivity`   | `"generalized"` or `"restricted-generalized"`           |
+| `properties.kfm:generalization` | H3 level (for example: `"H3-r7"`, `"H3-r8"`)            |
+| `properties.kfm:provenance`     | Path to PROV-O file in `../provenance/`                |
+| `properties.dct:license`        | SPDX license code (for example: `CC-BY-4.0`)           |
 
 ### Required Extensions
 
-| Extension   | Purpose                                              |
-|------------|------------------------------------------------------|
-| `proj`     | CRS, transform, raster/grid shape where applicable   |
-| `checksum` | SHA-256 validation of primary assets                 |
-| `version`  | Version tracking (`version` extension or KFM fields) |
-| `scientific` | Citations, creators, DOIs, related works          |
-| `kfm`      | Domain, contract version, governance anchors         |
-| `care`     | Sensitivity, sovereignty, consent & review metadata  |
+| Extension     | Purpose                                              |
+|--------------|------------------------------------------------------|
+| `proj`       | CRS, transform, and raster/grid shape where relevant |
+| `checksum`   | SHA-256 validation of main assets                    |
+| `version`    | Version tracking                                     |
+| `scientific` | Citations, creators, DOIs, related works             |
+| `kfm`        | Domain, release stage, internal contract/versioning  |
+| `care`       | Sensitivity, sovereignty, consent and review fields  |
 
-No Item may be accepted into the catalog without passing all extension validations.
-
----
-
-## 🌍 Spatial & Temporal Rules (v11)
-
-| Aspect              | Rule                                                                 |
-|---------------------|----------------------------------------------------------------------|
-| CRS                 | EPSG:4326 (WGS84) unless explicitly justified and documented        |
-| Spatial precision   | Coordinates MUST be generalized from H3 r7–r10 centroids            |
-| Geometry types      | `MultiPoint`, generalized `Polygon`, or `MultiPolygon` only         |
-| Site exposure       | No geometry may uniquely identify a specific site or context         |
-| Temporal coverage   | OWL-Time interval (`start`, `end`, `precision`) in properties       |
-| Sensitivity linkage | `care:sensitivity` and `kfm:generalization` must be consistent      |
+Items that do not validate against all required extensions must not be merged into the catalog.
 
 ---
 
-## 🧪 Validation & CI Requirements
+## 🌍 Spatial and Temporal Rules
 
-All STAC Items and Collections MUST pass:
+| Aspect            | Rule                                                                 |
+|-------------------|----------------------------------------------------------------------|
+| CRS               | EPSG:4326 (WGS84), unless justified and documented                  |
+| Spatial precision | Coordinates derived from H3 r7–r10 centroids                        |
+| Geometry types    | `MultiPoint`, `Polygon`, or `MultiPolygon` with generalized shapes  |
+| Site exposure     | No geometry may uniquely identify a specific site or context        |
+| Temporal coverage | OWL-Time interval (`start`, `end`, `precision`) in `properties`     |
+| Sensitivity       | `care:sensitivity` and `kfm:generalization` must be consistent      |
 
-- **STAC core schema validation** using the schemas in `schemas/`  
-- **KFM archaeology STAC extension validation** (care + kfm blocks)  
-- **CARE sensitivity validation** against governance policies  
-- **SHA-256 checksum verification** for all `assets.data` and critical sidecars  
-- **Crosswalk checks**:
-  - `items/` ↔ `../inventories/` (ID + file path)  
+---
+
+## 🧪 Validation and CI
+
+All Collections and Items must pass:
+
+- STAC core schema validation using definitions in `schemas/`  
+- KFM archaeology STAC extension validation (KFM and CARE blocks)  
+- CARE sensitivity validation against sovereignty policies  
+- SHA-256 checksum validation for all `assets.data` and key metadata files  
+- Crosswalk checks:
+  - `items/` ↔ `../inventories/` (IDs and paths)  
   - `items/` ↔ `../metadata/` (DCAT alignment)  
   - `items/` ↔ `../provenance/` (PROV-O chains)  
 
-CI pipeline (normative example):
+Example CI workflow (normative):
 
 - `.github/workflows/artifact-stac-validate.yml`  
-  - Step 1: STAC schema validate  
-  - Step 2: extension validate (kfm + care)  
-  - Step 3: checksum validation  
-  - Step 4: governance gate (sensitivity + sovereignty rules)  
+  - STAC schema validation  
+  - Extension validation (KFM and CARE)  
+  - Checksum verification  
+  - Governance and sensitivity gates  
 
-Any failure → catalog update is blocked.
+Any failure prevents catalog updates from being accepted.
 
 ---
 
-## 🧠 Example STAC Item (Artifact Inventory · v11-Aligned)
+## 🧠 Example STAC Item (Artifact Inventory)
 
 ~~~json
 {
@@ -279,13 +277,13 @@ Any failure → catalog update is blocked.
 }
 ~~~
 
-This example is **illustrative**; canonical schemas live under `schemas/`.
+This example is illustrative; authoritative schemas and examples live in `schemas/` and `examples/`.
 
 ---
 
 ## 📊 STAC Catalog Index (Illustrative)
 
-| Collection                   | Item Examples                                                |
+| Collection                   | Item examples                                                |
 |-----------------------------|--------------------------------------------------------------|
 | `artifact-inventories.json` | `flint-hills-lithics-v11.json`, `prairie-ceramics-v11.json` |
 | `lithics.json`              | `flint-hills-lithics-v11.json`                              |
@@ -293,44 +291,39 @@ This example is **illustrative**; canonical schemas live under `schemas/`.
 | `metals.json`               | `contact-era-metals-v11.json`                               |
 | `faunal.json`               | `fauna-open-v11.json`                                       |
 
-The **authoritative** index is derived from actual contents of `collections/` during CI validation.
+The canonical index is computed from the actual contents of `collections/` during CI.
 
 ---
 
-## 🔗 Integration with Graph, Story Nodes, and Focus Mode
+## 🔗 Integration
 
-- **Neo4j / Knowledge Graph:**
-  - STAC Items map to `ArtifactInventory` nodes with links to:
-    - `Artifact`, `GeneralizedSite`, `Collection`, `StoryNode`  
-  - Spatial aspects are represented using **GeoSPARQL** and H3 indices.
+### Knowledge Graph
 
-- **Story Node v3:**
-  - Story Nodes referencing artifact inventories must:
-    - Link back via `semantic_document_id` and STAC `id`.  
-    - Respect CARE and sovereignty flags from the STAC properties.
+- STAC Items map to `ArtifactInventory` nodes.  
+- Spatial properties are linked using GeoSPARQL-compatible geometries and H3 indices.  
+- PROV-O references from `kfm:provenance` connect to ingestion and validation activities.
 
-- **Focus Mode v3:**
-  - Uses this catalog as the **trusted discovery layer** for artifact inventories.  
-  - Only inventories that have passed STAC + governance validation are exposed to Focus Mode for reasoning.
+### Story Node v3 and Focus Mode v3
+
+- Story Nodes referencing artifact inventories must link by:
+  - STAC `id`  
+  - `semantic_document_id` for this README  
+- Focus Mode v3 uses this catalog as the **trusted discovery layer** for artifact inventories and only surfaces datasets that pass all validation and governance checks.
 
 ---
 
-## 🕰️ Version History
+## 🕰 Version History
 
 | Version   | Date       | Summary                                                                                         |
 |-----------|------------|-------------------------------------------------------------------------------------------------|
-| **v11.2.3** | 2025-12-02 | v11 alignment; added energy/carbon schemas; sovereignty/gov fields; CI/validation clarified; Focus v3 integration. |
+| v11.2.3   | 2025-12-02 | Aligned to KFM-MDP v11.2.2; updated paths and schemas; added energy/carbon refs; clarified CI and governance rules. |
 | v10.4.0   | 2025-11-17 | Created artifact STAC catalog; added CARE governance, metadata rules, validation workflows.    |
-| v10.0.0   | 2025-11-10 | Initial structure of artifact inventory STAC catalog.                                           |
+| v10.0.0   | 2025-11-10 | Initial artifact inventory STAC catalog structure.                                              |
 
 ---
 
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
 FAIR+CARE Certified · Sovereignty-Governed  
 KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
 [⬅ Back to Artifact Inventories](../README.md)
-
-</div>
