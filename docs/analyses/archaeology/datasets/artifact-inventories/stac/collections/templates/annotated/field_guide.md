@@ -1,277 +1,388 @@
 ---
 title: "📖 Kansas Frontier Matrix — Field Guide for Annotated Artifact STAC Collection Templates (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/artifact-inventories/stac/collections/templates/annotated/field_guide.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
+description: "Authoritative field guide for all fields used in annotated STAC Collection templates for KFM v11 artifact inventories, including STAC, KFM, CARE, DCAT, and governance rules."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Biannual · Metadata Standards Subcommittee · Archaeology Working Group · FAIR+CARE Council"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../../../schemas/telemetry/archaeology-artifact-stac-collection-field-guide-v1.json"
-governance_ref: "../../../../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+content_stability: "stable"
 status: "Active / Enforced"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:archaeology-artifact-stac-collection-field-guide-v11.2.3"
 doc_kind: "Field Guide"
 intent: "artifact-collection-annotated-field-guide"
+semantic_document_id: "kfm-doc-archaeology-artifact-stac-collection-field-guide-v11.2.3"
+category: "Analyses · Archaeology · STAC Collections · Templates"
+
+sbom_ref: "../../../../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../../../../releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "../../../../../../../../../schemas/telemetry/archaeology-artifact-stac-collection-field-guide-v1.json"
+energy_schema: "../../../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
+governance_ref: "../../../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Cultural / Archaeological / Heritage"
+sensitivity_level: "High"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Metadata Standards Subcommittee · Archaeology Working Group"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/artifact-inventories/stac/collections/templates/annotated/field_guide.md@v10.4.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 📖 Kansas Frontier Matrix — Field Guide for Annotated Artifact STAC Collection Templates (v11)
 
-# 📖 **Kansas Frontier Matrix — Field Guide for Annotated Artifact STAC Collection Templates**  
 `docs/analyses/archaeology/datasets/artifact-inventories/stac/collections/templates/annotated/field_guide.md`
 
-**Purpose:**  
-Serve as the **authoritative reference manual** for all fields appearing in the annotated STAC Collection templates for artifact inventories within the Kansas Frontier Matrix (KFM).  
+**Purpose**  
+Serve as the **authoritative reference manual** for all fields appearing in the annotated STAC Collection templates for artifact inventories within the Kansas Frontier Matrix (KFM).
+
 This guide explains:
 
 - STAC 1.0 Collection fields  
-- KFM Archaeology Extension fields (`kfm:*`)  
-- CARE Cultural Safety metadata (`care:*`)  
+- KFM archaeology extension fields (`kfm:*`)  
+- CARE cultural safety metadata (`care:*`)  
 - DCAT 3.0 mapping expectations  
-- Generalization & sovereignty rules  
-- Ethical constraints  
-- Metadata governance and CI validation logic  
+- Generalization and sovereignty rules  
+- Ethical and governance constraints  
+- Schema and CI validation logic  
 
-It is designed for contributors, metadata engineers, archaeologists, data stewards, and governance reviewers.
-
-</div>
+It is intended for contributors, metadata engineers, archaeologists, data stewards, and governance reviewers.
 
 ---
 
-# 🗂️ 1. STAC Collection Core Fields (STAC 1.0)
+## 🗂️ 1. STAC Collection Core Fields (STAC 1.0)
 
 ### `stac_version`
+
 - **Definition:** STAC standard version in use.  
-- **KFM Rule:** Must always be `"1.0.0"`.
+- **KFM rule:** Must always be `"1.0.0"` for Collections and Items in KFM v11.
 
 ---
 
 ### `type`
-- Must always be `"Collection"`.  
-- Distinguishes top-level grouping entities from Items.
+
+- Must always be `"Collection"` for these documents.  
+- Distinguishes top-level grouping entities (Collections) from Items.
 
 ---
 
 ### `id`
-- Unique identifier for the collection.  
+
+- Unique identifier for the Collection.  
 - Requirements:
-  - Lowercase, hyphenated  
+  - Lowercase  
+  - Hyphenated if multi-word  
   - Reflects dataset category (`lithics`, `ceramics`, `metals`, `faunal`, `artifact-inventories`)  
-  - Must match filename  
+  - Should match the filename (without extension)
 
 ---
 
 ### `description`
-- Human-readable description of the collection’s purpose, scope, and content.  
-- Displayed in KFM browsers and STAC viewers.
+
+- Human-readable description of the Collection’s purpose, scope, and contents.  
+- Displayed in KFM browsers, Story Node side-panels, and STAC viewers.
 
 ---
 
 ### `license`
-- SPDX-compliant license identifier (e.g., `"CC-BY-4.0"`).  
-- **KFM Archaeology Constraint:** Only **CC-BY** or **CC0** allowed.
+
+- SPDX-compliant license identifier (for example: `"CC-BY-4.0"`).  
+- **KFM archaeology constraint:** Only **CC-BY** or **CC0** permitted for public-governed artifact Collections.
 
 ---
 
 ### `extent`
-Defines both spatial and temporal coverage.
+
+Defines both spatial and temporal coverage of all child Items.
 
 #### `extent.spatial.bbox`
-- Bounding box array.  
-- Must reflect **generalized extents only**.  
-- No sensitive precision allowed (H3 generalization recommended).
+
+- Bounding box array: `[[minLon, minLat, maxLon, maxLat]]`.  
+- Must reflect **generalized extents only**:
+  - No site-precise or household-precise coordinates  
+  - Typically derived from H3 footprint envelopes  
 
 #### `extent.temporal.interval`
+
 - Array of `[start_time, end_time]` timestamp arrays.  
-- Must comply with **OWL-Time** and align with known cultural phases.
+- Must:
+  - Use ISO 8601 timestamps  
+  - Be consistent with **OWL-Time** interpretations  
+  - Align with known cultural phases represented in the Collection  
 
 ---
 
 ### `links`
-- Used for STAC navigation.  
-- Optional for internal repo use; required for STAC API deployment.
+
+- Used for STAC navigation and cross-linking.  
+- Optional for pure file-based catalogs; required when exposed via a STAC API.  
+- When present, must correctly reference:
+  - `self` (this Collection)  
+  - `root` artifact Collection (for non-root Collections)  
+  - Child Items and/or sub-Collections  
 
 ---
 
-# 🧭 2. KFM Archaeology STAC Extension Fields (`kfm:*`)
+## 🧭 2. KFM Archaeology STAC Extension Fields (`kfm:*`)
 
-### Purpose
+**Purpose**  
 Extend STAC with archaeology-specific metadata to support:
 
-- Knowledge Graph mapping  
-- Story Node cultural narratives  
+- Knowledge graph mapping (Neo4j / GeoSPARQL)  
+- Story Node material-culture narratives  
 - Focus Mode contextualization  
-- Domain-driven indexing  
+- Domain-driven search and filtering  
 
 ---
 
 ### `kfm:material_class`
-Controlled vocabulary:
+
+Controlled vocabulary (Collection-level):
+
 - `"lithic"`  
 - `"ceramic"`  
 - `"metal"`  
 - `"faunal"`  
-- `"all"` (root collection only)
+- `"all"` — root artifact Collection only  
+
+Values must match the Collection’s actual content and the associated filenames.
 
 ---
 
 ### `kfm:domain`
-- Domain identifier: always `"archaeology:artifact-inventories"`.
+
+- Domain identifier for this family of Collections.  
+- For artifact inventory Collections, always:
+
+~~~text
+archaeology-artifact-inventories
+~~~
+
+This string is used consistently across ETL, Focus Mode, Story Nodes, and the graph layer.
 
 ---
 
 ### `kfm:review_cycle`
-- Specifies governance cycle: `"Biannual"` or `"Quarterly"`.  
-- Used by FAIR+CARE and Metadata Governance systems.
+
+- Governance review cadence.  
+- Common values:
+  - `"Biannual"`  
+  - `"Quarterly"`  
+
+Used by FAIR+CARE and Metadata Standards processes to schedule re-review and re-validation.
 
 ---
 
 ### `kfm:provenance_summary`
-- Optional but recommended.  
-- High-level description of dataset lineage.
+
+- Optional but strongly recommended.  
+- Short, human-readable description of typical provenance patterns for this Collection, such as:
+
+> Aggregated from public-domain lithic catalogs with H3 generalization and sovereignty review.
+
+Helps reviewers quickly understand lineage before reading detailed PROV-O files.
 
 ---
 
-# ⚖️ 3. CARE Cultural Safety Fields (`care:*`)
+## ⚖️ 3. CARE Cultural Safety Fields (`care:*`)
 
-CARE metadata ensures ethical treatment of cultural and archaeological datasets, protecting Indigenous sovereignty and avoiding harmful representations.
+CARE metadata ensures ethical treatment of cultural and archaeological datasets, protecting Indigenous sovereignty and avoiding harmful disclosure or misrepresentation.
 
 ---
 
 ### `care:sensitivity`
-Allowed values:
-- `"general"` — PD or fully non-sensitive  
-- `"generalized"` — source coordinates or cultural notes generalized  
-- `"restricted-generalized"` — used sparingly; requires tribal oversight  
 
-**Forbidden for artifact collections:**  
-- `"restricted"` (never allowed in public repos)
+Allowed values for artifact Collections:
+
+- `"general"`  
+  - Public-domain or fully non-sensitive material.  
+- `"generalized"`  
+  - Sources may contain sensitive details, but published data is generalized (for example, H3-based, motif grouping).  
+- `"restricted-generalized"`  
+  - Used sparingly; indicates that even generalized outputs are under special governance.
+
+**Forbidden for artifact Collections in public repos:**
+
+- `"restricted"` — not allowed for public-governed STAC resources.
 
 ---
 
 ### `care:review`
+
 Allowed values:
-- `"faircare"` — reviewed through KFM’s FAIR+CARE Council  
-- `"tribal"` — required for protohistoric metals  
-- `"none-required"` — PD-only data  
+
+- `"faircare"`  
+  - Reviewed through FAIR+CARE-aligned governance processes.  
+- `"tribal"`  
+  - Sovereignty-governed review, required for sensitive protohistoric or contact-era materials.  
+- `"none-required"`  
+  - Use only for clearly public-domain data confirmed as non-sensitive.
 
 ---
 
 ### `care:notes`
-Supplementary cultural-safety explanation.  
-Examples:
-- `"Motif categories filtered to remove sacred symbolism."`  
-- `"Generalized polygon used to obscure culturally sensitive region boundaries."`
+
+- Supplementary free-text explanation of cultural safety treatment.  
+- Examples:
+  - `Motif categories filtered to remove sacred symbolism.`  
+  - `Generalized polygon used to obscure culturally sensitive region boundaries.`  
+  - `Contact-era metals reviewed with tribal representatives; site associations generalized.`  
+
+`care:notes` must be descriptive enough to justify sensitivity and review choices without exposing sensitive details.
 
 ---
 
-# 🔗 4. DCAT → STAC Mapping Notes
+## 🔗 4. DCAT → STAC Mapping Notes
 
-To enable dataset catalogs and automated harvesting:
+To support external catalogs and automated harvesting, basic **DCAT 3.0** fields map to STAC as follows:
 
-| DCAT Field | STAC Mapping |
-|-----------|--------------|
-| `dct:title` | `description` or collection title |
-| `dct:license` | `license` |
-| `dct:temporal` | `extent.temporal.interval` |
-| `dcat:distribution` | Not used in Collections; appears at Item-level |
-| `dcat:keyword` | Optional STAC `keywords` field |
+| DCAT Field        | STAC Mapping                      |
+|-------------------|-----------------------------------|
+| `dct:title`       | Collection `description` or title |
+| `dct:license`     | `license`                         |
+| `dct:temporal`    | `extent.temporal.interval`        |
+| `dcat:distribution` | Item-level assets, not Collections |
+| `dcat:keyword`    | STAC `keywords[]` (optional)      |
 
-DCAT metadata ensures interoperability with external catalogs (CKAN, DataHub, etc.).
-
----
-
-# 🗺️ 5. Spatial Generalization & Sovereignty Requirements
-
-**Mandatory for all archaeology datasets:**
-
-- Generalize using **H3 hexagons (levels 5–7)**  
-- Remove precise site coordinates  
-- Avoid publishing burial or ceremonial landscapes  
-- Territorial boundaries must be generalized unless explicitly approved  
-- Demote sensitive geometries to bounding boxes when needed  
-- Provide justification in `care:notes`  
-
-**Violation results in CI rejection.**
+DCAT metadata ensures interoperability with CKAN, DataHub, and other catalog ecosystems.
 
 ---
 
-# 🧪 6. Schema Validation Rules
+## 🗺️ 5. Spatial Generalization & Sovereignty Requirements
 
-STAC Collections must pass:
+Mandatory for **all** archaeology artifact Collections represented in public-governed STAC:
+
+- Use **H3-based generalization** (for example, levels 5–7) to derive extents and summary geometry.  
+- Remove or replace precise site coordinates with:
+  - H3 centroids  
+  - Generalized polygons  
+  - Bounding boxes derived from aggregated coverage  
+- Do not publish:
+  - Burial or ceremonial landscapes  
+  - Sacred locations or restricted cultural features  
+- Generalize territorial boundaries unless explicitly approved per sovereignty policy.  
+- When in doubt, prefer **more coarse generalization** and document the rationale in `care:notes`.
+
+Failure to adhere to these requirements is grounds for CI rejection and governance rollback.
+
+---
+
+## 🧪 6. Schema Validation Rules
+
+STAC Collections derived from the annotated templates must validate against:
 
 - `stac-collection-schema.json`  
 - `kfm-archaeology-extension.json`  
 - `care-sensitivity-extension.json`  
-- `dcat-crosswalk.json`  
+- `dcat-crosswalk.json` (where applicable)
 
 Validation checks include:
 
-- Required field presence  
-- Controlled vocabulary adherence  
-- Correct geometry types  
-- Sensitivity categorization  
-- DCAT–STAC alignment  
-- Provenance consistency between dataset → metadata → STAC  
+- Presence of required STAC fields  
+- Controlled vocabulary adherence (`kfm:*`, `care:*`)  
+- Correct value types and geometry structure  
+- Sensitivity categorization consistent with dataset contents  
+- DCAT–STAC alignment where crosswalks are defined  
+- Provenance consistency between:
+  - Source datasets  
+  - Metadata files  
+  - STAC Collections and Items  
 
-CI workflow: `.github/workflows/artifact-stac-validate.yml`
+CI workflow (normative):
+
+- `.github/workflows/artifact-stac-validate.yml`
 
 ---
 
-# 🧠 7. Knowledge Graph Mapping
+## 🧠 7. Knowledge Graph Mapping
 
-Each STAC Collection maps to KFM graph nodes:
+Each artifact STAC Collection maps to KFM graph structures, for example:
 
-### Node Types
+### Node types
+
 - `ArtifactCollection`  
 - `MaterialClass`  
 - `CulturalPhaseGroup`
 
 ### Relationships
-- `GROUPS`  
-- `HAS_CATEGORY`  
-- `HAS_CARE_SENSITIVITY`  
-- `HAS_EXTENT`  
 
-Collections enrich Story Nodes with:
+- `GROUPS` (Collection → Item / ArtifactInventory)  
+- `HAS_CATEGORY` (Collection → MaterialClass)  
+- `HAS_CARE_SENSITIVITY` (Collection → CARE/Sensitivity node)  
+- `HAS_EXTENT` (Collection → SpatialExtent / TemporalExtent)
 
-- Time ranges  
-- Cultural groupings  
-- Spatial context  
+Graph mappings are used to:
 
-AI narrative engines (Focus Mode v2) use these groupings for contextual inference.
-
----
-
-# 📝 8. Example Interpretation
-
-When reading annotated STAC Collection templates:
-
-- Comments prefixed with `_comment_*` describe why a field exists  
-- Every required field has a cultural, technical, or governance justification  
-- Each example follows the MCP documentation-first rule  
-- Templates cannot be published without CARE review completion  
+- Enrich Story Nodes with temporal and spatial context  
+- Support Focus Mode reasoning about cultural phases and material classes  
+- Enable graph-based queries over artifact inventories without exposing sensitive detail
 
 ---
 
-# 🕰️ 9. Version History
+## 📝 8. Reading Annotated Templates
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Metadata Subcommittee · Archaeology WG · FAIR+CARE Council | Created full field guide for annotated STAC Collection templates; includes CARE, DCAT, and KFM rules |
-| v10.0.0 | 2025-11-10 | Artifact Metadata Team | Initial scaffold |
+The annotated JSON templates in this directory use `_comment*` fields to explain semantics:
+
+- Keys such as `_comment_stac_version`, `_comment_material_class` provide human-readable descriptions.  
+- Every required field includes either:
+  - A technical justification (schema/validation reason), and/or  
+  - A cultural/ethical justification (CARE and sovereignty reason).  
+
+Important rules:
+
+- `_comment*` fields exist **only** in annotated documentation templates.  
+- They must **not** be preserved in production STAC Collections.  
+- Production documents must be based on the non-annotated templates in `../`.
 
 ---
 
-<div align="center">
+## 🕰 9. Version History
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+| Version   | Date       | Author                                      | Summary                                                                 |
+|-----------|------------|---------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Metadata Standards Subcommittee · Archaeology WG | Aligned with KFM-MDP v11.2.2; added energy/carbon schemas; clarified CARE/sovereignty rules and validation workflow. |
+| v10.4.0   | 2025-11-17 | Metadata Subcommittee · Archaeology WG · FAIR+CARE Council | Created full field guide for annotated STAC Collection templates, including CARE, DCAT, and KFM rules. |
+| v10.0.0   | 2025-11-10 | Artifact Metadata Team                      | Initial scaffold of the field guide.                                   |
+
+---
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE · Sovereignty-Governed  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
 [⬅ Back to Annotated Templates](../README.md)
-
-</div>
