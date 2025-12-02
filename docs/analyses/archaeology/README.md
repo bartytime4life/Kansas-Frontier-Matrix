@@ -9,6 +9,7 @@ release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · FAIR+CARE Council · Tribal Sovereignty Board"
 content_stability: "stable"
+status: "Active / Enforced"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-version-hash>"
@@ -72,29 +73,29 @@ provenance_requirements:
 `docs/analyses/archaeology/README.md`  
 
 **Diamond⁹ Ω / Crown∞Ω Ultimate Certified**  
-**FAIR+CARE + Tribal Sovereignty-Aligned · Scientifically Rigorous · Culturally Respectful**
+**FAIR+CARE · Tribal Sovereignty-Aligned · Scientifically Rigorous · Culturally Respectful**
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 Overview & Scope
 
 The **Archaeology Domain (KFM v11)** is a unified analytical environment merging:
 
 - 🛰 **Remote sensing** — LiDAR, SAR, thermal IR, multispectral, DEM derivatives  
 - 🧭 **Spatial historical geography** — treaties, plats, diaries, surveys, archival photographs  
-- 🧬 **Entity extraction from historical texts** — OCR → NER → GeoLink → StoryNodes  
+- 🧬 **Entity extraction from historical texts** — OCR → NER → GeoLink → Story Nodes  
 - 🌊 **Hydrological reconstruction** — paleo-channels, floodplains, watershed models  
 - 🌿 **Ecological co-analysis** — biomes, soils, slope, resource access  
 - 🗺 **Indigenous cultural landscapes** — CARE-restricted + sovereignty protections  
 - 🏞 **3D archaeology** — terrain, predicted excavation volumes, architectural inference  
-- 🤖 **AI-assisted archaeological inference** — Focus Mode v3, Explainability v3.2, narrative risk filters  
+- 🤖 **AI-assisted archaeological inference** — Focus Mode v3, explainability v3.2, narrative risk filters  
 
 KFM v11 treats archaeological data as **high-sensitivity cultural knowledge**, governed by:
 
 - **CARE Principles**  
-- **Sovereignty-Aligned Data Policies**  
+- **Sovereignty-aligned data policies**  
 - **FAIR+CARE Council**  
 - **Indigenous Data Governance Board (IDGB)**  
 
@@ -102,64 +103,64 @@ No sensitive site geometries are ever revealed at full resolution in public-faci
 
 ---
 
-## 🗂️ Directory Layout (v11-Expanded)
+## 🗂️ Directory Layout (v11 · Normative)
 
 ~~~text
 docs/
 └── analyses/
     └── archaeology/                      # Archaeology domain root
-        ├── README.md                     # This file
+        ├── 📄 README.md                  # This file (domain index)
         │
-        ├── datasets/                     # All archaeological source material
-        │   ├── lidar/                    # Hillshade, slope, roughness, CHM, DEM
-        │   ├── sar/                      # Sentinel-1, UAVSAR, moisture anomalies
-        │   ├── historical_maps/          # Plats, railroad surveys, treaty boundaries
-        │   ├── manuscripts/              # Diaries, reports, archival letters, NER outputs
-        │   ├── geophysics/               # Magnetometry, GPR, resistivity (governed)
-        │   ├── soils/                    # SSURGO/STATSGO infiltration & composition
-        │   ├── hydrology/                # Paleo-streams, WID data, flooding models
-        │   └── sovereignty/              # CARE + sovereignty-restricted datasets
+        ├── 🗂️ datasets/                  # Archaeological source material (governed)
+        │   ├── 🛰️ lidar/                 # Hillshade, slope, roughness, CHM, DEM
+        │   ├── 📡 sar/                   # Sentinel-1, UAVSAR, moisture anomalies
+        │   ├── 🗺️ historical_maps/       # Plats, railroad surveys, treaty boundaries
+        │   ├── 📚 manuscripts/           # Diaries, reports, archival letters, NER outputs
+        │   ├── 🧲 geophysics/            # Magnetometry, GPR, resistivity (governed)
+        │   ├── 🌱 soils/                 # SSURGO/STATSGO infiltration & composition
+        │   ├── 🌊 hydrology/             # Paleo-streams, WID data, flooding models
+        │   └── 🪶 sovereignty/           # CARE + sovereignty-restricted datasets
         │
-        ├── methods/
-        │   ├── remote_sensing/           # LiDAR+SAR fusion, feature extraction
-        │   ├── geoprocessing/            # Slope, roughness, curvature, landform models
-        │   ├── nlp/                      # OCR → NER → Linking → Story Node generation
-        │   ├── predictive_models/        # AI-based site prediction (Focus v3)
-        │   ├── treaty_alignment/         # Boundary alignment, centroid modeling
-        │   ├── deformation_models/       # Earthwork geometry normalization
-        │   └── cultural_landscape/       # Landscape change & movement corridors
+        ├── 🧪 methods/                   # Methodological READMEs (normative)
+        │   ├── remote_sensing/          # LiDAR+SAR fusion, feature extraction
+        │   ├── geoprocessing/           # Slope, roughness, curvature, landform models
+        │   ├── nlp/                     # OCR → NER → Linking → Story Node generation
+        │   ├── predictive_models/       # AI-based site prediction (Focus v3)
+        │   ├── treaty_alignment/        # Boundary alignment, centroid modeling
+        │   ├── deformation_models/      # Earthwork geometry normalization
+        │   └── cultural_landscape/      # Landscape change & movement corridors
         │
-        ├── results/
-        │   ├── site_probability_maps/    # Raster probability surfaces (H3 generalized)
-        │   ├── geomorphology/            # Landform classifications
-        │   ├── hydrology_overlays/       # Paleo-water maps
-        │   ├── text_entity_graphs/       # Linked archival–spatial entities
-        │   ├── cultural_routes/          # Hypothesized interaction spheres & paths
-        │   └── storynodes/               # Story Node v3 collections & narratives
+        ├── 📊 results/                   # Published, governed outputs
+        │   ├── site_probability_maps/   # Raster probability surfaces (H3 generalized)
+        │   ├── geomorphology/           # Landform classifications
+        │   ├── hydrology_overlays/      # Paleo-water maps
+        │   ├── text_entity_graphs/      # Linked archival–spatial entities
+        │   ├── cultural_routes/         # Interaction spheres & paths (generalized)
+        │   └── storynodes/              # Story Node v3 collections & narratives
         │
-        ├── validation/
-        │   ├── field_notes/              # Field logbooks (redacted)
-        │   ├── drone_surveys/            # Low-res orthos + validation metadata
-        │   ├── peer_review/              # Internal/external archaeological reviewers
-        │   └── confidence_metrics/       # Statistical/ML validation reports
+        ├── ✅ validation/                # Validation & review artifacts (governed)
+        │   ├── field_notes/             # Field logbooks (redacted / generalized)
+        │   ├── drone_surveys/           # Low-res orthos + validation metadata
+        │   ├── peer_review/             # Internal/external archaeological reviewers
+        │   └── confidence_metrics/      # Statistical/ML validation reports
         │
-        ├── visualization/
-        │   ├── maplibre_layers/          # 2D layers (privacy-hardened)
-        │   ├── cesium_tiles/             # 3D terrain tilesets and overlays
-        │   ├── embeddings/               # PCA/UMAP embeddings of text/spatial data
-        │   └── dashboards/               # FAIR+CARE visualization outputs
+        ├── 🌐 visualization/             # UI-facing resources
+        │   ├── maplibre_layers/         # 2D layers (privacy-hardened)
+        │   ├── cesium_tiles/            # 3D terrain tilesets and overlays
+        │   ├── embeddings/              # PCA/UMAP embeddings of text/spatial data
+        │   └── dashboards/              # FAIR+CARE visualization outputs
         │
-        └── metadata/
-            ├── provenance/               # PROV-O lineage bundles
-            ├── audit/                    # FAIR+CARE audit snapshots
-            └── stac/                     # STAC Items/Collections (generalized)
+        └── 🧾 metadata/                  # STAC · DCAT · PROV-O bundles
+            ├── provenance/              # PROV-O lineage bundles
+            ├── audit/                   # FAIR+CARE audit snapshots
+            └── stac/                    # STAC Items/Collections (generalized)
 ~~~
 
 This layout is **normative** for all archaeology-related analyses and documentation in KFM v11.
 
 ---
 
-## 🧩 Core v11 Analytical Modules (Expanded)
+## 🧩 Core v11 Analytical Modules
 
 ### 🛰 1. Remote Sensing & Feature Extraction
 
@@ -168,7 +169,7 @@ This layout is **normative** for all archaeology-related analyses and documentat
 - Thermal IR for nocturnal heat retention and potential structural remains.  
 - AI Feature Classifier v3.1 (explainable, bias-audited).
 
-**Outputs:**
+**Outputs (graph-safe):**
 
 - H3-generalized feature clusters.  
 - Anomaly heatmaps (privacy-aware).  
@@ -201,7 +202,7 @@ This layout is **normative** for all archaeology-related analyses and documentat
 
 **Outputs:**
 
-- Temporal entity graphs.  
+- Temporal entity graphs (Neo4j-ready).  
 - Historical interaction spheres.  
 - NER + linkage provenance bundles.
 
@@ -227,7 +228,28 @@ This layout is **normative** for all archaeology-related analyses and documentat
 - Inter-rater reliability scoring for interpretations.  
 - Tribal review and cultural consultation logs.
 
-Validation content is PRECISION-REDUCED for public outputs; full-detail artifacts remain sovereignty-governed.
+Validation content is **precision-reduced** for public outputs; full-detail artifacts remain sovereignty-governed.
+
+---
+
+## 🕸️ Story Node & Knowledge Graph Integration
+
+All archaeology analyses are required to emit **graph-safe, Story Node–ready** outputs:
+
+- **Neo4j mapping:**
+  - Sites, routes, hydrological features, and entities mapped to controlled node labels.  
+  - Relationships use governed, ontology-aligned types (KFM-OP v11; CIDOC-CRM, GeoSPARQL, OWL-Time).  
+
+- **Story Nodes:**
+  - Each published analysis may register Story Nodes under `results/storynodes/`.  
+  - Story Nodes must:
+    - Reference this index via `semantic_document_id`.  
+    - Embed PROV-O lineage links into the knowledge graph.  
+    - Carry sovereignty and sensitivity flags forward into Focus Mode v3.  
+
+- **Focus Mode v3:**
+  - Uses this index as the **authoritative registry** of archaeology analysis modules.  
+  - Only graph paths marked as **sovereignty-compliant** and **redaction-complete** are queryable in public Focus Mode profiles.
 
 ---
 
@@ -239,7 +261,7 @@ Validation content is PRECISION-REDUCED for public outputs; full-detail artifact
 | **Authority to Control**| Sensitive-site geometry generalized to H3 r7–r9 and governed disclosure policies.  |
 | **Responsibility**      | Council review required for Story Node publication and external dissemination.     |
 | **Ethics**              | AI outputs filtered through cultural sensitivity scoring and human oversight.      |
-| **CARE+**               | Zero tolerance for disclosure of sacred sites, burials, or private cultural knowledge. |
+| **CARE+**               | No disclosure of sacred sites, burials, or private cultural knowledge.             |
 
 All modules MUST reference `sovereignty_policy` and adhere to its redaction and approval workflows.
 
@@ -270,7 +292,7 @@ flowchart LR
       --> G["KFM Knowledge Graph"]
 
     B["Historical Texts + Maps"]
-      --> F["OCR → NER → GeoLink → StoryNodes"]
+      --> F["OCR → NER → GeoLink → Story Nodes"]
       --> E
 
     E --> H["Validation (Field · Drone · Sovereignty Review)"]
@@ -313,7 +335,7 @@ This record shape MUST align with `telemetry_schema` for archaeology analyses an
 
 | Version   | Date       | Summary                                                                 |
 |-----------|------------|-------------------------------------------------------------------------|
-| v11.2.3   | 2025-12-02 | v11.2 alignment; added telemetry/energy/carbon references; clarified sovereignty gates. |
+| v11.2.3   | 2025-12-02 | v11.2 alignment; added status; clarified Story Node/graph integration; sovereignty gates reiterated. |
 | v11.0.0   | 2025-11-24 | Full v11 rebuild; CARE+ sovereignty extensions; AI v3 integration; new directory schema. |
 | v10.1.0   | 2025-11-11 | Initial Platinum-template archaeology index.                            |
 
