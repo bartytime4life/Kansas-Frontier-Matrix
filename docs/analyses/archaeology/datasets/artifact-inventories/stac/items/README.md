@@ -1,66 +1,109 @@
 ---
 title: "📄 Kansas Frontier Matrix — Artifact Inventory STAC Items (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/artifact-inventories/stac/items/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
+description: "Canonical index and requirements for STAC 1.0 Items describing KFM v11 artifact inventory datasets."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../schemas/telemetry/archaeology-artifact-stac-items-v1.json"
-governance_ref: "../../../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+content_stability: "stable"
 status: "Active / Enforced"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:archaeology-artifact-stac-items-v11.2.3"
 doc_kind: "STAC Items Index"
 intent: "artifact-inventory-stac-items"
+semantic_document_id: "kfm-doc-archaeology-artifact-stac-items-v11.2.3"
+category: "Analyses · Archaeology · STAC Items"
+
+sbom_ref: "../../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../../releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "../../../../../../../schemas/telemetry/archaeology-artifact-stac-items-v1.json"
+energy_schema: "../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
+governance_ref: "../../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Cultural / Archaeological / Heritage"
+sensitivity_level: "High"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Archaeology Working Group · FAIR+CARE Council"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/artifact-inventories/stac/items/README.md@v10.4.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 📄 Kansas Frontier Matrix — Artifact Inventory STAC Items (v11)
 
-# 📄 **Kansas Frontier Matrix — Artifact Inventory STAC Items**  
 `docs/analyses/archaeology/datasets/artifact-inventories/stac/items/README.md`
 
-**Purpose:**  
-Provide the **canonical index** of all **STAC Items** describing artifact inventory datasets in the Kansas Frontier Matrix (KFM).  
-These STAC Items represent machine-readable metadata for cleaned, culturally reviewed inventories located under:
+**Purpose**  
+Provide the **canonical index** and **governed requirements** for all STAC Items that describe artifact inventory datasets in the Kansas Frontier Matrix (KFM).
+
+Each STAC Item represents machine-readable metadata for a single, cleaned, culturally reviewed inventory stored under:
 
 - `inventories/`  
 - `metadata/`  
 - `provenance/`  
 
-All items comply with **STAC 1.0**, **DCAT 3.0**, **CIDOC-CRM**, **GeoSPARQL**, **PROV-O**, **KFM archaeology extensions**, and **FAIR+CARE sensitivity rules**.
+All Items must comply with:
 
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../../README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../../standards/faircare.md)  
-[![License](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../../../../../LICENSE)  
-[![Status](https://img.shields.io/badge/Status-Active-success)](../../../../../../../releases/v10.4.0/manifest.zip)
-
-</div>
+- STAC 1.0  
+- KFM archaeology extensions (`kfm:*`)  
+- CARE cultural safety metadata (`care:*`)  
+- DCAT crosswalk expectations  
+- PROV-O provenance linkage  
+- FAIR+CARE and sovereignty rules
 
 ---
 
 ## 📘 Overview
 
-This directory contains **STAC Items**, each representing a single artifact inventory dataset.  
-These files:
+STAC Items in this directory:
 
-- Provide spatial, temporal, cultural, and provenance metadata  
-- Enable machine discovery via STAC crawlers and KFM’s metadata engine  
-- Govern dataset ingestion into Neo4j and AI/ETL pipelines  
-- Enforce CARE sensitivity controls  
-- Guarantee reproducibility and transparent lineage  
+- Provide spatial, temporal, cultural, and provenance metadata for artifact inventories.  
+- Enable machine discovery via STAC crawlers and KFM’s metadata engine.  
+- Govern dataset ingestion into Neo4j, Story Nodes, and Focus Mode pipelines.  
+- Enforce cultural sensitivity and sovereignty through `care:*` metadata.  
+- Support reproducibility and traceable lineage via `kfm:provenance`.
 
 Every STAC Item **must** link to:
 
-- Its dataset file in `inventories/`  
-- Its metadata file in `metadata/`  
-- Its provenance file in `provenance/`  
-- Its parent STAC Collection in `../collections/`  
+- Its dataset file in `../inventories/` (via `assets.data.href`).  
+- Its metadata / DCAT description in `../metadata/` (where present).  
+- Its provenance file in `../provenance/`.  
+- Its parent STAC Collection in `../collections/`.
 
 ---
 
@@ -68,61 +111,75 @@ Every STAC Item **must** link to:
 
 ~~~text
 docs/analyses/archaeology/datasets/artifact-inventories/stac/items/
-├── README.md                         # This file
-├── flint-hills-lithics-v1.json       # Lithic artifact STAC Item
-├── prairie-ceramics-v1.json          # Ceramic artifact STAC Item
-├── contact-era-metals-v1.json        # Protohistoric metal artifacts (pending review)
-├── fauna-open-v1.json                # Public-domain faunal dataset STAC Item
-└── templates/                        # STAC Item templates for new datasets
+├── 📄 README.md                         # This file (STAC Items index)
+├── 📄 flint-hills-lithics-v11.json      # Lithic artifact STAC Item
+├── 📄 prairie-ceramics-v11.json         # Ceramic artifact STAC Item
+├── 📄 contact-era-metals-v11.json       # Protohistoric metal artifacts (governed)
+├── 📄 fauna-open-v11.json               # Public-domain faunal STAC Item
+└── 📂 templates/                        # STAC Item templates for new datasets
 ~~~
+
+This layout is **normative** for artifact-inventory STAC Items.
 
 ---
 
 ## 🧭 Requirements for All STAC Items
 
-Every STAC Item in this directory **must meet all** of the following specifications:
+Every STAC Item in this directory must satisfy all of the following.
 
-### ✔ STAC Core Fields
+### STAC Core Fields
 
-| Field | Requirement |
-|---|---|
-| `id` | Stable dataset identifier (matching file stem) |
-| `stac_version` | `"1.0.0"` |
-| `type` | `"Feature"` |
-| `bbox` | Generalized bounding box (H3-derived) |
-| `geometry` | `MultiPoint` or simplified polygon only |
-| `properties.start_datetime` | Cultural-phase start date (if applicable) |
-| `properties.end_datetime` | Cultural-phase end date |
-| `assets.data.href` | Link to inventory CSV |
-| `links.collection` | Must point to parent collection JSON |
+| Field                         | Requirement / Notes                                           |
+|-------------------------------|---------------------------------------------------------------|
+| `id`                          | Stable identifier; must match JSON filename (without `.json`) |
+| `stac_version`                | `"1.0.0"`                                                     |
+| `type`                        | `"Feature"`                                                   |
+| `bbox`                        | Generalized bounding box (H3-derived; no site precision)     |
+| `geometry`                    | `MultiPoint`, `Polygon`, or `MultiPolygon` (generalized)     |
+| `properties.datetime`         | `null` or representative timestamp                           |
+| `assets.data.href`            | Relative path to inventory file in `../inventories/`         |
+| `assets.data.type`           | Correct MIME type (for example, `"text/csv"`)                |
+| `assets.data.roles`          | Must include `"data"`                                        |
+| `links[rel="collection"]`     | Must point to parent Collection JSON in `../collections/`    |
 
-### ✔ KFM Archaeology Extension (`kfm:*`)
+---
 
-| Field | Description |
-|---|---|
-| `kfm:phase` | Cultural-phase label |
-| `kfm:datatype` | `"artifact-inventory"` |
-| `kfm:source` | Data source institution |
-| `kfm:provenance` | Path to PROV-O log |
-| `kfm:material_class` | `"lithic"`, `"ceramic"`, `"metal"`, `"faunal"` |
+### KFM Archaeology Extension (`kfm:*`)
 
-### ✔ CARE Sensitivity Extension (`care:*`)
+| Field                | Description / Requirement                                               |
+|----------------------|-------------------------------------------------------------------------|
+| `kfm:domain`         | Must be `"archaeology-artifact-inventories"`                           |
+| `kfm:phase`          | Cultural-phase label (for example, `Late Prehistoric`)                 |
+| `kfm:material_class` | `"lithic"`, `"ceramic"`, `"metal"`, or `"faunal"`                      |
+| `kfm:generalization` | Spatial generalization level (for example, `"H3-r7"`)                  |
+| `kfm:provenance`     | Relative path to PROV-O lineage JSON in `../provenance/`               |
+| `kfm:datatype`       | When used, should be `"artifact-inventory"`                            |
 
-| Field | Allowed Values | Notes |
-|---|---|---|
-| `care:sensitivity` | `general`, `generalized` | Must match spatial generalization level |
-| `care:review` | `"faircare"`, `"tribal"`, `"none-required"` | Metals often require tribal review |
-| `care:notes` | Cultural / ethical notes | Required for ceramics, metals |
-| `care:visibility_rules` | `"h3-only"`, `"no-exact-points"` | No precise provenience ever allowed |
+---
 
-### ✔ STAC Extensions Required
+### CARE Sensitivity Extension (`care:*`)
 
-- **Projection (`proj`)**  
-- **Versioning (`version`)**  
-- **Checksum (`checksum`)**  
-- **Scientific Metadata (`sci`)**  
-- **KFM Archaeology Extension (`kfm`)**  
-- **CARE Cultural Safety Extension (`care`)**
+| Field              | Allowed Values / Notes                                                     |
+|--------------------|----------------------------------------------------------------------------|
+| `care:sensitivity` | `general`, `generalized`, or `restricted-generalized` (no `restricted`)   |
+| `care:review`      | `"faircare"`, `"tribal"`, or `"none-required"`                            |
+| `care:notes`       | Required for ceramics, metals, and any dataset with motif or contact-era context |
+| `care:sovereignty` | Indicates sovereignty governance (for example, `"protected"`)             |
+
+Spatial precision and visibility must be consistent with `care:sensitivity` and governance rules.
+
+---
+
+### Required Extensions
+
+Each Item must be valid against STAC 1.0 plus the following extensions (where implemented):
+
+- Projection (`proj`)  
+- Versioning (`version`)  
+- Checksum (`checksum`)  
+- Scientific (`sci`) where scientific metadata exists  
+- KFM archaeology (`kfm`)  
+- CARE cultural safety (`care`)
 
 ---
 
@@ -132,20 +189,28 @@ Every STAC Item in this directory **must meet all** of the following specificati
 {
   "stac_version": "1.0.0",
   "type": "Feature",
-  "id": "flint-hills-lithics-v1",
+  "id": "flint-hills-lithics-v11",
   "bbox": [-101.2, 37.5, -95.4, 40.1],
   "geometry": {
     "type": "MultiPoint",
-    "coordinates": [[/* generalized */]]
+    "coordinates": [
+      /* generalized coordinates only */
+    ]
   },
   "properties": {
+    "kfm:domain": "archaeology-artifact-inventories",
     "kfm:phase": "Late Prehistoric",
+    "kfm:material_class": "lithic",
+    "kfm:generalization": "H3-r7",
     "care:sensitivity": "generalized",
-    "kfm:provenance": "../../provenance/flint-hills-lithics-v1.json"
+    "care:sovereignty": "protected",
+    "kfm:provenance": "../provenance/flint-hills-lithics-v11.json",
+    "dct:license": "CC-BY-4.0",
+    "datetime": null
   },
   "assets": {
     "data": {
-      "href": "../../inventories/flint-hills-lithics-v1.csv",
+      "href": "../inventories/flint-hills-lithics-v11.csv",
       "type": "text/csv",
       "roles": ["data"]
     }
@@ -167,21 +232,29 @@ Every STAC Item in this directory **must meet all** of the following specificati
 {
   "stac_version": "1.0.0",
   "type": "Feature",
-  "id": "prairie-ceramics-v1",
+  "id": "prairie-ceramics-v11",
   "bbox": [-101.9, 37.2, -95.9, 40.2],
   "geometry": {
     "type": "MultiPoint",
-    "coordinates": [[/* generalized */]]
+    "coordinates": [
+      /* generalized coordinates only */
+    ]
   },
   "properties": {
+    "kfm:domain": "archaeology-artifact-inventories",
     "kfm:phase": "Middle Ceramic",
+    "kfm:material_class": "ceramic",
+    "kfm:generalization": "H3-r7",
     "care:sensitivity": "generalized",
-    "care:notes": "Motif categories filtered for cultural safety.",
-    "kfm:provenance": "../../provenance/prairie-ceramics-v1.json"
+    "care:sovereignty": "protected",
+    "care:notes": "Motif categories filtered and generalized for cultural safety.",
+    "kfm:provenance": "../provenance/prairie-ceramics-v11.json",
+    "dct:license": "CC-BY-4.0",
+    "datetime": null
   },
   "assets": {
     "data": {
-      "href": "../../inventories/prairie-ceramics-v1.csv",
+      "href": "../inventories/prairie-ceramics-v11.csv",
       "type": "text/csv",
       "roles": ["data"]
     }
@@ -201,47 +274,47 @@ Every STAC Item in this directory **must meet all** of the following specificati
 
 All STAC Items in this directory must pass:
 
-- STAC JSON schema validation  
-- KFM archaeology STAC extension validation  
-- CARE cultural sensitivity validation  
-- Checksum verification  
-- Matching crosswalk with:
-  - Inventory file in `inventories/`  
-  - Metadata file in `metadata/`  
-  - Provenance file in `provenance/`  
-  - Collection file in `../collections/`  
+- STAC core JSON schema validation (Items + extensions).  
+- KFM archaeology STAC extension checks (`kfm:*` fields).  
+- CARE sensitivity validation (values and consistency with generalization).  
+- Checksum verification where `checksum` extension is used.  
+- Crosswalk checks that ensure:
+  - Inventory file exists in `../inventories/`.  
+  - Provenance file exists in `../provenance/`.  
+  - Collection JSON exists in `../collections/`.  
+  - DCAT / metadata alignment where applicable.
 
-Validation workflows located in:
+Validation is enforced via CI workflows such as:
 
-- `docs/analyses/archaeology/validation/`  
-- `.github/workflows/artifact-stac-validate.yml`
-
----
-
-## 📊 STAC Item Index
-
-| STAC Item | Category | Sensitivity | Last Review | Status |
-|---|---|---|---|---|
-| `flint-hills-lithics-v1.json` | Lithics | generalized | 2025-11 | 🟢 Active |
-| `prairie-ceramics-v1.json` | Ceramics | generalized | 2025-10 | 🟢 Active |
-| `contact-era-metals-v1.json` | Metals | generalized | 2025-09 | 🟡 Needs Review |
-| `fauna-open-v1.json` | Faunal | general | 2025-11 | 🟢 Active |
+- `.github/workflows/artifact-stac-validate.yml`  
 
 ---
 
-## 🕰️ Version History
+## 📊 STAC Item Index (Illustrative)
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Archaeology WG · FAIR+CARE Council | Added full STAC Items index, examples, validation rules, and CARE extensions |
-| v10.0.0 | 2025-11-10 | Artifact Metadata Team | Initial STAC Item directory creation |
+| STAC Item                      | Category | Sensitivity   | Last Review | Status     |
+|--------------------------------|----------|--------------|-------------|------------|
+| `flint-hills-lithics-v11.json` | Lithics  | generalized  | 2025-11     | 🟢 Active  |
+| `prairie-ceramics-v11.json`    | Ceramics | generalized  | 2025-11     | 🟢 Active  |
+| `contact-era-metals-v11.json`  | Metals   | generalized  | 2025-09     | 🟡 Review  |
+| `fauna-open-v11.json`          | Faunal   | general      | 2025-11     | 🟢 Active  |
+
+The authoritative index of Items lives in this directory plus release manifests; this table is descriptive.
 
 ---
 
-<div align="center">
+## 🕰 Version History
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+| Version   | Date       | Author                           | Summary                                                                 |
+|-----------|------------|----------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Archaeology WG · FAIR+CARE Council | Updated to KFM v11.2.3; added governance metadata, energy/carbon schemas, and clarified CARE requirements. |
+| v10.4.0   | 2025-11-17 | Archaeology WG · FAIR+CARE Council | Added STAC Items index, examples, and validation rules with CARE extensions. |
+| v10.0.0   | 2025-11-10 | Artifact Metadata Team           | Initial STAC Item directory creation.                                  |
+
+---
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE Certified · Sovereignty-Governed  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
 [⬅ Back to STAC Catalog](../README.md)
-
-</div>
