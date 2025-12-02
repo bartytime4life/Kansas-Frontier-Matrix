@@ -6,13 +6,14 @@ last_updated: "2025-12-01"
 
 release_stage: "Stable · Governed"
 lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Atmospheric Systems · FAIR+CARE Council"
+review_cycle: "Quarterly · Atmospheric Systems · FAIR+CARE Oversight"
+content_stability: "stable"
 backward_compatibility: "v10.x → v11.x ingestion-contract compatible"
 status: "Active / Enforced"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
+doc_integrity_checksum: "<sha256-of-this-file>"
 
 sbom_ref: "../../../../releases/v11.2.3/sbom.spdx.json"
 manifest_ref: "../../../../releases/v11.2.3/manifest.zip"
@@ -27,90 +28,89 @@ license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.2"
 
-fair_category: "FAIR: A2 · Interoperable Event Streams"
-care_label: "CARE: C1 · Stewardship for Environmental Data"
+fair_category: "FAIR: F1-A2 · Interoperable Event Streams"
+care_label: "CARE: C1 · Environmental Data Stewardship"
 doc_kind: "Pipeline Overview"
 intent: "noaa-sns-sqs"
-
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "United States / Kansas"
 classification: "Public · Environmental Data Pipeline"
-ttl_policy: "Review each major release"
-sunset_policy: "Superseded by next NOAA ingestion architecture revision"
+ttl_policy: "Review at each major release"
+sunset_policy: "Replaced by future NOAA ingestion architecture revisions"
 immutability_status: "version-pinned"
 ---
 
 <div align="center">
 
 # 🌩️ NOAA SNS → SQS Event-Driven Ingestion Pipeline  
-**GOES-16 · GOES-18 · NEXRAD Level II**  
-**AWS Open Data Notifications**
+### **GOES-16 · GOES-18 · NEXRAD Level II**  
+### **AWS Public Dataset Notifications → KFM WAP**
 
-This service listens to NOAA’s public SNS topics (GOES + NEXRAD) and reliably ingests new granules via an SQS-based fan-out queue, applying Write-Audit-Publish (WAP) controls before they enter the KFM registry, lineage store, and downstream transformation graph.
+This pipeline consumes NOAA’s real-time SNS notifications, normalizes messages, enforces WAP lineage gates, and publishes deterministic ingestion events into the KFM atmospheric stack.
 
 </div>
 
 ---
 
-## 📘 Overview
+## 📘 1. Overview
 
-This ingestion pipeline implements an **event-driven bridge** from NOAA’s AWS Open Data SNS notifications into KFM’s atmospheric data stack:
+This subsystem handles NOAA’s event-driven ingest path:
 
-- 🛰 GOES-16 / GOES-18 ABI + related products  
-- 📡 NEXRAD Level II radar data  
-- 📨 SNS topics → 📬 SQS queues (fan-out, buffering, redrive)  
-- 🧾 JSON schema normalization and validation  
-- 🪵 WAP (Write-Audit-Publish) enforcement & lineage capture  
-- 📊 Telemetry and energy/carbon metrics for ingestion operations  
+- 🛰 **GOES-16 / GOES-18 ABI** products  
+- 📡 **NEXRAD Level II** radar archive  
+- 📨 **SNS → SQS fan-out** ingestion  
+- 🧾 **Normalization + schema validation**  
+- 🛡 **WAP** (Write-Audit-Publish) lineage enforcement  
+- 📊 **Telemetry + sustainability metrics**  
 
-The design is:
+Core design principles:
 
-- **Deterministic** — same messages → same normalized events → same STAC/WAP outputs  
-- **Governed** — all writes are WAP-controlled and provenance-tagged  
-- **Interoperable** — events can be re-consumed by other KFM pipelines and external tools  
+- **Deterministic:** identical SNS messages always yield identical WAP and STAC output.  
+- **Governed:** every event is provenance-tracked and audit-gated.  
+- **Interoperable:** outputs seamlessly integrate with KFM STAC, PROV-O, and LangGraph operators.
 
 ---
 
-## 🗂️ Directory Layout
+## 🗂 2. Directory Structure (Emoji-Prefix Standard)
 
 ~~~text
 docs/pipelines/atmo/noaa-sns-sqs/
 │
-├── 📄 README.md                        # This file
+├── 📄 README.md                               # This file
 │
-├── 📨 sns-topics/                      # Topic ARNs, deprecation notes, migration maps
+├── 📨 sns-topics/                             # NOAA SNS topic definitions
 │   ├── 🌐 goes16.md
 │   ├── 🌐 goes18.md
 │   └── 🌐 nexrad-level2.md
 │
-├── 📬 sqs/                             # Queue contracts, redrive policies, DLQ
+├── 📬 sqs/                                     # Queue policies + redrive design
 │   ├── 📜 queue-policy.json
 │   ├── 📜 dlq-policy.json
 │   └── 📘 fifo-guidelines.md
 │
-├── 🔧 handlers/                        # Lambda / containerized event handlers (design docs)
+├── 🔧 handlers/                                # Event handler specifications
 │   ├── 🧾 normalize-message.md
 │   ├── ✅ validate-schema.md
 │   ├── 📥 enqueue-wap.md
 │   └── 🚨 errors.md
 │
-├── 🧾 schemas/                         # Event + object-metadata normalization schemas
+├── 🧾 schemas/                                 # JSON Schema validation contracts
 │   ├── 🛰 noaa-goes-event.json
 │   ├── 📡 noaa-nexrad-event.json
 │   └── 📦 common-object-metadata.json
 │
-├── 🔒 iam/                             # IAM policies for SNS → SQS perms
+├── 🔒 iam/                                     # IAM bindings + SNS→SQS trust
 │   ├── 🔑 sqs-allow-sns.json
 │   └── 🔑 sns-subscription-policy.json
 │
-├── 🛠️ terraform/                       # Infrastructure-as-Code definitions
+├── 🛠️ terraform/                               # IaC: SNS, SQS, handlers, outputs
 │   ├── 📨 sns.tf
 │   ├── 📬 sqs.tf
 │   ├── 🧩 lambda.tf
 │   └── 📤 outputs.tf
 │
-└── 🪵 lineage/                         # WAP lineage checks, PROV-O mapping, sustainability
+└── 🪵 lineage/                                 # WAP + PROV-O lineage contracts
     ├── 📃 wap-contract.md
     ├── 🧬 prov-mapping.json
     └── 🌱 energy-carbon-metrics.md
@@ -118,179 +118,162 @@ docs/pipelines/atmo/noaa-sns-sqs/
 
 ---
 
-## 🔔 Supported NOAA AWS SNS Topics (2025)
+## 🔔 3. Supported NOAA SNS Topics (2025)
 
-| Dataset             | Topic Name               | Notes                                                   |
-|---------------------|--------------------------|---------------------------------------------------------|
-| **GOES-16**         | `NewGOES16Object`        | Real-time ABI/L1b/L2 notifications                      |
-| **GOES-18**         | `NewGOES18Object`        | Identical contract to GOES-16                           |
-| **NEXRAD Level II** | `NewNEXRADLevel2Archive` | Replaces legacy topic, old one deprecated in 2025-09-01 |
+| Dataset | Topic Name | Notes |
+|--------|-------------|-------|
+| **GOES-16** | `NewGOES16Object` | ABI + L1b/L2 feed |
+| **GOES-18** | `NewGOES18Object` | Contract-identical to GOES-16 |
+| **NEXRAD Level II** | `NewNEXRADLevel2Archive` | Legacy topic deprecated 2025-09-01 |
 
-All messages are **normalized** into a unified KFM event envelope before WAP entry.
-
----
-
-## 🔄 End-to-End Flow (High Level)
-
-1. **SNS publishes** when NOAA uploads a new granule to AWS S3.  
-2. **SQS queue receives** the message (fan-out, buffered, retry-safe).  
-3. **Handler normalizes** event → unified KFM event schema.  
-4. **Schema validation** via JSON Schema + common object-metadata enrichment.  
-5. **WAP ingest**:
-   - **Write:** stage-area registration  
-   - **Audit:** checksum, STAC cross-validation, size checks  
-   - **Publish:** KFM registry + lineage store updates  
-
-6. **Telemetry emission** (OpenTelemetry + PROV-O fragments for lineage-aware observability).
+All inputs are transformed into a **Unified KFM Event Envelope** before entering WAP.
 
 ---
 
-## 🧰 SNS → SQS Permissions (IAM)
+## 🔄 4. Event Flow (High-Level)
 
-### SQS Queue Policy (Minimum)
-
-- MUST allow `sns:Publish` / `sqs:SendMessage` *only* from the correct SNS topics.  
-- MUST restrict `SourceArn` to NOAA SNS topic ARNs.  
-- MUST deny unknown publishers (defense-in-depth).  
-
-### SNS Subscription Confirmation
-
-Handler design assumptions:
-
-- Messages comply with AWS SNS message format or the subscription is rejected.  
-- Only trusted topic ARNs are allowed; no “S3 event proxy” or ad-hoc event sources.  
-
-IAM guidance is detailed in:
-
-- `iam/sqs-allow-sns.json`  
-- `iam/sns-subscription-policy.json`
+1. **SNS publishes** on new NOAA granule arrival.  
+2. **SQS fan-out queue** receives and buffers messages.  
+3. **Handler normalization:**
+   - dataset classification  
+   - metadata extraction  
+   - envelope unification  
+4. **Schema validation:** JSON Schema + common metadata enrichment.  
+5. **WAP pipeline:**
+   - **Write:** staging registration  
+   - **Audit:** checksum validation + STAC hints  
+   - **Publish:** registry + lineage  
+6. **Telemetry:** ingestion latency, queue lag, error patterns, energy/carbon metrics.
 
 ---
 
-## 🧬 Event Schema & Validation Strategy
+## 🧬 5. Event Schema & Validation
 
-Each NOAA message is transformed into a **Normalized Event Envelope**.
+The **Unified Event Envelope** includes:
 
-**Core fields (required or strongly recommended):**
+- `dataset_id` (`goes16`, `goes18`, `nexrad-level2`)  
+- `bucket` and `key`  
+- `timestamp` (ISO-8601 event time)  
+- `instrument` / `product_level`  
+- `granule_id` (derived)  
+- `expected_size` and `checksum` when provided  
 
-- `bucket` — S3 bucket name (string)  
-- `key` — object key (string)  
-- `timestamp` — event time (ISO 8601)  
-- `dataset_id` — e.g., `goes16`, `goes18`, `nexrad-level2`  
-- `instrument` — ABI, Radar, etc.  
-- `product_level` — L1b, L2, etc.  
-- `granule_id` — derived from key naming convention  
-- `expected_size` — size estimate (bytes)  
-- `checksum` — sha256 or similar when provided  
+Schemas live under `schemas/` and must pass:
 
-All event types cross-map into **PROV-O** + a minimal **STAC Item skeleton** compatible with `KFM-STAC v11`.
+- **strict JSON Schema** validation  
+- **cross-field rules** (e.g., product naming conventions)  
+- **metadata enrichment** (instrument, spatial hints)  
 
-Validation:
+Failures trigger:
 
-- JSON Schema validation using `schemas/noaa-goes-event.json`, `noaa-nexrad-event.json`, and `common-object-metadata.json`.  
-- Any schema failure results in:
-  - event sent to DLQ (Dead Letter Queue)  
-  - telemetry event (`schema_error`)  
-  - no WAP Write step executed.
+- DLQ routing  
+- structured telemetry error events  
+- no WAP write allowed  
 
 ---
 
-## 🪵 WAP (Write-Audit-Publish) Hook Integration
+## 🛡 6. WAP (Write-Audit-Publish)
 
-WAP contracts enforce:
+WAP gating enforces:
 
-- **Deterministic writes** to staging.  
-- **Checksums** (sha256) required for publish to KFM registry.  
-- **STAC Item generation** from normalized metadata:
-  - geometry/extent derived by downstream geospatial pipeline.  
-- **Lineage** stored as JSON-LD/PROV fragments, linking:
-  - SNS event → S3 object → staging asset → STAC Item → KFM dataset.  
-- **Publish-gates** for:
-  - incomplete events  
-  - missing checksum or size  
-  - invalid or deprecated products  
+### **Write**
+- deterministic staging path  
+- atomic object registration  
 
-WAP details are specified in:
+### **Audit**
+- sha256 checksum match  
+- STAC skeleton consistency  
+- NOAA → KFM mapping accuracy  
+- validation signatures  
 
-- `lineage/wap-contract.md`  
-- `lineage/prov-mapping.json`
+### **Publish**
+- registry entry  
+- lineage event generation  
+- telemetry emission  
+
+Lineage uses **PROV-O JSON-LD** mapped via `lineage/prov-mapping.json`.
 
 ---
 
-## 📊 Telemetry (OpenTelemetry + KFM Telemetry)
+## 📬 7. SNS → SQS IAM Controls
 
-Emits (non-exhaustive):
+Minimum required guarantees:
 
-- **Ingestion latency** per message (SNS notification → WAP write).  
-- **Queue lag** + backlog size metrics for SQS.  
-- **Success/fail counts** per dataset_id (GOES-16, GOES-18, NEXRAD).  
-- **Schema errors** and normalization failures.  
-- **DLQ events** (with minimal, non-sensitive diagnostics).  
-- **Energy + carbon metrics** for the ingestion compute path, derived from infra metrics.
+- SQS must **only** accept messages from official NOAA SNS ARNs.  
+- SNS subscription policies must enforce **SourceArn** and **Sender** validation.  
+- No wildcard publishers allowed.  
+- Subscription confirmation failures must be logged and blocked.  
 
-Telemetry is aggregated in:
+IAM definitions live under `iam/`.
 
-~~~text
+---
+
+## 📊 8. Telemetry (OTel · Sustainability)
+
+Metrics exported:
+
+- ingestion latency  
+- queue backlog  
+- schema error counts  
+- DLQ depth + reason codes  
+- WAP audit failure types  
+- compute duration → energy estimation  
+- carbon factors via `carbon_schema`  
+
+Telemetry file stored at:
+
+```
 ../../../../releases/v11.2.3/noaa-sns-telemetry.json
-~~~
-
-Telemetry MUST:
-
-- Conform to `telemetry_schema`.  
-- Avoid sensitive information (no raw object URLs in logs; use hashed/short IDs if needed).  
+```
 
 ---
 
-## ⚖ FAIR+CARE & Governance
+## ⚖️ 9. Governance, FAIR, CARE
 
-Even though NOAA datasets are **public environmental data**, the pipeline must:
+Governance obligations:
 
-- Respect any **downstream CARE constraints** applied within KFM (e.g., sensitive derived products).  
-- Maintain accurate provenance (no editing of NOAA’s metadata beyond normalization).  
-- Avoid re-labelling or misrepresenting NOAA’s data quality or license terms.  
-
-Governance aspects covered:
-
-- PROV-O mapping ensures that NOAA remains correctly cited as the data producer.  
-- Energy/carbon metrics are captured to inform sustainability reporting.  
-- Operational logs are used for reliability + reproducibility audits.
+- NOAA remains recorded as the **source authority**.  
+- No metadata rewriting beyond normalization.  
+- CARE rules respected for downstream derived products.  
+- Sustainability telemetry required (energy + carbon).  
+- Provenance must remain **immutable** and **replayable**.
 
 ---
 
-## 🧪 Validation & CI/CD
+## 🧪 10. CI/CD Validation
 
-Key CI checks include:
+Required checks:
 
-- **Schema validation** against `schemas/noaa-*.json`.  
-- **Terraform validation** and security scanning.  
-- **IAM policy linting** for overly broad grants.  
-- **Telemetry schema validation** (matching `noaa-sns-sqs-v1.json`).  
-- **Documentation lint** ensuring this README stays in sync with code & infra.
+- JSON Schema validation  
+- IaC validation + security scanning  
+- WAP contract consistency  
+- Telemetry schema validation  
+- Markdown/MDP compliance  
 
-CI workflows:
+Workflows:
 
 - `noaa-sns-sqs-schema.yml`  
 - `noaa-sns-sqs-terraform.yml`  
-- `noaa-sns-sqs-telemetry.yml`  
+- `noaa-sns-sqs-telemetry.yml`
 
 ---
 
-## 🕰 Version History
+## 🕰 11. Version History
 
-| Version   | Date       | Notes                                                     |
-|-----------|------------|-----------------------------------------------------------|
-| **v11.2.3** | 2025-12-01 | Full KFM v11 alignment, stable schemas, telemetry v1      |
-| v11.1.x   | 2025-10    | Added WAP lineage mapping and PROV-O fragment generation |
-| v10.x     | 2024–2025  | Initial pipeline, basic SNS → SQS ingest and staging     |
+| Version | Date | Notes |
+|--------|-------|-------|
+| **v11.2.3** | 2025-12-01 | Full KFM-v11 rework, WAP integration, telemetry v1 |
+| v11.1.x | 2025-10 | PROV-O lineage mapping added |
+| v10.x | 2024–2025 | Original SNS→SQS ingestion pipeline |
 
 ---
 
-## ⚖️ Footer
+## ⚖️ 12. Footer
 
 <div align="center">
 
-**Kansas Frontier Matrix — NOAA SNS → SQS Ingestion Pipeline**  
-🌩️ Event-Driven Ingest · 🛰 GOES/NEXRAD · 🛡 FAIR+CARE-Aligned · 🌱 Sustainability-Aware  
+**Kansas Frontier Matrix — NOAA Event-Driven Ingestion Subsystem**  
+🌩️ Real-Time NOAA Feeds · 🛰 GOES/NEXRAD · 🛡 WAP-Governed · 🌱 Sustainability-Aware  
 
 [📚 Docs Root](../../../README.md) •  
 [🧱 Pipelines Index](../../README.md) •  
