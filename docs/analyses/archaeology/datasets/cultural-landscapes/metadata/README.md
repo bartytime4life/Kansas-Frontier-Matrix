@@ -1,236 +1,305 @@
 ---
 title: "🌄 Kansas Frontier Matrix — Cultural Landscape Metadata Standards (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/cultural-landscapes/metadata/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
+description: "Global metadata standard for KFM v11 cultural landscape datasets (regions, routes, interaction spheres, resource areas), aligned with DCAT, STAC, KFM, CARE, and PROV-O."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Biannual · Cultural Landscape Working Group · FAIR+CARE Council"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/archaeology-cultural-landscapes-metadata-v1.json"
-governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+content_stability: "stable"
 status: "Active / Enforced"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:cultural-landscape-metadata-standards-v11.2.3"
 doc_kind: "Metadata Standard"
 intent: "cultural-landscape-metadata"
+semantic_document_id: "kfm-doc-archaeology-cultural-landscapes-metadata-standards-v11.2.3"
+category: "Analyses · Archaeology · Cultural Landscapes · Metadata"
+
+sbom_ref: "../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/archaeology-cultural-landscapes-metadata-v1.json"
+energy_schema: "../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
+governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "CARE-Compliant"
+sensitivity: "Cultural / Historical / Archaeological"
+sensitivity_level: "Medium"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Cultural Landscape Working Group · FAIR+CARE Council"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/cultural-landscapes/metadata/README.md@v10.4.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 🌄 Kansas Frontier Matrix — Cultural Landscape Metadata Standards (v11)
 
-# 🌄 **Kansas Frontier Matrix — Cultural Landscape Metadata Standards**  
 `docs/analyses/archaeology/datasets/cultural-landscapes/metadata/README.md`
 
-**Purpose:**  
-Define the **metadata specification** for all cultural landscape datasets within the Kansas Frontier Matrix (KFM).  
-These standards apply to:
+**Purpose**  
+Define the **metadata specification** for all **cultural landscape datasets** within the Kansas Frontier Matrix (KFM), including:
 
 - Settlement regions  
 - Interaction spheres  
 - Resource procurement zones  
-- Ancient trails & mobility routes  
-- Territorial/cultural boundaries (generalized)  
-- Environmental/cultural synthesis layers  
+- Ancient trails and mobility routes  
+- Generalized territorial / cultural regions  
+- Environmental–cultural synthesis layers  
 
-This ensures datasets remain compliant with **FAIR+CARE**, **STAC 1.0**, **DCAT 3.0**, **CIDOC-CRM**, **GeoSPARQL**, **PROV-O**, and **MCP-DL v6.3**.
+These standards ensure all cultural-landscape metadata is:
 
-</div>
+- FAIR+CARE and sovereignty aligned.  
+- Compatible with **STAC 1.0**, **DCAT 3.0**, **KFM extensions (`kfm:*`)**, **CARE (`care:*`)**, and **PROV-O**.  
+- Ready for **Story Node v3**, **Focus Mode v3**, MapLibre/Cesium, and graph ingestion.
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
-Cultural landscape metadata ensures:
+Cultural landscape metadata must provide:
 
-- Ethical representation of cultural geographies  
-- Protection of Indigenous sovereignty  
-- Spatial generalization of sensitive areas  
-- Temporal contextualization of cultural phases  
-- Transparent provenance  
-- Machine-readability for maps, graph, ETL, and Focus Mode v2  
-- Alignment with archaeological terminology & controlled vocabularies  
+- Ethical representation of culturally significant geographies.  
+- Protection of Indigenous sovereignty and sensitive knowledge.  
+- Spatial generalization of vulnerable areas.  
+- Temporal context using culturally grounded phases.  
+- Transparent provenance and review history.  
+- Machine-readability for ETL, catalogs, graph queries, and AI narratives.  
 
-This directory contains machine-readable metadata JSON files for each dataset under:
+This directory contains metadata JSON files for cultural landscape datasets under:
 
 - `regions/`  
 - `routes/`  
 - `interaction-spheres/`  
 - `resource-areas/`  
-- `stac/`  
-- `provenance/`
+
+and shared templates and schemas used across these categories.
 
 ---
 
-# 🗂️ Directory Layout
+## 🗂️ Directory Layout
 
 ~~~text
 docs/analyses/archaeology/datasets/cultural-landscapes/metadata/
-├── README.md                          # This file
-├── great-bend-aspect-v2.json          # DCAT + CARE + provenance-linked metadata
-├── central-plains-exchange-v1.json    # Exchange sphere metadata
-├── protohistoric-wichita-v1.json      # Sensitive dataset metadata
-├── templates/                         # Metadata templates (STAC-aware)
-└── schemas/                           # Validators for metadata files
+├── 📄 README.md                            # This file (global standards)
+├── 📄 great-bend-aspect-v2.json            # Interaction sphere metadata (example)
+├── 📄 central-plains-exchange-v1.json      # Interaction sphere metadata (example)
+├── 📄 protohistoric-wichita-v2.json        # High-sensitivity interaction sphere metadata
+├── 📂 templates/                           # Non-annotated metadata templates
+└── 📂 schemas/                             # JSON Schemas validating all metadata files
 ~~~
 
----
-
-# 📦 Required Metadata Components
-
-Cultural landscape metadata files must include:
+Individual subtrees (e.g., interaction-spheres) may have their own metadata READMEs; this file defines the **global baseline** for all cultural landscape metadata.
 
 ---
 
-## ✔ DCAT 3.0 Fields
+## 📦 Required Metadata Components
 
-| Field | Description |
-|---|---|---|
-| `dct:title` | Dataset name |
-| `dct:description` | Human-readable summary |
-| `dct:license` | `"CC-BY-4.0"` or `"CC0"` |
-| `dct:temporal` | OWL-Time interval |
-| `dcat:keyword` | Tags: `"archaeology"`, `"cultural-landscape"`, `"region"`, etc. |
-| `dcat:distribution` | Link to STAC Item or GeoJSON |
+Each cultural landscape metadata JSON MUST include:
 
----
-
-## ✔ KFM Archaeology Metadata
-
-| Field | Description | Example |
-|---|---|---|
-| `kfm:culture_phase` | Cultural phase or multi-phase range | `"Late Prehistoric"` |
-| `kfm:landscape_type` | Region, route, sphere, resource, etc. | `"interaction_sphere"` |
-| `kfm:geometry_generalization` | Method used | `"H3-level-6"` |
-| `kfm:source` | Data origin | `"Kansas Historical Society"` |
-| `kfm:provenance` | PROV-O JSON reference | `"provenance/great-bend-v2.json"` |
-| `kfm:schema_version` | Metadata schema version | `"1.0.0"` |
+1. **DCAT 3.0 dataset metadata**  
+2. **KFM cultural-landscape extension fields (`kfm:*`)**  
+3. **CARE cultural-safety metadata (`care:*`)**  
+4. **Provenance link (`kfm:provenance`)**  
+5. **STAC crosswalk alignment** with associated Items/Collections  
 
 ---
 
-## ✔ CARE Cultural Safety Metadata
+### 1️⃣ DCAT 3.0 Fields
 
-Cultural landscape datasets must contain:
+Required DCAT fields:
 
-| Field | Allowed Values | Purpose |
-|---|---|---|
-| `care:sensitivity` | `general`, `generalized`, `restricted-generalized` | Protects cultural landscapes |
-| `care:review` | `faircare`, `tribal`, `none-required` | Indicates review authority |
-| `care:notes` | Free text | Cultural safety explanation |
-| `care:visibility_rules` | `h3-only`, `no-exact-points`, `polygon-generalized` | Controls public exposure |
+| Field             | Description                                      |
+|-------------------|--------------------------------------------------|
+| `dct:title`       | Dataset name (human-readable)                    |
+| `dct:description` | Generalized summary of the cultural landscape    |
+| `dct:license`     | License (e.g., `"CC-BY-4.0"` or `"CC0-1.0"`)     |
+| `dct:temporal`    | OWL-Time–compatible time span (text or structured) |
+| `dct:creator`     | Dataset steward or institution                   |
+| `dcat:keyword`    | Tags (e.g., `"archaeology"`, `"cultural-landscape"`, `"region"`) |
+| `dcat:distribution` | Link to STAC Item or primary asset            |
+
+These values must be reflected in STAC Collections/Items and in release manifests.
+
+---
+
+### 2️⃣ KFM Cultural-Landscape Metadata (`kfm:*`)
+
+KFM extensions capture archaeological and landscape semantics.
+
+Typical required fields:
+
+| Field                       | Description                                      | Example                 |
+|-----------------------------|--------------------------------------------------|-------------------------|
+| `kfm:domain`                | Domain identifier                               | `"archaeology-cultural-landscapes"` |
+| `kfm:landscape_type` / `kfm:region_type` | Class of landscape (region, route, sphere, resource) | `"interaction_sphere"` |
+| `kfm:culture_phase`         | Cultural phase(s) represented                    | `["Late Prehistoric","Protohistoric-Wichita"]` |
+| `kfm:generalization`        | Spatial generalization method                    | `"H3-r7"` or `"simplified-polygon"` |
+| `kfm:source`                | Primary data sources description                 | `"Kansas Historical Society archives and PD syntheses"` |
+| `kfm:provenance`            | Path to PROV-O provenance file                   | `"../provenance/great-bend-aspect-v2.json"` |
+| `kfm:schema_version`        | Metadata schema/template version                 | `"v11.0.0"` or later |
+
+Subcategory standards (e.g., interaction-spheres) may define additional required KFM fields.
+
+---
+
+### 3️⃣ CARE Cultural-Safety Metadata (`care:*`)
+
+All cultural landscape metadata MUST include CARE fields, tuned to sensitivity level.
+
+| Field                | Allowed / Example Values                               | Purpose                                   |
+|----------------------|--------------------------------------------------------|-------------------------------------------|
+| `care:sensitivity`   | `"general"`, `"generalized"`, `"restricted-generalized"` | Overall sensitivity classification         |
+| `care:review`        | `"faircare"`, `"tribal"`, `"none-required"`            | Indicates review authority                 |
+| `care:notes`         | Free-text note                                         | Explains cultural-safety decisions         |
+| `care:visibility_rules` | `"h3-only"`, `"no-exact-points"`, `"polygon-generalized"` | Controls public spatial fidelity   |
+| `care:consent_status`| `approved`, `conditional`, `not-approved`, `not-applicable` | Clarifies consent state for public use |
 
 **Rules:**
 
-- `"restricted"` is never permitted in public KFM repos  
-- `"restricted-generalized"` requires tribal approval  
-- Territorial or sacred areas must use **H3-only** visibility  
-- No exact boundaries without express tribal consent  
+- `care:sensitivity = "restricted"` is **never** used in public KFM repositories.  
+- `care:sensitivity = "restricted-generalized"` requires **tribal review** and strict visibility rules (often `"h3-only"`).  
+- Territorial or sacred landscapes must be generalized at coarse scales and may require additional governance (or exclusion).
 
 ---
 
-## ✔ Provenance Metadata (PROV-O Linked)
+### 4️⃣ Provenance Metadata (PROV-O Link)
 
-Metadata files must link to full provenance logs that describe:
+All metadata must link to a PROV-O lineage record:
 
-- Data creation  
-- GIS transformations  
-- Cultural and ethical reviews  
-- Generalization processes  
-- Assumptions & uncertainties  
+| Field             | Description                      |
+|-------------------|----------------------------------|
+| `kfm:provenance`  | Relative path to provenance JSON |
 
-Field:
+The referenced provenance file must describe:
 
-| Field | Description |
-|---|---|
-| `kfm:provenance` | Path to provenance JSON |
+- Data sources and extraction methods.  
+- GIS/generalization steps.  
+- Cultural and ethical review events (FAIR+CARE, tribal when needed).  
+- Modeling assumptions and uncertainty.  
 
----
-
-## ✔ STAC Alignment Requirements
-
-Metadata must fully align with STAC Item fields:
-
-| Metadata | STAC |
-|---|---|
-| `dct:title` | `id` or `description` |
-| `kfm:culture_phase` | `properties.kfm:culture_phase` |
-| `care:sensitivity` | `properties.care:sensitivity` |
-| `kfm:provenance` | `properties.kfm:provenance` |
-| `dcat:distribution` | `assets.data.href` |
+Subtree provenance standards (e.g., for interaction spheres) add more detailed requirements.
 
 ---
 
-# 🌍 Spatial Metadata Requirements
+### 5️⃣ STAC Alignment Requirements
 
-All cultural landscape metadata must include:
+Metadata must align with associated STAC Collections/Items:
 
-| Field | Requirement |
-|---|---|
-| CRS | EPSG:4326 unless otherwise justified |
-| `bbox` | Generalized bounding box |
-| Generalization Method | H3 or topological simplification |
-| Geometry | No exact sacred/ceremonial polygons |
+| Metadata Field        | STAC Field                                  |
+|-----------------------|---------------------------------------------|
+| `dct:title`           | STAC `id`/`title`/`description`             |
+| `kfm:culture_phase`   | STAC `properties.kfm:culture_phase`        |
+| `care:sensitivity`    | STAC `properties.care:sensitivity`         |
+| `kfm:provenance`      | STAC `properties.kfm:provenance`           |
+| `dcat:distribution`   | STAC `assets.data.href` or Item path       |
 
-Generalization rules always apply to protect cultural sovereignty.
-
----
-
-# 🕰️ Temporal Metadata Requirements
-
-- Must specify earliest and latest likely dates  
-- Use ISO 8601 or approximate dates (e.g., `"AD 1300–1600"`)  
-- Use OWL-Time compatible structure in DCAT or STAC  
-- Provide uncertainty notes where applicable  
+Alignment is enforced by crosswalk schemas under `schemas/`.
 
 ---
 
-# 🧪 Integration Into KFM Ecosystem
+## 🌍 Spatial Metadata Requirements
 
-### **Knowledge Graph**
-Nodes:
-- `CulturalLandscape`
-- `CulturalPhase`
-- `Region`
-- `ResourceArea`
-- `InteractionSphere`
+All cultural landscape metadata must reflect generalized, privacy-preserving spatial representations.
 
-Edges:
-- `LOCATED_IN`
-- `ASSOCIATED_WITH`
-- `OCCURRED_DURING`
-- `GENERALIZED_FROM`
-- `HAS_PROVENANCE`
+Required practices:
 
-### **Story Nodes**
-Metadata drives:
-
-- Culture narratives  
-- Timeline synchronization  
-- Region-based explanations  
-
-### **Focus Mode v2**
-Metadata feeds:
-
-- Cultural context summaries  
-- Ethics-aware interpretations  
-- Provenance chips  
+- CRS: **EPSG:4326** unless a strong justification is provided.  
+- Bounding boxes: generalized BBOX covering the cultural landscape region.  
+- Generalization method:
+  - H3 mosaics or topological simplification documented in `kfm:generalization` and provenance.  
+- Public metadata must **not** describe exact sacred/ceremonial polygons or reveal protected site locations.
 
 ---
 
-# 🧪 Validation Requirements
+## 🕰 Temporal Metadata Requirements
 
-All metadata must pass:
+Temporal metadata must:
+
+- Specify earliest and latest dates relevant to the dataset.  
+- Use ISO 8601 date strings or clearly labeled ranges (e.g., `"AD 1300–1600"`).  
+- Prefer OWL-Time–compatible structures in STAC and DCAT.  
+- Align with KFM’s cultural-phase ontology by mapping phases to time intervals.
+
+Uncertainty notes are encouraged where ranges are approximate or overlapping.
+
+---
+
+## 🧠 Integration Into KFM Ecosystem
+
+### Knowledge Graph
+
+Metadata records help populate and connect:
+
+**Nodes**
+
+- `CulturalLandscape` (or subtypes such as `InteractionSphere`, `CulturalRegion`, `Route`, `ResourceArea`).  
+- `CulturalPhase`.  
+- `MetadataRecord`.  
+- CARE and governance-related nodes.
+
+**Relationships**
+
+- `HAS_METADATA`  
+- `HAS_PROVENANCE`  
+- `OCCURRED_DURING`  
+- `ASSOCIATED_WITH`  
+- `GENERALIZED_FROM`  
+- `HAS_CARE_SENSITIVITY`  
+
+### Story Nodes & Focus Mode v3
+
+Metadata fields support:
+
+- Culture-aware narratives and timeline synchronization.  
+- Region-based story mapping and overlays.  
+- Ethical warnings, sensitivity badges, and provenance chips.  
+- Filtered, sovereignty-aligned responses in Focus Mode v3.
+
+---
+
+## 🧪 Validation Requirements
+
+All cultural landscape metadata must pass validation against schemas in `schemas/`, including (names may vary):
 
 - `metadata-core-schema.json`  
 - `dcat-metadata-schema.json`  
 - `care-metadata-schema.json`  
 - `provenance-link-schema.json`  
-- STAC crosswalk schema  
+- `stac-crosswalk-schema.json`  
 
-CI workflows:
+CI workflows enforcing these validations include:
 
 - `.github/workflows/metadata-validate.yml`  
 - `.github/workflows/faircare-audit.yml`  
@@ -238,27 +307,25 @@ CI workflows:
 
 Validation ensures:
 
-- Cultural safety  
-- Spatial generalization  
-- Metadata completeness  
-- Provenance traceability  
-- Ethical compliance  
+- Cultural safety and sovereignty compliance.  
+- Spatial generalization is adequately documented.  
+- Metadata completeness and consistency.  
+- Proper linkage to STAC and provenance artifacts.
 
 ---
 
-# 🕰️ Version History
+## 🕰 Version History
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Cultural Landscape WG · FAIR+CARE Council | Established cultural landscape metadata standards; added DCAT/STAC/CARE requirements |
-| v10.0.0 | 2025-11-10 | Landscape Metadata Team | Initial metadata directory scaffold |
+| Version   | Date       | Author                                   | Summary                                                                 |
+|-----------|------------|------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Cultural Landscape WG · FAIR+CARE Council | Upgraded to KFM v11.2.3; added energy/carbon telemetry references; aligned with interaction-sphere metadata standards and CARE vocabularies. |
+| v10.4.0   | 2025-11-17 | Cultural Landscape WG · FAIR+CARE Council | Established cultural landscape metadata standards; defined DCAT/STAC/CARE requirements. |
+| v10.0.0   | 2025-11-10 | Landscape Metadata Team                  | Initial metadata directory scaffold.                                   |
 
 ---
 
-<div align="center">
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE · Sovereignty-Aligned  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 [⬅ Back to Cultural Landscapes](../README.md)
-
-</div>
