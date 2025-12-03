@@ -1,235 +1,284 @@
 ---
 title: "🏺 Kansas Frontier Matrix — STAC Collection: Protohistoric Wichita Interaction Sphere (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/protohistoric-wichita/stac/README.md"
-version: "v10.4.1"
-last_updated: "2025-11-17"
-review_cycle: "Quarterly / FAIR+CARE Archaeology Council"
+description: "STAC 1.0 Collection + Item documentation for the Protohistoric Wichita interaction-sphere dataset in KFM v11, aligned with KFM, CARE, and sovereignty governance."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Quarterly · Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Review Required"
+content_stability: "stable"
+status: "Active / Enforced (Tribal Review Required)"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/analyses-archaeology-interaction-spheres-stac-v1.json"
-governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:archaeology-protohistoric-wichita-stac-collection-v11.2.3"
+doc_kind: "STAC Collection"
+intent: "archaeology-interaction-spheres-protohistoric-wichita-stac"
+semantic_document_id: "kfm-doc-archaeology-protohistoric-wichita-stac-collection-v11.2.3"
+category: "Analyses · Archaeology · Cultural Landscapes · STAC"
+
+sbom_ref: "../../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../../releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "../../../../../../../schemas/telemetry/analyses-archaeology-interaction-spheres-stac-v1.json"
+energy_schema: "../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
+governance_ref: "../../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
-doc_kind: "Dataset Documentation"
-intent: "archaeology-interaction-spheres-stac"
-semantic_document_id: "kfm:docs:analyses:archaeology:interaction-spheres:protohistoric-wichita:stac"
-doc_uuid: "<uuid-placeholder>"
-accessibility_compliance: "WCAG 2.1 AA (intended)"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Cultural / Historical / Archaeological"
+sensitivity_level: "High"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
 machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Review"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/protohistoric-wichita/stac/README.md@v10.4.1"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 🏺 STAC Collection: Protohistoric Wichita Interaction Sphere (v11)
 
-# 🏺✨ **Kansas Frontier Matrix — STAC Collection: Protohistoric Wichita Interaction Sphere** ✨🏺  
 `docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/protohistoric-wichita/stac/README.md`
 
-**Purpose:**  
-Define, document, and certify the **FAIR+CARE-aligned STAC Collection + Item suite** for the archaeologically significant  
-**Protohistoric Wichita Interaction Sphere (ca. 1400–1700 CE)** — integrating settlement generalizations, trade corridors,  
-ceramic networks, radiocarbon envelopes, paleoenvironmental variables, and ethnohistoric maps for KFM v10.
+**Purpose**  
+Describe the **STAC 1.0 Collection and Items** for the **Protohistoric Wichita Interaction Sphere** within KFM v11.
 
-### 🏆 Certifications  
-[![Diamond⁹ Ω](https://img.shields.io/badge/Diamond%E2%81%B9-Ω-blueviolet)](#)
-[![Crown∞Ω](https://img.shields.io/badge/Crown-∞Ω-gold)](#)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Verified-green)](#)
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](#)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](#)
+This README focuses on:
 
-</div>
+- The **local STAC Collection** for this dataset.  
+- The **STAC Item(s)** representing generalized interaction-sphere geometry.  
+- How these STAC artifacts integrate with:
+  - The **global interaction-sphere STAC catalog**.  
+  - DCAT metadata and PROV-O provenance.  
+  - CARE and sovereignty governance.
 
---- ✦ ---
+For cultural and historical context, see the parent dataset README:
 
-## 🌐 Overview
+- `../README.md`
 
-The **Protohistoric Wichita Interaction Sphere** represents a dynamic cultural, environmental, and geopolitical landscape  
-stretching across south-central Kansas and adjacent regions during the protohistoric period.
+---
 
-This STAC collection provides unified, semantic, and reproducible metadata for:
+## 📘 Overview
 
-- 🧱 Generalized Wichita settlement clusters (H3 / hex grids)  
-- 📡 Trade & mobility corridors (least-cost + ethnohistoric inference)  
-- 🌀 Ceramic network relations (paste groups, decorations, compositional associations)  
-- 🧪 Radiocarbon probability envelopes (summed PDFs)  
-- 🌿 Paleoenvironmental reconstructions (hydrology, soils, fire, vegetation, climate)  
-- 🗺️ Ethnohistoric cartography (Spanish, French, US, tribal sources)
+The Protohistoric Wichita interaction sphere is a **high-sensitivity cultural landscape** representing:
 
-Designed for **Focus Mode v2**, **Story Nodes v3**, **Neo4j ingestion**,  
-and **MapLibre map layers**, this dataset is a cornerstone of the KFM archaeological analytics environment.
+- Generalized zones of protohistoric Wichita interaction, exchange, and contact (ca. AD 1500–1700).  
+- Synthesized from archaeological, ethnohistoric, and environmental evidence.  
+- Governed under high-sensitivity CARE rules with **mandatory tribal review**.
 
---- ✦ ---
+This STAC folder provides:
 
-## 📁 Directory Layout (DL-C Emoji Tree)
+- A **Collection** describing the overall dataset (`collection.json`).  
+- One or more **Items** that represent generalized polygons at public-governed resolution.  
+- Integration hooks for DCAT, provenance, and the global interaction-sphere STAC catalog.
 
-```text
-protohistoric-wichita/ 🏺✨
-├── metadata/ 📘
-│   └── README.md 📝
-│
-├── provenance/ 🧬
-│   └── README.md 📝
-│
-└── stac/ 📦🧭
-    ├── collection.json 🗂️
-    ├── items/ 📁🌐
-    │   ├── settlements-generalized-h3.json 🧱
-    │   ├── trade-corridors.json 📡
-    │   ├── ceramic-network.json 🌀
-    │   ├── radiocarbon-bands.json 🧪
-    │   ├── paleoenvironmental-overlays.json 🌿
-    │   └── ethnohistoric-cartography.json 🗺️
-    └── README.md 📖 (← this file)
-````
+---
 
---- ✦ ---
+## 🗂️ Directory Layout
 
-## 🗂️ STAC Collection (`collection.json`)
+~~~text
+docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/protohistoric-wichita/stac/
+├── 📄 README.md                       # This file
+├── 📄 collection.json                 # STAC Collection: Protohistoric Wichita Interaction Sphere
+└── 📂 items/
+    └── 📄 protohistoric-wichita-v2.json  # STAC Item for this interaction sphere
+~~~
 
-### ⭐ Core Elements
+IDs and filenames must be consistent across:
 
-* `type`: `"Collection"`
-* `id`: `"protohistoric-wichita-interaction-sphere"`
-* `title`, `description`: cultural & environmental scope
-* `license`: `"CC-BY-4.0"` or CARE-constrained variants
-* `keywords`: Wichita, Great Bend, protohistoric, archaeology
-* `extent`:
+- `collection.json`  
+- `items/protohistoric-wichita-v2.json`  
+- `../metadata/protohistoric-wichita-v2.json`  
+- `../provenance/protohistoric-wichita-v2.json`
 
-  * 📍 Spatial bbox
-  * ⏳ Temporal interval (OWL-Time compliant)
+---
 
-### 🧩 Extensions Used
+## 📦 STAC Collection (`collection.json`)
 
-* `proj:` (CRS / geometry projection info)
-* `checksum:` dataset integrity
-* `version:` dataset-level version control
-* `scientific:` citations + DOI
-* `label:` optional symbolic metadata
+The Collection provides the **top-level STAC descriptor** for this dataset.
 
-### 🛡️ CARE Metadata
+### Required STAC Core Fields
 
-Required for sensitive-site handling:
+- `stac_version: "1.0.0"`  
+- `type: "Collection"`  
+- `id`: for example, `"protohistoric-wichita-interaction-sphere"`  
+- `description`: cultural scope and high-level summary  
+- `license`: `"CC-BY-4.0"` (plus CARE/sovereignty conditions in metadata)  
+- `extent`:
+  - `extent.spatial.bbox` — generalized bounding box for the interaction sphere.  
+  - `extent.temporal.interval` — OWL-Time–compatible `[start, end]` intervals (for example, `[["1500-01-01T00:00:00Z","1700-01-01T00:00:00Z"]]`).  
 
-* `care:sensitivity_level`
-* `care:governance`
-* `care:notes`
+### KFM & CARE Fields (Collection-Level)
 
---- ✦ ---
+Typical properties (see global interaction-sphere schemas for exact constraints):
 
-## 📄 STAC Items in `items/`
+- `kfm:domain = "archaeology-cultural-landscapes"`  
+- `kfm:region_type = "interaction_sphere"`  
+- `kfm:review_cycle` (for example, `"Biannual"` or `"Quarterly"`)  
+- `care:sensitivity` — `"restricted-generalized"` (expected for this dataset)  
+- `care:review` — `"tribal"` plus FAIR+CARE where applicable  
+- `care:sovereignty` — `"protected"`  
+- `care:notes` — summary of high-level cultural safety decisions and conditions  
 
-Each STAC Item inherits the collection ID and provides:
+### Links
 
-* geometry
-* temporal attributes
-* asset links
-* dataset-specific properties
+Collection `links[]` should include:
 
-### 🧱 settlements-generalized-h3.json
+- `self` — reference to `collection.json`.  
+- `root` or parent, if linking into the global interaction-sphere STAC catalog.  
+- `item` — links to `items/protohistoric-wichita-v2.json`.  
+- Optional links to documentation (dataset README, provenance README).
 
-Generalized settlement clusters (H3, hex grids).
-Used in heat maps and cultural landscape footprints.
+---
 
-### 📡 trade-corridors.json
+## 📦 STAC Item (`items/protohistoric-wichita-v2.json`)
 
-Hypothesized terrestrial corridors based on network analysis + ethnohistoric records.
+The STAC Item represents the **generalized interaction-sphere geometry** and main assets.
 
-### 🌀 ceramic-network.json
+### STAC Core Fields
 
-Node/edge metrics, ceramic types, cluster communities, spatial embedding.
+- `stac_version: "1.0.0"`  
+- `type: "Feature"`  
+- `id: "protohistoric-wichita-v2"`  
+- `bbox` — generalized bounding box (`[minLon, minLat, maxLon, maxLat]`).  
+- `geometry`:
+  - `type`: `"Polygon"` or `"MultiPolygon"`  
+  - `coordinates`: highly generalized polygons only (H3-derived or similar).  
 
-### 🧪 radiocarbon-bands.json
+### KFM & CARE Properties
 
-Summed PDFs → temporal probability envelopes.
+Required `properties` (summary; see schema docs for full list):
 
-### 🌿 paleoenvironmental-overlays.json
+- `kfm:domain = "archaeology-cultural-landscapes"`  
+- `kfm:region_type = "interaction_sphere"`  
+- `kfm:culture_phase` / `kfm:phase` = `"Protohistoric-Wichita"` or equivalent canonical label(s)  
+- `kfm:generalization` = for example, `"H3-r7"` or `"H3-r8"`  
+- `kfm:provenance` = `"../provenance/protohistoric-wichita-v2.json"`  
 
-Hydrology, soils, fire frequency, vegetation, climatic window variables.
+CARE fields MUST reflect high sensitivity:
 
-### 🗺️ ethnohistoric-cartography.json
+- `care:sensitivity = "restricted-generalized"`  
+- `care:review = "tribal"` (plus FAIR+CARE, if recorded)  
+- `care:sovereignty = "protected"`  
+- `care:consent_status` — for example, `"conditional"` until full approval.  
+- `care:notes` — summary of redaction and generalization decisions.  
+- `care:visibility_rules = "h3-only"` for public-facing geometry, unless explicitly relaxed by sovereignty policy.
 
-Digitized geometries from historic and tribal cartographic sources.
+### Assets
 
---- ✦ ---
+At minimum:
 
-## 🛠️ Pipeline & ETL Integration
+- `assets.data`:
+  - `href` → path or URL to generalized GeoJSON (for example, `"../protohistoric-wichita.geojson"` or a remote endpoint).  
+  - `type` → `"application/geo+json"` or appropriate MIME type.  
+  - `roles` → must include `"data"`.
 
-### 🧠 ETL Flow
+Additional assets (for example, tilesets or PDF context maps) may be referenced as governed by CARE and sovereignty rules.
 
-* STAC discovery → validation → checksum verification
-* Projection normalization (EPSG:4326)
-* Graph loading:
+---
 
-  * `Dataset`
-  * `Layer`
-  * `Place`
-  * `Event`
-  * `Network`
-* CARE flags propagate into graph properties
-* Multi-source provenance stored in PROV-O mappings
+## 📚 Controlled Vocabularies (Local Use)
 
-### 🗺️ Web UI Integration
+This STAC Collection/Item should align with global interaction-sphere vocabularies:
 
-* MapLibre layers auto-register
-* Time slider sync from radiocarbon bands
-* Environmental layers render as COGs or GeoJSON
-* Story Node context auto-activates relevant layers
+| Field                  | Allowed / Example Values                                       |
+|------------------------|----------------------------------------------------------------|
+| `kfm:region_type`      | `interaction_sphere`                                           |
+| `kfm:interaction_type` | `influence_sphere`, `exchange_corridor`, `contact_zone`       |
+| `care:consent_status`  | `approved`, `conditional`, `not-approved`, `not-applicable`    |
 
---- ✦ ---
+These are enforced or checked via schemas under:
 
-## 📜 Story Node Integration (v3)
+- `../../stac/schemas/`
 
-Story Nodes that commonly reference this dataset include:
+---
 
-* **proto-wichita-overview**
-* **environmental-context-1500CE**
-* **trade-and-ceramics**
-* **corridor-systems**
+## 🧪 Validation & Governance
 
-Each Story Node references STAC assets via:
+This Collection and its Item must pass:
 
-```yaml
-relations:
-  - rel: "supports"
-    target: "settlements-generalized-h3"
-```
+- **STAC schemas**:
+  - `stac-collection-schema.json` (for `collection.json`)  
+  - `stac-item-schema.json` (for `protohistoric-wichita-v2.json`)  
+- **KFM extensions**:
+  - Cultural-landscape/interaction-sphere extension (`kfm:*`).  
+- **CARE extensions**:
+  - CARE cultural-safety schema (`care:*` fields).  
+- **DCAT crosswalk**:
+  - Alignment with `../metadata/protohistoric-wichita-v2.json`.  
+- **Provenance crosswalk**:
+  - Alignment with `../provenance/protohistoric-wichita-v2.json`.
 
-Story Nodes use STAC geometry (for camera focus) and time intervals (for slider sync).
+CI workflows (for example `artifact-stac-validate.yml`, `metadata-validate.yml`, `faircare-audit.yml`) must all pass before changes are merged or released.
 
---- ✦ ---
+Any change to:
 
-## 🕸️ Graph Entity Mapping (Neo4j)
+- Geometry,  
+- Temporal coverage,  
+- CARE or sovereignty metadata, or  
+- Provenance linkage  
 
-| STAC Element       | Neo4j Entity                    | Notes                                   |
-| ------------------ | ------------------------------- | --------------------------------------- |
-| Collection         | `(:Dataset)`                    | Top-level Protohistoric Wichita dataset |
-| Settlements        | `(:Layer {type:'settlements'})` | Generalized sites                       |
-| Corridors          | `(:Layer {type:'corridor'})`    | Mobility routes                         |
-| Ceramic Network    | `(:Network)` + `(:Site)`        | Edges: `[:CERAMIC_LINK]`                |
-| Radiocarbon Bands  | `(:Layer {type:'rc-band'})`     | Linked to `(:Event)`                    |
-| Paleoenvironment   | `(:Layer {type:'env'})`         | Covariates                              |
-| Ethnohistoric Maps | `(:Map)`                        | `[:DERIVED_FROM]` references            |
-| CARE Flags         | Node/Rel props                  | Sensitivity enforcement                 |
+**must** be reflected consistently across STAC, metadata, provenance, and the dataset README, and be subject to **tribal review**.
 
---- ✦ ---
+---
 
-## 🕓 Version History
+## 🔗 Related Specifications
 
-| Version | Date       | Steward         | Notes                         |
-| ------- | ---------- | --------------- | ----------------------------- |
-| v10.4.1 | 2025-11-17 | Lead Programmer | SEP-B edition + C-1 aesthetic |
-| v10.4.0 | 2025-11-15 | Archaeology WG  | Initial STAC implementation   |
+- `../README.md`  
+  – Protohistoric Wichita interaction-sphere dataset overview and cultural context.  
+- `../../stac/README.md`  
+  – Interaction-sphere STAC catalog (Items + Collections overview).  
+- `../../stac/items/README.md`  
+  – STAC Item requirements for interaction spheres.  
+- `../../stac/schemas/README.md`  
+  – STAC schemas and extensions used by this Collection and Item.  
+- `../metadata/README.md`  
+  – DCAT + CARE metadata for this dataset.  
+- `../provenance/README.md`  
+  – Provenance index and requirements for Protohistoric Wichita.
 
---- ✦ ---
+---
 
-## 👑 Footer & Certifications
+## 🕰 Version History
 
-**Diamond⁹ Ω / Crown∞Ω Ultimate Certified**
-**FAIR+CARE Compliant · STAC 1.0.0 Validated · CIDOC CRM / OWL-Time / GeoSPARQL**
-**Archaeology Data & Ethics Charter Enforced**
+| Version   | Date       | Author                                           | Summary                                                                 |
+|-----------|------------|--------------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Cultural Landscape WG · FAIR+CARE Council · Tribal Advisors | Aligned with KFM v11.2.3; updated front matter; clarified STAC Collection/Item fields, CARE/sovereignty expectations, and crosswalks. |
+| v10.4.1   | 2025-11-17 | Lead Programmer · Archaeology WG                | v10.4.1 STAC documentation; expanded multi-layer Item set for v10.x context. |
+| v10.4.0   | 2025-11-15 | Archaeology WG                                   | Initial Protohistoric Wichita STAC collection structure.               |
 
-> After any modification, update `version`, `last_updated`, and re-run KFM CI STAC validators.
+---
 
---- ✦ ---
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE · Sovereignty-Governed  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[⬅ Back to Protohistoric Wichita Dataset](../README.md)
