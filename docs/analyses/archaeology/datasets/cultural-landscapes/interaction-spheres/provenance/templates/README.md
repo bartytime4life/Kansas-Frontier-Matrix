@@ -1,127 +1,129 @@
 ---
-title: "🏺 Kansas Frontier Matrix — Archaeology Provenance Templates (Interaction Spheres)"
+title: "🏺 Kansas Frontier Matrix — Archaeology Provenance Templates (Interaction Spheres) (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/provenance/templates/README.md"
-version: "v11.0.0"
-last_updated: "2025-11-17"
-review_cycle: "Annual / Autonomous · FAIR+CARE Council"
+description: "Template library for PROV-O + CARE provenance artifacts for KFM v11 interaction-sphere datasets, aligned with STAC, DCAT, and graph ingestion."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Annual · Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Review"
+content_stability: "stable"
+status: "Active / Enforced"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/archaeology-interaction-spheres-provenance-templates-v1.json"
-governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:archaeology-interaction-spheres-provenance-templates-v11.2.3"
+doc_kind: "Template Library"
+intent: "interaction-sphere-provenance-templates"
+semantic_document_id: "kfm-doc-archaeology-interaction-spheres-provenance-templates-v11.2.3"
+category: "Analyses · Archaeology · Cultural Landscapes · Provenance · Templates"
+
+sbom_ref: "../../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../../releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "../../../../../../../schemas/telemetry/archaeology-interaction-spheres-provenance-templates-v1.json"
+energy_schema: "../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
+governance_ref: "../../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Cultural / Historical / Archaeological"
+sensitivity_level: "Medium"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Review"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/provenance/templates/README.md@v11.0.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 🏺 Archaeology Provenance Templates (Interaction Spheres) — KFM v11
 
-# 🏺 **Kansas Frontier Matrix — Archaeology Provenance Templates (Interaction Spheres)**  
 `docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/provenance/templates/README.md`
 
-**Purpose:**  
-Define standard, MCP-compliant provenance templates for **archaeology interaction-sphere datasets**  
-(Great Bend Aspect, Protohistoric Wichita, and related cultural landscapes). These templates ensure every  
-dataset records **sources, transformations, QA, and graph links** in a way that is **FAIR+CARE aligned**,  
-**STAC/DCAT/PROV-O compatible**, and ready for **Neo4j + Story Node + Focus Mode v3** integration.
+**Purpose**  
+Define **standard, KFM-governed provenance templates** for archaeology **interaction-sphere datasets**  
+(for example, Great Bend Aspect, Protohistoric Wichita, and related cultural landscapes).
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue)]()  
-[![KFM-MDP v11.0](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.0-informational)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)]()  
-[![Domain · Archaeology](https://img.shields.io/badge/Domain-Archaeology%20%2F%20Provenance-brown)]()  
-[![Status · Active](https://img.shields.io/badge/Status-Active-brightgreen)]()
+These templates ensure every interaction-sphere dataset records:
 
-</div>
+- **Sources** (archives, repositories, field projects, literature)  
+- **Transformations** (georeferencing, digitization, generalization, modeling)  
+- **Review & governance** (FAIR+CARE, tribal/sovereignty review, redaction decisions)  
+- **Lineage** from raw → generalized → processed  
+- **Graph links** into Neo4j, Story Nodes, and Focus Mode v3
+
+Templates are designed to be:
+
+- **PROV-O JSON-LD compatible**  
+- **CARE and sovereignty-aware**  
+- **STAC / DCAT crosswalkable**  
+- **Machine-validated in CI**  
+- **Hydratable into the KFM knowledge graph**
 
 ---
 
 ## 📘 Overview
 
-This directory provides **canonical provenance templates** for all archaeology datasets under:
+This directory provides **canonical provenance templates** for all archaeology interaction-sphere datasets under:
 
 - `docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/**`
-- (e.g. Great Bend Aspect, Protohistoric Wichita, and future interaction-sphere modules)
 
 The templates:
 
-- Encode **where data came from** (archives, repositories, field projects).  
-- Capture **how data were transformed** (georeferencing, digitization, generalization, modeling).  
-- Record **who did what, when, and with which tools** (MCP-style experiment / activity logging).  
-- Align with **PROV-O** (Entity / Activity / Agent), **CIDOC-CRM** for cultural heritage,  
-  **STAC 1.0** for spatio-temporal assets, **DCAT 3.0** for datasets, and **Story Node** schema for narratives.  
-- Are designed to be **machine-validated in CI** and **hydrated into the Neo4j graph**.
+- Capture **where data came from**.  
+- Track **how they were processed and generalized**.  
+- Record **who did what, when, and with which tools**.  
+- Align with:
+  - **PROV-O** (Entity / Activity / Agent)  
+  - **STAC 1.0** (for `kfm:provenance` references)  
+  - **DCAT 3.0** (for dataset-level provenance fields)  
+  - **Story Node / Focus Mode v3** provenance chips and narrative context  
 
-Use these templates whenever you create or update an interaction-sphere dataset so that **every layer, table,  
-and Story Node is fully traceable and reproducible**.
+All interaction-sphere datasets MUST have provenance artifacts derived from these templates.
 
 ---
 
 ## 🗂 Directory Layout
 
-```text
-interaction-spheres/
-└── provenance/
-    └── templates/
-        ├── dataset-provenance.template.yml
-        ├── sources-registry.template.csv
-        ├── transformations-log.template.csv
-        ├── qa-checklist.template.md
-        ├── story-links.template.json
-        └── README.md  ← this file
-````
+~~~text
+docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/provenance/templates/
+├── 📄 README.md                          # This file
+├── 📄 dataset-provenance.template.yml    # Dataset-level provenance summary (human + machine-readable)
+├── 📄 sources-registry.template.csv      # Registry of all input sources
+├── 📄 transformations-log.template.csv   # ETL and modeling step log
+├── 📄 qa-checklist.template.md           # QA + FAIR+CARE review checklist
+└── 📄 story-links.template.json          # Mapping from datasets to Story Nodes / Focus Mode entities
+~~~
 
-**Files**
-
-* `dataset-provenance.template.yml`
-  High-level dataset provenance (who/what/when/why), DCAT/STAC/PROV-O aligned.
-
-* `sources-registry.template.csv`
-  Row-wise registry of **all input sources** (archives, GIS services, field notes, publications).
-
-* `transformations-log.template.csv`
-  Step-by-step record of ETL and analytical transformations, keyed to MCP experiments / scripts.
-
-* `qa-checklist.template.md`
-  Markdown checklist for **data quality, FAIR+CARE review, and archaeology-specific redaction rules**.
-
-* `story-links.template.json`
-  Machine-readable mapping between dataset elements and **Story Nodes / Focus Mode entities**.
-
----
-
-## 🧬 Provenance Model & Standards
-
-All templates here follow a common conceptual model:
-
-* **Entity (PROV-O / CIDOC-CRM E73 / E31)**
-
-  * Datasets, layers, tables, rasters, vector features.
-  * Source documents (field forms, reports, digitized maps).
-
-* **Activity (PROV-O / CIDOC-CRM E7 / E65)**
-
-  * Georeferencing, digitization, generalization, aggregation, modeling.
-  * MPC experiments (e.g. clustering, interpolation, network analysis).
-
-* **Agent (PROV-O / CIDOC-CRM E39)**
-
-  * People, teams, institutions, software agents (e.g. specific pipeline scripts).
-
-* **Relations**
-
-  * `prov:used` (activity uses entity)
-  * `prov:wasGeneratedBy` (entity generated by activity)
-  * `prov:wasAttributedTo` (entity attributed to agent)
-  * Links to **Story Nodes** and **Focus Mode entities** by ID.
-
-Standards alignment baked into templates:
-
-* **STAC 1.0**: `id`, `datetime`, `bbox`, `geometry`, `assets`, `properties` hooks.
-* **DCAT 3.0**: `dct:title`, `dct:description`, `dct:license`, `dct:provenance`, `dcat:distribution`.
-* **CIDOC-CRM**: optional `cidoc_class`, `crm_relation` fields for advanced projects.
-* **OWL-Time**: ISO datetimes + `precision` fields where only year/decade is known.
-* **GeoSPARQL**: GeoJSON geometry ready for conversion to WKT.
-* **FAIR+CARE**: explicit `rights`, `sensitivity`, and Indigenous data flags in YAML + QA template.
+These templates mirror the **artifact-inventories provenance templates**, but are tuned to interaction-sphere and cultural-landscape use cases.
 
 ---
 
@@ -131,191 +133,196 @@ Standards alignment baked into templates:
 
 **File:** `dataset-provenance.template.yml`
 
-Use this to describe an entire interaction-sphere dataset (e.g. “Protohistoric Wichita — Trade Corridors v1.0”).
+Use this to describe a full interaction-sphere dataset, for example:
 
-Key sections include (template will have TODO markers):
+- `"Great Bend Aspect Interaction Sphere v3"`  
+- `"Protohistoric Wichita Exchange Corridor v2"`
 
-* `id`: stable dataset identifier (URN or UUID).
-* `title`, `description`: human-readable label and abstract.
-* `collection`: STAC collection id (e.g. `kfm-archaeology-interaction-spheres`).
-* `spatial_extent`: bbox; `temporal_extent`: start/end ISO dates + `precision`.
-* `license`, `rights`, `access_constraints`: including CARE notes.
-* `lineage`: brief narrative of major processing stages.
-* `sources_ref`: pointer(s) into `sources-registry.csv`.
-* `transformations_ref`: pointer(s) into `transformations-log.csv`.
-* `graph_links`: optional list of Neo4j labels/ids to be created/updated.
+Key sections (to be adapted per dataset):
+
+- `id` — stable dataset identifier (URN, UUID, or STAC/metadata ID).  
+- `title`, `description` — human-readable label and abstract.  
+- `collection` — STAC Collection ID (for example, `"great-bend-aspect"`).  
+- `spatial_extent` — generalized bbox and region description.  
+- `temporal_extent` — start/end ISO dates with precision notes (OWL-Time aligned).  
+- `license`, `rights`, `access_constraints` — include CARE + sovereignty notes.  
+- `lineage` — narrative summary of major processing stages.  
+- `sources_ref` — links into `sources-registry.csv`.  
+- `transformations_ref` — links into `transformations-log.csv`.  
+- `care` and `sovereignty` — summary of sensitivity, review, and consent status.  
+- `graph_links` — optional hints for Neo4j node/label creation.
 
 ### 2️⃣ Sources Registry (CSV)
 
 **File:** `sources-registry.template.csv`
 
-One row per **input source** used to build or update the dataset.
+One row per **input source** used to build or update the interaction-sphere dataset.
 
-Example columns:
+Suggested columns:
 
-* `source_id` – local stable id (e.g. `KSHS_KM_00123`).
-* `title` – source title (map name, report title, etc.).
-* `creator` – person/org.
-* `year` – publication or observation year.
-* `repository` – KSHS, KU, USGS, tribal archive, etc.
-* `access_uri` – URL or catalog id.
-* `license` – source license / rights statement.
-* `sensitivity` – `public` / `restricted` / `generalize`.
-* `notes` – free text.
+- `source_id` — local identifier (`GBA_LIT_001`, `MAP_1894_01`, etc.).  
+- `title` — source title (map name, article, report, dataset).  
+- `creator` — person or organization.  
+- `year` — publication or observation year.  
+- `repository` — KHS, tribal archive, university, PD repository, etc.  
+- `access_uri` — URL or catalog ID if available.  
+- `license` — rights/usage conditions.  
+- `sensitivity` — `public`, `restricted`, `generalize`.  
+- `notes` — free-text context (for example, "used only as a coarse reference").
 
 ### 3️⃣ Transformations Log (CSV)
 
 **File:** `transformations-log.template.csv`
 
-Chronological record of **ETL and analytical steps**, referencing scripts and MCP experiments.
+Chronological log of ETL and modeling steps, keyed to scripts and MCP experiments.
 
-Example columns:
+Suggested columns:
 
-* `step_id` – e.g. `T001`, `T002`.
-* `activity_label` – “Georectify 1894 topo map”, “Digitize village polygons”, etc.
-* `input_entities` – list of `source_id` or dataset ids used.
-* `output_entities` – new dataset/layer ids created.
-* `script_or_tool` – Python module, QGIS alg, manual process.
-* `experiment_id` – link to MCP experiment doc (e.g. `EXP-ARCH-2025-03`).
-* `run_date` – ISO date.
-* `operator` – person or team name/initials.
-* `qa_status` – `pending`, `approved`, `rejected`.
-* `notes`.
+- `step_id` — for example, `T001`, `T002`.  
+- `activity_label` — `"Georectify 1894 topo map"`, `"H3 generalization"`.  
+- `input_entities` — list of `source_id` or dataset IDs.  
+- `output_entities` — IDs of resultant datasets/layers.  
+- `script_or_tool` — Python module, QGIS algorithm, manual QGIS/QField, etc.  
+- `experiment_id` — link to MCP experiment doc (for example, `EXP-INTSPHERE-2025-03`).  
+- `run_date` — ISO date.  
+- `operator` — analyst or team.  
+- `qa_status` — `pending`, `approved`, `rejected`.  
+- `notes` — free text description of caveats or special handling.
 
 ### 4️⃣ QA & FAIR+CARE Checklist (Markdown)
 
 **File:** `qa-checklist.template.md`
 
-Used to document **quality checks, ethical review, and archaeology-specific constraints**:
+A guided checklist for:
 
-* Geometry & topology validation (no self-intersections, correct CRS).
-* Attribute completeness & controlled vocabularies.
-* Spatial / temporal generalization for sensitive sites (e.g. H3-level anonymization).
-* CARE review:
+- Data quality (schema completeness, types, ranges, topological checks).  
+- Spatial generalization (H3/generalization level, no precise sites).  
+- CARE and sovereignty review:
+  - Consent, community consultation, authority to control, and benefit sharing.  
+- Narrative risk checks:
+  - Avoiding harmful framing in Story Nodes and Focus Mode.  
+- Licensing and rights confirmation.
 
-  * consent, community consultation, authority to control, benefit sharing.
-* Accessibility & documentation completeness.
+This document is meant for human reviewers but can be inspected by CI for completion flags.
 
 ### 5️⃣ Story / Focus Links (JSON)
 
 **File:** `story-links.template.json`
 
-Bridges dataset elements into **Story Nodes** and **Focus Mode v3**.
+Maps interaction-sphere datasets to narrative and graph entities.
 
-Typical structure:
+Typical content:
 
-* Mapping from dataset ids (layers, features, records) to:
+- Dataset-level entries:
+  - `dataset_id` (aligned with STAC/metadata).  
+  - `story_node_ids` relevant to the sphere.  
+  - `focus_entity_ids` (for example, `CulturalRegion`, `CulturalPhase`, `InteractionSphere` node IDs).  
+- Optionally:
+  - Seed text or narrative labels for Focus Mode v3 to bootstrap explanations.  
 
-  * `story_node_id` (per `story-node.schema.json`).
-  * `focus_entity_ids` (Person / Place / Event ids in Neo4j).
-  * Optional `narrative_snippet` seeds for auto-summarization.
-
----
-
-## 🧪 Usage Workflow
-
-1. **Copy templates** into your dataset’s provenance directory:
-
-   * e.g. `interaction-spheres/protohistoric-wichita/provenance/`
-
-2. **Fill out `sources-registry.csv`**
-
-   * Register all maps, reports, datasets, web services, and field sources.
-
-3. **Fill out `transformations-log.csv`**
-
-   * One row per ETL / modeling step; link to MCP experiment docs.
-
-4. **Author `dataset-provenance.yml`**
-
-   * Summarize scope, extents, key decisions, and high-level lineage.
-
-5. **Complete `qa-checklist.md`**
-
-   * Perform and record QA & CARE review; update `qa_status` in transformation log.
-
-6. **Populate `story-links.json` (optional but recommended)**
-
-   * Connect dataset content to Story Nodes and Focus Mode entities.
-
-7. **Run validation** (see below).
-
-   * Fix any schema or lint errors until CI passes.
-
-8. **Commit & open PR**
-
-   * Ensure provenance artifacts and dataset changes are in the same PR per MCP.
+This template enables tight coupling between data lineage and narrative surfaces.
 
 ---
 
-## 🎯 Focus Mode & Story Node Integration
+## 🧬 Provenance Model & Standards
 
-These templates are **Focus Mode v3 aware**:
+All templates share a common conceptual model:
 
-* `dataset-provenance.yml` and `story-links.json` provide the hooks needed for:
+- **Entity (PROV-O / CIDOC-CRM E73/E31)**  
+  - Datasets, layers, derived surfaces, and key input documents.  
 
-  * **Focus Mode** to center on an interaction sphere dataset and surface:
+- **Activity (PROV-O / CIDOC-CRM E7/E65)**  
+  - Georeferencing, digitization, classification, generalization, modeling, review.  
 
-    * related sites, time ranges, source documents, and key activities.
-  * **Story Nodes** to:
+- **Agent (PROV-O / CIDOC-CRM E39)**  
+  - People, teams, institutions, software/pipeline agents.  
 
-    * reference datasets in their `spacetime` and `relations` sections.
+- **Relations**  
+  - `prov:used`, `prov:wasGeneratedBy`, `prov:wasDerivedFrom`, `prov:wasAttributedTo`.
 
-* By using stable ids (`dataset_id`, `source_id`, `story_node_id`, `focus_entity_id`), the graph layer can:
+Templates are compatible with:
 
-  * Generate **site dossiers** that explain:
-
-    * where polygons/points came from,
-    * which sources support them,
-    * which transformations and QA checks they passed.
-
-* When Focus Mode renders a story about a Great Bend settlement cluster or a Protohistoric Wichita trade route:
-
-  * It can **cite the exact provenance entries** from these templates, satisfying MCP’s explainability and
-    CARE requirements.
-
----
-
-## ✅ Validation & CI Hooks
-
-Provenance templates are validated through:
-
-* **Schema checks**
-
-  * YAML: JSON-schema-like validation using custom tooling.
-  * CSV: header and required-column validation.
-  * JSON: `story-links.template.json` checked against Story Node + local schema.
-
-* **Make targets / scripts** (examples; actual names may differ in repo):
-
-  * `make validate-provenance`
-  * `python tools/validate_provenance.py`
-
-* **CI**
-
-  * PRs touching `provenance/**` must pass provenance validation jobs.
-  * Failure to include or update provenance when modifying datasets should block merges (MCP docs-as-code rule).
+- **STAC 1.0** — via `kfm:provenance` references in Items/Collections.  
+- **DCAT 3.0** — via `dct:provenance` / related fields in metadata.  
+- **CIDOC-CRM** — optional fields in YAML/JSON for advanced mapping.  
+- **OWL-Time** — ISO datetimes with optional precision fields.  
+- **GeoSPARQL** — geometry stored in GeoJSON, convertible to WKT for the graph.  
+- **FAIR+CARE** — explicit fields for rights, sensitivity, and Indigenous data considerations.
 
 ---
 
-## 🔄 Versioning & Governance
+## 🧪 Usage Workflow (Interaction Spheres)
 
-* Keep `version` and `last_updated` in this README and filled templates current.
-* For each dataset provenance file:
+1. **Copy templates** into your dataset-specific provenance folder  
+   (for example, `cultural-landscapes/interaction-spheres/great-bend-aspect/provenance/`).
 
-  * Update its internal `version` when changing content or lineage.
-  * Note breaking changes in the dataset’s own README / changelog.
-* Governance and review:
+2. **Fill out `sources-registry.template.csv`**  
+   - Register all input datasets, maps, reports, and services.
 
-  * Archaeology domain leads review provenance annually (or on major releases).
-  * FAIR+CARE Council can mandate additional fields or redaction rules over time.
+3. **Fill out `transformations-log.template.csv`**  
+   - Log each ETL/modeling step and link to MCP experiment docs.
+
+4. **Author `dataset-provenance.template.yml`**  
+   - Summarize scope, temporal/spatial extent, key decisions, and lineage.
+
+5. **Complete `qa-checklist.template.md`**  
+   - Perform QA and CARE review; update QA status in the transformations log.
+
+6. **Populate `story-links.template.json`** (recommended)  
+   - Bind data outputs to Story Nodes and Focus Mode entities.
+
+7. **Run validation**  
+   - Use repository’s provenance/metadata validation tools (see CI section below).
+
+8. **Rename and commit**  
+   - Remove `.template` suffixes, set real IDs/paths, commit alongside STAC/metadata updates.
+
+---
+
+## ✅ Validation & CI
+
+Provenance artifacts created from these templates are validated via:
+
+- Schema checks (where JSON/YAML/CSV schemas are provided).  
+- Internal consistency checks:
+  - IDs between sources, transformations, and dataset-level provenance.  
+- CARE and sovereignty checks (for example, ensuring governance flags exist where required).  
+
+Validation is run by CI workflows, including (names may vary):
+
+- `artifact-stac-validate.yml`  
+- `metadata-validate.yml`  
+- `faircare-audit.yml`  
+- Any provenance-specific validation scripts defined under `docs/analyses/archaeology/validation/`.
+
+Provenance omissions or invalid fields should block merges that modify interaction-sphere datasets.
+
+---
+
+## 🔗 Related Specifications
+
+- `../README.md`  
+  – Interaction Sphere provenance index and governance rules.  
+- `../../stac/README.md`  
+  – Interaction-sphere STAC catalog and `kfm:provenance` link usage.  
+- `../../metadata/README.md`  
+  – DCAT + CARE metadata standards.  
+- `../../../../artifact-inventories/provenance/templates/README.md`  
+  – Artifact-inventory provenance templates that inspired these patterns.
 
 ---
 
 ## 🕰 Version History
 
-| Version | Date       | Author               | Summary                                                              |
-| ------- | ---------- | -------------------- | -------------------------------------------------------------------- |
-| v11.0.0 | 2025-11-17 | Lead Programmer (AI) | Initial creation of interaction-spheres provenance templates README. |
+| Version   | Date       | Author                                             | Summary                                                                 |
+|-----------|------------|----------------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Cultural Landscape WG · FAIR+CARE Council · Tribal Advisory Review | Updated for KFM v11.2.3; aligned with interaction-sphere provenance index; added telemetry refs and clarified Focus Mode v3 usage. |
+| v11.0.0   | 2025-11-17 | Lead Programmer (AI)                               | Initial creation of interaction-sphere provenance template README and template set. |
 
 ---
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE · Sovereignty-Governed  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[⬅ Back to Interaction Sphere Provenance](../README.md)
