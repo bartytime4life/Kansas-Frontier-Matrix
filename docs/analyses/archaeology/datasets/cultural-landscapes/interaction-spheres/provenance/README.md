@@ -1,178 +1,235 @@
 ---
 title: "🧬 Kansas Frontier Matrix — Interaction Sphere Provenance Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/provenance/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
+description: "PROV-O + CARE JSON-LD provenance logs for KFM v11 interaction-sphere datasets, documenting lineage, generalization, and sovereignty-aligned review."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Biannual · Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Review (when required)"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../schemas/telemetry/archaeology-interaction-spheres-provenance-v1.json"
-governance_ref: "../../../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+content_stability: "stable"
 status: "Active / Enforced"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:archaeology-interaction-spheres-provenance-v11.2.3"
 doc_kind: "Provenance Index"
 intent: "interaction-sphere-provenance"
+semantic_document_id: "kfm-doc-archaeology-interaction-spheres-provenance-v11.2.3"
+category: "Analyses · Archaeology · Cultural Landscapes · Provenance"
+
+sbom_ref: "../../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../../releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "../../../../../../../schemas/telemetry/archaeology-interaction-spheres-provenance-v1.json"
+energy_schema: "../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
+governance_ref: "../../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant (Variable Sensitivity)"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Cultural / Historical / Archaeological"
+sensitivity_level: "Medium"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Review"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/provenance/README.md@v10.4.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 🧬 Interaction Sphere Provenance Logs (v11)
 
-# 🧬 **Interaction Sphere Provenance Logs**  
 `docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/provenance/README.md`
 
-**Purpose:**  
-Serve as the **authoritative provenance index** for all Interaction Sphere datasets within the Kansas Frontier Matrix (KFM).  
-Provenance logs document:
+**Purpose**  
+Serve as the **authoritative provenance index** for all interaction-sphere datasets in the Kansas Frontier Matrix (KFM) v11.
 
-- Cultural interpretations  
-- GIS processing  
-- Generalization & obfuscation  
-- CARE/Tribal review workflows  
-- Dataset lineage  
-- Ethical decisions  
-- Scientific + narrative assumptions  
+These logs document:
 
-Provenance is mandatory for **every** Interaction Sphere dataset and is essential for FAIR+CARE governance, transparency, reproducibility, and ethical AI interpretation.
+- Cultural interpretations and modeling assumptions  
+- GIS processing and generalization steps  
+- CARE and tribal/sovereignty review workflows  
+- Dataset lineage from sources to KFM-ready layers  
+- Ethical decisions and redaction choices  
 
-</div>
+Provenance is **mandatory** for every interaction-sphere dataset and is central to FAIR+CARE governance, transparency, reproducibility, and ethical AI interpretation (Story Nodes and Focus Mode v3).
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
-Interaction Spheres represent culturally significant, multi-era networks of:
+Interaction spheres represent culturally significant, multi-era networks of:
 
-- Exchange  
-- Movement  
-- Social co-presence  
-- Settlement interconnectivity  
-- Cultural diffusion  
+- Exchange and trade  
+- Movement and mobility corridors  
+- Social co-presence and overlapping use areas  
+- Settlement interconnectivity and diffusion patterns  
 
-Because these datasets involve **culturally sensitive** domains across multiple descendant communities, provenance logging must be:
+Because they intersect sensitive cultural domains and multiple descendant communities, provenance logs must be:
 
-- **Comprehensive**  
-- **Machine-readable (PROV-O JSON-LD)**  
-- **Ethically contextualized**  
-- **FAIR+CARE reviewed**  
-- **Generalization-aware**  
-- **Properly versioned**
+- **Comprehensive** — covering raw, generalized, and processed states  
+- **Machine-readable** — PROV-O JSON-LD with KFM + CARE extensions  
+- **Ethically contextualized** — fully documenting review and redaction steps  
+- **FAIR+CARE reviewed** — including tribal review where required  
+- **Generalization-aware** — recording how precision was reduced  
+- **Properly versioned** — for each dataset release (vN)
 
 ---
 
-# 🗂️ Directory Layout
+## 🗂️ Directory Layout
 
 ~~~text
 docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/provenance/
-├── README.md                                 # This file
-├── great-bend-aspect-v2.json                 # Provenance for Great Bend Aspect Interaction Sphere
-├── central-plains-exchange-v1.json           # Provenance for Central Plains Exchange Interaction Sphere
-├── protohistoric-wichita-v1.json             # Provenance for Protohistoric Wichita (high-sensitivity)
-└── templates/                                # Templates for creating new provenance records
+├── 📄 README.md                         # This file (provenance index)
+├── 📄 great-bend-aspect-v3.json         # Provenance for Great Bend Aspect interaction sphere
+├── 📄 central-plains-exchange-v2.json   # Provenance for Central Plains exchange sphere
+├── 📄 protohistoric-wichita-v2.json     # Provenance for Protohistoric Wichita corridor (high-sensitivity)
+└── 📂 templates/                        # Templates for creating new provenance records
 ~~~
 
----
-
-# 🧩 Required PROV-O Components
-
-All provenance logs MUST include:
-
-### ✔ `@context`
-With definitions for:
-- `"prov"`
-- `"care"`
-- `"kfm"`
-- `"dct"` (for crosswalk with DCAT)
-- `"crm"` (optional; for CIDOC-CRM alignment)
+Each provenance file name (minus `.json`) should match the STAC Item ID stem and metadata/provenance conventions.
 
 ---
 
-### ✔ `prov:Entity`
+## 🧩 Required PROV-O & JSON-LD Components
 
-Each provenance file must define:
+All provenance logs MUST be valid **JSON-LD** with **PROV-O** semantics plus CARE and KFM extensions.
 
-| Entity | Notes |
-|---|---|
-| `raw` | Original open-data sources, generalized from literature/archaeology/ethnohistory |
-| `generalized` | Spatially obfuscated version (H3 or simplified polygons) |
-| `processed` | Final dataset used by KFM |
+### 1️⃣ `@context`
 
-Optional:
-- `interpretive` — When cultural synthesis requires model-based inference
+Every log must define at least:
+
+- `"prov"` — `http://www.w3.org/ns/prov#`  
+- `"care"` — KFM CARE extension namespace  
+- `"kfm"` — KFM core/extension namespace  
+
+Optional, where relevant:
+
+- `"dct"` — DCAT/DC metadata alignment  
+- `"crm"` — CIDOC-CRM alignment for advanced use  
+
+### 2️⃣ `prov:Entity`
+
+Each provenance file must define entities capturing the main states of the dataset:
+
+| Entity Key     | Notes                                                           |
+|----------------|-----------------------------------------------------------------|
+| `raw`          | Source/open data, literature synthesis, or pre-generalization state |
+| `generalized`  | Spatially obfuscated version (H3 mosaic or simplified polygons) |
+| `processed`    | Final KFM-ready dataset (referenced by STAC Item)              |
+| `interpretive` | (Optional) explicitly modeled/synthetic representations         |
+
+Each `prov:Entity` SHOULD include:
+
+- `prov:label`  
+- `prov:type` (for example, `"Dataset"`)  
+- `kfm:source` (for `raw`) and `kfm:provenance_version` (for `processed`)  
+
+### 3️⃣ `prov:Activity`
+
+Activities represent processing, integration, review, and modeling steps, such as:
+
+| Activity Key       | Description                                           |
+|--------------------|-------------------------------------------------------|
+| `cleaning`         | Attribute harmonization, schema normalization        |
+| `generalization`   | H3 derivation, polygon simplification, masking       |
+| `integration`      | Combining multiple data sources (archaeology + texts)|
+| `ethics_review`    | FAIR+CARE + sovereignty review steps                 |
+| `modeling`         | Environmental/diffusion modeling (if applicable)     |
+
+Each `prov:Activity` must include:
+
+- `prov:type`  
+- `prov:startTime` (ISO 8601)  
+- `prov:endTime` (ISO 8601)  
+- `kfm:steps` — array of high-level processing steps  
+
+### 4️⃣ `prov:Agent`
+
+Agents represent people and organizations involved:
+
+| Agent Type           | Examples                                     |
+|----------------------|----------------------------------------------|
+| Analyst              | GIS specialist, archaeologist                |
+| FAIR+CARE Reviewer   | FAIR+CARE Council, independent reviewers     |
+| Tribal Reviewer      | Tribal heritage office or advisory board     |
+| Source Institution   | KHS, university repositories, PD archives    |
+
+Typical properties:
+
+- `prov:type` = `"Person"` or `"Organization"`  
+- `prov:label`  
+- Optionally `prov:actedOnBehalfOf` to show institutional relationships  
+
+### 5️⃣ Lineage Relations
+
+Minimum required PROV-O relations:
+
+- `prov:wasDerivedFrom` — links `raw → generalized → processed`  
+- `prov:wasGeneratedBy` — connects entities to activities that created them  
+- `prov:used` — connects activities to prior entities or inputs  
+- `prov:wasAttributedTo` — attributes entities to agents (analysts/reviewers)  
+
+These relations form the **reproducible lineage chain** that underpins graph ingestion and audit trails.
 
 ---
 
-### ✔ `prov:Activity`
+## ⚖️ CARE & Sovereignty Requirements
 
-Required activity types include:
+Interaction-sphere datasets often cross sensitive cultural domains. Provenance logs must record the CARE and sovereignty context.
 
-| Activity | Description |
-|---|---|
-| `generalization` | H3 or polygon simplification process |
-| `cleaning` | Attribute harmonization, CRS normalization |
-| `integration` | Combining multi-source archaeological/literary evidence |
-| `ethics_review` | FAIR+CARE + Tribal review steps |
-| `modeling` | Environmental/diffusion modeling steps (if applicable) |
+### Required CARE fields at provenance top-level
 
-Each activity must include:
-- `prov:startTime`
-- `prov:endTime`
-- `kfm:steps` (array of processing steps)
-- `prov:type`
+| Field                | Description / Rules                                      |
+|----------------------|---------------------------------------------------------|
+| `care:sensitivity`   | `"general"`, `"generalized"`, or `"restricted-generalized"` (no `"restricted"` in public catalog) |
+| `care:review`        | `"faircare"`, `"tribal"`, or `"none-required"`          |
+| `care:notes`         | Narrative explanation of safety decisions (mandatory for `generalized` / `restricted-generalized`) |
+| `care:visibility_rules` | For example, `"h3-only"` or `"no-exact-points"`     |
 
----
+Additional fields may appear as needed:
 
-### ✔ `prov:Agent`
+- `care:consent_status` (for example, `approved`, `conditional`, `not-approved`, `not-applicable`).
 
-Agents must represent:
+### Governance expectations
 
-| Agent Type | Examples |
-|---|---|
-| Analyst | GIS specialist, archaeologist |
-| FAIR+CARE Reviewer | Independent reviewers or KFM Council |
-| Tribal Reviewer | Required for protohistoric or high-sensitivity spheres |
-| Source Institution | KHS, PD archives, research teams |
+- Protohistoric / ethnohistoric interaction spheres typically require `care:review = "tribal"`.  
+- High-sensitivity layers should adopt stricter `care:visibility_rules` (for example, `h3-only`).  
+- `care:notes` should clearly describe:
+  - What was generalized or removed.  
+  - Which communities reviewed the representation.  
+  - Any conditions attached to use (for example, story framing limitations).
 
 ---
 
-### ✔ Lineage Relationships
-
-All provenance files MUST include:
-
-- `prov:wasDerivedFrom` — raw → generalized → processed  
-- `prov:wasGeneratedBy`  
-- `prov:used`  
-- `prov:wasAttributedTo`  
-
-These form the backbone of the reproducible data lineage.
-
----
-
-# ⚖️ CARE Cultural Safety Requirements
-
-Interaction Sphere datasets frequently intersect with restricted cultural knowledge.  
-Therefore:
-
-### Mandatory:
-- `care:sensitivity: "generalized"` or `"restricted-generalized"`
-- For protohistoric/wider-contact datasets: `care:review: "tribal"`
-- `care:notes` describing ethical considerations  
-- `care:visibility_rules`:  
-  - `"h3-only"` for high sensitivity  
-  - `"polygon-generalized"` for standard datasets
-
-### Forbidden:
-- `"restricted"` sensitivity level  
-- Exact cultural boundaries  
-- Publication of specific sacred or ceremonial sites  
-
----
-
-# 🧪 Provenance Example (Excerpt)
+## 🧪 Example Provenance Excerpt (Illustrative)
 
 ~~~json
 {
@@ -184,28 +241,37 @@ Therefore:
   "prov:Entity": {
     "raw": {
       "prov:label": "Historical synthesis of CPT exchange patterns",
+      "prov:type": "Dataset",
       "kfm:source": "Open archaeological synthesis (PD)"
     },
     "generalized": {
-      "prov:label": "Generalized interaction sphere (H3-6)",
+      "prov:label": "Generalized interaction sphere (H3-r6)",
+      "prov:type": "Dataset",
       "care:notes": "Boundaries generalized to protect cultural sovereignty."
     },
     "processed": {
-      "prov:label": "Central Plains Exchange Sphere v1",
-      "kfm:provenance_version": "v1"
+      "prov:label": "Central Plains Exchange Sphere v2",
+      "prov:type": "Dataset",
+      "kfm:provenance_version": "v2"
     }
   },
   "prov:Activity": {
     "generalization": {
-      "prov:type": "Generalization",
+      "prov:type": "SpatialGeneralization",
       "prov:startTime": "2025-10-15T10:22:00Z",
       "prov:endTime": "2025-10-15T10:47:00Z",
       "kfm:steps": ["H3 index derivation", "polygon simplification"]
     }
   },
   "prov:Agent": {
-    "analyst": { "prov:label": "A. Barta" },
-    "faircare": { "prov:label": "FAIR+CARE Council" }
+    "analyst": {
+      "prov:type": "Person",
+      "prov:label": "A. Barta"
+    },
+    "faircare": {
+      "prov:type": "Organization",
+      "prov:label": "FAIR+CARE Council"
+    }
   },
   "prov:wasDerivedFrom": [
     { "prov:generatedEntity": "generalized", "prov:usedEntity": "raw" },
@@ -216,66 +282,84 @@ Therefore:
 }
 ~~~
 
+Actual production logs MUST adhere to the project’s provenance schemas and reflect current review status.
+
 ---
 
-# 🧠 Integration Into KFM
+## 🧠 Integration Into KFM Ecosystem
 
 ### Knowledge Graph
-Provenance populates:
 
-- `InteractionSphere` nodes  
-- `GeneralizedRegion` nodes  
-- `ProvenanceActivity` nodes  
-- `ReviewEvent` nodes  
+Interaction-sphere provenance logs support creation of:
 
-Relationships:
-- `GENERALIZED_FROM`  
-- `HAS_PROVENANCE`  
-- `REVIEWED_BY`  
-- `CARE_SENSITIVITY`  
-- `ASSOCIATED_WITH`
+**Nodes**
+
+- `InteractionSphere` and `GeneralizedRegion` entities  
+- `ProvenanceActivity` nodes (cleaning, generalization, review)  
+- `ReviewEvent` nodes (CARE, tribal, FAIR+CARE events)  
+- Source/agent nodes representing institutions and people  
+
+**Relationships**
+
+- `GENERALIZED_FROM` (Processed ↔ Generalized ↔ Raw)  
+- `HAS_PROVENANCE` (InteractionSphere ↔ ProvenanceRecord)  
+- `REVIEWED_BY` (InteractionSphere/Provenance ↔ Agents)  
+- `HAS_CARE_SENSITIVITY` (InteractionSphere ↔ CARE state)  
 
 ### Story Nodes
-Used for:
 
-- Cultural narratives  
-- Exchange/mobility story arcs  
-- Ethical warnings  
-- Time-depth explanations  
+- Surface provenance context at paragraph or story-block level.  
+- Provide transparent evidence for interaction narratives.  
+- Allow Story Nodes to reference specific provenance versions when summarizing.
 
-### Focus Mode v2
-Provides:
+### Focus Mode v3
 
-- Provenance chips  
-- Ethical sensitivity banners  
-- Explanation-level transparency  
+- Uses provenance to:
+  - Render provenance chips in explanations.  
+  - Adjust narrative framing based on review status and CARE sensitivity.  
+  - Enforce additional constraints for high-sensitivity spheres.
 
 ---
 
-# 📊 Provenance Index
+## 📊 Provenance Index (Illustrative)
 
-| Dataset | Version | Sensitivity | Review Type | Status |
-|---|---|---|---|---|
-| Great Bend Aspect | v2 | generalized | FAIR+CARE | 🟢 Active |
-| Central Plains Exchange | v1 | generalized | FAIR+CARE | 🟢 Active |
-| Protohistoric Wichita | v1 | restricted-generalized | Tribal Required | 🟡 Needs Review |
+| Provenance File                | Dataset                          | Sensitivity           | Review              | Status   |
+|--------------------------------|----------------------------------|-----------------------|---------------------|----------|
+| `great-bend-aspect-v3.json`   | Great Bend Aspect v3             | generalized           | FAIR+CARE           | 🟢 Active |
+| `central-plains-exchange-v2.json` | Central Plains Exchange v2    | generalized           | FAIR+CARE           | 🟢 Active |
+| `protohistoric-wichita-v2.json`   | Protohistoric Wichita v2      | restricted-generalized | Tribal + FAIR+CARE | 🟡 Review |
 
----
-
-# 🕰️ Version History
-
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Cultural Landscape WG · FAIR+CARE Council | Fully defined Interaction Sphere provenance standards; added tribal review enforcement |
-| v10.0.0 | 2025-11-10 | Landscape Provenance Team | Initial provenance directory structure |
+Authoritative status and flags live in manifests, metadata, and governance records; this table is illustrative.
 
 ---
 
-<div align="center">
+## 🔗 Related Specifications
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE · MCP-DL v6.3 · Tribal Review Required (when applicable)  
-Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+- `../README.md`  
+  – Interaction Sphere provenance overview and directory-level governance.  
+- `../stac/README.md`  
+  – Interaction Sphere STAC catalog (Items + Collections).  
+- `../stac/items/README.md`  
+  – STAC Item requirements and integration patterns.  
+- `../metadata/README.md`  
+  – DCAT + CARE metadata standards for interaction spheres.  
+- `../../../../artifact-inventories/provenance/README.md`  
+  – Artifact-inventory provenance patterns reused in this domain.
+
+---
+
+## 🕰 Version History
+
+| Version   | Date       | Author                                             | Summary                                                                 |
+|-----------|------------|----------------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Cultural Landscape WG · FAIR+CARE Council · Tribal Advisory Review | Updated to KFM v11.2.3; added energy/carbon telemetry refs; aligned with v11 interaction-sphere governance and Focus Mode v3 usage. |
+| v10.4.0   | 2025-11-17 | Cultural Landscape WG · FAIR+CARE Council         | Defined Interaction Sphere provenance standards; added tribal review enforcement and PROV-O/CARE requirements. |
+| v10.0.0   | 2025-11-10 | Landscape Provenance Team                         | Initial provenance directory structure.                                |
+
+---
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE · Sovereignty-Governed  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
 [⬅ Back to Interaction Spheres](../README.md)
-
-</div>
