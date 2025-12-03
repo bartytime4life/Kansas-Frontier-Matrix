@@ -1,253 +1,241 @@
 ---
 title: "🗺️ Kansas Frontier Matrix — STAC Items: Protohistoric Wichita Interaction Sphere (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/protohistoric-wichita/stac/items/README.md"
-version: "v10.4.4"
-last_updated: "2025-11-17"
-review_cycle: "Quarterly · FAIR+CARE Council"
+description: "STAC 1.0 Item documentation for the Protohistoric Wichita interaction-sphere feature in KFM v11, with KFM and CARE extensions."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Quarterly · Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Review Required"
+content_stability: "stable"
+status: "Active · Enforced (Tribal Review Required)"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../../releases/v10.4.4/sbom.spdx.json"
-manifest_ref: "../../../../../../../../releases/v10.4.4/manifest.zip"
-telemetry_ref: "../../../../../../../../releases/v10.4.4/focus-telemetry.json"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:archaeology-protohistoric-wichita-stac-items-v11.2.3"
+doc_kind: "STAC Items Index"
+intent: "interaction-spheres-protohistoric-wichita-stac-items"
+semantic_document_id: "kfm-doc-archaeology-protohistoric-wichita-stac-items-v11.2.3"
+category: "Analyses · Archaeology · Cultural Landscapes · STAC"
+
+sbom_ref: "../../../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../../../releases/v11.2.3/focus-telemetry.json"
 telemetry_schema: "../../../../../../../../schemas/telemetry/stac-items-v1.json"
+energy_schema: "../../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
 governance_ref: "../../../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.4"
-status: "Active · Enforced"
-doc_kind: "STAC-Items"
-intent: "archaeology · protohistoric-wichita"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Cultural / Historical / Archaeological"
+sensitivity_level: "High"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Review"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/protohistoric-wichita/stac/items/README.md@v10.4.4"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 🗺️ STAC Items — Protohistoric Wichita Interaction Sphere (v11)
 
-# 🗺️ **STAC Items — Protohistoric Wichita Interaction Sphere**  
-`stac/items/README.md`
+`docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/protohistoric-wichita/stac/items/README.md`
 
-**Purpose:**  
-Define, document, and validate **all STAC Items** representing geospatial/temporal archaeological datasets belonging to the **Protohistoric Wichita Interaction Sphere**, ensuring full alignment with **STAC 1.0.0**, **DCAT 3.0**, **CIDOC-CRM**, **OWL-Time**, **GeoSPARQL**, **Story Node v3**, and **Focus Mode v2** requirements.
+**Purpose**  
+Define and govern the **STAC 1.0 Item(s)** representing the **Protohistoric Wichita Interaction Sphere** in KFM v11.
 
-</div>
+This README documents:
 
---- ✦ ---
+- The **protohistoric-wichita-v2** STAC Item (generalized interaction-sphere geometry).  
+- Required core STAC fields and KFM + CARE extensions.  
+- How this Item aligns with Collection, metadata, and provenance artifacts.  
 
-## 1. Overview 📚
+For cultural and interpretive context, see:
 
-This module defines **individual STAC Items** that represent discrete archaeological datasets within the Protohistoric Wichita Interaction Sphere:
+- `../README.md` (dataset overview).  
 
-- Wichita settlements (generalized via H3 privacy grid)  
-- Trade corridors & interaction routes  
-- Ceramic petrographic networks  
-- Radiocarbon date bands  
-- Paleoenvironmental overlays  
-- Ethnohistoric cartography layers  
+For catalog-wide interaction-sphere rules, see:
 
-Each item is **FAIR+CARE governed**, spatiotemporally grounded, provenance-linked, and validated under **STAC → DCAT → CIDOC → Graph** interoperability rules.
+- `../../stac/items/README.md` (global interaction-sphere Items index).
 
---- ✦ ---
+---
 
-## 2. Directory Layout (DL-C compliant) 🌳
+## 📘 Overview
 
-```
+The Protohistoric Wichita interaction-sphere STAC Item encodes:
 
-protohistoric-wichita/
-├── stac/
-│   ├── collection.json
-│   ├── items/
-│   │   ├── settlements-generalized-h3.json
-│   │   ├── trade-corridors.json
-│   │   ├── ceramic-network.json
-│   │   ├── radiocarbon-bands.json
-│   │   ├── paleoenvironmental-overlays.json
-│   │   └── ethnohistoric-cartography.json
-│   └── README.md
+- A **generalized MultiPolygon** footprint of the interaction sphere, derived from GIS and interpretive synthesis.  
+- Temporal coverage for the protohistoric period (ca. AD 1500–1700).  
+- Cultural-landscape semantics via `kfm:*` properties.  
+- CARE and sovereignty metadata (`care:*`) capturing sensitivity, review, and consent status.  
+- A pointer to the PROV-O provenance log used by Story Nodes, Focus Mode v3, and graph ingestion.
 
-````
+This directory is **Item-level only**; the Collection is described in:
 
---- ✦ ---
+- `../README.md` and `../collection.json`.
 
-## 3. Required Metadata for All STAC Items 🧩
+---
 
-Every STAC Item **must** include:
+## 🗂️ Directory Layout
 
-### 3.1 Core STAC Fields
-- `stac_version: "1.0.0"`
-- `type: "Feature"`
-- `id` (UUID or controlled namespace ID)
-- `geometry` (GeoJSON)
-- `bbox`
-- `properties.datetime` or `start_datetime`/`end_datetime`
-- `links`
-- `assets`
+~~~text
+docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/protohistoric-wichita/stac/items/
+├── 📄 README.md                       # This file
+└── 📄 protohistoric-wichita-v2.json   # STAC Item for the generalized interaction sphere
+~~~
 
-### 3.2 Required Extensions
-- `proj`
-- `checksum`
-- `scientific`
-- `version`
-- `history`
-- `context` (KFM custom extension mapping to Story Node v3)
+The `id` inside `protohistoric-wichita-v2.json` MUST match the filename stem.
 
-### 3.3 Scientific Metadata
-- Citation (`scientific:citation`)
-- DOI or surrogate PID
-- `history:lineage`
-- Research notes
+---
 
-### 3.4 CARE Metadata
-- Sensitivity flags  
-- H3 generalization settings  
-- Indigenous governance notes  
-- Stewardship attribution  
-- Minimization flags  
+## 📚 Controlled Vocabularies (Item-Level)
 
---- ✦ ---
+The protohistoric Wichita Item must align with the interaction-sphere vocabularies:
 
-## 4. Item Summaries 📦
+| Field / Property             | Allowed / Example Values                                       |
+|------------------------------|----------------------------------------------------------------|
+| `properties.kfm:region_type` | `interaction_sphere`                                          |
+| `properties.kfm:interaction_type` | `influence_sphere`, `exchange_corridor`, `contact_zone` |
+| `properties.care:consent_status`  | `approved`, `conditional`, `not-approved`, `not-applicable` |
 
-### 4.1 🧍‍♂️ Settlements (Generalized H3)
-**ID:** `settlements-generalized-h3`  
-Generalized Protohistoric Wichita settlement areas, privacy-protected using H3 indexing.  
-**Temporal:** 1350–1750 CE  
-**Spatial:** MultiPolygon  
+These vocabularies are enforced or referenced by schemas in:
 
-### 4.2 🔄 Trade Corridors
-**ID:** `trade-corridors`  
-Reconstructed interaction/trade corridors derived from ethnohistoric, geomorphic, and riverine access data.  
-**Temporal:** 1400–1750 CE  
-**Spatial:** MultiLineString  
+- `../../stac/schemas/`
 
-### 4.3 🏺 Ceramic Petrographic Network
-**ID:** `ceramic-network`  
-Petrographic clusters, compositional signatures, and distribution vectors.  
-**Temporal:** 1300–1700 CE  
+---
 
-### 4.4 ⏳ Radiocarbon Bands
-**ID:** `radiocarbon-bands`  
-Bayesian-modeled radiocarbon probability structures for regionally associated sites.  
+## 📦 Required STAC Item Structure
 
-### 4.5 🌿 Paleoenvironmental Overlays
-**ID:** `paleoenvironmental-overlays`  
-Hydrology, drought indices, fire regimes, reconstructed vegetation/corridors.  
+### STAC Core (Protohistoric Wichita Item)
 
-### 4.6 🗺 Ethnohistoric Cartography
-**ID:** `ethnohistoric-cartography`  
-Merged cartographic overlays from early French, Spanish, and 19th-century ethnographic atlases.  
+`protohistoric-wichita-v2.json` must include:
 
---- ✦ ---
+- `stac_version: "1.0.0"`  
+- `type: "Feature"`  
+- `id: "protohistoric-wichita-v2"`  
+- `collection`: `"protohistoric-wichita-interaction-sphere"` or equivalent Collection ID  
+- `bbox`:
+  - Generalized bounding box `[minLon, minLat, maxLon, maxLat]` matching the generalized geometry.  
+- `geometry`:
+  - `type`: `"Polygon"` or `"MultiPolygon"`  
+  - `coordinates`: generalized only (no site- or cluster-level precision).  
 
-## 5. STAC Item Template (Copy/Paste) 📄
+### KFM Interaction-Sphere Extensions (`properties.kfm:*`)
 
-```json
-{
-  "stac_version": "1.0.0",
-  "type": "Feature",
-  "id": "<item-id>",
-  "collection": "protohistoric-wichita",
-  "geometry": {},
-  "bbox": [],
-  "properties": {
-    "datetime": null,
-    "start_datetime": "",
-    "end_datetime": "",
-    "proj:epsg": 4326,
-    "scientific:citation": "",
-    "scientific:doi": "",
-    "history:lineage": "",
-    "kfm:context_storynode": "",
-    "kfm:care_sensitivity": ""
-  },
-  "assets": {
-    "data": {
-      "href": "<link>",
-      "type": "application/geo+json",
-      "roles": ["data"],
-      "checksum:multihash": ""
-    }
-  },
-  "links": [
-    { "rel": "collection", "href": "../collection.json" },
-    { "rel": "alternate", "href": "" },
-    { "rel": "provenance", "href": "" }
-  ]
-}
-````
+At minimum:
 
---- ✦ ---
+| Field                     | Description                                                     |
+|---------------------------|-----------------------------------------------------------------|
+| `kfm:domain`              | Must be `"archaeology-cultural-landscapes"`                    |
+| `kfm:region_type`         | `"interaction_sphere"`                                         |
+| `kfm:culture_phase` / `kfm:phase` | `"Protohistoric-Wichita"` or canonical phase label(s) |
+| `kfm:generalization`      | Generalization level, e.g. `"H3-r7"` or `"H3-r8"`              |
+| `kfm:provenance`          | `"../provenance/protohistoric-wichita-v2.json"`                |
+| `kfm:review_cycle`        | `"Quarterly"` or `"Biannual"` as per governance                |
 
-## 6. Knowledge Graph Integration 🕸️
+Additional fields may be required by shared schemas (for example, `kfm:interaction_type`).
 
-| STAC → Graph | Neo4j Class     | CIDOC CRM |
-| ------------ | --------------- | --------- |
-| Item         | `Dataset`       | `E73`     |
-| Geometry     | `Spatial`       | `E47`     |
-| Temporal     | `Temporal`      | `E52`     |
-| Asset        | `DigitalObject` | `E84`     |
-| Lineage      | `Activity`      | `E7`      |
+### CARE & Sovereignty Extensions (`properties.care:*`)
 
-Outputs generated automatically:
+For this high-sensitivity dataset:
 
-* Story Node v3 candidates
-* Focus Mode v2 contextual summaries
-* PROV-O lineage triples
-* H3-minimized public derivatives
+| Field                   | Expected / Allowed Values                                      |
+|-------------------------|----------------------------------------------------------------|
+| `care:sensitivity`      | `"restricted-generalized"`                                     |
+| `care:review`           | `"tribal"` (plus FAIR+CARE where recorded)                     |
+| `care:sovereignty`      | `"protected"`                                                  |
+| `care:consent_status`   | Initially `"conditional"` until fully approved                 |
+| `care:notes`            | Must summarize review outcomes, redaction, and generalization. |
+| `care:visibility_rules` | `"h3-only"` recommended; stricter modes may be used if required |
 
---- ✦ ---
+These values must match provenance and metadata records.
 
-## 7. Validation & CI/CD 🧪
+### Assets
 
-All items must pass:
+Minimal `assets` block:
 
-* `stac-validate`
-* JSON Schema validation
-* CARE governance audit
-* PROV lineage validation
-* Ontology alignment
-* Graph consistency scan
+- `assets.data`:
+  - `href`: path or URL to the generalized geometry (for example, `"../protohistoric-wichita.geojson"` or a remote path).  
+  - `type`: `"application/geo+json"` (or format actually used).  
+  - `roles`: must include `"data"`.
 
---- ✦ ---
+---
 
-## 8. Narrative & Focus Mode Binding 🧭
+## 🧪 Validation Requirements
 
-Each STAC Item requires a `kfm:context_storynode` reference linking to:
+`protohistoric-wichita-v2.json` must pass:
 
-* Story Node v3 master narrative
-* Or auto-generated Focus Mode v2 summary
+- **STAC Item schema**:
+  - `stac-item-schema.json` in `../../stac/schemas/`.  
+- **KFM extension schema**:
+  - Interaction-sphere KFM schema (`kfm-interaction-extension.json` or equivalent).  
+- **CARE extension schema**:
+  - `care-sensitivity-extension.json`.  
+- **DCAT crosswalk**:
+  - With `../metadata/protohistoric-wichita-v2.json`.  
+- **Provenance link check**:
+  - Ensuring `kfm:provenance` points to an existing `../provenance/protohistoric-wichita-v2.json`.  
 
-This enables:
+CI workflows (for example, `artifact-stac-validate.yml`, `metadata-validate.yml`, `faircare-audit.yml`) must all pass before this Item is considered governed and Active.
 
-* Storyline maps
-* Contextual timeline overlays
-* Entity-centric Focus Mode navigation
-* Archaeological dossier auto-generation
+---
 
---- ✦ ---
+## 🔗 Related Specifications
 
-## 9. Provenance (PROV-O) 🧾
+- `../README.md`  
+  – Protohistoric Wichita interaction-sphere dataset overview and governance.  
+- `../stac/README.md`  
+  – Protohistoric Wichita STAC Collection documentation.  
+- `../../stac/items/README.md`  
+  – Global interaction-sphere STAC Items index and requirements.  
+- `../../stac/schemas/README.md`  
+  – STAC schemas and extensions for interaction spheres.  
+- `../metadata/README.md`  
+  – DCAT + CARE metadata for Protohistoric Wichita.  
+- `../provenance/README.md`  
+  – Provenance index for Protohistoric Wichita.
 
-Each item must include:
+---
 
-* Data source origin
-* ETL pipeline UUID
-* Software agent version
-* Transformation events
-* Asset checksums
+## 🕰 Version History
 
---- ✦ ---
+| Version   | Date       | Author                                           | Summary                                                                 |
+|-----------|------------|--------------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Cultural Landscape WG · FAIR+CARE Council · Tribal Advisory Review | Rebuilt for KFM v11.2.3; aligned with global interaction-sphere STAC specs and CARE/sovereignty rules; dropped v10 multi-Item pattern in favor of single generalized Item. |
+| v10.4.4   | 2025-11-17 | FAIR+CARE Council · Archaeology WG              | v10.4.4 STAC Items README; multi-layer v10-era STAC pattern.           |
+| v10.4.0   | 2025-11-15 | Archaeology WG                                   | Initial STAC Items documentation for Protohistoric Wichita.            |
 
-## 10. Standards & Compliance 📎
+---
 
-* STAC 1.0.0
-* DCAT 3.0
-* CIDOC-CRM v7
-* GeoSPARQL 1.1
-* OWL-Time
-* PROV-O
-* Story Node v3
-* KFM Ontology v10
-* FAIR+CARE
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE · Sovereignty-Governed  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
---- ✦ ---
-
-**End of STAC Items README — Protohistoric Wichita Interaction Sphere**
+[⬅ Back to Protohistoric Wichita STAC Collection](../README.md)
