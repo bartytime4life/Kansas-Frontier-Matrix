@@ -1,67 +1,112 @@
 ---
 title: "🧬 Kansas Frontier Matrix — Artifact Inventory Provenance Templates (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/artifact-inventories/provenance/templates/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
+description: "Template library for PROV-O + CARE JSON-LD provenance logs for KFM v11 artifact inventories."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council · Metadata Standards Subcommittee"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../../schemas/telemetry/archaeology-artifact-inventory-provenance-templates-v1.json"
-governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+content_stability: "stable"
 status: "Active / Enforced"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:archaeology-artifact-inventory-provenance-templates-v11.2.3"
 doc_kind: "Template Library"
 intent: "artifact-inventory-provenance-templates"
+semantic_document_id: "kfm-doc-archaeology-artifact-inventory-provenance-templates-v11.2.3"
+category: "Analyses · Archaeology · Provenance · Templates"
+
+sbom_ref: "../../../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../../../releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "../../../../../../../../schemas/telemetry/archaeology-artifact-inventory-provenance-templates-v1.json"
+energy_schema: "../../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
+governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+care_label: "High-Sensitivity · Sovereignty-Governed"
+sensitivity: "Cultural / Archaeological / Heritage"
+sensitivity_level: "High"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Archaeology Working Group · FAIR+CARE Council · Metadata Standards Subcommittee"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/artifact-inventories/provenance/templates/README.md@v10.4.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 🧬 Kansas Frontier Matrix — Artifact Inventory Provenance Templates (v11)
 
-# 🧬 **Kansas Frontier Matrix — Artifact Inventory Provenance Templates**  
 `docs/analyses/archaeology/datasets/artifact-inventories/provenance/templates/README.md`
 
-**Purpose:**  
-Provide a library of **validated PROV-O lineage templates** for all artifact inventory datasets within the Kansas Frontier Matrix (KFM).  
-These templates ensure contributors generate provenance logs that are:
+**Purpose**  
+Provide a library of **PROV-O + CARE JSON-LD templates** for artifact inventory provenance logs in KFM v11.
 
-- Complete  
-- Culturally safe  
-- FAIR+CARE–aligned  
-- Compatible with KFM archaeology pipelines  
-- Valid under **W3C PROV-O**, **DCAT**, **STAC**, and **CIDOC-CRM**  
-- Traceable through ETL → Graph → Story Nodes → Focus Mode v2  
+These templates ensure that provenance records are:
 
-Every artifact inventory must include a provenance JSON built from one of these templates.
+- Structurally complete and PROV-O–compliant  
+- Culturally safe and sovereignty-aligned (CARE + sovereignty policy)  
+- Compatible with KFM archaeology pipelines, STAC, and DCAT  
+- Ready for ingestion into the KFM knowledge graph, Story Nodes, and Focus Mode v3  
 
-</div>
+Every artifact inventory MUST have a provenance JSON derived from one of these templates.
 
 ---
 
 ## 📘 Overview
 
-The templates in this directory allow contributors to produce standardized, machine-readable **provenance logs** describing:
+Templates in this directory help contributors produce standardized, machine-readable provenance logs describing:
 
-- Dataset origins (PD archives, museums, universities)  
-- Transformations applied (cleaning, classification, harmonization)  
-- Cultural review processes (FAIR+CARE + tribal review when required)  
-- Generalization procedures (H3 level, coordinate obfuscation)  
-- Uncertainty, assumptions, and biases  
-- Scripts, pipelines, and versions used  
-- Dataset lineage from raw → processed → published  
+- **Origins**  
+  - Source repositories (museums, archives, universities, PD portals, field projects).  
+- **Transformations**  
+  - Cleaning, normalization, classification, column mapping, encoding fixes.  
+- **Cultural and sovereignty review**  
+  - FAIR+CARE and tribal review activities, outcomes, and conditions.  
+- **Spatial generalization**  
+  - H3 level used, coordinate removal, precision reduction, any redaction.  
+- **Uncertainty and assumptions**  
+  - Known limitations, approximations, or interpretive steps.  
+- **Tools and pipelines**  
+  - Scripts, versions, container images, and configuration IDs.  
+- **Version lineage**  
+  - Raw → v1 → vN transitions and reasons for major changes.
 
 These logs are critical for:
 
-- Ethical governance  
-- Reproducibility  
-- Validation  
-- AI interpretability  
-- KFM governance reports  
-- Story Node provenance chips  
+- Ethical governance and auditability  
+- Scientific reproducibility  
+- Explainable AI behavior in Focus Mode  
+- Story Node provenance chips and narrative context  
 
 ---
 
@@ -69,36 +114,45 @@ These logs are critical for:
 
 ~~~text
 docs/analyses/archaeology/datasets/artifact-inventories/provenance/templates/
-├── README.md                           # This file
-├── template_provenance_lithics.json    # Lithic artifact provenance template
-├── template_provenance_ceramics.json   # Ceramic dataset provenance template
-├── template_provenance_metals.json     # Protohistoric metal provenance template
-├── template_provenance_faunal.json     # Faunal (PD-only) provenance template
-└── annotated/                          # Annotated templates with explanatory comments
+├── 📄 README.md                           # This file (template library index)
+├── 📄 template_provenance_lithics.json    # Lithic artifact inventory provenance template
+├── 📄 template_provenance_ceramics.json   # Ceramic artifact inventory provenance template
+├── 📄 template_provenance_metals.json     # Protohistoric / metal artifact provenance template
+├── 📄 template_provenance_faunal.json     # Faunal (public-domain oriented) provenance template
+└── 📂 annotated/                          # Annotated templates with explanatory comments
 ~~~
+
+This layout is **normative** for artifact-inventory provenance templates.
 
 ---
 
-# 🧩 Template Structure Overview (All Provenance Files)
+## 🧩 Common Template Structure
 
-Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeological extensions.
+All provenance templates follow a **JSON-LD PROV-O pattern** with KFM and CARE namespaces.
 
-### Required Components
+### Required top-level components
 
-| Component | Purpose |
-|---|---|
-| `@context` | Defines JSON-LD namespaces for PROV, CARE, KFM |
-| `prov:Entity` | Raw & processed datasets |
-| `prov:Activity` | Cleaning, filtering, classification steps |
-| `prov:Agent` | Analysts, reviewers, institutions |
-| `prov:wasDerivedFrom` | Raw → processed lineage |
-| `care:*` | Cultural-safety metadata |
-| `kfm:*` | Domain-specific provenance metadata |
-| `dct:` | Crosswalk for DCAT metadata where relevant |
+- `@context`  
+  - Includes `prov`, `care`, and `kfm` namespaces.  
+- `prov:Entity`  
+  - Describes raw and processed datasets.  
+- `prov:Activity`  
+  - Describes processing, generalization, and review steps.  
+- `prov:Agent`  
+  - Describes analysts, working groups, councils, and tribal reviewers.  
+- PROV-O relations  
+  - `prov:wasDerivedFrom`, `prov:wasGeneratedBy`, `prov:used`, `prov:wasAttributedTo`.  
+- CARE & KFM fields  
+  - `care:sensitivity`, `care:review`, `care:notes`, `care:visibility_rules`.  
+  - `kfm:provenance_version`, `kfm:source`, `kfm:generalization`, etc.
+
+Templates are intentionally minimal but enforce the core structure required by KFM’s provenance schema.
 
 ---
 
 ## 🧱 Template — Lithic Artifact Provenance (Minimal)
+
+`template_provenance_lithics.json` (illustrative pattern):
 
 ~~~json
 {
@@ -118,7 +172,7 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
     "processed": {
       "prov:label": "Processed Lithic Inventory",
       "prov:type": "Dataset",
-      "kfm:provenance_version": "v1"
+      "kfm:provenance_version": "v11"
     }
   },
 
@@ -127,7 +181,17 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
       "prov:type": "Cleaning",
       "prov:startTime": "YYYY-MM-DDThh:mm:ssZ",
       "prov:endTime": "YYYY-MM-DDThh:mm:ssZ",
-      "kfm:steps": ["column standardization", "type harmonization"]
+      "kfm:steps": [
+        "column standardization",
+        "type harmonization",
+        "duplicate removal"
+      ]
+    },
+    "generalization": {
+      "prov:type": "SpatialGeneralization",
+      "prov:startTime": "YYYY-MM-DDThh:mm:ssZ",
+      "prov:endTime": "YYYY-MM-DDThh:mm:ssZ",
+      "kfm:generalization": "H3-r7"
     }
   },
 
@@ -137,24 +201,30 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
       "prov:label": "ANALYST NAME"
     },
     "reviewer": {
-      "prov:type": "Group",
+      "prov:type": "Organization",
       "prov:label": "FAIR+CARE Council"
     }
   },
 
   "prov:wasDerivedFrom": [
-    { "prov:generatedEntity": "processed", "prov:usedEntity": "raw" }
+    {
+      "prov:generatedEntity": "processed",
+      "prov:usedEntity": "raw"
+    }
   ],
 
   "care:sensitivity": "generalized",
   "care:review": "faircare",
-  "care:notes": "Spatial generalization applied using H3 level 6."
+  "care:notes": "Spatial generalization applied using H3-r7; no site-level coordinates retained.",
+  "care:visibility_rules": "no-exact-points"
 }
 ~~~
 
 ---
 
 ## 🧱 Template — Ceramic Artifact Provenance (Motif-Sensitive)
+
+`template_provenance_ceramics.json` (motif-aware pattern):
 
 ~~~json
 {
@@ -169,13 +239,13 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
       "prov:label": "Raw Ceramic Motif Dataset",
       "prov:type": "Dataset",
       "kfm:source": "INSTITUTION",
-      "care:notes": "Some motif fields required masking."
+      "care:notes": "Raw motif fields may include culturally restricted designs."
     },
     "processed": {
       "prov:label": "Processed Ceramic Inventory",
       "prov:type": "Dataset",
-      "kfm:provenance_version": "v1",
-      "care:notes": "Restricted motifs removed before publication."
+      "kfm:provenance_version": "v11",
+      "care:notes": "Restricted motifs removed or generalized prior to publication."
     }
   },
 
@@ -184,7 +254,11 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
       "prov:type": "Filtering",
       "prov:startTime": "YYYY-MM-DDThh:mm:ssZ",
       "prov:endTime": "YYYY-MM-DDThh:mm:ssZ",
-      "kfm:steps": ["remove restricted motifs", "reclassify generalized categories"]
+      "kfm:steps": [
+        "remove restricted motifs",
+        "generalize motif classes",
+        "apply CARE motif policy"
+      ]
     }
   },
 
@@ -194,24 +268,30 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
       "prov:label": "ANALYST NAME"
     },
     "reviewer": {
-      "prov:type": "Group",
+      "prov:type": "Organization",
       "prov:label": "FAIR+CARE Council"
     }
   },
 
   "prov:wasDerivedFrom": [
-    { "prov:generatedEntity": "processed", "prov:usedEntity": "raw" }
+    {
+      "prov:generatedEntity": "processed",
+      "prov:usedEntity": "raw"
+    }
   ],
 
   "care:sensitivity": "generalized",
   "care:review": "faircare",
-  "care:notes": "Motif generalization required to protect cultural knowledge."
+  "care:notes": "Motif categories generalized to protect cultural knowledge; restricted designs removed.",
+  "care:visibility_rules": "no-exact-points"
 }
 ~~~
 
 ---
 
-## 🧱 Template — Metals / Protohistoric Provenance (Tribal Review Required)
+## 🧱 Template — Metals / Protohistoric Provenance (Tribal Review)
+
+`template_provenance_metals.json` (sovereignty-focused):
 
 ~~~json
 {
@@ -230,8 +310,8 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
     "processed": {
       "prov:label": "Processed Metal Inventory",
       "prov:type": "Dataset",
-      "kfm:provenance_version": "v1",
-      "care:notes": "Generalized after tribal review."
+      "kfm:provenance_version": "v11",
+      "care:notes": "Dataset filtered and generalized following tribal review."
     }
   },
 
@@ -240,7 +320,10 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
       "prov:type": "Consultation",
       "prov:startTime": "YYYY-MM-DDThh:mm:ssZ",
       "prov:endTime": "YYYY-MM-DDThh:mm:ssZ",
-      "kfm:steps": ["tribal consultation", "ethical filtering"]
+      "kfm:steps": [
+        "tribal consultation",
+        "ethical filtering based on feedback"
+      ]
     }
   },
 
@@ -250,24 +333,30 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
       "prov:label": "ANALYST NAME"
     },
     "tribal_reviewer": {
-      "prov:type": "Group",
+      "prov:type": "Organization",
       "prov:label": "Tribal Heritage Office"
     }
   },
 
   "prov:wasDerivedFrom": [
-    { "prov:generatedEntity": "processed", "prov:usedEntity": "raw" }
+    {
+      "prov:generatedEntity": "processed",
+      "prov:usedEntity": "raw"
+    }
   ],
 
   "care:sensitivity": "restricted-generalized",
   "care:review": "tribal",
-  "care:notes": "Contact-era metal artifacts require tribal consultation before dataset publication."
+  "care:notes": "Contact-era metal artifacts reviewed by tribal representatives; sensitive associations generalized.",
+  "care:visibility_rules": "h3-only"
 }
 ~~~
 
 ---
 
-## 🧱 Template — Faunal Provenance (PD-Only)
+## 🧱 Template — Faunal Provenance (Public-Domain Oriented)
+
+`template_provenance_faunal.json`:
 
 ~~~json
 {
@@ -286,83 +375,91 @@ Each template follows the **W3C PROV-O JSON-LD pattern**, with KFM archaeologica
     "processed": {
       "prov:label": "Processed Faunal Dataset",
       "prov:type": "Dataset",
-      "kfm:provenance_version": "v1"
+      "kfm:provenance_version": "v11"
     }
   },
 
   "prov:Activity": {
     "cleaning": {
       "prov:type": "Cleaning",
-      "kfm:steps": ["remove non-faunal records", "normalize species names"]
+      "kfm:steps": [
+        "remove non-faunal records",
+        "normalize species names",
+        "drop ambiguous identifications"
+      ]
     }
   },
 
   "prov:Agent": {
-    "analyst": { "prov:label": "ANALYST NAME" }
+    "analyst": {
+      "prov:type": "Person",
+      "prov:label": "ANALYST NAME"
+    }
   },
 
   "prov:wasDerivedFrom": [
-    { "prov:generatedEntity": "processed", "prov:usedEntity": "raw" }
+    {
+      "prov:generatedEntity": "processed",
+      "prov:usedEntity": "raw"
+    }
   ],
 
   "care:sensitivity": "general",
-  "care:review": "none-required"
+  "care:review": "none-required",
+  "care:notes": "Dataset verified PD-safe; sacred species and sensitive contexts removed as needed."
 }
 ~~~
 
 ---
 
-# 🧪 Validation Requirements
+## 🧪 Validation Requirements
 
-All provenance logs produced from these templates must pass:
+Provenance logs generated from these templates must satisfy:
 
-- **PROV-O structural validation**  
-- **CARE cultural review validation**  
-- **KFM provenance schema checks**  
-- **DCAT/STAC crosswalk checks**  
-- **CI pipelines:**  
-  - `metadata-validate.yml`  
-  - `artifact-stac-validate.yml`  
-  - `faircare-audit.yml`  
+- **Schema validation**  
+  - Against KFM’s PROV-O/CARE provenance schema (see `stac/schemas/`).  
+- **CARE validation**  
+  - `care:*` fields must use allowed values and match governance decisions.  
+- **Cross-linking checks**  
+  - STAC Items refer to the correct provenance file via `kfm:provenance`.  
+  - Paths align with actual file locations in `../provenance/`.  
 
-Any mismatch halts ingestion.
+Validation is enforced via CI workflows such as:
 
----
-
-# 🧠 Integration Into KFM
-
-### Knowledge Graph
-Provenance produces:
-
-- `Dataset` → `PROV` edges  
-- `Agent` nodes (analysts, councils, tribal reviewers)  
-- `Activity` nodes for cleaning, filtering, consultation  
-
-### Story Nodes
-Provenance chips show:
-
-- Data origins  
-- Ethical review paths  
-- Transformation logs  
-
-### Focus Mode v2
-Uses provenance to produce explainable narratives.
+- `.github/workflows/artifact-stac-validate.yml`  
+- `.github/workflows/metadata-validate.yml`  
+- Any FAIR+CARE governance audit workflows configured for KFM v11.
 
 ---
 
-# 🕰️ Version History
+## 🧠 Integration Within KFM
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v10.4.0 | 2025-11-17 | Archaeology WG · FAIR+CARE Council · Metadata Subcommittee | Created full provenance template suite with cultural safety logic and PROV-O mappings |
-| v10.0.0 | 2025-11-10 | Artifact Metadata Team | Initial template directory |
+- **STAC & DCAT**  
+  - STAC Items use `properties.kfm:provenance` to link to provenance JSON.  
+  - DCAT manifests can expose provenance URIs and summaries.
+
+- **Knowledge Graph**  
+  - Provenance entities and activities are converted into graph nodes and edges.  
+  - CARE and sovereignty flags propagate into graph-level views.
+
+- **Story Nodes & Focus Mode v3**  
+  - Provenance records drive provenance chips, sensitivity-aware responses, and AI transparency.  
+  - CARE and sovereignty metadata from provenance logs guide how stories and analyses are presented.
 
 ---
 
-<div align="center">
+## 🕰 Version History
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[⬅ Back to Provenance Templates](../README.md)
+| Version   | Date       | Author                                             | Summary                                                                 |
+|-----------|------------|----------------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Archaeology Working Group · FAIR+CARE Council · Metadata Standards Subcommittee | Updated templates to KFM v11.2.3; added energy/carbon telemetry refs; clarified sovereignty and Focus Mode v3 integration. |
+| v10.4.0   | 2025-11-17 | Archaeology Working Group · FAIR+CARE Council · Metadata Standards Subcommittee | Created provenance template suite with PROV-O + CARE patterns and validation guidance. |
+| v10.0.0   | 2025-11-10 | Artifact Metadata Team                             | Initial provenance template directory scaffold.                         |
 
-</div>
+---
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE · Sovereignty-Governed  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[⬅ Back to Provenance](../README.md)
