@@ -1,227 +1,339 @@
 ---
 title: "🏺📑 Kansas Frontier Matrix — Great Bend Aspect Interaction Sphere Metadata (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/great-bend-aspect/metadata/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
+description: "DCAT + STAC + KFM + CARE metadata specification for the Great Bend Aspect interaction-sphere dataset in KFM v11."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Biannual · Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Consultation Recommended"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../../schemas/telemetry/archaeology-great-bend-aspect-metadata-v1.json"
-governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+content_stability: "stable"
 status: "Active / Enforced"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:cultural-landscape-interaction-sphere-great-bend-aspect-metadata-v11.2.3"
 doc_kind: "Dataset Metadata"
 intent: "great-bend-aspect-metadata"
+semantic_document_id: "kfm-doc-archaeology-cultural-landscapes-great-bend-aspect-metadata-v11.2.3"
+category: "Analyses · Archaeology · Cultural Landscapes · Metadata"
+
+sbom_ref: "../../../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../../../releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "../../../../../../../../schemas/telemetry/archaeology-great-bend-aspect-metadata-v1.json"
+energy_schema: "../../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
+governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "CARE-Compliant (Generalized)"
+sensitivity: "Cultural / Historical / Archaeological"
+sensitivity_level: "Medium"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Cultural Landscape Working Group · FAIR+CARE Council"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/great-bend-aspect/metadata/README.md@v10.4.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 🏺📑 Great Bend Aspect Interaction Sphere — Metadata (v11)
 
-# 🏺📑 **Great Bend Aspect Interaction Sphere — Metadata**  
 `docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/great-bend-aspect/metadata/README.md`
 
-**Purpose:**  
-Provide the complete metadata specification for the **Great Bend Aspect (GBA) Interaction Sphere**, ensuring FAIR+CARE alignment, STAC/DCAT interoperability, transparent provenance, and ethical depiction of a culturally significant Late Prehistoric–Protohistoric landscape zone.  
+**Purpose**  
+Provide the **metadata specification** for the **Great Bend Aspect (GBA) Interaction Sphere**, ensuring:
 
-This metadata governs the dataset’s structure, cultural narrative framing, generalization level, and long-term reproducibility within the Kansas Frontier Matrix (KFM).
+- FAIR+CARE alignment and sovereignty awareness.  
+- **DCAT 3.0** and **STAC 1.0** interoperability.  
+- Consistent **KFM cultural-landscape extensions (`kfm:*`)**.  
+- Explicit **CARE** cultural-safety metadata.  
+- Crosswalks to PROV-O provenance and graph ingestion.
 
-</div>
+This metadata governs how the Great Bend Aspect interaction sphere is described, discovered, and ethically used within the Kansas Frontier Matrix (KFM).
 
----
+For the dataset overview, see:
 
-# 📘 Overview
+- `../README.md`
 
-The Great Bend Aspect Interaction Sphere is associated with:
+For global interaction-sphere metadata standards, see:
 
-- Ancestral Wichita cultural traditions  
-- Late Prehistoric + Protohistoric settlement networks  
-- Semi-sedentary horticulture & bison hunting  
-- Ceramic, architectural, and subsistence pattern coherence  
-- Prairie–riverine adaptive landscapes  
-- Regional interaction with Central Plains, Southern Plains, and early European contacts
-
-This metadata document ensures the dataset describing this sphere meets:
-
-- STAC 1.0  
-- DCAT 3.0  
-- CIDOC-CRM/GeoSPARQL ontology alignment  
-- KFM archaeology schema (`kfm:*`)  
-- FAIR+CARE governance with tribal advisories recommended for protohistoric elements  
-- Provenance traceability through PROV-O  
+- `../../metadata/README.md`
 
 ---
 
-# 🗂️ Directory App Structure
+## 📘 Overview
+
+The Great Bend Aspect Interaction Sphere describes a generalized Late Prehistoric–Protohistoric cultural landscape associated with:
+
+- Ancestral Wichita and related Plains horticultural traditions.  
+- Semi-sedentary horticulture blended with bison hunting.  
+- Distinctive ceramic, architectural, and subsistence patterns.  
+- Prairie–riverine ecotones in central Kansas.  
+- Interaction with Central Plains, Southern Plains, and early contact networks.
+
+This metadata ensures that the dataset:
+
+- Uses **generalized geometry** only.  
+- Encodes **cultural-phase and interaction-sphere semantics** via `kfm:*`.  
+- Includes **CARE** fields suitable for **elevated sensitivity** (but not high-restricted).  
+- Maintains consistent linkages with STAC Items and PROV-O provenance.
+
+---
+
+## 🗂️ Directory Layout
 
 ~~~text
 docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/great-bend-aspect/metadata/
-├── README.md                               # This file
-└── great-bend-aspect-v2.json               # DCAT + CARE + KFM metadata
+├── 📄 README.md                               # This file
+└── 📄 great-bend-aspect-v2.json               # DCAT + KFM + CARE metadata for v2
 ~~~
 
----
+`great-bend-aspect-v2.json` must be kept in sync with:
 
-# 📦 Metadata Specification (DCAT + KFM + CARE)
-
-The dataset metadata (`great-bend-aspect-v2.json`) must include all required fields:
-
----
-
-## ✔ DCAT 3.0 Fields
-
-| Field | Description | Example |
-|---|---|---|
-| `dct:title` | Dataset name | `"Great Bend Aspect Interaction Sphere v2"` |
-| `dct:description` | Summary | `"Generalized Late Prehistoric–Protohistoric interaction region"` |
-| `dct:license` | Open license | `"CC-BY-4.0"` |
-| `dct:temporal` | Time interval | `"AD 1350–1700"` |
-| `dcat:keyword` | Tags | `["Great Bend Aspect", "Wichita", "Late Prehistoric", "Protohistoric"]` |
-| `dcat:distribution` | STAC link | `"../../stac/great-bend-aspect-v2.json"` |
+- `../stac/great-bend-aspect-v2.json` (STAC Item).  
+- `../provenance/great-bend-aspect-v2.json` (provenance log).
 
 ---
 
-## ✔ KFM Archaeology Metadata
+## 📦 Metadata Specification (DCAT + KFM + CARE)
 
-| Field | Purpose | Example |
-|---|---|---|
-| `kfm:landscape_type` | Required type | `"interaction_sphere"` |
-| `kfm:culture_phase` | Cultural phases | `["GBA-Early","GBA-Middle","GBA-Late"]` |
-| `kfm:geometry_generalization` | Required for safety | `"H3-level-6"` |
-| `kfm:source` | Primary data source | `"PD archaeological synthesis"` |
-| `kfm:provenance` | PROV-O reference | `"../../provenance/great-bend-aspect-v2.json"` |
-| `kfm:schema_version` | Document version | `"1.0.0"` |
+The metadata JSON must contain:
 
----
+1. **DCAT 3.0 dataset metadata**.  
+2. **KFM cultural-landscape extensions (`kfm:*`)**.  
+3. **CARE** cultural-safety metadata (`care:*`).  
+4. **Provenance linkage** to a PROV-O log.  
+5. **STAC crosswalk** fields consistent with the STAC Item.
 
-## ✔ CARE Cultural Safety Metadata
-
-Because GBA contains protohistoric components (AD 1600–1700) with potential descendant community significance, CARE metadata is mandatory.
-
-| CARE Field | Recommended Value | Notes |
-|---|---|---|
-| `care:sensitivity` | `"generalized"` | Required for public-facing content |
-| `care:review` | `"faircare"` | Tribal advisory recommended |
-| `care:notes` | `"Generalized polygons used; sensitive narratives excluded."` | Ethical + contextual summary |
-| `care:visibility_rules` | `"polygon-generalized"` | Avoid precise boundaries or site inference |
-
-Forbidden:
-- `"restricted"`  
-- Exact sacred/ceremonial areas  
-- Explicit ethnohistorical data without review  
-- Embedding sensitive oral histories  
+Below summarizes required components for `great-bend-aspect-v2.json`.
 
 ---
 
-# 🌍 Spatial Metadata Requirements
+### 1️⃣ DCAT 3.0 Fields
 
-- Geometry: **MultiPolygon**, highly generalized  
-- CRS: **EPSG:4326**  
-- H3 generalization required for sensitive sub-regions  
-- No site-level spatial detail  
-- Only territory-scale, interpretive-safe surfaces allowed  
-- Bounding box must be included for DCAT & STAC  
+| Field             | Description                         | Example                                                           |
+|-------------------|-------------------------------------|-------------------------------------------------------------------|
+| `dct:title`       | Dataset title                       | `"Great Bend Aspect Interaction Sphere v2"`                       |
+| `dct:description` | Generalized cultural summary        | `"Generalized Late Prehistoric–Protohistoric interaction region in central Kansas."` |
+| `dct:license`     | License                             | `"CC-BY-4.0"`                                                     |
+| `dct:temporal`    | Temporal coverage (OWL-Time aligned)| `"AD 1350–1700"`                                                  |
+| `dct:creator`     | Primary creator or steward          | `"Cultural Landscape Working Group"`                              |
+| `dcat:keyword`    | Tags                                | `["Great Bend Aspect","Wichita","Late Prehistoric","Protohistoric"]` |
+| `dcat:distribution` | STAC reference or asset path      | `"../stac/great-bend-aspect-v2.json"`                             |
 
----
+These DCAT fields must crosswalk correctly to STAC:
 
-# 🕰️ Temporal Metadata Requirements
-
-- Must cover AD 1350–1700  
-- Multi-phase OWL-Time intervals allowed  
-- Provide phase-specific ranges (GBA-Early, Middle, Late)  
-- Optional uncertainty metadata recommended  
-
----
-
-# 🧪 Provenance Linkage
-
-Metadata MUST reference the PROV-O provenance record:
-
-kfm:provenance: “../../provenance/great-bend-aspect-v2.json”
-
-Provenance records describe:
-
-- Raw → generalized → processed lineage  
-- Cultural review (FAIR+CARE + optional tribal advisory)  
-- GIS generalization steps  
-- Source materials  
-- Ethical decision-making  
+- Title / description ↔ STAC `id` / `description`.  
+- Temporal coverage ↔ STAC `extent.temporal` / Item temporal properties.  
+- Distribution ↔ STAC `assets.data.href` or Item path.
 
 ---
 
-# ⚖️ Ethical Governance & Cultural Context
+### 2️⃣ KFM Cultural-Landscape Metadata (`kfm:*`)
 
-All GBA-related metadata must:
+KFM fields embed domain semantics and governance.
 
-- Avoid colonial terminology  
-- Clearly denote interpretive uncertainty  
-- Treat ancestral Wichita heritage with respect  
-- Avoid territorial claim implications  
-- Maintain generalization as a core protection principle  
-- Note when protohistoric content influences sensitivity classification  
+| Field                     | Purpose                                 | Example                                                    |
+|---------------------------|-----------------------------------------|------------------------------------------------------------|
+| `kfm:domain`              | Domain identifier                       | `"archaeology-cultural-landscapes"`                       |
+| `kfm:landscape_type` / `kfm:region_type` | Dataset class          | `"interaction_sphere"`                                     |
+| `kfm:culture_phase`       | Cultural phases represented             | `["GBA-Early","GBA-Middle","GBA-Late"]`                   |
+| `kfm:generalization`      | Spatial generalization mechanism        | `"H3-r7"` (or `"H3-r6"` as implemented)                   |
+| `kfm:source`              | Data origin summary                     | `"Public-domain archaeological synthesis and regional survey reports"` |
+| `kfm:provenance`          | Link to PROV-O JSON provenance          | `"../provenance/great-bend-aspect-v2.json"`               |
+| `kfm:schema_version`      | Metadata schema/template version        | `"v11.0.0"` or updated as appropriate                     |
+
+These must match the STAC Item’s `properties.kfm:*` and the provenance record’s KFM fields.
 
 ---
 
-# 🧠 Integration Into KFM Ecosystem
+### 3️⃣ CARE Cultural-Safety Metadata (`care:*`)
 
-Metadata informs:
+Because the GBA includes protohistoric components and descendant-community significance, **CARE metadata is mandatory**.
+
+Recommended fields:
+
+| CARE Field             | Recommended Values / Notes                               |
+|------------------------|----------------------------------------------------------|
+| `care:sensitivity`     | `"generalized"`                                          |
+| `care:review`          | `"faircare"` (tribal advisory consultation recommended) |
+| `care:notes`           | For example: `"Generalized polygons used; sensitive narratives and site-level details excluded."` |
+| `care:visibility_rules`| `"polygon-generalized"` or `"h3-only"` for specific layers |
+| `care:consent_status`  | `approved`, `conditional`, `not-approved`, or `not-applicable` (e.g., `"approved"` for v2) |
+
+**Forbidden** in public-governed GBA metadata:
+
+- `care:sensitivity = "restricted"`  
+- Exact sacred/ceremonial geographies, even in descriptions.  
+- Inclusion of sensitive oral histories without explicit approval.
+
+CARE fields must be consistent with:
+
+- STAC CARE fields (`../stac/great-bend-aspect-v2.json`).  
+- CARE fields in the provenance log.
+
+---
+
+## 🌍 Spatial Metadata Requirements
+
+Spatial metadata in `great-bend-aspect-v2.json` must reflect:
+
+- Geometry type: generalized **MultiPolygon** (as per STAC).  
+- CRS: **EPSG:4326** for all coordinates referenced in STAC and internal notes.  
+- Generalization:
+  - Use H3 mosaics and polygon simplification at a scale that prevents inference of protected sites.  
+  - Avoid site-level or feature-level locational hints in the description.
+
+Bounding boxes used in DCAT and STAC are:
+
+- Derived from generalized geometries.  
+- Coarse enough to respect CARE and sovereignty policies.
+
+---
+
+## 🕰 Temporal Metadata Requirements
+
+Temporal coverage must:
+
+- Match the interaction-sphere span (approximately AD 1350–1700).  
+- Use OWL-Time-consistent forms (intervals) in STAC and DCAT.  
+- Align with KFM’s cultural-phase ontology for GBA and related phases.
+
+Metadata may optionally:
+
+- Break coverage into Early/Middle/Late GBA phases in `kfm:culture_phase`.  
+- Indicate uncertainty margins in descriptive fields or an optional uncertainty block.
+
+---
+
+## 🧪 Provenance Linkage
+
+The metadata must link directly to the PROV-O log:
+
+- `kfm:provenance: "../provenance/great-bend-aspect-v2.json"`
+
+The referenced provenance file must:
+
+- Describe raw → generalized → processed lineage.  
+- Document generalization (H3, simplification thresholds).  
+- Record FAIR+CARE review steps and any tribal advisory input.  
+
+Provenance is validated via the schemas and workflows described in:
+
+- `../provenance/README.md`  
+- `../../provenance/README.md`
+
+---
+
+## ⚖️ Ethical Governance & Cultural Context
+
+All Great Bend Aspect metadata must:
+
+- Avoid colonial or overly deterministic language.  
+- Emphasize interpretive uncertainty, especially for protohistoric components.  
+- Make no territorial claims or exclusive ownership assertions.  
+- Recognize descendant communities’ ties to the landscape while respecting sovereignty policies.  
+- Respect GBA as an interpretive model rather than fixed political boundaries.
+
+---
+
+## 🧠 Integration Into KFM Ecosystem
+
+Metadata generated according to this standard drives:
 
 ### Knowledge Graph
-Nodes:
-- `InteractionSphere`  
-- `CulturalPhase`  
-- `GeneralizedRegion`  
-- `CulturalNetwork`  
 
-Edges:
-- `HAS_METADATA`  
-- `OCCURRED_DURING`  
-- `CARE_SENSITIVITY`  
-- `HAS_PROVENANCE`  
+**Nodes**
 
-### Story Nodes
-- Anchors Great Bend narratives  
-- Connects to artifact inventories, routes, and regions  
+- `InteractionSphere` (Great Bend Aspect).  
+- `MetadataRecord` for GBA.  
+- `CulturalPhase` (`GBA-Early`, `GBA-Middle`, `GBA-Late`).  
+- CARE-related nodes (for sensitivity states).
 
-### Focus Mode v2
-- Ethical warnings  
-- Provenance chips  
-- Cultural-phase overlays  
-- Summary contextualization  
+**Relationships**
 
----
+- `HAS_METADATA` (InteractionSphere → MetadataRecord).  
+- `HAS_CARE_SENSITIVITY` (InteractionSphere → CARE node).  
+- `HAS_PROVENANCE` (InteractionSphere → ProvenanceRecord via `kfm:provenance`).  
+- `OCCURRED_DURING` (InteractionSphere → CulturalPhase/TimeInterval).  
 
-# 📊 Metadata Summary
+### Story Nodes & Focus Mode v3
 
-| Field | Value |
-|---|---|
-| Title | Great Bend Aspect Interaction Sphere v2 |
-| Sensitivity | generalized |
-| Review | FAIR+CARE (Tribal advisories recommended) |
-| Culture Phases | Early/Middle/Late GBA |
-| Provenance | Included |
-| Spatial Generalization | H3-level-6 |
-| Status | 🟢 Active |
+- Provide dataset-level context, titles, and descriptions.  
+- Drive sensitivity badges, narrative framing, and timeline placement.  
+- Attach provenance chips and warnings when necessary.
 
 ---
 
-# 🕰️ Version History
+## 📊 Metadata Summary (Illustrative)
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v2 | 2025-11-17 | Cultural Landscape WG · FAIR+CARE Council | Updated for stronger CARE alignment; expanded metadata depth |
-| v1 | 2025-11-10 | Landscape Metadata Team | Initial metadata draft |
+| Field              | Value                                          |
+|--------------------|------------------------------------------------|
+| Title              | Great Bend Aspect Interaction Sphere v2       |
+| Sensitivity        | generalized                                   |
+| CARE Review        | FAIR+CARE (tribal advisory consultation recommended) |
+| Culture Phases     | GBA-Early / GBA-Middle / GBA-Late             |
+| Spatial Generalization | H3-r7 (public-governed representation)    |
+| Provenance Linked  | Yes (`../provenance/great-bend-aspect-v2.json`) |
+| Status             | 🟢 Active / Governed                          |
+
+Authoritative values are recorded in metadata, provenance, and release manifests.
 
 ---
 
-<div align="center">
+## 🔗 Related Specifications
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+- `../README.md`  
+  – Great Bend Aspect interaction-sphere dataset overview and governance.  
+- `../stac/README.md`  
+  – Great Bend Aspect STAC catalog (Collection + Item).  
+- `../provenance/README.md`  
+  – Great Bend Aspect provenance index and standards.  
+- `../../metadata/README.md`  
+  – Global interaction-sphere metadata standards.
+
+---
+
+## 🕰 Version History
+
+| Version   | Date       | Author                                   | Summary                                                                 |
+|-----------|------------|------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Cultural Landscape WG · FAIR+CARE Council | Updated for KFM v11.2.3; aligned with interaction-sphere metadata standards; added telemetry references and clarified CARE semantics. |
+| v10.4.0   | 2025-11-17 | Cultural Landscape WG · FAIR+CARE Council | Initial Great Bend Aspect metadata specification; defined DCAT/KFM/CARE fields and generalization guidelines. |
+| v10.0.0   | 2025-11-10 | Landscape Metadata Team                  | Prototype metadata content and directory structure.                     |
+
+---
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE · Sovereignty-Aligned  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
 [⬅ Back to Great Bend Aspect Dataset](../README.md)
-
-</div>
