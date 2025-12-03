@@ -1,160 +1,248 @@
 ---
 title: "🏺🧬 Kansas Frontier Matrix — Great Bend Aspect Interaction Sphere Provenance (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/great-bend-aspect/provenance/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-17"
+description: "PROV-O + CARE provenance logs for the Great Bend Aspect interaction-sphere dataset in KFM v11, documenting lineage, generalization, and FAIR+CARE review."
+version: "v11.2.3"
+last_updated: "2025-12-02"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Biannual · Cultural Landscape Working Group · FAIR+CARE Council · Tribal Advisory Review Recommended"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../../../../../schemas/telemetry/archaeology-great-bend-aspect-provenance-v1.json"
-governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+content_stability: "stable"
 status: "Active / Enforced"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-version-hash>"
+doc_uuid: "urn:kfm:doc:cultural-landscape-interaction-sphere-great-bend-aspect-provenance-v11.2.3"
 doc_kind: "Provenance Record Index"
 intent: "great-bend-aspect-provenance"
+semantic_document_id: "kfm-doc-archaeology-cultural-landscapes-great-bend-aspect-provenance-v11.2.3"
+category: "Analyses · Archaeology · Cultural Landscapes · Provenance"
+
+sbom_ref: "../../../../../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../../../../../releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "../../../../../../../../schemas/telemetry/archaeology-great-bend-aspect-provenance-v1.json"
+energy_schema: "../../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+
+governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.2"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "CARE-Compliant (Elevated Sensitivity)"
+sensitivity: "Cultural / Historical / Archaeological"
+sensitivity_level: "Medium"
+indigenous_rights_flag: true
+risk_category: "Moderate"
+public_exposure_risk: "Governed"
+redaction_required: true
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+classification: "Public (Governed)"
+jurisdiction: "Kansas / United States"
+immutability_status: "mutable-plan"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+data_steward: "Cultural Landscape Working Group · FAIR+CARE Council"
+provenance_chain:
+  - "docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/great-bend-aspect/provenance/README.md@v10.4.0"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
 ---
 
-<div align="center">
+# 🏺🧬 Great Bend Aspect Interaction Sphere — Provenance Logs (v11)
 
-# 🏺🧬 **Great Bend Aspect Interaction Sphere — Provenance Logs**  
 `docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/great-bend-aspect/provenance/README.md`
 
-**Purpose:**  
-Serve as the complete **provenance record index** for the **Great Bend Aspect (GBA) Interaction Sphere**, documenting all transformations, cultural reviews, generalizations, and ethical safeguards applied in the production of this culturally sensitive dataset.
+**Purpose**  
+Serve as the **provenance record index** for the **Great Bend Aspect (GBA) Interaction Sphere** in KFM v11, documenting:
 
-Great Bend Aspect datasets contain **Late Prehistoric + Protohistoric** components tied to ancestral **Wichita** peoples; therefore additional **CARE review** and **optional Tribal advisory review** are recommended for transparency and cultural safety.
+- Data origins and citations.  
+- Spatial generalization and masking steps.  
+- Cultural-phase synthesis and modeling choices.  
+- FAIR+CARE ethical review outcomes.  
+- Optional tribal advisory review notes.  
+- Lineage from **raw → generalized → processed** representations.  
 
-</div>
+These logs use **PROV-O JSON-LD** plus CARE and KFM extensions to ensure machine readability, graph compatibility, and reproducibility.
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
 The provenance logs in this folder record:
 
-- Dataset origin and citations  
-- Spatial generalization processes (H3 mosaic, polygon simplification)  
-- Cultural phase synthesis  
-- Ethical and CARE reviews  
-- Tribal advisory consult notes (if applicable)  
-- Uncertainty statements and interpretive limitations  
-- Lineage from raw → generalized → processed representations  
-- All FAIR+CARE compliance actions and ethical guardrails  
+- **Source evidence**:
+  - Public-domain archaeological literature and syntheses.  
+  - Approved open datasets and environmental covariates.  
+- **Processing and generalization**:
+  - H3 mosaics, polygon simplification, and boundary smoothing.  
+- **Cultural synthesis**:
+  - How interaction spheres were interpreted from multiple lines of evidence.  
+- **Ethical and CARE review**:
+  - FAIR+CARE review for cultural safety and neutrality.  
+  - Tribal advisory review notes where consultation is sought.  
+- **Uncertainty and limitations**:
+  - Statements of interpretive uncertainty and model assumptions.  
 
-These logs use **PROV-O JSON-LD** to ensure machine readability, graph compatibility, and reproducibility.
+These provenance records are integral for:
+
+- KFM **Knowledge Graph** ingestion.  
+- Story Node v3 narratives.  
+- Focus Mode v3 explanation chips and ethical framing.
 
 ---
 
-# 🗂️ Directory Layout
+## 🗂️ Directory Layout
 
 ~~~text
 docs/analyses/archaeology/datasets/cultural-landscapes/interaction-spheres/great-bend-aspect/provenance/
-├── README.md                                 # This file
-└── great-bend-aspect-v2.json                 # PROV-O lineage & cultural review metadata
+├── 📄 README.md                         # This file
+└── 📄 great-bend-aspect-v2.json         # PROV-O lineage & cultural review metadata (v2)
 ~~~
 
----
-
-# 🧩 Required PROV-O Components for GBA Provenance
-
-### ✔ `@context`
-Must include:
-- `"prov"` — PROV-O core ontology  
-- `"care"` — CARE cultural-sensitivity extension  
-- `"kfm"` — KFM archaeology metadata  
-- `"crm"` — Optional CIDOC-CRM alignment  
-- `"dct"` — DCAT crosswalk  
+Additional versioned provenance files (for earlier or internal iterations) may be added as needed, but `v2` is the authoritative lineage for KFM v11.
 
 ---
 
-### ✔ `prov:Entity`
+## 🧩 Required PROV-O Components for GBA Provenance
 
-Required entities:
+All provenance files MUST:
 
-| Entity | Description |
-|---|---|
-| `raw` | Aggregated public-domain archaeological synthesis (no restricted data) |
-| `generalized` | Spatially obfuscated form (H3-level-6, polygon simplification) |
-| `processed` | Final dataset used in KFM | 
-| `interpretive` | (Optional) cultural synthesis layer |
+- Be valid **JSON-LD**.  
+- Conform to **PROV-O** and KFM provenance schemas.  
+- Include top-level CARE fields appropriate for **elevated sensitivity**.
 
----
+### 1️⃣ `@context`
 
-### ✔ `prov:Activity`
+Each provenance JSON MUST include:
 
-Must include:
+- `"prov"` — `http://www.w3.org/ns/prov#` (PROV-O core).  
+- `"care"` — CARE cultural-sensitivity extension namespace.  
+- `"kfm"` — KFM core/extension namespace.  
+- `"dct"` — `http://purl.org/dc/terms/` (for DCAT-aligned provenance metadata).  
 
-| Activity | Purpose |
-|---|---|
-| `generalization` | H3 mosaic + simplification; essential for cultural safety |
-| `cleaning` | Harmonization of attributes, CRS, naming |
-| `integration` | Multi-source archaeological & environmental synthesis |
-| `ethics_review` | FAIR+CARE compliance review |
-| `tribal_advisory_review` | Optional but recommended for protohistoric components |
+Optional:
 
-Each activity must include:
-
-- `prov:startTime`  
-- `prov:endTime`  
-- `prov:type`  
-- `kfm:steps`  
+- `"crm"` — CIDOC-CRM mapping, if advanced heritage modeling is used.
 
 ---
 
-### ✔ `prov:Agent`
+### 2️⃣ `prov:Entity`
 
-Agents represent:
+Entities must model the main dataset states:
 
-| Type | Example |
-|---|---|  
-| Analyst | GIS/archaeology specialist |
-| FAIR+CARE Reviewer | KFM Ethics Council |
-| Tribal Reviewer (Optional) | Wichita-affiliated tribal heritage office |
-| Source Institution | Public domain archival/literature sources |
+| Entity Key     | Description                                                       |
+|----------------|-------------------------------------------------------------------|
+| `raw`          | Aggregated public-domain archaeological syntheses (no restricted data). |
+| `generalized`  | Spatially obfuscated form (for example, H3-level mosaic + simplified polygons). |
+| `processed`    | Final dataset used in STAC Item(s) and public-governed KFM layers. |
+| `interpretive` | (Optional) explicitly modeled cultural synthesis layers.          |
 
----
+`raw` MUST NOT include:
 
-### ✔ Lineage Relationships
+- Site-precise coordinates.  
+- Ceremonial or sacred landscape geometries.  
+- Restricted oral histories or ethnographic content.  
+- Non-consented high-resolution archaeological data.
 
-Mandatory provenance relationships:
+Each `prov:Entity` should include:
 
-- `prov:wasDerivedFrom`  
-- `prov:used`  
-- `prov:wasGeneratedBy`  
-- `prov:wasAttributedTo`
-
-These ensure dataset lineage from **raw → generalized → processed**.
-
----
-
-# ⚖️ CARE Cultural Safety Requirements
-
-GBA contains **elevated cultural sensitivity**, especially for protohistoric contexts.
-
-### Required:
-- `care:sensitivity = "generalized"`  
-- `care:review = "faircare"`  
-- `care:notes` describing removed/filtered or culturally sensitive content  
-- `care:visibility_rules = "polygon-generalized"` or `"h3-only"`  
-
-### Recommended:
-- Tribal advisory review for protohistoric (AD 1600–1700) components
-
-### Forbidden:
-- `"restricted"`  
-- Exact site coordinates  
-- Sacred or ceremonial landscape outlines  
-- Unapproved ethnohistoric content  
+- `prov:type` (usually `"Dataset"`).  
+- `prov:label`.  
+- `kfm:source` and `kfm:provenance_version` where applicable.
 
 ---
 
-# 🧪 Example Provenance Snippet (Excerpt)
+### 3️⃣ `prov:Activity`
+
+Activities document each transformation and review event, such as:
+
+| Activity Key        | Purpose                                                     |
+|---------------------|-------------------------------------------------------------|
+| `generalization`    | Creation of H3 mosaic, polygon simplification, and masking. |
+| `cleaning`          | Harmonization of attributes, CRS normalization, naming.     |
+| `integration`       | Multi-source archaeological and environmental synthesis.    |
+| `faircare_review`   | FAIR+CARE ethical review of content and generalization.     |
+| `tribal_advisory_review` | (Recommended) involvement of descendant communities. |
+
+Each `prov:Activity` MUST include:
+
+- `prov:type`.  
+- `prov:startTime` and `prov:endTime` (ISO 8601).  
+- `kfm:steps`: array detailing major pipeline actions.
+
+---
+
+### 4️⃣ `prov:Agent`
+
+Agents represent responsible people and organizations:
+
+| Agent Type           | Examples                                      |
+|----------------------|-----------------------------------------------|
+| Analyst              | GIS or archaeology specialist                 |
+| FAIR+CARE Reviewer   | FAIR+CARE Council members                     |
+| Tribal Advisory (optional) | Wichita-affiliated or other tribal heritage offices |
+| Source Institution   | Public-domain archives, repositories, or institutions |
+
+Agent entries should respect privacy/sovereignty constraints; roles and groups may be used in place of individual names where appropriate.
+
+---
+
+### 5️⃣ Lineage Relationships
+
+Each provenance file MUST define:
+
+- `prov:wasDerivedFrom` — chaining `raw → generalized → processed`.  
+- `prov:wasGeneratedBy` — linking entities to generating activities.  
+- `prov:used` — linking activities to the entities they consume.  
+- `prov:wasAttributedTo` — linking entities to agents for responsibility and credit.
+
+These relations jointly encode the reproducible lineage from initial sources to final KFM datasets.
+
+---
+
+## ⚖️ CARE Cultural-Safety Requirements (Elevated Sensitivity)
+
+While the Great Bend Aspect is not flagged as high-sensitive to the same degree as, for example, Protohistoric Wichita, it still has **elevated sensitivity**, especially in protohistoric contexts.
+
+### Required CARE Fields (Top-Level)
+
+| Field                | Expected Values / Notes                                 |
+|----------------------|---------------------------------------------------------|
+| `care:sensitivity`   | `"generalized"`                                         |
+| `care:review`        | `"faircare"` (tribal advisory review **recommended**)   |
+| `care:notes`         | Required; must describe generalization and redaction decisions. |
+| `care:visibility_rules` | `"polygon-generalized"` or `"h3-only"` where tighter protection is needed |
+
+### Forbidden
+
+- `care:sensitivity = "restricted"` in public-governed provenance.  
+- Any indication that would expose sacred or ceremonial locations.  
+- Direct inclusion of restricted oral histories without explicit, documented consent.
+
+CARE metadata in provenance MUST align with:
+
+- STAC Item CARE fields (`../stac/great-bend-aspect-v2.json`).  
+- Metadata CARE fields (`../metadata/great-bend-aspect-v2.json`).
+
+---
+
+## 🧪 Example Provenance Snippet (Illustrative)
 
 ~~~json
 {
@@ -166,98 +254,126 @@ GBA contains **elevated cultural sensitivity**, especially for protohistoric con
   },
   "prov:Entity": {
     "raw": {
-      "prov:label": "Late Prehistoric GBA synthesis from PD archaeological literature",
-      "prov:type": "Dataset"
+      "prov:type": "Dataset",
+      "prov:label": "Late Prehistoric and Protohistoric GBA synthesis from PD archaeological literature",
+      "kfm:source": "Open archaeological syntheses and regional survey reports"
     },
     "generalized": {
-      "prov:label": "Generalized GBA polygon (H3-level-6)",
-      "care:notes": "Exact settlement clusters removed; cultural safety protocols applied."
+      "prov:type": "Dataset",
+      "prov:label": "Generalized GBA interaction sphere (H3-r7 MultiPolygon)",
+      "care:notes": "Settlement clusters and any sensitive localities removed prior to H3 aggregation and polygon simplification."
     },
     "processed": {
+      "prov:type": "Dataset",
       "prov:label": "Great Bend Aspect Interaction Sphere v2",
       "kfm:provenance_version": "v2"
     }
   },
   "prov:Activity": {
     "generalization": {
-      "prov:type": "Generalization",
+      "prov:type": "SpatialGeneralization",
       "prov:startTime": "2025-10-14T13:12:00Z",
       "prov:endTime": "2025-10-14T13:55:00Z",
-      "kfm:steps": ["H3 derivation", "polygon simplification", "boundary smoothing"]
+      "kfm:steps": [
+        "H3 mosaic derivation (level 7)",
+        "polygon simplification",
+        "boundary smoothing",
+        "removal of any site-precise and sacred features"
+      ]
     },
     "faircare_review": {
       "prov:type": "Review",
       "prov:endTime": "2025-10-15T17:30:00Z",
-      "kfm:steps": ["ethical language audit", "sensitivity classification"]
+      "kfm:steps": [
+        "ethical language audit",
+        "cultural sensitivity classification",
+        "confirmation of generalization thresholds"
+      ]
     }
   },
   "prov:Agent": {
-    "analyst": { "prov:type": "Person", "prov:label": "A. Barta" },
-    "faircare": { "prov:type": "Group", "prov:label": "FAIR+CARE Council" }
+    "analyst": {
+      "prov:type": "Person",
+      "prov:label": "A. Barta"
+    },
+    "faircare": {
+      "prov:type": "Organization",
+      "prov:label": "FAIR+CARE Council"
+    }
   },
   "prov:wasDerivedFrom": [
     { "prov:generatedEntity": "generalized", "prov:usedEntity": "raw" },
     { "prov:generatedEntity": "processed", "prov:usedEntity": "generalized" }
   ],
   "care:sensitivity": "generalized",
-  "care:review": "faircare"
+  "care:review": "faircare",
+  "care:notes": "Spatial generalization and attribute filtering applied; no sacred or site-precise information included.",
+  "care:visibility_rules": "polygon-generalized"
 }
 ~~~
 
+This example is illustrative; authoritative constraints are defined by provenance schemas under `../../provenance/` and `../../stac/schemas/`.
+
 ---
 
-# 🧠 Integration Into KFM Ecosystem
+## 🧠 Integration Into KFM Ecosystem
 
 ### Knowledge Graph
-Entities created:
-- `InteractionSphere`
-- `GeneralizedRegion`
-- `CulturalPhase`
-- `ReviewEvent`
-- `ProvenanceActivity`
 
-Edges:
-- `GENERALIZED_FROM`  
-- `HAS_PROVENANCE`  
-- `CARE_SENSITIVITY`  
-- `OCCURRED_DURING`  
+From the Great Bend Aspect provenance logs, KFM ingests:
 
-### Story Nodes
-Provenance informs:
-- GBA cultural narratives  
-- Temporal storylines  
-- Ethical warning banners  
+**Nodes**
 
-### Focus Mode v2
-Uses provenance for:
-- Interpretive transparency  
-- Cultural-safety prompts  
-- Provenance chips (user-visible evidence trails)
+- `InteractionSphere` (Great Bend Aspect).  
+- `GeneralizedRegion` entities derived from the generalized polygons.  
+- `ProvenanceActivity` nodes (generalization, cleaning, review).  
+- `ReviewEvent` nodes (FAIR+CARE reviews; any tribal advisory events).  
 
----
+**Relationships**
 
-# 📊 Provenance Index
+- `HAS_PROVENANCE` (InteractionSphere → ProvenanceRecord).  
+- `GENERALIZED_FROM` (Processed ↔ Generalized ↔ Raw Entities).  
+- `REVIEWED_BY` (ProvenanceRecord → Agents/Organizations).  
+- `HAS_CARE_SENSITIVITY` (InteractionSphere → CARE state node).  
 
-| Provenance File | Version | Sensitivity | Review | Status |
-|---|---|---|---|---|
-| `great-bend-aspect-v2.json` | v2 | generalized | FAIR+CARE (tribal recommended) | 🟢 Active |
+### Story Nodes & Focus Mode v3
+
+- Story Nodes use provenance to:
+  - Ground narratives in documented lineage and generalization choices.  
+  - Display provenance chips and context banners.  
+
+- Focus Mode uses CARE + provenance to:
+  - Bound responses spatiotemporally and ethically.  
+  - Avoid exposing unsafe detail.  
+  - Surface warnings and disclaimers for interpretive content.
 
 ---
 
-# 🕰️ Version History
+## 🔗 Related Specifications
 
-| Version | Date | Author | Summary |
-|---|---|---|---|
-| v2 | 2025-11-17 | Cultural Landscape WG · FAIR+CARE Council | Updated provenance documentation; applied enhanced CARE notes |
-| v1 | 2025-11-10 | Landscape Provenance Team | Initial provenance entry |
+- `../README.md`  
+  – Great Bend Aspect interaction-sphere dataset overview.  
+- `../stac/README.md`  
+  – Great Bend Aspect STAC catalog (Collection + Item).  
+- `../metadata/README.md`  
+  – Great Bend Aspect metadata specification.  
+- `../../provenance/README.md`  
+  – Global interaction-sphere provenance standards and templates.
 
 ---
 
-<div align="center">
+## 🕰 Version History
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-FAIR+CARE · MCP-DL v6.3 · Tribal Advisory Recommended  
-Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[⬅ Back to Great Bend Aspect](../README.md)
+| Version   | Date       | Author                                             | Summary                                                                 |
+|-----------|------------|----------------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3   | 2025-12-02 | Cultural Landscape WG · FAIR+CARE Council          | Updated for KFM v11.2.3; aligned with interaction-sphere provenance standards; added telemetry refs and clarified CARE semantics. |
+| v10.4.0   | 2025-11-17 | Cultural Landscape WG · FAIR+CARE Council          | Initial Great Bend Aspect provenance index; defined PROV-O and CARE requirements for elevated sensitivity. |
+| v10.0.0   | 2025-11-10 | Landscape Provenance Team                          | Prototype lineage description and generalization workflow notes.       |
 
-</div>
+---
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+FAIR+CARE · Sovereignty-Aligned  
+KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[⬅ Back to Great Bend Aspect Dataset](../README.md)
