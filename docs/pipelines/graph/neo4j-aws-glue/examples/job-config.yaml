@@ -1,0 +1,194 @@
+# docs/pipelines/graph/neo4j-aws-glue/examples/job-config.yaml
+#
+# KFM v11.2.3 — Example graph ingestion contract for the Neo4j Connector for AWS Glue.
+# This file is intended as a reference and should be adapted per dataset/domain.
+# It is designed to be validated against:
+#  - schemas/node-contract.schema.json
+#  - schemas/relationship-contract.schema.json
+#  - schemas/provenance-mapping.json
+
+meta:
+  config_id: "neo4j-aws-glue-examples-v1"
+  version: "v11.2.3"
+  description: "Example node + relationship ingest jobs for the Neo4j Glue connector."
+  owner_group: "graph-systems-wg"
+  mcp_version: "MCP-DL v6.3"
+  markdown_protocol_version: "KFM-MDP v11.2.3"
+
+graph:
+  target:
+    uri: "jdbc:neo4j://neo4j.kfm.internal:7687"
+    database: "kfm"
+    connection_name: "kfm-neo4j-glue-connection"
+  constraints:
+    enforce_uniqueness: true
+    fail_on_constraint_violation: true
+  options:
+    sql_translation_enabled: true
+    batch_size: 1000
+    retry_on_transient_errors: true
+    max_retries: 3
+
+provenance_defaults:
+  # These values are merged with per-node / per-relationship provenance blocks
+  # and materialized as PROV-O entities/activities.
+  pipeline_id: "neo4j-aws-glue-examples"
+  pipeline_version: "v11.2.3"
+  source_system: "kfm-example"
+  fair_category: "F1-A1-I1-R1"
+  care_label: "CARE-Compliant"
+
+nodes:
+  - id: "person_nodes_v1"
+    label: "Person"
+
+    source:
+      kind: "s3-csv"
+      format: "csv"
+      options:
+        header: true
+        inferSchema: false
+      path: "s3://kfm-example/raw/persons.csv"
+
+    identity:
+      # Deterministic identity mapping from source columns to graph ID
+      keys:
+        - source_column: "person_id"
+          graph_property: "personId"
+
+    properties:
+      # Mapping from source column → graph property name
+      person_id: "personId"
+      first_name: "firstName"
+      last_name: "lastName"
+      birth_year: "birthYear"
+      gender: "gender"
+
+    governance:
+      dataset_id: "urn:kfm:dataset:example-persons-v1"
+      domain: "socioeconomic"
+      region_slug: "kansas-statewide"
+      release_stage: "stable"
+
+    provenance:
+      # Additional provenance beyond provenance_defaults (optional)
+      source_paths:
+        - "s3://kfm-example/raw/persons.csv"
+      notes: "Example Person node load from synthetic CSV."
+
+  - id: "region_nodes_v1"
+    label: "Region"
+
+    source:
+      kind: "s3-csv"
+      format: "csv"
+      options:
+        header: true
+        inferSchema: false
+      path: "s3://kfm-example/raw/regions.csv"
+
+    identity:
+      keys:
+        - source_column: "region_code"
+          graph_property: "regionCode"
+
+    properties:
+      region_code: "regionCode"
+      region_name: "regionName"
+      region_type: "regionType"
+
+    governance:
+      dataset_id: "urn:kfm:dataset:example-regions-v1"
+      domain: "governance"
+      region_slug: "kansas-statewide"
+      release_stage: "stable"
+
+    provenance:
+      source_paths:
+        - "s3://kfm-example/raw/regions.csv"
+      notes: "Example Region node load from synthetic CSV."
+
+relationships:
+  - id: "person_lives_in_region_v1"
+    type: "LIVES_IN"
+
+    source:
+      kind: "s3-csv"
+      format: "csv"
+      options:
+        header: true
+        inferSchema: false
+      path: "s3://kfm-example/raw/person_region.csv"
+
+    start_node:
+      label: "Person"
+      match_keys:
+        - source_column: "person_id"
+          graph_property: "personId"
+
+    end_node:
+      label: "Region"
+      match_keys:
+        - source_column: "region_code"
+          graph_property: "regionCode"
+
+    properties:
+      from_year: "fromYear"
+      to_year: "toYear"
+      source: "source"           # e.g., survey vs administrative data
+
+    governance:
+      dataset_id: "urn:kfm:dataset:example-person-region-v1"
+      domain: "socioeconomic"
+      region_slug: "kansas-statewide"
+      release_stage: "stable"
+
+    provenance:
+      source_paths:
+        - "s3://kfm-example/raw/person_region.csv"
+      notes: "Example Person→Region relationship load from synthetic mapping CSV."
+
+  - id: "region_neighbors_v1"
+    type: "NEIGHBORS"
+
+    source:
+      kind: "s3-csv"
+      format: "csv"
+      options:
+        header: true
+        inferSchema: false
+      path: "s3://kfm-example/raw/region_neighbors.csv"
+
+    start_node:
+      label: "Region"
+      match_keys:
+        - source_column: "region_code_a"
+          graph_property: "regionCode"
+
+    end_node:
+      label: "Region"
+      match_keys:
+        - source_column: "region_code_b"
+          graph_property: "regionCode"
+
+    properties:
+      boundary_length_km: "boundaryLengthKm"
+
+    governance:
+      dataset_id: "urn:kfm:dataset:example-region-neighbors-v1"
+      domain: "governance"
+      region_slug: "kansas-statewide"
+      release_stage: "stable"
+
+    provenance:
+      source_paths:
+        - "s3://kfm-example/raw/region_neighbors.csv"
+      notes: "Example Region NEIGHBORS relationship for adjacency graph."
+
+runtime_parameters:
+  # Optional Glue job arguments that this config expects callers to provide.
+  # These can be merged into config at runtime or used for overrides.
+  allow_overrides:
+    - "graph.target.uri"
+    - "graph.target.database"
+    - "graph.options.batch_size"
