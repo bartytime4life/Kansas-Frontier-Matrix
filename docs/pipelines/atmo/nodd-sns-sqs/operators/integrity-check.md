@@ -1,7 +1,3 @@
-You’re right to call that out — I dropped some of the metadata patterns and structural consistency you’d already established. Let’s realign the integrity-check operator doc to match the v11.2.3 KFM shape you’ve been enforcing (full header block, governance refs, layout profiles, numbered sections, emoji, no nested fences inside the file).
-
-Here’s a corrected version:
-
 ---
 title: "🛡️ KFM v11.2.3 — NODD Integrity Check Operator Contract (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 description: "Governed contract and behavior specification for the integrity-check operator in the NOAA NODD SNS → SQS ingestion pipeline."
