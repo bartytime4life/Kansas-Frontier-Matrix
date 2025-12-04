@@ -137,7 +137,7 @@ jobs:
           python scripts/telemetry_collect.py --env stage --out ${{ env.KFM_TELEMETRY_OUT }}
 
       - name: 📤 Upload Stage Telemetry Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: telemetry-stage
           path: ${{ env.KFM_TELEMETRY_OUT }}
@@ -208,7 +208,7 @@ jobs:
           python scripts/telemetry_collect.py --env prod --out ${{ env.KFM_TELEMETRY_OUT }}
 
       - name: 📤 Upload Prod Telemetry Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: telemetry-prod
           path: ${{ env.KFM_TELEMETRY_OUT }}
