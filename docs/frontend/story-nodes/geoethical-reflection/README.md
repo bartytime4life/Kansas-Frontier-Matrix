@@ -35,7 +35,7 @@ sbom_ref: "../../../releases/v11.2.4/sbom.spdx.json"
 manifest_ref: "../../../releases/v11.2.4/manifest.zip"
 telemetry_ref: "../../../releases/v11.2.4/geoethics-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/geoethics-v1.json"
-governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
 
 license: "Apache-2.0"
 mcp_version: "MCP-DL v6.3"
@@ -87,6 +87,23 @@ The `kfm_geoethics` block is **required** in Story Node front-matter; it is trea
 
 ---
 
+## 🗂️ Directory Layout
+
+```text
+📂 docs/frontend/story-nodes/geoethical-reflection/
+├── 📄 README.md                     # 🧭 Geoethical Reflection Layer standard (this file)
+├── 📂 schema/
+│   └── 📄 kfm.storyNode.geoethics.v1.json
+├── 📂 examples/
+│   └── 📄 story-node-frontmatter.yaml
+└── 📂 ui/
+    └── 📄 GeoethicsPanel.tsx
+```
+
+This directory is **documentation-first**: JSON Schema, examples, and UI spec live here; production implementations under `src/` **must** stay in sync and reference this standard.  
+
+---
+
 ## 🧭 Context
 
 KFM’s operational pipeline is:
@@ -104,7 +121,7 @@ Within this pipeline:
 
 ## 🧱 Architecture
 
-### 1. Geoethics Story-Node schema (UI schema v1)
+### 1. Geoethics Story Node schema (UI schema v1)
 
 This JSON Schema is the **single source of truth** for the `kfm_geoethics` block. It is mirrored in:
 
@@ -196,7 +213,7 @@ This JSON Schema is the **single source of truth** for the `kfm_geoethics` block
 }
 ```
 
-> **Graph note:** `provenance_ref` should point to a PROV Entity or Bundle (e.g. `urn:kfm:prov:storynode:…`), while `audit_trail_ref` should point to an OpenLineage or equivalent run identifier for masking/generalization jobs.
+> **Graph note:** `provenance_ref` should point to a PROV Entity or Bundle (e.g., `urn:kfm:prov:storynode:…`), while `audit_trail_ref` should point to an OpenLineage or equivalent run identifier for masking/generalization jobs.
 
 ### 2. UI component contract
 
@@ -261,9 +278,9 @@ Expected module boundaries for the Geoethical Reflection Layer:
 
 - The Geoethics panel appears as a **dedicated section** in the Story Node sidebar (MapLibre/Cesium views).  
 - It surfaces:
-  - `sovereignty_summary` as a short, high-signal explanation.
-  - CARE details in an expandable “CARE” block.
-  - Sensitive-site policy with explicit masking/generalization rules.
+  - `sovereignty_summary` as a short, high-signal explanation.  
+  - CARE details in an expandable “CARE” block.  
+  - Sensitive-site policy with explicit masking/generalization rules.  
   - Stakeholder review status, reviewers, and last review date.  
 
 ### 2. Focus Mode
@@ -290,7 +307,7 @@ The Geoethical Reflection Layer must be **read-only** in Focus Mode; edits happe
 
 ### 2. CI/CD checks
 
-Add or extend CI jobs (e.g. `.github/workflows/kfm-ci.yml`) to include:  
+Add or extend CI jobs (e.g., `.github/workflows/kfm-ci.yml`) to include:  
 
 - **Schema lint** — Validate `kfm.storyNode.geoethics.v1.json` and sample fixtures under `examples/`.  
 - **Markdown lint** — Enforce KFM-MDP v11.2.4 headings, front-matter, and footer rules on this README.  
@@ -307,7 +324,7 @@ Backlog items (Phase 1):
 
 ## 📦 Data & Metadata
 
-### 1. Example Story-Node front-matter block
+### 1. Example Story Node front-matter block
 
 ```yaml
 kfm_geoethics:
@@ -367,28 +384,11 @@ To keep KFM FAIR, interoperable, and provenance-rich, the Geoethical Reflection 
 
 - **PROV-O**  
   - Each masking/generalization run is a `prov:Activity` that:
-    - `prov:used` one or more upstream spatial entities.
-    - `prov:generated` new generalized Story Node or geometry entities.
-    - is linked to OpenLineage / audit logs via `audit_trail_ref`.  
+    - `prov:used` one or more upstream spatial entities.  
+    - `prov:generated` new generalized Story Node or geometry entities.  
+    - Is linked to OpenLineage / audit logs via `audit_trail_ref`.  
 
 This alignment ensures KFM’s geoethical metadata can be indexed, federated, and reasoned over alongside the rest of the data ecosystem.
-
----
-
-## 🗂️ Directory Layout
-
-```text
-docs/frontend/story-nodes/geoethical-reflection/
-├─ README.md
-├─ schema/
-│  └─ kfm.storyNode.geoethics.v1.json
-├─ examples/
-│  └─ story-node-frontmatter.yaml
-└─ ui/
-   └─ GeoethicsPanel.tsx
-```
-
-This directory is **documentation-first**: JSON Schema, examples, and UI spec live here; production implementations under `src/` **must** stay in sync and reference this standard.  
 
 ---
 
@@ -397,26 +397,16 @@ This directory is **documentation-first**: JSON Schema, examples, and UI spec li
 The Geoethical Reflection Layer operationalizes FAIR + CARE + Indigenous data sovereignty in KFM:  
 
 - **FAIR**  
-  - Findable: geoethics metadata searchable via STAC/DCAT and graph queries.  
-  - Accessible: policies surfaced directly in the UI and APIs.  
-  - Interoperable: mapped to STAC/DCAT/PROV.  
-  - Reusable: clearly licensed and versioned.  
+  - *Findable*: geoethics metadata searchable via STAC/DCAT and graph queries.  
+  - *Accessible*: policies surfaced directly in the UI and APIs.  
+  - *Interoperable*: mapped to STAC/DCAT/PROV.  
+  - *Reusable*: clearly licensed and versioned.  
 
 - **CARE & sovereignty**  
-  - Collective benefit: `collective_benefit` documents who benefits and how.  
-  - Authority to control: `authority_to_control` records Tribal or community governance.  
-  - Responsibility: `responsibility` and `ethics_notes` make stewardship explicit.  
-  - Ethics: masking/generalization rules protect sensitive sites and knowledge.  
-
-### Reference standards & resources
-
-- FAIR Principles  
-- CARE Principles  
-- CIDOC-CRM · PROV-O · GeoSPARQL  
-- Data Access Labels Standard  
-- KFM Governance Framework (`docs/standards/governance/ROOT-GOVERNANCE.md`)  
-- OpenLineage Attestation Policy  
-- Archaeology, AI, and Open Technology in Kansas (context for sensitive-site handling)  
+  - *Collective benefit*: `collective_benefit` documents who benefits and how.  
+  - *Authority to control*: `authority_to_control` records Tribal or community governance.  
+  - *Responsibility*: `responsibility` and `ethics_notes` make stewardship explicit.  
+  - *Ethics*: masking/generalization rules protect sensitive sites and knowledge.  
 
 All changes to this standard require review and approval by:
 
@@ -426,14 +416,38 @@ All changes to this standard require review and approval by:
 
 ---
 
+## 📚 Reference Standards & Resources (Footer)
+
+- [FAIR Principles](https://www.go-fair.org/fair-principles/)  
+- [CARE Principles for Indigenous Data Governance](https://www.gida-global.org/care)  
+- [CIDOC-CRM](https://www.cidoc-crm.org/) · [PROV-O](https://www.w3.org/TR/prov-o/) · [GeoSPARQL](https://www.ogc.org/standard/geosparql/)  
+- [Data Access Labels Standard](../../../standards/governance/data-access-labels/README.md)  
+- [KFM Governance Framework](../../../standards/governance/ROOT-GOVERNANCE.md)  
+- [KFM Markdown Authoring Protocol — KFM-MDP v11.2.4](../../../standards/kfm_markdown_protocol_v11.2.4.md)  
+- Archaeology, AI, and Open Technology in Kansas (context for sensitive-site handling)  
+- [Frontend Story Node Guide](../README.md)  
+
+---
+
 ## 🕰️ Version History
 
-| Version  | Date       | Status            | Notes                                                                 |
-|----------|-----------|-------------------|-----------------------------------------------------------------------|
-| v11.2.4  | 2025-12-05 | Active / Enforced | First LTS standardization of the Geoethical Reflection Layer for Story Nodes. |
+| Version | Date       | Status            | Notes                                                                 |
+|--------:|------------|-------------------|-----------------------------------------------------------------------|
+| v11.2.4 | 2025-12-05 | Active / Enforced | First LTS standardization of the Geoethical Reflection Layer for Story Nodes. |
 
 Future revisions **must**:
 
 - Preserve schema compatibility or provide explicit migration guidance.  
 - Update STAC/DCAT/PROV mappings where needed.  
 - Update CI/CD tests and fixtures alongside schema or contract changes.  
+
+---
+
+<div align="center">
+
+🧭 **KFM v11.2.4 — Geoethical Reflection Layer for Story Nodes**  
+Scientific Insight · FAIR+CARE Ethics · Sovereignty-First  
+
+[📘 Docs Root](../../..) · [🧵 Story Node Frontend Guide](../README.md) · [⚖ Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
