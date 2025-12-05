@@ -9,6 +9,7 @@ lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 content_stability: "stable"
 backward_compatibility: "v10.x → v11.x release-contract compatible"
+status: "Active / Enforced"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
@@ -31,7 +32,6 @@ markdown_protocol_version: "KFM-MDP v11.2.4"
 ontology_protocol_version: "KFM-OP v11.0"
 pipeline_contract_version: "KFM-PDC v11.0"
 
-status: "Active / Enforced"
 doc_kind: "Index"
 intent: "pipeline-release-index"
 role: "release-governance"
@@ -69,6 +69,19 @@ jurisdiction: "United States / Kansas"
 immutability_status: "version-pinned"
 ttl_policy: "Annual review"
 sunset_policy: "Superseded upon pipeline-release-governance-update"
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+badge_profiles:
+  - "root-centered-badge-row"
+requires_purpose_block: true
+requires_directory_layout_section: true
+requires_version_history: true
+requires_governance_links_in_footer: true
+
+diagram_profiles:
+  - "mermaid-flowchart-v1"
+  - "mermaid-timeline-v1"
 ---
 
 <div align="center">
@@ -94,7 +107,7 @@ Release pipelines implement:
 - **Data contract validation** (KFM-PDC v11)  
 - **Governed STAC/DCAT publishing**  
 - **PROV-O lineage** recorded for every release  
-- **OpenLineage v2.5 reliability events**  
+- **OpenLineage v2.5** reliability events and run metadata  
 - **Reproducible build signatures** and SBOM-linked artifacts  
 - **FAIR+CARE review gates** and sovereignty checks  
 - **Rollback and freeze controls** with documented runbooks  
@@ -134,10 +147,10 @@ All new files under `docs/pipelines/release/` must be documented here and includ
 
 ## 🧭 Context
 
-Release pipelines sit at the **boundary between staging and production** for all KFM data and AI products:
+Release pipelines sit at the **boundary between staging and production** for all KFM data and AI products.
 
-- Upstream: deterministic ETL, AI pipelines, conditional ingestion, and auto-update flows.  
-- Downstream: public and internal STAC/DCAT catalogs, Neo4j knowledge graph, web frontend, Story Nodes, and Focus Mode.
+- **Upstream:** deterministic ETL, AI pipelines, conditional ingestion, auto-update flows, and validation gates.  
+- **Downstream:** public and internal STAC/DCAT catalogs, the Neo4j knowledge graph, web frontend, Story Nodes, and Focus Mode.
 
 They provide the **final governed gate** where:
 
@@ -149,23 +162,23 @@ They provide the **final governed gate** where:
 
 ## 🧱 Architecture
 
-### Release Pipeline Philosophy (v11)
+### 1. Release Pipeline Philosophy (v11)
 
 KFM follows the **Observe → Validate → Compare → Canary → Promote → Audit → Rollback** model:
 
-| Phase       | Goal                        | Tools & Artifacts                            |
-|------------|-----------------------------|----------------------------------------------|
-| Observe    | Instrument system health    | OpenTelemetry, SLIs, dashboards              |
-| Validate   | Schema & DQ correctness     | KFM-PDC v11 validators, Great Expectations   |
-| Compare    | Detect regressions          | Diff engines, spatial/temporal overlays      |
-| Canary     | Gradual exposure            | Percent slices, geography/time windows       |
-| Promote    | Production adoption         | Promotion gates, lakeFS branches             |
-| Audit      | Post-release monitoring     | OTel dashboards, anomaly detection           |
-| Rollback   | Safe revert                 | Snapshots, lineage, cache rebuild, WAL logs  |
+| Phase    | Goal                         | Tools & Artifacts                           |
+|----------|------------------------------|---------------------------------------------|
+| Observe  | Instrument system health     | OpenTelemetry, SLIs, dashboards             |
+| Validate | Schema & DQ correctness      | KFM-PDC v11 validators, Great Expectations  |
+| Compare  | Detect regressions           | Diff engines, spatial/temporal overlays     |
+| Canary   | Gradual exposure             | Percent slices, geography/time windows      |
+| Promote  | Production adoption          | Promotion gates, lakeFS branches            |
+| Audit    | Post-release monitoring      | OTel dashboards, anomaly detection          |
+| Rollback | Safe revert                  | Snapshots, lineage, cache rebuild, WAL logs |
 
 All phases emit **OpenLineage v2.5** events and **PROV-O release lineage**.
 
-### Release Pipeline Components
+### 2. Release Pipeline Components
 
 #### Validation Gates
 
@@ -189,13 +202,21 @@ The promotion gate enforces:
 - License and provenance compliance.  
 - Complete OpenLineage and PROV-O chains for the release.  
 - CARE/sovereignty requirements for all affected datasets.  
-- Snapshot written to `data/releases/<pipeline-id>/<version>/` with manifest, SBOM, and telemetry.
+- Snapshot written to:
+
+~~~text
+data/releases/<pipeline-id>/<version>/
+~~~
+
+containing manifest, SBOM, and telemetry bundles.
 
 #### Canary Slices
 
 Promotion follows a controlled exposure pattern, for example:
 
-- `shadow (0%) → 1% → 5% → 25% → 50% → 100%`
+~~~text
+shadow (0%) → 1% → 5% → 25% → 50% → 100%
+~~~
 
 Slices may be defined by:
 
@@ -246,9 +267,9 @@ Release pipelines must:
 - Block promotions when governance policies or reviewer approvals are missing.  
 - Emit governance-relevant provenance (e.g., which council or board approved the release).
 
-Post-promotion governance includes:
+### Post-Promotion Governance
 
-### 24–72 Hour Audit Window
+**24–72 Hour Audit Window**
 
 Monitor for:
 
@@ -259,7 +280,7 @@ Monitor for:
 - Model hallucination risk (for Focus Mode and Story Nodes).  
 - CARE violations or complaints caught by auditors or partners.
 
-### Quarterly Review
+**Quarterly Review**
 
 Reliability Engineering and the FAIR+CARE Council jointly assess:
 
@@ -273,8 +294,8 @@ Reliability Engineering and the FAIR+CARE Council jointly assess:
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                      |
-|--------:|------------|----------------------------------------------|
+| Version | Date       | Summary                                                      |
+|--------:|------------|--------------------------------------------------------------|
 | v11.0.0 | 2025-11-23 | Initial v11 release pipelines index and governance overview. |
 
 ---
