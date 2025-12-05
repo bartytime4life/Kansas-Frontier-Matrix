@@ -82,6 +82,22 @@ All KFM deployments and forks that use React/Next.js must treat this document as
 
 ---
 
+## 🗂️ Directory Layout
+
+```text
+📂 docs/security/
+└── 📂 react2shell/
+    ├── 📄 README.md           # 🛡️ React2Shell Hardening Bulletin (this file)
+    ├── 📄 mitigations.md      # 📜 Detailed mitigation patterns & examples
+    ├── 📄 waf-rules.md        # 🧱 WAF rule definitions & deployment notes
+    ├── 📂 sbom-diff/          # 🧪 SBOM diff reports (before/after patches)
+    └── 📂 audits/             # ✅ Audit reports & red-team findings
+```
+
+Any additional React2Shell-related docs (e.g., incident-specific timelines) must be added under `audits/` or linked from this index.
+
+---
+
 ## 🧭 Context
 
 ### 1. Affected KFM components
@@ -112,12 +128,12 @@ Even if a specific deployment does not use RSC explicitly, **transitive dependen
 
 All KFM-managed environments **must** use the following minimum versions or newer **patched** equivalents:
 
-| Package            | Safe Minimum Version                          | Notes                                      |
-|--------------------|-----------------------------------------------|--------------------------------------------|
-| React              | **19.0.1+**, 19.1.2+, 19.2.1+                 | Mandatory; pin exact version per release   |
-| `react-server-dom-*` | Matching patched set                        | Must be version-matched with React         |
-| Next.js            | **15.0.5 / 15.1.9 / 15.2.6 / 15.3.6 / 15.4.8 / 15.5.7 / 16.0.7** | All KFM deployments must use one of these  |
-| Turbopack RSC modules | Latest patched artifacts                   | Verified via SBOM and provenance           |
+| Package              | Safe Minimum Version                          | Notes                                      |
+|----------------------|-----------------------------------------------|--------------------------------------------|
+| React                | **19.0.1+**, 19.1.2+, 19.2.1+                 | Mandatory; pin exact version per release   |
+| `react-server-dom-*` | Matching patched set                          | Must be version-matched with React         |
+| Next.js              | **15.0.5 / 15.1.9 / 15.2.6 / 15.3.6 / 15.4.8 / 15.5.7 / 16.0.7** | All KFM deployments must use one of these  |
+| Turbopack RSC modules | Latest patched artifacts                     | Verified via SBOM and provenance           |
 
 All version bumps must be committed with:
 
@@ -276,22 +292,6 @@ Although React2Shell primarily targets the frontend runtime, the response is cap
     - Provenance events describing patching and redeployment.
 
 This alignment ensures React2Shell is tracked not only as a one-off incident but as part of the long-term provenance chain.
-
----
-
-## 🗂️ Directory Layout
-
-```text
-📂 docs/security/
-└── 📂 react2shell/
-    ├── 📄 README.md           # 🛡️ React2Shell Hardening Bulletin (this file)
-    ├── 📄 mitigations.md      # 📜 Detailed mitigation patterns & examples
-    ├── 📄 waf-rules.md        # 🧱 WAF rule definitions & deployment notes
-    ├── 📂 sbom-diff/          # 🧪 SBOM diff reports (before/after patches)
-    └── 📂 audits/             # ✅ Audit reports & red-team findings
-```
-
-Any additional React2Shell-related docs (e.g., incident-specific timelines) must be added under `audits/` or linked from this index.
 
 ---
 
