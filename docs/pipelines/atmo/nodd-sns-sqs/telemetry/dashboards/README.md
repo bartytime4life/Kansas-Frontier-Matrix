@@ -1,7 +1,7 @@
 ---
-title: "📁 KFM v11.2.3 — NODD Telemetry Samples Specification (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-description: "Canonical, redacted OpenTelemetry trace, metric, and log samples for the NOAA NODD SNS → SQS ingestion pipeline."
-path: "docs/pipelines/atmo/nodd-sns-sqs/telemetry/samples/README.md"
+title: "📊 KFM v11.2.3 — NODD Telemetry Dashboards Specification (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+description: "Governed specification for NOAA NODD SNS → SQS observability dashboards: layout, panels, queries, and SLO visualizations."
+path: "docs/pipelines/atmo/nodd-sns-sqs/telemetry/dashboards/README.md"
 
 version: "v11.2.3"
 last_updated: "2025-12-04"
@@ -10,7 +10,7 @@ release_stage: "Stable · Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Atmospheric Systems · Provenance & Reliability Council"
 content_stability: "stable"
-backward_compatibility: "v10.x → v11.x telemetry-samples compatible"
+backward_compatibility: "v10.x → v11.x telemetry-dashboard compatible"
 status: "Active · Enforced"
 
 commit_sha: "<latest-commit-hash>"
@@ -34,9 +34,9 @@ license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.3"
 
-doc_kind: "Telemetry Samples Specification"
-intent: "nodd-sns-sqs-telemetry-samples"
-category: "Pipelines · Atmospheric · Telemetry · Samples"
+doc_kind: "Telemetry Dashboard Specification"
+intent: "nodd-sns-sqs-telemetry-dashboards"
+category: "Pipelines · Atmospheric · Telemetry · Dashboards"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "Public · Low-Risk"
@@ -57,223 +57,245 @@ requires_version_history: true
 requires_governance_links_in_footer: true
 
 ttl_policy: "24 Months"
-sunset_policy: "Superseded by next major NODD telemetry samples standard"
+sunset_policy: "Superseded by next major NODD telemetry dashboard standard"
 
 header_profile: "standard"
 footer_profile: "standard"
 ---
 
-# 📁 NODD Telemetry Samples Specification  
+<div align="center">
 
-`docs/pipelines/atmo/nodd-sns-sqs/telemetry/samples/README.md`
+# 📊 NODD Telemetry Dashboards Specification  
 
-Canonical, **redacted** sample telemetry payloads for the NOAA NODD SNS → SQS ingestion pipeline.  
-These samples define what **valid traces, metrics, and logs** look like in practice and serve as:
+`docs/pipelines/atmo/nodd-sns-sqs/telemetry/dashboards/README.md`
 
-- Ground truth for CI validation of telemetry shape.  
-- Human-readable examples for SREs, data engineers, and governance reviewers.  
-- Fixtures for dashboards and alert configuration.
+**Governed layout and panel specification for NOAA NODD SNS → SQS observability dashboards (queue health, latency, DLQs, replay determinism, energy/carbon).**
 
-⸻
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
+<img src="https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.3-purple" />
+<img src="https://img.shields.io/badge/Pipeline-NODD_SNS_%E2%86%92_SQS-skyblue" />
+<img src="https://img.shields.io/badge/Telemetry-Dashboards-green" />
+<img src="https://img.shields.io/badge/Status-Active_%2F_Enforced-brightgreen" />
+
+</div>
+
+---
 
 ## 🧭 1. Purpose
 
-This document governs the contents of the `samples/` directory:
+This document defines the **canonical dashboards** for the NOAA NODD SNS → SQS ingestion pipeline:
 
-- Ensures example telemetry payloads are **schema-compliant**, **redacted**, and **FAIR+CARE aligned**.  
-- Provides **reference shapes** for:
-  - OpenTelemetry traces (spans).  
-  - Metrics exports (time-series points / scrapes).  
-  - Structured logs (JSON events).  
-- Enables **automated validation** that docs, telemetry schemas, and runtime emissions stay in sync.
+- Establishes which dashboards MUST exist and their high-level layout.  
+- Aligns panels with the **telemetry schema**, SLOs, and error budgets.  
+- Ensures dashboards are **reproducible, versioned artifacts**, not ad hoc UI-only creations.  
+- Provides a reference for **SREs, engineers, and governance reviewers**.
 
-No sample in this directory may contain:
+Concrete dashboard JSON (Grafana or equivalent) may live in infrastructure repos, but MUST conform to this specification.
 
-- Real secrets, credentials, or ARNs.  
-- Real user PII or sensitive location details.  
-- Unredacted object URIs for sensitive datasets.
+---
 
-⸻
+## 🗂 2. Directory Layout (Dashboards)
 
-## 🗂 2. Directory Layout (Samples)
+This directory lives under `docs/pipelines/atmo/nodd-sns-sqs/telemetry/dashboards/` and MUST contain:
 
-This directory sits under `docs/pipelines/atmo/nodd-sns-sqs/telemetry/samples/` and MUST contain:
-
-    docs/pipelines/atmo/nodd-sns-sqs/telemetry/samples/
+    docs/pipelines/atmo/nodd-sns-sqs/telemetry/dashboards/
     │
-    ├── 📄 README.md                 # This file (samples spec)
+    ├── 📄 README.md                     # This file (dashboard specification index)
     │
-    ├── 📄 example-trace.json        # Canonical, redacted OpenTelemetry trace (single ingest unit)
-    ├── 📄 example-metrics.json      # Canonical, redacted metric export (queue age, latency, DLQ)
-    └── 📄 example-log.json          # Canonical, redacted structured log entry
+    └── 📄 nodd-ingestion-dashboard.md   # Core pipeline dashboard: layout, panels, queries, SLO overlays
 
-Additional sample files MAY be added (e.g., per-dataset variants) but MUST be documented in this README.
+Additional dashboard specs (e.g., per-dataset views or governance dashboards) MUST be added as separate `.md` files and referenced from this README.
 
-⸻
+---
 
-## 🧵 3. Trace Sample — `example-trace.json`
+## 🧱 3. Core Dashboard Set
 
-### 3.1 Purpose
+At minimum, KFM MUST expose a **core ingestion dashboard** documented in:
 
-`example-trace.json` MUST represent a **single end-to-end ingest unit** for NODD SNS → SQS, including spans for:
+- `nodd-ingestion-dashboard.md`
 
-- `nodd_sns.message_parse`  
-- `nodd_sns.integrity_check`  
-- `nodd_sns.metadata_extract`  
-- `nodd_sns.stac_register`  
-- `nodd_sns.provenance_emit`
+That dashboard MUST include panels grouped into four logical sections:
 
-### 3.2 Required Characteristics
+1. **Ingest Health & Throughput**  
+2. **Queue Health & SLOs**  
+3. **Failures, DLQs & Replay**  
+4. **Energy, Carbon & Cost (optional but recommended)**  
 
-The trace sample MUST:
+Each group is summarized here; precise panel lists and queries belong in `nodd-ingestion-dashboard.md`.
 
-- Conform to `telemetry_schema` field names and types for spans.  
-- Use **redacted** values for:
-  - Object URIs (e.g., hashed or truncated).  
-  - Cloud resource identifiers.  
-- Include:
-  - A single `trace_id` with multiple spans.  
-  - Parent-child relationships consistent with the operator chain.  
-  - Span attributes:
-    - `nodd.dataset`  
-    - `nodd.integrity_status`  
-    - `nodd.metadata_status`  
-    - `nodd.stac_write_status`  
-    - `nodd.provenance_status`  
+---
 
-CI MUST parse `example-trace.json` and validate it against the telemetry schema and invariants (e.g., operator ordering).
+## 🚀 4. Ingest Health & Throughput
 
-⸻
+Required panels:
 
-## 📊 4. Metrics Sample — `example-metrics.json`
+- **Ingest Latency (Distribution)**  
+  - Metric: `nodd_sns.ingest_latency_seconds` (histogram/summary).  
+  - Views:
+    - P50/P90/P99 latency by `dataset`.  
+    - SLO reference line (e.g., P90 < 300s).
 
-### 4.1 Purpose
+- **Ingest Throughput (Per Dataset)**  
+  - Metric: count of ingest completions or `nodd_sns.bytes_ingested_total`.  
+  - Views:
+    - Time-series of items or bytes ingested, grouped by `dataset`.  
+    - Ability to filter by `env` (`dev`, `stage`, `prod`).
 
-`example-metrics.json` MUST represent a **small, bounded** set of metric samples that exercise the primary NODD metrics:
+- **Success vs Failure Rate**  
+  - Derived from spans or explicit ingestion outcome metrics.  
+  - Stacked bar or line chart of successes vs failures over time.
 
-- Queue depth and age.  
-- Ingest latency.  
-- DLQ counts.  
-- Replay counts.  
-- Optional energy and carbon metrics.
+Panel conventions:
 
-### 4.2 Required Characteristics
+- Only low-cardinality labels (`dataset`, `env`).  
+- Preset time ranges: 15m, 1h, 6h, 24h, 7d.
 
-The metrics sample MUST:
+---
 
-- Demonstrate canonical metric names and labels, such as:
-  - `nodd_sns.queue_depth{queue,env}`  
-  - `nodd_sns.queue_age_seconds{queue,env,quantile}`  
-  - `nodd_sns.ingest_latency_seconds_bucket{dataset,env,le}`  
-  - `nodd_sns.dlq_messages_total{queue,env,dataset}`  
+## 📬 5. Queue Health & SLOs
 
+Required panels for SQS health:
+
+- **SQS Queue Depth**  
+  - Metric: `nodd_sns.queue_depth{queue,env}`.  
+  - Display: time-series trajectory for primary queue (and optionally DLQ).
+
+- **Queue Age (P50/P90/P99)**  
+  - Metric: `nodd_sns.queue_age_seconds{queue,env,quantile}`.  
+  - Display:
+    - Multiple lines for P50/P90/P99 with SLO threshold line at 90 seconds.
+
+- **Watermark Lag by Dataset/Partition**  
+  - Metric: `nodd_sns.watermark_lag_seconds{dataset,partition,env}` (if implemented).  
+  - Display:
+    - Max or P95 lag per dataset (table or heatmap).
+
+SLO visuals:
+
+- Clear visual indication (color bands / threshold markers) when:
+  - Queue-age SLO is violated.  
+  - Watermark lag exceeds configured bounds.
+
+---
+
+## 🧪 6. Failures, DLQs & Replay
+
+Required panels:
+
+- **DLQ Volume Over Time**  
+  - Metric: `nodd_sns.dlq_messages_total{queue,env,dataset}` (rate or per-interval).  
+  - Display:
+    - Stacked by `dataset`.  
+    - Highlight spikes to link with incidents and runbooks.
+
+- **Error Breakdown by Reason**  
+  - Metric: `nodd_sns.validation_errors_total{dataset,env,error_type}`.  
+  - Display:
+    - Bar chart or table showing top `error_type` contributors.
+
+- **Replay Activity & Determinism**  
+  - Metrics:
+    - `nodd_sns.replays_total{dataset,env,reason}`.  
+    - `nodd_sns.replay_mismatch_total{dataset,env}`.  
+  - Display:
+    - Time-series of replay counts.  
+    - Single-stat or alert panel for any replay mismatch > 0.
+
+Panels MUST link (via descriptions or annotations) to replay runbooks under `docs/pipelines/atmo/nodd-sns-sqs/replay/runbooks/`.
+
+---
+
+## 🌱 7. Energy, Carbon & Cost
+
+When energy/carbon telemetry is enabled:
+
+- **Energy Usage Over Time**  
+  - Metric: `nodd_sns.energy_kwh_total{env}` (displayed as rate/derivative).  
+  - View: time-series with environment filter.
+
+- **Carbon Emissions Over Time**  
+  - Metric: `nodd_sns.carbon_gco2e_total{env}` (rate/derivative).  
+  - View: time-series; optional per-dataset breakdown via variables.
+
+Optional panels:
+
+- Cost proxy panels, if standardized cost-per-unit is defined (e.g., per GB processed).
+
+All such panels MUST:
+
+- Use the schemas in `energy_schema` and `carbon_schema`.  
+- Clearly label values as **estimates**.
+
+---
+
+## 🎛 8. Panel Naming & Query Conventions
+
+Panel titles SHOULD:
+
+- Be short and descriptive (e.g., “Queue Age (P90) by Queue”).  
+- Use consistent prefixes where useful (e.g., “SLO: …” for SLO panels).
+
+Query conventions:
+
+- Use metric names and labels exactly as defined in `telemetry_schema`.  
 - Avoid:
-  - High-cardinality label values.  
-  - Real dataset-specific identifiers disguised as examples.
+  - Wildcard label matches with unbounded cardinality.  
+  - Embedding environment-specific constants in queries (prefer dashboard variables).
 
-The format (e.g., OTLP JSON, Prometheus exposition modeled in JSON) MUST match the form used in `telemetry_schema` and CI validation.
+Recommended variables:
 
-⸻
+- `$env` — environment (`dev`, `stage`, `prod`).  
+- `$dataset` — dataset selector.  
+- `$queue` — queue name where applicable.
 
-## 📝 5. Log Sample — `example-log.json`
+---
 
-### 5.1 Purpose
+## 🧪 9. CI & Configuration Management
 
-`example-log.json` MUST represent a **single structured log entry** for an ingest unit, such as:
+Dashboards are configuration artifacts:
 
-- A summary success log, or  
-- A validation failure log.
+- Grafana (or equivalent) JSON definitions MUST be:
+  - Versioned in git (typically infra repos).  
+  - Tagged or labeled with the corresponding KFM version.
 
-### 5.2 Required Characteristics
+CI SHOULD:
 
-The log sample MUST:
+- Parse dashboard JSON to ensure it is valid.  
+- Optionally:
+  - Check that required panels or queries exist (by title/UID).  
+  - Lint queries to verify they reference required metric names.
 
-- Be valid JSON and include:
+Any change that:
 
-  - High-level fields:
-    - `timestamp` (RFC3339).  
-    - `level` (e.g., `INFO`, `WARN`, `ERROR`).  
-    - `message` (human-readable summary).  
+- Removes a required panel,  
+- Renames a core metric, or  
+- Alters SLO visualizations
 
-  - Correlation fields:
-    - `trace_id`, `span_id`.  
-    - `wal_id` (if available).  
-    - `dataset`.  
-    - `object_uri_hash` (not full URI).  
+MUST:
 
-  - Outcome fields:
-    - `status` (`success`, `quarantined`, `failed`).  
-    - `issues` (list of issue codes, where applicable).
+- Be reflected in this README and/or `nodd-ingestion-dashboard.md`.  
+- Be reviewed by the Atmospheric Systems and Provenance & Reliability Council.
 
-- Contain **no** raw PII, secrets, or unredacted identifiers.  
-- Match the logging patterns described in the main telemetry README.
+---
 
-⸻
+## 🕰 10. Version History
 
-## 🧼 6. Redaction & Privacy Rules
-
-All samples MUST obey the following redaction rules:
-
-- **Object URIs**:
-  - Use hashed or truncated forms (e.g., `hash://...`) rather than real bucket names/keys.  
-
-- **Cloud resource identifiers**:
-  - Replace real account IDs, ARNs, and project IDs with placeholders (e.g., `123456789012` → `000000000000`).  
-
-- **Sensitive datasets**:
-  - If samples represent datasets that can overlap with sensitive or sovereign content, make sure:
-    - Geometries are generalized or synthetic.  
-    - No real site coordinates or exact timestamps that could identify protected locations.
-
-- **User/operator identifiers**:
-  - Use generic or synthetic agent IDs (`"kfm-nodd-ingest"`, `"operator@example.org"`), not real emails or names.
-
-Redaction MUST preserve **shape and structure** so that examples remain valid against schemas and tests.
-
-⸻
-
-## 🧪 7. CI & Validation Requirements
-
-CI MUST validate this directory and its contents:
-
-- **Schema Validation**:
-  - `example-trace.json`, `example-metrics.json`, and `example-log.json` MUST validate against:
-    - `telemetry_schema` (for shapes and field types).  
-    - Any additional per-sample schema declared in the NODD telemetry spec.
-
-- **Invariants**:
-  - Trace sample MUST contain the full operator span chain in the correct order.  
-  - Metrics sample MUST include at least one sample for each required metric family.  
-  - Log sample MUST include correlation fields and structured issue codes.
-
-- **Redaction Checks**:
-  - CI SHOULD ensure no obvious secrets:
-    - No patterns matching AWS keys, Cloud ARNs, or real domain names beyond approved examples.  
-
-Any change to sample shapes, fields, or semantics MUST:
-
-- Update this README if behavior or expectations change.  
-- Update CI tests that consume and validate these samples.
-
-⸻
-
-## 🕰 8. Version History
-
-| Version  | Date       | Notes                                                                                                 |
-|---------:|------------|-------------------------------------------------------------------------------------------------------|
-| v11.2.3  | 2025-12-04 | Initial NODD telemetry samples spec; defined trace, metrics, log sample contracts and redaction rules.|
+| Version  | Date       | Notes                                                                                              |
+|---------:|------------|----------------------------------------------------------------------------------------------------|
+| v11.2.3  | 2025-12-04 | Initial NODD telemetry dashboards spec; defined core dashboard groups and panel/SLO expectations.  |
 
 ---
 
 <div align="center">
 
-📁 NODD Telemetry Samples · KFM v11.2.3  
+📊 NODD Telemetry Dashboards · KFM v11.2.3  
 
-Schema-Grounded · Redacted · CI-Validated  
+Schema-Grounded · SLO-Driven · Governance-Aligned  
 
 MCP-DL v6.3 · KFM-MDP v11.2.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
 
 [⬅ Back to NODD Telemetry](../README.md) ·  
+[📁 Telemetry Samples](../samples/README.md) ·  
 [🧠 Operators](../../operators/README.md) ·  
 [⚖ Governance Charter](../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
