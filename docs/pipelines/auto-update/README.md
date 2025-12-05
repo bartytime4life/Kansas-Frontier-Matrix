@@ -26,9 +26,9 @@ telemetry_schema: "../../../schemas/telemetry/auto-update-v1.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -66,10 +66,10 @@ footer_profile: "standard"
 <div align="center">
 
 # ⚡ KFM v11 — Event-Driven Auto-Update Ingestion Pipeline  
-
 `docs/pipelines/auto-update/README.md`
 
-**Event-driven update detection, incremental deltas, deterministic STAC catalog writing, and reliability primitives for auto-updating KFM datasets.**
+**Purpose**  
+Define the governed, event-driven auto-update ingestion pattern for KFM datasets using **SNS → SQS → Workers → STAC**, including incremental refresh, idempotency, reliability primitives, and FAIR+CARE-aligned governance gates.
 
 <img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
 <img src="https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.3-purple" />
@@ -81,266 +81,362 @@ footer_profile: "standard"
 
 ---
 
-## 🧭 1. Purpose
+## 📘 Overview
 
-The **Auto-Update Ingestion Pipeline** defines a governed pattern for **event-driven, incremental updates** across KFM datasets using **SNS → SQS → Workers → STAC**.
+### 1. Why this pipeline pattern exists
 
-It exists to:
+The **Auto-Update Ingestion Pipeline** defines a reusable pattern for **event-driven, incremental updates** across KFM datasets:
 
-- Eliminate polling by using **push-style notifications** for new or updated assets.  
+- Eliminate polling via **push-style notifications** for new/updated assets.  
 - Support **idempotent, delta-only refreshes** using content hashes/ETags.  
 - Make **STAC the source-of-truth** for updated geospatial assets.  
 - Embed **validation, governance, and reliability gates** into every update unit.  
-- Provide a reusable, standard contract for hydrology, soils, atmo, archives, and other domains.
+- Standardize behavior across domains (hydrology, soils, atmo, archives, etc.).
+
+This specification is **normative** for any KFM pipeline that consumes upstream update events via SNS/SQS and writes to STAC.
+
+### 2. Scope
+
+Applies to:
+
+- All SNS→SQS-driven ingestion flows.  
+- Auto-update pipelines that perform incremental refreshes on KFM datasets.  
+- Pipelines that promote data between `work` → `processed` → `stable` layers.  
+- Any system where **STAC catalogs** are treated as the canonical asset registry.
+
+Out of scope:
+
+- Fully manual ingest workflows.  
+- Non-event-driven bulk backfills (unless they explicitly adopt this contract).  
 
 ---
 
-## 🗂 2. Directory Layout (Emoji-Prefix Standard)
+## 🗂️ Directory Layout
 
-High-level layout under `docs/pipelines/auto-update/`:
+~~~text
+docs/pipelines/auto-update/
+├── 📄 README.md                     # This file (auto-update pipeline spec)
+│
+├── 📨 sns-schema/                   # SNS event definitions
+│   └── 📄 message-v1.json
+│
+├── 📬 sqs-contract/                 # Consumer contract, idempotency keys, retry rules
+│   └── 📄 README.md
+│
+├── 🔍 validation-gates/             # Schema, QA, CARE/FAIR, provenance checks
+│   ├── 📄 schema-check.md
+│   ├── 📄 qa-rules.md
+│   └── 📄 governance-gate.md
+│
+├── 📦 processors/                   # Workers: ingestion → transform → STAC write
+│   ├── 📄 parquet-updater.md
+│   ├── 📄 raster-updater.md
+│   └── 📄 vector-updater.md
+│
+├── 🗺️ stac-writers/                 # Atomic STAC Item/Collection creation
+│   ├── 📄 item-writer.md
+│   └── 📄 collection-writer.md
+│
+├── ⏱️ watermarks/                   # Event-time watermarks, lag monitors
+│   └── 📄 watermark-spec.md
+│
+└── 📊 telemetry/                    # OTel spans, metrics, error budgets
+    └── 📄 metrics.md
+~~~
 
-    docs/pipelines/auto-update/
-    │
-    ├── 📄 README.md                       # This file (auto-update pipeline spec)
-    │
-    ├── 📨 sns-schema/                     # SNS event definitions
-    │   └── 📄 message-v1.json
-    │
-    ├── 📬 sqs-contract/                   # Consumer contract, idempotency keys, retry rules
-    │   └── 📄 README.md
-    │
-    ├── 🔍 validation-gates/               # Schema, QA, CARE/FAIR, provenance checks
-    │   ├── 📄 schema-check.md
-    │   ├── 📄 qa-rules.md
-    │   └── 📄 governance-gate.md
-    │
-    ├── 📦 processors/                     # Workers: ingestion → transform → STAC write
-    │   ├── 📄 parquet-updater.md
-    │   ├── 📄 raster-updater.md
-    │   └── 📄 vector-updater.md
-    │
-    ├── 🗺️ stac-writers/                   # Atomic STAC item/collection creation
-    │   ├── 📄 item-writer.md
-    │   └── 📄 collection-writer.md
-    │
-    ├── ⏱️ watermarks/                     # Event-time watermarks, lag monitors
-    │   └── 📄 watermark-spec.md
-    │
-    └── 📊 telemetry/                      # OTel spans, metrics, error budgets
-        └── 📄 metrics.md
+Author rules:
 
-Each subdocument must describe contracts, schemas, and CI checks for its component.
-
----
-
-## 🚀 3. Pipeline Overview
-
-### 3.1 Hot-Path: SNS → SQS → Worker
-
-1. **Publisher emits** compact update events to SNS.  
-2. **SNS fan-out** routes messages based on dataset, product, and priority.  
-3. **SQS subscriber** receives structured notifications with ETags, URIs, and time ranges.  
-4. **Worker** executes:
-
-   - Idempotency check.  
-   - Conditional fetch (skip if no hash/ETag change).  
-   - Transform (normalize into KFM-ready structure).  
-   - Validation & governance gates (schema, QA, CARE/FAIR).  
-   - **Atomic STAC write** (Item/Collection updates).
-
-### 3.2 Batch-Path: Cron / EventBridge Scheduler
-
-- Periodic refresh, backfills, extent recomputes, and QA deep scans.  
-- Uses **the same ingestion contract**:
-  - Same validation and governance gates.  
-  - Same STAC writing rules.  
-  - No bypass of hot-path protections.
+- Each listed subdirectory **must** contain a `README.md` or equivalent spec.  
+- Directory trees in docs use fenced `text` blocks and emoji-prefixed entries per KFM-MDP.  
 
 ---
 
-## 📥 4. Event Schema (v1)
+## 🧭 Context
+
+The auto-update pattern sits between **upstream publishers** and **KFM’s STAC-first catalogs**:
+
+- Upstream systems publish thin **SNS messages** describing what changed.  
+- SNS fanned-out messages land in **SQS queues** per dataset or domain.  
+- KFM workers consume messages, enforce validation & governance gates, and perform **atomic STAC updates**.  
+- Watermarks and WAL ensure replay-safety and ordered promotion to `stable`.
+
+This pattern must align with:
+
+- KFM-MDP v11.2.x (documentation & governance).  [oai_citation:0‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
+- STAC 1.x + KFM-STAC extensions.  
+- DCAT 3.0 dataset-level cataloging.  
+- PROV-O + OpenLineage for run-level lineage.  [oai_citation:1‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
+- GeoSPARQL for spatial semantics where applicable.  [oai_citation:2‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
+
+---
+
+## 🧱 Architecture
+
+### 1. Event flow: SNS → SQS → Worker → STAC
+
+~~~mermaid
+flowchart LR
+    P[Upstream Publisher] --> S[SNS Topic]
+    S --> Q[SQS Queue (per dataset/domain)]
+    Q --> W[Auto-Update Worker]
+    W --> G[Validation & Governance Gates]
+    G -->|pass| C[Candidate STAC]
+    C --> V[STAC Validation]
+    V -->|promote| K[Canonical STAC Catalog]
+    G -->|fail| D[DLQ / Quarantine + Replay Ticket]
+~~~
+
+**Hot path (realtime):**
+
+1. Publisher emits compact update event to SNS.  
+2. SNS routes to SQS queues by dataset/product/priority.  
+3. Worker consumes SQS message and executes:
+   - Idempotency and dedupe check.  
+   - Conditional fetch (skip if ETag unchanged).  
+   - Transform into KFM-ready structure.  
+   - Validation & governance gates (Schema, QA, CARE/FAIR, PROV).  
+   - **Atomic STAC write** (Item/Collection).  
+
+**Batch path (scheduled/backfill):**
+
+- Cron/EventBridge emits synthetic messages using the same schema.  
+- Same gates, same STAC rules; no bypass of protections.  
+
+---
+
+### 2. SNS Event Schema (v1)
 
 Example SNS message payload:
 
-    {
-      "event_time": "2025-12-04T03:14:15Z",
-      "dataset": "usgs/streamflow",
-      "asset_uri": "s3://bucket/path/file.parquet",
-      "content_etag": "W/\"a1b2c3\"",
-      "granule_start": "2025-12-04T03:00:00Z",
-      "granule_end": "2025-12-04T03:59:59Z",
-      "priority": "high",
-      "schema_version": "1.0"
-    }
+~~~json
+{
+  "event_time": "2025-12-04T03:14:15Z",
+  "dataset": "usgs/streamflow",
+  "asset_uri": "s3://bucket/path/file.parquet",
+  "content_etag": "W/\"a1b2c3\"",
+  "granule_start": "2025-12-04T03:00:00Z",
+  "granule_end": "2025-12-04T03:59:59Z",
+  "priority": "high",
+  "schema_version": "1.0"
+}
+~~~
 
 Design principles:
 
-- **Stable** — schema is additive; older events remain valid.  
-- **Minimal** — no heavy payloads; only pointers and metadata.  
-- **Deterministic** — full reproducibility from `dataset + asset_uri + content_etag`.
+- **Stable** — schema is additive; old events remain valid.  
+- **Minimal** — only pointers + minimal metadata (no heavy payloads).  
+- **Deterministic** — `dataset + asset_uri + content_etag` is sufficient to reproduce the update.  
 
-Schema details are documented under `sns-schema/message-v1.json`.
+Schema details and JSON Schema live in `sns-schema/message-v1.json`.
 
 ---
 
-## 🔁 5. Incremental Refresh Model
+### 3. Incremental Refresh Model
 
-Each dataset supports versioned, idempotent upserts using the following keys:
+Each dataset supports versioned, idempotent upserts using the keys:
 
-| Key                                   | Purpose                                 |
-|--------------------------------------:|-----------------------------------------|
-| `asset_uri`                           | Unique pointer to raw or derived data.  |
-| `content_etag`                        | Detects content change; skip if same.   |
-| `idempotency_key = sha256(dataset + asset_uri + content_etag)` | Deduplication and safe retries. |
-| Checkpoint store                      | Tracks last granule processed.          |
+| Key                                                                 | Purpose                                      |
+|---------------------------------------------------------------------|----------------------------------------------|
+| `asset_uri`                                                         | Unique pointer to raw or derived data.       |
+| `content_etag`                                                      | Detects content change; skip if unchanged.   |
+| `idempotency_key = sha256(dataset + asset_uri + content_etag)`      | Deduplication and safe retries.              |
+| Checkpoint store                                                    | Tracks last granule processed.               |
 
 Workers:
 
-- Refresh only **deltas** — no blind reprocessing.  
-- Log idempotency decisions (hit/miss) to telemetry and provenance.  
-- Maintain per-dataset checkpoint state.
+- Refresh only **deltas**, never blindly recompute an entire dataset.  
+- Log idempotency hits/misses to telemetry and provenance.  
+- Maintain per-dataset checkpoint state in a durable store.  
 
 ---
 
-## 🛡 6. Validation & Governance Gates
+### 4. Validation & Governance Gates
 
-All ingest units must pass three gate families:
+All ingest units must pass three gate families before promotion:
 
-### 6.1 Schema Gate
+#### 4.1 Schema Gate
 
-- Structural validity (e.g., JSON schema, Parquet schema).  
-- CRS and geospatial consistency.  
-- Time monotonicity (no impossible or inverted time ranges).
+- Structural validity (JSON/Parquet schema).  
+- CRS and geospatial consistency (where applicable).  
+- Time monotonicity (no inverted or impossible ranges).  
 
-### 6.2 QA Gate
+#### 4.2 QA Gate
 
 - Range checks and statistical sanity checks.  
-- Geometry validity (no self-intersections where prohibited, valid polygons).  
-- Null/NaN severity rules (acceptable levels vs. hard-fail thresholds).
+- Geometry validity (e.g., polygons not self-intersecting).  
+- Null/NaN thresholds and severity tiers.  
 
-### 6.3 Governance Gate
+#### 4.3 Governance Gate
 
 - CARE restrictions and sovereignty flags.  
-- Provenance completeness (who/what/when used + generated).  
-- STAC licensing accuracy and usage terms.  
-- Sensitivity masking or generalization when required.
+- Provenance completeness (entities, activities, agents).  [oai_citation:3‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
+- STAC licensing and usage terms.  
+- Sensitivity masking/generalization where required (e.g., heritage sites).  
 
-**Failures are quarantined** (DLQ or quarantine bucket); workers never publish STAC updates on red.
-
----
-
-## 📚 7. STAC as Source-of-Truth
-
-### 7.1 Writing Rules
-
-- Always create/update STAC Items **atomically**.  
-- Validate against:
-  - STAC spec.
-  - KFM STAC extensions (e.g., `raster:*`, `proj:*`, `processing:*`).  
-- Use a **temporary write → validate → promote** sequence:
-  - Write candidate Item.  
-  - Validate (schema + business rules).  
-  - Promote to canonical catalog only on success.
-
-### 7.2 Collections
-
-- Maintain **stable extent** metadata and **versioned summaries**.  
-- Attach processing lineage to each update:
-  - References to OpenLineage/PROV-O records.  
-  - SLO/QA status when available.
-
-STAC catalogs become the authoritative view of which assets exist and which versions are active.
+**Gate failures are quarantined** (DLQ / quarantine bucket); workers **never** publish STAC updates on red.
 
 ---
 
-## ⏱ 8. Watermarks & Ordered Backfills
+### 5. STAC as Source-of-Truth
 
-KFM uses **per-dataset and per-partition event-time watermarks**:
+#### 5.1 Writing rules
 
-- Workers only backfill **≤ watermark**.  
+- STAC Items are created/updated **atomically** via a temp → validate → promote pattern:  
+  1. Write candidate Item to a staging catalog.  
+  2. Validate (STAC schema + KFM business rules).  
+  3. Promote to canonical catalog only on success.  
+
+- Validation targets:
+  - STAC 1.x core.  
+  - KFM-STAC extensions (e.g., `raster:*`, `proj:*`, `processing:*`).  
+
+#### 5.2 Collections
+
+- Collections maintain **stable extents** with versioned summaries.  
+- Each update attaches lineage:
+  - OpenLineage/PROV-O references for the ingest run.  [oai_citation:4‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
+  - QA/SLO status when available.  
+
+The STAC catalog is the **authoritative index** of which assets exist and which versions are active.
+
+---
+
+### 6. Watermarks & Ordered Backfills
+
+Per-dataset and per-partition **event-time watermarks**:
+
+- Workers backfill only data **≤ watermark**.  
 - Watermark advances only when **all partitions converge**.  
-- Prevents mixed ordering and race conditions in highly concurrent environments.  
-- Enables multi-tenant datasets (hydrology, soils, atmo, archaeology imagery) to share infrastructure while preserving ordering guarantees.
+- Prevent mixed ordering and race conditions in concurrent environments.  
+- Allow shared infrastructure across domains (hydrology, soils, atmo, imagery) while preserving ordering guarantees.
 
-Watermark configuration and invariants are documented in `watermarks/watermark-spec.md`.
-
----
-
-## 📊 9. Observability (OTel-First)
-
-For each ingest unit, the pipeline records:
-
-- **Traces**:
-  - `fetch → transform → validate → stac_write` spans.  
-- **Metrics** (per dataset / partition):
-  - Latency P50/P95/P99.  
-  - Queue depth (SQS).  
-  - Watermark lag.  
-  - DLQ counts.  
-  - Error budget burn rate.  
-- **Logs**:
-  - Structured success logs (low cardinality).  
-  - Detailed error logs tied to run IDs and idempotency keys.
-
-Telemetry **must** conform to `telemetry_schema` and respect cardinality constraints.
+Details and invariants live in `watermarks/watermark-spec.md`.
 
 ---
 
-## 🧱 10. Reliability Model
+### 7. Reliability Model
 
-Reliability primitives baked into the auto-update design:
+Reliability primitives:
 
-- **Deterministic idempotency keys** (`sha256(dataset + asset_uri + content_etag)`).  
-- **WAL-backed replay model** for reprocessing without duplication.  
-- **Safe retries** (SQS visibility timeout tuned to content size and processing time).  
-- **Canary mode** for schema or pipeline upgrades:
-  - Route a fraction of events through new logic, compare outputs.  
-- **Kill-switch flags per dataset**:
-  - Immediate disable of auto-updates on governance or reliability incidents.
+- **Deterministic idempotency keys**: `sha256(dataset + asset_uri + content_etag)`.  
+- **WAL-backed replay**: reprocess without duplication, using WAL as source-of-truth.  
+- **Safe retries**: SQS visibility timeouts tuned to data size and processing time.  
+- **Canary mode**: route a fraction of events through new logic; compare outputs and telemetry.  
+- **Kill-switch flags per dataset**: immediate disable of auto-updates on governance or reliability incidents.
 
-Checkpointed state tables (conceptual):
+Conceptual checkpoint/state tables:
 
-| Table         | Shape                                               |
-|--------------:|-----------------------------------------------------|
-| `ingest_state`| `(dataset, asset_uri) → {etag, version, processed_at}` |
-| `checkpoints` | `(dataset, partition) → {watermark, updated_at}`    |
-| `qa_findings` | `(run_id, dataset, severity, rule)`                 |
+| Table         | Shape                                                      |
+|---------------|------------------------------------------------------------|
+| `ingest_state`| `(dataset, asset_uri) → {etag, version, processed_at}`     |
+| `checkpoints` | `(dataset, partition) → {watermark, updated_at}`           |
+| `qa_findings` | `(run_id, dataset, severity, rule)`                        |
 
 ---
 
-## 🚦 11. Rollout Sequence (Recommended)
+### 8. Rollout Sequence (Recommended)
 
-Stepwise rollout for new auto-update pipelines:
-
-1. Define message schema and DLQs (SNS + SQS + failure queues).  
-2. Implement **idempotent consumer** with a persistent state store.  
-3. Add **validation + governance gates** (schema, QA, CARE/FAIR).  
+1. Define SNS message schema and SQS DLQs.  
+2. Implement **idempotent consumer** with persistent state store.  
+3. Add **validation + governance gates** (Schema, QA, CARE/FAIR).  
 4. Integrate **STAC atomic writer** (Items/Collections).  
-5. Add **OpenTelemetry** instrumentation and connect to KFM dashboards.  
-6. Enable **SNS routing** from upstream publishers.  
-7. Scale workers and tune concurrency / visibility timeouts.  
-8. Turn on **cron-based backfills** and QA scans using the same contract.
+5. Add **OpenTelemetry** instrumentation and connect dashboards.  
+6. Enable SNS routing from upstream publishers.  
+7. Scale workers and tune concurrency/visibility timeouts.  
+8. Enable **cron-based backfills** and QA scans using the same contract.  
 
 ---
 
-## 🧩 12. Version History
+## 🧪 Validation & CI/CD
 
-| Version  | Date       | Notes                               |
-|---------:|------------|-------------------------------------|
-| v11.2.3  | 2025-12-04 | Initial governed release of spec.   |
+CI/CD requirements for auto-update pipelines:
+
+- **Schema tests** for SNS/SQS envelopes and STAC outputs.  
+- **Unit/integration tests** for workers, gates, and STAC writers.  
+- **Lineage checks** ensuring OpenLineage events are emitted for each run.  
+- **Governance tests** verifying CARE/sovereignty policies and kill-switches.  
+- **Telemetry conformance tests** using `telemetry_schema`, `energy_schema`, and `carbon_schema`.  
+
+A typical CI workflow (`kfm-ci.yml`) should include:
+
+- Markdown + YAML lint for docs under `docs/pipelines/auto-update/`.  
+- Validation of `sns-schema/message-v1.json`.  
+- Replay tests for WAL-backed reprocessing.  
+
+---
+
+## 📦 Data & Metadata
+
+Each processed update must result in:
+
+- A STAC Item (or update) for each promoted asset.  
+- Updated Collection summaries (extent, temporal coverage, statistics where applicable).  
+- A telemetry record (energy, carbon, runtime, counts) appended to `auto-update-telemetry.json`.  
+- A lineage record stored via OpenLineage/PROV-O, referencing:
+  - Input assets (by URI/hash).  
+  - Config version.  
+  - Software agent and run parameters.  
+
+All metadata must be:
+
+- Machine-extractable (JSON/JSON-LD).  
+- Compatible with KFM-STAC and DCAT mappings.  
+- Safe for public exposure given `care_label` and `classification`.  
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+- **STAC** — asset-level, spatiotemporal metadata and processing history.  
+- **DCAT** — dataset-level cataloging for discovery and governance.  
+- **PROV-O/OpenLineage** — detailed run-level provenance (activities, entities, agents).  [oai_citation:5‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
+
+Examples:
+
+- STAC Item → `dcat:Distribution` for a DCAT Dataset.  
+- Lineage run → `prov:Activity` with `prov:used` and `prov:generated` links.  
+- Dataset versioning via `prov:wasDerivedFrom` and DCAT version fields.  
+
+The auto-update pipeline is responsible for keeping these layers **consistent and mutually referential**.
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+FAIR:
+
+- **Findable:** Every promoted asset has a STAC Item reachable via catalogs and search.  
+- **Accessible:** Access URLs and licenses are explicit and enforced.  
+- **Interoperable:** Uses STAC, DCAT, PROV-O, and GeoSPARQL-aligned geometry where appropriate.  [oai_citation:6‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
+- **Reusable:** Clear licensing, provenance, and versioning for each update.  
+
+CARE:
+
+- **Collective Benefit:** Auto-updates improve timeliness and reliability for affected communities.  
+- **Authority to Control:** Respect `sovereignty_policy` for any dataset intersecting Indigenous or sensitive contexts.  
+- **Responsibility:** Failed governance or masking gates **must** block promotion to `stable`.  
+- **Ethics:** No auto-update may bypass review where specified by policy (e.g., for heritage-sensitive datasets).  
+
+Governance hooks:
+
+- `governance_ref`, `ethics_ref`, `sovereignty_policy` in front-matter are binding references.  
+- Auto-update behavior must be consistent with these standards and subject to periodic review.  
+
+---
+
+## 🕰️ Version History
+
+| Version | Date       | Notes                                             |
+|--------:|------------|---------------------------------------------------|
+| v11.2.3 | 2025-12-04 | Initial governed release of the auto-update spec. |
 
 ---
 
 <div align="center">
 
-### ⚡ KFM v11 — Event-Driven Auto-Update Ingestion Pipeline
+⚡ **Kansas Frontier Matrix — Event-Driven Auto-Update Ingestion Pipeline (v11.2.3)**  
+Scientific Insight · Deterministic Pipelines · FAIR+CARE Ethics · Sustainable Intelligence  
 
-Deterministic · Ethics-Aligned · Provenance-Complete  
-
-MCP-DL v6.3 · KFM-MDP v11.2.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
-
-[⬅ Back to Pipelines Index](../README.md) ·  
-[📚 STAC & Data Contracts](../../data/README.md) ·  
-[⚖ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[📘 Pipelines Index](../README.md) · [⚖ Governance](../../standards/governance/ROOT-GOVERNANCE.md) · [📦 Data & STAC Catalogs](../../data/README.md)
 
 </div>
