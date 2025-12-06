@@ -296,11 +296,11 @@ flowchart TD
     A["Technical Constraints (sandboxing, ACLs, rate limits)"] --> B["Protocol & API Rules (contracts, usage, logs)"]
     B --> C["Institutional Law (charters, statutes, policies)"]
     C --> D["Cultural Norms & Values (ethics, customs, community norms)"]
-~~~
+```
 
 ### 2. Co-Evolution Feedback Loop
 
-~~~mermaid
+```mermaid
 flowchart LR
     H["Human Experience (impacts, harms, benefits)"] --> O["Observability & Telemetry"]
     O --> A["AI Analysis & Forecasting (non-binding)"]
@@ -308,7 +308,7 @@ flowchart LR
     P --> R["Human Deliberation & Ratification"]
     R --> I["Implementation & Enforcement (pipelines, docs, standards)"]
     I --> H
-~~~
+```
 
 ---
 
