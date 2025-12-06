@@ -294,10 +294,208 @@ Values are synthetic and approximate.
 
 Assume example thresholds from the autonomy profile:
 
-```text
+~~~text
 resume_up    = 0.60
 resume_down  = 0.40
 slow_up      = 0.30
 slow_down    = 0.10
 pause        = -0.10
+~~~
 
+### Gate Behavior
+
+Throughout this scenario:
+
+- `care`: `OK` → no governance escalation.  
+- `cost_energy`: mostly `OK`, occasionally `WARN` when cost blips up, but never `BLOCK`.  
+- `freshness_stall`: `OK` → no hard stall.  
+- `cardinality_guard`: `OK`.
+
+So **no `BLOCK` or `ESCALATE`**, meaning:
+
+- Gates do **not** force `pause` or `escalate`.  
+- The main issue is **score‑driven thrash** between `resume` and `slow`.
+
+### Action & State Evolution
+
+Conceptual evolution (simplified):
+
+| Tick | State before | Previous action | S_norm | Naïve action | Actual action | State after   | Notes                               |
+|------|--------------|-----------------|--------|-------------:|--------------:|--------------|-------------------------------------|
+| T0   | STABLE       | resume          | 0.74   | resume       | resume        | STABLE       | Clearly resume                      |
+| T1   | STABLE       | resume          | 0.58   | resume       | resume        | STABLE       | Still above `resume_down`           |
+| T2   | STABLE       | resume          | 0.45   | slow         | slow          | STABLE       | Crossed into “slow‑leaning” band    |
+| T3   | STABLE       | slow            | 0.63   | resume       | resume        | STABLE       | Score bounce → flips back to resume |
+| T4   | STABLE       | resume          | 0.46   | slow         | slow          | STABLE       | Flip again → resume → slow          |
+| T5   | STABLE       | slow            | 0.60   | resume       | slow          | BACKOFF      | Thrash detected → lock into BACKOFF |
+| T6   | BACKOFF      | slow            | 0.55   | resume/slow? | slow          | STABLE       | BACKOFF cooldown ends; stay slow    |
+
+Notes:
+
+- **Naïve action**: what action logic would choose if it ignored thrash/backoff detection.  
+- **Actual action**: what the Decider emits under the thrash control design.  
+
+Once the system detects a **pattern of rapid flips** (e.g., resume → slow → resume → slow
+over a short time), it:
+
+1. Enters **BACKOFF** at T5.  
+2. During BACKOFF:
+   - **Rate‑limits evaluations** (e.g., checks every few ticks / minutes).  
+   - Uses smoothed scores (`S_norm` ≈ 0.55 over T6) and prior actions.  
+3. Exits BACKOFF back to **STABLE** with a **single chosen action** (`slow`) until  
+   naturally pulled back into `resume` by more sustained improvements.
+
+This matches the state‑machine design where BACKOFF exists explicitly to:
+
+- Protect against noisy conditions.  
+- Prevent rapid state/action oscillation.  
+- Maintain predictability for consuming orchestrators and operators.
+
+---
+
+## 📦 Data & Metadata
+
+### Scenario Metadata (Logical View)
+
+~~~json
+{
+  "scenario_id": "p0-storm-nowcast:thrash-control",
+  "scenario_status": "canonical",
+  "pipeline_id": "p0-storm-nowcast",
+  "variant": "single-tenant",
+  "fixture_ref": "../../fixtures/p0-storm-nowcast.jsonl#thrash-control",
+  "tags": [
+    "p0",
+    "storm-nowcast",
+    "thrash-control",
+    "backoff",
+    "hysteresis"
+  ]
+}
+~~~
+
+### Fixture Mapping
+
+- `fixture_ref` points into:
+
+  - `docs/pipelines/autonomy-matrix/examples/scenarios/fixtures/p0-storm-nowcast.jsonl`
+
+The fixture slice for `thrash-control` should:
+
+- Encode a short time window (e.g., 20 minutes) with:
+
+  - Score‑relevant telemetry (lag, cost, energy, carbon) **oscillating near thresholds**.  
+  - No CARE or hard cost/energy/carbon violations.  
+
+- Include a label or metadata entry indicating `scenario = "thrash-control"`.
+
+Offline Simulator can:
+
+- Replay the fixture slice.  
+- Log score (`S_norm`), actions, and states per tick.  
+- Confirm that after brief oscillation, the system:
+
+  - Enters `BACKOFF`,  
+  - Then stabilizes on a single action (`slow` in this scenario) when it returns to `STABLE`.
+
+Graph alignment:
+
+- Scenario node `:AutonomyScenario` connects to:
+
+  - `:Pipeline` (`p0-storm-nowcast`),  
+  - `:AutonomyFixture` (thrash-control slice),  
+  - Design docs for state machine and action logic.
+
+---
+
+## 🧪 Validation & CI/CD
+
+This scenario is a **stability regression guard**.
+
+### CI Expectations
+
+A scenario‑level CI test should:
+
+1. Load the `thrash-control` fixture.  
+2. Run the Decider with:
+
+   - Standard P0 storm nowcast profile.  
+   - Hysteresis and BACKOFF configurations from state‑machine and action‑logic specs.
+
+3. Assert that:
+
+   - There are **no long‑term action oscillations** after BACKOFF engages.  
+   - The number of action flips over the window is **below** a configured threshold.  
+   - State machine visits `BACKOFF` at least once when thrash is detected.  
+   - The system returns to `STABLE` with a **single dominant action** (`slow` here).
+
+4. Fail if:
+
+   - Actions continue flipping at nearly every tick.  
+   - BACKOFF is never used even with repeated resume/slow flips.  
+   - The final state remains in `BACKOFF` or an unstable looping pattern.
+
+### Drift Detection
+
+If changes to:
+
+- Thresholds or hysteresis behavior,  
+- BACKOFF entry/exit rules,  
+- Score smoothing / windows,
+
+cause this scenario to:
+
+- Stop using BACKOFF when it should, or  
+- Produce excessive action flips,
+
+CI should flag the behavior as either:
+
+- Intentional change (requiring scenario update and appropriate governance review), or  
+- Regression in thrash control.
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+This scenario is a **teaching example** for Focus Mode when operators see “weird” behavior near thresholds.
+
+Story Node ID:
+
+~~~text
+urn:kfm:story-node:pipelines:autonomy-matrix:examples:scenarios:p0-storm-nowcast:thrash-control
+~~~
+
+Example narrative:
+
+~~~text
+In the P0 storm nowcast thrash-control scenario, score and telemetry oscillate near the
+resume/slow thresholds. Instead of flipping actions on every tick, the Autonomy Decider
+detects repeated flips, enters BACKOFF, and rate-limits evaluations. After observing a
+smoothed score around the slow band, it returns to STABLE with a consistent slow action,
+keeping behavior predictable for operators and orchestrators.
+~~~
+
+Focus Mode can:
+
+- Compare real‑time action and state transitions to this scenario.  
+- Explain why BACKOFF appears and how it prevents thrash.  
+- Point operators to configuration parameters (thresholds, windows) that influence stability.
+
+---
+
+## 🕰️ Version History
+
+| Version    | Date       | Summary                                                                                                                 |
+|-----------:|------------|-------------------------------------------------------------------------------------------------------------------------|
+| **v11.2.4**| 2025-12-06 | Initial thrash‑control scenario for `p0-storm-nowcast`: noisy threshold behavior, BACKOFF usage, stability CI guardrail.|
+
+---
+
+<div align="center">
+
+⛈️ **KFM v11 — P0 Storm Nowcast · Thrash Control Scenario**  
+Noisy Metrics · Stable Autonomy · BACKOFF‑Driven Thrash Protection  
+
+[⛈️ P0 Scenario Family](README.md) · [🎭 Scenario Library Root](../README.md) · [🤖 Autonomy Matrix](../../../README.md)
+
+</div>
