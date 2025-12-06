@@ -1,6 +1,6 @@
 ---
-title: "🧩 Kansas Frontier Matrix — CI/CD Workflow Documentation Template"
-path: "docs/workflows/workflow_template.md"
+title: "🧩 Kansas Frontier Matrix — Workflow Documentation Template (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "docs/templates/workflow_template.md"
 
 version: "v11.2.4"
 last_updated: "2025-12-06"
@@ -15,8 +15,8 @@ signature_ref: "releases/v11.2.4/signature.sig"
 attestation_ref: "releases/v11.2.4/slsa-attestation.json"
 sbom_ref: "releases/v11.2.4/sbom.spdx.json"
 manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/docs-workflows-telemetry.json"
-telemetry_schema: "schemas/telemetry/docs-workflows-template-v11.2.4.json"
+telemetry_ref: "releases/v11.2.4/docs-workflow-template-telemetry.json"
+telemetry_schema: "schemas/telemetry/workflows/template-v11.2.4.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 
@@ -42,10 +42,10 @@ diagram_profiles:
   - "mermaid-timeline-v1"
 
 scope:
-  domain: "documentation-templates"
+  domain: "workflow-templates"
   applies_to:
-    - "docs/workflows/*.md"
-    - ".github/workflows/*.yml"
+    - "docs/templates/workflow_template.md"
+    - "docs/workflows/*.yml.md"
 
 fair_category: "F1-A1-I2-R2"
 care_label: "FAIR+CARE Governance Aligned"
@@ -58,7 +58,7 @@ indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
 
 ttl_policy: "24 months"
-sunset_policy: "Superseded by CI/CD Workflow Documentation Template v12"
+sunset_policy: "Superseded by Workflow Documentation Template v12"
 
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -74,8 +74,9 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
-  - "docs/workflows/workflow_template.md@v10.2.4"
-  - "docs/workflows/workflow_template.md@v1.0.0"
+  - "docs/templates/workflow_template.md@v10.2.2"
+  - "docs/templates/workflow_template.md@v10.0.0"
+  - "docs/templates/workflow_template.md@v9.9.0"
 
 provenance_requirements:
   versions_required: true
@@ -83,14 +84,14 @@ provenance_requirements:
   must_reference_superseded: true
   must_reference_origin_root: true
 
-json_schema_ref: "schemas/json/kfm-markdown-protocol-v11.2.4.schema.json"
-shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.4-shape.ttl"
+json_schema_ref: "schemas/json/kfm-workflow-doc-template-v11.2.4.schema.json"
+shape_schema_ref: "schemas/shacl/kfm-workflow-doc-template-v11.2.4-shape.ttl"
 story_node_refs: []
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:workflows:workflow-template:v11.2.4"
+doc_uuid: "urn:kfm:doc:templates:workflow-doc:v11.2.4"
 semantic_document_id: "kfm-workflow-doc-template-v11.2.4"
-event_source_id: "ledger:kfm:doc:workflows:workflow-template:v11.2.4"
+event_source_id: "ledger:kfm:doc:templates:workflow-doc:v11.2.4"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -181,18 +182,18 @@ deprecated_fields:
 
 <div align="center">
 
-# 🧩 **Kansas Frontier Matrix — CI/CD Workflow Documentation Template**  
-`docs/workflows/workflow_template.md`
+# 🧩 **Kansas Frontier Matrix — Workflow Documentation Template**  
+`docs/templates/workflow_template.md`
 
 **Purpose**  
-Provide a **governed, copy‑pasteable template** for documenting any CI/CD workflow in the Kansas Frontier Matrix monorepo.  
-Authors use this file as a **baseline** to create new `docs/workflows/<workflow-name>.yml.md` documents that are **KFM‑MDP v11.2.4 compliant**, **telemetry‑aware**, and ready for **Story Node / Focus Mode** integration.
+Provide a **standardized, governance-aligned, machine-validatable template** for documenting all GitHub Actions workflows used across the Kansas Frontier Matrix (KFM).  
+This enables **FAIR+CARE-compliant**, **MCP-DL v6.3-certified**, and **Diamond⁹ Ω / Crown∞Ω** automation practices across CI/CD, telemetry, governance, and AI pipelines.
 
-<img src="https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
 <img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
-<img src="https://img.shields.io/badge/Status-Template-brightgreen" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance_Aligned-orange" />
+<img src="https://img.shields.io/badge/Status-Template-lightgrey" />
 
 </div>
 
@@ -200,355 +201,408 @@ Authors use this file as a **baseline** to create new `docs/workflows/<workflow-
 
 ## 📘 Overview
 
-### 1. How to Use This Template
+### Template Scope
 
-1. **Copy this file** to a new path, for example:  
-   `docs/workflows/{{workflow_slug}}.yml.md`
-2. **Update the YAML front‑matter**:
-   - `title`, `path`, `version`, `last_updated`.  
-   - `sbom_ref`, `manifest_ref`, `telemetry_ref`, and `telemetry_schema` for the workflow.  
-   - `doc_uuid`, `semantic_document_id`, `event_source_id`, `provenance_chain`.
-3. **Replace placeholders** in the body:
-   - `{{WORKFLOW_NAME}}`, `{{WORKFLOW_FILE}}`, `{{WORKFLOW_KIND}}`, `{{TELEMETRY_SCHEMA_FILE}}`, etc.
-4. **Describe the workflow** under each section using the guidance below.
-5. Commit and let `docs-lint.yml` + `schema-lint.yml` enforce compliance.
+Use this template to document **any workflow `.yml` file**, typically located under:
 
-> **Convention:**  
-> Each workflow documentation file **MUST** describe exactly one GitHub Actions workflow defined under `.github/workflows/<workflow-name>.yml`.
+- `.github/workflows/` — CI/CD configuration.  
+- `docs/workflows/` — Markdown documentation `*.yml.md` aligned with this template.
 
-### 2. Recommended Naming Pattern
+Each workflow documentation file **must**:
 
-- Workflow file: `.github/workflows/{{workflow_slug}}.yml`  
-- Doc file: `docs/workflows/{{workflow_slug}}.yml.md`  
-- Telemetry schema: `schemas/telemetry/workflows/{{workflow_slug}}-vX.json`  
+1. Contain complete **YAML front-matter** (version, SBOM, manifest, telemetry schema, governance refs).  
+2. Describe workflow **purpose**, **triggers**, **permissions**, **jobs**, **inputs/outputs**, and **artifacts**.  
+3. Declare how the workflow enforces **FAIR+CARE**, **MCP-DL v6.3**, and internal governance policies.  
+4. Include a **Mermaid diagram** illustrating workflow logic (≤ 12 nodes, no custom `classDef`).  
+5. Provide a **version history table** aligned with KFM release policy.  
 
-Use lower‑kebab‑case for `{{workflow_slug}}` (e.g., `docs-lint`, `stac-validate`, `ai-train`).
+### Author Quickstart
+
+1. Copy this template to `docs/workflows/<workflow-name>.yml.md`.  
+2. Update the front-matter (`title`, `path`, `version`, `telemetry_schema`, etc.).  
+3. Replace placeholder content in each H3 section with workflow-specific details.  
+4. Keep directory paths, emojis, and headings consistent with **KFM-MDP v11.2.4**.  
+5. Open a PR and ensure CI passes: `docs-lint`, `faircare-validate`, `telemetry-export`.  
 
 ---
 
 ## 🗂️ Directory Layout
 
-Use this section to show **where the workflow lives** and which scripts / paths it touches.  
-Update the placeholders to match the new workflow.
-
 ~~~text
-📁 docs/
-└── 📁 workflows/
-    📄 README.md                               — CI/CD & governance workflows index
-    📄 workflow_template.md                    — ← This template
-    📄 {{workflow_slug}}.yml.md                — Your new workflow documentation
-
-📁 .github/
-└── 📁 workflows/
-    📄 {{workflow_slug}}.yml                   — GitHub Actions workflow definition
-
-📁 scripts/
-└── 📁 {{workflow_domain}}/
-    📄 {{workflow_slug}}_main.py               — (Example) main script invoked by workflow
-    📄 {{workflow_slug}}_helpers.py            — (Example) helpers for this workflow
-
-📁 reports/
-└── 📁 {{workflow_slug}}/
-    📄 *.json                                  — Machine-readable outputs & summaries
-    📄 *.md                                    — Human-readable summaries (optional)
-
-📁 releases/
-└── 📁 v{{release_major_minor}}/
-    📄 {{workflow_slug}}-telemetry.json        — Telemetry for this workflow
-    📄 sbom.spdx.json                          — Tooling SBOM (if applicable)
-    📄 manifest.zip                            — Release manifest (hashes, configs)
+📁 KansasFrontierMatrix/
+├── 📁 docs/                                            # All documentation
+│   ├── 📁 workflows/                                  # ⚙️ Workflow documentation (per CI job)
+│   │   📄 README.md                                   # 🧭 CI/CD & governance workflows index
+│   │   📄 docs-lint.yml.md                            # 🧪 Docs lint workflow doc
+│   │   📄 faircare-validate.yml.md                    # ⚖ FAIR+CARE validation workflow doc
+│   │   📄 stac-validate.yml.md                        # 🗂️ STAC/DCAT validation workflow doc
+│   │   📄 telemetry-export.yml.md                     # 📈 Telemetry export workflow doc
+│   │   📄 ai-train.yml.md                             # 🤖 AI training workflow doc
+│   │   📄 ai-explainability.yml.md                    # 🔍 AI explainability workflow doc
+│   │   📄 security-supply-chain.yml.md                # 🔒 Supply-chain security workflow doc
+│   │   📄 schema-lint.yml.md                          # 📐 Schema lint workflow doc
+│   │   📄 workflow_template.yml.md                    # 🧩 Workflow documentation template (instantiated)
+│   └── 📁 templates/                                  # 📄 Shared documentation templates
+│       📄 README.md                                   # Templates index
+│       📄 experiment.md                               # 🧪 Experiment / analysis template
+│       📄 model_card.md                               # 🤖 Model card template
+│       📄 sop.md                                      # 🧾 SOP template
+│       📄 workflow_template.md                        # 🧩 Workflow doc template (this file)
+├── 📁 .github/
+│   └── 📁 workflows/                                  # Actual GitHub Actions YAML workflows
+│       📄 docs-lint.yml                               # 📏 Docs lint workflow
+│       📄 faircare-validate.yml                       # ⚖ FAIR+CARE validation workflow
+│       📄 stac-validate.yml                           # 🗂️ STAC/DCAT validation workflow
+│       📄 telemetry-export.yml                        # 📈 Telemetry aggregation workflow
+│       📄 ai-train.yml                                # 🤖 AI training workflow
+│       📄 ai-explainability.yml                       # 🔍 Explainability workflow
+│       📄 security-supply-chain.yml                   # 🔒 Supply-chain security workflow
+│       📄 schema-lint.yml                             # 📐 Schema lint workflow
+└── 📁 releases/
+    └── 📁 v11.2.4/                                    # 📦 Release artifacts & telemetry
+        📄 sbom.spdx.json                              # 🧬 SBOM for this release
+        📄 manifest.zip                                # 📑 Asset + checksum manifest
+        📄 focus-telemetry.json                        # 📈 Unified telemetry ledger
 ~~~
 
-**Author task:** Fill in `{{workflow_slug}}`, `{{workflow_domain}}`, and `{{release_major_minor}}` (for example, `11.2` or `11.2.4`).
+When instantiating this template:
+
+- Ensure `path` in front-matter matches `docs/workflows/<workflow-name>.yml.md`.  
+- Keep emoji labels and comments aligned with this layout for CI and Focus Mode.  
 
 ---
 
 ## 🧭 Context
 
-Use this section to situate the workflow inside the **KFM CI/CD ecosystem**:
+Workflow documentation connects:
 
-- Describe the **purpose** of the workflow in 2–3 sentences.  
-- Specify **which phase of the pipeline** it belongs to, e.g.:
+- The **YAML definition** in `.github/workflows/*.yml`.  
+- The **governed narrative** in `docs/workflows/*.yml.md`.  
+- The **telemetry and provenance trail** in `releases/*/focus-telemetry.json` and `reports/audit/*`.
 
-  > Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j knowledge graph → API layer → React/MapLibre/Cesium frontend → Story Nodes → Focus Mode  
+Each workflow doc should answer:
 
-- List **dependencies** on other workflows (e.g., telemetry exporter, schema-lint).  
-- Note any **governance implications** (e.g., “blocks release if docs are invalid”).
+- *What* the workflow does.  
+- *When* it runs (triggers).  
+- *How* it runs (jobs, steps, permissions, caching).  
+- *Why* it exists (governance, FAIR+CARE, sustainability rationale).  
 
-### Author Checklist
+Docs are modeled as:
 
-When filling this section:
-
-- [ ] State the **main responsibility** of `{{WORKFLOW_NAME}}`.  
-- [ ] Indicate when it runs (e.g., `pull_request`, `push`, `schedule`).  
-- [ ] Mention any **hard gates** (conditions that fail builds).  
+- `prov:Plan` in PROV-O.  
+- `E29 Design or Procedure` in CIDOC-CRM.  
+- Catalog entries in DCAT/STAC-based documentation collections.  
 
 ---
 
 ## 🗺️ Diagrams
 
-Use this section to add one or two mermaid diagrams that **illustrate the workflow**.  
-For most workflow docs, a **single flowchart** is sufficient.
+Workflow docs must include a **Mermaid flowchart** describing the control flow.
 
-### 1. Flowchart Template
+### Diagram Rules
 
-Replace node labels to match `{{WORKFLOW_NAME}}` steps.
+- Use `flowchart LR` or `flowchart TD`.  
+- At most 12 nodes per diagram.  
+- Quoted labels, no `classDef`.  
+- One diagram per workflow doc is typical (more allowed if sections are complex).  
+
+### Diagram Template
 
 ~~~mermaid
 flowchart LR
-    A["Trigger: PR / Push / Schedule"] --> B["Checkout Repository"]
-    B --> C["Setup Tooling (Python / Node / etc.)"]
-    C --> D["Run {{WORKFLOW_NAME}} Core Steps"]
-    D --> E["Generate Reports & Artifacts"]
-    E --> F["Emit Telemetry Events"]
-    F --> G["Update Governance / Dashboards / Gates"]
+  A["Trigger (push / PR / schedule / dispatch)"] --> B["Checkout Repository"]
+  B --> C["Setup Environment & Dependencies"]
+  C --> D["Run Core Jobs (lint / validate / train / scan)"]
+  D --> E["Collect Reports & Artifacts"]
+  E --> F["Emit & Merge Telemetry"]
+  F --> G["Update Governance / Release State"]
 ~~~
 
-### 2. Timeline Template (Optional)
-
-If the workflow has a clear **lifecycle**, use a timeline:
-
-~~~mermaid
-timeline
-    title {{WORKFLOW_NAME}} — Run Lifecycle
-    section Preparation
-      T0 : Workflow triggered
-      T1 : Repo checked out & environment prepared
-    section Execution
-      T2 : Core jobs execute
-      T3 : Validation & summarization
-    section Publication
-      T4 : Telemetry merged and validated
-      T5 : Governance and dashboards updated
-~~~
+Replace node labels to reflect the actual workflow.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Document how **Story Nodes** and **Focus Mode** might use this workflow’s outputs.
+Workflow docs are used by **Story Nodes** and **Focus Mode** to explain KFM automation:
 
-### 1. Story Node Patterns
+- Focus Mode can answer questions like *“What happens when I push STAC changes?”* by rendering relevant workflow sections.  
+- Story Nodes may reference workflow docs using stable IDs such as:  
+  `urn:kfm:workflow-doc:stac-validate.yml@v11.2.4`.
 
-Examples you can adapt:
+Author guidelines:
 
-- `urn:kfm:story-node:infra:{{workflow_slug}}:<run_id>`  
-  - Describes status, impact, or incidents from a specific run.  
+- Keep H3 sections **short and tightly scoped** (Triggers, Jobs, Inputs, Permissions, etc.).  
+- Use descriptive, unambiguous phrases (avoid “it”, “this one”; prefer workflow names and filenames).  
+- Include concrete file paths and artifact locations so Story Nodes can deep-link.  
 
-- `urn:kfm:story-node:infra:{{workflow_slug}}-trend:<period>`  
-  - Summarizes trends in failures, runtime, energy, or errors for the workflow.
+Focus Mode:
 
-### 2. Focus Mode Behavior
-
-Describe what Focus Mode **may** and **must not** do for this workflow:
-
-- **MAY**:
-  - Summarize the workflow’s purpose and recent health.  
-  - Surface the most recent `reports/**` summaries and telemetry slices.  
-
-- **MUST NOT**:
-  - Alter or reinterpret telemetry values.  
-  - Claim success or certification without underlying evidence from reports.  
-
-> **Author tip:** Link to the workflow’s telemetry schema (e.g., `schemas/telemetry/workflows/{{workflow_slug}}-v3.json`) if relevant.
+- ✅ May summarize and highlight portions of this template or derived docs.  
+- ❌ Must not invent workflows, jobs, or permissions not present in YAML.  
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Use this section to:
+This template and all workflow docs must pass:
 
-- Show the **triggers** and **paths** for `{{WORKFLOW_NAME}}`.  
-- Provide a **conceptual YAML stub** (not necessarily exact, but structurally similar).  
-- Document which conditions **fail** the job vs. raise warnings.
+- **`docs-lint.yml`** — Markdown structure, H2/H3 headings, front-matter schema, Mermaid syntax.  
+- **`faircare-validate.yml`** — FAIR+CARE labeling, governance fields, sovereignty references.  
+- **`telemetry-export.yml`** — Telemetry record for documentation changes and usage.  
 
-### 1. Trigger & Scope Table
+Concrete workflow docs **must describe**:
 
-Fill in concrete values:
-
-| Trigger            | Paths / Workflows                        | Notes                          |
-|-------------------:|------------------------------------------|--------------------------------|
-| `pull_request`     | `{{paths_for_pr}}`                        | Blocks merge on failure        |
-| `push` (protected) | `{{paths_for_push}}`                      | Required on `main` / `release` |
-| `schedule`         | `{{cron_or_—}}`                           | Optional regression checks     |
-| `workflow_dispatch`| —                                        | Manual / backfill runs         |
-
-### 2. Conceptual YAML Template
-
-Adapt this to your specific workflow:
-
-~~~yaml
-name: "{{WORKFLOW_NAME}} (Governed)"
-
-on:
-  pull_request:
-    paths: {{PULL_REQUEST_PATHS}}
-  push:
-    branches: ["main", "release/**"]
-    paths: {{PUSH_PATHS}}
-  schedule:
-    - cron: "{{CRON_EXPRESSION}}"
-  workflow_dispatch: {}
-
-permissions:
-  contents: read
-  id-token: write
-
-concurrency:
-  group: {{workflow_slug}}-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  {{job_slug}}:
-    runs-on: ubuntu-22.04
-    timeout-minutes: {{TIMEOUT_MINUTES}}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup tooling
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run {{WORKFLOW_NAME}} core logic
-        run: |
-          python scripts/{{workflow_domain}}/{{workflow_slug}}_main.py \
-            --config configs/{{workflow_domain}}/{{workflow_slug}}.yaml \
-            --out reports/{{workflow_slug}}/
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: {{workflow_slug}}_reports
-          path: reports/{{workflow_slug}}/
-
-      - name: Emit telemetry
-        run: |
-          python scripts/telemetry/emit_telemetry.py \
-            --kind {{workflow_slug}} \
-            --summary reports/{{workflow_slug}}/summary.json \
-            --out {{workflow_slug}}_telemetry.json
-
-      - name: Append telemetry to unified log
-        run: |
-          python scripts/telemetry/merge_telemetry.py \
-            --in  {{workflow_slug}}_telemetry.json \
-            --dest releases/v{{release_major_minor}}/focus-telemetry.json
-~~~
-
-### 3. Quality Gates
-
-Describe:
-
-- Which metrics or validation failures **fail the job**.  
-- Which conditions are **warnings only** (logged, but allowed to pass).  
-- Where thresholds are defined (e.g., `configs/{{workflow_domain}}/{{workflow_slug}}_policy.yaml`).
+- Their place in the CI pipeline (e.g., gating merges, pre-release checks, telemetry roll-up).  
+- Any **hard gates** (e.g., “no release if STAC/DCAT validation fails”).  
+- Where validation and audit reports are stored under `reports/`.  
 
 ---
 
 ## 📦 Data & Metadata
 
-Use this section to define:
+### Required Front-Matter (Concrete Workflow Docs)
 
-- **Inputs** (e.g., paths, configs, previous reports).  
-- **Outputs** (reports, summaries, artifacts, telemetry).  
-- **Telemetry contracts** (schema file, key metrics).
+Every workflow documentation file must begin with:
 
-### 1. Inputs & Outputs Table
+~~~yaml
+---
+title: "⚙️ <Human-Friendly Workflow Name> — `<workflow-name>.yml`"
+path: "docs/workflows/<workflow-name>.yml.md"
 
-Customize for your workflow:
+version: "vX.Y.Z"
+last_updated: "YYYY-MM-DD"
+review_cycle: "Continuous · Autonomous"
+commit_sha: "<latest-commit-hash>"
 
-| Type       | Path / Key                                                | Description                                |
-|-----------:|-----------------------------------------------------------|--------------------------------------------|
-| **Input**  | `{{input_path_1}}`                                        | Primary data or config                     |
-| **Input**  | `{{input_path_2}}`                                        | Secondary data (optional)                  |
-| **Output** | `reports/{{workflow_slug}}/summary.json`                  | Machine-readable summary                   |
-| **Output** | `reports/{{workflow_slug}}/summary.md`                    | Human-readable PR summary (optional)       |
-| **Artifact** | `reports/{{workflow_slug}}/**`                          | Artifact bundle uploaded by workflow       |
-| **Telemetry** | `releases/v{{release_major_minor}}/focus-telemetry.json` | Unified ledger (this workflow appended) |
+sbom_ref: "releases/vX.Y.Z/sbom.spdx.json"
+manifest_ref: "releases/vX.Y.Z/manifest.zip"
+telemetry_ref: "releases/vX.Y.Z/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/workflows/<workflow-name>-vX.json"
 
-### 2. Telemetry Schema
+governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+---
+~~~
 
-Document:
+CI will fail if:
 
-- Schema location (e.g., `schemas/telemetry/workflows/{{workflow_slug}}-v3.json`).  
-- Key metrics that must be present (e.g., `workflow_duration_sec`, `energy_wh`, `carbon_gco2e`, domain‑specific metrics).  
+- Any required key is missing or malformed.  
+- `path` does not match the actual file location.  
+- `telemetry_schema` is not recognized by the telemetry system.  
+
+### Required H3 Sections (Concrete Docs)
+
+Within the allowed H2 headings of this template, each workflow doc should define:
+
+- Under **📘 Overview**  
+  - `### Purpose`  
+
+- Under **🧱 Architecture**  
+  - `### Triggers & Scope`  
+  - `### Workflow Definition (YAML Excerpt)`  
+  - `### Jobs Summary`  
+  - `### Inputs & Outputs`  
+  - `### Permissions (Least Privilege)`  
+  - `### Caching & Performance`  
+  - `### Failure Modes & Rollback`  
+
+- Under **⚖ FAIR+CARE & Governance**  
+  - `### FAIR+CARE Governance Matrix`  
+
+This structure is enforced via `docs-lint.yml` + schema validation.
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-If `{{WORKFLOW_NAME}}` interacts with STAC/DCAT/PROV:
+Workflow docs can be cataloged and traced like any other asset:
 
-- Describe which **STAC Collections/Items** or **DCAT Datasets** it touches.  
-- Note whether it **validates**, **generates**, or **updates** catalogs.  
-- Explain how runs are represented in **PROV**:
+- **DCAT**  
+  - Represented as `dcat:Dataset` with distributions for Markdown and rendered HTML.  
+  - `dct:title` from front-matter `title`.  
+  - `dct:modified` from `last_updated`.  
+  - `dct:license` from `license`.  
 
-  - Activities: `ex:{{WorkflowCamel}}Run_<run_id>`.  
-  - Entities: `ex:{{WorkflowCamel}}Report_<run_id>`.  
-  - Agents: `ex:KFM_CI_Bot`, `ex:{{TeamName}}`.
+- **STAC**  
+  - Included as Items in a documentation-focused Collection (e.g., `kfm-docs-workflows`).  
+  - `id` set to `semantic_document_id` or `<workflow-name>-doc-vX.Y.Z`.  
+  - `properties.datetime` set to `last_updated`.  
 
-If not applicable, state explicitly that the workflow **does not manipulate catalogs**, and only its **telemetry** may be cataloged as governance data.
+- **PROV-O**  
+  - Workflow doc = `prov:Plan`.  
+  - Each CI run = `prov:Activity` that:  
+    - `prov:used` the YAML file and repository state.  
+    - `prov:wasAssociatedWith` a runner, maintainers.  
+    - `prov:generated` artifacts, telemetry events, and governance decisions.  
 
 ---
 
 ## 🧱 Architecture
 
-Use this section to tie the workflow into the **code architecture**:
+This section describes the **content pattern** for each concrete workflow documentation file.
 
-- Which **modules** does it exercise (e.g., `src/pipelines`, `src/api`, `src/web`)?  
-- What is the **boundary** of responsibility for the workflow vs. other jobs?  
-- Any **configuration-driven patterns** (e.g., all behavior controlled by YAML/JSON).
+### Triggers & Scope
 
-### Author Checklist
+Document how the workflow is invoked and what paths it watches:
 
-- [ ] Mention relevant modules and scripts.  
-- [ ] Clarify any shared libraries or utilities.  
-- [ ] Note how failures are surfaced to PR authors (e.g., comments, status checks).
+~~~markdown
+### Triggers & Scope
+
+| Trigger             | Paths                           | Notes                                  |
+|--------------------:|---------------------------------|----------------------------------------|
+| `push`              | `src/**`, `data/**`             | Restricted to `main` / `release/**`    |
+| `pull_request`      | `docs/**`, `schemas/**`         | Blocks merges on validation failure    |
+| `workflow_dispatch` | —                               | Manual execution with inputs           |
+| `schedule`          | `0 3 * * *`                     | Nightly governance or telemetry runs   |
+~~~
+
+### Workflow Definition (YAML Excerpt)
+
+Include a minimal, accurate YAML excerpt from `.github/workflows/<workflow-name>.yml`:
+
+~~~yaml
+name: "Example Workflow — Governed"
+
+on:
+  push:
+    branches: ["main", "release/**"]
+    paths: ["src/**", "data/**"]
+  pull_request:
+    paths: ["docs/**", "schemas/**"]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  example:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Say hello
+        run: echo "Hello Kansas Frontier Matrix!"
+~~~
+
+### Jobs Summary
+
+Summarize all jobs and their responsibilities:
+
+~~~markdown
+### Jobs Summary
+
+| Job        | Purpose                                  | Outputs/Artifacts                       |
+|-----------:|------------------------------------------|-----------------------------------------|
+| `build`    | Compile or validate project components   | Binaries, bundle manifests              |
+| `validate` | Run linting, schema checks, FAIR+CARE    | `reports/**.json`, logs                 |
+| `deploy`   | Publish artifacts to releases/registries | `releases/vX.Y.Z/manifest.zip`         |
+~~~
+
+### Inputs & Outputs
+
+Document workflow inputs and outputs (ideally with links to schemas):
+
+~~~markdown
+### Inputs & Outputs
+
+| Type      | Field           | Description                                   |
+|-----------|-----------------|-----------------------------------------------|
+| **Input** | `dataset_ref`   | STAC/DCAT dataset or contract ID             |
+| **Input** | `config_path`   | Relative path to workflow configuration       |
+| **Output**| `reports/validation.json` | Contract or metadata validation report |
+| **Output**| `releases/vX.Y.Z/focus-telemetry.json` | Global telemetry ledger entry   |
+~~~
+
+### Permissions (Least Privilege)
+
+Explicitly list and justify each GitHub `permissions` field:
+
+~~~markdown
+### Permissions (Least Privilege)
+
+| Permission        | Reason                                         |
+|-------------------|------------------------------------------------|
+| `contents: read`  | Required to inspect repository files           |
+| `id-token: write` | Enables OIDC-based signing / attestations      |
+| `packages: write` | Only if workflow uploads packages to registry  |
+~~~
+
+Workflows granting broader permissions must document why and who approved them.
+
+### Caching & Performance
+
+Describe caching strategy and performance considerations:
+
+~~~markdown
+### Caching & Performance
+
+- Use `actions/cache@v4` for dependency caches (pip, npm, etc.).  
+- Cache keys must include lockfiles (e.g., `requirements.lock`, `poetry.lock`, `package-lock.json`).  
+- Typical speedup: **40–70%** for repeated runs on active branches.  
+- Document any known cold-start or heavy steps (e.g., large model downloads).  
+~~~
+
+### Failure Modes & Rollback
+
+Capture expected failures and operator actions:
+
+~~~markdown
+### Failure Modes & Rollback
+
+- **Missing contract fields** → Fail validation job; fix schema or data and rerun workflow.  
+- **STAC link rot or asset failures** → Flag affected Items, update `abandonment_candidates` registry.  
+- **Telemetry merge conflict** → Rerun `telemetry-export.yml` or resolve ledger conflicts manually.  
+- **Security scan failure** → Treat as release blocker; triage vulnerabilities before proceeding.  
+~~~
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-Explain:
+Concrete workflow docs must explain how automation upholds FAIR+CARE:
 
-- How the workflow contributes to **FAIR** (Findable, Accessible, Interoperable, Reusable) practices.  
-- Any **CARE**‑related logic (e.g., treatment of sensitive data in telemetry).  
-- Where policies and thresholds are stored (config files, governance docs).
+~~~markdown
+### FAIR+CARE Governance Matrix
 
-Example points you can reuse and tailor:
+| Principle  | Implementation                                      | Evidence                                  |
+|-----------:|-----------------------------------------------------|-------------------------------------------|
+| Findable   | Workflow documented with stable ID + metadata       | Front-matter, `docs/workflows/*.yml.md`   |
+| Accessible | Artifacts uploaded & retained by policy             | GitHub Actions artifacts, `reports/**`    |
+| Interoperable | JSON Schema, STAC/DCAT compatible outputs       | Schema validation logs                    |
+| Reusable   | CC-BY docs + versioned configs + manifests          | LICENSE, configs, `manifest.zip`          |
+| CARE       | Sensitive flags respected; ethics guardrails applied| FAIR+CARE reports, council decisions      |
+~~~
 
-- Telemetry avoids storing **person‑level identifiers**; it focuses on systems and runs.  
-- Energy and carbon metrics support **sustainability governance**.  
-- Workflow results may drive **gates** for releases, especially when ethics or compliance checks are involved.
+Governance artifacts:
+
+- `reports/audit/github-workflows-ledger.json` — workflow-change ledger.  
+- `reports/faircare/faircare_summary.json` — FAIR+CARE outcomes.  
+
+Workflows ingesting or exposing Indigenous or sensitive data should also reference:
+
+- `../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`.  
 
 ---
 
 ## 🕰️ Version History
 
-Update this table as the template evolves.
-
-| Version    | Date       | Author          | Summary                                                                                                      |
-|-----------:|------------|-----------------|--------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | `@kfm-docs`     | Aligned with KFM-MDP v11.2.4; added full front-matter; standardized section layout; integrated Story Node, telemetry, and governance guidance. |
-| v10.2.4   | 2025-11-12 | `@kfm-docs`     | Introduced v3 telemetry references and workflow naming conventions.                                         |
-| v10.1.0   | 2025-11-10 | `@kfm-docs`     | Added initial workflow documentation skeleton for CI/CD jobs.                                               |
-| v1.0.0    | 2025-11-01 | `@kfm-docs`     | Created initial workflow documentation template.                                                            |
+| Version   | Date       | Author        | Summary                                                                 |
+|----------:|------------|---------------|-------------------------------------------------------------------------|
+| **v11.2.4** | 2025-12-06 | `@kfm-docs`   | Upgraded to KFM-MDP v11.2.4; added full v11 metadata, emoji directory layout, Story Node/Focus Mode guidance, and STAC/DCAT/PROV alignment for workflow docs. |
+| v10.2.2   | 2025-11-12 | `@kfm-docs`   | Telemetry refs aligned to v10.2.0; strengthened MCP/FAIR+CARE rules and front-matter constraints. |
+| v10.0.0   | 2025-11-10 | `@kfm-docs`   | Added caching, failure modes, governance matrix, and required fields.   |
+| v9.9.0    | 2025-11-08 | `@kfm-docs`   | Initial workflow documentation template for KFM CI/CD.                  |
 
 ---
 
 <div align="center">
 
-🧩 **Kansas Frontier Matrix — CI/CD Workflow Documentation Template (v11.2.4)**  
-Documentation-First · FAIR+CARE Governance · CI/CD Discipline  
+🧩 **Kansas Frontier Matrix — Workflow Documentation Template (v11.2.4)**  
+Governed Automation · FAIR+CARE Documentation · Sustainable CI/CD  
 
-[⬅ Back to Workflows Index](./README.md) ·  
-[📘 Docs Root](../README.md) ·  
+[⬅ Back to Templates Index](README.md) ·  
+[📘 Markdown Protocol (KFM-MDP v11.2.4)](../standards/kfm_markdown_protocol_v11.2.4.md) ·  
 [⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
