@@ -367,4 +367,3 @@ CC‑BY‑NC 4.0 · FAIR+CARE Council · MCP‑DL v6.3
 [⬅ Back to Geo Examples](../README.md) · [🗺 Geo Generalization Standard](../../README.md) · [⚖ Governance](../../../../governance/ROOT-GOVERNANCE.md)
 
 </div>
-
