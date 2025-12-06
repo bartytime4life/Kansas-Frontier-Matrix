@@ -113,11 +113,11 @@ accessibility_compliance: "WCAG 2.1 AA+"
 heading_registry:
   approved_h2:
     - "📘 Overview"
+    - "🗂️ Directory Layout"
     - "🧭 Context"
     - "🧱 Architecture"
     - "📦 Data & Metadata"
     - "🧪 Validation & CI/CD"
-    - "🗂️ Directory Layout"
     - "⚖ FAIR+CARE & Governance"
     - "🕰️ Version History"
 
@@ -185,6 +185,68 @@ This pattern defines how KFM ingests SSURGO/SDM soils data from **USDA Soil Data
 - Energy/carbon/reliability telemetry suitable for Autonomy Matrix and lineage audits.
 
 Use this pattern for **any soils pipeline** that fetches data from SDA (R/`soilDB`, Python client, or direct HTTP) before publishing into KFM’s canonical STAC + graph layers.
+
+---
+
+## 🗂️ Directory Layout
+
+Canonical layout for SDA-based soils ingestion (emoji-prefixed):
+
+~~~text
+docs/
+  pipelines/
+    soil/
+      sda-ingest/
+        📄 README.md
+        📂 runbooks/
+        │  📄 weekly-refresh.md
+        │  📄 drift-investigation.md
+        📂 specs/
+           📄 sda-query-contracts.md
+           📄 chunking-policy.md
+
+src/
+  pipelines/
+    soil/
+      sda_ingest/
+        📄 __init__.py
+        📄 config.py
+        📄 chunkspec.py
+        📄 sda_client.py
+        📄 etl_runner.py
+        📄 validators.py
+        📄 stac_writer.py
+        📄 prov_writer.py
+        📄 telemetry.py
+
+data/
+  raw/
+    soil/
+      sda/
+        📂 tabular/
+        📂 spatial/
+        📂 chunk-manifests/
+  processed/
+    soil/
+      ssurgo/
+        📂 tabular/
+        📂 spatial/
+  stac/
+    soil/
+      sda-ssurgo/
+        📂 collections/
+        📂 items/
+
+.github/
+  workflows/
+    📄 soil-sda-ingest-ci.yaml
+    📄 soil-sda-ingest-telemetry.yaml
+~~~
+
+Rules:
+
+- New SDA soils pipelines must map cleanly into this layout or clearly documented variants.  
+- Docs under `sda-ingest/` must reference this pattern and stay KFM-MDP–aligned.  
 
 ---
 
@@ -489,68 +551,6 @@ Example workflows:
 - `soil-sda-ingest-telemetry.yaml`  
   - Validates telemetry schema (`pipelines-soil-sda-v1`).  
   - Enforces cardinality and label naming rules.
-
----
-
-## 🗂️ Directory Layout
-
-Canonical layout for SDA-based soils ingestion (emoji-prefixed):
-
-~~~text
-docs/
-  pipelines/
-    soil/
-      sda-ingest/
-        📄 README.md
-        📂 runbooks/
-        │  📄 weekly-refresh.md
-        │  📄 drift-investigation.md
-        📂 specs/
-           📄 sda-query-contracts.md
-           📄 chunking-policy.md
-
-src/
-  pipelines/
-    soil/
-      sda_ingest/
-        📄 __init__.py
-        📄 config.py
-        📄 chunkspec.py
-        📄 sda_client.py
-        📄 etl_runner.py
-        📄 validators.py
-        📄 stac_writer.py
-        📄 prov_writer.py
-        📄 telemetry.py
-
-data/
-  raw/
-    soil/
-      sda/
-        📂 tabular/
-        📂 spatial/
-        📂 chunk-manifests/
-  processed/
-    soil/
-      ssurgo/
-        📂 tabular/
-        📂 spatial/
-  stac/
-    soil/
-      sda-ssurgo/
-        📂 collections/
-        📂 items/
-
-.github/
-  workflows/
-    📄 soil-sda-ingest-ci.yaml
-    📄 soil-sda-ingest-telemetry.yaml
-~~~
-
-Rules:
-
-- New SDA soils pipelines must map cleanly into this layout or clearly documented variants.  
-- Docs under `sda-ingest/` must reference this pattern and stay MDP-aligned.  
 
 ---
 
