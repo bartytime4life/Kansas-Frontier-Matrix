@@ -151,7 +151,7 @@ deprecated_fields:
 # 📘 **Kansas Frontier Matrix — Analyses Overview (v11.2.4)**  
 `docs/analyses/README.md`
 
-**Purpose:**  
+**Purpose**  
 Provide the **canonical entry point** for all analytical domains within the **Kansas Frontier Matrix (KFM)** — the environmental, historical, geospatial, ecological, and cross-domain research system built under **Diamond⁹ Ω / Crown∞Ω** governance.
 
 All analytical workflows follow:
@@ -202,55 +202,55 @@ Telemetry from each workflow (energy, carbon, runtime, ethics status) is publish
 ## 🗂️ Directory Layout
 
 ~~~text
-docs/analyses/                          # 📘 Root of all analytical domains
+📁 docs/analyses/                       # 📘 Root of all analytical domains
 │
-├── README.md                           # 📘 This overview file (Analyses index)
+├── 📄 README.md                        # 📘 This overview file (Analyses index)
 │
-├── hydrology/                          # 🌊 Hydrology & streamflow analytics
-│   ├── README.md                       # Domain overview (methods, scope, governance)
-│   ├── datasets/                       # STAC/DCAT-indexed hydrology datasets
-│   ├── methods/                        # Drought/flood models, ETL, harmonization
-│   ├── results/                        # Derived metrics, plots, maps, tables
-│   └── metadata/                       # Lineage + FAIR+CARE registry (JSON/CSV)
+├── 📁 hydrology/                       # 🌊 Hydrology & streamflow analytics
+│   ├── 📄 README.md                    # Domain overview (methods, scope, governance)
+│   ├── 📁 datasets/                    # STAC/DCAT-indexed hydrology datasets
+│   ├── 📁 methods/                     # Drought/flood models, ETL, harmonization
+│   ├── 📁 results/                     # Derived metrics, plots, maps, tables
+│   └── 📁 metadata/                    # Lineage + FAIR+CARE registry (JSON/CSV)
 │
-├── climatology/                        # 🌦 Climate trends & future projections
-│   ├── README.md                       # Climate domain overview
-│   ├── datasets/                       # Climate rasters (NetCDF/COG, gridded series)
-│   ├── methods/                        # Anomaly models, heat index, teleconnections
-│   ├── results/                        # Maps, trend plots, scenario tables
-│   └── validation.md                   # Schema + ethics validation notes
+├── 📁 climatology/                     # 🌦 Climate trends & future projections
+│   ├── 📄 README.md                    # Climate domain overview
+│   ├── 📁 datasets/                    # Climate rasters (NetCDF/COG, gridded series)
+│   ├── 📁 methods/                     # Anomaly models, heat index, teleconnections
+│   ├── 📁 results/                     # Maps, trend plots, scenario tables
+│   └── 📄 validation.md                # Schema + ethics validation notes
 │
-├── geology/                            # 🪨 Geology, soils, geomorphology
-│   ├── README.md
-│   ├── datasets/                       # Geology, soils, subsurface models
-│   ├── methods/                        # Geostatistics, terrain models
-│   ├── results/                        # Outputs, cross-sections, derived layers
-│   └── metadata/                       # Provenance & contracts
+├── 📁 geology/                         # 🪨 Geology, soils, geomorphology
+│   ├── 📄 README.md
+│   ├── 📁 datasets/                    # Geology, soils, subsurface models
+│   ├── 📁 methods/                     # Geostatistics, terrain models
+│   ├── 📁 results/                     # Outputs, cross-sections, derived layers
+│   └── 📁 metadata/                    # Provenance & contracts
 │
-├── ecology/                            # 🌱 Biodiversity & ecological modeling
-│   ├── README.md
-│   ├── datasets/                       # Species, habitat, vegetation layers
-│   ├── methods/                        # SDMs, connectivity, resilience metrics
-│   ├── results/                        # Model outputs, maps, dashboards
-│   └── metadata/                       # FAIR+CARE flags, licenses
+├── 📁 ecology/                         # 🌱 Biodiversity & ecological modeling
+│   ├── 📄 README.md
+│   ├── 📁 datasets/                    # Species, habitat, vegetation layers
+│   ├── 📁 methods/                     # SDMs, connectivity, resilience metrics
+│   ├── 📁 results/                     # Model outputs, maps, dashboards
+│   └── 📁 metadata/                    # FAIR+CARE flags, licenses
 │
-├── historical/                         # 🏛 Historical + archival environmental linkage
-│   ├── README.md
-│   ├── datasets/                       # GLO plats, aerials, archives, KHS collections
-│   ├── methods/                        # OCR, NER, georeferencing, temporal alignment
-│   ├── results/                        # Mapped features, narratives, timelines
-│   └── governance.md                   # Ethics, sovereignty & archival CARE notes
+├── 📁 historical/                      # 🏛 Historical + archival environmental linkage
+│   ├── 📄 README.md
+│   ├── 📁 datasets/                    # GLO plats, aerials, archives, KHS collections
+│   ├── 📁 methods/                     # OCR, NER, georeferencing, temporal alignment
+│   ├── 📁 results/                     # Mapped features, narratives, timelines
+│   └── 📄 governance.md                # Ethics, sovereignty & archival CARE notes
 │
-├── cross-domain/                       # 🔗 Integrated multi-domain analytics
-│   ├── README.md                       # Cross-domain integration overview
-│   ├── datasets/                       # Joined, harmonized, or composite datasets
-│   ├── methods/                        # Fusion models, joint inference, MDM workflows
-│   ├── results/                        # Synthesized indicators, risk scores
-│   └── metadata/                       # Cross-domain provenance & contracts
+├── 📁 cross-domain/                    # 🔗 Integrated multi-domain analytics
+│   ├── 📄 README.md                    # Cross-domain integration overview
+│   ├── 📁 datasets/                    # Joined, harmonized, or composite datasets
+│   ├── 📁 methods/                     # Fusion models, joint inference, MDM workflows
+│   ├── 📁 results/                     # Synthesized indicators, risk scores
+│   └── 📁 metadata/                    # Cross-domain provenance & contracts
 │
-└── metadata/                           # 🗄️ Global analyses-level metadata & audits
-    ├── README.md                       # Analyses metadata overview
-    └── audit-reports/                  # FAIR+CARE + sustainability audit registry
+└── 📁 metadata/                        # 🗄️ Global analyses-level metadata & audits
+    ├── 📄 README.md                    # Analyses metadata overview
+    └── 📁 audit-reports/               # FAIR+CARE + sustainability audit registry
 ~~~
 
 Author rules:
@@ -427,7 +427,7 @@ Sensitive or Indigenous-related analyses:
 
 | Version   | Date       | Summary                                                                                                     |
 |----------:|------------|-------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | Upgraded to KFM-MDP v11.2.4; added full v11 metadata, STAC/DCAT/PROV alignment, sustainability targets, and directory layout with emojis. |
+| **v11.2.4** | 2025-12-06 | Upgraded to KFM-MDP v11.2.4; added full v11 metadata, STAC/DCAT/PROV alignment, sustainability targets, and emoji-rich directory layout for analyses. |
 | v11.0.0  | 2025-11-24 | Initial v11 analyses overview; introduced telemetry schema v4 and expanded FAIR+CARE matrix.               |
 | v10.2.2  | 2025-11-10 | Added cross-domain integration section and ISO metrics alignment.                                           |
 | v10.2.0  | 2025-11-09 | Linked metadata registry to FAIR+CARE pipelines for analyses.                                              |
