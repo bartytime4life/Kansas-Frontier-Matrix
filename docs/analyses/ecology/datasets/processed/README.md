@@ -135,12 +135,12 @@ All processed data:
 
 ```plaintext
 docs/analyses/ecology/datasets/processed/
-├── README.md                     # This document (processed datasets registry)
-├── biodiversity_cleaned.csv      # Cleaned GBIF + USDA biodiversity dataset
-├── habitat_variables.nc          # Environmental covariates (climate + vegetation)
-├── landcover_harmonized.tif      # Harmonized land cover classification raster
-├── ecosystem_variables.json      # Processed ecosystem-level indicators
-└── faircare_validation.json      # FAIR+CARE validation report + telemetry metrics
+├── 📘 README.md                     # This document (processed datasets registry)
+├── 🧬 biodiversity_cleaned.csv      # Cleaned GBIF + USDA biodiversity dataset
+├── 🌡️ habitat_variables.nc          # Environmental covariates (climate + vegetation)
+├── 🗺️ landcover_harmonized.tif      # Harmonized land cover classification raster
+├── 🌎 ecosystem_variables.json      # Processed ecosystem-level indicators
+└── ✅ faircare_validation.json      # FAIR+CARE validation report + telemetry metrics
 ```
 
 ---
@@ -181,7 +181,7 @@ flowchart TD
 |--------------------------|--------------------------------------------------------|--------------------------------|--------------------------------|
 | **Taxonomic Validation** | Reconcile species names using GBIF/USDA taxonomies    | `pygbif`, `pandas`             | `biodiversity_cleaned.csv`     |
 | **Spatial Harmonization**| Align coordinates, clip to Kansas extent, remove outliers | `geopandas`, `shapely`     | Cleaned point/area geometries |
-| **Temporal Aggregation** | Aggregate raw time series to monthly/seasonal/annual means | `xarray`, `pandas`        | `habitat_variables.nc`         |
+| **Temporal Aggregation** | Aggregate raw time-series to monthly/seasonal/annual means | `xarray`, `pandas`        | `habitat_variables.nc`         |
 | **Raster Harmonization** | Merge MODIS + ESA rasters to common 1 km grid (EPSG:4326) | `GDAL`, `rasterio`         | `landcover_harmonized.tif`     |
 | **Ecosystem Aggregation**| Build basin/bioregion indicators (health, nutrients, cover) | `xarray`, `rasterstats`   | `ecosystem_variables.json`     |
 | **Validation**           | FAIR+CARE metadata and ISO telemetry logging          | FAIR+CARE CLI / pipelines      | `faircare_validation.json`     |
@@ -262,12 +262,12 @@ flowchart TD
 
 ## 🕰️ Version History
 
-| Version | Date       | Author              | Summary                                                                                      |
-|--------:|-----------:|---------------------|----------------------------------------------------------------------------------------------|
-| v11.2.4 | 2025-12-06 | FAIR+CARE Council   | Aligned processed ecology datasets registry with KFM‑MDP v11.2.4; added scope and lifecycle metadata. |
-| v10.2.2 | 2025-11-09 | FAIR+CARE Council   | Published processed ecology dataset documentation with ISO telemetry and FAIR+CARE validation. |
-| v10.2.1 | 2025-11-09 | Ecological Data Processing Group | Added spatial harmonization and temporal aggregation details.                       |
-| v10.2.0 | 2025-11-09 | KFM Ecology Team    | Created baseline processed dataset documentation aligned with climatology module standards.   |
+| Version | Date       | Author                           | Summary                                                                                      |
+|--------:|-----------:|----------------------------------|----------------------------------------------------------------------------------------------|
+| v11.2.4 | 2025-12-06 | FAIR+CARE Council                | Aligned processed ecology datasets registry with KFM‑MDP v11.2.4; added scope and lifecycle metadata, emoji directory layout. |
+| v10.2.2 | 2025-11-09 | FAIR+CARE Council                | Published processed ecology dataset documentation with ISO telemetry and FAIR+CARE validation. |
+| v10.2.1 | 2025-11-09 | Ecological Data Processing Group | Added spatial harmonization and temporal aggregation details.                                |
+| v10.2.0 | 2025-11-09 | KFM Ecology Team                 | Created baseline processed dataset documentation aligned with climatology module standards.  |
 
 ---
 
