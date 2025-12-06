@@ -457,19 +457,17 @@ If any POI dataset becomes sensitive (e.g., shelters), it must be reclassified a
 
 ## 🗺️ Diagrams
 
-A simple diagram showing how profiles map into the stack:
+A simple diagram showing how profiles map into the stack (fixed label for Mermaid compatibility):
 
 ~~~mermaid
 flowchart LR
     A[STAC Collections & Items] --> B[ETL Normalization & Masking]
-    B --> C[Tiling Profiles (this doc)]
+    B --> C[Tiling Profiles]
     C --> D[Tile Generation Jobs]
     D --> E[Tile Services / APIs]
     E --> F[MapLibre / Cesium Clients]
     F --> G[Story Nodes & Focus Mode]
 ~~~
-
-Each profile in this guide is essentially a **parameterization** of the tiling step (`C → D → E`), with the standard ensuring consistency and geoprivacy compliance.
 
 ---
 
@@ -479,11 +477,9 @@ Each profile in this guide is essentially a **parameterization** of the tiling s
 
 Profiles in `tiler_config.yaml` that reference these examples should conform to a schema like:
 
-~~~yaml
-- name: "Validate tiling profiles"
-  run: |
-    jsonschema -i tiler_config.expanded.json \
-      schemas/json/tiling-resolution-standard-v11.2.4.schema.json
+~~~bash
+jsonschema -i tiler_config.expanded.json \
+  schemas/json/tiling-resolution-standard-v11.2.4.schema.json
 ~~~
 
 Where `tiler_config.expanded.json` is generated from YAML.
@@ -503,7 +499,6 @@ def test_profiles_respect_standard_bands():
         min_z = p.min_zoom
         max_z = p.max_zoom
 
-        # Assert against the tiling-resolution standard rules
         if cat == "base":
             assert 4 <= min_z <= max_z <= 16
         elif cat == "analytic-open":
@@ -632,4 +627,3 @@ Kansas-Focused Maps · Deterministic Profiles · FAIR+CARE Sovereignty
 [📘 Docs Root](../../../..) · [🧩 Tiling Standard](./README.md) · [🛡 Geoprivacy Masking](../geoprivacy-masking/README.md) · [⚖ Governance](../../governance/ROOT-GOVERNANCE.md)
 
 </div>
-
