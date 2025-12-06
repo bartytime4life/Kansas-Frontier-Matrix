@@ -11,9 +11,9 @@ commit_sha: "<latest-commit-hash>"
 
 signature_ref: "releases/v10.2.3/signature.sig"
 attestation_ref: "releases/v10.2.3/slsa-attestation.json"
-sbom_ref: "releases/v10.2.0/sbom.spdx.json"
-manifest_ref: "releases/v10.2.0/manifest.zip"
-telemetry_ref: "releases/v10.2.0/focus-telemetry.json"
+sbom_ref: "releases/v10.2.3/sbom.spdx.json"
+manifest_ref: "releases/v10.2.3/manifest.zip"
+telemetry_ref: "releases/v10.2.3/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/docs-governance-index-v2.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
@@ -189,7 +189,7 @@ Governance ensures that all operations, datasets, and technologies align with **
 
 [![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../faircare.md)
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../faircare/FAIRCARE-GUIDE.md)
 [![Status: Active](https://img.shields.io/badge/Status-Governed-success)]()
 
 </div>
@@ -210,6 +210,7 @@ This index file:
 
 - Describes the **governance structure, roles, and review cadence**  
 - Links to the **authoritative charter** (`ROOT-GOVERNANCE.md`)  
+- Points to **release-scoped governance packets** under `governance/releases/`  
 - Shows how governance decisions flow into **ledgers, telemetry, and dashboards**  
 - Aligns governance documentation with **KFM-MDP v11.2.4** heading and metadata standards  
 
@@ -218,7 +219,7 @@ Root charter: [`ROOT-GOVERNANCE.md`](ROOT-GOVERNANCE.md)
 ### 2. Governance Design Principles
 
 1. **Distributed Accountability** – Councils and committees share duties; no single actor can bypass governance.  
-2. **Documentation-First** – Every decision and exception is recorded in structured artifacts (issue forms, ledgers, telemetry).  
+2. **Documentation-First** – Every decision and exception is recorded in structured artifacts (issue forms, ledgers, telemetry, release packets).  
 3. **FAIR+CARE-First** – FAIR data principles and CARE for Indigenous data are non-negotiable gates, not afterthoughts.  
 4. **Deterministic Pipelines** – Automated checks behave predictably; any override is explicitly logged with human sign-off.  
 5. **Graph-Ready Semantics** – Governance entities and events are representable as nodes/edges in the KFM knowledge graph for lineage and audits.  
@@ -228,18 +229,42 @@ Root charter: [`ROOT-GOVERNANCE.md`](ROOT-GOVERNANCE.md)
 ## 🗂️ Directory Layout
 
 ~~~text
-📂 docs/standards/governance/
-├── 📄 README.md           # This index (Governance & Ethical Oversight Framework)
-└── 📄 ROOT-GOVERNANCE.md  # Authoritative governance charter and bylaws
+📂 docs/
+└── 📂 standards/
+    ├── 📂 governance/
+    │   ├── 📄 README.md                       # 🏛️ Governance & Ethical Oversight Framework (this file)
+    │   ├── 📄 ROOT-GOVERNANCE.md              # 🏛️ Root Governance Charter
+    │   └── 📂 releases/
+    │       ├── 📄 README.md                   # 🏛️ Governance Releases Index
+    │       ├── 📄 kfm-governance-v10.4.md     # 🏛️ Governance Release v10.4 (Markdown rules governance)
+    │       ├── 📂 v10.2.0/
+    │       │   ├── 📄 README.md               # 📦 Governance Packet Index (v10.2.0)
+    │       │   ├── 📄 governance_summary.md   # 🏛️ Governance Summary (v10.2.0)
+    │       │   ├── 📄 faircare_report.md      # ⚖ FAIR+CARE Governance Report (v10.2.0)
+    │       │   ├── 📄 ai_governance_report.md # 🧠 AI Governance Report (v10.2.0)
+    │       │   └── 📄 changelog_governance.md # 📜 Governance Changelog (v10.2.0)
+    │       └── 📂 v10.2.3/
+    │           ├── 📄 README.md               # 📦 Governance Packet Index (v10.2.3)
+    │           ├── 📄 governance_summary.md   # 🏛️ Governance Summary (v10.2.3)
+    │           ├── 📄 faircare_report.md      # ⚖ FAIR+CARE Governance Report (v10.2.3)
+    │           ├── 📄 ai_governance_report.md # 🧠 AI Governance Report (v10.2.3)
+    │           └── 📄 changelog_governance.md # 📜 Governance Changelog (v10.2.3)
+    ├── 📂 faircare/
+    │   └── 📄 FAIRCARE-GUIDE.md               # ⚖ FAIR+CARE Governance Guide (ethics_ref)
+    └── 📂 sovereignty/
+        └── 📄 INDIGENOUS-DATA-PROTECTION.md   # 🪶 Indigenous Data Protection Policy (sovereignty_policy)
 ~~~
 
 **Author rules:**
 
-- This directory **MUST** retain this minimal structure; additional governance docs live alongside these two files with their own KFM-MDP-compliant READMEs.  
-- Any new governance standard in this folder must:
-  - Reference `ROOT-GOVERNANCE.md` as its governance root.
-  - Declare `doc_kind: "Standard"` (or more specific subtype) in its front-matter.
-  - Be linked from this index under **⚖ FAIR+CARE & Governance → Governance Policy Links**.
+- The **governance root** consists of:
+  - This index,  
+  - `ROOT-GOVERNANCE.md`, and  
+  - The `releases/` subtree for release-scoped governance packets.  
+- New governance standards placed in `governance/` or `governance/releases/` **must**:
+  - Be KFM-MDP-compliant (`front-matter`, heading registry, footer).  
+  - Reference `ROOT-GOVERNANCE.md` as their governance root in `governance_ref`.  
+  - Be linked from either this index or `releases/README.md`.  
 
 ---
 
@@ -263,38 +288,49 @@ Detailed responsibilities and voting procedures are codified in [`ROOT-GOVERNANC
 | Role | Responsibility | Reports To |
 |---|---|---|
 | **Governance Chair** | Coordinates FAIR+CARE Council; signs off on ethical approvals. | FAIR+CARE Council |
-| **Technical Maintainer** | Implements validation workflows, schemas, telemetry integrations. | Technical Standards Committee |
+| **Technical Maintainer** | Implements validation workflows, schemas, and telemetry integrations. | Technical Standards Committee |
 | **AI Steward** | Oversees responsible AI training, evaluation, and explainability. | AI Governance Subcommittee |
 | **Data Curator** | Reviews dataset metadata for completeness, provenance, and CARE tags. | Open Science Board |
 | **Accessibility Auditor** | Evaluates UI and docs against WCAG 2.1 AA standards. | Open Science Board |
 
 These roles are modeled in the graph as **Agent** nodes linked via `:MEMBER_OF`, `:REPORTS_TO`, and **Activity** participation edges (`:REVIEWED`, `:APPROVED`, `:REJECTED`).  
 
+### 3. Release-Scoped Governance Packets
+
+For each significant release (e.g., **v10.2.0**, **v10.2.3**), governance is captured as a **packet** under `governance/releases/`:
+
+- `governance_summary.md` – umbrella governance narrative.  
+- `faircare_report.md` – FAIR+CARE narrative.  
+- `ai_governance_report.md` – AI governance narrative.  
+- `changelog_governance.md` – governance-specific changelog.  
+
+These packets are the **time-bounded realization** of the governance framework described in this index and the Root Charter.
+
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Governance artifacts (this README, `ROOT-GOVERNANCE.md`, ledgers, telemetry) are first-class inputs to **Story Nodes** and **Focus Mode**.
+Governance artifacts (this README, `ROOT-GOVERNANCE.md`, release packets, ledgers, telemetry) are first-class inputs to **Story Nodes** and **Focus Mode**.
 
 ### 1. Focus Mode Behavior
 
 When Focus Mode is scoped to governance:
 
 - **MAY:**
-  - Summarize governance structures and workflows.
-  - Highlight active councils, decision types, and audit cadence.
-  - Surface links to governance artifacts for the currently focused dataset/model.
+  - Summarize governance structures and workflows.  
+  - Highlight active councils, decision types, and audit cadence.  
+  - Surface links to governance artifacts for the currently focused dataset/model.  
 - **MUST NOT:**
-  - Invent or alter governance rules, roles, or decisions.
-  - Soften or hide any FAIR+CARE constraints or Indigenous data protections.
+  - Invent or alter governance rules, roles, or decisions.  
+  - Soften or hide any FAIR+CARE constraints or Indigenous data protections.  
 
-These behaviors are enforced by this document’s `ai_transform_permissions` and `ai_transform_prohibited` fields and validated in CI.  
+These behaviors are enforced by this document’s `ai_transform_permissions` and `ai_transform_prohibited` fields and validated in CI.
 
 ### 2. Story Node Patterns
 
 Governance-related Story Nodes typically:
 
-- Target specific governance entities:
+- Target the governance index or a release packet:
 
   ~~~text
   "target": "kfm-governance-index-v10.2.3"
@@ -305,11 +341,12 @@ Governance-related Story Nodes typically:
   ~~~text
   "references": [
     "reports/audit/governance-ledger.json",
-    "docs/reports/telemetry/governance_scorecard.json"
+    "docs/reports/telemetry/governance_scorecard.json",
+    "docs/standards/governance/releases/v10.2.3/governance_summary.md"
   ]
   ~~~
 
-- Mark their **scope** (dataset, model, collection) so Focus Mode can overlay “Governance status” for what the user is currently exploring.
+- Mark their **scope** (dataset, model, release) so Focus Mode can overlay “Governance status” for what the user is currently exploring.
 
 ---
 
@@ -334,7 +371,7 @@ flowchart TD
 
 - FAIR+CARE validation reports → `reports/fair/faircare_summary.json`  
 - Governance decisions → `reports/audit/governance-ledger.json`  
-- Telemetry events → `releases/v10.2.0/focus-telemetry.json`  
+- Telemetry events → `releases/v10.2.3/focus-telemetry.json`  
 
 These outputs are treated as entities in PROV and linked to review activities and agents.  
 
@@ -347,7 +384,7 @@ These outputs are treated as entities in PROV and linked to review activities an
 | 🕓 **Pending Review** | Awaiting Council or committee decision. | Auto-reminder and escalation rules apply. |
 | ❌ **Rejected** | Fails ethical or technical compliance checks. | Asset withheld from public release; requires remediation. |
 
-Status transitions are recorded with timestamps, reviewer IDs, and optional rationales in `reports/audit/governance-ledger.json`.
+Status transitions are recorded with timestamps, reviewer IDs, and rationales in `reports/audit/governance-ledger.json`.
 
 ### 3. Governance Review Template Integration
 
@@ -376,7 +413,7 @@ The form ID is stored in the ledger entry so CI/CD and Focus Mode can deep-link 
 | **Telemetry Dashboard** | Real-time visualization of governance and compliance metrics. | `docs/reports/telemetry/governance_scorecard.json` |
 | **AI Governance Module** | Evaluates explainability, drift, and bias metrics for models. | `reports/audit/ai_models.json` |
 
-Pipelines are defined in `.github/workflows/kfm-ci.yml` and must run all `test_profiles` listed in the front-matter for this document.  
+Pipelines are defined in `.github/workflows/kfm-ci.yml` and must run all `test_profiles` listed in this document’s front-matter.  
 
 ### 5. Quarterly Governance Audit
 
@@ -438,7 +475,7 @@ Metrics visualized (e.g., in `web/src/components/DashboardView/`):
 | **Review Turnaround Time** | Average time from submission to decision. | CI telemetry |
 | **Audit Log Integrity** | Number of ledger entries with valid checksums. | Ledger + checksums |
 
-Front-end components consume STAC/DCAT catalogs for discovery, then hydrate UI state with the latest telemetry for each dataset or model.
+Frontend components consume STAC/DCAT catalogs for discovery, then hydrate UI state with the latest telemetry for each dataset or model.
 
 ---
 
@@ -452,15 +489,15 @@ Governance is modeled as data in the same way as other KFM assets:
 
 - **STAC**
   - Governance datasets may appear in a `kfm-governance` STAC Collection:
-    - `id` = governance dataset identifier (e.g., `kfm-governance-ledger`)  
-    - `properties.datetime` = last audit run or decision timestamp.
+    - `id` = governance dataset identifier (e.g., `kfm-governance-ledger`).  
+    - `properties.datetime` = last audit run or decision timestamp.  
   - Assets include JSON ledgers, scorecards, and derived reports.  
 
 - **PROV-O**
   - Each governance decision is a `prov:Activity` with:
-    - Inputs: submitted dataset/model entities and validation reports  
-    - Outputs: ledger entry entity  
-    - Agents: reviewers, councils, committees  
+    - Inputs: submitted dataset/model entities and validation reports.  
+    - Outputs: ledger entry entities.  
+    - Agents: reviewers, councils, committees.  
   - Audits, policy updates, and schema changes are likewise Activities, enabling full lineage.  
 
 This alignment makes it possible to traverse from a map feature or dataset to its full governance history through graph queries.
@@ -471,10 +508,25 @@ This alignment makes it possible to traverse from a map feature or dataset to it
 
 From a KFM architecture perspective, governance spans all layers:
 
-1. **Pipelines (ETL / Validation)** – FAIR+CARE checks and contract validation run as deterministic ETL/ELT tasks whose outputs are governed artifacts (reports + flags).  
-2. **Graph** – Councils, roles, decisions, and audits are nodes and relationships in Neo4j, enabling queries like “show all datasets rejected for CARE reasons in the last year.”  
-3. **API Layer** – Governance state is exposed via API endpoints, allowing UI and external tools to fetch status badges, review details, and decision histories.  
-4. **Web / Focus Mode** – Frontend components and Focus Mode overlays use the API and catalogs to present current governance state contextually (per dataset, per map view, per time slice).
+1. **Pipelines (ETL / Validation)**  
+   FAIR+CARE checks and contract validation run as deterministic ETL/ELT tasks whose outputs are governed artifacts (reports + flags).  
+
+2. **Graph (Neo4j)**  
+   Councils, roles, decisions, audits, and release packets are nodes and relationships, enabling queries like:  
+   - “Show all datasets rejected for CARE reasons in the last year.”  
+   - “List governance packets and audits for release v10.2.3.”  
+
+3. **API Layer**  
+   Governance state is exposed via API endpoints, allowing UI and external tools to fetch:  
+   - Governance status badges,  
+   - Review details,  
+   - Decision histories and linked policies.  
+
+4. **Web / Focus Mode**  
+   Frontend components and Focus Mode overlays use the API and catalogs to present governance contextually:  
+   - Per dataset,  
+   - Per map view,  
+   - Per release (via `governance/releases/v*/` packets).  
 
 Any new governance-relevant feature must:
 
@@ -496,16 +548,17 @@ Any new governance-relevant feature must:
 | **Reusable** | Reviews archived per release; decisions linked via stable IDs. | Ledgers + Manifests |
 | **CARE** | Indigenous and community partners participate in review for cultural data; CARE tags gate release. | FAIR+CARE Council |
 
-See also: [`faircare.md`](../faircare.md)
+See also: [`FAIRCARE-GUIDE.md`](../faircare/FAIRCARE-GUIDE.md)
 
 ### 2. Governance Policy Links
 
 | Document | Description |
 |---|---|
 | [`ROOT-GOVERNANCE.md`](ROOT-GOVERNANCE.md) | Authoritative governance charter and bylaws. |
-| [`../faircare.md`](../faircare.md) | FAIR+CARE governance principles and CARE tagging model. |
+| [`../faircare/FAIRCARE-GUIDE.md`](../faircare/FAIRCARE-GUIDE.md) | FAIR+CARE governance principles and CARE tagging model. |
 | [`../licensing.md`](../licensing.md) | Licensing and IP governance (including SPDX usage). |
 | [`../telemetry_standards.md`](../telemetry_standards.md) | Telemetry governance and sustainability metrics. |
+| [`releases/README.md`](releases/README.md) | Governance releases index and packet overview (v10.2.0, v10.2.3, v10.4+). |
 
 These documents are treated as **policy entities** in the graph and referenced from ledger entries whenever a decision cites a specific policy clause.
 
@@ -515,7 +568,7 @@ These documents are treated as **policy entities** in the graph and referenced f
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
-| **v10.2.3** | 2025-12-06 | A. Barta | Aligned governance index with KFM-MDP v11.2.4 (front-matter, heading registry, CI/telemetry metadata); clarified STAC/DCAT/PROV integration and Focus Mode behavior. |
+| **v10.2.3** | 2025-12-06 | A. Barta | Aligned governance index with KFM-MDP v11.2.4, updated release/telemetry references to v10.2.3, added `governance/releases/` packet structure (v10.2.0, v10.2.3, v10.4), and clarified catalog and Focus Mode integration. |
 | v10.2.2 | 2025-11-12 | A. Barta | Updated release/telemetry refs to v10.2.0; clarified Council workflow, CARE integration, and dashboard sources. |
 | v9.7.0 | 2025-11-05 | A. Barta | Added complete governance framework index linking to FAIR+CARE Council and automated audit systems. |
 | v9.5.0 | 2025-10-20 | A. Barta | Expanded council roles, quorum, and telemetry linkage. |
@@ -527,6 +580,7 @@ These documents are treated as **policy entities** in the graph and referenced f
 
 **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
 Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Standards Index](../README.md) · [Root Governance Charter](ROOT-GOVERNANCE.md)
+
+[Back to Standards Index](../README.md) · [Root Governance Charter](ROOT-GOVERNANCE.md) · [Governance Releases](releases/README.md)
 
 </div>
