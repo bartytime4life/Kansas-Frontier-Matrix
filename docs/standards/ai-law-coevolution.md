@@ -291,22 +291,22 @@ The system is designed so that:
 
 ### 1. Law as a Multi-Layer Governance Stack
 
-~~~mermaid
+```mermaid
 flowchart TD
-    A[Technical Constraints<br/>(sandboxing, ACLs, rate limits)] --> B[Protocol & API Rules<br/>(contracts, usage, logs)]
-    B --> C[Institutional Law<br/>(charters, statutes, policies)]
-    C --> D[Cultural Norms & Values<br/>(ethics, customs, community norms)]
+    A["Technical Constraints (sandboxing, ACLs, rate limits)"] --> B["Protocol & API Rules (contracts, usage, logs)"]
+    B --> C["Institutional Law (charters, statutes, policies)"]
+    C --> D["Cultural Norms & Values (ethics, customs, community norms)"]
 ~~~
 
 ### 2. Co-Evolution Feedback Loop
 
 ~~~mermaid
 flowchart LR
-    H[Human Experience<br/>(impacts, harms, benefits)] --> O[Observability & Telemetry]
-    O --> A[AI Analysis & Forecasting<br/>(non-binding)]
-    A --> P[Policy & Design Proposals<br/>(options only)]
-    P --> R[Human Deliberation & Ratification]
-    R --> I[Implementation & Enforcement<br/>(pipelines, docs, standards)]
+    H["Human Experience (impacts, harms, benefits)"] --> O["Observability & Telemetry"]
+    O --> A["AI Analysis & Forecasting (non-binding)"]
+    A --> P["Policy & Design Proposals (options only)"]
+    P --> R["Human Deliberation & Ratification"]
+    R --> I["Implementation & Enforcement (pipelines, docs, standards)"]
     I --> H
 ~~~
 
