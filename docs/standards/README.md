@@ -25,7 +25,12 @@ governance_ref: "governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.4"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
 status: "Active / Enforced"
 doc_kind: "Index"
@@ -62,10 +67,65 @@ lifecycle_stage: "stable"
 ttl_policy: "24 months"
 sunset_policy: "Superseded by next major standards index version"
 
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summary"
+  - "semantic-highlighting"
+  - "timeline-generation"
+  - "a11y-adaptations"
+  - "diagram-extraction"
+  - "metadata-extraction"
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+transform_registry:
+  allowed:
+    - "summary"
+    - "semantic-highlighting"
+    - "timeline-generation"
+    - "a11y-adaptations"
+    - "diagram-extraction"
+    - "metadata-extraction"
+  prohibited:
+    - "content-alteration"
+    - "speculative-additions"
+    - "unverified-architectural-claims"
+    - "narrative-fabrication"
+    - "governance-override"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Layout"
+    - "🧱 Standards Catalog"
+    - "⚖ External Standards & Profiles"
+    - "🕰️ Version History"
+
+test_profiles:
+  - "markdown-lint"
+  - "schema-lint"
+  - "metadata-check"
+  - "accessibility-check"
+  - "provenance-check"
+  - "footer-check"
+
+ci_integration:
+  workflow: ".github/workflows/kfm-ci.yml"
+  environment: "dev → staging → production"
+
 layout_profiles:
   - "immediate-one-branch-with-descriptions-and-emojis"
 badge_profiles:
   - "root-centered-badge-row"
+
+branding_registry:
+  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
+  architecture: "Designed for Longevity · Governed for Integrity"
 
 requires_purpose_block: true
 requires_directory_layout_section: true
@@ -83,7 +143,7 @@ Provide the **central standards hub** for all governance, metadata, ethics, docu
 This is the *root* of the compliance system that pipelines, datasets, Story Nodes, Focus Mode, UI, and the knowledge graph depend on.
 
 [![Docs · MCP v6.3](https://img.shields.io/badge/Docs·MCP-v6.3-blue)]() ·
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.2-informational)]() ·
+[![KFM-MDP v11.2.4](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.4-informational)]() ·
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)]() ·
 [![Governance](https://img.shields.io/badge/Governance-Root-green)]()
 
@@ -93,16 +153,22 @@ This is the *root* of the compliance system that pipelines, datasets, Story Node
 
 ## 📘 Overview
 
-The `docs/standards/` directory defines every **binding rule** in KFM:
+The `docs/standards/` directory defines every **binding rule** in KFM, including:
 
-- **Data standards:** STAC v11, DCAT v11, CIDOC-CRM, OWL-Time, GeoSPARQL, ISO 19115  
-- **Governance + ethics:** FAIR+CARE, sovereignty protocols, licensing, custodial protections  
-- **Metadata specifications:** JSON-LD contexts, schema references, provenance models  
-- **Narrative interoperability:** Story Nodes, Focus Mode v3, narrative lineage  
-- **Documentation system:** Markdown protocols, output rules, directory structure  
-- **Telemetry + sustainability:** Energy/carbon tracking, build metrics, cost attribution  
-- **Change-control:** versioning, provenance, supersession, sunset policies  
-- **Compliance:** CI enforcement, automated linting, governance checks
+- **Data standards**  
+  STAC, DCAT, CIDOC-CRM, OWL-Time, GeoSPARQL, ISO 19115, ISO 50001, ISO 14064.  
+- **Governance & ethics**  
+  FAIR+CARE, sovereignty protocols, licensing, custodial protections, AI governance.  
+- **Metadata specifications**  
+  JSON-LD contexts, schema references, provenance models, data contracts.  
+- **Narrative interoperability**  
+  Story Nodes, Focus Mode v3, narrative lineage, governance-aware overlays.  
+- **Documentation system**  
+  Markdown protocols, output rules, directory structure, authoring guidance.  
+- **Telemetry & sustainability**  
+  Energy/carbon tracking, build metrics, governance telemetry, auditability.  
+- **Change-control & compliance**  
+  Versioning, provenance, supersession, sunset policies, CI enforcement, linting, governance checks.  
 
 This index is the **authoritative landing page for every standard** that affects the platform’s architecture.
 
@@ -110,157 +176,154 @@ This index is the **authoritative landing page for every standard** that affects
 
 ## 🗂️ Directory Layout
 
-The KFM standards directory follows the **same canonical layout** as rules, memory, and project files:
+The KFM standards directory follows the **canonical layout** with emojis and one-branch descriptions:
 
-```text
+~~~text
 📁 KansasFrontierMatrix/
 │
 ├── 📂 docs/
 │   ├── 📂 standards/                        — All governance + metadata + ethics + documentation standards
-│   │   ├── README.md                        — ← This index
-│   │   ├── faircare.md                      — FAIR+CARE ethical and sovereignty rules
-│   │   ├── data-contracts.md                — Dataset schema, STAC/DCAT mappings, ontology alignment
-│   │   ├── licensing.md                     — SPDX licensing and attribution requirements
-│   │   ├── ui_accessibility.md              — WCAG 2.1 AA+ UI constraints for web + narrative interfaces
-│   │   ├── telemetry_standards.md           — Energy, carbon, lineage, and sustainability telemetry specifications
-│   │   ├── markdown_rules.md                — Core Markdown structure + formatting rules
-│   │   ├── markdown_guide.md                — Human-focused writing guide
-│   │   ├── kfm_markdown_protocol_v11.md     — v11 authoring protocol
-│   │   ├── kfm_markdown_output_protocol.md  — Output behavior rules for generators/AI
-│   │   ├── kfm_markdown_protocol_superstandard.md — KFM-MDP v11 super-standard (canonical)
-│   │   └── 📂 governance/                   — Governance charters, oversight policy
-│   │       └── ROOT-GOVERNANCE.md           — Master governance authority
-```
+│   │   ├── 📄 README.md                     — ← This index (standards & governance hub)
+│   │   ├── 📄 faircare.md                   — FAIR+CARE data governance & sovereignty rules
+│   │   ├── 📄 data-contracts.md             — Dataset contracts, STAC/DCAT mappings, ontology alignment
+│   │   ├── 📄 licensing.md                  — SPDX licensing, IP, attribution requirements
+│   │   ├── 📄 ui_accessibility.md           — WCAG 2.1 AA+ UI and narrative accessibility super-standard
+│   │   ├── 📄 telemetry_standards.md        — Energy, carbon, lineage, sustainability telemetry super-standard
+│   │   ├── 📄 markdown_rules.md             — Core Markdown structure + formatting rules
+│   │   ├── 📄 markdown_guide.md             — Human-focused authoring guidance
+│   │   ├── 📄 kfm_markdown_protocol_v11.md  — v11 Markdown authoring protocol
+│   │   ├── 📄 kfm_markdown_output_protocol.md — Output behavior rules for generators/AI
+│   │   ├── 📄 ai-law-coevolution.md         — AI + Law co-evolution governance standard
+│   │   └── 📂 governance/                   — Governance charters, indexes, releases
+│   │       ├── 📄 README.md                 — Governance & ethical oversight index
+│   │       └── 📄 ROOT-GOVERNANCE.md        — Root governance charter (authoritative)
+│   │
+│   └── 📄 glossary.md                       — Shared terminology (governance, data, AI, story nodes)
+~~~
 
-**Rule:** *All KFM standards MUST use this directory layout pattern to ensure consistency across documentation, rules, memory, and project files.*
+**Author rules**
+
+- New standards **must** be placed under `docs/standards/` (or a clear subdirectory like `governance/`).  
+- Each new standard:
+  - Uses full KFM-MDP v11.2.4 front-matter,  
+  - Provides a Purpose block, Directory Layout (if applicable), and Version History,  
+  - Is linked from **🧱 Standards Catalog** below.  
 
 ---
 
 ## 🧱 Standards Catalog
 
-Below is a **curated, authoritative reference** to every live KFM v11 standard.
+This catalog lists **live v11 standards** and their responsibilities. Treat each as **normative** unless explicitly marked otherwise.
 
-### 1️⃣ Markdown & Documentation Standards (KFM-MDP v11.2.2 family)
+### 1️⃣ Markdown & Documentation Standards (KFM-MDP v11.2.x family)
 
 | File | Description |
 |------|-------------|
-| `markdown_rules.md` | Structural & formatting rules for every Markdown file. |
-| `markdown_guide.md` | Human-readable writing guide + examples. |
-| `kfm_markdown_protocol_v11.md` | Authoring protocol with YAML requirements, semantic rules, CI enforcement. |
-| `kfm_markdown_output_protocol.md` | Rules for AI/generator output (single block, no nesting, fence control). |
-| `kfm_markdown_protocol_superstandard.md` | Canonical super-standard combining rules + protocols. |
+| `markdown_rules.md` | Structural & formatting rules for all Markdown (headings, fences, lists, diagrams). |
+| `markdown_guide.md` | Human-facing writing guidance; examples of good KFM documentation. |
+| `kfm_markdown_protocol_v11.md` | Authoring protocol with YAML requirements, heading registry, CI rules. |
+| `kfm_markdown_output_protocol.md` | Output behavior rules for generators/AI (single fenced block, no nested fences, no hidden markup). |
 
-These govern **how all documentation is produced and validated**.
+These govern **how every document is written, structured, and validated**.
 
 ---
 
-### 2️⃣ Data Standards (Core Metadata / Geospatial / Semantic)
+### 2️⃣ Data & Metadata Standards
 
 | File | Scope |
 |------|-------|
-| `data-contracts.md` | Dataset schemas, tabular/vector/raster specifications, STAC/DCAT alignment, CRS + spatial logic, units, physical bounds. |
-| `telemetry_standards.md` | Energy/Carbon telemetry, build metrics, provenance emissions, ISO 50001 & ISO 14064 compliance. |
-| `licensing.md` | Required SPDX licensing for code, models, datasets, images, and documentation. |
+| `data-contracts.md` | Dataset contracts; schema fields; STAC/DCAT alignment; temporal/spatial coverage; CARE metadata. |
+| `telemetry_standards.md` | Telemetry super-standard: performance, sustainability, FAIR+CARE, AI ethics, provenance, dashboards. |
+| `licensing.md` | SPDX licensing rules for code, data, models, docs; attribution requirements; CARE overrides. |
 
-Dataset pipelines, STAC catalogs, and API responses **must follow these standards exactly**.
+Every dataset, STAC item, DCAT dataset, and pipeline output **must** comply with these data-layer standards.
 
 ---
 
-### 3️⃣ Governance, Ethics, Sovereignty
+### 3️⃣ Governance, Ethics, Sovereignty & Accessibility
 
 | File | Scope |
 |------|-------|
-| `faircare.md` | FAIR+CARE requirements, sovereignty modeling, custodial protections, Indigenous data rights. |
-| `ui_accessibility.md` | WCAG 2.1 AA+ rules for narrative and UI layers. |
-| `governance/ROOT-GOVERNANCE.md` | Root governance charter defining councils, approvals, and CI-governance pathways. |
+| `faircare.md` | FAIR+CARE data governance framework; Indigenous rights; cultural sensitivity; narrative limits. |
+| `ui_accessibility.md` | UI accessibility & inclusion super-standard; WCAG 2.1 AA+ for web, maps, 3D, Story Nodes, Focus Mode. |
+| `governance/README.md` | Governance & ethical oversight framework index (councils, ledgers, dashboards). |
+| `governance/ROOT-GOVERNANCE.md` | Root governance charter; council authority; quorum; audit requirements. |
 
-These define **ethical invariants** binding across KFM.
-
----
-
-## ⚖ External Standards Fully Adopted in KFM v11.2.2
-
-KFM internally integrates and operationalizes:
-
-- **STAC 1.0.0 & KFM-STAC v11 profile**
-- **DCAT 3.0**
-- **CIDOC-CRM (ISO 21127)**
-- **OWL-Time**
-- **GeoSPARQL**
-- **ISO 19115**
-- **ISO 50001 + ISO 14064**
-- **WCAG 2.1 AA+**
-- **SPDX 2.3**
-
-All internal standards map directly to these frameworks via JSON-LD, SHACL, and SCHEMA.  
-This index serves as the **root map** to that compliance layer.
+These define **ethical invariants** and **oversight mechanisms** for all KFM operations.
 
 ---
 
-## 🧩 How to Add or Update a Standard
+### 4️⃣ AI Governance & Law Co-Evolution
 
-A new standard MUST:
+| File | Scope |
+|------|-------|
+| `ai-law-coevolution.md` | AI + Law co-evolution standard; describes how human institutions and AI systems jointly reason about governance, without replacing human legal authority. |
 
-1. Use full **v11.2.2 YAML front-matter** (per Markdown Protocol Superstandard).  
-2. Include:
-   - Purpose  
-   - Scope  
-   - Requirements  
-   - Governance implications  
-   - Telemetry implications  
-   - Version history  
-3. Be placed under `docs/standards/` or `docs/standards/governance/`.  
-4. Be added to:
-   - Directory Layout section  
-   - Standards Catalog section  
-5. Pass:
-   - markdown-lint  
-   - schema-lint  
-   - metadata-check  
-   - governance-check  
-   - provenance-check  
+This standard ensures AI:
 
-No PR touching standards may merge until **ALL validations pass**.
+- Remains **advisory**,  
+- Respects FAIR+CARE & sovereignty,  
+- Operates within clearly defined governance pipelines and transform limits.
 
 ---
 
-## 🛠 Validation & CI Expectations
+### 5️⃣ Cross-Cutting Behavior & Telemetry
 
-All standards documents MUST pass:
+Across all standards:
 
-- **markdown-lint** → structure, headings, YAML, fences  
-- **schema-lint** → front-matter schema  
-- **metadata-check** → required fields  
-- **faircare-validate** → ethics + sovereignty  
-- **governance-audit** → authority + charter compliance  
-- **telemetry-check** → metrics compliance  
-- **provenance-check** → version lineage
+- **Telemetry** from CI/CD and runtime systems is consolidated into `focus-telemetry.json` per release.  
+- **Provenance** is recorded in:
+  - Governance ledgers,  
+  - Release manifests,  
+  - SBOMs,  
+  - PROV-compatible records in `schemas/` and `data/stac/`.  
+- **Focus Mode** must respect:
+  - AI transform permissions in each document’s front-matter,  
+  - FAIR+CARE & sovereignty constraints,  
+  - The distinction between **authoritative standards** and **derived narrative overlays**.
 
-Standards failing validation are **not authoritative**.
+---
+
+## ⚖ External Standards & Profiles
+
+KFM v11.2.2 adopts and profiles the following external standards:
+
+- **STAC 1.0.0** — via `KFM-STAC v11` profile for collections/items.  
+- **DCAT 3.0** — via `KFM-DCAT v11` profile for catalogs and datasets.  
+- **PROV-O** — via `KFM-PROV v11` profile for lineage and governance activities.  
+- **CIDOC-CRM (E29, E30, etc.)** — for cultural heritage and procedural design.  
+- **OWL-Time** — for temporal intervals & validity windows.  
+- **GeoSPARQL / GeoJSON** — for spatial footprints and geometry.  
+- **ISO 19115** — for geospatial metadata structure.  
+- **ISO 50001 / ISO 14064-1** — for energy and emissions modeling in telemetry.  
+- **WCAG 2.1 AA+** — for UI accessibility, including Focus Mode & Story Nodes.  
+- **SPDX 2.3** — for licensing and SBOM representations.
+
+Each KFM standard identifies its mappings to these external schemas in its own front-matter and body sections.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
-|--------:|------|---------|
-| v11.2.2 | 2025-11-27 | Full upgrade to KFM-MDP v11.2.2; unified directory layout; enhanced governance and metadata coverage; updated telemetry schemas. |
-| v11.0.0 | 2025-11-20 | Initial v11 standards index; added Markdown super-standard and v11 authoring/output protocols. |
-| v10.2.2 | 2025-11-12 | Upgraded to v10.2.0 standards; integrated telemetry requirements. |
+| Version | Date       | Author         | Summary                                                                                                 |
+|--------:|------------|----------------|---------------------------------------------------------------------------------------------------------|
+| v11.2.2 | 2025-11-27 | KFM Core Team  | Upgraded to KFM-MDP v11.2.4; aligned directory layout; added AI-law standard entry; updated telemetry & governance metadata. |
+| v11.0.0 | 2025-11-20 | KFM Core Team  | Initial v11 standards index; integrated v11 Markdown protocols, telemetry and FAIR+CARE references.    |
+| v10.2.2 | 2025-11-12 | KFM Core Team  | v10.2.x standards consolidation; introduced telemetry references and early governance layout.          |
 
 ---
 
 <div align="center">
 
 📏 **Kansas Frontier Matrix — Standards & Governance Index**  
-The starting point for all authoritative rules governing **data, code, models, documents, UI, narratives, and pipelines**.
+The root map for all authoritative rules governing **data, code, models, documents, UI, narratives, and pipelines**.
 
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
 FAIR+CARE Council · Master Coder Protocol v6.3  
 Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
 [⬅ Back to Documentation Home](../README.md) ·  
-[⚖ Root Governance Charter](governance/ROOT-GOVERNANCE.md) ·  
+[🏛 Root Governance Charter](governance/ROOT-GOVERNANCE.md) ·  
 [🌐 Project Homepage](../../README.md)
 
 </div>
