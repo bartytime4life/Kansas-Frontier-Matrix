@@ -422,20 +422,20 @@ This mapping:
 flowchart LR
     SNAP["Snapshot<br/>profile + telemetry"] --> GATES["Hard Gates<br/>CARE / budgets / anomalies"]
 
-    GATES -->|HAS_ESCALATE| ACT_ESC["Action = ESCALATE"]
-    GATES -->|HAS_BLOCK|   ACT_PAUSE_HARD["Action = PAUSE_HARD"]
-    GATES -->|OK_OR_WARN|  SCORE["Score & Normalize<br/>S → S_norm"]
+    GATES -- HAS_ESCALATE --> ACT_ESC["Action = ESCALATE"]
+    GATES -- HAS_BLOCK --> ACT_PAUSE_HARD["Action = PAUSE_HARD"]
+    GATES -- OK_OR_WARN --> SCORE["Score & Normalize<br/>S → S_norm"]
 
     SCORE --> MAP["Map with State + Thresholds<br/>hysteresis"]
 
-    MAP -->|choose| ACT_RES["Action = RESUME"]
-    MAP -->|choose| ACT_SLOW["Action = SLOW"]
-    MAP -->|choose| ACT_PAUSE_SOFT["Action = PAUSE_SOFT"]
+    MAP -- choose --> ACT_RES["Action = RESUME"]
+    MAP -- choose --> ACT_SLOW["Action = SLOW"]
+    MAP -- choose --> ACT_PAUSE_SOFT["Action = PAUSE_SOFT"]
 
-    ACT_RES        --> OUT["Action Object"]
-    ACT_SLOW       --> OUT
+    ACT_RES --> OUT["Action Object"]
+    ACT_SLOW --> OUT
     ACT_PAUSE_SOFT --> OUT
-    ACT_ESC        --> OUT
+    ACT_ESC --> OUT
     ACT_PAUSE_HARD --> OUT
 ~~~
 
