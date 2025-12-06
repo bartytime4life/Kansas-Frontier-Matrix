@@ -421,8 +421,8 @@ flowchart LR
     PAUSED -->|EV_GATE_CLEAR / EV_HUMAN_OVERRIDE| EVAL
 
     EVAL -->|conflict / uncertainty| ESC["ESCALATED<br/>human review"]
-    STABLE -->|EV_HUMAN_OVERRIDE (escalate)| ESC
-    ESC -->|EV_HUMAN_OVERRIDE (ack)| EVAL
+    STABLE -->|EV_HUMAN_OVERRIDE_ESCALATE| ESC
+    ESC -->|EV_HUMAN_OVERRIDE_ACK| EVAL
 
     INIT -->|EV_DISABLE_AUTONOMY| DIS["DISABLED<br/>autonomy off"]
     IDLE -->|EV_DISABLE_AUTONOMY| DIS
