@@ -288,11 +288,11 @@ A common “embedded service” architecture looks like:
 
 ~~~mermaid
 flowchart LR
-    P[Pipeline Orchestrator\n(Airflow/Dagster/LangGraph)] --> R[Runtime Snapshot\ntelemetry + profile ref]
-    R --> D[Autonomy Decider\n(this component)]
-    D --> A[Action Object\nresume/slow/pause/escalate]
+    P["Pipeline Orchestrator<br/>Airflow · Dagster · LangGraph"] --> R["Runtime Snapshot<br/>telemetry + profile ref"]
+    R --> D["Autonomy Decider<br/>(this component)"]
+    D --> A["Action Object<br/>resume / slow / pause / escalate"]
     A --> P
-    D --> T[Telemetry & OpenLineage\njsonl + events]
+    D --> T["Telemetry & OpenLineage<br/>jsonl + events"]
 ~~~
 
 ### Key Architectural Decisions (captured in `state-machine.md`)
