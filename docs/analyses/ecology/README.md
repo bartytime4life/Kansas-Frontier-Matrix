@@ -193,7 +193,7 @@ docs/analyses/ecology/
 
 ## 🧩 Analytical Framework
 
-```mermaid
+~~~mermaid
 flowchart TD
   A["Biodiversity & Land-Cover Datasets<br/>(GBIF, USDA, EPA, NASA, Local)"]
     --> B["Preprocessing + FAIR+CARE Validation"]
@@ -202,3 +202,119 @@ flowchart TD
   D --> E["Ecosystem Service Evaluation<br/>(Carbon, Pollination, Water Retention)"]
   E --> F["FAIR+CARE Validation + ISO 50001 / 14064 Telemetry"]
   F --> G["Governance Ledger + FAIR+CARE / IDGB Review"]
+~~~
+
+This framework is aligned with:
+
+- Cross-domain analyses (`docs/analyses/cross-domain/README.md`).  
+- Lineage & telemetry standards (`docs/pipelines/lineage/lineage-telemetry-standard.md`).  
+
+---
+
+## 🧬 Core Datasets
+
+| Source                    | Dataset                                   | Variables                              | Coverage        | FAIR+CARE Status |
+|---------------------------|-------------------------------------------|----------------------------------------|-----------------|------------------|
+| **GBIF**                  | Biodiversity occurrence records           | Species, occurrence, coordinates       | 1900–present    | ✅ Certified      |
+| **USDA PLANTS / NRCS**    | Plant distribution & ecological site data | Species, soil, cover type              | 1950–present    | ✅ Certified      |
+| **EPA / USGS**            | Ecological health & water quality         | Macroinvertebrates, pH, nitrates       | 1970–present    | ✅ Certified      |
+| **NASA MODIS / ESA CCI**  | Vegetation cover & NDVI/EVI trends        | NDVI, EVI, land-cover type             | 2000–present    | ✅ Certified      |
+| **NOAA NCEI Climate Data**| Environmental covariates                  | Temp, precip, seasonality              | 1880–present    | ✅ Certified      |
+| **Local / Tribal Sources**| Culturally informed ecological knowledge  | Species presence, habitats (generalized)| Varies         | 🔒 CARE-Governed  |
+
+Sensitive species are masked or generalized (e.g., hexagonal grids, ≥5 km jitter) according to CARE + biodiversity protection guidelines.
+
+---
+
+## 🌍 Key Analytical Workflows
+
+| Workflow                            | Description                                          | Tools / Libraries                        | Output                         |
+|-------------------------------------|------------------------------------------------------|------------------------------------------|--------------------------------|
+| **Species Distribution Modeling**   | Predicts species ranges from environmental covariates | MaxEnt · scikit-learn · xgboost         | Habitat suitability maps       |
+| **Land-Cover Classification**      | Detects vegetation change and fragmentation          | Google Earth Engine · rasterio · GDAL    | Land-cover rasters & trend maps|
+| **Ecosystem Service Valuation**    | Quantifies benefits (carbon storage, water retention)| InVEST · PyEcoTools                      | Ecosystem-service indices      |
+| **Habitat Connectivity Analysis**  | Models corridors and barriers for key species        | Circuitscape · networkx                  | Connectivity networks          |
+| **Cross-Domain Coupling**          | Links ecology with hydrology, climate, soils, heritage | Custom KFM pipelines + Neo4j          | Cross-domain Story Nodes       |
+
+All workflows must:
+
+- Emit PROV-O records and OpenTelemetry spans.  
+- Attach energy/carbon/cost telemetry per run.  
+- Reference SBOM and manifest entries for reproducibility.
+
+---
+
+## ⚖️ FAIR+CARE Governance Matrix
+
+| Principle              | Implementation                                                     | Verification Source                   |
+|------------------------|--------------------------------------------------------------------|---------------------------------------|
+| **Findable**           | STAC/DCAT metadata with UUIDs for datasets and models             | `datasets/metadata/`                  |
+| **Accessible**         | Public FAIR+CARE-compliant ecological layers via KFM Data Hub     | Governance ledger & catalog           |
+| **Interoperable**      | GeoPackage, GeoTIFF, NetCDF, JSON-LD, CRS = EPSG:4326            | `telemetry_schema` & CI checks        |
+| **Reusable**           | Provenance metadata, licenses, and versioned SBOM references      | `manifest_ref` & lineage audits       |
+| **Collective Benefit** | Supports conservation, climate adaptation, and community planning | FAIR+CARE audit reports               |
+| **Responsibility**     | Tracks energy/carbon telemetry via ISO 50001 / 14064-aligned metrics | `telemetry_ref` and dashboards    |
+| **Ethics**             | Sensitive species/site coordinates anonymized or masked           | FAIR+CARE Ethics & IDGB Review        |
+
+---
+
+## 🧮 Sustainability Metrics (Per Analysis Class)
+
+> Targets are indicative; pipeline-level values live in telemetry.
+
+| Metric                     | Description                            | Target      | Unit   |
+|---------------------------:|----------------------------------------|------------:|--------|
+| **Energy (J)**             | Mean energy per ecological analysis run | ≤ 15       | Joules |
+| **Carbon (gCO₂e)**         | Emissions equivalent per workflow       | ≤ 0.006    | gCO₂e  |
+| **Telemetry Coverage (%)** | FAIR+CARE trace completeness            | ≥ 95       | %      |
+| **Validation Success (%)** | FAIR+CARE compliance rate               | 100        | %      |
+
+---
+
+## 🧾 Governance Ledger Record Example
+
+~~~json
+{
+  "ledger_id": "ecology-analysis-ledger-2025-12-06-0001",
+  "component": "Ecology Analysis Module",
+  "datasets": [
+    "GBIF Biodiversity",
+    "USDA PLANTS",
+    "EPA Ecological Health",
+    "NASA MODIS NDVI",
+    "NOAA NCEI Climate"
+  ],
+  "energy_joules": 13.8,
+  "carbon_gCO2e": 0.0054,
+  "faircare_status": "Pass",
+  "auditor": "FAIR+CARE Ecology & Conservation Council",
+  "timestamp": "2025-12-06T04:15:00Z"
+}
+~~~
+
+These records are ingested into:
+
+- The governance ledger graph.  
+- The Focus Mode telemetry panel for ecology.
+
+---
+
+## 🕰️ Version History
+
+| Version  | Date       | Author                               | Summary                                                                                 |
+|---------:|-----------:|--------------------------------------|-----------------------------------------------------------------------------------------|
+| v11.2.4  | 2025-12-06 | FAIR+CARE Ecology & Conservation Council | Aligned ecology overview with KFM-MDP v11.2.4, cross-domain framework, and telemetry v11.2.4. |
+| v10.2.2  | 2025-11-09 | FAIR+CARE Council                    | Ecology analysis overview with sustainability and FAIR+CARE integration.                |
+| v10.2.1  | 2025-11-09 | Ecological Modeling Group            | Added ecosystem services and habitat connectivity sections.                             |
+| v10.2.0  | 2025-11-09 | KFM Ecology & Conservation Team      | Initial ecology documentation aligned with climatology and hydrology modules.           |
+
+---
+
+<div align="center">
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+
+[⬅ Back to Analyses Overview](../README.md) · [🌐 Cross-Domain Framework](../cross-domain/README.md) · [⚖ Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
