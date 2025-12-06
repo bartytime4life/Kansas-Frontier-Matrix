@@ -1,44 +1,62 @@
 ---
-title: "🗺️ Kansas Frontier Matrix — Coordinate Reference System (CRS) Standard (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🗺️ Kansas Frontier Matrix — Coordinate Reference System (CRS) Standard (Legacy v11.0.0)"
 path: "docs/standards/geo/crs-standard.md"
+
 version: "v11.0.0"
 last_updated: "2025-11-22"
-review_cycle: "Semiannual / FAIR+CARE Council"
+
+release_stage: "Superseded / Legacy"
+lifecycle: "Retired (Read-Only)"
+review_cycle: "None (superseded by CRS, Geometry & Topology v11.2.4)"
+content_stability: "frozen"
+status: "Superseded"
+
+doc_kind: "Standard (Legacy)"
+semantic_document_id: "kfm-crs-standard-v11"
+doc_uuid: "urn:kfm:docs:standards:geo:crs-standard:v11"
+immutability_status: "version-pinned"
+
 commit_sha: "<latest-commit-hash>"
 sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
 manifest_ref: "../../../releases/v11.0.0/manifest.zip"
 telemetry_ref: "../../../releases/v11.0.0/standards-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/standards-crs-v11.json"
-governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
+
+governance_ref: "../governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
-status: "Active / Enforced"
-doc_kind: "Standard"
-semantic_document_id: "kfm-crs-standard-v11"
-doc_uuid: "urn:kfm:docs:standards:geo:crs-standard:v11"
-machine_extractable: true
+markdown_protocol_version: "KFM-MDP v11.2.4 (backfilled)"
 accessibility_compliance: "WCAG 2.1 AA+"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk"
-immutability_status: "version-pinned"
+machine_extractable: true
+classification: "Public"
+jurisdiction: "Kansas / United States"
+
+superseded_by: "docs/standards/geospatial/crs-topology/README.md@v11.2.4"
 ---
 
 <div align="center">
 
-# 🗺️ **Kansas Frontier Matrix — CRS Standard (v11)**  
+# 🗺️ **Kansas Frontier Matrix — CRS Standard (Legacy v11.0.0)**  
 `docs/standards/geo/crs-standard.md`
 
-**Purpose:**  
-Define the mandatory coordinate reference systems (CRS), reprojection rules, metadata requirements, STAC/DCAT alignment, geospatial lineage, and MapLibre/Cesium rendering constraints for all KFM v11 geospatial datasets (rasters, vectors, STAC Items, DEMs, DoDs, hydrology layers, and Story Nodes).
+> **Legacy Notice (v11.2.4):**  
+> This document is preserved as a **historic CRS standard for KFM v11.0.0**.  
+> The **active, enforceable CRS specification** now lives at:  
+> `docs/standards/geospatial/crs-topology/README.md` (📐 *CRS, Geometry & Topology Governance Standard*).
+
+**Purpose (Legacy):**  
+Capture the original v11.0.0 rules for allowed CRSs, reprojection pipelines, metadata requirements, STAC/DCAT alignment, PROV lineage, and MapLibre/Cesium rendering constraints for KFM geospatial datasets.
 
 </div>
 
 ---
 
-# 📘 Overview
+## 📘 Overview (Legacy Context)
 
-This standard ensures consistent, deterministic CRS usage across:
+In KFM v11.0.0 this standard ensured consistent, deterministic CRS usage across:
 
 - ETL pipelines  
 - STAC catalogs  
@@ -49,16 +67,25 @@ This standard ensures consistent, deterministic CRS usage across:
 - MapLibre 2D and Cesium 3D rendering  
 - Story Nodes (v3) and Focus Mode  
 
-KFM v11 mandates **strict CRS safety**, **traceable transformations**, and **orthometric alignment** for all spatial assets.
+It mandated:
+
+- **Strict CRS safety** — no “mystery projections.”  
+- **Traceable transformations** — all reprojections with PROV-O lineage.  
+- **Orthometric alignment** — CRS behavior coordinated with vertical/DoD standards.
+
+> 🔁 **For current behavior**, always consult:  
+> `docs/standards/geospatial/crs-topology/README.md`.
 
 ---
 
-# 🧭 1. Allowed CRSs in KFM v11 (Closed Set)
+## 🧭 Allowed CRSs in KFM v11.0.0 (Closed Set – Legacy)
 
-To ensure consistency and 3D compatibility, KFM restricts all datasets to **two CRS families**.
+To ensure consistency and 3D compatibility, KFM v11.0.0 restricted all datasets to two CRS families.
 
-## 1.1 Geographic CRS (Global)
+### 1. Geographic CRS (Global)
+
 **EPSG:4326 — WGS84 (lat/long)**  
+
 - Required for:  
   - STAC geometry  
   - GeoJSON  
@@ -66,8 +93,10 @@ To ensure consistency and 3D compatibility, KFM restricts all datasets to **two 
   - Cesium 3D globe  
 - Units: **degrees**
 
-## 1.2 Projected CRS (Kansas Operational)
-**EPSG:26914 — NAD83 / UTM Zone 14N**  
+### 2. Projected CRS (Kansas Operational)
+
+**EPSG:26914 — NAD83 / UTM Zone 14N**
+
 - Required for:  
   - DEM processing  
   - Hydrology grids  
@@ -76,172 +105,198 @@ To ensure consistency and 3D compatibility, KFM restricts all datasets to **two 
   - High-resolution raster ETL  
 - Units: **meters**
 
+> ✅ These roles are now refined and generalized in the v11.2.4 **CRS, Geometry & Topology Governance Standard**.
+
 ---
 
-# 📐 2. CRS Metadata Requirements
+## 📐 CRS Metadata Requirements (Legacy)
 
-Every dataset **must** declare CRS explicitly in:
+Every dataset **had to** declare CRS explicitly in multiple layers of metadata.
 
-### 2.1 STAC Item Fields
-```json
-"proj:epsg": 4326,
-"proj:wkt2": "<WKT2 string>",
-"proj:shape": [height, width],
-"proj:transform": [a, b, c, d, e, f]
-```
+### 1. STAC Item Fields
 
-### 2.2 Raster (GeoTIFF/COG) Tags
-- `GTModelTypeGeoKey`
-- `GTRasterTypeGeoKey`
-- `GeographicTypeGeoKey`
-- `ProjectedCSTypeGeoKey`
-- `GeogAngularUnitsGeoKey`
-- `ProjLinearUnitsGeoKey`
+~~~json
+{
+  "proj:epsg": 4326,
+  "proj:wkt2": "<WKT2 string>",
+  "proj:shape": [2048, 2048],
+  "proj:transform": [30, 0, -102.05, 0, -30, 40.0]
+}
+~~~
 
-### 2.3 GeoJSON
-```
+### 2. Raster (GeoTIFF/COG) Tags
+
+Required GeoTIFF keys:
+
+- `GTModelTypeGeoKey`  
+- `GTRasterTypeGeoKey`  
+- `GeographicTypeGeoKey`  
+- `ProjectedCSTypeGeoKey`  
+- `GeogAngularUnitsGeoKey`  
+- `ProjLinearUnitsGeoKey`  
+
+### 3. GeoJSON
+
+~~~text
 CRS MUST be WGS84 (EPSG:4326)
-```
-GeoJSON CRS overrides are **not allowed**.
+GeoJSON CRS overrides are NOT allowed.
+~~~
 
-### 2.4 NetCDF / CF
-```
-grid_mapping_name = "transverse_mercator"
+### 4. NetCDF / CF (for EPSG:26914-style grids)
+
+~~~text
+grid_mapping_name           = "transverse_mercator"
 longitude_of_central_meridian = -99
 latitude_of_projection_origin = 0
-false_easting = 500000
-false_northing = 0
-```
+false_easting                = 500000
+false_northing               = 0
+~~~
 
 ---
 
-# 🔄 3. Reprojection Requirements (ETL v11)
+## 🔄 Reprojection Requirements (ETL v11.0.0)
 
-All reprojections MUST:
+All reprojections were required to:
 
-1. Be deterministic  
-2. Record provenance using PROV-O  
-3. Preserve Z-axis separately from XY  
-4. Use GDAL ≥ 3.8 with PROJ ≥ 9  
-5. Never alter vertical datum during XY reprojection  
+1. Be deterministic.  
+2. Record provenance using PROV-O.  
+3. Preserve Z-axis separately from XY.  
+4. Use **GDAL ≥ 3.8** with **PROJ ≥ 9**.  
+5. Never alter vertical datum during XY reprojection (vertical handled by vertical/DoD standard).
 
-### 3.1 Strict Transformation Matrix Logging
-ETL MUST write:
-```
+### 1. Transformation Logging (Legacy Contract)
+
+ETL was required to log at least:
+
+~~~text
 source_epsg
 target_epsg
 transform_parameters
 gdal_version
 proj_version
-prov:activity  "crs-transform-v11"
-```
+prov:activity = "crs-transform-v11"
+~~~
 
-### 3.2 Rasters: Required Reprojection Pipeline
-```
-gdalwarp -t_srs EPSG:4326 -r bilinear -co COMPRESS=LZW -co TILED=YES
-```
+### 2. Rasters: Typical Reprojection Pipeline
 
-### 3.3 Vectors: Required Pipeline
-```
+~~~text
+gdalwarp -t_srs EPSG:4326 -r bilinear -co COMPRESS=LZW -co TILED=YES input.tif output_epsg4326.tif
+~~~
+
+### 3. Vectors: Typical Pipeline
+
+~~~text
 ogr2ogr -t_srs EPSG:4326 output.geojson input.shp
-```
+~~~
+
+> ℹ️ In v11.2.4, these pipelines are captured and generalized as part of the **CRS/topology** and **ETL** standards, with PROV bundles referenced via `kfm:crs_transform_ref`.
 
 ---
 
-# 🛰 4. CRS in STAC Collections (Mandatory)
+## 🛰 CRS in STAC Collections (Legacy Rules)
 
-Collections MUST declare:
+Collections were required to declare:
 
-```json
-"proj:epsg": 4326,
-"proj:centroid": { "lat": 38.5, "lon": -98.2 },
-"proj:bbox": [-102.05, 36.99, -94.6, 40.0]
-```
+~~~json
+{
+  "proj:epsg": 4326,
+  "proj:centroid": { "lat": 38.5, "lon": -98.2 },
+  "proj:bbox": [-102.05, 36.99, -94.6, 40.0]
+}
+~~~
 
-Projected (UTM) collections MUST also declare geographic equivalents.
+Projected collections (e.g., UTM-based processing outputs) also needed geographic equivalents for:
 
----
-
-# 🌐 5. MapLibre & Cesium Rendering Rules
-
-## 5.1 MapLibre (2D)
-- All layers must be **EPSG:4326** or WebMercator tiles  
-- COG tiles served through tile pyramid  
-- Vector tiles must use geographic coordinates
-
-## 5.2 Cesium (3D)
-- Cesium always consumes **WGS84 ellipsoid**  
-- Projected rasters MUST be reprojected to EPSG:4326 before tiling  
-- Heightmaps must use orthometric heights (NAVD88)  
+- `proj:epsg`  
+- `proj:bbox`  
+- Any DCAT `dct:spatial` summary.
 
 ---
 
-# 🧩 6. Story Node v3 & Focus Mode CRS Rules
+## 🌐 MapLibre & Cesium Rendering Rules (Legacy)
 
-Every Story Node:
+### 1. MapLibre (2D)
 
-```
+- All vector layers must be in **EPSG:4326** or served via Web Mercator tiles.  
+- COG rasters served through standard tile pyramids.  
+- Vector tiles required geographic coordinates, with server-side tiling handling CRS conversion.
+
+### 2. Cesium (3D)
+
+- Cesium always consumes **WGS84 ellipsoid** coordinates.  
+- Projected rasters (EPSG:26914) had to be reprojected to EPSG:4326 before generating tile sets.  
+- Heightmaps required **orthometric heights (NAVD88)** per vertical/DoD standard.
+
+---
+
+## 🧩 Story Node v3 & Focus Mode CRS Rules (Legacy)
+
+Every Story Node was expected to use:
+
+~~~text
 spacetime.geometry → EPSG:4326
-bbox                → EPSG:4326
-crs                 → "EPSG:4326"
-```
+bbox               → EPSG:4326
+crs                → "EPSG:4326"
+~~~
 
-Focus Mode v3 MUST:
+Focus Mode v3:
 
-- Automatically reproject all vector/raster geometries to EPSG:4326  
-- Mask archaeological sites per H3 standard (see archaeology-sensitive-locations.md)  
+- Automatically reprojected all vector/raster geometries to EPSG:4326 for analysis and overlays.  
+- Delegated archaeological and Indigenous-sensitive masking behavior to the **archaeology-sensitive-locations** and **geoprivacy** standards (now moved under `docs/standards/geospatial/`).
 
 ---
 
-# 🧬 7. PROV-O Lineage for CRS Transforms
+## 🧬 PROV-O Lineage for CRS Transforms (Legacy)
 
-Every CRS transformation requires:
+Every CRS transformation required a PROV description, conceptually:
 
-```
-prov:used → input geometry
-prov:activity → "crs-transform-v11"
-prov:wasGeneratedBy → gdalwarp/ogr2ogr version
+~~~text
+prov:used           → input geometry entity
+prov:activity       → "crs-transform-v11"
+prov:wasGeneratedBy → gdalwarp/ogr2ogr (with version)
 prov:generatedAtTime → timestamp
 prov:wasAssociatedWith → KFM ETL agent
-```
+~~~
 
-Lineage is stored both:
+Lineage storage:
 
-- In STAC Item → `"kfm:lineage"`  
-- In Neo4j via `:TransformationEvent`
-
----
-
-# ⚙ 8. CI/CD Validation (PR Blockers)
-
-PR is rejected if:
-
-- Raster CRS missing  
-- Vector CRS missing  
-- STAC Item lacks `proj:*` fields  
-- GeoJSON not EPSG:4326  
-- COG not reprojected  
-- Cesium layer delivered in non-WGS84  
-- No PROV-O lineage  
-- CRS metadata inconsistent across files  
+- In STAC Item metadata (e.g., `"kfm:lineage"` / `kfm:crs_transform_ref` in newer patterns).  
+- In Neo4j as `:TransformationEvent` nodes and relationships.
 
 ---
 
-# 🕰 Version History
+## ⚙ CI/CD Validation (Legacy PR Blockers)
 
-- **v11.0.0 (2025-11-22):** Initial v11 release with CRS hardening, STAC/DCAT alignment, PROV-O lineage, and deterministic ETL requirements.
+Under v11.0.0, a PR was rejected if:
+
+- Raster CRS was missing.  
+- Vector CRS was missing.  
+- STAC Item lacked `proj:*` fields.  
+- GeoJSON was not EPSG:4326.  
+- COG outputs skipped reprojecting to EPSG:4326 where required.  
+- Cesium layer was delivered in a non-WGS84 coordinate system.  
+- No PROV-O lineage described CRS transforms.  
+- CRS metadata was inconsistent across assets in the same dataset or collection.
+
+> ✅ These checks are now superseded by the more general **CRS, Geometry & Topology** CI profiles in v11.2.4.
+
+---
+
+## 🕰 Version History
+
+| Version   | Date       | Status       | Notes                                                                                           |
+|----------:|------------|-------------|-------------------------------------------------------------------------------------------------|
+| v11.0.0   | 2025-11-22 | Superseded  | Initial v11 CRS standard; defined EPSG:4326 / EPSG:26914 roles, STAC/DCAT alignment, and PROV. |
 
 ---
 
 <div align="center">
 
-**Kansas Frontier Matrix — CRS Standard v11**  
-*Consistent · Deterministic · Interoperable*
+🗺️ **Kansas Frontier Matrix — CRS Standard (Legacy v11.0.0)**  
+Consistent · Deterministic · Interoperable (Historical Baseline)  
+
+📌 **Current CRS rules:** [📐 CRS, Geometry & Topology Governance Standard](../geospatial/crs-topology/README.md)  
+
+[🌎 Geospatial Standards Index](../geospatial/README.md) · [⚖ Governance](../governance/ROOT-GOVERNANCE.md)
 
 </div>
-
----
-
-### 🔗 Footer  
-[⬅ Back to Geo Standards](./README.md) · [🛰 Vertical Axis Standard](./vertical-axis-and-dod.md) · [📘 KFM v11 Reference](../../reference/kfm_v11_master_documentation.md)
-
