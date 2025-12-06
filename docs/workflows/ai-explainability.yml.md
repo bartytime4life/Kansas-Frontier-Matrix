@@ -312,17 +312,17 @@ In line with MCP 2.0, all audits must be:
 
 ### 1. High-Level Workflow (GitHub Actions)
 
-~~~mermaid
+```mermaid
 flowchart LR
-    A[Code / Config Change] --> B[ai-explainability.yml Triggered]
-    B --> C[Checkout + Setup Python]
-    C --> D[Resolve Model + Dataset from Config]
-    D --> E[Run Explainability & Fairness Audit CLI]
-    E --> F[Validate Outputs (JSON Schema)]
-    F --> G[Upload Artifacts & Telemetry]
-    G --> H[Update Graph + Catalogs (via API)]
-    H --> I[Post Status & Links to PR]
-~~~
+    A["Code / Config Change"] --> B["ai-explainability.yml Triggered"]
+    B --> C["Checkout + Setup Python"]
+    C --> D["Resolve Model + Dataset from Config"]
+    D --> E["Run Explainability & Fairness Audit CLI"]
+    E --> F["Validate Outputs (JSON Schema)"]
+    F --> G["Upload Artifacts & Telemetry"]
+    G --> H["Update Graph + Catalogs (via API)"]
+    H --> I["Post Status & Links to PR"]
+```
 
 ### 2. Timeline of a Typical Run
 
