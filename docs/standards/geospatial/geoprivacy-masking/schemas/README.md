@@ -377,8 +377,199 @@ The schema layer is wired into CI via:
 
 Typical CI step:
 
-```bash
+~~~bash
 # Example: validate geoprivacy masking run manifests
 jsonschema -i docs/standards/geospatial/geoprivacy-masking/examples/masking-runs/run_2025-12-05T00-00Z.json \
   schemas/json/geoprivacy-masking-runs-v11.2.4.schema.json
+~~~
 
+### 2. SHACL validation
+
+- Used for:
+  - RDF/PROV graphs.  
+  - Neo4j/graph exports (e.g., via RDF projection).  
+
+Typical CI step (conceptual):
+
+~~~bash
+shacl-validate \
+  -datafile prov/run_2025-12-05T00-00Z.ttl \
+  -shapesfile schemas/shacl/geoprivacy-masking-v1-shape.ttl
+~~~
+
+Failures in schema/shape validation:
+
+- Are **hard CI failures**.  
+- Must be addressed before merging masking-related changes.
+
+---
+
+## 📦 Data & Metadata
+
+### 1. Core masking metadata fields
+
+`geoprivacy-masking-v1.json` (simplified conceptual structure):
+
+~~~json
+{
+  "type": "object",
+  "required": [
+    "kfm:privacy_method",
+    "kfm:sensitivity_label",
+    "kfm:r_min_m",
+    "kfm:r_max_m",
+    "kfm:masking_run_id",
+    "kfm:prov_ref"
+  ],
+  "properties": {
+    "kfm:privacy_method": {
+      "type": "string",
+      "enum": ["donut_geomask_v1"]
+    },
+    "kfm:sensitivity_label": {
+      "type": "string",
+      "enum": ["public", "community", "sensitive", "sacred"]
+    },
+    "kfm:r_min_m": {
+      "type": "number",
+      "minimum": 0
+    },
+    "kfm:r_max_m": {
+      "type": "number"
+    },
+    "kfm:masking_run_id": {
+      "type": "string"
+    },
+    "kfm:prov_ref": {
+      "type": "string",
+      "format": "uri-reference"
+    },
+    "kfm:access_label": {
+      "type": "string"
+    },
+    "kfm:sovereignty_label": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true
+}
+~~~
+
+Implementation details (e.g., any `$data` references or constraints tying `r_max_m > r_min_m`) should match the actual JSON Schema dialect and validator.
+
+### 2. Fixtures & run manifests
+
+- Fixtures schemas:
+  - Enforce `FeatureCollection` structure.  
+  - Require `id`, `geometry`, `properties.kfm:sensitivity_label`.  
+
+- Run manifest schemas:
+  - Require:
+    - `run_id`, `standard_ref`, `fixtures`, `privacy_method`, `radius_profiles`, `summary`.  
+  - Optionally enforce summary fields (`distance_m`, `total_records`, etc.).
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+The schemas are designed to:
+
+- Embed cleanly into STAC/DCAT.  
+- Export cleanly into PROV graphs.
+
+### STAC
+
+`geoprivacy-masking-v1` is used to validate:
+
+- `properties` blocks of STAC Items/Collections with geoprivacy fields:
+
+~~~json
+{
+  "kfm:privacy_method": "donut_geomask_v1",
+  "kfm:sensitivity_label": "sensitive",
+  "kfm:r_min_m": 1000,
+  "kfm:r_max_m": 3000,
+  "kfm:masking_run_id": "urn:kfm:etl-run:2025-12-05T00:00Z",
+  "kfm:prov_ref": "docs/standards/geospatial/geoprivacy-masking/examples/masking-runs/run_2025-12-05T00-00Z_prov.jsonld"
+}
+~~~
+
+### DCAT
+
+- DCAT records may use:
+  - `dct:conformsTo` for geoprivacy standard.  
+  - Extension properties referencing `kfm:*` masking metadata (validated by these schemas).
+
+### PROV
+
+- SHACL shapes ensure that:
+  - Masking activities (`prov:Activity`) and entities (`prov:Entity`) carry consistent geoprivacy fields.  
+  - `prov:wasGeneratedBy` and `prov:used` relationships align with run manifests.
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+The schema layer is important for AI/Story Node behavior because:
+
+- Focus Mode relies on **predictable field names** (`kfm:sensitivity_label`, `kfm:privacy_method`, etc.) to:
+  - Summarize masking methods.  
+  - Explain protection levels per dataset.  
+- Story Nodes link to:
+  - `kfm:masking_run_id`  
+  - Scenario IDs (from CI scenario schemas).  
+
+By enforcing schemas:
+
+- Story Node generators can map JSON fields → narrative templates with low risk of misinterpretation.  
+- Focus Mode can safely query which CI scenarios and masking runs apply to a dataset.
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+Schemas operationalize FAIR+CARE by:
+
+- **FAIR**
+  - *Findable*: standard field names and types enable search across catalogs and graphs.  
+  - *Accessible*: schemas are versioned, documented, and open.  
+  - *Interoperable*: aligned with STAC, DCAT, PROV-O, and KFM ontologies.  
+  - *Reusable*: downstream tools know exactly what geoprivacy metadata to expect.
+
+- **CARE & sovereignty**
+  - Encode sacred and sovereignty labels as first-class schema elements.  
+  - Make sovereignty-related fields **required** where appropriate (e.g., in sacred CI scenarios).  
+  - Allow governance bodies to review and approve geoprivacy semantics as part of schema review.
+
+Governance notes:
+
+- Any change to core fields or allowed values (`kfm:sensitivity_label`, `kfm:privacy_method`, etc.) is a **governance change**, not just a technical one.  
+- Schema versioning must:
+  - Update this catalog.  
+  - Update affected example docs and CI scenarios.  
+  - Record changes in Version History.
+
+---
+
+## 🕰️ Version History
+
+| Version    | Date       | Status            | Notes                                                                                                  |
+|-----------:|------------|-------------------|--------------------------------------------------------------------------------------------------------|
+| **v11.2.4** | 2025-12-06 | Active / Enforced | Initial geoprivacy masking schema catalog; documents core masking metadata schema and related profiles. |
+
+Future updates should:
+
+- Add new schema entries as the geoprivacy standard evolves (e.g., new masking methods, new labels).  
+- Keep schema file names and IDs stable where possible; introduce new versions for breaking changes.  
+- Include migration notes when field names, enums, or required properties change.
+
+---
+
+<div align="center">
+
+📦 **KFM Geoprivacy Masking — Schema Catalog & Profiles (v11.2.4)**  
+Deterministic Contracts · Catalog-Ready Metadata · FAIR+CARE Sovereignty  
+
+[📘 Docs Root](../../../..) · [🛡 Geoprivacy Standard](../README.md) · [🧪 Examples Index](../examples/README.md) · [⚖ Governance](../../governance/ROOT-GOVERNANCE.md)
+
+</div>
