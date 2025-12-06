@@ -403,13 +403,13 @@ Any mismatch between geometry predicates and graph relationships is a **CI error
 
 ~~~mermaid
 flowchart LR
-    A[Raw Geometry\nvarious CRS] --> B[CRS Normalization\n→ EPSG:4326]
-    B --> C[Topology Cleaning\n(pre-masking)]
-    C --> D[Donut Masking\n(EPSG:4326 geodesic)]
-    D --> E[Topology Checks\n(post-masking)]
-    E --> F[H3/Polygon Generalization\n(for sacred)]
-    F --> G[STAC/DCAT + Neo4j\n(masked CRS)]
-    G --> H[Tiles & APIs\n(EPSG:3857)]
+    A[Raw Geometry (various CRS)] --> B[CRS Normalization to EPSG:4326]
+    B --> C[Topology Cleaning (pre-masking)]
+    C --> D[Donut Masking (EPSG:4326 geodesic)]
+    D --> E[Topology Checks (post-masking)]
+    E --> F[H3/Polygon Generalization (for sacred)]
+    F --> G[STAC/DCAT + Neo4j (masked CRS)]
+    G --> H[Tiles & APIs (EPSG:3857)]
     H --> I[Story Nodes & Focus Mode]
 ~~~
 
