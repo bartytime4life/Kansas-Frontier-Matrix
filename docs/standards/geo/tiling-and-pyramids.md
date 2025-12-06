@@ -240,12 +240,12 @@ Tiling is **never** the place to “fix” CRS, vertical, or sensitivity errors;
 
 ```mermaid
 flowchart LR
-    A[Source Raster(s)\n(normalized CRS & vertical)] --> B[COG Creation\n(blocks + overviews)]
-    B --> C[Tile Pyramid Generation\n(WebMercatorQuad)]
-    C --> D[STAC Registration\nCOG + tiles assets]
-    D --> E[Tile Services / APIs\nXYZ / WMTS]
-    E --> F[MapLibre / Cesium Clients]
-    F --> G[Story Nodes & Focus Mode\ncontext overlays]
+    A[Source rasters – normalized CRS and vertical] --> B[COG creation – blocks and overviews]
+    B --> C[Tile pyramid generation – WebMercatorQuad]
+    C --> D[STAC registration – COG and tile assets]
+    D --> E[Tile services / APIs – XYZ or WMTS]
+    E --> F[MapLibre / Cesium clients]
+    F --> G[Story Nodes and Focus Mode overlays]
 ```
 
 Key points:
