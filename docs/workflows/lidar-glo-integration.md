@@ -189,11 +189,11 @@ deprecated_fields:
 `docs/workflows/lidar-glo-integration.md`
 
 **Purpose**  
-Define a **FAIR+CARE‑aligned workflow** for fusing **bare‑earth LiDAR** terrain products with **19th‑century General Land Office (GLO) plats** to locate and document historical features (settlements, roads, field boundaries) across Kansas.  
+Define a **FAIR+CARE-aligned workflow** for fusing **bare-earth LiDAR** terrain products with **19th-century General Land Office (GLO) plats** to locate and document historical features (settlements, roads, field boundaries) across Kansas.  
 This guide provides a **reproducible, auditable** method that feeds results into the **KFM Knowledge Graph**, STAC/DCAT catalogs, and Focus Mode.
 
 <img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blueviolet" />
-<img src="https://img.shields.io-badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
 <img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
 <img src="https://img.shields.io/badge/FAIR%2BCARE-Certified-orange" />
 <img src="https://img.shields.io/badge/Status-Operational-brightgreen" />
@@ -206,7 +206,7 @@ This guide provides a **reproducible, auditable** method that feeds results into
 
 ### 1. Scope & Intent
 
-Bare‑earth **LiDAR‑derived DTMs** expose subtle microtopography—berms, ditches, mounds, wagon ruts—often corresponding to cultural features mapped in **GLO plats (ca. 1854–1900)**.  
+Bare-earth **LiDAR-derived DTMs** expose subtle microtopography—berms, ditches, mounds, wagon ruts—often corresponding to cultural features mapped in **GLO plats (ca. 1854–1900)**.  
 By georeferencing GLO plats to **PLSS** and overlaying them with derived terrain products (hillshade, SVF, slope, MDI), this workflow supports:
 
 - Systematic **discovery and documentation** of historic features.  
@@ -219,48 +219,56 @@ Within the KFM pipeline:
 
 this guide defines the **geospatial ETL and analysis segment** for LiDAR × GLO fusion.
 
-### 2. High-Level Workflow (Conceptual)
+### 2. High-Level Phases
 
-At a high level, the process:
-
-1. Ingest and normalize **LiDAR DEMs** and **GLO plats**.  
-2. Derive enhanced terrain layers (hillshade, MDI, SVF, slope, contours).  
-3. Georeference GLO plats to PLSS and align to the LiDAR grid.  
-4. Overlay plats and terrain to identify candidate features.  
-5. Digitize and attribute features, including **FAIR+CARE and sovereignty tags**.  
-6. Export to STAC/DCAT, ingest to Neo4j, and register for Focus Mode use.
+1. **Ingest & Normalize** LiDAR DEMs and GLO plats.  
+2. **Derive Terrain Layers**: hillshade, MDI, SVF, slope, contours.  
+3. **Georeference** GLO plats to PLSS and align rasters.  
+4. **Overlay & Interpret**: compare plats and terrain for candidate features.  
+5. **Digitize & Attribute** features with FAIR+CARE and sovereignty tags.  
+6. **Publish & Ingest** into STAC/DCAT and Neo4j; register Story Nodes.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-docs/workflows/lidar-glo-integration.md      # ← This field guide
+📁 docs/
+└── 📁 workflows/
+    📄 README.md                               — CI/CD & governance workflows index
+    📄 lidar-glo-integration.md                — ← This LiDAR & GLO integration field guide
 
-data/
-├── raw/
-│   ├── lidar/                               # LiDAR DEM tiles (GeoTIFF, LAZ)
-│   └── glo_plats/                           # GLO plats (TIFF, PDF, GeoTIFF) + field notes
-├── processed/
-│   ├── lidar/                               # Mosaics, hillshades, MDI, SVF, slope, contours
-│   └── glo/                                 # Georeferenced plats + digitized vectors
-└── work/
-    └── staging/
-        └── geospatial/                      # Intermediate rasters, masks, QA outputs
+📁 data/
+├── 📁 raw/
+│   ├── 📁 lidar/                              — LiDAR DEM tiles (GeoTIFF, LAZ)
+│   └── 📁 glo_plats/                          — GLO plats (TIFF, PDF, GeoTIFF) + field notes
+├── 📁 processed/
+│   ├── 📁 lidar/                              — Mosaics, hillshades, MDI, SVF, slope, contours
+│   └── 📁 glo/                                — Georeferenced plats, digitized vectors, QA masks
+└── 📁 work/
+    └── 📁 staging/
+        └── 📁 geospatial/                     — Intermediate rasters, scratch layers, logs
 
-src/
-└── pipelines/
-    └── geospatial/
-        ├── lidar_glo_pipeline.py            # Batch ETL/orchestration entrypoint
-        ├── lidar_derivatives.py             # RVT/MDI/SVF/slope helpers
-        └── glo_georef.py                    # GLO georeferencing and alignment
+📁 src/
+└── 📁 pipelines/
+    └── 📁 geospatial/
+        📄 lidar_glo_pipeline.py               — Orchestrates LiDAR × GLO ETL/analysis
+        📄 lidar_derivatives.py                — Derives hillshade/MDI/SVF/slope
+        📄 glo_georef.py                       — GLO georeferencing and PLSS alignment
 
-outputs/
-├── analysis/
-│   ├── terrain/                             # Slope, SVF, MDI, contours
-│   └── historic/                            # Digitized features, overlays, QA maps
-└── tiles/
-    └── web/                                 # PMTiles / vector tiles for frontend
+📁 outputs/
+├── 📁 analysis/
+│   ├── 📁 terrain/                            — Slope, SVF, MDI, contours, QA maps
+│   └── 📁 historic/                           — Digitized features, overlays, interpretation notes
+└── 📁 tiles/
+    └── 📁 web/
+        📄 *.pmtiles                           — Vector/raster tiles for MapLibre/Cesium
+
+📁 releases/
+└── 📁 v11.2.4/
+    📄 lidar-glo-integration-telemetry.json    — Telemetry for this workflow
+    📄 sbom.spdx.json                          — SBOM for geospatial tooling
+    📄 manifest.zip                            — Release manifest (ETL configs, checksums)
 ~~~
 
 ---
@@ -269,9 +277,9 @@ outputs/
 
 ### 1. Kansas LiDAR & GLO Landscape
 
-- **LiDAR** (e.g., USGS 3DEP, Kansas DASC) provides statewide bare‑earth DTMs.  
-- **GLO plats** record 19th‑century property boundaries, roads, schools, mills, and other structures.  
-- **PLSS (Township–Range–Section)** is the key common spatial framework.  
+- **LiDAR** (USGS 3DEP, Kansas DASC) provides statewide bare-earth DTMs.  
+- **GLO plats** record 19th-century property boundaries, roads, schools, mills, and other structures.  
+- **PLSS (Township–Range–Section)** is the common spatial frame that links survey records with modern data.
 
 Combining these sources enables:
 
@@ -281,10 +289,18 @@ Combining these sources enables:
 
 ### 2. Integration with KFM Systems
 
-- **ETL layer**: `src/pipelines/geospatial/lidar_glo_pipeline.py` reads from `data/raw/*` and writes to `data/processed/*` and `outputs/analysis/*`.  
-- **Catalogs**: processed rasters/vectors are indexed as STAC Items and DCAT Datasets.  
-- **Graph**: features become nodes and relationships in Neo4j with full provenance.  
-- **Frontend & Focus Mode**: MapLibre/Cesium frontends consume tiles and Story Nodes to guide users through historic landscapes.
+- **ETL layer**  
+  - `src/pipelines/geospatial/lidar_glo_pipeline.py` reads from `data/raw/**` and writes to `data/processed/**` and `outputs/analysis/**`.
+
+- **Catalogs**  
+  - Processed rasters/vectors are indexed as STAC Items and DCAT Datasets (see **🌐 STAC, DCAT & PROV Alignment**).
+
+- **Graph**  
+  - Features become nodes and relationships in Neo4j with full provenance and CARE tags.
+
+- **Frontend & Focus Mode**  
+  - MapLibre/Cesium frontends consume PMTiles and GeoJSON from `tiles/web/`.  
+  - Focus Mode presents Story Nodes about specific features, townships, or workflows.
 
 ---
 
@@ -304,44 +320,63 @@ flowchart LR
     H --> I["Publish (STAC/DCAT) · Ingest (Neo4j) · Register for Focus Mode"]
 ~~~
 
+### 2. Run Timeline (Per Township / AOI)
+
+~~~mermaid
+timeline
+    title LiDAR & GLO Integration — Run Lifecycle
+    section ETL & Prep
+      T0 : Ingest raw LiDAR and GLO plats
+      T1 : Normalize DEMs and generate derivatives
+    section Interpretation
+      T2 : Georeference GLO to PLSS
+      T3 : Overlay terrain + plats and inspect anomalies
+      T4 : Digitize and attribute features
+    section Publication & Governance
+      T5 : STAC/DCAT export and validation
+      T6 : Neo4j ingest and Story Node registration
+      T7 : FAIR+CARE review and telemetry update
+~~~
+
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
 ### 1. Story Node Types
 
-LiDAR × GLO integration produces Story Nodes such as:
+LiDAR × GLO integration produces several Story Node classes:
 
 - **Feature discovery nodes**  
-  - e.g., `urn:kfm:story-node:geo:lidar-glo:feature:<feature_uuid>`  
-  - Narrative: how a road, mound, or ditch was identified.  
+  - `urn:kfm:story-node:geo:lidar-glo:feature:<feature_uuid>`  
+  - Explain how a specific road, mound, ditch, or field boundary was identified.
 
 - **Area synthesis nodes**  
-  - e.g., `urn:kfm:story-node:geo:lidar-glo:township:<trs_id>`  
-  - Summary: major features and interpretation for a township.  
+  - `urn:kfm:story-node:geo:lidar-glo:township:<trs_id>`  
+  - Summarize features, interpretations, and caveats for a township/area.
 
 - **Methodology nodes**  
-  - e.g., `urn:kfm:story-node:geo:lidar-glo:method:v1_1`  
-  - High‑level description of the workflow in this guide.
+  - `urn:kfm:story-node:geo:lidar-glo:method:v1_1`  
+  - Describe the method defined by this guide and its constraints.
 
 Each Story Node links back to:
 
-- STAC/DCAT records (rasters, vectors, reports).  
-- Neo4j entities (places, events, documents).  
-- This guide via `semantic_document_id`.
+- STAC/DCAT records for rasters, vectors, and reports.  
+- Neo4j entities (`:Place`, `:Feature`, `:SurveyEvent`, `:Document`).  
+- This document (`semantic_document_id`).
 
 ### 2. Focus Mode Behavior
 
 When Focus Mode is activated on an area or feature:
 
-- **May**:
-  - Summarize the local LiDAR × GLO evidence.  
-  - Show how features evolved across time (via timelines).  
+- **MAY**:
+  - Summarize the LiDAR × GLO evidence supporting a feature.  
+  - Show evolution through time (e.g., plat → historic aerials → modern imagery).  
   - Surface FAIR+CARE and sovereignty notes for the site.
 
-- **Must not**:
-  - Reveal redacted locations or override `care_tag` and sovereignty rules.  
-  - Infer historical claims not grounded in data and documented interpretations.
+- **MUST NOT**:
+  - Reveal coordinates of sites tagged as `sensitive` beyond what governance allows.  
+  - Infer historical claims not grounded in curated data and documented interpretations.  
+  - Override or reinterpret CARE tags or sovereignty rules.
 
 ---
 
@@ -349,57 +384,58 @@ When Focus Mode is activated on an area or feature:
 
 ### 1. Workflow Hooks
 
-LiDAR × GLO pipelines should be integrated into CI/CD as follows:
+LiDAR × GLO pipelines should be wired into CI/CD as follows:
 
-- **On data changes** (`data/raw/lidar/**`, `data/raw/glo_plats/**`):
+- On changes to `data/raw/lidar/**` or `data/raw/glo_plats/**`:
   - Run:
     - `faircare-validate.yml` for FAIR+CARE and sovereignty checks.  
-    - `stac-validate.yml` once STAC Items are emitted.  
+    - `stac-validate.yml` after STAC Items are generated.
 
-- **On guide or schema changes**:
+- On changes to this guide or related schemas:
   - Run:
-    - `docs-lint.yml` for KFM‑MDP v11.2.4 compliance.  
-    - `schema-lint.yml` for JSON/SHACL schemas used by the pipeline.
+    - `docs-lint.yml` for KFM-MDP v11.2.4 compliance.  
+    - `schema-lint.yml` for geospatial schema updates.
 
 ### 2. Quality Assurance Checklist
 
-Use this checklist as part of the QA step in the pipeline:
-
-- [ ] LiDAR DTM aligned to expected CRS (e.g., EPSG:26914) and grid.  
-- [ ] GLO georeference RMS within documented tolerance (e.g., 3–10 m); control points archived.  
-- [ ] SVF/MDI/slope layers generated and visually reviewed.  
+- [ ] LiDAR DTM aligned to expected CRS (e.g., EPSG:26914) and pixel grid.  
+- [ ] GLO georeference RMS within documented tolerance (e.g., 3–10 m) with control points recorded.  
+- [ ] SVF / MDI / slope layers generated and visually inspected.  
 - [ ] Features digitized with attributes:
-  - `feature_id`, `feature_type`, `confidence`, `source_raster`, `source_glo_sheet`.  
-- [ ] STAC/DCAT Items validated by `stac-validate.yml`.  
+  - `feature_id`, `feature_type`, `source_sheet_id`, `source_epoch`, `confidence`.  
+- [ ] STAC/DCAT Items validated (STAC validator + schema checks).  
 - [ ] `care_tag` assigned (`public`, `restricted`, `sensitive`) and reviewed.  
-- [ ] Sensitive sites (e.g., burial mounds) generalised or withheld per policy.  
-- [ ] Neo4j ingest tested; Focus Mode summaries verified against underlying data.
+- [ ] Sensitive sites generalized or withheld according to sovereignty policy.  
+- [ ] Neo4j ingest tests completed; Focus Mode summaries match underlying features.
 
 ### 3. Telemetry
 
-The LiDAR × GLO pipeline may emit telemetry records (e.g., `lidar-glo-integration-telemetry.json`) including:
+Per run (per AOI / township), append telemetry to `releases/v11.2.4/lidar-glo-integration-telemetry.json`, e.g.:
 
-- Number of tiles processed, features detected, features accepted.  
-- Runtime, energy, and carbon estimates.  
-- Counts of features by `care_tag` for governance monitoring.
+- `tiles_processed`  
+- `features_detected` vs. `features_accepted`  
+- `sensitive_features_count`  
+- `workflow_duration_sec`, `energy_wh`, `carbon_gco2e`
+
+These metrics help governance track cost, coverage, and sensitivity trends.
 
 ---
 
 ## 📦 Data & Metadata
 
-### 1. Data Sources
+### 1. Core Data Sources
 
-| Dataset                  | Provider                 | Typical Format      |
-|-------------------------:|-------------------------|---------------------|
-| LiDAR Bare-Earth DEM     | Kansas DASC / USGS 3DEP | GeoTIFF, LAZ        |
-| PLSS Grids (TRS)         | KDOT / DASC             | GeoPackage, Shapefile |
-| GLO Plats & Field Notes  | BLM GLO Records         | TIFF, PDF, GeoTIFF  |
-| Hydrography (NHDPlus)    | USGS                    | GDB, GeoPackage     |
-| Historic Aerials / Topos | USGS / archives         | GeoTIFF             |
+| Dataset                  | Provider                 | Typical Format          |
+|-------------------------:|-------------------------|-------------------------|
+| LiDAR Bare-Earth DEM     | Kansas DASC / USGS 3DEP | GeoTIFF, LAZ            |
+| PLSS Grids (TRS)         | KDOT / DASC             | GeoPackage, Shapefile   |
+| GLO Plats & Field Notes  | BLM GLO Records         | TIFF, PDF, GeoTIFF      |
+| Hydrography (NHDPlus)    | USGS                    | FileGDB, GeoPackage     |
+| Historic Aerials / Topos | USGS / archives         | GeoTIFF                 |
 
 ### 2. Feature Schema (Vectors)
 
-Digitized features in `data/processed/glo/` should include:
+Digitized features in `data/processed/glo/` (GPKG/GeoJSON) should include:
 
 | Field             | Type     | Description                          |
 |------------------:|----------|--------------------------------------|
@@ -407,7 +443,7 @@ Digitized features in `data/processed/glo/` should include:
 | `feature_type`    | string   | e.g., `road`, `ditch`, `mound`       |
 | `source_epoch`    | integer  | e.g., 1882 (GLO survey year)         |
 | `source_sheet_id` | string   | GLO plat sheet identifier            |
-| `elevation_ref`   | float    | LiDAR‑derived elevation (m)          |
+| `elevation_ref`   | float    | LiDAR-derived elevation (m)          |
 | `confidence`      | float    | 0–1 confidence score                 |
 | `care_tag`        | string   | `public`, `restricted`, `sensitive`  |
 | `notes`           | string   | Analyst notes and caveats            |
@@ -416,11 +452,17 @@ Digitized features in `data/processed/glo/` should include:
 
 Common outputs in `data/processed/lidar/` and `outputs/analysis/terrain/`:
 
-- `*_dtm.tif` — bare‑earth DTM.  
-- `*_hillshade_mdi.tif` — multi‑directional hillshade.  
-- `*_svf.tif` — sky‑view factor.  
-- `*_slope.tif` — slope in degrees.  
+- `*_dtm.tif` — bare-earth DTM.  
+- `*_hillshade_mdi.tif` — multi-directional hillshade.  
+- `*_svf.tif` — sky-view factor.  
+- `*_slope.tif` — slope (degrees).  
 - `*_contours.gpkg` — derived contour lines.
+
+All rasters should include:
+
+- CRS metadata (`EPSG`),  
+- Pixel size, nodata values,  
+- `CHECKSUM` / hash where tools allow.
 
 ---
 
@@ -429,48 +471,47 @@ Common outputs in `data/processed/lidar/` and `outputs/analysis/terrain/`:
 ### 1. STAC
 
 - **Collections**:
-  - `kfm-lidar` — LiDAR derivatives.  
-  - `kfm-glo` — GLO plats and digitized vectors.  
+  - `kfm-lidar` — LiDAR derivatives (DTM, hillshade, SVF, slope).  
+  - `kfm-glo` — GLO plats and digitized feature vectors.
 
 - **Items**:
-  - One STAC Item per tile or township-scale coverage:
+  - Per tile or township-level coverage:
     - `id`: `<collection>-<tile_id>` or `<trs_id>`.  
-    - `geometry` / `bbox`: coverage extent (typically township or tile).  
-    - `properties.datetime`: acquisition or survey date when known.
+    - `geometry` / `bbox`: coverage extent.  
+    - `properties.datetime`: acquisition or survey date when known.  
 
 - **Assets**:
-  - `dtm`, `hillshade_mdi`, `svf`, `slope`, `contours`.  
-  - `glo-plat`, `glo-vectors`.  
+  - `dtm`, `hillshade_mdi`, `svf`, `slope`, `contours`, `glo-plat`, `glo-vectors`.  
   - Include:
-    - `proj:*` fields for CRS and grid.  
+    - `proj:*` for CRS and grid.  
     - `checksum:multihash` for integrity.  
     - `kfm:care_tag` for sensitivity.
 
 ### 2. DCAT
 
-- Define DCAT Datasets such as:
+Define DCAT Datasets like:
 
-  - **"LiDAR‑Derived Terrain Products for Kansas (KFM)"**  
-  - **"GLO Plat‑Derived Historic Features (KFM)"**
+- **"KFM LiDAR-Derived Terrain Products for Kansas"**  
+- **"KFM GLO-Derived Historic Features"**
 
-- Core fields:
+Required fields:
 
-  - `dct:title`, `dct:description`, `dct:identifier`.  
-  - `dct:license` (CC‑BY 4.0 or source license).  
-  - `dct:spatial` (Kansas or local extents).  
-  - `dct:temporal` (survey dates).  
+- `dct:title`, `dct:description`, `dct:identifier`.  
+- `dct:license` (e.g., CC-BY 4.0).  
+- `dct:spatial` (Kansas or local region).  
+- `dct:temporal` (survey intervals).  
 
 Distributions reference:
 
-- COGs, GeoPackages, PMTiles, and reports.  
-- Telemetry and QA summaries where appropriate.
+- COGs, GeoPackages, PMTiles, and QA reports.  
+- Telemetry and FAIR+CARE summaries for governance.
 
 ### 3. PROV
 
-For each processing run:
+For each LiDAR × GLO run:
 
 - **Entities**:
-  - LiDAR source tiles, GLO sheets, derived rasters, digitized vectors, QA reports.  
+  - LiDAR tiles, GLO sheets, derived rasters, vector features, QA reports.
 
 - **Activities**:
   - `ex:LidarPreprocess_<run_id>`  
@@ -478,14 +519,11 @@ For each processing run:
   - `ex:LidarGloFusion_<run_id>`
 
 - **Agents**:
-  - `ex:KFM_Geospatial_Pipeline` (software).  
-  - `ex:KFM_GeoTeam` (analysts).
+  - `ex:KFM_Geospatial_Pipeline` (software agent).  
+  - `ex:KFM_GeoTeam` (analysts).  
+  - Potentially `ex:TribalReviewBody` (governance actor for sensitive data).
 
-Key relations:
-
-- Derived entities `prov:wasGeneratedBy` activities.  
-- Activities `prov:used` source entities.  
-- Entities and activities `prov:wasAssociatedWith` agents.
+PROV relations link all entities and activities, making it possible to reconstruct how each feature was derived and reviewed.
 
 ---
 
@@ -493,31 +531,29 @@ Key relations:
 
 ### 1. Pipeline Structure
 
-- **ETL & Analysis** (`src/pipelines/geospatial/`):
+- **ETL & analysis** (`src/pipelines/geospatial/`):
   - `lidar_glo_pipeline.py` orchestrates:
-    - LiDAR import and tiling.  
-    - Derivative generation (RVT/MDI/SVF/slope).  
-    - GLO georeferencing and vectorization.  
-    - Feature QA and export.
+    - LiDAR ingest, resampling, and derivative generation.  
+    - GLO plat georeferencing with PLSS and hydrography control.  
+    - Feature detection (human and AI-assisted) and digitization.
 
-- **Graph Integration** (`src/graph/`):
-  - Loader scripts convert GeoPackages to Neo4j nodes and relationships:
-    - `:Place`, `:Feature`, `:SurveyEvent`, `:Document`.  
-    - Edges like `:RECORDED_IN`, `:DERIVED_FROM`, `:OVERLAYS`.
+- **Config & contracts**:
+  - YAML configs define AOIs, resolutions, thresholds, and masks.  
+  - `docs/contracts/data-contract-v3.json` governs attribute and structural requirements.
 
-- **API & Frontend** (`src/api/`, `src/web/`):
-  - APIs expose features and rasters as:
-    - REST/GraphQL endpoints.  
-    - Tiles and summaries for MapLibre/Cesium.  
+- **Graph & API**:
+  - Graph loaders create or update `:Place`, `:Feature`, `:SurveyEvent`, and `:Document` nodes.  
+  - APIs surface summarized results and geometry-filtered outputs to the frontend.
 
-### 2. Tools & Libraries
+### 2. Determinism & Reproducibility
 
-- **PDAL / GDAL** — point cloud to DTM, reprojection, raster alignment.  
-- **RVT / QGIS** — hillshades, MDI, SVF, slope.  
-- **QGIS Georeferencer** — manual/assisted GLO georeferencing with PLSS control.  
-- **Python (GeoPandas, rasterio, shapely)** — scripting and pipeline glue.
-
-All processing should be **config‑driven** (YAML/JSON configs per AOI or township) and logged with seeds, input hashes, and parameters.
+- Use **config-driven runs**:
+  - `configs/geospatial/lidar_glo_<aoi>.yaml` for each AOI.  
+- Log:
+  - Input file lists and checksums,  
+  - Tool versions (GDAL/PDAL/QGIS),  
+  - Important parameters (e.g., MDI illumination angles, SVF parameters).  
+- Ensure that re-running the pipeline with the same config and inputs reproduces outputs within numerical tolerances.
 
 ---
 
@@ -527,41 +563,42 @@ All processing should be **config‑driven** (YAML/JSON configs per AOI or towns
 
 | Principle        | Implementation                                                |
 |-----------------:|---------------------------------------------------------------|
-| **Findable**     | Stable UUIDs, STAC/DCAT catalogs, registry entries            |
-| **Accessible**   | CC‑BY where possible, clear license tags, controlled access   |
-| **Interoperable**| Standard CRS, GeoJSON/COG/GPKG, STAC/DCAT/PROV profiles       |
-| **Reusable**     | Provenance, checksums, versioned configs, pipeline docs       |
+| **Findable**     | UUIDs, STAC/DCAT catalogs, consistent directory layout       |
+| **Accessible**   | CC-BY assets, documented access rules for restricted layers  |
+| **Interoperable**| Standard CRS, open formats (COG, GPKG, GeoJSON, PMTiles)     |
+| **Reusable**     | Clear provenance, checksums, versioned configs, AI model cards |
 
 ### 2. CARE
 
 | Principle              | Implementation                                            |
 |-----------------------:|-----------------------------------------------------------|
-| **Collective Benefit** | Supports preservation, education, and tribal interests   |
-| **Authority to Control** | `care_tag` and sovereignty rules gate publication     |
-| **Responsibility**     | Avoids exposing fragile or sacred sites; uses redaction  |
-| **Ethics**             | Requires human‑in‑the‑loop review; AI is advisory only   |
+| **Collective Benefit** | Supports preservation, education, and tribal priorities  |
+| **Authority to Control** | `care_tag` and sovereignty policies gate publication |
+| **Responsibility**     | Redaction, generalization, or non-publication of sensitive sites |
+| **Ethics**             | Human-in-the-loop review; AI detections are advisory     |
 
-### 3. Sensitive Feature Handling
+### 3. Governance Flow
 
-- Sites flagged as **sensitive**:
-  - May be generalized to broader polygons or removed from public layers.  
-  - Are still tracked in registry/graph with restricted access flags.  
-  - Require FAIR+CARE Council review before public release.
+- LiDAR × GLO outputs enter the **FAIR+CARE validation workflow** (see `faircare-validate.yml`).  
+- Sensitive or contentious features can be:
+  - Quarantined,  
+  - Generalized, or  
+  - Marked for council review.  
 
-Governance outcomes (e.g., approved, withheld, generalized) should be recorded in both:
+Governance decisions are mirrored in:
 
 - Neo4j (governance relationships).  
-- Telemetry / audit logs for long‑term accountability.
+- Telemetry and audit logs.
 
 ---
 
 ## 🕰️ Version History
 
-| Version   | Date       | Author       | Summary                                                                                 |
-|----------:|------------|-------------|-----------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | `@kfm-geo`  | Aligned with KFM‑MDP v11.2.4; added STAC/DCAT/PROV alignment, Story Node hooks, telemetry fields, and CI/CD integration notes. |
-| v10.1.0  | 2025-11-10 | `@kfm-geo`   | Added MDI workflow, DCAT mirror, CARE tags; aligned with v10.1.0 telemetry & governance. |
-| v1.0.0   | 2025-11-08 | `@kfm-geo`   | Initial publication — LiDAR + GLO integration guide.                                   |
+| Version    | Date       | Author      | Summary                                                                                 |
+|-----------:|------------|------------|-----------------------------------------------------------------------------------------|
+| **v11.2.4** | 2025-12-06 | `@kfm-geo` | Aligned with KFM-MDP v11.2.4; updated directory layout to emoji/tree profile; added STAC/DCAT/PROV alignment, Story Node hooks, telemetry wiring, and CI/CD integration notes. |
+| v10.1.0   | 2025-11-10 | `@kfm-geo`  | Added MDI workflow, DCAT mirror, CARE tags; aligned with v10.1.0 telemetry & governance. |
+| v1.0.0    | 2025-11-08 | `@kfm-geo`  | Initial publication — LiDAR + GLO integration guide.                                   |
 
 ---
 
