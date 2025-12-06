@@ -1,42 +1,100 @@
 ---
 title: "🏺 Kansas Frontier Matrix — Sensitive Site Data Generalization & CARE Governance Guide (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/data-generalization/README.md"
+
 version: "v11.0.0"
-last_updated: "2025-11-20"
-review_cycle: "Annual / FAIR+CARE Council"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.0.0/manifest.zip"
-data_contract_ref: "../../../docs/standards/data-contracts.md"
-telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-generalization-v11.json"
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY-NC 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
+last_updated: "2025-12-06"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Annual · FAIR+CARE Council"
+content_stability: "stable"
+
 status: "Active / Enforced"
-doc_kind: "Governance Standard"
+doc_kind: "Standard"
 intent: "sensitive-site-generalization"
 semantic_document_id: "kfm-doc-sensitive-generalization"
 doc_uuid: "urn:kfm:docs:heritage:data-generalization-v11.0.0"
+event_source_id: "ledger:kfm:doc:heritage:data-generalization:v11.0.0"
+immutability_status: "version-pinned"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.0.0/manifest.zip"
+data_contract_ref: "../data-contracts.md"
+telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-generalization-v11.json"
+
+governance_ref: "../governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "CC-BY-NC 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.4"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
+scope:
+  domain: "sensitive-data-generalization"
+  applies_to:
+    - "ingest"
+    - "etl"
+    - "stac"
+    - "dcat"
+    - "graph"
+    - "api"
+    - "frontend"
+    - "maplibre"
+    - "cesium"
+    - "story-nodes"
+    - "focus-mode"
+    - "heritage"
+    - "ecology"
+
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
+
 fair_category: "F1-A1-I2-R3"
 care_label: "Restricted / High-Sensitivity"
-immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
+sensitivity: "Cultural, archaeological, ecological (high)"
+sensitivity_level: "High"
+public_exposure_risk: "High"
+classification: "Restricted"
+jurisdiction: "Kansas / United States"
+indigenous_rights_flag: true
+data_steward: "KFM FAIR+CARE Council"
+
+ttl_policy: "24 months"
+sunset_policy: "Superseded by next major sensitive-generalization standard version"
+
 provenance_chain:
   - "docs/standards/data-generalization/README.md@v10.4.0"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
+
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "TechArticle"
   prov_o: "prov:Plan"
+
 metadata_profiles:
   - "STAC 1.0.0"
   - "DCAT 3.0"
   - "PROV-O"
   - "FAIR+CARE"
+
 story_node_refs: []
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Restricted / Governance-Only"
 ai_transform_permissions:
@@ -45,11 +103,64 @@ ai_transform_permissions:
 ai_transform_prohibited:
   - "content-alteration"
   - "sensitive-detail-expansion"
-jurisdiction: "Kansas / United States"
-classification: "Restricted"
-lifecycle_stage: "stable"
-ttl_policy: "24 months"
-sunset_policy: "Superseded by next major sensitive-generalization standard version"
+  - "governance-override"
+  - "narrative-fabrication"
+
+transform_registry:
+  allowed:
+    - summary
+    - index-generation
+  prohibited:
+    - content-alteration
+    - sensitive-detail-expansion
+    - governance-override
+    - narrative-fabrication
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+badge_profiles:
+  - "root-centered-badge-row"
+
+requires_purpose_block: true
+requires_directory_layout_section: true
+requires_version_history: true
+requires_governance_links_in_footer: true
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Layout"
+    - "🧭 Context"
+    - "📦 Data & Metadata"
+    - "🌐 STAC, DCAT & PROV Alignment"
+    - "🧱 Architecture"
+    - "🧠 Story Node & Focus Mode Integration"
+    - "🧪 Validation & CI/CD"
+    - "⚖ FAIR+CARE & Governance"
+    - "🕰️ Version History"
+
+test_profiles:
+  - "markdown-lint"
+  - "schema-lint"
+  - "metadata-check"
+  - "diagram-check"
+  - "accessibility-check"
+  - "provenance-check"
+  - "footer-check"
+  - "sensitivity-check"
+
+ci_integration:
+  workflow: ".github/workflows/kfm-ci.yml"
+  environment: "dev → staging → production"
+
+branding_registry:
+  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
+  architecture: "Designed for Longevity · Governed for Integrity"
+  analysis: "Research-Driven · Evidence-Led · FAIR+CARE Grounded"
+  data-spec: "Open Data × Responsible Stewardship"
+  pipeline: "Deterministic Pipelines · Explainable AI · Open Provenance"
+  telemetry: "Transparent Systems · Ethical Metrics · Sustainable Intelligence"
+  graph: "Semantics × Provenance × Spatial Intelligence"
 ---
 
 <div align="center">
@@ -59,15 +170,9 @@ sunset_policy: "Superseded by next major sensitive-generalization standard versi
 
 **Diamond⁹ Ω / Crown∞Ω Ultimate Certified**
 
-**Purpose:**  
+**Purpose**  
 Define the **ethical, spatial, temporal, and governance framework** required to safely generalize or conceal **archaeological, Indigenous, ecological, and culturally sensitive site data** within KFM.  
-Implements unified KFM v11 protocols: **FAIR+CARE**, **KFM-MDP v11.0.0**, **STAC/DCAT 3.0**, **CIDOC-CRM**, **ISO 19115**, **GeoSPARQL**, **OWL-Time**, **ISO 25012**, and **MCP-DL v6.3**—ensuring respectful, sovereign, and sustainable handling of sensitive geospatial data.
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../README.md)  
-[![KFM-MDP v11.0](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.0-informational)]()  
-[![License: CC-BY-NC 4.0](https://img.shields.io/badge/License-CC--BY--NC%204.0-green)](../../../LICENSE)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governed-gold)](../faircare.md)  
-[![Status](https://img.shields.io/badge/Status-Active-brightgreen)](#)
+Implements unified KFM v11 protocols — **FAIR+CARE**, **KFM‑MDP v11.2.4**, **STAC/DCAT 3.0**, **CIDOC‑CRM**, **GeoSPARQL**, **OWL‑Time**, **ISO 19115**, **ISO 25012**, and **MCP‑DL v6.3** — ensuring respectful, sovereign, and sustainable handling of sensitive geospatial data.
 
 </div>
 
@@ -77,57 +182,80 @@ Implements unified KFM v11 protocols: **FAIR+CARE**, **KFM-MDP v11.0.0**, **STAC
 
 Sensitive-site data represents locations, attributes, and narratives that—if disclosed precisely—could risk:
 
-- Damage, looting, vandalism, or trespass  
-- Violations of tribal/Indigenous sovereignty and cultural protocols  
-- Exposure of confidential ceremonial or spiritual knowledge  
-- Ecological harm to fragile habitats and endangered species  
-- Erosion of community trust and collaborative relationships  
+- Damage, looting, vandalism, or trespass.  
+- Violations of tribal/Indigenous sovereignty and cultural protocols.  
+- Exposure of confidential ceremonial or spiritual knowledge.  
+- Ecological harm to fragile habitats and endangered species.  
+- Erosion of community trust and collaborative relationships.  
 
-This guide establishes the **mandatory generalization and governance rules** for publishing ANY dataset containing sensitive or potentially sensitive locations, including:
+This guide establishes the **mandatory generalization and governance rules** for publishing any dataset containing sensitive or potentially sensitive locations, including:
 
-- Archaeological sites (pre-contact, historic, or modern)  
-- Burial sites and cemeteries  
-- Tribal/Indigenous cultural or ceremonial locations  
-- Rare ecological or endangered-species habitats  
-- Water sources or hydrologic features of cultural importance  
+- Archaeological sites (pre‑contact, historic, or modern).  
+- Burial sites and cemeteries.  
+- Tribal/Indigenous cultural or ceremonial locations.  
+- Rare ecological or endangered-species habitats.  
+- Water sources or hydrologic features of cultural importance.  
 
-The KFM approach harmonizes:
+KFM’s approach harmonizes:
 
-- **Spatial generalization** (H3, aggregation, concealment)  
-- **Temporal generalization** (ranges instead of exact timestamps)  
-- **Attribute suppression** (names, ritual descriptions, explicit references)  
-- **CARE governance** (Authority to Control, Ethics, collective benefit)  
-- **Metadata contracts** (STAC/DCAT/ISO 19115)  
-- **Strict CI enforcement** to prevent accidental disclosure  
+- **Spatial generalization** (H3, aggregation, concealment).  
+- **Temporal generalization** (ranges instead of exact timestamps).  
+- **Attribute suppression** (names, ritual descriptions, explicit references).  
+- **CARE governance** (Authority to Control, Ethics, collective benefit).  
+- **Metadata contracts** (STAC/DCAT/ISO 19115).  
+- **Strict CI enforcement** to prevent accidental disclosure.  
 
-KFM **never** trades sovereignty, safety, or community trust for technical completeness.
+When technical convenience conflicts with sovereignty, safety, or community trust, **sovereignty and safety win**.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ```text
-docs/
-└── standards/
-    └── data-generalization/
-        ├── README.md                         # ← Core governance + generalization protocol
-        ├── examples/                         # Example JSON, DCAT, STAC Items
-        ├── validation/                       # FAIR+CARE audits, schema outputs
-        ├── governance/                       # MOUs, Council decisions, approvals (often restricted)
-        └── templates/                        # Masking templates, metadata templates, H3 configs
+📂 docs/
+└── 📂 standards/
+    ├── 📂 data-generalization/
+    │   📄 README.md          # 🏺 Sensitive-site data generalization & CARE governance (this file)
+    │   📂 examples/          # Example JSON, DCAT, STAC, and data contracts
+    │   📂 validation/        # FAIR+CARE audits, schema outputs, CI reports
+    │   📂 governance/        # MOUs, Council decisions, approvals (often restricted)
+    │   📂 templates/         # Masking templates, H3 configs, metadata snippets
+    ├── 📂 geo/
+    │   📄 archaeology-sensitive-locations.md   # 🛡 Archaeology & Indigenous sensitivity (geo-specific)
+    │   📄 geoprivacy-masking/README.md         # 🛡 Geoprivacy & donut masking (location-focused)
+    └── 📂 governance/
+        📄 ROOT-GOVERNANCE.md  # ⚖ Root governance charter
 ```
 
-All additional files in this directory MUST:
+Author rules:
 
-- Reference this README as the governing standard.  
-- Be documented and structured according to `markdown_rules.md` and `kfm_markdown_protocol_v11.md`.  
-- Respect `Restricted / High-Sensitivity` classification and appropriate repository/file access controls.
+- Any new file under `data-generalization/` must explicitly reference this README as the governing standard.  
+- Examples and templates must be consistent with KFM‑MDP v11.2.4 and this governance guide.  
+- `governance/` materials under this directory are **restricted** and must follow repo access‑control policies.
 
 ---
 
-## 🧩 Sensitive Data Generalization Framework
+## 🧭 Context
 
-### 🧭 1. Definitions & Scope
+This governance standard sits at the intersection of:
+
+- **Geo standards** — CRS, vertical, tiling, STAC (`docs/standards/geo/*.md`).  
+- **Geoprivacy & masking** — deterministic donut masking and H3 generalization for locations.  
+- **Heritage & sovereignty** — archaeology and Indigenous sensitive‑locations standard.  
+- **FAIR+CARE & sovereignty policies** — ethical obligations and community authority.  
+- **Data contracts** — enforceable metadata agreements for all datasets.  
+
+In the KFM pipeline:
+
+> Ingest → Sensitive review → Spatial/temporal generalization → Data contracts + STAC/DCAT → Graph → APIs → Frontend, Story Nodes, Focus Mode
+
+this document defines **when**, **how**, and **whether** sensitive content proceeds beyond secure storage.
+
+---
+
+## 📦 Data & Metadata
+
+### 1. Definitions & Scope
 
 **Sensitive site data** includes (but is not limited to):
 
@@ -137,56 +265,35 @@ All additional files in this directory MUST:
 - Locations whose disclosure could enable looting, desecration, or cultural harm.  
 - Ecological sites whose exploitation risk is amplified by geospatial precision (e.g., rare species nest sites).  
 
-When there is **any doubt** about sensitivity or risk, data MUST be treated as sensitive until reviewed by:
+If there is **any doubt** about sensitivity or risk, data **must be treated as sensitive** until reviewed by:
 
 - The FAIR+CARE Council, and  
 - Relevant tribal/Indigenous or community authorities.
 
----
+### 2. Required Generalization Techniques (Summary)
 
-### 🧱 2. Required Generalization Techniques
+| Technique                 | Description                                       | KFM Requirement                                                   |
+|--------------------------|---------------------------------------------------|-------------------------------------------------------------------|
+| **H3 Generalization**    | Represent locations as H3 hex cells, not points.  | Default ≥ r7; coarser for sacred/burial sites (e.g., r5–r4).      |
+| **Coordinate Removal**   | Remove all raw coordinates & explicit geometry.   | Required for any dataset leaving secure Tier‑1 archive.           |
+| **Grid Aggregation**     | Aggregate counts/attributes into cells.           | Allowed for statistical/ecological rollups with k‑anonymity.      |
+| **Temporal Aggregation** | Replace precise timestamps with ranges/periods.   | Required for ceremonial/seasonal or event‑sensitive features.     |
+| **Attribute Suppression**| Remove or generalize names and explicit details.  | Mandatory for culturally explicit or exploitable attributes.      |
+| **Complete Concealment** | Withhold location entirely (no public geometry).  | Mandatory for sacred, burial, or embargoed sites unless opted‑in. |
 
-| Technique                 | Description                                       | KFM Requirement                                        |
-|--------------------------|---------------------------------------------------|--------------------------------------------------------|
-| **H3 Generalization**    | Represent locations as H3 hex cells, not points.  | **Default:** `res ≥ 7`; stricter (coarser) for sacred/burial sites. |
-| **Coordinate Removal**   | Remove all raw coordinates & explicit geometry.   | Required for any dataset leaving the secure Tier-1 archive. |
-| **Grid Aggregation**     | Aggregate counts/attributes into grid cells.       | Allowed for statistical/ecological/demographic rollups. |
-| **Temporal Aggregation** | Replace precise timestamps with ranges/periods.   | Required for ceremonial or seasonally sensitive features. |
-| **Attribute Suppression**| Remove or generalize names and explicit references.| Mandatory where culturally explicit or exploitable.    |
-| **Complete Concealment** | Withhold location entirely (no geometry in public). | Mandatory for sacred, burial, or embargoed sites.      |
-
-**Default Rule:**  
-If uncertainty exists → **apply the strongest plausible masking or concealment.**
+**Default rule:**  
+If uncertainty exists → apply the **strongest plausible masking or concealment**.
 
 ---
 
-## 🛡 CARE Governance Requirements
+### 3. Required Metadata Fields (Data Contracts + STAC/DCAT)
 
-KFM is bound by the **CARE Principles**:
+Every generalized sensitive dataset must:
 
-- **Collective Benefit** — Data MUST produce collective benefit or at minimum do no harm.  
-- **Authority to Control** — Communities retain authority over what is shared, at what precision, and when.  
-- **Responsibility** — KFM MUST design for protection, not merely compliance.  
-- **Ethics** — Ethical review and community input override technical considerations.
+- Have a **data contract** complying with `../data-contracts.md`.  
+- Include explicit **CARE** and **generalization** metadata.
 
-### 🔥 Non-Negotiable Rules
-
-1. **Raw coordinates for sensitive sites MUST NOT appear in any public-facing dataset, STAC/DCAT record, or UI layer.**  
-2. **Any generalization finer than H3 resolution 7 MUST have explicit tribal/Indigenous authority and FAIR+CARE Council approval.**  
-3. **Sacred, burial, ceremonial, or embargoed sites MUST be concealed from public geometries and from any inferences that would reveal their location.**  
-4. **All sensitive datasets MUST include a fully populated CARE block in their data contract.**  
-5. **Sensitive data may be withheld entirely; non-publication is always an acceptable outcome if required by communities.**
-
----
-
-## 📦 Required Metadata Fields (Data Contracts + STAC/DCAT)
-
-Every generalized sensitive dataset MUST:
-
-- Have a **data contract** complying with `docs/standards/data-contracts.md`.  
-- Provide extended CARE and generalization metadata.
-
-### 🔐 CARE & Governance Block (in Data Contract)
+#### 3.1 CARE & Governance Block (Data Contract)
 
 ```json
 {
@@ -201,7 +308,7 @@ Every generalized sensitive dataset MUST:
 }
 ```
 
-### 🛰 STAC Properties (Required for Sensitive Items)
+#### 3.2 STAC Properties (Sensitive Items)
 
 ```json
 {
@@ -214,41 +321,24 @@ Every generalized sensitive dataset MUST:
 }
 ```
 
-### 📚 DCAT Properties (Catalog-Level)
+These complement `heritage:*` and `care:*` fields defined in archaeology/geoprivacy standards.
+
+#### 3.3 DCAT Properties (Catalog-Level)
 
 ```json
 {
   "dct:accessLevel": "restricted",
-  "dct:provenance": "Generalized from protected raw coordinates; raw data withheld.",
-  "dct:rights": "Subject to tribal authority and CARE governance.",
+  "dct:provenance": "Generalized from protected raw coordinates maintained in secure Tier-1 archive.",
+  "dct:rights": "Subject to tribal authority and FAIR+CARE governance.",
   "dcat:spatialResolutionInMeters": 5000
 }
 ```
 
-These fields MUST be present and correct in any STAC/DCAT records that describe sensitive datasets.
+Values must reflect the **coarsest** actual detail usable from the dataset, not internal raw resolutions.
 
 ---
 
-## 🧱 Standardized H3 Masking Workflow (KFM-Required)
-
-```mermaid
-flowchart TD
-    A["Raw Sensitive Coordinates<br/>(Tier-1 secure storage)"] --> B["Community & CARE Review"]
-    B --> C{"Approved for any level of sharing?"}
-    C -->|No| X["Secure Archive<br/>Coordinates permanently withheld"]
-    C -->|Yes| D["H3 Spatial Generalization<br/>Default: resolution ≥ 7"]
-    D --> E["Strip ALL Raw Geometries<br/>lat/lon, WKT, exact shapes removed"]
-    E --> F["Aggregate & Anonymize Attributes<br/>site_count, general periods, non-identifying tags"]
-    F --> G["Add CARE & STAC/DCAT Sensitive Metadata"]
-    G --> H["Run FAIR+CARE & STAC Validation Pipelines"]
-    H --> I{"All validations pass?"}
-    I -->|No| R["Remediate, strengthen masking,<br/>or escalate to Council"]
-    I -->|Yes| J["Publish Generalized Dataset<br/>(Public or Restricted Catalogs)"]
-```
-
----
-
-## 🧬 Example Generalized Dataset Entry (KFM-Compliant)
+### 4. Example Generalized Dataset Entry (KFM-Compliant)
 
 ```json
 {
@@ -282,110 +372,177 @@ flowchart TD
 
 ---
 
-## ⚙️ Validation & CI Enforcement
+## 🌐 STAC, DCAT & PROV Alignment
 
-Sensitive-site datasets MUST pass all the following CI checks before any external publication or UI integration:
+This guide extends the STAC/PROV work in the geo standards.
 
-| Validator                    | Purpose                                                          |
-|-----------------------------|------------------------------------------------------------------|
-| `faircare-validate.yml`     | CARE ethics, sovereignty, and sensitive-field checks             |
-| `stac-validate.yml`         | STAC/DCAT structure, required `kfm:*` properties, and contracts  |
-| `data-contract-validate.yml`| Ensures metadata contract completeness and JSON schema validity  |
-| `telemetry-export.yml`      | Records governance and CI cost metrics for sustainability        |
-| `docs-lint.yml`             | Ensures this guide and related docs follow KFM-MDP v11           |
+### 1. STAC
 
-**Any failure MUST block:**
+- Sensitive STAC Items must carry:
 
-- Publication of datasets to public catalogs or map APIs.  
-- Rendering of sensitive layers in public MapLibre/Focus UI.  
-- Use of such data in public Story Nodes or Focus Mode narratives.
+  - `heritage:*` and `care:*` fields from the archaeology standard.  
+  - `kfm:h3_generalization`, `kfm:h3_resolution`, `kfm:coordinates_removed`, and `kfm:care_status`.  
 
----
+- STAC Collections describing sensitive catalogs must indicate:
 
-## 🗃 Governance Ledger Requirements
+  - Restricted access,  
+  - Coarsened spatial resolution, and  
+  - Presence of generalized/withheld locations.
 
-Each sensitive generalization or non-publication decision MUST generate a governance ledger record:
+### 2. DCAT
 
-```json
-{
-  "event_type": "sensitive_site_generalization",
-  "dataset_id": "kfm-arch-gen-2025-01",
-  "care_status": "approved",
-  "authority_to_control": "Prairie Band Potawatomi Nation",
-  "resolution": 7,
-  "raw_coordinates_removed": true,
-  "sacred_sites_excluded": true,
-  "timestamp": "2025-11-16T14:20:00Z",
-  "review_ref": "council:decision:2025-10-02"
-}
-```
+- DCAT datasets must use:
 
-Ledger location (restricted access):
+  - `dct:accessLevel = "restricted"` or stricter for sensitive sets.  
+  - `dct:provenance` to document generalization and withholding.  
+  - `dct:rights` to reference tribal authority, MOUs, and CARE policies.
+
+### 3. PROV‑O
+
+Every generalization pipeline run (including decisions to withhold) must record:
 
 ```text
-docs/reports/audit/governance-ledger.json
+prov:used            → raw sensitive entities (vault references only)
+prov:activity        → "sensitive-site-generalization-v11"
+prov:wasGeneratedBy  → KFM masking/generalization tool + version
+prov:generatedAtTime → timestamp
+prov:wasAssociatedWith → FAIR+CARE-governed ETL agent
 ```
 
-This file is considered **sensitive** and MUST NOT be publicly exposed without appropriate redaction.
+If data is withheld completely, a PROV activity still records that the decision occurred, without exposing raw content.
 
 ---
 
-## 🧭 Accessibility, Ethics & Narrative Requirements
+## 🧱 Architecture
 
-- Public UI maps MUST NOT visually imply precision beyond allowed generalization (e.g., avoid point markers that imply a specific site within a coarse hex).  
-- Story Nodes and Focus Mode narratives that reference sensitive sites MUST:
+### 1. Standardized H3 Generalization Workflow
 
-  - Use region/landscape-scale descriptions, not precise locations.  
-  - Avoid directions, coordinate hints, or unique descriptive clues that enable site discovery.  
-  - Reflect community-approved narratives and language wherever possible.  
+```mermaid
+flowchart TD
+    A["Raw sensitive coordinates<br/>(Tier-1 secure storage)"] --> B["Community & CARE review"]
+    B --> C{"Approved for any level of sharing?"}
+    C -->|No| X["Secure archive only<br/>Coordinates permanently withheld"]
+    C -->|Yes| D["Spatial H3 generalization<br/>Default: resolution ≥ 7 (coarser for sacred/burial)"]
+    D --> E["Strip ALL raw geometries<br/>lat/lon, WKT, exact shapes removed"]
+    E --> F["Aggregate & anonymize attributes<br/>counts, broad periods, non-identifying tags"]
+    F --> G["Attach CARE, STAC, DCAT & PROV metadata<br/>including legal_basis & authority_to_control"]
+    G --> H["Run FAIR+CARE & STAC validation pipelines"]
+    H --> I{"All validations pass?"}
+    I -->|No| R["Remediate, strengthen masking,<br/>or escalate to Council"]
+    I -->|Yes| J["Publish generalized dataset<br/>(public or restricted catalogs)"]
+```
 
-- When generalization or concealment has been applied, documentation and UI SHOULD include a simple, respectful statement such as:
+- For **most sensitive categories** (sacred, burial), the workflow will end at **X** (withheld) or use extremely coarse region‑level representation (no map tile exposure).
 
-  > “Some locations and details have been generalized or omitted at the request of source communities and for the protection of sensitive sites.”
+### 2. Relationship to Geoprivacy Masking
 
-- Where sites are wholly withheld, Story Nodes MAY still cover cultural and historical themes, but MUST NOT be spatially anchored beyond the general region agreed to by communities.
+- **Geoprivacy masking** (donut geomasking) in the geo standards primarily protects **point locations** exposed as map features.  
+- This **data‑generalization guide** operates at a **dataset and governance level**, including:
+
+  - Dataset may never leave secure storage.  
+  - Dataset may be generalized to H3 cells or polygons only.  
+  - Dataset may be replaced entirely with narrative summaries instead of geospatial features.
+
+Both standards must be applied together when:
+
+- Sensitive sites are represented both as raw coordinates in ETL and as map layers in MapLibre/Cesium.  
+
+The stricter rule always wins.
 
 ---
 
-## 🧾 Relationship to Data Contracts, STAC/DCAT & Other Standards
+## 🧠 Story Node & Focus Mode Integration
 
-This guide:
+Story Nodes and Focus Mode interact with this standard as follows:
 
-- **Extends** `docs/standards/data-contracts.md` for sensitive dataset cases.  
-- Must be read alongside:
+- Story Nodes representing sensitive topics:
 
-  - `docs/standards/faircare.md` (FAIR+CARE standard)  
-  - `docs/standards/kfm_markdown_protocol_v11.md` (Markdown authoring)  
-  - `docs/standards/kfm_markdown_protocol_superstandard.md` (Unified KFM-MDP v11)  
+  - Must reference generalized geometries (H3, regions) or **no geometry at all** for highly sensitive sites.  
+  - Must not contain raw coordinates, directions, or clues that materially enable site discovery.  
 
-All sensitive datasets MUST:
+- Focus Mode:
 
-- Have a compliant data contract with CARE block and provenance.  
-- Have STAC and/or DCAT representations flagged as `restricted` with spatial resolution and masking information.  
-- Carry correct license and CARE status in all metadata layers.
+  - Must obey `ai_focusmode_usage: "Restricted / Governance-Only"`.  
+  - May summarize this document and applicable data contracts for governance review.  
+  - Must not “fill in” missing detail or speculate about exact locations or rituals.  
+
+Recommended language for generalized narratives:
+
+> “Locations and details in this area have been generalized or omitted at the request of source communities and for the protection of sensitive cultural and ecological sites.”
+
+If Focus Mode detects conflicting instructions (e.g., data suggests precision but metadata indicates high sensitivity), it must **side with the more restrictive rule** and flag the inconsistency to maintainers.
+
+---
+
+## 🧪 Validation & CI/CD
+
+The following checks (or equivalents) must run on any dataset flagged as sensitive:
+
+| Profile / Job              | Purpose                                                         |
+|----------------------------|-----------------------------------------------------------------|
+| `markdown-lint`            | Enforce KFM‑MDP v11.2.4 layout and heading rules.               |
+| `schema-lint`              | Validate data contracts and STAC/DCAT JSON against schemas.    |
+| `metadata-check`           | Verify CARE, sensitivity, and generalization metadata present. |
+| `diagram-check`            | Validate Mermaid diagrams (where present) for syntax.          |
+| `accessibility-check`      | Check docs/legends for basic a11y (e.g., color explanations).  |
+| `provenance-check`         | Confirm PROV‑O records exist for generalization and withholding.|
+| `footer-check`             | Ensure governance links and version history sections exist.    |
+| `sensitivity-check`        | Verify no raw coordinates, exact geometries, or forbidden fields leak into public outputs. |
+
+A PR is **blocked** if:
+
+- Raw coordinates or highly precise geometries appear in any public STAC/DCAT/UI artifact.  
+- CARE block is missing or incomplete in data contracts.  
+- H3 resolution is finer than allowed for the sensitivity category without explicit Council + tribal authorization.  
+- Geoprivacy masking and generalization metadata are inconsistent.  
+- Story Node or Focus Mode assets attempt to embed sensitive details in violation of this guide.
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+This document is a **governance standard** and must be interpreted through FAIR+CARE:
+
+- **FAIR**
+
+  - *Findable*: Sensitive datasets are discoverable at coarse descriptions but not exploitable.  
+  - *Accessible*: Access levels and rights are clearly stated; restricted does not mean invisible.  
+  - *Interoperable*: STAC/DCAT/PROV encoding of sensitivity and generalization is standards‑aligned.  
+  - *Reusable*: Derived generalized products can be reused without re‑exposing hidden details.
+
+- **CARE**
+
+  - *Collective Benefit*: Data use must serve community benefit or at least avoid harm.  
+  - *Authority to Control*: Communities decide what is shown, how, and at what detail.  
+  - *Responsibility*: KFM teams must proactively design for protection, not just compliance.  
+  - *Ethics*: When in doubt, protect sites and people, even if this means reducing or withdrawing datasets.
+
+Governance hooks:
+
+- All exceptions (e.g., finer than default H3 resolution, partial disclosure of sacred areas) must:
+
+  - Be reviewed by FAIR+CARE Council.  
+  - Have explicit community/tribal authorization.  
+  - Be recorded in the governance ledger with clear rationale.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Author             | Summary                                                                                                                                                                |
-|--------:|------------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| v11.0.0 | 2025-11-20 | FAIR+CARE Council | Upgraded to KFM-MDP v11.0.0; added extended YAML, OWL-Time & GeoSPARQL alignment, stricter CI integration, clarified H3 defaults, and refined CARE & narrative rules. |
-| v10.4.0 | 2025-11-16 | FAIR+CARE Council | KFM-MDP v10.4 alignment; STAC/DCAT integration; governance ledger rules, default H3 masking, and CARE governance formalization.                                        |
-| v10.2.2 | 2025-11-12 | FAIR+CARE Council | Updated metadata, DCAT, and workflow examples.                                                                                                                        |
-| v10.0.0 | 2025-11-09 | FAIR+CARE Council | Added CIDOC CRM linkage, CARE block, and H3 requirements for sensitive cultural data.                                                                                 |
-| v9.7.0  | 2025-11-09 | FAIR+CARE Council | Initial sensitive site generalization governance standard.                                                                                                            |
+| Version | Date       | Status            | Summary                                                                                                   |
+|--------:|------------|-------------------|-----------------------------------------------------------------------------------------------------------|
+| v11.0.0 | 2025-12-06 | Active / Enforced | Upgraded to KFM‑MDP v11.2.4; aligned with geo/geoprivacy standards, STAC/DCAT/PROV profiles, and CI hooks.|
+| v10.4.0 | 2025-11-20 | Superseded        | KFM‑MDP v10.4 alignment; STAC/DCAT integration; governance ledger rules and default H3 masking.          |
 
 ---
 
 <div align="center">
 
-🏺 **Kansas Frontier Matrix — Sensitive Site & CARE Governance**  
+🏺 **Kansas Frontier Matrix — Sensitive Site Data Generalization & CARE Governance Guide (v11.0.0)**  
 “When in doubt, protect the people and the place.”
 
-© 2025 Kansas Frontier Matrix — CC-BY-NC 4.0  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+CC‑BY‑NC 4.0 · FAIR+CARE Council · MCP‑DL v6.3  
 
-[⬅ Back to Standards Index](../../README.md) · [⚖ Root Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅ Back to Standards Index](../../README.md) · [⚖ Root Governance Charter](../governance/ROOT-GOVERNANCE.md) · [📘 KFM Markdown Protocol v11.2.4](../kfm_markdown_protocol_v11.2.4.md)
 
 </div>
