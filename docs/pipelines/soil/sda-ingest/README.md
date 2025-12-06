@@ -190,63 +190,65 @@ Use this pattern for **any soils pipeline** that fetches data from SDA (R/`soilD
 
 ## 🗂️ Directory Layout
 
-Canonical layout for SDA-based soils ingestion (emoji-prefixed):
+Canonical layout for SDA-based soils ingestion, using the KFM-MDP emoji tree format:
 
 ~~~text
-docs/
-  pipelines/
-    soil/
-      sda-ingest/
-        📄 README.md
-        📂 runbooks/
-        │  📄 weekly-refresh.md
-        │  📄 drift-investigation.md
-        📂 specs/
-           📄 sda-query-contracts.md
-           📄 chunking-policy.md
-
-src/
-  pipelines/
-    soil/
-      sda_ingest/
-        📄 __init__.py
-        📄 config.py
-        📄 chunkspec.py
-        📄 sda_client.py
-        📄 etl_runner.py
-        📄 validators.py
-        📄 stac_writer.py
-        📄 prov_writer.py
-        📄 telemetry.py
-
-data/
-  raw/
-    soil/
-      sda/
-        📂 tabular/
-        📂 spatial/
-        📂 chunk-manifests/
-  processed/
-    soil/
-      ssurgo/
-        📂 tabular/
-        📂 spatial/
-  stac/
-    soil/
-      sda-ssurgo/
-        📂 collections/
-        📂 items/
-
-.github/
-  workflows/
-    📄 soil-sda-ingest-ci.yaml
-    📄 soil-sda-ingest-telemetry.yaml
+KansasFrontierMatrix/
+├── 📂 docs/                                            # All documentation
+│   └── 📂 pipelines/
+│       └── 📂 soil/
+│           └── 📂 sda-ingest/                          # SDA soils ingestion pattern docs
+│               ├── 📄 README.md                        # This file (pattern definition)
+│               ├── 📂 runbooks/                        # Operational procedures
+│               │   ├── 📄 weekly-refresh.md            # Scheduled SDA refresh runbook
+│               │   └── 📄 drift-investigation.md       # Drift / anomaly investigation guide
+│               └── 📂 specs/                           # Detailed technical specs
+│                   ├── 📄 sda-query-contracts.md       # Versioned T-SQL templates & contracts
+│                   └── 📄 chunking-policy.md           # Chunk manifest & size policy
+│
+├── 📂 src/                                             # Source code
+│   └── 📂 pipelines/
+│       └── 📂 soil/
+│           └── 📂 sda_ingest/                          # Implementation of SDA ingestion pattern
+│               ├── 📄 __init__.py
+│               ├── 📄 config.py                        # Config models, endpoints, limits
+│               ├── 📄 chunkspec.py                     # Chunk manifest + splitting logic
+│               ├── 📄 sda_client.py                    # HTTP/T-SQL client for SDA
+│               ├── 📄 etl_runner.py                    # Orchestration entrypoints
+│               ├── 📄 validators.py                    # Schema/geometry/CRS checks
+│               ├── 📄 stac_writer.py                   # STAC Collection/Item writers
+│               ├── 📄 prov_writer.py                   # PROV-O JSON-LD emitters
+│               └── 📄 telemetry.py                     # Metrics + lineage telemetry integration
+│
+├── 📂 data/                                            # Data lifecycle
+│   ├── 📂 raw/
+│   │   └── 📂 soil/
+│   │       └── 📂 sda/
+│   │           ├── 📂 tabular/                         # Raw SDA tabular JSON/CSV
+│   │           ├── 📂 spatial/                         # Raw SDA spatial payloads (WKT/WKB)
+│   │           └── 📂 chunk-manifests/                 # Deterministic chunk-universe manifests
+│   ├── 📂 processed/
+│   │   └── 📂 soil/
+│   │       └── 📂 ssurgo/
+│   │           ├── 📂 tabular/                         # Normalized SSURGO tables (Parquet/Feather)
+│   │           └── 📂 spatial/                         # Validated, reprojected geometries
+│   └── 📂 stac/
+│       └── 📂 soil/
+│           └── 📂 sda-ssurgo/
+│               ├── 📂 collections/                     # STAC Collections for soils
+│               └── 📂 items/                           # STAC Items per run/chunk grouping
+│
+└── 📂 .github/                                         # CI/CD workflows
+    └── 📂 workflows/
+        ├── 📄 soil-sda-ingest-ci.yaml                  # CI for SDA ingestion pattern
+        └── 📄 soil-sda-ingest-telemetry.yaml           # Telemetry & lineage validation
 ~~~
 
-Rules:
+**Author rules:**
 
-- New SDA soils pipelines must map cleanly into this layout or clearly documented variants.  
-- Docs under `sda-ingest/` must reference this pattern and stay KFM-MDP–aligned.  
+- New SDA-related docs must be placed under `docs/pipelines/soil/sda-ingest/` and reference this pattern.  
+- Any changes to `src/pipelines/soil/sda_ingest/` behavior that affect contracts (chunking, SQL, telemetry, PROV) must update this layout and the pattern sections in the same PR.  
+- Additional subdirectories must be annotated in this tree with a brief trailing comment.
 
 ---
 
