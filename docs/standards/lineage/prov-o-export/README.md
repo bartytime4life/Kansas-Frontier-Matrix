@@ -16,9 +16,9 @@ telemetry_ref: "releases/lineage-prov-o-export/v0.1.0/lineage-telemetry.json"
 telemetry_schema: "schemas/telemetry/lineage-prov-o-export-v0.1.0.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
-governance_ref: "../governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "../../../governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.4"
@@ -167,7 +167,7 @@ deprecated_fields:
 
 **Purpose:**  
 Define the canonical, CI-enforced pattern for exporting Kansas Frontier Matrix (KFM) lineage into **W3C PROV-O** graphs, aligned with **DCAT 3.0**, **STAC 1.x**, and **KFM-MDP v11.2.4**.  
-This standard specifies how ETL runs, catalog records, knowledge-graph operations, and documents are turned into deterministic, queryable PROV-O entities, activities, and agents for downstream analysis and Focus Mode overlays. :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
+This standard specifies how ETL runs, catalog records, knowledge-graph operations, and documents are turned into deterministic, queryable PROV-O entities, activities, and agents for downstream analysis and Focus Mode overlays.
 
 [![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue "Master Coder Protocol v6.3")]() ·
 [![KFM-MDP v11.2.4](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.4-informational "Markdown Protocol v11.2.4")]() ·
@@ -187,20 +187,20 @@ This standard governs how **lineage information** is exported from KFM into **PR
 
 It covers:
 
-- ETL & data pipelines (Extract → Transform → Load) and their runs. :contentReference[oaicite:2]{index=2}  
-- Catalog-level metadata in **DCAT 3.0** and **STAC 1.x**. :contentReference[oaicite:3]{index=3} :contentReference[oaicite:4]{index=4}  
-- Graph loading and enrichment operations in Neo4j.  
-- Documentation artifacts governed by **KFM-MDP v11.2.4**. :contentReference[oaicite:5]{index=5}  
-- The mapping of these to **PROV-O Entities, Activities, Agents, Plans, and Bundles**. :contentReference[oaicite:6]{index=6}  
+- ETL and data pipelines (batch + streaming) that produce or transform datasets.
+- Catalog-level metadata in **DCAT 3.0** and **STAC 1.x**.
+- Graph loading and enrichment operations in Neo4j and related services.
+- Documentation artifacts governed by **KFM-MDP v11.2.4**.
+- The mapping of all of the above to **PROV-O Entities, Activities, Agents, Plans, Bundles**.
 
 The goal is a **deterministic, reproducible export pipeline** that produces:
 
 - Machine-readable lineage graphs (Turtle, JSON-LD, PROV-JSON).
-- Validated against **PROV-O**, **KFM-PROV v11**, and local SHACL shapes.
-- Ready for ingestion into triple stores and/or Neo4j-backed lineage views.
-- Safe for Focus Mode to query and summarize without altering authoritative content.
+- Graphs validated against **PROV-O**, **KFM-PROV v11**, and local SHACL shapes.
+- Artifacts ready for ingestion into triple stores and/or Neo4j-backed lineage views.
+- Lineage overlays for Focus Mode that never override authoritative content.
 
-This document is **draft / proposed** and MUST be reviewed and approved before being marked **Active / Enforced**.
+This document is **Draft / Proposed** and MUST be reviewed and approved before being marked **Active / Enforced**.
 
 ### 2. Core Principles
 
@@ -208,164 +208,175 @@ This document is **draft / proposed** and MUST be reviewed and approved before b
    Every exported PROV-O graph MUST be reproducible from:
    - a pinned ETL config (YAML/JSON),
    - a git commit SHA,
-   - versioned datasets and schemas. :contentReference[oaicite:7]{index=7}  
+   - versioned datasets and schemas.
 
 2. **Single Lineage Model**  
-   All provenance MUST be representable in the PROV-O **Entity–Activity–Agent** pattern with optional Bundles and Plans, avoiding ad-hoc custom vocabularies when PROV-O terms already exist. :contentReference[oaicite:8]{index=8}  
+   All provenance MUST be representable in the PROV-O **Entity–Activity–Agent** pattern, with optional Plans and Bundles, avoiding ad-hoc custom vocabularies where PROV already provides suitable terms.
 
 3. **Interoperable Catalogs**  
-   Lineage exports MUST link back to DCAT and STAC identifiers for datasets, distributions, and items so that catalog and provenance views remain in sync. :contentReference[oaicite:9]{index=9} :contentReference[oaicite:10]{index=10}  
+   Lineage exports MUST link back to DCAT and STAC identifiers for datasets, distributions, items, and services, keeping catalog and provenance views in sync.
 
 4. **Graph-First Semantics**  
-   PROV-O exports are designed to be ingestible by both RDF triple stores and KFM’s Neo4j graph, enabling:
+   PROV-O exports MUST be ingestible by both RDF triple stores and KFM’s Neo4j lineage graph, enabling:
    - lineage queries,
    - impact analysis,
-   - temporal reasoning (with OWL-Time). :contentReference[oaicite:11]{index=11} :contentReference[oaicite:12]{index=12}  
+   - temporal reasoning (with OWL-Time),
+   - spatial overlays (with GeoSPARQL).
 
 5. **FAIR+CARE-Aligned Lineage**  
-   Lineage MUST not expose sensitive data; instead, it describes **relationships and processes**, respecting Indigenous data sovereignty and privacy rules while still supporting findability and reusability. :contentReference[oaicite:13]{index=13}  
+   Lineage MUST describe relationships and processes, not leak sensitive content. It MUST respect Indigenous data sovereignty and privacy rules, while still supporting discoverability and reuse.
 
 6. **CI-Enforced**  
-   No lineage export is considered valid until:
-   - PROV-O schema checks,
-   - SHACL shape validation,
-   - and coverage tests pass in `.github/workflows/kfm-ci.yml`. :contentReference[oaicite:14]{index=14}  
+   No lineage export is considered valid until PROV-O schema checks, SHACL validation, and lineage-specific CI tests pass in `.github/workflows/kfm-ci.yml`.
 
 ### 3. Where This Work Lives (Monorepo Surfaces)
 
 This standard directly impacts:
 
 - **Docs**
-  - `docs/standards/lineage/prov-o-export/README.md` (this file).
-  - `docs/architecture/lineage/prov-graph.md` (graph-level design; proposed).
-  - `docs/guides/lineage/prov-o-export-cli.md` (CLI usage guide; proposed).
+  - `docs/standards/lineage/prov-o-export/README.md` (this file; normative export rules).
+  - `docs/standards/lineage/README.md` (lineage standards index; proposed).
+  - `docs/architecture/lineage/prov-graph.md` (lineage graph design; proposed).
+  - `docs/guides/lineage/prov-o-export-cli.md` (CLI usage; proposed).
 
 - **Pipelines**
-  - `src/pipelines/lineage/prov_export/`  
-    - `config/` — YAML/JSON export configs (per domain / dataset).  
-    - `jobs/` — deterministic export jobs (batch + streaming).  
-    - `cli.py` — top-level `kfm-provenance export` entrypoint.
+  - `src/pipelines/lineage/prov_export/`
+    - `config/` — YAML/JSON export configs per dataset/domain.
+    - `jobs/` — deterministic export jobs (batch + streaming).
+    - `cli.py` — `kfm-provenance export` entrypoint.
 
 - **Graph & API**
-  - `src/graph/lineage/prov/` — Neo4j loaders and query helpers for lineage.  
+  - `src/graph/lineage/prov/` — Neo4j loaders and query helpers for lineage views.
   - `src/api/lineage/prov/` — REST/GraphQL endpoints exposing lineage slices.
 
 - **Data & Catalogs**
-  - `data/processed/lineage/prov/` — PROV-O export artifacts (TTL, JSON-LD, PROV-JSON).  
-  - `data/releases/lineage/prov/` — versioned release bundles.  
-  - `data/stac/lineage/` — STAC Items linking to provenance artifacts. :contentReference[oaicite:15]{index=15}  
-  - `data/sources/dcat/` — DCAT entries referencing provenance datasets. :contentReference[oaicite:16]{index=16}  
+  - `data/processed/lineage/prov/` — PROV-O export artifacts (TTL, JSON-LD, PROV-JSON).
+  - `data/releases/lineage/prov/` — versioned release bundles.
+  - `data/stac/lineage/` — STAC Collections/Items for provenance assets.
+  - `data/sources/dcat/` — DCAT entries referencing provenance datasets.
 
-Implementers MUST ensure these paths exist or adjust this document (and JSON schemas) before promoting the standard to **Active**.
+Implementers MUST ensure these paths exist (or update this document and the schemas accordingly) before promoting this standard to **Active / Enforced**.
 
-### 4. Author Quickstart (for Lineage Standards & Guides)
+### 4. Author Quickstart (for Lineage Docs)
 
 When writing documentation related to PROV-O export:
 
-1. Start from this file’s front-matter and **KFM-MDP v11.2.4** scaffolding. :contentReference[oaicite:17]{index=17}  
-2. Use only the approved H2 headings from `heading_registry.approved_h2`.  
-3. Reference:
-   - `KFM-MDP v11.2.4` for Markdown rules,
-   - `DCAT 3.0 Implementation Guide` for catalog mapping, :contentReference[oaicite:18]{index=18}  
-   - `STAC System Guide` for asset catalogs, :contentReference[oaicite:19]{index=19}  
-   - `PROV-O Guide` for provenance modeling. :contentReference[oaicite:20]{index=20}  
-4. Explicitly link to:
-   - the pipelines that generate the lineage, and
-   - the storage locations of exported graphs.
+1. Start from a **KFM-MDP v11.2.4**-compliant template (Standard or Guide).
+2. Use only approved H2 headings from `heading_registry.approved_h2`.
+3. Explicitly reference:
+   - this standard for export rules,
+   - the DCAT and STAC guides for catalog mapping,
+   - the PROV-O guide for provenance modeling.
+4. Always state:
+   - which pipelines produce lineage,
+   - where exported graphs are stored,
+   - how they are validated in CI.
 
 ---
 
 ## 🗂️ Directory Layout
 
-Target layout for PROV-O export–related components (some paths are proposed and MUST be created during implementation):
+### 1. Global Monorepo Layout (Canonical)
+
+The KFM lineage components live inside the standard monorepo structure:
 
 ~~~text
-docs/
-├── standards/
-│   ├── kfm_markdown_protocol_v11.2.4.md
-│   └── lineage/
-│       ├── README.md                          # Lineage standards index (proposed)
-│       └── prov-o-export/
-│           └── README.md                      # This standard
-├── architecture/
-│   └── lineage/
-│       └── prov-graph.md                      # PROV graph & storage design (proposed)
-├── guides/
-│   └── lineage/
-│       └── prov-o-export-cli.md               # CLI usage & examples (proposed)
-
-src/
-├── pipelines/
-│   └── lineage/
-│       └── prov_export/
-│           ├── config/                        # YAML/JSON export configs
-│           ├── jobs/                          # Batch / streaming export jobs
-│           └── cli.py                         # `kfm-provenance export` entrypoint
-├── graph/
-│   └── lineage/
-│       └── prov/
-│           ├── neo4j_loader.py                # Load PROV into Neo4j (if used)
-│           └── queries.cyp                    # Standard lineage queries
-└── api/
-    └── lineage/
-        └── prov/
-            └── router.py                      # REST/GraphQL lineage endpoints
-
-data/
-├── processed/
-│   └── lineage/
-│       └── prov/
-│           ├── ttl/                           # PROV-O Turtle exports
-│           ├── jsonld/                        # PROV-O JSON-LD exports
-│           └── provjson/                      # PROV-JSON exports
-├── releases/
-│   └── lineage/
-│       └── prov/
-│           └── v*/                            # Versioned lineage release bundles
-└── stac/
-    └── lineage/
-        └── collections/                       # STAC Collections for provenance assets
-
-schemas/
-├── json/
-│   └── kfm-lineage-prov-o-export-v0.1.0.schema.json
-└── shacl/
-    └── kfm-lineage-prov-graph-v0.1.0-shape.ttl
+KansasFrontierMatrix/
+├── 📂 docs/                                  # All documentation
+│   ├── 📂 standards/                         # Standards & policies (Markdown, FAIR+CARE, governance, etc.)
+│   │   └── 📂 lineage/                       # Lineage standards (this standard + siblings)
+│   │       ├── 📄 README.md                  # Lineage standards index (proposed)
+│   │       └── 📂 prov-o-export/
+│   │           └── 📄 README.md              # This PROV-O export standard
+│   ├── 📂 architecture/                      # System & subsystem designs (ETL, graph, API, UI, Focus Mode)
+│   │   └── 📂 lineage/
+│   │       └── 📄 prov-graph.md              # PROV graph & storage design (proposed)
+│   ├── 📂 guides/                            # How-to guides, tutorials, SOP-style walkthroughs
+│   │   └── 📂 lineage/
+│   │       └── 📄 prov-o-export-cli.md       # CLI usage & examples (proposed)
+│   ├── 📂 data/                              # Data contracts, source registries, schema notes
+│   ├── 📂 analyses/                          # Domain analyses & case studies
+│   └── 📄 glossary.md                        # Shared glossary for KFM-wide terminology
+├── 📂 src/                                   # Backend & service code
+│   ├── 📂 pipelines/
+│   │   └── 📂 lineage/
+│   │       └── 📂 prov_export/
+│   │           ├── 📂 config/                # YAML/JSON export configs
+│   │           ├── 📂 jobs/                  # Batch / streaming export jobs
+│   │           └── 📄 cli.py                 # `kfm-provenance export` entrypoint
+│   ├── 📂 graph/
+│   │   └── 📂 lineage/
+│   │       └── 📂 prov/
+│   │           ├── 📄 neo4j_loader.py        # Load PROV into Neo4j
+│   │           └── 📄 queries.cyp            # Standard lineage queries
+│   ├── 📂 api/
+│   │   └── 📂 lineage/
+│   │       └── 📂 prov/
+│   │           └── 📄 router.py              # REST/GraphQL lineage endpoints
+│   └── 📂 tools/                             # Backend utilities, CLIs, migrations
+├── 📂 data/                                  # Data lifecycle: raw → work → processed → releases
+│   ├── 📂 sources/                           # External dataset manifests (STAC/DCAT-aligned)
+│   ├── 📂 raw/                               # Raw ingested data (LFS/DVC; not committed directly)
+│   ├── 📂 work/                              # Intermediate normalized / enriched data
+│   ├── 📂 processed/
+│   │   └── 📂 lineage/
+│   │       └── 📂 prov/
+│   │           ├── 📂 ttl/                   # PROV-O Turtle exports
+│   │           ├── 📂 jsonld/                # PROV-O JSON-LD exports
+│   │           └── 📂 provjson/              # PROV-JSON exports
+│   ├── 📂 releases/
+│   │   └── 📂 lineage/
+│   │       └── 📂 prov/
+│   │           └── 📂 v*/                    # Versioned lineage release bundles
+│   └── 📂 stac/
+│       └── 📂 lineage/
+│           └── 📂 collections/               # STAC Collections for provenance assets
+├── 📂 schemas/                               # JSON, JSON-LD, STAC, DCAT, SHACL, telemetry schemas
+│   ├── 📂 json/
+│   │   └── 📄 kfm-lineage-prov-o-export-v0.1.0.schema.json
+│   └── 📂 shacl/
+│       └── 📄 kfm-lineage-prov-graph-v0.1.0-shape.ttl
+├── 📂 mcp/                                   # Master Coder Protocol artifacts
+│   ├── 📂 experiments/
+│   ├── 📂 model_cards/
+│   └── 📂 sops/
+├── 📂 tests/                                 # Automated test suites (unit, integration, lineage checks)
+├── 📂 tools/                                 # Repo-level tools, dev utilities, maintenance scripts
+└── 📂 .github/                               # CI/CD workflows & GitHub configuration
+    └── 📂 workflows/
+        └── 📄 kfm-ci.yml                     # CI pipelines (docs-lint, lineage-audit, energy/carbon)
 ~~~
 
 **Author and Implementer Rules:**
 
-- Each directory above MUST have a `README.md` (or equivalent) once created, describing purpose and data contracts.  
-- Any deviation from these paths MUST be reflected here and in the JSON/SHACL schemas.  
-- Directory trees MUST use `~~~text` fences and canonical `├──` / `└──` glyphs, per **KFM-MDP v11.2.4**. :contentReference[oaicite:21]{index=21}  
+- Every directory above MUST eventually have a `README.md` (or equivalent) describing its purpose and data/contracts.
+- Any deviation from these paths MUST be reflected here and in the JSON/SHACL schemas.
+- Directory trees MUST use `~~~text` fences and canonical `├──` / `└──` glyphs, per **KFM-MDP v11.2.4**.
 
 ---
 
 ## 🧭 Context
 
-KFM already standardizes:
-
-- **Markdown authoring** via KFM-MDP v11.2.4. :contentReference[oaicite:22]{index=22}  
-- **Catalog metadata** via DCAT 3.0 and STAC-based systems. :contentReference[oaicite:23]{index=23} :contentReference[oaicite:24]{index=24}  
-- **Provenance modeling** via W3C PROV-O. :contentReference[oaicite:25]{index=25}  
-- **Spatiotemporal semantics** via GeoSPARQL and OWL-Time. :contentReference[oaicite:26]{index=26}  
-
 This standard sits at the intersection of:
 
-- **ETL architecture & pipelines** — where lineage events originate (pipeline runs, data transformations, graph loads). :contentReference[oaicite:27]{index=27}  
-- **Catalog layers (DCAT/STAC)** — where datasets and distributions are described and must reference provenance. :contentReference[oaicite:28]{index=28} :contentReference[oaicite:29]{index=29}  
-- **Graph & story systems** — where Focus Mode and Story Nodes need trustworthy lineage overlays rather than inferred or speculative provenance. :contentReference[oaicite:30]{index=30}  
+- **KFM-MDP v11.2.4** — defines Markdown structure, headings, and metadata for this document.
+- **KFM-OP v11** — ontology protocol for entities, activities, agents, time, and space.
+- **DCAT 3.0 & STAC 1.x** — catalog layers describing datasets, distributions, and geospatial assets.
+- **W3C PROV-O** — provenance ontology used as the canonical lineage model.
+- **GeoSPARQL & OWL-Time** — spatial and temporal semantics layered on top of PROV.
 
 Practically, this means:
 
 - Every **published dataset** SHOULD have:
-  - a DCAT Dataset and Distribution,
+  - a DCAT Dataset and at least one Distribution,
   - a STAC Collection/Item (if spatial),
-  - and at least one PROV-O Entity connected to the processes that generated it.
-- Every **ETL pipeline** that materially changes data MUST be represented as a PROV-O Activity linked to:
-  - its input and output Entities,
-  - its executable Plan (config + code),
-  - and its Agents (e.g. GitHub Actions runner, human reviewer). :contentReference[oaicite:31]{index=31} :contentReference[oaicite:32]{index=32}  
+  - and at least one PROV Entity connected to the processes that generated it.
+- Every **ETL pipeline** that materially transforms data MUST be represented as a PROV Activity linked to:
+  - input/output Entities,
+  - a Plan (config + code),
+  - and Agents (people, organizations, software).
+
+The PROV-O export is the **single source of truth** for KFM lineage, and all downstream tools (triple stores, Neo4j, Focus Mode) MUST treat it as authoritative.
 
 ---
 
@@ -393,39 +404,36 @@ This diagram shows how documentation and ETL configs feed pipelines, which gener
 ~~~mermaid
 timeline
     title Example Lineage Run
-    2025-12-01 : Commit 3f2a9c : "Update ETL config for KGS wells"
-    2025-12-01 : CI Pipeline : "Build, test, and deploy ETL job"
-    2025-12-02 : ETL Run #142 : "Ingest & transform wells → GeoJSON"
-    2025-12-02 : Graph Load : "Load wells into Neo4j"
-    2025-12-02 : PROV Export : "Emit PROV-O graph for Run #142"
+    2025-12-01 : Commit 3f2a9c : "Update ETL config for wells dataset"
+    2025-12-01 : CI Pipeline   : "Build, test, and deploy ETL job"
+    2025-12-02 : ETL Run #142  : "Ingest & transform wells → GeoJSON"
+    2025-12-02 : Graph Load    : "Load wells into Neo4j"
+    2025-12-02 : PROV Export   : "Emit PROV-O graph for Run #142"
 ~~~
 
-These timelines should be adapted to real runs in operational documentation (e.g., per project or per dataset).
+Diagrams MUST be accompanied by short explanatory text (as above) and MUST NOT introduce information that is missing from the surrounding prose.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Lineage narratives are powerful but must remain **descriptive**, not normative. This standard ensures that Focus Mode:
+Lineage narratives provide **“how did we get here?”** answers for datasets, maps, and Story Nodes.
 
-- Uses PROV-O graphs as **ground truth** for “how did this get here?” questions.
-- Never fabricates provenance beyond what exists in PROV exports.
-- Respects transform restrictions defined here and in KFM-MDP. :contentReference[oaicite:33]{index=33}  
+This standard ensures that:
 
-### 1. Mapping PROV Nodes to Story Nodes
+- Focus Mode uses PROV-O exports as **ground truth** for lineage questions.
+- Story Nodes reference PROV Entities and Activities instead of embedding ad-hoc provenance.
+- No speculative or fabricated lineage is generated by AI transforms.
 
-Typical mapping:
+### 1. Mapping PROV to Story Nodes
 
-- **Story Node text** describes:
-  - a dataset’s origin,
-  - key transformations,
-  - responsible teams.
-- **Story Node links** reference:
-  - `target`: a DCAT Dataset or STAC Item ID,
-  - `lineage_entity`: a PROV Entity IRI,
-  - `activity_run`: a PROV Activity IRI.
+A typical Story Node might include:
 
-Example JSON snippet (in a Story Node spec, not in Markdown):
+- `target` — a DCAT Dataset or STAC Item ID.
+- `lineage_entity` — a PROV Entity IRI representing the dataset version.
+- `activity_run` — a PROV Activity IRI representing a pipeline run.
+
+Example (shown here as plain text, defined in JSON elsewhere):
 
 ~~~text
 "target": "urn:kfm:dataset:kgs:wells:v2025-12-02",
@@ -433,67 +441,69 @@ Example JSON snippet (in a Story Node spec, not in Markdown):
 "activity_run": "urn:kfm:prov:activity:etl:kgs-wells:run-142"
 ~~~
 
-Story Nodes MUST NOT introduce new provenance claims; they only narrate what PROV-O already records.
+Story Nodes MUST NOT introduce new provenance claims. They only narrate relationships already present in PROV-O.
 
-### 2. Focus Mode Allowed Behaviors
+### 2. Focus Mode Behaviors
 
-Within `ai_transform_permissions` for this doc and for lineage views:
+For lineage-related Focus Mode sessions:
 
-- ✅ May summarize:
-  - “What pipeline produced this dataset?”
-  - “Which inputs did this result depend on?”
-- ✅ May highlight:
-  - key Activities,
-  - critical Agents (e.g. FAIR+CARE Council approval steps),
-  - temporal spans.
+- ✅ MAY:
+  - Summarize lineage chains associated with a dataset or map view.
+  - Highlight key Activities, Agents, and time spans.
+  - Explain which upstream datasets contributed to a result.
 
-- ❌ Must NOT:
-  - invent missing lineage links,
-  - change or override PROV-O graphs,
-  - relax governance or sovereignty constraints.
+- ❌ MUST NOT:
+  - Create missing links between Entities or Activities.
+  - Override or alter PROV-O graphs.
+  - Relax governance or sovereignty constraints.
+
+Transform behavior is governed by this document’s `ai_transform_*` and the global KFM governance.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Lineage export is only useful if it’s **consistently correct**. This standard extends CI/CD with two lineage-specific test profiles, building on existing KFM patterns. :contentReference[oaicite:34]{index=34} :contentReference[oaicite:35]{index=35}  
+Lineage export is only useful if it is **consistently correct and reproducible**. This standard extends CI/CD with lineage-specific test profiles.
 
 ### 1. Test Profiles (Extended Matrix)
 
-| Test Profile                 | Purpose                                           | Tooling / Workflow Hint                      |
-|-----------------------------|---------------------------------------------------|----------------------------------------------|
-| `markdown-lint`             | Docs structure & style                            | Markdownlint, custom scripts                  |
-| `schema-lint`               | YAML front-matter validation                      | JSON Schema validator                         |
-| `metadata-check`            | Required metadata presence                        | Custom validators                             |
-| `diagram-check`             | Mermaid syntax & profile checks                   | Mermaid CLI/parser                            |
-| `accessibility-check`       | Basic a11y rules                                  | Markdown a11y tools                           |
-| `provenance-check`          | Front-matter provenance consistency               | YAML vs footer comparison                     |
-| `footer-check`              | Governance footer correctness                     | Regex/AST check                               |
-| `prov-export-contract`      | PROV-O & SHACL validation of export graphs        | RDF/SHACL validators, PROV-O vocabulary       |
-| `prov-graph-consistency`    | Lineage graph sanity (no invalid cycles, etc.)    | SPARQL/Cypher checks; PROV constraints        |
+The following test profiles, referenced in `test_profiles`, MUST be wired into `.github/workflows/kfm-ci.yml`:
 
-### 2. Required Validation Steps for Each Export
+| Test Profile              | Purpose                                           | Tooling / Workflow Hint                      |
+|---------------------------|---------------------------------------------------|----------------------------------------------|
+| `markdown-lint`           | Docs structure & style                            | Markdownlint / custom scripts                |
+| `schema-lint`             | YAML front-matter validation                      | JSON Schema validator                        |
+| `metadata-check`          | Required metadata presence                        | Custom validators                            |
+| `diagram-check`           | Mermaid syntax & profile checks                   | Mermaid CLI/parser                           |
+| `accessibility-check`     | Basic a11y rules                                  | Markdown a11y tools                          |
+| `provenance-check`        | Front-matter provenance consistency               | YAML vs footer comparison                    |
+| `footer-check`            | Governance footer correctness                     | Regex/AST check                              |
+| `prov-export-contract`    | PROV-O & SHACL validation of export graphs        | RDF/SHACL validator, PROV-O vocabulary       |
+| `prov-graph-consistency`  | Lineage graph sanity (no invalid cycles, etc.)    | SPARQL / Cypher checks; PROV constraints     |
 
-For each executed **PROV-O export job**:
+### 2. Required Validation Steps Per Export
+
+For each PROV-O export job:
 
 1. **Schema Validation**
-   - Validate exported RDF against PROV-O classes and properties. :contentReference[oaicite:36]{index=36}  
+   - Validate exported RDF against PROV-O classes and properties.
    - Validate against `kfm-lineage-prov-graph-v0.1.0-shape.ttl` SHACL shapes.
 
 2. **Coverage Checks**
-   - Ensure minimum coverage thresholds:
-     - all released datasets in a given batch have at least one PROV Entity,
-     - every PROV Entity representing a dataset links to a DCAT Dataset or STAC Item (if applicable). :contentReference[oaicite:37]{index=37} :contentReference[oaicite:38]{index=38}  
+   - Every released dataset in the export scope MUST have at least one PROV Entity.
+   - Every dataset-Entity SHOULD link to a DCAT Dataset or STAC Item (if applicable).
 
 3. **Consistency Checks**
-   - Confirm no cycles in revision chains that violate PROV constraints.
-   - Ensure temporal consistency (Activity start/end times vs Entity generation times). :contentReference[oaicite:39]{index=39}  
+   - No invalid cycles in revision or derivation chains.
+   - Temporal consistency:
+     - Activities MUST have `prov:startedAtTime` ≤ `prov:endedAtTime`.
+     - Generated Entities MUST NOT precede the Activities that generated them.
 
 4. **CI Integration**
-   - `.github/workflows/kfm-ci.yml` MUST:
-     - run `prov-export-contract` and `prov-graph-consistency` on changed lineage artifacts,
-     - fail the PR if tests fail,
-     - attach validation summaries to build logs.
+   - CI MUST:
+     - Run `prov-export-contract` and `prov-graph-consistency` on changed lineage artifacts.
+     - Fail the PR if tests fail.
+     - Attach validation summaries to CI logs.
 
 ---
 
@@ -501,18 +511,15 @@ For each executed **PROV-O export job**:
 
 ### 1. Exported Artifact Types
 
-Each PROV-O export SHOULD produce:
+Each PROV-O export SHOULD emit:
 
-- **Turtle (`.ttl`)**
-  - Primary RDF serialization for debugging and version control.
-- **JSON-LD (`.jsonld`)**
-  - Web-friendly provenance for interop with JSON-first systems. :contentReference[oaicite:40]{index=40}  
-- **PROV-JSON (`.prov.json`)**
-  - Optional, for systems expecting PROV’s JSON profile.
+- **Turtle (`.ttl`)** — primary RDF serialization for debugging and version control.
+- **JSON-LD (`.jsonld`)** — web-friendly provenance for JSON-first systems.
+- **PROV-JSON (`.prov.json`)** — optional, for systems that expect the PROV JSON profile.
 
-All MUST:
+All exports MUST:
 
-- Declare `@context` including `prov`, `dct`, `dcat`, `stac`, `geo`, and KFM prefixes.
+- Declare `@context` including `prov`, `dct`, `dcat`, `stac`, `geo`, and KFM-specific prefixes.
 - Use stable IRI patterns derived from:
   - dataset IDs (DCAT/STAC),
   - ETL config IDs,
@@ -520,39 +527,36 @@ All MUST:
 
 ### 2. Minimal Entity Metadata
 
-Every PROV Entity representing a dataset or file SHOULD include:
+Each PROV Entity representing a dataset or file SHOULD include:
 
-- `prov:type` (e.g., `prov:Entity`, plus domain type),
-- `dct:title`, `dct:description`,
-- `dct:identifier` (matching DCAT/STAC IDs),
-- `prov:wasDerivedFrom` links for upstream entities,
-- `prov:generatedAtTime` (if known).
+- `prov:type` — base type plus domain type (e.g., dataset vs distribution).
+- `dct:title`, `dct:description`.
+- `dct:identifier` — aligned with DCAT/STAC identifiers.
+- `prov:wasDerivedFrom` — upstream Entities where applicable.
+- `prov:generatedAtTime` — if known.
 
-Catalog entries SHOULD link to these Entities via:
-
-- DCAT: `dcat:Dataset` → `prov:wasGeneratedBy` (Activity),
-- or via `prov:wasDerivedFrom` where appropriate. :contentReference[oaicite:41]{index=41}  
+Catalog entries SHOULD link back to these Entities using PROV and DCAT properties.
 
 ### 3. Minimal Activity Metadata
 
-Each ETL or graph Activity MUST include:
+Each ETL/graph Activity MUST include:
 
-- `prov:type` (e.g., `prov:Activity`, plus domain subclass),
-- `prov:startedAtTime`, `prov:endedAtTime`,
-- `prov:used` (input Entities),
-- `prov:generated` (output Entities),
-- `prov:wasAssociatedWith` (Agents),
-- `prov:qualifiedAssociation` for roles when relevant (e.g., “Data Steward”, “CI Runner”). :contentReference[oaicite:42]{index=42}  
+- `prov:type` — base Activity plus domain subclass where useful.
+- `prov:startedAtTime`, `prov:endedAtTime`.
+- `prov:used` — input Entities.
+- `prov:generated` — output Entities.
+- `prov:wasAssociatedWith` — Agents involved.
+- Qualified relations where roles matter (e.g., Data Steward vs CI Runner).
 
 ### 4. Agent Metadata
 
 Agents SHOULD be modeled as:
 
-- `prov:SoftwareAgent` for automated systems (e.g., GitHub Actions, Airflow DAGs), :contentReference[oaicite:43]{index=43}  
-- `prov:Organization` for institutions (e.g., “KFM FAIR+CARE Council”),
-- `prov:Person` for named individuals when allowed by governance.
+- `prov:SoftwareAgent` — automated systems (e.g., CI runners, orchestrators).
+- `prov:Organization` — institutional actors (e.g., “KFM FAIR+CARE Council”).
+- `prov:Person` — named individuals, where allowed by governance.
 
-Links to governance docs (e.g., roles, responsibilities) MUST use the existing governance URLs from front-matter.
+Where relevant, roles and responsibilities SHOULD link to governance docs referenced in `governance_ref`, `ethics_ref`, and `sovereignty_policy`.
 
 ---
 
@@ -560,42 +564,42 @@ Links to governance docs (e.g., roles, responsibilities) MUST use the existing g
 
 ### 1. DCAT ↔ PROV Mapping
 
-At a high level: :contentReference[oaicite:44]{index=44} :contentReference[oaicite:45]{index=45}  
+High-level mapping between catalog and provenance:
 
-| KFM Concept                     | DCAT Term                     | PROV-O Term / Pattern                                   |
-|---------------------------------|-------------------------------|--------------------------------------------------------|
-| Logical dataset                 | `dcat:Dataset`                | `prov:Entity`                                          |
-| Dataset distribution (file/API) | `dcat:Distribution`           | `prov:Entity` (file) + `prov:wasDerivedFrom` Dataset   |
-| Data service / API             | `dcat:DataService`            | `prov:Entity` and/or `prov:SoftwareAgent`              |
-| Dataset version                | `dcat:hasVersion` + `dcat:version` | `prov:wasRevisionOf` between Entities              |
-| Dataset series                 | `dcat:DatasetSeries`          | PROV Bundle or higher-level Entity w/ derivations      |
+| KFM Concept                     | DCAT Term              | PROV-O Pattern / Notes                                  |
+|---------------------------------|------------------------|---------------------------------------------------------|
+| Logical dataset                 | `dcat:Dataset`         | `prov:Entity`                                           |
+| Dataset distribution (file/API) | `dcat:Distribution`    | `prov:Entity` derived from Dataset                      |
+| Data service / API             | `dcat:DataService`     | `prov:Entity` and/or `prov:SoftwareAgent`               |
+| Dataset version                | `dcat:hasVersion` etc. | `prov:wasRevisionOf` chain between Entities             |
+| Dataset series                 | `dcat:DatasetSeries`   | PROV Bundle or higher-level Entity grouping versions    |
 
-The export pipeline MUST ensure:
+Rules:
 
-- For every `dcat:Dataset`, there is a corresponding PROV Entity IRI.
-- Version chains appear both as DCAT versioning and as `prov:wasRevisionOf` links.
+- For every `dcat:Dataset`, there SHOULD be a corresponding PROV Entity.
+- Version chains MUST appear both in DCAT (versioning terms) and PROV (`prov:wasRevisionOf`).
 
 ### 2. STAC ↔ PROV Mapping
 
-For STAC Items and Collections: :contentReference[oaicite:46]{index=46} :contentReference[oaicite:47]{index=47}  
+For STAC Collections and Items:
 
-| KFM Concept        | STAC Field                     | PROV-O Pattern                                        |
-|--------------------|--------------------------------|-------------------------------------------------------|
-| STAC Item asset    | `assets[*]`                    | `prov:Entity` (one per asset)                         |
-| Asset creation     | `properties.datetime`          | `prov:wasGeneratedBy` Activity w/ `prov:endedAtTime`  |
-| Collection license | `license`                      | Copied to `dct:license` on Entities                   |
-| STAC Item          | GeoJSON Feature + properties   | `prov:Entity` with `geo:hasGeometry` (if relevant)    |
+| Concept              | STAC Field           | PROV-O Pattern                                  |
+|----------------------|----------------------|-------------------------------------------------|
+| STAC Item asset      | `assets[*]`          | `prov:Entity` per asset                         |
+| Asset creation       | `properties.datetime`| `prov:wasGeneratedBy` Activity + end time       |
+| Collection license   | `license`            | copied to `dct:license` on related Entities     |
+| Spatial footprint    | `geometry` / `bbox`  | `geo:Feature` + `geo:hasGeometry` (GeoSPARQL)   |
 
-For geospatial Entities, GeoSPARQL terms MAY be used alongside PROV-O: `geo:Feature`, `geo:hasGeometry`, `geo:asWKT`. :contentReference[oaicite:48]{index=48}  
+Non-spatial documentation lineage MAY omit geometry or use a generic Kansas bounding box where needed for map overlay behavior.
 
-### 3. Provenance Bundles & Catalog Records
+### 3. Bundles & Catalog Records
 
-Larger exports MAY group provenance into:
+- PROV Bundles MAY be used to group:
+  - lineage for a dataset version,
+  - lineage for a single pipeline run.
+- DCAT CatalogRecords MAY describe catalog-entry events separately from dataset generation events.
 
-- PROV Bundles representing:
-  - “lineage for dataset X, version Y”,
-  - “lineage for run Z”.
-- DCAT CatalogRecords capturing when a dataset’s metadata was registered, separate from when data was generated. :contentReference[oaicite:49]{index=49}  
+Bundles MUST NOT contradict the core lineage graph; they are organizational, not authoritative overrides.
 
 ---
 
@@ -603,86 +607,75 @@ Larger exports MAY group provenance into:
 
 ### 1. Pipeline View
 
-From the architecture perspective, PROV-O export is a **deterministic ETL pipeline** layered on top of other ETL jobs:
+From an architecture perspective, PROV-O export is its own deterministic pipeline layered over other ETL jobs:
 
 1. **Source Jobs**
-   - Ingest and transform domain data (e.g., KGS wells, census, hydrology). :contentReference[oaicite:50]{index=50}  
-
+   - Ingest and transform domain data (e.g., wells, hydrology, archaeology).
 2. **Catalog Population**
-   - Populate DCAT and STAC catalogs (STAC JSON, DCAT RDF).
-
+   - Populate DCAT and STAC catalogs.
 3. **Lineage Harvest**
-   - Read run metadata:
-     - ETL configs,
-     - CI build metadata,
-     - runtime logs (start/end times, statuses).
-
+   - Read run metadata (ETL configs, CI build metadata, runtime logs).
 4. **PROV Graph Construction**
-   - Transform harvest data into PROV-O triples:
-     - Entities for datasets, distributions, config files,
-     - Activities for ETL runs, graph loads,
-     - Agents for people, orgs, CI runners. :contentReference[oaicite:51]{index=51}  
-
+   - Build PROV Entities, Activities, Agents, Plans, Bundles.
 5. **Export & Storage**
-   - Serialize graphs to Turtle/JSON-LD/PROV-JSON in `data/processed/lineage/prov/`.
-   - Version/tag bundles into `data/releases/lineage/prov/`.
-
+   - Serialize to Turtle/JSON-LD/PROV-JSON in `data/processed/lineage/prov/`.
+   - Bundles for release in `data/releases/lineage/prov/`.
 6. **Serving & Integration**
-   - Optional triple-store deployment.
-   - Neo4j lineage view or hybrid RDF→property-graph mapping.
-   - API endpoints surfacing lineage per dataset or per run.
+   - Optional triple store deployment.
+   - Neo4j lineage views or hybrid RDF→property-graph mapping.
+   - API endpoints for dataset- or run-scoped lineage queries.
 
 ### 2. Reproducibility Requirements
 
-- Each export MUST be rerunnable from:
-  - a config file in `src/pipelines/lineage/prov_export/config/`,
-  - pinned input sources (DCAT/STAC + logs),
-  - a specific git commit SHA and pipeline version. :contentReference[oaicite:52]{index=52} :contentReference[oaicite:53]{index=53}  
+Each export MUST be rerunnable from:
 
-- Export logs MUST record:
-  - config path,
-  - commit SHA,
-  - input dataset versions,
-  - timestamp,
-  - export artifact IDs.
+- A config file under `src/pipelines/lineage/prov_export/config/`.
+- Pinned input sources (DCAT/STAC + logs).
+- A specific git commit SHA and pipeline version.
+
+Export logs MUST record:
+
+- Config path.
+- Commit SHA.
+- Input dataset versions.
+- Timestamp.
+- Export artifact IDs.
 
 ### 3. Change Management
 
 Any substantive change to this standard MUST:
 
-1. Update this README, JSON schema, and SHACL shapes.  
-2. Update CI workflows for `prov-export-contract` and `prov-graph-consistency`.  
-3. Append a new row to **Version History** (below).  
+1. Update this README and the associated JSON/SHACL schemas.
+2. Update CI workflows for `prov-export-contract` and `prov-graph-consistency` (if needed).
+3. Append a new row to **Version History**.
 4. Update `provenance_chain` and `sunset_policy` once a stable v1.x is reached.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-Lineage is itself an artifact subject to governance:
+Lineage itself is a governed artifact.
 
 - **FAIR**
-  - **Findable:** stable IRIs, DCAT entries, STAC links. :contentReference[oaicite:54]{index=54} :contentReference[oaicite:55]{index=55}  
-  - **Accessible:** open provenance exports licensed under CC-BY 4.0, where appropriate.
-  - **Interoperable:** PROV-O, DCAT, STAC, GeoSPARQL, OWL-Time. :contentReference[oaicite:56]{index=56} :contentReference[oaicite:57]{index=57}  
-  - **Reusable:** clear licensing and version history.
+  - **Findable:** stable IRIs, catalog entries, and STAC links.
+  - **Accessible:** open provenance exports (where allowed) under CC-BY 4.0.
+  - **Interoperable:** PROV-O, DCAT, STAC, GeoSPARQL, OWL-Time.
+  - **Reusable:** clear licensing, version history, and provenance of lineage itself.
 
 - **CARE**
-  - **Collective Benefit:** lineage helps communities understand how narratives and datasets were constructed, promoting transparency.
-  - **Authority to Control:** sensitive provenance (e.g., processes around protected site data) may be kept in restricted bundles; public exports SHOULD be generalized.
-  - **Responsibility & Ethics:** lineage MUST NOT expose names or identifying details when governance requires aggregation or anonymization.
+  - **Collective Benefit:** lineage helps communities understand how data and narratives were constructed.
+  - **Authority to Control:** sensitive provenance (e.g., around restricted cultural sites) MAY be held in restricted bundles; public exports SHOULD be generalized.
+  - **Responsibility & Ethics:** lineage MUST NOT expose identifying details where governance requires aggregation or anonymization.
 
-- **Governance Hooks**
-  - `governance_ref`, `ethics_ref`, and `sovereignty_policy` MUST be consulted for any lineage export involving culturally sensitive or restricted data.
-  - FAIR+CARE Council MAY require additional review for specific provenance bundles.
+Authors and implementers MUST consult `governance_ref`, `ethics_ref`, and `sovereignty_policy` for any lineage export involving culturally sensitive or restricted data.
 
 ---
 
 ## 🕰️ Version History
 
-| Version   | Date       | Status    | Summary                                                                                               |
-|----------:|------------|----------|-------------------------------------------------------------------------------------------------------|
-| **v0.1.0** | 2025-12-07 | Draft     | Initial PROV-O export standard: defined monorepo surfaces, DCAT/STAC/PROV mappings, CI test profiles, and integration with Focus Mode & FAIR+CARE governance. |
+| Version   | Date       | Status | Summary                                                                                                                                      |
+|----------:|------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| **v0.1.0** | 2025-12-07 | Draft  | Initial PROV-O export standard: defined monorepo surfaces, DCAT/STAC/PROV mappings, lineage CI test profiles, and integration with Focus Mode & FAIR+CARE governance. |
 
 ---
 
@@ -691,7 +684,6 @@ Lineage is itself an artifact subject to governance:
 📑 **KFM Lineage — PROV-O Export Standard (Draft v0.1.0)**  
 Deterministic Pipelines · Open Provenance · FAIR+CARE-Aligned Lineage  
 
-[📘 Docs Root](../../) · [📂 Lineage Standards Index](../README.md) · [⚖ Governance](../../governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](../../../) · [📂 Lineage Standards Index](../README.md) · [⚖ Governance](../../../governance/ROOT-GOVERNANCE.md)
 
 </div>
-
