@@ -212,15 +212,15 @@ Where conflicts arise:
 
 ```mermaid
 flowchart LR
-    A[Dataset / Story Node Proposal<br/>Historical Team / Contributor] 
-        --> B[Initial Classification<br/>Risk & Sovereignty Screening]
-    B --> C{Sensitive?<br/>(High / Indigenous / Restricted)}
-    C -->|Yes| D[Review & Consent<br/>FAIR+CARE Council · Sovereignty Board]
-    C -->|No| E[Standard Governance Review<br/>Historical Governance WG]
-    D --> F[Mitigation Plan<br/>Generalization · Redaction · Restrictions]
+    A["Dataset / Story Node Proposal\nHistorical Team / Contributor"]
+        --> B["Initial Classification\nRisk & Sovereignty Screening"]
+    B --> C{Sensitive?}
+    C -->|Yes| D["Review & Consent\nFAIR+CARE Council · Sovereignty Board"]
+    C -->|No| E["Standard Governance Review\nHistorical Governance WG"]
+    D --> F["Mitigation Plan\nGeneralization · Redaction · Restrictions"]
     E --> F
-    F --> G[Catalog & Register Update<br/>STAC/DCAT + risk-register.json]
-    G --> H[Publish Views<br/>Story Nodes · Focus Mode · APIs]
+    F --> G["Catalog & Register Update\nSTAC/DCAT + risk-register.json"]
+    G --> H["Publish Views\nStory Nodes · Focus Mode · APIs"]
 ```
 
 ### Roles
