@@ -28,7 +28,7 @@ sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.4"
 ontology_protocol_version: "KFM-OP v11.0"
 pipeline_contract_version: "KFM-PDC v11.0"
 
@@ -88,12 +88,15 @@ sunset_policy: "Superseded upon next infrastructure update"
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summaries"
+  - "summary"
   - "semantic-highlighting"
   - "a11y-adaptations"
 ai_transform_prohibited:
-  - "speculative additions"
-  - "unverified historical claims"
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
 ---
 
 <div align="center">
@@ -104,7 +107,7 @@ ai_transform_prohibited:
 **Purpose**  
 Describe the **governed CI/CD, security, FAIR+CARE, sovereignty, AI-safety, and telemetry** infrastructure that GitHub provides for the KFM v11.2.2 monorepo.
 
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-informational)](../docs/standards/kfm_markdown_protocol_v11.2.2.md) ·
+[![KFM-MDP v11.2.4](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.4-informational)](../docs/standards/kfm_markdown_protocol_v11.2.4.md) ·
 [![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE) ·
 [![Status: Active](https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen)](#-version-history)
@@ -138,7 +141,7 @@ Nothing reaches production branches or official releases unless `.github/` workf
 │
 ├── 🤖 workflows/                                  # GitHub Actions workflows (CI/CD + governance)
 │   ├── 🧪 ci.yml                                  # Core CI: lint, type-check, tests, schema checks
-│   ├── 📚 docs_validate.yml                       # KFM-MDP v11.2.2 markdown + YAML validation
+│   ├── 📚 docs_validate.yml                       # KFM-MDP v11.2.4 markdown + YAML validation
 │   ├── 🛰️ stac_validate.yml                       # STAC 1.x Item/Collection validation
 │   ├── 🗂️ dcat_validate.yml                       # DCAT 3.0 dataset/distribution validation
 │   ├── 🧬 jsonld_validate.yml                     # JSON-LD / ontology validation (CIDOC, OWL-Time, GeoSPARQL)
@@ -159,7 +162,7 @@ Nothing reaches production branches or official releases unless `.github/` workf
 │   └── 🌐 site.yml                                # docs + web build/deploy pipelines
 │
 ├── 🧱 actions/                                    # Reusable composite actions
-│   ├── 📐 markdown-lint/                          # Enforce KFM-MDP v11.2.2 markdown rules
+│   ├── 📐 markdown-lint/                          # Enforce KFM-MDP v11.2.4 markdown rules
 │   ├── 🧾 schema-validate/                        # JSON/YAML schema validation
 │   ├── 🛰️ stac-validate/                          # STAC validator wrapper
 │   ├── 🗂️ dcat-validate/                          # DCAT validator wrapper
@@ -191,11 +194,11 @@ The `.github/` architecture orchestrates:
 
 1. **Core CI**  
    - Ensures that every PR and commit passes linting, tests, and schema checks before merging.  
-   - Validates markdown against **KFM-MDP v11.2.2** and YAML front-matter schemas.
+   - Validates markdown against **KFM-MDP v11.2.4** and YAML front-matter schemas.  [oai_citation:0‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
 
 2. **Metadata & Ontology Compliance**  
    - STAC/DCAT/JSON-LD validation enforces **catalog and ontology integrity**.  
-   - Provenance models (PROV-O + OpenLineage) are checked for completeness.
+   - PROV-O + OpenLineage models are checked for completeness and consistency.  [oai_citation:1‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
 
 3. **Security & Supply-Chain**  
    - `security_audit.yml` and `dependabot.yml` enforce dependency and secret hygiene.  
@@ -206,7 +209,8 @@ The `.github/` architecture orchestrates:
    - Model deployments are gated on model cards, tests, and explainability artifacts.
 
 5. **FAIR+CARE & Sovereignty Enforcement**  
-   - `faircare_validate.yml` and `h3_generalization.yml` prevent violations of heritage, tribal, and high-risk geographies.  
+   - `faircare_validate.yml` and `h3_generalization.yml` prevent violations of heritage, tribal, and high‑risk geographies.  
+   - Governance references from front‑matter are treated as **normative** for CI configuration.
 
 6. **Telemetry & Sustainability**  
    - `telemetry_export.yml` aggregates metrics on CI runs, governance outcomes, and energy/carbon usage into `github-infra-telemetry.json`.
@@ -268,7 +272,7 @@ These artifacts are:
 - Validating metadata completeness for STAC/DCAT.  
 - Ensuring CARE labels and sovereignty flags are present wherever required.  
 - Blocking merges that might expose sensitive heritage locations (via H3 generalization).  
-- Enforcing **KFM-MDP v11.2.2** so documentation is FAIR and machine-readable.
+- Enforcing **KFM-MDP v11.2.4** so documentation is FAIR and machine-readable.  [oai_citation:2‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
 
 The governance references:
 
@@ -291,7 +295,7 @@ When adding or modifying CI/CD behavior:
 5. **Align with FAIR+CARE and sovereignty policies**, and update relevant docs in `docs/security/` or `docs/standards/`.  
 6. **Obtain CODEOWNERS approval** for affected domains before merging.  
 
-Any new workflow that bypasses these rules breaks repository architecture and will be rejected in review.
+Any new workflow that bypasses these rules breaks repository architecture and should be rejected in review.
 
 ---
 
@@ -299,7 +303,7 @@ Any new workflow that bypasses these rules breaks repository architecture and wi
 
 | Version | Date       | Summary                                                                                                      |
 |--------:|------------|--------------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Rebuilt to align with KFM-MDP v11.2.2; stabilized directory layout; documented AI, FAIR+CARE, and telemetry wiring. |
+| v11.2.2 | 2025-11-28 | Rebuilt to align with KFM-MDP v11.2.4; stabilized directory layout; documented AI, FAIR+CARE, and telemetry wiring. |
 | v11.0.2 | 2025-11-27 | Governance & supply-chain refinements; expanded FAIR+CARE enforcement hooks.                                |
 | v11.0.1 | 2025-11-23 | Ontology/metadata integration; narrative-safety checks routed into CI.                                      |
 | v11.0.0 | 2025-11-19 | First governed v11 GitHub infrastructure README; CI/CD baseline.                                            |
