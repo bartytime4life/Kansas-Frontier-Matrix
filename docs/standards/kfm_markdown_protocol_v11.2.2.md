@@ -26,6 +26,7 @@ ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 status: "Active / Enforced"
 doc_kind: "Standard"
 header_profile: "standard"
@@ -159,7 +160,7 @@ deprecated_fields:
 
 <div align="center">
 
-# 📑 **Kansas Frontier Matrix — Markdown Authoring Protocol v11.2.2**  
+# 📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.2**  
 `docs/standards/kfm_markdown_protocol_v11.2.2.md`
 
 **Purpose:**  
@@ -578,6 +579,7 @@ For `doc_kind: "Standard"`, the following metadata fields are REQUIRED (already 
   - `telemetry_schema`
   - `energy_schema`
   - `carbon_schema`
+  - `prov_profile`
   - `ontology_alignment`
   - `metadata_profiles`
   - `provenance_chain`
