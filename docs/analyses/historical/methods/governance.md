@@ -16,7 +16,7 @@ footer_profile: "standard"
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.5"
+markdown_protocol_version: "KFM-MDP v11.2.4"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-commit-hash>"
@@ -57,7 +57,7 @@ metadata_profiles:
 provenance_chain:
   - version: "v11.2.4"
     date: "2025-12-07"
-    activity: "Initial Historical Methods Governance guide; aligned with Historical Methods README, Historical Governance, KFM-MDP v11.2.5, and CI/lineage standards."
+    activity: "Initial Historical Methods Governance guide; aligned with Historical Methods README, Historical Governance, KFM-MDP v11.2.4, and CI/lineage standards."
     is_root: true
 
 ai_training_inclusion: false
@@ -154,7 +154,7 @@ Governance for historical methods is embedded in the following structure:
 │           │   ├── 📄 population-dynamics.md        # Demography & migration methods
 │           │   └── 📄 cultural-landscapes.md        # Cultural & environmental landscape methods
 │           └── 📁 datasets/
-│               └── 🧾 risk-register.json            # Dataset-level risk & governance registry
+│               └── 📄 risk-register.json            # Dataset-level risk & governance registry
 ├── 📁 src/
 │   └── 📁 pipelines/
 │       └── 📁 historical/
@@ -164,18 +164,18 @@ Governance for historical methods is embedded in the following structure:
 │           └── 📄 config_historical.yml             # Method + dataset selection, parameters
 └── 📁 dist/
     └── 📁 historical/
-        ├── 🧾 provenance/                           # PROV-O bundles for historical pipelines
-        └── 🧾 validation/                           # Validation reports for methods/datasets
+        ├── 📁 provenance/                           # PROV-O bundles for historical pipelines
+        └── 📁 validation/                           # Validation reports for methods/datasets
 ```
 
 **Directory-level governance rules:**
 
-- Every method doc under `docs/analyses/historical/methods/` is considered a **governed method spec** (CIDOC E29 / PROV `prov:Plan`).  
+- Every method doc under `docs/analyses/historical/methods/` is treated as a **governed method spec** (CIDOC E29 / PROV `prov:Plan`).  
 - Pipelines in `src/pipelines/historical/` **must** reference one or more governed methods by doc path or `method_id`.  
 - Method governance decisions (e.g., “not approved for sovereign data”) **must** be documented here and reflected in:
   - Pipeline configs (`config_historical.yml`).  
   - STAC/DCAT metadata for datasets generated using that method.  
-  - Story Node metadata describing narratives built on those methods.
+  - Story Node metadata for narratives built on those methods.
 
 ---
 
@@ -202,7 +202,7 @@ It focuses on:
 
 ## 🧱 Architecture
 
-### Method Governance Flow
+### 🧩 Method Governance Flow
 
 ```mermaid
 flowchart LR
@@ -218,43 +218,33 @@ flowchart LR
     H --> I["Update Catalog & PROV\nSTAC/DCAT · PROV-O · OpenLineage"]
 ```
 
-### Method States
+### 🧬 Method States
 
 Each historical method must be tagged with one of:
 
 - **`approved`** – may be used in production pipelines and Story Nodes, subject to dataset-level governance.  
-- **`approved-conditional`** – may be used only with specified constraints (e.g., “aggregated outputs only”, “no coordinate-level display”).  
+- **`approved-conditional`** – may be used only with specified constraints (e.g., **aggregated outputs only**, **no coordinate-level display**).  
 - **`experimental`** – allowed in research branches and internal experiments; not surfaced via public Story Nodes without explicit review.  
-- **`deprecated`** – not recommended for new analyses; may be present for legacy reasons, but must not underlie new Story Nodes.  
-- **`rejected`** – must not be used in any production or public context; kept only for archival reasons if at all.
+- **`deprecated`** – not recommended for new analyses; may exist for legacy compatibility, but must not underpin new Story Nodes.  
+- **`rejected`** – must not be used in any production or public context; kept only for archival reasons, if at all.
 
 These states should be recorded:
 
-- In each method doc’s front-matter (`method_status`, if added) or in a shared **method registry** (see next section).  
+- In each method doc’s front-matter (`method_status`, if present) or  
+- In a shared **method registry** (see below), and  
 - In pipeline configs indicating which methods are runnable in which environments (dev / staging / production).
 
 ---
 
 ## 📦 Data & Metadata
 
-### Method Registry (Conceptual)
+### 🧾 Method Registry (Conceptual)
 
-In addition to this Markdown guide, KFM may maintain a machine-readable **method registry**, e.g.:
+Alongside this Markdown guide, KFM should maintain a machine-readable **method registry**, e.g.:
 
 - `docs/analyses/historical/methods/method-registry.json`
 
 Each method entry might include:
-
-- `method_id` – stable identifier, e.g., `hist-archival-correlation-v1`.  
-- `doc_path` – e.g., `docs/analyses/historical/methods/archival-correlation.md@v11.2.4`.  
-- `status` – `approved`, `approved-conditional`, `experimental`, `deprecated`, or `rejected`.  
-- `allowed_risk_tiers` – list of dataset risk tiers for which method is permitted (e.g., `[0,1,2]`).  
-- `sovereignty_constraints` – e.g., `"requires-sovereignty-review"`, `"tribal-mou-only"`.  
-- `notes` – governance notes and conditions.  
-- `approving_body` – e.g., `Historical Governance WG`, `Sovereignty Board`.  
-- `decision_timestamp` – ISO8601.
-
-Example:
 
 ```json
 {
@@ -269,13 +259,13 @@ Example:
 }
 ```
 
-Pipelines and Story Nodes can query this registry to ensure that their method usage is **legitimate and in-bounds**.
+Pipelines, catalogs, and Story Nodes can query this registry to ensure that their method usage is **legitimate and in-bounds**.
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Methods governance must be visible in catalogs and provenance:
+Methods governance must be visible in catalogs and provenance.
 
 ### STAC
 
@@ -310,32 +300,33 @@ In PROV:
 - Each pipeline run is a `prov:Activity` that:
   - `prov:used` the method plan.  
   - `prov:generated` historical datasets or Story Node bundles.  
-- Governance decisions themselves can appear as PROV entities (decision records) and activities (review meetings).
+
+Governance decisions can be represented as PROV entities and activities:
+
+- Decision records as `prov:Entity`.  
+- Review meetings as `prov:Activity`.  
+- Councils and boards as `prov:Agent`.
 
 ---
 
-## 🧠 Story Node & Focus Mode Integration
+## 🧠 Story Node, AI & Focus Mode Integration
 
-Methods governance shapes **how narratives are permitted to use methods**:
+Methods governance shapes **how narratives and AI transforms** are permitted to use methods.
 
-- Story Nodes must declare:
-  - Which method(s) they rely on (`method_id` or doc path).  
-  - Any constraints applied (e.g., spatial generalization, redaction of names).  
+### Story Nodes
 
-- Story Nodes are **not allowed** to:
-  - Imply that experimental or rejected methods are authoritative.  
-  - Present method-driven inferences as direct archival “facts”.  
-  - Ignore conditions like “aggregated-only” or “don’t display certain place-names”.
+Story Nodes must declare:
 
-**Focus Mode**:
+- Which method(s) they rely on (`method_id` or doc path).  
+- Any constraints applied (e.g., **spatial generalization**, **aggregation**, **redaction of names**).
 
-- May show short method summaries drawn from this governance doc and method docs.  
-- Should highlight:
-  - Method status (`approved`, `experimental`, etc.).  
-  - Any important caveats (e.g., “method cannot distinguish between multiple interpretations here”).  
-- Must not generate **new method claims** or override governance decisions.
+Story Nodes are **not allowed** to:
 
-Story Node JSON or config should include fields like:
+- Imply that experimental or rejected methods are authoritative.  
+- Present method-driven inferences as direct archival “facts.”  
+- Ignore conditions like “aggregated-only” or “don’t display certain place-names.”
+
+Example Story Node metadata fragment:
 
 ```json
 {
@@ -343,6 +334,25 @@ Story Node JSON or config should include fields like:
   "method_governance_ref": "docs/analyses/historical/methods/governance.md@v11.2.4"
 }
 ```
+
+### AI Transform Governance
+
+Per front-matter:
+
+- **Allowed transforms (Focus Mode / AI):**
+  - `summary`, `timeline-generation`, `semantic-highlighting`,  
+  - `diagram-extraction`, `metadata-extraction`, `a11y-adaptations`.
+
+- **Prohibited transforms:**
+  - `content-alteration`, `speculative-additions`,  
+  - `unverified-architectural-claims`, `narrative-fabrication`,  
+  - `governance-override`.
+
+AI systems:
+
+- May **summarize**, index, or adapt content for accessibility.  
+- Must **not change** normative governance text, invent new policy, or reinterpret methods as more permissive than documented.  
+- Must defer to this document and associated standards (`governance_ref`, `ethics_ref`, `sovereignty_policy`) as the **source of truth**.
 
 ---
 
@@ -352,67 +362,81 @@ Method governance is enforced via CI alongside historical validation.
 
 ### CI Responsibilities
 
-`.github/workflows/historical-validation.yml` (or an adjacent workflow) should:
+A dedicated workflow (e.g., `.github/workflows/historical-methods-governance.yml`) must:
 
 - Validate that **all method IDs** referenced in:
   - Pipelines (`src/pipelines/historical/*`).  
-  - STAC/DCAT metadata (`data/stac/historical/*`).  
-  - Story Node bundles (`dist/historical/storynode/*`).  
+  - STAC/DCAT metadata (`data/stac/historical/**`).  
+  - Story Node bundles (`dist/historical/storynode/**`).  
   correspond to entries in the method registry and/or real docs.
 
 - Check that:
   - `status` of methods is compatible with the target environment (e.g., `experimental` methods not used in production).  
-  - `allowed_risk_tiers` intersect correctly with datasets’ `kfm:risk_tier`.  
-  - Sovereignty constraints are respected for high-risk datasets.
+  - `allowed_risk_tiers` intersect correctly with datasets’ risk tiers from `risk-register.json`.  
+  - Sovereignty constraints are respected for high-sensitivity datasets (`indigenous_rights_flag: true`).
 
 ### CI Gate Examples
 
 - **Block merge** if:
-  - A pipeline uses a `method_id` with `status = rejected`.  
+  - A pipeline uses a `method_id` with `status = "rejected"`.  
   - A Story Node uses a method **not present** in the registry.  
-  - A method flagged as `approved-conditional` is used with incompatible risk tiers or without required masking.  
+  - A `approved-conditional` method is used with incompatible risk tiers or without required masking/generalization.
 
-- **Require human approval** (FAIR+CARE or Sovereignty Board) if:
-  - New methods are introduced with `status = approved-conditional`.  
-  - Existing methods change from `approved` to `experimental` or `deprecated` and still underpin many datasets/Story Nodes.
+- **Require human approval** (FAIR+CARE Council or Sovereignty Board) if:
+  - New methods are introduced with `status = "approved-conditional"`.  
+  - Existing methods change status (e.g., `approved` → `experimental` or `deprecated`) while still underpinning active datasets/Story Nodes.
 
 Validation results and governance warnings related to methods should be written into:
 
-- `dist/historical/validation/validation-<sha>.json` (see validation guide).  
-- Telemetry referenced by `telemetry_ref`.
+- `dist/historical/validation/validation-<sha>.json`, and  
+- Telemetry artifacts referenced by `telemetry_ref`.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-This methods governance document implements FAIR+CARE for **how** historical analyses are done, not just **what** data they use.
+This methods governance document applies FAIR+CARE to **how** historical analyses are done, not just **what** data they use.
 
-- **FAIR**
+### FAIR
 
-  - Methods are:
-    - **Findable** via this README, the methods index, and catalog links.  
-    - **Accessible** under CC-BY for documentation, with clear constraints for code/data usage.  
-    - **Interoperable** through use of ontologies and shared metadata vocabularies.  
-    - **Reusable** because assumptions, limitations, and governance constraints are explicit.
+- **Findable** – Methods are discoverable via:
+  - This governance guide,  
+  - The methods index, and  
+  - STAC/DCAT `kfm:method_id` fields.
 
-- **CARE**
+- **Accessible** – Method docs are CC-BY licensed and available in the repo.
 
-  - **Collective Benefit**  
-    - Methods should be chosen and tuned to support community-defined goals (education, heritage, resilience), not only technical curiosity.  
+- **Interoperable** – Methods are aligned with:
+  - CIDOC CRM, PROV-O, DCAT, STAC, OWL-Time, and GeoSPARQL,  
+  - Internal ontologies defined in KFM-OP v11.
 
-  - **Authority to Control**  
-    - For methods impacting Indigenous or community-controlled data, reviews by the Sovereignty Board or equivalent are **mandatory** before approval.  
+- **Reusable** – Governance constraints, assumptions, and caveats are explicitly documented, allowing others to safely reuse or audit methods.
 
-  - **Responsibility**  
-    - Method authors and maintainers are responsible for documenting potential harms, biases, and misinterpretations and for proposing mitigations.  
+### CARE
 
-  - **Ethics**  
-    - Methods that inherently sensationalize, decontextualize, or erase marginalized perspectives can be **rejected outright**, regardless of technical merit.
+- **Collective Benefit**  
+  Methods are prioritized when they support community goals (heritage, education, resilience) rather than only technical novelty.
+
+- **Authority to Control**  
+  For methods impacting Indigenous or sovereignty-linked data:
+  - Sovereignty Board and Indigenous partners must review and approve.  
+  - Conditions (e.g., minimum generalization) are binding.
+
+- **Responsibility**  
+  Method authors must:
+  - Document potential harms, biases, and limits.  
+  - Propose mitigations and alternatives when risks are high.
+
+- **Ethics**  
+  Methods that inherently sensationalize, decontextualize, or erase marginalized perspectives can be **rejected outright**, regardless of technical sophistication.
 
 If a method cannot be reconciled with FAIR+CARE or sovereignty policies, it must be:
 
 - Marked `rejected` or kept `experimental` and blocked from production.  
-- Clearly labeled in its doc, pipeline configs, and method registry entries.
+- Clearly labeled in:
+  - Its method doc,  
+  - The method registry, and  
+  - Any pipeline configs in which it appears.
 
 ---
 
@@ -420,7 +444,7 @@ If a method cannot be reconciled with FAIR+CARE or sovereignty policies, it must
 
 | Version   | Date       | Author / Steward                              | Summary                                                                                                 |
 |----------:|-----------:|-----------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-07 | FAIR+CARE Council · Historical Governance WG | Initial Historical Methods Governance guide; aligned with KFM-MDP v11.2.5, Historical Methods README, and Historical Governance; defined method lifecycle, registry structure, STAC/DCAT/PROV mappings, Story Node & Focus Mode constraints, and CI enforcement. |
+| v11.2.4   | 2025-12-07 | FAIR+CARE Council · Historical Governance WG | Initial Historical Methods Governance guide; aligned with KFM-MDP v11.2.4, Historical Methods README, Historical Governance, and CI/lineage standards; defined method lifecycle, registry structure, STAC/DCAT/PROV mappings, AI/Focus Mode constraints, and CI enforcement. |
 
 ---
 
@@ -429,6 +453,6 @@ If a method cannot be reconciled with FAIR+CARE or sovereignty policies, it must
 ⚖️ **Kansas Frontier Matrix — Historical Methods Governance**  
 Scientific Insight · FAIR+CARE · Sovereignty-Respecting · CI-Enforced  
 
-[📜 Historical Methods Index](./README.md) · [⚖ Historical Governance (Domain)](../governance.md) · [✅ Historical Validation](../validation.md) · [📘 Markdown Protocol v11.2.5](../../../standards/kfm_markdown_protocol_v11.2.5.md)
+[📜 Historical Methods Index](./README.md) · [⚖ Historical Governance (Domain)](../governance.md) · [✅ Historical Validation](../validation.md) · [📘 Markdown Protocol v11.2.4](../../../standards/kfm_markdown_protocol_v11.2.4.md)
 
 </div>
