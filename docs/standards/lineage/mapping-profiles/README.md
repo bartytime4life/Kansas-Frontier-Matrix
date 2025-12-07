@@ -198,10 +198,10 @@ This standard governs how **mapping profiles** are defined, versioned, and valid
 
 In practice, a mapping profile is a **config artifact** (YAML + RDF/TTL) that declares how:
 
-- KFM labels / types map to external classes,
-- KFM properties map to external predicates,
-- IRIs, identifiers, and versioning are constructed,
-- spatial/temporal information is represented (GeoJSON/GeoSPARQL + OWL-Time),
+- KFM labels / types map to external classes.
+- KFM properties map to external predicates.
+- IRIs, identifiers, and versioning are constructed.
+- Spatial/temporal information is represented (GeoJSON/GeoSPARQL + OWL-Time).
 - FAIR+CARE and sovereignty constraints are respected in what is exposed.
 
 This document is **draft / proposed** and MUST be promoted to **Active / Enforced** via governance once schemas, pipelines, and tests are in place.
@@ -221,7 +221,7 @@ This document is **draft / proposed** and MUST be promoted to **Active / Enforce
    Mapping profiles MUST prefer PROV-O, DCAT 3.0, STAC 1.x, GeoSPARQL, and OWL-Time terms before introducing KFM extensions.
 
 5. **Round-Trip Awareness**  
-   Where feasible, mapping SHOULD support round-tripping (e.g., STAC/DCAT → internal representation) without loss of core identity and provenance.
+   Where feasible, mappings SHOULD support round-tripping (e.g., STAC/DCAT → internal representation) without loss of core identity and provenance.
 
 6. **FAIR+CARE-Aligned Exposure**  
    Mapping profiles MUST be the place where sensitive fields are generalized, redacted, or omitted per FAIR+CARE and sovereignty rules, not ad-hoc in code.
@@ -240,12 +240,12 @@ This standard coordinates several modules:
   - `src/pipelines/lineage/prov_export/` — consumes mapping profiles to build PROV graphs.
 
 - **Graph & API**
-  - `src/graph/lineage/mapping/` — Neo4j loaders / cypher helpers aware of mappings.
+  - `src/graph/lineage/mapping/` — Neo4j loaders / Cypher helpers aware of mappings.
   - `src/api/lineage/prov/` — endpoints to surface mapped lineage slices.
 
 - **Data & Schemas**
   - `data/processed/lineage/` — exported graphs, catalogs, and test fixtures.
-  - `schemas/json/kfm-lineage-mapping-profile-v0.1.0.schema.json` — JSON schema for YAML mapping configs.
+  - `schemas/json/kfm-lineage-mapping-profile-v0.1.0.schema.json` — JSON Schema for YAML mapping configs.
   - `schemas/shacl/kfm-lineage-mapping-profile-shapes-v0.1.0.ttl` — SHACL for RDF mapping representations.
 
 ### 4. Author Quickstart (Mapping Profile Authors)
@@ -265,7 +265,7 @@ When adding or editing a mapping profile:
 
 4. **Run Local Validation**  
    - `mapping-profile-lint` (schema validation).
-   - `mapping-profile-crosswalk-check` (check external term validity, SHACL shapes).
+   - `mapping-profile-crosswalk-check` (external term validity, SHACL shapes).
 
 5. **Document Intent & Limitations**  
    Explain in the profile README:
@@ -283,7 +283,7 @@ When adding or editing a mapping profile:
 
 ## 🗂️ Directory Layout
 
-Canonical layout for mapping-profile–related components (using standard emojis and glyphs):
+Canonical layout for mapping-profile–related components (standard emojis, KFM tree style):
 
 ~~~text
 KansasFrontierMatrix/
@@ -297,7 +297,7 @@ KansasFrontierMatrix/
 │   │   │   └── 📂 mapping-profiles/          # STAC/DCAT/PROV mapping profiles (this standard)
 │   │   │       ├── 📄 README.md
 │   │   │       ├── 📂 profiles/              # Reusable mapping profile bundles
-│   │   │       │   ├── 📂 stac-dcat-prov/    # Default KFM crosswalks (dc./stac./prov./geo.)
+│   │   │       │   ├── 📂 stac-dcat-prov/    # Default KFM crosswalks (DCAT/STAC/PROV/GeoSPARQL)
 │   │   │       │   │   ├── 📄 README.md
 │   │   │       │   │   ├── 📄 mappings.ttl   # RDF representation of mapping profile
 │   │   │       │   │   └── 📄 examples.md    # Human-readable examples & walkthroughs
@@ -359,7 +359,7 @@ This standard sits where several KFM standards intersect:
 Operationally:
 
 - ETL pipelines create and update internal entities (files, tables, graph nodes).
-- Mapping profiles define how those entities **should appear** in STAC Collections/Items, DCAT Datasets/Distributions, and PROV-O Entities/Activities/Agents.
+- Mapping profiles define how those entities **should appear** in STAC Collections/Items, DCAT Datasets/Distributions/DataServices, and PROV-O Entities/Activities/Agents.
 - PROV-O export and catalog exporters consume mapping profiles to generate RDF/JSON artifacts.
 - Focus Mode uses those artifacts as ground truth for lineage and metadata overlays.
 
@@ -456,17 +456,17 @@ Mapping profiles are treated as **contracts** and must be validated rigorously.
 
 ### 1. Test Profiles (Extended Matrix)
 
-| Test Profile                    | Purpose                                             | Tooling / Workflow Hint                          |
-|--------------------------------|-----------------------------------------------------|--------------------------------------------------|
-| `markdown-lint`                | Docs structure & style                              | Markdownlint, custom scripts                     |
-| `schema-lint`                  | YAML front-matter validation                        | JSON Schema validator                            |
-| `metadata-check`               | Required metadata presence                          | Custom validators                                |
-| `diagram-check`               | Mermaid syntax & profile checks                     | Mermaid CLI/parser                               |
-| `accessibility-check`          | Basic a11y rules                                    | Markdown a11y tools                              |
-| `provenance-check`             | Front-matter provenance consistency                 | YAML vs footer comparison                        |
-| `footer-check`                 | Governance footer correctness                       | Regex/AST-based check                            |
-| `mapping-profile-lint`         | Mapping profile schema validation                   | JSON Schema for YAML, SHACL for RDF              |
-| `mapping-profile-crosswalk-check` | Validate external terms and crosswalk completeness | SPARQL/SHACL checks vs PROV/DCAT/STAC vocabularies |
+| Test Profile                        | Purpose                                             | Tooling / Workflow Hint                          |
+|------------------------------------|-----------------------------------------------------|--------------------------------------------------|
+| `markdown-lint`                    | Docs structure & style                              | Markdownlint, custom scripts                     |
+| `schema-lint`                      | YAML front-matter validation                        | JSON Schema validator                            |
+| `metadata-check`                   | Required metadata presence                          | Custom validators                                |
+| `diagram-check`                   | Mermaid syntax & profile checks                     | Mermaid CLI/parser                               |
+| `accessibility-check`              | Basic a11y rules                                    | Markdown a11y tools                              |
+| `provenance-check`                 | Front-matter provenance consistency                 | YAML vs footer comparison                        |
+| `footer-check`                     | Governance footer correctness                       | Regex/AST-based check                            |
+| `mapping-profile-lint`             | Mapping profile schema validation                   | JSON Schema for YAML, SHACL for RDF              |
+| `mapping-profile-crosswalk-check`  | Validate external terms and crosswalk completeness  | SPARQL/SHACL checks vs PROV/DCAT/STAC vocabularies |
 
 ### 2. Required Validation Steps for Each Profile
 
@@ -504,7 +504,7 @@ Mapping profiles themselves are **data objects**:
 
 ### 1. Minimal YAML Mapping Profile Skeleton
 
-Example (conceptual):
+Conceptual example:
 
 ~~~yaml
 id: "kfm-lineage-mapping-profile-stac-dcat-prov-v0.1.0"
@@ -561,7 +561,7 @@ property_mappings:
       - "geo:hasGeometry"
       - "geo:asWKT"
 
-faaircare:
+faircare:
   expose_properties:
     - "dct:title"
     - "dct:description"
@@ -595,13 +595,13 @@ This section is intentionally high-level; detailed crosswalks belong in concrete
 
 ### 1. KFM Dataset-Level Mappings
 
-| KFM Concept             | DCAT                       | STAC                          | PROV-O                      | Notes                                 |
-|-------------------------|----------------------------|-------------------------------|-----------------------------|---------------------------------------|
-| Logical dataset         | `dcat:Dataset`             | Collection / Item grouping    | `prov:Entity`               | Abstract dataset identity             |
-| Dataset version         | `dcat:Dataset` + versioning properties | STAC Collection/Item version fields | `prov:Entity` + `prov:wasRevisionOf` | Use DCAT 3.0 versioning where possible |
-| Dataset distribution    | `dcat:Distribution`        | STAC Asset                    | `prov:Entity`               | Files, APIs, tiles, etc.              |
-| Data service / API      | `dcat:DataService`         | STAC or OGC service           | `prov:SoftwareAgent` / Entity | API entrypoints                      |
-| Dataset series          | `dcat:DatasetSeries`       | STAC Collection hierarchy     | PROV Bundle or higher-level Entity | For recurring releases          |
+| KFM Concept             | DCAT                       | STAC                          | PROV-O                      | Notes                                         |
+|-------------------------|----------------------------|-------------------------------|-----------------------------|-----------------------------------------------|
+| Logical dataset         | `dcat:Dataset`             | Collection / Item grouping    | `prov:Entity`               | Abstract dataset identity                     |
+| Dataset version         | `dcat:Dataset` + versioning properties | STAC Collection/Item version fields | `prov:Entity` + `prov:wasRevisionOf` | Use DCAT 3.0 versioning where possible       |
+| Dataset distribution    | `dcat:Distribution`        | STAC Asset                    | `prov:Entity`               | Files, APIs, tiles, etc.                      |
+| Data service / API      | `dcat:DataService`         | STAC API / OGC service        | `prov:SoftwareAgent` / Entity | API entrypoints                             |
+| Dataset series          | `dcat:DatasetSeries`       | STAC Collection hierarchy     | PROV Bundle or higher-level Entity | For recurring releases / dataset series |
 
 ### 2. Lineage & Process Mappings
 
@@ -643,8 +643,8 @@ Mapping profiles SHOULD specify:
 
 - **Export Pipelines**  
   - Use mapping engine outputs to:
-    - Write artifacts to `data/processed/lineage/`,
-    - Publish STAC/DCAT endpoints,
+    - Write artifacts to `data/processed/lineage/`.
+    - Publish STAC/DCAT endpoints.
     - Populate lineage triple store or Neo4j lineage graph.
 
 - **APIs & UI**  
@@ -713,4 +713,3 @@ Deterministic Crosswalks · Open Provenance · FAIR+CARE-Aligned Semantics
 [📘 Docs Root](../../../) · [📂 Lineage Standards Index](../README.md) · [⚖ Governance](../../../governance/ROOT-GOVERNANCE.md)
 
 </div>
-
