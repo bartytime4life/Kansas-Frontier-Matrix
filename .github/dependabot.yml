@@ -1,7 +1,7 @@
 # 🧩 Kansas Frontier Matrix — Dependabot Configuration (MCP v6.3 · FAIR+CARE Certified)
 # File: .github/dependabot.yml
 # Purpose: Automate dependency updates, security alert triage, and ecosystem version governance.
-# Alignment: MCP-DL v6.3 · KFM-MDP v11.2.2 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# Alignment: MCP-DL v6.3 · KFM-MDP v11.2.4 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  [oai_citation:0‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)
 # SPDX-License-Identifier: MIT
 
 version: 2
@@ -9,7 +9,7 @@ version: 2
 updates:
 
   # ============================================================
-  # 🐍 Python — Core Application and Pipelines (root)
+  # 🐍 Python — Core Application and Pipelines (repo root)
   # ============================================================
   - package-ecosystem: "pip"
     directory: "/"
@@ -43,7 +43,7 @@ updates:
           - "*"
 
   # ============================================================
-  # 🧱 Node.js — Web Frontend
+  # 🧱 Node.js — Web Frontend (/web)
   # ============================================================
   - package-ecosystem: "npm"
     directory: "/web"
@@ -171,6 +171,8 @@ updates:
           - "patch"
         patterns:
           - "*"
+# Note: Graph/GeoSPARQL-related deps must remain compatible with KFM-OP v11
+# and GeoSPARQL 1.0/1.1 semantics for feature/geometry modeling.  [oai_citation:1‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)
 
   # ============================================================
   # 📦 Data Validation — FAIR+CARE Compliance Tooling
@@ -205,7 +207,7 @@ updates:
 # ============================================================
 # • All Dependabot PRs are subject to the same CI/CD and governance gates as manual PRs:
 #    - .github/workflows/kfm-ci.yml              → core lint, tests, schema checks
-#    - .github/workflows/docs_validate.yml       → KFM-MDP v11.2.2 markdown & front-matter
+#    - .github/workflows/docs_validate.yml       → KFM-MDP v11.2.4 markdown & front-matter  [oai_citation:2‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)
 #    - .github/workflows/stac_validate.yml       → STAC Items/Collections (where relevant)
 #    - .github/workflows/dcat_validate.yml       → DCAT datasets (where relevant)
 #    - .github/workflows/faircare_validate.yml   → FAIR+CARE and sovereignty checks
