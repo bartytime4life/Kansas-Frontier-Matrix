@@ -300,18 +300,18 @@ This document is the **entry point** for new contributors and automated agents: 
 
 ~~~mermaid
 flowchart LR
-    subgraph Repo[Monorepo]
-        A[docs/ standards & guides] --> B[src/ pipelines]
-        B --> C[data/ processed & stac/]
-        C --> D[src/ graph · Neo4j]
-        D --> E[src/ api · GraphQL/FastAPI]
-        E --> F[web clients · Map/3D/Focus Mode]
+    subgraph Repo["Monorepo (code + docs)"]
+        A["docs/ - standards & guides"] --> B["src/pipelines/ - ETL & AI"]
+        B --> C["data/processed/ & data/stac/ - published data"]
+        C --> D["src/graph/ - Neo4j knowledge graph"]
+        D --> E["src/api/ - GraphQL / FastAPI"]
+        E --> F["web/ - map, 3D, Focus Mode"]
     end
 
-    subgraph Lineage[Lineage & Provenance]
-        B -. OpenLineage .-> G[Runtime Lineage Bus]
-        B --> H[PROV-O Export]
-        H --> I[Lineage Store (RDF/Graph)]
+    subgraph Lineage["Lineage & provenance"]
+        B -.-> G["OpenLineage runtime bus"]
+        B --> H["PROV-O export pipeline"]
+        H --> I["Lineage store (RDF + graph)"]
         I --> F
     end
 ~~~
