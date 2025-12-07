@@ -27,7 +27,7 @@ commit_sha: "<latest-commit-hash>"
 provenance_chain:
   - version: "v11.2.4"
     date: "2025-12-07"
-    activity: "Historical analyses overview aligned to KFM-MDP v11.2.4; directory layout emoji formatting normalized; catalog/provenance sections added."
+    activity: "Historical analyses overview aligned to KFM-MDP v11.2.4; directory layout emoji formatting normalized; catalog/provenance sections added; footer updated to emoji profile."
     wasDerivedFrom: "v10.2.2"
   - version: "v10.2.2"
     date: "2025-11-11"
@@ -115,6 +115,8 @@ This overview README:
 
 ```bash
 📁 data/
+├── 📁 sources/
+│   └── 📁 historical/              # Source manifests: license, URIs, acquisition metadata
 ├── 📁 raw/
 │   └── 📁 historical/              # Original downloads / scans / rasters
 ├── 📁 work/
@@ -140,7 +142,7 @@ This overview README:
         └── 📁 historical/          # Story Node configs + layouts for the UI
 ```
 
-These structures must remain source-of-truth for where new historical analyses, datasets, and Story Node configurations are added.
+These structures remain the source of truth for where new historical analyses, datasets, and Story Node configurations are added.
 
 ---
 
@@ -277,7 +279,7 @@ When creating a new historical Story Node, authors should:
 
 | Principle              | Implementation                                              | Verification / Location                  |
 |------------------------|-------------------------------------------------------------|------------------------------------------|
-| **Findable**           | Indexed via STAC/DCAT + CIDOC CRM tags                     | `datasets/metadata/`                     |
+| **Findable**           | Indexed via STAC/DCAT + CIDOC CRM tags                     | `docs/analyses/historical/datasets/metadata/` |
 | **Accessible**         | CC-BY / public-domain access when allowed                  | FAIR+CARE ledger entries                 |
 | **Interoperable**      | JSON-LD / GeoJSON / TEI / EAD where appropriate            | Telemetry + schema validation            |
 | **Reusable**           | Full provenance & citation metadata per dataset            | `manifest_ref`, PROV logs                |
@@ -349,7 +351,7 @@ Ledger entries are stored alongside sustainability audits in:
 
 | Version     | Date       | Author / Steward              | Summary                                                                 |
 |-------------|------------|------------------------------|-------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-07 | FAIR+CARE Council            | Aligned with KFM-MDP v11.2.4; normalized emoji directory trees; added STAC/DCAT/PROV alignment, diagrams, Story Node & Focus Mode integration, and CI/CD sections. |
+| **v11.2.4** | 2025-12-07 | FAIR+CARE Council            | Aligned with KFM-MDP v11.2.4; normalized emoji directory trees; added STAC/DCAT/PROV alignment, diagrams, Story Node & Focus Mode integration, CI/CD sections, and emoji footer. |
 | **v10.2.2** | 2025-11-11 | FAIR+CARE Council            | Historical module overview; metrics and CIDOC CRM mapping verified.     |
 | **v10.2.1** | 2025-11-09 | Historical Integration Group | Added archival–geospatial linkage & population dynamics workflow.       |
 | **v10.2.0** | 2025-11-09 | KFM Humanities Team          | Initial release aligned with FAIR+CARE and ISO governance.              |
@@ -358,9 +360,11 @@ Ledger entries are stored alongside sustainability audits in:
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+© 2025 Kansas Frontier Matrix Project · 🧭 KFM Core  
 
-[Back to Analyses Index](../README.md) · [Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md) · [Markdown Protocol v11.2.4](../../standards/kfm_markdown_protocol_v11.2.4.md)
+📜 Master Coder Protocol v6.3 · ⚖️ FAIR+CARE Certified  
+💠 Diamond⁹ Ω · 👑 Crown∞Ω Ultimate Certified  
+
+🔙 [Back to Analyses Index](../README.md) · 📜 [Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md) · 📘 [Markdown Protocol v11.2.4](../../standards/kfm_markdown_protocol_v11.2.4.md)
 
 </div>
