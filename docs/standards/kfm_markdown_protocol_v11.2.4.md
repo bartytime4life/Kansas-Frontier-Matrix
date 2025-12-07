@@ -1,19 +1,19 @@
 ---
-title: "📑 Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4"
-path: "docs/standards/kfm_markdown_protocol_v11.2.4.md"
-version: "v11.2.4"
-last_updated: "2025-12-04"
+title: "📑 Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.5"
+path: "docs/standards/kfm_markdown_protocol_v11.2.5.md"
+version: "v11.2.5"
+last_updated: "2025-12-06"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Annual · FAIR+CARE Council & Focus Mode Board"
 content_stability: "stable"
 commit_sha: "<latest-commit-hash>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/markdown-protocol-v11.2.4.json"
+signature_ref: "releases/v11.2.5/signature.sig"
+attestation_ref: "releases/v11.2.5/slsa-attestation.json"
+sbom_ref: "releases/v11.2.5/sbom.spdx.json"
+manifest_ref: "releases/v11.2.5/manifest.zip"
+telemetry_ref: "releases/v11.2.5/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/markdown-protocol-v11.2.5.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 governance_ref: "../governance/ROOT-GOVERNANCE.md"
@@ -21,7 +21,7 @@ ethics_ref: "../faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.4"
+markdown_protocol_version: "KFM-MDP v11.2.5"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -48,7 +48,7 @@ jurisdiction: "Kansas / United States"
 indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
 ttl_policy: "24 months"
-sunset_policy: "Supersedes KFM-MDP v11.2.2"
+sunset_policy: "Supersedes KFM-MDP v11.2.4"
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "TechArticle"
@@ -61,6 +61,7 @@ metadata_profiles:
   - "PROV-O"
   - "FAIR+CARE"
 provenance_chain:
+  - "docs/standards/kfm_markdown_protocol_v11.2.4.md@v11.2.4"
   - "docs/standards/kfm_markdown_protocol_v11.2.3.md@v11.2.3"
   - "docs/standards/kfm_markdown_protocol_v11.2.2.md@v11.2.2"
   - "docs/standards/kfm_markdown_protocol_v11.2.1.md@v11.2.1"
@@ -72,13 +73,13 @@ provenance_requirements:
   newest_first: true
   must_reference_superseded: true
   must_reference_origin_root: true
-json_schema_ref: "schemas/json/kfm-markdown-protocol-v11.2.4.schema.json"
-shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.4-shape.ttl"
+json_schema_ref: "schemas/json/kfm-markdown-protocol-v11.2.5.schema.json"
+shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.5-shape.ttl"
 story_node_refs: []
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:standards:markdown-protocol:v11.2.4"
-semantic_document_id: "kfm-markdown-protocol-v11.2.4"
-event_source_id: "ledger:kfm:doc:standards:markdown-protocol:v11.2.4"
+doc_uuid: "urn:kfm:doc:standards:markdown-protocol:v11.2.5"
+semantic_document_id: "kfm-markdown-protocol-v11.2.5"
+event_source_id: "ledger:kfm:doc:standards:markdown-protocol:v11.2.5"
 doc_integrity_checksum: "<sha256>"
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -159,14 +160,14 @@ deprecated_fields:
 
 <div align="center">
 
-# 📑 **Kansas Frontier Matrix — Markdown Authoring Protocol v11.2.4**  
-`docs/standards/kfm_markdown_protocol_v11.2.4.md`
+# 📑 **Kansas Frontier Matrix — Markdown Authoring Protocol v11.2.5**  
+`docs/standards/kfm_markdown_protocol_v11.2.5.md`
 
 **Purpose:**  
-Define the canonical, enforceable Markdown authoring rules for the Kansas Frontier Matrix (KFM) v11.2.4.  
+Define the canonical, enforceable Markdown authoring rules for the Kansas Frontier Matrix (KFM) v11.2.5.  
 This protocol standardizes structure, headings, metadata, and narrative patterns so that all Markdown in the monorepo is CI-safe, FAIR+CARE-aligned, semantically interoperable, and ready for advanced Story Node / Focus Mode integration.
 
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue "Master Coder Protocol v6.3")]() · [![KFM-MDP v11.2.4](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.4-informational "Markdown Protocol v11.2.4")]() · [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold "FAIR+CARE Compliant")]() · [![WCAG AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet "WCAG 2.1 AA+")]() · [![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen "Status: Active & Enforced")]()
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue "Master Coder Protocol v6.3")]() · [![KFM-MDP v11.2.5](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.5-informational "Markdown Protocol v11.2.5")]() · [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold "FAIR+CARE Compliant")]() · [![WCAG AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet "WCAG 2.1 AA+")]() · [![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen "Status: Active & Enforced")]()
 
 </div>
 
@@ -176,7 +177,7 @@ This protocol standardizes structure, headings, metadata, and narrative patterns
 
 ### 1. Scope and Intent
 
-KFM-MDP v11.2.4 governs **all Markdown files** within the Kansas Frontier Matrix monorepo, regardless of domain (ETL pipelines, graph schemas, AI docs, UI specs, archaeology analyses, hydrology notes, etc.). If it is `.md` and lives in the repository, this protocol applies.
+KFM-MDP v11.2.5 governs **all Markdown files** within the Kansas Frontier Matrix monorepo, regardless of domain (ETL pipelines, graph schemas, AI docs, UI specs, archaeology analyses, hydrology notes, etc.). If it is `.md` and lives in the repository, this protocol applies.
 
 This version:
 
@@ -364,6 +365,7 @@ Diagrams are encouraged to illustrate concepts, but they must adhere to strict r
        2025-11-26 : v11.2.1 : "Provenance Hardening"
        2025-11-27 : v11.2.2 : "Heading Registry & Transform Rules"
        2025-12-04 : v11.2.4 : "Semantic Alignment & AI Integration"
+       2025-12-06 : v11.2.5 : "Metadata Refinements & Unified Markdown Alignment"
    ~~~
 
 5. **Accessibility (A11y) Considerations**
@@ -396,7 +398,7 @@ A *Story Node* is a JSON-based narrative element with text and a spatiotemporal 
   Story Nodes may refer to a document or a specific section via a `target` identifier. For example:
 
   ~~~text
-  "target": "kfm-markdown-protocol-v11.2.4"
+  "target": "kfm-markdown-protocol-v11.2.5"
   ~~~
 
 - **Referencing Story Nodes from docs:**  
@@ -413,7 +415,7 @@ Rules:
 
 ### 2. Focus Mode Behavior
 
-When a user activates Focus Mode on this document (i.e., focusing the UI or AI assistant on `kfm-markdown-protocol-v11.2.4`):
+When a user activates Focus Mode on this document (i.e., focusing the UI or AI assistant on `kfm-markdown-protocol-v11.2.5`):
 
 - **Focus Mode MAY:**
 
@@ -519,7 +521,7 @@ If any of these fail, CI blocks the merge.
 |------------------------|-----------------------------------------------|---------------------------------------------|
 | `markdown-lint`        | Structural and style linting                  | Markdownlint, custom lint scripts           |
 | `schema-lint`          | YAML front-matter schema validation           | JSON Schema validator                       |
-| `metadata-check`       | Required metadata presence/format             | Custom validation scripts                    |
+| `metadata-check`       | Required metadata presence/format             | Custom validation scripts                   |
 | `diagram-check`        | Mermaid diagram syntax/profile check          | Mermaid CLI/parser                          |
 | `accessibility-check`  | Basic accessibility structure checks          | Markdown a11y tools / axe-like checks       |
 | `provenance-check`     | Provenance chain and version history          | Custom script comparing YAML vs footer      |
@@ -681,10 +683,10 @@ In PROV-O:
 
 - Each version is a `prov:Entity` and specifically a `prov:Plan`.
 - Versioning relationships:
-  - `v11.2.4 prov:wasDerivedFrom v11.2.2` (and earlier).
+  - `v11.2.5 prov:wasDerivedFrom v11.2.4` (and earlier).
   - `provenance_chain` encodes this in YAML; a converter can export it as PROV RDF.
 - Creation/update events:
-  - Release activities (e.g., `ex:release_v11_2_4`) are `prov:Activity`.
+  - Release activities (e.g., `ex:release_v11_2_5`) are `prov:Activity`.
   - Architects/councils are `prov:Agent` (often `prov:Organization`).
   - `prov:wasGeneratedBy` links the entity (doc version) to its release activity.
   - `prov:wasAssociatedWith` links activity to agents.
@@ -748,21 +750,22 @@ This standard embeds FAIR and CARE principles into documentation:
 
 ## 🕰️ Version History
 
-| Version   | Date       | Summary                                                                                                           |
-|----------:|------------|-------------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-04 | Based on v11.2.2, incorporating new governance rules (MCP 2.0, Architect feedback) and project updates. Added STAC/DCAT/PROV alignment section, extended Focus Mode & Story Node guidance, and refined CI enforcement. |
-| v11.2.3  | 2025-12-02 | Interim update refining transform permissions and semantic indexing prep for Focus Mode (no structural changes; draft only). |
-| v11.2.2  | 2025-11-27 | Introduced heading registry, transform rules, expanded metadata/provenance fields, unified YAML front-matter structure, and tightened anti-pattern definitions. |
-| v11.2.1  | 2025-11-26 | Added profile system, stronger provenance chain enforcement, and stricter DCAT/STAC metadata requirements.         |
-| v11.2.0  | 2025-11-25 | Major overhaul for KFM v11: re-architected front-matter, added header/footer profiles, CI test profiles, and diagram usage rules. |
-| v11.0.1  | 2025-11-20 | Initial KFM v11 release consolidating markdown rules under the new ontology and governance framework.             |
-| v10.4.3  | 2023-11-10 | Legacy markdown rules (pre-KFM) covering basic front-matter, H1–H4 structure, and minimal README templates.       |
+| Version     | Date       | Summary                                                                                                           |
+|------------:|------------|-------------------------------------------------------------------------------------------------------------------|
+| **v11.2.5** | 2025-12-06 | Minor revision based on v11.2.4, aligning metadata fields and examples with unified Markdown usage; updated provenance_chain and exemplar identifiers; no structural changes. |
+| v11.2.4     | 2025-12-04 | Based on v11.2.2, incorporating new governance rules (MCP 2.0, Architect feedback) and project updates. Added STAC/DCAT/PROV alignment section, extended Focus Mode & Story Node guidance, and refined CI enforcement. |
+| v11.2.3     | 2025-12-02 | Interim update refining transform permissions and semantic indexing prep for Focus Mode (no structural changes; draft only). |
+| v11.2.2     | 2025-11-27 | Introduced heading registry, transform rules, expanded metadata/provenance fields, unified YAML front-matter structure, and tightened anti-pattern definitions. |
+| v11.2.1     | 2025-11-26 | Added profile system, stronger provenance chain enforcement, and stricter DCAT/STAC metadata requirements.         |
+| v11.2.0     | 2025-11-25 | Major overhaul for KFM v11: re-architected front-matter, added header/footer profiles, CI test profiles, and diagram usage rules. |
+| v11.0.1     | 2025-11-20 | Initial KFM v11 release consolidating markdown rules under the new ontology and governance framework.             |
+| v10.4.3     | 2023-11-10 | Legacy markdown rules (pre-KFM) covering basic front-matter, H1–H4 structure, and minimal README templates.       |
 
 ---
 
 <div align="center">
 
-📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4**  
+📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.5**  
 Scientific Insight · Documentation-First · FAIR+CARE Ethics · Sustainable Intelligence  
 
 [📘 Docs Root](..) · [📂 Standards Index](./README.md) · [⚖ Governance](../governance/ROOT-GOVERNANCE.md)
