@@ -462,4 +462,3 @@ The Soil & Ecology Pipelines group and FAIR+CARE Council are responsible for:
 [⬅️ Soil Pipelines Index](../README.md) · [⚒️ SDA Async Pattern](../sda-async/README.md) · [⚖️ Root Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-y
