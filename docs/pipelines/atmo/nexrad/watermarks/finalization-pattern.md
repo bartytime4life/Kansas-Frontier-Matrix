@@ -86,9 +86,11 @@ scope:
 
 ---
 
-## 1. 🧭 Purpose
+## 📘 Overview
 
-This pattern defines the authoritative KFM v11.2.4 method for applying **event-time watermarks** and **finalization delays** to NEXRAD Level‑II ingestion.
+### Purpose
+
+This pattern defines the authoritative KFM v11.2.4 method for applying **event-time watermarks** and **finalization delays** to NEXRAD Level-II ingestion.
 
 It ensures that:
 
@@ -96,11 +98,54 @@ It ensures that:
 - Event-time processing is **deterministic across replay** (WAL + reprocessing).  
 - Downstream atmospheric products (Focus Mode, Story Nodes, Mesh Atlases, risk layers) see only **stable, reproducible volumes**.
 
-It is a **specialization** of the **Event‑Driven Deterministic Ingestion & Promotion Pattern** for NEXRAD atmospheric data.
+It is a **specialization** of the **Event-Driven Deterministic Ingestion & Promotion Pattern** for NEXRAD atmospheric data.
 
 ---
 
-## 2. 📡 Why Event-Time Watermarks Matter
+## 🗂️ Directory Layout
+
+```text
+📁 docs/
+└── 📁 pipelines/
+    └── 📁 atmo/
+        └── 📁 nexrad/
+            └── 📁 watermarks/
+                📄 finalization-pattern.md      # ← This file
+                📁 examples/
+                │   📄 minimal-flow.md          # Small end-to-end example
+                │   📄 replay-behavior.md       # Replay determinism analysis
+                │   📄 qa-tests.md              # QA test matrix & edge cases
+                └── 📁 design/
+                    📄 vcp-delay-rationale.md   # VCP-aware delay rationale
+
+📁 src/
+└── 📁 pipelines/
+    └── 📁 atmo/
+        └── 📁 nexrad/
+            📄 config_watermarks.yaml           # Lateness buffers & VCP delays
+            📄 ingest_stream.py                 # NEXRAD event ingestion
+            📄 watermark_logic.py               # Event-time / watermark implementation
+            📄 finalization_job.sql             # Streaming SQL / job definition
+            📄 stac_emit.py                     # STAC Item & Collection emission
+
+📁 data/
+└── 📁 processed/
+    └── 📁 atmo/
+        └── 📁 nexrad/
+            📁 preview/                         # Optional preview-only products
+            📁 final/                           # Final, watermark-stable products
+
+📁 data/
+└── 📁 stac/
+    └── 📁 atmo/
+        └── 📁 nexrad/
+            📁 preview/                         # STAC Collections/Items for preview
+            📁 final/                           # STAC Collections/Items for final datasets
+```
+
+---
+
+## 🧭 Context
 
 NEXRAD volume scans arrive:
 
@@ -108,8 +153,8 @@ NEXRAD volume scans arrive:
 - In **bursts**,  
 - With **variable completion times** due to:
   - VCP mode,  
-  - SAILS / MESO‑SAILS,  
-  - AVSET / range‑dependent termination.
+  - SAILS / MESO-SAILS,  
+  - AVSET / range-dependent termination.
 
 This introduces three hazards:
 
@@ -133,52 +178,43 @@ This introduces three hazards:
 
 ---
 
-## 3. 🧱 Canonical Pattern Overview
+## 🧱 Architecture
 
-### 3.1 Principles
+### Canonical pattern overview
 
-- **Event time dominates ingest time**  
-  - All windows and aggregations use `event_time` as the primary clock.  
+**Key principles:**
 
-- **Watermark definition**  
-  - `watermark(event_time) = event_time - lateness_buffer`.  
+- **Event time > ingest time** (always)  
+- Watermark = `event_time - lateness_buffer`  
+- Finalization requires:
+  - **Observed completeness** of a volume, plus  
+  - **VCP-aligned delay** (Section 🕒 Choosing the Finalization Delay)  
+- Deterministic **idempotent upsert** keyed by:
 
-- **Finalization** requires both:  
-  - Observed volume completeness (all expected tilts/records), **and**  
-  - A **VCP-specific finalization delay** to absorb late stragglers.
+```text
+(radar_id, volume_id, product_code)
+```
 
-- **Idempotent final upsert**, keyed by:
-
-  ```text
-  (radar_id, volume_id, product_code)
-  ```
-
-  and version-tagged for STAC/graph.
-
-### 3.2 Preview vs Final Layers
+#### Preview vs final
 
 | Layer       | Purpose                    | When it Publishes                                 |
 |------------|----------------------------|---------------------------------------------------|
 | **Preview** | Early map responsiveness   | On watermark closure (may be partial / provisional) |
 | **Final**   | Stable, authoritative data | After VCP-specific delay & volume completeness    |
 
-Rules:
+Preview products must be **visually distinct** and clearly marked as non-final; only final products are:
 
-- Preview products must be **visually distinct** and clearly marked as **non-final**.  
-- Only final products are:
-  - Indexed into canonical STAC/DCAT collections,  
-  - Inserted into the production Neo4j graph,  
-  - Used as Story Node / Focus Mode baselines.
+- Indexed into canonical STAC/DCAT collections,  
+- Inserted into the production Neo4j graph,  
+- Used as Story Node / Focus Mode baselines.
 
 ---
 
-## 4. 📡 Implementation Model (Streaming)
+### Implementation model (streaming)
 
-This pattern is typically implemented using streaming frameworks (e.g., Flink SQL, Beam), but the semantics are framework-independent.
+The pattern is generally implemented in a streaming framework (Flink, Beam, etc.), but the semantics are framework-agnostic.
 
-### 4.1 Event-time & watermark definition (Flink SQL example)
-
-Preview window (1‑minute tumbling) with watermark lag:
+#### Event-time & watermark definition (Flink SQL example)
 
 ```sql
 CREATE TABLE nexrad_raw (
@@ -191,12 +227,12 @@ CREATE TABLE nexrad_raw (
 );
 ```
 
-This guarantees:
+This ensures:
 
 - Event-time order and late data handling are explicit.  
-- Lateness tolerance (`2` minutes here) is **versioned configuration**, not a magic constant.
+- Lateness tolerance is a **configurable parameter**, not a hard-coded constant.
 
-### 4.2 Finalization stage (volume aggregation)
+#### Finalization stage (volume aggregation)
 
 ```sql
 INSERT INTO nexrad_final
@@ -212,14 +248,14 @@ HAVING CURRENT_WATERMARK(event_time) >= MAX(event_time) + INTERVAL '7' MINUTE;
 
 Semantics:
 
-- Aggregation waits until the **current watermark** passes  
+- Aggregation waits until `CURRENT_WATERMARK(event_time)` passes  
   `MAX(event_time) + finalization_delay`.  
-- Finalization delay is **VCP-aware** (Section 5).  
-- A given `(radar_id, volume_id, product_code)` emits **exactly one final record**.
+- Finalization delay is **VCP-aware**.  
+- Each `(radar_id, volume_id, product_code)` emits **exactly one final record**.
 
 ---
 
-## 5. 🕒 Choosing the Finalization Delay
+### 🕒 Choosing the finalization delay
 
 Finalization delay **must** be tied to the VCP and operational behavior of the radar:
 
@@ -227,199 +263,152 @@ Finalization delay **must** be tied to the VCP and operational behavior of the r
 |-------------------------|------------------|------------------------|
 | **12 / 212**            | ~4.5–5 min       | 5 min                  |
 | **215 / 35**            | ~6–7 min         | 7 min                  |
-| **SAILS / MESO‑SAILS**  | Low-level bursts | +1 min additional buffer |
+| **SAILS / MESO-SAILS**  | Burst low-level cuts | +1 min buffer      |
 
-Guidelines:
+Effective delay per volume:
 
-- The **effective delay** per volume is:
-
-  ```text
-  finalization_delay(vcp, sails_state) =
-    base_delay(vcp) + sails_buffer(vcp, sails_state)
-  ```
-
-- Finalization delay parameters must be:
-
-  - Captured in configuration (YAML/JSON) under `src/pipelines/atmo/nexrad/config/`,  
-  - Logged in PROV‑O as part of the `Activity` parameters,  
-  - Included in telemetry for each run.
-
-Changes to delay logic are **backward-incompatible behavior changes** and must:
-
-- Bump the pattern version or pipeline version, and  
-- Be documented in Version History with rationale.
-
----
-
-## 6. 🔒 Deterministic Behavior Requirements
-
-### 6.1 Idempotency
-
-Final outputs must be **idempotent**:
-
-- Final STAC Items and downstream products are keyed by:
-
-  ```text
-  (radar_id, volume_id, product_code)
-  ```
-
-- Reprocessing the same input stream with the same:
-
-  - Code version,  
-  - Config,  
-  - Seeds,  
-
-  must generate **bit-identical outputs** (up to allowed floating-point tolerances).
-
-### 6.2 Replay safety
-
-Under WAL or queue replay:
-
-- Watermarks must advance identically;  
-- Windows must open and close at the same **event times**;  
-- The set of final volumes produced must be identical.
+```text
+finalization_delay(vcp, sails_state) =
+  base_delay(vcp) + sails_buffer(vcp, sails_state)
+```
 
 Requirements:
 
-- No hidden `now()` in logic;  
-- No dependencies on wall-clock ingestion order;  
-- All randomness must use fixed, logged seeds.
+- Delay parameters must live in **versioned config** (e.g., `config_watermarks.yaml`).  
+- Delay values must be **recorded in PROV-O** for each run.  
+- Adjustments require:
+  - Governance sign-off,  
+  - Version history updates,  
+  - Regression tests for replay determinism.
 
-### 6.3 STAC, graph, and CARE integration
+---
+
+### 🔒 Deterministic behavior requirements
+
+#### Idempotency
+
+Final outputs must be **idempotent**:
+
+- Final STAC Items and downstream products are keyed by `(radar_id, volume_id, product_code)`.  
+- Reprocessing with identical:
+  - Inputs,  
+  - Code,  
+  - Config,  
+  - Seeds,  
+
+  yields **bit-identical** outputs (within defined numeric tolerances).
+
+#### Replay safety
+
+Under WAL/queue replay:
+
+- Watermarks advance identically.  
+- Windows open/close at the same event times.  
+- Final volume set and manifests are identical.
+
+Therefore:
+
+- No `now()` / wall-clock use inside business logic.  
+- Any randomness must be:
+  - Seeded deterministically,  
+  - Logged in PROV & telemetry.
+
+#### STAC, graph, and CARE integration
 
 - **STAC**:
-  - Preview products (if cataloged) must live under a **preview** namespace/collection,  
-  - Final products are cataloged under the authoritative NEXRAD Collection,  
-  - STAC Item properties must include:
+  - Preview products (if cataloged) → preview collections.  
+  - Final products → authoritative NEXRAD collections.  
+  - Required properties include:
     - `nexrad:radar_id`, `nexrad:volume_id`, `nexrad:vcp`,  
     - `kfm:watermark_lag`, `kfm:finalization_delay`,  
     - `openlineage:runId`, `kfm:provenance_ref`, `kfm:telemetry_ref`.
 
 - **Neo4j**:
-  - Nodes such as `:RadarVolume`, `:RadarProduct`, `:RadarScanRun` link:
+  - Node types:
+    - `:RadarVolume`, `:RadarProduct`, `:RadarScanRun`.  
+  - Key relationships:
     - `(:RadarVolume)-[:HAS_PRODUCT]->(:RadarProduct)`,  
     - `(:RadarProduct)-[:PRODUCED_BY]->(:RadarScanRun)`.
 
 - **CARE & masking**:
-  - When radar products intersect:
-    - Tribal lands,  
-    - Emergency response overlays,  
-    - Sensitive infrastructure footprints,  
+  - If NEXRAD derivatives are combined with:
+    - Tribal land boundaries,  
+    - Emergency response or shelter locations,  
+    - Critical infrastructure,  
 
-    views used in public contexts must apply:
+    then public-facing layers must apply:
 
-    - Spatial generalization (e.g., H3), or  
-    - Data suppression policies documented in PROV & audit logs.
-
----
-
-## 7. 📁 Directory Layout
-
-```text
-📁 docs/
-└── 📁 pipelines/
-    └── 📁 atmo/
-        └── 📁 nexrad/
-            └── 📁 watermarks/
-                📄 finalization-pattern.md      # ← This file
-                📁 examples/
-                │   📄 minimal-flow.md        # Small end-to-end example
-                │   📄 replay-behavior.md     # Replay determinism analysis
-                │   📄 qa-tests.md            # QA test matrix & edge cases
-                └── 📁 design/
-                    📄 vcp-delay-rationale.md # VCP-aware delay rationale
-
-📁 src/
-└── 📁 pipelines/
-    └── 📁 atmo/
-        └── 📁 nexrad/
-            ├── 📄 config_watermarks.yaml     # Lateness buffers & VCP delays
-            ├── 📄 ingest_stream.py           # NEXRAD event ingestion
-            ├── 📄 watermark_logic.py         # Event-time / watermark implementation
-            ├── 📄 finalization_job.sql       # Streaming SQL / job definition
-            └── 📄 stac_emit.py               # STAC Item & Collection emission
-
-📁 data/
-└── 📁 processed/
-    └── 📁 atmo/
-        └── 📁 nexrad/
-            ├── 📁 preview/                   # Optional preview-only products
-            └── 📁 final/                     # Final, watermark-stable products
-
-📁 data/
-└── 📁 stac/
-    └── 📁 atmo/
-        └── 📁 nexrad/
-            ├── 📁 preview/                   # STAC Collections/Items for preview
-            └── 📁 final/                     # STAC Collections/Items for final datasets
-```
+    - Spatial generalization (e.g., H3), and/or  
+    - Redaction, per `docs/standards/data-generalization/`.
 
 ---
 
-## 8. 🧪 QA / CI Checks
+## 🧪 Validation & CI/CD
 
-All **atmospheric pipelines** implementing this pattern must pass the following QA/CI checks (per dataset/product):
+All **atmospheric pipelines** implementing this pattern must pass the following QA/CI checks:
 
 - **Watermark Drift Check**  
-  - Verify that computed watermarks are **consistent across replays** and code versions.  
+  - Ensure computed watermarks and window closures **match** across replay scenarios.
 
 - **Replay Consistency Check**  
-  - Run a controlled replay (same inputs) and assert:
-    - Identical set of final volumes,  
-    - Identical metadata and STAC manifests.
+  - Given a fixed input corpus:
+    - Final volume IDs and counts match,  
+    - STAC manifests and key metadata fields match.
 
 - **Volume Completeness Audit**  
-  - Ensure final products include **all expected tilts/records** per VCP configuration.  
-  - Flag missing cuts or abnormal scan counts.
+  - For each final volume:
+    - All expected tilts/cuts present for the VCP,  
+    - No unexpected duplicates or missing scans.
 
 - **VCP-Delay Enforcement Test**  
-  - Confirm finalization delay is applied correctly per VCP and SAILS/MESO‑SAILS settings.  
+  - Validate that effective delays conform to config for each VCP and SAILS/MESO state.
 
 - **STAC Integrity Test**  
-  - Validate STAC Collections/Items against `KFM-STAC v11` profiles.  
+  - Validate STAC Collections/Items against KFM STAC schemas and profiles.
 
 - **Telemetry Coverage Test**  
-  - Ensure telemetry entries exist, conforming to `patterns/nexrad-watermark-v1.json`, covering:
-    - Watermark lag distributions,  
-    - Event-to-final latency,  
+  - Confirm telemetry records exist per run with:
+    - Latency distributions,  
+    - Watermark lag,  
+    - Finalization delay,  
     - Volume counts,  
-    - Energy and CO₂e estimates per run.
+    - Energy & CO₂e estimates.
 
-CI workflows (e.g., `.github/workflows/atmo-nexrad-watermarks.yml`) must fail if:
+CI workflows (e.g., `.github/workflows/atmo-nexrad-watermarks.yml`) must **fail** when:
 
-- Any QA test fails, or  
-- STAC/PROV/telemetry artifacts cannot be produced or validated.
+- Any of the above checks fail, or  
+- Required STAC/PROV/telemetry artifacts are missing or invalid.
 
 ---
 
-## 9. 🧠 Story Node & Focus Mode Integration
+## 🧠 Story Node & Focus Mode Integration
 
-NEXRAD watermarked products drive several atmospheric Story Nodes:
+NEXRAD products governed by this pattern power multiple atmospheric Story Nodes, including:
 
 - **“Fast Storms, Stable Data”**  
-  - Explains how event-time watermarks prevent map flicker and inconsistent products.  
+  - Focus: why UX remains stable during rapidly evolving convective events.  
 
 - **“Radar Volumes & Flash Flood Storylines”**  
-  - Uses finalized reflectivity/derivative fields as stable baselines for hydrology overlays.
+  - Focus: how finalized volumes feed hydrology and flood-risk narratives.
 
-Pattern requirements for Story Nodes:
+Pattern requirements:
 
 - Story Nodes must reference:
-  - Specific **dataset versions** and **volume IDs**, not generic “latest radar”.  
-  - STAC IDs and PROV bundles for their underlying NEXRAD products.  
+  - Specific NEXRAD dataset versions, volume IDs, and STAC Items,  
+  - Associated PROV bundles (so users can inspect lineage).
 
 - Focus Mode should support:
-  - Toggling **Preview vs Final** modes where appropriate,  
-  - Showing watermarked latency metrics in an info panel (e.g., “this volume finalized X minutes after event-time due to VCP Y”),  
-  - Highlighting any periods where data is **still within finalization delay windows** (i.e., not yet fully stable).
+  - Toggling **preview vs final** visualization where appropriate,  
+  - Displaying finalization delay and watermark lag for each volume,  
+  - Indicating when data is **within** a finalization window (i.e., caution that more data is pending).
 
 ---
 
-## 10. 🕰️ Version History
+## 🕰️ Version History
 
-| Version  | Date       | Author / Steward              | Summary                                                       |
-|----------|------------|------------------------------|---------------------------------------------------------------|
-| v11.2.4  | 2025-12-07 | Atmo Pipelines + FAIR+CARE Council | Initial unified NEXRAD watermark & finalization delay pattern under KFM v11.2.4. |
+| Version  | Date       | Author / Steward                          | Summary                                                        |
+|----------|------------|-------------------------------------------|----------------------------------------------------------------|
+| v11.2.4  | 2025-12-07 | Atmo Pipelines + FAIR+CARE Council        | Initial unified NEXRAD watermark & finalization delay pattern under KFM v11.2.4. |
 
 ---
 
