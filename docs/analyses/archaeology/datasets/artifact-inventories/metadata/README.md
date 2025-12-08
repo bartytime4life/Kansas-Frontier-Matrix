@@ -19,22 +19,25 @@ intent: "artifact-inventory-metadata"
 semantic_document_id: "kfm-doc-archaeology-artifact-inventory-metadata-v11.2.3"
 category: "Analyses · Archaeology · Metadata"
 
-sbom_ref: "../../../../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../../../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../../../../../releases/v11.2.3/focus-telemetry.json"
-telemetry_schema: "../../../../../../schemas/telemetry/archaeology-artifact-inventory-metadata-v1.json"
-energy_schema: "../../../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+sbom_ref: "releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "releases/v11.2.3/manifest.zip"
+telemetry_ref: "releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/archaeology-artifact-inventory-metadata-v1.json"
+energy_schema: "schemas/telemetry/energy-v2.json"
+carbon_schema: "schemas/telemetry/carbon-gco2e-v1.json"
 
-governance_ref: "../../../../../standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../../standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.5"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "High-Sensitivity · Sovereignty-Governed"
@@ -49,7 +52,7 @@ machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 classification: "Public (Governed)"
 jurisdiction: "Kansas / United States"
-immutability_status: "mutable-plan"
+immutability_status: "version-pinned"
 
 header_profile: "standard"
 footer_profile: "standard"
@@ -64,230 +67,239 @@ provenance_requirements:
   must_reference_origin_root: true
 ---
 
-# 📑 Kansas Frontier Matrix — Artifact Inventory Metadata Standards (v11)
+<div align="center">
+
+# 📑 **Kansas Frontier Matrix — Artifact Inventory Metadata Standards (v11)**  
 
 `docs/analyses/archaeology/datasets/artifact-inventories/metadata/README.md`
 
 **Purpose**  
-Define the complete **metadata specification** for all artifact inventory datasets within the Kansas Frontier Matrix (KFM) v11.
+Define the complete **metadata specification** for all artifact inventory datasets within the Kansas Frontier Matrix (KFM) v11, aligning DCAT, STAC, CARE, and KFM archaeology extensions for graph ingestion, visualization, and narratives.
 
-This standard ensures alignment with:
-
-- **FAIR+CARE** and sovereignty policies  
-- **STAC 1.0** (Items + Collections)  
-- **DCAT 3.0**  
-- **CIDOC-CRM**, **GeoSPARQL**, **OWL-Time**, **ISO 19115**  
-- **KFM-OP v11** (ontology) and **MCP-DL v6.3** (documentation-first)  
-
-Metadata in this directory supports:
-
-- Neo4j graph ingestion and reasoning  
-- Story Node and Focus Mode v3 generation  
-- Archaeological visualization (MapLibre + Cesium)  
-- Predictive and phase-based modeling  
-- Artifact classification reproducibility and provenance traceability  
-
-Only **public-domain**, **open-license**, or **sovereignty-approved** inventories may be represented here.
+</div>
 
 ---
 
 ## 📘 Overview
 
-Each metadata file in this directory provides machine-readable description, governance, and cultural-safety fields for:
+This standard ensures that artifact inventory metadata:
 
-- Lithic datasets  
-- Ceramic datasets  
-- Metal / protohistoric datasets  
-- Faunal (public-domain oriented) datasets  
-- Additional open-access artifact tables that meet governance criteria  
+- Aligns with:
+  - **FAIR+CARE** and sovereignty policies,  
+  - **STAC 1.0** (Items + Collections),  
+  - **DCAT 3.0**,  
+  - **CIDOC-CRM**, **GeoSPARQL**, **OWL-Time**, **ISO 19115**,  
+  - **KFM-OP v11** and **MCP-DL v6.3**.  
+- Supports:
+  - Neo4j **graph ingestion and reasoning**,  
+  - Story Node and **Focus Mode v3** generation,  
+  - Archaeological visualization (MapLibre + Cesium),  
+  - Predictive and phase-based modeling,  
+  - Artifact classification reproducibility and full provenance traceability.
 
-No sensitive, culturally restricted, or non-consented artifact information may appear in this directory.
-
-Metadata is stored as **JSON-LD**, combining:
-
-- **DCAT 3.0 Dataset metadata**  
-- **STAC 1.0 Item metadata** (mirroring entries in `stac/items/`)  
-- **CARE** cultural safety metadata  
-- **KFM archaeology extension** (`kfm:*`) references to provenance, Collections, and inventories  
+Only **public-domain**, **open-license**, or **sovereignty-approved** inventories may be represented by metadata in this directory. No sensitive, culturally restricted, or non-consented artifact information may appear in these metadata records.
 
 ---
 
 ## 🗂️ Directory Layout
 
-~~~text
-docs/analyses/archaeology/datasets/artifact-inventories/metadata/
-├── 📄 README.md                           # This file
-├── 📄 flint-hills-lithics-v11.json        # DCAT + STAC + CARE + KFM metadata
-├── 📄 prairie-ceramics-v11.json           # Ceramic inventory metadata
-├── 📄 contact-era-metals-v11.json         # Protohistoric metals metadata (governed)
-├── 📄 fauna-open-v11.json                 # Faunal (public-domain oriented) metadata
-└── 📂 schemas/                            # JSON schemas for metadata validation
-~~~
+```text
+KansasFrontierMatrix/
+├── 📁 docs/
+│   └── 📁 analyses/
+│       └── 📁 archaeology/
+│           └── 📁 datasets/
+│               └── 📁 artifact-inventories/
+│                   ├── 📁 inventories/                      # Cleaned, generalized CSVs
+│                   └── 📁 metadata/
+│                       📄 README.md                         # ← This file (metadata standard)
+│                       📄 flint-hills-lithics-v11.json      # DCAT + STAC + CARE + KFM metadata
+│                       📄 prairie-ceramics-v11.json         # Ceramic inventory metadata
+│                       📄 contact-era-metals-v11.json       # Protohistoric metals metadata (governed)
+│                       📄 fauna-open-v11.json               # Faunal (public-domain oriented) metadata
+│                       📁 schemas/                          # JSON schemas for metadata validation
+│                           📄 artifact-inventory-metadata.schema.json
+│                           📄 artifact-inventory-metadata-shape.ttl
+└── 📁 metadata/
+    └── 📁 archaeology/
+        └── 📁 artifact-inventories/
+            └── 📁 stac/                                    # Mirror STAC items (optional alternative layout)
+```
 
 This layout is **normative** for artifact-inventory metadata in KFM v11.
 
 ---
 
-## 📦 Required Metadata Layers
+## 📦 Data & Metadata
 
-Each metadata file MUST integrate the following layers.
+Each metadata file in this directory provides a **machine-readable description** and **governance layer** for:
+
+- Lithic inventories,  
+- Ceramic inventories,  
+- Metal / protohistoric inventories,  
+- Faunal (public-domain oriented) inventories,  
+- Additional open-access artifact tables that meet sovereignty and FAIR+CARE criteria.
+
+Metadata is stored as **JSON-LD**, combining:
+
+- **DCAT 3.0 Dataset metadata**,  
+- **STAC 1.0 Item metadata** (mirroring entries in `stac/items/` when present),  
+- **CARE** cultural-safety metadata,  
+- **KFM archaeology extensions** (`kfm:*`) linking to provenance, inventories, and graph entities.
+
+No sensitive or restricted details are allowed in this metadata layer.
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
 
 ### 1️⃣ DCAT 3.0 Dataset Metadata
 
 Required DCAT fields:
 
-| Field              | Description                       | Example                                          |
-|--------------------|-----------------------------------|--------------------------------------------------|
-| `dct:title`        | Dataset title                     | `"Flint Hills Lithic Inventory v11"`            |
-| `dct:description`  | Summary of dataset                | `"Generalized lithic inventory, culturally reviewed."` |
-| `dct:license`      | SPDX license code                 | `"CC-BY-4.0"`                                    |
-| `dct:creator`      | Source institution / custodian    | `"WSU Open Collections"`                         |
-| `dct:temporal`     | Temporal coverage (OWL-Time)      | `"1200–1400 CE"` or interval representation      |
-| `dct:spatial`      | Generalized spatial description   | `"Kansas, Flint Hills region (generalized)"`     |
-| `dcat:distribution`| Path/URL to main distribution     | `"inventories/flint-hills-lithics-v11.csv"`      |
-| `dcat:keyword`     | Tags / keywords                   | `["lithic", "inventory", "Kansas", "archaeology"]` |
+| Field             | Description                            | Example                                           |
+|-------------------|----------------------------------------|---------------------------------------------------|
+| `dct:title`       | Dataset title                          | `"Flint Hills Lithic Inventory v11"`             |
+| `dct:description` | Dataset description (FAIR+CARE-aware)  | `"Generalized lithic inventory, culturally reviewed."` |
+| `dct:license`     | SPDX license code                      | `"CC-BY-4.0"`                                     |
+| `dct:creator`     | Source institution / custodian         | `"WSU Open Collections"`                         |
+| `dct:temporal`    | Temporal coverage (OWL-Time interval)  | `"1200–1400 CE"` or explicit interval object      |
+| `dct:spatial`     | Generalized spatial description        | `"Kansas, Flint Hills region (generalized)"`      |
+| `dcat:distribution` | Main distribution path/URL           | `"inventories/flint-hills-lithics-v11.csv"`       |
+| `dcat:keyword`    | Tags / keywords                        | `["lithic","inventory","Kansas","archaeology"]`   |
 
-DCAT metadata must be consistent with STAC, CARE, and provenance layers.
+DCAT metadata MUST be consistent with STAC, CARE, and KFM extensions.
 
 ---
 
 ### 2️⃣ STAC 1.0 Item Metadata (Mirrored)
 
-Metadata files must align with the corresponding STAC Item in `stac/items/`.
+Each metadata file MUST align with the corresponding STAC Item (if present). Required STAC fields:
 
-Required STAC fields:
+| STAC Field                    | Description                                   | Example                                         |
+|-------------------------------|-----------------------------------------------|-------------------------------------------------|
+| `stac_version`                | STAC version                                  | `"1.0.0"`                                       |
+| `type`                        | STAC type                                     | `"Feature"`                                     |
+| `id`                          | Unique dataset ID                             | `"flint-hills-lithics-v11"`                    |
+| `bbox`                        | Generalized bounding box                      | `[-101.2, 37.5, -95.4, 40.1]`                  |
+| `geometry`                    | Generalized geometry (no site-precise coords) | `MultiPoint` or generalized polygon             |
+| `properties.kfm:domain`       | Domain identifier                             | `"archaeology-artifact-inventories"`           |
+| `properties.kfm:phase`        | Cultural-phase name                           | `"Late Prehistoric"`                           |
+| `properties.kfm:material_class` | Material class                              | `"lithic"`                                      |
+| `properties.kfm:generalization` | Spatial generalization                        | `"H3-r7"`                                       |
+| `properties.kfm:provenance`   | Provenance log path                           | `"provenance/flint-hills-lithics-v11.json"`    |
+| `assets.data.href`            | Inventory file path                           | `"inventories/flint-hills-lithics-v11.csv"`    |
+| `assets.data.type`            | MIME type                                     | `"text/csv"`                                    |
 
-| STAC Field                | Description                              | Example                                         |
-|---------------------------|------------------------------------------|-------------------------------------------------|
-| `stac_version`            | STAC version                             | `"1.0.0"`                                       |
-| `type`                    | STAC type                               | `"Feature"`                                     |
-| `id`                      | Unique dataset ID                        | `"flint-hills-lithics-v11"`                    |
-| `bbox`                    | Generalized bounding box                 | `[-101.2, 37.5, -95.4, 40.1]`                  |
-| `geometry`                | Generalized geometry (no site-precise)   | `MultiPoint`                                    |
-| `properties.kfm:domain`   | Domain identifier                        | `"archaeology-artifact-inventories"`           |
-| `properties.kfm:phase`    | Cultural-phase name                      | `"Late Prehistoric"`                           |
-| `properties.kfm:material_class` | Material class                    | `"lithic"`                                      |
-| `properties.kfm:generalization` | Spatial generalization level       | `"H3-r7"`                                       |
-| `properties.kfm:provenance`     | Provenance log path                | `"provenance/flint-hills-lithics-v11.json"`    |
-| `assets.data.href`        | Inventory file path                      | `"inventories/flint-hills-lithics-v11.csv"`    |
-| `assets.data.type`        | MIME type                                | `"text/csv"`                                    |
+STAC and DCAT MUST share the same:
 
-Metadata and STAC Item MUST remain in sync, especially for:
-
-- `id`  
-- `kfm:phase`  
-- `kfm:material_class`  
-- `kfm:provenance`  
-- asset paths  
+- `id`,  
+- `dct:title` vs `properties.title` (if present),  
+- `kfm:*` domain/phase/material fields,  
+- distribution paths.
 
 ---
 
 ### 3️⃣ CARE Cultural-Safety Metadata
 
-All artifact inventory metadata MUST include CARE fields, consistent with STAC and provenance.
-
 Required CARE fields:
 
-| CARE Field              | Description                     | Allowed Values                                     |
-|-------------------------|---------------------------------|---------------------------------------------------|
-| `care:sensitivity`      | Sensitivity class               | `"general"`, `"generalized"`, `"restricted-generalized"` |
-| `care:review`           | Review authority                | `"faircare"`, `"tribal"`, `"none-required"`       |
-| `care:notes`            | Cultural context / review notes | Free text; required for `generalized` or `restricted-generalized` |
-| `care:visibility_rules` | Visibility constraints          | `"h3-only"`, `"no-exact-points"`                  |
+| CARE Field              | Description                               | Allowed Values                                      |
+|-------------------------|-------------------------------------------|----------------------------------------------------|
+| `care:sensitivity`      | Sensitivity class                         | `"general"`, `"generalized"`, `"restricted-generalized"` |
+| `care:review`           | Review authority                          | `"faircare"`, `"tribal"`, `"none-required"`        |
+| `care:notes`            | Cultural context / review notes           | Free text; required for generalized/restricted data |
+| `care:visibility_rules` | Visibility constraints                    | `"h3-only"`, `"no-exact-points"`                   |
 
-Forbidden:
+Forbidden in this directory:
 
-- `care:sensitivity = "restricted"` for metadata in this public-governed directory.  
-- Any fields that expose sacred sites, burials, or culturally restricted information.  
-- Precise provenience, excavation-unit IDs, or sensitive photo references.
+- `care:sensitivity = "restricted"` — such records belong in non-public, access-controlled locations.  
+- Free-text fields that expose sacred sites, burials, or restricted information.
 
 ---
 
 ### 4️⃣ KFM Archaeology & Governance Fields (`kfm:*`)
 
-Metadata files must also include key KFM fields for governance and graph integration:
+Key KFM extension fields:
 
-| Field                | Description                                   |
-|----------------------|-----------------------------------------------|
-| `kfm:domain`         | Must be `"archaeology-artifact-inventories"` |
-| `kfm:phase`          | Cultural phase (as above)                    |
-| `kfm:material_class` | Material class for this inventory            |
-| `kfm:datatype`       | Typically `"artifact-inventory"`             |
-| `kfm:provenance`     | Path to JSON-LD provenance log               |
-| `kfm:source`         | Source institution or repository             |
+| Field                | Description                                      |
+|----------------------|--------------------------------------------------|
+| `kfm:domain`         | `"archaeology-artifact-inventories"`            |
+| `kfm:phase`          | Cultural phase key used in graph & Story Nodes  |
+| `kfm:material_class` | High-level material class                       |
+| `kfm:datatype`       | Typically `"artifact-inventory"`                |
+| `kfm:provenance`     | Path/ID of PROV-O JSON-LD log                   |
+| `kfm:source`         | Source institution or repository                |
 
-These fields must match the corresponding STAC & provenance artifacts.
+These fields MUST be consistent across:
+
+- Inventory CSV,  
+- STAC Item,  
+- DCAT Dataset,  
+- Provenance logs,  
+- Graph ingestion config.
 
 ---
 
-## 🧪 Validation Requirements
+## 🧪 Validation & CI/CD
 
-All artifact-inventory metadata must pass:
+All artifact-inventory metadata MUST pass:
 
 - **JSON Schema validation**  
-  - Against metadata schemas in `metadata/schemas/`.  
-- **DCAT 3.0 validation**  
-  - Required DCAT fields present and consistent.  
+  - Against `metadata/schemas/artifact-inventory-metadata.schema.json`.  
+- **DCAT validation**  
+  - Required DCAT fields present and consistent; license and creator recorded.  
 - **STAC alignment checks**  
-  - IDs, paths, and `kfm:*` fields consistent with STAC Items.  
+  - `id`, `assets.data.href`, `kfm:*` fields consistent with STAC Items (if mirrored).  
 - **CARE validation**  
-  - `care:*` values allowed and consistent with generalization and sovereignty policy.  
-- **Crosswalk alignment**  
-  - With:
-    - STAC Item in `stac/items/`  
-    - Provenance log in `provenance/`  
-    - Collection metadata in `stac/collections/` where applicable  
+  - `care:*` values allowed and consistent with sovereignty policy and H3 generalization.  
+- **Crosswalk validation**  
+  - STAC/DCAT/PROV cross references remain consistent with `inventories/` and graph configs.
 
-Validation workflows (illustrative):
+Recommended CI workflows:
 
-- `docs/analyses/archaeology/validation/`  
-- `.github/workflows/artifact-metadata-validate.yml`  
-- `.github/workflows/artifact-stac-validate.yml`  
+- `.github/workflows/archaeology-artifact-metadata-validate.yml`  
+- `.github/workflows/archaeology-artifact-stac-validate.yml`  
+- `.github/workflows/faircare-archaeology-audit.yml`  
 
-Any failure must block ingestion and release.
+Any validation failure must block:
+
+- New releases referencing these metadata,  
+- Graph ingestion of corresponding inventories,  
+- Story Node promotion that depends on these datasets.
 
 ---
 
-## 🛰️ Integration Into the KFM Ecosystem
+## ⚖ FAIR+CARE & Governance
 
-Metadata in this directory feeds multiple layers:
+Metadata in this directory is:
 
-### Knowledge Graph (Neo4j)
+- **High-sensitivity** by concept (archaeology + heritage),  
+- Stored in a **public-governed** but carefully generalized form,  
+- Subject to strong oversight by:
+  - Archaeology Working Group,  
+  - FAIR+CARE Council,  
+  - Sovereignty governance structures (Tribal and community stakeholders).
 
-- Drives creation of:
-  - `ArtifactInventory`, `MaterialClass`, `CulturalPhase`, and `GeneralizedSite` nodes.  
-- Establishes relationships:
-  - `HAS_INVENTORY`, `BELONGS_TO_PHASE`, `HAS_MATERIAL_CLASS`, `HAS_CARE_SENSITIVITY`, `HAS_PROVENANCE`.
+Key governance requirements:
 
-### Story Nodes
+- All metadata updates must be:
+  - Logged with provenance (authors, dates, justifications),  
+  - Reviewed for CARE and sovereignty impacts.  
 
-- Provides:
-  - Material-culture context  
-  - Temporal placement  
-  - Sensitivity-aware narrative framing  
-  - Provenance summary for each Story Node referencing artifact inventories  
+- Any change that:
+  - Reduces generalization (e.g., `H3-r7` → `H3-r9`), or  
+  - Introduces new fields that might increase risk
 
-### Focus Mode v3
-
-- Uses metadata to:
-  - Filter responses based on CARE & sovereignty rules  
-  - Render provenance chips and dataset references  
-  - Provide context-aware explanations of artifact distributions and phases  
-
-### Visualization
-
-- Supports:
-  - H3-based artifact density maps  
-  - Temporal distribution overlays  
-  - Material/phase-based symbology and filters  
+MUST be explicitly reviewed and approved by relevant governance bodies before merge.
 
 ---
 
 ## 📄 Example Metadata Snippet (v11-Aligned)
 
-Illustrative example for a lithic inventory:
+> Illustrative only; actual files MUST conform to schemas and governance decisions.
 
-~~~json
+```json
 {
   "dct:title": "Flint Hills Lithic Inventory v11",
   "dct:description": "Generalized lithic artifact dataset for the Flint Hills region, reviewed under FAIR+CARE.",
@@ -325,24 +337,26 @@ Illustrative example for a lithic inventory:
     }
   }
 }
-~~~
-
-This snippet is illustrative; canonical constraints are defined by schemas in `metadata/schemas/`.
+```
 
 ---
 
-## 🕰 Version History
+## 🕰️ Version History
 
-| Version   | Date       | Author                           | Summary                                                                 |
-|-----------|------------|----------------------------------|-------------------------------------------------------------------------|
-| v11.2.3   | 2025-12-02 | Archaeology WG · FAIR+CARE Council | Updated to KFM v11.2.3; added energy/carbon telemetry refs; aligned with STAC/CARE/KFM v11 patterns and Focus Mode v3. |
-| v10.4.0   | 2025-11-17 | Archaeology WG · FAIR+CARE Council | Created metadata standards for artifact inventories; defined STAC/DCAT/CARE rules and validation paths. |
-| v10.0.0   | 2025-11-10 | Artifact Metadata Team           | Initial structure and baseline metadata guidance.                        |
+| Version | Date       | Author / Steward                    | Summary                                                                 |
+|--------:|------------|--------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3 | 2025-12-02 | Archaeology WG · FAIR+CARE Council  | Updated to KFM v11.2.3; added energy/carbon telemetry refs; aligned with STAC/CARE/KFM v11 patterns and Focus Mode v3. |
+| v10.4.0 | 2025-11-17 | Archaeology WG · FAIR+CARE Council  | Created metadata standards for artifact inventories; defined STAC/DCAT/CARE rules and validation paths. |
+| v10.0.0 | 2025-11-10 | Artifact Metadata Team               | Initial structure and baseline metadata guidance.                        |
 
 ---
 
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-FAIR+CARE · Sovereignty-Governed  
-KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+<div align="center">
 
-[⬅ Back to Artifact Inventories](../README.md)
+📑 **Kansas Frontier Matrix — Artifact Inventory Metadata Standards**  
+
+[⬅ Artifact Inventories Index](../README.md) ·  
+[🏺 Inventory Files](../inventories/README.md) ·  
+[⚖️ Root Governance](../../../../../standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
