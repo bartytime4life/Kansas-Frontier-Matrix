@@ -5,7 +5,7 @@ description: "JSON Schema index for validating KFM v11 artifact-inventory metada
 version: "v11.2.3"
 last_updated: "2025-12-02"
 
-release_stage: "Stable / Governed"
+release_stage: "Stable · Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Biannual · Archaeology Working Group · FAIR+CARE Council · Metadata Standards Subcommittee"
 content_stability: "stable"
@@ -19,22 +19,25 @@ intent: "artifact-inventory-metadata-schemas"
 semantic_document_id: "kfm-doc-archaeology-artifact-inventory-metadata-schemas-v11.2.3"
 category: "Analyses · Archaeology · Metadata · Schemas"
 
-sbom_ref: "../../../../../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../../../../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../../../../../../releases/v11.2.3/focus-telemetry.json"
-telemetry_schema: "../../../../../../../schemas/telemetry/archaeology-artifact-metadata-schemas-v1.json"
-energy_schema: "../../../../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../../../../schemas/telemetry/carbon-gco2e-v1.json"
+sbom_ref: "releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "releases/v11.2.3/manifest.zip"
+telemetry_ref: "releases/v11.2.3/focus-telemetry.json"
+telemetry_schema: "schemas/telemetry/archaeology-artifact-metadata-schemas-v1.json"
+energy_schema: "schemas/telemetry/energy-v2.json"
+carbon_schema: "schemas/telemetry/carbon-gco2e-v1.json"
 
-governance_ref: "../../../../../../standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../../../standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.5"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "High-Sensitivity · Sovereignty-Governed"
@@ -49,7 +52,7 @@ machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 classification: "Public (Governed)"
 jurisdiction: "Kansas / United States"
-immutability_status: "mutable-plan"
+immutability_status: "version-pinned"
 
 header_profile: "standard"
 footer_profile: "standard"
@@ -64,61 +67,65 @@ provenance_requirements:
   must_reference_origin_root: true
 ---
 
-# 📐 Kansas Frontier Matrix — Artifact Inventory Metadata Schemas (v11)
+<div align="center">
+
+# 📐 **Kansas Frontier Matrix — Artifact Inventory Metadata Schemas (v11)**  
 
 `docs/analyses/archaeology/datasets/artifact-inventories/metadata/schemas/README.md`
 
 **Purpose**  
 Define and govern the **JSON Schema standards** used to validate **metadata files** for artifact inventory datasets within the Kansas Frontier Matrix (KFM) v11.
 
-These metadata schemas ensure compliance with:
-
-- **DCAT 3.0**  
-- **STAC 1.0** (referential alignment with `stac/items/`)  
-- **CIDOC-CRM** (conceptual mapping)  
-- **PROV-O** (lineage structures)  
-- **CARE** cultural safety metadata  
-- **FAIR** principles (Findable, Accessible, Interoperable, Reusable)  
-- **MCP-DL v6.3** documentation-first governance  
-
-Metadata validated by these schemas describes datasets located in:
-
-- `inventories/`  
-- `stac/items/`  
-- `provenance/`  
-
-and is essential for searchability, reproducibility, graph ingestion, Focus Mode v3 interpretability, and cultural compliance.
-
----
-
-## 📘 Overview
-
-This folder contains:
-
-- **Core metadata validation schemas**  
-- **DCAT 3.0 alignment schemas**  
-- **CARE sensitivity schemas specific to metadata**  
-- **Provenance-link validation schemas**  
-- **STAC crosswalk schemas** linking metadata to STAC Items and provenance specs  
-
-Every metadata file in `metadata/` must validate against one or more schemas from this directory as part of CI.
+</div>
 
 ---
 
 ## 🗂️ Directory Layout
 
-~~~text
-docs/analyses/archaeology/datasets/artifact-inventories/metadata/schemas/
-├── 📄 README.md                        # This file
-├── 📄 dcat-metadata-schema.json        # DCAT 3.0 validation schema
-├── 📄 metadata-core-schema.json        # Core metadata fields validator
-├── 📄 care-metadata-schema.json        # CARE cultural safety metadata validator
-├── 📄 provenance-link-schema.json      # Ensures metadata ↔ provenance linkage
-├── 📄 stac-crosswalk-schema.json       # Ensures STAC–metadata alignment
-└── 📂 templates/                       # Schema templates for contributors
-~~~
+```text
+KansasFrontierMatrix/
+├── 📁 docs/
+│   └── 📁 analyses/
+│       └── 📁 archaeology/
+│           └── 📁 datasets/
+│               └── 📁 artifact-inventories/
+│                   └── 📁 metadata/
+│                       ├── 📄 README.md                         # Metadata standard
+│                       ├── 📄 flint-hills-lithics-v11.json      # DCAT + STAC + CARE + KFM metadata
+│                       ├── 📄 prairie-ceramics-v11.json         # Ceramic inventory metadata
+│                       ├── 📄 contact-era-metals-v11.json       # Protohistoric metals metadata (governed)
+│                       ├── 📄 fauna-open-v11.json               # Faunal (public-domain oriented) metadata
+│                       └── 📁 schemas/
+│                           ├── 📄 README.md                     # ← This file (schema index)
+│                           ├── 📄 metadata-core-schema.json     # Core metadata fields validator
+│                           ├── 📄 dcat-metadata-schema.json     # DCAT 3.0 validation schema
+│                           ├── 📄 care-metadata-schema.json     # CARE cultural-safety metadata validator
+│                           ├── 📄 provenance-link-schema.json   # Metadata ↔ provenance linkage
+│                           ├── 📄 stac-crosswalk-schema.json    # STAC–metadata alignment
+│                           └── 📁 templates/                    # Schema templates for contributors
+└── 📁 schemas/
+    └── 📁 json/
+        └── 📄 archaeology-artifact-inventory-metadata-master.schema.json   # Aggregating/master schema (optional)
+```
 
-This layout is **normative** for artifact-inventory metadata schemas.
+This layout is **normative** for artifact-inventory metadata schemas in KFM v11.
+
+---
+
+## 📘 Overview
+
+These schemas enforce that artifact-inventory metadata:
+
+- Complies with **DCAT 3.0**, **STAC 1.0**, and **KFM-OP v11**.  
+- Honors **FAIR+CARE** and sovereignty obligations by validating cultural-safety metadata.  
+- Correctly links to **provenance logs**, **STAC Items**, and **inventory files**.  
+- Is suitable for:
+  - Neo4j graph ingestion,  
+  - Search and discovery,  
+  - Story Node and Focus Mode v3 use,  
+  - Analytical reproducibility and auditing.
+
+Every metadata file in `metadata/` MUST validate against one or more schemas from this directory as part of CI.
 
 ---
 
@@ -128,23 +135,23 @@ The **core metadata schema** validates the baseline structure for artifact-inven
 
 ### Required fields
 
-| Field          | Description                       |
-|----------------|-----------------------------------|
-| `dct:title`    | Human-readable dataset title      |
-| `dct:description` | Summary of dataset contents  |
-| `dct:license`  | SPDX ID (for example, `CC-BY-4.0`, `CC0-1.0`) |
-| `kfm:phase`    | Cultural-phase classification     |
-| `kfm:material_class` | Artifact material type     |
-| `kfm:source`   | Data origin institution / repository |
-| `kfm:provenance` | Path to PROV-O JSON log       |
+| Field              | Description                               |
+|--------------------|-------------------------------------------|
+| `dct:title`        | Human-readable dataset title             |
+| `dct:description`  | Summary of dataset contents              |
+| `dct:license`      | SPDX ID (for example, `CC-BY-4.0`, `CC0-1.0`) |
+| `kfm:phase`        | Cultural-phase classification            |
+| `kfm:material_class` | Artifact material type                 |
+| `kfm:source`       | Data origin institution / repository     |
+| `kfm:provenance`   | Path or ID for PROV-O JSON log           |
 
 ### Optional but strongly encouraged
 
 - `dcat:keyword`  
-- Citation information (for example, `dct:bibliographicCitation`)  
-- Contact point (for example, `dcat:contactPoint`)  
+- Citation information (`dct:bibliographicCitation`)  
+- Contact point (`dcat:contactPoint`)  
 
-The core schema ensures that all metadata records carry the minimal information required for FAIR discovery, attribution, and governance.
+The core schema ensures all metadata records carry the minimal information required for FAIR discovery, attribution, and governance.
 
 ---
 
@@ -154,24 +161,24 @@ The **DCAT metadata schema** enforces DCAT 3.0 compliance for artifact-inventory
 
 ### Required DCAT fields
 
-| DCAT Field         | Example                                           |
-|--------------------|---------------------------------------------------|
-| `dct:title`        | `"Flint Hills Lithic Inventory v11"`             |
-| `dct:license`      | `"CC-BY-4.0"`                                     |
-| `dcat:distribution`| `"inventories/flint-hills-lithics-v11.csv"`      |
-| `dct:temporal`     | `"1200–1400 CE"` or an interval representation   |
-| `dcat:keyword`     | `["lithic", "archaeology", "inventory"]`         |
+| DCAT Field          | Example                                           |
+|---------------------|---------------------------------------------------|
+| `dct:title`         | `"Flint Hills Lithic Inventory v11"`             |
+| `dct:license`       | `"CC-BY-4.0"`                                     |
+| `dcat:distribution` | `"inventories/flint-hills-lithics-v11.csv"`      |
+| `dct:temporal`      | `"1200–1400 CE"` or explicit interval object      |
+| `dcat:keyword`      | `["lithic", "archaeology", "inventory"]`         |
 
-### DCAT ↔ STAC crosswalk expectations
+### DCAT ↔ STAC Crosswalk Expectations
 
 The schema ensures that:
 
-| DCAT Field         | Must align with STAC                           |
-|--------------------|-----------------------------------------------|
-| `dct:title`        | STAC `id` or `description`                    |
-| `dcat:distribution`| STAC `assets.data.href`                       |
-| `dct:temporal`     | STAC temporal properties / Collection extent  |
-| `dct:license`      | STAC `license` / `dct:license`                |
+| DCAT Field          | Must Align With STAC                             |
+|---------------------|--------------------------------------------------|
+| `dct:title`         | STAC `id` or `properties.title/description`     |
+| `dcat:distribution` | STAC `assets.data.href`                         |
+| `dct:temporal`      | STAC temporal properties / collection extent    |
+| `dct:license`       | STAC `license` / `dct:license`                  |
 
 Any inconsistency between DCAT and STAC is treated as a validation failure.
 
@@ -179,7 +186,7 @@ Any inconsistency between DCAT and STAC is treated as a validation failure.
 
 ## 3️⃣ CARE Metadata Schema (`care-metadata-schema.json`)
 
-The **CARE metadata schema** validates cultural safety information at the metadata level.
+The **CARE metadata schema** validates cultural-safety information at the metadata level.
 
 ### Required CARE fields
 
@@ -187,16 +194,15 @@ The **CARE metadata schema** validates cultural safety information at the metada
 |----------------------|------------------------------------------------------------|
 | `care:sensitivity`   | `"general"`, `"generalized"`, `"restricted-generalized"`   |
 | `care:review`        | `"faircare"`, `"tribal"`, `"none-required"`                |
-| `care:notes`         | Required when sensitivity is `generalized` or `restricted-generalized` |
+| `care:notes`         | Required for `generalized` or `restricted-generalized`     |
 | `care:visibility_rules` | `"h3-only"`, `"no-exact-points"`                      |
 
-### Rules enforced by schema
+Enforced rules:
 
-- `care:sensitivity = "restricted"` is **forbidden** for artifact-inventory metadata in the public-governed catalog.  
-- `care:review = "tribal"` is required for certain contact-era / protohistoric metal datasets.  
-- All spatial generalization and redaction steps must be documented in `care:notes`.  
-
-These rules must align with the global sovereignty policy and other CARE documentation.
+- `care:sensitivity = "restricted"` is **forbidden** for metadata in this public-governed directory  
+  (such datasets belong in restricted storage).  
+- Entries flagged `care:review = "tribal"` require evidence of Tribal review/approval.  
+- All spatial generalization and redaction steps must be documented in `care:notes`.
 
 ---
 
@@ -204,20 +210,20 @@ These rules must align with the global sovereignty policy and other CARE documen
 
 The **provenance link schema** ensures that metadata records correctly reference PROV-O lineage logs.
 
-Checks include:
+It checks that:
 
-- `kfm:provenance` must be present and must:
-  - Match the filename stem with corresponding file in `provenance/`.  
-  - Use consistent relative paths (for example, `"provenance/flint-hills-lithics-v11.json"`).  
+- `kfm:provenance` exists in metadata and:  
+  - Matches a corresponding file in `provenance/` (same stem).  
+  - Uses valid relative paths (e.g., `"provenance/flint-hills-lithics-v11.json"`).  
 
-The schema is used to confirm cross-file consistency across:
+This schema is used to confirm cross-file consistency across:
 
-- `metadata/FILE.json`  
-- `provenance/FILE.json`  
-- `stac/items/FILE.json`  
-- `inventories/FILE.ext`  
+- `metadata/<dataset>.json`,  
+- `provenance/<dataset>.json`,  
+- `stac/items/<dataset>.json`,  
+- `inventories/<dataset>.*`.
 
-Any mismatch between these locations is treated as an error and must be corrected before release.
+Any mismatch is treated as a validation error.
 
 ---
 
@@ -227,25 +233,25 @@ The **STAC crosswalk schema** ensures metadata and STAC Items remain synchronize
 
 It verifies that:
 
-| Metadata Field      | Must match STAC Item field                        |
-|---------------------|---------------------------------------------------|
-| `dct:title`         | STAC `id` or `description`                        |
-| `kfm:phase`         | STAC `properties.kfm:phase`                       |
-| `kfm:material_class` | STAC `properties.kfm:material_class`            |
-| `kfm:source`        | STAC `properties.kfm:source` (if present)         |
-| `kfm:provenance`    | STAC `properties.kfm:provenance`                  |
+| Metadata Field        | Must Match STAC Field                                  |
+|-----------------------|--------------------------------------------------------|
+| `dct:title`           | STAC `id` or `properties.title/description`           |
+| `kfm:phase`           | STAC `properties.kfm:phase`                           |
+| `kfm:material_class`  | STAC `properties.kfm:material_class`                  |
+| `kfm:source`          | STAC `properties.kfm:source` (if present)             |
+| `kfm:provenance`      | STAC `properties.kfm:provenance`                      |
 
-Validation failure here indicates drift between metadata and STAC, and must block CI and ingestion pipelines.
+Validation failure indicates drift between metadata and STAC and MUST block CI and ingestion until resolved.
 
 ---
 
-## 🧪 Validation Workflows
+## 🧪 Validation & CI/CD
 
 Artifact-inventory metadata is validated using:
 
 - `.github/workflows/metadata-validate.yml`  
 - `.github/workflows/artifact-stac-validate.yml`  
-- `.github/workflows/faircare-audit.yml` (where CARE-related checks apply)  
+- `.github/workflows/faircare-audit.yml` (for CARE-related checks)  
 
 Validators perform:
 
@@ -255,73 +261,74 @@ Validators perform:
    - `care-metadata-schema.json`  
    - `provenance-link-schema.json`  
    - `stac-crosswalk-schema.json`  
+
 2. CARE cultural review enforcement.  
 3. Provenance integrity checks (paths and filename stems).  
 4. DCAT 3.0 completeness and crosswalk checks.  
 5. STAC alignment and ontology consistency checks.  
 6. FAIR+CARE ethical compliance.
 
-Any mismatch or violation results in **CI failure** and a governance block until resolved.
+Any mismatch or violation must be repaired before data enters:
+
+- Graph ingestion pipelines,  
+- Story Node production,  
+- Public-facing Focus Mode overlays.
 
 ---
 
-## 🧠 Integration Into the KFM Knowledge Graph
+## 🧠 Graph & Story Node Integration
 
-The schemas defined here drive consistent graph ingestion.
+The schemas defined here:
 
-### Node types influenced by metadata schemas
+- Drive Neo4j label/relationship expectations for:
+  - `:ArtifactInventory`, `:CulturalPhase`, `:MaterialClass`, `:CareSensitivityState`.  
+- Ensure Story Nodes referencing inventories can:
+  - Reliably identify phases, materials, provenance logs, and CARE flags.  
+- Provide a firm foundation for:
+  - Phase-based timelines,  
+  - Material-culture narratives,  
+  - Sensitivity-aware views in Focus Mode.
 
-- `ArtifactInventory`  
-- `MaterialClass`  
-- `CulturalPhase`  
-- `DatasetSource`  
-- `GeneralizedSite`  
-- CARE-related nodes (for example, `CareSensitivityState`)  
+Schema evolution must be:
 
-### Relationships enforced by validation
-
-- `HAS_METADATA` (Inventory → Metadata record)  
-- `HAS_CARE_SENSITIVITY` (Inventory → CARE node)  
-- `HAS_PROVENANCE` (Inventory → provenance log)  
-- `BELONGS_TO_PHASE` (Inventory → CulturalPhase)  
-- `HAS_DISTRIBUTION` (Metadata → distribution/asset nodes)  
-
-These relationships power:
-
-- Story Nodes (material/phase narratives)  
-- Temporal culture arcs  
-- Focus Mode v3 interpretive layers  
-- Map + timeline overlays with sensitivity-aware behavior  
+- Versioned in this README and in the schemas themselves,  
+- Reflected in graph ingestion and Story Node mapping tools.
 
 ---
 
 ## 📝 Contributor Workflow
 
-1. Start from a metadata template in `metadata/templates/`.  
-2. Populate fields according to the **Metadata Standards** README and these schemas.  
-3. Run local validation using:
-   - `jsonschema`  
-   - Any KFM CLI metadata validator (if available).  
-4. Check alignment with:
-   - Corresponding STAC Item in `stac/items/`.  
-   - Provenance file in `provenance/`.  
-5. Ensure CARE metadata is complete and accurate.  
-6. Submit a PR; CI and FAIR+CARE governance will enforce adherence to these schemas.
+1. Start from a schema template in `templates/`.  
+2. Extend or adjust only with:
+   - Clear, documented rationale,  
+   - Backwards compatibility considerations.  
+3. Update this README’s table(s) and references as needed.  
+4. Run local validation against example metadata.  
+5. Submit PR for:
+   - Archaeology Working Group,  
+   - Metadata Standards Subcommittee,  
+   - FAIR+CARE governance review.
+
+No schema change is **self-approving**; all require governance sign-off.
 
 ---
 
-## 🕰 Version History
+## 🕰️ Version History
 
-| Version   | Date       | Author                                             | Summary                                                                 |
-|-----------|------------|----------------------------------------------------|-------------------------------------------------------------------------|
-| v11.2.3   | 2025-12-02 | Archaeology WG · Metadata Standards Subcommittee · FAIR+CARE Council | Updated schema index for KFM v11.2.3; clarified DCAT/STAC/CARE crosswalk roles and CI integration. |
-| v10.4.0   | 2025-11-17 | Archaeology WG · Metadata Standards Subcommittee · FAIR+CARE Council | Added full metadata schema index, DCAT/STAC crosswalk validation, and CARE requirements. |
-| v10.0.0   | 2025-11-10 | Artifact Metadata Team                             | Initial schema structure and baseline validators.                       |
+| Version | Date       | Author / Steward                                     | Summary                                                                 |
+|--------:|------------|-------------------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.3 | 2025-12-02 | Archaeology WG · Metadata Standards Subcommittee · FAIR+CARE Council | Updated schema index for KFM v11.2.3; clarified DCAT/STAC/CARE crosswalk roles and CI integration. |
+| v10.4.0 | 2025-11-17 | Archaeology WG · Metadata Standards Subcommittee · FAIR+CARE Council | Added full metadata schema index, DCAT/STAC crosswalk validation, and CARE requirements. |
+| v10.0.0 | 2025-11-10 | Artifact Metadata Team                                | Initial schema structure and baseline validators.                        |
 
 ---
 
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-FAIR+CARE · Sovereignty-Governed  
-KFM-MDP v11.2.2 · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+<div align="center">
 
-[⬅ Back to Metadata Directory](../README.md)
+📐 **Kansas Frontier Matrix — Artifact Inventory Metadata Schemas**  
+
+[⬅ Metadata Standard](../README.md) ·  
+[🏺 Inventory Files](../../inventories/README.md) ·  
+[⚖️ Root Governance](../../../../../../standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
