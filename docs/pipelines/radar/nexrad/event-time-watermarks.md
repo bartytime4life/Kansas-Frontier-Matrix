@@ -392,3 +392,13 @@ Energy, carbon, and sovereignty policies are enforced via:
 
 - `telemetry_schema` and `energy_schema` / `carbon_schema`, and  
 - The sovereignty policy at `docs/standards/sovereignty/RADAR-SOVEREIGNTY-GUIDE.md`.
+
+<div align="center">
+
+🌩️ **Kansas Frontier Matrix — NEXRAD Event-Time Watermarks**  
+
+[📘 Docs Root](../../README.md) ·  
+[📡 Radar Pipelines Index](../README.md) ·  
+[⚖️ Root Governance](../../standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
