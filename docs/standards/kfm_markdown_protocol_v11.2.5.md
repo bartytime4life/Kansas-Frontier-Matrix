@@ -277,11 +277,18 @@ When asking ChatGPT (or any AI assistant) to create or update a KFM Markdown doc
        - `🧾` for JSON/log-like artifacts  
        - `🖼️` for images/visual assets  
      - Uses `├──` / `└──` ASCII branches.  
-     - Is fenced as `~~~text`.
+     - Is fenced as `~~~text` (tildes, not backticks).
 
-2. **Prompt pattern (recommended)**
+2. **Fencing rule for ChatGPT outputs (to be copy-paste ready):**
 
-   > “Generate a KFM-compliant Markdown doc with: YAML front-matter, `📘 Overview` then `🗂️ Directory Layout` (with emoji directory tree), and only emoji-prefixed H2s from the heading registry.”
+   - The assistant **MUST** wrap the **entire document** in a single **outer code fence** in the response:  
+     - Start the reply with: ` ```markdown`  
+     - End the reply with: ` ````
+   - Inside that outer fence, **all internal code blocks and directory trees MUST use `~~~` fences**, for example:
+     - `~~~text` for directory layouts  
+     - `~~~bash` for shell commands  
+     - `~~~mermaid` for diagrams  
+   - Inner code blocks **MUST NOT** use triple backticks. This prevents the outer fence from breaking and guarantees a single unbroken box that can be copied from ChatGPT straight into GitHub.
 
 3. **Tell the AI to avoid:**
 
@@ -289,8 +296,9 @@ When asking ChatGPT (or any AI assistant) to create or update a KFM Markdown doc
    - Unnecessary HTML; `<div align="center">` is allowed but keep it minimal.  
    - Nested fences or unsupported diagram types.
 
-4. **After pasting AI output:**
+4. **After pasting AI output into a file:**
 
+   - Remove the outer ```markdown fence lines before committing the `.md` file.  
    - Verify **relative paths** match the actual file location (e.g., standards under `docs/standards/` must use `../../releases/...` for release artifacts).  
    - Run `docs`/Markdown lint locally or via CI.  
    - Check that **Directory Layout** is indeed second and uses emoji formatting.
@@ -301,7 +309,7 @@ When asking ChatGPT (or any AI assistant) to create or update a KFM Markdown doc
 
 The **canonical repository layout** uses the `immediate-one-branch-with-descriptions-and-emojis` profile:
 
-```text
+~~~text
 📁 Kansas-Frontier-Matrix/
 ├── 📁 docs/                                  # All documentation
 │   ├── 📁 standards/                         # Standards & policies (Markdown, FAIR+CARE, governance, etc.)
@@ -336,7 +344,7 @@ The **canonical repository layout** uses the `immediate-one-branch-with-descript
 ├── 📁 .github/                               # CI/CD workflows & GitHub configuration
 │   └── 📁 workflows/                         # CI pipelines (kfm-ci, docs-lint, lineage-audit, energy/carbon)
 └── 📄 README.md                              # High-level project overview
-```
+~~~
 
 **Directory Layout rules (normative):**
 
@@ -345,7 +353,7 @@ The **canonical repository layout** uses the `immediate-one-branch-with-descript
   - A `📁` emoji, concise comment, and correct positioning.  
 - All directory trees in docs:
   - **MUST** use this emoji style (`📁`, `📄`, `🧾`, `🖼️`) and branch characters.  
-  - **MUST** be fenced as `~~~text` (or ```text```), not generic code blocks.  
+  - **MUST** be fenced as `~~~text` blocks (tildes), not backtick fences.  
 - When using ChatGPT, always explicitly request **emoji-formatted directory layouts** under `🗂️ Directory Layout`.
 
 ---
@@ -374,20 +382,20 @@ Diagrams support understanding but must remain **governed**:
 - Each diagram:
   - Lives in a `🗺️ Diagrams`, `🧱 Architecture`, or `🧪 Validation & CI/CD` section (or nearby).  
   - Has a short textual explanation for accessibility.  
-  - Uses Mermaid syntax in fenced blocks (e.g., `~~~mermaid`).
+  - Uses Mermaid syntax in fenced blocks with tildes (e.g., `~~~mermaid`).
 
 **Example flowchart**
 
-```mermaid
+~~~mermaid
 flowchart LR
     A[Author drafts Markdown] --> B[CI: markdown-lint + schema-lint]
     B -->|Pass| C[Merge to main]
     B -->|Fail| D[Author fixes issues]
-```
+~~~
 
 **Example timeline**
 
-```mermaid
+~~~mermaid
 timeline
     title Markdown Protocol Evolution
     2023-11-10 : v10.4.3 : "Legacy markdown rules"
@@ -395,7 +403,7 @@ timeline
     2025-11-27 : v11.2.2 : "Heading registry & transform rules"
     2025-12-04 : v11.2.4 : "Semantic alignment & AI integration"
     2025-12-07 : v11.2.5 : "Emoji H2 + directory layout elevation"
-```
+~~~
 
 Forbidden: ASCII art diagrams, diagrams with secrets, or unlabeled diagrams.
 
@@ -411,9 +419,9 @@ Docs following KFM-MDP v11.2.5 are **Story Node ready**:
 
 **Story Node targeting example**
 
-```text
+~~~text
 "target": "kfm-markdown-protocol-v11.2.5"
-```
+~~~
 
 **Focus Mode MAY:**
 
@@ -435,15 +443,15 @@ Markdown is fully integrated into CI:
 
 From `test_profiles`:
 
-| Profile              | Purpose                                          |
-|----------------------|--------------------------------------------------|
-| `markdown-lint`      | Structural & style linting                       |
-| `schema-lint`        | YAML front-matter schema validation              |
-| `metadata-check`     | Required metadata present & consistent           |
-| `diagram-check`      | Mermaid syntax & profile check                   |
-| `accessibility-check`| Basic structural a11y checks                     |
-| `provenance-check`   | `provenance_chain` + Version History alignment   |
-| `footer-check`       | Footer & governance-links enforcement            |
+| Profile               | Purpose                                         |
+|-----------------------|-------------------------------------------------|
+| `markdown-lint`       | Structural & style linting                      |
+| `schema-lint`         | YAML front-matter schema validation             |
+| `metadata-check`      | Required metadata present & consistent          |
+| `diagram-check`       | Mermaid syntax & profile check                  |
+| `accessibility-check` | Basic structural a11y checks                    |
+| `provenance-check`    | `provenance_chain` + Version History alignment  |
+| `footer-check`        | Footer & governance-links enforcement           |
 
 ### H1/H2 rules
 
@@ -549,16 +557,16 @@ This protocol encodes FAIR+CARE into documentation:
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary                                                                                                                       |
-|------------:|-----------:|-------------------------------------------------------------------------------------------------------------------------------|
+| Version     | Date       | Summary                                                                                                                                                                                                                 |
+|------------:|-----------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **v11.2.5** | 2025-12-07 | Elevated `🗂️ Directory Layout` to second H2 for standards/guides; mandated emoji directory trees; updated heading registry to emoji-prefixed H2s; normalized relative paths for releases/schemas from `docs/standards/`; clarified ChatGPT usage requirements. |
-| v11.2.4     | 2025-12-04 | Added STAC/DCAT/PROV alignment section; extended Story Node & Focus Mode guidance; tightened CI enforcement and transform rules. |
-| v11.2.3     | 2025-12-02 | Refined AI transform permissions and Focus Mode behaviors (no structural changes; internal alignment).                        |
-| v11.2.2     | 2025-11-27 | Introduced heading registry; expanded metadata/provenance fields; unified YAML front-matter; hardened anti-pattern definitions. |
-| v11.2.1     | 2025-11-26 | Added profile system; stronger provenance enforcement; stricter DCAT/STAC metadata requirements.                               |
-| v11.2.0     | 2025-11-25 | Major overhaul for KFM v11, including header/footer profiles, CI test profiles, and diagram usage rules.                      |
-| v11.0.1     | 2025-11-20 | Initial KFM v11 consolidation of markdown rules under unified ontology and governance.                                        |
-| v10.4.3     | 2023-11-10 | Legacy markdown rules prior to KFM v11, defining basic front-matter and structural layout.                                    |
+| v11.2.4     | 2025-12-04 | Added STAC/DCAT/PROV alignment section; extended Story Node & Focus Mode guidance; tightened CI enforcement and transform rules.                                                                                       |
+| v11.2.3     | 2025-12-02 | Refined AI transform permissions and Focus Mode behaviors (no structural changes; internal alignment).                                                                                                                  |
+| v11.2.2     | 2025-11-27 | Introduced heading registry; expanded metadata/provenance fields; unified YAML front-matter; hardened anti-pattern definitions.                                                                                        |
+| v11.2.1     | 2025-11-26 | Added profile system; stronger provenance enforcement; stricter DCAT/STAC metadata requirements.                                                                                                                        |
+| v11.2.0     | 2025-11-25 | Major overhaul for KFM v11, including header/footer profiles, CI test profiles, and diagram usage rules.                                                                                                               |
+| v11.0.1     | 2025-11-20 | Initial KFM v11 consolidation of markdown rules under unified ontology and governance.                                                                                                                                 |
+| v10.4.3     | 2023-11-10 | Legacy markdown rules prior to KFM v11, defining basic front-matter and structural layout.                                                                                                                              |
 
 ---
 
