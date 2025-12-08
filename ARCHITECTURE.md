@@ -1,60 +1,59 @@
 ---
-title: "🏗️ Kansas Frontier Matrix — Repository Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "ARCHITECTURE.md"
-version: "v11.2.4"
+title: "📑 Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.5"
+path: "docs/standards/kfm_markdown_protocol_v11.2.5.md"
+version: "v11.2.5"
 last_updated: "2025-12-07"
+
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Annual · FAIR+CARE Council & Focus Mode Board"
-backward_compatibility: "Full v10.x → v11.x compatibility"
 content_stability: "stable"
 
-commit_sha: "<latest-commit-hash>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/root-architecture-v11.json"
-energy_schema: "schemas/telemetry/energy-v2.json"
-carbon_schema: "schemas/telemetry/carbon-v2.json"
+status: "Active / Enforced"
+doc_kind: "Standard"
+header_profile: "standard"
+footer_profile: "standard"
 
-governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-
+license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.4"
+markdown_protocol_version: "KFM-MDP v11.2.5"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
 prov_profile: "KFM-PROV v11"
-openlineage_profile: "OpenLineage v2.5 + KFM Extensions"
 
-status: "Active / Enforced"
-doc_kind: "Architecture"
-intent: "repository-architecture"
-category: "System Architecture · Repository Design · Global Dataflow"
+scope:
+  domain: "documentation"
+  applies_to:
+    - "all-markdown"
 
 fair_category: "F1-A1-I1-R1"
-care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
-sensitivity: "General (non-sensitive; applies masking to protected datasets)"
-sensitivity_level: "Low"
-public_exposure_risk: "Low to Medium"
+care_label: "Public · Low-Risk"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
 classification: "Public"
 jurisdiction: "Kansas / United States"
 indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
-risk_profile: "High Governance · Requires Full Provenance · Auto-Masked Sensitive Data"
-redaction_required: false
 
-ontology_ref:
-  - "docs/graph/ontology/core-entities.md"
-  - "docs/graph/ontology/cidoc-crm-mapping.md"
-  - "docs/graph/ontology/spatial-temporal-patterns.md"
+ttl_policy: "24 months"
+sunset_policy: "Supersedes KFM-MDP v11.2.4"
+
+commit_sha: "<latest-commit-hash>"
+signature_ref: "../../releases/v11.2.5/signature.sig"
+attestation_ref: "../../releases/v11.2.5/slsa-attestation.json"
+sbom_ref: "../../releases/v11.2.5/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.5/manifest.zip"
+telemetry_ref: "../../releases/v11.2.5/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/markdown-protocol-v11.2.5.json"
+energy_schema: "../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "governance/ROOT-GOVERNANCE.md"
+ethics_ref: "faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -70,11 +69,13 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
-  - "ARCHITECTURE.md@v11.2.2"
-  - "ARCHITECTURE.md@v11.1.1"
-  - "ARCHITECTURE.md@v11.1.0"
-  - "ARCHITECTURE.md@v11.0.1"
-  - "ARCHITECTURE.md@v11.0.0"
+  - "docs/standards/kfm_markdown_protocol_v11.2.4.md@v11.2.4"
+  - "docs/standards/kfm_markdown_protocol_v11.2.3.md@v11.2.3"
+  - "docs/standards/kfm_markdown_protocol_v11.2.2.md@v11.2.2"
+  - "docs/standards/kfm_markdown_protocol_v11.2.1.md@v11.2.1"
+  - "docs/standards/kfm_markdown_protocol_v11.2.md@v11.2.0"
+  - "docs/standards/kfm_markdown_protocol_v11.md@v11.0.1"
+  - "docs/standards/markdown_rules.md@v10.4.3"
 
 provenance_requirements:
   versions_required: true
@@ -82,17 +83,20 @@ provenance_requirements:
   must_reference_superseded: true
   must_reference_origin_root: true
 
-json_schema_ref: "schemas/json/root-architecture-v11.schema.json"
-shape_schema_ref: "schemas/shacl/root-architecture-v11-shape.ttl"
+json_schema_ref: "../../schemas/json/kfm-markdown-protocol-v11.2.5.schema.json"
+shape_schema_ref: "../../schemas/shacl/kfm-markdown-protocol-v11.2.5-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:architecture:repository:v11.2.4"
-semantic_document_id: "kfm-repository-architecture"
-event_source_id: "ledger:ARCHITECTURE.md"
+story_node_refs: []
 immutability_status: "version-pinned"
+
+doc_uuid: "urn:kfm:doc:standards:markdown-protocol:v11.2.5"
+semantic_document_id: "kfm-markdown-protocol-v11.2.5"
+event_source_id: "ledger:kfm:doc:standards:markdown-protocol:v11.2.5"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
+
 ai_transform_permissions:
   - "summary"
   - "timeline-generation"
@@ -101,6 +105,7 @@ ai_transform_permissions:
   - "a11y-adaptations"
   - "diagram-extraction"
   - "metadata-extraction"
+
 ai_transform_prohibited:
   - "content-alteration"
   - "speculative-additions"
@@ -149,8 +154,6 @@ test_profiles:
   - "diagram-check"
   - "metadata-check"
   - "provenance-check"
-  - "lineage-audit-v11"
-  - "governance-audit-v11"
 
 ci_integration:
   workflow: ".github/workflows/kfm-ci.yml"
@@ -177,23 +180,19 @@ requires_directory_layout_section: true
 requires_governance_links_in_footer: true
 
 deprecated_fields:
-  - "old_architecture_doc_v10.4"
+  - "old_markdown_standard_v10.4"
 ---
 
 <div align="center">
 
-# 🏗️ **Kansas Frontier Matrix**  
-## **Repository Architecture & System Blueprint (v11 LTS)**  
-`ARCHITECTURE.md`  
+# 📑 **Kansas Frontier Matrix — Markdown Authoring Protocol v11.2.5**  
+`docs/standards/kfm_markdown_protocol_v11.2.5.md`
 
-**Purpose:**  
-Describe the **canonical repository structure and runtime architecture** for the Kansas Frontier Matrix (KFM v11), in a way that is:  
+**Purpose**  
+Define the canonical, enforceable Markdown authoring rules for the Kansas Frontier Matrix (KFM) v11.2.5.  
+This protocol standardizes structure, headings, metadata, and narrative patterns so that all Markdown in the monorepo is CI-safe, FAIR+CARE-aligned, semantically interoperable, and ready for advanced Story Node / Focus Mode integration.
 
-- deterministic and provenance-aware (PROV-O, OpenLineage),  [oai_citation:0‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
-- geospatially interoperable (GeoSPARQL, STAC),  [oai_citation:1‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
-- documentation-first and CI-safe under **KFM-MDP v11.2.4**.  [oai_citation:2‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
-
-[📘 Docs – MCP v6.3](docs/README.md) · [⚖️ FAIR+CARE](docs/standards/faircare/FAIRCARE-GUIDE.md) · [📜 License: MIT](LICENSE) · [📦 SBOM](releases/v11.2.4/sbom.spdx.json) · [📊 Telemetry](releases/v11.2.4/focus-telemetry.json)
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue "Master Coder Protocol v6.3")]() · [![KFM-MDP v11.2.5](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.5-informational "Markdown Protocol v11.2.5")]() · [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold "FAIR+CARE Compliant")]() · [![WCAG AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet "WCAG 2.1 AA+")]() · [![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen "Status: Active & Enforced")]()
 
 </div>
 
@@ -201,350 +200,373 @@ Describe the **canonical repository structure and runtime architecture** for the
 
 ## 📘 Overview
 
-KFM v11 is a **state-scale, FAIR+CARE-governed knowledge system for Kansas**, spanning:
+### 1. Scope and Intent
 
-- 🗺️ Geospatial layers (2D/3D maps, rasters, vectors, DGGS/H3 tiles)  
-- 💧 Environmental & hydrological chronologies  
-- 🌿 Ecology, land systems, and soil/terrain  
-- 🏺 Archaeology & cultural landscapes (generalized for sovereignty and safety)  
-- 📜 Historical archives, documents, and newspapers  
-- ⚡ Hazards & infrastructure (storms, floods, drought, wildfire, energy)  
-- 🧠 AI-assisted ETL, modeling, and narrative generation  
-- 📖 Story Nodes & Focus Mode overlays tied to the knowledge graph  
+KFM-MDP v11.2.5 governs **all Markdown files** in the Kansas Frontier Matrix monorepo (`Kansas-Frontier-Matrix`), across every domain:
 
-This architecture document is treated as a **prov:Plan** (design/specification) and a **CIDOC-CRM E29 Design or Procedure**, providing the blueprint that all code, data, and docs must conform to.  [oai_citation:3‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
+- ETL / pipelines (`src/pipelines/`)
+- Graph / ontology (`src/graph/`)
+- APIs (`src/api/`)
+- Web & 3D UI (`web/`)
+- Data catalogs & specs (`docs/data/`, `data/stac/`)
+- Domain analyses (`docs/analyses/`)
+- Governance & standards (`docs/standards/`)
+- CI/CD & infra (`.github/`)
 
-### Goals of this document
+If it’s `.md` in this repo, this protocol applies.
 
-- Provide a **single, canonical directory layout** for the monorepo.  [oai_citation:4‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
-- Explain how **data, pipelines, graph, APIs, and web UI** compose into one system.  
-- Show how **STAC, DCAT, PROV-O, GeoSPARQL, OWL-Time** are wired in from the start.  [oai_citation:5‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
-- Describe how **Story Nodes & Focus Mode** depend on this structure for safe, grounded narratives.  
-- Anchor CI/CD, governance, and FAIR+CARE checks directly into the repo layout.
+This version:
 
-All evolution of the repository MUST preserve this high-level shape; deviations (e.g., new top-level directories, alternate layouts) require architecture/governance review and a version bump to this document.
+- **Promotes the `🗂️ Directory Layout` section** to be the **second H2** in standards and guides, immediately after `📘 Overview`.  
+- **Standardizes emoji-rich directory trees** under `🗂️ Directory Layout`, using the `immediate-one-branch-with-descriptions-and-emojis` layout profile for human + AI readability.  
+- Updates the **heading registry** to require emoji-prefixed H2s (e.g., `📘 Overview`, `🗂️ Directory Layout`) across all new and revised docs.  
+- Normalizes **relative paths** (e.g., `../../releases/...`) for standards under `docs/standards/`, ensuring links resolve correctly from the actual file location.  
+- Reaffirms tight integration with **STAC, DCAT, PROV-O, CIDOC CRM**, and the KFM ontology, making Markdown documents ingestible into catalogs and the Neo4j knowledge graph.
+
+All downstream documentation patterns must extend this standard, **not override it**.
+
+### 2. Core Principles
+
+1. **Single Source of Truth** – This document is the authoritative reference for KFM Markdown structure and metadata.  
+2. **Documentation-First** – Code/data changes are incomplete without updated docs.  
+3. **Machine-Readable by Design** – Uniform front-matter + predictable headings + structured content.  
+4. **Human-Friendly Narrative** – Clear Purpose, logical sections, and concise language.  
+5. **Ethical & Sovereignty-Aware** – FAIR, CARE, and Indigenous data sovereignty baked into governance fields.  
+6. **Predictable Layout** – `📘 Overview` then `🗂️ Directory Layout`, followed by other registered H2s, ending with `🕰️ Version History`.  
+
+### 3. Author Quickstart (Human-Facing)
+
+Before writing or editing any KFM Markdown:
+
+1. **Start from a matching template**  
+   Copy an existing doc with the same `doc_kind` under `docs/standards/` or `docs/guides/`.
+
+2. **Update YAML front-matter**  
+   - Set `title`, `path`, `version`, `last_updated`.  
+   - Ensure `governance_ref`, `ethics_ref`, `sovereignty_policy` and metadata URLs are correct and **relative to the file’s location**.  
+   - Confirm `doc_kind`, `status`, `review_cycle`, and `classification`.
+
+3. **Purpose block**  
+   Under the H1, include a short **Purpose** paragraph explaining what the doc does and for whom.
+
+4. **Use only approved H2 headings (with emojis)**  
+   All H2s **must** be chosen from `heading_registry.approved_h2`, using the exact emoji + text.
+
+5. **Keep ordering predictable**  
+   - `📘 Overview`  
+   - `🗂️ Directory Layout`  
+   - remaining H2s as appropriate for the doc, ending with `🕰️ Version History`.
+
+6. **Close with Version History & footer**  
+   - A `🕰️ Version History` table.  
+   - Governance footer with links back to docs root, standards index, and governance charter.
+
+### 4. Author Quickstart (ChatGPT / AI Usage)
+
+When asking ChatGPT (or any AI assistant) to create or update a KFM Markdown document:
+
+1. **Explicitly request:**
+
+   - A **YAML front-matter block** at the very top, matching this protocol.  
+   - H1/H2 headings using the **emoji-prefixed registry** (e.g., `## 📘 Overview`, `## 🗂️ Directory Layout`).  
+   - A **`🗂️ Directory Layout` H2 as the second section**, right after `📘 Overview`.  
+   - A directory tree under `🗂️ Directory Layout` that:
+     - Uses emojis:  
+       - `📁` for directories  
+       - `📄` for Markdown/text files  
+       - `🧾` for JSON/log-like artifacts  
+       - `🖼️` for images/visual assets  
+     - Uses `├──` / `└──` ASCII branches.  
+     - Is fenced as `~~~text`.
+
+2. **Prompt pattern (recommended)**
+
+   > “Generate a KFM-compliant Markdown doc with: YAML front-matter, `📘 Overview` then `🗂️ Directory Layout` (with emoji directory tree), and only emoji-prefixed H2s from the heading registry.”
+
+3. **Tell the AI to avoid:**
+
+   - System-specific citation syntax or hidden markup.  
+   - Unnecessary HTML; `<div align="center">` is allowed but keep it minimal.  
+   - Nested fences or unsupported diagram types.
+
+4. **After pasting AI output:**
+
+   - Verify **relative paths** match the actual file location (e.g., standards under `docs/standards/` must use `../../releases/...` for release artifacts).  
+   - Run `docs`/Markdown lint locally or via CI.  
+   - Check that **Directory Layout** is indeed second and uses emoji formatting.
 
 ---
 
 ## 🗂️ Directory Layout
 
-The directory tree below is the **authoritative layout** for the KFM monorepo. It follows the emoji + comment conventions from **KFM-MDP v11.2.4** and MUST be kept in sync with reality.  [oai_citation:6‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
+The **canonical repository layout** uses the `immediate-one-branch-with-descriptions-and-emojis` profile:
 
-~~~text
-KansasFrontierMatrix/
-├── 📂 docs/                                  # All documentation
-│   ├── 📂 standards/                         # Standards & policies (Markdown, FAIR+CARE, governance, etc.)
-│   ├── 📂 architecture/                      # System & subsystem designs (ETL, graph, API, UI, Focus Mode)
-│   ├── 📂 guides/                            # How-to guides, tutorials, SOP-style walkthroughs
-│   ├── 📂 data/                              # Data contracts, source registries, schema notes
-│   ├── 📂 analyses/                          # Domain analyses & case studies (archaeology, hydrology, etc.)
+```text
+📁 Kansas-Frontier-Matrix/
+├── 📁 docs/                                  # All documentation
+│   ├── 📁 standards/                         # Standards & policies (Markdown, FAIR+CARE, governance, etc.)
+│   ├── 📁 architecture/                      # System & subsystem designs (ETL, graph, API, UI, Focus Mode)
+│   ├── 📁 guides/                            # How-to guides, tutorials, SOP-style walkthroughs
+│   ├── 📁 data/                              # Data contracts, source registries, schema notes
+│   ├── 📁 analyses/                          # Domain analyses & case studies (archaeology, hydrology, etc.)
 │   └── 📄 glossary.md                        # Shared glossary for KFM-wide terminology
-├── 📂 src/                                   # Backend & service code
-│   ├── 📂 pipelines/                         # ETL, AI/ML, orchestration (batch, streaming, LangGraph, Airflow)
-│   ├── 📂 graph/                             # Neo4j schema, loaders, queries, lineage helpers
-│   ├── 📂 api/                               # FastAPI / GraphQL services (gateway, auth, routing)
-│   └── 📂 tools/                             # Backend utilities, CLIs, migrations
-├── 📂 data/                                  # Data lifecycle: raw → work → processed → releases
-│   ├── 📂 sources/                           # External dataset manifests (STAC/DCAT-aligned)
-│   ├── 📂 raw/                               # Raw ingested data (LFS/DVC; not committed directly)
-│   ├── 📂 work/                              # Intermediate normalized / enriched data
-│   ├── 📂 processed/                         # Production-ready GeoJSON, COGs, CSVs, graph exports
-│   └── 📂 stac/                              # STAC Collections & Items indexing processed assets
-├── 📂 schemas/                               # JSON, JSON-LD, STAC, DCAT, SHACL, telemetry schemas
-│   ├── 📂 json/                              # JSON schemas (docs, pipelines, Story Nodes, Focus telemetry)
-│   └── 📂 telemetry/                         # Energy, carbon, lineage, metrics schemas
-├── 📂 mcp/                                   # Master Coder Protocol artifacts
-│   ├── 📂 experiments/                       # Experiment logs (timestamped, domain-tagged)
-│   ├── 📂 model_cards/                       # Model documentation & evaluation cards
-│   └── 📂 sops/                              # SOPs for repeatable processes (ETL, modeling, deployment)
-├── 📂 tests/                                 # Automated test suites (unit, integration, UI)
-├── 📂 tools/                                 # Repo-level tools, dev utilities, maintenance scripts
-└── 📂 .github/                               # CI/CD workflows & GitHub configuration
-    └── 📂 workflows/                         # CI pipelines (kfm-ci, docs-lint, lineage-audit, energy/carbon)
-~~~
+├── 📁 src/                                   # Backend & service code
+│   ├── 📁 pipelines/                         # ETL, AI/ML, orchestration (batch, streaming, LangGraph, Airflow)
+│   ├── 📁 graph/                             # Neo4j schema, loaders, queries, lineage helpers
+│   ├── 📁 api/                               # FastAPI / GraphQL services (gateway, auth, routing)
+│   └── 📁 tools/                             # Backend utilities, CLIs, migrations
+├── 📁 web/                                   # React / MapLibre / Cesium frontends & Story Node UI
+│   ├── 📁 app/                               # Main web app
+│   └── 📁 story-nodes/                       # Story Node layouts & Focus Mode UX
+├── 📁 data/                                  # Data lifecycle: raw → work → processed → releases
+│   ├── 📁 sources/                           # External dataset manifests (STAC/DCAT-aligned)
+│   ├── 📁 raw/                               # Raw ingested data (LFS/DVC; not committed directly)
+│   ├── 📁 work/                              # Intermediate normalized / enriched data
+│   ├── 📁 processed/                         # Production-ready GeoJSON, COGs, CSVs, graph exports
+│   └── 📁 stac/                              # STAC Collections & Items indexing processed assets
+├── 📁 schemas/                               # JSON, JSON-LD, STAC, DCAT, SHACL, telemetry schemas
+│   ├── 📁 json/                              # JSON schemas (docs, pipelines, Story Nodes, Focus telemetry)
+│   └── 📁 telemetry/                         # Energy, carbon, lineage, metrics schemas
+├── 📁 mcp/                                   # Master Coder Protocol artifacts
+│   ├── 📁 experiments/                       # Experiment logs (timestamped, domain-tagged)
+│   ├── 📁 model_cards/                       # Model documentation & evaluation cards
+│   └── 📁 sops/                              # SOPs for repeatable processes (ETL, modeling, deployment)
+├── 📁 tests/                                 # Automated test suites (unit, integration, UI)
+├── 📁 tools/                                 # Repo-level tools, dev utilities, maintenance scripts
+├── 📁 .github/                               # CI/CD workflows & GitHub configuration
+│   └── 📁 workflows/                         # CI pipelines (kfm-ci, docs-lint, lineage-audit, energy/carbon)
+└── 📄 README.md                              # High-level project overview
+```
 
-**Directory rules**
+**Directory Layout rules (normative):**
 
-- Every directory shown above MUST have a `README.md` explaining purpose, substructure, and governance.  
-- New top-level directories are **forbidden** without updating this document and passing architecture/governance review.  
-- Directory trees in docs MUST use `~~~text` fences and canonical `├──` / `└──` glyphs and emoji labels, per KFM-MDP v11.2.4.  [oai_citation:7‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
+- Every documented directory **MUST** have a `README.md` describing purpose and key files.  
+- Any **new top-level directory** added to the repo **MUST** be reflected in this tree with:
+  - A `📁` emoji, concise comment, and correct positioning.  
+- All directory trees in docs:
+  - **MUST** use this emoji style (`📁`, `📄`, `🧾`, `🖼️`) and branch characters.  
+  - **MUST** be fenced as `~~~text` (or ```text```), not generic code blocks.  
+- When using ChatGPT, always explicitly request **emoji-formatted directory layouts** under `🗂️ Directory Layout`.
 
 ---
 
 ## 🧭 Context
 
-This architecture sits at the intersection of several KFM standards and external vocabularies:
+KFM-MDP v11.2.5 sits at the intersection of:
 
-- **Markdown Protocol – KFM-MDP v11.2.4**  
-  Enforces front-matter, heading registry, and footer patterns for all Markdown in `docs/`, `ARCHITECTURE.md` included.  [oai_citation:8‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
+- **KFM-OP v11 (Ontology Protocol)** – ensures doc entities & relationships align with Neo4j schema and CIDOC-CRM / PROV-O.  
+- **MCP-DL v6.3** – enforces a documentation-first culture and reproducible experiment practices.  
+- **Data catalog standards** – STAC, DCAT, GeoSPARQL, OWL-Time, enabling search and integration across tools.  
+- **Story Node & Focus Mode** – use Markdown as a structured narrative layer over the graph and map visualizations.
 
-- **Provenance – PROV-O + KFM-PROV v11**  
-  All design choices here are modeled as a **prov:Plan** and operationalized via Entities–Activities–Agents, enabling lineage of code, data, and docs.  [oai_citation:9‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
-
-- **Geospatial Semantics – GeoSPARQL + KFM-STAC v11**  
-  Spatial things in KFM are treated as `geo:Feature` with linked geometries (`geo:Geometry`) using WKT/GeoJSON literals, aligning 2D/3D map views with the graph and catalogs.  [oai_citation:10‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
-
-- **Catalogs – DCAT 3.0 + STAC 1.x**  
-  Datasets in `data/` and their metadata in `docs/data/` and `data/stac/` follow DCAT and STAC profiles so they can be discovered, filtered, and linked to PROV graphs.
-
-- **Story Nodes & Focus Mode**  
-  Narrative overlays are backed by the graph and catalogs; they rely on this repository’s predictable structure to safely answer “what, where, when, how, and who”.
-
-This document is the **entry point** for new contributors and automated agents: if a change cannot be located in this architecture, it is probably not aligned with KFM governance yet.
+This protocol makes Markdown a **first-class, cataloged, provenance-aware asset**, not just ad-hoc notes.
 
 ---
 
 ## 🗺️ Diagrams
 
-### 1. End-to-End System View
+Diagrams support understanding but must remain **governed**:
 
-~~~mermaid
+- Allowed profiles (see `diagram_profiles`):
+  - `mermaid-flowchart-v1`
+  - `mermaid-timeline-v1`
+
+- Each diagram:
+  - Lives in a `🗺️ Diagrams`, `🧱 Architecture`, or `🧪 Validation & CI/CD` section (or nearby).  
+  - Has a short textual explanation for accessibility.  
+  - Uses Mermaid syntax in fenced blocks (e.g., `~~~mermaid`).
+
+**Example flowchart**
+
+```mermaid
 flowchart LR
-    subgraph Repo["Monorepo (code + docs)"]
-        A["docs/ - standards & guides"] --> B["src/pipelines/ - ETL & AI"]
-        B --> C["data/processed/ & data/stac/ - published data"]
-        C --> D["src/graph/ - Neo4j knowledge graph"]
-        D --> E["src/api/ - GraphQL / FastAPI"]
-        E --> F["web/ - map, 3D, Focus Mode"]
-    end
+    A[Author drafts Markdown] --> B[CI: markdown-lint + schema-lint]
+    B -->|Pass| C[Merge to main]
+    B -->|Fail| D[Author fixes issues]
+```
 
-    subgraph Lineage["Lineage & provenance"]
-        B -.-> G["OpenLineage runtime bus"]
-        B --> H["PROV-O export pipeline"]
-        H --> I["Lineage store (RDF + graph)"]
-        I --> F
-    end
-~~~
+**Example timeline**
 
-- **Docs** define contracts and standards.  
-- **Pipelines** implement those contracts and emit catalog + PROV-O lineage.  [oai_citation:11‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
-- **Graph & APIs** expose a governed, queryable knowledge graph.  
-- **Web** renders maps, timelines, and Focus Mode overlays backed by those layers.  [oai_citation:12‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
-
-### 2. Architecture Evolution (Example)
-
-~~~mermaid
+```mermaid
 timeline
-    title Repository Architecture Evolution (v11)
-    2025-11-19 : v11.0.0 : "Initial v11 LTS repository architecture"
-    2025-11-23 : v11.0.1 : "Expanded runtime/lineage description"
-    2025-11-27 : v11.2.2 : "Aligned with KFM-MDP v11.2.2, CI hardening"
-    2025-12-07 : v11.2.4 : "Full KFM-MDP v11.2.4 alignment, STAC/DCAT/PROV/GeoSPARQL integration"
-~~~
+    title Markdown Protocol Evolution
+    2023-11-10 : v10.4.3 : "Legacy markdown rules"
+    2025-11-25 : v11.2.0 : "Front-matter & profile overhaul"
+    2025-11-27 : v11.2.2 : "Heading registry & transform rules"
+    2025-12-04 : v11.2.4 : "Semantic alignment & AI integration"
+    2025-12-07 : v11.2.5 : "Emoji H2 + directory layout elevation"
+```
 
-Diagrams are **illustrative only**; all normative requirements live in text, schemas, and tests.
+Forbidden: ASCII art diagrams, diagrams with secrets, or unlabeled diagrams.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Story Nodes and Focus Mode are first-class citizens in this architecture:
+Docs following KFM-MDP v11.2.5 are **Story Node ready**:
 
-- **Story Nodes**  
-  - Live as JSON (schema in `schemas/json/`) and are indexed by the graph.  
-  - Bind narrative text to:
-    - Place (`geo:Feature`), via GeoSPARQL-aligned geometry references.  [oai_citation:13‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
-    - Time (`time:Instant` / `time:Interval`), using OWL-Time patterns.  
-    - Datasets and documents (`prov:Entity`, `dcat:Dataset`).  [oai_citation:14‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
+- H2 + H3 structure creates natural **Story Node segments** (e.g., `📘 Overview`, `🗂️ Directory Layout`).  
+- Front-matter IDs (`doc_uuid`, `semantic_document_id`) allow Focus Mode to anchor summaries.  
+- `ai_transform_permissions` and `ai_transform_prohibited` codify what AI may do with the content.
 
-- **Focus Mode v3**  
-  - Accepts a focus target: graph node ID, dataset ID, Story Node ID.  
-  - Pulls a controlled subgraph (2–3 hops), plus STAC/DCAT records and PROV-O lineage.  
-  - Generates explanations using only allowed transforms (`summary`, `semantic-highlighting`, etc.), never modifying source docs or inventing provenance.
+**Story Node targeting example**
 
-**Repo responsibilities**
+```text
+"target": "kfm-markdown-protocol-v11.2.5"
+```
 
-- `docs/architecture/` describes Story Node schemas, Focus Mode behaviors, and UI contracts.  
-- `src/graph/` defines labels and relationships that Story Nodes and Focus Mode target.  
-- `src/api/` exposes:
-  - “focus target → subgraph + docs + catalogs + lineage” APIs.  
-- `web/` (when present under `src/` or a dedicated app) is *only* a consumer of these APIs; it does not invent lineage or narrative on its own.
+**Focus Mode MAY:**
+
+- Summarize sections (Overview, Directory Layout rules, etc.).  
+- Highlight key requirements (heading registry, AI restrictions).  
+
+**Focus Mode MUST NOT:**
+
+- Invent new governance rules or modify normative statements.  
+- Alter semantics of requirements like “emoji directory layouts” or heading registries.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-The repository is wired so that **docs, code, data, and lineage** are validated together before merging.
+Markdown is fully integrated into CI:
 
-### 1. CI Workflows
+### Test profiles
 
-`.github/workflows/kfm-ci.yml` orchestrates:
+From `test_profiles`:
 
-- **Docs & Markdown**
-  - `markdown-lint` and `accessibility-check` for all `.md` (including this file).  [oai_citation:15‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
-  - `footer-check` to ensure version history + governance footers are present.  
+| Profile              | Purpose                                          |
+|----------------------|--------------------------------------------------|
+| `markdown-lint`      | Structural & style linting                       |
+| `schema-lint`        | YAML front-matter schema validation              |
+| `metadata-check`     | Required metadata present & consistent           |
+| `diagram-check`      | Mermaid syntax & profile check                   |
+| `accessibility-check`| Basic structural a11y checks                     |
+| `provenance-check`   | `provenance_chain` + Version History alignment   |
+| `footer-check`       | Footer & governance-links enforcement            |
 
-- **Schemas & Contracts**
-  - `schema-lint` for JSON/JSON-LD/STAC/DCAT/Story Node/telemetry schemas.  
-  - Data-contract checks (KFM-PDC v11) against sample data in `data/`.  
+### H1/H2 rules
 
-- **Lineage & Governance**
-  - `lineage-audit-v11` verifies that pipelines emit PROV-O/OpenLineage events.  [oai_citation:16‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
-  - `governance-audit-v11` ensures FAIR+CARE and sovereignty rules are respected.
+- Exactly **one H1** per file.  
+- H2 **must** come from `heading_registry.approved_h2` and **must** include the emoji.  
+- Standard order (for standards/guides):
+  1. `📘 Overview`
+  2. `🗂️ Directory Layout`
+  3. remaining sections as needed  
+  4. `🕰️ Version History` last
 
-### 2. Architecture-Specific Expectations
+Docs that omit `🗂️ Directory Layout` or place it too low are **non-compliant** for standards/guides and will be flagged.
 
-For any PR that changes **repository structure or architecture**:
+### YAML rules
 
-- Update **this file** (`ARCHITECTURE.md`) and any relevant `docs/architecture/*.md`.  
-- Update schemas (`schemas/json/`, `schemas/shacl/`) if contracts change.  
-- Add or update tests under `tests/` and, where appropriate, fixtures under `data/` or `mcp/experiments/`.  
-- Include lineage expectations (PROV-O/OpenLineage) for new pipelines.  
-
-No structural change is considered valid until **CI is green and this architecture doc remains consistent with the repo**.
+- Front-matter is required at the top; no blank lines before `---`.  
+- All required fields per `doc_kind` must be present and typed correctly.  
+- Deprecated fields listed here are **not allowed** in new docs.
 
 ---
 
 ## 📦 Data & Metadata
 
-The data and metadata stack is designed to be:
+This document is itself a **metadata-rich asset**:
 
-- **Graph-friendly** — everything is representable as nodes and relationships.  
-- **Catalog-first** — datasets surface via DCAT and STAC records.  
-- **Provenance-rich** — every important entity has a PROV-O lineage chain.  [oai_citation:17‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
+- Can be indexed as a DCAT `dcat:Dataset` / `dcat:CatalogRecord`.  
+- Can be represented as a STAC Item in a `kfm-docs` Collection.  
+- Behaves as a `prov:Plan` (CIDOC `E29 Design or Procedure`) in the provenance graph.
 
-### 1. Data Lifecycle
+Required metadata for `doc_kind: "Standard"` includes:
 
-- `data/raw/` — raw ingests, never edited in place; referenced as PROV-O Entities.  
-- `data/work/` — normalized and enriched intermediates; often used in iterative analyses.  
-- `data/processed/` — canonical outputs for publication and graph loading.  
-- `data/stac/` — STAC Collections & Items referencing processed assets (COGs, GeoJSON, etc.).  
-
-### 2. Metadata Artifacts
-
-- **Schemas** in `schemas/json/` and `schemas/shacl/` define:
-  - data contracts,
-  - Story Node formats,
-  - telemetry and energy/carbon measurements.  
-
-- **Catalogs**:
-  - DCAT records (KFM-DCAT v11) describe datasets and their distributions.  
-  - STAC records (KFM-STAC v11) describe geospatial items and collections.  
-
-- **Lineage**:
-  - PROV-O graphs represent Entities–Activities–Agents, including datasets, ETL runs, and review processes.  [oai_citation:18‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
-
-All of these are referenced from the graph, letting Focus Mode “walk” from a narrative to the underlying data and back.
+- Identity & versioning: `title`, `path`, `version`, `doc_uuid`, `semantic_document_id`, `event_source_id`.  
+- Governance & lifecycle: `status`, `release_stage`, `lifecycle`, `review_cycle`, `ttl_policy`, `sunset_policy`, `governance_ref`, `ethics_ref`, `sovereignty_policy`.  
+- Licensing & ethics: `license`, `fair_category`, `care_label`, `classification`, `sensitivity`, `indigenous_rights_flag`.  
+- Provenance & catalogs: `commit_sha`, `signature_ref`, `attestation_ref`, `sbom_ref`, `manifest_ref`, `telemetry_ref`, `telemetry_schema`, `energy_schema`, `carbon_schema`, `metadata_profiles`, `provenance_chain`, `doc_integrity_checksum`.  
+- AI behavior: `ai_focusmode_usage`, `ai_transform_permissions`, `ai_transform_prohibited`, `transform_registry`.
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-This repo architecture is explicitly tuned to make **STAC, DCAT, PROV-O, and GeoSPARQL** work together cleanly.   
+**DCAT**
 
-### 1. High-Level Alignment
+- `title` → `dct:title`  
+- Purpose → `dct:description`  
+- `last_updated` → `dct:modified`  
+- `doc_uuid` → `dct:identifier`  
+- Markdown download URL → `dcat:Distribution` with `mediaType: text/markdown`.
 
-- **DCAT 3.0**  
-  - `dcat:Dataset` ↔ logical dataset (e.g., “Kansas Wells 2025”).  
-  - `dcat:Distribution` ↔ actual files/APIs in `data/processed/`.  
-  - Provenance uses `prov:wasGeneratedBy` and related properties.  [oai_citation:19‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
+**STAC**
 
-- **STAC 1.x**  
-  - STAC Collections/Items in `data/stac/` describe spatial assets linked to processed datasets.  
-  - Geometry is expressed via GeoJSON or WKT, in line with GeoSPARQL’s geometry model.  [oai_citation:20‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
+- Represent this doc as a non-spatial Item in a documentation Collection:
+  - `id` = `semantic_document_id`  
+  - `properties.datetime` = `last_updated`  
+  - An asset for the Markdown file.
 
-- **PROV-O**  
-  - Entities = datasets, files, docs, configs.  
-  - Activities = ETL runs, analyses, reviews, exports.  
-  - Agents = people, orgs, software systems.  [oai_citation:21‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
+**PROV-O**
 
-- **GeoSPARQL**  
-  - `geo:Feature` ↔ places, sites, grid cells, etc.  
-  - `geo:Geometry` ↔ geometry nodes with `geo:asWKT` / `geo:asGeoJSON` serializations.  [oai_citation:22‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
+- Each version is a `prov:Entity` with `prov:Plan`.  
+- `provenance_chain` defines `prov:wasDerivedFrom` edges between versions.  
+- Release activities & councils are `prov:Activity` / `prov:Agent`.
 
-### 2. Concrete Repo Mappings
-
-- `data/processed/` → PROV-O Entities + DCAT Distributions; STAC Assets for geospatial outputs.  
-- `data/stac/` → STAC Collections/Items; each Item’s geometry is a **GeoSPARQL geometry** in the lineage graph.  
-- `src/pipelines/` → PROV-O Activities + OpenLineage jobs, capturing how entities were produced.  [oai_citation:23‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
-- `docs/` → PROV-O Plans (designs, protocols) and DCAT/TechArticle-style documentation records.  
-
-The architecture ensures every major artifact has **an ID, a catalog record, lineage, and—if spatial—a geometry**.
+This alignment makes docs first-class citizens in KFM catalogs and provenance graphs.
 
 ---
 
 ## 🧱 Architecture
 
-Conceptually, KFM v11 is organized into the following layers:
+From an architectural perspective, this standard:
 
-### 1. Data Layer (`data/`, `schemas/`)
+1. **Defines the Markdown contract** for all code and data modules.  
+2. **Feeds CI** – `.github/workflows/kfm-ci.yml` applies `test_profiles` to every changed `.md`.  
+3. **Supports documentation tooling & doc sites**, where front-matter and heading registry drive navigation.  
+4. **Enables AI-safe consumption** via Focus Mode and Story Nodes, respecting `ai_transform_*` constraints.
 
-- Encodes data lifecycle, contracts, and catalogs.  
-- Anchors STAC/DCAT/GeoSPARQL/PROV-O integration.   
+Any change to this protocol **must**:
 
-### 2. Pipeline & AI Layer (`src/pipelines/`, `src/ai/`, `tools/`)
-
-- Implements ETL, ingestion, and transformation jobs.  
-- Emits lineage events (OpenLineage + PROV-O exports).  [oai_citation:24‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
-- Hosts AI-assisted flows (e.g., summarization, extraction, quality checks) under strict governance.
-
-### 3. Knowledge Graph Layer (`src/graph/`, `docs/graph/`)
-
-- Neo4j schema aligns KFM-OP v11 with:
-  - PROV-O for provenance,  [oai_citation:25‡Comprehensive Guide to W3C PROV-O.pdf](file-service://file-M7Pfz7uE2cTVgom8q9d8B3)  
-  - GeoSPARQL for spatial semantics,  [oai_citation:26‡GeoSPARQL: Geospatial SPARQL for the Semantic Web.pdf](file-service://file-Gcko4NCD4BXhFG42Sh7Z1o)  
-  - OWL-Time for temporal ranges.  
-- Story Nodes are linked into the graph as narrative overlays.
-
-### 4. API & Service Layer (`src/api/`)
-
-- FastAPI/GraphQL gateway adds:
-  - access control and authentication,  
-  - FAIR+CARE masking and sovereignty enforcement,  
-  - lineage-aware query logging and telemetry.
-
-### 5. Presentation Layer (`web/` or frontend apps)
-
-- React + MapLibre + Cesium (where implemented) render:
-  - maps, 3D scenes, and timelines,  
-  - Focus Mode panels on top of graph + catalogs.  
-
-The repo keeps a **clean separation**: frontends are stateless view clients; governance, semantics, and provenance live one layer down.
+- Update this file, the JSON schema, and SHACL shape.  
+- Adjust CI workflows if new checks are added.  
+- Bump `version`, `last_updated`, and add a new Version History entry.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-This architecture is explicitly engineered to make **FAIR+CARE + sovereignty** enforceable:
+This protocol encodes FAIR+CARE into documentation:
 
-- **FAIR**
-  - *Findable*: stable IDs, cataloged datasets, discoverable docs.  
-  - *Accessible*: open formats (Markdown, JSON, RDF) and public schemas.  
-  - *Interoperable*: DCAT, STAC, PROV-O, GeoSPARQL, OWL-Time as shared vocabularies.   
-  - *Reusable*: clear licensing, version history, and provenance.
+- **FAIR**  
+  - Findable: stable IDs, predictable paths, and catalog entries.  
+  - Accessible: CC-BY license, public repository.  
+  - Interoperable: STAC/DCAT/PROV-O, CIDOC, schema.org mappings.  
+  - Reusable: explicit versioning and provenance.
 
-- **CARE**
-  - *Collective Benefit*: architecture targets long-term benefit for Kansas communities, not just internal users.  
-  - *Authority to Control*: sovereignty policies are wired into:
-    - ETL masking and generalization,  
-    - graph-level access controls,  
-    - Focus Mode transform restrictions.  
-  - *Responsibility & Ethics*: docs, pipelines, and UI flows are reviewed where sensitive cultural or ecological data are involved.
+- **CARE**  
+  - Collective Benefit: open documentation that benefits communities.  
+  - Authority to Control: links to governance & sovereignty policies; `indigenous_rights_flag` drives review.  
+  - Responsibility: authors must avoid exposing sensitive information (e.g., precise locations of cultural sites).  
+  - Ethics: forbids speculative or misleading governance claims.
 
-- **Governance Hooks**
-  - Governance & FAIR+CARE docs in `docs/standards/` are normative references for this file.  [oai_citation:27‡Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.4.pdf](file-service://file-57iDMaU6FoN7pZ8e5HbsPp)  
-  - Changes to architecture, lineage, or exposure pathways MUST go through council review when flagged as high-risk.
+`governance_ref`, `ethics_ref`, and `sovereignty_policy` are **normative** and must be followed when authoring any doc.
 
 ---
 
 ## 🕰️ Version History
 
-| Version   | Date       | Summary                                                                                                               |
-|----------:|------------|-----------------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-07 | Aligned with **KFM-MDP v11.2.4**; harmonized heading registry, directory layout emojis, and STAC/DCAT/PROV/GeoSPARQL wiring; clarified Story Node & Focus Mode dependencies. |
-| v11.2.2  | 2025-11-27 | Synced with v11.2.2 CI/governance setup; described OpenLineage integration and strengthened lineage/governance audits. |
-| v11.1.1  | 2025-11-27 | Refined runtime/lineage descriptions; clarified FAIR+CARE hooks in CI and data lifecycle.                              |
-| v11.1.0  | 2025-11-27 | Updated for KFM-STAC/DCAT v11 and ontology alignment; documented responsibilities per repo layer.                       |
-| v11.0.1  | 2025-11-23 | Expanded runtime description (LangGraph, lineage bus, reliability engine); clarified monorepo layout philosophy.       |
-| v11.0.0  | 2025-11-19 | Established v11 LTS architecture; defined dataflow, graph role, and governance integration for the modern KFM stack.   |
+| Version     | Date       | Summary                                                                                                                       |
+|------------:|-----------:|-------------------------------------------------------------------------------------------------------------------------------|
+| **v11.2.5** | 2025-12-07 | Elevated `🗂️ Directory Layout` to second H2 for standards/guides; mandated emoji directory trees; updated heading registry to emoji-prefixed H2s; normalized relative paths for releases/schemas from `docs/standards/`; clarified ChatGPT usage requirements. |
+| v11.2.4     | 2025-12-04 | Added STAC/DCAT/PROV alignment section; extended Story Node & Focus Mode guidance; tightened CI enforcement and transform rules. |
+| v11.2.3     | 2025-12-02 | Refined AI transform permissions and Focus Mode behaviors (no structural changes; internal alignment).                        |
+| v11.2.2     | 2025-11-27 | Introduced heading registry; expanded metadata/provenance fields; unified YAML front-matter; hardened anti-pattern definitions. |
+| v11.2.1     | 2025-11-26 | Added profile system; stronger provenance enforcement; stricter DCAT/STAC metadata requirements.                               |
+| v11.2.0     | 2025-11-25 | Major overhaul for KFM v11, including header/footer profiles, CI test profiles, and diagram usage rules.                      |
+| v11.0.1     | 2025-11-20 | Initial KFM v11 consolidation of markdown rules under unified ontology and governance.                                        |
+| v10.4.3     | 2023-11-10 | Legacy markdown rules prior to KFM v11, defining basic front-matter and structural layout.                                    |
 
 ---
 
 <div align="center">
 
-🏗️ **Kansas Frontier Matrix — Repository Architecture (v11.2.4)**  
-Documentation-First · FAIR+CARE · Provenance-Aware · Spatially Interoperable  
+📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.5**  
+Scientific Insight · Documentation-First · FAIR+CARE Ethics · Sustainable Intelligence  
 
-[⬅️ Root Overview](README.md) · [📚 Docs Home](docs/README.md) · [🛡️ Governance Charter](docs/standards/governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](..) · [📂 Standards Index](./README.md) · [⚖ Governance Charter](governance/ROOT-GOVERNANCE.md)
 
 </div>
