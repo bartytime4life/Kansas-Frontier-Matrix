@@ -286,7 +286,7 @@ When asking ChatGPT (or any AI assistant) to create or update a KFM Markdown doc
 3. **Tell the AI to avoid:**
 
    - System-specific citation syntax or hidden markup.  
-   - Unnecessary HTML; `\<div align="center">` is allowed but keep it minimal.  
+   - Unnecessary HTML; `<div align="center">` is allowed but keep it minimal.  
    - Nested fences or unsupported diagram types.
 
 4. **After pasting AI output:**
@@ -437,13 +437,13 @@ From `test_profiles`:
 
 | Profile              | Purpose                                          |
 |----------------------|--------------------------------------------------|
-| `markdown-lint`      | Structural & style linting                      |
-| `schema-lint`        | YAML front-matter schema validation             |
-| `metadata-check`     | Required metadata present & consistent          |
-| `diagram-check`      | Mermaid syntax & profile check                  |
-| `accessibility-check`| Basic structural a11y checks                    |
-| `provenance-check`   | `provenance_chain` + Version History alignment  |
-| `footer-check`       | Footer & governance-links enforcement           |
+| `markdown-lint`      | Structural & style linting                       |
+| `schema-lint`        | YAML front-matter schema validation              |
+| `metadata-check`     | Required metadata present & consistent           |
+| `diagram-check`      | Mermaid syntax & profile check                   |
+| `accessibility-check`| Basic structural a11y checks                     |
+| `provenance-check`   | `provenance_chain` + Version History alignment   |
+| `footer-check`       | Footer & governance-links enforcement            |
 
 ### H1/H2 rules
 
