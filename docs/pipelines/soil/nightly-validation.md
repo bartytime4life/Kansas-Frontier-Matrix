@@ -354,7 +354,7 @@ Story Nodes should never bypass this pipeline pattern for soil ingest in product
 | Runtime              | ≤ 30 minutes per nightly run   | Auto-scale partitions / compute; alert if exceeded       |
 | Idempotency          | Zero duplicate events per run  | WAL-tracked `run_id` and `event_id` enforcement          |
 
-\* Thresholds are configured per source in `run.yaml` (e.g., stricter for sovereign-critical datasets).
+\* Thresholds are configured per source in `run.yaml` (e.g., stricter for sovereignty-critical datasets).
 
 SLO violations must:
 
@@ -411,10 +411,9 @@ If governance or FAIR+CARE checks fail, the pipeline:
 
 <div align="center">
 
-🌱 **Kansas Frontier Matrix — Nightly Soil Ingest Validation Pipeline**  
-Documentation-First · Deterministic ETL · STAC/DCAT/PROV · FAIR+CARE · Sovereignty-Respecting  
+© 2025 Kansas Frontier Matrix Project  
+Master Coder Protocol v6.3 · FAIR+CARE Certified · 🌱 Diamond⁹ Ω / 👑 Crown∞Ω Ultimate Certified  
 
-For governance questions, consult:  
-[`docs/standards/governance/ROOT-GOVERNANCE.md`](/docs/standards/governance/ROOT-GOVERNANCE.md)
+[🌱 Soil Pipelines Overview](./README.md) • [🏗️ Pipelines Index](../README.md) • [⚖️ Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
