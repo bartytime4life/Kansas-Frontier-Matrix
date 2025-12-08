@@ -44,6 +44,46 @@ markdown_protocol_version: "KFM-MDP v11.2.5"
 
 ---
 
+## 🗂️ Directory Layout
+
+```text
+KansasFrontierMatrix/
+├── 📁 docs/
+│   └── 📁 pipelines/
+│       └── 📁 atmospheric/
+│           └── 📁 hrrr/
+│               └── 📁 windowing/
+│                   ├── 📄 README.md                  # This pattern guide
+│                   ├── 📁 examples/
+│                   │   ├── 📄 bbox-basic.md          # Example bbox windowing run
+│                   │   ├── 📄 polygon-windowing.md   # Polygon-based AOI windowing
+│                   │   └── 📄 stac-subset-example.json
+│                   └── 📁 tests/
+│                       ├── 📄 test-windowing-shapes.py
+│                       ├── 📄 test-stac-provenance.py
+│                       └── 📁 fixtures/              # Test data & configs
+├── 📁 src/
+│   └── 📁 pipelines/
+│       └── 📁 atmospheric/
+│           └── 📁 hrrr/
+│               └── 📁 windowing/
+│                   ├── 📄 __init__.py
+│                   ├── 📄 run_window.py              # Main windowing entrypoint
+│                   ├── 📄 run_state.py               # Idempotency & run-state keys
+│                   ├── 📄 stac_emit.py               # STAC processing:subset emitter
+│                   └── 📄 config.py                  # Dataset/version/selector config
+└── 📁 data/
+    ├── 📁 run_state/
+    │   └── 📁 hrrr_window/
+    │       └── 📄 <sha256>.json                      # Run-state & stats bundle
+    └── 📁 atmospheric/
+        └── 📁 hrrr/
+            ├── 📁 zarr_index/                        # Optional Zarr index metadata
+            └── 📁 subsets/                           # Materialized HRRR subsets
+```
+
+---
+
 ## 📘 Overview
 
 This pattern specifies how **HRRR Zarr** datasets are lazily windowed, subsetted, and statically recorded for provenance inside the **Kansas Frontier Matrix (KFM)**.
@@ -60,7 +100,7 @@ Windowing is done strictly by:
 - **Dataset version** (HRRR release / Zarr snapshot)  
 - **Forecast cycle hour** (init or valid time, explicitly configured)  
 - **Spatial selector**: bbox or polygon (Kansas AOIs, basins, counties, etc.)  
-- **Explicit run-state guardrails** for idempotency
+- **Explicit run-state guardrails** for idempotency  
 
 All operations use **lazy** execution through **Dask Distributed**, with optional cluster scheduling.
 
@@ -92,15 +132,15 @@ All operations use **lazy** execution through **Dask Distributed**, with optiona
 
 Two supported selectors (no ad-hoc modes):
 
-| Selector | Use Case                                          |
-|----------|----------------------------------------------------|
-| **bbox** | Counties, coarse Kansas AOI, static tiles.         |
-| **polygon** | Basins, HRUs, Story Node AOIs, sensitive overlays. |
+| Selector  | Use Case                                              |
+|-----------|--------------------------------------------------------|
+| **bbox**  | Counties, coarse Kansas AOI, static tiles.             |
+| **polygon** | Basins, HRUs, Story Node AOIs, sensitive overlays.  |
 
 Selectors MUST be:
 
 - Config-driven (YAML/JSON), not embedded as “magic numbers” in code.  
-- Referenced in STAC `processing:subset.selectors`.
+- Referenced in STAC `processing:subset.selector`.
 
 ### 3️⃣ Run-State Guardrail (Idempotency)
 
@@ -294,55 +334,6 @@ Pattern rules:
 | Telemetry    | Energy/carbon + runtime metrics recorded per run (via telemetry schema).   |
 
 Validation SHOULD be implemented as part of the **event-driven deterministic ingest** pattern and wired into CI.
-
----
-
-## 🗂️ Directory Layout
-
-```text
-docs/
-  pipelines/
-    atmospheric/
-      hrrr/
-        windowing/
-          README.md                  # ← This file (pattern guide)
-          examples/
-            bbox-basic.md           # Example YAML → bbox windowing run
-            polygon-windowing.md    # Polygon-based AOI windowing
-            stac-subset-example.json
-          tests/
-            test-windowing-shapes.py
-            test-stac-provenance.py
-            fixtures/
-```
-
-Associated code and data layout (logical):
-
-```text
-src/
-  pipelines/
-    atmospheric/
-      hrrr/
-        windowing/
-          __init__.py
-          run_window.py
-          run_state.py
-          stac_emit.py
-          config.py
-
-data/
-  run_state/
-    hrrr_window/
-      <sha256>.json
-  atmospheric/
-    hrrr/
-      zarr_index/...
-      subsets/...
-
-schemas/
-  telemetry/
-    hrrr-windowing-v2.json
-```
 
 ---
 
