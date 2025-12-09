@@ -1,1 +1,221 @@
+# .github/workflows/security_audit.yml
+# 🔐 Kansas Frontier Matrix — Security Audit (Dependencies, Secrets, Workflow Hardening)
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Run governed security checks over the KFM monorepo, focusing on:
+#     - Dependency vulnerability scanning (Python, Node, etc.)
+#     - Secret/credential leakage scanning
+#     - Basic workflow security hardening checks
+#
+# Governance Context:
+#   - Implements the SECURITY.md policy for:
+#       * CVE scanning and patch SLAs
+#       * Secret hygiene (no secrets in repo)
+#       * Supply-chain hygiene (in tandem with sbom_verify.yml)
+#   - Complements:
+#       * ci.yml           → core tests & linting
+#       * sbom_verify.yml  → SBOM + attestations + manifest checks
+#       * faircare_validate.yml / h3_generalization.yml → FAIR+CARE & sovereignty
+
+name: 🔐 security-audit
+
+on:
+  pull_request:
+    branches:
+      - main
+      - "release/**"
+  push:
+    branches:
+      - main
+      - "release/**"
+  schedule:
+    # Weekly deep audit on default branch
+    - cron: "0 2 * * 0"
+  workflow_dispatch: {}
+
+# Avoid overlapping security audits on the same ref
+concurrency:
+  group: security-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "20"
+  KFM_WEB_ROOT: "web"
+
+jobs:
+  security-audit:
+    name: "🔐 Security Audit (Deps, Secrets, Workflow Hardening)"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history helps some secret scanners
+
+      # --------------------------------------------------------------------
+      # 0. Language runtimes for CLI-based scanners
+      # --------------------------------------------------------------------
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements*.txt
+            scripts/requirements-security.txt
+
+      - name: 🟦 Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: |
+            ${{ env.KFM_WEB_ROOT }}/package-lock.json
+            ${{ env.KFM_WEB_ROOT }}/npm-shrinkwrap.json
+
+      - name: 📦 Install Security Tooling (Python)
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-security.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-security.txt
+          else
+            # Minimal defaults; extend via scripts/requirements-security.txt as needed
+            pip install --no-cache-dir "pip-audit" || echo "pip-audit install failed; continuing (composite security-scan may provide alternatives)."
+          fi
+
+      # --------------------------------------------------------------------
+      # 1. Composite Security Scan (dependencies + secrets)
+      #
+      # Expected behavior of .github/actions/security-scan:
+      #   - Run dependency vulnerability scanning for supported ecosystems
+      #   - Run secret/credential leakage scanning on repo contents
+      #   - Exit non-zero if critical/high issues are found
+      #
+      # This is the primary, governed security gate.
+      # --------------------------------------------------------------------
+      - name: 🔐 Consolidated Security Scan (Composite Action)
+        run: |
+          set -euo pipefail
+          if [[ ! -d ".github/actions/security-scan" ]]; then
+            echo "::error title=Missing composite action::.github/actions/security-scan not found."
+            echo "This composite action is required for governed security audits."
+            exit 1
+          fi
+
+          # Entry-point is expected to orchestrate:
+          #   - dependency scanners (pip-audit / osv-scanner / npm audit / etc.)
+          #   - secret scanning (e.g., trufflehog/gitleaks) according to repo policy
+          bash .github/actions/security-scan/entrypoint.sh .
+
+      # --------------------------------------------------------------------
+      # 2. Python Dependency Vulnerability Audit (pip-audit) — explicit, fast
+      #    This supplements the composite action and gives clearer Python feedback.
+      # --------------------------------------------------------------------
+      - name: 🧪 Python Dependency Audit (pip-audit)
+        continue-on-error: true   # composite security-scan should already gate; this is extra visibility
+        run: |
+          set -euo pipefail
+          if python -m pip show pip-audit >/dev/null 2>&1; then
+            if [[ -f requirements.txt || -f requirements-dev.txt || -f pyproject.toml ]]; then
+              echo "Running pip-audit against environment..."
+              pip-audit || echo "pip-audit found issues (see log); primary gating is via composite security-scan."
+            else
+              echo "No Python dependency manifests found; skipping pip-audit."
+            fi
+          else
+            echo "pip-audit not installed; skip explicit Python audit (composite may still have scanned)."
+          fi
+
+      # --------------------------------------------------------------------
+      # 3. Node / Web Dependency Audit (npm audit) — if web project present
+      # --------------------------------------------------------------------
+      - name: 🔎 Detect web project
+        id: detect_web
+        run: |
+          set -euo pipefail
+          if [[ -d "${KFM_WEB_ROOT}" && -f "${KFM_WEB_ROOT}/package.json" ]]; then
+            echo "has_web=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_web=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 🧪 Node Dependency Audit (npm audit)
+        if: steps.detect_web.outputs.has_web == 'true'
+        working-directory: ${{ env.KFM_WEB_ROOT }}
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
+            npm ci --ignore-scripts
+          else
+            npm install --ignore-scripts
+          fi
+
+          if npm audit --audit-level=high; then
+            echo "npm audit completed with no high/critical vulnerabilities."
+          else
+            echo "npm audit reported high/critical vulnerabilities."
+            echo "Composite security-scan is authoritative for gating; use these logs for remediation guidance."
+          fi
+
+      # --------------------------------------------------------------------
+      # 4. Secret Scanning (gitleaks) — explicit, in addition to composite
+      # --------------------------------------------------------------------
+      - name: 🕵️ Secret Scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          args: "detect --no-color --redact --source=."
+
+      # --------------------------------------------------------------------
+      # 5. Workflow Security / Hardening Checks (optional script)
+      #
+      # Example checks (implemented in your script):
+      #   - Minimal permissions in workflow `permissions:` blocks
+      #   - No use of unpinned third-party actions (floating tags)
+      #   - No use of `pull_request_target` in unsafe ways
+      # --------------------------------------------------------------------
+      - name: 🛡 Workflow Security Hardening Check (Optional)
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_workflow_security.py ]]; then
+            python scripts/validate_workflow_security.py \
+              --workflows ".github/workflows"
+          else
+            echo "scripts/validate_workflow_security.py not found; skipping workflow hardening lint."
+          fi
+
+      # --------------------------------------------------------------------
+      # 6. Security Audit Summary (for GitHub UI & telemetry_export.yml)
+      # --------------------------------------------------------------------
+      - name: 🧾 Emit Security Audit Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🔐 Security Audit Summary"
+            echo ""
+            echo "- Composite security-scan: executed via .github/actions/security-scan"
+            echo "- Python dependency audit: pip-audit (best-effort) if installed"
+            echo "- Node dependency audit: npm audit (if web project present)"
+            echo "- Secret scanning: gitleaks"
+            echo "- Workflow hardening: scripts/validate_workflow_security.py (optional)"
+            echo ""
+            echo "This workflow enforces the SECURITY.md policy for dependency and secret hygiene,"
+            echo "and provides additional signals for telemetry_export.yml and governance dashboards."
+          } >> "${GITHUB_STEP_SUMMARY}"
 
