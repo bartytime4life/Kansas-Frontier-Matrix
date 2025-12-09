@@ -1,1 +1,188 @@
+# .github/workflows/dcat_validate.yml
+# 🗂 Kansas Frontier Matrix — DCAT Dataset & Distribution Validation
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Validate all DCAT 3.0 / KFM-DCAT v11 datasets and distributions against:
+#     - KFM-DCAT v11 JSON-LD profiles
+#     - Local DCAT extension schemas (if configured)
+#     - Basic structural and linkage consistency (optional scripts)
+#
+# Governance Context:
+#   - KFM-DCAT v11 profile (datasets, distributions, catalogs)
+#   - KFM-MDP v11.2.5 (docs for datasets live under docs/data/**)
+#   - FAIR+CARE & sovereignty rules (enforced more deeply in faircare_validate.yml)
+#   - PROV-O / OpenLineage: this workflow emits structured logs for telemetry_export.yml
+
+name: 🗂 dcat-validate
+
+on:
+  pull_request:
+    paths:
+      - "docs/data/**"
+      - "data/releases/**"
+      - "data/catalog/**"
+      - "schemas/dcat/**"
+      - ".github/actions/dcat-validate/**"
+      - ".github/workflows/dcat_validate.yml"
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "docs/data/**"
+      - "data/releases/**"
+      - "data/catalog/**"
+      - "schemas/dcat/**"
+      - ".github/actions/dcat-validate/**"
+      - ".github/workflows/dcat_validate.yml"
+  workflow_dispatch: {}
+
+# Ensure we don't have overlapping DCAT validation runs per ref
+concurrency:
+  group: dcat-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  DCAT_ROOT_DOCS: "docs/data"
+  DCAT_ROOT_DATA: "data/catalog"
+  DCAT_ROOT_RELEASES: "data/releases"
+  DCAT_SCHEMA_DIR: "schemas/dcat"
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  dcat-validate:
+    name: "🗂 DCAT 3.0 Validation (KFM-DCAT v11)"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Detect whether any DCAT-bearing roots exist; if none, short-circuit politely
+      - name: 🔎 Detect DCAT Roots
+        id: detect_dcat
+        run: |
+          set -euo pipefail
+          has_any="false"
+
+          for path in "${DCAT_ROOT_DOCS}" "${DCAT_ROOT_DATA}" "${DCAT_ROOT_RELEASES}"; do
+            if [[ -d "$path" ]]; then
+              echo "Found DCAT root: $path"
+              has_any="true"
+            fi
+          done
+
+          echo "has_dcat=${has_any}" >> "$GITHUB_OUTPUT"
+
+          if [[ "${has_any}" == "false" ]]; then
+            echo "::notice title=DCAT validation::No DCAT roots present; skipping validation."
+          fi
+
+      - name: ⏭ Skip DCAT validation (no DCAT data)
+        if: steps.detect_dcat.outputs.has_dcat == 'false'
+        run: |
+          echo "No DCAT content detected; nothing to validate for this run."
+
+      # --------------------------------------------------------------------
+      # 1. DCAT structural & schema validation via composite action
+      #    This action is expected to:
+      #      - Validate JSON-LD graphs against KFM-DCAT v11 schemas
+      #      - Apply any local context/extension mappings under ${DCAT_SCHEMA_DIR}
+      #      - Exit non-zero on any invalid DCAT object
+      # --------------------------------------------------------------------
+      - name: 🗂 Run DCAT Validator (Composite Action)
+        if: steps.detect_dcat.outputs.has_dcat == 'true'
+        run: |
+          set -euo pipefail
+
+          roots=()
+          [[ -d "${DCAT_ROOT_DOCS}" ]] && roots+=("${DCAT_ROOT_DOCS}")
+          [[ -d "${DCAT_ROOT_DATA}" ]] && roots+=("${DCAT_ROOT_DATA}")
+          [[ -d "${DCAT_ROOT_RELEASES}" ]] && roots+=("${DCAT_ROOT_RELEASES}")
+
+          if [[ ${#roots[@]} -eq 0 ]]; then
+            echo "No DCAT roots exist at runtime; nothing to validate."
+            exit 0
+          fi
+
+          echo "Validating DCAT roots: ${roots[*]}"
+          bash .github/actions/dcat-validate/entrypoint.sh "${DCAT_SCHEMA_DIR}" "${roots[@]}"
+
+      # --------------------------------------------------------------------
+      # 2. Optional: DCAT linkage & completeness checks
+      #    Example checks (implemented in your script):
+      #      - every distribution references a dataset
+      #      - required DCAT properties present (title, description, license, spatial/temporal)
+      #      - internal link consistency (e.g., accessURL, downloadURL)
+      # --------------------------------------------------------------------
+      - name: 🔗 Optional DCAT Linkage & Completeness Checks
+        if: steps.detect_dcat.outputs.has_dcat == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_dcat_links.py ]]; then
+            python -m pip install --upgrade pip
+            # Keep dependencies minimal; expand as your script requires
+            pip install --no-cache-dir "rdflib" "pyld" || echo "Optional DCAT helpers install failed; continuing."
+            python scripts/validate_dcat_links.py \
+              --docs-root "${DCAT_ROOT_DOCS}" \
+              --data-root "${DCAT_ROOT_DATA}" \
+              --releases-root "${DCAT_ROOT_RELEASES}"
+          else
+            echo "No scripts/validate_dcat_links.py found; skipping advanced DCAT link/completeness checks."
+          fi
+
+      # --------------------------------------------------------------------
+      # 3. Optional: FAIR+CARE field presence pre-check (lightweight)
+      #    Full FAIR+CARE enforcement is handled in faircare_validate.yml.
+      # --------------------------------------------------------------------
+      - name: ⚖ Optional FAIR+CARE Metadata Pre-Check (DCAT)
+        if: steps.detect_dcat.outputs.has_dcat == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_dcat_faircare_metadata.py ]]; then
+            python -m pip install --upgrade pip
+            pip install --no-cache-dir "rdflib" "pyld" || echo "Optional FAIR+CARE helpers install failed; continuing."
+            python scripts/validate_dcat_faircare_metadata.py \
+              --docs-root "${DCAT_ROOT_DOCS}" \
+              --data-root "${DCAT_ROOT_DATA}" \
+              --releases-root "${DCAT_ROOT_RELEASES}"
+          else
+            echo "No scripts/validate_dcat_faircare_metadata.py found; skipping FAIR+CARE DCAT pre-check."
+          fi
+
+      # --------------------------------------------------------------------
+      # 4. DCAT Validation Summary (for GitHub UI & telemetry_export.yml)
+      # --------------------------------------------------------------------
+      - name: 🧾 Emit DCAT Validation Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🗂 DCAT Validation Summary"
+            echo ""
+            echo "- DCAT roots (checked for existence):"
+            echo "  - \`${DCAT_ROOT_DOCS}\`"
+            echo "  - \`${DCAT_ROOT_DATA}\`"
+            echo "  - \`${DCAT_ROOT_RELEASES}\`"
+            echo "- DCAT schema dir: \`${DCAT_SCHEMA_DIR}\`"
+            echo "- DCAT content present: ${{ steps.detect_dcat.outputs.has_dcat }}"
+            echo ""
+            echo "This run is part of the governed CI/CD plan for DCAT assets (KFM-DCAT v11)."
+            echo "Detailed logs from the composite validator and any optional scripts above"
+            echo "are available in the workflow run artifacts/logs."
+          } >> "${GITHUB_STEP_SUMMARY}"
 
