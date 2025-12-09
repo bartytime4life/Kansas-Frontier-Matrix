@@ -1,18 +1,19 @@
 ---
 title: "🛡️ Kansas Frontier Matrix — Security Policy & Vulnerability Disclosure (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/SECURITY.md"
-version: "v11.2.2"
-last_updated: "2025-11-27"
+version: "v11.2.3"
+last_updated: "2025-12-08"
 review_cycle: "Annual · FAIR+CARE Security Council · Architecture Board"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
+
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../releases/v11.2.2/focus-telemetry.json"
+sbom_ref: "../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../releases/v11.2.3/focus-telemetry.json"
 telemetry_schema: "../schemas/telemetry/security-policy-v1.json"
 energy_schema: "../schemas/telemetry/energy-v2.json"
 carbon_schema: "../schemas/telemetry/carbon-v2.json"
@@ -23,9 +24,9 @@ sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+markdown_protocol_version: "KFM-MDP v11.2.5"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
 
 status: "Active / Enforced"
 doc_kind: "SecurityPolicy"
@@ -33,7 +34,7 @@ intent: "security-and-disclosure"
 category: "Security · Governance · Supply Chain · Responsible Disclosure"
 
 fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
+care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
 sensitivity_level: "Low"
 public_exposure_risk: "Low"
 risk_category: "Security"
@@ -44,6 +45,8 @@ data_steward: "KFM FAIR+CARE Security Council"
 provenance_chain:
   - ".github/SECURITY.md@v10.0.0"
   - ".github/SECURITY.md@v11.0.0"
+  - ".github/SECURITY.md@v11.2.2"
+  - ".github/SECURITY.md@v11.2.3"
 
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -55,10 +58,11 @@ ontology_alignment:
 json_schema_ref: "../schemas/json/security-policy-v11.schema.json"
 shape_schema_ref: "../schemas/shacl/security-policy-v11-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:security-policy:v11.2.2"
+doc_uuid: "urn:kfm:doc:security-policy-v11.2.3"
 semantic_document_id: "kfm-security-policy"
 event_source_id: "ledger:.github/SECURITY.md"
 immutability_status: "mutable-plan"
+machine_extractable: true
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -67,16 +71,19 @@ ai_transform_permissions:
   - "semantic-highlighting"
   - "a11y-adaptations"
 ai_transform_prohibited:
-  - "speculative additions"
+  - "speculative-additions"
   - "governance-override"
   - "unverified historical claims"
 
-machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 classification: "Public Document"
 jurisdiction: "United States / Kansas"
+lifecycle_stage: "stable"
 ttl_policy: "12 months"
 sunset_policy: "Superseded upon next security-policy update"
+
+prov_profile: "PROV-O Plan + KFM Governance Extensions"
+openlineage_profile: "OpenLineage v2.5 · CI/CD and AI pipeline events"
 ---
 
 <div align="center">
@@ -107,11 +114,11 @@ This policy defines how KFM manages:
 
 It is enforced via:
 
-- KFM-MDP v11.2.2 (Markdown & documentation rules)  
+- **KFM-MDP v11.2.5** (Markdown & documentation rules)  
 - FAIR+CARE governance and sovereignty policies  
 - CI/CD gating and CODEOWNERS review  
 - SBOM + manifest verification  
-- Schema/ontology validation (KFM-STAC/DCAT/JSON-LD)  
+- Schema/ontology validation (KFM-STAC/DCAT/JSON-LD/PROV-O)  
 - OpenLineage + PROV-O provenance checks  
 
 This file is the **public-facing entry point**. Deeper standards live in `docs/security/`.
@@ -120,7 +127,7 @@ This file is the **public-facing entry point**. Deeper standards live in `docs/s
 
 ## 🗂️ Repository Security Context
 
-~~~text
+```text
 Kansas-Frontier-Matrix/
 ├── 🛡️ .github/                          # GitHub configuration, CI/CD, security policy
 │   ├── 🛡️ SECURITY.md                   # ← Public security & disclosure policy (this file)
@@ -143,7 +150,7 @@ Kansas-Frontier-Matrix/
     ├── 🧾 sbom.spdx.json               # SPDX SBOM
     ├── 📜 manifest.zip                 # Release manifest
     └── 📊 focus-telemetry.json         # Telemetry (incl. security & governance metrics)
-~~~
+```
 
 The documents under `docs/security/` are **normative** and referenced by this policy.
 
@@ -225,7 +232,7 @@ Detailed threat models: `docs/security/threat-model.md`.
 KFM enforces strict supply-chain controls, as specified in `docs/security/supply-chain.md` and related docs:
 
 - **SBOMs**  
-  - SPDX 2.3 and (where applicable) CycloneDX 1.5 SBOMs for releases.  
+  - SPDX 2.3 and, where applicable, CycloneDX SBOMs for releases.  
 
 - **Provenance & Signing**  
   - SLSA-style provenance attestations.  
@@ -244,11 +251,11 @@ Artifacts that fail integrity, signature, or policy checks **cannot be promoted 
 
 KFM uses a CVSS-inspired severity model with the following **target SLAs**:
 
-| Severity | Detection SLA | Patch SLA | Notes                   |
-|--------: |--------------:|-----------|-------------------------|
-| Critical | 4 hours        | 24 hours  | Blocks CI/CD & releases |
-| High     | 24 hours       | 72 hours  | Requires expedited fix  |
-| Medium   | 48 hours       | 7 days    | Logged & monitored      |
+| Severity | Detection SLA | Patch SLA  | Notes                   |
+|--------: |--------------:|-----------:|-------------------------|
+| Critical | 4 hours        | 24 hours   | Blocks CI/CD & releases |
+| High     | 24 hours       | 72 hours   | Requires expedited fix  |
+| Medium   | 48 hours       | 7 days     | Logged & monitored      |
 | Low      | Weekly sweep   | Next sprint | Best-effort remediation |
 
 The full vulnerability-management standard, including exception processes and scoring notes, is in:
@@ -270,9 +277,9 @@ KFM follows a NIST 800-61–inspired lifecycle:
 
 Incident reports and postmortems live under:
 
-~~~text
+```text
 docs/security/reports/incident-response/
-~~~
+```
 
 Security incidents may also trigger:
 
@@ -292,7 +299,7 @@ KFM requires that:
 - Narratives do not fabricate historical events, individuals, or attributions.  
 - Indigenous and culturally sensitive narratives follow sovereignty policies and FAIR+CARE guidance.  
 - Protected site coordinates and sensitive locations are generalized or suppressed.  
-- Prompting and model behavior are monitored for harmful or biased patterns.
+- Prompting and model behavior are monitored for harmful or biased patterns.  
 
 If you observe dangerous or misleading AI behavior (e.g., leaking sensitive coordinates, fabricating events, or generating harmful narratives), report it using the same channels as other vulnerabilities and label the report **“AI / Narrative Safety”**.
 
@@ -302,9 +309,9 @@ If you observe dangerous or misleading AI behavior (e.g., leaking sensitive coor
 
 Security-related telemetry contributes to:
 
-~~~text
+```text
 releases/<version>/focus-telemetry.json
-~~~
+```
 
 This telemetry may include:
 
@@ -360,24 +367,25 @@ Maintainers are responsible for:
 - Respecting the confidentiality of reporters and affected communities  
 - Applying fixes consistently across affected branches/environments  
 - Ensuring regression tests, validators, and CI rules are updated as needed  
-- Updating SBOMs, manifests, IR logs, and telemetry to reflect changes  
+- Updating SBOMs, manifests, incident-response logs, and telemetry to reflect changes  
 - Coordinating with governance bodies (Security Council, FAIR+CARE, Architecture Board) when risk intersects ethics, sovereignty, or major architectural choices  
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                                   |
-|--------:|------------|-----------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Rebuilt policy using `docs/security` governance; added supply-chain, SBOM/SLSA, NPM worm defense, and telemetry links. |
-| v11.0.0 | 2025-11-18 | Initial v11 security policy aligned with new CI/CD, FAIR+CARE, and sovereignty architecture.             |
-| v10.0.0 | Legacy     | Early SECURITY.md baseline prior to v11 repository restructure.                                           |
+| Version | Date       | Summary                                                                                                                                |
+|--------:|------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-12-08 | Aligned with KFM-MDP v11.2.5; updated front-matter telemetry/metadata; clarified AI/narrative safety, telemetry, and FAIR+CARE links. |
+| v11.2.2 | 2025-11-27 | Rebuilt policy using `docs/security` governance; added supply-chain, SBOM/SLSA, NPM worm defense, and telemetry links.                |
+| v11.0.0 | 2025-11-18 | Initial v11 security policy aligned with new CI/CD, FAIR+CARE, and sovereignty architecture.                                          |
+| v10.0.0 | Legacy     | Early SECURITY.md baseline prior to v11 repository restructure.                                                                        |
 
 ---
 
 <div align="center">
 
-🛡️ **Kansas Frontier Matrix — Security Policy & Vulnerability Disclosure (v11.2.2)**  
+🛡️ **Kansas Frontier Matrix — Security Policy & Vulnerability Disclosure (v11.2.3)**  
 Secure by Design · FAIR+CARE-Governed · Provenance-First  
 
 [⬅️ Root README](../README.md) · [📚 Security Governance](../docs/security/README.md) · [🛡 Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
