@@ -1,1 +1,212 @@
+# .github/workflows/faircare_validate.yml
+# ⚖ Kansas Frontier Matrix — FAIR+CARE & Sovereignty Governance Validation
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Enforce FAIR+CARE-aligned governance across KFM assets by validating:
+#     - FAIR metadata (Findable, Accessible, Interoperable, Reusable)
+#     - CARE metadata (Collective Benefit, Authority to Control, Responsibility, Ethics)
+#     - Sovereignty flags & policy references
+#     - High-sensitivity classifications (heritage, Indigenous, ecology, etc.)
+#
+# Governance Context:
+#   - FAIR Principles (F1-A1-I1-R1)
+#   - CARE Principles for Indigenous Data Governance
+#   - KFM FAIR+CARE Guide (docs/standards/faircare/FAIRCARE-GUIDE.md)
+#   - Indigenous Data Protection policy
+#   - STAC/DCAT/JSON-LD ontologies (validated separately in stac/dcat/jsonld workflows)
+#
+# Heavy spatial masking & H3 enforcement is handled in:
+#   - h3_generalization.yml
+
+name: ⚖ faircare-validate
+
+on:
+  pull_request:
+    paths:
+      - "data/**"
+      - "docs/data/**"
+      - "docs/standards/faircare/**"
+      - "docs/standards/sovereignty/**"
+      - ".github/*.md"
+      - "schemas/faircare/**"
+      - "scripts/*faircare*"
+      - ".github/workflows/faircare_validate.yml"
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "data/**"
+      - "docs/data/**"
+      - "docs/standards/faircare/**"
+      - "docs/standards/sovereignty/**"
+      - ".github/*.md"
+      - "schemas/faircare/**"
+      - "scripts/*faircare*"
+      - ".github/workflows/faircare_validate.yml"
+  workflow_dispatch: {}
+
+# Ensure we don't have overlapping FAIR+CARE validation runs per ref
+concurrency:
+  group: faircare-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
+  # Roots used by FAIR+CARE validators
+  FAIRCARE_DOCS_ROOT: "docs"
+  FAIRCARE_DATA_ROOT: "data"
+  FAIRCARE_SCHEMA_DIR: "schemas/faircare"
+
+jobs:
+  faircare-validate:
+    name: "⚖ FAIR+CARE & Sovereignty Governance Validation"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-faircare.txt
+
+      - name: 📦 Install FAIR+CARE Tooling
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-faircare.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-faircare.txt
+          fi
+
+      # --------------------------------------------------------------------
+      # 1. FAIR+CARE metadata validation for docs & front-matter
+      #    Enforces:
+      #      - fair_category, care_label, classification, sensitivity fields
+      #      - governance & sovereignty references where required
+      #      - version history & governance footer presence (via helper script)
+      # --------------------------------------------------------------------
+      - name: 📚 Validate FAIR+CARE Doc Metadata
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_faircare_doc_metadata.py ]]; then
+            python scripts/validate_faircare_doc_metadata.py \
+              --root "${FAIRCARE_DOCS_ROOT}" \
+              --include-pattern "*.md" \
+              --include-github-md ".github/*.md"
+          else
+            echo "::error title=Missing validator::scripts/validate_faircare_doc_metadata.py not found."
+            echo "This script is required to enforce FAIR+CARE doc metadata governance."
+            exit 1
+          fi
+
+      # --------------------------------------------------------------------
+      # 2. FAIR+CARE validation for datasets (STAC, DCAT, JSON-LD-backed)
+      #    Enforces:
+      #      - Required FAIR+CARE fields at dataset/distribution level
+      #      - Sovereignty flags and INDIGENOUS-DATA-PROTECTION link presence
+      #      - High-risk datasets must declare sensitivity & steward
+      # --------------------------------------------------------------------
+      - name: 🗂 Validate FAIR+CARE for Datasets & Distributions
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_faircare_datasets.py ]]; then
+            python scripts/validate_faircare_datasets.py \
+              --data-root "${FAIRCARE_DATA_ROOT}" \
+              --docs-root "${FAIRCARE_DOCS_ROOT}" \
+              --schema-dir "${FAIRCARE_SCHEMA_DIR}"
+          else
+            echo "::error title=Missing validator::scripts/validate_faircare_datasets.py not found."
+            echo "This script is required to enforce FAIR+CARE dataset-level governance."
+            exit 1
+          fi
+
+      # --------------------------------------------------------------------
+      # 3. High-sensitivity & sovereignty classification checks
+      #    Focus:
+      #      - Archaeology, Indigenous lands, sacred sites, endangered ecology
+      #      - Ensuring sovereignty flags & CARE labels are correctly applied
+      #      - Ensuring data marked as high-sensitivity is routed for extra review
+      #
+      #    Spatial masking is enforced separately in h3_generalization.yml;
+      #    this job focuses on metadata & classification integrity.
+      # --------------------------------------------------------------------
+      - name: 🧭 High-Sensitivity & Sovereignty Classification Checks
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_sensitivity_flags.py ]]; then
+            python scripts/validate_sensitivity_flags.py \
+              --data-root "${FAIRCARE_DATA_ROOT}" \
+              --docs-root "${FAIRCARE_DOCS_ROOT}"
+          else
+            echo "scripts/validate_sensitivity_flags.py not present; "
+            echo "if sensitivity classification needs to be enforced, add this script and re-enable hard failure."
+            # For now, treat as soft-miss; uncomment to enforce:
+            # exit 1
+          fi
+
+      # --------------------------------------------------------------------
+      # 4. Optional: FAIR metrics / basic scoring for telemetry
+      #    Example metrics (implemented in your script):
+      #      - percent of datasets with complete FAIR+CARE metadata
+      #      - count of high-sensitivity assets by domain
+      #      - count of governance violations detected
+      # --------------------------------------------------------------------
+      - name: 📊 Optional FAIR+CARE Metrics Collection
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/collect_faircare_metrics.py ]]; then
+            python scripts/collect_faircare_metrics.py \
+              --data-root "${FAIRCARE_DATA_ROOT}" \
+              --docs-root "${FAIRCARE_DOCS_ROOT}" \
+              --out "faircare-metrics.json"
+          else
+            echo "scripts/collect_faircare_metrics.py not found; skipping FAIR+CARE metrics export."
+          fi
+
+      - name: 📤 Upload FAIR+CARE Metrics Artifact (Optional)
+        if: success() || failure()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: faircare-metrics
+          path: faircare-metrics.json
+          if-no-files-found: ignore
+
+      # --------------------------------------------------------------------
+      # 5. FAIR+CARE Validation Summary (for GitHub UI & telemetry_export.yml)
+      # --------------------------------------------------------------------
+      - name: 🧾 Emit FAIR+CARE Validation Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## ⚖ FAIR+CARE & Sovereignty Validation Summary"
+            echo ""
+            echo "- Docs root: \`${FAIRCARE_DOCS_ROOT}\`"
+            echo "- Data root: \`${FAIRCARE_DATA_ROOT}\`"
+            echo "- FAIR+CARE schema dir (if used): \`${FAIRCARE_SCHEMA_DIR}\`"
+            echo ""
+            echo "This run enforces FAIR+CARE metadata requirements and sovereignty flags."
+            echo "Spatial masking (H3) is validated separately in the h3_generalization workflow."
+            echo "Detailed logs for each validator script are available in the workflow run."
+          } >> "${GITHUB_STEP_SUMMARY}"
 
