@@ -142,7 +142,7 @@ Provide a **governed, deterministic composite GitHub Action** that validates **D
 against **W3C DCAT + KFM-DCAT v11** profiles and blocks merges when catalog metadata  
 is incomplete, invalid, or non-compliant.
 
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-blue)](../../../docs/standards/kfm_markdown_protocol_v11.2.5.md)
+[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-blue)](../../../docs/standards/kfm_markdown_protocol_v11.2.2.md)
 · [![KFM-DCAT v11](https://img.shields.io/badge/Profile-KFM--DCAT_v11-purple)]()
 · [![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen)]()
 · [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
@@ -184,13 +184,15 @@ but **MUST** preserve the external behaviour defined here.
 
 Add to a workflow (e.g. `.github/workflows/ci.yml`):
 
-    - name: ✅ Validate DCAT metadata
-      uses: ./.github/actions/dcat-validate
-      with:
-        catalog_path: docs/catalog/**/*.ttl
-        profile: kfm-dcat-v11
-        fail_level: error
-        report_path: artifacts/dcat/dcat-validation.json
+~~~yaml
+- name: ✅ Validate DCAT metadata
+  uses: ./.github/actions/dcat-validate
+  with:
+    catalog_path: docs/catalog/**/*.ttl
+    profile: kfm-dcat-v11
+    fail_level: error
+    report_path: artifacts/dcat/dcat-validation.json
+~~~
 
 **Recommended workflows**
 
@@ -253,14 +255,14 @@ but they MUST remain **deterministic and pinned** in `action.yml`.
 
 ### Inputs
 
-| Input               | Type    | Required | Default                                   | Description                                                                                          |
-|--------------------|---------|----------|-------------------------------------------|------------------------------------------------------------------------------------------------------|
-| `catalog_path`     | string  | ✅ Yes   | _none_                                    | Glob or path (relative to `working_directory`) to DCAT metadata files (e.g. `docs/catalog/**/*.ttl`). |
-| `profile`          | string  | ✅ Yes   | `kfm-dcat-v11`                            | Validation profile identifier (`kfm-dcat-v11`, `kfm-dcat-v11-strict`, etc.).                        |
-| `fail_level`       | string  | ❌ No    | `error`                                   | Minimum severity that causes failure: `error` \| `warning`.                                         |
-| `working_directory`| string  | ❌ No    | `${{ github.workspace }}`                | Base directory used to resolve `catalog_path`.                                                      |
-| `report_path`      | string  | ❌ No    | `artifacts/dcat/dcat-validation.json`     | Path (relative to `working_directory`) where the JSON report will be written.                      |
-| `extra_args`       | string  | ❌ No    | `""`                                      | Extra CLI flags passed through to the underlying validator (advanced use only).                     |
+| Input                | Type    | Required | Default                               | Description                                                                                             |
+|----------------------|---------|----------|---------------------------------------|---------------------------------------------------------------------------------------------------------|
+| `catalog_path`       | string  | ✅ Yes   | _none_                                | Glob or path (relative to `working_directory`) to DCAT metadata files (e.g. `docs/catalog/**/*.ttl`).  |
+| `profile`            | string  | ✅ Yes   | `kfm-dcat-v11`                        | Validation profile identifier (`kfm-dcat-v11`, `kfm-dcat-v11-strict`, etc.).                           |
+| `fail_level`         | string  | ❌ No    | `error`                               | Minimum severity that causes failure: `error` \| `warning`.                                            |
+| `working_directory`  | string  | ❌ No    | `${{ github.workspace }}`            | Base directory used to resolve `catalog_path`.                                                         |
+| `report_path`        | string  | ❌ No    | `artifacts/dcat/dcat-validation.json` | Path (relative to `working_directory`) where the JSON report will be written.                          |
+| `extra_args`         | string  | ❌ No    | `""`                                  | Extra CLI flags passed through to the underlying validator (advanced use only).                        |
 
 ### Outputs
 
@@ -276,32 +278,34 @@ but they MUST remain **deterministic and pinned** in `action.yml`.
 
 The JSON report MUST, at minimum, include something equivalent to:
 
+~~~jsonc
+{
+  "schema_version": "kfm-dcat-validation-v1",
+  "profile": "kfm-dcat-v11",
+  "run": {
+    "started_at": "2025-11-28T12:34:56Z",
+    "finished_at": "2025-11-28T12:34:59Z"
+  },
+  "summary": {
+    "files_scanned": 12,
+    "errors": 0,
+    "warnings": 3
+  },
+  "files": [
     {
-      "schema_version": "kfm-dcat-validation-v1",
-      "profile": "kfm-dcat-v11",
-      "run": {
-        "started_at": "2025-11-28T12:34:56Z",
-        "finished_at": "2025-11-28T12:34:59Z"
-      },
-      "summary": {
-        "files_scanned": 12,
-        "errors": 0,
-        "warnings": 3
-      },
-      "files": [
+      "path": "docs/catalog/kansas-history.ttl",
+      "errors": [],
+      "warnings": [
         {
-          "path": "docs/catalog/kansas-history.ttl",
-          "errors": [],
-          "warnings": [
-            {
-              "code": "KFM-DCAT-W001",
-              "message": "Dataset missing optional dcat:DatasetSeries linkage.",
-              "severity": "warning"
-            }
-          ]
+          "code": "KFM-DCAT-W001",
+          "message": "Dataset missing optional dcat:DatasetSeries linkage.",
+          "severity": "warning"
         }
       ]
     }
+  ]
+}
+~~~
 
 Exact schema is defined in `telemetry_schema` and SHOULD remain backward-compatible across minor versions.
 
@@ -343,27 +347,27 @@ This alignment ensures:
 The `dcat-validate` composite action is governed by the following rules:
 
 1. **Pinned implementations only**  
-   - ALL third-party actions, containers, and CLIs MUST be pinned by `@<commit_sha>` or `@sha256:<digest>`  
-   - No `@v1`, `@latest`, or floating tags allowed
+   - ALL third-party actions, containers, and CLIs MUST be pinned by `@<commit_sha>` or `@sha256:<digest>`.  
+   - No `@v1`, `@latest`, or floating tags allowed.
 
 2. **No implicit network or secret usage**  
-   - MUST NOT call external network resources except those explicitly documented  
-   - MUST NOT read or assume any secrets beyond those passed in via `with:` or environment
+   - MUST NOT call external network resources except those explicitly documented.  
+   - MUST NOT read or assume any secrets beyond those passed in via `with:` or environment.
 
 3. **Change management**  
    - Any change to inputs/outputs or validation semantics MUST:
-     - update `action.yml` and this README in the same PR  
-     - update associated JSON/SHACL schemas where relevant  
-     - pass `markdown-lint`, `schema-lint`, `metadata-check`, and `provenance-check`
+     - update `action.yml` and this README in the same PR,  
+     - update associated JSON/SHACL schemas where relevant,  
+     - pass `markdown-lint`, `schema-lint`, `metadata-check`, and `provenance-check`.
 
 4. **FAIR+CARE & sovereignty**  
-   - Validation MUST NOT force exposure of sensitive Indigenous or culturally restricted datasets  
-   - Absence of precise coordinates is **valid** when datasets are marked sovereignty-protected per KFM governance  
-   - Errors MUST NOT be raised solely for generalized or redacted spatial data where CARE rules apply
+   - Validation MUST NOT force exposure of sensitive Indigenous or culturally restricted datasets.  
+   - Absence of precise coordinates is **valid** when datasets are marked sovereignty-protected per KFM governance.  
+   - Errors MUST NOT be raised solely for generalized or redacted spatial data where CARE rules apply.
 
 5. **CI enforcement**  
-   - `kfm-ci.yml` SHOULD treat a failed `dcat-validate` step as a **hard block** for merging  
-   - Emergency overrides MUST be explicitly documented by the Infrastructure & Provenance Committee
+   - `kfm-ci.yml` SHOULD treat a failed `dcat-validate` step as a **hard block** for merging.  
+   - Emergency overrides MUST be explicitly documented by the Infrastructure & Provenance Committee.
 
 ---
 
@@ -383,4 +387,3 @@ DCAT 3.0 Compliance · Deterministic CI/CD · FAIR+CARE-Aligned Metadata Governa
 [⬅ Composite Actions Library](../README.md) · [⚖ Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
