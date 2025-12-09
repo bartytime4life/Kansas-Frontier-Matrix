@@ -1,1 +1,371 @@
-y
+# .github/workflows/release.yml
+# 🚀 Kansas Frontier Matrix — Signed Release Packaging & Publication
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   - Orchestrate governed KFM releases:
+#       * Compute version & ensure consistency
+#       * Build & package release artifacts (code, data, docs, web)
+#       * Generate SBOM + manifest (if not already present)
+#       * Run supply-chain verification hooks
+#       * Sign artifacts and create a GitHub Release
+#       * Stage release assets under releases/<version> for catalogs/telemetry
+#
+# Governance Context:
+#   - SECURITY.md (supply-chain & signing requirements)
+#   - sbom_verify.yml (independent SBOM/attestation verification)
+#   - telemetry_export.yml (CI/AI telemetry aggregation)
+#   - KFM-STAC/DCAT/PROV for cataloging release artifacts
+
+name: 🚀 release
+
+on:
+  # Tag-based releases (preferred)
+  push:
+    tags:
+      - "v*"
+  # Manual release (e.g., for hotfixes or backfills)
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g., v11.2.3). Optional if triggered by tag."
+        required: false
+        type: string
+      channel:
+        description: "Release channel"
+        required: true
+        type: choice
+        default: "stable"
+        options:
+          - stable
+          - rc
+          - beta
+
+# Avoid overlapping releases per ref
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write       # Required for creating tags & GitHub Releases
+  id-token: write       # For OIDC-based signing / provenance if used
+  actions: read
+  packages: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "20"
+  RELEASES_ROOT: "releases"
+
+jobs:
+  ###########################################################################
+  # 1. PREPARE ARTIFACTS
+  ###########################################################################
+  prepare:
+    name: "📦 Prepare Release Artifacts"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      channel: ${{ steps.channel.outputs.channel }}
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history helps some provenance/signing flows
+
+      - name: 🔖 Determine Release Version
+        id: version
+        run: |
+          set -euo pipefail
+
+          ver=""
+
+          # Case 1: Tag-triggered release
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
+            ver="${GITHUB_REF_NAME}"
+          # Case 2: Manual workflow_dispatch with explicit version
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.version }}" ]]; then
+            ver="${{ github.event.inputs.version }}"
+          # Case 3: Derive from script (fallback)
+          elif [[ -f scripts/print_version.py ]]; then
+            ver="$(python scripts/print_version.py)"
+          else
+            echo "::error title=Version resolution failed::No tag, no input version, and no scripts/print_version.py present."
+            exit 1
+          fi
+
+          # Normalize to have a leading 'v' for folder / tag consistency
+          if [[ "${ver}" != v* ]]; then
+            ver="v${ver}"
+          fi
+
+          echo "Resolved release version: ${ver}"
+          echo "version=${ver}" >> "$GITHUB_OUTPUT"
+
+      - name: 🏷 Resolve Release Channel
+        id: channel
+        run: |
+          set -euo pipefail
+          ch="stable"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.channel }}" ]]; then
+            ch="${{ github.event.inputs.channel }}"
+          fi
+          echo "channel=${ch}" >> "$GITHUB_OUTPUT"
+          echo "Release channel: ${ch}"
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-release.txt
+
+      - name: 🟦 Setup Node ${{ env.NODE_VERSION }} (for web/docs, optional)
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: |
+            web/package-lock.json
+            web/npm-shrinkwrap.json
+
+      - name: 📦 Install Release Tooling
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-release.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-release.txt
+          elif [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          fi
+
+      - name: 🗂 Prepare releases/<version> directory
+        run: |
+          set -euo pipefail
+          ver="${{ steps.version.outputs.version }}"
+
+          mkdir -p "${RELEASES_ROOT}/${ver}"
+
+          if [[ -n "$(ls -A "${RELEASES_ROOT}/${ver}" 2>/dev/null || true)" ]]; then
+            echo "::warning title=Release directory already populated::releases/${ver} is non-empty; contents may be overwritten or merged."
+          fi
+
+      # -------------------------------------------------------------
+      # Optional: build release artifacts (web, docs, bundles, etc.)
+      # Implemented by repo-specific script; safe if absent.
+      # -------------------------------------------------------------
+      - name: 🛠 Build Release Artifacts (Optional)
+        run: |
+          set -euo pipefail
+          ver="${{ steps.version.outputs.version }}"
+
+          if [[ -f scripts/build_release_artifacts.py ]]; then
+            python scripts/build_release_artifacts.py \
+              --version "${ver}" \
+              --out-root "${RELEASES_ROOT}/${ver}"
+          else
+            echo "scripts/build_release_artifacts.py not found; ensure other workflows have produced artifacts in releases/${ver}."
+          fi
+
+      # -------------------------------------------------------------
+      # Optional: generate SBOM + manifest for this version if not present
+      # -------------------------------------------------------------
+      - name: 📦 Generate SBOM & Manifest (Optional)
+        run: |
+          set -euo pipefail
+          ver="${{ steps.version.outputs.version }}"
+          rel_dir="${RELEASES_ROOT}/${ver}"
+
+          sbom="${rel_dir}/sbom.spdx.json"
+          manifest="${rel_dir}/manifest.zip"
+
+          if [[ -f "${sbom}" ]]; then
+            echo "SBOM already present at ${sbom}; skipping generation."
+          elif [[ -f scripts/generate_sbom.py ]]; then
+            echo "Generating SBOM at ${sbom}..."
+            python scripts/generate_sbom.py \
+              --version "${ver}" \
+              --out "${sbom}"
+          else
+            echo "No SBOM found and scripts/generate_sbom.py missing; SBOM generation not performed."
+          fi
+
+          if [[ -f "${manifest}" ]]; then
+            echo "Manifest already present at ${manifest}; skipping generation."
+          elif [[ -f scripts/generate_manifest.py ]]; then
+            echo "Generating manifest at ${manifest}..."
+            python scripts/generate_manifest.py \
+              --version "${ver}" \
+              --releases-root "${RELEASES_ROOT}" \
+              --out "${manifest}"
+          else
+            echo "No manifest found and scripts/generate_manifest.py missing; manifest generation not performed."
+          fi
+
+      # -------------------------------------------------------------
+      # Optional: run local supply-chain verification before final sbom_verify gate
+      # -------------------------------------------------------------
+      - name: 🛡 Local Supply-Chain Sanity Check (Optional)
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/verify_supply_chain.py ]]; then
+            python scripts/verify_supply_chain.py \
+              --releases-root "${RELEASES_ROOT}"
+          else
+            echo "scripts/verify_supply_chain.py not found; relying on sbom_verify.yml for full enforcement."
+          fi
+
+      # -------------------------------------------------------------
+      # Stage release directory as artifact for downstream jobs
+      # -------------------------------------------------------------
+      - name: 📤 Upload Release Workspace
+        uses: actions/upload-artifact@v4
+        with:
+          name: kfm-release-${{ steps.version.outputs.version }}
+          path: ${{ env.RELEASES_ROOT }}/${{ steps.version.outputs.version }}
+
+  ###########################################################################
+  # 2. SIGN & PUBLISH
+  ###########################################################################
+  sign-and-publish:
+    name: "🖊 Sign Artifacts & Publish GitHub Release"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    needs: prepare
+
+    environment:
+      name: prod
+      url: https://kfm.example.org
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📥 Download Release Workspace
+        uses: actions/download-artifact@v4
+        with:
+          name: kfm-release-${{ needs.prepare.outputs.version }}
+          path: ${{ env.RELEASES_ROOT }}/${{ needs.prepare.outputs.version }}
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-release.txt
+
+      - name: 📦 Install Signing Tooling (Optional)
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-release.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-release.txt
+          elif [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          fi
+          # Install cosign or other signing tools here if needed:
+          # curl -sSL https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64 -o /usr/local/bin/cosign && chmod +x /usr/local/bin/cosign
+
+      # -------------------------------------------------------------
+      # Sign artifacts for the release (SBOM, manifest, bundles, etc.)
+      # Implemented by repo-specific script.
+      # -------------------------------------------------------------
+      - name: 🖊 Sign Release Artifacts (Optional)
+        run: |
+          set -euo pipefail
+          ver="${{ needs.prepare.outputs.version }}"
+          rel_dir="${RELEASES_ROOT}/${ver}"
+
+          if [[ -f scripts/sign_release_artifacts.py ]]; then
+            python scripts/sign_release_artifacts.py \
+              --releases-root "${RELEASES_ROOT}" \
+              --version "${ver}"
+          else
+            echo "scripts/sign_release_artifacts.py not found; ensure signing is performed by another governed mechanism if required."
+          fi
+
+      # -------------------------------------------------------------
+      # Tag creation (only for workflow_dispatch without existing tag)
+      # -------------------------------------------------------------
+      - name: 🏷 Create Tag (if workflow_dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          set -euo pipefail
+          ver="${{ needs.prepare.outputs.version }}"
+
+          if git rev-parse "${ver}" >/dev/null 2>&1; then
+            echo "Tag ${ver} already exists; not creating a new one."
+            exit 0
+          fi
+
+          git config user.name "kfm-release-bot"
+          git config user.email "release@kfm.example.org"
+          git tag -a "${ver}" -m "KFM release ${ver}"
+          git push origin "${ver}"
+
+      # -------------------------------------------------------------
+      # Create or update GitHub Release via gh CLI
+      # -------------------------------------------------------------
+      - name: 🚀 Create/Update GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          ver="${{ needs.prepare.outputs.version }}"
+          ch="${{ needs.prepare.outputs.channel }}"
+          rel_dir="${RELEASES_ROOT}/${ver}"
+
+          # Ensure gh is available
+          if ! command -v gh >/dev/null 2>&1; then
+            echo "::error::GitHub CLI (gh) is not available on this runner."
+            exit 1
+          fi
+
+          # Build release title and notes
+          title="KFM ${ver} (${ch})"
+
+          # Check whether release already exists
+          if gh release view "${ver}" >/dev/null 2>&1; then
+            echo "GitHub Release ${ver} already exists; uploading/refreshing assets."
+            # Upload or replace assets
+            gh release upload "${ver}" "${rel_dir}"/* --clobber
+          else
+            echo "Creating new GitHub Release ${ver}"
+            gh release create "${ver}" "${rel_dir}"/* \
+              --title "${title}" \
+              --notes "KFM ${ver} (${ch}) release artifacts, SBOM, and manifest."
+          fi
+
+      - name: 🧾 Emit Release Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          ver="${{ needs.prepare.outputs.version }}"
+          ch="${{ needs.prepare.outputs.channel }}"
+          {
+            echo "## 🚀 KFM Release Summary"
+            echo ""
+            echo "- Version: \`${ver}\`"
+            echo "- Channel: \`${ch}\`"
+            echo "- Release directory: \`${RELEASES_ROOT}/${ver}\`"
+            echo "- GitHub Release: https://github.com/${GITHUB_REPOSITORY}/releases/tag/${ver}"
+            echo ""
+            echo "Artifacts in \`${RELEASES_ROOT}/${ver}\` should include:"
+            echo "- \`sbom.spdx.json\` (if available)"
+            echo "- \`manifest.zip\` (if available)"
+            echo "- Signed bundles / archives for code, web, and data (if configured)"
+          } >> "${GITHUB_STEP_SUMMARY}"
