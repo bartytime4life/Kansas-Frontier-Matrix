@@ -1,1 +1,302 @@
+# .github/workflows/ci.yml
+# 🧪 Kansas Frontier Matrix — Core CI (Lint, Tests, Type-Checks, Base Schemas)
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Provide fast, deterministic feedback on code, configs, and core schemas for the KFM monorepo.
+#   This workflow focuses on:
+#     - Linting & unit/integration tests for core languages (Python, Node/Web).
+#     - Lightweight config/schema sanity checks.
+#     - Optional CodeQL code scanning (if enabled).
+#
+# Governance Context:
+#   - KFM-MDP v11.2.5 (Markdown-handling is primarily in docs_validate.yml)
+#   - KFM-PDC v11 (data contract enforcement via data_pipeline.yml)
+#   - FAIR+CARE + sovereignty enforcement via dedicated workflows:
+#       faircare_validate.yml, h3_generalization.yml
+#   - STAC/DCAT/JSON-LD validation via dedicated workflows:
+#       stac_validate.yml, dcat_validate.yml, jsonld_validate.yml
+
+name: 🧪 ci
+
+on:
+  pull_request:
+    branches:
+      - main
+      - "release/**"
+  push:
+    branches:
+      - main
+      - "release/**"
+  workflow_dispatch: {}
+
+# Cancel older runs on the same ref when new commits arrive
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write   # For CodeQL / code scanning (if enabled)
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "20"
+  # Adjust these if your repo uses different layout
+  KFM_PY_ROOT: "src"
+  KFM_WEB_ROOT: "web"
+
+jobs:
+  ###########################################################################
+  # 1. Python: lint + tests + basic type check (if configured)
+  ###########################################################################
+  python-ci:
+    name: "🐍 Python Lint & Tests"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements*.txt
+            pyproject.toml
+            setup.cfg
+
+      - name: 📦 Install Python Dependencies (Locked if available)
+        run: |
+          set -euo pipefail
+          if [[ -f requirements-dev.txt ]]; then
+            python -m pip install --upgrade pip
+            pip install --no-cache-dir -r requirements-dev.txt
+          elif [[ -f requirements.txt ]]; then
+            python -m pip install --upgrade pip
+            pip install --no-cache-dir -r requirements.txt
+          else
+            echo "No requirements*.txt found; skipping Python dependency install."
+          fi
+
+      - name: 🧹 Lint Python (ruff/flake8/black if present)
+        run: |
+          set -euo pipefail
+          if python -m pip show ruff >/dev/null 2>&1; then
+            ruff check ${{ env.KFM_PY_ROOT }} || exit 1
+          elif python -m pip show flake8 >/dev/null 2>&1; then
+            flake8 ${{ env.KFM_PY_ROOT }} || exit 1
+          else
+            echo "No Python linter (ruff/flake8) installed; skipping lint."
+          fi
+
+      - name: ✅ Run Python Tests (pytest/tox)
+        run: |
+          set -euo pipefail
+          if [[ -f tox.ini ]]; then
+            tox
+          elif python -m pip show pytest >/dev/null 2>&1; then
+            pytest
+          else
+            echo "No pytest/tox configured; skipping Python tests."
+          fi
+
+      - name: 🔍 Optional Python Type Checking (mypy/pyright)
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if python -m pip show mypy >/dev/null 2>&1; then
+            mypy ${{ env.KFM_PY_ROOT }}
+          elif command -v pyright >/dev/null 2>&1; then
+            pyright ${{ env.KFM_PY_ROOT }}
+          else
+            echo "No static type checker (mypy/pyright); skipping."
+
+  ###########################################################################
+  # 2. Node/Web: lint + tests + build
+  ###########################################################################
+  node-ci:
+    name: "🕸 Web / Node Lint & Tests"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🔎 Detect web root
+        id: detect_web
+        run: |
+          set -euo pipefail
+          if [[ -d "${KFM_WEB_ROOT}" && -f "${KFM_WEB_ROOT}/package.json" ]]; then
+            echo "has_web=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_web=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: ⏭ Skip Node/Web CI if no web project
+        if: steps.detect_web.outputs.has_web == 'false'
+        run: |
+          echo "No ${KFM_WEB_ROOT}/package.json; skipping Node/Web CI."
+
+      - name: ⚙ Setup Node ${{ env.NODE_VERSION }}
+        if: steps.detect_web.outputs.has_web == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: |
+            ${{ env.KFM_WEB_ROOT }}/package-lock.json
+            ${{ env.KFM_WEB_ROOT }}/npm-shrinkwrap.json
+
+      - name: 📦 Install Web Dependencies (npm ci)
+        if: steps.detect_web.outputs.has_web == 'true'
+        working-directory: ${{ env.KFM_WEB_ROOT }}
+        run: |
+          set -euo pipefail
+          if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
+            npm ci --ignore-scripts
+          else
+            npm install --ignore-scripts
+          fi
+
+      - name: 🧹 Lint Web (eslint if configured)
+        if: steps.detect_web.outputs.has_web == 'true'
+        working-directory: ${{ env.KFM_WEB_ROOT }}
+        run: |
+          set -euo pipefail
+          if npx --yes eslint --version >/dev/null 2>&1; then
+            npx --yes eslint .
+          else
+            echo "No eslint configured; skipping web lint."
+          fi
+
+      - name: ✅ Run Web Tests (npm test if configured)
+        if: steps.detect_web.outputs.has_web == 'true'
+        working-directory: ${{ env.KFM_WEB_ROOT }}
+        run: |
+          set -euo pipefail
+          if npm run | grep -q " test"; then
+            npm test
+          else
+            echo "No 'test' script in package.json; skipping web tests."
+          fi
+
+      - name: 🏗 Web Build (npm run build if configured)
+        if: steps.detect_web.outputs.has_web == 'true'
+        working-directory: ${{ env.KFM_WEB_ROOT }}
+        run: |
+          set -euo pipefail
+          if npm run | grep -q " build"; then
+            npm run build
+          else
+            echo "No 'build' script in package.json; skipping web build."
+          fi
+
+  ###########################################################################
+  # 3. Config & Base Schema Sanity (YAML/JSON/etc.)
+  ###########################################################################
+  config-schemas:
+    name: "🧾 Config & Base Schema Checks"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Optional: lightweight JSON/YAML validation & schema checks for configs.
+      # Heavier STAC/DCAT/JSON-LD validation is in dedicated workflows.
+      - name: 🧬 Validate Core Config Schemas (if configured)
+        run: |
+          set -euo pipefail
+          if [[ -d .github/actions/schema-validate ]]; then
+            # Example: validate JSON/YAML configs under config/ against their schemas
+            if [[ -d schemas/config && -d config ]]; then
+              bash .github/actions/schema-validate/entrypoint.sh schemas/config config
+            else
+              echo "No schemas/config or config directory; skipping base config schema checks."
+            fi
+          else
+            echo ".github/actions/schema-validate not found; skipping schema validation."
+          fi
+
+  ###########################################################################
+  # 4. Optional: CodeQL Code Scanning (if GitHub Advanced Security enabled)
+  ###########################################################################
+  codeql:
+    name: "🔐 CodeQL Static Analysis (Optional)"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    needs:
+      - python-ci
+      - node-ci
+
+    permissions:
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python', 'javascript' ]
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🧩 Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: 🧪 Autobuild (best-effort)
+        uses: github/codeql-action/autobuild@v3
+
+      - name: 🔍 Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  ###########################################################################
+  # 5. Summary for CI (helps downstream telemetry_export.yml)
+  ###########################################################################
+  ci-summary:
+    name: "🧾 CI Summary"
+    runs-on: ubuntu-22.04
+    needs:
+      - python-ci
+      - node-ci
+      - config-schemas
+    if: always()
+
+    steps:
+      - name: ✏️ Emit CI Summary
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🧪 KFM Core CI Summary"
+            echo ""
+            echo "- Python job: ${{ needs.python-ci.result }}"
+            echo "- Node/Web job: ${{ needs.node-ci.result }}"
+            echo "- Config/Base Schemas job: ${{ needs.config-schemas.result }}"
+            echo ""
+            echo "CodeQL job (if enabled) runs as a separate job and reports findings in GitHub Security."
+          } >> "${GITHUB_STEP_SUMMARY}"
 
