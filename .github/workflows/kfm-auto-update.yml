@@ -1,6 +1,6 @@
 # .github/workflows/kfm-auto-update.yml
 # 🔄 Kansas Frontier Matrix — Auto-Update & Governed Promotion
-# v11.2.2 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 #
 # Purpose:
 #   Perform scheduled or manual auto-refresh of data/models,
@@ -8,7 +8,7 @@
 #   and promote artifacts from stage → prod only after full governance approval.
 #
 # Governance Layers Applied:
-#   - KFM-MDP v11.2.2 (docs + metadata)
+#   - KFM-MDP v11.2.5 (docs + metadata)
 #   - FAIR+CARE enforcement (faircare_validate)
 #   - Indigenous sovereignty (H3 generalization)
 #   - STAC/DCAT/JSON-LD + Ontology validation
@@ -20,7 +20,7 @@ name: 🔄 kfm-auto-update
 
 on:
   schedule:
-    - cron: "0 3 * * *" # Daily auto-refresh at 03:00 UTC
+    - cron: "0 3 * * *" # Daily auto-refresh at 03:00 UTC on default branch
   workflow_dispatch:
     inputs:
       reason:
@@ -33,9 +33,9 @@ concurrency:
   group: kfm-auto-update
   cancel-in-progress: false
 
-# Required permissions for governed promotion
+# Default, locked-down permissions (escalate via PAT if stronger write is ever needed)
 permissions:
-  contents: write       # Needed for tagging + pushing tags
+  contents: write       # Needed for tagging + pushing tags via GITHUB_TOKEN
   id-token: write       # Needed for OIDC auth to clouds if used
   actions: read
   packages: read
@@ -56,7 +56,7 @@ jobs:
   ###########################################################################
   ingest:
     name: "🧪 Ingest & Validate (Stage)"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     environment: stage
     timeout-minutes: 150
 
@@ -66,10 +66,13 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }} with cache
         uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
 
       - name: 📦 Install Dependencies (Locked)
         run: |
@@ -83,7 +86,7 @@ jobs:
       # -------------------
       # Metadata validation
       # -------------------
-      - name: 📚 Validate Docs & Front-Matter (KFM-MDP v11.2.2)
+      - name: 📚 Validate Docs & Front-Matter (KFM-MDP v11.2.5)
         run: |
           bash .github/actions/markdown-lint/entrypoint.sh
 
@@ -102,11 +105,11 @@ jobs:
       # -------------------
       # FAIR+CARE & Sovereignty gates
       # -------------------
-      - name: ⚖ FAIR+CARE Governance Check
+      - name: ⚖ FAIR+CARE Governance Check (Stage)
         run: |
           python scripts/run_faircare_checks.py
 
-      - name: 🧊 H3 Generalization / Sensitive Coordinate Enforcement
+      - name: 🧊 H3 Generalization / Sensitive Coordinate Enforcement (Stage)
         run: |
           python scripts/h3_masking_check.py --stage stage
 
@@ -130,18 +133,17 @@ jobs:
           [[ -f scripts/validate_climate.py ]] && python scripts/validate_climate.py
 
       # -------------------
-      # Telemetry snapshot
+      # Telemetry snapshot (Stage)
       # -------------------
       - name: 📊 Export Stage Telemetry
         run: |
           python scripts/telemetry_collect.py --env stage --out ${{ env.KFM_TELEMETRY_OUT }}
 
       - name: 📤 Upload Stage Telemetry Artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: telemetry-stage
           path: ${{ env.KFM_TELEMETRY_OUT }}
-
 
   ###########################################################################
   # 2. PROMOTE TO PRODUCTION (Governed)
@@ -149,9 +151,12 @@ jobs:
   promote:
     name: "🚀 Promote to Production (Governed)"
     needs: ingest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
-    # Gated environment: reviewers + waiting period
+    # Only allow promotion from the main line → prod environment
+    if: github.ref == 'refs/heads/main'
+
+    # Gated environment: reviewers + waiting period configured in repo settings
     environment:
       name: prod
       url: https://kfm.example.org
@@ -164,19 +169,27 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }} with cache
         uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+
+      - name: 📦 Install Dependencies (Locked)
+        run: |
+          python -m pip install --upgrade pip
+          pip install --no-cache-dir -r requirements.txt
 
       # -------------------
       # Final governance gates
       # -------------------
-      - name: ⚖ Final FAIR+CARE Gate
+      - name: ⚖ Final FAIR+CARE Gate (Prod)
         run: |
           python scripts/run_faircare_checks.py --env prod
 
-      - name: 🧊 Final H3 Generalization Check
+      - name: 🧊 Final H3 Generalization Check (Prod)
         run: |
           python scripts/h3_masking_check.py --stage prod
 
@@ -184,12 +197,19 @@ jobs:
         run: |
           python scripts/verify_supply_chain.py
 
+      # -------------------
+      # Promotion
+      # -------------------
       - name: 🔁 Promote Artifacts Stage → Prod
         run: |
           python promote.py --from stage --to prod
 
+      - name: 📡 Emit OpenLineage Events (Prod)
+        run: |
+          python scripts/emit_lineage.py --env prod --mode promote
+
       # -------------------
-      # Version tagging
+      # Version tagging (governed)
       # -------------------
       - name: 🏷 Tag Release
         if: ${{ success() }}
@@ -208,7 +228,7 @@ jobs:
           python scripts/telemetry_collect.py --env prod --out ${{ env.KFM_TELEMETRY_OUT }}
 
       - name: 📤 Upload Prod Telemetry Artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: telemetry-prod
           path: ${{ env.KFM_TELEMETRY_OUT }}
