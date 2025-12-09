@@ -51,9 +51,9 @@ telemetry_schema: "../../schemas/telemetry/markdown-protocol-v11.2.5.json"
 energy_schema: "../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../schemas/telemetry/carbon-v2.json"
 
-governance_ref: "governance/ROOT-GOVERNANCE.md"
-ethics_ref: "faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "../governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -207,7 +207,7 @@ KFM-MDP v11.2.5 governs **all Markdown files** in the Kansas Frontier Matrix mon
 - ETL / pipelines (`src/pipelines/`)
 - Graph / ontology (`src/graph/`)
 - APIs (`src/api/`)
-- Web & 3D UI (`web/`)
+- Web & 3D UI (`src/web/`)
 - Data catalogs & specs (`docs/data/`, `data/stac/`)
 - Domain analyses (`docs/analyses/`)
 - Governance & standards (`docs/standards/`)
@@ -279,26 +279,24 @@ When asking ChatGPT (or any AI assistant) to create or update a KFM Markdown doc
      - Uses `├──` / `└──` ASCII branches.  
      - Is fenced as `~~~text` (tildes, not backticks).
 
-2. **Fencing rule for ChatGPT outputs (to be copy-paste ready):**
+2. **Fencing rule for AI assistant outputs (to be copy-paste ready):**
 
-   - The assistant **MUST** wrap the **entire document** in a single **outer code fence** in the response:  
-     - Start the reply with: ` ```markdown`  
-     - End the reply with: ` ````
+   - Ask the assistant to wrap the **entire document** in a single **outer fenced code block** of type `markdown` in its response.  
    - Inside that outer fence, **all internal code blocks and directory trees MUST use `~~~` fences**, for example:
      - `~~~text` for directory layouts  
      - `~~~bash` for shell commands  
      - `~~~mermaid` for diagrams  
-   - Inner code blocks **MUST NOT** use triple backticks. This prevents the outer fence from breaking and guarantees a single unbroken box that can be copied from ChatGPT straight into GitHub.
+   - Internal fenced code blocks **MUST NOT** use triple backticks. This avoids accidentally closing the outer fence and guarantees a single unbroken box that can be copied from the assistant straight into GitHub.
 
-3. **Tell the AI to avoid:**
+3. **Tell the AI to avoid including in the Markdown file:**
 
-   - System-specific citation syntax or hidden markup.  
+   - System- or tool-specific citation syntax or hidden markup in the **document content**. Assistant- or platform-required annotations for citations may appear outside the outer fenced block in the chat transcript and are not part of the committed file.  
    - Unnecessary HTML; `<div align="center">` is allowed but keep it minimal.  
    - Nested fences or unsupported diagram types.
 
 4. **After pasting AI output into a file:**
 
-   - Remove the outer ```markdown fence lines before committing the `.md` file.  
+   - Remove the outer fenced code block lines (the opening `markdown` fence and its closing fence) before committing the `.md` file.  
    - Verify **relative paths** match the actual file location (e.g., standards under `docs/standards/` must use `../../releases/...` for release artifacts).  
    - Run `docs`/Markdown lint locally or via CI.  
    - Check that **Directory Layout** is indeed second and uses emoji formatting.
@@ -318,14 +316,14 @@ The **canonical repository layout** uses the `immediate-one-branch-with-descript
 │   ├── 📁 data/                              # Data contracts, source registries, schema notes
 │   ├── 📁 analyses/                          # Domain analyses & case studies (archaeology, hydrology, etc.)
 │   └── 📄 glossary.md                        # Shared glossary for KFM-wide terminology
-├── 📁 src/                                   # Backend & service code
+├── 📁 src/                                   # Backend, services, and frontend code
 │   ├── 📁 pipelines/                         # ETL, AI/ML, orchestration (batch, streaming, LangGraph, Airflow)
 │   ├── 📁 graph/                             # Neo4j schema, loaders, queries, lineage helpers
 │   ├── 📁 api/                               # FastAPI / GraphQL services (gateway, auth, routing)
+│   ├── 📁 web/                               # React / MapLibre / Cesium frontends & Story Node UI
+│   │   ├── 📁 app/                           # Main web app
+│   │   └── 📁 story-nodes/                   # Story Node layouts & Focus Mode UX
 │   └── 📁 tools/                             # Backend utilities, CLIs, migrations
-├── 📁 web/                                   # React / MapLibre / Cesium frontends & Story Node UI
-│   ├── 📁 app/                               # Main web app
-│   └── 📁 story-nodes/                       # Story Node layouts & Focus Mode UX
 ├── 📁 data/                                  # Data lifecycle: raw → work → processed → releases
 │   ├── 📁 sources/                           # External dataset manifests (STAC/DCAT-aligned)
 │   ├── 📁 raw/                               # Raw ingested data (LFS/DVC; not committed directly)
@@ -575,6 +573,6 @@ This protocol encodes FAIR+CARE into documentation:
 📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.5**  
 Scientific Insight · Documentation-First · FAIR+CARE Ethics · Sustainable Intelligence  
 
-[📘 Docs Root](..) · [📂 Standards Index](./README.md) · [⚖ Governance Charter](governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](..) · [📂 Standards Index](./README.md) · [⚖ Governance Charter](../governance/ROOT-GOVERNANCE.md)
 
 </div>
