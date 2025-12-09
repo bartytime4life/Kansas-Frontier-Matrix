@@ -1,7 +1,7 @@
 # 🐞 Kansas Frontier Matrix — Bug Report Template
-# File: .github/ISSUE_TEMPLATE/bug_report.yaml
-# Purpose: Standardized issue form for reporting software, data, or workflow errors.
-# Alignment: MCP-DL v6.3 · KFM-MDP v11.0 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω
+# File: .github/ISSUE_TEMPLATE/bug_report.yml
+# Purpose: Governance-aware issue form for reporting software, data, or workflow defects.
+# Alignment: MCP-DL v6.3 · KFM-MDP v11.2.5 · FAIR+CARE · KFM-OP v11 · Diamond⁹ Ω / Crown∞Ω
 # SPDX-License-Identifier: CC-BY-4.0
 
 name: "🐞 Bug Report"
@@ -19,8 +19,12 @@ body:
     attributes:
       value: |
         ## 🐞 Bug Report
-        Please describe the issue clearly and reproducibly.
-        Reports should comply with **MCP-DL v6.3**, **KFM-MDP v11**, and **FAIR+CARE** governance.
+
+        Please describe the issue clearly and reproducibly. Reports should comply with **MCP-DL v6.3**, **KFM-MDP v11.2.5**, and **FAIR+CARE** governance.
+
+        > ⚠️ **Security & Sovereignty**
+        >
+        > If this issue involves a potential **security vulnerability**, **sensitive locations**, or **Indigenous / CARE-governed data**, follow the guidance in `.github/SECURITY.md` and governance forms instead of sharing sensitive details publicly.
 
   - type: input
     id: summary
@@ -66,14 +70,13 @@ body:
     id: logs
     attributes:
       label: "Relevant Logs or Screenshots"
-      description: "Console logs, stack traces, error objects, screenshots."
+      description: "Console logs, stack traces, error objects, screenshots. Omit secrets, API keys, or sensitive coordinates."
       placeholder: |
-        ```bash
         Traceback (most recent call last):
           File "src/api/routes/map.py", line 42, in get_layers
             raise ValueError("Missing STAC ID")
         ValueError: Missing STAC ID
-        ```
+      render: shell
     validations:
       required: false
 
@@ -86,13 +89,22 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: kfm_versions
+    attributes:
+      label: "KFM Version / Branch"
+      description: "Which KFM version, branch, or commit were you using?"
+      placeholder: "v11.2.5 · branch: main · commit: abc1234"
+    validations:
+      required: true
+
   - type: dropdown
     id: severity
     attributes:
       label: "Severity Level"
       description: "How severe is this issue?"
       options:
-        - "🟥 Critical — System crash or data loss"
+        - "🟥 Critical — System crash, data loss, or security impact"
         - "🟧 High — Major workflow or feature broken"
         - "🟨 Medium — Partial functionality broken"
         - "🟩 Low — Minor or cosmetic issue"
@@ -101,30 +113,63 @@ body:
       required: true
 
   - type: dropdown
-    id: component
+    id: pipeline_stage
     attributes:
-      label: "Affected Component"
-      description: "Where is this issue occurring?"
+      label: "Affected Pipeline Stage"
+      description: "Where in the KFM pipeline is this issue occurring?"
       options:
-        - "ETL Pipeline (data ingestion/validation)"
-        - "AI/ML Components (Focus Mode, NER, summarization)"
+        - "Deterministic ETL (data ingestion/validation)"
+        - "Catalogs (STAC/DCAT/PROV metadata)"
+        - "Knowledge Graph (Neo4j)"
         - "API Layer (FastAPI/GraphQL)"
-        - "Frontend (React/MapLibre/Cesium)"
-        - "Docs/Workflows (.github actions)"
-        - "Other (explain in 'Related Files')"
+        - "Web UI (React/MapLibre/Cesium)"
+        - "Story Nodes / Focus Mode"
+        - "CI/CD & Infra (.github workflows, deployment)"
+        - "Other (explain in 'Related Files / IDs')"
       default: 0
     validations:
       required: true
 
+  - type: dropdown
+    id: data_sensitivity
+    attributes:
+      label: "Data Sensitivity / Sovereignty"
+      description: "Does this issue involve governed, sensitive, or Indigenous data?"
+      options:
+        - "Public / Non-sensitive data only"
+        - "Potentially sensitive (location, personal, ecological)"
+        - "Indigenous / CARE-governed data"
+        - "Unknown / Not sure"
+      default: 0
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: governance_flags
+    attributes:
+      label: "Security / Governance Flags"
+      description: "Help us route this issue correctly."
+      options:
+        - label: "May be a security vulnerability (see `.github/SECURITY.md`)."
+        - label: "May expose sensitive locations or Indigenous / CARE-governed data."
+        - label: "Impacts AI-generated narratives (Story Nodes / Focus Mode)."
+        - label: "Appears to be a data quality, lineage, or provenance issue."
+    validations:
+      required: false
+
   - type: textarea
     id: related_files
     attributes:
-      label: "Related Files or Directories"
-      description: "If relevant, list affected paths."
+      label: "Related Files, IDs, or Directories"
+      description: "Paths, IDs, or endpoints directly involved in this issue."
       placeholder: |
         e.g.
         - src/pipelines/etl/noaa_ingest.py
+        - src/graph/migrations/2025_11_add_treaty_nodes.cypher
+        - src/api/routes/map.py
         - web/src/components/TimelineView/index.tsx
+        - data/stac/treaties/collection.json
+        - Story Node IDs, STAC/DCAT IDs, PROV URNs, or API routes
     validations:
       required: false
 
@@ -140,7 +185,7 @@ body:
           required: true
         - label: "I checked open issues to prevent duplicates."
           required: true
-        - label: "I included complete reproduction steps and logs."
+        - label: "I included complete reproduction steps and, where possible, logs/screenshots."
           required: true
 
   - type: markdown
@@ -148,27 +193,26 @@ body:
       value: |
         ## 🧩 Validation, Governance & Telemetry
 
-        Submitting this bug triggers automated CI/CD workflows:
+        Submitting this bug triggers automated CI/CD workflows, including:
 
         - **codeql.yml** — Static analysis & security scanning  
-        - **docs_validate.yml** — KFM-MDP v11 doc & metadata validation  
-        - **faircare_validate.yml** — FAIR+CARE governance checks  
+        - **docs_validate.yml** — KFM-MDP v11.2.5 doc & metadata validation  
+        - **faircare_validate.yml** — FAIR+CARE / sovereignty checks (where applicable)  
         - **security_audit.yml** — Dependency & container scanning  
         - **telemetry_export.yml** — CI/CD & sustainability telemetry logging  
 
         Governance & telemetry artifacts update automatically:
 
-        ```
-        docs/reports/audit/github-workflows-ledger.json
-        releases/*/focus-telemetry.json
-        ```
+        - `docs/reports/audit/github-workflows-ledger.json`
+        - `releases/*/focus-telemetry.json`
 
         Your report strengthens the KFM ecosystem by ensuring:
+
         - Reliability  
-        - Ethical compliance  
-        - Reproducibility  
-        - Safety  
+        - Ethical & sovereign-compliant behavior  
+        - Reproducibility & transparent provenance  
+        - Safety for users, communities, and environments  
 
         **© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0  
+        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.5 · KFM-OP v11.0  
         Diamond⁹ Ω / Crown∞Ω Ultimate Certified
