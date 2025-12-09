@@ -1,8 +1,8 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Pull Request Template (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/PULL_REQUEST_TEMPLATE.md"
-version: "v11.2.2"
-last_updated: "2025-11-27"
+version: "v11.2.3"
+last_updated: "2025-12-09"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
@@ -50,6 +50,7 @@ provenance_chain:
   - ".github/PULL_REQUEST_TEMPLATE.md@v10.4.1"
   - ".github/PULL_REQUEST_TEMPLATE.md@v11.0.0"
   - ".github/PULL_REQUEST_TEMPLATE.md@v11.0.1"
+  - ".github/PULL_REQUEST_TEMPLATE.md@v11.2.2"
 
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -61,7 +62,7 @@ ontology_alignment:
 json_schema_ref: "../schemas/json/github-pullrequest-v11.schema.json"
 shape_schema_ref: "../schemas/shacl/github-pullrequest-v11-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:github-pullrequest-template:v11.2.2"
+doc_uuid: "urn:kfm:doc:github-pullrequest-template:v11.2.3"
 semantic_document_id: "kfm-doc-github-pullrequest-template"
 event_source_id: "ledger:.github/PULL_REQUEST_TEMPLATE.md"
 immutability_status: "mutable-plan"
@@ -98,6 +99,7 @@ All PRs are:
 - SBOM-verified  
 - Telemetry-logged  
 - Schema-checked  
+- Security-scanned  
 
 [![MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
 [![KFM-MDP v11](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-purple)]()  
@@ -123,6 +125,11 @@ All PRs are:
 - [ ] ⚙️ CI/CD Workflow  
 - [ ] 🏛 Governance / Standards Update  
 
+### Governance Binding?
+
+- [ ] 🔒 **Non-governance** (no change to contracts, schemas, or standards)  
+- [ ] 🏛 **Governance-impacting** (update standards, schemas, or contracts; requires council review)  
+
 ### PR Summary (2–4 sentences)
 
 > _Write your summary here._
@@ -140,6 +147,7 @@ All PRs are:
 - Dataset manifests: `data/...`  
 - STAC/DCAT items: `data/stac/...`  
 - Architecture docs: `docs/architecture/...`  
+- ADRs touched/added: `ADR/00xx-*.md`  
 
 ---
 
@@ -154,6 +162,19 @@ All PRs are:
 - [ ] `docs/`  
 - [ ] `.github/`  
 - [ ] `tests/`  
+- [ ] `configs/`  
+- [ ] `ADR/`  
+
+### Pipeline Stages Touched (if applicable)
+
+- [ ] `calibrate`  
+- [ ] `preprocess`  
+- [ ] `pretrain`  
+- [ ] `train`  
+- [ ] `predict`  
+- [ ] `diagnose`  
+- [ ] `submit`  
+- [ ] Other: `__________________`
 
 ### High-Level Overview
 
@@ -173,7 +194,7 @@ All PRs are:
 - [ ] Unit + integration tests  
 - [ ] Schema validation (JSON/YAML)  
 - [ ] STAC/DCAT validation (if applicable)  
-- [ ] SBOM impact reviewed  
+- [ ] SBOM impact reviewed (dependencies / licenses)  
 - [ ] No secrets or sensitive coordinates added  
 
 ### Documentation Validation
@@ -182,6 +203,17 @@ All PRs are:
 - [ ] Front-matter updated & valid  
 - [ ] Links verified  
 - [ ] Mermaid diagrams render (if applicable)  
+
+### Commands Run (for reproducibility)
+
+~~~bash
+# Example (edit as needed)
+# make ci-local
+# spectramind selftest --deep
+# spectramind train --config ...
+~~~
+
+> _List the exact commands you ran locally/CI to validate this PR._
 
 ---
 
@@ -221,6 +253,22 @@ Governance references:
 - `../docs/standards/governance/ROOT-GOVERNANCE.md`  
 - `../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`  
 
+**FAIR+CARE Notes:**  
+> _Write here._
+
+---
+
+## 🛡️ Security, SBOM & Compliance
+
+- [ ] Security impact assessed (auth, authz, secrets, infra)  
+- [ ] `.github/workflows/security_audit.yml` passing (static analysis, CVE scan)  
+- [ ] Secrets scanning clean for new/changed files  
+- [ ] SBOM regenerated/verified if dependencies changed (`sbom_ref`)  
+- [ ] License and third‑party notices updated if needed  
+
+**Security / Compliance Notes:**  
+> _Write here._
+
 ---
 
 ## 🧠 AI / Model-Specific Changes (If Applicable)
@@ -229,6 +277,7 @@ Governance references:
 - [ ] Training/eval datasets documented (`mcp/experiments/...`)  
 - [ ] Hallucination/grounding guards validated  
 - [ ] Focus Mode compatibility maintained  
+- [ ] Relevant ADRs updated/added (architecture, loss, fusion, pretraining, etc.)  
 
 **AI Notes:**  
 > _Write here._
@@ -248,6 +297,19 @@ Governance references:
 
 ---
 
+## 🌍 Telemetry, Energy & Carbon (If Applicable)
+
+- [ ] Telemetry events added/updated (conform to `github-pullrequest-v4` schema)  
+- [ ] Energy metrics captured/updated (conform to `energy-v2` schema)  
+- [ ] Carbon metrics captured/updated (conform to `carbon-v2` schema)  
+- [ ] Telemetry IDs kept in sync with `focus-telemetry.json`  
+- [ ] Manifest/SBOM references updated if telemetry or pipelines change  
+
+**Telemetry / Sustainability Notes:**  
+> _Write here._
+
+---
+
 ## 🧪 Test Results
 
 | Test Type            | Status | Notes |
@@ -259,6 +321,7 @@ Governance references:
 | STAC/DCAT Validation |        |       |
 | FAIR+CARE Checks     |        |       |
 | Accessibility Tests  |        |       |
+| Security Scan        |        |       |
 
 Paste relevant logs or summaries if needed.
 
@@ -304,28 +367,30 @@ List major upstream sources, tools, or workflows involved in this change.
 
 ## ✅ Reviewer Checklist (Maintainers)
 
-| Check                                | Status | Notes |
-|--------------------------------------|--------|-------|
-| CI/CD Passed                         |        |       |
-| FAIR+CARE Compliance Verified        |        |       |
-| Sovereignty/H3 Rules Verified        |        |       |
-| SBOM Updated/Reviewed (if needed)    |        |       |
-| Documentation Meets KFM-MDP v11.2.2  |        |       |
-| Sensitive Data Review Complete       |        |       |
-| Telemetry Impact Considered          |        |       |
-| Governance Ledger Updated (if needed)|        |       |
+| Check                                   | Status | Notes |
+|-----------------------------------------|--------|-------|
+| CI/CD Passed                            |        |       |
+| FAIR+CARE Compliance Verified           |        |       |
+| Sovereignty/H3 Rules Verified           |        |       |
+| SBOM Updated/Reviewed (if needed)       |        |       |
+| Documentation Meets KFM-MDP v11.2.2     |        |       |
+| Sensitive Data Review Complete          |        |       |
+| Telemetry Impact Considered             |        |       |
+| Security Audit & Scans Clean            |        |       |
+| Governance Ledger Updated (if needed)   |        |       |
 
 ---
 
 ## 🕰 Template History
 
-| Version | Date       | Notes                                                                                     |
-|--------:|------------|-------------------------------------------------------------------------------------------|
+| Version | Date       | Notes                                                                                              |
+|--------:|------------|----------------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-12-09 | Aligned with telemetry/energy/carbon schemas, SBOM & security workflows, and pipeline stage flags. |
 | v11.2.2 | 2025-11-27 | Updated with v11.2.2 metadata, FAIR+CARE + sovereignty blocks, and telemetry integration language. |
-| v11.0.1 | 2025-11-19 | Full v11 rebuild: governance, telemetry, sustainability.                                  |
-| v11.0.0 | 2025-11-18 | First v11 version aligned with KFM-MDP v11.                                               |
-| v10.4.1 | 2025-11-16 | Governance, metadata, and accessibility improvements.                                     |
-| v10.3.1 | 2025-11-13 | Initial PR template.                                                                      |
+| v11.0.1 | 2025-11-19 | Full v11 rebuild: governance, telemetry, sustainability.                                           |
+| v11.0.0 | 2025-11-18 | First v11 version aligned with KFM-MDP v11.                                                        |
+| v10.4.1 | 2025-11-16 | Governance, metadata, and accessibility improvements.                                              |
+| v10.3.1 | 2025-11-13 | Initial PR template.                                                                               |
 
 ---
 
