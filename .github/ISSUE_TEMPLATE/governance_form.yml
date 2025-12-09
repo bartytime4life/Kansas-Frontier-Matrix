@@ -1,7 +1,7 @@
 # ⚖️ Kansas Frontier Matrix — Governance Review Form
 # File: .github/ISSUE_TEMPLATE/governance_form.yml
 # Purpose: Enable FAIR+CARE, sovereignty, cultural, and ethics-aligned governance reviews.
-# Alignment: MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0 · FAIR+CARE · Indigenous Data Sovereignty · Diamond⁹ Ω / Crown∞Ω
+# Alignment: MCP-DL v6.3 · KFM-MDP v11.2.2 · KFM-OP v11.0 · KFM-PDC v11.0 · FAIR+CARE · Indigenous Data Sovereignty · Diamond⁹ Ω / Crown∞Ω
 # SPDX-License-Identifier: CC-BY-4.0
 
 name: "⚖️ Governance or FAIR+CARE Review"
@@ -11,6 +11,7 @@ labels:
   - "governance"
   - "faircare"
   - "ethics"
+  - "sovereignty"
 assignees:
   - "bartytime4life"
 
@@ -20,12 +21,14 @@ body:
     attributes:
       value: |
         ## ⚖️ Kansas Frontier Matrix — Governance & Ethical Review
+
         This form ensures datasets, workflows, Story Nodes, and models align with:
+
         - **FAIR principles** — Findable · Accessible · Interoperable · Reusable  
         - **CARE principles** — Collective Benefit · Authority to Control · Responsibility · Ethics  
         - **Indigenous Data Sovereignty Requirements**  
         - **Master Coder Protocol v6.3**  
-        - **KFM-MDP v11 governance rules**  
+        - **KFM-MDP v11.2.2 governance rules**  
 
         Governance reviews protect communities, ensure ethical practice, and maintain transparency in the Kansas Frontier Matrix.
 
@@ -72,6 +75,35 @@ body:
         - data/sources/usgs_hydro_1890.json
         - datasets/stac/tribal_boundaries_1840.item.json
         - .github/workflows/data_pipeline.yml
+    validations:
+      required: true
+
+  - type: dropdown
+    id: indigenous_data_flag
+    attributes:
+      label: "Indigenous / Tribal / Community-Governed Data"
+      description: "Does this dataset or workflow involve Indigenous, Tribal, or otherwise community-governed data or knowledge?"
+      options:
+        - "No"
+        - "Yes — with documented approvals and conditions"
+        - "Yes — approvals pending / in progress"
+        - "Unsure — requires further sovereignty review"
+      default: 0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data_sensitivity
+    attributes:
+      label: "Proposed Sensitivity Classification"
+      description: "Proposed sensitivity level for this dataset/workflow under KFM governance."
+      options:
+        - "Public · Low-Risk"
+        - "Limited · Medium-Risk"
+        - "Restricted · High-Risk"
+        - "Critical · Very High-Risk"
+        - "Needs Classification by FAIR+CARE Council"
+      default: 0
     validations:
       required: true
 
@@ -150,6 +182,33 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: ai_training_inclusion
+    attributes:
+      label: "AI Training Inclusion"
+      description: "Is this dataset/workflow approved for inclusion in AI training/fine-tuning datasets?"
+      options:
+        - "Not permitted for AI training"
+        - "Permitted with restrictions (FAIR+CARE / sovereignty conditions)"
+        - "Permitted for general AI training"
+        - "Needs additional review by FAIR+CARE Council"
+      default: 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: ai_transform_notes
+    attributes:
+      label: "AI / Automation Notes"
+      description: "Any constraints on AI transforms (e.g., allow summaries/a11y, prohibit speculative narratives), Focus Mode usage, or tool-specific conditions."
+      placeholder: |
+        Example:
+        - Allowed transforms: summaries, a11y adaptations, semantic highlighting.
+        - Prohibited: speculative historical reconstructions, decontextualized narrative generation.
+        - Focus Mode: allowed only with explicit context and source citation.
+    validations:
+      required: false
+
   - type: textarea
     id: supporting_evidence
     attributes:
@@ -171,9 +230,9 @@ body:
       options:
         - label: "I confirm this review aligns with Master Coder Protocol v6.3."
           required: true
-        - label: "I verify all referenced data is ethically and legally shareable."
+        - label: "I verify all referenced data is ethically and legally shareable under the described conditions."
           required: true
-        - label: "I understand this review will be logged in the governance ledger."
+        - label: "I understand this review will be logged in the governance ledger and may inform future FAIR+CARE decisions."
           required: true
 
   - type: markdown
@@ -183,14 +242,14 @@ body:
 
         This governance review will be permanently logged in:
 
-        ```
+        ```text
         docs/reports/audit/governance-ledger.json
         ```
 
         Telemetry & sustainability metrics will also be updated:
 
-        ```
-        releases/v11.0.1/focus-telemetry.json
+        ```text
+        releases/v11.2.2/focus-telemetry.json
         docs/reports/telemetry/
         ```
 
@@ -203,5 +262,5 @@ body:
         Thank you for upholding the ethical and cultural framework of the **Kansas Frontier Matrix**.
 
         **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0  
+        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.2 · KFM-OP v11.0 · KFM-PDC v11.0  
         Diamond⁹ Ω / Crown∞Ω Ultimate Certified
