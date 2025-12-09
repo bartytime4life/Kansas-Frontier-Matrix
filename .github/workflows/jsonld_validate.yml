@@ -1,1 +1,211 @@
+# .github/workflows/jsonld_validate.yml
+# 🧬 Kansas Frontier Matrix — JSON-LD & Ontology Validation
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Validate JSON-LD graphs and ontology-aligned exports across the KFM monorepo, including:
+#     - CIDOC-CRM based heritage/history graphs
+#     - OWL-Time temporal entities
+#     - GeoSPARQL geometries & relationships
+#     - PROV-O lineage / OpenLineage-compatible events
+#
+# Governance Context:
+#   - KFM-OP v11 ontology profile
+#   - KFM-STAC v11, KFM-DCAT v11 JSON-LD projections
+#   - PROV-O + OpenLineage event modeling
+#   - FAIR+CARE & sovereignty signals (used downstream in faircare_validate.yml)
+#
+# This workflow focuses on JSON-LD structural and semantic integrity.
+# STAC/DCAT-specific semantics are validated in:
+#   - stac_validate.yml
+#   - dcat_validate.yml
+
+name: 🧬 jsonld-validate
+
+on:
+  pull_request:
+    paths:
+      - "data/jsonld/**"
+      - "data/graph/**"
+      - "data/stac/**"          # STAC JSON-LD projections (if present)
+      - "data/catalog/**"
+      - "docs/data/**"
+      - "schemas/jsonld/**"
+      - ".github/actions/schema-validate/**"
+      - ".github/workflows/jsonld_validate.yml"
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "data/jsonld/**"
+      - "data/graph/**"
+      - "data/stac/**"
+      - "data/catalog/**"
+      - "docs/data/**"
+      - "schemas/jsonld/**"
+      - ".github/actions/schema-validate/**"
+      - ".github/workflows/jsonld_validate.yml"
+  workflow_dispatch: {}
+
+# Ensure we don't have overlapping JSON-LD validation runs per ref
+concurrency:
+  group: jsonld-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  JSONLD_SCHEMA_DIR: "schemas/jsonld"
+  JSONLD_ROOT_DOCS: "docs/data"
+  JSONLD_ROOT_DATA: "data/jsonld"
+  JSONLD_ROOT_GRAPH: "data/graph"
+  JSONLD_ROOT_CATALOG: "data/catalog"
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  jsonld-validate:
+    name: "🧬 JSON-LD & Ontology Validation (CIDOC / OWL-Time / GeoSPARQL / PROV-O)"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Detect whether any JSON-LD-bearing roots exist; if none, short-circuit politely
+      - name: 🔎 Detect JSON-LD Roots
+        id: detect_jsonld
+        run: |
+          set -euo pipefail
+          has_any="false"
+
+          for path in "${JSONLD_ROOT_DOCS}" "${JSONLD_ROOT_DATA}" "${JSONLD_ROOT_GRAPH}" "${JSONLD_ROOT_CATALOG}"; do
+            if [[ -d "$path" ]]; then
+              echo "Found JSON-LD root: $path"
+              has_any="true"
+            fi
+          done
+
+          echo "has_jsonld=${has_any}" >> "$GITHUB_OUTPUT"
+
+          if [[ "${has_any}" == "false" ]]; then
+            echo "::notice title=JSON-LD validation::No JSON-LD roots present; skipping validation."
+          fi
+
+      - name: ⏭ Skip JSON-LD validation (no JSON-LD data)
+        if: steps.detect_jsonld.outputs.has_jsonld == 'false'
+        run: |
+          echo "No JSON-LD content detected; nothing to validate for this run."
+
+      # --------------------------------------------------------------------
+      # 1. JSON-LD structural & schema validation via composite action
+      #    This action is expected to:
+      #      - Validate JSON-LD documents against KFM-OP v11-aligned schemas
+      #      - Apply local contexts and shape constraints under ${JSONLD_SCHEMA_DIR}
+      #      - Exit non-zero on any invalid JSON-LD entity
+      # --------------------------------------------------------------------
+      - name: 🧬 Run JSON-LD Schema Validation (Composite Action)
+        if: steps.detect_jsonld.outputs.has_jsonld == 'true'
+        run: |
+          set -euo pipefail
+
+          roots=()
+          [[ -d "${JSONLD_ROOT_DOCS}" ]] && roots+=("${JSONLD_ROOT_DOCS}")
+          [[ -d "${JSONLD_ROOT_DATA}" ]] && roots+=("${JSONLD_ROOT_DATA}")
+          [[ -d "${JSONLD_ROOT_GRAPH}" ]] && roots+=("${JSONLD_ROOT_GRAPH}")
+          [[ -d "${JSONLD_ROOT_CATALOG}" ]] && roots+=("${JSONLD_ROOT_CATALOG}")
+
+          if [[ ${#roots[@]} -eq 0 ]]; then
+            echo "No JSON-LD roots exist at runtime; nothing to validate."
+            exit 0
+          fi
+
+          echo "Validating JSON-LD roots: ${roots[*]}"
+          if [[ -d ".github/actions/schema-validate" ]]; then
+            # Expect entrypoint signature: entrypoint.sh <schema_dir> <root...>
+            bash .github/actions/schema-validate/entrypoint.sh "${JSONLD_SCHEMA_DIR}" "${roots[@]}"
+          else
+            echo "::error title=Missing composite action::Expected .github/actions/schema-validate for JSON-LD validation."
+            exit 1
+          fi
+
+      # --------------------------------------------------------------------
+      # 2. Optional: SHACL / ontology-level shape validation
+      #    Example checks (implemented in your script):
+      #      - CIDOC class/property constraints
+      #      - OWL-Time temporal consistency
+      #      - GeoSPARQL geometry relationships
+      #      - PROV-O lineage pattern checks
+      # --------------------------------------------------------------------
+      - name: 📐 Optional SHACL / Ontology Shape Validation
+        if: steps.detect_jsonld.outputs.has_jsonld == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_jsonld_shacl.py ]]; then
+            python -m pip install --upgrade pip
+            # Keep dependencies minimal; expand as your script requires
+            pip install --no-cache-dir "pyshacl" "rdflib" "pyld" || echo "Optional SHACL deps install failed; continuing."
+            python scripts/validate_jsonld_shacl.py \
+              --schema-dir "${JSONLD_SCHEMA_DIR}" \
+              --docs-root "${JSONLD_ROOT_DOCS}" \
+              --data-root "${JSONLD_ROOT_DATA}" \
+              --graph-root "${JSONLD_ROOT_GRAPH}" \
+              --catalog-root "${JSONLD_ROOT_CATALOG}"
+          else
+            echo "No scripts/validate_jsonld_shacl.py found; skipping ontology-level shape validation."
+          fi
+
+      # --------------------------------------------------------------------
+      # 3. Optional: PROV-O / OpenLineage event consistency
+      #    Example checks (implemented in your script):
+      #      - Activities, Entities, Agents linked according to PROV-O patterns
+      #      - OpenLineage events have required fields and valid references
+      # --------------------------------------------------------------------
+      - name: 📡 Optional PROV-O / OpenLineage Consistency Checks
+        if: steps.detect_jsonld.outputs.has_jsonld == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_prov_openlineage.py ]]; then
+            python -m pip install --upgrade pip
+            pip install --no-cache-dir "rdflib" "pyld" || echo "Optional PROV/OpenLineage deps install failed; continuing."
+            python scripts/validate_prov_openlineage.py \
+              --graph-root "${JSONLD_ROOT_GRAPH}" \
+              --releases-root "data/releases"
+          else
+            echo "No scripts/validate_prov_openlineage.py found; skipping PROV-O/OpenLineage checks."
+          fi
+
+      # --------------------------------------------------------------------
+      # 4. JSON-LD Validation Summary (for GitHub UI & telemetry_export.yml)
+      # --------------------------------------------------------------------
+      - name: 🧾 Emit JSON-LD Validation Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🧬 JSON-LD & Ontology Validation Summary"
+            echo ""
+            echo "- JSON-LD roots (checked for existence):"
+            echo "  - \`${JSONLD_ROOT_DOCS}\`"
+            echo "  - \`${JSONLD_ROOT_DATA}\`"
+            echo "  - \`${JSONLD_ROOT_GRAPH}\`"
+            echo "  - \`${JSONLD_ROOT_CATALOG}\`"
+            echo "- JSON-LD schema dir: \`${JSONLD_SCHEMA_DIR}\`"
+            echo "- JSON-LD content present: ${{ steps.detect_jsonld.outputs.has_jsonld }}"
+            echo ""
+            echo "This run is part of the governed CI/CD plan for ontology-aligned assets (KFM-OP v11)."
+            echo "Detailed logs from the composite validator and any optional scripts above"
+            echo "are available in the workflow run artifacts/logs."
+          } >> "${GITHUB_STEP_SUMMARY}"
 
