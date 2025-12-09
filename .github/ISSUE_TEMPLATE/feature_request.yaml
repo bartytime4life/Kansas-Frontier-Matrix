@@ -1,7 +1,7 @@
 # 💡 Kansas Frontier Matrix — Feature Request Template
-# File: .github/ISSUE_TEMPLATE/feature_request.yaml
+# File: .github/ISSUE_TEMPLATE/feature_request.yml
 # Purpose: Collect structured requests for new features, enhancements, or improvements to the KFM system.
-# Alignment: MCP-DL v6.3 · KFM-MDP v11.0 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω
+# Alignment: MCP-DL v6.3 · KFM-MDP v11.2.5 · FAIR+CARE · KFM-OP v11.0 · Diamond⁹ Ω / Crown∞Ω
 # SPDX-License-Identifier: CC-BY-4.0
 
 name: "💡 Feature Request"
@@ -10,6 +10,7 @@ title: "Feature Request: [Short Title]"
 labels:
   - "enhancement"
   - "feature"
+  - "governance"
 assignees:
   - "bartytime4life"
 
@@ -19,7 +20,11 @@ body:
       value: |
         ## 💡 Kansas Frontier Matrix — Feature Request Form
         Use this form to suggest new functionality, UI improvements, data/ETL features, or AI/graph enhancements.
-        All feature proposals are reviewed under **MCP-DL v6.3**, **KFM-MDP v11**, and **FAIR+CARE** governance.
+        All feature proposals are reviewed under **MCP-DL v6.3**, **KFM-MDP v11.2.5**, **FAIR+CARE**, and KFM governance.
+
+        This template is part of the deterministic KFM pipeline:
+
+        `Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j knowledge graph → API layer → React/MapLibre/Cesium frontend → Story Nodes → Focus Mode`.
 
   - type: input
     id: feature_title
@@ -62,8 +67,8 @@ body:
       placeholder: |
         Example:
         Implement an entity-linking module under `src/ai/models/` that uses transformer-based embeddings
-        to detect and link semantic entities (people, places, events). Expose results via a GraphQL endpoint
-        and integrate with Focus Mode v3 and Neo4j through Cypher query templates.
+        to detect and link semantic entities (people, places, events). Expose results via an API endpoint
+        and integrate with Focus Mode and Neo4j through Cypher query templates.
     validations:
       required: true
 
@@ -82,6 +87,22 @@ body:
       default: 1
     validations:
       required: true
+
+  - type: checkboxes
+    id: pipeline_layers
+    attributes:
+      label: "Pipeline Layers Touched"
+      description: "Select all parts of the KFM pipeline this feature will touch."
+      options:
+        - label: "Deterministic ETL / data ingestion"
+        - label: "STAC / DCAT / PROV catalogs"
+        - label: "Neo4j knowledge graph / ontologies"
+        - label: "API layer (REST / GraphQL / tiles)"
+        - label: "Frontend (React / MapLibre / Cesium / 3D)"
+        - label: "Story Nodes / Focus Mode"
+        - label: "CI/CD, security, or governance automation"
+    validations:
+      required: false
 
   - type: dropdown
     id: impact_level
@@ -104,21 +125,36 @@ body:
       placeholder: |
         Examples:
         - Depends on `src/graph/queries/link_entities.cypher`
-        - Builds on `focus_transformer_v2`
-        - Requires new STAC metadata fields for linked documents
+        - Builds on `src/ai/models/focus_transformer_v2/`
+        - Requires new STAC or DCAT metadata fields
     validations:
       required: false
 
   - type: textarea
-    id: risks
+    id: governance_and_risks
     attributes:
-      label: "Potential Risks or Considerations"
-      description: "Identify data sensitivity, bias, performance, or technical risks."
+      label: "Governance, FAIR+CARE & Risk Considerations"
+      description: "Identify data sensitivity, bias, sovereignty, performance, and security considerations."
       placeholder: |
         Examples:
-        - New model may introduce or amplify bias; requires FAIR+CARE review.
-        - Increased compute or memory requirements for Focus Mode v3.
-        - Needs additional consent review for cultural/Indigenous data usage.
+        - Uses Indigenous or culturally sensitive data → requires sovereignty / CARE review.
+        - New ML model may introduce or amplify bias; needs evaluation and documentation.
+        - Increased compute or storage footprint with sustainability implications.
+        - Touches authentication, authorization, or security-sensitive paths.
+    validations:
+      required: false
+
+  - type: textarea
+    id: docs_and_catalog_impacts
+    attributes:
+      label: "Docs, Catalog & Knowledge Graph Impacts"
+      description: "Describe which docs, catalogs, or graph schemas must be created or updated."
+      placeholder: |
+        Examples:
+        - New architecture doc under `docs/architecture/feature_xyz.md`.
+        - STAC Collection or Item changes under `data/stac/`.
+        - DCAT dataset entry under `docs/data/catalog/`.
+        - New node/edge types in Neo4j (KFM-OP v11 alignment).
     validations:
       required: false
 
@@ -129,10 +165,10 @@ body:
       description: "Define measurable success criteria and done-conditions."
       placeholder: |
         Examples:
-        - Entity linking achieves ≥ 90% accuracy on evaluation corpus.
-        - Users can filter by linked entities in the Focus Mode UI.
-        - Documentation added under `docs/ai/` and `docs/graph/`.
-        - New telemetry fields added and visible in governance dashboards.
+        - Entity linking achieves ≥ 90% precision/recall on evaluation corpus.
+        - Users can filter and explore new entities in Focus Mode.
+        - Documentation added under `docs/ai/`, `docs/graph/`, and `docs/architecture/`.
+        - Telemetry fields added and visible in governance dashboards.
     validations:
       required: true
 
@@ -142,13 +178,13 @@ body:
       label: "Governance & Compliance Checklist"
       description: "Confirm you understand governance and documentation expectations."
       options:
-        - label: "This proposal will be documented following Master Coder Protocol v6.3 (documentation-first)."
+        - label: "This proposal will be documented following Master Coder Protocol (MCP-DL v6.3), documentation-first."
           required: true
-        - label: "This feature will comply with FAIR+CARE principles and sovereignty policies."
+        - label: "This feature will comply with FAIR+CARE principles and sovereignty policies, including Indigenous data protections where applicable."
           required: true
-        - label: "I will update or create all relevant docs in `docs/` and `src/` upon implementation."
+        - label: "I will update or create all relevant docs in `docs/` and keep configs, schemas, and examples in sync."
           required: true
-        - label: "I understand this request may require approval during an architecture/governance review cycle."
+        - label: "I understand this request may require architecture and governance review before implementation."
           required: true
 
   - type: markdown
@@ -158,26 +194,23 @@ body:
 
         Feature requests help guide roadmap and architecture decisions. After submission, automation may:
 
-        - Run **docs_validate.yml** to ensure the proposal and follow-up docs conform to **KFM-MDP v11**.  
-        - Run **stac_validate.yml** / **dcat_validate.yml** if new metadata patterns or catalogs are proposed.  
-        - Run **faircare_validate.yml** to flag FAIR+CARE implications, especially for data- or AI-related features.  
-        - Feed into **telemetry_export.yml** for governance and roadmap telemetry (e.g., feature backlog, complexity).  
+        - Run **docs_validate.yml** to ensure the proposal and follow-up docs conform to **KFM-MDP v11.2.5**.  
+        - Run **stac_validate.yml** / **dcat_validate.yml** if new metadata patterns, catalogs, or datasets are proposed.  
+        - Run **faircare_validate.yml** to flag FAIR+CARE and sovereignty implications, especially for data- or AI-related features.  
+        - Run **security_audit.yml** if the feature touches authentication, authorization, or supply-chain sensitive components.  
+        - Feed into **telemetry_export.yml** for governance and roadmap telemetry (e.g., feature backlog, complexity, sustainability metrics).  
 
         Architecture and governance decisions are recorded in:
 
-        ```
-        docs/reports/audit/github-workflows-ledger.json
-        ```
+        `docs/reports/audit/github-workflows-ledger.json`
 
         and may be reflected in telemetry snapshots:
 
-        ```
-        releases/v11.0.1/focus-telemetry.json
-        ```
+        `releases/<version>/focus-telemetry.json`
 
         Thank you for helping shape the **Kansas Frontier Matrix**.
-        Your proposal contributes to a transparent, ethical, and reproducible system.
+        Your proposal contributes to a transparent, ethical, reproducible, and sovereign-aware system.
 
         **© 2025 Kansas Frontier Matrix — MIT / CC-BY-4.0**  
-        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.0 · KFM-OP v11.0  
+        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.5 · KFM-OP v11.0  
         Diamond⁹ Ω / Crown∞Ω Ultimate Certified
