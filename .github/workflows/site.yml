@@ -1,1 +1,371 @@
-y
+# .github/workflows/site.yml
+# 🌐 Kansas Frontier Matrix — Web & Docs Build / Deploy Pipeline
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   - Build and test the KFM web client (MapLibre/Cesium or equivalent).
+#   - Build the KFM docs site.
+#   - On governed branches, deploy web + docs via a single, scripted interface.
+#
+# Governance Context:
+#   - Tied into CI/CD architecture documented in .github/workflows/README.md
+#   - Must respect FAIR+CARE and sovereignty governance enforced elsewhere.
+#   - Deployments use config-driven scripts, not ad‑hoc commands in YAML.
+
+name: 🌐 site
+
+on:
+  pull_request:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "web/**"
+      - "docs/**"
+      - "package.json"
+      - "package-lock.json"
+      - "docs/**"
+      - "scripts/build_docs.py"
+      - "scripts/build_web.py"
+      - ".github/workflows/site.yml"
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "web/**"
+      - "docs/**"
+      - "package.json"
+      - "package-lock.json"
+      - "docs/**"
+      - "scripts/build_docs.py"
+      - "scripts/build_web.py"
+      - ".github/workflows/site.yml"
+  workflow_dispatch: {}
+
+# Avoid overlapping site builds/deploys on same ref
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "20"
+  WEB_ROOT: "web"
+  DOCS_ROOT: "docs"
+
+jobs:
+  ###########################################################################
+  # 1. BUILD WEB CLIENT
+  ###########################################################################
+  build-web:
+    name: "🌐 Build Web Client"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🔎 Detect Web Project
+        id: detect_web
+        run: |
+          set -euo pipefail
+          if [[ -d "${WEB_ROOT}" && -f "${WEB_ROOT}/package.json" ]]; then
+            echo "has_web=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_web=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Web build::No ${WEB_ROOT}/package.json; skipping web build."
+          fi
+
+      - name: ⏭ Skip Web Build (no project)
+        if: steps.detect_web.outputs.has_web == 'false'
+        run: |
+          echo "No web project detected; build-web job is a no-op."
+
+      - name: 🟦 Setup Node ${{ env.NODE_VERSION }}
+        if: steps.detect_web.outputs.has_web == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: |
+            ${{ env.WEB_ROOT }}/package-lock.json
+            ${{ env.WEB_ROOT }}/npm-shrinkwrap.json
+
+      - name: 📦 Install Web Dependencies
+        if: steps.detect_web.outputs.has_web == 'true'
+        working-directory: ${{ env.WEB_ROOT }}
+        run: |
+          set -euo pipefail
+          if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
+            npm ci --ignore-scripts
+          else
+            npm install --ignore-scripts
+          fi
+
+      # If you have a dedicated build script, prefer that:
+      # scripts/build_web.py should encapsulate repo-specific logic.
+      - name: 🛠 Build Web (Script or NPM)
+        if: steps.detect_web.outputs.has_web == 'true'
+        run: |
+          set -euo pipefail
+
+          if [[ -f "scripts/build_web.py" ]]; then
+            echo "Using scripts/build_web.py to build web client."
+            python -m pip install --upgrade pip >/dev/null 2>&1 || true
+            python scripts/build_web.py \
+              --root "${WEB_ROOT}" \
+              --out "${WEB_ROOT}/build"
+          else
+            echo "scripts/build_web.py not found; falling back to npm build."
+            cd "${WEB_ROOT}"
+            # Run lint/tests if available, then build
+            npm run lint --if-present
+            npm test --if-present
+            npm run build --if-present
+          fi
+
+          # Normalize build output directory for artifact upload
+          if [[ -d "${WEB_ROOT}/dist" ]]; then
+            echo "WEB_BUILD_DIR=${WEB_ROOT}/dist" >> "$GITHUB_ENV"
+          elif [[ -d "${WEB_ROOT}/build" ]]; then
+            echo "WEB_BUILD_DIR=${WEB_ROOT}/build" >> "$GITHUB_ENV"
+          else
+            echo "::error title=Web build output missing::Expected ${WEB_ROOT}/dist or ${WEB_ROOT}/build."
+            exit 1
+          fi
+
+      - name: 📤 Upload Web Build Artifact
+        if: steps.detect_web.outputs.has_web == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: kfm-web-build
+          path: ${{ env.WEB_BUILD_DIR }}
+          if-no-files-found: error
+
+  ###########################################################################
+  # 2. BUILD DOCS SITE
+  ###########################################################################
+  build-docs:
+    name: "📚 Build Docs Site"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🔎 Detect Docs Root
+        id: detect_docs
+        run: |
+          set -euo pipefail
+          if [[ -d "${DOCS_ROOT}" ]]; then
+            echo "has_docs=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_docs=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Docs build::No ${DOCS_ROOT}/ directory present; skipping docs build."
+          fi
+
+      - name: ⏭ Skip Docs Build (no docs)
+        if: steps.detect_docs.outputs.has_docs == 'false'
+        run: |
+          echo "No docs directory; build-docs job is a no-op."
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        if: steps.detect_docs.outputs.has_docs == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            docs/requirements.txt
+            scripts/requirements-docs.txt
+
+      - name: 📦 Install Docs Dependencies
+        if: steps.detect_docs.outputs.has_docs == 'true'
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-docs.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-docs.txt
+          elif [[ -f docs/requirements.txt ]]; then
+            pip install --no-cache-dir -r docs/requirements.txt
+          elif [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          fi
+
+      # Prefer a repo-specific script to encapsulate docs build logic.
+      - name: 🛠 Build Docs (Script or MkDocs/Sphinx)
+        if: steps.detect_docs.outputs.has_docs == 'true'
+        run: |
+          set -euo pipefail
+
+          DOCS_BUILD_DIR="docs/_site"
+
+          if [[ -f "scripts/build_docs.py" ]]; then
+            echo "Using scripts/build_docs.py to build docs."
+            python scripts/build_docs.py \
+              --root "${DOCS_ROOT}" \
+              --out "${DOCS_BUILD_DIR}"
+          elif command -v mkdocs >/dev/null 2>&1 && [[ -f "mkdocs.yml" || -f "docs/mkdocs.yml" ]]; then
+            echo "Using MkDocs to build docs."
+            if [[ -f "docs/mkdocs.yml" ]]; then
+              mkdocs build --config-file docs/mkdocs.yml --site-dir "${DOCS_BUILD_DIR}"
+            else
+              mkdocs build --site-dir "${DOCS_BUILD_DIR}"
+            fi
+          elif command -v sphinx-build >/dev/null 2>&1 && [[ -d "docs/source" ]]; then
+            echo "Using Sphinx to build docs."
+            sphinx-build -b html docs/source "${DOCS_BUILD_DIR}"
+          else
+            echo "::error title=Docs build tooling missing::No scripts/build_docs.py, mkdocs, or Sphinx configuration found."
+            exit 1
+          fi
+
+          echo "DOCS_BUILD_DIR=${DOCS_BUILD_DIR}" >> "$GITHUB_ENV"
+
+      - name: 📤 Upload Docs Build Artifact
+        if: steps.detect_docs.outputs.has_docs == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: kfm-docs-build
+          path: ${{ env.DOCS_BUILD_DIR }}
+          if-no-files-found: error
+
+  ###########################################################################
+  # 3. DEPLOY WEB + DOCS (Governed)
+  ###########################################################################
+  deploy:
+    name: "🚀 Deploy Web & Docs (Governed)"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    needs:
+      - build-web
+      - build-docs
+
+    # Only deploy on push (not PR) to governed branches
+    if: github.event_name == 'push'
+
+    environment:
+      name: prod-web
+      url: https://kfm.example.org
+
+    permissions:
+      contents: read
+      id-token: write   # For OIDC-based deploys to cloud providers (if used)
+      actions: read
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📥 Download Web Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kfm-web-build
+          path: deploy/web
+        continue-on-error: true
+
+      - name: 📥 Download Docs Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kfm-docs-build
+          path: deploy/docs
+        continue-on-error: true
+
+      - name: 🔎 Inspect Deploy Assets
+        id: inspect_assets
+        run: |
+          set -euo pipefail
+          has_web="false"
+          has_docs="false"
+
+          if [[ -d "deploy/web" ]]; then
+            has_web="true"
+          fi
+          if [[ -d "deploy/docs" ]]; then
+            has_docs="true"
+          fi
+
+          echo "has_web=${has_web}" >> "$GITHUB_OUTPUT"
+          echo "has_docs=${has_docs}" >> "$GITHUB_OUTPUT"
+
+          echo "Web deploy dir exists: ${has_web}"
+          echo "Docs deploy dir exists: ${has_docs}"
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-release.txt
+            scripts/requirements-deploy.txt
+
+      - name: 📦 Install Deploy Tooling
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-deploy.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-deploy.txt
+          elif [[ -f scripts/requirements-release.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-release.txt
+          elif [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          fi
+
+      # Canonical, config-driven deploy entrypoint.
+      # Implement this script to push artifacts to GitHub Pages, S3, GCS, etc.
+      - name: 🚀 Deploy Web + Docs via Script
+        run: |
+          set -euo pipefail
+
+          if [[ ! -f "scripts/deploy_site.py" ]]; then
+            echo "::error title=Missing deploy script::scripts/deploy_site.py not found."
+            echo "This script must be implemented to define governed web/docs deployment."
+            exit 1
+          fi
+
+          python scripts/deploy_site.py \
+            --web-root "deploy/web" \
+            --docs-root "deploy/docs" \
+            --has-web "${{ steps.inspect_assets.outputs.has_web }}" \
+            --has-docs "${{ steps.inspect_assets.outputs.has_docs }}" \
+            --env "prod"
+
+      - name: 🧾 Emit Site Deploy Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🌐 Web & Docs Deploy Summary"
+            echo ""
+            echo "- Workflow: \`${GITHUB_WORKFLOW}\`"
+            echo "- Branch/Tag: \`${GITHUB_REF}\`"
+            echo "- Web assets present: \`${{ steps.inspect_assets.outputs.has_web }}\`"
+            echo "- Docs assets present: \`${{ steps.inspect_assets.outputs.has_docs }}\`"
+            echo ""
+            echo "Deployment was executed via:"
+            echo "- \`scripts/deploy_site.py\` (governed, config-driven entrypoint)"
+            echo ""
+            echo "For full deployment details, consult:"
+            echo "- \`scripts/deploy_site.py\`"
+            echo "- environment logs for \`prod-web\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
