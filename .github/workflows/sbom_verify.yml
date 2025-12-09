@@ -1,1 +1,245 @@
+# .github/workflows/sbom_verify.yml
+# 📦 Kansas Frontier Matrix — SBOM, Manifest & SLSA Attestation Verification
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Verify that each governed release has:
+#     - A valid SPDX SBOM (sbom.spdx.json)
+#     - A matching release manifest (manifest.zip or manifest.json)
+#     - Valid signatures and/or attestations (signature.sig, slsa-attestation.json)
+#   and that these artifacts are internally consistent and policy-compliant.
+#
+# Governance Context:
+#   - SECURITY.md (supply-chain & SBOM policy)
+#   - KFM-STAC / KFM-DCAT for cataloging release artifacts
+#   - SLSA provenance guidance (OpenLineage + PROV-O integration)
+#
+# Core enforcement is delegated to local scripts:
+#   - scripts/verify_supply_chain.py        (hard gate)
+#   - scripts/verify_sbom_spdx.py          (optional SPDX structural checks)
+#   - scripts/collect_sbom_metrics.py      (optional metrics for telemetry)
+
+name: 📦 sbom-verify
+
+on:
+  pull_request:
+    paths:
+      - "releases/**"
+      - "docs/security/**"
+      - "docs/data/**"
+      - "schemas/sbom/**"
+      - "scripts/verify_supply_chain.py"
+      - "scripts/verify_sbom_*"
+      - ".github/workflows/sbom_verify.yml"
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "releases/**"
+      - "docs/security/**"
+      - "docs/data/**"
+      - "schemas/sbom/**"
+      - "scripts/verify_supply_chain.py"
+      - "scripts/verify_sbom_*"
+      - ".github/workflows/sbom_verify.yml"
+  schedule:
+    # Weekly verification of latest releases on default branch
+    - cron: "30 1 * * 0"
+  workflow_dispatch: {}
+
+# Avoid overlapping SBOM verification runs on the same ref
+concurrency:
+  group: sbom-verify-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
+  RELEASES_ROOT: "releases"
+  SBOM_SCHEMA_DIR: "schemas/sbom"
+  SBOM_METRICS_OUT: "sbom-verify-metrics.json"
+
+jobs:
+  sbom-verify:
+    name: "📦 SBOM / Manifest / SLSA Verification"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🔎 Detect Release Artifacts
+        id: detect_releases
+        run: |
+          set -euo pipefail
+
+          if [[ ! -d "${RELEASES_ROOT}" ]]; then
+            echo "has_releases=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=SBOM verify::No ${RELEASES_ROOT} directory found; skipping."
+            exit 0
+          fi
+
+          # Look for at least one sbom.spdx.json under releases/**
+          if find "${RELEASES_ROOT}" -type f -name "sbom*.spdx.json" | grep -q .; then
+            echo "has_releases=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_releases=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=SBOM verify::No sbom*.spdx.json files found under ${RELEASES_ROOT}; skipping."
+          fi
+
+      - name: ⏭ Skip SBOM verification (no releases with SBOM)
+        if: steps.detect_releases.outputs.has_releases == 'false'
+        run: |
+          echo "No releases with SBOMs detected; nothing to verify for this run."
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        if: steps.detect_releases.outputs.has_releases == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-sbom.txt
+
+      - name: 📦 Install SBOM Verification Tooling
+        if: steps.detect_releases.outputs.has_releases == 'true'
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-sbom.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-sbom.txt
+          else
+            # Minimal default helpers if a dedicated requirements file is not present
+            pip install --no-cache-dir "jsonschema" "python-dateutil" || echo "Optional SBOM deps failed; continuing if not strictly required by scripts."
+          fi
+
+      # --------------------------------------------------------------------
+      # 1. SPDX Schema Validation (optional but recommended)
+      #    Uses the generic schema-validate composite action, if present.
+      # --------------------------------------------------------------------
+      - name: 🧾 Validate SPDX SBOM Files Against Schema
+        if: steps.detect_releases.outputs.has_releases == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -d ".github/actions/schema-validate" && -d "${SBOM_SCHEMA_DIR}" ]]; then
+            echo "Running schema validation for SBOMs under ${RELEASES_ROOT}."
+            bash .github/actions/schema-validate/entrypoint.sh "${SBOM_SCHEMA_DIR}" "${RELEASES_ROOT}"
+          else
+            echo "SBOM schema validation skipped (schema-validate action or ${SBOM_SCHEMA_DIR} missing)."
+          fi
+
+      # --------------------------------------------------------------------
+      # 2. Hard Gate: Supply-Chain / SBOM Consistency Check
+      #
+      # Expected behavior of scripts/verify_supply_chain.py:
+      #   - Iterate over releases/<version> directories.
+      #   - Require presence of:
+      #       * sbom.spdx.json
+      #       * manifest.zip (or manifest.json)
+      #       * slsa-attestation.json (if policy requires)
+      #       * signature.sig (or equivalent signature/attestation artifact)
+      #   - Cross-check:
+      #       * Manifest vs SBOM contents (hashes, files, components)
+      #       * References in docs/security/ and docs/data/ for the same version
+      #   - Optionally invoke cosign/slsa-verifier (or other tools) internally.
+      #   - Exit non-zero on any policy violation → blocks CI/CD.
+      # --------------------------------------------------------------------
+      - name: 🛡 Verify Supply Chain Artifacts (Hard Gate)
+        if: steps.detect_releases.outputs.has_releases == 'true'
+        run: |
+          set -euo pipefail
+          if [[ ! -f scripts/verify_supply_chain.py ]]; then
+            echo "::error title=Missing verifier::scripts/verify_supply_chain.py not found."
+            echo "This script is required to enforce SBOM/manifest/attestation policy."
+            exit 1
+          fi
+
+          python scripts/verify_supply_chain.py \
+            --releases-root "${RELEASES_ROOT}"
+
+      # --------------------------------------------------------------------
+      # 3. Optional: Fine-grained SPDX / SBOM Content Checks
+      #
+      # Example behavior of scripts/verify_sbom_spdx.py:
+      #   - Validate SPDX document structure & license info
+      #   - Ensure required SPDX metadata fields (creator, created, dataLicense)
+      #   - Check declared components vs vulnerability feeds (optional)
+      # --------------------------------------------------------------------
+      - name: 📐 Optional SPDX / SBOM Content Checks
+        if: steps.detect_releases.outputs.has_releases == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/verify_sbom_spdx.py ]]; then
+            python scripts/verify_sbom_spdx.py \
+              --releases-root "${RELEASES_ROOT}"
+          else
+            echo "scripts/verify_sbom_spdx.py not found; skipping fine-grained SPDX checks."
+          fi
+
+      # --------------------------------------------------------------------
+      # 4. Optional: SBOM/Supply-Chain Metrics for Telemetry
+      #
+      # Example metrics:
+      #   - Number of releases with complete SBOMs
+      #   - Number of SBOM/manifest/attestation verification failures
+      #   - License coverage & counts of unknown/none
+      # --------------------------------------------------------------------
+      - name: 📊 Optional SBOM Metrics Collection
+        if: steps.detect_releases.outputs.has_releases == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/collect_sbom_metrics.py ]]; then
+            python scripts/collect_sbom_metrics.py \
+              --releases-root "${RELEASES_ROOT}" \
+              --out "${SBOM_METRICS_OUT}"
+          else
+            echo "scripts/collect_sbom_metrics.py not found; skipping SBOM metrics export."
+          fi
+
+      - name: 📤 Upload SBOM Metrics Artifact (Optional)
+        if: success() || failure()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-verify-metrics
+          path: ${{ env.SBOM_METRICS_OUT }}
+          if-no-files-found: ignore
+
+      # --------------------------------------------------------------------
+      # 5. SBOM Verification Summary (for GitHub UI & telemetry_export.yml)
+      # --------------------------------------------------------------------
+      - name: 🧾 Emit SBOM Verification Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## 📦 SBOM / Manifest / SLSA Verification Summary"
+            echo ""
+            echo "- Releases root: \`${RELEASES_ROOT}\`"
+            echo "- SBOM schema dir: \`${SBOM_SCHEMA_DIR}\`"
+            echo "- Releases with SBOM present: ${{ steps.detect_releases.outputs.has_releases }}"
+            echo ""
+            echo "Hard gate:"
+            echo "- scripts/verify_supply_chain.py (required) enforces SBOM/manifest/attestation policy."
+            echo ""
+            echo "Optional checks:"
+            echo "- scripts/verify_sbom_spdx.py (fine-grained SPDX checks)"
+            echo "- scripts/collect_sbom_metrics.py (metrics for telemetry_export.yml)"
+          } >> "${GITHUB_STEP_SUMMARY}"
 
