@@ -1,8 +1,8 @@
 ---
 title: "🔄 Kansas Frontier Matrix — CI/CD Workflows Master Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: ".github/workflows/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+version: "v11.2.3"
+last_updated: "2025-12-08"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
@@ -12,9 +12,9 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../releases/v11.2.2/github-infra-telemetry.json"
+sbom_ref: "../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../releases/v11.2.3/github-infra-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/github-workflows-v4.json"
 energy_schema: "../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../schemas/telemetry/carbon-v2.json"
@@ -25,9 +25,9 @@ sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+markdown_protocol_version: "KFM-MDP v11.2.5"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
 
@@ -63,14 +63,16 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
-  - ".github/workflows/README.md@v11.2.0"
-  - ".github/workflows/README.md@v11.0.2"
-  - ".github/workflows/README.md@v11.0.1"
-  - ".github/workflows/README.md@v11.0.0"
-  - ".github/workflows/README.md@v10.4.1"
-  - ".github/workflows/README.md@v10.3.1"
-  - ".github/workflows/README.md@v10.2.2"
   - ".github/workflows/README.md@v10.0.0"
+  - ".github/workflows/README.md@v10.2.2"
+  - ".github/workflows/README.md@v10.3.1"
+  - ".github/workflows/README.md@v10.4.1"
+  - ".github/workflows/README.md@v11.0.0"
+  - ".github/workflows/README.md@v11.0.1"
+  - ".github/workflows/README.md@v11.0.2"
+  - ".github/workflows/README.md@v11.2.0"
+  - ".github/workflows/README.md@v11.2.2"
+  - ".github/workflows/README.md@v11.2.3"
 provenance_requirements:
   versions_required: true
   newest_first: true
@@ -103,7 +105,7 @@ requires_directory_layout_section: true
 requires_version_history: true
 requires_governance_links_in_footer: true
 
-doc_uuid: "urn:kfm:doc:github-workflows:architecture:v11.2.2"
+doc_uuid: "urn:kfm:doc:github-workflows:architecture:v11.2.3"
 semantic_document_id: "kfm-doc-github-workflows-readme"
 event_source_id: "ledger:.github/workflows/README.md"
 immutability_status: "mutable-plan"
@@ -118,10 +120,10 @@ sunset_policy: "Superseded upon next CI/CD architecture update"
 
 <div align="center">
 
-# 🔄 **Kansas Frontier Matrix — CI/CD Workflows Master Architecture (v11.2.2 LTS)**  
+# 🔄 **Kansas Frontier Matrix — CI/CD Workflows Master Architecture (v11.2.3 LTS)**  
 `.github/workflows/README.md`
 
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-blue)](../../docs/standards/kfm_markdown_protocol_v11.2.2.md)
+[![KFM-MDP v11.2.5](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.5-blue)](../../docs/standards/kfm_markdown_protocol_v11.2.5.md)
 [![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](../../docs/standards/faircare/FAIRCARE-GUIDE.md)
 [![CI/CD](https://img.shields.io/badge/Pipelines-Automated-success)]()
 [![Security](https://img.shields.io/badge/Supply--Chain-Secure-critical)]()
@@ -131,7 +133,7 @@ sunset_policy: "Superseded upon next CI/CD architecture update"
 **Purpose**  
 Describe the **canonical CI/CD architecture** for all workflows in `.github/workflows/` that implement  
 validation, FAIR+CARE governance, supply-chain integrity, security, telemetry, data lineage, and automated deployment  
-for the Kansas Frontier Matrix (KFM) v11.2.2 monorepo.
+for the Kansas Frontier Matrix (KFM) v11.2.3 monorepo.
 
 </div>
 
@@ -158,11 +160,11 @@ Workflows in this directory:
 
 ## 🗂️ Directory Layout
 
-~~~text
+```text
 .github/
 └── 🤖 workflows/                             # All governed CI/CD workflows (this directory)
     ├── 🧪 ci.yml                             # Core CI: lint, tests, type-checks, base schema checks
-    ├── 📚 docs_validate.yml                  # KFM-MDP v11.2.2 markdown + front-matter validation
+    ├── 📚 docs_validate.yml                  # KFM-MDP v11.2.5 markdown + front-matter validation
     ├── 🛰️ stac_validate.yml                  # STAC 1.x Item/Collection validation (data/stac/**)
     ├── 🗂️ dcat_validate.yml                  # DCAT 3.0 dataset/distribution validation
     ├── 🧬 jsonld_validate.yml                # JSON-LD + ontology checks (CIDOC/OWL-Time/GeoSPARQL/PROV-O)
@@ -178,7 +180,7 @@ Workflows in this directory:
     ├── 🔄 kfm-auto-update.yml                # Scheduled auto-update & promotion orchestration
     ├── 🏷️ labeler.yml                        # Auto-label PRs by component/domain
     └── 🌐 site.yml                           # Web + docs build & deployment pipelines
-~~~
+```
 
 Any new workflow added to this directory MUST be:
 
@@ -192,7 +194,7 @@ Any new workflow added to this directory MUST be:
 
 At a high level, `.github/workflows/` implements a **multi-stage gate**:
 
-~~~mermaid
+```mermaid
 flowchart TB
     A["🔔 Triggers\npush · PR · schedule · manual"] --> B["🧪 Core CI\nci.yml"]
     B --> C["📚 Docs & Metadata\n docs_validate · stac_validate · dcat_validate · jsonld_validate"]
@@ -201,7 +203,7 @@ flowchart TB
     E --> F["📦 Build & Release\n site · release"]
     F --> G["🔄 Auto-Update & Promotion\n kfm-auto-update"]
     G --> H["📊 Telemetry & Lineage\n telemetry_export + OpenLineage"]
-~~~
+```
 
 **Design principles:**
 
@@ -228,7 +230,7 @@ flowchart TB
 
 **`docs_validate.yml`**
 
-- Enforces **KFM-MDP v11.2.2**, including:  
+- Enforces **KFM-MDP v11.2.5**, including:  
   - YAML front-matter presence & key fields.  
   - Heading hierarchy & emoji usage at H2.  
   - Directory layout + version history sections for governed docs.  
@@ -411,6 +413,7 @@ CI/CD architecture is therefore a **governance tool**, not a purely technical sy
 
 | Version | Date       | Summary                                                                                                                                |
 |--------:|------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-12-08 | Aligned with KFM-MDP v11.2.5; refreshed telemetry references and governance links; clarified auto-update/promotion behavior.          |
 | v11.2.2 | 2025-11-28 | Deep v11.2.2 architecture update; added `kfm-auto-update.yml` to layout & flows; aligned with GitHub Infra README and telemetry wiring. |
 | v11.2.0 | 2025-11-27 | First v11.2 master CI/CD architecture; consolidated governance, security, AI, and telemetry views.                                    |
 | v11.0.2 | 2025-11-19 | Expanded ETL and lineage workflows; added sustainability considerations.                                                               |
@@ -425,7 +428,7 @@ CI/CD architecture is therefore a **governance tool**, not a purely technical sy
 
 <div align="center">
 
-🔄 **Kansas Frontier Matrix — CI/CD Workflows Master Architecture (v11.2.2)**  
+🔄 **Kansas Frontier Matrix — CI/CD Workflows Master Architecture (v11.2.3)**  
 Automation-First · FAIR+CARE-Governed · Provenance-Aware  
 
 [⬅ GitHub Infrastructure Overview](../README.md) · [🏗 Repository Architecture](../ARCHITECTURE.md) · [🛡 Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
