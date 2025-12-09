@@ -123,6 +123,15 @@ It is enforced via:
 
 This file is the **public-facing entry point**. Deeper standards live in `docs/security/`.
 
+### Scope & Supported Versions
+
+KFM is developed and maintained as a continuously evolving research and infrastructure system.
+
+- **Supported line for security fixes:**  
+  - The current **v11.x** line (main branch and associated release tags).  
+- Older versions are considered **out of maintenance**; users are expected to upgrade to the latest v11.x release to receive security fixes.  
+- Any exception to this policy (for example, a critical, widely exploited issue) will be documented in a security advisory and, where feasible, backported.
+
 ---
 
 ## 🗂️ Repository Security Context
@@ -184,6 +193,16 @@ KFM maintainers will:
 - Publish a security advisory and changelog entry once a fix is available  
 - Credit researchers when safe and permitted (opt-in)  
 
+### Disclosure Timeline & Advisories
+
+KFM follows a coordinated disclosure approach:
+
+- We aim to resolve confirmed vulnerabilities **within the SLAs** defined in this document.  
+- If a vulnerability cannot be fully resolved within **90 days** of acknowledgement, maintainers will coordinate with the reporter on a responsible disclosure timeline and any interim mitigations.  
+- For confirmed vulnerabilities that impact users, maintainers will:
+  - Create and publish a **GitHub Security Advisory** detailing the issue, affected versions, and remediation steps.  
+  - Request a **CVE identifier** for significant vulnerabilities, when appropriate.  
+
 **Do NOT:**
 
 - Attack production systems or unrelated infrastructure  
@@ -242,6 +261,7 @@ KFM enforces strict supply-chain controls, as specified in `docs/security/supply
   - Automated scanning with tools such as osv-scanner, Grype, and Trivy.  
   - Dependency-confusion and registry anomaly detection (`docs/security/supply-chain/dependency-confusion/`).  
   - NPM worm-defense (lifecycle-script suppression + anomaly rules) via `docs/security/supply-chain/npm-ignore-scripts/`.  
+  - Automated dependency health tooling (e.g., GitHub dependency alerts and update workflows) as described in `docs/security/supply-chain.md`.  
 
 Artifacts that fail integrity, signature, or policy checks **cannot be promoted to release**.
 
@@ -251,11 +271,11 @@ Artifacts that fail integrity, signature, or policy checks **cannot be promoted 
 
 KFM uses a CVSS-inspired severity model with the following **target SLAs**:
 
-| Severity | Detection SLA | Patch SLA  | Notes                   |
-|--------: |--------------:|-----------:|-------------------------|
-| Critical | 4 hours        | 24 hours   | Blocks CI/CD & releases |
-| High     | 24 hours       | 72 hours   | Requires expedited fix  |
-| Medium   | 48 hours       | 7 days     | Logged & monitored      |
+| Severity | Detection SLA | Patch SLA   | Notes                   |
+|--------: |--------------:|------------:|-------------------------|
+| Critical | 4 hours        | 24 hours    | Blocks CI/CD & releases |
+| High     | 24 hours       | 72 hours    | Requires expedited fix  |
+| Medium   | 48 hours       | 7 days      | Logged & monitored      |
 | Low      | Weekly sweep   | Next sprint | Best-effort remediation |
 
 The full vulnerability-management standard, including exception processes and scoring notes, is in:
@@ -319,6 +339,7 @@ This telemetry may include:
 - Governance and FAIR+CARE checks  
 - SBOM and provenance verification status  
 - Energy and carbon metrics related to security and scanning workloads  
+- High-level vulnerability metrics (for example, number of vulnerabilities found and fixed per release, and mean time to remediate by severity)  
 
 Telemetry **never** contains:
 
@@ -376,7 +397,7 @@ Maintainers are responsible for:
 
 | Version | Date       | Summary                                                                                                                                |
 |--------:|------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| v11.2.3 | 2025-12-08 | Aligned with KFM-MDP v11.2.5; updated front-matter telemetry/metadata; clarified AI/narrative safety, telemetry, and FAIR+CARE links. |
+| v11.2.3 | 2025-12-08 | Aligned with KFM-MDP v11.2.5; added scope/supported versions and disclosure timeline; refined supply-chain and telemetry descriptions. |
 | v11.2.2 | 2025-11-27 | Rebuilt policy using `docs/security` governance; added supply-chain, SBOM/SLSA, NPM worm defense, and telemetry links.                |
 | v11.0.0 | 2025-11-18 | Initial v11 security policy aligned with new CI/CD, FAIR+CARE, and sovereignty architecture.                                          |
 | v10.0.0 | Legacy     | Early SECURITY.md baseline prior to v11 repository restructure.                                                                        |
