@@ -1,1 +1,240 @@
+# .github/workflows/h3_generalization.yml
+# 🧊 Kansas Frontier Matrix — H3 Spatial Generalization & Sensitive Coordinate Enforcement
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Enforce spatial masking and aggregation for sensitive locations using H3,
+#   ensuring that archaeological sites, Indigenous lands, sacred locations,
+#   and other high‑risk geographies are never exposed at disallowed precision.
+#
+# Governance Context:
+#   - FAIR+CARE (CARE + FAIR metadata from faircare_validate.yml)
+#   - Indigenous Data Protection & sovereignty policies
+#   - H3-based spatial generalization policies (e.g., config/h3_policy.yml)
+#   - STAC/DCAT/JSON-LD semantics (validated in stac/dcat/jsonld workflows)
+#
+# This workflow focuses on:
+#   - Detecting raw/sensitive coordinates in governed layers
+#   - Verifying that any high-sensitivity features are represented via H3 cells
+#   - Ensuring H3 resolution is at or above minimum resolution thresholds
+#   - Emitting metrics for downstream telemetry_export.yml
+
+name: 🧊 h3-generalization
+
+on:
+  pull_request:
+    paths:
+      - "data/**"
+      - "docs/data/**"
+      - "config/h3_*.yml"
+      - "config/h3_*.yaml"
+      - "scripts/*h3*"
+      - ".github/workflows/h3_generalization.yml"
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "data/**"
+      - "docs/data/**"
+      - "config/h3_*.yml"
+      - "config/h3_*.yaml"
+      - "scripts/*h3*"
+      - ".github/workflows/h3_generalization.yml"
+  workflow_dispatch: {}
+
+# Ensure we don't have overlapping H3 validation runs per ref
+concurrency:
+  group: h3-generalization-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
+  # Roots to scan for sensitive coordinates & H3 indices
+  H3_DATA_ROOT: "data"
+  H3_DOCS_ROOT: "docs/data"
+  # Policy config (tunable by governance; e.g., per-domain allowed H3 resolutions)
+  H3_POLICY_CONFIG: "config/h3_policy.yml"
+  # Optional metrics output for telemetry_export workflow
+  H3_METRICS_OUT: "h3-generalization-metrics.json"
+
+jobs:
+  h3-generalization:
+    name: "🧊 H3 Spatial Generalization & Sensitive Coordinate Enforcement"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🔎 Detect Spatial/H3-Relevant Content
+        id: detect_h3
+        run: |
+          set -euo pipefail
+          has_any="false"
+
+          if [[ -d "${H3_DATA_ROOT}" ]]; then
+            echo "Found data root: ${H3_DATA_ROOT}"
+            has_any="true"
+          fi
+
+          if [[ -d "${H3_DOCS_ROOT}" ]]; then
+            echo "Found docs data root: ${H3_DOCS_ROOT}"
+            has_any="true"
+          fi
+
+          echo "has_h3_targets=${has_any}" >> "$GITHUB_OUTPUT"
+
+          if [[ "${has_any}" == "false" ]]; then
+            echo "::notice title=H3 generalization::No data/docs roots present; skipping validation."
+          fi
+
+      - name: ⏭ Skip H3 validation (no data/docs roots)
+        if: steps.detect_h3.outputs.has_h3_targets == 'false'
+        run: |
+          echo "No spatial/H3-relevant content detected; nothing to validate for this run."
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        if: steps.detect_h3.outputs.has_h3_targets == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-h3.txt
+
+      - name: 📦 Install H3 & Geo Tooling
+        if: steps.detect_h3.outputs.has_h3_targets == 'true'
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-h3.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-h3.txt
+          else
+            # Minimal defaults if a dedicated requirements file is not present
+            pip install --no-cache-dir "h3" "shapely" "pyproj" || echo "Optional geo deps failed; continuing if not strictly required by scripts."
+          fi
+
+      # --------------------------------------------------------------------
+      # 1. Hard gate: H3 Masking/Generalization Enforcement
+      #
+      # Expected behavior of scripts/h3_masking_check.py:
+      #   - Scan ${H3_DATA_ROOT} and ${H3_DOCS_ROOT} for:
+      #       * raw coordinates in high-sensitivity layers
+      #       * geo features tagged with sovereignty/high-sensitivity metadata
+      #   - Verify:
+      #       * that such features are represented via H3 cells, not raw points
+      #       * H3 resolution meets the minimum allowed level from H3_POLICY_CONFIG
+      #   - Exit non-zero on violation so CI/CD blocks the change.
+      # --------------------------------------------------------------------
+      - name: 🧊 Enforce H3 Generalization Policy
+        if: steps.detect_h3.outputs.has_h3_targets == 'true'
+        run: |
+          set -euo pipefail
+
+          if [[ ! -f scripts/h3_masking_check.py ]]; then
+            echo "::error title=Missing H3 enforcement script::scripts/h3_masking_check.py not found."
+            echo "This script is required to enforce H3 generalization & masking policies."
+            exit 1
+          fi
+
+          if [[ ! -f "${H3_POLICY_CONFIG}" ]]; then
+            echo "::warning title=Missing H3 policy config::${H3_POLICY_CONFIG} not found."
+            echo "Using default policy embedded in h3_masking_check.py (if any)."
+          fi
+
+          python scripts/h3_masking_check.py \
+            --data-root "${H3_DATA_ROOT}" \
+            --docs-root "${H3_DOCS_ROOT}" \
+            --policy "${H3_POLICY_CONFIG}" \
+            --mode ci
+
+      # --------------------------------------------------------------------
+      # 2. Optional: H3 Coverage & Edge-Case Audits
+      #
+      # Example checks (implemented in your script):
+      #   - All high-sensitivity STAC/DCAT layers have H3 coverage configured
+      #   - No H3 cells at disallowed resolutions for given domains
+      #   - No “mixed” layers exposing both raw coordinates and H3 cells
+      # --------------------------------------------------------------------
+      - name: 📐 Optional H3 Coverage & Consistency Audit
+        if: steps.detect_h3.outputs.has_h3_targets == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/h3_coverage_audit.py ]]; then
+            python scripts/h3_coverage_audit.py \
+              --data-root "${H3_DATA_ROOT}" \
+              --docs-root "${H3_DOCS_ROOT}" \
+              --policy "${H3_POLICY_CONFIG}"
+          else
+            echo "scripts/h3_coverage_audit.py not present; skipping advanced H3 coverage audit."
+          fi
+
+      # --------------------------------------------------------------------
+      # 3. Optional: FAIR+CARE-Aware H3 Metrics
+      #
+      # Example metrics (implemented in your script):
+      #   - Number of high-sensitivity features protected via H3
+      #   - Number of violations found & their domains
+      #   - Distribution of H3 resolutions used for sensitive layers
+      #
+      # These can be picked up by telemetry_export.yml and folded into
+      # focus-telemetry/github-infra-telemetry.json.
+      # --------------------------------------------------------------------
+      - name: 📊 Optional H3 Metrics Collection
+        if: steps.detect_h3.outputs.has_h3_targets == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/collect_h3_metrics.py ]]; then
+            python scripts/collect_h3_metrics.py \
+              --data-root "${H3_DATA_ROOT}" \
+              --docs-root "${H3_DOCS_ROOT}" \
+              --policy "${H3_POLICY_CONFIG}" \
+              --out "${H3_METRICS_OUT}"
+          else
+            echo "scripts/collect_h3_metrics.py not found; skipping H3 metrics export."
+          fi
+
+      - name: 📤 Upload H3 Metrics Artifact (Optional)
+        if: success() || failure()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: h3-generalization-metrics
+          path: ${{ env.H3_METRICS_OUT }}
+          if-no-files-found: ignore
+
+      # --------------------------------------------------------------------
+      # 4. H3 Validation Summary (for GitHub UI & telemetry_export.yml)
+      # --------------------------------------------------------------------
+      - name: 🧾 Emit H3 Generalization Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🧊 H3 Spatial Generalization & Sensitive Coordinate Enforcement Summary"
+            echo ""
+            echo "- Data root: \`${H3_DATA_ROOT}\`"
+            echo "- Docs data root: \`${H3_DOCS_ROOT}\`"
+            echo "- H3 policy config: \`${H3_POLICY_CONFIG}\` (may fall back to script defaults)"
+            echo "- H3 targets present: ${{ steps.detect_h3.outputs.has_h3_targets }}"
+            echo ""
+            echo "This run enforces H3-based masking and aggregation requirements for"
+            echo "archaeological, Indigenous, and other high-sensitivity geographies."
+            echo "Detailed logs and any metrics (if generated) are available as workflow artifacts."
+          } >> "${GITHUB_STEP_SUMMARY}"
 
