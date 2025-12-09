@@ -129,40 +129,36 @@ This directory feeds the entire KFM pipeline:
 
 > Layout profile: `immediate-one-branch-with-descriptions-and-emojis`
 
-    data/
-      sources/
-        agreements/
-          README.md                          # 📂 You are here: standard for all agreements
-
-          templates/
-            agreement-manifest.schema.json   # 🧬 JSON Schema used in CI for manifests
-            agreement-manifest.example.yaml  # 📋 Canonical example manifest
-
-          public/                            # 🌐 Agreements for open/public data
-            <source-id>/
-              LICENSE.txt                    # 📜 Verbatim license (if redistributable)
-              agreement-manifest.yaml        # 🧾 Machine-readable agreement summary
-              notes.md                       # ✏️ Optional human notes (no secrets)
-
-          restricted/                        # 🔒 Agreements with redistribution or access limits
-            <source-id>/
-              agreement-manifest.yaml        # 🧾 Agreement with internal / embargoed limits
-              access-notes.md                # 🔐 Who can see what, at what resolution
-
-          tribal/                            # 🪶 Indigenous / tribal data agreements
-            <source-id>/
-              agreement-manifest.yaml        # 🧾 CARE-aligned agreement summary
-              sovereignty-notes.md           # 🛡 Cultural protocols & contacts (high-level only)
-
-          third_party/                       # 🤝 Vendor / partner / commercial API contracts
-            <source-id>/
-              agreement-manifest.yaml        # 🧾 Summary of rights & restrictions
-              contact.md                     # 📇 Non-sensitive contact / escalation info
-
-          archive/                           # 🕰 Immutable snapshots of superseded manifests
-            <yyyy>/
-              <source-id>/
-                agreement-manifest.vYYYYMMDD.yaml  # 📦 Frozen manifest snapshot (read-only)
+~~~text
+📁 data/
+└── 📁 sources/
+    └── 📁 agreements/
+        ├── 📄 README.md                          # 📂 You are here: standard for all agreements
+        ├── 📁 templates/
+        │   ├── 🧾 agreement-manifest.schema.json # JSON Schema used in CI for manifests
+        │   └── 📄 agreement-manifest.example.yaml# Canonical example manifest
+        ├── 📁 public/                            # Agreements for open/public data
+        │   └── 📁 <source-id>/
+        │       ├── 📄 LICENSE.txt                # Verbatim license (if redistributable)
+        │       ├── 📄 agreement-manifest.yaml    # Machine-readable agreement summary
+        │       └── 📄 notes.md                   # Optional human notes (no secrets)
+        ├── 📁 restricted/                        # Agreements with redistribution or access limits
+        │   └── 📁 <source-id>/
+        │       ├── 📄 agreement-manifest.yaml    # Agreement with internal / embargoed limits
+        │       └── 📄 access-notes.md            # Who can see what, at what resolution
+        ├── 📁 tribal/                            # Indigenous / tribal data agreements
+        │   └── 📁 <source-id>/
+        │       ├── 📄 agreement-manifest.yaml    # CARE-aligned agreement summary
+        │       └── 📄 sovereignty-notes.md       # Cultural protocols & contacts (high-level only)
+        ├── 📁 third_party/                       # Vendor / partner / commercial API contracts
+        │   └── 📁 <source-id>/
+        │       ├── 📄 agreement-manifest.yaml    # Summary of rights & restrictions
+        │       └── 📄 contact.md                 # Non-sensitive contact / escalation info
+        └── 📁 archive/                           # Immutable snapshots of superseded manifests
+            └── 📁 <yyyy>/
+                └── 📁 <source-id>/
+                    └── 🧾 agreement-manifest.vYYYYMMDD.yaml  # Frozen manifest snapshot (read-only)
+~~~
 
 **Naming conventions**
 
@@ -216,76 +212,78 @@ Frontend **must not** read raw manifests directly from `data/`; it goes via API 
 
 Each manifest is a deterministic, MCP‑style config describing what is allowed or forbidden.
 
-    id: "src-noaa-ncei-daily-climate"
-    title: "NOAA NCEI Daily Climate Data for Kansas"
-    source_uri:
-      - "https://www.ncei.noaa.gov/"
-    provider:
-      name: "NOAA National Centers for Environmental Information"
-      kind: "federal-agency"
-    category: "public"                    # public|restricted|tribal|third_party
-    agreement_type:
-      - "license"                         # license|tos|mou|tribal_agreement|custom
+~~~yaml
+id: "src-noaa-ncei-daily-climate"
+title: "NOAA NCEI Daily Climate Data for Kansas"
+source_uri:
+  - "https://www.ncei.noaa.gov/"
+provider:
+  name: "NOAA National Centers for Environmental Information"
+  kind: "federal-agency"
+category: "public"                    # public|restricted|tribal|third_party
+agreement_type:
+  - "license"                         # license|tos|mou|tribal_agreement|custom
 
-    license:
-      spdx: "CC-BY-4.0"                   # SPDX id or "Proprietary" / "Custom"
-      label: "Creative Commons Attribution 4.0 International"
-      license_text_ref: "LICENSE.txt"     # relative path or external URI
+license:
+  spdx: "CC-BY-4.0"                   # SPDX id or "Proprietary" / "Custom"
+  label: "Creative Commons Attribution 4.0 International"
+  license_text_ref: "LICENSE.txt"     # relative path or external URI
 
-    rights_and_use:
-      data_sharing_scope: "public"        # public|internal|embargoed|no_redistribution
-      allowed_uses:
-        - "research"
-        - "education"
-      prohibited_uses:
-        - "re-identification"
-      derived_data_rules:
-        - "may_publish_aggregates_only"
-        - "must_not_republish_raw_records"
-      citation_required: true
-      citation_text: "NOAA NCEI (year): Dataset title. Retrieved via Kansas Frontier Matrix."
+rights_and_use:
+  data_sharing_scope: "public"        # public|internal|embargoed|no_redistribution
+  allowed_uses:
+    - "research"
+    - "education"
+  prohibited_uses:
+    - "re-identification"
+  derived_data_rules:
+    - "may_publish_aggregates_only"
+    - "must_not_republish_raw_records"
+  citation_required: true
+  citation_text: "NOAA NCEI (year): Dataset title. Retrieved via Kansas Frontier Matrix."
 
-    temporal_scope:
-      effective_date: "2023-01-01"
-      expiration_date: null               # or ISO date if known
-      review_cycle: "biennial"
+temporal_scope:
+  effective_date: "2023-01-01"
+  expiration_date: null               # or ISO date if known
+  review_cycle: "biennial"
 
-    jurisdiction:
-      - "US-federal"
-      - "Kansas"
+jurisdiction:
+  - "US-federal"
+  - "Kansas"
 
-    sensitivity:
-      contains_pii: false                 # none|anonymized|contains_pii_prohibited
-      data_category: "public"             # public|internal|restricted|confidential
+sensitivity:
+  contains_pii: false                 # none|anonymized|contains_pii_prohibited
+  data_category: "public"             # public|internal|restricted|confidential
 
-    sovereignty:
-      indigenous_rights_flag: false       # true for tribal/CARE datasets
-      communities: []                     # populated for tribal agreements
+sovereignty:
+  indigenous_rights_flag: false       # true for tribal/CARE datasets
+  communities: []                     # populated for tribal agreements
 
-    stac:
-      collections:
-        - "kfm-climate-noaa-ncei-daily"
-      items: []                           # optional item IDs
+stac:
+  collections:
+    - "kfm-climate-noaa-ncei-daily"
+  items: []                           # optional item IDs
 
-    dcat:
-      datasets:
-        - "urn:kfm:dcat:dataset:noaa-ncei-daily"
+dcat:
+  datasets:
+    - "urn:kfm:dcat:dataset:noaa-ncei-daily"
 
-    prov:
-      entities:
-        - "urn:kfm:entity:dataset:noaa-ncei-daily"
-      wasGeneratedBy:
-        - "urn:kfm:activity:etl:noaa-ncei-daily-v1"
+prov:
+  entities:
+    - "urn:kfm:entity:dataset:noaa-ncei-daily"
+  wasGeneratedBy:
+    - "urn:kfm:activity:etl:noaa-ncei-daily-v1"
 
-    version:
-      agreement_version: "2025.1"
-      supersedes: "2023.2"
-      change_log:
-        - "2025-02-01: Updated license from CC-BY-3.0 to CC-BY-4.0."
-        - "2025-02-01: Clarified derived-data rules for AI training."
+version:
+  agreement_version: "2025.1"
+  supersedes: "2023.2"
+  change_log:
+    - "2025-02-01: Updated license from CC-BY-3.0 to CC-BY-4.0."
+    - "2025-02-01: Clarified derived-data rules for AI training."
 
-    security:
-      contract_vault_ref: null            # URI in secret contract vault (if applicable)
+security:
+  contract_vault_ref: null            # URI in secret contract vault (if applicable)
+~~~
 
 **Required blocks**, at minimum:
 
