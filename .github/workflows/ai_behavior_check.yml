@@ -1,1 +1,371 @@
+# .github/workflows/ai_behavior_check.yml
+# 🤖 Kansas Frontier Matrix — AI Behavior, Drift & Narrative Safety Checks
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Enforce governed AI behavior across KFM by:
+#     - Validating AI/LLM config & prompt metadata
+#     - Running behavior / regression tests for Story Nodes & Focus Mode
+#     - Checking for disallowed patterns (speculation, unsafe narratives, leaks)
+#     - Monitoring simple drift/bias metrics (via local test harnesses)
+#
+# Governance Context:
+#   - KFM-MDP v11.2.5 (docs & model card metadata)
+#   - KFM-OP v11 (graph & narrative semantics)
+#   - KFM FAIR+CARE & sovereignty policies
+#   - SECURITY.md (AI surface is part of the attack surface)
+#
+# NOTE:
+#   This workflow does NOT call live external LLMs directly; it relies on
+#   repo-local test harnesses & fixtures (e.g., golden outputs) implemented in
+#   scripts/ and tests/ directories.
+
+name: 🤖 ai-behavior-check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "src/ai/**"
+      - "src/llm/**"
+      - "src/storynodes/**"
+      - "src/focusmode/**"
+      - "config/ai/**"
+      - "config/prompts/**"
+      - "mcp/model_cards/**"
+      - "tests/ai/**"
+      - "tests/focusmode/**"
+      - "scripts/*ai*"
+      - "scripts/*focusmode*"
+      - ".github/workflows/ai_behavior_check.yml"
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "src/ai/**"
+      - "src/llm/**"
+      - "src/storynodes/**"
+      - "src/focusmode/**"
+      - "config/ai/**"
+      - "config/prompts/**"
+      - "mcp/model_cards/**"
+      - "tests/ai/**"
+      - "tests/focusmode/**"
+      - "scripts/*ai*"
+      - "scripts/*focusmode*"
+      - ".github/workflows/ai_behavior_check.yml"
+  schedule:
+    # Nightly AI behavior regression on default branch
+    - cron: "0 4 * * *"
+  workflow_dispatch: {}
+
+# Avoid overlapping AI behavior runs on the same ref
+concurrency:
+  group: ai-behavior-check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHON_VERSION: "3.11"
+  KFM_AI_SRC_ROOT: "src/ai"
+  KFM_STORYNODE_SRC_ROOT: "src/storynodes"
+  KFM_FOCUSMODE_SRC_ROOT: "src/focusmode"
+  KFM_MODEL_CARD_ROOT: "mcp/model_cards"
+  KFM_AI_TEST_ROOT: "tests/ai"
+  KFM_FOCUSMODE_TEST_ROOT: "tests/focusmode"
+  KFM_AI_METRICS_OUT: "ai-behavior-metrics.json"
+
+jobs:
+  ###########################################################################
+  # 1. Static Config & Model Card Validation
+  ###########################################################################
+  ai-configs:
+    name: "📑 AI Config & Model Card Validation"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🔎 Detect AI/LLM Assets
+        id: detect_ai
+        run: |
+          set -euo pipefail
+          has_any="false"
+
+          for path in "${KFM_AI_SRC_ROOT}" "${KFM_STORYNODE_SRC_ROOT}" "${KFM_FOCUSMODE_SRC_ROOT}" "${KFM_MODEL_CARD_ROOT}" "config/ai" "config/prompts"; do
+            if [[ -d "$path" ]]; then
+              echo "Found AI asset root: $path"
+              has_any="true"
+            fi
+          done
+
+          echo "has_ai=${has_any}" >> "$GITHUB_OUTPUT"
+
+          if [[ "${has_any}" == "false" ]]; then
+            echo "::notice title=AI behavior check::No AI-related assets present; skipping."
+          fi
+
+      - name: ⏭ Skip AI config validation (no AI assets)
+        if: steps.detect_ai.outputs.has_ai == 'false'
+        run: |
+          echo "No AI-related assets detected; nothing to validate for this run."
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        if: steps.detect_ai.outputs.has_ai == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-ai.txt
+
+      - name: 📦 Install AI Validation Tooling
+        if: steps.detect_ai.outputs.has_ai == 'true'
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-ai.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-ai.txt
+          fi
+
+      # Expected behavior of scripts/validate_ai_configs.py:
+      #   - Validate config/ai/** and config/prompts/** against JSON/YAML schemas
+      #   - Ensure required governance metadata fields exist (e.g., model_id, allowed_uses)
+      - name: 🧾 Validate AI Config Schemas
+        if: steps.detect_ai.outputs.has_ai == 'true'
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_ai_configs.py ]]; then
+            python scripts/validate_ai_configs.py \
+              --config-root "config/ai" \
+              --prompt-root "config/prompts"
+          else
+            echo "scripts/validate_ai_configs.py not found; implement to enforce AI config schemas."
+            # Treat missing script as error if configs exist:
+            if [[ -d "config/ai" || -d "config/prompts" ]]; then
+              exit 1
+            fi
+          fi
+
+      # Expected behavior of scripts/validate_model_cards.py:
+      #   - Ensure each deployed model has a model card in mcp/model_cards/**
+      #   - Check for required sections: description, training data summary,
+      #     limitations, safety considerations, evaluation summary, etc.
+      - name: 🧠 Validate Model Cards
+        if: steps.detect_ai.outputs.has_ai == 'true'
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_model_cards.py ]]; then
+            python scripts/validate_model_cards.py \
+              --model-card-root "${KFM_MODEL_CARD_ROOT}"
+          else
+            echo "scripts/validate_model_cards.py not found; implement to enforce model card requirements."
+            if [[ -d "${KFM_MODEL_CARD_ROOT}" ]]; then
+              exit 1
+            fi
+          fi
+
+  ###########################################################################
+  # 2. AI Behavior & Narrative Safety Tests (Story Nodes / Focus Mode)
+  ###########################################################################
+  ai-tests:
+    name: "🧪 AI Behavior & Narrative Safety Tests"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    needs:
+      - ai-configs
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🔎 Detect AI Test Suites
+        id: detect_tests
+        run: |
+          set -euo pipefail
+          has_tests="false"
+          if [[ -d "${KFM_AI_TEST_ROOT}" || -d "${KFM_FOCUSMODE_TEST_ROOT}" ]]; then
+            has_tests="true"
+          fi
+          echo "has_tests=${has_tests}" >> "$GITHUB_OUTPUT"
+
+          if [[ "${has_tests}" == "false" ]]; then
+            echo "::notice title=AI tests::No tests/ai or tests/focusmode directories found; skipping behavior tests."
+          fi
+
+      - name: ⏭ Skip AI behavior tests (no test suites)
+        if: steps.detect_tests.outputs.has_tests == 'false'
+        run: |
+          echo "No AI behavior test suites present; nothing to run for this job."
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        if: steps.detect_tests.outputs.has_tests == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-ai.txt
+
+      - name: 📦 Install Test Dependencies
+        if: steps.detect_tests.outputs.has_tests == 'true'
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-ai.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-ai.txt
+          elif [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          fi
+
+      # Expected behavior of scripts/run_ai_behavior_suite.py:
+      #   - Run offline tests using fixtures/golden outputs
+      #   - Check for:
+      #       * narrative grounding (no obvious hallucination within test set)
+      #       * absence of disallowed patterns (e.g., speculative history tags)
+      #       * compliance with sovereignty and sensitivity flags in prompts
+      #   - Exit non-zero on violations
+      - name: 🤖 Run AI Behavior Test Suite
+        if: steps.detect_tests.outputs.has_tests == 'true'
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/run_ai_behavior_suite.py ]]; then
+            python scripts/run_ai_behavior_suite.py \
+              --ai-test-root "${KFM_AI_TEST_ROOT}" \
+              --focusmode-test-root "${KFM_FOCUSMODE_TEST_ROOT}"
+          else
+            echo "scripts/run_ai_behavior_suite.py not found; falling back to pytest for tests/ai & tests/focusmode."
+            if python -m pip show pytest >/dev/null 2>&1; then
+              if [[ -d "${KFM_AI_TEST_ROOT}" ]]; then
+                pytest "${KFM_AI_TEST_ROOT}"
+              fi
+              if [[ -d "${KFM_FOCUSMODE_TEST_ROOT}" ]]; then
+                pytest "${KFM_FOCUSMODE_TEST_ROOT}"
+              fi
+            else
+              echo "pytest not installed; cannot run fallback AI tests."
+              exit 1
+            fi
+          fi
+
+  ###########################################################################
+  # 3. Drift & Bias Metrics (Offline Harness)
+  ###########################################################################
+  ai-drift:
+    name: "📊 AI Drift & Bias Metrics (Offline)"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+    needs:
+      - ai-configs
+      - ai-tests
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🔎 Detect Drift/Bias Harness
+        id: detect_drift
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/eval_ai_drift_bias.py ]]; then
+            echo "has_drift_harness=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_drift_harness=false" >> "$GITHUB_OUTPUT"
+            echo "No scripts/eval_ai_drift_bias.py; skipping drift/bias metrics."
+          fi
+
+      - name: ⏭ Skip drift/bias evaluation (no harness)
+        if: steps.detect_drift.outputs.has_drift_harness == 'false'
+        run: |
+          echo "No offline drift/bias harness present; nothing to run."
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        if: steps.detect_drift.outputs.has_drift_harness == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-ai.txt
+
+      - name: 📦 Install Drift/Bias Dependencies
+        if: steps.detect_drift.outputs.has_drift_harness == 'true'
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          if [[ -f scripts/requirements-ai.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-ai.txt
+          elif [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          fi
+
+      # Expected behavior of scripts/eval_ai_drift_bias.py:
+      #   - Compare current AI behavior against previous baselines using
+      #     offline logs or golden responses.
+      #   - Produce metrics (JSON) describing simple drift/bias indicators
+      #   - Exit non-zero if thresholds are exceeded, to block risky changes.
+      - name: 📊 Run Drift & Bias Evaluation
+        if: steps.detect_drift.outputs.has_drift_harness == 'true'
+        run: |
+          set -euo pipefail
+          python scripts/eval_ai_drift_bias.py \
+            --out "${KFM_AI_METRICS_OUT}"
+
+      - name: 📤 Upload AI Behavior Metrics Artifact (Optional)
+        if: success() || failure()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-behavior-metrics
+          path: ${{ env.KFM_AI_METRICS_OUT }}
+          if-no-files-found: ignore
+
+  ###########################################################################
+  # 4. AI Behavior Check Summary
+  ###########################################################################
+  ai-summary:
+    name: "🧾 AI Behavior Governance Summary"
+    runs-on: ubuntu-22.04
+    needs:
+      - ai-configs
+      - ai-tests
+      - ai-drift
+    if: always()
+
+    steps:
+      - name: ✏️ Emit AI Behavior Summary
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🤖 AI Behavior & Narrative Safety Summary"
+            echo ""
+            echo "- AI configs & model cards job: ${{ needs.ai-configs.result }}"
+            echo "- AI behavior tests job: ${{ needs.ai-tests.result }}"
+            echo "- Drift & bias metrics job: ${{ needs.ai-drift.result }}"
+            echo ""
+            echo "This workflow enforces governed AI behavior for Story Nodes and Focus Mode,"
+            echo "backed by config/model-card validation, offline regression tests, and"
+            echo "optional drift/bias metrics for telemetry_export.yml and governance dashboards."
+          } >> "${GITHUB_STEP_SUMMARY}"
 
