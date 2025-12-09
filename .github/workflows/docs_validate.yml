@@ -1,0 +1,197 @@
+# .github/workflows/docs_validate.yml
+# 📚 Kansas Frontier Matrix — Documentation & Metadata Validation
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Enforce KFM-MDP v11.2.5 markdown rules, YAML front-matter schemas,
+#   and documentation governance for all governed markdown content.
+#
+# Governance Layers Applied:
+#   - KFM-MDP v11.2.5 (markdown structure + front-matter)
+#   - FAIR+CARE metadata presence & classification (via doc metadata)
+#   - Provenance requirements (version history + governance footer)
+#   - JSON/YAML schema validation for doc metadata
+#   - Telemetry hooks via downstream telemetry_export workflow
+
+name: 📚 docs-validate
+
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+      - '**/*.markdown'
+      - '**/*.mdx'
+      - 'docs/**'
+      - '.github/*.md'
+      - 'README.md'
+      - 'ARCHITECTURE.md'
+      - 'schemas/markdown/**'
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.md'
+      - '**/*.markdown'
+      - '**/*.mdx'
+      - 'docs/**'
+      - '.github/*.md'
+      - 'README.md'
+      - 'ARCHITECTURE.md'
+      - 'schemas/markdown/**'
+  workflow_dispatch: {}
+
+# Ensure non-overlapping runs per ref
+concurrency:
+  group: docs-validate-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pull-requests: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  KFM_MDP_VERSION: "v11.2.5"
+  PYTHON_VERSION: "3.11"
+  # Example schema paths – align with your repo structure/schemas
+  KFM_MARKDOWN_SCHEMA: "schemas/markdown/kfm-mdp-v11.2.5.schema.json"
+  KFM_FRONTMATTER_SCHEMA: "schemas/markdown/kfm-frontmatter-v11.schema.json"
+
+jobs:
+  docs-validate:
+    name: "📚 KFM-MDP Docs & Metadata Validation"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }} (for helper scripts)
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-docs.txt
+
+      - name: 📦 Install Documentation Tooling (if defined)
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/requirements-docs.txt ]]; then
+            python -m pip install --upgrade pip
+            pip install --no-cache-dir -r scripts/requirements-docs.txt
+          fi
+
+      # --------------------------------------------------------------------
+      # 1. Markdown structure & style — KFM-MDP v11.2.5
+      # --------------------------------------------------------------------
+      - name: 📚 Enforce KFM-MDP v11.2.5 (Markdown Lint)
+        run: |
+          set -euo pipefail
+          bash .github/actions/markdown-lint/entrypoint.sh
+
+      # --------------------------------------------------------------------
+      # 2. Front-matter & metadata schema validation
+      # --------------------------------------------------------------------
+      - name: 🧾 Validate Markdown Front-Matter Schema
+        run: |
+          set -euo pipefail
+          # Validate front-matter blocks against KFM front-matter schema
+          bash .github/actions/schema-validate/entrypoint.sh \
+            "${KFM_FRONTMATTER_SCHEMA}" \
+            "docs/**/*.md" \
+            ".github/*.md" \
+            "README.md" \
+            "ARCHITECTURE.md"
+
+      - name: 🧬 Validate KFM-MDP Metadata Schema
+        run: |
+          set -euo pipefail
+          # Optional: additional structural/metadata checks using a dedicated schema
+          if [[ -f "${KFM_MARKDOWN_SCHEMA}" ]]; then
+            bash .github/actions/schema-validate/entrypoint.sh \
+              "${KFM_MARKDOWN_SCHEMA}" \
+              "docs/**/*.md" \
+              ".github/*.md" \
+              "README.md" \
+              "ARCHITECTURE.md"
+          else
+            echo "KFM markdown schema ${KFM_MARKDOWN_SCHEMA} not found; skipping extended schema validation."
+          fi
+
+      # --------------------------------------------------------------------
+      # 3. KFM-specific governance checks (Version history, footers, links)
+      # --------------------------------------------------------------------
+      - name: 📜 Check Required Sections (Version History & Governance Footer)
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_doc_governance.py ]]; then
+            python scripts/validate_doc_governance.py \
+              --paths \
+                "docs/**/*.md" \
+                ".github/*.md" \
+                "README.md" \
+                "ARCHITECTURE.md"
+          else
+            echo "scripts/validate_doc_governance.py not present; implement to enforce Version History + governance footer."
+            # Fail here if you want this to be mandatory:
+            # exit 1
+          fi
+
+      # --------------------------------------------------------------------
+      # 4. FAIR+CARE metadata sanity (lightweight doc-level checks)
+      #    Heavy FAIR+CARE enforcement is handled in faircare_validate.yml,
+      #    but we can do early field presence checks here.
+      # --------------------------------------------------------------------
+      - name: ⚖ FAIR+CARE Metadata Presence Check (Docs)
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_faircare_doc_metadata.py ]]; then
+            python scripts/validate_faircare_doc_metadata.py \
+              --paths \
+                "docs/**/*.md" \
+                ".github/*.md" \
+                "README.md" \
+                "ARCHITECTURE.md"
+          else
+            echo "scripts/validate_faircare_doc_metadata.py not present; skipping FAIR+CARE doc metadata pre-check."
+          fi
+
+      # --------------------------------------------------------------------
+      # 5. Optional: Link checking / internal consistency
+      # --------------------------------------------------------------------
+      - name: 🔗 Optional Link & Anchor Check
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/check_links.py ]]; then
+            python scripts/check_links.py \
+              --paths \
+                "docs/**/*.md" \
+                ".github/*.md" \
+                "README.md" \
+                "ARCHITECTURE.md"
+          else
+            echo "scripts/check_links.py not present; skipping link check."
+          fi
+
+      # --------------------------------------------------------------------
+      # 6. Summary for logs (helps telemetry_export.yml post-process)
+      # --------------------------------------------------------------------
+      - name: 🧾 Emit Summary for Telemetry
+        run: |
+          {
+            echo "KFM-MDP Version: ${KFM_MDP_VERSION}"
+            echo "Validated paths:"
+            echo "  - docs/**/*.md"
+            echo "  - .github/*.md"
+            echo "  - README.md"
+            echo "  - ARCHITECTURE.md"
+          } | tee -a "${GITHUB_STEP_SUMMARY}"
