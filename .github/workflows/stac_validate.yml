@@ -1,1 +1,154 @@
+# .github/workflows/stac_validate.yml
+# 🛰 Kansas Frontier Matrix — STAC Collections & Items Validation
+# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+#
+# Purpose:
+#   Validate all STAC Collections/Items under data/stac/** against:
+#     - Official STAC 1.x JSON Schemas (KFM-STAC v11 profile)
+#     - Local STAC extensions & schema-map overrides (if configured)
+#     - Basic geometry & bbox consistency checks (via composite action/scripts)
+#
+# Governance Context:
+#   - KFM-STAC v11 profile (Collections, Items, Catalogs)
+#   - KFM-MDP v11.2.5 (docs for STAC metadata live under docs/data/**)
+#   - FAIR+CARE & sovereignty rules (enforced more deeply in faircare_validate.yml + h3_generalization.yml)
+#   - PROV-O / OpenLineage: this workflow emits structured logs for telemetry_export.yml
+
+name: 🛰 stac-validate
+
+on:
+  pull_request:
+    paths:
+      - "data/stac/**"
+      - "schemas/stac/**"
+      - ".github/actions/stac-validate/**"
+      - ".github/workflows/stac_validate.yml"
+  push:
+    branches:
+      - main
+      - "release/**"
+    paths:
+      - "data/stac/**"
+      - "schemas/stac/**"
+      - ".github/actions/stac-validate/**"
+      - ".github/workflows/stac_validate.yml"
+  workflow_dispatch: {}
+
+# Ensure we don't have overlapping STAC validation runs per ref
+concurrency:
+  group: stac-validate-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  STAC_ROOT: "data/stac"
+  STAC_SCHEMA_DIR: "schemas/stac"
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  stac-validate:
+    name: "🛰 STAC 1.x Validation (KFM-STAC v11)"
+    runs-on: ubuntu-22.04
+    timeout-minutes: 40
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Optional: short-circuit if STAC_ROOT does not exist (e.g., early repo state)
+      - name: 🔎 Check for STAC directory
+        id: detect_stac
+        run: |
+          set -euo pipefail
+          if [[ -d "${STAC_ROOT}" ]]; then
+            echo "has_stac=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_stac=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=STAC validation::No ${STAC_ROOT} directory present; skipping."
+          fi
+
+      - name: ⏭ Skip STAC validation (no STAC data)
+        if: steps.detect_stac.outputs.has_stac == 'false'
+        run: |
+          echo "No STAC content detected; nothing to validate for this run."
+
+      # --------------------------------------------------------------------
+      # 1. STAC structural & schema validation via composite action
+      #    This action is expected to:
+      #      - Use stac-validator (and/or pystac) under the hood
+      #      - Optionally apply a schema-map to local extension schemas
+      #      - Validate Items, Collections, and Catalogs recursively
+      # --------------------------------------------------------------------
+      - name: 🛰 Run STAC Validator (Composite Action)
+        if: steps.detect_stac.outputs.has_stac == 'true'
+        run: |
+          set -euo pipefail
+          # Composite action typically encapsulates:
+          #   - pip install stac-validator / stac-check if needed
+          #   - recursive traversal of ${STAC_ROOT}
+          #   - exit non-zero on any invalid STAC object
+          bash .github/actions/stac-validate/entrypoint.sh "${STAC_ROOT}" "${STAC_SCHEMA_DIR}"
+
+      # --------------------------------------------------------------------
+      # 2. Optional: Geometry & bbox best-practices checks (advanced)
+      #    If you have stac-check or custom geometry checks, hook them here.
+      # --------------------------------------------------------------------
+      - name: 📐 Optional STAC Geometry & BBox Checks
+        if: steps.detect_stac.outputs.has_stac == 'true'
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          # Option A: dedicated script
+          if [[ -f scripts/validate_stac_geometry.py ]]; then
+            python -m pip install --upgrade pip
+            # Only install extras if the script exists to keep CI fast
+            pip install --no-cache-dir "stac-check" || echo "stac-check install failed; continuing."
+            python scripts/validate_stac_geometry.py --root "${STAC_ROOT}"
+          else
+            echo "No scripts/validate_stac_geometry.py found; skipping geometry/bbox detail checks."
+          fi
+
+      # --------------------------------------------------------------------
+      # 3. Optional: STAC API validation (if STAC API config present)
+      #    This is for validating a running STAC API, not local JSON only.
+      # --------------------------------------------------------------------
+      - name: 🌐 Optional STAC API Validation
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_stac_api.py ]]; then
+            python -m pip install --upgrade pip
+            pip install --no-cache-dir "stac-api-validator" || echo "stac-api-validator install failed; continuing."
+            python scripts/validate_stac_api.py
+          else
+            echo "No scripts/validate_stac_api.py found; skipping STAC API validation."
+          fi
+
+      # --------------------------------------------------------------------
+      # 4. STAC Validation Summary (for GitHub UI & telemetry_export.yml)
+      # --------------------------------------------------------------------
+      - name: 🧾 Emit STAC Validation Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🛰 STAC Validation Summary"
+            echo ""
+            echo "- STAC root: \`${STAC_ROOT}\`"
+            echo "- STAC schema dir: \`${STAC_SCHEMA_DIR}\`"
+            echo "- STAC directory present: ${{ steps.detect_stac.outputs.has_stac }}"
+            echo ""
+            echo "This run is part of the governed CI/CD plan for STAC assets (KFM-STAC v11)."
+            echo "Detailed logs from the composite validator and any optional scripts above"
+            echo "are available in the workflow run artifacts/logs."
+          } >> "${GITHUB_STEP_SUMMARY}"
 
