@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "🌌 Kansas Frontier Matrix — Geomagnetic Storm Event Briefing (G3 Watch · Dec 9 2025)"
 path: "docs/events/space-weather/2025-12-09-g3-geomagnetic-storm.md"
@@ -421,4 +420,3 @@ and the **Environmental & Space Weather Steering Group**.
 
 </div>
 ```
-
