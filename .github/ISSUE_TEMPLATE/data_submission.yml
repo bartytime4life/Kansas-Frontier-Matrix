@@ -11,6 +11,7 @@ labels:
   - "data"
   - "stac"
   - "faircare"
+  - "governance"
 assignees:
   - "bartytime4life"
 
@@ -314,7 +315,7 @@ body:
     id: care_relevance
     attributes:
       label: "CARE / Sovereignty Relevance"
-      description: "Does this dataset relate to Indigenous, tribal, or culturally sensitive information?"
+      description: "Does this dataset relate to Indigenous, tribal, or culturally sensitive information? If you select “Yes” or “Uncertain”, please also open a **Governance or FAIR+CARE Review** using the `⚖️ Governance or FAIR+CARE Review` issue template."
       options:
         - "No — not applicable"
         - "Yes — contains Indigenous-related or culturally sensitive information"
@@ -381,6 +382,18 @@ body:
     validations:
       required: true
 
+  - type: textarea
+    id: update_and_ttl_policy
+    attributes:
+      label: "Update Cadence & Retention / TTL Policy"
+      description: "Describe expected update frequency (static vs regularly updated), retention policy, and any sunset/retirement plans for this dataset."
+      placeholder: |
+        Example:
+        - Updated annually with new year of data; previous versions retained for 10 years.
+        - Static historical snapshot; no further updates planned. Will be superseded by `dataset_id: ...` when new reconstruction is available.
+    validations:
+      required: false
+
   # ─────────────────────────────────────────────────────────────
   # 7. Contributor Checklist
   # ─────────────────────────────────────────────────────────────
@@ -401,6 +414,8 @@ body:
           required: true
         - label: "I understand this dataset will undergo STAC/DCAT + FAIR+CARE + PROV validation before entering `data/` or `data/stac/`."
           required: true
+        - label: "If CARE / Sovereignty Relevance is “Yes” or “Uncertain”, I have opened or linked a corresponding Governance or FAIR+CARE Review issue for this dataset."
+          required: true
 
   # ─────────────────────────────────────────────────────────────
   # 8. Validation Workflows & Telemetry (Informational)
@@ -413,25 +428,25 @@ body:
 
         When this issue is submitted, the following CI/CD workflows may run (depending on configuration):
 
-        - stac-validate.yml → STAC schema, bbox, license, checksum, and asset verification
-        - dcat-validate.yml → DCAT dataset & distribution validation (if JSON-LD or RDF is provided/generated)
-        - prov-validate.yml → PROV-O lineage checks for entities, activities, and agents
-        - faircare-validate.yml → FAIR+CARE and sovereignty governance review
-        - docs-validate.yml → Markdown/YAML/JSON linting under KFM-MDP v11.2.5
-        - security_audit.yml → Dependency and container vulnerability scanning
-        - telemetry_export.yml → CI/CD and sustainability metrics logged to telemetry
+        - `stac-validate.yml` → STAC schema, bbox, license, checksum, and asset verification
+        - `dcat-validate.yml` → DCAT dataset & distribution validation (if JSON-LD or RDF is provided/generated)
+        - `prov-validate.yml` → PROV-O lineage checks for entities, activities, and agents
+        - `faircare-validate.yml` → FAIR+CARE and sovereignty governance review
+        - `docs-validate.yml` → Markdown/YAML/JSON linting under **KFM-MDP v11.2.5**
+        - `security_audit.yml` → Dependency and container vulnerability scanning
+        - `telemetry_export.yml` → CI/CD and sustainability metrics logged to telemetry
 
         Validation artifacts are typically written under paths such as:
 
-        - reports/self-validation/stac/
-        - reports/self-validation/dcat/
-        - reports/self-validation/prov/
-        - reports/fair/
+        - `reports/self-validation/stac/`
+        - `reports/self-validation/dcat/`
+        - `reports/self-validation/prov/`
+        - `reports/fair/`
 
         Telemetry and governance ledgers are updated via:
 
-        - releases/<version>/focus-telemetry.json
-        - docs/reports/audit/governance-ledger.json
+        - `releases/<version>/focus-telemetry.json`
+        - `docs/reports/audit/governance-ledger.json`
 
         These signals feed into governance dashboards, Focus Mode context, and the KFM knowledge graph to:
 
