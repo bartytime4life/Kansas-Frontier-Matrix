@@ -66,20 +66,15 @@ It does **not** contain implementation code; runtime logic lives under `src/` an
 
 ## 🗂️ Documentation Layout
 
-The documentation subtree for security event pipelines is organized as:
-
 ~~~text
-docs/
-  pipelines/
-    security/
-      events/
-        README.md                    # This file (canonical directory index)
-        github-pat-cloud-pivot.md    # Pipeline spec for GitHub PAT → cloud pivot events (summary + pointers)
-        templates/
-          event-pipeline-template.md # Reusable template for new security event pipelines
-        guides/
-          onboarding.md              # How to add a new security event pipeline
-          troubleshooting.md         # Common failure modes and playbooks
+docs/pipelines/security/events/
+├── 📄 README.md                        # This file (canonical directory index)
+├── 📄 github-pat-cloud-pivot.md        # Pipeline spec for GitHub PAT → cloud pivot events (summary + pointers)
+├── 📁 templates/
+│   └── 📄 event-pipeline-template.md   # Reusable template for new security event pipelines
+└── 📁 guides/
+    ├── 📄 onboarding.md                # How to add a new security event pipeline
+    └── 📄 troubleshooting.md           # Common failure modes and playbooks
 ~~~
 
 Each **concrete pipeline** documented here **must**:
@@ -134,10 +129,10 @@ Security event pipelines are a specialized slice of the core KFM pipeline:
 
 The table below tracks all **documented** security event pipelines for KFM v11.2.6.
 
-| Pipeline ID                 | Description                                              | Primary Source(s)            | ETL Config                                           | Event Brief Link                                                                                     | Status          |
-|----------------------------|----------------------------------------------------------|-----------------------------|-----------------------------------------------------|------------------------------------------------------------------------------------------------------|-----------------|
+| Pipeline ID                 | Description                                              | Primary Source(s)                                 | ETL Config                                                | Event Brief Link                                                                                     | Status          |
+|----------------------------|----------------------------------------------------------|--------------------------------------------------|----------------------------------------------------------|------------------------------------------------------------------------------------------------------|-----------------|
 | `github-pat-cloud-pivot`   | Detect and catalog GitHub PAT → cloud control-plane pivots and related supply-chain threats. | GitHub audit logs, Actions telemetry, cloud IAM/control-plane logs | `configs/pipelines/security/events/github-pat-cloud-pivot.yaml` | `docs/security/events/github-pat-cloud-pivot/README.md` (GitHub PAT → Cloud Control Plane Pivot) | Active / Stable |
-| `TBD-new-security-event`   | Reserved placeholder for next governed security event pipeline. | TBD                         | `configs/pipelines/security/events/TBD.yaml`        | `docs/security/events/TBD/README.md`                                                                | Planned         |
+| `TBD-new-security-event`   | Reserved placeholder for next governed security event pipeline. | TBD                                              | `configs/pipelines/security/events/TBD.yaml`             | `docs/security/events/TBD/README.md`                                                                | Planned         |
 
 > When creating a new pipeline, add a row here and ensure the **Event Brief Link** points to an approved security event brief under `docs/security/events/`.
 
@@ -316,7 +311,7 @@ Edits require approval from the **Security & Supply Chain Council** and must pas
 
 <br/>
 
-<sub>© Kansas Frontier Matrix · CC‑BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM‑MDP v11.2.6</sub>
+<sub>© Kansas Frontier Matrix · CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM-MDP v11.2.6</sub>
 
 <br/>
 
