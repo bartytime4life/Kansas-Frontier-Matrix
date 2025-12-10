@@ -1,0 +1,298 @@
+name: "KFM Schema & Drift Validate"
+description: "Validate STAC/DCAT schemas and detect mismatch drift via derivation hashes"
+
+inputs:
+  stac_glob:
+    description: "Glob for STAC JSON"
+    required: false
+    default: "data/stac/**/*.json"
+  dcat_glob:
+    description: "Glob for DCAT JSON-LD"
+    required: false
+    default: "data/dcat/**/*.jsonld"
+  fail_on_drift:
+    description: "Fail the job on any detected drift"
+    required: false
+    default: "true"
+
+outputs:
+  stac_report:
+    description: "Path to STAC derivation-hash report"
+    value: ${{ steps.stac_hashes.outputs.stac_report }}
+  dcat_report:
+    description: "Path to DCAT derivation-hash report"
+    value: ${{ steps.dcat_hashes.outputs.dcat_report }}
+  drift_report:
+    description: "Path to STAC/DCAT drift report"
+    value: ${{ steps.drift.outputs.drift_report }}
+  drift_detected:
+    description: "Whether any STAC/DCAT drift was detected (\"true\" or \"false\")"
+    value: ${{ steps.drift.outputs.drift_detected }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        set -euo pipefail
+        python -m pip install --upgrade pip
+        # rdflib[jsonld] enables JSON-LD parsing for DCAT validation
+        python -m pip install "rdflib[jsonld]" jsonschema rfc3987
+
+    - name: Validate STAC JSON shape
+      shell: bash
+      env:
+        STAC_GLOB: ${{ inputs.stac_glob }}
+      run: |
+        set -euo pipefail
+        python - << 'PY'
+import glob, json, os, sys
+pattern = os.environ.get("STAC_GLOB", "data/stac/**/*.json")
+paths = sorted(glob.glob(pattern, recursive=True))
+fails = []
+
+for path in paths:
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except Exception as e:
+        fails.append(f"{path}: JSON parse error: {e}")
+        continue
+
+    if "type" not in doc:
+        fails.append(f"{path}: missing required 'type' field")
+        continue
+
+    if not ("assets" in doc or "links" in doc):
+        fails.append(f"{path}: missing both 'assets' and 'links' fields")
+
+if fails:
+    print("STAC validation failures:")
+    for msg in fails:
+        print(" -", msg)
+    sys.exit(1)
+PY
+
+    - name: Validate DCAT JSON-LD parse
+      shell: bash
+      env:
+        DCAT_GLOB: ${{ inputs.dcat_glob }}
+      run: |
+        set -euo pipefail
+        python - << 'PY'
+import glob, os, sys
+import rdflib
+
+pattern = os.environ.get("DCAT_GLOB", "data/dcat/**/*.jsonld")
+paths = sorted(glob.glob(pattern, recursive=True))
+for path in paths:
+    g = rdflib.Graph()
+    try:
+        g.parse(path, format="json-ld")
+    except Exception as e:
+        raise SystemExit(f"DCAT parse failed: {path} :: {e}")
+PY
+
+    - name: Compute derivation hashes (STAC)
+      id: stac_hashes
+      shell: bash
+      env:
+        STAC_GLOB: ${{ inputs.stac_glob }}
+      run: |
+        set -euo pipefail
+        mkdir -p reports
+        python - << 'PY'
+import glob, json, hashlib, os
+
+pattern = os.environ.get("STAC_GLOB", "data/stac/**/*.json")
+paths = sorted(glob.glob(pattern, recursive=True))
+out = []
+
+def sha(payload: dict) -> str:
+    s = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(s.encode("utf-8")).hexdigest()
+
+for path in paths:
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except Exception as e:
+        print(f"[warn] {path}: {e}")
+        continue
+
+    props = doc.get("properties", {}) or {}
+    stable = {
+        "bbox": doc.get("bbox"),
+        "geometry": doc.get("geometry"),
+        "datetime": props.get("datetime")
+                    or doc.get("extent", {}).get("temporal"),
+        "assets": [
+            {
+                "id": k,
+                "href": v.get("href"),
+                "type": v.get("type"),
+            }
+            for k, v in (doc.get("assets") or {}).items()
+        ],
+        "links": [
+            {
+                "rel": l.get("rel"),
+                "href": l.get("href"),
+            }
+            for l in (doc.get("links") or [])
+        ],
+    }
+
+    ident = (
+        doc.get("id")
+        or props.get("id")
+        or doc.get("collection")
+        or path
+    )
+    out.append({"id": ident, "hash": sha(stable)})
+
+with open("reports/stac_hashes.json", "w", encoding="utf-8") as fh:
+    json.dump(out, fh, indent=2)
+PY
+        echo "stac_report=reports/stac_hashes.json" >> "$GITHUB_OUTPUT"
+
+    - name: Compute derivation hashes (DCAT)
+      id: dcat_hashes
+      shell: bash
+      env:
+        DCAT_GLOB: ${{ inputs.dcat_glob }}
+      run: |
+        set -euo pipefail
+        mkdir -p reports
+        python - << 'PY'
+import glob, json, hashlib, os, sys
+
+pattern = os.environ.get("DCAT_GLOB", "data/dcat/**/*.jsonld")
+paths = sorted(glob.glob(pattern, recursive=True))
+out = []
+
+def sha(payload: dict) -> str:
+    s = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(s.encode("utf-8")).hexdigest()
+
+for path in paths:
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except Exception as e:
+        print(f"[warn] {path}: {e}", file=sys.stderr)
+        continue
+
+    datasets = doc.get("@graph") if "@graph" in doc else [doc]
+
+    for ds in datasets:
+        types = ds.get("@type", [])
+        if isinstance(types, str):
+            types = [types]
+        if "dcat:Dataset" not in types:
+            continue
+
+        pid = ds.get("@id", path)
+        stable = {
+            "title": ds.get("dct:title"),
+            "description": ds.get("dct:description"),
+            "temporal": ds.get("dct:temporal"),
+            "spatial": ds.get("dct:spatial"),
+            "distributions": [
+                {
+                    "id": d.get("@id"),
+                    "accessURL": d.get("dcat:accessURL"),
+                    "mediaType": d.get("dcat:mediaType"),
+                }
+                for d in ds.get("dcat:distribution", [])
+            ],
+        }
+        out.append({"id": pid, "hash": sha(stable)})
+
+with open("reports/dcat_hashes.json", "w", encoding="utf-8") as fh:
+    json.dump(out, fh, indent=2)
+PY
+        echo "dcat_report=reports/dcat_hashes.json" >> "$GITHUB_OUTPUT"
+
+    - name: Compare STAC vs DCAT hashes (drift)
+      id: drift
+      shell: bash
+      env:
+        STAC_REPORT: ${{ steps.stac_hashes.outputs.stac_report }}
+        DCAT_REPORT: ${{ steps.dcat_hashes.outputs.dcat_report }}
+      run: |
+        set -euo pipefail
+        python - << 'PY'
+import json, os
+
+with open(os.environ["STAC_REPORT"], "r", encoding="utf-8") as fh:
+    stac = json.load(fh)
+with open(os.environ["DCAT_REPORT"], "r", encoding="utf-8") as fh:
+    dcat = json.load(fh)
+
+def norm(i: str) -> str:
+    return i.replace("urn:", "").replace("doi:", "").split("/")[-1]
+
+si = {norm(x["id"]): x["hash"] for x in stac}
+di = {norm(x["id"]): x["hash"] for x in dcat}
+
+drift = []
+
+for k, v in si.items():
+    dv = di.get(k)
+    if dv is None:
+        drift.append({"id": k, "kind": "missing_in_dcat"})
+    elif dv != v:
+        drift.append(
+            {
+                "id": k,
+                "kind": "hash_mismatch",
+                "stac": v,
+                "dcat": dv,
+            }
+        )
+
+for k in di:
+    if k not in si:
+        drift.append({"id": k, "kind": "missing_in_stac"})
+
+out = {
+    "drift": drift,
+    "stac_count": len(si),
+    "dcat_count": len(di),
+}
+
+os.makedirs("reports", exist_ok=True)
+with open("reports/stac_dcat_drift.json", "w", encoding="utf-8") as fh:
+    json.dump(out, fh, indent=2)
+
+has_drift = bool(drift)
+gh_out = os.environ.get("GITHUB_OUTPUT")
+if gh_out:
+    with open(gh_out, "a", encoding="utf-8") as fh:
+        fh.write("drift_report=reports/stac_dcat_drift.json\n")
+        fh.write(f"drift_detected={'true' if has_drift else 'false'}\n")
+
+print(json.dumps(out, indent=2))
+PY
+
+    - name: Upload drift artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: stac-dcat-drift
+        path: reports/stac_dcat_drift.json
+
+    - name: Fail on drift (policy)
+      if: ${{ inputs.fail_on_drift == 'true' && steps.drift.outputs.drift_detected == 'true' }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "❌ STAC/DCAT drift detected:"
+        cat reports/stac_dcat_drift.json
+        exit 1
