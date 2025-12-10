@@ -258,4 +258,15 @@ Edits require approval from the **Security & Supply Chain Council** and must pas
 
 <br/>
 
-<sub>© Kansas Frontier Matrix · CC‑BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM‑MDP v11.2.6</sub>
+<sub>© Kansas Frontier Matrix · CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM-MDP v11.2.6</sub>
+
+<br/>
+
+<div align="center">
+
+🛡️ **Kansas Frontier Matrix — GitHub PAT Compromise → Cloud Control Plane Attack Vector (KFM Security Event Brief) v11.2.6**  
+Security · Supply Chain Defense · Provenance-Driven CI/CD · FAIR+CARE Aligned  
+
+[📘 Docs Root](../../../README.md) · [🛡️ Security Index](../../README.md) · [⚖ Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
