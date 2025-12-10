@@ -31,7 +31,7 @@ carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.5"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 ---
@@ -39,51 +39,34 @@ pipeline_contract_version: "KFM-PDC v11"
 <div align="center">
 
 # 🧪 **CI Test Lineage with PROV‑O**  
-`docs/standards/ci/prov-test-lineage.md`
-
-**Purpose**  
-
-Define a governed, PROV‑O–aligned CI lineage profile where each test job is a `prov:Activity` with
-environment, test statistics, and coverage, plus a workflow‑level aggregate `prov:Activity` for coverage
-trend analysis across KFM releases and matrices.
+_Per‑job provenance as `prov:Activity` + workflow aggregate for coverage trends_
 
 </div>
 
----
-
 ## 📘 Overview
-
-We model each **test job** as a `prov:Activity` that **uses** the repository at a specific `commit_sha` and  
-**generates** artifacts (JUnit XML + coverage reports). Each job records:
+We model each **test job** as a `prov:Activity` that **uses** the repository at a specific `commit_sha` and **generates** artifacts (JUnit XML + coverage reports). Each job records:
 
 - ISO‑8601 `startedAtTime` / `endedAtTime`
 - Deterministic **run ID** (GitHub Run ID or full Actions URL)
 - **Environment** (OS, Python, pytest, plugin versions)
 - **Test counts** (passed/failed/xpassed/xfailed/skipped/error)
-- **Coverage %** (line/branch) and artifact digests
+- **Coverage %** (line/branch) and artifact digests  
 
-We also emit a **workflow aggregate** node for rollups (per‑matrix, per‑workflow) to trend coverage up/down
-and to feed the CI → telemetry → Neo4j → API → Story Nodes pipeline.
-
----
+We also emit a **workflow aggregate** node for rollups (per‑matrix, per‑workflow) to trend coverage up/down.
 
 ## 🗂️ Directory Layout
-
-This standard touches CI lineage docs under `docs/`, runtime workflows under `.github/`, emitted artifacts,
-and validation schemas.
-
 ~~~text
 📁 Kansas-Frontier-Matrix/
 ├── 📁 docs/
 │   └── 📁 standards/
 │       └── 📁 ci/
-│           ├── 📄 prov-test-lineage.md              # this standard
+│           ├── 📄 prov-test-lineage.md                 # this file
 │           └── 📁 examples/
-│               ├── 🧾 job-lineage.example.jsonld    # per-job PROV-O JSON-LD
+│               ├── 🧾 job-lineage.example.jsonld       # per-job PROV
 │               └── 🧾 workflow-aggregate.example.jsonld
 ├── 📁 .github/
 │   └── 📁 workflows/
-│       └── 📄 ci.yml                                # emits lineage on every run
+│       └── 🧾 ci.yml                                   # emits lineage on every run
 ├── 📁 artifacts/
 │   └── 📁 tests/
 │       └── 📁 <run-id>/
@@ -94,18 +77,12 @@ and validation schemas.
 │               └── 🧾 workflow-aggregate.jsonld
 └── 📁 schemas/
     └── 📁 prov/
-        └── 🧾 ci-test-lineage-v1.json               # JSON schema for validation
+        └── 🧾 ci-test-lineage-v1.json                  # JSON schema for validation
 ~~~
 
----
+## 🧪 Validation & CI/CD
 
-## 📦 Data & Metadata
-
-This section defines the **per‑job** and **workflow aggregate** PROV‑O JSON‑LD profiles used by CI to emit
-machine‑readable test lineage.
-
-### 🧩 Per‑Job JSON‑LD — Minimal Example
-
+### 🧩 JSON‑LD (Per‑Job) — Minimal Example
 ~~~json
 {
   "@context": {
@@ -115,8 +92,8 @@ machine‑readable test lineage.
   },
   "@id": "urn:kfm:ci:job:github:<run_id>:<job_id>",
   "@type": "prov:Activity",
-  "prov:startedAtTime": { "@type": "xsd:dateTime", "@value": "2025-12-09T02:14:05Z" },
-  "prov:endedAtTime":   { "@type": "xsd:dateTime", "@value": "2025-12-09T02:16:47Z" },
+  "prov:startedAtTime": {"@type":"xsd:dateTime","@value":"2025-12-09T02:14:05Z"},
+  "prov:endedAtTime":   {"@type":"xsd:dateTime","@value":"2025-12-09T02:16:47Z"},
   "kfm:runId": "github_actions_run:<run_id>",
   "kfm:runUrl": "https://github.com/<org>/<repo>/actions/runs/<run_id>",
   "prov:used": [
@@ -163,12 +140,11 @@ machine‑readable test lineage.
     "branch": 78.6,
     "measuredBy": "coverage.py 7.6.1"
   },
-  "kfm:jobLabels": ["ubuntu-22.04", "python-3.11", "matrix:fast"]
+  "kfm:jobLabels": ["ubuntu-22.04","python-3.11","matrix:fast"]
 }
 ~~~
 
-### 📊 Workflow Aggregate JSON‑LD — Minimal Example
-
+### 📊 JSON‑LD (Workflow Aggregate) — Minimal Example
 ~~~json
 {
   "@context": {
@@ -178,8 +154,8 @@ machine‑readable test lineage.
   },
   "@id": "urn:kfm:ci:workflow:github:<run_id>",
   "@type": "prov:Activity",
-  "prov:startedAtTime": { "@type": "xsd:dateTime", "@value": "2025-12-09T02:12:40Z" },
-  "prov:endedAtTime":   { "@type": "xsd:dateTime", "@value": "2025-12-09T02:18:03Z" },
+  "prov:startedAtTime": {"@type":"xsd:dateTime","@value":"2025-12-09T02:12:40Z"},
+  "prov:endedAtTime":   {"@type":"xsd:dateTime","@value":"2025-12-09T02:18:03Z"},
   "kfm:runId": "github_actions_run:<run_id>",
   "kfm:jobs": [
     "urn:kfm:ci:job:github:<run_id>:linux-py311",
@@ -201,15 +177,7 @@ machine‑readable test lineage.
 }
 ~~~
 
----
-
-## 🧪 Validation & CI/CD
-
-This section defines the CI wiring that emits PROV‑O lineage on every run and the governance rules
-enforced via CI gates.
-
 ### ⚙️ GitHub Actions Snippet (emits lineage files)
-
 ~~~yaml
 # .github/workflows/ci.yml (excerpt)
 - name: Export PROV lineage (per job)
@@ -228,9 +196,9 @@ enforced via CI gates.
     junit_path = f"artifacts/tests/{run_id}/junit.xml"
     cov_path   = f"artifacts/tests/{run_id}/coverage.xml"
 
-    def digest(path: str) -> str | None:
+    def digest(p):
         try:
-            with open(path, "rb") as f:
+            with open(p, "rb") as f:
                 return hashlib.sha256(f.read()).hexdigest()
         except FileNotFoundError:
             return None
@@ -243,16 +211,10 @@ enforced via CI gates.
       },
       "@id": f"urn:kfm:ci:job:github:{run_id}:{job_id}",
       "@type": "prov:Activity",
-      "prov:startedAtTime": {
-        "@type": "xsd:dateTime",
-        "@value": start or now
-      },
-      "prov:endedAtTime": {
-        "@type": "xsd:dateTime",
-        "@value": now
-      },
-      "kfm:runId": f"github_actions_run:{run_id}",
-      "kfm:runUrl": "https://github.com/${{ github.repository }}/actions/runs/{run_id}",
+      "prov:startedAtTime": {"@type": "xsd:dateTime", "@value": start or now},
+      "prov:endedAtTime":   {"@type": "xsd:dateTime", "@value": now},
+      "kfm:runId":  f"github_actions_run:{run_id}",
+      "kfm:runUrl": f"https://github.com/${{ github.repository }}/actions/runs/{run_id}",
       "prov:used": [
         {
           "@id": f"urn:kfm:repo:{commit}",
@@ -262,15 +224,15 @@ enforced via CI gates.
       ],
       "prov:generated": [
         {
-          "@id": f"urn:kfm:artifact:junit:{digest(junit_path)}",
+          "@id":   f"urn:kfm:artifact:junit:{digest(junit_path)}",
           "@type": "prov:Entity",
-          "kfm:path": junit_path,
+          "kfm:path":   junit_path,
           "kfm:sha256": digest(junit_path)
         },
         {
-          "@id": f"urn:kfm:artifact:coverage:{digest(cov_path)}",
+          "@id":   f"urn:kfm:artifact:coverage:{digest(cov_path)}",
           "@type": "prov:Entity",
-          "kfm:path": cov_path,
+          "kfm:path":   cov_path,
           "kfm:sha256": digest(cov_path)
         }
       ]
@@ -283,53 +245,39 @@ enforced via CI gates.
     PY
 ~~~
 
-A final workflow job **SHOULD** emit a corresponding `workflow-aggregate.jsonld` into the same
-`artifacts/tests/<run-id>/prov/` directory, using the aggregate profile above.
-
 ### ✅ Validation & Governance
-
-- **Schema check**  
-  - Validate `.jsonld` files against `schemas/prov/ci-test-lineage-v1.json`.
-- **CI gates**  
-  - Fail PR if coverage drops more than the allowed SLO delta (per project config).
-  - Optionally block merge if PROV lineage files are missing or schema‑invalid.
-- **FAIR+CARE**  
-  - No PII: artifacts and telemetry use non‑identifying run IDs and job labels.
-  - Lineage is limited to repo, environment, and artifacts; no developer or account IDs.
-- **Energy/Carbon**  
-  - Attach CI spans to `telemetry_ref` using `energy_schema` / `carbon_schema`.
-  - Allow correlation of test coverage and energy/carbon cost across releases.
+- **Schema check**: validate `.jsonld` with `schemas/prov/ci-test-lineage-v1.json`.
+- **CI gates**: fail PR if coverage drops more than allowed SLO delta.
+- **FAIR+CARE**: no PII; artifacts and telemetry use non‑identifying run IDs.
+- **Energy/Carbon**: attach spans to `telemetry_ref` using `energy_schema` / `carbon_schema`.
 
 ### 📈 What this answers quickly
+- **What changed?** commit SHA + job labels + environment.
+- **What did it produce?** JUnit/Coverage artifacts with digests.
+- **Is coverage trending up/down?** workflow aggregate with baseline deltas.
 
-- **What changed?**  
-  - `kfm:commitSha` + `kfm:jobLabels` + environment entities.
-- **What did it produce?**  
-  - JUnit + coverage artifacts with stable paths and SHA‑256 digests.
-- **Is coverage trending up/down?**  
-  - Workflow aggregate with coverage stats and deltas vs a `baselineCommit`.
+---
 
 ### ✅ Drop‑in Tasks (backlog‑ready)
-
-1. Add `schemas/prov/ci-test-lineage-v1.json` (draft v1) under `schemas/prov/`.  
-2. Wire the per‑job exporter step (above) to all test matrices in `.github/workflows/ci.yml`.  
-3. Emit `workflow-aggregate.jsonld` in a final job and push to `artifacts/tests/<run-id>/prov/`.  
-4. Add a Grafana/Neo4j facet to visualize coverage trend per path/module, driven from the PROV graph.  
+1) Add `schemas/prov/ci-test-lineage-v1.json` (draft v1).  
+2) Wire per‑job exporter step (above) to all test matrices.  
+3) Emit `workflow-aggregate.jsonld` in a final job and push to `artifacts/tests/<run-id>/prov/`.  
+4) Add a Grafana/Neo4j facet to visualize coverage trend per path/module.
 
 ---
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary                                                                 |
-|------------:|-----------:|-------------------------------------------------------------------------|
-| **v11.2.5** | 2025-12-09 | Initial governed CI PROV‑O test lineage standard (per‑job + workflow). |
+| Version     | Date       | Summary                                                                                                  |
+|------------:|-----------:|----------------------------------------------------------------------------------------------------------|
+| **v11.2.5** | 2025-12-09 | Initial CI test lineage standard using PROV‑O; defines per‑job and workflow JSON‑LD, Actions exporter, and coverage/telemetry integration. |
 
 ---
 
 <div align="center">
 
 🧪 **KFM — CI Test Lineage with PROV‑O (per‑job + workflow aggregate)**  
-Deterministic CI Lineage · PROV‑O Coverage Telemetry · KFM v11
+Scientific Insight · Documentation‑First · FAIR+CARE Ethics · Sustainable Intelligence  
 
 [📘 Docs Root](../..) · [📂 Standards Index](../README.md) · [⚖ Governance Charter](../governance/ROOT-GOVERNANCE.md)
 
