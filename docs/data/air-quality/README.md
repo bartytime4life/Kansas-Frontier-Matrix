@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "🌫️ KFM v11.2.6 — Air Quality Sources & API Governance (OpenAQ v3 · AirNow · CAMS NRT · Diamond⁹ Ω / Crown∞Ω Certified)"
 path: "docs/data/air-quality/README.md"
@@ -290,4 +289,3 @@ These telemetry artifacts are validated against
 [🌐 KFM Home](../../README.md) · [📚 Standards](../../standards/README.md) · [📦 STAC Catalog](../../data/stac/)
 
 </div>
-```
