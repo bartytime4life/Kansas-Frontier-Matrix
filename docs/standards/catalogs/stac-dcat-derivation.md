@@ -19,12 +19,12 @@ doc_uuid: "urn:kfm:doc:standards-catalogs-stac-dcat-derivation-v11.2.3"
 semantic_document_id: "kfm-standards-stac-dcat-derivation-v11.2.3"
 event_source_id: "ledger:kfm:standards:catalogs:stac-dcat-derivation:v11.2.3"
 
-sbom_ref: "../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../releases/v11.2.3/catalog-metadata-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/catalog-metadata-v1.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
+sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.3/catalog-metadata-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/catalog-metadata-v1.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../governance/ROOT-GOVERNANCE.md"
 faircare_ref: "../faircare/FAIRCARE-GUIDE.md"
@@ -59,8 +59,8 @@ ontology_alignment:
   owl_time: "TemporalEntity"
   geosparql: "geo:FeatureCollection"
 
-json_schema_ref: "../../schemas/json/stac-dcat-derivation-v1.json"
-shape_schema_ref: "../../schemas/shacl/stac-dcat-derivation-v1.shape.ttl"
+json_schema_ref: "../../../schemas/json/stac-dcat-derivation-v1.json"
+shape_schema_ref: "../../../schemas/shacl/stac-dcat-derivation-v1.shape.ttl"
 
 immutability_status: "version-pinned"
 machine_extractable: true
@@ -141,7 +141,7 @@ requires_governance_links_in_footer: true
 `docs/standards/catalogs/stac-dcat-derivation.md`
 
 **Purpose**  
-Define the **authoritative KFM pattern** in which **STAC Items and Collections are the source of truth**, and **DCAT is always derived automatically from STAC** for catalogs, portals, and federation.
+Define the **authoritative KFM pattern** where **STAC Items and Collections are the source of truth**, and **DCAT is always derived automatically from STAC** for catalogs, portals, and federation.
 
 </div>
 
@@ -162,57 +162,67 @@ Goals:
 
 This document is a sibling to:
 
-- `docs/standards/catalogs/README.md` — Catalog & metadata standards index.  
+- `docs/standards/catalogs/README.md` — catalog & metadata standards index.  
 - `docs/standards/catalogs/stac/stac-kfm-profile.md` — KFM STAC profile.  
 - `docs/standards/catalogs/dcat/dcat-kfm-profile.md` — KFM DCAT profile.  
-- `docs/standards/catalogs/crosswalks/stac-dcat-crosswalk.md` — Detailed field-level mapping.
+- `docs/standards/catalogs/crosswalks/stac-dcat-crosswalk.md` — detailed field-level mapping.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-📂 docs/standards/catalogs/
-├── 📄 README.md                         — Catalog & metadata standards index
-│
-├── 🧩 stac/                             — STAC profiles, patterns, examples
-│   └── 📄 stac-kfm-profile.md
-│
-├── 🧩 dcat/                             — DCAT profiles, patterns, examples
-│   └── 📄 dcat-kfm-profile.md
-│
-├── 🔁 crosswalks/                       — Implementation-oriented crosswalk docs
-│   └── 📄 stac-dcat-crosswalk.md
-│
-└── 📦 stac-dcat-derivation.md           — ← This document (STAC → DCAT model)
+📁 Kansas-Frontier-Matrix/
+└── 📁 docs/
+    └── 📁 standards/
+        ├── 📁 catalogs/                         📚 Catalog & metadata standards
+        │   ├── 📄 README.md                     📚 Index for catalog standards
+        │   │
+        │   ├── 🧩 stac/                         🛰️ STAC profiles, patterns, examples
+        │   │   ├── 📄 stac-kfm-profile.md       STAC profile (Collections, Items, kfm:* fields)
+        │   │   └── 📄 stac-best-practices.md    STAC naming, tiling & asset patterns
+        │   │
+        │   ├── 🧩 dcat/                         🗄️ DCAT / GeoDCAT profiles
+        │   │   ├── 📄 dcat-kfm-profile.md       DCAT profile for catalogs & federation
+        │   │   └── 📄 dcat-examples.md          Derived DCAT JSON-LD / Turtle examples
+        │   │
+        │   ├── 🔁 crosswalks/                   🔀 STAC ↔ DCAT (& optional CKAN) crosswalks
+        │   │   └── 📄 stac-dcat-crosswalk.md    Canonical STAC ↔ DCAT mapping (field-level)
+        │   │
+        │   └── 📦 stac-dcat-derivation.md       📦 STAC → DCAT derivation model (this file)
+        │
+        └── 📁 governance/ …                     ⚖️ Governance & approvals
 ~~~
 
-Implementation code & CI hooks SHOULD live under:
+**Implementation (code, not standards)** SHOULD live under:
 
 - `src/pipelines/catalogs/stac-dcat/` — ETL & crosswalk implementation.  
-- `schemas/catalogs/` — JSON/SHACL schemas validating derived DCAT against this model.
+- `schemas/catalogs/` — schemas validating derived DCAT (in addition to refs in this front matter).  
 
 ---
 
 ## 🌍 Why STAC Is the Source of Truth
 
-STAC is a **GeoJSON-native, geospatially explicit** model. A STAC Item/Collection carries:
+STAC is a **GeoJSON-native, geospatially explicit** model. A STAC Item or Collection carries:
 
 - `geometry` — exact spatial footprint.  
 - `bbox` — derived spatial envelope.  
 - `properties.datetime` or `properties.start_datetime` / `properties.end_datetime`.  
-- `assets` — per-asset `href`, `type`, `roles`, checksums, titles.  
-- `properties` — domain-specific metadata (e.g., NAIP, HRRR, archaeology, hydrology).
+- `assets` — per-asset `href`, `type`, `roles`, checksums, titles, and sizes.  
+- `properties` — domain-specific metadata (e.g., NAIP, HRRR, archaeology, hydrology, remote sensing).
 
 These fields drive:
 
-- Map rendering & tiling.  
-- Ingestion pipelines (ETL, cloud-native access).  
-- Provenance & lineage (via PROV-O / KFM registries).  
-- Temporal indexing & query.  
-- Validation via `stac-validator` and related tools.
+- map rendering and tiling  
+- ingestion pipelines (ETL, cloud-native reads)  
+- provenance & lineage (via PROV-O / KFM-PROV v11)  
+- temporal indexing & queries  
+- multi-asset integrity (checksums, roles, media types)
 
-Because STAC is **spatially explicit, time-aware, and asset-centric**, KFM treats it as **canonical** and **directly maintained** by data engineers and domain stewards.
+Because STAC is **spatially explicit, time-aware, and asset-centric**, KFM treats it as:
+
+- the **only** place where authoritative spatial and temporal catalog facts are curated  
+- the starting point for all downstream catalog projections, including DCAT and CKAN-like portals
 
 ---
 
@@ -220,85 +230,94 @@ Because STAC is **spatially explicit, time-aware, and asset-centric**, KFM treat
 
 DCAT is optimized for:
 
-- **Discovery & search** (catalog portals, APIs).  
-- **Federation** with external catalogs and data portals.  
-- Semantic web ecosystems (RDF, JSON-LD, Turtle).
+- **discovery & search** (catalog portals, SPARQL/RDF, JSON-LD APIs)  
+- **federation** with external catalogs and knowledge graphs  
+- generic **dataset-level and service-level descriptions** (`dcat:Dataset`, `dcat:Distribution`, `dcat:DataService`)
 
-DCAT is **not designed** to be the authoritative geospatial metadata layer for:
+DCAT is **not** designed to be the authoritative, detailed geospatial metadata layer for:
 
-- Complex asset lists (multiple formats, multi-resolution pyramids).  
-- Detailed geospatial footprints beyond bounding boxes.  
-- STAC-specific structures (Collections → Items → Assets).
+- complex, multi-asset datasets (e.g., pyramids, multiple CRS/CRS-less assets)  
+- rich per-asset metadata beyond what fits naturally into a small number of distributions  
+- STAC-specific constructs like Item/Collection semantics and link graphs
 
-Therefore:
+KFM position:
 
-- DCAT in KFM is treated as an **artifact generated from STAC**.  
-- Editing DCAT directly risks divergence between catalogs and spatially authoritative STAC.
+- DCAT is the **discovery and federation** surface, **not** the spatial truth source.  
+- Hand-editing DCAT in production risks drift from STAC and must be avoided.
 
-**KFM rule**
+> **Rule:** STAC is edited → STAC is validated → DCAT is regenerated → catalogs & portals update.
 
-> STAC is edited → STAC is validated → DCAT is regenerated → portals & catalogs update.
-
-No production DCAT should exist without an upstream STAC representation.
+No production DCAT should exist without a corresponding STAC representation.
 
 ---
 
 ## 🧱 Recommended Architecture
 
 ~~~text
-Authoritative STAC Catalog
-(data/stac/**.json)
+Authoritative STAC Catalog (data/stac/**.json)
 │
-├── validate → stac-validator · stac-check
+├── Validate STAC
+│   └─ stac-validator + KFM STAC profile checks
 │
-└── transform → STAC → DCAT JSON-LD crosswalk
-     │
-     ├── dcat:Dataset       (per STAC Item/Collection)
-     ├── dcat:Distribution  (per STAC Asset)
-     └── dcat:DataService   (optional, for live services/APIs)
+└── Derive DCAT (STAC → DCAT)
+    │
+    ├── dcat:Dataset       (per STAC Collection/Item)
+    ├── dcat:Distribution  (per STAC Asset)
+    └── dcat:DataService   (optional, for live services/APIs)
 ~~~
 
-**Key rule**
+**Key architectural rules**
 
 - **Do NOT hand-edit DCAT artifacts in production.**  
-- All DCAT (JSON-LD, Turtle, RDF/XML) must be **derived artifacts** produced from STAC via governed crosswalks and pipelines.
+- Treat DCAT JSON-LD/Turtle as **build artifacts** that are safe to delete and regenerate.  
+- Keep derivation tooling **config-driven and deterministic** (KFM-PDC v11 compliant).  
+
+Recommended file layout:
+
+- STAC source: `data/stac/**`  
+- DCAT JSON-LD: `data/dcat/jsonld/**`  
+- DCAT Turtle/RDF (optional): `data/dcat/rdf/**`
 
 ---
 
 ## 🔁 Minimal STAC → DCAT Crosswalk
 
-This table defines the **minimal, stable mapping template**. Domain-specific extensions may add more fields, but **must not conflict** with this base.
-
-### Dataset-Level Mapping (STAC Item/Collection → dcat:Dataset)
-
-| STAC Field / Concept                  | DCAT / RDF Field                     |
-|--------------------------------------|--------------------------------------|
-| `id`                                 | `dct:identifier`                     |
-| `properties.title`                   | `dct:title`                          |
-| `properties.description`             | `dct:description`                    |
-| `bbox`                               | `dct:spatial` (`dct:Location`)       |
-| `datetime` or `start/end_datetime`   | `dct:temporal` (`dct:PeriodOfTime`)  |
-| `keywords` / `tags`                  | `dcat:keyword`                       |
-| `providers`                          | `dct:publisher`, `dct:creator`       |
-| `links` (homepage, docs)             | `dcat:landingPage` / `foaf:page`     |
-| collection membership                | `dct:isPartOf` / `dcat:inSeries`     |
-| `license`                            | `dct:license`                        |
-| provenance/source                    | `dct:source`, `prov:wasDerivedFrom`  |
-
-### Asset-Level Mapping (STAC Asset → dcat:Distribution)
-
-| STAC Asset Field                     | DCAT / RDF Field                     |
-|--------------------------------------|--------------------------------------|
-| `href`                               | `dcat:downloadURL` / `dcat:accessURL`|
-| `type`                               | `dct:format`                         |
-| `roles`                              | profile-specific role mapping        |
-| `checksum:*`                         | `spdx:checksum`                      |
-| `title`                              | `dct:title`                          |
-| `description`                        | `dct:description`                    |
-
-Additional mappings (e.g., `eo:*`, `sar:*`, domain profiles) MUST be specified in:
+This section captures the **minimal, stable mapping template**. Domain profiles may extend it, but MUST NOT conflict with it. Full details live in:
 
 - `docs/standards/catalogs/crosswalks/stac-dcat-crosswalk.md`
+
+### Dataset-Level Mapping  
+(STAC Item/Collection → `dcat:Dataset`)
+
+| STAC Field / Concept                | DCAT / RDF Field                      |
+|------------------------------------|---------------------------------------|
+| `id`                               | `dct:identifier`                      |
+| `properties.title`                 | `dct:title`                           |
+| `properties.description`           | `dct:description`                     |
+| `bbox`                             | `dct:spatial` (`dct:Location`)        |
+| `geometry`                         | GeoSPARQL geometry within `dct:spatial` or related object |
+| `datetime` / `start/end_datetime`  | `dct:temporal` (`dct:PeriodOfTime`)   |
+| `keywords` / `tags`                | `dcat:keyword`                        |
+| `providers`                        | `dct:publisher`, `dct:creator`        |
+| `links` (homepage/docs)           | `dcat:landingPage`, `foaf:page`       |
+| collection membership              | `dct:isPartOf` / `dcat:inSeries`      |
+| `license`                          | `dct:license`                         |
+| provenance/source                  | `dct:source`, `prov:wasDerivedFrom`   |
+
+### Asset-Level Mapping  
+(STAC Asset → `dcat:Distribution`)
+
+| STAC Asset Field             | DCAT / RDF Field                      |
+|-----------------------------|----------------------------------------|
+| `href`                      | `dcat:downloadURL` / `dcat:accessURL` |
+| `type`                      | `dct:format`                          |
+| `roles`                     | profile-specific role → distribution classification |
+| `title`                     | `dct:title`                           |
+| `description`               | `dct:description`                     |
+| `checksum:*`                | `spdx:checksum` (`spdx:Checksum`)     |
+| `kfm:*` asset metadata      | mapped into profile-specific DCAT extensions or retained as annotations |
+
+Additional domain mappings (e.g., EO, SAR, heritage, hydrology) MUST be documented in `stac-dcat-crosswalk.md`.
 
 ---
 
@@ -363,96 +382,130 @@ Additional mappings (e.g., `eo:*`, `sar:*`, domain profiles) MUST be specified i
 Notes:
 
 - JSON-LD above is **derived**, not hand-authored.  
-- Any change to STAC triggers a new DCAT derivation; DCAT is never the authoritative source.
+- Any change to STAC triggers a new derivation; DCAT is never the spatial or temporal source of truth.
 
 ---
 
 ## 🛠️ Tooling Recommendations
 
-KFM recommends the following for a **STAC-first, DCAT-derived** pipeline:
+KFM recommends a **config-driven**, **deterministic** toolchain:
 
-- **STAC Validation & Linting**
-  - `stac-validator` — schema + extension validation.  
-  - `stac-check` or equivalent — semantic and profile checks.  
+### 1. STAC Validation
 
-- **STAC → DCAT Crosswalk**
-  - Crosswalk scripts maintained under `src/pipelines/catalogs/stac-dcat/`.  
-  - Prefer deterministic transforms (e.g., Python or Node scripts, with tests).  
-  - Avoid “ad-hoc” transformations that diverge from `stac-dcat-crosswalk.md`.
+- `stac-validator` — schema + extension compliance.  
+- KFM STAC profile checks (e.g., via custom Python/Node tooling) to enforce:
+  - required `kfm:*` fields  
+  - mission tags, event refs, ingest state, QC state.
 
-- **Artifact Layout**
-  - STAC sources: `data/stac/**`  
-  - Derived DCAT JSON-LD: `data/dcat/jsonld/**`  
-  - Optional DCAT Turtle/RDF: `data/dcat/rdf/**`
+### 2. STAC → DCAT Crosswalk
 
-DCAT outputs MUST be treated as **build artifacts** that can be safely regenerated.
+Implementation under:
+
+- `src/pipelines/catalogs/stac-dcat/`
+
+Should:
+
+- read STAC Collections/Items from `data/stac/**`  
+- output DCAT JSON-LD under `data/dcat/jsonld/**`  
+- optionally emit Turtle/RDF for triple stores under `data/dcat/rdf/**`  
+- be fully driven by configuration and crosswalk docs in:
+  - `docs/standards/catalogs/crosswalks/stac-dcat-crosswalk.md`
+
+### 3. Provenance & Telemetry
+
+Derivation jobs must:
+
+- emit telemetry into `catalog-metadata-telemetry.json` (see `telemetry_ref`)  
+- capture:
+  - counts of STAC → DCAT conversions  
+  - validation errors  
+  - derivation timings and resource usage (aligned with `energy_schema` and `carbon_schema`)  
+- write PROV-compatible lineage linking:
+  - STAC source entities  
+  - derivation activities  
+  - DCAT output entities
 
 ---
 
 ## ✅ CI & Governance Rules
 
-CI MUST enforce:
+This derivation model is **enforced** via CI and governance:
 
-1. **No orphan DCAT**
+1. **No Orphan DCAT**
 
-   - Every DCAT `dcat:Dataset` MUST have a corresponding STAC Item/Collection.  
-   - CI should fail if DCAT is found without a traceable STAC source.
+   - CI fails if any DCAT record lacks a resolvable STAC source ID.  
+   - DCAT checks must confirm `dct:identifier` maps back to a STAC `id`.
 
-2. **No hand-edited DCAT in production**
+2. **No Hand-Edited DCAT in Production**
 
-   - Derived DCAT files SHOULD be overwritten by pipelines.  
-   - Manual edits MUST be treated as temporary and discarded on next derivation.
+   - DCAT directories are treated as **generated**.  
+   - Protected branches must not accept manual edits to DCAT artifacts without a documented migration path and governance exception.
 
-3. **Crosswalk validation**
+3. **Crosswalk Validation**
 
-   - DCAT outputs:
-     - MUST validate against the KFM DCAT profile schema.  
-     - MUST maintain identifier, temporal, and spatial consistency with STAC.  
+   - Derived DCAT must:
+     - validate against the KFM DCAT profile (`dcat-kfm-profile.md`)  
+     - be internally consistent with STAC (identifiers, spatial/temporal ranges, license)  
+   - Crosswalk fixtures and regression tests live under `tests/catalogs/stac-dcat/`.
 
-4. **Provenance alignment**
+4. **Provenance Requirements**
 
-   - Derivation processes MUST record:
-     - STAC source IDs.  
-     - Transform script/tool versions.  
-     - Output DCAT identifiers.  
+   - Each derivation run must record:
+     - STAC source collection and item counts  
+     - tool version and configuration hash  
+     - release identifiers (linking to `sbom_ref`, `manifest_ref`)  
 
-   - This information is captured in telemetry and governance ledgers.
+5. **Governance Changes**
 
-5. **Governance changes**
+   - Any modification to:
+     - STAC profile fields used in catalogs  
+     - DCAT profile fields derived from STAC  
+     - crosswalk semantics or mappings  
 
-   - Any change to:
-     - KFM STAC profile,  
-     - KFM DCAT profile, or  
-     - Crosswalk semantics  
+   MUST:
 
-     MUST:
-
-     - Bump this document’s version.  
-     - Update associated schemas/SHACL shapes.  
-     - Be logged in the governance ledger and reviewed by the Metadata & Catalogs WG and FAIR+CARE Council.
+   - bump this document’s `version` and `last_updated`  
+   - update associated JSON/SHACL schemas (`json_schema_ref`, `shape_schema_ref`)  
+   - be reviewed by the Metadata & Catalogs WG and FAIR+CARE Council  
+   - be logged as an event in the governance ledger (e.g., `reports/audit/governance-ledger.json`)
 
 ---
 
 ## 🧾 Summary (KFM Position)
 
-KFM’s **authoritative stance** for catalog metadata:
+KFM’s **catalog stance**:
 
-- **Always author and maintain metadata in STAC.**  
-- **Never treat DCAT as the source of truth.**  
-- **Always derive DCAT (JSON-LD and related formats) from validated STAC via governed crosswalks.**  
-- **Use explicit STAC → DCAT mappings to preserve semantic and spatial fidelity.**
+- **Author in STAC. Always.**  
+- **Validate STAC first.**  
+- **Derive DCAT from STAC via governed crosswalks.**  
+- **Treat DCAT as a projection, not the source of truth.**  
+- **Enforce the model via CI, telemetry, and governance.**
 
-This model ensures:
+This guarantees:
 
-- Spatial correctness for maps and analytics.  
-- Stable, federated catalogs for discovery & portals.  
-- Consistent, traceable metadata across KFM systems and external partners.
+- spatial and temporal correctness  
+- stable identifiers and provenance  
+- federation-ready catalogs that never drift from the authoritative STAC layer
 
 ---
 
 ## 🕰️ Version History
 
-| Version  | Date       | Author                                   | Summary                                                                                   |
-|----------|------------|------------------------------------------|-------------------------------------------------------------------------------------------|
-| v11.2.3  | 2025-12-03 | Metadata & Catalogs WG · FAIR+CARE Council | Initial KFM-standard STAC → DCAT derivation model; defined STAC-first catalog architecture, minimal crosswalk, tooling, and CI/governance rules. |
+| Version | Date       | Author                                   | Summary                                                                                               |
+|--------:|------------|------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-12-03 | Metadata & Catalogs WG · FAIR+CARE Council | Initial KFM-standard STAC → DCAT derivation model; defined STAC-first architecture, minimal crosswalk, tooling guidance, and CI/governance rules. |
 
+---
+
+<sub>© 2025 Kansas Frontier Matrix · MIT / CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM‑MDP v11.2.4</sub>
+
+<br/>
+
+<div align="center">
+
+📦 **KFM v11.2.3 — STAC → DCAT Derivation Model**  
+STAC First · DCAT Derived · Provenance Everywhere  
+
+[📚 Catalog Standards Index](./README.md) · [📖 Standards Root](../README.md) · [⚖ Governance Charter](../governance/ROOT-GOVERNANCE.md)
+
+</div>
