@@ -45,16 +45,41 @@ This standard defines **four canonical mission-level tags** that **every KFM col
 - `algorithm-change`
 - `mission-status`
 
-They are:
+They keep catalogs, graph, and UI aligned across providers, missions, and time.
 
-- stored in **STAC** as `properties.kfm:tags[]` and `properties.kfm:mission:*`  
-- mirrored in **DCAT** via `dcat:keyword`, `dct:subject`, and `kfm:mission:*` extensions  
-- propagated into the **Neo4j mission/catalog graph**  
-- exposed in **Story Nodes & Focus Mode** as filters, badges, and timeline markers  
+---
 
-This keeps KFM’s **catalogs, graph, and UI** aligned across providers, missions, and time.
+## 🗂️ Directory Layout
 
-> Pipeline fit: ETL → STAC/DCAT (with mission tags) → Neo4j mission graph → API → Story Nodes / Focus Mode.
+Mission tags appear consistently in the KFM monorepo, using the standard emoji directory style:
+
+~~~text
+data/
+└── 📁 stac/
+    └── 📁 missions/
+        └── 📄 collection.json          # STAC Collections with kfm:tags & kfm:mission:* fields
+
+docs/
+└── 📁 catalogs/
+    └── 📁 dcat/
+        └── 📄 <mission>.jsonld         # DCAT Datasets mirroring mission tags
+
+src/
+└── 📁 pipelines/
+    └── 📁 catalogs/
+        └── 📄 mission_tags.py          # ETL for applying/maintaining mission tags
+
+configs/
+└── 📁 pipelines/
+    └── 📁 catalogs/
+        └── 📄 mission-tags.yaml        # Config for mission tag derivation and validation
+
+.github/
+└── 📁 workflows/
+    └── 📄 catalogs-metadata.yml        # CI for STAC/DCAT schema & mission-tag checks
+~~~
+
+ETL and CI treat these locations as **canonical** when validating and updating mission tags.
 
 ---
 
@@ -67,12 +92,14 @@ Mission tags answer four questions about any mission or collection at any point 
 3. **`algorithm-change`** — *Has the algorithm changed in a way that affects interpretation?*  
 4. **`mission-status`** — *Is the mission healthy, degraded, in incident, or ended?*
 
-These tags are:
+They are:
 
-- **minimal but expressive**: small enumerations, easy to adopt  
-- **time-aware**: values can change over time and are tracked via STAC, DCAT, graph, and Story Nodes  
-- **provider-agnostic**: allow alignment for multiple upstream missions with different status models  
-- **FAIR+CARE-aligned**: make changes visible, searchable, and auditable, while allowing redaction where needed
+- stored in **STAC** as `properties.kfm:tags[]` and `properties.kfm:mission:*`  
+- mirrored in **DCAT** via `dcat:keyword`, `dct:subject`, and `kfm:mission:*` extensions  
+- propagated into the **Neo4j mission/catalog graph**  
+- exposed in **Story Nodes & Focus Mode** as filters, badges, and timeline markers  
+
+> Pipeline fit: ETL → STAC/DCAT (with mission tags) → Neo4j mission graph → API → Story Nodes / Focus Mode.
 
 ---
 
@@ -80,12 +107,12 @@ These tags are:
 
 ### Tag summary
 
-| Tag name              | Field prefix                 | Question answered                                      | Scope             |
-|-----------------------|-----------------------------|--------------------------------------------------------|-------------------|
-| `product-availability` | `kfm:mission:product_availability` | “Can users obtain products from this mission?”         | mission / product |
-| `reprocessing`        | `kfm:mission:reprocessing`  | “Is bulk reprocessing happening, and how broad is it?” | mission-wide or subset |
-| `algorithm-change`    | `kfm:mission:algorithm_change` | “What algorithm versions are in effect and when?”    | mission / collection |
-| `mission-status`      | `kfm:mission:status`        | “What is the operational state of the mission?”       | mission           |
+| Tag name               | Field prefix                        | Question answered                                      | Scope                  |
+|------------------------|-------------------------------------|--------------------------------------------------------|------------------------|
+| `product-availability` | `kfm:mission:product_availability`  | “Can users obtain products from this mission?”         | mission / product line |
+| `reprocessing`         | `kfm:mission:reprocessing`          | “Is bulk reprocessing happening, and how broad is it?” | mission-wide or subset |
+| `algorithm-change`     | `kfm:mission:algorithm_change`      | “What algorithm versions are in effect and when?”      | mission / collection   |
+| `mission-status`       | `kfm:mission:status`                | “What is the operational state of the mission?”        | mission                |
 
 ### 1️⃣ `product-availability`
 
@@ -390,37 +417,6 @@ This standard ensures Story Nodes can **cross-filter by mission state** without 
 
 ---
 
-## 🗂️ Repository Layout & Conventions
-
-Mission tags appear in a consistent repository layout with emoji-preserving directory hints:
-
-~~~text
-data/
-└── stac/📦
-    └── <mission>/collection.json          # STAC Collections with kfm:tags & kfm:mission:* fields
-
-docs/
-└── catalogs/
-    └── dcat/🗄️
-        └── <mission>.jsonld               # DCAT Datasets mirroring mission tags
-
-src/
-└── pipelines/
-    └── catalogs/
-        └── mission_tags.py                # ETL for applying/maintaining mission tags
-
-configs/
-└── pipelines/
-    └── catalogs/
-        └── mission-tags.yaml              # Config for mission tag derivation and validation
-
-.github/
-└── workflows/🧰
-    └── catalogs-metadata.yml              # CI for STAC/DCAT schema & mission-tag checks
-~~~
-
----
-
 ## 🧪 CI Policy (Must-Pass Rules)
 
 Mission tag enforcement is handled via **catalog metadata CI workflows**.
@@ -474,7 +470,7 @@ Any mission where sovereignty or privacy concerns apply must be reviewed by the 
 
 | Version  | Date       | Description                                                            |
 |----------|------------|------------------------------------------------------------------------|
-| v11.2.6  | 2025-12-10 | Aligned with KFM-MDP v11.2.6; expanded STAC/DCAT/graph/CI sections; added FAIR+CARE and pipeline integration. |
+| v11.2.6  | 2025-12-10 | Aligned with KFM-MDP v11.2.6; directory layout moved to top with standard emojis; expanded STAC/DCAT/graph/CI sections; added FAIR+CARE and pipeline integration. |
 | v11.2.5  | 2025-12-01 | Initial definition of mission tags standard (four canonical tags).     |
 
 ---
@@ -492,7 +488,7 @@ Edits require approval from the **FAIR+CARE Council** and **Reliability Guild** 
 
 <br/>
 
-<sub>© Kansas Frontier Matrix · CC‑BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM‑MDP v11.2.6</sub>
+<sub>© Kansas Frontier Matrix · CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM-MDP v11.2.6</sub>
 
 <br/>
 
