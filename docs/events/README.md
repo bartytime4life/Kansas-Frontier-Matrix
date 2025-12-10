@@ -1,7 +1,7 @@
 ---
 title: "🧭 Event→Action Map — Keep STAC/DCAT & Graph Aligned"
 path: "docs/events/README.md"
-version: "v11.2.x"
+version: "v11.2.6"
 last_updated: "2025-12-10"
 
 release_stage: "Stable / Governed"
@@ -12,7 +12,7 @@ content_stability: "stable"
 doc_kind: "Runbook"
 status: "Active / Canonical"
 intent: "event-routing"
-semantic_document_id: "kfm-doc-events-routing-v11.2.x"
+semantic_document_id: "kfm-doc-events-routing-v11.2.6"
 
 license: "CC-BY 4.0"
 
@@ -45,6 +45,7 @@ attestation_ref: "../../releases/v11.2.6/slsa-attestation.json"
 signature_ref: "../../releases/v11.2.6/signature.sig"
 telemetry_ref: "../../releases/v11.2.6/events-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/events-routing-v1.json"
+governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 ---
 
 # 🧭 Event→Action Map — Keep STAC/DCAT & Graph Aligned
@@ -61,7 +62,7 @@ with guarantees of **idempotent upserts**, **reversible rollbacks**, and **prove
 
 ~~~text
 docs/events/
-├── 📄 README.md                    # Event→Action Map (this file, canonical routing runbook)
+├── 📄 README.md                    # 🧭 Event→Action Map (this file, canonical routing runbook)
 ├── 📁 specs/
 │   ├── 📄 product-availability.md  # Detailed spec for product-availability events
 │   ├── 📄 reprocessing.md          # Detailed spec for reprocessing events
@@ -117,12 +118,12 @@ Legend:
 - Graph Action    → Neo4j nodes/edges/tags
 ~~~
 
-| event_kind            | status      | ETL Action                                                                | Catalog Action (STAC/DCAT)                                         | Graph Action (Neo4j)                                              |
-|-----------------------|------------:|---------------------------------------------------------------------------|--------------------------------------------------------------------|-------------------------------------------------------------------|
-| product-availability  | ongoing     | **Pause** fresh fetch; mark source line **unverified**; backlog tasks    | Add `kfm:ingest_state=paused`, `kfm:qc=unverified`, `kfm:reason`   | Freeze edges from latest `Item→Collection`; add `:Paused` tag     |
-| product-availability  | resolved    | **Requeue** backfill window; resume normal ingest                        | Clear pause flags; append new `DatasetVersion` with backfill note  | Unfreeze edges; link new version; add `:Backfilled` event node    |
-| reprocessing          | (any)       | **Pin** prior version for reads; ingest new line **in parallel**         | New `Item`/`Version` with `processing_level` consistent; `altlineage` | Branch version node; dual edges (old=`active`, new=`candidate`) |
-| algorithm-change      | (any)       | **Branch** collections; update `processing_level` & schema if needed     | New `Collection` (major) or `processing:minor` (minor changes)     | New branch; update constraints; annotate model hash/SBOM          |
+| event_kind            | status      | ETL Action                                                                | Catalog Action (STAC/DCAT)                                            | Graph Action (Neo4j)                                              |
+|-----------------------|------------:|---------------------------------------------------------------------------|------------------------------------------------------------------------|-------------------------------------------------------------------|
+| product-availability  | ongoing     | **Pause** fresh fetch; mark source line **unverified**; backlog tasks    | Add `kfm:ingest_state=paused`, `kfm:qc=unverified`, `kfm:reason`      | Freeze edges from latest `Item→Collection`; add `:Paused` tag     |
+| product-availability  | resolved    | **Requeue** backfill window; resume normal ingest                        | Clear pause flags; append new `DatasetVersion` with backfill note     | Unfreeze edges; link new version; add `:Backfilled` event node    |
+| reprocessing          | (any)       | **Pin** prior version for reads; ingest new line **in parallel**         | New `Item`/`Version` with `processing_level` consistent; `altlineage` | Branch version node; dual edges (old=`active`, new=`candidate`)   |
+| algorithm-change      | (any)       | **Branch** collections; update `processing_level` & schema if needed     | New `Collection` (major) or `processing:minor` (minor changes)        | New branch; update constraints; annotate model hash/SBOM          |
 
 > Routing invariant: read-paths remain stable; **default version** changes only via explicit event handling.
 
@@ -241,26 +242,26 @@ Example (Dataset):
 Event-driven changes MUST NOT reach production catalogs or graph unless all checks pass:
 
 - **Great Expectations** (or equivalent) test suites:
-  - per branch / per DatasetVersion  
-  - validate data quality under both `active` and `candidate` lines
+  - per branch / per `DatasetVersion`  
+  - validate data quality under both `active` and `candidate` lines  
 
 - **OpenLineage**:
   - emit lineage events on transitions:
     - pause / resume  
     - reprocessing start / completion  
-    - algorithm-change deployment
+    - algorithm-change deployment  
 
 - **Schema / Contract** (KFM-PDC v11):
   - fail on schema drift  
-  - enforce required STAC/DCAT and `kfm:*` fields
+  - enforce required STAC/DCAT and `kfm:*` fields  
 
 - **Provenance**:
   - append PROV `Activity` per event-driven run  
-  - capture `prov:Agent` for operators and services
+  - capture `prov:Agent` for operators and services  
 
 - **Energy / Carbon** (FAIR+CARE-aligned):
   - OTel metrics for runtime / energy impact during parallel runs  
-  - comparisons between old and new lines (for governance & sustainability dashboards)
+  - comparisons between old and new lines (for governance & sustainability dashboards)  
 
 CI workflow:
 
@@ -288,13 +289,15 @@ During reprocessing:
 - There MAY be:
   - one `DatasetVersion` with `{ active_default: true, role: "active" }`  
   - one `DatasetVersion` with `{ active_default: false, role: "candidate" }`  
-- CI must ensure the router never results in **two** defaults.
+
+CI must ensure the router never results in **two** defaults.
 
 ### Algorithm-change constraints
 
 - A major algorithm-change SHOULD produce a new `(:Collection)` with:
   - incremented `processing_level` or equivalent  
   - references back via `:DERIVED_FROM_COLLECTION` edges  
+
 - The old `Collection` remains queryable and linked to its `DatasetVersion`s.
 
 Example (informal):
@@ -374,22 +377,22 @@ All operator actions MUST be reflected as events in `data/events/` and PROV bund
   - Default read path points to `DatasetVersion` with `active_default=true`.  
   - APIs SHOULD provide toggles for:
     - `candidate` versions  
-    - historical versions by `kfm:version` or PROV id.
+    - historical versions by `kfm:version` or PROV id.  
 
 - **Story Nodes**:
   - Must display event ribbons:
     - paused  
     - backfill  
     - reprocessing  
-    - algorithm branch
+    - algorithm branch  
   - Link directly to:
     - associated STAC Collections / DCAT datasets  
     - PROV Activities and Agents  
-    - affected `DatasetVersion` graph nodes.
+    - affected `DatasetVersion` graph nodes.  
 
 - **Focus Mode diffs**:
   - Show STAC/DCAT field deltas (before vs after event).  
-  - Visualize graph edge changes (e.g., which edges were frozen/unfrozen).
+  - Visualize graph edge changes (e.g., which edges were frozen/unfrozen).  
 
 ---
 
@@ -405,7 +408,7 @@ An event-driven change is considered **acceptable** when:
 - Telemetry records:
   - routing decisions  
   - CI outcomes  
-  - energy/carbon metrics (for FAIR+CARE review).
+  - energy/carbon metrics (for FAIR+CARE review).  
 
 ---
 
@@ -413,7 +416,7 @@ An event-driven change is considered **acceptable** when:
 
 | Version  | Date       | Description                                                                 |
 |----------|------------|-----------------------------------------------------------------------------|
-| v11.2.6  | 2025-12-10 | Aligned with KFM-MDP v11.2.6; added directory layout and CI/graph details. |
+| v11.2.6  | 2025-12-10 | Aligned with KFM-MDP v11.2.6; directory layout at top; CI/graph details and governance links clarified. |
 
 ---
 
@@ -423,7 +426,7 @@ This document:
 
 - complies with **KFM-MDP v11.2.6**, **KFM-STAC v11**, **KFM-DCAT v11**, and **KFM-PROV v11**  
 - is governed by the **Reliability Guild** and **Metadata Council**, with co-review by the Governance Council  
-- must be updated whenever KFM changes event routing semantics, catalog-graph mappings, or rollback policies
+- must be updated whenever KFM changes event routing semantics, catalog-graph mappings, or rollback policies  
 
 Edits require approval from the Reliability Guild and Metadata Council and must pass
 `markdown-lint`, `schema-lint`, `footer-check`, and events-routing validation in CI.
@@ -436,9 +439,9 @@ Edits require approval from the Reliability Guild and Metadata Council and must 
 
 <div align="center">
 
-🧭 **Kansas Frontier Matrix — Event→Action Map (STAC/DCAT/Graph Alignment) v11.2.x**  
+🧭 **Kansas Frontier Matrix — Event→Action Map (STAC/DCAT/Graph Alignment) v11.2.6**  
 Deterministic Events · Catalog–Graph Harmony · FAIR+CARE Aligned  
 
-[📘 Docs Root](../README.md) · [📂 Standards Index](../standards/README.md) · [📡 Events Index](./README.md) · [⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](../README.md) · [🟫 Environmental Events Index](environmental/README.md) · [📡 Remote-Sensing Events](remote-sensing/README.md) · [⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
