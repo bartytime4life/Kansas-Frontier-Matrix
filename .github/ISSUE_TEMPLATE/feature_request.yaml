@@ -1,7 +1,7 @@
 # 💡 Kansas Frontier Matrix — Feature Request Template
 # File: .github/ISSUE_TEMPLATE/feature_request.yml
 # Purpose: Collect structured requests for new features, enhancements, or improvements to the KFM system.
-# Alignment: MCP-DL v6.3 · KFM-MDP v11.2.5 · FAIR+CARE · KFM-OP v11.0 · Diamond⁹ Ω / Crown∞Ω
+# Alignment: MCP-DL v6.3 · KFM-MDP v11.2.5 · KFM-OP v11.0 · KFM-STAC v11 · KFM-DCAT v11 · KFM-PROV v11 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω
 # SPDX-License-Identifier: CC-BY-4.0
 
 name: "💡 Feature Request"
@@ -194,9 +194,9 @@ body:
 
         Feature requests help guide roadmap and architecture decisions. After submission, automation may:
 
-        - Run **docs_validate.yml** to ensure the proposal and follow-up docs conform to **KFM-MDP v11.2.5**.  
-        - Run **stac_validate.yml** / **dcat_validate.yml** if new metadata patterns, catalogs, or datasets are proposed.  
-        - Run **faircare_validate.yml** to flag FAIR+CARE and sovereignty implications, especially for data- or AI-related features.  
+        - Run **docs-validate.yml** to ensure the proposal and follow-up docs conform to **KFM-MDP v11.2.5**.  
+        - Run **stac-validate.yml** / **dcat-validate.yml** if new metadata patterns, catalogs, or datasets are proposed.  
+        - Run **faircare-validate.yml** to flag FAIR+CARE and sovereignty implications, especially for data- or AI-related features.  
         - Run **security_audit.yml** if the feature touches authentication, authorization, or supply-chain sensitive components.  
         - Feed into **telemetry_export.yml** for governance and roadmap telemetry (e.g., feature backlog, complexity, sustainability metrics).  
 
@@ -204,13 +204,14 @@ body:
 
         `docs/reports/audit/github-workflows-ledger.json`
 
-        and may be reflected in telemetry snapshots:
+        Telemetry snapshots are typically stored in:
 
-        `releases/<version>/focus-telemetry.json`
+        `releases/<version>/focus-telemetry.json`  
+        `docs/reports/telemetry/`
 
         Thank you for helping shape the **Kansas Frontier Matrix**.
         Your proposal contributes to a transparent, ethical, reproducible, and sovereign-aware system.
 
-        **© 2025 Kansas Frontier Matrix — MIT / CC-BY-4.0**  
-        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.5 · KFM-OP v11.0  
+        **© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
+        FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.5 · KFM-STAC v11 · KFM-DCAT v11 · KFM-PROV v11 · KFM-OP v11.0  
         Diamond⁹ Ω / Crown∞Ω Ultimate Certified
