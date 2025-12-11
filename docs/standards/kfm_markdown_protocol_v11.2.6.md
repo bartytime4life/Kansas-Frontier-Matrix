@@ -337,7 +337,6 @@ When using an AI assistant to create or update a KFM Markdown document:
 
 4. **Prohibited AI outputs in committed docs**:
 
-   - System-specific citation syntax, runtime tool markers, or chat-only markup.
    - Hidden governance changes or speculative architecture not backed by design docs.
    - Fabricated historical or scientific claims about Kansas or Indigenous communities.
 
@@ -515,17 +514,17 @@ Markdown is part of the **critical CI/CD path**.
 
 From `test_profiles`:
 
-| Profile         | Purpose                                            |
-|----------------|----------------------------------------------------|
-| markdown-lint   | Structural & style linting                        |
-| schema-lint     | YAML front-matter schema validation               |
-| metadata-check  | Required metadata present & consistent            |
-| diagram-check   | Mermaid syntax & profile check                    |
-| accessibility-check | Basic structural a11y checks (headings, lists)|
-| provenance-check| `provenance_chain` & Version History alignment    |
-| footer-check    | Footer & governance-links enforcement             |
-| secret-scan     | Ensure no secrets/tokens are present              |
-| pii-scan        | Detect and block obvious PII in docs              |
+| Profile              | Purpose                                             |
+|----------------------|-----------------------------------------------------|
+| markdown-lint        | Structural & style linting                          |
+| schema-lint          | YAML front-matter schema validation                 |
+| metadata-check       | Required metadata present & consistent              |
+| diagram-check        | Mermaid syntax & profile check                      |
+| accessibility-check  | Basic structural a11y checks (headings, lists)      |
+| provenance-check     | `provenance_chain` & Version History alignment      |
+| footer-check         | Footer & governance-links enforcement               |
+| secret-scan          | Ensure no secrets/tokens are present                |
+| pii-scan             | Detect and block obvious PII in docs                |
 
 ### H1/H2 rules
 
