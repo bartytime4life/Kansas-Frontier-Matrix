@@ -1,9 +1,9 @@
 ---
-title: "🔁 KFM v11.2.3 — STAC → CKAN Crosswalk (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🔁 KFM v11.2.6 — STAC → CKAN Crosswalk (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 description: "Guided crosswalk for deriving CKAN/portal metadata from authoritative STAC (and optionally DCAT) records in the Kansas Frontier Matrix."
 path: "docs/standards/catalogs/crosswalks/stac-ckan-crosswalk.md"
-version: "v11.2.3"
-last_updated: "2025-12-03"
+version: "v11.2.6"
+last_updated: "2025-12-10"
 
 release_stage: "Stable · Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -15,14 +15,14 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256-of-this-file>"
 
-doc_uuid: "urn:kfm:doc:standards-catalogs-crosswalks-stac-ckan-v11.2.3"
-semantic_document_id: "kfm-standards-catalogs-crosswalks-stac-ckan-v11.2.3"
-event_source_id: "ledger:kfm:standards:catalogs:crosswalks:stac-ckan:v11.2.3"
+doc_uuid: "urn:kfm:doc:standards-catalogs-crosswalks-stac-ckan-v11.2.6"
+semantic_document_id: "kfm-standards-catalogs-crosswalks-stac-ckan-v11.2.6"
+event_source_id: "ledger:kfm:standards:catalogs:crosswalks:stac-ckan:v11.2.6"
 
-sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.3/catalog-metadata-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/catalog-metadata-v1.json"
+sbom_ref: "../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.6/catalog-metadata-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/catalog-metadata-v1.json"
 
 governance_ref: "../../governance/ROOT-GOVERNANCE.md"
 faircare_ref: "../../faircare/FAIRCARE-GUIDE.md"
@@ -30,7 +30,12 @@ sovereignty_ref: "../../sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "MIT / CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
 doc_kind: "Crosswalk Spec"
 intent: "catalogs-stac-to-ckan-crosswalk"
@@ -52,8 +57,8 @@ ontology_alignment:
   owl_time: "TemporalEntity"
   geosparql: "geo:FeatureCollection"
 
-json_schema_ref: "../../../schemas/json/catalogs-stac-ckan-crosswalk-v1.json"
-shape_schema_ref: "../../../schemas/shacl/catalogs-stac-ckan-crosswalk-v1.shape.ttl"
+json_schema_ref: "../../../../schemas/json/catalogs-stac-ckan-crosswalk-v1.json"
+shape_schema_ref: "../../../../schemas/shacl/catalogs-stac-ckan-crosswalk-v1.shape.ttl"
 
 immutability_status: "version-pinned"
 machine_extractable: true
@@ -75,19 +80,46 @@ Define a **governed, STAC-first mapping** from KFM STAC (and optionally DCAT) in
 
 ---
 
-## 📘 1. Scope & KFM Position
+## 🗂️ Directory Layout
+
+~~~text
+📁 Kansas-Frontier-Matrix/
+└── 📁 docs/
+    └── 📁 standards/
+        └── 📁 catalogs/
+            └── 📁 crosswalks/                         🔀 Catalog crosswalk standards subtree
+                ├── 📄 README.md                       📚 Crosswalks standards index
+                ├── 📄 stac-dcat-crosswalk.md          📦 STAC → DCAT field-level mapping (canonical)
+                ├── 📄 stac-ckan-crosswalk.md          🔁 This file — STAC → CKAN / portal crosswalk
+                └── 📁 profiles/                       🧩 Domain-specific crosswalk profiles
+                    ├── 📄 stac-dcat-hydro-profile.md  💧 Hydrology-focused crosswalk profile
+                    └── 📄 stac-dcat-archaeo-profile.md 🏺 Archaeology / heritage crosswalk profile
+~~~
+
+**Directory contract**
+
+- This spec sits under the **catalog crosswalks subtree** and depends on:
+  - `docs/standards/catalogs/README.md` (catalog standards index)  
+  - `docs/standards/catalogs/stac-dcat-derivation.md` (STAC → DCAT derivation model)  
+  - `docs/standards/catalogs/crosswalks/README.md` (this subtree’s index)  
+- Implementations live in code and CI pipelines (e.g., `src/pipelines/catalogs/stac-ckan/`), but **must reference this document by path and version**.
+
+---
+
+## 📘 Scope & KFM Position
 
 This crosswalk describes how to derive **CKAN dataset/resource metadata** from:
 
 - **Authoritative STAC Items & Collections** (primary source), and  
-- Optionally, **derived DCAT** artifacts (secondary view), when a portal already consumes DCAT.
+- Optionally, **derived DCAT** artifacts (secondary view) when a portal already consumes DCAT.
 
 It must be read alongside:
 
-- `../README.md` — crosswalk standards index.  
-- `../stac/README.md` & `../stac/stac-kfm-profile.md` — STAC profile (authoritative).  
-- `../dcat/README.md` & `../dcat/dcat-kfm-profile.md` — DCAT profile.  
+- `../README.md` — catalog standards index.  
+- `../crosswalks/README.md` — crosswalk standards index.  
 - `../stac-dcat-derivation.md` — STAC-first → DCAT-derived model.  
+- `../stac/stac-kfm-profile.md` — KFM STAC profile (authoritative).  
+- `../dcat/dcat-kfm-profile.md` — KFM DCAT profile.  
 - `./stac-dcat-crosswalk.md` — STAC → DCAT crosswalk (primary).
 
 **KFM position:**
@@ -98,7 +130,7 @@ It must be read alongside:
 
 ---
 
-## 🧱 2. CKAN Concepts & Targets
+## 🧱 CKAN Concepts & Targets
 
 This crosswalk covers CKAN core structures:
 
@@ -113,7 +145,7 @@ Primary CKAN fields:
   - `title`  
   - `notes`  
   - `tags`  
-  - `groups` (optionally)  
+  - `groups` (optional)  
   - `extras` (key-value metadata)  
   - `license_id`  
 
@@ -134,22 +166,22 @@ This crosswalk aims to map STAC/DCAT into these fields while:
 
 ---
 
-## 📦 3. STAC / DCAT → CKAN Dataset Mapping
+## 📦 STAC / DCAT → CKAN Dataset Mapping
 
-### 3.1 Identification & Names
+### Identification & Names
 
 **Goal:** produce a stable CKAN `name` and descriptive `title` from STAC/DCAT.
 
 | CKAN Field | Source & Rule                                                                 |
 |-----------|-------------------------------------------------------------------------------|
 | `name`    | Derived from STAC `id` or DCAT `dct:identifier`, lowercased, hyphenated, ASCII-safe. |
-| `title`   | STAC `properties.title` or Collection `title` → DCAT `dct:title` → CKAN `title`. |
+| `title`   | STAC `properties.title` or Collection `title` → DCAT `dct:title` → CKAN `title`.     |
 
 **Best practice:**
 
-- For dataset-level CKAN packages, prefer **Collection-level identifiers** (e.g. `naip_ks_2023`, `hrrr_precip_ks_3km`) rather than individual Item IDs.
+- For dataset-level CKAN packages, prefer **Collection-level identifiers** (e.g., `naip_ks_2023`, `hrrr_precip_ks_3km`) rather than individual Item IDs.
 
-### 3.2 Description (`notes`)
+### Description (`notes`)
 
 | CKAN Field | Source & Rule                                                  |
 |-----------|----------------------------------------------------------------|
@@ -157,7 +189,7 @@ This crosswalk aims to map STAC/DCAT into these fields while:
 
 Use a **concise, human-readable** description. For complex datasets, DCAT may embed more detailed prose; CKAN `notes` should be an abridged version.
 
-### 3.3 Tags (`tags`)
+### Tags (`tags`)
 
 | CKAN Field | Source & Rule                              |
 |-----------|--------------------------------------------|
@@ -166,27 +198,25 @@ Use a **concise, human-readable** description. For complex datasets, DCAT may em
 **Rules:**
 
 - Normalize to lowercase, hyphenated tags.  
-- Limit to governance-approved vocabularies for certain domains when required.
+- Use governance-approved vocabularies where they exist (e.g., hydrology, climate).
 
 Example:
 
 - STAC `keywords`: `["precipitation", "HRRR", "Kansas"]` → CKAN tags: `["precipitation", "hrrr", "kansas"]`.
 
-### 3.4 License (`license_id`)
+### License (`license_id`)
 
-| CKAN Field   | Source & Rule                  |
-|-------------|--------------------------------|
+| CKAN Field   | Source & Rule                             |
+|-------------|-------------------------------------------|
 | `license_id`| STAC `license` or DCAT `dct:license`, mapped to CKAN license ID. |
 
 **Mapping must be explicit** (e.g., `CC-BY-4.0` → `cc-by`).
 
 If license is not recognized, `license_id` may be left blank but **must not misrepresent** licensing terms.
 
-### 3.5 Extras (`extras`)
+### Extras (`extras`)
 
-Use `extras` to carry structured KFM metadata:
-
-Examples:
+Use `extras` to carry structured KFM metadata, for example:
 
 - `kfm_dataset_id` ← `kfm:dataset_id`  
 - `kfm_domain` ← `kfm:domain`  
@@ -201,85 +231,86 @@ Extras enable:
 
 ---
 
-## 📡 4. STAC / DCAT → CKAN Resource Mapping
+## 📡 STAC / DCAT → CKAN Resource Mapping
 
 Each STAC Asset that should be exposed in a portal is mapped to a CKAN `resource`.
 
-### 4.1 URL & Format
+### URL & Format
 
-| CKAN Field | Source & Rule                       |
-|-----------|-------------------------------------|
-| `url`     | STAC Asset `href` → or DCAT `dcat:downloadURL` / `dcat:accessURL`. |
+| CKAN Field | Source & Rule                                                        |
+|-----------|----------------------------------------------------------------------|
+| `url`     | STAC Asset `href` → or DCAT `dcat:downloadURL` / `dcat:accessURL`.   |
 | `format`  | STAC Asset `type` (MIME) simplified to CKAN `format` label when needed. |
 
 Rules:
 
-- `format` may be a short label (e.g., `GeoTIFF`, `NetCDF`, `Parquet`) or the MIME type, depending on partner portal conventions.  
+- `format` may be a short label (e.g., `GeoTIFF`, `NetCDF`, `Parquet`) or the MIME type, depending on portal conventions.  
 - **Never** map to ambiguous/incorrect formats.
 
-### 4.2 Name & Description
+### Name & Description
 
-| CKAN Field    | Source & Rule                                |
-|--------------|----------------------------------------------|
-| `name`       | Derived from Asset key or `title` (if present). |
-| `description`| Asset description when available, else fallback to dataset description snippet. |
+| CKAN Field    | Source & Rule                                         |
+|--------------|-------------------------------------------------------|
+| `name`       | Derived from Asset key or Asset `title` (if present). |
+| `description`| Asset description when available, else dataset snippet.|
 
-### 4.3 Hash / Checksums
+### Hash / Checksums
 
 | CKAN Field | Source & Rule                          |
 |-----------|----------------------------------------|
 | `hash`    | STAC Asset `checksum:sha256` (preferred). |
 
-If checksums exist, CKAN `hash` should use the raw hex string. Optionally, additional checksum metadata can be stored in `extras` at resource-level if the portal supports it.
+If checksums exist, CKAN `hash` should use the raw hex string. Additional checksum details MAY be encoded as resource-level `extras` if the portal supports it.
 
-### 4.4 Resource Selection
+### Resource Selection
 
 Not all STAC assets are suitable as CKAN resources:
 
 - **Include**:
-  - Main data assets (`data`, `timeseries`, important `overview`s).  
-- **Exclude or consider internal-only**:
-  - Debug, QA, or internal intermediate assets.  
-  - Highly internal or sensitive assets that are not intended for external consumption.
+  - Main data assets (`data`, `timeseries`, major `overview`s).  
+- **Exclude or internal-only**:
+  - Debug/QA or intermediate assets.  
+  - Highly internal or sensitive assets not intended for external consumption.
 
-The selection logic should be:
+Selection logic MUST be:
 
 - Encapsulated in crosswalk code.  
-- Governed by FAIR+CARE and sovereignty rules (see §6).
+- Governed by FAIR+CARE and sovereignty rules (see next section).
 
 ---
 
-## 🛡️ 5. FAIR+CARE & Sovereignty Constraints
+## 🛡️ FAIR+CARE & Sovereignty Constraints
 
 Federating to CKAN/portals is subject to the **same constraints** as DCAT federation.
 
-### 5.1 Dataset Eligibility
+### Dataset Eligibility
 
 Only derive CKAN packages for datasets where:
 
-- `kfmfc:sensitivity` allows external viewing (e.g., `general`, some cases of `restricted-generalized`).  
-- `kfmfc:care_label` is compatible with the **intended audience** (public, community-specific, internal).  
-- `kfmfc:sovereignty_flag` is handled according to agreements and KFM policy.
+- Sensitivity and care labels allow external viewing (e.g., general environmental datasets).  
+- CARE metadata does **not** indicate additional restrictions that are incompatible with the target portal.  
+- Any sovereignty or heritage flags are respected per KFM policies and agreements.
 
-Internal-only datasets (`restricted-internal`):
+Internal-only datasets:
 
-- Must **not** produce CKAN datasets in public portals.  
-- May appear in a **separate internal CKAN instance** under stricter access controls.
+- MUST NOT produce CKAN datasets in public portals.  
+- MAY appear in **internal CKAN instances** under stricter access controls.
 
-### 5.2 Spatial & Attribute Redaction
+### Spatial & Attribute Redaction
 
-For sensitive domains (e.g., archaeology):
+For sensitive domains (e.g., heritage/archaeology):
 
-- Derived CKAN metadata should only reference **generalized** STAC/DCAT.  
-- No site codes or fine-grained identifying attributes should be added to CKAN `extras` or resource descriptions.
+- Derived CKAN metadata should reference only **generalized** STAC/DCAT products.  
+- No site codes or fine-grained identifying attributes should be added to CKAN `extras` or resource descriptions.  
+- Spatial fields should align with **already generalized** geometries and extents.
 
-If in doubt:
+When in doubt:
 
-- Prefer a **higher-level dataset** (e.g., “Cultural Landscape Regions”) rather than granular layers.
+- Prefer **higher-level datasets** (e.g., “Cultural Landscape Regions”) rather than granular layers.
 
 ---
 
-## 🧬 6. Provenance & Lineage
+## 🧬 Provenance & Lineage
 
 The STAC → CKAN mapping must preserve provenance:
 
@@ -290,48 +321,53 @@ The STAC → CKAN mapping must preserve provenance:
 Recommended patterns:
 
 - Store `kfm_dataset_id` in CKAN `extras`.  
-- Optionally store STAC/ DCAT source URLs in `extras` such as:
-
+- Optionally store STAC/DCAT source URLs in `extras`, such as:
   - `stac_collection_url`  
   - `stac_item_url_example`  
-  - `dcat_dataset_url`
+  - `dcat_dataset_url`  
 
-PROV-O-level documentation (outside CKAN) should:
+PROV-O-level documentation (outside CKAN) SHOULD:
 
 - Record when CKAN exports were generated.  
 - From which STAC/DCAT versions.  
 - For which portal or partner.
 
+This provenance MUST be compatible with `KFM-PROV v11` and referenced in release telemetry where appropriate.
+
 ---
 
-## 🧪 7. CI & Validation
+## 🧪 CI & Validation
 
 Before CKAN exports are accepted:
 
 1. **STAC validation**  
-   - Ensure all source STAC records are valid per KFM STAC profile and extensions.
+   - All source STAC records MUST validate against:
+     - STAC 1.0.x schemas.  
+     - KFM-STAC v11 profile and mission-tag / event-tag rules.
 
 2. **Crosswalk tests**  
    - Use fixtures with known STAC → CKAN expectations.  
    - Generate CKAN payloads and assert:
-
      - `name`, `title`, `notes`, `tags`, `extras` are correctly populated.  
-     - All required fields for target CKAN instance are present.
+     - Required fields for the target CKAN instance are present.  
+     - Forbidden fields (sensitive attributes) are absent.
 
 3. **Governance checks**  
    - Confirm restricted datasets are not exported to public CKAN.  
-   - Confirm no internal-only IDs or sensitive attributes are included.
+   - Confirm no internal-only IDs, raw coordinates, or sensitive notes are included.
 
 4. **Telemetry logging**  
-   - Record counts of exported packages/resources and validation failures in `catalog-metadata-telemetry.json`.
+   - Record counts of exported packages/resources and validation failures in:
+     - `catalog-metadata-telemetry.json` (per-version) using `catalog-metadata-v1.json` schema.
 
-CI job (indicative):
+CI jobs (indicative) MAY include:
 
-- `catalog-crosswalk-stac-ckan-validate.yml`.
+- `catalog-crosswalk-stac-ckan-validate.yml`  
+- integrated into `.github/workflows/kfm-ci.yml` for the `dev → staging → production` promotion pipeline.
 
 ---
 
-## ✅ 8. Implementation Checklist
+## ✅ Implementation Checklist
 
 When implementing or updating STAC → CKAN exports:
 
@@ -341,24 +377,40 @@ When implementing or updating STAC → CKAN exports:
 
 2. **Implement crosswalk logic**  
    - Map STAC/DCAT fields to CKAN dataset/resource fields per this spec.  
-   - Handle FAIR+CARE & sovereignty-based filtering.
+   - Handle FAIR+CARE & sovereignty-based filtering of datasets and fields.
 
 3. **Wire CI & tests**  
-   - Add regression tests for representative datasets (imagery, climate, hydrology, archaeology).  
-   - Ensure CI fails on crosswalk regressions.
+   - Add regression tests for representative datasets (imagery, climate, hydrology, heritage).  
+   - Ensure CI fails on crosswalk regressions or governance violations.
 
 4. **Monitor & refine**  
    - Monitor portal usage and feedback.  
    - Refine tags, descriptions, and extras for findability and clarity (without breaking STAC/DCAT consistency).
 
 5. **Governance review**  
-   - Review exports periodically with FAIR+CARE, sovereignty, and domain working groups.
+   - Review exports periodically with FAIR+CARE, sovereignty, and domain working groups.  
+   - Treat changes to crosswalk semantics as governed events (version bump + audit entry).
 
 ---
 
-## 🕰️ 9. Version History
+## 🕰️ Version History
 
 | Version  | Date       | Author                                      | Summary                                                                 |
 |----------|------------|---------------------------------------------|-------------------------------------------------------------------------|
+| v11.2.6  | 2025-12-10 | Metadata & Catalogs WG · FAIR+CARE Council | Aligned STAC → CKAN crosswalk with KFM‑MDP v11.2.6; updated paths, profiles, and governance/CI expectations for v11.2.6 catalog stack. |
 | v11.2.3  | 2025-12-03 | Metadata & Catalogs WG · FAIR+CARE Council | Initial STAC → CKAN crosswalk spec; defined mapping for CKAN datasets/resources, FAIR+CARE constraints, provenance, and CI validation patterns under the STAC-first → DCAT-derived model. |
 
+---
+
+<sub>© 2025 Kansas Frontier Matrix · MIT / CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM‑MDP v11.2.6</sub>
+
+<br/>
+
+<div align="center">
+
+🔁 **KFM v11.2.6 — STAC → CKAN Crosswalk**  
+STAC‑First Catalogs · DCAT‑Derived Discovery · Portal‑Safe Crosswalks  
+
+[📚 Catalog Crosswalks Index](README.md) · [📚 Catalog Standards Index](../README.md) · [📦 STAC → DCAT Derivation](../stac-dcat-derivation.md) · [⚖ Governance Charter](../../governance/ROOT-GOVERNANCE.md)
+
+</div>
