@@ -1,5 +1,3 @@
-```markdown
-<!-- FILE: data/historical/land-treaties/stac/README.md -->
 ---
 title: "🛰 Kansas Frontier Matrix — Land Treaties STAC Catalog"
 path: "data/historical/land-treaties/stac/README.md"
@@ -1160,4 +1158,3 @@ Energy & Carbon Telemetry Enabled (ISO 50001 / ISO 14064)
 **End of Document**
 
 </div>
-```
