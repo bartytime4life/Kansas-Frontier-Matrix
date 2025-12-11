@@ -108,9 +108,48 @@ These foundations are documented in KFM’s internal statistics, data-science, a
 
 ---
 
-## 2. Architecture
+## 2. Directory Layout
 
-### 2.1 Signals (Metrics & Traces)
+Telemetry correlation docs and configuration MUST follow KFM emoji-style directory conventions.
+
+~~~text
+📂 docs/
+└── 📂 telemetry/
+    └── 📂 reliability-sustainability-correlation/
+        ├── 📝 README.md          # This file – design + implementation guide
+        ├── 🧱 EXAMPLES.md        # Dashboard configs, PromQL examples, analysis snippets
+        ├── 🧪 VALIDATION.md      # Schema checks, CI test matrix, governance review steps
+        ├── 📊 DASHBOARDS/        # Grafana JSON exports and wiring notes
+        ├── 🧩 ALERTS/            # Prometheus alerting rules + runbooks
+        └── 🧭 GOVERNANCE.md      # Thresholds, ownership, review cadence, exceptions process
+
+📂 schemas/
+└── 📂 telemetry/
+    ├── 📄 reliability-v2.json
+    ├── 📄 energy-v2.json
+    ├── 📄 carbon-v2.json
+    └── 📄 correlation-reliability-sustainability-v2.json
+
+📂 .github/
+└── 📂 actions/
+    ├── ⚙️ otel-export/
+    ├── ⚙️ energy-sampler/
+    └── ⚙️ reliability-emit/
+
+📂 data/
+└── 📂 telemetry/
+    └── 📂 ci/
+        ├── 📦 snapshots/YYYY/MM/DD/*.parquet
+        └── 🧾 trace-manifests/*.json
+~~~
+
+Any deviations from this structure MUST be documented here and in `VALIDATION.md`.
+
+---
+
+## 3. Architecture
+
+### 3.1 Signals (Metrics & Traces)
 
 **Metrics (OpenTelemetry → Prometheus/Mimir):**
 
@@ -127,9 +166,9 @@ All keyed (directly or via aggregation) by:
 
 - Root span per workflow run: `ci.workflow.run`.  
 - Child spans per job attempt: `ci.job.attempt`.  
-- Span attributes and links (see §4).
+- Span attributes and links (see §5).
 
-### 2.2 Lineage & PROV-O
+### 3.2 Lineage & PROV-O
 
 Each CI attempt is modeled as:
 
@@ -143,18 +182,18 @@ Relationships:
 - `prov:wasInformedBy` → previous failed/flaky attempts (retries / replays).  
 - `prov:wasAssociatedWith` → CI runner/image, project, and owning team.
 
-### 2.3 Storage & Query Surfaces
+### 3.3 Storage & Query Surfaces
 
 - **Metrics** — Prometheus/Mimir, with **cardinality-governed** label sets (see metric cardinality standards).  
 - **Traces** — Tempo/Jaeger with `trace_id == kfm.exec_correlation_id`.  
 - **Long-term** — daily Parquet snapshots written under `data/telemetry/ci/` for governed audits and analyses.  
-- **Catalogs** — STAC/DCAT/PROV snapshots (see §6) for FAIR findability and reuse.
+- **Catalogs** — STAC/DCAT/PROV snapshots (see §7) for FAIR findability and reuse.
 
 ---
 
-## 3. Metrics & Labels
+## 4. Metrics & Labels
 
-### 3.1 Minimal Labels (Cardinality-Safe)
+### 4.1 Minimal Labels (Cardinality-Safe)
 
 Required correlation / routing labels (non-exhaustive):
 
@@ -173,7 +212,7 @@ Required correlation / routing labels (non-exhaustive):
 - Embed high-cardinality env names or ephemeral pod IDs in labels.  
 - Include user identifiers, feature IDs, or raw paths/URLs as metric labels.
 
-### 3.2 Metrics (Prometheus) — Recording Rules
+### 4.2 Metrics (Prometheus) — Recording Rules
 
 Core counters:
 
@@ -201,9 +240,9 @@ ci_retry_co2e_g_24h_by_wf =
 
 ---
 
-## 4. Tracing & CI Attempt Correlation
+## 5. Tracing & CI Attempt Correlation
 
-### 4.1 Span Model (OpenTelemetry)
+### 5.1 Span Model (OpenTelemetry)
 
 **Root span** — one per workflow run:
 
@@ -234,7 +273,7 @@ ci_retry_co2e_g_24h_by_wf =
 - `SpanLink` (or equivalent) to the previous attempt span for that job.  
 - `prov:wasInformedBy` backbone in the PROV bundle mirroring span links.
 
-### 4.2 CI/CD Integration (GitHub Actions)
+### 5.2 CI/CD Integration (GitHub Actions)
 
 **Correlation IDs:**
 
@@ -268,11 +307,11 @@ ci_retry_co2e_g_24h_by_wf =
 
 ---
 
-## 5. Data Contracts & Schemas
+## 6. Data Contracts & Schemas
 
 All telemetry MUST conform to the following JSON Schemas (or successors) under `schemas/telemetry/`:
 
-### 5.1 Reliability Telemetry (`reliability-v2.json`)
+### 6.1 Reliability Telemetry (`reliability-v2.json`)
 
 Minimum fields:
 
@@ -287,7 +326,7 @@ Optional but recommended:
 
 - `kfm.wal_session_id`, `test.suite`, `artifact.group`.
 
-### 5.2 Energy Telemetry (`energy-v2.json`)
+### 6.2 Energy Telemetry (`energy-v2.json`)
 
 Minimum fields:
 
@@ -297,7 +336,7 @@ Minimum fields:
 - `runner.cpu_model`.  
 - `grid.region`.
 
-### 5.3 Carbon Telemetry (`carbon-v2.json`)
+### 6.3 Carbon Telemetry (`carbon-v2.json`)
 
 Minimum fields:
 
@@ -306,7 +345,7 @@ Minimum fields:
 - `carbon.factor.source_ref` — URI/URN for factor dataset.  
 - `carbon.time_weighting` — how time of day and grid profile were applied.
 
-### 5.4 Correlation Envelope (`correlation-reliability-sustainability-v2.json`)
+### 6.4 Correlation Envelope (`correlation-reliability-sustainability-v2.json`)
 
 Envelope binding reliability, energy, and carbon:
 
@@ -323,9 +362,9 @@ Envelope binding reliability, energy, and carbon:
 
 ---
 
-## 6. STAC/DCAT & PROV Alignment
+## 7. STAC/DCAT & PROV Alignment
 
-### 6.1 STAC
+### 7.1 STAC
 
 Daily **aggregated CI telemetry snapshots** SHOULD be published as STAC Items under a dedicated Collection, for example:
 
@@ -341,7 +380,7 @@ Assets:
 - `metrics_parquet` — Parquet file with per-attempt rolled-up metrics.  
 - `trace_manifest` — JSON mapping `kfm.exec_correlation_id` → trace URIs.
 
-### 6.2 DCAT
+### 7.2 DCAT
 
 Define a DCAT Dataset:
 
@@ -355,7 +394,7 @@ Distributions:
 - Links to STAC Collections/Items.  
 - Links to Parquet snapshots and trace manifests.
 
-### 6.3 PROV-O
+### 7.3 PROV-O
 
 Each daily snapshot is a `prov:Entity` generated by a snapshotter `prov:Activity` (for example, `ci.snapshotter@vX.Y`):
 
@@ -365,7 +404,7 @@ Each daily snapshot is a `prov:Entity` generated by a snapshotter `prov:Activity
 
 ---
 
-## 7. FAIR+CARE & Governance
+## 8. FAIR+CARE & Governance
 
 Reliability × sustainability telemetry is inherently **governance-driven**:
 
@@ -397,9 +436,9 @@ All assumptions about grid factors, device models, and uncertainty ranges MUST b
 
 ---
 
-## 8. Example Queries & Dashboards
+## 9. Example Queries & Dashboards
 
-### 8.1 Example PromQL Queries
+### 9.1 Example PromQL Queries
 
 **Top 10 wasteful jobs (CO₂e, last 7 days):**
 
@@ -432,50 +471,11 @@ topk(
   - Retry CO₂e.  
   - Success rate.
 
-### 8.2 Dashboard Themes
+### 9.2 Dashboard Themes
 
 - **Org overview:** total retry energy and CO₂e by week; top offenders.  
 - **Workflow detail:** timeline of retries and waste; forecasted reduction under proposed fixes.  
 - **Experiment view:** effect of specific PRs or caching changes on metrics.
-
----
-
-## 9. Directory Layout
-
-Telemetry correlation docs and configuration MUST follow KFM emoji-style directory conventions.
-
-~~~text
-📂 docs/
-└── 📂 telemetry/
-    └── 📂 reliability-sustainability-correlation/
-        ├── 📝 README.md          # This file – design + implementation guide
-        ├── 🧱 EXAMPLES.md        # Dashboard configs, PromQL examples, analysis snippets
-        ├── 🧪 VALIDATION.md      # Schema checks, CI test matrix, governance review steps
-        ├── 📊 DASHBOARDS/        # Grafana JSON exports and wiring notes
-        ├── 🧩 ALERTS/            # Prometheus alerting rules + runbooks
-        └── 🧭 GOVERNANCE.md      # Thresholds, ownership, review cadence, exceptions process
-
-📂 schemas/
-└── 📂 telemetry/
-    ├── 📄 reliability-v2.json
-    ├── 📄 energy-v2.json
-       📄 carbon-v2.json
-    └── 📄 correlation-reliability-sustainability-v2.json
-
-📂 .github/
-└── 📂 actions/
-    ├── ⚙️ otel-export/
-    ├── ⚙️ energy-sampler/
-    └── ⚙️ reliability-emit/
-
-📂 data/
-└── 📂 telemetry/
-    └── 📂 ci/
-        ├── 📦 snapshots/YYYY/MM/DD/*.parquet
-        └── 🧾 trace-manifests/*.json
-~~~
-
-Any deviations from this structure MUST be documented here and in `VALIDATION.md`.
 
 ---
 
@@ -502,8 +502,8 @@ Changes to this module MUST pass at least:
 
 - **Sustainability gates (optional → enforced)**
   - If per-workflow `retry_co2e_g_24h_by_wf` exceeds configured budgets:
-    - fail fast on optional stages (e.g., non-critical matrix expansions).  
-    - require annotation or override from responsible team.
+    - Fail fast on optional stages (for example, non-critical matrix expansions).  
+    - Require annotation or override from responsible team.
 
 ---
 
