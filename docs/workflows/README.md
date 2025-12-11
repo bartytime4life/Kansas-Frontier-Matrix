@@ -255,13 +255,14 @@ Per KFM‑MDP, this index is the **entry Story Node** for CI/CD in Focus Mode an
     📄 ai-train.yml.md                  — AI model training with governance hooks
     📄 ai-explainability.yml.md         — Bias/drift/explainability audit pipeline
     📄 security-supply-chain.yml.md     — SBOM, signing & npm worm defense
+    📄 lidar-glo-integration.md         — LiDAR & GLO integration field guide
     📄 workflow_template.md             — Template for new workflow docs
 ~~~
 
 Author rules:
 
-- Every `.github/workflows/*.yml` **MUST** have a corresponding `docs/workflows/<name>.yml.md`.
-- New workflows **MUST** be added to this tree and documented using `workflow_template.md`.
+- Every `.github/workflows/*.yml` **MUST** have a corresponding `docs/workflows/<name>.yml.md` (or `.md` for field guides).  
+- New workflows **MUST** be added to this tree and documented using `workflow_template.md`.  
 - Directory layout in docs **MUST** use `~~~text` fences and the canonical `├──` / `└──` glyphs.
 
 ---
@@ -318,12 +319,14 @@ All concrete workflow docs in this directory **MUST** explain where they attach 
 - **Story Node role**  
   - This file is the **root CI/CD Story Node** for KFM.
   - H2 sections map to Story Node facets (Overview, Context, Validation, Governance, Version History).
+
 - **Focus Mode behaviour**
   - MAY summarize the workflow families, validation matrix, and telemetry design.
   - MAY highlight which workflows gate which repo paths.
   - MUST NOT invent new governance rules; it can only restate text from this and referenced standards.
+
 - **Anchors for other Story Nodes**
-  - Each workflow doc (`*.yml.md`) should reference this index as its **parent** via `semantic_document_id`.
+  - Each workflow doc (`*.yml.md` / `.md`) should reference this index as its **parent** via `semantic_document_id`.
   - Derived Story Nodes (e.g. `urn:kfm:story-node:workflows:docs-lint`) should link to the corresponding H3 sections in this file and the per‑workflow Markdown.
 
 Result: Focus Mode can answer “What happens when I push to main?” or “Where do FAIR+CARE checks live?” using this index + local subgraph, without guessing.
@@ -344,8 +347,8 @@ These workflows ensure docs and metadata remain CI‑safe and catalog‑ready.
 
 Responsibilities:
 
-- Reject non‑compliant Markdown or front‑matter.
-- Block merges when STAC/DCAT/PROV descriptions drift from schemas.
+- Reject non‑compliant Markdown or front‑matter.  
+- Block merges when STAC/DCAT/PROV descriptions drift from schemas.  
 - Keep schemas themselves guarded by SHACL/JSON Schema.
 
 ---
@@ -360,8 +363,8 @@ Responsibilities:
 
 These workflows:
 
-- Inspect data classifications, CARE labels, and sovereignty flags.
-- Enforce accessibility basics on docs and UI builds.
+- Inspect data classifications, CARE labels, and sovereignty flags.  
+- Enforce accessibility basics on docs and UI builds.  
 - Emit ledger‑ready records of significant CI/CD events.
 
 ---
@@ -375,8 +378,8 @@ These workflows:
 
 Key expectations:
 
-- Every training run is config‑driven and logged with dataset/model versions.
-- Explainability runs measure bias and drift over time, not just once.
+- Every training run is config‑driven and logged with dataset/model versions.  
+- Explainability runs measure bias and drift over time, not just once.  
 - Outputs link back to data and code via PROV/lineage identifiers.
 
 ---
@@ -389,8 +392,8 @@ Key expectations:
 
 This family:
 
-- Generates SBOMs and attaches checksums/signatures to artifacts.
-- Scans dependencies for known malicious patterns (e.g., worms/typosquats).
+- Generates SBOMs and attaches checksums/signatures to artifacts.  
+- Scans dependencies for known malicious patterns (e.g., worms/typosquats).  
 - Blocks releases when integrity or provenance can’t be established.
 
 ---
@@ -426,8 +429,8 @@ jobs:
 
 This pattern is **normative**:
 
-- Data/docs changes **must** trigger FAIR+CARE validation.
-- Reports are uploaded as artifacts and registered in telemetry + catalogs.
+- Data/docs changes **must** trigger FAIR+CARE validation.  
+- Reports are uploaded as artifacts and registered in telemetry + catalogs.  
 - Failing FAIR+CARE checks **block merges** until fixed.
 
 ---
@@ -473,8 +476,8 @@ For each workflow:
   - Rendered HTML docs,
   - JSON reports from runs.
 - Each workflow’s output reports (e.g., `lint_summary.json`) are:
-  - DCAT Distributions of a “CI/CD Reports” dataset;
-  - STAC Assets (non‑spatial) in a `kfm-ci` Collection;
+  - DCAT Distributions of a “CI/CD Reports” dataset;  
+  - STAC Assets (non‑spatial) in a `kfm-ci` Collection;  
   - PROV Entities linked to Activities (runs) and Agents (runners/maintainers).
 
 This guarantees that **CI/CD itself is cataloged, versioned, and traceable**, just like domain datasets.
@@ -486,10 +489,12 @@ This guarantees that **CI/CD itself is cataloged, versioned, and traceable**, ju
 ### 1. DCAT
 
 - **Catalog**: KFM’s data catalog lists:
-  - This index (`kfm-ci-cd-governance-workflows-v11.2.4`) as a `dcat:Dataset` or `dcat:CatalogRecord`.
+  - This index (`kfm-ci-cd-governance-workflows-v11.2.4`) as a `dcat:Dataset` or `dcat:CatalogRecord`.  
   - Each per‑workflow doc as its own `dcat:Dataset`.
+
 - **Distributions**:
   - HTML, Markdown, YAML, and JSON reports as `dcat:Distribution` with proper media types and checksums.
+
 - **Versioning**:
   - This file’s `version` and Version History map to DCAT 3’s versioning properties (`dcat:hasVersion`, `dcat:previousVersion`).
 
@@ -497,11 +502,13 @@ This guarantees that **CI/CD itself is cataloged, versioned, and traceable**, ju
 
 - **Collections**:
   - `kfm-ci` Collection for CI/CD artifacts and telemetry.
+
 - **Items**:
   - Each workflow run → STAC Item with:
-    - `id` = run_id,
-    - `properties.datetime` = run timestamp,
+    - `id` = `run_id`,  
+    - `properties.datetime` = run timestamp,  
     - `assets` = telemetry JSON, reports, logs.
+
 - **Geometry & bbox**:
   - Non‑spatial CI/CD items may use `geometry: null` and omit `bbox`, or associate with a default Kansas bbox for region‑scoped analysis if desired.
 
@@ -509,13 +516,16 @@ This guarantees that **CI/CD itself is cataloged, versioned, and traceable**, ju
 
 - **Entities**:
   - Workflow YAML, workflow docs, reports, telemetry snapshots.
+
 - **Activities**:
   - Each workflow run is a `prov:Activity` with `prov:startedAtTime` / `prov:endedAtTime`.
+
 - **Agents**:
   - GitHub runners (software agents), maintainers (persons/organizations).
+
 - **Relations**:
-  - `prov:wasGeneratedBy` from reports → workflow run.
-  - `prov:used` from run → commit SHA, configs, input datasets.
+  - `prov:wasGeneratedBy` from reports → workflow run.  
+  - `prov:used` from run → commit SHA, configs, input datasets.  
   - `prov:wasAssociatedWith` from run → agents.
 
 This alignment lets lineage tools reconstruct exactly **which workflow version** validated **which commit or dataset** and with **what outcome**.
@@ -528,11 +538,14 @@ From a monorepo perspective:
 
 - **docs/**  
   - `docs/workflows/README.md` = CI/CD index (this file).  
-  - `docs/workflows/*.yml.md` = per‑workflow specs & SOPs.
+  - `docs/workflows/*.yml.md` / `.md` = per‑workflow specs & SOPs.
+
 - **.github/workflows/**  
   - YAML definitions implementing the flows described here.
+
 - **src/pipelines/**  
   - ETL / data pipelines invoked by some workflows (e.g., refresh catalogs).
+
 - **data/stac/** and **data/sources/**  
   - Catalogs and manifests that some validation workflows read.
 
@@ -545,8 +558,8 @@ Design rules:
 
 Any new workflow proposal **MUST**:
 
-- Declare its triggers, artifacts, telemetry fields, and governance implications.
-- Be accompanied by a new `*.yml.md` doc and an update to this index.
+- Declare its triggers, artifacts, telemetry fields, and governance implications.  
+- Be accompanied by a new `*.yml.md` / `.md` doc and an update to this index.
 
 ---
 
@@ -566,14 +579,17 @@ Any new workflow proposal **MUST**:
 
 - **Review cadence**
   - Weekly workflow health review by FAIR+CARE Security + Reliability teams.
+
 - **Merge conditions**
   - New/changed workflows MUST:
-    - Pass schema + lint checks.
-    - Emit telemetry conforming to declared schemas.
+    - Pass schema + lint checks.  
+    - Emit telemetry conforming to declared schemas.  
     - Declare purpose, inputs, outputs, and governance impact.
+
 - **Sustainability targets**
-  - Aim for ≤ 15 Wh per workflow run on average (per telemetry).
+  - Aim for ≤ 15 Wh per workflow run on average (per telemetry).  
   - Track carbon emissions per run; highlight large regressions.
+
 - **Retention**
   - Logs & telemetry retained ≥ 12 months (or stricter per governance rules).
 
@@ -583,20 +599,20 @@ These policies are enforced at CI level and visible to Focus Mode users inspecti
 
 ## 🕰️ Version History
 
-| Version   | Date       | Summary                                                                                                                     |
-|----------:|------------|-----------------------------------------------------------------------------------------------------------------------------|
+| Version    | Date       | Summary                                                                                                                     |
+|-----------:|------------|-----------------------------------------------------------------------------------------------------------------------------|
 | **v11.2.4** | 2025-12-05 | Aligned with KFM‑MDP v11.2.4; adopted standard front‑matter, approved H2s, Story Node/Focus Mode hooks, and STAC/DCAT/PROV mappings. No semantic workflow changes. |
-| v11.2.2  | 2025-11-27 | Canonical layout; badges/footer added; telemetry schema updated; FAIR+CARE + governance workflows consolidated.             |
-| v10.2.4  | 2025-11-12 | Telemetry schema v3 adoption; governance matrix refresh; sustainability policy alignment.                                   |
-| v10.1.0  | 2025-11-10 | Added AI explainability + telemetry exporter workflows.                                                                      |
-| v10.0.0  | 2025-11-08 | Established baseline CI/CD and FAIR+CARE validator workflows for KFM.                                                       |
+| v11.2.2   | 2025-11-27 | Canonical layout; badges/footer added; telemetry schema updated; FAIR+CARE + governance workflows consolidated.             |
+| v10.2.4   | 2025-11-12 | Telemetry schema v3 adoption; governance matrix refresh; sustainability policy alignment.                                   |
+| v10.1.0   | 2025-11-10 | Added AI explainability + telemetry exporter workflows.                                                                      |
+| v10.0.0   | 2025-11-08 | Established baseline CI/CD and FAIR+CARE validator workflows for KFM.                                                       |
 
 ---
 
 <div align="center">
 
-## ⚙️ **Kansas Frontier Matrix — CI/CD & Governance Workflows (v11.2.4)**  
-*Ethical Automation · FAIR+CARE Governance · Sustainable CI/CD*
+⚙️ **Kansas Frontier Matrix — CI/CD & Governance Workflows (v11.2.4)**  
+Ethical Automation · FAIR+CARE Governance · Sustainable CI/CD  
 
 <img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
@@ -607,7 +623,7 @@ These policies are enforced at CI level and visible to Focus Mode users inspecti
 © 2025 Kansas Frontier Matrix — CC‑BY 4.0  
 MCP‑DL v6.3 · KFM‑MDP v11.2.4 · FAIR+CARE Aligned · Diamond⁹ Ω / Crown∞Ω  
 
-[⬅ Back to Docs Index](../README.md) ·  
+[⬅ Back to Docs Root](../README.md) ·  
 [⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·  
 [📘 KFM Documentation Home](../README.md)
 
