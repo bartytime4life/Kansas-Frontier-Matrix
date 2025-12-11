@@ -437,9 +437,16 @@ Patterns, meanwhile, act as **rulesets** Focus Mode uses for:
 
 <div align="center">
 
-📊 **KFM v11 — Metric Cardinality Patterns**  
+📊 **KFM v11 — Metric Cardinality Patterns (Detailed Examples, v11.2.6)**  
 Deterministic Metrics · Sustainable Telemetry · FAIR+CARE-Aligned  
 
-[⬅ Back to patterns README](./README.md)
+[⬅ Back to patterns README](./README.md) ·  
+[📡 Telemetry Metrics Index](../../README.md) ·  
+[📊 Metric Cardinality Standard](../README.md) ·  
+[⚖ Cardinality Governance](../governance/README.md) ·  
+[🧭 Standards Index](../../../standards/README.md) ·  
+[⚖ Governance](../../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🌿 FAIR+CARE Guide](../../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
