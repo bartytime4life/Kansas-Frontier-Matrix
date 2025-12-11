@@ -192,15 +192,49 @@ deprecated_fields:
 
 **Purpose**  
 Centralized index for all **reusable documentation templates** that drive the Kansas Frontier Matrix (KFM) ecosystem.  
-Each template is aligned with **MCP‑DL v6.3**, **KFM‑MDP v11.2.6**, and **FAIR+CARE**, so that every experiment, model, SOP, and governance report is reproducible, ethically grounded, and machine-parseable.
+Each template is aligned with **MCP-DL v6.3**, **KFM-MDP v11.2.6**, and **FAIR+CARE**, so that every experiment, model, SOP, and governance report is reproducible, ethically grounded, and machine-parseable.
 
 [![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![KFM‑MDP v11.2.6](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.6-purple)]()  
-[![License · CC‑BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)]()  
+[![KFM-MDP v11.2.6](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.6-purple)]()  
+[![License · CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)]()  
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange)]()  
 [![Status · Stable](https://img.shields.io/badge/Status-Stable%20%2F%20Enforced-brightgreen)]()
 
 </div>
+
+---
+
+## 🗂️ Directory Layout
+
+~~~text
+📁 docs/
+└── 📁 templates/
+    ├── 📄 README.md                # ← This index (templates catalog)
+    ├── 📄 kfm-markdown-template.md # Core KFM-MDP v11.2.6 markdown template
+    ├── 📄 experiment.md            # Experiment / analysis documentation template
+    ├── 📄 model_card.md            # AI/ML model card template
+    └── 📄 sop.md                   # Standard Operating Procedure template
+
+📁 mcp/
+├── 📁 experiments/                 # Concrete experiment docs derived from experiment.md
+│   └── 📄 …                        # Individual experiment docs
+├── 📁 model_cards/                 # Concrete model cards derived from model_card.md
+│   └── 📄 …                        # Individual model cards
+└── 📁 sops/                        # SOPs derived from sop.md
+    └── 📄 …                        # Individual SOP documents
+
+📁 reports/
+└── 📁 audit/
+    └── 📄 github-workflows-ledger.json  # CI/CD evidence including template usage events
+
+📁 releases/
+└── 📁 v11.2.6/
+    ├── 📄 docs-templates-telemetry.json # Telemetry for template usage & validation
+    ├── 📄 sbom.spdx.json                # SBOM for docs tooling & dependencies
+    └── 📄 manifest.zip                  # Manifest (hashes, versions, references)
+~~~
+
+Any new template added under `docs/templates/` MUST be registered here and in the Template Catalog.
 
 ---
 
@@ -211,11 +245,11 @@ This index describes the **standard template set** used throughout KFM:
 - **Experiment Template** — for research, ETL, AI/ML, and historical/archaeological analyses.  
 - **Model Card Template** — for AI/ML models, including bias, explainability, and governance metadata.  
 - **SOP Template** — for standard operating procedures across pipelines, governance, and operations.  
-- **Core Markdown Template** — for any new KFM document requiring KFM‑MDP v11.2.6 compliance.
+- **Core Markdown Template** — for any new KFM document requiring KFM-MDP v11.2.6 compliance.
 
 All templates are:
 
-- **Markdown‑based**, KFM‑MDP v11.2.6 compliant.  
+- **Markdown-based**, KFM-MDP v11.2.6 compliant.  
 - Designed for **machine extraction** into DCAT/STAC catalogs and the KFM knowledge graph.  
 - Verified by CI workflows (`docs-lint.yml`, FAIR+CARE validation, telemetry export) and reported via docs-templates telemetry.
 
@@ -226,7 +260,7 @@ All templates are:
 **Purpose**  
 Provides the **canonical pattern** for any KFM Markdown file:
 
-- YAML front‑matter ordering and required fields.  
+- YAML front-matter ordering and required fields.  
 - Approved emoji + label heading patterns.  
 - Directory layout style and governance footer rules.
 
@@ -245,7 +279,7 @@ Standardize documentation of experiments for AI models, ETL pipelines, and analy
 
 **Canonical Sections (H2/H3 inside template):**
 
-- Metadata (front‑matter)  
+- Metadata (front-matter)  
 - Objective & Hypothesis  
 - Methodology (data, tools, configs)  
 - Results & Discussion  
@@ -286,7 +320,7 @@ Used in:
 #### 4. SOP Template — `docs/templates/sop.md`
 
 **Purpose**  
-Provide a structured, step‑wise format for repeatable operational workflows.
+Provide a structured, step-wise format for repeatable operational workflows.
 
 **Canonical Sections:**
 
@@ -304,37 +338,6 @@ Applied to:
 
 ---
 
-## 🗂️ Directory Layout
-
-~~~text
-📁 docs/
-  📁 templates/
-    📄 README.md                # ← This index (templates catalog)
-    📄 kfm-markdown-template.md # Core KFM-MDP v11.2.6 markdown template
-    📄 experiment.md            # Experiment / analysis documentation template
-    📄 model_card.md            # AI/ML model card template
-    📄 sop.md                   # Standard Operating Procedure template
-
-📁 mcp/
-  📁 experiments/               # Concrete experiment docs derived from experiment.md
-  📁 model_cards/               # Concrete model cards derived from model_card.md
-  📁 sops/                      # SOPs derived from sop.md
-
-📁 reports/
-  📁 audit/
-    📄 github-workflows-ledger.json  # CI/CD evidence including template usage events
-
-📁 releases/
-  📁 v11.2.6/
-    📄 docs-templates-telemetry.json # Telemetry for template usage & validation
-    📄 sbom.spdx.json                # SBOM for docs tooling & dependencies
-    📄 manifest.zip                  # Manifest (hashes, versions, references)
-~~~
-
-Any new template added under `docs/templates/` MUST be registered here and in the Template Catalog above.
-
----
-
 ## 🧭 Context
 
 Templates live in the documentation layer but are tightly coupled to the full KFM pipeline:
@@ -344,7 +347,7 @@ Templates live in the documentation layer but are tightly coupled to the full KF
 - **Experiments** describe how ETL, AI, and analyses are conducted → reproducible science.  
 - **Model Cards** document AI components that surface in APIs, Focus Mode, and Story Nodes.  
 - **SOPs** describe governed procedures for operations, governance, and stewardship.  
-- **Core Markdown Template** ensures every doc these workflows depend on is structurally consistent and catalog‑ready.
+- **Core Markdown Template** ensures every doc these workflows depend on is structurally consistent and catalog-ready.
 
 By enforcing consistent template usage:
 
@@ -360,10 +363,10 @@ High-level flow for template usage and enforcement:
 
 ~~~mermaid
 flowchart LR
-  TPL[docs/templates/*.md<br/>Templates] --> DOCS[Concrete Docs<br/>experiments / model_cards / sops]
-  DOCS --> CI[CI Workflows<br/>docs-lint · faircare-validate · telemetry-export]
-  CI --> CAT[STAC/DCAT/PROV & Graph<br/>Doc Catalogs]
-  CAT --> FM[Story Nodes & Focus Mode]
+  TPL["docs/templates/*.md templates"] --> DOCS["Concrete docs: experiments / model_cards / sops"]
+  DOCS --> CI["CI workflows: docs-lint, faircare-validate, telemetry-export"]
+  CI --> CAT["STAC/DCAT/PROV & graph catalogs"]
+  CAT --> FM["Story Nodes & Focus Mode"]
 ~~~
 
 Timelines or more detailed diagrams SHOULD be stored in separate diagram-specific docs or sections that reference this index.
@@ -374,8 +377,8 @@ Timelines or more detailed diagrams SHOULD be stored in separate diagram-specifi
 
 Template-based documents are designed to be **Story Node–friendly**:
 
-- Experiment docs → potential `story_node` instances for ETL/AI/analysis narratives.  
-- Model cards → `story_node` entries for AI models (capabilities, risks, provenance).  
+- Experiment docs → potential Story Nodes for ETL/AI/analysis narratives.  
+- Model cards → Story Nodes for AI models (capabilities, risks, provenance).  
 - SOPs → process-focused Story Nodes describing how KFM operates and governs itself.
 
 Story Node / Focus Mode behaviors:
@@ -405,7 +408,7 @@ Templates integrate with KFM CI/CD to ensure every derived document is compliant
 
 | Workflow                 | Role                                              | Key Output                                            |
 |--------------------------|---------------------------------------------------|-------------------------------------------------------|
-| `docs-lint.yml`          | Markdown structure, headings, front‑matter, links | `reports/self-validation/docs/lint_summary.json`      |
+| `docs-lint.yml`          | Markdown structure, headings, front-matter, links | `reports/self-validation/docs/lint_summary.json`      |
 | `faircare-validate.yml`  | FAIR+CARE & ethics checks on docs + data         | `reports/faircare/faircare_summary.json`              |
 | `telemetry-export.yml`   | Aggregates template usage & doc metrics           | `releases/v11.2.6/docs-templates-telemetry.json`      |
 
@@ -413,7 +416,7 @@ Author guidance:
 
 - Any new document created from a template must **keep the YAML scaffold** and fill in required fields.  
 - CI will block merges if:
-  - Front‑matter is incomplete or malformed.  
+  - Front-matter is incomplete or malformed.  
   - Required sections or governance references are missing.  
   - Disallowed headings or missing Version History/footer are detected.
 
@@ -426,7 +429,7 @@ Templates are treated as **reference entities**:
 - Each template file:
   - Has a stable path (`docs/templates/*.md`).  
   - Is indexed by this document and by doc catalogs.  
-  - Carries governance metadata in its own front‑matter.
+  - Carries governance metadata in its own front-matter.
 
 Derived documents:
 
@@ -434,7 +437,7 @@ Derived documents:
 - Inherit governance references (`governance_ref`, `ethics_ref`, `sovereignty_policy`) as appropriate.  
 - MUST include:
   - A `🕰️ Version History` section.  
-  - The standard governance footer (Docs Root, Standards/Markdown Protocol, Governance Charter).
+  - The standard governance footer (Docs Root, Markdown Protocol, Governance Charter).
 
 Telemetry for template usage (e.g., counts of experiment/model/SOP docs, validation status) is stored in:
 
@@ -445,20 +448,20 @@ Telemetry for template usage (e.g., counts of experiment/model/SOP docs, validat
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Templates themselves are non‑spatial, but align with KFM’s metadata ecosystem:
+Templates themselves are non-spatial, but align with KFM’s metadata ecosystem:
 
 - **DCAT**  
-  - This index acts as a `dcat:CatalogRecord` with associated `dcat:Dataset` for the template collection.  
-  - Individual templates can be modeled as distributions (e.g., `mediaType: text/markdown`).
+  - This index acts as a `dcat:CatalogRecord` with an associated `dcat:Dataset` for the template collection.  
+  - Individual templates can be modeled as `dcat:Distribution` entries with `mediaType: text/markdown`.
 
 - **STAC**  
-  - A `kfm-docs-templates` STAC Collection may list templates as Items with `geometry: null` and `datetime = last_updated`.  
-  - Links from data collections to relevant templates (e.g., experiment template used for a given domain) may be added as `links` with custom `rel` types.
+  - A `kfm-docs-templates` STAC Collection may list templates as Items with `geometry: null` and `properties.datetime = last_updated`.  
+  - Data collections may link to relevant templates (e.g., experiment templates used) via STAC `links` and custom `rel` types.
 
 - **PROV-O**  
   - This index is a `prov:Plan` describing documentation patterns.  
   - Concrete docs use `prov:wasDerivedFrom` to link back to specific template versions.  
-  - CI workflows and template-based generators (`mcp` tools) are `prov:Activity` instances associated with appropriate `prov:Agent`s.
+  - CI workflows and template-based generators (`mcp` tools) are `prov:Activity` instances associated with `prov:Agent`s.
 
 ---
 
@@ -470,10 +473,10 @@ In the KFM monorepo architecture:
 - `mcp/experiments/**`, `mcp/model_cards/**`, `mcp/sops/**`, and other derived docs implement those contracts.  
 - CI workflows:
   - Enforce structural constraints via lint and schema checks.  
-  - Export telemetry that tracks compliance and coverage.  
+  - Export telemetry that tracks compliance, usage, and coverage.  
 - The knowledge graph ingests:
   - Template instances as CIDOC `E29 Design or Procedure`.  
-  - Relations between experiments, models, SOPs, datasets, and workflow Activities.
+  - Relations between experiments, models, SOPs, datasets, and CI/OpenLineage Activities.
 
 This index is the **single source of truth** for:
 
@@ -488,7 +491,7 @@ This index is the **single source of truth** for:
 Templates embed FAIR+CARE expectations into every downstream doc:
 
 - **FAIR**  
-  - Front‑matter ensures **Findability** and **Accessibility**.  
+  - Front-matter ensures **Findability** and **Accessibility**.  
   - Standardized fields support **Interoperability** with catalogs and graph.  
   - Version history and provenance enable **Reusability**.
 
@@ -516,8 +519,8 @@ AI/agent systems may **summarize** or **highlight** template-based docs but MUST
 
 | Version   | Date       | Author         | Summary                                                                                                                      |
 |----------:|-----------:|----------------|------------------------------------------------------------------------------------------------------------------------------|
-| v11.2.6   | 2025-12-11 | `@kfm-docs`    | Updated to KFM‑MDP v11.2.6; added Core Markdown Template, aligned paths to v11.2.6 releases/schemas, reorganized sections to heading registry, clarified STAC/DCAT/PROV and CI integration. |
-| v11.2.4   | 2025-12-06 | `@kfm-docs`    | Expanded front‑matter; converted sections to approved H2 registry; added Story Node & telemetry integration and metadata alignment. |
+| v11.2.6   | 2025-12-11 | `@kfm-docs`    | Updated to KFM-MDP v11.2.6; moved Directory Layout earlier per H2 registry; added Core Markdown Template; aligned paths to v11.2.6 releases/schemas; clarified STAC/DCAT/PROV and CI integration. |
+| v11.2.4   | 2025-12-06 | `@kfm-docs`    | Expanded front-matter; converted sections to approved H2 registry; added Story Node & telemetry integration and metadata alignment. |
 | v10.2.2   | 2025-11-12 | `@kfm-docs`    | Aligned telemetry refs to v10.2.0; clarified integration with docs-lint and FAIR+CARE workflows.                            |
 | v10.0.0   | 2025-11-10 | `@kfm-docs`    | Introduced telemetry schema v2; updated governance workflows and MCP/FAIR+CARE sections.                                    |
 | v9.7.0    | 2025-11-05 | `@kfm-docs`    | Unified experiment, model, and SOP templates under a stable release.                                                        |
@@ -529,10 +532,22 @@ AI/agent systems may **summarize** or **highlight** template-based docs but MUST
 <div align="center">
 
 📄 **Kansas Frontier Matrix — Documentation Templates Index (v11.2.6)**  
-Documentation Integrity · FAIR+CARE Governance · Platinum‑Grade Reproducibility  
+Documentation Integrity · FAIR+CARE Governance · Platinum-Grade Reproducibility  
+
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/Templates-v11.2.6-informational" />
+<img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
 
 [⬅ Back to Documentation Index](../README.md) ·  
-[📘 Markdown Protocol (KFM‑MDP v11.2.6)](../standards/kfm_markdown_protocol_v11.2.6.md) ·  
-[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+[📚 Glossary](../glossary.md) ·  
+[📘 Markdown Protocol (KFM-MDP v11.2.6)](../standards/kfm_markdown_protocol_v11.2.6.md) ·  
+[📐 Templates & SOPs](./) ·  
+[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🤝 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+MCP-DL v6.3 · KFM-MDP v11.2.6 · FAIR+CARE Aligned · Diamond⁹ Ω / Crown∞Ω  
 
 </div>
