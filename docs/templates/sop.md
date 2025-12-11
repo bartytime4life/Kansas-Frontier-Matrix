@@ -2,8 +2,8 @@
 title: "🧾 Kansas Frontier Matrix — Standard Operating Procedure (SOP) Template (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/templates/sop.md"
 
-version: "v11.2.4"
-last_updated: "2025-12-06"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Annual · Autonomous"
@@ -11,14 +11,14 @@ content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/docs-sop-template-telemetry.json"
-telemetry_schema: "schemas/telemetry/docs-sop-template-v11.2.4.json"
-energy_schema: "schemas/telemetry/energy-v2.json"
-carbon_schema: "schemas/telemetry/carbon-v2.json"
+signature_ref: "../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../releases/v11.2.6/docs-sop-template-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/docs-sop-template-v11.2.6.json"
+energy_schema: "../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
@@ -26,7 +26,7 @@ sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.4"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -75,6 +75,7 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
+  - "docs/templates/sop.md@v11.2.4"
   - "docs/templates/sop.md@v10.2.2"
   - "docs/templates/sop.md@v10.0.0"
   - "docs/templates/sop.md@v9.7.0"
@@ -87,14 +88,14 @@ provenance_requirements:
   must_reference_superseded: true
   must_reference_origin_root: true
 
-json_schema_ref: "schemas/json/kfm-sop-template-v11.2.4.schema.json"
-shape_schema_ref: "schemas/shacl/kfm-sop-template-v11.2.4-shape.ttl"
+json_schema_ref: "../../schemas/json/kfm-sop-template-v11.2.6.schema.json"
+shape_schema_ref: "../../schemas/shacl/kfm-sop-template-v11.2.6-shape.ttl"
 story_node_refs: []
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:templates:sop:v11.2.4"
-semantic_document_id: "kfm-sop-template-v11.2.4"
-event_source_id: "ledger:kfm:doc:templates:sop:v11.2.4"
+doc_uuid: "urn:kfm:doc:templates:sop:v11.2.6"
+semantic_document_id: "kfm-sop-template-v11.2.6"
+event_source_id: "ledger:kfm:doc:templates:sop:v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -190,13 +191,13 @@ deprecated_fields:
 
 **Purpose**  
 Provide a structured, machine-verifiable template for documenting operational workflows within the Kansas Frontier Matrix (KFM).  
-This ensures all processes are **transparent**, **auditable**, and **FAIR+CARE**-aligned under **Master Coder Protocol v6.3** and **KFM-MDP v11.2.4**.
+This ensures all processes are **transparent**, **auditable**, and **FAIR+CARE**-aligned under **Master Coder Protocol v6.3** and **KFM-MDP v11.2.6**.
 
-<img src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
-<img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Certified-orange" />
-<img src="https://img.shields.io/badge/Status-Template-lightgrey" />
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
+[![KFM‑MDP v11.2.6](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.6-purple)]()  
+[![License · CC‑BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)]()  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange)]()  
+[![Status · Template](https://img.shields.io/badge/Status-Template-lightgrey)]()
 
 </div>
 
@@ -235,32 +236,33 @@ SOP templates and concrete SOPs live alongside other documentation and workflows
 
 ~~~text
 📁 KansasFrontierMatrix/
-├── 📁 docs/                                             # All documentation
-│   ├── 📁 templates/                                   # Reusable documentation templates
-│   │   📄 README.md                                    # 📄 Templates index + usage
-│   │   📄 experiment.md                                # 🧪 Experiment / analysis template
-│   │   📄 model_card.md                                # 🤖 AI/ML model card template
-│   │   📄 sop.md                                       # 🧾 SOP template (this file)
-│   ├── 📁 sop/                                         # 🧾 Concrete SOPs for KFM operations
-│   │   📄 etl-lidar-intake.md                          # 🗺️ Example: LiDAR ingestion SOP
-│   │   📄 ai-model-retrain.md                          # 🤖 Example: model retrain SOP
-│   │   📄 governance-faircare-review.md                # ⚖ Example: FAIR+CARE review SOP
-│   └── 📁 workflows/                                   # ⚙️ Workflow documentation (CI/CD)
-│       📄 README.md                                    # CI/CD index
-├── 📁 .github/
-│   └── 📁 workflows/                                   # CI/CD YAML definitions
-│       📄 docs-lint.yml                                # 📏 Markdown + SOP structure checks
-│       📄 faircare-validate.yml                        # ⚖ FAIR+CARE + governance validation
-│       📄 telemetry-export.yml                         # 📈 Telemetry aggregation
-├── 📁 releases/                                        # 📦 Versioned releases and artifacts
-│   📁 v11.2.4/
-│   ├── 📄 sbom.spdx.json                               # 🧬 SBOM for this release
-│   ├── 📄 manifest.zip                                 # 📑 Release manifest (checksums, assets)
-│   └── 📄 focus-telemetry.json                         # 📈 Unified telemetry ledger
-└── 📁 reports/
-    ├── 📁 self-validation/                             # ✅ Docs + SOP validation reports
-    ├── 📁 faircare/                                    # ⚖ FAIR+CARE reports
-    └── 📁 audit/                                       # 🔍 Governance / workflow ledgers
+  📁 docs/                                   # All documentation
+    📁 templates/                            # Reusable documentation templates
+      📄 README.md                           # Templates index + usage
+      📄 kfm-markdown-template.md            # Core markdown template
+      📄 experiment.md                       # 🧪 Experiment / analysis template
+      📄 model_card.md                       # 🤖 AI/ML model card template
+      📄 sop.md                              # 🧾 SOP template (this file)
+    📁 sop/                                  # 🧾 Concrete SOPs for KFM operations
+      📄 etl-lidar-intake.md                 # 🗺️ Example: LiDAR ingestion SOP
+      📄 ai-model-retrain.md                 # 🤖 Example: model retrain SOP
+      📄 governance-faircare-review.md       # ⚖ Example: FAIR+CARE review SOP
+    📁 workflows/                            # ⚙️ Workflow documentation (CI/CD)
+      📄 README.md                           # CI/CD index
+  📁 .github/
+    📁 workflows/                            # CI/CD YAML definitions
+      📄 docs-lint.yml                       # 📏 Markdown + SOP structure checks
+      📄 faircare-validate.yml               # ⚖ FAIR+CARE + governance validation
+      📄 telemetry-export.yml                # 📈 Telemetry aggregation
+  📁 releases/                               # 📦 Versioned releases and artifacts
+    📁 v11.2.6/
+      🧾 sbom.spdx.json                      # 🧬 SBOM for this release
+      🧾 manifest.zip                        # 📑 Release manifest (checksums, assets)
+      🧾 focus-telemetry.json                # 📈 Unified telemetry ledger
+  📁 reports/
+    📁 self-validation/                      # ✅ Docs + SOP validation reports
+    📁 faircare/                             # ⚖ FAIR+CARE reports
+    📁 audit/                                # 🔍 Governance / workflow ledgers
 ~~~
 
 Concrete SOPs **must**:
@@ -274,13 +276,13 @@ Concrete SOPs **must**:
 
 SOPs are **operational blueprints** describing how KFM activities are carried out:
 
-- They implement **prov:Plan** entities within PROV-O.  
+- They implement **`prov:Plan`** entities within PROV-O and map to CIDOC-CRM `E29 Design or Procedure`.  
 - They are referenced by CI workflows, pipelines, and human-run procedures.  
 - They enable **Story Nodes** and **Focus Mode** to narrate *how* KFM performs specific tasks.  
 
 The SOP template is designed to:
 
-- Align with the **KFM Markdown Protocol** (headings, front-matter, diagrams).  
+- Align with the **KFM Markdown Protocol** (headings, front-matter, diagrams) in v11.2.6.  
 - Provide enough structure for automated extraction into DCAT/STAC and the knowledge graph.  
 - Support FAIR+CARE governance decisions by clearly documenting responsibilities and checks.
 
@@ -294,14 +296,14 @@ Example SOP flow (adapt per SOP):
 
 ~~~mermaid
 flowchart TD
-    A["Start SOP"] --> B["Prepare Environment & Inputs"]
-    B --> C["Execute Core Steps"]
-    C --> D["Run Validation & QA Checks"]
-    D --> E{"All Checks Pass?"}
-    E -->|Yes| F["Record Results & Update Telemetry"]
-    E -->|No| G["Remediate, Re-run, or Escalate"]
-    F --> H["End SOP"]
-    G --> H["End SOP (with Issues Logged)"]
+  A["Start SOP"] --> B["Prepare Environment & Inputs"]
+  B --> C["Execute Core Steps"]
+  C --> D["Run Validation & QA Checks"]
+  D --> E{"All Checks Pass?"}
+  E -->|Yes| F["Record Results & Update Telemetry"]
+  E -->|No| G["Remediate, Re-run, or Escalate"]
+  F --> H["End SOP"]
+  G --> H["End SOP (with Issues Logged)"]
 ~~~
 
 Each SOP should accompany a diagram with:
@@ -315,15 +317,15 @@ Each SOP should accompany a diagram with:
 
 SOPs are used by **Story Nodes** and **Focus Mode** to explain *how* KFM works operationally:
 
-- Focus Mode can surface a SOP when a user asks *“How does KFM retrain models?”* or *“How do we validate STAC catalogs?”*.  
+- Focus Mode can surface a SOP when a user asks “How does KFM retrain models?” or “How are STAC catalogs validated?”.  
 - SOPs can be referenced from Story Nodes via IDs like:  
-  `urn:kfm:sop:etl:etl-lidar-intake@v11.2.4`.
+  `urn:kfm:sop:etl:etl-lidar-intake@v11.2.6`.
 
 When writing an SOP:
 
 - Use **short, clearly scoped steps** so Focus Mode can reframe them cleanly.  
 - Keep **one concept per paragraph or list item** for better segmentation.  
-- Avoid vague pronouns; refer to systems and files explicitly (`docs/sop/etl-lidar-intake.md`).  
+- Avoid vague pronouns; refer to systems and files explicitly (e.g., `docs/sop/etl-lidar-intake.md`).  
 
 Focus Mode:
 
@@ -340,11 +342,11 @@ This section describes **how SOPs are validated**, not how individual SOPs shoul
 
 Every SOP derived from this template must pass:
 
-| Workflow                 | Purpose                                         | Key Output                                           |
-|--------------------------|-------------------------------------------------|------------------------------------------------------|
-| `docs-lint.yml`          | Markdown + front-matter + heading validation   | `reports/self-validation/docs/lint_summary.json`     |
-| `faircare-validate.yml`  | FAIR+CARE + governance + sensitivity checks    | `reports/faircare/faircare_summary.json`             |
-| `telemetry-export.yml`   | Telemetry aggregation for documentation events | `releases/v11.2.4/focus-telemetry.json`             |
+| Workflow                 | Purpose                                         | Key Output                                             |
+|--------------------------|-------------------------------------------------|--------------------------------------------------------|
+| `docs-lint.yml`          | Markdown + front-matter + heading validation   | `reports/self-validation/docs/lint_summary.json`       |
+| `faircare-validate.yml`  | FAIR+CARE + governance + sensitivity checks    | `reports/faircare/faircare_summary.json`               |
+| `telemetry-export.yml`   | Telemetry aggregation for documentation events | `releases/v11.2.6/focus-telemetry.json`               |
 
 ### 2. Example SOP-Related Checks
 
@@ -368,8 +370,34 @@ title: "🧾 [SOP Title]"
 path: "docs/sop/[filename].md"
 version: "vX.Y.Z"
 last_updated: "YYYY-MM-DD"
+
+release_stage: "Draft / Stable / Historical"
+lifecycle: "Incubation / LTS / Archive"
 review_cycle: "Annual · Autonomous"
+content_stability: "evolving / stable / frozen"
+
+status: "Active / Deprecated / Historical Record"
+doc_kind: "SOP"
+header_profile: "standard"
+footer_profile: "standard"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
 commit_sha: "<commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+semantic_document_id: "<kfm-sop-<name>-vX.Y.Z>"
+doc_uuid: "<urn:kfm:doc:sop:<name>:vX.Y.Z>"
+event_source_id: "ledger:docs/sop/[filename].md"
+immutability_status: "version-pinned"
 
 sbom_ref: "releases/vX.Y.Z/sbom.spdx.json"
 manifest_ref: "releases/vX.Y.Z/manifest.zip"
@@ -377,14 +405,12 @@ telemetry_ref: "releases/vX.Y.Z/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/docs-sop-template-vX.Y.Z.json"
 
 governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
 ---
 ~~~
 
 CI will **fail** if required keys are missing or malformed.
 
-### 2. SOP Sections (to be used as H3 in Concrete SOPs)
+### 2. SOP Sections (H3 in Concrete SOPs)
 
 Concrete SOPs should implement these H3 sections under their allowed H2 headings:
 
@@ -395,10 +421,7 @@ Concrete SOPs should implement these H3 sections under their allowed H2 headings
 - `### 🧪 Validation & Quality Assurance`  
 - `### 🔄 Change Management`  
 
-Their location in this template:
-
-- Conceptually described under **🧱 Architecture** (see below).  
-- Fully instantiated in each SOP file under the same H2 heading.
+Their semantic placement is described under **🧱 Architecture**.
 
 ---
 
@@ -409,17 +432,17 @@ SOPs can be treated as **first-class catalog and provenance entities**:
 - **DCAT**  
   - Represent an SOP as a `dcat:Dataset` or `dcat:CatalogRecord` with:  
     - `dct:title` = SOP title.  
-    - `dct:description` = Brief summary from Purpose section.  
+    - `dct:description` = brief summary from Purpose section.  
     - `dct:modified` = `last_updated`.  
     - `dct:license` = CC-BY 4.0.  
 
 - **STAC**  
-  - SOPs can be assets in a documentation-oriented Collection (e.g., `kfm-docs`).  
+  - SOPs can be assets in a documentation Collection (e.g., `kfm-docs`).  
   - `id` = SOP semantic ID; `properties.datetime` = `last_updated`.  
 
 - **PROV-O**  
-  - Each SOP is a `prov:Plan` (`E29 Design or Procedure` in CIDOC-CRM).  
-  - Activities that “follow” the SOP (e.g., ETL jobs) are `prov:Activity` with a `prov:wasAssociatedWith` relationship to agents and `prov:wasInformedBy` the SOP.
+  - Each SOP is a `prov:Plan`.  
+  - Activities that “follow” the SOP (e.g., ETL jobs) are `prov:Activity` with `prov:used` or `prov:wasInformedBy` relations referencing the SOP and `prov:Agent` entries for people/services.
 
 Concrete SOPs **may** include a short paragraph describing where they appear in catalogs or provenance graphs.
 
@@ -458,11 +481,11 @@ List technical, procedural, or governance dependencies required before execution
 ~~~markdown
 ### ⚙️ Prerequisites
 
-| Requirement      | Description                                  |
-|------------------|----------------------------------------------|
-| **Environment**  | Python 3.11+, Docker 24+, Git CLI            |
-| **Dependencies** | `pystac`, `jsonschema`, `requests`, `pytest`, `kfm-stac-tools` |
-| **Credentials**  | GitHub token (read), STAC asset keys (if private) |
+| Requirement       | Description                                  |
+|-------------------|----------------------------------------------|
+| **Environment**   | Python 3.11+, Docker 24+, Git CLI            |
+| **Dependencies**  | `pystac`, `jsonschema`, `requests`, `pytest`, `kfm-stac-tools` |
+| **Credentials**   | GitHub token (read), STAC asset keys (if private) |
 | **Validation Scripts** | Located under `tools/validation/` or `src/pipelines/validation/` |
 ~~~
 
@@ -483,7 +506,7 @@ Provide numbered, reproducible instructions. Every step should be deterministic:
    make validate-faircare
    ~~~
 
-3. **Validate schema & STAC/DCAT metadata**  
+3. **Run schema & STAC/DCAT validation**  
    ~~~bash
    make validate-schema
    ~~~
@@ -497,7 +520,7 @@ Provide numbered, reproducible instructions. Every step should be deterministic:
 
 5. **Trigger CI governance sync**  
    - Confirm `governance_sync.yml` passes.  
-   - Ensure `focus-telemetry.json` updated for current release.
+   - Ensure `focus-telemetry.json` is updated for the current release.
 ~~~
 
 ### 🧪 Validation & Quality Assurance (Within Concrete SOP)
@@ -555,31 +578,32 @@ reports/audit/github-workflows-ledger.json
 
 Concrete SOPs should note:
 
-- Who must review changes (roles, e.g., FAIR+CARE Council, Infra team).  
-- Any mandatory approvals (e.g., for sensitive or Indigenous data handling SOPs).  
+- Who must review changes (e.g., FAIR+CARE Council, infra team).  
+- Any mandatory approvals for sensitive or sovereignty-related workflows.
 
 ---
 
 ## 🕰️ Version History
 
-| Version    | Date       | Author        | Summary                                                                 |
-|-----------:|------------|---------------|-------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | `@kfm-docs`   | Upgraded to KFM-MDP v11.2.4; added full metadata block, emoji-rich directory layout, and STAC/DCAT/PROV alignment; clarified SOP H3 section expectations. |
-| v10.2.2    | 2025-11-12 | `@kfm-docs`   | Aligned telemetry refs to v10.2.0; clarified governance, CI, and sustainability linkages. |
-| v10.0.0    | 2025-11-10 | `@kfm-docs`   | Enhanced telemetry schema; FAIR+CARE integration and ISO 19115 compliance. |
-| v9.7.0     | 2025-11-05 | `@kfm-docs`   | Created SOP template with governance integration and CI mapping.        |
-| v9.5.0     | 2025-10-20 | `@kfm-docs`   | Added telemetry reporting and automation references.                    |
-| v9.0.0     | 2025-06-01 | `@kfm-core`   | Initial SOP template creation.                                          |
+| Version   | Date       | Author        | Summary                                                                                                                |
+|----------:|-----------:|--------------|------------------------------------------------------------------------------------------------------------------------|
+| v11.2.6   | 2025-12-11 | `@kfm-docs`  | Updated to KFM-MDP v11.2.6; aligned release/schema paths to v11.2.6; synchronized with Templates Index & Core Markdown Template; clarified CI, Story Node, and catalog/provenance integration. |
+| v11.2.4   | 2025-12-06 | `@kfm-docs`  | Upgraded to KFM-MDP v11.2.4; added full metadata block, emoji-rich directory layout, STAC/DCAT/PROV alignment, and SOP H3 section expectations. |
+| v10.2.2   | 2025-11-12 | `@kfm-docs`  | Aligned telemetry refs to v10.2.0; clarified governance, CI, and sustainability linkages.                             |
+| v10.0.0   | 2025-11-10 | `@kfm-docs`  | Enhanced telemetry schema; FAIR+CARE integration and ISO 19115 compliance.                                            |
+| v9.7.0    | 2025-11-05 | `@kfm-docs`  | Created SOP template with governance integration and CI mapping.                                                      |
+| v9.5.0    | 2025-10-20 | `@kfm-docs`  | Added telemetry reporting and automation references.                                                                  |
+| v9.0.0    | 2025-06-01 | `@kfm-core`  | Initial SOP template creation.                                                                                        |
 
 ---
 
 <div align="center">
 
-🧾 **Kansas Frontier Matrix — SOP Template (v11.2.4)**  
+🧾 **Kansas Frontier Matrix — SOP Template (v11.2.6)**  
 Operational Clarity · FAIR+CARE Governance · Catalog & Graph Ready  
 
 [⬅ Back to Templates Index](README.md) ·  
-[📘 Markdown Protocol (KFM-MDP v11.2.4)](../standards/kfm_markdown_protocol_v11.2.4.md) ·  
+[📘 Markdown Protocol (KFM-MDP v11.2.6)](../standards/kfm_markdown_protocol_v11.2.6.md) ·  
 [⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
