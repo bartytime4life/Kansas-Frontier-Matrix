@@ -1,8 +1,8 @@
 ---
 title: "📜 KFM v11 — ETL Governance Event Records (PROV-O · Energy/Carbon · SLSA · FAIR+CARE)"
 path: "docs/telemetry/etl-governance-events/README.md"
-version: "v11.2.3"
-last_updated: "2025-11-29"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 
 release_stage: "Stable · Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -15,12 +15,12 @@ commit_sha: "<latest-commit>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-signature_ref: "../../../releases/v11.2.3/signature.sig"
-attestation_ref: "../../../releases/v11.2.3/slsa-attestation.json"
-sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.3/manifest.zip"
+signature_ref: "../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.6/manifest.zip"
 
-telemetry_ref: "../../../releases/v11.2.3/etl-governance-events.json"
+telemetry_ref: "../../../releases/v11.2.6/etl-governance-events.json"
 telemetry_schema: "../../../schemas/telemetry/etl-governance-event-v1.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
@@ -31,7 +31,7 @@ sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 
@@ -278,18 +278,19 @@ Stored per:
 
 ## 🧭 10. Version History
 
-| Version | Date       | Notes                                                                                   |
-|--------:|------------|-----------------------------------------------------------------------------------------|
-| v11.2.3 | 2025-11-29 | Metadata aligned to v11.2.3; safe-fence protocol applied; emoji directory style updated |
-| v11.2.2 | 2025-11-29 | Full rewrite for KFM-MDP v11.1; energy/carbon telem v2; SLSA + PROV-O proofs            |
+| Version | Date       | Notes                                                                                                  |
+|--------:|------------|--------------------------------------------------------------------------------------------------------|
+| v11.2.6 | 2025-12-11 | Updated to KFM-MDP v11.2.6; release/telemetry refs bumped to v11.2.6; enriched footer and cross-links; no schema changes |
+| v11.2.3 | 2025-11-29 | Metadata aligned to v11.2.3; safe-fence protocol applied; emoji directory style updated               |
+| v11.2.2 | 2025-11-29 | Full rewrite for KFM-MDP v11.1; energy/carbon telem v2; SLSA + PROV-O proofs                           |
 
 ---
 
 <div align="center">
 
-📜 **Kansas Frontier Matrix — Telemetry & Governance Layer (v11.2.3)**  
+📜 **Kansas Frontier Matrix — Telemetry & Governance Layer (v11.2.6)**  
 Provenance · Observability · Sustainable Intelligence  
 
-[📘 Docs Root](../../../..) · [📡 Telemetry Index](../README.md) · [⚖ Governance](../../standards/governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](../../../..) · [📡 Telemetry Index](../README.md) · [⚖ Governance](../../standards/governance/ROOT-GOVERNANCE.md) · [🌿 FAIR+CARE Guide](../../standards/faircare/FAIRCARE-GUIDE.md) · [🪶 Indigenous Data Protection](../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) · [🛡 Security Policy](../../standards/security/SECURITY-POLICY.md) · [📊 ETL Governance Event Schema](../../../schemas/telemetry/etl-governance-event-v1.json)
 
 </div>
