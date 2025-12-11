@@ -2,8 +2,8 @@
 title: "🗺️ Kansas Frontier Matrix — LiDAR & GLO Integration Field Guide (v1.1)"
 path: "docs/workflows/lidar-glo-integration.md"
 
-version: "v11.2.4"
-last_updated: "2025-12-06"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous"
@@ -11,13 +11,13 @@ content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
+signature_ref: "releases/v11.2.6/signature.sig"
+attestation_ref: "releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "releases/v11.2.6/manifest.zip"
 data_contract_ref: "docs/contracts/data-contract-v3.json"
-telemetry_ref: "releases/v11.2.4/lidar-glo-integration-telemetry.json"
-telemetry_schema: "schemas/telemetry/lidar-glo-integration-workflow-v11.2.4.json"
+telemetry_ref: "releases/v11.2.6/lidar-glo-integration-telemetry.json"
+telemetry_schema: "schemas/telemetry/lidar-glo-integration-workflow-v11.2.6.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 
@@ -92,9 +92,9 @@ shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.4-shape.ttl"
 story_node_refs: []
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:workflows:lidar-glo-integration:v11.2.4"
-semantic_document_id: "kfm-lidar-glo-integration-field-guide-v11.2.4"
-event_source_id: "ledger:kfm:doc:workflows:lidar-glo-integration:v11.2.4"
+doc_uuid: "urn:kfm:doc:workflows:lidar-glo-integration:v11.2.6"
+semantic_document_id: "kfm-lidar-glo-integration-field-guide-v11.2.6"
+event_source_id: "ledger:kfm:doc:workflows:lidar-glo-integration:v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -194,8 +194,8 @@ This guide provides a **reproducible, auditable** method that feeds results into
 
 <img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blueviolet" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/Data-FAIR%2BCARE-gold" />
 <img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Certified-orange" />
 <img src="https://img.shields.io/badge/Status-Operational-brightgreen" />
 
 </div>
@@ -233,42 +233,43 @@ this guide defines the **geospatial ETL and analysis segment** for LiDAR × GLO 
 ## 🗂️ Directory Layout
 
 ~~~text
-📁 docs/
-└── 📁 workflows/
-    📄 README.md                               — CI/CD & governance workflows index
-    📄 lidar-glo-integration.md                — ← This LiDAR & GLO integration field guide
-
-📁 data/
-├── 📁 raw/
-│   ├── 📁 lidar/                              — LiDAR DEM tiles (GeoTIFF, LAZ)
-│   └── 📁 glo_plats/                          — GLO plats (TIFF, PDF, GeoTIFF) + field notes
-├── 📁 processed/
-│   ├── 📁 lidar/                              — Mosaics, hillshades, MDI, SVF, slope, contours
-│   └── 📁 glo/                                — Georeferenced plats, digitized vectors, QA masks
-└── 📁 work/
-    └── 📁 staging/
-        └── 📁 geospatial/                     — Intermediate rasters, scratch layers, logs
-
-📁 src/
-└── 📁 pipelines/
-    └── 📁 geospatial/
-        📄 lidar_glo_pipeline.py               — Orchestrates LiDAR × GLO ETL/analysis
-        📄 lidar_derivatives.py                — Derives hillshade/MDI/SVF/slope
-        📄 glo_georef.py                       — GLO georeferencing and PLSS alignment
-
-📁 outputs/
-├── 📁 analysis/
-│   ├── 📁 terrain/                            — Slope, SVF, MDI, contours, QA maps
-│   └── 📁 historic/                           — Digitized features, overlays, interpretation notes
-└── 📁 tiles/
-    └── 📁 web/
-        📄 *.pmtiles                           — Vector/raster tiles for MapLibre/Cesium
-
-📁 releases/
-└── 📁 v11.2.4/
-    📄 lidar-glo-integration-telemetry.json    — Telemetry for this workflow
-    📄 sbom.spdx.json                          — SBOM for geospatial tooling
-    📄 manifest.zip                            — Release manifest (ETL configs, checksums)
+📁 KansasFrontierMatrix/
+├── 📚 docs/                                   # Documentation (standards, workflows, guides)
+│   └── ⚙️ workflows/
+│       📄 README.md                           # Workflows index
+│       📄 lidar-glo-integration.md            # 🗺️ LiDAR & GLO integration field guide (this file)
+│
+├── 🗂️ data/
+│   ├── 📁 raw/                                # Immutable source data (DVC/LFS)
+│   │   ├── 📡 lidar/                          # LiDAR DEM tiles (GeoTIFF, LAZ)
+│   │   └── 🧭 glo_plats/                      # GLO plats (TIFF, PDF, GeoTIFF) + field notes
+│   ├── 📁 processed/
+│   │   ├── 🏔️ lidar/                         # Mosaics, hillshades, MDI, SVF, slope, contours
+│   │   └── 🧾 glo/                            # Georeferenced plats, digitized vectors, QA masks
+│   └── 📁 work/
+│       └── 🧪 staging/
+│           └── 🗺️ geospatial/                 # Intermediates & scratch rasters
+│
+├── 🧩 src/
+│   └── 🌐 pipelines/
+│       └── 🗺️ geospatial/
+│           📄 lidar_glo_pipeline.py           # Orchestrates LiDAR × GLO ETL/analysis
+│           📄 lidar_derivatives.py            # Derives hillshade/MDI/SVF/slope rasters
+│           📄 glo_georef.py                   # GLO georeferencing & PLSS alignment
+│
+├── 📊 outputs/
+│   ├── 🧮 analysis/
+│   │   ├── 🏔️ terrain/                       # Slope, SVF, MDI, contours, QA maps
+│   │   └── 🏛️ historic/                      # Digitized features, overlays, interpretation notes
+│   └── 🧱 tiles/
+│       └── 🗺️ web/
+│           📄 *.pmtiles                       # Vector/raster tiles for MapLibre/Cesium
+│
+└── 📦 releases/
+    └── 📁 v11.2.6/
+        📄 lidar-glo-integration-telemetry.json  # Telemetry for this workflow
+        📄 sbom.spdx.json                        # Geospatial tooling SBOM
+        📄 manifest.zip                          # ETL configs, checksums, provenance pointers
 ~~~
 
 ---
@@ -279,7 +280,7 @@ this guide defines the **geospatial ETL and analysis segment** for LiDAR × GLO 
 
 - **LiDAR** (USGS 3DEP, Kansas DASC) provides statewide bare-earth DTMs.  
 - **GLO plats** record 19th-century property boundaries, roads, schools, mills, and other structures.  
-- **PLSS (Township–Range–Section)** is the common spatial frame that links survey records with modern data.
+- **PLSS (Township–Range–Section)** is the common spatial frame linking survey records with modern data.
 
 Combining these sources enables:
 
@@ -299,7 +300,7 @@ Combining these sources enables:
   - Features become nodes and relationships in Neo4j with full provenance and CARE tags.
 
 - **Frontend & Focus Mode**  
-  - MapLibre/Cesium frontends consume PMTiles and GeoJSON from `tiles/web/`.  
+  - MapLibre/Cesium frontends consume PMTiles and GeoJSON from `outputs/tiles/web/`.  
   - Focus Mode presents Story Nodes about specific features, townships, or workflows.
 
 ---
@@ -410,7 +411,8 @@ LiDAR × GLO pipelines should be wired into CI/CD as follows:
 
 ### 3. Telemetry
 
-Per run (per AOI / township), append telemetry to `releases/v11.2.4/lidar-glo-integration-telemetry.json`, e.g.:
+Per run (per AOI / township), append telemetry to  
+`releases/v11.2.6/lidar-glo-integration-telemetry.json`, for example:
 
 - `tiles_processed`  
 - `features_detected` vs. `features_accepted`  
@@ -521,7 +523,7 @@ For each LiDAR × GLO run:
 - **Agents**:
   - `ex:KFM_Geospatial_Pipeline` (software agent).  
   - `ex:KFM_GeoTeam` (analysts).  
-  - Potentially `ex:TribalReviewBody` (governance actor for sensitive data).
+  - `ex:TribalReviewBody` (governance actor) where applicable.
 
 PROV relations link all entities and activities, making it possible to reconstruct how each feature was derived and reviewed.
 
@@ -550,8 +552,8 @@ PROV relations link all entities and activities, making it possible to reconstru
 - Use **config-driven runs**:
   - `configs/geospatial/lidar_glo_<aoi>.yaml` for each AOI.  
 - Log:
-  - Input file lists and checksums,  
-  - Tool versions (GDAL/PDAL/QGIS),  
+  - Input file lists and checksums.  
+  - Tool versions (GDAL/PDAL/QGIS).  
   - Important parameters (e.g., MDI illumination angles, SVF parameters).  
 - Ensure that re-running the pipeline with the same config and inputs reproduces outputs within numerical tolerances.
 
@@ -596,7 +598,8 @@ Governance decisions are mirrored in:
 
 | Version    | Date       | Author      | Summary                                                                                 |
 |-----------:|------------|------------|-----------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | `@kfm-geo` | Aligned with KFM-MDP v11.2.4; updated directory layout to emoji/tree profile; added STAC/DCAT/PROV alignment, Story Node hooks, telemetry wiring, and CI/CD integration notes. |
+| **v11.2.6** | 2025-12-11 | `@kfm-geo` | Aligned to KFM v11.2.6; updated release & telemetry paths, emoji directory layout, and footer/navigation profile; preserved v1.1 methodological content. |
+| v11.2.4   | 2025-12-06 | `@kfm-geo`  | Aligned with KFM-MDP v11.2.4; updated directory layout to emoji/tree profile; added STAC/DCAT/PROV alignment, Story Node hooks, telemetry wiring, and CI/CD integration notes. |
 | v10.1.0   | 2025-11-10 | `@kfm-geo`  | Added MDI workflow, DCAT mirror, CARE tags; aligned with v10.1.0 telemetry & governance. |
 | v1.0.0    | 2025-11-08 | `@kfm-geo`  | Initial publication — LiDAR + GLO integration guide.                                   |
 
@@ -604,11 +607,23 @@ Governance decisions are mirrored in:
 
 <div align="center">
 
-🗺️ **Kansas Frontier Matrix — LiDAR & GLO Integration Field Guide (v1.1)**  
+🗺️ **Kansas Frontier Matrix — LiDAR & GLO Integration Field Guide (v1.1 · doc v11.2.6)**  
 Geospatial Insight · FAIR+CARE Governance · Cultural Stewardship  
+
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/Data-FAIR%2BCARE-gold" />
+<img src="https://img.shields.io/badge/Workflow-lidar_glo_integration_v11.2.6-informational" />
 
 [⬅ Back to Workflows Index](./README.md) ·  
 [📘 Docs Root](../README.md) ·  
-[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+[📚 Glossary](../glossary.md) ·  
+[📐 Markdown Protocol (KFM-MDP v11.2.4)](../standards/kfm_markdown_protocol_v11.2.4.md) ·  
+[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🤝 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md)
+
+  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 for this document  
+MCP-DL v6.3 · KFM-MDP v11.2.4 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
 
 </div>
