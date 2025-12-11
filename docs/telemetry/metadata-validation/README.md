@@ -1,8 +1,8 @@
 ---
-title: "🔏 KFM v11.2.3 — Metadata Validation & Trust Badge System (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🔏 KFM v11.2.6 — Metadata Validation & Trust Badge System (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/telemetry/metadata-validation/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-01"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -15,12 +15,12 @@ commit_sha: "<latest-commit>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.3/manifest.zip"
-attestation_ref: "../../../releases/v11.2.3/slsa-attestation.json"
-signature_ref: "../../../releases/v11.2.3/signature.sig"
+sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.6/manifest.zip"
+attestation_ref: "../../../releases/v11.2.6/slsa-attestation.json"
+signature_ref: "../../../releases/v11.2.6/signature.sig"
 
-telemetry_ref: "../../../releases/v11.2.3/metadata-validation-telemetry.json"
+telemetry_ref: "../../../releases/v11.2.6/metadata-validation-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/metadata-validation-v1.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
@@ -31,7 +31,7 @@ sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -125,6 +125,7 @@ metadata_profiles:
   - "KFM-Metadata-Trust-v11"
 
 provenance_chain:
+  - "docs/telemetry/metadata-validation/README.md@v11.2.3"
   - "docs/telemetry/metadata-validation/README.md@v11.2.2"
   - "docs/telemetry/metadata-validation/README.md@v11.1.0"
   - "docs/telemetry/metadata-validation/README.md@v10.4.3"
@@ -140,7 +141,7 @@ provenance_requirements:
 # 🔏 Metadata Validation & Trust Badge System  
 Automated STAC, DCAT, JSON-LD, Provenance & FAIR+CARE Metadata Integrity Validation
 
-[![KFM Metadata Trust v11.2.3](https://img.shields.io/badge/KFM_Metadata_Trust-v11.2.3-6f42c1)]()  
+[![KFM Metadata Trust v11.2.6](https://img.shields.io/badge/KFM_Metadata_Trust-v11.2.6-6f42c1)]()  
 [![FAIR Verified](https://img.shields.io/badge/FAIR-Verified-2ea44f)]()  
 [![CARE Compliant](https://img.shields.io/badge/CARE-Compliant-0aa)]()  
 [![SLSA Attested](https://img.shields.io/badge/SLSA-Attested-005bbb)]()
@@ -170,7 +171,7 @@ The system is mandatory for all v11 metadata-bearing directories.
 
 ~~~text
 docs/telemetry/metadata-validation/
-├── 📄 README.md                          # This file
+├── 📄 README.md                           # This file
 │
 ├── 🧪 checks/                             # Schemas & validation rule sets
 │   ├── stac-schema.json                   # STAC schema
@@ -182,13 +183,13 @@ docs/telemetry/metadata-validation/
 │   ├── metadata-badge.yml                 # Validator + badge emitter
 │   └── report-template.html               # HTML template for validation reports
 │
-├── 📊 reports/                             # GitHub Pages–served validator results
-│   └── index.html                          # Current metadata validation report
+├── 📊 reports/                            # GitHub Pages–served validator results
+│   └── index.html                         # Current metadata validation report
 │
-├── 🎨 badges/                              # Dynamic badge JSON outputs
+├── 🎨 badges/                             # Dynamic badge JSON outputs
 │   └── metadata-badge.json                # Consumed by shields.io
 │
-└── 🐍 scripts/                             # Validation CLI tools
+└── 🐍 scripts/                            # Validation CLI tools
     ├── validate_metadata.py               # STAC/DCAT/LD/provenance/FAIR+CARE checks
     ├── render_report.py                   # HTML report generator
     └── utils.py                           # Shared helpers (context expansion, hashing)
@@ -230,7 +231,7 @@ Badge:
 https://img.shields.io/badge/metadata--validation-dynamic-blueviolet  
 
 Badge report target:  
-https://<pages-domain>/docs/telemetry/metadata-validation/reports/index.html  
+https://\<pages-domain\>/docs/telemetry/metadata-validation/reports/index.html  
 
 The badge turns green or red depending on metadata validation status.
 
@@ -251,13 +252,13 @@ Steps:
 
 ## 📘 Reference Scripts
 
-validate_metadata.py  
+**validate_metadata.py**  
 • Runs STAC, DCAT, JSON-LD, provenance, FAIR+CARE validation  
 
-render_report.py  
-• Creates HTML validation reports served from /reports/  
+**render_report.py**  
+• Creates HTML validation reports served from `/reports/`  
 
-utils.py  
+**utils.py**  
 • Hashing, context expansion, SBOM parsing, shared helpers  
 
 ---
@@ -266,28 +267,37 @@ utils.py
 
 Recommended directories to include the Trust Badge:
 
-• docs/data/  
-• any stac/ collection  
-• any pipelines/ output directory  
-• any metadata-driven UI component  
+• `docs/data/`  
+• Any `stac/` collection  
+• Any `pipelines/` output directory  
+• Any metadata-driven UI component  
 
 ---
 
 ## 🧾 Version History
 
-| Version | Date       | Summary                                                                |
-|--------:|------------|------------------------------------------------------------------------|
-| v11.2.3 | 2025-12-01 | Centralized metadata validator & Trust Badge system released.          |
-| v11.2.2 | 2025-11-12 | DCAT/LD expansion rules standardized; schema consolidation.            |
-| v11.2.0 | 2025-10-28 | FAIR+CARE rule integration completed; provenance model stabilized.     |
-| v10.4.x | 2025-08-xx | Early distributed validators prior to centralization.                  |
+| Version | Date       | Summary                                                                                          |
+|--------:|------------|--------------------------------------------------------------------------------------------------|
+| v11.2.6 | 2025-12-11 | Updated to KFM-MDP v11.2.6; release/telemetry refs bumped to v11.2.6; footer and cross-links aligned with v11.2.6 telemetry docs; no schema changes. |
+| v11.2.3 | 2025-12-01 | Centralized metadata validator & Trust Badge system released.                                    |
+| v11.2.2 | 2025-11-12 | DCAT/LD expansion rules standardized; schema consolidation.                                      |
+| v11.2.0 | 2025-10-28 | FAIR+CARE rule integration completed; provenance model stabilized.                               |
+| v10.4.x | 2025-08-xx | Early distributed validators prior to centralization.                                            |
 
 ---
 
 <div align="center">
 
+🔏 **Kansas Frontier Matrix — Metadata Validation & Trust Badge System (v11.2.6)**  
+Semantic Integrity · Provenance Verified · FAIR+CARE-Aligned
+
 [📘 Docs Root](../../..) ·  
-[🛡 Governance](../../../standards/governance/ROOT-GOVERNANCE.md) ·  
-[📡 Telemetry Protocol v11](../../../standards/telemetry/README.md)
+[📡 Telemetry Index](../README.md) ·  
+[🛡 Governance](../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🌿 FAIR+CARE Guide](../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) ·  
+[🛡 Security Policy](../../standards/security/SECURITY-POLICY.md) ·  
+[📊 Metadata Validation Telemetry](../../../releases/v11.2.6/metadata-validation-telemetry.json) ·  
+[🧩 Validation Schema](../../../schemas/telemetry/metadata-validation-v1.json)
 
 </div>
