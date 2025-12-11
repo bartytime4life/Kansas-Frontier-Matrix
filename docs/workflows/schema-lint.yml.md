@@ -2,8 +2,8 @@
 title: "🧩 Kansas Frontier Matrix — Schema Validation Workflow (`schema-lint.yml`) (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/workflows/schema-lint.yml.md"
 
-version: "v11.2.4"
-last_updated: "2025-12-06"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous"
@@ -11,12 +11,12 @@ content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/schema-lint-telemetry.json"
-telemetry_schema: "schemas/telemetry/schema-lint-workflow-v11.2.4.json"
+signature_ref: "releases/v11.2.6/signature.sig"
+attestation_ref: "releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "releases/v11.2.6/manifest.zip"
+telemetry_ref: "releases/v11.2.6/schema-lint-telemetry.json"
+telemetry_schema: "schemas/telemetry/schema-lint-workflow-v11.2.6.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 
@@ -91,9 +91,9 @@ shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.4-shape.ttl"
 story_node_refs: []
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:workflows:schema-lint-yml:v11.2.4"
-semantic_document_id: "kfm-workflow-schema-lint-yml-v11.2.4"
-event_source_id: "ledger:kfm:doc:workflows:schema-lint-yml:v11.2.4"
+doc_uuid: "urn:kfm:doc:workflows:schema-lint-yml:v11.2.6"
+semantic_document_id: "kfm-workflow-schema-lint-yml-v11.2.6"
+event_source_id: "ledger:kfm:doc:workflows:schema-lint-yml:v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -266,7 +266,7 @@ Within:
         📄 summary.md                      — Human-readable summary for PRs
 
 📁 releases/
-└── 📁 v11.2.4/
+└── 📁 v11.2.6/
     📄 schema-lint-telemetry.json          — Aggregated schema-lint telemetry
     📄 sbom.spdx.json                      — SBOM for validators and dependencies
     📄 manifest.zip                        — Release manifest (configs, versions, checksums)
@@ -445,7 +445,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in  schema_lint_telemetry.json \
-            --dest releases/v11.2.4/schema-lint-telemetry.json
+            --dest releases/v11.2.6/schema-lint-telemetry.json
 ~~~
 
 ### 2. Quality Gates
@@ -485,7 +485,7 @@ Schema changes that are **breaking** should be:
 
 Telemetry is appended to:
 
-- `releases/v11.2.4/schema-lint-telemetry.json`
+- `releases/v11.2.6/schema-lint-telemetry.json`
 
 with metrics such as schemas_checked, failures, runtime, energy, and carbon.
 
@@ -545,7 +545,7 @@ Key relations:
 - **Validators**: `tools/schemas/*.py` and `*.mjs`  
 - **Schemas**: `schemas/json/`, `schemas/shacl/`, `schemas/examples/`  
 - **Reports**: `reports/self-validation/schemas/`  
-- **Telemetry**: `releases/v11.2.4/schema-lint-telemetry.json`
+- **Telemetry**: `releases/v11.2.6/schema-lint-telemetry.json`
 
 The workflow:
 
@@ -601,7 +601,8 @@ Schema-lint and its telemetry form part of the **governance evidence** used by c
 
 | Version    | Date       | Author          | Summary                                                                                                                        |
 |-----------:|------------|-----------------|--------------------------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | `@kfm-arch`     | Aligned with KFM-MDP v11.2.4; expanded front-matter; added STAC/DCAT/PROV alignment, Story Node hooks, telemetry wiring, and CI integration details. |
+| **v11.2.6** | 2025-12-11 | `@kfm-arch`     | Aligned to KFM v11.2.6; updated release and telemetry paths and telemetry schema reference; no functional changes to schema validation behavior. |
+| v11.2.4   | 2025-12-06 | `@kfm-arch`     | Aligned with KFM-MDP v11.2.4; expanded front-matter; added STAC/DCAT/PROV alignment, Story Node hooks, telemetry wiring, and CI integration details. |
 | v10.2.4   | 2025-11-12 | `@kfm-arch`     | Introduced telemetry v3 schema for schema-lint; unified artifact paths; improved summary aggregation.                          |
 | v10.1.0   | 2025-11-10 | `@kfm-arch`     | Added SHACL validation step; expanded coverage to configs and examples.                                                       |
 | v9.9.0    | 2025-11-08 | `@kfm-arch`     | Initial governed schema-lint workflow documentation.                                                                          |
@@ -618,4 +619,3 @@ Semantic Contracts · FAIR+CARE Governance · Sustainable CI/CD
 [⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
