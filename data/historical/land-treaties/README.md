@@ -20,13 +20,13 @@ telemetry_schema: "../../../schemas/telemetry/module-default-v1.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -34,6 +34,9 @@ dcat_profile: "KFM-DCAT v11"
 
 status: "Active / Enforced"
 doc_kind: "Module"
+header_profile: "standard"
+footer_profile: "standard"
+
 semantic_intent:
   - "data-governance"
   - "heritage-records"
@@ -78,10 +81,10 @@ event_source_id: "ledger:kfm:module:land-treaties:v11.2.2"
 `docs/data/historical/land-treaties/`
 
 **Purpose:**  
-Provide authoritative, structured, governed treaty datasets (≈1850–1890) for narrative, geospatial, and historical interpretation within the Kansas Frontier Matrix v11 architecture.
+Provide authoritative, structured, governed treaty datasets (≈1850–1890) for narrative, geospatial, and historical interpretation within the Kansas Frontier Matrix v11 architecture, tightly integrated with the ETL → STAC/DCAT/PROV → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode pipeline. :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
 
 [![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.2-purple)]()  
+[![KFM-MDP v11.2.6](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.6-purple)]()  
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)]()  
 [![WCAG AA+](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%2B-brightgreen)]()  
 [![SLSA Level 3](https://img.shields.io/badge/SLSA-Level%203-orange)]()
@@ -101,19 +104,19 @@ The **Land Treaties Module** is the canonical home for:
 
 This module connects:
 
-- Source archives (KHS, NARA, BLM GLO, tribal archives)  
+- Source archives (KHS, NARA, BLM GLO, tribal archives, and other curated open-data sources) :contentReference[oaicite:2]{index=2}  
 - ETL workflows (OCR, NER, geocoding, polygon construction)  
-- The KFM **knowledge graph** (Neo4j)  
+- The KFM **knowledge graph** (Neo4j) and geospatial front-end :contentReference[oaicite:3]{index=3}  
 - The KFM **map + timeline UI**  
 - **Story Nodes** and **Focus Mode v3** narratives  
 
-All content here must be **schema-valid**, **provenance-complete**, and **mask / generalize** locations or details that are sensitive under CARE and Indigenous sovereignty policies.
+All content here must be **schema-valid**, **provenance-complete**, and must **mask / generalize** locations or details that are sensitive under FAIR+CARE and Indigenous sovereignty policies (for example, approximate or omit locations for sacred or vulnerable sites). :contentReference[oaicite:4]{index=4}:contentReference[oaicite:5]{index=5}
 
 ---
 
 ## 🗂️ Directory Layout
 
-Emoji-enriched, CI-safe layout for this module:
+Emoji-enriched, CI-safe layout for this module (per `fencing_profile: outer-backticks-inner-tildes-v1` in KFM‑MDP v11.2.6). :contentReference[oaicite:6]{index=6}
 
 ~~~text
 docs/data/historical/land-treaties/
@@ -145,15 +148,17 @@ docs/data/historical/land-treaties/
     └── 🗃️ docs/                      # Scanned treaties, reference PDFs, supporting maps
 ~~~
 
-Every subdirectory MUST be kept in sync with this layout and described here if modified.
+Every subdirectory MUST be kept in sync with this layout and documented here if modified, in line with KFM’s documentation-first governance. :contentReference[oaicite:7]{index=7}
 
 ---
 
 ## 📦 Metadata & Standards Compliance
 
-This module **must** satisfy the following standards for all datasets and files:
+This module **must** satisfy the following standards for all datasets and files, using KFM’s STAC/DCAT/PROV/GeoSPARQL profiles as the canonical source of truth. :contentReference[oaicite:8]{index=8}  
 
 ### STAC v1.0.0
+
+We implement the STAC 1.0.0 Community Standard for organizing treaty-related spatiotemporal assets (polygons, maps, document scans) as **Catalogs → Collections → Items → Assets**. :contentReference[oaicite:9]{index=9}  
 
 - **Collections** (e.g., `treaties-kansas-v1`) describe:
   - spatial extent (multi-county, multi-state when relevant)  
@@ -172,32 +177,34 @@ This module **must** satisfy the following standards for all datasets and files:
     - `transcription` (text/markdown)  
     - `summary` or `notes` if provided  
 
+JSON Schema validation of STAC Collections and Items is required before publish. :contentReference[oaicite:10]{index=10}  
+
 ### DCAT 3.0
 
-- Each treaty dataset is a `dcat:Dataset` with:
-  - `dct:title`, `dct:description`, `dct:creator`, `dct:publisher`  
-  - `dct:temporal`, `dct:spatial`  
-  - `dct:license`, `dct:rights`  
-  - `dcat:distribution` entries pointing at STAC Items or static downloads  
+Each treaty dataset is modeled as a `dcat:Dataset` in a DCAT 3.0–compliant catalog, enabling federated open-data discovery and graph queries. :contentReference[oaicite:11]{index=11}  
+
+- `dct:title`, `dct:description`, `dct:creator`, `dct:publisher`  
+- `dct:temporal`, `dct:spatial`  
+- `dct:license`, `dct:rights`  
+- `dcat:distribution` entries pointing at STAC Items or static downloads  
 
 ### GeoSPARQL 1.1
 
-- All geometries are:
-  - stored as GeoJSON  
-  - optionally mirrored as WKT literals in the graph  
-  - default CRS: **EPSG:4326 (WGS84)**  
-  - typed as `geo:Feature` / `geo:Geometry` in the graph  
+Geometries are exposed as both GeoJSON and (optionally) WKT literals in the knowledge graph, consistent with GeoSPARQL’s `geo:Feature` / `geo:Geometry` model and `geo:hasGeometry`/`geo:asWKT`. :contentReference[oaicite:12]{index=12}  
+
+- Default CRS: **EPSG:4326 (WGS84)**  
+- Nodes typed as `geo:Feature` / `geo:Geometry`  
 
 ### CIDOC-CRM
 
-Mapping (minimum):
+CIDOC-CRM is used as the primary heritage ontology:
 
 - `E5 Event` — Treaty negotiation/ratification event  
-- `E53 Place` — The negotiation site and treaty polygons  
+- `E53 Place` — Negotiation site and treaty polygons  
 - `E39 Actor` — Tribes, U.S. government, signatories  
 - `E31 Document` — Treaty texts & scans  
 
-Relationships such as:
+Key relationships:
 
 - `E5.P7_took_place_at → E53 Place`  
 - `E5.P11_had_participant → E39 Actor`  
@@ -205,12 +212,15 @@ Relationships such as:
 
 ### OWL-Time
 
-- Treaties represented as `time:Interval` with:
-  - `time:hasBeginning` / `time:hasEnd`  
-  - precision (`year`, `month`, `day`) recorded in metadata  
-  - original phrasing in `original_label` (e.g., `"autumn 1865"`)  
+Treaties are represented as `time:Interval` with:
+
+- `time:hasBeginning` / `time:hasEnd`  
+- Precision (`year`, `month`, `day`) recorded in metadata  
+- Original phrasing preserved in `original_label` (e.g., `"autumn 1865"`)
 
 ### PROV-O
+
+We adopt PROV-O for end-to-end treaty data provenance, tracking entities (datasets, scans), activities (ETL runs), and agents (institutions, maintainers). :contentReference[oaicite:13]{index=13}  
 
 For each asset:
 
@@ -226,49 +236,51 @@ At minimum:
 ### FAIR+CARE
 
 - **FAIR**:
-  - Findable → STAC/DCAT + searchable IDs  
+  - Findable → STAC/DCAT IDs and searchable metadata  
   - Accessible → stable URLs, documented access control  
   - Interoperable → open formats, standard vocabularies  
   - Reusable → clear licenses, quality notes, provenance  
 
 - **CARE**:
-  - Collective Benefit → clear articulation of use cases, including benefits to Indigenous communities  
-  - Authority to Control → respect tribal governance, mask sensitive locations as requested  
-  - Responsibility → no speculative claims; handle contested histories with care  
+  - Collective Benefit → articulated use cases including benefits to Indigenous communities  
+  - Authority to Control → respect tribal governance; mask or omit sensitive locations as instructed  
+  - Responsibility → no speculative or harmful claims; contested histories are explicitly marked and sourced  
   - Ethics → no de-anonymization; no exposure of sacred or restricted sites  
 
-If any treaty or site is flagged as **restricted** by partners, coordinates MUST be generalized (e.g., to county-level) or fully withheld.
+Sensitive records must follow KFM’s FAIR+CARE and sovereignty guidance (e.g., generalization of locations to county-level or full suppression). :contentReference[oaicite:14]{index=14}:contentReference[oaicite:15]{index=15}  
 
 ---
 
 ## 🧱 Pipeline Behavior
 
-All workflows under `workflows/` must follow the **KFM Reliability Framework**.
+All workflows under `workflows/` must follow the **KFM Reliability Framework**, aligning with deterministic ETL and governed publish gates. :contentReference[oaicite:16]{index=16}  
 
 ### 4.1 Determinism & Idempotency
 
-- Use only deterministic operations (fixed random seeds, fixed NLP models & versions).  
-- Running the same ETL job with the same inputs MUST produce identical outputs (same hashes).
+- Deterministic operations only (fixed random seeds, fixed NLP model versions, fixed reprojection parameters).  
+- Running the same ETL job with the same inputs MUST produce identical outputs (same hashes).  
 
-Example responsibilities:
+Responsibilities:
 
-- OCR pipelines: same engine + language model + page segmentation config.  
-- NER/relationship extraction: pinned model versions; pinned configuration.  
-- Polygon creation: consistent reprojection, snapping, simplification thresholds.
+- OCR pipelines: fixed engine + language model + segmentation config.  
+- NER/relationship extraction: pinned models and configuration.  
+- Polygon creation: consistent reprojection, snapping, simplification thresholds.  
 
 ### 4.2 Write-Ahead Logging (WAL) & Rollback
 
-- Before modifying graph or STAC indices, record:
-  - ID of to-be-created/updated entities  
-  - previous state snapshot where applicable  
+Before modifying graph or STAC indices, each run MUST:
 
-- Provide rollback tools in `workflows/` to:
-  - revert an ETL run by `run_id`  
-  - restore prior STAC/graph state from WAL and snapshot manifests  
+- Record IDs of to-be-created/updated entities  
+- Snapshot previous state where applicable  
+
+Rollback tools in `workflows/` MUST support:
+
+- Reverting an ETL run by `run_id`  
+- Restoring prior STAC/graph state from WAL and snapshot manifests  
 
 ### 4.3 Telemetry & SLOs
 
-Each job MUST emit telemetry:
+Each job MUST emit telemetry compatible with the module telemetry schema:
 
 - `latency_slo_ms` — target latency  
 - `latency_ms` — actual runtime  
@@ -276,11 +288,11 @@ Each job MUST emit telemetry:
 - `energy_wh` — estimated energy consumption  
 - `carbon_ug` — estimated CO₂eq micrograms  
 
-Telemetry flows into the KFM observability stack and is summarized in the module’s telemetry JSON referenced in the header.
+Telemetry is aggregated into `telemetry_ref` and used to enforce performance, reliability, and sustainability SLOs.
 
 ### 4.4 OpenLineage Integration
 
-Each ETL run must produce an OpenLineage event:
+Each ETL run MUST produce an OpenLineage event:
 
 - `run_id` / `parent_run_id`  
 - `job_name` (e.g., `treaties_ingest_v2`)  
@@ -288,13 +300,13 @@ Each ETL run must produce an OpenLineage event:
 - `outputs[]` — new STAC Items, updated graph nodes  
 - `facets` — STAC IDs, DCAT URIs, code version, environment hash  
 
-This allows cross-module lineage tracing from raw archive scans all the way to Focus Mode narratives.
+This enables cross-module lineage tracing from raw archive scans to Focus Mode narratives.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Treaties are central to many KFM narratives. This module must therefore support **Story Nodes** and **Focus Mode v3** out-of-the-box.
+Treaties are central to many KFM narratives. This module must therefore support **Story Nodes** and **Focus Mode v3** natively, consistent with the core architecture for graph-backed storytelling. :contentReference[oaicite:17]{index=17}  
 
 ### 5.1 Story Nodes
 
@@ -340,11 +352,11 @@ story_node:
       role: "council-site"
 ~~~
 
-Narrative text must stay within documented facts and clearly cite contested interpretations in the underlying knowledge graph, not in the Story Node itself.
+Narrative text must stay within documented facts in the underlying data and graph; contested interpretations and uncertainties should be modeled in the graph and referenced, not invented in the Story Node.
 
 ### 5.2 Focus Mode v3
 
-Focus Mode is the AI-powered contextual lens. For treaties, the Focus engine must be able to:
+Focus Mode is the AI-powered contextual lens. For treaties, the Focus engine MUST be able to:
 
 - Take a treaty `Event` or `Story Node` as the focus entity  
 - Pull related entities within two hops:
@@ -358,7 +370,7 @@ For each Focus request, the backend will:
 1. Query the Neo4j graph for the neighborhood around the treaty event.  
 2. Materialize relevant STAC/geo assets (polygons, maps).  
 3. Use the AI summarization pipeline (pinned model version) to generate **data-backed** narrative text.  
-4. Attach provenance to each summary (which graph nodes & documents were used).  
+4. Attach provenance to each summary (which graph nodes & documents were used) using PROV-O. :contentReference[oaicite:18]{index=18}  
 
 The front-end will:
 
@@ -372,18 +384,18 @@ The front-end will:
 All Focus outputs must:
 
 - be **non-speculative**  
-- honor CARE masking rules  
-- include a way for users to drill down to the underlying data (`see sources` link)
+- honor CARE masking rules and Indigenous sovereignty policy  
+- expose “see sources” links back to the underlying datasets and documents  
 
 ---
 
 ## 🧬 Version History
 
-| Version | Date       | Author        | Notes |
-|---------|------------|--------------|-------|
-| v11.2.2 | 2025-11-30 | `<your-name>` | Initial v11-compliant Land Treaties Module README |
+| Version | Date       | Author        | Notes                                                |
+|---------|------------|--------------|------------------------------------------------------|
+| v11.2.2 | 2025-11-30 | `<your-name>` | Initial v11-compliant Land Treaties Module README.  |
 
-Update this table whenever you make structural or governance-significant changes.
+Update this table whenever you make structural or governance-significant changes, and ensure provenance_chain is updated accordingly. :contentReference[oaicite:19]{index=19}  
 
 ---
 
@@ -393,8 +405,8 @@ Update this table whenever you make structural or governance-significant changes
 
 **📚 Governance Links**  
 [Docs Root](../../../README.md) •  
-[Standards Index](../../../docs/standards/INDEX.md) •  
-[Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[Standards Index](../../../standards/INDEX.md) •  
+[Governance Charter](../../../standards/governance/ROOT-GOVERNANCE.md)
 
 **🔐 Compliance:**  
 FAIR+CARE · STAC/DCAT · CIDOC-CRM · OWL-Time · GeoSPARQL · PROV-O · SLSA Level 3 · SPDX 2.3 · OpenLineage
