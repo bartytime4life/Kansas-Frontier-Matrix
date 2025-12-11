@@ -19,12 +19,12 @@ doc_uuid: "urn:kfm:doc:standards:catalogs:crosswalks-index:v11.2.3"
 semantic_document_id: "kfm-standards-catalogs-crosswalks-index-v11.2.3"
 event_source_id: "ledger:kfm:standards:catalogs:crosswalks:index:v11.2.3"
 
-sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.3/catalog-metadata-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/catalog-metadata-v1.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+sbom_ref: "../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.3/catalog-metadata-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/catalog-metadata-v1.json"
+energy_schema: "../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../governance/ROOT-GOVERNANCE.md"
 faircare_ref: "../../faircare/FAIRCARE-GUIDE.md"
@@ -59,12 +59,12 @@ ontology_alignment:
   owl_time: "TemporalEntity"
   geosparql: "geo:FeatureCollection"
 
-json_schema_ref: "../../../schemas/json/catalogs-crosswalks-index-v1.json"
-shape_schema_ref: "../../../schemas/shacl/catalogs-crosswalks-index-v1.shape.ttl"
+json_schema_ref: "../../../../schemas/json/catalogs-crosswalks-index-v1.json"
+shape_schema_ref: "../../../../schemas/shacl/catalogs-crosswalks-index-v1.shape.ttl"
 
 immutability_status: "version-pinned"
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 
 ttl_policy: "12 Months"
 sunset_policy: "Superseded by next major catalog crosswalks standards update"
@@ -153,200 +153,239 @@ This index defines how KFM documents and governs:
 
 - **STAC → DCAT** crosswalks (KFM’s canonical pattern — STAC-first, DCAT-derived).  
 - Optional **STAC → CKAN / portal** crosswalks for legacy or external systems.  
+- Domain-specific crosswalk profiles that extend the core mappings.  
 - Crosswalk documentation structure, validation rules, and CI/CD integration.  
-- How crosswalk specs are used by pipelines, governance, and Focus Mode for safe, explainable metadata behavior.
 
 It is a child of:
 
-- `docs/standards/catalogs/README.md` — Catalog & metadata standards index.  
-- `docs/standards/catalogs/stac-dcat-derivation.md` — Authoritative STAC → DCAT derivation model.
+- `docs/standards/catalogs/README.md` — catalog & metadata standards index.  
+- `docs/standards/catalogs/stac-dcat-derivation.md` — authoritative STAC → DCAT derivation model.
+
+Crosswalk docs under this tree are **normative** for KFM pipelines: if a pipeline maps between catalog models, it must implement one of the governed crosswalk standards defined here.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-📂 docs/standards/catalogs/
-└── 📂 crosswalks/
-    ├── 📄 README.md                      — ← This file (crosswalks index)
-    │
-    ├── 📄 stac-dcat-crosswalk.md         — STAC → DCAT field-level mapping (canonical)
-    ├── 📄 stac-ckan-crosswalk.md         — Optional STAC → CKAN/portal mapping notes
-    │
-    └── 📂 profiles/                      — (Optional) domain-specific crosswalk profiles
-        ├── 📄 stac-dcat-hydro-profile.md — Hydrology-focused crosswalk details
-        └── 📄 stac-dcat-archaeo-profile.md — Archaeology / heritage-focused crosswalk details
+📁 Kansas-Frontier-Matrix/
+└── 📁 docs/
+    └── 📁 standards/
+        └── 📁 catalogs/
+            ├── 📄 README.md                       📚 Catalog & metadata standards index
+            ├── 📦 stac-dcat-derivation.md         📦 STAC → DCAT derivation model
+            │
+            └── 📁 crosswalks/                     🔀 Catalog crosswalk standards subtree
+                ├── 📄 README.md                    📚 This file (crosswalks index)
+                │
+                ├── 📄 stac-dcat-crosswalk.md       📦 STAC → DCAT field-level mapping (canonical)
+                ├── 📄 stac-ckan-crosswalk.md       📦 Optional STAC → CKAN / portal mapping notes
+                │
+                └── 📁 profiles/                    🧩 Domain-specific crosswalk profiles
+                    ├── 📄 stac-dcat-hydro-profile.md    💧 Hydrology-focused crosswalk profile
+                    └── 📄 stac-dcat-archaeo-profile.md  🏺 Archaeology / heritage crosswalk profile
 ~~~
 
 **Directory contract**
 
-- Every document under this tree MUST:
-  - Use **KFM-MDP v11.2.4** front-matter and heading patterns.  
-  - Be **machine-extractable** (tables, headings, code blocks) for crosswalk tooling.  
-  - Align with `stac-dcat-derivation.md` and the catalog standards index.  
-  - Respect FAIR+CARE and sovereignty requirements, especially when mapping sensitive fields.
+- Every document under `docs/standards/catalogs/crosswalks/` MUST:
+  - follow **KFM-MDP v11.2.4** front-matter and heading conventions  
+  - be **machine-extractable** (clear tables and code blocks)  
+  - declare its source and target models (e.g., “STAC → DCAT v3”)  
+  - align with the STAC-first, DCAT-derived model in `stac-dcat-derivation.md`  
+  - respect FAIR+CARE and sovereignty rules, especially for sensitive domains (e.g., heritage)
 
 ---
 
 ## 🔁 Crosswalk Types
 
-KFM crosswalk docs fall into three main categories:
+KFM catalog crosswalks fall into three main categories:
 
 1. **Core STAC ↔ DCAT crosswalk**  
-   - Defines the **base, version-stable mapping** all pipelines must implement.  
-   - Normative; used by CI, validators, and metadata tooling.
+   - Defines the **base, version-stable mapping** required for all KFM catalogs.  
+   - Normative and enforced by CI and metadata tooling.  
 
-2. **Portal-oriented crosswalks**  
-   - STAC → CKAN / GeoNetwork / other portal models.  
-   - Non-authoritative; supported where external systems require specific fields.
+2. **Portal-oriented crosswalks (STAC → CKAN / other)**  
+   - Used to integrate with CKAN-like or national portals that rely on specific schemas.  
+   - Non-authoritative, but must not contradict core STAC ↔ DCAT semantics.  
 
 3. **Domain-specific crosswalk profiles**  
-   - Hydrology, archaeology, climatology, etc.  
-   - Build on the core STAC ↔ DCAT mapping with domain-specific semantics (e.g., `eo:*` extensions, cultural sensitivity flags).
+   - Hydrology, archaeology/heritage, atmospheric science, etc.  
+   - Extend the core crosswalk with domain-specific fields and constraints.  
 
-All crosswalks MUST:
+All crosswalk docs MUST:
 
-- Declare their **source** and **target** models.  
-- Describe **field-level mappings**, including type conversions and units.  
-- Document **edge cases** and **lossy transformations**.  
-- Provide **examples** (STAC in → DCAT/portal out).
+- Specify:
+  - source model and version (e.g., STAC 1.0.0 + KFM-STAC v11 profile)  
+  - target model and version (e.g., DCAT 3.0 + KFM-DCAT v11 profile)  
+- Describe:
+  - field-level mappings (including type/unit conversions)  
+  - edge cases and lossy transformations  
+  - required and optional fields on both sides  
+- Include:
+  - worked examples (STAC in → derivation out)  
+  - notes on FAIR+CARE and sovereignty impacts where applicable  
 
 ---
 
 ## 📦 STAC → DCAT Crosswalk
 
-The core crosswalk is fully specified in:
+The **canonical STAC → DCAT crosswalk** is defined in:
 
-- `docs/standards/catalogs/crosswalks/stac-dcat-crosswalk.md`  
-- Together with the architecture and rationale in `docs/standards/catalogs/stac-dcat-derivation.md`.
+- `docs/standards/catalogs/crosswalks/stac-dcat-crosswalk.md`
 
-**Normative KFM position**
+and is paired with the architectural model in:
 
-- STAC is the **authoritative spatial and temporal metadata layer**.  
+- `docs/standards/catalogs/stac-dcat-derivation.md`
+
+**KFM position**
+
+- STAC is the **authoritative spatial/temporal metadata layer**.  
 - DCAT is a **derived discovery and federation layer**, never the source of truth.  
-- Crosswalk logic MUST be **deterministic** and **versioned**.
+- The STAC → DCAT crosswalk is **binding** for all KFM catalog pipelines.
 
-Key expectations of the `stac-dcat-crosswalk.md` standard:
+The `stac-dcat-crosswalk.md` standard MUST:
 
-- Mapping of:
-  - STAC Item/Collection → `dcat:Dataset`.  
-  - STAC Assets → `dcat:Distribution`.  
+- Cover mappings from:
+  - STAC Collections/Items → `dcat:Dataset`  
+  - STAC Assets → `dcat:Distribution`  
 
-- Coverage of:
-  - Identifiers and titles.  
-  - Temporal intervals (`datetime`, `start_datetime`, `end_datetime`).  
-  - Bounding boxes and spatial footprint handling.  
-  - Providers, licenses, checksums, and roles.  
-  - Provenance (PROV-O) and FAIR+CARE indicators.
+- Address:
+  - identifiers (`id` → `dct:identifier`)  
+  - titles and descriptions  
+  - spatial footprint (`bbox`, `geometry` → `dct:spatial`)  
+  - temporal intervals (`datetime`, `start_datetime`, `end_datetime` → `dct:temporal`)  
+  - providers, licenses, and rights  
+  - keywords, mission tags, and KFM `kfm:*` properties  
+  - provenance and derivation (`dct:source`, `prov:wasDerivedFrom`)  
 
-Implementation pipelines MUST treat `stac-dcat-crosswalk.md` as **binding** for all STAC → DCAT transformations.
+Pipelines implementing STAC → DCAT transformations MUST be traceable back to this crosswalk.
 
 ---
 
 ## 📦 STAC → CKAN / Portal Crosswalk
 
-Where KFM integrates with CKAN-like portals or national data portals, the optional crosswalk is documented in:
+For CKAN-like or external portal integrations, the optional crosswalk is documented in:
 
-- `docs/standards/catalogs/crosswalks/stac-ckan-crosswalk.md`.
+- `docs/standards/catalogs/crosswalks/stac-ckan-crosswalk.md`
 
-This document SHOULD:
+This document SHOULD describe:
 
-- Define how STAC fields map into:
-  - CKAN `package` fields (e.g., `name`, `title`, `notes`, `extras`).  
-  - Portal-specific metadata extensions (e.g., tags, organizations).  
+- Field mappings from STAC (and/or DCAT) into:
+  - CKAN `package`-level fields (`name`, `title`, `notes`, `tags`, `extras`, etc.)  
+  - portal-specific organizational and access metadata  
 
-- Highlight:
-  - Where information may be **lost or flattened** (e.g., multi-asset Items).  
-  - How to handle **spatial/temporal fields** that lack native equivalents.  
-  - How to avoid exposing **sensitive fields** in public-facing portals (e.g., generalized locations for cultural sites).
+- Handling of:
+  - spatial/temporal fields where portal support is limited  
+  - multi-asset Items that must be flattened into portal concepts  
+  - sensitive fields that must be masked, generalized, or omitted (e.g., heritage locations)
 
 KFM rule:
 
-> Portal crosswalks MUST NOT bypass the STAC → DCAT model or weaken FAIR+CARE protections.
+> Portal crosswalks MUST NOT bypass STAC → DCAT governance or weaken FAIR+CARE protections.
+
+Portal crosswalks are **adapters** on top of the STAC-first, DCAT-derived architecture; they do not redefine authoritative metadata.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Crosswalks are enforced via CI workflows and telemetry.
+Crosswalk standards are enforced via CI, schemas, and telemetry.
 
-### 1. Recommended CI Workflows
+### 1. CI Workflows
+
+Recommended workflows:
 
 - `catalog-stac-validate.yml`  
-  - Validates STAC Items/Collections against:
-    - STAC 1.0.x schemas.  
-    - KFM-STAC v11 profile.  
+  - Validates STAC against STAC 1.0.x and KFM-STAC v11.  
 
 - `catalog-dcat-validate.yml`  
-  - Validates derived DCAT JSON-LD against:
-    - DCAT 3.0.  
-    - KFM-DCAT v11 profile.
+  - Validates derived DCAT JSON-LD against DCAT 3.0 and KFM-DCAT v11.  
 
 - `catalog-crosswalk-validate.yml`  
-  - Ensures STAC ↔ DCAT consistency:
-    - IDs, temporal ranges, spatial extents.  
-    - License and publisher consistency.  
-    - Asset/Distribution counts and checksums.
+  - Applies crosswalk logic to fixture STAC/portal inputs and asserts:
+    - identifier consistency  
+    - temporal/spatial consistency  
+    - license and publisher consistency  
+    - asset/distribution count checks  
 
-All workflows MUST emit Unified Telemetry Objects into:
+All workflows MUST run as part of:
 
-- `../../../releases/v11.2.3/catalog-metadata-telemetry.json`  
-  conforming to `../../../schemas/telemetry/catalog-metadata-v1.json`.
+- `.github/workflows/kfm-ci.yml`  
+- the `dev → staging → production` promotion pipeline.
 
-### 2. Governance Rules
+### 2. Telemetry
 
-- No DCAT in production without **traceable STAC provenance**.  
-- Changes to crosswalk standards MUST:
-  - Bump version and `last_updated`.  
-  - Update this index and referenced docs.  
-  - Be recorded in governance/audit logs.  
-  - Pass FAIR+CARE review if they affect visibility of sensitive fields.
+Crosswalk-related telemetry (referenced via `telemetry_ref`) SHOULD include:
+
+- counts of STAC records evaluated  
+- counts of DCAT (and optional portal) records generated  
+- mapping coverage statistics (e.g., fields mapped vs ignored)  
+- error and warning categories over time  
+
+Telemetry MUST conform to:
+
+- `catalog-metadata-telemetry.json` schema (`catalog-metadata-v1.json`)  
+- KFM energy/carbon schemas for crosswalk-heavy workflows.
+
+### 3. Governance
+
+Any changes to:
+
+- the core STAC ↔ DCAT crosswalk  
+- portal crosswalk definitions  
+- domain-specific crosswalk profiles  
+
+MUST:
+
+- bump version and `last_updated` in the changed docs  
+- update this index if new crosswalks or profiles are added/removed  
+- record changes in governance/audit logs  
+- pass FAIR+CARE review when they affect visibility of sensitive information.
 
 ---
 
 ## 🧠 Focus Mode & Metadata Extraction
 
-Crosswalk docs are used by Focus Mode and other AI tools to:
-
-- Explain how a STAC record becomes a DCAT dataset or portal entry.  
-- Clarify why a field appears (or does not appear) in an external catalog.  
-- Surface potential **lossy transformations** or **generalizations** (e.g., geometry simplification, sensitive field masking).
+Crosswalk docs are **first-class inputs** for Focus Mode and other AI tooling.
 
 Under this index’s AI rules:
 
 - Focus Mode MAY:
-  - Summarize crosswalk behavior.  
-  - Highlight which fields map where.  
-  - Explain differences between STAC, DCAT, and portal metadata.  
+  - summarize crosswalk behavior and mapping rules  
+  - highlight where data may be generalized, flattened, or dropped  
+  - generate **explanations** for why specific DCAT or portal fields appear (or do not appear)  
 
 - Focus Mode MUST NOT:
-  - Invent new crosswalk rules.  
-  - Override or reinterpret normative mapping tables.  
-  - Claim legal or governance authority outside of what is stated in these docs.
+  - invent crosswalk rules that are not present in these docs  
+  - override, contradict, or “fix” crosswalk tables autonomously  
+  - claim governance authority beyond what is explicitly encoded here  
 
-Crosswalk docs MUST remain:
+Authors SHOULD:
 
-- Plain, unambiguous, and table-driven.  
-- Friendly to machine parsing (no deeply nested formatting tricks).
+- keep crosswalk sections table-driven and stable  
+- use clear headings and short, structured lists so extraction is deterministic  
+- annotate lossy transforms and FAIR+CARE impacts explicitly to aid interpretability.
 
 ---
 
 ## 🕰️ Version History
 
-| Version  | Date       | Author                                      | Summary                                                                                                 |
-|----------|------------|---------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| v11.2.3  | 2025-12-03 | Metadata & Catalogs WG · FAIR+CARE Council | Created crosswalks standards index; aligned with catalog standards index and STAC → DCAT derivation model; defined directory layout, crosswalk types, CI/governance expectations, and Focus Mode usage. |
+| Version | Date       | Author                                      | Summary                                                                                                 |
+|--------:|------------|---------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-12-03 | Metadata & Catalogs WG · FAIR+CARE Council | Created catalog crosswalks standards index; aligned with catalog standards index and STAC → DCAT derivation model; defined directory layout, crosswalk types, CI/governance expectations, and Focus Mode usage. |
+
+---
+
+<sub>© 2025 Kansas Frontier Matrix · MIT / CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM‑MDP v11.2.4</sub>
+
+<br/>
 
 <div align="center">
 
-📚 **Kansas Frontier Matrix — Catalog Crosswalks Standards Index (v11.2.3)**  
-STAC-first catalogs · DCAT-derived discovery · Governed crosswalks.
+📚 **KFM v11.2.3 — Catalog Crosswalks Standards Index**  
+STAC-First Catalogs · DCAT-Derived Discovery · Governed Crosswalks  
 
-© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0  
-Master Coder Protocol v6.3 · FAIR+CARE Aligned · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[⬅ Back to Catalog Standards Index](../README.md) ·  
-[📦 STAC → DCAT Derivation Model](../stac-dcat-derivation.md) ·  
-[⚖ Root Governance Charter](../../governance/ROOT-GOVERNANCE.md)
+[📚 Catalog Standards Index](../README.md) · [📦 STAC → DCAT Derivation](../stac-dcat-derivation.md) · [⚖ Governance Charter](../../governance/ROOT-GOVERNANCE.md)
 
 </div>
