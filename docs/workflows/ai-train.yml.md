@@ -2,8 +2,8 @@
 title: "🧠 Kansas Frontier Matrix — AI Training Workflow (`ai-train.yml`) (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/workflows/ai-train.yml.md"
 
-version: "v11.2.4"
-last_updated: "2025-12-06"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous"
@@ -11,12 +11,12 @@ content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/ai-train-telemetry.json"
-telemetry_schema: "schemas/telemetry/ai-train-workflow-v11.2.4.json"
+signature_ref: "releases/v11.2.6/signature.sig"
+attestation_ref: "releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "releases/v11.2.6/manifest.zip"
+telemetry_ref: "releases/v11.2.6/ai-train-telemetry.json"
+telemetry_schema: "schemas/telemetry/ai-train-workflow-v11.2.6.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 
@@ -91,9 +91,9 @@ shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.4-shape.ttl"
 story_node_refs: []
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:workflows:ai-train-yml:v11.2.4"
-semantic_document_id: "kfm-workflow-ai-train-yml-v11.2.4"
-event_source_id: "ledger:kfm:doc:workflows:ai-train-yml:v11.2.4"
+doc_uuid: "urn:kfm:doc:workflows:ai-train-yml:v11.2.6"
+semantic_document_id: "kfm-workflow-ai-train-yml-v11.2.6"
+event_source_id: "ledger:kfm:doc:workflows:ai-train-yml:v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -191,10 +191,10 @@ deprecated_fields:
 Define the **governed GitHub Actions workflow** that trains and evaluates KFM AI models (e.g., **Focus Transformer v2.1**), enforces **FAIR+CARE** and **MCP‑DL v6.3** governance, generates **Model Cards**, computes **bias/drift/explainability** metrics, signs artifacts (SLSA/OIDC), and exports **telemetry** & **SBOM** for Diamond⁹ Ω / Crown∞Ω certification.  
 The workflow is fully aligned with **KFM‑MDP v11.2.4** and the CI/CD & Governance index at `docs/workflows/README.md`.
 
-<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance_Aligned-orange" />
 <img src="https://img.shields.io/badge/AI-Train_&_Eval-governed" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance_Aligned-orange" />
 <img src="https://img.shields.io/badge/Status-Automated-brightgreen" />
 
 </div>
@@ -261,49 +261,50 @@ The exact trigger configuration is defined in `.github/workflows/ai-train.yml` a
 ## 🗂️ Directory Layout
 
 ~~~text
-📁 .github/
-└── 📁 workflows/
-    📄 ai-train.yml                     — GitHub Actions workflow (governed AI training)
-
-📁 docs/
-└── 📁 workflows/
-    📄 README.md                        — CI/CD & Governance Workflows index
-    📄 ai-train.yml.md                  — ← This specification
-
-📁 src/
-└── 📁 ai/
-    📄 train.py                         — Training entrypoint (used by CI)
-    📄 eval.py                          — Evaluation & metrics
-    📄 drift_check.py                   — Drift & OOD checks
-    📄 explainability/                  — Shared explainability routines
-
-📁 configs/
-└── 📁 ai/
-    📄 focus_v2_1.yaml                  — Example training config for Focus Transformer v2.1
-    📄 <model_name>.yaml                — Other model configs (seeds, STAC refs, hyperparams)
-
-📁 mcp/
-└── 📁 model_cards/
-    📄 FOCUS_V2_1_MODEL_CARD.md        — Generated model card (example)
-
-📁 data/
-└── 📁 processed/
-    📁 models/
-        📁 <model_id>/
-            📄 model_metadata.json      — Model version manifest
-            📄 model_weights.bin        — Model artifacts (or storage pointer)
-            📄 metrics.json             — Eval metrics
-            📄 drift.json               — Drift/OOD report
-            📄 explainability.json      — Explainability report
-            📄 MODEL_CARD.md            — Governed model card
-            📄 signature.sig            — Cosign signature
-            📄 certificate.pem          — Sig certificate
-
-📁 releases/
-└── 📁 v11.2.4/
-    📄 sbom.spdx.json                   — SBOM
-    📄 manifest.zip                     — Release manifest
-    📄 ai-train-telemetry.json          — Aggregated training telemetry
+📁 KansasFrontierMatrix/
+├── ⚙️ .github/
+│   └── 📁 workflows/
+│       📄 ai-train.yml                     # GitHub Actions workflow (governed AI training)
+│
+├── 📚 docs/
+│   └── ⚙️ workflows/
+│       📄 README.md                        # CI/CD & Governance Workflows index
+│       📄 ai-train.yml.md                  # ← This specification
+│
+├── 🧠 src/
+│   └── 📁 ai/
+│       📄 train.py                         # Training entrypoint (used by CI)
+│       📄 eval.py                          # Evaluation & metrics
+│       📄 drift_check.py                   # Drift & OOD checks
+│       📁 explainability/                  # Shared explainability routines
+│
+├── ⚙️ configs/
+│   └── 🤖 ai/
+│       📄 focus_v2_1.yaml                  # Example training config for Focus Transformer v2.1
+│       📄 <model_name>.yaml                # Other model configs (seeds, STAC refs, hyperparams)
+│
+├── 🧾 mcp/
+│   └── 📁 model_cards/
+│       📄 FOCUS_V2_1_MODEL_CARD.md        # Generated model card (example)
+│
+├── 🗂️ data/
+│   └── 📁 processed/
+│       📁 models/
+│           📁 <model_id>/
+│               📄 model_metadata.json      # Model version manifest
+│               📄 model_weights.bin        # Model artifacts (or storage pointer)
+│               📄 metrics.json             # Eval metrics
+│               📄 drift.json               # Drift/OOD report
+│               📄 explainability.json      # Explainability report
+│               📄 MODEL_CARD.md            # Governed model card
+│               📄 signature.sig            # Cosign signature
+│               📄 certificate.pem          # Sig certificate
+│
+└── 📦 releases/
+    └── 📁 v11.2.6/
+        📄 sbom.spdx.json                   # SBOM
+        📄 manifest.zip                     # Release manifest
+        📄 ai-train-telemetry.json          # Aggregated training telemetry
 ~~~
 
 ---
@@ -315,8 +316,8 @@ The exact trigger configuration is defined in `.github/workflows/ai-train.yml` a
 - **Upstream:**
   - ETL and cataloging pipelines produce training-ready datasets and STAC/DCAT metadata.  
 - **Siblings:**
-  - `faircare-validate.yml` validates FAIR+CARE and governance for datasets/docs.
-  - `ai-explainability.yml` can perform **post-training explainability audits** on model versions produced here.
+  - `faircare-validate.yml` validates FAIR+CARE and governance for datasets/docs.  
+  - `ai-explainability.yml` can perform **post-training explainability audits** on model versions produced here.  
 - **Downstream:**
   - Results flow into:
     - Model cards in `mcp/model_cards/`,
@@ -383,7 +384,7 @@ timeline
   - A narrative summary of:
     - Dataset(s) used and constraints,
     - Key metrics and fairness status,
-    - Important drift/explainability findings.
+    - Important drift/explainability findings.  
   - Links to:
     - The model card,
     - STAC/DCAT entries,
@@ -392,14 +393,14 @@ timeline
 **Focus Mode** MAY:
 
 - Surface:
-  - Training history for a model (timeline of runs).
-  - Metric trends and fairness status across versions.
+  - Training history for a model (timeline of runs).  
+  - Metric trends and fairness status across versions.  
 - Highlight:
   - Where data contracts or governance gates failed in previous runs.
 
 **Focus Mode MUST NOT**:
 
-- Rewrite numerical metrics or governance decisions.
+- Rewrite numerical metrics or governance decisions.  
 - Infer new policy from the presence/absence of a run — it can only surface existing content.
 
 ---
@@ -565,7 +566,7 @@ jobs:
       - name: Build SBOM (SPDX)
         uses: anchore/syft-action@v1
         with:
-          args: "dir:. -o spdx-json=./releases/v11.2.4/sbom.spdx.json"
+          args: "dir:. -o spdx-json=./releases/v11.2.6/sbom.spdx.json"
 
       - name: Attest Build Provenance (SLSA)
         uses: slsa-framework/slsa-github-generator/actions/attest-build-provenance@v1
@@ -604,7 +605,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in  "telemetry_ai_${MODEL_ID}.json" \
-            --dest "releases/v11.2.4/ai-train-telemetry.json"
+            --dest "releases/v11.2.6/ai-train-telemetry.json"
 ~~~
 
 ---
@@ -613,13 +614,13 @@ jobs:
 
 ### 1. Inputs
 
-- **Config:** `configs/ai/<model>.yaml`
-  - Model family and version.
-  - STAC/DCAT dataset references.
-  - Hyperparameters, seeds, resource limits.
+- **Config:** `configs/ai/<model>.yaml`  
+  - Model family and version.  
+  - STAC/DCAT dataset references.  
+  - Hyperparameters, seeds, resource limits.  
 - **Data:** STAC/DCAT referenced datasets resolved via:
-  - `dataset_ref` input,
-  - or mapping in the training config.
+  - `dataset_ref` input, or  
+  - Mapping in the training config.
 
 ### 2. Artifacts
 
@@ -635,9 +636,9 @@ Per `MODEL_ID`, the workflow MUST produce (at minimum):
 
 Release-level artifacts:
 
-- `releases/v11.2.4/sbom.spdx.json`  
-- `releases/v11.2.4/manifest.zip`  
-- `releases/v11.2.4/ai-train-telemetry.json`
+- `releases/v11.2.6/sbom.spdx.json`  
+- `releases/v11.2.6/manifest.zip`  
+- `releases/v11.2.6/ai-train-telemetry.json`
 
 ### 3. Telemetry Record Shape (Conceptual)
 
@@ -661,7 +662,7 @@ Each run contributes an entry similar to:
 }
 ~~~
 
-The exact schema is defined in `schemas/telemetry/ai-train-workflow-v11.2.4.json`.
+The exact schema is defined in `schemas/telemetry/ai-train-workflow-v11.2.6.json`.
 
 ---
 
@@ -672,14 +673,14 @@ The exact schema is defined in `schemas/telemetry/ai-train-workflow-v11.2.4.json
 For each training run:
 
 - **Entities**
-  - `ex:ModelVersion_<MODEL_ID>_<VERSION>`
-  - `ex:DatasetVersion_<DATASET_ID>_<VERSION>`
-  - `ex:TrainingReport_<RUN_ID>` (metrics, drift, explainability, model card)
+  - `ex:ModelVersion_<MODEL_ID>_<VERSION>`  
+  - `ex:DatasetVersion_<DATASET_ID>_<VERSION>`  
+  - `ex:TrainingReport_<RUN_ID>` (metrics, drift, explainability, model card)  
 - **Activity**
-  - `ex:TrainingRun_<RUN_ID>`
+  - `ex:TrainingRun_<RUN_ID>`  
 - **Agents**
-  - `ex:KFM_CI_Bot` (software agent)
-  - `ex:ModelOwnerTeam` (organization)
+  - `ex:KFM_CI_Bot` (software agent)  
+  - `ex:ModelOwnerTeam` (organization)  
 
 Key relations:
 
@@ -693,30 +694,30 @@ These mappings enable reconstruction of which dataset and config produced which 
 ### 2. DCAT
 
 - Each train/eval bundle can be a `dcat:Dataset`:
-  - `dct:title`: "Training & Evaluation for ${MODEL_ID} — ${RUN_ID}"
-  - `dct:description`: Short narrative summarizing training context and metrics.
-  - `dct:identifier`: `${MODEL_ID}-${RUN_ID}`.
-  - `dct:issued`: run completion time.
+  - `dct:title`: "Training & Evaluation for ${MODEL_ID} — ${RUN_ID}"  
+  - `dct:description`: Short narrative summarizing training context and metrics.  
+  - `dct:identifier`: `${MODEL_ID}-${RUN_ID}`.  
+  - `dct:issued`: run completion time.  
 - `dcat:Distribution` entries point to:
-  - Model card,
-  - Metrics/drift/explainability JSON,
-  - SBOM,
-  - Telemetry snapshots.
+  - Model card,  
+  - Metrics/drift/explainability JSON,  
+  - SBOM,  
+  - Telemetry snapshots.  
 
 ### 3. STAC
 
 For geo-aware models:
 
 - Represent training/validation results as STAC Items in a `kfm-ai-train` Collection:
-  - `id`: `${MODEL_ID}-${RUN_ID}`
-  - `properties.datetime`: training completion.
+  - `id`: `${MODEL_ID}-${RUN_ID}`  
+  - `properties.datetime`: training completion.  
   - `assets`:
-    - `model-card` → `MODEL_CARD.md`
-    - `metrics` → `metrics.json`
-    - `drift` → `drift.json`
-    - `explainability` → `explainability.json`
+    - `model-card` → `MODEL_CARD.md`  
+    - `metrics` → `metrics.json`  
+    - `drift` → `drift.json`  
+    - `explainability` → `explainability.json`  
 - `geometry` / `bbox` may reflect:
-  - Training coverage (e.g., Kansas bounding box), or
+  - Training coverage (e.g., Kansas bounding box), or  
   - The footprint of training data if spatially constrained.
 
 ---
@@ -726,7 +727,7 @@ For geo-aware models:
 ### 1. Module Boundaries
 
 - `src/ai/*`:
-  - Training and evaluation logic.
+  - Training and evaluation logic.  
   - No direct CI-specific APIs (keep reusable).  
 - `tools/`:
   - Data contract validation, FAIR+CARE checks, telemetry emission utilities.  
@@ -738,7 +739,7 @@ For geo-aware models:
 ### 2. Determinism & Config
 
 - All randomness:
-  - Seeded via values in `configs/ai/<model>.yaml`.
+  - Seeded via values in `configs/ai/<model>.yaml`.  
   - Seeds logged in model metadata and telemetry.  
 - No hidden configuration:
   - All thresholds for drift/fairness must be explicitly configurable and documented.
@@ -749,53 +750,70 @@ For geo-aware models:
 
 ### 1. FAIR
 
-| Aspect | Implementation |
-|--------|----------------|
-| Findable | Stable IDs (`MODEL_ID`, `RUN_ID`), catalog inclusion, path conventions. |
-| Accessible | Governed artifacts exposed through CI artifacts and/or storage with documented policies. |
-| Interoperable | JSON Schema, DCAT 3.0, STAC, and PROV-O mappings. |
-| Reusable | Clear licensing, versioning, and provenance; documented configs and metrics. |
+| Aspect      | Implementation                                                                 |
+|-------------|--------------------------------------------------------------------------------|
+| Findable    | Stable IDs (`MODEL_ID`, `RUN_ID`), catalog inclusion, path conventions         |
+| Accessible  | Governed artifacts exposed through CI artifacts and/or storage with policies  |
+| Interoperable | JSON Schema, DCAT 3.0, STAC, and PROV-O mappings                            |
+| Reusable    | Clear licensing, versioning, and provenance; documented configs and metrics   |
 
 ### 2. CARE
 
-- **Collective Benefit**
-  - Training runs include fairness & drift checks, improving overall safety and trust.  
-- **Authority to Control**
-  - Sensitive attributes and groups defined by governance documents; workflow enforces redaction and gating.  
-- **Responsibility**
-  - Fail-fast behavior for PII/sensitive data or unfairness breaches; requires explicit mitigation and override.  
-- **Ethics**
-  - Checks must be interpretable; metrics and thresholds documented in configs and model cards.
+- **Collective Benefit**  
+  Training runs include fairness & drift checks, improving overall safety and trust.  
+
+- **Authority to Control**  
+  Sensitive attributes and groups are defined by governance documents; the workflow enforces redaction and gating.  
+
+- **Responsibility**  
+  Fail-fast behavior for PII/sensitive data or unfairness breaches; requires explicit mitigation and override.  
+
+- **Ethics**  
+  Checks must be interpretable; metrics and thresholds documented in configs and model cards.
 
 ### 3. Governance Hooks
 
 - `ai-train.yml` is a **required check** for high-risk model families.  
 - Governance bodies (FAIR+CARE Council, AI Governance WG) periodically review:
-  - Metric definitions,
-  - Guardrails,
-  - Drift strategies,
-  - Telemetry trends.
+  - Metric definitions,  
+  - Guardrails,  
+  - Drift strategies,  
+  - Telemetry trends.  
 
 ---
 
 ## 🕰️ Version History
 
-| Version    | Date       | Summary                                                                                                     |
-|-----------:|------------|-------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | Aligned with KFM‑MDP v11.2.4; expanded front-matter, STAC/DCAT/PROV mappings, Story Node hooks, and telemetry ref to v11.2.4; no breaking semantic changes to training flow. |
-| v10.2.4   | 2025-11-12 | Telemetry schema v3; Focus Transformer v2.1 alignment; added PII/sensitive gate and updated SBOM/manifest refs. |
-| v10.1.0   | 2025-11-10 | Introduced telemetry v2, integrated IG explainability, SLSA/Cosign attestations.                            |
-| v9.9.0    | 2025-11-08 | Initial governed AI training workflow doc with drift/explainability and telemetry export.                   |
+| Version    | Date       | Author       | Summary                                                                                                     |
+|-----------:|------------|-------------|-------------------------------------------------------------------------------------------------------------|
+| **v11.2.6** | 2025-12-11 | `@kfm-ai`   | Aligned to KFM v11.2.6; updated release and telemetry references to `v11.2.6`, adopted emoji directory layout, and extended footer navigation. |
+| v11.2.4   | 2025-12-06 | `@kfm-ai`   | Aligned with KFM‑MDP v11.2.4; expanded front-matter, STAC/DCAT/PROV mappings, Story Node hooks, and telemetry ref to v11.2.4; no breaking semantic changes to training flow. |
+| v10.2.4   | 2025-11-12 | `@kfm-ai`   | Telemetry schema v3; Focus Transformer v2.1 alignment; added PII/sensitive gate and updated SBOM/manifest refs. |
+| v10.1.0   | 2025-11-10 | `@kfm-ai`   | Introduced telemetry v2, integrated IG explainability, SLSA/Cosign attestations.                            |
+| v9.9.0    | 2025-11-08 | `@kfm-ai`   | Initial governed AI training workflow doc with drift/explainability and telemetry export.                   |
 
 ---
 
 <div align="center">
 
-🧠 **Kansas Frontier Matrix — AI Training Workflow (`ai-train.yml`)**  
+🧠 **Kansas Frontier Matrix — AI Training Workflow (`ai-train.yml`) · v11.2.6**  
 Deterministic Training · FAIR+CARE Governance · SLSA & SBOM · Focus-Ready Model Intelligence  
+
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/AI-Train%2FEval-governed" />
+<img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
 
 [⬅ Back to CI/CD & Governance Workflows](./README.md) ·  
 [📘 Docs Root](../README.md) ·  
-[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+[📚 Glossary](../glossary.md) ·  
+[📐 Markdown Protocol (KFM-MDP v11.2.4)](../standards/kfm_markdown_protocol_v11.2.4.md) ·  
+[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🤝 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)  
+
+  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 for this document  
+MCP-DL v6.3 · KFM-MDP v11.2.4 · FAIR+CARE Governance · Diamond⁹ Ω / Crown∞Ω Certified  
 
 </div>
