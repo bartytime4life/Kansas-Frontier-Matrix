@@ -1,8 +1,8 @@
 ---
-title: "📈 Kansas Frontier Matrix — Cardinality Review Log (Quarterly Ledger) v11.2.2"
+title: "📈 Kansas Frontier Matrix — Cardinality Review Log (Quarterly Ledger) v11.2.6"
 path: "docs/telemetry/metrics/cardinality/review-log/review-log.md"
-version: "v11.2.2"
-last_updated: "2025-11-30"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -13,11 +13,11 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-signature_ref: "../../../../../releases/v11.2.2/signature.sig"
-attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
-sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../../releases/v11.2.2/otel-metrics.json"
+signature_ref: "../../../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.2.6/otel-metrics.json"
 telemetry_schema: "../../../../../schemas/telemetry/metric-cardinality-v1.json"
 energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
@@ -29,7 +29,7 @@ sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTIO
 license: "CC-BY 4.0"
 
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -83,6 +83,7 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
+  - "docs/telemetry/metrics/cardinality/review-log/review-log.md@v11.2.2"
   - "docs/telemetry/metrics/cardinality/review-log/review-log.md@v11.1.0"
   - "docs/telemetry/metrics/cardinality/review-log/review-log.md@v10.x"
 
@@ -98,9 +99,9 @@ shape_schema_ref: "../../../../../schemas/shacl/telemetry-review-log-v1-shape.tt
 story_node_refs: []
 immutability_status: "version-pinned"
 
-doc_uuid: "urn:kfm:doc:telemetry:metrics:cardinality:review-log:v11.2.2"
-semantic_document_id: "kfm-telemetry-metric-cardinality-review-log-v11.2.2"
-event_source_id: "ledger:kfm:doc:telemetry:metrics:cardinality:review-log:v11.2.2"
+doc_uuid: "urn:kfm:doc:telemetry:metrics:cardinality:review-log:v11.2.6"
+semantic_document_id: "kfm-telemetry-metric-cardinality-review-log-v11.2.6"
+event_source_id: "ledger:kfm:doc:telemetry:metrics:cardinality:review-log:v11.2.6"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -166,11 +167,11 @@ deprecated_fields:
 
 <div align="center">
 
-# 📈 **Cardinality Review Log (Quarterly Ledger) v11.2.2**  
+# 📈 **Cardinality Review Log (Quarterly Ledger) v11.2.6**  
 `docs/telemetry/metrics/cardinality/review-log/review-log.md`
 
 **Purpose**  
-Serve as the **authoritative quarterly ledger** for metric cardinality anomalies in KFM v11.  
+Serve as the **authoritative quarterly ledger** for metric cardinality anomalies in KFM v11.2.6.  
 This log records **ASB usage**, **spikes**, **forbidden labels**, **quarantined metrics**, **governance tickets**, and **Story Node seeds**.
 
 </div>
@@ -254,12 +255,15 @@ Notes: Path normalization added; exporter validated by CI; dashboards updated.
 Review-log entries are consumed by Focus Mode to build:
 
 - Spike timelines  
-- Remediation narratives  
-- Deployment → cardinality impact mappings  
-- “System Health Over Time” visual stories  
-- Per-metric health summaries  
+- Budget utilization graphs  
+- “Violation → Remediation” Story Node sequences  
+- Focus Mode narratives for:
+  - specific metrics  
+  - specific services  
+  - specific deployments  
+  - systemic trends across releases  
 
-Each entry MUST seed a Story Node with:
+Each entry SHOULD seed a Story Node with:
 
 - A short synopsis  
 - Offending labels  
@@ -289,20 +293,27 @@ All entries must pass CARE screening before merge.
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                |
-|--------:|------------|----------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-30 | Full metadata version; added quarterly log structure and example entries.              |
-| v11.1.0 | 2025-08-15 | Initial partial log.                                                                   |
-| v10.x   | 2024-03-01 | Early log before governance formalization.                                            |
+| Version | Date       | Summary                                                                                                              |
+|--------:|------------|----------------------------------------------------------------------------------------------------------------------|
+| v11.2.6 | 2025-12-11 | Updated to KFM-MDP v11.2.6; release and telemetry refs bumped to v11.2.6; no changes to existing quarterly entries. |
+| v11.2.2 | 2025-11-30 | Full metadata version; added quarterly log structure and example entries.                                            |
+| v11.1.0 | 2025-08-15 | Initial partial log.                                                                                                 |
+| v10.x   | 2024-03-01 | Early log before governance formalization.                                                                          |
 
 ---
 
 <div align="center">
 
-📈 **Cardinality Review Log — KFM v11.2.2**  
+📈 **Cardinality Review Log — KFM v11.2.6**  
 Observability Governance · Deterministic Metrics · FAIR+CARE-Aligned  
 
-[⬅ Back to Review Log Index](./README.md)
+[⬅ Back to Review Log Index](./README.md) ·  
+[📡 Telemetry Metrics Index](../../../README.md) ·  
+[📊 Metric Cardinality Standard](../README.md) ·  
+[⚖ Cardinality Governance](../governance/README.md) ·  
+[🧭 Standards Index](../../../../standards/README.md) ·  
+[⚖ Governance](../../../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🌿 FAIR+CARE Guide](../../../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
-
