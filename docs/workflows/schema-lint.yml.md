@@ -191,10 +191,10 @@ deprecated_fields:
 Define the **governed GitHub Actions workflow** that validates **JSON, YAML, STAC, DCAT, and PROV schemas** used across the Kansas Frontier Matrix (KFM).  
 This workflow ensures that **schemas, examples, and configuration files** remain **valid, consistent, and interoperable**, forming a reliable foundation for ETL pipelines, catalogs, the knowledge graph, and Focus Mode.
 
-<img src="https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/Docs·MCP-DL_v6.3-blueviolet" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/Data-FAIR%2BCARE-gold" />
 <img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
 <img src="https://img.shields.io/badge/Status-Automated-brightgreen" />
 
 </div>
@@ -235,41 +235,43 @@ Within:
 ## 🗂️ Directory Layout
 
 ~~~text
-📁 docs/
-└── 📁 workflows/
-    📄 README.md                           — CI/CD & governance workflows index
-    📄 schema-lint.yml.md                  — ← This schema validation workflow spec
-
-📁 .github/
-└── 📁 workflows/
-    📄 schema-lint.yml                     — GitHub Actions workflow (schema validation)
-
-📁 schemas/
-├── 📁 json/                               — JSON Schemas (docs, pipelines, Story Nodes, telemetry)
-├── 📁 shacl/                              — SHACL shapes for graph and RDF structures
-└── 📁 examples/                           — Example payloads & fixtures for validation
-
-📁 tools/
-└── 📁 schemas/
-    📄 validate_json_schemas.py            — Validates JSON Schemas themselves
-    📄 validate_payloads.py                — Validates examples/configs against schemas
-    📄 validate_shacl.py                   — Runs SHACL checks for RDF/graph data
-    📄 summarize_schema_lint.mjs           — Aggregates validation results to summary JSON/MD
-
-📁 reports/
-└── 📁 self-validation/
-    📁 schemas/
-        📄 schema_validation.json          — Detailed per-file results
-        📄 shacl_validation.json           — SHACL validation outcomes
-        📄 payload_validation.json         — Config/example validation results
-        📄 lint_summary.json               — Canonical machine-readable summary
-        📄 summary.md                      — Human-readable summary for PRs
-
-📁 releases/
-└── 📁 v11.2.6/
-    📄 schema-lint-telemetry.json          — Aggregated schema-lint telemetry
-    📄 sbom.spdx.json                      — SBOM for validators and dependencies
-    📄 manifest.zip                        — Release manifest (configs, versions, checksums)
+📁 KansasFrontierMatrix/
+├── 📚 docs/                                   # Documentation (standards, workflows, guides)
+│   └── ⚙️ workflows/                          # CI/CD & governance workflow docs
+│       📄 README.md                           # Workflows index
+│       📄 schema-lint.yml.md                  # 🧩 Schema validation workflow (this file)
+│
+├── ⚙️ .github/
+│   └── ⚙️ workflows/                          # Actual GitHub Actions definitions
+│       📄 schema-lint.yml                     # 🧩 Schema validation workflow (YAML)
+│
+├── 🧾 schemas/                                # Schemas & shapes for KFM
+│   ├── 📄 README.md                           # Schemas overview
+│   ├── 🧾 json/                               # JSON Schemas (docs, telemetry, Story Nodes, etc.)
+│   ├── 🧱 shacl/                              # SHACL shapes for graph/RDF structures
+│   └── 🧪 examples/                           # Example payloads & fixtures
+│
+├── 🛠️ tools/
+│   └── 🧾 schemas/                            # Schema validation helpers
+│       📄 validate_json_schemas.py            # JSON Schema self-validation
+│       📄 validate_payloads.py                # Examples/configs → schema validation
+│       📄 validate_shacl.py                   # SHACL & RDF checks
+│       📄 summarize_schema_lint.mjs           # Aggregation → summary JSON/MD
+│
+├── 📊 reports/
+│   └── ✅ self-validation/
+│       └── 🧾 schemas/
+│           📄 schema_validation.json          # JSON Schema validation results
+│           📄 shacl_validation.json           # SHACL validation results
+│           📄 payload_validation.json         # Example/config validation
+│           📄 lint_summary.json               # Canonical machine-readable summary
+│           📄 summary.md                      # Human-readable PR summary
+│
+└── 📦 releases/
+    └── 📁 v11.2.6/
+        📄 schema-lint-telemetry.json          # Telemetry for this workflow
+        📄 sbom.spdx.json                      # SBOM for validators
+        📄 manifest.zip                        # Manifest (configs, versions, checksums)
 ~~~
 
 ---
@@ -278,13 +280,13 @@ Within:
 
 ### 1. Triggers & Scope
 
-| Trigger            | Paths                                  | Notes                                    |
-|-------------------:|----------------------------------------|------------------------------------------|
-| `pull_request`     | `schemas/**`, `configs/**`, `docs/**`  | Blocks merges with schema-breaking changes |
-| `push` (protected) | `schemas/**`, `configs/**`, `docs/**`  | Required on `main` & `release/**`        |
-| `workflow_dispatch`| —                                      | Manual re-runs for schema migrations     |
+| Trigger            | Paths                                  | Notes                                       |
+|-------------------:|----------------------------------------|---------------------------------------------|
+| `pull_request`     | `schemas/**`, `configs/**`, `docs/**`  | Blocks merges with schema-breaking changes  |
+| `push` (protected) | `schemas/**`, `configs/**`, `docs/**`  | Required on `main` & `release/**`          |
+| `workflow_dispatch`| —                                      | Manual re-runs for schema migrations        |
 
-**Primary coverage:**
+Primary coverage:
 
 - JSON/JSON-LD schemas under `schemas/json/**`.  
 - SHACL shapes under `schemas/shacl/**`.  
@@ -459,7 +461,7 @@ The job **must fail** if:
 
 Schema changes that are **breaking** should be:
 
-- Clearly flagged in the summary,  
+- Clearly flagged in the summary.  
 - Linked to migration guidance where available.
 
 ---
@@ -487,7 +489,7 @@ Telemetry is appended to:
 
 - `releases/v11.2.6/schema-lint-telemetry.json`
 
-with metrics such as schemas_checked, failures, runtime, energy, and carbon.
+with metrics such as: `schemas_checked`, `schemas_failed`, `examples_checked`, `runtime_sec`, `energy_wh`, `carbon_gco2e`.
 
 ---
 
@@ -542,7 +544,7 @@ Key relations:
 ### 1. Module Boundaries
 
 - **Workflow**: `.github/workflows/schema-lint.yml`  
-- **Validators**: `tools/schemas/*.py` and `*.mjs`  
+- **Validators**: `tools/schemas/*.py` and `tools/schemas/*.mjs`  
 - **Schemas**: `schemas/json/`, `schemas/shacl/`, `schemas/examples/`  
 - **Reports**: `reports/self-validation/schemas/`  
 - **Telemetry**: `releases/v11.2.6/schema-lint-telemetry.json`
@@ -601,7 +603,7 @@ Schema-lint and its telemetry form part of the **governance evidence** used by c
 
 | Version    | Date       | Author          | Summary                                                                                                                        |
 |-----------:|------------|-----------------|--------------------------------------------------------------------------------------------------------------------------------|
-| **v11.2.6** | 2025-12-11 | `@kfm-arch`     | Aligned to KFM v11.2.6; updated release and telemetry paths and telemetry schema reference; no functional changes to schema validation behavior. |
+| **v11.2.6** | 2025-12-11 | `@kfm-arch`     | Aligned to KFM v11.2.6; updated release & telemetry paths and telemetry schema reference; retained v11.2.4 behavior and contracts. |
 | v11.2.4   | 2025-12-06 | `@kfm-arch`     | Aligned with KFM-MDP v11.2.4; expanded front-matter; added STAC/DCAT/PROV alignment, Story Node hooks, telemetry wiring, and CI integration details. |
 | v10.2.4   | 2025-11-12 | `@kfm-arch`     | Introduced telemetry v3 schema for schema-lint; unified artifact paths; improved summary aggregation.                          |
 | v10.1.0   | 2025-11-10 | `@kfm-arch`     | Added SHACL validation step; expanded coverage to configs and examples.                                                       |
@@ -614,8 +616,20 @@ Schema-lint and its telemetry form part of the **governance evidence** used by c
 🧩 **Kansas Frontier Matrix — Schema Validation Workflow (`schema-lint.yml`)**  
 Semantic Contracts · FAIR+CARE Governance · Sustainable CI/CD  
 
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/Data-FAIR%2BCARE-gold" />
+<img src="https://img.shields.io/badge/Workflow-Schema_Lint_v11.2.6-informational" />
+
 [⬅ Back to Workflows Index](./README.md) ·  
 [📘 Docs Root](../README.md) ·  
-[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+[📚 Glossary](../glossary.md) ·  
+[📐 Markdown Protocol (KFM-MDP v11.2.4)](../standards/kfm_markdown_protocol_v11.2.4.md) ·  
+[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🤝 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md)
+
+  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 for this document  
+MCP-DL v6.3 · KFM-MDP v11.2.4 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
 
 </div>
