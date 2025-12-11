@@ -3,6 +3,7 @@ title: "📡 KFM v11.2.6 — OpenTelemetry + STAC Lineage Schema (Diamond⁹ Ω 
 path: "docs/telemetry/otel-stac-lineage/README.md"
 version: "v11.2.6"
 last_updated: "2025-12-11"
+
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Telemetry & Reliability · FAIR+CARE Council Oversight"
@@ -79,6 +80,29 @@ requires_governance_links_in_footer: true
 diagram_profiles:
   - "mermaid-flowchart-v1"
   - "mermaid-timeline-v1"
+
+heading_registry:
+  approved_h2:
+    - "🧩 Scope & Goals"
+    - "🗂️ Directory Layout"
+    - "🧾 Attribute Schema (Canonical Keys)"
+    - "🔌 Orchestrator Integration Patterns"
+    - "📚 Validation & Conformance"
+    - "🎭 Story Node & Focus Mode Integration"
+    - "🕰️ Version History"
+
+test_profiles:
+  - "markdown-lint"
+  - "schema-lint"
+  - "metadata-check"
+  - "footer-check"
+  - "accessibility-check"
+  - "provenance-check"
+  - "telemetry-schema-check"
+
+ci_integration:
+  workflow: ".github/workflows/telemetry-otel-stac-lineage.yml"
+  environment: "dev → staging → production"
 ---
 
 <div align="center">
@@ -98,13 +122,13 @@ Define a **single, enforced OpenTelemetry span-attribute schema** that carries *
 
 ---
 
-## 🧩 1. Scope & Goals
+## 🧩 Scope & Goals
 
 This standard governs **how KFM emits OpenTelemetry spans** whenever a component:
 
-- Reads, transforms, or writes **STAC Collections / Items / Assets**  
-- Mutates **versioned data** via lakeFS or equivalent storage backends  
-- Performs **lineage-sensitive operations** that must be auditable by the FAIR+CARE Council  
+- Reads, transforms, or writes **STAC Collections / Items / Assets**.  
+- Mutates **versioned data** via lakeFS or equivalent storage backends.  
+- Performs **lineage-sensitive operations** that must be auditable by the FAIR+CARE Council.  
 
 It answers, for every span:
 
@@ -115,40 +139,40 @@ It answers, for every span:
 This schema is **normative**. If you are emitting spans for KFM datasets, you MUST:
 
 - Implement all **required** fields, and  
-- NOT redefine these keys with incompatible semantics  
+- NOT redefine these keys with incompatible semantics.  
 
 Exceptions require a registered **governance exception** in:
 
-- `docs/standards/governance/ROOT-GOVERNANCE.md`
+- `docs/standards/governance/ROOT-GOVERNANCE.md`.
 
 ---
 
-## 🗂️ 2. Directory Layout
+## 🗂️ Directory Layout
 
 ~~~text
-docs/
-  telemetry/
-    otel-stac-lineage/
-      📄 README.md                          # This spec (you are here)
-      📂 examples/                          # Concrete JSON span examples
-        📄 airflow-task-span.json           # Example Airflow DAG task span
-        📄 langgraph-node-span.json         # Example LangGraph node span
-        📄 lakefs-commit-span.json          # Example lakeFS commit span
-      📂 diagrams/                          # Optional mermaid diagrams
-        📄 otel-stac-lineage-flow.md        # Orchestrator → OTel → Backend overview
+📂 docs/
+└── 📂 telemetry/
+    └── 📂 otel-stac-lineage/
+        ├── 📄 README.md                      # This spec (you are here)
+        ├── 📂 examples/                      # Concrete JSON span examples
+        │   ├── 📄 airflow-task-span.json     # Example Airflow DAG task span
+        │   ├── 📄 langgraph-node-span.json   # Example LangGraph node span
+        │   └── 📄 lakefs-commit-span.json    # Example lakeFS commit span
+        └── 📂 diagrams/                      # Optional mermaid diagrams
+            └── 📄 otel-stac-lineage-flow.md  # Orchestrator → OTel → Backend overview
 
-src/
-  telemetry/
-    📄 otel_stac_lineage.py                 # Attribute helpers and validators
-    📂 exporters/
-      📄 otel_stac_lineage_exporter.py      # Optional custom processors/exporters
+📂 src/
+└── 📂 telemetry/
+    ├── 📄 otel_stac_lineage.py               # Attribute helpers and validators
+    └── 📂 exporters/
+        └── 📄 otel_stac_lineage_exporter.py  # Optional custom processors/exporters
 ~~~
 
 Implementation references under `src/` are **non-normative but recommended**.
 
 ---
 
-## 🧾 3. Attribute Schema (Canonical Keys)
+## 🧾 Attribute Schema (Canonical Keys)
 
 ### 3.1 Overview
 
@@ -164,8 +188,8 @@ Type shorthand:
 
 For each attribute we specify:
 
-- **Req.** — `R` required, `C` conditionally required, `O` optional  
-- **Domain** — `STAC`, `Lineage`, `Ethics`, `Geo`, `Energy`, `Reliability`, `Governance`  
+- **Req.** — `R` required, `C` conditionally required, `O` optional.  
+- **Domain** — `STAC`, `Lineage`, `Ethics`, `Geo`, `Energy`, `Reliability`, `Governance`.  
 
 ---
 
@@ -279,7 +303,7 @@ For each attribute we specify:
 
 ---
 
-## 🔌 4. Orchestrator Integration Patterns
+## 🔌 Orchestrator Integration Patterns
 
 This section provides implementation guidance for common orchestrators.
 
@@ -291,10 +315,10 @@ Applicable to:
 
 Recommended attributes:
 
-- `stac.collection`, `stac.item`  
-- `lineage.parent_items` (for writers)  
-- `reliability.retry`, `slo.step_kind`  
-- `governance.policy_id` for release-type tasks  
+- `stac.collection`, `stac.item`.  
+- `lineage.parent_items` (for writers).  
+- `reliability.retry`, `slo.step_kind`.  
+- `governance.policy_id` for release-type tasks.  
 
 ---
 
@@ -306,9 +330,9 @@ Applicable to:
 
 Recommended attributes:
 
-- `stac.collection`, `stac.item`  
-- `care.label`, `privacy.masking`  
-- `slo.step_kind = "interpretation"` (or similar)  
+- `stac.collection`, `stac.item`.  
+- `care.label`, `privacy.masking`.  
+- `slo.step_kind = "interpretation"` (or similar).  
 
 ---
 
@@ -320,14 +344,14 @@ Applicable to:
 
 Recommended attributes:
 
-- `stac.collection`, `stac.item`  
-- `lineage.parent_items`  
-- `data.hash.sha256`, `data.bytes`  
-- `governance.policy_id`  
+- `stac.collection`, `stac.item`.  
+- `lineage.parent_items`.  
+- `data.hash.sha256`, `data.bytes`.  
+- `governance.policy_id`.  
 
 ---
 
-## 📚 5. Validation & Conformance
+## 📚 Validation & Conformance
 
 1. **JSON Schema**  
    - `telemetry_schema` defines these attributes and types.  
@@ -343,22 +367,22 @@ Recommended attributes:
 
 ---
 
-## 🎭 6. Story Node & Focus Mode Integration
+## 🎭 Story Node & Focus Mode Integration
 
 When traces inform narratives:
 
 - Story Nodes SHOULD link back to the originating trace via a **trace ID** or equivalent.  
 - Narrative layers MUST NOT alter CARE labels or privacy settings; they can only surface them.  
 - Focus Mode v3 may aggregate spans by:
-  - `stac.collection`, `stac.item`  
-  - `slo.step_kind` (ingest → transform → publish → visualize)  
-  - `care.label`  
+  - `stac.collection`, `stac.item`.  
+  - `slo.step_kind` (ingest → transform → publish → visualize).  
+  - `care.label`.  
 
 The goal is to let reviewers navigate from **story → trace → dataset** and verify lineage.
 
 ---
 
-## 🕰️ 7. Version History
+## 🕰️ Version History
 
 | Version | Date       | Notes                                                                                              |
 |--------:|------------|----------------------------------------------------------------------------------------------------|
@@ -375,11 +399,11 @@ Traceable Lineage · Operational Telemetry · FAIR+CARE-Aligned
 
 [📘 Docs Root](../../README.md) ·  
 [📡 Telemetry Index](../README.md) ·  
-[📂 STAC Catalog Overview](../../data/README.md) ·  
-[📦 STAC Catalog Root](../../data/stac/) ·  
+[📂 STAC Catalog Overview](../../../data/README.md) ·  
+[📦 STAC Catalog Root](../../../data/stac/README.md) ·  
 [📂 Standards Index](../../standards/README.md) ·  
 [⚖ Governance](../../standards/governance/ROOT-GOVERNANCE.md) ·  
-🌿 [FAIR+CARE Guide](../../standards/faircare/FAIRCARE-GUIDE.md) ·  
-🪶 [Indigenous Data Protection](../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+[🌿 FAIR+CARE Guide](../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
