@@ -2,8 +2,8 @@
 title: "🔐 Kansas Frontier Matrix — Supply-Chain Security Workflow (`security-supply-chain.yml`) (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/workflows/security-supply-chain.yml.md"
 
-version: "v11.2.4"
-last_updated: "2025-12-06"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous"
@@ -11,12 +11,12 @@ content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/security-supply-chain-telemetry.json"
-telemetry_schema: "schemas/telemetry/security-supply-chain-workflow-v11.2.4.json"
+signature_ref: "releases/v11.2.6/signature.sig"
+attestation_ref: "releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "releases/v11.2.6/manifest.zip"
+telemetry_ref: "releases/v11.2.6/security-supply-chain-telemetry.json"
+telemetry_schema: "schemas/telemetry/security-supply-chain-workflow-v11.2.6.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 
@@ -101,9 +101,9 @@ shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.4-shape.ttl"
 story_node_refs: []
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:workflows:security-supply-chain-yml:v11.2.4"
-semantic_document_id: "kfm-workflow-security-supply-chain-yml-v11.2.4"
-event_source_id: "ledger:kfm:doc:workflows:security-supply-chain-yml:v11.2.4"
+doc_uuid: "urn:kfm:doc:workflows:security-supply-chain-yml:v11.2.6"
+semantic_document_id: "kfm-workflow-security-supply-chain-yml-v11.2.6"
+event_source_id: "ledger:kfm:doc:workflows:security-supply-chain-yml-v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -267,7 +267,7 @@ Within:
     📄 secrets_scan.json                       — Secrets & token leak findings
 
 📁 releases/
-└── 📁 v11.2.4/
+└── 📁 v11.2.6/
     📄 security-supply-chain-telemetry.json    — Aggregated telemetry for this workflow
     📄 sbom.spdx.json                          — SPDX SBOM (multi-language)
     📄 manifest.zip                            — Release manifest (hashes, attestation refs)
@@ -443,13 +443,13 @@ jobs:
 
       - name: Generate SBOM (SPDX)
         run: |
-          mkdir -p releases/v11.2.4
-          ./syft dir:. -o spdx-json=./releases/v11.2.4/sbom.spdx.json
+          mkdir -p releases/v11.2.6
+          ./syft dir:. -o spdx-json=./releases/v11.2.6/sbom.spdx.json
 
       - name: Scan SBOM for vulnerabilities
         run: |
           mkdir -p reports/audit
-          ./grype sbom:./releases/v11.2.4/sbom.spdx.json -o json > reports/audit/sbom_scan.json || true
+          ./grype sbom:./releases/v11.2.6/sbom.spdx.json -o json > reports/audit/sbom_scan.json || true
 
       - name: Container scan (if Dockerfile present)
         run: |
@@ -487,15 +487,15 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: slsa-framework/slsa-github-generator/actions/attest-build-provenance@v1
         with:
-          subject-path: "releases/v11.2.4/"
+          subject-path: "releases/v11.2.6/"
 
       - name: Cosign sign SBOM (optional)
         if: github.ref == 'refs/heads/main'
         run: |
           cosign sign-blob --yes \
-            --output-signature releases/v11.2.4/signature.sig \
-            --output-certificate releases/v11.2.4/certificate.pem \
-            releases/v11.2.4/sbom.spdx.json
+            --output-signature releases/v11.2.6/signature.sig \
+            --output-certificate releases/v11.2.6/certificate.pem \
+            releases/v11.2.6/sbom.spdx.json
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -503,9 +503,9 @@ jobs:
           name: security_supply_chain_reports
           path: |
             reports/audit/**
-            releases/v11.2.4/sbom.spdx.json
-            releases/v11.2.4/signature.sig
-            releases/v11.2.4/certificate.pem
+            releases/v11.2.6/sbom.spdx.json
+            releases/v11.2.6/signature.sig
+            releases/v11.2.6/certificate.pem
 
       - name: Emit telemetry
         run: |
@@ -517,7 +517,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in  security_supply_chain_telemetry.json \
-            --dest releases/v11.2.4/security-supply-chain-telemetry.json
+            --dest releases/v11.2.6/security-supply-chain-telemetry.json
 ~~~
 
 ### 2. Quality Gates
@@ -554,13 +554,13 @@ Policy thresholds and waivers should be configuration‑driven (e.g., YAML in `c
 | `reports/audit/dependency_diff.json`               | Dependency changes (base vs PR)                  |
 | `reports/audit/secrets_scan.json`                  | Potential secrets and tokens                     |
 | `reports/audit/supply_chain_security_summary.json` | Aggregated machine-readable summary              |
-| `releases/v11.2.4/sbom.spdx.json`                  | SPDX SBOM for the repository                     |
-| `releases/v11.2.4/signature.sig`                   | Cosign signature of SBOM (where applicable)      |
-| `releases/v11.2.4/certificate.pem`                 | Cosign certificate                               |
+| `releases/v11.2.6/sbom.spdx.json`                  | SPDX SBOM for the repository                     |
+| `releases/v11.2.6/signature.sig`                   | Cosign signature of SBOM (where applicable)      |
+| `releases/v11.2.6/certificate.pem`                 | Cosign certificate                               |
 
 Telemetry records aggregate into:
 
-- `releases/v11.2.4/security-supply-chain-telemetry.json`
+- `releases/v11.2.6/security-supply-chain-telemetry.json`
 
 with fields like:
 
@@ -633,7 +633,7 @@ Relations:
 - **Security tooling wrapper scripts**: `tools/security/*.py` and `tools/security/*.mjs`.  
 - **Configs**: `configs/security/*.yaml` (policies, thresholds, waivers).  
 - **Reports**: `reports/audit/**`.  
-- **Telemetry**: `releases/v11.2.4/security-supply-chain-telemetry.json`.
+- **Telemetry**: `releases/v11.2.6/security-supply-chain-telemetry.json`.
 
 The workflow delegates complex logic to scripts and tools; YAML remains declarative.
 
@@ -679,7 +679,8 @@ Even though security data is technical, it has CARE implications:
 
 | Version    | Date       | Author          | Summary                                                                                                                        |
 |-----------:|------------|-----------------|--------------------------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | `@kfm-sec`      | Aligned with KFM-MDP v11.2.4; expanded front-matter; added STAC/DCAT/PROV alignment, Story Node hooks, telemetry wiring, and detailed supply-chain scan flow. |
+| **v11.2.6** | 2025-12-11 | `@kfm-sec`      | Aligned to KFM v11.2.6; updated release/telemetry paths and telemetry schema reference; no functional changes to security checks. |
+| v11.2.4   | 2025-12-06 | `@kfm-sec`      | Aligned with KFM-MDP v11.2.4; expanded front-matter; added STAC/DCAT/PROV alignment, Story Node hooks, telemetry wiring, and detailed supply-chain scan flow. |
 | v10.2.4   | 2025-11-12 | `@kfm-sec`      | Introduced telemetry v3 schema; unified audit artifact paths; added secrets scan integration and dependency diff summary.      |
 | v10.1.0   | 2025-11-10 | `@kfm-sec`      | Added SBOM generation, container scans, SLSA attestations, and Cosign signing.                                                |
 | v9.9.0    | 2025-11-08 | `@kfm-sec`      | Initial governed supply-chain security workflow documentation; basic SBOM + vulnerability scanning.                           |
@@ -696,4 +697,3 @@ Secure Dependencies · FAIR+CARE Governance · Sustainable CI/CD
 [⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
