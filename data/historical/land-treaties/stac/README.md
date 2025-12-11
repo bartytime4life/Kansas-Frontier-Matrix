@@ -74,14 +74,15 @@ doc_uuid: "urn:kfm:stac:land-treaties:v11.2.2"
 event_source_id: "stac:kfm:land-treaties:v11.2.2"
 ---
 
-# 🛰 Kansas Frontier Matrix — Land Treaties STAC Catalog  
+<div align="center">
+
+# 🛰 **Kansas Frontier Matrix — Land Treaties STAC Catalog**  
 `data/historical/land-treaties/stac/`
 
-This submodule defines the **canonical STAC layout** for land‑treaty data in Kansas Frontier Matrix, bridging deterministic ETL outputs into a governed, queryable catalog aligned with the KFM map/timeline and knowledge‑graph stack.
+**Role in the pipeline**  
+Deterministic ETL → **STAC/DCAT/PROV** catalogs → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode
 
-It follows the core KFM pipeline:
-
-> Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode
+</div>
 
 ---
 
@@ -453,4 +454,3 @@ Energy & Carbon Telemetry Enabled (ISO 50001 / ISO 14064)
 **End of Document**
 
 </div>
-
