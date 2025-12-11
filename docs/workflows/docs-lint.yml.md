@@ -2,8 +2,8 @@
 title: "🧪 Kansas Frontier Matrix — Documentation Lint Workflow (`docs-lint.yml`) (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/workflows/docs-lint.yml.md"
 
-version: "v11.2.4"
-last_updated: "2025-12-06"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous"
@@ -11,12 +11,12 @@ content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/docs-lint-telemetry.json"
-telemetry_schema: "schemas/telemetry/docs-lint-workflow-v11.2.4.json"
+signature_ref: "releases/v11.2.6/signature.sig"
+attestation_ref: "releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "releases/v11.2.6/manifest.zip"
+telemetry_ref: "releases/v11.2.6/docs-lint-telemetry.json"
+telemetry_schema: "schemas/telemetry/docs-lint-workflow-v11.2.6.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 
@@ -91,9 +91,9 @@ shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.4-shape.ttl"
 story_node_refs: []
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:workflows:docs-lint-yml:v11.2.4"
-semantic_document_id: "kfm-workflow-docs-lint-yml-v11.2.4"
-event_source_id: "ledger:kfm:doc:workflows:docs-lint-yml:v11.2.4"
+doc_uuid: "urn:kfm:doc:workflows:docs-lint-yml:v11.2.6"
+semantic_document_id: "kfm-workflow-docs-lint-yml-v11.2.6"
+event_source_id: "ledger:kfm:doc:workflows:docs-lint-yml:v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -191,10 +191,10 @@ deprecated_fields:
 Define the **governed GitHub Actions workflow** that validates all KFM documentation against **KFM‑MDP v11.2.4**, Platinum README rules, **MCP‑DL v6.3**, and **FAIR+CARE** requirements.  
 The workflow enforces **front‑matter schemas**, **GFM structure**, **link integrity**, **Mermaid guardrails**, **table width limits**, and **badge/footer ordering**, producing machine‑readable reports and **telemetry** for the governance ledger.
 
-<img src="https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/Data-FAIR%2BCARE-gold" />
 <img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
 <img src="https://img.shields.io/badge/Status-Automated-brightgreen" />
 
 </div>
@@ -240,40 +240,43 @@ Within the canonical KFM pipeline:
 ## 🗂️ Directory Layout
 
 ~~~text
-📁 .github/
-└── 📁 workflows/
-    📄 docs-lint.yml                       — GitHub Actions workflow (docs lint)
-
-📁 docs/
-└── 📁 workflows/
-    📄 README.md                           — CI/CD & Governance Workflows index
-    📄 docs-lint.yml.md                    — ← This specification
-
-📁 tools/
-└── 📁 docs/
-    📄 validate_front_matter.py            — Front-matter schema validator
-    📄 validate_mermaid.mjs                — Mermaid usage guardrails
-    📄 audit_tables_and_fences.mjs         — Table width & code fence audit
-    📄 validate_badges_footer.mjs          — Badge ordering & footer checks
-    📄 summarize_docs_lint.mjs             — Aggregates lint JSON to summary
-
-📁 reports/
-└── 📁 self-validation/
-    📁 docs/
-        📄 markdownlint.txt                — Raw markdownlint output
-        📄 frontmatter_validation.json     — Front-matter schema results
-        📄 link_check.log                  — Link checker output
-        📄 mermaid_audit.json              — Mermaid usage analysis
-        📄 format_audit.json               — Tables & fences audit
-        📄 badges_footer_audit.json        — Badge/footer checks
-        📄 lint_summary.json               — Canonical machine-readable summary
-        📄 summary.md                      — Human-readable summary for PRs
-
-📁 releases/
-└── 📁 v11.2.4/
-    📄 sbom.spdx.json                      — SBOM for docs tooling & dependencies
-    📄 manifest.zip                        — Release manifest
-    📄 docs-lint-telemetry.json            — Aggregated docs-lint telemetry
+📁 KansasFrontierMatrix/
+├── 📚 docs/
+│   ├── ⚙️ workflows/
+│   │   📄 README.md                           # CI/CD & Governance Workflows index
+│   │   📄 docs-lint.yml.md                    # 🧪 Documentation lint workflow spec (this file)
+│   └── 📏 standards/
+│       📄 kfm_markdown_protocol_v11.2.4.md    # KFM-MDP v11.2.4
+│
+├── ⚙️ .github/
+│   └── 📁 workflows/
+│       📄 docs-lint.yml                       # GitHub Actions workflow (docs lint)
+│
+├── 🛠️ tools/
+│   └── 📁 docs/
+│       📄 validate_front_matter.py            # Front-matter schema validator
+│       📄 validate_mermaid.mjs                # Mermaid usage guardrails
+│       📄 audit_tables_and_fences.mjs         # Table width & code fence audit
+│       📄 validate_badges_footer.mjs          # Badge ordering & footer checks
+│       📄 summarize_docs_lint.mjs             # Aggregates lint JSON → summary
+│
+├── 📊 reports/
+│   └── 📁 self-validation/
+│       └── 📁 docs/
+│           📄 markdownlint.txt                # Raw markdownlint output
+│           📄 frontmatter_validation.json     # Front-matter schema results
+│           📄 link_check.log                  # Link checker output
+│           📄 mermaid_audit.json              # Mermaid usage analysis
+│           📄 format_audit.json               # Tables & fences audit
+│           📄 badges_footer_audit.json        # Badge/footer checks
+│           📄 lint_summary.json               # Canonical machine-readable summary
+│           📄 summary.md                      # Human-readable summary for PRs
+│
+└── 📦 releases/
+    └── 📁 v11.2.6/
+        📄 docs-lint-telemetry.json            # Aggregated docs-lint telemetry
+        📄 sbom.spdx.json                      # SBOM for docs tooling & dependencies
+        📄 manifest.zip                        # Release manifest
 ~~~
 
 ---
@@ -458,7 +461,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in  docs_lint_telemetry.json \
-            --dest releases/v11.2.4/docs-lint-telemetry.json
+            --dest releases/v11.2.6/docs-lint-telemetry.json
 ~~~
 
 ### 2. Validation Rules (Conceptual)
@@ -471,7 +474,7 @@ Required keys (for standards & workflow docs), aligned with KFM‑MDP:
 |--------------------|-------------------------------------------------------------|
 | `title`            | Emoji prefix + descriptive title                            |
 | `path`             | Repo-relative, matches actual file location                 |
-| `version`          | SemVer string (e.g., `v11.2.4`)                             |
+| `version`          | SemVer string (e.g., `v11.2.6`)                             |
 | `last_updated`     | ISO‑8601 date (`YYYY-MM-DD`)                                |
 | `review_cycle`     | Known enum (e.g., `Continuous · Autonomous`)                |
 | `commit_sha`       | Git hash or `<latest-commit-hash>` placeholder              |
@@ -525,12 +528,12 @@ These are uploaded as CI artifacts and may also be harvested into catalogs/graph
 
 ### 2. Telemetry Records
 
-Each run contributes to `releases/v11.2.4/docs-lint-telemetry.json`. Typical fields:
+Each run contributes to `releases/v11.2.6/docs-lint-telemetry.json`. Typical fields:
 
 ~~~json
 {
   "workflow": "docs-lint",
-  "run_id": "docs-lint_2025-12-06T17-30-00Z",
+  "run_id": "docs-lint_2025-12-11T17-30-00Z",
   "docs_checked": 286,
   "errors": 3,
   "warnings": 19,
@@ -540,11 +543,11 @@ Each run contributes to `releases/v11.2.4/docs-lint-telemetry.json`. Typical fie
   "workflow_duration_sec": 92,
   "energy_wh": 2.3,
   "carbon_gco2e": 0.0009,
-  "timestamp": "2025-12-06T17:31:32Z"
+  "timestamp": "2025-12-11T17:31:32Z"
 }
 ~~~
 
-Schema specifics live in `schemas/telemetry/docs-lint-workflow-v11.2.4.json`.
+Schema specifics live in `schemas/telemetry/docs-lint-workflow-v11.2.6.json`.
 
 ---
 
@@ -649,22 +652,36 @@ The workflow:
 
 ## 🕰️ Version History
 
-| Version    | Date       | Summary                                                                                                               |
-|-----------:|------------|-----------------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | Updated to align with KFM‑MDP v11.2.4; expanded front‑matter; added STAC/DCAT/PROV alignment and Story Node hooks; introduced dedicated `docs-lint-telemetry.json`. |
-| v10.2.4   | 2025-11-12 | Upgraded to telemetry schema v3; unified artifact paths under `reports/self-validation/docs/`; strengthened table/code‑fence audits. |
-| v10.1.0   | 2025-11-10 | Introduced telemetry v2; improved Mermaid guardrails; migrated to `upload-artifact@v4`.                               |
-| v9.9.0    | 2025-11-08 | Initial governed docs‑lint workflow documentation.                                                                     |
+| Version    | Date       | Author        | Summary                                                                                                               |
+|-----------:|------------|--------------|-----------------------------------------------------------------------------------------------------------------------|
+| **v11.2.6** | 2025-12-11 | `@kfm-docs`  | Aligned to KFM v11.2.6; updated release and telemetry paths to `v11.2.6`, adopted emoji root directory layout, and extended footer navigation. |
+| v11.2.4   | 2025-12-06 | `@kfm-docs`  | Updated to align with KFM‑MDP v11.2.4; expanded front‑matter; added STAC/DCAT/PROV alignment and Story Node hooks; introduced dedicated `docs-lint-telemetry.json`. |
+| v10.2.4   | 2025-11-12 | `@kfm-docs`  | Upgraded to telemetry schema v3; unified artifact paths under `reports/self-validation/docs/`; strengthened table/code‑fence audits. |
+| v10.1.0   | 2025-11-10 | `@kfm-docs`  | Introduced telemetry v2; improved Mermaid guardrails; migrated to `upload-artifact@v4`.                               |
+| v9.9.0    | 2025-11-08 | `@kfm-docs`  | Initial governed docs‑lint workflow documentation.                                                                     |
 
 ---
 
 <div align="center">
 
-🧪 **Kansas Frontier Matrix — Documentation Lint Workflow (`docs-lint.yml`)**  
+🧪 **Kansas Frontier Matrix — Documentation Lint Workflow (`docs-lint.yml`) · v11.2.6**  
 Documentation Excellence · FAIR+CARE Governance · Sustainable CI/CD  
+
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/Docs--Lint-v11.2.6-informational" />
+<img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
 
 [⬅ Back to Workflows Index](./README.md) ·  
 [📘 Docs Root](../README.md) ·  
-[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+[📚 Glossary](../glossary.md) ·  
+[📐 Markdown Protocol (KFM-MDP v11.2.4)](../standards/kfm_markdown_protocol_v11.2.4.md) ·  
+[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🤝 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 for this document  
+MCP-DL v6.3 · KFM-MDP v11.2.4 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
 
 </div>
