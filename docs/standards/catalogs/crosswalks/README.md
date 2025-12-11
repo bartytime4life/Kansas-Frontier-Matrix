@@ -147,24 +147,6 @@ Serve as the **governed index** for all **catalog crosswalk standards** in the K
 
 ---
 
-## 📘 Overview
-
-This index defines how KFM documents and governs:
-
-- **STAC → DCAT** crosswalks (KFM’s canonical pattern — STAC-first, DCAT-derived).  
-- Optional **STAC → CKAN / portal** crosswalks for legacy or external systems.  
-- Domain-specific crosswalk profiles that extend the core mappings.  
-- Crosswalk documentation structure, validation rules, and CI/CD integration.  
-
-It is a child of:
-
-- `docs/standards/catalogs/README.md` — catalog & metadata standards index.  
-- `docs/standards/catalogs/stac-dcat-derivation.md` — authoritative STAC → DCAT derivation model.
-
-Crosswalk docs under this tree are **normative** for KFM pipelines: if a pipeline maps between catalog models, it must implement one of the governed crosswalk standards defined here.
-
----
-
 ## 🗂️ Directory Layout
 
 ~~~text
@@ -191,9 +173,27 @@ Crosswalk docs under this tree are **normative** for KFM pipelines: if a pipelin
 - Every document under `docs/standards/catalogs/crosswalks/` MUST:
   - follow **KFM-MDP v11.2.4** front-matter and heading conventions  
   - be **machine-extractable** (clear tables and code blocks)  
-  - declare its source and target models (e.g., “STAC → DCAT v3”)  
+  - declare its source and target models (e.g., “STAC → DCAT 3.0”)  
   - align with the STAC-first, DCAT-derived model in `stac-dcat-derivation.md`  
   - respect FAIR+CARE and sovereignty rules, especially for sensitive domains (e.g., heritage)
+
+---
+
+## 📘 Overview
+
+This index defines how KFM documents and governs:
+
+- **STAC → DCAT** crosswalks (KFM’s canonical pattern — STAC-first, DCAT-derived).  
+- Optional **STAC → CKAN / portal** crosswalks for legacy or external systems.  
+- Domain-specific crosswalk profiles that extend the core mappings.  
+- Crosswalk documentation structure, validation rules, and CI/CD integration.  
+
+It is a child of:
+
+- `docs/standards/catalogs/README.md` — catalog & metadata standards index.  
+- `docs/standards/catalogs/stac-dcat-derivation.md` — authoritative STAC → DCAT derivation model.
+
+Crosswalk docs under this tree are **normative** for KFM pipelines: if a pipeline maps between catalog models, it must implement one of the governed crosswalk standards defined here.
 
 ---
 
