@@ -8,13 +8,15 @@ release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · FAIR+CARE Council"
 content_stability: "stable"
-status: "Active"
+status: "Active / In-Repo Canonical"
 
-doc_kind: "Standard Template"
+doc_kind: "Standard"
+intent: "kfm-markdown-template"
 header_profile: "standard"
 footer_profile: "standard"
 
 license: "CC-BY 4.0"
+
 markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
@@ -34,29 +36,35 @@ immutability_status: "version-pinned"
 sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
 manifest_ref: "../../releases/v11.2.6/manifest.zip"
 telemetry_ref: "../../releases/v11.2.6/kfm-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/markdown-template-usage-v1.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 ---
 
-# 📘 Kansas Frontier Matrix — Core Markdown Template (v11.2.6)
+<div align="center">
+
+# 📘 Kansas Frontier Matrix  
+## **Core Markdown Template (KFM v11.2.6)**
+
+This file is the **canonical pattern** for constructing new, governed, standards-aligned Markdown documents inside the Kansas Frontier Matrix monorepo.
+
+`docs/templates/kfm-markdown-template.md`
+
+</div>
+
+---
 
 ## 📘 Overview
 
-This file provides the **canonical template** for producing KFM-compliant documentation under **KFM-MDP v11.2.6**.  
-All new Markdown documents should follow this structure, including:
+This template defines the **uniform, reproducible structure** that KFM Markdown files should follow under **KFM-MDP v11.2.6**. It encodes:
 
-- YAML front-matter fields and ordering  
+- Metadata layout and front-matter ordering  
 - H1/H2 heading patterns (emoji + label)  
 - Directory layout style (emoji + ASCII tree)  
 - Governance footer format  
+- Alignment with FAIR+CARE, provenance, and telemetry requirements  
 
-The template is intended for:
-
-- STAC/DCAT/PROV-aligned data-domain READMEs  
-- Architecture and design notes  
-- Telemetry and governance specs  
-- Event summaries and incident reports  
-
-When AI assistants generate drafts for this template, the **transport format** in ChatGPT is a single fenced `markdown` block; once saved in the repo, the file is stored as normal Markdown with YAML front-matter at the top.
+Use this template whenever creating a new Markdown file anywhere in the monorepo.  
+When AI assistants generate drafts, the **transport format** in ChatGPT is a single fenced `markdown` block. Once saved in the repo, documents are plain `.md` files with YAML front-matter at the top.
 
 ---
 
@@ -66,8 +74,10 @@ This template lives under `docs/templates/` and governs how other docs should re
 
 ~~~text
 📁 docs/
+  📁 standards/
+    📄 kfm_markdown_protocol_v11.2.6.md   # KFM-MDP: markdown authoring standard
   📁 templates/
-    📄 kfm-markdown-template.md   # This file – core KFM-MDP v11.2.6 markdown template
+    📄 kfm-markdown-template.md           # This file – core KFM-MDP v11.2.6 markdown template
 ~~~
 
 **Directory layout rules:**
@@ -78,141 +88,194 @@ This template lives under `docs/templates/` and governs how other docs should re
   - `🧾` JSON/YAML/config
   - `🧪` tests/fixtures
   - `🖼️` images/media
-- Use `📁` / `📄` + short description comments where helpful.
-- Use `~~~text` fences for directory trees (never nested ``` inside KFM docs).
-- Keep paths **relative to the file** and stable across refactors whenever possible.
+- Use `📁` / `📄` plus short description comments where helpful.  
+- Use `~~~text` fences for directory trees (never inner ``` fences in KFM docs).  
+- Keep paths **relative to the file** and stable across refactors whenever possible.  
+- For domain or module docs, always include a `🗂️ Directory Layout` section similar to this one.
 
 ---
 
-## 🧭 Context
+## 🧭 Context — How & When to Use This Template
 
-This template is the **baseline** for all KFM docs and is aligned with:
+This file is both:
+
+- A **guide** (what KFM expects from Markdown docs), and  
+- A **copy-paste source** (front-matter skeletons and standard sections).
+
+For any new KFM Markdown file:
+
+1. Start from this template.  
+2. Copy the **front-matter skeleton** and adjust fields.  
+3. Choose headings from the recommended set below.  
+4. Add a `🗂️ Directory Layout` section if the doc describes a directory/module/domain.  
+5. Add and maintain a `🕰️ Version History` table at the end.  
+
+This template is aligned with:
 
 - `docs/standards/kfm_markdown_protocol_v11.2.6.md` (KFM-MDP)  
-- KFM-OP v11 ontologies and graph modeling  
+- KFM-OP v11 ontologies and graph modeling conventions  
 - KFM-PDC v11 pipeline contracts and governance patterns  
 
-Recommended H2 sections (drawn from the global heading registry):
+---
 
-- `📘 Overview`  
-- `🗂️ Directory Layout`  
-- `🧭 Context`  
-- `🧱 Architecture`  
-- `📦 Data & Metadata`  
-- `🌐 STAC, DCAT & PROV Alignment`  
-- `⚖ FAIR+CARE & Governance`  
-- `🧠 Story Node & Focus Mode Integration`  
-- `🧪 Validation & CI/CD`  
-- `🕰️ Version History`  
+## 🧱 Front-Matter Skeleton (Copy & Adapt)
 
-Not every doc needs all headings, but:
+Paste this at the top of new docs, then customize. Adjust fields as needed (for very small docs you may omit some references, but keep ordering where fields exist).
 
-- **Overview** and **Version History** are required.  
-- A **Directory Layout** section is required for domain/area READMEs and core standards.  
+~~~markdown
+---
+title: "<emoji + short, descriptive title>"
+path: "<relative/path/from/repo/root>.md"
+version: "v11.2.6"
+last_updated: "<YYYY-MM-DD>"
+
+release_stage: "<Draft / Stable / Governed / Historical>"
+lifecycle: "<Incubation / Long-Term Support (LTS) / Archive>"
+review_cycle: "<cadence · owning group(s)>"
+content_stability: "<evolving / stable / frozen>"
+
+status: "<Active / Deprecated / Historical Record>"
+doc_kind: "<Standard / Data Domain Overview / Design Note / Event Summary / ...>"
+intent: "<short-purpose-slug>"
+header_profile: "standard"
+footer_profile: "standard"
+
+license: "CC-BY 4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+semantic_document_id: "<kfm-doc-*-v11.2.6>"
+doc_uuid: "<urn:kfm:doc:...:v11.2.6>"
+event_source_id: "ledger:<relative/path>.md"
+immutability_status: "version-pinned"
+
+sbom_ref: "<../../releases/v11.2.6/sbom.spdx.json>"
+manifest_ref: "<../../releases/v11.2.6/manifest.zip>"
+telemetry_ref: "<../../releases/v11.2.6/<area>-telemetry.json>"
+telemetry_schema: "<../../schemas/telemetry/<area>-v11.json>"
+governance_ref: "<../standards/governance/...md>"
+---
+~~~
+
+Guidelines:
+
+- **No blank lines** before the first `---`.  
+- Update `version` and `last_updated` only on substantive content changes.  
+- Use **real values** in new docs; placeholders (`<...>`) are for templates only.  
+- Keep field ordering consistent with KFM-MDP v11.2.6 where fields exist.
+
+---
+
+## 📦 Data & Metadata — Content-Level Rules
+
+Beyond front-matter, each doc SHOULD:
+
+- Clearly state its **scope** and **role** (what it governs / describes vs what it does not).  
+- Reference related docs via **relative paths** (e.g. `../standards/...`, `../../data/...`).  
+- Describe any associated **schemas** under `schemas/` and telemetry schemas under `schemas/telemetry/`.  
+- When relevant, explain:
+  - Where this doc’s subject appears in STAC/DCAT catalogs.  
+  - Which PROV records or OpenLineage events are relevant.  
+
+For data/domain or API docs, add explicit `📦 Data & Metadata` sections that outline:
+
+- Key fields and their types.  
+- Required IDs and identifiers (e.g. dataset IDs, graph node IDs, URNs).  
+- Which catalogs and schemas enforce these structures.
 
 ---
 
 ## 🧱 Architecture Alignment
 
-Each KFM document should explain how its subject fits into the core pipeline:
+Every KFM document that describes systems, data, or workflows should explain how its subject fits into the **canonical pipeline**:
 
 > Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode
 
 At minimum, authors should specify:
 
-- Which **ETL pipelines** are relevant (`src/pipelines/...`).
-- Which **catalogs** are produced/consumed (`data/stac/`, `data/*/dcat/`, `data/*/dcat-prov/`).
-- Which **graph entities** and relationships are involved (`src/graph/...`, KFM-OP labels).
-- Which **APIs** expose the results (`src/api/...`).
+- Relevant **ETL pipelines** (`src/pipelines/...`).  
+- Which **catalogs** are produced/consumed (`data/stac/`, `data/*/dcat/`, `data/*/dcat-prov/`).  
+- Which **graph entities** and relationships are involved (`src/graph/...`, KFM-OP labels).  
+- Which **APIs** expose the results (`src/api/...`).  
 - Which **UI areas** depend on this work (`src/web/...`, Focus Mode panels, Story Nodes).
 
 Architecture sections should be:
 
-- Descriptive enough for new contributors to orient themselves.
-- Precise enough that CI, telemetry, and governance can reference specific modules.
-
----
-
-## 📦 Data & Metadata
-
-### Front-Matter Requirements
-
-Every KFM document MUST:
-
-- Start with a single YAML front-matter block, no blank lines above `---`.
-- Include (at minimum) the following keys in this order (when applicable):
-
-  1. `title`  
-  2. `path`  
-  3. `version`  
-  4. `last_updated`  
-  5. `release_stage`  
-  6. `lifecycle`  
-  7. `review_cycle`  
-  8. `content_stability`  
-  9. `status`  
-  10. `doc_kind`  
-  11. `header_profile`  
-  12. `footer_profile`  
-  13. `license`  
-  14. `mcp_version` (if relevant)  
-  15. `markdown_protocol_version`  
-  16. `ontology_protocol_version`  
-  17. `pipeline_contract_version`  
-  18. `stac_profile`  
-  19. `dcat_profile`  
-  20. `prov_profile`  
-  21. provenance & integrity fields (`commit_sha`, `previous_version_hash`, `doc_integrity_checksum`)  
-  22. identifier fields (`semantic_document_id`, `doc_uuid`, `event_source_id`, `immutability_status`)  
-  23. references (`sbom_ref`, `manifest_ref`, `telemetry_ref`, `governance_ref`, etc.)
-
-Additional fields (scope, sensitivity, heading registry, etc.) may be added as needed for standards and domain docs.
-
-### Content Metadata
-
-Within the body, authors SHOULD:
-
-- State explicit **scope** and **role** of the doc (what it governs and what it does not).
-- Reference related docs via **relative paths** (e.g. `../standards/...`, `../../data/...`).
-- Document any **associated schemas** under `schemas/` and telemetry under `schemas/telemetry/`.
+- Descriptive enough for new contributors to orient themselves.  
+- Precise enough that CI, telemetry, and governance can anchor checks to specific modules.
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-For data and catalog-related docs, authors should use this template to:
+For data and catalog-related docs, authors should:
 
-- Declare how STAC Collections/Items are structured and linked.
-- Explain how DCAT Datasets and Distributions represent the same assets.
-- Show how PROV-O captures lineage:
+- Declare how STAC Collections/Items are structured, versioned, and linked.  
+- Explain how DCAT Datasets and Distributions represent the same assets.  
+- Show how PROV-O captures lineage across ETL, modeling, and publication:
 
-  - `prov:Entity` (datasets, docs, models),
-  - `prov:Activity` (ETL runs, AI inferences),
-  - `prov:Agent` (teams, automated systems).
+  - `prov:Entity` — datasets, files, docs, models, snapshots.  
+  - `prov:Activity` — ETL runs, AI inferences, document generation.  
+  - `prov:Agent` — teams, services, automated agents.
 
-Even for purely textual docs (like this template), the **front-matter** plus **provenance fields** enable STAC/DCAT/PROV alignment through doc catalogs.
+Even purely textual docs (like this one) participate in catalogs:
+
+- Front-matter identifier fields (`semantic_document_id`, `doc_uuid`, `event_source_id`) support STAC/DCAT cataloging.  
+- `sbom_ref`, `manifest_ref`, and `telemetry_ref` connect docs to release artifacts and telemetry bundles.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-All KFM documents must reflect KFM’s FAIR+CARE and sovereignty commitments:
+All KFM documents must reflect FAIR+CARE and sovereignty commitments:
 
 - **FAIR**  
-  - Make docs and datasets **Findable** and **Interoperable** via stable IDs, paths, and schemas.  
-  - Ensure **Accessibility** (license, access notes) and **Reusability** (clear scope and caveats).
+  - *Findable*: use stable paths, IDs, and catalog entries.  
+  - *Accessible*: state licenses, access notes, and any restrictions.  
+  - *Interoperable*: align with KFM-OP, STAC/DCAT/PROV, and other adopted standards.  
+  - *Reusable*: describe scope, assumptions, and limitations clearly.
 
 - **CARE**  
-  - When docs describe workflows that touch Indigenous data, sensitive sites, or community-held knowledge:
-    - Flag them using appropriate front-matter fields (`indigenous_rights_flag`, sensitivity levels in other docs).  
+  - When docs describe workflows involving Indigenous data, sensitive sites, or community-held knowledge:
+    - Flag them with appropriate front-matter (e.g., additional sensitivity/scope fields in that doc).  
     - Reference relevant governance and sovereignty docs.  
-    - Explicitly state any constraints, redaction rules, or special review requirements.
+    - Document any constraints, redaction rules, or special review requirements.  
 
 Docs built from this template MUST avoid:
 
-- Exposing sensitive coordinates or PII.
-- Overstating certainty on contested histories or governance policies.
-- Bypassing KFM governance processes.
+- Exposing sensitive coordinates, PII, or disallowed internal identifiers.  
+- Overstating certainty on contested histories, governance policies, or interpretations.  
+- Bypassing or contradicting established KFM governance processes.
+
+When in doubt, add a short `⚖ FAIR+CARE & Governance` section and explicitly state whether sensitive or sovereign data is involved.
+
+---
+
+## 🧠 Story Node & Focus Mode Integration (Optional)
+
+If a doc is likely to be used in **Story Nodes** or **Focus Mode**:
+
+- Add a section describing:
+  - Which entities, datasets, or APIs Story Nodes might reference.  
+  - How Focus Mode should interpret/visualize the subject (e.g., map layers, timelines).  
+- Make it easy to:
+  - Extract narrative segments for Story Node cards.  
+  - Link to `doc_uuid`, `semantic_document_id`, and key graph IDs.  
+
+Always distinguish between:
+
+- **Facts** (data-backed, catalog/graph supported).  
+- **Interpretation** (explicitly labeled narrative reading of those facts).  
+- **Speculation** (either clearly labeled or omitted).
 
 ---
 
@@ -222,26 +285,28 @@ Docs created from this template should be expected to pass:
 
 - `markdown-lint` — structure, headings, spacing.  
 - `schema-validate` — front-matter schema checks.  
-- `provenance-check` — presence and consistency of version and integrity fields.  
-- `telemetry-validate` — where `telemetry_ref` and related schemas are present.  
+- `metadata-check` — presence and coherence of required metadata fields.  
+- `provenance-check` — version and integrity metadata consistency.  
+- `footer-check` — presence and correctness of the governance footer.  
 
-Optional but recommended checks:
+Where `telemetry_ref` and `telemetry_schema` are present:
 
-- `footer-check` — ensures presence of governance footer.  
-- `link-check` — validates internal relative links.  
+- `telemetry-validate` — ensures referenced telemetry bundles match schemas.
 
-When introducing a new doc type or pattern, authors should:
+If a doc introduces new schemas, modules, or telemetry:
 
-- Update any relevant schemas under `schemas/`.  
-- Update CI config (e.g., `.github/workflows/kfm-ci.yml`) if new checks are required.
+- Extend or create JSON Schemas under `schemas/` or `schemas/telemetry/`.  
+- Update CI config (e.g., `.github/workflows/kfm-ci.yml`) to validate the new artifacts.  
+
+Treat failing CI as a **spec problem**, not just an implementation detail.
 
 ---
 
 ## 🕰️ Version History
 
-| Version   | Date       | Summary                                      | Commit        |
-|----------:|-----------:|----------------------------------------------|---------------|
-| v11.2.6   | 2025-12-11 | Initial template standardization for KFM-MDP | `<latest-sha>` |
+| Version   | Date       | Summary                                                                           | Commit        |
+|----------:|-----------:|-----------------------------------------------------------------------------------|---------------|
+| v11.2.6   | 2025-12-11 | Initial unified core/standard Markdown template aligned with KFM-MDP v11.2.6.     |
 
 ---
 
