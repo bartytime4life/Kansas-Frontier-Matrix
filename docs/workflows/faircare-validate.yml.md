@@ -2,8 +2,8 @@
 title: "⚖️ Kansas Frontier Matrix — FAIR+CARE Validation Workflow (`faircare-validate.yml`) (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/workflows/faircare-validate.yml.md"
 
-version: "v11.2.4"
-last_updated: "2025-12-06"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous"
@@ -11,12 +11,12 @@ content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/faircare-validate-telemetry.json"
-telemetry_schema: "schemas/telemetry/faircare-validate-workflow-v11.2.4.json"
+signature_ref: "releases/v11.2.6/signature.sig"
+attestation_ref: "releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "releases/v11.2.6/manifest.zip"
+telemetry_ref: "releases/v11.2.6/faircare-validate-telemetry.json"
+telemetry_schema: "schemas/telemetry/faircare-validate-workflow-v11.2.6.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 
@@ -91,9 +91,9 @@ shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.4-shape.ttl"
 story_node_refs: []
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:workflows:faircare-validate-yml:v11.2.4"
-semantic_document_id: "kfm-workflow-faircare-validate-yml-v11.2.4"
-event_source_id: "ledger:kfm:doc:workflows:faircare-validate-yml:v11.2.4"
+doc_uuid: "urn:kfm:doc:workflows:faircare-validate-yml:v11.2.6"
+semantic_document_id: "kfm-workflow-faircare-validate-yml-v11.2.6"
+event_source_id: "ledger:kfm:doc:workflows:faircare-validate-yml:v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -191,10 +191,10 @@ deprecated_fields:
 Define the **governed GitHub Actions workflow** that validates datasets and docs for **FAIR+CARE** compliance, performs **ethics/PII scans**, enforces **data contracts**, manages **abandonment candidates**, and emits **governance‑ready reports** with full telemetry for Diamond⁹ Ω / Crown∞Ω certification.  
 This workflow is the primary **ethics and governance gate** for data and documentation in the Kansas Frontier Matrix (KFM).
 
-<img src="https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/Data-FAIR%2BCARE-gold" />
 <img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
 <img src="https://img.shields.io/badge/Status-Automated-brightgreen" />
 
 </div>
@@ -233,43 +233,41 @@ Within the KFM pipeline:
 ## 🗂️ Directory Layout
 
 ~~~text
-📁 .github/
-└── 📁 workflows/
-    📄 faircare-validate.yml                     — GitHub Actions workflow (FAIR+CARE gate)
-
-📁 docs/
-└── 📁 workflows/
-    📄 README.md                                — CI/CD & Governance Workflows index
-    📄 faircare-validate.yml.md                 — ← This specification
-
-📁 docs/
-└── 📁 standards/
-    📄 faircare/FAIRCARE-GUIDE.md               — FAIR+CARE standard
-    📄 governance/ROOT-GOVERNANCE.md            — Governance charter
-    📄 sovereignty/INDIGENOUS-DATA-PROTECTION.md— Sovereignty policy
-
-📁 data/
-├── 📁 sources/                                 — Source manifests (DCAT-aligned)
-├── 📁 raw/                                     — Raw ingested data (not committed)
-├── 📁 work/
-│   └── 📁 staging/
-│       📁 tabular/
-│           📁 abandonment_candidates/          — Quarantined assets + registry
-│               📄 abandonment_registry.json
-└── 📁 processed/                               — Validated, production-ready assets
-
-📁 reports/
-└── 📁 faircare/
-    📄 contract_summary.json                    — Data-contract validation summary
-    📄 faircare_summary.json                    — FAIR+CARE audit results
-    📄 pii_scan.json                            — PII / sensitive markers
-    📄 provenance_trace.json                    — DCAT/PROV-style lineage
-
-📁 releases/
-└── 📁 v11.2.4/
-    📄 sbom.spdx.json                           — SBOM for validation tools
-    📄 manifest.zip                             — Release manifest
-    📄 faircare-validate-telemetry.json         — Aggregated FAIR+CARE telemetry
+📁 KansasFrontierMatrix/
+├── 📚 docs/
+│   ├── ⚙️ workflows/
+│   │   📄 README.md                           # CI/CD & Governance Workflows index
+│   │   📄 faircare-validate.yml.md            # ⚖️ FAIR+CARE validation workflow (this file)
+│   └── 📏 standards/
+│       ├── 📁 faircare/
+│       │   📄 FAIRCARE-GUIDE.md               # FAIR+CARE standard
+│       ├── ⚖️ governance/
+│       │   📄 ROOT-GOVERNANCE.md              # Governance charter
+│       └── 🪶 sovereignty/
+│           📄 INDIGENOUS-DATA-PROTECTION.md   # Sovereignty policy
+│
+├── 🗂️ data/
+│   ├── 📁 sources/                            # Source manifests (DCAT-aligned)
+│   ├── 📁 raw/                                # Raw ingested data (not committed)
+│   ├── 📁 work/
+│   │   └── 📁 staging/
+│   │       └── 📁 tabular/
+│   │           └── 🚫 abandonment_candidates/ # Quarantined assets + registry
+│   │               📄 abandonment_registry.json
+│   └── 📁 processed/                          # Validated, production-ready assets
+│
+├── 📊 reports/
+│   └── ⚖️ faircare/
+│       📄 contract_summary.json               # Data-contract validation summary
+│       📄 faircare_summary.json               # FAIR+CARE audit results
+│       📄 pii_scan.json                       # PII / sensitive markers
+│       📄 provenance_trace.json               # DCAT/PROV-style lineage
+│
+└── 📦 releases/
+    └── 📁 v11.2.6/
+        📄 faircare-validate-telemetry.json    # Aggregated FAIR+CARE telemetry
+        📄 sbom.spdx.json                      # SBOM for validation tools
+        📄 manifest.zip                        # Release manifest (hashes, configs)
 ~~~
 
 ---
@@ -437,7 +435,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in  faircare_telemetry.json \
-            --dest releases/v11.2.4/faircare-validate-telemetry.json
+            --dest releases/v11.2.6/faircare-validate-telemetry.json
 ~~~
 
 ### 2. Quality Gates (Normative)
@@ -472,7 +470,7 @@ Key artifacts per run:
 
 ### 3. Telemetry Records
 
-Telemetry entries are appended to `releases/v11.2.4/faircare-validate-telemetry.json`, e.g.:
+Telemetry entries are appended to `releases/v11.2.6/faircare-validate-telemetry.json`, e.g.:
 
 ~~~json
 {
@@ -489,6 +487,8 @@ Telemetry entries are appended to `releases/v11.2.4/faircare-validate-telemetry.
   "timestamp": "2025-12-06T03:12:20Z"
 }
 ~~~
+
+These records are later merged by the telemetry export workflow into the global `focus-telemetry.json` ledger.
 
 ---
 
@@ -576,7 +576,7 @@ Design principles:
 
 - Non‑compliant assets are:
   - Quarantined under `abandonment_candidates/`.  
-  - Registered in `abandonment_registry.json` with ID, checksum, reason, and reviewer (if any).  
+  - Registered in `abandonment_registry.json` with ID, checksum, path, reason, and reviewer (if any).  
   - Prevented from entering public catalogs or the knowledge graph until remediated or explicitly approved by the FAIR+CARE Council.
 
 ### 2. Abandonment Candidates Integration
@@ -597,22 +597,36 @@ Telemetry events (e.g., `dataset-flagged`, `dataset-remediated`, `dataset-retire
 
 ## 🕰️ Version History
 
-| Version    | Date       | Summary                                                                                                                                               |
-|-----------:|------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | Updated to align with KFM‑MDP v11.2.4; expanded front‑matter; added STAC/DCAT/PROV alignment and Story Node hooks; introduced dedicated `faircare-validate-telemetry.json`. |
-| v10.2.4   | 2025-11-12 | Telemetry schema v3; artifact paths unified; clarified schedule behavior and abandonment registry semantics.                                         |
-| v10.1.0   | 2025-11-10 | Added contract summary emission and telemetry v2 adoption.                                                                                            |
-| v9.9.0    | 2025-11-08 | Initial governed FAIR+CARE validation workflow documentation; introduced quarantine registry, PII scan, provenance export, and telemetry merge.      |
+| Version    | Date       | Author        | Summary                                                                                                                                               |
+|-----------:|------------|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **v11.2.6** | 2025-12-11 | `@kfm-gov`   | Aligned to KFM v11.2.6; updated release & telemetry paths, emoji directory layout, and footer/navigation profile; preserved FAIR+CARE workflow semantics and contracts. |
+| v11.2.4   | 2025-12-06 | `@kfm-gov`   | Updated to align with KFM‑MDP v11.2.4; expanded front‑matter; added STAC/DCAT/PROV alignment and Story Node hooks; introduced dedicated `faircare-validate-telemetry.json`. |
+| v10.2.4   | 2025-11-12 | `@kfm-gov`   | Telemetry schema v3; artifact paths unified; clarified schedule behavior and abandonment registry semantics.                                         |
+| v10.1.0   | 2025-11-10 | `@kfm-gov`   | Added contract summary emission and telemetry v2 adoption.                                                                                            |
+| v9.9.0    | 2025-11-08 | `@kfm-gov`   | Initial governed FAIR+CARE validation workflow documentation; introduced quarantine registry, PII scan, provenance export, and telemetry merge.      |
 
 ---
 
 <div align="center">
 
-⚖️ **Kansas Frontier Matrix — FAIR+CARE Validation Workflow (`faircare-validate.yml`)**  
+⚖️ **Kansas Frontier Matrix — FAIR+CARE Validation Workflow (`faircare-validate.yml`) · v11.2.6**  
 Ethical Automation · FAIR+CARE Governance · Sustainable CI/CD  
+
+<img src="https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
+<img src="https://img.shields.io/badge/Data-FAIR%2BCARE-gold" />
+<img src="https://img.shields.io/badge/Workflow-faircare_validate_v11.2.6-informational" />
 
 [⬅ Back to Workflows Index](./README.md) ·  
 [📘 Docs Root](../README.md) ·  
-[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md)
+[📚 Glossary](../glossary.md) ·  
+[📐 Markdown Protocol (KFM-MDP v11.2.4)](../standards/kfm_markdown_protocol_v11.2.4.md) ·  
+[⚖ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🤝 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+  
+© 2025 Kansas Frontier Matrix — CC-BY 4.0 for this document  
+MCP-DL v6.3 · KFM-MDP v11.2.4 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω  
 
 </div>
