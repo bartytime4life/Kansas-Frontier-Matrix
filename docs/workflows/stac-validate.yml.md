@@ -2,8 +2,8 @@
 title: "🗂️ Kansas Frontier Matrix — STAC/DCAT Validation Workflow (`stac-validate.yml`) (Diamond⁹ Ω / Crown∞Ω)"
 path: "docs/workflows/stac-validate.yml.md"
 
-version: "v11.2.4"
-last_updated: "2025-12-06"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous"
@@ -11,12 +11,12 @@ content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "releases/v11.2.4/signature.sig"
-attestation_ref: "releases/v11.2.4/slsa-attestation.json"
-sbom_ref: "releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "releases/v11.2.4/manifest.zip"
-telemetry_ref: "releases/v11.2.4/stac-validate-telemetry.json"
-telemetry_schema: "schemas/telemetry/workflows/stac-validate-v11.2.4.json"
+signature_ref: "releases/v11.2.6/signature.sig"
+attestation_ref: "releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "releases/v11.2.6/manifest.zip"
+telemetry_ref: "releases/v11.2.6/stac-validate-telemetry.json"
+telemetry_schema: "schemas/telemetry/workflows/stac-validate-v11.2.6.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 
@@ -91,9 +91,9 @@ shape_schema_ref: "schemas/shacl/kfm-markdown-protocol-v11.2.4-shape.ttl"
 story_node_refs: []
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:workflows:stac-validate-yml:v11.2.4"
-semantic_document_id: "kfm-workflow-stac-validate-yml-v11.2.4"
-event_source_id: "ledger:kfm:doc:workflows:stac-validate-yml:v11.2.4"
+doc_uuid: "urn:kfm:doc:workflows:stac-validate-yml:v11.2.6"
+semantic_document_id: "kfm-workflow-stac-validate-yml-v11.2.6"
+event_source_id: "ledger:kfm:doc:workflows:stac-validate-yml:v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -192,7 +192,7 @@ Define the **GitHub Actions** workflow that validates all **STAC 1.0** Catalogs/
 
 <img src="https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
-<img src="https://img.shields.io-badge/FAIR%2BCARE-Governance%20Aligned-orange" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
 <img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
 <img src="https://img.shields.io/badge/Status-Automated-brightgreen" />
 
@@ -245,7 +245,7 @@ this workflow protects the **catalog layer**, ensuring downstream components can
 ├── 📁 dcat/
 │   📄 dcat-ap-3.0.json                        — DCAT 3.0 / KFM-DCAT profile
 └── 📁 json/
-    📄 telemetry/workflows/stac-validate-v11.2.4.json  — Telemetry schema for this workflow
+    📄 telemetry/workflows/stac-validate-v11.2.6.json  — Telemetry schema for this workflow
 
 📁 scripts/
 └── 📁 stac/
@@ -266,7 +266,7 @@ this workflow protects the **catalog layer**, ensuring downstream components can
         📄 stac_summary.md                     — Human-readable summary (PR view)
 
 📁 releases/
-└── 📁 v11.2.4/
+└── 📁 v11.2.6/
     📄 stac-validate-telemetry.json            — Telemetry for this workflow
     📄 sbom.spdx.json                          — SBOM for tools used in validation
     📄 manifest.zip                            — Release manifest (hashes, configuration)
@@ -331,7 +331,7 @@ This workflow can produce infrastructure‑style Story Nodes, for example:
 Story Nodes reference:
 
 - `reports/self-validation/stac/stac_validation.json` for machine‑readable status.  
-- Telemetry entries in `releases/v11.2.4/stac-validate-telemetry.json`.
+- Telemetry entries in `releases/v11.2.6/stac-validate-telemetry.json`.
 
 ### 2. Focus Mode
 
@@ -456,7 +456,7 @@ jobs:
         run: |
           python scripts/merge_telemetry.py \
             --in  stac_telemetry.json \
-            --dest releases/v11.2.4/stac-validate-telemetry.json
+            --dest releases/v11.2.6/stac-validate-telemetry.json
 ~~~
 
 ### 2. Validation Rules
@@ -519,8 +519,8 @@ Validated by `stac_contract_check.py`:
 
 Telemetry is appended to:
 
-- `releases/v11.2.4/stac-validate-telemetry.json`  
-  (schema: `stac-validate-v11.2.4`).
+- `releases/v11.2.6/stac-validate-telemetry.json`  
+  (schema: `stac-validate-v11.2.6`).
 
 ---
 
@@ -574,7 +574,7 @@ Relations:
 - **Validation scripts**: `scripts/stac/*.py`.  
 - **Schemas/configs**: `schemas/stac/**`, `schemas/dcat/**`, `docs/contracts/**`.  
 - **Reports**: `reports/self-validation/stac/**`.  
-- **Telemetry**: `releases/v11.2.4/stac-validate-telemetry.json`.
+- **Telemetry**: `releases/v11.2.6/stac-validate-telemetry.json`.
 
 ### 2. Determinism & Reproducibility
 
@@ -617,7 +617,8 @@ Items or Collections with `kfm:care_tag = sensitive`:
 
 | Version    | Date       | Author          | Summary                                                                                                                            |
 |-----------:|------------|-----------------|------------------------------------------------------------------------------------------------------------------------------------|
-| **v11.2.4** | 2025-12-06 | `@kfm-devops`   | Aligned with KFM-MDP v11.2.4; added full front-matter, directory layout, Story Node hooks, STAC/DCAT/PROV alignment, and dedicated telemetry file for this workflow. |
+| **v11.2.6** | 2025-12-11 | `@kfm-devops`   | Aligned to KFM v11.2.6; updated release and telemetry paths and workflow telemetry schema reference; no functional validation changes. |
+| v11.2.4   | 2025-12-06 | `@kfm-devops`   | Aligned with KFM-MDP v11.2.4; added full front-matter, directory layout, Story Node hooks, STAC/DCAT/PROV alignment, and dedicated telemetry file for this workflow. |
 | v10.2.4   | 2025-11-12 | `@kfm-devops`   | Upgraded to telemetry schema v3; unified artifact paths under `reports/self-validation/stac/`; refined asset/extension checks.   |
 | v10.1.0   | 2025-11-10 | `@kfm-devops`   | Telemetry v2 adoption; stricter checksum/link rules; first DCAT parity report.                                                    |
 | v9.9.0    | 2025-11-08 | `@kfm-devops`   | Initial governed STAC/DCAT validation doc with asset/link checks and telemetry export.                                            |
