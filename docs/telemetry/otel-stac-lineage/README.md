@@ -1,8 +1,8 @@
 ---
-title: "📡 KFM v11.2.2 — OpenTelemetry + STAC Lineage Schema (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "📡 KFM v11.2.6 — OpenTelemetry + STAC Lineage Schema (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/telemetry/otel-stac-lineage/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Telemetry & Reliability · FAIR+CARE Council Oversight"
@@ -17,11 +17,11 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-commit-hash>"
 doc_integrity_checksum: "<sha256-of-this-file>"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
+sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.6/manifest.zip"
 
-telemetry_ref: "../../../releases/v11.2.2/telemetry-otel-stac-lineage.json"
-telemetry_schema: "../../../schemas/telemetry/otel-stac-lineage-v11.2.2.json"
+telemetry_ref: "../../../releases/v11.2.6/telemetry-otel-stac-lineage.json"
+telemetry_schema: "../../../schemas/telemetry/otel-stac-lineage-v11.2.6.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 
@@ -31,7 +31,7 @@ sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -63,9 +63,9 @@ metadata_profiles:
   - "FAIR+CARE"
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:telemetry:otel-stac-lineage:v11.2.2"
-semantic_document_id: "kfm-telemetry-otel-stac-lineage-v11.2.2"
-event_source_id: "ledger:telemetry-otel-stac-lineage-v11.2.2"
+doc_uuid: "urn:kfm:doc:telemetry:otel-stac-lineage:v11.2.6"
+semantic_document_id: "kfm-telemetry-otel-stac-lineage-v11.2.6"
+event_source_id: "ledger:telemetry-otel-stac-lineage-v11.2.6"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -83,7 +83,7 @@ diagram_profiles:
 
 <div align="center">
 
-# 📡 **KFM v11.2.2 — OpenTelemetry + STAC Lineage Schema**  
+# 📡 **KFM v11.2.6 — OpenTelemetry + STAC Lineage Schema**  
 `docs/telemetry/otel-stac-lineage/README.md`
 
 **Purpose**  
@@ -125,21 +125,26 @@ Exceptions require a registered **governance exception** in:
 
 ## 🗂️ 2. Directory Layout
 
-    docs/telemetry/otel-stac-lineage/
-    ├── 📄 README.md                          # This spec (you are here)
-    ├── 📁 examples/                          # Concrete JSON span examples
-    │   ├── 📄 airflow-task-span.json         # Example Airflow DAG task span
-    │   ├── 📄 langgraph-node-span.json       # Example LangGraph node span
-    │   └── 📄 lakefs-commit-span.json        # Example lakeFS commit span
-    └── 📁 diagrams/                          # Optional mermaid diagrams
-        └── 📄 otel-stac-lineage-flow.md      # Orchestrator → OTel → Backend overview
+~~~text
+docs/
+  telemetry/
+    otel-stac-lineage/
+      📄 README.md                          # This spec (you are here)
+      📂 examples/                          # Concrete JSON span examples
+        📄 airflow-task-span.json           # Example Airflow DAG task span
+        📄 langgraph-node-span.json         # Example LangGraph node span
+        📄 lakefs-commit-span.json          # Example lakeFS commit span
+      📂 diagrams/                          # Optional mermaid diagrams
+        📄 otel-stac-lineage-flow.md        # Orchestrator → OTel → Backend overview
 
-Implementation references (non-normative but recommended):
+src/
+  telemetry/
+    📄 otel_stac_lineage.py                 # Attribute helpers and validators
+    📂 exporters/
+      📄 otel_stac_lineage_exporter.py      # Optional custom processors/exporters
+~~~
 
-    src/telemetry/
-    ├── 📜 otel_stac_lineage.py               # Attribute helpers and validators
-    └── 📁 exporters/
-        └── 📜 otel_stac_lineage_exporter.py  # Optional custom processors/exporters
+Implementation references under `src/` are **non-normative but recommended**.
 
 ---
 
@@ -166,13 +171,13 @@ For each attribute we specify:
 
 ### 3.2 STAC Identity Attributes
 
-| Attribute         | Type | Req. | Domain | Example                                 | Notes                       |
-|-------------------|------|------|--------|------------------------------------------|-----------------------------|
-| `stac.collection` | str  | R    | STAC   | `"kfm-hydrology-kansas-river"`          | STAC Collection ID.         |
-| `stac.item`       | str  | R    | STAC   | `"kansas-river-2024-08-01-hrrr-wind"`   | STAC Item ID.               |
-| `stac.version`    | str  | C    | STAC   | `"1.0.0-kfm-v11"`                       | Required if versioned.      |
-| `stac.asset_role` | str  | C    | STAC   | `"data"`, `"thumbnail"`, `"metadata"`   | Use STAC roles.             |
-| `stac.asset_href` | str  | C    | STAC   | `"s3://kfm/hydrology/.../asset.parquet"`| URI/URL to asset.           |
+| Attribute         | Type | Req. | Domain | Example                               | Notes                       |
+|-------------------|------|------|--------|----------------------------------------|-----------------------------|
+| `stac.collection` | str  | R    | STAC   | `"kfm-hydrology-kansas-river"`        | STAC Collection ID.         |
+| `stac.item`       | str  | R    | STAC   | `"kansas-river-2024-08-01-hrrr-wind"` | STAC Item ID.               |
+| `stac.version`    | str  | C    | STAC   | `"1.0.0-kfm-v11"`                     | Required if versioned.      |
+| `stac.asset_role` | str  | C    | STAC   | `"data"`, `"thumbnail"`, `"metadata"` | Use STAC roles.             |
+| `stac.asset_href` | str  | C    | STAC   | `"s3://kfm/hydrology/.../asset.parquet"` | URI/URL to asset.        |
 
 **Rules**
 
@@ -198,11 +203,11 @@ For each attribute we specify:
 
 ### 3.4 Data Integrity & Size
 
-| Attribute          | Type | Req. | Domain  | Example                      | Notes                                      |
-|--------------------|------|------|---------|------------------------------|--------------------------------------------|
-| `data.hash.sha256` | str  | C    | Lineage | `"e3b0c44298fc1c14..."`      | SHA-256 of the **primary output** asset.   |
-| `data.bytes`       | int  | O    | Lineage | `524288000`                  | Total bytes written/read.                  |
-| `data.encoding`    | str  | O    | Lineage | `"parquet"`, `"zarr"`        | Logical encoding/format.                   |
+| Attribute          | Type | Req. | Domain  | Example                 | Notes                                      |
+|--------------------|------|------|---------|-------------------------|--------------------------------------------|
+| `data.hash.sha256` | str  | C    | Lineage | `"e3b0c44298fc1c14..."` | SHA-256 of the **primary output** asset.   |
+| `data.bytes`       | int  | O    | Lineage | `524288000`             | Total bytes written/read.                  |
+| `data.encoding`    | str  | O    | Lineage | `"parquet"`, `"zarr"`   | Logical encoding/format.                   |
 
 **Rules**
 
@@ -212,11 +217,11 @@ For each attribute we specify:
 
 ### 3.5 Geospatial & Temporal Context
 
-| Attribute            | Type | Req. | Domain | Example                                              | Notes                          |
-|----------------------|------|------|--------|------------------------------------------------------|--------------------------------|
-| `geo.crs`            | str  | O    | Geo    | `"EPSG:4326"`                                        | Horizontal CRS.                |
-| `geo.vertical_datum` | str  | C    | Geo    | `"NAVD88"`                                           | Required for vertical data.    |
-| `time.interval`      | str  | O    | Geo    | `"2024-08-01T00:00:00Z/2024-08-01T01:00:00Z"`       | ISO-8601 time interval.        |
+| Attribute            | Type | Req. | Domain | Example                                               | Notes                          |
+|----------------------|------|------|--------|-------------------------------------------------------|--------------------------------|
+| `geo.crs`            | str  | O    | Geo    | `"EPSG:4326"`                                         | Horizontal CRS.                |
+| `geo.vertical_datum` | str  | C    | Geo    | `"NAVD88"`                                            | Required for vertical data.    |
+| `time.interval`      | str  | O    | Geo    | `"2024-08-01T00:00:00Z/2024-08-01T01:00:00Z"`        | ISO-8601 time interval.        |
 
 **Rules**
 
@@ -226,11 +231,11 @@ For each attribute we specify:
 
 ### 3.6 FAIR+CARE & Privacy Attributes
 
-| Attribute         | Type | Req. | Domain | Example                          | Notes                                        |
-|-------------------|------|------|--------|----------------------------------|----------------------------------------------|
+| Attribute         | Type | Req. | Domain | Example                           | Notes                                        |
+|-------------------|------|------|--------|-----------------------------------|----------------------------------------------|
 | `care.label`      | str  | C    | Ethics | `"Public"`, `"Sensitive-Heritage"`| CARE label at time of operation.            |
-| `care.scope`      | str  | O    | Ethics | `"Tribal-partner-X-only"`       | Human-readable scope text.                   |
-| `privacy.masking` | str  | C    | Ethics | `"h3_generalized"`, `"none"`    | Required for any spatially sensitive data.   |
+| `care.scope`      | str  | O    | Ethics | `"Tribal-partner-X-only"`        | Human-readable scope text.                   |
+| `privacy.masking` | str  | C    | Ethics | `"h3_generalized"`, `"none"`     | Required for any spatially sensitive data.   |
 
 **Rules**
 
@@ -253,11 +258,11 @@ For each attribute we specify:
 
 ### 3.8 Reliability & WAL Context
 
-| Attribute            | Type | Req. | Domain       | Example                             | Notes                         |
-|----------------------|------|------|--------------|-------------------------------------|-------------------------------|
-| `reliability.retry`  | int  | O    | Reliability  | `0`, `1`, `2`                       | Attempt index.                |
-| `reliability.wal_id` | str  | O    | Reliability  | `"wal-2025-11-28T02:31:44Z-01"`     | WAL / transaction ID.         |
-| `slo.step_kind`      | str  | O    | Reliability  | `"ingest"`, `"transform"`, `"publish"` | Logical pipeline step name. |
+| Attribute            | Type | Req. | Domain       | Example                               | Notes                         |
+|----------------------|------|------|--------------|---------------------------------------|-------------------------------|
+| `reliability.retry`  | int  | O    | Reliability  | `0`, `1`, `2`                         | Attempt index.                |
+| `reliability.wal_id` | str  | O    | Reliability  | `"wal-2025-11-28T02:31:44Z-01"`       | WAL / transaction ID.         |
+| `slo.step_kind`      | str  | O    | Reliability  | `"ingest"`, `"transform"`, `"publish"`| Logical pipeline step name.   |
 
 ---
 
@@ -291,6 +296,8 @@ Recommended attributes:
 - `reliability.retry`, `slo.step_kind`  
 - `governance.policy_id` for release-type tasks  
 
+---
+
 ### 4.2 LangGraph Nodes
 
 Applicable to:
@@ -302,6 +309,8 @@ Recommended attributes:
 - `stac.collection`, `stac.item`  
 - `care.label`, `privacy.masking`  
 - `slo.step_kind = "interpretation"` (or similar)  
+
+---
 
 ### 4.3 lakeFS Hooks / Commit Events
 
@@ -326,7 +335,7 @@ Recommended attributes:
 
 2. **CI Conformance**  
    - Example spans in `examples/` are validated against the schema.  
-   - Pipelines that advertise v11.2.2 conformance MUST run a telemetry conformance test in CI.
+   - Pipelines that advertise **v11.2.6 conformance** MUST run a telemetry conformance test in CI.
 
 3. **Evolution Rules**  
    - Adding new optional attributes → **minor** version bump.  
@@ -351,15 +360,26 @@ The goal is to let reviewers navigate from **story → trace → dataset** and v
 
 ## 🕰️ 7. Version History
 
-| Version  | Date       | Notes                                                                 |
-|----------|------------|-----------------------------------------------------------------------|
-| v11.2.2  | 2025-11-28 | Upgraded to KFM-MDP v11.2.2; added energy/carbon v2 schema alignment |
-| v11.1.0  | 2025-11-20 | Initial Diamond⁹ Ω / Crown∞Ω-certified release of OTel+STAC schema   |
+| Version | Date       | Notes                                                                                              |
+|--------:|------------|----------------------------------------------------------------------------------------------------|
+| v11.2.6 | 2025-12-11 | Updated to KFM-MDP v11.2.6; release artifacts and telemetry schema refs bumped; no schema changes. |
+| v11.2.2 | 2025-11-28 | Upgraded to KFM-MDP v11.2.2; added energy/carbon v2 schema alignment.                              |
+| v11.1.0 | 2025-11-20 | Initial Diamond⁹ Ω / Crown∞Ω-certified release of OTel+STAC schema.                               |
 
 ---
 
 <div align="center">
 
-[📡 Telemetry Home](../README.md) · [📚 Standards](../../standards/README.md) · [📦 STAC Catalog](../../data/stac/)
+📡 **KFM v11.2.6 — OpenTelemetry + STAC Lineage Schema**  
+Traceable Lineage · Operational Telemetry · FAIR+CARE-Aligned  
+
+[📘 Docs Root](../../README.md) ·  
+[📡 Telemetry Index](../README.md) ·  
+[📂 STAC Catalog Overview](../../data/README.md) ·  
+[📦 STAC Catalog Root](../../data/stac/) ·  
+[📂 Standards Index](../../standards/README.md) ·  
+[⚖ Governance](../../standards/governance/ROOT-GOVERNANCE.md) ·  
+🌿 [FAIR+CARE Guide](../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+🪶 [Indigenous Data Protection](../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
