@@ -295,19 +295,19 @@ This index is therefore **both**:
 
 ~~~mermaid
 flowchart LR
-    A[Commit / PR] --> B[.github/workflows/*]
-    B --> C[Docs & Schema Lint]
-    B --> D[STAC/DCAT/PROV Validation]
-    B --> E[FAIR+CARE & Sovereignty Audit]
-    B --> F[Security & Supply-Chain Checks]
+    A["Commit / PR"] --> B[".github/workflows/*"]
+    B --> C["Docs & Schema Lint"]
+    B --> D["STAC/DCAT/PROV Validation"]
+    B --> E["FAIR+CARE & Sovereignty Audit"]
+    B --> F["Security & Supply-Chain Checks"]
 
-    C --> G[Build / Package Artifacts]
+    C --> G["Build / Package Artifacts"]
     D --> G
-    E --> H[Governance Ledger Update]
+    E --> H["Governance Ledger Update"]
     F --> G
 
-    G --> I[Telemetry Export (energy / carbon / quality)]
-    I --> J[Dashboards · Focus Mode · Reports]
+    G --> I["Telemetry Export (energy, carbon, quality)"]
+    I --> J["Dashboards, Focus Mode, Reports"]
 ~~~
 
 All concrete workflow docs in this directory **MUST** explain where they attach in this flow and what artifacts they emit.
