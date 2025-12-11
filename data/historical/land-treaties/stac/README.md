@@ -79,7 +79,14 @@ event_source_id: "stac:kfm:land-treaties:v11.2.2"
 # 🛰 **Kansas Frontier Matrix — Land Treaties STAC Catalog**  
 `data/historical/land-treaties/stac/`
 
-**Role in the pipeline**  
+**Purpose**  
+Define the governed STAC catalog layout and schemas for Kansas‑related land‑treaty data so deterministic ETL outputs can flow into DCAT/PROV, Neo4j, APIs, and the KFM map/timeline while honoring FAIR+CARE and Indigenous data sovereignty.
+
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue "Master Coder Protocol v6.3")]() ·
+[![KFM-MDP v11.2.6](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.6-informational "Markdown Protocol v11.2.6")]() ·
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Enforced-gold "FAIR+CARE Enforced")]()
+
+**Pipeline slot**  
 Deterministic ETL → **STAC/DCAT/PROV** catalogs → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode
 
 </div>
