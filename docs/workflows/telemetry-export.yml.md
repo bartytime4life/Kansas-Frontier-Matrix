@@ -281,11 +281,11 @@ this workflow:
 
 ### 1. Triggers & Scope
 
-| Trigger            | Paths / Workflows                             | Notes                                      |
-|-------------------:|-----------------------------------------------|--------------------------------------------|
-| `workflow_run`     | docs-lint, faircare-validate, stac-validate, ai-train, ai-explainability, security-supply-chain | Primary mode; runs after these complete |
-| `schedule`         | hourly                                        | Roll-up of last N runs; trend refresh      |
-| `workflow_dispatch`| —                                             | Manual backfill or emergency re-aggregation|
+| Trigger             | Paths / Workflows                             | Notes                                      |
+|--------------------:|-----------------------------------------------|--------------------------------------------|
+| `workflow_run`      | docs-lint, faircare-validate, stac-validate, ai-train, ai-explainability, security-supply-chain | Primary mode; runs after these complete |
+| `schedule`          | hourly                                        | Roll-up of last N runs; trend refresh      |
+| `workflow_dispatch` | —                                             | Manual backfill or emergency re-aggregation|
 
 **Upstream requirement:** Each contributing workflow **must** emit a JSON summary conforming to its telemetry schema and upload it as an artifact.
 
@@ -414,11 +414,11 @@ jobs:
       - name: Collect inputs
         run: |
           mkdir -p .telemetry/in .telemetry/out releases/v11.2.4
-          python scripts/telemetry/pull_artifact.py --name docs_lint_reports            --out .telemetry/in/docs      || true
-          python scripts/telemetry/pull_artifact.py --name faircare_reports             --out .telemetry/in/faircare  || true
-          python scripts/telemetry/pull_artifact.py --name stac_validation_reports      --out .telemetry/in/stac      || true
-          python scripts/telemetry/pull_artifact.py --name schema_lint_reports          --out .telemetry/in/schema    || true
-          python scripts/telemetry/pull_artifact.py --name ai_*_artifacts               --out .telemetry/in/ai        || true
+          python scripts/telemetry/pull_artifact.py --name docs_lint_reports             --out .telemetry/in/docs      || true
+          python scripts/telemetry/pull_artifact.py --name faircare_reports              --out .telemetry/in/faircare  || true
+          python scripts/telemetry/pull_artifact.py --name stac_validation_reports       --out .telemetry/in/stac      || true
+          python scripts/telemetry/pull_artifact.py --name schema_lint_reports           --out .telemetry/in/schema    || true
+          python scripts/telemetry/pull_artifact.py --name ai_*_artifacts                --out .telemetry/in/ai        || true
           python scripts/telemetry/pull_artifact.py --name security_supply_chain_reports --out .telemetry/in/security || true
 
       - name: Normalize to telemetry schemas
@@ -456,7 +456,7 @@ jobs:
       - name: Merge streams → focus-telemetry.json
         run: |
           python scripts/telemetry/merge_telemetry.py \
-            --in .telemetry/out/*.json \
+            --in  .telemetry/out/*.json \
             --dest releases/v11.2.4/focus-telemetry.json
 
       - name: Validate unified telemetry
@@ -494,7 +494,7 @@ The job should:
 - **Fail** if:
   - Any per‑workflow normalized payload fails its schema validation.  
   - The unified ledger fails validation against `docs-index-v3.json`.  
-  - The ledger is empty when there should be data for the period (e.g., missing upstream runs).  
+  - The ledger is unexpectedly empty for the time window when upstream workflows have run.  
 
 - **Warn** (non‑fatal) if:
   - Some upstream workflows had no artifacts for the time window.  
@@ -510,11 +510,11 @@ Each upstream workflow must provide:
 
 - A **summary JSON** conforming to its telemetry schema.  
 - A **consistent artifact name**, e.g.:
-  - `docs_lint_reports` → `lint_summary.json`.  
-  - `faircare_reports` → `faircare_summary.json`.  
-  - `stac_validation_reports` → `stac_validation.json`.  
-  - `ai_<model>_artifacts` → `metrics.json` + `drift.json` + `explainability.json`.  
-  - `security_supply_chain_reports` → `supply_chain_security_summary.json`.  
+  - `docs_lint_reports` → `lint_summary.json`  
+  - `faircare_reports` → `faircare_summary.json`  
+  - `stac_validation_reports` → `stac_validation.json`  
+  - `ai_<model>_artifacts` → `metrics.json`, `drift.json`, `explainability.json`  
+  - `security_supply_chain_reports` → `supply_chain_security_summary.json`  
 
 The exporter uses those contracts plus `schemas/telemetry/workflows/*.json` to shape events.
 
@@ -529,12 +529,12 @@ Core event fields in `focus-telemetry.json`:
 | `timestamp`    | string  | ISO‑8601 UTC timestamp                                      |
 | `workflow`     | string  | GitHub workflow name                                        |
 | `run_id`       | string  | CI run identifier                                           |
-| `branch`       | string  | Git ref / release tag                                      |
-| `duration_sec` | number  | Total workflow runtime                                     |
-| `energy_wh`    | number  | Estimated energy consumption                               |
-| `carbon_gco2e` | number  | CO₂eq estimate                                             |
-| `status`       | enum    | `success` \| `warning` \| `failure`                        |
-| `payload`      | object  | Workflow‑specific, validated against its own schema        |
+| `branch`       | string  | Git ref / release tag                                       |
+| `duration_sec` | number  | Total workflow runtime                                      |
+| `energy_wh`    | number  | Estimated energy consumption                                |
+| `carbon_gco2e` | number  | CO₂eq estimate                                              |
+| `status`       | enum    | `success` \| `warning` \| `failure`                         |
+| `payload`      | object  | Workflow‑specific, validated against its own schema         |
 
 This ledger is append‑only and versioned with releases (`v11.2.4`).
 
@@ -593,15 +593,15 @@ Relations:
 - **Normalization & merge logic**: `scripts/telemetry/*.py`.  
 - **Schemas**: `schemas/telemetry/**`.  
 - **Reports & summaries**: `reports/telemetry/**`.  
-- **Unified ledger & related artifacts**: `releases/v11.2.4/focus-telemetry.json`, `sbom.spdx.json`, `manifest.zip`.
-
-The workflow remains declarative; heavy logic lives in reusable scripts.
+- **Unified ledger & related artifacts**:  
+  - `releases/v11.2.4/focus-telemetry.json`  
+  - `releases/v11.2.4/sbom.spdx.json`  
+  - `releases/v11.2.4/manifest.zip`
 
 ### 2. Determinism & Reproducibility
 
-- For a given set of upstream artifacts and configuration:
-  - Normalization + merge steps are deterministic.  
-- Tool versions (Python, jsonschema, etc.) are pinned in `requirements.txt`.  
+- For a given set of upstream artifacts and configuration, normalization and merge steps are **deterministic**.  
+- Tool versions (Python, `jsonschema`, etc.) are pinned in `requirements.txt` and captured in `sbom.spdx.json`.  
 - Schema versions are explicit (`workflows/*-v3.json`, `docs-index-v3.json`).
 
 ---
