@@ -1,8 +1,8 @@
 ---
-title: "📡 Kansas Frontier Matrix — Telemetry Metrics Documentation Index v11.2.2"
+title: "📡 Kansas Frontier Matrix — Telemetry Metrics Documentation Index v11.2.6"
 path: "docs/telemetry/metrics/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-30"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Telemetry Governance Council"
@@ -10,11 +10,11 @@ content_stability: "stable"
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
-signature_ref: "../../../releases/v11.2.2/signature.sig"
-attestation_ref: "../../../releases/v11.2.2/slsa-attestation.json"
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.2/otel-metrics.json"
+signature_ref: "../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.6/otel-metrics.json"
 telemetry_schema: "../../../schemas/telemetry/metric-cardinality-v1.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
@@ -23,7 +23,7 @@ ethics_ref: "../../standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -70,6 +70,7 @@ metadata_profiles:
   - "PROV-O"
   - "FAIR+CARE"
 provenance_chain:
+  - "docs/telemetry/metrics/README.md@v11.2.2"
   - "docs/telemetry/metrics/README.md@v11.1.0"
   - "docs/telemetry/metrics/README.md@v10.x"
 provenance_requirements:
@@ -81,9 +82,9 @@ json_schema_ref: "../../../schemas/json/telemetry-metrics-index-v1.schema.json"
 shape_schema_ref: "../../../schemas/shacl/telemetry-metrics-index-v1-shape.ttl"
 story_node_refs: []
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:telemetry:metrics:index:v11.2.2"
-semantic_document_id: "kfm-telemetry-metrics-index-v11.2.2"
-event_source_id: "ledger:kfm:doc:telemetry:metrics:index:v11.2.2"
+doc_uuid: "urn:kfm:doc:telemetry:metrics:index:v11.2.6"
+semantic_document_id: "kfm-telemetry-metrics-index-v11.2.6"
+event_source_id: "ledger:kfm:doc:telemetry:metrics:index:v11.2.6"
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
@@ -149,11 +150,11 @@ deprecated_fields:
 
 <div align="center">
 
-# 📡 **Kansas Frontier Matrix — Telemetry Metrics Documentation Index v11.2.2**  
+# 📡 **Kansas Frontier Matrix — Telemetry Metrics Documentation Index v11.2.6**  
 `docs/telemetry/metrics/README.md`
 
 **Purpose**  
-Provide the **top-level index and architectural guide** for all **telemetry metric standards** in KFM v11.2.2.  
+Provide the **top-level index and architectural guide** for all **telemetry metric standards** in KFM v11.2.6.  
 This file defines how metric-related documents under `docs/telemetry/metrics/` are organized, governed, and integrated with Focus Mode and FAIR+CARE policies.
 
 </div>
@@ -280,20 +281,28 @@ Any new metric standard added under this directory MUST:
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                                      |
-|--------:|------------|--------------------------------------------------------------------------------------------------------------|
+| Version | Date       | Summary                                                                                                           |
+|--------:|------------|-------------------------------------------------------------------------------------------------------------------|
+| v11.2.6 | 2025-12-11 | Updated to KFM-MDP v11.2.6; release and telemetry refs bumped to v11.2.6; footer and cross-links aligned with v11.2.6 telemetry docs; no structural changes. |
 | v11.2.2 | 2025-11-30 | Rebuilt telemetry metrics index to align with KFM-MDP v11.2.2; added full metadata, directory layout, and links. |
-| v11.1.0 | 2025-08-15 | Initial telemetry metrics index covering cardinality directory only.                                         |
-| v10.x   | 2024-03-01 | Early, informal telemetry metrics notes before v11 consolidation.                                           |
+| v11.1.0 | 2025-08-15 | Initial telemetry metrics index covering cardinality directory only.                                              |
+| v10.x   | 2024-03-01 | Early, informal telemetry metrics notes before v11 consolidation.                                                |
 
 ---
 
 <div align="center">
 
-📡 **Kansas Frontier Matrix — Telemetry Metrics Documentation Index v11.2.2**  
+📡 **Kansas Frontier Matrix — Telemetry Metrics Documentation Index v11.2.6**  
 Metric Standards · Deterministic Observability · FAIR+CARE-Aligned  
 
-[📘 Docs Root](../../README.md) · [📂 Telemetry Index](../README.md) · [📂 Standards Index](../../standards/README.md) · [⚖ Governance](../../standards/governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](../../README.md) ·  
+[📂 Telemetry Index](../README.md) ·  
+[📂 Standards Index](../../standards/README.md) ·  
+[⚖ Governance](../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🌿 FAIR+CARE Guide](../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) ·  
+[🛡 Security Policy](../../standards/security/SECURITY-POLICY.md) ·  
+[📊 Metric Cardinality Telemetry](../../../releases/v11.2.6/otel-metrics.json) ·  
+[🧩 Metric Cardinality Schema](../../../schemas/telemetry/metric-cardinality-v1.json)
 
 </div>
-
