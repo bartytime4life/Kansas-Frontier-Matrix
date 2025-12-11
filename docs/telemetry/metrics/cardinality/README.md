@@ -1,8 +1,8 @@
 ---
 title: "📊 KFM v11 — Metric Cardinality Management & Safe Label Design (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/telemetry/metrics/cardinality/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-30"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -13,11 +13,11 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-signature_ref: "../../../../releases/v11.2.2/signature.sig"
-attestation_ref: "../../../../releases/v11.2.2/slsa-attestation.json"
-sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../releases/v11.2.2/otel-metrics.json"
+signature_ref: "../../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.6/otel-metrics.json"
 telemetry_schema: "../../../../schemas/telemetry/metric-cardinality-v1.json"
 energy_schema: "../../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
@@ -28,7 +28,7 @@ sovereignty_policy: "../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.m
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -79,6 +79,7 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
+  - "docs/telemetry/metrics/cardinality/README.md@v11.2.2"
   - "docs/telemetry/metrics/cardinality/README.md@v11.1.0"
   - "docs/telemetry/metrics/cardinality/README.md@v10.x"
 provenance_requirements:
@@ -91,9 +92,9 @@ json_schema_ref: "../../../../schemas/json/telemetry-metric-cardinality-v1.schem
 shape_schema_ref: "../../../../schemas/shacl/telemetry-metric-cardinality-v1-shape.ttl"
 story_node_refs: []
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:telemetry:metrics:cardinality:v11.2.2"
-semantic_document_id: "kfm-telemetry-metric-cardinality-v11.2.2"
-event_source_id: "ledger:kfm:doc:telemetry:metrics:cardinality:v11.2.2"
+doc_uuid: "urn:kfm:doc:telemetry:metrics:cardinality:v11.2.6"
+semantic_document_id: "kfm-telemetry-metric-cardinality-v11.2.6"
+event_source_id: "ledger:kfm:doc:telemetry:metrics:cardinality:v11.2.6"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -185,7 +186,7 @@ deprecated_fields:
 `docs/telemetry/metrics/cardinality/README.md`
 
 **Purpose**  
-Define the **governed standard** for **metric cardinality safety** in the Kansas Frontier Matrix (KFM) v11.2.2.  
+Define the **governed standard** for **metric cardinality safety** in the Kansas Frontier Matrix (KFM) v11.2.6.  
 This document keeps metrics **deterministic & low-cardinality**, protects **Prometheus/Mimir cost ceilings**, and enforces **FAIR+CARE-aligned telemetry**.
 
 </div>
@@ -447,6 +448,7 @@ Telemetry authors MUST:
 
 | Version | Date       | Summary                                                                                                           |
 |--------:|------------|-------------------------------------------------------------------------------------------------------------------|
+| v11.2.6 | 2025-12-11 | Updated to KFM-MDP v11.2.6; release and telemetry refs bumped to v11.2.6; footer and cross-links aligned with v11.2.6 telemetry/metrics docs; no semantic changes. |
 | v11.2.2 | 2025-11-30 | Complete rewrite aligned with KFM-MDP v11.2.2; added ASB, spike detection, Story Node integration, and CI checks. |
 | v11.1.0 | 2025-08-15 | Introduced explicit whitelist/blacklist label model and baseline query hygiene guidance.                          |
 | v10.x   | 2024-03-01 | Initial draft of metric cardinality guidance and informal label recommendations.                                  |
@@ -455,9 +457,18 @@ Telemetry authors MUST:
 
 <div align="center">
 
-📊 **KFM v11 — Metric Cardinality Management & Safe Label Design**  
+📊 **KFM v11 — Metric Cardinality Management & Safe Label Design (v11.2.6)**  
 Observability With Purpose · Deterministic Metrics · FAIR+CARE Telemetry  
 
-[📘 Docs Root](../../../../README.md) · [🧭 Standards Index](../../../standards/README.md) · [⚖ Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](../../../../README.md) ·  
+[📡 Telemetry Metrics Index](../README.md) ·  
+[📂 Telemetry Index](../../README.md) ·  
+[🧭 Standards Index](../../../standards/README.md) ·  
+[⚖ Governance](../../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🌿 FAIR+CARE Guide](../../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) ·  
+[🛡 Security Policy](../../../standards/security/SECURITY-POLICY.md) ·  
+[📊 Metric Cardinality Telemetry](../../../../releases/v11.2.6/otel-metrics.json) ·  
+[🧩 Metric Cardinality Schema](../../../../schemas/telemetry/metric-cardinality-v1.json)
 
 </div>
