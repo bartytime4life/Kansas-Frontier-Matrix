@@ -192,8 +192,8 @@ Define the **GitHub Actions** workflow that validates all **STAC 1.0** Catalogs/
 
 <img src="https://img.shields.io/badge/Docs·MCP-v6.3-blueviolet" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.4-purple" />
-<img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
 <img src="https://img.shields.io-badge/FAIR%2BCARE-Governance%20Aligned-orange" />
+<img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
 <img src="https://img.shields.io/badge/Status-Automated-brightgreen" />
 
 </div>
