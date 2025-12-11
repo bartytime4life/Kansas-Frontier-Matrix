@@ -1,8 +1,8 @@
 ---
 title: "⚖️ KFM v11 — Cardinality Governance & Enforcement (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/telemetry/metrics/cardinality/governance/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-30"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -13,11 +13,11 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-signature_ref: "../../../../../releases/v11.2.2/signature.sig"
-attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
-sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../../releases/v11.2.2/otel-metrics.json"
+signature_ref: "../../../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.2.6/otel-metrics.json"
 telemetry_schema: "../../../../../schemas/telemetry/metric-cardinality-v1.json"
 energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
@@ -28,7 +28,7 @@ sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTIO
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -81,6 +81,7 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
+  - "docs/telemetry/metrics/cardinality/governance/README.md@v11.2.2"
   - "docs/telemetry/metrics/cardinality/governance/README.md@v11.1.0"
   - "docs/telemetry/metrics/cardinality/governance/README.md@v10.x"
 
@@ -95,9 +96,9 @@ shape_schema_ref: "../../../../../schemas/shacl/telemetry-governance-v1-shape.tt
 story_node_refs: []
 immutability_status: "version-pinned"
 
-doc_uuid: "urn:kfm:doc:telemetry:metrics:cardinality:governance:v11.2.2"
-semantic_document_id: "kfm-telemetry-metric-cardinality-governance-v11.2.2"
-event_source_id: "ledger:kfm:doc:telemetry:metrics:cardinality:governance:v11.2.2"
+doc_uuid: "urn:kfm:doc:telemetry:metrics:cardinality:governance:v11.2.6"
+semantic_document_id: "kfm-telemetry-metric-cardinality-governance-v11.2.6"
+event_source_id: "ledger:kfm:doc:telemetry:metrics:cardinality:governance:v11.2.6"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -180,7 +181,7 @@ deprecated_fields:
 `docs/telemetry/metrics/cardinality/governance/README.md`
 
 **Purpose**  
-Define the **formal governance, enforcement workflows, and escalation procedures** required to maintain stable, FAIR+CARE-aligned metric cardinality across the Kansas Frontier Matrix (KFM) v11.2.2.  
+Define the **formal governance, enforcement workflows, and escalation procedures** required to maintain stable, FAIR+CARE-aligned metric cardinality across the Kansas Frontier Matrix (KFM) v11.2.6.  
 This document governs **Active Series Budgets**, **spike detection**, **quarantine**, and **telemetry approval workflows**.
 
 </div>
@@ -375,22 +376,30 @@ Telemetry that leaks sensitive identifiers violates both **CARE** and **sovereig
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                             |
-|--------:|------------|-----------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-30 | Complete rewrite; added ASB governance, spike detection, quarantine workflows, and Story Node rules |
-| v11.1.0 | 2025-08-15 | Introduced preliminary governance structure for label changes                                       |
-| v10.x   | 2024-03-01 | Initial governance notes                                                                            |
+| Version | Date       | Summary                                                                                                                |
+|--------:|------------|------------------------------------------------------------------------------------------------------------------------|
+| v11.2.6 | 2025-12-11 | Updated to KFM-MDP v11.2.6; release and telemetry refs bumped to v11.2.6; footer and cross-links aligned; no semantic changes. |
+| v11.2.2 | 2025-11-30 | Complete rewrite; added ASB governance, spike detection, quarantine workflows, and Story Node rules                    |
+| v11.1.0 | 2025-08-15 | Introduced preliminary governance structure for label changes                                                           |
+| v10.x   | 2024-03-01 | Initial governance notes                                                                                               |
 
 ---
 
 <div align="center">
 
-⚖️ **KFM v11 — Cardinality Governance & Enforcement**  
+⚖️ **KFM v11 — Cardinality Governance & Enforcement (v11.2.6)**  
 Telemetry Stability · Deterministic Metrics · FAIR+CARE-Aligned  
 
-[📘 Docs Root](../../../../README.md)  
-[🧭 Standards Index](../../../standards/README.md)  
-[⚖ Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](../../../../../README.md) ·  
+[📡 Telemetry Metrics Index](../../README.md) ·  
+[📊 Metric Cardinality Standard](../README.md) ·  
+[📂 Telemetry Index](../../../README.md) ·  
+[🧭 Standards Index](../../../../standards/README.md) ·  
+[⚖ Governance](../../../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🌿 FAIR+CARE Guide](../../../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) ·  
+[🛡 Security Policy](../../../../standards/security/SECURITY-POLICY.md) ·  
+[📊 Metric Cardinality Telemetry](../../../../../releases/v11.2.6/otel-metrics.json) ·  
+[🧩 Metric Cardinality Schema](../../../../../schemas/telemetry/metric-cardinality-v1.json)
 
 </div>
-
