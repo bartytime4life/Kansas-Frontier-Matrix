@@ -1,36 +1,13 @@
 ---
 title: "📘 Kansas Frontier Matrix — Glossary & Terminology Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/glossary.md"
-version: "v11.0.1"
-last_updated: "2025-12-06"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Annual · FAIR+CARE Council"
 content_stability: "stable"
-
-commit_sha: "<latest-commit-hash>"
-signature_ref: "releases/v11.0.1/signature.sig"
-attestation_ref: "releases/v11.0.1/slsa-attestation.json"
-sbom_ref: "releases/v11.0.1/sbom.spdx.json"
-manifest_ref: "releases/v11.0.1/manifest.zip"
-telemetry_ref: "releases/v11.0.1/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/docs-glossary-v4.json"
-energy_schema: "schemas/telemetry/energy-v2.json"
-carbon_schema: "schemas/telemetry/carbon-v2.json"
-
-governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-license: "CC-BY 4.0"
-
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.4"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
 
 status: "Active / Enforced"
 doc_kind: "Standard"
@@ -38,6 +15,30 @@ intent: "terminology-index"
 role: "glossary"
 header_profile: "standard"
 footer_profile: "standard"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+signature_ref: "../releases/v11.2.6/signature.sig"
+attestation_ref: "../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../releases/v11.2.6/focus-telemetry.json"
+telemetry_schema: "../schemas/telemetry/docs-glossary-v4.json"
+energy_schema: "../schemas/telemetry/energy-v2.json"
+carbon_schema: "../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Mixed Dataset Classification"
@@ -68,15 +69,16 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
-  - "docs/glossary.md@v9.0.0"
-  - "docs/glossary.md@v9.3.0"
-  - "docs/glossary.md@v9.5.0"
-  - "docs/glossary.md@v9.7.0"
-  - "docs/glossary.md@v10.2.3"
-  - "docs/glossary.md@v10.2.4"
-  - "docs/glossary.md@v10.3.1"
-  - "docs/glossary.md@v11.0.0"
+  - "docs/glossary.md@v11.2.6"
   - "docs/glossary.md@v11.0.1"
+  - "docs/glossary.md@v11.0.0"
+  - "docs/glossary.md@v10.3.1"
+  - "docs/glossary.md@v10.2.4"
+  - "docs/glossary.md@v10.2.3"
+  - "docs/glossary.md@v9.7.0"
+  - "docs/glossary.md@v9.5.0"
+  - "docs/glossary.md@v9.3.0"
+  - "docs/glossary.md@v9.0.0"
 
 provenance_requirements:
   versions_required: true
@@ -84,15 +86,15 @@ provenance_requirements:
   must_reference_superseded: true
   must_reference_origin_root: true
 
-json_schema_ref: "schemas/json/docs-glossary-v11.schema.json"
-shape_schema_ref: "schemas/shacl/docs-glossary-v11-shape.ttl"
+json_schema_ref: "../schemas/json/docs-glossary-v11.schema.json"
+shape_schema_ref: "../schemas/shacl/docs-glossary-v11-shape.ttl"
 story_node_refs: []
 
 immutability_status: "mutable-plan"
 
-doc_uuid: "urn:kfm:doc:glossary:v11.0.1"
-semantic_document_id: "kfm-docs-glossary-v11.0.1"
-event_source_id: "ledger:kfm:doc:glossary:v11.0.1"
+doc_uuid: "urn:kfm:doc:glossary:v11.2.6"
+semantic_document_id: "kfm-docs-glossary-v11.2.6"
+event_source_id: "ledger:kfm:doc:glossary:v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -167,9 +169,9 @@ deprecated_fields: []
 
 **Purpose**  
 Provide a standardized, machine-parseable vocabulary for contributors and researchers working within the Kansas Frontier Matrix (KFM).  
-Aligned with **MCP-DL v6.3**, **KFM-MDP v11.2.4**, **FAIR+CARE**, **STAC/DCAT**, **CIDOC-CRM**, **OWL-Time**, and **GeoSPARQL** to ensure consistent terminology across documentation, APIs, pipelines, and Story Nodes.
+Aligned with **MCP-DL v6.3**, **KFM-MDP v11.2.6**, **FAIR+CARE**, **STAC/DCAT**, **CIDOC-CRM**, **OWL-Time**, and **GeoSPARQL** to ensure consistent terminology across documentation, APIs, pipelines, and Story Nodes.
 
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue)](standards/kfm_markdown_protocol_v11.2.4.md)  
+[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL_v6.3-blue)](standards/kfm_markdown_protocol_v11.2.6.md)  
 [![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY_4.0-green)](../LICENSE)  
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](standards/faircare/FAIRCARE-GUIDE.md)  
 [![Status: Stable](https://img.shields.io/badge/Status-Stable-success)](#-version-history)
@@ -213,7 +215,7 @@ The glossary is:
   - External standards (STAC/DCAT, CIDOC-CRM, OWL-Time, GeoSPARQL, PROV-O)
 
 - A key input to:
-  - **KFM-MDP linting** (checking for unknown or inconsistent terms).  
+  - **KFM-MDP** linting (checking for unknown or inconsistent terms).  
   - **Focus Mode** semantic highlighting and entity linking.  
   - **Schema design** (JSON/SHACL) for new KFM components.
 
@@ -223,7 +225,7 @@ When in doubt about a term’s meaning or allowed variants, check here first.
 
 ## 📦 Data & Metadata
 
-This section organizes glossary entries into thematic groups (H3+), keeping H2 headings aligned with KFM‑MDP v11.2.4.
+This section organizes glossary entries into thematic groups (H3+), keeping H2 headings aligned with **KFM‑MDP v11.2.6**.
 
 ### 📚 Core Project Terms
 
@@ -231,7 +233,7 @@ This section organizes glossary entries into thematic groups (H3+), keeping H2 h
 |------|-----------|--------------------|
 | **KFM (Kansas Frontier Matrix)** | A semantic, FAIR+CARE-aligned geospatial–historical knowledge hub for Kansas, integrating maps, timelines, Story Nodes, and AI-assisted narratives under a unified architecture. | Entire monorepo |
 | **MCP (Master Coder Protocol)** | Documentation-first engineering protocol that requires design docs, provenance, and validation before code is accepted; governs experiments, model cards, and SOPs. | `docs/standards/`, `mcp/`, `.github/` |
-| **KFM-MDP (Markdown Protocol)** | Project-wide ruleset (v11.2.4) for YAML front-matter, headings, diagram profiles, and CI-safe Markdown structure, including heading registries and governance footers. | `docs/standards/kfm_markdown_protocol_v11.2.4.md` |
+| **KFM-MDP (Markdown Protocol)** | Project-wide ruleset (v11.2.6) for YAML front-matter, headings, diagram profiles, and CI-safe Markdown structure, including heading registries and governance footers. | `docs/standards/kfm_markdown_protocol_v11.2.6.md` |
 | **KFM-OP (Ontology Protocol)** | Defines how entities, relationships, time, and space are modeled in the KFM knowledge graph, aligning with CIDOC-CRM, OWL-Time, GeoSPARQL, and PROV-O. | `schemas/`, `docs/architecture/graph_*.md` |
 | **KFM-STAC / KFM-DCAT / KFM-PROV** | KFM-specific profiles of STAC, DCAT, and PROV-O used to keep catalogs, datasets, and provenance graphs consistent. | `docs/standards/`, `data/stac/`, `data/sources/` |
 | **FAIR Principles** | Data principles: Findable, Accessible, Interoperable, Reusable; used to evaluate datasets, documentation, and APIs. | Validation pipelines, `docs/standards/faircare/` |
@@ -400,7 +402,8 @@ Guidance:
 
 | Version   | Date       | Author        | Summary                                                                                           |
 |----------:|------------|---------------|---------------------------------------------------------------------------------------------------|
-| **v11.0.1** | 2025-12-06 | KFM Docs Team | Realigned with KFM-MDP v11.2.4; added Autonomy Matrix, heritage standards, scenario fixtures, and clarified controlled vocabulary. |
+| **v11.2.6** | 2025-12-11 | KFM Docs Team | Upgraded to KFM-MDP v11.2.6; aligned release paths and schemas; clarified telemetry and Focus Mode usage; kept glossary entries in sync with Autonomy Matrix and heritage standards. |
+| v11.0.1  | 2025-12-06 | KFM Docs Team | Realigned with KFM-MDP v11.2.4; added Autonomy Matrix, heritage standards, scenario fixtures, and clarified controlled vocabulary. |
 | v11.0.0  | 2025-11-18 | KFM Docs Team | Upgraded to KFM-MDP v11; expanded ontology fields, security terms, H3, and controlled vocabulary. |
 | v10.3.1  | 2025-11-13 | KFM Docs Team | Updated release paths to v10.3.0; added LangGraph, MCP server, and governance entries.           |
 | v10.2.4  | 2025-11-12 | KFM Docs Team | Added controlled vocabulary table; checksum reference path updated.                              |
@@ -414,7 +417,7 @@ Guidance:
 
 <div align="center">
 
-📘 **Kansas Frontier Matrix — Glossary & Terminology Index v11.0.1**  
+📘 **Kansas Frontier Matrix — Glossary & Terminology Index v11.2.6**  
 Scientific Insight · Documentation-First · FAIR+CARE Ethics  
 
 [📘 Docs Root](.) · [📂 Standards](standards/README.md) · [⚖ Governance](standards/governance/ROOT-GOVERNANCE.md)
