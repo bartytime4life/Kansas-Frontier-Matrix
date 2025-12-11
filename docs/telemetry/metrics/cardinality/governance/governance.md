@@ -1,27 +1,30 @@
 ---
-title: "⚖️ Kansas Frontier Matrix — Cardinality Governance Procedures v11.2.2"
+title: "⚖️ Kansas Frontier Matrix — Cardinality Governance Procedures v11.2.6"
 path: "docs/telemetry/metrics/cardinality/governance/governance.md"
-version: "v11.2.2"
-last_updated: "2025-11-30"
+version: "v11.2.6"
+last_updated: "2025-12-11"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Telemetry Governance Council"
 content_stability: "stable"
+
 commit_sha: "<latest-commit-hash>"
-signature_ref: "../../../../../releases/v11.2.2/signature.sig"
-attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
-sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../../releases/v11.2.2/otel-metrics.json"
+signature_ref: "../../../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.2.6/otel-metrics.json"
 telemetry_schema: "../../../../../schemas/telemetry/metric-cardinality-v1.json"
 energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
+
 governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -30,6 +33,7 @@ status: "Active / Enforced"
 doc_kind: "Guideline"
 header_profile: "standard"
 footer_profile: "standard"
+
 scope:
   domain: "telemetry-cardinality-governance"
   applies_to:
@@ -37,11 +41,13 @@ scope:
     - "mimir"
     - "otel"
     - "metrics-governance"
+
 semantic_intent:
   - "governance"
   - "observability"
   - "reliability"
 category: "Telemetry · Governance · Standards"
+
 fair_category: "F1-A1-I1-R1"
 care_label: "Public · Low-Risk"
 sensitivity: "General (non-sensitive; auto-mask rules apply)"
@@ -53,18 +59,22 @@ indigenous_rights_flag: true
 data_steward: "KFM Telemetry Governance Council"
 ttl_policy: "24 months"
 sunset_policy: "Supersedes cardinality-governance v11.1.0"
+
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "TechArticle"
   prov_o: "prov:Plan"
   owl_time: "ProperInterval"
   geosparql: "geo:FeatureCollection"
+
 metadata_profiles:
   - "STAC 1.0.0"
   - "DCAT 3.0"
   - "PROV-O"
   - "FAIR+CARE"
+
 provenance_chain:
+  - "docs/telemetry/metrics/cardinality/governance/governance.md@v11.2.2"
   - "docs/telemetry/metrics/cardinality/governance/governance.md@v11.1.0"
   - "docs/telemetry/metrics/cardinality/governance/governance.md@v10.x"
 provenance_requirements:
@@ -72,14 +82,16 @@ provenance_requirements:
   newest_first: true
   must_reference_superseded: true
   must_reference_origin_root: false
+
 json_schema_ref: "../../../../../schemas/json/telemetry-governance-v1.schema.json"
 shape_schema_ref: "../../../../../schemas/shacl/telemetry-governance-v1-shape.ttl"
 story_node_refs: []
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:telemetry:metrics:cardinality:governance:procedures:v11.2.2"
-semantic_document_id: "kfm-telemetry-metric-cardinality-governance-procedures-v11.2.2"
-event_source_id: "ledger:kfm:doc:telemetry:metrics:cardinality:governance:v11.2.2"
+doc_uuid: "urn:kfm:doc:telemetry:metrics:cardinality:governance:procedures:v11.2.6"
+semantic_document_id: "kfm-telemetry-metric-cardinality-governance-procedures-v11.2.6"
+event_source_id: "ledger:kfm:doc:telemetry:metrics:cardinality:governance:procedures:v11.2.6"
 doc_integrity_checksum: "<sha256>"
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
@@ -102,13 +114,15 @@ transform_registry:
     - diagram-extraction
     - metadata-extraction
   prohibited:
-    - content-alteration
+    - content-alteration"
     - speculative-additions
     - unverified-architectural-claims
     - narrative-fabrication
     - governance-override
+
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
+
 heading_registry:
   approved_h2:
     - "📘 Overview"
@@ -123,6 +137,7 @@ heading_registry:
     - "🔎 Review Log Entry Template"
     - "🧠 Story Node & Focus Mode Integration"
     - "🕰️ Version History"
+
 test_profiles:
   - "markdown-lint"
   - "schema-lint"
@@ -130,20 +145,25 @@ test_profiles:
   - "footer-check"
   - "accessibility-check"
   - "provenance-check"
+
 ci_integration:
   workflow: ".github/workflows/kfm-ci.yml"
   environment: "dev → staging → production"
+
 branding_registry:
   standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
   telemetry: "Transparent Metrics · Ethical Aggregates · Sustainable Intelligence"
+
 layout_profiles:
   - "immediate-one-branch-with-descriptions-and-emojis"
 badge_profiles:
   - "root-centered-badge-row"
+
 requires_purpose_block: true
 requires_version_history: true
 requires_directory_layout_section: false
 requires_governance_links_in_footer: true
+
 deprecated_fields:
   - "old_cardinality_governance_v10"
 ---
@@ -154,7 +174,7 @@ deprecated_fields:
 `docs/telemetry/metrics/cardinality/governance/governance.md`
 
 **Purpose**  
-Define the **step-by-step enforcement logic, escalation chain, deny-match rules, investigation workflow, and governance ticketing protocol** associated with metric cardinality violations in KFM v11.  
+Define the **step-by-step enforcement logic, escalation chain, deny-match rules, investigation workflow, and governance ticketing protocol** associated with metric cardinality violations in KFM v11.2.6.  
 This file operationalizes the rules declared in this directory’s `README.md`.
 
 </div>
@@ -492,19 +512,30 @@ Format:
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                           |
-|--------:|------------|---------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-30 | Converted to full governed document with complete metadata; aligned with KFM-MDP v11.2.2.        |
-| v11.1.0 | 2025-08-15 | Prior detailed procedures for cardinality governance and enforcement.                             |
-| v10.x   | 2024-03-01 | Initial governance draft capturing basic enforcement steps for metric cardinality violations.     |
+| Version | Date       | Summary                                                                                                                            |
+|--------:|------------|------------------------------------------------------------------------------------------------------------------------------------|
+| v11.2.6 | 2025-12-11 | Updated to KFM-MDP v11.2.6; release and telemetry refs bumped to v11.2.6; aligned with v11.2.6 telemetry/cardinality governance; no procedural changes. |
+| v11.2.2 | 2025-11-30 | Converted to full governed document with complete metadata; aligned with KFM-MDP v11.2.2.                                          |
+| v11.1.0 | 2025-08-15 | Prior detailed procedures for cardinality governance and enforcement.                                                              |
+| v10.x   | 2024-03-01 | Initial governance draft capturing basic enforcement steps for metric cardinality violations.                                      |
 
 ---
 
 <div align="center">
 
-⚖️ **Cardinality Governance Procedures**  
+⚖️ **Cardinality Governance Procedures (v11.2.6)**  
 Telemetry Stability · Deterministic Metrics · FAIR+CARE-Aligned  
 
-[📘 Docs Root](../../../../README.md) · [🧭 Standards Index](../../../standards/README.md) · [⚖ Governance](../../../standards/governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](../../../../../README.md) ·  
+[📡 Telemetry Metrics Index](../../../README.md) ·  
+[📊 Metric Cardinality Standard](../README.md) ·  
+[📂 Telemetry Index](../../../README.md) ·  
+[🧭 Standards Index](../../../../standards/README.md) ·  
+[⚖ Governance](../../../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🌿 FAIR+CARE Guide](../../../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) ·  
+[🛡 Security Policy](../../../../standards/security/SECURITY-POLICY.md) ·  
+[📊 Metric Cardinality Telemetry](../../../../../releases/v11.2.6/otel-metrics.json) ·  
+[🧩 Metric Governance Schema](../../../../../schemas/telemetry/metric-cardinality-v1.json)
 
 </div>
