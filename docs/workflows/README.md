@@ -306,7 +306,7 @@ flowchart LR
     E --> H[Governance Ledger Update]
     F --> G
 
-    G --> I[Telemetry Export<br/>(energy · carbon · quality)]
+    G --> I[Telemetry Export (energy / carbon / quality)]
     I --> J[Dashboards · Focus Mode · Reports]
 ~~~
 
