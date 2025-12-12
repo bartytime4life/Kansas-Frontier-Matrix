@@ -1,0 +1,48 @@
+# .github/workflows/build.yml
+name: build
+on:
+  push: {branches: [main]}
+  pull_request:
+jobs:
+  call-build:
+    uses: ./.github/workflows/reusable/build_reusable.yml
+    with: {artifact_name: "kfm-artifact", package_dir: "."}
+
+# .github/workflows/attest.yml
+name: attest
+on:
+  workflow_run:
+    workflows: ["build"]
+    types: [completed]
+jobs:
+  call-attest:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: ./.github/workflows/reusable/attest_reusable.yml
+    with: {artifact_name: "kfm-artifact"}
+
+# .github/workflows/verify.yml
+name: verify
+on:
+  workflow_run:
+    workflows: ["attest"]
+    types: [completed]
+jobs:
+  call-verify:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses: ./.github/workflows/reusable/verify_reusable.yml
+    with: {artifact_name: "kfm-artifact"}
+
+# .github/workflows/release.yml
+name: release
+on:
+  workflow_run:
+    workflows: ["verify"]
+    types: [completed]
+jobs:
+  promote:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Promote to KFM channel (only after machine-verified checks)
+        run: |
+          echo "All checks passed. Promoting artifact to release channel."
