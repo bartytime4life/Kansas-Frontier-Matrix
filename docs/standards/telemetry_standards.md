@@ -2,20 +2,24 @@
 title: "📈 Kansas Frontier Matrix — Telemetry Super-Standard & Sustainability Governance (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/telemetry_standards.md"
 
-version: "v11.1.0"
-last_updated: "2025-11-27"
+version: "v11.2.6"
+last_updated: "2025-12-12"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly / FAIR+CARE Council & Sustainability Board"
+review_cycle: "Quarterly · FAIR+CARE Council & Sustainability Board"
 content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v11.1.0/sbom.spdx.json"
-manifest_ref: "releases/v11.1.0/manifest.zip"
-telemetry_ref: "releases/v11.1.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/telemetry-superstandard-v11.json"
-energy_schema: "schemas/telemetry/energy-v2.json"
-carbon_schema: "schemas/telemetry/carbon-gco2e-v1.json"
+previous_version_hash: "<previous-sha256>"
+
+signature_ref: "../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../releases/v11.2.6/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/telemetry-superstandard-v11.2.6.json"
+energy_schema: "../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "governance/ROOT-GOVERNANCE.md"
 ethics_ref: "faircare/FAIRCARE-GUIDE.md"
@@ -23,7 +27,7 @@ sovereignty_policy: "sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.4"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -46,10 +50,11 @@ scope:
     - "all-pipelines"
     - "focus-telemetry"
     - "governance-metrics"
+    - "ci-cd-instrumentation"
 
 semantic_document_id: "kfm-doc-telemetry-superstandard"
-doc_uuid: "urn:kfm:docs:standards:telemetry-superstandard-v11.1.0"
-event_source_id: "ledger:kfm:doc:standards:telemetry-superstandard:v11.1.0"
+doc_uuid: "urn:kfm:docs:standards:telemetry-superstandard:v11.2.6"
+event_source_id: "ledger:kfm:doc:standards:telemetry-superstandard:v11.2.6"
 immutability_status: "version-pinned"
 doc_integrity_checksum: "<sha256>"
 
@@ -65,11 +70,13 @@ classification: "Public"
 jurisdiction: "Kansas / United States"
 indigenous_rights_flag: true
 data_steward: "KFM Sustainability Board & FAIR+CARE Council"
+
 lifecycle_stage: "stable"
 ttl_policy: "36 months"
 sunset_policy: "Superseded by Telemetry Super-Standard v12"
 
 provenance_chain:
+  - "docs/standards/telemetry_standards.md@v11.1.0"
   - "docs/standards/telemetry_standards.md@v11.0.0"
   - "docs/standards/telemetry_standards.md@v10.2.2"
   - "ISO_50001.pdf"
@@ -82,7 +89,7 @@ provenance_requirements:
   versions_required: true
   newest_first: true
   must_reference_superseded: true
-  must_reference_origin_root: false
+  must_reference_origin_root: true
 
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -115,19 +122,19 @@ ai_transform_prohibited:
 
 transform_registry:
   allowed:
-    - summary
-    - timeline-generation
-    - semantic-highlighting
-    - 3d-context-render
-    - a11y-adaptations
-    - diagram-extraction
-    - metadata-extraction
+    - "summary"
+    - "timeline-generation"
+    - "semantic-highlighting"
+    - "3d-context-render"
+    - "a11y-adaptations"
+    - "diagram-extraction"
+    - "metadata-extraction"
   prohibited:
-    - content-alteration
-    - speculative-additions
-    - unverified-architectural-claims
-    - narrative-fabrication
-    - governance-override
+    - "content-alteration"
+    - "speculative-additions"
+    - "unverified-architectural-claims"
+    - "narrative-fabrication"
+    - "governance-override"
 
 heading_registry:
   approved_h2:
@@ -146,7 +153,7 @@ heading_registry:
     - "📊 Dashboards, KPIs & SLOs"
     - "🗃 Retention & Security"
     - "🚫 Forbidden Telemetry"
-    - "🕰 Version History"
+    - "🕰️ Version History"
 
 test_profiles:
   - "schema-lint"
@@ -175,33 +182,26 @@ requires_purpose_block: true
 requires_directory_layout_section: true
 requires_version_history: true
 requires_governance_links_in_footer: true
+
+deprecated_fields:
+  - "old_markdown_standard_v10.4"
 ---
 
 <div align="center">
 
-# 📈 **Kansas Frontier Matrix — Telemetry Super-Standard & Sustainability Governance (v11.1.0)**  
+# 📈 **Kansas Frontier Matrix — Telemetry Super-Standard & Sustainability Governance**
 `docs/standards/telemetry_standards.md`
 
 **Purpose**  
-Define the **unified, expanded, and authoritative telemetry governance standard** for KFM v11, integrating:
+Define the **unified, governed telemetry contract** for KFM, including sustainability (energy + carbon), FAIR+CARE governance signals, AI ethics metrics, accessibility telemetry, documentation health, and provenance lineage—so every pipeline and workflow is **measurable, explainable, auditable, and policy-safe**.
 
-- Sustainability metrics (ISO 50001, ISO 14064-1)  
-- FAIR+CARE governance  
-- Accessibility & equity telemetry  
-- AI ethics, drift, and bias telemetry  
-- Provenance logging (PROV-O)  
-- STAC/DCAT metadata emission  
-- Focus Mode v3 & Story Node v3 telemetry  
-- Energy modeling for CI/CD pipelines  
-- Carbon intensity, offsets, and renewable sourcing  
-- System performance, quality, and documentation telemetry  
-
-This is the **master standard** for all telemetry in the Kansas Frontier Matrix.
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]() ·
-[![KFM-MDP v11.2.4](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.4-purple)]() ·
-[![Telemetry · Super-Standard](https://img.shields.io/badge/Telemetry-Super--Standard-informational)]() ·
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Aligned-gold)]()
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/Telemetry-Super--Standard-informational" />
+<img src="https://img.shields.io/badge/Sustainability-ISO_50001-2f855a" />
+<img src="https://img.shields.io/badge/Carbon-ISO_14064--1-2b6cb0" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 </div>
 
@@ -209,435 +209,515 @@ This is the **master standard** for all telemetry in the Kansas Frontier Matrix.
 
 ## 📘 Overview
 
-### 1. Telemetry in KFM v11.1
+Telemetry in KFM is not “logging.” It is a **governed evidence stream**.
 
-Telemetry in KFM v11.1 is:
+All KFM systems that emit telemetry MUST follow this standard so that:
 
-- **Governed** — aligned with FAIR+CARE, MCP-DL v6.3, and Root Governance.  
-- **Sustainable** — modeled under ISO 50001 (energy management) and ISO 14064-1 (GHG accounting).  
-- **Interoperable** — emitted as JSON compatible with DCAT 3.0, STAC 1.x, PROV-O, and ISO 19115.  
-- **Explainable** — structured for AI bias, drift, and ethics review.  
-- **Transparent** — aggregated metrics are surfaced in open dashboards.  
-- **Immutable** — release-level snapshots stored in `focus-telemetry.json` with checksums.  
-- **Ethical** — forbidden from recording PII or individual user behavioral trails.
+- **Sustainability is measurable** (energy and carbon per job, run, release).
+- **Governance is auditable** (FAIR+CARE, sovereignty constraints, approvals/waivers).
+- **AI is accountable** (bias, drift, explainability stability, model-card linkage).
+- **Accessibility is enforceable** (a11y audits and release gates).
+- **Documentation stays machine-parseable** (KFM-MDP health, front-matter integrity).
+- **Provenance is reconstructable** (PROV-O lineage for activities, entities, agents).
 
-All KFM pipelines, services, and standards that generate telemetry MUST conform to this super-standard.
+Telemetry authority derives from:
 
-### 2. Governance & Ownership
-
-- **Sustainability Board** – owns energy and carbon metrics and related SLOs.  
-- **FAIR+CARE Council** – owns governance, AI ethics, and CARE-related telemetry semantics.  
-- **Technical Standards Committee** – maintains the unified schema and CI instrumentation.  
-
-Telemetry policies derive authority from:
-
-- `governance/ROOT-GOVERNANCE.md`  
-- `faircare/FAIRCARE-GUIDE.md`  
+- `governance/ROOT-GOVERNANCE.md`
+- `faircare/FAIRCARE-GUIDE.md`
 - `sovereignty/INDIGENOUS-DATA-PROTECTION.md`
+
+Telemetry outputs are **release-pinned** and integrity-checked:
+
+- `../../releases/<version>/focus-telemetry.json`
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-📂 KansasFrontierMatrix/
-└── 📂 docs/
-    ├── 📂 standards/
-    │   ├── 📄 README.md                       # Standards index
-    │   ├── 📄 telemetry_standards.md          # 📈 Telemetry Super-Standard (this file)
-    │   ├── 📄 ui_accessibility.md             # ♿ UI Accessibility & Inclusion Super-Standard
-    │   ├── 📄 licensing.md                    # ⚖ Licensing & SPDX usage
-    │   ├── 📄 markdown_rules.md               # 📝 Legacy markdown rules (pre-MDP v11)
-    │   ├── 📄 kfm_markdown_protocol_v11.2.4.md# 📑 Markdown Authoring Protocol v11.2.4
-    │   ├── 📂 governance/
-    │   │   ├── 📄 README.md                   # 🏛️ Governance & Ethical Oversight Framework
-    │   │   ├── 📄 ROOT-GOVERNANCE.md          # 🏛️ Root Governance Charter
-    │   │   └── 📂 releases/                   # 🏛️ Governance release packets
-    │   ├── 📂 faircare/
-    │   │   └── 📄 FAIRCARE-GUIDE.md           # ⚖ FAIR+CARE Governance Guide
-    │   └── 📂 sovereignty/
-    │       └── 📄 INDIGENOUS-DATA-PROTECTION.md # 🪶 Indigenous Data Protection Policy
-    ├── 📂 architecture/                       # System + telemetry architecture docs
-    ├── 📂 guides/                             # Telemetry & ops guides
-    ├── 📂 analyses/                           # Sustainability and governance analyses
-    └── 📄 glossary.md                         # Shared terminology
+📁 docs/
+├── 📁 standards/
+│   ├── 📄 README.md                                — Standards index
+│   ├── 📄 telemetry_standards.md                   — ← This super-standard (telemetry governance)
+│   ├── 📄 ui_accessibility.md                      — UI Accessibility & Inclusion super-standard
+│   ├── 📄 kfm_markdown_protocol_v11.2.6.md         — KFM Markdown Protocol (KFM-MDP)
+│   ├── 📁 governance/
+│   │   └── 📄 ROOT-GOVERNANCE.md                   — Governance charter
+│   ├── 📁 faircare/
+│   │   └── 📄 FAIRCARE-GUIDE.md                    — FAIR+CARE guide
+│   └── 📁 sovereignty/
+│       └── 📄 INDIGENOUS-DATA-PROTECTION.md        — Sovereignty policy
+│
+├── 📁 telemetry/
+│   ├── 📁 etl-governance-events/
+│   │   ├── 📁 examples/                            — Example event packets and fixtures
+│   │   ├── 📁 specs/                               — Event type specs (normative)
+│   │   ├── 📁 storage/                             — Storage conventions and retention notes
+│   │   └── 📁 validators/                          — Validators and conformance guidance
+│   │
+│   ├── 📁 metadata-validation/
+│   │   ├── 📁 badges/                              — Badge semantics and rules
+│   │   ├── 📁 checks/                              — Validation checks (by profile)
+│   │   ├── 📁 ci/                                  — CI integration notes
+│   │   ├── 📁 reports/                             — Report schemas and examples
+│   │   └── 📁 scripts/                             — Reference scripts / CLIs
+│   │
+│   ├── 📁 otel-stac-lineage/
+│   │   ├── 📁 diagrams/                            — OTel ↔ STAC ↔ PROV diagrams and mappings
+│   │   └── 📁 examples/
+│   │       ├── 📁 mapping/                         — Mapping examples (OTel spans → STAC/PROV)
+│   │       ├── 📁 otel/                            — OTel payload examples
+│   │       └── 📁 regression/
+│   │           └── 📁 fail/                         — Known-failure fixtures for validators
+│   │
+│   └── 📁 reliability-sustainability-correlation/
+│       ├── 📁 ALERTS/                              — Alert rules and runbooks
+│       └── 📁 DASHBOARDS/
+│           ├── 📁 screenshots/                     — Dashboard screenshots for governance review
+│           └── 📁 queries/
+│               ├── 📁 promql/                      — Prometheus queries
+│               ├── 📁 logql/                       — Loki queries
+│               ├── 📁 jq/                          — JSON query utilities
+│               ├── 📁 manifests/                   — Query manifests and metadata
+│               ├── 📁 sql/                         — Warehouse queries
+│               │   └── 📁 _views/                  — SQL views
+│               └── 📁 tests/
+│                   ├── 📁 fixtures/                — Test fixtures
+│                   │   └── 📁 derived/             — Derived fixtures
+│                   ├── 📁 reports/                 — Test reports
+│                   ├── 📁 runners/                 — Test runners
+│                   └── 📁 snapshots/               — Golden snapshots
+│
+├── 📁 reports/
+│   └── 📁 telemetry/
+│       ├── 📄 telemetry_merge_report.json          — Merge/validation report (optional)
+│       └── 📄 telemetry_schema_failures.json       — Schema failures (optional)
+│
+└── 📁 workflows/
+    ├── 📄 README.md                                — CI/CD & governance workflows index
+    └── 📄 telemetry-export.yml.md                  — Telemetry export workflow spec
+
+📁 schemas/
+└── 📁 telemetry/
+    ├── 📄 telemetry-superstandard-v11.2.6.json     — Unified telemetry schema (this standard)
+    ├── 📄 energy-v2.json                           — Energy schema (shared)
+    └── 📄 carbon-v2.json                           — Carbon schema (shared)
+
+📁 releases/
+└── 📁 v11.2.6/
+    ├── 📄 focus-telemetry.json                     — Release-pinned telemetry snapshot (immutable)
+    ├── 📄 sbom.spdx.json                           — SBOM for telemetry tooling
+    ├── 📄 manifest.zip                             — Release manifest (hashes + refs)
+    └── 📄 signature.sig                            — Signature for release packet
 ~~~
 
-**Author rules**
+**Author rules (normative)**
 
-- This file defines the **global contract** for telemetry; all architecture/guides must reference it.  
-- Telemetry schemas live under `schemas/telemetry/` and MUST be linked from this file’s front-matter.  
-- Release-level telemetry snapshots live under `releases/<version>/focus-telemetry.json`.  
-- Any new telemetry-related standard MUST:
-  - Use KFM-MDP v11.2.4 front-matter, and  
-  - Link back here under **📚 Documentation & Metadata Telemetry**.
+- Telemetry MUST be **schema-validated** before it is merged into `focus-telemetry.json`.
+- Telemetry MUST be **PII-safe** and **sovereignty-safe** by design (see **🚫 Forbidden Telemetry**).
+- Telemetry docs under `docs/telemetry/**` are normative support material; this file remains the global contract.
 
 ---
 
 ## 🧱 Telemetry Categories
 
-Telemetry is partitioned into **eight mandatory categories**. Every release MUST have coverage and validation for each:
+KFM telemetry is partitioned into **mandatory categories**. Every release MUST have coverage across all categories that apply.
 
-1. **System Performance Telemetry**  
-   - Latency, throughput, error rates, queue depth, cache hit rates, etc.
+| Category key | Category name | Primary purpose | Typical producers |
+|---|---|---|---|
+| `system` | System performance | Reliability, latency, error rates, throughput | APIs, services, caches, queues |
+| `sustainability` | Sustainability (ISO 50001) | Energy accounting and efficiency regressions | CI jobs, runners, batch compute |
+| `carbon` | Carbon (ISO 14064-1) | Carbon estimates and intensity tracking | CI jobs, batch compute, hosting |
+| `faircare` | FAIR+CARE governance | Dataset governance outcomes and review signals | FAIR+CARE validators, governance audits |
+| `ai` | AI ethics & explainability | Bias, drift, explainability stability, model-card linkage | AI training/eval/explainability workflows |
+| `a11y` | Accessibility & inclusion | WCAG audit summaries and gating signals | UI audit workflows, docs rendering checks |
+| `docs` | Documentation & metadata | KFM-MDP compliance, schema/lint/link health | docs-lint, metadata validators |
+| `lineage` | Provenance lineage | PROV-O mapping + run reconstruction | telemetry exporters, OTel/STAC lineage tools |
 
-2. **Sustainability Telemetry (ISO 50001)**  
-   - Energy usage (Wh), power profiles for CI/CD jobs, runners, and services.
+Rules:
 
-3. **Carbon Accounting Telemetry (ISO 14064-1)**  
-   - gCO₂e per job, per release, per environment, with region-specific carbon intensity.
-
-4. **FAIR+CARE Governance Telemetry**  
-   - Counts of data requiring governance review, restricted datasets, CARE-related decisions.
-
-5. **AI Model Ethics Telemetry**  
-   - Model bias, drift, data skew, explainability stability, and model-card references.
-
-6. **Accessibility & Inclusion Telemetry**  
-   - Accessibility scores, WCAG 2.1 AA compliance metrics, inclusive language scoring.
-
-7. **Documentation Quality Telemetry**  
-   - Markdown protocol compliance, front-matter correctness, link integrity, diagram validity.
-
-8. **Provenance & Workflow Lineage Telemetry (PROV-O)**  
-   - Execution lineage for pipelines, including inputs, outputs, agents, and activities.
-
-Each event MUST specify its primary `category` and MAY include references to secondary categories in its `payload`.
+- Each event MUST declare exactly one `category`.
+- Events MAY include additional category-relevant values, but MUST remain schema-valid.
+- If a subsystem cannot emit a category, it MUST emit an explicit “coverage: not-applicable” record for transparency.
 
 ---
 
 ## 🧠 Unified Telemetry Object
 
-All telemetry events MUST follow the **Unified Telemetry Object** shape to allow consistent processing:
+All telemetry events MUST conform to the Unified Telemetry Object (UTO).
+
+### Canonical shape (normative)
 
 ~~~json
 {
   "event_id": "uuid4",
-  "event_type": "pipeline | docs | ai | governance | accessibility | sustainability | system",
-  "timestamp": "2025-11-20T14:55:00Z",
-  "duration_sec": 123.5,
-  "energy_wh": 41.2,
-  "carbon_gco2e": 18.9,
+  "event_type": "pipeline | ci | docs | ai | governance | accessibility | sustainability | system",
+  "category": "system | sustainability | carbon | faircare | ai | a11y | docs | lineage",
   "status": "success | failure | warning",
-  "category": "sustainability",
+  "timestamp": "2025-12-12T03:00:00Z",
+
+  "duration_sec": 0,
+  "energy_wh": 0,
+  "carbon_gco2e": 0,
+
   "payload": {},
   "context": {},
-  "prov": {
-    "wasGeneratedBy": "ci-workflow-v11",
-    "used": ["workflow.yml", "container-image", "dataset-metadata.json"],
-    "agent": "github-actions-runner"
-  }
+  "prov": {}
 }
 ~~~
 
-### Required Fields
+### Required fields (minimum contract)
 
-- `event_id` – UUIDv4 string identifier.  
-- `event_type` – high-level type (enumeration above).  
-- `timestamp` – ISO 8601 `date-time` string (UTC).  
-- `status` – `"success"`, `"failure"`, or `"warning"`.  
-- `category` – one of the eight telemetry categories.  
-- `payload` – category-specific data (object).  
-- `context` – environment info (e.g., `branch`, `commit`, `workflow_name`, `runner_region`).  
-- `prov` – PROV-O mapping for lineage.
+- `event_id` (UUIDv4 string)
+- `event_type` (controlled string)
+- `category` (controlled string)
+- `status` (`success | failure | warning`)
+- `timestamp` (UTC ISO-8601 `date-time`)
+- `payload` (object; category-specific)
+- `context` (object; run/environment metadata)
+- `prov` (object; PROV-aligned lineage mapping)
 
-### Schema Enforcement
+### Required context fields (recommended baseline)
 
-The schema is implemented at:
+`context` SHOULD include:
 
-~~~text
-schemas/telemetry/telemetry-superstandard-v11.json
+- `repo`, `branch`, `commit_sha`
+- `workflow_name`, `job_name`, `run_id`
+- `environment` (`dev | staging | production`)
+- `runner_type`, `runner_region`
+- `release_version` (if applicable)
+- `data_classification` / `care_label` (when relevant)
+
+Example:
+
+~~~json
+{
+  "repo": "KansasFrontierMatrix",
+  "branch": "main",
+  "commit_sha": "abcd1234",
+  "workflow_name": "telemetry-export",
+  "job_name": "merge-and-validate",
+  "run_id": "gha_123456789",
+  "environment": "staging",
+  "runner_type": "ubuntu-22.04",
+  "runner_region": "us-central1",
+  "release_version": "v11.2.6"
+}
 ~~~
 
-All telemetry generated by KFM MUST validate against this schema before being merged into release artifacts or dashboards.
+### Integrity fields (recommended)
+
+Events MAY include an `integrity` object:
+
+~~~json
+{
+  "integrity": {
+    "payload_sha256": "<sha256>",
+    "schema_id": "telemetry-superstandard-v11.2.6"
+  }
+}
+~~~
 
 ---
 
 ## 🔋 Sustainability Telemetry (ISO 50001)
 
-Sustainability telemetry quantifies energy usage per job, workflow, and release.
+Sustainability telemetry quantifies energy use per job, workflow, and release.
 
-### Required Energy Fields
+### Energy measurement policy
+
+Telemetry MUST record energy as:
+
+- `energy_wh` (watt-hours, Wh)
+
+Energy MAY be:
+
+- **measured** (preferred when infrastructure supports it), or
+- **estimated** (acceptable with documented model inputs)
+
+### Minimum energy payload (recommended)
 
 ~~~json
 {
-  "energy_wh": 53.4,
-  "runner_watts": 92.0,
-  "duration_sec": 208.0,
-  "power_model": "runner_watts * duration_sec / 3600",
-  "runner_type": "github-large-linux",
-  "region": "us-central"
+  "energy_wh": 52.4,
+  "energy_method": "estimated",
+  "runner_watts": 95,
+  "duration_sec": 198,
+  "runner_type": "ubuntu-22.04",
+  "runner_region": "us-central1",
+  "power_model": "runner_watts * duration_sec / 3600"
 }
 ~~~
 
-### KFM Energy Formula
+### Reference formula (deterministic)
 
 ~~~text
 energy_wh = (runner_watts * duration_sec) / 3600
 ~~~
 
-Runners MUST have a documented `runner_watts` value based on empirical or vendor data.
+### Release-level sustainability requirements
 
-### Required Reporting
+Each release MUST include:
 
-Per release, KFM MUST compute and record:
-
-- Total energy per workflow (`build`, `test`, `deploy`, `ai-train`, `ai-evaluate`).  
-- Weekly and monthly aggregated energy usage.  
-- Trend lines and regression checks for energy efficiency.  
-- Flags when energy usage grows faster than functional scope (efficiency regression).
+- total energy by workflow family (docs, FAIR+CARE, AI, build/test/deploy)
+- top-N jobs by energy use
+- at least one **regression check** comparing energy vs. previous release
 
 ---
 
 ## 🌍 Carbon Accounting (ISO 14064-1)
 
-KFM uses region-specific carbon intensity data (gCO₂/kWh) to estimate emissions.
+Carbon telemetry estimates emissions per event using:
 
-### Required Carbon Fields
+- energy use (`energy_wh`)
+- regional carbon intensity (`carbon_intensity_gco2_per_kwh`)
+
+### Minimum carbon payload (recommended)
 
 ~~~json
 {
   "carbon_gco2e": 17.2,
   "carbon_intensity_gco2_per_kwh": 420.5,
-  "energy_wh": 41.2,
-  "region": "MRO",
-  "intensity_source": "carbon-intensity-api-v3"
+  "intensity_region": "MRO",
+  "intensity_source": "carbon-intensity-source-vX",
+  "energy_wh": 41.2
 }
 ~~~
 
-### KFM Carbon Formula
+### Reference formula (deterministic)
 
 ~~~text
 carbon_gco2e = (energy_wh / 1000) * carbon_intensity_gco2_per_kwh
 ~~~
 
-### Required Outputs
+### Required carbon governance outputs
 
 Per release and per environment:
 
-- Total carbon emissions (gCO₂e).  
-- Carbon intensity by region.  
-- Renewable energy fraction (if known).  
-- Indicators for:
-  - Carbon-neutral CI/CD (if offsets/RE credits are applied).  
-  - Emissions trends vs previous releases.
+- total carbon emissions (gCO₂e)
+- intensity region + source identification
+- trend flags for large regressions
+- optional “net emissions” fields if offsets/RECs are tracked (must be transparent and separately auditable)
 
 ---
 
 ## 🤝 FAIR+CARE Telemetry
 
-Telemetry MUST support FAIR+CARE observability for data pipelines and publishing.
+FAIR+CARE telemetry makes governance outcomes queryable and reviewable.
 
-### Minimum FAIR+CARE Telemetry Fields
+### Minimum governance payload (recommended)
 
 ~~~json
 {
-  "care_review_pending": 4,
-  "care_restricted_datasets": 12,
-  "care_violations": 0,
-  "fair_noncompliant_datasets": 1,
-  "datasets_with_missing_metadata": 3
+  "datasets_scanned": 0,
+  "violations_found": 0,
+  "quarantined_assets": 0,
+  "care_review_pending": 0,
+  "care_restricted_datasets": 0,
+  "sovereignty_flags_triggered": 0,
+  "overrides_used": 0
 }
 ~~~
 
-### Required Governance Metrics
+Rules:
 
-Per release, KFM MUST record:
-
-- Count of datasets that:
-  - Require CARE review.  
-  - Are restricted from public release.  
-  - Have unresolved FAIR noncompliance (missing license, provenance, access conditions).  
-- Number of governance decisions taken per release:
-  - Approvals, rejections, deferrals.  
-
-These metrics feed governance dashboards and FAIR+CARE Council reviews.
+- Telemetry MUST NOT leak restricted dataset contents.
+- Telemetry MUST support governance review:
+  - counts, categories, and references (IDs/paths), not raw sensitive data.
+- Overrides MUST be measurable:
+  - count, scope, reason codes, and governance reference IDs.
 
 ---
 
 ## 🧬 AI Ethics & Explainability
 
-AI telemetry MUST make AI behavior auditable and reproducible.
+AI telemetry MUST make model changes auditable and reproducible.
 
-### Required AI Telemetry Fields
+### Minimum AI payload (recommended)
 
 ~~~json
 {
-  "bias_score": 0.07,
+  "model_id": "<model-id>",
+  "model_version": "<version>",
+  "dataset_ref": "<stac-or-dcat-ref>",
+  "bias_score": 0.0,
   "drift_flag": false,
-  "explainability_stability": 92.5,
-  "training_dataset_ref": "data/sources/historical_docs_v3.json",
-  "model_card_ref": "mcp/model_cards/storynode-transformer-v11.md"
+  "explainability_stability": 0.0,
+  "model_card_ref": "mcp/model_cards/<model-card>.md"
 }
 ~~~
 
-### Metrics
+Rules:
 
-- **Bias Score** – aggregated metric across evaluation sets (0–1, lower is better).  
-- **Drift Flag** – boolean indicating if model predictions deviate beyond thresholds.  
-- **Explainability Stability** – % of explanations that remain stable across runs/tests.  
-- **Model Card Coverage** – fraction of required sections completed in model cards.  
-
-These metrics MUST be reported for each major AI model and each significant retrain.
+- Bias, drift, and explainability metrics MUST be:
+  - versioned,
+  - tied to dataset references,
+  - linked to model cards.
+- “Green” metrics MUST NOT be claimed without schema-valid evidence artifacts.
 
 ---
 
 ## ♿ Accessibility & Inclusion Telemetry
 
-Accessibility telemetry measures how well UIs and narratives align with the UI Accessibility Super-Standard.
+Accessibility telemetry is required for UI surfaces and doc rendering.
 
-### Example A11y Telemetry
+### Minimum a11y payload (recommended)
 
 ~~~json
 {
-  "a11y_compliance": 95,
-  "a11y_warnings": 3,
-  "a11y_critical_issues": 0,
-  "inclusive_language_score": 98,
-  "components_audited": 162
+  "routes_scanned": 0,
+  "components_audited": 0,
+  "critical_issues": 0,
+  "major_issues": 0,
+  "minor_issues": 0,
+  "a11y_score": null,
+  "inclusive_language_score": null
 }
 ~~~
 
-Metrics MUST align with `docs/standards/ui_accessibility.md`:
+Rules:
 
-- WCAG 2.1 AA compliance percentage for critical flows.  
-- Number of critical blocking issues.  
-- Number of warnings/minor issues.  
-- Inclusive language scoring for UI strings and docs.  
-
-Critical issues MUST block release unless a governance waiver is granted and logged.
+- Critical a11y issues SHOULD block releases unless governed with a time-bounded waiver.
+- Accessibility telemetry MUST align with:
+  - `docs/standards/ui_accessibility.md`
 
 ---
 
 ## 📚 Documentation & Metadata Telemetry
 
-Documentation telemetry provides observability into:
+Documentation telemetry ensures KFM documentation stays machine-parseable and governance-ready.
 
-- KFM-MDP v11.2.4 compliance.  
-- Front-matter coverage.  
-- Broken links or invalid diagrams.  
-- Missing governance or ethics references.
-
-### Example Docs Telemetry
+### Minimum docs payload (recommended)
 
 ~~~json
 {
-  "docs_total": 182,
-  "docs_mdp_compliant": 179,
-  "docs_with_broken_links": 2,
-  "docs_missing_front_matter": 1
+  "docs_checked": 0,
+  "mdp_compliant": 0,
+  "frontmatter_failures": 0,
+  "broken_links": 0,
+  "diagram_parse_failures": 0,
+  "footer_failures": 0
 }
 ~~~
 
-These metrics MUST be generated by docs workflows (e.g., `docs-lint.yml`, `markdown-schema-validate.yml`) and included in `focus-telemetry.json`.
+Rules:
+
+- Documentation telemetry MUST be produced by lint/validation workflows.
+- Failures MUST be countable and attributable to paths (without exposing restricted content).
 
 ---
 
 ## 🧬 PROV-O Lineage
 
-Every pipeline MUST emit PROV-O-aligned fields as part of telemetry:
+Every telemetry event MUST provide PROV-aligned linkage so governance can reconstruct “what happened.”
+
+### Minimum PROV mapping (recommended)
 
 ~~~json
 {
   "prov": {
-    "wasGeneratedBy": "docs-lint-v11",
-    "used": [
-      "docs/standards/kfm_markdown_protocol_v11.2.4.md",
-      "docs/standards/ui_accessibility.md"
-    ],
-    "agent": "kfm-docs-runner"
+    "activity_id": "<run-or-span-id>",
+    "wasGeneratedBy": "<workflow-or-tool>",
+    "used": ["<inputs>"],
+    "generated": ["<outputs>"],
+    "agent": "<runner-or-service-agent>"
   }
 }
 ~~~
 
-This ensures that every telemetry record is:
+Guidance:
 
-- Attributable to a specific workflow or activity.  
-- Linked to precise inputs (schemas, docs, data, configs).  
-- Linked to the agent (runner, user, or service account) triggering the workflow.
+- If OpenTelemetry traces exist, use OTel span IDs as stable anchors and map:
+  - spans → PROV Activities
+  - artifacts → PROV Entities
+  - runners/services → PROV Agents
 
-These PROV fields are required for:
-
-- Time-travel debugging of pipeline behavior.  
-- Governance audits.  
-- Story Node & Focus Mode lineage displays.
+If the pipeline emits STAC/DCAT artifacts, include references in `prov.generated` and/or `context.links`.
 
 ---
 
 ## ⚙ CI/CD Instrumentation
 
-All of the following workflows MUST emit Unified Telemetry Objects:
+CI/CD workflows MUST emit telemetry and MUST validate before merge.
 
-- `docs-lint.yml`  
-- `markdown-schema-validate.yml`  
-- `faircare-validate.yml`  
-- `data-contract-validate.yml`  
-- `stac-validate.yml`  
-- `build.yml`  
-- `test.yml`  
-- `deploy.yml`  
-- `ai-train.yml`  
-- `ai-evaluate.yml`  
-- `telemetry-export.yml`  
+### Normative pipeline
 
-Per release, these MUST be merged into:
+1. Each job produces one or more UTO events.
+2. Events are validated against `telemetry_schema`.
+3. Events are merged into `../../releases/<version>/focus-telemetry.json`.
+4. The merged snapshot is:
+   - schema-validated,
+   - checksummed,
+   - version-pinned.
 
-~~~text
-releases/v11.1.0/focus-telemetry.json
+### Conceptual flow (safe mermaid)
+
+~~~mermaid
+flowchart LR
+  A[Job runs] --> B[Emit telemetry events]
+  B --> C[Schema validate]
+  C --> D[Merge snapshot]
+  D --> E[Publish dashboards]
 ~~~
 
-The merge process MUST:
+### Failure policy
 
-- Validate data against `schemas/telemetry/telemetry-superstandard-v11.json`.  
-- Compute aggregated metrics (energy, carbon, bias, a11y, FAIR+CARE, docs).  
-- Compute and store a SHA-256 checksum for `focus-telemetry.json`.  
+The telemetry merge MUST fail if:
 
-Any validation failure is a governance issue and MUST block release until resolved or formally waived.
+- any event is schema-invalid
+- required fields are missing
+- forbidden telemetry is detected
+- the merged snapshot cannot be checksummed and recorded
 
 ---
 
 ## 📊 Dashboards, KPIs & SLOs
 
-KFM MUST maintain dashboards that surface key telemetry KPIs and SLOs.
+Dashboards are the public-facing “contract view” of telemetry.
 
-### KPIs (Examples)
+### KPI families (recommended)
 
-- Carbon per workflow / per release.  
-- Energy per test suite and per deployment.  
-- Bias and drift indicators for active AI models.  
-- Accessibility compliance percentage per UI surface.  
-- FAIR+CARE compliance per dataset.  
-- Documentation compliance with KFM-MDP v11.2.4.
+- Sustainability: energy per workflow / per release
+- Carbon: emissions per workflow / per release
+- Reliability: error rates, latency percentiles, incident counts
+- Governance: FAIR+CARE violations, quarantines, pending reviews
+- AI: drift flags, bias scores, explainability stability
+- A11y: critical/major issue counts, coverage per route
+- Docs: MDP compliance, front-matter failures, link health
 
-### SLOs (Examples)
+### SLO policy (recommended)
 
-- **Energy** – Pipeline energy per standard PR ≤ 45 Wh on average.  
-- **Carbon** – Carbon per release trending downward or neutral over rolling 12 months.  
-- **Accessibility** – A11y compliance ≥ 95% for critical flows.  
-- **FAIR+CARE** – ≥ 98% of datasets with complete metadata and governance sign-off.  
+SLOs MUST be measurable and release-comparable. Examples:
 
-SLO violations MUST:
+- Energy per standard PR run (rolling median) ≤ defined threshold
+- Carbon per release does not regress beyond defined tolerance
+- Critical a11y issues = 0 for production releases
+- High-risk model families require explainability + fairness telemetry present
 
-- Be recorded in telemetry, and  
-- Be surfaced to the Sustainability Board and FAIR+CARE Council.
+SLO breaches SHOULD emit dedicated telemetry events and link to governance review artifacts.
 
 ---
 
 ## 🗃 Retention & Security
 
-| Artifact                  | Retention  | Notes                                  |
-|--------------------------|-----------:|----------------------------------------|
-| Per-workflow telemetry   | 30 days    | Rolled into aggregated metrics         |
-| `focus-telemetry.json`   | 12 months  | Immutable per-release snapshots        |
-| Governance snapshots     | Permanent  | CARE & legal recordkeeping             |
-| Sustainability reports   | 24 months  | ISO and internal reporting             |
+Telemetry storage MUST follow classification and governance constraints.
 
-All telemetry MUST be PII-safe **by design**:
+### Retention (baseline)
 
-- No user-level identifiers (names, emails, usernames, IPs).  
-- No household-level or device-level location data.  
-- No sensitive site coordinates (e.g., protected Indigenous or archaeological sites) in public logs.  
-- No raw prompts containing sensitive input content.
+| Artifact | Retention | Notes |
+|---|---:|---|
+| Per-job raw events | 30–90 days | Rolled into release snapshots |
+| Release snapshot (`focus-telemetry.json`) | ≥ 12 months | Immutable and checksummed |
+| Governance incidents / waivers | Permanent | Required for auditability |
+| Sustainability summaries | ≥ 24 months | Supports trend analysis |
+
+### Security (normative)
+
+- Public telemetry MUST remain aggregated and non-identifying.
+- Restricted telemetry (if any) MUST:
+  - live in governed storage,
+  - be access-controlled,
+  - be referenced by ID, not copied into public artifacts.
 
 ---
 
@@ -645,39 +725,53 @@ All telemetry MUST be PII-safe **by design**:
 
 Telemetry MUST NOT contain:
 
-- Direct or indirect personal identifiers.  
-- Individual-level behavioral patterns or clickstreams.  
-- Sensitive cultural or sacred site coordinates (unless stored in restricted, governed logs with explicit approvals).  
-- Raw model prompts that include sensitive content.  
+- PII (names, emails, user IDs, IP addresses, device identifiers)
+- individual clickstreams or behavioral trails
+- raw prompts or raw user-provided text that could contain sensitive content
+- exact coordinates of sensitive locations (including protected Indigenous or archaeological sites)
+- secrets, tokens, credentials, or private keys
+- raw dataset rows from restricted or sensitive sources
 
-Any attempt to record forbidden telemetry MUST:
+Any forbidden telemetry detection MUST:
 
-- Fail schema validation,  
-- Trigger a governance incident logged in `reports/audit/governance-ledger.json`, and  
-- Be reviewed by the FAIR+CARE Council and Sustainability Board.
+- block merge into release snapshots,
+- generate a governance incident record,
+- be reviewed under Root Governance and FAIR+CARE.
 
 ---
 
-## 🕰 Version History
+## 🕰️ Version History
 
-| Version | Date       | Author    | Summary                                                                                                                                     |
-|--------:|------------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| v11.1.0 | 2025-11-27 | A. Barta  | Upgraded for KFM-MDP v11.2.4; added full schema references, heading registry, AI transform rules, and expanded sustainability, FAIR+CARE, AI, a11y, docs, and PROV-O telemetry guidance. |
-| v11.0.0 | 2025-11-20 | A. Barta  | Initial Telemetry Super-Standard: ISO 50001 & ISO 14064-1 integration, FAIR+CARE v11, unified telemetry object, CI/CD instrumentation, sustainability modeling, AI ethics metrics. |
-| v10.2.2 | 2024-06-10 | KFM Core  | Legacy telemetry guidelines focusing on system performance and basic energy accounting.                                                    |
+| Version | Date | Author | Summary |
+|---:|---:|---|---|
+| v11.2.6 | 2025-12-12 | `@kfm-telemetry` | Updated to KFM‑MDP v11.2.6; fixed repo-relative references; aligned directory layout to current telemetry doc tree; clarified UTO required fields, ISO energy/carbon formulas, PROV/OTel mapping, CI merge failure policy, retention/security, and forbidden telemetry list. |
+| v11.1.0 | 2025-11-27 | A. Barta | Expanded v11 telemetry governance with sustainability, FAIR+CARE, AI, a11y, docs, and PROV lineage guidance. |
+| v11.0.0 | 2025-11-20 | A. Barta | Initial Telemetry Super-Standard: ISO 50001 & ISO 14064-1 integration, unified telemetry object, CI instrumentation. |
+| v10.2.2 | 2024-06-10 | KFM Core | Legacy telemetry guidelines focusing on system performance and early energy accounting. |
 
 ---
 
 <div align="center">
 
-📈 **Kansas Frontier Matrix — Telemetry Super-Standard & Sustainability Governance (v11.1.0)**  
-“Measure everything. Optimize sustainably. Govern transparently.”
+📈 **Kansas Frontier Matrix — Telemetry Super-Standard & Sustainability Governance (v11.2.6)**  
+Transparent metrics · Sustainable intelligence · Governed automation
 
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 · FAIR+CARE Certified  
-Master Coder Protocol v6.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/Telemetry-Super--Standard-informational" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
-[⬅ Back to Standards Index](README.md) ·  
-[🏛 Root Governance Charter](governance/ROOT-GOVERNANCE.md) ·  
-[⚖ FAIR+CARE Guide](faircare/FAIRCARE-GUIDE.md)
+[⬅ Standards Index](./README.md) ·
+[📘 Docs Root](../README.md) ·
+[⚙ CI/CD Workflows](../workflows/README.md) ·
+[📊 Telemetry Docs](../telemetry/README.md) ·
+[♿ UI Accessibility Standard](./ui_accessibility.md) ·
+[📏 Markdown Protocol (KFM‑MDP v11.2.6)](./kfm_markdown_protocol_v11.2.6.md) ·
+[🏛️ Governance Charter](./governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](./faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](./sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+© 2025 Kansas Frontier Matrix — CC‑BY 4.0  
+MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
