@@ -118,13 +118,13 @@ and **pending backlog items** for the archaeology domain.
 ## 🗂️ Directory Layout
 
 ~~~text
-docs/
-└── story-nodes/
-    └── domains/
-        └── archaeology/
-            └── notes/
+📂 docs/
+└── 📂 story-nodes/
+    └── 📂 domains/
+        └── 🏺 archaeology/
+            └── 📝 notes/
                 ├── 📄 README.md            # This file (notes directory index + guardrails)
-                ├── 📄 backlog.md           # Candidate Story Nodes & work queue (generalized)
+                ├── 📑 backlog.md           # Candidate Story Nodes & work queue (generalized)
                 └── ⚖️ ethics-checklist.md  # Sovereignty + CARE review checklist (non-sensitive)
 ~~~
 
