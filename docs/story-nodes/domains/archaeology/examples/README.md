@@ -1,9 +1,9 @@
 ---
-title: "🏺 Kansas Frontier Matrix — Archaeology Story Node Examples (KFM v11.2.2 · Governed · Public-Safe)"
+title: "🏺 Kansas Frontier Matrix — Archaeology Story Node Examples (KFM v11.2.6 · Governed · Public-Safe)"
 path: "docs/story-nodes/domains/archaeology/examples/README.md"
 
-version: "v11.2.2"
-last_updated: "2025-11-30"
+version: "v11.2.6"
+last_updated: "2025-12-12"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Annual · Archaeology Domain Board · FAIR+CARE Council"
@@ -13,12 +13,12 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-signature_ref: "../../../../../releases/v11.2.2/signature.sig"
-attestation_ref: "../../../../../releases/v11.2.2/slsa-attestation.json"
-sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.2.2/manifest.zip"
+signature_ref: "../../../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.2.6/manifest.zip"
 
-telemetry_ref: "../../../../../releases/v11.2.2/storynodes-archaeology-examples-telemetry.json"
+telemetry_ref: "../../../../../releases/v11.2.6/storynodes-archaeology-examples-telemetry.json"
 telemetry_schema: "../../../../../schemas/telemetry/storynodes-v11.json"
 energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
@@ -29,7 +29,7 @@ sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTIO
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -82,8 +82,8 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
-  - "docs/story-nodes/domains/archaeology/examples/README.md@v11.2.1"
   - "docs/story-nodes/domains/archaeology/examples/README.md@v11.2.2"
+  - "docs/story-nodes/domains/archaeology/examples/README.md@v11.2.1"
 
 provenance_requirements:
   versions_required: true
@@ -91,16 +91,17 @@ provenance_requirements:
   must_reference_superseded: true
   must_reference_origin_root: true
 
-json_schema_ref: "../../../../../schemas/json/kfm-markdown-protocol-v11.2.2.schema.json"
-shape_schema_ref: "../../../../../schemas/shacl/kfm-markdown-protocol-v11.2.2-shape.ttl"
+json_schema_ref: "../../../../../schemas/json/kfm-markdown-protocol-v11.2.6.schema.json"
+shape_schema_ref: "../../../../../schemas/shacl/kfm-markdown-protocol-v11.2.6-shape.ttl"
 story_node_refs:
   - "docs/story-nodes/domains/archaeology/examples/protohistoric-wichita-site.json"
   - "docs/story-nodes/domains/archaeology/examples/fort-larned-geophysics.json"
 
 immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:storynodes:archaeology:examples:v11.2.2"
-semantic_document_id: "kfm-storynodes-archaeology-examples"
+doc_uuid: "urn:kfm:storynodes:archaeology:examples:v11.2.6"
+semantic_document_id: "kfm-storynodes-archaeology-examples-v11.2.6"
 event_source_id: "ledger:storynodes/archaeology/examples"
+doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -131,7 +132,7 @@ transform_registry:
     - "governance-override"
 
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 
 heading_registry:
   approved_h2:
@@ -181,19 +182,36 @@ deprecated_fields:
 
 <div align="center">
 
-# 🏺 **KFM — Archaeology Story Node Examples (v11.2.2)**
+# 🏺 **Kansas Frontier Matrix — Archaeology Story Node Examples (v11.2.6)**
 `docs/story-nodes/domains/archaeology/examples/README.md`
 
 **Purpose**  
 Provide **curated, generalized, public-safe** example Story Nodes demonstrating correct structure, masking, metadata, relations, and narrative alignment for the archaeology domain under governed KFM v11.
 
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.2-purple" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
 <img src="https://img.shields.io/badge/MCP--DL-v6.3-blue" />
 <img src="https://img.shields.io/badge/Story_Nodes-Examples-success" />
 <img src="https://img.shields.io/badge/Classification-Public--Safe-informational" />
 <img src="https://img.shields.io/badge/Status-Active_%2F_Enforced-brightgreen" />
 
 </div>
+
+---
+
+## 📘 Overview
+
+This directory contains **reference-quality archaeology Story Node fixtures** intended for:
+
+- **Onboarding**: show authors what “correct + governed + public-safe” looks like.
+- **Validation**: act as “living unit tests” for Story Node schema + domain validators.
+- **Focus Mode**: demonstrate how examples can be summarized without inventing facts.
+
+All examples here are required to be:
+
+- **Generalized**: no precise coordinates, no site numbers, no restricted identifiers.
+- **Governance-safe**: CARE + sovereignty aligned for culturally-linked contexts.
+- **Schema-ready**: valid per Story Node v11 schema and archaeology domain constraints.
+- **Public-safe by default**: this directory is publishable without special handling.
 
 ---
 
@@ -204,57 +222,44 @@ Provide **curated, generalized, public-safe** example Story Nodes demonstrating 
 └── 📁 story-nodes/
     └── 📁 domains/
         └── 📁 archaeology/
-            ├── 📄 README.md                              — Domain index (rules, templates, governance)
-            ├── 📄 relation-patterns.md                   — Allowed relation patterns for archaeology
-            ├── 📁 templates/                             — Canonical templates for node authors
-            └── 📁 examples/
-                ├── 📄 README.md                          — ← This index
-                ├── 🏞️ protohistoric-wichita-site.json    — Generalized protohistoric narrative (public-safe)
-                ├── 🧲 fort-larned-geophysics.json         — Non-invasive survey example (public-safe)
-                └── 📂 ...                                 — Additional public-safe examples (if/when added)
+            ├── 📄 README.md                          # Domain index (rules, templates, governance)
+            ├── 📄 relation-patterns.md               # Allowed relation patterns for archaeology
+            ├── 📁 templates/                         # Canonical templates for node authors
+            │   └── 📄 README.md                      # Templates index (authoring patterns)
+            └── 📁 examples/                          # Public-safe example fixtures
+                ├── 📄 README.md                      # ← This index
+                ├── 🧾 protohistoric-wichita-site.json# Example: generalized protohistoric narrative (public-safe)
+                ├── 🧾 fort-larned-geophysics.json    # Example: non-invasive survey narrative (public-safe)
+                └── 📁 ...                            # Additional public-safe examples (if/when added)
 ~~~
 
-**Notes**
+**Notes (normative)**
 
-- The examples directory is **public-facing by design**. Anything not safe for `classification: Public` does not belong here.
-- Additions to this directory are treated as **contract updates** because they influence onboarding, tooling, and validator expectations.
-
----
-
-## 📘 Overview
-
-This directory contains **reference-quality example Story Nodes** for archaeology.
-
-These examples are intended to be:
-
-- **Generalized**: no precise coordinates; no site numbers; no restricted location hints.
-- **Validator-ready**: schema compliant and consistent with domain templates.
-- **Governance-safe**: reflects CARE and sovereignty expectations for culturally linked contexts.
-- **Practical**: shows realistic narrative structure without leaking sensitive knowledge.
+- Anything not safe for `classification: Generalized / Public-Safe` **MUST NOT** live here.
+- New files added under `examples/` are treated as **contract fixtures** (they influence tooling + expectations).
 
 ---
 
 ## 🧭 Context
 
-### 1. What qualifies as “public-safe” archaeology here (normative)
+### 1. What qualifies as “public-safe” archaeology here
 
 A Story Node in this directory MUST:
 
-- use **generalized** geometry (e.g., coarse polygon masks, region-level indicators),
-- avoid publishing **site numbers**, **permit identifiers**, or **unpublished field notes**,
-- avoid content that enables **re-identification** of restricted locations,
-- remain valid for `classification: Generalized / Public-Safe`.
+- use **generalized** spatial representation (region-level, administrative polygon, or explicitly masked geometry),
+- omit **site numbers**, **permit IDs**, **unpublished field notes**, and **internal tracking identifiers**,
+- avoid “re-identification” hints (directions, distances, landmark triangulation, unique descriptions).
 
-### 2. What will never appear here (normative)
+### 2. What will never appear here
 
 This directory MUST NOT contain:
 
-- precise, unprotected coordinates (lat/lon, UTM, parcel centroids, or equivalent),
+- precise unmasked coordinates (lat/lon, UTM, parcel centroids, etc.),
 - burial/sacred site descriptions or culturally restricted knowledge,
-- internal excavation forms, raw notes, or unpublished interpretations,
-- sensitive photos or media that expose restricted contexts.
+- internal excavation paperwork, raw notes, or unpublished interpretations,
+- sensitive media that reveals restricted context.
 
-If a “sensitive scenario” must be documented, it must be represented abstractly (flags/labels only), without the sensitive payload.
+If a sensitive scenario must be documented for testing, represent it **abstractly** (flags/labels only) with no sensitive payload.
 
 ---
 
@@ -264,25 +269,31 @@ If a “sensitive scenario” must be documented, it must be represented abstrac
 
 ~~~mermaid
 flowchart LR
-  A["Author writes Story Node JSON<br/>(public-safe, generalized)"] --> B["Schema validation<br/>(Story Node v11)"]
-  B --> C["Domain rules validation<br/>(relations, masking, sovereignty flags)"]
-  C --> D["Docs lint + metadata checks<br/>(KFM-MDP v11.2.2)"]
-  D --> E["Merge + publish docs<br/>(public docs posture)"]
+  A["Author writes Story Node JSON (public-safe)"] --> B["Schema validation (Story Node v11)"]
+  B --> C["Domain rules validation (masking, relations, sovereignty)"]
+  C --> D["Docs lint + metadata checks (KFM-MDP v11.2.6)"]
+  D --> E["Merge + publish (public docs posture)"]
 ~~~
+
+This diagram is intentionally simple (no HTML line breaks) to remain compatible with strict Mermaid parsers.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Examples support Story Node tooling and Focus Mode without fabricating facts:
+Examples support Story Node tooling and Focus Mode without fabricating facts.
 
-- Focus Mode MAY:
-  - summarize what a given example demonstrates (structure, masking, relations),
-  - highlight how to adapt patterns for new, **public-safe** nodes.
-- Focus Mode MUST NOT:
-  - treat examples as real sites, real investigations, or operational records,
-  - infer missing facts or add “color narrative” not contained in the fixture,
-  - “improve” realism by adding sensitive details.
+**Focus Mode MAY:**
+
+- summarize what a given example demonstrates (structure, masking, relations),
+- highlight which constraints are being illustrated,
+- link to templates and relation patterns.
+
+**Focus Mode MUST NOT:**
+
+- treat fixtures as real sites, real investigations, or operational records,
+- infer missing facts, add “color narrative,” or “improve realism,”
+- output sensitive details not contained in the fixture.
 
 Examples are fixtures: **reference structures**, not field truth.
 
@@ -290,28 +301,28 @@ Examples are fixtures: **reference structures**, not field truth.
 
 ## 🧪 Validation & CI/CD
 
-### 1. Required checks (expected)
+### Expected checks
 
 Every example Story Node SHOULD be validated by CI:
 
 - **docs-lint**
-  - validates this README’s front-matter, headings, and footer links
+  - validates this README’s front-matter, headings, links, and footer
 - **storynodes-validate**
   - validates JSON against Story Node v11 schema
   - enforces archaeology domain constraints (relation patterns, masking rules)
-- **sovereignty/CARE gate**
-  - blocks merges if sensitive markers or restricted patterns appear
+- **sensitivity-check**
+  - blocks merges if disallowed precision or identifiers appear
 - **link validation**
-  - if a node references STAC/DCAT assets, validate that references are well-formed and allowed
+  - if nodes reference STAC/DCAT assets, references must be well-formed and allowed
 
-### 2. What should fail CI (normative)
+### What must fail CI (normative)
 
 CI MUST fail if any example includes:
 
-- coordinates with precision beyond the allowed “public-safe” threshold,
+- coordinates with precision beyond the “public-safe” threshold,
 - restricted site identifiers, permit numbers, or internal system IDs,
-- content that violates indigenous protection policy or CARE expectations,
-- secrets, tokens, or private URLs.
+- content violating Indigenous data protection policy or CARE expectations,
+- secrets/tokens/private URLs.
 
 ---
 
@@ -321,9 +332,9 @@ CI MUST fail if any example includes:
 
 Use one of the following **public-safe** approaches:
 
-- **administrative mask** (county / region / watershed polygon)
-- **coarse index** (e.g., H3 at coarse resolution) *only if policy allows*
-- **described region** (“Central Kansas river valley”, etc.) without pinpointing
+- **Administrative mask**: county / region / watershed polygon
+- **Coarse index** (only if policy allows): a coarse grid/H3 that cannot re-identify a site
+- **Named region**: “Central Kansas river valley” without pinning
 
 ### 2. Minimal Story Node skeleton (sanitized, schematic)
 
@@ -333,7 +344,7 @@ Adapt field names to your Story Node v11 schema (this is intentionally schematic
 {
   "schema_version": "v11",
   "node_kind": "archaeology.story_node",
-  "id": "kfm-arch-example-protohistoric-001",
+  "id": "urn:kfm:story-node:archaeology:example:protohistoric:001",
   "classification": "Generalized / Public-Safe",
   "jurisdiction": "Kansas / United States",
   "care": {
@@ -341,16 +352,15 @@ Adapt field names to your Story Node v11 schema (this is intentionally schematic
     "indigenous_rights_flag": true
   },
   "spacetime": {
-    "time_range": { "start": "1400-01-01", "end": "1700-12-31" },
+    "when": { "start": "1400-01-01", "end": "1700-12-31" },
     "geometry_precision": "generalized"
   },
   "summary": {
     "title": "Generalized protohistoric settlement context",
-    "abstract": "Public-safe example narrative demonstrating masking, relations, and provenance."
+    "abstract": "Public-safe example fixture demonstrating masking, relations, and provenance."
   },
   "relations": [],
   "provenance": {
-    "created_by": "@kfm-archaeology",
     "method": "example_fixture",
     "sources": []
   }
@@ -368,17 +378,17 @@ Adapt field names to your Story Node v11 schema (this is intentionally schematic
 
 If an archaeology Story Node references assets (e.g., generalized survey rasters), examples SHOULD:
 
-- reference **STAC Items** by stable, non-sensitive identifiers (or stub IDs)
-- ensure assets are:
-  - public-safe (no restricted coordinates embedded in metadata)
-  - licensed and attributable
-- align provenance:
-  - Story Node = narrative/semantic layer
-  - STAC = geospatial asset layer
-  - PROV = lineage layer for processes/artifacts
-  - DCAT = catalog/public distribution layer (if applicable)
+- reference **STAC Items** by stable, non-sensitive identifiers (or stub IDs),
+- ensure referenced assets are:
+  - public-safe (no restricted coordinates embedded in metadata),
+  - licensed and attributable,
+- align provenance roles:
+  - Story Node = narrative/semantic layer,
+  - STAC = geospatial asset layer,
+  - PROV = lineage layer,
+  - DCAT = catalog/distribution layer (if applicable).
 
-If an asset cannot be represented safely, it belongs in an access-controlled internal store, not here.
+If an asset cannot be represented safely, it belongs in an access-controlled store, not here.
 
 ---
 
@@ -391,7 +401,7 @@ This examples directory is part of a governed domain contract:
 - `examples/` demonstrates compliant patterns (public-safe fixtures)
 - CI validators enforce the above consistently
 
-Examples are the “living unit tests” for archaeology Story Node authoring rules.
+Treat examples as **fixtures with governance weight**.
 
 ---
 
@@ -401,32 +411,33 @@ Even “example content” is governance-sensitive in archaeology.
 
 Therefore:
 
-- Every update MUST be reviewed by:
-  - Archaeology Domain Board
-  - FAIR+CARE Council (when indigenous-linked contexts appear)
-- Generalization is not optional; it is the default.
-- When in doubt: **reduce precision**, **remove identifiers**, and **document abstractly**.
+- updates SHOULD be reviewed by:
+  - Archaeology Domain Board,
+  - FAIR+CARE Council (when Indigenous-linked contexts are involved),
+- generalization is not optional; it is the default,
+- when in doubt: **reduce precision**, **remove identifiers**, **document abstractly**.
 
-This directory is designed to remain safely publishable under:
+This directory is designed to remain safely publishable under:  
 `classification: Generalized / Public-Safe`.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Author             | Summary                                                                 |
-|--------:|------------|--------------------|-------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-30 | `@kfm-archaeology`  | Initial governed archaeology example set; synced with templates and validation rules. |
-| v11.2.1 | 2025-11-29 | `@kfm-archaeology`  | Added initial generalized examples (protohistoric narrative + geophysics). |
+| Version   | Date       | Author             | Summary                                                                                              |
+|----------:|------------|--------------------|------------------------------------------------------------------------------------------------------|
+| v11.2.6   | 2025-12-12 | `@kfm-archaeology`  | Updated to KFM-MDP v11.2.6; reordered sections (Overview → Directory Layout); tightened diagram safety; refreshed release/schema refs; normalized directory tree icons and alignment. |
+| v11.2.2   | 2025-11-30 | `@kfm-archaeology`  | Initial governed archaeology example set; synced with templates and validation rules.               |
+| v11.2.1   | 2025-11-29 | `@kfm-archaeology`  | Added initial generalized examples (protohistoric narrative + geophysics).                          |
 
 ---
 
 <div align="center">
 
-🏺 **KFM — Archaeology Story Node Examples (v11.2.2)**  
+🏺 **Kansas Frontier Matrix — Archaeology Story Node Examples (v11.2.6)**  
 Public-Safe Fixtures · Cultural Respect · Validator-Ready Examples
 
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.2-purple" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
 <img src="https://img.shields.io/badge/MCP--DL-v6.3-blue" />
 <img src="https://img.shields.io/badge/FAIR%2BCARE-Aligned-gold" />
 <img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
@@ -434,6 +445,11 @@ Public-Safe Fixtures · Cultural Respect · Validator-Ready Examples
 [⬅ Domain Index](../README.md) ·
 [📄 Relation Patterns](../relation-patterns.md) ·
 [📁 Templates](../templates/README.md) ·
+[🧠 Story Nodes Index](../../../README.md) ·
+[📄 Docs Templates Index](../../../../templates/README.md) ·
+[📑 Markdown Protocol](../../../../standards/kfm_markdown_protocol_v11.2.6.md) ·
+[📈 Telemetry Standard](../../../../standards/telemetry_standards.md) ·
+[♿ UI Accessibility](../../../../standards/ui_accessibility.md) ·
 [📘 Docs Home](../../../../README.md) ·
 [📏 Standards Index](../../../../standards/README.md) ·
 [⚖ Governance Charter](../../../../standards/governance/ROOT-GOVERNANCE.md) ·
@@ -442,6 +458,6 @@ Public-Safe Fixtures · Cultural Respect · Validator-Ready Examples
 [📚 Glossary](../../../../glossary.md)
 
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
-MCP-DL v6.3 · KFM-MDP v11.2.2
+MCP-DL v6.3 · KFM-MDP v11.2.6
 
 </div>
