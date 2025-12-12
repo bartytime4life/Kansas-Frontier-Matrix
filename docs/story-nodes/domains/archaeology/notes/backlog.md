@@ -1,38 +1,101 @@
 ---
-title: "🏺 KFM v11.2.2 — Archaeology Story Node Backlog"
+title: "🏺 KFM v11.2.6 — Archaeology Story Node Backlog"
 path: "docs/story-nodes/domains/archaeology/notes/backlog.md"
-version: "v11.2.2"
-last_updated: "2025-11-30"
+version: "v11.2.6"
+last_updated: "2025-12-11"
+
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Archaeology Domain Board · FAIR+CARE Council"
+content_stability: "stable"
+
+status: "Active / Enforced"
+doc_kind: "Backlog"
+intent: "kfm-archaeology-storynode-backlog"
+lifecycle_stage: "draft-pool"
 
 commit_sha: "<latest-commit>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-doc_uuid: "urn:kfm:storynodes:archaeology:backlog:v11.2.2"
+doc_uuid: "urn:kfm:storynodes:archaeology:backlog:v11.2.6"
 semantic_document_id: "kfm-storynodes-archaeology-backlog"
 event_source_id: "ledger:storynodes/archaeology/backlog"
 immutability_status: "version-pinned"
 
-governance_ref: "../../../standards/governance/ROOT-GOVERNANCE.md"
+provenance_chain:
+  - "docs/story-nodes/domains/archaeology/notes/backlog.md@v11.2.2"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: false
+
+sbom_ref: "../../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../../releases/v11.2.6/storynode-telemetry.json"
+telemetry_schema: "../../../../../schemas/telemetry/storynodes-v11.json"
+
+governance_ref: "../../../../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-
-status: "Active"
-doc_kind: "Backlog"
-intent: "kfm-archaeology-storynode-backlog"
-lifecycle_stage: "draft-pool"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
 
 fair_category: "F1-A1-I1-R2"
 care_label: "Culturally Sensitive · Indigenous-Linked"
 classification: "Generalized / Internal-Prep"
 jurisdiction: "Kansas / United States"
+
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA"
 
 ttl_policy: "12 months"
 sunset_policy: "Archived when incorporated into official Story Node sets"
+
+header_profile: "standard"
+footer_profile: "standard"
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summary"
+  - "semantic-highlighting"
+  - "timeline-generation"
+  - "metadata-extraction"
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "narrative-fabrication"
+  - "governance-override"
+
+heading_registry:
+  approved_h2:
+    - "🗂️ Directory Layout"
+    - "📘 Usage Notes"
+    - "🏷️ Status Vocabulary"
+    - "🗂️ Backlog Items"
+    - "🧾 Backlog Item Template"
+    - "⚖ Sovereignty & Ethics Reminders"
+    - "🕰️ Version History"
+
+test_profiles:
+  - "markdown-lint"
+  - "metadata-check"
+  - "footer-check"
+  - "accessibility-check"
+  - "provenance-check"
+
+ci_integration:
+  workflow: ".github/workflows/kfm-ci.yml"
+  environment: "dev → staging → production"
 ---
 
 <div align="center">
@@ -43,57 +106,93 @@ sunset_policy: "Archived when incorporated into official Story Node sets"
 `docs/story-nodes/domains/archaeology/notes/backlog.md`
 
 **Purpose**  
-Maintain a curated list of **draft Story Node concepts**,  
-awaiting review, generalization, consultation, or conversion  
-to final Markdown/JSON Story Nodes.
+Maintain a curated list of **draft Story Node concepts** awaiting review, generalization, consultation,  
+or conversion to final **Markdown/JSON Story Nodes** for the archaeology domain.
 
 </div>
 
 ---
 
+## 🗂️ Directory Layout
+
+~~~text
+📂 docs/
+└── 📂 story-nodes/
+    └── 📂 domains/
+        └── 🏺 archaeology/
+            └── 📝 notes/
+                ├── 📄 README.md           # Notes directory rules + guardrails
+                ├── 📄 backlog.md          # This file — draft pool & triage table
+                └── ⚖️ ethics-checklist.md # CARE + sovereignty review checklist
+~~~
+
+---
+
 ## 📘 Usage Notes
 
-This backlog is a **staging area**, not a public directory.  
-Everything here is:
+This backlog is a **staging area**. Nothing here is final.
 
-- **non-final**
-- **generalized**
-- **subject to sovereignty & CARE review**
-- **subject to archaeology board approval**
-- **not guaranteed to become a Story Node**
+Everything in this file MUST remain:
 
-No sensitive content may appear here—**even drafts must follow masking rules**.
+- **Generalized** (no precise locations; no site codes)
+- **Sovereignty-aware** (Indigenous-linked content requires explicit review path)
+- **CARE-aligned** (avoid harmful attribution, sensitive details, or triangulation risk)
+- **Ready for triage** (each item must have a next action)
+
+This file is stored in-repo; therefore content must remain **public-safe** even if labeled “internal-prep”.
+
+---
+
+## 🏷️ Status Vocabulary
+
+Use these bounded status values (avoid free-form strings):
+
+- `concept` — idea exists; not yet scoped
+- `research` — sources/datasets being identified (still generalized)
+- `outline` — narrative shape drafted; missing details/citations
+- `draft` — candidate story exists; needs review
+- `blocked` — waiting on consultation, permissions, or governance decision
+- `ready-for-review` — prepared for archaeology + sovereignty review
+- `approved` — approved to convert into canonical Story Node artifact
+- `promoted` — moved into official Story Node set (outside `notes/`)
+- `archived` — retired or merged into another item
 
 ---
 
 ## 🗂️ Backlog Items
 
-Below is the structured backlog table used across KFM v11 archaeology workflow.
+Structured backlog table (newest items should be added near the top).
 
-| ID (Tentative) | Title / Topic | Status | Notes | Next Action |
-|----------------|--------------|--------|--------|--------------|
-| TBD-001 | Generalized Protohistoric Camp near Smoky Hill | draft | Needs sovereignty review + H3 masking level decision | Prepare v11 JSON Node |
-| TBD-002 | Arkansas River Corridor Survey (Composite) | outline | Several survey seasons; requires generalization + merging | Define timeline window |
-| TBD-003 | Walnut Basin Lithic Scatter | draft | Very sparse surface finds; requires uncertainty framing | Write narrative sections |
-| TBD-004 | Fort Larned Peripheral Geophysics | draft | Non-invasive; safe to publish after masking | Add STAC assets |
-| TBD-005 | Multi-phase Central Plains Village (Generalized) | concept | Needs occupation-phase splitting | Plan 2–3 Story Node phases |
-| TBD-006 | 1930s WPA Excavation Archive (Generalized) | outline | Must avoid internal form details | Link only published scans |
-| TBD-007 | Post-contact Trade Corridors (regional) | research | Not site-specific; no sensitivity flags | Build large-region H3 geometry |
-| TBD-008 | Early Holocene Occupation Indicators | research | Broad-scale, multi-county | Establish uncertainty language |
+| ID (Tentative) | Title / Topic | Status | Sensitivity / CARE Notes | Next Action |
+|----------------|---------------|--------|---------------------------|------------|
+| TBD-001 | Protohistoric camp (Smoky Hill region — generalized) | draft | Needs sovereignty review; decide masking level; avoid location triangulation | Prepare v11 Story Node outline + governance questions |
+| TBD-002 | Arkansas River corridor survey (composite — generalized) | outline | Multi-season aggregation; ensure composite geometry rules | Define timeline window + dataset refs (STAC/DCAT if available) |
+| TBD-003 | Walnut Basin lithic scatter (generalized) | draft | Sparse evidence; must include uncertainty framing | Write fact/interpretation split + confidence notes |
+| TBD-004 | Historic fort periphery geophysics (generalized) | draft | Non-invasive; still avoid precise grid/line locations | Identify publishable assets; add governance notes |
+| TBD-005 | Multi-phase Central Plains village (generalized) | concept | Requires phase separation; avoid cultural over-claims | Plan 2–3 node structure + time ranges |
+| TBD-006 | 1930s WPA excavation archive (generalized) | outline | Do not include internal forms; link only published scans | Assemble public citations + archive provenance notes |
+| TBD-007 | Post-contact trade corridors (regional — non-site) | research | Prefer regional story; low site sensitivity | Draft regional spatial scope + periodization |
+| TBD-008 | Early Holocene occupation indicators (multi-county — generalized) | research | Broad scale; emphasize uncertainty + methods | Establish uncertainty language + candidate datasets |
 
-You may add new rows as long as they follow the same column structure.
+Rules:
+
+- Keep “Title / Topic” generalized (no site numbers, no excavation-unit identifiers).
+- “Sensitivity / CARE Notes” must describe constraints, not sensitive details.
+- “Next Action” should be actionable and governance-aware.
 
 ---
 
-## 📝 Draft Notes Area
+## 🧾 Backlog Item Template
 
-**Use the space below for brief drafts or reminders:**  
-(Do not include sensitive locations, burials, or tribal knowledge.)
+Use this template when adding a new item (copy into the table row fields; do not add sensitive details):
 
-- *[Write notes here]*  
-- *[Outline observations or questions]*  
-- *[List required sources or datasets]*  
-- *[Add reviewer questions]*  
+~~~text
+ID: TBD-###
+Title/Topic: <generalized>
+Status: concept | research | outline | draft | blocked | ready-for-review | approved | promoted | archived
+Sensitivity/CARE Notes: <why it might be sensitive + what must be generalized>
+Next Action: <single concrete next step + who/which board if applicable>
+~~~
 
 ---
 
@@ -101,27 +200,37 @@ You may add new rows as long as they follow the same column structure.
 
 Always document which backlog items require:
 
-- tribal consultation  
-- masking adjustments  
-- restricted knowledge removal  
-- narrative review for cultural sensitivity  
-- CARE justification  
+- Tribal consultation / partner review (where applicable)
+- Masking adjustments (H3 generalization, county-only, region-only, or no-geometry)
+- Restricted knowledge removal (never store restricted details here)
+- Narrative review for cultural sensitivity
+- CARE justification (why the narrative is appropriate and how it avoids harm)
+
+If an item is `blocked`, record the **governance reason** (policy/approval needed), not the restricted content.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                      |
-|--------:|------------|--------------------------------------------------------------|
-| v11.2.2 | 2025-11-30 | Initial governed backlog structure added to archaeology domain. |
-| v11.2.1 | 2025-11-29 | Added table structure + draft item schema.                    |
+| Version | Date       | Summary                                                                                     |
+|--------:|------------|---------------------------------------------------------------------------------------------|
+| v11.2.6 | 2025-12-11 | Upgraded to KFM-MDP v11.2.6; added status vocabulary, item template, governance/ethics refs. |
+| v11.2.2 | 2025-11-30 | Initial governed backlog structure added to archaeology domain.                              |
+| v11.2.1 | 2025-11-29 | Added table structure + draft item schema.                                                   |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-[📚 Docs Home](../../../../README.md) · [📏 Standards Index](../../../standards/README.md) · [🛡 Governance Charter](../../../standards/governance/ROOT-GOVERNANCE.md)
+🏺 **KFM v11.2.6 — Archaeology Story Node Backlog**  
+Draft Pool · Sovereignty-Aware · FAIR+CARE-Aligned
+
+[⬅ Back to Notes README](./README.md) ·  
+[📂 Archaeology Domain](../README.md) ·  
+[📂 Story Nodes Root](../../../README.md) ·  
+[📚 Docs Home](../../../../README.md) ·  
+[🛡 Governance Charter](../../../../standards/governance/ROOT-GOVERNANCE.md) ·  
+[🌿 FAIR+CARE Guide](../../../../standards/faircare/FAIRCARE-GUIDE.md) ·  
+[🪶 Indigenous Data Protection](../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
-
