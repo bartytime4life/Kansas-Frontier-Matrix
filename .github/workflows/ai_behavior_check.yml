@@ -1,6 +1,6 @@
 # .github/workflows/ai_behavior_check.yml
 # 🤖 Kansas Frontier Matrix — AI Behavior, Drift & Narrative Safety Checks
-# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# v11.2.6 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 #
 # Purpose:
 #   Enforce governed AI behavior across KFM by:
@@ -10,7 +10,7 @@
 #     - Monitoring simple drift/bias metrics (via local test harnesses)
 #
 # Governance Context:
-#   - KFM-MDP v11.2.5 (docs & model card metadata)
+#   - KFM-MDP v11.2.6 (docs & model card metadata)
 #   - KFM-OP v11 (graph & narrative semantics)
 #   - KFM FAIR+CARE & sovereignty policies
 #   - SECURITY.md (AI surface is part of the attack surface)
@@ -96,7 +96,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -126,7 +126,7 @@ jobs:
 
       - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
         if: steps.detect_ai.outputs.has_ai == 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
@@ -143,9 +143,6 @@ jobs:
             pip install --no-cache-dir -r scripts/requirements-ai.txt
           fi
 
-      # Expected behavior of scripts/validate_ai_configs.py:
-      #   - Validate config/ai/** and config/prompts/** against JSON/YAML schemas
-      #   - Ensure required governance metadata fields exist (e.g., model_id, allowed_uses)
       - name: 🧾 Validate AI Config Schemas
         if: steps.detect_ai.outputs.has_ai == 'true'
         run: |
@@ -162,10 +159,6 @@ jobs:
             fi
           fi
 
-      # Expected behavior of scripts/validate_model_cards.py:
-      #   - Ensure each deployed model has a model card in mcp/model_cards/**
-      #   - Check for required sections: description, training data summary,
-      #     limitations, safety considerations, evaluation summary, etc.
       - name: 🧠 Validate Model Cards
         if: steps.detect_ai.outputs.has_ai == 'true'
         run: |
@@ -192,7 +185,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -217,7 +210,7 @@ jobs:
 
       - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
         if: steps.detect_tests.outputs.has_tests == 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
@@ -236,13 +229,6 @@ jobs:
             pip install --no-cache-dir -r requirements.txt
           fi
 
-      # Expected behavior of scripts/run_ai_behavior_suite.py:
-      #   - Run offline tests using fixtures/golden outputs
-      #   - Check for:
-      #       * narrative grounding (no obvious hallucination within test set)
-      #       * absence of disallowed patterns (e.g., speculative history tags)
-      #       * compliance with sovereignty and sensitivity flags in prompts
-      #   - Exit non-zero on violations
       - name: 🤖 Run AI Behavior Test Suite
         if: steps.detect_tests.outputs.has_tests == 'true'
         run: |
@@ -279,7 +265,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -301,7 +287,7 @@ jobs:
 
       - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
         if: steps.detect_drift.outputs.has_drift_harness == 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
@@ -320,11 +306,6 @@ jobs:
             pip install --no-cache-dir -r requirements.txt
           fi
 
-      # Expected behavior of scripts/eval_ai_drift_bias.py:
-      #   - Compare current AI behavior against previous baselines using
-      #     offline logs or golden responses.
-      #   - Produce metrics (JSON) describing simple drift/bias indicators
-      #   - Exit non-zero if thresholds are exceeded, to block risky changes.
       - name: 📊 Run Drift & Bias Evaluation
         if: steps.detect_drift.outputs.has_drift_harness == 'true'
         run: |
@@ -368,4 +349,3 @@ jobs:
             echo "backed by config/model-card validation, offline regression tests, and"
             echo "optional drift/bias metrics for telemetry_export.yml and governance dashboards."
           } >> "${GITHUB_STEP_SUMMARY}"
-
