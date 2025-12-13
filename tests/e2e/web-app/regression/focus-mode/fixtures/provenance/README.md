@@ -13,13 +13,13 @@ status: "Active · Enforced"
 doc_kind: "Testing Guide"
 header_profile: "standard"
 footer_profile: "standard"
-intent: "tests-e2e-provenance-fixtures"
+intent: "tests-e2e-provenance-fixtures-focus-mode"
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+pipeline_contract_version: "KFM-PDC v11.0"
 
 semantic_document_id: "kfm-tests-e2e-provenance-fixtures-focus-mode"
 doc_uuid: "urn:kfm:tests:e2e:fixtures:provenance:focus-mode:readme:v11.2.6"
@@ -39,19 +39,19 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-signature_ref: "../../../../../../../../releases/v11.2.6/signature.sig"
-attestation_ref: "../../../../../../../../releases/v11.2.6/slsa-attestation.json"
-sbom_ref: "../../../../../../../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../../../../../../../releases/v11.2.6/manifest.zip"
+signature_ref: "../../../../../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../../../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../../../../releases/v11.2.6/manifest.zip"
 
-telemetry_ref: "../../../../../../../../releases/v11.2.6/tests-e2e-telemetry.json"
-telemetry_schema: "../../../../../../../../schemas/telemetry/tests-e2e-v11.json"
-energy_schema: "../../../../../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../../../../../schemas/telemetry/carbon-v2.json"
+telemetry_ref: "../../../../../../../releases/v11.2.6/tests-e2e-telemetry.json"
+telemetry_schema: "../../../../../../../schemas/telemetry/tests-e2e-v11.json"
+energy_schema: "../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../schemas/telemetry/carbon-v2.json"
 
-governance_ref: "../../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 ttl_policy: "6-month review"
 sunset_policy: "Superseded upon next v12 E2E provenance fixture framework update"
@@ -85,7 +85,7 @@ provenance_chain:
 
 **Purpose**  
 Define the **canonical synthetic provenance fixture suite** used by Focus Mode regression E2E tests.  
-These fixtures enable deterministic UI validation for **provenance chips**, **lineage panels**, and **governance overlays** without touching real, sensitive, or production data.
+These fixtures enable deterministic UI validation for **provenance chips**, **lineage panels**, and **governance overlays** without using real, sensitive, or production data.
 
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
 <img src="https://img.shields.io/badge/E2E-Provenance%20Fixtures-blueviolet" />
@@ -94,9 +94,9 @@ These fixtures enable deterministic UI validation for **provenance chips**, **li
 <img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 [⬅️ Focus Mode Fixtures](../README.md) ·
-[🧪 Focus Mode Specs](../../../../specs/README.md) ·
+[🧪 Focus Mode Specs](../../specs/README.md) ·
 [🧭 E2E Guide](../../../../../README.md) ·
-[🧱 Test Architecture](../../../../../../ARCHITECTURE.md)
+[🏗 Test Architecture](../../../../../../ARCHITECTURE.md)
 
 </div>
 
@@ -105,63 +105,67 @@ These fixtures enable deterministic UI validation for **provenance chips**, **li
 ## 📘 Overview
 
 ### What these fixtures are
-Provenance fixtures are **synthetic JSON artifacts** that simulate:
+Provenance fixtures are **synthetic artifacts** that simulate:
 
-- **PROV-O** fragments (Activity / Entity / Agent + basic relations)
-- **OpenLineage v2.5**-style events (job/run + inputs/outputs)
-- **KFM governance facets** used by Focus Mode UI (CARE tier, sovereignty flags, masking indicators)
+- **PROV-O** fragments (Activity / Entity / Agent and basic relations)
+- **OpenLineage v2.5-like** events (job/run + inputs/outputs)
+- **KFM governance facets** consumed by the UI (CARE tier, sovereignty flags, masking indicators)
 - **Stable IDs** suitable for UI linking (URNs, semantic IDs, placeholder hashes)
 
-These fixtures exist so regression tests can assert:
+These fixtures exist so E2E regression tests can assert:
 
-- a provenance chip appears for a given claim/panel,
-- the “evidence/lineage” view renders expected IDs and references,
+- provenance chips render where required,
+- evidence/lineage views show expected identifiers and references,
 - governance indicators are present and consistent,
-- restricted/masked states do not leak precision.
+- restricted/masked states never leak raw precision.
 
 ### What these fixtures are not
 These fixtures are **not**:
 - production provenance records,
 - authoritative scientific statements,
-- a substitute for schema or contract validation in pipeline-level tests.
+- a substitute for pipeline-level lineage validation.
 
-They are **UI-facing test inputs** designed for determinism and policy safety.
+They are **UI-facing inputs** optimized for determinism and policy safety.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-📁 fixtures/
-└── 📁 provenance/
-    ├── 📄 README.md                          — This guide (policy + shapes)
-    │
-    ├── 🧾 provenance_manifest.json           — Required: inventory + intent + checksums
-    ├── 🧾 checksums.sha256                   — Optional: detached checksums
-    │
-    ├── 🧾 prov_o/
-    │   ├── 🧾 fm_prov_activity_001.jsonld    — PROV-O JSON-LD fragment (synthetic)
-    │   ├── 🧾 fm_prov_activity_002.jsonld
-    │   └── 🧾 fm_prov_activity_003.jsonld
-    │
-    ├── 🧾 openlineage/
-    │   ├── 🧾 fm_ol_event_001.json           — OpenLineage-like event (synthetic)
-    │   ├── 🧾 fm_ol_event_002.json
-    │   └── 🧾 fm_ol_event_003.json
-    │
-    ├── 🧾 mappings/
-    │   ├── 🧾 fm_claim_to_prov_map_001.json  — Claim/panel → provenance IDs
-    │   └── 🧾 fm_claim_to_ol_map_001.json
-    │
-    └── 🧾 governance/
-        ├── 🧾 fm_governance_overlay_001.json — CARE + sovereignty + masking states
-        └── 🧾 fm_governance_overlay_002.json
+📁 tests/                                                                  — Test platform root (unit / integration / e2e)
+└── 📁 e2e/                                                                — End-to-end suites (browser + API + governance)
+    └── 📁 web-app/                                                        — UI-focused E2E suites
+        └── 📁 regression/                                                 — Broader coverage (non-smoke)
+            └── 📁 focus-mode/                                             — Focus Mode v3 regression suites
+                └── 📁 fixtures/                                           — Deterministic synthetic inputs (non-sensitive)
+                    └── 📁 provenance/                                     — ← This folder (provenance fixture set)
+                        ├── 📄 README.md                                   — This guide (rules + expected shapes)
+                        ├── 📄 provenance_manifest.json                    — 🧾 Inventory + intent + SHA-256 per fixture
+                        ├── 📄 checksums.sha256                            — 🧾 Optional detached checksums (CI fast-path)
+                        │
+                        ├── 📁 prov_o/                                     — 🧾 PROV-O JSON-LD fragments (synthetic)
+                        │   ├── 📄 fm_prov_activity_001.jsonld             — Baseline provenance for Context panel
+                        │   ├── 📄 fm_prov_activity_002.jsonld             — Restricted/masked variant (no precision)
+                        │   └── 📄 fm_prov_activity_003.jsonld             — Missing-evidence variant (safe UI behavior)
+                        │
+                        ├── 📁 openlineage/                                — 🧾 OpenLineage-like events (synthetic)
+                        │   ├── 📄 fm_ol_event_001.json                     — Baseline job/run + inputs/outputs
+                        │   ├── 📄 fm_ol_event_002.json                     — Multi-input / multi-output variant
+                        │   └── 📄 fm_ol_event_003.json                     — Redacted variant (restricted state)
+                        │
+                        ├── 📁 mappings/                                   — 🧾 Claim/panel → provenance ID maps
+                        │   ├── 📄 fm_claim_to_prov_map_001.json            — Claim keys → PROV entity/activity URNs
+                        │   └── 📄 fm_claim_to_ol_map_001.json              — Claim keys → OpenLineage run/job IDs
+                        │
+                        └── 📁 governance/                                 — 🧾 CARE + sovereignty overlay states (synthetic)
+                            ├── 📄 fm_governance_overlay_001.json           — Tier B (masked geometry)
+                            └── 📄 fm_governance_overlay_002.json           — Restricted output state (redacted UI)
 ~~~
 
 **Directory policy**
-- If any fixture exists under `prov_o/` or `openlineage/`, then `provenance_manifest.json` MUST exist.
-- Keep fixture sets minimal and scenario-driven (high-signal, no filler).
-- All files MUST be synthetic and non-identifying.
+- If any file exists under `prov_o/` or `openlineage/`, `provenance_manifest.json` MUST exist.
+- Fixtures MUST remain synthetic, deterministic, and non-identifying.
+- JSON/JSON-LD fixtures SHOULD be small and UI-oriented (high-signal, minimal noise).
 
 ---
 
@@ -170,20 +174,20 @@ They are **UI-facing test inputs** designed for determinism and policy safety.
 ### Determinism rules
 Fixtures MUST:
 - use stable identifiers (deterministic URNs, stable semantic IDs),
-- avoid timestamps that change per run (use fixed `eventTime` unless explicitly testing time rendering),
-- avoid random UUID generation inside fixture content unless it is version-pinned and recorded.
+- avoid timestamps that change per run (use fixed timestamps unless explicitly testing time rendering),
+- avoid runtime-generated UUIDs unless version-pinned and listed in the manifest.
 
-### Safety rules (sovereignty + ethics)
+### Sovereignty + ethics rules
 Fixtures MUST:
-- contain no real coordinates, no plausible sacred site geometry, and no identifying text,
-- never include raw precision “debug geometry” payloads intended for internal tooling,
-- simulate restricted content states only via **flags** and **masked placeholders**.
+- contain no real coordinates and no plausible “real site” geometry,
+- never include raw-precision geometry dumps for restricted contexts,
+- simulate restricted states via **flags and redaction placeholders**, not sensitive content.
 
-### Compatibility rules (UI resilience)
-Fixtures SHOULD:
-- include both “happy path” and “restricted/redacted” states,
-- include at least one case with “missing evidence” (to validate safe UI handling),
-- include stable, human-readable labels for test diagnosis.
+### UI resilience rules
+Fixtures SHOULD include:
+- a baseline “happy path” provenance set,
+- at least one restricted/redacted case,
+- at least one “missing evidence” case to validate safe UI fallback behavior.
 
 ---
 
@@ -191,73 +195,74 @@ Fixtures SHOULD:
 
 ~~~mermaid
 flowchart TD
-  A["Scenario fixture (expected UI)"] --> B["API mocks return provenance payloads"]
-  B --> C["Focus Mode UI renders panels"]
-  C --> D["Assertions verify chips, links, and governance overlays"]
-  D --> E["Artifacts + telemetry recorded"]
+  A["Scenario loads (expected UI)"] --> B["API mocks return provenance payloads"]
+  B --> C["Focus Mode UI renders panels and chips"]
+  C --> D["Assertions verify IDs, links, and governance overlays"]
+  D --> E["Artifacts and telemetry recorded"]
 ~~~
 
 **Interpretation**  
-Provenance fixtures sit on the API boundary (often via mocks) and enable deterministic validation of provenance surfaces and policy indicators.
+Provenance fixtures sit behind API mocks and enable deterministic validation of provenance surfaces and policy indicators in Focus Mode.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### Focus Mode provenance surfaces (what regression tests validate)
-Regression E2E tests that use these fixtures SHOULD validate:
+### Focus Mode provenance surfaces (what regression E2E validates)
+Regression E2E tests using these fixtures SHOULD validate:
 
 - **Context panel**
   - provenance chip exists when claims are present,
-  - evidence list renders stable IDs (dataset IDs, experiment IDs, model card IDs where applicable).
+  - evidence list renders stable IDs (dataset IDs, experiment IDs, model card IDs when applicable).
 
 - **Timeline panel**
-  - events display with traceable references,
-  - ordering does not contradict declared provenance timestamps (when tested).
+  - events display traceable references,
+  - ordering is stable and consistent (when time rendering is under test).
 
 - **Map panel**
-  - provenance for layers is visible,
-  - any masked state is clearly indicated,
-  - no raw coordinate precision is shown in tooltips or downloads.
+  - provenance for layers is visible and linkable,
+  - masked/restricted states are clearly indicated,
+  - raw coordinate precision never appears in tooltips, JSON views, or downloads.
 
-### Claim mapping (required concept)
-The UI must be able to map:
+### Claim mapping is required for deterministic assertions
+The UI must map:
 - a displayed claim (or panel section)
 - to one or more provenance references.
 
 Fixtures encode this mapping under `mappings/` so tests can assert:
-- “Claim X shows provenance ID Y”
+- “Claim X shows provenance reference Y”
 - “Panel Z contains at least one evidence reference”
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-### Required checks (fixture-level)
+### Required checks
 Fixtures MUST pass:
+- JSON/JSON-LD parse validation,
 - secret scan (no tokens/keys),
 - PII scan (no identifying persons),
 - “no raw coordinates” scan (project policy),
-- JSON parse validation.
+- manifest consistency checks (all referenced files exist).
 
-### Recommended checks (project-level)
-Fixtures SHOULD also pass:
-- schema-lint for known fixture shapes (if schemas exist),
+### Recommended checks
+Fixtures SHOULD pass:
 - checksum verification against `provenance_manifest.json`,
-- governance overlay validation (expected keys present).
+- governance overlay key validation (required UI keys present),
+- schema-lint (if fixture schemas exist in `tests/e2e/**/schemas/`).
 
 ### CI behavior (recommended)
 - Provenance fixture checks run with `@regression` and `@governance` suites.
-- Any governance failure is treated as **merge-blocking**.
+- Governance-related failures are treated as **merge-blocking**.
 
 ---
 
 ## 📦 Data & Metadata
 
-### provenance_manifest.json (required)
-The manifest is the source-of-truth inventory for this folder.
+### provenance_manifest.json is the source of truth
+The manifest is the canonical inventory for this folder.
 
-Shape (recommended):
+Recommended shape:
 ~~~json
 {
   "fixture_set_id": "fm_provenance_fixtures_v11_2_6",
@@ -275,7 +280,7 @@ Shape (recommended):
     },
     {
       "path": "openlineage/fm_ol_event_001.json",
-      "intent": "Baseline OpenLineage event for evidence chip rendering",
+      "intent": "Baseline OpenLineage-like event for chip rendering",
       "sha256": "<sha256>"
     },
     {
@@ -292,102 +297,56 @@ Shape (recommended):
 }
 ~~~
 
-### PROV-O fixture fragment (recommended minimum)
-Keep this small and UI-oriented:
-- at least one `prov:Activity`
-- at least one `prov:Entity`
-- a `prov:used` edge
-- a `prov:wasGeneratedBy` edge
-- optional `prov:Agent` (CI job / test runner)
+### PROV-O fragment minimum
+Keep PROV-O fixtures small and UI-oriented:
+- at least one `prov:Activity`,
+- at least one `prov:Entity`,
+- at least one `prov:used` edge,
+- at least one `prov:wasGeneratedBy` edge,
+- optional `prov:Agent` (CI runner, synthetic actor).
 
-Example (simplified shape):
-~~~json
-{
-  "@context": { "prov": "http://www.w3.org/ns/prov#" },
-  "prov:activity": {
-    "urn:kfm:prov:activity:fm_synth_003:001": {
-      "prov:label": "Synthetic Focus Mode activity",
-      "prov:type": "kfm:TestActivity"
-    }
-  },
-  "prov:entity": {
-    "urn:kfm:prov:entity:dataset:synthetic:001": {
-      "prov:label": "Synthetic dataset reference",
-      "prov:type": "kfm:TestEntity"
-    }
-  },
-  "prov:used": [
-    {
-      "prov:activity": "urn:kfm:prov:activity:fm_synth_003:001",
-      "prov:entity": "urn:kfm:prov:entity:dataset:synthetic:001"
-    }
-  ]
-}
-~~~
-
-### OpenLineage-like event fixture (recommended minimum)
-Keep event fields stable for UI rendering tests:
-~~~json
-{
-  "eventType": "COMPLETE",
-  "eventTime": "2025-12-13T00:00:00Z",
-  "run": { "runId": "urn:kfm:ol:run:fm_synth_003:001" },
-  "job": { "namespace": "kfm-tests", "name": "focus-mode-e2e" },
-  "inputs": [
-    { "namespace": "kfm-synthetic", "name": "dataset/synth/001" }
-  ],
-  "outputs": [
-    { "namespace": "kfm-synthetic", "name": "artifact/evidence/001" }
-  ]
-}
-~~~
-
-### Governance overlay fixture (recommended minimum)
-This is what the UI uses to show safe/unsafe states without real content:
-~~~json
-{
-  "care_tier": "Tier B",
-  "sovereignty_flags": ["masked"],
-  "masking": { "method": "H3", "resolution": "R8" },
-  "restricted_output": false,
-  "notes": "Synthetic governance overlay for regression assertions"
-}
-~~~
+### Governance overlay minimum
+Governance fixtures SHOULD include keys the UI can render deterministically:
+- `care_tier`,
+- `sovereignty_flags`,
+- `masking.method`,
+- `masking.resolution`,
+- `restricted_output` (boolean).
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### PROV alignment
-- Treat each PROV fixture file as a **PROV fragment** used for UI behavior validation.
-- IDs SHOULD be URNs and MUST be synthetic.
+- Each PROV-O fixture file is a **synthetic PROV fragment** used to test UI behavior.
+- Identifiers SHOULD be URNs and MUST be synthetic.
 
-### DCAT alignment (optional for audit tooling)
+### DCAT alignment (optional)
 If the repo catalogs test artifacts:
-- the fixture set can be represented as a `dcat:Dataset` (documentation/testing),
-- each fixture file is a `dcat:Distribution` (JSON/JSON-LD media types).
+- the fixture set may be represented as a `dcat:Dataset` (testing documentation),
+- each fixture file may be treated as a `dcat:Distribution` (`application/json`, `application/ld+json`).
 
 ### STAC alignment (optional)
 If E2E artifacts are wrapped as STAC Items:
 - use `geometry: null` for non-spatial provenance artifacts,
-- store artifacts as STAC assets (reports + provenance JSON).
+- store fixtures as STAC assets only when publishing test artifacts externally.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Non-negotiable governance rules
-These fixtures MUST ensure:
+Fixtures MUST ensure:
 - no sensitive precision leakage,
 - no culturally harmful narrative text (even synthetic),
 - no secrets or PII,
-- restricted states are simulated via flags and redaction placeholders only.
+- restricted states are represented via redaction and flags only.
 
-### Escalation policy (tests)
-If a regression test indicates provenance UI can leak restricted information:
+### Escalation policy
+If regression tests indicate provenance UI can leak restricted information:
 - treat as merge-blocking,
-- route to FAIR+CARE Council + the Narrative Governance Team,
-- record the failure per project audit policy.
+- route to FAIR+CARE Council + Narrative Governance Team,
+- record the failure per audit policy.
 
 ---
 
@@ -395,16 +354,15 @@ If a regression test indicates provenance UI can leak restricted information:
 
 | Version | Date | Summary |
 |---:|---|---|
-| v11.2.6 | 2025-12-13 | Initial provenance fixture guide for Focus Mode regression E2E tests (synthetic, deterministic, sovereignty-safe). |
+| v11.2.6 | 2025-12-13 | Realigned directory layout to KFM-MDP v11.2.6 emoji tree rules; clarified fixture set structure (PROV-O, OpenLineage-like, mappings, governance overlays); corrected relative references. |
 
 <div align="center">
 
-[🏛️ Governance Charter](../../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+[🏛️ Governance Charter](../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 © 2025 Kansas Frontier Matrix — MIT License  
 Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
