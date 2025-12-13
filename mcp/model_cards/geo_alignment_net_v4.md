@@ -1,27 +1,23 @@
 ---
 title: "🗺️ Model Card — Geo Alignment Net v4 (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "mcp/model_cards/geo_alignment_net_v4.md"
+
 version: "v11.0.0"
-last_updated: "2025-11-23"
+last_updated: "2025-12-12"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Geospatial Working Group · FAIR+CARE Council · AI Governance Board"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../releases/v11.0.0/mcp-modelcards-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/mcp-modelcards-v11.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0.0"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+content_stability: "stable"
+
 status: "Active / Enforced"
 doc_kind: "Model Card"
+header_profile: "standard"
+footer_profile: "standard"
 intent: "geo-alignment-net-v4"
 semantic_document_id: "kfm-modelcard-geo-alignment-net-v4"
 doc_uuid: "urn:kfm:modelcard:geo-alignment-net-v4:v11.0.0"
+event_source_id: "urn:kfm:modelcard:geo-alignment-net-v4"
+
 machine_extractable: true
 classification: "AI Model Documentation"
 sensitivity: "Mixed"
@@ -30,136 +26,192 @@ care_label: "Collective Benefit · Ethics · Responsibility"
 immutability_status: "version-pinned"
 accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+signature_ref: "../../releases/v11.0.0/signature.sig"
+attestation_ref: "../../releases/v11.0.0/slsa-attestation.json"
+sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.0.0/manifest.zip"
+
+telemetry_ref: "../../releases/v11.0.0/mcp-modelcards-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/mcp-modelcards-v11.json"
+
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+provenance_chain:
+  - "mcp/experiments/2025-11-14_GEO-EXP-009.md@v11.0.0"
+
+ai_transform_permissions:
+  - "summarize"
+  - "extract-metadata"
+  - "a11y-adaptations"
+  - "layout-normalization"
+ai_transform_prohibited:
+  - "fabricate-results"
+  - "fabricate-provenance"
+  - "invent-dataset-ids"
+  - "invent-license-rights"
+  - "override-governance"
+  - "expose-sensitive-coordinates"
+  - "deanonymize"
 ---
 
 <div align="center">
 
-# 🗺️ **Geo Alignment Net v4 — Model Card (v11 LTS)**  
+# 🗺️ **Geo Alignment Net v4 — Model Card (v11 LTS)**
 `mcp/model_cards/geo_alignment_net_v4.md`
 
-**Purpose:**  
-Document architecture, evaluation, governance, and provenance for **Geo Alignment Net v4** — KFM's geospatial harmonization and alignment model used for coordinate correction, shape adjustment, vertical-datum normalization, raster alignment, and multi-source GIS integration.
+**Purpose**  
+Document architecture, evaluation, governance, and provenance for **Geo Alignment Net v4 (GAN‑v4)** —
+KFM’s geospatial harmonization and alignment model used for coordinate correction, shape adjustment,
+vertical-datum normalization, raster alignment, and multi-source GIS integration.
 
 </div>
 
 ---
 
-## 📘 1. Model Summary
+## 📘 Overview
 
-**Geo Alignment Net v4 (GAN-v4)** is a hybrid deep geospatial alignment model combining:
+**Geo Alignment Net v4 (GAN‑v4)** is a hybrid deep geospatial alignment model combining:
 
-- CNN-based spatial feature detectors  
-- Coordinate residual regression heads  
-- Multigrid cross-scale attention  
-- Vertical datum adjustment nets (NAVD88 ↔ NGVD29 ↔ EGM96)  
-- H3-aware spatial correction logic  
+- CNN-based spatial feature detectors
+- coordinate residual regression heads
+- multigrid cross-scale attention
+- vertical datum adjustment nets (NAVD88 ↔ NGVD29 ↔ EGM96)
+- H3-aware spatial correction logic
 
-GAN-v4 assists with:
+GAN‑v4 assists with:
 
-- Aligning historical maps to modern basemaps  
-- Correcting scanned GIS layers  
-- Harmonizing multi-source geospatial datasets  
-- Detecting and fixing raster/feature offsets  
-- Aligning hydrology, climate, landcover, and archaeology layers  
-- Improving map accuracy for Story Nodes & Focus Mode v3  
+- aligning historical maps to modern basemaps
+- correcting scanned GIS layers
+- harmonizing multi-source geospatial datasets
+- detecting and fixing raster/feature offsets
+- aligning hydrology, climate, landcover, and archaeology layers (subject to governance rules)
+- improving map accuracy for Story Nodes and Focus Mode v3
 
-GAN-v4 **does not** create or hallucinate new geometries — it only refines existing ones.
-
----
-
-## 🧠 2. Intended Use
-
-### ✔ Approved Use Cases
-- GIS dataset alignment (vector + raster)  
-- Vertical datum harmonization for elevation surfaces  
-- Geospatial coherence checks  
-- Feature correction for historical maps  
-- Basemap deformation analysis  
-- Automated ETL alignment step in LangGraph v11  
-
-### ❌ Restricted Use Cases
-- Creating new archaeological geometries  
-- Inferring sensitive cultural site locations  
-- Precision elevation corrections on sovereign lands without approval  
-- Generating maps for governance-critical decisions without human review  
+**Non-goals**
+- GAN‑v4 does not create new geometries; it refines and aligns existing geometries.
+- GAN‑v4 must not be used to infer sensitive cultural locations or produce precision outputs for restricted geographies.
 
 ---
 
-## 🌍 3. Training Data
+## 🗂️ Directory Layout
 
-### Datasets Used
+~~~text
+📁 KansasFrontierMatrix/
+├── 📁 mcp/
+│   ├── 📁 model_cards/
+│   │   └── 📄 geo_alignment_net_v4.md                   # This model card (GAN‑v4)
+│   └── 📁 experiments/
+│       └── 📄 2025-11-14_GEO-EXP-009.md                 # Training / evaluation run log (as referenced)
+├── 📁 src/
+│   └── 📁 pipelines/
+│       ├── 📁 geo_alignment/                            # Alignment pipeline stages (as referenced)
+│       ├── 📁 climate/                                  # Downstream raster alignment consumers
+│       └── 📁 hydrology/                                # Downstream alignment consumers
+├── 📁 data/
+│   └── 📁 provenance/
+│       └── 📁 experiments/
+│           └── 📁 geo_alignment_net_v4/
+│               └── 📁 <timestamp>/
+│                   ├── 🧾 prov.jsonld                   # PROV‑O JSON‑LD
+│                   ├── 🧾 openlineage.json              # OpenLineage event(s)
+│                   ├── 🧾 config_snapshot.json          # Run configuration snapshot
+│                   └── 🧾 checksums.json                # Output checksums
+└── 📁 releases/
+    └── 📁 v11.0.0/
+        └── 🧾 mcp-modelcards-telemetry.json             # Energy/carbon/runtime telemetry bundle
+~~~
+
+---
+
+## 🧭 Context
+
+### Intended use
+Approved uses include:
+- GIS dataset alignment (vector + raster)
+- vertical datum harmonization for elevation surfaces
+- geospatial coherence checks and QA flags
+- feature correction for historical maps (public / non-sensitive)
+- basemap deformation analysis
+- automated ETL alignment step in deterministic pipelines
+
+### Out-of-scope use
+GAN‑v4 must not be used for:
+- creating new archaeological geometries
+- inferring or refining sensitive cultural site locations
+- precision elevation corrections on sovereign lands without approval
+- governance-critical decisions (legal boundaries, high-stakes enforcement) without human review
+
+---
+
+## 📦 Data & Metadata
+
+### Training datasets (as referenced)
 | Dataset | ID | Notes |
-|---------|--------------|-------|
-| USGS 3DEP DEM | `stac:terrain/3dep` | Training vertical-datum corrections |
-| NAIP Imagery | `stac:imagery/naip_kansas` | Used for ground-truth alignment |
+|---------|----|------|
+| USGS 3DEP DEM | `stac:terrain/3dep` | Vertical-datum correction learning |
+| NAIP Imagery | `stac:imagery/naip_kansas` | Ground-truth alignment reference |
 | Kansas Historical Maps | `stac:archives/maps_public` | Public-domain, digitized & cleaned |
-| Hydrology basins | `stac:hydrology/basins_core` | Used to learn watershed alignment bounds |
-| Climate rasters | `stac:climate/core_rasters` | For raster/hybrid alignment learning |
+| Hydrology basins | `stac:hydrology/basins_core` | Watershed alignment bounds |
+| Climate rasters | `stac:climate/core_rasters` | Raster / hybrid alignment learning |
 
-### Governance
-- All datasets are **FAIR-compliant**.  
-- Sensitive heritage datasets **NOT included**.  
-- No tribal or restricted sites used.
+### Governance (as reported)
+- datasets are FAIR-compliant
+- sensitive heritage datasets are not included for training
+- no tribal or restricted site datasets used for training
 
-### Bias Considerations
-- Historical maps vary heavily in accuracy  
-- Western KS lacks high-resolution basemap diversity  
-- Cloud coverage in NAIP sometimes biases alignment  
+### Bias considerations (as reported)
+Known risk areas:
+- historical maps vary heavily in accuracy
+- western Kansas has less high-resolution basemap diversity
+- NAIP cloud coverage can bias alignment
 
-Mitigations:
-
-- Domain-balanced sampling  
-- Raster augmentation  
-- Focal-region equalization  
-
----
-
-## 🧬 4. Model Architecture
-
-GAN-v4 architecture:
-
-- **Tiered CNN encoder** for spatial edge/feature extraction  
-- **Transformer-based spatial attention** for global alignment  
-- **Residual regression heads** for X/Y offset prediction  
-- **Vertical datum subnetwork** for Z-alignment  
-- **H3 correction layer** for grid-based constraints  
-- **GeoSPARQL alignment validator**  
-
-Outputs:
-
-- Offset vectors (dx, dy, dz)  
-- Rotation angle (optional)  
-- Scale correction  
-- Confidence map  
+Mitigations (as reported):
+- domain-balanced sampling
+- raster augmentation
+- focal-region equalization
 
 ---
 
-## ⚙️ 5. Training Procedure
+## 🧱 Architecture
 
-### Environment
-- Framework: PyTorch 2.2  
-- Container: `kfm/geo-align-env:v11`  
-- Hardware: A100 80GB  
+### Architecture components (as reported)
+- tiered CNN encoder for spatial edge/feature extraction
+- transformer-based spatial attention for global alignment
+- residual regression heads for dx/dy offset prediction
+- vertical datum subnetwork for dz alignment
+- H3 correction layer for grid-based constraints
+- GeoSPARQL alignment validator
 
-### Hyperparameters
-- Epochs: 160  
-- Batch: 8 (high-res raster windows)  
-- Loss: Weighted MSE + Huber on rotation terms  
-- LR: 3e-4 → cosine decay  
-- Optimizer: AdamW  
-- Seed: **221917**
+### Outputs (as reported)
+- offset vectors: (dx, dy, dz)
+- rotation angle (optional)
+- scale correction
+- confidence map
 
-### Reproducibility
-- Training run logged at:  
-  `mcp/experiments/2025-11-14_GEO-EXP-009.md`
-
-- All inputs/outputs hashed in provenance bundle.
+### Safety boundary
+- outputs must respect masking/generalization rules for restricted layers
+- confidence outputs must be propagated to downstream QA gates (do not “force” corrections on low-confidence regions)
 
 ---
 
-## 📊 6. Evaluation
+## 🧪 Validation & CI/CD
 
-### Key Metrics
+### Key metrics (as reported)
 | Metric | Score |
 |--------|-------|
 | RMSE (dx/dy offset) | 0.38 m |
@@ -167,85 +219,42 @@ Outputs:
 | Rotation error | <0.15° |
 | Scale drift | <0.3% |
 | H3 grid alignment accuracy | 0.93 |
-| GeoSPARQL validity | 100% |
+| GeoSPARQL validity | 1.00 |
 
-### Validation Methods
-- Hand-checked georeferencing points  
-- Raster cross-correlation maps  
-- Vertical-datum cross-check vs 3DEP  
+### Validation methods (as reported)
+- hand-checked georeferencing points
+- raster cross-correlation maps
+- vertical-datum cross-check vs 3DEP
 
-GAN-v4 consistently reduces misalignment in historical maps by **60–85%**, depending on era and scan quality.
-
----
-
-## 🛡️ 7. FAIR+CARE & Sovereignty Governance
-
-### FAIR Compliance
-- STAC/DCAT metadata included  
-- PROV-O lineage complete  
-- JSON-LD context applied  
-
-### CARE Compliance
-Even though GAN-v4 itself does not use sensitive cultural datasets, its *outputs may interact* with them.
-
-Thus:
-
-- Never output refined coordinates for **archaeological** or **sacred** sites  
-- Only apply alignment to such layers when:
-  - Data is generalized (H3 R7–R9)  
-  - Sovereignty approval exists  
-  - CARE metadata is fully populated  
-
-### Sovereignty Notes
-- Vertical-datum alignment of tribal lands requires opt-in review  
-- Sensitive cultural sites must remain masked  
+Reported effect:
+- reduces misalignment in historical maps by ~60–85% depending on era and scan quality
 
 ---
 
-## ⚠️ 8. Limitations
+## 🧠 Story Node & Focus Mode Integration
 
-GAN-v4 may be less accurate when:
+### Focus Mode v3 map context
+GAN‑v4 supports:
+- aligning non-sensitive map layers used for Focus Mode spatial reasoning
+- improving visual coherence for overlays (hydrology, climate, landcover)
 
-- Input rasters are heavily distorted  
-- Features lack clear edges  
-- Historical maps use inconsistent cartographic projections  
-- Very sparse control points exist  
-- Imagery mismatch (seasonal differences)  
-
-Model is **not** suitable for:
-
-- Archaeological precision mapping  
-- High-stakes legal boundary corrections  
-- Hydrologic enforcement (use hydrology pipelines instead)  
+### Story Node map context
+GAN‑v4 may be used to align non-sensitive layers for Story Nodes. For any layer with potential cultural sensitivity:
+- apply masking/generalization (H3 R7–R9 or project policy)
+- require sovereignty review if applicable
+- do not emit precision geometry in publishable artifacts
 
 ---
 
-## 🚀 9. Deployment & Usage Boundaries
+## 🌐 STAC, DCAT & PROV Alignment
 
-### Allowed:
-- ETL alignment stages  
-- Preprocessing for climate/hydrology rasters  
-- Story Node map-context alignment (non-sensitive datasets)  
-- Focus Mode map reasoning (non-sensitive datasets)  
+### STAC / DCAT expectations
+- aligned outputs should be cataloged with STAC Items/Collections (for spatial assets)
+- publishable bundles should include DCAT dataset records with license/rights and CARE/sovereignty fields
+- all derived artifacts must carry versioning and checksum references
 
-### Restricted:
-- Sensitive cultural datasets  
-- Tribal geographies requiring sovereignty review  
-- Precision cadastral boundary correction  
-
-### Integration Points
-- `src/pipelines/geo_alignment/`  
-- `src/pipelines/climate/`  
-- `src/pipelines/hydrology/`  
-- Focus Mode v3 map context renderer  
-
----
-
-## 🔗 10. Provenance & Lineage
-
-### PROV-O Example
-
-```
+### PROV‑O example
+~~~json
 {
   "prov:entity": "geo_alignment_net_v4",
   "prov:wasGeneratedBy": "training:2025-11-14_GEO-EXP-009",
@@ -253,50 +262,82 @@ Model is **not** suitable for:
     "stac:terrain/3dep",
     "stac:imagery/naip_kansas",
     "stac:archives/maps_public",
-    "stac:hydrology/basins_core"
+    "stac:hydrology/basins_core",
+    "stac:climate/core_rasters"
   ],
   "prov:wasAssociatedWith": "kfm-ai-training-service-v11"
 }
-```
+~~~
 
-### OpenLineage Events
-
-Stored under:
-
-```
-data/provenance/experiments/geo_alignment_net_v4/<timestamp>.json
-```
+### OpenLineage storage (as referenced)
+~~~text
+data/provenance/experiments/geo_alignment_net_v4/<timestamp>/
+~~~
 
 ---
 
-## ♻️ 11. Telemetry
+## ⚖ FAIR+CARE & Governance
 
-Logged under:
+### FAIR compliance (as reported)
+- STAC/DCAT metadata included for publishable artifacts
+- PROV‑O lineage complete for training and key runs
+- JSON‑LD context applied where required
 
-```
-releases/<version>/mcp-modelcards-telemetry.json
-```
+### CARE + sovereignty constraints
+GAN‑v4 itself does not require sensitive cultural datasets for training, but its outputs may interact with them.
 
-Approximate training footprint:
+Rules:
+- never output refined coordinates for archaeological or sacred sites
+- only apply alignment to sensitive layers when:
+  - data is already generalized (H3 R7–R9 or project policy)
+  - sovereignty approval exists
+  - CARE metadata is fully populated and validated
 
-- Energy: **7.9 kWh**  
-- Carbon: **370 gCO₂e**  
-- GPU-hours: **5.2**  
+### Limitations (as reported)
+GAN‑v4 may be less accurate when:
+- input rasters are heavily distorted
+- features lack clear edges
+- historical maps use inconsistent projections
+- very sparse control points exist
+- imagery mismatch due to seasonal differences
+
+Not suitable for:
+- archaeological precision mapping
+- high-stakes legal boundary corrections
+- hydrologic enforcement (use hydrology pipelines instead)
+
+### Deployment boundaries
+Allowed:
+- ETL alignment stages
+- preprocessing for climate/hydrology rasters
+- Story Node map-context alignment (non-sensitive datasets)
+- Focus Mode map reasoning (non-sensitive datasets)
+
+Restricted:
+- sensitive cultural datasets without masking + approval
+- tribal geographies requiring sovereignty review
+- precision cadastral boundary correction
 
 ---
 
-## 🕰 12. Version History
+## 🕰️ Version History
 
 | Version | Date | Summary |
 |--------:|------|---------|
-| v11.0.0 | 2025-11-23 | Initial model card for Geo Alignment Net v4, aligned with FAIR+CARE and KFM-MDP v11. |
+| v11.0.0 | 2025-11-23 | Initial model card for Geo Alignment Net v4, aligned with FAIR+CARE and KFM v11. |
+| v11.0.0 | 2025-12-12 | Normalized document to KFM‑MDP v11.2.6 (approved H2 set, required directory layout section, tilde fences, governance links in footer). No model behavior changes. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix — MCP-DL v6.3  
-Diamond⁹ Ω / Crown∞Ω Certified · FAIR+CARE · Sovereignty-Aware  
-Geospatial Accuracy · Ethical AI · Full Governance
+🗺️ **Geo Alignment Net v4 — Model Card**  
+[🏛️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+© 2025 Kansas Frontier Matrix — CC‑BY 4.0  
+MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Sovereignty‑Aware · Ethical AI · Full Governance  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
