@@ -220,16 +220,15 @@ Minimum interface contract SOPs must state:
 
 ~~~mermaid
 flowchart TD
-  A[🟢 Start SOP] --> B[📥 Acquire inputs + verify rights]
-  B --> C[🧾 Validate contracts + metadata]
-  C --> D[⚙️ Execute deterministic steps]
-  D --> E[✅ Validate outputs]
-  E --> F[🧬 Write provenance (PROV-O + OpenLineage refs)]
-  F --> G[📊 Write telemetry]
-  G --> H[🚦 CI gates + governance routing]
-  H --> I[🏁 Done / publish allowed]
+  A["Start SOP"] --> B["Acquire inputs and verify rights"]
+  B --> C["Validate contracts and metadata"]
+  C --> D["Execute deterministic steps"]
+  D --> E["Validate outputs"]
+  E --> F["Write provenance: PROV-O and OpenLineage references"]
+  F --> G["Write telemetry"]
+  G --> H["CI gates and governance routing"]
+  H --> I["Done / publish allowed"]
 ~~~
-
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
