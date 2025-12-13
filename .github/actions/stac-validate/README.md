@@ -1,55 +1,57 @@
 ---
-title: "🔧 Kansas Frontier Matrix — Security Scan Configuration"
-path: ".github/actions/security-scan/config/README.md"
+title: "🛰 Kansas Frontier Matrix — STAC Validation Composite Action"
+path: ".github/actions/stac-validate/README.md"
 version: "v11.2.3"
-last_updated: "2025-12-13"
+last_updated: "2025-12-09"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Annual · FAIR+CARE Security Council · Architecture Board"
+review_cycle: "Annual · FAIR+CARE Council · Architecture Board"
 content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../../../releases/v11.2.3/github-infra-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/github-workflows-v4.json"
-energy_schema: "../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
+sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.3/github-infra-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/github-workflows-v4.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11.0"
 pipeline_contract_version: "KFM-PDC v11.0"
+stac_profile: "KFM-STAC v11"
 
 status: "Active / Enforced"
 doc_kind: "Guide"
-intent: "github-security-scan-action-config"
-role: "security-scan-config"
-category: "Security · CI/CD · Composite Action"
+intent: "github-stac-validate-action"
+role: "stac-validation-composite-action"
+category: "Metadata · STAC · CI/CD · Composite Action"
 
 classification: "Public Document"
 sensitivity: "General (non-sensitive)"
 sensitivity_level: "Low"
 public_exposure_risk: "Low"
-risk_category: "Security"
+risk_category: "Metadata"
 indigenous_rights_flag: false
 redaction_required: false
-data_steward: "KFM FAIR+CARE Security Council"
+data_steward: "KFM FAIR+CARE Council"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
 
 provenance_chain:
-  - ".github/actions/security-scan/config/README.md@v11.2.3"
+  - ".github/actions/stac-validate/README.md@v11.2.2"
+  - ".github/actions/stac-validate/README.md@v11.2.3"
 
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -58,12 +60,12 @@ ontology_alignment:
   prov_o: "prov:Plan"
   geosparql: "geo:FeatureCollection"
 
-json_schema_ref: "../../../../schemas/json/github-actions-security-scan-v11.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/github-actions-security-scan-v11-shape.ttl"
+json_schema_ref: "../../../schemas/json/github-actions-stac-validate-v11.schema.json"
+shape_schema_ref: "../../../schemas/shacl/github-actions-stac-validate-v11-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:github-actions:security-scan:config:v11.2.3"
-semantic_document_id: "kfm-action-security-scan-config"
-event_source_id: "ledger:.github/actions/security-scan/config/README.md"
+doc_uuid: "urn:kfm:doc:github-actions:stac-validate:v11.2.3"
+semantic_document_id: "kfm-action-stac-validate"
+event_source_id: "ledger:.github/actions/stac-validate/README.md"
 immutability_status: "mutable-plan"
 machine_extractable: true
 
@@ -83,26 +85,28 @@ accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "United States / Kansas"
 lifecycle_stage: "stable"
 ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next security-scan config update"
+sunset_policy: "Superseded upon next stac-validate action update"
 
 prov_profile: "PROV-O Plan + KFM Governance Extensions"
-openlineage_profile: "OpenLineage v2.5 · CI/CD and security pipeline events"
+openlineage_profile: "OpenLineage v2.5 · CI/CD and metadata pipeline events"
 ---
 
 <div align="center">
 
-# 🔧 **Kansas Frontier Matrix — Security Scan Configuration**
-`.github/actions/security-scan/config/`
+# 🛰 **Kansas Frontier Matrix — STAC Validation Composite Action**
+`.github/actions/stac-validate/`
 
-**Purpose**  
-Define the **governed configuration surface** for the `security-scan` composite action — including
-tool enablement, severity thresholds, ignore rules, and workflow-hardening policy.
+**Purpose**
+Provide a **single, governed entrypoint** for validating **STAC 1.x Items and Collections** under the KFM‑STAC v11 profile, ensuring:
 
-This configuration is designed to be:
+- Correct **STAC structure & required fields**
+- Proper **spatiotemporal metadata** (GeoJSON, bbox, datetime)
+- **Licensing, provenance, and FAIR+CARE hooks** for downstream governance
+- Clean, machine‑readable validation output for CI/CD and telemetry
 
-- **Deterministic** — same repo + same config → same policy decision.
-- **Config-driven** — workflows pass *inputs*, config files hold *policy*.
-- **Auditable** — changes are reviewable, versioned, and governance-linked.
+This action is invoked primarily by:
+
+- `.github/workflows/stac_validate.yml` → **governed STAC gate** for KFM.
 
 </div>
 
@@ -110,29 +114,22 @@ This configuration is designed to be:
 
 ## 📘 Overview
 
-This directory contains **policy configuration** consumed by `.github/actions/security-scan/entrypoint.sh`
-(and any helper scripts) to standardize security scanning behavior across KFM workflows.
+The `stac-validate` action implements KFM’s **STAC validation layer**:
 
-### What belongs here
+- Validates **STAC Items & Collections** in `data/stac/**` against:
+  - **OGC STAC 1.x** core specification
+  - **KFM-STAC v11 profile** (project‑specific extensions & conventions)
+- Checks **GeoJSON geometry & bbox** consistency, `datetime` / `start_datetime` / `end_datetime`, and asset metadata fields.
+- Ensures key **provenance & licensing** fields are present and consistent with KFM governance.
+- Produces **structured logs** suitable for `telemetry_export.yml` and catalog dashboards.
 
-- Tool selection and enablement flags (dependency/secret/workflow scanners).
-- Severity thresholds (fail vs warn vs ignore).
-- Ignore rules (scoped and justified; never blanket-ignores).
-- Workflow hardening rules (permissions, pinned actions, disallowed events).
+Design goals:
 
-### What must NOT belong here (normative)
+- **Deterministic** — same STAC inputs → same outcome.
+- **Config-driven** — profile & extension behavior controlled via config files.
+- **Composable** — callable from any workflow gate that needs STAC validation.
 
-- Secrets, credentials, tokens, or private keys.
-- PII/PHI.
-- Any data that would violate sovereignty policy or governance constraints.
-
-### Precedence (normative)
-
-When multiple configuration sources are present, apply precedence in this order:
-
-1. **Workflow inputs** (explicit per-run overrides)
-2. **Repository config files** in this directory
-3. **Action defaults** (embedded fallbacks)
+Any invalid STAC entity MUST cause this action (and upstream workflows) to fail, blocking merges or releases.
 
 ---
 
@@ -140,159 +137,268 @@ When multiple configuration sources are present, apply precedence in this order:
 
 ~~~text
 .github/
-└── 📁 actions/                                        # Reusable composite actions
-    └── 📁 security-scan/                              # Consolidated security scan action
-        └── 📁 config/                                 # ← Governed policy configuration
-            ├── 📄 README.md                           # ← This file
-            ├── 🧾 tools.yml                           # Tool enablement + thresholds + ignore rules
-            └── 🧾 workflow_policy.yml                 # Workflow hardening rules (permissions, pins, events)
+└── 🧱 actions/                                   # Reusable composite actions
+    └── 🛰 stac-validate/                         # STAC validation action
+        ├── 📄 README.md                          # ← This file (governance & usage)
+        ├── ⚙️ action.yml                         # GitHub Action descriptor (composite / shell)
+        ├── 🧱 entrypoint.sh                      # Main orchestrator script (bash)
+        ├── ⚙️ config/                            # STAC profile & validation config
+        │   ├── 🧾 profiles.yml                   # KFM-STAC profile IDs, options, strictness
+        │   ├── 🧾 collections.yml                # Collection-level conventions (ids, hierarchies)
+        │   └── 🧾 assets.yml                     # Asset-type rules (required fields, roles, media types)
+        └── 🧪 scripts/                           # Helper scripts (optional, language-agnostic)
+            ├── 🧬 run_stac_validator.py          # Core STAC validation wrapper
+            ├── 🧭 check_spatiotemporal.py        # Extra bbox/time consistency checks
+            └── 📊 summarize_stac_results.py      # Aggregates results → machine-readable summary
 ~~~
+
+> **Normative:** Any structural change to this directory MUST be reflected here and in  
+> `.github/workflows/stac_validate.yml`, plus relevant metadata docs in `docs/data/` & `docs/standards/`.
+
+---
+
+## 🧭 Context
+
+This action is part of KFM’s **catalog governance layer** (STAC/DCAT/PROV) and is designed to block:
+
+- Invalid STAC JSON (schema failures)
+- KFM-STAC profile violations (missing fields, inconsistent spatiotemporal data)
+- Governance-relevant metadata omissions (license, required provenance hooks)
+
+It is intended to be used as a **CI/CD gate** before publishing STAC outputs, generating tiles, ingesting to Neo4j, or attaching Story Nodes.
 
 ---
 
 ## 🧱 Architecture
 
-### 1) `tools.yml` contract (normative)
+### Action ID
 
-`tools.yml` defines:
+Within the KFM repository this action MAY be used in two forms:
 
-- Which scanners run
-- How findings are classified
-- What severities are policy-relevant
-- What (limited, scoped) ignore rules exist
-
-Recommended shape:
+1. **Direct script invocation** (current pattern in `stac_validate.yml`):
 
 ~~~yaml
-version: "v11"
-defaults:
-  fail_on:
-    critical: true
-    high: true
-    medium: false
-    low: false
-  redact_logs: true
-
-dependency_scanning:
-  enabled: true
-  tools:
-    pip_audit:
-      enabled: true
-      args: []
-    npm_audit:
-      enabled: true
-      args:
-        - "--audit-level=high"
-
-secret_scanning:
-  enabled: true
-  scan_history: false
-  tools:
-    gitleaks:
-      enabled: true
-      args: []
-ignore:
-  vulnerabilities:
-    - id: "CVE-2099-0000"
-      reason: "False positive (validated by maintainers); tracked in issue #<id>."
-      expires: "2026-06-30"
-  paths:
-    - pattern: "data/processed/**"
-      reason: "Generated artifacts (must still be secret-scanned upstream before landing)."
-      expires: "2026-06-30"
-outputs:
-  summary_json: "_security-summary.json"
+- name: 🛰 Run STAC Validator (Composite Action)
+  run: |
+    set -euo pipefail
+    bash .github/actions/stac-validate/entrypoint.sh data/stac
 ~~~
 
-**Rules:**
-
-- `ignore.*` entries MUST include a **reason** and an **expiry**.
-- Ignore rules MUST be **narrowly scoped** (IDs or paths) and MUST NOT disable whole classes of scanning.
-- If `outputs.summary_json` is set, the action SHOULD write a machine-readable summary at that path.
-
-### 2) `workflow_policy.yml` contract (normative)
-
-`workflow_policy.yml` defines workflow hardening checks for `.github/workflows/**`.
-
-Recommended shape:
+2. **Composite action usage** (if `action.yml` is defined as a composite action):
 
 ~~~yaml
-version: "v11"
-workflow_hardening:
-  enabled: true
-
-  require_minimal_permissions: true
-  require_pinned_actions: true
-
-  disallow_events:
-    - "pull_request_target"
-
-  required_permissions:
-    contents: "read"
-
-  allow_unpinned_actions:
-    - "actions/checkout@v4"
-    - "actions/setup-python@v5"
+- name: 🛰 Run STAC Validator (Composite Action)
+  uses: ./.github/actions/stac-validate
+  with:
+    stac_root: "data/stac"
+    profile: "kfm-stac-v11"
+    config_dir: ".github/actions/stac-validate/config"
 ~~~
 
-**Rules:**
+> The repo MUST treat these forms as behaviorally equivalent. If `action.yml` is updated,  
+> `.github/workflows/stac_validate.yml` MUST be updated to use the canonical interface.
 
-- If `require_pinned_actions: true`, workflows MUST NOT use floating tags except those explicitly allowlisted.
-- `disallow_events` violations MUST be treated as policy-relevant failures unless explicitly waived by governance.
+### Inputs (proposed, for `action.yml`)
 
-### 3) JSON Schema alignment (normative)
+| Name         | Type   | Default                                | Description                                                                 |
+|--------------|--------|----------------------------------------|-----------------------------------------------------------------------------|
+| `stac_root`  | string | `data/stac`                            | Root directory containing STAC Collections/Items.                          |
+| `profile`    | string | `kfm-stac-v11`                         | STAC profile identifier (e.g., `kfm-stac-v11`).                            |
+| `config_dir` | string | `.github/actions/stac-validate/config` | Directory with profile/asset/collection config.                            |
+| `fail_fast`  | bool   | `true`                                 | If `true`, stop at first critical failure; otherwise validate everything.  |
+| `summary`    | string | `""`                                   | Optional path to write JSON summary (e.g., `_stac-validate-summary.json`). |
 
-Any additions or changes to the configuration surface MUST be reflected in:
+> **Schema note:** These inputs MUST be reflected in  
+> `schemas/json/github-actions-stac-validate-v11.schema.json`.
 
-- `schemas/json/github-actions-security-scan-v11.schema.json`
-- `schemas/shacl/github-actions-security-scan-v11-shape.ttl`
+### Outputs (proposed)
+
+| Name                  | Type   | Description                                                            |
+|-----------------------|--------|------------------------------------------------------------------------|
+| `items_checked`       | number | Number of STAC Items validated.                                       |
+| `collections_checked` | number | Number of STAC Collections validated.                                 |
+| `issues_found`        | number | Total number of validation issues discovered.                         |
+| `severity_max`        | string | Highest severity observed (`none`, `warning`, `error`, `critical`).   |
+| `summary_path`        | string | Path to JSON summary, if produced.                                    |
+
+These outputs are intended for internal workflows (e.g., telemetry aggregation, dashboards).
+
+### Behavior
+
+At a high level, the action MUST:
+
+1. **Discover STAC content**
+   - Recursively traverse `stac_root` for `collection.json` and Item JSON files.
+   - Ignore non‑JSON or non‑STAC files unless explicitly configured.
+
+2. **Validate against STAC spec + KFM profile**
+   - Use a STAC validator (CLI or library) via `run_stac_validator.py`.
+   - Apply the selected `profile` and any extensions from `config/`.
+   - Distinguish between **schema errors** and **profile violations**.
+
+3. **Check spatiotemporal consistency** (via `check_spatiotemporal.py`)
+   - Validate GeoJSON geometry + `bbox` consistency.
+   - Check `datetime` vs `start_datetime`/`end_datetime`.
+   - Verify CRS assumptions are consistent with KFM-STAC v11 conventions.
+
+4. **Enforce governance‑linked metadata**
+   - Ensure presence of `license`, `providers`, and key lineage/provenance fields.
+   - Verify references to FAIR+CARE and sovereignty policies when required.
+   - Surface violations as **errors** when they breach KFM governance contracts.
+
+5. **Summarize results**
+   - Aggregate per‑file results into a single JSON summary (`summarize_stac_results.py`).
+   - Include counts, severities, and per‑file references suitable for dashboards.
+
+6. **Fail on policy‑relevant issues**
+   - Exit non‑zero when errors/critical issues are present.
+   - Allow warnings to pass but reflect them in summaries and logs.
+
+### Implementation Notes
+
+- `entrypoint.sh` SHOULD:
+  - Use strict bash flags (`set -euo pipefail`).
+  - Accept `stac_root` as its first argument and optional flags thereafter.
+  - Orchestrate `run_stac_validator.py`, `check_spatiotemporal.py`, and summarization.
+
+- `run_stac_validator.py` SHOULD:
+  - Integrate with a STAC validator library/CLI.
+  - Respect `profile` and `config_dir`.
+  - Emit structured JSON (file → list of issues & severities).
+
+- `check_spatiotemporal.py` SHOULD:
+  - Parse geometry, `bbox`, and times.
+  - Add additional issues to the same structured output format.
+
+- `summarize_stac_results.py` SHOULD:
+  - Merge tool outputs into a unified schema.
+  - Respect severity thresholds.
+  - Optionally write a summary JSON file at the `summary` path.
+
+Any change to:
+
+- STAC profile behavior,
+- severity thresholds, or
+- mapping from validator output → policy decisions
+
+MUST be:
+
+1. Reflected in `config/profiles.yml` (and related config files).
+2. Documented in this README under **Architecture → Behavior**.
+3. Tested via `.github/workflows/stac_validate.yml` and updated examples in `docs/data/`.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-### Local sanity checks (recommended)
+### Example usage from `.github/workflows/stac_validate.yml`
 
-- Validate YAML syntax (`tools.yml`, `workflow_policy.yml`).
-- Run the action entrypoint against a known-safe path and confirm:
-  - Fail/warn behavior matches configured thresholds
-  - Ignore rules apply only where expected
-  - No raw secrets appear in logs
+~~~yaml
+- name: 🛰 Run STAC Validator (Composite Action)
+  run: |
+    set -euo pipefail
+    roots=("data/stac")
+    for root in "${roots[@]}"; do
+      if [[ -d "$root" ]]; then
+        echo "Validating STAC root: $root"
+        bash .github/actions/stac-validate/entrypoint.sh "$root"
+      else
+        echo "No STAC directory at $root; skipping."
+      fi
+    done
+~~~
 
-### CI expectations (normative)
+### As a composite action
 
-- CI MUST fail if:
-  - YAML is invalid
-  - Schema/shape validation fails
-  - Ignore rules are missing `reason` or `expires`
-  - Workflow hardening rules are violated (when enabled)
+~~~yaml
+jobs:
+  stac-validate:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🛰 Validate STAC 1.x (KFM-STAC v11)
+        uses: ./.github/actions/stac-validate
+        with:
+          stac_root: "data/stac"
+          profile: "kfm-stac-v11"
+          config_dir: ".github/actions/stac-validate/config"
+          fail_fast: true
+          summary: "_stac-validate-summary.json"
+~~~
+
+### Determinism & failure mode
+
+- The action MUST exit non‑zero if any STAC Collection/Item fails schema validation or violates KFM‑STAC v11 requirements.
+- Validation tooling SHOULD be pinned (version-locked) in CI for reproducible outcomes.
+- If `fail_fast: false`, the action SHOULD validate all discovered STAC files and return a combined failure.
+
+---
+
+## 📦 Data & Metadata
+
+This action is designed to treat STAC JSON as governed metadata artifacts:
+
+- Inputs:
+  - `data/stac/**` (Collections and Items)
+  - `.github/actions/stac-validate/config/**` (profile and rule configuration)
+
+- Outputs (optional):
+  - `_stac-validate-summary.json` (or the configured `summary` path)
+
+Where present, summaries SHOULD be compatible with KFM telemetry export tooling and must avoid embedding:
+
+- raw secrets (never)
+- PII (never)
+- disallowed precise coordinates for protected locations (see sovereignty policy)
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+
+- Validates STAC Items and Collections as catalog-first assets.
+- Encourages stable IDs and consistent spatiotemporal fields (`geometry`, `bbox`, `datetime`, `start_datetime`, `end_datetime`).
+
+### DCAT
+
+- Validation outcomes can be summarized into catalog health signals suitable for DCAT-aligned publishing pipelines.
+
+### PROV-O
+
+- Validation runs are treated as pipeline activities; summary outputs can be attached to provenance traces as run artifacts.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-- Changes to thresholds and ignores are **governance-relevant**.
-- Any ignore rule that suppresses a **critical/high** finding MUST be:
-  - time-limited (`expires`)
-  - justified (`reason`)
-  - traceable (issue/ticket link where applicable)
-- Telemetry generated from these configs MUST remain non-sensitive (no secrets, no PII, no sensitive locations).
+- This action is governed under KFM’s FAIR+CARE posture and must:
+  - enforce required licensing/provenance fields as policy-relevant metadata
+  - avoid leaking sensitive site locations in logs or telemetry
+  - remain deterministic and audit-friendly (clear failures, clear summaries)
+
+Telemetry MUST NOT include:
+
+- raw coordinates of sensitive sites beyond what is allowed in governed STAC outputs
+- any non-governed or internal STAC drafts not intended for publication
+
+Where necessary, telemetry SHOULD be aggregated (e.g., counts per collection) rather than per-feature details.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                 |
-|--------:|------------|-------------------------------------------------------------------------|
-| v11.2.3 | 2025-12-13 | Initial governed README for `security-scan/config`; defined config contracts. |
-
----
+| Version | Date       | Summary                                                                                                  |
+|--------:|------------|----------------------------------------------------------------------------------------------------------|
+| v11.2.3 | 2025-12-09 | Aligned with KFM-MDP v11.2.6; documented inputs/outputs; clarified KFM-STAC v11 profile integration.    |
+| v11.2.2 | 2025-11-28 | Initial governed README for stac-validate; aligned with `stac_validate.yml` and KFM STAC catalog flows. |
 
 <div align="center">
 
-🔧 **Kansas Frontier Matrix — Security Scan Configuration (v11.2.3)**  
-Policy-as-Code · FAIR+CARE-Governed · CI-Safe  
+🛰 **Kansas Frontier Matrix — STAC Validation Composite Action (v11.2.3)**
+Catalog-First · FAIR+CARE-Governed · Provenance-Aware
 
-[⬅ Security Scan Action README](../README.md) · [⬅ GitHub Infra Overview](../../README.md) · [🛡 Security Policy](../../../SECURITY.md) · [📚 Security Governance](../../../../docs/security/README.md)
+[⬅ GitHub Infra Overview](../../README.md) · [📊 CI/CD Workflows](../../workflows/README.md) · [📚 Data & STAC Standards](../../../docs/data/README.md)  
+[⚖ Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md) · [🧭 FAIR+CARE](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) · [🪶 Sovereignty Policy](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
