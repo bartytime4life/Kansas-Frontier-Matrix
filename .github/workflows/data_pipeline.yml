@@ -1,13 +1,13 @@
 # .github/workflows/data_pipeline.yml
 # 🔁 Kansas Frontier Matrix — Data Pipeline Contracts & Lineage Governance
-# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# v11.2.6 — Stable / Governed (KFM-PDC v11)
 #
 # Purpose:
 #   Enforce governed, deterministic ETL / data pipeline behavior across KFM by:
 #     - Validating pipeline configs against KFM-PDC v11 contracts
-#     - Dry‑running or testing ETL pipelines in a controlled CI environment
-#     - Verifying lineage / OpenLineage output and PROV-O consistency
-#     - Emitting metrics for downstream telemetry_export.yml
+#     - Executing CI-safe dry-runs (stage/test mode; no prod side effects)
+#     - Validating lineage / OpenLineage outputs and PROV-O consistency
+#     - Emitting optional metrics for downstream telemetry_export.yml
 #
 # Governance Context:
 #   - KFM-PDC v11 (data pipeline & contract spec)
@@ -34,6 +34,8 @@ on:
       - "scripts/validate_pipelines.py"
       - "scripts/run_etl_dryrun.py"
       - "scripts/validate_lineage.py"
+      - "scripts/collect_pipeline_metrics.py"
+      - ".github/actions/schema-validate/**"
       - ".github/workflows/data_pipeline.yml"
   push:
     branches:
@@ -51,6 +53,8 @@ on:
       - "scripts/validate_pipelines.py"
       - "scripts/run_etl_dryrun.py"
       - "scripts/validate_lineage.py"
+      - "scripts/collect_pipeline_metrics.py"
+      - ".github/actions/schema-validate/**"
       - ".github/workflows/data_pipeline.yml"
   schedule:
     # Nightly contract & dry-run validation on default branch
@@ -62,9 +66,9 @@ concurrency:
   group: data-pipeline-${{ github.ref }}
   cancel-in-progress: true
 
+# Minimal permissions (no write required for this workflow)
 permissions:
   contents: read
-  actions: read
 
 defaults:
   run:
@@ -72,13 +76,23 @@ defaults:
 
 env:
   PYTHON_VERSION: "3.11"
+
+  # Determinism / reproducibility knobs (scripts may optionally read these)
+  TZ: "UTC"
+  PYTHONHASHSEED: "0"
+  KFM_RUN_MODE: "ci"
+  KFM_ENV: "stage"
+
   # Tunable paths; align with repo layout
   KFM_PIPELINE_CONFIG_ROOT: "config/pipelines"
   KFM_PIPELINE_SCHEMA_DIR: "schemas/pipelines"
   KFM_PIPELINE_SRC_ROOT: "src/pipelines"
+  KFM_ETL_SRC_ROOT: "src/etl"
+
   KFM_DATA_RAW_ROOT: "data/raw"
   KFM_DATA_WORK_ROOT: "data/work"
   KFM_DATA_PROCESSED_ROOT: "data/processed"
+
   # Optional metrics file picked up by telemetry_export.yml
   KFM_PIPELINE_METRICS_OUT: "data-pipeline-metrics.json"
 
@@ -86,10 +100,15 @@ jobs:
   ###########################################################################
   # 1. Pipeline Config & Contract Validation (KFM-PDC v11)
   ###########################################################################
-  pipeline-configs:
-    name: "🧾 Pipeline Config & Contract Validation (KFM-PDC v11)"
+  pipeline-contracts:
+    name: "🧾 Pipeline Contract Validation (KFM-PDC v11)"
     runs-on: ubuntu-22.04
     timeout-minutes: 30
+
+    outputs:
+      has_configs: ${{ steps.detect.outputs.has_configs }}
+      has_schemas: ${{ steps.detect.outputs.has_schemas }}
+      has_sources: ${{ steps.detect.outputs.has_sources }}
 
     steps:
       - name: 📥 Checkout repository
@@ -97,24 +116,46 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: 🔎 Detect Pipeline Configs
-        id: detect_configs
+      - name: 🔎 Detect pipeline inputs (configs / schemas / sources)
+        id: detect
         run: |
           set -euo pipefail
+
+          has_configs="false"
           if [[ -d "${KFM_PIPELINE_CONFIG_ROOT}" ]]; then
-            echo "has_configs=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_configs=false" >> "$GITHUB_OUTPUT"
-            echo "::notice title=Pipeline contracts::No ${KFM_PIPELINE_CONFIG_ROOT} directory found; skipping contract validation."
+            if find "${KFM_PIPELINE_CONFIG_ROOT}" -type f \( -name "*.yml" -o -name "*.yaml" -o -name "*.json" \) | grep -q .; then
+              has_configs="true"
+            fi
           fi
 
-      - name: ⏭ Skip pipeline contract validation (no configs)
-        if: steps.detect_configs.outputs.has_configs == 'false'
+          has_schemas="false"
+          if [[ -d "${KFM_PIPELINE_SCHEMA_DIR}" ]]; then
+            if find "${KFM_PIPELINE_SCHEMA_DIR}" -type f -name "*.json" | grep -q .; then
+              has_schemas="true"
+            fi
+          fi
+
+          has_sources="false"
+          if [[ -d "${KFM_PIPELINE_SRC_ROOT}" || -d "${KFM_ETL_SRC_ROOT}" ]]; then
+            has_sources="true"
+          fi
+
+          echo "has_configs=${has_configs}" >> "$GITHUB_OUTPUT"
+          echo "has_schemas=${has_schemas}" >> "$GITHUB_OUTPUT"
+          echo "has_sources=${has_sources}" >> "$GITHUB_OUTPUT"
+
+          echo "Detected:"
+          echo "  - configs: ${has_configs} (${KFM_PIPELINE_CONFIG_ROOT})"
+          echo "  - schemas: ${has_schemas} (${KFM_PIPELINE_SCHEMA_DIR})"
+          echo "  - sources: ${has_sources} (${KFM_PIPELINE_SRC_ROOT} / ${KFM_ETL_SRC_ROOT})"
+
+      - name: ⏭ Skip contracts (no pipeline configs present)
+        if: steps.detect.outputs.has_configs == 'false'
         run: |
-          echo "No pipeline configs present; nothing to validate for this run."
+          echo "No pipeline configs found under ${KFM_PIPELINE_CONFIG_ROOT}; contract validation is a no-op."
 
       - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
-        if: steps.detect_configs.outputs.has_configs == 'true'
+        if: steps.detect.outputs.has_configs == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -124,41 +165,51 @@ jobs:
             scripts/requirements-pipelines.txt
 
       - name: 📦 Install Pipeline Tooling
-        if: steps.detect_configs.outputs.has_configs == 'true'
+        if: steps.detect.outputs.has_configs == 'true'
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
           if [[ -f scripts/requirements-pipelines.txt ]]; then
             pip install --no-cache-dir -r scripts/requirements-pipelines.txt
+          elif [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          else
+            echo "::warning::No requirements file found; assuming pipeline validators are self-contained."
           fi
 
-      # Core JSON/YAML schema validation for pipeline configs (KFM-PDC v11)
       - name: 🧬 Validate Pipeline Config Schemas (KFM-PDC v11)
-        if: steps.detect_configs.outputs.has_configs == 'true'
+        if: steps.detect.outputs.has_configs == 'true'
         run: |
           set -euo pipefail
-          if [[ -d ".github/actions/schema-validate" && -d "${KFM_PIPELINE_SCHEMA_DIR}" ]]; then
-            bash .github/actions/schema-validate/entrypoint.sh \
-              "${KFM_PIPELINE_SCHEMA_DIR}" \
-              "${KFM_PIPELINE_CONFIG_ROOT}"
-          else
-            echo "::error title=Missing schema validator::.github/actions/schema-validate or ${KFM_PIPELINE_SCHEMA_DIR} not found."
+
+          if [[ ! -d ".github/actions/schema-validate" ]]; then
+            echo "::error title=Missing schema validator::.github/actions/schema-validate not found."
             exit 1
           fi
 
-      # Optional additional contract checks (cross-pipeline invariants, etc.)
-      - name: 📐 Optional Contract Semantics Checks
-        if: steps.detect_configs.outputs.has_configs == 'true'
-        continue-on-error: true
+          if [[ "${{ steps.detect.outputs.has_schemas }}" != "true" ]]; then
+            echo "::error title=Missing pipeline schemas::${KFM_PIPELINE_SCHEMA_DIR} has no JSON schemas."
+            echo "KFM-PDC contract validation requires governed schemas under ${KFM_PIPELINE_SCHEMA_DIR}."
+            exit 1
+          fi
+
+          bash .github/actions/schema-validate/entrypoint.sh \
+            "${KFM_PIPELINE_SCHEMA_DIR}" \
+            "${KFM_PIPELINE_CONFIG_ROOT}"
+
+      - name: ✅ Validate Pipeline Contract Semantics (Required)
+        if: steps.detect.outputs.has_configs == 'true'
         run: |
           set -euo pipefail
-          if [[ -f scripts/validate_pipelines.py ]]; then
-            python scripts/validate_pipelines.py \
-              --config-root "${KFM_PIPELINE_CONFIG_ROOT}" \
-              --src-root "${KFM_PIPELINE_SRC_ROOT}"
-          else
-            echo "scripts/validate_pipelines.py not found; skipping semantic contract checks."
+          if [[ ! -f scripts/validate_pipelines.py ]]; then
+            echo "::error title=Missing contract validator::scripts/validate_pipelines.py not found."
+            echo "Governed pipelines require semantic contract validation."
+            exit 1
           fi
+
+          python scripts/validate_pipelines.py \
+            --config-root "${KFM_PIPELINE_CONFIG_ROOT}" \
+            --src-root "${KFM_PIPELINE_SRC_ROOT}"
 
   ###########################################################################
   # 2. Pipeline Dry-Run / Tests (Stage)
@@ -168,9 +219,10 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 60
     needs:
-      - pipeline-configs
+      - pipeline-contracts
 
-    # Allow manual and PR runs; for scheduled runs, we still dry-run
+    if: needs.pipeline-contracts.outputs.has_configs == 'true' && needs.pipeline-contracts.outputs.has_sources == 'true'
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
@@ -194,35 +246,16 @@ jobs:
             pip install --no-cache-dir -r scripts/requirements-pipelines.txt
           elif [[ -f requirements.txt ]]; then
             pip install --no-cache-dir -r requirements.txt
-          fi
-
-      - name: 🔎 Check for ETL code presence
-        id: detect_etl
-        run: |
-          set -euo pipefail
-          if [[ -d "${KFM_PIPELINE_SRC_ROOT}" || -d "src/etl" ]]; then
-            echo "has_etl=true" >> "$GITHUB_OUTPUT"
           else
-            echo "has_etl=false" >> "$GITHUB_OUTPUT"
-            echo "::notice title=ETL tests::No ${KFM_PIPELINE_SRC_ROOT} or src/etl directory found; skipping dry-run."
+            echo "::warning::No requirements file found; dry-run may fail if dependencies are missing."
           fi
 
-      - name: ⏭ Skip pipeline dry-run (no ETL sources)
-        if: steps.detect_etl.outputs.has_etl == 'false'
-        run: |
-          echo "No ETL sources detected; nothing to dry-run for this run."
-
-      # Expected behavior of scripts/run_etl_dryrun.py:
-      #   - Execute pipelines in a "stage" or "test" mode
-      #   - Use WORK directories and/or in-memory sinks, not production storage
-      #   - Exit non-zero on contract violations, failed tasks, or schema mismatches
-      - name: 🧪 Run Pipeline Dry-Run (Stage / Test Mode)
-        if: steps.detect_etl.outputs.has_etl == 'true'
+      - name: 🧪 Run Pipeline Dry-Run (CI Stage Mode)
         run: |
           set -euo pipefail
           if [[ ! -f scripts/run_etl_dryrun.py ]]; then
-            echo "::error title=Missing dry-run script::scripts/run_etl_dryrun.py not found."
-            echo "This script is required to execute pipeline dry-runs in CI."
+            echo "::error title=Missing dry-run runner::scripts/run_etl_dryrun.py not found."
+            echo "Governed pipelines require a CI-safe dry-run entrypoint."
             exit 1
           fi
 
@@ -242,8 +275,11 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 40
     needs:
-      - pipeline-configs
+      - pipeline-contracts
       - pipeline-dryrun
+
+    # Run whenever dryrun was attempted (even if it failed), but skip if dryrun was skipped
+    if: always() && needs.pipeline-dryrun.result != 'skipped'
 
     steps:
       - name: 📥 Checkout repository
@@ -266,19 +302,18 @@ jobs:
           python -m pip install --upgrade pip
           if [[ -f scripts/requirements-pipelines.txt ]]; then
             pip install --no-cache-dir -r scripts/requirements-pipelines.txt
+          elif [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          else
+            echo "::warning::No requirements file found; lineage validation may fail if deps are missing."
           fi
 
-      # Expected behavior of scripts/validate_lineage.py:
-      #   - Inspect lineage / OpenLineage outputs produced by pipelines
-      #   - Validate them against PROV-O / OpenLineage patterns
-      #   - Ensure that each pipeline step has associated Entities/Activities/Agents
-      #   - Exit non-zero on missing lineage or structural violations
-      - name: 📡 Validate Lineage & OpenLineage Events
+      - name: 📡 Validate Lineage & OpenLineage Events (Required)
         run: |
           set -euo pipefail
           if [[ ! -f scripts/validate_lineage.py ]]; then
             echo "::error title=Missing lineage validator::scripts/validate_lineage.py not found."
-            echo "This script is required to validate pipeline lineage output."
+            echo "Governed pipelines require lineage validation (OpenLineage / PROV-O alignment)."
             exit 1
           fi
 
@@ -287,7 +322,6 @@ jobs:
             --src-root "${KFM_PIPELINE_SRC_ROOT}" \
             --data-root "${KFM_DATA_PROCESSED_ROOT}"
 
-      # Optional: Emit lineage metrics file for telemetry_export.yml
       - name: 📊 Optional Pipeline Metrics Collection
         continue-on-error: true
         run: |
@@ -311,29 +345,33 @@ jobs:
           if-no-files-found: ignore
 
   ###########################################################################
-  # 4. Summary for Data Pipelines (for GitHub UI & telemetry_export.yml)
+  # 4. Summary (for GitHub UI & telemetry_export.yml)
   ###########################################################################
   pipeline-summary:
     name: "🧾 Data Pipeline Governance Summary"
     runs-on: ubuntu-22.04
     needs:
-      - pipeline-configs
+      - pipeline-contracts
       - pipeline-dryrun
       - pipeline-lineage
     if: always()
 
     steps:
-      - name: ✏️ Emit Data Pipeline Summary
+      - name: 🧾 Emit Data Pipeline Summary
         run: |
           set -euo pipefail
           {
             echo "## 🔁 Data Pipeline Governance Summary"
             echo ""
-            echo "- Pipeline configs job: ${{ needs.pipeline-configs.result }}"
-            echo "- Pipeline dry-run job: ${{ needs.pipeline-dryrun.result }}"
-            echo "- Lineage validation job: ${{ needs.pipeline-lineage.result }}"
+            echo "- Contract validation: ${{ needs.pipeline-contracts.result }}"
+            echo "- Dry-run: ${{ needs.pipeline-dryrun.result }}"
+            echo "- Lineage validation: ${{ needs.pipeline-lineage.result }}"
             echo ""
-            echo "This workflow enforces KFM-PDC v11 data contracts, dry-runs ETL pipelines,"
-            echo "and validates lineage / OpenLineage output as part of the governed CI/CD plan."
+            echo "Detected inputs:"
+            echo "- Pipeline configs present: \`${{ needs.pipeline-contracts.outputs.has_configs }}\`"
+            echo "- Pipeline schemas present: \`${{ needs.pipeline-contracts.outputs.has_schemas }}\`"
+            echo "- Pipeline sources present: \`${{ needs.pipeline-contracts.outputs.has_sources }}\`"
+            echo ""
+            echo "This workflow enforces KFM-PDC v11 data contracts, runs CI-safe pipeline dry-runs,"
+            echo "and validates lineage (OpenLineage / PROV-O alignment) as part of the governed CI/CD plan."
           } >> "${GITHUB_STEP_SUMMARY}"
-
