@@ -1,52 +1,52 @@
-# .github/workflows/site.yml
-# 🌐 Kansas Frontier Matrix — Web & Docs Build / Deploy Pipeline
-# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# .github/workflows/telemetry_export.yml
+# 📊 Kansas Frontier Matrix — CI/CD & AI Telemetry Export
+# v11.2.6 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 #
 # Purpose:
-#   - Build and test the KFM web client (MapLibre/Cesium or equivalent).
-#   - Build the KFM docs site.
-#   - On governed branches, deploy web + docs via a single, scripted interface.
+#   Aggregate CI/CD, governance, security, and AI/Focus Mode metrics into a
+#   governed telemetry document (github-infra-telemetry.json), validate it
+#   against telemetry schemas, and expose it as an artifact for releases.
 #
 # Governance Context:
-#   - Tied into CI/CD architecture documented in .github/workflows/README.md
-#   - Must respect FAIR+CARE and sovereignty governance enforced elsewhere.
-#   - Deployments use config-driven scripts, not ad‑hoc commands in YAML.
+#   - Telemetry schemas (github-workflows-v4, security-policy, energy, carbon)
+#   - PROV-O/OpenLineage event modeling
+#   - FAIR+CARE-aligned observability & sustainability reporting
+#
+# NOTE:
+#   This workflow relies on repo-local scripts for the heavy lifting:
+#     - scripts/aggregate_telemetry.py
+#     - scripts/validate_telemetry.py   (optional)
+#     - scripts/print_version.py        (optional, for version scoping)
 
-name: 🌐 site
+name: 📊 telemetry-export
 
 on:
-  pull_request:
-    branches:
-      - main
-      - "release/**"
-    paths:
-      - "web/**"
-      - "docs/**"
-      - "package.json"
-      - "package-lock.json"
-      - "docs/**"
-      - "scripts/build_docs.py"
-      - "scripts/build_web.py"
-      - ".github/workflows/site.yml"
-  push:
-    branches:
-      - main
-      - "release/**"
-    paths:
-      - "web/**"
-      - "docs/**"
-      - "package.json"
-      - "package-lock.json"
-      - "docs/**"
-      - "scripts/build_docs.py"
-      - "scripts/build_web.py"
-      - ".github/workflows/site.yml"
+  # Run after key governed workflows complete
+  workflow_run:
+    workflows:
+      - "🧪 ci"
+      - "📚 docs-validate"
+      - "🛰 stac-validate"
+      - "🗂 dcat-validate"
+      - "🧬 jsonld-validate"
+      - "⚖ faircare-validate"
+      - "🧊 h3-generalization"
+      - "🔐 security-audit"
+      - "📦 sbom-verify"
+      - "🔁 data-pipeline"
+      - "🤖 ai-behavior-check"
+      - "🎯 focusmode-mlops"
+      - "🌐 site"
+    types:
+      - completed
+
+  # Manual trigger for backfills / debugging
   workflow_dispatch: {}
 
-# Avoid overlapping site builds/deploys on same ref
+# Avoid overlapping telemetry exports on the same commit
 concurrency:
-  group: site-${{ github.ref }}
-  cancel-in-progress: false
+  group: telemetry-export-${{ github.event.workflow_run.head_sha || github.sha }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -58,257 +58,29 @@ defaults:
 
 env:
   PYTHON_VERSION: "3.11"
-  NODE_VERSION: "20"
-  WEB_ROOT: "web"
-  DOCS_ROOT: "docs"
+  TELEMETRY_OUT: "github-infra-telemetry.json"
+  TELEMETRY_SCHEMA_DIR: "schemas/telemetry"
+  # Optional specialized schemas (if used by scripts)
+  TELEMETRY_SCHEMA_MAIN: "schemas/telemetry/github-workflows-v4.json"
+  TELEMETRY_SCHEMA_SECURITY: "schemas/telemetry/security-policy-v1.json"
+  TELEMETRY_SCHEMA_ENERGY: "schemas/telemetry/energy-v2.json"
+  TELEMETRY_SCHEMA_CARBON: "schemas/telemetry/carbon-v2.json"
+  RELEASES_ROOT: "releases"
 
 jobs:
-  ###########################################################################
-  # 1. BUILD WEB CLIENT
-  ###########################################################################
-  build-web:
-    name: "🌐 Build Web Client"
+  telemetry-export:
+    name: "📊 Aggregate & Validate Telemetry"
     runs-on: ubuntu-22.04
-    timeout-minutes: 40
+    timeout-minutes: 30
 
     steps:
-      - name: 📥 Checkout repository
+      - name: 📥 Checkout repository (same commit as triggering workflow)
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
-
-      - name: 🔎 Detect Web Project
-        id: detect_web
-        run: |
-          set -euo pipefail
-          if [[ -d "${WEB_ROOT}" && -f "${WEB_ROOT}/package.json" ]]; then
-            echo "has_web=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_web=false" >> "$GITHUB_OUTPUT"
-            echo "::notice title=Web build::No ${WEB_ROOT}/package.json; skipping web build."
-          fi
-
-      - name: ⏭ Skip Web Build (no project)
-        if: steps.detect_web.outputs.has_web == 'false'
-        run: |
-          echo "No web project detected; build-web job is a no-op."
-
-      - name: 🟦 Setup Node ${{ env.NODE_VERSION }}
-        if: steps.detect_web.outputs.has_web == 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-          cache-dependency-path: |
-            ${{ env.WEB_ROOT }}/package-lock.json
-            ${{ env.WEB_ROOT }}/npm-shrinkwrap.json
-
-      - name: 📦 Install Web Dependencies
-        if: steps.detect_web.outputs.has_web == 'true'
-        working-directory: ${{ env.WEB_ROOT }}
-        run: |
-          set -euo pipefail
-          if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
-            npm ci --ignore-scripts
-          else
-            npm install --ignore-scripts
-          fi
-
-      # If you have a dedicated build script, prefer that:
-      # scripts/build_web.py should encapsulate repo-specific logic.
-      - name: 🛠 Build Web (Script or NPM)
-        if: steps.detect_web.outputs.has_web == 'true'
-        run: |
-          set -euo pipefail
-
-          if [[ -f "scripts/build_web.py" ]]; then
-            echo "Using scripts/build_web.py to build web client."
-            python -m pip install --upgrade pip >/dev/null 2>&1 || true
-            python scripts/build_web.py \
-              --root "${WEB_ROOT}" \
-              --out "${WEB_ROOT}/build"
-          else
-            echo "scripts/build_web.py not found; falling back to npm build."
-            cd "${WEB_ROOT}"
-            # Run lint/tests if available, then build
-            npm run lint --if-present
-            npm test --if-present
-            npm run build --if-present
-          fi
-
-          # Normalize build output directory for artifact upload
-          if [[ -d "${WEB_ROOT}/dist" ]]; then
-            echo "WEB_BUILD_DIR=${WEB_ROOT}/dist" >> "$GITHUB_ENV"
-          elif [[ -d "${WEB_ROOT}/build" ]]; then
-            echo "WEB_BUILD_DIR=${WEB_ROOT}/build" >> "$GITHUB_ENV"
-          else
-            echo "::error title=Web build output missing::Expected ${WEB_ROOT}/dist or ${WEB_ROOT}/build."
-            exit 1
-          fi
-
-      - name: 📤 Upload Web Build Artifact
-        if: steps.detect_web.outputs.has_web == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: kfm-web-build
-          path: ${{ env.WEB_BUILD_DIR }}
-          if-no-files-found: error
-
-  ###########################################################################
-  # 2. BUILD DOCS SITE
-  ###########################################################################
-  build-docs:
-    name: "📚 Build Docs Site"
-    runs-on: ubuntu-22.04
-    timeout-minutes: 40
-
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: 🔎 Detect Docs Root
-        id: detect_docs
-        run: |
-          set -euo pipefail
-          if [[ -d "${DOCS_ROOT}" ]]; then
-            echo "has_docs=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_docs=false" >> "$GITHUB_OUTPUT"
-            echo "::notice title=Docs build::No ${DOCS_ROOT}/ directory present; skipping docs build."
-          fi
-
-      - name: ⏭ Skip Docs Build (no docs)
-        if: steps.detect_docs.outputs.has_docs == 'false'
-        run: |
-          echo "No docs directory; build-docs job is a no-op."
-
-      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
-        if: steps.detect_docs.outputs.has_docs == 'true'
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
-          cache-dependency-path: |
-            requirements.txt
-            docs/requirements.txt
-            scripts/requirements-docs.txt
-
-      - name: 📦 Install Docs Dependencies
-        if: steps.detect_docs.outputs.has_docs == 'true'
-        run: |
-          set -euo pipefail
-          python -m pip install --upgrade pip
-          if [[ -f scripts/requirements-docs.txt ]]; then
-            pip install --no-cache-dir -r scripts/requirements-docs.txt
-          elif [[ -f docs/requirements.txt ]]; then
-            pip install --no-cache-dir -r docs/requirements.txt
-          elif [[ -f requirements.txt ]]; then
-            pip install --no-cache-dir -r requirements.txt
-          fi
-
-      # Prefer a repo-specific script to encapsulate docs build logic.
-      - name: 🛠 Build Docs (Script or MkDocs/Sphinx)
-        if: steps.detect_docs.outputs.has_docs == 'true'
-        run: |
-          set -euo pipefail
-
-          DOCS_BUILD_DIR="docs/_site"
-
-          if [[ -f "scripts/build_docs.py" ]]; then
-            echo "Using scripts/build_docs.py to build docs."
-            python scripts/build_docs.py \
-              --root "${DOCS_ROOT}" \
-              --out "${DOCS_BUILD_DIR}"
-          elif command -v mkdocs >/dev/null 2>&1 && [[ -f "mkdocs.yml" || -f "docs/mkdocs.yml" ]]; then
-            echo "Using MkDocs to build docs."
-            if [[ -f "docs/mkdocs.yml" ]]; then
-              mkdocs build --config-file docs/mkdocs.yml --site-dir "${DOCS_BUILD_DIR}"
-            else
-              mkdocs build --site-dir "${DOCS_BUILD_DIR}"
-            fi
-          elif command -v sphinx-build >/dev/null 2>&1 && [[ -d "docs/source" ]]; then
-            echo "Using Sphinx to build docs."
-            sphinx-build -b html docs/source "${DOCS_BUILD_DIR}"
-          else
-            echo "::error title=Docs build tooling missing::No scripts/build_docs.py, mkdocs, or Sphinx configuration found."
-            exit 1
-          fi
-
-          echo "DOCS_BUILD_DIR=${DOCS_BUILD_DIR}" >> "$GITHUB_ENV"
-
-      - name: 📤 Upload Docs Build Artifact
-        if: steps.detect_docs.outputs.has_docs == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: kfm-docs-build
-          path: ${{ env.DOCS_BUILD_DIR }}
-          if-no-files-found: error
-
-  ###########################################################################
-  # 3. DEPLOY WEB + DOCS (Governed)
-  ###########################################################################
-  deploy:
-    name: "🚀 Deploy Web & Docs (Governed)"
-    runs-on: ubuntu-22.04
-    timeout-minutes: 45
-    needs:
-      - build-web
-      - build-docs
-
-    # Only deploy on push (not PR) to governed branches
-    if: github.event_name == 'push'
-
-    environment:
-      name: prod-web
-      url: https://kfm.example.org
-
-    permissions:
-      contents: read
-      id-token: write   # For OIDC-based deploys to cloud providers (if used)
-      actions: read
-
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-        with:
+          # Important for workflow_run: ensure we check out the workflow_run's commit
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 0
 
-      - name: 📥 Download Web Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: kfm-web-build
-          path: deploy/web
-        continue-on-error: true
-
-      - name: 📥 Download Docs Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: kfm-docs-build
-          path: deploy/docs
-        continue-on-error: true
-
-      - name: 🔎 Inspect Deploy Assets
-        id: inspect_assets
-        run: |
-          set -euo pipefail
-          has_web="false"
-          has_docs="false"
-
-          if [[ -d "deploy/web" ]]; then
-            has_web="true"
-          fi
-          if [[ -d "deploy/docs" ]]; then
-            has_docs="true"
-          fi
-
-          echo "has_web=${has_web}" >> "$GITHUB_OUTPUT"
-          echo "has_docs=${has_docs}" >> "$GITHUB_OUTPUT"
-
-          echo "Web deploy dir exists: ${has_web}"
-          echo "Docs deploy dir exists: ${has_docs}"
-
       - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
         with:
@@ -316,56 +88,136 @@ jobs:
           cache: pip
           cache-dependency-path: |
             requirements.txt
-            scripts/requirements-release.txt
-            scripts/requirements-deploy.txt
+            scripts/requirements-telemetry.txt
 
-      - name: 📦 Install Deploy Tooling
+      - name: 📦 Install Telemetry Tooling
         run: |
           set -euo pipefail
           python -m pip install --upgrade pip
-          if [[ -f scripts/requirements-deploy.txt ]]; then
-            pip install --no-cache-dir -r scripts/requirements-deploy.txt
-          elif [[ -f scripts/requirements-release.txt ]]; then
-            pip install --no-cache-dir -r scripts/requirements-release.txt
+          if [[ -f scripts/requirements-telemetry.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-telemetry.txt
           elif [[ -f requirements.txt ]]; then
             pip install --no-cache-dir -r requirements.txt
           fi
 
-      # Canonical, config-driven deploy entrypoint.
-      # Implement this script to push artifacts to GitHub Pages, S3, GCS, etc.
-      - name: 🚀 Deploy Web + Docs via Script
+      # --------------------------------------------------------------------
+      # 1. Determine version scope (optional but recommended)
+      # --------------------------------------------------------------------
+      - name: 🔖 Resolve Version (for releases/<version>/ wiring)
+        id: version
         run: |
           set -euo pipefail
+          ver="dev"
+          if [[ -f scripts/print_version.py ]]; then
+            if v=$(python scripts/print_version.py 2>/dev/null); then
+              ver="${v}"
+            fi
+          fi
+          echo "version=${ver}" >> "$GITHUB_OUTPUT"
+          echo "Resolved telemetry version scope: ${ver}"
 
-          if [[ ! -f "scripts/deploy_site.py" ]]; then
-            echo "::error title=Missing deploy script::scripts/deploy_site.py not found."
-            echo "This script must be implemented to define governed web/docs deployment."
+      # --------------------------------------------------------------------
+      # 2. Aggregate telemetry
+      # --------------------------------------------------------------------
+      - name: 📊 Aggregate Telemetry
+        run: |
+          set -euo pipefail
+          if [[ ! -f scripts/aggregate_telemetry.py ]]; then
+            echo "::error title=Missing telemetry aggregator::scripts/aggregate_telemetry.py not found."
+            echo "This script is required to aggregate telemetry into ${TELEMETRY_OUT}."
             exit 1
           fi
 
-          python scripts/deploy_site.py \
-            --web-root "deploy/web" \
-            --docs-root "deploy/docs" \
-            --has-web "${{ steps.inspect_assets.outputs.has_web }}" \
-            --has-docs "${{ steps.inspect_assets.outputs.has_docs }}" \
-            --env "prod"
+          python scripts/aggregate_telemetry.py \
+            --event-path "${GITHUB_EVENT_PATH}" \
+            --schema-dir "${TELEMETRY_SCHEMA_DIR}" \
+            --out "${TELEMETRY_OUT}" \
+            --version "${{ steps.version.outputs.version }}" \
+            --ref "${GITHUB_REF}" \
+            --sha "${GITHUB_SHA}"
 
-      - name: 🧾 Emit Site Deploy Summary
+      # --------------------------------------------------------------------
+      # 3. Validate telemetry JSON against schemas (optional hard gate)
+      #    - If validation tools exist, they run as gates.
+      #    - Artifact upload still happens via `if: always()`.
+      # --------------------------------------------------------------------
+      - name: ✅ Validate Telemetry JSON (Preferred: Custom Script)
+        if: always()
+        run: |
+          set -euo pipefail
+          if [[ -f scripts/validate_telemetry.py ]]; then
+            python scripts/validate_telemetry.py \
+              --telemetry "${TELEMETRY_OUT}" \
+              --schema "${TELEMETRY_SCHEMA_MAIN}" \
+              --energy-schema "${TELEMETRY_SCHEMA_ENERGY}" \
+              --carbon-schema "${TELEMETRY_SCHEMA_CARBON}" \
+              --security-schema "${TELEMETRY_SCHEMA_SECURITY}"
+          else
+            echo "scripts/validate_telemetry.py not found; skipping custom validation."
+          fi
+
+      - name: ✅ Validate Telemetry JSON (Fallback: schema-validate)
+        if: always()
+        run: |
+          set -euo pipefail
+          if [[ -d ".github/actions/schema-validate" ]]; then
+            bash .github/actions/schema-validate/entrypoint.sh \
+              "${TELEMETRY_SCHEMA_DIR}" \
+              "${TELEMETRY_OUT}"
+          else
+            echo ".github/actions/schema-validate not found; skipping fallback telemetry schema validation."
+          fi
+
+      # --------------------------------------------------------------------
+      # 4. Stage releases/<version>/github-infra-telemetry.json (workspace only)
+      # --------------------------------------------------------------------
+      - name: 📁 Stage Version-Scoped Telemetry (Non-Commital)
+        if: always()
+        run: |
+          set -euo pipefail
+          ver="${{ steps.version.outputs.version }}"
+          mkdir -p "${RELEASES_ROOT}/${ver}"
+          cp "${TELEMETRY_OUT}" "${RELEASES_ROOT}/${ver}/github-infra-telemetry.json"
+          echo "Staged telemetry at ${RELEASES_ROOT}/${ver}/github-infra-telemetry.json (workspace only)."
+
+      # --------------------------------------------------------------------
+      # 5. Upload telemetry artifacts (always)
+      # --------------------------------------------------------------------
+      - name: 📤 Upload Telemetry Artifact (Root)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-infra-telemetry
+          path: ${{ env.TELEMETRY_OUT }}
+          if-no-files-found: error
+
+      - name: 📤 Upload Telemetry Artifact (Version-Scoped)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-infra-telemetry-${{ steps.version.outputs.version }}
+          path: ${{ env.RELEASES_ROOT }}/${{ steps.version.outputs.version }}/github-infra-telemetry.json
+          if-no-files-found: error
+
+      # --------------------------------------------------------------------
+      # 6. Telemetry Export Summary (for GitHub UI)
+      # --------------------------------------------------------------------
+      - name: 🧾 Emit Telemetry Export Summary
         if: always()
         run: |
           set -euo pipefail
           {
-            echo "## 🌐 Web & Docs Deploy Summary"
+            echo "## 📊 Telemetry Export Summary"
             echo ""
-            echo "- Workflow: \`${GITHUB_WORKFLOW}\`"
-            echo "- Branch/Tag: \`${GITHUB_REF}\`"
-            echo "- Web assets present: \`${{ steps.inspect_assets.outputs.has_web }}\`"
-            echo "- Docs assets present: \`${{ steps.inspect_assets.outputs.has_docs }}\`"
+            echo "- Triggered by workflow: \`${{ github.event.workflow_run.name || github.workflow }}\`"
+            echo "- Trigger head branch: \`${{ github.event.workflow_run.head_branch || 'n/a' }}\`"
+            echo "- Trigger head SHA: \`${{ github.event.workflow_run.head_sha || github.sha }}\`"
+            echo "- Trigger conclusion: \`${{ github.event.workflow_run.conclusion || 'n/a' }}\`"
+            echo "- Telemetry output: \`${TELEMETRY_OUT}\`"
+            echo "- Version scope: \`${{ steps.version.outputs.version }}\`"
+            echo "- Version-scoped path (workspace): \`${RELEASES_ROOT}/${{ steps.version.outputs.version }}/github-infra-telemetry.json\`"
             echo ""
-            echo "Deployment was executed via:"
-            echo "- \`scripts/deploy_site.py\` (governed, config-driven entrypoint)"
-            echo ""
-            echo "For full deployment details, consult:"
-            echo "- \`scripts/deploy_site.py\`"
-            echo "- environment logs for \`prod-web\`"
+            echo "This workflow aggregates governed CI/CD, governance, security, AI, and Focus Mode"
+            echo "signals into a single telemetry document suitable for release packaging and"
+            echo "observability dashboards."
           } >> "${GITHUB_STEP_SUMMARY}"
