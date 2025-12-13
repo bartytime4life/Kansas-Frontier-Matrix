@@ -1,23 +1,24 @@
 ---
-title: "♻️ Kansas Frontier Matrix — Reusable GitHub Workflows Library (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: ".github/workflows/reusable/README.md"
+title: "🧾 Kansas Frontier Matrix — DCAT Validation Composite Action"
+path: ".github/actions/dcat-validate/README.md"
+version: "v11.2.3"
+last_updated: "2025-12-09"
 
-version: "v11.2.6"
-last_updated: "2025-12-13"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Infrastructure & Provenance Committee"
+review_cycle: "Annual · FAIR+CARE Council · Architecture Board"
 content_stability: "stable"
-
-status: "Active / Enforced"
-doc_kind: "Component Guide"
-intent: "github-reusable-workflows-library"
-role: "ci-cd-reuse"
-category: "CI/CD · Automation · Governance · Reusability"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.3/github-infra-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/github-workflows-v4.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
@@ -26,72 +27,86 @@ sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECT
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
 dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
 
-classification: "Public"
-sensitivity: "General (non-sensitive; auto-mask rules apply)"
-sensitivity_level: "None"
+status: "Active / Enforced"
+doc_kind: "Guide"
+intent: "github-dcat-validate-action"
+role: "dcat-validation-composite-action"
+category: "Metadata · DCAT · CI/CD · Composite Action"
+
+classification: "Public Document"
+sensitivity: "General (non-sensitive)"
+sensitivity_level: "Low"
 public_exposure_risk: "Low"
+risk_category: "Metadata"
 indigenous_rights_flag: false
-data_steward: "KFM Infrastructure & Provenance Committee"
+redaction_required: false
+data_steward: "KFM FAIR+CARE Council"
 
 fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
+care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
 
 provenance_chain:
-  - ".github/workflows/reusable/README.md@v11.2.6"
+  - ".github/actions/dcat-validate/README.md@v11.2.3"
 
-json_schema_ref: "../../../schemas/json/github-reusable-workflows-readme-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/github-reusable-workflows-readme-v11-shape.ttl"
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "SoftwareApplication"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+  geosparql: "geo:FeatureCollection"
 
-doc_uuid: "urn:kfm:doc:github-workflows:reusable-readme:v11.2.6"
-semantic_document_id: "kfm-doc-github-workflows-reusable-readme"
-event_source_id: "ledger:.github/workflows/reusable/README.md"
+json_schema_ref: "../../../schemas/json/github-actions-dcat-validate-v11.schema.json"
+shape_schema_ref: "../../../schemas/shacl/github-actions-dcat-validate-v11-shape.ttl"
+
+doc_uuid: "urn:kfm:doc:github-actions:dcat-validate:v11.2.3"
+semantic_document_id: "kfm-action-dcat-validate"
+event_source_id: "ledger:.github/actions/dcat-validate/README.md"
 immutability_status: "mutable-plan"
+machine_extractable: true
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
   - "summary"
+  - "semantic-highlighting"
   - "a11y-adaptations"
   - "metadata-extraction"
 ai_transform_prohibited:
-  - "content-alteration"
   - "speculative-additions"
-  - "unverified-architectural-claims"
   - "governance-override"
+  - "content-alteration"
 
-machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
+jurisdiction: "United States / Kansas"
+lifecycle_stage: "stable"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next dcat-validate action update"
 
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-badge_profiles:
-  - "root-centered-badge-row"
-
-requires_purpose_block: true
-requires_directory_layout_section: true
-requires_version_history: true
-requires_governance_links_in_footer: true
+prov_profile: "PROV-O Plan + KFM Governance Extensions"
+openlineage_profile: "OpenLineage v2.5 · CI/CD and metadata pipeline events"
 ---
 
 <div align="center">
 
-# ♻️ **Kansas Frontier Matrix — Reusable GitHub Workflows Library**
-`.github/workflows/reusable/README.md`
+# 🧾 **Kansas Frontier Matrix — DCAT Validation Composite Action**  
+`.github/actions/dcat-validate/`
 
 **Purpose**  
-Define the **governed reusable workflow library** (GitHub Actions `workflow_call`) used across KFM CI/CD.  
-Reusable workflows exist to keep gates **deterministic**, **least-privilege**, **auditable**, and **consistent** across the monorepo.
+Provide a **single, governed entrypoint** for validating **DCAT (W3C DCAT 3.x) catalog metadata**
+under the **KFM‑DCAT v11** profile, ensuring:
 
-<img src="https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.6-blueviolet" />
-<img src="https://img.shields.io/badge/CI%2FCD-Reusable_Workflows-success" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Governed-orange" />
-<img src="https://img.shields.io/badge/License-MIT-green" />
+- Required **Catalog / Dataset / Distribution / DataService** fields are present
+- License / rights fields are complete and policy-consistent
+- Provenance hooks exist (PROV‑O / KFM lineage conventions)
+- Machine‑readable validation output for CI/CD gates and telemetry
+
+This action is invoked primarily by:
+
+- `.github/workflows/dcat_validate.yml` → **governed DCAT metadata gate** for KFM
 
 </div>
 
@@ -99,159 +114,275 @@ Reusable workflows exist to keep gates **deterministic**, **least-privilege**, *
 
 ## 📘 Overview
 
-Reusable workflows are the **shared building blocks** for KFM CI/CD:
+The `dcat-validate` action is KFM’s **DCAT quality gate** for publishable catalog metadata.
 
-- Standardize core behaviors (checkout, setup, caching, lint/test/validate patterns).
-- Enforce **least-privilege permissions** and explicit secret usage.
-- Provide stable **interfaces** (inputs/outputs) so top-level workflows remain readable.
-- Centralize consistent **telemetry hooks** (artifacts, reports, lineage events).
+It is designed to:
 
-**Normative principle**: Top-level workflows orchestrate *what* runs; reusable workflows implement *how* it runs.
+- Validate DCAT metadata artifacts (commonly **JSON‑LD** and/or **Turtle**) against:
+  - **DCAT 3.x structural expectations**
+  - **KFM‑DCAT v11 profile rules** (project‑specific constraints)
+- Enforce **governance‑linked requirements** such as:
+  - license/rights presence and consistent labeling
+  - publisher/provider responsibility fields
+  - provenance linkage fields required by KFM publishing contracts
+- Emit **deterministic, machine‑readable summaries** for downstream CI telemetry export.
+
+Design goals:
+
+- **Deterministic** — identical metadata inputs produce the same outcome.
+- **Config‑driven** — rules and strictness are controlled by files in `config/`.
+- **Composable** — callable from any workflow that needs a DCAT validation gate.
+
+Any **policy‑relevant error** MUST fail the action (exit non‑zero).
 
 ---
 
 ## 🗂️ Directory Layout
 
-This folder contains reusable workflows invoked via `workflow_call`.
-
 ~~~text
 .github/
-└── 🤖 workflows/
-    ├── 📄 README.md                               — Master CI/CD architecture (overview)
-    └── ♻️ reusable/                                — Reusable workflows library (this directory)
-        ├── 📄 README.md                            — This document
-        └── 🧩 <reusable-workflow>.yml              — Reusable workflow(s) (workflow_call entrypoints)
+└── 🧱 actions/                                      # Reusable composite actions
+    └── 🧾 dcat-validate/                            # DCAT validation action (KFM-DCAT v11)
+        ├── 📄 README.md                             # ← This file (governance & usage)
+        ├── ⚙️ action.yml                            # GitHub Action descriptor (composite)
+        ├── 🧱 entrypoint.sh                         # Bash orchestrator (deterministic runner)
+        ├── ⚙️ config/                               # Validation config + profile bindings
+        │   ├── 📄 README.md                         # Config documentation (normative)
+        │   ├── 🧾 profiles.yml                      # Profile IDs, strictness, format rules
+        │   ├── 🧩 shapes/                           # SHACL shapes for validation
+        │   │   ├── 🧩 kfm-dcat-v11.shapes.ttl        # KFM-DCAT v11 constraints (primary)
+        │   │   └── 🧩 dcat-3-core.shapes.ttl         # Optional baseline shapes (if used)
+        │   ├── 🧾 vocab.yml                         # Controlled vocab hints (themes, mediaType, etc.)
+        │   └── 🧾 crosswalks.yml                    # Optional STAC↔DCAT crosswalk checks
+        └── 🧪 scripts/                              # Helper scripts (language-agnostic)
+            ├── 📄 README.md                         # Scripts overview + contracts
+            ├── 🧬 run_dcat_validator.py             # Parse + validate DCAT graphs
+            ├── 🧭 check_profile_rules.py            # Non-SHACL checks (naming, ids, conventions)
+            └── 📊 summarize_dcat_results.py         # Unified JSON summary for telemetry
 ~~~
 
-**Naming conventions**
-
-- Prefer kebab-case: `python-lint.yml`, `node-test.yml`, `stac-validate.yml`.
-- Prefer “verb-object” clarity (what the workflow provides), not where it is used.
-- Avoid “misc” workflows; split by concern.
+> **Normative:** Any structural change to this directory MUST be reflected here and in
+> the workflow(s) that invoke this action.
 
 ---
 
 ## 🧭 Context
 
-KFM treats CI/CD as governed infrastructure:
+**Where this lands in the KFM pipeline**
 
-> Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j → API → Frontend → Story Nodes → Focus Mode
+- **ETL → catalogs (STAC/DCAT/PROV) → graph → API → frontend → Story Nodes → Focus Mode**
+- `dcat-validate` is part of the **catalog stage**:
+  - It validates that DCAT metadata is consistent and publishable
+  - It helps guarantee downstream interoperability (federated catalog tooling, portal harvesters, etc.)
+  - It ensures governance fields needed for FAIR+CARE reporting are present and machine-extractable
 
-Reusable workflows sit inside CI/CD and must preserve:
+**What this action validates**
 
-- Determinism (pinned actions, locked toolchains).
-- Traceability (reports + lineage-friendly outputs).
-- Governance enforcement (FAIR+CARE + sovereignty constraints).
-- Accessibility and documentation standards checks.
+- DCAT **Catalog(s)** (optional, depending on repo structure)
+- DCAT **Dataset(s)** (required for publishable records)
+- DCAT **Distribution(s)** (access URLs, media types, optional checksums)
+- DCAT **DataService(s)** (when APIs are cataloged)
+- Optional crosswalk checks against STAC identifiers (configurable)
 
 ---
 
-## 🧱 Architecture
+## 🗺️ Diagrams
 
-### Workflow interface contract
+No diagrams are required for this action README.
 
-Each reusable workflow MUST define:
+If a diagram is added later, it MUST be CI‑safe and conform to the repo’s diagram validation rules.
 
-- `on: workflow_call`
-- **Inputs** with types and defaults.
-- **Outputs** (when meaningful) for upstream orchestration.
-- A minimal permission set under `permissions:` (job-level where possible).
+---
 
-Recommended interface pattern:
+## 🧠 Story Node & Focus Mode Integration
 
-~~~yaml
-on:
-  workflow_call:
-    inputs:
-      fail_level:
-        required: false
-        type: string
-        default: "error"
-    secrets:
-      GH_TOKEN:
-        required: false
-~~~
+This action supports Story Node and Focus Mode readiness by ensuring DCAT metadata:
 
-### Least-privilege defaults (recommended)
+- Is structured and consistent enough to be ingested into catalogs and the graph layer
+- Includes stable identifiers suitable for linking evidence and governance records
+- Avoids “dark metadata” (missing licenses, ambiguous publishers, unlabeled distributions)
 
-- Default `permissions: { contents: read }`
-- Add write permissions only when strictly needed (e.g., release packaging).
-- Never assume secrets exist; require them explicitly via `workflow_call.secrets`.
-
-### Pinned dependencies (normative)
-
-- Third-party actions MUST be pinned by commit SHA.
-- Toolchains SHOULD be pinned (Node, Python, Java, etc.) and version-logged to artifacts.
+Focus Mode usage is allowed for summarization and metadata extraction, but it MUST NOT invent
+missing governance or provenance fields.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Reusable workflows are expected to be used by top-level workflows under `.github/workflows/`.
+### ⚙️ Action interface
 
-**Required behaviors for governed steps**
+Within the KFM repository this action MAY be used in two forms:
 
-- Fail fast on deterministic validation failures.
-- Produce machine-readable artifacts (JSON where appropriate).
-- Never print sensitive values to logs.
-- When producing reports, write to predictable paths (e.g., `artifacts/<domain>/...`).
+1) **Direct script invocation** (common for early adoption)
 
-**Expected CI profiles impacted by changes here**
+~~~yaml
+- name: 🧾 DCAT Validation (script entrypoint)
+  run: |
+    set -euo pipefail
+    bash .github/actions/dcat-validate/entrypoint.sh data/dcat
+~~~
 
-- `markdown-lint`
-- `schema-lint`
-- `metadata-check`
-- `secret-scan`
-- `pii-scan`
+2) **Composite action usage** (preferred long-term)
+
+~~~yaml
+- name: 🧾 DCAT Validation (composite)
+  uses: ./.github/actions/dcat-validate
+  with:
+    dcat_root: "data/dcat"
+    profile: "kfm-dcat-v11"
+    config_dir: ".github/actions/dcat-validate/config"
+    summary: "_dcat-validate-summary.json"
+~~~
+
+> The repo MUST treat these two forms as behaviorally equivalent. If `action.yml` is updated,
+> the invoking workflow MUST use the canonical interface.
+
+### 🧷 Inputs (proposed, for `action.yml`)
+
+| Name         | Type   | Default                                 | Description |
+|--------------|--------|------------------------------------------|-------------|
+| `dcat_root`  | string | `data/dcat`                              | Root directory containing DCAT catalogs/datasets (repository convention). |
+| `profile`    | string | `kfm-dcat-v11`                           | Profile identifier to apply (KFM‑DCAT v11). |
+| `config_dir` | string | `.github/actions/dcat-validate/config`   | Directory containing profile config + SHACL shapes. |
+| `format`     | string | `auto`                                   | Input format: `auto`, `jsonld`, `ttl`. |
+| `fail_fast`  | bool   | `true`                                   | Stop at first critical error if true; otherwise validate all files. |
+| `summary`    | string | `""`                                     | Optional path to write a JSON summary file. |
+
+> **Schema note:** These inputs MUST be reflected in
+> `schemas/json/github-actions-dcat-validate-v11.schema.json`.
+
+### 📤 Outputs (proposed)
+
+| Name             | Type   | Description |
+|------------------|--------|-------------|
+| `files_checked`  | number | Total number of DCAT files validated. |
+| `issues_found`   | number | Total number of validation issues discovered. |
+| `severity_max`   | string | Highest severity observed (`none`, `warning`, `error`, `critical`). |
+| `summary_path`   | string | Path to the summary JSON file, if produced. |
+
+### 🧱 Behavior (normative)
+
+At a high level, the action MUST:
+
+1) **Discover DCAT content**
+- Traverse `dcat_root` for supported files (commonly `.json`, `.jsonld`, `.ttl`).
+- Ignore non-metadata artifacts unless explicitly configured.
+
+2) **Parse into a graph model**
+- Parse DCAT into a normalized in-memory representation (RDF graph semantics).
+- Fail fast on syntax errors (invalid JSON‑LD/Turtle).
+
+3) **Validate against SHACL + profile rules**
+- Run SHACL validation using shapes referenced by the selected `profile`.
+- Apply additional profile rules (naming, identifier conventions, required fields).
+
+4) **Evaluate policy thresholds**
+- Classify findings into `warning` / `error` / `critical`.
+- Exit non‑zero when thresholds are violated.
+
+5) **Emit machine-readable outputs**
+- Write (or print) a consolidated JSON summary suitable for telemetry export.
+
+### ✅ Failure semantics (recommended)
+
+- Exit `0` if no policy‑relevant errors are found.
+- Exit `1` if any **error/critical** rule is violated (schema, SHACL, governance contract).
+- Exit `2` for configuration/runtime failures (missing config, missing shapes, tool crash).
 
 ---
 
 ## 📦 Data & Metadata
 
-Reusable workflows SHOULD standardize artifact names and locations so telemetry aggregation is consistent.
+### Expected inputs
 
-Recommended artifact conventions:
+This action validates DCAT metadata intended for KFM’s publishable catalog surface.
 
-- `artifacts/<domain>/<tool>-report.json`
-- `artifacts/<domain>/<tool>-summary.json`
-- `artifacts/<domain>/run-metadata.json` (versions, start/end timestamps, inputs summary)
+A conformant record SHOULD include, at minimum:
 
-Where lineage is emitted, reusable workflows SHOULD include stable identifiers that upstream workflows can incorporate into PROV/OpenLineage exports.
+- A stable identifier (e.g., `dct:identifier`)
+- A title and description (`dct:title`, `dct:description`)
+- License / rights information (`dct:license` and/or `dct:rights`)
+- Publisher/provider responsibility (`dct:publisher` and/or `dcat:contactPoint`)
+- At least one distribution when the dataset is accessible (`dcat:distribution`)
+  - with access/download URL and a declared format/media type
+
+### Output summary (recommended shape)
+
+The action SHOULD emit a summary that supports downstream telemetry aggregation:
+
+- counts by severity
+- counts by entity type (Catalog/Dataset/Distribution/DataService)
+- per-file issue lists (file path + rule id + message + severity)
+- profile id and config version used
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### DCAT
+
+- DCAT provides the catalog-facing metadata surface for datasets and services.
+- KFM‑DCAT v11 constrains DCAT usage for consistent publication and governance.
+
+### STAC
+
+- STAC remains the primary packaging format for spatiotemporal assets.
+- A repo MAY enforce crosswalk checks between STAC identifiers and DCAT identifiers via `config/crosswalks.yml`.
+
+### PROV‑O
+
+- DCAT records SHOULD provide linkage points to provenance entities/activities where appropriate.
+- This action can enforce “presence of linkage fields” (profile-dependent), but it does not generate provenance.
+
+---
+
+## 🧱 Architecture
+
+### Execution model
+
+- `entrypoint.sh` orchestrates the run:
+  - strict shell mode (`set -euo pipefail`)
+  - loads configuration from `config/`
+  - invokes scripts to validate and summarize
+- `run_dcat_validator.py` performs parsing and SHACL validation using the selected profile.
+- `summarize_dcat_results.py` consolidates results into a single schema for telemetry export.
+
+### Determinism requirements
+
+- No network calls during validation.
+- No nondeterministic ordering in result output.
+- Config files are the sole source of rules and thresholds.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-Reusable workflows MUST NOT:
+This action enforces governance-aligned metadata requirements:
 
-- Bypass FAIR+CARE or sovereignty enforcement.
-- Introduce uncontrolled network calls without documentation and justification.
-- Introduce floating dependencies (`@latest`, unpinned containers, unpinned CLIs).
+- **Findable/Accessible**: requires stable identifiers and minimum descriptive fields.
+- **Reusable**: requires license/rights clarity and distribution semantics.
+- **CARE**: supports Authority to Control by ensuring records can be audited and policy‑checked.
 
-If a reusable workflow needs elevated permissions or access, document:
+Telemetry and logs MUST NOT include:
 
-- Why it is required
-- The minimal scope
-- How it is audited (reports, attestations, telemetry)
+- secrets, credentials, or tokens
+- sensitive sovereign disclosures beyond what is permitted in governed metadata outputs
 
 ---
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-13 | Introduced governed README for reusable workflows library; standardized interface, naming, least-privilege, and artifact conventions. |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v11.2.3 | 2025-12-09 | Initial governed README for `dcat-validate`; aligns with KFM‑DCAT v11 and KFM‑MDP v11.2.6. |
 
 ---
 
 <div align="center">
 
-♻️ **Reusable Workflows Library**  
-Deterministic CI/CD · Governed Interfaces · Reusable Infrastructure
+🧾 **Kansas Frontier Matrix — DCAT Validation Composite Action (v11.2.3)**  
+Catalog-First · FAIR+CARE-Governed · Provenance-Aware  
 
-[⬅ Workflows Overview](../README.md) ·
-[🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+[⬅ GitHub Infra Overview](../../README.md) · [📊 CI/CD Workflows](../../workflows/README.md) · [⚖ Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
