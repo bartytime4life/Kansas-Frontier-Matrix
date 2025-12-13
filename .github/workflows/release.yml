@@ -1,371 +1,391 @@
-# .github/workflows/release.yml
-# 🚀 Kansas Frontier Matrix — Signed Release Packaging & Publication
-# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
-#
-# Purpose:
-#   - Orchestrate governed KFM releases:
-#       * Compute version & ensure consistency
-#       * Build & package release artifacts (code, data, docs, web)
-#       * Generate SBOM + manifest (if not already present)
-#       * Run supply-chain verification hooks
-#       * Sign artifacts and create a GitHub Release
-#       * Stage release assets under releases/<version> for catalogs/telemetry
-#
-# Governance Context:
-#   - SECURITY.md (supply-chain & signing requirements)
-#   - sbom_verify.yml (independent SBOM/attestation verification)
-#   - telemetry_export.yml (CI/AI telemetry aggregation)
-#   - KFM-STAC/DCAT/PROV for cataloging release artifacts
+---
+title: "🧭 Kansas Frontier Matrix — STAC to Knowledge-Graph Architecture & Provenance Model"
+path: "docs/architecture/stac-knowledge-graph.md"
+version: "v11.2.6"
+last_updated: "2025-12-13"
 
-name: 🚀 release
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Annual · Architecture Review Board · FAIR+CARE Council"
+content_stability: "stable"
 
-on:
-  # Tag-based releases (preferred)
-  push:
-    tags:
-      - "v*"
-  # Manual release (e.g., for hotfixes or backfills)
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Release version (e.g., v11.2.3). Optional if triggered by tag."
-        required: false
-        type: string
-      channel:
-        description: "Release channel"
-        required: true
-        type: choice
-        default: "stable"
-        options:
-          - stable
-          - rc
-          - beta
+status: "Active / Enforced"
+doc_kind: "Architecture Standard"
+header_profile: "standard"
+footer_profile: "standard"
 
-# Avoid overlapping releases per ref
-concurrency:
-  group: release-${{ github.ref }}
-  cancel-in-progress: false
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
-permissions:
-  contents: write       # Required for creating tags & GitHub Releases
-  id-token: write       # For OIDC-based signing / provenance if used
-  actions: read
-  packages: read
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+classification: "Public"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+jurisdiction: "Kansas / United States"
+indigenous_rights_flag: true
+data_steward: "KFM FAIR+CARE Council"
+immutability_status: "version-pinned"
+ttl_policy: "24 months"
+sunset_policy: "Superseded by KFM v12"
 
-defaults:
-  run:
-    shell: bash
+doc_uuid: "urn:kfm:doc:architecture:stac-knowledge-graph:v11.2.6"
+semantic_document_id: "kfm-architecture-stac-knowledge-graph-v11.2.6"
+event_source_id: "ledger:kfm:doc:architecture:stac-knowledge-graph:v11.2.6"
+doc_integrity_checksum: "<sha256>"
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
 
-env:
-  PYTHON_VERSION: "3.11"
-  NODE_VERSION: "20"
-  RELEASES_ROOT: "releases"
+signature_ref: "././releases/v11.2.6/signature.sig"
+attestation_ref: "././releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "././releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "././releases/v11.2.6/manifest.zip"
+provenance_chain:
+  - "././releases/v11.2.6/manifest.zip"
+  - "././releases/v11.2.6/sbom.spdx.json"
+  - "././releases/v11.2.6/slsa-attestation.json"
 
-jobs:
-  ###########################################################################
-  # 1. PREPARE ARTIFACTS
-  ###########################################################################
-  prepare:
-    name: "📦 Prepare Release Artifacts"
-    runs-on: ubuntu-22.04
-    timeout-minutes: 60
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summary"
+  - "diagram-extraction"
+  - "metadata-extraction"
+  - "layout-normalization"
+  - "semantic-highlighting"
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "governance-override"
 
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-      channel: ${{ steps.channel.outputs.channel }}
+governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+---
 
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0   # full history helps some provenance/signing flows
+<div align="center">
 
-      - name: 🔖 Determine Release Version
-        id: version
-        run: |
-          set -euo pipefail
+# 🧭 STAC → Knowledge-Graph Architecture
 
-          ver=""
+`docs/architecture/stac-knowledge-graph.md`
 
-          # Case 1: Tag-triggered release
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref_type }}" == "tag" ]]; then
-            ver="${GITHUB_REF_NAME}"
-          # Case 2: Manual workflow_dispatch with explicit version
-          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.version }}" ]]; then
-            ver="${{ github.event.inputs.version }}"
-          # Case 3: Derive from script (fallback)
-          elif [[ -f scripts/print_version.py ]]; then
-            ver="$(python scripts/print_version.py)"
-          else
-            echo "::error title=Version resolution failed::No tag, no input version, and no scripts/print_version.py present."
-            exit 1
-          fi
+**Purpose**  
+Define the canonical, governed pattern for ingesting STAC catalogs into the KFM Neo4j knowledge graph with PROV-O-complete lineage, deterministic replay, and fast spatiotemporal traversal.
 
-          # Normalize to have a leading 'v' for folder / tag consistency
-          if [[ "${ver}" != v* ]]; then
-            ver="v${ver}"
-          fi
+</div>
 
-          echo "Resolved release version: ${ver}"
-          echo "version=${ver}" >> "$GITHUB_OUTPUT"
+---
 
-      - name: 🏷 Resolve Release Channel
-        id: channel
-        run: |
-          set -euo pipefail
-          ch="stable"
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.channel }}" ]]; then
-            ch="${{ github.event.inputs.channel }}"
-          fi
-          echo "channel=${ch}" >> "$GITHUB_OUTPUT"
-          echo "Release channel: ${ch}"
+## 📘 Overview
 
-      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
-          cache-dependency-path: |
-            requirements.txt
-            scripts/requirements-release.txt
+This document defines the **canonical architecture pattern** for ingesting **STAC catalogs** into the Kansas Frontier Matrix **Neo4j knowledge graph**, preserving **full PROV-O lineage**, enabling **fast spatiotemporal queries**, and supporting **Story Nodes and Focus Mode** without drift.
 
-      - name: 🟦 Setup Node ${{ env.NODE_VERSION }} (for web/docs, optional)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-          cache-dependency-path: |
-            web/package-lock.json
-            web/npm-shrinkwrap.json
+This pattern is **mandatory** for all governed geospatial raster, vector, and derived analytical products in KFM v11.
 
-      - name: 📦 Install Release Tooling
-        run: |
-          set -euo pipefail
-          python -m pip install --upgrade pip
-          if [[ -f scripts/requirements-release.txt ]]; then
-            pip install --no-cache-dir -r scripts/requirements-release.txt
-          elif [[ -f requirements.txt ]]; then
-            pip install --no-cache-dir -r requirements.txt
-          fi
+### Architectural intent
 
-      - name: 🗂 Prepare releases/<version> directory
-        run: |
-          set -euo pipefail
-          ver="${{ steps.version.outputs.version }}"
+The STAC → Graph pattern serves four core objectives:
 
-          mkdir -p "${RELEASES_ROOT}/${ver}"
+1. **Deterministic ingestion** of external and internal STAC catalogs
+2. **First-class provenance** for every transformation and derivative
+3. **Fast temporal and spatial traversal** for narrative and analysis layers
+4. **Governance-ready lineage** aligned with FAIR+CARE and Indigenous data protections
 
-          if [[ -n "$(ls -A "${RELEASES_ROOT}/${ver}" 2>/dev/null || true)" ]]; then
-            echo "::warning title=Release directory already populated::releases/${ver} is non-empty; contents may be overwritten or merged."
-          fi
+---
 
-      # -------------------------------------------------------------
-      # Optional: build release artifacts (web, docs, bundles, etc.)
-      # Implemented by repo-specific script; safe if absent.
-      # -------------------------------------------------------------
-      - name: 🛠 Build Release Artifacts (Optional)
-        run: |
-          set -euo pipefail
-          ver="${{ steps.version.outputs.version }}"
+## 🗂️ Directory Layout
 
-          if [[ -f scripts/build_release_artifacts.py ]]; then
-            python scripts/build_release_artifacts.py \
-              --version "${ver}" \
-              --out-root "${RELEASES_ROOT}/${ver}"
-          else
-            echo "scripts/build_release_artifacts.py not found; ensure other workflows have produced artifacts in releases/${ver}."
-          fi
+~~~text
+📁 KansasFrontierMatrix/
+├── 📁 docs/
+│   ├── 📁 architecture/
+│   │   └── 📄 stac-knowledge-graph.md            # This standard (governed)
+│   └── 📁 standards/
+│       ├── 📄 governance/ROOT-GOVERNANCE.md      # Governance authority
+│       ├── 📄 faircare/FAIRCARE-GUIDE.md         # FAIR+CARE practices
+│       └── 📄 sovereignty/INDIGENOUS-DATA-PROTECTION.md
+├── 📁 data/
+│   ├── 📁 stac/                                  # STAC Collections/Items (catalog output)
+│   ├── 📁 sources/                               # Source manifests (license, checksums)
+│   └── 📁 processed/                             # Derived artifacts (never in src/)
+├── 📁 schemas/
+│   ├── 📁 stac/                                  # KFM STAC profile constraints
+│   ├── 📁 dcat/                                  # DCAT profile constraints
+│   └── 📁 prov/                                  # PROV(-O) constraints / JSON-LD context
+├── 📁 src/
+│   └── 📁 graph/                                  # Neo4j ingestion + mapping logic (expected)
+├── 📁 mcp/
+│   ├── 📁 runs/                                   # Run logs + config snapshots (deterministic)
+│   └── 📁 experiments/                            # Research-only runs (if any)
+└── 📁 .github/
+    └── 📁 workflows/                              # CI validation + governance gates
+~~~
 
-      # -------------------------------------------------------------
-      # Optional: generate SBOM + manifest for this version if not present
-      # -------------------------------------------------------------
-      - name: 📦 Generate SBOM & Manifest (Optional)
-        run: |
-          set -euo pipefail
-          ver="${{ steps.version.outputs.version }}"
-          rel_dir="${RELEASES_ROOT}/${ver}"
+---
 
-          sbom="${rel_dir}/sbom.spdx.json"
-          manifest="${rel_dir}/manifest.zip"
+## 🧭 Context
 
-          if [[ -f "${sbom}" ]]; then
-            echo "SBOM already present at ${sbom}; skipping generation."
-          elif [[ -f scripts/generate_sbom.py ]]; then
-            echo "Generating SBOM at ${sbom}..."
-            python scripts/generate_sbom.py \
-              --version "${ver}" \
-              --out "${sbom}"
-          else
-            echo "No SBOM found and scripts/generate_sbom.py missing; SBOM generation not performed."
-          fi
+### Position in the KFM pipeline
 
-          if [[ -f "${manifest}" ]]; then
-            echo "Manifest already present at ${manifest}; skipping generation."
-          elif [[ -f scripts/generate_manifest.py ]]; then
-            echo "Generating manifest at ${manifest}..."
-            python scripts/generate_manifest.py \
-              --version "${ver}" \
-              --releases-root "${RELEASES_ROOT}" \
-              --out "${manifest}"
-          else
-            echo "No manifest found and scripts/generate_manifest.py missing; manifest generation not performed."
-          fi
+~~~text
+Deterministic ETL
+↓
+STAC / DCAT / PROV catalogs (machine-validated)
+↓
+Graph Ingestion (idempotent merge + constraints)
+↓
+Neo4j Knowledge Graph
+↓
+API → UI → Story Nodes → Focus Mode
+~~~
 
-      # -------------------------------------------------------------
-      # Optional: run local supply-chain verification before final sbom_verify gate
-      # -------------------------------------------------------------
-      - name: 🛡 Local Supply-Chain Sanity Check (Optional)
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          if [[ -f scripts/verify_supply_chain.py ]]; then
-            python scripts/verify_supply_chain.py \
-              --releases-root "${RELEASES_ROOT}"
-          else
-            echo "scripts/verify_supply_chain.py not found; relying on sbom_verify.yml for full enforcement."
-          fi
+### Key principle
 
-      # -------------------------------------------------------------
-      # Stage release directory as artifact for downstream jobs
-      # -------------------------------------------------------------
-      - name: 📤 Upload Release Workspace
-        uses: actions/upload-artifact@v4
-        with:
-          name: kfm-release-${{ steps.version.outputs.version }}
-          path: ${{ env.RELEASES_ROOT }}/${{ steps.version.outputs.version }}
+Lineage is not an add-on. **If it is not in the graph, it is not governed.**
 
-  ###########################################################################
-  # 2. SIGN & PUBLISH
-  ###########################################################################
-  sign-and-publish:
-    name: "🖊 Sign Artifacts & Publish GitHub Release"
-    runs-on: ubuntu-22.04
-    timeout-minutes: 45
-    needs: prepare
+---
 
-    environment:
-      name: prod
-      url: https://kfm.example.org
+## 🧱 Architecture
 
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+### Core graph entities
 
-      - name: 📥 Download Release Workspace
-        uses: actions/download-artifact@v4
-        with:
-          name: kfm-release-${{ needs.prepare.outputs.version }}
-          path: ${{ env.RELEASES_ROOT }}/${{ needs.prepare.outputs.version }}
+#### 1) Collection (`:Collection`)
+Represents a STAC Collection.
 
-      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
-          cache-dependency-path: |
-            requirements.txt
-            scripts/requirements-release.txt
+**Required properties**
+- `collection_id` (stable identifier)
+- `title`
+- `license`
+- `stac_version`
+- `created_at`
 
-      - name: 📦 Install Signing Tooling (Optional)
-        run: |
-          set -euo pipefail
-          python -m pip install --upgrade pip
-          if [[ -f scripts/requirements-release.txt ]]; then
-            pip install --no-cache-dir -r scripts/requirements-release.txt
-          elif [[ -f requirements.txt ]]; then
-            pip install --no-cache-dir -r requirements.txt
-          fi
-          # Install cosign or other signing tools here if needed:
-          # curl -sSL https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64 -o /usr/local/bin/cosign && chmod +x /usr/local/bin/cosign
+#### 2) Item (`:Item`)
+Represents a STAC Item (acquisition-time atomic unit).
 
-      # -------------------------------------------------------------
-      # Sign artifacts for the release (SBOM, manifest, bundles, etc.)
-      # Implemented by repo-specific script.
-      # -------------------------------------------------------------
-      - name: 🖊 Sign Release Artifacts (Optional)
-        run: |
-          set -euo pipefail
-          ver="${{ needs.prepare.outputs.version }}"
-          rel_dir="${RELEASES_ROOT}/${ver}"
+**Required properties**
+- `item_id` (globally unique)
+- `collection_id`
+- `acquisition_time` (ISO-8601 UTC)
+- `geometry` (WKB or GeoJSON)
+- `bbox`
+- `platform`
+- `constellation`
 
-          if [[ -f scripts/sign_release_artifacts.py ]]; then
-            python scripts/sign_release_artifacts.py \
-              --releases-root "${RELEASES_ROOT}" \
-              --version "${ver}"
-          else
-            echo "scripts/sign_release_artifacts.py not found; ensure signing is performed by another governed mechanism if required."
-          fi
+**Optional properties**
+- `gsd`
+- `cloud_cover`
+- `eo_bands`
+- `created_at`
+- `updated_at`
 
-      # -------------------------------------------------------------
-      # Tag creation (only for workflow_dispatch without existing tag)
-      # -------------------------------------------------------------
-      - name: 🏷 Create Tag (if workflow_dispatch)
-        if: github.event_name == 'workflow_dispatch'
-        run: |
-          set -euo pipefail
-          ver="${{ needs.prepare.outputs.version }}"
+#### 3) Asset (`:Asset`)
+Represents a STAC Asset (file, reference, or derivative).
 
-          if git rev-parse "${ver}" >/dev/null 2>&1; then
-            echo "Tag ${ver} already exists; not creating a new one."
-            exit 0
-          fi
+**Required properties**
+- `asset_id` (`item_id::asset_key`)
+- `href`
+- `type` (MIME)
+- `roles[]`
+- `checksum`
+- `size_bytes`
 
-          git config user.name "kfm-release-bot"
-          git config user.email "release@kfm.example.org"
-          git tag -a "${ver}" -m "KFM release ${ver}"
-          git push origin "${ver}"
+#### 4) Process (`:Process`)
+Represents a PROV Activity (ingest, transform, derive).
 
-      # -------------------------------------------------------------
-      # Create or update GitHub Release via gh CLI
-      # -------------------------------------------------------------
-      - name: 🚀 Create/Update GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          ver="${{ needs.prepare.outputs.version }}"
-          ch="${{ needs.prepare.outputs.channel }}"
-          rel_dir="${RELEASES_ROOT}/${ver}"
+**Required properties**
+- `process_id`
+- `name`
+- `kind` (`ingest | transform | derive | subset | reproject`)
+- `started_at`
+- `ended_at`
+- `params_json`
+- `code_ref` (git SHA)
+- `container_digest`
+- `attestation_ref`
 
-          # Ensure gh is available
-          if ! command -v gh >/dev/null 2>&1; then
-            echo "::error::GitHub CLI (gh) is not available on this runner."
-            exit 1
-          fi
+#### 5) Dataset (`:Dataset`) (optional materialization)
+Used for mosaics, composites, or analytical outputs.
 
-          # Build release title and notes
-          title="KFM ${ver} (${ch})"
+**Required properties**
+- `dataset_id`
+- `title`
+- `spatial_ref`
+- `temporal_extent`
+- `checksum`
+- `size_bytes`
+- `location`
 
-          # Check whether release already exists
-          if gh release view "${ver}" >/dev/null 2>&1; then
-            echo "GitHub Release ${ver} already exists; uploading/refreshing assets."
-            # Upload or replace assets
-            gh release upload "${ver}" "${rel_dir}"/* --clobber
-          else
-            echo "Creating new GitHub Release ${ver}"
-            gh release create "${ver}" "${rel_dir}"/* \
-              --title "${title}" \
-              --notes "KFM ${ver} (${ch}) release artifacts, SBOM, and manifest."
-          fi
+---
 
-      - name: 🧾 Emit Release Summary
-        if: always()
-        run: |
-          set -euo pipefail
-          ver="${{ needs.prepare.outputs.version }}"
-          ch="${{ needs.prepare.outputs.channel }}"
-          {
-            echo "## 🚀 KFM Release Summary"
-            echo ""
-            echo "- Version: \`${ver}\`"
-            echo "- Channel: \`${ch}\`"
-            echo "- Release directory: \`${RELEASES_ROOT}/${ver}\`"
-            echo "- GitHub Release: https://github.com/${GITHUB_REPOSITORY}/releases/tag/${ver}"
-            echo ""
-            echo "Artifacts in \`${RELEASES_ROOT}/${ver}\` should include:"
-            echo "- \`sbom.spdx.json\` (if available)"
-            echo "- \`manifest.zip\` (if available)"
-            echo "- Signed bundles / archives for code, web, and data (if configured)"
-          } >> "${GITHUB_STEP_SUMMARY}"
+### Canonical relationships
+
+~~~text
+(:Collection)-[:HAS_ITEM]->(:Item)
+(:Item)-[:HAS_ASSET]->(:Asset)
+(:Item)-[:IN_COLLECTION]->(:Collection)
+
+(:Process)-[:USED]->(:Item|:Asset)
+(:Process)-[:GENERATED]->(:Item|:Asset|:Dataset)
+
+(:Asset)-[:DERIVED_FROM]->(:Asset|:Item)
+~~~
+
+This structure directly mirrors PROV-O:
+
+| PROV concept | KFM node |
+|---|---|
+| Entity | `:Item`, `:Asset`, `:Dataset` |
+| Activity | `:Process` |
+| Agent | Tool / user / service (reserved extension; see “Future Extensions”) |
+
+---
+
+### Indexing & performance guarantees
+
+#### Identity & integrity (non-negotiable)
+- Unique constraints on:
+  - `:Item(item_id)`
+  - `:Collection(collection_id)`
+  - `:Asset(asset_id)`
+  - `:Process(process_id)`
+
+#### Temporal access
+- Range index:
+  - `:Item(acquisition_time)`
+- Optional composite index:
+  - `:Item(collection_id, acquisition_time)`
+
+#### Spatial acceleration (coarse-to-fine)
+Each `:Item` must include at least one tiling key for coarse filtering prior to exact geometry tests:
+- `s2_cell_level_12` **or**
+- `quadkey_z14`
+
+---
+
+### Deterministic ingestion contract
+
+Each ingested STAC Item must supply (minimum KFM contract):
+
+~~~json
+{
+  "collection": "string",
+  "id": "string",
+  "properties": {
+    "datetime": "2025-12-13T00:00:00Z",
+    "platform": "string",
+    "constellation": "string"
+  },
+  "geometry": { "type": "Polygon", "coordinates": [] },
+  "assets": {
+    "data": {
+      "href": "uri",
+      "type": "mime",
+      "roles": ["data"],
+      "checksum": "sha256:<hex>",
+      "size": 123456
+    }
+  },
+  "kfm:provenance": {
+    "process": {
+      "id": "proc-id",
+      "name": "ingest_stac@vX",
+      "kind": "ingest",
+      "code_ref": "git-sha",
+      "container_digest": "sha256:<hex>",
+      "attestation_ref": "slsa.json"
+    },
+    "inputs": ["asset-id-1"]
+  }
+}
+~~~
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+- `Collection` maps to `:Collection`
+- `Item` maps to `:Item`
+- `assets.*` map to `:Asset`
+
+### DCAT
+- Governed published datasets SHOULD be represented as `dcat:Dataset` records (in catalogs) and map to `:Dataset` nodes for graph discoverability.
+
+### PROV-O
+- Every ingest/transform/derive step is a `prov:Activity` mapped to `:Process`
+- Inputs are `prov:used` → `(:Process)-[:USED]->(:Item|:Asset)`
+- Outputs are `prov:generated` → `(:Process)-[:GENERATED]->(:Asset|:Dataset)`
+
+Failures are still first-class provenance: a failed `:Process` still exists and still links to its inputs, with status and error facets captured by governance/telemetry systems.
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+- Story Nodes anchor on `:Item` or `:Dataset`
+- Lineage panels traverse:
+  - `:DERIVED_FROM`
+  - `:USED`
+  - `:GENERATED`
+- Focus Mode spatiotemporal queries rely on:
+  - `acquisition_time`
+  - tiling keys (`s2_cell_level_12` / `quadkey_z14`)
+  - optional gazetteer joins (via API-layer traversal, not UI-side file reads)
+
+This guarantees narrative traceability without recomputation.
+
+---
+
+## 🧪 Validation & CI/CD
+
+Violations MUST block promotion and/or ingestion.
+
+**Non-negotiable rules**
+- No `:Item` without provenance
+- No `:Asset` without checksum
+- No `:Dataset` without lineage
+- No Story Node without graph anchoring
+
+**Recommended CI checks**
+- STAC schema validation (`data/stac/**`)
+- PROV JSON-LD validation (`schemas/prov/**`)
+- Neo4j constraints present and enforced
+- Idempotent merge tests (dedupe + update semantics)
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+- All `:Asset` and `:Dataset` nodes MUST carry:
+  - cryptographic checksums
+  - provenance activities (`:Process`)
+- Sensitive datasets MAY include:
+  - `care_label`
+  - `access_label`
+- SBOM and SLSA attestations are mandatory for derived products
+- NHPA §304 and Indigenous data flags propagate through lineage edges (the graph must allow queryable rights + sensitivity)
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Notes |
+|---|---:|---|
+| v11.2.6 | 2025-12-13 | MDP v11.2.6 conformance pass (approved headings, directory layout, fenced blocks, governed footer). |
+
+---
+
+<div align="center">
+
+**Docs** · [📘 Docs Root](../README.md) · [🏗️ Architecture](./README.md) · [🧱 Data Pipeline Contracts](../pipeline/README.md)  
+**Governance** · [⚖ ROOT Governance](../standards/governance/ROOT-GOVERNANCE.md) · [🪶 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md) · [🛡️ Indigenous Data Protection](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+</div>
