@@ -1,24 +1,24 @@
 # .github/workflows/jsonld_validate.yml
 # 🧬 Kansas Frontier Matrix — JSON-LD & Ontology Validation
-# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# v11.2.6 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 #
 # Purpose:
 #   Validate JSON-LD graphs and ontology-aligned exports across the KFM monorepo, including:
-#     - CIDOC-CRM based heritage/history graphs
+#     - CIDOC-CRM aligned heritage/history graphs
 #     - OWL-Time temporal entities
 #     - GeoSPARQL geometries & relationships
-#     - PROV-O lineage / OpenLineage-compatible events
+#     - PROV-O lineage / OpenLineage-compatible exports
 #
 # Governance Context:
 #   - KFM-OP v11 ontology profile
-#   - KFM-STAC v11, KFM-DCAT v11 JSON-LD projections
+#   - KFM-STAC v11, KFM-DCAT v11 JSON-LD projections (if present)
 #   - PROV-O + OpenLineage event modeling
-#   - FAIR+CARE & sovereignty signals (used downstream in faircare_validate.yml)
+#   - FAIR+CARE & sovereignty signals (enforced downstream in faircare_validate.yml + h3_generalization.yml)
 #
-# This workflow focuses on JSON-LD structural and semantic integrity.
-# STAC/DCAT-specific semantics are validated in:
-#   - stac_validate.yml
-#   - dcat_validate.yml
+# Notes:
+#   - Hard gate: structural/schema validation via .github/actions/schema-validate
+#   - Optional: SHACL/ontology and PROV/OpenLineage consistency scripts (if present)
+#   - Emits a machine-readable metrics artifact for telemetry_export.yml
 
 name: 🧬 jsonld-validate
 
@@ -27,10 +27,14 @@ on:
     paths:
       - "data/jsonld/**"
       - "data/graph/**"
-      - "data/stac/**"          # STAC JSON-LD projections (if present)
+      - "data/stac/**"
       - "data/catalog/**"
       - "docs/data/**"
+      - "releases/**"
       - "schemas/jsonld/**"
+      - "scripts/validate_jsonld_shacl.py"
+      - "scripts/validate_prov_openlineage.py"
+      - "scripts/requirements-jsonld.txt"
       - ".github/actions/schema-validate/**"
       - ".github/workflows/jsonld_validate.yml"
   push:
@@ -43,12 +47,15 @@ on:
       - "data/stac/**"
       - "data/catalog/**"
       - "docs/data/**"
+      - "releases/**"
       - "schemas/jsonld/**"
+      - "scripts/validate_jsonld_shacl.py"
+      - "scripts/validate_prov_openlineage.py"
+      - "scripts/requirements-jsonld.txt"
       - ".github/actions/schema-validate/**"
       - ".github/workflows/jsonld_validate.yml"
   workflow_dispatch: {}
 
-# Ensure we don't have overlapping JSON-LD validation runs per ref
 concurrency:
   group: jsonld-validate-${{ github.ref }}
   cancel-in-progress: true
@@ -62,16 +69,26 @@ defaults:
     shell: bash
 
 env:
+  PYTHON_VERSION: "3.11"
+
   JSONLD_SCHEMA_DIR: "schemas/jsonld"
+
   JSONLD_ROOT_DOCS: "docs/data"
   JSONLD_ROOT_DATA: "data/jsonld"
   JSONLD_ROOT_GRAPH: "data/graph"
   JSONLD_ROOT_CATALOG: "data/catalog"
-  PYTHON_VERSION: "3.11"
+
+  RELEASES_ROOT: "releases"
+
+  METRICS_OUT: "jsonld-validate-metrics.json"
+
+  # Optional strictness toggles (default: best-effort for extra checks)
+  STRICT_SHACL: "false"
+  STRICT_PROV: "false"
 
 jobs:
   jsonld-validate:
-    name: "🧬 JSON-LD & Ontology Validation (CIDOC / OWL-Time / GeoSPARQL / PROV-O)"
+    name: "🧬 JSON-LD & Ontology Validation (KFM-OP v11)"
     runs-on: ubuntu-22.04
     timeout-minutes: 45
 
@@ -81,42 +98,77 @@ jobs:
         with:
           fetch-depth: 1
 
-      # Detect whether any JSON-LD-bearing roots exist; if none, short-circuit politely
-      - name: 🔎 Detect JSON-LD Roots
+      - name: 🔎 Detect JSON-LD content
         id: detect_jsonld
         run: |
           set -euo pipefail
-          has_any="false"
 
-          for path in "${JSONLD_ROOT_DOCS}" "${JSONLD_ROOT_DATA}" "${JSONLD_ROOT_GRAPH}" "${JSONLD_ROOT_CATALOG}"; do
-            if [[ -d "$path" ]]; then
-              echo "Found JSON-LD root: $path"
-              has_any="true"
+          total=0
+          roots=("${JSONLD_ROOT_DOCS}" "${JSONLD_ROOT_DATA}" "${JSONLD_ROOT_GRAPH}" "${JSONLD_ROOT_CATALOG}")
+
+          for root in "${roots[@]}"; do
+            if [[ -d "${root}" ]]; then
+              n=$(find "${root}" -type f -name "*.jsonld" 2>/dev/null | wc -l | tr -d ' ')
+              total=$((total + n))
             fi
           done
 
-          echo "has_jsonld=${has_any}" >> "$GITHUB_OUTPUT"
-
-          if [[ "${has_any}" == "false" ]]; then
-            echo "::notice title=JSON-LD validation::No JSON-LD roots present; skipping validation."
+          if [[ "${total}" -gt 0 ]]; then
+            echo "has_jsonld=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_jsonld=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=JSON-LD validation::No *.jsonld files found under configured roots; skipping."
           fi
 
-      - name: ⏭ Skip JSON-LD validation (no JSON-LD data)
+          echo "jsonld_file_count=${total}" >> "$GITHUB_OUTPUT"
+
+      - name: ⏭ Skip JSON-LD validation (no JSON-LD content)
         if: steps.detect_jsonld.outputs.has_jsonld == 'false'
         run: |
-          echo "No JSON-LD content detected; nothing to validate for this run."
+          echo "No JSON-LD content detected; job is a no-op."
 
-      # --------------------------------------------------------------------
-      # 1. JSON-LD structural & schema validation via composite action
-      #    This action is expected to:
-      #      - Validate JSON-LD documents against KFM-OP v11-aligned schemas
-      #      - Apply local contexts and shape constraints under ${JSONLD_SCHEMA_DIR}
-      #      - Exit non-zero on any invalid JSON-LD entity
-      # --------------------------------------------------------------------
-      - name: 🧬 Run JSON-LD Schema Validation (Composite Action)
+      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
+        if: steps.detect_jsonld.outputs.has_jsonld == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            scripts/requirements-jsonld.txt
+            scripts/requirements-ontology.txt
+            scripts/requirements-graph.txt
+
+      - name: 📦 Install JSON-LD validation tooling (deterministic)
         if: steps.detect_jsonld.outputs.has_jsonld == 'true'
         run: |
           set -euo pipefail
+          python -m pip install --upgrade pip
+
+          if [[ -f scripts/requirements-jsonld.txt ]]; then
+            pip install --no-cache-dir -r scripts/requirements-jsonld.txt
+          elif [[ -f requirements.txt ]]; then
+            echo "::notice title=JSON-LD tooling::scripts/requirements-jsonld.txt not found; falling back to requirements.txt."
+            pip install --no-cache-dir -r requirements.txt
+          else
+            echo "::notice title=JSON-LD tooling::No requirements file found; assuming validator scripts/actions are self-contained."
+          fi
+
+      - name: 🧬 Run JSON-LD schema validation (composite entrypoint)
+        id: schema_validate
+        if: steps.detect_jsonld.outputs.has_jsonld == 'true'
+        run: |
+          set -euo pipefail
+
+          if [[ ! -d "${JSONLD_SCHEMA_DIR}" ]]; then
+            echo "::error title=Missing JSON-LD schemas::Expected ${JSONLD_SCHEMA_DIR}."
+            exit 1
+          fi
+
+          if [[ ! -d ".github/actions/schema-validate" ]]; then
+            echo "::error title=Missing composite action::Expected .github/actions/schema-validate."
+            exit 1
+          fi
 
           roots=()
           [[ -d "${JSONLD_ROOT_DOCS}" ]] && roots+=("${JSONLD_ROOT_DOCS}")
@@ -124,88 +176,128 @@ jobs:
           [[ -d "${JSONLD_ROOT_GRAPH}" ]] && roots+=("${JSONLD_ROOT_GRAPH}")
           [[ -d "${JSONLD_ROOT_CATALOG}" ]] && roots+=("${JSONLD_ROOT_CATALOG}")
 
-          if [[ ${#roots[@]} -eq 0 ]]; then
-            echo "No JSON-LD roots exist at runtime; nothing to validate."
+          echo "Validating JSON-LD roots: ${roots[*]}"
+          bash .github/actions/schema-validate/entrypoint.sh "${JSONLD_SCHEMA_DIR}" "${roots[@]}"
+
+      - name: 📐 SHACL / ontology shape validation (optional)
+        id: shacl_validate
+        if: steps.detect_jsonld.outputs.has_jsonld == 'true'
+        continue-on-error: ${{ env.STRICT_SHACL != 'true' }}
+        run: |
+          set -euo pipefail
+
+          if [[ ! -f scripts/validate_jsonld_shacl.py ]]; then
+            echo "scripts/validate_jsonld_shacl.py not found; skipping SHACL/ontology checks."
             exit 0
           fi
 
-          echo "Validating JSON-LD roots: ${roots[*]}"
-          if [[ -d ".github/actions/schema-validate" ]]; then
-            # Expect entrypoint signature: entrypoint.sh <schema_dir> <root...>
-            bash .github/actions/schema-validate/entrypoint.sh "${JSONLD_SCHEMA_DIR}" "${roots[@]}"
-          else
-            echo "::error title=Missing composite action::Expected .github/actions/schema-validate for JSON-LD validation."
-            exit 1
+          # Avoid non-deterministic 'pip install latest' here. Ensure deps are pinned in requirements.
+          python -c "import rdflib" >/dev/null 2>&1 || {
+            echo "::notice title=SHACL validation skipped::rdflib not installed. Add it to scripts/requirements-jsonld.txt."
+            exit 0
+          }
+
+          if ! python -c "import pyshacl" >/dev/null 2>&1; then
+            echo "::notice title=SHACL validation skipped::pyshacl not installed. Add it to scripts/requirements-jsonld.txt."
+            exit 0
           fi
 
-      # --------------------------------------------------------------------
-      # 2. Optional: SHACL / ontology-level shape validation
-      #    Example checks (implemented in your script):
-      #      - CIDOC class/property constraints
-      #      - OWL-Time temporal consistency
-      #      - GeoSPARQL geometry relationships
-      #      - PROV-O lineage pattern checks
-      # --------------------------------------------------------------------
-      - name: 📐 Optional SHACL / Ontology Shape Validation
+          python scripts/validate_jsonld_shacl.py \
+            --schema-dir "${JSONLD_SCHEMA_DIR}" \
+            --docs-root "${JSONLD_ROOT_DOCS}" \
+            --data-root "${JSONLD_ROOT_DATA}" \
+            --graph-root "${JSONLD_ROOT_GRAPH}" \
+            --catalog-root "${JSONLD_ROOT_CATALOG}"
+
+      - name: 📡 PROV-O / OpenLineage consistency checks (optional)
+        id: prov_validate
         if: steps.detect_jsonld.outputs.has_jsonld == 'true'
-        continue-on-error: true
+        continue-on-error: ${{ env.STRICT_PROV != 'true' }}
         run: |
           set -euo pipefail
-          if [[ -f scripts/validate_jsonld_shacl.py ]]; then
-            python -m pip install --upgrade pip
-            # Keep dependencies minimal; expand as your script requires
-            pip install --no-cache-dir "pyshacl" "rdflib" "pyld" || echo "Optional SHACL deps install failed; continuing."
-            python scripts/validate_jsonld_shacl.py \
-              --schema-dir "${JSONLD_SCHEMA_DIR}" \
-              --docs-root "${JSONLD_ROOT_DOCS}" \
-              --data-root "${JSONLD_ROOT_DATA}" \
-              --graph-root "${JSONLD_ROOT_GRAPH}" \
-              --catalog-root "${JSONLD_ROOT_CATALOG}"
-          else
-            echo "No scripts/validate_jsonld_shacl.py found; skipping ontology-level shape validation."
+
+          if [[ ! -f scripts/validate_prov_openlineage.py ]]; then
+            echo "scripts/validate_prov_openlineage.py not found; skipping PROV/OpenLineage checks."
+            exit 0
           fi
 
-      # --------------------------------------------------------------------
-      # 3. Optional: PROV-O / OpenLineage event consistency
-      #    Example checks (implemented in your script):
-      #      - Activities, Entities, Agents linked according to PROV-O patterns
-      #      - OpenLineage events have required fields and valid references
-      # --------------------------------------------------------------------
-      - name: 📡 Optional PROV-O / OpenLineage Consistency Checks
-        if: steps.detect_jsonld.outputs.has_jsonld == 'true'
-        continue-on-error: true
+          python -c "import rdflib" >/dev/null 2>&1 || {
+            echo "::notice title=PROV/OpenLineage validation skipped::rdflib not installed. Add it to scripts/requirements-jsonld.txt."
+            exit 0
+          }
+
+          python scripts/validate_prov_openlineage.py \
+            --graph-root "${JSONLD_ROOT_GRAPH}" \
+            --releases-root "${RELEASES_ROOT}"
+
+      - name: 📊 Write metrics artifact (for telemetry_export.yml)
+        if: always()
         run: |
           set -euo pipefail
-          if [[ -f scripts/validate_prov_openlineage.py ]]; then
-            python -m pip install --upgrade pip
-            pip install --no-cache-dir "rdflib" "pyld" || echo "Optional PROV/OpenLineage deps install failed; continuing."
-            python scripts/validate_prov_openlineage.py \
-              --graph-root "${JSONLD_ROOT_GRAPH}" \
-              --releases-root "data/releases"
-          else
-            echo "No scripts/validate_prov_openlineage.py found; skipping PROV-O/OpenLineage checks."
-          fi
 
-      # --------------------------------------------------------------------
-      # 4. JSON-LD Validation Summary (for GitHub UI & telemetry_export.yml)
-      # --------------------------------------------------------------------
-      - name: 🧾 Emit JSON-LD Validation Summary
+          has_jsonld="${{ steps.detect_jsonld.outputs.has_jsonld || 'false' }}"
+          file_count="${{ steps.detect_jsonld.outputs.jsonld_file_count || '0' }}"
+
+          schema_outcome="${{ steps.schema_validate.outcome || 'skipped' }}"
+          shacl_outcome="${{ steps.shacl_validate.outcome || 'skipped' }}"
+          prov_outcome="${{ steps.prov_validate.outcome || 'skipped' }}"
+
+          cat > "${METRICS_OUT}" <<EOF
+          {
+            "kfm_workflow": "jsonld-validate",
+            "kfm_version": "v11.2.6",
+            "run": {
+              "run_id": "${GITHUB_RUN_ID}",
+              "run_attempt": "${GITHUB_RUN_ATTEMPT}",
+              "repository": "${GITHUB_REPOSITORY}",
+              "ref": "${GITHUB_REF}",
+              "sha": "${GITHUB_SHA}"
+            },
+            "inputs": {
+              "schema_dir": "${JSONLD_SCHEMA_DIR}",
+              "roots": {
+                "docs": "${JSONLD_ROOT_DOCS}",
+                "data": "${JSONLD_ROOT_DATA}",
+                "graph": "${JSONLD_ROOT_GRAPH}",
+                "catalog": "${JSONLD_ROOT_CATALOG}"
+              },
+              "jsonld_detected": ${has_jsonld},
+              "jsonld_file_count": ${file_count}
+            },
+            "results": {
+              "schema_validation": "${schema_outcome}",
+              "shacl_validation": "${shacl_outcome}",
+              "prov_openlineage_validation": "${prov_outcome}"
+            }
+          }
+          EOF
+
+          echo "Wrote ${METRICS_OUT}"
+
+      - name: 📤 Upload JSON-LD validation metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jsonld-validate-metrics
+          path: ${{ env.METRICS_OUT }}
+          if-no-files-found: error
+
+      - name: 🧾 Emit JSON-LD validation summary
         if: always()
         run: |
           set -euo pipefail
           {
             echo "## 🧬 JSON-LD & Ontology Validation Summary"
             echo ""
-            echo "- JSON-LD roots (checked for existence):"
-            echo "  - \`${JSONLD_ROOT_DOCS}\`"
-            echo "  - \`${JSONLD_ROOT_DATA}\`"
-            echo "  - \`${JSONLD_ROOT_GRAPH}\`"
-            echo "  - \`${JSONLD_ROOT_CATALOG}\`"
-            echo "- JSON-LD schema dir: \`${JSONLD_SCHEMA_DIR}\`"
-            echo "- JSON-LD content present: ${{ steps.detect_jsonld.outputs.has_jsonld }}"
+            echo "- JSON-LD files detected: \`${{ steps.detect_jsonld.outputs.has_jsonld || 'false' }}\`"
+            echo "- JSON-LD file count: \`${{ steps.detect_jsonld.outputs.jsonld_file_count || '0' }}\`"
+            echo "- Schema dir: \`${JSONLD_SCHEMA_DIR}\`"
             echo ""
-            echo "This run is part of the governed CI/CD plan for ontology-aligned assets (KFM-OP v11)."
-            echo "Detailed logs from the composite validator and any optional scripts above"
-            echo "are available in the workflow run artifacts/logs."
+            echo "Step outcomes:"
+            echo "- Schema validation: \`${{ steps.schema_validate.outcome || 'skipped' }}\`"
+            echo "- SHACL / ontology checks: \`${{ steps.shacl_validate.outcome || 'skipped' }}\`"
+            echo "- PROV/OpenLineage checks: \`${{ steps.prov_validate.outcome || 'skipped' }}\`"
+            echo ""
+            echo "Metrics artifact:"
+            echo "- \`${METRICS_OUT}\` (uploaded as \`jsonld-validate-metrics\`)"
           } >> "${GITHUB_STEP_SUMMARY}"
-
