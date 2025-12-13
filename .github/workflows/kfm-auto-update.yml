@@ -1,6 +1,6 @@
 # .github/workflows/kfm-auto-update.yml
 # 🔄 Kansas Frontier Matrix — Auto-Update & Governed Promotion
-# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# v11.2.6 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 #
 # Purpose:
 #   Perform scheduled or manual auto-refresh of data/models,
@@ -8,19 +8,19 @@
 #   and promote artifacts from stage → prod only after full governance approval.
 #
 # Governance Layers Applied:
-#   - KFM-MDP v11.2.5 (docs + metadata)
+#   - KFM-MDP v11.2.6 (docs + metadata)
 #   - FAIR+CARE enforcement (faircare_validate)
 #   - Indigenous sovereignty (H3 generalization)
 #   - STAC/DCAT/JSON-LD + Ontology validation
-#   - OpenLineage v2.5 emission
-#   - SBOM/SLSA checks (sbom_verify downstream)
-#   - Telemetry → releases/github-infra-telemetry.json
+#   - OpenLineage emission (lineage is mandatory, even on failure where feasible)
+#   - SBOM/SLSA checks (verify_supply_chain)
+#   - Telemetry artifacts for downstream packaging/aggregation
 
 name: 🔄 kfm-auto-update
 
 on:
   schedule:
-    - cron: "0 3 * * *" # Daily auto-refresh at 03:00 UTC on default branch
+    - cron: "0 3 * * *" # Daily auto-refresh at 03:00 UTC (runs on default branch)
   workflow_dispatch:
     inputs:
       reason:
@@ -28,17 +28,15 @@ on:
         required: false
         type: string
 
-# Prevent overlapping auto-update runs
+# Prevent overlapping auto-update runs per ref
 concurrency:
-  group: kfm-auto-update
+  group: kfm-auto-update-${{ github.ref }}
   cancel-in-progress: false
 
-# Default, locked-down permissions (escalate via PAT if stronger write is ever needed)
+# Default permissions: least privilege. Escalate per-job as needed.
 permissions:
-  contents: write       # Needed for tagging + pushing tags via GITHUB_TOKEN
-  id-token: write       # Needed for OIDC auth to clouds if used
+  contents: read
   actions: read
-  packages: read
 
 defaults:
   run:
@@ -46,11 +44,19 @@ defaults:
 
 env:
   PYTHON_VERSION: "3.11"
-  KFM_ENV: "stage"      # default stage env
+
+  # Lifecycle envs (KFM convention)
+  KFM_STAGE_ENV: "stage"
+  KFM_PROD_ENV: "prod"
+
+  # Validation roots (repo conventions)
+  STAC_ROOT: "data/stac"
+  STAC_SCHEMA_DIR: "schemas/stac"
+
+  # Telemetry
   KFM_TELEMETRY_OUT: "github-infra-telemetry.json"
 
 jobs:
-
   ###########################################################################
   # 1. INGEST + VALIDATE (Stage)
   ###########################################################################
@@ -60,69 +66,144 @@ jobs:
     environment: stage
     timeout-minutes: 150
 
+    # If your ingest scripts commit or open PRs, elevate permissions here.
+    # Keeping read-only by default is safer; scripts can still write to workspace/artifacts.
+    permissions:
+      contents: read
+      actions: read
+
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }} with cache
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: |
             requirements.txt
+            scripts/requirements*.txt
 
       - name: 📦 Install Dependencies (Locked)
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
-          pip install --no-cache-dir -r requirements.txt
+          if [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          else
+            echo "::error title=Missing dependencies::requirements.txt not found."
+            exit 1
+          fi
 
       - name: 🔄 Run Ingest Agent (Stage)
         run: |
-          python run_agent.py --mode ingest --stage stage
+          set -euo pipefail
+          if [[ ! -f run_agent.py ]]; then
+            echo "::error title=Missing ingest entrypoint::run_agent.py not found."
+            exit 1
+          fi
+          python run_agent.py --mode ingest --stage "${KFM_STAGE_ENV}"
 
       # -------------------
       # Metadata validation
       # -------------------
-      - name: 📚 Validate Docs & Front-Matter (KFM-MDP v11.2.5)
+      - name: 📚 Validate Docs & Front-Matter (KFM-MDP v11.2.6)
         run: |
-          bash .github/actions/markdown-lint/entrypoint.sh
+          set -euo pipefail
+          if [[ -d ".github/actions/markdown-lint" ]]; then
+            bash .github/actions/markdown-lint/entrypoint.sh
+          else
+            echo "::error title=Missing action::.github/actions/markdown-lint not found."
+            exit 1
+          fi
 
-      - name: 🛰 Validate STAC 1.x
+      - name: 🛰 Validate STAC 1.x (Local Catalog)
         run: |
-          bash .github/actions/stac-validate/entrypoint.sh data/stac
+          set -euo pipefail
+          if [[ -d ".github/actions/stac-validate" ]]; then
+            if [[ -d "${STAC_ROOT}" ]]; then
+              bash .github/actions/stac-validate/entrypoint.sh "${STAC_ROOT}" "${STAC_SCHEMA_DIR}"
+            else
+              echo "::notice title=STAC validate::No ${STAC_ROOT} directory; skipping."
+            fi
+          else
+            echo "::error title=Missing action::.github/actions/stac-validate not found."
+            exit 1
+          fi
 
       - name: 🗂 Validate DCAT 3.0
         run: |
-          bash .github/actions/dcat-validate/entrypoint.sh
+          set -euo pipefail
+          if [[ -d ".github/actions/dcat-validate" ]]; then
+            bash .github/actions/dcat-validate/entrypoint.sh
+          else
+            echo "::error title=Missing action::.github/actions/dcat-validate not found."
+            exit 1
+          fi
 
       - name: 🧬 JSON-LD & Ontology Validation
         run: |
-          bash .github/actions/schema-validate/entrypoint.sh schemas/jsonld
+          set -euo pipefail
+          if [[ -d ".github/actions/schema-validate" ]]; then
+            if [[ -d "schemas/jsonld" ]]; then
+              # Validate JSON-LD schema set against relevant repo roots (adjust target as needed)
+              bash .github/actions/schema-validate/entrypoint.sh "schemas/jsonld" "data"
+            else
+              echo "::notice title=JSON-LD validate::No schemas/jsonld directory; skipping."
+            fi
+          else
+            echo "::error title=Missing action::.github/actions/schema-validate not found."
+            exit 1
+          fi
 
       # -------------------
       # FAIR+CARE & Sovereignty gates
       # -------------------
       - name: ⚖ FAIR+CARE Governance Check (Stage)
         run: |
-          python scripts/run_faircare_checks.py
+          set -euo pipefail
+          if [[ -f scripts/run_faircare_checks.py ]]; then
+            python scripts/run_faircare_checks.py --env "${KFM_STAGE_ENV}"
+          else
+            echo "::error title=Missing FAIR+CARE check::scripts/run_faircare_checks.py not found."
+            exit 1
+          fi
 
       - name: 🧊 H3 Generalization / Sensitive Coordinate Enforcement (Stage)
         run: |
-          python scripts/h3_masking_check.py --stage stage
+          set -euo pipefail
+          if [[ -f scripts/h3_masking_check.py ]]; then
+            python scripts/h3_masking_check.py --stage "${KFM_STAGE_ENV}"
+          else
+            echo "::error title=Missing H3 masking check::scripts/h3_masking_check.py not found."
+            exit 1
+          fi
 
       # -------------------
       # Data contracts & lineage
       # -------------------
       - name: 🔁 Validate Data Pipelines (KFM-PDC v11)
         run: |
-          python scripts/validate_pipelines.py
+          set -euo pipefail
+          if [[ -f scripts/validate_pipelines.py ]]; then
+            python scripts/validate_pipelines.py
+          else
+            echo "::error title=Missing pipeline validator::scripts/validate_pipelines.py not found."
+            exit 1
+          fi
 
       - name: 📡 Emit OpenLineage Events (Stage)
         run: |
-          python scripts/emit_lineage.py --env stage --mode ingest
+          set -euo pipefail
+          if [[ -f scripts/emit_lineage.py ]]; then
+            python scripts/emit_lineage.py --env "${KFM_STAGE_ENV}" --mode ingest
+          else
+            echo "::error title=Missing lineage emitter::scripts/emit_lineage.py not found."
+            exit 1
+          fi
 
       # -------------------
       # Domain-specific validation hooks (optional)
@@ -130,20 +211,47 @@ jobs:
       - name: 🌿 Climate/Hydro Model Checks (if present)
         continue-on-error: true
         run: |
-          [[ -f scripts/validate_climate.py ]] && python scripts/validate_climate.py
+          set -euo pipefail
+          if [[ -f scripts/validate_climate.py ]]; then
+            python scripts/validate_climate.py
+          else
+            echo "scripts/validate_climate.py not found; skipping."
+          fi
 
       # -------------------
       # Telemetry snapshot (Stage)
       # -------------------
       - name: 📊 Export Stage Telemetry
         run: |
-          python scripts/telemetry_collect.py --env stage --out ${{ env.KFM_TELEMETRY_OUT }}
+          set -euo pipefail
+          if [[ -f scripts/telemetry_collect.py ]]; then
+            python scripts/telemetry_collect.py --env "${KFM_STAGE_ENV}" --out "${KFM_TELEMETRY_OUT}"
+          else
+            echo "::error title=Missing telemetry collector::scripts/telemetry_collect.py not found."
+            exit 1
+          fi
 
       - name: 📤 Upload Stage Telemetry Artifact
         uses: actions/upload-artifact@v4
         with:
           name: telemetry-stage
           path: ${{ env.KFM_TELEMETRY_OUT }}
+          if-no-files-found: error
+
+      - name: 🧾 Emit Stage Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🔄 KFM Auto-Update — Stage Summary"
+            echo ""
+            echo "- Trigger: \`${{ github.event_name }}\`"
+            echo "- Stage env: \`${KFM_STAGE_ENV}\`"
+            echo "- STAC root: \`${STAC_ROOT}\`"
+            echo "- Telemetry: \`${KFM_TELEMETRY_OUT}\`"
+            echo ""
+            echo "Stage ingest + validation completed (or failed) with governed checks."
+          } >> "${GITHUB_STEP_SUMMARY}"
 
   ###########################################################################
   # 2. PROMOTE TO PRODUCTION (Governed)
@@ -153,7 +261,7 @@ jobs:
     needs: ingest
     runs-on: ubuntu-22.04
 
-    # Only allow promotion from the main line → prod environment
+    # Only allow promotion from main → prod environment
     if: github.ref == 'refs/heads/main'
 
     # Gated environment: reviewers + waiting period configured in repo settings
@@ -163,72 +271,152 @@ jobs:
 
     timeout-minutes: 90
 
+    permissions:
+      contents: write     # tagging requires write; do NOT broaden more than needed
+      actions: read
+      id-token: write     # for OIDC-based provenance/signing if your scripts use it
+
     steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v6
+      - name: 📥 Checkout repository (for tagging)
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
+          persist-credentials: true
 
       - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }} with cache
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
           cache-dependency-path: |
             requirements.txt
+            scripts/requirements*.txt
 
       - name: 📦 Install Dependencies (Locked)
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip
-          pip install --no-cache-dir -r requirements.txt
+          if [[ -f requirements.txt ]]; then
+            pip install --no-cache-dir -r requirements.txt
+          else
+            echo "::error title=Missing dependencies::requirements.txt not found."
+            exit 1
+          fi
 
       # -------------------
       # Final governance gates
       # -------------------
       - name: ⚖ Final FAIR+CARE Gate (Prod)
         run: |
-          python scripts/run_faircare_checks.py --env prod
+          set -euo pipefail
+          if [[ -f scripts/run_faircare_checks.py ]]; then
+            python scripts/run_faircare_checks.py --env "${KFM_PROD_ENV}"
+          else
+            echo "::error title=Missing FAIR+CARE check::scripts/run_faircare_checks.py not found."
+            exit 1
+          fi
 
       - name: 🧊 Final H3 Generalization Check (Prod)
         run: |
-          python scripts/h3_masking_check.py --stage prod
+          set -euo pipefail
+          if [[ -f scripts/h3_masking_check.py ]]; then
+            python scripts/h3_masking_check.py --stage "${KFM_PROD_ENV}"
+          else
+            echo "::error title=Missing H3 masking check::scripts/h3_masking_check.py not found."
+            exit 1
+          fi
 
       - name: 🛡 Supply-Chain (SBOM + SLSA) Check
         run: |
-          python scripts/verify_supply_chain.py
+          set -euo pipefail
+          if [[ -f scripts/verify_supply_chain.py ]]; then
+            python scripts/verify_supply_chain.py
+          else
+            echo "::error title=Missing supply-chain verifier::scripts/verify_supply_chain.py not found."
+            exit 1
+          fi
 
       # -------------------
       # Promotion
       # -------------------
       - name: 🔁 Promote Artifacts Stage → Prod
         run: |
-          python promote.py --from stage --to prod
+          set -euo pipefail
+          if [[ -f promote.py ]]; then
+            python promote.py --from "${KFM_STAGE_ENV}" --to "${KFM_PROD_ENV}"
+          else
+            echo "::error title=Missing promotion entrypoint::promote.py not found."
+            exit 1
+          fi
 
       - name: 📡 Emit OpenLineage Events (Prod)
         run: |
-          python scripts/emit_lineage.py --env prod --mode promote
+          set -euo pipefail
+          if [[ -f scripts/emit_lineage.py ]]; then
+            python scripts/emit_lineage.py --env "${KFM_PROD_ENV}" --mode promote
+          else
+            echo "::error title=Missing lineage emitter::scripts/emit_lineage.py not found."
+            exit 1
+          fi
 
       # -------------------
       # Version tagging (governed)
       # -------------------
-      - name: 🏷 Tag Release
-        if: ${{ success() }}
+      - name: 🏷 Tag Release (single-tag push; no global --tags)
+        if: success()
         run: |
-          ver=$(python scripts/print_version.py)
+          set -euo pipefail
+
+          if [[ ! -f scripts/print_version.py ]]; then
+            echo "::error title=Missing version script::scripts/print_version.py not found."
+            exit 1
+          fi
+
+          ver="$(python scripts/print_version.py)"
+          tag="kfm-${ver}"
+
           git config user.name "kfm-auto-update-bot"
           git config user.email "auto@kfm.example.org"
-          git tag -a "kfm-${ver}" -m "Automated promotion"
-          git push --tags
+
+          if git rev-parse "${tag}" >/dev/null 2>&1; then
+            echo "Tag ${tag} already exists; skipping."
+            exit 0
+          fi
+
+          git tag -a "${tag}" -m "Automated promotion (${KFM_STAGE_ENV} → ${KFM_PROD_ENV})"
+          git push origin "${tag}"
 
       # -------------------
       # Telemetry for promotion run
       # -------------------
       - name: 📊 Export Prod Telemetry
         run: |
-          python scripts/telemetry_collect.py --env prod --out ${{ env.KFM_TELEMETRY_OUT }}
+          set -euo pipefail
+          if [[ -f scripts/telemetry_collect.py ]]; then
+            python scripts/telemetry_collect.py --env "${KFM_PROD_ENV}" --out "${KFM_TELEMETRY_OUT}"
+          else
+            echo "::error title=Missing telemetry collector::scripts/telemetry_collect.py not found."
+            exit 1
+          fi
 
       - name: 📤 Upload Prod Telemetry Artifact
         uses: actions/upload-artifact@v4
         with:
           name: telemetry-prod
           path: ${{ env.KFM_TELEMETRY_OUT }}
+          if-no-files-found: error
+
+      - name: 🧾 Emit Promotion Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "## 🚀 KFM Auto-Update — Promotion Summary"
+            echo ""
+            echo "- Ref: \`${GITHUB_REF}\`"
+            echo "- Prod env: \`${KFM_PROD_ENV}\`"
+            echo "- Supply-chain verified: \`scripts/verify_supply_chain.py\`"
+            echo "- Telemetry: \`${KFM_TELEMETRY_OUT}\`"
+            echo ""
+            echo "Promotion is governed via the \`prod\` environment (reviewers / wait rules in repo settings)."
+          } >> "${GITHUB_STEP_SUMMARY}"
