@@ -96,7 +96,9 @@ Fixtures in this folder simulate **known UI + governance states** without using 
 <img src="https://img.shields.io/badge/Governance-FAIR%2BCARE-orange" />
 <img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
-[⬅️ Focus Mode Regression](../README.md) · [🧾 Spec Rules](../specs/README.md) · [🧭 E2E Guide](../../../../README.md)
+[⬅️ Focus Mode Regression](../README.md) ·
+[🧾 Spec Rules](../specs/README.md) ·
+[🧭 E2E Guide](../../../../README.md)
 
 </div>
 
@@ -109,7 +111,7 @@ This folder contains **synthetic, deterministic fixtures** used to drive Focus M
 Fixtures here exist to:
 - 🧠 Provide stable **Context · Timeline · Map** inputs for regression specs.
 - 🛡️ Simulate governance conditions (CARE tiers, sovereignty flags, restricted states) safely.
-- 🧾 Provide stable **provenance/evidence surfaces** (IDs, hashes, references) without dumping full payloads.
+- 🧾 Provide stable **provenance/evidence surfaces** (IDs, hashes, references) without full payload dumps.
 - 🧪 Enable regression tests to assert **masking invariants** and “no-leak” requirements.
 
 Fixtures here MUST be:
@@ -135,34 +137,55 @@ This folder is organized for **scenario discovery**, **runner-friendly loading**
         └── 📁 regression/
             └── 📁 focus-mode/
                 └── 📁 fixtures/
-                    ├── 📄 README.md                         — This guide (fixture rules + governance)
+                    ├── 📄 README.md                                  — This guide (rules + governance intent)
+                    ├── 🧾 scenario_registry.json                      — Scenario ID → bundle mapping (source of truth)
                     │
-                    ├── 🧾 scenario_registry.json             — Scenario ID → fixture bundle mapping
+                    ├── 📁 api_mocks/                                  — API interception stubs (optional; synthetic)
+                    │   ├── 📄 README.md                                — API mock conventions + schema notes
+                    │   └── 📁 fm_synth_00x/                            — Per-scenario mock bundles (recommended)
+                    │       └── 🧾 *.json                               — Endpoint-shaped responses (synthetic)
                     │
-                    ├── 📁 scenarios/                         — Scenario bundles (synthetic, deterministic)
-                    │   ├── 🧾 focus_safe.json                 — Fully public, non-sensitive scenario
-                    │   ├── 🧾 focus_masked.json               — Masked/generalized scenario (H3-safe)
-                    │   └── 🧾 focus_restricted.json           — Restricted state (blocked/redacted UX)
+                    ├── 📁 expected_ui/                                 — High-signal expected UI assertions (no payload dumps)
+                    │   ├── 📄 README.md                                — What belongs in expected UI fixtures
+                    │   └── 📁 scenarios/
+                    │       ├── 📄 README.md                            — Scenarios index (expected UI layer)
+                    │       ├── 📁 fm_synth_001/
+                    │       │   ├── 📄 README.md                        — Expected UI contract for fm_synth_001
+                    │       │   └── 📁 snapshots/
+                    │       │       └── 📄 README.md                    — Snapshot rules (only sanitized UI render outputs)
+                    │       ├── 📁 fm_synth_002/
+                    │       │   ├── 📄 README.md
+                    │       │   └── 📁 snapshots/
+                    │       │       └── 📄 README.md
+                    │       └── 📁 fm_synth_003/
+                    │           ├── 📄 README.md
+                    │           └── 📁 snapshots/
+                    │               └── 📄 README.md
                     │
-                    ├── 📁 api_mocks/                         — Optional API response stubs (if runner uses interception)
-                    │   ├── 🧾 focus_mode_entity.json
-                    │   ├── 🧾 focus_mode_panels.json
-                    │   └── 🧾 focus_mode_provenance.json
+                    ├── 📁 provenance/                                  — Provenance fixtures (IDs/hashes only; synthetic)
+                    │   ├── 📄 README.md                                — Provenance fixture rules (no full dumps)
+                    │   ├── 📁 governance/
+                    │   │   └── 📄 README.md                            — CARE tiers, sovereignty flags, restriction routing
+                    │   ├── 📁 mappings/
+                    │   │   └── 📄 README.md                            — ID mapping glue (entity↔dataset↔experiment↔modelcard)
+                    │   ├── 📁 openlineage/
+                    │   │   └── 📄 README.md                            — OpenLineage v2.5 synthetic facets + shapes
+                    │   └── 📁 prov_o/
+                    │       └── 📄 README.md                            — PROV-O fragments (Activity/Entity/Agent; IDs only)
                     │
-                    ├── 📁 expected_ui/                       — Expected “high-signal” UI assertions (counts, IDs, flags)
-                    │   ├── 🧾 focus_safe_expected.json
-                    │   ├── 🧾 focus_masked_expected.json
-                    │   └── 🧾 focus_restricted_expected.json
-                    │
-                    └── 📁 provenance/                        — Provenance fragments (IDs/hashes only; no full dumps)
-                        ├── 🧾 focus_safe_prov.json
-                        ├── 🧾 focus_masked_prov.json
-                        └── 🧾 focus_restricted_prov.json
+                    └── 📁 scenarios/                                   — Scenario manifests (route + flags + invariants)
+                        ├── 📄 README.md                                — Scenario bundle conventions (this layer)
+                        ├── 📁 fm_synth_001/
+                        │   └── 📄 README.md                            — Scenario definition + invariants
+                        ├── 📁 fm_synth_002/
+                        │   └── 📄 README.md
+                        └── 📁 fm_synth_003/
+                            └── 📄 README.md
 ~~~
 
 Notes:
-- Filenames above are the **canonical target layout** for this folder.
-- If your repo chooses a different extension (`.yaml`) or schema naming, keep the structure and intent consistent.
+- Use `📁` for directories, `📄` for Markdown, and `🧾` for JSON/YAML artifacts.
+- If a fixture file is not Markdown, prefer **machine-friendly** formats (`🧾 .json`) and keep payloads minimal.
 
 ---
 
@@ -182,13 +205,23 @@ Fixtures SHOULD NOT:
 
 ### IDs and timestamps (determinism contract)
 Use stable deterministic identifiers:
-- `scenario_id`: stable string key (e.g., `focus_safe`)
+- `scenario_id`: stable string key (e.g., `fm_synth_003`)
 - `entity_id`: stable synthetic ID (UUID allowed if pinned)
-- `run_seed`: a numeric seed (if a generator is used)
+- `seed`: numeric seed (only if a generator is used; stored in the scenario manifest)
 
 Timestamps:
-- Use fixed timestamps where possible (e.g., `2020-01-01T00:00:00Z`)
-- If “now” is required, it MUST be injected by a deterministic clock provider in the runner, not generated by the fixture.
+- Use fixed timestamps where possible (e.g., `2020-01-01T00:00:00Z`).
+- If “now” is required, it MUST be injected by a deterministic clock provider in the runner.
+
+### Geometry safety rules (fixture-level)
+Fixtures MUST NOT contain:
+- raw latitude/longitude coordinate pairs intended to represent plausible real locations,
+- high-resolution bounding boxes that look like real places,
+- sensitive-like geometry payloads (full polygons/lines) unless clearly synthetic and explicitly validated as safe.
+
+Prefer:
+- `geometry: null`, or
+- generalized representations (e.g., “masked” placeholders) that contain no real precision.
 
 ---
 
@@ -197,23 +230,23 @@ Timestamps:
 ~~~mermaid
 flowchart TD
   A["Load scenario_registry.json"] --> B["Select scenario_id"]
-  B --> C["Load scenario bundle (scenarios/*.json)"]
-  C --> D["Optional API mocks (api_mocks/*.json)"]
-  D --> E["Render Focus Mode panels"]
-  E --> F["Assert expected_ui (counts, flags, IDs)"]
-  F --> G["Assert provenance fragments (IDs and hashes)"]
-  G --> H["Write artifacts and telemetry"]
+  B --> C["Load scenario manifest (scenarios/<id>/...)"]
+  C --> D["Optionally install api_mocks/<id>/..."]
+  D --> E["Render Focus Mode panels (Context/Timeline/Map)"]
+  E --> F["Assert expected_ui/scenarios/<id>/..."]
+  F --> G["Assert provenance fragments (IDs/hashes only)"]
+  G --> H["Write artifacts + telemetry (test run)"]
 ~~~
 
 Interpretation:
-- Fixtures are the stable, non-sensitive input layer enabling deterministic E2E regression assertions for Focus Mode v3.
+- The fixture stack is a deterministic input layer that enables regression specs to assert UI behavior and governance invariants without exposing real data.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
 Fixtures MAY represent:
-- an entity opened directly in Focus Mode,
+- an entity opened directly in Focus Mode, or
 - an entity reached from a Story Node route transition.
 
 When fixtures simulate Story Node linkage:
@@ -224,7 +257,7 @@ When fixtures simulate Story Node linkage:
 Minimum integration invariants:
 - entity identity remains stable across panel interactions,
 - provenance surfaces remain non-empty (IDs/hashes),
-- restricted state remains restricted across route transitions.
+- restricted state remains restricted across route transitions and UI exports.
 
 ---
 
@@ -233,99 +266,106 @@ Minimum integration invariants:
 Fixtures are CI-scanned and CI-validated.
 
 Fixtures MUST pass:
-- ✅ JSON/YAML parse validation
+- ✅ JSON parse validation (where applicable)
 - ✅ schema validation (when a fixture schema exists)
 - ✅ secret scan
 - ✅ PII scan (best-effort)
 - ✅ sovereignty safety checks (no coordinate leakage patterns)
 
-Recommended checks (fixture lint rules):
-- enforce stable key ordering in JSON (or apply a formatter in CI),
-- forbid lat/long-like fields unless explicitly null or generalized,
-- forbid raw geometry payloads unless geometry is clearly synthetic and policy-safe.
+Recommended fixture lint rules:
+- enforce stable formatting and ordering in JSON (formatter in CI),
+- forbid coordinate-like key pairs unless explicitly null/generalized,
+- forbid full geometry dumps in “expected_ui” fixtures,
+- verify every `scenario_id` referenced in `scenario_registry.json` has:
+  - a scenario manifest,
+  - an expected UI contract,
+  - a provenance fragment bundle reference.
 
 ---
 
 ## 📦 Data & Metadata
 
-### Scenario registry (canonical shape)
-The registry maps scenario IDs to fixture bundles.
+### scenario_registry.json (canonical shape)
+The registry maps scenario IDs to fixture bundle roots.
 
 Example (simplified):
 ~~~json
 {
   "schema_version": "v11.2.6",
   "scenarios": {
-    "focus_safe": {
-      "bundle": "scenarios/focus_safe.json",
-      "expected": "expected_ui/focus_safe_expected.json",
-      "provenance": "provenance/focus_safe_prov.json",
+    "fm_synth_001": {
+      "scenario_ref": "scenarios/fm_synth_001/",
+      "expected_ui_ref": "expected_ui/scenarios/fm_synth_001/",
+      "api_mocks_ref": "api_mocks/fm_synth_001/",
+      "provenance_ref": "provenance/",
       "tags": ["@regression"]
     },
-    "focus_masked": {
-      "bundle": "scenarios/focus_masked.json",
-      "expected": "expected_ui/focus_masked_expected.json",
-      "provenance": "provenance/focus_masked_prov.json",
+    "fm_synth_002": {
+      "scenario_ref": "scenarios/fm_synth_002/",
+      "expected_ui_ref": "expected_ui/scenarios/fm_synth_002/",
+      "api_mocks_ref": "api_mocks/fm_synth_002/",
+      "provenance_ref": "provenance/",
       "tags": ["@regression", "@governance"]
     },
-    "focus_restricted": {
-      "bundle": "scenarios/focus_restricted.json",
-      "expected": "expected_ui/focus_restricted_expected.json",
-      "provenance": "provenance/focus_restricted_prov.json",
+    "fm_synth_003": {
+      "scenario_ref": "scenarios/fm_synth_003/",
+      "expected_ui_ref": "expected_ui/scenarios/fm_synth_003/",
+      "api_mocks_ref": "api_mocks/fm_synth_003/",
+      "provenance_ref": "provenance/",
       "tags": ["@regression", "@governance"]
     }
   }
 }
 ~~~
 
-### “Expected UI” files (what belongs there)
-Expected UI files MUST contain only **high-signal assertions**, such as:
+### Scenario manifests (what belongs there)
+Scenario manifests SHOULD declare:
+- `scenario_id`
+- deterministic route (or navigation recipe)
+- fixed time (or injected time config)
+- governance flags (CARE tier, sovereignty visibility, restricted geometry simulation)
+- invariants (e.g., “raw coordinates forbidden”, “export blocked or masked”)
+
+### Expected UI fixtures (what belongs there)
+Expected UI fixtures MUST remain **high-signal and minimal**, such as:
 - required panel presence flags,
-- expected counts (evidence chips, timeline entries),
-- required governance badges (CARE tier, sovereignty icon),
-- restricted-state UI expectations (masked/redacted/blocked).
+- expected counts (chips, timeline entries),
+- required governance badges (CARE tier visible, sovereignty indicator visible),
+- restricted-state UI expectations (masked/redacted/blocked),
+- explicit “no raw coordinates” assertions.
 
-Example (simplified):
-~~~json
-{
-  "scenario_id": "focus_masked",
-  "expect": {
-    "panels_ready": ["context", "timeline", "map"],
-    "care_tier": "Tier B",
-    "sovereignty_flag_visible": true,
-    "raw_coordinates_visible": false,
-    "evidence_chip_min_count": 1
-  }
-}
-~~~
+Expected UI fixtures MUST NOT:
+- include full API payload dumps,
+- include full geometry payloads,
+- include copied internal debug JSON that contains raw precision.
 
-### Provenance fragments (IDs/hashes only)
-Provenance fixture fragments SHOULD include only:
-- `dataset_ids`, `experiment_ids`, `model_card_ids` (when relevant),
-- `hashes` (sha256 placeholders allowed),
-- stable reference anchors.
-
-Do NOT include full documents or full dataset dumps.
+### Provenance fixtures (IDs/hashes only)
+Provenance fixtures SHOULD include only:
+- dataset IDs / STAC/DCAT IDs (synthetic IDs allowed),
+- experiment IDs / model card IDs (synthetic references allowed),
+- hashes/checksums (placeholders allowed until pinned),
+- governance routing metadata (Tier, allowed/blocked/masked state).
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### PROV-O alignment (fixture interpretation)
-- A scenario bundle is a `prov:Entity`.
-- A test run is a `prov:Activity`.
-- CI runner + maintainers are `prov:Agent`.
+- Scenario manifests and expected UI files are `prov:Entity` artifacts.
+- An E2E run is a `prov:Activity`.
+- CI runner and maintainers are `prov:Agent`.
 
-Fixture provenance content MUST remain:
-- synthetic,
-- non-identifying,
-- safe to publish.
+### OpenLineage alignment (synthetic test runs)
+If OpenLineage events are emitted during E2E:
+- include scenario_id and suite tags as run facets,
+- include fixture bundle refs as inputs,
+- include reports/traces/screenshots as outputs.
 
-### STAC/DCAT alignment (optional for fixture catalogs)
-If fixtures are indexed:
-- treat the fixture bundle as documentation/test data (not a real dataset),
-- set `geometry: null` for STAC-like representations,
-- ensure any “coverage” fields are synthetic and non-sensitive.
+### STAC/DCAT alignment (optional)
+If fixtures are indexed as documentation/test datasets:
+- represent them as non-spatial resources (`geometry: null`),
+- treat outputs as test artifacts (not real datasets),
+- keep any “coverage” synthetic and non-identifying.
 
 ---
 
@@ -333,11 +373,11 @@ If fixtures are indexed:
 
 ### How fixtures are used by specs (recommended pattern)
 Specs SHOULD:
-- select `scenario_id`,
-- load the registry,
-- load bundle + expected + provenance fragments,
-- drive UI interactions using page objects,
-- call shared assertions that consume `expected_ui`.
+1. select a `scenario_id`,
+2. load `scenario_registry.json`,
+3. load the scenario manifest + expected UI + provenance fragments,
+4. drive UI interactions using page objects,
+5. apply shared assertions using expected UI contracts.
 
 This avoids:
 - hardcoding payloads in test logic,
@@ -362,9 +402,9 @@ Synthetic text MUST:
 - remain minimal and purely functional for testing.
 
 ### Escalation
-If a fixture is found to violate policy:
+If a fixture violates policy:
 - remove it immediately,
-- invalidate related specs until corrected,
+- quarantine any dependent specs until corrected,
 - route review to the relevant working group and FAIR+CARE Council.
 
 ---
@@ -373,7 +413,7 @@ If a fixture is found to violate policy:
 
 | Version | Date | Summary |
 |---:|---|---|
-| v11.2.6 | 2025-12-13 | Initial Focus Mode v3 regression fixtures guide aligned to KFM-MDP v11.2.6 (deterministic, sovereignty-safe, governance-aware). |
+| v11.2.6 | 2025-12-13 | Expanded and normalized fixture architecture to match KFM‑MDP v11.2.6 (emoji directory layout, scenario bundles, expected UI snapshots, provenance subpackages). |
 
 <div align="center">
 
@@ -385,4 +425,3 @@ If a fixture is found to violate policy:
 Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
