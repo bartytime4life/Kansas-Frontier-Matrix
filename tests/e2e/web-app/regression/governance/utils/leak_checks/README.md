@@ -41,19 +41,19 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-signature_ref: "../../../../../../../../releases/v11.2.6/signature.sig"
-attestation_ref: "../../../../../../../../releases/v11.2.6/slsa-attestation.json"
-sbom_ref: "../../../../../../../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../../../../../../../releases/v11.2.6/manifest.zip"
+signature_ref: "../../../../../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../../../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../../../../releases/v11.2.6/manifest.zip"
 
-telemetry_ref: "../../../../../../../../releases/v11.2.6/tests-e2e-telemetry.json"
-telemetry_schema: "../../../../../../../../schemas/telemetry/tests-e2e-v11.json"
-energy_schema: "../../../../../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../../../../../schemas/telemetry/carbon-v2.json"
+telemetry_ref: "../../../../../../../releases/v11.2.6/tests-e2e-telemetry.json"
+telemetry_schema: "../../../../../../../schemas/telemetry/tests-e2e-v11.json"
+energy_schema: "../../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../../schemas/telemetry/carbon-v2.json"
 
-governance_ref: "../../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 ttl_policy: "6-month review"
 sunset_policy: "Superseded upon next v12 E2E framework update"
@@ -88,9 +88,10 @@ provenance_chain:
 
 **Purpose**  
 Define the **canonical leak-check utility layer** used by governance E2E regression suites to detect and block:
-- sensitive-precision leakage (coordinates, geometry, bboxes),
-- unsafe debug payload dumps,
-- prohibited-output patterns in governed UI surfaces.
+
+- sensitive-precision leakage (coordinate-like precision, bbox-like precision, geometry-like dumps),
+- unsafe debug payload dumps in user-visible surfaces,
+- restricted-state bypass in governed UI flows.
 
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
 <img src="https://img.shields.io/badge/Surface-Web%20App%20E2E-blueviolet" />
@@ -108,30 +109,43 @@ Define the **canonical leak-check utility layer** used by governance E2E regress
 
 ## 📘 Overview
 
-Leak checks are **guardrail utilities** that scan E2E-visible surfaces to ensure the application never exposes:
+Leak checks are **governance guardrail utilities** executed inside E2E regression runs to ensure the web app never exposes:
 
-- **raw coordinate precision** (lat/long-like pairs, high-precision bboxes),
-- **geometry dumps** (GeoJSON/WKT-like fragments) in tooltips, JSON views, or downloads,
-- **restricted-state bypass** (UI shows content that should be masked/redacted/blocked),
-- **unsafe debug output** (full payload prints, stack traces containing sensitive fragments).
+- **raw precision** that should be masked/generalized,
+- **geometry-like payload dumps** in UI surfaces (panels, tooltips, debug views),
+- **restricted content** that should be redacted/blocked,
+- **unsafe debug output** that increases disclosure risk.
 
 Leak checks are designed to be:
 
-- ✅ **deterministic** (stable rule sets, stable allowlists, stable report format),
-- 🛡️ **sovereignty-safe** (focus on preventing precision leakage, not reconstructing it),
-- 🧪 **high-signal** (block when risk is meaningful; warn only when explicitly allowed),
-- 🧾 **auditable** (reports show rule IDs and locations without dumping full content).
+- ✅ **Deterministic**: stable rule IDs, stable severity semantics, stable report schema.
+- 🛡️ **Sovereignty-safe**: focused on preventing disclosure, not reconstructing hidden content.
+- 🧪 **High-signal**: “block” only when risk is meaningful; “warn” is opt-in and explicit.
+- 🧾 **Auditable**: reports include rule IDs and locations without dumping full content.
 
-**Non-goals**
+### What leak checks are (KFM definition)
+
+A leak check is a scan over **E2E-visible surfaces** (or E2E-captured summaries of surfaces) that produces:
+
+- a structured report (`json`),
+- a pass/fail decision used for CI gating,
+- minimal snapshots for debugging (redacted by design).
+
+### Non-goals
+
 - Leak checks are not OCR systems for screenshots.
-- Leak checks are not a replacement for governance policy enforcement in the application.
+- Leak checks are not a replacement for application-side masking / policy enforcement.
 - Leak checks do not validate scientific correctness; they validate **safety invariants**.
 
 ---
 
 ## 🗂️ Directory Layout
 
-This folder typically contains leak-check rules, scanners, and report writers.
+This utility is organized to support:
+
+- reuse across governance suites,
+- deterministic fixtures and allowlists,
+- unit testing for the scanners and rule engine.
 
 ~~~text
 📁 tests/
@@ -140,52 +154,85 @@ This folder typically contains leak-check rules, scanners, and report writers.
         └── 📁 regression/
             └── 📁 governance/
                 └── 📁 utils/
-                    ├── 📁 fixtures/                              — Utility fixtures (patterns, allowlists, expectations)
-                    │   ├── 🧾 leak_patterns.json                  — Pattern catalog (block/warn)
-                    │   └── 🧾 leak_allowlist.json                 — Safe placeholder allowlist
+                    ├── 📄 README.md                                       — Utilities index (shared helpers)
                     │
-                    └── 📁 leak_checks/
-                        ├── 📄 README.md                           — This guide
+                    ├── 📁 fixtures/                                       — Shared utility fixtures (safe, synthetic)
+                    │   ├── 📄 README.md
+                    │   ├── 🧾 leak_patterns.json                           — Pattern catalog (rule definitions)
+                    │   └── 🧾 leak_allowlist.json                          — Allowlisted placeholders (safe by design)
+                    │
+                    └── 📁 leak_checks/                                    — Leak check utilities (this folder)
+                        ├── 📄 README.md                                    — This guide
                         │
-                        ├── 📄 leak_check_runner.ts                 — Orchestrates checks for a test step
-                        ├── 📄 leak_check_rules.ts                  — Normalized rule set interface
-                        ├── 📄 leak_check_scanners.ts               — DOM / console / network scanning helpers
-                        ├── 📄 leak_check_report.ts                 — Report model + serialization
+                        ├── 📄 leak_check_runner.ts                          — Orchestrates a leak check pass
+                        ├── 📄 leak_check_rules.ts                           — Rule normalization + registry
+                        ├── 📄 leak_check_scanners.ts                        — DOM/console/network scan helpers
+                        ├── 📄 leak_check_report.ts                          — Report model + serialization
                         │
-                        └── 📁 __tests__/                           — Unit tests for leak utilities (optional)
-                            └── 📄 leak_checks.spec.ts
+                        ├── 📁 fixtures/                                    — Leak-check specific fixtures
+                        │   ├── 📄 README.md
+                        │   ├── 🧾 fixture_registry.json                     — Fixture ID → case path mapping
+                        │   ├── 📁 bundles/                                  — Suite manifests (grouped cases)
+                        │   │   └── 📄 README.md
+                        │   └── 📁 cases/                                    — Atomic case fixtures (single-signal)
+                        │       └── 📄 README.md
+                        │
+                        └── 📁 __tests__/                                    — Unit tests (optional)
+                            ├── 📄 README.md
+                            └── 📁 snapshots/                                — Snapshot expectations (redacted)
+                                └── 📄 README.md
 ~~~
-
-Notes:
-- Names above represent the **canonical target layout**. Your repo may use different filenames or languages.
-- Fixtures are intentionally stored in `../fixtures/` so leak checks can be reused across governance suites.
 
 ---
 
 ## 🧭 Context
 
 ### What leak checks scan (recommended surfaces)
+
 Leak checks SHOULD scan the smallest set of **high-risk, high-signal** surfaces:
 
-- **Rendered UI text** (DOM text content for panels, tooltips, overlays)
-- **“Details/JSON” views** (if the UI exposes a structured debug pane)
-- **Console logs** (errors/warns printed during E2E runs)
-- **Network responses used by the UI** (intercepted responses, only summarized in reports)
-- **Download triggers** (filenames, link hrefs, and metadata banners — not full file contents)
+- **Rendered UI text** (panel body text, tooltips, banners, chips)
+- **UI “detail” views** (if the UI exposes JSON/metadata panes)
+- **Console output** captured during E2E (errors/warnings)
+- **Network response summaries** captured by the runner (do not store raw payloads)
+- **Download triggers** (names, metadata banners, “safe preview” text)
+
+Leak checks SHOULD NOT:
+
+- store or print raw API payloads to CI logs,
+- record full DOM dumps in artifacts without redaction,
+- inspect screenshots via OCR as the primary mechanism.
 
 ### What counts as a “leak”
-A leak is any E2E-visible content that violates governance invariants, such as:
 
-- a high-precision coordinate-like pair in UI text,
-- a GeoJSON-like `"coordinates"` fragment rendered to the user,
-- a bbox presented at raw precision where masking is required,
-- restricted text shown in a scenario that should be redacted/blocked.
+A leak is any E2E-visible output that violates governance invariants, including:
+
+- coordinate-like precision appearing in UI text (where masking is required),
+- bbox-like precision appearing in tooltips, debug panes, or downloads,
+- geometry-like fragments rendered in user-visible surfaces,
+- restricted-state UI showing content that should be redacted/blocked.
+
+### Severity model (recommended)
+
+Leak checks SHOULD standardize severity:
+
+- `block` — CI must fail (merge-blocking)
+- `warn` — CI may pass only when explicitly configured to allow warnings
+- `info` — record-only, never blocks
+
+Rule IDs MUST be stable so governance dashboards can trend:
+
+- counts by rule ID,
+- regressions introduced by change sets,
+- repeat offenders in specific surfaces.
 
 ### Allowlist philosophy (safe by construction)
+
 Allowlists MUST:
-- contain only explicit placeholders (e.g., `H3_R8_CELL_ID`, `LAT_REDACTED`),
-- never contain realistic coordinate examples,
-- be reviewed as carefully as code changes (they change governance posture).
+
+- include only explicit placeholders (e.g., `H3_R8_CELL_ID`, `COORDINATE_REDACTED`),
+- avoid anything that resembles realistic coordinate formats,
+- be reviewed as carefully as code changes (they alter enforcement posture).
 
 ---
 
@@ -193,95 +240,127 @@ Allowlists MUST:
 
 ~~~mermaid
 flowchart TD
-  A["E2E spec step completes"] --> B["Collect scan targets"]
+  A["E2E step completes"] --> B["Collect scan targets"]
   B --> C["Load patterns and allowlist"]
-  C --> D["Run scanners and rule matching"]
-  D --> E["Generate leak check report"]
-  E --> F["Block merge if severity is block"]
+  C --> D["Scan and match rules"]
+  D --> E["Write structured report"]
+  E --> F["Block merge if any block severity"]
 ~~~
 
 Interpretation:
-- Leak checks run as an enforcement layer: they produce an auditable report and fail fast on policy-breaking patterns.
+- Leak checks are an enforcement layer: they run deterministically, produce an auditable report, and fail fast on high-risk patterns.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Leak checks are mandatory for governed narrative surfaces because they are user-visible and easy to regress.
+Leak checks are mandatory for **governed narrative surfaces** because they are user-visible and easy to regress.
 
 ### Story Node surfaces (typical risk points)
+
 Leak checks SHOULD validate:
-- no raw coordinates appear in “spacetime” UI,
+
+- no raw precision appears in spacetime/map UI,
 - masked geometry stays masked across navigation and refresh,
 - provenance chips do not expand into full payload dumps.
 
 ### Focus Mode surfaces (typical risk points)
+
 Leak checks SHOULD validate:
-- map tooltips and context panels never show precision beyond policy,
-- “evidence” surfaces show IDs/hashes, not raw sensitive fragments,
-- restricted scenarios remain restricted across panel switching.
+
+- tooltips and panels do not show precision beyond policy,
+- evidence/provenance surfaces show IDs/hashes, not raw sensitive fragments,
+- restricted scenarios remain restricted across:
+  - panel switching,
+  - route transitions,
+  - “copy/share/export” interactions.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Leak checks are expected to be:
+Leak checks are **merge-blocking** when they detect any `block` severity result.
 
-- **merge-blocking** when they detect severity `block`,
-- **reporting** when severity is `warn` (only when explicitly allowed by rules).
+### Recommended CI behavior
 
-Recommended CI behavior:
-- run leak checks in `@governance` suites by default,
-- emit a structured report to E2E artifacts,
-- upload a summary to telemetry (counts by severity and rule ID).
+- run leak checks for `@governance` suites by default,
+- emit a structured report into E2E artifacts,
+- contribute summary counts to telemetry (per run).
 
-**Flake policy**
-- A leak check failure is not retryable by default.
-- If a failure is flaky, treat that as a design bug in scanners/waits, not a reason to relax rules.
+### Required artifacts (recommended)
+
+Leak checks SHOULD write:
+
+~~~text
+📁 reports/
+└── 📁 e2e/
+    ├── 🧾 leak-check-report.json                 — Structured results (no raw dumps)
+    ├── 🧾 leak-check-summary.json                — Totals by severity and rule ID
+    └── 📁 leak-check-snapshots/                  — Minimal redacted snippets (optional)
+~~~
+
+### Flake policy
+
+- A leak check failure is **not retryable by default**.
+- If a leak check failure is flaky, treat it as a scanner/readiness design bug:
+  - fix selectors,
+  - use event-based waits,
+  - tighten deterministic capture steps.
+
+Do not relax governance rules to “fix” flakiness.
 
 ---
 
 ## 📦 Data & Metadata
 
 ### Rule model (recommended minimal shape)
-Rules SHOULD be normalized into a small consistent interface.
+
+Rules SHOULD normalize to a small interface.
 
 ~~~json
 {
-  "rule_id": "lat_long_pair_high_precision",
+  "rule_id": "coordinate_like_precision_pair",
   "severity": "block",
   "matcher": {
     "type": "regex",
-    "value": "(-?\\d{1,3}\\.\\d{4,})\\s*,\\s*(-?\\d{1,3}\\.\\d{4,})"
+    "value": "<regex-redacted-in-docs>"
   },
-  "description": "Detects coordinate-like pairs with high precision.",
+  "description": "Detects coordinate-like precision patterns in user-visible surfaces.",
+  "targets": ["ui_text", "console", "network_summary", "download_banner"],
   "tags": ["precision", "coordinates", "@governance"]
 }
 ~~~
 
+Notes:
+- The exact regex strings may live in `../fixtures/leak_patterns.json`.
+- This guide avoids embedding realistic coordinate-like examples in documentation.
+
 ### Report model (recommended)
+
 Reports MUST avoid dumping raw content. Prefer:
+
 - rule ID,
+- severity,
 - target type,
-- a small redacted snippet (optional),
-- stable location anchors (selector name, URL path, request name).
+- stable location anchors (page + selector + request name),
+- optional redacted snippet or hash.
 
 ~~~json
 {
   "schema_version": "v11.2.6",
-  "run_id": "e2e_2025-12-13_001",
-  "scenario_id": "governance_masked_required",
+  "run_id": "e2e_<timestamp>_<seq>",
+  "scenario_id": "<scenario_id>",
   "results": [
     {
-      "rule_id": "geojson_coordinates_key",
+      "rule_id": "geometry_like_dump_key",
       "severity": "block",
       "target": "ui_text",
       "location": {
         "page": "FocusMode",
-        "selector": "data-testid=provenance-panel"
+        "selector": "data-testid=<selector>"
       },
       "evidence": {
-        "snippet_redacted": "\"coordinates\" …",
+        "snippet_redacted": "<redacted>",
         "hash": "<sha256>"
       }
     }
@@ -289,10 +368,23 @@ Reports MUST avoid dumping raw content. Prefer:
   "summary": {
     "block": 1,
     "warn": 0,
+    "info": 0,
     "pass": 12
   }
 }
 ~~~
+
+### Fixtures and case-driven validation
+
+Leak checks SHOULD be validated against fixture cases:
+
+- atomic cases under `fixtures/cases/`,
+- bundles under `fixtures/bundles/`,
+- fixture registry under `fixtures/fixture_registry.json`.
+
+This ensures:
+- detectors have positive controls (they fire),
+- detectors have negative controls (they do not over-trigger).
 
 ---
 
@@ -300,54 +392,62 @@ Reports MUST avoid dumping raw content. Prefer:
 
 Leak-check artifacts are test outputs (not real datasets):
 
-- **DCAT**: leak-check reports can be treated as `dcat:Distribution` artifacts (`mediaType: application/json`).
+- **DCAT**: leak-check reports may be treated as `dcat:Distribution` artifacts (`mediaType: application/json`).
 - **STAC**: if represented as a STAC item, use:
   - `geometry: null`
-  - `properties.datetime` as the run timestamp
-  - assets: `leak-check-report.json`
+  - `properties.datetime` set to run timestamp
+  - assets: report + summary
 - **PROV-O**:
   - a leak-check run is a `prov:Activity`,
   - rules/fixtures are `prov:Entity`,
-  - CI is a `prov:Agent`.
+  - CI runner and maintainers are `prov:Agent`.
 
 ---
 
 ## 🧱 Architecture
 
 ### Recommended scanner pipeline
+
 Leak checks SHOULD implement a layered approach:
 
 1. **Normalize inputs**
-   - DOM text, console entries, intercepted response summaries
-2. **Apply allowlist first**
-   - remove known safe placeholders from consideration
-3. **Apply block rules**
-   - fail fast if block rules match
-4. **Apply warn rules**
-   - record for review if configured
+   - DOM text extraction
+   - console entries
+   - network response summaries (safe-minimized)
+   - download banner metadata
+2. **Apply allowlist**
+   - strip known safe placeholders
+3. **Apply `block` rules**
+   - fail fast if any match
+4. **Apply `warn/info` rules**
+   - record per configuration
 5. **Write report**
-   - stable JSON schema, minimal safe snippets
+   - stable JSON schema, minimal evidence
 
 ### Anti-patterns (avoid)
-- Logging full network payloads to CI output
-- Storing raw UI dumps in artifacts without redaction
-- Using “sleep” timing instead of event-based readiness
-- Treating allowlists as a general bypass mechanism
+
+- printing full payloads into CI output,
+- storing raw DOM dumps as artifacts,
+- treating allowlists as a bypass mechanism,
+- “sleep-based” timing instead of event-based readiness.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-Leak checks exist to uphold non-negotiable constraints:
+Leak checks uphold non-negotiable constraints:
 
 - **Authority to Control**: prevents precision leakage that could enable harmful inference.
 - **Responsibility & Ethics**: blocks unsafe outputs even when the app “mostly works.”
-- **Collective Benefit**: ensures public-facing surfaces remain safe and respectful.
+- **Collective Benefit**: keeps public-facing surfaces safe and respectful.
+
+### Governance routing
 
 If leak checks detect a governance failure:
-- block merges affecting governed surfaces,
-- route review to the appropriate working group and FAIR+CARE Council,
-- fix the underlying UI/API behavior (do not weaken rules as a shortcut).
+
+- block merges affecting governed outputs,
+- route to the relevant working group and FAIR+CARE Council,
+- fix underlying UI/API behavior (do not weaken rules as a shortcut).
 
 ---
 
@@ -359,12 +459,11 @@ If leak checks detect a governance failure:
 
 <div align="center">
 
-[🏛️ Governance Charter](../../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+[🏛️ Governance Charter](../../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 © 2025 Kansas Frontier Matrix — MIT License  
 Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
