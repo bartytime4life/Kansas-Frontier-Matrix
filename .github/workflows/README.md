@@ -1,86 +1,53 @@
 ---
-title: "🔄 Kansas Frontier Matrix — CI/CD Workflows Master Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: ".github/workflows/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-08"
+title: "🔁 Kansas Frontier Matrix — Reusable GitHub Workflows (KFM CI/CD)"
+path: ".github/workflows/reusable/README.md"
+
+version: "v11.2.6"
+last_updated: "2025-12-13"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
+review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 content_stability: "stable"
 
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../releases/v11.2.3/github-infra-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/github-workflows-v4.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+status: "Active / Enforced"
+doc_kind: "Index"
+intent: "github-reusable-workflows"
+role: "ci-cd-reusable-workflows-overview"
+category: "CI/CD · Automation · Security · Telemetry"
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.5"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
-status: "Active / Enforced"
-doc_kind: "Architecture"
-intent: "github-workflows-ci-cd-master"
-role: "ci-cd-overview"
-category: "CI/CD · Governance · Automation · Security · Telemetry"
-
-classification: "Public Document"
+classification: "Public"
 sensitivity: "General"
 sensitivity_level: "None"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
 data_steward: "KFM FAIR+CARE Council"
-risk_category: "Low"
-redaction_required: false
-
 fair_category: "F1-A1-I1-R1"
-care_label: "Public / Low-Risk"
+care_label: "Public · Low-Risk"
+jurisdiction: "Kansas / United States"
 
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "CreativeWork"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
 
-metadata_profiles:
-  - "STAC 1.0.0"
-  - "DCAT 3.0"
-  - "PROV-O"
-  - "FAIR+CARE"
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
-provenance_chain:
-  - ".github/workflows/README.md@v10.0.0"
-  - ".github/workflows/README.md@v10.2.2"
-  - ".github/workflows/README.md@v10.3.1"
-  - ".github/workflows/README.md@v10.4.1"
-  - ".github/workflows/README.md@v11.0.0"
-  - ".github/workflows/README.md@v11.0.1"
-  - ".github/workflows/README.md@v11.0.2"
-  - ".github/workflows/README.md@v11.2.0"
-  - ".github/workflows/README.md@v11.2.2"
-  - ".github/workflows/README.md@v11.2.3"
-provenance_requirements:
-  versions_required: true
-  newest_first: true
-  must_reference_superseded: true
-  must_reference_origin_root: false
+telemetry_schema: "../../../schemas/telemetry/github-workflows-v4.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 
-json_schema_ref: "../../schemas/json/github-workflows-readme-v11.schema.json"
-shape_schema_ref: "../../schemas/shacl/github-workflows-readme-v11-shape.ttl"
+json_schema_ref: "../../../schemas/json/github-reusable-workflows-readme-v11.schema.json"
+shape_schema_ref: "../../../schemas/shacl/github-reusable-workflows-readme-v11-shape.ttl"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -92,7 +59,7 @@ ai_transform_permissions:
   - "metadata-extraction"
 ai_transform_prohibited:
   - "speculative-additions"
-  - "unverified-historical-claims"
+  - "unverified-architectural-claims"
   - "governance-override"
   - "content-alteration"
 
@@ -105,35 +72,32 @@ requires_directory_layout_section: true
 requires_version_history: true
 requires_governance_links_in_footer: true
 
-doc_uuid: "urn:kfm:doc:github-workflows:architecture:v11.2.3"
-semantic_document_id: "kfm-doc-github-workflows-readme"
-event_source_id: "ledger:.github/workflows/README.md"
+doc_uuid: "urn:kfm:doc:github-workflows:reusable:index:v11.2.6"
+semantic_document_id: "kfm-doc-github-workflows-reusable-readme"
+event_source_id: "ledger:.github/workflows/reusable/README.md"
 immutability_status: "mutable-plan"
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
-
-jurisdiction: "United States / Kansas"
-lifecycle_stage: "stable"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next CI/CD architecture update"
 ---
 
 <div align="center">
 
-# 🔄 **Kansas Frontier Matrix — CI/CD Workflows Master Architecture (v11.2.3 LTS)**  
-`.github/workflows/README.md`
+# 🔁 **Kansas Frontier Matrix — Reusable GitHub Workflows (v11.2.6 LTS)**
+`.github/workflows/reusable/README.md`
 
-[![KFM-MDP v11.2.5](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.5-blue)](../../docs/standards/kfm_markdown_protocol_v11.2.5.md)
-[![FAIR+CARE](https://img.shields.io/badge/Data-FAIR%2BCARE-gold)](../../docs/standards/faircare/FAIRCARE-GUIDE.md)
-[![CI/CD](https://img.shields.io/badge/Pipelines-Automated-success)]()
-[![Security](https://img.shields.io/badge/Supply--Chain-Secure-critical)]()
-[![Telemetry](https://img.shields.io/badge/Telemetry-OpenLineage%20%2B%20OTel-9c27b0)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
+<img src="https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.6-blue" />
+<img src="https://img.shields.io/badge/CI%2FCD-Reusable_Workflows-success" />
+<img src="https://img.shields.io/badge/Supply--Chain-Hardened-critical" />
+<img src="https://img.shields.io/badge/Telemetry-OpenLineage%20%2B%20OTel-9c27b0" />
+<img src="https://img.shields.io/badge/License-MIT-green" />
 
 **Purpose**  
-Describe the **canonical CI/CD architecture** for all workflows in `.github/workflows/` that implement  
-validation, FAIR+CARE governance, supply-chain integrity, security, telemetry, data lineage, and automated deployment  
-for the Kansas Frontier Matrix (KFM) v11.2.3 monorepo.
+Provide the **canonical index + authoring contract** for **reusable GitHub Actions workflows**
+stored under `.github/workflows/reusable/`.
+
+Reusable workflows are treated as **governed CI/CD infrastructure**:
+they reduce duplication, centralize policy, and enforce consistent validation across the KFM pipeline
+(ETL → catalogs → graph → API → UI → Story Nodes → Focus Mode).
 
 </div>
 
@@ -141,296 +105,255 @@ for the Kansas Frontier Matrix (KFM) v11.2.3 monorepo.
 
 ## 📘 Overview
 
-This document is the **master CI/CD architecture spec** for KFM:
+### What lives here
 
-- Treats GitHub Actions as a **governed policy engine**, not just build scripts.  
-- Defines how workflows together realize a **prov:Plan** for safe evolution of code, data, models, and narratives.  
-- Connects CI/CD behavior to **FAIR+CARE**, **sovereignty**, **ontology**, and **supply-chain** standards.  
-- Ensures every change is **reproducible, observable, auditable**, and **ethically constrained**.
+This directory contains **reusable GitHub Actions workflows** designed to be invoked via `workflow_call`.
 
-Workflows in this directory:
+Use this directory when you need:
 
-- **Validate** code, docs, schemas, and geospatial/temporal metadata.  
-- **Enforce** FAIR+CARE and sovereignty rules.  
-- **Protect** supply-chain and secrets.  
-- **Govern** AI models, Story Nodes, and Focus Mode narratives.  
-- **Emit** OpenTelemetry + OpenLineage telemetry into KFM’s governance data lake.  
+- **One canonical implementation** of a repeated CI/CD concern (e.g., linting, schema validation, security scanning).
+- **Consistent governance gates** (FAIR+CARE checks, sovereignty masking checks, “no secrets/no PII” enforcement).
+- **Shared telemetry emission** patterns (OpenLineage + OpenTelemetry-friendly artifacts).
+
+### What does not live here
+
+Keep these **out of** `reusable/`:
+
+- One-off workflows that are **only used once** (keep them in `.github/workflows/`).
+- Repo content that belongs in the pipeline itself (scripts, schemas, validators) — those belong under:
+  - `tools/` (validators, lint drivers, CLI helpers)
+  - `schemas/` (JSON schema, SHACL, telemetry schema)
+  - `src/` (application/pipeline code)
+  - `docs/` (standards, architecture, workflow documentation)
+
+### Source of truth
+
+- Master CI/CD architecture: `../README.md`
+- Markdown authoring standard: `../../../docs/standards/kfm_markdown_protocol_v11.2.6.md`
 
 ---
 
 ## 🗂️ Directory Layout
 
-```text
+Reusable workflow layouts MUST follow the governed tree style.
+
+~~~text
 .github/
-└── 🤖 workflows/                             # All governed CI/CD workflows (this directory)
-    ├── 🧪 ci.yml                             # Core CI: lint, tests, type-checks, base schema checks
-    ├── 📚 docs_validate.yml                  # KFM-MDP v11.2.5 markdown + front-matter validation
-    ├── 🛰️ stac_validate.yml                  # STAC 1.x Item/Collection validation (data/stac/**)
-    ├── 🗂️ dcat_validate.yml                  # DCAT 3.0 dataset/distribution validation
-    ├── 🧬 jsonld_validate.yml                # JSON-LD + ontology checks (CIDOC/OWL-Time/GeoSPARQL/PROV-O)
-    ├── ⚖️ faircare_validate.yml              # FAIR+CARE & ethics checks
-    ├── 🧊 h3_generalization.yml              # H3 generalization enforcement for sensitive coordinates
-    ├── 🔐 security_audit.yml                 # Dependency CVEs, secret scanning, workflow hardening
-    ├── 📦 sbom_verify.yml                    # SBOM + manifest + SLSA attestation verification
-    ├── 🔁 data_pipeline.yml                  # ETL contract & lineage validation (KFM-PDC v11)
-    ├── 🤖 ai_behavior_check.yml              # AI behavior, drift, bias, forbidden narratives
-    ├── 🎯 focusmode_mlops.yml                # Focus Mode v3 MLOps (fusion, narrative safety, explainability)
-    ├── 📊 telemetry_export.yml               # Telemetry aggregation → github-infra-telemetry.json
-    ├── 🚀 release.yml                        # Signed release packaging, manifest, SBOM
-    ├── 🔄 kfm-auto-update.yml                # Scheduled auto-update & promotion orchestration
-    ├── 🏷️ labeler.yml                        # Auto-label PRs by component/domain
-    └── 🌐 site.yml                           # Web + docs build & deployment pipelines
-```
+└── 🤖 workflows/                                        — Primary workflows + orchestration
+    └── 🔁 reusable/                                     — Reusable workflows (called via workflow_call)
+        ├── 📄 README.md                                 — ← This document
+        ├── 📄 reusable_<domain>_<purpose>.yml            — Reusable workflow contract (on: workflow_call)
+        ├── 📄 reusable_<domain>_<purpose>.md             — Optional: per-workflow notes (governance + I/O)
+        └── 📁 templates/                                — Optional: snippets for authors (no secrets)
+~~~
 
-Any new workflow added to this directory MUST be:
+### Naming conventions (recommended)
 
-- Documented in this README.  
-- Wired into schemas under `schemas/telemetry/` when it affects telemetry.  
-- Aligned with FAIR+CARE and sovereignty policy documents.
+- `reusable_<domain>_<purpose>.yml`
+  - domain examples: `ci`, `docs`, `security`, `data`, `catalog`, `graph`, `ui`, `ai`, `telemetry`
+  - purpose examples: `lint`, `test`, `schema_validate`, `sbom_verify`, `faircare_gate`
 
 ---
 
-## 🧱 Architecture
+## 🧭 Context
 
-At a high level, `.github/workflows/` implements a **multi-stage gate**:
+KFM CI/CD is **policy + provenance**, not just build automation.
 
-```mermaid
+Reusable workflows are the **shared “policy modules”** that primary workflows call to ensure:
+
+- consistent enforcement of KFM standards
+- predictable artifacts and telemetry
+- minimal-permission security posture
+- deterministic, replayable validations
+
+In practice:
+
+- `.github/workflows/*.yml` contains **triggers and orchestration**
+- `.github/workflows/reusable/*.yml` contains **reusable policy implementations**
+
+---
+
+## 🗺️ Diagrams
+
+~~~mermaid
 flowchart TB
-    A["🔔 Triggers\npush · PR · schedule · manual"] --> B["🧪 Core CI\nci.yml"]
-    B --> C["📚 Docs & Metadata\n docs_validate · stac_validate · dcat_validate · jsonld_validate"]
-    C --> D["⚖ Governance\n faircare_validate · h3_generalization"]
-    D --> E["🔐 Security & Supply Chain\n security_audit · sbom_verify"]
-    E --> F["📦 Build & Release\n site · release"]
-    F --> G["🔄 Auto-Update & Promotion\n kfm-auto-update"]
-    G --> H["📊 Telemetry & Lineage\n telemetry_export + OpenLineage"]
-```
+  A["PR / Push / Schedule"] --> B["Primary workflow in .github/workflows/"]
+  B --> C["Reusable workflow (workflow_call) in .github/workflows/reusable/"]
+  C --> D["Repo validators and scripts (tools/ src/ schemas/)"]
+  D --> E["Artifacts + telemetry (reports, logs, summaries)"]
+~~~
 
-**Design principles:**
+---
 
-- **Single-pass correctness**: each stage either passes or fails; no “best-effort” modes for governed checks.  
-- **Path-aware execution**: workflows trigger only when relevant files change, but never skip required checks for those paths.  
-- **Provenance-first**: every critical step emits lineage and telemetry, forming an audit graph.  
+## 🧠 Story Node & Focus Mode Integration
+
+Reusable workflows are expected to support Story Nodes / Focus Mode governance by:
+
+- running documentation validators for narrative safety and required metadata
+- enforcing model-card and experiment-log completeness (when AI/ML changes occur)
+- blocking speculative additions where governed standards prohibit them
+
+Reusable workflows MUST NOT:
+
+- generate or rewrite narrative content
+- fabricate evidence, citations, provenance, or governance status
+- bypass sovereignty or masking requirements
+
+(Those are enforced by standards and validators; this directory only **runs** them.)
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-### Core CI (`ci.yml`)
+### Required reusable-workflow authoring rules
 
-- Runs for most PRs and pushes.  
-- Responsibilities:
-  - Linting (TS/JS/CSS/Python).  
-  - Unit + integration tests.  
-  - Minimal schema checks (e.g., core configs).  
-- Provides a **fast feedback loop** before deeper governance workflows.
+Every reusable workflow under this directory SHOULD:
 
----
+- declare `on: workflow_call`
+- define **typed** `inputs` with defaults where safe
+- define `secrets` expectations explicitly
+- use **minimal permissions** (`permissions:`) and avoid `write-all`
+- pin third-party actions by **SHA** where feasible (supply-chain hardening)
+- emit artifacts in a predictable structure (so telemetry aggregation can find them)
 
-### Documentation, Metadata & Ontology
+### Example caller pattern (local reusable)
 
-**`docs_validate.yml`**
+~~~yaml
+jobs:
+  docs_validate:
+    uses: ./.github/workflows/reusable/reusable_docs_validate.yml
+    with:
+      target_paths: "docs/**"
+    secrets: inherit
+~~~
 
-- Enforces **KFM-MDP v11.2.5**, including:  
-  - YAML front-matter presence & key fields.  
-  - Heading hierarchy & emoji usage at H2.  
-  - Directory layout + version history sections for governed docs.  
+### Example reusable contract skeleton
 
-**`stac_validate.yml` / `dcat_validate.yml` / `jsonld_validate.yml`**
+~~~yaml
+name: "Reusable: Docs Validate"
 
-- **STAC**:
-  - Collections & Items under `data/stac/**`.  
-  - Bounding boxes, datetimes, CRS, licenses, asset metadata.  
+on:
+  workflow_call:
+    inputs:
+      target_paths:
+        description: "Glob(s) to validate"
+        required: true
+        type: string
+    secrets:
+      GH_TOKEN:
+        required: false
 
-- **DCAT**:
-  - Dataset JSON-LD (KFM-DCAT v11).  
-  - Distributions & references.  
+permissions:
+  contents: read
 
-- **JSON-LD / Ontology**:
-  - CIDOC-CRM classes/properties.  
-  - OWL-Time instants/intervals.  
-  - GeoSPARQL geometry & relationships.  
-  - PROV-O lineage relationships.
-
-Any failure **blocks merges and releases**.
-
----
-
-### FAIR+CARE, Sovereignty & H3
-
-**`faircare_validate.yml`**
-
-- Validates:
-  - CARE labels & FAIR categories.  
-  - Sovereignty flags and policy references.  
-  - Presence of required governance metadata for high-sensitivity domains.  
-
-**`h3_generalization.yml`**
-
-- Checks for:
-  - High-precision coordinates in sensitive datasets.  
-  - Proper H3 generalization and/or masking for archaeology and tribal sites.  
-  - Metadata fields indicating generalization applied.  
-
-Failed FAIR+CARE or H3 checks → PR must be corrected or escalated via `governance_issue` template.
-
----
-
-### Security & Supply-Chain
-
-**`security_audit.yml`**
-
-- Runs:
-  - Secret scanners on code and configs.  
-  - Vulnerability scanners against dependencies.  
-  - Optional container scans.  
-
-- Policy:
-  - Critical CVEs → block until resolved.  
-  - High CVEs → require explicit governance sign-off.
-
-**`sbom_verify.yml`**
-
-- Ensures:
-  - SBOM (SPDX) exists and is valid.  
-  - SBOM matches `manifest.zip`.  
-  - SLSA-like attestations and signatures are present.  
-
-Results feed into security sections of the telemetry and governance ledgers.
-
----
-
-### Data Pipelines & Lineage (`data_pipeline.yml`)
-
-- Ensures:
-  - Pipeline configurations follow KFM-PDC v11 data contracts.  
-  - Lineage events are consistently emitted.  
-  - Changes to ETL don’t silently break downstream contracts.  
-
-This workflow helps keep ETL-derived products reproducible and well documented.
-
----
-
-### AI & Focus Mode Governance
-
-**`ai_behavior_check.yml`**
-
-- Checks:
-  - Forbid patterns in AI outputs (e.g., speculative history, ungrounded claims).  
-  - Grounding and citation quality.  
-  - Bias and drift metrics where configured.  
-
-**`focusmode_mlops.yml`**
-
-- Ensures:
-  - Story Node and Focus Mode v3 models are properly configured and versioned.  
-  - Model cards in `mcp/model_cards/**` are present & updated.  
-  - Explainability artifacts exist for critical models (where required).
-
-No AI or Focus Mode change may skip these governance layers.
-
----
-
-### Telemetry & Reporting (`telemetry_export.yml`)
-
-- Aggregates metrics into `github-infra-telemetry.json` using `github-workflows-v4.json` schema.  
-- Metrics include:
-  - Pass/fail rates and durations per workflow.  
-  - Governance & FAIR+CARE violation counts.  
-  - Energy & carbon estimations.  
-  - Security and supply-chain events (CVE/secret/attestation outcomes).  
-
-Telemetry is a first-class artifact, not an afterthought.
-
----
-
-### Site & Release Workflows (`site.yml`, `release.yml`)
-
-- **`site.yml`**:
-  - Builds & deploys:
-    - Web client (MapLibre/Cesium).  
-    - Docs site.  
-
-- **`release.yml`**:
-  - Packages and signs releases.  
-  - Attaches SBOM, manifest, telemetry, and attestation files.  
-  - Emits final OpenLineage events that mark release completion.
-
----
-
-### 🔄 Auto-Update & Promotion (`kfm-auto-update.yml`)
-
-- **Purpose**:
-  - Orchestrate **scheduled auto-updates** for data layers, models, or indexes (e.g., nightly or weekly refresh).  
-  - Coordinate safe promotion from freshly refreshed states → staging → production.
-
-- **Behavior**:
-  - Triggers on schedules (cron) or manual dispatch.  
-  - Runs subsets of:
-    - Data pipeline checks (ETL validation & lineage).  
-    - Metadata/ontology validation (STAC/DCAT/JSON-LD).  
-    - FAIR+CARE and H3 checks for affected assets.  
-    - Security & SBOM checks when release-like flows are involved.  
-
-- **Gating**:
-  - Promotion to production only when:
-    - All relevant workflows (ci/docs/stac/dcat/jsonld/faircare/h3/security/sbom) pass.  
-    - Governance-approved thresholds for drift, bias, or risk are satisfied.  
-
-- **Telemetry**:
-  - Emits additional signals for auto-refresh success rates and error budgets to telemetry.
+jobs:
+  validate:
+    name: "Docs validation"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@<pin-sha-or-version>
+      - name: Run validators
+        run: |
+          echo "Run KFM doc validators here"
+~~~
 
 ---
 
 ## 📦 Data & Metadata
 
-The workflows themselves are modeled as **metadata-producing infrastructure**:
+Reusable workflows SHOULD standardize outputs so downstream aggregation is consistent.
 
-- Each workflow run = `prov:Activity` with a unique ID & timestamp.  
-- Artifacts (logs, SBOM, manifests, telemetry JSON) = `prov:Entity`.  
-- Links to docs & standards via `governance_ref`, `ethics_ref`, `sovereignty_policy`.  
+Recommended artifact conventions:
 
-These elements can be exported into:
+- `artifacts/<workflow_name>/reports/**`
+- `artifacts/<workflow_name>/logs/**`
+- `artifacts/<workflow_name>/telemetry/**`
 
-- DCAT catalogs for CI/CD artifacts.  
-- STAC-like registries of non-spatial pipeline outputs.  
-- The knowledge graph as infrastructure entities and events.
+Recommended metadata signals (inputs or environment):
+
+- `kfm_run_id` (caller-provided)
+- `kfm_component` (e.g., `docs`, `stac`, `security`)
+- `kfm_profile` (e.g., `markdown-lint`, `schema-lint`)
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+Even CI/CD infrastructure is modeled as governed provenance:
+
+- **PROV-O**
+  - reusable workflow definition = `prov:Plan`
+  - each workflow run = `prov:Activity`
+  - runner / bot identity = `prov:Agent`
+  - produced logs, SBOMs, reports = `prov:Entity`
+
+- **DCAT**
+  - CI artifacts can be described as dataset distributions (when published)
+
+- **STAC**
+  - Non-spatial STAC Items can represent released artifacts (geometry null, datetime = run time)
+
+This README does not publish catalogs; it defines the conventions that make it possible.
+
+---
+
+## 🧱 Architecture
+
+### Interface boundaries
+
+Reusable workflows are allowed to:
+
+- call repo tooling (`tools/**`, `src/**`, `schemas/**`) via deterministic scripts
+- upload artifacts needed for governance review
+
+Reusable workflows are not allowed to:
+
+- embed data transforms that belong in ETL (those must be deterministic pipelines under `src/` + `data/`)
+- “decide” governance outcomes beyond reporting validator results
+
+### Versioning strategy (recommended)
+
+- Reusable workflows should be treated as API surface:
+  - avoid breaking input names/types
+  - deprecate with clear migration notes
+  - keep behavior deterministic for the same inputs + repo ref
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-CI/CD enforces FAIR+CARE by:
+Reusable workflows enforce governance by design:
 
-- Ensuring proper metadata and licensing before assets are considered “valid”.  
-- Enforcing Indigenous data sovereignty and CARE constraints via `faircare_validate` and `h3_generalization`.  
-- Blocking changes when governance rules are not satisfied, rather than just logging warnings.
+- **No secrets / no PII**: never echo secrets; redact logs if needed.
+- **Sovereignty-aware**: do not output or cache precise sensitive locations.
+- **Least privilege**: permissions must be explicitly minimized.
+- **Auditability**: steps must be traceable via logs + artifacts.
+- **Reproducibility**: do not depend on non-pinned mutable external resources when avoidable.
 
-CI/CD architecture is therefore a **governance tool**, not a purely technical system.
+If a reusable workflow must access sensitive resources, it MUST:
+- document the justification and constraints in an adjacent `.md` note, and
+- require explicit secret inputs (never implicit).
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                                                                |
-|--------:|------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| v11.2.3 | 2025-12-08 | Aligned with KFM-MDP v11.2.5; refreshed telemetry references and governance links; clarified auto-update/promotion behavior.          |
-| v11.2.2 | 2025-11-28 | Deep v11.2.2 architecture update; added `kfm-auto-update.yml` to layout & flows; aligned with GitHub Infra README and telemetry wiring. |
-| v11.2.0 | 2025-11-27 | First v11.2 master CI/CD architecture; consolidated governance, security, AI, and telemetry views.                                    |
-| v11.0.2 | 2025-11-19 | Expanded ETL and lineage workflows; added sustainability considerations.                                                               |
-| v11.0.1 | 2025-11-19 | Fixed directory layout; aligned schemas and telemetry references with GitHub infra docs.                                              |
-| v11.0.0 | 2025-11-18 | Initial v11 CI/CD overview with FAIR+CARE-aware workflows.                                                                             |
-| v10.4.1 | 2025-11-16 | Added AI workflow descriptions; improved metadata checks.                                                                              |
-| v10.3.1 | 2025-11-13 | Introduced STAC/DCAT validators and telemetry bundling concepts.                                                                      |
-| v10.2.2 | 2025-11-12 | Added sustainability metrics to CI/CD; started CVE gating.                                                                             |
-| v10.0.0 | 2025-11-09 | Initial CI/CD workflow documentation for early KFM versions.                                                                           |
+| Version     | Date       | Summary |
+|------------:|-----------:|---------|
+| **v11.2.6** | 2025-12-13 | Initial governed index for `.github/workflows/reusable/`; establishes `workflow_call` contract patterns, security posture, and provenance-friendly artifact conventions. |
 
 ---
 
 <div align="center">
 
-🔄 **Kansas Frontier Matrix — CI/CD Workflows Master Architecture (v11.2.3)**  
-Automation-First · FAIR+CARE-Governed · Provenance-Aware  
+🔁 **Reusable Workflows Index (v11.2.6)**  
+Governed CI/CD · Provenance-Aware · FAIR+CARE-Aligned
 
-[⬅ GitHub Infrastructure Overview](../README.md) · [🏗 Repository Architecture](../ARCHITECTURE.md) · [🛡 Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅ Workflows Master README](../README.md) ·
+[📑 KFM Markdown Protocol](../../../docs/standards/kfm_markdown_protocol_v11.2.6.md) ·
+[🏛️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
