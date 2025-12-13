@@ -1,6 +1,6 @@
 ---
-title: "🛡️ Kansas Frontier Matrix — Governance Regression Tests (E2E Web App) (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "tests/e2e/web-app/regression/governance/README.md"
+title: "🧰 Kansas Frontier Matrix — Governance E2E Utilities (Web App Regression) (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+path: "tests/e2e/web-app/regression/governance/utils/README.md"
 
 version: "v11.2.6"
 last_updated: "2025-12-13"
@@ -10,10 +10,10 @@ review_cycle: "Continuous · Autonomous Systems Oversight · FAIR+CARE Council"
 content_stability: "stable"
 
 status: "Active · Enforced"
-doc_kind: "Testing Guide"
+doc_kind: "Utilities Guide"
 header_profile: "standard"
 footer_profile: "standard"
-intent: "tests-e2e-web-app-regression-governance"
+intent: "tests-e2e-web-app-regression-governance-utils"
 diagram_profiles:
   - "mermaid-flowchart-v1"
 
@@ -23,9 +23,9 @@ markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 
-semantic_document_id: "kfm-tests-e2e-web-app-regression-governance-readme"
-doc_uuid: "urn:kfm:tests:e2e:web-app:regression:governance:readme:v11.2.6"
-event_source_id: "ledger:tests/e2e/web-app/regression/governance/README.md"
+semantic_document_id: "kfm-tests-e2e-web-app-regression-governance-utils-readme"
+doc_uuid: "urn:kfm:tests:e2e:web-app:regression:governance:utils:readme:v11.2.6"
+event_source_id: "ledger:tests/e2e/web-app/regression/governance/utils/README.md"
 immutability_status: "version-pinned"
 machine_extractable: true
 
@@ -41,19 +41,19 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-signature_ref: "../../../../../releases/v11.2.6/signature.sig"
-attestation_ref: "../../../../../releases/v11.2.6/slsa-attestation.json"
-sbom_ref: "../../../../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.2.6/manifest.zip"
+signature_ref: "../../../../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../../../releases/v11.2.6/manifest.zip"
 
-telemetry_ref: "../../../../../releases/v11.2.6/tests-e2e-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/tests-e2e-v11.json"
-energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
+telemetry_ref: "../../../../../../releases/v11.2.6/tests-e2e-telemetry.json"
+telemetry_schema: "../../../../../../schemas/telemetry/tests-e2e-v11.json"
+energy_schema: "../../../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../../../schemas/telemetry/carbon-v2.json"
 
-governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 ttl_policy: "6-month review"
 sunset_policy: "Superseded upon next v12 E2E framework update"
@@ -78,27 +78,27 @@ ai_transform_prohibited:
   - "secret-insertion"
 
 provenance_chain:
-  - "tests/e2e/web-app/regression/governance/README.md@v11.2.6"
+  - "tests/e2e/web-app/regression/governance/utils/README.md@v11.2.6"
 ---
 
 <div align="center">
 
-# 🛡️ **Governance Regression Tests (E2E Web App) (v11 LTS)**
-`tests/e2e/web-app/regression/governance/README.md`
+# 🧰 **Governance E2E Utilities (Web App Regression) (v11 LTS)**
+`tests/e2e/web-app/regression/governance/utils/README.md`
 
 **Purpose**  
-Define the **canonical governance regression E2E suite** for the KFM web app.  
-This folder validates **FAIR+CARE routing**, **sovereignty masking**, **restricted-state UX**, and **provenance surfaces** using **deterministic, synthetic fixtures**.
+Define the **shared utility layer** for governance regression E2E tests.  
+Utilities in this folder provide **deterministic navigation**, **policy-safe parsing**, **stable waiting**, and **leak-detection helpers** without duplicating logic in specs.
 
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
 <img src="https://img.shields.io/badge/Surface-Web%20App-blueviolet" />
-<img src="https://img.shields.io/badge/Suite-Regression-informational" />
-<img src="https://img.shields.io/badge/Governance-FAIR%2BCARE-orange" />
+<img src="https://img.shields.io/badge/Scope-Governance%20E2E-orange" />
+<img src="https://img.shields.io/badge/Determinism-Event%20Based-brightgreen" />
 <img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
-[⬅️ Regression Index](../README.md) ·
-[🧭 E2E Guide](../../../README.md) ·
-[🧪 Tests Index](../../../../README.md)
+[⬅️ Governance Regression](../README.md) ·
+[📌 Shared Assertions](../assertions/README.md) ·
+[🧭 E2E Guide](../../../README.md)
 
 </div>
 
@@ -106,25 +106,29 @@ This folder validates **FAIR+CARE routing**, **sovereignty masking**, **restrict
 
 ## 📘 Overview
 
-Governance regression tests are **policy-level E2E assertions** that confirm the UI does not regress into unsafe or non-compliant behavior.
+Governance E2E utilities exist to keep tests:
+- ✅ deterministic (no flaky sleeps, no “guess timing”),
+- 🛡️ sovereignty-safe (no coordinate leakage, no full payload dumps),
+- 🧾 auditable (stable artifacts and manifests),
+- 🧠 readable (specs focus on “what” not “how”).
 
-This suite focuses on **user-visible governance behavior**, including:
-- 🏷️ CARE tier display and routing (Tier A/B/C behaviors).
-- 🪶 Sovereignty masking invariants (no precision leakage; generalized/blocked where required).
-- 🧾 Provenance and evidence surfaces (IDs/hashes/links are present; no payload dumps).
-- 🚫 Restricted states (redacted, masked, or blocked UX behaves deterministically).
-- 📦 Export/download behaviors (no sensitive precision in tooltips, JSON views, or downloads).
+Utilities in this directory SHOULD:
+- expose small, composable helpers,
+- fail loudly with high-signal errors,
+- avoid encoding scenario-specific assumptions (that belongs in fixtures),
+- be runner-compatible (Playwright/Cypress-style patterns; no runner lock-in in docs).
 
-Out of scope:
-- Model accuracy evaluation (handled by model cards + experiments).
-- Back-end policy engines beyond the surfaces they expose to the UI.
-- Any test relying on production tokens, production data, or external networks as a required dependency.
+Utilities in this directory MUST NOT:
+- embed production URLs, tokens, or credentials,
+- fetch external network resources as a required dependency,
+- hardcode real coordinates or plausible sensitive geometry,
+- generate random IDs or timestamps unless seeded and recorded.
 
 ---
 
 ## 🗂️ Directory Layout
 
-This folder is organized for **clear policy intent**, **CI parallelism**, and **fixture safety**.
+Utilities are grouped by intent: navigation, waiting, parsing, and governance checks.
 
 ~~~text
 📁 tests/
@@ -132,72 +136,63 @@ This folder is organized for **clear policy intent**, **CI parallelism**, and **
     └── 📁 web-app/
         └── 📁 regression/
             └── 📁 governance/
-                ├── 📄 README.md                           — This guide (governance regression scope + rules)
-                │
-                ├── 📁 specs/                              — Governance regression specs (runner-specific)
-                │   ├── 📄 README.md                        — Spec conventions (tags, determinism, flake policy)
-                │   └── 🧾 *.spec.*                         — Test specs (format depends on runner)
-                │
-                ├── 📁 fixtures/                            — Synthetic governance states (non-identifying)
-                │   ├── 📄 README.md                        — Fixture rules (no raw coords, no real entities)
-                │   ├── 🧾 governance_registry.json          — Scenario registry (ID → bundle refs)
-                │   └── 📁 scenarios/
-                │       ├── 📄 README.md                    — Scenarios index
-                │       └── 📁 gov_synth_00x/               — Scenario bundles (safe/masked/restricted)
-                │
-                ├── 📁 assertions/                          — Shared governance assertions (high-signal, reusable)
-                │   └── 📄 README.md                        — Assertion catalog + required invariants
-                │
-                ├── 📁 artifacts/                           — Runner outputs (reports/traces/screenshots)
-                │   └── 📄 README.md                        — Artifact layout + retention rules
-                │
-                └── 📁 utils/                               — Helpers (selectors, waits, policy-safe parsers)
-                    └── 📄 README.md                        — Utility conventions (no sleeps; event-based waits)
+                └── 📁 utils/
+                    ├── 📄 README.md                         — This guide (utility rules + catalog)
+                    │
+                    ├── 📁 navigation/                       — Route helpers + deterministic entry points
+                    │   └── 📄 README.md                      — Navigation conventions (no hardcoded sleeps)
+                    │
+                    ├── 📁 waits/                            — Event-based waits (UI ready, network idle)
+                    │   └── 📄 README.md                      — Wait strategy rules (no time-based sleeps)
+                    │
+                    ├── 📁 selectors/                        — Stable selectors + data-testid policies
+                    │   └── 📄 README.md                      — Selector conventions (a11y-safe)
+                    │
+                    ├── 📁 parsing/                          — Safe parsing of UI text/JSON views (no payload dumps)
+                    │   └── 📄 README.md                      — Parsing rules (policy-safe)
+                    │
+                    ├── 📁 leak_checks/                      — Precision leakage detection helpers (coordinates, geometry)
+                    │   └── 📄 README.md                      — Leak detection patterns + allowlists
+                    │
+                    ├── 📁 fixtures/                         — Helper loaders for scenario_registry + bundles
+                    │   └── 📄 README.md                      — Fixture loading helpers (deterministic)
+                    │
+                    └── 📁 telemetry/                        — Run-manifest + telemetry helpers (shape validation)
+                        └── 📄 README.md                      — Telemetry helper rules (schema-aligned)
 ~~~
 
-Policy notes:
-- Keep governance assertions centralized under `📁 assertions/` so they remain consistent across suites.
-- Keep fixtures minimal and synthetic; store only what is required for deterministic policy checks.
+Notes:
+- This layout is a **recommended structure**. If the repo uses a flatter layout, keep the same categories and naming intent.
+- Use `🧾` for JSON/YAML/log artifacts when documenting example files.
 
 ---
 
 ## 🧭 Context
 
-### Determinism contract (non-negotiable)
-Governance regressions MUST:
-- use synthetic, deterministic fixtures,
-- use event-based waits (selector/state/network idle), not time-based sleeps,
-- be idempotent and isolated (no cross-test coupling),
-- avoid “live time” unless injected by a deterministic clock provider.
+### Utility design principles
+Utilities SHOULD follow:
+- **Single responsibility**: one helper does one job.
+- **Event-based waiting**: wait for *state* (visible/ready) not *time*.
+- **Policy-first defaults**: helpers default to safe behavior (masked/redacted).
+- **Runner-neutral interfaces**: minimize direct coupling (e.g., accept “page” handle or driver adapter).
 
-### Governance invariants (what must never regress)
-All governance regressions SHOULD assert at least these invariants:
+### Deterministic waiting (required)
+Utilities MUST:
+- prefer waits on:
+  - DOM ready state,
+  - selector visibility,
+  - stable network idle (if supported),
+  - explicit app “ready” markers (recommended `data-testid="app-ready"`),
+- reject arbitrary `sleep(1000)` patterns unless explicitly quarantined for a known issue.
 
-1. **No sensitive precision leakage**
-   - No raw coordinates in UI text, tooltips, debug views, downloads, or exported JSON.
-   - Masked/restricted states must remain masked/restricted through navigation.
-
-2. **CARE routing is visible and consistent**
-   - CARE tier label is present when required.
-   - Tier routing produces correct UX state (allowed vs masked vs blocked).
-
-3. **Sovereignty indicators behave correctly**
-   - Sovereignty flag visibility is consistent with fixture state.
-   - Any “restricted” state triggers safe fallback UI.
-
-4. **Provenance surfaces are present**
-   - Evidence/provenance chips contain stable IDs/hashes/links.
-   - Provenance does not expose full payloads or raw sensitive geometry.
-
-5. **Exports remain policy-safe**
-   - Export actions produce either safe content (masked/generalized) or a blocked response.
-   - Any “download” flow is audited and deterministic.
-
-### Tagging guidance (runner-agnostic)
-Recommended tags:
-- `@regression` for this folder by default
-- `@governance` for policy-level gates
-- `@nightly` for slow matrix tests (browser permutations, heavy artifact generation)
+### Governance-safe parsing (required)
+Parsing utilities MUST:
+- avoid printing full API payloads into logs,
+- return small structured results (counts, IDs, flags),
+- redact anything that resembles:
+  - coordinate-like text patterns,
+  - raw geometries,
+  - sensitive identifiers.
 
 ---
 
@@ -205,143 +200,102 @@ Recommended tags:
 
 ~~~mermaid
 flowchart TD
-  A["Start E2E regression run"] --> B["Boot test stack (UI/API)"]
-  B --> C["Load synthetic governance fixtures"]
-  C --> D["Run governance specs"]
-  D --> E["Assert masking and routing invariants"]
-  E --> F["Collect artifacts (report, trace, screenshots)"]
-  F --> G["Write telemetry summary"]
-  G --> H["CI gate: pass or block merge"]
+  A["Spec selects scenario_id"] --> B["Fixture loader reads registry"]
+  B --> C["Navigation helper opens route"]
+  C --> D["Wait helpers confirm UI ready"]
+  D --> E["Parsing helpers extract high-signal fields"]
+  E --> F["Leak checks assert no precision leakage"]
+  F --> G["Telemetry helper writes run-manifest"]
 ~~~
 
 Interpretation:
-- Governance regressions are executed against a controlled test stack using synthetic fixtures and must produce auditable artifacts and telemetry before CI allows merges.
+- Utilities turn fragile UI timing + parsing into a deterministic workflow that supports governance invariants.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Governance regressions are **merge-blocking** when included in required pipelines.
+Utilities are part of the governed E2E surface and MUST pass:
+- secret scan,
+- PII scan (best-effort),
+- lint + type checks (where applicable),
+- governance regression suites.
 
-Minimum CI expectations:
-- Secrets scan and PII scan must pass.
-- Fixture validation must pass (JSON parse + schema where available).
-- Governance assertions must be **retry-resistant**:
-  - governance failures are not retried by default,
-  - any retry must be explicitly justified and tracked.
-
-Required artifacts per run (recommended):
-~~~text
-📁 reports/
-└── 📁 e2e/
-    ├── 🧾 junit.xml
-    ├── 🧾 report.json
-    ├── 📁 traces/
-    ├── 📁 screenshots/
-    └── 🧾 run-manifest.json
-~~~
-
-Telemetry aggregation target (repo standard):
-~~~text
-📁 releases/
-└── 📁 <version>/
-    └── 🧾 tests-e2e-telemetry.json
-~~~
+Recommended CI checks for utilities:
+- forbid `sleep`/`timeout` literals above a low threshold unless annotated,
+- enforce selector usage via `data-testid` where possible,
+- enforce “no console dump” of payload-like objects.
 
 ---
 
 ## 📦 Data & Metadata
 
-### Fixture source of truth
-Governance regressions MUST use synthetic fixtures from:
-- `tests/e2e/web-app/regression/governance/fixtures/`
-- and/or shared synthetic assets under `tests/fixtures/`
+### Stable selector policy (recommended)
+If the app supports it, utilities SHOULD standardize on:
+- `data-testid` attributes,
+- ARIA roles/labels for accessibility-safe selection.
 
-No production datasets. No real individuals. No plausible real “site-like” coordinates.
+Utilities SHOULD avoid:
+- brittle CSS selectors tied to layout or theme.
 
-### Recommended run-manifest fields
-A governance regression run SHOULD emit:
-- `run_id`
-- `suite_tags`
-- `scenario_ids` executed
-- `browser_matrix`
-- `seed` (if used)
-- `env_hash`
-- `artifact_paths`
-- `governance_mode_flags`
+### Leak check patterns (minimum set)
+Leak-check helpers SHOULD detect:
+- latitude/longitude-like numbers (`-97.1234`, `38.5678`) in rendered text,
+- GeoJSON-like keys (`"coordinates":`, `"geometry":`) in UI debug views,
+- bounding box fields with high precision,
+- unmasked “download” content.
 
-Example (simplified):
-~~~json
-{
-  "run_id": "e2e_governance_2025-12-13_001",
-  "suite_tags": ["@regression", "@governance"],
-  "scenario_ids": ["gov_synth_001", "gov_synth_002"],
-  "browser_matrix": ["chromium"],
-  "env_hash": "<sha256>",
-  "artifacts": {
-    "report": "reports/e2e/report.json",
-    "junit": "reports/e2e/junit.xml"
-  }
-}
-~~~
+Where allowlists exist (e.g., synthetic coordinate placeholders):
+- allowlists MUST be explicit, minimal, and reviewed.
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### PROV-O alignment (tests as governed activities)
-- A governance regression run is a `prov:Activity`.
-- Fixtures, configs, and reports are `prov:Entity`.
-- CI jobs, maintainers, and councils are `prov:Agent`.
+### PROV-O (test utilities as support entities)
+- Utility modules may be treated as `prov:Entity` inputs to a test run activity.
+- A test run is a `prov:Activity`.
+- CI is a `prov:Agent`.
 
-### DCAT alignment (reports as distributions)
-- The suite report is a `dcat:Distribution` (e.g., `mediaType: application/json`).
-- The README and runbook docs are documentation records (`text/markdown`).
-
-### STAC alignment (optional)
-If E2E artifacts are indexed as STAC items:
-- use `geometry: null`,
-- store artifacts as assets (report, traces, screenshots),
-- keep content synthetic and non-sensitive.
+### Telemetry
+Utilities SHOULD help write:
+- `run-manifest.json` (determinism and artifacts),
+- schema-aligned telemetry fragments that aggregate into:
+  `releases/<version>/tests-e2e-telemetry.json`.
 
 ---
 
 ## 🧱 Architecture
 
-Governance regressions should follow a stable pattern:
-- Page objects for navigation and stable selectors
-- Shared assertion library for governance invariants
-- Scenario registry + fixture bundles for deterministic state selection
-- Event-based waiting (UI state / network idle / DOM ready)
+### Recommended utility catalog (what belongs here)
+Utilities in this folder typically include:
+- **Route openers** (e.g., open a Focus Mode entity route deterministically)
+- **Ready checks** (app ready marker, panels ready, map tiles ready)
+- **Panel parsers** (extract evidence chip IDs, badge text, counts)
+- **Governance badge readers** (CARE tier, sovereignty flag state)
+- **Leak detection** (assert no coordinate-like text is present)
+- **Download interceptors** (verify masked exports, block forbidden exports)
+- **Artifact helpers** (name snapshots, store traces, link run manifests)
 
-Recommended separation of concerns:
-- `specs/` decides what to test
-- `fixtures/` defines safe scenario inputs
-- `assertions/` defines policy invariants
-- `utils/` provides stable primitives (selectors, waits)
+### What does NOT belong here
+- Scenario payload definitions (belongs in `fixtures/`)
+- Hardcoded “expected UI” assertions (belongs in `assertions/` or `expected_ui/`)
+- Large runner configuration (belongs in runner config files at suite root)
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-### Sovereignty rules (binding)
-These tests MUST:
-- never include raw sensitive precision,
-- confirm masked and restricted states are enforced end-to-end,
-- treat any detected leakage as a stop-ship failure.
+Utilities MUST:
+- default to safe behavior,
+- treat potential precision leakage as a hard failure,
+- preserve sovereignty policy constraints in logs and outputs,
+- remain publishable (no hidden sensitive content in helper strings).
 
-### Ethical language in fixtures (required)
-Synthetic text used in governance tests MUST:
-- avoid colonial framing or harmful phrasing,
-- avoid implying genealogy or sacred knowledge,
-- remain minimal and functional.
-
-### Escalation path
-Any governance regression failure that indicates:
-- precision leakage,
-- policy bypass,
-- restricted-state malfunction,
-must be routed to the relevant working group and the FAIR+CARE Council per governance policy.
+If a utility is found to enable leakage (even indirectly):
+- remove or patch immediately,
+- invalidate dependent specs until corrected,
+- route review per governance policy.
 
 ---
 
@@ -349,16 +303,15 @@ must be routed to the relevant working group and the FAIR+CARE Council per gover
 
 | Version | Date | Summary |
 |---:|---|---|
-| v11.2.6 | 2025-12-13 | Initial governance regression E2E guide aligned to KFM‑MDP v11.2.6 (emoji layout, determinism rules, policy invariants, artifact + telemetry expectations). |
+| v11.2.6 | 2025-12-13 | Initial governance E2E utilities guide aligned to KFM‑MDP v11.2.6 (event-based waits, policy-safe parsing, leak-check helpers). |
 
 <div align="center">
 
-[🏛️ Governance Charter](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+[🏛️ Governance Charter](../../../../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 © 2025 Kansas Frontier Matrix — MIT License  
 Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
