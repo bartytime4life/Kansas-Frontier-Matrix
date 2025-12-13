@@ -1,304 +1,302 @@
 ---
 title: "🧪 Kansas Frontier Matrix — Test Platform Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tests/ARCHITECTURE.md"
+
 version: "v11.0.0"
-last_updated: "2025-11-24"
+last_updated: "2025-12-13"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous Systems Oversight · FAIR+CARE Council"
+content_stability: "stable"
+ttl_policy: "6-month review"
+sunset_policy: "Superseded upon next v12 test architecture upgrade"
+
+status: "Active / Enforced"
+doc_kind: "Architecture"
+header_profile: "standard"
+footer_profile: "standard"
+intent: "tests-platform-architecture"
+
+semantic_document_id: "kfm-doc-tests-architecture"
+doc_uuid: "urn:kfm:doc:tests-architecture-v11.0.0"
+event_source_id: "ledger:tests/ARCHITECTURE.md"
+immutability_status: "version-pinned"
+machine_extractable: true
+
+classification: "Public Document"
+sensitivity: "Low"
+public_exposure_risk: "Low"
+fair_category: "F1-A1-I2-R3"
+care_label: "Public · Low-Risk · Inclusive · Ethical"
+accessibility_compliance: "WCAG 2.1 AA+"
+jurisdiction: "Kansas / United States"
+indigenous_rights_flag: false
+
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+
 commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-version-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+signature_ref: "../releases/v11.0.0/signature.sig"
+attestation_ref: "../releases/v11.0.0/slsa-attestation.json"
 sbom_ref: "../releases/v11.0.0/sbom.spdx.json"
 manifest_ref: "../releases/v11.0.0/manifest.zip"
+
 telemetry_ref: "../releases/v11.0.0/tests-telemetry.json"
 telemetry_schema: "../schemas/telemetry/tests-architecture-v11.json"
+
 governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
-status: "Active · Enforced"
-doc_kind: "Architecture"
-intent: "tests-platform-architecture"
-semantic_document_id: "kfm-doc-tests-architecture"
-doc_uuid: "urn:kfm:doc:tests-architecture-v11.0.0"
-accessibility_compliance: "WCAG 2.1 AA+"
-classification: "Public Document"
-sensitivity: "Low"
-fair_category: "F1-A1-I2-R3"
-care_label: "Public / Low-Risk · Inclusive · Ethical"
-indigenous_rights_flag: false
-lifecycle_stage: "stable"
-public_exposure_risk: "Low"
-immutability_status: "version-pinned"
-ttl_policy: "6-month review"
-sunset_policy: "Superseded upon next v12 test architecture upgrade"
-machine_extractable: true
-event_source_id: "ledger:tests/ARCHITECTURE.md"
+
 provenance_chain:
   - "tests/ARCHITECTURE.md@v10.0.0"
   - "tests/ARCHITECTURE.md@v10.3.2"
   - "tests/ARCHITECTURE.md@v10.4.0"
+
+ai_transform_permissions:
+  - "summary"
+  - "semantic-highlighting"
+  - "diagram-extraction"
+  - "metadata-extraction"
+  - "layout-normalization"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "governance-override"
+  - "inject-secrets"
+  - "inject-pii"
 ---
 
 <div align="center">
 
-# 🧪 **Kansas Frontier Matrix — Test Platform Architecture (v11 LTS)**  
+# 🧪 **Kansas Frontier Matrix — Test Platform Architecture (v11 LTS)**
 `tests/ARCHITECTURE.md`
 
-### **Deterministic · FAIR+CARE · Sovereignty-Safe · Telemetry-Aligned · Diamond⁹ Ω / Crown∞Ω**
+**Deterministic · FAIR+CARE · Sovereignty-Safe · Telemetry-Aligned · Diamond⁹ Ω / Crown∞Ω**
 
-This document defines the **full testing architecture** for the Kansas Frontier Matrix v11 monorepo, covering:
-
-- **Unit · Integration · E2E · Schema · Governance · Telemetry · Accessibility**  
-- **LangGraph DAG validation (Reliable Pipelines v11)**  
-- **Story Node v3 + Focus Mode v3 testing**  
-- **Graph, STAC/DCAT, ETL, AI, UI, and sovereignty checks**  
-- **OpenTelemetry v11 integration**  
-- **FAIR+CARE governance gating**  
-
-The test platform is the **CI/CD backbone** ensuring system-wide trustworthiness.
+This document defines the **test platform architecture** for the Kansas Frontier Matrix v11 monorepo, covering:
+Unit, Integration, E2E, Schema, Governance, Telemetry, and Accessibility validation — and how these gates
+protect ETL, catalogs (STAC/DCAT), graph ingestion, API/UI, Story Nodes, and Focus Mode.
 
 </div>
 
 ---
 
-# 📘 1. Purpose
+## 📘 Overview
 
-The KFM Test Platform ensures the entire monorepo remains:
+### What this architecture guarantees
+The KFM Test Platform keeps the monorepo:
+- stable (regressions blocked)
+- governed (FAIR+CARE + sovereignty rules enforced)
+- semantically safe (schema + ontology alignment constraints validated at boundaries)
+- accessible (WCAG 2.1 AA+ gate)
+- telemetry-valid (tests validate telemetry shape and required fields)
+- provenance-ready (tests validate presence/structure of provenance references when required)
 
-- **Stable** — regressions prevented through deterministic tests  
-- **Governed** — FAIR+CARE + sovereignty rules enforced  
-- **Semantic-safe** — ontology and schema correctness (CIDOC-CRM, OWL-Time, GeoSPARQL)  
-- **A11y-compliant** — WCAG 2.1 AA+ guaranteed  
-- **Telemetry-accurate** — sustainability, energy, carbon, and ethics metrics validated  
-- **Provenance-aligned** — OpenLineage v2.5 + PROV-O signals validated  
-
-This architecture governs how tests are structured, executed, validated, and incorporated into the release pipeline.
+### Non-negotiables
+- deterministic tests by default (seeded where randomness exists)
+- no network calls in unit tests (unless explicitly mocked)
+- fixtures are sanitized and sovereignty-safe
+- failures block merge/release tagging when they touch governance, masking, a11y, contracts, or schemas
 
 ---
 
-# 🗂️ 2. Directory Layout (v11)
+## 🗂️ Directory Layout
 
-```text
+~~~text
 tests/
+├── 📄 ARCHITECTURE.md               — This architecture specification (this file)
+├── 📄 README.md                     — Test framework overview (entry point)
 │
-├── ARCHITECTURE.md               # This v11 architecture specification
-├── README.md                     # High-level test suite overview
+├── 📁 unit/                         — Deterministic pure-logic testing
+│   ├── 📁 web/                      — React/TS components, hooks, reducers (headless)
+│   ├── 📁 pipelines/                — ETL/AI/utils unit tests (no network)
+│   ├── 📁 utils/                    — Pure functions, helpers, format validators
+│   └── 📁 governance/               — CARE + sovereignty rule atomic tests
 │
-├── unit/                         # Deterministic pure-logic testing
-│   ├── web/                      # React/TS components, hooks, reducers
-│   ├── pipelines/                # ETL/AI/utils small-unit tests
-│   ├── utils/                    # Pure functions, helpers
-│   └── governance/               # CARE + sovereignty rule atomic tests
+├── 📁 integration/                  — Cross-component boundary validation
+│   ├── 📁 web/                      — Map/timeline contract integration
+│   ├── 📁 api/                      — API contract tests (paging, error shapes, DTO schemas)
+│   ├── 📁 stac/                     — STAC/DCAT linking + metadata integrity
+│   ├── 📁 storynodes/               — Story Node v3 validity + Focus Mode contract readiness
+│   ├── 📁 graph/                    — Graph constraints/idempotency/dedupe (if enabled)
+│   └── 📁 telemetry/                — Telemetry emission/aggregation validation
 │
-├── integration/                  # Cross-component behavior
-│   ├── web/                      # MapLibre + Cesium + timeline behavior
-│   ├── stac/                     # STAC/DCAT linking + metadata integrity
-│   ├── storynodes/               # Story Node v3 → Focus Mode v3 flows
-│   └── telemetry/                # OTel metrics emission, aggregation
+├── 📁 e2e/                          — System-wide behavior tests (browser-driven)
+│   ├── 📁 web-app/                  — Navigation, rendering, keyboard paths, a11y gates
+│   ├── 📁 dataset-workflows/        — Intake → validate → publish simulations
+│   └── 📁 governance/               — Ledger/provenance UI flows (where implemented)
 │
-├── e2e/                          # System-wide behavior (Playwright/Cypress)
-│   ├── web-app/                  # UX, navigation, rendering
-│   ├── dataset-workflows/        # Upload → validate → publish flows
-│   └── governance/               # Ledger audit, CARE masking end-to-end
+├── 📁 schemas/                      — Schema-driven test suites (fixtures + assertions)
+│   ├── 📄 story-node.test.json
+│   ├── 📄 stac-collection.test.json
+│   └── 📄 telemetry.test.json
 │
-├── schemas/                      # Schema-driven test suites
-│   ├── story-node.test.json
-│   ├── stac-collection.test.json
-│   └── telemetry.test.json
-│
-└── resources/                    # Static deterministic fixtures
-    ├── sample_stac/
-    ├── storynodes/
-    ├── focus_payloads/
-    └── pipelines/
-```
+└── 📁 resources/                    — Static deterministic fixtures (sanitized)
+    ├── 📁 sample_stac/
+    ├── 📁 storynodes/
+    ├── 📁 focus_payloads/
+    └── 📁 pipelines/
+~~~
 
 ---
 
-# 🧬 3. Test Architecture Model (v11)
+## 🧭 Context
 
-## 3.1 Layered Model
+### Test layers (v11)
+1. unit (pure logic, deterministic)
+2. integration (cross-boundary checks)
+3. e2e (user-critical flows)
+4. schema (shape validity for payloads and catalogs)
+5. governance (CARE + sovereignty + narrative safety)
+6. telemetry (shape validity + required fields + aggregation rules)
+7. accessibility (WCAG 2.1 AA+ gates)
 
-1. **Unit Layer** — deterministic, side-effect-free  
-2. **Integration Layer** — required boundaries across ETL/graph/UI  
-3. **E2E Layer** — complete simulated user + pipeline flows  
-4. **Schema Layer** — JSON/YAML shape validation  
-5. **Governance Layer** — FAIR+CARE + sovereignty enforcement  
-6. **Telemetry Layer** — energy, carbon, runtime, A11y usage  
+### Fixture rules (hard constraints)
+Fixtures MUST NOT:
+- contain PII
+- contain secrets/tokens
+- contain restricted coordinates or sovereignty-protected locations
+- depend on external live services
 
-## 3.2 Test Architecture Diagram
+---
 
-```mermaid
+## 🧱 Architecture
+
+### Test platform responsibilities
+- ensure contract correctness at boundaries (schemas + DTOs)
+- ensure catalog correctness (STAC/DCAT link integrity)
+- ensure graph integrity (idempotency + merge/dedupe behavior when enabled)
+- ensure narrative safety gates exist and are enforced where narrative-capable systems are present
+- ensure UI accessibility is not regressed (keyboard + screen-reader structure)
+
+### Default gating order
+1. unit
+2. schema + contract validation
+3. integration
+4. accessibility
+5. e2e
+6. governance
+7. telemetry verification + report publishing
+
+---
+
+## 🗺️ Diagrams
+
+### Layer flow (ASCII-safe Mermaid labels)
+~~~mermaid
 flowchart TD
-  A["Unit Tests"] --> B["Integration Tests"]
-  B --> C["Schema Tests"]
-  C --> D["Governance & CARE Tests"]
-  D --> E["E2E Tests"]
-  E --> F["Telemetry & Sustainability Validation"]
-```
+  A["Unit tests"] --> B["Integration tests"]
+  B --> C["Schema and contract tests"]
+  C --> D["Governance and CARE tests"]
+  D --> E["End-to-end tests"]
+  E --> F["Telemetry and sustainability validation"]
+~~~
+
+### CI pipeline flow (ASCII-safe Mermaid labels)
+~~~mermaid
+flowchart TD
+  A["CI trigger"] --> B["Unit"]
+  B --> C["Schema and contracts"]
+  C --> D["Integration"]
+  D --> E["Accessibility"]
+  E --> F["E2E"]
+  F --> G["Governance and CARE"]
+  G --> H["Telemetry verification"]
+  H --> I["Publish reports and release telemetry"]
+~~~
 
 ---
 
-# 🧪 4. Test Types & Requirements
+## 🧪 Validation & CI/CD
 
-## 4.1 Unit Tests
-- Pure logic  
-- React components (no network)  
-- STAC/DCAT utilities  
-- Graph helpers  
-- CARE/A2C atomic checks  
-- Deterministic seed (no nondeterministic randomness)  
+### Merge blockers (normative)
+A merge MUST be blocked if any of the following fail:
+- schema/contract validation
+- sovereignty masking regression checks
+- narrative safety checks (where applicable)
+- accessibility regressions (WCAG 2.1 AA+)
+- secret scan or PII scan flags
+- telemetry schema validation failures (required shape/fields)
+- provenance reference failures where required by pipeline policy
 
-## 4.2 Integration Tests
-Validates:
-
-- Story Node v3 pipeline  
-- Focus Mode v3 entity resolution  
-- Graph synchronization  
-- MapLibre/Cesium + timeline cohesion  
-- GE Checkpoints + OTel metrics  
-- Data contract enforcement  
-
-## 4.3 E2E Tests (Playwright/Cypress)
-Ensures:
-
-- Navigation + UI states  
-- A11y flows  
-- Timeline brushing  
-- Hotfix/rollback UI flows  
-- Data ingestion → publish round-trip  
-- Governance overlays + redactions  
-
-## 4.4 Schema Tests
-Mandatory:
-
-- Story Node v3 schema  
-- Telemetry v11 schema  
-- STAC Collection/Item shape  
-- API payload shapes  
-
-Any schema violation **blocks CI**.
-
-## 4.5 Governance & CARE Tests
-Check:
-
-- H3 generalization  
-- Sensitive location masking  
-- Indigenous data sovereignty rules  
-- License exposure  
-- Provenance chip visibility  
-- Narrative safety  
-
-CARE failures → **no merge**.
-
-## 4.6 Telemetry Tests
-Validate:
-
-- WebVitals  
-- OTel pipeline metrics  
-- Energy & CO₂ estimates  
-- Accessibility usage  
-- Error logs & event metadata  
-- Story Node + Focus Mode telemetry emission  
-
-Outputs must match:
-
-```
-releases/v11.0.0/tests-telemetry.json
-```
+### Reports and artifacts
+The platform SHOULD emit:
+- unit/integration/e2e reports (JSON where possible)
+- coverage summaries
+- checksums for key fixtures and reference outputs
+- telemetry artifacts (energy/carbon/runtime where available)
+- governance outcome summaries (CARE + sovereignty gate results)
 
 ---
 
-# ⚙️ 5. CI/CD Integration
+## 🌐 STAC, DCAT & PROV Alignment
 
-CI executes tests in order:
+### STAC/DCAT validation scope
+Integration tests SHOULD validate:
+- STAC Item/Collection shape for publishable spatial outputs
+- DCAT-compatible dataset metadata presence for publishable bundles
+- link integrity among:
+  - derived outputs
+  - STAC assets
+  - DCAT records
+  - provenance references
 
-1. Unit  
-2. Schema  
-3. Integration  
-4. Accessibility  
-5. E2E  
-6. Governance  
-7. Telemetry  
-
-**Any failure blocks:**
-
-- PR merges  
-- Release tagging  
-- Governance certification  
-
-CI publishes:
-
-- Test JSON reports  
-- Coverage maps  
-- Telemetry artifacts  
-- Governance ledger entries  
+### Provenance expectations
+Where pipelines claim provenance support, tests SHOULD verify:
+- PROV-O bundle references exist (Activity/Entity/Agent IDs)
+- OpenLineage references exist (job/run identifiers and dataset linkages)
+- stable identifiers can be traced across CI, releases, and governance ledgers
 
 ---
 
-# 🛡️ 6. Security & Privacy
+## ⚖ FAIR+CARE & Governance
 
-Tests must **never**:
+### Security and privacy (hard constraints)
+Tests MUST NOT:
+- log PII
+- use production tokens
+- access restricted datasets
+- leak sovereignty-protected locations
+- store sensitive intermediate data in committed fixtures or logs
 
-- Log PII  
-- Access production data  
-- Leak credentials  
-- Expose sensitive graph entities  
+### Accessibility architecture (WCAG 2.1 AA+)
+A11y tests must cover:
+- keyboard-only navigation
+- landmark structure and heading order
+- ARIA roles and labels where required
+- reduced-motion support
+- alt text presence (where images exist)
 
-Fixtures must be sanitized.
-
----
-
-# ♿ 7. Accessibility Architecture
-
-A11y tests cover:
-
-- WCAG 2.1 AA+  
-- Keyboard navigation  
-- Reduced-motion  
-- Color contrast ≥ 4.5:1  
-- Screen reader flows  
-- ARIA labeling  
-- Heading/landmark structure  
-
-Accessibility regressions are **CI-blocking**.
+Accessibility regressions are CI-blocking.
 
 ---
 
-# 🧾 8. Provenance & Governance
-
-Each test suite execution must emit:
-
-- PROV-O activity logs  
-- OpenLineage v2.5 events  
-- Ledger entries  
-- Test runtime, environment, hash  
-
-Governance ensures:
-
-- CARE rules enforced  
-- No weakening of sovereignty protections  
-- Ethical, sustainable testing practices  
-
----
-
-# 🕰️ 9. Version History
+## 🕰️ Version History
 
 | Version | Date | Summary |
-|--------:|------|---------|
-| v11.0.0 | 2025-11-24 | Complete upgrade to KFM-MDP v11, sovereignty + A11y + telemetry v11 integrated, LangGraph DAG + Reliable Pipelines v11 testing. |
-| v10.4.0 | 2025-11-15 | Prior architecture (v10.4): Focus 2.5 + Story Node v3 integration. |
+|---:|---|---|
+| v11.0.0 | 2025-12-13 | Aligned to KFM-MDP v11.2.6 (approved H2 registry, tilde fences, Mermaid ASCII-safe labels, governed metadata normalization). |
+| v11.0.0 | 2025-11-24 | Initial v11 architecture: sovereignty, a11y, telemetry v11, platform-wide test coverage. |
+| v10.4.0 | 2025-11-15 | Prior architecture: Focus and Story Node integration hardening. |
 | v10.3.2 | 2025-11-14 | Hardened schema + telemetry testing. |
 | v10.0.0 | 2025-11-10 | Initial platform-wide test architecture. |
 
----
-
 <div align="center">
 
-**© 2025 Kansas Frontier Matrix — MIT License**  
-**Diamond⁹ Ω / Crown∞Ω** · FAIR+CARE Certified · MCP-DL v6.3  
-Test Platform v11 — *Ethical · Deterministic · Sovereign-Safe · Telemetry-Aligned*
+[🏛️ Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+© 2025 Kansas Frontier Matrix — MIT License  
+Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
