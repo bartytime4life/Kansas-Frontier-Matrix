@@ -1,25 +1,25 @@
 ---
-title: "🧪 KFM v11.2.2 — Pytest Runner Composite Action"
-path: ".github/actions/pytest-runner/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+title: "♻️ Kansas Frontier Matrix — Reusable Workflows Library (Governed CI/CD Building Blocks)"
+path: ".github/workflows/reusable/README.md"
+version: "v11.2.6"
+last_updated: "2025-12-13"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Infrastructure & Provenance Committee"
 content_stability: "stable"
-backward_compatibility: "Aligned with v10.x → v11.x CI/CD model"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-attestation_ref: "../../../releases/v11.2.2/slsa-attestation.json"
-signature_ref: "../../../releases/v11.2.2/signature.sig"
-telemetry_ref: "../../../releases/v11.2.2/github-infra-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/actions-library-v11.json"
+sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.6/manifest.zip"
+attestation_ref: "../../../releases/v11.2.6/slsa-attestation.json"
+signature_ref: "../../../releases/v11.2.6/signature.sig"
+
+telemetry_ref: "../../../releases/v11.2.6/github-infra-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/github-workflows-v4.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
 
@@ -28,61 +28,70 @@ ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "MIT"
-
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
 status: "Active / Enforced"
-doc_kind: "Component Guide"
-intent: "github-composite-actions"
-role: "ci-cd-infrastructure"
+doc_kind: "Overview"
+intent: "github-reusable-workflows"
+role: "ci-cd-reusable-library"
 category: "CI/CD · Automation · Governance · Reusability"
 
-classification: "Public"
+classification: "Public Document"
 sensitivity: "General (non-sensitive; auto-mask rules apply)"
 sensitivity_level: "None"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
-
-care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
-fair_category: "F1-A1-I1-R1"
-
 data_steward: "KFM Infrastructure & Provenance Committee"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
 
 provenance_chain:
-  - ".github/actions/pytest-runner/README.md@v11.2.2"
+  - ".github/workflows/reusable/README.md@v11.2.6"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: false
+  must_reference_origin_root: false
 
-prov_profile: "PROV-O Plan + KFM Governance Extensions"
-openlineage_profile: "OpenLineage v2.5 (CI/CD events)"
+json_schema_ref: "../../../schemas/json/github-workflows-readme-v11.schema.json"
+shape_schema_ref: "../../../schemas/shacl/github-workflows-readme-v11-shape.ttl"
 
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../../../schemas/json/actions-pytest-runner-readme-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/actions-pytest-runner-readme-v11-shape.ttl"
-
-doc_uuid: "urn:kfm:doc:github-actions-pytest-runner:v11.2.2"
-semantic_document_id: "kfm-doc-github-actions-pytest-runner"
-event_source_id: "ledger:.github/actions/pytest-runner/README.md"
-
+doc_uuid: "urn:kfm:doc:github-workflows:reusable-readme:v11.2.6"
+semantic_document_id: "kfm-doc-github-workflows-reusable-readme"
+event_source_id: "ledger:.github/workflows/reusable/README.md"
 immutability_status: "mutable-plan"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summary"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+  - "diagram-extraction"
+  - "metadata-extraction"
+ai_transform_prohibited:
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+  - "content-alteration"
+
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
 
 heading_registry:
   approved_h2:
     - "📘 Overview"
-    - "🧪 Test Execution & CI/CD"
-    - "📊 Coverage & Telemetry"
-    - "📦 Data & Metadata Contract"
+    - "🗂️ Directory Layout"
+    - "🧱 Architecture"
+    - "🧪 Validation & CI/CD"
+    - "📦 Data & Metadata"
     - "⚖ FAIR+CARE & Governance"
     - "🕰️ Version History"
 
@@ -93,19 +102,12 @@ test_profiles:
   - "footer-check"
   - "accessibility-check"
   - "provenance-check"
+  - "secret-scan"
+  - "pii-scan"
 
 ci_integration:
   workflow: ".github/workflows/kfm-ci.yml"
-  environment: "dev · staging · production"
-
-branding_registry:
-  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
-  architecture: "Designed for Longevity · Governed for Integrity"
-  analysis: "CI-Driven · Evidence-Led · FAIR+CARE Grounded"
-  data-spec: "Open Pipelines × Responsible Automation"
-  pipeline: "Deterministic CI/CD · Explainable Workflows · Open Provenance"
-  telemetry: "Transparent Systems · Ethical Metrics · Sustainable Intelligence"
-  graph: "Semantics × Provenance × Automation Intelligence"
+  environment: "dev → staging → production"
 
 layout_profiles:
   - "immediate-one-branch-with-descriptions-and-emojis"
@@ -114,38 +116,23 @@ badge_profiles:
 
 requires_purpose_block: true
 requires_version_history: true
-requires_directory_layout_section: false
+requires_directory_layout_section: true
 requires_governance_links_in_footer: true
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
-ai_transform_permissions:
-  - "summary"
-  - "a11y-adaptations"
-ai_transform_prohibited:
-  - "speculative-additions"
-  - "unverified-architectural-claims"
-  - "narrative-fabrication"
-  - "governance-override"
-
-deprecated_fields:
-  - "old_pytest_runner_action_readme_v10.4"
 ---
 
 <div align="center">
 
-# 🧪 **KFM v11 — Pytest Runner Composite Action**  
-`.github/actions/pytest-runner/README.md`
+# ♻️ **Kansas Frontier Matrix — Reusable Workflows Library (v11.2.6)**
+`.github/workflows/reusable/README.md`
 
 **Purpose**  
-Provide a **governed, deterministic composite GitHub Action** for running **pytest** across KFM modules  
-(`src/pipelines`, `src/graph`, `src/api`, `src/web`, `docs` where applicable) with **standardized options**,  
-**coverage & xfail policy**, and **telemetry + provenance** suitable for CI dashboards and OpenLineage.
+Document the **reusable workflow library** (`workflow_call`) used by Kansas Frontier Matrix CI/CD to keep
+pipelines **deterministic, governed, auditable, and consistent** across PR validation, scheduled runs, and releases.
 
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-blue)](../../../docs/standards/kfm_markdown_protocol_v11.2.2.md)
-· [![CI/CD Profile](https://img.shields.io/badge/CI%2FCD-KFM--PDC_v11-navy)]()
-· [![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen)]()
-· [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/CI%2FCD-Reusable_Workflows-success" />
+<img src="https://img.shields.io/badge/Governance-FAIR%2BCARE-orange" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 </div>
 
@@ -153,281 +140,199 @@ Provide a **governed, deterministic composite GitHub Action** for running **pyte
 
 ## 📘 Overview
 
-The **`pytest-runner` composite action** is the canonical way to execute **Python test suites** in the  
-Kansas Frontier Matrix monorepo:
+Reusable workflows are **governed building blocks** for `.github/workflows/*`:
 
-- Normalizes **pytest invocation** across workflows and services.  
-- Enforces **minimum coverage thresholds** and **xfail policies**.  
-- Produces **JUnit** & **coverage** artifacts for CI, code review, and long‑term QA.  
-- Emits **telemetry** and **OpenLineage events** for test runs (pass/fail, duration, coverage).  
-- Ensures tests run in a **deterministic, pinned environment** aligned with KFM reproducibility standards.
+- A *caller workflow* handles triggers (`pull_request`, `push`, `schedule`, `workflow_dispatch`).
+- A *reusable workflow* (this directory) implements **standard job logic** via `on: workflow_call`.
+- Composite actions under `.github/actions/*` provide **step-level reuse** inside reusable workflows.
 
-Use this action instead of ad‑hoc `pytest` steps to:
+This structure reduces drift and keeps critical behavior consistent:
 
-- Avoid duplicate configuration across workflows.  
-- Centralize KFM‑specific behaviours (e.g., xfail leakage detection, coverage minima).  
-- Maintain a single governed contract for “what a test run means” across the platform.
+- identical lint/test/validate semantics across callers,
+- standardized artifacts and telemetry,
+- centralized permission and secret handling,
+- deterministic tooling and pinned dependencies.
 
----
+**When to use what**
 
-## 🧪 Test Execution & CI/CD
+- Use a **reusable workflow** when you need to reuse **jobs** (multiple steps, artifacts, permissions, strategy matrices).
+- Use a **composite action** when you need to reuse **steps** (a single unit of behavior inside a job).
 
-This composite action is **contract‑driven**: workflows MAY extend around it, but MUST treat its inputs/outputs  
-as the authoritative interface for Python tests in CI.
+**Library contract (non-negotiable)**
 
-### 1. Typical Usage
+All reusable workflows in this folder MUST:
 
-In `.github/workflows/kfm-ci.yml`:
-
-```yaml
-- name: 🧪 Run pytest (core)
-  uses: ./.github/actions/pytest-runner
-  with:
-    python_version: "3.11"
-    working_directory: "."
-    test_paths: |
-      tests/
-    cov_paths: |
-      src/
-    min_coverage: 85
-    xfail_policy: "no-new-xfails"
-    junit_report_path: artifacts/pytest/junit-core.xml
-    coverage_xml_path: artifacts/pytest/coverage-core.xml
-```
-
-Examples:
-
-- **Core pipeline & graph tests**  
-  - `test_paths: tests/pipelines tests/graph`  
-  - `cov_paths: src/pipelines src/graph`
-
-- **API & web**  
-  - `test_paths: tests/api tests/web`  
-  - `cov_paths: src/api src/web`
-
-### 2. Normative Execution Stages
-
-The composite action MUST, at minimum, perform these stages in order:
-
-1. **Environment setup**  
-   - Select `python_version` via `actions/setup-python@<pinned_sha>`.  
-   - Configure deterministic pip cache (cache key tied to `lockfile`, `python_version`, and `cache_key_suffix`).  
-   - Install dependencies using **pinned** constraints:
-     - Prefer `requirements.txt`/`requirements-dev.txt` or `poetry.lock`/`pip-tools` lock.  
-     - Fail if no deterministic dependency definition is found (unless `allow_unlocked_deps: true` is explicitly set in the future).
-
-2. **Test selection**  
-   - Resolve `test_paths` relative to `working_directory`.  
-   - If no tests are found, treat as **configuration error**, not success.
-
-3. **Pytest invocation**  
-   - Run `pytest` with:
-     - Configurable `pytest_args` (appended to defaults).  
-     - Coverage options when `cov_paths` is non‑empty.  
-     - Standard KFM flags (e.g., `-ra`, `--maxfail=1` by default, unless overridden).  
-   - Ensure exit code is captured and combined with subsequent policy checks.
-
-4. **Coverage enforcement**  
-   - If `cov_paths` is specified:
-     - Generate coverage XML (and optionally HTML) using `coverage.py` or `pytest-cov`.  
-     - Parse coverage result to compute overall coverage (line or branch, as configured).  
-     - If coverage < `min_coverage`, treat as **error** regardless of pytest exit code.
-
-5. **Xfail policy enforcement**  
-   - If `xfail_policy` is defined:
-     - Parse pytest summary / JUnit results.  
-     - Detect:
-       - New xfails (tests newly marked xfail, relative to baseline).  
-       - Xfails that unexpectedly pass (xfail leakage).  
-     - For `xfail_policy: "no-new-xfails"`:
-       - New xfails MUST be treated as errors.  
-     - For `xfail_policy: "no-xfail-leaks"`:
-       - Xpasses (xfail but passed) MUST be treated as errors.
-
-6. **Artifact generation**  
-   - Always produce:
-     - JUnit XML (`junit_report_path`) for CI and code review.  
-     - Coverage XML when `cov_paths` is set (`coverage_xml_path`).  
-   - Optionally produce HTML coverage reports (if `coverage_html_dir` is non‑empty).
-
-7. **Telemetry & provenance**  
-   - Generate a machine‑readable **test run telemetry** JSON:
-     - Start/end timestamps, duration.  
-     - Python & pytest versions.  
-     - Test counts (passed/failed/xfail/xpass/skipped/error).  
-     - Coverage values and thresholds.  
-   - Emit an OpenLineage/PROV event:
-     - Model test run as a `prov:Activity` that **uses** the repository sources and **generates** JUnit & coverage reports.  
-     - Attach `event_source_id`, `commit_sha`, and `workflow` identifiers.
-
-8. **Exit semantics**  
-   - Base exit code = pytest exit code.  
-   - Elevate to failure if:
-     - Coverage < `min_coverage`, OR  
-     - Xfail policy violated, OR  
-     - Telemetry/report generation fails.  
-   - Set composite `status` accordingly (`passed`/`failed`).
-
-All third‑party GitHub Actions and test tooling MUST be pinned to `@<commit_sha>` or equivalent digests in `action.yml`.
+- declare `on: workflow_call`,
+- document inputs/outputs (via this README index + inline comments in the workflow),
+- use least-privilege `permissions`,
+- emit artifacts/telemetry to stable locations (see `📦 Data & Metadata`),
+- avoid leaking secrets to logs, artifacts, or telemetry.
 
 ---
 
-## 📊 Coverage & Telemetry
+## 🗂️ Directory Layout
 
-### Coverage Semantics
+~~~text
+.github/
+└── 🤖 workflows/                                      — Governed CI/CD workflows
+    ├── 📄 README.md                                   — Master architecture (caller workflows)
+    └── 📁 reusable/                                   — Reusable workflows library (workflow_call)
+        ├── 📄 README.md                               — This library index
+        ├── 📄 _template.reusable.yml                  — Canonical template for new reusables
+        ├── 📄 python_ci.reusable.yml                  — Python lint + unit tests + coverage (example)
+        ├── 📄 node_ci.reusable.yml                    — Node/TS lint + unit tests + build (example)
+        ├── 📄 docs_validate.reusable.yml              — Markdown/front-matter validation bundle (example)
+        ├── 📄 stac_validate.reusable.yml              — STAC validation bundle (example)
+        ├── 📄 dcat_validate.reusable.yml              — DCAT validation bundle (example)
+        └── 📄 telemetry_export.reusable.yml           — Telemetry aggregation/export bundle (example)
+~~~
 
-The `pytest-runner` composite action provides a **standard definition of coverage** for KFM:
+**Note**  
+The filenames above illustrate the *intended pattern*. Keep the directory index current as workflows are added/renamed.
 
-- Default **mode**: line coverage via `coverage.py` or `pytest-cov`.  
-- Default **scope**: union of all paths listed in `cov_paths`.  
-- Exclusions:
-  - Tests themselves (`tests/`),  
-  - Auto‑generated code,  
-  - Migrations or pure configuration files may be excluded via `.coveragerc` (checked into the repo).
+---
 
-Key behaviours:
+## 🧱 Architecture
 
-- `min_coverage` is a hard threshold for CI (for the paths under test).  
-- For multi‑module runs, coverage MAY be calculated per module and aggregated; this should be reflected in the telemetry.  
-- For gradual enforcement, `min_coverage` can be increased over time while CI blocks on regressions.
+Reusable workflows sit between **caller workflows** and **composite actions**.
 
-### Telemetry Contract
+~~~mermaid
+flowchart TB
+  A["Caller workflow (triggered)\n.github/workflows/*.yml"] --> B["Reusable workflow\n.github/workflows/reusable/*.yml\n(on: workflow_call)"]
+  B --> C["Composite actions\n.github/actions/*\n(step reuse)"]
+  B --> D["Artifacts + reports\nartifacts/** or uploaded artifacts"]
+  B --> E["Telemetry + lineage\nreleases/<version>/github-infra-telemetry.json\n(OpenLineage/PROV summaries)"]
+~~~
 
-The action SHOULD emit a JSON report (path controlled by `telemetry_path`) with at least:
+**Design goals**
 
-```jsonc
-{
-  "schema_version": "kfm-pytest-telemetry-v1",
-  "run": {
-    "started_at": "2025-11-28T12:34:56Z",
-    "finished_at": "2025-11-28T12:35:23Z",
-    "duration_seconds": 27.1,
-    "workflow": "kfm-ci.yml",
-    "job_name": "pytest-core",
-    "commit_sha": "<commit>"
-  },
-  "environment": {
-    "python_version": "3.11.7",
-    "pytest_version": "7.4.0"
-  },
-  "tests": {
-    "total": 420,
-    "passed": 410,
-    "failed": 2,
-    "skipped": 5,
-    "xfail": 3,
-    "xpass": 0,
-    "error": 0
-  },
-  "coverage": {
-    "enabled": true,
-    "mode": "line",
-    "overall_percent": 87.3,
-    "threshold": 85.0
-  },
-  "policies": {
-    "xfail_policy": "no-new-xfails",
-    "min_coverage_enforced": true
-  }
-}
-```
+- **Determinism**: behavior is config-driven and repeatable.
+- **Consistency**: one canonical implementation for common CI jobs.
+- **Governance**: enforce FAIR+CARE and sovereignty policies at the workflow boundary.
+- **Security**: least privilege, pinned actions, and careful artifact/log hygiene.
+- **Observability**: machine-readable outputs for dashboards and audits.
 
-Exact schema is defined in `telemetry_schema` and MUST remain backward‑compatible within v11 patch releases.
+---
+
+## 🧪 Validation & CI/CD
+
+### Calling a reusable workflow
+
+In a caller workflow job:
+
+~~~yaml
+jobs:
+  python_ci:
+    name: "🐍 Python CI (reusable)"
+    uses: ./.github/workflows/reusable/python_ci.reusable.yml
+    with:
+      python_version: "3.11"
+      test_paths: |
+        tests/
+      min_coverage: 85
+    secrets: inherit
+~~~
+
+### Required conventions
+
+Reusable workflows SHOULD:
+
+- define `inputs` with types and defaults,
+- define `outputs` for downstream jobs (e.g., `status`, `coverage`, `artifact_name`),
+- standardize artifact paths (avoid per-job ad-hoc naming),
+- centralize tool bootstrapping (setup runtime, caching, lockfile installation),
+- avoid “helpful” implicit fallbacks that hide misconfiguration.
+
+### Permissions and secrets
+
+Reusable workflows MUST explicitly declare minimal permissions, for example:
+
+~~~yaml
+permissions:
+  contents: read
+  pull-requests: read
+~~~
+
+Guidance:
+
+- Prefer `contents: read` unless the workflow must write tags/releases.
+- Prefer passing secrets through `secrets: inherit` only when the reusable workflow genuinely needs them.
+- Never print secret values; never serialize them into telemetry.
+
+---
+
+## 📦 Data & Metadata
+
+Reusable workflows are expected to emit:
+
+- **Artifacts** (test reports, lint JSON, schema validation reports)
+- **Telemetry summaries** (counts, durations, outcomes, tool versions)
+- **Provenance-friendly identifiers** (commit SHA, workflow/job names, profile versions)
+
+### Artifact conventions
+
+Recommended layout (inside the runner workspace):
+
+~~~text
+artifacts/
+├── markdown/                    — Markdown + front-matter lint reports
+├── dcat/                        — DCAT validation outputs
+├── stac/                        — STAC validation outputs
+├── pytest/                       — JUnit + coverage + pytest telemetry
+└── telemetry/                    — Aggregated CI telemetry (machine readable)
+~~~
+
+### Telemetry hygiene
+
+Telemetry MUST contain:
+
+- counts, durations, versions, statuses,
+- file paths (relative) and rule codes (when needed),
 
 Telemetry MUST NOT contain:
 
-- Raw source code,  
-- Full test names for sensitive/private suites (unless governance allows),  
-- Secrets, tokens, or environment values.
-
----
-
-## 📦 Data & Metadata Contract
-
-### Inputs
-
-| Input                 | Type    | Required | Default                               | Description |
-|----------------------|---------|----------|---------------------------------------|-------------|
-| `python_version`     | string  | ✅ Yes   | _none_                                | Python version to use (e.g., `3.11`). |
-| `working_directory`  | string  | ❌ No    | `${{ github.workspace }}`            | Base directory for resolving `test_paths` and config files. |
-| `test_paths`         | string  | ✅ Yes   | _none_                                | Newline‑separated list of test path globs (relative to `working_directory`). |
-| `pytest_args`        | string  | ❌ No    | `-ra`                                 | Additional arguments passed to `pytest` after defaults. |
-| `cov_paths`          | string  | ❌ No    | _empty_                               | Newline‑separated list of source paths to measure coverage for. |
-| `min_coverage`       | number  | ❌ No    | `0`                                   | Minimum allowed coverage percentage (0 disables enforcement). |
-| `xfail_policy`       | string  | ❌ No    | `none`                                | One of `none` \| `no-new-xfails` \| `no-xfail-leaks` (policy for expected failures). |
-| `junit_report_path`  | string  | ❌ No    | `artifacts/pytest/junit.xml`          | Path (relative) for JUnit XML report. |
-| `coverage_xml_path`  | string  | ❌ No    | `artifacts/pytest/coverage.xml`       | Path (relative) for coverage XML report (if coverage is enabled). |
-| `coverage_html_dir`  | string  | ❌ No    | `""`                                  | Directory (relative) for optional HTML coverage report; empty disables. |
-| `telemetry_path`     | string  | ❌ No    | `artifacts/pytest/pytest-telemetry.json` | Path (relative) for telemetry JSON. |
-| `cache_key_suffix`   | string  | ❌ No    | `""`                                  | Optional string to disambiguate pip cache entries (e.g., `graph`, `api`). |
-
-### Outputs
-
-| Output          | Type   | Description |
-|-----------------|--------|-------------|
-| `status`        | enum   | `"passed"` or `"failed"` after combining pytest exit code, coverage, and policy checks. |
-| `tests_total`   | int    | Total number of tests executed. |
-| `tests_failed`  | int    | Number of failing tests. |
-| `coverage`      | number | Overall coverage percentage (if coverage enabled, else `0` or `null`). |
-| `junit_report`  | string | Final resolved path to JUnit XML report. |
-| `coverage_xml`  | string | Final resolved path to coverage XML report (if generated). |
-| `telemetry`     | string | Final resolved path to telemetry JSON report. |
+- raw file contents,
+- secrets,
+- precise sensitive coordinates,
+- PII.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-The `pytest-runner` composite action participates in KFM governance in the following ways:
+This library is part of KFM’s governance surface:
 
-1. **Pinned implementations only**  
-   - All underlying actions (`actions/checkout`, `actions/setup-python`, caching actions, etc.) MUST be pinned by `@<commit_sha>`.  
-   - Pytest and coverage tools MUST be pinned via lockfiles to guarantee reproducibility.
+- Reusable workflows are treated as **policy-bearing infrastructure**.
+- They must respect sovereignty protections and masking/generalization rules when validating or exporting data artifacts.
+- All third-party GitHub Actions used inside reusables MUST be pinned by SHA in the workflow file.
+- Any contract changes (inputs/outputs, failure semantics, artifact paths) MUST be updated in:
+  - the reusable workflow file,
+  - this README index,
+  - any affected schemas or CI checks.
 
-2. **No implicit secret usage**  
-   - Test execution MUST NOT implicitly use secrets unless explicitly configured in the workflow (e.g., integration tests using service tokens).  
-   - Where secrets are used, test suites MUST avoid printing or leaking them into logs or JUnit/coverage artifacts.
+Minimum CI expectations:
 
-3. **Reproducibility & determinism**  
-   - Only deterministic operations are allowed by default (no random seeds without explicit seeding and logging).  
-   - Test runs SHOULD be repeatable locally by developers using the same configuration and lockfiles.
-
-4. **FAIR+CARE alignment**  
-   - Test telemetry MUST be free of personally identifiable information and sensitive content.  
-   - When tests involve Indigenous or restricted datasets, datasets themselves MUST be mocked or properly access‑controlled; the action MUST NOT override these safeguards.
-
-5. **Change management**  
-   - Any change to:
-     - Inputs/outputs,  
-     - Coverage/xfail semantics,  
-     - Telemetry structure  
-     MUST be accompanied by:
-       - Updates to `action.yml` and this README,  
-       - Schema updates (JSON/SHACL) where relevant,  
-       - Passing the full test profile listed in `test_profiles`.
-
-6. **CI enforcement**  
-   - `kfm-ci.yml` SHOULD treat a failed `pytest-runner` step as a **hard block** for merging.  
-   - Temporary relaxations (e.g., reduced `min_coverage`) MUST be:
-     - Scoped and documented in the PR,  
-     - Time‑bounded,  
-     - Approved via Infrastructure & Provenance Committee procedures where required.
+- `markdown-lint` and `schema-lint` pass for this README.
+- Secret scanning and PII scanning remain clean.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                                 |
-|--------:|------------|---------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Initial governed Pytest Runner composite action; standardized coverage + xfail policy + telemetry v1.   |
+| Version     | Date       | Summary |
+|------------:|-----------:|---------|
+| **v11.2.6** | 2025-12-13 | Added governed index README for reusable workflows library; defined conventions for workflow_call usage, artifacts, telemetry hygiene, and governance rules. |
 
 ---
 
 <div align="center">
 
-🧪 **KFM v11 — Pytest Runner Composite Action**  
-Standardized Test Runs · Deterministic Coverage · FAIR+CARE‑Aligned QA Telemetry  
+♻️ **KFM Reusable Workflows Library**  
+Deterministic CI/CD · Governed Automation · Provenance-Aware Execution
 
-[⬅ Composite Actions Library](../README.md) · [📘 Markdown Protocol](../../../docs/standards/kfm_markdown_protocol_v11.2.2.md) · [⚖ Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅ Workflows Master Architecture](../README.md) ·
+[🧩 Composite Actions](../../actions/README.md) ·
+[⚖ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md)
 
 </div>
-
