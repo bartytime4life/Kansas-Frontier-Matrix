@@ -1,5 +1,5 @@
 ---
-title: "⚙️ Kansas Frontier Matrix — Security Scan Configuration"
+title: "🔍 Kansas Frontier Matrix — Security Scan Action Config"
 path: ".github/actions/security-scan/config/README.md"
 version: "v11.2.3"
 last_updated: "2025-12-13"
@@ -13,6 +13,13 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
+sbom_ref: "../../../../releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.3/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.3/github-infra-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/github-workflows-v4.json"
+energy_schema: "../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
+
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
@@ -25,7 +32,7 @@ pipeline_contract_version: "KFM-PDC v11.0"
 
 status: "Active / Enforced"
 doc_kind: "Guide"
-intent: "security-scan-config"
+intent: "github-security-scan-action-config"
 role: "security-scan-config"
 category: "Security · CI/CD · Configuration"
 
@@ -51,8 +58,8 @@ ontology_alignment:
   prov_o: "prov:Plan"
   geosparql: "geo:FeatureCollection"
 
-json_schema_ref: "../../../../schemas/json/github-actions-security-scan-v11.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/github-actions-security-scan-v11-shape.ttl"
+json_schema_ref: "../../../../schemas/json/github-actions-security-scan-config-v11.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/github-actions-security-scan-config-v11-shape.ttl"
 
 doc_uuid: "urn:kfm:doc:github-actions:security-scan:config:v11.2.3"
 semantic_document_id: "kfm-action-security-scan-config"
@@ -73,26 +80,37 @@ ai_transform_prohibited:
   - "content-alteration"
 
 accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "United States / Kansas"
-lifecycle_stage: "stable"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next security-scan config schema update"
 
-prov_profile: "PROV-O Plan + KFM Governance Extensions"
-openlineage_profile: "OpenLineage v2.5 · CI/CD and security pipeline events"
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Layout"
+    - "🧭 Context"
+    - "📦 Data & Metadata"
+    - "🧪 Validation & CI/CD"
+    - "🕰️ Version History"
+
+test_profiles:
+  - "markdown-lint"
+  - "schema-lint"
+  - "metadata-check"
+  - "footer-check"
+  - "accessibility-check"
+  - "provenance-check"
+
+ci_integration:
+  workflow: ".github/workflows/kfm-ci.yml"
+  environment: "dev · staging · production"
 ---
 
 <div align="center">
 
-# ⚙️ **Kansas Frontier Matrix — Security Scan Configuration**
+# 🔍 **KFM — Security Scan Action Config**
 `.github/actions/security-scan/config/`
 
 **Purpose**  
-Define the **governed, repo-local configuration** used by the KFM `security-scan` composite action to run:
-
-- Dependency vulnerability scans (Python, Node, etc.)
-- Secret/credential leakage detection
-- Workflow hardening & policy checks
+Document and govern the configuration that controls **dependency scanning**, **secret scanning**, and
+(optional) **workflow hardening checks**.
 
 </div>
 
@@ -100,238 +118,121 @@ Define the **governed, repo-local configuration** used by the KFM `security-scan
 
 ## 📘 Overview
 
-This folder contains the **default configuration** for the `security-scan` action.
+Security scanning is intentionally policy-driven. This config directory defines:
 
-### What belongs here
+- Which tools are enabled
+- Severity thresholds that fail CI
+- Ignore rules (with governance justification)
+- Workflow hardening policy rules for `.github/workflows/**`
 
-- **Policy knobs** (what tools run, what counts as a failure, what is ignored under governance).
-- **Machine-readable, diff-friendly** YAML configurations.
-- **Non-sensitive** configuration only (no secrets, tokens, credentials, PII).
-
-### What does NOT belong here
-
-- Secrets (ever).
-- “Temporary” bypasses without documentation (use governed ignore entries with reason + expiration).
-- Tool output artifacts (those should be produced per-run by workflows and stored as CI artifacts when needed).
+This keeps outcomes deterministic and reviewable.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-.github/
-└── 🧱 actions/
-    └── 🔍 security-scan/
-        └── ⚙️ config/
-            ├── 📄 README.md               — This file (what configs exist + how to use them)
-            ├── 🧾 tools.yml               — Tool enablement, thresholds, ignore rules, scan scope
-            └── 🧾 workflow_policy.yml     — Workflow hardening rules for `.github/workflows/**`
+.github/actions/security-scan/
+└── 📁 config/                                  # Governed security scan configuration
+    ├── 📄 README.md                            # ← This file
+    ├── 🧾 tools.yml                            # Enabled tools, severity thresholds, ignore rules
+    └── 🧾 workflow_policy.yml                  # Workflow hardening rules (permissions, pins, etc.)
 ~~~
 
 ---
 
 ## 🧭 Context
 
-The `security-scan` action is designed to be **config-driven**.
+This config is consumed by:
 
-### Configuration resolution (expected contract)
-
-A workflow or script invoking the action SHOULD follow this precedence:
-
-1. **Explicit config path** (via action input like `config: ...`, or script argument/env var if implemented)
-2. **Repo-local default** config in this directory
-3. **Action defaults** (only if no config files are present)
-
-If the implementation deviates from this contract, update this README and the action README (`../README.md`) to match.
-
-### Typical usage patterns
-
-**Use the repo-local defaults** (most common):
-
-~~~bash
-bash .github/actions/security-scan/entrypoint.sh .
-~~~
-
-**Override with a custom config** (e.g., in a workflow):
-
-~~~yaml
-- name: 🔐 Security Scan
-  uses: ./.github/actions/security-scan
-  with:
-    path: .
-    config: ".github/actions/security-scan/config/tools.yml"
-~~~
+- `.github/actions/security-scan/entrypoint.sh`
+- `.github/actions/security-scan/scripts/run_dep_scans.py`
+- `.github/actions/security-scan/scripts/run_secret_scans.py`
+- `.github/actions/security-scan/scripts/summarize_results.py`
 
 ---
 
 ## 📦 Data & Metadata
 
-All configuration files here are YAML and MUST remain:
+### `tools.yml`
 
-- **Deterministic in interpretation** (same config + same repo state ⇒ same policy evaluation rules)
-- **Governance-auditable** (ignore rules have reason + expiry; thresholds are explicit)
-- **Non-sensitive** (no tokens, no credentials, no secret patterns that reveal real secrets)
+Typical settings:
+- scanners enabled (dependency + secret scanning)
+- severity thresholds (fail on critical/high)
+- per-ecosystem toggles (python/node)
+- ignore rules (with explicit rationale, expiration, and scope)
 
-### `tools.yml` contract
-
-`tools.yml` defines:
-
-- Which scanners are enabled
-- What severities fail CI
-- Ignore rules (with justification + expiration)
-- Path scopes (optional) for targeted scans
-
-Minimal example (illustrative):
+Example shape:
 
 ~~~yaml
-version: "v11"
-policy:
-  fail_on:
-    critical: true
-    high: true
-    medium: false
-    low: false
-
-scopes:
-  root: "."
-  include:
-    - "src/**"
-    - "docs/**"
-  exclude:
-    - "data/**"
-    - "mcp/runs/**"
-
 dependency_scans:
   python:
     enabled: true
-    tools:
-      pip_audit:
-        enabled: true
-      osv_scanner:
-        enabled: true
-
+    tools: ["pip-audit", "osv-scanner"]
   node:
     enabled: true
-    tools:
-      npm_audit:
-        enabled: true
-        production_only: true
+    tools: ["npm-audit", "osv-scanner"]
 
-secret_scans:
-  enabled: true
-  tools:
-    gitleaks:
-      enabled: true
-      scan_history: false
+thresholds:
+  fail_on_critical: true
+  fail_on_high: true
+  fail_on_medium: false
 
 ignore:
-  vulnerabilities:
-    - id: "CVE-2099-0000"
-      reason: "False positive (documented in upstream issue #1234)."
-      expires: "2026-01-01"
-  secrets:
-    - fingerprint: "EXAMPLE_FINGERPRINT_HASH"
-      reason: "Test fixture string (non-secret), validated by Security Council."
-      expires: "2026-01-01"
+  - id: "CVE-0000-0000"
+    reason: "False positive in transitive dependency; tracked in issue #123"
+    scope: "python"
+    expires: "2026-03-01"
 ~~~
 
-**Normative: ignore entries MUST include `reason` and `expires`.**
+### `workflow_policy.yml`
 
-### `workflow_policy.yml` contract
+Defines hardening rules (examples):
+- `permissions:` must be minimal
+- actions must be pinned (no floating tags)
+- prohibit unsafe events/patterns as governed
 
-`workflow_policy.yml` defines guardrails for `.github/workflows/**`, such as:
-
-- Minimal permissions requirements
-- Action pinning rules
-- Disallowed events/anti-patterns (e.g., unsafe usage patterns)
-
-Minimal example (illustrative):
+Example shape:
 
 ~~~yaml
-version: "v11"
-workflow_hardening:
-  enabled: true
-
-permissions:
-  require_explicit_block: true
-  default_read_only: true
-
-actions:
-  require_pinning: true
-  pinning_mode: "sha"   # allowed values should be validated by the implementation
-
-events:
-  deny:
+workflow_policy:
+  require_pinned_actions: true
+  require_permissions_block: true
+  deny_events:
     - "pull_request_target"
-
-paths:
-  include:
-    - ".github/workflows/**"
+  deny_patterns:
+    - "curl | bash"
 ~~~
-
-**Normative: policy MUST prefer least privilege and reproducible action references.**
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-### Where this is enforced
+Any config change MUST:
+- be reviewed by the Security Council,
+- update any relevant workflow docs,
+- pass CI schema validation and markdown checks.
 
-- Primary workflow gate (expected): `.github/workflows/security_audit.yml`
-- The action README (`../README.md`) documents how `security-scan` is invoked and how failures block merges/releases.
-
-### Minimum checks that MUST remain true
-
-- This README remains KFM-MDP compliant (front-matter, headings, version history).
-- Config files do not contain secrets/credentials.
-- Changes to thresholds/ignore rules are reviewable in diff form and have documented rationale.
-
-### Quick local validation
-
-From repo root:
-
-~~~bash
-bash .github/actions/security-scan/entrypoint.sh .
-~~~
-
----
-
-## ⚖ FAIR+CARE & Governance
-
-Security configuration is **governed** because it changes what KFM treats as “acceptable risk.”
-
-### Governance expectations
-
-- Severity thresholds SHOULD be stable and changed only with explicit rationale.
-- Ignore rules MUST be:
-  - Specific (avoid broad wildcards),
-  - Time-bounded (`expires`),
-  - Justified (`reason`),
-  - Reviewable by the Security Council (and other required bodies per governance).
-
-### Sovereignty and sensitive data
-
-Even though these configs are “just CI,” they MUST NOT introduce mechanisms that:
-
-- Leak sensitive locations, protected datasets, or restricted identifiers into logs or telemetry,
-- Encourage collection of raw secrets/PII in scan outputs.
+Config MUST NOT introduce:
+- network endpoints,
+- credentials,
+- secret allowlists that weaken scanning without explicit governance.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                 |
-|--------:|------------|-------------------------------------------------------------------------|
-| v11.2.3 | 2025-12-13 | Initial governed README for `security-scan` configuration (`tools.yml`, `workflow_policy.yml`). |
+| Version | Date       | Summary                                                           |
+|--------:|------------|-------------------------------------------------------------------|
+| v11.2.3 | 2025-12-13 | Added config README; documented tools.yml and workflow policy rules. |
 
 ---
 
 <div align="center">
 
-⚙️ **Kansas Frontier Matrix — Security Scan Configuration (v11.2.3)**  
-Secure by Design · FAIR+CARE-Governed · Policy-as-Code  
+🔍 **KFM — Security Scan Action Config (v11.2.3)**  
+Policy-Driven DevSecOps · Deterministic Gates · Governed Exceptions  
 
-[⬅ Security Scan Action](../README.md) · [🛡 Security Policy](../../../SECURITY.md) · [📚 Security Governance](../../../../docs/security/README.md)
+[⬅ Security Scan Action](../README.md) · [🧱 Actions Library](../../README.md) · [⚖ Governance](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
