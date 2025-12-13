@@ -1,29 +1,23 @@
 ---
 title: "🧬 Kansas Frontier Matrix — MCP Model Cards Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "mcp/model_cards/README.md"
+
 version: "v11.0.0"
-last_updated: "2025-11-23"
+last_updated: "2025-12-12"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · MCP Board · FAIR+CARE Council · AI Governance Team"
-commit_sha: "<latest-commit-hash>"
-signature_ref: "../../releases/v11.0.0/signature.sig"
-sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v11.0.0/manifest.zip"
-telemetry_ref: "../../releases/v11.0.0/mcp-modelcards-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/mcp-modelcards-v11.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+content_stability: "stable"
+
 status: "Active / Enforced"
 doc_kind: "Index"
+header_profile: "standard"
+footer_profile: "standard"
 intent: "mcp-model-card-index"
 semantic_document_id: "kfm-mcp-modelcards-index"
 doc_uuid: "urn:kfm:mcp:modelcards:index:v11.0.0"
-event_source_id: "ledger:kfm:mcp:modelcards:index:v11.0.0"
+event_source_id: "urn:kfm:mcp:modelcards:index:v11.0.0"
+
 machine_extractable: true
 classification: "Governed AI Document"
 sensitivity: "Mixed"
@@ -32,23 +26,48 @@ care_label: "Collective Benefit · Responsibility · Ethics"
 immutability_status: "version-pinned"
 accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "Kansas / United States"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+signature_ref: "../../releases/v11.0.0/signature.sig"
+attestation_ref: "../../releases/v11.0.0/slsa-attestation.json"
+sbom_ref: "../../releases/v11.0.0/sbom.spdx.json"
+manifest_ref: "../../releases/v11.0.0/manifest.zip"
+
+telemetry_ref: "../../releases/v11.0.0/mcp-modelcards-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/mcp-modelcards-v11.json"
+
+governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 ai_transform_permissions:
-  - "summary"
-  - "timeline-generation"
+  - "summarize"
+  - "extract-metadata"
   - "semantic-highlighting"
-  - "diagram-extraction"
-  - "metadata-extraction"
   - "layout-normalization"
   - "a11y-adaptations"
 ai_transform_prohibited:
-  - "alter-normative-requirements"
-  - "invent-governance-status"
+  - "fabricate-model-claims"
   - "fabricate-provenance"
-  - "introduce-novel-facts"
+  - "invent-dataset-ids"
+  - "invent-license-rights"
+  - "override-governance"
+  - "expose-sensitive-coordinates"
+  - "deanonymize"
+
 provenance_chain:
+  - "mcp/model_cards/README.md@v11.0.0"
   - "docs/standards/kfm_markdown_protocol_v11.2.6.md@v11.2.6"
-  - "docs/standards/kfm_markdown_protocol_v11.md@v11.0.1"
-  - "docs/standards/markdown_rules.md@v10.4.3"
 ---
 
 <div align="center">
@@ -57,10 +76,10 @@ provenance_chain:
 `mcp/model_cards/README.md`
 
 **Purpose**  
-Provide the canonical, governed index for all AI/ML **Model Cards** used in the Kansas Frontier Matrix (KFM).
-Model Cards are mandatory documentation artifacts defining intended use, training data, evaluation, limitations,
-governance boundaries, provenance, and sustainability telemetry for every model used in pipelines, Focus Mode,
-and Story Node workflows.
+Provide the governed, reproducible, FAIR+CARE and sovereignty-aligned index for all AI/ML **Model Cards**
+used inside the Kansas Frontier Matrix (KFM). Model Cards are mandatory documentation artifacts defining
+intended use, restricted use, training data, evaluation, limitations, governance boundaries, provenance, and
+sustainability telemetry for every model used in pipelines, Focus Mode, and Story Node workflows.
 
 </div>
 
@@ -68,40 +87,20 @@ and Story Node workflows.
 
 ## 📘 Overview
 
-### What a Model Card is in KFM
-A Model Card is the **authoritative contract** for a model’s:
-- intended use and prohibited use
-- training data inputs (STAC/DCAT identifiers)
-- evaluation and validation results
-- known limitations and failure modes
-- governance boundaries (FAIR+CARE + sovereignty constraints)
-- provenance evidence (PROV‑O + OpenLineage references)
-- sustainability telemetry (energy + carbon)
-
-### When a Model Card is required
-A Model Card is required for any model that:
-- produces predictions or reconstructions
-- runs inference inside ETL/pipeline steps
+Model Cards are required for any model that:
+- produces predictions, reconstructions, or alignments
+- runs inference inside ETL / pipeline steps
 - supports Focus Mode or Story Node generation
-- performs alignment, interpolation, imputation, or harmonization
-- participates in CrewAI/LangGraph deterministic executors
+- performs interpolation, imputation, harmonization, or geospatial alignment
+- participates in CrewAI or LangGraph deterministic executors
 
-### Naming rules
-Model card filenames must follow:
-- `<model_slug>_v<version>.md`
-
-Downstream pipelines MUST reference:
-- the **model card path** and **card version**
-- not just the model artifact version
-
-### Current Model Card Index
-
-| Model Card | Version | Domain | CARE Label | Status |
-|---|---|---|---|---|
-| `climate_anomaly_net_v3.md` | v3 | Climate anomaly reconstruction | Responsible · Ethics · Stewardship | Active / Enforced |
-| `hydrology_seq2seq_v11.md` | v11 | Hydrology reconstruction (seq2seq) | Collective Benefit · Responsibility · Ethics | Active / Enforced |
-| `focus_mode_transformer_v3.md` | v3 | Governed narrative reasoning | Collective Benefit · Authority to Control · Responsibility · Ethics | Active / Enforced |
-| `geo_alignment_net_v4.md` | v4 | Geospatial alignment & harmonization | Collective Benefit · Ethics · Responsibility | Active / Enforced |
+Model Cards exist to:
+- define intended use vs prohibited use
+- record training/evaluation dataset identifiers (STAC/DCAT)
+- document reproducibility controls (seeds, environments, experiment references)
+- enforce governance boundaries (FAIR+CARE + sovereignty constraints)
+- preserve provenance evidence (PROV-O + OpenLineage + checksums)
+- attach sustainability telemetry (energy + carbon)
 
 ---
 
@@ -110,152 +109,139 @@ Downstream pipelines MUST reference:
 ~~~text
 mcp/model_cards/
 │
-├── README.md                           # 🧬 Canonical index + governance rules for model cards
-├── climate_anomaly_net_v3.md           # 🌡️ Climate anomaly reconstruction (CAN‑v3)
-├── hydrology_seq2seq_v11.md            # 💧 Hydrology reconstruction (HS2S‑v11)
-├── focus_mode_transformer_v3.md        # 🧠 Governed narrative reasoning engine (FMT‑v3)
-├── geo_alignment_net_v4.md             # 🗺️ Geospatial alignment & harmonization (GAN‑v4)
-└── (add new model cards here)          # ➕ One file per model + version
+├── README.md                           # This file — canonical index + rules
+├── climate_anomaly_net_v3.md           # 🌡️ Climate anomaly reconstruction (CAN-v3)
+├── hydrology_seq2seq_v11.md            # 💧 Hydrology reconstruction (HS2S-v11)
+├── focus_mode_transformer_v3.md        # 🧠 Governed narrative reasoning engine (FMT-v3)
+├── geo_alignment_net_v4.md             # 🗺️ Geospatial alignment & harmonization (GAN-v4)
+└── <model_slug>_v<version>.md          # Additional model cards (required naming convention)
 ~~~
 
 ---
 
 ## 🧭 Context
 
-### Why this index exists
-This index is the stable entry point for:
-- audit trails (governance + provenance)
-- deterministic pipeline references (contracts and configs)
-- model lifecycle reviews (quarterly governance cadence)
-- sustainability reporting (energy/carbon tracking)
+### Naming convention
+Model card filenames MUST follow:
+
+~~~text
+<model_slug>_v<version>.md
+~~~
+
+Downstream pipelines MUST reference:
+- the model card file path under `mcp/model_cards/`
+- the model card `version:` (doc version)
+- the model artifact version (if different)
+- the experiment(s) and provenance bundle(s) that support the model
 
 ### Relationship to MCP experiments
-Every model card MUST point to:
-- at least one `mcp/experiments/*` record that documents training, evaluation, or deployment validation
-- reproducibility controls (seeds, environment, SBOM, and provenance outputs)
-
----
-
-## 🧱 Architecture
-
-### Where model cards sit in the KFM pipeline
-Model cards are documentation entities that bind together:
-- ETL outputs (data/processed/*)
-- catalogs (STAC/DCAT records)
-- graph representations (Neo4j nodes/edges)
-- API contract expectations
-- UI/Story Node/Focus Mode consumption boundaries
-
-### Interface contract (minimum)
-All model cards MUST clearly declare:
-- what the model consumes (inputs + required metadata)
-- what the model produces (outputs + expected schemas)
-- where provenance and telemetry are written
+Every model card MUST link to at least one `mcp/experiments/*.md` record that documents:
+- training or fine-tuning
+- evaluation/validation
+- deployment validation gates (when applicable)
 
 ---
 
 ## 📦 Data & Metadata
 
-### Front-matter requirements (normative)
-Each governed model card MUST include:
-- identity: `title`, `path`, `version`, `last_updated`
-- governance: `governance_ref`, `ethics_ref`, `sovereignty_policy`
-- compliance: `license`, `classification`, `sensitivity`, `fair_category`, `care_label`
-- provenance: `commit_sha`, `signature_ref` (when release-pinned), `provenance_chain`
-- IDs: `doc_uuid`, `semantic_document_id`, `event_source_id`
-- AI transform limits: `ai_transform_permissions`, `ai_transform_prohibited`
+### Required declarations in model cards
+Every model card MUST declare:
+- intended use and restricted use
+- training and evaluation datasets (STAC/DCAT identifiers)
+- reproducibility controls (seed, environment, hardware, SBOM reference)
+- evaluation metrics and validation methods
+- limitations, failure modes, and required human oversight
+- governance boundaries (FAIR+CARE posture + sovereignty implications)
+- provenance and lineage (PROV-O + OpenLineage locations + checksums)
+- telemetry references (energy + carbon)
 
-### Required declarations inside the body
-Each model card MUST clearly state:
-- intended use vs restricted use
-- limitations and failure modes
-- governance boundaries and required human review points
-- the experiment(s) and datasets underpinning the model
-- sustainability telemetry reference(s)
-
----
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-### DCAT mapping (documentation entity)
-Model cards are documentation distributions suitable for DCAT cataloging:
-- `semantic_document_id` maps to `dct:identifier`
-- the markdown file is a `dcat:Distribution` (`mediaType: text/markdown`)
-
-### STAC representation (optional but supported)
-A model card may be represented as a non-spatial STAC Item:
-- `geometry: null`
-- `properties.datetime = last_updated`
-- `assets.markdown.href` points to the repo path
-
-### PROV‑O linkage (required via references)
-Model cards MUST reference:
-- training/evaluation activities (`prov:Activity`)
-- input datasets/entities (`prov:Entity`)
-- responsible agents (teams/services) (`prov:Agent`)
-- OpenLineage event locations for traceability
+### Sovereignty and sensitivity defaults
+- Never publish or refine sensitive locations in model outputs.
+- Require masking/generalization (H3-based where applicable) whenever a model may touch cultural or sovereignty-restricted content.
+- Require human review gates for any narrative-capable model outputs.
 
 ---
 
-## 🧪 Validation & CI/CD
+## 🧱 Architecture
 
-### Minimum validation profiles
-Model card Markdown is CI-enforced for:
-- structure (H1/H2 rules)
-- YAML schema compliance
-- required metadata presence
-- footer governance links and ordering
-- accessibility checks
-- provenance chain consistency
-- secret and PII scanning
+Model Cards bind together:
+- pipeline configuration (what calls the model)
+- catalog identifiers (STAC/DCAT)
+- graph entities and relationships (Neo4j)
+- UI consumption boundaries (Focus Mode and Story Nodes)
+- provenance traces (PROV-O and OpenLineage)
+- telemetry bundles (energy/carbon)
 
-### Common failure causes
-- missing or malformed front-matter
-- more than one H1
-- unapproved H2 headings (emoji/text mismatch)
-- directory layouts not fenced with `~~~text`
-- mixed fence styles inside files
-- footer missing governance links
+Minimum interface contract each card must state:
+- what the model consumes (inputs + required metadata)
+- what it produces (outputs + expected schemas)
+- where provenance and telemetry are written
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### Narrative-facing models
-Any model that influences Story Node or Focus Mode narrative output MUST state:
-- what the model is allowed to claim
-- what the model must never claim (no speculation, no invented provenance)
-- masking rules (H3-based generalization when required)
-- required human review gates before publication
+### Narrative-capable models
+If a model can generate or shape narrative output, its model card MUST state:
+- what claims are allowed (evidence-led only)
+- what claims are prohibited (no speculation, no invented causes, no genealogy)
+- required masking rules (H3/generalization) and sovereignty gates
+- required human review steps before publish/release
 
 ### Non-narrative models
-Models that only produce numeric/geospatial layers MUST still define:
-- output constraints (precision, masking, aggregation)
+Numeric/geospatial models must still define:
+- output precision constraints
+- masking/generalization defaults for restricted areas
 - downstream usage boundaries for narrative systems
+
+---
+
+## 🧪 Validation & CI/CD
+
+Model cards must pass:
+- KFM-MDP v11.2.6 markdown validation (structure + fences)
+- required front-matter presence checks
+- provenance presence checks (PROV-O + OpenLineage + checksums)
+- FAIR+CARE field presence checks
+- sovereignty constraints (no coordinate leakage; masking documented)
+- telemetry reference checks (where required)
+
+Common failures that must be treated as merge blockers:
+- missing provenance artifacts
+- missing dataset identifiers for training/eval
+- missing or ambiguous restricted-use boundaries
+- more than one H1
+- unapproved H2 headings
+- backtick fences inside repo Markdown (must use `~~~`)
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+Model cards must:
+- reference STAC/DCAT identifiers for training/evaluation datasets
+- specify where STAC/DCAT records are emitted (if the model produces publishable assets)
+- provide a PROV-O JSON-LD block in the model card (or reference the location if external)
+- identify OpenLineage event storage location(s) for key runs
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-### Required governance signals
-Every model card must declare:
-- FAIR category
-- CARE label
-- sovereignty implications (including required masking / approvals)
-- whether the model may interact with restricted datasets (and under what conditions)
-
-### Release posture
-Version-pinned model cards are treated as governed artifacts:
-- provenance and telemetry references must be stable
-- updates require governance review per review_cycle
+All model cards must:
+- declare FAIR category and CARE label
+- declare sovereignty implications and required masking/approvals
+- list prohibited outputs and required human oversight
+- ensure traceability from claim → dataset/document → provenance → run identity
 
 ---
 
 ## 🕰️ Version History
 
 | Version | Date | Summary |
-|---:|---|---|
+|--------:|------|---------|
 | v11.0.0 | 2025-11-23 | Initial MCP model cards index for KFM v11. |
+| v11.0.0 | 2025-12-12 | Normalized to KFM-MDP v11.2.6 (approved H2 set, tilde fences, governed footer, required metadata fields). |
 
 ---
 
@@ -265,6 +251,7 @@ Version-pinned model cards are treated as governed artifacts:
 [🤝 FAIR+CARE Guide](../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
 [🪶 Indigenous Data Protection](../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
-© 2025 Kansas Frontier Matrix — MCP‑DL v6.3 · CC‑BY 4.0
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+MCP-DL v6.3 · KFM-MDP v11.2.6 · KFM-OP v11 · KFM-PDC v11
 
 </div>
