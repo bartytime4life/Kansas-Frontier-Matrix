@@ -1,21 +1,24 @@
 # .github/workflows/ci.yml
 # 🧪 Kansas Frontier Matrix — Core CI (Lint, Tests, Type-Checks, Base Schemas)
-# v11.2.3 — Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+# v11.2.6 — Governed / LTS
 #
 # Purpose:
-#   Provide fast, deterministic feedback on code, configs, and core schemas for the KFM monorepo.
+#   Fast, deterministic feedback on code + core configs for the KFM monorepo.
 #   This workflow focuses on:
-#     - Linting & unit/integration tests for core languages (Python, Node/Web).
-#     - Lightweight config/schema sanity checks.
-#     - Optional CodeQL code scanning (if enabled).
+#     - Linting & unit/integration tests (Python, Node/Web if present)
+#     - Lightweight config/schema sanity checks (non-STAC/DCAT/JSON-LD)
+#     - Optional CodeQL scanning (guarded for forks/permissions)
 #
 # Governance Context:
-#   - KFM-MDP v11.2.5 (Markdown-handling is primarily in docs_validate.yml)
-#   - KFM-PDC v11 (data contract enforcement via data_pipeline.yml)
-#   - FAIR+CARE + sovereignty enforcement via dedicated workflows:
-#       faircare_validate.yml, h3_generalization.yml
-#   - STAC/DCAT/JSON-LD validation via dedicated workflows:
-#       stac_validate.yml, dcat_validate.yml, jsonld_validate.yml
+#   - Docs/Markdown rules: docs_validate.yml (KFM-MDP v11.2.6)
+#   - Pipeline contracts: data_pipeline.yml (KFM-PDC v11)
+#   - FAIR+CARE & sovereignty: faircare_validate.yml + h3_generalization.yml
+#   - STAC/DCAT/JSON-LD: stac_validate.yml + dcat_validate.yml + jsonld_validate.yml
+#
+# Notes:
+#   - Keep permissions minimal by default; escalate only per job where required.
+#   - Prefer repo-defined toolchains (requirements-dev.txt, package.json scripts).
+#   - Avoid hard-failing when a component is not present (e.g., no web/ directory).
 
 name: 🧪 ci
 
@@ -30,15 +33,12 @@ on:
       - "release/**"
   workflow_dispatch: {}
 
-# Cancel older runs on the same ref when new commits arrive
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
-  security-events: write   # For CodeQL / code scanning (if enabled)
-  actions: read
 
 defaults:
   run:
@@ -47,7 +47,6 @@ defaults:
 env:
   PYTHON_VERSION: "3.11"
   NODE_VERSION: "20"
-  # Adjust these if your repo uses different layout
   KFM_PY_ROOT: "src"
   KFM_WEB_ROOT: "web"
 
@@ -62,12 +61,12 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
       - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
@@ -76,39 +75,56 @@ jobs:
             pyproject.toml
             setup.cfg
 
-      - name: 📦 Install Python Dependencies (Locked if available)
+      - name: 📦 Install Python Dependencies (prefer locked/dev requirements)
         run: |
           set -euo pipefail
+          python -m pip install --upgrade pip
+
           if [[ -f requirements-dev.txt ]]; then
-            python -m pip install --upgrade pip
-            pip install --no-cache-dir -r requirements-dev.txt
+            pip install -r requirements-dev.txt
           elif [[ -f requirements.txt ]]; then
-            python -m pip install --upgrade pip
-            pip install --no-cache-dir -r requirements.txt
+            pip install -r requirements.txt
+          elif [[ -f pyproject.toml ]]; then
+            # Best-effort for projects that use pyproject without exported requirements
+            pip install .
           else
-            echo "No requirements*.txt found; skipping Python dependency install."
+            echo "No Python dependency manifest found (requirements*.txt/pyproject.toml); skipping install."
           fi
+
+          # Optional sanity check: report broken requirements (best-effort)
+          python -m pip check || true
 
       - name: 🧹 Lint Python (ruff/flake8/black if present)
         run: |
           set -euo pipefail
-          if python -m pip show ruff >/dev/null 2>&1; then
-            ruff check ${{ env.KFM_PY_ROOT }} || exit 1
+
+          if python -m ruff --version >/dev/null 2>&1; then
+            python -m ruff check "${KFM_PY_ROOT}"
+            # Only run ruff-format check if supported by the installed ruff
+            python -m ruff format --check "${KFM_PY_ROOT}" >/dev/null 2>&1 || true
           elif python -m pip show flake8 >/dev/null 2>&1; then
-            flake8 ${{ env.KFM_PY_ROOT }} || exit 1
+            flake8 "${KFM_PY_ROOT}"
           else
-            echo "No Python linter (ruff/flake8) installed; skipping lint."
+            echo "No Python linter detected (ruff/flake8)."
+            echo "Recommendation: add ruff to requirements-dev.txt for governed CI."
           fi
 
-      - name: ✅ Run Python Tests (pytest/tox)
+          # Optional formatter check if black is present and ruff didn't already format-check
+          if python -m pip show black >/dev/null 2>&1 && ! python -m ruff --version >/dev/null 2>&1; then
+            black --check "${KFM_PY_ROOT}"
+          fi
+
+      - name: ✅ Run Python Tests (pytest/tox if configured)
         run: |
           set -euo pipefail
-          if [[ -f tox.ini ]]; then
+
+          if [[ -f tox.ini ]] && python -m pip show tox >/dev/null 2>&1; then
             tox
           elif python -m pip show pytest >/dev/null 2>&1; then
             pytest
           else
-            echo "No pytest/tox configured; skipping Python tests."
+            echo "No tox/pytest detected; skipping Python tests."
+            echo "Recommendation: add pytest to requirements-dev.txt for governed CI."
           fi
 
       - name: 🔍 Optional Python Type Checking (mypy/pyright)
@@ -116,14 +132,16 @@ jobs:
         run: |
           set -euo pipefail
           if python -m pip show mypy >/dev/null 2>&1; then
-            mypy ${{ env.KFM_PY_ROOT }}
-          elif command -v pyright >/dev/null 2>&1; then
-            pyright ${{ env.KFM_PY_ROOT }}
+            mypy "${KFM_PY_ROOT}"
+          elif [[ -f "${KFM_WEB_ROOT}/package.json" ]] && command -v node >/dev/null 2>&1; then
+            # If a JS toolchain exists, try pyright via npx (best-effort)
+            npx --yes pyright "${KFM_PY_ROOT}" || true
           else
-            echo "No static type checker (mypy/pyright); skipping."
+            echo "No static type checker (mypy/pyright) detected; skipping."
+          fi
 
   ###########################################################################
-  # 2. Node/Web: lint + tests + build
+  # 2. Node/Web: lint + tests + build (only if web project exists)
   ###########################################################################
   node-ci:
     name: "🕸 Web / Node Lint & Tests"
@@ -132,7 +150,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -151,9 +169,9 @@ jobs:
         run: |
           echo "No ${KFM_WEB_ROOT}/package.json; skipping Node/Web CI."
 
-      - name: ⚙ Setup Node ${{ env.NODE_VERSION }}
+      - name: ⚙️ Setup Node ${{ env.NODE_VERSION }}
         if: steps.detect_web.outputs.has_web == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
@@ -161,7 +179,7 @@ jobs:
             ${{ env.KFM_WEB_ROOT }}/package-lock.json
             ${{ env.KFM_WEB_ROOT }}/npm-shrinkwrap.json
 
-      - name: 📦 Install Web Dependencies (npm ci)
+      - name: 📦 Install Web Dependencies (npm ci if lock present)
         if: steps.detect_web.outputs.has_web == 'true'
         working-directory: ${{ env.KFM_WEB_ROOT }}
         run: |
@@ -172,38 +190,26 @@ jobs:
             npm install --ignore-scripts
           fi
 
-      - name: 🧹 Lint Web (eslint if configured)
+      - name: 🧹 Lint Web (npm run lint --if-present)
         if: steps.detect_web.outputs.has_web == 'true'
         working-directory: ${{ env.KFM_WEB_ROOT }}
         run: |
           set -euo pipefail
-          if npx --yes eslint --version >/dev/null 2>&1; then
-            npx --yes eslint .
-          else
-            echo "No eslint configured; skipping web lint."
-          fi
+          npm run lint --if-present
 
-      - name: ✅ Run Web Tests (npm test if configured)
+      - name: ✅ Run Web Tests (npm test --if-present)
         if: steps.detect_web.outputs.has_web == 'true'
         working-directory: ${{ env.KFM_WEB_ROOT }}
         run: |
           set -euo pipefail
-          if npm run | grep -q " test"; then
-            npm test
-          else
-            echo "No 'test' script in package.json; skipping web tests."
-          fi
+          npm test --if-present
 
-      - name: 🏗 Web Build (npm run build if configured)
+      - name: 🏗 Web Build (npm run build --if-present)
         if: steps.detect_web.outputs.has_web == 'true'
         working-directory: ${{ env.KFM_WEB_ROOT }}
         run: |
           set -euo pipefail
-          if npm run | grep -q " build"; then
-            npm run build
-          else
-            echo "No 'build' script in package.json; skipping web build."
-          fi
+          npm run build --if-present
 
   ###########################################################################
   # 3. Config & Base Schema Sanity (YAML/JSON/etc.)
@@ -215,17 +221,14 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
-      # Optional: lightweight JSON/YAML validation & schema checks for configs.
-      # Heavier STAC/DCAT/JSON-LD validation is in dedicated workflows.
       - name: 🧬 Validate Core Config Schemas (if configured)
         run: |
           set -euo pipefail
           if [[ -d .github/actions/schema-validate ]]; then
-            # Example: validate JSON/YAML configs under config/ against their schemas
             if [[ -d schemas/config && -d config ]]; then
               bash .github/actions/schema-validate/entrypoint.sh schemas/config config
             else
@@ -236,7 +239,11 @@ jobs:
           fi
 
   ###########################################################################
-  # 4. Optional: CodeQL Code Scanning (if GitHub Advanced Security enabled)
+  # 4. Optional: CodeQL Code Scanning (if enabled)
+  #
+  # Notes:
+  #  - Upgraded to CodeQL Action v4 (current). v3 deprecation announced.
+  #  - Avoid running on forked PRs where security-events permissions are not granted.
   ###########################################################################
   codeql:
     name: "🔐 CodeQL Static Analysis (Optional)"
@@ -246,6 +253,10 @@ jobs:
       - python-ci
       - node-ci
 
+    if: |
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+
     permissions:
       contents: read
       security-events: write
@@ -253,24 +264,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'python', 'javascript' ]
+        language: [ "python", "javascript" ]
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
       - name: 🧩 Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
 
       - name: 🧪 Autobuild (best-effort)
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@v4
 
       - name: 🔍 Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
 
@@ -297,6 +308,6 @@ jobs:
             echo "- Node/Web job: ${{ needs.node-ci.result }}"
             echo "- Config/Base Schemas job: ${{ needs.config-schemas.result }}"
             echo ""
-            echo "CodeQL job (if enabled) runs as a separate job and reports findings in GitHub Security."
+            echo "Notes:"
+            echo "- CodeQL runs only on non-fork contexts (or on push) to ensure security-events permissions."
           } >> "${GITHUB_STEP_SUMMARY}"
-
