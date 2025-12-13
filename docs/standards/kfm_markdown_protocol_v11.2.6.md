@@ -1,588 +1,533 @@
-# .github/actions/schema-validate/action.yml
-name: "KFM Schema Validate"
-description: "Validate JSON / YAML / JSON-LD files against a KFM profile (JSON Schema; optional SHACL) and emit a machine-readable report."
-
-inputs:
-  paths:
-    description: "Newline-separated glob patterns of files to validate (relative to working_directory)."
-    required: true
-
-  profile:
-    description: "Validation profile identifier (e.g., kfm-config, kfm-stac-item, kfm-telemetry-ci-v11). Used to resolve schema + optional shape bundles."
-    required: true
-
-  mode:
-    description: "Validation mode: all|changed. 'changed' best-effort (requires sufficient git history / base ref availability)."
-    required: false
-    default: "all"
-
-  fail_level:
-    description: "Minimum severity that causes failure: error|warning."
-    required: false
-    default: "error"
-
-  working_directory:
-    description: "Base directory for resolving globs and schema roots. Relative to $GITHUB_WORKSPACE."
-    required: false
-    default: "."
-
-  schema_root:
-    description: "Base directory for JSON Schemas. Relative to working_directory."
-    required: false
-    default: "schemas/json"
-
-  shape_root:
-    description: "Base directory for SHACL shapes. Relative to working_directory."
-    required: false
-    default: "schemas/shacl"
-
-  use_shapes:
-    description: "If 'true', run SHACL validation when a matching shape bundle exists and the input can be parsed as RDF/JSON-LD."
-    required: false
-    default: "false"
-
-  report_path:
-    description: "Output path for the full validation report JSON (relative to working_directory)."
-    required: false
-    default: "artifacts/schema/schema-validation.json"
-
-  telemetry_path:
-    description: "Output path for summary telemetry JSON (relative to working_directory)."
-    required: false
-    default: "artifacts/schema/schema-validation-telemetry.json"
-
-  extra_args:
-    description: "Reserved for advanced use (future passthrough flags). Currently ignored."
-    required: false
-    default: ""
-
-outputs:
-  status:
-    description: "\"passed\" or \"failed\" based on fail_level and findings."
-    value: ${{ steps.schema_validate.outputs.status }}
-  error_count:
-    description: "Total number of validation errors across all files."
-    value: ${{ steps.schema_validate.outputs.error_count }}
-  warning_count:
-    description: "Total number of validation warnings across all files."
-    value: ${{ steps.schema_validate.outputs.warning_count }}
-  files_scanned:
-    description: "Count of files processed."
-    value: ${{ steps.schema_validate.outputs.files_scanned }}
-  report_path:
-    description: "Final resolved path to the JSON validation report."
-    value: ${{ steps.schema_validate.outputs.report_path }}
-  telemetry:
-    description: "Final resolved path to telemetry JSON report."
-    value: ${{ steps.schema_validate.outputs.telemetry }}
-
-runs:
-  using: "composite"
-  steps:
-    # NOTE: Per KFM governance, pin third-party actions by full commit SHA in your repo.
-    - name: "Set up Python"
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-
-    - name: "Install validator dependencies (pinned)"
-      shell: bash
-      run: |
-        set -euo pipefail
-        python -m pip install --disable-pip-version-check --no-input \
-          "jsonschema==4.23.0" \
-          "PyYAML==6.0.2" \
-          "rfc3987==1.3.8" \
-          "rdflib==7.0.0" \
-          "pyshacl==0.26.0"
-
-    - name: "Run schema validation"
-      id: schema_validate
-      shell: bash
-      env:
-        INPUT_PATHS: ${{ inputs.paths }}
-        INPUT_PROFILE: ${{ inputs.profile }}
-        INPUT_MODE: ${{ inputs.mode }}
-        INPUT_FAIL_LEVEL: ${{ inputs.fail_level }}
-        INPUT_WORKING_DIRECTORY: ${{ inputs.working_directory }}
-        INPUT_SCHEMA_ROOT: ${{ inputs.schema_root }}
-        INPUT_SHAPE_ROOT: ${{ inputs.shape_root }}
-        INPUT_USE_SHAPES: ${{ inputs.use_shapes }}
-        INPUT_REPORT_PATH: ${{ inputs.report_path }}
-        INPUT_TELEMETRY_PATH: ${{ inputs.telemetry_path }}
-        GITHUB_WORKSPACE: ${{ github.workspace }}
-        GITHUB_SHA: ${{ github.sha }}
-        GITHUB_BASE_REF: ${{ github.base_ref }}
-      run: |
-        set -euo pipefail
-        python - << 'PY'
-        import datetime as _dt
-        import glob
-        import json
-        import os
-        import platform
-        import subprocess
-        import sys
-        import time
-        from pathlib import Path
-
-        import yaml
-        import jsonschema
-        from jsonschema import FormatChecker
-        from jsonschema.validators import validator_for
-
-        # Optional SHACL stack (installed above)
-        import rdflib
-        from pyshacl import validate as shacl_validate
-
-
-        def _utc_iso(ts: float | None = None) -> str:
-            if ts is None:
-                ts = time.time()
-            return _dt.datetime.fromtimestamp(ts, tz=_dt.timezone.utc).isoformat().replace("+00:00", "Z")
-
-
-        def _json_no_dupes(fp: Path):
-            def hook(pairs):
-                obj = {}
-                for k, v in pairs:
-                    if k in obj:
-                        raise ValueError(f"Duplicate key '{k}'")
-                    obj[k] = v
-                return obj
-
-            with fp.open("r", encoding="utf-8") as fh:
-                return json.load(fh, object_pairs_hook=hook)
-
-
-        class _UniqueKeyLoader(yaml.SafeLoader):
-            pass
-
-
-        def _construct_mapping(loader: yaml.SafeLoader, node: yaml.nodes.MappingNode, deep: bool = False):
-            mapping = {}
-            for key_node, value_node in node.value:
-                key = loader.construct_object(key_node, deep=deep)
-                if key in mapping:
-                    raise ValueError(f"Duplicate key '{key}'")
-                mapping[key] = loader.construct_object(value_node, deep=deep)
-            return mapping
-
-
-        _UniqueKeyLoader.add_constructor(  # type: ignore[attr-defined]
-            yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
-            _construct_mapping,
-        )
-
-
-        def _yaml_no_dupes(fp: Path):
-            with fp.open("r", encoding="utf-8") as fh:
-                return yaml.load(fh, Loader=_UniqueKeyLoader)
-
-
-        def _as_pointer(path_parts) -> str:
-            # jsonpointer encoding: "~"->"~0", "/"->"~1"
-            out = ""
-            for p in path_parts:
-                s = str(p).replace("~", "~0").replace("/", "~1")
-                out += "/" + s
-            return out if out else "/"
-
-
-        def _git_changed_files(repo_dir: Path) -> set[str] | None:
-            """
-            Best-effort changed-file detection. Returns None if git/base ref is unavailable.
-            Assumes repo is already checked out.
-            """
-            base_ref = os.environ.get("GITHUB_BASE_REF") or ""
-            try:
-                if base_ref:
-                    base = f"origin/{base_ref}"
-                    # If base isn't present (shallow checkout), try a minimal fetch.
-                    try:
-                        subprocess.run(["git", "rev-parse", "--verify", base], cwd=repo_dir, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    except Exception:
-                        try:
-                            subprocess.run(["git", "fetch", "--no-tags", "--depth=1", "origin", base_ref], cwd=repo_dir, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                        except Exception:
-                            # can't fetch or still missing
-                            pass
-
-                    # Use merge-base if possible
-                    try:
-                        mb = subprocess.check_output(["git", "merge-base", "HEAD", base], cwd=repo_dir, text=True).strip()
-                        diff_range = f"{mb}..HEAD"
-                    except Exception:
-                        diff_range = f"{base}..HEAD"
-                else:
-                    # push/non-PR fallback
-                    diff_range = "HEAD~1..HEAD"
-
-                out = subprocess.check_output(
-                    ["git", "diff", "--name-only", "--diff-filter=ACMRT", diff_range],
-                    cwd=repo_dir,
-                    text=True,
-                )
-                return {line.strip() for line in out.splitlines() if line.strip()}
-            except Exception:
-                return None
-
-
-        def _resolve_schema(profile: str, schema_root: Path) -> Path | None:
-            # If profile is an explicit path, honor it.
-            p = Path(profile)
-            if p.is_file():
-                return p
-
-            # Try common naming variants.
-            variants = [
-                profile,
-                profile.replace("@", "-"),
-                profile.split("@")[0],
-                profile.split("@")[0].replace("@", "-"),
-            ]
-            candidates: list[Path] = []
-            for v in variants:
-                candidates.extend(
-                    [
-                        schema_root / f"{v}.schema.json",
-                        schema_root / f"{v}.json",
-                        schema_root / v / "schema.json",
-                        schema_root / v / f"{v}.schema.json",
-                    ]
-                )
-
-            for c in candidates:
-                if c.is_file():
-                    return c
-            return None
-
-
-        def _resolve_shape(profile: str, shape_root: Path) -> Path | None:
-            p = Path(profile)
-            if p.is_file():
-                # explicit path could be a ttl shape too, but only use if it looks like ttl
-                if p.suffix.lower() in {".ttl", ".nt", ".n3", ".trig"}:
-                    return p
-                return None
-
-            variants = [
-                profile,
-                profile.replace("@", "-"),
-                profile.split("@")[0],
-                profile.split("@")[0].replace("@", "-"),
-            ]
-            candidates: list[Path] = []
-            for v in variants:
-                candidates.extend(
-                    [
-                        shape_root / f"{v}.ttl",
-                        shape_root / f"{v}-shape.ttl",
-                        shape_root / f"{v}.shape.ttl",
-                        shape_root / v / f"{v}-shape.ttl",
-                        shape_root / v / f"{v}.ttl",
-                    ]
-                )
-
-            for c in candidates:
-                if c.is_file():
-                    return c
-            return None
-
-
-        # ---- Inputs ----
-        workspace = Path(os.environ.get("GITHUB_WORKSPACE", ".")).resolve()
-        wd_in = os.environ.get("INPUT_WORKING_DIRECTORY", ".").strip() or "."
-        working_directory = (workspace / wd_in).resolve()
-
-        patterns_raw = os.environ.get("INPUT_PATHS", "")
-        profile = os.environ.get("INPUT_PROFILE", "").strip()
-        mode = (os.environ.get("INPUT_MODE", "all") or "all").strip().lower()
-        fail_level = (os.environ.get("INPUT_FAIL_LEVEL", "error") or "error").strip().lower()
-        schema_root = (working_directory / (os.environ.get("INPUT_SCHEMA_ROOT", "schemas/json").strip() or "schemas/json")).resolve()
-        shape_root = (working_directory / (os.environ.get("INPUT_SHAPE_ROOT", "schemas/shacl").strip() or "schemas/shacl")).resolve()
-        use_shapes = (os.environ.get("INPUT_USE_SHAPES", "false").strip().lower() == "true")
-        report_path = (working_directory / (os.environ.get("INPUT_REPORT_PATH", "artifacts/schema/schema-validation.json").strip() or "artifacts/schema/schema-validation.json")).resolve()
-        telemetry_path = (working_directory / (os.environ.get("INPUT_TELEMETRY_PATH", "artifacts/schema/schema-validation-telemetry.json").strip() or "artifacts/schema/schema-validation-telemetry.json")).resolve()
-        commit_sha = os.environ.get("GITHUB_SHA", "")
-
-        if not profile:
-            print("❌ 'profile' input is required.", file=sys.stderr)
-            sys.exit(2)
-
-        patterns = [p.strip() for p in patterns_raw.splitlines() if p.strip()]
-        if not patterns:
-            print("❌ 'paths' input is required and must contain at least one glob.", file=sys.stderr)
-            sys.exit(2)
-
-        started = time.time()
-
-        # ---- Discover files ----
-        discovered: set[Path] = set()
-        for pat in patterns:
-            full_pat = str((working_directory / pat) if not os.path.isabs(pat) else Path(pat))
-            for m in glob.glob(full_pat, recursive=True):
-                p = Path(m)
-                if p.is_file():
-                    discovered.add(p.resolve())
-
-        if not discovered:
-            print("❌ No files matched inputs.paths patterns.", file=sys.stderr)
-            sys.exit(2)
-
-        warnings_global: list[dict] = []
-        if mode == "changed":
-            changed = _git_changed_files(working_directory)
-            if changed is None:
-                warnings_global.append({
-                    "code": "KFM-SCHEMA-W_CHG001",
-                    "message": "mode=changed requested, but git diff/base ref unavailable; validating all matched files.",
-                    "severity": "warning",
-                })
-            else:
-                # Normalize changed paths to absolute under working_directory
-                changed_abs = set()
-                for rel in changed:
-                    try:
-                        changed_abs.add((working_directory / rel).resolve())
-                    except Exception:
-                        pass
-                discovered = {p for p in discovered if p in changed_abs}
-                if not discovered:
-                    # If nothing intersected, treat as config error (per spec)
-                    print("❌ mode=changed resulted in zero files to validate (paths did not intersect git diff).", file=sys.stderr)
-                    sys.exit(2)
-
-        # ---- Resolve schema & optional shape ----
-        schema_path = _resolve_schema(profile, schema_root)
-        if schema_path is None:
-            print(f"❌ Could not resolve JSON Schema for profile='{profile}' under schema_root='{schema_root}'.", file=sys.stderr)
-            sys.exit(2)
-
-        schema_path = schema_path.resolve()
-        try:
-            schema = _json_no_dupes(schema_path)
-        except Exception as e:
-            print(f"❌ Failed to load schema '{schema_path}': {e}", file=sys.stderr)
-            sys.exit(2)
-
-        try:
-            vcls = validator_for(schema)
-            vcls.check_schema(schema)
-        except Exception as e:
-            print(f"❌ Schema is not valid JSON Schema: {schema_path} :: {e}", file=sys.stderr)
-            sys.exit(2)
-
-        resolver = jsonschema.RefResolver(base_uri=schema_path.as_uri(), referrer=schema)  # noqa: S301 (RefResolver deprecated but stable)
-        validator = vcls(schema, resolver=resolver, format_checker=FormatChecker())
-
-        shape_path = None
-        shapes_graph = None
-        if use_shapes:
-            shape_path = _resolve_shape(profile, shape_root)
-            if shape_path and shape_path.is_file():
-                shapes_graph = rdflib.Graph()
-                try:
-                    shapes_graph.parse(str(shape_path), format="turtle")
-                except Exception as e:
-                    warnings_global.append({
-                        "code": "KFM-SHACL-W_LOAD001",
-                        "message": f"Failed to parse SHACL shapes at '{shape_path}'; skipping SHACL validation. Error: {e}",
-                        "severity": "warning",
-                    })
-                    shapes_graph = None
-            else:
-                warnings_global.append({
-                    "code": "KFM-SHACL-W_MISSING001",
-                    "message": f"use_shapes=true but no SHACL bundle found for profile '{profile}' under '{shape_root}'; skipping SHACL validation.",
-                    "severity": "warning",
-                })
-
-        # ---- Validate files ----
-        per_file = []
-        error_count = 0
-        warning_count = 0
-
-        for fp in sorted(discovered):
-            rel = str(fp.relative_to(working_directory)) if fp.is_relative_to(working_directory) else str(fp)
-            file_errors = []
-            file_warnings = []
-
-            suffix = fp.suffix.lower()
-            try:
-                if suffix in {".yaml", ".yml"}:
-                    doc = _yaml_no_dupes(fp)
-                elif suffix in {".json", ".jsonld"}:
-                    doc = _json_no_dupes(fp)
-                else:
-                    file_warnings.append({
-                        "code": "KFM-SCHEMA-W_TYPE001",
-                        "message": f"Unsupported file extension '{suffix}' (skipped).",
-                        "json_pointer": "/",
-                        "severity": "warning",
-                    })
-                    per_file.append({"path": rel, "errors": [], "warnings": file_warnings})
-                    warning_count += len(file_warnings)
-                    continue
-            except Exception as e:
-                file_errors.append({
-                    "code": "KFM-SCHEMA-E_PARSE",
-                    "message": f"Parse error: {e}",
-                    "json_pointer": "/",
-                    "severity": "error",
-                })
-                per_file.append({"path": rel, "errors": file_errors, "warnings": file_warnings})
-                error_count += len(file_errors)
-                warning_count += len(file_warnings)
-                continue
-
-            # JSON Schema validation
-            try:
-                errs = sorted(validator.iter_errors(doc), key=lambda e: list(e.absolute_path))
-                for e in errs:
-                    file_errors.append({
-                        "code": "KFM-SCHEMA-E_VALIDATION",
-                        "message": e.message,
-                        "json_pointer": _as_pointer(e.absolute_path),
-                        "validator": str(e.validator),
-                        "severity": "error",
-                    })
-            except Exception as e:
-                file_errors.append({
-                    "code": "KFM-SCHEMA-E_ENGINE",
-                    "message": f"Validator engine error: {e}",
-                    "json_pointer": "/",
-                    "severity": "error",
-                })
-
-            # Optional SHACL validation (only when shapes available + file parseable as JSON-LD/RDF)
-            if use_shapes and shapes_graph is not None:
-                # Best-effort: only parse JSON-LD (file extension .jsonld OR has @context)
-                is_jsonldish = (suffix == ".jsonld") or (isinstance(doc, dict) and ("@context" in doc or "@graph" in doc))
-                if is_jsonldish:
-                    data_graph = rdflib.Graph()
-                    try:
-                        data_graph.parse(str(fp), format="json-ld")
-                        conforms, results_graph, results_text = shacl_validate(
-                            data_graph=data_graph,
-                            shacl_graph=shapes_graph,
-                            inference="rdfs",
-                            abort_on_first=False,
-                            meta_shacl=False,
-                            advanced=False,
-                            debug=False,
-                        )
-                        if not conforms:
-                            # Keep the message short to avoid dumping too much into logs/telemetry.
-                            msg = (results_text or "SHACL validation failed.").strip()
-                            if len(msg) > 800:
-                                msg = msg[:800] + "…"
-                            file_errors.append({
-                                "code": "KFM-SHACL-E_VALIDATION",
-                                "message": msg,
-                                "json_pointer": "/",
-                                "severity": "error",
-                            })
-                    except Exception as e:
-                        file_warnings.append({
-                            "code": "KFM-SHACL-W_PARSE001",
-                            "message": f"SHACL skipped: could not parse JSON-LD to RDF for file '{rel}'. Error: {e}",
-                            "json_pointer": "/",
-                            "severity": "warning",
-                        })
-                else:
-                    file_warnings.append({
-                        "code": "KFM-SHACL-W_SKIP001",
-                        "message": "SHACL skipped: input not JSON-LD/RDF.",
-                        "json_pointer": "/",
-                        "severity": "warning",
-                    })
-
-            per_file.append({"path": rel, "errors": file_errors, "warnings": file_warnings})
-            error_count += len(file_errors)
-            warning_count += len(file_warnings)
-
-        # Add global warnings
-        warning_count += len(warnings_global)
-
-        finished = time.time()
-        duration = round(finished - started, 3)
-
-        report = {
-            "schema_version": "kfm-schema-validation-report-v1",
-            "profile": profile,
-            "run": {
-                "started_at": _utc_iso(started),
-                "finished_at": _utc_iso(finished),
-                "duration_seconds": duration,
-                "mode": mode,
-                "fail_level": fail_level,
-                "commit_sha": commit_sha,
-            },
-            "environment": {
-                "python": platform.python_version(),
-                "platform": platform.platform(),
-                "jsonschema": getattr(jsonschema, "__version__", "unknown"),
-            },
-            "schema": {
-                "schema_path": str(schema_path.relative_to(working_directory)) if schema_path.is_relative_to(working_directory) else str(schema_path),
-                "schema_id": schema.get("$id") or schema.get("$schema") or None,
-                "draft": schema.get("$schema") or None,
-            },
-            "shacl": {
-                "enabled": bool(use_shapes),
-                "shape_path": (str(shape_path.relative_to(working_directory)) if shape_path and shape_path.is_relative_to(working_directory) else (str(shape_path) if shape_path else None)),
-            },
-            "summary": {
-                "files_scanned": len(per_file),
-                "errors": error_count,
-                "warnings": warning_count,
-            },
-            "global_warnings": warnings_global,
-            "files": per_file,
-        }
-
-        telemetry = {
-            "schema_version": "kfm-schema-validation-telemetry-v1",
-            "profile": profile,
-            "run": report["run"],
-            "summary": report["summary"],
-        }
-
-        report_path.parent.mkdir(parents=True, exist_ok=True)
-        telemetry_path.parent.mkdir(parents=True, exist_ok=True)
-
-        report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
-        telemetry_path.write_text(json.dumps(telemetry, indent=2), encoding="utf-8")
-
-        failed = (error_count > 0) or (fail_level == "warning" and warning_count > 0)
-        status = "failed" if failed else "passed"
-
-        # Step summary (best-effort)
-        step_summary = os.environ.get("GITHUB_STEP_SUMMARY")
-        if step_summary:
-            with open(step_summary, "a", encoding="utf-8") as fh:
-                fh.write(f"## 📐 KFM Schema Validate — {status.upper()}\n")
-                fh.write(f"- Profile: `{profile}`\n")
-                fh.write(f"- Files scanned: **{len(per_file)}**\n")
-                fh.write(f"- Errors: **{error_count}**\n")
-                fh.write(f"- Warnings: **{warning_count}**\n")
-                fh.write(f"- Report: `{report_path}`\n")
-                fh.write(f"- Telemetry: `{telemetry_path}`\n")
-
-        # Emit composite outputs
-        gh_out = os.environ.get("GITHUB_OUTPUT")
-        if gh_out:
-            with open(gh_out, "a", encoding="utf-8") as fh:
-                fh.write(f"status={status}\n")
-                fh.write(f"error_count={error_count}\n")
-                fh.write(f"warning_count={warning_count}\n")
-                fh.write(f"files_scanned={len(per_file)}\n")
-                fh.write(f"report_path={str(report_path)}\n")
-                fh.write(f"telemetry={str(telemetry_path)}\n")
-
-        # Console summary
-        print(json.dumps(report["summary"], indent=2))
-        if failed:
-            sys.exit(1)
-        PY
+---
+title: "📑 Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.6"
+path: "docs/standards/kfm_markdown_protocol_v11.2.6.md"
+
+version: "v11.2.6"
+last_updated: "2025-12-12"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Annual · FAIR+CARE Council & Focus Mode Board"
+content_stability: "stable"
+
+status: "Active / Enforced"
+doc_kind: "Standard"
+header_profile: "standard"
+footer_profile: "standard"
+diagram_profiles:
+  - "mermaid-flowchart-v1"
+  - "mermaid-timeline-v1"
+
+license: "CC-BY 4.0"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
+scope:
+  domain: "documentation"
+  applies_to:
+    - "all-markdown"
+    - "docs/**"
+    - "mcp/**"
+    - "src/**/README.md"
+    - ".github/**/*.md"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+classification: "Public"
+jurisdiction: "Kansas / United States"
+indigenous_rights_flag: true
+data_steward: "KFM FAIR+CARE Council"
+
+ttl_policy: "24 months"
+sunset_policy: "Superseded by KFM-MDP v12"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+
+signature_ref: "../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.6/manifest.zip"
+
+telemetry_ref: "../../releases/v11.2.6/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/markdown-protocol-v11.2.6.json"
+energy_schema: "../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "governance/ROOT-GOVERNANCE.md"
+ethics_ref: "faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  prov_o: "prov:Plan"
+  owl_time: "ProperInterval"
+  geosparql: "geo:FeatureCollection"
+
+metadata_profiles:
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "docs/standards/kfm_markdown_protocol_v11.2.5.md@v11.2.5"
+  - "docs/standards/kfm_markdown_protocol_v11.2.4.md@v11.2.4"
+  - "docs/standards/kfm_markdown_protocol_v11.2.3.md@v11.2.3"
+  - "docs/standards/kfm_markdown_protocol_v11.2.2.md@v11.2.2"
+  - "docs/standards/kfm_markdown_protocol_v11.2.1.md@v11.2.1"
+  - "docs/standards/kfm_markdown_protocol_v11.2.md@v11.2.0"
+  - "docs/standards/kfm_markdown_protocol_v11.md@v11.0.1"
+  - "docs/standards/markdown_rules.md@v10.4.3"
+
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+  must_reference_superseded: true
+  must_reference_origin_root: true
+
+json_schema_ref: "../../schemas/json/kfm-markdown-protocol-v11.2.6.schema.json"
+shape_schema_ref: "../../schemas/shacl/kfm-markdown-protocol-v11.2.6-shape.ttl"
+
+story_node_refs: []
+immutability_status: "version-pinned"
+doc_uuid: "urn:kfm:doc:standards:markdown-protocol:v11.2.6"
+semantic_document_id: "kfm-markdown-protocol-v11.2.6"
+event_source_id: "ledger:kfm:doc:standards:markdown-protocol:v11.2.6"
+doc_integrity_checksum: "<sha256>"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "semantic-highlighting"
+  - "3d-context-render"
+  - "a11y-adaptations"
+  - "diagram-extraction"
+  - "metadata-extraction"
+  - "layout-normalization"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+transform_registry:
+  allowed:
+    - "summary"
+    - "timeline-generation"
+    - "semantic-highlighting"
+    - "3d-context-render"
+    - "a11y-adaptations"
+    - "diagram-extraction"
+    - "metadata-extraction"
+    - "layout-normalization"
+  prohibited:
+    - "content-alteration"
+    - "speculative-additions"
+    - "unverified-architectural-claims"
+    - "narrative-fabrication"
+    - "governance-override"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Layout"
+    - "🧭 Context"
+    - "🗺️ Diagrams"
+    - "🧠 Story Node & Focus Mode Integration"
+    - "🧪 Validation & CI/CD"
+    - "📦 Data & Metadata"
+    - "🌐 STAC, DCAT & PROV Alignment"
+    - "🧱 Architecture"
+    - "⚖ FAIR+CARE & Governance"
+    - "🕰️ Version History"
+
+test_profiles:
+  - "markdown-lint"
+  - "schema-lint"
+  - "footer-check"
+  - "accessibility-check"
+  - "diagram-check"
+  - "metadata-check"
+  - "provenance-check"
+  - "secret-scan"
+  - "pii-scan"
+
+ci_integration:
+  workflow: ".github/workflows/kfm-ci.yml"
+  environment: "dev → staging → production"
+
+branding_registry:
+  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
+  architecture: "Designed for Longevity · Governed for Integrity"
+  analysis: "Research-Driven · Evidence-Led · FAIR+CARE Grounded"
+  data-spec: "Open Data × Responsible Stewardship"
+  pipeline: "Deterministic Pipelines · Explainable AI · Open Provenance"
+  telemetry: "Transparent Systems · Ethical Metrics · Sustainable Intelligence"
+  graph: "Semantics × Provenance × Spatial Intelligence"
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+
+fencing_profile: "outer-backticks-inner-tildes-v1"
+
+badge_profiles:
+  - "root-centered-badge-row"
+
+requires_purpose_block: true
+requires_version_history: true
+requires_directory_layout_section: true
+requires_governance_links_in_footer: true
+
+deprecated_fields:
+  - "old_markdown_standard_v10.4"
+---
+
+<div align="center">
+
+# 📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM‑MDP) v11.2.6**
+`docs/standards/kfm_markdown_protocol_v11.2.6.md`
+
+**Purpose**  
+Define the **canonical, enforceable Markdown authoring rules** for the Kansas Frontier Matrix (KFM).  
+This protocol standardizes **structure, headings, metadata, and narrative patterns** so Markdown across the monorepo is **CI‑safe, FAIR+CARE‑aligned, semantically interoperable**, and ready for **Story Node / Focus Mode** integration.
+
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
+<img src="https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
+
+</div>
+
+---
+
+## 📘 Overview
+
+### 1. Scope and intent
+
+KFM‑MDP v11.2.6 governs **all Markdown files** in the Kansas Frontier Matrix monorepo.
+
+If it’s `.md` in this repo, this protocol applies—especially:
+
+- Standards, governance, and guides under `docs/**`
+- Workflow documentation under `docs/workflows/**`
+- Telemetry documentation under `docs/telemetry/**`
+- Experiment logs, model cards, and SOPs under `mcp/**`
+- Any `README.md` in `src/**`
+
+This protocol exists to ensure Markdown is:
+
+- **Predictable for humans** (consistent layout, consistent headings)
+- **Parseable for machines** (front‑matter + stable sections)
+- **Governable** (FAIR+CARE and sovereignty constraints are explicit)
+- **Indexable** (DCAT/STAC/PROV aligned)
+- **Safe to transform** (Focus Mode can summarize without inventing policy)
+
+KFM‑MDP v11.2.6 supersedes v11.2.5.
+
+### 2. Absolute rules (normative)
+
+1. **Front‑matter is required**  
+   Every governed KFM Markdown document MUST start with YAML front‑matter (`---` … `---`).
+
+2. **Exactly one H1**  
+   One—and only one—`#` heading per file.
+
+3. **Approved H2s only**  
+   Every H2 MUST match exactly one entry in `heading_registry.approved_h2`, including the emoji.
+
+4. **Standards ordering**  
+   Standards and indexes MUST place:
+   - `## 📘 Overview` first
+   - `## 🗂️ Directory Layout` second
+   - `## 🕰️ Version History` last
+
+5. **Directory layout must not “break the box”**  
+   Every directory tree MUST be fenced as `~~~text` and use consistent branch glyphs (`├──`, `└──`, `│`).
+
+6. **Internal fences use tildes**  
+   In committed docs: use `~~~` for fenced blocks (`~~~json`, `~~~yaml`, `~~~bash`, `~~~mermaid`, `~~~text`).  
+   Do not mix `~~~` and backticks inside the same document.
+
+7. **No secrets / no PII**  
+   Docs are scanned. Secrets and PII MUST NOT appear anywhere in Markdown.
+
+### 3. The chat-safe fencing profile
+
+`fencing_profile: outer-backticks-inner-tildes-v1` is mandatory for AI-assisted authoring.
+
+- In chat (assistant output), wrap the entire document in **one** outer fence: ` ```markdown … ``` `
+- Inside the document, ALL examples MUST use **tildes** (`~~~`) for code blocks.
+
+This prevents nested “```” blocks from closing the outer fence and breaking the rendered box.
+
+---
+
+## 🗂️ Directory Layout
+
+Directory layouts MUST follow `immediate-one-branch-with-descriptions-and-emojis`.
+
+Rules:
+
+- Use `~~~text` fences (tildes).
+- Use `📁` for directories and `📄` for files (add `🧾` for JSON/YAML/log artifacts when helpful).
+- Use `├──` / `└──` and maintain vertical bars for readability.
+- Keep comments aligned for human scanning.
+
+Canonical monorepo layout (documentation-relevant):
+
+~~~text
+📁 KansasFrontierMatrix/
+├── 📁 docs/                                   — Documentation layer (standards, workflows, telemetry, guides)
+│   ├── 📁 standards/                          — Standards, governance, FAIR+CARE, sovereignty
+│   │   ├── 📄 README.md                       — Standards index
+│   │   ├── 📄 kfm_markdown_protocol_v11.2.6.md— ← This document (KFM‑MDP)
+│   │   ├── 📄 telemetry_standards.md          — Telemetry governance super-standard
+│   │   ├── 📄 ui_accessibility.md             — UI accessibility super-standard
+│   │   ├── 📁 governance/                     — Governance charter and governance standards
+│   │   ├── 📁 faircare/                       — FAIR+CARE guidance
+│   │   └── 📁 sovereignty/                    — Indigenous data protection and sovereignty policy
+│   │
+│   ├── 📁 workflows/                          — Workflow docs (one .yml.md per .github workflow)
+│   ├── 📁 telemetry/                          — Telemetry documentation suites (events, validators, lineage, dashboards)
+│   ├── 📁 templates/                          — Canonical templates (experiments, model cards, SOPs, core markdown)
+│   ├── 📁 architecture/                       — System design docs (ETL → graph → API → UI → Story Nodes)
+│   ├── 📁 guides/                             — Author/operator guides
+│   ├── 📁 analyses/                           — Research and domain analyses
+│   └── 📄 glossary.md                         — Shared vocabulary
+│
+├── 📁 schemas/                                — Schemas (docs, telemetry, SHACL, STAC/DCAT mappings)
+├── 📁 releases/                               — Release packets (manifest, SBOM, signatures, telemetry snapshots)
+├── 📁 mcp/                                    — Experiments, model cards, SOPs (MCP‑DL artifacts)
+├── 📁 src/                                    — Code (pipelines, graph, APIs, web UI)
+└── 📁 .github/                                — CI/CD workflows and repo governance automation
+~~~
+
+---
+
+## 🧭 Context
+
+KFM‑MDP sits at the junction of:
+
+- **MCP‑DL v6.3** (documentation-first reproducibility)
+- **FAIR+CARE governance** (ethics, stewardship, authority, responsibility)
+- **Sovereignty policy** (masking, consent, and restricted content controls)
+- **STAC/DCAT/PROV** (catalog discovery and provenance)
+- **Story Nodes / Focus Mode** (safe summarization, narrative overlays)
+
+The KFM pipeline is documentation-dependent:
+
+> Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode
+
+If Markdown drifts, downstream cataloging and Focus Mode narratives become unsafe or unreliable—so this protocol is enforced by CI.
+
+---
+
+## 🗺️ Diagrams
+
+Diagrams MUST be:
+
+- placed under `🗺️ Diagrams` (or `🧱 Architecture` / `🧪 Validation & CI/CD` when appropriate),
+- fenced with `~~~mermaid`,
+- accompanied by a short plain-language explanation.
+
+### Mermaid guardrails (practical rules)
+
+To avoid rendering failures:
+
+- Do NOT use HTML in Mermaid labels (no `<br/>`, no inline tags).
+- Keep labels simple; prefer ASCII punctuation.
+- If a label includes special characters, use the quoted node label form: `A["Label text"]`.
+
+Example:
+
+~~~mermaid
+flowchart LR
+  A["Author edits doc"] --> B["CI runs lint + schema validation"]
+  B -->|pass| C["Merge allowed"]
+  B -->|fail| D["Fix required"]
+~~~
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+KFM‑MDP makes Markdown **Story Node friendly**:
+
+- predictable H2 sections become stable “facets” for Focus Mode summaries,
+- front‑matter IDs provide stable anchors for graph ingestion,
+- transform permissions constrain what AI is allowed to do.
+
+**Focus Mode MAY:**
+
+- summarize and highlight sections,
+- produce timelines and navigation aids,
+- extract metadata fields and link them to catalogs.
+
+**Focus Mode MUST NOT:**
+
+- alter normative requirements,
+- invent governance status,
+- fabricate provenance or dataset relationships.
+
+---
+
+## 🧪 Validation & CI/CD
+
+Markdown compliance is CI-enforced.
+
+### Minimum validation profiles
+
+| Profile | What it protects |
+|---|---|
+| `markdown-lint` | structure (H1/H2 rules), formatting constraints |
+| `schema-lint` | YAML front‑matter schema compliance |
+| `metadata-check` | required keys present and consistent |
+| `diagram-check` | Mermaid parse + allowed diagram profiles |
+| `footer-check` | governance links + footer ordering |
+| `accessibility-check` | basic a11y checks (heading order, list semantics) |
+| `provenance-check` | provenance chain + version history coherence |
+| `secret-scan` | blocks secrets/tokens/credentials |
+| `pii-scan` | blocks obvious PII leakage |
+
+### Common failure causes
+
+- Missing or malformed front‑matter
+- More than one H1
+- Unapproved H2 headings (emoji mismatch, text mismatch)
+- Directory layouts not fenced with `~~~text`
+- Mixed fence styles (using ``` inside files)
+- Mermaid node labels with HTML (breaks render)
+- Footer missing governance links
+
+---
+
+## 📦 Data & Metadata
+
+### Front‑matter requirements (normative)
+
+A governed KFM doc MUST include:
+
+- identity: `title`, `path`, `version`, `last_updated`
+- governance: `governance_ref`, `ethics_ref`, `sovereignty_policy`
+- compliance: `license`, `classification`, `sensitivity`, `fair_category`, `care_label`
+- provenance: `commit_sha`, `signature_ref` (when release-pinned), `provenance_chain`
+- IDs: `doc_uuid`, `semantic_document_id`, `event_source_id`
+- AI transform limits: `ai_transform_permissions`, `ai_transform_prohibited`
+
+Placeholders are allowed only where explicitly indicated (e.g., `<latest-commit-hash>`), and MUST be resolved for release-tagged documents.
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### DCAT
+
+- This document is a documentation dataset (`dcat:Dataset` or `dcat:CatalogRecord`).
+- `semantic_document_id` maps to `dct:identifier`.
+- Markdown is a `dcat:Distribution` (`mediaType: text/markdown`).
+
+### STAC
+
+- The document may be represented as a non-spatial STAC Item:
+  - `geometry: null`
+  - `properties.datetime = last_updated`
+  - `assets.markdown.href` points to the file path in the repo or artifact store.
+
+### PROV‑O
+
+- This standard is a `prov:Plan`.
+- Updates and validations are `prov:Activity` instances.
+- CI bots, councils, and maintainers are `prov:Agent`s.
+
+---
+
+## 🧱 Architecture
+
+KFM‑MDP drives architecture indirectly by constraining documentation shape:
+
+- documentation can be parsed and transformed deterministically,
+- pipeline “contracts” can reference docs as stable entities,
+- the graph can ingest doc metadata to link code, data, and governance.
+
+Any change to KFM‑MDP MUST be accompanied by:
+
+- schema updates (`json_schema_ref`, `shape_schema_ref`),
+- CI rule updates (lint/validators),
+- a new Version History entry,
+- updated release packet references when pinned.
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+KFM‑MDP encodes FAIR+CARE requirements into Markdown:
+
+- **FAIR**: stable identifiers, licenses, and provenance enable findability and reuse.
+- **CARE**: sovereignty and stewardship constraints prevent harm and respect authority to control.
+
+Governance is binding and traceable through:
+
+- `governance_ref`
+- CI enforcement (required checks)
+- release manifests and signatures
+
+---
+
+## 🕰️ Version History
+
+| Version     | Date       | Summary |
+|------------:|-----------:|---------|
+| **v11.2.6** | 2025-12-12 | Normalized governance/ethics/sovereignty relative paths for `docs/standards/`; clarified normative rules and Mermaid guardrails; reinforced `outer-backticks-inner-tildes-v1` for AI-assisted authoring; improved directory layout readability and alignment. |
+| v11.2.5     | 2025-12-07 | Elevated `🗂️ Directory Layout` to second H2 for standards/guides; mandated emoji trees and `~~~text` fences; strengthened AI authoring guidance. |
+| v11.2.4     | 2025-12-04 | Added STAC/DCAT/PROV alignment; expanded Story Node & Focus Mode guidance; tightened CI enforcement rules. |
+| v11.2.3     | 2025-12-02 | Refined AI transform permissions and Focus Mode behaviors. |
+| v11.2.2     | 2025-11-27 | Introduced heading registry; expanded metadata/provenance fields; unified front‑matter patterns. |
+| v11.2.1     | 2025-11-26 | Added profile system; stronger provenance enforcement. |
+| v11.2.0     | 2025-11-25 | Major overhaul for v11 (profiles, CI test profiles, diagram rules). |
+| v11.0.1     | 2025-11-20 | Initial consolidation of markdown rules under v11 governance and ontology alignment. |
+| v10.4.3     | 2023-11-10 | Legacy markdown rules prior to v11. |
+
+---
+
+<div align="center">
+
+📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM‑MDP) v11.2.6**  
+Documentation-First · FAIR+CARE Governance · Sustainable Intelligence
+
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
+
+[📘 Docs Root](../README.md) ·
+[📂 Standards Index](./README.md) ·
+[📄 Templates Index](../templates/README.md) ·
+[⚙ CI/CD Workflows](../workflows/README.md) ·
+[📈 Telemetry Standard](./telemetry_standards.md) ·
+[📊 Telemetry Docs](../telemetry/README.md) ·
+[♿ UI Accessibility Standard](./ui_accessibility.md) ·
+[🏛️ Governance Charter](./governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](./faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](./sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+© 2025 Kansas Frontier Matrix — CC‑BY 4.0  
+MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+
+</div>
