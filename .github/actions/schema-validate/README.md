@@ -184,7 +184,7 @@ remain stable across v11.x.
 
 Simple example in `.github/workflows/kfm-ci.yml`:
 
-```yaml
+~~~yaml
 - name: 📐 Validate JSON/YAML schemas (core)
   uses: ./.github/actions/schema-validate
   with:
@@ -195,11 +195,11 @@ Simple example in `.github/workflows/kfm-ci.yml`:
     profile: "kfm-config"
     fail_level: error
     report_path: artifacts/schema/schema-validation-core.json
-```
+~~~
 
 STAC‑specific example:
 
-```yaml
+~~~yaml
 - name: 🛰 Validate STAC metadata
   uses: ./.github/actions/schema-validate
   with:
@@ -207,11 +207,11 @@ STAC‑specific example:
     profile: "kfm-stac-item"
     fail_level: error
     report_path: artifacts/schema/stac-validation.json
-```
+~~~
 
 DCAT‑telemetry example (e.g., CI telemetry):
 
-```yaml
+~~~yaml
 - name: 📊 Validate CI telemetry schema
   uses: ./.github/actions/schema-validate
   with:
@@ -219,7 +219,7 @@ DCAT‑telemetry example (e.g., CI telemetry):
     profile: "kfm-telemetry-ci-v11"
     fail_level: warning
     report_path: artifacts/schema/telemetry-ci-validation.json
-```
+~~~
 
 ### 2. Normative Execution Stages
 
@@ -380,7 +380,7 @@ These schemas align with KFM’s knowledge graph and Story Node specification, e
 
 At minimum, the report MUST follow a structure equivalent to:
 
-```jsonc
+~~~jsonc
 {
   "schema_version": "kfm-schema-validation-report-v1",
   "profile": "kfm-config",
@@ -416,7 +416,7 @@ At minimum, the report MUST follow a structure equivalent to:
     }
   ]
 }
-```
+~~~
 
 Exact schema is defined in `telemetry_schema` and MUST remain backward‑compatible across v11 patch releases.  
 Additive fields SHOULD be used for extensions; breaking changes require a new `schema_version` value.
