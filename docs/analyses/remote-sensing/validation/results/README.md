@@ -80,7 +80,7 @@ deterministic result bundles, governance-safe summaries, and references to STAC/
 
 <img alt="KFM-MDP v11.2.6" src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
 <img alt="Status Active Enforced" src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
-<img alt="Results Machine Outputs" src="https://img.shields.io/badge/Validation-Results-blue" />
+<img alt="Validation Results" src="https://img.shields.io/badge/Validation-Results-blue" />
 <img alt="FAIR+CARE Policy Aware" src="https://img.shields.io/badge/FAIR%2BCARE-Policy--Aware-gold" />
 
 </div>
@@ -93,7 +93,7 @@ This directory is for **results artifacts**: compact, deterministic, machine-rea
 
 Results are used to:
 
-- power CI gates (pass/warn/fail),
+- power CI gates (`pass|warn|fail`),
 - support rollups (daily, release),
 - provide audit-friendly summaries linked to STAC/DCAT/PROV,
 - enable reproducible re-checks without shipping raw data into docs.
@@ -129,32 +129,34 @@ Results here SHOULD remain **small** and **stable**. Detailed artifacts (large r
 - 🧩 Method definitions live in:
   - `docs/analyses/remote-sensing/validation/methods/`
 - 📦 Governed data outputs live under:
-  - `data/` (and are referenced via STAC/DCAT/PROV)
+  - `data/` (referenced via STAC/DCAT/PROV)
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-📁 docs/analyses/remote-sensing/validation/                    — Validation root
-└── 📦 results/                                                — Machine-readable results (this directory)
-    ├── 📄 README.md                                           — This index + contract
-    ├── 🧾 schemas/                                            — Optional: JSON schemas for results payloads (recommended)
-    ├── 🧾 per-run/                                            — One bundle per validation run (recommended)
-    │   └── 🧾 <run_id>/                                       — Run-scoped results
-    │       ├── 🧾 results.json                                — Required: primary summary (small)
-    │       ├── 🧾 gates.json                                  — Optional: gate outcomes and threshold evals
-    │       ├── 🧾 refs.json                                   — Optional: STAC/DCAT/PROV references
-    │       └── 🧾 manifest.json                               — Optional: checksum manifest for this bundle
-    ├── 📅 daily/                                              — Daily rollups (recommended)
-    │   └── 📅 YYYY/MM/DD/                                     — Date partition
-    │       ├── 🧾 results.rollup.json                          — Required: daily summary (small)
-    │       └── 🧾 manifest.json                               — Optional
-    └── 🏷️ releases/                                           — Release rollups (recommended)
-        └── 🏷️ v<semver>/                                      — Release partition
-            ├── 🧾 results.rollup.json                          — Required: release summary (small)
-            ├── 🧾 drift.delta.json                             — Optional: diff vs previous release (small)
-            └── 🧾 manifest.json                                — Optional
+📁 docs/analyses/remote-sensing/validation/                           — Validation root
+└── 📁 results/                                                       — Machine-readable results (this directory)
+    ├── 📄 README.md                                                  — This index + contract
+    ├── 📁 schemas/                                                   — Optional: JSON schemas for results payloads
+    ├── 📁 per-run/                                                   — Per-run result bundles (recommended)
+    │   └── 📁 <run_id>/                                              — Run-scoped results
+    │       ├── 🧾 results.json                                       — Required: primary summary (small)
+    │       ├── 🧾 gates.json                                         — Optional: gate outcomes and threshold evals
+    │       ├── 🧾 refs.json                                          — Optional: STAC/DCAT/PROV references
+    │       └── 🧾 manifest.json                                      — Optional: checksum manifest for this bundle
+    ├── 📁 daily/                                                     — Daily rollups (recommended)
+    │   └── 📁 YYYY/                                                  — Year partition
+    │       └── 📁 MM/                                                — Month partition
+    │           └── 📁 DD/                                            — Day partition
+    │               ├── 🧾 results.rollup.json                         — Required: daily summary (small)
+    │               └── 🧾 manifest.json                               — Optional
+    └── 📁 releases/                                                  — Release rollups (recommended)
+        └── 📁 v<semver>/                                             — Release partition
+            ├── 🧾 results.rollup.json                                 — Required: release summary (small)
+            ├── 🧾 drift.delta.json                                    — Optional: diff vs previous release (small)
+            └── 🧾 manifest.json                                       — Optional
 ~~~
 
 Notes:
@@ -322,6 +324,6 @@ Recommended CI checks for `results/`:
 [⬅ Docs Index](../../../../README.md)
 
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
-MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
