@@ -312,4 +312,18 @@ Recommended checks for changes to this file or to the graph schema it assumes:
 
 ---
 
-Back to index · [`docs/graph/cypher/README.md`](../README.md) · Graph · [`docs/graph/README.md`](../../README.md) · Governance · [`docs/standards/governance/ROOT-GOVERNANCE.md`](../../../standards/governance/ROOT-GOVERNANCE.md)
+<div align="center">
+
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/Status-Ready--to--Run-brightgreen" />
+
+[🧾 Cypher Index](../README.md) ·
+[🗺️ Graph Docs](../../README.md) ·
+[🏛️ Governance Charter](../../../standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+
+</div>
