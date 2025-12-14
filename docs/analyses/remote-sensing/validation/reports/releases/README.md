@@ -75,12 +75,11 @@ accessibility_compliance: "WCAG 2.1 AA+"
 `docs/analyses/remote-sensing/validation/reports/releases/README.md`
 
 **Purpose**  
-Define the structure and naming for **release-level validation rollups** used for:
-promotion gates, SemVer-aligned change summaries, drift thresholds, and audit bundles referencing STAC/DCAT/PROV.
+Define the structure and naming for **release-level validation rollups** used for promotion gates, SemVer-aligned change summaries, drift thresholds, and audit bundles referencing STAC/DCAT/PROV.
 
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
-<img src="https://img.shields.io/badge/License-CC--BY%204.0-blue" />
+<img alt="KFM-MDP v11.2.6" src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img alt="Status Active Enforced" src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
+<img alt="License CC-BY 4.0" src="https://img.shields.io/badge/License-CC--BY%204.0-blue" />
 
 </div>
 
@@ -109,20 +108,24 @@ Release reports are documentation-grade artifacts. They SHOULD reference (not du
 
 ~~~text
 📁 docs/analyses/remote-sensing/validation/reports/          — Reports root
-└── 📁 releases/                                            — Release rollups (this directory)
+└── 🏷️ releases/                                            — Release rollups (this directory)
     ├── 📄 README.md                                        — This index
-    └── 📁 v<semver>/                                       — One folder per release (recommended)
+    └── 🏷️ v<semver>/                                       — One folder per release (recommended)
         ├── 📄 qa-rollup.md                                 — Human-readable promotion rollup (required)
         ├── 🧾 metrics.json                                 — Machine-readable summary (recommended)
         ├── 🧾 links.json                                   — STAC/DCAT/PROV + attestations refs (recommended)
         ├── 🧾 drift.delta.json                              — Diff vs previous release (recommended)
-        └── 📁 evidence/                                    — Optional: small evidence artifacts (safe only)
-            ├── 🧾 tables.csv                               — Optional: small metric tables (no secrets)
+        └── 🧾 evidence/                                    — Optional: small evidence artifacts (safe only)
+            ├── 📋 tables/                                  — Optional: small metric tables (no secrets)
+            ├── 📈 plots/                                   — Optional: deterministic plots (no leakage)
+            ├── 🗺️ maps/                                    — Optional: generalized maps (governance-safe only)
             └── 📄 notes.md                                 — Optional: steward notes (no sensitive content)
 ~~~
 
-> If your repo uses a different release naming scheme, keep it deterministic and update this README.
-> Recommended folder naming is `vMAJOR.MINOR.PATCH` to match governed release tags.
+Notes:
+
+- Recommended folder naming is `vMAJOR.MINOR.PATCH` to match governed release tags.
+- Keep evidence artifacts small and safe; link to larger governed assets via STAC/DCAT/PROV references.
 
 ---
 
@@ -233,14 +236,14 @@ When promotion fails, `qa-rollup.md` SHOULD:
 
 <div align="center">
 
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
+<img alt="KFM-MDP v11.2.6" src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img alt="Status Active Enforced" src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 [⬅ Reports](../README.md) ·
 [📅 Daily Reports](../daily/README.md) ·
 [🧾 Per‑Run Bundles](../per-run/README.md) ·
 [📡 Validation](../../README.md) ·
-[📡 Remote Sensing Analyses](../../../README.md) ·
+[🛰️ Remote Sensing Analyses](../../../README.md) ·
 [🏛️ Governance Charter](../../../../../standards/governance/ROOT-GOVERNANCE.md) ·
 [🤝 FAIR+CARE Guide](../../../../../standards/faircare/FAIRCARE-GUIDE.md) ·
 [🪶 Indigenous Data Protection](../../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) ·
@@ -250,4 +253,3 @@ When promotion fails, `qa-rollup.md` SHOULD:
 MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
