@@ -368,16 +368,16 @@ Mapping file location:
 
 ~~~mermaid
 flowchart TD
-  A[CAMS NRT PM2.5 fields] --> B[Ingest + subset AOI]
-  C[Station PM2.5 observations] --> D[QA + normalize units]
-  B --> E[Collocate model to stations]
+  A["CAMS NRT PM2.5 fields"] --> B["Ingest + subset AOI"]
+  C["Station PM2.5 observations"] --> D["QA + normalize units"]
+  B --> E["Collocate model to stations"]
   D --> E
-  E --> F[Fit bias model (rolling window)]
-  F --> G[Gap-fill missing station points]
+  E --> F["Fit bias model - rolling window"]
+  F --> G["Gap-fill missing station points"]
   E --> G
-  G --> H[Write processed artifacts]
-  H --> I[Emit STAC Items]
-  H --> J[Emit PROV bundles]
+  G --> H["Write processed artifacts"]
+  H --> I["Emit STAC Items"]
+  H --> J["Emit PROV bundles"]
 ~~~
 
 ---
