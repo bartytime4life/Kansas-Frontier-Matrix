@@ -84,16 +84,17 @@ tags:
 <div align="center">
 
 # 🌫️ **Kansas Frontier Matrix — CAMS NRT PM2.5 Gap-Fill Pipeline**
-
 `docs/data/air-quality/cams-nrt-gapfill/README.md`
 
 **Purpose**  
-Define a **deterministic, provenance-enforced** pipeline to gap-fill Kansas PM₂.₅ station/sensor time series using **ECMWF/CAMS near-real-time (NRT) surface PM₂.₅** with **short-window bias correction**, emitting **STAC Items** and **PROV-O lineage** for every derived artifact.
+Define a **deterministic, provenance-enforced** pipeline to gap-fill Kansas PM₂.₅ station/sensor time series using
+**ECMWF/CAMS near-real-time (NRT) surface PM₂.₅**, with **short-window bias correction**, emitting **STAC Items**
+and **PROV-O lineage** for every derived artifact.
 
 <img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/KFM--PDC-v11-blue" />
-<img src="https://img.shields.io/badge/STAC%2BPROV-Aligned-brightgreen" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
+<img src="https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet" />
 <img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 </div>
@@ -102,7 +103,8 @@ Define a **deterministic, provenance-enforced** pipeline to gap-fill Kansas PM�
 
 ## 📘 Overview
 
-This module defines a replayable recipe to gap-fill Kansas PM₂.₅ observation streams using CAMS NRT model fields, while preserving explicit lineage:
+This module defines a replayable recipe to gap-fill Kansas PM₂.₅ observation streams using CAMS NRT model fields,
+while preserving explicit lineage:
 
 - Which CAMS product / cycle / valid time / lead time?
 - Which spatial + temporal collocation method + tolerance window?
@@ -131,21 +133,21 @@ This module defines a replayable recipe to gap-fill Kansas PM₂.₅ observation
 
 ~~~text
 📁 docs/data/air-quality/cams-nrt-gapfill/
-├── 📄 README.md                                 — This governed pipeline spec
-├── 📁 specs/                                    — Contracts + profiles (PDC/STAC/PROV)
+├── 📄 README.md                                  — This governed pipeline spec
+├── 📁 specs/                                     — Contracts + profiles (PDC/STAC/PROV)
 │   ├── 🧾 cams_gapfill_contract.kfm-pdc.v11.json  — Pipeline contract (inputs/outputs/params)
 │   ├── 🧾 stac_item_profile.kfm-stac.v11.json     — STAC Item profile for derived outputs
 │   └── 🧾 prov_profile.kfm-prov.v11.jsonld        — PROV profile for lineage bundles
-├── 📁 configs/                                  — Replayable, deterministic runtime configs
+├── 📁 configs/                                   — Replayable, deterministic runtime configs
 │   ├── 🧾 cams_ads_query.yml
 │   ├── 🧾 collocation.yml
 │   ├── 🧾 bias_model.yml
 │   └── 🧾 gapfill_policy.yml
-├── 📁 examples/                                 — Sample artifacts for validators/tests
+├── 📁 examples/                                  — Sample artifacts for validators/tests
 │   ├── 🧾 sample_stac_item.json
 │   ├── 🧾 sample_prov_bundle.jsonld
 │   └── 🧾 sample_timeseries.parquet
-└── 📁 runbooks/                                 — Ops runbooks (SLOs, incidents, backfills)
+└── 📁 runbooks/                                  — Ops runbooks (SLOs, incidents, backfills)
     ├── 📄 reliability_slo.md
     ├── 📄 incident_playbook.md
     └── 📄 backfill_procedure.md
@@ -157,11 +159,13 @@ This module defines a replayable recipe to gap-fill Kansas PM₂.₅ observation
 
 ### Objective
 
-Map each station observation `(lat, lon, t_obs)` to a CAMS value `CAMS_PM25(cell, t_model)` with controlled tolerances, then correct local model bias and use the corrected estimate to fill missing PM₂.₅ points.
+Map each station observation `(lat, lon, t_obs)` to a model value `CAMS_PM25(cell, t_model)` with controlled
+tolerances, then correct local model bias and use the corrected estimate to fill missing PM₂.₅ points.
 
 ### Why short-window bias correction?
 
-CAMS bias is typically **location-dependent** and can drift with synoptic regimes, transport, and emissions patterns. A short training window improves agility while keeping production stable.
+CAMS bias is typically **location-dependent** and can drift with synoptic regimes, transport, and emissions patterns.
+A short training window improves agility while keeping production stable.
 
 Default governed posture:
 
@@ -250,21 +254,21 @@ Persist per cycle/day:
 
 Recommended columns for `pm25_gapfilled` Parquet:
 
-| field              | meaning |
-| ------------------ | ------- |
-| station_id         | canonical station id |
-| time_utc           | timestamp |
-| pm25_obs_ugm3      | observed (nullable) |
-| pm25_filled_ugm3   | filled value (nullable if not filled) |
-| pm25_final_ugm3    | chosen output value (obs if present else filled) |
-| is_imputed         | boolean |
-| fill_class         | `none` \| `cams_corrected` \| `cams_raw_fallback` \| `regional_pool_corrected` |
-| cams_cycle_utc     | provenance |
-| cams_valid_time_utc| provenance |
-| cams_lead_hours    | provenance |
-| bias_method        | provenance |
-| bias_params_hash   | provenance |
-| qa_flags           | JSON (policy + sanity checks) |
+| field               | meaning |
+| ------------------- | ------- |
+| station_id          | canonical station id |
+| time_utc            | timestamp |
+| pm25_obs_ugm3       | observed (nullable) |
+| pm25_filled_ugm3    | filled value (nullable if not filled) |
+| pm25_final_ugm3     | chosen output value (obs if present else filled) |
+| is_imputed          | boolean |
+| fill_class          | `none` \| `cams_corrected` \| `cams_raw_fallback` \| `regional_pool_corrected` |
+| cams_cycle_utc      | provenance |
+| cams_valid_time_utc | provenance |
+| cams_lead_hours     | provenance |
+| bias_method         | provenance |
+| bias_params_hash    | provenance |
+| qa_flags            | JSON (policy + sanity checks) |
 
 Persist (processed):
 
@@ -365,6 +369,8 @@ Mapping file location:
 ---
 
 ## 🗺️ Diagrams
+
+This flow shows the minimal provenance-preserving path from CAMS NRT + observations to gap-filled time series with STAC + PROV emissions.
 
 ~~~mermaid
 flowchart TD
@@ -473,7 +479,7 @@ Recommended linking patterns:
   - STAC Item references (assets)
   - PROV bundle references (lineage)
   - QA summaries (imputation rates, bias-fit diagnostics)
-- Narrative should clearly distinguish:
+- Narrative SHOULD clearly distinguish:
   - **Observed** PM₂.₅ values
   - **Imputed** (gap-filled) values
   - Any interpretive analytics derived downstream
@@ -504,7 +510,7 @@ Focus Mode MUST NOT:
 - Data checks:
   - Units are µg/m³ only
   - Non-negative constraints
-  - Sanity bounds (e.g., ceiling clamp)
+  - Sanity bounds (e.g., clamp ceiling)
   - Missingness accounting (expected vs delivered)
 - Governance checks:
   - Sovereignty gate flags enforced
@@ -541,8 +547,8 @@ Focus Mode MUST NOT:
 
 Determinism is enforced by pinning:
 
-- `R_metres` / spatial tolerance
-- `T_minutes` / temporal tolerance
+- spatial tolerance (`R_metres` or equivalent)
+- temporal tolerance (`T_minutes`)
 - bias window length
 - bias model method + parameters
 - provider inclusion policy + preference order (if applicable)
@@ -556,4 +562,19 @@ Determinism is enforced by pinning:
 
 ---
 
-Back to index · [`docs/data/air-quality/README.md`](../README.md) · Data Architecture · [`docs/architecture/data/README.md`](../../../architecture/data/README.md) · Governance · [`docs/standards/governance/ROOT-GOVERNANCE.md`](../../../standards/governance/ROOT-GOVERNANCE.md) · FAIR+CARE · [`docs/standards/faircare/FAIRCARE-GUIDE.md`](../../../standards/faircare/FAIRCARE-GUIDE.md) · Sovereignty · [`docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`](../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+<div align="center">
+
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
+
+[🌫️ Air Quality Index](../README.md) ·
+[🏗️ Data Architecture](../../../architecture/data/README.md) ·
+[🏛️ Governance Charter](../../../standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+
+</div>
