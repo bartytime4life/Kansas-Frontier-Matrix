@@ -1,15 +1,15 @@
 ---
 title: "🧩 KFM — DRIFT STAC Templates (Retrieval Episodes · Provenance Anchors)"
 path: "docs/search/drift/stac/templates/README.md"
+
 version: "v11.2.6"
 last_updated: "2025-12-13"
-
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · FAIR+CARE Council Oversight"
 content_stability: "stable"
-
 status: "Active / Enforced"
+
 doc_kind: "Templates Guide"
 header_profile: "standard"
 footer_profile: "standard"
@@ -74,7 +74,8 @@ sunset_policy: "Superseded upon next STAC template profile revision"
 `docs/search/drift/stac/templates/README.md`
 
 **Purpose**  
-Provide **governed, deterministic JSON templates** for emitting STAC Collections/Items that represent **DRIFT retrieval episodes** (global→local hybrid retrieval), including required **PROV anchors** and **CARE-aware redaction gates**.
+Provide governed, deterministic JSON templates for emitting STAC Collections/Items that represent **DRIFT retrieval episodes**,
+including required provenance anchors and **CARE-aware** governance flags.
 
 <img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
 <img src="https://img.shields.io/badge/STAC-KFM--STAC_v11-brightgreen" />
@@ -88,61 +89,56 @@ Provide **governed, deterministic JSON templates** for emitting STAC Collections
 
 ## 📘 Overview
 
-This directory contains **STAC JSON templates** used by DRIFT Search to generate:
+This directory contains STAC JSON templates used by DRIFT Search to generate:
 
-- **STAC Items** for each retrieval episode (user query + DRIFT steps),
-- optional **Collections** for grouping items by release, environment, or run-family,
-- consistent **assets + properties** that bind retrieval outputs to **PROV-O/OpenLineage** artifacts and **CARE governance flags**.
+- STAC Items for each retrieval episode (global→local hybrid retrieval)
+- Optional STAC Collections for grouping retrieval episode Items
+- A consistent assets + properties layout binding episode outputs to PROV/OpenLineage and governance flags
 
 Design goals:
 
-- **Deterministic output**: same inputs → identical STAC JSON (stable `id`, stable property keys, stable asset layout).
-- **Provenance-first**: every Item has explicit links to provenance bundles and safety/CARE decisions.
-- **Safety by default**: templates avoid leaking sensitive details (no raw protected coordinates, no restricted dataset URLs).
-- **Machine-validated**: output must pass the pinned STAC validation profile (KFM-STAC v11).
+- Deterministic output: same inputs → identical STAC JSON
+- Provenance-first: every Item has explicit links to provenance bundles and governance decisions
+- Safety by default: templates contain no restricted content and avoid sensitive geometry patterns
+- Machine-validated: emitted JSON must validate under KFM-STAC v11 rules
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-docs/search/drift/stac/templates/                 — DRIFT STAC JSON templates (governed)
-├── README.md                                    — This guide
-├── item.retrieval-episode.template.json          — STAC Item template for a DRIFT retrieval episode
-├── collection.drift-retrieval.template.json      — STAC Collection template for DRIFT retrieval episodes
-├── asset.roles.template.json                     — Canonical asset role map (roles + mediaTypes)
-├── properties.kfm-drift.template.json            — Canonical kfm:* property block (placeholders)
-└── examples/                                     — Example filled outputs (non-sensitive)
-    ├── item.retrieval-episode.example.json
-    └── collection.drift-retrieval.example.json
+📁 docs/search/drift/stac/templates/                         — DRIFT STAC JSON templates (governed)
+├── 📄 README.md                                             — This guide
+├── 🧾 item.retrieval-episode.template.json                  — STAC Item template (retrieval episode)
+├── 🧾 collection.drift-retrieval.template.json              — STAC Collection template (episode grouping)
+├── 🧾 asset.roles.template.json                             — Canonical asset role map (roles + mediaTypes)
+├── 🧾 properties.kfm-drift.template.json                    — Canonical kfm:* property block (placeholders)
+└── 📁 examples/                                             — Example filled outputs (non-sensitive)
+    ├── 🧾 item.retrieval-episode.example.json                — Filled item example (redaction-safe)
+    └── 🧾 collection.drift-retrieval.example.json            — Filled collection example
 ~~~
 
 ---
 
 ## 🧭 Context
 
-DRIFT Search emits STAC as a **first-class retrieval trace**:
+DRIFT Search can emit STAC as a first-class retrieval trace:
 
-- a retrieval run is treated as an auditable “episode” with inputs, outputs, and governance decisions,
-- STAC Items provide **portable references** to:
-  - the query bundle (sanitized),
-  - the retrieval result bundle,
-  - the graph traversal trace (if allowed),
+- each run is an auditable “episode” with inputs, outputs, and governance decisions
+- STAC Items provide portable references to:
+  - the sanitized query bundle (or query hash),
+  - the retrieval result bundle (references only),
   - the provenance bundle (PROV-O JSON-LD),
-  - the safety/CARE gate report.
+  - the policy / CARE gate report
 
-Default posture:
+Template posture:
 
-- **Non-spatial** STAC Items are allowed when spatial details are sensitive or not meaningful:
-  - `geometry: null`
-  - `bbox: null`
-- When spatial is permitted, prefer **generalized footprints** (e.g., region polygon or H3-coarsened geometry) over point precision.
+- This directory is template-only and must remain **non-sensitive**.
+- Geometry defaults SHOULD be `null` unless policy explicitly allows generalized geometry.
 
 ---
 
-## 📦 Data & Metadata
-
-### Template placeholders (normative)
+## 📦 Template placeholders
 
 Templates MUST be populated using a deterministic substitution map.
 
@@ -153,18 +149,45 @@ Recommended placeholder set:
 - `{{query_hash}}` — normalized query hash (for dedupe)
 - `{{created_utc}}` — ISO8601 timestamp (UTC)
 - `{{start_utc}}`, `{{end_utc}}` — optional interval bounds
-- `{{care_label}}`, `{{fair_category}}`, `{{classification}}`, `{{sensitivity_level}}`
-- `{{sovereignty_gate}}` — `true|false` (string/boolean per profile)
-- `{{policy_bundle_ref}}` — href to the governance decision artifact (if emitted)
+- `{{fair_category}}`, `{{care_label}}`, `{{classification}}`, `{{sensitivity_level}}`
+- `{{sovereignty_gate}}` — `clear|restricted|conflict|unknown` (recommended)
+- `{{policy_bundle_ref}}` — href to governance decision artifact (if emitted)
 - `{{prov_bundle_ref}}` — href to PROV-O JSON-LD
 - `{{openlineage_ref}}` — href to OpenLineage event bundle (if emitted)
-- `{{graph_trace_ref}}` — href to traversal trace (if emitted and allowed)
-- `{{results_ref}}` — href to retrieval results payload
-- `{{query_ref}}` — href to sanitized query bundle
+- `{{results_ref}}` — href to retrieval results payload (references only)
+- `{{query_ref}}` — href to sanitized query bundle (optional)
 
-### Canonical STAC Item skeleton (template shape)
+---
 
-This is the expected **shape**, not the exact file contents:
+## 🧱 Deterministic generation contract
+
+A compliant emitter SHOULD:
+
+1. Select a template deterministically based on `item_kind`:
+   - `retrieval-episode` (default)
+   - `episode-collection` (optional)
+2. Populate placeholders from a single run context object.
+3. Serialize deterministically:
+   - stable key ordering,
+   - stable float formatting,
+   - fixed locale and timezone,
+   - no environment-dependent fields.
+4. Validate:
+   - STAC core + KFM-STAC v11 profile,
+   - any local JSON schema rules for `kfm:*` properties (if enforced).
+
+### ID policy
+
+- STAC Item `id` MUST be stable and collision-resistant:
+  - `urn:kfm:search:drift:retrieval:<run_id>:<step_id>`
+- If `run_id` is derived, it SHOULD be deterministic from:
+  - `query_hash`, `constraints`, `workflow_version`, `policy_bundle_hash`, `index_snapshot_id`.
+
+---
+
+## 🧾 Canonical STAC Item skeleton
+
+This snippet demonstrates the expected shape (placeholders included). It is template-safe and does not embed restricted content.
 
 ~~~json
 {
@@ -172,6 +195,7 @@ This is the expected **shape**, not the exact file contents:
   "stac_version": "1.0.0",
   "stac_extensions": [],
   "id": "urn:kfm:search:drift:retrieval:{{kfm_run_id}}:{{kfm_step_id}}",
+  "collection": "kfm-search-drift-episodes",
   "geometry": null,
   "bbox": null,
   "properties": {
@@ -222,148 +246,42 @@ This is the expected **shape**, not the exact file contents:
       "roles": ["metadata", "governance"]
     }
   },
-  "links": []
+  "links": [
+    { "rel": "collection", "href": "./collection.json", "type": "application/json" }
+  ]
 }
 ~~~
-
-### Asset rules (normative)
-
-- Assets MUST be:
-  - content-addressable where possible (checksummed bundles),
-  - non-secret (no tokens, no signed URLs),
-  - compliant with CARE gates (restricted artifacts are not linked unless the access model is explicit and approved).
-
-- If an artifact is restricted:
-  - omit the asset link, or
-  - link only to a governed, access-controlled catalog endpoint (never direct storage URLs).
-
----
-
-## 🧱 Architecture
-
-### Deterministic generation contract
-
-A compliant STAC emission pipeline SHOULD:
-
-1. Choose template file(s) deterministically based on `item_kind`:
-   - `retrieval-episode` (default)
-   - `retrieval-collection` (optional)
-2. Populate placeholders from a **single run context object**.
-3. Normalize output JSON for stability:
-   - stable key ordering (serializer-level),
-   - stable float formatting,
-   - canonical boolean casing,
-   - no environment-dependent fields (locale/TZ).
-4. Validate against:
-   - STAC core + KFM-STAC v11 profile,
-   - any local JSON schema rules for `kfm:*` properties.
-
-### ID policy (recommended)
-
-- STAC Item `id` MUST be stable and collision-resistant:
-  - `urn:kfm:search:drift:retrieval:<run_id>:<step_id>`
-- If `run_id` is generated:
-  - prefer deterministic derivation from `(query_hash, start_utc, policy_version, engine_version)`.
-
----
-
-## 🗺️ Diagrams
-
-The templates are used as a deterministic emission stage in DRIFT retrieval.
-
-~~~mermaid
-flowchart LR
-  A["DRIFT run context"] --> B["Select template"]
-  B --> C["Populate placeholders"]
-  C --> D["Validate STAC profile"]
-  D -->|pass| E["Write STAC Item JSON"]
-  D -->|fail| F["Fail CI gate"]
-~~~
-
-Explanation: DRIFT emits STAC only after placeholders are populated and the resulting JSON validates against the governed profile.
-
----
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-### STAC
-
-- Templates produce STAC Items that act as **retrieval episode records**.
-- Non-spatial mode is allowed (`geometry: null`) to prevent leaking sensitive location details.
-- `assets.prov` anchors the Item to PROV-O lineage.
-
-### DCAT
-
-- Retrieval STAC Items may be mirrored as DCAT distributions:
-  - the STAC Item JSON is a `dcat:Distribution` (machine output),
-  - provenance and governance bundles are referenced as additional distributions.
-
-### PROV-O
-
-- Each Item SHOULD have a corresponding PROV bundle:
-  - `prov:Entity` = the STAC Item and each emitted artifact,
-  - `prov:Activity` = the retrieval run step,
-  - `prov:Agent` = DRIFT executor + governance reviewers/bots,
-  - `prov:used` and `prov:wasGeneratedBy` link inputs/outputs.
-
----
-
-## 🧠 Story Node & Focus Mode Integration
-
-Templates are designed so Focus Mode can:
-
-- locate the retrieval episode via STAC `id`,
-- read provenance/governance bundles via the `assets` map,
-- summarize results while respecting:
-  - `kfm:classification`,
-  - `kfm:sensitivity_level`,
-  - `kfm:sovereignty_gate`,
-  - any explicit redaction flags in the policy asset.
-
-Focus Mode MUST NOT:
-
-- dereference restricted assets when `kfm:sovereignty_gate=true`,
-- infer or reconstruct protected spatial coordinates from generalized geometries.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Minimum expected checks for any template change:
+Template changes SHOULD trigger:
 
-- `markdown-lint` (structure: H1/H2, fences, ordering)
-- `schema-lint` (front-matter conformance)
-- `footer-check` (governance links + ordering)
-- `secret-scan` / `pii-scan`
-- template JSON validation:
-  - parseable JSON
-  - placeholder set completeness (no dangling `{{...}}` in example outputs)
-- STAC validation:
-  - pinned validator versions
-  - KFM-STAC v11 profile rules enforced
+- JSON parse validation (templates and examples)
+- placeholder completeness check (no dangling `{{...}}` in examples)
+- STAC validation (KFM-STAC v11 profile)
+- governance lint checks (no secrets; no restricted URLs; no precise sensitive geometry patterns)
+- Mermaid parse validation (if diagrams are edited)
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-- Templates MUST not encode:
-  - raw protected site coordinates,
-  - tribal/sovereign restricted dataset endpoints,
-  - any access tokens or credentials.
+Templates MUST NOT encode:
 
-- Templates MUST expose governance state as explicit fields:
-  - `kfm:care_label`
-  - `kfm:classification`
-  - `kfm:sensitivity_level`
-  - `kfm:sovereignty_gate`
+- raw protected coordinates,
+- restricted dataset endpoints,
+- secrets, tokens, or signed URLs.
 
-- Any change to:
-  - required `kfm:*` properties,
-  - asset role semantics,
-  - ID policy,
-  - redaction posture
+Templates MUST surface governance state explicitly (as placeholders or fixed keys):
 
-…requires review under FAIR+CARE governance.
+- `kfm:care_label`
+- `kfm:classification`
+- `kfm:sensitivity_level`
+- `kfm:sovereignty_gate`
+
+Any change to required properties, asset role semantics, ID policy, or redaction posture requires FAIR+CARE review.
 
 ---
 
@@ -371,7 +289,7 @@ Minimum expected checks for any template change:
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v11.2.6 | 2025-12-13 | Initial governed templates guide for DRIFT STAC template emission and validation posture. |
+| v11.2.6 | 2025-12-13 | Standardized directory layout format and confirmed KFM-MDP v11.2.6 header/footer and fence profiles. |
 
 ---
 
@@ -391,7 +309,6 @@ Designed for Longevity · Governed for Integrity
 [🪶 Indigenous Data Protection](../../../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 © 2025 Kansas Frontier Matrix — MIT  
-MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
