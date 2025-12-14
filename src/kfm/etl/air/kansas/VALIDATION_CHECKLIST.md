@@ -11,18 +11,9 @@ content_stability: "stable"
 
 status: "Active / Canonical"
 doc_kind: "Checklist"
-intent: "kfm-air-etl-validation-evidence-checklist"
-
 header_profile: "standard"
 footer_profile: "standard"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-doc_uuid: "urn:kfm:doc:air-etl-validation-checklist:kansas:v11.2.6"
-semantic_document_id: "kfm-doc-air-etl-validation-kansas"
-event_source_id: "ledger:src/kfm/etl/air/kansas/VALIDATION_CHECKLIST.md"
-immutability_status: "version-pinned"
+intent: "kfm-air-etl-validation-evidence-checklist"
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
@@ -32,231 +23,266 @@ pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
 prov_profile: "KFM-PROV v11"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+doc_uuid: "urn:kfm:doc:etl:air:kansas:validation-checklist:v11.2.6"
+semantic_document_id: "kfm-etl-air-kansas-validation-checklist"
+event_source_id: "ledger:src/kfm/etl/air/kansas/VALIDATION_CHECKLIST.md"
+immutability_status: "version-pinned"
+
+governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+classification: "Public Document"
+sensitivity: "Mixed (station-level; provider-dependent)"
+sensitivity_level: "Low to Medium"
+public_exposure_risk: "Dataset-level"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+indigenous_rights_flag: "Dataset-level"
+redaction_required: false
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summary"
+  - "semantic-highlighting"
+  - "metadata-extraction"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "speculative-additions"
+  - "unverified-claims"
+  - "hallucinated-datasets"
+  - "governance-override"
 ---
 
-# 🌬️ KFM — Kansas Air ETL Validation & Evidence Checklist
+<div align="center">
+
+# 🌬️ **KFM — Kansas Air ETL Validation & Evidence Checklist**
+`src/kfm/etl/air/kansas/VALIDATION_CHECKLIST.md`
+
+**Purpose**  
+Make Kansas air-quality micro-batch ingests safe, reproducible, and auditable across **OpenAQ v3**, **EPA AQS**, and **PurpleAir**, by enforcing deterministic validation, late-data detection, and evidence emission (**STAC properties**, **PROV-O run JSON-LD**, **OpenLineage events**).
+
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/Lineage-PROV%E2%80%91O_%7C_OpenLineage-success" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Canonical-brightgreen" />
+
+</div>
+
+---
 
 ## 📘 Overview
 
-This checklist makes **micro‑batch air‑quality ingests** safe, deterministic, and auditable across **OpenAQ v3**, **EPA AQS**, and **PurpleAir**.
+This checklist is the **operational contract** for Kansas air-quality ingestion runs:
 
-It is designed to:
-- Detect and quantify **late arriving** and **retroactively edited** observations.
-- Emit evidence artifacts that downstream systems can rely on:
-  - **STAC** properties + sidecar assets,
-  - **W3C PROV‑O** (JSON‑LD) run records,
-  - **OpenLineage** events,
-  - Validation summaries, delta ledgers, and integrity hashes.
-- Prevent “fail‑open” ingestion by enforcing **quarantine and drift gates** at batch level.
+- Micro-batch first (deterministic replay), streaming optional (same envelope).
+- Provider-aware validation flags with a stable `validation_profile_version`.
+- Late/changed data detection with `update_count`, `retroactive_update`, and `time_lag_seconds`.
+- Evidence emission that downstream systems can verify without “trusting the pipeline”.
 
-In the KFM pipeline, this checklist sits at **ETL** and feeds:
-`ETL → catalogs (STAC/DCAT/PROV) → graph → API → frontend → Story Nodes → Focus Mode`.
+**Outputs that MUST be emitted per micro-batch (per provider, per window):**
+- **STAC metadata**: new/updated Item properties that surface QC + retroactivity.
+- **PROV-O run doc**: Activity/Entity/Agent chain for the batch window.
+- **OpenLineage event(s)**: Job/Run/Dataset facets for operational lineage.
 
-## 🗂️ Directory Layout
+---
 
-This document lives at:
+## 🧭 Context
 
-~~~text
-src/kfm/etl/air/kansas/VALIDATION_CHECKLIST.md
+### Where this lives in the KFM pipeline
+
+- **ETL**: provider pulls → normalize → validate → stage/commit.
+- **Catalogs**: STAC/DCAT updated to reflect new assets + QA state.
+- **Graph**: station identity resolved + relationships updated.
+- **API/UI**: consumers use lineage + metadata to detect late edits and quality shifts.
+
+### Definitions used in this checklist
+
+- **Micro-batch window**: `[T_start, T_end)` (half-open interval).
+- **Natural key (`nk`)**: deterministic identity for an observation record.
+- **Retroactive update**: provider sends new value(s) for an existing `nk`.
+- **Quarantine**: batch is committed to staging but blocked from public catalogs/graph load.
+
+---
+
+## 🗺️ Diagrams
+
+~~~mermaid
+flowchart TD
+  A["Provider API Pull\n(OpenAQ v3 / AQS / PurpleAir)"] --> B["Raw Snapshot\n(provider payload + clocks)"]
+  B --> C["Normalize + Station Resolve\n(authoritative→proximity→name)"]
+  C --> D["Row-Level Validation\n(flag_* + profile_version)"]
+  D --> E["Upsert + Retroactivity\n(nk + update_count + time_lag_seconds)"]
+  E --> F["Batch Gates\n(quorum + drift + quarantine)"]
+  F --> G["Publishable Outputs\nprocessed tables/streams"]
+  G --> H["Catalog + Evidence\nSTAC + PROV + OpenLineage"]
 ~~~
 
-Evidence and outputs for Kansas air ETL SHOULD land under the repo’s data plane. The repo snapshot indicates these domain roots exist:
-
-~~~text
-data/
-├── air-quality/        # Domain root for air-quality data products (Kansas + providers)
-└── updates/            # Incremental update payloads / delta ledgers
-~~~
-
-Recommended evidence layout (adjust only if your pipeline is explicitly configured differently):
-
-~~~text
-data/
-├── air-quality/
-│   ├── raw/                       # Provider snapshots (optional if you snapshot elsewhere)
-│   ├── work/                      # Normalized intermediates
-│   ├── processed/                 # Deterministic outputs (Parquet/CSV/COG as applicable)
-│   ├── lineage/
-│   │   ├── prov/                  # prov.jsonld per micro-batch
-│   │   └── openlineage/           # openlineage.json per micro-batch
-│   └── reports/
-│       ├── validation/            # row/batch QC summaries
-│       └── drift/                 # drift diagnostics
-├── stac/
-│   └── air-quality/               # STAC Collections/Items for air-quality (if used)
-├── dcat/
-│   └── datasets/                  # DCAT dataset records (if used)
-└── updates/
-    └── air-quality/
-        └── kansas/                # delta-ledger tables + compact change sets
-~~~
-
-Minimum evidence artifacts per micro‑batch window:
-- A deterministic output dataset (or “quarantined” marker).
-- A validation summary (flag counts + station resolve stats).
-- `prov.jsonld` and `openlineage.json`.
-- A STAC Item (or Item update) referencing the output plus sidecars.
-- A content hash/checksum for each persisted artifact.
+---
 
 ## 🧪 Validation & CI/CD
 
-### ✅ 8‑Step Production Checklist
+> Use this section as a **run-time checklist**. Each step includes required fields and evidence.
 
-#### 1) Source Envelope & Clock Discipline (Micro‑Batch First)
-- **Ingest window:** `[T_start, T_end)` using repository wall‑clock and **provider last‑updated signals**.
-- Persist four clocks for every observation row:
-  - `source_observed_at` (sensor timestamp, as‑reported)
-  - `provider_last_updated_at` (provider “updated” field, if available)
-  - `ingest_received_at` (gateway receive time; monotonic within batch)
-  - `batch_committed_at` (transaction commit time)
-- Streaming fallback (optional): mirror the same four clocks in the message envelope and use a deterministic idempotency key:
-  - `{provider}:{station_authoritative_id}:{parameter}:{source_observed_at}`
+### Step 1 — Source envelope & clock discipline
 
-#### 2) Authoritative Identity & Station Resolve
-- Resolve station using a deterministic “3‑key” rule:
-  1) **Authoritative ID match**, else
-  2) **Proximity match** (H3 and/or distance threshold), else
-  3) **Name/alias match** (fuzzy)
-- Persist:
-  - `station_authority` ∈ {`EPA_AQS`,`PurpleAir`,`OpenAQ_Proxy`,`KFM_Custom`}
-  - `station_authoritative_id`
-  - `station_geometry_h3_{res}` (H3 indexes for joins; resolution is config‑driven)
-  - `identity_confidence` ∈ {`authoritative`,`probable`,`fuzzy`}
-- If station cannot be resolved deterministically, keep the record but set:
-  - `flag_station_resolved = false`
-  - `identity_confidence = "fuzzy"`
+- [ ] Define ingest window as `[T_start, T_end)` using repo wall-clock for scheduling.
+- [ ] Persist **four clocks** per record (raw, not derived):
+  - [ ] `source_observed_at` (sensor timestamp)
+  - [ ] `provider_last_updated_at` (provider-side timestamp; field name varies)
+  - [ ] `ingest_received_at` (gateway receive time; monotonic where possible)
+  - [ ] `batch_committed_at` (transaction commit time for the micro-batch)
 
-#### 3) Row‑Level Validation Flags (Deterministic, Provider‑Aware)
-Emit deterministic flags per row (boolean unless noted):
+**Streaming fallback (optional):**
+- [ ] Message envelope contains the same four clocks.
+- [ ] Idempotency key exists: `{provider}:{station_key}:{parameter}:{source_observed_at}`.
 
-- `flag_value_range` (hard bounds per parameter + unit normalization)
-- `flag_rate_of_change` (spike check; parameter‑specific thresholds)
-- `flag_missingness` (null/NaN/empty structure)
-- `flag_unit_normalized` (unit conversion performed and recorded)
-- `flag_calibration_status` (enum/string from provider metadata if available)
-- `flag_qc_provider` (string/enum; e.g., AQS qualifier/QC code)
-- `flag_station_resolved` (from Step 2)
+### Step 2 — Authoritative identity & station resolve
 
-Composite:
-- `flag_authoritative_ok = (flag_station_resolved && flag_value_range && flag_missingness && flag_unit_normalized && flag_rate_of_change)`
+- [ ] Resolve station identity using the **3-key rule**:
+  1) authoritative ID match  
+  2) proximity match  
+  3) name match
+- [ ] Persist identity fields:
+  - [ ] `station_authority` ∈ {`EPA_AQS`,`PurpleAir`,`OpenAQ_Proxy`,`KFM_Custom`}
+  - [ ] `station_authoritative_id`
+  - [ ] `identity_confidence` ∈ {`authoritative`,`probable`,`fuzzy`}
+- [ ] Persist spatial join keys:
+  - [ ] `station_geometry_h3_<res>` (one or more H3 resolutions used for joins)
 
-Always store:
-- `validation_profile_version` (e.g., `air-qc-v3.1`)
+### Step 3 — Row-level validation flags (deterministic, provider-aware)
 
-#### 4) Update Counting & Retroactivity Detection
-- Build deterministic natural key:
-  - `nk = hash(provider, station_authoritative_id, parameter, source_observed_at)`
-- On upsert:
-  - If `nk` exists and payload differs → increment `update_count`
-  - Set `last_update_received_at = ingest_received_at`
-  - Compute `time_lag_seconds = ingest_received_at - source_observed_at`
-  - Set `retroactive_update = (update_count > 0)`
-- Maintain a compact delta ledger for every changed record:
-  - `changed_fields[]` (field names only; avoid storing full old values unless governed)
+- [ ] Emit provider-aware flags (booleans unless noted):
+  - [ ] `flag_value_range`
+  - [ ] `flag_rate_of_change`
+  - [ ] `flag_missingness`
+  - [ ] `flag_calibration_status` (enum/string when provided)
+  - [ ] `flag_qc_provider` (provider QC/qualifier, if present)
+  - [ ] `flag_station_resolved`
+- [ ] Emit composite:
+  - [ ] `flag_authoritative_ok` = all critical flags pass
+- [ ] Persist `validation_profile_version` (example: `air-qc-v3.1`).
 
-#### 5) Batch‑Level Health Gates (Fail‑Safe, Not Fail‑Open)
-- **Quorum rule:** if more than `X%` of rows fail `flag_authoritative_ok`, quarantine the batch.
-- **Drift rule:** compare last `N` batches vs current (mean/variance/flag rates). If drift exceeds threshold:
-  - mark `drift_state ∈ {ok, warn, error}`
-  - degrade to staging‑only outputs
-- Enforce deterministic replay:
-  - WAL + same `[T_start, T_end)` + same configs must reproduce identical outputs.
-- Emit batch `severity ∈ {info, warn, error}` into lineage, telemetry, and validation report.
+### Step 4 — Update counting & retroactivity detection
 
-#### 6) STAC Item / Collection Augmentation (Explicit Properties)
-Add to STAC Item `properties` (and bubble to Collection summaries where appropriate):
+- [ ] Build deterministic natural key:
+  - [ ] `nk = hash(provider, station_authoritative_id, parameter, source_observed_at)`
+- [ ] Upsert rules:
+  - [ ] If `nk` absent → insert with `update_count = 0`
+  - [ ] If `nk` present and payload differs → increment `update_count`
+  - [ ] Set `last_update_received = ingest_received_at` when updated
+- [ ] Compute:
+  - [ ] `time_lag_seconds = ingest_received_at - source_observed_at`
+  - [ ] `retroactive_update = (update_count > 0)`
+- [ ] Maintain delta ledger:
+  - [ ] `changed_fields[]` (field names)
+  - [ ] `change_fingerprint` (hash of changed subset; optional)
 
-- `kfm:update_count` (integer)
-- `kfm:last_update_received_at` (RFC3339)
-- `kfm:time_lag_seconds` (number)
-- `kfm:retroactive_update` (boolean)
-- `kfm:validation_profile_version` (string)
-- `kfm:identity_confidence` (enum)
-- `kfm:station_authority` (string)
-- `kfm:station_authoritative_id` (string)
-- `kfm:flags` (object: all `flag_*` fields)
-- `kfm:provider_last_updated_at` (RFC3339)
-- `kfm:ingest_received_at` (RFC3339)
-- `kfm:data_quality_score` (0–1, optional composite)
+### Step 5 — Batch-level health gates (fail-safe, not fail-open)
 
-Assets:
-- The STAC Item MUST include sidecars:
-  - `prov.jsonld`
-  - `openlineage.json`
-  - `validation.json` (or `validation.ndjson`) summary
+- [ ] Quorum gate:
+  - [ ] If `pct_failed_authoritative_ok > threshold` → quarantine
+- [ ] Drift gate:
+  - [ ] Compare batch stats vs prior rolling window (default 7 batches)
+  - [ ] If drift exceeds threshold → stage-only + elevate severity
+- [ ] Retry/backoff:
+  - [ ] WAL + deterministic replay using the same `[T_start, T_end)`
+- [ ] Emit severity:
+  - [ ] `severity` ∈ {`info`,`warn`,`error`}
 
-#### 7) PROV Run Emission (W3C PROV‑O JSON‑LD)
-Per micro‑batch window, emit:
+### Step 6 — STAC augmentation (explicit properties)
 
-- **prov:Activity**
-  - `id = urn:kfm:activity:air:ingest:{provider}:{T_start}-{T_end}`
-  - `prov:startedAtTime` = first `ingest_received_at`
-  - `prov:endedAtTime` = `batch_committed_at`
-  - attributes: window bounds, counts, `quorum_pass`, `drift_state`, checksums
-- **prov:Entity** (inputs): API snapshot/manifests
-- **prov:Entity** (outputs): parquet/csv, STAC Item(s), delta-ledger extract (if any)
-- **prov:Agent**: orchestration + code identity:
-  - `kfm:orchestrator` (e.g., Dagster/Airflow)
-  - `kfm:code_commit_sha`
+- [ ] Add/Update STAC Item `properties`:
+  - [ ] `kfm:update_count` (integer)
+  - [ ] `kfm:last_update_received` (RFC3339)
+  - [ ] `kfm:time_lag_seconds` (number)
+  - [ ] `kfm:retroactive_update` (boolean)
+  - [ ] `kfm:validation_profile_version` (string)
+  - [ ] `kfm:identity_confidence` (enum)
+  - [ ] `kfm:station_authority` (string)
+  - [ ] `kfm:station_authoritative_id` (string)
+  - [ ] `kfm:flags` (object containing `flag_*`)
+  - [ ] `kfm:provider_last_updated_at` (RFC3339)
+  - [ ] `kfm:ingest_received_at` (RFC3339)
+  - [ ] `kfm:data_quality_score` (0–1, optional)
+- [ ] Ensure STAC Item `assets` includes evidence sidecars when published:
+  - [ ] `prov.jsonld`
+  - [ ] `openlineage.json`
 
-Attach metrics:
-- total rows
-- rows quarantined
-- retroactive updates
-- mean/median `time_lag_seconds`
+### Step 7 — PROV run emission (W3C PROV-O JSON-LD)
 
-#### 8) OpenLineage Events (Job + Run + Dataset Facets)
-Emit per micro‑batch:
+Per micro-batch:
 
-- **Job**
-  - `kfm.air.kansas.{provider}.microbatch`
-- **Run**
-  - `runId = uuid5(window_key, code_commit_sha)` (deterministic)
-- **Dataset facets**
-  - schema URL, documentation link to STAC Item, quality metrics (flag counts), version hash
-- **Run facets**
-  - `nominalTime = [T_start, T_end)`
-  - processing times, drift state, quorum pass/fail, error message (if any)
+- [ ] `prov:Activity` id pattern:
+  - [ ] `kfm:air:kansas:ingest:{provider}:{T_start}-{T_end}`
+- [ ] Activity clocks:
+  - [ ] `prov:startedAtTime` = first `ingest_received_at`
+  - [ ] `prov:endedAtTime` = `batch_committed_at`
+- [ ] Entities:
+  - [ ] Inputs: provider snapshot/manifests
+  - [ ] Outputs: parquet/csv + STAC Item(s) + optional delta ledger
+- [ ] Agent:
+  - [ ] `prov:SoftwareAgent` for ETL runner with `code_commit_sha`
+- [ ] Metrics attached (as attributes or a sidecar):
+  - [ ] `rows_total`, `rows_quarantined`, `retro_updates`, `time_lag_seconds_stats`
 
-### CI expectations (high level)
-A batch SHOULD NOT be treated as “production‑ready” unless:
-- validation summary exists,
-- lineage artifacts exist (PROV + OpenLineage),
-- STAC item validates (if STAC is emitted),
-- integrity hashes/checksums match persisted artifacts,
-- quarantine/drift gates are enforced (fail‑closed).
+### Step 8 — OpenLineage events (job + run + dataset facets)
 
-## 🌐 STAC, DCAT & PROV Alignment
+- [ ] Job naming:
+  - [ ] `kfm.air.kansas.{provider}.microbatch`
+- [ ] Run id:
+  - [ ] `runId = uuid5(window + code_commit_sha)`
+- [ ] Dataset facets (source & sink):
+  - [ ] schema reference (URL or hash)
+  - [ ] data quality metrics (flag counts)
+  - [ ] documentation link (STAC href or stable repo path)
+  - [ ] version/content hash
+- [ ] Run facets:
+  - [ ] nominal time `[T_start, T_end)`
+  - [ ] processing times
+  - [ ] error message (when severity is `error`)
+  - [ ] validation summary (update_count/time_lag aggregates)
 
-### STAC alignment
-- STAC is the primary “asset face” for spatiotemporal outputs.
-- STAC Items for air ETL must carry:
-  - update/retroactivity metadata (`kfm:update_count`, `kfm:retroactive_update`)
-  - freshness metadata (`kfm:time_lag_seconds`, `kfm:ingest_received_at`)
-  - row‑level QC rollups (`kfm:flags` + `kfm:data_quality_score`)
-- Sidecar assets ensure auditability without chasing logs.
-
-### DCAT alignment (if used for publishing)
-- DCAT Dataset identifiers should mirror the dataset’s stable KFM id.
-- DCAT Distributions should point at:
-  - the processed data artifact,
-  - and/or the STAC Item/Collection as discoverability metadata.
-- Access constraints (e.g., private PurpleAir sensor precision) must be recorded explicitly.
-
-### PROV alignment
-- PROV makes the “why/how” queryable:
-  - which raw snapshots contributed,
-  - which batch produced a record,
-  - why a record changed (retroactive update).
+---
 
 ## 📦 Data & Metadata
+
+### Deterministic field contracts (minimum)
+
+**Record fields (normalized layer):**
+- `provider`
+- `station_authority`, `station_authoritative_id`, `identity_confidence`
+- `parameter` (canonical code)
+- `unit` (canonical unit)
+- `value` (numeric)
+- clocks: `source_observed_at`, `provider_last_updated_at`, `ingest_received_at`, `batch_committed_at`
+- `nk` (hash)
+- `update_count`, `last_update_received`, `time_lag_seconds`, `retroactive_update`
+- `validation_profile_version`
+- `flag_*` fields (provider-aware)
+
+**Delta ledger (when enabled):**
+- `nk`
+- `update_count_after`
+- `changed_fields[]`
+- `change_fingerprint`
+- `ingest_received_at`
 
 ### Minimal STAC `properties` fragment
 
 ~~~json
 {
   "kfm:update_count": 0,
-  "kfm:last_update_received_at": "2025-12-14T03:21:45Z",
+  "kfm:last_update_received": "2025-12-14T03:21:45Z",
   "kfm:time_lag_seconds": 412.3,
   "kfm:retroactive_update": false,
   "kfm:validation_profile_version": "air-qc-v3.1",
@@ -266,8 +292,7 @@ A batch SHOULD NOT be treated as “production‑ready” unless:
   "kfm:flags": {
     "flag_value_range": true,
     "flag_rate_of_change": true,
-    "flag_missingness": true,
-    "flag_unit_normalized": true,
+    "flag_missingness": false,
     "flag_calibration_status": "ok",
     "flag_qc_provider": "A",
     "flag_station_resolved": true,
@@ -279,138 +304,125 @@ A batch SHOULD NOT be treated as “production‑ready” unless:
 }
 ~~~
 
-### Minimal PROV‑O JSON‑LD skeleton
+---
 
-~~~json
-{
-  "@context": [
-    "https://www.w3.org/ns/prov.jsonld",
-    {
-      "kfm": "urn:kfm:",
-      "kfm:code_commit_sha": { "@type": "xsd:string" },
-      "kfm:window_start": { "@type": "xsd:dateTime" },
-      "kfm:window_end": { "@type": "xsd:dateTime" }
-    }
-  ],
-  "@id": "urn:kfm:activity:air:ingest:EPA_AQS:2025-12-14T03:00:00Z-2025-12-14T04:00:00Z",
-  "@type": "prov:Activity",
-  "prov:startedAtTime": "2025-12-14T03:21:45Z",
-  "prov:endedAtTime": "2025-12-14T03:22:10Z",
-  "kfm:window_start": "2025-12-14T03:00:00Z",
-  "kfm:window_end": "2025-12-14T04:00:00Z",
-  "prov:wasAssociatedWith": {
-    "@id": "urn:kfm:agent:etl:kfm-air",
-    "@type": "prov:Agent",
-    "kfm:code_commit_sha": "<latest-commit-hash>"
-  },
-  "prov:used": [
-    { "@id": "urn:kfm:entity:air:raw:EPA_AQS:snapshot:2025-12-14T03:21:10Z", "@type": "prov:Entity" }
-  ],
-  "prov:generated": [
-    { "@id": "urn:kfm:entity:air:processed:EPA_AQS:kansas:window:2025-12-14T03", "@type": "prov:Entity" },
-    { "@id": "urn:kfm:entity:stac:item:air-quality:kansas:2025-12-14T03", "@type": "prov:Entity" }
-  ]
-}
-~~~
+## 🌐 STAC, DCAT & PROV Alignment
 
-### Minimal OpenLineage event skeleton
+### STAC
 
-~~~json
-{
-  "eventType": "COMPLETE",
-  "eventTime": "2025-12-14T03:22:10Z",
-  "run": {
-    "runId": "00000000-0000-0000-0000-000000000000",
-    "facets": {
-      "nominalTime": { "startTime": "2025-12-14T03:00:00Z", "endTime": "2025-12-14T04:00:00Z" },
-      "kfmValidation": {
-        "update_count_total": 12,
-        "retroactive_update_rows": 12,
-        "time_lag_seconds_mean": 410.2,
-        "time_lag_seconds_p95": 1200.0,
-        "quorum_pass": true,
-        "drift_state": "ok"
-      }
-    }
-  },
-  "job": { "namespace": "kfm.air.kansas", "name": "epa_aqs.microbatch" },
-  "inputs": [
-    { "namespace": "https://api.example", "name": "epa_aqs_snapshot", "facets": { "version": { "datasetVersion": "<hash>" } } }
-  ],
-  "outputs": [
-    { "namespace": "kfm.data", "name": "air_quality_kansas_epa_aqs_window_2025_12_14_03", "facets": { "version": { "datasetVersion": "<hash>" } } }
-  ],
-  "producer": "urn:kfm:producer:air-etl"
-}
-~~~
+- Each publishable micro-batch updates one or more STAC Items whose `assets` point to the committed outputs.
+- Late/changed data MUST be observable via `kfm:update_count`, `kfm:retroactive_update`, and lag metrics.
 
-### Delta ledger schema (recommended)
-A compact delta ledger is the canonical evidence for retroactive edits.
+### DCAT
+
+- DCAT Dataset/Distribution records SHOULD surface:
+  - access constraints (provider and privacy constraints)
+  - version/content hash where applicable
+  - pointers to STAC as the spatiotemporal catalog surface
+
+### PROV-O
+
+- Raw snapshots, processed outputs, catalogs, and evidence docs are `prov:Entity`.
+- Each micro-batch is a `prov:Activity` that `prov:used` inputs and `prov:generated` outputs.
+- ETL runner is `prov:SoftwareAgent`, linked via `prov:wasAssociatedWith`.
+
+---
+
+## 🧱 Architecture
+
+### Deterministic upsert rule (reference pseudocode)
 
 ~~~text
-delta_ledger (
-  nk                       TEXT PRIMARY KEY,
-  provider                 TEXT NOT NULL,
-  station_authoritative_id TEXT NOT NULL,
-  parameter                TEXT NOT NULL,
-  source_observed_at       TIMESTAMP NOT NULL,
-  ingest_received_at       TIMESTAMP NOT NULL,
-  update_count             INTEGER NOT NULL,
-  retroactive_update       BOOLEAN NOT NULL,
-  changed_fields           TEXT[] NOT NULL,
-  payload_hash             TEXT NOT NULL
-)
+nk = hash(provider, station_authoritative_id, parameter, source_observed_at)
+
+if not exists(nk):
+  insert(record, update_count=0, retroactive_update=false)
+else:
+  if payload_differs(existing, record):
+    update_count = existing.update_count + 1
+    retroactive_update = true
+    changed_fields = diff_fields(existing, record)
+    upsert(record, update_count=update_count, retroactive_update=true, changed_fields=changed_fields)
+  else:
+    no-op (idempotent replay)
 ~~~
+
+### Quarantine behavior
+
+- Quarantine keeps artifacts **reproducible and inspectable** but blocks:
+  - publication into public STAC/DCAT surfaces
+  - graph load into production
+  - downstream “public UI” activation
+
+---
+
+## 🗂️ Directory Layout
+
+Recommended (not exhaustive) evidence layout for a single provider micro-batch:
+
+~~~text
+📁 data/
+├── 📁 air-quality/
+│   ├── 📁 processed/
+│   │   └── 📁 kansas/
+│   │       ├── 📁 openaq-v3/
+│   │       ├── 📁 aqs/
+│   │       └── 📁 purpleair/
+│   └── 📁 reports/
+│       └── 📁 self-validation/
+│           └── 📁 air-kansas/
+│               └── 📁 <provider>/
+│                   └── 📁 <T_start>__<T_end>/
+│                       ├── 🧾 prov.jsonld
+│                       ├── 🧾 openlineage.json
+│                       ├── 🧾 validation-summary.json
+│                       └── 🧾 delta-ledger.parquet
+~~~
+
+---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-If air‑quality data is surfaced in Story Nodes or Focus Mode:
-- Narrative claims SHOULD be conditioned on:
-  - `kfm:data_quality_score`,
-  - `kfm:retroactive_update`,
-  - `kfm:time_lag_seconds`,
-  - and the batch drift state.
-- If a Story Node references a time range that later receives a retroactive update:
-  - the Story Node SHOULD be eligible for refresh,
-  - and provenance links MUST remain stable (so evidence trails don’t break).
+Focus Mode and Story Nodes can safely use this checklist’s outputs to:
 
-Minimum evidence link set for a narrative claim:
-- STAC Item link (and assets),
-- PROV activity id,
-- OpenLineage run id,
-- validation summary hash.
+- detect late revisions and avoid presenting stale “facts”
+- surface quality caveats (“sensor drift detected”, “batch quarantined”)
+- provide provenance links from visualizations back to:
+  - the micro-batch Activity (PROV)
+  - the exact catalog Item (STAC)
+  - the operational run record (OpenLineage)
+
+---
 
 ## ⚖ FAIR+CARE & Governance
 
-Air data can still be sensitive:
-- **PurpleAir** sensors may be colocated with private residences. Treat precise coordinates as potentially sensitive.
-  - Prefer storing/publishing **H3‑generalized** station geometry for public catalogs.
-  - Retain exact geometry only in governed contexts where policy permits.
-- Always store and propagate:
-  - license/terms metadata,
-  - attribution requirements,
-  - access constraints (public vs restricted).
+Air-quality data is generally public, but **station-level exposure can be sensitive**:
 
-Fail‑closed governance rule:
-- If required governance metadata is missing (license, access, sensitivity), do not publish to public catalogs.
+- Some PurpleAir devices may be at residences; treat precision as provider- and context-dependent.
+- When required by policy or provider terms:
+  - generalize geometry (H3) for public surfaces
+  - restrict raw coordinates to governed layers
+- Never weaken or “assume away” governance:
+  - if in doubt, quarantine and escalate to stewards.
+
+---
 
 ## 🕰️ Version History
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v11.2.6 | 2025-12-14 | MDP v11.2.6 compliance update (approved H2 headings + tilde fences); aligned evidence paths to `data/air-quality/` and `data/updates/`; completed minimal STAC/PROV/OpenLineage examples; strengthened privacy/governance guidance for PurpleAir station geometry. |
+| v11.2.6 | 2025-12-14 | KFM-MDP v11.2.6 alignment: approved H2 registry, inner-tilde fences, required governance footer + version history; tightened deterministic replay and evidence emission rules. |
+| v11.2.3 | 2025-12-09 | Initial Kansas air ingest checklist covering micro-batch validation, STAC/PROV/OpenLineage evidence, and late-data detection. |
 
 ---
 
 <div align="center">
 
 🌬️ **KFM — Kansas Air ETL Validation & Evidence Checklist (v11.2.6)**  
-MIT License · MCP‑DL v6.3 · KFM‑MDP v11.2.6 · KFM‑OP v11 · KFM‑PDC v11
+Deterministic Pipelines · Evidence-Led Lineage · FAIR+CARE Governed
 
-[⬅ Back to Repo Root](../../../../../README.md) ·
-[📦 Data Plane](../../../../../data/README.md) ·
-[🔄 CI/CD Workflows](../../../../../.github/workflows/README.md) ·
+[⬅ Back to Repository Root](../../../../../README.md) ·
+[📑 KFM Markdown Protocol](../../../../../docs/standards/kfm_markdown_protocol_v11.2.6.md) ·
 [⚖ Governance Charter](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
