@@ -1,11 +1,11 @@
 ---
-title: "🧳 KFM — CI‑Triggered Repro‑Kit Pattern (Deterministic, Sanitized, Attested)"
+title: "🧳 KFM — CI-Triggered Repro-Kit Pattern (Deterministic, Sanitized, Attested)"
 path: ".github/repro-kit/README.md"
 
 version: "v11.2.6"
 last_updated: "2025-12-14"
 release_stage: "Stable / Governed"
-lifecycle: "Long‑Term Support (LTS)"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Reliability & FAIR+CARE Council"
 content_stability: "stable"
 
@@ -71,14 +71,14 @@ ai_transform_prohibited:
 
 <div align="center">
 
-# 🧳 **KFM — CI‑Triggered Repro‑Kit Pattern**
+# 🧳 **KFM — CI-Triggered Repro-Kit Pattern**
 `.github/repro-kit/README.md`
 
 **Purpose**  
-When CI fails, emit a compact **repro‑kit**: a deterministic, sanitized, and attested bundle containing only what is needed to replay the failure locally or in CI.
+When CI fails, emit a compact **repro-kit**: a deterministic, sanitized, and attested bundle containing only what is needed to replay the failure locally or in CI.
 
 **Why**  
-Faster triage, smaller artifacts, safer sharing, and verifiable lineage (PROV‑O + OpenLineage) under FAIR+CARE and security policy.
+Faster triage, smaller artifacts, safer sharing, and verifiable lineage (PROV-O + OpenLineage) under FAIR+CARE and security policy.
 
 <br/>
 
@@ -93,36 +93,81 @@ Faster triage, smaller artifacts, safer sharing, and verifiable lineage (PROV‑
 
 ## 📘 Overview
 
-A **repro‑kit** is a small, self‑describing bundle produced by CI when a job fails. It contains:
+A **repro-kit** is a small, self-describing bundle produced by CI when a job fails. It contains:
 
 - **Deterministic replay inputs** (or remote pointers + checksums)
 - A tiny **replay script** (or OCI recipe)
 - **Evidence**:
-  - a **PROV‑O JSON‑LD** run document
+  - a **PROV-O JSON-LD** run document
   - an **OpenLineage** event JSON
   - validation summaries and integrity hashes
 - **Sanitization evidence** showing secrets/PII redaction was applied
-- **Attestation** (SLSA / in‑toto) binding kit contents to the CI run identity
+- **Attestation** (SLSA / in-toto) binding kit contents to the CI run identity
 
-A repro‑kit is intentionally **not** a general “debug dump.” It is:
+A repro-kit is intentionally **not** a general “debug dump.” It is:
 - minimal,
-- policy‑gated,
-- time‑limited by default,
+- policy-gated,
+- time-limited by default,
 - and cryptographically verifiable.
 
 **Design goals (normative):**
 - **Deterministic**: only pinned/seeded inputs or remote pointers with checksums.
 - **Minimal**: typically ≤ a few MB; exclude caches and bulky logs.
-- **Portable**: 1‑command replay (script or container).
+- **Portable**: 1-command replay (script or container).
 - **Forensic**: input hashes, output hashes, config snapshot references.
 - **Safe**: secrets scrubbed, PII redacted, governance gates enforced.
-- **Ephemeral**: short TTL; long‑term retention requires explicit promotion.
+- **Ephemeral**: short TTL; long-term retention requires explicit promotion.
+
+---
+
+## 🗂️ Directory Layout
+
+This pattern documentation lives here:
+
+~~~text
+📁 .github/
+└── 📁 repro-kit/                     # CI repro-kit pattern (docs + contracts)
+    └── 📄 README.md                  # This document
+~~~
+
+### Repro-kit bundle layout (normative)
+
+A repro-kit MUST be a single archive (zip/tar) with the following structure:
+
+~~~text
+📦 repro-kit/                         # Root inside archive (single bundle)
+├── 🧾 manifest.json                  # Required: primary manifest (machine-readable)
+├── 📁 replay/                        # Replay entrypoints and human notes
+│   ├── 🧪 repro.sh                   # Optional: POSIX replay script
+│   ├── 🧪 repro.ps1                  # Optional: PowerShell replay script
+│   └── 📄 README.md                  # Optional: replay notes (no secrets/PII)
+├── 📁 inputs/                        # Minimal fixtures (or remote pointers)
+│   ├── 📁 files/                     # Optional: tiny files needed to reproduce
+│   └── 📁 pointers/                  # Required when inputs are remote (URIs + checksums)
+├── 📁 evidence/                      # Required: lineage + validation + integrity
+│   ├── 🧬 prov.jsonld                # Required: PROV-O Activity/Entity/Agent chain
+│   ├── 🧾 openlineage.json           # Required: OpenLineage event JSON
+│   ├── 🧾 validation-summary.json    # Recommended: validator outputs (counts, failures)
+│   └── 🔐 checksums.sha256           # Required: sha256 list for files in the kit
+├── 📁 sanitization/                  # Required: redaction evidence
+│   ├── 🧾 redaction-report.json      # Required: what was removed/masked and why
+│   └── 🧾 allowlist.json             # Optional: allowlisted fields/paths snapshot
+└── 📁 attestations/                  # Required: supply-chain attestations
+    ├── 🧾 repro-kit.slsa.json        # Required: SLSA/in-toto attestation (or equivalent)
+    └── 🧾 signing-info.json          # Optional: signer metadata (no secrets)
+~~~
+
+**Rules (normative):**
+- If an input cannot be safely included (size/sensitivity), include a **pointer** with:
+  - `uri`, `retrieval_instructions`, and a **checksum/content hash**.
+- If a kit cannot be safely produced (policy gate), CI must emit a **quarantine stub**:
+  - `manifest.json` + `redaction-report.json` explaining why the kit was blocked.
 
 ---
 
 ## 🧭 Context
 
-Repro‑kits are built to accelerate triage across:
+Repro-kits accelerate triage across:
 - ETL failures (schema drift, contract violations, data quality regressions)
 - Catalog validation failures (STAC/DCAT shape/links)
 - Graph ingestion failures (dedupe/constraint regressions)
@@ -135,10 +180,10 @@ Repro‑kits are built to accelerate triage across:
 - governance/security stewards (when the kit is quarantined)
 
 **Where they fit:**
-- Repro‑kits are CI artifacts that bridge “a failing run” to “a replayable failure case.”
-- Repro‑kits complement (but do not replace) run logs under:
-  - `mcp/runs/` (governed run logs/config snapshots)
-  - `data/reports/` (validation evidence) when data pipelines are involved
+- Repro-kits are CI artifacts that bridge “a failing run” to “a replayable failure case.”
+- Repro-kits complement (but do not replace) governed run logs and evidence under:
+  - `mcp/runs/`
+  - `data/reports/`
 
 ---
 
@@ -157,57 +202,53 @@ flowchart TD
 
 ~~~mermaid
 flowchart LR
-  K["repro-kit.zip"] --> M["manifest.json"]
-  K --> R["repro.sh / repro.ps1"]
-  K --> I["inputs/ (minimal)"]
-  K --> E["evidence/ (prov + openlineage + validation)"]
-  K --> S["sanitization/ (redaction report)"]
-  K --> A["attestations/ (SLSA / in-toto)"]
+  K["📦 repro-kit bundle"] --> M["🧾 manifest.json"]
+  K --> R["🧪 replay scripts"]
+  K --> I["📁 inputs (files/pointers)"]
+  K --> E["📁 evidence (prov/openlineage/validation)"]
+  K --> S["📁 sanitization (redaction report)"]
+  K --> A["📁 attestations (SLSA/in-toto)"]
 ~~~
 
 ---
 
-## 🗂️ Directory Layout
+## 🧪 Validation & CI/CD
 
-This pattern lives under:
+### When to create a repro-kit (recommended triggers)
+
+- On failure of:
+  - data pipeline validation jobs
+  - STAC/DCAT validation jobs
+  - schema lint / contract tests
+  - critical unit/integration tests
+- On flaky failures:
+  - only after `N` retries (to avoid generating kits for transient runner issues)
+
+### What must be validated before upload (normative)
+
+A kit MUST NOT be uploaded unless:
+
+- `manifest.json` exists and is parseable
+- checksums file exists and matches kit contents
+- sanitization report exists and states `status: publishable`
+- attestation exists (or a configured “attestation unavailable” exception applies)
+- size and TTL policies are satisfied
+
+### Local replay runbook (normative)
+
+Minimum replay sequence (illustrative):
 
 ~~~text
-.github/repro-kit/
-└── README.md
+1) Unpack repro-kit.zip
+2) Verify evidence/checksums.sha256
+3) Fetch any inputs/pointers (if present) using sanctioned tooling
+4) Run replay/repro.sh (or repro.ps1)
+5) Confirm the failure reproduces (expected_exit_code)
 ~~~
 
-### Repro‑kit bundle layout (normative)
-
-A repro‑kit MUST be a single archive (zip/tar) with the following structure:
-
-~~~text
-repro-kit/
-├── manifest.json                  # Required: primary manifest (machine-readable)
-├── replay/
-│   ├── repro.sh                   # Optional: POSIX replay script
-│   ├── repro.ps1                  # Optional: PowerShell replay script
-│   └── README.md                  # Optional: human replay notes (no secrets)
-├── inputs/
-│   ├── files/                     # Optional: tiny fixtures needed to reproduce
-│   └── pointers/                  # Required when inputs are remote: URIs + checksums
-├── evidence/
-│   ├── prov.jsonld                # Required: PROV-O Activity/Entity/Agent
-│   ├── openlineage.json           # Required: OpenLineage event
-│   ├── validation-summary.json    # Recommended: validator outputs (counts, failures)
-│   └── checksums.sha256           # Required: sha256 list for files in the kit
-├── sanitization/
-│   ├── redaction-report.json      # Required: what was removed/masked and why
-│   └── allowlist.json             # Optional: allowlisted fields/paths policy snapshot
-└── attestations/
-    ├── repro-kit.slsa.json        # Required: SLSA/in-toto attestation (or equivalent)
-    └── signing-info.json          # Optional: signer identities/keys (no secrets)
-~~~
-
-**Rules:**
-- If an input cannot be safely included (size/sensitivity), include a **pointer**:
-  - `uri`, `retrieval_instructions`, and a **checksum** (or content hash) are mandatory.
-- If a kit cannot be safely produced (policy gate), CI must emit a **quarantine stub**:
-  - a manifest + redaction report explaining why the kit was blocked.
+If the failure does not reproduce:
+- the kit must be treated as incomplete,
+- and a follow-up kit should be generated with updated minimal inputs.
 
 ---
 
@@ -217,7 +258,7 @@ repro-kit/
 
 The manifest MUST be sufficient to replay, verify, and trace the kit without guessing.
 
-Required top‑level fields:
+Required top-level fields:
 
 ~~~json
 {
@@ -281,8 +322,6 @@ Required top‑level fields:
 
 `evidence/checksums.sha256` MUST list sha256 hashes for all files in the kit except the checksum file itself.
 
-Format:
-
 ~~~text
 <sha256>  manifest.json
 <sha256>  evidence/prov.jsonld
@@ -299,8 +338,6 @@ Format:
 - whether the kit is:
   - **publishable** (upload allowed), or
   - **quarantined** (upload blocked or restricted)
-
-Example:
 
 ~~~json
 {
@@ -323,11 +360,32 @@ Example:
 
 ---
 
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+A repro-kit MAY be represented as a non-spatial STAC Item (optional pattern):
+- `geometry: null`
+- `properties.datetime = last_updated`
+- `assets.repro_kit.href` points to the artifact store location (or a stable pointer)
+
+### DCAT
+This document is a documentation dataset:
+- `semantic_document_id` maps to `dct:identifier`
+- Markdown is a `dcat:Distribution` (`mediaType: text/markdown`)
+- The repro-kit bundle can be a `dcat:Distribution` with access constraints and TTL.
+
+### PROV-O
+- The repro-kit is a `prov:Entity` that was generated by a CI `prov:Activity`.
+- CI bots and councils are `prov:Agent`s.
+- Inputs, pointers, and validation evidence are additional `prov:Entity` nodes linked by `prov:used` and `prov:wasDerivedFrom`.
+
+---
+
 ## 🧱 Architecture
 
 ### Components (logical)
 
-A CI implementation of this pattern typically has five deterministic stages:
+A CI implementation of this pattern has five deterministic stages:
 
 1. **Collect**
    - Select minimal files and pointers needed to reproduce the failure.
@@ -344,91 +402,47 @@ A CI implementation of this pattern typically has five deterministic stages:
    - Include a replay entrypoint if feasible.
 
 4. **Attest**
-   - Generate an in‑toto / SLSA attestation binding:
+   - Generate an in-toto / SLSA attestation binding:
      - kit digests,
      - CI run identity,
-     - and the commit SHA.
-   - Signing keys must be managed by CI and never embedded in the kit.
+     - commit SHA.
+   - Signing keys are managed by CI and never embedded in the kit.
 
 5. **Publish**
-   - Upload to a short‑TTL secure artifact store (or GitHub artifacts if configured).
-   - Open (or update) an Issue linking:
+   - Upload to a short-TTL secure artifact store (or GitHub artifacts if configured).
+   - Open/update an Issue linking:
      - kit location,
      - manifest,
      - validation summary,
-     - and attestation.
+     - attestation.
 
 ### Determinism contract (normative)
 
-A repro‑kit MUST be replayable without ambiguity:
+A repro-kit MUST be replayable without ambiguity:
 
 - Inputs are included **or** referenced by stable pointers + checksums.
-- The replay script MUST:
-  - pin the window/range/seed (if applicable),
+- Replay script MUST:
+  - pin window/range/seed (if applicable),
   - fail if required inputs are missing,
   - verify checksums before running.
-- If the replay requires network retrieval, it MUST be limited to:
-  - explicitly listed pointer URIs,
-  - and checksum verification must occur before use.
-
----
-
-## 🧪 Validation & CI/CD
-
-### When to create a repro‑kit (recommended triggers)
-
-- On failure of:
-  - `data_pipeline` (ETL and validation)
-  - `stac_validate` / `dcat_validate` (catalog correctness)
-  - schema lint / contract tests
-  - critical unit/integration tests
-- On flaky failures:
-  - only after `N` retries (to avoid generating kits for transient runner issues)
-
-### What must be validated before upload (normative)
-
-A kit MUST NOT be uploaded unless:
-
-- `manifest.json` exists and is parseable
-- checksums file exists and matches kit contents
-- sanitization report exists and states `status: publishable`
-- attestation exists (or a configured “attestation unavailable” exception applies)
-- size and TTL policies are satisfied
-
-### Local replay runbook (normative)
-
-Minimum replay sequence (illustrative):
-
-~~~text
-1) Unpack repro-kit.zip
-2) Verify evidence/checksums.sha256
-3) Fetch any inputs/pointers (if present) using sanctioned tooling
-4) Run replay/repro.sh (or repro.ps1)
-5) Confirm the failure reproduces (expected_exit_code)
-~~~
-
-If the failure does not reproduce:
-- the kit must be treated as incomplete,
-- and a follow-up kit should be generated with updated minimal inputs.
+- Network retrieval is permitted only for explicitly listed pointers and MUST verify checksums before use.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-Repro‑kits are governed artifacts.
+Repro-kits are governed artifacts.
 
 **Hard constraints:**
 - No secrets, tokens, credentials, private keys.
 - No direct PII.
 - No sensitive location precision when governance requires masking/generalization.
-- No restricted Indigenous data or culturally sensitive materials unless:
-  - explicit authority exists,
-  - and the kit is quarantined to a restricted store with steward approval.
+- No restricted Indigenous data or culturally sensitive materials unless authority exists and the kit is quarantined to a restricted store.
 
 **Default posture:**
-- **Fail‑closed**: if sanitization or governance gates cannot certify safety, do not publish.
+- **Fail-closed**: if sanitization or governance gates cannot certify safety, do not publish.
 - **Short TTL** by default:
-  - extension or promotion to long‑term retention requires explicit approval.
+  - extension or promotion to long-term retention requires explicit approval.
 - **Traceability** is mandatory:
   - every kit must be tied to a CI run + commit SHA + attestation.
 
@@ -444,18 +458,19 @@ Authoritative references:
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v11.2.6 | 2025-12-14 | Upgraded repro‑kit pattern to full KFM‑MDP v11.2.6 structure; defined normative bundle layout, manifest contract, sanitization evidence, attestation expectations, and fail‑closed governance gates. |
+| v11.2.6 | 2025-12-14 | Upgraded repro-kit pattern to KFM-MDP v11.2.6; fixed emoji-aligned directory trees; defined normative bundle layout, manifest contract, sanitization evidence, attestation expectations, and fail-closed governance gates. |
 
 ---
 
 <div align="center">
 
-🧳 **KFM — CI‑Triggered Repro‑Kit Pattern (v11.2.6)**  
+🧳 **KFM — CI-Triggered Repro-Kit Pattern (v11.2.6)**  
 Deterministic · Sanitized · Attested · Traceable
 
 [⬅ Back to Repository Root](../../README.md) ·
 [⚖ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
 [🤝 FAIR+CARE Guide](../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) ·
 [🛡️ Security Policy](../../SECURITY.md)
 
 </div>
