@@ -1,323 +1,382 @@
 ---
 title: "📦 Kansas Frontier Matrix — Staging Data Workspace (Diamond9 Omega / CrownInfinityOmega Ultimate Certified)"
 path: "data/work/staging/README.md"
-version: "v11.1.0"
-last_updated: "2025-11-19"
+
+version: "v11.1.1"
+last_updated: "2025-12-14"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v11.1.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.1.0/manifest.zip"
-telemetry_ref: "../../../releases/v11.1.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-work-staging-v11.json"
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+content_stability: "stable"
+
+status: "Active / Enforced"
+doc_kind: "Data Layer"
+header_profile: "standard"
+footer_profile: "standard"
+diagram_profiles:
+  - "mermaid-flowchart-v1"
+
 license: "Internal · FAIR+CARE Certified"
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-status: "Active / Enforced"
-doc_kind: "Data Layer"
-intent: "staging-workspace"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
+scope:
+  domain: "data-work"
+  applies_to:
+    - "data/work/staging/**"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Verified"
+care_label: "Internal · CARE-Verified"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
+sensitivity_level: "Low"
+public_exposure_risk: "Medium"
+classification: "Internal"
+jurisdiction: "Kansas / United States"
+
+indigenous_rights_flag: true
+data_steward: "KFM FAIR+CARE Council"
+
+ttl_policy: "24 months"
+sunset_policy: "Superseded by a later Work Layer staging spec"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+
+signature_ref: "../../../releases/v11.1.1/signature.sig"
+attestation_ref: "../../../releases/v11.1.1/slsa-attestation.json"
+sbom_ref: "../../../releases/v11.1.1/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.1.1/manifest.zip"
+
+telemetry_ref: "../../../releases/v11.1.1/focus-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/data-work-staging-v11.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  prov_o: "prov:Plan"
+  owl_time: "ProperInterval"
+  geosparql: "geo:FeatureCollection"
+
+metadata_profiles:
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "data/work/staging/README.md@v11.1.0"
+  - "data/work/staging/README.md@v11.0.0"
+  - "data/work/staging/README.md@v10.0.0"
+
+story_node_refs: []
+immutability_status: "version-pinned"
+
+doc_uuid: "urn:kfm:doc:data-work:staging:v11.1.1"
+semantic_document_id: "kfm-data-work-staging-v11.1.1"
+event_source_id: "ledger:kfm:doc:data-work:staging:v11.1.1"
+doc_integrity_checksum: "<sha256>"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+  - "diagram-extraction"
+  - "metadata-extraction"
+  - "layout-normalization"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+transform_registry:
+  allowed:
+    - "summary"
+    - "timeline-generation"
+    - "semantic-highlighting"
+    - "a11y-adaptations"
+    - "diagram-extraction"
+    - "metadata-extraction"
+    - "layout-normalization"
+  prohibited:
+    - "content-alteration"
+    - "speculative-additions"
+    - "unverified-architectural-claims"
+    - "narrative-fabrication"
+    - "governance-override"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
 ---
 
 <div align="center">
 
-# 📦 **Kansas Frontier Matrix — Staging Data Workspace**  
+# 📦 **Kansas Frontier Matrix — Staging Data Workspace**
 `data/work/staging/README.md`
 
 **Purpose**  
-Define the controlled, FAIR+CARE-supervised **staging environment** for KFM datasets.  
-This workspace is the **pre-publication validation zone** where datasets undergo schema alignment, FAIR+CARE audits, checksum verification, provenance registration, and telemetry recording before promotion into governed publication layers.
+Define the **controlled, FAIR+CARE-supervised staging environment** for Kansas Frontier Matrix datasets.  
+This workspace is the **pre-publication validation zone** where datasets undergo **schema alignment**, **FAIR+CARE audits**, **checksum verification**, **provenance registration**, and **telemetry recording** before promotion into the **Processed Layer**.
+
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/Classification-Internal-informational" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 </div>
 
 ## 📘 Overview
 
+### 1. Role in the KFM pipeline
 The Staging Workspace bridges:
 
-**raw ingestion → temporary processing → validation → ethics review → governance registration → promotion**
+**raw ingestion → temporary processing → validation → ethics review → governance registration → processed publication**
 
-All datasets entering staging are subject to:
+It is the internal “gate” used to prevent unsafe, non-compliant, or invalid artifacts from reaching the Processed Layer.
 
-- deterministic ETL normalization (when applicable)
-- schema + JSON-schema compliance (where schemas exist)
-- FAIR+CARE ethics validation
-- provenance chain generation (PROV-O)
-- checksum and manifest integrity checks
-- telemetry v11 sustainability metrics capture
-- governance approval workflow
-- pre-STAC/DCAT metadata preparation
+### 2. What staging is (and is not)
+**Staging is:**
+- a controlled workspace for intermediate artifacts,
+- a deterministic-validation checkpoint (schemas, checksums, provenance),
+- a governance checkpoint (FAIR+CARE + sovereignty review as needed),
+- a telemetry checkpoint (sustainability + audit completeness).
 
-This directory is **internal-only** and is **not** published directly.
+**Staging is not:**
+- a long-term storage layer,
+- a public distribution layer,
+- a place to publish STAC/DCAT as final outputs.
 
-## 🗂 Directory Layout
+### 3. Promotion rule (high-level)
+Promotion to the Processed Layer is allowed only when:
+- validation status is `passed`,
+- integrity checks match expected manifests,
+- provenance is complete and linkable,
+- licensing/rights are cleared,
+- governance decision is recorded (or explicitly not required for the artifact class).
+
+## 🗂️ Directory Layout
 
 ~~~text
-data/
-└── work/
-    └── staging/
-        ├── README.md
-        ├── tabular/
-        │   ├── tmp/
-        │   ├── normalized/
-        │   ├── validation/
-        │   └── logs/
-        ├── spatial/
-        │   ├── tmp/
-        │   ├── validation/
-        │   └── logs/
-        └── metadata/
-            ├── tmp/
-            ├── validation/
-            └── logs/
+📁 data/
+└── 📁 work/
+    └── 📁 staging/                               — Controlled, internal staging workspace
+        ├── 📄 README.md                          — This document
+        │
+        ├── 📁 tabular/                           — Intermediate tabular artifacts (pre-processed)
+        │   ├── 📁 tmp/                           — Ephemeral transformation outputs (safe to purge)
+        │   ├── 📁 normalized/                    — Schema-aligned intermediate tables
+        │   ├── 📁 validation/                    — Validation results (schema + QC + FAIR+CARE)
+        │   └── 📁 logs/                          — Run logs, telemetry, audit traces
+        │
+        ├── 📁 spatial/                           — Intermediate spatial artifacts (vectors/rasters)
+        │   ├── 📁 tmp/                           — Ephemeral transformation outputs (safe to purge)
+        │   ├── 📁 normalized/                    — CRS-aligned intermediates, topology-ready outputs
+        │   ├── 📁 validation/                    — Spatial validation (CRS/topology/coverage)
+        │   └── 📁 logs/                          — Run logs, telemetry, audit traces
+        │
+        └── 📁 metadata/                          — Metadata bundles for promotion readiness
+            ├── 📁 tmp/                           — Ephemeral metadata generation outputs
+            ├── 📁 validation/                    — Metadata validation (schemas + completeness)
+            └── 📁 logs/                          — Metadata pipeline logs + audit traces
 ~~~
-
-Directory semantics:
-
-- `tmp/` — ephemeral transformation outputs (may be overwritten; not authoritative)
-- `normalized/` — schema-aligned intermediate artifacts (tabular-first; may be used elsewhere if required)
-- `validation/` — QC, FAIR+CARE, checksum, and compliance results
-- `logs/` — execution history, telemetry, audit traces (no secrets / no PII)
-
-All staging data MUST remain isolated from production/published layers.
 
 ## 🧭 Context
 
-Staging is a governed workspace for datasets that are not yet eligible for publication.
+### 1. Why staging exists
+Staging exists to enforce:
+- deterministic ETL normalization,
+- schema alignment and machine validation,
+- provenance completeness (PROV-O),
+- integrity checks (hashes + manifests),
+- governance constraints (FAIR+CARE + sovereignty),
+- telemetry capture for sustainability and auditability.
 
-Key boundaries:
+### 2. Internal-only constraint
+This directory is **internal-only** and **must not be treated as published data**. Any artifact intended for public distribution must be promoted into the Processed Layer and represented through the catalog outputs (STAC/DCAT) with the required governance controls.
 
-- **Raw intake** belongs in `data/**/raw/**` (immutable source-of-record evidence).
-- **Staging** belongs here (`data/work/staging/**`) for pre-publication checks and controlled iteration.
-- **Published distributions** belong in governed output layers (e.g., processed/published surfaces defined by the repo’s data architecture).
-- **Catalogs** (STAC/DCAT) and **lineage** (PROV/OpenLineage) must be authored/registered from governed locations, not from ad-hoc scratch artifacts.
-
-Staging’s job is to make promotion decisions **repeatable**, **auditable**, and **governance-safe**.
-
-## 🗺 Diagrams
+## 🗺️ Diagrams
 
 ~~~mermaid
 flowchart LR
-  A[Raw Intake] --> B[Staging: tmp/]
-  B --> C[Staging: normalized/ (when applicable)]
-  C --> D[Staging: validation/]
-  D --> E{FAIR+CARE + Governance Review}
-  E -->|passed| F[Promotion to Governed Publication Layers]
-  E -->|failed| G[Remediate + Re-run Deterministic Checks]
-  D --> H[Telemetry + Logs]
-  H --> E
+  A["Raw ingestion"] --> B["Staging tmp"]
+  B --> C["Normalize to schemas"]
+  C --> D["Validation and QA"]
+  D --> E["FAIR+CARE and sovereignty review"]
+  E --> F{"Promotion decision"}
+  F -->|approved| G["Processed layer publish"]
+  F -->|rejected| H["Fix and re-run"]
+  G --> I["STAC and DCAT publication"]
+  G --> J["PROV and OpenLineage records"]
 ~~~
+
+The staging flow above shows the gating function: artifacts only move forward after validation and governance checks, with lineage preserved across each step.
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Staging is **not** a narrative evidence surface.
+### 1. How Focus Mode may use staging docs
+Focus Mode may summarize this document and extract metadata for internal navigation and governance auditing.
 
-- Story Nodes and Focus Mode should reference **promoted, governed** datasets and their catalogs/lineage records.
-- Staging telemetry and validation outputs can inform sustainability and quality dashboards, but should be treated as **pre-publication** and **mutable** until promotion.
-- Promotion is the point where identifiers and provenance become stable enough to support narrative assertions.
+### 2. Restrictions
+Because staging may reference sensitive operational practices, Focus Mode usage must:
+- avoid inventing approval status,
+- avoid claiming a dataset is “published” when it is only staged,
+- avoid revealing sensitive operational details beyond what is documented.
 
 ## 🧪 Validation & CI/CD
 
-Before promotion, staging datasets SHOULD pass the applicable gates:
+### 1. CI-enforced checks
+This README (and any staging documentation) is expected to pass:
+- `markdown-lint`
+- `schema-lint`
+- `metadata-check`
+- `diagram-check`
+- `footer-check`
+- `accessibility-check`
+- `provenance-check`
+- `secret-scan`
+- `pii-scan`
 
-- JSON schema validation (where a schema exists)
-- FAIR+CARE certification checks
-- checksum integrity checks (sha256 + manifest comparison)
-- provenance chain validation (PROV-O completeness / consistency)
-- licensing checks (including open-data compatibility when relevant)
-- telemetry completeness (energy / carbon / coverage fields per telemetry schema)
-- governance approval workflow outcome
-- spatial datasets (when applicable):
-  - CRS enforcement (e.g., EPSG:4326 where required by contract)
-  - topology QA / geometry validity
-- tabular datasets (when applicable):
-  - field-type enforcement
-  - missingness checks
-  - key integrity checks (PK/FK where defined)
-
-Validation artifacts SHOULD be written to:
-
-- `data/work/staging/**/validation/` (stage-local evidence)
-- and, if the repo uses centralized reporting roots, to:
-  - `data/reports/validation/`
-  - `data/reports/fair/`
-  - `data/reports/audit/`
-
-No validation output may contain secrets, credentials, signed URLs, or PII.
+### 2. Dataset promotion gates (staging-to-processed)
+Before promotion, staged datasets must pass (as applicable):
+- JSON schema validation
+- checksum integrity checks (e.g., SHA256)
+- provenance chain completeness (PROV-O)
+- licensing checks (rights + allowed use)
+- telemetry completeness (energy + carbon fields where required)
+- spatial (if applicable): CRS enforcement + topology QA
+- tabular (if applicable): field type enforcement + missingness checks
 
 ## 📦 Data & Metadata
 
-Staging prepares and isolates three major intermediate domains:
+### 1. What goes into staging
+Typical staged artifacts include:
+- intermediate tables (normalized schemas, canonical field types),
+- intermediate vectors/rasters (CRS-aligned, simplified, cleaned),
+- validation outputs and coverage reports,
+- derived metadata bundles required for catalog publication readiness.
 
-- **Tabular** intermediate datasets (normalized tables)
-- **Spatial** intermediate datasets (vectors, rasters)
-- **Metadata** bundles (validation outputs, schema specs, pre-catalog records)
+### 2. Entity requirements (PROV-O)
+All staged artifacts should be representable as `prov:Entity` with:
+- a stable identifier (internal staging ID),
+- checksum(s) (e.g., `sha256`),
+- dataset type (`tabular` / `spatial` / `metadata`),
+- schema version reference,
+- validation state (`in_review` / `passed` / `failed`),
+- governance pointers (where review is required),
+- timestamps (ISO 8601).
 
-Each staged dataset SHOULD carry (or be linkable to) a minimal staging metadata record that includes:
+### 3. Activity and agent requirements
+Staging activities should be representable as `prov:Activity` and linked to:
+- pipeline version,
+- parameter digest,
+- timestamps,
+- input entities and output entities,
+- responsible `prov:Agent` (team, service account, or steward role).
 
-- a stable staging identifier (string)
-- dataset type (`tabular` / `spatial` / `metadata`)
-- schema version reference (if applicable)
-- validation state (`in_review`, `passed`, `failed`)
-- checksum (sha256; temporary integrity record)
-- FAIR+CARE status
-- timestamps (ASCII ISO 8601)
-- governance pointer for ethics review
-- telemetry block (e.g., `energy_wh`, `carbon_gco2e`, coverage)
-
-Example (illustrative):
-
+### 4. Example staging metadata record
 ~~~json
 {
-  "id": "staging_tabular_environmental_indicators_v11.1.0",
+  "id": "staging_tabular_environmental_indicators_v11",
   "dataset_type": "tabular",
-  "source": "data/raw/climate/noaa_temperature.csv",
   "schema_version": "v3.3.0",
   "records_processed": 55204,
   "validation_status": "in_review",
-  "checksum_sha256": "sha256:3e9bcfa27d14fbb0ad0c2c4afd0f584c94f00468bc930a7a7fa191c3b63a2911",
-  "fairstatus": "in_review",
+  "checksum_sha256": "sha256:<sha256>",
+  "care_status": "in_review",
   "telemetry": {
     "energy_wh": 7.4,
     "co2_g": 9.8,
     "validation_coverage_pct": 100
   },
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json",
-  "created": "2025-11-19T20:01:00Z"
+  "governance_ref": "../../../docs/standards/governance/ROOT-GOVERNANCE.md",
+  "created": "2025-12-14T00:00:00Z"
 }
-~~~
-
-Retrieval examples:
-
-~~~python
-import json
-
-with open("data/work/staging/tabular/validation/validation_report.json", "r", encoding="utf-8") as f:
-    report = json.load(f)
-
-print(report.get("status"))
-~~~
-
-~~~bash
-ls data/work/staging/spatial/
-~~~
-
-~~~cypher
-MATCH (s:StagingEntity)
-RETURN s.id, s.validation_status, s.telemetry_energy_wh;
 ~~~
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Staging is **pre-catalog** and **pre-publication**, but it must be catalog-ready.
+### 1. STAC
+Staging artifacts are **not** the public catalog. However, staging may prepare STAC-ready metadata so that promotion can emit:
+- STAC Collections under `data/stac/collections/`
+- STAC Items under `data/stac/items/`
+- assets referencing processed outputs (not staging temp paths)
 
-### PROV-O entity requirements
+### 2. DCAT
+Staging supports DCAT readiness by enforcing:
+- stable identifiers,
+- rights/license clarity,
+- lineage traceability,
+- distribution separation (internal staging vs. published processed).
 
-All staging datasets SHOULD record:
-
-- a `prov:Entity` identifier (UUID or stable staging id)
-- sha256 checksum (temporary integrity record)
-- dataset type (tabular/spatial/metadata)
-- schema version reference (if applicable)
-- validation state (`in_review`, `passed`, `failed`)
-- FAIR+CARE status
-- temporal metadata (ASCII ISO 8601)
-- governance pointer for ethics review
-- telemetry block (e.g., `energy_wh`, `carbon_gco2e`)
-
-Entities may change while in staging; upon promotion they become governed/stable per the publication layer’s immutability rules.
-
-### Activity requirements
-
-Activities executed inside staging include:
-
-- normalization pipelines
-- schema validation
-- FAIR+CARE ethics auditing
-- explainability/bias evaluation (AI workflows, when applicable)
-- checksum generation + manifest comparison
-- metadata harmonization (STAC/DCAT alignment preparation)
-- governance review procedures
-
-Each activity SHOULD log:
-
-- pipeline version
-- parameter digest (ASCII hash)
-- execution timestamp
-- validation coverage
-- associated agents
-- promotion eligibility outcome
-
-Represent activities as PROV-O `prov:Activity`.
-
-### Agent requirements
-
-Agents involved in staging workflows SHOULD be modeled as PROV-O `prov:Agent`, including:
-
-- `@kfm-staging` — staging pipeline stewards
-- `@kfm-architecture` — schema alignment oversight
-- `@faircare-council` — ethics and CARE supervision
-- `@kfm-security` — checksum/integrity oversight
-- `@kfm-data` — governance lifecycle management
-
-### STAC/DCAT preparation
-
-Staging must prepare (but not publish directly):
-
-- STAC-compatible extents, assets, and identifiers
-- DCAT-compatible dataset/distribution fields (title/description/license/publisher/coverage)
-- linkable provenance references for promoted assets
+### 3. PROV-O
+Staging is expected to emit or prepare:
+- Entities: raw inputs, staged intermediates, validation reports, processed outputs
+- Activities: normalization, validation, governance review, promotion
+- Agents: pipeline runners, stewards, councils, CI bots
 
 ## 🧱 Architecture
 
-Promotion contract (high-level):
+### 1. Isolation and determinism
+Staging must remain isolated from production-facing outputs. Pipelines should be deterministic and replayable, with:
+- pinned tool versions,
+- config snapshots recorded in logs,
+- stable identifiers across runs where applicable,
+- explicit promotion activities recorded in provenance.
 
-- staging artifacts are mutable and internal
-- promotion produces governed artifacts:
-  - publishable data distributions
-  - catalogs (STAC/DCAT)
-  - provenance registrations (PROV/OpenLineage)
-  - release manifests / checksums / SBOM references
-
-Telemetry integration:
-
-- `telemetry_ref` points to the release telemetry bundle for v11.1.0
-- `telemetry_schema` defines required fields and validation expectations for staging telemetry reporting
-
-Roadmap (planning targets):
-
-- v11.2 — AI-assisted staging anomaly detection
-- v11.3 — schema auto-alignment pipeline for tabular/spatial
-- v11.4 — integration of staging metadata into Focus Mode v3 timelines
-- v11.5 — automated promotion scoring engine
+### 2. Interface boundaries
+The frontend must not read from staging. Only:
+- processed outputs and catalogs (STAC/DCAT),
+- API/graph surfaces,
+are supported interfaces for user-facing experiences.
 
 ## ⚖ FAIR+CARE & Governance
 
-Staging is governed and enforced:
+### 1. Governance constraint
+All staging work is governed by:
+- the KFM Governance Charter,
+- FAIR+CARE guidance,
+- sovereignty and Indigenous data protection requirements.
 
-- internal-only; never published directly
-- FAIR+CARE Council oversight for ethics and CARE supervision
-- integrity controls: checksums + manifest comparisons
-- governance approval required for promotion eligibility
-- no secrets, credentials, signed URLs, or PII allowed anywhere in this workspace
-- rights/licensing must be checked before any external publication
+### 2. Default safety posture
+When there is any risk of sensitive location disclosure or restricted knowledge:
+- staging validation must enforce redaction/generalization rules as required,
+- promotion must be blocked until governance requirements are satisfied.
 
-Authoritative governance reference:
-
-- `../../../docs/standards/governance/ROOT-GOVERNANCE.md`
-
-## 🕰 Version History
-
-| Version | Date | Author | Summary |
-|---:|---:|---|---|
-| v11.1.0 | 2025-11-19 | `@kfm-staging` | Full KFM-MDP v11 rebuild; validation logic expansion; telemetry v11 alignment; directory normalization. |
-| v11.0.0 | 2025-11-15 | `@kfm-staging` | Initial v11 staging layer migration. |
-| v10.0.0 | 2025-11-09 | `@kfm-staging` | Original staging workspace definition. |
+---
 
 <div align="center">
 
 [⬅️ Back to Work Layer](../README.md) ·
 [📐 Data Architecture](../../../docs/ARCHITECTURE.md) ·
-[⚖️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[🏛️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🧭 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
+
+## 🕰️ Version History
+
+| Version | Date | Author | Summary |
+|---|---:|---|---|
+| v11.1.1 | 2025-12-14 | `@kfm-staging` | KFM-MDP v11.2.6 compliance pass (front-matter requirements, approved H2s, tilde fences, footer governance links). |
+| v11.1.0 | 2025-11-19 | `@kfm-staging` | Full staging workspace definition; validation logic expansion; telemetry alignment; directory normalization. |
+| v11.0.0 | 2025-11-15 | `@kfm-staging` | Initial v11 staging layer migration. |
+| v10.0.0 | 2025-11-09 | `@kfm-staging` | Original staging workspace definition. |
