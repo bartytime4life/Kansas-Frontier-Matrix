@@ -1,4 +1,3 @@
-```markdown
 ---
 title: "🧪 Kansas Frontier Matrix — Governance API Mocks (E2E Fixtures) (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tests/e2e/web-app/regression/governance/fixtures/api_mocks/README.md"
@@ -380,4 +379,3 @@ If an API mock is found to violate policy:
 Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-```
