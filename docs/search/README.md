@@ -1,16 +1,27 @@
 ---
 title: "🔍 Kansas Frontier Matrix — Search System Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/search/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-27"
+
+version: "v11.2.6"
+last_updated: "2025-12-13"
 review_cycle: "Quarterly · FAIR+CARE Council"
 release_stage: "Stable / Governed"
-lifecycle: "LTS"
+lifecycle: "Long-Term Support (LTS)"
+content_stability: "stable"
+status: "Active / Enforced"
+
+doc_kind: "SearchGuide"
+header_profile: "standard"
+footer_profile: "standard"
+
+intent: "search-system-overview"
+category: "Documentation · Search"
+
 commit_sha: "<latest-commit-hash>"
 
-sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../releases/v11.2.2/focus-telemetry.json"
+sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../releases/v11.2.6/focus-telemetry.json"
 telemetry_schema: "../../schemas/telemetry/search-system-v11.json"
 energy_schema: "../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../schemas/telemetry/carbon-v2.json"
@@ -18,21 +29,24 @@ carbon_schema: "../../schemas/telemetry/carbon-v2.json"
 governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+security_ref: "../security/supply-chain/README.md"
+
 license: "MIT"
 
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
-status: "Active / Enforced"
-doc_kind: "SearchGuide"
-intent: "search-system-overview"
-category: "Documentation · Search"
 fair_category: "F1-A1-I1-R1"
 care_label: "Public · Low-Risk"
 classification: "Public"
+sensitivity: "General (non-sensitive; policy-gated)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
 
 indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
@@ -48,7 +62,7 @@ ontology_alignment:
 json_schema_ref: "../../schemas/json/search-docs-v11.schema.json"
 shape_schema_ref: "../../schemas/shacl/search-docs-v11-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:search:index:v11"
+doc_uuid: "urn:kfm:doc:search:index:v11.2.6"
 semantic_document_id: "kfm-docs-search-index"
 event_source_id: "ledger:docs/search/README.md"
 immutability_status: "version-pinned"
@@ -73,16 +87,17 @@ sunset_policy: "Superseded upon next search-architecture revision"
 
 <div align="center">
 
-# 🔍 **Kansas Frontier Matrix — Search System Overview**  
+# 🔍 **Kansas Frontier Matrix — Search System Overview**
 `docs/search/README.md`
 
 **Purpose**  
-Provide a consolidated reference for the **Search & Discovery System** powering the Kansas Frontier Matrix (KFM).  
-Defines search pipelines, index structures, semantic enrichment, FAIR+CARE considerations, and integration with Focus Mode v3.
+Provide a consolidated, governed reference for the **Search & Discovery System** powering Kansas Frontier Matrix (KFM).  
+Defines search pipelines, index structures, semantic enrichment, FAIR+CARE considerations, and integration with Focus Mode.
 
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Aligned-orange)]()  
-[![KFM-MDP](https://img.shields.io/badge/KFM--MDP-v11.2.2-purple)]()
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Aligned-orange" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 </div>
 
@@ -92,23 +107,28 @@ Defines search pipelines, index structures, semantic enrichment, FAIR+CARE consi
 
 KFM’s Search System provides **unified, semantic, ethical, and geospatially-aware discovery** across:
 
-- Historical documents  
-- Datasets & metadata  
-- Story Nodes  
-- Focus Mode entities  
-- STAC Catalog assets  
-- Knowledge graph relationships  
-- Spatial layers & temporal events  
+- Historical documents
+- Datasets & metadata
+- Story Nodes
+- Focus Mode entities
+- STAC catalog assets
+- Knowledge graph relationships
+- Spatial layers & temporal events
 
-It combines:
+It combines (implementation may vary by deployment, but capabilities are governed):
 
-- **Vector search** (embeddings)  
-- **Graph search** (Neo4j Cypher / GQL)  
-- **STAC/DCAT index lookups**  
-- **Metadata filters** (FAIR+CARE, dataset type, temporal range)  
-- **Full-text indexing** (Elastic/Lucene-based)  
+- **Vector search** (embeddings / ANN)
+- **Graph search** (Neo4j Cypher or equivalent)
+- **STAC/DCAT index lookups**
+- **Metadata filters** (FAIR+CARE, dataset type, temporal range)
+- **Full-text indexing** (e.g., Lucene/Elastic-class engines)
 
-Built for high performance, transparency, and machine interpretability.
+Design priorities:
+
+- performance and latency discipline,
+- transparency and explainability,
+- rights/sensitivity controls (FAIR+CARE + sovereignty policy),
+- deterministic, replayable indexing workflows.
 
 ---
 
@@ -128,37 +148,40 @@ docs/search/
 ## 🧩 Search Components
 
 ### 1️⃣ Full-Text Search (FTS)
-- Uses Lucene/Elastic indexing  
-- Tokenization, stemming, stopwords, N-grams  
-- Multi-field relevance scoring  
-- Highlight fragments for Focus Mode summaries  
+
+- Lexical indexing with tokenization, stemming, stopwords, n-grams
+- Multi-field relevance scoring
+- Highlight fragments for downstream summaries (when enabled and allowed)
 
 ### 2️⃣ Semantic Vector Search (Embeddings)
-- Transformer-based embedding models  
-- Sentence-level and entity-level encodings  
-- Approximate nearest neighbor (ANN) recall  
-- Embedding masking for sensitive fields (CARE compliance)  
+
+- Sentence-level and entity-level encodings
+- Approximate nearest neighbor (ANN) retrieval (index-specific)
+- Embedding masking/omissions for restricted or sensitive fields (CARE compliance)
 
 ### 3️⃣ Knowledge Graph Search
-- Cypher pattern matching  
-- Multi-hop entity traversal  
-- Spatial + temporal constraints supported  
-- Used heavily in Focus Mode v3  
+
+- Pattern matching and relationship traversal
+- Multi-hop entity expansion
+- Spatial + temporal constraints supported
+- Used to enrich search results for Focus Mode and Story Nodes
 
 ### 4️⃣ Metadata Search (STAC/DCAT)
-- Search by dataset type, bbox, time range  
-- Works across processed & raw metadata  
-- Ensures reproducibility and dataset lineage discovery  
+
+- Search by dataset type, bbox, time range, and catalog properties
+- Supports reproducibility by exposing dataset/version provenance
+- Bridges “files and metadata” with the graph and narrative layers
 
 ### 5️⃣ Hybrid Search Pipeline
-All search types can be combined:
 
-```
-User Query → Classification → Query Routing  
+All search types can be combined via routing + rank fusion:
+
+~~~text
+User Query → Classification → Query Routing
   → (FTS + Vector + Graph + Metadata)
-  → Fusion Ranking → Ethical Filter (CARE)
-  → Focus Summary (optional)
-```
+  → Fusion Ranking → Ethical Filter (FAIR+CARE)
+  → Focus Summary (optional; provenance-aware)
+~~~
 
 ---
 
@@ -166,70 +189,73 @@ User Query → Classification → Query Routing
 
 The router inspects:
 
-- Query type (keyword, natural language, structured)  
-- Entities referenced  
-- Temporal expressions (e.g., “in 1880s”)  
-- Spatial hints (“near Fort Larned”, “in SW Kansas”)  
-- Ethical context (restricted terms → masked)  
+- query type (keyword, natural language, structured)
+- entities referenced (people/places/events)
+- temporal expressions (e.g., “in the 1880s”)
+- spatial hints (e.g., “near Fort Larned”, “in SW Kansas”)
+- ethical context (restricted terms → masked or blocked)
 
 Then sends requests to:
 
-- FTS → quick lexical grounding  
-- Vector search → semantic similarity  
-- Graph search → entity relations  
-- Metadata search → datasets & files  
+- FTS → quick lexical grounding
+- vector search → semantic similarity
+- graph search → entity relations
+- metadata search → datasets and files
 
-Rank fusion returns a unified result list.
+Rank fusion returns a unified result list with explainable components.
 
 ---
 
 ## 🛡️ Ethical Search (FAIR+CARE Filters)
 
-Search results pass through:
+All candidate results MUST pass policy gates before surfacing.
 
 | Filter | Function |
 |--------|----------|
-| **Consent Filter** | Excludes datasets lacking community consent |
+| **Consent Filter** | Excludes datasets lacking appropriate consent signals |
 | **Sovereignty Filter** | Enforces Indigenous data governance rules |
-| **Sensitivity Filter** | Masks culturally sensitive content |
+| **Sensitivity Filter** | Masks or blocks culturally sensitive content |
 | **Provenance Filter** | Ensures only verified, lineage-tracked data is shown |
-| **Role-based Permissions** | Restricts access to certain collections |
+| **Role-based Permissions** | Restricts access to governed collections |
 
-CARE rules are **mandatory** and integrated at the engine level — not optional.
+FAIR+CARE rules are **mandatory** and enforced as part of the search pipeline, not as an optional UI feature.
 
 ---
 
 ## 🧠 Focus Mode Integration
 
-Search results can be passed directly into Focus Mode:
+Search results can be passed into Focus Mode for provenance-aware synthesis:
 
-- Entities are grouped into clusters (People · Places · Events · Documents)  
-- Graph neighborhood used to expand summaries  
-- Narrative generated with citations and provenance markers  
-- No hallucinations: all statements are traceable  
+- Entities grouped into clusters (People · Places · Events · Documents)
+- Graph neighborhood used to expand context (when allowed)
+- Narrative generation is **evidence-led**:
+  - statements SHOULD be traceable to catalog/graph/document evidence,
+  - restricted knowledge MUST be masked or withheld per policy.
 
 ---
 
 ## 📚 Index Architecture
 
-The indexing system includes:
+The indexing system is organized into interoperable index families (logical roles; implementation may be service-backed):
 
-- **text-index/** (FTS tokens)  
-- **vector-index/** (embeddings for all entities)  
-- **graph-index/** (entity metadata → KG)  
-- **stac-index/** (dataset metadata hierarchy)  
+- **FTS index**: lexical tokens and per-field analyzers
+- **Vector index**: embeddings for entities and documents
+- **Graph index**: queryable entity metadata and relationships
+- **STAC/DCAT index**: catalog records and metadata lookups
 
-Indexes are deterministic and re-creatable via ETL workflows.
+Indexes are designed to be deterministic and re-creatable via governed ETL/indexing workflows.
 
 ---
 
 ## 🧮 Search Metrics
 
+Targets below are service objectives (SLO-style) and may be tuned by the FAIR+CARE Council and search stewards.
+
 | Metric | Definition | Target |
-|--------|------------|---------|
+|--------|------------|--------|
 | **Precision@10** | Relevance of top 10 | ≥ 0.88 |
-| **Recall@50** | Coverage of relevant docs | ≥ 0.92 |
-| **Latency** | 95th percentile response | < 450ms |
+| **Recall@50** | Coverage of relevant items | ≥ 0.92 |
+| **Latency (p95)** | 95th percentile response | < 450 ms |
 | **Ethical Compliance** | CARE filter correctness | 100% |
 | **Index Freshness** | From commit to index update | < 10 minutes |
 
@@ -239,29 +265,44 @@ Indexes are deterministic and re-creatable via ETL workflows.
 
 Reindex triggers:
 
-- Dataset updates  
-- Story Node updates  
-- Graph migrations  
-- Model upgrades  
-- Release promotions (staging → prod)  
+- dataset updates
+- Story Node updates
+- graph migrations
+- embedding/model upgrades (governed)
+- release promotions (staging → prod)
 
-Full reindex schedule: **Monthly**  
-Partial reindex schedule: **Continuous (event-driven)**
+Recommended schedules:
+
+- full reindex: **monthly** (or upon breaking changes)
+- partial reindex: **continuous** (event-driven)
+
+All reindex operations SHOULD emit telemetry and provenance artifacts.
 
 ---
 
 ## 🕰 Version History
 
 | Version | Date | Summary |
-|--------|--------|----------|
+|--------|------|---------|
+| v11.2.6 | 2025-12-13 | Updated to KFM-MDP v11.2.6 header/footer profile; clarified governed capabilities and policy-gated behaviors. |
 | v11.2.2 | 2025-11-27 | Initial v11.2.2 release of Search System Overview. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix  
-[⬅️ Back](../README.md) · [🧠 Semantic Search](semantic-search.md) · [🛡️ Governance](../standards/governance/ROOT-GOVERNANCE.md)
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
+
+[⬅️ Back to Docs Root](../README.md) ·
+[🧠 Semantic Search](semantic-search.md) ·
+[🔎 Query Language](query-language.md) ·
+[📚 Index Architecture](index-architecture.md) ·
+[🛡️ FAIR+CARE Search Rules](faircare-search-rules.md) ·
+[🏛️ Governance](../standards/governance/ROOT-GOVERNANCE.md) ·
+[🔐 Supply-Chain Security](../security/supply-chain/README.md)
+
+© 2025 Kansas Frontier Matrix — MIT  
+MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
