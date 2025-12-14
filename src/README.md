@@ -1,10 +1,11 @@
 ---
 title: "🧠 Kansas Frontier Matrix — Source Code & ETL Pipelines (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "src/README.md"
-version: "v11.2.4"
-last_updated: "2025-12-08"
 
-release_stage: "Stable · Governed"
+version: "v11.2.6"
+last_updated: "2025-12-14"
+
+release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 content_stability: "stable"
@@ -14,20 +15,37 @@ status: "Active / Canonical"
 doc_kind: "Source Index"
 header_profile: "standard"
 footer_profile: "standard"
+diagram_profiles:
+  - "mermaid-flowchart-v1"
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.4"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-version-hash>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "../releases/v11.2.4/manifest.zip"
+doc_uuid: "urn:kfm:src:readme:v11.2.6"
+semantic_document_id: "kfm-doc-src-readme"
+event_source_id: "ledger:kfm:doc:src:readme:v11.2.6"
+provenance_chain:
+  - "src/README.md@v11.2.4"
+  - "src/README.md@v11.0.0"
+
+sbom_ref: "../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../releases/v11.2.6/manifest.zip"
+signature_ref: "../releases/v11.2.6/signature.sig"
+attestation_ref: "../releases/v11.2.6/slsa-attestation.json"
+
 data_contract_ref: "../docs/contracts/data-contract-v3.json"
 
-telemetry_ref: "../releases/v11.2.4/src-telemetry.json"
+telemetry_ref: "../releases/v11.2.6/src-telemetry.json"
 telemetry_schema: "../schemas/telemetry/src-etl-v11.json"
 energy_schema: "../schemas/telemetry/energy-v2.json"
 carbon_schema: "../schemas/telemetry/carbon-v2.json"
@@ -42,28 +60,105 @@ ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 intent: "src-etl-overview"
-semantic_document_id: "kfm-doc-src-readme"
-doc_uuid: "urn:kfm:src:readme-v11.2.4"
 accessibility_compliance: "WCAG 2.1 AA+"
 machine_extractable: true
+
+classification: "Public"
+jurisdiction: "Kansas / United States"
 fair_category: "F1-A1-I2-R3"
-care_label: "Public / Low-Risk"
+care_label: "Public · Low-Risk"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+indigenous_rights_flag: true
 immutability_status: "version-pinned"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summarize"
+  - "extract_task_checklist"
+  - "metadata_extraction"
+  - "navigation_generation"
+  - "diagram_extraction"
+
+ai_transform_prohibited:
+  - "invent_sources_or_citations"
+  - "invent_governance_status"
+  - "fabricate_provenance_or_dataset_relationships"
+  - "include_credentials_or_secrets"
+  - "generate_sensitive_locations"
+
+scope:
+  domain: "src"
+  applies_to:
+    - "src/**"
+
+heading_registry:
+  approved_h2:
+    - "📘 Overview"
+    - "🗂️ Directory Layout"
+    - "🧭 Context"
+    - "🧱 Architecture"
+    - "🗺️ Diagrams"
+    - "🧠 Story Node & Focus Mode Integration"
+    - "🧪 Validation & CI/CD"
+    - "📦 Data & Metadata"
+    - "🌐 STAC, DCAT & PROV Alignment"
+    - "⚖ FAIR+CARE & Governance"
+    - "🕰️ Version History"
+
+test_profiles:
+  - "markdown-lint"
+  - "schema-lint"
+  - "metadata-check"
+  - "diagram-check"
+  - "accessibility-check"
+  - "provenance-check"
+  - "footer-check"
+  - "secret-scan"
+  - "pii-scan"
+
+ci_integration:
+  workflow: ".github/workflows/kfm-ci.yml"
+  environment: "dev → staging → production"
+
+branding_registry:
+  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
+  pipeline: "Deterministic Pipelines · Explainable AI · Open Provenance"
+  graph: "Semantics × Provenance × Spatial Intelligence"
+  architecture: "Designed for Longevity · Governed for Integrity"
+
+layout_profiles:
+  - "immediate-one-branch-with-descriptions-and-emojis"
+
+fencing_profile: "outer-backticks-inner-tildes-v1"
+
+badge_profiles:
+  - "root-centered-badge-row"
+
+requires_purpose_block: true
+requires_directory_layout_section: true
+requires_version_history: true
+requires_governance_links_in_footer: true
+
+deprecated_fields:
+  - "old_markdown_standard_v10.4"
 ---
 
 <div align="center">
 
-# 🧠 **Kansas Frontier Matrix — Source Code & ETL Pipelines (v11 LTS)**  
+# 🧠 **Kansas Frontier Matrix — Source Code & ETL Pipelines (v11.2.6 LTS)**
 `src/README.md`
 
 **Purpose**  
-Describe the **core source tree** for the Kansas Frontier Matrix (KFM) — including ETL/AI pipelines, LangGraph agents, validation engines, governance sync, telemetry collectors, and theming — all aligned with **FAIR+CARE**, **MCP-DL v6.3**, and **Diamond⁹ Ω / Crown∞Ω Ultimate Certification**.
+Describe the canonical source tree for the Kansas Frontier Matrix (KFM) — including ETL and AI pipelines, orchestration agents, validation engines, governance synchronization, telemetry collectors, graph + API services, and theming — aligned with FAIR+CARE, MCP-DL v6.3, and Diamond⁹ Ω / Crown∞Ω governance.
 
-[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../docs/README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Source_Certified-orange)](../docs/standards/faircare/FAIRCARE-GUIDE.md)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../LICENSE)  
-[![ISO 19115](https://img.shields.io/badge/ISO-19115_Aligned-blue)](../docs/standards/README.md)  
-[![ISO 50001](https://img.shields.io/badge/ISO-50001_Energy_Reporting-lightgrey)](../docs/standards/README.md)
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/License-MIT-green" />
+<img src="https://img.shields.io/badge/Status-Stable%20%2F%20Governed-brightgreen" />
 
 </div>
 
@@ -71,150 +166,171 @@ Describe the **core source tree** for the Kansas Frontier Matrix (KFM) — inclu
 
 ## 📘 Overview
 
-The `src/` directory houses KFM v11’s **automation and intelligence core**:
+The `src/` directory houses KFM’s automation and intelligence core:
 
-- **LangGraph v11 agents & DAGs** with reliable-node semantics (WAL · Retry · Resume · Compensation)  
-- **ETL & AI pipelines** with data contracts, FAIR+CARE, and sovereignty gates  
-- **Neo4j knowledge graph** schema, ingest jobs, and query templates  
-- **Governance pipelines** for provenance and ledger synchronization  
-- **Telemetry pipelines** for runtime, energy, carbon, and ethics metrics  
-- **Theming & UI frameworks** for accessible, sustainable, inclusive interfaces  
+- deterministic ETL and harmonization pipelines
+- validation and governance gates (contracts, FAIR+CARE, sovereignty)
+- Neo4j knowledge graph schema and ingest jobs
+- API services for UI and narrative tooling
+- orchestration agents (event-driven and scheduled)
+- telemetry collectors for runtime, energy, carbon, and ethics events
+- theming and UI token utilities used by frontends
 
-All code under `src/`:
+All code under `src/` is expected to:
 
-- Conforms to **FAIR+CARE** and **sovereignty** policies  
-- Is governed by **MCP-DL v6.3** and KFM data contracts (`data_contract_ref`)  
-- Emits **provenance**, **telemetry**, and **validation artifacts** to support reproducibility and auditability  
+- respect governance and sovereignty constraints
+- be reproducible (MCP-DL v6.3; config-driven execution)
+- emit provenance and telemetry artifacts suitable for audit and replay
 
----
+## 🗂️ Directory Layout
 
-## 🗂️ Directory Layout (v11.2.x)
+This is the intended (canonical) `src/` layout for v11.2.x. Individual modules may evolve, but new work should preserve these boundaries.
 
-```text
+~~~text
 📁 src/
+├── 📄 README.md                                  — Source code and ETL overview (this document)
+├── 📄 ARCHITECTURE.md                            — Source-layer architecture notes
 │
-├── 📄 README.md                        # Source Code & ETL overview (this document)
-├── 📄 ARCHITECTURE.md                  # System architecture overview for KFM v11
+├── 📁 pipelines/                                 — Automation pipelines (ETL, AI, validation, governance, telemetry)
+│   ├── 📁 etl/                                   — Ingestion + transformation (batch and streaming)
+│   ├── 📁 ai/                                    — Focus Mode tooling and model runners (rules-first; ML when justified)
+│   ├── 📁 validation/                            — Schema, checksum, contracts, FAIR+CARE, sovereignty audits
+│   ├── 📁 governance/                            — Ledger sync, provenance emitters, manifest synchronization
+│   ├── 📁 telemetry/                             — Runtime, energy, carbon, and ethics event collectors
+│   ├── 📁 remote-sensing/                        — Satellite and aerial processing + STAC publishing helpers
+│   ├── 📁 updater/                               — Idempotent schedulers, webhooks, dry-run safe updaters
+│   └── 📁 utils/                                 — Shared STAC/DCAT/JSON/metadata utilities
 │
-├── 📁 pipelines/                       # FAIR+CARE automation (ETL · AI · Validation · Governance · Telemetry)
-│   ├── 📁 etl/                         # Ingestion + transformation (batch + streaming)
-│   ├── 📁 ai/                          # AI models (Focus Mode v3, climate/hydro models) + explainability
-│   ├── 📁 validation/                  # Schema, checksum, FAIR+CARE, sovereignty audits
-│   ├── 📁 governance/                  # Ledger, provenance, and manifest synchronization
-│   ├── 📁 telemetry/                   # Runtime, energy, carbon, FAIR+CARE metrics collectors
-│   ├── 📁 remote-sensing/              # Satellite + aerial ETL and STAC publishing
-│   ├── 📁 updater/                     # Idempotent schedulers, webhooks, dry-run-safe updaters
-│   └── 📁 utils/                       # Shared STAC/DCAT/JSON/metadata utilities
+├── 📁 graph/                                     — Knowledge graph integration (Neo4j + semantic alignment)
+│   ├── 📁 schema/                                — Constraints, ontology mappings (CIDOC, GeoSPARQL, OWL-Time)
+│   ├── 📁 ingest/                                — Incremental, idempotent ingest + provenance sync jobs
+│   ├── 📁 queries/                               — Cypher templates for Focus Mode and analytics
+│   └── 📁 utils/                                 — Graph helpers and metadata bridges
 │
-├── 📁 graph/                           # Neo4j schema, ingest, queries, and exports
-│   ├── 📁 schema/                      # Ontology mappings, constraints (CIDOC, GeoSPARQL, OWL-Time)
-│   ├── 📁 ingest/                      # Graph ingestion + provenance sync jobs
-│   ├── 📁 queries/                     # Focus Mode & analytical Cypher templates
-│   └── 📁 utils/                       # Graph helpers, checksum + metadata bridges
+├── 📁 server/                                    — API boundary (frontend must not query the graph directly)
+│   ├── 📁 api/                                   — REST endpoints (search, focus, story nodes, datasets)
+│   ├── 📁 graphql/                               — GraphQL schema and resolvers (when used)
+│   └── 📁 middleware/                            — Auth, governance gates, telemetry middleware
 │
-├── 📁 server/                          # FastAPI + GraphQL API services
-│   ├── 📁 api/                         # REST endpoints for search, focus, story nodes, datasets
-│   ├── 📁 graphql/                     # GraphQL schema and resolvers
-│   └── 📁 middleware/                  # Auth, FAIR+CARE, sovereignty, telemetry middleware
+├── 📁 agents/                                    — Orchestration agents (see `src/agents/README.md`)
+│   ├── 📄 README.md                              — Agents and orchestration index
+│   └── 📁 langgraph/                             — LangGraph-based agents and graphs
 │
-├── 📁 theming/                         # Theming & Adaptive UI framework (tokens → CSS/JS)
+├── 📁 theming/                                   — Theming and adaptive UI utilities (tokens → CSS/JS)
 │   ├── 📄 base.css
 │   ├── 📄 light.css
 │   ├── 📄 dark.css
 │   ├── 📄 high-contrast.css
 │   └── 📄 theme.js
 │
-├── 📁 agents/                          # Orchestration & agents (see src/agents/README.md)
-│   ├── 📄 README.md                    # Agents & orchestration index
-│   └── 📁 langgraph/                   # LangGraph-based agents (STAC refresh, etc.)
-│       ├── 📄 README.md
-│       └── 📁 stac_refresh/
-│           ├── 📄 README.md            # STAC differential recomputation agent design
-│           ├── 📄 agent.py             # LangGraph DAG implementation
-│           └── 📄 graph_refresh_manifest.yaml
+├── 📁 design-tokens/                             — Design tokens used across frontends
+│   └── 📁 tokens/
 │
-├── 📁 design-tokens/                   # UI design tokens for all frontends
-│   └── 📁 tokens/                      # Color, spacing, typography, motion, etc.
-│
-├── 📄 metadata.json                    # Provenance & checksum registry for src/ (auto-generated)
-└── 📁 tests/                           # Unit/integration tests for pipelines, graph, server, agents, theming
-```
+├── 🧾 metadata.json                              — Source registry (generated; checksums + provenance for critical files)
+└── 📁 tests/                                     — Unit and integration tests for pipelines, graph, server, agents, theming
+~~~
 
-> All new modules **must** be represented in `metadata.json`, tested under `src/tests/`, and aligned with relevant docs in `../docs/`.
+## 🧭 Context
 
----
+The `src/` layer is the implementation side of the pipeline contract:
 
-## 🧩 Core Responsibilities
+ETL → catalogs (STAC/DCAT/PROV) → graph (Neo4j) → API → frontend → Story Nodes → Focus Mode.
 
-The `src/` tree is responsible for:
+Operational boundaries:
 
-- **ETL orchestration**  
-  - Multi-source ingest (NOAA, USGS, FEMA, KHS, sensors, etc.)  
-  - Harmonization into STAC/DCAT/Neo4j-friendly formats  
+- frontend code must consume APIs and must not read raw data artifacts directly
+- transformations must be deterministic, config-driven, and replayable
+- derived data belongs under `data/processed/` (not under `src/`)
+- provenance and rights must remain queryable and portable across catalogs and graph
 
-- **AI reasoning & Focus Mode**  
-  - Focus Mode v3 narrative engines and explanation layers  
-  - Climate, hydrology, and other domain models with explainability hooks  
+## 🧱 Architecture
 
-- **Validation & governance**  
-  - Schema, checksum, and contract validation  
-  - FAIR+CARE & sovereignty audits for sensitive data  
-  - Provenance and governance-ledger synchronization  
+### Core responsibilities
 
-- **Graph building**  
-  - Neo4j schema, ingest, and lineage graph  
-  - Narrative graph and Story Node relationships  
+`src/` is responsible for:
 
-- **Telemetry & sustainability**  
-  - Runtime/latency metrics  
-  - Energy & carbon estimation (ISO 50001-inspired)  
-  - FAIR+CARE governance events  
+- ETL orchestration (multi-source ingestion, normalization, harmonization)
+- AI enrichment and analysis helpers (Focus Mode components, explainability hooks)
+- validation and governance gating (contracts, FAIR+CARE, sovereignty checks)
+- knowledge graph construction (schema, ingest, query templates)
+- telemetry and sustainability metrics (runtime, energy, carbon, ethics events)
+- theming and UI utilities (tokens and accessible theme support)
 
-- **UI / Theming**  
-  - Accessible, responsive themes  
-  - Token-based design for React/MapLibre/Cesium frontends
+### Determinism and configuration
 
-All new modules must:
+Implementation expectations:
 
-- Declare contracts in **data contracts** (`data_contract_ref`) and/or dedicated schemas  
-- Integrate with **provenance**, **telemetry**, and **validation** flows  
-- Pass the **Source Tests & Validation Suite** in `src/tests/`
+- no “magic constants” in pipeline code; tuneables live in config
+- every run emits a config snapshot and a provenance trace
+- ingestion and graph merges are incremental, idempotent, and version-aware
+- validation failures must be explicit (no silent success paths)
 
----
+## 🗺️ Diagrams
 
-## 🔄 End-to-End Automation Flow (v11.2.x)
+### End-to-end automation flow
 
-```mermaid
+~~~mermaid
 flowchart LR
-  A["Raw Data Sources<br/>NOAA · USGS · FEMA · KHS · Sensors"] 
-    --> B["ETL Pipelines<br/>src/pipelines/etl/*"]
-  B --> C["Validation Pipelines<br/>src/pipelines/validation/*"]
-  C --> D["Governance Pipelines<br/>src/pipelines/governance/*"]
-  D --> H["Graph Ingest<br/>src/graph/"]
-  H --> E["AI Pipelines<br/>src/pipelines/ai/*<br/>(Focus Mode v3 · models)"]
-  E --> F["Telemetry Pipelines<br/>src/pipelines/telemetry/*"]
-  F --> G["UI/Theming & Web App<br/>web/ · src/theming/"]
-```
+  A[Raw data sources] --> B[ETL pipelines: src/pipelines/etl]
+  B --> C[Validation: src/pipelines/validation]
+  C --> D[Governance sync: src/pipelines/governance]
+  D --> E[Graph ingest: src/graph]
+  E --> F[AI pipelines: src/pipelines/ai]
+  F --> G[Telemetry: src/pipelines/telemetry]
+  G --> H[API services: src/server]
+  H --> I[Frontend and narratives]
+~~~
 
-LangGraph agents under `src/agents/` can hook into any stage by consuming **events** (e.g., `stac.update`, lineage alerts, telemetry thresholds) and orchestrating **differential recomputation**.
+Notes:
 
----
+- agents under `src/agents/` may hook into any stage through events and schedules
+- validations and governance checks must occur before publication or model training
 
-## 📦 Provenance & `metadata.json` Registry
+## 🧠 Story Node & Focus Mode Integration
 
-`src/metadata.json` acts as a **local registry** for the source tree:
+`src/` enables Story Node and Focus Mode features by providing:
 
-- Pipeline names and versions  
-- Data contract references and schema links  
-- Checksums for critical artifacts (validation manifests, agents, STAC emitters)  
-- Provenance relationships across ETL, AI, and governance modules  
-- Telemetry bundle references (`telemetry_ref`)  
+- governed data access patterns (catalog-first, provenance-aware)
+- narrative-safe transformations (no fabricated relationships, no policy overrides)
+- explainability hooks for ML-assisted outputs (where model work is justified)
+- safeguards for sovereignty and sensitivity constraints
 
-Example snippet:
+Focus Mode behavior constraints (non-exhaustive):
 
-```json
+- allowed: summarization, metadata extraction, navigation aids
+- prohibited: invented sources, invented governance status, fabricated provenance links
+
+## 🧪 Validation & CI/CD
+
+Validation is CI-enforced via `test_profiles` and is expected to block merges on failure.
+
+Typical coverage areas:
+
+- ETL invariants (schema, CRS, units, and data contract validation)
+- AI explainability and bias metrics (when applicable)
+- governance sync and provenance integrity
+- telemetry schema correctness and thresholds
+- accessibility checks for theming utilities
+
+`validation_reports` in front matter point to expected outputs used in audits and governance review.
+
+## 📦 Data & Metadata
+
+### `src/metadata.json` registry
+
+`src/metadata.json` acts as the source-layer registry for:
+
+- module inventory and stable identifiers
+- checksums for critical artifacts (pipelines, manifests, agents)
+- data contract and schema references
+- provenance relationships across ETL, AI, governance, and graph integrations
+- telemetry bundle references (`telemetry_ref`)
+
+Example (documentation-safe):
+
+~~~json
 {
-  "id": "src_registry_v11.2.4",
+  "id": "src_registry_v11.2.6",
   "pipelines_registered": [
     "pipelines/etl/climate_stream_etl.py",
     "pipelines/ai/focus_transformer_v3.py",
@@ -222,94 +338,85 @@ Example snippet:
     "pipelines/telemetry/telemetry_reporter.py"
   ],
   "checksum_verified": true,
-  "fairstatus": "certified",
+  "faircare_status": "certified",
   "governance_registered": true,
-  "telemetry_ref": "../releases/v11.2.4/src-telemetry.json",
-  "created": "2025-12-08T12:00:00Z",
+  "telemetry_ref": "../releases/v11.2.6/src-telemetry.json",
+  "created": "2025-12-14T00:00:00Z",
   "validator": "@kfm-src-core"
 }
-```
+~~~
 
-> Generation and update of `metadata.json` should be **CI-controlled**, not manual.
+Registry updates should be CI-controlled, not manual.
 
----
+### Telemetry
 
-## 🧮 FAIR+CARE Governance Matrix
+Aggregated telemetry is release-pinned at:
 
-| Principle            | Implementation                                                                 | Oversight              |
-|----------------------|-------------------------------------------------------------------------------|------------------------|
-| **Findable**         | All code, pipelines, and artifacts indexed in `metadata.json`, STAC/DCAT catalogs, CI logs. | `@kfm-data`           |
-| **Accessible**       | MIT-licensed source, open docs, and machine-readable metadata.              | `@kfm-accessibility`  |
-| **Interoperable**    | STAC/DCAT alignment; ISO 19115 / OWL-Time / CIDOC-CRM / GeoSPARQL integration. | `@kfm-architecture` |
-| **Reusable**         | Modular, containerized, documented pipelines with deterministic configs.    | `@kfm-design`         |
-| **Collective Benefit** | Automation supports research, public agencies, and communities.            | `@faircare-council`   |
-| **Authority to Control** | CARE/A2C fields in data contracts; governance-ledger entries.            | `@kfm-governance`     |
-| **Responsibility**   | Source maintainers track ethical impact and drift; regular review cycles.   | `@kfm-sustainability` |
-| **Ethics**           | Bias, inclusion, and accessibility tests enforced via `src/tests/`.          | `@kfm-ethics`         |
+~~~text
+../releases/v11.2.6/src-telemetry.json
+~~~
 
-Sovereignty-sensitive modules must also:
+Telemetry expectations:
 
-- Respect `sovereignty_policy` at all ETL and graph stages  
-- Carry forward **sovereignty and sensitivity flags** into outputs and Story Nodes  
+- runtime and throughput metrics (latency, I/O, memory)
+- energy and carbon reporting aligned to the repo telemetry schemas
+- governance and ethics events (masking, quarantine, approvals)
 
----
+## 🌐 STAC, DCAT & PROV Alignment
 
-## 🌱 Sustainability & Telemetry
+`src/` produces and consumes assets in catalog-ready forms:
 
-All pipeline modules and agents emit telemetry aggregated into:
+- STAC: publish derived geospatial assets as Items in stable Collections
+- DCAT: ensure dataset discoverability, licensing, and distribution records
+- PROV-O: attach lineage to runs, inputs, and outputs (Activities, Entities, Agents)
 
-```text
-../releases/v11.2.4/src-telemetry.json
-```
+The graph ingest layer should preserve these links so users can trace:
 
-Telemetry includes:
+source → transform → derived asset → narrative usage.
 
-- Runtime (latency, throughput), memory, I/O  
-- Energy usage (Wh / kWh) and carbon output (gCO₂e / kgCO₂e)  
-- FAIR+CARE and sovereignty-related events (e.g., data masked, consent respected)  
+## ⚖ FAIR+CARE & Governance
 
-These metrics are used to:
+### Enforcement matrix (implementation view)
 
-- Score pipeline sustainability and reliability  
-- Provide Focus Mode and UI overlays for **“cost of computation”**  
-- Support ISO 50001-style energy reporting and FAIR+CARE governance audits  
+| Principle | Implementation | Oversight |
+|---|---|---|
+| Findable | inventories and IDs in registries; catalog links | data stewardship |
+| Accessible | public source licensing; documented APIs | accessibility and governance |
+| Interoperable | STAC/DCAT + ontology alignment | architecture review |
+| Reusable | deterministic pipelines; versioning and manifests | maintainers and CI |
+| Collective Benefit | outputs designed for communities and research | FAIR+CARE Council |
+| Authority to Control | sovereignty flags and publication gates | governance |
+| Responsibility | telemetry, audits, and remediation workflow | sustainability |
+| Ethics | bias and context checks for AI-assisted outputs | ethics review |
 
----
+Sovereignty-sensitive modules must:
 
-## 🧪 Testing & Validation (`src/tests/`)
-
-The **Source Tests & Validation Suite** (`src/tests/`) must cover:
-
-- **ETL invariants** — schema, CRS, units & contract validation  
-- **AI explainability & bias metrics** — Focus Mode, climate/hydro models  
-- **Governance sync & ledger writes** — provenance and governance-ledger integrity  
-- **Telemetry correctness** — schema conformity, thresholds, “no silent failures”  
-- **Theming accessibility** — WCAG 2.1 AA+ via automated and manual checks  
-
-CI is configured so that **any test failure blocks merges** into main branches.
-
----
+- propagate sovereignty and sensitivity flags into derived assets and graph nodes
+- apply masking or generalization for restricted locations by default
+- require explicit approval before publication when policies demand it
 
 ## 🕰️ Version History
 
-| Version  | Date       | Summary                                                                                                             |
-|---------:|-----------:|---------------------------------------------------------------------------------------------------------------------|
-| v11.2.4  | 2025-12-08 | Aligned `src/` overview with KFM-MDP v11.2.4; integrated agents index & LangGraph patterns; updated telemetry/paths. |
-| v11.0.0  | 2025-11-24 | Upgraded to KFM-MDP v11; integrated LangGraph v11, Reliable Pipelines v11, sovereignty rules, telemetry v11.        |
-| v10.3.2  | 2025-11-16 | v10.3.2 overview; Focus v2.x; STAC/DCAT ETL; telemetry v3; governance-ledger sync.                                 |
-| v10.1.0  | 2025-11-10 | Refactored streaming ETL + Focus v2; improved sustainability metrics and DCAT/STAC bridge.                         |
-| v10.0.0  | 2025-11-08 | Added AI reasoning + telemetry; baseline FAIR+CARE certification.                                                  |
-| v9.7.0   | 2025-11-05 | Expanded telemetry + governance pipeline coverage.                                                                 |
+| Version | Date | Summary |
+|---:|---:|---|
+| **v11.2.6** | 2025-12-14 | Updated to KFM-MDP v11.2.6; added heading registry and test profiles; normalized internal fences to `~~~`; removed Mermaid HTML labels; standardized footer links and governance references. |
+| v11.2.4 | 2025-12-08 | Aligned `src/` overview with KFM-MDP v11.2.4; integrated agents index and patterns; updated telemetry paths and references. |
+| v11.0.0 | 2025-11-24 | Upgraded to v11; integrated agents, reliability patterns, sovereignty rules, and expanded telemetry coverage. |
+| v10.3.2 | 2025-11-16 | v10.x overview; Focus v2.x; STAC/DCAT ETL; telemetry v3; governance-ledger sync. |
+| v10.1.0 | 2025-11-10 | Refactored streaming ETL; improved sustainability metrics and catalog bridge. |
+| v10.0.0 | 2025-11-08 | Added AI reasoning and telemetry; baseline FAIR+CARE certification. |
+| v9.7.0 | 2025-11-05 | Expanded telemetry and governance pipeline coverage. |
 
 ---
 
 <div align="center">
 
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · 🧠 Diamond⁹ Ω / 👑 Crown∞Ω Ultimate Certified  
+🧠 **Kansas Frontier Matrix — Source Code & ETL Pipelines (v11.2.6 LTS)**  
+Deterministic ETL → STAC/DCAT/PROV → Neo4j Graph → API → Web UI → Story Nodes → Focus Mode
 
-Deterministic ETL → STAC/DCAT/PROV → Neo4j Graph → API → React/MapLibre/Cesium → Story Nodes → Focus Mode  
+[📚 Docs Portal](../docs/README.md) · [📂 Standards Index](../docs/standards/README.md) · [⚙ CI/CD Workflows](../docs/workflows/README.md) · [📊 Telemetry Docs](../docs/telemetry/README.md) · [🏛️ Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md) · [🤝 FAIR+CARE Guide](../docs/standards/faircare/FAIRCARE-GUIDE.md) · [🪶 Indigenous Data Protection](../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
-[📐 Architecture Overview](./ARCHITECTURE.md) • [📚 Docs Portal](../docs/README.md) • [⚖️ Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — MIT  
+MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
