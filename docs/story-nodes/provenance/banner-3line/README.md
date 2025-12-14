@@ -207,7 +207,9 @@ Hard constraints:
 
 ## 🕰️ Version History
 
-- v11.2.6 (2025-12-14): Aligned to KFM-MDP v11.2.6; standardized 3-line keys and parsing rules; added lint guidance and metadata shape.
+| Version | Date | Summary |
+|---:|---:|---|
+| **v11.2.6** | 2025-12-14 | Initial publication of the 3-line provenance banner pattern for Story Nodes; standardized keys and parsing rules; added lint guidance and metadata shape. |
 
 ---
 
