@@ -103,17 +103,18 @@ This folder SHOULD remain **small** and **safe**. If full provenance bundles are
 
 ---
 
-## 🗂️ Directory Layout (recommended)
+## 🗂️ Directory Layout
 
 ~~~text
-📁 docs/analyses/remote-sensing/validation/reports/releases/v<semver>/provenance/
-├── 📄 README.md                                 — This policy/index
-├── 🧾 provenance.index.json                     — Recommended: pointer registry (ids + digests)
-├── 🧾 prov.bundle.jsonld                        — Optional: consolidated PROV-O bundle (release-level)
-├── 🧾 openlineage.events.json                   — Optional: consolidated OpenLineage events (release-level)
-├── 🧾 slsa.attestation.json                     — Optional: SLSA provenance attestation (if published in-repo)
-└── 🧾 signatures/                               — Optional: detached signatures (if used)
-    └── 📄 README.md
+📁 docs/analyses/remote-sensing/validation/reports/releases/v<semver>/provenance/      — Release provenance pointers and (optional) bundles
+├── 📄 README.md                                                                      — This policy/index
+├── 🧾 provenance.index.json                                                          — Pointer registry (ids + digests) (recommended)
+├── 🧾 prov.bundle.jsonld                                                             — Consolidated PROV-O bundle (optional; keep small)
+├── 🧾 openlineage.events.json                                                        — Consolidated OpenLineage events (optional; keep small)
+├── 🧾 slsa.attestation.json                                                          — SLSA provenance attestation (optional; if in-repo)
+└── 📁 signatures/                                                                    — Detached signatures (optional)
+    ├── 📄 README.md                                                                  — Signature notes and verification guidance
+    └── 🧾 <artifact>.sig                                                             — Detached signature files (example)
 ~~~
 
 Notes:
@@ -316,7 +317,6 @@ CI MAY enforce:
 [⬅ Docs Index](../../../../../../../README.md)
 
 © 2025 Kansas Frontier Matrix — CC-BY 4.0  
-MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
+MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
 
 </div>
-
