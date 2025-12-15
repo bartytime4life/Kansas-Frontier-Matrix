@@ -1,9 +1,9 @@
 ---
-title: "📑 Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.5"
-path: "docs/standards/kfm_markdown_protocol_v11.2.5.md"
-version: "v11.2.5"
-last_updated: "2025-12-07"
+title: "📑 Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.6"
+path: "docs/standards/kfm_markdown_protocol_v11.2.6.md"
 
+version: "v11.2.6"
+last_updated: "2025-12-12"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Annual · FAIR+CARE Council & Focus Mode Board"
@@ -13,10 +13,13 @@ status: "Active / Enforced"
 doc_kind: "Standard"
 header_profile: "standard"
 footer_profile: "standard"
+diagram_profiles:
+  - "mermaid-flowchart-v1"
+  - "mermaid-timeline-v1"
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.5"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -39,15 +42,15 @@ indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
 
 ttl_policy: "24 months"
-sunset_policy: "Supersedes KFM-MDP v11.2.4"
+sunset_policy: "Supersedes KFM-MDP v11.2.5"
 
 commit_sha: "<latest-commit-hash>"
-signature_ref: "../../releases/v11.2.5/signature.sig"
-attestation_ref: "../../releases/v11.2.5/slsa-attestation.json"
-sbom_ref: "../../releases/v11.2.5/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.5/manifest.zip"
-telemetry_ref: "../../releases/v11.2.5/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/markdown-protocol-v11.2.5.json"
+signature_ref: "../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../releases/v11.2.6/focus-telemetry.json"
+telemetry_schema: "../../schemas/telemetry/markdown-protocol-v11.2.6.json"
 energy_schema: "../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../schemas/telemetry/carbon-v2.json"
 
@@ -69,6 +72,7 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
+  - "docs/standards/kfm_markdown_protocol_v11.2.5.md@v11.2.5"
   - "docs/standards/kfm_markdown_protocol_v11.2.4.md@v11.2.4"
   - "docs/standards/kfm_markdown_protocol_v11.2.3.md@v11.2.3"
   - "docs/standards/kfm_markdown_protocol_v11.2.2.md@v11.2.2"
@@ -83,15 +87,15 @@ provenance_requirements:
   must_reference_superseded: true
   must_reference_origin_root: true
 
-json_schema_ref: "../../schemas/json/kfm-markdown-protocol-v11.2.5.schema.json"
-shape_schema_ref: "../../schemas/shacl/kfm-markdown-protocol-v11.2.5-shape.ttl"
+json_schema_ref: "../../schemas/json/kfm-markdown-protocol-v11.2.6.schema.json"
+shape_schema_ref: "../../schemas/shacl/kfm-markdown-protocol-v11.2.6-shape.ttl"
 
 story_node_refs: []
 immutability_status: "version-pinned"
 
-doc_uuid: "urn:kfm:doc:standards:markdown-protocol:v11.2.5"
-semantic_document_id: "kfm-markdown-protocol-v11.2.5"
-event_source_id: "ledger:kfm:doc:standards:markdown-protocol:v11.2.5"
+doc_uuid: "urn:kfm:doc:standards:markdown-protocol:v11.2.6"
+semantic_document_id: "kfm-markdown-protocol-v11.2.6"
+event_source_id: "ledger:kfm:doc:standards:markdown-protocol:v11.2.6"
 doc_integrity_checksum: "<sha256>"
 
 ai_training_inclusion: false
@@ -101,6 +105,7 @@ ai_transform_permissions:
   - "summary"
   - "timeline-generation"
   - "semantic-highlighting"
+  - "layout-normalization"
   - "3d-context-render"
   - "a11y-adaptations"
   - "diagram-extraction"
@@ -118,6 +123,7 @@ transform_registry:
     - summary
     - timeline-generation
     - semantic-highlighting
+    - layout-normalization
     - 3d-context-render
     - a11y-adaptations
     - diagram-extraction
@@ -154,6 +160,8 @@ test_profiles:
   - "diagram-check"
   - "metadata-check"
   - "provenance-check"
+  - "secret-scan"
+  - "pii-scan"
 
 ci_integration:
   workflow: ".github/workflows/kfm-ci.yml"
@@ -171,6 +179,8 @@ branding_registry:
 layout_profiles:
   - "immediate-one-branch-with-descriptions-and-emojis"
 
+fencing_profile: "outer-backticks-inner-tildes-v1"
+
 badge_profiles:
   - "root-centered-badge-row"
 
@@ -185,14 +195,18 @@ deprecated_fields:
 
 <div align="center">
 
-# 📑 **Kansas Frontier Matrix — Markdown Authoring Protocol v11.2.5**  
-`docs/standards/kfm_markdown_protocol_v11.2.5.md`
+# 📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.6**
+`docs/standards/kfm_markdown_protocol_v11.2.6.md`
 
 **Purpose**  
-Define the canonical, enforceable Markdown authoring rules for the Kansas Frontier Matrix (KFM) v11.2.5.  
-This protocol standardizes structure, headings, metadata, and narrative patterns so that all Markdown in the monorepo is CI-safe, FAIR+CARE-aligned, semantically interoperable, and ready for advanced Story Node / Focus Mode integration.
+Define the **canonical, enforceable Markdown authoring rules** for the Kansas Frontier Matrix (KFM).  
+This protocol standardizes **structure, headings, metadata, and narrative patterns** so Markdown across the monorepo is **CI-safe, FAIR+CARE-aligned, semantically interoperable**, and ready for **Story Node / Focus Mode** integration.
 
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue "Master Coder Protocol v6.3")]() · [![KFM-MDP v11.2.5](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.5-informational "Markdown Protocol v11.2.5")]() · [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold "FAIR+CARE Compliant")]() · [![WCAG AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet "WCAG 2.1 AA+")]() · [![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen "Status: Active & Enforced")]()
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
+<img src="https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 </div>
 
@@ -200,372 +214,419 @@ This protocol standardizes structure, headings, metadata, and narrative patterns
 
 ## 📘 Overview
 
-### 1. Scope and Intent
+### 1. Scope and intent
 
-KFM-MDP v11.2.5 governs **all Markdown files** in the Kansas Frontier Matrix monorepo (`Kansas-Frontier-Matrix`), across every domain:
+KFM-MDP v11.2.6 governs **all Markdown files** in the Kansas Frontier Matrix monorepo (`Kansas-Frontier-Matrix`) across every domain:
 
-- ETL / pipelines (`src/pipelines/`)
-- Graph / ontology (`src/graph/`)
-- APIs (`src/api/`)
-- Web & 3D UI (`web/`)
-- Data catalogs & specs (`docs/data/`, `data/stac/`)
-- Domain analyses (`docs/analyses/`)
-- Governance & standards (`docs/standards/`)
-- CI/CD & infra (`.github/`)
+- ETL / pipelines (`src/pipelines/`, `docs/pipelines/`)
+- Graph / ontology (`src/graph/`, `docs/graph/`)
+- Web UI (`web/`, `docs/design/`, `docs/accessibility/`)
+- Data lifecycle & catalogs (`data/`, `docs/data/`, `data/stac/`)
+- Governance & standards (`docs/standards/`, `docs/governance/`)
+- CI/CD & infra docs (`.github/`, `docs/workflows/`)
 
 If it’s `.md` in this repo, this protocol applies.
 
-This version:
+### 2. Absolute rules (normative)
 
-- **Promotes the `🗂️ Directory Layout` section** to be the **second H2** in standards and guides, immediately after `📘 Overview`.  
-- **Standardizes emoji-rich directory trees** under `🗂️ Directory Layout`, using the `immediate-one-branch-with-descriptions-and-emojis` layout profile for human + AI readability.  
-- Updates the **heading registry** to require emoji-prefixed H2s (e.g., `📘 Overview`, `🗂️ Directory Layout`) across all new and revised docs.  
-- Normalizes **relative paths** (e.g., `../../releases/...`) for standards under `docs/standards/`, ensuring links resolve correctly from the actual file location.  
-- Reaffirms tight integration with **STAC, DCAT, PROV-O, CIDOC CRM**, and the KFM ontology, making Markdown documents ingestible into catalogs and the Neo4j knowledge graph.
+1. **Front-matter is required**  
+   Every governed KFM Markdown file MUST begin with YAML front-matter (`---` … `---`). No blank lines before the first `---`.
 
-All downstream documentation patterns must extend this standard, **not override it**.
+2. **Exactly one H1**  
+   Each file MUST contain exactly one `#` heading.
 
-### 2. Core Principles
+3. **Approved H2 registry only**  
+   Every H2 MUST match exactly one entry in `heading_registry.approved_h2` (emoji + text must match).
 
-1. **Single Source of Truth** – This document is the authoritative reference for KFM Markdown structure and metadata.  
-2. **Documentation-First** – Code/data changes are incomplete without updated docs.  
-3. **Machine-Readable by Design** – Uniform front-matter + predictable headings + structured content.  
-4. **Human-Friendly Narrative** – Clear Purpose, logical sections, and concise language.  
-5. **Ethical & Sovereignty-Aware** – FAIR, CARE, and Indigenous data sovereignty baked into governance fields.  
-6. **Predictable Layout** – `📘 Overview` then `🗂️ Directory Layout`, followed by other registered H2s, ending with `🕰️ Version History`.  
+4. **Standards ordering is enforced**  
+   Standards MUST place:
+   - `## 📘 Overview` as the first H2
+   - `## 🗂️ Directory Layout` as the second H2
+   - `## 🕰️ Version History` as the final H2
 
-### 3. Author Quickstart (Human-Facing)
+5. **Chat-safe fencing profile is mandatory**  
+   `fencing_profile: outer-backticks-inner-tildes-v1` is the default across KFM:
+   - Outer fence (in chat / generated output): backticks
+   - Inner code fences (inside documents): tildes (`~~~`)
 
-Before writing or editing any KFM Markdown:
+6. **No secrets, no PII, no sensitive coordinates**  
+   Markdown is scanned. Secrets and PII MUST NOT appear in docs.  
+   Protected-site locations MUST be generalized and masked per sovereignty policy.
 
-1. **Start from a matching template**  
-   Copy an existing doc with the same `doc_kind` under `docs/standards/` or `docs/guides/`.
+7. **Directory trees are standardized**  
+   Directory trees MUST use:
+   - Emoji markers: `📁` directories, `📄` files, `🧾` structured artifacts
+   - ASCII branches: `├──`, `└──`, `│`
+   - `~~~text` fence (tildes)
 
-2. **Update YAML front-matter**  
-   - Set `title`, `path`, `version`, `last_updated`.  
-   - Ensure `governance_ref`, `ethics_ref`, `sovereignty_policy` and metadata URLs are correct and **relative to the file’s location**.  
-   - Confirm `doc_kind`, `status`, `review_cycle`, and `classification`.
+### 3. Core principles
 
-3. **Purpose block**  
-   Under the H1, include a short **Purpose** paragraph explaining what the doc does and for whom.
+1. **Single Source of Truth** – This document is the authoritative reference for KFM Markdown structure and metadata.
+2. **Documentation-First** – Code/data changes are incomplete without updated docs.
+3. **Machine-Readable by Design** – Uniform front-matter + predictable headings + structured content.
+4. **Human-Friendly Narrative** – Clear purpose, logical sections, and concise language.
+5. **Ethical & Sovereignty-Aware** – FAIR+CARE and Indigenous data sovereignty are encoded in metadata and enforced in review.
+6. **Predictable Layout** – `📘 Overview` then `🗂️ Directory Layout`, ending with `🕰️ Version History`.
 
-4. **Use only approved H2 headings (with emojis)**  
-   All H2s **must** be chosen from `heading_registry.approved_h2`, using the exact emoji + text.
+### 4. Author quickstart (human-facing)
 
-5. **Keep ordering predictable**  
-   - `📘 Overview`  
-   - `🗂️ Directory Layout`  
-   - remaining H2s as appropriate for the doc, ending with `🕰️ Version History`.
+1. Copy an existing doc with the same `doc_kind`.
+2. Update YAML: `title`, `path`, `version`, `last_updated`, and governance/ethics/sovereignty refs.
+3. Keep the second H2 as `🗂️ Directory Layout` for standards and guides.
+4. Use only approved H2 headings from the registry.
+5. Use `~~~` for all internal fenced blocks (`~~~yaml`, `~~~json`, `~~~bash`, `~~~mermaid`, `~~~text`).
+6. Close with `🕰️ Version History` and a governance footer.
 
-6. **Close with Version History & footer**  
-   - A `🕰️ Version History` table.  
-   - Governance footer with links back to docs root, standards index, and governance charter.
+### 5. Author quickstart (AI usage)
 
-### 4. Author Quickstart (ChatGPT / AI Usage)
+When generating Markdown for KFM, request:
 
-When asking ChatGPT (or any AI assistant) to create or update a KFM Markdown document:
+- YAML front-matter at top
+- `## 📘 Overview` then `## 🗂️ Directory Layout` (second)
+- Only registry H2 headings
+- Internal fences are `~~~` (not backticks)
+- No citations with tool-specific syntax, no hidden markup, no secrets
 
-1. **Explicitly request:**
+Recommended prompt:
 
-   - A **YAML front-matter block** at the very top, matching this protocol.  
-   - H1/H2 headings using the **emoji-prefixed registry** (e.g., `## 📘 Overview`, `## 🗂️ Directory Layout`).  
-   - A **`🗂️ Directory Layout` H2 as the second section**, right after `📘 Overview`.  
-   - A directory tree under `🗂️ Directory Layout` that:
-     - Uses emojis:  
-       - `📁` for directories  
-       - `📄` for Markdown/text files  
-       - `🧾` for JSON/log-like artifacts  
-       - `🖼️` for images/visual assets  
-     - Uses `├──` / `└──` ASCII branches.  
-     - Is fenced as `~~~text`.
-
-2. **Prompt pattern (recommended)**
-
-   > “Generate a KFM-compliant Markdown doc with: YAML front-matter, `📘 Overview` then `🗂️ Directory Layout` (with emoji directory tree), and only emoji-prefixed H2s from the heading registry.”
-
-3. **Tell the AI to avoid:**
-
-   - System-specific citation syntax or hidden markup.  
-   - Unnecessary HTML; `<div align="center">` is allowed but keep it minimal.  
-   - Nested fences or unsupported diagram types.
-
-4. **After pasting AI output:**
-
-   - Verify **relative paths** match the actual file location (e.g., standards under `docs/standards/` must use `../../releases/...` for release artifacts).  
-   - Run `docs`/Markdown lint locally or via CI.  
-   - Check that **Directory Layout** is indeed second and uses emoji formatting.
+> “Generate a KFM-compliant Markdown doc: YAML front-matter, H2 registry headings, `📘 Overview` then `🗂️ Directory Layout` with emoji tree, internal fences use `~~~`, end with `🕰️ Version History` + governance footer.”
 
 ---
 
 ## 🗂️ Directory Layout
 
-The **canonical repository layout** uses the `immediate-one-branch-with-descriptions-and-emojis` profile:
+Canonical monorepo layout (key directories and files):
 
-```text
+~~~text
 📁 Kansas-Frontier-Matrix/
-├── 📁 docs/                                  # All documentation
-│   ├── 📁 standards/                         # Standards & policies (Markdown, FAIR+CARE, governance, etc.)
-│   ├── 📁 architecture/                      # System & subsystem designs (ETL, graph, API, UI, Focus Mode)
-│   ├── 📁 guides/                            # How-to guides, tutorials, SOP-style walkthroughs
-│   ├── 📁 data/                              # Data contracts, source registries, schema notes
-│   ├── 📁 analyses/                          # Domain analyses & case studies (archaeology, hydrology, etc.)
-│   └── 📄 glossary.md                        # Shared glossary for KFM-wide terminology
-├── 📁 src/                                   # Backend & service code
-│   ├── 📁 pipelines/                         # ETL, AI/ML, orchestration (batch, streaming, LangGraph, Airflow)
-│   ├── 📁 graph/                             # Neo4j schema, loaders, queries, lineage helpers
-│   ├── 📁 api/                               # FastAPI / GraphQL services (gateway, auth, routing)
-│   └── 📁 tools/                             # Backend utilities, CLIs, migrations
-├── 📁 web/                                   # React / MapLibre / Cesium frontends & Story Node UI
-│   ├── 📁 app/                               # Main web app
-│   └── 📁 story-nodes/                       # Story Node layouts & Focus Mode UX
-├── 📁 data/                                  # Data lifecycle: raw → work → processed → releases
-│   ├── 📁 sources/                           # External dataset manifests (STAC/DCAT-aligned)
-│   ├── 📁 raw/                               # Raw ingested data (LFS/DVC; not committed directly)
-│   ├── 📁 work/                              # Intermediate normalized / enriched data
-│   ├── 📁 processed/                         # Production-ready GeoJSON, COGs, CSVs, graph exports
-│   └── 📁 stac/                              # STAC Collections & Items indexing processed assets
-├── 📁 schemas/                               # JSON, JSON-LD, STAC, DCAT, SHACL, telemetry schemas
-│   ├── 📁 json/                              # JSON schemas (docs, pipelines, Story Nodes, Focus telemetry)
-│   └── 📁 telemetry/                         # Energy, carbon, lineage, metrics schemas
-├── 📁 mcp/                                   # Master Coder Protocol artifacts
-│   ├── 📁 experiments/                       # Experiment logs (timestamped, domain-tagged)
-│   ├── 📁 model_cards/                       # Model documentation & evaluation cards
-│   └── 📁 sops/                              # SOPs for repeatable processes (ETL, modeling, deployment)
-├── 📁 tests/                                 # Automated test suites (unit, integration, UI)
-├── 📁 tools/                                 # Repo-level tools, dev utilities, maintenance scripts
-├── 📁 .github/                               # CI/CD workflows & GitHub configuration
-│   └── 📁 workflows/                         # CI pipelines (kfm-ci, docs-lint, lineage-audit, energy/carbon)
-└── 📄 README.md                              # High-level project overview
-```
+├── 📄 README.md                                  # Root overview of the KFM system (v11)
+├── 📄 ARCHITECTURE.md                            # High-level system & repository architecture
+├── 📄 CONTRIBUTING.md                            # Contribution workflow (FAIR+CARE governed)
+├── 📄 LICENSE                                    # Project license (code/docs licensing as specified)
+│
+├── 📁 .github/                                   # GitHub config + CI/CD
+│   ├── 📁 ISSUE_TEMPLATE/                        # Issue templates
+│   ├── 📁 actions/                               # Reusable composite actions
+│   ├── 📁 workflows/                             # CI workflows (lint/tests/audits/build/deploy)
+│   ├── 📄 ARCHITECTURE.md                        # CI/CD & GitHub infra architecture
+│   ├── 📄 PULL_REQUEST_TEMPLATE.md               # PR checklist (governance & tests)
+│   ├── 📄 README.md                              # .github overview
+│   ├── 📄 SECURITY.md                            # Security policy (vuln reporting, etc.)
+│   └── 🧾 dependabot.yml                          # Dependency update configuration
+│
+├── 📁 data/                                      # Data lifecycle + catalogs
+│   ├── 📁 air-quality/                           # Air quality data sources & products
+│   ├── 📁 archive/                               # Archived/deprecated datasets
+│   ├── 📁 checksums/                             # Data integrity hashes
+│   ├── 📁 hydrology/                             # Hydrology datasets/config
+│   ├── 📁 processed/                             # Canonical processed outputs (final datasets)
+│   ├── 📁 raw/                                   # Raw ingested inputs (DVC/LFS as applicable)
+│   ├── 📁 reports/                               # Data QA/QC and summary reports
+│   ├── 📁 stac/                                  # STAC Collections & Items (asset metadata)
+│   ├── 📁 surficial-geology/                     # Surficial geology products
+│   ├── 📁 updates/                               # Incremental update payloads
+│   ├── 📁 work/                                  # Intermediate/working artifacts
+│   ├── 📄 ARCHITECTURE.md                        # data/ architecture notes
+│   └── 📄 README.md                              # data/ conventions
+│
+├── 📁 docs/                                      # Documentation (human + machine readable)
+│   ├── 📁 accessibility/                         # A11y standards & audits
+│   ├── 📁 analyses/                              # Domain analyses and case studies
+│   ├── 📁 architecture/                          # System/subsystem design docs
+│   ├── 📁 archives/                              # Archival/records documentation
+│   ├── 📁 data/                                  # Data contracts, catalogs, schema notes
+│   ├── 📁 design/                                # UX/UI design docs
+│   ├── 📁 governance/                            # Governance charters, policies, processes
+│   ├── 📁 graph/                                 # Ontology and graph modeling docs
+│   ├── 📁 guides/                                # How-to guides and tutorials
+│   ├── 📁 history/                               # Historical context and timelines
+│   ├── 📁 pipelines/                             # Pipeline specs/runbooks/SOPs for ETL/AI workflows
+│   ├── 📁 reports/                               # Generated reports and whitepapers
+│   ├── 📁 search/                                # Search/indexing behavior docs
+│   ├── 📁 security/                              # Security, supply-chain, hardening docs
+│   ├── 📁 soil/                                  # Soil and terrain domain docs
+│   ├── 📁 standards/                             # KFM standards and protocols
+│   ├── 📁 telemetry/                             # Telemetry/observability standards
+│   ├── 📁 templates/                             # Document and MCP templates
+│   ├── 📁 workflows/                             # Human process/workflow documentation
+│   ├── 📄 ARCHITECTURE.md                        # docs/ architecture overview
+│   ├── 📄 MASTER_GUIDE_v10.md                    # Legacy KFM v10 master guide (archival)
+│   ├── 📄 MASTER_GUIDE_v11.md                    # KFM v11 master guide (current)
+│   ├── 📄 README.md                              # docs/ index
+│   └── 📄 glossary.md                            # Shared glossary
+│
+├── 📁 mcp/                                       # Master Coder Protocol workspace
+│   ├── 📁 experiments/                           # 🧪 Experiment logs and reproducible run records
+│   ├── 📁 model_cards/                           # 🧾 AI/ML model cards (transparency reports)
+│   ├── 📁 sops/                                  # 📋 Standard Operating Procedures
+│   ├── 📄 MCP-README.md                          # MCP “bible” / core protocol reference
+│   └── 📄 README.md                              # MCP workspace overview
+│
+├── 📁 schemas/                                   # Schema definitions
+│   ├── 📁 json/                                  # JSON schemas (docs/pipelines/story nodes/telemetry)
+│   └── 📁 telemetry/                             # Telemetry schemas (energy/carbon/lineage/metrics)
+│
+├── 📁 src/                                       # Backend services, pipelines, core logic
+│   ├── 📁 ai/                                    # AI/ML logic and Focus Mode services
+│   ├── 📁 design-tokens/                         # Shared design tokens
+│   ├── 📁 graph/                                 # Neo4j schema/loaders/queries
+│   ├── 📁 icons/                                 # Shared icon assets
+│   ├── 📁 map/                                   # Geospatial utilities/helpers
+│   ├── 📁 pipelines/                             # ETL and orchestration pipelines
+│   ├── 📁 tests/                                 # Backend-focused tests
+│   ├── 📁 theming/                               # Theming utilities
+│   ├── 📄 ARCHITECTURE.md                        # src/ architecture overview
+│   └── 📄 README.md                              # src/ overview
+│
+├── 📁 tests/                                     # Cross-cutting test suites
+│   ├── 📁 fixtures/                              # Shared fixtures/sample data
+│   ├── 📄 ARCHITECTURE.md                        # Testing architecture
+│   └── 📄 README.md                              # Testing overview
+│
+├── 📁 tools/                                     # Tooling and utilities
+│   ├── 📁 ai/                                    # AI evaluation and drift analysis tools
+│   ├── 📁 ci/                                    # CI helper scripts/tools
+│   ├── 📁 cli/                                   # Command-line utilities
+│   ├── 📁 governance/                            # Governance automation (ledger syncing/compliance)
+│   ├── 📁 telemetry/                             # Telemetry aggregation tools
+│   ├── 📁 validation/                            # Data/metadata validators (STAC/DCAT/schema checks)
+│   ├── 📄 ARCHITECTURE.md                        # Tools subsystem architecture notes
+│   └── 📄 README.md                              # tools/ overview
+│
+├── 📁 web/                                       # Frontend web app (React + MapLibre + Cesium)
+│   ├── 📁 public/                                # Static assets
+│   ├── 📁 src/                                   # Frontend source code
+│   ├── 📄 ARCHITECTURE.md                        # Frontend architecture
+│   └── 📄 README.md                              # Frontend overview
+│
+└── 📁 releases/                                  # Certified release artifacts and provenance
+    ├── 📁 v11.2.6/                               # Current release packet (when published)
+    ├── 📁 v11.2.2/                               # Example release packet
+    ├── 📁 v11.0.0/                               # Example release packet
+    ├── 📁 v10.4.0/                               # Legacy release packet
+    └── 📁 v10.2.0/                               # Legacy release packet
+~~~
 
-**Directory Layout rules (normative):**
+Directory layout rules (normative):
 
-- Every documented directory **MUST** have a `README.md` describing purpose and key files.  
-- Any **new top-level directory** added to the repo **MUST** be reflected in this tree with:
-  - A `📁` emoji, concise comment, and correct positioning.  
-- All directory trees in docs:
-  - **MUST** use this emoji style (`📁`, `📄`, `🧾`, `🖼️`) and branch characters.  
-  - **MUST** be fenced as `~~~text` (or ```text```), not generic code blocks.  
-- When using ChatGPT, always explicitly request **emoji-formatted directory layouts** under `🗂️ Directory Layout`.
+- Every documented directory SHOULD have a `README.md` describing purpose and key files.
+- Any new top-level directory MUST be reflected in this tree.
+- Trees MUST use `~~~text` and the emoji + branch conventions above.
+- Avoid listing sensitive filenames/paths that reveal protected sources, credentials, or restricted-site locations.
 
 ---
 
 ## 🧭 Context
 
-KFM-MDP v11.2.5 sits at the intersection of:
+KFM-MDP v11.2.6 sits at the intersection of:
 
-- **KFM-OP v11 (Ontology Protocol)** – ensures doc entities & relationships align with Neo4j schema and CIDOC-CRM / PROV-O.  
-- **MCP-DL v6.3** – enforces a documentation-first culture and reproducible experiment practices.  
-- **Data catalog standards** – STAC, DCAT, GeoSPARQL, OWL-Time, enabling search and integration across tools.  
-- **Story Node & Focus Mode** – use Markdown as a structured narrative layer over the graph and map visualizations.
+- **KFM-OP v11 (Ontology Protocol)** – aligns document entities to the graph’s semantic model.
+- **MCP-DL v6.3** – enforces reproducibility norms and disciplined documentation.
+- **STAC / DCAT / PROV-O** – standardizes discovery, distribution metadata, and lineage.
+- **Story Nodes & Focus Mode** – uses Markdown as a structured narrative layer over data + graph + UI.
 
-This protocol makes Markdown a **first-class, cataloged, provenance-aware asset**, not just ad-hoc notes.
+This protocol treats Markdown as a **first-class governed asset**: versioned, validated, cataloged, and provenance-aware.
 
 ---
 
 ## 🗺️ Diagrams
 
-Diagrams support understanding but must remain **governed**:
+Diagrams are allowed but remain governed.
 
-- Allowed profiles (see `diagram_profiles`):
-  - `mermaid-flowchart-v1`
-  - `mermaid-timeline-v1`
+Allowed diagram profiles:
 
-- Each diagram:
-  - Lives in a `🗺️ Diagrams`, `🧱 Architecture`, or `🧪 Validation & CI/CD` section (or nearby).  
-  - Has a short textual explanation for accessibility.  
-  - Uses Mermaid syntax in fenced blocks (e.g., `~~~mermaid`).
+- `mermaid-flowchart-v1`
+- `mermaid-timeline-v1`
 
-**Example flowchart**
+Rules:
 
-```mermaid
+- Diagrams MUST live near relevant content (`🗺️ Diagrams`, `🧱 Architecture`, `🧪 Validation & CI/CD`).
+- Each diagram MUST include a short text explanation for accessibility.
+- Mermaid blocks MUST be fenced with `~~~mermaid`.
+
+Example flowchart:
+
+~~~mermaid
 flowchart LR
-    A[Author drafts Markdown] --> B[CI: markdown-lint + schema-lint]
-    B -->|Pass| C[Merge to main]
-    B -->|Fail| D[Author fixes issues]
-```
+  A[Author drafts Markdown] --> B[CI: lint + schema + governance checks]
+  B -->|Pass| C[Merge to main]
+  B -->|Fail| D[Fix issues and re-run CI]
+~~~
 
-**Example timeline**
+Example timeline:
 
-```mermaid
+~~~mermaid
 timeline
-    title Markdown Protocol Evolution
-    2023-11-10 : v10.4.3 : "Legacy markdown rules"
-    2025-11-25 : v11.2.0 : "Front-matter & profile overhaul"
-    2025-11-27 : v11.2.2 : "Heading registry & transform rules"
-    2025-12-04 : v11.2.4 : "Semantic alignment & AI integration"
-    2025-12-07 : v11.2.5 : "Emoji H2 + directory layout elevation"
-```
+  title Markdown Protocol Evolution
+  2023-11-10 : v10.4.3 : Legacy markdown rules
+  2025-11-25 : v11.2.0 : v11 overhaul (profiles + CI enforcement)
+  2025-12-07 : v11.2.5 : Directory Layout elevated + emoji H2 registry
+  2025-12-12 : v11.2.6 : Fencing profile hardened + secret/PII scan enforced
+~~~
 
-Forbidden: ASCII art diagrams, diagrams with secrets, or unlabeled diagrams.
+Forbidden:
+
+- ASCII art diagrams
+- Diagrams containing secrets or credential-like strings
+- Diagrams that reveal protected site coordinates
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Docs following KFM-MDP v11.2.5 are **Story Node ready**:
+Docs following KFM-MDP are **Story Node ready**:
 
-- H2 + H3 structure creates natural **Story Node segments** (e.g., `📘 Overview`, `🗂️ Directory Layout`).  
-- Front-matter IDs (`doc_uuid`, `semantic_document_id`) allow Focus Mode to anchor summaries.  
-- `ai_transform_permissions` and `ai_transform_prohibited` codify what AI may do with the content.
+- H2/H3 structure yields stable narrative segmentation.
+- `doc_uuid` and `semantic_document_id` anchor Story Node targeting.
+- `ai_transform_permissions` and `ai_transform_prohibited` codify safe usage.
 
-**Story Node targeting example**
+Focus Mode MAY:
 
-```text
-"target": "kfm-markdown-protocol-v11.2.5"
-```
+- Summarize sections (Overview, Directory Layout rules, etc.)
+- Highlight requirements (heading registry, fencing profile, CI profiles)
+- Extract metadata for indexing
 
-**Focus Mode MAY:**
+Focus Mode MUST NOT:
 
-- Summarize sections (Overview, Directory Layout rules, etc.).  
-- Highlight key requirements (heading registry, AI restrictions).  
+- Invent new governance rules or alter normative statements
+- Add speculative architecture claims
+- Override sovereignty policy constraints
 
-**Focus Mode MUST NOT:**
+Example target pattern:
 
-- Invent new governance rules or modify normative statements.  
-- Alter semantics of requirements like “emoji directory layouts” or heading registries.
+~~~json
+{
+  "target": "kfm-markdown-protocol-v11.2.6"
+}
+~~~
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Markdown is fully integrated into CI:
+Markdown is CI-enforced.
 
 ### Test profiles
 
 From `test_profiles`:
 
-| Profile              | Purpose                                          |
-|----------------------|--------------------------------------------------|
-| `markdown-lint`      | Structural & style linting                       |
-| `schema-lint`        | YAML front-matter schema validation              |
-| `metadata-check`     | Required metadata present & consistent           |
-| `diagram-check`      | Mermaid syntax & profile check                   |
-| `accessibility-check`| Basic structural a11y checks                     |
-| `provenance-check`   | `provenance_chain` + Version History alignment   |
-| `footer-check`       | Footer & governance-links enforcement            |
+| Profile                 | Purpose |
+|-------------------------|---------|
+| `markdown-lint`         | Structural & style linting |
+| `schema-lint`           | YAML front-matter schema validation |
+| `metadata-check`        | Required metadata presence & consistency |
+| `diagram-check`         | Mermaid syntax & profile check |
+| `accessibility-check`   | Structural a11y checks |
+| `provenance-check`      | Provenance chain + version history alignment |
+| `footer-check`          | Governance footer link enforcement |
+| `secret-scan`           | Detect leaked secrets/tokens/keys |
+| `pii-scan`              | Detect PII in docs (policy-scoped) |
 
-### H1/H2 rules
+### Structural rules enforced
 
-- Exactly **one H1** per file.  
-- H2 **must** come from `heading_registry.approved_h2` and **must** include the emoji.  
-- Standard order (for standards/guides):
-  1. `📘 Overview`
-  2. `🗂️ Directory Layout`
-  3. remaining sections as needed  
-  4. `🕰️ Version History` last
-
-Docs that omit `🗂️ Directory Layout` or place it too low are **non-compliant** for standards/guides and will be flagged.
-
-### YAML rules
-
-- Front-matter is required at the top; no blank lines before `---`.  
-- All required fields per `doc_kind` must be present and typed correctly.  
-- Deprecated fields listed here are **not allowed** in new docs.
+- Exactly one H1 per file.
+- H2 headings must match registry entries exactly.
+- Standards/guides: Directory Layout must be second; Version History last.
+- Internal fences must use `~~~` (tildes) consistently.
 
 ---
 
 ## 📦 Data & Metadata
 
-This document is itself a **metadata-rich asset**:
+This standard is a metadata-rich asset.
 
-- Can be indexed as a DCAT `dcat:Dataset` / `dcat:CatalogRecord`.  
-- Can be represented as a STAC Item in a `kfm-docs` Collection.  
-- Behaves as a `prov:Plan` (CIDOC `E29 Design or Procedure`) in the provenance graph.
+### Required metadata (doc_kind: Standard)
 
-Required metadata for `doc_kind: "Standard"` includes:
-
-- Identity & versioning: `title`, `path`, `version`, `doc_uuid`, `semantic_document_id`, `event_source_id`.  
-- Governance & lifecycle: `status`, `release_stage`, `lifecycle`, `review_cycle`, `ttl_policy`, `sunset_policy`, `governance_ref`, `ethics_ref`, `sovereignty_policy`.  
-- Licensing & ethics: `license`, `fair_category`, `care_label`, `classification`, `sensitivity`, `indigenous_rights_flag`.  
-- Provenance & catalogs: `commit_sha`, `signature_ref`, `attestation_ref`, `sbom_ref`, `manifest_ref`, `telemetry_ref`, `telemetry_schema`, `energy_schema`, `carbon_schema`, `metadata_profiles`, `provenance_chain`, `doc_integrity_checksum`.  
-- AI behavior: `ai_focusmode_usage`, `ai_transform_permissions`, `ai_transform_prohibited`, `transform_registry`.
+- **Identity & versioning:** `title`, `path`, `version`, `last_updated`, `doc_uuid`, `semantic_document_id`, `event_source_id`
+- **Lifecycle & governance:** `status`, `release_stage`, `review_cycle`, `ttl_policy`, `sunset_policy`, `governance_ref`, `ethics_ref`, `sovereignty_policy`
+- **Integrity & provenance:** `commit_sha`, `signature_ref`, `attestation_ref`, `sbom_ref`, `manifest_ref`, `telemetry_ref`, `provenance_chain`, `doc_integrity_checksum`
+- **AI constraints:** `ai_transform_permissions`, `ai_transform_prohibited`, `transform_registry`
+- **Validation hooks:** `json_schema_ref`, `shape_schema_ref`, `test_profiles`
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-**DCAT**
+### DCAT mapping
 
-- `title` → `dct:title`  
-- Purpose → `dct:description`  
-- `last_updated` → `dct:modified`  
-- `doc_uuid` → `dct:identifier`  
-- Markdown download URL → `dcat:Distribution` with `mediaType: text/markdown`.
+- `title` → `dct:title`
+- Purpose text → `dct:description`
+- `last_updated` → `dct:modified`
+- `doc_uuid` → `dct:identifier`
+- Markdown distribution → `dcat:Distribution` (`mediaType: text/markdown`)
 
-**STAC**
+### STAC mapping
 
-- Represent this doc as a non-spatial Item in a documentation Collection:
-  - `id` = `semantic_document_id`  
-  - `properties.datetime` = `last_updated`  
-  - An asset for the Markdown file.
+Represent as a non-spatial Item in a documentation Collection:
 
-**PROV-O**
+- `id` = `semantic_document_id`
+- `properties.datetime` = `last_updated`
+- Asset link for the Markdown file
 
-- Each version is a `prov:Entity` with `prov:Plan`.  
-- `provenance_chain` defines `prov:wasDerivedFrom` edges between versions.  
-- Release activities & councils are `prov:Activity` / `prov:Agent`.
+### PROV-O mapping
 
-This alignment makes docs first-class citizens in KFM catalogs and provenance graphs.
+- Each version is a `prov:Entity`
+- This standard is a `prov:Plan`
+- `provenance_chain` defines `prov:wasDerivedFrom` edges across versions
+- Governance councils and CI workflows act as `prov:Agent` and `prov:Activity` participants
 
 ---
 
 ## 🧱 Architecture
 
-From an architectural perspective, this standard:
+Architecturally, KFM-MDP:
 
-1. **Defines the Markdown contract** for all code and data modules.  
-2. **Feeds CI** – `.github/workflows/kfm-ci.yml` applies `test_profiles` to every changed `.md`.  
-3. **Supports documentation tooling & doc sites**, where front-matter and heading registry drive navigation.  
-4. **Enables AI-safe consumption** via Focus Mode and Story Nodes, respecting `ai_transform_*` constraints.
+1. Defines the Markdown contract for all domains (docs, pipelines, standards, runbooks).
+2. Feeds CI enforcement via `.github/workflows/kfm-ci.yml`.
+3. Enables catalog ingestion (DCAT/STAC) and provenance linking (PROV-O).
+4. Supports Story Nodes / Focus Mode as a structured narrative interface.
 
-Any change to this protocol **must**:
+Any change to this protocol MUST:
 
-- Update this file, the JSON schema, and SHACL shape.  
-- Adjust CI workflows if new checks are added.  
-- Bump `version`, `last_updated`, and add a new Version History entry.
+- Bump `version` and `last_updated`
+- Update `telemetry_schema`, JSON schema, and SHACL shape references as applicable
+- Add a Version History entry describing deltas
+- Remain compatible with CI enforcement expectations
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-This protocol encodes FAIR+CARE into documentation:
+This protocol encodes FAIR+CARE into documentation practice.
 
-- **FAIR**  
-  - Findable: stable IDs, predictable paths, and catalog entries.  
-  - Accessible: CC-BY license, public repository.  
-  - Interoperable: STAC/DCAT/PROV-O, CIDOC, schema.org mappings.  
-  - Reusable: explicit versioning and provenance.
+- **Findable:** stable paths + identifiers + catalogs
+- **Accessible:** explicit licensing and governed public exposure risk
+- **Interoperable:** STAC/DCAT/PROV alignment + ontology mappings
+- **Reusable:** explicit versioning + provenance chain + validation profiles
 
-- **CARE**  
-  - Collective Benefit: open documentation that benefits communities.  
-  - Authority to Control: links to governance & sovereignty policies; `indigenous_rights_flag` drives review.  
-  - Responsibility: authors must avoid exposing sensitive information (e.g., precise locations of cultural sites).  
-  - Ethics: forbids speculative or misleading governance claims.
+CARE constraints apply across all docs:
 
-`governance_ref`, `ethics_ref`, and `sovereignty_policy` are **normative** and must be followed when authoring any doc.
+- Avoid disclosure of protected or culturally sensitive site locations
+- Respect sovereignty policy requirements and review triggers
+- Keep governance claims evidence-led and reviewable
 
 ---
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary                                                                                                                       |
-|------------:|-----------:|-------------------------------------------------------------------------------------------------------------------------------|
-| **v11.2.5** | 2025-12-07 | Elevated `🗂️ Directory Layout` to second H2 for standards/guides; mandated emoji directory trees; updated heading registry to emoji-prefixed H2s; normalized relative paths for releases/schemas from `docs/standards/`; clarified ChatGPT usage requirements. |
+| Version     | Date       | Summary |
+|------------:|-----------:|---------|
+| **v11.2.6** | 2025-12-12 | Enforced `outer-backticks-inner-tildes-v1` fencing profile; expanded CI profiles to include `secret-scan` and `pii-scan`; clarified absolute rules; preserved emoji H2 registry and Directory Layout ordering; reinforced governance and sovereignty constraints. |
+| v11.2.5     | 2025-12-07 | Elevated `🗂️ Directory Layout` to second H2 for standards/guides; mandated emoji directory trees; updated heading registry to emoji-prefixed H2s; normalized relative paths for standards. |
 | v11.2.4     | 2025-12-04 | Added STAC/DCAT/PROV alignment section; extended Story Node & Focus Mode guidance; tightened CI enforcement and transform rules. |
-| v11.2.3     | 2025-12-02 | Refined AI transform permissions and Focus Mode behaviors (no structural changes; internal alignment).                        |
+| v11.2.3     | 2025-12-02 | Refined AI transform permissions and Focus Mode behaviors (no structural changes; internal alignment). |
 | v11.2.2     | 2025-11-27 | Introduced heading registry; expanded metadata/provenance fields; unified YAML front-matter; hardened anti-pattern definitions. |
-| v11.2.1     | 2025-11-26 | Added profile system; stronger provenance enforcement; stricter DCAT/STAC metadata requirements.                               |
-| v11.2.0     | 2025-11-25 | Major overhaul for KFM v11, including header/footer profiles, CI test profiles, and diagram usage rules.                      |
-| v11.0.1     | 2025-11-20 | Initial KFM v11 consolidation of markdown rules under unified ontology and governance.                                        |
-| v10.4.3     | 2023-11-10 | Legacy markdown rules prior to KFM v11, defining basic front-matter and structural layout.                                    |
+| v11.2.1     | 2025-11-26 | Added profile system; stronger provenance enforcement; stricter DCAT/STAC metadata requirements. |
+| v11.2.0     | 2025-11-25 | Major overhaul for KFM v11, including header/footer profiles, CI test profiles, and diagram usage rules. |
+| v11.0.1     | 2025-11-20 | Initial KFM v11 consolidation of markdown rules under unified ontology and governance. |
+| v10.4.3     | 2023-11-10 | Legacy markdown rules prior to KFM v11, defining basic front-matter and structural layout. |
 
 ---
 
 <div align="center">
 
-📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.5**  
-Scientific Insight · Documentation-First · FAIR+CARE Ethics · Sustainable Intelligence  
+📑 **Kansas Frontier Matrix — Markdown Authoring Protocol (KFM-MDP) v11.2.6**  
+Scientific Insight · Documentation-First · FAIR+CARE Ethics · Sustainable Intelligence
 
 [📘 Docs Root](..) · [📂 Standards Index](./README.md) · [⚖ Governance Charter](governance/ROOT-GOVERNANCE.md)
 
