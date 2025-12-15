@@ -1,8 +1,8 @@
 ---
 title: "🛰️ Kansas Frontier Matrix — API Utility Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/api/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+version: "v11.2.3"
+last_updated: "2025-12-15"
 review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -13,8 +13,13 @@ doc_integrity_checksum: "<sha256>"
 
 sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
 manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
+
 telemetry_ref: "../../../../releases/v11.2.2/focus-telemetry.json"
+system_telemetry_ref: "../../../../releases/v11.2.2/system-telemetry.json"
 telemetry_schema: "../../../../schemas/telemetry/web-utils-api-v11.json"
+
+signature_ref: "<optional-if-published: ../../../../releases/v11.2.2/signature.sig>"
+attestation_ref: "<optional-if-published: ../../../../releases/v11.2.2/slsa-attestation.json>"
 
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
@@ -22,9 +27,12 @@ sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROT
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11.0"
 pipeline_contract_version: "KFM-PDC v11.0"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
 status: "Active / Enforced"
 doc_kind: "Architecture"
@@ -43,9 +51,10 @@ redaction_required: false
 data_steward: "KFM FAIR+CARE Council"
 
 provenance_chain:
-  - "web/src/utils/api/README.md@v10.3.0"
-  - "web/src/utils/api/README.md@v10.4.0"
+  - "web/src/utils/api/README.md@v11.2.2"
   - "web/src/utils/api/README.md@v11.0.0"
+  - "web/src/utils/api/README.md@v10.4.0"
+  - "web/src/utils/api/README.md@v10.3.0"
 provenance_requirements:
   versions_required: true
   newest_first: true
@@ -59,7 +68,7 @@ ontology_alignment:
 json_schema_ref: "../../../../schemas/json/web-utils-api-readme-v11.schema.json"
 shape_schema_ref: "../../../../schemas/shacl/web-utils-api-readme-v11-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:web-utils-api-readme:v11.2.2"
+doc_uuid: "urn:kfm:doc:web-utils-api-readme:v11.2.3"
 semantic_document_id: "kfm-doc-web-utils-api-readme"
 event_source_id: "ledger:web/src/utils/api/README.md"
 immutability_status: "version-pinned"
@@ -72,6 +81,8 @@ ai_transform_permissions:
 ai_transform_prohibited:
   - "speculative-additions"
   - "unverified-historical-claims"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
   - "governance-override"
   - "content-alteration"
 
@@ -84,7 +95,7 @@ jurisdiction: "Kansas / United States"
 
 <div align="center">
 
-# 🛰️ **Kansas Frontier Matrix — API Utility Layer (v11.2.2)**  
+# 🛰️ **Kansas Frontier Matrix — API Utility Layer (v11.2.3)**  
 `web/src/utils/api/README.md`
 
 **Purpose**  
@@ -96,288 +107,255 @@ KFM Web Platform for interacting with:
 - Focus Mode & Story Node endpoints  
 - Telemetry sinks  
 - Governance lookups  
-This layer ensures consistent, safe, observable API behavior.
+
+This layer ensures consistent, safe, observable API behavior and keeps the web UI from coupling to backend quirks.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)]() ·
+[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)]() ·
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governed-gold)]()
 
 </div>
 
 ---
 
-# 🧭 1. Overview
+## 📘 Overview
 
 The API utility layer in `web/src/utils/api/**` provides:
 
-- 🧩 **Standardized fetch wrappers** (retry, abort, timeouts)  
-- 🔐 **Governance-safe parameter handling** (no sensitive coordinate leakage)  
-- 🛡️ **CARE & sovereignty compliance**  
-- 🧾 **Provenance propagation** into responses  
-- 🧬 **JSON-LD friendly response shapes**  
-- 🛠 **Response validators** (STAC, DCAT, graph entity types)  
-- 🌩 **Telemetry hooks** for latency, errors, ethics flags  
-- 🧊 **Deterministic response normalization**  
-- 📜 **GraphQL wrapper** with type guards & error taxonomy  
+- 🧩 Standardized fetch wrappers (retry, abort, timeouts)
+- 🔐 Governance-safe parameter handling (no sensitive coordinate leakage)
+- 🛡️ CARE & sovereignty compliance checks and propagation
+- 🧾 Provenance propagation into responses (PROV-friendly fields)
+- 🧬 JSON-LD friendly response shapes (where applicable)
+- 🧪 Response validators (STAC, DCAT, Focus/Story payload guards)
+- 📡 Telemetry hooks for latency, errors, and governance flags
+- 🧊 Deterministic response normalization (stable sorting, canonical key order where needed)
+- 🧵 GraphQL wrapper with type guards and error taxonomy
 
-These utilities must remain:
+Constraints:
 
-- **Pure data-to-data transforms**  
-- Framework-agnostic (no React imports)  
-- Fully TypeScript-strict  
-- 🚫 No DOM, no window, no browser globals  
+- Framework-agnostic (no React imports)
+- No DOM usage (no `window`, no `document`, no browser globals)
+- Deterministic behavior (same input → same output/error)
+- No UI/business logic (only low-level request/response helpers)
 
-They power:
+This layer powers (examples):
 
-- Story Node v3 loading  
-- Focus Mode v3 entity fetches  
-- Map layer metadata fetches  
-- Dataset previews  
-- Timeline event hydration  
-- Governance overlay metadata lookups  
+- Story Node v3 loading
+- Focus Mode v3 entity fetches
+- Map layer metadata fetches
+- Dataset previews and catalog browsing
+- Timeline hydration
+- Governance overlay lookups (CARE/sovereignty/license)
 
 ---
 
-# 🗂 2. Directory Structure (Emoji-Rich · v11.2.2)
+## 🗂️ Directory Layout
 
 ~~~text
 web/src/utils/api/
-│
-├── 🌐 apiClient.ts          # Core fetch wrapper (retry, abort, headers, governance)
-├── 🧪 responseGuards.ts     # STAC/DCAT/StoryNode/GraphQL response validators
-├── 🧾 jsonRequest.ts        # Safe JSON POST/PUT/PATCH helpers with type guards
-├── 🧵 graphqlClient.ts      # GraphQL wrapper (query/mutate w/ deterministic transforms)
-├── 🧬 stacClient.ts         # STAC Item/Collection fetcher with schema validation
-├── 🗂 dcatClient.ts         # DCAT dataset/distribution fetcher
-├── 🎯 focusClient.ts        # Focus Mode v3 API requester (entity → context → narrative)
-├── 📚 storyClient.ts        # Story Node v3 fetcher (cards, details, relations)
-├── 🔐 governanceClient.ts   # CARE/sovereignty/license metadata lookups
-└── 📡 telemetryClient.ts    # Frontend telemetry event sender (OpenTelemetry v11)
+├── 📄 apiClient.ts            # Core fetch wrapper (timeouts, retries, aborts, headers)
+├── 📄 responseGuards.ts       # STAC/DCAT/Story/Focus/Graph response guards + schema checks
+├── 📄 jsonRequest.ts          # Safe JSON helpers (POST/PUT/PATCH) with deterministic encoding
+├── 📄 graphqlClient.ts        # GraphQL query/mutation wrapper with strict result validation
+├── 📄 stacClient.ts           # STAC Item/Collection fetch helpers + STAC guard integration
+├── 📄 dcatClient.ts           # DCAT dataset/distribution fetch helpers + DCAT guard integration
+├── 📄 focusClient.ts          # Focus Mode v3 request helpers (entity → context → narrative)
+├── 📄 storyClient.ts          # Story Node v3 request helpers (cards, details, relations)
+├── 📄 governanceClient.ts     # CARE/sovereignty/license metadata lookups (public-safe)
+└── 📄 telemetryClient.ts      # Frontend telemetry sender (schema-validated, no PII)
 ~~~
 
-This directory **must not contain business logic** — only low-level API helpers.
+Directory rule: this folder must contain only *transport + shape validation + normalization* utilities.
 
 ---
 
-# 🧱 3. Module Descriptions
+## 🧱 Architecture
 
-## 🌐 `apiClient.ts` — Core Fetch Wrapper
+### Request/Response lifecycle (frontend)
 
-Provides a hardened wrapper around `fetch()`:
+~~~mermaid
+flowchart LR
+  UI["UI (components/hooks)"] --> SVC["web/src/services (feature orchestration)"]
+  SVC --> API["utils/api/apiClient.ts"]
+  API --> GUARD["utils/api/responseGuards.ts"]
+  GUARD --> NORM["Deterministic normalization"]
+  NORM --> SVC
+  SVC --> UI
+  API --> TEL["utils/api/telemetryClient.ts (latency/errors)"]
+~~~
 
-- Timeout + abort controllers  
-- Automatic JSON parsing  
-- Error taxonomy generation  
-- Consistent headers (versioning, provenance, governance flags)  
-- CARE-safe query parameter encoding  
-- Sovereignty-aware redactions in request paths  
+### Core design principles
 
-Guarantees:
+- Single hardened entrypoint for HTTP (`apiClient.ts`)
+- Guards sit between the network and UI (fail fast)
+- Normalization ensures stable UI rendering (no backend ordering assumptions)
+- Governance metadata is treated as first-class (carried, not discarded)
+- Telemetry is opt-in per call-site but uses consistent schema + taxonomy
 
-- No sensitive coordinate leakage  
-- Deterministic errors  
-- Telemetry hooks before/after fetch  
-- Enforced method/verb whitelisting  
+### Error taxonomy (recommended)
 
----
+API utilities should surface errors consistently so the UI and CI logs are actionable.
 
-## 🧪 `responseGuards.ts` — Response Validators
-
-Contains type guards + schema validators for:
-
-- Story Node v3  
-- Focus Mode v3 response shapes  
-- STAC Collections/Items  
-- DCAT datasets  
-- GraphQL entity payloads  
-- Temporal extents  
-- Governance metadata (`careLabel`, `sovereignty`, `license`)  
-
-Guarantees:
-
-- Malformed responses fail fast  
-- No rendering until governance validation passes  
-
----
-
-## 🧾 `jsonRequest.ts` — Safe JSON Helpers
-
-Features:
-
-- Deterministic JSON encoding  
-- Automatic provenance stamping (e.g., `"via": "web-client-v11.2.2"`)  
-- CARE-aware sanitization of outgoing payloads  
-- Response validation via `responseGuards`  
-
-Supports:
-
-- POST/PUT/PATCH/DELETE  
-- Typed payloads and responses  
+~~~text
+Category (example)         When used
+- network_timeout          Request exceeded timeout budget
+- network_unreachable      DNS/connection issues, offline
+- http_non_2xx             Any non-success status; include status + safe message
+- schema_invalid           Response failed guard/schema validation
+- governance_blocked       CARE/sovereignty rules prevent returning details
+- parse_error              JSON/text parsing failed
+- rate_limited             429 / backoff suggested
+- unknown                  Anything else; preserve safe debug context
+~~~
 
 ---
 
-## 🧵 `graphqlClient.ts` — GraphQL Wrapper
+## 🧭 Context
 
-Capabilities:
+Position in the web stack:
 
-- Query + mutation helpers  
-- Deterministic error formatting  
-- Strict response validation via GraphQL result schemas  
-- Mapping GraphQL → UI-ready shapes (no speculation)  
-- Automatic inclusion of:
-  - CARE labels  
-  - Sovereignty flags  
-  - Provenance metadata  
+- UI consumes *services/hooks* which call this layer for transport.
+- This layer does not decide “what to fetch”; it decides “how to fetch safely and consistently”.
+- The layer is the enforcement point for:
+  - request shaping (safe params)
+  - response shaping (guards)
+  - observability (telemetry)
+  - governance propagation (CARE/sovereignty/license/provenance)
 
-Must never:
+Boundary rules:
 
-- Invent missing fields  
-- Sharpen uncertain temporal or spatial detail  
-
----
-
-## 🧬 `stacClient.ts`
-
-Loads and validates:
-
-- STAC Collections  
-- STAC Items  
-- Assets, roles, extents  
-- Temporal/spatial metadata  
-
-Applies:
-
-- Coordinate masking  
-- Governance metadata merges  
-- Data contract alignment (`KFM-STAC v11`)  
+- Do not import React, map libraries, or UI modules here.
+- Do not import raw configuration that would make tests non-deterministic.
+- Do not create new ontological claims or historical assertions (transport only).
 
 ---
 
-## 🗂 `dcatClient.ts`
+## 📦 Data & Metadata
 
-Loads DCAT datasets/distributions:
+### Required metadata behavior (layer responsibilities)
 
-- Validates DCAT Dataset JSON-LD  
-- Extracts license, temporal coverage, spatial extents  
-- Aligns with `KFM-DCAT v11` profile  
-- Propagates FAIR metadata to consuming UIs  
+- Preserve provenance fields returned by APIs (do not drop or rename casually).
+- Preserve CARE label / rights flags returned by APIs.
+- Ensure pagination metadata is surfaced in a predictable shape.
+- Normalize date/time text into a machine-safe representation (no “sharpening” fuzzy dates).
 
----
+### Governance-safe parameter rules (must)
 
-## 🎯 `focusClient.ts`
+- Never encode restricted coordinates (or over-precise coordinates) in URLs.
+- Avoid exposing restricted IDs in query strings when a safer alias exists.
+- If an API offers “generalized” vs “precise” modes, default to generalized unless explicitly allowed.
 
-Requests Focus Mode v3:
+### Deterministic normalization (examples)
 
-- Focal entity resolution  
-- Context window generation  
-- Narrative blocks  
-- Related entities  
-- Governance overlays  
-
-Applies **strict CARE/sovereignty filters** before returning data to the web UI.
+- Stable sort lists before returning to UI (explicit comparator, no locale-dependent sorting).
+- Canonicalize optional arrays to `[]` rather than `undefined` when it improves downstream safety.
+- Avoid auto-filling missing fields; missing stays missing (guards decide pass/fail).
 
 ---
 
-## 📚 `storyClient.ts`
+## 🌐 STAC, DCAT & PROV Alignment
 
-Requests Story Node v3:
+### STAC
 
-- Cards  
-- Details  
-- Relations  
-- Provenance chains  
-- Temporal + spatial footprints  
+- Treat STAC as the canonical structure for spatial/temporal dataset discovery.
+- Validate at minimum:
+  - `type`
+  - `stac_version`
+  - `id`
+  - `bbox` / `geometry` (when present)
+  - `datetime` or `start_datetime` / `end_datetime`
+  - `assets` integrity (roles, hrefs)
 
-Validates Story Node v3 schema before returning results.
+### DCAT
 
----
+- Treat DCAT as the canonical structure for catalog-level dataset descriptions.
+- Validate at minimum:
+  - identifiers (URI/URN)
+  - license/rights statements
+  - temporal/spatial coverage
+  - distributions (downloads/services) where present
 
-## 🔐 `governanceClient.ts`
+### PROV
 
-Used for:
-
-- CARE/sovereignty lookups  
-- License metadata  
-- Rights-holder identification  
-- Data-use restrictions  
-
-Must not:
-
-- Bypass global sovereignty rules  
-- Disclose restricted values  
-
----
-
-## 📡 `telemetryClient.ts`
-
-Handles emission of:
-
-- WebVitals  
-- Navigation events  
-- Dataset previews  
-- Focus Mode context loads  
-- Error taxonomies  
-- A11y usage patterns  
-
-All events must conform to:
-
-- Telemetry schema (`web-utils-api-v11.json`)  
-- No PII  
-- No sensitive/tribal data  
+- Preserve PROV-friendly fields (run IDs, derivation links, “wasDerivedFrom”-style relationships).
+- When the UI needs a “provenance summary”, generate it deterministically and keep it clearly labeled as a UI summary (not new provenance).
 
 ---
 
-# 🔐 4. Governance Rules
+## ⚖ FAIR+CARE & Governance
 
-API utilities MUST:
+This layer is governance-sensitive because it controls what can be requested and returned.
 
-- Reject unvalidated API responses  
-- Never expose restricted coordinates or IDs  
-- Enforce sovereignty masking  
-- Retain CARE metadata across transforms  
-- Apply STAC/DCAT/Fair metadata alignment  
-- Produce PROV-O friendly provenance fields  
+Minimum governance requirements:
 
-Governance violations → CI failure via:
+- Reject unvalidated responses (schema/guard failure is not “best effort”; it is a stop condition).
+- Never expose restricted coordinates, protected site identifiers, or disallowed fields.
+- Treat sovereignty as a hard constraint: if data is masked/generalized, do not attempt to reconstruct precision.
+- Preserve CARE metadata across transforms (do not strip labels).
+- If governance metadata is missing when required, fail safe (return a governance error, not partial sensitive content).
 
-- `faircare_validate.yml`  
-- `jsonld_validate.yml`  
-- `security_audit.yml`  
+Governance violations are release-blocking via repository CI policy (e.g., FAIR+CARE validation and security/audit workflows).
 
 ---
 
-# ♿ 5. Accessibility Expectations
+## 🧠 Story Node & Focus Mode Integration
 
-While these utilities don't render UI, they **feed A11y-sensitive components**:
+This layer supports narrative-facing features by enforcing “facts must remain evidence-led” *at the transport boundary*.
 
-- Temporal text must align with A11y formatters  
-- Error messages must avoid ambiguity and be screen-reader safe  
-- Response guards must ensure missing A11y metadata is surfaced, not hidden  
+Recommended integration practices:
+
+- `storyClient.ts` should:
+  - validate Story Node v3 payloads before the UI renders
+  - surface provenance chains and evidence links as first-class fields
+  - ensure narrative text is accompanied by references (when required by the Story Node contract)
+
+- `focusClient.ts` should:
+  - validate Focus Mode v3 response shapes
+  - apply governance overlays *before* returning results to the UI layer
+  - propagate any “blocked/provisional” governance status to the UI so it can render safe fallbacks
 
 ---
 
-# 🧪 6. Testing Requirements
+## 🧪 Validation & CI/CD
 
-All utilities must have test coverage under:
+Test locations (expected):
 
 ~~~text
 tests/unit/web/utils/api/**
 tests/integration/web/utils/api/**
 ~~~
 
-Tests must verify:
+Minimum test coverage targets:
 
-- Deterministic fetch behavior  
-- Schema-validated responses  
-- Temporal/spatial governance compliance  
-- Provenance metadata retention  
-- No leakage of restricted attributes  
+- Deterministic fetch behavior (timeouts, retries, abort)
+- Error taxonomy mapping (network/http/schema/governance)
+- Guard coverage for:
+  - STAC Items/Collections
+  - DCAT dataset/distribution shapes
+  - Story Node and Focus response shapes
+- “No leakage” tests:
+  - restricted params are rejected or generalized
+  - restricted fields are not returned from helpers
+- Telemetry schema validation and “no PII” checks for event payloads
+
+CI expectations:
+
+- Fail fast on schema invalid responses.
+- Block merges on governance regressions (CARE/sovereignty checks).
+- Treat changes in this layer as high-impact (web architecture review recommended).
 
 ---
 
-# 🕰 7. Version History
+## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                 |
-|--------:|------------|-----------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Full v11.2.2 upgrade; new emoji layout; governance, sovereignty, CARE, STAC/DCAT, v3 alignment. |
-| v10.4.0 | 2025-11-15 | Early v10.4 API utils introduction.                                                    |
-| v10.3.0 | 2025-11-13 | Initial API utility block.                                                              |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v11.2.3 | 2025-12-15 | Reformatted to KFM-MDP v11.2.6 (single H1, approved H2 registry, outer-backticks/inner-tildes); expanded architecture/context/governance guidance without removing existing data. |
+| v11.2.2 | 2025-11-28 | Full v11.2.2 upgrade; emoji layout; governance, sovereignty, CARE, STAC/DCAT, v3 alignment. |
+| v11.0.0 | 2025-11-24 | v11 API utility layer established for Focus/Story/graph and catalog fetch patterns. |
+| v10.4.0 | 2025-11-15 | Early v10.4 API utils introduction. |
+| v10.3.0 | 2025-11-13 | Initial API utility block. |
 
 ---
 
@@ -386,6 +364,11 @@ Tests must verify:
 © 2025 Kansas Frontier Matrix — MIT License  
 FAIR+CARE Certified · Public Document · Version-Pinned  
 
-[⬅️ Back to Utils Overview](../README.md) · [🧭 Web Source Overview](../../README.md) · [🌐 Web Platform](../../../README.md)
+[⬅️ Back to Utils Overview](../README.md) ·
+[🧭 Web Source Overview](../../README.md) ·
+[🌐 Web Platform](../../../README.md) ·
+[🛡 Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[⚖ FAIR+CARE Guide](../../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
