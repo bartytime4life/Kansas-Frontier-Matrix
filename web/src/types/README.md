@@ -1,8 +1,8 @@
 ---
 title: "🧾 Kansas Frontier Matrix — Web Types Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/types/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+version: "v11.2.6"
+last_updated: "2025-12-15"
 review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -11,15 +11,26 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
+sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.6/focus-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/web-types-readme-v11.json"
+energy_schema: "../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+signature_ref: "../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../releases/v11.2.6/slsa-attestation.json"
+
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
 status: "Active / Enforced"
 doc_kind: "Overview"
@@ -29,6 +40,7 @@ category: "Web · Types · Architecture"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "Public · Low-Risk (unless typing redacted CARE fields)"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
 sensitivity_level: "None"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
@@ -37,6 +49,7 @@ risk_category: "Low"
 redaction_required: false
 
 provenance_chain:
+  - "web/src/types/README.md@v11.2.2"
   - "web/src/types/README.md@v10.4.0"
   - "web/src/types/README.md@v10.3.2"
 provenance_requirements:
@@ -52,7 +65,7 @@ ontology_alignment:
 json_schema_ref: "../../../schemas/json/web-types-readme.schema.json"
 shape_schema_ref: "../../../schemas/shacl/web-types-readme-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:web-types-readme:v11.2.2"
+doc_uuid: "urn:kfm:doc:web-types-readme:v11.2.6"
 semantic_document_id: "kfm-doc-web-types-readme"
 event_source_id: "ledger:web/src/types/README.md"
 immutability_status: "version-pinned"
@@ -79,326 +92,255 @@ sunset_policy: "Superseded upon next type-system revision"
 
 <div align="center">
 
-# 🧾 **Kansas Frontier Matrix — Web Types Overview (v11.2.2)**  
+# 🧾 **Kansas Frontier Matrix — Web Types Overview (v11)**  
 `web/src/types/README.md`
 
-**Purpose:**  
-Define the **type system** that underpins all TypeScript-powered behavior in the  
-Kansas Frontier Matrix Web Platform (`web/src/types/**`).  
-Types ensure **deterministic, FAIR+CARE-governed, semantically correct modeling**  
-of data exchanged between UI components, hooks, pipelines, backend APIs, and the  
-knowledge graph — including Story Node v3, Focus Mode v3, STAC/DCAT, and governance overlays.
+**Purpose**  
+Define the **governed TypeScript type surface** for the Kansas Frontier Matrix Web Platform  
+(`web/src/types/**`). Types enforce **deterministic, schema-aligned, FAIR+CARE-safe** modeling of:
+
+- UI ↔ API DTOs (REST / GraphQL / JSON-LD)
+- Focus Mode payloads and explainability envelopes
+- Story Node v3 narrative + spatial/temporal bundles
+- STAC / DCAT catalog artifacts
+- Governance overlays (CARE, sovereignty, redaction/masking)
+- Telemetry events (non-PII; schema-validated)
 
 </div>
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
-The `types/` directory provides:
+`web/src/types/**` is the **single, shared type contract** for the entire frontend. It exists to prevent:
+- schema drift (backend vs. UI expectations),
+- accidental leakage of sensitive governed fields,
+- non-deterministic rendering behavior caused by loose typing.
 
-- 🧾 **Shared TypeScript interfaces, enums, and type aliases**  
-- 🧬 **Canonical data modeling** for:
-  - Story Node v3
-  - Focus Mode v3 payloads
-  - STAC v1.x and DCAT v3
-  - UI state, spatial/temporal metadata
-- 🛡️ **Strict typing for governance & CARE metadata**
-- 🌐 **Typed DTOs** used by `services/` and `pipelines/` to communicate with backend APIs
-- 📐 **Schema-derived types** mapped from JSON Schemas and SHACL shapes
-- 🚫 **Non-speculative modeling** (no invented fields, no assumed relationships)
-- 🧺 **Machine-extractable, stable definitions** driving:
-  - Component props
-  - Pipeline orchestration
-  - Context state
-  - Telemetry schemas
-  - Provenance models
+### Core invariants
 
-Everything in this directory exists to **guarantee correctness, safety, and predictability**  
-across the entire Web Platform.
+- **No direct graph typing**: the web models only **API surfaces**, not Neo4j internals.
+- **No `any` on external payloads**: inbound data is treated as `unknown` until validated.
+- **DTOs are not domain objects**: DTOs mirror API shapes; domain types represent UI-safe normalized forms.
+- **Governance metadata is first-class**: “redaction/masking/CARE/sovereignty” is not a footnote—types must carry it.
+- **Determinism**: given identical responses, the UI must render the same results (no speculative enrichment).
+
+### Where these types are consumed
+
+- `web/src/services/**` — API clients and adapters (typed input/output)
+- `web/src/hooks/**` and `web/src/pipelines/**` — orchestration and state machines
+- `web/src/context/**` — shared state contracts
+- `web/src/components/**` — component props + render-safe domain models
+- `web/src/utils/**` — guards and normalizers that convert DTO → domain models
+
+### Source-of-truth references
+
+- JSON Schemas and telemetry schemas under `schemas/**` are authoritative for shape validation.
+- Validators and contract checks under `tools/validation/**` are authoritative for schema conformance.
 
 ---
 
-# 🧱 Directory Structure (Emoji-Rich · v11.2.2)
+## 🗂️ Directory Layout
+
+This directory is intentionally small and stable. New modules must be justified by:
+- an upstream schema contract (JSON Schema / telemetry schema / API change), and
+- a clear ownership boundary (DTO vs domain vs UI state).
 
 ~~~text
 web/src/types/
-├── 🌐 api.ts          # DTOs for REST/GraphQL/STAC/DCAT backend responses
-├── 🧬 domain.ts       # Domain entities (StoryNode, Dataset, Place, Event, Person, etc.)
-├── 🛡 governance.ts   # CARE labels, sovereignty flags, provenance & restriction shapes
-├── 🌍 spatial.ts      # Bounding boxes, GeoJSON, Feature/Collection, H3 masks, CRS
-├── ⏳ temporal.ts     # OWL-Time aligned temporal types & fuzzy intervals
-├── 🖥 ui.ts           # UI-level types (props, panel states, A11y flags, layout primitives)
-├── 📈 telemetry.ts    # Telemetry event shapes (schema-derived, non-PII)
-├── 🎯 focus.ts        # Focus Mode v3 focal payloads, related entities, context windows
-├── 📖 story.ts        # Story Node v3 narrative + spatial + temporal + provenance types
-├── 📦 stac.ts         # STAC v1.x Collection, Item, Asset, Link, Extent mappings
-├── 🗂 dcat.ts         # DCAT v3 Dataset, Distribution, Catalog, Theme mappings
-└── 🔗 index.ts        # Re-export barrel (central type surface)
+├── 🌐 api.ts          # API-layer DTOs (REST/GraphQL/JSON-LD/STAC/DCAT responses)
+├── 🧬 domain.ts       # UI-safe domain entities (normalized, render-ready)
+├── 🛡 governance.ts   # CARE/sovereignty/redaction/provenance envelopes
+├── 🌍 spatial.ts      # GeoJSON/BBox/H3/CRS primitives + governed spatial wrappers
+├── ⏳ temporal.ts     # OWL-Time-aligned temporal primitives + fuzzy/approx intervals
+├── 🖥 ui.ts           # UI state types (panels, layouts, A11y flags, interaction contracts)
+├── 📈 telemetry.ts    # Non-PII telemetry event + attribute shapes (schema-derived)
+├── 🎯 focus.ts        # Focus Mode payloads (targets, context windows, evidence refs)
+├── 📖 story.ts        # Story Node v3 structures (narrative + time + space + provenance)
+├── 📦 stac.ts         # STAC v1.x Collection/Item/Asset/Link subsets used by UI
+├── 🗂 dcat.ts         # DCAT v3 Dataset/Distribution/Catalog subsets used by UI
+└── 🔗 index.ts        # Barrel exports (the only stable import surface for app code)
 ~~~
 
----
-
-# 🧩 Module Responsibilities
-
-## 🌐 `api.ts` — Backend DTOs
-
-Defines typed backend response shapes for:
-
-- REST endpoints (JSON)  
-- GraphQL queries/mutations  
-- Focus/Story orchestrator endpoints  
-- STAC Collections/Items metadata  
-- DCAT v3 datasets/distributions  
-- Provenance & bibliographic metadata  
-
-**Guarantees**
-
-- All external API calls have strongly-typed DTOs  
-- No “any” usage for backend payloads  
-- DTOs track **exact** schema fields (no speculation)  
+**Import rule (enforced by review):** app code should import from `web/src/types` (via `index.ts`) rather than deep-linking into individual files, except within this directory.
 
 ---
 
-## 🧬 `domain.ts` — Core Domain Models
+## 🧱 Architecture
 
-Provides shared domain models including:
+### Layer boundary: DTO → Domain → UI
 
-- `StoryNode`  
-- `Dataset`  
-- `Place`  
-- `Event`  
-- `Person`  
-- `GraphRelation`  
-- `HazardLayer`  
-- `TemporalCluster`  
+The type system is intentionally layered:
 
-Used by:
+~~~mermaid
+flowchart LR
+  DTO["API DTOs (api.ts, stac.ts, dcat.ts)"] --> NORM["Normalize + Validate (utils/guards + adapters)"]
+  NORM --> DOM["Domain Models (domain.ts, story.ts, focus.ts)"]
+  DOM --> UI["UI Contracts (ui.ts, component props, contexts)"]
+  GOV["Governance Envelope (governance.ts)"] --> DTO
+  GOV --> DOM
+  GOV --> UI
+~~~
 
-- Focus Mode v3  
-- Story Node components & pipelines  
-- Timeline & map overlays  
-- Graph utilities in `web/src/utils/graph/**`  
+### DTO principles (`api.ts`, `stac.ts`, `dcat.ts`)
 
----
+- DTOs mirror the backend **exactly**.
+- DTOs may contain:
+  - `null` / redacted values,
+  - optional fields,
+  - versioned payload envelopes.
+- DTOs must be treated as `unknown` at the boundary and promoted to typed DTOs only via validation.
 
-## 🛡 `governance.ts` — Governance & CARE Typing
+**Recommended naming convention**
+- `Api*` prefixes for DTOs: `ApiStoryNodeResponse`, `ApiFocusSummary`, etc.
+- `Dcat*` and `Stac*` prefixes for catalog types.
 
-Defines types for:
+### Domain principles (`domain.ts`, `focus.ts`, `story.ts`)
 
-- CARE labels (`Public`, `Restricted`, `Indigenous-governed`, etc.)  
-- Sovereignty flags and heritage metadata  
-- Redaction & masking flags  
-- Provenance chain structures (PROV-O aligned)  
-- Data stewardship tags  
+Domain models are:
+- render-safe (no raw HTML injection shapes),
+- normalized (IDs and label fields are predictable),
+- governance-aware (domain objects carry “what is allowed to show”).
 
-**Guarantees**
+Domain types should:
+- preserve stable IDs (URNs/UUIDs) unchanged,
+- avoid embedding transport details (pagination metadata, HTTP status, etc.).
 
-- All governance metadata is explicitly typed, never “just a string”  
-- Higher layers cannot silently omit governance fields without TypeScript errors  
+### Governance envelope (`governance.ts`)
 
----
+Governance types define the “UI visibility contract”:
+- CARE labels and license/rights hints
+- sovereignty and heritage flags
+- masking/redaction indicators (including geometry generalization)
+- provenance hooks (PROV-aligned structures and references)
 
-## 🌍 `spatial.ts` — Spatial & CRS Types
+**Rule:** if a feature, dataset, story node, or focus narrative is governed, its type must include governance metadata (or explicitly model its absence).
 
-Contains types for:
+### Spatial (`spatial.ts`)
 
-- GeoJSON `Geometry`, `Feature`, `FeatureCollection`  
-- `BBox` and `LatLng` primitives  
-- CRS descriptors (EPSG codes, vertical datum hints)  
-- H3 masks & resolution-level descriptors  
-- Map layer spatial configs (extent, zoom, mask metadata)  
+Spatial types must support:
+- GeoJSON geometry and Feature/FeatureCollection
+- bounding boxes and spatial extents
+- coordinate reference descriptors (when exposed)
+- **masking/generalization** signals for protected places
 
-Governance:
+**Governance-friendly spatial modeling**
+- Represent “redacted geometry” explicitly (e.g., generalized geometry + masking reason) rather than silently dropping geometry.
 
-- Spatial types for sensitive datasets **must** carry:
-  - Masking configuration  
-  - CARE & sovereignty flags  
-  - Provenance tokens  
+### Temporal (`temporal.ts`)
 
----
+Temporal types must support:
+- OWL-Time aligned intervals/instants
+- fuzzy/approximate ranges (precision metadata)
+- story-node and catalog temporal coverage
 
-## ⏳ `temporal.ts` — Temporal & OWL-Time Types
+**Rule:** never silently coerce fuzzy ranges into precise instants.
 
-Defines:
+### Telemetry (`telemetry.ts`)
 
-- OWL-Time-compatible intervals (`TimeInstant`, `TimeInterval`)  
-- Temporal extents and coverage info  
-- Approximation/fuzziness flags (`approx`, `precision`)  
-- Story Node temporal bundles (`StoryTimeSpan`)  
-- Timeline band descriptors  
+Telemetry types must:
+- match the telemetry schemas under `schemas/telemetry/**`,
+- be non-PII by construction,
+- encode event names and attribute keys as constrained unions.
 
-Guarantees:
+**Event taxonomy (typical)**
+- `ui:*`, `map:*`, `timeline:*`, `story:*`, `focus:*`, `stac:*`, `dcat:*`
+- error classes (typed): rendering, schema validation, governance denial, network failures
 
-- UI & backend share a single source-of-truth for temporal semantics  
-- Fuzzy ranges are never silently converted to precise instants  
+### Barrel export (`index.ts`)
 
----
-
-## 🖥 `ui.ts` — UI-Level Types
-
-Shared component-agnostic UI primitives:
-
-- Panel states & layout modes  
-- Drawer, modal, sheet, and overlay states  
-- A11y flags (high contrast, reduced motion, large text)  
-- Input and navigation event wrappers  
-- Generic prop types for cross-cutting UI patterns  
-
----
-
-## 📈 `telemetry.ts` — Telemetry Event Types
-
-Defines structured telemetry events:
-
-- `"ui:*"` — interactions, navigation, A11y usage  
-- `"map:*"` — pan/zoom patterns, layer toggles (non-PII)  
-- `"timeline:*"` — range changes, zoom levels, selection patterns  
-- `"story:*"` — Story Node view events  
-- `"focus:*"` — Focus Mode context loads  
-- `"stac:*"` — dataset preview & selection events  
-
-All telemetry types:
-
-- Are **non-PII**  
-- Match telemetry schemas under `schemas/telemetry/**`  
-- Respect FAIR+CARE requirements  
+`index.ts` is the **public type API** for the web codebase.
+- Keep exports intentional.
+- Avoid re-exporting types that are internal-only or experimental.
 
 ---
 
-## 🎯 `focus.ts` — Focus Mode v3 Types
+## 🌐 STAC, DCAT & PROV Alignment
 
-Typed shapes for Focus Mode v3:
+Types in this folder must support KFM’s catalog and provenance strategy:
 
-- Focal entity descriptor (`FocusTarget`)  
-- Related entities (Places, Events, StoryNodes, Datasets)  
-- Context windows (temporal + spatial)  
-- Governance overlays (CARE, sovereignty, risk flags)  
+- **STAC** (`stac.ts`) represents UI-consumed subsets of STAC Collections/Items/Assets.
+- **DCAT** (`dcat.ts`) represents UI-consumed subsets of DCAT Dataset/Distribution/Catalog views.
+- **PROV** alignment is expressed through governance/provenance envelopes and reference IDs (not raw RDF graphs in the UI).
 
-Used by:
+### Practical alignment rules for the type system
 
-- `FocusContext`  
-- `focusPipeline`  
-- `focusClient` and `focusBindings`  
+- Keep catalog types **structurally compatible** with schema validators in `tools/validation/**`.
+- Maintain **lossless references**:
+  - dataset IDs, item IDs, distribution IDs,
+  - provenance IDs and source references,
+  - time coverage and spatial extents.
 
-Ensures deterministic Focus Mode state and safe integration with the UI.
+### UI-safe catalog previews
 
----
-
-## 📖 `story.ts` — Story Node v3 Types
-
-Defines:
-
-- `StoryNode` core shape (title, summary, narrative body)  
-- Temporal structures (time spans, fuzziness, original labels)  
-- Spatial structures (geometry, bbox, H3 mask references)  
-- Relations (linked entities, datasets, events)  
-- Provenance metadata (sources, rights, model references if AI is used)  
-
-Guarantees:
-
-- Story Nodes have explicit and auditable fields  
-- Narrative rendering is bounded by well-typed structures  
+Types must allow catalog previews to be:
+- license-aware,
+- provenance-linked,
+- masking-aware (sensitive tiles/geometries generalized and flagged),
+- stable for caching and deterministic rendering.
 
 ---
 
-## 📦 `stac.ts` — STAC v1.x Types
+## ⚖ FAIR+CARE & Governance
 
-Maps STAC concepts to TypeScript:
+Types are part of governance enforcement:
 
-- `StacCollection`  
-- `StacItem`  
-- `StacAsset`  
-- `StacLink`  
-- `StacExtent`  
+- If the backend signals **masking/redaction**, types must provide a place to carry:
+  - what was masked,
+  - why it was masked,
+  - what level of generalization is permitted.
 
-Includes:
+### AI behavior constraints reflected in typing
 
-- KFM-specific governance wrappers (licenses, CARE labels)  
-- Spatial/temporal extent fields with typed constraints  
+Frontend types must not enable:
+- speculative additions to narratives,
+- client-side “invented” provenance,
+- governance overrides via UI state.
 
----
+AI-related payload shapes should:
+- distinguish archival/curated text vs. AI-generated segments,
+- link AI segments to evidence references and governance context,
+- carry flags needed for “Why am I seeing this?” UX affordances.
 
-## 🗂 `dcat.ts` — DCAT v3 Types
-
-Models DCAT v3 constructs:
-
-- `DcatDataset`  
-- `DcatDistribution`  
-- `DcatCatalog`  
-- Thematic & keyword tags  
-
-DCAT types must align with `KFM-DCAT v11` profile.
+**All governance display/behavior must remain consistent with:**
+- `../../../docs/standards/governance/ROOT-GOVERNANCE.md`
+- `../../../docs/standards/faircare/FAIRCARE-GUIDE.md`
+- `../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`
 
 ---
 
-## 🔗 `index.ts` — Barrel Exports
+## 🧪 Validation & CI/CD
 
-Exports all type modules:
+Types are validated in CI through a combination of compile-time and runtime checks.
 
-- Ensures a single **stable import point** for the rest of the web codebase  
-- Allows downstream code to treat the type system as a **coherent surface**  
+### Required checks
 
----
+- **TypeScript strict** compilation must pass (no ignored errors).
+- **Runtime guards** must exist for any external payload shape used by the UI.
+- **Telemetry event types** must conform to telemetry schemas (`telemetry_schema`, energy/carbon schemas).
+- **Schema drift prevention**:
+  - when upstream JSON Schemas change, DTOs and guards must be updated together.
 
-# 🔐 Governance & FAIR+CARE Requirements
+### Change checklist (when modifying types)
 
-All types MUST:
+1. Update DTO types (and any adapters) for the changed API shape.
+2. Update guards/normalizers that promote `unknown` → typed DTO/domain.
+3. Update dependent services/hooks/pipelines.
+4. Update telemetry types if event shapes changed.
+5. Add/adjust tests (type-level and runtime guard coverage).
 
-- Represent only **verified, non-speculative fields**  
-- Include governance metadata for sensitive entities (or be explicit about its absence)  
-- Distinguish:
-  - archival vs. derived vs. AI-generated content  
-- Support sovereignty/masking flows by design (`governance.ts`, `spatial.ts`)  
-- Align with backend JSON Schemas, GraphQL SDL, and ontology profiles (CIDOC, OWL-Time, STAC/DCAT)  
-
-If a type attempts to model something that is:
-
-- unsupported by backend schema, or  
-- a speculative relationship,  
-
-→ it must be rejected in review and never merged.
+**Note:** script names vary by workspace; reference `web/package.json` for the exact typecheck/lint/test commands used in CI.
 
 ---
 
-# ♿ Accessibility Expectations
+## 🕰️ Version History
 
-Type definitions must allow components to:
-
-- Express semantics to assistive technologies (ARIA-driven props, state)  
-- Distinguish visible vs. non-visible UI semantics  
-- Represent A11y modes (e.g., high contrast, reduced motion, large text) clearly  
-
-Types must not:
-
-- Conflate visual-only concepts with structural semantics  
-- Make it impossible to build accessible components (e.g., missing fields for labels or roles)  
-
----
-
-# 🧪 Testing Expectations
-
-The type system is primarily validated via:
-
-- TypeScript strict compilation (`tsc --noEmit`)  
-- Schema compatibility checks (JSON Schema ↔ TS types)  
-- Telemetry schema alignment tests  
-- Linting for unused/dead types  
-
-CI will:
-
-- Fail if new API payloads don’t have corresponding types  
-- Fail if schema snapshots and TS types drift  
-
----
-
-# 🕰 Version History
-
-| Version | Date       | Summary                                                                                          |
-|--------:|------------|--------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Upgraded to KFM-MDP v11.2.2; emoji directory; added Focus v3, Story v3, STAC/DCAT v11 alignment; strengthened governance typing. |
-| v10.4.0 | 2025-11-15 | KFM-MDP v10.4.1 types overview; labeled modules; governance-aligned typing rules.               |
-| v10.3.2 | 2025-11-14 | Added STAC/DCAT + Focus Mode v2.5 types.                                                         |
+| Version  | Date       | Summary |
+|---------:|------------|---------|
+| v11.2.6  | 2025-12-15 | Aligned to KFM-MDP v11.2.6 (approved H2 registry + required section order); added missing ethics/sovereignty refs; clarified DTO→Domain→UI boundaries; strengthened governance- and validator-linked typing guidance. |
+| v11.2.2  | 2025-11-28 | Upgraded to KFM-MDP v11.2.2; emoji directory; added Focus v3, Story v3, STAC/DCAT v11 alignment; strengthened governance typing. |
+| v10.4.0  | 2025-11-15 | KFM-MDP v10.4.1 types overview; labeled modules; governance-aligned typing rules. |
+| v10.3.2  | 2025-11-14 | Added STAC/DCAT + Focus Mode v2.5 types. |
 
 ---
 
@@ -407,6 +349,6 @@ CI will:
 © 2025 Kansas Frontier Matrix — MIT License  
 FAIR+CARE Certified · Public Document · Version-Pinned  
 
-[⬅️ Back to Web Source Overview](../README.md) · [🌐 Web Platform Overview](../../README.md) · [🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅️ Back to Web Source Overview](../README.md) · [🧱 Web Source Architecture](../ARCHITECTURE.md) · [🌐 Web Platform Overview](../../README.md) · [🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
