@@ -1,45 +1,73 @@
 ---
 title: "🗺️ Kansas Frontier Matrix — Map Styling Specification (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/styles/maps/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-styles-maps-v1.json"
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4.1"
+version: "v11.2.6"
+last_updated: "2025-12-15"
+
+review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
+release_stage: "Stable / Governed"
 status: "Active / Enforced"
+lifecycle_stage: "LTS"
+backward_compatibility: "Aligned: v10.x → v11.x"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.6/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-styles-maps-v1.json"
+energy_schema: "../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
+signature_ref: "../../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../../releases/v11.2.6/slsa-attestation.json"
+
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+license: "MIT"
+
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+
+status_category: "Specification"
 doc_kind: "Specification"
 intent: "web-styles-maps"
+role: "specification"
+category: "Web · Styles · Maps"
+
 fair_category: "F1-A1-I1-R1"
-care_label: "Public / Spatial-Dependent"
-sensitivity_level: "Variable (depends on layers)"
+care_label: "Public · Spatial-Dependent"
+sensitivity_level: "Variable"
 public_exposure_risk: "Medium"
-indigenous_rights_flag: "Conditional"
+indigenous_rights_flag: true
 data_steward: "KFM FAIR+CARE Council"
 risk_category: "Mixed"
 redaction_required: true
+
 provenance_chain:
   - "web/src/styles/maps/README.md@v10.3.2"
-previous_version_hash: "<previous-sha256>"
+  - "web/src/styles/maps/README.md@v10.4.0"
+
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "DefinedTermSet"
   owl_time: "TemporalEntity"
   geosparql: "N/A"
   prov_o: "prov:Plan"
+
 json_schema_ref: "../../../../schemas/json/web-styles-maps.schema.json"
 shape_schema_ref: "../../../../schemas/shacl/web-styles-maps-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-styles-maps-v10.4.0"
+
+doc_uuid: "urn:kfm:doc:web-styles-maps-v11.2.6"
 semantic_document_id: "kfm-doc-web-styles-maps"
 event_source_id: "ledger:web/src/styles/maps/README.md"
 immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
+
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
@@ -47,27 +75,30 @@ ai_transform_permissions:
   - "a11y-adaptations"
 ai_transform_prohibited:
   - "summaries"
-  - "speculative additions"
-  - "unverified visual semantics"
+  - "speculative-additions"
+  - "unverified-visual-semantics"
+
 machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "United States / Kansas"
 classification: "Public Document"
-role: "specification"
-lifecycle_stage: "stable"
-ttl_policy: "Review every 12 months"
-sunset_policy: "Superseded upon map-style system v11 update"
+ttl_policy: "Review required every 12 months"
+sunset_policy: "Superseded upon next map-style system major update"
 ---
 
 <div align="center">
 
-# 🗺️ **Kansas Frontier Matrix — Map Styling Specification**  
+# 🗺️ **Kansas Frontier Matrix — Map Styling Specification (v11)**  
 `web/src/styles/maps/README.md`
 
-**Purpose:**  
-Define the **map-specific styling layer** for the Kansas Frontier Matrix (KFM) Web Platform:  
-how MapLibre and Cesium maps, overlays, legends, masking grids, and map UI components  
-are visually rendered in a way that is **consistent**, **accessible**, and **FAIR+CARE-aware**.
+Defines the **map-specific styling contract** for the Kansas Frontier Matrix (KFM) Web Platform:
+MapLibre (2D) + Cesium (3D) UI styling, layer legend presentation, masking/generalization visuals,
+and governance-safe map affordances (A11y-first, FAIR+CARE-aligned, sovereignty-aware).
+
+[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../mcp/MCP-README.md)
+· [![KFM-MDP v11.2.6](https://img.shields.io/badge/KFM--MDP-v11.2.6-purple)](../../../../docs/standards/)
+· [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Aligned-orange)](../../../../docs/standards/faircare/FAIRCARE-GUIDE.md)
+· [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../../LICENSE)
 
 </div>
 
@@ -75,236 +106,280 @@ are visually rendered in a way that is **consistent**, **accessible**, and **FAI
 
 ## 📘 Overview
 
-The `web/src/styles/maps/` directory contains **CSS and styling primitives specifically for map UIs**:
+This document governs the **visual styling layer** used by map-centric UI surfaces in the KFM web application, including:
 
-- MapLibre GL map canvas and interaction controls  
-- Cesium 3D globe + terrain overlays  
-- Map legends and layer keys  
-- H3 masking cell visualizations  
-- Sovereignty and CARE overlays  
-- Map HUDs (cursor readouts, debug HUDs, etc.)  
-- Map-specific A11y adaptations (focus rings, color ramps)  
+- **MapLibre GL JS** map containers, controls, popups, tooltips, and overlay chrome (2D).
+- **CesiumJS** container styling for 3D mode and any 3D UI overlays (3D).
+- **Layer legend and HUD styling** (readable, A11y-safe, responsive).
+- **Masking/generalization visuals** used to ethically represent restricted or sensitive spatial content.
+- **Governance-safe map affordances** (clear warnings, non-optional overlays when required).
 
-These map styles sit **on top of** the design tokens and themes defined in:
+**Non-negotiables (contract):**
 
-- `web/src/styles/tokens/**`  
-- `web/src/styles/themes/**`  
-- `web/src/styles/mixins/**`  
-
-Map styles must **never** introduce their own colors or spacing directly; they must use tokens + theme variables.
+- Map styles **must be token-driven** (no ad-hoc colors/spacing that bypass tokens/themes).
+- Map styling **must not weaken governance signaling**:
+  - masking/generalization must remain obvious,
+  - sovereignty and restriction notices must remain visible and legible,
+  - warnings must not become “decorative” via styling.
+- Map styling must remain **accessible by default** (WCAG 2.1 AA+), including high-contrast and reduced-motion support.
+- The frontend remains a **consumer** of backend governance decisions; the UI **renders** those decisions and does not override them.
 
 ---
 
-## 🧱 Directory Structure
-
-> Filenames are illustrative; align them to your actual implementation paths.
+## 🗂️ Directory Layout
 
 ~~~text
-web/src/styles/maps/
-├── maplibre.css          # Base MapLibre map, controls, popups, and overlays
-├── cesium.css            # Cesium globe, timeline, and overlay styling
-├── layers.css            # Layer-specific styling (boundaries, rivers, trails, etc.)
-├── legends.css           # Legend layout, swatches, and labels
-├── masking.css           # H3 grid + masking visualization for sensitive sites
-└── hud.css               # Map HUD styling (cursor info, debug overlays, scale bar)
+📁 web/
+└── 📁 src/
+    └── 📁 styles/
+        └── 📁 maps/
+            ├── 📄 README.md          # This specification (map styling contract)
+            ├── 📄 maplibre.css       # MapLibre containers, controls, popups, overlays (tokenized)
+            ├── 📄 cesium.css         # Cesium containers + 3D UI overlays (tokenized)
+            ├── 📄 layers.css         # Layer symbolization helpers (borders, lines, fills, highlight states)
+            ├── 📄 legends.css        # Legend layout, swatches, labels, accessibility helpers
+            ├── 📄 masking.css        # Masking/generalization visuals (H3/grid/patterns) for restricted content
+            └── 📄 hud.css            # HUD styling (cursor readout, scale bar, debug overlays when allowed)
+~~~
+
+**Directory rule:** if file names differ in the repository, update this tree to match **without changing the contract** (token-first, governance-safe, A11y-first).
+
+---
+
+## 🧭 Context
+
+KFM’s map UI is designed for **spatial + temporal storytelling** and dataset exploration:
+
+- Users navigate through time (timeline/slider) and space (map/3D view), switching basemaps and overlays.
+- Datasets and layers are catalog-driven; each layer is expected to have styling and a legend presentation.
+- The interface blends modern mapping UI with a historical reading experience; styling supports long-form narrative consumption.
+
+This map styling layer is downstream of:
+
+- **Design tokens and theming** (shared conventions and CSS variables).
+- **Governance overlays** (CARE labels, sovereignty flags, masking requirements).
+- **Layer configuration** provided by backend/catalog services (e.g., STAC/DCAT-backed metadata and layer descriptors).
+
+---
+
+## 🗺️ Diagrams
+
+~~~mermaid
+flowchart LR
+  subgraph DS["Design System"]
+    TOK["tokens/** (colors, spacing, typography)"]
+    THE["themes/** (CSS variables)"]
+    MIX["mixins/** (focus rings, reduced-motion)"]
+  end
+
+  subgraph MAP["Map Styling Layer"]
+    CSS2D["maplibre.css"]
+    CSS3D["cesium.css"]
+    LAY["layers.css"]
+    LEG["legends.css"]
+    MSK["masking.css"]
+    HUD["hud.css"]
+  end
+
+  TOK --> THE
+  THE --> MAP
+  MIX --> MAP
+
+  CFG["Layer config + dataset metadata (STAC/DCAT)"] --> UI["Map UI Components"]
+  GOV["Governance decisions (CARE/sovereignty/masking)"] --> UI
+
+  MAP --> UI
+  UI --> UX["User Experience (2D/3D + Timeline + Legend)"]
 ~~~
 
 ---
 
-## 🧩 Module Responsibilities
+## 🧱 Architecture
+
+### Token-first styling contract
+
+Map styles must use **design tokens and theme variables** for:
+
+- colors (including contrast-safe palettes),
+- typography and sizing,
+- spacing and layout rhythm,
+- radii and elevation,
+- z-index/layering rules for overlays and drawers.
+
+**Prohibited:**
+
+- “magic” hex colors in map CSS unless defined as a token-derived variable.
+- pixel-perfect overrides that break high-contrast mode.
+- hiding governance UI via opacity, z-index tricks, or “display: none” (unless explicitly governed and tested).
+
+### `maplibre.css` responsibilities
+
+MapLibre-specific CSS governs:
+
+- map container sizing and responsive behavior,
+- control styling (zoom/compass/attribution),
+- popup and tooltip styling,
+- overlay container styling (legends, chips, warnings, HUD mount points).
+
+Accessibility requirements:
+
+- all controls must have clear focus indicators,
+- controls must remain operable with keyboard-only navigation,
+- map UI must remain usable under large text and high-contrast settings.
+
+### `cesium.css` responsibilities
+
+Cesium-specific CSS governs:
+
+- Cesium canvas container and overlay mounts,
+- any 3D UI elements (timelines/controls if enabled),
+- consistent typography and chrome styling that matches the 2D map.
+
+Motion requirements:
+
+- 3D-related UI transitions must respect reduced-motion preferences.
+- any animated UI must degrade to a static presentation mode.
+
+### `layers.css` responsibilities
+
+`layers.css` provides **layer-agnostic styling helpers** used across many map overlays:
+
+- selection and hover states (e.g., outlines, glow alternatives that remain accessible),
+- boundary emphasis rules (do not overpower masking overlays),
+- consistent thickness/opacity conventions for lines and fills,
+- safe defaults for dense layers (avoid visual noise and misleading salience).
+
+Important constraint:
+
+- **Data category styling** (hydrology vs. admin boundaries) is allowed,
+- **Governance meaning** (restricted/sovereignty/masked) must be reserved for governance overlay components and masking styles.
+
+### `legends.css` responsibilities
+
+Legend styling must:
+
+- remain readable on small viewports and in split-pane layouts,
+- provide accessible swatches and text labels,
+- support screen-reader-friendly descriptions (via structure and SR-only helpers in the component layer),
+- preserve license/provenance display areas (do not truncate or hide the metadata region).
+
+### `masking.css` responsibilities
+
+Masking/generalization visuals are a **governance safeguard**, not a decorative effect.
+
+Masking styles must:
+
+- make generalized regions clearly distinct from precise layers,
+- avoid patterns that could be mistaken for “normal” symbology,
+- remain visible in every theme, including high-contrast mode,
+- support layered overlays (masking should remain visible above base layers where policy requires).
+
+### `hud.css` responsibilities
+
+HUD styling governs:
+
+- cursor readouts (coarse region labels, not necessarily precise coordinates),
+- scale bars and map status indicators,
+- debug overlays in development modes (must not leak sensitive data; must be gated by policy and build flags).
+
+HUD constraint:
+
+- HUD must not obscure governance warnings, legends, or critical interaction areas.
 
 ---
 
-### 🗺️ `maplibre.css` — MapLibre Core Styling
+## 🧠 Story Node & Focus Mode Integration
 
-Defines styles for:
+Map styling must support narrative and focus workflows:
 
-- Map canvas container and parent element  
-- Navigation controls (zoom in/out, reset, compass)  
-- Attribution + scale controls  
-- Popups and info boxes  
-- Click/hover feedback indicators  
-
-Requirements:
-
-- Must use theme variables for backgrounds, borders, and text  
-- Must provide **visible focus states** for keyboard users on controls  
-- Must ensure controls do not block critical map content (e.g., masked overlays, legends)  
-- Must be legible in light/dark/high-contrast themes  
+- **Story Node footprints** (points/lines/polygons) must be legible, discoverable, and accessible.
+- **Focus state highlighting** must be visually distinct from generic selection states and must not conflict with masking overlays.
+- If a Story Node or Focus target is governed as generalized/masked, map styling must:
+  - ensure the generalized visual is clearly indicated,
+  - avoid presenting “precise” styling affordances (e.g., sharp pinpoint markers) when precision is prohibited.
 
 ---
 
-### 🌍 `cesium.css` — Cesium 3D Styling
+## 🌐 STAC, DCAT & PROV Alignment
 
-Defines styles for:
+Map views frequently preview datasets and assets discovered via catalog services.
 
-- Cesium canvas container  
-- 3D globe overlays (e.g., grid lines, bounding overlays)  
-- Timeline + animation controls (if used)  
-- Attribution area  
+Map styling must preserve space and readability for catalog-derived metadata display in:
 
-Constraints:
+- legends,
+- tooltips/popups,
+- layer chips and badges (license, provenance, governance notices).
 
-- Must not diminish legibility of 3D overlays (like sovereignty areas)  
-- Must maintain accessible contrast for all textual overlays  
-- Must coordinate with themes to keep UI visually coherent with 2D maps  
+Key rule:
 
----
-
-### 🧱 `layers.css` — Layer-Specific Styling
-
-Defines styling for:
-
-- Administrative boundaries  
-- Rivers & hydrology lines  
-- Trails, railways, roads  
-- Historical overlays (treaty lines, forts, etc.)  
-- Environmental overlays (e.g., drought indices, land cover)  
-
-Rules:
-
-- All colors must be derived from design tokens via theme variables  
-- Must provide **visually distinct, yet accessible** line/area styling  
-- Must not encode governance meaning (CARE, sovereignty) without the respective governance components  
-- Must avoid saturated or confusing color ramps that could misrepresent risk/severity  
+- **Catalog/provenance content is rendered by components**, but **styles must not make that content unreadable** (e.g., low contrast badges, truncation, hidden overflow without affordances).
 
 ---
 
-### 📊 `legends.css` — Legend Layout & Styling
+## ⚖ FAIR+CARE & Governance
 
-Defines legend styling for:
+Map styling is a governance-critical surface because it can unintentionally reveal sensitive information.
 
-- Map legends with color ramps and patterns  
-- Layer symbolization preview items  
-- H3 masking and sovereignty indications  
-- Legend titles and descriptive text  
+Minimum governance requirements:
 
-Requirements:
+- Sovereignty and restriction notices must remain **visually prioritized** and **non-optional** when policy requires.
+- Masking/generalization must remain **obvious** (no “subtle” masking).
+- Styling must not imply precision when precision is withheld (avoid precise markers for generalized locations).
+- Do not visually “down-rank” warnings (e.g., smaller, lighter, or low-contrast text for serious notices).
 
-- Layout must remain readable on small viewports  
-- Swatches must be WCAG AA-compliant in all themes  
-- Text must clearly describe any CARE/masking semantics  
-- Must work with A11y helpers to provide SR-only descriptions where necessary  
+Indigenous data protection implications:
 
----
-
-### 🧊 `masking.css` — H3 & Masking Visuals
-
-Defines:
-
-- Visualization for H3 cell grids (hexes or equivalent shapes)  
-- Styles for masked or generalized regions  
-- Visual representation of sovereignty-protected or culturally sensitive zones  
-
-Governance constraints:
-
-- Masking visuals **must clearly indicate** that exact locations are generalized  
-- Masked layers must visually differ from “normal” unmasked layers  
-- Masking must not be subtle, ambiguous, or easily confused with other overlays  
-- Any style changes here must not **reduce the clarity** of masking as an ethical safeguard  
+- This styling layer must support sovereignty signals and culturally sensitive restrictions.
+- Icons, patterns, and colors must avoid culturally inappropriate symbolism.
 
 ---
 
-### 🧭 `hud.css` — Map HUD Styling
+## 📦 Data & Metadata
 
-Defines UI for:
+### Telemetry implications
 
-- Cursor HUD (coarse coordinate/region readout)  
-- Debug/diagnostic overlays (if enabled in dev)  
-- Layer status HUDs (used in dev features or advanced views)  
+CSS does not emit telemetry directly, but map styling influences interaction behavior and error rates.
 
-Constraints:
+When significant changes are made to map styling, monitor (via approved telemetry dashboards):
 
-- HUD must not interfere with accessibility or essential controls  
-- Text must be legible and theme-aware  
-- HUD positioning must avoid blocking essential map content (e.g., sovereignty boundaries, warnings)  
+- interaction shifts (layer toggles, legend opens, map control usage),
+- A11y mode usage (high-contrast and reduced-motion sessions),
+- governance affordance engagement (masking notices viewed, “why masked?” interactions).
 
----
-
-## ♿ Accessibility Requirements
-
-Map-specific styles must:
-
-- Ensure all map controls have clear focus outlines (when combined with mixins)  
-- Maintain adequate contrast for all labels and overlays  
-- Respect reduced-motion for interactions:
-  - No purely decorative transitions or animations on map/HUD  
-- Work well with:
-  - Large text mode  
-  - High-contrast theme  
-  - Screen readers (for necessary textual overlays)  
-
-Any map styling change must not degrade:
-
-- The ability to see CARE labels, warnings, and masked areas  
-- The readability of key map UI under different themes  
+Telemetry emitted by the web layer must conform to `telemetry_schema` and must remain non-PII.
 
 ---
 
-## 🔐 FAIR+CARE & Governance Constraints
+## 🧪 Validation & CI/CD
 
-Map styles are deeply connected to governance:
+Map styling changes must be validated to avoid regressions in governance signaling and accessibility.
 
-- Sovereignty-related overlays must remain visually prioritized and recognizable  
-- Masked grids must **not** resemble non-sensitive layers; they must be obviously distinct  
-- CARE-coded overlays must use consistent color semantics as defined by tokens/themes  
-- Styles may **not** hide or mute serious warnings or governance indication in any theme  
+Minimum validation expectations:
 
-If a new map style would hide or confuse:
+- **Contrast validation** for map UI chrome, legends, and warnings across themes.
+- **Reduced-motion validation** for any UI transitions affected by styles.
+- **Visual regression checks** for:
+  - masked vs. unmasked overlays,
+  - legend readability,
+  - control focus visibility,
+  - sovereignty/warning overlays.
+- **Layout regression checks** on narrow and split-pane viewports.
 
-- CARE labels  
-- SovereigntyNotice  
-- MaskingIndicator  
+Repository guidance:
 
-…it is **not allowed** and must be redesigned before merge.
-
----
-
-## 📈 Telemetry & Observability
-
-Map styles themselves do not send telemetry, but they influence:
-
-- User behavior (what gets clicked / interacted with)  
-- A11y event rates (keyboard vs mouse usage)  
-- Potential misclicks if visual design is confusing  
-
-When making significant map styling changes, observability dashboards should be monitored for:
-
-- Changes in map interaction patterns  
-- A11y usage metrics  
-- Governance-related user flows (e.g., less/more interaction with sovereignty layers)
+- Prefer codified checks in CI over manual-only reviews.
+- If new tokens or theming variables are required, they must be introduced through the design-token pipeline (not ad-hoc CSS).
 
 ---
 
-## 🧪 Testing Requirements
+## 🕰️ Version History
 
-Suggested tests:
-
-- **Visual regression tests** of key map views:
-  - Masked vs unmasked overlays  
-  - Legend readability  
-  - Map controls focus outlines  
-
-- **A11y checks:**
-  - Contrast ratios for map labels and controls  
-  - Focus visibility on controls  
-  - Visibility of CARE/masking visuals in all themes  
-
-- **Theming tests:**
-  - Map UI under light/dark/high-contrast themes  
-  - Legends & overlays in theme combinations  
-
-Failures in any of the above should be treated as CI-blocking for map-related PRs.
-
----
-
-## 🕰 Version History
-
-| Version | Date       | Summary                                                                 |
-|--------:|------------|-------------------------------------------------------------------------|
-| v10.4.0 | 2025-11-15 | Introduced map styling spec; aligned maplibre/cesium/legends/masking with tokens & themes |
-| v10.3.2 | 2025-11-14 | Hardened CARE/sovereignty overlay styling in maps                      |
-| v10.3.1 | 2025-11-13 | Initial map-specific styles for MapLibre and base legends             |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v11.2.6 | 2025-12-15 | Reformatted to KFM-MDP v11.2.6 heading registry and section order; clarified governance-critical masking rules; tightened token-first contract; updated release artifact references. |
+| v10.4.0 | 2025-11-15 | Introduced map styling spec; aligned MapLibre/Cesium/legends/masking with tokens & themes. |
+| v10.3.2 | 2025-11-14 | Hardened CARE/sovereignty overlay styling in maps. |
+| v10.3.1 | 2025-11-13 | Initial map-specific styles for MapLibre and base legends. |
 
 ---
 
@@ -312,7 +387,7 @@ Failures in any of the above should be treated as CI-blocking for map-related PR
 
 © 2025 Kansas Frontier Matrix — MIT License  
 FAIR+CARE Certified · Public Document · Version-Pinned  
-Validated under MCP-DL v6.3 & KFM-MDP v10.4.1  
+
+[⬅️ Back to Styles Overview](../README.md) · [💻 Web Source Overview](../../README.md) · [🌐 Web Platform Overview](../../../README.md) · [🛡 Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
-
