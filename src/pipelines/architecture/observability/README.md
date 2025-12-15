@@ -1,27 +1,88 @@
 ---
-title: "🛠️ Kansas Frontier Matrix — Unified Reliable Pipeline Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "src/pipelines/architecture/reliable-pipelines.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
-review_cycle: "Quarterly / Autonomous"
+title: "🔭 Kansas Frontier Matrix — Pipeline Observability Architecture (Diamond⁹ Ω / Crown∞Ω)"
+path: "src/pipelines/architecture/observability/README.md"
+
+version: "v11.2.6"
+last_updated: "2025-12-15"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+review_cycle: "Continuous · FAIR+CARE Council Oversight"
+
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "releases/v10.4.0/manifest.zip"
-telemetry_ref: "releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "schemas/telemetry/pipelines-reliable-updaters-v1.json"
-governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
+previous_version_hash: "<previous-version-sha256>"
+
+doc_uuid: "urn:kfm:doc:src:pipelines:architecture:observability:v11.2.6"
+semantic_document_id: "kfm-src-pipelines-architecture-observability"
+event_source_id: "ledger:src/pipelines/architecture/observability/README.md"
+
+doc_kind: "Architecture"
+intent: "pipelines-observability"
+role: "pipeline-observability-architecture"
+category: "Pipelines · Observability · Telemetry · Sustainability"
+
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
 license: "MIT"
+classification: "Public"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
+sensitivity_level: "Low"
+fair_category: "F1-A1-I2-R2"
+care_label: "Public · Low-Risk"
+
+provenance_chain:
+  - "src/pipelines/architecture/observability/README.md@v11.2.6 (initial creation)"
+
 mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
+telemetry_docs_ref: "../../../../docs/telemetry/"
+telemetry_standards_ref: "../../../../docs/standards/telemetry_standards.md"
+telemetry_schemas_ref: "../../../../schemas/telemetry/"
+telemetry_release_ref: "../../../../releases/v11.2.2/system-telemetry.json"
+energy_schema: "../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "summary"
+  - "semantic-highlighting"
+  - "diagram-extraction"
+  - "metadata-extraction"
+  - "layout-normalization"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+jurisdiction: "Kansas / United States"
+lifecycle_stage: "operational"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded upon next pipeline observability architecture update"
+immutability_status: "mutable-plan"
 ---
 
 <div align="center">
 
-# 🛠️ **Kansas Frontier Matrix — Unified Reliable Pipeline Architecture**  
-`src/pipelines/architecture/reliable-pipelines.md`
+# 🔭 **Kansas Frontier Matrix — Pipeline Observability Architecture (v11)**
+`src/pipelines/architecture/observability/README.md`
 
-**Purpose:**  
-Define the **reliability, idempotency, rollback/resume, and blue/green deployment architecture** required for all pipelines and updaters in the Kansas Frontier Matrix (KFM).  
-Ensures pipelines are **deterministic, exactly-once at the boundary, debuggable, and fast to roll back** without rewriting history.
+**Purpose**  
+Define the **observability contract** for KFM pipelines: the **telemetry, sustainability, lineage, and governance**
+signals that every pipeline run MUST expose so that ETL → catalogs → graph → APIs → UI → Story Nodes / Focus Mode
+remains **measurable, auditable, reproducible, and governed**.
 
 </div>
 
@@ -29,349 +90,346 @@ Ensures pipelines are **deterministic, exactly-once at the boundary, debuggable,
 
 ## 📘 Overview
 
-Reliable pipelines in KFM follow a **single, enforced pattern**:
+KFM’s pipeline layer (`src/pipelines/**`) is expected to be **deterministic**, **testable**, and **traceable** end‑to‑end.
+Observability is not “nice to have” in KFM—**it is governance evidence**.
 
-1. **Trigger** — cron, event, or manual with a documented envelope  
-2. **Light AI (optional)** — schema and mapping hints only, frozen to config  
-3. **Deterministic ETL** — pure, stateless transforms with pinned versions  
-4. **Validation & QA Gates** — schema, spatial, temporal, domain, drift  
-5. **Idempotent Upsert** — natural keys + content hashes, transactional outbox  
-6. **Metadata & Versioning** — STAC/DCAT, provenance, semantic versions  
-7. **Blue/Green Publish** — immutable artifacts, pointer flips, health checks  
-8. **Alerts & Telemetry** — logs, metrics, traces, FAIR+CARE telemetry events  
-9. **Rollback & Resume** — pointer-based rollback, checkpoint-based resume  
+This document defines:
 
-All patterns MUST comply with:
+1. **What** pipeline observability must capture (minimum surfaces + correlation keys)
+2. **Where** observability artifacts live (schemas, docs, release snapshots)
+3. **How** observability aligns with KFM catalogs and provenance (STAC/DCAT/PROV)
+4. **How** observability informs CI gates and user-facing experiences (Story Nodes / Focus Mode)
 
-- **MCP-DL v6.3**  
-- **Markdown Rules v10.4**  
-- **FAIR+CARE governance**  
+### Core references
+
+- Telemetry standards: `../../../../docs/standards/telemetry_standards.md`
+- Telemetry documentation suites: `../../../../docs/telemetry/`
+- Telemetry schemas: `../../../../schemas/telemetry/`
+- Release telemetry snapshot example: `../../../../releases/v11.2.2/system-telemetry.json`
+- Markdown compliance rules (applies to this file): `../../../../docs/standards/kfm_markdown_protocol_v11.2.6.md`
+
+### Observability surfaces
+
+Pipelines MUST expose observability across **four surfaces**:
+
+- **Logs** (human + machine readable; structured; governance-safe)
+- **Metrics** (runtime, counts, errors, performance budgets)
+- **Sustainability** (energy and carbon, using governed schemas)
+- **Lineage** (inputs → transformations → outputs, aligned to PROV and catalogs)
+
+> Implementation details (exact metric names, validators, and storage conventions) are governed under
+> `docs/telemetry/**` and `schemas/telemetry/**`. This README defines the pipeline-facing contract and
+> integration points.
 
 ---
 
 ## 🗂️ Directory Layout
 
-~~~~~text
-src/pipelines/architecture/
-├── reliable-pipelines.md         # This file
-src/pipelines/
-├── etl/
-│   ├── batch/                    # Batch ETL jobs (files, APIs, backfills)
-│   └── streaming/                # Streaming ETL (Kafka, websockets, events)
-└── common/
-    ├── idempotency/              # Idempotency keys, hashes, outbox utilities
-    ├── validation/               # GX / JSONSchema / STAC validation helpers
-    ├── observability/            # Logging, metrics, tracing helpers
-    ├── versioning/               # Artifact versions, blue/green pointers
-    └── governance/               # FAIR+CARE and provenance hooks
-
-data/
-├── sources/                      # Source descriptors (contracts)
-├── raw/                          # Raw ingested data
-├── work/                         # Staging for validation / drift checks
-└── processed/
-    ├── blue/                     # Currently serving versions
-    └── green/                    # Candidate versions
-~~~~~
+~~~text
+📁 KansasFrontierMatrix/
+├── 📁 src/
+│   ├── 📁 pipelines/                                   — ETL + orchestration pipelines
+│   │   └── 📁 architecture/
+│   │       └── 📁 observability/
+│   │           └── 📄 README.md                        — Pipeline observability contract (this doc)
+│   │
+│   └── 📄 ARCHITECTURE.md                              — Backend architecture overview (system context)
+│
+├── 📁 docs/
+│   ├── 📁 telemetry/                                   — Telemetry documentation suites (events, lineage,
+│   │                                                     dashboards)
+│   └── 📁 standards/
+│       ├── 📄 kfm_markdown_protocol_v11.2.6.md         — Markdown authoring protocol (governs this README)
+│       └── 📄 telemetry_standards.md                   — Telemetry governance super-standard
+│
+├── 📁 schemas/
+│   └── 📁 telemetry/                                   — Governed telemetry schemas (energy, carbon, lineage)
+│
+├── 📁 tools/
+│   └── 📁 telemetry/                                   — Telemetry tooling (aggregation, export, validation)
+│
+└── 📁 releases/
+    └── 📁 v11.2.2/
+        ├── 🧾 system-telemetry.json                    — Release telemetry snapshot (example)
+        ├── 🧾 sbom.spdx.json                            — Release SBOM
+        └── 🧾 manifest.zip                              — Release manifest bundle
+~~~
 
 ---
 
-## 🧩 Reliable Pipeline Architecture (Indented Mermaid)
+## 🧭 Context
 
-~~~~~mermaid
+### Pipeline position in KFM’s system contract
+
+KFM’s system flow is documentation-dependent and stage-gated:
+
+> Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode
+
+Observability must be **consistent across that entire chain**, so that:
+
+- an operator can trace failures and performance regressions,
+- a reviewer can validate governance gates and provenance,
+- Focus Mode can remain evidence-led and safe.
+
+### Why observability is a governed architecture concern
+
+KFM explicitly rejects “black box” processing. The pipeline layer is designed so that outputs can be validated,
+re-run, and audited—down to evidence and intermediate transformations.
+
+In practice, this requires observability signals that are:
+
+- **Correlatable** (run IDs and dataset IDs link logs ↔ telemetry ↔ provenance)
+- **Deterministic** (repeated runs produce explainable differences; configs captured)
+- **Governance-safe** (no secrets, no PII, no sensitive coordinates)
+- **Release-packaged** (telemetry snapshots are part of releases)
+
+---
+
+## 🗺️ Diagrams
+
+### 1) Observability flow across pipeline stages
+
+~~~mermaid
 flowchart TD
-  T["Trigger<br/>cron · event · manual"] --> AI["Light AI (Optional)<br/>schema · mapping hints"]
-  AI --> ETL["Deterministic ETL<br/>pure transforms"]
-  ETL --> VAL["Validation & QA Gates<br/>schema · spatial · temporal · drift"]
-  VAL -->|pass| UPS["Idempotent Upsert<br/>natural key · content hash · outbox"]
-  VAL -->|fail| OBS["Stop · Alert · DLQ"]
-  UPS --> META["Metadata & Versioning<br/>STAC · DCAT · provenance"]
-  META --> BG["Blue/Green Publish<br/>green → blue pointer flip"]
-  BG --> TEL["Alerts & Telemetry<br/>logs · metrics · traces"]
-~~~~~
+  A["ETL / Orchestration (src/pipelines)"] --> B["Catalog Publish (STAC/DCAT/PROV)"]
+  B --> C["Graph Ingest (Neo4j)"]
+  C --> D["API Layer"]
+  D --> E["Web UI Build/Deploy"]
+  E --> F["Story Nodes / Focus Mode"]
+
+  A --> L["Structured Logs"]
+  A --> M["Lineage Events (PROV / OpenLineage if enabled)"]
+  A --> N["Telemetry + Sustainability Metrics"]
+
+  L --> T["Telemetry Tools (tools/telemetry)"]
+  M --> T
+  N --> T
+
+  T --> R["Release Telemetry Snapshot (releases/*/system-telemetry.json)"]
+  T --> G["Governance Evidence (standards + reviews)"]
+~~~
+
+### 2) Correlation keys (minimum contract)
+
+~~~mermaid
+flowchart LR
+  RUN["run_id"] --> LOGS["logs"]
+  RUN --> METRICS["metrics"]
+  RUN --> LINEAGE["lineage"]
+  RUN --> RELEASE["release telemetry snapshot"]
+
+  DATASET["dataset_id / stac_item_id"] --> LINEAGE
+  DATASET --> METRICS
+
+  COMMIT["commit_sha"] --> RUN
+~~~
 
 ---
 
-## 🧱 1. Triggers & Envelopes
+## 🧠 Story Node & Focus Mode Integration
 
-Every run MUST start with a **trigger envelope** capturing intent and idempotency:
+Story Nodes and Focus Mode depend on **trustworthy, provenance-linked outputs**, and KFM explicitly targets
+performance and safety gates for the user experience.
 
-### Trigger Types
+Pipeline observability supports this in three ways:
 
-- **Time-based:** nightly/hourly refreshes, scheduled backfills  
-- **Event-based:** webhooks, file drops, STAC updates, message bus events  
-- **Manual:** governance-approved replays or hotfixes  
+1. **Evidence linkage (provenance-first)**  
+   Focus Mode should summarize content that is traceable to governed sources and lineage, not “free text”
+   without provenance pointers.
 
-### Envelope Example
+2. **Performance + regression gates**  
+   KFM workstreams include CI gating for performance regressions (especially around Focus Mode queries and
+   narrative rendering). Observability metrics are the inputs to those gates.
 
-~~~~~json
+3. **Accessible, user-safe observability surfaces**  
+   If observability is surfaced to users (e.g., “dataset last processed”, “quality gate passed”, “processing cost”),
+   it MUST be:
+   - aggregate-only (no sensitive fields),
+   - explained in plain language,
+   - aligned with accessibility expectations (WCAG).
+
+> Focus Mode should never expose raw pipeline logs, tokens, or sensitive coordinate details.
+> It should expose **validated summaries** of governed outcomes.
+
+---
+
+## 🧪 Validation & CI/CD
+
+This README is governed by KFM-MDP (applies to `src/**/README.md`), which means CI enforces:
+
+- front-matter presence and correctness
+- approved H2 headings only
+- directory layout fencing correctness
+- schema linting and provenance checks
+- secret and PII scanning
+
+### Observability-related CI gates
+
+CI SHOULD treat these as hard gates for protected branches and release packaging:
+
+- **Telemetry snapshot presence** for release candidates (e.g., `releases/*/system-telemetry.json`)
+- **Telemetry schema validation** against governed schemas under `schemas/telemetry/**`
+- **Performance regression thresholds** (for APIs, UI builds, and Focus Mode flows)
+- **Security posture deltas** (dependency/SBOM drift checks) when enabled by governance
+
+---
+
+## 📦 Data & Metadata
+
+### Observability artifacts (what pipelines must emit)
+
+At minimum, each pipeline run MUST be able to produce:
+
+- **Run identity**: `run_id`, `commit_sha`, environment context
+- **Stage timing**: start/end timestamps, duration, retries, status
+- **Counts and integrity signals**: records in/out, warnings/errors, validation pass/fail
+- **Sustainability**: energy and carbon metrics aligned to governed schemas
+- **Lineage pointers**: which inputs produced which outputs (catalog IDs + PROV links)
+
+### Illustrative telemetry record (schema-aligned shape is governed elsewhere)
+
+~~~json
 {
-  "trigger_id": "cron-2025-11-15T00:00Z-kgs-wells",
-  "trigger_kind": "cron",
-  "dataset_id": "kgs_wells",
-  "source_uri": "https://example.org/kgs/wells",
-  "requested_range": {
-    "start": "1900-01-01",
-    "end": "2025-11-01"
+  "run_id": "kfm-run-YYYYMMDD-HHMMSS-001",
+  "commit_sha": "<git-sha>",
+  "pipeline": {
+    "name": "etl_ingest_to_catalog",
+    "stage": "ETL",
+    "attempt": 1
   },
-  "idempotency_key": "sha256(dataset_id|requested_range|source_uri)"
+  "status": "success",
+  "timing": {
+    "started_at": "2025-12-15T12:00:00Z",
+    "ended_at": "2025-12-15T12:07:12Z",
+    "runtime_sec": 432
+  },
+  "io": {
+    "records_in": 120345,
+    "records_out": 120112
+  },
+  "sustainability": {
+    "energy_wh": 3.2,
+    "carbon_gco2e": 4.1
+  },
+  "lineage": {
+    "inputs": ["stac:item:raw:example-001"],
+    "outputs": ["stac:item:processed:example-001"],
+    "prov_activity_id": "prov:activity:kfm-run-YYYYMMDD-HHMMSS-001"
+  },
+  "release_artifacts": {
+    "telemetry_snapshot_ref": "releases/v11.2.2/system-telemetry.json"
+  }
 }
-~~~~~
+~~~
 
-The `idempotency_key` is used to ensure **we do not re-run the same envelope twice** once it has succeeded.
+> The exact JSON schema and required/optional fields are governed under `schemas/telemetry/**`.
+> This example illustrates **what must be possible to express** for auditability.
 
----
+### Configuration capture (determinism requirement)
 
-## 🎯 2. Idempotency Requirements
-
-### Trigger-Level Idempotency Key
-
-~~~~~text
-sha256(dataset_id + "|" + version_or_range + "|" + source_uri)
-~~~~~
-
-### Record-Level Natural Key & Hash
-
-- **Natural key:** minimal stable identity for each record (e.g. `(station_id, date)`).
-- **Content hash:** hash of **normalized record without runtime fields** (no timestamps, no ephemeral IDs).
-
-~~~~~text
-content_hash = sha256(normalized_record_without_runtime_fields)
-~~~~~
-
-### Transactional Outbox
-
-Any pipeline that writes to the graph and also:
-
-- Sends events to Kafka / queues  
-- Writes to STAC / DCAT endpoints  
-- Triggers downstream services  
-
-MUST use a **transactional outbox** to ensure:
-
-- Internal DB writes and outbox entries are committed in a **single transaction**.  
-- A separate worker delivers outbox messages with retries and backoff.  
+To support reproducibility, runs SHOULD capture the exact configuration used (pipeline parameters, versions,
+seeds where applicable) and associate it with `run_id`. How and where that configuration is stored is governed
+by pipeline implementation conventions and MCP artifacts.
 
 ---
 
-## 🧪 3. Validation & QA Gates
+## 🌐 STAC, DCAT & PROV Alignment
 
-No data is promoted to `data/processed/` or Neo4j until it passes **all required gates**.
+KFM’s pipelines and catalogs are designed around:
 
-### Validation Matrix
+- **STAC** (asset-level discovery and geospatial metadata)
+- **DCAT** (catalog-level discovery and distributions)
+- **PROV-O** (processing lineage and accountability)
 
-| Gate     | Check Type                             | Tooling                          | Action      |
-|----------|----------------------------------------|----------------------------------|------------|
-| Schema   | JSON Schema / Pydantic / STAC          | GX, `jsonschema`, STAC validator | Fail        |
-| Spatial  | CRS validity, geometry sanity          | GDAL/OGR, Shapely                | Fail        |
-| Temporal | Range, monotonicity                    | Custom checks                    | Warn/Fail   |
-| Domain   | Enums, ranges, controlled vocabularies | Lookup tables, GX                | Fail        |
-| Drift    | Statistical differences vs last good   | Custom metrics                   | Warn/Review |
+### Recommended mapping (contract-level)
 
-On **any failure**:
+- **Pipeline run** → `prov:Activity`
+- **Input/Output assets** → `prov:Entity` (also referenced via STAC Item IDs)
+- **Software execution context** → `prov:Agent` (implementation may model this explicitly)
 
-- Outputs remain in `data/work/**` only.  
-- `qa_gate_failed` events are emitted.  
-- Pipelines MUST NOT publish or update pointers.
+### Versioning + successor chains
 
----
+Where assets and metadata are updated over time, version chains SHOULD be captured so that:
 
-## 🧱 4. Versioning & Blue/Green Pipeline
+- the graph can represent predecessor/successor relations,
+- catalogs can express evolution,
+- observability can explain “what changed” between runs.
 
-### Immutable Artifacts
-
-All artifacts generated by a run MUST be **immutable** and versioned, e.g.:
-
-~~~~~text
-s3://kfm/artifacts/{dataset}/{version}/...
-data/processed-green/{dataset}/...
-data/processed-blue/{dataset}/...
-~~~~~
-
-### Promotion Sequence
-
-1. Write candidate dataset to `processed-green/**`.  
-2. Run post-publish health checks (can the UI/API query the candidate successfully?).  
-3. Flip pointer to `processed-blue/**` atomically.  
-4. Emit `publish_promoted` telemetry and update metadata (STAC/DCAT).
-
-Blue/green patterns guarantee that **rollback is a pointer flip**, not a destructive rewrite.
+(See KFM’s STAC Versioning Extension usage and successor/predecessor linkage conventions in project references.)
 
 ---
 
-## 📡 5. Observability & Telemetry
+## 🧱 Architecture
 
-Pipelines MUST integrate with the observability architecture defined in:
+### Design goals
 
-- `src/pipelines/architecture/observability/README.md`
+Pipeline observability MUST:
 
-### Required Log Fields
+1. **Correlate** telemetry ↔ lineage ↔ artifacts ↔ governance decisions
+2. **Support release packaging** (telemetry snapshots are part of release evidence)
+3. **Stay governance-safe** (no secrets/PII; sovereignty-safe summaries)
+4. **Stay lightweight** (do not block pipelines with heavy collectors in hot paths)
 
-- `dataset_id`  
-- `run_id`  
-- `trigger_id`  
-- `stage` (`extract`, `transform`, `validate`, `load`, `publish`)  
-- `status`  
-- `idempotency_key`  
-- `duration_ms`  
-- `error_class`, `error_message` (if any)  
+### Architectural responsibilities
 
-### Example Telemetry Events
+- `src/pipelines/**`  
+  Emits run-scoped observability signals and ensures each stage boundary is measurable.
 
-~~~~~json
-{"event":"stage_started","stage":"etl","run_id":"2025-11-15-abc","dataset":"kgs_wells"}
-{"event":"qa_gate_failed","gate":"schema","errors":3,"run_id":"2025-11-15-abc","dataset":"kgs_wells"}
-{"event":"upsert_summary","inserted":1240,"updated":311,"skipped":9123,"run_id":"2025-11-15-abc","dataset":"kgs_wells"}
-{"event":"publish_promoted","from":"green","to":"blue","version":"v10.4.2","run_id":"2025-11-15-abc","dataset":"kgs_wells"}
-~~~~~
+- `tools/telemetry/**`  
+  Aggregates, validates, compacts, and exports telemetry into governed release snapshots.
 
-Metrics, traces, and telemetry output locations are defined in the observability spec; pipelines must comply.
+- `schemas/telemetry/**`  
+  Defines the authoritative telemetry schema contracts (including energy and carbon schemas).
 
----
+- `docs/telemetry/**` and `docs/standards/telemetry_standards.md`  
+  Defines governance rules: what can be collected, retained, and surfaced.
 
-## 🔁 6. Retries, Backoff & DLQ
+### Optional lineage event integration
 
-### Retry Policy
-
-- Maximum attempts: **5**  
-- Strategy: **exponential backoff with jitter**  
-- Only applied to **I/O operations** (remote APIs, storage, DB connections)  
-- All retries MUST honor:
-  - Timeouts  
-  - Circuit breakers  
-
-### DLQ (Dead Letter Queue)
-
-Any work item that exceeds retry limits MUST:
-
-- Be written to a DLQ with:
-  - Payload  
-  - Error class and message  
-  - Stack trace (if available)  
-  - `first_seen_at`, `last_seen_at`, and `retry_count`  
-- Trigger an alert route (SRE, governance, or data engineering).
+Where enabled and governed, pipelines MAY emit OpenLineage-compatible events in addition to PROV-aligned
+lineage artifacts. OpenLineage is particularly useful for expressing job and dataset lineage in orchestration tools.
+If used, it MUST still respect sovereignty rules and PII controls.
 
 ---
 
-## 🧯 7. Rollback & Resume
+## ⚖ FAIR+CARE & Governance
 
-### Rollback
+Telemetry is **governance evidence**. This implies:
 
-Rollback is always:
+- **Do not collect or emit PII** in logs or metric tags.
+- **Do not leak secrets** (tokens, keys, credentials) in any output.
+- **Do not emit sensitive coordinates** or restricted cultural locations in raw form.
+- **Use only governed schemas** and documented semantics for sustainability (energy/carbon) fields.
+- **Treat telemetry as non-training data** (no model training on telemetry logs).
 
-- **Pointer-based** (blue/green), not a destructive deletion.  
-- Documented in governance ledger (who, why, when).  
+When Indigenous or sensitive data is involved, pipelines MUST comply with:
 
-Rules:
+- `../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`
 
-- Never mutate or delete previously published artifacts in place.  
-- Use the previous `blue` version as the rollback target.  
-- For graph data, use snapshots or replay from last known-good artifacts.
+Governance escalation is required when:
 
-### Resume
-
-Resume MUST use **checkpoints**:
-
-- Cursor types:
-  - Date/time range
-  - Page/token
-  - Offset/sequence ID  
-- Checkpoints persisted in durable storage.  
-- Resume logic must rely on:
-  - Idempotent reads  
-  - Idempotent upserts  
-  - Idempotent side-effects (outbox pattern)  
-
-This ensures safe re-runs without duplication or data loss.
-
----
-
-## 📜 8. Data-Level Requirements
-
-Any dataset managed by a reliable pipeline MUST have:
-
-- A `data/sources/<dataset>.json` descriptor with:
-  - Source endpoints and schemas  
-  - Temporal and spatial coverage  
-  - License and CARE tags  
-  - Expected outputs (tables, COGs, STAC collections, graph updates)  
-
-Directory expectations:
-
-~~~~~text
-data/
-  sources/<dataset>.json
-  raw/<dataset>/...
-  work/<dataset>/...
-  processed/
-    blue/<dataset>/...
-    green/<dataset>/...
-  stac/
-    collections/...
-    items/...
-~~~~~
-
----
-
-## 🧮 9. Idempotent Upsert Pseudocode
-
-~~~~~python
-def upsert(records, store, run_id):
-    for r in records:
-        nk = natural_key(r)
-        h = content_hash(normalize(r))
-        prev = store.get_meta(nk)
-
-        if prev and prev.hash == h:
-            mark_skipped(nk, run_id)
-            continue
-
-        store.transactional_upsert(
-            natural_key=nk,
-            record=r,
-            hash=h,
-            prev_hash=prev.hash if prev else None,
-            run_id=run_id,
-        )
-~~~~~
-
-This pattern MUST be applied to all updaters: graph upserts, tabular sinks, and external-facing indices.
-
----
-
-## 🧑‍🏭 10. Operator Runbook
-
-Operators MUST follow these steps:
-
-1. **Trigger**  
-   - Confirm correct dataset + mode (cron/event/manual).  
-   - For manual runs, document justification in governance ledger.  
-2. **Monitor**  
-   - Watch logs for `stage_started`, `qa_gate_failed`, `stage_failed`.  
-   - Check dashboards for retries, DLQ entries, and performance anomalies.  
-3. **On Validation Failure**  
-   - Inspect gate reports and sample failing records.  
-   - Fix schema, transform, or contracts.  
-   - Perform a small **dry-run** on a subset.  
-   - Re-run full pipeline once verified.  
-4. **On Publish Issues**  
-   - If candidate green data is unhealthy:
-     - Flip pointer back to previous blue.  
-     - Open an incident with `run_id`, scope, and impact.  
-   - Fix underlying cause, then re-run.  
-5. **Resume**  
-   - Use checkpoints; do not restart from scratch unless necessary.  
-   - Confirm idempotency guarantees before resume.  
-6. **Close Out**  
-   - Confirm telemetry and governance entries are written.  
-   - Update release notes if pointer flips or schema changes occurred.  
+- introducing new telemetry fields,
+- changing telemetry retention,
+- adding new lineage emitters (e.g., OpenLineage) to regulated pipelines,
+- surfacing telemetry in user-facing experiences.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Author / Team              | Summary                                                                        |
-|--------:|------------|----------------------------|--------------------------------------------------------------------------------|
-| v10.4.0 | 2025-11-15 | Pipeline Architecture Team | Unified reliable pipeline architecture; aligned with observability spec format. |
-| v10.3.1 | 2025-11-13 | Pipeline Architecture Team | Previous “Reliable Pipeline Architecture Guide”.                               |
-| v1.0.0  | 2025-11-15 | ETL/Updaters Working Group | Initial “Reliable Updaters” pattern.                                           |
+| Version  | Date       | Summary                                                                 |
+|---------:|------------|-------------------------------------------------------------------------|
+| v11.2.6  | 2025-12-15 | Initial creation of pipeline observability architecture README (v11).   |
+
+---
+
+<div align="center">
+
+© 2025 Kansas Frontier Matrix — MIT License  
+🔭 Pipeline Observability Architecture v11 · KFM‑MDP v11.2.6 · STAC/DCAT/PROV Aligned · FAIR+CARE Governed
+
+[🛡 Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[⚖ FAIR+CARE Guide](../../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🧭 Sovereignty Policy](../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+</div>
