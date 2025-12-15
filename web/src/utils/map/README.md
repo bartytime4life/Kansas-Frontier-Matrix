@@ -1,266 +1,468 @@
 ---
 title: "🗺️ Kansas Frontier Matrix — Map & Layer Utilities (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/map/README.md"
-version: "v10.4.1"
-last_updated: "2025-11-15"
-review_cycle: "Quarterly / Autonomous · FAIR+CARE Council Oversight"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.4.1/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.4.1/manifest.zip"
-telemetry_ref: "../../../../releases/v10.4.1/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-utils-map-v1.json"
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
+
+version: "v11.2.6"
+last_updated: "2025-12-15"
+review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
+release_stage: "Stable / Governed"
+lifecycle: "Long-Term Support (LTS)"
+content_stability: "stable"
+
 status: "Active / Enforced"
 doc_kind: "Architecture"
+header_profile: "standard"
+footer_profile: "standard"
+diagram_profiles:
+  - "mermaid-flowchart-v1"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+
+sbom_ref: "../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.6/focus-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-utils-map-v11.json"
+energy_schema: "../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
+
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
+
 intent: "web-map-utilities"
+role: "frontend-map-layer-logic"
+category: "Web · Utilities · MapLibre · Layers"
+
+classification: "Public Document"
 fair_category: "F1-A1-I1-R1"
+care_label: "Public · Governed"
+sensitivity_level: "Low"
+public_exposure_risk: "Low"
+indigenous_rights_flag: true
+risk_category: "Low"
+redaction_required: false
+data_steward: "KFM FAIR+CARE Council"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "SoftwareSourceCode"
+  owl_time: "TemporalEntity"
+  prov_o: "prov:Plan"
+  geosparql: "geo:FeatureCollection"
+
+provenance_chain:
+  - "web/src/utils/map/README.md@v10.4.1"
+provenance_requirements:
+  versions_required: true
+  newest_first: true
+
+json_schema_ref: "../../../../schemas/json/web-utils-map-readme-v11.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/web-utils-map-readme-v11-shape.ttl"
+
+doc_uuid: "urn:kfm:doc:web-utils-map-readme:v11.2.6"
+semantic_document_id: "kfm-doc-web-utils-map-readme"
+event_source_id: "ledger:web/src/utils/map/README.md"
+immutability_status: "version-pinned"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+ai_transform_permissions:
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+ai_transform_prohibited:
+  - "summaries"
+  - "speculative-additions"
+  - "unverified-historical-claims"
+  - "relationship-fabrication"
+  - "governance-override"
+
+machine_extractable: true
+accessibility_compliance: "WCAG 2.1 AA+"
+ttl_policy: "Annual review"
+sunset_policy: "Superseded on next map-utils revision"
+jurisdiction: "Kansas / United States"
 ---
 
 <div align="center">
 
-# 🗺️ **Kansas Frontier Matrix — Map & Layer Utilities**  
+# 🗺️ **Kansas Frontier Matrix — Map & Layer Utilities (v11.2.6)**
 `web/src/utils/map/README.md`
 
-**Purpose:**  
-Describe the **MapLibre-focused utility modules** used to render, style, and synchronize geospatial layers  
-in the KFM React client — including **STAC/DCAT → MapLibre transforms**, **layer styling tokens**, **bbox  
-and fit-to-view operations**, and **feature selection logic** used by Focus Mode v2 and the timeline.
+**Purpose**  
+Define the **MapLibre-focused utility layer** that transforms KFM catalog + graph outputs into
+**deterministic, governance-safe map layers** and stable interaction primitives used by the Web Platform.
+
+These utilities are intentionally **pure** (data → data), **TypeScript-strict**, and **FAIR+CARE + sovereignty aware**:
+they preserve licenses/attribution, prevent precision leaks (masked/restricted sites), and keep map/timeline/Focus Mode
+synchronization consistent across devices.
 
 </div>
 
 ---
 
-## 🧭 Overview
+## 📘 Overview
 
-The `web/src/utils/map/` module provides **pure, side-effect-free helpers** that sit between:
+`web/src/utils/map/**` is the **front-end mapping utility layer** that sits between:
 
-- STAC/DCAT/graph metadata and MapLibre’s runtime style, and  
-- Knowledge graph entities (Places, Events, Story Nodes) and on-screen features.
+- **Catalog + graph metadata** (STAC/DCAT, graph entities, Story Nodes, Focus Mode payloads), and
+- **MapLibre runtime configuration** (sources, layers, filters, legends, and selection logic).
 
-These utilities ensure that:
+Primary responsibilities:
 
-- All map layers are **deterministic**, **typed**, and **reusable**  
-- Layer creation & updates are **declarative** (no ad-hoc style mutations)  
-- Bboxes and viewports are computed consistently for **timeline & Focus Mode**  
-- FAIR+CARE metadata (source, license, sensitivity flags) is preserved and attachable to the UI  
+- Convert **STAC Items/Collections** (and DCAT-derived metadata) into **MapLibre source + layer descriptors**
+  without mutating MapLibre state directly.
+- Provide a **single visual language** via shared style tokens (colors/opacities/zoom thresholds) for KFM layers
+  (historic maps, environmental layers, settlements/places, documents/media overlays).
+- Provide deterministic **bbox and viewport math** (merge/pad/fit) for:
+  - “Zoom to layer”
+  - “Zoom to Focus Mode context”
+  - Timeline-driven camera updates
+- Provide safe **feature selection and time filtering** (by ID, properties, temporal windows) and return stable
+  “clicked entity” descriptors for Focus Mode + Story Nodes.
+- Preserve and propagate **FAIR+CARE + sovereignty metadata** so the UI can:
+  - display license/attribution
+  - label restricted/generalized geometries correctly
+  - avoid exposing disallowed precision (e.g., culturally sensitive locations)
 
-No module in `utils/map/` directly talks to the network or DOM. They operate only on JS/TS data structures.
+Hard constraints:
 
----
-
-## 📂 Directory Layout
-
-Expected layout for this module:
-
-```
-
-web/src/utils/map/
-│
-├── stacToMaplibre.ts      # STAC Item → MapLibre source/layer definitions
-├── layerStyles.ts         # Shared style tokens (colors, opacities, zoom thresholds)
-├── bboxUtils.ts           # Bbox ops (merge, pad, fit-to-view helpers)
-├── featureSelectors.ts    # Feature selection and filtering by ID / properties
-├── interactions.ts        # Hit-testing helpers wired into MapLibre events
-└── legends.ts             # Legend/value mapping helpers for categorical/continuous layers
-
-````
+- No network calls, no file I/O, no DOM access, no global state.
+- Framework-agnostic: no React imports.
+- Same input → same output (deterministic; no `Date.now()`, no randomness).
+- Never sharpen uncertain or masked geometry/time into a “more precise” representation.
 
 ---
 
-## 🧱 Module Descriptions
+## 🗂️ Directory Layout
 
-### 🧩 `stacToMaplibre.ts`
+~~~text
+📁 web/src/utils/map/                                  — MapLibre + layer utilities (pure functions)
+├── 📄 README.md                                       — This document (architecture + rules)
+├── 📄 stacToMaplibre.ts                               — STAC Item/Collection → MapLibre source/layer descriptors
+├── 📄 layerStyles.ts                                  — Shared style tokens (colors, widths, opacities, zoom thresholds)
+├── 📄 bboxUtils.ts                                    — BBox + viewport helpers (merge, pad, fit; antimeridian-safe)
+├── 📄 featureSelectors.ts                             — Feature selection/filtering (IDs, properties, time windows)
+├── 📄 interactions.ts                                 — Hit-test interpretation helpers (click/hover → stable selection)
+└── 📄 legends.ts                                      — Legend/value mapping helpers (categorical + continuous ramps)
+~~~
 
-**Goal:** Convert STAC Items/Collections into **MapLibre-ready** source + layer configs.
+---
 
-Typical responsibilities:
+## 🧭 Context
 
-- Map a STAC Item’s `assets` → MapLibre `source` definitions (raster, vector, geojson)
-- Respect `bbox`, `geometry`, `proj` extension data, and media type
-- Attach KFM-specific metadata (e.g., CARE labels, layer category, timeline range)
+KFM’s web map is designed to render **historical and modern geospatial layers** using MapLibre as the primary renderer
+(with optional Leaflet usage for lighter-weight or specialized cases). Layers and map behavior are driven by:
 
-Example (conceptual):
+- **Data catalogs (STAC/DCAT)**: layer availability, temporal extent, spatial footprint, licenses, attribution
+- **Knowledge graph entities**: Places/Events/Story Nodes and their linked geometries
+- **Focus Mode & timeline**: synchronized “what / when / where” context windows
 
-```ts
-interface MapLayerDescriptor {
-  id: string;
-  source: maplibregl.AnySourceData;
-  layers: maplibregl.LayerSpecification[];
-  temporal?: { start: string; end?: string };
-  faircare?: { license: string; sensitivity?: "public" | "restricted" };
+This utility layer exists to keep mapping behavior:
+
+- **Declarative** (derived descriptors, not ad-hoc mutations)
+- **Governed** (CA(R)E labels and masking behavior preserved)
+- **Consistent** (timeline ↔ map synchronization does not drift across pages/components)
+- **Performant** (large data pushed to tiles when possible; avoid giant GeoJSON in UI)
+
+---
+
+## 🧱 Architecture
+
+### 1) `stacToMaplibre.ts` — Catalog → Runtime Layer Descriptors
+
+Goal: transform catalog records into a stable “map layer descriptor” that the UI can mount/unmount predictably.
+
+Typical inputs:
+
+- STAC Item/Collection metadata (assets, roles, bbox/geometry, datetime / extent)
+- Optional DCAT metadata (license text, publisher, distribution hints)
+- Optional KFM governance overlays (CARE label, sensitivity, masking policy)
+- Optional style options (layer kind, category, default visibility)
+
+Typical outputs:
+
+- MapLibre `source` definition (raster tiles, vector tiles, GeoJSON source, etc.)
+- One or more MapLibre `layer` specs (fill/line/symbol/raster/hillshade/etc.)
+- A stable `id` namespace usable across:
+  - map layers
+  - legends
+  - telemetry events
+  - URL-safe references (when allowed)
+
+Design rule: if an asset is restricted or generalized, the output must reflect that restriction in:
+- layer metadata (labels / flags)
+- geometry resolution (generalized tiles or aggregated geometry)
+- attribution text (rights-holder / restriction notice)
+
+### 2) `layerStyles.ts` — Single Visual Language
+
+Goal: centralize all map styling so the UI never hardcodes styles in components.
+
+Expected contents:
+
+- Palette + contrast-safe tokens (including high-contrast mode)
+- Opacity and blending rules (historic basemap overlays, hillshade, raster transparency)
+- Category mapping for KFM layer families (examples: “Maps”, “Environment”, “Settlements”, “Documents”)
+- Zoom thresholds and symbol density rules
+- Focus Mode highlight styles (selected / hovered / related / suppressed)
+
+Governance rule: styles may signal “restricted/generalized” via patterns (e.g., hatch, dashed outline), but must not
+imply exact precision when the data is generalized.
+
+### 3) `bboxUtils.ts` — Spatial Extents, Safely
+
+Goal: deterministic bbox math for map camera controls and UI framing.
+
+Must handle:
+
+- Merging multiple bboxes
+- Padding bboxes for better framing
+- Clamping to valid world bounds
+- Edge cases:
+  - antimeridian crossing
+  - tiny extents (point-like layers)
+  - mixed geometry precision (points + polygons)
+  - invalid/inverted bboxes (repair or reject deterministically)
+
+Sovereignty rule: for generalized or restricted entities, the bbox returned must not defeat masking (e.g., do not
+compute a tight bbox from a restricted point geometry).
+
+### 4) `featureSelectors.ts` — Selection + Filtering (IDs, Props, Time)
+
+Goal: deterministic feature selection and filtering primitives used by Focus Mode, Story Nodes, and timeline.
+
+Must support:
+
+- Select by stable IDs (graph IDs, dataset IDs, feature IDs)
+- Filter by property predicates (category, layer flags, governance labels)
+- Filter by temporal window (timeline start/end → MapLibre filter or GeoJSON filter)
+- Return stable ordering for UI lists and consistent “top hit” selection
+
+Governance rule: filtering must not “reconstruct” hidden features (e.g., by intersecting multiple filters to infer
+restricted locations).
+
+### 5) `interactions.ts` — Map Event Interpretation Without UI State
+
+Goal: interpret MapLibre event payloads into stable, typed selection outputs:
+
+- click/hover event → `{ layerId, featureId, lngLat?, properties?, entityRef? }`
+- prioritization rules for overlapping features (e.g., focus highlights > selected layer > basemap)
+- safe fallbacks (no crash when properties missing)
+- consistent hit resolution across devices
+
+No DOM dependencies: MapLibre objects may be passed in by the caller, but not created here.
+
+### 6) `legends.ts` — Legends From Styles + Metadata
+
+Goal: build legend models for UI components using:
+
+- style tokens from `layerStyles.ts`
+- STAC asset metadata (bands, units, nodata, value ranges)
+- layer category/type hints (categorical vs continuous)
+
+Legend outputs must include:
+
+- labels
+- color/ramp descriptors
+- units (when known)
+- attribution hooks (license/source) where displayed alongside legends
+
+---
+
+## 📦 Data & Metadata
+
+KFM map utilities should exchange **explicit, typed descriptors** rather than raw MapLibre objects scattered across UI.
+
+Recommended descriptor shape (conceptual):
+
+~~~ts
+export type KfmCareLabel = "Public" | "Public · Governed" | "Restricted" | "Restricted · Generalized";
+
+export interface KfmGovernanceMeta {
+  careLabel: KfmCareLabel;
+  sensitivityLevel?: "None" | "Low" | "Moderate" | "High";
+  indigenousRightsFlag?: boolean;
+  masking?: { strategy: "none" | "generalized" | "suppressed"; note?: string };
+  license?: string;
+  rightsHolder?: string;
 }
 
-function stacItemToMapLayer(item: StacItem): MapLayerDescriptor { /* ... */ }
-````
+export interface KfmProvenanceMeta {
+  sourceId?: string;              // dataset/stac/dcat id (stable)
+  provWasDerivedFrom?: string[];  // PROV links (ids or paths)
+  manifestRef?: string;           // release manifest reference (path)
+  sbomRef?: string;               // SBOM reference (path)
+}
 
-This function is the main bridge from **data catalog (STAC/DCAT)** to **runtime map**.
+export interface MapLayerDescriptor {
+  id: string;                     // stable, deterministic
+  title: string;                  // UI label
+  kind: "raster" | "vector" | "geojson";
+  temporal?: { start?: string; end?: string; precision?: string; approx?: boolean };
+  bbox?: [number, number, number, number] | null;
 
----
+  source: unknown;                // MapLibre source spec (kept structural + serializable where possible)
+  layers: unknown[];              // MapLibre layer specs
 
-### 🎨 `layerStyles.ts`
+  governance: KfmGovernanceMeta;
+  provenance?: KfmProvenanceMeta;
+  attribution?: { text: string; url?: string };
+}
+~~~
 
-Centralizes KFM’s **map style tokens**, so the visual language is consistent:
+Notes:
 
-* Color palettes for historical vs. modern layers
-* Opacity and blending rules for overlay maps (e.g., historic topo over DEM)
-* Category → color mappings for treaty types, land use, hazards, etc.
-* Min/max zoom for different layer types
-
-Example patterns:
-
-```ts
-export const treatyBoundaryStyle = {
-  lineColor: "#ffcc00",
-  lineWidth: 2,
-  lineDashArray: [2, 2]
-};
-
-export const focusHighlightStyle = {
-  lineColor: "#ff2d55",
-  lineWidth: 3
-};
-```
-
-All map components use these tokens instead of hard-coded styles.
+- Keep descriptors serializable where possible (helps telemetry, caching, snapshot export).
+- Carry governance/provenance through every transformation; never drop them “for convenience”.
+- Any “unknown” types above should map to MapLibre style spec types in implementation; docs remain renderer-agnostic.
 
 ---
 
-### 📦 `bboxUtils.ts`
+## 🌐 STAC, DCAT & PROV Alignment
 
-Helpers for working with bounding boxes:
+Map utilities must treat STAC/DCAT/PROV as first-class inputs/outputs:
 
-* Merge multiple bboxes into a single extent
-* Pad bboxes by % for better framing
-* Convert between `[west, south, east, north]` arrays and typed structs
-* Compute “best fit” for mixed precision (single points vs. large polygons)
+- STAC:
+  - Interpret Item/Collection `bbox`, `geometry`, `datetime` / temporal extent
+  - Prefer explicit `assets` roles + media types for source selection
+  - Respect projection/metadata extensions when present (do not guess CRS details)
+- DCAT:
+  - Surface license/rights/publisher as attribution metadata and UI disclosure
+  - Use DCAT distribution hints to choose “best” render pathway (tiles vs files) without inventing data
+- PROV:
+  - Preserve provenance links so the UI can show “where this layer came from”
+  - Never claim an entity was derived from a source unless provided by the API/catalog
 
-Example (conceptual):
-
-```ts
-fitViewportToBboxes(
-  map: maplibregl.Map,
-  bboxes: [number, number, number, number][],
-  options?: { padding?: number }
-): void;
-```
-
-Used heavily by:
-
-* Focus Mode v2 to fit all relevant locations
-* Timeline navigation to pan/zoom when selecting an era or Story Node
-* “Zoom to layer” actions in the legend and layer browser
+Governance rules apply across all three:
+- if an asset is marked restricted/generalized, the rendered representation must not undermine that policy.
 
 ---
 
-### 🎯 `featureSelectors.ts`
+## 🧠 Story Node & Focus Mode Integration
 
-Given a MapLibre source + feature set, these helpers:
+Map utilities are a critical bridge for:
 
-* Select features by **stable IDs** (e.g., graph `placeId`, `eventId`)
-* Filter features by property predicates (e.g., `feature.properties.year <= 1870`)
-* Map selections back to **knowledge graph IDs** for Focus Mode
+- **Focus Mode v3**: highlight focal entity geometry, related clusters, and evidence-linked places/events
+- **Story Node v3**: show story geography, related layers, and the story’s temporal window on the map
+- **Timeline ↔ Map sync**:
+  - timeline window → map filters / opacity gates
+  - selected story/event → bbox fit + focus highlight layer
 
-Typical patterns:
+Required behaviors:
 
-```ts
-selectFeaturesByIds(
-  geojson: GeoJSON.FeatureCollection,
-  ids: string[],
-  idProperty: string = "id"
-): GeoJSON.Feature[];
-
-filterFeaturesByTime(
-  geojson: GeoJSON.FeatureCollection,
-  startYear: number,
-  endYear: number
-): GeoJSON.Feature[];
-```
-
-These functions are leveraged by:
-
-* Hover/click interactions
-* “Show only relevant features for this Focus Mode context”
-* Story Node card highlights on the map
+- Selecting a Story Node must produce:
+  - a safe bbox (never defeats masking)
+  - stable layer/feature IDs for highlights
+  - deterministic “related entities” selection ordering
+- Time filters must:
+  - preserve uncertainty (approx/decade/century)
+  - avoid “pinpointing” a range to a specific day/year when the source is fuzzy
 
 ---
 
-### 🖱️ `interactions.ts`
+## 🗺️ Diagrams
 
-Pure helpers to **interpret** MapLibre event payloads and return stable, typed data:
-
-* Convert `map.on('click', ...)` event → `{ featureId, layerId, coords }`
-* Resolve which logical entity was clicked (Place, Event, Story Node span, etc.)
-* Provide fallbacks for overlapping features (e.g., prioritize focus-highlight layers)
-
-These functions separate **event mechanics** from **domain logic**, simplifying React components.
-
----
-
-### 🧷 `legends.ts`
-
-Legend utilities that compute:
-
-* Category→label→color mappings (e.g., treaty categories, land-use classes)
-* Gradient stops for continuous layers (e.g., elevation, drought index)
-* Legend metadata from STAC Items (e.g., `raster:bands`, units)
-
-Outputs are used by the web UI’s legend components to keep the map + legend in sync.
+~~~mermaid
+flowchart TD
+  A["STAC / DCAT Catalog Records"] --> B["stacToMaplibre.ts<br/>descriptor build"]
+  C["Graph Entities<br/>(Place/Event/StoryNode)"] --> D["featureSelectors.ts<br/>id + time filtering"]
+  B --> E["MapLayerDescriptor[]"]
+  D --> E
+  E --> F["React Map Components<br/>(MapLibre runtime)"]
+  F --> G["interactions.ts<br/>click/hover interpretation"]
+  G --> H["Focus Mode v3 / Story Node v3<br/>selection + highlighting"]
+  H --> I["bboxUtils.ts<br/>fit + clamp"]
+  I --> F
+  J["layerStyles.ts<br/>tokens"] --> B
+  J --> F
+  K["legends.ts<br/>legend models"] --> F
+~~~
 
 ---
 
-## 🧪 Testing Requirements
+## 🧪 Validation & CI/CD
 
-All `utils/map` modules must be covered by unit tests under:
+Minimum expectations:
 
-```
-tests/web/utils/map/*.test.ts
-```
+- Unit tests for:
+  - STAC → MapLibre descriptor determinism
+  - bbox math (including antimeridian and tiny extents)
+  - selection and time filtering semantics
+  - legend generation correctness
+  - governance retention (license/careLabel/masking flags never dropped)
+- Integration tests for:
+  - Focus Mode selection → highlight layer outputs
+  - timeline window → filter expression generation (where implemented)
+- Lint / format:
+  - TypeScript strict mode; no implicit any
+  - stable sorting rules for any collection outputs
+- Governance gates:
+  - any coordinate-precision leak or sovereignty violation must be CI-blocking
+  - telemetry emission (if any upstream) must be schema-valid and PII-free
 
-Tests MUST verify:
+Expected test locations:
 
-* Deterministic transforms from STAC → MapLibre descriptors
-* Stable bbox operations across edge cases (antimeridian, tiny extents, mixed features)
-* Correct feature selection and time-filtering semantics
-* No side effects on global MapLibre state (functions operate on data only)
-* Preservation of FAIR+CARE metadata (license, provenance flags) when round-tripping layer descriptors
-
-Where possible, tests should use **small synthetic fixtures** (mock STAC Items, GeoJSON feature collections).
-
----
-
-## ⚙️ Development Standards
-
-All `web/src/utils/map/` modules MUST:
-
-* Be implemented in **TypeScript**
-* Export **typed, pure functions** only (no classes, no side effects)
-* Avoid direct use of `document`, `window` (MapLibre `Map` instances may be passed as arguments, but not created here)
-* Be linted with ESLint + Prettier
-* Include complete JSDoc docstrings (parameters, return types, error conditions)
-* Follow KFM’s **color/contrast** and **accessibility** guidelines when defining styles
-* Respect CARE tags on sensitive geometries (e.g., avoid exposing coordinates for restricted sites in helper defaults)
+~~~text
+📁 tests/
+├── 📁 unit/web/utils/map/            — unit tests for each module
+└── 📁 integration/web/utils/map/     — Focus/Story/Timeline integration cases
+~~~
 
 ---
 
-## 🧭 Future Extensions (v10.5+)
+## ⚖ FAIR+CARE & Governance
 
-Planned improvements for `utils/map`:
+Map utilities are a high-risk surface because they handle geometry and interaction.
 
-* Helper for **3D terrain integration** (DEM extrusion, hillshade blending)
-* Vector tile layer generator from large GeoJSON features (client-side tiling helpers)
-* Time-animated layer construction (for “playable” historical sequences)
-* Multi-graph federation visual hints (showing cross-region links with different stroke patterns)
-* Support for **Story Node “spacetime” geometry** conveniences (direct mapping of Story Node schema into layers)
+Non-negotiable rules:
+
+- No precise coordinates for restricted content:
+  - if input is generalized, do not “tighten” bbox/geometry
+  - if input is suppressed, do not render a proxy that reveals location
+- No inference-by-intersection:
+  - do not allow UI filters to reconstruct restricted location by combining public layers
+- Always preserve:
+  - `careLabel`
+  - sensitivity flags
+  - license/rights-holder attribution
+  - provenance pointers (when provided)
+
+Recommended safety patterns:
+
+- Default to generalized extents for any entity with `indigenousRightsFlag: true` unless explicitly public-safe.
+- Prefer aggregation layers (grid/hex/H3) for sensitive point sets.
+- Ensure style tokens for restricted layers communicate “generalized” without implying exactness.
 
 ---
 
-## 🏁 Version History
+## 🕰️ Version History
 
-| Version | Date       | Changes                                         |
-| ------- | ---------- | ----------------------------------------------- |
-| v10.4.1 | 2025-11-15 | Initial creation under KFM-MDP v10.4 standards. |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v11.2.6 | 2025-12-15 | Upgraded to KFM-MDP v11.2.6; standardized headings/order/fences; expanded architecture for STAC/DCAT/PROV alignment, Focus Mode v3 + Story Node v3 integration, governance-safe bbox/selection rules, and CI expectations. |
+| v10.4.1 | 2025-11-15 | Initial creation under legacy v10.4 documentation patterns; introduced STAC→MapLibre transforms, style tokens, bbox helpers, selection, interactions, and legend utilities. |
 
 ---
+
+<div align="center">
+
+© 2025 Kansas Frontier Matrix — MIT License  
+FAIR+CARE Aligned · Public Document · Version-Pinned · Sovereignty-Safe
+
+[⬅️ Back to Web Utils](../README.md) ·
+[🧭 Web Source Overview](../../README.md) ·
+[🌐 Web Platform Overview](../../../README.md) ·
+[🛡 Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+
+</div>
