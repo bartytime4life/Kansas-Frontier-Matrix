@@ -1,34 +1,38 @@
 ---
 title: "🧰 Kansas Frontier Matrix — Web Utilities Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+version: "v11.2.3"
+last_updated: "2025-12-15"
 review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-utils-readme-v11.json"
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-
 status: "Active / Enforced"
 doc_kind: "Overview"
 intent: "web-utils-overview"
 role: "overview"
 category: "Web · Utilities · Architecture"
+license: "MIT"
+mcp_version: "MCP-DL v6.3"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+doc_integrity_checksum: "<sha256>"
+signature_ref: "../../../releases/v11.2.2/signature.sig"
+attestation_ref: "../../../releases/v11.2.2/slsa-attestation.json"
+sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.2/manifest.zip"
+
+telemetry_ref: "../../../releases/v11.2.2/system-telemetry.json"
+telemetry_schema: "../../../schemas/telemetry/system-telemetry-v11.json"
+
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "Public · Low-Risk"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
 sensitivity_level: "None"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
@@ -37,9 +41,10 @@ risk_category: "Low"
 redaction_required: false
 
 provenance_chain:
-  - "web/src/utils/README.md@v10.3.1"
-  - "web/src/utils/README.md@v10.3.2"
+  - "web/src/utils/README.md@v11.2.2"
   - "web/src/utils/README.md@v10.4.0"
+  - "web/src/utils/README.md@v10.3.2"
+  - "web/src/utils/README.md@v10.3.1"
 provenance_requirements:
   versions_required: true
   newest_first: true
@@ -53,7 +58,7 @@ ontology_alignment:
 json_schema_ref: "../../../schemas/json/web-utils-readme.schema.json"
 shape_schema_ref: "../../../schemas/shacl/web-utils-readme-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:web-utils-readme:v11.2.2"
+doc_uuid: "urn:kfm:doc:web-utils-readme:v11.2.3"
 semantic_document_id: "kfm-doc-web-utils-readme"
 event_source_id: "ledger:web/src/utils/README.md"
 immutability_status: "version-pinned"
@@ -80,241 +85,268 @@ sunset_policy: "Superseded on next utils-layer revision"
 
 <div align="center">
 
-# 🧰 **Kansas Frontier Matrix — Web Utilities Overview (v11.2.2)**  
+# 🧰 **Kansas Frontier Matrix — Web Utilities Overview (v11.2.3)**
 `web/src/utils/README.md`
 
-**Purpose**  
-Document the **utility modules** used across the Kansas Frontier Matrix (KFM) Web Platform — providing  
-pure, deterministic helper functions for formatting, schema guards, spatial math, JSON-LD generation,  
-accessibility utilities, URL building, temporal logic, and type validation.  
-Utilities ensure repeatable, FAIR+CARE-safe logic supporting every component, pipeline, and feature in the web application.
+**Purpose**
+Describe the **web utility layer** for the Kansas Frontier Matrix (KFM): small, deterministic functions and type guards used across the web app to keep Focus Mode, maps, timelines, and dataset views **governance-safe**, **accessible**, and **reproducible**.
+
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Public%20Low--Risk-orange" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 </div>
 
 ---
 
-# 📘 Overview
+## 📘 Overview
 
-Utilities in `web/src/utils/**`:
+Utilities under `web/src/utils/` exist to make the web layer:
 
-- Provide **state-less, deterministic**, pure functions  
-- Contain **no UI logic** and **no side effects**  
-- Are imported everywhere (hooks, pipelines, components, services)  
-- Must be **FAIR+CARE-safe**, sovereign-safe, and governance-aware  
-- Must uphold **WCAG 2.1 AA+** accessibility patterns  
-- Must avoid speculative or unverified logic  
-- Must include **unit, integration, A11y, and governance tests**  
-- Must align with:
-  - KFM-OP v11 ontology expectations  
-  - KFM-PDC v11 data contracts  
-  - KFM-MDP v11.2.2 documentation rules  
+- **Deterministic**: same input → same output; stable ordering; no hidden state
+- **Side-effect-free**: no network, no storage, no DOM writes, no logging by default
+- **Governance-safe**: never reconstruct restricted precision (coords/IDs); honor CARE labels
+- **A11y-forward**: help components meet WCAG 2.1 AA+ consistently
+- **Contract-aware**: validate and normalize payloads before rendering (Story Node v3, Focus Mode v3, STAC/DCAT views, telemetry events)
 
-Utilities form the **shared logic layer** that powers Focus Mode v3, Story Node v3, STAC/DCAT explorers, timeline interactions, and map synchronization.
+Utilities are used by hooks, services, and components to prevent a common failure mode:
+“UI renders something that violates governance or breaks accessibility because input data was malformed or over-precise.”
 
 ---
 
-# 🧱 Directory Structure (Emoji-Rich · Box-Safe · v11.2.2)
+## 🗂️ Directory Layout
+
+The directory trees below are the **governed taxonomy** for `web/src/utils/`.
+If the actual tree differs, treat this README as the canonical contract and update it alongside the change.
+
+### Recommended grouping (scales well)
 
 ~~~text
 web/src/utils/
-├── ✨ formatters.ts             # Formatting: numbers, units, dates, captions, CARE-aware text
-├── 🧬 jsonld.ts                 # JSON-LD builders (Story Nodes, Datasets, Focus Mode governance)
-├── 🛡️ guards.ts                 # Type/schema guards (Story Node v3, STAC/DCAT, Focus, telemetry)
-├── 🗺️ bbox.ts                   # Spatial math (BBox merge, clamp, pad, safe extents, no leaks)
-├── ♿ a11y.ts                    # Accessibility helpers (contrast, motion, SR text, focus control)
-├── 🧾 provenance.ts             # Provenance-building utilities (PROV-O, SBOM/manifest linking)
-├── 🔗 url.ts                    # Governance-safe URL builders (no PK leaks, no raw coords)
-├── 🎨 color.ts                  # WCAG AA+ color utilities (contrast, tokens, CARE state colors)
-├── ⏳ temporal.ts               # OWL-Time aligned temporal logic (fuzzy ranges, intervals)
-└── 🔢 array.ts                  # Deterministic array helpers (unique, group, stable sort)
+├── 📄 formatters.ts                   # ✨ Numbers, units, dates, captions (CARE-aware)
+├── 📄 guards.ts                       # 🛡️ Runtime guards for payloads (Story Node, STAC, DCAT, telemetry)
+├── 📄 jsonld.ts                       # 🧬 JSON-LD builders for doc/dataset/narrative linking
+├── 📄 provenance.ts                   # 🧾 PROV-O helpers + manifest/SBOM linkage
+│
+├── 📁 a11y/                            # ♿ Accessibility helpers
+│   ├── 📄 a11y.ts                      # Focus management, SR helpers, reduced motion
+│   └── 📄 contrast.ts                  # WCAG contrast helpers (and test helpers)
+│
+├── 📁 geo/                             # 🗺️ Spatial math and safety utilities
+│   ├── 📄 bbox.ts                      # BBox merge/pad/clamp + safe extents
+│   └── 📄 h3.ts                        # H3 masking/generalization helpers (optional)
+│
+├── 📁 links/                           # 🔗 URL + deep-link helpers
+│   └── 📄 url.ts                       # Governance-safe query encoding (no restricted precision)
+│
+├── 📁 temporal/                        # ⏳ Time utilities
+│   └── 📄 temporal.ts                  # OWL-Time aligned ranges + timeline mapping
+│
+├── 📁 theme/                           # 🎨 Color and token helpers
+│   └── 📄 color.ts                     # Contrast-aware color utilities + CARE status colors
+│
+└── 📁 collections/                     # 🔢 Deterministic collection helpers
+    └── 📄 array.ts                     # Unique, groupBy, stableSort (no locale drift)
 ~~~
 
-All modules must remain **side-effect-free, deterministic, and safe across governance contexts**.
-
----
-
-# 🧩 Module Responsibilities
-
-## ✨ `formatters.ts`
-- Dates, ranges, time labels  
-- Accessible number formatting  
-- CARE-safe wording (“generalized location”, “restricted dataset”)  
-- Scientific units  
-- Narrative microcopy  
-
-**Never:**  
-- invent precision  
-- override CARE/sovereignty wording  
-- produce inaccessible text  
-
----
-
-## 🧬 `jsonld.ts`
-- Build JSON-LD for:
-  - Story Node v3  
-  - Focus Mode v3 focal entities  
-  - STAC/DCAT datasets  
-  - Governance metadata  
-
-Aligned with:
-- schema.org  
-- CIDOC-CRM  
-- PROV-O  
-- KFM-OP v11  
-
-**Never:**  
-- create speculative relationships  
-- output unverifiable provenance  
-
----
-
-## 🛡️ `guards.ts`
-- Validate:
-  - Story Nodes  
-  - STAC Items  
-  - DCAT datasets  
-  - Governance metadata  
-  - Telemetry events  
-  - Focus Mode payloads  
-
-Guarantee:
-- invalid data is rejected before rendering  
-- governance metadata exists before sensitive output  
-
----
-
-## 🗺️ `bbox.ts`
-Spatial helpers for:
-- merging & padding  
-- safe extent calculation  
-- preventing map over-zoom of masked sites  
-- normalizing STAC bounding boxes  
-
-**Must never:**
-- recreate precise coordinates for masked/generalized data  
-
----
-
-## ♿ `a11y.ts`
-- Contrast utilities  
-- Screen-reader helpers  
-- Reduced-motion flows  
-- Keyboard focus utilities  
-- Label/ARIA helpers  
-
-Must satisfy:
-- WCAG 2.1 AA+  
-- high-contrast mapping  
-
----
-
-## 🧾 `provenance.ts`
-- Build PROV-O aligned traces  
-- Connect UI provenance to manifest/SBOM/lineage  
-- Provide UI-readable provenance descriptors  
-
----
-
-## 🔗 `url.ts`
-- URL generation for deep links (timeline, map, focus)  
-- Query encoding  
-- **Governance-safe**: no restricted IDs, no micro-coords  
-- Normalizes H3 masking and generalization  
-
----
-
-## 🎨 `color.ts`
-- WCAG AA+ color contrast  
-- CARE-status mapping  
-- Light/dark/high-contrast themes  
-- Returns safe palettes only  
-
----
-
-## ⏳ `temporal.ts`
-- OWL-Time aligned temporal ranges  
-- Fuzzy interval labeling  
-- STAC/DCAT → timeline conversions  
-- Timeline highlight intervals  
-
----
-
-## 🔢 `array.ts`
-- Stable uniqueness  
-- Deterministic grouping  
-- Predictable sorting for Story Nodes, events, datasets  
-- Build timeline summary rows  
-
----
-
-# 🔐 Governance Requirements
-
-All utilities must:
-
-- Respect CARE labels & sovereignty rules  
-- Honor masking/generalization constraints  
-- Include provenance features where applicable  
-- Avoid generating:
-  - speculative historical interpretations  
-  - overprecise coordinates  
-  - unverifiable narratives  
-
-Governance failures → CI failure (faircare_validate.yml).
-
----
-
-# ♿ Accessibility Requirements
-
-Utilities must always:
-
-- Maintain WCAG AA+ contrast  
-- Support keyboard navigation patterns  
-- Provide safe token combinations  
-- Be compatible with reduced-motion modes  
-
-A11y regressions → CI block.
-
----
-
-# 📈 Telemetry Responsibilities
-
-Utilities must:
-
-- Produce schema-valid telemetry structures  
-- Support event classification  
-- Exclude PII  
-- Attach governance metadata where relevant  
-- Flow into `focus-telemetry.json`  
-
----
-
-# 🧪 Testing Requirements
-
-Must include:
-
-- Unit tests  
-- Integration tests (pipelines/UI interactions)  
-- Schema/type guard tests  
-- A11y contrast tests  
-- Governance tests (masking, sovereignty, provenance)  
-
-All under:
+### Minimal “flat” layout (acceptable for small surfaces)
 
 ~~~text
-tests/unit/web/utils/**
-tests/integration/web/utils/**
+web/src/utils/
+├── 📄 formatters.ts                   # ✨ Formatting helpers
+├── 📄 jsonld.ts                       # 🧬 JSON-LD helpers
+├── 📄 guards.ts                       # 🛡️ Runtime guards
+├── 📄 bbox.ts                         # 🗺️ Spatial helpers
+├── 📄 a11y.ts                         # ♿ A11y helpers
+├── 📄 provenance.ts                   # 🧾 Provenance helpers
+├── 📄 url.ts                          # 🔗 URL helpers (governance-safe)
+├── 📄 color.ts                        # 🎨 Theme/contrast helpers
+├── 📄 temporal.ts                     # ⏳ Time helpers
+└── 📄 array.ts                        # 🔢 Deterministic array helpers
+~~~
+
+### Naming conventions (recommended)
+
+- `guards.ts` is for runtime validation and type predicates (not “domain logic”)
+- Avoid `helpers.ts` / `misc.ts` (too vague → becomes a junk drawer)
+- Prefer `stableSort*` over `sort*` when the stability guarantee matters
+- Prefer `format*` for user-visible strings, and `to*` / `from*` for structural transforms
+
+---
+
+## 🧭 Context
+
+Where these utilities sit in the web stack (conceptual):
+
+- **API layer** returns data (graph → API → web)
+- `web/src/services/**` fetches and parses
+- `web/src/utils/**` validates/normalizes/encodes safely
+- UI components render only **post-guard** data
+
+Common call paths:
+
+- **Story Nodes / Focus Mode**: guards → formatters → provenance/jsonld → UI
+- **Map**: bbox/geo safety → url deep-link encoding → UI
+- **Timeline**: temporal mapping → formatters → stable sorting/grouping → UI
+
+---
+
+## 🗺️ Diagrams
+
+This diagram shows a typical safe rendering flow that prevents governance and A11y regressions.
+
+~~~mermaid
+flowchart LR
+  A["API response"] --> B["services parse"]
+  B --> C["utils guards + normalization"]
+  C --> D["formatters + a11y helpers"]
+  D --> E["components render"]
 ~~~
 
 ---
 
-# 🕰 Version History
+## 🧱 Architecture
+
+### Design rules (non-negotiable)
+
+1. **No side effects**
+   - No `fetch`, no `localStorage`, no `window` mutation, no DOM writes, no analytics calls.
+
+2. **Deterministic output**
+   - Avoid locale-sensitive formatting unless explicitly parameterized.
+   - Prefer stable ordering utilities for lists that feed UI diffing or accessibility flows.
+
+3. **Governance-safe by construction**
+   - Do not generate URLs or strings that expose restricted precision (micro-coordinates, sensitive IDs).
+   - Utilities must support masking/generalization and must not “undo” it.
+
+4. **Boundary-friendly**
+   - Utilities should accept primitives and plain objects, return primitives/plain objects.
+   - Avoid importing UI-only code, components, or styles.
+
+### Module map (what goes where)
+
+- `guards.ts`: schema/type guards for inbound and inter-layer payloads
+- `formatters.ts`: user-visible strings (dates, ranges, units, labels)
+- `geo/*`: bbox math, safe extents, (optional) H3 generalization helpers
+- `temporal/*`: timeline range normalization, OWL-Time aligned intervals
+- `a11y/*`: focus and reduced-motion helpers; contrast math
+- `provenance.ts` + `jsonld.ts`: linking evidence and lineage into UI-friendly forms
+- `url.ts`: deep links and query encoding with governance guardrails
+- `array.ts`: stable collection transforms used across views
+
+---
+
+## 📦 Data & Metadata
+
+### Runtime validation and “defensive rendering”
+
+Utilities should make it easy to do:
+
+- “Reject invalid payload early” (fail fast before it reaches UI)
+- “Normalize on ingest” (e.g., empty arrays → empty arrays, optional fields → defaults)
+- “Never infer precision” (do not create coordinates, timestamps, or IDs that weren’t present)
+
+### Suggested type surfaces (optional, if not provided elsewhere)
+
+If the project does not centralize types in another directory, `web/src/utils/types/` can host thin types for:
+
+- STAC views (`stac.ts`)
+- DCAT views (`dcat.ts`)
+- Story Node v3 (`story_node.ts`)
+- Telemetry events (`telemetry.ts`)
+- Focus Mode payload contracts (`focus_mode.ts`)
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+Utilities may be used to:
+
+- Map STAC/GeoJSON geometry and bbox into safe UI extents (never increasing precision)
+- Produce DCAT-style identifiers and distribution references for “dataset-like” UI entities
+- Build PROV-O-friendly traces for “what evidence produced this view” via:
+  - `prov:used` (inputs)
+  - `prov:wasGeneratedBy` (activity)
+  - `prov:wasDerivedFrom` (lineage)
+
+Practical guidance:
+
+- Treat README/docs as `prov:Plan`-adjacent metadata surfaces (via front-matter IDs)
+- Keep JSON-LD generation deterministic and minimal (avoid speculative relationship generation)
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+Utilities directly support Focus Mode’s “safe transform” posture:
+
+- Stable sectioning + deterministic formatting makes summarization predictable
+- `ai_transform_permissions` / `ai_transform_prohibited` in front-matter constrain automation
+- Provenance utilities ensure “why/where did this come from” is renderable without leaking restricted detail
+
+Focus Mode-safe patterns:
+
+- Prefer “generalized location” language when sovereignty policy requires masking
+- Provide provenance links to manifests/SBOM instead of repeating sensitive identifiers in UI
+
+---
+
+## 🧪 Validation & CI/CD
+
+Utilities must be easy to validate and hard to misuse.
+
+### Required checks (typical)
+
+- Unit tests for:
+  - stable sorting/grouping
+  - bbox clamping and safe extents
+  - temporal conversions and labeling
+  - URL encoding constraints (no restricted precision)
+  - contrast computations / WCAG thresholds
+- Type-level checks (TS) for public utility APIs
+- Schema-lint for this README front-matter (`metadata-check` / `schema-lint`)
+
+### Test placement (preferred)
+
+~~~text
+tests/
+├── unit/
+│   └── web/
+│       └── utils/                    # Pure unit tests for utils
+└── integration/
+    └── web/
+        └── utils/                    # Integration tests with service parsing / key views
+~~~
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+Utilities must enforce “least harm by default”:
+
+- Never expose secrets, tokens, or internal-only IDs in generated strings/URLs
+- Never reconstruct restricted locations or increase coordinate precision
+- Support CARE labeling and sovereignty policy enforcement in UI-facing transforms
+- Prefer explicit “restricted” states over silent failure
+
+If a utility function affects governance-sensitive output, it must:
+
+- be covered by a test that asserts masking/generalization behavior
+- be reviewed with the relevant governance references in this doc’s front-matter
+
+---
+
+## 🕰️ Version History
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v11.2.2 | 2025-11-28 | Complete emoji-restoration, governance alignment, MDP v11.2.2 upgrade, A11y/CARE overhaul |
-| v10.4.0 | 2025-11-15 | Full rewrite to KFM-MDP v10.4; added governance, A11y, spatial, temporal, JSON-LD modules |
-| v10.3.2 | 2025-11-14 | Added temporal + provenance utilities |
-| v10.3.1 | 2025-11-13 | Initial utilities overview |
+| v11.2.3 | 2025-12-15 | Aligned README to KFM-MDP v11.2.6 headings and fencing; clarified governance-safe patterns; expanded directory taxonomy while keeping utils deterministic and side-effect-free. |
+| v11.2.2 | 2025-11-28 | Prior baseline referenced by provenance chain. |
+| v10.4.0 | 2025-11-15 | Full rewrite to KFM-MDP v10.4; added governance, A11y, spatial, temporal, JSON-LD modules. |
+| v10.3.2 | 2025-11-14 | Added temporal + provenance utilities. |
+| v10.3.1 | 2025-11-13 | Initial utilities overview. |
 
 ---
 
