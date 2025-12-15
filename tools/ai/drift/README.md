@@ -31,6 +31,8 @@ markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 
+# Note: v11.2.6 documentation can legitimately reference the last certified release bundle.
+# Update these to releases/v11.2.6/* once the v11.2.6 release packet exists.
 sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
 manifest_ref: "../../../releases/v11.2.2/manifest.zip"
 
@@ -73,7 +75,7 @@ provenance_chain:
 
 <div align="center">
 
-# 🌡️ **KFM — AI Drift Monitoring**
+# 🌡️ **KFM — AI Drift Monitoring (v11)**
 `tools/ai/drift/README.md`
 
 **Purpose**  
@@ -86,416 +88,496 @@ how drift is detected, scored, thresholded, and escalated—so models remain rel
 
 ## 📘 Overview
 
-### What drift monitoring is (in KFM terms)
+### What drift monitoring means in KFM
 
-In KFM, **drift monitoring** is the governed process of detecting when:
+In the Kansas Frontier Matrix, **drift monitoring** is the governed process of detecting when:
 
-- **input data distributions** change (data drift),
-- **model outputs** change (prediction drift),
-- or **model performance** degrades (concept drift),
+- **Input distributions** change (*data drift*),
+- **Model outputs** change (*prediction drift*),
+- and/or **Model performance** changes (*concept drift*),
 
-in ways that may invalidate a model’s previous certification status.
+in ways that can invalidate a model’s prior certification or its intended operational assumptions.
 
-KFM treats drift as a first-class governance signal: drift does not automatically mean “bad model,” but it **does** mean “conditions changed,” and the system must respond in a traceable, policy-safe way.
+Drift is treated as a **first-class governance signal**:
+- Drift does not automatically mean “bad model.”
+- Drift means **conditions changed**, and KFM must respond in a traceable, policy-safe way.
 
-### Why drift matters for a Kansas-scale system
+### Why drift matters for Kansas-scale, multi-domain systems
 
-KFM integrates multi-domain data with strong temporal components:
+KFM runs across domains with strong temporal variability and shifting instrumentation:
 
-- climate and hydrology cycles,
-- land cover and vegetation shifts,
-- remote sensing sensor changes,
-- archival/document ingestion changes,
-- UI-driven behavior changes (query patterns and retrieval distributions).
+- Climate/hydrology seasonality and regime shifts
+- Land cover change, phenology change, disturbance events
+- Remote sensing sensor changes and processing changes
+- Archival ingestion changes (OCR/NER model updates, new corpora)
+- Retrieval distribution changes (search/index refreshes, embedding updates)
+- UI-driven distribution changes (how users query, what gets retrieved)
 
-These changes can silently cause model behavior to shift. Drift monitoring ensures KFM remains:
+Drift can be **silent** and cumulative. Monitoring catches it before it becomes:
+- misleading narratives,
+- unstable map layers,
+- degraded retrieval quality,
+- or governance risk (unsafe inference via small slices).
 
-- **reliable** (avoid stale or misleading outputs),
-- **auditable** (drift evidence stored in governed artifacts),
-- **safe** (fail-closed for missing policy metadata, no sensitive leaks),
-- **reproducible** (config-driven thresholds and versioned baselines).
-
-### Drift types (normative definitions)
+### Normative definitions
 
 - **Data drift**: distributional change in model inputs (features, covariates, embeddings).
-- **Prediction drift**: change in distribution of model outputs (scores, classes, ranks, text-length proxies).
-- **Concept drift**: change in the relationship between inputs and targets (performance changes), often detected via evaluation sets.
+- **Prediction drift**: distributional change in model outputs (scores/classes/ranks/text proxies).
+- **Concept drift**: change in the mapping from inputs → targets (often detected via labeled evaluation).
+
+### Scope of this subsystem
+
+This `tools/ai/drift/` subsystem defines:
+
+1. **Windows** — how “baseline” and “current” slices are defined and made reproducible  
+2. **Baselines** — how reference distributions are chosen, versioned, and stored  
+3. **Detectors** — how drift statistics are computed (feature/output/embedding aware)  
+4. **Metrics** — metric normalization, aggregation, and cross-feature scoring  
+5. **Reporters** — schema-valid, policy-safe output artifacts and summaries  
+6. **Escalation** — PASS/WARN/FAIL mapping and follow-on actions (review, retrain, retire)
 
 ### Core invariants (normative)
 
-1. Drift monitoring MUST be **config-driven** (thresholds and actions are not hard-coded).
-2. Drift reports MUST be **safe** (no secrets, no PII, no protected-site coordinates).
+1. Drift monitoring MUST be **config-driven** (no hard-coded thresholds for production decisions).
+2. Drift reports MUST be **policy-safe** (no secrets, no PII, no protected-site coordinates).
 3. Drift monitoring MUST be **version-aware**:
    - model identity (ID + version/hash),
    - dataset identity (ID + version),
-   - baseline selection identity (training distribution or last certified release).
-4. Drift must **fail closed** when governance metadata is missing or ambiguous.
+   - baseline identity (type + slice + checksum where feasible),
+   - window identity (slice definition, timezone, semantics).
+4. Drift monitoring MUST **fail closed** when governance metadata is missing or ambiguous.
+5. Drift monitoring MUST be **deterministic** given the same inputs and pinned configs.
 
 ---
 
 ## 🗂️ Directory Layout
 
-This directory sits under `tools/ai/`:
+> The repository’s `tools/ai/` area is reserved for **AI evaluation and drift analysis tools**. This drift subtree is the governed internal structure for drift monitoring within that scope.
+
+### Drift subsystem (canonical layout)
 
 ~~~text
 📁 tools/
 └── 🧠 ai/
-    ├── 🌡️ drift_monitor.py              # Runner (often lives at tools/ai root)
-    ├── 📁 configs/                      # Threshold profiles (see tools/ai/configs/README.md)
-    └── 📁 drift/
-        └── 📄 README.md                 # This file
+    ├── 📄 README.md                              # AI & ML Tools index
+    ├── 📁 configs/                               # Governed config profiles (thresholds, domains, environments)
+    │   └── 📄 README.md                          # Config conventions + schemas + examples
+    │
+    └── 📁 drift/                                 # 🌡️ Drift monitoring subsystem (THIS)
+        ├── 📄 README.md                          # Drift overview + contracts + integration (this file)
+        │
+        ├── 📁 baselines/                         # Reference distributions + capture + storage rules
+        │   └── 📄 README.md
+        │
+        ├── 📁 detectors/                         # Detector implementations + safe defaults + capability matrix
+        │   └── 📄 README.md
+        │
+        ├── 📁 metrics/                           # Metric definitions + aggregation + scoring conventions
+        │   └── 📄 README.md
+        │
+        ├── 📁 reporters/                         # Report building + schema validation + rendering (JSON/MD)
+        │   └── 📄 README.md
+        │
+        ├── 📁 windows/                           # Window definitions (time/release/count/event) + validators
+        │   └── 📄 README.md
+        │
+        └── 📁 docs/                              # Drift docs (publishable, policy-safe)
+            └── 📄 README.md
 ~~~
 
-Canonical (intended) drift subsystem layout:
+### Subsystem index (human navigation)
 
-~~~text
-📁 tools/
-└── 🧠 ai/
-    └── 📁 drift/
-        ├── 📄 README.md                            # This file
-        │
-        ├── 📁 detectors/                           # Drift detector implementations (pluggable)
-        │   ├── 🧾 psi.json                          # PSI-based detector config (optional)
-        │   ├── 🧾 ks.json                           # KS-test detector config (optional)
-        │   └── 🧾 js_divergence.json                # JS/KL divergence detector config (optional)
-        │
-        ├── 📁 metrics/                             # Metric calculators (numeric/categorical/embeddings)
-        ├── 📁 windows/                             # Windowing logic (time slices, releases, cohorts)
-        ├── 📁 baselines/                           # Baseline selection helpers (training, last release)
-        ├── 📁 reporters/                           # Report builders and schema validators
-        └── 📁 docs/                                # Optional drift notes (publishable and policy-safe)
-~~~
+- **Baselines** → `./baselines/README.md`  
+- **Detectors** → `./detectors/README.md`  
+- **Metrics** → `./metrics/README.md`  
+- **Reporters** → `./reporters/README.md`  
+- **Windows** → `./windows/README.md`  
+- **Docs** → `./docs/README.md`
 
-Directory rules (normative):
+### Directory rules (normative)
 
-- Implementations MAY be organized differently, but the **interfaces must remain stable**:
-  - detectors compute metrics,
-  - windows define comparisons,
-  - reporters produce schema-valid drift reports,
-  - baselines are explicit and versioned.
-- Do not store run payloads here. Store drift run artifacts under:
-  - `mcp/experiments/<run-id>/...` (preferred),
-  - or `mcp/runs/<run-id>/...` if the project uses that structure.
+- This drift module MUST remain **co-located** under `tools/ai/drift/` (no scattered drift code across the repo).
+- Drift **run artifacts** (reports/telemetry/manifests) MUST NOT be committed inside this directory by default.
+  - Store run artifacts in governed run locations (e.g., MCP experiment logs) and reference them from summaries.
+- Every directory shown above MUST contain a `README.md` that documents its contract.
 
 ---
 
 ## 🧭 Context
 
-### Where drift monitoring runs
+### Where drift monitoring fits in the KFM pipeline
 
-Drift monitoring is invoked from:
+Drift monitoring is cross-cutting:
 
-- CI workflows (validation gates),
-- scheduled/continuous pipelines (batch drift checks),
-- release packaging (release-to-release drift comparisons),
-- operator audits (manual checks during review).
+- **Pipelines/ETL**: detect drift in incoming data streams and processed outputs  
+- **Model governance**: detect drift relative to certified baselines  
+- **Story/Narrative**: detect drift in retrieval and narrative-generation proxies  
+- **Telemetry**: record drift events and their operational/energy impact
 
-The drift subsystem is designed to work offline and deterministically—no hidden network requirements.
+Drift monitoring is most effective when run at **known transition boundaries**, such as:
 
-### Baseline selection (normative)
+- dataset refresh,
+- pipeline version bump,
+- model version bump,
+- release cut,
+- or scheduled cadence (daily/weekly) for critical models.
 
-Every drift comparison MUST specify a baseline, chosen from one of:
+### Baseline identity is mandatory
 
-- **training baseline**: distribution from the training/evaluation dataset version used to certify the model,
-- **release baseline**: distribution captured at a certified release packet (e.g., last known “good”),
-- **rolling baseline**: a stable trailing window (only allowed for monitoring; not recommended for certification decisions).
+Every drift check MUST specify one baseline mode:
 
-The baseline must be recorded in the drift report with:
+- **training baseline**: distribution captured from the training/eval dataset used for certification
+- **release baseline**: distribution captured from the last certified release packet
+- **explicit baseline**: distribution captured by an operator for a specific evaluation period
+- **rolling baseline**: allowed for monitoring only; NOT recommended as the sole evidence for certification decisions
 
+Baseline identity must be recorded in outputs as:
 - baseline type,
-- dataset ID/version and slice definition,
-- baseline artifact reference (where stored),
-- baseline checksum/hash when available.
+- dataset ID/version,
+- slice definition (window semantics),
+- and a checksum/hash when feasible.
 
-### Windowing strategies
+### Windowing is not optional
 
-Common window types:
+All drift results MUST be interpretable as:
 
-- **Trailing windows**: last 7d / 30d / 90d relative to “now” for operational monitoring.
-- **Fixed intervals**: specific date ranges (e.g., seasonal comparisons).
-- **Release-to-release**: compare distributions between certified releases (recommended for governance).
+- “baseline window vs current window”
+- with explicit:
+  - temporal bounds,
+  - timezone,
+  - inclusion semantics,
+  - minimum sample rules.
 
-Window definitions must be explicit and recorded.
+Windowing lives in `tools/ai/drift/windows/`.
+
+### Relationship to other AI governance modules
+
+Drift is designed to be composable with:
+
+- **Fairness** (`tools/ai/fairness/`): drift may trigger re-audit of subgroup metrics
+- **Explainability** (`tools/ai/explainability/`): drift may trigger regeneration/validation of explainability bundles
+- **Provenance** (`tools/ai/provenance/`): drift artifacts must bind to run lineage
+- **Registry** (`tools/ai/registry/`): drift status may affect deployment status or certification labels
+- **Telemetry** (`tools/ai/telemetry/`): drift runs must emit energy/carbon + drift summary metrics
 
 ---
 
 ## 🗺️ Diagrams
 
-### Drift monitoring decision flow
+### Drift monitoring lifecycle (governed flow)
 
 ~~~mermaid
 flowchart TD
-  A["Select model + dataset slice<br/>(ID + version)"] --> B["Select baseline<br/>(training | last release | explicit window)"]
-  B --> C["Compute drift metrics<br/>(per feature/output)"]
-  C --> D["Aggregate drift score<br/>(config-driven)"]
-  D --> E["Compare to thresholds<br/>(PASS/WARN/FAIL)"]
-  E -->|PASS| F["Record report + telemetry<br/>(no action)"]
-  E -->|WARN| G["Escalate / monitor<br/>(review or increased cadence)"]
-  E -->|FAIL| H["Block certification or quarantine<br/>(recalibrate/retrain/retire)"]
-  F --> I["Bind to provenance + registry"]
-  G --> I
-  H --> I
+  A["Select target<br/>model_id + version/hash"] --> B["Resolve dataset slice<br/>dataset_id + version"]
+  B --> C["Resolve baseline<br/>training | release | explicit"]
+  B --> D["Resolve window(s)<br/>baseline_window + current_window"]
+  C --> E["Compute drift stats<br/>(detectors)"]
+  D --> E
+  E --> F["Normalize + aggregate<br/>(metrics)"]
+  F --> G["Threshold mapping<br/>(config-driven)"]
+  G -->|PASS| H["Record + continue"]
+  G -->|WARN| I["Escalate + increase monitoring"]
+  G -->|FAIL| J["Quarantine / block promotion<br/>recalibrate | retrain | retire"]
+  H --> K["Emit report + telemetry<br/>(policy-safe)"]
+  I --> K
+  J --> K
+  K --> L["Bind to provenance + registry<br/>(audit trail)"]
 ~~~
 
-Accessibility note: flow from selection → metrics → thresholds → actions → provenance binding.
+Accessibility note: the flow moves from model/dataset selection → baseline/window resolution → detector computation → aggregation → thresholding → action → reporting and provenance binding.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### Why drift monitoring applies to narrative systems
+### Why drift matters for narrative and retrieval systems
 
-Focus Mode and Story Node generation can drift due to:
+For Focus Mode and Story Node generation, drift can occur even without explicit labels:
 
-- retrieval distribution changes (what content is retrieved),
-- embedding space drift (updated corpora or tokenization),
-- model updates (weights/config),
-- data updates (new documents, new records, changed catalog entries).
+- retrieval distribution shifts (what evidence is retrieved),
+- embedding representation shifts,
+- corpus refresh and OCR/NER changes,
+- prompt template changes,
+- model weights/config changes.
 
-When narrative systems drift, the risk is:
+This can degrade:
+- consistency across time,
+- grounding density (citations/evidence),
+- topic balance,
+- and reliability of summaries.
 
-- inconsistent narratives for similar targets,
-- degraded factual grounding or citations,
-- unintended topic skew.
+### Drift-aware behavior (recommended policy pattern)
 
-### Recommended “drift-aware behavior” for Focus Mode
+- **PASS**: normal operation
+- **WARN**: allow operation, but:
+  - increase monitoring cadence,
+  - log governance-safe warning,
+  - flag for review if in production
+- **FAIL**: fail closed for certification-dependent outputs:
+  - block promotion to production,
+  - or degrade to retrieval-only mode if approved by governance for the domain
 
-If drift status is:
+### Drift-to-governance escalation (normative)
 
-- **PASS**: proceed normally.
-- **WARN**: proceed with caution; attach a governance note internally and increase monitoring.
-- **FAIL**: fail closed for production narrative generation OR degrade to retrieval-only behavior, depending on governance policy for the domain.
+If drift status is **FAIL** for a production-certified model, the system MUST:
 
-Drift gating decisions must be recorded as part of the run artifacts and (when applicable) referenced in the model registry.
+- record a drift event with:
+  - model identity,
+  - dataset identity,
+  - baseline identity,
+  - window identity,
+  - detector summary,
+  - action taken,
+- and route it to governance review pathways defined by `governance_ref`.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-### Determinism rules (normative)
+### Required validations (normative)
 
-Drift tooling MUST:
+For any drift run that produces governed artifacts:
 
-- accept thresholds and windowing via config files (see `tools/ai/configs/`)
-- record the config path and config hash in outputs
-- pin random seeds if sampling is used
-- emit stable JSON artifacts that can be revalidated
+- **Schema validation**
+  - drift report must validate against `json_schema_ref`
+  - telemetry must validate against `telemetry_schema`, `energy_schema`, `carbon_schema`
+- **Determinism check**
+  - the report must include config references and config hash
+  - the window spec must be explicit (not “now” without an anchor)
+- **Safety scans**
+  - no secrets
+  - no PII
+  - no protected-site coordinates
+- **Fail-closed rules**
+  - missing IDs/versions → FAIL
+  - missing baseline identity → FAIL
+  - missing threshold config → FAIL
+  - insufficient sample size → mark “ineligible” and do not claim drift
 
-### Minimal run outputs (contract)
+### Output profiles (recommended)
 
-Each drift run SHOULD produce:
+- `report.json` (required; machine-readable)
+- `summary.md` (optional; policy-safe; human-readable)
+- `telemetry.json` (required when running in governed environments)
+- `selection_manifest.json` (optional; lists item IDs/hashes, not raw sensitive payloads)
 
-- `report.json` (machine-readable drift report)
-- `telemetry.json` (energy/carbon + runtime + summary drift score)
-- optional `summary.md` (human-readable; policy-safe; never required for CI)
+### Example artifact layout (recommended)
 
-### Fail-closed conditions (normative)
-
-A drift run MUST return FAIL if:
-
-- model identity is missing or ambiguous,
-- dataset identity/version is missing,
-- baseline is not specified or not reproducible,
-- thresholds are missing or invalid,
-- report schema validation fails.
-
-### Suggested checks wired into CI
-
-- JSON schema validation for `report.json`
-- config schema validation
-- “no secrets / no PII” scanning on outputs intended for repo storage
-- deterministic output shape checks (stable keys)
+~~~text
+📁 mcp/
+└── 📁 experiments/
+    └── 📁 2025-12-15__drift__focus_mode_v3__kfm-v11.2.6/
+        ├── 🧾 report.json                        # Schema-valid drift report
+        ├── 🧾 telemetry.json                     # Energy/carbon + runtime + drift summary
+        ├── 🧾 selection_manifest.json            # IDs/hashes of selected items (no sensitive payload)
+        ├── 📄 summary.md                         # Policy-safe narrative summary (optional)
+        └── 📄 README.md                          # Run context: purpose, configs, provenance refs
+~~~
 
 ---
 
 ## 📦 Data & Metadata
 
-### Drift report structure (recommended)
+### Drift report contract (recommended structure)
 
-A drift report is a governed artifact with at least:
+At minimum, a drift report SHOULD capture:
 
-- `run_id`
-- `status` (`PASS` | `WARN` | `FAIL`)
-- model identity:
-  - `model_id`, `model_version` (or `model_hash`)
-- dataset identity:
-  - `dataset_id`, `dataset_version` (or STAC/DCAT refs)
-- baseline identity:
-  - type, slice definition, reference, checksum
-- window identity:
-  - slice definition
-- metrics:
-  - per-feature metrics
+- `run_id` (stable, timestamped)
+- `status` (`PASS` | `WARN` | `FAIL` | `INELIGIBLE`)
+- `model`:
+  - `model_id`
+  - `model_version` and/or `model_hash`
+- `dataset`:
+  - `dataset_id`
+  - `dataset_version`
+  - optional STAC/DCAT references
+- `baseline`:
+  - `type`
+  - `ref` (path/URI)
+  - `sha256` (if available)
+  - `window` (slice definition)
+- `window`:
+  - current window spec (slice definition)
+- `detectors_used`:
+  - list of detector IDs/versions
+- `metrics`:
+  - per-feature drift stats
   - aggregate drift score
-- actions:
-  - recommended or enforced actions
+- `thresholds`:
+  - config ref + hash
+- `actions`:
+  - none / monitor / review / recalibrate / retrain / retire
+- `provenance`:
+  - references to run logs, provenance entities, registry updates
 
-Example (illustrative):
+Illustrative (policy-safe) skeleton:
 
 ~~~json
 {
-  "run_id": "2025-12-15_focus_drift",
+  "run_id": "2025-12-15__drift__example",
   "status": "WARN",
-  "model": {
-    "model_id": "focus_mode_v3_narrative",
-    "model_version": "11.2.6"
-  },
-  "dataset": {
-    "dataset_id": "dcat:kfm:dataset:docs-corpus:v11",
-    "dataset_version": "v11"
-  },
+  "model": { "model_id": "<model-id>", "model_version": "<ver>", "model_hash": "<sha256>" },
+  "dataset": { "dataset_id": "<dataset-id>", "dataset_version": "<ver>" },
   "baseline": {
     "type": "release",
-    "ref": "releases/v11.2.2/focus-baseline.json",
+    "ref": "releases/v11.2.2/<baseline-artifact>.json",
     "sha256": "<sha256>",
-    "slice": {
-      "time": "2025-10-01/2025-11-01",
-      "notes": "last certified baseline window"
-    }
+    "window": { "type": "anchored_time", "start": "<iso>", "end": "<iso>", "timezone": "UTC" }
   },
-  "window": {
-    "time": "2025-11-15/2025-12-15",
-    "notes": "monitoring window"
-  },
+  "window": { "type": "rolling_time", "start": "<iso>", "end": "<iso>", "timezone": "UTC" },
+  "detectors_used": ["psi_v1", "ks_v1"],
   "metrics": {
     "aggregate_drift_score": 0.31,
     "by_feature": [
-      {
-        "feature": "embedding_norm",
-        "metric": "psi",
-        "value": 0.22,
-        "threshold_warn": "<set-by-governance>",
-        "threshold_fail": "<set-by-governance>"
-      }
+      { "feature": "feature_1", "metric": "psi", "value": 0.22 }
     ]
   },
+  "thresholds": { "config_ref": "tools/ai/configs/<profile>.json", "config_sha256": "<sha256>" },
   "actions": ["require_review_if_production"],
-  "telemetry_ref": "mcp/experiments/2025-12-15_focus_drift/telemetry.json"
+  "provenance": { "run_ref": "mcp/experiments/<run-id>/" }
 }
 ~~~
 
-### Telemetry requirements
+### Telemetry contract (minimum)
 
-Drift runs SHOULD emit:
+Telemetry SHOULD include:
 
 - `runtime_ms`
 - `energy_wh`
 - `carbon_gco2e`
-- `drift_score` (aggregate)
-- counts (features checked, features drifted, detectors used)
-
-Telemetry must be schema-valid per `telemetry_schema`, `energy_schema`, and `carbon_schema`.
+- `status`
+- `aggregate_drift_score`
+- counts (features_checked, features_flagged, detectors_used_count)
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### STAC
+### STAC alignment (recommended)
 
-If drift checks are performed on **spatial model outputs** (classified rasters, segmentation masks, tiles):
+For spatial model outputs (COGs, vector tiles, GeoJSON):
 
-- drift comparisons SHOULD reference STAC Items/Collections used to source:
-  - baseline outputs,
-  - current outputs,
-  - derived evaluation products.
+- Baseline and current selections SHOULD be representable as:
+  - STAC Item IDs
+  - plus the STAC search query snapshot (for replayability)
 
-STAC links should be stored as references (IDs/paths), not embedded payloads.
+Avoid embedding full STAC Items inside drift reports; store IDs/refs.
 
-### DCAT
+### DCAT alignment (recommended)
 
-If a drift event causes a dataset to be flagged or reissued:
+Drift results that affect dataset releases SHOULD be linkable via DCAT as:
 
-- DCAT-aligned dataset metadata should record:
-  - the drift event reference,
-  - the corrective action (retrain/recalibrate),
-  - the new version.
+- a dataset quality note / governance record
+- with references to:
+  - dataset ID/version
+  - drift report distribution (machine-readable artifact)
 
-### PROV-O
+### PROV-O alignment (recommended)
 
-Each drift run should be representable as:
+Represent each drift run as a provenance activity:
 
-- a `prov:Activity` (drift check)
-- using Entities:
-  - model artifact (Entity),
-  - baseline slice artifacts (Entity),
-  - window slice artifacts (Entity)
-- generating Entities:
-  - drift report (Entity),
-  - telemetry record (Entity)
-- with attributed Agents (CI runner, maintainer role, governance role).
+- `prov:Activity` = “drift_check”
+- `prov:used` = model entity, dataset entity, baseline entity, config entity
+- `prov:generated` = drift report entity, telemetry entity
+- `prov:wasAssociatedWith` = governance agents/CI runner roles
 
-Goal: drift is not a “note”; it is a traceable lineage event.
+This supports auditability and replay.
 
 ---
 
 ## 🧱 Architecture
 
-### Detector design (pluggable and task-aware)
+### Component responsibilities
 
-Drift detectors should be selected based on feature type:
+- **Windows** (`windows/`)
+  - resolves baseline/current slices deterministically
+  - enforces minimum sample + safety constraints
 
-- numeric features:
-  - PSI, KS-test, Wasserstein distance, distribution divergence
-- categorical features:
-  - chi-square-like distribution comparison, JS divergence on category frequencies
-- embeddings:
-  - aggregate statistics (mean/variance norms), centroid shifts, safe divergence measures on binned projections
-- text outputs (generative systems):
-  - length distribution drift, citation-rate drift, “evidence density” drift (safe aggregate measures)
+- **Baselines** (`baselines/`)
+  - defines how baseline distributions are captured and stored
+  - establishes baseline provenance (training/release/explicit)
 
-Detectors must be safe-by-default: compute on aggregates, not raw protected content.
+- **Detectors** (`detectors/`)
+  - compute drift statistics appropriate to feature type:
+    - numeric, categorical, geospatial proxies, embeddings, text proxies
+  - MUST operate on aggregates when possible (policy safety)
 
-### Severity mapping (PASS/WARN/FAIL)
+- **Metrics** (`metrics/`)
+  - normalize drift stats into comparable scores
+  - aggregate feature-level drift into subsystem- and model-level scores
+  - define weighting rules (config-driven)
 
-Severity must be config-driven:
+- **Reporters** (`reporters/`)
+  - produce schema-valid JSON reports
+  - produce optional human summaries
+  - validate outputs against schemas and safety checks
 
-- metric thresholds define WARN/FAIL,
-- aggregation rules define how multiple metrics roll up,
-- action policy defines what to do per status and per environment.
+### Recommended detector categories (non-exhaustive)
 
-Recommended action policy:
+- Numeric:
+  - PSI, KS test, Wasserstein distance, JS/KL divergence on binned distributions
+- Categorical:
+  - JS divergence on category frequencies, chi-square style comparisons (as allowed by policy)
+- Embeddings:
+  - centroid shift norms, binned projection divergence, safe summary statistics
+- Text outputs (for narrative systems):
+  - length distribution drift, citation-rate drift, evidence-density proxies (aggregate-only)
 
-- PASS: record
-- WARN: record + escalate (review or increased cadence)
-- FAIL: record + block promotion / quarantine dependent pipelines
+### Status mapping (PASS/WARN/FAIL)
 
-### “Drift without labels”
+Status mapping MUST be defined in config profiles:
 
-In many production settings, labels are delayed or unavailable. KFM supports drift monitoring without labels via:
+- thresholds per metric
+- aggregation rule (max, weighted sum, quorum)
+- per-environment action policy (dev/staging/prod)
 
-- input distribution drift,
-- output distribution drift,
-- proxy quality signals (policy-approved, safe aggregates).
+Recommended semantics:
 
-Concept drift checks should run when evaluation labels are available.
+- PASS: no action
+- WARN: escalate and monitor
+- FAIL: block certification-dependent actions and route to governance review
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-### Policy constraints (normative)
+### Safety constraints (normative)
 
-Drift monitoring must comply with:
+Drift reporting MUST NOT include:
 
-- `governance_ref`
-- `ethics_ref`
-- `sovereignty_policy`
+- PII
+- secrets
+- protected-site coordinates
+- raw sensitive imagery snippets
+- raw text excerpts from restricted corpora
 
-This implies:
+Drift reporting SHOULD prefer:
 
-- No protected-site coordinates in drift reports.
-- No PII in drift reports.
-- No secrets in drift reports.
-- Drift reports must be written in a way that supports long-term auditability without exposing restricted data.
+- aggregate statistics,
+- coarse spatial binning (when relevant),
+- suppression of small groups/subcohorts.
 
-### Publication rule
+### Small-group suppression (normative)
 
-Only **policy-safe** drift summaries may be published in `docs/reports/`.  
-Full drift artifacts belong in `mcp/experiments/` and should be access-controlled by repo governance practices.
+Any drift output that could expose a small cohort MUST be suppressed or generalized:
+
+- require minimum `n` for subgroup reporting
+- avoid intersectional subgroup breakdowns unless governance-approved
+
+### Governance escalation (normative)
+
+A **FAIL** status for a production-certified model MUST trigger:
+
+- an audit trail entry (report + telemetry + provenance link)
+- a recommended corrective action:
+  - recalibrate thresholds,
+  - retrain,
+  - retire,
+  - or restrict usage scope (domain/env gating)
 
 ### Training prohibition
 
-Drift reports are governance artifacts and MUST NOT be used as AI training data (`ai_training_allowed: false`).
+Drift artifacts are governance records and MUST NOT be used as training data (`ai_training_allowed: false`).
 
 ---
 
@@ -503,15 +585,18 @@ Drift reports are governance artifacts and MUST NOT be used as AI training data 
 
 | Version     | Date       | Summary |
 |------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-15 | Created drift subsystem README: definitions, baseline/windowing rules, report/telemetry contracts, CI fail-closed rules, and provenance alignment for KFM AI governance. |
+| **v11.2.6** | 2025-12-15 | Drift subsystem architecture: canonical layout, definitions, baseline/windowing requirements, detector/metric/reporting contracts, CI validation and fail-closed rules, provenance and governance alignment. |
 
 ---
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-🌡️ Drift Monitoring · Governed for Integrity
+🌡️ Drift Monitoring · Governed for Integrity · KFM v11
 
-[⬅️ Back to AI Tools](../README.md) · [⚙️ Config Profiles](../configs/README.md) · [🛡 Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅️ Back to AI Tools](../README.md) ·
+[⚙️ Config Profiles](../configs/README.md) ·
+[🪟 Drift Windows](./windows/README.md) ·
+[🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
