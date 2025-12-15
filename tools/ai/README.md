@@ -1,16 +1,18 @@
 ---
 title: "🧠 Kansas Frontier Matrix — AI & Machine Learning Tools (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tools/ai/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-27"
+
+version: "v11.2.6"
+last_updated: "2025-12-15"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-version-sha256>"
-doc_uuid: "urn:kfm:doc:tools-ai-readme-v11.0.0"
-doc_guid: "urn:kfm:doc:tools-ai-readme-v11.0.0"
+
+doc_uuid: "urn:kfm:doc:tools-ai-readme-v11.2.6"
+doc_guid: "urn:kfm:doc:tools-ai-readme-v11.2.6"
 semantic_document_id: "kfm-doc-tools-ai"
 doc_kind: "Architecture"
 intent: "tools-ai-platform"
@@ -33,9 +35,9 @@ sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECT
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
 
 fair_category: "F1-A1-I2-R3"
 care_label: "Public · Low-Risk"
@@ -47,12 +49,13 @@ risk_category: "Low"
 redaction_required: false
 
 provenance_chain:
-  - "tools/ai/README.md@v9.5.0"
-  - "tools/ai/README.md@v9.6.0"
-  - "tools/ai/README.md@v9.7.0"
-  - "tools/ai/README.md@v10.0.0"
-  - "tools/ai/README.md@v10.2.2"
+  - "tools/ai/README.md@v11.2.2"
   - "tools/ai/README.md@v11.0.0"
+  - "tools/ai/README.md@v10.2.2"
+  - "tools/ai/README.md@v10.0.0"
+  - "tools/ai/README.md@v9.7.0"
+  - "tools/ai/README.md@v9.6.0"
+  - "tools/ai/README.md@v9.5.0"
 
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -82,349 +85,501 @@ sunset_policy: "Superseded upon next AI-tools platform update"
 
 <div align="center">
 
-# 🧠 **Kansas Frontier Matrix — AI & Machine Learning Tools (v11)**  
+# 🧠 **Kansas Frontier Matrix — AI & Machine Learning Tools (v11)**
 `tools/ai/README.md`
 
 **Purpose**  
-Define the **FAIR+CARE-certified AI & ML governance toolkit** for the Kansas Frontier Matrix (KFM) — covering explainability, bias detection, drift monitoring, sustainability metrics, and provenance binding for all AI/ML workloads:
+Define the **FAIR+CARE-governed AI & ML tooling surface** for the Kansas Frontier Matrix (KFM):  
+explainability, bias audits, drift monitoring, sustainability telemetry, and provenance binding for all AI/ML workloads across the platform.
 
-- Focus Mode v3  
-- Story Node v3 generation  
-- Climate & hydrology models  
-- Remote-sensing models  
-- Time-series forecasters  
+Applies to (non-exhaustive):
 
-All tools comply with:
-
-- **MCP-DL v6.3** (documentation-first)  
-- **KFM-MDP v11.2.2** (markdown + metadata protocol)  
-- **FAIR+CARE** (ethics & sovereignty)  
-- **KFM-OP v11.0** (ontology alignment)  
-- **Diamond⁹ Ω / Crown∞Ω** reliability and governance standards  
+- **Focus Mode** narrative generation and summarization workloads
+- **Story Node** generation and enrichment workflows
+- **Remote sensing** and geospatial ML (classification/segmentation)
+- **Forecasting** and time-series models (climate/hydrology)
+- **Entity extraction / linking** and doc-to-graph pipelines
 
 [![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)]() ·
+[![KFM-MDP v11.2.6](https://img.shields.io/badge/KFM--MDP-v11.2.6-purple)]() ·
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-AI%20Governed-gold)]() ·
-[![AI Explainability](https://img.shields.io/badge/AI-Explainable%20%26%20Ethical-blueviolet)]() ·
+[![AI Explainability](https://img.shields.io/badge/AI-Explainable%20%26%20Audited-blueviolet)]() ·
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
 
 </div>
 
 ---
 
-## 📘 1. Overview
+## 📘 Overview
 
-The **AI Tools Framework** under `tools/ai/` governs:
+### What this directory is
 
-- **Explainable AI (XAI)** — SHAP, LIME, Integrated Gradients, attention maps, evidence bundles  
-- **Fairness & bias audits** — statistical parity, equalized odds, subgroup metrics, intersectional analysis  
-- **Drift monitoring** — distributional & conceptual drift (features and outputs)  
-- **Sustainability telemetry** — energy and carbon metrics for AI workloads  
-- **Governance & provenance** — JSON-LD exports, ledger integration, model registry, and OpenLineage events  
+`tools/ai/` contains **governance-grade utilities** that make AI/ML behavior in KFM:
 
-These tools are invoked by:
+- **Auditable** (bias + explainability + drift evidence)
+- **Traceable** (PROV-linked run records, versioned model/dataset identities)
+- **Reproducible** (deterministic configs; pinned versions; stable IDs)
+- **Sustainable** (energy/carbon estimates for training/eval/audit)
+- **Policy-safe** (FAIR+CARE + sovereignty constraints are enforced by design)
 
-- CI/CD workflows (`.github/workflows/*`)  
-- Autonomous pipelines (`src/pipelines/ai/**`)  
-- Governance workflows (`tools/governance/**`)  
-- Operators via CLI (`tools/cli/**`)  
+This README is an **architecture + registry specification** (`doc_kind: Architecture`, `immutability_status: mutable-plan`).  
+It defines the **intended** tool surface and output contracts. Individual scripts/modules may evolve as the platform updates.
 
-No AI pipeline can be **certified for production** unless AI Tools audits pass and are recorded in the governance ledgers.
+### What these tools govern (scope)
+
+These tools govern **any workload** that:
+
+- Produces a prediction, label, ranking, embedding, classification, segmentation, or generated narrative
+- Influences user-visible outputs (UI layers, Story Nodes, Focus Mode views)
+- Produces derived data that may become “certified” (`data/processed/`) or versioned into `releases/`
+
+### Non-goals
+
+`tools/ai/` is **not** the model training “home” and is **not** a production inference service.  
+It is a governance and validation surface that:
+
+- runs in CI, controlled environments, and audit pipelines
+- emits structured artifacts for ledgers/telemetry/model cards
+- blocks/flags non-compliant outcomes before promotion
+
+### Core capabilities (tool categories)
+
+1. **Explainability / evidence bundles**
+   - Local and global “why” artifacts per model and per dataset slice
+   - Coverage scoring (how often explanations are available and meaningful)
+
+2. **Bias / fairness audits**
+   - Subgroup metrics and intersectional checks
+   - Threshold-based PASS/WARN/FAIL gating aligned to documented risk profiles
+
+3. **Drift monitoring**
+   - Feature drift, output drift, and concept drift signals
+   - Action recommendations (monitor/recalibrate/retrain/retire)
+
+4. **Sustainability telemetry**
+   - Energy and carbon estimation for audit + evaluation runs
+   - Reporting aligned to `energy_schema` and `carbon_schema`
+
+5. **Governance + provenance binding**
+   - Model registry management
+   - Run records linked to model cards, datasets, and release packets
 
 ---
 
-## 🗂️ 2. Directory Layout (Emoji Style A)
+## 🗂️ Directory Layout
 
-```text
-tools/
+### Position in the repo
+
+`tools/ai/` is one of the governed tool suites under `tools/`:
+
+~~~text
+📁 tools/
+├── 🧠 ai/                                     # AI/ML evaluation, audit, governance tooling (this README lives here)
+├── 🧪 ci/                                     # CI helper scripts/tools
+├── ⌨️ cli/                                     # Command-line utilities (repo-level interface layer)
+├── 🏛️ governance/                              # Governance automation (ledgers/compliance)
+├── 📡 telemetry/                               # Telemetry aggregation and reporting
+└── ✅ validation/                              # Data/metadata validators (STAC/DCAT/schema checks)
+~~~
+
+### Canonical (intended) layout inside `tools/ai/`
+
+This is the **recommended canonical layout** for the AI governance toolchain.  
+(Some subfolders may be added over time as the suite grows; keep interfaces stable and config-driven.)
+
+~~~text
+📁 tools/
 └── 🧠 ai/
-    ├── 📄 README.md                 # This file
+    ├── 📄 README.md                            # This file (architecture + tool registry)
     │
-    ├── 🧪 focus_audit.py            # Explainability & transparency validator for Focus Mode / Story Nodes
-    ├── ⚖️ bias_check.py             # Fairness & bias analysis (classification/regression)
-    ├── 🌡️ drift_monitor.py          # Data & concept drift detection and alert hooks
+    ├── 📁 configs/                             # Threshold profiles + governance presets (YAML/JSON)
+    │   ├── 🧾 fairness_thresholds.default.json  # Default fairness thresholds by task type
+    │   ├── 🧾 explainability_thresholds.json    # Explainability coverage/quality thresholds
+    │   └── 🧾 drift_thresholds.json             # Drift alert thresholds
     │
-    ├── 📚 ai_model_registry.json    # Active model registry: versions, hashes, datasets, licenses, CARE labels
-    └── 📑 metadata.json             # JSON-LD config: audit thresholds, CARE profiles, telemetry config
-```
+    ├── 📁 fairness/                            # Bias & fairness metric implementations + runners
+    ├── 📁 explainability/                      # XAI runners and evidence bundle generators
+    ├── 📁 drift/                               # Drift detection implementations + runners
+    ├── 📁 telemetry/                           # Energy/carbon capture, aggregation, and export
+    ├── 📁 provenance/                          # PROV/JSON-LD emitters and binding helpers
+    ├── 📁 registry/                            # Model registry helpers + validation rules
+    │
+    ├── 🧾 ai_model_registry.json                # Registry of governed models (IDs, versions, refs)
+    └── 🧾 metadata.json                         # Tool suite metadata + default profiles
+~~~
 
-Each file must:
+### Directory rules (normative)
 
-- Be deterministic and idempotent where possible  
-- Be safe to run in CI, staging, and offline audit environments  
-- Be configurable via `metadata.json` and data contracts  
+- AI governance tools SHOULD be **deterministic** and **idempotent** where possible.
+- Any new scripts MUST be callable in:
+  - CI environments
+  - staging validation
+  - offline audit environments (no hidden network requirements)
+- Tool outputs MUST be:
+  - structured (JSON / JSON-LD where applicable)
+  - schema-valid (see `telemetry_schema`, `energy_schema`, `carbon_schema`)
+  - safe (no secrets, no PII, no protected-site coordinates)
 
 ---
 
-## 🧬 3. AI Governance Workflow (v11)
+## 🧭 Context
 
-```mermaid
+### How `tools/ai/` fits the KFM pipeline
+
+KFM’s platform flow is:
+
+> ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes / Focus Mode
+
+`tools/ai/` contributes to the **governance gates** in that flow by producing:
+
+- **Audit artifacts** (fairness, explainability, drift)
+- **Telemetry artifacts** (energy/carbon + run-time metrics)
+- **Provenance bindings** (run → model → dataset → release packet)
+
+### Where outputs belong
+
+To maintain repo hygiene and reproducibility:
+
+- **Derived datasets** (model-ready features, predictions used as data products) belong in:
+  - `data/work/` (intermediate)
+  - `data/processed/` (certified outputs)
+- **Run logs / audit artifacts** belong in:
+  - `mcp/experiments/` or `mcp/runs/` (raw run payloads)
+- **Human-readable summaries** may be mirrored into:
+  - `docs/reports/` (when explicitly published and scrubbed)
+
+Do not store large run payloads in `tools/ai/` itself.
+
+### Terminology (quick)
+
+- **Model**: a versioned artifact (weights + code + config + dependencies) referenced by `model_id` and version/hash.
+- **Dataset**: a versioned asset or collection described via STAC/DCAT identifiers.
+- **Audit**: a deterministic procedure that produces PASS/WARN/FAIL plus evidence artifacts.
+- **Certification**: a governance decision based on audit outputs + policy constraints.
+
+---
+
+## 🗺️ Diagrams
+
+### AI governance gate (conceptual)
+
+This diagram shows the **intended** evaluation path for AI/ML workloads before they are promoted or released.
+
+~~~mermaid
 flowchart TD
-    A["KFM AI/ML Models\n(Focus · ETL · Forecast · Remote Sensing)"]
-      --> B["⚖️ bias_check.py\nBias & Fairness Validation"]
-    B --> C["🧪 focus_audit.py\nExplainability (SHAP · LIME · IG · Attention)"]
-    C --> D["🌡️ drift_monitor.py\nData & Concept Drift Detection"]
-    D --> E["Mitigation Hooks\n(retrain · reweight · thresholds)"]
-    E --> F["FAIR+CARE Certification\nEthics · A11y · Sovereignty Gates"]
-    F --> G["🏛 Governance + 📡 Telemetry\nJSON-LD → Ledgers · Telemetry · Model Registry"]
-```
+  A["AI/ML Workload<br/>(Focus Mode · Story Nodes · RS/ML · Forecasting)"] --> B["Bias/Fairness Audit<br/>(subgroup metrics + thresholds)"]
+  B --> C["Explainability Audit<br/>(evidence bundle + coverage scoring)"]
+  C --> D["Drift Checks<br/>(data/output/concept drift)"]
+  D --> E["Sustainability Telemetry<br/>(energy_wh + carbon_gco2e)"]
+  E --> F["Governance Binding<br/>(registry + provenance + ledgers)"]
+  F -->|PASS| G["Eligible for certification / promotion<br/>(work → processed → release)"]
+  F -->|WARN| H["Escalate / monitor<br/>(tighten thresholds or require review)"]
+  F -->|FAIL| I["Block / quarantine<br/>(retrain, recalibrate, retire)"]
+~~~
 
-The workflow:
-
-1. **Bias & fairness** — run `bias_check.py` on relevant models.  
-2. **Explainability** — generate/validate XAI artifacts with `focus_audit.py`.  
-3. **Drift monitoring** — run `drift_monitor.py` over sliding windows.  
-4. **Mitigation** — flag or trigger retraining and risk mitigations.  
-5. **Certification** — produce FAIR+CARE decisions.  
-6. **Governance integration** — push results into ledgers and telemetry.
+Accessibility note: the diagram flows from workload → audits → telemetry → governance binding → PASS/WARN/FAIL outcomes.
 
 ---
 
-## ⚙️ 4. Stage Responsibilities
+## 🧠 Story Node & Focus Mode Integration
 
-### 4.1 Bias Detection (`bias_check.py`)
+### What “AI-governed output” means for KFM narratives
 
-- Computes fairness metrics such as:
-  - Statistical Parity Difference  
-  - Disparate Impact  
-  - Equalized Odds & Equal Opportunity  
-  - Subgroup-specific error rates  
+When KFM generates or enriches narratives (Story Nodes or Focus Mode outputs), the tooling must ensure:
 
-- Supports:
-  - Multiple protected attributes  
-  - Intersectional analysis  
-  - Domain-specific fairness thresholds  
+- **Explainability is available** (why the narrative included claims, citations, or entity links)
+- **Bias audits are current** for the model and task configuration
+- **Drift is monitored** for the input distributions used in generation
+- **Sensitive content is constrained** by sovereignty policy and FAIR+CARE guidance
 
-Outputs:
+### Focus Mode requirements (normative)
 
-- Per-model bias metrics and PASS/WARN/FAIL flags.  
-- Structured JSON for each run, suitable for ingestion into governance and telemetry.
+If a model is used for user-facing narrative generation:
 
----
+- `ai_outputs_require_explainability: true` implies the model MUST have a valid explainability audit reference.
+- `ai_outputs_require_bias_audit: true` implies the model MUST have a valid bias/fairness audit reference.
+- Audit references MUST be version-linked (model version + dataset version + config hash).
 
-### 4.2 Explainability (`focus_audit.py`)
+### “Evidence bundles” (concept)
 
-- Generates or verifies explainability artifacts for:
+An evidence bundle is a structured artifact that explains:
 
-  - Focus Mode v3 models (e.g., narrative transformers)  
-  - Remote-sensing models (e.g., segmentation/classification networks)  
-  - Tabular time-series models (e.g., hydrology, climate predictors)  
+- inputs used (by ID / hashed references, never raw sensitive content)
+- features/signals that drove outputs
+- model version + configuration
+- dataset IDs and slices (e.g., region/time window)
+- relevant constraints or redactions applied
 
-- Supports:
-
-  - SHAP (global and local importance)  
-  - LIME (local explanations)  
-  - Integrated Gradients for deep networks  
-  - Attention maps and saliency overlays (if applicable)  
-
-- Ensures:
-
-  - Explanations match the **current** model weights and dataset versions.  
-  - Explanations are stored in **versioned artifact paths**, referenced in `ai_model_registry.json`.  
+Evidence bundles must be safe to store long-term and safe to publish only when policy permits.
 
 ---
 
-### 4.3 Drift Monitoring (`drift_monitor.py`)
+## 🧪 Validation & CI/CD
 
-- Monitors:
+### How audits are invoked
 
-  - **Data drift** — population stability index, KL/JS divergence, KS tests for key features.  
-  - **Prediction drift** — distribution changes in predictions across time windows.  
-  - **Concept drift** — systematic performance changes on evaluation sets.  
+AI tools are invoked by:
 
-- Emits:
+- CI workflows under `.github/workflows/` (lint + governance + validations)
+- pipeline runs under `src/pipelines/` (automated ETL + model workflows)
+- operators via repo CLI tools (under `tools/cli/`)
 
-  - Drift scores per feature/model  
-  - Flags for moderate vs severe drift  
-  - Suggested actions: `monitor`, `recalibrate`, `retrain`, or `retire`  
+Exact workflow filenames can vary by release; the contract is: **audits MUST run before promotion**.
 
-Any **severe drift** must be:
+### Determinism rules (normative)
 
-- Logged in drift-ledger outputs  
-- Escalated to governance; optionally block further usage until mitigated.
+AI governance tools MUST:
 
----
+- accept all thresholds and parameters via config files (not hard-coded)
+- record run parameters, tool version, and environment info
+- pin seeds when randomness is unavoidable
+- output stable JSON that can be revalidated
 
-## 📚 5. AI Model Registry (`ai_model_registry.json`)
+### Expected outputs per audit
 
-The model registry is the **authoritative listing** of AI/ML models governed by KFM.
+Each audit SHOULD produce:
 
-Typical fields:
+- a top-level `status`: `PASS` | `WARN` | `FAIL`
+- a `run_id` that can be traced to a pipeline run or experiment
+- `model_id`, `model_version` (or hash)
+- `dataset_id`, `dataset_version` (or STAC/DCAT pointers)
+- metric payloads + summaries
+- references to stored artifacts (explainability bundles, drift charts, etc.)
+- telemetry payload for energy/carbon
 
-- `model_id` — stable model identifier  
-- `version` — semantic version of the model  
-- `architecture` — string (e.g., `transformer_encoder_v3`, `lstm_hydro_v8`)  
-- `datasets` — list of dataset IDs used for training/eval (STAC/DCAT-linked)  
-- `license` — model license (if applicable)  
-- `care_label` — CARE classification (e.g., `public`, `restricted`, `not_for_decisions`)  
-- `model_card_ref` — path/URI to model card  
-- `last_bias_audit` — timestamp + ref to `bias_check` report  
-- `last_explainability_audit` — timestamp + ref to `focus_audit` report  
-- `last_drift_check` — timestamp + ref to `drift_monitor` report  
-- `energy_training_wh` / `carbon_training_gco2e` — training sustainability metrics  
-- `deployment_status` — `experimental`, `internal`, `production`, `retired`  
+### Failure handling (fail-closed)
 
-Updates:
-
-- Must be performed via governed flows (CI/CLI, not manual editing).  
-- Must be referenced in governance and telemetry bundles.
+- FAIL outcomes MUST block certification and production promotion.
+- WARN outcomes MUST either:
+  - trigger a review workflow (human governance), or
+  - be explicitly accepted with a documented rationale (where policy allows)
 
 ---
 
-## 🧾 6. Example AI Governance Record (v11)
+## 📦 Data & Metadata
 
-```json
+### Model registry (`ai_model_registry.json`)
+
+The model registry is the **authoritative listing** of governed AI/ML models.
+
+A registry entry SHOULD include:
+
+- `model_id` (stable ID)
+- `version` (semantic version or content hash)
+- `task_type` (classification / regression / segmentation / generation / retrieval)
+- `inputs` and `outputs` (high-level description)
+- `datasets` (STAC/DCAT identifiers for training/eval)
+- `model_card_ref` (path to a model card under `mcp/model_cards/`)
+- audit references:
+  - `bias_audit_ref`
+  - `explainability_audit_ref`
+  - `drift_report_ref`
+- sustainability metrics:
+  - `energy_wh` and `carbon_gco2e` (when captured)
+- `deployment_status`: `experimental` | `internal` | `production` | `retired`
+- `care_label` and `sensitivity` flags as appropriate
+
+Registry updates SHOULD be performed via governed tooling (CLI + validation), not ad-hoc manual edits.
+
+### Example (illustrative) registry entry
+
+~~~json
 {
-  "@context": "https://schema.org/",
-  "@type": "Dataset",
-  "id": "ai_tools_registry_v11.0.0",
-  "models_registered": [
-    "focus_mode_v3_climate_v11",
-    "hydrology_lstm_v8"
+  "model_id": "focus_mode_v3_narrative",
+  "version": "11.2.6",
+  "task_type": "generation",
+  "deployment_status": "internal",
+  "datasets": [
+    "dcat:kfm:dataset:docs-corpus:v11",
+    "stac:kfm:collection:kansas-basemap:v11"
   ],
-  "bias_audits_completed": 36,
-  "drift_events_detected": 2,
-  "last_drift_event": "2025-11-18T19:12:03Z",
-  "fairstatus": "certified",
-  "ai_explainability_score": 0.997,
-  "checksum_verified": true,
-  "governance_registered": true,
-  "telemetry_logged": true,
-  "energy_wh": 7.4,
-  "carbon_gco2e": 8.2,
-  "validator": "@kfm-ai-governance",
-  "created": "2025-11-24T00:00:00Z",
-  "governance_ref": "data/reports/audit/ai_hazards_ledger.json"
+  "model_card_ref": "mcp/model_cards/focus_mode_v3_narrative.md",
+  "bias_audit_ref": "mcp/experiments/2025-12-15_focus_bias_audit/report.json",
+  "explainability_audit_ref": "mcp/experiments/2025-12-15_focus_xai_audit/evidence_bundle.json",
+  "drift_report_ref": "mcp/experiments/2025-12-15_focus_drift/report.json",
+  "telemetry_ref": "mcp/experiments/2025-12-15_focus_audit/telemetry.json",
+  "care_label": "Public · Low-Risk",
+  "sensitivity": "General"
 }
-```
+~~~
+
+### Telemetry (energy + carbon)
+
+All AI governance runs SHOULD emit telemetry aligned to:
+
+- `telemetry_schema`
+- `energy_schema`
+- `carbon_schema`
+
+Minimum recommended fields:
+
+- `run_id`
+- `tool` (bias / xai / drift)
+- `runtime_ms`
+- `energy_wh`
+- `carbon_gco2e`
+- compact audit scores (e.g., `bias_score`, `explainability_score`, `drift_score`)
 
 ---
 
-## 🧠 7. FAIR+CARE Governance Matrix (AI Tools)
+## 🌐 STAC, DCAT & PROV Alignment
 
-| Principle               | Implementation                                                         | Oversight          |
-|-------------------------|-------------------------------------------------------------------------|--------------------|
-| **Findable**            | Model registry & audit logs with stable IDs & JSON-LD contexts         | `@kfm-data`        |
-| **Accessible**          | Open reports + model cards under MIT; human- & machine-readable        | `@kfm-accessibility` |
-| **Interoperable**       | JSON-LD, DCAT 3.0, STAC, SPDX, PROV-O compatible outputs               | `@kfm-architecture` |
-| **Reusable**            | Versioned configs, pinned models, deterministic pipelines              | `@kfm-design`      |
-| **Collective Benefit**  | Supports responsible, context-aware use of AI in environmental/cultural work | `@faircare-council` |
-| **Authority to Control**| FAIR+CARE Council dictates which models can be used where/how          | `@kfm-governance`  |
-| **Responsibility**      | Audit logs and sustainability metrics attach responsibility to owners   | `@kfm-security`    |
-| **Ethics**              | Sensitive topics flagged; models blocked when fairness or drift fails  | `@kfm-ethics`      |
+### STAC alignment (assets and evaluation artifacts)
 
----
+When AI produces **spatial assets** (e.g., segmentation masks, tiles, classified rasters):
 
-## 🌱 8. Sustainability & Telemetry Integration
+- Outputs SHOULD be stored under `data/work/` or `data/processed/`
+- Catalog them via STAC in `data/stac/`
+- Keep assets discoverable by time and region
 
-For each AI job or audit, the AI tools must emit:
+### DCAT alignment (dataset-level records)
 
-- `energy_wh` — estimated energy for training/eval/audit  
-- `carbon_gco2e` — estimated carbon footprint  
-- `runtime_ms` — runtime of the job  
-- `ai_bias_score` — compact fairness/bias metric  
-- `ai_explainability_score` — coverage/quality metric for XAI artifacts  
-- `ai_drift_score` — aggregated drift indicator  
+When AI produces **dataset-level deliverables**:
 
-These metrics are forwarded to:
+- Describe the dataset with DCAT-aligned metadata (as governed by KFM docs)
+- Include licensing, steward, distributions, and update cadence
+- Link back to the producing pipeline and audits
 
-```text
-../../../releases/v11.2.2/focus-telemetry.json
-docs/reports/telemetry/ai/*.json
-```
+### PROV alignment (lineage)
 
-and help KFM:
+Every AI audit run SHOULD be representable as:
 
-- Track the cost of AI and compare alternatives.  
-- Support climate-related sustainability reporting.  
-- Provide explainable context to governance bodies and users.
+- a `prov:Activity` (the audit run)
+- consuming `prov:Entity` inputs (model artifact, dataset slice)
+- producing `prov:Entity` outputs (audit report, evidence bundle, telemetry)
+- attributed to responsible agents (CI, maintainers, governance roles)
+
+The goal: **no orphan outputs**—everything ties back to provenance.
 
 ---
 
-## ⚖️ 9. Retention & Provenance Policy
+## 🧱 Architecture
 
-| Artifact              | Retention | Notes                                      |
-|-----------------------|-----------|--------------------------------------------|
-| Bias Reports          | 365 days  | Used for re-certification & audits         |
-| Drift Logs            | 180 days  | Rolling horizon for retraining decisions   |
-| Explainability Bundles| 365 days  | Linked from model cards & stories          |
-| Registry Snapshots    | Permanent | Immutable; used for long-term audits       |
-| Governance Entries    | Permanent | Append-only in `data/reports/audit/**`     |
+### Tool contracts (recommended interfaces)
 
-Cleanup is handled by AI-focused CI workflows:
+To keep the suite consistent, each audit runner SHOULD support:
 
-- `ai_cleanup.yml` — rotates short-lived logs, preserves canonical artifacts.
+Inputs (required):
 
----
+- `--model-id`
+- `--model-version` or `--model-hash`
+- `--dataset-id`
+- `--dataset-version` or `--stac-item` / `--dcat-record`
+- `--config` (threshold profile)
+- `--run-id`
+- `--out` (output directory or report file)
 
-## 🛡 10. Security & Privacy Constraints
+Outputs (required):
 
-AI Tools MUST:
+- `report.json` (machine-readable)
+- `telemetry.json` (energy/carbon + runtime)
+- optional evidence artifacts (explainability bundles, plots)
 
-- Avoid logging raw input data (especially PII or sensitive imagery) into governance/audit logs.  
-- Log only:
-  - Derived statistics  
-  - IDs / hashed references to data  
-  - Metadata safe for long-term archival.  
+### Bias & fairness audits (design guidance)
 
-- Not attempt to override or weaken CARE/sovereignty policies.  
-- Fail **closed** when encountering unexpected or ambiguous metadata.  
+Bias checks should support:
 
----
+- subgroup metrics (by protected attribute where relevant/available)
+- intersectional checks (where policy permits and data supports)
+- task-appropriate metrics:
+  - classification: error rates by subgroup, parity gaps, calibration deltas
+  - regression: error distributions by subgroup, residual analysis
+  - ranking: exposure parity and outcome parity where applicable
 
-## 🧪 11. Example Local/CI Usage
+Bias audits MUST NOT:
 
-```bash
-# Setup environment
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements-tools-ai.txt
+- log raw sensitive inputs
+- “invent” protected attributes (only audit what is explicitly defined and authorized)
 
-# Run fairness audit locally
-python tools/ai/bias_check.py \
-  --model-id focus_mode_v3_climate_v11 \
-  --dataset-id climate_streams_v4 \
-  --config configs/ai/focus_bias.yml \
-  --out docs/reports/audit/focus_v3_bias_report.json
+### Explainability audits (design guidance)
 
-# Run explainability audit
-python tools/ai/focus_audit.py \
-  --model-id focus_mode_v3_climate_v11 \
-  --dataset-id climate_streams_v4 \
-  --out docs/reports/audit/focus_v3_explainability.json
+Explainability audits should:
 
-# Run drift monitoring
-python tools/ai/drift_monitor.py \
-  --model-id hydrology_lstm_v8 \
-  --window 90d \
-  --out docs/reports/audit/hydro_lstm_drift_summary.json
-```
+- generate global + local explanations appropriate to model type
+- verify artifact/version consistency:
+  - explanation corresponds to the exact model version
+  - explanation corresponds to the exact dataset slice / time window
+- compute explainability coverage and quality scores:
+  - coverage: percentage of cases with valid explanations
+  - quality: stability/consistency metrics (method-dependent)
 
-In CI, these are orchestrated via:
+### Drift monitoring (design guidance)
 
-- `ai_governance.yml`  
-- `ai_validation.yml`  
-- `ai_telemetry.yml`  
+Drift checks should:
+
+- compare distributions across time windows or releases
+- output per-feature drift summaries and an aggregate drift score
+- recommend actions and attach thresholds used
 
 ---
 
-## 🕰 12. Version History
+## ⚖ FAIR+CARE & Governance
 
-| Version | Date       | Summary                                                                                                                                 |
-|--------:|-----------:|-----------------------------------------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; applied emoji directory layout; clarified bias/explainability/drift roles; tightened governance and telemetry links. |
-| v11.0.0 | 2025-11-24 | Full KFM v11 upgrade; telemetry v4; AI governance integration with tools/ci and tools/governance; unbroken fences and enriched semantics. |
-| v10.2.2 | 2025-11-12 | JSON-LD exports; extended drift metrics; energy/CO₂ logging; standardized explainability bundles.                                     |
-| v10.0.0 | 2025-11-10 | Telemetry v2 schema; FAIR+CARE explainability fields; registry hardening.                                                               |
-| v9.7.0  | 2025-11-05 | Added sustainability telemetry and improved explainability scoring.                                                                     |
-| v9.6.0  | 2025-11-03 | Unified explainability metrics and governance sync.                                                                                     |
-| v9.5.0  | 2025-11-02 | Introduced bias detection and drift management for production models.                                                                   |
+### Policy anchors (normative)
+
+This tool suite MUST operate under:
+
+- `governance_ref`
+- `ethics_ref`
+- `sovereignty_policy`
+
+Governance constraints apply even when risk is “Low”:
+
+- Do not output protected coordinates.
+- Do not output PII.
+- Do not publish raw data slices into audit logs.
+- Fail closed on ambiguous classification or missing policy metadata.
+
+### AI training prohibition for governance logs
+
+`ai_training_allowed: false` is enforced for audit artifacts.  
+Audit logs and governance ledgers MUST NOT be used as training data.
+
+### Security & privacy constraints (normative)
+
+AI tools MUST:
+
+- avoid printing secrets, tokens, API keys, or credentials in logs
+- avoid embedding raw inputs in reports (store hashed references and IDs instead)
+- keep artifacts and summaries policy-scoped:
+  - internal-only artifacts remain internal
+  - public summaries must be scrubbed and reviewed if needed
+
+### Default retention guidance (override by governance)
+
+Retention is governed and may vary by domain. Default guidance:
+
+| Artifact type             | Default retention | Notes |
+|--------------------------|------------------:|------|
+| Bias reports             | 365 days          | supports re-certification and trend analysis |
+| Drift logs               | 180 days          | rolling horizon for retraining decisions |
+| Explainability bundles   | 365 days          | linked from model cards and narrative governance |
+| Registry snapshots       | Permanent         | required for long-term audits |
+| Governance ledger entries| Permanent         | append-only, traceability-critical |
+
+If a domain is sensitive, sovereignty policy can require **longer retention**, **shorter retention**, or **restricted access**.
+
+---
+
+## 🕰️ Version History
+
+| Version     | Date       | Summary |
+|------------:|-----------:|---------|
+| **v11.2.6** | 2025-12-15 | Aligned to KFM-MDP v11.2.6 heading + fencing conventions; clarified repo placement and output destinations (data vs runs vs docs); expanded contracts for audit inputs/outputs; strengthened provenance and telemetry guidance; refreshed governance constraints and retention guidance; updated URNs and provenance chain. |
+| v11.2.2     | 2025-11-27 | Baseline v11.2.2 AI tools README; defined bias/explainability/drift roles; governance + telemetry anchors. |
+| v11.0.0     | 2025-11-24 | Initial v11 tool suite framing; telemetry and governance integration. |
+| v10.2.2     | 2025-11-12 | JSON-LD exports; extended drift metrics; energy/CO₂ logging; standardized explainability bundles. |
+| v10.0.0     | 2025-11-10 | Telemetry schema v2; FAIR+CARE explainability fields; registry hardening. |
+| v9.7.0      | 2025-11-05 | Added sustainability telemetry and improved explainability scoring. |
+| v9.6.0      | 2025-11-03 | Unified explainability metrics and governance sync. |
+| v9.5.0      | 2025-11-02 | Introduced bias detection and drift management for production models. |
 
 ---
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-🧠 AI & ML Tools v11.2.2 · FAIR+CARE Certified · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω  
+🧠 AI & ML Tools v11.2.6 · FAIR+CARE Governed · MCP-DL v6.3 · Diamond⁹ Ω / Crown∞Ω
 
 [⬅️ Back to Tools Index](../README.md) · [🧱 Tools Architecture](../ARCHITECTURE.md) · [🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
