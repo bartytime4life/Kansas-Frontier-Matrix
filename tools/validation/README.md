@@ -2,15 +2,15 @@
 title: "✅ Kansas Frontier Matrix — Validation & FAIR+CARE Compliance Tools (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "tools/validation/README.md"
 
-version: "v11.2.2"
-last_updated: "2025-11-27"
+version: "v11.2.6"
+last_updated: "2025-12-15"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-commit-hash>"
-doc_uuid: "urn:kfm:doc:tools-validation-readme-v11.0.1"
+doc_uuid: "urn:kfm:doc:tools:validation:readme:v11.2.6"
 doc_kind: "Operational Specification"
 intent: "tools-validation"
 role: "validation-registry"
@@ -18,11 +18,11 @@ category: "Validation · Governance · FAIR+CARE · Sovereignty"
 semantic_document_id: "kfm-doc-tools-validation"
 immutability_status: "mutable-plan"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
+sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.6/manifest.zip"
 data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
 
-telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
+telemetry_ref: "../../../releases/v11.2.6/focus-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/tools-validation-registry-v4.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
@@ -33,13 +33,16 @@ sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECT
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+stac_profile: "KFM-STAC v11"
+dcat_profile: "KFM-DCAT v11"
+prov_profile: "KFM-PROV v11"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "Public · Low-Risk"
-sensitivity: "General"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
 sensitivity_level: "Low"
 public_benefit_level: "High"
 indigenous_data_flag: false
@@ -53,6 +56,7 @@ provenance_chain:
   - "tools/validation/README.md@v10.3.1"
   - "tools/validation/README.md@v11.0.0"
   - "tools/validation/README.md@v11.0.1"
+  - "tools/validation/README.md@v11.2.2"
 
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
@@ -65,13 +69,31 @@ json_schema_ref: "../../../schemas/json/tools-validation-readme-v11.json"
 shape_schema_ref: "../../../schemas/shacl/tools-validation-readme-v11.shape.ttl"
 
 event_source_id: "ledger:tools/validation/README.md"
+
 ai_training_allowed: false
 ai_training_guidance: "Do not use validation logs as training input."
 ai_outputs_require_explainability: true
 ai_outputs_require_bias_audit: true
 
+ai_transform_permissions:
+  - "summary"
+  - "timeline-generation"
+  - "semantic-highlighting"
+  - "3d-context-render"
+  - "a11y-adaptations"
+  - "diagram-extraction"
+  - "metadata-extraction"
+  - "layout-normalization"
+
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
 machine_readable: true
-accessibility_compliance: "WCAG 2.1 AA"
+accessibility_compliance: "WCAG 2.1 AA+"
 jurisdiction: "United States · Kansas"
 lifecycle_stage: "operational"
 ttl_policy: "Annual review"
@@ -80,190 +102,225 @@ sunset_policy: "Superseded upon next validation-tools architecture update"
 
 <div align="center">
 
-# ✅ **Kansas Frontier Matrix — Validation & FAIR+CARE Compliance Tools**  
+# ✅ **Kansas Frontier Matrix — Validation & FAIR+CARE Compliance Tools**
 `tools/validation/README.md`
 
-**The authoritative validation suite for structural correctness, governance safety, ethics, sovereignty, explainability,
-and sustainability compliance across the Kansas Frontier Matrix.**
+**Purpose**  
+The authoritative validation suite for **structural correctness, governance safety, ethics, sovereignty,
+explainability, and sustainability telemetry** across the Kansas Frontier Matrix.
 
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Validation%20Certified-gold)]() ·
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]() ·
-[![ISO 19115](https://img.shields.io/badge/ISO--19115%20Aligned-blue)]() ·
-[![DCAT 3.0](https://img.shields.io/badge/DCAT--3.0-Integrated-green)]() ·
-[![MCP-DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)]()
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Validation%20Certified-gold" />
+<img src="https://img.shields.io/badge/License-MIT-green" />
+<img src="https://img.shields.io/badge/DCAT--3.0-Integrated-green" />
+<img src="https://img.shields.io/badge/STAC-Profiled-blue" />
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
 
 </div>
 
 ---
 
-## 📘 1. Overview
+## 📘 Overview
 
-The **Validation & FAIR+CARE Compliance Suite** enforces the **governed correctness** of:
+The **Validation & FAIR+CARE Compliance Suite** defines and enforces the **governed correctness** of:
 
-- Data (raw → work → processed → published)  
-- STAC Collections & Items  
-- DCAT 3.0 datasets and distributions  
-- JSON-LD metadata (Story Nodes, Telemetry, Governance)  
-- Pipeline outputs (ETL, AI, inference)  
-- Explainability + bias/demographic fairness metrics  
-- Lineage, integrity, and checksum chains  
-- CARE, sovereignty, and ethical rules  
-- Energy, carbon, and sustainability telemetry  
+- **Data lifecycle** artifacts (`data/raw → data/work → data/processed → publish`)
+- **Catalogs and metadata** (STAC, DCAT, JSON-LD, contracts, telemetry)
+- **Pipeline outputs** (ETL, enrichment, inference, exports)
+- **Integrity and provenance** (hash chains, manifest alignment, release attestation)
+- **AI accountability** (explainability coverage, bias/fairness auditing, drift gates)
+- **Sovereignty and ethics** (CARE labels, Indigenous protection policy compliance)
+- **Sustainability** (energy/carbon telemetry requirements and thresholds)
 
-This is the **single source of truth** for validation behavior across:
+This suite is the **single operational source of truth** for validation behavior across:
 
-- Tools Platform (`tools/**`)  
-- CI/CD workflows (`.github/workflows/*`)  
-- Data pipeline DAGs (`src/pipelines/*`)  
-- Governance sync engines  
-- Focus Mode v3 explainability and safety screens  
+- `tools/**` (tooling and governance automation)
+- `.github/workflows/**` (CI/CD enforcement and release gates)
+- `src/pipelines/**` (ETL + AI pipeline orchestration)
+- `schemas/**` (JSON Schema / SHACL / telemetry schemas)
+- Focus Mode safety + explainability screens (consumer of validation artifacts)
 
----
+### What this suite does not do
 
-## 🗂️ 2. Directory Layout (Emoji Style A)
-
-```text
-tools/
-└── ✅ validation/
-    ├── 📄 README.md                   # This file
-    │
-    ├── ⚖️ faircare_validator.py       # CARE, sovereignty, A11y, licensing, ethics
-    ├── 📐 schema_check.py             # STAC, DCAT, JSON-LD, contracts, telemetry shapes
-    ├── 🧠 ai_explainability_audit.py  # SHAP/LIME attribution, drift, fairness metrics
-    ├── 🔐 checksum_audit.py           # SHA-256 lineage, tamper detection & registry
-    │
-    ├── 🧾 validator_manifest.json     # Aggregated results + signatures + telemetry linkage
-    └── 📑 metadata.json               # JSON-LD validation profile configuration
-```
-
-This layout is **KFM-MDP v11.2.2-compliant**, CI-safe, and mobile-safe.
+- It does **not** relax policy for performance.
+- It does **not** mint new facts or “fix” data silently.
+- It does **not** publish sensitive content to logs or reports (fail-closed on policy violations).
 
 ---
 
-## 🧩 3. Tools Platform Context in KFM v11
+## 🗂️ Directory Layout
 
-The validation suite sits in the core **governance pipeline**:
+The directory tree below is **KFM-MDP box-safe** and uses the required `~~~text` fence.
 
-```text
+~~~text
+📁 tools/                                         — Tooling and utilities for development, validation, governance
+└── 📁 validation/                                — ✅ Validation + FAIR+CARE compliance suite (this directory)
+    ├── 📄 README.md                              — This file (registry + runbook + contracts)
+    │
+    ├── 📄 faircare_validator.py                  — (entrypoint) CARE, sovereignty, licensing, A11y, ethics
+    ├── 📄 schema_check.py                        — (entrypoint) STAC/DCAT/JSON-LD/contracts/telemetry validation
+    ├── 📄 ai_explainability_audit.py             — (entrypoint) explainability + bias/fairness checks
+    ├── 📄 checksum_audit.py                      — (entrypoint) SHA-256 integrity + manifest alignment
+    │
+    ├── 🧾 validator_manifest.json                — Roll-up results + hashes + telemetry linkage (output artifact)
+    └── 🧾 metadata.json                          — Validation profile configuration (JSON-LD or JSON)
+~~~
+
+Notes:
+
+- The file list above reflects the **contracted entrypoints and artifacts referenced by this README**.
+- If your branch restructures these entrypoints (e.g., moves code into `validators/`), update this tree and
+  preserve the same external interfaces (inputs/outputs) described below.
+
+---
+
+## 🧭 Context
+
+### Where validation sits in KFM v11+
+
+Validation is the core **governance gate** that sits between “generated” and “ship-ready.”
+
+~~~text
 CI / Operator
    ↓
-💻 tools/cli
+💻 tools/cli (optional wrapper)
    ↓
-✅ tools/validation
+✅ tools/validation   — you are here
    ↓
-🏛 tools/governance
+🏛 tools/governance   — ledger syncing, policy attestations
    ↓
-📡 tools/telemetry
+📡 tools/telemetry    — energy/carbon/system metrics aggregation
    ↓
-🤖 tools/ai (for AI/Focus Mode pipelines)
+🤖 tools/ai/drift     — drift evaluation (baseline vs candidate), consumed by validation gates
    ↓
-📦 Release Artifacts
-(STAC/DCAT · Ledgers · Telemetry · SBOM · Contracts)
-```
+📦 releases/          — SBOM, manifests, attestations, telemetry snapshots
+~~~
 
-Validation is **not optional**:
+### Non-optional enforcement
 
-- No dataset or model is promoted unless validation passes.  
-- All validation executions are logged and tied to a release or run ID.  
+- No dataset, model, or catalog record is promoted unless validation passes.
+- Validation outputs are treated as **governed artifacts**:
+  - machine-readable for CI gates
+  - human-readable for review
+  - provenance-linked for audits
 
 ---
 
-## ⚙️ 4. Validation Workflow (Mermaid · Box-Safe)
+## 🗺️ Diagrams
 
-```mermaid
+~~~mermaid
 flowchart TD
-  A["Dataset / Model / Metadata"]
-    --> B["Schema Check\n(STAC · DCAT · JSON-LD · Contracts)"]
-  B --> C["FAIR+CARE Validator\n(Sovereignty · A11y · Ethics)"]
-  C --> D["Checksum Audit\n(SHA-256 Integrity Chains)"]
-  D --> E["Explainability & Bias Audit\n(SHAP/LIME · Drift)"]
-  E --> F["validator_manifest.json\nTelemetry · Governance Sync"]
-```
+  A["Dataset / Model / Metadata"] --> B["Schema Check\n(STAC · DCAT · JSON-LD · Contracts · Telemetry)"]
+  B --> C["FAIR+CARE Validator\n(Sovereignty · A11y · Ethics · License)"]
+  C --> D["Checksum Audit\n(SHA-256 Integrity Chains · Manifest)"]
+  D --> E["AI Explainability & Bias Audit\n(SHAP/LIME coverage · Fairness metrics)"]
+  E --> F["Drift Gate\n(Baseline vs Candidate)\n↳ tools/ai/drift artifacts"]
+  F --> G["validator_manifest.json\nDecision · Telemetry linkage · Signing hash"]
+~~~
 
-Each stage contributes:
+Interpretation:
 
-- **B**: Structural soundness and required fields  
-- **C**: Ethical & legal constraints, including CARE & sovereignty  
-- **D**: Cryptographic integrity and tamper detection  
-- **E**: AI safety, fairness, and interpretability guarantees  
+- **Schema → Governance → Integrity** must pass before AI audits can be trusted.
+- Drift is evaluated as a **gate** (not as a narrative generator): it blocks unsafe or unstable changes.
 
 ---
 
-## 🧬 5. Stage Specifications
+## 🧠 Story Node & Focus Mode Integration
 
-### 5.1 Schema Validation (`schema_check.py`)
+Validation outputs are **evidence-grade** and may be linked from Story Nodes and Focus Mode panels.
 
-Validates:
+### Story Nodes
 
-- STAC 1.x (with KFM profiles and extensions)  
-- DCAT 3.0 JSON-LD dataset and distribution descriptors  
-- Story Node v3 schema (`story-node.schema.json`)  
-- Telemetry v4 schemas for system, tools, and domain pipelines  
-- Data Contracts (PDC v11, from `data_contract_ref`)  
+A Story Node that references validation must:
 
-Outputs:
+- treat validation results as **facts** (metric values, pass/fail, timestamp),
+- link to the corresponding manifest/report as evidence,
+- avoid converting validation warnings into historical claims.
 
-- Detailed JSON results:
-  - `schema_passed` (bool)  
-  - `errors` and `warnings` arrays  
-  - `validated_entities` list  
+### Focus Mode
 
-### 5.2 FAIR+CARE Validator (`faircare_validator.py`)
+Focus Mode may surface validation status as a quality overlay, for example:
 
-Checks:
+- “This layer is certified for current release”
+- “This model output is blocked pending bias audit”
+- “Drift exceeded threshold for county-slice X; safer mode enabled”
 
-- CARE label presence and propagation  
-- Sovereignty conflicts & Indigenous data protection requirements  
-- Licensing and re-use conditions (public vs restricted)  
-- Accessibility metadata (A11y hints, alt text, subtitles for content)  
+Focus Mode MUST NOT use validation artifacts to:
 
-It directly references:
-
-- `ethics_ref`  
-- `sovereignty_policy`  
-- Relevant heritage and sovereignty rules from `docs/standards/heritage/**`.  
-
-### 5.3 Checksum Audit (`checksum_audit.py`)
-
-Responsibilities:
-
-- Compute SHA-256 for datasets & key files  
-- Compare against manifest entries (`data/checksums/manifest.json`)  
-- Log:
-  - `checksum_verified`  
-  - `manifest_status` (up-to-date, missing, mismatch)  
-- Register integrity status in `data/reports/audit/archive_integrity_log.json`  
-
-### 5.4 AI Explainability Audit (`ai_explainability_audit.py`)
-
-Responsibilities:
-
-- Verify presence and freshness of explainability artifacts:
-  - SHAP values  
-  - LIME explanations  
-  - Attention maps / saliency information  
-
-- Evaluate:
-  - Bias/fairness metrics  
-  - Drift detection results  
-  - Alignment with AI safety and usage constraints  
-
-If a model fails explainability or bias checks, it is marked as:
-
-- `certification_status: "blocked"` until remediation.
+- invent provenance,
+- “justify” speculative narrative,
+- override sovereignty masking.
 
 ---
 
-## 📄 6. Example Validation Session Record
+## 🧪 Validation & CI/CD
 
-```json
+### CI enforcement profiles (minimum)
+
+This suite is expected to be invoked by CI workflows and/or release pipelines with at least:
+
+- schema validation (STAC/DCAT/JSON-LD/contracts/telemetry)
+- FAIR+CARE + sovereignty checks
+- checksum + manifest alignment
+- AI explainability + bias audit checks
+- drift gate evaluation (consuming `tools/ai/drift` artifacts or equivalent output)
+
+### Recommended local workflow
+
+Use deterministic inputs and a config snapshot whenever possible.
+
+~~~bash
+# Example: run schema + governance + integrity checks (entrypoints shown for clarity)
+python tools/validation/schema_check.py --target data/processed --out data/reports/validation/schema.json
+python tools/validation/faircare_validator.py --target data/ --out data/reports/validation/faircare.json
+python tools/validation/checksum_audit.py --manifest data/checksums/manifest.json --out data/reports/validation/checksums.json
+
+# AI audits (run only when applicable; may be skipped in lightweight CI)
+python tools/validation/ai_explainability_audit.py --model mcp/model_cards/<model_id> --out data/reports/validation/ai.json
+
+# Drift gate (baseline vs candidate) is computed in tools/ai/drift and referenced here
+# python tools/ai/drift/run_drift_eval.py --baseline <ref> --candidate <ref> --out mcp/runs/drift/<run_id>/
+~~~
+
+### What should fail CI
+
+Validation SHOULD fail closed (block merge/release) on:
+
+- schema errors on governed outputs (STAC/DCAT/JSON-LD/contracts)
+- missing or invalid license/provenance fields required by policy
+- checksum mismatch vs manifest (tamper or accidental regression)
+- AI output lacking required explainability artifacts (where required)
+- bias/fairness audit violations or missing audits for required models
+- drift exceeding configured thresholds on protected slices or critical tasks
+- any restricted-coordinate leakage into artifacts/logs
+
+---
+
+## 📦 Data & Metadata
+
+### Core artifacts
+
+At minimum, a governed validation run should produce:
+
+- **Structured outputs** (machine readable)
+  - `validator_manifest.json` (roll-up + decision + signing hash)
+  - stage outputs (schema/faircare/checksum/ai/drift summaries)
+- **Traceability hooks**
+  - release/build identifiers (commit hash, manifest hash)
+  - references to telemetry snapshots
+  - provenance pointers (PROV sidecar or ledger event id)
+
+### Example validation session record
+
+~~~json
 {
-  "id": "validation_session_v11.0.1",
+  "id": "validation_session_v11.2.6_example",
   "schema_passed": true,
   "checksum_verified": true,
   "faircare_compliant": true,
   "ai_explainability_score": 0.998,
   "bias_index": 0.017,
+  "drift_status": "pass",
   "energy_wh": 2.4,
   "carbon_gco2e": 2.8,
   "validated_entities": [
@@ -271,91 +328,166 @@ If a model fails explainability or bias checks, it is marked as:
   ],
   "signing_hash": "sha256:5a8b883f9...",
   "governance_registered": true,
-  "timestamp": "2025-11-24T15:22:00Z",
+  "timestamp": "2025-12-15T00:00:00Z",
   "validator": "@kfm-validation-core"
 }
-```
+~~~
 
-These records are bundled in `validator_manifest.json` and referenced in release telemetry.
+### Retention and review
 
----
+| Artifact | Retention | Notes |
+|---|---:|---|
+| Schema validation outputs | ≥ 180 days | Rotated and archived via CI cleanup |
+| FAIR+CARE logs | ≥ 365 days | Used for audits & re-certifications |
+| Checksum manifests | Permanent | Required for traceability |
+| Signed manifests / attestations | Permanent | Release integrity artifacts |
+| Telemetry snapshots (raw) | ≥ 90 days | Summaries persisted in governance reports |
 
-## 🧠 7. FAIR+CARE Governance Matrix
+### Sustainability telemetry targets (v11)
 
-| Principle              | Enforcement via Validation Suite                                 | Oversight            |
-|------------------------|------------------------------------------------------------------|----------------------|
-| **F1 – Findable**      | Stable IDs + JSON-LD; checks ensure proper dataset & ledger refs | `@kfm-data`          |
-| **A1 – Accessible**    | Valid A11y metadata and open formats verified                    | `@kfm-accessibility` |
-| **I1 – Interoperable** | STAC/DCAT/JSON-LD/ISO metadata validated                         | `@kfm-architecture`  |
-| **R1 – Reusable**      | Contract-compliant fields; license & provenance checks           | `@kfm-design`        |
-| **Collective Benefit** | FAIR+CARE checks on sensitive impacts and community risks        | `@faircare-council`  |
-| **Authority to Control** | Sovereignty rules enforced; blocking on violations             | `@kfm-governance`    |
-| **Responsibility**     | Telemetry of ethics & sustainability metrics is mandatory        | `@kfm-security`      |
-| **Ethics**             | AI bias & drift audits; sensitive content policies enforced      | `@kfm-ethics`        |
-
----
-
-## 🧰 8. Validation Tool Summary
-
-| Tool                      | Description                                                     |
-|---------------------------|-----------------------------------------------------------------|
-| `schema_check.py`         | Structural & semantic correctness for all key schemas          |
-| `faircare_validator.py`   | CARE, sovereignty, licensing, ethics, A11y checks               |
-| `checksum_audit.py`       | SHA-256 integrity + tamper detection                           |
-| `ai_explainability_audit.py` | Explainability coverage + bias & drift auditing            |
-| `validator_manifest.json` | Roll-up of validation results + telemetry + signing hashes     |
-| `metadata.json`           | JSON-LD profile of validation rules & ontological mappings     |
+| Metric | Target |
+|---|---:|
+| Energy/run | ≤ 2.5 Wh |
+| Carbon/run | ≤ 3.0 gCO₂e |
+| FAIR+CARE pass rate | 100% |
 
 ---
 
-## 📦 9. Retention & Provenance Policy
+## 🌐 STAC, DCAT & PROV Alignment
 
-| Artifact                  | Retention       | Notes                                      |
-|---------------------------|----------------:|--------------------------------------------|
-| Schema Validation Reports | ≥ 180 days      | Rotated and archived via CI cleanup        |
-| FAIR+CARE Logs            | ≥ 365 days      | Used for audits & re-certifications        |
-| Checksum Manifests        | Permanent       | Required for legal/scientific traceability |
-| Signed Manifests          | Permanent       | Persistent attestations                     |
-| Telemetry Snapshots       | ≥ 90 days (raw) | Summaries persisted in governance reports  |
+### DCAT 3.0
 
-Rotation is automated by `validation_cleanup.yml` and telemetry compaction tasks.
+- Validation outputs may be represented as a `dcat:Dataset` (“KFM Validation Runs”).
+- `validator_manifest.json` and stage reports are `dcat:Distribution`s.
+- `semantic_document_id` maps to `dct:identifier`.
 
----
+### STAC
 
-## 🌱 10. Sustainability Metrics (v11 Targets)
+- Validation outputs can be represented as non-spatial STAC Items:
+  - `geometry: null`
+  - `properties.datetime = run timestamp`
+  - assets: `validator_manifest.json`, stage reports, telemetry pointers
 
-| Metric          | Target      |
-|-----------------|-------------|
-| Energy/run      | ≤ 2.5 Wh    |
-| Carbon/run      | ≤ 3.0 gCO₂e |
-| Renewable share | 100%        |
-| FAIR+CARE pass% | 100%        |
+### PROV-O
 
-Validation runs emit sustainability telemetry in:
-
-```text
-../../../releases/v11.2.2/focus-telemetry.json
-docs/reports/telemetry/tools-validation-*.json
-```
+- Inputs (datasets/models/baselines) are `prov:Entity`s.
+- The validation run is a `prov:Activity`.
+- Artifacts are generated `prov:Entity`s linked via `prov:wasGeneratedBy`.
+- CI bots/councils/maintainers are `prov:Agent`s.
 
 ---
 
-## 🕰 11. Version History
+## 🧱 Architecture
 
-| Version | Date       | Summary                                                                                                                   |
-|--------:|-----------:|---------------------------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; applied emoji directory layout; clarified FAIR+CARE, AI audit, and sustainability integration. |
-| v11.0.1 | 2025-11-24 | Cross-toolchain upgrade; v11 telemetry; sovereignty gates; stable box-safe fences and diagrams.                           |
-| v11.0.0 | 2025-11-19 | First v11 rewrite of validation suite; integrated with contracts, STAC/DCAT, and governance-led pipelines.                |
-| v10.x   | 2023–2025  | Earlier validation pipeline generations; pre-v11 governance and telemetry semantics.                                      |
+### Stage responsibilities (contract)
+
+#### 1) Schema validation (`schema_check.py`)
+
+Validates:
+
+- STAC (with KFM profiles/extensions)
+- DCAT 3.0 dataset/distribution descriptors
+- Story Node schema and governed JSON-LD metadata
+- Telemetry schemas (tools + pipelines)
+- Data Contracts (`data_contract_ref`)
+
+Outputs include:
+
+- `schema_passed` boolean
+- error/warning lists
+- list of validated entities/paths
+
+#### 2) FAIR+CARE validation (`faircare_validator.py`)
+
+Enforces:
+
+- CARE label presence and propagation
+- Sovereignty conflicts & Indigenous data protection constraints
+- Licensing and reuse conditions
+- Accessibility metadata expectations (A11y hints, alt text coverage for docs/UX artifacts)
+
+#### 3) Integrity validation (`checksum_audit.py`)
+
+Responsibilities:
+
+- compute SHA-256 for governed artifacts
+- compare vs checksum manifests and release manifests
+- classify manifest status (`up_to_date`, `missing`, `mismatch`)
+- emit tamper-detection signals
+
+#### 4) AI accountability validation (`ai_explainability_audit.py`)
+
+Responsibilities:
+
+- verify explainability artifact coverage when required
+- verify bias/fairness audit presence and thresholds
+- verify AI usage constraints are not violated (policy-aligned behavior)
+
+#### 5) Drift gate (consumes `tools/ai/drift` outputs)
+
+Responsibilities:
+
+- compare baseline vs candidate on defined slices
+- block or warn on significant drift thresholds (especially on policy-sensitive slices)
+- record drift evidence links in `validator_manifest.json` (do not re-derive drift implicitly)
+
+### Extension points
+
+New validators must:
+
+- be deterministic (config-driven)
+- produce machine-readable artifacts
+- integrate into `validator_manifest.json`
+- respect sovereignty and redaction requirements
+- ship with tests validating schema + policy enforcement
 
 ---
+
+## ⚖ FAIR+CARE & Governance
+
+### Governance matrix (enforcement mapping)
+
+| Principle | Enforced by | Typical checks | Oversight |
+|---|---|---|---|
+| **F1 — Findable** | schema_check | stable IDs, catalog references, identifiers | `@kfm-data` |
+| **A1 — Accessible** | faircare_validator | access labels, format expectations | `@kfm-accessibility` |
+| **I1 — Interoperable** | schema_check | STAC/DCAT/JSON-LD + contract validation | `@kfm-architecture` |
+| **R1 — Reusable** | faircare_validator + checksum_audit | license + provenance + integrity | `@kfm-governance` |
+| **Collective Benefit** | faircare_validator | harm-aware gating, impact flags | `@faircare-council` |
+| **Authority to Control** | faircare_validator | sovereignty blocking on violations | `@kfm-governance` |
+| **Responsibility** | telemetry integration | energy/carbon reporting required | `@kfm-security` |
+| **Ethics** | ai_explainability_audit + drift gate | bias + drift + explainability | `@kfm-ethics` |
+
+### Fail-closed sovereignty rule
+
+If a validation artifact would expose restricted locations or protected knowledge:
+
+- redact or generalize outputs, **or**
+- block publication and require manual review
+
+The correct default is **fail closed**, not “log more.”
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Summary |
+|---:|---:|---|
+| v11.2.6 | 2025-12-15 | Updated to KFM-MDP v11.2.6 (approved H2s, tilde fences), added explicit AI transform limits, clarified drift gate integration via `tools/ai/drift`. |
+| v11.2.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; emoji directory layout; clarified FAIR+CARE, AI audit, sustainability integration. |
+| v11.0.1 | 2025-11-24 | Cross-toolchain upgrade; v11 telemetry; sovereignty gates; box-safe fences and diagrams. |
+| v11.0.0 | 2025-11-19 | First v11 rewrite of validation suite; integrated contracts, STAC/DCAT, governance-led pipelines. |
+| v10.x | 2023–2025 | Earlier validation pipeline generations; pre-v11 governance and telemetry semantics. |
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-✅ Validation & FAIR+CARE Tools · MCP-DL v6.3 · KFM-MDP v11.2.2 · Diamond⁹ Ω / Crown∞Ω  
+✅ Validation & FAIR+CARE Tools · MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω
 
-[⬅️ Back to Tools Index](../README.md) · [🧱 Tools Architecture](../ARCHITECTURE.md) · [🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅️ Back to Tools Index](../README.md) ·
+[🧱 Tools Architecture](../ARCHITECTURE.md) ·
+[🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
