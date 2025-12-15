@@ -1,8 +1,8 @@
 ---
 title: "📅 Kansas Frontier Matrix — Date & Timeline Utilities (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/date/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+version: "v11.2.3"
+last_updated: "2025-12-15"
 review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -22,7 +22,7 @@ sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROT
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11.0"
 
 status: "Active / Enforced"
@@ -42,6 +42,7 @@ risk_category: "Low"
 redaction_required: false
 
 provenance_chain:
+  - "web/src/utils/date/README.md@v11.2.2"
   - "web/src/utils/date/README.md@v10.4.1"
   - "web/src/utils/date/README.md@v10.3.2"
 provenance_requirements:
@@ -57,7 +58,7 @@ ontology_alignment:
 json_schema_ref: "../../../../schemas/json/web-utils-date-readme-v11.schema.json"
 shape_schema_ref: "../../../../schemas/shacl/web-utils-date-readme-v11-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:web-utils-date-readme:v11.2.2"
+doc_uuid: "urn:kfm:doc:web-utils-date-readme:v11.2.3"
 semantic_document_id: "kfm-doc-web-utils-date-readme"
 event_source_id: "ledger:web/src/utils/date/README.md"
 immutability_status: "version-pinned"
@@ -69,75 +70,87 @@ sunset_policy: "Superseded on next temporal-logic revision"
 jurisdiction: "Kansas / United States"
 ---
 
-<div align="center">
+# 📅 Kansas Frontier Matrix — Date & Timeline Utilities (v11.2.3)
 
-# 📅 **Kansas Frontier Matrix — Date & Timeline Utilities (v11.2.2)**  
 `web/src/utils/date/README.md`
 
-**Purpose:**  
-Define and govern the **temporal utilities** powering KFM’s timeline,  
-OWL-Time–aligned intervals, Story Node v3 temporal reasoning,  
-Focus Mode v3 context windows, and timeline–map synchronization.  
-All utilities are **pure**, **deterministic**, **FAIR+CARE-governed**,  
-and implemented under strict TypeScript safety.
+Define and govern the temporal utilities powering KFM’s timeline, OWL-Time–aligned intervals,
+Story Node v3 temporal reasoning, Focus Mode v3 context windows, and timeline–map synchronization.
+All utilities are pure, deterministic, FAIR+CARE-governed, and implemented under strict TypeScript safety.
 
-</div>
+## 📘 Overview
 
----
+The `utils/date/` module implements core temporal logic required by major web subsystems in KFM v11:
 
-# 🧭 1. Overview
-
-The `utils/date/` module implements **core temporal logic** required by all major  
-web subsystems in KFM v11:
-
-- 🕒 **Timeline Engine** (multi-scale zoom + brushing)  
-- ✨ **Story Node v3** (temporal footprints, fuzzy ranges)  
-- 🎯 **Focus Mode v3** (temporal expansion & relevance windows)  
-- 🔗 **Map & timeline synchronization**  
-- 🧠 **Graph-derived event normalization**  
-- 📦 **STAC/DCAT temporal extent normalization**  
+- 🕒 Timeline Engine (multi-scale zoom + brushing)
+- ✨ Story Node v3 (temporal footprints, fuzzy ranges)
+- 🎯 Focus Mode v3 (temporal expansion & relevance windows)
+- 🔗 Map & timeline synchronization
+- 🧠 Graph-derived event normalization
+- 📦 STAC/DCAT temporal extent normalization
 
 All functions:
 
-- Are **side-effect-free**  
-- Obey **OWL-Time** semantics  
-- Propagate FAIR/CARE metadata when temporal transformation occurs  
-- Never “sharpen” uncertain dates into more precise ones  
-- Produce deterministic output across all environments  
+- are side-effect-free
+- obey OWL-Time semantics
+- propagate FAIR/CARE metadata when temporal transformation occurs
+- never “sharpen” uncertain dates into more precise ones
+- produce deterministic output across all environments
 
----
-
-# 🗂 2. Directory Layout (Emoji-Rich · v11.2.2)
+## 🗂️ Directory Layout
 
 ~~~text
 web/src/utils/date/
-│
-├── 📅 parseDate.ts        # ISO/OWL-Time parser w/ fuzzy & uncertain-date support
-├── 🗓 formatDate.ts       # UI-safe, deterministic temporal formatting
-├── 🕒 timelineRange.ts    # Visible-window computation & padding logic
-├── 🎚 precision.ts        # Granularity evaluator (year → month → day → decade → century)
-├── 🔢 compareDates.ts     # Stable comparator for events, Story Nodes, STAC items
-└── 🔧 normalizeDate.ts    # Canonicalization + FAIR/CARE metadata retention
+├── 📄 parseDate.ts        # ISO/OWL-Time parser w/ fuzzy & uncertain-date support
+├── 📄 formatDate.ts       # UI-safe, deterministic temporal formatting
+├── 📄 timelineRange.ts    # Visible-window computation & padding logic
+├── 📄 precision.ts        # Granularity evaluator (year → month → day → decade → century)
+├── 📄 compareDates.ts     # Stable comparator for events, Story Nodes, STAC items
+└── 📄 normalizeDate.ts    # Canonicalization + FAIR/CARE metadata retention
 ~~~
 
----
+## 🧭 Context
 
-# 🧱 3. Module Descriptions
+Where these utilities sit in the web stack:
 
-## 📅 `parseDate.ts` — Temporal Parsing Engine
+- API/services fetch data and pass it to temporal utilities for validation/normalization.
+- Timeline/map components consume normalized ranges and formatted labels.
+- Focus Mode and Story Nodes rely on “fuzzy-safe” transformations (no invented precision).
+
+Typical call paths:
+
+- Story Nodes: `parseDate` → `normalizeDate` → `formatDate` → render
+- Timeline: `normalizeDate` → `precision` → `timelineRange` → render
+- Sorting/grouping: `parseDate`/`normalizeDate` → `compareDates` → stable ordering
+
+## 🗺️ Diagrams
+
+~~~mermaid
+flowchart LR
+  A["Raw temporal fields\n(STAC/DCAT, Story Node, graph events)"] --> B["parseDate.ts"]
+  B --> C["normalizeDate.ts\ncanonical + metadata retention"]
+  C --> D["precision.ts\nrendering granularity"]
+  C --> E["compareDates.ts\nstable ordering"]
+  C --> F["timelineRange.ts\nwindow + padding"]
+  C --> G["formatDate.ts\nUI labels (a11y-safe)"]
+~~~
+
+## 🧱 Architecture
+
+### 📅 `parseDate.ts` — Temporal Parsing Engine
 
 Parses:
 
-- ISO 8601 (`1854-03-21`, `1870`, `1870-05`)  
-- OWL-Time Story Node fields (`when.start`, `when.end`, `precision`)  
-- Approximate expressions:  
-  - `"ca. 1850"`, `"~1860"`, `"early 1800s"`, `"late 19th century"`  
-- OCR-derived or ambiguous fields from archives  
-- Graph events with mixed precision  
+- ISO 8601 (`1854-03-21`, `1870`, `1870-05`)
+- OWL-Time Story Node fields (`when.start`, `when.end`, `precision`)
+- approximate expressions:
+  - `ca. 1850`, `~1860`, `early 1800s`, `late 19th century`
+- OCR-derived or ambiguous fields from archives
+- graph events with mixed precision
 
 Returns:
 
-```ts
+~~~ts
 interface DateMeta {
   date: Date | null;
   original: string;
@@ -145,96 +158,86 @@ interface DateMeta {
   approx: boolean;
   provenance?: string;
 }
-```
+~~~
 
-**FAIR rule:**  
-Never discard original input; always store `original` & `approx`.
+FAIR rule:
+- never discard original input; always preserve `original` and `approx`
 
----
+### 🗓 `formatDate.ts` — UI Temporal Formatting
 
-## 🗓 `formatDate.ts` — UI Temporal Formatting
-
-- Localized yet deterministic  
-- Handles approximate dates (`"c. 1850"`)  
-- Generates accessible labels for timeline bands  
-- Used by Story Node cards, Focus Mode summaries, dataset previews  
+- localized yet deterministic
+- handles approximate dates (`c. 1850`)
+- generates accessible labels for timeline bands
+- used by Story Node cards, Focus Mode summaries, dataset previews
 
 Examples:
 
-| Input             | Output         |
-|-------------------|----------------|
-| `1854-03-21`      | `Mar 21, 1854` |
-| `ca. 1850`        | `c. 1850`      |
-| `{ decade: 1870 }`| `1870s`        |
-| `century: 19`     | `19th century` |
+| Input | Output |
+|---|---|
+| `1854-03-21` | `Mar 21, 1854` |
+| `ca. 1850` | `c. 1850` |
+| `{ decade: 1870 }` | `1870s` |
+| `century: 19` | `19th century` |
 
----
-
-## 🕒 `timelineRange.ts` — Range Expansion & Visible Window Logic
+### 🕒 `timelineRange.ts` — Range Expansion & Visible Window Logic
 
 Used by:
 
-- Focus Mode v3 context expansion  
-- Timeline zoom logic  
-- Map ↔ timeline synchronization  
+- Focus Mode v3 context expansion
+- timeline zoom logic
+- map ↔ timeline synchronization
 
 Capabilities:
 
-- Expands ranges by padding (years, months, days)  
-- Clips reversed or invalid ranges  
-- Merges overlapping intervals  
-- Guarantees deterministic window selection  
+- expands ranges by padding (years, months, days)
+- clips reversed or invalid ranges
+- merges overlapping intervals
+- guarantees deterministic window selection
 
 Example:
 
-```ts
+~~~ts
 computeTimelineWindow({ start: 1850, end: 1870 }, { padYears: 5 })
 → { start: 1845, end: 1875 }
-```
+~~~
 
-**Governance requirement:**  
-Timeline expansions for sensitive Story Nodes must NOT suggest false precision.
+Governance requirement:
+- timeline expansions for sensitive Story Nodes must not suggest false precision
 
----
-
-## 🎚 `precision.ts` — Granularity Evaluation
+### 🎚 `precision.ts` — Granularity Evaluation
 
 Determines how the UI renders a date:
 
-- Year-only → wide block  
-- Month → moderate block  
-- Day → point highlight  
-- Decade/century → abstract interval blocks  
+- year-only → wide block
+- month → moderate block
+- day → point highlight
+- decade/century → abstract interval blocks
 
 Supports Story Node v3 mixed-precision overlays and timeline aggregation.
 
----
-
-## 🔢 `compareDates.ts` — Stable Comparator
+### 🔢 `compareDates.ts` — Stable Comparator
 
 Provides consistent ordering for:
 
-- Story Node events  
-- Graph Events  
-- STAC date ranges  
-- Approximate and partial dates  
-- BCE/CE alignment  
+- Story Node events
+- graph events
+- STAC date ranges
+- approximate and partial dates
+- BCE/CE alignment
 
 Ensures:
 
-- No sorting jumps for BCE → CE transitions  
-- Comparators do not exaggerate precision  
-- Deterministic results across sessions  
+- no sorting jumps for BCE → CE transitions
+- comparators do not exaggerate precision
+- deterministic results across sessions
 
----
+### 🔧 `normalizeDate.ts` — Canonical Temporal Normalization
 
-## 🔧 `normalizeDate.ts` — Canonical Temporal Normalization
-
-Creates a **FAIR, canonical** representation of any parsed date.
+Creates a FAIR, canonical representation of any parsed date.
 
 Adds metadata:
 
-```ts
+~~~ts
 {
   value: "1854-03-21",
   canonical: "1854-03-21",
@@ -242,17 +245,43 @@ Adds metadata:
   approx: false,
   provenance: "graph-event"
 }
-```
+~~~
 
 Also ensures:
 
-- APPROX flags are preserved  
-- CIDOC `time:hasTime` compatibility  
-- STAC/DCAT temporal extents are normalized without modification of meaning  
+- approx flags are preserved
+- CIDOC time-span compatibility patterns are supported in downstream JSON-LD
+- STAC/DCAT temporal extents are normalized without modification of meaning
 
----
+## 📦 Data & Metadata
 
-# 🧪 4. Testing Requirements
+Temporal transforms must retain meaning and context:
+
+- preserve the original source string and declared precision
+- retain approximate/uncertain markers end-to-end
+- avoid converting partial dates into implied full dates (e.g., `1870` must not become `1870-01-01` without explicit labeling)
+
+Recommended normalized fields for downstream UI:
+
+- `original` (string)
+- `canonical` (string or null)
+- `precision` (enum)
+- `approx` (boolean)
+- `range` (start/end where known)
+- `provenance` (optional string tag)
+
+## ⚖ FAIR+CARE & Governance
+
+Non-negotiables:
+
+- never “sharpen” a fuzzy/approximate time into a specific day/month
+- never infer a precise range when only a coarse range exists
+- always preserve uncertainty markers for user-facing transparency
+- when content is governance-sensitive, prefer generalized labels and stable, non-leaky ordering
+
+Governance failures are treated as blocking defects when they change meaning or imply false precision.
+
+## 🧪 Validation & CI/CD
 
 All utilities must include tests under:
 
@@ -260,55 +289,73 @@ All utilities must include tests under:
 tests/web/utils/date/**
 ~~~
 
-Tests MUST verify:
+Tests must verify:
 
-- Deterministic results for identical inputs  
-- Preservation of approximate/fuzzy dates  
-- OWL-Time alignment  
-- FAIR temporal metadata retention  
-- BCE/CE edge-case handling  
-- Correct grouping & ordering via `compareDates.ts`  
-- Timeline-range correctness (`timelineRange.ts`)  
+- deterministic results for identical inputs
+- preservation of approximate/fuzzy dates
+- OWL-Time alignment behavior in parsing/normalization
+- FAIR temporal metadata retention
+- BCE/CE edge-case handling
+- correct grouping and ordering via `compareDates.ts`
+- timeline-range correctness (`timelineRange.ts`)
 
----
+## 🧠 Story Node & Focus Mode Integration
 
-# 🧭 5. Development Standards
+Temporal utilities must support narrative safety:
 
-Every module MUST:
+- Story Node temporal footprints must render without inventing certainty
+- Focus Mode context windows must expand without implying the story “started earlier” than evidence supports
+- Timeline labels must remain accessible and explicit about fuzziness (e.g., “c. 1850”, “late 19th century”)
 
-- Be pure TypeScript (`.ts`)  
-- Export pure functions  
-- Include JSDoc docstrings  
-- Avoid all side effects  
-- Pass ESLint + Prettier + Docs Lint  
-- Validate against telemetry schemas for any date-derived metrics  
-- Comply with FAIR+CARE & sovereignty rules  
+Recommended patterns:
 
----
+- surface `approx` markers in UI labels
+- keep “unknown” explicit rather than silently dropping time
+- keep sorting stable even when precision differs (coarse dates should not bounce in ordering)
 
-# 🔮 6. Future Extensions (v11.3+)
+## 🧭 Context
 
-- BCE support across all rendering engines  
-- Hybrid calendar support (Julian ↔ Gregorian)  
-- Prehistoric/paleoclimate fuzzy ranges  
-- Temporal-density heatmap generation  
-- Sub-daily precision for modern sensor data  
+Development standards for this module:
 
----
+- pure TypeScript (`.ts`)
+- export pure functions only
+- include JSDoc docstrings for public functions
+- avoid all side effects
+- pass ESLint + Prettier + docs lint
+- comply with FAIR+CARE and sovereignty rules
 
-# 🕰 7. Version History
+## 🧪 Validation & CI/CD
 
-| Version | Date       | Changes                                                                                      |
-|--------:|------------|----------------------------------------------------------------------------------------------|
+If any date-derived telemetry is emitted by callers, it must conform to `telemetry_schema` referenced in front-matter.
+
+## 🧭 Context
+
+## 🧭 Context
+(Reserved for future cross-links to web timeline engine architecture and map/time synchronization docs.)
+
+## 🧭 Context
+
+## 🔮 Future Extensions (v11.3+)
+
+- BCE support across all rendering engines
+- hybrid calendar support (Julian ↔ Gregorian)
+- prehistoric/paleoclimate fuzzy ranges
+- temporal-density heatmap generation
+- sub-daily precision for modern sensor data
+
+## 🕰️ Version History
+
+| Version | Date | Changes |
+|---:|---:|---|
+| v11.2.3 | 2025-12-15 | Reformatted to KFM-MDP v11.2.6 headings/fences; preserved all v11.2.2 content; clarified governance-safe normalization and added diagram + integration notes. |
 | v11.2.2 | 2025-11-28 | Full v11.2.2 upgrade; emoji directory; Focus Mode v3 + Story Node v3 alignment; FAIR/CARE update. |
-| v10.4.1 | 2025-11-15 | Initial KFM-MDP v10.4 version.                                                               |
-
----
+| v10.4.1 | 2025-11-15 | Initial KFM-MDP v10.4 version. |
+| v10.3.2 | 2025-11-14 | Added temporal + provenance utilities. |
 
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-FAIR+CARE Certified · Public Document · Version-Pinned  
+FAIR+CARE Certified · Public Document · Version-Pinned
 
 [⬅️ Back to Web Utils](../README.md) · [🧭 Web Source Overview](../../README.md) · [🌐 Web Platform Overview](../../../README.md)
 
