@@ -1,8 +1,8 @@
 ---
 title: "🧠 Kansas Frontier Matrix — Graph & Entity Utilities (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/utils/graph/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+version: "v11.2.6"
+last_updated: "2025-12-15"
 review_cycle: "Quarterly · FAIR+CARE Council & Web Architecture Board"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -11,9 +11,9 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../releases/v11.2.2/focus-telemetry.json"
+sbom_ref: "../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.6/focus-telemetry.json"
 telemetry_schema: "../../../../schemas/telemetry/web-utils-graph-v11.json"
 
 governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
@@ -22,7 +22,7 @@ sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROT
 
 license: "MIT"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11.0"
 
 status: "Active / Enforced"
@@ -43,9 +43,11 @@ risk_category: "Low"
 redaction_required: false
 
 provenance_chain:
-  - "web/src/utils/graph/README.md@v10.3.1"
-  - "web/src/utils/graph/README.md@v10.3.2"
+  - "web/src/utils/graph/README.md@v11.2.2"
+  - "web/src/utils/graph/README.md@v11.0.0"
   - "web/src/utils/graph/README.md@v10.4.1"
+  - "web/src/utils/graph/README.md@v10.3.2"
+  - "web/src/utils/graph/README.md@v10.3.1"
 provenance_requirements:
   versions_required: true
   newest_first: true
@@ -60,7 +62,7 @@ ontology_alignment:
 json_schema_ref: "../../../../schemas/json/web-utils-graph-readme-v11.schema.json"
 shape_schema_ref: "../../../../schemas/shacl/web-utils-graph-readme-v11-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:web-utils-graph-readme:v11.2.2"
+doc_uuid: "urn:kfm:doc:web-utils-graph-readme:v11.2.6"
 semantic_document_id: "kfm-doc-web-utils-graph-readme"
 event_source_id: "ledger:web/src/utils/graph/README.md"
 immutability_status: "version-pinned"
@@ -86,243 +88,435 @@ jurisdiction: "Kansas / United States"
 
 <div align="center">
 
-# 🧠 **Kansas Frontier Matrix — Graph & Entity Utilities (v11.2.2)**  
+# 🧠 **Kansas Frontier Matrix — Graph & Entity Utilities (v11.2.6)**  
 `web/src/utils/graph/README.md`
 
 **Purpose**  
-Define the **frontend-side normalization, relationship flattening, subgraph extraction,  
-entity merging, provenance propagation, and Focus Mode v3 bindings** used by the KFM  
-Web Platform to transform Neo4j + API graph responses into **stable, deterministic,  
-governance-safe UI structures**.
+Define the **frontend-side normalization, relationship flattening, subgraph extraction, entity merging, provenance propagation, and Focus Mode v3 bindings** used by the KFM Web Platform to transform Neo4j + API graph responses into **stable, deterministic, governance-safe UI structures**.
 
 These utilities are:
-- deterministic  
-- typed  
-- FAIR+CARE-governed  
-- sovereignty-safe  
-- fully aligned with Story Node v3 + Focus Mode v3  
-- essential to map/timeline/focus synchronization  
+- deterministic
+- typed (TypeScript strict)
+- FAIR+CARE-governed
+- sovereignty-safe
+- aligned with Story Node v3 + Focus Mode v3
+- essential to map/timeline/focus synchronization
 
 </div>
 
----
+## 📘 Overview
 
-# 🧭 Overview
+`web/src/utils/graph/**` contains **pure functional TypeScript modules** responsible for turning *graph-shaped API payloads* into **predictable, UI-ready models** that can be rendered safely in:
 
-The `web/src/utils/graph/` directory contains **pure functional TypeScript modules** responsible for:
+- Focus Mode v3 (focal entity → context → narrative panels)
+- Story Node v3 (cards, relations, evidence trails)
+- Map layers and overlays (spatial extents, masked geometries)
+- Timeline engine (temporal extents and ordering)
+- Entity detail panels (typed properties + provenance)
 
-- 🔄 **Normalizing** Neo4j graph nodes and relationships  
-- 🪢 **Flattening** and sanitizing subgraphs into UI-ready arrays  
-- 🧱 **Binding** graph entities to Focus Mode v3 + Story Node v3  
-- 📍 **Spatial + temporal** extraction from graph structures  
-- 🧬 **Provenance injection** (PROV-O, CARE labels, sovereignty flags)  
-- 🔐 **Governance filtering** (masking, generalization, sensitive relationship suppression)  
-- 🧊 **Deterministic ordering** for stable UI renders  
-- ⚡ **High-performance graph transforms** without side effects  
+Core responsibilities:
 
-These modules **NEVER**:
-- touch the DOM  
-- call the network  
-- mutate global state  
-- bypass FAIR+CARE constraints  
+- 🔄 Normalize raw nodes into canonical entities (type-safe, schema-guarded)
+- 🪢 Flatten nested subgraphs into stable arrays (nodes + edges)
+- 🧊 Deterministically order nodes/edges for stable rendering and caching
+- 🧾 Preserve and propagate provenance (PROV-O) and rights/license metadata
+- 🔐 Enforce governance filters (CARE labels, sovereignty rules, masking/generalization)
+- 🧠 Provide Focus Mode binding helpers (context windows, “related entities”, evidence lists)
 
----
+Hard constraints (non-negotiable):
 
-# 📂 Directory Layout (Emoji-Rich · v11.2.2)
+- No network calls, no IO, no global mutation
+- No DOM / `window` / browser-global usage
+- No relationship invention or “best guess” linking
+- No sharpening of uncertain time or generalized/masked geometry into precise values
+- Governance metadata must not be dropped silently
+
+## 🗂️ Directory Layout
 
 ~~~text
-web/src/utils/graph/
-│
-├── 🧩 entityNormalize.ts     # Canonicalizes entities (Place/Event/StoryNode/Document/etc.)
-├── 🔗 relationFlatten.ts     # Converts nested Neo4j subgraphs → flat edges + deduped nodes
-├── 🎯 focusBindings.ts       # Focus Mode v3 entity → map/timeline binding logic
-├── 🆔 idUtils.ts             # Stable ID hashing, deduplication, entity merging
-└── 🗂️ groupByType.ts         # Splits heterogeneous node arrays into typed buckets
+📁 web/
+  📁 src/
+    📁 utils/
+      📁 graph/
+        📄 README.md                 # This document (architecture + contracts)
+        📄 entityNormalize.ts        # Canonical entity normalization (typed + governed)
+        📄 relationFlatten.ts        # Nested subgraph → flat nodes/edges (dedupe + stable sort)
+        📄 focusBindings.ts          # Focus Mode v3 bindings (entity → FocusContext)
+        📄 idUtils.ts                # Stable ID helpers (canonicalization, merge keys, dedupe)
+        📄 groupByType.ts            # Split heterogeneous nodes into typed buckets
 ~~~
 
----
+If the codebase includes additional graph utility modules in this directory, they MUST be documented here with:
+- inputs/outputs
+- governance behavior
+- determinism guarantees
+- test coverage location
 
-# 🧱 Module Descriptions
+## 🧭 Context
 
-## 🧩 `entityNormalize.ts`
+KFM’s web application does not query Neo4j directly. It consumes **API responses** (REST and/or GraphQL) that may include:
 
-Normalizes raw Neo4j nodes into stable, UI-ready **canonical entities**.
+- a focal entity payload (Place/Event/Person/Group/Document/Dataset/StoryNode)
+- a compact subgraph for context (typically within limited hops)
+- evidence and provenance attachments
+- governance overlays (CARE label, sovereignty flags, license, sensitivity)
 
-**Features**
+These utilities sit between:
 
-- Type canonicalization:  
-  `Place | Event | Person | Document | StoryNode | Dataset`
-- Temporal normalization (OWL-Time aligned)  
-- Spatial extraction (GeoJSON-safe)  
-- CARE-protected spatial masking (generalization)  
-- Provenance merging:  
-  - PROV-O `prov:used`, `prov:wasGeneratedBy`  
-  - license, rights-holder, SBOM origin  
-- Story Node v3 compatible shape  
-- Focus Mode v3 compatible narrative model  
+- `web/src/utils/api/**` (fetch, response guards, schema checks)
+and
+- `web/src/components/**` + Focus Mode panels + timeline/map views
 
-**Guarantees**
+Pipeline fit (frontend perspective):
 
-- No speculative fields  
-- No hidden precision leaks  
-- Deterministic output ordering  
+~~~text
+API response (graph-shaped)
+  → relationFlatten (structure & dedupe)
+    → entityNormalize (typed canonical entities)
+      → groupByType (UI bucketization)
+        → focusBindings (Focus Mode context assembly)
+          → UI render (map + timeline + narrative + provenance)
+~~~
 
----
+Design goal:
 
-## 🔗 `relationFlatten.ts`
+- Make graph consumption **boring**: deterministic, validated, auditable.
+- Make governance **visible**: if something is masked or suppressed, the UI should be able to explain why.
+- Make failures **safe**: invalid payloads are rejected early; no partial rendering that can leak restricted details.
 
-Neo4j returns **deep nested subgraphs**.  
-The UI requires **predictable, flat structures**.
+## 🧱 Architecture
 
-**Performs**
-- Extracts `{ nodes[], relationships[] }` → `{ flatNodes[], edges[] }`
-- Deduplicates repeated nodes/edges
-- Orders edges by semantic relationship importance  
-- Applies sensitivity masking:
-  - removes prohibited relationships  
-  - generalizes links with sovereignty restrictions  
+### Canonical inputs
 
-**Used by**
+Graph utilities are designed around a minimal set of input expectations:
 
-- Story Node relation panels  
-- Focus Mode v3 evidence trails  
-- Graph-derived timelines  
-- “Related entities” UI modules  
+- **Nodes** have:
+  - stable identifier (prefer `urn:kfm:...` or API-stable id)
+  - type/label information (entity category)
+  - properties payload (names, dates, geometry, evidence links, etc.)
+  - governance/provenance metadata (when available)
 
----
+- **Edges** have:
+  - stable source/target ids
+  - relationship type label
+  - optional properties (confidence, evidence, temporal qualifiers)
+  - governance qualifiers (when required)
 
-## 🎯 `focusBindings.ts`
+Graph utilities MUST tolerate:
+- partial nodes (missing optional props)
+- missing edges
+- unknown node labels (must be handled as “unknown type”, not crashed)
+- mixed precision temporal/spatial data
 
-The glue binding **graph entities → Focus Mode v3 context**.
+Graph utilities MUST NOT tolerate:
+- payloads that cannot be validated by upstream response guards
+- payloads that attempt to bypass governance requirements (e.g., missing required CARE metadata for sensitive classes)
 
-Computes:
+### Canonical outputs
 
-- Highlighted Places, Events, Story Nodes  
-- Time window for the focal entity  
-- Spatial extents (BBox safely clamped)  
-- Related entity clusters  
-- CARE/sovereignty narratives (for overlays)  
-- A stable `FocusContext`:
+The output of these utilities is intended to be:
 
-```ts
-interface FocusContext {
+- stable (same input → same output)
+- serializable (no `Date` objects unless explicitly isolated)
+- safe (masked/generalized where required)
+- explainable (provenance and governance preserved)
+
+Recommended core shapes (illustrative; align to actual project types/contracts):
+
+~~~ts
+export type CanonicalId = string;
+
+export interface GovernanceMeta {
+  careLabel?: string;
+  sovereignty?: string;
+  sensitivity?: "none" | "low" | "moderate" | "high";
+  indigenousRightsFlag?: boolean;
+  license?: string;
+  restrictions?: string[];
+  masked?: boolean;
+  maskMethod?: "h3" | "bbox-generalization" | "redaction" | "none";
+}
+
+export interface ProvenanceMeta {
+  prov?: {
+    used?: string[];
+    wasDerivedFrom?: string[];
+    wasGeneratedBy?: string[];
+    wasAssociatedWith?: string[];
+  };
+  evidence?: Array<{ id: string; href?: string; label?: string }>;
+}
+
+export interface CanonicalEntity {
+  id: CanonicalId;
+  kind:
+    | "Place"
+    | "Event"
+    | "Person"
+    | "Group"
+    | "Organization"
+    | "Document"
+    | "Dataset"
+    | "StoryNode"
+    | "Unknown";
+  label?: string;
+  description?: string;
+  when?: { start?: string; end?: string; precision?: string; approx?: boolean };
+  where?: { geometry?: unknown; bbox?: [number, number, number, number] | null };
+  confidence?: number;
+  __governance?: GovernanceMeta;
+  __provenance?: ProvenanceMeta;
+  __raw?: unknown; // optional passthrough for debugging (must be safe/redacted)
+}
+
+export interface CanonicalEdge {
+  id: CanonicalId;
+  source: CanonicalId;
+  target: CanonicalId;
+  type: string;
+  confidence?: number;
+  __governance?: GovernanceMeta;
+  __provenance?: ProvenanceMeta;
+}
+~~~
+
+### Determinism rules
+
+All transformations must be deterministic. At minimum:
+
+- dedupe keys:
+  - entities: `id`
+  - edges: `(source, type, target, qualifiers)` canonicalized into a stable id
+
+- stable ordering:
+  - entities sorted by `(kind, label || "", id)`
+  - edges sorted by `(type, source, target, id)`
+
+- merge policy:
+  - never overwrite “more governed” values with “less governed” values
+  - never discard provenance or governance blocks unless explicitly configured and logged at a higher layer
+
+### Governance filtering model
+
+Graph utilities are a **secondary enforcement layer** (API and backend should already enforce). Their job is to prevent frontend-side leakage when:
+
+- the API returns generalized geometry and a client tries to “reconstruct” precision
+- the API returns mixed-precision temporal metadata and UI wants to display a more precise date
+- edges imply relationships that should be suppressed at public risk levels
+
+Graph utilities must implement “deny by default” behavior for:
+- restricted geometry
+- restricted identifiers for deep-linking
+- restricted relationship types (where policy requires suppression)
+- missing governance metadata when policy requires it
+
+## 📦 Data & Metadata
+
+### Stable identifiers
+
+The system uses stable ids for cross-linking and caching. Graph utilities must:
+
+- treat ids as opaque
+- avoid encoding sensitive meaning into derived ids
+- avoid exposing internal ids in URLs without governance checks
+
+### Confidence and evidence
+
+Graph/entity payloads may include confidence-like signals:
+
+- entity confidence (identity/linking strength)
+- relationship confidence (evidence strength)
+- evidence count / citations list
+
+Graph utilities must:
+- preserve confidence values, never invent them
+- never treat confidence as proof; it is a UI hint
+- ensure evidence lists are preserved and can be rendered as provenance trails
+
+### Temporal + spatial metadata
+
+Graph utilities commonly depend on:
+
+- `web/src/utils/date/**` for OWL-Time aligned temporal normalization
+- `web/src/utils/bbox/**` for safe bounding box computation and clamping
+- `web/src/utils/url/**` for governance-safe deep links
+
+Rules:
+
+- If temporal precision is “year” (or fuzzier), do not render as day-level
+- If geometry is masked/generalized, do not compute derived geometry that increases precision
+- If only a bbox exists, treat it as authoritative and do not infer a centroid unless explicitly allowed
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+Graph utilities must remain compatible with KFM’s catalog and provenance outputs:
+
+- **Datasets** may be represented as:
+  - DCAT dataset identifiers (URNs)
+  - references to STAC Collections/Items (repo paths or API hrefs)
+  - distributions/assets (STAC assets) that should be displayed without leaking restricted details
+
+- **Provenance** (PROV-O):
+  - Entities: raw/processed artifacts, documents, datasets, story nodes
+  - Activities: ETL runs, curation, inference, validation
+  - Agents: people, services, scripts (as allowed by governance rules)
+
+Graph utilities must preserve:
+- `prov:used`
+- `prov:wasGeneratedBy`
+- `prov:wasDerivedFrom`
+- `prov:wasAssociatedWith`
+
+When provenance is missing:
+- do not fabricate
+- surface the absence as a UI-visible “provenance incomplete” condition (for governance review)
+
+## 🧠 Story Node & Focus Mode Integration
+
+Focus Mode is a “deep exploration session” centered on a focal entity. Graph utilities support this by producing stable, governed Focus Mode inputs:
+
+### Focus bindings
+
+`focusBindings.ts` should compute a stable Focus Context:
+
+- focal entity id + kind
+- related entity ids (places/events/documents/story nodes/datasets)
+- safe temporal window (no sharpening)
+- safe bbox (clamped/generalized as required)
+- governance overlay (CARE label + sovereignty flags + any masking notices)
+- evidence/provenance lists to support “why am I seeing this?” panels
+
+Illustrative shape:
+
+~~~ts
+export interface FocusContext {
   focusId: string;
-  relatedPlaces: string[];
-  relatedEvents: string[];
-  relatedDocuments: string[];
-  relatedStoryNodes: string[];
-  timelineWindow: { start: string; end?: string };
+  focusKind: CanonicalEntity["kind"];
+  related: {
+    places: string[];
+    events: string[];
+    documents: string[];
+    storyNodes: string[];
+    datasets: string[];
+    people: string[];
+    groups: string[];
+    organizations: string[];
+    unknown: string[];
+  };
+  timelineWindow: { start?: string; end?: string; precision?: string; approx?: boolean };
   bbox: [number, number, number, number] | null;
-  governance: { careLabel: string; sovereignty?: string };
+  governance: {
+    careLabel?: string;
+    sovereignty?: string;
+    sensitivity?: string;
+    masked?: boolean;
+    maskMethod?: string;
+    notices?: string[];
+  };
+  provenance?: ProvenanceMeta;
 }
-```
+~~~
 
----
+### Story Node alignment
 
-## 🆔 `idUtils.ts`
+Graph utilities must support Story Node v3 expectations:
 
-Ensures **deterministic identity**:
+- Story Nodes are structured entities with:
+  - title + narrative text
+  - spatial extent
+  - temporal extent
+  - linked entities
+  - evidence links / provenance
 
-- ID hashing + normalization  
-- Deduplication of arrays and graphs  
-- Composite ID generation for multi-entity relationships  
-- Stable ordering for React key usage  
+Graph utilities must:
+- preserve the separation of facts vs interpretation vs speculation flags if present
+- ensure evidence links remain attached through normalization
+- ensure story node relations do not imply unverified facts (no relationship invention)
 
-**Guarantees**
+## 🗺️ Diagrams
 
-- No collisions  
-- No nondeterminism  
-- No sensitive key exposure in URLs  
+~~~mermaid
+flowchart TD
+  A["API response\n(nodes + relationships + metadata)"] --> B["relationFlatten.ts\n- dedupe\n- stable sort\n- suppress restricted edges"]
+  B --> C["entityNormalize.ts\n- typed entities\n- temporal/spatial normalize\n- governance masking"]
+  C --> D["groupByType.ts\n- buckets for UI"]
+  D --> E["focusBindings.ts\n- FocusContext\n- timeline window\n- safe bbox\n- related sets"]
+  E --> F["UI render\n(Focus Mode + Story Nodes + Map + Timeline)\n+ provenance + governance overlays"]
+~~~
 
----
+## 🧪 Validation & CI/CD
 
-## 🗂️ `groupByType.ts`
+Graph utilities are high-impact and must be continuously validated.
 
-Groups heterogeneous graph nodes into:
-
-```ts
-{
-  places: [...],
-  events: [...],
-  documents: [...],
-  storyNodes: [...],
-  datasets: [...],
-  people: [...]
-}
-```
-
-Used by:
-
-- Focus Mode v3 relation panels  
-- Story Node v3 contextual linking  
-- Graph-based search  
-- Relationship overlays  
-
----
-
-# 🧪 Testing Requirements
-
-All graph utilities MUST have:
-
-- Deterministic normalization tests  
-- CARE-compliance tests (masking, sensitive suppression)  
-- Provenance propagation tests  
-- Temporal normalization tests  
-- Spatial extraction tests  
-- Relationship flattening truth tables  
-- ID stability tests  
-- FocusContext generation tests  
-
-All located under:
+Required test coverage:
 
 ~~~text
 tests/unit/web/utils/graph/**
 tests/integration/web/utils/graph/**
 ~~~
 
----
+Minimum test categories:
 
-# ⚙️ Development Standards
+- Normalization correctness (entity types, required fields, fallbacks)
+- Deterministic ordering (stable sort and stable dedupe)
+- Governance filtering:
+  - masked geometry stays masked
+  - restricted ids do not appear in URL-oriented outputs
+  - suppressed relationship types remain suppressed
+- Provenance retention (PROV fields and evidence trails survive transforms)
+- Temporal safety:
+  - fuzzy/approx dates remain fuzzy/approx
+  - no precision sharpening
+- FocusContext stability (same input → same context result)
 
-Modules MUST:
+CI expectations (see `.github/workflows/**`):
 
-- Be pure, side-effect-free  
-- Use TypeScript strict mode  
-- Avoid DOM/React/MapLibre imports  
-- Follow KFM-PDC v11 data contracts  
-- Comply with FAIR+CARE & sovereignty rules  
-- Pass lint/format/test/MDP validation  
-- Implement JSDoc for all exported functions  
-- Remain cyber/sovereignty safe  
+- TypeScript checks (strict)
+- Unit/integration tests
+- Schema validation where applicable
+- Governance and security gating aligned with repository standards and policies
 
----
+## ⚖ FAIR+CARE & Governance
 
-# 🧭 Future Extensions (v11.3+)
+This layer is explicitly governed.
 
-- Cross-entity confidence inference for timelines  
-- Story Node cluster-merging heuristics  
-- Multi-graph federation adapters  
-- Contextual subgraph compression for mobile  
-- Provenance-guided color semantics  
+It MUST:
 
----
+- Respect CARE labels and sovereignty flags attached to entities/edges
+- Prevent precision leakage for protected locations (do not derive fine geometry)
+- Prevent narrative leakage through “implied” edges (no relationship fabrication)
+- Preserve license/rights-holder metadata on datasets/documents
+- Allow the UI to present governance notices (“coordinates blurred due to policy”)
 
-# 🕰 Version History
+It MUST NOT:
+
+- reconstruct restricted coordinates from generalized forms
+- infer relationships that are not present in the graph/API payload
+- silently drop governance metadata
+- bypass upstream policy failures (if something is missing, fail safe)
+
+Indigenous rights flag behavior:
+
+- When `indigenous_rights_flag: true` is relevant for a returned entity:
+  - masking/generalization is the default posture
+  - any override requires explicit policy and must not be performed by frontend utilities
+
+## 🕰️ Version History
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v11.2.2 | 2025-11-28 | Full upgrade to KFM-MDP v11.2.2; emoji directory refresh; aligned with Focus Mode v3, Story Node v3, CARE masking, and CI/CD schema updates. |
+| v11.2.6 | 2025-12-15 | KFM-MDP v11.2.6 compliance pass (single H1, approved H2 registry, fence profile). Expanded contracts, governance filtering model, provenance retention rules, and Focus Mode integration guidance. |
+| v11.2.2 | 2025-11-28 | Emoji layout refresh; aligned with Focus Mode v3, Story Node v3, CARE masking, and CI/schema expectations. |
+| v11.0.0 | 2025-11-24 | v11 alignment for graph-to-UI normalization, provenance propagation, and deterministic relationship flattening. |
 | v10.4.1 | 2025-11-15 | Initial v10.4 graph-utils documentation. |
 | v10.3.2 | 2025-11-14 | Early graph extraction logic. |
 | v10.3.1 | 2025-11-13 | Initial utilities overview. |
 
----
-
 <div align="center">
 
 © 2025 Kansas Frontier Matrix — MIT License  
-FAIR+CARE Certified · Public Document · Version-Pinned  
+FAIR+CARE Certified · Public · Version-Pinned  
 
-[⬅️ Back to Web Source](../../README.md) · [🌐 Web Platform Overview](../../../README.md) · [🛡 Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+[⬅️ Back to Web Utils](../README.md) · [🧭 Web Source Overview](../../README.md) · [🛡 Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
 
 </div>
