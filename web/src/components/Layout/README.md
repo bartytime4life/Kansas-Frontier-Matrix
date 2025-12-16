@@ -1,8 +1,8 @@
 ---
 title: "📐 Kansas Frontier Matrix — Layout Components Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/Layout/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-30"
+version: "v11.2.6"
+last_updated: "2025-12-16"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -12,10 +12,11 @@ content_stability: "stable"
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
+signature_ref: "<release-signature-or-attestation-ref>"
 
-sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../releases/v11.2.2/web-layout-telemetry.json"
+sbom_ref: "../../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.6/web-layout-telemetry.json"
 telemetry_schema: "../../../../schemas/telemetry/web-components-layout-v2.json"
 energy_schema: "../../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
@@ -29,9 +30,9 @@ classification: "Public Document"
 jurisdiction: "United States / Kansas"
 
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11.0"
+pipeline_contract_version: "KFM-PDC v11.0"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
 
@@ -46,6 +47,7 @@ semantic_intent:
 
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk (layout-only)"
+sensitivity: "None"
 sensitivity_level: "None"
 public_exposure_risk: "Low"
 indigenous_rights_flag: false
@@ -66,7 +68,7 @@ ontology_alignment:
 
 json_schema_ref: "../../../../schemas/json/web-components-layout-readme-v11.schema.json"
 shape_schema_ref: "../../../../schemas/shacl/web-components-layout-readme-v11-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-components-layout-readme-v11.2.2"
+doc_uuid: "urn:kfm:doc:web-components-layout-readme-v11.2.6"
 semantic_document_id: "kfm-doc-web-components-layout-readme-v11"
 event_source_id: "ledger:web/src/components/Layout/README.md"
 immutability_status: "version-pinned"
@@ -86,30 +88,33 @@ accessibility_compliance: "WCAG 2.1 AA+"
 heading_registry:
   approved_h2:
     - "📘 Overview"
-    - "🗂️ Directory Structure"
+    - "🗂️ Directory Layout"
     - "🧩 Component Responsibilities"
-    - "🔐 FAIR+CARE & Governance Integration"
+    - "⚖ FAIR+CARE & Governance"
     - "♿ Accessibility Requirements (WCAG 2.1 AA+)"
     - "📈 Telemetry Responsibilities"
     - "🧪 Testing Requirements"
-    - "🕰 Version History"
-    - "⚖️ Footer"
+    - "🕰️ Version History"
 ---
 
 <div align="center">
 
-# 📐 **Kansas Frontier Matrix — Layout Components Overview**  
+# 📐 **Kansas Frontier Matrix — Layout Components Overview**
 `web/src/components/Layout/README.md`
 
-**Purpose:**  
-Define the layout system used across the KFM Web Platform — including containers, shells, panels, navigation  
-structures, and accessibility scaffolding that ensures every page and feature is presented in a coherent,  
-WCAG-compliant, FAIR+CARE-aware UI architecture.
+**Purpose**  
+Define the **layout system** used across the KFM Web Platform — shells, containers, panels, navigation regions,
+and accessibility scaffolding that keep every view **coherent, responsive, and WCAG‑compliant**.
 
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.2-purple)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Low%20Risk-gold)]()  
-[![WCAG AA+](https://img.shields.io/badge/A11y-WCAG%202.1%20AA%2B-brightgreen)]()
+Layout components are **presentation-only**: they must not fetch data, query the graph, or embed domain business logic.
+They exist to make feature surfaces (Map, Timeline, Story Nodes, Focus Mode, Dataset browsers) structurally consistent,
+governance-visible, and accessible.
+
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Governed-orange" />
+<img src="https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
 
 </div>
 
@@ -117,289 +122,271 @@ WCAG-compliant, FAIR+CARE-aware UI architecture.
 
 ## 📘 Overview
 
-Layout components define **the structural foundation** of the KFM Web Platform UI.  
-They ensure:
+Layout components provide the **structural foundation** for KFM’s web UI, which is described as a React-based,
+map-centric interface with supporting panels such as a Timeline control, Layer Legend, and Search surface. The
+platform also supports 2D/3D mapping engines (MapLibre / Cesium) at the view layer.
 
-- Consistent page scaffolding across all views  
-- Accessible navigation and region semantics  
-- Always-on visibility for governance surfaces (CARE + provenance when needed)  
-- Predictable responsive behavior on desktop, tablet, mobile  
-- Integration with global contexts (theme, governance, A11y, time, focus)  
-- A clean separation between **layout** and **feature/business logic** components  
-- Deterministic rendering with no hidden side effects  
+This README defines how layout code should be structured so that downstream features can:
 
-**Layout components must:**
+- Present a map-first interface with consistent placement of navigation, tools, panels, and drawers.
+- Maintain stable semantic landmarks across routes and modes (Map view, Timeline mode, Story Node reading,
+  Focus Mode investigation).
+- Keep governance surfaces (CARE labels, sovereignty notices, provenance links) reachable and non-optional.
+- Support responsive composition (desktop, tablet, mobile) without breaking keyboard navigation or focus order.
+- Consume shared theming and design tokens (defined upstream in the monorepo) without hard-coding UI “magic numbers.”
 
-- Be **pure presentation** (no data fetching, no business logic)  
-- Use appropriate **semantic HTML** landmarks and regions  
-- Propagate **A11y tokens** and theme tokens from global providers  
-- Defer all data-processing to hooks, context providers, or higher-level containers  
+**Non-goals**
+
+- Implementing data access (API clients, graph access, file downloads).
+- Implementing feature logic (Map rendering, Timeline logic, Focus Mode reasoning).
+- Implementing governance policy decisions (layout only renders governance state supplied by higher layers).
 
 ---
 
-## 🗂️ Directory Structure
-
-Emoji-enriched v11 layout:
+## 🗂️ Directory Layout
 
 ~~~text
 web/src/components/Layout/
-│
-├── 🧭 Header.tsx              # Global top bar with navigation + governance links
-├── 📚 Sidebar.tsx             # Left/right navigation sidebar (collapsible, accessible)
-├── 🧱 PageContainer.tsx       # Top-level page wrapper with theme + A11y + contexts
-├── 🗂 Panel.tsx               # Generic panel container (story, focus, datasets, governance)
-├── 🧩 Section.tsx             # Accessible sectional content block
-├── 🔀 SplitView.tsx           # Horizontal/vertical split panes (e.g., map + narrative)
-├── 🛠 Toolbar.tsx             # Tool/action bar with icons + keyboard shortcuts
-└── 🪟 ModalLayout.tsx         # Accessible modal scaffolding (focus trapping, scroll control)
+├── 📄 README.md — This document (governed layout contract for the web UI)
+├── 🧱 PageContainer.tsx — Page shell + landmark regions + skip-to-content target
+├── 🧭 Header.tsx — Global header (navigation, global actions, governance entry points)
+├── 📚 Sidebar.tsx — Primary navigation / filters (collapsible, keyboard-first)
+├── 🗂 Panel.tsx — Generic panel container (map-adjacent panels, narrative panels, inspector panels)
+├── 🧩 Section.tsx — Accessible content section block (heading + spacing + reading width)
+├── 🔀 SplitView.tsx — Split-pane scaffold (map + narrative, map + inspector, etc.)
+├── 🛠 Toolbar.tsx — Layout-level tool strip (buttons, toggles, shortcut affordances)
+└── 🪟 ModalLayout.tsx — Modal scaffold (focus trap, scroll lock, ARIA dialog semantics)
 ~~~
 
-Any additions MUST be reflected here and documented in the responsibilities section.
+Notes:
+
+- Keep **layout** components small and composable; prefer composition over deep inheritance.
+- If a component introduces a new landmark or navigational region, it must be documented here.
+- If filenames differ in-repo, update this tree (the directory layout is CI-linted).
 
 ---
 
 ## 🧩 Component Responsibilities
 
+### 🧱 PageContainer.tsx
+
+**Role**  
+Top-level page wrapper that defines the *stable landmarks* and layout grid used by all routes.
+
+**Responsibilities**
+
+- Provide consistent semantic regions (typically: `header`, `nav`, `main`, `footer`, optional `aside`).
+- Host the skip-to-content target and ensure focus lands in the correct region after route changes.
+- Apply layout tokens (spacing, max widths, responsive breakpoints) via the theming layer.
+
+**Must not**
+
+- Fetch data or call APIs.
+- Make governance decisions (it only renders what governance state providers supply).
+
+---
+
 ### 🧭 Header.tsx
 
-**Role:**  
-Global top bar used across major views.
+**Role**  
+Global top bar / app header.
 
-**Responsibilities:**
+**Responsibilities**
 
-- Provides primary navigation (e.g., links to Map, Timeline, Datasets, Docs)  
-- Surfaces governance affordances:
-  - Link to governance docs  
-  - CARE/sovereignty info entry points  
-- Hosts global search (if enabled) and app-level utilities (theme toggle, a11y toggle)
+- Provide primary navigation links (e.g., Map, Timeline, Datasets, Docs).
+- Provide globally-relevant controls (theme/a11y toggles, help entry points).
+- Provide consistent entry points to governance documentation and explanations.
 
-**A11y:**
+**Accessibility baseline**
 
-- `<header>` landmark  
-- Skip-to-content link anchored into `<main>`/PageContainer  
-- High-contrast color tokens; no color-only semantics for active states  
+- Must render as a `<header>` landmark.
+- Must include (or support) a skip-to-content link.
 
 ---
 
 ### 📚 Sidebar.tsx
 
-**Role:**  
-Persistent or collapsible navigation sidebar.
+**Role**  
+Primary navigation and (optionally) filter surface.
 
-**Responsibilities:**
+**Responsibilities**
 
-- Render navigation tree (sections, view links)  
-- Support collapsible sections with ARIA attributes (`aria-expanded`)  
-- Provide optional area for filters or dataset layer lists when used in map context  
+- Render a keyboard-friendly navigation list/tree.
+- Support collapsible sections with correct ARIA state (`aria-expanded`, `aria-controls`).
+- Provide consistent placement for view-local navigational content (e.g., map layers list, filters).
 
-**A11y:**
+**Accessibility baseline**
 
-- Use `<nav>` landmark with `aria-label` (e.g., `"Primary navigation"`)  
-- Keyboard navigation support (arrow keys for tree, tab for actions)  
-
----
-
-### 🧱 PageContainer.tsx
-
-**Role:**  
-Top-level page wrapper and context host.
-
-**Responsibilities:**
-
-- Wrap page-level content in `<main>` region with correct `role="main"`  
-- Apply theming and layout tokens (spacing, typography)  
-- Connect global contexts:
-  - ThemeContext  
-  - GovernanceContext (CARE, sovereignty flags)  
-  - A11yContext (reduced motion, contrast preferences)  
-  - TimeContext / FocusContext (where appropriate)  
-- Manage scroll behavior and overflow  
-
-**Rules:**
-
-- MUST not fetch data; only read from contexts and render children  
-- MUST ensure that Skip-to-content link and focus management land here  
+- Must render as a `<nav>` landmark with a clear `aria-label`.
+- Must avoid hidden-focus scenarios when collapsed (collapsed sidebar content must not be tabbable).
 
 ---
 
 ### 🗂 Panel.tsx
 
-**Role:**  
-Reusable container for high-level panels.
+**Role**  
+A layout container for secondary surfaces adjacent to the main content area.
 
-**Typical uses:**
+**Responsibilities**
 
-- Story Node detail panel  
-- Focus Mode side panel  
-- Dataset detail or governance panel  
-- Timeline explanation panel  
+- Provide consistent padding/spacing and a stable section header pattern.
+- Support scroll behavior inside a panel without breaking page-level scroll semantics.
+- Support “map-adjacent” and “narrative-adjacent” panel placement.
 
-**A11y:**
+**Examples of consumers (feature-owned, not layout-owned)**
 
-- Provide appropriate region semantics (e.g., `<section>` with headings)  
-- Support optional `aria-label` for panel context  
+- Story Node reading panel
+- Focus Mode investigation panel
+- Dataset inspector panel
+- Timeline explanation panel
 
 ---
 
 ### 🧩 Section.tsx
 
-**Role:**  
-Structured content block for within panels/pages.
+**Role**  
+A semantic content wrapper for structuring panel/page content.
 
-**Responsibilities:**
+**Responsibilities**
 
-- Encapsulate a discrete unit of content with its heading  
-- Maintain heading order (H2/H3/etc.) consistent with parent layout  
-- Provide appropriate spacing, background, and reading width  
-
-**Context:**
-
-- Used for narrative blocks, governance notices, timeline descriptions, etc.  
+- Provide consistent heading spacing and reading width.
+- Enforce heading order within a container (no skipping levels).
+- Provide a predictable content boundary for screen readers (use `<section>` + heading).
 
 ---
 
 ### 🔀 SplitView.tsx
 
-**Role:**  
-Layout for side-by-side or top-bottom panes (e.g., Map + Narrative).
+**Role**  
+A split-pane scaffold for multi-surface views (common in map-first UIs).
 
-**Responsibilities:**
+**Responsibilities**
 
-- Arrange two (or more) child regions with adjustable sizes  
-- Optionally allow keyboard-resizable split (using ARIA `separator` patterns)  
-- Respect reduced-motion and avoid over-animated transitions  
+- Provide stable composition for:
+  - Map + panel
+  - Map + narrative
+  - Map + inspector
+- Optionally support user resizing (if supported by the current UI design).
+- Respect reduced motion and avoid “animated layout thrash.”
 
-**A11y:**
+**If resizable is enabled**
 
-- Use ARIA `role="separator"` when panes are user-resizable  
-- Provide keyboard controls (e.g., arrow keys with modifier) for resizing when enabled  
+- Use an ARIA separator pattern for the resize handle (`role="separator"` and keyboard controls).
 
 ---
 
 ### 🛠 Toolbar.tsx
 
-**Role:**  
-Tool/action bar for layout-level actions.
+**Role**  
+A consistent location for view-level tools.
 
-**Typical contents:**
+**Responsibilities**
 
-- Map tools (zoom, basemap, layer toggles)  
-- Timeline tools (granularity, play/pause)  
-- Focus Mode actions (switch entity, filter relations)  
-
-**Requirements:**
-
-- Every tool must have:
-  - Visible text label or ARIA label  
-  - Clear icon semantics for screen readers  
-- Should expose hooks/events for telemetry (e.g., `"ui:tool-activated"`)  
+- Provide consistent spacing/alignment for tool buttons and toggles.
+- Ensure every tool is keyboard-accessible and has a visible name or an accessible name.
+- Support stable integration points for telemetry (tool activation events are emitted by the wiring layer).
 
 ---
 
 ### 🪟 ModalLayout.tsx
 
-**Role:**  
-Scaffolding for modals and drawers (layout-level concern).
+**Role**  
+The governed scaffolding for modals and modal-adjacent surfaces (including drawers).
 
-**Responsibilities:**
+**Responsibilities**
 
-- Provide correct `role="dialog"` or `role="alertdialog"` semantics  
-- Implement focus trapping and return focus to invoker on close  
-- Prevent scroll bleed behind the modal  
-- Respect reduced-motion for open/close animations  
+- Provide correct dialog semantics (`role="dialog"` / `aria-modal="true"` when appropriate).
+- Trap focus within the modal while open and restore focus to the invoking control on close.
+- Prevent background scroll bleed while open.
+- Respect reduced motion for open/close transitions.
 
-**Used for:**
+**Notes**
 
-- GovernanceDrawer  
-- Story Node media viewer  
-- Dataset metadata modals  
-- System-level prompts  
+- Feature components such as DetailDrawer must be compatible with ModalLayout’s focus and scroll rules.
 
 ---
 
-## 🔐 FAIR+CARE & Governance Integration
+## ⚖ FAIR+CARE & Governance
 
-Although primarily visual/structural, the layout system must:
+Even though layout components are “low-risk” by themselves, they are responsible for ensuring that governance
+surfaces remain **structurally visible** and **reachable**.
 
-- Ensure governance and CARE surfaces remain **reachable and visible**, not hidden by layout decisions  
-- Reserve clear, consistent regions for:
-  - CAREBadge / governance widgets  
-  - Provenance chips or trails in places where sensitive data is shown  
-- Avoid layout patterns that:
-  - Make warnings easy to miss (e.g., burying them below endlessly scrolling panels)  
-  - Confuse which section a warning applies to  
+Layout must support:
 
-Layout components **must not**:
+- A stable region for CARE/sovereignty labels and notices (especially in header/panel patterns).
+- A stable region for provenance links and “why is this hidden/generalized?” explanations when sensitive content is present.
+- Predictable placement of warnings so they are not buried below fold or hidden behind non-obvious interactions.
 
-- Suppress or conditionally hide governance components provided as children  
-- Obscure sovereignty notices behind non-obvious gestures or off-screen areas  
+Layout must not:
+
+- Obscure governance warnings behind overlay-only interactions without accessible alternatives.
+- Render feature surfaces that bypass platform contracts (frontend stays behind APIs; no direct graph access).
 
 ---
 
 ## ♿ Accessibility Requirements (WCAG 2.1 AA+)
 
-Layout components are **foundational** for accessibility.
+Layout components are accessibility-critical because they define navigation order and semantic landmarks.
 
-They MUST:
+Minimum requirements:
 
-- Use semantic landmarks:
-  - `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>` where appropriate  
-- Maintain a logical heading hierarchy (no skipping levels arbitrarily)  
-- Provide:
-  - Skip-to-content links (from Header to PageContainer)  
-  - Visible focus indicators for all interactive layout controls (Sidebar, SplitView, Toolbar, ModalLayout)  
+- Provide semantic landmarks (`header`, `nav`, `main`, optional `aside`, `footer`) and ensure they are not duplicated in ways
+  that confuse assistive technology.
+- Provide a skip-to-content link pattern (Header → PageContainer main region).
+- Ensure focus order matches reading order for both:
+  - map-first layouts (map in `main`, panels in `aside` or adjacent sections)
+  - narrative-first layouts (panel or narrative in `main`, map secondary)
 - Respect user preferences:
-  - `prefers-reduced-motion`  
-  - High-contrast mode  
-- Avoid:
-  - Hidden focus traps  
-  - Off-screen content that becomes keyboard focusable without context  
+  - `prefers-reduced-motion`
+  - high-contrast modes (avoid color-only affordances)
 
-Any layout-related A11y regression MUST block CI.
+Hard constraints:
+
+- No invisible tabbable UI when hidden/collapsed.
+- No focus traps outside ModalLayout; modal/drawer focus behavior must be centralized.
 
 ---
 
 ## 📈 Telemetry Responsibilities
 
-The layout system participates in UI-level telemetry. Through higher-level wiring, it should enable:
+Layout participates in UI-level telemetry by providing stable, predictable interaction points.
 
-- `"layout:page-enter"` / `"layout:page-exit"` events  
-- `"layout:sidebar-toggle"` when Sidebar is opened/closed  
-- `"layout:modal-open"` / `"layout:modal-close"` for ModalLayout usage  
-- `"layout:splitview-adjust"` when SplitView is resized (if user-controllable)  
-- `"layout:toolbar-tool-activated"` when Toolbar tools are invoked  
+Common event families (names are illustrative; payloads must follow `telemetry_schema`):
 
-**Constraints:**
+- `layout:page-enter` / `layout:page-exit`
+- `layout:sidebar-toggle`
+- `layout:modal-open` / `layout:modal-close`
+- `layout:splitview-adjust` (only if user-driven resizing exists)
+- `layout:toolbar-tool-activated`
 
-- No PII in telemetry payloads  
-- Events MUST conform to `telemetry_schema`  
-- Events should be stable across versions or version-tagged for analysis  
+Telemetry constraints:
+
+- No PII in payloads.
+- No raw user-entered content in telemetry.
+- Include component version/environment tags (handled by the telemetry client/wiring layer).
 
 ---
 
 ## 🧪 Testing Requirements
 
-Testing scope for layout components:
+Layout tests must validate structure, accessibility, and regressions that would affect every page.
 
-- **Unit tests:**
-  - Render correctness (smoke tests)  
-  - Proper classnames / tokens for layout  
-  - Prop-driven variants (e.g., sidebar positions, modal states)  
+Minimum coverage:
 
-- **Integration tests:**
-  - Combined layout with main views (map + panel, story + map, etc.)  
-  - Skip-to-content jumps and focus movement  
-  - Governance components placed in Header/Sidebar show correctly  
+- **Unit**
+  - renders without errors across supported variants (collapsed sidebar, no header actions, etc.)
+  - landmark structure is present and stable
 
-- **Accessibility tests:**
-  - Landmark roles present and unique where needed  
-  - Keyboard navigation across Header, Sidebar, Panel, ModalLayout  
-  - Focus trap behavior in modals  
+- **Accessibility**
+  - skip-to-content works and lands focus in the correct region
+  - keyboard-only navigation across header/sidebar/toolbar is functional
+  - modal focus trap and focus restoration works
 
-- **Telemetry tests:**
-  - Events triggered on key interactions (sidebar toggle, modal open/close…)  
+- **Integration**
+  - map + panel compositions (SplitView) do not break scroll/focus
+  - governance surfaces render in expected regions when provided by feature layers
 
-Test locations:
+Suggested test locations (align to the repo’s chosen web test harness):
 
 ~~~text
 tests/unit/web/components/Layout/**
@@ -408,29 +395,29 @@ tests/integration/web/components/Layout/**
 
 ---
 
-## 🕰 Version History
+## 🕰️ Version History
 
-| Version | Date       | Summary                                                                 |
-|--------:|------------|-------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-30 | Upgraded to v11.2.2; enriched metadata, A11y, governance & telemetry   |
-| v10.4.0 | 2025-11-15 | Complete layout overview per KFM-MDP v10.4; added A11y, governance rules |
-| v10.3.2 | 2025-11-14 | Improved SplitView + Header governance patterns                        |
-| v10.3.1 | 2025-11-13 | Initial layout documentation                                          |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v11.2.6 | 2025-12-16 | Aligned to KFM‑MDP v11.2.6; normalized headings (Directory Layout, governance, version history ordering); strengthened layout non-goals and web UI context; improved directory tree style and footer governance links. |
+| v11.2.2 | 2025-11-30 | Upgraded to v11.2.2; enriched metadata, A11y, governance & telemetry. |
+| v10.4.0 | 2025-11-15 | Complete layout overview per KFM-MDP v10.4; added A11y and governance guidance. |
+| v10.3.2 | 2025-11-14 | Improved SplitView + Header governance patterns. |
+| v10.3.1 | 2025-11-13 | Initial layout documentation. |
 
 ---
 
-## ⚖️ Footer
-
 <div align="center">
 
-**📚 Governance Links**  
-[Docs Root](../../../../README.md) •  
-[Standards Index](../../../../docs/standards/INDEX.md) •  
-[Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+**📚 Reference Links**  
+[Web Architecture](../../../ARCHITECTURE.md) · [Web README](../../../README.md) · [Docs Root](../../../../README.md)
 
-**🔐 Compliance:**  
-FAIR+CARE · CIDOC-CRM · OWL-Time · PROV-O · WCAG 2.1 AA+ · SLSA Level 3
+**🧭 Governance & Standards**  
+[Standards Index](../../../../docs/standards/INDEX.md) · [Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md) · [FAIR+CARE Guide](../../../../docs/standards/faircare/FAIRCARE-GUIDE.md)
 
-**End of Document**
+**🔐 Compliance (layout-level)**  
+FAIR+CARE · PROV‑O aware surfaces · WCAG 2.1 AA+ · KFM‑MDP v11.2.6
+
+© 2025 Kansas Frontier Matrix — MIT License
 
 </div>
