@@ -1,10 +1,124 @@
-flowchart TD
-  A["Pipeline Step<br/>Extract · Transform · Load"] --> B["Retry Layer<br/>Identify Retryable Errors"]
-  B --> C["Exponential Backoff<br/>Base Delay × 2^n + Full Jitter"]
-  C --> D["Timeout Enforcement<br/>Hard Deadlines · Deadline Propagation"]
-  D --> E{"Circuit Breaker<br/>Overload Protection"}
-  E -->|Open| F["Fail Fast<br/>Temporary Halt · Cooldown Timer"]
-  E -->|Closed| G["Continue Execution"]
-  G --> H["Idempotency Gate<br/>Safe Re-Execution"]
-  H --> I["Telemetry Export<br/>Retry Attempts · Jitter · Timeout Events"]
-  I --> J["Governance Ledger Sync<br/>Retry Logs · CARE Safety Check"]
+import os
+
+base_path = "/mnt/data/src/pipelines/architecture/architecture_diagrams"
+os.makedirs(base_path, exist_ok=True)
+
+content = """%% Kansas Frontier Matrix (KFM) — Retries + Backoff Flow (v11)
+%% File: src/pipelines/architecture/architecture_diagrams/retries_flow.mmd
+%% Purpose:
+%% - Standard retry behavior for network I/O in ETL, catalog updates, governance tooling, and API calls
+%% - Deterministic, observable, and governance-safe retry decisions (no "retry to bypass policy")
+%% Notes:
+%% - Only retry operations that are safe (idempotent OR protected by an idempotency key)
+%% - Prefer deterministic backoff (derived from run signature) over true randomness
+%% - Record attempt telemetry and preserve evidence for governance/audit
+
+flowchart TB
+
+  %% ------------------------------------------------------------
+  %% Call sites
+  %% ------------------------------------------------------------
+  subgraph CALLS["Call sites (where retries are used)"]
+    C_FETCH["Fetch raw source artifacts\n(HTTP/S3/FTP where allowed)"]
+    C_API["Call KFM APIs\n(REST/GraphQL; contract-versioned)"]
+    C_CATALOG["Pull/refresh catalog endpoints\n(STAC/DCAT registries)"]
+    C_TELEM["Emit telemetry\n(non-PII events)"]
+    C_MISC["Other bounded network I/O\n(license lookups, metadata resolvers)"]
+  end
+
+  %% ------------------------------------------------------------
+  %% Retry wrapper entry
+  %% ------------------------------------------------------------
+  subgraph WRAPPER["Retry wrapper"]
+    R_START["Start request"]
+    R_META["Attach run metadata\n(run_id, tool_version, contract_version)"]
+    R_SAFE{"Safe to retry?"}
+    R_KEYS["Prepare idempotency controls\n(idempotency key / etag / checksum)"]
+    R_ATTEMPT["Attempt request\n(timeout + abort)"]
+    R_RESULT{"Success?"}
+  end
+
+  %% ------------------------------------------------------------
+  %% Error classification
+  %% ------------------------------------------------------------
+  subgraph CLASSIFY["Classify failure"]
+    E_KIND["Classify error\n(network / timeout / 429 / 5xx / checksum / auth / policy)"]
+    E_RETRY{"Retryable class?"}
+    E_NONRETRY["Non-retryable\n(auth/permission/policy/invalid request)\n-> fail fast"]
+  end
+
+  %% ------------------------------------------------------------
+  %% Backoff policy (deterministic)
+  %% ------------------------------------------------------------
+  subgraph BACKOFF["Backoff policy (deterministic)"]
+    B_RULES["Select backoff policy\n(exponential with cap, Retry-After honored)"]
+    B_WAIT["Wait\n(deterministic delay derived from run signature)"]
+    B_MAX{"Max attempts reached?"}
+    B_CIRCUIT{"Circuit breaker open?"}
+  end
+
+  %% ------------------------------------------------------------
+  %% Observability + evidence
+  %% ------------------------------------------------------------
+  subgraph OBS["Telemetry + evidence"]
+    O_ATTEMPT["Emit attempt telemetry\n(attempt, latency, status, error_class; non-PII)"]
+    O_EVID["Persist evidence\n(response headers, error summaries, checksums)\n(mcp/runs/{run_id}/...)"]
+    O_REPORT["Write report entry\n(data/reports/** for pipeline failures)"]
+  end
+
+  %% ------------------------------------------------------------
+  %% Outcomes
+  %% ------------------------------------------------------------
+  subgraph OUT["Outcomes"]
+    S_OK["Success\n(store result; continue pipeline step)"]
+    S_FAIL["Fail\npropagate typed error + governance-safe message"]
+    S_ESC["Escalate\nmanual review / incident ticket / governance review if required"]
+  end
+
+  %% ------------------------------------------------------------
+  %% Wiring: call sites into wrapper
+  %% ------------------------------------------------------------
+  C_FETCH --> R_START
+  C_API --> R_START
+  C_CATALOG --> R_START
+  C_TELEM --> R_START
+  C_MISC --> R_START
+
+  %% wrapper logic
+  R_START --> R_META --> R_SAFE
+  R_SAFE -- "yes" --> R_KEYS --> R_ATTEMPT
+  R_SAFE -- "no" --> E_NONRETRY --> O_ATTEMPT --> O_REPORT --> S_FAIL
+
+  %% attempt result
+  R_ATTEMPT --> O_ATTEMPT
+  R_ATTEMPT --> R_RESULT
+
+  R_RESULT -- "yes" --> O_EVID --> S_OK
+  R_RESULT -- "no" --> E_KIND --> E_RETRY
+
+  %% retryable vs not
+  E_RETRY -- "no" --> E_NONRETRY --> O_EVID --> O_REPORT --> S_FAIL
+  E_RETRY -- "yes" --> O_EVID --> B_RULES --> B_CIRCUIT
+
+  %% circuit breaker
+  B_CIRCUIT -- "yes" --> O_REPORT --> S_ESC
+  B_CIRCUIT -- "no" --> B_WAIT --> B_MAX
+
+  %% max attempts
+  B_MAX -- "no" --> R_ATTEMPT
+  B_MAX -- "yes" --> O_REPORT --> S_ESC
+
+  %% ------------------------------------------------------------
+  %% Notes: safe-to-retry decision
+  %% ------------------------------------------------------------
+  %% Safe to retry if:
+  %% - method is GET/HEAD or other idempotent operation
+  %% - OR request uses an idempotency key and server honors it
+  %% - AND governance/policy does not forbid access (no retries for 401/403/policy blocks)
+"""
+
+file_path = os.path.join(base_path, "retries_flow.mmd")
+with open(file_path, "w", encoding="utf-8") as f:
+    f.write(content)
+
+file_path
