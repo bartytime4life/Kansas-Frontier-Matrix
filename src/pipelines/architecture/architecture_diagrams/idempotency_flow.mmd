@@ -31,7 +31,7 @@ flowchart TB
   subgraph TRANSFORM["Transform (deterministic + idempotent outputs)"]
     X_STAGE["Stage workspace\n(data/work/{run_id}/**)"]
     X_PROC["Deterministic transforms\n(parse/clean/georef/normalize)"]
-    X_ATOMIC["Atomic write\ntemp → final"]
+    X_ATOMIC["Atomic write\ntemp -> final"]
     X_OUT["Processed outputs\n(data/processed/{dataset_id}/{version}/**)"]
   end
 
