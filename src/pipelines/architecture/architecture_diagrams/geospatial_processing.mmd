@@ -1,9 +1,4 @@
-import os, textwrap, pathlib, json, hashlib, datetime
-
-base_path = "/mnt/data/src/pipelines/architecture/architecture_diagrams"
-os.makedirs(base_path, exist_ok=True)
-
-content = """%% Kansas Frontier Matrix (KFM) — Geospatial Processing Architecture (v11)
+%% Kansas Frontier Matrix (KFM) — Geospatial Processing Architecture (v11)
 %% File: src/pipelines/architecture/architecture_diagrams/geospatial_processing.mmd
 %% Intent:
 %% - Deterministic, config-driven geospatial processing for raster + vector + derived map products
@@ -12,124 +7,89 @@ content = """%% Kansas Frontier Matrix (KFM) — Geospatial Processing Architect
 
 flowchart TB
 
-  %% ------------------------------------------------------------------
-  %% Inputs (raw sources) + governance intake
-  %% ------------------------------------------------------------------
   subgraph INPUTS["Inputs + intake"]
-    I_SRC["External sources\\n(archives, GIS portals, agencies, scans, field datasets)"]
-    I_MAN["Source manifests\\n(data/sources/*.yml: uri, license, retrieval_date, checksums, restrictions, steward)"]
-    I_RAW["Raw storage\\n(data/raw/{source_id}/**)"]
-    I_GOV["FAIR+CARE + sovereignty gate\\n(human oversight when required)"]
+    I_SRC["External sources\n(archives, GIS portals, agencies, scans, field datasets)"]
+    I_MAN["Source manifests\n(data/sources/*.yml: uri, license, retrieval_date, checksums, restrictions, steward)"]
+    I_RAW["Raw storage\n(data/raw/{source_id}/**)"]
+    I_GOV["FAIR+CARE + sovereignty gate\n(human oversight when required)"]
   end
 
-  %% ------------------------------------------------------------------
-  %% Orchestration (determinism + reproducibility)
-  %% ------------------------------------------------------------------
   subgraph ORCH["Orchestration + reproducibility"]
-    O_RUN["Pipeline runner\\n(src/pipelines/**; config-driven, replayable, idempotent)"]
-    O_CFG["Run snapshot\\n(mcp/runs/{run_id}/config + seeds + env)"]
-    O_ENV["Pinned runtime\\n(lockfiles/containers; stable versions)"]
+    O_RUN["Pipeline runner\n(src/pipelines/**; config-driven, replayable, idempotent)"]
+    O_CFG["Run snapshot\n(mcp/runs/{run_id}/config + seeds + env)"]
+    O_ENV["Pinned runtime\n(lockfiles/containers; stable versions)"]
   end
 
-  %% ------------------------------------------------------------------
-  %% Raster processing
-  %% ------------------------------------------------------------------
   subgraph RASTER["Raster processing"]
-    R_SCAN["Scans / imagery intake\\n(TIFF/JPEG/PDF extracts)"]
-    R_GCP["Georeference\\n(GCP capture + warp)"]
-    R_CRS["Reproject / normalize CRS\\n(canonical CRS per contracts)"]
-    R_COG["Optimize\\n(COG conversion + compression + overviews/pyramids)"]
-    R_MOSAIC["Mosaic / resample\\n(optional; deterministic rules)"]
-    R_TILES["Tile products\\n(raster tiles / tilejson / mbtiles as assets)"]
+    R_SCAN["Scans / imagery intake\n(TIFF/JPEG/PDF extracts)"]
+    R_GCP["Georeference\n(GCP capture + warp)"]
+    R_CRS["Reproject / normalize CRS\n(canonical CRS per contracts)"]
+    R_COG["Optimize\n(COG conversion + compression + overviews/pyramids)"]
+    R_MOSAIC["Mosaic / resample\n(optional; deterministic rules)"]
+    R_TILES["Tile products\n(raster tiles / tilejson / mbtiles as assets)"]
   end
 
-  %% ------------------------------------------------------------------
-  %% Vector processing
-  %% ------------------------------------------------------------------
   subgraph VECTOR["Vector processing"]
-    V_IN["Vector intake\\n(Shapefile/GeoJSON/GeoPackage/CSV+coords)"]
-    V_CLEAN["Clean + standardize\\n(field mapping, coercion, dedupe)"]
-    V_TOPO["Geometry + topology validation\\n(fix invalid polys; snap; simplify w/ constraints)"]
-    V_CRS["Reproject / normalize CRS\\n(canonical CRS per contracts)"]
-    V_DERIVE["Derive shapes\\n(buffers/centroids/bbox/extent-only where allowed)"]
-    V_TILES["Tile products\\n(vector tiles / PMTiles / MVT assets)"]
+    V_IN["Vector intake\n(Shapefile/GeoJSON/GeoPackage/CSV+coords)"]
+    V_CLEAN["Clean + standardize\n(field mapping, coercion, dedupe)"]
+    V_TOPO["Geometry + topology validation\n(fix invalid polys; snap; simplify w/ constraints)"]
+    V_CRS["Reproject / normalize CRS\n(canonical CRS per contracts)"]
+    V_DERIVE["Derive shapes\n(buffers/centroids/bbox/extent-only where allowed)"]
+    V_TILES["Tile products\n(vector tiles / PMTiles / MVT assets)"]
   end
 
-  %% ------------------------------------------------------------------
-  %% Governance masking / generalization
-  %% ------------------------------------------------------------------
   subgraph GOV["Governance masking + redaction"]
-    G_CLASS["Classify sensitivity\\n(CARE labels + sovereignty flags + license constraints)"]
-    G_MASK["Apply masking/generalization\\n(H3/generalized bbox; suppress restricted geometries)"]
-    G_NOTICE["Attach governance notices\\n(why masked; allowed uses; rights-holder)"]
+    G_CLASS["Classify sensitivity\n(CARE labels + sovereignty flags + license constraints)"]
+    G_MASK["Apply masking/generalization\n(H3/generalized bbox; suppress restricted geometries)"]
+    G_NOTICE["Attach governance notices\n(why masked; allowed uses; rights-holder)"]
   end
 
-  %% ------------------------------------------------------------------
-  %% Outputs (processed + catalog + provenance)
-  %% ------------------------------------------------------------------
   subgraph OUTPUTS["Outputs + catalogs + provenance"]
-    P_OUT["Processed outputs\\n(data/processed/{dataset_id}/{version}/**)"]
-    C_STAC["STAC\\n(data/stac/**: Collections + Items + assets, bbox/geometry/time)"]
-    C_DCAT["DCAT view\\n(datasets + distributions; license/publisher/coverage)"]
-    C_PROV["PROV trace\\n(mcp/runs/{run_id}/** + data/reports/audit/**)"]
+    P_OUT["Processed outputs\n(data/processed/{dataset_id}/{version}/**)"]
+    C_STAC["STAC\n(data/stac/**: Collections + Items + assets, bbox/geometry/time)"]
+    C_DCAT["DCAT view\n(datasets + distributions; license/publisher/coverage)"]
+    C_PROV["PROV trace\n(mcp/runs/{run_id}/** + data/reports/audit/**)"]
   end
 
-  %% ------------------------------------------------------------------
-  %% Validation gates (CI-blocking)
-  %% ------------------------------------------------------------------
   subgraph VALIDATE["Validate + certify"]
-    V_SCHEMA["Schema checks\\n(GeoJSON/STAC/DCAT/telemetry; JSON + SHACL where used)"]
-    V_GEOSAFE["Geo safety checks\\n(no precision leaks; restricted IDs suppressed; antimeridian safe)"]
-    V_CHECK["Checksums + integrity\\n(sha256 parity; manifest linking)"]
+    V_SCHEMA["Schema checks\n(GeoJSON/STAC/DCAT/telemetry; JSON + SHACL where used)"]
+    V_GEOSAFE["Geo safety checks\n(no precision leaks; restricted IDs suppressed; antimeridian safe)"]
+    V_CHECK["Checksums + integrity\n(sha256 parity; manifest linking)"]
     V_OK{"Valid + compliant?"}
-    V_FAIL["Stop + report\\n(data/reports/**; no load/release)"]
+    V_FAIL["Stop + report\n(data/reports/**; no load/release)"]
   end
 
-  %% ------------------------------------------------------------------
-  %% Governance ledgers + telemetry + release artifacts
-  %% ------------------------------------------------------------------
   subgraph RELEASE["Governance + telemetry + release"]
-    L_LEDGER["Append-only governance ledgers\\n(tools/governance/** → data/reports/audit/**)"]
-    L_TELEM["Telemetry\\n(tools/telemetry/** → releases/**/focus-telemetry.json)"]
-    L_SBOM["SBOM + manifest\\n(releases/{version}/sbom.spdx.json + manifest.zip + attestations)"]
+    L_LEDGER["Append-only governance ledgers\n(tools/governance/** → data/reports/audit/**)"]
+    L_TELEM["Telemetry\n(tools/telemetry/** → releases/**/focus-telemetry.json)"]
+    L_SBOM["SBOM + manifest\n(releases/{version}/sbom.spdx.json + manifest.zip + attestations)"]
   end
 
-  %% ------------------------------------------------------------------
-  %% Downstream consumers
-  %% ------------------------------------------------------------------
   subgraph DOWN["Load + serve + UI"]
-    D_GRAPH["Graph ingest\\n(Neo4j: Places/Events/Datasets geometries + relationships)"]
-    D_API["API layer\\n(versioned contracts; safe error shapes; filters)"]
-    D_WEB["Web client\\n(MapLibre/Cesium + Timeline + Focus Mode + Story Nodes)"]
+    D_GRAPH["Graph ingest\n(Neo4j: Places/Events/Datasets geometries + relationships)"]
+    D_API["API layer\n(versioned contracts; safe error shapes; filters)"]
+    D_WEB["Web client\n(MapLibre/Cesium + Timeline + Focus Mode + Story Nodes)"]
   end
 
-  %% ---------------- Wiring ----------------
   I_SRC --> I_MAN --> I_GOV --> I_RAW --> O_RUN
   O_RUN --> O_CFG
   O_RUN --> O_ENV
 
-  %% fan-out to raster/vector streams
   O_RUN --> R_SCAN
   O_RUN --> V_IN
 
-  %% raster steps
   R_SCAN --> R_GCP --> R_CRS --> R_MOSAIC --> R_COG --> R_TILES
-
-  %% vector steps
   V_IN --> V_CLEAN --> V_TOPO --> V_CRS --> V_DERIVE --> V_TILES
 
-  %% governance masking applies to both (policy-driven)
   R_TILES --> G_CLASS
   V_TILES --> G_CLASS
   G_CLASS --> G_MASK --> G_NOTICE
 
-  %% outputs
   G_NOTICE --> P_OUT
   P_OUT --> C_STAC
   P_OUT --> C_DCAT
   P_OUT --> C_PROV
 
-  %% validation gates
   C_STAC --> V_SCHEMA
   C_DCAT --> V_SCHEMA
   P_OUT --> V_GEOSAFE
@@ -141,13 +101,5 @@ flowchart TB
   V_OK -- "no" --> V_FAIL
   V_OK -- "yes" --> L_LEDGER
 
-  %% release + downstream
   L_LEDGER --> L_TELEM --> L_SBOM
   L_SBOM --> D_GRAPH --> D_API --> D_WEB
-"""
-
-file_path = os.path.join(base_path, "geospatial_processing.mmd")
-with open(file_path, "w", encoding="utf-8") as f:
-    f.write(content)
-
-file_path
