@@ -1,5 +1,5 @@
 ---
-title: "⚡ KFM — ETL Energy & CO₂ Telemetry · OpenTelemetry · STAC · PROV"
+title: "⚡ KFM — ETL Energy & CO₂ Telemetry (OpenTelemetry · STAC · PROV)"
 path: "src/kfm/telemetry/etl_energy_co2.md"
 
 version: "v11.2.6"
@@ -17,11 +17,6 @@ footer_profile: "standard"
 intent: "etl-energy-co2-telemetry"
 
 license: "MIT"
-classification: "Public"
-sensitivity: "General (non-sensitive; auto-mask rules apply)"
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-
 mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
@@ -31,229 +26,87 @@ stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
 prov_profile: "KFM-PROV v11"
 
-scope:
-  domain: "telemetry"
-  applies_to:
-    - "src/**"
-    - "pipelines/**"
-    - "tools/telemetry/**"
-    - "schemas/telemetry/**"
-    - "data/stac/**"
-
-diagram_profiles:
-  - "mermaid-flowchart-v1"
-
-commit_sha: "<latest-commit-hash>"
-signature_ref: "././releases/v11.2.6/signature.sig"
-provenance_chain:
-  - "docs/standards/kfm_markdown_protocol_v11.2.6.md@v11.2.6"
+classification: "Public"
+sensitivity: "General (non-sensitive; auto-mask rules apply)"
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
 
 doc_uuid: "urn:kfm:doc:telemetry:etl-energy-co2:v11.2.6"
 semantic_document_id: "kfm-telemetry-etl-energy-co2"
-event_source_id: "kfm:src:kfm/telemetry:etl_energy_co2.md"
+event_source_id: "ledger:kfm:doc:telemetry:etl-energy-co2:v11.2.6"
+immutability_status: "mutable-plan"
 
+commit_sha: "<latest-commit-hash>"
+provenance_chain: []
+
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summarize"
-  - "extract-metadata"
-  - "format-normalization"
-  - "generate-snippets-from-provided-content-only"
+  - "summary"
+  - "semantic-highlighting"
+  - "a11y-adaptations"
+  - "metadata-extraction"
+  - "layout-normalization"
 ai_transform_prohibited:
-  - "invent-measurements"
-  - "invent-governance-status"
-  - "fabricate-provenance"
-  - "introduce-new-metrics-or-schema-claims-without-review"
-
-governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-energy_schema: "schemas/telemetry/energy-v2.json"
-carbon_schema: "schemas/telemetry/carbon-v2.json"
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
 ---
 
-# ⚡ KFM — ETL Energy & CO₂ Telemetry · OpenTelemetry · STAC · PROV
+# ⚡ KFM — ETL Energy & CO₂ Telemetry (OpenTelemetry · STAC · PROV)
 
 > **Purpose**  
-> Provide a minimal, governed pattern to instrument ETL runs with energy (J), network and disk I/O (By), and derived CO₂ (kg CO₂e), emit OpenTelemetry signals, and persist run telemetry into a STAC Item with an attached PROV JSON-LD asset for auditability.
+> Provide a governed, copy‑paste telemetry pattern for KFM ETL runs that:
+> 1) measures energy (J), network/disk bytes, and duration,  
+> 2) converts energy → kWh → CO₂ (kg) using a configurable emission factor, and  
+> 3) persists the run telemetry into a **STAC Item** with an attached **PROV JSON‑LD** asset, while also emitting **OpenTelemetry** metrics/traces for centralized observability.
+
+---
 
 ## 📘 Overview
 
-This guide adds **copy-paste instrumentation** to ETL steps that already produce or update STAC Items.
+This page describes a **drop‑in instrumentation pattern** you can embed in any KFM ETL job.
 
-You get:
+### What you get
 
-- OpenTelemetry metrics and traces that collectors can ingest
-- Deterministic conversion from **J → kWh → kg CO₂e** with a configurable emission factor
-- A stable place to persist per-run telemetry:
-  - STAC Item `properties.kfm:telemetry`
-  - STAC Asset `telemetry-prov` containing PROV JSON-LD
+- **OpenTelemetry metrics** (OTLP‑exportable) using semantic metric names:
+  - `hw.host.energy` (J)
+  - `process.disk.io` (By)
+  - `process.network.io` (By)
+- **CO₂ conversion**: `co2_kg = (energy_joules / 3_600_000) * emission_factor_kg_per_kwh`
+- **Persistence**:
+  - `STAC Item → properties["kfm:telemetry"]`
+  - `STAC Asset → "telemetry-prov"` (PROV JSON‑LD)
 
-Non-goals:
+### What this does not do
 
-- This is not a full power-modeling framework.
-- This does not prescribe a single hardware measurement method.
-- This does not bypass KFM governance and release processes.
+- It does **not** prescribe a single “correct” hardware energy reader. Energy sources vary by platform (RAPL/IPMI/cloud APIs/collector‑side measurement).
+- It does **not** guarantee per‑process energy attribution. If you read *host* energy, you may need allocation logic if multiple jobs share a node.
 
 ### Quickstart
+
+#### Dependencies
 
 ~~~bash
 pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp pystac
 ~~~
 
-Then adapt the reference implementation below and call:
-
-- `run_etl_job(run_id=..., emission_factor_kg_per_kwh=...)`
-- `persist_to_stac_item(item_path=..., tele=...)`
-
-## 🗂️ Directory Layout
-
-Canonical placement and output layout.
-
-~~~text
-📦 <repo-root>/
-├─ 📂 src/
-│  └─ 📂 kfm/
-│     └─ 📂 telemetry/
-│        └─ 📄 etl_energy_co2.md                    # This guide (governed how-to)
-├─ 📂 schemas/
-│  └─ 📂 telemetry/
-│     ├─ 📄 energy-v2.json                          # Energy telemetry schema
-│     └─ 📄 carbon-v2.json                          # Carbon telemetry schema
-├─ 📂 tools/
-│  └─ 📂 telemetry/
-│     └─ 📄 ...                                     # Aggregation / reporting helpers
-└─ 📂 data/
-   └─ 📂 stac/
-      └─ 📂 <domain>/
-         └─ 📂 items/
-            ├─ 📄 <item-id>.geojson                 # STAC Item
-            └─ 📂 assets/
-               └─ 📂 telemetry/
-                  └─ 📄 <run-id>-prov.jsonld        # PROV JSON-LD asset (run-level)
-~~~
-
-Rule:
-
-- Telemetry persistence **must not** write outside the STAC Item directory (or declared output root) for the ETL step.
-- If your catalog storage uses a different layout, keep `Asset.href` relative and adjust the write location accordingly.
-
-## 🧭 Context
-
-### Measurement sources
-
-Replace simulated values with real measurements as your environment allows.
-
-Common approaches:
-
-- CPU package energy counters such as RAPL, polled and integrated over time
-- BMC/IPMI power reads, integrated over time
-- Node-level telemetry via Prometheus node exporter or similar, integrated over time
-- Cloud provider energy or power APIs where available
-
-This pattern stays valid regardless of measurement source as long as you output joules and I/O bytes.
-
-### Emission factor governance
-
-CO₂ is derived from energy using an **emission factor**:
-
-- `co2_kg = kwh * emission_factor_kg_per_kwh`
-
-You must treat the emission factor as governed metadata:
-
-- Configure it per region, supplier, or contract
-- Record its source and effective date in run notes or dataset governance notes
-- Do not present example defaults as authoritative for Kansas without verification
-
-### Metric naming
-
-This pattern uses dot-delimited, OpenTelemetry-style metric names:
-
-- `hw.host.energy` (J)
-- `process.network.io` (By)
-- `process.disk.io` (By)
-
-If your collector or internal conventions require a different namespace, keep the semantics but rename consistently and update downstream dashboards accordingly.
-
-## 🗺️ Diagrams
-
-~~~mermaid
-flowchart LR
-  A[ETL job step] --> B[OpenTelemetry metrics and traces]
-  B --> C[OTel Collector]
-  C --> D[Metrics and traces backends]
-
-  A --> E[STAC Item update]
-  E --> F[kfm:telemetry in properties]
-  E --> G[telemetry-prov asset]
-  G --> H[PROV JSON-LD file]
-  E --> I[STAC Catalog and Collection workflows]
-  I --> J[Graph ingestion via governed APIs]
-~~~
-
-## 🧱 Architecture
-
-Where this pattern fits in the KFM pipeline:
-
-- **ETL stage**: compute or capture run telemetry and persist it with the run outputs
-- **Catalog stage**: STAC Items and assets remain the canonical metadata surface for downstream indexing
-- **Lineage stage**: PROV JSON-LD enables audit and linkage to run IDs, agents, and generated artifacts
-- **Graph stage**: ingestion should read telemetry via catalogs or APIs, not by direct frontend access to the graph
-- **UI stage**: the UI consumes telemetry summaries through APIs only
-
-This doc changes no pipeline contracts. It only defines a stable telemetry payload and where it is persisted.
-
-## 📦 Data & Metadata
-
-### Unit conversions
-
-- `kwh = joules / 3_600_000`
-- `co2_kg = kwh * emission_factor_kg_per_kwh`
-
-### Minimal telemetry record for STAC
-
-A compact telemetry record stored in the STAC Item should be:
-
-- Numeric, unit-stable fields
-- Explicit timestamps
-- Explicit emission factor used
-
-Example shape:
-
-~~~json
-{
-  "run_id": "etl-2025-12-16-0001",
-  "started_at": "2025-12-16T12:00:00Z",
-  "ended_at": "2025-12-16T12:03:11Z",
-  "duration_seconds": 191.0,
-  "energy_joules": 55000000.0,
-  "energy_kwh": 15.2777777778,
-  "emission_factor_kg_per_kwh": 0.4,
-  "co2_kg": 6.1111111111,
-  "bytes_sent": 12345678,
-  "bytes_received": 2222222,
-  "bytes_disk_read": 987654,
-  "bytes_disk_written": 123456,
-  "measurement_method": "simulated",
-  "recorded_at": "2025-12-16T12:03:11Z"
-}
-~~~
-
-### Reference implementation
-
-Copy, paste, and adapt.
+#### Minimal drop‑in example
 
 ~~~python
-# Requires:
-#   pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp pystac
-
-from __future__ import annotations
-
 import json
+import os
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 import pystac
 from opentelemetry import metrics, trace
@@ -265,299 +118,516 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider as SDKTracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 
-JOULES_PER_KWH = 3_600_000.0
-
 
 def utc_now_iso() -> str:
-    return (
-        datetime.now(timezone.utc)
-        .replace(microsecond=0)
-        .isoformat()
-        .replace("+00:00", "Z")
-    )
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def joules_to_kwh(joules: float) -> float:
-    return joules / JOULES_PER_KWH
+    # 1 kWh = 3,600,000 J
+    return float(joules) / 3_600_000.0
 
 
-def kwh_to_co2_kg(kwh: float, emission_factor_kg_per_kwh: float) -> float:
-    return kwh * emission_factor_kg_per_kwh
+def read_proc_disk_io_linux() -> Optional[Dict[str, int]]:
+    """
+    Best-effort per-process disk I/O using Linux /proc.
+    Returns None if not supported.
+    """
+    p = Path("/proc/self/io")
+    if not p.exists():
+        return None
+    out: Dict[str, int] = {}
+    for line in p.read_text(encoding="utf-8").splitlines():
+        if ":" not in line:
+            continue
+        k, v = line.split(":", 1)
+        k = k.strip()
+        v = v.strip()
+        if v.isdigit():
+            out[k] = int(v)
+    # Keys commonly available: read_bytes, write_bytes
+    if "read_bytes" not in out and "write_bytes" not in out:
+        return None
+    return out
+
+
+def read_host_energy_joules() -> Optional[int]:
+    """
+    Placeholder hook. Replace with a real, monotonic host energy counter if available:
+    - RAPL (Intel) / sysfs
+    - IPMI (BMC)
+    - Cloud provider power telemetry
+    - Collector-side host metrics receiver
+    Return None if unavailable.
+    """
+    return None
 
 
 @dataclass(frozen=True)
-class EtlTelemetry:
+class TelemetryResult:
     run_id: str
     started_at: str
     ended_at: str
     duration_seconds: float
 
-    energy_joules: float
-    energy_kwh: float
-    emission_factor_kg_per_kwh: float
-    co2_kg: float
+    energy_joules: Optional[float]
+    energy_kwh: Optional[float]
+    co2_kg: Optional[float]
+    emission_factor_kg_per_kwh: Optional[float]
+    emission_factor_source: Optional[str]
 
-    bytes_sent: int
-    bytes_received: int
-    bytes_disk_read: int
-    bytes_disk_written: int
-
-    measurement_method: str
-    notes: Optional[str] = None
+    disk_read_bytes: Optional[int]
+    disk_write_bytes: Optional[int]
+    net_tx_bytes: Optional[int]
+    net_rx_bytes: Optional[int]
 
 
-def init_otel(service_name: str = "kfm-etl", service_version: str = "v11.2.6"):
+def build_otel() -> Tuple[Any, Any, Any, Any, Any]:
     resource = Resource.create(
         {
-            "service.name": service_name,
-            "service.version": service_version,
+            "service.name": "kfm-etl",
+            "service.version": "v11.2.6",
+            "deployment.environment": os.getenv("KFM_ENV", "dev"),
         }
     )
 
-    metric_reader = PeriodicExportingMetricReader(
-        OTLPMetricExporter(),
-        export_interval_millis=5000,
-    )
+    metric_exporter = OTLPMetricExporter()  # configure via OTEL_EXPORTER_OTLP_ENDPOINT
+    metric_reader = PeriodicExportingMetricReader(metric_exporter, export_interval_millis=5000)
     metrics.set_meter_provider(MeterProvider(resource=resource, metric_readers=[metric_reader]))
     meter = metrics.get_meter("kfm.telemetry.energy", "0.1.0")
 
     trace.set_tracer_provider(SDKTracerProvider(resource=resource))
-    tracer = trace.get_tracer("kfm.telemetry.etl", "0.1.0")
+    tracer = trace.get_tracer("kfm.telemetry.etl")
     trace.get_tracer_provider().add_span_processor(SimpleSpanProcessor(OTLPSpanExporter()))
 
-    return meter, tracer
+    energy_counter = meter.create_counter(
+        "hw.host.energy",
+        unit="J",
+        description="Host energy consumption in joules (best-effort source).",
+    )
+    disk_counter = meter.create_counter(
+        "process.disk.io",
+        unit="By",
+        description="Process disk I/O in bytes (read/write).",
+    )
+    net_counter = meter.create_counter(
+        "process.network.io",
+        unit="By",
+        description="Process network I/O in bytes (tx/rx) (best-effort).",
+    )
+    return tracer, energy_counter, disk_counter, net_counter, meter
 
 
-METER, TRACER = init_otel()
+def run_job_with_telemetry(run_id: str) -> TelemetryResult:
+    """
+    Wrap your ETL work inside this function (or copy the pattern into your script).
+    This example uses best-effort measurement hooks and is safe to run when hooks are unavailable.
+    """
+    tracer, energy_counter, disk_counter, net_counter, _meter = build_otel()
 
-ENERGY_COUNTER = METER.create_counter(
-    "hw.host.energy",
-    unit="J",
-    description="Host energy in joules",
-)
-NET_COUNTER = METER.create_counter(
-    "process.network.io",
-    unit="By",
-    description="Process network I/O in bytes",
-)
-DISK_COUNTER = METER.create_counter(
-    "process.disk.io",
-    unit="By",
-    description="Process disk I/O in bytes",
-)
-
-
-def run_etl_job(
-    run_id: str,
-    emission_factor_kg_per_kwh: float,
-    measurement_method: str = "simulated",
-) -> EtlTelemetry:
     started_at = utc_now_iso()
     t0 = time.time()
 
-    with TRACER.start_as_current_span(
-        "etl.job",
+    # Configurable emission factor (kg CO2 per kWh).
+    # Set these from your governed config stack (YAML/JSON/env) and record the source string.
+    emission_factor = float(os.getenv("KFM_EMISSION_FACTOR_KG_PER_KWH", "0.0")) or None
+    emission_factor_source = os.getenv("KFM_EMISSION_FACTOR_SOURCE", None)
+
+    # Baselines
+    disk0 = read_proc_disk_io_linux()
+    e0 = read_host_energy_joules()
+
+    # NOTE: process-level network bytes are highly platform-dependent.
+    # If you can’t measure per-process network bytes safely, set these to None and rely on
+    # collector-side host metrics or app-level request accounting.
+    net_tx = None
+    net_rx = None
+
+    with tracer.start_as_current_span(
+        "etl.run",
         attributes={
-            "run.id": run_id,
-            "kfm.pipeline.stage": "etl",
-            "telemetry.measurement_method": measurement_method,
+            "kfm.run_id": run_id,
+            "kfm.pipeline_stage": "ETL",
+            "kfm.telemetry.profile": "energy-co2-v11.2.6",
         },
     ) as span:
-        # Replace these with real measurements for your environment.
-        energy_joules = 55_000_000.0
-        bytes_sent, bytes_received = 12_345_678, 2_222_222
-        bytes_disk_read, bytes_disk_written = 987_654, 123_456
+        # ----------------------------
+        # Your ETL job body goes here.
+        # ----------------------------
+        # Example placeholder work:
+        time.sleep(0.05)
 
-        ENERGY_COUNTER.add(energy_joules, {"kfm.run_id": run_id})
-        NET_COUNTER.add(bytes_sent, {"kfm.run_id": run_id, "network.io.direction": "transmit"})
-        NET_COUNTER.add(bytes_received, {"kfm.run_id": run_id, "network.io.direction": "receive"})
-        DISK_COUNTER.add(bytes_disk_read, {"kfm.run_id": run_id, "disk.io.direction": "read"})
-        DISK_COUNTER.add(bytes_disk_written, {"kfm.run_id": run_id, "disk.io.direction": "write"})
+        # End measurements
+        disk1 = read_proc_disk_io_linux()
+        e1 = read_host_energy_joules()
 
-        energy_kwh = joules_to_kwh(energy_joules)
-        co2_kg = kwh_to_co2_kg(energy_kwh, emission_factor_kg_per_kwh)
+        # Disk deltas (Linux /proc/self/io best-effort)
+        disk_read = None
+        disk_write = None
+        if disk0 and disk1:
+            disk_read = max(0, int(disk1.get("read_bytes", 0) - disk0.get("read_bytes", 0)))
+            disk_write = max(0, int(disk1.get("write_bytes", 0) - disk0.get("write_bytes", 0)))
 
-        span.set_attribute("telemetry.energy_joules", energy_joules)
-        span.set_attribute("telemetry.energy_kwh", energy_kwh)
-        span.set_attribute("telemetry.emission_factor_kg_per_kwh", emission_factor_kg_per_kwh)
-        span.set_attribute("telemetry.co2_kg", co2_kg)
-        span.set_attribute("telemetry.bytes_sent", bytes_sent)
-        span.set_attribute("telemetry.bytes_received", bytes_received)
-        span.set_attribute("telemetry.bytes_disk_read", bytes_disk_read)
-        span.set_attribute("telemetry.bytes_disk_written", bytes_disk_written)
+        # Energy delta (best-effort monotonic counter)
+        energy_j = None
+        energy_kwh = None
+        co2_kg = None
+        if e0 is not None and e1 is not None:
+            energy_j = float(max(0, int(e1 - e0)))
+            energy_kwh = joules_to_kwh(energy_j)
+            if emission_factor is not None:
+                co2_kg = float(energy_kwh * emission_factor)
+
+        # Emit OTel counters (only when values exist)
+        # Attributes should avoid secrets/PII; prefer stable IDs, not hostnames.
+        if energy_j is not None:
+            energy_counter.add(energy_j, {"hw.id": os.getenv("KFM_HW_ID", "unknown")})
+
+        if disk_read is not None:
+            disk_counter.add(disk_read, {"process.pid": str(os.getpid()), "disk.io.direction": "read"})
+        if disk_write is not None:
+            disk_counter.add(disk_write, {"process.pid": str(os.getpid()), "disk.io.direction": "write"})
+
+        if net_tx is not None:
+            net_counter.add(net_tx, {"process.pid": str(os.getpid()), "network.io.direction": "transmit"})
+        if net_rx is not None:
+            net_counter.add(net_rx, {"process.pid": str(os.getpid()), "network.io.direction": "receive"})
+
+        # Span attributes for quick correlation (don’t treat spans as your canonical audit record).
+        span.set_attribute("kfm.telemetry.energy_joules", energy_j if energy_j is not None else "null")
+        span.set_attribute("kfm.telemetry.co2_kg", co2_kg if co2_kg is not None else "null")
+        span.set_attribute("kfm.telemetry.duration_seconds", time.time() - t0)
 
     ended_at = utc_now_iso()
     duration = time.time() - t0
 
-    return EtlTelemetry(
+    return TelemetryResult(
         run_id=run_id,
         started_at=started_at,
         ended_at=ended_at,
-        duration_seconds=duration,
-        energy_joules=energy_joules,
+        duration_seconds=float(duration),
+        energy_joules=energy_j,
         energy_kwh=energy_kwh,
-        emission_factor_kg_per_kwh=emission_factor_kg_per_kwh,
         co2_kg=co2_kg,
-        bytes_sent=bytes_sent,
-        bytes_received=bytes_received,
-        bytes_disk_read=bytes_disk_read,
-        bytes_disk_written=bytes_disk_written,
-        measurement_method=measurement_method,
-        notes="Example values only. Replace with real measurements.",
+        emission_factor_kg_per_kwh=emission_factor,
+        emission_factor_source=emission_factor_source,
+        disk_read_bytes=disk_read,
+        disk_write_bytes=disk_write,
+        net_tx_bytes=net_tx,
+        net_rx_bytes=net_rx,
     )
 
 
-def persist_to_stac_item(item_path: str, tele: EtlTelemetry) -> Dict[str, Any]:
-    item_file = Path(item_path)
-    item = pystac.Item.from_file(str(item_file))
+def persist_telemetry_to_stac_item(item_path: str, tele: TelemetryResult) -> str:
+    """
+    Persist telemetry in STAC Item properties and attach a PROV JSON-LD asset.
+    Returns the PROV JSON-LD path written.
+    """
+    item = pystac.Item.from_file(item_path)
 
+    # Canonical KFM namespaced property bucket
     item.properties.setdefault("kfm:telemetry", {})
     item.properties["kfm:telemetry"].update(
         {
-            **asdict(tele),
+            "run_id": tele.run_id,
+            "profile": "energy-co2-v11.2.6",
             "recorded_at": utc_now_iso(),
-            "kfm:energy_schema": "schemas/telemetry/energy-v2.json",
-            "kfm:carbon_schema": "schemas/telemetry/carbon-v2.json",
+            "started_at": tele.started_at,
+            "ended_at": tele.ended_at,
+            "duration_seconds": tele.duration_seconds,
+            "energy": {
+                "joules": tele.energy_joules,
+                "kwh": tele.energy_kwh,
+            },
+            "carbon": {
+                "co2_kg": tele.co2_kg,
+                "emission_factor_kg_per_kwh": tele.emission_factor_kg_per_kwh,
+                "emission_factor_source": tele.emission_factor_source,
+            },
+            "io": {
+                "disk": {
+                    "read_bytes": tele.disk_read_bytes,
+                    "write_bytes": tele.disk_write_bytes,
+                },
+                "network": {
+                    "tx_bytes": tele.net_tx_bytes,
+                    "rx_bytes": tele.net_rx_bytes,
+                },
+            },
         }
     )
 
-    prov_rel = Path("assets/telemetry") / f"{tele.run_id}-prov.jsonld"
-    prov_abs = item_file.parent / prov_rel
-    prov_abs.parent.mkdir(parents=True, exist_ok=True)
-
+    # PROV JSON-LD (minimal audit record)
     prov_doc = {
-        "@context": {
-            "prov": "http://www.w3.org/ns/prov#",
-            "xsd": "http://www.w3.org/2001/XMLSchema#",
-        },
-        "@id": f"urn:kfm:prov:activity:{tele.run_id}",
-        "@type": "prov:Activity",
-        "prov:startedAtTime": {"@value": tele.started_at, "@type": "xsd:dateTime"},
-        "prov:endedAtTime": {"@value": tele.ended_at, "@type": "xsd:dateTime"},
-        "prov:generated": [
+        "@context": "https://openprovenance.org/prov-jsonld/context.jsonld",
+        "@graph": [
             {
-                "@id": f"urn:kfm:telemetry:{tele.run_id}",
-                "@type": "prov:Entity",
-                "prov:value": {
-                    "energy_joules": tele.energy_joules,
-                    "energy_kwh": tele.energy_kwh,
-                    "co2_kg": tele.co2_kg,
-                    "emission_factor_kg_per_kwh": tele.emission_factor_kg_per_kwh,
-                    "bytes_sent": tele.bytes_sent,
-                    "bytes_received": tele.bytes_received,
-                    "bytes_disk_read": tele.bytes_disk_read,
-                    "bytes_disk_written": tele.bytes_disk_written,
-                    "duration_seconds": tele.duration_seconds,
-                    "measurement_method": tele.measurement_method,
-                },
+                "@id": f"urn:kfm:run:{tele.run_id}",
+                "@type": "prov:Activity",
+                "prov:startedAtTime": tele.started_at,
+                "prov:endedAtTime": tele.ended_at,
+                "prov:generated": [
+                    {
+                        "@id": f"urn:kfm:telemetry:{tele.run_id}",
+                        "@type": "prov:Entity",
+                        "kfm:energy_joules": tele.energy_joules,
+                        "kfm:energy_kwh": tele.energy_kwh,
+                        "kfm:co2_kg": tele.co2_kg,
+                        "kfm:duration_seconds": tele.duration_seconds,
+                    }
+                ],
             }
         ],
     }
-    prov_abs.write_text(json.dumps(prov_doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
-    item.add_asset(
-        "telemetry-prov",
-        pystac.Asset(
-            href=str(prov_rel).replace("\\", "/"),
-            media_type="application/ld+json",
-            roles=["metadata", "provenance"],
-            title="Run-level telemetry provenance (PROV JSON-LD)",
-        ),
+    # Write the PROV JSON-LD alongside the item (adapt to your storage layout)
+    item_dir = Path(item_path).resolve().parent
+    prov_dir = item_dir / "assets" / "telemetry"
+    prov_dir.mkdir(parents=True, exist_ok=True)
+    prov_path = prov_dir / f"{tele.run_id}-prov.jsonld"
+
+    prov_path.write_text(json.dumps(prov_doc, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Attach as STAC asset (metadata role)
+    item.assets["telemetry-prov"] = pystac.Asset(
+        href=str(Path("assets/telemetry") / prov_path.name),
+        media_type="application/ld+json",
+        roles=["metadata"],
+        title="PROV JSON-LD telemetry record for ETL run",
     )
 
-    item.save_object(include_self_link=False)
+    # Persist STAC Item update
+    item.save_object()
 
-    return {
-        "stac_item_path": str(item_file),
-        "prov_asset_path": str(prov_abs),
-        "run_id": tele.run_id,
-    }
+    return str(prov_path)
 
 
-# Example usage:
-# tele = run_etl_job(run_id="etl-2025-12-16-0001", emission_factor_kg_per_kwh=0.4)
-# persist_to_stac_item(item_path="data/stac/<domain>/items/<item-id>.geojson", tele=tele)
+# Example:
+# tele = run_job_with_telemetry("etl-2025-12-16-0001")
+# prov_written = persist_telemetry_to_stac_item("data/stac/items/sample-item.json", tele)
+# print("Wrote PROV:", prov_written)
 ~~~
-
-## 🧪 Validation & CI/CD
-
-Minimum checks recommended for CI or local preflight:
-
-- Markdown checks:
-  - Exactly one H1
-  - Approved H2 headings only
-  - No mixed fence styles inside committed files
-  - Footer governance links present
-
-- Schema checks:
-  - Validate stored telemetry fields against referenced telemetry schemas
-  - Validate STAC Item conformance with your STAC validator
-
-Example local validation commands:
-
-~~~bash
-# Schema validation patterns will vary depending on your validator tooling.
-# Keep these commands consistent with your repo's standard CI tasks.
-
-python -c "import pystac; pystac.Item.from_file('data/stac/<domain>/items/<item-id>.geojson').validate()"
-~~~
-
-Operational checks:
-
-- Telemetry numbers must be non-negative
-- If `measurement_method` is not simulated, record the measurement source and sampling interval in run notes or a run log
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-### STAC
-
-- Persist telemetry under `Item.properties.kfm:telemetry`
-- Attach the PROV JSON-LD run record as an asset:
-  - `assets.telemetry-prov.href = assets/telemetry/<run-id>-prov.jsonld`
-  - `media_type = application/ld+json`
-
-### DCAT
-
-Telemetry is typically a dataset distribution detail rather than the primary dataset record.
-
-Common patterns:
-
-- Treat the STAC Item as the canonical metadata and expose telemetry through STAC assets.
-- If DCAT metadata is produced for the dataset, reference the telemetry artifact as an additional distribution when appropriate.
-
-### PROV
-
-Run telemetry is represented as:
-
-- `prov:Activity` identified by `run_id`
-- `prov:Entity` for the produced telemetry record
-- Optional extensions:
-  - `prov:wasAssociatedWith` linking to a CI bot, operator, or runtime agent
-  - `prov:used` linking to the dataset inputs that were processed
-
-## ⚖ FAIR+CARE & Governance
-
-- Telemetry can reveal operational characteristics of infrastructure.
-  - If exposure is a concern, raise `classification` and adjust publication rules for telemetry assets.
-- Emission factor selection is a governance concern.
-  - Record factor source, date, and region.
-  - Prefer supplier or region-specific factors when available.
-- When telemetry is attached to runs processing sensitive datasets:
-  - Ensure the run complies with sovereignty and ethical handling requirements.
-  - Do not embed sensitive identifiers or disallowed locations inside telemetry notes.
-
-## 🕰️ Version History
-
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-16 | Initial governed pattern for ETL energy and CO₂ telemetry using OpenTelemetry signals, STAC persistence, and a PROV JSON-LD asset. |
 
 ---
 
-🔗 Navigation
+## 🗂️ Directory Layout
 
-- Standards: `docs/standards/README.md`
-- Telemetry docs: `docs/telemetry/README.md`
-- Governance charter: `docs/standards/governance/ROOT-GOVERNANCE.md`
-- FAIR+CARE guide: `docs/standards/faircare/FAIRCARE-GUIDE.md`
-- Sovereignty policy: `docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`
+~~~text
+📁 KansasFrontierMatrix/
+├── 📁 src/                                            — Source code (pipelines, graph, APIs, UI)
+│   └── 📁 kfm/
+│       └── 📁 telemetry/
+│           └── 📄 etl_energy_co2.md                    — This governed how‑to + reference
+├── 📁 schemas/                                        — Schemas (docs, telemetry, SHACL, mappings)
+│   └── 📁 telemetry/                                  — Telemetry schemas (energy, carbon, lineage)
+│       ├── 📄 energy-v2.json                           — Energy telemetry schema (expected)
+│       └── 📄 carbon-v2.json                           — Carbon telemetry schema (expected)
+├── 📁 tools/                                          — Tooling and utilities for governance/validation
+│   └── 📁 telemetry/                                  — Telemetry aggregation/validation helpers
+└── 📁 docs/                                           — Documentation layer (standards, guides, telemetry)
+    └── 📁 standards/
+        ├── 📄 README.md                                — Standards index
+        ├── 📄 telemetry_standards.md                   — Telemetry governance standard
+        ├── 📁 governance/                              — Governance charter and governance standards
+        ├── 📁 faircare/                                — FAIR+CARE guidance
+        └── 📁 sovereignty/                             — Indigenous data protection & sovereignty policy
+~~~
+
+---
+
+## 🧭 Context
+
+KFM telemetry lives at the **ETL → catalog** boundary:
+
+- **ETL** measures run costs (energy/CO₂/I/O/time) and emits metrics to collectors.
+- **Catalog** persists an auditable record in:
+  - **STAC** (Item‑level metadata)
+  - **PROV** (run activity/entity record suitable for governance audits)
+- Downstream, telemetry may be ingested into the **graph** and exposed via **APIs** to the UI and Focus Mode, without direct graph access from clients.
+
+> Pipeline flow (canonical): deterministic ETL → STAC/DCAT/PROV catalogs → graph → APIs → UI → Story Nodes → Focus Mode.
+
+---
+
+## 🧱 Architecture
+
+### Design principles
+
+- **Best‑effort measurement with explicit nulls**: if a platform cannot read energy/network counters, record `null` and keep the run auditable.
+- **Two lanes**:
+  - **OTel lane** for real‑time observability (metrics/traces to a collector)
+  - **STAC/PROV lane** for durable governance/audit metadata attached to produced assets
+
+### Recommended adapter points
+
+- `read_host_energy_joules()`:
+  - RAPL/IPMI/cloud API/collector‑side host energy
+- `read_proc_disk_io_linux()`:
+  - per‑process disk bytes via `/proc/self/io` when available
+- Network bytes:
+  - app‑level accounting (wrap request libraries)
+  - eBPF/collector‑side measurement
+  - or record `null` and document the limitation
+
+---
+
+## 🗺️ Diagrams
+
+~~~mermaid
+flowchart LR
+  A[ETL Job] --> B[Measure: Energy / IO / Duration]
+  B --> C[OpenTelemetry Metrics + Traces]
+  C --> D[OTLP Collector]
+  B --> E[Compute: kWh + CO2]
+  E --> F[Persist into STAC Item properties.kfm:telemetry]
+  F --> G[Write PROV JSON-LD asset]
+  G --> H[Catalog Ingestion]
+  H --> I[Graph + APIs]
+  I --> J[UI + Focus Mode]
+~~~
+
+---
+
+## 📦 Data & Metadata
+
+### Canonical telemetry fields (STAC persistence)
+
+Store telemetry under a namespaced bucket:
+
+- `properties["kfm:telemetry"]` (object)
+  - `run_id` (string)
+  - `profile` (string; pinned identifier for your schema)
+  - `recorded_at`, `started_at`, `ended_at` (RFC3339 timestamps)
+  - `duration_seconds` (number)
+  - `energy.joules`, `energy.kwh` (number | null)
+  - `carbon.co2_kg` (number | null)
+  - `carbon.emission_factor_kg_per_kwh` (number | null)
+  - `carbon.emission_factor_source` (string | null)
+  - `io.disk.read_bytes`, `io.disk.write_bytes` (int | null)
+  - `io.network.tx_bytes`, `io.network.rx_bytes` (int | null)
+
+### OTel metric naming
+
+Use OTel semantic metric names where possible and keep attributes minimal and non-sensitive.
+
+Suggested mapping:
+
+| Signal | OTel Metric Name | Unit | Direction attribute |
+|---|---|---:|---|
+| Host energy | `hw.host.energy` | J | N/A |
+| Process disk bytes | `process.disk.io` | By | `disk.io.direction` = `read` / `write` |
+| Process network bytes | `process.network.io` | By | `network.io.direction` = `transmit` / `receive` |
+
+### CO₂ conversion and provenance
+
+- Conversion:
+  - `energy_kwh = energy_joules / 3_600_000`
+  - `co2_kg = energy_kwh * emission_factor_kg_per_kwh`
+- Governance requirement:
+  - record the emission factor **and** a human‑readable `emission_factor_source` string (utility disclosure, supplier report, region average, etc.)
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC Item
+
+- Telemetry is persisted under:
+  - `properties["kfm:telemetry"]`
+- PROV is attached as a STAC asset:
+  - `assets["telemetry-prov"]` with `media_type="application/ld+json"` and `roles=["metadata"]`
+
+### PROV JSON‑LD
+
+Minimum viable pattern:
+
+- **Activity**: `urn:kfm:run:<run_id>`
+- **Entity**: `urn:kfm:telemetry:<run_id>`
+- Relationship:
+  - Activity `prov:generated` the telemetry entity
+
+Keep the PROV asset small and audit‑friendly; the STAC Item remains the “discovery handle.”
+
+### DCAT (optional)
+
+If you publish dataset‑level DCAT, you may aggregate telemetry (e.g., total CO₂ per release) into:
+- DCAT dataset annotations, or
+- a release‑scoped distribution artifact (telemetry snapshot)
+
+Do not overload per‑run detail into DCAT unless the catalog requires it.
+
+---
+
+## 🧪 Validation & CI/CD
+
+### Local validation checklist
+
+- Validate STAC JSON:
+  - ensure the item remains a valid STAC Item after property/asset injection
+- Validate telemetry shapes:
+  - ensure `kfm:telemetry.energy` and `kfm:telemetry.carbon` match your pinned schema versions (when present)
+- Secrets/PII scan:
+  - ensure no endpoints/tokens/hostnames leak into persisted telemetry
+
+### Example commands (adapt to repo tooling)
+
+~~~bash
+# 1) Basic JSON lint (example)
+python -m json.tool data/stac/items/sample-item.json > /dev/null
+
+# 2) If you have schema validators wired:
+#    - validate telemetry object against schemas/telemetry/*
+#    - validate STAC via pystac validation tooling
+~~~
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+Telemetry can safely support narrative and operational overlays when treated as **evidence**:
+
+- Story Nodes may reference run telemetry to communicate:
+  - processing cost, energy footprint, and transparency notes
+- Focus Mode may summarize telemetry trends, but must:
+  - avoid speculative claims about causality
+  - preserve numeric values and units
+  - cite the run_id and emission factor source string recorded in metadata
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+- Treat telemetry as potentially sensitive when it contains:
+  - detailed host identifiers, internal topology hints, or location-revealing metadata
+- Follow the referenced governance documents:
+  - Governance Charter (roles, review, compliance)
+  - FAIR+CARE Guide (responsible stewardship and representation)
+  - Indigenous Data Protection policy (sovereignty controls and masking rules)
+- Required practice:
+  - record emission factor source and measurement method notes (even if “unknown”), rather than silently omitting provenance.
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Notes |
+|---|---:|---|
+| v11.2.6 | 2025-12-16 | Initial governed pattern for ETL energy/CO₂ telemetry via OpenTelemetry + STAC + PROV. |
+
+---
+
+<div align="center">
+
+⚡ **KFM — ETL Energy & CO₂ Telemetry (OpenTelemetry · STAC · PROV)**  
+Transparent Systems · Ethical Metrics · Sustainable Intelligence
+
+[📂 Standards Index](../../../docs/standards/README.md) ·
+[📈 Telemetry Standard](../../../docs/standards/telemetry_standards.md) ·
+[🏛️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+© 2025 Kansas Frontier Matrix — MIT  
+MCP‑DL v6.3 · KFM‑MDP v11.2.6 · KFM‑PDC v11 · KFM‑STAC/DCAT/PROV v11
+
+</div>
