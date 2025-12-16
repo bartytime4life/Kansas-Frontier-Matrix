@@ -1,10 +1,11 @@
 ---
 title: "🧠 Kansas Frontier Matrix — Web Context System Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/context/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-30"
+version: "v11.2.6"
+last_updated: "2025-12-16"
 
 release_stage: "Stable / Governed"
+status: "Active / Enforced"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
 content_stability: "stable"
@@ -13,27 +14,31 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.2/web-context-telemetry.json"
+sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.6/manifest.zip"
+telemetry_ref: "../../../releases/v11.2.6/web-context-telemetry.json"
 telemetry_schema: "../../../schemas/telemetry/web-context-readme-v2.json"
 energy_schema: "../../../schemas/telemetry/energy-v2.json"
 carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+signature_ref: "../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../releases/v11.2.6/slsa-attestation.json"
 
 governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 license: "MIT"
 
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
 
-status: "Active / Enforced"
 doc_kind: "Overview"
 intent: "web-context-overview"
 role: "overview"
+category: "Web · Source · State Layer"
 
 fair_category: "F1-A1-I1-R1"
 care_label: "Public / Low-Risk (logic-only)"
@@ -44,11 +49,6 @@ data_steward: "KFM FAIR+CARE Council"
 risk_category: "Low"
 redaction_required: false
 
-provenance_chain:
-  - "web/src/context/README.md@v10.4.0"
-  - "web/src/context/README.md@v10.3.2"
-  - "web/src/context/README.md@v10.3.1"
-
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "SoftwareSourceCode"
@@ -57,10 +57,19 @@ ontology_alignment:
 
 json_schema_ref: "../../../schemas/json/web-context-readme-v11.schema.json"
 shape_schema_ref: "../../../schemas/shacl/web-context-readme-v11-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-context-readme-v11.2.2"
+
+doc_uuid: "urn:kfm:doc:web-context-readme-v11.2.6"
 semantic_document_id: "kfm-doc-web-context-readme-v11"
 event_source_id: "ledger:web/src/context/README.md"
 immutability_status: "version-pinned"
+
+provenance_chain:
+  - "web/src/context/README.md@v11.2.2"
+  - "web/src/context/README.md@v10.4.0"
+  - "web/src/context/README.md@v10.3.2"
+  - "web/src/context/README.md@v10.3.1"
+
+fencing_profile: "outer-backticks-inner-tildes-v1"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -68,9 +77,11 @@ ai_transform_permissions:
   - "semantic-highlighting"
   - "a11y-adaptations"
 ai_transform_prohibited:
-  - "summaries"
+  - "summary"
   - "speculative-additions"
   - "unverified-historical-claims"
+  - "governance-override"
+  - "content-alteration"
 
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
@@ -83,14 +94,16 @@ sunset_policy: "Superseded upon next state-layer overhaul"
 heading_registry:
   approved_h2:
     - "📘 Overview"
-    - "🗂️ Directory Structure"
-    - "🧩 Context Responsibilities"
-    - "🔐 FAIR+CARE & Governance Integration"
-    - "♿ Accessibility Requirements (WCAG 2.1 AA+)"
-    - "📈 Telemetry Responsibilities"
-    - "🧪 Testing Requirements"
-    - "🕰 Version History"
-    - "⚖️ Footer"
+    - "🗂️ Directory Layout"
+    - "🧭 Context"
+    - "🗺️ Diagrams"
+    - "🧠 Story Node & Focus Mode Integration"
+    - "🧪 Validation & CI/CD"
+    - "📦 Data & Metadata"
+    - "🌐 STAC, DCAT & PROV Alignment"
+    - "🧱 Architecture"
+    - "⚖ FAIR+CARE & Governance"
+    - "🕰️ Version History"
 ---
 
 <div align="center">
@@ -98,17 +111,16 @@ heading_registry:
 # 🧠 **Kansas Frontier Matrix — Web Context System Overview**  
 `web/src/context/README.md`
 
-**Purpose:**  
-Document the **state management layer** of the Kansas Frontier Matrix Web Platform — including  
-the contexts that manage time, focus, governance, accessibility, theming, and spatial/narrative  
-synchronization across the entire frontend application.  
-React Contexts in this directory serve as the *global, ethical, and deterministic state backbone*  
-for all features, components, and pipelines.
+**Purpose**  
+Define the governed, deterministic contract for the **React Context state layer** in the Kansas Frontier Matrix (KFM) Web Platform (`web/src/context/**`).  
+Contexts coordinate **time**, **space**, **focus**, **governance**, **accessibility**, **theme**, and **UI shell** state—while keeping the frontend behind approved APIs and preventing unsafe disclosure of governed data.
 
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.2-purple)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Low%20Risk-gold)]()  
-[![WCAG AA+](https://img.shields.io/badge/A11y-WCAG%202.1%20AA%2B-brightgreen)]()
+[![Web Source Overview](https://img.shields.io/badge/web%2Fsrc-README-blue)](../README.md)
+· [![Web Source Architecture](https://img.shields.io/badge/web%2Fsrc-ARCHITECTURE-blueviolet)](../ARCHITECTURE.md)
+· [![KFM‑MDP v11.2.6](https://img.shields.io/badge/KFM--MDP-v11.2.6-purple)](../../../docs/standards/kfm_markdown_protocol_v11.2.6.md)
+· [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange)](../../../docs/standards/faircare/FAIRCARE-GUIDE.md)
+· [![Governance](https://img.shields.io/badge/Governance-ROOT--GOVERNANCE-brightgreen)](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+· [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
 
 </div>
 
@@ -116,351 +128,524 @@ for all features, components, and pipelines.
 
 ## 📘 Overview
 
-Contexts in `web/src/context/` provide:
+`web/src/context/**` is the **global state backbone** for the web client. It exists to make the UI:
 
-- **Global state containers** shared across the Web Platform  
-- Deterministic, typed state transitions  
-- Mandatory governance (CARE/provenance) checks at the state layer  
-- Accessibility-first system settings and preferences  
-- Synchronization for:
-  - Timeline → Map  
-  - Focus Mode → Story Nodes  
-  - Governance → UI visibility / masking  
-  - Theme → design-system tokens  
-- Centralized, predictable state orchestration  
-- Telemetry-aware updates (non-PII)  
+- **Deterministic** (repeatable state transitions; predictable cross-feature sync)
+- **Governable** (CARE/sovereignty/masking status is carried as explicit state—not inferred)
+- **Accessible** (user A11y preferences propagate consistently and immediately)
+- **Composable** (map, timeline, story, focus, and explorer features can coordinate without ad-hoc wiring)
+- **Safe by design** (no “direct graph access,” no bypassing API governance, no accidental exposure of sensitive geometries)
 
-Contexts must remain:
+### What contexts are for
 
-- Pure (no rendering, no direct side effects beyond controlled telemetry)  
-- Type-safe (TS types/guards for all state shapes)  
-- Predictable (no hidden global mutation)  
-- FAIR+CARE compliant (respecting governance flags)  
-- A11y aligned (propagating user preferences to UI)  
-- Non-speculative (no inferred facts about time, place, or entities)  
+Contexts are responsible for:
+
+- Storing **small, shared, app-wide state** (time window, active focus, map camera, panel visibility)
+- Exposing **typed, bounded update surfaces** (reducers/actions or equivalent)
+- Coordinating synchronization between major UI subsystems:
+  - Timeline ↔ Map (2D/3D)
+  - Story Node selection ↔ Time focus ↔ Map highlight
+  - Focus selection ↔ narrative panes ↔ provenance/governance overlays
+  - Theme/A11y ↔ design system tokens ↔ reduced-motion behavior
+
+### What contexts are not for
+
+Contexts MUST NOT:
+
+- Perform network calls (REST/GraphQL/STAC/DCAT). Those belong in `services/**`, `hooks/**`, and/or `pipelines/**`.
+- Store large data payloads (full Story Node bodies, large feature collections, imagery tiles).
+- Store or recompute authoritative governance decisions. The backend remains the source of truth; the frontend may be stricter, never looser.
 
 ---
 
-## 🗂️ Directory Structure
+## 🗂️ Directory Layout
 
 ~~~text
-web/src/context/
-│
-├── ⏱️ TimeContext.tsx         # Controls global timeline range + fuzzy intervals
-├── 🎯 FocusContext.tsx        # Entity in focus + narrative bundle + geometry refs
-├── 🎨 ThemeContext.tsx        # Light/dark + high-contrast-aware theme state
-├── ♿ A11yContext.tsx          # Reduced-motion, high-contrast, large-text preferences
-├── 🛡 GovernanceContext.tsx    # CARE, provenance, sovereignty flags + warnings
-├── 🗺️ MapContext.tsx          # MapLibre + Cesium viewport + camera state
-└── 🖥️ UIContext.tsx           # UI toggles (sidebars, panels, modals, layouts)
-~~~
-
-Each context file must be documented in the responsibilities section below.
-
----
-
-## 🧩 Context Responsibilities
-
-### ⏱️ TimeContext.tsx
-
-**Role:**  
-Global controller for time-related state.
-
-**Responsibilities:**
-
-- Maintain the current timeline window (start/end)  
-- Normalize and store time spans in OWL-Time-friendly shapes  
-- Track granularity (e.g., year/decade/century)  
-- Expose filters for:
-  - Story Nodes  
-  - STAC/DCAT datasets  
-  - Map layers  
-  - Focus Mode ranges  
-
-**Guarantees:**
-
-- No inconsistent temporal state (e.g., end < start)  
-- Fuzzy/uncertain dates handled ethically (e.g., storing ranges and labels like “ca. 1850”)  
-- Changes propagated deterministically via reducer/actions or equivalent pattern  
-
-**Telemetry (via helper/wrapper):**
-
-- `"timeline:update"` when the global time window or granularity changes  
-
----
-
-### 🎯 FocusContext.tsx
-
-**Role:**  
-Global state for Focus Mode and focus-like views.
-
-**Responsibilities:**
-
-- Track the current focus entity:
-  - ID, type (Person, Place, Event, Dataset, Story Node, etc.)  
-- Store summary/narrative metadata (e.g., AI-labeled or archival)  
-- Maintain a small neighborhood of graph neighbors and related Story Nodes  
-- Provide references for map highlight geometry (IDs, not raw coordinates)  
-- Provide states for “focus is active/inactive”  
-
-**Governance:**
-
-- CARE labels must be tracked alongside focus entity  
-- Must carry flags for “sovereignty-controlled” or “sensitive” focus targets  
-- Must never embed raw geometry or coordinates — only IDs/handles  
-
-**Telemetry:**
-
-- `"focus:activate"` (focus set)  
-- `"focus:relation-select"` (user follows relation from focus context)  
-
----
-
-### 🎨 ThemeContext.tsx
-
-**Role:**  
-Platform theming controller.
-
-**Responsibilities:**
-
-- Manage:
-  - Light/dark modes  
-  - High-contrast variants  
-  - Color token preferences consistent with A11y rules  
-- Provide a unified set of design tokens to components (via CSS variables / Tailwind config)
-
-**Accessibility:**
-
-- Must respect `prefers-color-scheme` and user overrides  
-- Must ensure that all theme combinations maintain WCAG AA+ contrast for core tokens  
-
----
-
-### ♿ A11yContext.tsx
-
-**Role:**  
-Accessibility preferences context.
-
-**Responsibilities:**
-
-- Track:
-  - `reducedMotion` preference  
-  - `highContrast` preference  
-  - `largeText` or font scaling factors  
-  - Optional flags for screen-reader “mode” or other assistive indicators  
-- Provide hooks for components to subscribe to and respond to preference changes  
-
-**Telemetry:**
-
-- `"a11y:preference-change"` when user changes any of these preferences  
-
-Components should not guess; they should read preferences from this context.
-
----
-
-### 🛡 GovernanceContext.tsx
-
-**Role:**  
-Global governance and CARE state hub.
-
-**Responsibilities:**
-
-- Track:
-  - CARE labels at application-scope (e.g., default classification)  
-  - Sovereignty rules relevant to the current view/region  
-  - Masking flags (H3 generalization, temporal generalization, redaction status)  
-  - Current warnings that must be shown (e.g., for sensitive pages)  
-  - AI generation flags / disclaimers  
-
-- Provide:
-  - Derived, read-only governance state to mapping, timeline, story, and dataset views  
-
-**Rules:**
-
-- Must not compute or store raw coordinates; only flags and rules  
-- Must not circumvent backend/graph governance decisions; only surface and propagate  
-
-**Telemetry:**
-
-- `"governance:warning-shown"` when a global governance warning becomes active  
-
----
-
-### 🗺️ MapContext.tsx
-
-**Role:**  
-Global view state for 2D/3D maps.
-
-**Responsibilities:**
-
-- Track:
-  - MapLibre viewport (center, zoom, bearing, pitch)  
-  - Cesium camera position/time slice for 3D (if used)  
-  - Active layers and layer visibility state  
-  - Selected map entity IDs (not raw coordinates)  
-- Provide:
-  - A stable interface for MapView to read+update camera/viewport state  
-
-**Governance:**
-
-- Must interact with GovernanceContext to determine which layers are viewable  
-- Must signal when restricted layers would be visible so UI can mask or block  
-
-**Telemetry:**
-
-- `"map:pan"`  
-- `"map:zoom"`  
-- `"map:layer-toggle"`  
-
-(Events are emitted by map-layer code using MapContext values.)
-
----
-
-### 🖥️ UIContext.tsx
-
-**Role:**  
-Global UI toggles and layout state.
-
-**Responsibilities:**
-
-- Manage:
-  - Sidebar open/close  
-  - Drawer visibility (e.g., DetailDrawer, GovernanceDrawer)  
-  - Modal open/close  
-  - Layout modes (e.g., split view vs stacked)  
-- Ensure:
-  - Consistent transitions and animation flags  
-  - Controlled focus management when panels open/close (in collaboration with A11y helpers)  
-
-**Rules:**
-
-- No business or data logic; only UI-level toggles and transient state  
-- Must be consistent and deterministic across reloads (where appropriate; may be persisted in local storage with user consent)  
-
----
-
-## 🔐 FAIR+CARE & Governance Integration
-
-The context layer is where governance flags and preferences first become **globally visible**.
-
-All contexts MUST:
-
-- Respect CARE and sovereignty flags from backend/graph:
-  - GovernanceContext must hold the canonical “frontend view” of these flags  
-  - TimeContext and MapContext must use these to prevent unsafe state combinations (e.g., non-generalized view on restricted data)  
-- Avoid storing:
-  - Raw coordinates  
-  - Sensitive text or media content (only IDs, references, and flags)  
-- Provide:
-  - Clean, typed interfaces for UI layers to read governance metadata and respond accordingly  
-
-Governance logic in contexts:
-
-- Determines **whether** something is allowed to be shown, but not **how** it is visually rendered (that’s the component layer).  
-- MUST not override stricter backend governance decisions; “frontend can be stricter, never looser.”
-
-Governance violations at the context layer (e.g., exposing restricted state or ignoring redaction_required flags) are **CI-blocking**.
-
----
-
-## ♿ Accessibility Requirements (WCAG 2.1 AA+)
-
-Although contexts are non-visual, they are **critical** for accessibility:
-
-- A11yContext:
-  - Must reliably propagate user preferences so components can adapt correctly  
-- ThemeContext:
-  - Must ensure theme choices do not break contrast or readability  
-- UIContext:
-  - Must support predictable focus behavior on open/close actions (via layout components)
-
-Requirements:
-
-- No context may create “hidden” states that trap focus or disable essential features without UI components being aware  
-- State transitions triggered by user preferences must be:
-  - Deterministic  
-  - Announced (where needed) to assistive technologies via UI/ARIA integration  
-
-Accessibility regressions in context usage must block merges.
-
----
-
-## 📈 Telemetry Responsibilities
-
-Each context participates in telemetry by providing semantic “change points” that can be recorded by wrapper hooks or side-effect layers.
-
-Typical events (wired by hooks, not emitted inside contexts):
-
-- `timeline:update` (from TimeContext updates)  
-- `focus:activate` / `focus:clear` (from FocusContext)  
-- `map:pan` / `map:zoom` / `map:layer-toggle` (from MapContext-driven interactions)  
-- `governance:warning-shown` (from GovernanceContext state)  
-- `a11y:preference-change` (from A11yContext updates)  
-
-Telemetry MUST:
-
-- Be non-PII  
-- Follow the schemas in `telemetry_schema`  
-- Include context version and environment tags to support time-series analysis and debugging  
-
-Context code itself should remain side-effect-light; telemetry is best handled by effect hooks at the boundary.
-
----
-
-## 🧪 Testing Requirements
-
-Each context MUST have:
-
-- **Unit tests**:
-  - State initialization  
-  - Reducer/transition function tests  
-  - Edge case transitions (boundary conditions for time, focus, map, governance)  
-
-- **Integration tests**:
-  - Cross-context synchronization:
-    - TimeContext ↔ MapContext ↔ FocusContext  
-    - GovernanceContext ↔ MapContext / TimelineView / Story components  
-  - Combined behavior with UI components (e.g., map/timeline reacting to TimeContext)  
-
-- **Governance tests**:
-  - Redaction and sovereignty flags propagate properly and are not dropped  
-  - Prohibited states (e.g., “sensitive geometry in a non-masked view”) cannot occur via context alone  
-
-- **A11y preference propagation tests**:
-  - A11yContext updates cause expected downstream behavior in test harnesses  
-
-Test file layout:
-
-~~~text
-tests/unit/web/context/**
-tests/integration/web/context/**
+📁 web/
+└── 📁 src/
+    └── 📁 context/
+        ├── 📄 README.md                 — This document (state-layer overview + contracts)
+        ├── 📄 TimeContext.tsx           — Global temporal window + granularity + fuzzy ranges
+        ├── 📄 FocusContext.tsx          — Active focus target + selection + narrative handles
+        ├── 📄 GovernanceContext.tsx     — CARE/sovereignty flags + masking + required notices
+        ├── 📄 MapContext.tsx            — MapLibre/Cesium camera + layer visibility + selection IDs
+        ├── 📄 ThemeContext.tsx          — Theme selection (token-backed light/dark/high-contrast)
+        ├── 📄 A11yContext.tsx           — Reduced motion + large text + keyboard/SR preferences
+        └── 📄 UIContext.tsx             — Shell state (panes, drawers, modals, focus management)
 ~~~
 
 ---
 
-## 🕰 Version History
+## 🧭 Context
 
-| Version | Date       | Summary                                                                                  |
-|--------:|------------|------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-30 | Upgraded to KFM-MDP v11.2.2; added telemetry v2, energy/carbon schemas, clearer governance contracts |
-| v10.4.0 | 2025-11-15 | Rewritten for KFM-MDP v10.4; added governance, A11y, telemetry, Focus Mode v2.5 alignment |
-| v10.3.2 | 2025-11-14 | Added sovereignty + provenance integration                                              |
-| v10.3.1 | 2025-11-13 | Initial context layer documentation                                                    |
+### Implementation contract (applies to every context)
+
+Each context module SHOULD present a consistent surface:
+
+- `XxxContext` (React context)
+- `XxxProvider` (provider component)
+- `useXxx()` (hook for consuming context safely)
+- Typed `State` and `Action` (or `State` and bounded setters)
+- Reducer/action transitions that are:
+  - deterministic
+  - serializable (where practical)
+  - testable without rendering
+
+#### Shared non-negotiables
+
+- **No network I/O** inside context modules.
+- **No raw governed geometries** inside context state.
+  - Storing a *map camera viewport* is allowed.
+  - Storing *dataset feature geometry* or *precise sensitive coordinates* is not allowed.
+- **No secret-bearing values** (tokens, credentials), and no obvious PII.
+- **No “hidden global mutation”** (no module-level mutable singletons controlling app state).
 
 ---
 
-## ⚖️ Footer
+### ⏱️ TimeContext
+
+**Role**  
+Canonical controller for temporal state: the active time window, granularity, and uncertainty-safe ranges.
+
+**Owns (typical state, names may vary)**
+
+- Active interval(s) for filtering: `start`, `end` (or multi-range brushes)
+- Granularity (year / decade / century / “deep time bands”)
+- “Fuzzy time” descriptors (approximation flags, original labels)
+- Timeline interaction state (brush handles, pinned instants, hover window)
+
+**Hard invariants**
+
+- `start <= end` (or valid ordered bounds for multi-range models)
+- Uncertain dates are preserved as **ranges + labels**, never silently coerced to precise instants
+- Time is stored in a form that can be mapped to OWL-Time-friendly representations
+
+**Cross-context interactions**
+
+- Timeline updates TimeContext → downstream filters update MapContext-visible layers, Story lists, dataset explorers
+- Story Node selection may propose a time window update (TimeContext remains the canonical store)
+
+**Persistence policy**
+
+- Optional: persist user “default time band” preference locally
+- Never persist sensitive content-derived time claims as if they were facts (store user UI preference only)
+
+---
+
+### 🎯 FocusContext
+
+**Role**  
+Canonical “what am I looking at?” state: current focus target, active selection mode, and focus-driven UI coordination.
+
+**Owns (typical state, names may vary)**
+
+- `focusTarget`: `{ id, type }` where `type` is constrained (Place / Event / Person / Dataset / StoryNode / etc.)
+- `activeStoryNodeId` (when focus is driven by a Story Node)
+- Focus UI mode: panel state, tab selection, expand/collapse
+- Highlight handles (IDs), not geometries: related entity IDs, dataset IDs, layer keys
+
+**Hard invariants**
+
+- FocusContext stores **identifiers and handles**, not raw governed payloads
+- Any narrative content stored locally must be treated as:
+  - UI-cached, non-authoritative display data, and
+  - labeled/segmented by origin (archival vs derived vs AI-generated)
+- Must carry or reference governance metadata required to render disclaimers safely (via GovernanceContext or embedded minimal flags)
+
+**Cross-context interactions**
+
+- Setting focus may:
+  - request a map highlight (via IDs into MapContext)
+  - request a time window alignment (via TimeContext)
+  - activate governance notices (via GovernanceContext)
+
+**Persistence policy**
+
+- Do not persist Focus targets by default (prevents “sticky” focus on sensitive topics across sessions)
+- If share-links exist, share only safe identifiers (no coordinates; no governed payload excerpts)
+
+---
+
+### 🛡 GovernanceContext
+
+**Role**  
+Frontend-wide governance visibility hub: CARE labels, sovereignty flags, masking requirements, and required notices that must be rendered.
+
+**Owns (typical state, names may vary)**
+
+- Active governance profile for the current view (CARE label, risk category)
+- Sovereignty and protection flags relevant to currently-viewed items
+- Masking requirements (H3/generalization requirements, “redaction required” toggles)
+- Required notices (e.g., “locations generalized”, “restricted media hidden”)
+- AI disclosure settings and disclaimers that must be shown in Focus/Story surfaces
+
+**Hard invariants**
+
+- GovernanceContext does **not** invent governance status; it surfaces backend decisions and applies frontend-safe tightening only.
+- Governance notices required by policy are not user-dismissable when policy requires persistent display.
+- GovernanceContext must be available to Map/Story/Focus surfaces without duplication.
+
+**Cross-context interactions**
+
+- Governance flags gate what MapContext can render (layer enablement, masking mode)
+- FocusContext and Story surfaces must reference governance flags for labeling and safe disclosure behavior
+
+**Persistence policy**
+
+- Never persist governance decisions as “user preferences.”
+- Persist only user UI preferences that do not loosen governance (e.g., “show governance drawer by default” is OK).
+
+---
+
+### 🗺️ MapContext
+
+**Role**  
+2D/3D view controller for global map state, including camera/viewport, active layers, and selection handles.
+
+**Owns (typical state, names may vary)**
+
+- MapLibre viewport (center, zoom, bearing, pitch)
+- Cesium camera equivalents (position/orientation) if 3D is enabled
+- Active layer keys and visibility flags
+- Selected feature handles:
+  - feature IDs
+  - Story Node IDs
+  - dataset/layer IDs
+  - (avoid raw feature geometry storage)
+
+**Hard invariants**
+
+- MapContext may store **camera coordinates**, but must not store **governed feature coordinates** unless explicitly authorized and non-sensitive.
+- Layer visibility must obey GovernanceContext:
+  - restricted layers cannot become visible through client-only state changes
+  - masking mode must apply when required
+
+**Cross-context interactions**
+
+- Map selection may activate FocusContext (via IDs)
+- Map camera changes may be tagged for telemetry (without leaking user identifiers)
+
+**Persistence policy**
+
+- Optional: persist non-sensitive map UI preferences (basemap choice, last zoom)
+- Never persist restricted-layer visibility as a user preference if policy forbids it
+
+---
+
+### 🎨 ThemeContext
+
+**Role**  
+Theme selection (light/dark/high-contrast), implemented via tokens and CSS variables.
+
+**Owns (typical state, names may vary)**
+
+- Active theme key: `light | dark | high-contrast`
+- System preference detection and user override
+- Token mode hooks for design system integration
+
+**Hard invariants**
+
+- Components must not bypass theme tokens with raw hex colors
+- Theme changes must not reduce accessibility contrast for core UI affordances
+
+**Cross-context interactions**
+
+- Reads A11yContext (e.g., high-contrast preference)
+- Coordinates with UIContext for safe transitions respecting reduced motion
+
+**Persistence policy**
+
+- Safe to persist theme preference locally
+
+---
+
+### ♿ A11yContext
+
+**Role**  
+Centralized accessibility preference state.
+
+**Owns (typical state, names may vary)**
+
+- `reducedMotion`
+- `highContrast`
+- `fontScale` / `largeText`
+- Optional keyboard-navigation preference flags (if implemented)
+
+**Hard invariants**
+
+- A11yContext is authoritative for preference propagation; components do not “guess”
+- Preference changes must be safe to apply at runtime without breaking focus behavior
+
+**Cross-context interactions**
+
+- Informs ThemeContext, UIContext, and map/3D transition behavior
+- Supports “reduced-motion-safe” camera changes and panel animations
+
+**Persistence policy**
+
+- Safe to persist A11y preferences locally
+
+---
+
+### 🖥️ UIContext
+
+**Role**  
+Global shell state: which panels are open, which drawers/modals are active, and layout mode.
+
+**Owns (typical state, names may vary)**
+
+- Pane visibility: left/right panels, focus panel, story panel, explorer panel
+- Modal/drawer open states
+- Layout mode: split/stacked/docked
+- Focus-management coordination flags (when opening/closing panels)
+
+**Hard invariants**
+
+- UIContext contains UI-only state (no domain data, no governance decisions)
+- Must coordinate focus management to avoid keyboard traps and silent focus jumps
+
+**Cross-context interactions**
+
+- Reads A11yContext for reduced-motion behavior
+- Works with FocusContext (e.g., “open focus panel when focus activated”)
+
+**Persistence policy**
+
+- Safe to persist non-sensitive UI preferences (panel default open/closed), with user consent
+
+---
+
+## 🗺️ Diagrams
+
+~~~mermaid
+flowchart TD
+  subgraph Providers["Context Providers"]
+    Time["TimeContext"]
+    Focus["FocusContext"]
+    Gov["GovernanceContext"]
+    Map["MapContext"]
+    Theme["ThemeContext"]
+    A11y["A11yContext"]
+    UI["UIContext"]
+  end
+
+  subgraph Surfaces["Major UI Surfaces"]
+    Timeline["TimelineView"]
+    Map2D3D["MapView / CesiumView"]
+    FocusPanel["FocusPanel"]
+    StoryUI["Story Node UI"]
+    Explorer["STAC/DCAT Explorer UI"]
+    Overlay["Governance Overlay UI"]
+  end
+
+  Timeline --> Time
+  Map2D3D --> Map
+  FocusPanel --> Focus
+  StoryUI --> Focus
+  StoryUI --> Time
+  Explorer --> Time
+  Explorer --> Gov
+  Overlay --> Gov
+
+  Map --> Gov
+  Focus --> Gov
+  Theme --> A11y
+  UI --> A11y
+  UI --> Focus
+~~~
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+Contexts are the coordination plane that keeps **Story Node** and **Focus Mode** interactions coherent.
+
+### Canonical interaction sequences
+
+#### Story Node selection → synchronized UI
+
+1. User selects a Story Node card (or a map footprint associated with a Story Node).
+2. The app sets:
+   - `FocusContext.activeStoryNodeId` (and/or focus target)  
+   - `TimeContext` window aligned to the Story Node temporal span (range-safe)
+   - `MapContext` highlight handles (IDs)
+3. Governance overlays render:
+   - CARE label and sovereignty indicators (from GovernanceContext)
+   - masking/generalization notices where required
+
+#### Focus target selection → governed explanation surface
+
+1. User selects an entity (place/event/person/dataset) through search, map click, or Story relations.
+2. The app sets `FocusContext.focusTarget = { id, type }`.
+3. Data retrieval and narrative generation occur **outside** contexts (hooks/pipelines/services), and any returned content must:
+   - preserve provenance references
+   - label AI-generated segments vs archival text
+   - honor backend governance restrictions
+4. GovernanceContext drives required disclosures and any masking requirements for map/story previews.
+
+### Non-negotiable constraints
+
+- Frontend contexts coordinate state; they do not perform reasoning or governance decisions.
+- All sensitive redaction and access control remains enforced by backend services; the frontend may add additional safety constraints but must never loosen them.
+
+---
+
+## 🧪 Validation & CI/CD
+
+### Minimum CI expectations (context layer)
+
+- Unit tests for:
+  - initial state
+  - reducers / bounded setters
+  - invariants and edge cases (time ordering, focus clearing, layer gating)
+- Integration tests for cross-context synchronization:
+  - Time ↔ Map ↔ Story ↔ Focus
+  - Governance ↔ Map layer visibility and masking state
+  - A11y ↔ Theme ↔ UI focus management
+- Type checks:
+  - strict TypeScript compilation for context state and action types
+- Security checks:
+  - no secrets
+  - no obvious PII in documentation or state snapshots
+
+### Markdown governance checks (documentation CI)
+
+This document is expected to pass the standard KFM Markdown validation profiles:
+
+| Profile | What it protects |
+|---|---|
+| `markdown-lint` | heading structure + formatting constraints |
+| `schema-lint` | YAML front-matter schema compliance |
+| `metadata-check` | required keys present and consistent |
+| `diagram-check` | Mermaid parse + allowed diagram profiles |
+| `footer-check` | governance links present and ordered |
+| `accessibility-check` | heading order + list semantics + basic a11y checks |
+| `provenance-check` | provenance chain and version history coherence |
+| `secret-scan` | blocks secrets/tokens/credentials |
+| `pii-scan` | blocks obvious PII leakage |
+
+---
+
+## 📦 Data & Metadata
+
+### Telemetry boundaries
+
+Contexts should be **telemetry-aware** but remain side-effect light.
+
+**Recommended pattern**
+
+- Contexts expose stable “change points” (state transitions).
+- Hooks at the boundary (e.g., `useTelemetry`) emit events based on transitions.
+- Telemetry payloads are validated against `telemetry_schema` and MUST be non-PII.
+
+### Suggested event families (non-exhaustive)
+
+- `timeline:*` — global time window changes, granularity changes
+- `focus:*` — focus activate/clear, relation navigation
+- `map:*` — pan/zoom, layer toggle, safe selection events (IDs only)
+- `governance:*` — required notice shown, masking mode activated
+- `a11y:*` — preference changes (high-contrast, reduced-motion, font scale)
+- `ui:*` — drawer/panel open/close (aggregated)
+
+### State snapshot policy (debugging)
+
+If state snapshots are captured (e.g., for error reports):
+
+- Remove or hash any potentially sensitive identifiers if policy requires it.
+- Never include raw governed geometries, restricted media URLs, or user identifiers.
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+Contexts interact with standards-aligned metadata **by reference**:
+
+- **STAC**
+  - Dataset/asset selections should be represented in context state as stable identifiers or catalog handles.
+  - Spatial previews obey masking rules; contexts should not carry raw asset geometries when restricted.
+- **DCAT**
+  - Catalog browsing state should reference dataset identifiers and filters (keywords, license classes) without embedding full distributions unless explicitly safe.
+- **PROV-O**
+  - Provenance is surfaced in UI via provenance chips and references.
+  - Contexts store provenance handles/IDs needed to request provenance details from APIs, not reconstructed provenance graphs.
+
+This keeps the state layer lightweight and ensures governance enforcement remains centralized and auditable.
+
+---
+
+## 🧱 Architecture
+
+### Context boundaries vs other layers
+
+- **Contexts**: shared state + deterministic transitions  
+- **Hooks/Pipelines**: orchestration and side effects (fetching, telemetry emission, derived computation)  
+- **Services**: API clients + schema validation + error normalization  
+- **Components/Pages**: rendering and interaction
+
+### Performance expectations
+
+- Avoid storing large objects in context state (prevents unnecessary rerenders).
+- Prefer stable identifiers and small structs over large payloads.
+- If a context grows too broad, consider splitting into sub-contexts (without breaking the “approved API surface” contract).
+
+### Accessibility (WCAG 2.1 AA+)
+
+Contexts are non-visual, but they must support accessible UX:
+
+- A11yContext must propagate preferences reliably.
+- UIContext must support predictable focus behavior when panels open/close.
+- ThemeContext must support contrast-safe modes and never require raw color usage in components.
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+The context layer is the earliest point where governance becomes **globally visible** in the frontend.
+
+### Required governance behaviors
+
+- GovernanceContext is a single source of truth for:
+  - CARE label visibility
+  - sovereignty notices
+  - masking/generalization requirements
+  - required disclaimers (including AI disclosure)
+- MapContext and FocusContext must consume governance flags and must not allow “unsafe states” such as:
+  - restricted layers becoming visible via client-only toggles
+  - unmasked sensitive features being rendered due to a stale state transition
+
+### Prohibited behaviors
+
+- Storing raw sensitive feature geometry in context state
+- Creating feature flags that disable governance overlays for governed content
+- Treating user preferences as authority to override policy
+
+### Principle
+
+**Frontend can be stricter, never looser.**  
+If backend denies or masks, contexts must carry and respect that decision.
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Summary |
+|---:|---|---|
+| v11.2.6 | 2025-12-16 | Aligned to KFM-MDP v11.2.6: normalized approved H2 headings, directory layout format, fencing profile, and footer governance links; expanded context contracts, invariants, and cross-context sync rules. |
+| v11.2.2 | 2025-11-30 | Added telemetry v2 references and clarified governance and A11y responsibilities across contexts. |
+| v10.4.0 | 2025-11-15 | Rewritten for KFM-MDP v10.4; added governance + A11y + telemetry alignment. |
+| v10.3.2 | 2025-11-14 | Added sovereignty + provenance integration notes. |
+| v10.3.1 | 2025-11-13 | Initial context layer documentation. |
 
 <div align="center">
 
-**📚 Governance Links**  
-[Docs Root](../../../README.md) •  
-[Standards Index](../../../docs/standards/INDEX.md) •  
-[Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+© 2025 Kansas Frontier Matrix — MIT License  
+FAIR+CARE Certified · Public Document · Version-Pinned  
 
-**🔐 Compliance:**  
-FAIR+CARE · CIDOC-CRM · OWL-Time · PROV-O · WCAG 2.1 AA+ · SLSA Level 3
-
-**End of Document**
+[⬅️ Back to Web Source Overview](../README.md) ·
+[🧱 Web Source Architecture](../ARCHITECTURE.md) ·
+[🌐 Web Platform Overview](../../README.md) ·
+[🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🪶 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🧿 Sovereignty Policy](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
