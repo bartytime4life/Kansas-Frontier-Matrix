@@ -2,7 +2,7 @@
 title: "📂 Kansas Frontier Matrix — DetailDrawer Component Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "web/src/components/DetailDrawer/README.md"
 version: "v11.2.2"
-last_updated: "2025-11-30"
+last_updated: "2025-12-16"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -13,23 +13,24 @@ commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
 doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../../releases/v11.2.2/web-detaildrawer-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/web-components-detaildrawer-v2.json"
-energy_schema: "../../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../../schemas/telemetry/carbon-v2.json"
+sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
+manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
+telemetry_ref: "../../../../releases/v11.2.2/web-detaildrawer-telemetry.json"
+telemetry_schema: "../../../../schemas/telemetry/web-components-detaildrawer-v2.json"
+energy_schema: "../../../../schemas/telemetry/energy-v2.json"
+carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
 
-governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
+governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
 
 license: "MIT"
 classification: "Public with CARE/sovereignty exceptions"
 jurisdiction: "United States / Kansas"
 
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
@@ -54,6 +55,7 @@ risk_category: "Mixed"
 redaction_required: true
 
 provenance_chain:
+  - "web/src/components/DetailDrawer/README.md@v11.2.2"
   - "web/src/components/DetailDrawer/README.md@v10.4.0"
   - "web/src/components/DetailDrawer/README.md@v10.3.2"
 
@@ -63,8 +65,8 @@ ontology_alignment:
   owl_time: "TemporalEntity"
   prov_o: "prov:Entity"
 
-json_schema_ref: "../../../../../schemas/json/web-components-detaildrawer-readme-v11.schema.json"
-shape_schema_ref: "../../../../../schemas/shacl/web-components-detaildrawer-readme-v11-shape.ttl"
+json_schema_ref: "../../../../schemas/json/web-components-detaildrawer-readme-v11.schema.json"
+shape_schema_ref: "../../../../schemas/shacl/web-components-detaildrawer-readme-v11-shape.ttl"
 doc_uuid: "urn:kfm:doc:web-components-detaildrawer-readme-v11.2.2"
 semantic_document_id: "kfm-doc-web-components-detaildrawer-readme-v11"
 event_source_id: "ledger:web/src/components/DetailDrawer/README.md"
@@ -76,10 +78,14 @@ ai_transform_permissions:
   - "semantic-highlighting"
   - "a11y-adaptations"
   - "diagram-extraction"
+  - "metadata-extraction"
+  - "layout-normalization"
 ai_transform_prohibited:
   - "summaries"
   - "speculative-additions"
   - "unverified-historical-claims"
+  - "unverified-architectural-claims"
+  - "governance-override"
 
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
@@ -90,7 +96,7 @@ heading_registry:
     - "🗂️ Directory Structure"
     - "🧩 Component Responsibilities"
     - "🔐 Governance & FAIR+CARE Integration"
-    - "♿ Accessibility Requirements (WCAG 2.1 AA+)"
+    - "♿ Accessibility Requirements"
     - "📈 Telemetry Responsibilities"
     - "🧪 Testing Requirements"
     - "🕰 Version History"
@@ -99,19 +105,20 @@ heading_registry:
 
 <div align="center">
 
-# 📂 **Kansas Frontier Matrix — DetailDrawer Component Overview**  
+# 📂 **Kansas Frontier Matrix — DetailDrawer Component Overview**
 `web/src/components/DetailDrawer/README.md`
 
-**Purpose:**  
-Document the **DetailDrawer component suite**, a core UI pattern used throughout the KFM Web Platform for  
-displaying deep, contextual, governance-aware content in a slide-out drawer.  
-DetailDrawer acts as an **ethical detail view**, delivering narrative, metadata, provenance, CARE labels,  
-and interaction tools without navigating away from the current page.
+**Purpose**
+Document the **DetailDrawer component suite**, a core UI pattern used throughout the KFM Web Platform for
+displaying deep, contextual, governance-aware content in a slide-out drawer.
 
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.2-purple)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Enforced-gold)]()  
-[![WCAG AA+](https://img.shields.io/badge/A11y-WCAG%202.1%20AA%2B-brightgreen)]()
+DetailDrawer acts as an **ethical detail view**, delivering narrative, metadata, provenance, CARE labels,
+and interaction tools without forcing a full-page navigation.
+
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/FAIR%2BCARE-Enforced-orange" />
+<img src="https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet" />
 
 </div>
 
@@ -119,327 +126,306 @@ and interaction tools without navigating away from the current page.
 
 ## 📘 Overview
 
-The **DetailDrawer Suite** provides governed, contextual side panels for:
+DetailDrawer is the primary **stay-on-page** pattern for presenting entity details in the KFM web client
+alongside the map, timeline, and search results panels.
 
-- Dataset and asset detail views (STAC/DCAT)  
-- Story Node deep-dive narratives  
-- Governance and CARE explanations  
-- Focus Mode supplemental detail panes  
-- Layer information panels and map-adjacent details  
+It is designed to render **facts and governed metadata** sourced from:
+- STAC/DCAT catalogs and API responses (frontend never queries the graph directly)
+- Provenance bundles aligned to PROV-O and release manifests
+- Governance flags required for CARE and sovereignty compliance
 
-Key properties:
+Common entity types shown in DetailDrawer:
+- Datasets and assets (STAC Collections / Items, DCAT datasets)
+- Story Nodes and Focus Mode context panels
+- Map layer metadata and time-filtered layer descriptions
+- Governance and provenance explainers
 
-- Slide-out drawers with reduced-motion aware transitions  
-- CARE/sovereignty-aware content masking and warnings  
-- Deep metadata and provenance rendering  
-- Story Node v3 compatible narrative integration (read-only; no speculation)  
-- Keyboard and screen-reader friendly interaction  
-- Telemetry-emitting interactions for usage analytics  
+Non-goals:
+- Editing or mutating governed records from the public UI
+- Reconstructing missing provenance or completing partial lineage
+- Generating new historical claims or speculative narrative
 
-DetailDrawer is the primary pattern for **“stay-on-page” rich detail** in the KFM web client.
+### Pipeline position
+
+~~~mermaid
+flowchart TD
+  A["User interaction<br/>Map · Timeline · Search"] --> B["DetailDrawer opens"]
+  B --> C["Fetch detail payload<br/>API + Catalogs"]
+  C --> D["Apply governance gating<br/>CARE · Sovereignty · Redaction"]
+  D --> E["Render sections<br/>Narrative · Metadata · Provenance · Actions"]
+  E --> F["Emit privacy-safe telemetry<br/>Schema validated"]
+~~~
+
+### Redaction modes
+
+DetailDrawer MUST support clear, user-comprehensible redaction outcomes:
+- **Clear**: data is safe to display at full precision
+- **Generalized**: time and space are reduced in precision (for example, grid-based masking)
+- **Masked**: sensitive fields are hidden but the record remains discoverable
+- **Restricted**: only a high-level summary and governance notice are shown
+
+In all modes, the UI must explain **what changed** and **why**.
 
 ---
 
 ## 🗂️ Directory Structure
 
-Emoji-enhanced v11 layout:
+The component suite lives in:
 
 ~~~text
-web/src/components/DetailDrawer/
-│
-├── 📂 DetailDrawer.tsx              # Main drawer container (layout, ARIA, focus management)
-├── 🏷️ DrawerHeader.tsx             # Title, entity type, CARE label, close button, provenance chip
-├── 📄 DrawerSection.tsx            # Reusable styled section block (semantic <section>)
-├── 📊 DrawerMetadata.tsx           # Metadata list + masking/redaction indicators
-├── 🧬 DrawerProvenance.tsx         # Full PROV-O lineage panel + JSON-LD export
-├── ⚠️ DrawerCAREBlock.tsx          # CARE/sovereignty/cultural warnings + explanation
-├── 🧭 DrawerFooter.tsx             # Actions, links, dataset tools, Focus Mode launch
-└── ♿ DrawerA11yHelpers.tsx        # Screen-reader descriptions, keyboard scaffolding, announcements
+📁 web/src/components/DetailDrawer/
+├── 📄 README.md                         # This document
+├── 📄 DetailDrawer.tsx                  # Drawer container, lifecycle, focus management
+├── 📄 DrawerHeader.tsx                  # Title, type label, close control, governance chips
+├── 📄 DrawerSection.tsx                 # Section scaffold and consistent semantics
+├── 📄 DrawerMetadata.tsx                # Metadata rendering with masking indicators
+├── 📄 DrawerProvenance.tsx              # Provenance rendering and export affordances
+├── 📄 DrawerCAREBlock.tsx               # CARE and sovereignty notices and explanations
+├── 📄 DrawerFooter.tsx                  # Action row and deep links (governance-aware)
+└── 📄 DrawerA11yHelpers.tsx             # Shared accessibility helpers and announcements
 ~~~
 
-Any new subcomponent MUST be added here and documented in “Component Responsibilities”.
+If the directory contents differ from this list, update this README to match the folder.
+CI linting and human review treat this README as a contract surface for the component suite.
 
 ---
 
 ## 🧩 Component Responsibilities
 
-### 📂 DetailDrawer.tsx
+This section is written at the **contract level**: it defines what each part of the suite MUST do,
+independent of state-management library choices or styling frameworks.
 
-**Role:**  
-Primary container that controls open/close lifecycle, layout, and overall governance behavior.
+### DetailDrawer container
 
-**Responsibilities:**
+Responsibilities:
+- Provide a stable open/close lifecycle (controlled, deterministic, testable)
+- Render as a semantic overlay:
+  - `role="dialog"` and `aria-modal="true"` when it behaves as a modal
+  - `role="complementary"` when it behaves as a non-modal side panel
+- Trap focus while open and restore focus on close
+- Respect user motion preferences (reduced motion)
+- Avoid layout shift when opening and closing (no surprise page reflow)
 
-- Render slide-out drawer with:
-  - Reduced-motion aware transitions  
-  - Proper ARIA roles (`role="dialog"` / `aria-modal="true"` or `role="complementary"`)  
-- Focus management:
-  - Trap focus while open  
-  - Return focus to invoking element on close  
-- Integrate governance contexts:
-  - `GovernanceContext`  
-  - `CAREContext`  
-  - `A11yContext`  
-- Respect `redaction_required` and `indigenous_rights_flag`:
-  - Block or generalize content when appropriate  
-  - Ensure CAREBlock is shown before any sensitive content  
+Data boundary rules:
+- DetailDrawer MUST consume entity details via the Web data access layer (API + catalogs)
+- It MUST NOT embed direct knowledge-graph queries in the frontend
 
-**Telemetry:**
+Error and loading states:
+- Provide a governed loading state (no partial sensitive content during load)
+- Provide a not-found state that does not leak internal IDs or access policy
 
-- `"drawer:open"` — drawer opens  
-- `"drawer:close"` — drawer closes  
-- `"drawer:section-expand"` — collapsible section expanded/collapsed  
+### DrawerHeader
 
----
+Responsibilities:
+- Present entity title and entity type
+- Provide a close control with keyboard and screen-reader support
+- Surface high-signal governance chips early:
+  - CARE label and any redaction indicators
+  - provenance freshness indicator when available
 
-### 🏷️ DrawerHeader.tsx
+Minimum A11y:
+- The title MUST be wired to `aria-labelledby` for the dialog
+- The close control MUST have a visible label or an accessible name
 
-**Role:**  
-Topmost header area for the drawer.
+### DrawerSection
 
-**Displays:**
+Responsibilities:
+- Provide consistent section structure using semantic elements:
+  - `<section>` and a correctly ordered heading element
+- Support collapsible sections when needed without breaking heading order
+- Keep content rendering deterministic:
+  - stable keys for lists
+  - no random IDs in the markup
 
-- Entity title (dataset, Story Node, event, etc.)  
-- Entity type label (e.g., “Dataset”, “Story Node”, “Event”)  
-- CARE badge (classification)  
-- Provenance chip (source + last-updated summary)  
-- Close button (with keyboard + SR support)
+### DrawerMetadata
 
-**Accessibility:**
+Responsibilities:
+- Render metadata that helps users understand:
+  - what the entity is
+  - where it came from
+  - how it may be used (license, rights, attribution)
+- Display masking and generalization explicitly:
+  - do not show exact coordinates when redaction is required
+  - do not show more temporal precision than the governance flags allow
 
-- Uses `<header>` within the drawer context  
-- Exposes accessible name for the dialog via `aria-labelledby`  
-- Close button must be reachable by keyboard and labeled (e.g., `"Close detail drawer"`)
+Security requirements:
+- Never render untrusted HTML
+- Treat all text as data unless explicitly sanitized by a governed sanitizer
 
----
+### DrawerProvenance
 
-### 📄 DrawerSection.tsx
+Responsibilities:
+- Render provenance and lineage as recorded:
+  - do not invent missing links or “fill gaps”
+- Provide an export affordance for inspection:
+  - JSON-LD when available
+  - links to manifest and SBOM references when present
 
-**Role:**  
-Reusable component for drawer content sections.
+Expected content:
+- producer or source references
+- transformation steps and validators
+- release artifact references (manifest, SBOM) where applicable
 
-**Responsibilities:**
+### DrawerCAREBlock
 
-- Render a semantic `<section>` with:
-  - Section heading (`<h2>` / `<h3>` depending on hierarchy)  
-  - Optional descriptive text  
-- Maintain proper heading order within the drawer  
-- Never inject speculative, unverified text  
-- Serve as the container for DataCards, metadata blocks, Story Node excerpts, etc.
+Responsibilities:
+- Render early and prominently when:
+  - indigenous rights are flagged
+  - redaction is required
+  - CARE classification is above baseline public safety
+- Explain why values are masked or generalized
+- Provide a user-facing explanation that is:
+  - non-technical
+  - non-accusatory
+  - consistent with FAIR+CARE governance language
 
----
+### DrawerFooter
 
-### 📊 DrawerMetadata.tsx
+Responsibilities:
+- Present actions and deep links that remain within governance boundaries
+- Disable or hide actions that could violate policy and provide an explanation
+- Avoid dark patterns:
+  - do not “nudge” users toward restricted actions
+  - do not present blocked actions as errors when they are policy outcomes
 
-**Role:**  
-Metadata-focused section for the drawer.
+### DrawerA11yHelpers
 
-**Displays (when available and allowed):**
-
-- Rights-holder  
-- License (SPDX)  
-- Source archive / system  
-- Dataset type & size  
-- Temporal extent (with precision and generalization)  
-- Spatial extent (generalized when required)  
-
-**Governance:**
-
-- Fields subject to masking or redaction must:
-  - Show a redaction indicator (icon + tooltip / SR text)  
-  - Avoid showing raw values (e.g., exact coordinates for sacred sites)  
-- AI-generated metadata MUST be labeled as such and linked to provenance when present.
-
----
-
-### 🧬 DrawerProvenance.tsx
-
-**Role:**  
-Full provenance and lineage view.
-
-**Responsibilities:**
-
-- Render PROV-O lineage:
-  - producers, activities, transformations, agents  
-- Present supply-chain artifacts:
-  - SBOM reference  
-  - manifest reference  
-- Provide a **JSON-LD / provenance export** link for inspection  
-- Never invent or complete missing lineage—only show factual, recorded links  
-
-**Telemetry:**
-
-- `"drawer:provenance-open"` — fired when provenance panel becomes visible  
-
----
-
-### ⚠️ DrawerCAREBlock.tsx
-
-**Role:**  
-Dedicated block for CARE + sovereignty warnings and explanations.
-
-**Responsibilities:**
-
-- Surface:
-  - Sovereignty warnings  
-  - Cultural sensitivity disclaimers  
-  - Explanation of H3 generalization and masking behavior  
-  - CARE classification details  
-- MUST be rendered **before any potentially sensitive content** in the drawer  
-- Provide clear user understanding of why some data is hidden or generalized  
-
----
-
-### 🧭 DrawerFooter.tsx
-
-**Role:**  
-Bottom action bar for the drawer.
-
-**Common actions:**
-
-- Open detailed dataset view  
-- Open in MapView  
-- Launch Focus Mode on the entity  
-- Download metadata / JSON-LD  
-- Open external documentation (if allowed)
-
-**Governance:**
-
-- Actions that would violate CARE or sovereignty rules:
-  - MUST be disabled or hidden  
-  - MUST include explanatory tooltip or SR-only text  
-
-**Telemetry:**
-
-- `"drawer:action"` — logged with action type (e.g., `"open-focus"`, `"open-map"`)  
-
----
-
-### ♿ DrawerA11yHelpers.tsx
-
-**Role:**  
-Shared A11y utilities used by all drawer components.
-
-**Provides:**
-
-- ARIA roles, labels, and descriptions  
-- Focus management utilities  
-- Live-region announcements for open/close events  
-- Hooks for `prefers-reduced-motion` and other user preferences  
-
-**Requirement:**  
-All new behavior in DetailDrawer suite MUST use these helpers, not ad-hoc ARIA logic.
+Responsibilities:
+- Centralize focus-management helpers, live-region announcements, and keyboard patterns
+- Provide reusable helpers so the suite does not drift into inconsistent ARIA patterns
+- Provide a single place to align with WCAG updates and project-wide A11y conventions
 
 ---
 
 ## 🔐 Governance & FAIR+CARE Integration
 
-The DetailDrawer Suite is a **governance-critical** UI surface. It MUST:
+DetailDrawer is a governance-critical UI surface. It MUST implement defense-in-depth:
+- The API layer should already enforce redaction and access policy
+- The UI MUST still apply governance rules to prevent accidental leakage through rendering, copying,
+  telemetry, or edge-case formatting
 
-- Honor:
-  - `classification`  
-  - `care_label`  
-  - `indigenous_rights_flag`  
-  - `redaction_required`  
-- Present CARE and sovereignty state clearly and early in the drawer  
-- Mask / generalize:
-  - Spatial data  
-  - Temporal precision  
-  - Sensitive metadata fields  
-- Indicate:
-  - When content is masked  
-  - When metadata is incomplete or unknown  
-- Never:
-  - Invent historical claims  
-  - Speculate about tribal intentions, lineage, or sacredness  
-  - De-anonymize entities or individuals  
+Required governance behaviors:
+- Always show CARE label and redaction status before sensitive fields
+- When redaction is required:
+  - do not show raw coordinates
+  - do not show precise temporal stamps if precision is restricted
+  - do not show raw excerpts that include private information without review
+- Provide clear notices that distinguish:
+  - missing data
+  - redacted data
+  - restricted data
 
-Governance test failures must block merges in CI.
+AI and narrative constraints:
+- Any AI-assisted content displayed in the drawer MUST be traceable to governed sources
+- The drawer MUST label AI-derived text as AI-derived and link to provenance when provided
+- The drawer MUST refuse to display speculative additions or unverified historical claims
 
 ---
 
-## ♿ Accessibility Requirements (WCAG 2.1 AA+)
+## ♿ Accessibility Requirements
 
-DetailDrawer v11.2.2 MUST:
+DetailDrawer MUST meet WCAG 2.1 AA+ expectations and remain operable by keyboard and assistive
+technology across supported browsers.
 
-- Use semantic HTML structure:
-  - `<aside>` or `<section>` for container  
-  - `<header>` & `<footer>` per drawer  
-- Provide:
-  - ARIA roles (`role="dialog"`/`"complementary"`)  
-  - `aria-modal` when appropriate  
-  - `aria-labelledby` linking to the title  
-- Maintain proper heading order and labelling  
-- Allow keyboard-only control:
-  - Open, close, navigate sections  
-- Respect `prefers-reduced-motion` with:
-  - simplified or disabled transitions when requested  
-- Avoid color-only semantics:
-  - icons/text used alongside color differences  
+Minimum requirements:
+- Keyboard support:
+  - open, close, and navigate without a mouse
+  - `Escape` closes when modal behavior is in use
+- Focus management:
+  - focus is trapped within the drawer when modal
+  - focus returns to the invoking element on close
+- Screen reader support:
+  - dialog name and description are announced
+  - redaction notices are announced when present
+- Motion and animation:
+  - transitions respect reduced-motion preferences
+- Visual clarity:
+  - information is not conveyed by color alone
+  - zoom and text scaling do not break layout
 
-Any A11y regression is a **hard CI failure**.
+Recommended automated checks:
+- Lighthouse CI accessibility checks as part of the web validation pipeline
+- A11y regression tests for focus trap, keyboard order, and dialog labelling
 
 ---
 
 ## 📈 Telemetry Responsibilities
 
-Telemetry is required for reliability, behavior analysis, and governance monitoring.
+DetailDrawer emits telemetry to support reliability, governance auditing, and UX evaluation.
 
-Events include:
+Telemetry MUST be:
+- schema-validated against `telemetry_schema`
+- privacy-safe: no secrets, no PII, and no exact sensitive coordinates
+- governance-aware: include redaction and CARE status as non-sensitive flags
 
-- `"drawer:open"`  
-- `"drawer:close"`  
-- `"drawer:section-expand"`  
-- `"drawer:provenance-open"`  
-- `"drawer:care-warning"`  
-- `"drawer:action"`  
+### Required event families
 
-**Constraints:**
+- `drawer:open`
+- `drawer:close`
+- `drawer:section-toggle`
+- `drawer:provenance-view`
+- `drawer:care-notice`
+- `drawer:action`
 
-- No PII or detailed user behavior trails  
-- Event payloads MUST follow `telemetry_schema`  
-- Must be linked to component version and environment  
+### Minimum event shape
+
+~~~json
+{
+  "event_name": "drawer:open",
+  "ts": "2025-12-16T00:00:00Z",
+  "component": "DetailDrawer",
+  "component_version": "v11.2.2",
+  "entity_type": "dataset",
+  "entity_id": "kfm:dataset:example-id",
+  "care_label": "Public / Medium",
+  "redaction_applied": true,
+  "result": "ok"
+}
+~~~
+
+Telemetry must not include:
+- free-form user input
+- raw excerpts from restricted sources
+- user identifiers or stable cross-session tracking identifiers
 
 ---
 
 ## 🧪 Testing Requirements
 
-Tests MUST cover:
+Testing must demonstrate that DetailDrawer is:
+- correct under normal content
+- safe under sensitive content
+- accessible under keyboard and assistive technology use
+- stable under large metadata payloads
 
-- **Unit**:
-  - Each subcomponent renders with expected props  
-  - Governance behavior (masking, redaction) per props  
-- **Integration**:
-  - Drawer with Story Nodes  
-  - Drawer with STAC/DCAT datasets  
-  - Drawer in Focus Mode contexts  
-- **Accessibility**:
-  - Keyboard tab/shift-tab coverage  
-  - Focus trap works correctly  
-  - ARIA attributes and roles  
-- **Governance**:
-  - Sensitive datasets → masked fields, warnings shown  
-  - Sovereignty flags → coordinates generalization  
-- **Telemetry**:
-  - All required events emitted with correct shape  
+Required test coverage:
+- Governance:
+  - sensitive entities show CAREBlock before detail fields
+  - redacted fields do not render at full precision
+- Accessibility:
+  - correct roles, labels, and focus behavior
+  - keyboard-only navigation for all interactive elements
+- Telemetry:
+  - events emit on open, close, and actions
+  - event payloads validate against the telemetry schema
+- Integration:
+  - map-click or timeline selection opens the drawer with correct entity context
+  - Story Node and Focus Mode contexts render without speculative content
 
-Test locations:
-
-~~~text
-tests/unit/web/components/DetailDrawer/**
-tests/integration/web/components/DetailDrawer/**
-~~~
+If the web test stack includes browser-driven integration tests, include a scenario that:
+- loads a map view
+- selects a known entity
+- validates that the drawer opens, announces its title, and applies redaction indicators correctly
 
 ---
 
 ## 🕰 Version History
 
-| Version | Date       | Summary                                             |
-|--------:|------------|-----------------------------------------------------|
-| v11.2.2 | 2025-11-30 | Upgraded to v11.2.2 standards; governance + A11y v11 |
-| v10.4.0 | 2025-11-15 | Full drawer documentation with governance/A11y      |
-| v10.3.2 | 2025-11-14 | Added CARE/provenance improvements                  |
-| v10.3.1 | 2025-11-13 | Initial DetailDrawer overview                       |
+| Version | Date       | Summary |
+|--------:|------------|---------|
+| v11.2.2 | 2025-12-16 | Documentation refresh: corrected relative references; aligned to KFM-MDP v11.2.6; clarified API-only data boundaries, redaction modes, telemetry privacy rules, and A11y expectations. |
+| v10.4.0 | 2025-11-15 | Full drawer documentation with governance and accessibility foundations. |
+| v10.3.2 | 2025-11-14 | Added CARE and provenance improvements. |
 
 ---
 
@@ -447,14 +433,15 @@ tests/integration/web/components/DetailDrawer/**
 
 <div align="center">
 
-**📚 Governance Links**  
-[Docs Root](../../../../../README.md) •  
-[Standards Index](../../../../../docs/standards/INDEX.md) •  
-[Governance Charter](../../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+**Governance links**
+[Docs Root](../../../../README.md) •
+[Standards Index](../../../../docs/standards/INDEX.md) •
+[Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md) •
+[Web Architecture](../../../../web/ARCHITECTURE.md)
 
-**🔐 Compliance:**  
-FAIR+CARE · CIDOC-CRM · OWL-Time · STAC/DCAT · PROV-O · WCAG 2.1 AA+ · SLSA Level 3
+**Compliance**
+FAIR+CARE · CIDOC-CRM · OWL-Time · STAC/DCAT · PROV-O · WCAG 2.1 AA+ · SLSA-aligned provenance
 
-**End of Document**
+**End of document**
 
 </div>
