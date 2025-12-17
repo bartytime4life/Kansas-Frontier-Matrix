@@ -253,8 +253,8 @@ sequenceDiagram
 - When a dataset is updated, ensure older versions remain traceable (via provenance and/or catalog links).
 
 ---
-**
-###Footer refs
+
+## Footer
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
