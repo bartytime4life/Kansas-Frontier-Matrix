@@ -439,3 +439,10 @@ sequenceDiagram
 | Date | Version | Change |
 |---|---|---|
 | 2025-12-17 | v1.0.0-draft | Initial governed draft for accessibility tokens |
+
+
+---
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
