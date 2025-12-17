@@ -229,3 +229,19 @@ sequenceDiagram
 ### Versioning
 - Update `version` and `last_updated` when this navigation changes.
 - For contract-impacting edits elsewhere, use the API Contract Extension template and track backward compatibility explicitly.
+
+---
+
+## 🧾 Version History
+
+| Version | Date | Status | Summary | Commit |
+|---|---|---|---|---|
+| v1.0.0 | 2025-12-17 | draft | Initial `docs/` navigation hub scaffold (templates, pipeline map, governance pointers). | `<latest-commit-hash>` |
+
+---
+
+## 🔗 Footer
+
+- ⬅️ **Back to Index:** [`../README.md`](../README.md)
+- 🧱 **Data Architecture:** [`MASTER_GUIDE_v12.md`](MASTER_GUIDE_v12.md)
+- 🛡️ **Governance Charter:** [`governance/ROOT_GOVERNANCE.md`](governance/ROOT_GOVERNANCE.md)
