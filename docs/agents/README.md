@@ -1,4 +1,4 @@
- ---
+---
 title: "Agents — Documentation & Governance"
 path: "docs/agents/README.md"
 version: "v1.0.0"
