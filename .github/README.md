@@ -139,11 +139,11 @@ Changes under `.github/` are high-impact because they affect contributor experie
 
 ~~~mermaid
 flowchart LR
-  A[Contributor Branch] --> B[Pull Request]
-  B --> C[CI Status Checks<br/>(lint/tests/schema/contract/security)]
-  C -->|pass| D[Merge to default branch]
-  C -->|fail| E[Fix + re-run]
-  D --> F[Optional CD<br/>(docs/site release, catalog publish, tagged release)]
+  A["Contributor Branch"] --> B["Pull Request"]
+  B --> C["CI Status Checks<br/>(lint · tests · schema · contract · security)"]
+  C -->|pass| D["Merge to default branch"]
+  C -->|fail| E["Fix + re-run"]
+  D --> F["Optional CD<br/>(docs site release · catalog publish · tagged release)"]
 ~~~
 
 ## 📦 Data & Metadata
