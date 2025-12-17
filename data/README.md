@@ -1,351 +1,239 @@
 ---
-title: "📦 Kansas Frontier Matrix — Data Directory Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Data Directory — README"
 path: "data/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-17"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-version: "v11.2.4"
-last_updated: "2025-12-14"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-doc_uuid: "urn:kfm:doc:data-readme:v11.2.4"
-semantic_document_id: "kfm-doc-data-root"
-event_source_id: "ledger:data/README.md"
-immutability_status: "version-pinned"
-
-sbom_ref: "../releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "../releases/v11.2.4/manifest.zip"
-telemetry_ref: "../releases/v11.2.4/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/data-directory-v11.2.4.json"
-energy_schema: "../schemas/telemetry/energy-v2.json"
-carbon_schema: "../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Overview"
-intent: "data-directory"
-role: "repository-data-overview"
-category: "Data · Metadata · FAIR+CARE"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-sensitivity: "Mixed"
-sensitivity_level: "Variable"
-risk_category: "Low to Medium"
-indigenous_rights_flag: true
-redaction_required: false
+doc_uuid: "urn:kfm:doc:data:readme:v1.0.0"
+semantic_document_id: "kfm-data-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-machine_extractable: true
-classification: "Public Document"
-jurisdiction: "United States / Kansas"
-accessibility_compliance: "WCAG 2.1 AA"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-badge_profiles:
-  - "root-centered-badge-row"
-requires_purpose_block: true
-requires_directory_layout_section: true
-requires_version_history: true
-requires_governance_links_in_footer: true
-
-metadata_profiles:
-  - "STAC 1.0.0"
-  - "DCAT 3.0"
-  - "PROV-O"
-  - "FAIR+CARE"
-
-prov_profile: "PROV-O Plan + KFM Data Lineage Profile"
-openlineage_profile: "OpenLineage v2.5 · Data & ETL pipeline events"
-
-provenance_chain:
-  - "data/README.md@v11.2.4"
-  - "data/README.md@v11.2.3"
-  - "data/README.md@v11.2.2"
-  - "data/README.md@v11.0.1"
-  - "data/README.md@v11.0.0"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "metadata-extraction"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "unverified-historical-claims"
-  - "governance-override"
-  - "hallucinated-datasets"
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📦 **Kansas Frontier Matrix — Data Directory Overview v11.2.4**  
-`data/README.md`
-
-**Purpose**  
-Define the **canonical structure, lifecycle, and governance** of all datasets in the Kansas Frontier Matrix (KFM)—from raw external sources to fully validated, cataloged, graph‑integrated, and Story‑Node‑ready products. This document ties the data layout to **STAC/DCAT discovery, PROV‑O lineage, deterministic pipelines, and KFM‑MDP v11.2.6**.
-
-<a href="../docs/standards/kfm_markdown_protocol_v11.2.6.md"><img src="https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.6-blue" /></a>
-<a href="../docs/standards/faircare/FAIRCARE-GUIDE.md"><img src="https://img.shields.io/badge/Data-FAIR%2BCARE-gold" /></a>
-<img src="https://img.shields.io/badge/Metadata-STAC_1.0.0_%7C_DCAT_3.0-informational" />
-<img src="https://img.shields.io/badge/Lineage-PROV%E2%80%93O_%7C_OpenLineage-success" />
-<a href="../LICENSE"><img src="https://img.shields.io/badge/License-CC--BY_4.0-green" /></a>
-
-</div>
-
----
+# KFM Data Directory — README
 
 ## 📘 Overview
 
-The `data/` directory is the **root of the KFM data plane**, organized **by domain and stage**:
+### Purpose
+- Define what belongs in `data/` and how it moves through the canonical KFM data lifecycle:
+  `data/raw → data/work → data/processed` and into catalog outputs under `data/stac/`.
+- Provide a single, governed place to describe **where** data artifacts live, **what quality gates apply**, and **how provenance + sensitivity are handled** before data is treated as “publishable / certified”.
 
-- Stage directories define the governed lifecycle: `raw/ → work/ → processed/`.
-- Domain directories (e.g., `air-quality/`, `hydrology/`, `surficial-geology/`) hold domain context (docs, configs, mappings) and point into the stage directories and catalogs.
-- `stac/` provides the canonical STAC catalog root for discovery and spatiotemporal search.
-- Integrity, governance, and audit artifacts live alongside the data (`checksums/`, `reports/`, `archive/`, `updates/`).
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Folder conventions and staging rules for `data/` | Implementation details of ETL jobs (see `src/pipelines/`) |
+| Expectations for dataset-level README/schema docs | Graph ontology/modeling rules (see `docs/graph/`) |
+| Provenance and catalog output placement (STAC/DCAT/PROV) | API/UI behavior (see `src/server/`, `web/`) |
+| Sensitivity / redaction expectations for data artifacts | Governance policy authoring (see `docs/governance/`) |
 
-Start here for deeper context and operational detail:
+### Audience
+- Primary: Data + pipeline contributors maintaining ingestion and transforms
+- Secondary: Reviewers (governance/security), historians/editors validating source traceability, UI/API developers consuming cataloged products
 
-- `data/ARCHITECTURE.md`
-- `../docs/pipelines/`
-- `../tools/validation/`
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **raw**: Landed source materials as received (or as close as feasible)
+  - **work**: Intermediate artifacts created during cleaning/normalization
+  - **processed**: Certified, “publishable” artifacts intended for downstream use (catalog + graph ingestion)
+  - **catalogs**: Machine-readable metadata products (STAC/DCAT/PROV) used for discovery + lineage
 
----
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Canonical pipeline ordering | `docs/MASTER_GUIDE_v12.md` | KFM Maintainers | “ETL → catalogs → graph → APIs → UI → story” |
+| Data staging rules (summary) | `data/README.md` | Data/Pipeline Maintainers (TBD) | This document |
+| Data domains and stage folders | `data/raw/`, `data/work/`, `data/processed/` | Data/Pipeline Maintainers (TBD) | Source → intermediate → certified |
+| Catalog outputs | `data/stac/` | Data/Pipeline Maintainers (TBD) | STAC/DCAT/PROV outputs (plus mappings in `docs/data/`) |
+| Pipeline implementation | `src/pipelines/` | Engineering | ETL + transforms + catalog build |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Directory tree reflects current `data/` layout (no invented paths)
+- [ ] Staging semantics are explicit (what belongs in raw/work/processed)
+- [ ] Validation steps listed and repeatable (even if “TBD: see pipeline docs”)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
-Canonical, emoji‑rich layout for `data/` (KFM‑MDP `immediate-one-branch-with-descriptions-and-emojis` profile).
+### This document
+- `path`: `data/README.md` (must match front-matter)
 
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed/stac outputs |
+| Raw inputs | `data/raw/` | Landed inputs (or references/pointers if large) |
+| Working / staging | `data/work/` | Intermediate artifacts + normalization outputs |
+| Certified outputs | `data/processed/` | Curated, downstream-ready data products |
+| Catalog products | `data/stac/` | STAC/DCAT/PROV outputs used for discovery + lineage |
+| Catalog mappings | `docs/data/` | Mapping docs / profiles that explain catalog fields |
+| ETL + builds | `src/pipelines/` | Deterministic transforms and catalog generation |
+| Schemas | `schemas/` | JSON schemas / validation contracts (where applicable) |
+| Runs / experiments | `mcp/` | Experiment logs, model cards, SOPs (not data storage) |
+
+### Expected file tree for this sub-area
 ~~~text
-📁 data/
-├── 📄 README.md                      # This file (data plane overview, governance, contributor rules)
-├── 📄 ARCHITECTURE.md                # Data-plane architecture notes (domain ↔ stage ↔ catalogs)
-│
-├── 📁 air-quality/                   # Domain package: air quality (metadata, configs, notes)
-├── 📁 hydrology/                     # Domain package: hydrology (metadata, configs, notes)
-├── 📁 surficial-geology/             # Domain package: surficial geology (metadata, configs, notes)
-│
-├── 📁 raw/                           # Immutable ingests (as-received or lossless re-encodes)
-├── 📁 work/                          # Pipeline workspace (intermediates; reproducibility-aware)
-├── 📁 processed/                     # Deterministic ETL outputs (analysis-ready)
-│
-├── 📁 stac/                          # STAC catalog root (Collections/Items referencing processed assets)
-├── 📁 checksums/                     # Integrity digests (e.g., SHA-256 for key artifacts)
-├── 📁 reports/                       # Validation, audit, and telemetry outputs
-├── 📁 updates/                       # Incremental update payloads (deltas / hotfix inputs)
-└── 📁 archive/                       # Retired datasets and snapshots (cold storage)
+data/
+├── 📄 README.md
+├── 📁 raw/
+│   └── 📁 <domain>/
+│       └── 📄 <source artifacts…>
+├── 📁 work/
+│   └── 📁 <domain>/
+│       └── 📄 <intermediate artifacts…>
+├── 📁 processed/
+│   └── 📁 <domain>/
+│       ├── 📄 README.md
+│       └── 📄 <certified artifacts…>
+└── 📁 stac/
+    └── 📄 <catalog outputs…>
 ~~~
-
-**Normative rules (data/ level):**
-
-- Every documented directory under `data/` MUST contain its own `README.md` stating:
-  - Purpose and scope,
-  - Data steward / ownership,
-  - Sensitivity and governance constraints,
-  - Primary assets and expected schemas.
-- Production‑grade datasets MUST be discoverable via catalog metadata:
-  - STAC artifacts live under `data/stac/`,
-  - DCAT records and data contracts live under `docs/data/`,
-  - Provenance must be queryable (PROV‑O/OpenLineage references in metadata and/or run logs).
-
----
 
 ## 🧭 Context
 
-`data/` lands in the KFM pipeline as the **data plane** feeding the rest of the stack:
+### Background
+KFM treats data as a governed product. Data artifacts move through explicit stages so that:
+- raw inputs remain auditable,
+- intermediate work can be reproduced or discarded safely,
+- processed outputs are stable inputs into catalog generation and graph ingestion.
 
-> Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j graph → API → Frontend map/timeline → Story Nodes → Focus Mode
+Large data artifacts may be tracked outside Git using DVC (pointers + checksums in-repo) while keeping code + metadata version-synchronized. (If DVC is enabled in this repository, contributors should follow the project’s DVC conventions and remotes.)
 
-Key boundary rule: the frontend does **not** read `data/**` directly; it consumes APIs and catalog products.
+### Assumptions
+- Each dataset belongs to a **domain** (folder name conventions are project-specific).
+- Anything in `data/processed/` is assumed **safe enough** and **validated enough** to drive cataloging and downstream consumption (graph/API/UI) without ad-hoc fixes.
 
----
+### Constraints / invariants
+- Canonical pipeline ordering is preserved: ETL → STAC/DCAT/PROV catalogs → Graph → APIs → UI → Story Nodes → Focus Mode.
+- Promotion to `data/processed/` happens only after validation gates (schema/quality/provenance/sensitivity) are satisfied.
+- If sensitivity is involved (e.g., culturally sensitive site locations), data must be generalized/redacted prior to public outputs.
+
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| What are the canonical domain folder names under `data/*/`? | TBD | TBD |
+| Where is the authoritative dataset registry/changelog maintained (STAC only, or additional log)? | TBD | TBD |
+| Are large binaries tracked via DVC in this repo (and where is the DVC remote documented)? | TBD | TBD |
+| What is the retention policy for `data/work/` intermediates? | TBD | TBD |
+
+### Future extensions
+- Add a new data domain:
+  - create parallel `raw/work/processed` subfolders,
+  - add dataset-level `README.md` describing sources and transforms,
+  - ensure catalog outputs exist in `data/stac/` with provenance.
+- Add/standardize dataset schemas under `schemas/` for stronger CI validation.
 
 ## 🗺️ Diagrams
 
+### System / dataflow diagram
 ~~~mermaid
-flowchart TD
-  D["📁 <domain>/\nDomain context (docs, configs, mappings)"]
-  R["📁 raw/\nImmutable ingests"]
-  W["📁 work/\nCleaning · normalization · enrichment"]
-  P["📁 processed/\nDeterministic ETL outputs"]
-  S["📁 stac/\nSTAC Items & Collections"]
-  C["📁 docs/data/\nDCAT records + data contracts"]
-  K["📁 checksums/\nIntegrity digests"]
-  T["📁 reports/\nValidation · audit · telemetry"]
-  U["📁 updates/\nIncremental deltas"]
+flowchart LR
+  subgraph DATA[data/]
+    R[data/raw] --> W[data/work] --> P[data/processed]
+  end
 
-  D --> R
-  R --> W
-  W --> P
-  U --> W
-
-  P --> S
-  P --> C
-
-  S --> K
-  C --> K
-
-  K --> T
+  P --> C[data/stac (STAC/DCAT/PROV)]
+  C --> G[Neo4j graph]
+  G --> A[APIs]
+  A --> U[Web UI]
+  U --> S[Story Nodes]
+  S --> F[Focus Mode]
 ~~~
 
----
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant Contributor
+  participant Pipeline as ETL/Pipeline
+  participant Catalog as STAC/DCAT/PROV
+  Contributor->>Pipeline: Add/refresh raw sources in data/raw/<domain>/
+  Pipeline->>Pipeline: Normalize + stage intermediates in data/work/<domain>/
+  Pipeline->>Pipeline: Validate + certify outputs in data/processed/<domain>/
+  Pipeline->>Catalog: Emit/refresh catalog entries in data/stac/
+~~~
 
 ## 📦 Data & Metadata
 
-### Lifecycle expectations
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Source datasets | mixed (CSV/GeoJSON/GeoTIFF/etc.) | External authoritative sources | Checksums; format sanity; schema checks (where defined) |
+| Source documents | mixed (PDF/text/images) | Archives/collections | Metadata completeness; provenance references |
+| Geometries | GeoJSON/WKT/etc. | Derived from source or authoritative geodata | Geometry validity checks; CRS checks |
 
-- **Raw (`data/raw/`)**  
-  Immutable source materials. If assets are large, they may be tracked with large-file tooling (e.g., Git LFS and/or DVC), but the governing rule is: *raw must be reproducible and provenance-addressable.*
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Raw landed artifacts | mixed | `data/raw/<domain>/` | Source inventory + checksums (as applicable) |
+| Intermediate transforms | mixed | `data/work/<domain>/` | Repeatable transforms (pipeline-defined) |
+| Certified datasets | mixed | `data/processed/<domain>/` | Domain schema/README required |
+| Catalog metadata | JSON (+ JSON-LD where applicable) | `data/stac/` (+ mappings in `docs/data/`) | KFM-STAC/KFM-DCAT/KFM-PROV profiles |
 
-- **Work (`data/work/`)**  
-  Intermediate artifacts used during ETL. If intermediates are required for reproducibility, they should be retained with clear notes; otherwise, pipelines should be able to regenerate them deterministically.
+### Sensitivity & redaction
+- Before promotion to `data/processed/`, pipelines and/or reviewers should:
+  - scan for sensitive information (PII, culturally sensitive locations),
+  - generalize/omit fields as required by governance,
+  - mark artifacts requiring restricted handling (if applicable).
 
-- **Processed (`data/processed/`)**  
-  Analysis-ready products. These are the default assets referenced by `data/stac/` and downstream services.
-
-- **Updates (`data/updates/`)**  
-  Incremental change payloads (corrections, deltas, late-arriving data). Updates must be provenance-linked and replayable through the same deterministic pipeline contract.
-
-- **Checksums (`data/checksums/`) and reports (`data/reports/`)**  
-  Integrity and governance artifacts: checksums for tamper-evidence; reports for validation, audits, and telemetry.
-
-### Contributor guidance
-
-When adding or modifying data:
-
-1. **Choose the right home**
-   - Domain-specific documentation/config: `data/<domain>/`
-   - Raw intake: `data/raw/`
-   - Pipeline intermediates: `data/work/`
-   - Final outputs: `data/processed/`
-   - Catalog updates: `data/stac/` (and `docs/data/` for DCAT/data contracts)
-2. **Record provenance and rights**
-   - Capture source, license/rights, retrieval date, processing parameters, and any redaction/generalization steps.
-3. **Keep outputs deterministic**
-   - Prefer config-driven, replayable pipelines (no manual edits to processed outputs).
-4. **Update catalogs**
-   - Ensure new/updated processed assets are represented in STAC and mirrored in DCAT-compatible records.
-5. **Document sensitivity**
-   - If cultural heritage / Indigenous / sensitive ecology is involved, apply governance rules before public exposure.
-
----
+### Quality signals
+- Define and enforce, per domain as needed:
+  - completeness checks (required fields present),
+  - range checks for numeric attributes,
+  - geometry validity (where spatial),
+  - provenance completeness (source + transformation references),
+  - deterministic output generation (no “untracked manual fixes”).
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-KFM uses complementary metadata layers:
+### STAC
+- `data/stac/` stores catalog outputs describing data products for discovery.
+- Processed artifacts should be represented as STAC Collections/Items with assets pointing to the data (or to external storage locations, if used).
+- Extensions may be used for domain metadata where needed (consistent with KFM-STAC profile).
 
-- **STAC (`data/stac/`)**  
-  Spatiotemporal discovery layer. STAC Items/Collections reference `data/processed/` assets (COGs, GeoParquet, GeoJSON, etc.) and expose temporal/spatial extents for filtering.
+### DCAT
+- DCAT dataset descriptors should be derivable from the same authoritative metadata used for STAC.
+- License + publisher/contact metadata should be explicit and consistent with governance rules.
 
-- **DCAT (`docs/data/`)**  
-  Publishing/discovery layer for catalog portals and compliance. DCAT records should mirror STAC identifiers and expose distributions, licenses, access constraints, and steward roles.
+### PROV-O
+- Provenance must link outputs back to inputs and processing activities:
+  - `prov:used`: which inputs were consumed
+  - `prov:wasGeneratedBy`: which activity produced the output
+  - `prov:wasDerivedFrom`: derivation relationships when applicable
+- Run/activity identifiers should be stable enough to support auditing.
 
-- **PROV‑O / OpenLineage (`mcp/runs/` and/or provenance assets)**  
-  Lineage layer. Every production dataset must be traceable to:
-  - input sources (Entities),
-  - the ETL run (Activity),
-  - and the producing agent (Agent).
-
-Rule of thumb: if a user can see a layer in the UI, they must be able to trace it back to STAC/DCAT and a provenance chain.
-
----
-
-## 🧱 Architecture
-
-This directory is intentionally designed so that:
-
-- **Pipelines** live in `src/pipelines/` and operate on `data/raw/ → data/work/ → data/processed/`.
-- **Catalogs** are first-class artifacts (STAC in `data/stac/`, DCAT + contracts in `docs/data/`).
-- **Graph ingestion** (Neo4j) and API layers consume processed assets and catalog metadata, not ad-hoc files.
-
-For architectural decisions and rationale, see `data/ARCHITECTURE.md` and `docs/architecture/`.
-
----
-
-## 🧪 Validation & CI/CD
-
-Data and metadata changes are gated by CI checks under `.github/workflows/` and reusable actions under `.github/actions/`.
-
-Expected validation themes include:
-
-- **Doc structure checks** (KFM‑MDP): front matter, heading registry, footer links, diagram fencing.
-- **Metadata checks**: STAC validation, DCAT shape/schema checks, identifier stability.
-- **Integrity checks**: checksum verification and manifest consistency (when producing a release packet).
-- **Security and privacy**: secret scanning and PII scanning.
-- **Governance**: FAIR+CARE labeling and sovereignty rules for sensitive datasets.
-
----
-
-## 🧠 Story Node & Focus Mode Integration
-
-Data products become narratively explorable when they can be bound to Story Nodes:
-
-- A Story Node must reference datasets and evidence via stable identifiers (STAC/DCAT IDs, graph URNs).
-- Narrative outputs must be evidence-led:
-  - Facts: sourced and traceable,
-  - Interpretation: clearly labeled as reasoning from facts,
-  - Speculation: explicitly marked hypothetical (and usually avoided in governed outputs).
-
-Focus Mode may summarize this document and associated dataset metadata, but must not invent datasets, provenance, or governance status.
-
----
-
-## ⚖ FAIR+CARE & Governance
-
-This repository operates under explicit governance constraints:
-
-- **FAIR**: datasets must be findable (cataloged), accessible (documented), interoperable (standard schemas/CRS/ontologies), and reusable (licensed + provenance).
-- **CARE**: authority, responsibility, and ethics must be explicit—especially for Indigenous and culturally sensitive content.
-- **Sovereignty**: if data touches Indigenous lands, knowledge, or heritage:
-  - consent and authority constraints apply,
-  - masking/generalization may be required,
-  - distribution and exposure rules must be enforced before publishing.
-
-Authoritative governance references:
-
-- `../docs/standards/governance/ROOT-GOVERNANCE.md`
-- `../docs/standards/faircare/FAIRCARE-GUIDE.md`
-- `../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`
-
----
-
-## 🕰️ Version History
-
-| Version  | Date       | Summary |
-|---------:|------------|---------|
-| v11.2.4  | 2025-12-14 | Updated directory layout to match current repo (domain packages + `updates/`); aligned headings and fences to KFM‑MDP v11.2.6; removed external/tool citations for commit-safe Markdown. |
-| v11.2.3  | 2025-12-09 | Aligned with KFM‑MDP v11.2.5; expanded directory layout; integrated STAC/DCAT/PROV and telemetry references. |
-| v11.2.2  | 2025-11-27 | Canonical directory layout; telemetry/schema paths wired; FAIR+CARE and checksum governance hardened. |
-| v11.0.1  | 2025-11-19 | Rewritten with v11 fence rules; GitHub-safe layout; aligned initial data architecture with v11 stack. |
-| v11.0.0  | 2025-11-19 | Initial v11 data directory documentation and lifecycle definition. |
-
----
-
-<div align="center">
-
-📦 **Kansas Frontier Matrix — Data Directory Overview v11.2.4**  
-Data‑First · FAIR+CARE‑Governed · Provenance‑Aware  
-
-© 2025 Kansas Frontier Matrix — CC‑BY 4.0  
-MCP‑DL v6.3 · KFM‑MDP v11.2.6 · KFM‑OP v11.0  
-
-[⬅ Back to Repository Root](../README.md) ·  
-[📚 Data & Catalog Standards](../docs/data/README.md) ·  
-[⚖ Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+### Versioning
+- Use STAC Versioning links and graph predecessor/successor relationships as applicable.
+- When a dataset is updated, ensure older versions remain traceable (via provenance and/or catalog links).
