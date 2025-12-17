@@ -1,10 +1,10 @@
 ---
-title: "Agents — Documentation & Governance"
+title: "KFM Agents — README"
 path: "docs/agents/README.md"
 version: "v1.0.0"
 last_updated: "2025-12-17"
 status: "draft"
-doc_kind: "Guide"
+doc_kind: "README"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -41,251 +41,265 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# Agents — Documentation & Governance
+# KFM Agents — README
 
 ## 📘 Overview
 
 ### Purpose
-- This README is the entry point for **agent specifications** in KFM.
-- It defines how agents are documented so their behavior is **auditable**, **repeatable**, and **reviewable**.
-- It standardizes what must be captured for each agent: role, stage alignment, allowed inputs, outputs, provenance expectations, safety constraints, and review gates.
+This directory (`docs/agents/`) contains **governed documentation** for AI/automation “agents” used in the Kansas Frontier Matrix (KFM) system: what they do, what they are allowed to do, what they consume/produce, and how their outputs remain provenance-linked and reviewable.
+
+This README defines the **minimum documentation contract** for any agent-related contribution (design, runbook, evaluation, or prompt asset).
 
 ### Scope
 | In Scope | Out of Scope |
 |---|---|
-| Agent role/spec documentation, prompt packages (if stored as docs), operational runbooks, evaluation notes/rubrics, safety/governance constraints, telemetry expectations | Implementing agent code, changing platform governance policy text, storing secrets/credentials, bypassing contracted APIs, publishing sensitive site coordinates |
+| Agent role/spec documentation (capabilities, constraints, I/O) | Implementing agent code (belongs under `src/`) |
+| Safety, redaction, and governance notes for agent outputs | Publishing new public-facing endpoints without an API contract doc |
+| Evaluation plans (benchmarks, regression tests, red-team notes) | Storing secrets, credentials, or sensitive location details in docs |
+| Runbooks for operating agents and reviewing outputs | Replacing human review where governance requires it |
 
 ### Audience
-- Contributors defining or updating agents
-- Reviewers (governance/security/editorial) validating agent outputs
-- Pipeline/API/UI maintainers integrating or consuming agent outputs
+- Primary: Contributors designing or implementing agent workflows (AI, data engineering, frontend, and platform).
+- Secondary: Maintainers/reviewers (governance, security, sovereignty/CARE, domain experts).
 
 ### Definitions (link to glossary)
 - Link: `docs/glossary.md`
-- Terms used here:
-  - **Agent**: a bounded automation component (LLM-based or rule-based) with defined inputs/outputs and constraints.
-  - **Agent Spec**: the governed document describing the agent’s contract and constraints.
-  - **Prompt Package**: versioned prompt text (and examples) used by an LLM-based agent.
-  - **Run**: a single execution producing outputs with provenance + telemetry.
-  - **Evidence Artifact**: structured output intended to support Story Nodes / Focus Mode.
+- Terms used in this doc: **agent**, **agent run**, **evidence artifact**, **specialist agent**, **coordinator/fusion agent**, **context bundle**, **Story Node**, **Focus Mode**, **redaction/generalization**.
 
 ### Key artifacts (what this doc points to)
-| Artifact | Path / Identifier | Notes |
-|---|---|---|
-| Master guide (pipeline invariants + extension matrix) | `docs/MASTER_GUIDE_v12.md` | Canonical pipeline ordering and “Extension Matrix” |
-| Universal doc template (default) | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Use for agent specs/runbooks/eval notes unless a narrower template applies |
-| Story Node template (narratives) | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Use only for Story Nodes / Focus Mode narrative artifacts |
-| API contract template (if agent adds/changes endpoints) | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | Required for REST/GraphQL contract changes |
-| AI governance reference (if present) | `docs/guides/ai/` | Model cards, governance + explainability expectations |
-| Telemetry docs + schemas | `docs/telemetry/` + `schemas/telemetry/` | Required run/audit signals |
-| Security docs | `.github/SECURITY.md` + `docs/security/` | Sensitive handling, logging, threat model practices |
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master Guide (system source of truth) | `docs/MASTER_GUIDE_v12.md` | Maintainers | Pipeline ordering + subsystem contracts |
+| Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Maintainers | Use for most agent docs |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Editorial/Governance | Required for narrative Story Nodes |
+| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API Maintainers | Required if an agent adds/changes an endpoint |
+| Governance root | `docs/governance/ROOT_GOVERNANCE.md` | Governance | Review triggers + authority |
+| Ethics | `docs/governance/ETHICS.md` | Governance | Narrative and model behavior constraints |
+| Sovereignty / CARE | `docs/governance/SOVEREIGNTY.md` | Governance | Restricted locations + community protections |
 
-### Definition of done (for this directory)
-- [ ] Every agent has a spec document (governed template, versioned)
-- [ ] Every agent spec states: stage alignment, allowed inputs, outputs, provenance requirements, safety constraints, review gates
-- [ ] Any user-facing narrative artifacts are produced only via Story Node conventions (evidence-led + source-linked)
-- [ ] Any agent impacting user-facing content has telemetry + audit expectations documented
-- [ ] No duplicated policy text—link to governance/security docs instead
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Clear definition of what “agents” means in KFM (and what it does *not* mean)
+- [ ] Concrete contribution rules (what to document, where to put it)
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `docs/agents/README.md`
+- `path`: `docs/agents/README.md` (must match front-matter)
 
 ### Related repository paths
 | Area | Path | What lives here |
 |---|---|---|
-| Agent documentation | `docs/agents/` | Specs, prompt packages (if documented here), runbooks, eval notes |
-| Pipelines | `src/pipelines/` + `docs/pipelines/` | ETL, transforms, catalog build, graph build |
-| Catalogs | `data/stac/` + `docs/data/` | STAC/DCAT/PROV generation + mappings |
-| Graph | `src/graph/` + `docs/graph/` | Ontology, labels, migrations |
-| APIs | `src/server/` + docs | Contracted access layer (REST/GraphQL) |
-| UI | `web/` + `docs/design/` | Map layers, Focus Mode UX, a11y |
-| Story Nodes | `docs/reports/.../story_nodes/` | Narrative artifacts with provenance pointers |
-| MCP / experiments | `mcp/` | Experiments, model cards, SOPs, run logs |
-| Schemas | `schemas/` | JSON schemas, telemetry schemas |
+| Governed docs | `docs/` | System documentation, templates, runbooks |
+| Agent docs | `docs/agents/` | Agent specs, runbooks, eval plans, prompt assets |
+| Schemas | `schemas/` | JSON schemas (STAC/DCAT/PROV/telemetry/etc.) |
+| Code | `src/` | Implementation code (agents belong here, not in `docs/`) |
+| Derived data | `data/processed/` | Reproducible outputs + artifacts (not source code) |
+| Run logs / experiments | `mcp/runs/`, `mcp/experiments/` | Repeatable experiment logs, evaluations, run IDs |
+| Tests | `tests/` | Contract/integration tests (API, graph, schemas) |
+| Web UI | `web/` | React/MapLibre UI (consumes APIs, not graph directly) |
 
 ### Expected file tree for this sub-area
 ~~~text
-docs/agents/
-  README.md                         📘 Entry point + conventions for agent documentation
-  specs/                            🧩 Agent specifications (one file per agent)
-    <agent_id>.md                   🧾 Governed “Agent Spec” (use Universal template)
-  prompts/                          🧠 Prompt packages (versioned; if stored in docs)
-    <agent_id>/
-      system.md                     🧠 System prompt (if used)
-      instructions.md               🧠 Operating instructions / guardrails
-      examples/                     🧪 Few-shot examples (if allowed)
-  runbooks/                         🧪 Operational runbooks (how to run + verify)
-    <agent_id>.md
-  evaluations/                      📊 Offline/online eval notes + rubrics
-    <agent_id>.md
-  adr/                              🏛️ Local agent decisions (optional)
-    ADR-0001-<topic>.md
+docs/
+└── 📁 agents/
+    ├── 📄 README.md
+    ├── 📁 specs/                 # Agent role specs + I/O contracts (add as needed)
+    ├── 📁 runbooks/              # Operational runbooks + review workflows (add as needed)
+    ├── 📁 eval/                  # Benchmarks + regression tests + red-team notes (add as needed)
+    ├── 📁 prompts/               # Governed prompt assets (no secrets; avoid sensitive locations)
+    └── 📁 diagrams/              # Mermaid sources / exports (optional)
 ~~~
-
-### Agent registry (fill as specs land)
-| Agent ID | Spec | Primary Stage(s) | Owner | Status |
-|---|---|---|---|---|
-| (add) | `docs/agents/specs/<agent_id>.md` | TBD | TBD | TBD |
 
 ## 🧭 Context
 
 ### Background
-KFM’s canonical pipeline is staged and governed: **ETL → STAC/DCAT/PROV catalogs → graph → APIs → UI → Story Nodes → Focus Mode**. Agents must fit into this ordering and must not bypass contracts or governance.
+KFM is documentation-first and pipeline-governed. “Agents” are useful when they improve repeatability and reviewability (e.g., triage, evidence synthesis, structured extraction, multi-perspective analysis), but they must remain **bounded by KFM’s contracts**: provenance-first, schema-validated, and safe for sensitive geographies and communities.
 
-Agents are useful in two common patterns:
-- **Dev-time agents**: help with drafting docs, validating schemas, mapping sources to catalog structures, and preparing PR-ready artifacts.
-- **Product-facing agents**: synthesize evidence artifacts or explanations used in Focus Mode while preserving provenance and explainability.
+A common pattern is **role-based (specialist) analysis**: multiple agents (or modules) each provide a perspective (historical texts, terrain, environment), and a coordinator/fusion step reconciles results into an evidence-backed output.
 
 ### Assumptions
-- Agent outputs that affect user-visible behavior or narrative require stronger governance (telemetry, review gates, explainability).
-- Agent outputs should not overwrite underlying factual data; they may only propose derived artifacts (with citations/provenance pointers).
+- Agents may be LLM-based, non-LLM, or hybrid; the documentation requirements apply either way.
+- Agent outputs that influence user-facing narratives must be explainable and provenance-linked.
+- Human review remains required where governance or safety dictates it.
 
 ### Constraints / invariants
-- Preserve canonical pipeline ordering; do not introduce “shortcuts” that skip catalogs/provenance.
-- The frontend consumes data only via contracted APIs (no direct graph coupling).
-- Agents must not introduce secrets, credentials, or sensitive site coordinates into docs/logs.
-- Where sovereignty/sensitive-site rules apply: prefer generalized/redacted representations and document the rule used.
+- Canonical pipeline ordering is preserved: **ETL → STAC/DCAT/PROV catalogs → graph → APIs → UI → Story Nodes → Focus Mode**.
+- The UI must not bypass APIs (no direct graph access).
+- Any sensitive or restricted locations must be generalized/redacted per sovereignty rules.
+- “Predictive” or uncertain outputs must be clearly labeled and must not be treated as confirmed facts without review.
 
 ### Open questions
-| Question | Owner | Target date |
-|---|---|---|
-| Which agents are currently in use (dev and/or product), and where are they invoked? | TBD | TBD |
-| What is the minimum telemetry record required for an agent “run”? | TBD | TBD |
-| Where should prompts live for runtime use (docs vs source tree)? | TBD | TBD |
+| Question | Owner | Target milestone | Notes |
+|---|---|---|---|
+| Where is the canonical agent registry (names, IDs, owners, allowed inputs/outputs)? | TBD | TBD | Recommend a single source-of-truth file under `docs/agents/` or `schemas/` |
+| What is the standard format for agent run IDs (to map cleanly into PROV)? | TBD | TBD | Align with `prov:Activity` identifiers |
+| What evaluations are required before an agent can write Story Nodes or feed Focus Mode? | TBD | TBD | Define minimum regression + red-team gates |
 
 ### Future extensions
-- A standard “Agent Registry” manifest (machine-readable) alongside the human-readable table above.
-- A common evaluation harness and regression suite for LLM prompt changes.
-- Role-based “virtual expert team” agents (specialists + coordinator) for multi-perspective evidence synthesis.
+- Add a governed **agent spec template** under `docs/agents/specs/` (Universal doc template) with: role, permissions, inputs/outputs, provenance behavior, and redaction rules.
+- Add a lightweight **agent registry** (YAML/JSON) that is schema-validated in CI.
+- Add evaluation harnesses that test for: provenance completeness, hallucination resistance, redaction correctness, and narrative neutrality.
 
 ## 🗺️ Diagrams
 
-### Agents in canonical context
+### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  subgraph Pipeline["Canonical KFM Pipeline"]
-    A[ETL] --> B[STAC/DCAT/PROV Catalogs]
-    B --> C[Neo4j Graph]
-    C --> D[APIs]
-    D --> E[React/Map UI]
-    E --> F[Story Nodes]
-    F --> G[Focus Mode]
+  DS[External data sources] --> ETL[ETL / transforms]
+  ETL --> CAT[STAC/DCAT/PROV catalogs]
+  CAT --> G[Knowledge graph]
+  G --> API[APIs]
+  API --> UI[UI]
+  UI --> SN[Story Nodes]
+  SN --> FM[Focus Mode]
+
+  subgraph Agentic[Optional agentic workflows]
+    SA[Specialist agent(s)] --> CO[Coordinator / fusion]
   end
 
-  subgraph Agents["Agents (bounded + governed)"]
-    X[Dev-time Agents] --> A
-    X --> B
-    Y[Product-facing Agents] --> D
-    Y --> F
-    Y --> G
-  end
+  CAT --> SA
+  G --> SA
+  CO --> EA[Evidence artifacts]
+  CO --> SN
+  EA --> CAT
+~~~
 
-  Agents -. "must not bypass contracts / governance" .-> Pipeline
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant Analyst as Analyst/Contributor
+  participant Agent as Agent runner
+  participant API as KFM API layer
+  participant Catalog as STAC/DCAT/PROV
+  participant Docs as Story Node / Docs
+
+  Analyst->>Agent: Run agent with a scoped question + inputs
+  Agent->>API: Fetch contracted, redacted context bundle
+  API-->>Agent: Provenance-linked facts + refs
+  Agent->>Catalog: Emit evidence artifact + PROV activity record
+  Agent->>Docs: Draft Story Node (if applicable)
+  Analyst->>Docs: Review / edit / accept
 ~~~
 
 ## 📦 Data & Metadata
 
 ### Inputs
-| Input type | Examples | Allowed? | Notes |
-|---|---|---:|---|
-| Governed docs | `docs/MASTER_GUIDE_v12.md`, templates, standards | ✅ | Prefer linking to canonical docs rather than re-authoring policy text |
-| Catalog metadata | STAC/DCAT/PROV assets | ✅ | Must preserve IDs and provenance pointers |
-| Graph facts | entity IDs, relationships | ✅ | Must be accessed through contracted services/tools per architecture |
-| Unvetted external text | random web text pasted into prompts | ⚠️ | Allowed only if captured as a governed source artifact first |
+| Input | Required? | Examples | Notes |
+|---|---:|---|---|
+| Provenance-linked references | Yes | STAC Item IDs, DCAT dataset IDs, graph entity IDs | Inputs should be IDs/refs, not raw copy/paste blobs |
+| Configuration | Often | model/prompt version, thresholds, run settings | Must be reproducible (pinned versions, deterministic settings where possible) |
+| Scope constraints | Yes | geography/time window, sensitivity class | Enforce redaction/generalization rules up front |
 
 ### Outputs
-| Output type | Where it should land | Notes |
-|---|---|---|
-| Agent spec | `docs/agents/specs/<agent_id>.md` | Governed; versioned |
-| Prompt package | `docs/agents/prompts/<agent_id>/...` | Versioned; reviewable; keep examples minimal |
-| Runbook | `docs/agents/runbooks/<agent_id>.md` | How to run + validate + rollback |
-| Eval notes / rubric | `docs/agents/evaluations/<agent_id>.md` | Define what “good” looks like; include regression checks |
-| Run logs / experiments | `mcp/runs/` or `mcp/experiments/` | Include run_id and provenance pointers |
+| Output | Required? | Location | Notes |
+|---|---:|---|---|
+| Evidence artifact(s) | Often | `data/processed/` + catalog entry | Treat as data product with STAC/DCAT/PROV |
+| Story Node(s) | Sometimes | `docs/` (story nodes area) | Must follow Story Node template and cite dataset/document IDs |
+| Run log | Yes | `mcp/runs/` or `mcp/experiments/` | Includes run ID, inputs, outputs, validation results |
 
 ### Sensitivity & redaction
-- Treat location-sensitive content as sensitive by default unless explicitly marked otherwise by governance.
-- If outputs reference sensitive locations, publish only generalized/redacted geometry and record the redaction rule.
+- Do not publish precise coordinates for restricted locations.
+- Prefer generalized geometries and descriptive regions over exact points when sensitivity is uncertain.
+- Ensure redaction rules are documented *and* testable (CI gates).
 
-### Quality signals & confidence
-- Prefer structured outputs with explicit input references.
-- If uncertainty exists, label it (e.g., confidence levels, competing hypotheses) and keep narrative claims evidence-led.
+### Quality signals
+- Provenance completeness (all claims trace to IDs)
+- Uncertainty/confidence (explicit, machine-readable when possible)
+- Reproducibility (config pinned; run logs recorded)
+- Review status (draft/reviewed/approved)
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### Provenance requirements
-Agents that generate or transform artifacts must:
-- Preserve stable identifiers for inputs and outputs.
-- Record `prov:used` (inputs), `prov:wasGeneratedBy` (run/activity), and `prov:wasAssociatedWith` (agent/software identity) for each run.
-- Provide a run identifier (e.g., `run_id`) that links telemetry, outputs, and catalog/graph lineage.
+### STAC
+- Any agent-generated evidence artifact that becomes a reusable asset should be represented as a STAC Item/Asset with stable IDs.
 
-### STAC Items & Collections touched
-- Documentation-only changes: **none**.
-- If an agent creates/updates catalog assets, the agent spec must explicitly state which:
-  - STAC collections are in scope
-  - item ID patterns and versioning expectations
-  - required extensions and validation steps
+### DCAT
+- Map reusable outputs to a DCAT dataset record (minimum: title, description, license, keywords).
 
-### DCAT fields
-- If agent outputs are published as discoverable datasets or distributions, document DCAT mapping in the agent spec (do not invent new fields without governance review).
+### PROV-O
+- Model each agent run as a `prov:Activity` that `prov:used` input entities and `prov:generated` output entities.
 
-### PROV bundles and run IDs
-- Prefer storing provenance as sidecar bundles (or a linked store) so outputs can be traced and audited across pipeline stages.
+### Versioning
+- New output versions should link predecessor/successor; the graph should mirror version lineage.
 
-## 🧱 Extension Points Checklist
+## 🧱 Architecture
 
-Use this checklist when adding or materially changing an agent. It is derived from KFM’s “Extension Matrix” framing.
+### Components
+- **Agent specs** (docs): permissions, inputs/outputs, and constraints.
+- **Agent runners** (code): orchestrate execution; emit artifacts, logs, and provenance.
+- **Validators** (CI): ensure docs, schemas, and outputs conform to KFM contracts.
 
-| Change type | Data | Catalog | Graph | API | UI | Story/Focus | Telemetry |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| Dev-time agent (docs / validation only) | — | — | — | optional | — | — | optional |
-| Product agent producing evidence artifacts | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Narrative agent producing Story Nodes | optional | optional | ✓ | ✓ | ✓ | ✓ | ✓ |
-| New governance/security gate | — | — | — | — | — | — | ✓ |
+### Interfaces / contracts
+- Agents must consume KFM data through contracted interfaces (catalog + APIs) rather than ad-hoc scraping.
+- Any user-facing output must surface: provenance refs, redaction status, and uncertainty metadata (when applicable).
+- If an agent introduces or changes an API, document it with the API contract extension template and add contract tests.
+
+### Extension points checklist (for future work)
+- [ ] New agent role/spec documented
+- [ ] Inputs/outputs mapped to STAC/DCAT/PROV
+- [ ] Redaction/generalization rules documented + tested
+- [ ] Telemetry signals defined (if user-facing)
+- [ ] Governance review triggered (if required)
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### Focus Mode touchpoints
-If an agent’s outputs appear in Focus Mode:
-- Outputs must be citeable (link back to source artifacts or catalog entries).
-- Outputs must support explainability (what inputs contributed; what rules were applied).
-- The UI should be able to display governance flags (e.g., redaction applied, sensitivity notices).
+### How this work surfaces in Focus Mode
+- Agents may support Focus Mode by generating **provenance-linked context bundles** or drafting Story Nodes that are reviewed before publication.
 
-### Story Node expectations
-- Story Nodes are evidence-led; narrative claims should map back to dataset/document IDs and provenance pointers.
-- Use the Story Node template for story artifacts; do not embed Story Node narratives inside agent specs.
+### Provenance-linked narrative rule
+- Focus Mode and Story Nodes must not contain uncited factual claims; every factual claim must map to a dataset/document ID.
+
+### Optional structured controls
+- `includePredictions` (default: false)
+- `confidence` / `uncertainty` fields (required if predictions are included)
+- `redactionApplied` (true/false + rule ID)
 
 ## 🧪 Validation & CI/CD
 
-### Validation checklist
-- [ ] Agent spec uses a governed template and has valid front-matter
-- [ ] Stage alignment is explicit and matches canonical pipeline ordering
-- [ ] Inputs/outputs are typed; allowed inputs are scoped to governed artifacts
-- [ ] Review gates are defined (especially for user-facing outputs)
-- [ ] Telemetry requirements are documented for runs
-- [ ] No secrets/credentials or sensitive coordinates are present
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV)
+- [ ] Graph integrity checks
+- [ ] API contract tests
+- [ ] UI schema checks (layer registry)
+- [ ] Security and sovereignty checks (as applicable)
 
-### CI expectations (project-level)
-- Docs and schema changes are expected to be validated by CI checks (documentation standards, schema validation, and governance policy checks as applicable).
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) validate schemas
+# 2) run unit/integration tests
+# 3) run doc lint
+~~~
+
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| Agent runs | Agent runner | `mcp/runs/` |
+| Validation results | CI | CI logs + `mcp/` |
+| Focus Mode consumption | UI/API | `docs/telemetry/` + `schemas/telemetry/` |
 
 ## ⚖ FAIR+CARE & Governance
 
-### Governance approvals required (if any)
-- FAIR+CARE council review: **required** when an agent generates user-facing interpretations or prioritizations affecting sensitive domains.
-- Security review: **required** when an agent changes logging/telemetry, touches authentication/authorization, or handles sensitive locations.
-- Historian/editor review: **required** when an agent proposes narrative content intended for publication.
+### Review gates
+- Require review for: new agent roles that affect narratives, new sensitive layers/outputs, new external data sources, and any new public-facing endpoints.
+
+### CARE / sovereignty considerations
+- Identify impacted communities and protection rules early; document redaction/generalization behavior for any restricted locations.
+
+### AI usage constraints
+- Ensure this document’s AI permissions/prohibitions match intended use.
+- This area must not be used to justify policy changes (“generate_policy”) or to infer restricted site locations (“infer_sensitive_locations”).
 
 ## 🕰️ Version History
-
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-17 | Initial README for `docs/agents/` | TBD |
-
-## 🔚 Footer References
-- `docs/MASTER_GUIDE_v12.md`
-- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-- `docs/templates/TEMPLATE__STORY_NODE_V3.md`
-- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
-- `docs/governance/ROOT_GOVERNANCE.md`
-- `.github/SECURITY.md`
+---
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
