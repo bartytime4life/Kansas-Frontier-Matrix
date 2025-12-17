@@ -166,14 +166,14 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ### KFM data flow positioning for `data/work/`
 ~~~mermaid
 flowchart TD
-  A[data/raw/ (inputs)] --> B[data/work/ (staging)]
-  B --> C[data/processed/ (final outputs)]
+  A["data/raw/ — inputs"] --> B["data/work/ — staging"]
+  B --> C["data/processed/ — final outputs"]
 
-  C --> D[data/stac/ (STAC/DCAT/PROV catalogs)]
-  D --> E[Neo4j graph]
-  E --> F[APIs]
-  F --> G[UI]
-  E --> H[Story Nodes / Focus Mode]
+  C --> D["data/stac/ — STAC + DCAT + PROV catalogs"]
+  D --> E["Neo4j graph"]
+  E --> F["APIs"]
+  F --> G["UI"]
+  E --> H["Story Nodes / Focus Mode"]
 ~~~
 
 ### Extension points checklist (for future work)
