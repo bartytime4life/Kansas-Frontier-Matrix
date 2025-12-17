@@ -252,6 +252,8 @@ sequenceDiagram
 - Use STAC Versioning links and graph predecessor/successor relationships as applicable.
 - When a dataset is updated, ensure older versions remain traceable (via provenance and/or catalog links).
 
+---
+
 Footer refs:
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
