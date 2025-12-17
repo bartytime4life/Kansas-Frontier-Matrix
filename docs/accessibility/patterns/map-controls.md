@@ -301,14 +301,14 @@ Example toolbar structure:
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  U[User] --> C[Map Controls UI (React)]
-  R[Layer Registry / Catalog JSON] --> C
-  C --> S[Map State]
-  S --> M[Map Engine (MapLibre/Leaflet/Cesium)]
-  S --> A11Y[ARIA Status / Live Region]
-  C --> API[APIs]
-  API --> G[Graph/Data Services]
-  C --> D[Dossier / Details Panel]
+  U["User"] --> C["Map Controls UI (React)"]
+  R["Layer Registry / Catalog JSON"] --> C
+  C --> S["Map State"]
+  S --> M["Map Engine (MapLibre / Leaflet / Cesium)"]
+  S --> A11Y["ARIA Status / Live Region"]
+  C --> API["APIs"]
+  API --> G["Graph / Data Services"]
+  C --> D["Dossier / Details Panel"]
   D --> A11Y
 ~~~
 
