@@ -1,361 +1,307 @@
 ---
-title: "📥 Kansas Frontier Matrix — Raw Data Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "README — data/raw (Raw Data Landing Zone)"
 path: "data/raw/README.md"
-
-version: "v11.2.2"
-last_updated: "2025-11-27"
-release_stage: "Stable / Governed"
-review_cycle: "Continuous · FAIR+CARE Council Oversight"
-lifecycle: "Long-Term Support (LTS)"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-doc_uuid: "urn:kfm:doc:data-raw-layer-v11.0.0"
-semantic_document_id: "kfm-doc-data-raw-readme"
-event_source_id: "ledger:data/raw/README.md"
-immutability_status: "version-pinned"
-
-sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.2/manifest.zip"
-data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-
-telemetry_ref: "../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/data-raw-v11.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "Open Data Commons / FAIR+CARE License"
+version: "v0.1.0"
+last_updated: "2025-12-17"
+status: "active"
+doc_kind: "Data Directory README"
+license: "CC-BY-4.0"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
-
-status: "Active · Enforced"
-doc_kind: "Domain Architecture"
-intent: "raw-data-layer"
-role: "raw-domain"
-category: "Data · Raw · FAIR+CARE · Provenance"
-
-fair_category: "F1-A1-I1-R1"
-care_label: "Mixed — varies by source and domain"
-sensitivity_level: "Dataset-dependent"
-indigenous_rights_flag: "Dataset-dependent"
-public_exposure_risk: "Dataset-dependent"
-redaction_required: false
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Mixed"
-
-ontology_alignment:
-  cidoc: "E73 Information Object"
-  schema_org: "Dataset"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Entity"
-  geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../../schemas/json/data-raw-readme-v11.schema.json"
-shape_schema_ref: "../../schemas/shacl/data-raw-readme-v11-shape.ttl"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Restricted"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+doc_uuid: "urn:kfm:doc:data:raw:readme:c95554d4-6e9b-546f-bf91-9f4ca09ccc61"
+semantic_document_id: "kfm-data-raw-readme-v0.1.0"
+event_source_id: "ledger:kfm:doc:data:raw:readme:v0.1.0"
+commit_sha: "<latest-commit-hash>"
 ai_transform_permissions:
-  - "summaries"
-  - "semantic-highlighting"
+- "summarize"
+- "structure_extract"
+- "translate"
+- "keyword_index"
 ai_transform_prohibited:
-  - "speculative"
-  - "unverified historical claims"
-
-machine_extractable: true
-classification: "Public / Mixed Sensitivity"
-jurisdiction: "Kansas / United States"
-accessibility_compliance: "WCAG 2.1 AA"
-ttl_policy: "Permanent"
-sunset_policy: "Superseded upon next raw-layer architecture update"
+- "generate_policy"
+- "infer_sensitive_locations"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📥 **Kansas Frontier Matrix — Raw Data Layer**  
-`data/raw/README.md`
-
-**Purpose**  
-Immutable repository of **unaltered, source-level datasets** collected from verified public, academic, tribal, and governmental providers.  
-
-The Raw Data Layer is the **foundation of KFM**, enabling:
-
-- Transparent ingestion pipelines  
-- Strong provenance and checksum validation  
-- FAIR+CARE pre-audits and governance tracking  
-- Ethical and sovereign data handling from first contact  
-
-</div>
-
----
-
-## 📘 1. Overview
-
-The **Raw Data Layer** preserves all source datasets in their **original formats**, together with:
-
-- 🌐 Source metadata (who / what / where / when / how)  
-- ⚖️ FAIR+CARE pre-audit and licensing checks  
-- 🔐 SHA-256 checksums and integrity manifests  
-- 🧬 PROV-O and ISO 19115-compatible provenance  
-
-Raw data is **never modified** — any cleaning, normalization, or transformation happens downstream in `data/staging/`, `data/work/`, and `data/processed/`.  
-This layer provides the **trust anchor** for all higher-level products, including processed datasets, archives, Story Nodes, and Focus Mode narratives.
-
----
-
-## 🗂️ 2. Directory Layout (Emoji Style A)
-
-```text
-data/raw/
-├── 📄 README.md                           # This file
-│
-├── 🌦️ climate/                           # NOAA, NIDIS, CPC; temperature · precip · drought indices
-├── 🌪️ hazards/                           # FEMA, USGS, NOAA; floods · tornadoes · drought · wildfire
-├── 💧 hydrology/                          # USGS streamflow, aquifer levels, watershed inputs
-├── 🌿 landcover/                          # MODIS/VIIRS, Landsat, NLCD; vegetation & landcover
-├── 📊 tabular/                            # Historical, census, administrative records
-├── 🗻 terrain/                            # DEMs, slope, elevation rasters
-├── 📜 text/                               # OCR-scanned docs, archives, reports
-└── 📑 metadata/                           # Source provenance, checksums, contracts, FAIR+CARE pre-audits
-```
-
-Each domain subfolder SHOULD have its own `README.md` describing:
-
-- Sources and acquisition methods  
-- Native formats and schemas  
-- FAIR+CARE and sovereignty notes  
-- Known quirks (units, null handling, etc.)  
-
----
-
-## 🔄 3. Data Acquisition Workflow
-
-```mermaid
-flowchart TD
-    SRC["External Sources\n(NOAA · USGS · FEMA · NASA · KGS · Tribal/State · Archives)"]
-      --> ING["Ingestion\n(ETL jobs · scrapers · bulk downloads · manual drops)"]
-
-    ING --> PRE["FAIR+CARE Pre-Audit\n(ethics · licensing · sovereignty)"]
-    PRE --> REG["Checksum & Provenance Registration\n(data/raw/metadata/*)"]
-    REG --> PROMO["Promotion to Staging\n(data/staging/* · data/work/*)"]
-```
-
-### 3.1 Acquisition
-
-- Sources include:
-  - Federal: NOAA, USGS, FEMA, NASA, USACE  
-  - State/tribal: KGS, KDHE, state agencies, tribal data stewards  
-  - Academic: KSU/KU datasets  
-  - Archives: libraries, historical societies, document collections  
-
-- Methods:
-  - HTTP/HTTPS APIs  
-  - FTP/bulk downloads  
-  - Cloud bucket sync  
-  - Manual transfers (with governance review)  
-
-### 3.2 Verification
-
-- Where upstream checksums/signatures exist, they are validated.  
-- KFM computes internal **SHA-256** checksums for every file.  
-- Results are logged under `data/raw/metadata/checksums.json`.
-
-### 3.3 FAIR+CARE Pre-Audit
-
-- Licensing and terms-of-use documented verbatim.  
-- CARE and sovereignty flags added for:
-  - Indigenous datasets  
-  - Sensitive ecological or heritage data  
-  - Restricted-use archives  
-
-### 3.4 Registration
-
-- Provenance entries recorded in `data/raw/metadata/provenance.json`  
-- Append-only governance ledger entries created in:
-  ```text
-  docs/reports/audit/data_provenance_ledger.json
-  docs/reports/fair/data_care_assessment.json
-  ```
-
-### 3.5 Promotion
-
-- **Unaltered** files are copied or referenced into:
-  - `data/staging/` for normalization  
-  - `data/work/` for ETL processing  
-- Promotion is logged as a **new PROV-O activity** linking raw → staging/work.
-
----
-
-## 🧩 4. Example Source Metadata Record (JSON)
-
-```json
-{
-  "id": "noaa_temperature_1900_2025_raw",
-  "domain": "climate",
-  "source_url": "https://www.ncdc.noaa.gov/cdo-web/",
-  "provider": "NOAA National Centers for Environmental Information",
-  "license": "Public Domain",
-  "records_fetched": 125480,
-  "schema_version": "v3.1.0",
-  "checksum_sha256": "sha256:aaf87123e5c16bcae094a9c71e2d93b09c29a38cf7d5b1e07c187a9127f84a53",
-  "fetched_on": "2025-11-12T19:22:00Z",
-  "validator": "@kfm-etl-ops",
-  "faircare_preaudit": {
-    "sensitivity": "none",
-    "license_review": "ok",
-    "community_flags": [],
-    "consent_token": null
-  },
-  "governance_ref": "docs/reports/audit/data_provenance_ledger.json"
-}
-```
-
----
-
-## ⚖️ 5. FAIR+CARE Source Governance Matrix
-
-| Principle                     | Implementation                                                         | Oversight             |
-|-------------------------------|------------------------------------------------------------------------|-----------------------|
-| 🧭 **Findable**               | Raw source index + metadata under `data/raw/metadata/` (JSON/JSON-LD) | `@kfm-data`           |
-| 🔓 **Accessible**             | Original licensing preserved; access notes stored verbatim            | `@kfm-accessibility`  |
-| 🔗 **Interoperable**          | Native formats documented; crosswalks to target schemas               | `@kfm-architecture`   |
-| 🔁 **Reusable**               | Full source metadata, schema refs, and consent recorded               | `@kfm-design`         |
-| 🤝 **Collective Benefit**     | Use cases consistent with public and community benefit                 | `@faircare-council`   |
-| 🛡️ **Authority to Control**   | Council validates ethics, attribution, and consent                     | `@kfm-governance`     |
-| 📋 **Responsibility**         | Ingestion logs & checksums reviewed and archived                       | `@kfm-security`       |
-| 🧠 **Ethics**                 | Sensitive content tagged, quarantined, or restricted as needed         | `@kfm-ethics`         |
-
-Governance logs live in:
-
-```text
-docs/reports/audit/data_provenance_ledger.json
-docs/reports/fair/data_care_assessment.json
-```
-
----
-
-## 🔐 6. Data Integrity Verification
-
-### 6.1 Checksum Records
-
-Raw file checksums are stored in:
-
-```text
-data/raw/metadata/checksums.json
-data/checksums/manifest.json
-```
-
-Each entry includes:
-
-- `file` — relative path to the raw file  
-- `checksum_sha256` — SHA-256 hex string (`sha256-...`)  
-- `validated` — boolean  
-- `verified_on` — ISO 8601 timestamp  
-- `source_ref` — description of upstream/source  
-
-### 6.2 Provenance Logging
-
-Source-level provenance is recorded in:
-
-```text
-data/raw/metadata/provenance.json
-```
-
-and mirrored into **global governance ledgers** for long-term audits.
-
----
-
-## 🧠 7. Raw Layer’s Role in the Data System
-
-The raw layer is the **trust anchor** for everything above it:
-
-- All **ETL pipelines** in `src/pipelines/**` originate from raw inputs.  
-- All **processed datasets** reference raw sources in their provenance.  
-- All **archives** (`data/archive/**`) can be replayed back to raw ingests.  
-- All **Story Nodes & Focus Mode narratives** eventually point back to raw evidence.
-
-Core rules:
-
-- Raw files are **never modified in place**.  
-- Any new upstream download is a **new version**, not an overwrite.  
-- If a source retracts or changes data, this is recorded as a **new provenance event**, not a silent replacement.
-
----
-
-## ♻️ 8. Retention & Preservation Policy
-
-| Category         | Retention | Policy                                                           |
-|------------------|----------:|------------------------------------------------------------------|
-| Raw Data Files   | Permanent | Immutable archive for provenance, science, and legal traceability |
-| Source Metadata  | Permanent | ISO 19115 / DCAT / FAIR+CARE metadata retained indefinitely      |
-| Checksum Records | Permanent | Integrity evidence for every release                             |
-| FAIR+CARE Pre-Audits | ≥ 5 years | Pre-ingestion ethics/licensing records                       |
-| Ingestion Logs   | ≥ 1 year  | Detailed logs rotated according to infra policy                  |
-
-Retention automation is configured in:
-
-```text
-data/raw/metadata/raw_data_retention.yml
-```
-
----
-
-## 🌱 9. Sustainability Practices (Raw Ingestion)
-
-Sustainability metrics for raw ingestion include:
-
-- `energy_wh` per ingestion batch  
-- `carbon_gco2e` per ingestion batch  
-- `files_ingested` and `bytes_ingested`  
-
-Telemetry emitted to:
-
-```text
-releases/v11.2.2/focus-telemetry.json
-docs/reports/telemetry/data-raw-v11.json
-```
-
-Practices:
-
-- Batch large ingests to minimize overhead.  
-- Prefer energy-efficient time windows and cloud regions.  
-- Avoid redundant re-ingests when upstream data has not changed.
-
----
-
-## 🧾 10. Internal Citation
-
-```text
-Kansas Frontier Matrix (2025). Raw Data Layer (v11.0.0).
-Immutable FAIR+CARE-aligned repository for unaltered source datasets from NOAA,
-USGS, FEMA, NASA, KDHE, KGS, and archival providers. Implements checksum
-validation, ISO 19115 provenance, and open data ethics under MCP-DL v6.3
-and KFM-MDP v11.x.
-```
+# README — `data/raw/` (Raw Data Landing Zone)
+
+> This document follows KFM Markdown Protocol and is governed by `docs/MASTER_GUIDE_v12.md`.
+
+## 📘 Overview
+
+### Purpose
+- Define what belongs in `data/raw/`, how it relates to the KFM pipeline, and the expected contributor workflow for introducing new **raw** inputs.
+- Clarify “raw vs. work vs. processed” responsibilities so downstream catalogs (STAC/DCAT/PROV), graph builds, and UI layers remain reproducible.
+
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Raw data “landing zone” expectations | Data cleaning/normalization details (belongs in `data/work/`) |
+| How raw inputs are represented/tracked | Neo4j graph modeling details |
+| Links to manifests and governance references | UI layer configuration details |
+
+### Audience
+- Primary: Contributors adding new datasets, maintainers reviewing data additions.
+- Secondary: Pipeline developers and Story Node authors who need to trace provenance back to source evidence.
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used in this doc (minimum):
+  - **Raw**: Original, source-faithful artifacts as obtained from upstream providers (API/download/manual digitization).
+  - **Work**: Intermediate staging outputs produced by transforms, QA, and validation.
+  - **Processed**: Canonical, validated outputs suitable for cataloging + graph/UI consumption.
+  - **Manifest**: A machine-readable source descriptor (typically in `data/sources/`) that the pipeline can fetch + reproduce.
+
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Raw landing zone | `data/raw/` | Data maintainers | This directory |
+| Source manifests | `data/sources/` | Data maintainers | “Catalog of inputs” / fetch configuration |
+| Staging workspace | `data/work/` | Pipelines | Transform + QA workspace |
+| Canonical outputs | `data/processed/` | Pipelines | Validated outputs |
+| Asset catalogs | `data/stac/` | Pipelines | STAC items/collections for processed assets |
+| Governance | `docs/governance/*` | Project governance | Sensitivity, ethics, sovereignty |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid (path matches, versions set)
+- [ ] Directory intent is clear: raw vs work vs processed
+- [ ] File tree is present and consistent with how the repo is intended to be used
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
+- [ ] Validation guidance is repeatable (even if commands are marked “not confirmed in repo”)
+
+## 🗂 Directory Layout
+
+### This document
+- `path`: `data/raw/README.md` (must match front-matter)
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed/stac outputs |
+| Documentation | `docs/` | Canonical governed docs |
+| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas (if present) |
+| Frontend | `web/` | React + map clients (if present) |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
+
+### Expected file tree for this sub-area
+~~~text
+📁 data/
+├─📁 raw/
+│  ├─📄 README.md
+│  ├─📁 <source_id>/                       # recommended: one folder per source manifest
+│  │  ├─📁 <YYYY-MM-DD>/                   # recommended: acquisition date (or release date)
+│  │  │  ├─📄 <original_filename>.<ext>    # raw artifact as acquired
+│  │  │  ├─📄 <original_filename>.<ext>.sha256  # optional: checksum sidecar
+│  │  │  └─📄 <notes>.md                   # optional: acquisition notes (NO sensitive content)
+│  │  └─📄 _SOURCE.md                      # optional: human notes / license reminders
+│  └─📄 .gitkeep                           # optional: keep empty directory in git
+~~~
+
+Notes:
+- The exact per-source folder naming convention is **not confirmed in repo**. If a convention exists, document it here and keep it stable (so the pipeline can be deterministic).
+
+## 🧭 Context
+
+### Background
+- KFM uses a staged data lifecycle so raw inputs can be fetched/re-fetched, transforms can be repeated, and outputs can be validated before publication.
+
+### Assumptions
+- Raw artifacts may be large (rasters, scans, imagery) and may not be stored directly in Git.
+- Source identity is tracked via a manifest (typically `data/sources/*.json`) rather than ad hoc manual downloads.
+
+### Constraints / invariants
+- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode is preserved.
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- **Raw should remain source-faithful**; transformations belong in `data/work/` and above.
+
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Is DVC used in this repo for raw artifacts? If so, what are the required commands + remote? | TBD | TBD |
+| Is there a required folder naming convention under `data/raw/<source_id>/...`? | TBD | TBD |
+| Do we require checksum sidecars for raw assets (or does DVC cover this)? | TBD | TBD |
+
+### Future extensions
+- Add a schema for raw acquisition metadata sidecars (if needed) under `schemas/`.
+- Add automated integrity checks (hash verification, file count assertions) to CI.
+
+## 🗺 Diagrams
+
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+    A[data/raw\nRaw downloads] --> B[data/work\nStaging + transforms]
+    B --> C[data/processed\nValidated outputs]
+    C --> D[data/stac\nCatalogs (STAC/DCAT/PROV)]
+    D --> E[Neo4j Graph]
+    E --> F[APIs]
+    F --> G[React/Map UI]
+    G --> H[Story Nodes]
+    H --> I[Focus Mode]
+~~~
+
+### Optional: sequence diagram (raw acquisition)
+~~~mermaid
+sequenceDiagram
+participant Maintainer
+participant Pipeline
+participant RawStore as data/raw
+participant WorkStore as data/work
+Maintainer->>Pipeline: Register/Update source manifest (data/sources/*.json)
+Pipeline->>RawStore: Fetch raw artifacts (download/API)
+Pipeline->>WorkStore: Transform + QA + validation
+Pipeline-->>Maintainer: Run logs + integrity summary
+~~~
+
+## 📦 Data & Metadata
+
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Scanned maps / rasters | TIFF/GeoTIFF/JPEG/PNG | Upstream archive/API/manual download | Checksum/integrity; geospatial validation occurs in `data/work/` |
+| Vector datasets | SHP/GeoJSON/GeoPackage/CSV | Open data portals / archives | Schema + basic sanity; geometry validation occurs in `data/work/` |
+| Text documents | TXT/PDF | Digitized archives | File integrity; OCR/NLP occurs in `data/work/` |
+| Images | JPG/PNG/TIFF | Archives / scans | File integrity |
+
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Raw artifacts | various | `data/raw/<source_id>/...` | Source-faithful (no transformation contract here) |
+| Optional checksum sidecars | `.sha256` | alongside raw artifact | TBD (consider standardizing) |
+| Optional acquisition notes | `.md` | alongside raw artifact | Must comply with governance (no sensitive/PII) |
+
+### Sensitivity & redaction
+- **Do not** place secrets, credentials, or sensitive personal information in `data/raw/`.
+- If a dataset is restricted/sensitive, do not store it in Git-tracked locations; follow governance refs in front matter.
+- If public publishing requires generalization/redaction, that must happen downstream (typically `data/work/` → `data/processed/`), with provenance preserved.
+
+### Quality signals
+- Integrity: checksum or DVC hash matches acquisition record.
+- Reproducibility: raw artifacts are fetchable via manifest (URL/API reference) or documented archival reference.
+- Completeness: acquisition date + expected file counts are documented (at minimum in manifest; optionally in `_SOURCE.md`).
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+- Collections involved: typically created from **processed** outputs, not raw.
+- Items involved: raw artifacts may become STAC Assets later, but STAC Items should point to validated/usable assets.
+
+### DCAT
+- Dataset identifiers: should align with `data/sources` manifests (source IDs).
+- License mapping: capture source license at manifest-level and propagate to catalogs.
+
+### PROV-O
+- `prov:wasDerivedFrom`: processed assets should reference raw artifacts or their stable identifiers/hashes.
+- `prov:wasGeneratedBy`: transformations in `data/work/` should be modeled as Activities with Agents (pipeline version, contributor, container digest if available).
+
+### Versioning
+- Prefer stable source identifiers and acquisition-date partitioning; do not silently overwrite raw artifacts without recording version changes.
+
+## 🧱 Architecture
+
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| Source manifests | Describe fetch + metadata | `data/sources/*.json` |
+| Raw store | Source-faithful artifacts | `data/raw/` (+ DVC pointers if used) |
+| Work store | Transform + QA staging | `data/work/` |
+| Processed store | Canonical validated outputs | `data/processed/` |
+| Catalog builder | STAC/DCAT/PROV generation | `data/stac/` (+ validators) |
+
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Source manifest schema | `schemas/` (if present) | Semver + changelog |
+| Raw artifact tracking | DVC or equivalent | Dataset version linked to commit/run |
+| Catalog schemas | `schemas/` + `data/stac/` | Contract tests required |
+
+### Extension points checklist (for future work)
+- [ ] Data: new source manifest added under `data/sources/`
+- [ ] Raw: acquisition documented (date + integrity signal)
+- [ ] Work: transform + QA steps are reproducible
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Catalog: STAC/DCAT/PROV updated from processed outputs
+- [ ] UI: layer registry entry added (location TBD)
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump (if telemetry exists)
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+- Raw artifacts do **not** surface directly in Focus Mode.
+- Focus Mode should surface **processed** layers + graph entities, with provenance links that allow a user to trace back to raw evidence.
+
+### Provenance-linked narrative rule
+- Every claim must trace to a dataset / record / asset ID (typically in processed/STAC + provenance).
+
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Ensure `data/sources/*.json` entries are valid and include license/source reference fields (exact schema **not confirmed in repo**).
+- [ ] Verify that raw artifacts are either:
+  - fetchable/reproducible from manifests, or
+  - tracked via a large-file mechanism (e.g., DVC) without bloating Git.
+- [ ] Confirm no sensitive/restricted content is committed to Git-tracked locations.
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands (not confirmed in repo)
+# 1) validate source manifests (JSON schema)
+# 2) fetch raw data for one source
+# 3) run pipeline through work → processed → stac for that source
+~~~
+
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| Raw fetch timestamp | pipeline run | `mcp/runs/` or `mcp/experiments/` |
+| Checksum/hash | DVC or sidecar | alongside artifacts or run logs |
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- Who approves changes? (TBD — follow governance docs)
+- What requires council/board sign-off? (TBD — follow governance docs)
+
+### CARE / sovereignty considerations
+- Identify communities impacted by the dataset and any special handling rules.
+- Do not publish precise locations for culturally sensitive sites; follow sovereignty policy in front matter.
+
+### AI usage constraints
+- Ensure this doc’s AI permissions/prohibitions match intended use (front matter).
+- Avoid AI-driven inference that could expose sensitive locations or identities.
+
+## 🕰 Version History
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v0.1.0 | 2025-12-17 | Initial `data/raw/README.md` | TBD |
 
 ---
 
-## 🕰 11. Version History
-
-| Version | Date       | Summary                                                                                                         |
-|--------:|-----------:|-----------------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; applied emoji directory layout and footer; expanded governance & sustainability.  |
-| v11.0.0 | 2025-11-19 | Full v11 upgrade: telemetry v4, FAIR+CARE pre-audits v11, ontology mapping, sustainability and governance v11. |
-| v10.2.2 | 2025-11-12 | Streaming STAC hooks, telemetry v2, expanded pre-audit fields (consent tokens, sensitivity flags).             |
-| v10.0.0 | 2025-11-09 | Initial raw-layer baseline; introduced retention policies & telemetry schemas.                                |
-
----
-
-<div align="center">
-
-© 2025 Kansas Frontier Matrix — Open Data Commons / FAIR+CARE License  
-[⬅️ Back](../README.md) · [📐 Data Architecture](../ARCHITECTURE.md) · [🛡️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
