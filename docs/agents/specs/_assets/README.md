@@ -146,13 +146,13 @@ Keeping these artifacts in `_assets/` avoids bloating specs with large inline co
 ### System / dataflow diagram (docs-only asset lifecycle)
 ~~~mermaid
 flowchart LR
-  Spec[Agent spec (.md)] -->|references| Asset[_assets/*]
-  Author[Contributor] --> Spec
+  Spec["Agent spec (.md)"] -->|references| Asset["_assets/ (docs-only)"]
+  Author["Contributor"] --> Spec
   Author --> Asset
-  Spec --> Review[Review: governance + redaction + licensing]
+  Spec --> Review["Review: governance + redaction + licensing"]
   Asset --> Review
-  Review --> Merge[Merge]
-  Merge --> Render[GitHub / Docs render]
+  Review --> Merge["Merge"]
+  Merge --> Render["GitHub / Docs render"]
 ~~~
 
 ### Optional: sequence diagram (review loop)
