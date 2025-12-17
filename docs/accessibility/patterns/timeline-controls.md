@@ -1,36 +1,34 @@
 ---
 title: "Timeline Controls (Accessibility Pattern)"
-doc_type: "pattern"
-doc_kind: "Pattern"
-status: "draft"
-version: "v0.1.0"
-last_updated: "2025-12-17"
-created_by: "KFM Documentation System"
-owner: "KFM UI/UX + Frontend"
-repo: "Kansas-Frontier-Matrix"
 path: "docs/accessibility/patterns/timeline-controls.md"
-editors:
-  - "KFM Maintainers"
-reviewers:
-  - "KFM Accessibility Reviewers"
-tags:
-  - "accessibility"
-  - "a11y"
-  - "ui-pattern"
-  - "timeline"
-  - "slider"
-  - "react"
-  - "maplibre"
-  - "focus-mode"
-depends_on:
-  - "docs/MASTER_GUIDE_v12.md"
-  - "docs/accessibility/checklist.md"
-related_docs:
-  - "docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md"
-  - "docs/design/"
-  - "web/"
+version: "v1.0.0"
+last_updated: "2025-12-17"
+status: "draft"
+doc_kind: "Pattern"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:accessibility:patterns:timeline-controls:v1.0.0"
+semantic_document_id: "kfm-accessibility-patterns-timeline-controls-v1.0.0"
+event_source_id: "ledger:kfm:doc:accessibility:patterns:timeline-controls:v1.0.0"
 commit_sha: "<latest-commit-hash>"
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
+
 ai_transform_permissions:
   - "summarize"
   - "structure_extract"
@@ -39,283 +37,435 @@ ai_transform_permissions:
 ai_transform_prohibited:
   - "generate_policy"
   - "infer_sensitive_locations"
-provenance_summary: "Drafted from governed KFM templates + internal system architecture notes describing timeline usage in the UI. Maintainers should validate implementation details against current `web/` components."
-artifact_role: "governed-documentation"
-lineages: []
-sovereignty:
-  jurisdiction: "US-KS"
-  indigenous_context: "Present"
-  data_sensitivity: "Moderate"
-sensitivity: "public"
-classification: "open"
-license: "CC-BY-4.0"
-user_facing: true
-i18n_ready: false
-machine_readable: false
-canonical_schema: null
-derived_from:
-  - "docs/MASTER_GUIDE_v12.md"
-links:
-  - label: "Accessibility Checklist"
-    path: "docs/accessibility/checklist.md"
-notes: "Pattern describes user-facing behavior and accessibility contract for timeline UI. It does not prescribe a specific timeline library; any implementation must satisfy the interaction + a11y requirements."
+
+doc_integrity_checksum: "sha256:0cfbf51c12dba2a68fc5012c8c0eff2d880e2d8f1ad46130926e7fa9d0a416c4"
 ---
 
-# Timeline Controls (Accessibility Pattern)
+# Timeline Controls
 
-## Overview
+## 📘 Overview
 
-Timeline controls are a core KFM interaction pattern: users adjust time (single year or range) to filter what appears on the map and in accompanying panels.
+### Purpose
 
-This pattern defines an **accessibility contract** for timeline controls:
-- Keyboard operability
-- Screen reader support (role/value/state + readable value text)
-- Focus management
-- Reduced-motion behavior for playback
+- Define accessible, testable UI patterns for **timeline controls** in the KFM React/Map UI (time slider, optional play/pause, and supporting inputs).
+- Govern the **interaction contract** between timeline controls and the rest of KFM (map layer filtering, API time filters, Focus Mode constraints, and URL snapshot state).
+- Reduce risk of timeline features becoming “visual-only” (mouse-only, silent to assistive tech, or motion-heavy).
 
 ### Scope
 
-**In scope**
-- Single-value timeline slider (e.g., “Year: 1850”)
-- Range selection (e.g., “1850–1860”) if supported
-- Playback controls (play/pause, step forward/back)
-- Era presets (buttons or menu of periods)
-- “Locked timeline” state in Focus Mode (read-only/disabled)
+| In Scope | Out of Scope |
+|---|---|
+| Keyboard semantics for time sliders and playback controls | Creating/curating temporal datasets (ETL + catalogs) |
+| Screen reader naming/value exposure for timeline controls | Defining new REST/GraphQL endpoints (use API Contract Extension template) |
+| Reduced motion + autoplay safeguards | Map styling decisions that are not accessibility-related |
+| Focus Mode time constrain/lock patterns | Backfilling missing temporal metadata in catalogs |
+| Validation checklist (a11y + governance) | Authoring Story Nodes (use Story Node template) |
 
-**Out of scope**
-- Backend temporal filtering semantics
-- Map rendering performance tuning (except where it impacts announcements/focus)
-- Final visual design tokens (colors, spacing)—covered elsewhere
+### Audience
 
-### Not confirmed in repo (requires maintainer decision)
+- Primary: Frontend engineers implementing timeline UI in `web/`
+- Secondary: UX/design contributors, QA/a11y reviewers, governance/security reviewers (data leakage + sovereignty)
 
-- Canonical timeline granularity (year-only vs month/day for some datasets)
-- Supported assistive technology + browser matrix
-- Whether range selection is first-class (two-handle slider) or implemented as two controls
+### Definitions (link to glossary)
 
-## 🧱 Directory Layout
+- Link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc:
+  - **Timeline control**: UI element that sets a current time or time window used to filter map layers/queries.
+  - **Scrubbing**: continuous pointer/keyboard adjustments to inspect change over time.
+  - **Commit**: the moment a time selection is applied (e.g., pointer-up, Enter, Apply).
+  - **Playback**: auto-advancing the time control (play/pause).
+  - **Temporal extent**: time coverage for a layer/asset (e.g., STAC temporal extent).
+  - **Focus lock**: Focus Mode makes timeline readonly or constrained to a window.
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master Guide (pipeline + contracts) | `docs/MASTER_GUIDE_v12.md` | Core maintainers | UI must remain behind APIs |
+| Layer registry (declarative layers + gating) | `web/cesium/layers/regions.json` (example) | Frontend | Schema-validated; prevents ad-hoc layer leakage |
+| API time filtering contracts | `src/server/` + docs | Backend | Contract-governed; provenance + redaction |
+| This pattern doc | `docs/accessibility/patterns/timeline-controls.md` | Frontend | Establishes a11y behavior + tests |
+
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid
+- [ ] Scope and invariants are explicit (no direct graph access; timeline is UI-only)
+- [ ] Timeline control keyboard + screen reader behaviors are specified
+- [ ] Reduced motion + autoplay constraints are specified
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
+
+---
+
+## 🗂 Directory Layout
+
+### This document
+
+- `path`: `docs/accessibility/patterns/timeline-controls.md`
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed/stac outputs |
+| Documentation | `docs/` | Canonical governed docs |
+| Graph | `src/graph/` | Graph build + ontology bindings |
+| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Frontend | `web/` | React + map clients |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
+
+### Expected file tree for this sub-area
 
 ~~~text
 📁 docs/
-└─📁 accessibility/
-  ├─📄 checklist.md
-  └─📁 patterns/
-    └─📄 timeline-controls.md
+├─ 📁 accessibility/
+│  ├─ 📁 patterns/
+│  │  └─ 📄 timeline-controls.md
 ~~~
 
-## 📌 Context
+---
 
-Timeline controls are frequently used while interacting with the map (panning/zooming/clicking story nodes). They must be accessible **without requiring drag** and without interfering with map navigation.
+## 🧭 Context
 
-The pattern must also support Focus Mode behaviors where the timeline may become constrained or locked (read-only) to a specific period.
+### Background
 
-## 🧩 Diagrams
+- KFM’s map UI is explicitly time-aware: users browse historical periods and filter visible layers by year/era, and some designs include playback (“play”) and shareable snapshots (layer set + time).
+- Timeline controls are a primary navigation control. If inaccessible, the system becomes effectively unusable for keyboard and screen-reader users for temporal exploration.
+
+### Assumptions
+
+- Timeline controls live in the **React/Map UI** (`web/`).
+- Temporal extents are available via catalogs and/or API payloads (STAC/metadata + query endpoints).
+- “Play mode” is optional; when present it must be pauseable and respect reduced motion preferences.
+
+### Constraints / invariants
+
+- Canonical pipeline ordering is preserved: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode.
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- UI changes must not create side channels for sensitive/restricted layers (no hidden data leakage).
+
+### Open questions
+
+| Question | Owner | Target date |
+|---|---|---|
+| Do we standardize on “year” vs. ISO 8601 datetime in UI state and URL snapshots? | TBD | TBD |
+| Are timeline ranges (two-thumb) a hard requirement or optional feature? | TBD | TBD |
+| What is the approved announcement strategy for playback (coarse vs. per-tick)? | TBD | TBD |
+
+### Future extensions
+
+- Add an **events timeline list** synchronized with the map (select event → highlight on map; select map feature → focus timeline).
+- Add **faceted temporal filtering** (era presets, confidence filters) sourced from API metadata rather than hard-coded lists.
+- Add telemetry signals for a11y regressions (opt-in; privacy-safe).
+
+---
+
+## 🗺 Diagrams
+
+### System / dataflow diagram
 
 ~~~mermaid
-stateDiagram-v2
-  [*] --> Idle
-  Idle --> Scrubbing: pointer drag / keyboard step
-  Scrubbing --> Idle: commit value
-  Idle --> Playing: play
-  Playing --> Idle: pause
-  Playing --> Idle: reach end / stop
-  Idle --> Locked: Focus Mode locks timeline
-  Locked --> Idle: unlock / exit Focus Mode
+flowchart LR
+  User["User input<br/>(keyboard / pointer / screen reader)"] --> TL["Timeline controls<br/>(UI state)"]
+  TL -->|preview scrub| Map["Map layers<br/>(filtered visibility)"]
+  TL -->|commit| API["API layer<br/>(time-filtered query)"]
+  API -->|results + provenance refs| Map
+  TL --> URL["URL snapshot state<br/>(shareable)"]
+  FM["Focus Mode"] -->|constrain/lock time| TL
 ~~~
 
-## 🧾 Data & Metadata
+### Optional: sequence diagram
 
-### Inputs (recommended)
-- `min` / `max` (numeric time domain, e.g., year range)
-- `step` (e.g., 1 year; larger step for PageUp/PageDown)
-- `value` (current time) OR `startValue` + `endValue` (range)
-- `formatValue(value) -> string` used for:
-  - visible label
-  - `aria-valuetext`
-  - announcements (if used)
+~~~mermaid
+sequenceDiagram
+participant UI as Timeline UI
+participant API as API Layer
+participant Map as Map View
+UI->>Map: update preview (scrub)
+UI->>API: commit time change (apply filter)
+API-->>UI: response (items + provenance refs)
+UI->>Map: render updates (time-filtered)
+note over UI: Focus Mode may lock/constrain time
+~~~
 
-### Outputs (recommended)
-- `onChange(value)` for immediate preview (optional)
-- `onCommit(value)` when user “commits” (mouse up / key up / Enter), recommended to reduce AT noise
+---
 
-### Sensitivity note
-Do not expose redacted temporal details in:
-- `aria-label`
-- `aria-describedby`
-- `aria-valuetext`
-- hidden/offscreen text
+## 📦 Data & Metadata
 
-If a dataset only has approximate dates, `aria-valuetext` should reflect that (e.g., “circa 1850”) **without revealing hidden precision**.
+### Inputs
 
-## 🔁 STAC, DCAT & PROV Alignment
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Temporal bounds (min/max) | ISO 8601 interval or derived year range | STAC extents or API summaries | Must parse; must be monotonic (min ≤ max) |
+| Layer temporal extent | ISO 8601 interval(s) | Layer registry + catalogs/API | Must intersect correctly with selected time |
+| Focus Mode time constraint (optional) | ISO 8601 interval or year range | Focus Mode context payload | Must narrow bounds; must be explainable to user |
+| User preference: reduced motion | boolean | Client pref (`prefers-reduced-motion`) | Must disable autoplay by default |
 
-When the UI derives timeline bounds from catalog/metadata:
-- Use **temporal extents** consistently (collection/item ranges).
-- Prefer formatting that matches user-facing conventions (e.g., year) while keeping provenance trace links elsewhere in UI.
+### Outputs
 
-## 🏗️ Architecture & Pipeline Fit
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Current time selection | year or ISO 8601 | `web/` UI state | UI state contract (not confirmed in repo) |
+| Time window selection | start/end (year or ISO 8601) | `web/` UI state | UI state contract (not confirmed in repo) |
+| API time filter parameter(s) | query params / GraphQL args | `src/server/` | Contract-governed; tests required |
+| URL snapshot | query string / route state | `web/` | UI routing contract (not confirmed in repo) |
 
-### Preferred control primitives
+### Sensitivity & redaction
 
-1) **Use native controls first**
-- For single-value selection: prefer `<input type="range">` with an associated `<label>`.
+- Timeline controls MUST NOT disclose restricted layer names/availability to unauthorized users.
+- Timeline-driven queries MUST rely on API enforcement for redaction/generalization of sensitive locations.
 
-2) **Custom slider only when necessary**
-- If a custom slider is required, it must implement a complete slider accessibility contract (role/value/state + keyboard).
+### Quality signals
 
-### Recommended component structure
+- Range constraints: selected values are within bounds; `start <= end`.
+- Keyboard coverage: every control is operable without pointer.
+- Screen reader coverage: label + value + constraints are discoverable.
+- Motion safety: autoplay is never forced; pause is always available.
 
-- Label row
-  - “Year” / “Time range” label
-  - Current value text (visible)
-- Control row
-  - Step back button
-  - Slider / range controls
-  - Step forward button
-  - Play/pause toggle (optional)
-- Presets row (optional)
-  - Era buttons or menu
+---
 
-## 🔌 Interfaces & Contracts
+## 🌐 STAC, DCAT & PROV Alignment
 
-### Accessibility contract (single-value slider)
+### STAC
 
-**Must provide:**
-- A programmatic name (label / `aria-label` / `aria-labelledby`)
-- Role and value semantics:
-  - If native range input: default semantics are provided
-  - If custom: `role="slider"` + `aria-valuemin`, `aria-valuemax`, `aria-valuenow`, and `aria-valuetext`
-- Focusable via keyboard (`tabindex="0"` for custom)
+- Collections involved: any collection with temporal extent used for time filtering (collection IDs not confirmed in repo).
+- Items involved: items returned by time-filtered queries; items should provide `datetime` or equivalent temporal coverage.
+- Extension(s): any KFM temporal conventions/extensions (not confirmed in repo).
 
-### Accessibility contract (range selection)
+### DCAT
 
-If range selection is supported:
-- Represent the range as **two accessible slider handles** (start/end), or as two native range inputs.
-- Each handle must have a distinct accessible name:
-  - “Start year”
-  - “End year”
-- Avoid “drag-only” range selection: provide keyboard operation for both handles.
+- Dataset identifiers: the dataset IDs used in UI facets or layer metadata (not confirmed in repo).
+- License mapping: UI must preserve dataset license/attribution when presenting time-filtered results.
+- Contact / publisher mapping: surfaced via dataset metadata where required (not confirmed in repo).
 
-## Keyboard Interaction
+### PROV-O
 
-### Single-value slider (recommended mapping)
+- `prov:wasDerivedFrom`: preserve dataset/asset IDs returned by API as provenance pointers.
+- `prov:wasGeneratedBy`: preserve transform/job IDs when returned (run IDs, activity IDs).
+- Activity / Agent identities: do not fabricate provenance; only display what the API returns.
+
+### Versioning
+
+- Use STAC versioning links and graph predecessor/successor relationships as applicable.
+- Timeline ranges should remain metadata-driven so new dataset versions naturally update time bounds.
+
+---
+
+## 🧱 Architecture
+
+### Components
+
+| Component | Responsibility | Interface |
+|---|---|---|
+| Timeline controls (UI) | Select time or time window; expose value to AT | Semantic HTML (preferred) or ARIA slider |
+| Layer registry | Declare layers + constraints + gating | JSON + schema validation |
+| API layer | Execute time-filtered queries; apply redaction | REST/GraphQL contracts + tests |
+| Focus Mode | Provide constrained/locked time contexts | Focus context bundle (provenance-linked) |
+| Map view | Render time-filtered layers | WebGL map rendering + UI state |
+
+### Interfaces / contracts
+
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Layer registry | `web/cesium/layers/regions.json` | Schema-validated; breaking changes require versioning |
+| API schemas | `src/server/` + docs | Backward compat or version bump; contract tests required |
+| UI time state (shape) | `web/` | Not confirmed in repo; document if stabilized |
+| URL snapshot encoding | `web/` | Not confirmed in repo; avoid breaking share links |
+
+### Extension points checklist (for future work)
+
+- [ ] UI: add/modify timeline behavior with keyboard + SR tests
+- [ ] UI: layer registry entry + access rules (no hidden data leakage)
+- [ ] APIs: time filter changes documented + contract tests updated
+- [ ] Focus Mode: time lock/constrain behaviors documented and provenance-linked
+- [ ] Telemetry: optional new signals + schema version bump (if implemented)
+
+### Implementation patterns
+
+#### Pattern A — Native range input slider (preferred)
+
+Use a native slider, plus a visible and programmatic value readout.
+
+~~~html
+<label for="kfm-time-slider">Time (year)</label>
+<input
+  id="kfm-time-slider"
+  type="range"
+  min="1800"
+  max="1900"
+  step="1"
+  value="1850"
+  aria-describedby="kfm-time-help kfm-time-value"
+/>
+
+<p id="kfm-time-help">
+  Use left/right arrow keys to change the year. Home/End jumps to min/max.
+</p>
+
+<output id="kfm-time-value" for="kfm-time-slider">1850</output>
+~~~
+
+#### Pattern B — Custom ARIA slider (only when native cannot be used)
+
+~~~html
+<div
+  role="slider"
+  tabindex="0"
+  aria-label="Time (year)"
+  aria-valuemin="1800"
+  aria-valuemax="1900"
+  aria-valuenow="1850"
+  aria-valuetext="1850"
+/>
+~~~
+
+Keyboard behavior MUST support:
 
 | Key | Action |
 |---|---|
-| Left / Down | Decrease by `step` |
-| Right / Up | Increase by `step` |
-| PageDown | Decrease by “large step” (e.g., 10× step) |
-| PageUp | Increase by “large step” |
-| Home | Jump to min |
-| End | Jump to max |
+| ArrowRight / ArrowUp | Increase by `step` |
+| ArrowLeft / ArrowDown | Decrease by `step` |
+| PageUp | Increase by “large step” (e.g., 10× step) |
+| PageDown | Decrease by “large step” |
+| Home | Set to min |
+| End | Set to max |
 
-**Notes**
-- If the slider is inside a map UI, ensure arrow key handling is scoped so it does not break map keyboard navigation when the slider is not focused.
+#### Pattern C — Range selection (start/end)
 
-### Play/pause (if present)
+Prefer two independent sliders (or a slider + numeric inputs) with clear labels.
 
-- Use a `<button>` with:
-  - Clear label (“Play timeline”, “Pause timeline”)
-  - Optional `aria-pressed="true|false"` if modeled as a toggle button
+~~~html
+<label for="kfm-start-year">Start year</label>
+<input id="kfm-start-year" type="range" min="1800" max="1900" step="1" value="1850" />
 
-### Era presets
+<label for="kfm-end-year">End year</label>
+<input id="kfm-end-year" type="range" min="1800" max="1900" step="1" value="1860" />
 
-- Render as buttons or menu items with clear names:
-  - “Pre-Statehood”
-  - “Civil War”
-  - etc.
-- Presets must be reachable by keyboard and not rely on hover to describe the action.
+<output id="kfm-range-summary">Showing 1850–1860</output>
+~~~
 
-## Screen Reader Behavior
+Minimum requirements:
 
-### `aria-valuetext` guidance
+- Enforce `start <= end`
+- Associate errors/status messages via `aria-describedby`
 
-- `aria-valuetext` should be human-readable:
-  - “1850”
-  - “1850 to 1860”
-  - “circa 1850”
-- Do not use raw timestamps unless the UI itself is also timestamp-based.
+#### Pattern D — Playback (play/pause) and reduced motion
 
-### Announcements (live regions)
+If animation is provided:
 
-If announcements are used:
-- Use a **polite** live region and update on **commit**, not on every micro-step while dragging.
-- Avoid rapid updates during playback (or provide a user setting to limit announcements).
+- Pause MUST be available at all times
+- Autoplay MUST NOT run by default when reduced motion is requested
 
-## Focus Management
+~~~html
+<button aria-pressed="false" aria-label="Play timeline">
+  Play
+</button>
+~~~
 
-- Tab order should be stable and predictable.
-- When timeline changes trigger map rerender:
-  - **Do not** steal focus from the currently focused timeline element.
-- When opening a story node panel from timeline interactions:
-  - Move focus intentionally to the panel header (or keep focus if panel is non-modal), consistent with UI modal/drawer rules.
+Announcement guidance:
 
-## Reduced Motion
+- Avoid announcing every tick while playing (screen reader overload).
+- Prefer announcing only on pause/stop, or at coarse intervals.
 
-If playback animates through time:
-- Respect `prefers-reduced-motion`:
-  - Provide non-animated stepping alternatives
-  - Default to paused or reduced animation speed where appropriate
-- Always allow user to pause/stop playback.
+#### Pattern E — Map synchronization and focus management
 
-## Empty / Disabled / Locked States
+- Timeline changes MUST NOT steal focus.
+- If time changes cause map updates, use a non-intrusive status message (optional) and avoid rapid-fire live regions.
+- If selected time has no data, show inline message and associate it with the control.
 
-### Disabled (no temporal data)
-- Show a visible message (“No temporal data available”).
-- Disable slider and controls programmatically (`disabled` for native, `aria-disabled="true"` for custom).
-- Ensure disabled controls are not focusable (or behave consistently if focusable).
+---
 
-### Locked (Focus Mode)
-When Focus Mode locks timeline:
-- Convey locked state visually (icon + text) and programmatically:
-  - `aria-disabled="true"` or `disabled`
-  - `aria-describedby` pointing to helper text (“Locked to 1951 for this Focus Mode view”)
-- Provide a clear way to exit Focus Mode or unlock if that’s allowed.
+## 🧠 Story Node & Focus Mode Integration
 
-## 🧯 Extension Points Checklist
+### How this work surfaces in Focus Mode
 
-When introducing a new timeline feature:
-- [ ] Update this pattern doc with keyboard + screen reader implications.
-- [ ] Update `docs/accessibility/checklist.md` if new checks are needed.
-- [ ] Ensure layer registry / metadata provides necessary accessible labels (if driven by data).
+- Focus Mode may set a default or constrained time window relevant to the selected entity/place/story.
+- Timeline controls must represent:
+  - **free**: user can select any time within global bounds
+  - **constrained**: user can select within a narrowed window
+  - **locked**: user cannot change time until exiting Focus Mode
 
-## 🧭 Story Node & Focus Mode Integration
+### Provenance-linked narrative rule
 
-- Timeline controls must work with:
-  - Story Node panels (opening/closing without focus loss)
-  - Focus Mode locking or narrowing the time range
-  - Governance/audit messaging that may accompany a time-locked view
+- Focus Mode only consumes provenance-linked content.
+- Timeline filtering must not introduce unsourced narrative; it only changes which evidence is eligible to display.
+
+### Optional structured controls
+
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time:
+  mode: "locked"          # free | constrained | locked
+  start: "1850-01-01"
+  end: "1860-12-31"
+  granularity: "year"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+---
 
 ## 🧪 Validation & CI/CD
 
-**Recommended automated tests (not confirmed in repo)**
-- [ ] Unit tests for keyboard interaction (keys listed above).
-- [ ] Integration tests:
-  - play/pause toggles correctly
-  - focus remains on timeline control during map updates
-- [ ] Automated a11y scan for:
-  - slider labeled correctly
-  - no ARIA violations
-  - no focus traps
+### Validation steps
 
-**Manual checks**
-- [ ] Keyboard-only: can set year/range precisely without dragging
-- [ ] Screen reader: slider announces value and boundaries; play/pause is understandable
-- [ ] Reduced motion: playback respects system preference
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV) — as applicable to layers being filtered
+- [ ] Graph integrity checks — not directly impacted by this UI pattern
+- [ ] API contract tests — time filter changes
+- [ ] UI schema checks (layer registry)
+- [ ] Accessibility checks (keyboard + screen reader + reduced motion)
+- [ ] Security and sovereignty checks (no hidden data leakage; redaction enforced)
 
-## 🛡 FAIR+CARE & Governance
+### Reproduction
 
-- Timeline labels and announcements must not expose redacted times or restricted layer information.
-- If the timeline drives visibility of restricted layers, ensure gating is enforced before anything becomes perceivable (including via accessibility APIs).
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) validate schemas
+# 2) run unit/integration tests
+# 3) run doc lint
+# 4) run a11y checks
+~~~
 
-## 📚 Version History
+### Telemetry signals (if applicable)
 
-| Version | Date | Change | Author |
-|---|---:|---|---|
-| v0.1.0 | 2025-12-17 | Initial draft timeline controls accessibility pattern | KFM Documentation System |
+| Signal | Source | Where recorded |
+|---|---|---|
+| Timeline playback used | UI event | `docs/telemetry/` + `schemas/telemetry/` (not confirmed in repo) |
+| A11y regression detected | CI/a11y tooling | `docs/telemetry/` + `schemas/telemetry/` (not confirmed in repo) |
 
-## 🔚 Footer / References
+---
 
-- Accessibility checklist: `docs/accessibility/checklist.md`
-- Master guide: `docs/MASTER_GUIDE_v12.md`
-- Universal doc template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+
+- Accessibility reviewer sign-off is required for changes to timeline interactions and announcements.
+- Governance/security review is required when timeline behavior could affect data exposure (layer gating, restricted locations).
+
+### CARE / sovereignty considerations
+
+- Timeline controls must not reveal restricted locations or sensitive layer existence via timing differences, labels, or disabled UI states.
+- If sensitive data is time-scoped, ensure redaction/generalization rules are documented and enforced by the API and layer registry.
+
+### AI usage constraints
+
+- This doc’s AI permissions/prohibitions are governed by front-matter:
+  - Allowed: summarize, structure_extract, translate, keyword_index
+  - Prohibited: generate_policy, infer_sensitive_locations
+
+---
+
+## 🕰 Version History
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-17 | Initial accessibility pattern for timeline controls | TBD |
+
+---
+
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
