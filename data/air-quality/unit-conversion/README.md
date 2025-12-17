@@ -1,354 +1,360 @@
 ---
-title: "🌡️ KFM — Air-Quality Unit Conversion (ppb ↔ µg/m³) · Temperature-Pressure Dependent"
-path: "docs/data/air-quality/unit-conversion/README.md"
+title: "🔁 KFM — Air Quality Unit Conversion (Profiles · Schemas · Reference)"
+path: "data/air-quality/unit-conversion/README.md"
+
 version: "v11.2.6"
-last_updated: "2025-12-10"
+last_updated: "2025-12-17"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · FAIR+CARE Council & Atmospheric Science WG"
+review_cycle: "Quarterly · Data Architecture Board · FAIR+CARE Oversight"
 content_stability: "stable"
 
-doc_kind: "Technical Guide"
-status: "Active"
+status: "Active / Canonical"
+doc_kind: "Directory README"
+header_profile: "standard"
+footer_profile: "standard"
 intent: "air-quality-unit-conversion"
-semantic_document_id: "kfm-doc-air-quality-unit-conversion-v11.2.6"
 
 license: "CC-BY 4.0"
-
+mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-OP v11"
+pipeline_contract_version: "KFM-PDC v11"
+
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
 prov_profile: "KFM-PROV v11"
 
-header_profile: "standard"
-footer_profile: "standard"
+scope:
+  domain: "air-quality"
+  applies_to:
+    - "data/air-quality/unit-conversion/**"
+
+fair_category: "F1-A1-I1-R1"
+care_label: "Public · Low-Risk"
+sensitivity: "General (non-sensitive; formulas & lookup tables)"
+sensitivity_level: "None"
+public_exposure_risk: "Low"
+classification: "Public"
+jurisdiction: "Kansas / United States"
+
+indigenous_rights_flag: true
+data_steward: "KFM FAIR+CARE Council"
+
+ttl_policy: "24 months"
+sunset_policy: "Superseded by KFM v12 (or later) air-quality unit-conversion specification"
+
+commit_sha: "<latest-commit-hash>"
+previous_version_hash: "<previous-sha256>"
+
+signature_ref: "../../../releases/v11.2.6/signature.sig"
+attestation_ref: "../../../releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "../../../releases/v11.2.6/manifest.zip"
+
+governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+
+json_schema_ref: "../../../schemas/json/kfm-markdown-protocol-v11.2.6.schema.json"
+shape_schema_ref: "../../../schemas/shacl/kfm-markdown-protocol-v11.2.6-shape.ttl"
+
+immutability_status: "mutable-living-doc"
+doc_uuid: "urn:kfm:doc:data:air-quality:unit-conversion:readme:v11.2.6"
+semantic_document_id: "kfm-air-quality-unit-conversion-readme"
+event_source_id: "ledger:kfm:doc:data:air-quality:unit-conversion:readme:v11.2.6"
+doc_integrity_checksum: "<sha256>"
+
+ai_training_inclusion: false
+ai_focusmode_usage: "Allowed with restrictions"
+
+ai_transform_permissions:
+  - "summary"
+  - "metadata-extraction"
+  - "layout-normalization"
+ai_transform_prohibited:
+  - "content-alteration"
+  - "speculative-additions"
+  - "unverified-architectural-claims"
+  - "narrative-fabrication"
+  - "governance-override"
+
+ontology_alignment:
+  cidoc: "E29 Design or Procedure"
+  schema_org: "TechArticle"
+  prov_o: "prov:Plan"
+
+metadata_profiles:
+  - "STAC 1.0.0"
+  - "DCAT 3.0"
+  - "PROV-O"
+  - "FAIR+CARE"
+
+provenance_chain:
+  - "data/air-quality/unit-conversion/README.md@v11.2.6"
 ---
 
-# 🌡️ Air-Quality Unit Conversion — ppb ↔ µg/m³  
-Temperature- & Pressure-Sensitive Gas-Phase Conversions
+<div align="center">
 
-Most atmospheric gases **cannot** be converted between ppb and µg/m³ with a single static factor.  
-The conversion depends on **temperature (T)** and **pressure (P)** via the ideal-gas law.  
-This guide establishes the official KFM method for deterministic, reproducible conversions.
+# 🔁 **KFM — Air Quality Unit Conversion**
+`data/air-quality/unit-conversion/README.md`
+
+**Purpose**  
+Provide **canonical, versioned unit-conversion profiles** used by KFM air-quality ETL and metadata production (e.g., ppm/ppb ↔ µg/m³, AQI breakpoint rules), with **deterministic behavior** and **auditable provenance**.
+
+<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
+<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
+<img src="https://img.shields.io/badge/Domain-Air%20Quality-brightgreen" />
+<img src="https://img.shields.io/badge/Status-Active%20%2F%20Canonical-brightgreen" />
+
+</div>
+
+---
+
+## 📘 Overview
+
+This folder contains **unit-conversion “profiles”** and related documentation used to **standardize air‑quality measurement units** across KFM.
+
+This is a **data dependency** (reference material), not an ETL output:
+- It **does not** store raw sensor readings or processed datasets.
+- It **does** store conversion rules and parameters that ETL jobs can apply consistently.
+
+### What belongs here
+
+- **Conversion profiles** (JSON/YAML): versioned, deterministic conversion definitions
+- **Schemas**: local validation schemas for those profiles (JSON Schema)
+- **Examples/fixtures**: small, stable samples for correctness testing and round‑trip checks
+- **Documentation**: assumptions, sources, and governance notes
+
+### What does not belong here
+
+- Runtime logs, secrets, credential files
+- Large datasets (raw or processed)
+- Code modules that belong under `src/` (this directory can be consumed by code, but not house code as the primary artifact)
 
 ---
 
 ## 🗂️ Directory Layout
 
 ~~~text
-docs/
-└── 📁 data/
-    └── 📁 air-quality/
-        ├── 📄 README.md
-        └── 📁 unit-conversion/
-            ├── 📄 README.md                  # 🌡️ This file
-            ├── 📁 samples/
-            │   └── 📄 example-calculations.md
-            └── 📁 schemas/
-                └── 📄 unit-conversion-spec-v11.json
-
-src/
-└── 📁 data/
-    └── 📁 air_quality/
-        └── 📄 unit_conversion.py             # Reference implementation (ppb ↔ µg/m³)
-
-configs/
-└── 📁 data/
-    └── 📁 air_quality/
-        └── 📄 unit-conversion-v11.yaml       # Config for which gases, MW values, T/P sources
-
-data/
-└── 📁 processed/
-    └── 📁 air_quality/
-        └── 📄 harmonized-concentrations.parquet  # Converted & harmonized outputs
-
-mcp/
-└── 📁 experiments/
-    └── 📁 air_quality/
-        └── 📄 unit-conversion-log.jsonl      # Deterministic conversion logs + PROV references
+📁 data/air-quality/unit-conversion/
+├── 📄 README.md                                   — This file (what this folder is + how to use it)
+├── 📁 profiles/                                   — Versioned conversion profiles (JSON/YAML)
+│   ├── 🧾 aqi_breakpoints_us_epa_v1.json           — Example: AQI breakpoint rules (profile)
+│   ├── 🧾 gas_molecular_weights_v1.json            — Example: MW lookup for ppm/ppb conversions
+│   └── 🧾 concentration_conversions_v1.json        — Example: unit conversion recipes (generic)
+├── 📁 schemas/                                    — Validation schemas for profiles in /profiles
+│   ├── 🧾 unit-conversion-profile.schema.json      — Schema for a single profile
+│   └── 🧾 unit-conversion-bundle.schema.json       — Schema for bundles/collections of profiles
+└── 📁 examples/                                   — Small examples + roundtrip fixtures (optional)
+    ├── 🧾 example_inputs.json                      — Example concentrations + conditions
+    └── 🧾 example_expected_outputs.json            — Expected normalized outputs
 ~~~
 
----
-
-## 📘 Overview
-
-Air-quality sources within KFM (OpenAQ, AirNow, CAMS NRT, PurpleAir, internal AQ sensors, etc.) frequently mix:
-
-- **mass concentrations** (µg/m³) and  
-- **mixing ratios** (ppb)
-
-Because KFM performs **cross-source harmonization**, all conversions must be:
-
-- **explicit** (T, P, molecular weight documented)
-- **deterministic & reproducible** (config-driven, not ad hoc)
-- **reversible** (inverse conversion available)
-- **provenance-tracked** (fully described via PROV-O)
-
-This document defines the **canonical formula**, **metadata requirements**, and **integration points** in the KFM pipeline:
-
-> Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j → API → Story Nodes / Focus Mode.
+**Rule:** if a change affects conversion behavior, it must be expressed as a **profile change** (and validated), not as an undocumented implicit assumption inside ETL code.
 
 ---
 
-## 🧮 Canonical Formula (Ideal-Gas Based)
+## 🧭 Context
 
-### ppb → µg/m³
+Unit conversion sits in the pipeline as a **normalization step**:
 
-$begin:math:display$
-\mu\text{g m}^{-3}
-=
-\text{ppb}
-\times
-\frac{
-\text{MW}\;(\text{g mol}^{-1}) \times P
-}{
-R \times T
-}
-\times 10^{3}
-$end:math:display$
+> Deterministic ETL → STAC/DCAT/PROV catalogs → Graph → APIs → UI/Story Nodes/Focus Mode
 
-Where:
-
-- **MW** — molecular weight (g·mol⁻¹)  
-- **P** — pressure (Pa)  
-- **T** — temperature (K)  
-- **R** — 8.314 462 618 J·mol⁻¹·K⁻¹  
-
-### µg/m³ → ppb (inverse)
-
-$begin:math:display$
-\text{ppb}
-=
-\mu\text{g m}^{-3}
-\times
-\frac{
-R \times T
-}{
-\text{MW} \times P
-}
-\times 10^{-3}
-$end:math:display$
-
-These formulas are the **only** ones KFM uses internally for gas-phase ppb ↔ µg/m³ conversions.
+Typical air‑quality workflows require consistent units because sources vary (e.g., mixing ratio vs. mass concentration, different averaging periods). This folder provides:
+- a governed place to declare **assumptions** (temperature, pressure, molecular weight),
+- a deterministic reference for ETL,
+- and traceable metadata hooks (STAC/DCAT/PROV) to record “what conversion rules were used”.
 
 ---
 
-## 🌡️ Why Conversion Factors Differ
+## 📦 Data & Metadata
 
-Regulatory and scientific agencies publish approximate conversion factors at **fixed reference conditions**.
+### Conversion profile concept
 
-Example factors:
+A **conversion profile** is a machine‑readable object that defines:
+- **what** is being converted (pollutant / quantity),
+- **from_unit** and **to_unit** (explicit strings; prefer a consistent unit system),
+- **required parameters** (e.g., temperature_K, pressure_kPa, molecular_weight_g_mol),
+- **defaults** (only when governance allows a default),
+- **validity constraints** (ranges, supported pollutants),
+- **source references** (where the rule/breakpoints came from),
+- **profile versioning** and identifiers.
 
-| Gas | MW (g/mol) | 20 °C / 1013 mb             | 25 °C / 1 atm              |
-|-----|------------|-----------------------------|----------------------------|
-| NO₂ | 46.0055    | 1 ppb ≈ 1.9125 µg/m³        | 1 ppb ≈ 1.88 µg/m³         |
-| O₃  | 48.00      | 1 ppb ≈ 1.9957 µg/m³        | 1 ppb ≈ 1.96 µg/m³         |
-
-These differences arise **entirely** from the chosen T/P constants.  
-Therefore **KFM never uses static tables internally**—only explicit, T/P-aware formulas recorded in metadata.
-
----
-
-## 🧩 KFM Best Practices
-
-### 1️⃣ Store native units from source systems
-
-- Do **not** convert raw values during ingestion.
-- Keep the original:
-  - unit (e.g., `"ppb"` or `"µg/m³"`)
-  - temperature & pressure context when provided
-
-### 2️⃣ Always record the conversion context
-
-For any conversion run, KFM must record at minimum:
-
-- **temperature** (°C or K; stored as K in schemas)  
-- **pressure** (mb or Pa; stored as Pa in schemas)  
-- **molecular weight (MW)** for the gas  
-- **reference conditions** if using a specific agency standard (e.g., `"DEFRA 20 °C, 1013 mb"`)
-
-These are stored in:
-
-- ETL config (`unit-conversion-v11.yaml`)  
-- per-run logs (`mcp/experiments/.../unit-conversion-log.jsonl`)  
-- PROV bundles (see below)
-
-### 3️⃣ Perform conversions after ingestion
-
-Conversions should occur:
-
-- **after ingestion**, in deterministic ETL or analysis steps  
-- **before visualization / cross-source blending**
-
-This allows:
-
-- reproducible re-runs with updated T/P or MW values  
-- alternative scenarios (e.g., re-running at different reference conditions)
-
-### 4️⃣ Provide explicit reversibility
-
-Every conversion pipeline must:
-
-- implement both **forward** (ppb → µg/m³) and **inverse** (µg/m³ → ppb) formulas  
-- record the direction and parameters in PROV-O so that the transformation is auditable and reversible
-
----
-
-## 🔗 Integration With STAC / DCAT / PROV
-
-### STAC
-
-For STAC Collections / Items that contain converted gas-phase concentrations, KFM SHOULD use:
-
-- `properties.kfm:unit_conversion_method` — e.g., `"ideal-gas-ppb-ugm3-v11"`  
-- `properties.kfm:temperature_reference` — e.g., `298.15` (K)  
-- `properties.kfm:pressure_reference` — e.g., `101325` (Pa)  
-- `properties.kfm:conversion_formula_ref` — URI or identifier of this guide or schema entry  
-
-Example (Item properties):
+### Minimal recommended profile shape
 
 ~~~json
 {
-  "datetime": "2025-12-10T00:00:00Z",
-  "kfm:unit_conversion_method": "ideal-gas-ppb-ugm3-v11",
-  "kfm:temperature_reference": 298.15,
-  "kfm:pressure_reference": 101325,
-  "kfm:conversion_formula_ref": "kfm-doc-air-quality-unit-conversion-v11.2.6#ideal-gas"
+  "profile_id": "kfm:air-quality:unit-conversion:concentration:ideal-gas:v1",
+  "version": "v1",
+  "title": "Ideal gas conversion: ppb ↔ µg/m³",
+  "quantity_kind": "concentration",
+  "from_unit": "ppb",
+  "to_unit": "ug/m3",
+  "parameters": {
+    "molecular_weight_g_mol": { "required": true },
+    "temperature_K": { "required": true },
+    "pressure_kPa": { "required": true }
+  },
+  "defaults": {
+    "temperature_K": null,
+    "pressure_kPa": null
+  },
+  "constraints": {
+    "temperature_K": { "min": 150, "max": 350 },
+    "pressure_kPa": { "min": 70, "max": 110 }
+  },
+  "source": {
+    "authority": "TBD (insert authoritative spec or publication)",
+    "retrieved_at": "YYYY-MM-DD",
+    "citation": "TBD"
+  },
+  "notes": [
+    "Do not apply a default T/P unless explicitly governed and documented."
+  ]
 }
 ~~~
 
+**Important:** conversions that depend on environmental conditions (T/P) must not silently assume “standard conditions” unless the profile explicitly declares a governed default and its provenance.
+
+### AQI breakpoint profiles
+
+If KFM computes AQI from pollutant concentration, store breakpoint logic as a profile (breakpoints + formula). Keep:
+- pollutant name + averaging period,
+- breakpoints (concentration ranges ↔ index ranges),
+- rounding rules,
+- provenance/source authority and version.
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+
+Conversion profiles can be referenced from STAC Items that represent air-quality products. A common pattern is:
+- keep the profile file in this directory,
+- include it as a STAC **asset** on the Item that used it,
+- record the profile identifier and version in Item properties.
+
+~~~json
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "kfm-air-quality-<dataset-id>",
+  "geometry": null,
+  "bbox": null,
+  "properties": {
+    "datetime": "2025-12-17T00:00:00Z",
+    "kfm:unit_conversion": {
+      "profile_id": "kfm:air-quality:unit-conversion:concentration:ideal-gas:v1",
+      "profile_version": "v1"
+    }
+  },
+  "assets": {
+    "unit-conversion-profile": {
+      "href": "data/air-quality/unit-conversion/profiles/concentration_conversions_v1.json",
+      "type": "application/json",
+      "roles": ["metadata"]
+    }
+  }
+}
+~~~
+
+If `kfm:unit_conversion` is not yet an approved property in the repo’s STAC profile, treat it as **proposed** and route through schema/ontology review before enforcing.
+
 ### DCAT
 
-DCAT Datasets representing converted air-quality products SHOULD include:
+In DCAT, conversion profiles can be modeled as:
+- a small `dcat:Dataset` (the conversion profile set),
+- with one or more `dcat:Distribution` objects (each profile file).
 
-- `kfm:unit_conversion_method` — as above  
-- `kfm:conversion_formula_ref` — link to this document  
-- `prov:wasDerivedFrom` — identifiers for original datasets in native units  
+The “used profile” relationship for a produced dataset should be represented through PROV (below) and/or through documented dataset metadata fields.
 
-These fields live in `data/catalogs/**` DCAT JSON-LD.
+### PROV‑O
 
-### PROV-O
+For reproducibility, ETL runs should record they **used** a conversion profile entity (and optionally generated a normalized dataset).
 
-For each converted field, PROV bundles must express:
-
-- `prov:Entity` — original concentration and converted concentration  
-- `prov:Activity` — conversion step / pipeline run  
-- `prov:Agent` — ETL service or analyst (as appropriate)  
-
-Key relations:
-
-- `converted_entity prov:wasDerivedFrom original_entity`  
-- `conversion_activity prov:used original_entity`  
-- `conversion_activity prov:generated converted_entity`  
-- `conversion_activity prov:used` parameters:
-  - temperature, pressure, molecular weight  
-  - formula reference, config hash  
-
-This ensures deterministic lineage and full reproducibility.
-
----
-
-## 🧪 Example Calculation (NO₂ at 25 °C, 1 atm)
-
-For **1 ppb NO₂**:
-
-- MW = 46.0055 g/mol  
-- T = 298.15 K  
-- P = 101325 Pa  
-
-$begin:math:display$
-\mu\text{g m}^{-3}
-=
-1 \times
-\frac{
-46.0055 \times 101325
-}{
-8.314462618 \times 298.15
+~~~json
+{
+  "@context": "https://openprovenance.org/prov-jsonld/context.jsonld",
+  "@graph": [
+    {
+      "@id": "urn:kfm:prov:activity:air-quality:etl:<run-id>",
+      "@type": "prov:Activity",
+      "prov:used": [
+        "urn:kfm:prov:entity:air-quality:unit-conversion:concentration:ideal-gas:v1"
+      ]
+    }
+  ]
 }
-\times 10^{3}
-\approx
-1.88 \;\mu\text{g m}^{-3}
-$end:math:display$
-
-This example SHOULD appear in:
-
-- `docs/data/air-quality/unit-conversion/samples/example-calculations.md`  
-- automated test cases in `src/data/air_quality/unit_conversion.py`  
-
-so that CI can assert correctness of future changes.
+~~~
 
 ---
 
-## 🧪 CI & Validation
+## 🧪 Validation & CI/CD
 
-Conversion logic is validated via:
+Minimum expectations for anything added/changed here:
 
-- **Unit tests**
-  - reuse known reference factors (e.g., NO₂, O₃ at standard conditions)  
-  - compare pipeline output to computed values within a small tolerance
+- **Schema validation** for every profile file in `profiles/`
+- **Determinism check**: repeated application of the same profile to the same inputs yields identical outputs
+- **No silent defaults**: where parameters are required (T/P/MW), the absence must be a hard failure unless governance explicitly permits defaults
 
-- **Schema validation**
-  - `unit-conversion-spec-v11.json` applied to:
-    - ETL configs  
-    - harmonized concentration tables
+Suggested checks (examples; wire to your repo’s validators as applicable):
 
-- **Determinism checks**
-  - fixed inputs (raw concentration, T, P, MW) must always yield the same converted value  
-  - logs in `mcp/experiments/.../unit-conversion-log.jsonl` must be reproducible
+~~~bash
+# Validate profile JSON against schema
+python -m jsonschema -i data/air-quality/unit-conversion/profiles/concentration_conversions_v1.json \
+  data/air-quality/unit-conversion/schemas/unit-conversion-profile.schema.json
+~~~
 
-Changes to conversion formulas or MW tables **must** go through Atmospheric Science WG review.
-
----
-
-## 📎 Provenance Requirements
-
-Every conversion must emit PROV-O statements:
-
-- `prov:wasDerivedFrom` → original concentration entity  
-- `prov:valueConversion` (or equivalent custom property) → formula reference and implementation ID  
-- `prov:used` → temperature & pressure metadata, molecular weight, and config version  
-- `prov:generatedAtTime` → conversion timestamp  
-- `prov:wasAssociatedWith` → ETL pipeline / operator identity  
-
-PROV bundles for air-quality conversions SHOULD live under:
-
-- `mcp/experiments/air_quality/unit-conversion-prov.jsonld`
-
-and be referenced from STAC/DCAT metadata where appropriate.
+Security posture:
+- No secrets in this folder
+- No PII
+- No precise sensitive locations (generally not applicable to conversion profiles, but still subject to scanning rules)
 
 ---
 
-## 🧭 Version History
+## ⚖ FAIR+CARE & Governance
 
-| Version  | Date       | Notes                                                                 |
-|----------|------------|-----------------------------------------------------------------------|
-| v11.2.6  | 2025-12-10 | Initial KFM-aligned unit conversion guide for gas-phase ppb ↔ µg/m³. |
+This folder is low‑risk by default (formulas and lookup tables), but governance still applies because conversion choices can materially change interpretation.
+
+Governance requirements:
+- Every profile must include a **source authority reference** and **retrieval date**
+- Any change that affects conversion outputs is a **governed change** (reviewed; versioned)
+- Where conversion assumptions could bias interpretation (e.g., default conditions), the defaults must be explicitly justified and approved
+
+Binding references:
+- Governance Charter: `../../../docs/standards/governance/ROOT-GOVERNANCE.md`
+- FAIR+CARE Guide: `../../../docs/standards/faircare/FAIRCARE-GUIDE.md`
+- Indigenous Data Protection: `../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`
 
 ---
 
-### ⚖ FAIR+CARE & Governance Footer
+## 🕰️ Version History
 
-This document:
+| Version     | Date       | Summary |
+|------------:|-----------:|---------|
+| **v11.2.6** | 2025-12-17 | Created/normalized directory README for air-quality unit-conversion profiles; aligned with KFM‑MDP v11.2.6 (front matter, heading registry, directory layout, governance footer). |
 
-- complies with **KFM-MDP v11.2.6**, **KFM-STAC v11**, **KFM-DCAT v11**, and **KFM-PROV v11**  
-- is governed by the **FAIR+CARE Council** and **Atmospheric Science Working Group**, with co-review by the Governance Council  
-- must be updated when conversion formulas, MW tables, or metadata conventions are materially changed
-
-Edits require approval from the FAIR+CARE Council and Atmospheric Science WG and must pass
-`markdown-lint`, `schema-lint`, `footer-check`, and unit-conversion validation tests in CI.
-
-<br/>
-
-<sub>© Kansas Frontier Matrix · CC-BY 4.0 · Diamond⁹ Ω / Crown∞Ω · Aligned with KFM‑MDP v11.2.6</sub>
-
-<br/>
+---
 
 <div align="center">
 
-🌡️ **Kansas Frontier Matrix — Air-Quality Unit Conversion (ppb ↔ µg/m³) v11.2.6**  
-Deterministic Conversions · Atmospheric Science Aligned · FAIR+CARE Governance  
+**✅ Status:** Active / Canonical (Air Quality Data Reference)
 
-[📘 Docs Root](../../../README.md) · [📊 Data Docs Index](../../README.md) · [🌫 Air-Quality Index](../README.md) · [⚖ Governance Charter](../../../standards/governance/ROOT-GOVERNANCE.md)
+**Navigation**  
+[📂 Data Domain Root](../README.md) ·
+[📁 Air Quality STAC](../stac/README.md) ·
+[⚖ Governance (Air Quality)](../governance/README.md)
+
+**Standards**  
+[📘 Standards Index](../../../docs/standards/README.md) ·
+[🏛️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
+[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
+[🪶 Indigenous Data Protection](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+
+© 2025 Kansas Frontier Matrix — CC‑BY 4.0  
+MCP‑DL v6.3 · KFM‑MDP v11.2.6
 
 </div>
