@@ -160,17 +160,17 @@ Large data artifacts may be tracked outside Git using DVC (pointers + checksums 
 
 ### System / dataflow diagram
 ~~~mermaid
-flowchart LR
-  subgraph DATA[data/]
-    R[data/raw] --> W[data/work] --> P[data/processed]
+ flowchart LR
+  subgraph DATA["data/"]
+    R["data/raw"] --> W["data/work"] --> P["data/processed"]
   end
 
-  P --> C[data/stac (STAC/DCAT/PROV)]
-  C --> G[Neo4j graph]
-  G --> A[APIs]
-  A --> U[Web UI]
-  U --> S[Story Nodes]
-  S --> F[Focus Mode]
+  P --> C["data/stac (STAC/DCAT/PROV)"]
+  C --> G["Neo4j graph"]
+  G --> A["APIs"]
+  A --> U["Web UI"]
+  U --> S["Story Nodes"]
+  S --> F["Focus Mode"]
 ~~~
 
 ### Optional: sequence diagram
