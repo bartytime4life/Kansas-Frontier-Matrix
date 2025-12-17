@@ -79,7 +79,7 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 ~~~mermaid
 flowchart LR
-  A[Primary source item(s)] --> B[Extraction/curation activity]
+  A[Primary source items] --> B[Extraction and curation activity]
   B --> C[Story Node v3]
   C --> D[Focus Mode narrative]
 ~~~
