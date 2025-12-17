@@ -1,431 +1,263 @@
 ---
-title: "⚙️ Kansas Frontier Matrix — Work Data Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM — data/work Staging Area (README)"
 path: "data/work/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-17"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
 
-version: "v11.2.3"
-last_updated: "2025-12-09"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Continuous · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-doc_uuid: "urn:kfm:doc:data-work-readme:v11.2.3"
-semantic_document_id: "kfm-doc-data-work-layer"
-event_source_id: "ledger:data/work/README.md"
-immutability_status: "version-pinned"
-
-sbom_ref: "../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../releases/v11.2.3/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/data-work-layer-v11.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "CC-BY 4.0"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.5"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Guide"
-intent: "work-data-layer"
-role: "etl-staging-layer"
-category: "Data · ETL · Governance · FAIR+CARE"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Variable — Dataset Dependent"
-sensitivity: "Mixed"
-sensitivity_level: "Variable"
-risk_category: "Dataset-level"
-indigenous_rights_flag: "Dataset-level"
-redaction_required: false
-data_steward: "KFM FAIR+CARE Council"
+doc_uuid: "urn:kfm:doc:data:work:readme:v1.0.0"
+semantic_document_id: "kfm-data-work-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:work:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-metadata_profiles:
-  - "STAC 1.0.0"
-  - "DCAT 3.0"
-  - "PROV-O"
-  - "FAIR+CARE"
-
-prov_profile: "PROV-O Plan + KFM Data Lineage Profile"
-openlineage_profile: "OpenLineage v2.5 · ETL pipeline events"
-
-provenance_chain:
-  - "data/work/README.md@v11.0.0"
-  - "data/work/README.md@v11.1.0"
-  - "data/work/README.md@v11.2.3"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "metadata-extraction"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "unverified-historical-claims"
-  - "governance-override"
-  - "hallucinated-datasets"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-classification: "Public Document (describes internal layer; data may be sensitive)"
-jurisdiction: "Kansas / United States"
-accessibility_compliance: "WCAG 2.1 AA"
-lifecycle_stage: "stable"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next Work Data Layer update"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-badge_profiles:
-  - "root-centered-badge-row"
-requires_purpose_block: true
-requires_directory_layout_section: true
-requires_version_history: true
-requires_governance_links_in_footer: true
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# ⚙️ **Kansas Frontier Matrix — Work Data Layer**  
-`data/work/README.md`
-
-**Purpose**  
-Formal definition of the **Work Data Layer** within the Kansas Frontier Matrix (KFM).  
-
-This layer is the **governed transformation zone** between **raw data ingestion** and **processed dataset publication**. It hosts:
-
-- Deterministic ETL intermediates  
-- Schema‑aligned staging outputs  
-- AI‑assisted validation artifacts  
-- FAIR+CARE and sovereignty checks  
-- Pre‑STAC/DCAT metadata drafts  
-- Governance‑linked promotion state for movement into `data/processed/` and `data/stac/`
-
-It is tightly integrated with **PROV‑O**, **OpenLineage**, and **CI/CD workflows** to provide full **traceability**, **lineage**, and **reproducible pipelines**.
-
-</div>
-
----
+# KFM `data/work/` — Staging Workspace (README)
 
 ## 📘 Overview
 
-The Work Data Layer is the **operational center** of KFM’s data transformation pipeline:
+### Purpose
+- Define what belongs in `data/work/` and what does **not**, as part of KFM’s governed ETL → catalog → graph → API → UI pipeline.
+- Establish a **directory contract**: `data/work/` is for **intermediate / staging artifacts** produced during ETL runs (i.e., between `data/raw/` and `data/processed/`), and is **not** a stable interface for downstream consumers.
 
-- It is where **raw, immutable sources** from `data/raw/` are:
-  - Cleaned and normalized,  
-  - Enriched and joined,  
-  - Checked against data contracts,  
-  - Prepared for cataloging and graph ingest.
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Intermediate transformation outputs (e.g., temporary normalized tables, clipped rasters, intermediate joins/derivatives) | Authoritative “source of truth” raw drops (use `data/raw/`) |
+| Per-run staging artifacts used to produce `data/processed/` outputs | Final, validated outputs intended for ingestion (use `data/processed/`) |
+| Small manifests/notes that help reproduce or debug a run (non-sensitive) | Secrets, credentials, tokens, private keys |
+| Temporary exports used for validation and QA before promotion | Public-facing datasets without STAC/DCAT/PROV metadata |
 
-- It is **transient but governed**:
-  - Contents can be recomputed from `data/raw/` + configs + code,  
-  - Yet still must respect FAIR+CARE, sovereignty, and security rules.
+### Audience
+- Primary: ETL/pipeline maintainers, data engineers, CI maintainers
+- Secondary: contributors reviewing a pipeline PR, governance reviewers (when a run introduces sensitive materials)
 
-- It bridges:
-  - **Storage** (`data/raw/`, `data/processed/`),  
-  - **Catalogs** (`data/stac/`, `data/dcat/`),  
-  - **Graph** (Neo4j),  
-  - **Narrative layers** (Story Nodes, Focus Mode).
+### Definitions
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **raw / work / processed**
+  - **ETL run**
+  - **staging artifact**
+  - **promotion** (moving an output from `work/` to `processed/`)
+  - **cataloging** (STAC/DCAT/PROV)
+  - **provenance** (PROV-O)
+  - **deterministic / replayable**
 
-Work layer assets are:
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `data/work/README.md` | TBD | Directory contract for `data/work/` |
+| Raw inputs | `data/raw/` | TBD | Source drops (avoid mutating; treat as inputs) |
+| Work staging | `data/work/` | TBD | Intermediate outputs; may be cleaned/regenerated |
+| Processed outputs | `data/processed/` | TBD | Validated outputs intended for catalog + ingestion |
+| Catalogs | `data/stac/` (+ associated docs) | TBD | Cataloged assets (STAC/DCAT/PROV) |
+| ETL configs / code | `src/pipelines/` (or repo-defined equivalent) | TBD | Deterministic transforms |
+| Run logs | `mcp/runs/` or `mcp/experiments/` | TBD | Replay + audit trail (path may vary by repo) |
+| Schemas / validators | `schemas/` | TBD | STAC/DCAT/PROV + other schema checks |
 
-- **Not directly exposed** to public UIs or external APIs,  
-- But they are **first‑class citizens** in provenance, risk assessment, and sustainability accounting.
-
----
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] `data/work/` purpose is explicitly distinguished from `data/raw/` and `data/processed/`
+- [ ] Promotion criteria to `data/processed/` documented (at a minimum, validation + provenance expectations)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated (esp. for sensitive locations)
+- [ ] Validation / reproduction steps are listed (even if placeholders pending repo command names)
 
 ## 🗂️ Directory Layout
 
-Aligned with the canonical `data/` architecture (`data/README.md` and `data/ARCHITECTURE.md`), the Work Data Layer uses a **domain‑aware but type‑first structure**:
+### This document
+- `path`: `data/work/README.md` (must match front-matter)
 
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Raw sources | `data/raw/` | Original ingested sources / downloads (inputs) |
+| Work staging | `data/work/` | Intermediate artifacts generated during transforms |
+| Final outputs | `data/processed/` | Final cleaned/normalized assets ready for catalogs + ingestion |
+| Catalogs | `data/stac/` | STAC Collections/Items and related metadata |
+| Provenance | `data/stac/` + graph | PROV activities/entities/agents linked to generated outputs |
+| Schemas | `schemas/` | JSON schema / validators used by CI |
+| Runs & telemetry | `mcp/runs/` / `docs/telemetry/` | Replay logs, run metadata, audit/telemetry (paths may vary) |
+
+### Expected file tree for this sub-area
 ~~~text
-📁 data/work/
-├── 📄 README.md                     # This document (Work Data Layer guide)
-│
-├── 📁 tables/                       # Normalized tabular intermediates
-│   ├── 📁 climate/                  # Climate tables (indices, normals, joins)
-│   ├── 📁 hazards/                  # Hazard classification/event tables
-│   ├── 📁 hydrology/                # Watershed, streamflow, hydrograph tables
-│   ├── 📁 landcover/                # Land cover/use tabular summaries
-│   ├── 📁 terrain/                  # Elevation/terrain derivatives
-│   ├── 📁 cultural/                 # Cultural/heritage tabular intermediates
-│   └── 📁 text/                     # Tokenized/OCR/NLP outputs (governed)
-│
-├── 📁 spatial/                      # Intermediate spatial layers
-│   ├── 📁 climate/                  # Reprojected rasters, zonal stats, tiles
-│   ├── 📁 hazards/                  # Event extents, footprints, exposure masks
-│   ├── 📁 hydrology/                # Derived streams, catchments, HUC joins
-│   ├── 📁 landcover/                # Regridded land cover, change layers
-│   ├── 📁 terrain/                  # Slope/aspect/curvature derivatives
-│   └── 📁 cultural/                 # H3‑generalized cultural/heritage intermediates
-│
-├── 📁 metadata/                     # Pre‑publication metadata & logs
-│   ├── 📁 stac-drafts/              # STAC‑adjacent JSON for future Items/Collections
-│   ├── 📁 dcat-drafts/              # Draft DCAT Dataset/Distribution JSON‑LD
-│   ├── 📁 schemas/                  # Snapshot copies of active schemas/contracts
-│   └── 📁 lineage/                  # Work‑layer PROV/OpenLineage run fragments
-│
-└── 📁 logs/                         # Optional: ETL/validation logs (short‑lived)
-    ├── 📁 checks/                   # Data contract & validation logs
-    └── 📁 ai/                       # AI validation / explainability logs (redacted if needed)
+🗂️ data/
+├── 🧱 raw/
+├── 🧪 work/
+│   ├── 📄 README.md
+│   ├── 📁 <domain-or-pipeline>/         # optional (pattern; not guaranteed)
+│   │   ├── 📁 <run-id>/                 # optional (pattern; not guaranteed)
+│   │   │   ├── 🧾 manifest.json         # recommended: small provenance stub / inputs list
+│   │   │   ├── 🧩 intermediate/         # intermediate outputs (may be large/binary)
+│   │   │   └── 📝 notes.md              # debug notes (non-sensitive)
+│   │   └── 🧹 _tmp/                     # local-only scratch (recommend gitignored)
+│   └── 🧹 _tmp/
+└── 🏁 processed/
 ~~~
 
-**Normative notes:**
+## 🧭 Context
 
-- `data/work/processed/` and `data/work/tmp/` are **deprecated** patterns.  
-  - Final ETL outputs belong in `data/processed/`.  
-  - Scratch work belongs in `data/tmp/`.  
-- New subdirectories under `tables/` or `spatial/` MUST be:
-  - Added to this layout section,  
-  - Governed by appropriate FAIR+CARE and sovereignty rules,  
-  - Connected to STAC/DCAT/graph modeling where relevant.
+### Background
+- KFM’s pipeline is ordered and contract-driven: ETL produces deterministic, replayable transforms; artifacts move through `data/raw/ → data/work/ → data/processed/`.
+- `data/work/` exists to keep **in-progress** ETL outputs separate from:
+  - **inputs** (`data/raw/`)
+  - **publishable outputs** (`data/processed/` + catalogs)
 
----
+### Assumptions
+- ETL runs are intended to be **deterministic** and **replayable** given the same inputs/configs.
+- Processed outputs (not work artifacts) are the ones that get:
+  - STAC Collection/Item representation
+  - DCAT mapping
+  - PROV activity record linking inputs → outputs
 
-## 🔄 Role in the Data Lifecycle
+### Constraints / invariants
+- `data/work/` is **not** a stable public contract:
+  - Don’t build downstream dependencies (UI, API, catalog loaders) that require `data/work/`.
+- Promotion boundary:
+  - If an output is meant to be consumed downstream (catalog → graph → API → UI), it must be promoted to `data/processed/` and cataloged/validated.
+- Governance boundary:
+  - If staging artifacts contain potentially sensitive cultural sites/locations, apply redaction/generalization rules before any publishing/export; consult `docs/governance/SOVEREIGNTY.md` and related governance docs.
+- No secrets:
+  - Never store credentials, tokens, or private keys in `data/work/` (or anywhere in the repo).
 
-Within the canonical **raw → work → processed → catalogs → graph** flow, the Work layer:
+### Open questions
+| Question | Why it matters | Proposed owner | Status |
+|---|---|---|---|
+| Should we standardize a required `data/work/<domain>/<run-id>/manifest.json` schema? | Improves reproducibility + automated promotion | TBD | Open |
+| What is the official retention/cleanup policy for `data/work/` artifacts? | Prevents unbounded repo growth | TBD | Open |
+| Are large `data/work/` artifacts tracked via DVC/object storage or excluded via `.gitignore`? | Keeps Git history manageable | TBD | Open |
 
-1. **Ingests from `data/raw/`**  
-   - Pipelines read immutable sources and write normalized outputs into `tables/` and `spatial/`.
+### Future extensions
+- Define a minimal “work manifest” schema that can be auto-generated by ETL and later converted into PROV and/or STAC assets.
+- Add CI checks that prevent accidental commits of sensitive/binary staging artifacts (size thresholds + file-type denylist).
+- Add a “promotion tool” that:
+  1) validates, 2) stamps checksums, 3) writes STAC/DCAT/PROV, 4) moves outputs to `data/processed/`.
 
-2. **Applies data contracts & quality controls**  
-   - Schema enforcement, value ranges, CRS harmonization, and geometry checks.
+## 🗺️ Diagrams
 
-3. **Performs domain‑specific enrichment**  
-   - Join external keys, compute indices, derive masks, aggregate by H3 or polygons.
+### KFM data flow positioning for `data/work/`
+~~~mermaid
+flowchart TD
+  A[data/raw/ (inputs)] --> B[data/work/ (staging)]
+  B --> C[data/processed/ (final outputs)]
 
-4. **Prepares catalog‑ready views**  
-   - Drafts STAC/DCAT metadata in `metadata/stac-drafts/` and `metadata/dcat-drafts/`.
-
-5. **Feeds `data/processed/`**  
-   - Only ETL outputs that pass Work‑layer governance and validation are promoted.
-
-6. **Emits lineage & telemetry**  
-   - PROV‑O / OpenLineage documents, checksum updates, and sustainability metrics.
-
-No data should skip the Work layer on its way from `raw/` into `processed/` (except in tightly‑scoped emergency flows which MUST be documented and short‑lived).
-
----
-
-## 🧬 Entities (PROV‑O: `prov:Entity`)
-
-Every **materialized artifact** in `data/work/` that is a meaningful pipeline output SHOULD be modeled as a `prov:Entity`. At a minimum, Work‑layer entities SHOULD carry:
-
-- **Path & identity**
-  - `kfm:path` — repository‑relative path (e.g., `data/work/tables/hazards/events_1900_1950.parquet`)  
-  - `kfm:entity_uuid` — stable Work‑layer UUID (ASCII‑safe URI/URN)
-
-- **Integrity & versioning**
-  - `checksum_sha256` — content hash  
-  - `source_commit` — Git commit SHA of the pipeline code  
-  - `source_dvc_rev` (if applicable) — DVC version for upstream raw data
-
-- **Governance metadata**
-  - `fair_category` — e.g., `F1-A1-I1-R1`  
-  - `care_label` — e.g., `Collective Benefit · Authority to Control · Responsibility · Ethics`  
-  - `sovereignty_flag` / `sensitivity_level` — to reflect cultural, ecological, or privacy risk
-
-- **Telemetry block (if significant job)**
-  - `energy_wh`  
-  - `carbon_gco2e`  
-  - `records_processed` / `bytes_processed`  
-
-Entity metadata is written into:
-
-- JSON sidecars in `metadata/` (e.g., `metadata/lineage/<entity_uuid>.json`), and/or  
-- Central lineage docs under `data/reports/self-validation/lineage/`.
-
-Once an entity is **promoted** to `data/processed/`, its Work‑layer metadata becomes part of its permanent provenance record and MUST NOT be silently changed.
-
----
-
-## ⚙️ Activities (PROV‑O: `prov:Activity`)
-
-Each ETL or AI operation that creates or modifies Work‑layer entities is a `prov:Activity`. Activities SHOULD record:
-
-- **Identity & config**
-  - `pipeline_id` — human‑readable name (e.g., `etl.hazards.events.v3`)  
-  - `pipeline_version` — semver or Git tag  
-  - `config_fingerprint_sha256` — hash of pipeline configuration used  
-  - `environment` — container image tag or environment spec ID
-
-- **Execution details**
-  - `started_at` / `ended_at` — ISO 8601 timestamps (`YYYY-MM-DDTHH:MM:SSZ`)  
-  - `inputs` / `outputs` — lists of Work‑layer and raw entities (by path or UUID)  
-  - Validation coverage metrics (e.g., `% rows tested`, `% rules passed`)
-
-- **Governance hooks**
-  - FAIR+CARE validation result (pass/warn/fail),  
-  - Sovereignty review status,  
-  - Any manual overrides or waivers with justification.
-
-Activities are typically captured via:
-
-- OpenLineage events emitted by CI/CD (`data_pipeline.yml`, `kfm-auto-update.yml`), and/or  
-- Python scripts such as `scripts/emit_lineage.py`.
-
----
-
-## 🧑‍💼 Agents (PROV‑O: `prov:Agent`)
-
-Agents represent people, services, or collectives that are responsible for Work‑layer operations:
-
-Examples:
-
-- `@kfm-etl-ops` — pipeline operators and maintainers  
-- `@kfm-architecture` — data/ontology architects  
-- `@faircare-council` — FAIR+CARE governance stewards  
-- `@kfm-security` — integrity & access control  
-- `@kfm-data` — catalog and metadata maintainers  
-
-Each Agent is modeled as a `prov:Agent` and is linked to Activities via relationships such as:
-
-- `prov:wasAssociatedWith`  
-- `prov:actedOnBehalfOf`
-
-These associations drive:
-
-- Audit trails,  
-- Governance dashboards,  
-- Reviewer assignment for high‑risk changes.
-
----
-
-## 🧪 Validation in the Work Layer
-
-Although Work is transient, validation here is **the primary shield** that prevents flawed data from reaching `processed/`, catalogs, or the graph.
-
-### Validation Scope
-
-Work‑layer validation SHOULD include:
-
-- **Schema & contracts**
-  - JSON Schema / SHACL for metadata,  
-  - Tabular schema checks (types, allowed values, required fields),  
-  - Spatial schema checks (geometry type, CRS, required attributes).
-
-- **Geospatial integrity**
-  - Geometry validity (buffer(0) style checks),  
-  - CRS correctness and expected transform history,  
-  - Meaningful `bbox` coverage (no zero‑area extents unless well‑justified).
-
-- **FAIR+CARE & sovereignty**
-  - CARE labels present and appropriate,  
-  - Sovereignty and sensitivity flags set correctly,  
-  - H3 generalization or masking applied where required before promotion.
-
-- **Security & integrity**
-  - Checksum verification vs. `data/checksums/raw/` (for upstream),  
-  - No secrets or credentials embedded in Work‑layer data.
-
-- **AI‑specific checks** (when applicable)
-  - Bias and drift signals,  
-  - Explainability/feature importance logs (where required),  
-  - Clear labeling of synthetic / AI‑generated values.
-
-### Where Validation Outputs Live
-
-Work‑layer validation feeds into:
-
-- `data/reports/self-validation/` — schema, FAIR+CARE, and integrity reports,  
-- `data/reports/audit/` — higher‑level governance and incident follow‑ups,  
-- `data/reports/telemetry/` — aggregated metrics on ETL performance and sustainability.
-
-Promotion from `data/work/` to `data/processed/` MUST be blocked when critical validation fails.
-
----
-
-## 💾 Example Usage Patterns
-
-### Python — Read Work‑Layer Metadata Sidecar
-
-~~~python
-import json
-from pathlib import Path
-
-entity_uuid = "urn:kfm:work:hazards:events_1900_1950"
-meta_path = Path("data/work/metadata/lineage") / f"{entity_uuid.replace(':', '_')}.json"
-
-with meta_path.open() as f:
-    meta = json.load(f)
-
-print("Checksum:", meta["checksum_sha256"])
-print("Upstream sources:", meta["upstream_entities"])
+  C --> D[data/stac/ (STAC/DCAT/PROV catalogs)]
+  D --> E[Neo4j graph]
+  E --> F[APIs]
+  F --> G[UI]
+  E --> H[Story Nodes / Focus Mode]
 ~~~
 
-### Bash — Sanity Check of a Spatial Intermediate
+### Extension points checklist (for future work)
+- [ ] Data: new domain added under `data/<domain>/` (and staged via `data/work/` as needed)
+- [ ] STAC: new collection + item schema validation (for promoted outputs)
+- [ ] PROV: activity + agent identifiers recorded (for promoted outputs)
+- [ ] Graph: new labels/relations mapped + migration plan (if outputs introduce new entities)
+- [ ] APIs: contract version bump + tests (if new outputs require new endpoints)
+- [ ] UI: layer registry entry + access rules (if new outputs become visual layers)
+- [ ] Focus Mode: provenance references enforced (no claims without linked evidence)
+- [ ] Telemetry: new signals + schema version bump (if new runs introduce new metrics)
 
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+- `data/work/` artifacts should **not** be referenced directly in Story Nodes / Focus Mode.
+- Only outputs that have been promoted to `data/processed/` **and** cataloged (STAC/DCAT/PROV) should surface as evidence for narrative generation.
+
+### Provenance-linked narrative rule
+- Every factual claim must trace to a dataset / record / asset ID.
+
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV) for any outputs promoted beyond `data/work/`
+- [ ] Graph integrity checks (if new processed outputs are ingested)
+- [ ] API contract tests (if behavior changes)
+- [ ] UI schema checks (layer registry)
+- [ ] Security and sovereignty checks (as applicable)
+
+### Reproduction
 ~~~bash
-# Verify checksum against recorded value
-sha256sum data/work/spatial/hazards/events_1900_1950.gpkg
-
-# Inspect CRS and geometry types with ogrinfo (or equivalent)
-ogrinfo -al -so data/work/spatial/hazards/events_1900_1950.gpkg
+# Example placeholders — replace with repo-specific commands
+# 1) Run ETL deterministically (same inputs/configs => same outputs)
+# 2) Validate schemas
+# 3) Run tests + lint docs
+#
+# e.g.
+# make etl
+# make validate-schemas
+# make test
+# make docs-lint
 ~~~
 
-### Cypher — Trace Work‑Layer Lineage to Raw Sources
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| TBD / N-A | ETL runner | `docs/telemetry/` + `schemas/telemetry/` |
 
-~~~cypher
-MATCH (w:Entity {layer: "work", domain: "hazards"})
-OPTIONAL MATCH (w)-[:wasGeneratedBy]->(act:Activity)-[:used]->(r:Entity {layer: "raw"})
-RETURN w.kfm_id AS work_id,
-       collect(DISTINCT r.kfm_id) AS raw_sources,
-       max(act.ended_at) AS last_run_at;
-~~~
+## ⚖ FAIR+CARE & Governance
 
----
+### Review gates
+- Changes that introduce any of the following should trigger governance review:
+  - New sensitive layers
+  - New AI narrative behaviors
+  - New external data sources
+  - New public-facing endpoints
 
-## 🛣️ Roadmap (Work Layer)
+### CARE / sovereignty considerations
+- `data/work/` may temporarily contain sensitive location-derived artifacts during processing.
+- Before promotion/publishing:
+  - apply redaction/generalization rules where required,
+  - ensure any restricted coordinates are protected per sovereignty policy.
 
-Planned enhancements for the Work Data Layer:
-
-- **v11.2.x** —  
-  - Standardize per‑entity lineage sidecars in `metadata/lineage/`.  
-  - Tighten integration with `data_pipeline.yml` and `kfm-auto-update.yml` for promotion gating.
-
-- **v11.3** —  
-  - Validation‑driven automatic promotion pipelines (Work → Processed → STAC/DCAT).  
-  - Domain‑specific Work‑layer dashboards (hydrology, hazards, climate).
-
-- **v11.4** —  
-  - AI‑assisted anomaly detection for Work‑layer tables and spatial layers.  
-  - Risk scoring for cultural/heritage layers before catalog publication.
-
-- **v11.5** —  
-  - Integrated dataset‑risk scoring and FAIR+CARE impact metrics across all Work‑layer domains.
-
----
+### AI usage constraints
+- Ensure this doc’s `ai_transform_permissions` / `ai_transform_prohibited` align with intended use.
 
 ## 🕰️ Version History
 
-| Version | Date       | Author       | Summary                                                                                     |
-|--------:|------------|--------------|---------------------------------------------------------------------------------------------|
-| v11.2.3 | 2025-12-09 | `@kfm-ops`   | Aligned with data/README & data/ARCHITECTURE; simplified layout; integrated PROV/OpenLineage and FAIR+CARE semantics; updated telemetry refs. |
-| v11.1.0 | 2025-11-19 | `@kfm-ops`   | KFM-MDP v11 refactor; PROV-O hardening; introduced Work-layer telemetry schema reference.   |
-| v11.0.0 | 2025-11-15 | `@kfm-ops`   | Initial v11 migration for Work Data Layer documentation.                                   |
-| v10.3.1 | 2025-11-13 | `@kfm-ops`   | Retention policy and v10 telemetry wiring for Work-layer intermediates.                    |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-17 | Initial `data/work/` README | TBD |
 
 ---
-
-<div align="center">
-
-⚙️ **Kansas Frontier Matrix — Work Data Layer (v11.2.3)**  
-Staging‑First · FAIR+CARE‑Governed · Provenance‑Aware  
-
-[⬅️ Back to Data Overview](../README.md) ·  
-[🗄️ Data System Architecture](../ARCHITECTURE.md) ·  
-[🏗️ Repository Architecture](../../ARCHITECTURE.md) ·  
-[⚖️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
