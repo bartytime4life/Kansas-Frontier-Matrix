@@ -124,17 +124,17 @@ releases/
 ~~~mermaid
 flowchart LR
   subgraph Data
-    A[Raw Sources] --> B[ETL + Normalization]
-    B --> C[STAC Items + Collections]
-    C --> D[DCAT Dataset Views]
-    C --> E[PROV Lineage Bundles]
+    A["Raw Sources"] --> B["ETL + Normalization"]
+    B --> C["STAC Items + Collections"]
+    C --> D["DCAT Dataset Views"]
+    C --> E["PROV Lineage Bundles"]
   end
 
-  C --> G[Neo4j Graph]
-  G --> H[API Layer]
-  H --> I[Map UI (React/MapLibre/Cesium)]
-  I --> J[Story Nodes]
-  J --> K[Focus Mode]
+  C --> G["Neo4j Graph"]
+  G --> H["API Layer"]
+  H --> I["Map UI — React · MapLibre · Cesium"]
+  I --> J["Story Nodes"]
+  J --> K["Focus Mode"]
 ~~~
 
 ## 📦 Data & Metadata
