@@ -1,326 +1,297 @@
 ---
-title: "🌫️ Air Quality — Source Registry"
+title: "Air Quality — Sources (README)"
 path: "data/air-quality/sources/README.md"
-version: "v0.1.0"
-last_updated: "2025-12-16"
-status: "Draft"
-doc_kind: "Data"
-header_profile: "data-spec"
-footer_profile: "standard"
+version: "v1.0.0"
+last_updated: "2025-12-17"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
 
-tags:
-  - data
-  - air-quality
-  - sources
-  - metadata
-  - provenance
-  - etl
-  - stac
-  - dcat
-  - prov
-
-guardianship: "KFM Data Council"
-domain: "air-quality"
-audience:
-  - contributors
-  - data-engineering
-  - research
-  - governance-review
-
-severity: "info"
-estimated_read_time: "8–12 min"
-
-related_docs:
-  - "data/air-quality/ingestion/README.md"
-  - "data/README.md"
-  - "docs/patterns/provenance/README.md"
-  - "docs/patterns/stac/README.md"
-
-canonical_schema: "schemas/<source-metadata-schema>.json"
-provenance_required: true
-change_log_required: true
-
-ai_generated: true
-ai_generated_by: "GPT-5.2 Pro"
-ai_generated_on: "2025-12-16"
-
-license: "CC-BY 4.0"
-classification: "public"
-sensitivity: "low"
-
-fair_category: "environmental-observations"
-care_label: "general"
-
-governance_ref: "governance/ROOT-GOVERNANCE.md"
-ethics_ref: "faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-kfm_version: "v11"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-pipeline_contract_version: "KFM-PDC v11"
-mcp_version: "MCP 2.0"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-commit_sha: "<fill-at-merge>"
-provenance_chain: []
-semantic_document_id: "kfm-data-air-quality-sources-readme"
-doc_uuid: "urn:kfm:doc:data:air-quality:sources:readme:v0.1.0"
-event_source_id: "ledger:kfm:data:air-quality:sources:readme:v0.1.0"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:data:air-quality:sources:readme:v1.0.0"
+semantic_document_id: "kfm-data-air-quality-sources-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:air-quality:sources:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
-  - summarization
-  - extraction
-  - classification
-  - qa
-  - transformation
-
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "unbounded-generation-without-citations"
-  - "training-on-sensitive-cultural-data"
-  - "location-doxxing"
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# Air Quality — Source Registry
-
-<p align="center">
-  <strong>Purpose:</strong> Provide a single, auditable registry of upstream air-quality data sources (datasets, APIs, feeds, and archives) used by KFM’s air-quality ingestion pipelines—capturing licensing, access method, spatial/temporal coverage, and provenance hooks required for STAC/DCAT/PROV.
-</p>
+# Air Quality — Sources (README)
 
 ## 📘 Overview
 
-This directory is the **authoritative “source-of-sources”** for the *air-quality* domain. It is intentionally **metadata-first**:
+### Purpose
+- Record *upstream* air-quality data sources used (or proposed) for the `air-quality` domain, including license/terms, access method, and provenance expectations.
+- Provide a single place to confirm that every source used in pipelines is traceable and governance-reviewable (especially for “new external data sources”).
 
-- **What belongs here:** machine-readable source descriptors (JSON/YAML as governed), human-readable source notes, and any minimal artifacts required to support provenance (e.g., citation strings, license notes).
-- **What does not belong here:** raw downloads, intermediate processing outputs, or final processed datasets. Those belong in the data lifecycle staging areas (e.g., `data/raw/`, `data/work/`, `data/processed/`) and should be tracked with checksums and/or DVC pointers where applicable.
+### Scope
 
-Quick links:
+| In Scope | Out of Scope |
+|---|---|
+| Source registry conventions, required metadata fields, link/license expectations, ingestion notes, validation expectations | Air-quality analysis methods, derived dataset definitions, map styling, API contracts, story node narrative content |
 
-- Air quality ingestion SOP: `../ingestion/README.md`
-- Data tree conventions: `../../README.md`
-- Provenance pattern: `../../../docs/patterns/provenance/README.md`
-- STAC pattern: `../../../docs/patterns/stac/README.md`
+### Audience
+- Primary: Data engineers and pipeline maintainers, QA/CI maintainers.
+- Secondary: Frontend layer maintainers (need dataset attribution), governance reviewers.
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **Upstream source**: authoritative provider of raw air-quality measurements or indices.
+  - **Derived dataset**: a transformed product produced by KFM pipelines.
+  - **Source contract**: machine-readable metadata about an upstream source (path/schema not confirmed here).
+  - **Provenance manifest**: PROV/OpenLineage-like record tying outputs to inputs and code version.
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `data/air-quality/sources/README.md` | Data | Domain-scoped source registry |
+| Air-quality domain root | `data/air-quality/` | Data | Raw/work/processed outputs |
+| Pipeline code (air-quality) | `src/pipelines/` | Data/Platform | Path may vary by repo |
+| STAC outputs | `data/stac/` or `data/air-quality/stac/` | Data | Collection + items for datasets |
+| Provenance outputs | `data/provenance/` or domain folder | Data/Platform | PROV bundles per run |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Each source entry includes a landing page and explicit license/terms reference
+- [ ] Each source entry includes access method + update cadence + expected geographic/temporal coverage
+- [ ] Validation steps listed (including link/license checks in CI)
+- [ ] Governance triggers and sensitivity notes included (if any sources contain restricted locations)
 
 ## 🗂️ Directory Layout
 
-This folder should remain small and reviewable. Prefer **one file per upstream source**.
+### This document
+- `path`: `data/air-quality/sources/README.md` (must match front-matter)
 
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed/stac outputs |
+| Air-quality domain | `data/air-quality/` | Domain-specific lifecycle folders |
+| Documentation | `docs/` | Canonical governed docs |
+| Pipelines | `src/pipelines/` | ETL + transforms |
+| Schemas | `schemas/` | JSON schemas + contract validation |
+| CI / Tests | `tests/` + workflows | Validation and link/license checks |
+
+### Expected file tree for this sub-area
 ~~~text
-data/
-  air-quality/
-    sources/
-      README.md
-
-      # Optional: a generated or maintained index that the ingestion pipeline reads first.
-      sources.index.json
-
-      # One source record per upstream provider/dataset/feed.
-      <source-id>.source.json
-
-      # Optional companion notes when a source needs human explanation (caveats, QA history).
-      <source-id>.notes.md
-
-      # Optional license clarification when upstream terms are complex or nonstandard.
-      <source-id>.license.md
-~~~
-
-Relationship to the broader data lifecycle (context only):
-
-~~~text
-data/
-  raw/          # raw ingests and/or DVC pointers (by domain)
-  work/         # intermediate transforms and staging artifacts
-  processed/    # canonical processed outputs used by APIs/UI
-  stac/         # STAC Collections/Items for spatiotemporal assets
-  reports/      # QA/QC outputs, summaries, profiling reports
-  checksums/    # integrity hashes for artifacts that must be verifiable
-  updates/      # incremental update payloads
+📁 data/
+└── 📁 air-quality/
+    ├── 📁 raw/
+    ├── 📁 work/
+    ├── 📁 processed/
+    ├── 📁 stac/
+    ├── 📁 reports/
+    ├── 📁 provenance/
+    └── 📁 sources/
+        └── 📝 README.md
 ~~~
 
 ## 🧭 Context
 
-KFM treats “adding a dataset” as **adding a governed source record + a reproducible ingestion path**.
+### Background
+Air-quality layers can be time-varying and are often consumed as “current conditions” as well as historical time series. KFM requires deterministic, provenance-linked pipelines: sources must be documented with licenses and stable identifiers, and derived outputs must be publishable into STAC/DCAT/PROV so the UI and Focus Mode can show evidence and attribution.
 
-In practice, the flow for air-quality is:
+### Assumptions
+- Air-quality sources may include both:
+  - Official regulatory monitoring (station-based)
+  - Community sensors (may have more complex privacy/terms)
+  - Modeled surfaces (gridded, derived)
+- The authoritative schema/location for “source contracts” may be centralized (not confirmed here).
 
-1. **Define/Update source metadata** (this folder)
-2. **Ingest** (domain ingestion SOP + scripts/config)
-3. **Stage and validate** (work + QA checks + checksums)
-4. **Publish** (processed outputs + STAC/DCAT + provenance)
+### Constraints / invariants
+- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode is preserved.
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- New external data sources are a governance review trigger (see governance section).
 
-### Why a dedicated source registry?
+### Open questions
 
-A source registry makes it possible to:
+| Question | Owner | Target date |
+|---|---|---|
+| What are the initial air-quality datasets committed for v12 (pollutants, indices, cadence)? | TBD | TBD |
+| Where is the canonical source-contract schema and validator located? | TBD | TBD |
+| Do any sources impose redistribution constraints requiring special handling? | TBD | TBD |
 
-- enforce that every dataset shown in the UI/API has a **traceable origin**,
-- generate catalogs (DCAT/STAC) consistently from a single metadata spine,
-- run repeatable ingestion jobs that don’t embed undocumented URLs or access parameters in code.
+### Future extensions
+- Add per-source “data dictionary” docs (fields + QA flags).
+- Add per-source automated freshness checks (scheduled CI) for API-based sources.
+- Add “derived dataset registry” mapping raw → processed → STAC collection ids.
 
-### Source IDs
+## 🗺️ Diagrams
 
-Use **stable, slug-like IDs**. The source ID becomes the filename stem and should not change unless the upstream source is fundamentally replaced.
-
-Recommended pattern:
-
-- `airq-<provider>-<dataset>-<scope>`
-- Examples (illustrative only): `airq-epa-aqs-ambient`, `airq-local-sensors-pm25`
-
-If a source is replaced, create a **new source ID** and link them via `replaces` / `supersedes` metadata rather than rewriting history.
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  S[Upstream Sources<br/>APIs / downloads] --> R[data/air-quality/raw]
+  R --> W[data/air-quality/work]
+  W --> P[data/air-quality/processed]
+  P --> C[STAC Collection + Items]
+  P --> V[PROV lineage bundle]
+  C --> G[Graph index (Neo4j)]
+  G --> A[APIs]
+  A --> U[Map UI + Focus Mode]
+~~~
 
 ## 📦 Data & Metadata
 
-### Minimum required fields for each source record
+### Inputs
 
-The KFM workflow expects each source to include the basics needed to identify, access, license, and place the data in space/time. At minimum, capture:
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Upstream source payloads | CSV/JSON/GeoTIFF/etc. | External publishers | Checksums + schema checks (as available) |
+| Source metadata | Markdown + (optional) JSON | `data/air-quality/sources/` and/or `data/sources/` | Link/license validation; schema validation if defined |
+| Pipeline parameters | JSON/YAML | `src/pipelines/` configs | Schema-validated (if schema exists) |
 
-- **Identity:** name, description, publisher/provider
-- **Access:** landing page URL(s), API endpoint(s), auth requirements (if any), rate limits (if any)
-- **License & attribution:** license name, license URL or text, attribution statement
-- **Coverage:** spatial extent + temporal extent
-- **Resolution & format:** spatial resolution (if applicable), temporal frequency, file formats/encodings
-- **Domain semantics:** pollutants/variables measured, units, measurement method notes (if relevant)
-- **Operational notes:** known limitations, QA caveats, update cadence, expected ingestion strategy
+### Outputs
 
-If an official JSON schema exists in `schemas/`, the schema is the source of truth. This README describes intent and review expectations.
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Normalized tables | Parquet/CSV | `data/air-quality/processed/` | Domain schema (TBD) |
+| Geospatial layers | GeoJSON/COG/PMTiles | `data/air-quality/processed/` | Layer contract (TBD) |
+| STAC catalog entries | JSON | `data/air-quality/stac/` or `data/stac/` | STAC 1.x + extensions |
+| DCAT views | JSON-LD/RDF | `data/dcat/` or `docs/data/` | DCAT profile |
+| Provenance | JSON-LD | `data/air-quality/provenance/` | PROV profile |
 
-### Example source record (template)
+### Sensitivity & redaction
+- Most regulatory air-quality data is public, but community sensor sources may:
+  - Include fine-grained location tied to individuals/property
+  - Have terms restricting redistribution
+- If any source is sensitive:
+  - Document required generalization (e.g., aggregate to county/tract or grid)
+  - Ensure UI layer gating prevents precise coordinate exposure
 
-~~~json
-{
-  "id": "airq-<provider>-<dataset>-<scope>",
-  "title": "<human title>",
-  "description": "<what it is and why KFM uses it>",
-  "publisher": {
-    "name": "<org name>",
-    "homepage": "<https://...>"
-  },
-  "access": {
-    "landing_page": "<https://...>",
-    "api_endpoint": "<https://...>",
-    "access_type": "download|api|archive",
-    "auth": "none|api_key|oauth|other",
-    "rate_limits": {
-      "notes": "<optional>"
-    }
-  },
-  "license": {
-    "name": "<license short name>",
-    "url": "<https://...>",
-    "attribution": "<required attribution text if any>"
-  },
-  "coverage": {
-    "spatial_extent": {
-      "type": "bbox",
-      "bbox": [-102.051, 36.993, -94.588, 40.003],
-      "crs": "EPSG:4326"
-    },
-    "temporal_extent": {
-      "start": "<YYYY-MM-DD or ISO8601>",
-      "end": "<YYYY-MM-DD or null>",
-      "accrual_periodicity": "hourly|daily|monthly|annual|irregular|continuous"
-    }
-  },
-  "data_characteristics": {
-    "variables": [
-      {
-        "name": "<pollutant or metric>",
-        "unit": "<unit>",
-        "method": "<optional>"
-      }
-    ],
-    "formats": ["csv", "json", "netcdf", "geotiff", "other"],
-    "resolution": {
-      "spatial": "<optional>",
-      "temporal": "<optional>"
-    }
-  },
-  "provenance": {
-    "retrieval_strategy": "<brief: how we fetch it>",
-    "expected_lineage": "<brief: how it becomes processed>",
-    "citations": [
-      "<citation string or bibliographic reference>"
-    ]
-  },
-  "governance": {
-    "classification": "public",
-    "sensitivity": "low",
-    "fair_category": "environmental-observations",
-    "care_label": "general",
-    "notes": "<any restrictions or special handling>"
-  },
-  "lifecycle": {
-    "status": "active|deprecated|paused",
-    "replaces": [],
-    "superseded_by": []
-  }
-}
-~~~
-
-### Notes on licenses and terms
-
-- **Do not assume “open data”** even if access is public. Record the license explicitly.
-- If the upstream data has restrictions (e.g., redistribution limits, noncommercial terms), capture them clearly and flag for governance review before publishing processed outputs.
-
-### Location sensitivity (precision control)
-
-Air-quality data can include sensor coordinates. When sources include locations that might be sensitive (e.g., private property sensors, sensitive sites), document any required **precision reduction** or **masking rules** here so downstream steps can enforce them consistently.
-
-## 🧪 Validation & CI/CD
-
-Source records should be validated in CI the same way code is validated:
-
-1. **Schema validation** (JSON schema or repo-approved validator)
-2. **Linting** (format and required fields)
-3. **Governance gates** (license presence, sensitivity labeling, CARE checks)
-4. **Provenance checks** (presence of sufficient provenance hooks to generate DCAT/STAC/PROV)
-
-Local expectations (adjust to repo tooling):
-
-- Validate changed source records against the canonical schema in `schemas/`.
-- Run the relevant “data + docs” checks used in CI prior to PR.
-- If the change impacts ingestion behavior, run the ingestion pipeline in a minimal test mode and attach logs under the governed run-log location (e.g., `mcp/runs/`).
+### Quality signals
+- Completeness: expected station coverage/time coverage per period
+- Value sanity: pollutant ranges, AQI range checks, missingness thresholds
+- Spatial validity: valid geometries; consistent CRS; station points within expected region
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-KFM’s catalog strategy is intentionally multi-layered:
+### STAC
+- Each publishable dataset should have:
+  - A STAC Collection (dataset-level)
+  - STAC Items (per time slice / tile / station set), as appropriate
+- Assets should include machine-readable attribution/license fields where applicable.
 
-- **Human-readable:** README/docs describing sources and intent.
-- **Machine-readable:** DCAT/STAC catalogs generated from authoritative metadata.
-- **Lineage:** PROV records connecting raw → transforms → processed → published artifacts.
+### DCAT
+- Minimum mapping expected:
+  - Title, description, license, keywords, publisher/contact
+- Use stable dataset identifiers so UI and Focus Mode can reference them.
 
-Recommended mapping:
+### PROV-O
+- For each pipeline run that produces air-quality outputs:
+  - Record the transformation activity and inputs (source ids + versions)
+  - Tie outputs to code version (`commit_sha`) for reproducibility
 
-- This source record → **DCAT Dataset** (and **DCAT DataService** when the source is primarily an API)
-- Ingestion execution (job run) → **PROV Activity**
-- Retrieved raw file(s) → **PROV Entity** (and checksum artifact if required)
-- Processed air-quality product (GeoJSON/COG/tiles/etc.) → **STAC Item**
-- Product grouping (e.g., “Air Quality — Annual PM2.5”) → **STAC Collection**
+### Versioning
+- New versions link predecessor/successor.
+- Graph mirrors version lineage.
 
-### API-first sources (DCAT DataService)
+### Extension points checklist (for future work)
+- [ ] Data: new domain added under `data/<domain>/.`
+- [ ] STAC: new collection + item schema validation
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests
+- [ ] UI: layer registry entry + access rules
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
 
-For real-time or endpoint-driven sources, represent the endpoint as a **DataService** and connect it to the dataset it serves. This helps downstream catalogs and UIs distinguish “downloadable files” from “queryable services.”
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+- Air-quality layers may provide contextual evidence for:
+  - Environmental events (smoke/dust/drought conditions)
+  - Health/environment narratives at place + time
+- Focus Mode must only present air-quality claims that trace to dataset ids/time windows.
+
+### Provenance-linked narrative rule
+- Every claim must trace to a dataset / record / asset ID.
+
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "air_quality_TBD"
+focus_time: "TBD"
+focus_center: [-98.0000, 38.0000]
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Source link + license checks for any registered source
+- [ ] Schema validation (STAC/DCAT/PROV) for published catalogs
+- [ ] Data quality checks (ranges, missingness, geometry validity)
+- [ ] Security and sovereignty checks (as applicable)
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) fetch raw source(s)
+# 2) run air-quality pipeline
+# 3) validate STAC/DCAT/PROV
+# 4) run domain quality checks
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| source_link_check_failed | CI | `docs/telemetry/` + `schemas/telemetry/` |
+| air_quality_pipeline_run | pipeline | `mcp/runs/` or domain provenance folder |
 
 ## ⚖ FAIR+CARE & Governance
 
-This directory must remain aligned with:
+### Review gates
+- Governance review triggers include:
+  - New external data sources
+  - Any sources with redistribution restrictions
+  - Any source containing potentially sensitive location detail
 
-- FAIR: source metadata should be findable and reusable with explicit licensing and identifiers.
-- CARE: Indigenous data protection, cultural sensitivity, and sovereignty constraints must be honored.
-- KFM governance: changes that affect publication scope, access rights, or sensitive locations require governance review.
+### CARE / sovereignty considerations
+- If a source intersects protected/sovereign communities or sensitive sites:
+  - Document redaction/generalization rules
+  - Ensure gating is enforced end-to-end (catalog → API → UI)
 
-If a source touches Indigenous lands, cultural heritage, or sensitive locations, include explicit notes in the source record and link to any required handling rules.
+### AI usage constraints
+- Ensure doc’s AI permissions/prohibitions match intended use.
 
 ## 🕰️ Version History
 
-| Date       | Version | Change summary                                      | Author |
-|------------|---------|------------------------------------------------------|--------|
-| 2025-12-16 | v0.1.0  | Initial README establishing air-quality source registry conventions | GPT-5.2 Pro |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-17 | Initial draft air-quality sources README | TBD |
 
 ---
-
-[⬅ Root README](../../../README.md) ·
-[🧱 Data Architecture](../../ARCHITECTURE.md) ·
-[📂 Data Index](../../README.md) ·
-[🌫️ Air Quality Domain](../README.md) ·
-[🔌 Ingestion SOP](../ingestion/README.md) ·
-[🏛️ Governance Charter](../../../docs/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../../docs/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../../docs/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
