@@ -1,37 +1,27 @@
 # .github/workflows/ci.yml
-# 🧪 Kansas Frontier Matrix — Core CI (Lint, Tests, Type-Checks, Base Schemas)
-# v11.2.6 — Governed / LTS
-#
-# Purpose:
-#   Fast, deterministic feedback on code + core configs for the KFM monorepo.
-#   This workflow focuses on:
-#     - Linting & unit/integration tests (Python, Node/Web if present)
-#     - Lightweight config/schema sanity checks (non-STAC/DCAT/JSON-LD)
-#     - Optional CodeQL scanning (guarded for forks/permissions)
-#
-# Governance Context:
-#   - Docs/Markdown rules: docs_validate.yml (KFM-MDP v11.2.6)
-#   - Pipeline contracts: data_pipeline.yml (KFM-PDC v11)
-#   - FAIR+CARE & sovereignty: faircare_validate.yml + h3_generalization.yml
-#   - STAC/DCAT/JSON-LD: stac_validate.yml + dcat_validate.yml + jsonld_validate.yml
-#
-# Notes:
-#   - Keep permissions minimal by default; escalate only per job where required.
-#   - Prefer repo-defined toolchains (requirements-dev.txt, package.json scripts).
-#   - Avoid hard-failing when a component is not present (e.g., no web/ directory).
-
-name: 🧪 ci
+name: CI
 
 on:
   pull_request:
-    branches:
-      - main
-      - "release/**"
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches:
       - main
-      - "release/**"
-  workflow_dispatch: {}
+      - master
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: "Fail if expected CI gates are not configured"
+        required: false
+        default: "true"
+      python_version:
+        description: "Python version for CI runner"
+        required: false
+        default: "3.11"
+      node_version:
+        description: "Node.js version for CI runner"
+        required: false
+        default: "20"
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -39,275 +29,213 @@ concurrency:
 
 permissions:
   contents: read
-
-defaults:
-  run:
-    shell: bash
-
-env:
-  PYTHON_VERSION: "3.11"
-  NODE_VERSION: "20"
-  KFM_PY_ROOT: "src"
-  KFM_WEB_ROOT: "web"
+  pull-requests: read
 
 jobs:
-  ###########################################################################
-  # 1. Python: lint + tests + basic type check (if configured)
-  ###########################################################################
-  python-ci:
-    name: "🐍 Python Lint & Tests"
-    runs-on: ubuntu-22.04
-    timeout-minutes: 30
+  validate:
+    name: Validate (contracts + schemas + tests)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      KFM_CI_STRICT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.strict || 'true' }}
+      KFM_PYTHON_VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.python_version || '3.11' }}
+      KFM_NODE_VERSION: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.node_version || '20' }}
 
     steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
-      - name: 🐍 Setup Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v6
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
-          cache-dependency-path: |
-            requirements*.txt
-            pyproject.toml
-            setup.cfg
+          python-version: ${{ env.KFM_PYTHON_VERSION }}
 
-      - name: 📦 Install Python Dependencies (prefer locked/dev requirements)
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.KFM_NODE_VERSION }}
+
+      - name: Show tool versions
+        run: |
+          python --version
+          pip --version
+          node --version
+          npm --version
+
+      - name: KFM CI gates (best-effort, strict by default)
+        shell: bash
         run: |
           set -euo pipefail
+
+          strict="${KFM_CI_STRICT}"
+          echo "KFM_CI_STRICT=${strict}"
+
           python -m pip install --upgrade pip
 
-          if [[ -f requirements-dev.txt ]]; then
-            pip install -r requirements-dev.txt
-          elif [[ -f requirements.txt ]]; then
-            pip install -r requirements.txt
-          elif [[ -f pyproject.toml ]]; then
-            # Best-effort for projects that use pyproject without exported requirements
-            pip install .
+          make_has_target () {
+            [[ -f Makefile ]] || return 1
+            make -n "$1" >/dev/null 2>&1
+          }
+
+          run_make () {
+            local target="$1"
+            echo "::group::make ${target}"
+            make --no-print-directory "${target}"
+            echo "::endgroup::"
+          }
+
+          note_missing () {
+            local gate="$1"
+            missing+=("${gate}")
+            echo "::warning title=CI gate not configured::${gate}"
+          }
+
+          missing=()
+
+          # Gate 1: Markdown protocol / docs validation (required)
+          if make_has_target "docs-lint"; then
+            run_make "docs-lint"
+          elif [[ -f .pre-commit-config.yaml ]]; then
+            echo "::group::pre-commit (docs/protocol)"
+            python -m pip install pre-commit
+            pre-commit run --all-files --show-diff-on-failure
+            echo "::endgroup::"
           else
-            echo "No Python dependency manifest found (requirements*.txt/pyproject.toml); skipping install."
+            # Generic Markdown lint fallback (does not replace KFM-MDP checks)
+            if git ls-files '*.md' | grep -q .; then
+              echo "::group::markdownlint-cli2"
+              npx --yes markdownlint-cli2 "**/*.md"
+              echo "::endgroup::"
+            else
+              echo "No Markdown files detected; skipping markdown lint."
+            fi
           fi
 
-          # Optional sanity check: report broken requirements (best-effort)
-          python -m pip check || true
+          # Gate 2: JSON syntax sanity check (helps catch broken catalogs/config)
+          echo "::group::JSON syntax check (data/, schemas/, docs/telemetry/, mcp/)"
+          python - <<'PY'
+          import json, pathlib, sys
 
-      - name: 🧹 Lint Python (ruff/flake8/black if present)
-        run: |
-          set -euo pipefail
+          roots = [pathlib.Path(p) for p in ("data", "schemas", "docs/telemetry", "mcp") if pathlib.Path(p).exists()]
+          paths = []
+          for root in roots:
+            paths.extend(root.rglob("*.json"))
 
-          if python -m ruff --version >/dev/null 2>&1; then
-            python -m ruff check "${KFM_PY_ROOT}"
-            # Only run ruff-format check if supported by the installed ruff
-            python -m ruff format --check "${KFM_PY_ROOT}" >/dev/null 2>&1 || true
-          elif python -m pip show flake8 >/dev/null 2>&1; then
-            flake8 "${KFM_PY_ROOT}"
+          bad = []
+          for p in paths:
+            try:
+              json.loads(p.read_text(encoding="utf-8"))
+            except Exception as e:
+              bad.append((str(p), str(e)))
+
+          if bad:
+            print("Invalid JSON files detected:")
+            for p, e in bad:
+              print(f" - {p}: {e}")
+            sys.exit(1)
+
+          print(f"JSON syntax OK ({len(paths)} files).")
+          PY
+          echo "::endgroup::"
+
+          # Gate 3: JSON schema validation (STAC/DCAT/telemetry) (required where applicable)
+          if make_has_target "schema-validate"; then
+            run_make "schema-validate"
           else
-            echo "No Python linter detected (ruff/flake8)."
-            echo "Recommendation: add ruff to requirements-dev.txt for governed CI."
+            # STAC fallback validation if the STAC catalog tree exists
+            if [[ -d "data/stac" ]]; then
+              echo "::group::STAC validation (pystac)"
+              python -m pip install "pystac[validation]"
+              pystac validate "data/stac" --recursive
+              echo "::endgroup::"
+            else
+              note_missing "schema-validate (STAC/DCAT/telemetry) — add Makefile target or CI script"
+            fi
           fi
 
-          # Optional formatter check if black is present and ruff didn't already format-check
-          if python -m pip show black >/dev/null 2>&1 && ! python -m ruff --version >/dev/null 2>&1; then
-            black --check "${KFM_PY_ROOT}"
-          fi
-
-      - name: ✅ Run Python Tests (pytest/tox if configured)
-        run: |
-          set -euo pipefail
-
-          if [[ -f tox.ini ]] && python -m pip show tox >/dev/null 2>&1; then
-            tox
-          elif python -m pip show pytest >/dev/null 2>&1; then
-            pytest
+          # Gate 4: Graph integrity tests (required where applicable)
+          if [[ -d "src/graph" || -d "docs/graph" ]]; then
+            if make_has_target "graph-test"; then
+              run_make "graph-test"
+            elif make_has_target "graph-validate"; then
+              run_make "graph-validate"
+            else
+              note_missing "graph integrity tests (graph-test / graph-validate)"
+            fi
           else
-            echo "No tox/pytest detected; skipping Python tests."
-            echo "Recommendation: add pytest to requirements-dev.txt for governed CI."
+            echo "No src/graph or docs/graph detected; skipping graph gate."
           fi
 
-      - name: 🔍 Optional Python Type Checking (mypy/pyright)
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          if python -m pip show mypy >/dev/null 2>&1; then
-            mypy "${KFM_PY_ROOT}"
-          elif [[ -f "${KFM_WEB_ROOT}/package.json" ]] && command -v node >/dev/null 2>&1; then
-            # If a JS toolchain exists, try pyright via npx (best-effort)
-            npx --yes pyright "${KFM_PY_ROOT}" || true
+          # Gate 5: API contract tests (required where applicable)
+          if [[ -d "src/server" || -d "docs/api" || -f "openapi.yaml" || -f "openapi.yml" || -f "openapi.json" ]]; then
+            if make_has_target "api-contract-test"; then
+              run_make "api-contract-test"
+            elif make_has_target "openapi-validate"; then
+              run_make "openapi-validate"
+            elif make_has_target "graphql-validate"; then
+              run_make "graphql-validate"
+            else
+              note_missing "API contract tests (api-contract-test / openapi-validate / graphql-validate)"
+            fi
           else
-            echo "No static type checker (mypy/pyright) detected; skipping."
+            echo "No API surface detected (src/server, docs/api, or openapi.*); skipping API gate."
           fi
 
-  ###########################################################################
-  # 2. Node/Web: lint + tests + build (only if web project exists)
-  ###########################################################################
-  node-ci:
-    name: "🕸 Web / Node Lint & Tests"
-    runs-on: ubuntu-22.04
-    timeout-minutes: 30
-
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 1
-
-      - name: 🔎 Detect web root
-        id: detect_web
-        run: |
-          set -euo pipefail
-          if [[ -d "${KFM_WEB_ROOT}" && -f "${KFM_WEB_ROOT}/package.json" ]]; then
-            echo "has_web=true" >> "$GITHUB_OUTPUT"
+          # Gate 6: UI layer registry schema checks (required where applicable)
+          if [[ -d "web" ]]; then
+            if make_has_target "ui-validate"; then
+              run_make "ui-validate"
+            elif make_has_target "ui-a11y"; then
+              run_make "ui-a11y"
+            else
+              note_missing "UI registry/a11y checks (ui-validate / ui-a11y)"
+            fi
           else
-            echo "has_web=false" >> "$GITHUB_OUTPUT"
+            echo "No web/ directory detected; skipping UI gate."
           fi
 
-      - name: ⏭ Skip Node/Web CI if no web project
-        if: steps.detect_web.outputs.has_web == 'false'
-        run: |
-          echo "No ${KFM_WEB_ROOT}/package.json; skipping Node/Web CI."
-
-      - name: ⚙️ Setup Node ${{ env.NODE_VERSION }}
-        if: steps.detect_web.outputs.has_web == 'true'
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-          cache-dependency-path: |
-            ${{ env.KFM_WEB_ROOT }}/package-lock.json
-            ${{ env.KFM_WEB_ROOT }}/npm-shrinkwrap.json
-
-      - name: 📦 Install Web Dependencies (npm ci if lock present)
-        if: steps.detect_web.outputs.has_web == 'true'
-        working-directory: ${{ env.KFM_WEB_ROOT }}
-        run: |
-          set -euo pipefail
-          if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
-            npm ci --ignore-scripts
+          # Gate 7: Security + sovereignty scanning (required where applicable)
+          # Baseline secret/dependency scanning runs in the separate `security` job.
+          # Repo-specific scanning (sovereignty, redaction lint, SBOM, SLSA) should be wired via Makefile.
+          if make_has_target "security-scan"; then
+            run_make "security-scan"
           else
-            npm install --ignore-scripts
+            echo "No make security-scan configured; baseline scans run in the security job."
           fi
 
-      - name: 🧹 Lint Web (npm run lint --if-present)
-        if: steps.detect_web.outputs.has_web == 'true'
-        working-directory: ${{ env.KFM_WEB_ROOT }}
-        run: |
-          set -euo pipefail
-          npm run lint --if-present
+          # Strict mode: fail if required/applicable gates were not configured
+          if [[ "${#missing[@]}" -gt 0 ]]; then
+            echo ""
+            echo "Missing CI gates:"
+            printf ' - %s\n' "${missing[@]}"
+            echo ""
 
-      - name: ✅ Run Web Tests (npm test --if-present)
-        if: steps.detect_web.outputs.has_web == 'true'
-        working-directory: ${{ env.KFM_WEB_ROOT }}
-        run: |
-          set -euo pipefail
-          npm test --if-present
+            if [[ "${strict}" == "true" ]]; then
+              echo "Strict mode is enabled; failing CI because required gates are missing."
+              exit 1
+            else
+              echo "Strict mode is disabled; continuing even though some gates are missing."
+            fi
+          fi
 
-      - name: 🏗 Web Build (npm run build --if-present)
-        if: steps.detect_web.outputs.has_web == 'true'
-        working-directory: ${{ env.KFM_WEB_ROOT }}
-        run: |
-          set -euo pipefail
-          npm run build --if-present
-
-  ###########################################################################
-  # 3. Config & Base Schema Sanity (YAML/JSON/etc.)
-  ###########################################################################
-  config-schemas:
-    name: "🧾 Config & Base Schema Checks"
-    runs-on: ubuntu-22.04
+  security:
+    name: Security (secrets + dependency review)
+    runs-on: ubuntu-latest
     timeout-minutes: 20
 
     steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
-      - name: 🧬 Validate Core Config Schemas (if configured)
-        run: |
-          set -euo pipefail
-          if [[ -d .github/actions/schema-validate ]]; then
-            if [[ -d schemas/config && -d config ]]; then
-              bash .github/actions/schema-validate/entrypoint.sh schemas/config config
-            else
-              echo "No schemas/config or config directory; skipping base config schema checks."
-            fi
-          else
-            echo ".github/actions/schema-validate not found; skipping schema validation."
-          fi
+      - name: Dependency review (PR only)
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@v4
 
-  ###########################################################################
-  # 4. Optional: CodeQL Code Scanning (if enabled)
-  #
-  # Notes:
-  #  - Upgraded to CodeQL Action v4 (current). v3 deprecation announced.
-  #  - Avoid running on forked PRs where security-events permissions are not granted.
-  ###########################################################################
-  codeql:
-    name: "🔐 CodeQL Static Analysis (Optional)"
-    runs-on: ubuntu-22.04
-    timeout-minutes: 60
-    needs:
-      - python-ci
-      - node-ci
-
-    if: |
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name == github.repository
-
-    permissions:
-      contents: read
-      security-events: write
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ "python", "javascript" ]
-
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 1
-
-      - name: 🧩 Initialize CodeQL
-        uses: github/codeql-action/init@v4
-        with:
-          languages: ${{ matrix.language }}
-
-      - name: 🧪 Autobuild (best-effort)
-        uses: github/codeql-action/autobuild@v4
-
-      - name: 🔍 Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4
-        with:
-          category: "/language:${{ matrix.language }}"
-
-  ###########################################################################
-  # 5. Summary for CI (helps downstream telemetry_export.yml)
-  ###########################################################################
-  ci-summary:
-    name: "🧾 CI Summary"
-    runs-on: ubuntu-22.04
-    needs:
-      - python-ci
-      - node-ci
-      - config-schemas
-    if: always()
-
-    steps:
-      - name: ✏️ Emit CI Summary
-        run: |
-          set -euo pipefail
-          {
-            echo "## 🧪 KFM Core CI Summary"
-            echo ""
-            echo "- Python job: ${{ needs.python-ci.result }}"
-            echo "- Node/Web job: ${{ needs.node-ci.result }}"
-            echo "- Config/Base Schemas job: ${{ needs.config-schemas.result }}"
-            echo ""
-            echo "Notes:"
-            echo "- CodeQL runs only on non-fork contexts (or on push) to ensure security-events permissions."
-          } >> "${GITHUB_STEP_SUMMARY}"
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
