@@ -144,14 +144,14 @@ Notes:
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-    A[data/raw\nRaw downloads] --> B[data/work\nStaging + transforms]
-    B --> C[data/processed\nValidated outputs]
-    C --> D[data/stac\nCatalogs (STAC/DCAT/PROV)]
-    D --> E[Neo4j Graph]
-    E --> F[APIs]
-    F --> G[React/Map UI]
-    G --> H[Story Nodes]
-    H --> I[Focus Mode]
+  A["data/raw<br/>Raw downloads"] --> B["data/work<br/>Staging + transforms"]
+  B --> C["data/processed<br/>Validated outputs"]
+  C --> D["data/stac<br/>Catalogs: STAC · DCAT · PROV"]
+  D --> E["Neo4j graph"]
+  E --> F["APIs"]
+  F --> G["React/Map UI"]
+  G --> H["Story Nodes"]
+  H --> I["Focus Mode"]
 ~~~
 
 ### Optional: sequence diagram (raw acquisition)
