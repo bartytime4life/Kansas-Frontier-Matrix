@@ -146,28 +146,28 @@ web/
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  A[ETL / Processing] --> B[STAC/DCAT/PROV Catalogs]
-  B --> C[Graph + Indexes]
-  C --> D[APIs (REST/GraphQL)]
-  D --> E[Web UI]
-  E --> F[Cesium Map Client]
-  E --> G[Story Nodes]
-  G --> H[Focus Mode Narrative]
+  A["ETL and processing"] --> B["Catalogs: STAC • DCAT • PROV"]
+  B --> C["Graph and indexes (Neo4j)"]
+  C --> D["APIs: REST and GraphQL"]
+  D --> E["Web UI"]
+  E --> F["Cesium map client"]
+  E --> G["Story Nodes"]
+  G --> H["Focus Mode narrative"]
 
-  F -->|click/select feature| H
-  F -->|layer toggles| F
+  F -->|click or select feature| H
+  F -->|toggle layers| F
 ~~~
 
 ### Optional: Layer registry governed flow
 ~~~mermaid
 flowchart TD
-  R[web/cesium/layers/regions.json] -->|schema-validated| L[Layer Loader]
-  L --> V[Visibility rules<br/>(default_enabled, zoom, roles)]
-  L --> P[Provenance pointers<br/>(stac_id, prov_ref)]
-  V --> C[Cesium Viewer]
-  P --> UI[UI "About this layer"<br/>panel / tooltip]
-  C --> FM[Focus Mode trigger]
-  FM -->|API call w/ provenance IDs| API[Focus Mode API]
+  R["web/cesium/layers/regions.json"] -->|schema validated| L["Layer loader"]
+  L --> V["Visibility rules\n(default_enabled, zoom, roles)"]
+  L --> P["Provenance pointers\n(stac_id, prov_ref)"]
+  V --> C["Cesium viewer"]
+  P --> U["About this layer panel"]
+  C --> FM["Focus Mode trigger"]
+  FM -->|API call with provenance IDs| AAPI["Focus Mode API"]
 ~~~
 
 ## 📦 Data & Metadata
