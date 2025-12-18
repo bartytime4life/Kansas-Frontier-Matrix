@@ -1,509 +1,405 @@
 ---
-title: "📚 Kansas Frontier Matrix — Documentation System Architecture (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "Kansas Frontier Matrix — Architecture"
 path: "docs/ARCHITECTURE.md"
-version: "v11.2.6"
-last_updated: "2025-12-11"
-
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-status: "Active / Enforced"
+version: "v1.0.0"
+last_updated: "2025-12-17"
+status: "draft"
 doc_kind: "Architecture"
-intent: "docs-system-architecture"
-header_profile: "standard"
-footer_profile: "standard"
+license: "CC-BY-4.0"
 
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:architecture:v1.0.0"
+semantic_document_id: "kfm-architecture-v1.0.0"
+event_source_id: "ledger:kfm:doc:architecture:v1.0.0"
 commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-signature_ref: "../releases/v11.2.6/signature.sig"
-attestation_ref: "../releases/v11.2.6/slsa-attestation.json"
-sbom_ref: "../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../releases/v11.2.6/manifest.zip"
-telemetry_ref: "../releases/v11.2.6/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/docs-architecture-v1.json"
-energy_schema: "../schemas/telemetry/energy-v2.json"
-carbon_schema: "../schemas/telemetry/carbon-v2.json"
 
-governance_ref: "standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-fair_category: "F1-A1-I1-R1"
-care_label: "Public / Low-Risk"
-sensitivity: "General (non-sensitive; auto-mask rules apply)"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-classification: "Public Document"
-jurisdiction: "Kansas / United States"
-indigenous_rights_flag: false
-risk_category: "Low"
-redaction_required: false
-
-ontology_alignment:
-  cidoc: "E31 Document"
-  schema_org: "CreativeWorkSeries"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-
-metadata_profiles:
-  - "STAC 1.0.0"
-  - "DCAT 3.0"
-  - "PROV-O"
-  - "FAIR+CARE"
-
-json_schema_ref: "../schemas/json/docs-architecture.schema.json"
-shape_schema_ref: "../schemas/shacl/docs-architecture-shape.ttl"
-
-provenance_chain:
-  - "docs/ARCHITECTURE.md@v11.2.6"
-  - "docs/ARCHITECTURE.md@v10.4.0"
-  - "docs/ARCHITECTURE.md@v10.3.2"
-  - "docs/ARCHITECTURE.md@v10.0.0"
-
-provenance_requirements:
-  versions_required: true
-  newest_first: true
-  must_reference_superseded: true
-  must_reference_origin_root: true
-
-doc_uuid: "urn:kfm:doc:docs-architecture:v11.2.6"
-semantic_document_id: "kfm-doc-docs-architecture-v11.2.6"
-event_source_id: "ledger:docs/ARCHITECTURE.md"
-immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "unverified-historical-claims"
-  - "governance-override"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-
-heading_registry:
-  approved_h2:
-    - "📘 Overview"
-    - "🗂️ Directory Layout"
-    - "🧭 Context"
-    - "🧱 Architecture"
-    - "🌐 STAC, DCAT & PROV Alignment"
-    - "⚖ FAIR+CARE & Governance"
-    - "🧪 Validation & CI/CD"
-    - "🕰️ Version History"
-
-test_profiles:
-  - "markdown-lint"
-  - "schema-lint"
-  - "metadata-check"
-  - "provenance-check"
-  - "footer-check"
-  - "accessibility-check"
-
-ci_integration:
-  workflow: ".github/workflows/kfm-ci.yml"
-  environment: "dev → staging → production"
-
-branding_registry:
-  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
-  architecture: "Docs as a First-Class System · Governed for Integrity"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-
-badge_profiles:
-  - "root-centered-badge-row"
-
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next major documentation platform release"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📚 **Kansas Frontier Matrix — Documentation System Architecture**  
-`docs/ARCHITECTURE.md`
-
-**Purpose**  
-Define the **complete architecture of the documentation system** for the Kansas Frontier Matrix (KFM):  
-Markdown governance, knowledge organization, FAIR+CARE alignment, schema-driven authoring, telemetry awareness,  
-and version-pinned reproducibility across all documentation modules.
-
-</div>
-
----
+# Kansas Frontier Matrix — Architecture
 
 ## 📘 Overview
 
-The KFM documentation system is a **schema-governed, FAIR+CARE-certified, accessibility-first** subsystem that provides:
+### Purpose
+- Define the end-to-end architecture of Kansas Frontier Matrix (KFM) and the subsystem contracts that make the pipeline reproducible, governed, and UI-consumable.
+- Provide a shared mental model for contributors: what components exist, how they connect, and what invariants must not be broken.
 
-- Project-wide documentation under `docs/**`  
-- Architecture specifications (system, web, data, pipelines, governance)  
-- Standards and policies (Markdown rules, A11y, governance, sovereignty)  
-- Reports, audits, provenance logs, FAIR+CARE assessments  
-- STAC/DCAT documentation and data-domain READMEs  
-- Pipeline, telemetry, and dataset documentation  
-- Frontend & backend API documentation  
-- Tutorials, onboarding guides, SOPs, and experiment/model templates  
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Canonical pipeline architecture: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode | Dataset-specific ETL details (document in `docs/pipelines/<domain>/...`) |
+| Subsystem boundaries, interfaces, and “do not break” rules | Full API reference (use OpenAPI/GraphQL docs + contract extension docs) |
+| Deployment model overview (static-first + optional services) | Infrastructure runbooks / SRE playbooks (not confirmed in repo) |
+| Governance + FAIR+CARE implications of architectural choices | Creating new governance policy (prohibited; refer to governed policy docs) |
 
-Every document in `docs/**`:
+### Audience
+- Primary: KFM maintainers and contributors (data, pipeline, graph, API, UI).
+- Secondary: reviewers/partners evaluating provenance, governance, and reproducibility.
 
-- MUST follow **KFM‑MDP v11.2.6**  
-- MUST include YAML front-matter validated by JSON/SHACL schemas  
-- MUST be accessible (WCAG 2.1 AA or better)  
-- MUST be machine-extractable (structured headings, stable IDs, clear metadata)  
-- MUST be version-pinned and appear in SBOM + manifest metadata  
-- MUST generate governance traces (provenance & CARE alignment) via telemetry
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc: ETL, STAC, DCAT, PROV-O, Neo4j, ontology, contract tests, Story Nodes, Focus Mode, layer registry, redaction/generalization, telemetry.
 
-Documentation is treated as a **first-class system** with its own architecture, CI/CD, and governance.
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master Guide (pipeline + extension matrix) | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical ordering and subsystem contracts |
+| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Governs this document structure |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Docs | Governs narrative artifacts |
+| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API | Governs endpoint/GraphQL schema changes |
+| Pipeline contract | `KFM-PPC v11.0.0` | Governance | The “non-negotiable ordering” |
+| Profiles (catalog validation) | `KFM-STAC/DCAT/PROV v11.0.0` | Data/Catalog | Machine validation targets |
+| Ontology protocol | `KFM-ONTO v4.1.0` | Graph | Governs labels/relations + migrations |
 
----
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid (and `path` matches file location)
+- [ ] Architecture diagrams render (Mermaid)
+- [ ] Subsystem contracts + invariants are explicit
+- [ ] Interfaces (files/schemas/APIs) are documented clearly
+- [ ] Validation gates and reproducible build entry points are listed
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
-Canonical high-level layout for the documentation subsystem (see `docs/README.md` for a broader index):
+### This document
+- `path`: `docs/ARCHITECTURE.md`
 
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | `raw/`, `work/`, `processed/` data by domain |
+| Catalogs | `data/stac/` + `docs/data/` | STAC items/collections, DCAT mapping docs, PROV records/docs |
+| Pipelines | `src/pipelines/` + `docs/pipelines/` | ETL orchestration, transforms, run logs, reproducibility notes |
+| Graph | `src/graph/` + `docs/graph/` | Ontology, constraints, migrations, ingestion tooling |
+| APIs | `src/server/` + `docs/` | REST/GraphQL access layer, contract docs (OpenAPI/GraphQL) |
+| Frontend | `web/` + `docs/design/` | React map client, layer registry, Focus Mode UX docs |
+| Schemas | `schemas/` | JSON schemas for catalogs + telemetry |
+| Tests | `tests/` | Contract tests and validation fixtures |
+| Story Nodes | `docs/reports/.../story_nodes/` | Governed narrative nodes (markdown) |
+| Telemetry | `docs/telemetry/` + `schemas/telemetry/` | Signals, auditability, schema versioning |
+| Security | `.github/SECURITY.md` + `docs/security/` | Security policy and implementation standards |
+| MCP | `mcp/` | Model cards, experiment reports, SOPs |
+
+### Expected file tree for this sub-area
 ~~~text
 📁 docs/
-├── 📄 README.md                          # Documentation home & index
-├── 📄 ARCHITECTURE.md                   # Documentation system architecture (this file)
-│
-├── 📁 standards/                        # Governance, Markdown, ontology, security, FAIR+CARE
-│   ├── 📄 kfm_markdown_protocol_v11.2.6.md
-│   ├── 📁 governance/
-│   │   └── 📄 ROOT-GOVERNANCE.md
-│   ├── 📁 faircare/
-│   ├── 📁 sovereignty/
-│   └── 📁 heritage/
-│
-├── 📁 templates/                        # Core Markdown + experiment/model/SOP/workflow templates
-│   ├── 📄 kfm-markdown-template.md
-│   ├── 📄 experiment.md
-│   ├── 📄 model_card.md
-│   ├── 📄 sop.md
-│   └── 📄 workflow_template.md
-│
-├── 📁 architecture/                     # System, data, API, UI, and graph architecture docs
-│   ├── 📄 README.md
-│   ├── 📄 system-architecture.md
-│   ├── 📄 data-architecture.md
-│   ├── 📄 api-architecture.md
-│   └── 📄 focus-mode-architecture.md
-│
-├── 📁 data/                             # Data-domain READMEs (soil, air, hydro, etc.)
-│   ├── 📄 README.md
-│   ├── 📁 soil/
-│   ├── 📁 air/
-│   ├── 📁 hydrology/
-│   └── 📁 remote-sensing/
-│
-├── 📁 pipelines/                        # Pipeline, autonomy, and reliability docs
-│   ├── 📄 README.md
-│   ├── 📁 autonomy-matrix/
-│   ├── 📁 reliability/
-│   └── 📁 validation-observability/
-│
-├── 📁 telemetry/                        # Telemetry & observability docs
-│   ├── 📄 README.md
-│   └── 📁 correlation/
-│
-├── 📁 reports/                          # FAIR+CARE, audits, validation & governance ledgers
-│   ├── 📁 audit/
-│   ├── 📁 faircare/
-│   └── 📁 self-validation/
-│
-├── 📁 analyses/                         # Thematic/domain analyses built on KFM data
-│   ├── 📁 hydrology/
-│   ├── 📁 remote-sensing/
-│   ├── 📁 archaeology/
-│   └── 📁 history/
-│
-├── 📁 references/                       # External dataset & research reference summaries
-│   ├── 📁 datasets/
-│   └── 📁 research/
-└── 📄 glossary.md                       # Project-wide glossary & terminology index
+├─📄 ARCHITECTURE.md
+├─📄 MASTER_GUIDE_v12.md
+├─📁 templates/
+│  ├─📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
+│  ├─📄 TEMPLATE__STORY_NODE_V3.md
+│  └─📄 TEMPLATE__API_CONTRACT_EXTENSION.md
+├─📁 governance/
+│  ├─📄 ROOT_GOVERNANCE.md
+│  ├─📄 ETHICS.md
+│  └─📄 SOVEREIGNTY.md
+├─📁 graph/
+│  └─📄 <ontology-and-migrations-docs>
+├─📁 pipelines/
+│  └─📄 <etl-and-catalog-build-docs>
+└─📁 design/
+   └─📄 <ui-and-focus-mode-docs>
 ~~~
-
-Directory layout rules:
-
-- Use `📁` for directories, `📄` for Markdown/text, `🧾` for JSON/YAML, `🧪` for tests, `🖼️` for images.  
-- Use `~~~text` fences for trees (per `fencing_profile: outer-backticks-inner-tildes-v1`).  
-- Keep comments short and implementation-focused (what this path is for, not long prose).
-
----
 
 ## 🧭 Context
 
-The documentation subsystem sits alongside code and data as a **governed surface**:
+### Background
+KFM is designed as an end-to-end geospatial + historical knowledge system that turns heterogeneous raw inputs into interactive map exploration and provenance-led narratives. The architecture is intentionally “static-first” (pre-generated assets whenever possible) but supports a lightweight API layer when dynamic queries are required.
 
-- It encodes:
-  - KFM’s **contracts** (Markdown, ontology, pipeline, telemetry).  
-  - **Plans and procedures** (SOPs, workflows, governance).  
-  - **Narrative layers** (Story Nodes, Focus Mode behavior, analyses).  
+### Assumptions
+- Data sources are heterogeneous (raster, vector, text) and must be normalized into stable, reusable intermediate formats.
+- Outputs must be reproducible: the same inputs + pinned tooling yield the same results.
+- Catalogs and provenance are not optional metadata: they are the primary mechanism for trust, auditability, and UI explainability.
+- The UI should remain usable even in “minimal deployment” scenarios (static hosting); dynamic services are an extension, not a baseline requirement.
 
-- It integrates tightly with the canonical pipeline:
+### Constraints / invariants
+- The canonical pipeline ordering is preserved: **ETL → STAC/DCAT/PROV catalogs → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- Frontend consumes contracts via APIs or pre-built artifacts (no direct graph dependency).
+- ETL must be deterministic and replayable; catalogs must be schema-validated.
+- Focus Mode is provenance-only: no unsourced narrative; predictive content is opt-in and includes uncertainty metadata.
+- UI must not leak sensitive data: layer registry + gating and API-side redaction/generalization are part of the architecture (not an afterthought).
 
-  > Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Confirm canonical locations for API contract docs (OpenAPI + GraphQL schema files) | TBD | TBD |
+| Confirm the authoritative location for glossary and shared definitions | TBD | TBD |
+| Define the minimal public telemetry set vs restricted telemetry | TBD | TBD |
 
-Documentation is:
+### Future extensions
+KFM expects structured growth via an “Extension Matrix” approach: new capabilities are added across layers in a coordinated, testable way. Canonical next-evolution extension points include:
+- (A) **Data**: new domains, new STAC extension profiles.
+- (B) **AI evidence**: evidence artifacts as STAC assets, linked into Focus Mode.
+- (C) **Graph**: new entity types with explicit provenance.
+- (D) **API**: new endpoints with contract tests and redaction/generalization rules.
+- (E) **UI**: new layer registry entries with provenance pointers and CARE gating.
 
-- The **specification layer** for each of those components.  
-- A **data source** for the knowledge graph (via doc catalogs and PROV).  
-- A **governance artifact** with telemetry, SBOMs, signatures, and attestations.  
+## 🗺️ Diagrams
 
-No pipeline, dataset, or model is considered “governed” without corresponding documentation anchored in `docs/**`.
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  subgraph Ingest["ETL + Normalization"]
+    A["Raw Sources<br/>data/raw/"] --> B["Work Staging<br/>data/work/"]
+    B --> C["Processed Outputs<br/>data/processed/"]
+  end
 
----
+  subgraph Catalogs["Catalog Generation"]
+    C --> D["STAC Collections + Items<br/>data/stac/"]
+    C --> E["DCAT Mapping<br/>docs/data/"]
+    C --> F["PROV Lineage Records<br/>docs/data/ + embedded blocks"]
+  end
 
-## 🧱 Architecture
+  subgraph Graph["Semantic Core"]
+    D --> G["Neo4j Knowledge Graph<br/>ontology + constraints"]
+    E --> G
+    F --> G
+  end
 
-The documentation system follows a layered architecture.
+  subgraph Access["Access Services"]
+    G --> H["API Layer<br/>REST + GraphQL<br/>src/server/"]
+  end
 
-### 1. Governance & Policy Layer
+  subgraph UIX["User Experience"]
+    C --> I["Static UI Assets + Layer Data<br/>web/"]
+    H --> I
+    I --> J["Story Nodes<br/>docs/reports/.../story_nodes/"]
+    J --> K["Focus Mode<br/>Provenance-led dashboards"]
+  end
 
-Defines what “valid documentation” means:
+  subgraph Observability["Governance + Telemetry"]
+    A --> T["Run Logs + Validation Artifacts"]
+    H --> U["API Telemetry"]
+    I --> V["UI Audit Signals"]
+  end
+~~~
 
-- **Markdown structural rules** — KFM‑MDP v11.2.6:
-  - YAML front-matter in canonical order.  
-  - Emoji-prefixed H2 registry.  
-  - Single H1 per file.  
-  - Standardized directory layouts and governance footer.
+### Optional: Focus Mode sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant UI as React/Map UI
+  participant API as API Layer
+  participant Graph as Neo4j Graph
 
-- **Governance policies**:
-  - `standards/governance/ROOT-GOVERNANCE.md` as root charter.  
-  - FAIR+CARE and sovereignty standards (`standards/faircare/`, `standards/sovereignty/`).  
-  - Heritage protection standards (`standards/heritage/`).
+  UI->>API: Focus query(entity_id, viewport, time_range)
+  API->>Graph: Fetch subgraph + provenance refs (apply redaction)
+  Graph-->>API: Context bundle (entities + evidence + lineage)
+  API-->>UI: Contracted payload (narrative pointers + citations + audit flags)
+~~~
 
-- **Versioning rules**:
-  - All docs version-pinned via `version`, `doc_uuid`, `semantic_document_id`.  
-  - Provenance requirements encoded in front-matter.
+### Optional: deployment view (static-first)
+~~~mermaid
+flowchart TB
+  subgraph Host["Static Host (e.g., Pages/CDN)"]
+    W["web/ build artifacts"]
+    X["data/processed public assets"]
+    Y["data/stac public catalogs"]
+  end
 
-### 2. Schema Layer
+  subgraph Services["Optional services (containers)"]
+    A1["API service"]
+    A2["Neo4j"]
+  end
 
-Schema-driven enforcement for everything under `docs/**`:
+  User["Browser"] --> Host
+  User --> A1
+  A1 --> A2
+  A1 --> Host
+~~~
 
-- **JSON Schemas** (`schemas/json/`):
-  - Front-matter profiles for:
-    - Monorepo overview, docs architecture, templates.  
-    - Domain READMEs, events, advisories, telemetry docs.
+## 📦 Data & Metadata
 
-- **SHACL Shapes** (`schemas/shacl/`):
-  - Constraints for how doc metadata appears when projected into the graph.
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Geospatial rasters | GeoTIFF/COG | External portals, archives | Raster metadata + projection checks |
+| Geospatial vectors | GeoJSON / Shapefile | State/local data hubs, digitized maps | Geometry validity + schema checks |
+| Text corpora | TXT/PDF/HTML (normalized) | Historical archives | Language/encoding normalization + citation retention |
+| Human-curated annotations | YAML/JSON/MD | Researchers / maintainers | Schema + review gates |
 
-- **Ontology mappings**:
-  - Documentation files modeled as `cidoc:E31 Document`, `prov:Plan` or `prov:Collection`.  
-  - Linked to datasets, pipelines, and models via PROV-O and CIDOC-CRM relations.
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Processed datasets | GeoTIFF/CSV/GeoJSON/etc. | `data/processed/` | Domain schemas (as applicable) |
+| STAC catalogs | JSON | `data/stac/` | KFM-STAC v11.0.0 |
+| DCAT mapping docs | JSON-LD / docs | `docs/data/` | KFM-DCAT v11.0.0 |
+| PROV lineage | JSON-LD / embedded blocks | `docs/data/` + artifacts | KFM-PROV v11.0.0 |
+| Graph build / exports | DB + dumps | `src/graph/` tooling | KFM-ONTO v4.1.0 + constraints |
+| API schemas | OpenAPI + GraphQL SDL | `docs/` + `src/server/` | Contract-governed |
+| UI layer registry | JSON/YAML | `web/` | UI schema checks |
+| Story Nodes | Markdown (governed) | `docs/reports/.../story_nodes/` | Story Node v3 template |
+| Telemetry | JSON logs/metrics | `docs/telemetry/` | Telemetry schemas |
 
-Schemas make docs **lintable, testable, and graph-loadable**.
+### Sensitivity & redaction
+- Treat sensitivity as an architectural concern: sensitive coordinates and restricted site details must be generalized/redacted **before** reaching unauthenticated clients.
+- Enforce gating in both:
+  - the API layer (policy enforcement + redaction) and
+  - the UI layer registry (prevent unauthorized layers from rendering).
 
-### 3. Content Layer
+### Quality signals
+- Determinism: same inputs yield same outputs (ETL replayability).
+- Schema validity: STAC/DCAT/PROV payloads must validate against governed profiles.
+- Graph integrity: ontology constraints + migration discipline (no breaking label/edge changes).
+- UI integrity: layer registry schema checks + a11y expectations.
+- Provenance coverage: Focus Mode requires provenance pointers for every surfaced claim/evidence panel.
 
-The visible content of `docs/**`:
-
-- Architecture specs (this file, data/API/Fous Mode architecture).  
-- Standards and protocols (Markdown, ontology, STAC/DCAT profiles).  
-- Templates (experiment, model card, SOP, workflow).  
-- Domain documentation (soil, air, hydrology, remote sensing, heritage).  
-- Reports (FAIR+CARE, audits, validation).  
-- Tutorials, guides, and onboarding materials.
-
-Content is designed to be:
-
-- **Modular** (clear H2/H3 decomposition).  
-- **Scope-bounded** (each doc has well-defined intent).  
-- **Composable** (Story Nodes and Focus Mode can reuse sections safely).
-
-### 4. Semantic & Machine-Extractability Layer
-
-Ensures docs are consumable by tools, not just humans:
-
-- **Heading conventions**:
-  - Approved H2 registry (Overview, Directory Layout, Context, Architecture, etc.).  
-  - H3/H4 structured for extraction (Objective, Methodology, Results, Governance, etc.).
-
-- **Stable identifiers**:
-  - `doc_uuid`, `semantic_document_id`, `event_source_id`.  
-  - Consistent path naming.
-
-- **Cross-document links**:
-  - Relative links (no hard-coded domains).  
-  - Glossary terms reused consistently across docs.
-
-Docs become a **semantic corpus** that can be indexed, graphed, and surfaced in Focus Mode.
-
-### 5. Telemetry & Observability Layer
-
-Documentation changes and usage emit telemetry:
-
-- Per-release telemetry (e.g., `../releases/v11.2.6/focus-telemetry.json`):
-  - Counts and categories of docs changed.  
-  - Lint and validation status.  
-  - Accessibility and governance results.
-
-- **Correlation with reliability & sustainability**:
-  - Documentation workflows appear in CI telemetry (energy, CO₂e, retry behavior).  
-  - Docs associated with pipeline runs and governance events.
-
-Telemetry makes documentation **observable** and **auditable** like any other system.
-
-### 6. Rendering & Consumption Layer
-
-Docs are consumed by:
-
-- GitHub’s Markdown renderer (source-of-truth view).  
-- Static sites or portals (if configured).  
-- Developer tooling and IDE integrations.  
-- Focus Mode and Story Nodes (read-only, governed transformations).
-
-Rendering rules:
-
-- No documentation behavior relies on non-standard Markdown features not supported in the main consumption environments.  
-- A11y-first: headings, lists, and tables must be screen-reader-friendly.
-
-### 7. Authoring Rules (KFM‑MDP v11.2.6)
-
-Authoring constraints for `docs/**`:
-
-- **Front-matter**:
-  - Required fields as defined in KFM‑MDP v11.2.6 and document-specific schemas.  
-  - No blank lines before `---`.
-
-- **Structure**:
-  - Exactly one H1.  
-  - H2 headings must come from the approved registry for this doc.  
-  - Directory layouts under `🗂️ Directory Layout` use emoji + ASCII trees.
-
-- **Generation via AI assistants**:
-  - Single fenced `markdown` block when produced in chat tools.  
-  - Inner fences use tildes (`~~~`) to avoid nesting issues.  
-  - No speculative governance text; normative rules must come from standards docs.
-
----
+### Extension points checklist (for future work)
+- [ ] Data: new domain added under `data/<domain>/.`
+- [ ] STAC: new collection + item schema validation
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests
+- [ ] UI: layer registry entry + access rules
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Even though this is “just docs,” the documentation subsystem is cataloged like data.
-
 ### STAC
-
-- Documentation can be represented as **non-spatial STAC Items** in a `kfm-docs` Collection:
-  - `id` = `semantic_document_id`.  
-  - `properties.datetime` = `last_updated`.  
-  - `assets.docs` = canonical Markdown URL.
-
-- Links from data Collections to relevant documentation:
-  - Data architecture docs linked from domain Collections.  
-  - Heritage standards linked from sensitive heritage Collections.
+- Every processed dataset is represented as a STAC Collection + Items, including spatial/temporal extents and asset links.
+- Evidence artifacts (e.g., model outputs, derived layers) are treated as first-class assets to enable reproducible UI rendering and downstream reuse.
 
 ### DCAT
-
-- Documentation catalogs modeled as `dcat:Catalog`:
-  - `docs/README.md` as high-level catalog record.  
-  - Standards, architecture, templates as `dcat:Dataset` + `dcat:Distribution` (Markdown).
-
-- Fields:
-  - `dct:title` ← `title`.  
-  - `dct:description` ← Overview section.  
-  - `dct:modified` ← `last_updated`.  
-  - `dct:identifier` ← `doc_uuid`.
+- STAC holdings are mapped into DCAT-compatible dataset descriptions (title, description, license, keywords, publisher/contact metadata).
+- DCAT enables cross-catalog interoperability: discovery tools can harvest KFM datasets without needing KFM-specific code.
 
 ### PROV-O
+- Pipeline steps emit machine-readable lineage information. At minimum, record:
+  - `prov:wasGeneratedBy` (the activity/process producing an artifact)
+  - `prov:used` (inputs used)
+  - `prov:generatedAtTime` (timestamp)
+- Provenance must be preserved into the graph and surfaced back to UI/Focus Mode.
 
-- Each version of this file is a `prov:Entity` with type `prov:Plan`.  
-- `provenance_chain` expresses `prov:wasRevisionOf` or `prov:wasDerivedFrom`.  
-- CI workflows and human edits are `prov:Activity` instances with:
-  - `prov:used` (prior version, schemas).  
-  - `prov:generated` (new doc version, telemetry).  
-  - `prov:wasAssociatedWith` (agents: CI + maintainers).
+### Versioning
+- Use STAC versioning links and graph predecessor/successor relationships as applicable.
+- API contracts follow backward compatibility rules or require explicit version bumps.
 
-This alignment allows documentation to participate fully in provenance queries.
+## 🧱 Subsystem contracts (architecture rules)
 
----
+### Subsystem contracts table
+| Subsystem | Contract artifacts | “Do not break” rule | Primary interface(s) |
+|---|---|---|---|
+| ETL | configs + run logs + validation artifacts | Deterministic, replayable runs | Files in `data/processed/` + lineage logs |
+| Catalogs | STAC/DCAT/PROV schemas + validators | Must pass schema validation | JSON catalogs + JSON-LD mappings |
+| Graph | ontology + migrations + constraints | Stable labels/edges; migration discipline | Neo4j via Cypher/GraphQL resolvers; exports |
+| APIs | OpenAPI/GraphQL schemas + tests | Backward compat or version bump | REST/GraphQL endpoints + context bundles |
+| UI | layer registry + a11y + audit affordances | No hidden data leakage | Static assets + contracted API calls |
+| Story Nodes | Story Node template + provenance schema | Evidence-led, versioned narratives | Markdown artifacts + graph ingestion links |
+| Focus Mode | provenance-linked context bundle | No hallucinated sources | API-provided focus payload + audit flags |
+| Telemetry | telemetry schemas + collectors | Observability for performance/security/governance | `docs/telemetry/` outputs + dashboards (not confirmed in repo) |
 
-## ⚖ FAIR+CARE & Governance
+### Interface discipline
+- **File-based interfaces** (preferred): processed assets, catalogs, UI layer payloads.
+- **Schema-based contracts** (required): STAC/DCAT/PROV, telemetry, story node front-matter.
+- **API-based contracts** (when needed): search, graph queries, Focus Mode context bundles.
 
-The documentation architecture embeds FAIR+CARE into authoring and review.
+### Deployment modes
+- **Static-first (baseline)**: host the built `web/` app and public artifacts/cats; enables broad accessibility.
+- **Static + API (recommended for richer queries)**: add a small API service and graph backend for dynamic queries and Focus Mode assembly.
+- **Local/dev (repro builds)**: containerized environment runs ETL + graph build + UI build deterministically.
 
-- **FAIR**:
-  - **Findable** — predictable paths, stable identifiers, indexed in catalogs and search.  
-  - **Accessible** — open licenses (MIT, CC‑BY), WCAG-compliant structure.  
-  - **Interoperable** — consistent metadata, ontology mappings, and schemas.  
-  - **Reusable** — version history, provenance, clear scope, and documented limitations.
+## 🧠 Story Node & Focus Mode Integration
 
-- **CARE**:
-  - Documentation about sensitive topics must:
-    - Reference relevant governance and sovereignty docs.  
-    - Use precise but non-harmful language.  
-    - Avoid exposing sensitive coordinates or personal data.  
+### How this work surfaces in Focus Mode
+- Focusable entities typically include: Places, Events, People, Datasets, and Story Nodes.
+- Focus Mode should present:
+  - a map + time window centered on the focus entity
+  - the evidence bundle (datasets, assets, citations, lineage)
+  - related graph context (neighbors/relationships)
+  - governance/audit indicators (redaction applied, sensitivity class, etc.)
 
-- **Governance integration**:
-  - Docs about heritage, Indigenous knowledge, or sensitive data:
-    - Flag `indigenous_rights_flag` and related fields appropriately.  
-    - Are subject to FAIR+CARE Council review.  
+### Provenance-linked narrative rule
+- Every claim must trace to a dataset / record / asset identifier.
+- Predictive/AI-derived content must be: explicit, opt-in, uncertainty-labeled, and provenance-linked to the model run + inputs.
 
-This file itself is governed:
-
-- Changes are tracked via `provenance_chain` and Version History.  
-- AI tools and Focus Mode are constrained by the definitions and rules described here and in referenced standards.
-
----
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
 ## 🧪 Validation & CI/CD
 
-The documentation system is wired into CI/CD via `.github/workflows/kfm-ci.yml`.
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV)
+- [ ] Graph integrity checks (ontology constraints + migrations)
+- [ ] API contract tests (OpenAPI/GraphQL)
+- [ ] UI schema checks (layer registry)
+- [ ] Security and sovereignty checks (as applicable)
 
-Key checks applied to `docs/**`:
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# (Commands below are referenced in design docs but may differ in the live repo.)
 
-- **markdown-lint** — structural rules (H1/H2, spacing, heading order, fenced blocks).  
-- **schema-lint** — front-matter validation against `docs-architecture.schema.json` and related schemas.  
-- **metadata-check** — presence and formatting of governance, classification, and licensing fields.  
-- **provenance-check** — `provenance_chain` consistency vs. Version History.  
-- **accessibility-check** — headings, tables, and link text sanity.  
-- **footer-check** — governance footer presence and correctness.
+# 1) Build container environment
+docker compose up --build
 
-Expected artifacts:
+# 2) Run end-to-end pipeline (ETL -> catalogs -> graph -> web build)
+make all
 
-- `reports/self-validation/docs/lint_summary.json`  
-- `reports/self-validation/docs/metadata_summary.json`  
-- `reports/self-validation/docs/provenance_summary.json`  
+# 3) Run validation + tests
+make test
+~~~
 
-Any documentation change that fails these checks is treated like a failing code change: it **blocks merge** until corrected.
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| Pipeline run metadata (inputs, versions, durations) | ETL | `docs/telemetry/` + `schemas/telemetry/` |
+| Catalog validation failures | Catalog build | CI logs + telemetry (if enabled) |
+| Redaction/generalization counts | API + UI gating | Telemetry + audit panels |
+| Focus Mode provenance coverage (%) | API assembly | Telemetry + tests |
 
----
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- Architectural changes that introduce new data sources, new public endpoints, new sensitive layers, or new AI narrative behavior require explicit governance review.
+- Contract changes (API, ontology, schema) must include tests and documentation updates as part of the same change set.
+
+### CARE / sovereignty considerations
+- Sensitive locations and culturally sensitive information must follow documented redaction/generalization rules.
+- The architecture assumes “metadata can be open while payload can be restricted” when sovereignty requires it.
+
+### AI usage constraints
+- Ensure this document’s AI permissions/prohibitions match intended use (no policy generation; no inferring sensitive locations).
+- Focus Mode must not present unsourced narrative or un-audited model outputs.
 
 ## 🕰️ Version History
 
-| Version   | Date       | Author        | Summary                                                                                           |
-|----------:|------------|---------------|---------------------------------------------------------------------------------------------------|
-| **v11.2.6** | 2025-12-11 | KFM Docs Team | Upgraded to KFM‑MDP v11.2.6; aligned front‑matter, H2 registry, and telemetry paths; clarified STAC/DCAT/PROV alignment and CI integration for docs as a first‑class subsystem. |
-| v10.4.0  | 2025-11-15 | KFM Docs Team | Defined full documentation system architecture for KFM v10.4; introduced telemetry-aware docs stack. |
-| v10.3.2  | 2025-11-14 | KFM Docs Team | Extended schema layer and provenance integration; tightened governance references.                |
-| v10.0.0  | 2025-11-10 | KFM Core Team | Initial documentation architecture for KFM v10; established docs/ as a governed subsystem.        |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-17 | Initial architecture doc (aligned to Master Guide v12 + governed templates) | Bartytime |
 
 ---
-
-<div align="center">
-
-📚 **Kansas Frontier Matrix — Documentation System Architecture (v11.2.6)**  
-Docs as Infrastructure · FAIR+CARE Governance · Catalog & Graph Ready  
-
-[📘 Docs Root](./README.md) ·  
-[📚 Markdown Protocol (KFM‑MDP v11.2.6)](standards/kfm_markdown_protocol_v11.2.6.md) ·  
-[⚖ Governance Charter](standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
