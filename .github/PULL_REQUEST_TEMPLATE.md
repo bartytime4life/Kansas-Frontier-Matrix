@@ -1,402 +1,250 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Pull Request Template (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM — Pull Request Template"
 path: ".github/PULL_REQUEST_TEMPLATE.md"
-version: "v11.2.3"
-last_updated: "2025-12-09"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../schemas/telemetry/github-pullrequest-v4.json"
-energy_schema: "../schemas/telemetry/energy-v2.json"
-carbon_schema: "../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
-
-status: "Active / Enforced"
+version: "v1.0.0"
+last_updated: "2025-12-18"
+status: "template"
 doc_kind: "Template"
-intent: "pull-request-template"
-role: "process-template"
-category: "Governance · Process · CI/CD"
+license: "CC-BY-4.0"
 
-classification: "Public Document"
-sensitivity: "General"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-risk_category: "Low"
-indigenous_rights_flag: false
-redaction_required: false
+markdown_protocol_version: "KFM-MDP v11.2.6"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-data_steward: "KFM FAIR+CARE Council"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-provenance_chain:
-  - ".github/PULL_REQUEST_TEMPLATE.md@v10.3.1"
-  - ".github/PULL_REQUEST_TEMPLATE.md@v10.4.1"
-  - ".github/PULL_REQUEST_TEMPLATE.md@v11.0.0"
-  - ".github/PULL_REQUEST_TEMPLATE.md@v11.0.1"
-  - ".github/PULL_REQUEST_TEMPLATE.md@v11.2.2"
+doc_uuid: "urn:kfm:doc:github:pull-request-template:v1.0.0"
+semantic_document_id: "kfm-github-pull-request-template-v1.0.0"
+event_source_id: "ledger:kfm:doc:github:pull-request-template:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "CreativeWork"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:Feature"
-
-json_schema_ref: "../schemas/json/github-pullrequest-v11.schema.json"
-shape_schema_ref: "../schemas/shacl/github-pullrequest-v11-shape.ttl"
-
-doc_uuid: "urn:kfm:doc:github-pullrequest-template:v11.2.3"
-semantic_document_id: "kfm-doc-github-pullrequest-template"
-event_source_id: "ledger:.github/PULL_REQUEST_TEMPLATE.md"
-immutability_status: "mutable-plan"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summaries"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative additions"
-  - "unverified historical narratives"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "United States / Kansas"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next PR-process update"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# Pull Request
 
-# 🧾 **Kansas Frontier Matrix — Pull Request Template**  
-`.github/PULL_REQUEST_TEMPLATE.md`
+<!--
+KFM governance reminders:
+- Preserve canonical pipeline order:
+  ETL → STAC/DCAT/PROV Catalogs → Neo4j Graph → APIs → React/Map UI → Story Nodes → Focus Mode
+- Frontend consumes through API contracts (no direct graph dependency).
+- No unsourced narrative in user-facing surfaces; provenance + citations are required.
+-->
 
-Ensure every contribution meets **KFM-MDP v11.2.2**, **MCP-DL v6.3**, **FAIR+CARE**,  
-and **Diamond⁹ Ω / Crown∞Ω** governance requirements.
+## 📘 Overview
 
-All PRs are:
+### Purpose
+- **What**: <!-- 1–3 sentences -->
+- **Why**: <!-- link issue(s) / user story -->
+- **How**: <!-- high-level approach -->
 
-- Fully validated  
-- Governance-audited  
-- SBOM-verified  
-- Telemetry-logged  
-- Schema-checked  
-- Security-scanned  
+### Type of change
+- [ ] Dataset / catalog (STAC/DCAT/PROV)
+- [ ] ETL / pipeline
+- [ ] Graph / ontology / migration
+- [ ] API contract (REST/GraphQL)
+- [ ] Web UI (React/MapLibre)
+- [ ] Story Node / Focus Mode narrative
+- [ ] Telemetry / observability
+- [ ] Security / governance / policy docs
+- [ ] Documentation-only
+- [ ] Other: <!-- describe -->
 
-[![MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)]()  
-[![KFM-MDP v11](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-purple)]()  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)]()  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)]()
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| <!-- --> | <!-- --> |
 
-</div>
+### Related issues / tickets
+- Closes: #
+- Related: #
 
----
+### Key artifacts touched
+| Artifact | Path / Identifier | Change | Notes |
+|---|---|---|---|
+| <!-- e.g., Pipeline module --> | <!-- src/pipelines/... --> | <!-- add/modify/remove --> | <!-- --> |
 
-## 🪶 Summary
-
-> Provide a brief explanation of **what** this PR changes and **why**.
-
-### Type of Change (check all that apply)
-
-- [ ] ✨ Feature  
-- [ ] 🐛 Bug Fix  
-- [ ] 🧠 AI / Model Update  
-- [ ] 🗺️ Data Update (STAC/DCAT/metadata)  
-- [ ] 📚 Documentation  
-- [ ] 🔧 Refactor / Maintenance  
-- [ ] ⚙️ CI/CD Workflow  
-- [ ] 🏛 Governance / Standards Update  
-
-### Governance Binding?
-
-- [ ] 🔒 **Non-governance** (no change to contracts, schemas, or standards)  
-- [ ] 🏛 **Governance-impacting** (update standards, schemas, or contracts; requires council review)  
-
-### PR Summary (2–4 sentences)
-
-> _Write your summary here._
+### Definition of done
+- [ ] PR description complete (this template filled)
+- [ ] All changes are deterministic/replayable (seeded if applicable)
+- [ ] Tests/validation updated and passing (see below)
+- [ ] Documentation updated (docs-first; missing docs treated as a bug)
+- [ ] Provenance + sensitivity handled (FAIR+CARE + sovereignty)
 
 ---
 
-## 🧩 Related Issues / References
+## 🗂️ Directory Layout
 
-- Closes: #`<issue>`  
-- Related issues:  
-- Related docs:  
-  - `docs/...`  
-  - `docs/standards/...`  
-  - `docs/history/...`  
-- Dataset manifests: `data/...`  
-- STAC/DCAT items: `data/stac/...`  
-- Architecture docs: `docs/architecture/...`  
-- ADRs touched/added: `ADR/00xx-*.md`  
+### Changed areas (check all that apply)
+| Area | Path(s) | Notes |
+|---|---|---|
+| Data | `data/` | <!-- raw/work/processed/stac --> |
+| Pipelines | `src/pipelines/` | <!-- --> |
+| Catalogs | `data/stac/` + `docs/data/` | <!-- STAC/DCAT/PROV --> |
+| Graph | `src/graph/` + `docs/graph/` | <!-- --> |
+| APIs | `src/server/` + `docs/` | <!-- --> |
+| Frontend | `web/` | <!-- --> |
+| Story Nodes | `docs/reports/.../story_nodes/` | <!-- --> |
+| Schemas | `schemas/` | <!-- --> |
+| Tests | `tests/` | <!-- --> |
+| CI | `.github/workflows/` | <!-- --> |
+| MCP artifacts | `mcp/` | <!-- experiments/model cards/SOPs --> |
 
----
-
-## 📂 Changes Introduced
-
-### Files / Areas Affected
-
-- [ ] `src/`  
-- [ ] `web/`  
-- [ ] `data/`  
-- [ ] `schemas/`  
-- [ ] `docs/`  
-- [ ] `.github/`  
-- [ ] `tests/`  
-- [ ] `configs/`  
-- [ ] `ADR/`  
-
-### Pipeline Stages Touched (if applicable)
-
-- [ ] `calibrate`  
-- [ ] `preprocess`  
-- [ ] `pretrain`  
-- [ ] `train`  
-- [ ] `predict`  
-- [ ] `diagnose`  
-- [ ] `submit`  
-- [ ] Other: `__________________`
-
-### High-Level Overview
-
+### File tree (optional but helpful)
 ~~~text
-- …
-- …
-- …
+📦 <root>
+├─ 📁 data/
+│  ├─ 📁 raw/
+│  ├─ 📁 work/
+│  ├─ 📁 processed/
+│  └─ 📁 stac/
+├─ 📁 src/
+├─ 📁 web/
+├─ 📁 docs/
+└─ 📁 tests/
 ~~~
 
 ---
 
-## 🧮 Local Validation & Testing Checklist
+## 🧭 Context
 
-### Code & Data Validation
+### Pipeline ordering & contract invariants (must be true)
+- [ ] I did **not** bypass the canonical pipeline ordering (ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode).
+- [ ] UI changes (if any) consume KFM data through API contracts (no direct Neo4j/graph access).
+- [ ] I did **not** add unsourced narrative in any user-facing surface; citations/provenance exist or are queued.
 
-- [ ] Linting (Python/TS/MD)  
-- [ ] Unit + integration tests  
-- [ ] Schema validation (JSON/YAML)  
-- [ ] STAC/DCAT validation (if applicable)  
-- [ ] SBOM impact reviewed (dependencies / licenses)  
-- [ ] No secrets or sensitive coordinates added  
+### Assumptions
+- <!-- -->
 
-### Documentation Validation
+### Risks / impact
+- **Risk level**: [ ] Low [ ] Medium [ ] High
+- **User impact**: <!-- -->
+- **Performance impact**: <!-- -->
+- **Breaking change?**: [ ] No [ ] Yes (describe + mitigation)
 
-- [ ] Follows KFM-MDP v11.2.2  
-- [ ] Front-matter updated & valid  
-- [ ] Links verified  
-- [ ] Mermaid diagrams render (if applicable)  
+### Rollout / migration plan (if needed)
+- [ ] No rollout needed
+- [ ] Requires migration/backfill (describe):
+  - <!-- -->
 
-### Commands Run (for reproducibility)
+---
 
+## 📦 Data & Metadata
+
+### If this PR changes or adds datasets
+- [ ] Data staged correctly (`data/raw/` → `data/work/` → `data/processed/`)
+- [ ] New/updated STAC Collection + Item(s) created under `data/stac/`
+- [ ] DCAT view updated (if applicable)
+- [ ] PROV lineage updated (`prov:wasDerivedFrom` / `prov:wasGeneratedBy`, run IDs)
+- [ ] Validation performed (schema + geometry/range checks)
+- [ ] Large assets tracked appropriately (e.g., DVC) and not committed directly to Git if oversized
+
+### If this PR adds or changes an analysis / ML artifact
+- [ ] Experiment log added under `mcp/experiments/` (hypothesis, inputs, method, outputs)
+- [ ] Model card added/updated under `mcp/model_cards/` (model version, data, limits, bias notes)
+- [ ] Outputs stored under `data/processed/` (not `src/`)
+- [ ] Uncertainty/confidence fields included (where applicable)
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+- **STAC IDs / Collections / Items**:
+  - <!-- -->
+- **DCAT dataset identifiers**:
+  - <!-- -->
+- **PROV activity/run IDs**:
+  - <!-- -->
+
+---
+
+## 🧱 Architecture
+
+### Components changed
+- <!-- e.g., src/pipelines/...; src/server/...; web/... -->
+
+### API contract impact (if any)
+- [ ] No API changes
+- [ ] REST contract changed (link to doc / OpenAPI update):
+  - <!-- -->
+- [ ] GraphQL schema/resolvers changed (link):
+  - <!-- -->
+- [ ] Contract extension doc added (use `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` as governing format)
+
+---
+
+## 🧠 Story Node & Focus Mode Integration (if relevant)
+
+- [ ] No Story/Focus changes
+- [ ] Story Node(s) added/updated (path + IDs):
+  - <!-- -->
+- [ ] Evidence-led narrative with cited dataset/document IDs
+- [ ] Sensitivity handling described (redaction/generalization)
+
+---
+
+## 🧪 Validation & CI/CD
+
+### Checks run (paste commands + results)
+- <!-- Example:
 ~~~bash
-# Example (edit as needed)
-# make ci-local
-# spectramind selftest --deep
-# spectramind train --config ...
+make test
 ~~~
+-->
 
-> _List the exact commands you ran locally/CI to validate this PR._
+### Test coverage
+- [ ] Unit tests updated/added
+- [ ] Integration tests updated/added
+- [ ] Schema validation updated/added (`schemas/`)
+- [ ] Data validation updated/added (ranges, geometry validity, null checks)
+- [ ] Frontend checks (lint/build/a11y) run (if UI touched)
 
----
-
-## ♿ Accessibility (A11y) Impact
-
-If UI changes:
-
-- [ ] Keyboard navigation verified  
-- [ ] Focus states correct  
-- [ ] High-contrast mode compatible  
-- [ ] Alt text included where needed  
-- [ ] Respects `prefers-reduced-motion`  
-
-**A11y Notes:**  
-> _Write here._
+### Evidence (optional)
+- Screenshots / GIFs (UI)
+- Logs (pipeline run)
+- Sample outputs (small, non-sensitive)
 
 ---
 
-## ⚖️ FAIR+CARE Governance Confirmation
+## ⚖ FAIR+CARE & Governance
 
-### FAIR Principles
+### Sensitivity / sovereignty / ethics
+- [ ] No sensitive locations/PII introduced
+- [ ] If sensitive content exists, it is generalized/redacted per `docs/governance/SOVEREIGNTY.md`
+- [ ] CARE considerations reviewed (collective benefit, authority to control, responsibility, ethics)
+- [ ] Security implications reviewed (authz/audit/logging; see `.github/SECURITY.md`)
 
-- [ ] **F1** Findable (IDs, metadata, indexing)  
-- [ ] **A1** Accessible (open formats, documented access)  
-- [ ] **I1** Interoperable (STAC/DCAT/JSON-LD aligned)  
-- [ ] **R1** Reusable (clear licensing & provenance)  
-
-### CARE Principles
-
-- [ ] No unapproved Indigenous or cultural data added  
-- [ ] CARE labels added/updated where appropriate  
-- [ ] Sovereignty/masking rules respected (H3, generalization, redaction)  
-
-Governance references:
-
-- `../docs/standards/faircare/FAIRCARE-GUIDE.md`  
-- `../docs/standards/governance/ROOT-GOVERNANCE.md`  
-- `../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md`  
-
-**FAIR+CARE Notes:**  
-> _Write here._
+### Approvals needed
+- [ ] None
+- [ ] FAIR+CARE council review
+- [ ] Security council review
+- [ ] Historian/editor review
+- [ ] Other: <!-- -->
 
 ---
 
-## 🛡️ Security, SBOM & Compliance
+## 🙋 Reviewer Notes
 
-- [ ] Security impact assessed (auth, authz, secrets, infra)  
-- [ ] `.github/workflows/security_audit.yml` passing (static analysis, CVE scan)  
-- [ ] Secrets scanning clean for new/changed files  
-- [ ] SBOM regenerated/verified if dependencies changed (`sbom_ref`)  
-- [ ] License and third‑party notices updated if needed  
-
-**Security / Compliance Notes:**  
-> _Write here._
-
----
-
-## 🧠 AI / Model-Specific Changes (If Applicable)
-
-- [ ] Model card updated (`mcp/model_cards/...`)  
-- [ ] Training/eval datasets documented (`mcp/experiments/...`)  
-- [ ] Hallucination/grounding guards validated  
-- [ ] Focus Mode compatibility maintained  
-- [ ] Relevant ADRs updated/added (architecture, loss, fusion, pretraining, etc.)  
-
-**AI Notes:**  
-> _Write here._
-
----
-
-## 🗺️ Data & Metadata Changes (If Applicable)
-
-- [ ] STAC Items/Collections updated (`data/stac/...`)  
-- [ ] DCAT JSON-LD updated (`docs/data/...`)  
-- [ ] Spatial extents updated (CRS + bbox; H3 masking checked)  
-- [ ] Temporal extents updated (OWL-Time aligned)  
-- [ ] Provenance/rights/licensing verified  
-
-**Data Notes:**  
-> _Write here._
-
----
-
-## 🌍 Telemetry, Energy & Carbon (If Applicable)
-
-- [ ] Telemetry events added/updated (conform to `github-pullrequest-v4` schema)  
-- [ ] Energy metrics captured/updated (conform to `energy-v2` schema)  
-- [ ] Carbon metrics captured/updated (conform to `carbon-v2` schema)  
-- [ ] Telemetry IDs kept in sync with `focus-telemetry.json`  
-- [ ] Manifest/SBOM references updated if telemetry or pipelines change  
-
-**Telemetry / Sustainability Notes:**  
-> _Write here._
-
----
-
-## 🧪 Test Results
-
-| Test Type            | Status | Notes |
-|----------------------|--------|-------|
-| Unit Tests           |        |       |
-| Integration Tests    |        |       |
-| End-to-End Tests     |        |       |
-| Schema Validation    |        |       |
-| STAC/DCAT Validation |        |       |
-| FAIR+CARE Checks     |        |       |
-| Accessibility Tests  |        |       |
-| Security Scan        |        |       |
-
-Paste relevant logs or summaries if needed.
-
----
-
-## 📦 Release & Deployment Considerations
-
-- [ ] Requires Docker rebuild  
-- [ ] Requires Neo4j migration  
-- [ ] Requires STAC/DCAT rebuild or reindex  
-- [ ] Requires re-running ETL pipelines  
-- [ ] Breaking change  
-
-### Breaking Change Notes
-
-~~~text
-Describe the breaking change, affected consumers, and migration path.
-~~~
-
----
-
-## 🧭 Versioning & Provenance
-
-Suggested SemVer bump:
-
-- [ ] Major (breaking changes, contract updates)  
-- [ ] Minor (new features, backwards compatible)  
-- [ ] Patch (bugfix / internal change)  
-
-Telemetry impact:
-
-~~~text
-Describe modifications to telemetry fields, workload patterns, or governance dashboards.
-~~~
-
-Provenance notes (optional):
-
-~~~text
-List major upstream sources, tools, or workflows involved in this change.
-~~~
-
----
-
-## ✅ Reviewer Checklist (Maintainers)
-
-| Check                                   | Status | Notes |
-|-----------------------------------------|--------|-------|
-| CI/CD Passed                            |        |       |
-| FAIR+CARE Compliance Verified           |        |       |
-| Sovereignty/H3 Rules Verified           |        |       |
-| SBOM Updated/Reviewed (if needed)       |        |       |
-| Documentation Meets KFM-MDP v11.2.2     |        |       |
-| Sensitive Data Review Complete          |        |       |
-| Telemetry Impact Considered             |        |       |
-| Security Audit & Scans Clean            |        |       |
-| Governance Ledger Updated (if needed)   |        |       |
-
----
-
-## 🕰 Template History
-
-| Version | Date       | Notes                                                                                              |
-|--------:|------------|----------------------------------------------------------------------------------------------------|
-| v11.2.3 | 2025-12-09 | Aligned with telemetry/energy/carbon schemas, SBOM & security workflows, and pipeline stage flags. |
-| v11.2.2 | 2025-11-27 | Updated with v11.2.2 metadata, FAIR+CARE + sovereignty blocks, and telemetry integration language. |
-| v11.0.1 | 2025-11-19 | Full v11 rebuild: governance, telemetry, sustainability.                                           |
-| v11.0.0 | 2025-11-18 | First v11 version aligned with KFM-MDP v11.                                                        |
-| v10.4.1 | 2025-11-16 | Governance, metadata, and accessibility improvements.                                              |
-| v10.3.1 | 2025-11-13 | Initial PR template.                                                                               |
-
----
-
-<div align="center">
-
-© 2025 Kansas Frontier Matrix  
-[⬅️ Back](../README.md) · [⚙️ GitHub Infrastructure](./README.md) · [🛡 Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+- Suggested reviewers: @
+- Review focus areas:
+  - <!-- -->
