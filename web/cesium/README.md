@@ -1,309 +1,305 @@
 ---
-title: "🌍 KFM v11.2.3 — Cesium Web Integration Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-description: "Governed overview of CesiumJS integration in the Kansas Frontier Matrix web stack, including directory layout, architecture, telemetry, and governance for 3D geospatial visualization."
+title: "KFM Web — Cesium Subsystem README"
 path: "web/cesium/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-03"
+version: "v1.0.0"
+last_updated: "2025-12-18"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-release_stage: "Stable · Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Web Visualization Systems · FAIR+CARE Council"
-content_stability: "stable"
-backward_compatibility: "Cesium 1.120 → 1.136 integration-contract compatible"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256-of-this-file>"
-doc_uuid: "urn:kfm:doc:web-cesium-overview-v11-2-3"
-semantic_document_id: "kfm-web-cesium-overview-v11.2.3"
-event_source_id: "ledger:kfm:web:cesium:overview:v11.2.3"
-
-sbom_ref: "../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../releases/v11.2.3/web-cesium-telemetry.json"
-telemetry_schema: "../schemas/telemetry/web-cesium-release-v1.json"
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
-
-license: "MIT"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.3"
-status: "Active / Enforced"
-doc_kind: "Subsystem Overview"
-intent: "web-cesium-subsystem"
-fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:web:cesium:readme:v1.0.0"
+semantic_document_id: "kfm-web-cesium-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:cesium:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# KFM Web — Cesium Subsystem README
 
-# 🌍 **Kansas Frontier Matrix — Cesium Web Integration Overview**  
-`web/cesium/README.md`
+## 📘 Overview
 
-**Purpose:**  
-Define the **governed integration contract** for CesiumJS within the KFM web stack, including directory layout, architecture, performance/telemetry hooks, and FAIR+CARE governance for 3D geospatial visualization.
+### Purpose
+- Document the Cesium-related frontend subsystem under `web/cesium/`.
+- Provide governance-safe patterns for adding/removing Cesium layers, integrating them with Focus Mode, and maintaining provenance and CARE gating.
 
-</div>
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Cesium module configuration + layer registry patterns | Backend generation of tiles/COGs/3D tiles |
+| Sensitivity gating + provenance pointers for Cesium layers | Neo4j schema changes |
+| Focus Mode interaction patterns from Cesium entities | Model inference workflows |
 
----
+### Audience
+- Primary: Frontend engineers working on 3D globe visualization.
+- Secondary: Geospatial engineers producing 3D-friendly assets, governance reviewers.
 
-## 📘 1. Overview
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` *(not confirmed in repo; add if missing)*
+- Terms used in this doc: CesiumJS, terrain, imagery, 3D Tiles, layer registry, provenance.
 
-CesiumJS is the primary **3D globe and scene engine** used by KFM for:
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Web architecture | `web/ARCHITECTURE.md` | Frontend | System invariants |
+| Cesium layer registry (proposed) | `web/cesium/layers/regions.json` | Frontend | Path/schema not confirmed |
+| Cesium registry schema (proposed) | `web/cesium/layers/regions.schema.v1.json` | Frontend | Not confirmed |
+| Focus Mode API | `src/server/` + `docs/` | Backend | Click → focus context |
 
-- 3D Tiles (sites, buildings, terrain, archives)  
-- Time-dynamic STAC overlays (climate, hydrology, atmosphere, land use)  
-- Archaeology and heritage Story Nodes rendered in 3D context  
-- Combined **MapLibre + Cesium dual-view** experiences in Focus Mode  
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] All claims link to datasets / schemas / tickets / commits (as applicable)
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
-This document governs:
+## 🗂️ Directory Layout
 
-- How Cesium is organized under `web/cesium/`  
-- How Cesium integrates with React, MapLibre, and Story Nodes  
-- How performance & errors are measured (telemetry)  
-- How FAIR+CARE and sovereignty constraints are respected in 3D views  
+### This document
+- `path`: `web/cesium/README.md`
 
----
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Frontend | `web/` | React + map clients |
+| APIs | `src/server/` | Focus Mode + search endpoints |
+| Catalogs | `data/` | STAC/DCAT/PROV outputs |
 
-## 🗂️ 2. Directory Layout (Emoji-Prefix Standard)
-
+### Expected file tree for this sub-area
 ~~~text
-web/cesium/
-│
-├── 📄 README.md                             # This file — Cesium web integration overview
-│
-├── ⚙️ config/                               # Cesium-specific configuration & wiring
-│   ├── 📄 cesium-env.example.json           # Example env config (keys, asset paths, toggles)
-│   ├── 📄 cesium-providers.json             # Allowed imagery/terrain/tileset providers (governed)
-│   └── 📄 cesium-feature-flags.json         # Feature toggles (async pick, debug layers, etc.)
-│
-├── 🧩 components/                           # React/TS components wrapping CesiumJS
-│   ├── 📄 CesiumGlobe.tsx                   # Main globe wrapper (camera, base layers, controls)
-│   ├── 📄 CesiumTimelineScene.tsx          # Timeline-aware globe (Story Nodes, Focus Mode)
-│   ├── 📄 CesiumRegionOverlay.tsx          # Cultural region & hydrology overlays (polygons/H3)
-│   └── 📄 CesiumDebugLayerToggle.tsx       # Optional debug overlay controller
-│
-├── 🗺️ layers/                              # Layer wiring between KFM data + Cesium primitives
-│   ├── 📄 tilesets.json                     # Registry of 3D Tilesets used by KFM
-│   ├── 📄 regions.json                      # Cultural region ↔ Cesium layer mapping
-│   └── 📄 sensors.json                      # Sensor/telemetry overlays for Cesium
-│
-├── 🧪 tests/                                # Visualization + interaction smoke tests
-│   ├── 📄 rendering-smoke.md                # Manual/CI test scenarios for Cesium views
-│   └── 📄 perf-baseline.md                  # Guidance for performance baselines (FPS, latency)
-│
-├── 🗄️ releases/                            # Versioned CesiumJS release notes (governed)
-│   └── 1.136/
-│       └── 📄 README.md                     # CesiumJS v1.136 KFM-governed release notes
-│
-└── 📚 docs/                                 # Additional Cesium-specific documentation
-    ├── 📄 integration-patterns.md           # Patterns for React, MapLibre, Focus Mode
-    ├── 📄 governance-hooks.md               # How FAIR+CARE, sovereignty, masking apply in 3D
-    └── 📄 troubleshooting.md                # Common Cesium issues & remediation in KFM
+🗂️ web/cesium/
+├─ 📄 README.md
+├─ 📁 layers/                      (not confirmed in repo)
+│  ├─ 📄 regions.json               (not confirmed in repo)
+│  └─ 📄 regions.schema.v1.json     (not confirmed in repo)
+├─ 📁 adapters/                    (not confirmed in repo)
+├─ 📁 assets/                      (not confirmed in repo)
+└─ 📁 utils/                       (not confirmed in repo)
 ~~~
 
-**Layout notes:**
+## 🧭 Context
 
-- **Releases** are governed per-version (e.g., `releases/1.136/README.md`).  
-- **components/** encapsulate Cesium usage so downstream code never talks to raw Cesium randomly.  
-- **layers/** map KFM concepts (regions, tilesets, sensors) to Cesium primitives in a **governed, declarative** way.  
+### Background
+- KFM’s UI is primarily 2D map-focused, but can be extended to richer 3D visualization. Cesium enables a 3D globe/terrain view and allows draping historical maps or datasets over terrain to help users interpret change in topography and land use.
+
+### Assumptions
+- Cesium is optional and should be treated as a subsystem that can be enabled without breaking the base 2D workflow.
+- Layer configuration is declarative (registry-driven) rather than hardcoded layer-by-layer in UI code *(exact registry file locations are not confirmed in repo)*.
+
+### Constraints / invariants
+- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode is preserved.
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- No ad-hoc adding markers in front-end code without a registry entry (governance + reviewability).
+- Sensitive layers must obey CARE rules: default off, zoom-limited, generalized geometry, and/or role-gated where required.
+
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Do we use Cesium Ion assets (token-based), or only self-hosted terrain/imagery? | TBD | TBD |
+| What is the authoritative layer registry schema for Cesium layers? | TBD | TBD |
+| How is user role/scope communicated to the UI for restricted layers? | TBD | TBD |
+
+### Future extensions
+- 3D Tiles support for large feature sets (buildings, historical reconstructions).
+- Evidence panels: show STAC-linked plots/images (e.g., time-series, annotated imagery) alongside Cesium map context.
+- Offline “story packs” with pre-bundled Cesium-ready assets.
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[STAC/DCAT/PROV catalogs] --> B[Layer registry JSON]
+  A --> C[Static assets: tiles/COGs/3D]
+  D[APIs] --> E[Focus Mode context bundle]
+  B --> UI[Web UI]
+  C --> UI
+  E --> UI
+  UI --> CZ[Cesium Engine]
+~~~
+
+### Optional: sequence diagram (Click → Focus Mode)
+~~~mermaid
+sequenceDiagram
+  participant User
+  participant CesiumUI
+  participant API
+  participant Graph
+  User->>CesiumUI: Click feature/marker
+  CesiumUI->>API: Focus query(entity_id)
+  API->>Graph: Fetch subgraph + provenance refs (redaction rules)
+  Graph-->>API: Context bundle
+  API-->>CesiumUI: Narrative + citations + audit flags
+  CesiumUI-->>User: Focus dashboard + provenance
+~~~
+
+## 📦 Data & Metadata
+
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Cesium layer registry | JSON | `web/cesium/layers/*.json` *(proposed)* | JSON schema validation *(proposed)* |
+| Terrain/imagery endpoints | URL/config | static hosting / services | availability + integrity (TBD) |
+| Feature overlays | GeoJSON / tiles / 3D Tiles | pipeline outputs | geometry validity (TBD) |
+| Focus Mode context | JSON | API | contract tests |
+
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Cesium-rendered layers | runtime scene graph | browser runtime | performance budgets (TBD) |
+| Click/hover events | UI events | telemetry (optional) | telemetry schemas |
+| Provenance panel entries | UI state | browser runtime | must include IDs |
+
+### Sensitivity & redaction
+- Registry entries for sensitive layers MUST include gating rules (default off, zoom bounds, generalization requirement, and/or role gating).
+- Focus Mode responses MUST not contain restricted coordinates unless authorized, and the UI MUST not attempt to “reconstruct” restricted detail client-side.
+
+### Quality signals
+- Time-to-first-render for Cesium scene is within acceptable bounds for target devices.
+- Layer toggles do not cause uncontrolled memory growth.
+- Every rendered dataset is attributable (STAC/DCAT/PROV IDs available to the user).
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+- Collections involved: TBD (each Cesium layer should reference a STAC collection ID when applicable).
+- Items involved: TBD (clickable features should link to item IDs or observation IDs).
+- Extension(s): Versioning + any domain extensions (TBD).
+
+### DCAT
+- Dataset identifiers: TBD (used for dataset metadata panels).
+- License mapping: displayed from DCAT-aligned metadata.
+
+### PROV-O
+- `prov:wasDerivedFrom`: surfaced for evidence artifacts.
+- `prov:wasGeneratedBy`: surfaced for model runs / transforms that produced overlays.
+
+### Versioning
+- Use STAC Versioning links and graph predecessor/successor relationships as applicable.
+
+### Extension points checklist (for future work)
+- [ ] Data: new domain added under `data/<domain>/.`
+- [ ] STAC: new collection + item schema validation
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests
+- [ ] UI: layer registry entry + access rules
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+- Clicking a Cesium feature should open an entity panel (or directly activate Focus Mode) using an entity ID that the API can resolve to a provenance-backed context bundle.
+
+### Provenance-linked narrative rule
+- Every claim must trace to a dataset / record / asset ID.
+
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "cesium:<layer_id>"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+### Example Cesium layer registry entry (illustrative only; replace IDs/paths)
+~~~json
+{
+  "id": "archaeology_candidates",
+  "title": "Potential Archaeological Sites",
+  "provenance": {
+    "stac_id": "urn:kfm:stac:collection:archaeology:candidates:v1",
+    "prov_activity_id": "urn:kfm:prov:activity:example:run:YYYYMMDD"
+  },
+  "visibility": {
+    "default_enabled": false,
+    "min_zoom": 8,
+    "max_zoom": 18
+  },
+  "care": {
+    "sensitivity_class": "public",
+    "generalize": false
+  },
+  "render": {
+    "engine": "cesium",
+    "geometry": "point",
+    "cluster": true
+  }
+}
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV)
+- [ ] Graph integrity checks
+- [ ] API contract tests
+- [ ] UI schema checks (layer registry)
+- [ ] Security and sovereignty checks (as applicable)
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) validate layer registry json against schema
+# 2) run UI unit tests
+# 3) run e2e test that toggles a Cesium layer and verifies expected markers render
+~~~
+
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| Cesium render timing | browser metrics | `docs/telemetry/` + `schemas/telemetry/` |
+| Layer toggle audit | UI events | `docs/telemetry/` + `schemas/telemetry/` |
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- Frontend maintainers approve Cesium module changes.
+- Governance review required when adding layers with any sensitivity flags or when changing redaction/generalization behavior.
+
+### CARE / sovereignty considerations
+- Identify communities impacted and protection rules.
+- Enforce conservative defaults: default-off visibility and zoom gating for sensitive content.
+
+### AI usage constraints
+- Ensure doc’s AI permissions/prohibitions match intended use.
+
+## 🕰️ Version History
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-18 | Initial Cesium subsystem README | TBD |
 
 ---
-
-## 🧱 3. Architecture & Integration Model
-
-### 3.1 Core Principles
-
-KFM Cesium integration follows these rules:
-
-- **Wrapper-first:** all Cesium usage goes through **typed React/TS components**.  
-- **Declarative data wiring:** layers are described in JSON registries, not hard-coded.  
-- **Provenance-aware:** layers know which datasets/tilesets they visualize and can surface provenance & CARE info.  
-- **Focus Mode-aware:** globe interactions are always compatible with Story Node + timeline semantics.
-
-### 3.2 Integration Layers
-
-1. **React + Cesium Wrapper Components**  
-   - `components/CesiumGlobe.tsx`  
-   - `components/CesiumTimelineScene.tsx`  
-
-   Responsibilities:
-   - Create and manage Cesium `Viewer` / `Scene`.  
-   - Register input handlers (click, hover, camera changes).  
-   - Bridge camera state with React + URL state.
-
-2. **Layer Registries (`layers/*.json`)**  
-   - Link **KFM data IDs** → **Cesium primitives**:  
-     - 3D Tilesets  
-     - Imagery layers  
-     - Region polygons / H3 mosaics  
-     - Sensor overlays  
-
-   Each entry includes:
-   - Data ID / STAC or registry reference  
-   - CARE / visibility policy hints  
-   - Provenance pointer(s)
-
-3. **Config (`config/*.json`)**  
-   - Provider endpoints (Cesium Ion, self-hosted terrain, 3D Tiles endpoints).  
-   - Feature flags (async pick, debug overlays, experimental tilesets).  
-   - Environment-specific toggles (dev, staging, prod).
-
----
-
-## 🧠 4. Focus Mode & Story Node Integration
-
-Cesium is used in **two primary Focus Mode patterns**:
-
-1. **Globe Context Panel**  
-   - Displays regions, tilesets, and site clusters relevant to the active Story Node.  
-   - Uses **asynchronous picking** (`scene.pickAsync`) to show provenance & CARE badges on click/hover.  
-
-2. **Timeline-Linked Scene**  
-   - Uses `CesiumTimelineScene.tsx` for time-linked visualizations.  
-   - Binds Cesium’s built-in timeline or custom time controls to:
-     - STAC imagery  
-     - 3D Tiles with epoch-based visibility  
-     - Hydrology or climate time series  
-
-Key rules:
-
-- Every interaction must be explainable in terms of **Story Node + dataset + provenance**.  
-- No direct user-facing Cesium state without a corresponding **KFM object** behind it.
-
----
-
-## 🗺️ 5. Data, Providers & Provenance
-
-### 5.1 Providers
-
-All Cesium providers used in KFM must be declared in:
-
-- `config/cesium-providers.json`
-
-Each provider entry includes:
-
-- Provider ID (e.g., `"terrain-kfm-primary"`)  
-- Type (`"terrain"`, `"imagery"`, `"3d-tiles"`)  
-- Endpoint/URL  
-- License / usage notes  
-- CARE or sovereignty notes (if applicable)
-
-### 5.2 Tilesets & Layers
-
-3D Tilesets and thematic layers are declared in:
-
-- `layers/tilesets.json`  
-- `layers/regions.json`  
-- `layers/sensors.json`
-
-Each entry includes:
-
-- `kfm:data_id` or STAC/registry reference  
-- Provider IDs and URLs  
-- CARE constraints and visibility rules (e.g., `"polygon-generalized"`, `"h3-only"`)  
-- PROV-O provenance link(s)
-
-### 5.3 Provenance Path
-
-For every visualized object (site, region, tileset):
-
-1. **KFM dataset / STAC entry**  
-2. **Provenance log** (PROV-O)  
-3. **Layer registry entry**  
-4. **Cesium primitive** (tile, primitive, entity, etc.)  
-
-This chain must be **unbroken** and testable in CI.
-
----
-
-## 📊 6. Performance & Telemetry (FAIR+CARE)
-
-Telemetry for Cesium is:
-
-- **Opt-in**  
-- **Hash/redaction-first** for any potentially identifying signals  
-- Used only for **performance & reliability**, not user tracking
-
-### 6.1 Metrics (Indicative)
-
-- Picking latency (`scene.pickAsync`)  
-- Terrain sampling latency (DEM queries)  
-- Frame time statistics (mean, p95, p99)  
-- Tile load counts & errors  
-- GPU memory pressure indicators (if available)
-
-### 6.2 Schema & Storage
-
-- Schema: `../schemas/telemetry/web-cesium-release-v1.json`  
-- Storage: `../releases/v11.2.3/web-cesium-telemetry.json`  
-
-Telemetry is consumed by:
-
-- CI dashboards  
-- Ops & reliability tooling  
-- The **KFM performance SLO/Error Budget** framework
-
----
-
-## ⚖ 7. FAIR+CARE, Sovereignty & Masking
-
-Cesium must respect the **same governance constraints** as 2D maps:
-
-- **Location masking** for sensitive sites or regions:  
-  - Use **H3-only** or region-level generalized polygons where required.  
-  - Never expose raw coordinates for sensitive archaeological or cultural locations.  
-
-- **Zoom-level constraints:**  
-  - Some layers may be visible only at certain zooms.  
-  - Tilesets or overlays may be completely disabled in public deployments.  
-
-- **Provenance & CARE surfacing:**  
-  - On click/hover, globe UI should be able to display:
-    - Source dataset  
-    - CARE label + sensitivity  
-    - Short provenance chip  
-
-Rules and patterns for this live in:
-
-- `docs/web/cesium/docs/governance-hooks.md` (referenced above)
-
----
-
-## 🧪 8. Testing & CI Expectations
-
-Cesium integration participates in **web CI** via:
-
-- Unit tests and integration harnesses (if present)  
-- Manual/automated scenarios described in:
-
-  - `web/cesium/tests/rendering-smoke.md`  
-  - `web/cesium/tests/perf-baseline.md`
-
-CI expectations:
-
-- No uncontrolled console errors in core scenes.  
-- Basic smoke scenes render without:
-  - Tile flood  
-  - Exception spam  
-  - Frozen camera or pick handlers  
-
-Where possible, CI should collect a small **performance snapshot** to detect regressions across releases.
-
----
-
-## 🕰️ 9. Version History
-
-| Version  | Date       | Author                                      | Summary                                                                 |
-|----------|------------|---------------------------------------------|-------------------------------------------------------------------------|
-| v11.2.3  | 2025-12-03 | Web Visualization Systems WG · FAIR+CARE Council | Initial governed Cesium web integration overview; aligned directory layout, config, layers, governance, and telemetry with CesiumJS v1.136 and KFM-MDP v11.2.3. |
-
----
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — MIT (Cesium Integration Code & Docs)**  
-FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[⬅ Back to Web Root](../README.md) · [⬅ Back to Cesium Releases](./releases/1.136/README.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
