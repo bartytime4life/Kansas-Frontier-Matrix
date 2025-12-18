@@ -1,1 +1,182 @@
+name: Security
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main, master]
+  schedule:
+    # Weekly (Mon) at 03:17 UTC
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+# Default: least privilege. Jobs elevate only when required.
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-review:
+    name: Dependency review (PR)
+    if: github.event_name == 'pull_request' && (github.event.repository.private == false || vars.KFM_ENABLE_GHAS_SCANS == 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Review dependency changes for known CVEs
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+
+  secret-scan:
+    name: Secret scan (Gitleaks)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Required for gitleaks to reliably scan git history
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run gitleaks (SARIF)
+        id: gitleaks
+        uses: DariuszPorowski/github-action-gitleaks@v2
+        with:
+          report_format: sarif
+          fail: false
+
+      # Upload SARIF only when GitHub token can write security events:
+      # - push/schedule/workflow_dispatch: yes
+      # - pull_request from forks: no (token is read-only)
+      - name: Upload SARIF to GitHub Code Scanning (same-repo only)
+        if: steps.gitleaks.outputs.exitcode == 1 && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.gitleaks.outputs.report }}
+
+      - name: Fail build if secrets found
+        if: steps.gitleaks.outputs.exitcode == 1
+        run: |
+          echo "${GITLEAKS_RESULT}"
+          exit 1
+        env:
+          GITLEAKS_RESULT: ${{ steps.gitleaks.outputs.result }}
+
+  osv-pr:
+    name: OSV scan (PR diff)
+    if: github.event_name == 'pull_request' && (github.event.repository.private == false || vars.KFM_ENABLE_GHAS_SCANS == 'true') && github.event.pull_request.head.repo.full_name == github.repository
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@v2.3.1
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    with:
+      scan-args: "--allow-no-lockfiles"
+
+  osv-full:
+    name: OSV scan (full)
+    if: github.event_name != 'pull_request' && (github.event.repository.private == false || vars.KFM_ENABLE_GHAS_SCANS == 'true')
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.3.1
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    with:
+      scan-args: "--allow-no-lockfiles"
+
+  codeql:
+    name: CodeQL (${{ matrix.language }})
+    if: (github.event.repository.private == false || vars.KFM_ENABLE_GHAS_SCANS == 'true') && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python, javascript]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended
+
+      - name: Autobuild (best-effort)
+        uses: github/codeql-action/autobuild@v4
+        continue-on-error: true
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  scorecard:
+    name: OpenSSF Scorecard (weekly)
+    if: github.event_name == 'schedule' && (github.event.repository.private == false || vars.KFM_ENABLE_GHAS_SCANS == 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Run Scorecard
+        uses: ossf/scorecard-action@v2.4.3
+        with:
+          results_file: scorecard.sarif
+          results_format: sarif
+          publish_results: false
+
+      - name: Upload Scorecard results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scorecard-results
+          path: scorecard.sarif
+          retention-days: 7
+
+      - name: Upload Scorecard SARIF to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: scorecard.sarif
+
+  sbom:
+    name: Generate SBOM (Syft)
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      # anchore/sbom-action notes it may need contents write for its uploads/submissions
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Generate SBOM (SPDX JSON)
+        uses: anchore/sbom-action@v0.20.11
+        with:
+          path: .
+          format: spdx-json
+          artifact-name: kfm-sbom.spdx.json
 
