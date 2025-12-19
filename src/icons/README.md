@@ -1,205 +1,300 @@
 ---
-title: "🎨 Kansas Frontier Matrix — Iconography System & Symbol Design Tokens (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "src/icons — Icon Assets"
 path: "src/icons/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/src-icons-registry-v1.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:src:icons:readme:v1.0.0"
+semantic_document_id: "kfm-src-icons-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:src:icons:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🎨 **Kansas Frontier Matrix — Iconography System & Symbol Design Tokens**
-`src/icons/README.md`
-
-**Purpose:**  
-Define and document the **visual iconography system**, including governance, FAIR+CARE accessibility, and sustainability alignment for all vector symbols used across the Kansas Frontier Matrix (KFM).  
-All icons follow **Platinum UI Tokenization v7.1**, **FAIR+CARE A11y**, and **ISO 9241-171** accessibility principles.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-A11y%20Certified-orange)](../../docs/standards/faircare.md)
-[![Status: Stable](https://img.shields.io/badge/Status-Operational-success)]()
-
-</div>
-
----
+# src/icons — Icon Assets
 
 ## 📘 Overview
 
-The **Iconography System** provides scalable, accessible symbols used across all KFM applications — web UI, dashboards, reports, and interactive maps.  
-Icons are optimized for **semantic meaning, accessibility, and FAIR+CARE governance traceability**.
+### Purpose
+This README governs how **icon assets** are organized, named, licensed, and consumed across KFM—especially in the **map/narrative UI**, Story Nodes, and Focus Mode. The goal is to keep iconography consistent, accessible, and legally clean.
 
-All icons are:
-- **Vector-based** (SVG) and **WCAG-compliant**
-- Generated from **design tokens** in `src/design-tokens/`
-- Versioned, checksum-tracked, and licensed under CC-BY 4.0
-- Exported for React, MapLibre, and documentation environments
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| SVG/PNG icons used by the UI (buttons, controls, entity badges) | Full illustrations, hero images, marketing art |
+| Map symbols (markers, pins, layer glyphs) | Basemaps / tiles / imagery datasets (those belong under `data/`) |
+| Entity-type glyphs (e.g., Place/Person/Event) for consistent UI semantics | Third-party icon libraries pulled dynamically at runtime |
+| Documentation of conventions (naming, sizing, accessibility) | UI implementation details that belong to `web/` |
 
----
+### Audience
+- Primary: Frontend/UI engineers, designers
+- Secondary: API/graph engineers (for aligning entity semantics with UI symbols)
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **Icon**: A small visual asset used in UI controls or labels.
+  - **Map marker / symbol**: An icon used to represent a feature on the map.
+  - **Sprite**: A compiled bundle of multiple icons to reduce requests (if used).
+  - **Manifest**: A machine-readable list mapping logical icon IDs → file paths (if used).
+
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Icons directory README | `src/icons/README.md` | UI | This document |
+| Icon source files | `src/icons/**` | UI/Design | Prefer SVG for scalability |
+| Optional: icon manifest | `src/icons/manifest.*` | UI | Not confirmed in repo; add if needed |
+| Optional: generated sprite(s) | `web/**` | UI | Not confirmed in repo; avoid committing generated outputs unless required |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Directory layout and naming conventions are explicit
+- [ ] Licensing and attribution expectations are explicit
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
-```plaintext
-src/icons/
-├── README.md                        # This file — overview and design governance
-│
-├── system/                          # Functional system icons (alerts, settings, data)
-│   ├── alert.svg
-│   ├── check.svg
-│   ├── info.svg
-│   └── governance.svg
-│
-├── thematic/                        # Thematic visual symbols for domains (climate, landcover)
-│   ├── climate.svg
-│   ├── hydrology.svg
-│   ├── hazards.svg
-│   ├── treaties.svg
-│   └── landcover.svg
-│
-├── accessibility/                   # Inclusive and assistive icons (contrast, narration, keyboard)
-│   ├── high-contrast.svg
-│   ├── narration.svg
-│   ├── keyboard.svg
-│   └── vision.svg
-│
-└── metadata.json                    # Icon registry, telemetry, and governance metadata
-```
+### This document
+- `path`: `src/icons/README.md`
 
----
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Icons | `src/icons/` | Canonical icon source assets + conventions |
+| Design tokens | `src/design-tokens/` | Color/typography/spacing tokens that icons should align with |
+| Frontend | `web/` | React/map clients that render icons |
+| Docs | `docs/` | Governed docs, templates, governance policies |
+| Schemas | `schemas/` | Any manifest schemas (if introduced) |
 
-## ⚙️ Icon Governance Framework
+### Expected file tree for this sub-area
+~~~text
+📁 src/
+└── 📁 icons/
+    ├── 📄 README.md
+    ├── 📁 svg/                 # preferred source format (proposed)
+    │   ├── 📁 ui/              # buttons, panels, controls
+    │   ├── 📁 map/             # markers, pins, layer symbols
+    │   └── 📁 entities/        # entity-type glyphs (Place/Person/Event/etc.)
+    ├── 📁 png/                 # only if SVG is not viable (legacy/export)
+    └── 📁 third_party/         # optional: imported sets + attribution (proposed)
+        ├── 📄 LICENSES.md
+        └── 📄 SOURCES.md
+~~~
 
-```mermaid
-flowchart TD
-A["Design Tokens (src/design-tokens/tokens/)"] --> B["Icon Generation (src/icons/)"]
-B --> C["Accessibility Review (WCAG + Pa11y)"]
-C --> D["Governance Ledger Registration"]
-D --> E["Deployment (Web + Map + Docs)"]
-```
+## 🧭 Context
 
-Each icon passes FAIR+CARE certification and is recorded in the telemetry ledger (`focus-telemetry.json`).
+### Background
+Icon sprawl (duplicated assets, inconsistent naming, unclear licensing) becomes a maintenance and governance risk. This directory centralizes icon assets so the UI can stay consistent across map layers, story panels, and Focus Mode affordances.
 
----
+### Assumptions
+- SVG is the default icon format for UI and map rendering when possible.
+- Icons follow a consistent sizing grid (e.g., 16/20/24px) and include a stable `viewBox`.
+- Where color is required, icons should be compatible with token-driven theming (e.g., `currentColor` or token-mapped fills).
 
-## 🧩 Icon Metadata Schema
+### Constraints / invariants
+- Preserve the KFM pipeline ordering (ETL → catalogs → graph → APIs → UI → Story Nodes → Focus Mode).
+- UI should rely on API contracts for data; icons must not become a “side channel” that encodes hidden or sensitive meaning not present in provenance-linked UI content.
+- Licensing must be explicit for any third‑party icon imports (avoid “mystery assets”).
 
-| Field | Description | Example |
-|--------|-------------|----------|
-| `id` | Unique identifier | `"icon_climate_v10"` |
-| `category` | Icon set category | `"thematic"` |
-| `filename` | SVG file name | `"climate.svg"` |
-| `keywords` | Descriptive tags for search and semantics | `["weather","temperature","climate","map"]` |
-| `a11y_label` | Screen reader text alternative | `"Climate and temperature icon"` |
-| `license` | SPDX identifier | `"CC-BY-4.0"` |
-| `checksum` | SHA-256 for integrity tracking | `"sha256-9e2a...a32b"` |
-| `fairstatus` | FAIR+CARE certification | `"certified"` |
-| `energy_embedded_wh` | Energy cost of generation/rendering | `0.02` |
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Do we want an icon **manifest** (icon_id → path) to keep usage consistent? | TBD | TBD |
+| Do we need a **sprite** pipeline (build-time bundling) or can we import SVGs directly? | TBD | TBD |
+| What entity-type icon mapping is canonical (Place/Person/Event/Organization/Artifact/etc.)? | TBD | TBD |
 
-**Example Metadata Entry:**
-```json
-{
-  "id": "icon_hazards_v10",
-  "category": "thematic",
-  "filename": "hazards.svg",
-  "a11y_label": "Hazard and risk visualization icon",
-  "license": "CC-BY-4.0",
-  "checksum": "sha256-98f7c2b48f91d20a...",
-  "fairstatus": "certified",
-  "energy_embedded_wh": 0.03
-}
-```
+### Future extensions
+- Add a schema-validated icon manifest (with lint rules to prevent breaking renames).
+- Add optional build-time optimization (SVGO) and sprite generation (if performance requires it).
+- Introduce automated checks for missing attribution files in `third_party/`.
 
----
+## 🗺️ Diagrams
 
-## 🧠 Design Token Integration
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[Design + icon sources] --> B[src/icons]
+  B --> C[Optional: build optimization]
+  C --> D[web/ UI bundles]
+  D --> E[React/Map UI renders icons]
+  E --> F[Story Nodes + Focus Mode UI]
+~~~
 
-Each icon’s color, stroke, and sizing are sourced from **KFM design tokens** (`src/design-tokens/generated/`).
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant UI as UI (web/)
+  participant Icon as Icon Asset (src/icons)
+  UI->>Icon: import/use icon by stable ID/path
+  Icon-->>UI: SVG/PNG asset
+  UI-->>UI: render icon in map + narrative UI
+~~~
 
-| Token Type | Description | Example |
-|-------------|-------------|----------|
-| `color.primary` | Base stroke color for line icons. | `#005EB8` |
-| `color.hazard` | Domain-specific thematic tone. | `#E53935` |
-| `size.icon.sm` | Small icon size. | `16px` |
-| `size.icon.lg` | Large map icon size. | `48px` |
-| `stroke.width` | Consistent line width. | `1.5px` |
+## 📦 Data & Metadata
 
----
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| UI icon sources | SVG | `src/icons/svg/**` | Lint/optimize (SVGO) (if enabled) |
+| Map symbols | SVG/PNG | `src/icons/svg/map/**` | Size + viewBox + naming checks |
+| Third-party sets (optional) | SVG/PNG | `src/icons/third_party/**` | License + attribution required |
 
-## ♿ Accessibility Standards
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Optimized icons (optional) | SVG | build output (TBD) | Not confirmed in repo |
+| Sprite bundle (optional) | SVG/JSON | build output (TBD) | Not confirmed in repo |
+| Icon manifest (optional) | JSON/YAML | `src/icons/manifest.*` | If added: define schema under `schemas/` |
 
-All icons conform to **WCAG 2.1 AA** and **ISO 9241-171**:
+### Sensitivity & redaction
+- Icons are generally **public** assets, but symbolism can be culturally sensitive.
+- Avoid sacred/culturally restricted imagery in generic iconography. If a symbol relates to a protected community/context, document review requirements under Governance.
 
-| Standard | Requirement | Implementation |
-|-----------|--------------|----------------|
-| WCAG 1.1.1 | Provide text alternatives. | `a11y_label` embedded via `<title>` or `aria-label`. |
-| WCAG 1.4.3 | Maintain 4.5:1 color contrast. | Token-controlled fill/stroke colors. |
-| WCAG 2.1.1 | Keyboard and focus navigable (interactive icons). | Tabindex and ARIA focusable regions. |
-| ISO 9241-171 | Inclusive use for all users. | All icons keyboard and screen reader accessible. |
+### Quality signals
+- Consistent naming (kebab-case) and stable IDs
+- File size thresholds (avoid oversized SVG paths)
+- SVG hygiene: includes `viewBox`, no embedded raster unless required, no external references
+- Accessibility: icons used as controls must have labeled buttons/tooltips at the UI layer
 
-Accessibility validation occurs in CI (`ui-accessibility.yml`).
+## 🌐 STAC, DCAT & PROV Alignment
 
----
+### STAC
+- Collections involved: N/A (icons are source assets, not datasets)
+- Items involved: N/A
+- Extension(s): N/A
 
-## ⚖️ FAIR+CARE Governance Matrix
+### DCAT
+- Dataset identifiers: N/A
+- License mapping: handled at asset level (repo license + any `third_party/` attribution)
+- Contact / publisher mapping: N/A
 
-| Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Indexed in `metadata.json` and telemetry ledger. | @kfm-data |
-| **Accessible** | Descriptive alt text and labels; WCAG-compliant. | @kfm-accessibility |
-| **Interoperable** | Tokenized color and structure definitions. | @kfm-architecture |
-| **Reusable** | Modular icons with CC-BY 4.0 license. | @kfm-design |
-| **CARE** | Inclusive iconography reviewed by FAIR+CARE Council. | @faircare-council |
+### PROV-O
+- `prov:wasDerivedFrom`: only applicable if icons are generated from upstream design sources (not confirmed in repo)
+- `prov:wasGeneratedBy`: build step (if sprite/optimization is introduced)
+- Activity / Agent identities: N/A until an icon build pipeline exists
 
-Governance metrics tracked in:  
-`docs/reports/telemetry/governance_scorecard.json`
+### Versioning
+- Renaming or removing icons is a breaking change for the UI. Prefer additive changes, and deprecate before removal.
 
----
+## 🧱 Architecture
 
-## ♻️ Sustainability Metrics
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| `src/icons/` | Canonical icon sources | File paths + naming conventions |
+| Optional: manifest | Stable logical IDs for icons | JSON/YAML contract (if added) |
+| Optional: build optimizer | Reduce size, normalize SVG | Build step + CI gate (if added) |
+| `web/` UI | Render icons in map + panels | Import assets / reference IDs |
 
-| Metric | Target | Verified By |
-|---------|---------|--------------|
-| `energy_embedded_wh` | ≤ 0.05 per SVG | @kfm-sustainability |
-| `carbon_gco2e` | ≤ 0.07 per asset | @kfm-security |
-| `reuse_rate` | ≥ 95% across projects | @kfm-design-system |
-| `a11y_compliance` | 100% | @kfm-accessibility |
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Naming + directory conventions | `src/icons/README.md` | Additive changes preferred |
+| Optional: manifest schema | `schemas/` | Semver + changelog |
+| Optional: sprite output contract | build output docs | Versioned by build tooling |
 
-Telemetry recorded in:  
-`releases/v10.0.0/focus-telemetry.json`
+### Extension points checklist (for future work)
+- [ ] UI: introduce a single icon registry API for the UI (to prevent drift)
+- [ ] Validation: add a CI lint step for icons (sizes, licensing, naming)
+- [ ] Governance: add required review for third-party icon imports
 
----
+## 🧠 Story Node & Focus Mode Integration
 
-## 🧩 Validation Workflows
+### How this work surfaces in Focus Mode
+- Icons may appear in:
+  - Story Node markers/pins on the map
+  - Entity-type badges (Place/Person/Event/Organization/Artifact)
+  - UI controls in the Focus Mode panel
 
-| Workflow | Description | Output |
-|-----------|-------------|---------|
-| `icon-registry-validate.yml` | Ensures valid metadata and checksum integrity. | `reports/self-validation/icons/icon_registry.json` |
-| `ui-accessibility.yml` | Runs accessibility validation (Pa11y + axe-core). | `reports/self-validation/ui/a11y_summary.json` |
-| `telemetry-export.yml` | Updates sustainability and governance metrics. | `releases/v10.0.0/focus-telemetry.json` |
+### Provenance-linked narrative rule
+- Icons must not imply facts that aren’t supported by provenance-linked content.
+  - Example: use a neutral “event” glyph unless the story node has curated evidence for a more specific symbol.
 
----
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] (Optional) Icon lint: naming + directory rules + basic SVG hygiene
+- [ ] (Optional) License check for `third_party/` additions
+- [ ] UI build checks to ensure icon imports resolve
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) run doc lint / markdown checks
+# 2) (optional) run icon lint (naming, sizes, licenses)
+# 3) run UI build/tests to verify imports resolve
+~~~
+
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| N/A | N/A | N/A |
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- UI/Design review for icon set changes (consistency + accessibility)
+- Governance review trigger if:
+  - importing third-party icons without clearly compatible licensing
+  - using culturally sensitive symbolism
+
+### CARE / sovereignty considerations
+- If iconography references Indigenous Nations, sacred locations, or culturally protected symbols:
+  - treat as **requires human review**
+  - document constraints and acceptable representations
+
+### AI usage constraints
+- Ensure doc’s AI permissions/prohibitions match intended use.
+- Do not use AI to “invent” culturally-specific symbols.
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.0.0 | 2025-11-10 | `@kfm-design-system` | Introduced unified FAIR+CARE-compliant iconography system with design token integration and A11y validation. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial README for `src/icons/` | TBD |
 
 ---
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Source Index](../README.md) · [Design Tokens](../design-tokens/README.md) · [Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
-
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
