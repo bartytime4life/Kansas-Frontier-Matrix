@@ -1,10 +1,10 @@
 ---
-title: "KFM — data/work Staging Area (README)"
+title: "KFM — data/work Directory README"
 path: "data/work/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-17"
+last_updated: "2025-12-19"
 status: "draft"
-doc_kind: "README"
+doc_kind: "Guide"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -41,223 +41,248 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM `data/work/` — Staging Workspace (README)
+# KFM — data/work Directory README
 
 ## 📘 Overview
 
 ### Purpose
-- Define what belongs in `data/work/` and what does **not**, as part of KFM’s governed ETL → catalog → graph → API → UI pipeline.
-- Establish a **directory contract**: `data/work/` is for **intermediate / staging artifacts** produced during ETL runs (i.e., between `data/raw/` and `data/processed/`), and is **not** a stable interface for downstream consumers.
+- Define the intended use and conventions for `data/work/` as the **non-canonical workspace** for intermediate artifacts produced during ETL, normalization, and validation.
+- Ensure intermediate outputs are organized predictably so they can be promoted (when appropriate) into **canonical** locations (e.g., `data/processed/`, `data/stac/`, `data/catalog/dcat/`, `data/prov/`) without breaking the pipeline ordering.
 
 ### Scope
 | In Scope | Out of Scope |
 |---|---|
-| Intermediate transformation outputs (e.g., temporary normalized tables, clipped rasters, intermediate joins/derivatives) | Authoritative “source of truth” raw drops (use `data/raw/`) |
-| Per-run staging artifacts used to produce `data/processed/` outputs | Final, validated outputs intended for ingestion (use `data/processed/`) |
-| Small manifests/notes that help reproduce or debug a run (non-sensitive) | Secrets, credentials, tokens, private keys |
-| Temporary exports used for validation and QA before promotion | Public-facing datasets without STAC/DCAT/PROV metadata |
+| Intermediate files produced during ingestion, parsing, validation, normalization, enrichment, and QA | Final/canonical datasets intended for long-term reference |
+| Run logs, checksums, intermediate manifests, draft metadata | Public-facing catalogs (STAC/DCAT/PROV outputs belong in their canonical folders) |
+| Temporary run scratch space | Application contracts, API schema design, UI behavior |
 
 ### Audience
-- Primary: ETL/pipeline maintainers, data engineers, CI maintainers
-- Secondary: contributors reviewing a pipeline PR, governance reviewers (when a run introduces sensitive materials)
+- Primary: pipeline engineers, data contributors maintaining ETL runs
+- Secondary: reviewers/auditors verifying provenance + quality gates
 
-### Definitions
+### Definitions (link to glossary)
 - Link: `docs/glossary.md`
 - Terms used in this doc:
-  - **raw / work / processed**
-  - **ETL run**
-  - **staging artifact**
-  - **promotion** (moving an output from `work/` to `processed/`)
-  - **cataloging** (STAC/DCAT/PROV)
-  - **provenance** (PROV-O)
-  - **deterministic / replayable**
+  - **Work area**: a transient workspace where intermediate pipeline artifacts may be created and iterated.
+  - **Canonical outputs**: artifacts that are stable, versioned, and referenced by catalogs/graph/APIs.
+  - **Run scope**: grouping of outputs produced by a single execution of a pipeline.
 
 ### Key artifacts (what this doc points to)
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| This README | `data/work/README.md` | TBD | Directory contract for `data/work/` |
-| Raw inputs | `data/raw/` | TBD | Source drops (avoid mutating; treat as inputs) |
-| Work staging | `data/work/` | TBD | Intermediate outputs; may be cleaned/regenerated |
-| Processed outputs | `data/processed/` | TBD | Validated outputs intended for catalog + ingestion |
-| Catalogs | `data/stac/` (+ associated docs) | TBD | Cataloged assets (STAC/DCAT/PROV) |
-| ETL configs / code | `src/pipelines/` (or repo-defined equivalent) | TBD | Deterministic transforms |
-| Run logs | `mcp/runs/` or `mcp/experiments/` | TBD | Replay + audit trail (path may vary by repo) |
-| Schemas / validators | `schemas/` | TBD | STAC/DCAT/PROV + other schema checks |
+| Work root | `data/work/` | DataOps | Non-canonical staging + intermediates |
+| Staging | `data/work/staging/` | ETL | Downloaded/unpacked inputs in transit |
+| Tables | `data/work/tables/` | ETL | Intermediate tabular extracts/joins |
+| Spatial | `data/work/spatial/` | ETL | Intermediate geospatial transforms |
+| Work-processed | `data/work/processed/` | ETL | Candidate processed outputs pending promotion |
+| Metadata | `data/work/metadata/` | ETL | Draft/derived metadata, manifests, reports |
+| Logs | `data/work/logs/` | ETL | Run logs, validation outputs, checksums |
+| Temp | `data/work/tmp/` | ETL | Scratch space; safe-to-delete by convention |
 
 ### Definition of done (for this document)
 - [ ] Front-matter complete + valid
-- [ ] `data/work/` purpose is explicitly distinguished from `data/raw/` and `data/processed/`
-- [ ] Promotion criteria to `data/processed/` documented (at a minimum, validation + provenance expectations)
-- [ ] Governance + CARE/sovereignty considerations explicitly stated (esp. for sensitive locations)
-- [ ] Validation / reproduction steps are listed (even if placeholders pending repo command names)
+- [ ] Directory responsibilities are clearly stated (what belongs / what does not)
+- [ ] Conventions avoid breaking the canonical pipeline ordering (ETL → catalogs → graph → APIs → UI → story → focus)
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
+- [ ] No secrets/credentials/PII are implied to be stored in `data/work/`
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `data/work/README.md` (must match front-matter)
+- `path`: `data/work/README.md`
 
 ### Related repository paths
 | Area | Path | What lives here |
 |---|---|---|
-| Raw sources | `data/raw/` | Original ingested sources / downloads (inputs) |
-| Work staging | `data/work/` | Intermediate artifacts generated during transforms |
-| Final outputs | `data/processed/` | Final cleaned/normalized assets ready for catalogs + ingestion |
-| Catalogs | `data/stac/` | STAC Collections/Items and related metadata |
-| Provenance | `data/stac/` + graph | PROV activities/entities/agents linked to generated outputs |
-| Schemas | `schemas/` | JSON schema / validators used by CI |
-| Runs & telemetry | `mcp/runs/` / `docs/telemetry/` | Replay logs, run metadata, audit/telemetry (paths may vary) |
+| Data lifecycle root | `data/` | Raw/work/processed + catalogs |
+| Raw sources | `data/raw/` | Source snapshots; minimally transformed |
+| Canonical processed | `data/processed/` | Stable processed datasets (derived) |
+| STAC catalogs | `data/stac/` | STAC collections/items + assets |
+| DCAT catalogs | `data/catalog/dcat/` | Dataset-level catalog views |
+| PROV bundles | `data/prov/` | Lineage/activity bundles |
+| Pipelines | `src/pipelines/` | ETL + catalog build + transforms |
+| Schemas | `schemas/` | Validation schemas (STAC/DCAT/PROV/telemetry/etc.) |
 
 ### Expected file tree for this sub-area
 ~~~text
-🗂️ data/
-├── 🧱 raw/
-├── 🧪 work/
-│   ├── 📄 README.md
-│   ├── 📁 <domain-or-pipeline>/         # optional (pattern; not guaranteed)
-│   │   ├── 📁 <run-id>/                 # optional (pattern; not guaranteed)
-│   │   │   ├── 🧾 manifest.json         # recommended: small provenance stub / inputs list
-│   │   │   ├── 🧩 intermediate/         # intermediate outputs (may be large/binary)
-│   │   │   └── 📝 notes.md              # debug notes (non-sensitive)
-│   │   └── 🧹 _tmp/                     # local-only scratch (recommend gitignored)
-│   └── 🧹 _tmp/
-└── 🏁 processed/
+📁 data/
+└── 📁 work/
+    ├── 📄 README.md
+    ├── 📁 staging/
+    │   └── 📄 README.md
+    ├── 📁 tables/
+    │   └── 📄 README.md
+    ├── 📁 spatial/
+    │   └── 📄 README.md
+    ├── 📁 processed/
+    │   └── 📄 README.md
+    ├── 📁 metadata/
+    │   └── 📄 README.md
+    ├── 📁 logs/
+    │   └── 📄 README.md
+    └── 📁 tmp/
+        └── 📄 README.md
 ~~~
 
 ## 🧭 Context
 
 ### Background
-- KFM’s pipeline is ordered and contract-driven: ETL produces deterministic, replayable transforms; artifacts move through `data/raw/ → data/work/ → data/processed/`.
-- `data/work/` exists to keep **in-progress** ETL outputs separate from:
-  - **inputs** (`data/raw/`)
-  - **publishable outputs** (`data/processed/` + catalogs)
+`data/work/` exists to support the **middle of the lifecycle** where data is being actively transformed, validated, and prepared for cataloging/graph ingestion. It is an operational convenience layer to keep intermediate artifacts separated from canonical outputs.
 
 ### Assumptions
-- ETL runs are intended to be **deterministic** and **replayable** given the same inputs/configs.
-- Processed outputs (not work artifacts) are the ones that get:
-  - STAC Collection/Item representation
-  - DCAT mapping
-  - PROV activity record linking inputs → outputs
+- Intermediate artifacts may be created per “run” (recommended), but the exact run ID scheme is project-defined.
+- Some files in `data/work/` may be regenerated frequently; consumers should avoid depending on them as stable inputs unless explicitly promoted/versioned elsewhere.
 
 ### Constraints / invariants
-- `data/work/` is **not** a stable public contract:
-  - Don’t build downstream dependencies (UI, API, catalog loaders) that require `data/work/`.
-- Promotion boundary:
-  - If an output is meant to be consumed downstream (catalog → graph → API → UI), it must be promoted to `data/processed/` and cataloged/validated.
-- Governance boundary:
-  - If staging artifacts contain potentially sensitive cultural sites/locations, apply redaction/generalization rules before any publishing/export; consult `docs/governance/SOVEREIGNTY.md` and related governance docs.
-- No secrets:
-  - Never store credentials, tokens, or private keys in `data/work/` (or anywhere in the repo).
+- The canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- Frontend clients must not depend on `data/work/` artifacts directly (API boundary remains the integration surface).
+- `data/work/` must not be treated as an authoritative source of truth; authoritative datasets and catalogs must be promoted to their canonical locations.
+- Never store secrets/credentials in `data/work/` (or anywhere in-repo).
 
 ### Open questions
-| Question | Why it matters | Proposed owner | Status |
-|---|---|---|---|
-| Should we standardize a required `data/work/<domain>/<run-id>/manifest.json` schema? | Improves reproducibility + automated promotion | TBD | Open |
-| What is the official retention/cleanup policy for `data/work/` artifacts? | Prevents unbounded repo growth | TBD | Open |
-| Are large `data/work/` artifacts tracked via DVC/object storage or excluded via `.gitignore`? | Keeps Git history manageable | TBD | Open |
+| Question | Owner | Target date |
+|---|---|---|
+| Define a standard run identifier format (`run_id`) | TBD | TBD |
+| Define retention/cleanup rules for `data/work/tmp/` and large intermediates | TBD | TBD |
+| Decide which intermediate artifacts should be committed vs generated | TBD | TBD |
 
 ### Future extensions
-- Define a minimal “work manifest” schema that can be auto-generated by ETL and later converted into PROV and/or STAC assets.
-- Add CI checks that prevent accidental commits of sensitive/binary staging artifacts (size thresholds + file-type denylist).
-- Add a “promotion tool” that:
-  1) validates, 2) stamps checksums, 3) writes STAC/DCAT/PROV, 4) moves outputs to `data/processed/`.
+- Extension point A: add a run manifest pattern (e.g., `data/work/metadata/<run_id>/manifest.json`)
+- Extension point B: add standardized validation report outputs (row counts, geometry validity, schema checks)
 
 ## 🗺️ Diagrams
 
-### KFM data flow positioning for `data/work/`
+### System / dataflow diagram
 ~~~mermaid
-flowchart TD
-  A["data/raw/ — inputs"] --> B["data/work/ — staging"]
-  B --> C["data/processed/ — final outputs"]
-
-  C --> D["data/stac/ — STAC + DCAT + PROV catalogs"]
-  D --> E["Neo4j graph"]
-  E --> F["APIs"]
-  F --> G["UI"]
-  E --> H["Story Nodes / Focus Mode"]
+flowchart LR
+  A["data/raw (inputs)"] --> B["data/work (staging + transforms)"]
+  B --> C["data/processed (canonical)"]
+  C --> D["data/stac + data/catalog/dcat + data/prov (catalogs)"]
 ~~~
 
+## 📦 Data & Metadata
+
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Source snapshots | PDF/CSV/GeoPackage/etc. | `data/raw/` | Hash + basic type checks |
+| Pipeline configs | YAML/JSON/etc. | `src/pipelines/` | Lint + schema (if defined) |
+
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Intermediate tables | CSV/Parquet/etc. | `data/work/tables/` | Schema checks (project-defined) |
+| Intermediate spatial layers | GeoJSON/GeoPackage/etc. | `data/work/spatial/` | Geometry/CRS validity checks |
+| Candidate processed outputs | dataset formats | `data/work/processed/` | Must be promotable to `data/processed/` |
+| Draft metadata + manifests | JSON/YAML | `data/work/metadata/` | STAC/DCAT/PROV drafts validated before promotion |
+| Logs + reports | text/JSON | `data/work/logs/` | No secrets; redaction rules apply |
+| Scratch temp files | any | `data/work/tmp/` | Not relied upon |
+
+### Sensitivity & redaction
+- If any intermediate artifact contains sensitive fields (locations, names, or restricted content), it must be handled according to governance and sovereignty guidance and must not be promoted to public catalogs without appropriate generalization/redaction.
+
+### Quality signals
+- Recommended checks for intermediates:
+  - Completeness (required columns present)
+  - Range checks / type checks for numeric fields
+  - Spatial validity (geometry validity + CRS present + bounding boxes)
+  - Join cardinality checks where merges occur
+  - Checksums and stable file naming for reproducibility
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+- `data/work/` may contain **draft** STAC items/collections or extraction metadata, but **published** STAC outputs belong under `data/stac/`.
+
+### DCAT
+- `data/work/` may contain mapping drafts, but **published** DCAT records belong under `data/catalog/dcat/`.
+
+### PROV-O
+- `data/work/` may contain draft provenance reports, but **published** PROV bundles belong under `data/prov/`.
+- When promoting any artifact out of `data/work/`, ensure it can be linked with:
+  - `prov:wasDerivedFrom` (input source IDs)
+  - `prov:wasGeneratedBy` (run/activity ID)
+  - activity agent identity (human/system)
+
+### Versioning
+- Intermediate outputs in `data/work/` are not assumed stable.
+- Promotion to canonical areas should introduce explicit versioning and lineage references (as applicable).
+
+## 🧱 Architecture
+
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| ETL | ingest + normalize + validate | configs + run logs + intermediates |
+| Work area | hold intermediate artifacts | filesystem conventions (this doc) |
+| Catalog builders | generate STAC/DCAT/PROV | schema-validated JSON/LD outputs |
+| Graph build | load canonical outputs into Neo4j | API-layer mediated access |
+| APIs | serve contracted data | REST/GraphQL (contract tests) |
+| UI | render map + narrative | API calls only |
+
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Validation schemas | `schemas/` | Semver + changelog |
+| Pipeline run logs (structured) | `data/work/logs/` | per-run scoping recommended |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | schema validated; linked lineage |
+
 ### Extension points checklist (for future work)
-- [ ] Data: new domain added under `data/<domain>/` (and staged via `data/work/` as needed)
-- [ ] STAC: new collection + item schema validation (for promoted outputs)
-- [ ] PROV: activity + agent identifiers recorded (for promoted outputs)
-- [ ] Graph: new labels/relations mapped + migration plan (if outputs introduce new entities)
-- [ ] APIs: contract version bump + tests (if new outputs require new endpoints)
-- [ ] UI: layer registry entry + access rules (if new outputs become visual layers)
-- [ ] Focus Mode: provenance references enforced (no claims without linked evidence)
-- [ ] Telemetry: new signals + schema version bump (if new runs introduce new metrics)
+- [ ] Run-scoped output conventions (folders + manifests)
+- [ ] Schema validation for intermediate tables/spatial layers
+- [ ] Promotion checklist from `data/work/processed/` → `data/processed/`
+- [ ] Automated cleanup rules for tmp artifacts
+- [ ] Telemetry signals for run outcomes and validation status
 
 ## 🧠 Story Node & Focus Mode Integration
 
 ### How this work surfaces in Focus Mode
-- `data/work/` artifacts should **not** be referenced directly in Story Nodes / Focus Mode.
-- Only outputs that have been promoted to `data/processed/` **and** cataloged (STAC/DCAT/PROV) should surface as evidence for narrative generation.
+- `data/work/` artifacts should **not** be referenced directly by Story Nodes or Focus Mode.
+- Only artifacts promoted to canonical, cataloged outputs (and linked into graph/API) should feed narrative experiences.
 
 ### Provenance-linked narrative rule
-- Every factual claim must trace to a dataset / record / asset ID.
-
-### Optional structured controls
-~~~yaml
-focus_layers:
-  - "TBD"
-focus_time: "TBD"
-focus_center: [ -98.0000, 38.0000 ]
-~~~
+- Any narrative claim must trace to a dataset/record/asset ID in the canonical catalogs and/or graph.
 
 ## 🧪 Validation & CI/CD
 
 ### Validation steps
 - [ ] Markdown protocol checks
-- [ ] Schema validation (STAC/DCAT/PROV) for any outputs promoted beyond `data/work/`
-- [ ] Graph integrity checks (if new processed outputs are ingested)
-- [ ] API contract tests (if behavior changes)
-- [ ] UI schema checks (layer registry)
-- [ ] Security and sovereignty checks (as applicable)
+- [ ] Ensure no secrets/credentials exist in `data/work/`
+- [ ] Intermediate table checks (types, required columns, row count sanity)
+- [ ] Spatial validity checks (CRS present, geometry validity, bounding boxes)
+- [ ] Draft STAC/DCAT/PROV artifacts validated before promotion
+- [ ] Promotion checklist completed for any outputs moved to canonical directories
 
 ### Reproduction
 ~~~bash
-# Example placeholders — replace with repo-specific commands
-# 1) Run ETL deterministically (same inputs/configs => same outputs)
-# 2) Validate schemas
-# 3) Run tests + lint docs
-#
-# e.g.
-# make etl
-# make validate-schemas
-# make test
-# make docs-lint
+# Example placeholders — replace with repo-specific commands:
+# 1) run ETL for a dataset/domain
+# 2) validate intermediate outputs
+# 3) promote approved outputs to canonical directories
+# 4) generate catalogs + validate schemas
 ~~~
 
 ### Telemetry signals (if applicable)
 | Signal | Source | Where recorded |
 |---|---|---|
-| TBD / N-A | ETL runner | `docs/telemetry/` + `schemas/telemetry/` |
+| ETL run status | pipeline runtime | `data/work/logs/` |
+| Validation report | validators | `data/work/logs/` or `data/work/metadata/` |
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
-- Changes that introduce any of the following should trigger governance review:
-  - New sensitive layers
-  - New AI narrative behaviors
-  - New external data sources
-  - New public-facing endpoints
+- Changes that affect promotion rules, sensitive data handling, or catalog publication should be reviewed (human review required).
 
 ### CARE / sovereignty considerations
-- `data/work/` may temporarily contain sensitive location-derived artifacts during processing.
-- Before promotion/publishing:
-  - apply redaction/generalization rules where required,
-  - ensure any restricted coordinates are protected per sovereignty policy.
+- Avoid exposing sensitive locations or culturally sensitive information via intermediate artifacts.
+- Ensure that any redaction/generalization rules are applied before content is moved into public-facing catalogs.
 
 ### AI usage constraints
-- Ensure this doc’s `ai_transform_permissions` / `ai_transform_prohibited` align with intended use.
+- AI-assisted transformations must not infer sensitive locations or generate policy; keep AI usage aligned with repository governance documents.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-17 | Initial `data/work/` README | TBD |
-
----
-Footer refs:
-- Governance: `docs/governance/ROOT_GOVERNANCE.md`
-- Ethics: `docs/governance/ETHICS.md`
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+| v1.0.0 | 2025-12-19 | Initial `data/work/` README | TBD |
