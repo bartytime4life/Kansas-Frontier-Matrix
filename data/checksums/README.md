@@ -1,421 +1,255 @@
 ---
-title: "🔐 Kansas Frontier Matrix — Data Checksums & Integrity Registry (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Data Checksums — README"
 path: "data/checksums/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-11"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-doc_uuid: "urn:kfm:doc:data-checksums-readme-v11.0.0"
-semantic_document_id: "kfm-doc-data-checksums-readme"
-event_source_id: "ledger:data/checksums/README.md"
-immutability_status: "version-pinned"
-
-sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.2/manifest.zip"
-data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/data-checksums-v11.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Overview"
-header_profile: "root-centered-badge-row"
-footer_profile: "standard"
-fencing_profile: "outer-backticks-inner-tildes-v1"
-intent: "data-checksums-registry"
-role: "integrity-registry"
-category: "Data · Integrity · Provenance"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-sensitivity: "General (non-sensitive; auto-mask rules apply)"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-indigenous_rights_flag: true
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Low"
-redaction_required: false
+doc_uuid: "urn:kfm:doc:data:checksums:readme:v1.0.0"
+semantic_document_id: "kfm-data-checksums-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:checksums:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-ontology_alignment:
-  cidoc: "E73 Information Object"
-  schema_org: "Dataset"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Entity"
-  geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../../schemas/json/data-checksums-readme-v11.schema.json"
-shape_schema_ref: "../../schemas/shacl/data-checksums-readme-v11-shape.ttl"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Restricted"
 ai_transform_permissions:
-  - "summaries"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative additions"
-  - "unverified historical claims"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-jurisdiction: "Kansas / United States"
-classification: "Public"
-lifecycle_stage: "stable"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next integrity-registry update"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🔐 **Kansas Frontier Matrix — Data Checksums & Integrity Registry**  
-`data/checksums/README.md`
-
-**Purpose**  
-Describe the **checksum verification system**, integrity tracking, and **catalog/provenance linkage** for all governed datasets and releases in the **Kansas Frontier Matrix (KFM)** across the core pipeline:
-
-> Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode
-
-Every artifact—from raw dataset to Story Node-ready release bundle—is:
-
-- Cryptographically hashed (SHA-256)  
-- Registered into governance ledgers and Neo4j (via PROV/GeoSPARQL views)  
-- Cross-checked with SBOM and release manifests  
-- Integrated with FAIR+CARE governance and sustainability telemetry  
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue.svg)]() ·
-[![KFM-MDP v11.2.6](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.6-informational.svg)]() ·
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)]() ·
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Integrity%20Certified-gold.svg)]() ·
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Metadata%20Aligned-green.svg)]()
-
-</div>
-
----
+# KFM Data Checksums — README
 
 ## 📘 Overview
 
-The **Checksum Integrity Registry** manages **SHA-256 manifests** for:
+### Purpose
+This directory is the canonical home for checksum manifests that support **integrity verification** of data artifacts in the KFM repository.
 
-- Datasets under `data/**` (raw, work, processed, releases)  
-- STAC/DCAT metadata files and PROV sidecars  
-- Release artifacts (`manifest.zip`, SBOMs, STAC collections, DCAT catalogs)  
-- Critical governance files (data contracts, ontology schemas, Story Node templates)  
+Checksums are used to:
+- Detect accidental corruption or unintended changes to data files.
+- Support reproducible pipelines by enabling “verify inputs/outputs match expected bytes”.
+- Provide an auditable integrity signal that can be referenced by ETL logs, catalogs, and validation gates.
 
-Checksums serve as **verifiable fingerprints** binding:
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Checksums for files under `data/` (raw/work/processed/stac outputs, reports, etc.) | Dependency/SBOM hashes (handled elsewhere) |
+| Manifests intended for CI verification | Secret material, credentials, or private keys |
+| Dataset-level or run-level checksum bundles | Checksums for external systems not stored in this repo |
 
-- Data files → STAC/DCAT/PROV records → Neo4j nodes → Story Nodes → Focus Mode telemetry  
-- Release assets → SBOM entries → supply-chain attestations  
+### Audience
+- Primary: Data pipeline maintainers, catalog maintainers, CI maintainers
+- Secondary: Reviewers, historians/editors verifying provenance bundles, downstream consumers mirroring KFM data
 
-In the KFM pipeline, this registry sits **between ETL output and catalog/graph publication**:
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used in this doc: checksum, manifest, integrity, deterministic, provenance
 
-1. Deterministic ETL writes normalized assets to `data/work/` and `data/processed/`.  
-2. Catalog builders emit STAC/DCAT/PROV artifacts into `data/stac/`, `data/dcat/`, and provenance stores.  
-3. The checksum layer fingerprints these assets and governance docs into manifests under `data/checksums/`.  
-4. Neo4j ingesters attach checksum identifiers to graph entities (datasets, releases, Story Nodes).  
-5. APIs and Focus Mode expose integrity status for downstream users.
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `data/checksums/README.md` | TBD | Orientation + conventions |
+| Checksum manifests | `data/checksums/...` | TBD | See “Directory Layout” + “Conventions” |
 
-Primary objectives:
-
-- Detect unauthorized modifications or corruption  
-- Provide public verifiability of releases and Story Node backing data  
-- Support reproducibility of historical analyses and Focus Mode narratives  
-- Feed integrity signals into governance, telemetry, and reliability dashboards  
-
----
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Directory purpose and boundaries are explicit
+- [ ] Naming + format conventions documented (with “not confirmed in repo” clearly marked where applicable)
+- [ ] Validation steps are listed and repeatable
 
 ## 🗂️ Directory Layout
 
+### This document
+- `path`: `data/checksums/README.md`
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed/stac outputs per domain |
+| Catalog outputs | `data/stac/` | STAC collections + items |
+| Lineage outputs | `data/prov/` | PROV bundles (if present) |
+| Pipelines | `src/pipelines/` | ETL/catalog generation code (not confirmed in repo) |
+| CI | `.github/` | Validation actions/workflows (not confirmed in repo) |
+
+### Expected file tree for this sub-area
 ~~~text
-data/checksums/
-├── 📄 README.md                     # This file (governed by KFM-MDP v11.2.6)
-├── 📘 manifest.json                 # Master SHA-256 manifest for core datasets
-├── 🧪 processed_datasets.json       # Checksums for FAIR+CARE-certified processed outputs
-├── 🧱 staging_datasets.json         # Checksums for normalized/staging artifacts
-├── 🧰 work_datasets.json            # Checksums for ETL workspaces (optional, may be pruned)
-└── 🧾 release_hashes.json           # Checksums mapped to SBOM + manifest.zip entries
+📁 data/
+└── 📁 checksums/
+    └── 📄 README.md
 ~~~
 
-Rules:
+> Reserved expansion (not confirmed in repo): per-domain or per-stage manifests (e.g., `raw/`, `processed/`, `stac/`) and/or per-release manifests.
 
-- `manifest.json` is the canonical index of checksums for key, graph-exposed datasets.  
-- Other manifests partition coverage by lifecycle stage (processed, staging, work, release).  
-- Every manifest is a **first-class catalog asset**, discoverable via STAC/DCAT and PROV links.  
-- All files must conform to `data-checksums-readme-v11`-compatible schemas and pass CI schema checks.  
+## 🧭 Context
 
----
+### Background
+KFM’s pipeline is designed to be reproducible and provenance-forward. Checksums are a lightweight, tool-agnostic integrity mechanism that can be referenced by:
+- ETL runs (to prove which bytes were ingested and produced),
+- catalog artifacts (to validate that referenced assets haven’t drifted),
+- CI gates (to prevent silent corruption).
 
-## 🧱 Architecture & Integrity Flow
+### Assumptions
+- Checksum files are treated as **derived artifacts** and are updated when the corresponding data artifacts change.
+- The repository may include both human-curated and pipeline-generated data; checksum practices must work for both.
 
+### Constraints / invariants
+- Canonical pipeline ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- Frontend consumes data through API contracts; checksums do **not** introduce direct UI → graph coupling.
+- No secrets/credentials in checksum manifests.
+
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| What is the canonical checksum algorithm (SHA-256 recommended; confirm actual) | TBD | TBD |
+| Are manifests generated in CI, locally, or by ETL runs (or all three)? | TBD | TBD |
+| Should manifests be per-domain, per-run, or per-release? | TBD | TBD |
+
+### Future extensions
+- Add a validator that ensures checksum manifests:
+  - cover all required artifacts for a dataset release,
+  - have no orphan entries,
+  - match the canonical algorithm and formatting.
+- Align checksum values with STAC asset metadata where applicable (not confirmed in repo).
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram
 ~~~mermaid
-flowchart TD
-    ETL["Deterministic ETL & Validation\nsrc/pipelines/** → data/{work,processed}"]
-        --> CATALOGS["STAC/DCAT/PROV Catalogs\ndata/stac · data/dcat · provenance store"]
-
-    ETL --> GEN["Checksum Generator\n(tools/validation/checksums_*.py)"]
-    CATALOGS --> GEN
-
-    GEN --> REG["Integrity Registry\n(data/checksums/*.json)"]
-
-    REG --> LEDGER["Governance Ledger\n(docs/reports/audit/data_provenance_ledger.json)"]
-    REG --> SBOM["SBOM & Release Manifests\n(releases/v11.x.x/)"]
-
-    CATALOGS --> GRAPH["Neo4j Graph & GeoSPARQL Views\nsrc/graph/**"]
-    REG --> GRAPH
-
-    GRAPH --> API["API Layer\nsrc/api/**"]
-    API --> UI["React / MapLibre / Cesium UIs\nsrc/web/**"]
-    UI --> STORY["Story Nodes & Focus Mode\nStory Node registry"]
-
-    REG --> STORY
-    SBOM --> PUBLIC["Public Release Verification\nExternal users & tools"]
+flowchart LR
+  A[ETL outputs under data/] --> B[Checksum manifest generation]
+  B --> C[CI verifies manifests]
+  A --> D[STAC/DCAT/PROV catalogs]
+  D --> C
 ~~~
 
-### Flow Description
+## 📦 Data & Metadata
 
-1. **ETL & Cataloging**  
-   - Deterministic ETL produces raw/work/processed assets.  
-   - STAC/DCAT/PROV emitters describe these assets as catalog entities and provenance graphs.  
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Data files to checksum | any (binary/text) | `data/**` | File exists + stable path |
+| Manifest rules | documented conventions | this README | Lint + deterministic ordering |
 
-2. **Checksum Generation**  
-   - Checksum tooling computes SHA-256 for all governed artifacts (data, catalogs, governance docs).  
-   - The generator consumes both filesystem paths and catalog/provenance identifiers to avoid drift.  
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Checksum manifest(s) | text | `data/checksums/**` | This README (format rules below) |
 
-3. **Registry & Governance**  
-   - Results are written into manifest files under `data/checksums/`.  
-   - Governance ledgers record `prov:Entity` entries for checksum manifests and link them to ETL/STAC activities.  
+### Sensitivity & redaction
+- Checksums are typically non-sensitive, but **filenames/paths can be sensitive** if they reveal restricted site locations or culturally sensitive material.
+- If a dataset contains restricted/sensitive location identifiers, prefer:
+  - opaque IDs in file naming, and/or
+  - storing restricted bundles outside public distribution channels (requires human review).
 
-4. **Graph Integration**  
-   - Neo4j nodes for datasets, releases, and Story Nodes gain checksum properties / relationships (draft labels):  
-     - `(:KfmDataset)-[:HAS_CHECKSUM]->(:ChecksumDigest)`  
-     - `(:Release)-[:VERIFIES_ASSET]->(:ChecksumManifest)`  
+### Quality signals
+- Completeness: required files are covered by a manifest.
+- Determinism: manifest ordering is stable (e.g., lexical sort by path).
+- Verifiability: a standard tool can verify the manifest without custom code.
 
-5. **Publication & Verification**  
-   - Releases embed checksum sets and SBOM parity information.  
-   - Public users and automated agents can verify assets against `data/checksums/*.json` and release bundles.  
-   - Focus Mode surfaces integrity status (e.g., “✅ Checksums verified for all backing datasets”).  
+## 🌐 STAC, DCAT & PROV Alignment
 
----
+### STAC
+- If STAC Items reference assets stored in-repo, checksum manifests can serve as an integrity backstop for those assets.
+- If the repo adopts a STAC checksum mechanism/extension, manifest values should match (not confirmed in repo).
 
-## ⚙️ Manifest Structure
+### DCAT
+- Dataset releases may link to checksum manifests as “distribution integrity metadata” (implementation not confirmed in repo).
 
-All checksum manifests share a core structure:
+### PROV-O
+- Where PROV bundles exist, checksum manifests can be referenced as evidence of the exact bytes used/produced by an activity.
+  - `prov:wasDerivedFrom`: input data identifiers
+  - `prov:wasGeneratedBy`: run/activity identifier
+  - (How/where run IDs are recorded is not confirmed in repo.)
 
-~~~json
-{
-  "version": "v11.0.0",
-  "generated_on": "2025-11-19T19:25:00Z",
-  "hash_algorithm": "SHA-256",
-  "datasets": [
-    {
-      "id": "hazards_processed_v11.0.0",
-      "path": "data/processed/hazards/hazards_composite_v11.0.0.geojson",
-      "checksum": "sha256-2f1e3b8c97df84b5d2c3e39bbd95b9e8d12b64ad38a62400f745d68ec6d1b75e",
-      "fairstatus": "certified",
-      "governance_ref": "docs/reports/audit/data_provenance_ledger.json",
-      "stac_ref": "data/stac/items/hazards_v11_2025Q4.json",
-      "dcat_ref": "data/dcat/hazards_v11_2025Q4.jsonld"
-    },
-    {
-      "id": "climate_staging_v11.0.0",
-      "path": "data/staging/climate/climate_aggregate_v11.0.0.parquet",
-      "checksum": "sha256-a8373fa4d12d49be5f5f2178a91d79981b1d28b947f05eaa52e9e7e8d2cfadcd",
-      "fairstatus": "pending"
-    }
-  ]
-}
+### Versioning
+- When data artifacts change, update checksum manifests in the same change set.
+- Prefer stable IDs/paths; avoid churn that breaks downstream mirroring.
+
+## 🧱 Architecture
+
+### Recommended manifest format (not confirmed in repo)
+A plain-text format compatible with common tooling is recommended:
+
+- One line per file:
+  - `<hex-digest><two-spaces><relative-path>`
+- Relative paths are from repo root (use forward slashes).
+- Use a deterministic sort order by path.
+
+Example (illustrative only):
+~~~text
+<sha256-hex>  data/processed/example-dataset/example.parquet
+<sha256-hex>  data/stac/items/example-item.json
 ~~~
 
-**Checksum format:** `sha256-<hex>`.
+## 🧠 Story Node & Focus Mode Integration
 
-Required per dataset:
-
-- `id` — stable dataset identifier, aligned with STAC/DCAT/Neo4j IDs where feasible  
-- `path` — repository-relative path to the asset  
-- `checksum` — SHA-256 digest in `sha256-<hex>` form  
-- `fairstatus` — e.g., `certified`, `pending`, `deprecated`  
-
-Recommended:
-
-- `governance_ref` — JSON/JSON-LD ledger entry referencing PROV activities  
-- `stac_ref`, `dcat_ref` — STAC/DCAT records for catalog discoverability  
-
-**Provenance alignment:**
-
-- Manifests are modeled as `prov:Entity` with `prov:wasGeneratedBy` ETL/checksum activities.  
-- Individual dataset checksum entries may be mapped to `spdx:checksum` fields in SBOMs.  
-
----
-
-## 🧠 FAIR+CARE Integrity Governance
-
-Checksums are deeply integrated with FAIR+CARE and Indigenous data sovereignty:
-
-| Principle                 | Implementation                                                                       | Verified By          |
-|---------------------------|--------------------------------------------------------------------------------------|----------------------|
-| **Findable**              | Checksum references embedded in STAC/DCAT, Neo4j, and release manifests             | @kfm-data            |
-| **Accessible**            | JSON manifests under CC-BY 4.0, publicly browsable when risk allows                 | @kfm-accessibility   |
-| **Interoperable**         | Structures compatible with SPDX, STAC 1.x, DCAT 3, and PROV-O                       | @kfm-architecture    |
-| **Reusable**              | Immutable, versioned logs with explicit provenance and ontology alignment           | @kfm-governance      |
-| **Collective Benefit**    | Public can independently verify dataset integrity and Story Node backing data       | @faircare-council    |
-| **Authority to Control**  | Governance Council defines checksum coverage/policy for sensitive datasets          | @kfm-governance      |
-| **Responsibility**        | Telemetry-backed coverage metrics; periodic audits and anomaly alerts               | @kfm-security        |
-| **Ethics & Sovereignty**  | Integrity guardrails for Indigenous and sensitive data; redaction where necessary   | @kfm-ethics          |
-
-Notes:
-
-- For **sensitive Indigenous datasets**, checksum manifests may be **scope-limited** or redacted, while still recording the fact of verification in governance ledgers.  
-- Integrity violations on governed datasets can trigger governance workflows (e.g., Story Node de-publication, Focus Mode warnings).  
-
----
+Checksums are an **integrity layer**, not narrative content. They may indirectly support Focus Mode by:
+- preventing drift between narrative references and underlying artifacts,
+- enabling auditors/reviewers to validate that cited evidence assets match expected bytes.
 
 ## 🧪 Validation & CI/CD
 
-Several workflows in `.github/workflows/` enforce checksum correctness and governance alignment:
-
-| Workflow                  | Description                                                | Outputs                                                              |
-|---------------------------|------------------------------------------------------------|----------------------------------------------------------------------|
-| `checksum-verify.yml`     | Generates & verifies SHA-256 hashes for governed assets    | `data/checksums/manifest.json`, per-stage checksum manifests        |
-| `faircare_validate.yml`   | Ensures checksumming respects FAIR+CARE & sovereignty     | `docs/reports/fair/faircare_summary.json`                           |
-| `governance-ledger.yml`   | Aligns checksum records with governance/provenance ledger | `docs/reports/audit/data_provenance_ledger.json`                    |
-| `sbom_verify.yml`         | Confirms SBOM→checksum→manifest consistency               | `releases/v11.x.x/sbom.spdx.json`, `releases/v11.x.x/manifest.zip`  |
-
-Rules:
-
-- Any PR touching `data/checksums/`, `data/stac/`, `data/dcat/`, or `releases/` **must** pass these workflows.  
-- Security policy may add **secret- and PII-scan profiles** that treat checksum manifests as code-like assets.  
-- Failures in checksum verification **block merges** until resolved or explicitly waived under governance rules.  
-
----
-
-## 📊 Example CLI Verification
-
-Local verification using standard tools:
-
+### Validation steps (examples; tooling not confirmed in repo)
 ~~~bash
-# 1) Compute checksum locally
-sha256sum data/processed/hazards/hazards_composite_v11.0.0.geojson
+# Example: generate SHA-256 checksums (POSIX)
+# sha256sum data/processed/... > data/checksums/<manifest>.sha256
 
-# 2) Look up expected checksum in manifest
-jq '.datasets[] | select(.id=="hazards_processed_v11.0.0")' data/checksums/manifest.json
-
-# 3) Optionally, compare via script (non-zero exit on mismatch)
-python tools/validation/check_checksum.py \
-  --id hazards_processed_v11.0.0 \
-  --manifest data/checksums/manifest.json \
-  --file data/processed/hazards/hazards_composite_v11.0.0.geojson
+# Example: verify a manifest (POSIX)
+# sha256sum -c data/checksums/<manifest>.sha256
 ~~~
 
-This pattern is suitable for:
+### Validation checklist
+- [ ] Manifest uses the canonical algorithm (confirm which)
+- [ ] Manifest paths are relative + repo-stable
+- [ ] Manifest is deterministically ordered
+- [ ] Verification step succeeds in CI (if configured)
 
-- Developer spot checks  
-- Reproducibility notebooks (under `docs/analyses/**`)  
-- External users verifying published releases against `data/checksums/` plus SBOMs  
+## ⚖ FAIR+CARE & Governance
 
----
+### Review gates
+- If manifests include or reveal sensitive location identifiers:
+  - FAIR+CARE council review: TBD
+  - Security council review: yes (recommended)
+  - Historian/editor review: yes (recommended)
 
-## 🌱 Sustainability & Integrity Metrics
+### CARE / sovereignty considerations
+- Avoid leaking sensitive sites via filenames/paths embedded in manifests.
+- Apply redaction/generalization rules when required (requires human review).
 
-Sustainability and integrity metrics captured in telemetry include:
-
-| Metric                | Target                      | Verified By         |
-|-----------------------|----------------------------|---------------------|
-| Checksum Coverage     | 100% for released datasets | @kfm-validation     |
-| Governance Sync       | 100% for archived datasets | @kfm-governance     |
-| SBOM Parity           | ≥ 99.9% SBOM–manifest match| @kfm-architecture   |
-| Energy per Batch      | ≤ 10 Wh per checksum batch | @kfm-sustainability |
-| FAIR+CARE Compliance  | Certified-only processes   | @faircare-council   |
-
-Telemetry destinations:
-
-~~~text
-../../releases/v11.2.2/focus-telemetry.json
-docs/reports/telemetry/data-checksums-*.json
-~~~
-
-These metrics are used by Focus Mode and governance dashboards to:
-
-- Flag integrity regressions between releases  
-- Track sustainability of large checksum runs  
-- Provide public transparency into integrity practices  
-
----
-
-## 🏷️ Naming & Conventions
-
-- **Data files:** `<domain>_<layer>_v<semver>.<ext>`  
-  - e.g., `hazards_composite_v11.0.0.geojson`  
-
-- **Checksum IDs:** `<dataset_id>`  
-  - Prefer IDs aligned with STAC/DCAT/Neo4j identifiers (e.g., `hazards_processed_v11.0.0`).  
-
-- **Checksum field:**  
-  - All manifests must include a `checksum` field in `sha256-<hex>` format.  
-
-- **Immutability rule:**  
-  - Once a release is tagged, its checksum entries become **append-only**.  
-  - Corrections add **new records** (e.g., `hazards_processed_v11.0.0_fix1`), never overwrite existing ones.  
-
-- **Graph mapping (draft):**  
-  - `:ChecksumManifest { id, version, generated_on, hash_algorithm }`  
-  - `:ChecksumDigest { checksum, path, fairstatus }`  
-  - Relationships:  
-    - `(:ChecksumManifest)-[:CONTAINS_DIGEST]->(:ChecksumDigest)`  
-    - `(:KfmDataset)-[:HAS_CHECKSUM]->(:ChecksumDigest)`  
-
-All new labels/relationships are **draft** and require schema review under KFM-OP v11.
-
----
-
-## 🧾 Internal Citation
-
-Recommended internal citation for this registry:
-
-~~~text
-Kansas Frontier Matrix (2025). Data Checksums & Integrity Registry (v11.2.6).
-Checksum governance, cryptographic verification, and FAIR+CARE-integrated integrity
-processes for KFM datasets, catalogs, and releases. Ensures dataset immutability,
-reproducibility, and public verifiability across versions and Story Nodes.
-~~~
-
-Use this in related docs (ETL guides, STAC/DCAT specs, Story Node standards) when referring to checksum policy.
-
----
+### AI usage constraints
+- AI must not infer or reconstruct sensitive locations from checksum or filename patterns.
 
 ## 🕰️ Version History
 
-| Version  | Date       | Author      | Summary                                                                                                                 |
-|---------:|-----------:|------------|-------------------------------------------------------------------------------------------------------------------------|
-| v11.2.6  | 2025-12-11 | @kfm-data  | Aligned with KFM-MDP v11.2.6; moved 🗂️ Directory Layout to second H2; updated FAIR+CARE fields; added pipeline/Neo4j links. |
-| v11.2.2  | 2025-11-27 | @kfm-data  | Upgraded to v11.2.x series; applied emoji layout; aligned references; clarified governance and telemetry integration.  |
-| v11.0.0  | 2025-11-19 | @kfm-data  | Upgraded to v11; added sustainability telemetry, ROOT-GOVERNANCE link, and ontology hooks.                             |
-| v10.2.2  | 2025-11-12 | @kfm-data  | Aligned with v10.2; SBOM/manifest linkage, JSON-LD guidance, CLI examples, telemetry.                                  |
-| v10.0.0  | 2025-11-10 | @kfm-data  | Baseline registry; governance mapping, manifest examples, and core integrity metrics.                                   |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial `data/checksums/` README | TBD |
 
 ---
-
-<div align="center">
-
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-[⬅️ Back](../README.md) · [🗃️ Archive & Provenance Registry](../archive/README.md) · [🛡️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
