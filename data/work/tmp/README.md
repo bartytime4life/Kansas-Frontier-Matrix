@@ -1,260 +1,270 @@
 ---
-title: "🧮 Kansas Frontier Matrix — Temporary Work Environment (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "data/work/tmp — Temporary Workspace"
 path: "data/work/tmp/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Readme"
+license: "CC-BY-4.0"
 
-version: "v11.0.0"
-last_updated: "2025-11-20"
-release_stage: "Stable / Governed"
-review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-doc_uuid: "urn:kfm:doc:data-work-tmp-v11.0.0"
-semantic_document_id: "kfm-doc-data-work-tmp-readme"
-event_source_id: "ledger:data/work/tmp/README.md"
-immutability_status: "version-pinned"
-
-sbom_ref: "../../../releases/v11.0.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.0.0/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-
-telemetry_ref: "../../../releases/v11.0.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-work-tmp-v11.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "Internal · FAIR+CARE Certified"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.0"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Operational Workspace"
-intent: "temporary-etl-environment"
-role: "etl-core-domain"
-category: "Data · ETL · Workspace · Temporary"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Low–Medium — dependent on domain outputs"
-sensitivity_level: "Dataset-dependent"
-indigenous_rights_flag: "Dataset-dependent"
-redaction_required: true
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Medium"
+doc_uuid: "urn:kfm:doc:data:work:tmp-readme:v1.0.0"
+semantic_document_id: "kfm-data-work-tmp-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:work:tmp-readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-ontology_alignment:
-  cidoc: "E73 Information Object"
-  schema_org: "DataFeed"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Activity"
-  geosparql: "geo:FeatureCollection"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Restricted"
 ai_transform_permissions:
-  - "summaries"
-  - "semantic-highlighting"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative additions"
-  - "synthetic content generation"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-classification: "Internal Processing Layer"
-jurisdiction: "Kansas / United States"
-lifecycle_stage: "transient"
-ttl_policy: "7–30 days (domain-dependent)"
-sunset_policy: "Auto-deleted after staging promotion"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# data/work/tmp — Temporary Workspace
 
-# 🧮 **Kansas Frontier Matrix — Temporary Work Environment (TMP)**  
-`data/work/tmp/README.md`
+## 📘 Overview
 
-Internal FAIR+CARE-governed workspace for:
+### Purpose
+- Provide an **ephemeral scratch space** for pipeline runs (downloads, decompression, intermediate transforms, and other short-lived artifacts).
+- Keep **reproducible / governed** outputs out of `tmp` by “promoting” them into the appropriate stable locations (e.g., `data/work/staging/`, `data/work/processed/`, `data/processed/`, `data/stac/`, `data/catalog/dcat/`, `data/prov/`).
 
-- 🧪 ETL transformations  
-- 🧠 AI/ML model intermediate outputs  
-- 📊 Validation checkpoints & schema alignment  
-- 🔍 Telemetry metrics (energy, carbon, runtime)  
-- 🔐 Pre-staging integrity checks & provenance logging  
+### Scope
+**In-scope (temporary / disposable):**
+- Partial downloads, extracted archives, intermediate joins, scratch exports, one-off debug artifacts.
+- Run-scoped caches that can be safely regenerated.
 
-The TMP ensures **safe processing, reproducibility, and ethical handling** of all intermediate computational artifacts.
+**Out-of-scope (must NOT live here long-term):**
+- Source-of-truth raw ingests → use `data/raw/` (and/or `data/sources/` depending on domain conventions).
+- Stable intermediates → use `data/work/staging/` or `data/work/processed/`.
+- Published outputs → use `data/processed/` plus catalogs (`data/stac/`, `data/catalog/dcat/`, `data/prov/`).
+- Long-lived logs → use `data/work/logs/` or `mcp/runs/` (if applicable).
 
-</div>
+### Audience
+- Pipeline/ETL developers
+- Data curators performing ingestion/standardization
+- QA/reviewers validating that sensitive or non-reproducible artifacts are not being committed
 
----
+### Definitions (link to glossary)
+- **Work area:** A non-source-of-truth workspace used during ETL.
+- **Promotion:** Moving outputs from scratch (`tmp`) into stable, versioned, and governed locations.
+- **Run scope:** Files tied to a single execution (often keyed by a run id).
 
-## 1. 📘 Purpose
+### Key artifacts (what this doc points to)
+| Artifact | Where it lives | What it is | Must be committed? |
+|---|---|---|---|
+| Temporary scratch files | `data/work/tmp/` | Disposable intermediates | **No** |
+| Staging-ready data | `data/work/staging/` | Cleaned inputs ready for deterministic transforms | Depends on repo policy |
+| Stable work outputs | `data/work/processed/` | Consistent intermediates suitable for review | Depends on repo policy |
+| Published processed data | `data/processed/` | Durable, versioned outputs | **Yes (typically)** |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Discovery + provenance artifacts | **Yes** |
 
-The **Temporary Work Environment (TMP)** is the KFM’s controlled operational sandbox.  
-Its mission is to ensure:
+### Definition of done (for this document)
+- [ ] Describes what belongs in `data/work/tmp/` vs what does not.
+- [ ] Includes a clear “do not commit from here” guideline.
+- [ ] Shows the expected folder layout and run-scoping convention.
+- [ ] Links to canonical pipeline and repository locations.
 
-- SAFE intermediate data transformations  
-- ETHICAL handling of domain-sensitive datasets  
-- REPRODUCIBLE AI/ETL workflows  
-- CONTROLLED life cycle for high-risk intermediate data  
-- TRACEABILITY for all processing operations  
+## 🗂 Directory Layout
 
-TMP functions as the **bridge** between:
+### This document
+- You are reading: `data/work/tmp/README.md`
 
-`data/raw/` → `data/work/tmp/` → `data/work/staging/` → `data/processed/`
+### Related repository paths
+- `data/README.md`
+- `data/work/README.md`
+- `data/work/staging/README.md`
+- `data/work/processed/README.md`
+- `data/work/logs/README.md`
+- `docs/MASTER_GUIDE_v12.md`
 
-Only data that passes TMP governance checks may proceed to staging.
+### Expected file tree for this sub-area
+~~~text
+📁 data/
+└── 📁 work/
+    └── 📁 tmp/
+        ├── 📄 README.md
+        ├── 📄 .gitkeep              # optional (only if repo requires to keep empty dirs)
+        └── 📁 runs/                 # optional convention (run-scoped scratch)
+            └── 📁 run_<run_id>/     # e.g., run_20251219T153000Z_ab12cd
+                ├── 📄 <temp_files...>
+                └── 📁 <temp_subdirs...>
+~~~
 
----
+## 🧭 Context
 
-## 2. 🗂️ Directory Layout (GitHub-Safe)
+### Background
+KFM’s canonical pipeline ordering is:
+**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**.
 
-```text
-data/work/tmp/
-├── README.md
-├── climate/
-├── hazards/
-├── hydrology/
-├── landcover/
-├── spatial/
-├── tabular/
-├── terrain/
-└── text/
-```
+`data/work/tmp/` supports the **ETL** portion by providing a safe “scratchpad” that can be cleaned without breaking provenance or published datasets.
 
-Each domain folder contains:
+### Assumptions
+- Temporary artifacts are **safe to delete** after a successful run.
+- Where possible, temporary artifacts are **run-scoped** (e.g., under `data/work/tmp/runs/run_<run_id>/`) to avoid collisions.
 
-- Intermediate ETL artifacts  
-- AI/ML outputs awaiting validation  
-- Temporary logs + metrics  
-- Validation checkpoint files  
-- Pre-staging governance evidence  
+> If your pipeline currently writes directly into `data/work/tmp/` without run-scoping, consider adopting a run directory convention to keep artifacts isolated (project convention; confirm with pipeline owners).
 
----
+### Constraints / invariants
+- **No long-term dependencies:** downstream steps should not rely on files remaining in `tmp` after completion.
+- **No secrets / credentials:** never store tokens, private keys, or connection strings here.
+- **Sensitive data caution:** even temporary copies can be sensitive—avoid committing and ensure cleanup.
+- **Promotion rule:** if an artifact is required for reproducibility, cataloging, or review, move it out of `tmp` into a governed location.
 
-## 3. ⚙️ TMP Workflow Overview
+### Open questions
+- Should the repo enforce a standard run directory name (e.g., `run_<YYYYMMDDTHHMMSSZ>_<short_hash>`)?
+- Should there be an automated cleanup step (make target / script) and a documented retention window?
 
-```mermaid
-flowchart TD
-    RAW["data/raw/*"] --> TMP["data/work/tmp/*"]
-    TMP --> PREVAL["FAIR+CARE Pre-Validation + Schema Checks"]
-    PREVAL --> TELEMETRY["Telemetry Sync (Energy, Carbon, Runtime)"]
-    TELEMETRY --> STAGING["Promotion to Staging"]
-    STAGING --> LEDGER["Provenance Ledger Registration"]
-```
+### Future extensions
+- Add a cleanup script and retention policy doc (e.g., `tools/cleanup_tmp.sh`) aligned with governance and CI checks.
+- Add disk-usage telemetry alerts if runs can be large.
 
-### Workflow Summary
-1. **Extraction** — Load raw inputs into TMP.  
-2. **Transformation** — Normalize schemas, model outputs, and prepare intermediate layers.  
-3. **FAIR+CARE Pre-Validation** — Ethical compliance & schema verification.  
-4. **Telemetry Logging** — Capture efficiency (Wh), carbon (gCO₂e), runtime, memory.  
-5. **Promotion** — Move stable, compliant results to staging.  
-6. **Ledger Sync** — Register operations in PROV-O/ISO lineage logs.
+## 🗺 Diagrams
 
----
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[data/raw] --> B[data/work/tmp]
+  B --> C[data/work/staging]
+  C --> D[data/work/processed]
+  D --> E[data/processed]
+  E --> F[data/stac + data/catalog/dcat + data/prov]
+  F --> G[Neo4j]
+  G --> H[APIs]
+  H --> I[React/Map UI]
+  I --> J[Story Nodes]
+  J --> K[Focus Mode]
+~~~
 
-## 4. 🧩 Example TMP Metadata Record
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant ETL as ETL Pipeline
+  participant TMP as data/work/tmp
+  participant STAGE as data/work/staging
+  participant PROC as data/work/processed
+  ETL->>TMP: write scratch intermediates
+  ETL->>STAGE: promote staging-ready outputs
+  ETL->>PROC: promote stable intermediates (optional)
+  ETL-->>TMP: cleanup tmp artifacts (recommended)
+~~~
 
-```json
-{
-  "id": "tmp_tabular_work_v11.0.0",
-  "domain": "tabular",
-  "records_processed": 41200,
-  "workflow": "etl_tabular_pipeline_v11",
-  "validation_status": "in_review",
-  "fairstatus": "compliant",
-  "telemetry": {
-    "energy_wh": 1.3,
-    "carbon_gco2e": 1.9,
-    "runtime_sec": 42,
-    "validation_coverage_pct": 96.1
-  },
-  "created": "2025-11-20T01:22:00Z",
-  "checksum_sha256": "sha256:e1ccf8ea...9d0c7b8a",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
+## 📦 Data & Metadata
 
----
+### Inputs
+- Any transient inputs generated during ingestion: downloaded archives, extracted files, intermediate tables, temporary GIS exports, etc.
 
-## 5. 🧠 FAIR+CARE Governance Matrix
+### Outputs
+- Expected: **none** that are relied upon long-term.
+- Any output needed for reproducibility should be promoted out of `tmp` and documented in the appropriate README.
 
-| Principle | Implementation | Oversight |
-|----------|----------------|-----------|
-| **Findable** | TMP outputs indexed by ID + workflow. | `@kfm-data` |
-| **Accessible** | Internal-only JSON/Parquet. | `@kfm-accessibility` |
-| **Interoperable** | JSON Schema, PROV-O, DCAT, STAC references. | `@kfm-architecture` |
-| **Reusable** | Traceability logs + lineage preserved. | `@kfm-design` |
-| **Collective Benefit** | Ethical AI + transparent ETL. | `@faircare-council` |
-| **Authority to Control** | Lifecycle rules enforced. | `@kfm-governance` |
-| **Responsibility** | Domain engineers tag all outputs. | `@kfm-security` |
-| **Ethics** | Sensitive attributes masked or redacted. | `@kfm-ethics` |
+### Sensitivity & redaction
+- Treat `tmp` as potentially containing sensitive content (even briefly).
+- Do not commit contents from `tmp`.
+- If sensitive data must be handled, ensure redaction/filters occur before promotion into stable locations.
 
-Governance artifacts:  
-`data/reports/audit/data_provenance_ledger.json`  
-`data/reports/fair/data_care_assessment.json`
+### Quality signals
+- N/A for `tmp` itself. Quality checks should run on promoted artifacts (staging/processed outputs).
 
----
+## 🌐 STAC, DCAT & PROV Alignment
 
-## 6. ⚙️ TMP Lifecycle & Automation
+### STAC
+- `tmp` artifacts should **not** be referenced by STAC Items/Collections.
 
-| Stage | Description | Output |
-|-------|-------------|---------|
-| Extraction | Import & normalize raw inputs | CSV, Parquet |
-| Transformation | Clean + model + merge | Intermediate files |
-| FAIR+CARE Audit | Ethics + schema pre-validation | Compliance reports |
-| Telemetry Sync | Sustainability & performance metrics | JSON logs |
-| Promotion | Move to staging | Certified data |
+### DCAT
+- `tmp` artifacts should **not** be referenced by DCAT dataset entries.
 
-Automation Workflows:  
-- `tmp_sync_v2.yml`  
-- `etl_validation_v3.yml`
+### PROV-O
+- If a transformation uses temp artifacts, provenance should describe **inputs and promoted outputs**, not require `tmp` files to remain.
 
----
+### Versioning
+- Any versioning that matters should happen at the dataset/catalog layer, not in `tmp`.
 
-## 7. ♻️ Retention & Sustainability
+## 🧱 Architecture
 
-| Category | Retention | Policy |
-|----------|-----------|--------|
-| TMP Data | 7 Days | Auto-cleared post-staging. |
-| AI Outputs | 14 Days | Needed for reproducibility audits. |
-| Logs & QA | 30 Days | Archived system-wide. |
-| Metadata | 365 Days | Immutable in governance ledger. |
+### Components
+- ETL scripts may read/write here as a scratch space.
+- Cleanup steps (manual or automated) should keep the directory tidy between runs.
 
-Telemetry Example Source:  
-`../../../releases/v11.0.0/focus-telemetry.json`
+### Interfaces / contracts
+- No API or UI component should consume from `data/work/tmp/` directly.
+- Only promoted, governed outputs should be used for catalogs and downstream ingestion.
 
----
+### Extension points checklist (for future work)
+- [ ] Standardize run id naming
+- [ ] Add cleanup tooling + documentation
+- [ ] Add CI guardrails to prevent committing `tmp` artifacts
 
-## 8. 🌱 Sustainability Metrics
+## 🧠 Story Node & Focus Mode Integration
 
-| Metric | Value | Verified By |
-|--------|------:|-------------|
-| Energy Use (per cycle) | 6.8 Wh | `@kfm-sustainability` |
-| Carbon Output | 8.1 gCO₂e | `@kfm-infra` |
-| Renewable Supply | 100% (RE100 Verified) | `@kfm-power` |
-| FAIR+CARE Compliance | 100% | `@faircare-council` |
+### How this work surfaces in Focus Mode
+- It should not. `tmp` is intentionally non-user-facing and non-citable.
 
----
+### Provenance-linked narrative rule
+- Only promoted, cataloged, and provenance-backed artifacts should be used as evidence for narratives.
 
-## 9. 🕰️ Version History
+### Optional structured controls
+~~~yaml
+focus_layers:
+  include:
+    - "cataloged_datasets_only"
+  exclude:
+    - "data/work/tmp/**"
+~~~
 
-| Version | Date       | Summary                                                |
-|--------:|------------|--------------------------------------------------------|
-| v11.0.0 | 2025-11-20 | Upgraded to v11 preferred formatting; governance added |
-| v10.0.0 | 2025-11-09 | TMP telemetry v2 & pre-validation enhancements         |
+## 🧪 Validation & CI/CD
 
-<div align="center">
+### Validation steps
+- Confirm `data/work/tmp/` is excluded from version control (typically via `.gitignore`).
+- Confirm pipeline steps promote required artifacts out of `tmp`.
+- Confirm cleanup does not remove promoted artifacts.
 
-**Kansas Frontier Matrix — Temporary Work Environment**  
-🧮 FAIR+CARE Certified · Ethics-Governed · Diamond⁹ Ω / Crown∞Ω  
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) run ETL
+# 2) validate catalogs
+# 3) run tests / lint
+~~~
 
-© 2025 Kansas Frontier Matrix — Internal Layer  
+### Telemetry signals (if applicable)
+- Disk usage under `data/work/tmp/`
+- Run directory count
+- Cleanup success/failure
 
-[Back to Work Layer](../README.md) · [Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+## ⚖ FAIR+CARE & Governance
 
-</div>
+### Review gates
+- PR review should confirm no `tmp` artifacts were committed.
+- Any change that affects handling of sensitive data requires human review.
+
+### CARE / sovereignty considerations
+- Temporary storage still counts as “handling” data; apply sovereignty constraints before promotion and publication.
+
+### AI usage constraints
+- Do not run AI transforms on sensitive data without following governance constraints and recording provenance.
+
+## 🕰 Version History
+| Version | Date | Change | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial README for `data/work/tmp/` | <name/handle> |
