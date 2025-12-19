@@ -1,490 +1,291 @@
 ---
-title: "📐 KFM v11.2.2 — Schema Validation Composite Action"
+title: "GitHub Action — Schema Validate"
 path: ".github/actions/schema-validate/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Infrastructure & Provenance Committee"
-content_stability: "stable"
-backward_compatibility: "Aligned with v10.x → v11.x CI/CD model"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-attestation_ref: "../../../releases/v11.2.2/slsa-attestation.json"
-signature_ref: "../../../releases/v11.2.2/signature.sig"
-telemetry_ref: "../../../releases/v11.2.2/github-infra-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/actions-library-v11.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Component Guide"
-intent: "github-composite-actions"
-role: "ci-cd-infrastructure"
-category: "CI/CD · Automation · Governance · Reusability"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-classification: "Public"
-sensitivity: "General (non-sensitive; auto-mask rules apply)"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-indigenous_rights_flag: false
+doc_uuid: "urn:kfm:doc:github-actions:schema-validate:readme:v1.0.0"
+semantic_document_id: "kfm-gha-schema-validate-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:github-actions:schema-validate:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
-fair_category: "F1-A1-I1-R1"
-
-data_steward: "KFM Infrastructure & Provenance Committee"
-
-provenance_chain:
-  - ".github/actions/schema-validate/README.md@v11.2.2"
-
-prov_profile: "PROV-O Plan + KFM Governance Extensions"
-openlineage_profile: "OpenLineage v2.5 (CI/CD events)"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../../../schemas/json/actions-schema-validate-readme-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/actions-schema-validate-readme-v11-shape.ttl"
-
-doc_uuid: "urn:kfm:doc:github-actions-schema-validate:v11.2.2"
-semantic_document_id: "kfm-doc-github-actions-schema-validate"
-event_source_id: "ledger:.github/actions/schema-validate/README.md"
-
-immutability_status: "mutable-plan"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-
-heading_registry:
-  approved_h2:
-    - "📘 Overview"
-    - "🧪 Validation & CI/CD"
-    - "🧰 Schema Types & Profiles"
-    - "📦 Data & Metadata Contract"
-    - "⚖ FAIR+CARE & Governance"
-    - "🕰️ Version History"
-
-test_profiles:
-  - "markdown-lint"
-  - "schema-lint"
-  - "metadata-check"
-  - "footer-check"
-  - "accessibility-check"
-  - "provenance-check"
-
-ci_integration:
-  workflow: ".github/workflows/kfm-ci.yml"
-  environment: "dev · staging · production"
-
-branding_registry:
-  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
-  architecture: "Designed for Longevity · Governed for Integrity"
-  analysis: "CI-Driven · Evidence-Led · FAIR+CARE Grounded"
-  data-spec: "Open Pipelines × Responsible Automation"
-  pipeline: "Deterministic CI/CD · Explainable Workflows · Open Provenance"
-  telemetry: "Transparent Systems · Ethical Metrics · Sustainable Intelligence"
-  graph: "Semantics × Provenance × Automation Intelligence"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-badge_profiles:
-  - "root-centered-badge-row"
-
-requires_purpose_block: true
-requires_version_history: true
-requires_directory_layout_section: false
-requires_governance_links_in_footer: true
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "a11y-adaptations"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "unverified-architectural-claims"
-  - "narrative-fabrication"
-  - "governance-override"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-deprecated_fields:
-  - "old_schema_validate_action_readme_v10.4"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📐 **KFM v11 — Schema Validation Composite Action**  
-`.github/actions/schema-validate/README.md`
-
-**Purpose**  
-Provide a **governed, deterministic composite GitHub Action** for validating **JSON / YAML / JSON‑LD**  
-(and related KFM metadata documents) against **registered JSON Schemas & SHACL shapes**, including  
-**STAC**, **DCAT**, **telemetry**, and **Story Node / Focus Mode** profiles.
-
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-blue)](../../../docs/standards/kfm_markdown_protocol_v11.2.2.md)
-· [![KFM-PDC v11](https://img.shields.io/badge/Pipeline_Contract-KFM--PDC_v11-indigo)]()
-· [![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen)]()
-· [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-
-</div>
-
----
+# GitHub Action — Schema Validate
 
 ## 📘 Overview
 
-The **`schema-validate` composite action** is the canonical way to enforce **schema contracts** in KFM CI:
+### Purpose
+This GitHub Action runs **schema validation** as a CI gate, ensuring that JSON-based artifacts in the repo
+(e.g., schemas, registries, catalogs, and other contract files) remain **machine-validated** and safe to consume
+downstream.
 
-- Validates **JSON, YAML, JSON‑LD** documents against **versioned JSON Schemas** and **SHACL shapes**.  
-- Supports multiple **profiles** including:
-  - Core configuration (`kfm-config`),  
-  - STAC (`kfm-stac-item`, `kfm-stac-collection`),  
-  - DCAT (`kfm-dcat-v11`),  
-  - Telemetry (CI, energy, carbon),  
-  - Story Node / Focus Mode metadata.  
-- Produces **machine‑readable validation reports** for CI dashboards and provenance.  
-- Emits **OpenLineage / PROV** events that document schema checks applied to each artifact.
+This supports KFM’s pipeline invariant: **ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode** by
+catching contract breaks early. See: `docs/MASTER_GUIDE_v12.md`.
 
-This action SHOULD be used by:
+### Scope
 
-- `kfm-ci.yml` for **every PR** touching JSON/YAML configuration, STAC, DCAT, or telemetry.  
-- Data and metadata pipelines before **publishing** to STAC/DCAT catalogs.  
-- Release workflows to ensure **schemas & shapes remain compatible** with KFM profiles.
+| In Scope | Out of Scope |
+|---|---|
+| Validate JSON files against JSON Schema contracts | STAC semantic checks (use `.github/actions/stac-validate`) |
+| Validate schema files for basic correctness and reference resolution | Vulnerability/dependency scanning (use `.github/actions/security-scan`) |
+| Enforce “CI-clean” contract discipline for schemas/registries used by the pipeline | Neo4j constraint checks / graph integrity checks (handled elsewhere) |
 
-Where `markdown-lint` guards **docs**, `schema-validate` guards the **structured metadata & configuration layer**.
+### Audience
+- Primary: CI maintainers, DataOps maintainers, pipeline engineers
+- Secondary: Contributors adding or modifying schemas, catalog JSON, or UI registries
 
----
+### Definitions
+- Link: `docs/glossary.md`
+- Terms used in this doc: JSON Schema, contract, registry, STAC, DCAT, PROV, telemetry
 
-## 🧪 Validation & CI/CD
+### Key artifacts
 
-This composite action is **contract‑driven**: implementation details MAY evolve, but the contract below MUST  
-remain stable across v11.x.
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This action README | `.github/actions/schema-validate/README.md` | CI maintainers | Governed description of intent + usage |
+| Action definition | `.github/actions/schema-validate/action.yml` | CI maintainers | Source of truth for inputs/outputs |
+| JSON Schemas | `schemas/` | DataOps | SemVer + changelog expected |
+| Catalog and metadata JSON | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | DataOps | Validity is required for downstream graph/API work |
+| UI registries | `web/` | UI team | Any registry files should be schema validated |
 
-### 1. Typical Usage
+### Definition of done
+- [ ] Front-matter complete + `path` matches file location
+- [ ] Validation intent is clearly stated (what is validated vs not validated)
+- [ ] Local reproduction guidance exists (even if tool-specific details live in `action.yml`)
+- [ ] Security notes included (no secrets, no sensitive leakage in logs)
+- [ ] References to KFM invariants and governance are present
 
-Simple example in `.github/workflows/kfm-ci.yml`:
+## 🗂️ Directory Layout
 
-~~~yaml
-- name: 📐 Validate JSON/YAML schemas (core)
-  uses: ./.github/actions/schema-validate
-  with:
-    paths: |
-      data/**/*.json
-      data/**/*.yaml
-      docs/**/*.schema.json
-    profile: "kfm-config"
-    fail_level: error
-    report_path: artifacts/schema/schema-validation-core.json
+### This document
+- `path`: `.github/actions/schema-validate/README.md`
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| GitHub Actions | `.github/actions/` | Composite/local actions used by CI workflows |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Data catalogs | `data/stac/` | STAC Items + Collections |
+| Dataset catalogs | `data/catalog/dcat/` | DCAT 3 records |
+| Lineage | `data/prov/` | PROV-O bundles |
+| Frontend registries | `web/` | Layer registries and UI configuration files |
+
+### Expected file tree for this sub-area
+~~~text
+📁 .github/
+├── 📁 actions/
+│   ├── 📁 schema-validate/
+│   │   ├── 📄 README.md
+│   │   └── 📄 action.yml
+│   ├── 📁 stac-validate/
+│   └── 📁 security-scan/
 ~~~
 
-STAC‑specific example:
+## 🧭 Context
 
-~~~yaml
-- name: 🛰 Validate STAC metadata
-  uses: ./.github/actions/schema-validate
-  with:
-    paths: data/stac/**/*.json
-    profile: "kfm-stac-item"
-    fail_level: error
-    report_path: artifacts/schema/stac-validation.json
+### Background
+KFM depends on **contracted, machine-validated artifacts**. Schema drift or invalid JSON commonly fails late
+(at catalog build, API contract tests, or UI runtime). This action pushes those failures left into CI.
+
+### Assumptions
+- JSON Schemas are stored under `schemas/`.
+- The action’s authoritative behavior (inputs/outputs/globs/validator runtime) is defined in `action.yml`.
+- CI workflows call this action on PRs that touch schema-governed files.
+
+### Constraints / invariants
+- The canonical pipeline ordering is preserved and documented in `docs/MASTER_GUIDE_v12.md`.
+- The UI never reads Neo4j directly; contracts must be enforced at the API layer.
+- Validation must be deterministic and reproducible (same inputs → same results).
+
+### Open questions
+
+| Question | Owner | Target date |
+|---|---|---|
+| What file globs are covered by default | TBD | TBD |
+| Which validator runtime is standard for the repo | TBD | TBD |
+| Do we emit structured results (e.g., SARIF) | TBD | TBD |
+
+### Future extensions
+- Add schema validation for additional registries (e.g., layer registries, telemetry payloads).
+- Add a “changed files only” mode to speed up PR checks while keeping full validation on main.
+
+## 🗺️ Diagrams
+
+### System and CI dataflow
+~~~mermaid
+flowchart LR
+  PR[Pull Request changes] --> CI[CI job: schema-validate]
+  CI --> S1[Validate schemas]
+  CI --> S2[Validate instances]
+  S1 --> Gate[Pass or fail gate]
+  S2 --> Gate
+  Gate --> Downstream[Safe to run catalogs/API/UI checks]
 ~~~
 
-DCAT‑telemetry example (e.g., CI telemetry):
-
-~~~yaml
-- name: 📊 Validate CI telemetry schema
-  uses: ./.github/actions/schema-validate
-  with:
-    paths: telemetry/**/*.json
-    profile: "kfm-telemetry-ci-v11"
-    fail_level: warning
-    report_path: artifacts/schema/telemetry-ci-validation.json
-~~~
-
-### 2. Normative Execution Stages
-
-For every invocation, the composite action MUST perform at least:
-
-1. **Target discovery**  
-   - Resolve `paths` against `working_directory`.  
-   - Respect `mode` when implemented (e.g., `changed` vs `all`).  
-   - Fail with a configuration error if **no files** are discovered.
-
-2. **Profile resolution**  
-   - Interpret `profile` to:
-     - Load the appropriate **JSON Schema bundle** and optional **SHACL shapes**.  
-     - Select the correct **draft** (e.g., JSON Schema draft‑07 / 2020‑12).  
-   - Profiles MUST be versioned and documented (e.g., `kfm-stac-item@v11`).
-
-3. **Schema validation**  
-   - Use a **pinned** schema engine (e.g., `ajv`, `python-jsonschema`) wrapped by a pinned container/CLI.  
-   - For each file:
-     - Parse JSON/YAML (using strict parsers; reject trailing commas, duplicate keys, etc.).  
-     - Validate against:
-       - Base schema(s) for the profile.  
-       - Any compositional/allOf/oneOf rules in profile.  
-   - Collect error & warning diagnostics, including:
-     - JSON Pointer / path,  
-     - Error code and human‑readable message,  
-     - Severity.
-
-4. **Shape / semantic validation (optional but recommended)**  
-   - When `use_shapes: true` and a SHACL shape exists for the profile:
-     - Convert JSON/JSON‑LD to RDF as required.  
-     - Run SHACL engine with **pinned** implementation.  
-     - Combine shape results into the same report under separate section.
-
-5. **Report generation**  
-   - Aggregate results into a single JSON report at `report_path`:
-     - Input list and applied profile(s).  
-     - Per‑file violations.  
-     - Summary counts by severity and rule.  
-     - Schema and shape versions used.  
-     - Start/end timestamps.
-
-6. **Exit semantics**  
-   - If any **error** is present:
-     - Set `status=failed` and `error_count > 0`.  
-     - Fail the step when `fail_level: error`.  
-   - If only **warnings** exist and `fail_level: warning`: also fail.  
-   - Otherwise: `status=passed`, `error_count=0`.
-
-7. **Telemetry & provenance**  
-   - Emit telemetry conforming to `telemetry_schema`:
-     - Run metadata, counts, profile, and schema versions.  
-   - Emit OpenLineage/PROV events:
-     - `prov:Activity` uses Entities (schema files + validated docs) and generates report Entity.  
-     - Attach `event_source_id`, `commit_sha`, `profile`, and versions.
-
-All underlying tools MUST be pinned by `@<commit_sha>` or container digests in `action.yml`.
-
----
-
-## 🧰 Schema Types & Profiles
-
-The `schema-validate` action is designed to work across multiple KFM schema families via **profiles**:
-
-### 1. Core configuration profiles
-
-Examples (names illustrative):
-
-- `kfm-config` – generic KFM JSON/YAML configuration files.  
-- `kfm-ci-config` – CI‑specific configuration (e.g., workflow metadata, feature flags).  
-
-These profiles are typically backed by JSON Schemas in:
-
-- `schemas/json/config/*.schema.json`  
-- Optionally complemented by SHACL for semantic constraints.
-
-### 2. STAC profiles
-
-For STAC entities:
-
-- `kfm-stac-item` – STAC Items aligned with `KFM-STAC v11`.  
-- `kfm-stac-collection` – STAC Collections.  
-- `kfm-stac-catalog` – STAC Catalogs.
-
-These profiles MUST:
-
-- Use STAC JSON Schemas, extended with KFM‑specific requirements.  
-- Ensure:
-  - Correct STAC version,  
-  - Asset `roles` and required metadata,  
-  - Provenance links (where required by KFM).
-
-### 3. DCAT and catalog profiles
-
-While DCAT‑RDF is primarily handled via the `dcat-validate` action, JSON or JSON‑LD DCAT representations MAY use:
-
-- `kfm-dcat-json-v11` – JSON/JSON‑LD DCAT aligned with KFM‑DCAT v11.
-
-### 4. Telemetry profiles
-
-For CI, energy, and carbon telemetry:
-
-- `kfm-telemetry-ci-v11`  
-- `kfm-telemetry-energy-v2`  
-- `kfm-telemetry-carbon-v2`
-
-These profiles ensure:
-
-- Correct schema versions,  
-- Required fields (e.g., `schema_version`, `run`, `summary` blocks),  
-- Units and value ranges where applicable.
-
-### 5. Story Node & Focus Mode profiles
-
-For narrative/graph‑aligned documents:
-
-- `kfm-story-node-v1`  
-- `kfm-focus-mode-v1`
-
-These schemas align with KFM’s knowledge graph and Story Node specification, ensuring:
-
-- Explicit spatial and temporal extents when required,  
-- Links to graph node identifiers,  
-- Governance fields (classification, sensitivity, etc.).
-
----
-
-## 📦 Data & Metadata Contract
+## 📦 Data & Metadata
 
 ### Inputs
 
-| Input               | Type    | Required | Default                                    | Description |
-|--------------------|---------|----------|--------------------------------------------|-------------|
-| `paths`            | string  | ✅ Yes   | _none_                                     | Newline‑separated glob patterns of schema‑validated files (JSON/YAML/JSON‑LD). |
-| `profile`          | string  | ✅ Yes   | _none_                                     | Validation profile identifier (e.g., `kfm-config`, `kfm-stac-item`, `kfm-telemetry-ci-v11`). |
-| `mode`             | string  | ❌ No    | `all`                                      | Future‑facing: one of `all` \| `changed`. `all` validates all matching files. |
-| `fail_level`       | string  | ❌ No    | `error`                                    | Minimum severity that causes failure: `error` \| `warning`. |
-| `working_directory`| string  | ❌ No    | `${{ github.workspace }}`                 | Base directory for resolving `paths`. |
-| `schema_root`      | string  | ❌ No    | `schemas/json`                             | Base directory or URI for JSON Schemas referenced by `profile`. |
-| `shape_root`       | string  | ❌ No    | `schemas/shacl`                            | Base directory or URI for SHACL shapes referenced by `profile`. |
-| `use_shapes`       | boolean | ❌ No    | `false`                                    | Whether to apply SHACL validation in addition to JSON Schema. |
-| `report_path`      | string  | ❌ No    | `artifacts/schema/schema-validation.json`  | Path (relative) where the JSON validation report is written. |
-| `telemetry_path`   | string  | ❌ No    | `artifacts/schema/schema-validation-telemetry.json` | Path (relative) for summary telemetry JSON. |
-| `extra_args`       | string  | ❌ No    | `""`                                       | Extra CLI flags passed to underlying schema engine(s) for advanced use. |
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Schema documents | JSON | `schemas/` | Must be valid JSON + internally consistent |
+| Schema-governed instances | JSON | Repo paths configured in `action.yml` | Must validate against selected schema(s) |
 
 ### Outputs
 
-| Output          | Type   | Description |
-|-----------------|--------|-------------|
-| `status`        | enum   | `"passed"` or `"failed"` based on `fail_level` and findings. |
-| `error_count`   | int    | Total number of validation errors across all files. |
-| `warning_count` | int    | Total number of validation warnings across all files. |
-| `files_scanned` | int    | Count of files processed. |
-| `report_path`   | string | Final resolved path to the JSON validation report. |
-| `telemetry`     | string | Final resolved path to telemetry JSON report. |
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| CI pass/fail | Exit code | GitHub Actions step result | Non-zero on any validation error |
+| Human-readable report | Log output | Workflow logs | Keep logs free of secrets/PII |
 
-### Report Format (High‑Level)
+### Sensitivity & redaction
+- Do not print secrets, tokens, or environment values.
+- If validation errors include excerpts from documents, ensure those documents are not restricted content
+  (or redact in logging behavior as required by governance).
 
-At minimum, the report MUST follow a structure equivalent to:
+### Quality signals
+- Total validations run (schemas + instances)
+- Error count by category (parse error vs schema error vs reference error)
+- Deterministic ordering for output to make diffs stable
 
-~~~jsonc
-{
-  "schema_version": "kfm-schema-validation-report-v1",
-  "profile": "kfm-config",
-  "run": {
-    "started_at": "2025-11-28T12:00:00Z",
-    "finished_at": "2025-11-28T12:00:03Z",
-    "duration_seconds": 3.01
-  },
-  "summary": {
-    "files_scanned": 14,
-    "errors": 1,
-    "warnings": 2
-  },
-  "files": [
-    {
-      "path": "data/config/core.json",
-      "errors": [
-        {
-          "code": "KFM-SCHEMA-E001",
-          "message": "Required property 'version' is missing.",
-          "json_pointer": "/",
-          "severity": "error"
-        }
-      ],
-      "warnings": [
-        {
-          "code": "KFM-SCHEMA-W010",
-          "message": "Property 'debug' is discouraged in production profiles.",
-          "json_pointer": "/debug",
-          "severity": "warning"
-        }
-      ]
-    }
-  ]
-}
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+- This action may validate STAC JSON against local schemas if configured, but **STAC semantic validation**
+  (collection-item integrity, required links, extension rules) is handled by `.github/actions/stac-validate`.
+
+### DCAT
+- DCAT records should be validated against a repo-approved schema or shape (implementation-specific).
+
+### PROV-O
+- PROV bundles should be validated for structural correctness where schemas exist.
+
+### Versioning
+- If schemas are versioned (recommended), this action should enforce:
+  - stable schema IDs and references
+  - backwards-compat behavior rules (where defined by repo standards)
+
+## 🧱 Architecture
+
+### Components
+
+| Component | Responsibility | Interface |
+|---|---|---|
+| GitHub workflow | Orchestrates CI | `.github/workflows/*.yml` |
+| schema-validate action | Runs validations | `.github/actions/schema-validate/action.yml` |
+| Schemas | Define contracts | `schemas/` |
+| Instances | Must conform | configured globs |
+
+### Interfaces / contracts
+
+| Contract | Location | Versioning rule |
+|---|---|---|
+| JSON schemas | `schemas/` | SemVer + changelog recommended |
+| UI registries schemas | `schemas/` + `web/` | Schema change requires UI review |
+| Catalog schemas | `schemas/` + `data/stac/` / `data/catalog/dcat/` / `data/prov/` | Must remain machine-validated |
+
+### Extension points checklist
+- [ ] Add new schema under `schemas/` with a stable ID
+- [ ] Update `action.yml` globs/mapping to include new instance locations
+- [ ] Add tests (if repo has contract tests) for representative valid/invalid instances
+- [ ] Ensure downstream docs reference the new schema
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+Schema validity is a prerequisite for any content served into Focus Mode contexts:
+- Catalog JSON validity supports provenance-linked narratives.
+- Registry validity supports consistent UI rendering of layers and audit notices.
+
+### Provenance-linked narrative rule
+- This action does not create narratives.
+- It supports the rule by preventing broken contracts that would block provenance linkage downstream.
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Run schema validator against schema files
+- [ ] Validate instances against schemas per `action.yml` mapping
+- [ ] Fail CI on any errors
+
+### Reproduction
+The exact validator and command line are implementation-defined. Use `action.yml` as the source of truth.
+
+Examples of local approaches (choose the one matching the repo’s implementation):
+
+~~~bash
+# Example approach A: Node-based validator (AJV)
+# npx ajv-cli validate -s schemas/<schema>.json -d <instances-glob>
+
+# Example approach B: Python-based validator
+# python -m pip install jsonschema
+# python -c "import json, jsonschema; ..."
+
+# Example approach C: Dedicated schema tool
+# <tool> validate --schema <schema> --data <file-or-glob>
 ~~~
 
-Exact schema is defined in `telemetry_schema` and MUST remain backward‑compatible across v11 patch releases.  
-Additive fields SHOULD be used for extensions; breaking changes require a new `schema_version` value.
-
----
+### Telemetry signals
+| Signal | Source | Where recorded |
+|---|---|---|
+| Validation errors count | CI job logs | Workflow logs (and optional artifacts) |
+| Files validated | CI job logs | Workflow logs |
 
 ## ⚖ FAIR+CARE & Governance
 
-The `schema-validate` composite action has the following governance requirements:
+### Review gates
+- Schema changes that affect public outputs: requires human review (DataOps + relevant subsystem owner).
+- Any schema that touches sensitive/restricted content: requires governance review per:
+  - `docs/governance/ROOT_GOVERNANCE.md`
+  - `docs/governance/SOVEREIGNTY.md`
 
-1. **Pinned, deterministic toolchain**  
-   - All underlying actions and schema engines MUST be pinned to `@<commit_sha>` or `@sha256:<digest>`.  
-   - Schema and shape bundles MUST be versioned and stored in the repo (or a governed schema registry).
+### CARE / sovereignty considerations
+- This action should not broaden access to restricted data.
+- Validation logs must avoid echoing restricted content.
 
-2. **No implicit network or secret usage**  
-   - Validation MUST run against locally available schemas/shapes by default.  
-   - If remote schema resolution is supported, it MUST be:
-     - Explicitly documented,  
-     - Opt‑in, and  
-     - Routed through approved mirrors or registries.
-
-3. **Reproducibility & provenance**  
-   - Validation results MUST be reproducible from:
-     - Repository state (commit SHA),  
-     - Profile & schema versions,  
-     - CLI arguments and environment.  
-   - PROV/OpenLineage metadata MUST capture which schemas and shapes were used.
-
-4. **FAIR+CARE alignment**  
-   - Validation telemetry MUST NOT include full document contents, only paths and aggregate results.  
-   - For sensitive or sovereignty‑protected documents:
-     - Schemas SHOULD allow generalized/obfuscated fields (e.g., approximate locations).  
-     - Error messages MUST NOT expose redacted content; they may reference field names and types only.
-
-5. **Change management**  
-   - Any change to:
-     - Supported profiles,  
-     - Input/output contracts,  
-     - Telemetry or report structure  
-     MUST be accompanied by:
-       - Updates to `action.yml` and this README,  
-       - Updates to JSON/SHACL schemas,  
-       - Passing the full `test_profiles` suite.
-
-6. **CI enforcement**  
-   - `kfm-ci.yml` SHOULD treat a failed `schema-validate` step as a **hard block** for merging when:  
-     - Config or catalog metadata is involved,  
-     - Telemetry impacting governance is invalid.  
-   - Overrides MUST be:
-     - Narrow in scope,  
-     - Explicitly justified in PR text,  
-     - Time‑bounded and tracked by the Infrastructure & Provenance Committee.
-
----
+### AI usage constraints
+- This doc does not authorize AI-generated policy. It permits summarization/structure extraction only.
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                                 |
-|--------:|------------|---------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Initial governed Schema Validation composite action; unified JSON/YAML schema validation + telemetry v1 |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial action README | TBD |
 
 ---
-
-<div align="center">
-
-📐 **KFM v11 — Schema Validation Composite Action**  
-Schema‑Safe Pipelines · Deterministic Validation · FAIR+CARE‑Aligned Metadata Governance  
-
-[⬅ Composite Actions Library](../README.md) · [📘 Markdown Protocol](../../../docs/standards/kfm_markdown_protocol_v11.2.2.md) · [⚖ Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
