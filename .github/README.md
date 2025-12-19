@@ -1,8 +1,8 @@
 ---
-title: ".github — Automation & Community Health (KFM)"
+title: ".github — GitHub Automation & Repo Entry Points"
 path: ".github/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-17"
+last_updated: "2025-12-19"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -41,42 +41,48 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# .github — Automation & Community Health
+# .github — GitHub Automation & Repo Entry Points
 
 ## 📘 Overview
 
 ### Purpose
-This document defines what belongs in the `.github/` directory and how repository automation + community-health files support KFM’s governed pipeline and contributor workflow.
+- This document describes what belongs in the repo’s `.github/` area: GitHub Actions workflows, contribution templates, and security entry points.
+- It also documents the intended CI “gates” that protect the Kansas Frontier Matrix (KFM) pipeline invariants (provenance-first, deterministic runs, and API-boundary access).
 
 ### Scope
 | In Scope | Out of Scope |
 |---|---|
-| GitHub Actions workflows, status checks, CI/CD conventions | Application code (`src/**`) and data (`data/**`) |
-| Community-health files (issue/PR templates, CODEOWNERS, SECURITY policy references) | End-user docs unrelated to GitHub processes |
-| Security automation hooks (scanning gates, provenance/SBOM generation) | Operational secrets/credentials (never stored in-repo) |
+| GitHub Actions workflows (`.github/workflows/`) | Implementing ETL, catalog, graph, API, or UI logic (lives outside `.github/`) |
+| Repo contribution entry points (issue/PR templates, CODEOWNERS) | Writing governance policy (lives under `docs/governance/` and `.github/SECURITY.md`) |
+| CI gate expectations (what must be validated) | Infra provisioning / cloud resources (not governed here) |
 
 ### Audience
-- Primary: Maintainers, release engineers, security reviewers
-- Secondary: Contributors opening PRs and issues
+- Primary: repo maintainers, CI/CD owners, security reviewers
+- Secondary: contributors, data curators, reviewers for Story Nodes / Focus Mode content
 
 ### Definitions (link to glossary)
 - Link: `docs/glossary.md`
-- Terms used in this doc: CI, CD, “status check”, “community-health file”, “governed doc”, “pipeline contract”
+- Terms used in this doc:
+  - **CI gate**: a required validation step that must pass before merge.
+  - **Provenance-first**: artifacts must trace to STAC/DCAT/PROV + graph lineage.
+  - **Sovereignty**: special handling (generalization/redaction/review) for restricted/sensitive locations or community-governed data.
 
 ### Key artifacts (what this doc points to)
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Workflows | `.github/workflows/*.yml` | Maintainers | CI/CD + scanning gates |
-| Security policy | `.github/SECURITY.md` | Security reviewers | Reporting + disclosure process |
-| Issue templates | `.github/ISSUE_TEMPLATE/*` | Maintainers | Structured intake for issues |
-| PR template | `.github/PULL_REQUEST_TEMPLATE.md` | Maintainers | Ensures required metadata/checks are addressed |
-| Code owners | `.github/CODEOWNERS` | Maintainers | Review routing |
+| GitHub workflows | `.github/workflows/` | Repo maintainers | CI gates, validation, release automation |
+| Security policy | `.github/SECURITY.md` | Security owners | Canonical entry point for reporting + standards |
+| Issue templates | `.github/ISSUE_TEMPLATE/` | Maintainers | Bug reports, data requests, etc. |
+| PR template | `.github/PULL_REQUEST_TEMPLATE.md` | Maintainers | “Definition of done” checklist for PRs |
+| Code ownership | `.github/CODEOWNERS` | Maintainers | Review routing; required approvals |
+| Dependency updates | `.github/dependabot.yml` | Maintainers | Optional; if present, keep scoped and safe |
 
 ### Definition of done (for this document)
 - [ ] Front-matter complete + valid
-- [ ] Statements avoid asserting repo contents that are *not confirmed in repo*
-- [ ] Workflow expectations are stated as “must/should” only when backed by a governed contract (Master Guide / Security policy)
-- [ ] File-tree section present and uses emoji + aligned tree
+- [ ] Links point to canonical KFM references (Master Guide, governance, security)
+- [ ] CI gate expectations align with `docs/MASTER_GUIDE_v12.md`
+- [ ] No workflow implies bypassing provenance/security/sovereignty checks
+- [ ] No secrets/credentials documented or embedded
 
 ## 🗂️ Directory Layout
 
@@ -86,194 +92,217 @@ This document defines what belongs in the `.github/` directory and how repositor
 ### Related repository paths
 | Area | Path | What lives here |
 |---|---|---|
-| Workflows | `.github/workflows/` | CI/CD and security automation definitions |
-| Policies | `.github/SECURITY.md` | Vulnerability reporting and disclosure |
-| Templates | `.github/ISSUE_TEMPLATE/` | Issue forms and templates |
-| PR template | `.github/PULL_REQUEST_TEMPLATE.md` | PR checklist and metadata prompts |
-| System contracts | `docs/` | Master Guide, governed templates, standards |
-| Schemas | `schemas/` | JSON schema (STAC/DCAT/telemetry/etc.) |
-| Pipelines | `src/pipelines/` | ETL + catalog build + graph ingest |
-| Tests | `tests/` | Unit/integration/contract tests |
+| Master guide | `docs/MASTER_GUIDE_v12.md` | Canonical pipeline ordering + “v12-ready” gates |
+| Workflows | `.github/workflows/` | CI jobs, validators, deployment pipelines |
+| Security | `.github/SECURITY.md` + `docs/security/` | Policy + technical standards |
+| Standards | `docs/standards/` | Governed standards, including markdown protocol |
+| Templates | `docs/templates/` | Governed doc templates (Universal, Story Node, API Contract Extension) |
+| Schemas | `schemas/` | JSON schemas (STAC/DCAT/telemetry/etc.) |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC/DCAT/PROV artifacts validated by CI |
+| Pipelines | `src/pipelines/` | ETL + catalog build logic (workflows call into this) |
+| Graph | `src/graph/` | Neo4j schema/migrations/ingestion (validated by CI) |
+| APIs | `src/server/` | Contracted access layer (validated by CI) |
+| UI | `web/` | React/map UI, layer registry checks, a11y gates |
 
 ### Expected file tree for this sub-area
-> Note: The exact filenames below are a **recommended baseline** and may need to be adjusted to match the current repo state (**not confirmed in repo**).
-
 ~~~text
-📁 .github/
-├── 📄 README.md
-├── 📄 SECURITY.md
-├── 📄 CODEOWNERS
-├── 📁 workflows/
-│   ├── 📄 ci.yml
-│   ├── 📄 docs.yml
-│   ├── 📄 security.yml
-│   ├── 📄 stac-validate.yml
-│   └── 📄 release.yml
-├── 📁 ISSUE_TEMPLATE/
-│   ├── 📄 bug_report.yml
-│   ├── 📄 data_ingest_request.yml
-│   ├── 📄 story_node_request.yml
-│   └── 📄 config.yml
-└── 📄 PULL_REQUEST_TEMPLATE.md
+.github/
+  README.md
+  SECURITY.md
+  workflows/
+    <ci-and-validation-workflows>.yml
+  ISSUE_TEMPLATE/
+    <issue-forms>.yml
+  PULL_REQUEST_TEMPLATE.md
+  CODEOWNERS
+  dependabot.yml
 ~~~
 
 ## 🧭 Context
 
-### Why `.github/` matters in KFM
-KFM is “documentation-first” and “contract-first”: automation should protect the canonical pipeline ordering (ETL → catalogs → graph → APIs → UI → Story Nodes → Focus Mode) and prevent changes that break provenance or sovereignty rules.
+### Background
+KFM’s pipeline is intentionally contract-driven: data is processed into standards-based catalogs (STAC/DCAT/PROV), then loaded into the graph, then served via APIs to the UI and Story/Focus experiences. `.github/` is where we enforce those contracts through automated validation gates and reviewer routing.
 
-In KFM, `.github/` is treated as a **control plane**: workflows and templates encode the minimum checks required for safe, reproducible contributions.
+### Assumptions
+- GitHub Actions is the CI runner for this repository.
+- Required checks exist (or will exist) to validate:
+  - governed Markdown documents,
+  - STAC/DCAT/PROV schema validity,
+  - graph integrity,
+  - API contract compatibility,
+  - UI layer registry structure,
+  - security/sovereignty safeguards where applicable.
 
-### Constraints and invariants
-- **Pipeline order is non-negotiable**: artifacts should be produced/validated in the canonical order.
-- **Front-end stays behind APIs**: do not introduce direct graph access from the UI layer.
-- **Focus Mode is provenance-only**: narrative content must be traceable to IDs (datasets/records/assets) and must not “hallucinate sources”.
+### Constraints / invariants
+- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- **Frontend never reads Neo4j directly**; UI depends on API contracts only.
+- Focus Mode must only consume provenance-linked content; unsourced narrative is not acceptable.
 
-### Change management expectations
-Changes under `.github/` are high-impact because they affect contributor experience, merge safety, and supply-chain posture.
-- Prefer small, reviewable changes.
-- Pin third-party GitHub actions where feasible.
-- Keep workflow steps deterministic and cache-safe.
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Which workflow files are “required checks” on the default branch? | TBD | TBD |
+| Where are CI reports stored (artifacts vs `docs/telemetry/` vs `mcp/runs/`)? | TBD | TBD |
+| Who are CODEOWNERS for workflows, security, and sovereignty-sensitive areas? | TBD | TBD |
+
+### Future extensions
+- Add/expand “sovereignty scanning gates” for changes touching sensitive layers or restricted locations.
+- Add telemetry reporting for CI gate trends (pass rates, runtimes, security findings).
 
 ## 🗺️ Diagrams
 
+### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  A["Contributor Branch"] --> B["Pull Request"]
-  B --> C["CI Status Checks<br/>(lint · tests · schema · contract · security)"]
-  C -->|pass| D["Merge to default branch"]
-  C -->|fail| E["Fix + re-run"]
-  D --> F["Optional CD<br/>(docs site release · catalog publish · tagged release)"]
+  PR[Pull Request] --> CI[GitHub Actions: CI Gates]
+
+  subgraph Gates
+    M[Markdown protocol validation]
+    S[Schema validation: STAC/DCAT/PROV/telemetry]
+    G[Graph integrity tests]
+    A[API contract tests]
+    U[UI schema checks (layer registry + a11y hooks)]
+    Sec[Security + sovereignty checks (as applicable)]
+  end
+
+  CI --> M
+  CI --> S
+  CI --> G
+  CI --> A
+  CI --> U
+  CI --> Sec
+
+  M --> Status[Required checks pass]
+  S --> Status
+  G --> Status
+  A --> Status
+  U --> Status
+  Sec --> Status
+~~~
+
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant Dev as Contributor
+  participant GH as GitHub
+  participant CI as Actions Runner
+  participant Repo as Repo Artifacts
+
+  Dev->>GH: Open PR
+  GH->>CI: Trigger workflows
+  CI->>Repo: Run validators + tests
+  Repo-->>CI: Results + reports
+  CI-->>GH: Status checks (pass/fail)
+  GH-->>Dev: Review + merge eligibility
 ~~~
 
 ## 📦 Data & Metadata
 
-### Inputs (events that trigger automation)
-- Pull requests
-- Pushes to protected branches
-- Scheduled workflows (e.g., nightly validation / data refresh)
-- Release tags
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Code changes | git diff | Pull request | unit/integration tests, lint |
+| Catalog changes | JSON / TTL / JSON-LD | Pull request | schema validation (STAC/DCAT/PROV) |
+| Docs changes | Markdown | Pull request | markdown protocol validation |
+| Workflow changes | YAML | Pull request | workflow lint + least-privilege review |
 
-### Outputs (artifacts and signals)
-- Required status checks (pass/fail)
-- Test reports and coverage artifacts (if configured)
-- Schema validation reports for STAC/DCAT/telemetry (if configured)
-- SBOM/provenance artifacts for releases (if configured)
-- Published docs site / Pages deploy (if configured)
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| CI status checks | GitHub status | GitHub UI | Required checks configured in repo |
+| Validation reports | artifacts/logs | GitHub Actions artifacts (typical) | Schema + test logs |
+| Telemetry summaries (optional) | Markdown/JSON | `docs/telemetry/` | `schemas/telemetry/` |
 
-### Sensitivity and secrets
-- Never store secrets in the repo.
-- Prefer GitHub environment protection rules and least-privilege tokens.
-- Treat any dataset that may encode restricted locations or culturally sensitive information as “governance-triggering”; require explicit review.
+### Sensitivity & redaction
+- Workflows may require credentials for protected operations (publishing, deployments, private data pulls). Never store secrets in-repo; never echo secrets to logs.
+- If CI touches sovereignty-restricted data or locations, enforce generalization/redaction rules and required reviewers before merge.
+
+### Quality signals
+- All required CI gates pass.
+- Schema-validated catalogs remain consistent with the pipeline contracts.
+- No regressions in API/UI/story validations when those areas are touched.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Workflows in `.github/workflows/` should help enforce:
-- STAC collection/item generation and validation for new/updated assets.
-- DCAT mappings for dataset-level metadata.
-- PROV run identifiers for transformations (ETL runs, catalog builds, graph ingests).
+### STAC
+- CI should validate STAC collections and items under `data/stac/` whenever they change.
+- If new assets are added, ensure they remain link-consistent (items ↔ collections) and schema-valid.
 
-If a PR changes data products:
-- Require schema validation for the modified STAC/DCAT/telemetry documents.
-- Require a reproducible run reference (run ID or run log path), when applicable.
+### DCAT
+- CI should validate DCAT dataset records under `data/catalog/dcat/` when changed.
+- Minimum expected metadata fields (title/description/license/keywords) should be present per the Master Guide guidance.
 
-## 🧱 Architecture
+### PROV-O
+- CI should validate provenance bundles under `data/prov/` when changed.
+- Provenance should reference stable run/activity identifiers where applicable.
 
-### CI checks mapped to the canonical pipeline layers
-| Layer | Typical checks in CI | Notes |
-|---|---|---|
-| ETL | config validation, deterministic run / replayability checks | Avoid non-deterministic transforms |
-| Catalogs (STAC/DCAT/PROV) | JSON schema validation; STAC validation tooling | Machine-validated metadata |
-| Graph | integrity tests; ontology/constraint checks | Stable labels/edges |
-| APIs | OpenAPI/GraphQL contract tests | Backward compat or version bump |
-| UI | layer registry schema checks; a11y smoke tests | No hidden data leakage |
-| Story Nodes | schema + provenance-link validation | Evidence-led only |
-| Focus Mode | provenance-linked bundle checks | Predictive content must be opt-in + uncertainty |
-| Security/Sovereignty | secret scanning; dependency checks; policy gates | Apply “where applicable” |
-
-### Workflow design principles
-- **Deterministic**: CI should produce consistent results for the same commit.
-- **Least privilege**: default to read-only permissions unless write is required.
-- **Auditable**: artifacts should record versions, run IDs, and checksums when possible.
-
-### Extension points checklist (for future work)
-- [ ] Data: new domain added under `data/<domain>/`
-- [ ] STAC: new collection + item schema validation
-- [ ] PROV: activity + agent identifiers recorded
-- [ ] Graph: new labels/relations mapped + migration plan
-- [ ] APIs: contract version bump + tests
-- [ ] UI: layer registry entry + access rules
-- [ ] Focus Mode: provenance references enforced
-- [ ] Telemetry: new signals + schema version bump
+### Versioning
+- New versions should link predecessor/successor (catalog + graph lineage) when versioning is used.
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How `.github/` work surfaces in Focus Mode
-This directory does not add end-user features directly, but it ensures that:
-- Story Nodes remain machine-ingestible and provenance-linked.
-- Focus Mode only receives evidence bundles with traceable identifiers.
+### How this work surfaces in Focus Mode
+- When Story Nodes or Focus Mode artifacts change, CI should enforce that narrative claims trace to provenance-linked evidence (dataset/document/asset identifiers).
 
 ### Provenance-linked narrative rule
 - Every claim must trace to a dataset / record / asset ID.
 
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
 ## 🧪 Validation & CI/CD
 
-### Minimum CI gates for “v12-ready” contributions
-- Markdown protocol validation
-- JSON schema validation (STAC/DCAT/telemetry)
-- Graph integrity tests
-- API contract tests
-- UI layer registry schema checks
-- Security + sovereignty scanning gates (where applicable)
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV/telemetry)
+- [ ] Graph integrity checks
+- [ ] API contract tests
+- [ ] UI schema checks (layer registry)
+- [ ] Security and sovereignty checks (as applicable)
 
 ### Reproduction
 ~~~bash
 # Example placeholders — replace with repo-specific commands
-
-# 1) validate markdown/doc protocol
-# make docs-lint
-
-# 2) validate schemas (STAC/DCAT/telemetry)
-# make schema-validate
-
-# 3) run tests
-# make test
-
-# 4) run security scans (where applicable)
-# make security-scan
+# 1) validate docs / markdown protocol
+# 2) validate STAC/DCAT/PROV schemas
+# 3) run unit/integration tests
+# 4) run graph integrity checks
+# 5) run API contract tests
+# 6) run UI schema checks
 ~~~
 
 ### Telemetry signals (if applicable)
 | Signal | Source | Where recorded |
 |---|---|---|
-| CI status + runtimes | GitHub Actions | (repo-specific) |
-| Validation reports | schema validators | `reports/` (recommended) |
+| CI pass/fail trend | GitHub Actions | `docs/telemetry/` + `schemas/telemetry/` |
+| Security scan findings | Workflow job | `docs/telemetry/` + `schemas/telemetry/` |
+| Sovereignty gate triggers | Workflow job | `docs/telemetry/` + `schemas/telemetry/` |
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
-Changes may require elevated review when they introduce:
-- New sensitive layers
-- New AI narrative behaviors
-- New external data sources
-- New public-facing endpoints
+- Workflow changes: require maintainer review; security reviewers when secrets/permissions or scanning rules change.
+- Changes that affect public-facing content, sensitive layers, sovereignty rules, or AI narrative behaviors should trigger governance review per the Master Guide.
 
 ### CARE / sovereignty considerations
-- Document redaction/generalization rules for any restricted locations.
-- Ensure CI does not publish restricted data artifacts to public endpoints.
+- Identify communities impacted and protection rules before exposing restricted locations or culturally sensitive content.
 
 ### AI usage constraints
-- Ensure this doc’s AI permissions/prohibitions match intended use.
-- Avoid implying prohibited AI actions (e.g., inferring sensitive locations).
+- Ensure this document’s AI permissions/prohibitions match intended use.
+- Do not treat AI-generated outputs as authoritative without provenance links and human review.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-17 | Initial `.github/README.md` | TBD |
+| v1.0.0 | 2025-12-19 | Initial `.github/README.md` scaffold | TBD |
 
 ---
-
 Footer refs:
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
