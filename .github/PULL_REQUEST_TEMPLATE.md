@@ -1,9 +1,10 @@
+<!--
 ---
-title: "KFM — Pull Request Template"
+title: "GitHub Pull Request Template"
 path: ".github/PULL_REQUEST_TEMPLATE.md"
 version: "v1.0.0"
-last_updated: "2025-12-18"
-status: "template"
+last_updated: "2025-12-19"
+status: "active"
 doc_kind: "Template"
 license: "CC-BY-4.0"
 
@@ -30,221 +31,116 @@ event_source_id: "ledger:kfm:doc:github:pull-request-template:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
-  - "summarize"
   - "structure_extract"
-  - "translate"
-  - "keyword_index"
 ai_transform_prohibited:
   - "generate_policy"
   - "infer_sensitive_locations"
 
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
-
-# Pull Request
+-->
 
 <!--
-KFM governance reminders:
-- Preserve canonical pipeline order:
-  ETL → STAC/DCAT/PROV Catalogs → Neo4j Graph → APIs → React/Map UI → Story Nodes → Focus Mode
-- Frontend consumes through API contracts (no direct graph dependency).
-- No unsourced narrative in user-facing surfaces; provenance + citations are required.
+Thanks for contributing! Please fill out what applies.
+You can delete sections that are truly irrelevant, but keep checklists that touch changed subsystems.
 -->
 
-## 📘 Overview
+## Summary
+<!-- What does this PR change and why? Keep it evidence-led and linkable. -->
+- 
 
-### Purpose
-- **What**: <!-- 1–3 sentences -->
-- **Why**: <!-- link issue(s) / user story -->
-- **How**: <!-- high-level approach -->
+## Type of change (check all that apply)
+- [ ] Bug fix
+- [ ] Feature / enhancement
+- [ ] Refactor / cleanup (no behavior change intended)
+- [ ] Docs-only change
+- [ ] Data ingestion / ETL
+- [ ] Catalogs: STAC / DCAT / PROV
+- [ ] Graph: Neo4j / ontology / migrations
+- [ ] API: REST / GraphQL contracts
+- [ ] UI: React / MapLibre / Cesium
+- [ ] Story Nodes / Focus Mode narrative
+- [ ] CI / GitHub / developer experience
 
-### Type of change
-- [ ] Dataset / catalog (STAC/DCAT/PROV)
-- [ ] ETL / pipeline
-- [ ] Graph / ontology / migration
-- [ ] API contract (REST/GraphQL)
-- [ ] Web UI (React/MapLibre)
-- [ ] Story Node / Focus Mode narrative
-- [ ] Telemetry / observability
-- [ ] Security / governance / policy docs
-- [ ] Documentation-only
-- [ ] Other: <!-- describe -->
-
-### Scope
-| In Scope | Out of Scope |
-|---|---|
-| <!-- --> | <!-- --> |
-
-### Related issues / tickets
-- Closes: #
+## Related issues / tickets
+<!-- Example: Fixes #123. Link any design docs, decision records, or governance approvals. -->
+- Fixes: #
 - Related: #
 
-### Key artifacts touched
-| Artifact | Path / Identifier | Change | Notes |
-|---|---|---|---|
-| <!-- e.g., Pipeline module --> | <!-- src/pipelines/... --> | <!-- add/modify/remove --> | <!-- --> |
+## Scope (what changed)
+<!-- Bullet list of the main deltas, ideally grouped by subsystem -->
+- 
 
-### Definition of done
-- [ ] PR description complete (this template filled)
-- [ ] All changes are deterministic/replayable (seeded if applicable)
-- [ ] Tests/validation updated and passing (see below)
-- [ ] Documentation updated (docs-first; missing docs treated as a bug)
-- [ ] Provenance + sensitivity handled (FAIR+CARE + sovereignty)
+## Validation evidence
+<!-- Paste/describe how you validated this change. Prefer CI links + reproducible steps. -->
+- CI status: <!-- link or "pending" -->
+- Local checks (if applicable): <!-- command(s) or description -->
+- Test coverage notes (if applicable): 
 
----
-
-## 🗂️ Directory Layout
-
-### Changed areas (check all that apply)
-| Area | Path(s) | Notes |
-|---|---|---|
-| Data | `data/` | <!-- raw/work/processed/stac --> |
-| Pipelines | `src/pipelines/` | <!-- --> |
-| Catalogs | `data/stac/` + `docs/data/` | <!-- STAC/DCAT/PROV --> |
-| Graph | `src/graph/` + `docs/graph/` | <!-- --> |
-| APIs | `src/server/` + `docs/` | <!-- --> |
-| Frontend | `web/` | <!-- --> |
-| Story Nodes | `docs/reports/.../story_nodes/` | <!-- --> |
-| Schemas | `schemas/` | <!-- --> |
-| Tests | `tests/` | <!-- --> |
-| CI | `.github/workflows/` | <!-- --> |
-| MCP artifacts | `mcp/` | <!-- experiments/model cards/SOPs --> |
-
-### File tree (optional but helpful)
-~~~text
-📦 <root>
-├─ 📁 data/
-│  ├─ 📁 raw/
-│  ├─ 📁 work/
-│  ├─ 📁 processed/
-│  └─ 📁 stac/
-├─ 📁 src/
-├─ 📁 web/
-├─ 📁 docs/
-└─ 📁 tests/
-~~~
+## Risk & rollback
+- Risk level: [ ] Low  [ ] Medium  [ ] High
+- Rollback plan (brief): 
 
 ---
 
-## 🧭 Context
+# Subsystem checklists (complete the sections that apply)
 
-### Pipeline ordering & contract invariants (must be true)
-- [ ] I did **not** bypass the canonical pipeline ordering (ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode).
-- [ ] UI changes (if any) consume KFM data through API contracts (no direct Neo4j/graph access).
-- [ ] I did **not** add unsourced narrative in any user-facing surface; citations/provenance exist or are queued.
+## ✅ General (always)
+- [ ] No secrets/credentials/tokens were added (including in examples, logs, fixtures)
+- [ ] No new PII was introduced, or appropriate redaction/generalization is applied
+- [ ] Changes are deterministic/idempotent where applicable (especially pipelines)
+- [ ] Public-facing text avoids unsourced claims (provenance-first)
 
-### Assumptions
-- <!-- -->
+## 🧰 ETL / Pipelines (if applicable)
+- [ ] Input sources documented (where applicable) under `data/sources/` or governed docs
+- [ ] Output placement follows repo rules (raw/work/processed, no derived data in `src/`)
+- [ ] Re-run behavior verified (idempotent; no duplicates)
+- [ ] Any randomness is seed-locked and documented
 
-### Risks / impact
-- **Risk level**: [ ] Low [ ] Medium [ ] High
-- **User impact**: <!-- -->
-- **Performance impact**: <!-- -->
-- **Breaking change?**: [ ] No [ ] Yes (describe + mitigation)
+## 🗂️ Catalogs: STAC / DCAT / PROV (if applicable)
+- [ ] STAC: Collection(s) updated/added (`data/stac/collections/...`)
+- [ ] STAC: Item(s) updated/added (`data/stac/items/...`) with valid geometry/time/links
+- [ ] DCAT: Dataset record(s) updated/added (`data/catalog/dcat/...`) (IDs/keywords/license)
+- [ ] PROV: Lineage bundle(s) updated/added (`data/prov/...`) with activity/run identifiers
+- [ ] Schema validation performed (STAC/DCAT/PROV) and links are not broken
 
-### Rollout / migration plan (if needed)
-- [ ] No rollout needed
-- [ ] Requires migration/backfill (describe):
-  - <!-- -->
+## 🧠 Graph: Neo4j / Ontology (if applicable)
+- [ ] Ontology change is scoped and documented (labels/relations stable where required)
+- [ ] Migration plan included (constraints/indexes/backfill) and is reversible where feasible
+- [ ] Graph integrity checks pass (no orphaned references; provenance links preserved)
 
----
+## 🌐 APIs: REST / GraphQL (if applicable)
+- [ ] Contract updated (OpenAPI/GraphQL/schema) and backward-compat assessed
+- [ ] Contract tests added/updated (integration + schema validation)
+- [ ] Endpoint enforces access rules/redaction rules (no UI direct-to-graph coupling)
 
-## 📦 Data & Metadata
+## 🗺️ UI: React / MapLibre / Cesium (if applicable)
+- [ ] Screenshots or short clip included (for visible changes)
+- [ ] A11y considerations checked (keyboard nav, contrast, semantics where applicable)
+- [ ] Layer registry updated + schema-validated (if layers changed/added)
+- [ ] UI consumes data via API contracts (no direct graph reads)
 
-### If this PR changes or adds datasets
-- [ ] Data staged correctly (`data/raw/` → `data/work/` → `data/processed/`)
-- [ ] New/updated STAC Collection + Item(s) created under `data/stac/`
-- [ ] DCAT view updated (if applicable)
-- [ ] PROV lineage updated (`prov:wasDerivedFrom` / `prov:wasGeneratedBy`, run IDs)
-- [ ] Validation performed (schema + geometry/range checks)
-- [ ] Large assets tracked appropriately (e.g., DVC) and not committed directly to Git if oversized
+## 📚 Story Nodes / Focus Mode (if applicable)
+- [ ] Story Node(s) added/updated under `docs/reports/.../story_nodes/`
+- [ ] Every factual claim maps to a cited dataset/document ID (no “free text” claims)
+- [ ] Sensitivity/CARE/sovereignty considerations reviewed and documented if triggered
+- [ ] Predictive/AI-derived content is clearly labeled, opt-in, and includes uncertainty metadata (if used)
 
-### If this PR adds or changes an analysis / ML artifact
-- [ ] Experiment log added under `mcp/experiments/` (hypothesis, inputs, method, outputs)
-- [ ] Model card added/updated under `mcp/model_cards/` (model version, data, limits, bias notes)
-- [ ] Outputs stored under `data/processed/` (not `src/`)
-- [ ] Uncertainty/confidence fields included (where applicable)
-
----
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-- **STAC IDs / Collections / Items**:
-  - <!-- -->
-- **DCAT dataset identifiers**:
-  - <!-- -->
-- **PROV activity/run IDs**:
-  - <!-- -->
-
----
-
-## 🧱 Architecture
-
-### Components changed
-- <!-- e.g., src/pipelines/...; src/server/...; web/... -->
-
-### API contract impact (if any)
-- [ ] No API changes
-- [ ] REST contract changed (link to doc / OpenAPI update):
-  - <!-- -->
-- [ ] GraphQL schema/resolvers changed (link):
-  - <!-- -->
-- [ ] Contract extension doc added (use `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` as governing format)
+## 🧪 CI/CD gates (check what applies)
+- [ ] Markdown protocol validation passes (if docs changed)
+- [ ] JSON schema validation passes (STAC/DCAT/telemetry as applicable)
+- [ ] Graph integrity tests pass (if graph changed)
+- [ ] API contract tests pass (if API changed)
+- [ ] UI schema checks pass (if UI registries changed)
+- [ ] Security + sovereignty scanning gates pass (where applicable)
 
 ---
 
-## 🧠 Story Node & Focus Mode Integration (if relevant)
+## Reviewer notes
+<!-- Help reviewers: what’s the intended behavior, what are the edge cases, where to focus. -->
+- 
 
-- [ ] No Story/Focus changes
-- [ ] Story Node(s) added/updated (path + IDs):
-  - <!-- -->
-- [ ] Evidence-led narrative with cited dataset/document IDs
-- [ ] Sensitivity handling described (redaction/generalization)
-
----
-
-## 🧪 Validation & CI/CD
-
-### Checks run (paste commands + results)
-- <!-- Example:
-~~~bash
-make test
-~~~
--->
-
-### Test coverage
-- [ ] Unit tests updated/added
-- [ ] Integration tests updated/added
-- [ ] Schema validation updated/added (`schemas/`)
-- [ ] Data validation updated/added (ranges, geometry validity, null checks)
-- [ ] Frontend checks (lint/build/a11y) run (if UI touched)
-
-### Evidence (optional)
-- Screenshots / GIFs (UI)
-- Logs (pipeline run)
-- Sample outputs (small, non-sensitive)
-
----
-
-## ⚖ FAIR+CARE & Governance
-
-### Sensitivity / sovereignty / ethics
-- [ ] No sensitive locations/PII introduced
-- [ ] If sensitive content exists, it is generalized/redacted per `docs/governance/SOVEREIGNTY.md`
-- [ ] CARE considerations reviewed (collective benefit, authority to control, responsibility, ethics)
-- [ ] Security implications reviewed (authz/audit/logging; see `.github/SECURITY.md`)
-
-### Approvals needed
-- [ ] None
-- [ ] FAIR+CARE council review
-- [ ] Security council review
-- [ ] Historian/editor review
-- [ ] Other: <!-- -->
-
----
-
-## 🙋 Reviewer Notes
-
-- Suggested reviewers: @
-- Review focus areas:
-  - <!-- -->
+## Checklist for maintainers (optional)
+- [ ] Labels applied
+- [ ] Changelog/release notes needed?
+- [ ] Requires human review (governance/security/historian/editor) flagged when applicable
