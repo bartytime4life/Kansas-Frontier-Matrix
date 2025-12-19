@@ -106,16 +106,16 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 ### Expected file tree for this sub-area
 ~~~text
-.github/
-  README.md
-  SECURITY.md
-  workflows/
-    <ci-and-validation-workflows>.yml
-  ISSUE_TEMPLATE/
-    <issue-forms>.yml
-  PULL_REQUEST_TEMPLATE.md
-  CODEOWNERS
-  dependabot.yml
+🗂️ .github/                                  GitHub automation and repo entry points
+├── 📄 README.md                              Overview of this .github/ area (what lives where)
+├── 🔐 SECURITY.md                            Security policy + reporting instructions
+├── 📁 workflows/                             GitHub Actions workflows (CI, validation, release)
+│   └── 📄 <ci-and-validation-workflows>.yml  CI + validation gates (lint/tests/schema/security)
+├── 📁 ISSUE_TEMPLATE/                        Issue templates + forms
+│   └── 📄 <issue-forms>.yml                  Structured issue form definitions
+├── 📄 PULL_REQUEST_TEMPLATE.md               PR checklist + required change notes
+├── 👥 CODEOWNERS                             Review ownership + required approvers routing
+└── 🤖 dependabot.yml                         Automated dependency update configuration
 ~~~
 
 ## 🧭 Context
