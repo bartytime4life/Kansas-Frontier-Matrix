@@ -1,206 +1,291 @@
 ---
-title: "🎨 Kansas Frontier Matrix — Design Tokens & UI System Specification (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "src/design-tokens — README"
 path: "src/design-tokens/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/src-design-tokens-v1.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:src:design-tokens:readme:v1.0.0"
+semantic_document_id: "kfm-src-design-tokens-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:src:design-tokens:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🎨 **Kansas Frontier Matrix — Design Tokens & UI System Specification**
-`src/design-tokens/README.md`
-
-**Purpose:**  
-Define the **core visual, typographic, and semantic variables** (design tokens) that unify accessibility, sustainability, and reproducibility across the Kansas Frontier Matrix (KFM) digital interfaces.  
-These tokens ensure cross-platform design consistency under **FAIR+CARE**, **WCAG 2.1 AA**, and **MCP-DL v6.3** governance.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-A11y%20Certified-orange)](../../docs/standards/faircare.md)
-[![Status: Active](https://img.shields.io/badge/Status-Design%20System-success)]()
-
-</div>
-
----
+# src/design-tokens — README
 
 ## 📘 Overview
 
-The **Design Token System** defines KFM’s visual identity in a machine-readable format for web, map, and AI-driven dashboards.  
-All tokens are stored as JSON and used to generate **CSS variables**, **React style contexts**, and **Figma libraries**, ensuring that **UI, accessibility, and sustainability metrics** remain synchronized.
+### Purpose
+This directory defines **design tokens** for KFM’s UI-facing surfaces (e.g., the map UI, Focus Mode panels, navigation, and shared UI primitives). Tokens provide a **single source of truth** for presentation values (color, typography, spacing, radii, shadows, z-index, etc.) so styling remains consistent and reviewable.
 
-Design tokens fall into three primary categories:
-1. **Foundational Tokens** — color, typography, spacing, elevation  
-2. **Semantic Tokens** — purpose-driven variants (success, warning, error)  
-3. **Functional Tokens** — applied to components (buttons, panels, maps)
+This document is intentionally **contract-oriented**: it describes *what belongs here*, *what outputs are expected*, and *what invariants must hold*, without assuming any specific implementation tooling (not confirmed in repo).
 
----
+### Scope
+
+| In Scope | Out of Scope |
+|---|---|
+| Token naming conventions + semantics | React component implementation details |
+| Token source format(s) + validation expectations | Map layer registries / dataset catalogs |
+| Build/export expectations for UI consumption | Neo4j/graph access (must remain API-mediated) |
+| Accessibility constraints (contrast, typography, motion) | Historical narrative content + citations |
+
+### Audience
+- Primary: UI engineers, frontend maintainers, and design-system contributors
+- Secondary: API engineers (contract awareness), docs maintainers, reviewers (a11y/governance)
+
+### Definitions (link to glossary)
+- Link (if present): `docs/glossary.md` (**not confirmed in repo**)
+- Terms used in this doc:
+  - **Token:** A named, versioned value used in UI styling (e.g., `color.text.primary`).
+  - **Primitive token:** Raw values (hex colors, px/rem sizes) not tied to meaning.
+  - **Semantic token:** Meaningful aliases (e.g., “primary text”) mapped to primitives.
+  - **Theme:** A set of token values for a mode (light/dark/high-contrast/print).
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Token source(s) | `src/design-tokens/<TBD>` | UI / Design | Source-of-truth format not confirmed in repo |
+| Token schema(s) | `schemas/<TBD>` | UI / Platform | Optional but strongly recommended |
+| Generated exports | `src/design-tokens/<dist or build output TBD>` | UI | Must be reproducible + deterministic |
+| Consumption docs | `web/<TBD>` + `docs/design/<TBD>` | UI / Docs | Not confirmed in repo |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Token taxonomy is defined (primitive vs semantic) and naming is consistent
+- [ ] Validation steps are listed and repeatable
+- [ ] Accessibility constraints are explicit (contrast, motion, font sizing)
+- [ ] No references imply bypassing API contracts or exposing sensitive data
 
 ## 🗂️ Directory Layout
 
-```plaintext
-src/design-tokens/
-├── README.md                         # This document — design token overview
-│
-├── tokens/
-│   ├── colors.json                    # Brand + neutral palette definitions
-│   ├── typography.json                # Font sizes, weights, and line heights
-│   ├── spacing.json                   # Margins, padding, grid unit scales
-│   ├── elevation.json                 # Shadows, surface levels, z-index
-│   ├── motion.json                    # Animation durations and easing curves
-│   └── accessibility.json             # Contrast, focus, ARIA token mappings
-│
-├── generated/
-│   ├── tokens.css                     # Compiled CSS variables
-│   ├── tokens.scss                    # Sass export for frontend builds
-│   └── tokens.js                      # JS/TS token export for React integration
-│
-└── metadata.json                      # Provenance + version info for governance tracking
-```
+### This document
+- `path`: `src/design-tokens/README.md`
 
----
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Frontend | `web/` | React + map clients consume exported tokens |
+| Documentation | `docs/` | Design guidelines + governed docs |
+| Schemas | `schemas/` | JSON schemas for tokens (recommended) |
+| Tooling | `tools/` | Token build/validation scripts (if adopted) |
 
-## 🧱 Foundational Tokens
+### Expected file tree for this sub-area
+> The structure below is **expected** for maintainability, but is **not confirmed in repo**.
 
-| Category | Token | Description | Example |
-|-----------|--------|-------------|----------|
-| **Color** | `color.background.primary` | Default UI background | `#ffffff` |
-| **Color** | `color.text.primary` | Main text color | `#1a1a1a` |
-| **Typography** | `font.size.body` | Default body font size | `16px` |
-| **Spacing** | `spacing.md` | Medium padding/margin unit | `1rem` |
-| **Elevation** | `shadow.lg` | Large shadow depth | `0px 4px 16px rgba(0,0,0,0.2)` |
+~~~text
+📁 src/
+└── 📁 design-tokens/
+    ├── 📄 README.md
+    ├── 📁 tokens/                 # source-of-truth inputs (not confirmed in repo)
+    ├── 📁 schemas/                # optional local schemas (not confirmed in repo)
+    ├── 📁 build/                  # build scripts / transforms (not confirmed in repo)
+    └── 📁 dist/                   # generated outputs; do not hand-edit (not confirmed in repo)
+~~~
 
----
+## 🧭 Context
 
-## 🎨 Semantic Tokens
+### Background
+KFM’s UI blends maps, timelines, and narrative panels. Without a shared token system, UI styling tends to diverge across components and features (especially when multiple contributors are involved). Tokens ensure changes are:
+- centralized,
+- reviewable,
+- testable (especially for accessibility),
+- and easy to propagate across the UI.
 
-| Token | Purpose | Value Example |
-|--------|----------|----------------|
-| `color.success` | Confirmation / Positive action | `#28a745` |
-| `color.warning` | Attention / Warnings | `#ffcc00` |
-| `color.error` | Errors / Invalid states | `#e63946` |
-| `color.info` | Informational UI | `#007bff` |
-| `color.neutral` | Background neutral tone | `#f5f5f5` |
+### Assumptions
+- The canonical system pipeline ordering is preserved (UI is downstream of the API layer).
+- UI consumes data through API contracts; styling artifacts must not introduce data coupling.
+- Token build/export should be deterministic (same inputs → same outputs).
 
-**Example JSON Structure**
-```json
-{
-  "color": {
-    "success": "#28a745",
-    "warning": "#ffcc00",
-    "error": "#e63946",
-    "info": "#007bff",
-    "neutral": "#f5f5f5"
-  }
-}
-```
+### Constraints / invariants
+- **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode** ordering remains intact.
+- **Frontend consumes contracts via APIs (no direct graph dependency).**
+- No sensitive locations or restricted content should be inferable from styling tokens.
+- Generated artifacts must be reproducible and should not embed timestamps/randomness.
 
----
+### Open questions
 
-## 🧩 Functional Tokens
+| Question | Owner | Target date |
+|---|---|---|
+| What is the source-of-truth token format (JSON/YAML/TS/etc.)? | TBD | TBD |
+| What are the supported themes (light/dark/high-contrast/print)? | TBD | TBD |
+| Where do exported artifacts live (repo vs build output)? | TBD | TBD |
+| Do we need a JSON Schema + CI gate for tokens? | TBD | TBD |
 
-| Component | Token Example | Purpose |
-|------------|----------------|----------|
-| Button | `button.primary.background` | Primary button fill color |
-| Map | `map.land.primary` | Default land area color |
-| Chart | `chart.axis.text` | Chart label typography |
-| Panel | `panel.shadow.depth` | Shadow level for map/info panels |
+### Future extensions
+- Theme packs for Focus Mode (e.g., “Archive”, “Prairie”, “High Contrast”).
+- Tokenized map styling primitives (only presentation semantics; no dataset IDs).
+- A11y automation: contrast checks + reduced-motion gates in CI.
 
----
+## 🗺️ Diagrams
 
-## ♿ Accessibility & Contrast Standards
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[Token source-of-truth] --> B[Validation + build/export]
+  B --> C[UI consumable artifacts\n(CSS vars / JSON / TS)]
+  C --> D[React/Map UI]
+  D --> E[Story Nodes + Focus Mode rendering]
+~~~
 
-All tokens are audited for **WCAG 2.1 AA** contrast compliance.  
-Accessibility tokens are defined in `accessibility.json` and validated via the **UI Accessibility Workflow** (`.github/workflows/ui-accessibility.yml`).
+## 📦 Data & Metadata
 
-| Rule | Metric | Target |
-|------|---------|---------|
-| **Text Contrast** | Ratio between foreground/background | ≥ 4.5:1 |
-| **Focus Indicator** | Outline thickness + color delta | ≥ 3px + 3:1 contrast |
-| **Color-blind Safe Palette** | Simulated Deuteranopia/Protanopia | 100% distinguishable |
-| **Motion Sensitivity** | Animation duration threshold | ≥ 100ms easing curve |
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Token source(s) | TBD | `src/design-tokens/<TBD>` | Schema + lint (recommended) |
+| Brand/a11y rules | TBD | `docs/design/<TBD>` | Review gate (recommended) |
 
----
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| UI tokens export | TBD | `src/design-tokens/<TBD>` | Schema (recommended) |
+| Theme variants | TBD | `src/design-tokens/<TBD>` | Diff-friendly + deterministic |
 
-## 🧮 Sustainability Integration
+### Sensitivity & redaction
+- Tokens are expected to be **public** and should not include:
+  - private URLs,
+  - organization-internal codenames,
+  - location-specific “hidden meaning” styling that implies restricted sites.
+- If any iconography or terminology is culturally sensitive, route through governance review (requires human review).
 
-Design token exports include telemetry metadata to measure rendering efficiency and color energy profile.
+### Quality signals
+- Contrast ratio targets for text on surfaces (a11y gate).
+- Reduced-motion compliance (avoid forcing animations).
+- Token naming consistency + no unused exports (lint gate).
+- Deterministic builds (byte-for-byte stable outputs when inputs unchanged).
 
-| Metric | Description | Target |
-|---------|-------------|---------|
-| `energy_render_wh` | Average energy per render | ≤ 0.2 Wh |
-| `carbon_render_gco2e` | CO₂ per render operation | ≤ 0.3 gCO₂e |
-| `color_luminance_avg` | Average brightness (YIQ) | 50–65% |
-| `reuse_rate` | Shared variable usage efficiency | ≥ 80% |
+## 🌐 STAC, DCAT & PROV Alignment
 
-Telemetry recorded in:  
-`releases/v10.0.0/focus-telemetry.json`
+### STAC
+- Not applicable: design tokens are UI presentation contracts, not asset catalogs.
 
----
+### DCAT
+- Not applicable: tokens are not published datasets.
 
-## ⚙️ Validation Workflows
+### PROV-O
+- Optional: if tokens are generated by a build step, record the build activity/run in CI logs (location **not confirmed in repo**).
 
-| Workflow | Purpose | Output |
-|-----------|----------|--------|
-| `design-token-validate.yml` | Validates JSON schema + accessibility rules | `reports/self-validation/ui/design_tokens.json` |
-| `ui-accessibility.yml` | Checks color contrast + ARIA token alignment | `reports/self-validation/ui/a11y_summary.json` |
-| `telemetry-export.yml` | Publishes sustainability + rendering efficiency | `releases/v10.0.0/focus-telemetry.json` |
+### Versioning
+- Token changes should follow semantic versioning *if* exported artifacts are treated as contracts (policy **not confirmed in repo**).
+- At minimum: changelog notes in PR descriptions, and stable token names (avoid churn).
 
-All results logged to:  
-`docs/reports/telemetry/governance_scorecard.json`
+## 🧱 Architecture
 
----
+### Components
 
-## 🧾 Governance & Provenance
+| Component | Responsibility | Interface |
+|---|---|---|
+| Token sources | Declare primitives + semantic tokens | Files under `src/design-tokens/` |
+| Validator | Ensure schema + naming correctness | CI step (recommended) |
+| Exporter | Emit UI-consumable artifacts | Build script/tool (not confirmed) |
+| UI consumers | Import tokens to style components | `web/` |
 
-Design tokens are treated as **data artifacts** subject to governance oversight.  
-Metadata for each token file includes:
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Token schema | `schemas/<TBD>` | Semver recommended (not confirmed in repo) |
+| Export format | `src/design-tokens/<TBD>` | Must be backwards compatible or versioned |
+| A11y rules | `docs/design/<TBD>` | Review + CI checks recommended |
 
-```json
-{
-  "version": "v10.0.0",
-  "author": "@kfm-design-system",
-  "checksum": "sha256-93acb1e2a97...",
-  "validated": true,
-  "governance_ref": "docs/standards/governance/ROOT-GOVERNANCE.md"
-}
-```
+### Extension points checklist (for future work)
+- [ ] Add new token domain (e.g., `motion.*`, `shadow.*`) with schema updates
+- [ ] Add theme(s) with explicit surface/text mappings
+- [ ] Add contrast checks and reduced-motion checks in CI
+- [ ] Add docs + examples for consumption in `web/`
 
----
+## 🧠 Story Node & Focus Mode Integration
 
-## 🧠 FAIR+CARE Design Matrix
+### How this work surfaces in Focus Mode
+- Tokens govern the **presentation layer** of Focus Mode:
+  - readability of narrative text + citations,
+  - visual hierarchy of evidence panels,
+  - map UI controls (buttons, legends, overlays).
+- Tokens must not weaken provenance rendering (e.g., citation links must remain clearly distinguishable).
 
-| Principle | Implementation |
-|------------|----------------|
-| **Findable** | Tokens indexed in manifest + telemetry registry. |
-| **Accessible** | Open JSON format with machine and human readability. |
-| **Interoperable** | Compatible with CSS, JS, SCSS, and Figma. |
-| **Reusable** | Licensed under CC-BY 4.0 with version control. |
-| **CARE** | Ensures cultural and linguistic inclusivity in UI elements. |
+### Provenance-linked narrative rule
+- This directory does not define narrative claims.
+- When styling narrative, ensure citations and provenance affordances remain visually explicit.
 
----
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Token schema validation (if schema exists)
+- [ ] Lint: naming conventions + duplicates + unused tokens
+- [ ] A11y checks: contrast + focus states + reduced motion
+- [ ] Build determinism check (no timestamped outputs)
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# validate tokens
+# <cmd> tokens:validate
+
+# build exports
+# <cmd> tokens:build
+
+# run UI checks (optional)
+# <cmd> test:ui
+~~~
+
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| Token build hash | CI | `mcp/runs/` or CI logs (not confirmed in repo) |
+| Contrast compliance | CI | Test output / report artifact |
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- Design/a11y review: recommended for changes affecting typography/colors/motion.
+- Governance review: required if iconography or terminology may be sensitive (requires human review).
+
+### CARE / sovereignty considerations
+- Avoid UI metaphors, naming, or symbols that could misrepresent or disrespect communities tied to the represented places/events.
+- If theme names reference cultures, tribes, or sensitive historical contexts, route through governance review (requires human review).
+
+### AI usage constraints
+- Token generation should not introduce policy or infer sensitive information.
+- Keep AI permissions/prohibitions aligned with repository governance.
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.0.0 | 2025-11-10 | `@kfm-design-system` | Established centralized design token library with WCAG, sustainability, and telemetry integration. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial README scaffold for design tokens | TBD |
 
 ---
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Source Index](../README.md) · [UI Accessibility Standards](../../docs/standards/ui_accessibility.md) · [Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
-
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
