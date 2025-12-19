@@ -1,314 +1,269 @@
 ---
-title: "🧱 KFM v11.2.2 — Composite Actions Library (GitHub Actions)"
+title: "KFM GitHub Actions Local Actions"
 path: ".github/actions/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Infrastructure & Provenance Committee"
-content_stability: "stable"
-backward_compatibility: "Aligned with v10.x → v11.x CI/CD model"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.2/manifest.zip"
-attestation_ref: "../../releases/v11.2.2/slsa-attestation.json"
-signature_ref: "../../releases/v11.2.2/signature.sig"
-telemetry_ref: "../../releases/v11.2.2/github-infra-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/actions-library-v11.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Component Guide"
-intent: "github-composite-actions"
-role: "ci-cd-infrastructure"
-category: "CI/CD · Automation · Governance · Reusability"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-classification: "Public"
-sensitivity: "General (non-sensitive; auto-mask rules apply)"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-indigenous_rights_flag: false
+doc_uuid: "urn:kfm:doc:github:actions-readme:v1.0.0"
+semantic_document_id: "kfm-github-actions-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:github:actions-readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
-fair_category: "F1-A1-I1-R1"
-
-data_steward: "KFM Infrastructure & Provenance Committee"
-
-provenance_chain:
-  - ".github/actions/README.md@v11.0.0"
-  - ".github/actions/README.md@v11.1.0"
-  - ".github/actions/README.md@v11.2.0"
-  - ".github/actions/README.md@v11.2.2"
-
-prov_profile: "PROV-O Plan + KFM Governance Extensions"
-openlineage_profile: "OpenLineage v2.5 (CI/CD events)"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../../schemas/json/actions-readme-v11.schema.json"
-shape_schema_ref: "../../schemas/shacl/actions-readme-v11-shape.ttl"
-
-doc_uuid: "urn:kfm:doc:github-actions-readme:v11.2.2"
-semantic_document_id: "kfm-doc-github-actions-library"
-event_source_id: "ledger:.github/actions/README.md"
-
-immutability_status: "mutable-plan"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-
-heading_registry:
-  approved_h2:
-    - "📘 Overview"
-    - "🗂️ Directory Layout"
-    - "🧱 Composite Action Specifications"
-    - "🧭 Governance Requirements"
-    - "🕰️ Version History"
-
-test_profiles:
-  - "markdown-lint"
-  - "schema-lint"
-  - "metadata-check"
-  - "footer-check"
-  - "accessibility-check"
-  - "provenance-check"
-
-ci_integration:
-  workflow: ".github/workflows/kfm-ci.yml"
-  environment: "dev · staging · production"
-
-branding_registry:
-  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
-  architecture: "Designed for Longevity · Governed for Integrity"
-  analysis: "CI-Driven · Evidence-Led · FAIR+CARE Grounded"
-  data-spec: "Open Pipelines × Responsible Automation"
-  pipeline: "Deterministic CI/CD · Explainable Workflows · Open Provenance"
-  telemetry: "Transparent Systems · Ethical Metrics · Sustainable Intelligence"
-  graph: "Semantics × Provenance × Automation Intelligence"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-badge_profiles:
-  - "root-centered-badge-row"
-
-requires_purpose_block: true
-requires_version_history: true
-requires_directory_layout_section: true
-requires_governance_links_in_footer: true
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "a11y-adaptations"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "unverified-architectural-claims"
-  - "narrative-fabrication"
-  - "governance-override"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-deprecated_fields:
-  - "old_actions_readme_v10.4"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧱 **KFM v11 — Composite Actions Library**  
-`.github/actions/README.md`
-
-**Purpose**  
-Provide the **governed, reusable, deterministic composite GitHub Actions** used across all KFM v11.2.2 CI/CD workflows.  
-These actions encode **shared CI/CD logic** once, with **FAIR+CARE**, **provenance**, and **security** guarantees.
-
-[![KFM-MDP v11.2.2](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.2-blue)](../../docs/standards/kfm_markdown_protocol_v11.2.2.md)
-· [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Enforced-gold)](../../docs/standards/faircare/FAIRCARE-GUIDE.md)
-· [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)
-
-</div>
-
----
-
-## 🗂️ Directory Layout
-
-~~~text
-.github/actions/
-├── 📄 README.md                      # Composite Actions Library (this file)
-├── 📂 markdown-lint/                 # Markdown + YAML front-matter validation (KFM-MDP v11.2.2)
-│   └── 📄 action.yml
-├── 📂 schema-validate/               # JSON/YAML schema validation (AJV + KFM schemas)
-│   └── 📄 action.yml
-├── 📂 stac-validate/                 # STAC Item/Collection/Catalog validator
-│   └── 📄 action.yml
-├── 📂 dcat-validate/                 # DCAT 3.0 dataset & distribution validator
-│   └── 📄 action.yml
-├── 📂 pytest-runner/                 # Standardized pytest executor (coverage, xfail rules)
-│   └── 📄 action.yml
-└── 📂 security-scan/                 # Dependency & secret scanning, supply-chain checks
-    └── 📄 action.yml
-~~~
-
-**Layout rules**  
-- 📂 is used only for directories; 📄 is used only for files.  
-- No emojis appear inside the ASCII connectors themselves.  
-- Every directory above MUST maintain this structure (single `action.yml` per composite).
-
----
+# KFM GitHub Actions Local Actions
 
 ## 📘 Overview
 
-This directory contains the **governed composite GitHub Actions** that form the backbone of KFM v11 CI/CD.
+### Purpose
+- Provide a single place to document **local GitHub Actions** (usually composite actions) stored in `.github/actions/`.
+- Standardize how local actions are authored and consumed by workflows in `.github/workflows/` so CI gates remain consistent and reusable across the repository.
 
-Composite actions here are:
+### Scope
 
-- 🧩 **Reusable** – centralize repeated workflow logic.  
-- 🛡 **Governed** – reviewed and enforced by Infrastructure & Provenance Committee.  
-- 🧬 **Schema-validated** – aligned with KFM-PDC v11 and KFM-OP v11.  
-- 🛰 **Observable** – emitting telemetry and OpenLineage events.  
-- 🔒 **Secure** – pinned, hardened, and subject to security scanning.
+| In Scope | Out of Scope |
+|---|---|
+| Local actions in `.github/actions/` | Editing workflow definitions in `.github/workflows/` |
+| How to add, version, and test local actions | Production deployment infrastructure |
+| How local actions map to KFM CI gates | Replacing project governance/security policies |
 
-All new workflows MUST use these composites instead of re-implementing low-level logic.
+### Audience
+- Primary: repo maintainers and contributors who create or modify CI checks
+- Secondary: reviewers who need to understand what CI jobs are doing and where logic lives
 
----
+### Definitions
+- Link: `../../docs/glossary.md`
+- Terms used in this doc:
+  - **Local action**: a repo-contained action referenced as `./.github/actions/<name>`
+  - **Composite action**: an action that composes multiple steps and shells via `runs: using: composite`
+  - **Workflow**: a `.github/workflows/*.yml` pipeline that calls actions
+  - **CI gate**: a required validation check enforced on PRs and mainline builds
 
-## 🧱 Composite Action Specifications
+### Key artifacts
 
-Each composite action MUST:
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This directory | `.github/actions/` | TBD | Local actions live here |
+| Workflow entry points | `.github/workflows/` | TBD | Calls local actions |
+| Canonical pipeline and CI gates | `docs/MASTER_GUIDE_v12.md` | TBD | Defines minimum CI gates and pipeline ordering |
+| Doc templates | `docs/templates/` | TBD | Used for governed documentation |
+| Schemas | `schemas/` | TBD | JSON schemas, telemetry schemas |
+| Data catalogs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | TBD | Standard outputs validated by CI |
 
-- Declare **inputs** with explicit types and defaults.  
-- Declare **outputs** with documented meaning.  
-- Use **pinned actions** (`@<commit_sha>` not tags).  
-- Emit **OpenLineage** events for key steps.  
-- Emit **telemetry** conforming to `actions-library-v11.json`.  
-- Avoid network calls or side-effects beyond those explicitly documented.  
-- Fail fast on errors and surface clear diagnostics.
+### Definition of done
+- [ ] Front-matter complete + valid
+- [ ] Local actions directory conventions explained
+- [ ] Action inventory table exists (even if partially populated)
+- [ ] CI gates mapping is documented
+- [ ] Security and sovereignty considerations are stated
 
-### 📐 `markdown-lint/`
+## 🗂️ Directory Layout
 
-- Validates:
-  - YAML front-matter structure.  
-  - KFM-MDP v11.2.2 heading usage.  
-  - Footer presence & integrity.  
-  - Fence and box safety (no stray backticks).  
+### This document
+- `path`: `.github/actions/README.md`
 
-- Used by:
-  - `docs_validate.yml`  
-  - `ci.yml`  
+### Related repository paths
 
-### 🧾 `schema-validate/`
+| Area | Path | What lives here |
+|---|---|---|
+| Local actions | `.github/actions/` | Reusable repo-contained actions |
+| Workflows | `.github/workflows/` | CI pipelines that call local actions |
+| Documentation | `docs/` | Canonical governed docs and templates |
+| Data domains | `data/` | Raw/work/processed outputs and catalogs |
+| Schemas | `schemas/` | Schema definitions and validators |
+| Graph | `src/graph/` | Graph build + ontology bindings |
+| APIs | `src/server/` | API layer that fronts the graph |
+| Frontend | `web/` | React and map UI |
 
-- Validates:
-  - JSON & YAML files against their schemas.  
-  - Telemetry schemas.  
-  - Story Node & Focus Mode schemas.  
-  - STAC/DCAT-related JSON.
+### Expected file tree for this sub-area
+~~~text
+📁 .github/
+├── 📁 actions/
+│   ├── 📄 README.md
+│   ├── 📁 <action_name>/
+│   │   ├── 📄 action.yml
+│   │   ├── 📄 README.md
+│   │   ├── 📁 scripts/
+│   │   │   └── 📄 <optional helper scripts>
+│   │   └── 📁 fixtures/
+│   │       └── 📄 <optional test fixtures>
+└── 📁 workflows/
+    └── 📄 <workflow>.yml
+~~~
 
-- Used by:
-  - `ci.yml`  
-  - Data and metadata pipelines.
+## 🧭 Context
 
-### 🛰️ `stac-validate/`
+### Background
+KFM uses CI not only to run tests, but to enforce:
+- governed Markdown protocol and documentation structure
+- standards-based catalogs and provenance outputs
+- stable graph and API contracts
+- UI registry consistency and security safeguards
 
-- Validates:
-  - STAC Items, Collections, Catalogs.  
-  - Asset completeness and roles.  
-  - Spatial and temporal extents.  
-  - Provenance metadata presence.
+Local actions are the mechanism to keep these checks:
+- consistent across workflows
+- easier to update without copy-pasting YAML
+- reviewable as “units” of CI behavior
 
-- Blocks merges when STAC is invalid.
+### Assumptions
+- Workflows use a repository checkout step before calling local actions.
+- Local actions may call repository scripts or validators (preferred) rather than duplicating logic in YAML.
 
-### 🗂️ `dcat-validate/`
+### Constraints / invariants
+- Canonical pipeline ordering is preserved: ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode.
+- Frontend consumes contracts via APIs and does not read the graph directly.
+- Local actions must not introduce secrets, credentials, or PII into logs.
+- When checks concern sensitive or restricted locations, action behavior must support redaction or gating per governance docs.
 
-- Validates:
-  - DCAT datasets & distributions.  
-  - License fields.  
-  - DCAT/STAC alignment.
+### Open questions
 
-- Ensures FAIR metadata is present for all catalog entries.
+| Question | Owner | Target date |
+|---|---|---|
+| Which local actions currently exist in this repo | TBD | TBD |
+| Do we require SHA pinning for third-party actions in workflows | TBD | TBD |
+| How are CI reports persisted, if at all | TBD | TBD |
 
-### 🧪 `pytest-runner/`
+### Future extensions
+- Add an automated “Action Index” check that validates each action has an `action.yml` and a per-action `README.md`.
+- Add a consistent output format for CI gates so PR checks are predictable and easy to interpret.
 
-- Runs:
-  - `pytest` with standardized options (coverage, xfail policy).  
-  - In a controlled environment with deterministic dependencies.  
+## 🗺️ Diagrams
 
-- Emits:
-  - Coverage metrics.  
-  - Basic test telemetry for CI dashboards.
+### CI and local actions flow
+~~~mermaid
+flowchart LR
+  PR[Pull request] --> WF[Workflow in .github/workflows]
+  WF --> LA[Local actions in .github/actions]
+  LA --> REP[Checks and artifacts]
+  LA --> REPO[Repo scripts, schemas, and validators]
+  REPO --> REP
+~~~
 
-### 🔍 `security-scan/`
+## 📦 Data & Metadata
 
-- Performs:
-  - Secret scanning.  
-  - Dependency vulnerability scanning.  
-  - Lockfile verification.  
-  - Supply-chain checks aligned with SLSA.
+### Inputs
 
-- Used by:
-  - `security_audit.yml`  
-  - Nightly or scheduled workflows.
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Workflow definitions | YAML | `.github/workflows/` | YAML lint where applicable |
+| Local action definitions | YAML + shell | `.github/actions/<name>/action.yml` | `action.yml` schema, basic smoke run |
+| Schemas | JSON | `schemas/` | JSON schema validators |
+| Catalog outputs | JSON | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Schema + integrity checks |
 
----
+### Outputs
 
-## 🧭 Governance Requirements
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Job status | GitHub Checks | CI UI | Required checks configuration |
+| Validation logs | text | CI logs | Must not leak secrets |
+| Optional reports | SARIF / JSON / artifacts | Workflow artifacts | Must match repository expectations |
 
-All composite actions MUST:
+### Sensitivity and redaction
+- Any action that scans content for restricted locations, credentials, or sensitive text must:
+  - avoid printing sensitive matches
+  - prefer counts, hashes, or redacted excerpts over raw content
 
-1. Be referenced by **pinned SHAs** only (no moving tags).  
-2. Include provenance metadata (`prov:Activity` assignments via OpenLineage).  
-3. Emit telemetry conforming to `telemetry_schema`.  
-4. Avoid implicit network access or credential usage.  
-5. Be reviewed by:
-   - Infrastructure & Provenance Committee.  
-   - FAIR+CARE Council when narratives or data exports are involved.  
-   - Security Response Group for security-related composites.  
+### Quality signals
+- Deterministic outcomes for identical inputs
+- Clear error messages that identify:
+  - the failing contract or schema
+  - the file path or identifier involved
+  - how to reproduce locally when possible
 
-Any change to an action MUST:
+## 🌐 STAC, DCAT & PROV Alignment
 
-- Update its `action.yml` metadata.  
-- Update any referenced schema documents.  
-- Pass CI checks (lint, schema, provenance, security).  
+### STAC
+Local actions may validate:
+- STAC JSON schema validity
+- item and collection integrity
+- link integrity and required fields
 
----
+### DCAT
+Local actions may validate:
+- DCAT record schema validity
+- required mappings such as title, description, license, and keywords
+
+### PROV-O
+Local actions may validate:
+- existence and basic shape of PROV activity records for transforms
+- presence of stable identifiers for activities and agents
+
+## 🧱 Architecture
+
+### Action design rules
+- **Single responsibility**: one action corresponds to one CI gate or tightly related set of checks.
+- **Parameterizable**: accept inputs for paths, strictness, or modes rather than hardcoding.
+- **Deterministic**: avoid time-based outputs unless explicitly required.
+- **No hidden network dependency**: if external calls are required, document them and ensure they are allowed by policy.
+
+### Referencing local actions in workflows
+~~~yaml
+# Example usage pattern
+- name: Run a local gate
+  uses: ./.github/actions/<action_name>
+  with:
+    mode: "strict"
+~~~
+
+### Action inventory
+Populate this table as local actions are created or discovered.
+
+| Action | Path | CI gate category | Used by workflows | Notes |
+|---|---|---|---|---|
+| TBD | `.github/actions/TBD` | TBD | TBD | TBD |
+
+## 🧪 Validation and CI/CD
+
+### Minimum CI gates
+See `docs/MASTER_GUIDE_v12.md` for the minimum CI gates expected for “v12-ready” contributions.
+
+### Local testing
+If you add or modify an action:
+- Ensure the action has a per-action `README.md` explaining inputs, outputs, and examples.
+- Ensure failure modes produce clear messages and do not leak sensitive data.
+- Prefer exercising the action via its calling workflow in a PR to confirm end-to-end behavior.
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                                                |
-|--------:|------------|------------------------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Aligned metadata with KFM-MDP v11.2.2; added heading registry, test profiles, and clarified governance requirements.  |
-| v11.2.0 | 2025-11-20 | Introduced telemetry & OpenLineage emission for composite actions.                                                     |
-| v11.1.0 | 2025-11-10 | Documentation and schema enhancements for actions library.                                                             |
-| v11.0.0 | 2025-11-01 | Initial Composite Actions Library introduction for KFM v11 CI/CD.                                                      |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial `.github/actions` documentation scaffold | TBD |
 
 ---
 
-<div align="center">
-
-🧱 **KFM v11 — Composite Actions Library (GitHub Actions)**  
-Reusable CI Building Blocks · Deterministic Pipelines · FAIR+CARE-Aligned Automation  
-
-[📘 Docs Root](../../README.md) · [📂 Standards Index](../../docs/standards/README.md) · [⚖ Governance](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Master guide: `../../docs/MASTER_GUIDE_v12.md`
+- Universal doc template: `../../docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Governance: `../../docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `../../docs/governance/ETHICS.md`
+- Sovereignty: `../../docs/governance/SOVEREIGNTY.md`
