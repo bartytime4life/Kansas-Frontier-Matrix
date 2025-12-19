@@ -1,377 +1,279 @@
 ---
-title: "🔍 Kansas Frontier Matrix — Security Scan Composite Action"
+title: "GitHub Action — Security Scan"
 path: ".github/actions/security-scan/README.md"
-version: "v11.2.4"
-last_updated: "2025-12-13"
-
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Annual · FAIR+CARE Security Council · Architecture Board"
-content_stability: "stable"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../../releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.4/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.4/github-infra-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/github-workflows-v4.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
-
-status: "Active / Enforced"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
 doc_kind: "Guide"
-intent: "github-security-scan-action"
-role: "security-scan-composite-action"
-category: "Security · CI/CD · Composite Action"
+license: "CC-BY-4.0"
 
-classification: "Public Document"
-sensitivity: "General (non-sensitive)"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-risk_category: "Security"
-indigenous_rights_flag: false
-redaction_required: false
-data_steward: "KFM FAIR+CARE Security Council"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-provenance_chain:
-  - ".github/actions/security-scan/README.md@v11.2.3"
-  - ".github/actions/security-scan/README.md@v11.2.2"
+doc_uuid: "urn:kfm:doc:github-actions:security-scan:readme:v1.0.0"
+semantic_document_id: "kfm-action-security-scan-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:github-actions:security-scan:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "SoftwareApplication"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../../../schemas/json/github-actions-security-scan-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/github-actions-security-scan-v11-shape.ttl"
-
-doc_uuid: "urn:kfm:doc:github-actions:security-scan:v11.2.4"
-semantic_document_id: "kfm-action-security-scan"
-event_source_id: "ledger:.github/actions/security-scan/README.md"
-immutability_status: "mutable-plan"
-machine_extractable: true
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "metadata-extraction"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "governance-override"
-  - "content-alteration"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "United States / Kansas"
-lifecycle_stage: "stable"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next security-scan action update"
-
-prov_profile: "PROV-O Plan + KFM Governance Extensions"
-openlineage_profile: "OpenLineage v2.5 · CI/CD and security pipeline events"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🔍 **Kansas Frontier Matrix — Security Scan Composite Action**
-`.github/actions/security-scan/`
-
-**Purpose**  
-Provide a **single, governed entrypoint** for repository‑wide security scanning in KFM CI/CD, including:
-
-- Dependency vulnerability scanning (Python, Node, etc.)
-- Secret/credential leakage detection
-- Basic workflow hardening & policy checks
-
-This action is typically invoked by:
-
-- `.github/workflows/security_audit.yml` → **governed security gate** for KFM.
-
-</div>
-
----
+# GitHub Action Security Scan
 
 ## 📘 Overview
 
-The `security-scan` action encapsulates KFM’s **baseline security checks**:
+### Purpose
+- Provide a reusable GitHub Action wrapper to run the repository’s security scanning gates in CI.
+- Standardize outputs (job summary + artifacts) and failure behavior (exit status / thresholds) across workflows.
 
-- Normalizes **dependency vulnerability scans** across ecosystems.
-- Runs **secret scanning** against the repository (including history, where allowed).
-- Optionally enforces **workflow hardening** rules (minimal permissions, pinned actions, etc.).
-- Produces **machine-readable results** that can be summarized into CI telemetry and governance dashboards.
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Running one or more repository-approved scanners (SAST, secrets, dependency scanning, etc.) | Remediation, automatic patching, or approving risk exceptions |
+| Producing machine-readable artifacts (for example SARIF or SBOM) and a human-readable step summary | Replacing GitHub org/repo security settings and policies |
+| Enforcing CI hygiene for KFM outputs and artifacts | Scanning external systems unless explicitly wired in a workflow |
 
-It is intended to be:
+### Audience
+- Primary: Repo maintainers and CI/CD maintainers
+- Secondary: Contributors who need to understand PR gate failures
 
-- **Deterministic** — same inputs → same exit status.
-- **Config-driven** — behavior controlled via config files (e.g., `config/security/*.yml`).
-- **Composable** — can be reused from any workflow needing a consolidated security pass.
+### Definitions
+- Link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc:
+  - **SAST**: Static application security testing
+  - **SCA**: Software composition analysis / dependency scanning
+  - **SARIF**: Static Analysis Results Interchange Format
+  - **SBOM**: Software bill of materials (SPDX or CycloneDX)
 
-The action MUST fail (exit non‑zero) when a **policy‑relevant violation** is detected (e.g., critical CVEs, hardcoded secrets), so that upstream workflows (e.g., `security-audit`) can block merges or releases.
+### Key artifacts
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Composite action definition | `.github/actions/security-scan/action.yml` | Repo maintainers | Authoritative inputs and outputs live here |
+| This README | `.github/actions/security-scan/README.md` | Repo maintainers | Intended behavior and usage examples |
+| Workflows using this action | `.github/workflows/*.yml` | Repo maintainers | Gate configuration per workflow |
 
----
+### Definition of done
+- [ ] Front-matter complete and valid
+- [ ] README matches the actual inputs and outputs in `action.yml`
+- [ ] Usage snippet included for common scenarios
+- [ ] Security considerations documented (permissions, token handling, artifact hygiene)
 
 ## 🗂️ Directory Layout
 
+### This document
+- `path`: `.github/actions/security-scan/README.md`
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| GitHub composite actions | `.github/actions/` | Reusable actions called from workflows |
+| GitHub workflows | `.github/workflows/` | CI pipelines that invoke this action |
+| Security docs | `docs/security/` | Security standards and playbooks (not confirmed in repo) |
+| Telemetry schemas | `schemas/telemetry/` | Scan telemetry schemas (not confirmed in repo) |
+
+### Expected file tree for this sub-area
 ~~~text
-.github/
-├── 📁 actions/                               — Reusable composite actions
-│   └── 📁 security-scan/                     — Consolidated security scan action
-│       ├── 📄 README.md                      — ← This file (governance & usage)
-│       ├── 📄 action.yml                     — GitHub Action descriptor (composite / shell)
-│       ├── 📄 entrypoint.sh                  — Main orchestrator script (bash)
-│       ├── 📁 config/                        — Optional local security policy config
-│       │   ├── 🧾 tools.yml                  — Enabled tools, severity thresholds, ignore rules
-│       │   └── 🧾 workflow_policy.yml        — Workflow hardening rules (permissions, pins, etc.)
-│       └── 📁 scripts/                       — Helper scripts (optional, language-agnostic)
-│           ├── 📄 run_dep_scans.py           — Orchestrates dependency scanners
-│           ├── 📄 run_secret_scans.py        — Orchestrates secret scanners
-│           └── 📄 summarize_results.py       — Aggregates results → machine-readable summary
-└── 📁 workflows/                             — CI/CD workflows
-    └── 🧾 security_audit.yml                 — Governed security gate workflow (invokes this action)
+📁 .github/
+├── 📁 actions/
+│   └── 📁 security-scan/
+│       ├── 📄 action.yml
+│       └── 📄 README.md
+└── 📁 workflows/
+    ├── 📄 security.yml
+    └── 📄 ci.yml
 ~~~
 
-> **Normative:** Any structural change to this directory MUST be reflected here and in  
-> `.github/workflows/security_audit.yml` and relevant security docs under `docs/security/`.
+## 🧭 Context
 
----
+### Background
+KFM expects strict validation and governance gates (schema validity, security posture, controlled publication). This action centralizes security scanning so workflows stay consistent as the system grows.
 
-## 🧱 Architecture
+### Assumptions
+- `action.yml` exists and defines the real inputs and outputs for this action.
+- Workflows invoking this action set appropriate permissions for any uploads they enable (for example SARIF to Code Scanning).
+- Scanners are executed either:
+  - locally in the GitHub runner, or
+  - via trusted GitHub Actions that are pinned and reviewed.
 
-### Action invocation patterns
+### Constraints / invariants
+- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode ordering is preserved. This action is a cross-cutting CI gate, not a pipeline stage.
+- No secrets or credentials are committed to the repo or emitted in logs.
+- Artifacts must not leak sensitive data, including precise locations that should be generalized.
 
-Within the KFM repository this action MAY be used in two equivalent forms:
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Which scanners are mandatory vs optional for this repo? | TBD | TBD |
+| What are the failing thresholds (severity, allowlist rules)? | TBD | TBD |
+| Should SARIF be uploaded to Code Scanning, or stored only as artifacts? | TBD | TBD |
 
-1. **Direct script invocation** (current pattern in `security_audit.yml`):
+### Future extensions
+- Add SBOM generation and signature verification as standard outputs.
+- Add supply-chain controls: action pinning enforcement, provenance attestations, dependency allow and deny rules.
 
-~~~yaml
-- name: 🔐 Consolidated Security Scan (Composite Action)
-  run: |
-    set -euo pipefail
-    bash .github/actions/security-scan/entrypoint.sh .
+## 🗺️ Diagrams
+
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[GitHub Workflow] --> B[security-scan composite action]
+  B --> C[Scanner 1..N]
+  C --> D[Reports: SARIF / SBOM / JSON]
+  D --> E[PR Check + Step Summary]
+  D --> F[Artifact Upload]
 ~~~
 
-2. **Composite action usage** (if `action.yml` is defined as a composite action):
+### Sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant GH as GitHub Workflow
+  participant ACT as security-scan action
+  participant SCN as scanners
+  participant ART as artifacts
 
-~~~yaml
-- name: 🔐 Consolidated Security Scan
-  uses: ./.github/actions/security-scan
-  with:
-    path: .
+  GH->>ACT: Invoke action with inputs
+  ACT->>SCN: Run configured scanners
+  SCN-->>ACT: Findings and reports
+  ACT-->>GH: Fail or pass gate and summary
+  ACT->>ART: Upload reports when enabled
 ~~~
-
-> The repo MUST treat these two forms as equivalent in behavior. If `action.yml` is added or changed,  
-> `security_audit.yml` MUST be updated to use the canonical interface.
-
-### Inputs (proposed, for `action.yml`)
-
-| Name                  | Type    | Default | Description                                                              |
-|-----------------------|---------|---------|--------------------------------------------------------------------------|
-| `path`                | string  | `.`     | Root path to scan (usually the repo root).                               |
-| `config`              | string  | `""`    | Optional security config file (e.g., `config/security/tools.yml`).       |
-| `fail_on_critical`    | boolean | `true`  | Fail the job when critical issues are found.                             |
-| `fail_on_high`        | boolean | `true`  | Fail the job when high‑severity issues are found.                        |
-| `fail_on_medium`      | boolean | `false` | Optionally fail on medium issues (governance‑controlled).                |
-| `secret_scan_history` | boolean | `false` | If `true`, scan git history (may be expensive).                          |
-| `output_summary`      | string  | `""`    | Optional path for a JSON summary file (e.g., `_security-summary.json`).  |
-
-> **Schema note:** These inputs MUST be reflected in the JSON Schema at  
-> `schemas/json/github-actions-security-scan-v11.schema.json`.
-
-### Outputs (proposed)
-
-| Name           | Type   | Description                                                    |
-|----------------|--------|----------------------------------------------------------------|
-| `issues_found` | number | Total number of policy‑relevant issues discovered.            |
-| `severity_max` | string | Highest severity observed (e.g., `none`, `low`, `medium`).    |
-| `summary_path` | string | Path to JSON summary if produced (e.g., `_security-summary.json`). |
-
-These outputs are mainly intended for internal workflows (e.g., telemetry aggregation).
-
-### Execution flow
-
-At a high level:
-
-1. **Dependency scans**
-   - Python: `pip-audit`, `osv-scanner`, or equivalent.
-   - Node: `npm audit` (with scripts disabled), `osv-scanner` if configured.
-   - Additional ecosystems configurable via `config/security/tools.yml`.
-
-2. **Secret scans**
-   - Use one or more scanners (e.g., `gitleaks`, `trufflehog`) configured by KFM policy.
-   - Redact or hash secrets in logs (never print raw secrets).
-
-3. **Workflow hardening checks (optional)**
-   - Validate `.github/workflows/**` against `workflow_policy.yml`:
-     - Minimal `permissions:` blocks.
-     - Pinned actions rather than floating tags.
-     - No unsafe `pull_request_target` usage.
-
-4. **Policy evaluation**
-   - Severity thresholds and ignore rules pulled from `config/security/tools.yml`.
-   - Exit non‑zero if thresholds are violated.
-
-5. **Summary output**
-   - Optionally write a **JSON summary file** (issues, severities, counts per tool).
-   - Designed to be consumed later by `telemetry_export.yml` and security dashboards.
-
-### Implementation notes
-
-- `entrypoint.sh` SHOULD:
-  - Enable strict bash flags (`set -euo pipefail`).
-  - Orchestrate sub‑tools via `scripts/*.py` or CLI tools.
-  - Normalize exit codes into a single governed result.
-
-- `scripts/run_dep_scans.py` (if present) SHOULD:
-  - Read tool configuration (e.g., which ecosystems to scan).
-  - Produce structured JSON on stdout or in a file.
-
-- `scripts/run_secret_scans.py` SHOULD:
-  - Honor ignore lists and redaction policies.
-  - Avoid uploading raw secrets to logs or artifacts.
-
-- `scripts/summarize_results.py` SHOULD:
-  - Merge multiple tool outputs into a unified schema.
-  - Respect configured severity thresholds.
-
-Any change to tool selection, thresholds, or policy interpretation MUST be:
-
-1. Reflected in `config/security/*.yml`.
-2. Documented here under **Execution flow**.
-3. Tested via `security_audit.yml` and, where appropriate, `docs/security/` examples.
-
----
-
-## 🧪 Validation & CI/CD
-
-### Example usage
-
-#### From `security_audit.yml` (script invocation)
-
-~~~yaml
-- name: 🔐 Consolidated Security Scan (Composite Action)
-  run: |
-    set -euo pipefail
-    if [[ ! -d ".github/actions/security-scan" ]]; then
-      echo "::error::Missing .github/actions/security-scan directory."
-      exit 1
-    fi
-    bash .github/actions/security-scan/entrypoint.sh .
-~~~
-
-#### As a composite action (recommended long‑term pattern)
-
-~~~yaml
-jobs:
-  security-audit:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: 🔐 Security Scan
-        uses: ./.github/actions/security-scan
-        with:
-          path: .
-          config: "config/security/tools.yml"
-          fail_on_critical: true
-          fail_on_high: true
-          fail_on_medium: false
-          secret_scan_history: false
-          output_summary: "_security-summary.json"
-~~~
-
-### Pass/fail contract
-
-- The action MUST fail (exit non‑zero) on **policy‑relevant violations** (severity thresholds, secrets detected, workflow-policy violations).
-- The action SHOULD emit a single summarized result (stdout + optional JSON file) suitable for downstream parsing.
-- The action MUST NOT leak secrets, credentials, or PII in logs or artifacts.
-
----
 
 ## 📦 Data & Metadata
 
-This action contributes to:
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Repository workspace | Git checkout | GitHub Actions | Clean checkout; submodules as needed |
+| Scan scope | paths or globs | workflow `with:` | Validate globs; default to whole repo |
+| Failure thresholds | severity list or numeric | workflow `with:` | Validate allowed values |
+| Allowlist | file path | repo or workflow | Ensure allowlist is versioned and reviewed |
+| GitHub token | secret env | GitHub Actions | Least privilege; no echoing |
 
-- `security_audit.yml` job status and logs.
-- Telemetry metrics (via `telemetry_export.yml`), including:
-  - Number of vulnerabilities by severity.
-  - Count of secrets detected or blocked.
-  - Workflow-policy violations.
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Step summary | Markdown | GitHub job summary | Human-readable |
+| Findings report | SARIF recommended | artifact | SARIF v2.1.0 example, not confirmed in repo |
+| Dependency report | JSON | artifact | Tool-specific, not confirmed |
+| SBOM | SPDX or CycloneDX | artifact | Tool-specific, not confirmed |
 
-Telemetry should never contain:
+### Sensitivity & redaction
+- Do not include file contents or secrets in artifacts.
+- Prefer redacted findings where tools support it.
+- If scanning historical documents or datasets that may contain personal data, ensure reports do not expose raw PII.
 
-- Raw secrets or credentials.
-- Direct PII/PHI.
-- Exact locations or identifiers from sensitive sovereign datasets.
-
-Where needed, summary metrics SHOULD be anonymized or bucketed.
-
----
+### Quality signals
+- Scanners and third-party actions should be pinned to immutable versions in workflows.
+- Deterministic behavior: prefer config-driven scanning and stable allowlists.
+- Keep allowlists explicit with rationale and require human review for additions.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### DCAT
+This action does not generate catalogs directly. It supports KFM governance by helping prevent:
+- publication of secrets inside STAC, DCAT, or PROV outputs,
+- unsafe dependencies entering the pipeline,
+- accidental leakage of sensitive location data into public artifacts.
 
-- This document can be modeled as a documentation dataset (`dcat:Dataset` or `dcat:CatalogRecord`).
-- `semantic_document_id` maps to `dct:identifier`.
-- Markdown is a `dcat:Distribution` (`mediaType: text/markdown`).
+## 🧱 Architecture
 
-### PROV-O
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| GitHub workflow | Schedules and triggers the scan | `.github/workflows/*.yml` |
+| `security-scan` action | Orchestrates scanners and gate logic | `.github/actions/security-scan/action.yml` |
+| Scanners | Produce findings | Tool-specific CLI or actions |
+| Artifact storage | Stores reports | GitHub Actions artifacts |
 
-- This document is a `prov:Plan` (see `ontology_alignment.prov_o`).
-- Each run of the security scan is a `prov:Activity`.
-- CI bots, councils, and maintainers are `prov:Agent`s.
-- Produced telemetry and summaries are `prov:Entity` instances linked with `prov:wasGeneratedBy`.
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Action inputs and outputs | `.github/actions/security-scan/action.yml` | Semver; update README and workflow callers |
+| Allowlist format | `docs/security/` or repo root | Schema plus review gate, not confirmed in repo |
 
----
+### Extension points checklist
+- [ ] Add new scanner with explicit config file and pinned version
+- [ ] Add new report output with schema and format documented
+- [ ] Add allowlist rules with rationale and reviewer requirement
+
+## 🧠 Story Node & Focus Mode Integration
+
+This is CI infrastructure, but it protects downstream Story Nodes and Focus Mode by enforcing that generated narrative artifacts and catalogs cannot accidentally include secrets or sensitive location details.
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Action is invoked in at least one workflow
+- [ ] Reports are generated or explicitly disabled in predictable locations
+- [ ] Failure thresholds behave as expected
+- [ ] Artifacts do not contain secrets
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific scanner commands.
+# The authoritative scanner list lives in `.github/actions/security-scan/action.yml`.
+
+# 1) run secret scan
+# <tool> scan --config <path>
+
+# 2) run dependency scan
+# <tool> audit --format json
+
+# 3) run SAST
+# <tool> analyze --sarif out.sarif
+~~~
+
+### Telemetry signals
+| Signal | Source | Where recorded |
+|---|---|---|
+| Scan duration | GitHub Actions | Job logs |
+| Finding counts by severity | Scanner output | Step summary and artifacts |
+| Allowlist usage | Action logs | Step summary |
 
 ## ⚖ FAIR+CARE & Governance
 
-This action is **governance-bound** and contributes to supply-chain integrity:
+### Review gates
+- Changes to gating behavior or thresholds require human review.
+- Introducing new external scanners or SaaS uploads requires security review. This process is not confirmed in repo.
 
-- Violations with release or merge impact MUST be treated as **policy-relevant** and enforceable.
-- Governance and ethics references in front‑matter are **binding** and must remain accurate:
-  - `governance_ref`
-  - `ethics_ref`
-  - `sovereignty_policy`
+### CARE / sovereignty considerations
+- Security reports must not reveal culturally sensitive or restricted locations. If findings include coordinates or place names from restricted datasets, redact or generalize before publication.
 
-**Redaction is mandatory** for any secret-scan output. Do not print raw secrets or tokens under any circumstances.
-
----
+### AI usage constraints
+- This action should not send repository content to third-party AI services.
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                                   |
-|--------:|------------|-----------------------------------------------------------------------------------------------------------|
-| v11.2.4 | 2025-12-13 | Aligned headings and fencing with KFM-MDP v11.2.6; normalized directory-tree icons; clarified CI contract. |
-| v11.2.3 | 2025-12-09 | Aligned with KFM-MDP v11.2.5; documented inputs/outputs; clarified composite vs script usage.             |
-| v11.2.2 | 2025-11-28 | Initial governed README for security-scan; aligned with `security_audit.yml` and security policy.          |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial README for security-scan action | TBD |
 
 ---
-
-<div align="center">
-
-🔍 **Kansas Frontier Matrix — Security Scan Composite Action (v11.2.4)**  
-Secure by Design · FAIR+CARE-Governed · Supply-Chain Aware  
-
-[⬅ GitHub Infra Overview](../../README.md) · [🛡 Security Policy](../../SECURITY.md) · [📚 Security Governance](../../../docs/security/README.md)
-
-</div>
+Footer refs:
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Templates: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
