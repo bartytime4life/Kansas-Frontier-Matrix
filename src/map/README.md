@@ -1,234 +1,321 @@
 ---
-title: "🗺️ Kansas Frontier Matrix — Map Visualization Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM — src/map (Map Subsystem) README"
 path: "src/map/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/src-map-framework-v1.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
+version: "v0.1.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:src:map:readme:v0.1.0"
+semantic_document_id: "kfm-src-map-readme-v0.1.0"
+event_source_id: "ledger:kfm:doc:src:map:readme:v0.1.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🗺️ **Kansas Frontier Matrix — Map Visualization Framework**
-`src/map/README.md`
-
-**Purpose:**  
-Power the **interactive cartographic and temporal visualization system** of the Kansas Frontier Matrix (KFM).  
-Combines **MapLibre GL JS**, **Cesium 3D Tiles**, and **D3.js overlays** to produce FAIR+CARE-certified, sustainable, and explainable geographic experiences.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Geospatial%20Ethics%20Certified-orange)](../../docs/standards/faircare.md)
-[![Status: Active](https://img.shields.io/badge/Status-Operational-success)]()
-
-</div>
-
----
+# src/map
 
 ## 📘 Overview
 
-The **Map Visualization Framework** renders 2D and 3D spatial layers — hydrology, hazards, treaties, demographics, and more — into accessible, data-driven interfaces.  
-All map views adhere to FAIR+CARE geospatial ethics, ensuring culturally sensitive and environmentally sustainable visualizations.
+### Purpose
+`src/map/` is the **code + contracts hub** for *map-related domain logic* that supports the KFM pipeline end-to-end—especially anything that turns cataloged assets into **map-ready artifacts** (styles, layer manifests, time-slicing helpers, projection utilities, validation).
 
-KFM’s maps integrate:
-- **MapLibre GL JS** for dynamic 2D rendering  
-- **CesiumJS** for 3D terrain and time-based visualization  
-- **D3.js** for analytic overlays and transitions  
-- **Accessibility tokens** from `src/design-tokens/`
+This README is intentionally conservative: the exact internal module layout of `src/map/` is **not confirmed in repo** from the available materials. Treat this as the **governed intent** for the folder; update it once concrete packages/files exist.
 
----
+### Scope
+
+| In Scope | Out of Scope |
+|---|---|
+| Map-domain utilities (CRS/projection helpers, bbox/time window helpers) | Rendering UI components (those belong in `web/`) |
+| Layer/layer-manifest modeling + validation (schema-first) | Direct UI access to Neo4j (must go via APIs) |
+| Packaging map-ready artifacts from cataloged assets (e.g., style JSON, TileJSON pointers) | “Undocumented” layers that cannot be traced to STAC/DCAT/PROV |
+| Guardrails for sensitive layers (redaction/generalization hooks) | Any policy generation (governed elsewhere) |
+
+### Audience
+- Primary: engineers working on map-related backend/shared logic (layer manifests, validation, map contracts)
+- Secondary: data/geo engineers producing STAC assets that must render correctly in the UI
+- Tertiary: QA and governance reviewers validating provenance + sensitivity controls
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` (**not confirmed in repo**)
+- Terms used in this doc: layer registry, style JSON, TileJSON, bbox, CRS, MapLibre, Cesium, time-slicing
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Canonical pipeline order | `docs/MASTER_GUIDE_v12.md` | Core maintainers | ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode |
+| Map UI implementation | `web/` | UI team | UI uses contracts via APIs (no direct graph reads) |
+| Layer registry (example) | `web/cesium/layers/regions.json` | UI team | Referenced in governed template; actual location may differ (**verify**) |
+| Map contracts/schemas | `schemas/` | Platform team | Add JSON schemas here (if/when defined) |
+| STAC catalogs | `data/stac/` | DataOps | Map-visible assets must resolve to STAC items/collections |
+| Provenance bundles | `data/prov/` | DataOps | Map-ready artifacts should be traceable via PROV |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Any claims about paths/components are either verified or marked “not confirmed in repo”
+- [ ] Explicitly preserves: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode
+- [ ] Mentions API boundary (UI never reads Neo4j directly)
+- [ ] Validation steps listed and repeatable
+- [ ] Sensitivity and redaction hooks are acknowledged
 
 ## 🗂️ Directory Layout
 
-```plaintext
-src/map/
-├── README.md                         # This file — Map framework overview
-│
-├── config/                           # Base map styles, layers, and tilesets
-│   ├── basemaps.json
-│   ├── overlays.json
-│   └── maplibre-style.json
-│
-├── components/                       # Reusable UI + map integration components
-│   ├── MapContainer.jsx
-│   ├── TimelineOverlay.jsx
-│   └── LayerControls.jsx
-│
-├── hooks/                            # Custom React hooks for map interactions
-│   ├── useMapState.js
-│   ├── useLayerToggle.js
-│   └── useTelemetryTracking.js
-│
-├── layers/                           # Predefined thematic layer JSON schemas
-│   ├── hydrology.geojson
-│   ├── landcover.geojson
-│   ├── hazards.geojson
-│   └── treaties.geojson
-│
-└── metadata.json                     # Governance, provenance, and telemetry linkage
-```
+### This document
+- `path`: `src/map/README.md`
 
----
+### Related repository paths
 
-## 🧩 Core Technologies
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed/stac outputs |
+| Catalogs | `data/stac/` + `data/catalog/dcat/` | STAC Items/Collections + DCAT |
+| Provenance | `data/prov/` | PROV lineage bundles |
+| Graph | `src/graph/` | Ontology + graph build/migrations |
+| APIs | `src/api/` or `src/server/` (**not confirmed in repo**) | Contracted access layer |
+| Frontend | `web/` | React + MapLibre/Cesium UI |
+| Story Nodes | `docs/reports/.../story_nodes/` | Narrative artifacts w/ provenance |
 
-| Component | Description | Purpose |
-|------------|--------------|----------|
-| **MapLibre GL JS** | WebGL-based 2D map engine. | Core vector rendering and interactivity. |
-| **CesiumJS** | 3D geospatial visualization engine. | Time-aware 3D terrain and building models. |
-| **D3.js** | Data visualization library. | Statistical overlays, transitions, and choropleths. |
-| **React 18** | Component framework. | UI integration and state management. |
-| **Turf.js** | Geospatial analytics toolkit. | Spatial joins, buffers, and area calculations. |
+### Expected file tree for this sub-area
+~~~text
+📁 src/
+└── 📁 map/
+    ├── 📄 README.md
+    ├── 📁 contracts/            # (optional) map payload types + validators (not confirmed in repo)
+    ├── 📁 layers/               # (optional) layer manifest builders / resolvers (not confirmed in repo)
+    ├── 📁 styles/               # (optional) style JSON generators/linters (not confirmed in repo)
+    ├── 📁 time/                 # (optional) time filtering helpers (not confirmed in repo)
+    ├── 📁 projection/           # (optional) CRS/projection utilities (not confirmed in repo)
+    └── 📁 __tests__/            # (optional) unit tests for utilities (not confirmed in repo)
+~~~
 
----
+## 🧭 Context
 
-## ⚙️ Rendering Workflow
+### Background
+KFM is a geospatial + historical knowledge system where users explore places and time on a map UI. The canonical system ordering is governed (ETL → catalogs → graph → APIs → UI → story/focus). Any map-facing content must be provenance-linked and contract-served through APIs.
 
-```mermaid
-flowchart TD
-A["STAC / DCAT Metadata Sources"] --> B["KFM Map Config (config/basemaps.json)"]
-B --> C["MapLibre Renderer (MapContainer.jsx)"]
-C --> D["Layer Overlays (GeoJSON, Cesium, D3)"]
-D --> E["Telemetry & Governance Logging (useTelemetryTracking.js)"]
-E --> F["Accessible User Output (Focus Mode & Reports)"]
-```
+### Assumptions
+- The map UI is implemented in `web/` (React + MapLibre/Cesium are referenced in governed materials).
+- `src/map/` exists to keep **non-UI map logic** cohesive and testable (e.g., schema validation, layer manifests, temporal slicing).
+- Exact file layout is **not confirmed in repo** yet.
 
----
+### Constraints / invariants
+- Canonical pipeline ordering is preserved.
+- Frontend consumes contracts via APIs (**no direct graph dependency**).
+- Anything rendered on the map should be traceable to STAC/DCAT/PROV references.
+- Determinism: if `src/map/` builds artifacts, outputs should be reproducible from the same inputs + config.
 
-## 🌐 Basemap & Overlay Management
+### Open questions
 
-### Example Basemap Configuration
-```json
-{
-  "id": "kfm_basemap_light",
-  "name": "Kansas Topographic Light",
-  "type": "raster",
-  "url": "https://tiles.kfm.dev/light/{z}/{x}/{y}.png",
-  "attribution": "© OpenStreetMap · KFM FAIR+CARE 2025"
-}
-```
+| Question | Owner | Target date |
+|---|---|---|
+| Does `src/map/` primarily support backend/API, pipelines, or shared libs consumed by `web/`? | TBD | TBD |
+| Where is the authoritative layer registry in this repo (e.g., `web/.../layers.json`)? | TBD | TBD |
+| Are map contracts defined in OpenAPI/GraphQL, JSON schema, or both? | TBD | TBD |
 
-### Example Layer (Hydrology)
-```json
-{
-  "id": "hydrology_v10",
-  "type": "geojson",
-  "source": "data/archive/2025Q4/hydrology_v10.0.0/hydrology.geojson",
-  "paint": {
-    "line-color": "#1e88e5",
-    "line-width": 1.2
-  },
-  "interactive": true,
-  "metadata": {
-    "provenance": "USGS NHD",
-    "fairstatus": "certified"
-  }
-}
-```
+### Future extensions
+- Extension point A: schema-validated “layer manifests” that bind a UI layer to STAC item(s)/collection(s) and PROV run IDs.
+- Extension point B: reusable time-slicing utilities (global timeline ↔ layer availability).
+- Extension point C: sensitivity gating helpers (public vs restricted layers; generalized geometry outputs).
 
----
+## 🗺️ Diagrams
 
-## ♿ Accessibility & Inclusivity
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[Cataloged assets<br/>STAC/DCAT] --> B[src/map<br/>manifest + validation]
+  B --> C[API payloads<br/>contracted]
+  C --> D[web/ UI<br/>MapLibre/Cesium]
+  D --> E[Story Nodes + Focus Mode<br/>provenance-linked]
+~~~
 
-| Feature | Description | Standard |
-|----------|--------------|----------|
-| **Keyboard Navigation** | Map keyboard shortcuts for zoom/pan/toggle. | WCAG 2.1 2.1.1 |
-| **High Contrast Mode** | Alternate palette from `src/theming/high-contrast.css`. | WCAG 2.1 1.4.3 |
-| **Screen Reader Labels** | ARIA-labeled regions for map content. | WCAG 2.1 4.1.2 |
-| **Reduced Motion Support** | Disables map transitions on motion-sensitive systems. | ISO 9241-171 |
-| **Language Context** | Tooltip and map text localized for multilingual support. | FAIR+CARE Inclusion |
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant UI as web/ UI
+  participant API as API Layer
+  participant Catalog as STAC/DCAT
+  UI->>API: request layers for (bbox, time)
+  API->>Catalog: resolve STAC items/collections + provenance refs
+  Catalog-->>API: asset refs + metadata
+  API-->>UI: contracted layer payload + provenance
+~~~
 
-Accessibility is validated in CI by `ui-accessibility.yml`.
+## 📦 Data & Metadata
 
----
+### Inputs
 
-## 🧠 Telemetry & Sustainability Integration
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Catalog references | STAC JSON, DCAT | `data/stac/`, `data/catalog/dcat/` | STAC/DCAT validators |
+| Map assets | GeoJSON, COG/GeoTIFF, MBTiles, images | `data/processed/` + assets referenced by STAC | Geometry validity, link checks |
+| Time metadata | ISO timestamps/ranges | STAC properties, dataset metadata | Range sanity + ordering |
 
-All map rendering metrics feed into **`focus-telemetry.json`** for sustainability tracking.
+### Outputs
 
-| Metric | Description | Target |
-|---------|-------------|---------|
-| `frame_rate_avg` | Average FPS for rendering stability | ≥ 50 FPS |
-| `render_energy_wh` | Energy cost per render cycle | ≤ 0.35 Wh |
-| `carbon_gco2e` | CO₂ equivalent per session | ≤ 0.5 g |
-| `tile_cache_hit_ratio` | Cached vs. network tile loads | ≥ 90% |
-| `a11y_pass_rate` | Accessibility audit success | 100% |
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Layer manifest(s) | JSON | `data/processed/` or `web/` (**not confirmed**) | JSON schema (define under `schemas/`) |
+| Style configs | JSON | `web/` or `src/map/styles/` (**not confirmed**) | Style schema / lints |
+| API payloads | JSON | served | OpenAPI/GraphQL contracts |
 
-Telemetry validation schema:  
-`schemas/telemetry/src-map-framework-v1.json`
+### Sensitivity & redaction
+- Some layers may require:
+  - generalized geometry (reduce precision / aggregate regions)
+  - time window generalization
+  - access gating (RBAC) at the API layer
+- Never leak restricted layers via “hidden but fetchable” endpoints.
 
----
+### Quality signals
+- Geometry validity: no self-intersections where invalid, valid bbox extents, consistent CRS.
+- Temporal consistency: time ranges valid and comparable across layers.
+- Link integrity: no broken STAC asset links for map-visible layers.
+- Determinism: same inputs/config → same outputs (hashable artifacts).
 
-## 🧩 Governance & Provenance
+## 🌐 STAC, DCAT & PROV Alignment
 
-Each map view references FAIR+CARE and governance metadata for ethical validation.
+### STAC
+- Collections involved: TBD
+- Items involved: TBD
+- Extension(s): TBD
 
-**Metadata Schema (`metadata.json`):**
-```json
-{
-  "id": "map_framework_v10.0.0",
-  "datasets_linked": [
-    "hydrology_v10.0.0",
-    "landcover_v10.0.0",
-    "hazards_v10.0.0",
-    "treaties_v10.0.0"
-  ],
-  "checksum_verified": true,
-  "fairstatus": "certified",
-  "governance_registered": true,
-  "telemetry_ref": "releases/v10.0.0/focus-telemetry.json",
-  "created": "2025-11-10T00:00:00Z",
-  "governance_ref": "docs/standards/governance/ROOT-GOVERNANCE.md"
-}
-```
+### DCAT
+- Dataset identifiers: TBD
+- License mapping: TBD
+- Contact / publisher mapping: TBD
 
----
+### PROV-O
+- `prov:wasDerivedFrom`: source item IDs (STAC/DCAT)
+- `prov:wasGeneratedBy`: pipeline activity/run ID
+- Activity / Agent identities: pipeline runner + versioned configs
 
-## ⚖️ FAIR+CARE Mapping Matrix
+### Versioning
+- Use STAC Versioning links and graph predecessor/successor relationships as applicable.
 
-| Principle | Implementation |
-|------------|----------------|
-| **Findable** | Map layers and datasets indexed in STAC/DCAT catalogs. |
-| **Accessible** | Open-access vector tiles and GeoJSON layers. |
-| **Interoperable** | Standards-based schemas (ISO 19115, OGC GeoJSON). |
-| **Reusable** | Modular components and version-controlled maps. |
-| **CARE** | Cultural and environmental data reviewed for ethical representation. |
+## 🧱 Architecture
 
----
+### Components
 
-## 🧮 Validation Workflows
+| Component | Responsibility | Interface |
+|---|---|---|
+| `src/map` utilities | Map-domain logic (bbox/time/CRS), manifest validation | Imported by pipelines/APIs |
+| Catalogs | Provide asset metadata + time/space coverage | STAC/DCAT/PROV JSON |
+| APIs | Serve contracted payloads for UI | REST/GraphQL |
+| UI (`web/`) | Render layers, timeline, narrative affordances | API calls only |
 
-| Workflow | Description | Output |
-|-----------|-------------|---------|
-| `map-validate.yml` | Validates config and layer schemas. | `reports/self-validation/map/validation.json` |
-| `ui-accessibility.yml` | Runs accessibility audits. | `reports/self-validation/ui/a11y_summary.json` |
-| `telemetry-export.yml` | Merges map telemetry metrics. | `releases/v10.0.0/focus-telemetry.json` |
+### Interfaces / contracts
 
-Governance results recorded in:  
-`docs/reports/telemetry/governance_scorecard.json`
+| Contract | Location | Versioning rule |
+|---|---|---|
+| JSON schemas | `schemas/` | Semver + changelog |
+| API schemas | `src/server/` + docs (**not confirmed**) | Contract tests required |
+| Layer registry | `web/cesium/layers/regions.json` (**verify**) | Schema-validated |
 
----
+### Extension points checklist (for future work)
+- [ ] Data: new domain added under `data/<domain>/...`
+- [ ] STAC: new collection + item schema validation
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests
+- [ ] UI: layer registry entry + access rules
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+- Map interactions in Focus Mode should only show layers and evidence that have resolvable provenance references (STAC/DCAT/PROV and/or document IDs).
+- If `src/map` contributes layer manifests, it should ensure every layer is mappable back to catalog IDs.
+
+### Provenance-linked narrative rule
+- Every claim must trace to a dataset / record / asset ID.
+
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV) for any map-visible assets
+- [ ] Link integrity checks for STAC assets used by map layers
+- [ ] Geometry validity checks (GeoJSON validity, CRS sanity)
+- [ ] API contract tests (payload shape + redaction rules)
+- [ ] UI layer registry schema checks (if applicable)
+- [ ] Security + sovereignty checks (if applicable)
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) validate catalogs (STAC/DCAT/PROV)
+# 2) run map contract/manifest tests
+# 3) run API contract tests
+# 4) run doc lint
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| Map layer load failures | UI logs / integration tests | `docs/telemetry/` + `schemas/telemetry/` |
+| Broken asset links | CI link-check job | CI logs + report artifact |
+| Redaction/gating enforcement | API audit logs | `docs/telemetry/` (aggregated) |
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- Map layers that change public-facing narratives or add new external data sources require governance review (per repo governance docs).
+- Sensitive layers require explicit sovereignty handling and approval.
+
+### CARE / sovereignty considerations
+- Identify any culturally sensitive locations and apply generalization/redaction rules.
+- Ensure restricted access is enforced at the API layer and reflected in UI affordances.
+
+### AI usage constraints
+- This README does not authorize new AI behaviors.
+- Ensure any AI-derived “map evidence artifacts” remain provenance-linked and opt-in where predictive.
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v10.0.0 | 2025-11-10 | `@kfm-geo-dev` | Introduced unified map visualization framework integrating MapLibre, Cesium, D3, and FAIR+CARE telemetry compliance. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v0.1.0 | 2025-12-19 | Initial scaffold for `src/map` README | TBD |
 
 ---
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Governed under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Source Index](../README.md) · [Theming Framework](../theming/README.md) · [Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
-
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
