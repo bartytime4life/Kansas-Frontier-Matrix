@@ -1,327 +1,309 @@
 ---
-title: "📡 KFM v11 — Telemetry & Provenance Logging Framework (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "Telemetry — README"
 path: "docs/telemetry/README.md"
-version: "v11.2.6"
-last_updated: "2025-12-11"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-release_stage: "Stable · Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Continuous · FAIR+CARE Governance Secretariat"
-content_stability: "stable"
-status: "Active / Enforced"
-backward_compatibility: "v10.x → v11.x compliant"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-signature_ref: "../../releases/v11.2.6/signature.sig"
-attestation_ref: "../../releases/v11.2.6/slsa-attestation.json"
-sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.6/manifest.zip"
-
-telemetry_ref: "../../releases/v11.2.6/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/system-telemetry-v1.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Aware · Provenance-Logged · Responsible Computing"
-classification: "Public (Governed)"
-sensitivity: "Low/Moderate"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "United States · Kansas"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:telemetry:readme:v1.0.0"
+semantic_document_id: "kfm-telemetry-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:telemetry:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# Telemetry
 
-# 📡 **Kansas Frontier Matrix — Telemetry & Provenance Logging Framework**  
-`docs/telemetry/README.md`
+## 📘 Overview
 
-**Purpose**  
-Define the **data telemetry and provenance monitoring framework** that governs real-time validation,  
-ethical oversight, and performance metrics across the **Kansas Frontier Matrix (KFM)** ecosystem.  
+### Purpose
+This directory contains **governed documentation for KFM telemetry**: what signals are collected, how they are validated, and how they support observability, security posture, and governance metrics across the canonical pipeline.
 
-Telemetry ensures all datasets, models, and workflows remain **transparent**, **traceable**, and **accountable**  
-to **FAIR+CARE** and **Master Coder Protocol (MCP-DL v6.3)** standards.
+Telemetry is treated as a first-class subsystem that:
+- supports reproducibility and auditability (run IDs, validations, redaction actions),
+- helps enforce “no unsourced narrative” by recording provenance-linking behaviors,
+- provides CI/CD-visible quality and integrity signals.
 
-</div>
+### Scope
 
----
+| In Scope | Out of Scope |
+|---|---|
+| Telemetry signal definitions and naming conventions | Vendor selection for logging/metrics infrastructure |
+| Telemetry schema locations + versioning expectations | Operational SRE runbooks not checked into this repo |
+| CI/CD validation expectations for telemetry artifacts | Runtime secrets/keys, deployment configuration |
+| Guidance on sensitivity, redaction, and “do not log” rules | Collecting or storing end-user PII |
 
-## 🗂️ 1. Directory Layout (Emoji-Prefix Standard)
+### Audience
+- Primary: Data pipeline engineers, backend/API engineers, frontend engineers, governance/security reviewers
+- Secondary: historians/editors reviewing narrative provenance + audit panels
 
+### Definitions
+- Link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc (intended meanings):
+  - **signal**: a named telemetry event/metric/tracing span emitted by a subsystem
+  - **producer**: component that emits telemetry
+  - **schema**: JSON schema that validates a telemetry payload (versioned)
+  - **run_id**: stable identifier for a deterministic pipeline execution (ETL/catalog/graph build)
+  - **audit flag**: a UI/API surfaced warning tied to provenance/sensitivity
+
+### Key artifacts
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Telemetry docs (this area) | `docs/telemetry/` | Repo maintainers | Narrative + governance for telemetry |
+| Telemetry schemas | `schemas/telemetry/` | DataOps / Platform | Schema validation + SemVer |
+| Pipeline run artifacts | `mcp/runs/` | DataOps / MCP | Run logs + evidence products (if used) |
+
+### Definition of done
+- [ ] Front-matter complete + valid
+- [ ] Directory map points to canonical locations (docs/schemas/mcp)
+- [ ] Signal definitions do not require logging sensitive data
+- [ ] Validation steps are explicit and repeatable
+- [ ] Any changes that affect governance/sensitivity are marked **requires human review**
+
+## 🗂️ Directory Layout
+
+### This document
+- `path`: `docs/telemetry/README.md`
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Telemetry docs | `docs/telemetry/` | Human-readable standards and indexes for telemetry |
+| Telemetry schemas | `schemas/telemetry/` | JSON Schemas for telemetry payloads |
+| Pipelines | `src/pipelines/` | Telemetry producers for ETL/catalog/graph builds |
+| APIs | `src/server/` | Telemetry for contracted endpoints and redaction behavior |
+| Frontend | `web/` | UX telemetry for Focus Mode and audit panel interactions |
+| MCP runs | `mcp/runs/` | Run bundles, logs, experiment metadata (if applicable) |
+
+### Expected file tree for this sub-area
 ~~~text
-docs/
-└── telemetry/
-    ├── 📄 README.md                              # Telemetry & provenance root index (this file)
-    │
-    ├── 📂 etl-governance-events/                 # ETL governance events (PROV + SLSA + energy/carbon)
-    │   └── 📄 README.md
-    │
-    ├── 📂 metadata-validation/                   # Metadata validation & Trust Badge system
-    │   └── 📄 README.md
-    │
-    ├── 📂 metrics/                               # Metric standards (cardinality, patterns, review logs)
-    │   └── 📄 README.md
-    │
-    ├── 📂 otel-stac-lineage/                     # OpenTelemetry span schema for STAC/DCAT/PROV lineage
-    │   └── 📄 README.md
-    │
-    ├── 📂 reliability-sustainability-correlation/ # Retries/Replays ↔ Energy/CO₂e correlation telemetry
-    │   └── 📄 README.md
-    │
-    ├── 📄 governance-metrics.json                # Aggregated governance-level metrics spec
-    ├── 📄 ai-performance.json                    # AI performance/drift/explainability telemetry spec
-    ├── 📄 accessibility-metrics.json             # Accessibility & inclusion telemetry spec
-    ├── 📄 sustainability.json                    # Energy & carbon metric spec
-    └── 📄 provenance-ledger.json                 # Provenance & validation traceability spec
+📁 docs/
+└── 📁 telemetry/
+    ├── 📄 README.md
+    ├── 📄 SIGNALS.md              # not confirmed in repo (recommended index of signals)
+    ├── 📄 SCHEMAS.md              # not confirmed in repo (recommended schema map)
+    ├── 📄 GOVERNANCE_NOTES.md     # not confirmed in repo (review triggers, redaction rules)
+    └── 📄 CHANGELOG.md            # not confirmed in repo (telemetry changes, SemVer notes)
+
+📁 schemas/
+└── 📁 telemetry/
+    ├── 📄 README.md               # not confirmed in repo (schema index + ownership)
+    └── 📁 v1/
+        ├── 📄 telemetry.event.schema.json   # not confirmed in repo
+        └── 📄 telemetry.metric.schema.json  # not confirmed in repo
 ~~~
 
-Rules:
+## 🧭 Context
 
-- 📂 is used **only** for directories; 📄 is used **only** for files.  
-- All subdirectories MUST contain a `README.md` describing their local scope, metadata, and governance hooks.  
-- Telemetry JSON specs under this root describe **how telemetry streams are structured and interpreted**.  
+### Background
+KFM’s canonical pipeline requires strong provenance and deterministic processing. Telemetry provides:
+- operational visibility (did a run succeed, what validations failed),
+- governance visibility (did redaction occur, was content served with provenance),
+- quality visibility (schema checks, integrity checks, contract tests).
 
-The canonical release-level merged ledger is stored under:
+### Assumptions
+- Telemetry documentation is stored under `docs/telemetry/`, and schema definitions live under `schemas/telemetry/` (as a canonical pairing).  
+- Telemetry is cross-cutting, i.e., every pipeline stage may emit telemetry.
 
-~~~text
-releases/v11.2.6/focus-telemetry.json
-~~~
+### Constraints and invariants
+- Canonical ordering is preserved: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode.
+- Frontend consumes data through the API layer (no direct graph access).
+- Telemetry must not introduce leakage of secrets or sensitive locations.
+- Telemetry events that involve sensitivity decisions must record *that a redaction occurred*, not the raw sensitive value.
 
----
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| What telemetry schema set is v1 baseline for this repo? | TBD | TBD |
+| Where are telemetry events stored/aggregated at runtime? | TBD | TBD |
+| What is the minimal signal set required for “v12-ready” CI? | TBD | TBD |
 
-## 📘 2. Overview
+### Future extensions
+- Telemetry dashboards / audit reports linked from this directory (not confirmed in repo)
+- Focus Mode “audit panel” telemetry standardization for citations and warnings (not confirmed in repo)
+- Energy/carbon telemetry for workloads (mentioned as an extension area; not confirmed in repo)
 
-Telemetry is the **operational nervous system** of KFM:
+## 🗺️ Diagrams
 
-- Recording validation events and CI outcomes.  
-- Capturing provenance (who/what/when/how).  
-- Tracking FAIR+CARE compliance and ethical signals.  
-- Measuring sustainability (energy, carbon, runtime, resource use).  
-
-Telemetry bridges:
-
-- **Governance & policy**  
-- **AI ethics**  
-- **Data validation & catalogs**  
-- **Accessibility & inclusion**  
-- **Sustainability & performance**
-
-All telemetry conforms to:
-
-- **FAIR+CARE** ethical metadata schema.  
-- **ISO 9001** (Quality Management).  
-- **ISO 50001** (Energy Management) & **ISO 14064** (GHG accounting).  
-- **MCP-DL v6.3** and KFM **system-telemetry-v1** schema.  
-
-Specialized subdomains extend this root standard:
-
-- **ETL Governance Events** → `docs/telemetry/etl-governance-events/`.  
-- **Metadata Validation & Trust Badge** → `docs/telemetry/metadata-validation/`.  
-- **Metrics & Cardinality** → `docs/telemetry/metrics/`.  
-- **OTel + STAC Lineage Schema** → `docs/telemetry/otel-stac-lineage/`.  
-- **Reliability × Sustainability Correlation** → `docs/telemetry/reliability-sustainability-correlation/`.
-
----
-
-## ⚙️ 3. Telemetry System Architecture
-
-~~~mermaid
-flowchart TD
-  A["CI/CD Workflows"] --> B["Validation Reports\n(JSON, STAC/DCAT, PROV)"]
-  B --> C["Telemetry Export\n(normalize + merge)"]
-  C --> D["Unified Ledger\n(focus-telemetry.json)"]
-  D --> E["FAIR+CARE Dashboards\n& Public Reports"]
-  E --> F["Continuous Audit\n& Ethics + Sustainability Monitoring"]
-~~~
-
-Telemetry pipelines unify governance, ethics, accessibility, performance, and sustainability data  
-into a single **transparent ledger** for each release.
-
----
-
-## 🧩 4. Core Telemetry Streams
-
-| Stream                   | Description                                         | Source Workflow(s)              | Primary Output                                                |
-|--------------------------|-----------------------------------------------------|---------------------------------|--------------------------------------------------------------|
-| **Docs Validation**      | Markdown structure, links, metadata checks          | `docs-lint.yml`                 | `reports/self-validation/docs/lint_summary.json`             |
-| **FAIR+CARE Audit**      | Dataset & doc ethics, PII & sensitivity checks      | `faircare-validate.yml`         | `reports/fair/faircare_summary.json`                         |
-| **Catalog Integrity**    | STAC/DCAT validation, asset completeness            | `stac-validate.yml`             | `reports/self-validation/stac_validation.json`               |
-| **AI Training & Ethics** | Metrics, drift, explainability, energy              | `ai-train.yml`                  | `reports/ai/<model>/metrics.json`                            |
-| **Build & Performance**  | Builds, tests, cache usage, runtime                 | build/test workflows            | `reports/telemetry/build_metrics.json`                       |
-| **ETL Governance Events**| ETL lineage & energy/carbon per run                 | ETL workflows + event exporters | `releases/v11.x/etl-governance-events.json`                  |
-| **Metric Validation**    | Cardinality, label contracts, trust badges          | `metadata-validation.yml`       | `docs/telemetry/metadata-validation/reports/index.html`      |
-| **Reliability × Sust.**  | Retries/replays ↔ energy/CO₂e correlation telemetry | CI workflows + OTel exporters   | `releases/v11.x/reliability-sustainability-correlation.json` |
-
-All stream summaries are normalized and merged (via a `telemetry-export` pipeline) into:  
-`releases/v11.2.6/focus-telemetry.json`.
-
----
-
-## 🧮 5. Telemetry Schema (system-telemetry-v1)
-
-Each **event** in `focus-telemetry.json` conforms to `system-telemetry-v1`:
-
-| Field           | Type              | Description                                            |
-|-----------------|-------------------|--------------------------------------------------------|
-| `event_id`      | string (UUIDv4)   | Unique ID per telemetry event                          |
-| `timestamp`     | string (ISO 8601) | Event time (UTC)                                       |
-| `category`      | string            | `docs` · `faircare` · `stac` · `ai` · `build` · `etl`… |
-| `status`        | string            | `success` · `warning` · `failure`                      |
-| `branch`        | string            | Git ref / tag (`main`, `release/v11.2.6`)              |
-| `run_id`        | string            | CI run identifier (e.g., GitHub Actions run ID)        |
-| `duration_sec`  | number            | Workflow runtime in seconds                            |
-| `energy_wh`     | number            | Estimated/observed energy usage (Wh)                   |
-| `carbon_gco2e`  | number            | Carbon equivalent emissions                            |
-| `payload`       | object            | Workflow-specific fields (metrics, counts, etc.)       |
-
-`payload` carries stream-specific data (e.g., lint counts, FAIR+CARE scores, AI metrics).
-
-Specialized telemetry schemas (ETL events, metric validation, OTel+STAC lineage, correlation telemetry)  
-extend this base via their own JSON Schemas under `schemas/telemetry/`.
-
----
-
-## ♿ 6. Accessibility Telemetry Metrics
-
-Captured via `accessibility_scan.yml` and web build workflows:
-
-| Metric                | Target        | Source                    |
-|-----------------------|--------------:|---------------------------|
-| WCAG 2.1 AA Score     | ≥ 95%         | Lighthouse / axe scans    |
-| Keyboard Operability  | 100% elements | Integration tests         |
-| Focus Visibility      | ≥ 3:1 contrast| Token & CSS checks        |
-| Alt-text Coverage     | 100% images   | Build-time a11y audit     |
-
-A11y metrics feed into:
-
-- `accessibility-metrics.json` (spec).  
-- `focus-telemetry.json` (realized events).  
-- A11y dashboards for the KFM web frontends.
-
----
-
-## 🧠 7. FAIR+CARE Ethical Telemetry
-
-Ethics metadata is embedded per event (`payload.ethics.*`):
-
-| Principle            | Field                                    | Description                              |
-|----------------------|------------------------------------------|------------------------------------------|
-| Collective Benefit   | `payload.ethics.collective_benefit`      | Societal/educational benefit             |
-| Authority to Control | `payload.ethics.authority_to_control`    | Responsible council/owner                |
-| Responsibility       | `payload.ethics.responsibility`          | Who audited & under which standard pack  |
-| Ethics Score         | `payload.ethics.ethics_score`            | 0–100 ethics assessment metric           |
-
-Produced primarily by `faircare-validate.yml` and AI governance flows, and cross-referenced  
-in the FAIR+CARE Council’s governance records.
-
----
-
-## 🔍 8. Example Telemetry Event
-
-~~~json
-{
-  "event_id": "TEL-2025-0041",
-  "timestamp": "2025-12-11T22:16:00Z",
-  "category": "faircare",
-  "status": "success",
-  "branch": "release/v11.2.6",
-  "run_id": "github-actions-123456789",
-  "duration_sec": 742,
-  "energy_wh": 0.96,
-  "carbon_gco2e": 0.48,
-  "payload": {
-    "workflow": "faircare-validate.yml",
-    "datasets_scanned": 152,
-    "violations_found": 0,
-    "policy_version": "faircare@2025.4",
-    "ethics": {
-      "collective_benefit": "Supports open environmental research and education.",
-      "authority_to_control": "FAIR+CARE Council",
-      "responsibility": "Reviewed by FAIR+CARE Governance Secretariat",
-      "ethics_score": 98.7
-    }
-  }
-}
-~~~
-
----
-
-## 🌱 9. Sustainability & Performance (ISO 50001/14064)
-
-KFM tracks sustainability at both **workflow** and **release** granularity:
-
-| Metric               | Target        | Aggregation                  |
-|----------------------|--------------:|------------------------------|
-| Energy per CI Cycle  | ≤ 3 Wh        | Weekly/monthly rollups       |
-| CO₂e per Release     | Fully offset  | Release-level ledger         |
-| Hotspot Workflows    | Identified    | Telemetry alerts             |
-| Telemetry Size       | ≤ 5 MB        | Storage & SLO checks         |
-
-Telemetry is used to guide:
-
-- Workflow optimization.  
-- Hardware/infra choices.  
-- Carbon budgeting and offsets.  
-
-The **Reliability × Sustainability** module (`docs/telemetry/reliability-sustainability-correlation/`)  
-provides detailed correlation between retries/replays and energy/CO₂e, feeding into these metrics.
-
----
-
-## 🧮 10. Telemetry Lifecycle
-
+### System and telemetry dataflow diagram
 ~~~mermaid
 flowchart LR
-  A["Validation & Build Workflows"] --> B["Per-job Telemetry JSON\n+ OTel Metrics/Traces"]
-  B --> C["Normalization\n(system-telemetry-v1 + domain schemas)"]
-  C --> D["Merged Ledger\n(focus-telemetry.json)"]
-  D --> E["Dashboards & Reports\n(FAIR+CARE, A11y, Sustainability)"]
-  E --> F["Optimization & Governance Updates\n(policy, thresholds, CI changes)"]
+  subgraph Pipeline
+    A[ETL] --> B[STAC/DCAT/PROV Catalogs]
+    B --> C[Neo4j Graph]
+    C --> D[APIs]
+    D --> E[React/Map UI]
+    E --> F[Story Nodes]
+    F --> G[Focus Mode]
+  end
+
+  A --> T[Telemetry Events]
+  B --> T
+  C --> T
+  D --> T
+  E --> T
+  F --> T
+  G --> T
+
+  T --> S[Schemas: schemas/telemetry/]
+  T --> H[Docs: docs/telemetry/]
 ~~~
 
-Telemetry is **append-only and versioned**: corrections are recorded as new events, never by retroactive edits.  
-Release ledgers are cryptographically signed and referenced from `signature_ref` and `attestation_ref`.
+## 📦 Data and Metadata
+
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Telemetry event payloads | JSON | Pipeline/API/UI producers | JSON Schema in `schemas/telemetry/` |
+| CI telemetry summaries | JSON/Markdown | CI workflows | Markdown + schema validation (where applicable) |
+
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Telemetry documentation | Markdown | `docs/telemetry/` | KFM-MDP governed docs |
+| Telemetry schemas | JSON Schema | `schemas/telemetry/` | SemVer + schema lint |
+| Optional run summaries | Markdown/JSON | `mcp/runs/` | Repo conventions (TBD) |
+
+### Sensitivity and redaction
+Telemetry must never require:
+- raw secrets (tokens/keys),
+- raw user identifiers (PII),
+- sensitive location coordinates.
+
+Telemetry may include:
+- boolean flags (e.g., `redaction_applied: true`),
+- stable internal run identifiers,
+- counts/aggregates (e.g., “items processed”, “errors by type”).
+
+### Quality signals
+Recommended telemetry quality checks (examples; not confirmed as implemented):
+- payload validates against the referenced schema version
+- required IDs present (run_id, dataset_id, stac_item_id, prov_activity_id) when applicable
+- timestamps are present and ISO-8601 formatted
+- geometry is never emitted in telemetry unless explicitly governed
+
+## 🌐 STAC, DCAT and PROV Alignment
+
+Telemetry events should include **references** (not copies) to catalog and lineage artifacts:
+- STAC: include STAC Collection/Item IDs when a signal pertains to catalog creation/validation.
+- DCAT: include dataset identifier when signal pertains to dataset-level changes.
+- PROV-O: include provenance activity/run identifiers for transforms and builds.
+
+Versioning expectations:
+- Telemetry schema versions follow SemVer and are referenced in each event payload.
+- New schema versions must be backward compatible or require an explicit version bump.
+
+## 🧱 Architecture
+
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| Telemetry producers | Emit events/metrics | Code in pipeline/API/UI subsystems |
+| Schema validators | Validate payload shape | JSON Schemas in `schemas/telemetry/` |
+| Governance reviewers | Ensure compliance | `docs/governance/*` (not confirmed in repo) |
+| CI checks | Fail builds on invalid telemetry artifacts | GitHub workflows (not confirmed in repo) |
+
+### Interfaces and contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Telemetry event schema | `schemas/telemetry/` | SemVer + changelog recommended |
+| Telemetry docs | `docs/telemetry/` | Governed docs, link to schemas |
+| CI validation | `.github/workflows/` | Contract tests must pass |
+
+### Extension points checklist
+- [ ] Add a new telemetry signal: update `docs/telemetry/SIGNALS.md` (recommended) and schema (if needed)
+- [ ] Add a new schema version: place under `schemas/telemetry/v<major>/` and document changes
+- [ ] Add pipeline stage telemetry: ensure run IDs and provenance references are included
+- [ ] Add UI telemetry: ensure aggregation-only and no PII
+
+## 🧠 Story Node and Focus Mode Integration
+
+Telemetry may be used to confirm that Focus Mode behavior remains provenance-linked:
+- when a narrative is displayed, the payload should record which evidence references were available (IDs only)
+- when redaction/generalization is applied, log a non-sensitive flag and the policy reference (ID/path only)
+- if predictive content is used (opt-in), record that predictions were included and include uncertainty fields (IDs/metrics only)
+
+## 🧪 Validation and CI/CD
+
+### Validation steps
+- [ ] Markdown protocol checks for docs under `docs/`
+- [ ] JSON schema validation for `schemas/telemetry/`
+- [ ] Contract tests for APIs that emit telemetry-relevant responses
+- [ ] Security and sovereignty scanning gates where applicable
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) validate telemetry schemas
+# 2) run unit/integration tests
+# 3) run doc lint / markdown protocol validation
+~~~
+
+### Telemetry signals
+This repo has not confirmed a canonical signal catalog yet. Recommended baseline categories:
+| Category | Producer(s) | Example purpose |
+|---|---|---|
+| pipeline.run | ETL/catalog/graph builders | Start/end, counts, warnings |
+| catalog.validation | STAC/DCAT/PROV builders | Schema validity, broken links |
+| graph.integrity | Graph build | Constraint violations, missing refs |
+| api.contract | API layer | Contract-test result, response shape |
+| ui.audit | UI / Focus Mode | Citation rendered, warnings shown (no PII) |
+
+## ⚖ FAIR+CARE and Governance
+
+### Review gates
+Telemetry changes should be flagged for review when they:
+- add new fields that could leak sensitive location or identity
+- expand logging around restricted datasets
+- affect the audit panel and provenance visibility
+
+### CARE and sovereignty considerations
+- Telemetry must not be a backchannel for sensitive location disclosure.
+- Redaction/generalization actions should be observable, but not reversible from telemetry alone.
+
+### AI usage constraints
+This document does not authorize any prohibited AI transformations. Telemetry must not encourage:
+- speculative additions
+- inference of sensitive locations
+- generation of new policy outside governed docs
+
+## 🕰️ Version History
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial telemetry README scaffold | TBD |
 
 ---
-
-## 🕰️ 11. Version History
-
-| Version | Date       | Summary                                                                                                         |
-|--------:|------------|-----------------------------------------------------------------------------------------------------------------|
-| v11.2.6 | 2025-12-11 | Updated to KFM-MDP v11.2.6; aligned directory layout with new telemetry modules; bumped release and schema refs. |
-| v11.2.3 | 2025-11-29 | Aligned with ETL governance events; applied safe-fence + emoji layouts; defined unified focus-telemetry ledger. |
-| v10.2.2 | 2025-11-12 | Established system-telemetry-v1; integrated FAIR+CARE, a11y, and sustainability metrics.                       |
-
----
-
-<div align="center">
-
-📡 **Kansas Frontier Matrix — Telemetry & Provenance Logging Framework (v11.2.6)**  
-Provenance · Observability · Sustainable Intelligence  
-
-[📘 Docs Root](../..) ·  
-[📂 Telemetry Metrics](./metrics/README.md) ·  
-[📜 ETL Governance Events](./etl-governance-events/README.md) ·  
-[🛡 Metadata Validation & Trust Badge](./metadata-validation/README.md) ·  
-[📡 OTel + STAC Lineage Schema](./otel-stac-lineage/README.md) ·  
-[⚡🌱 Reliability × Sustainability Correlation](./reliability-sustainability-correlation/README.md) ·  
-[🧭 Standards Index](../standards/README.md) ·  
-[⚖ Governance](../standards/governance/ROOT-GOVERNANCE.md) ·  
-[🌿 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md) ·  
-[🪶 Indigenous Data Protection](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
