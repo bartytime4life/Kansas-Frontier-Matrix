@@ -1,211 +1,232 @@
 ---
-title: "🗂️ Kansas Frontier Matrix — Text TMP Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Data Work Tmp Text — README"
 path: "data/work/tmp/text/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.0.0/manifest.zip"
-data_contract_ref: "../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/work-text-tmp-v10.json"
-governance_ref: "../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:data:work:tmp:text:readme:v1.0.0"
+semantic_document_id: "kfm-data-work-tmp-text-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:work:tmp:text:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🗂️ Kansas Frontier Matrix — **Text TMP Workspace**
-`data/work/tmp/text/README.md`
-
-**Purpose:**  
-FAIR+CARE-certified **temporary text processing workspace** supporting **OCR (Optical Character Recognition)**, **NLP (Natural Language Processing)**, and **semantic enrichment** pipelines for the Kansas Frontier Matrix (KFM).  
-Ensures historical, cultural, and archival texts are transformed into reproducible, ethical, and machine-readable formats for knowledge graph integration and governance traceability.
-
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../docs/architecture/README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Text%20TMP%20Certified-gold)](../../../../docs/standards/faircare-validation.md)  
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../LICENSE)
-
-</div>
-
----
+# KFM Data Work Tmp Text — README
 
 ## 📘 Overview
 
-The **Text TMP Workspace (v10.0.0)** is designed to manage transient OCR and NLP operations before validation and staging.  
-It guarantees full **checksum lineage**, **ethics certification**, and **telemetry tracking** for transparency across historical, legal, and archival textual assets.
+### Purpose
+This folder holds **temporary, intermediate text artifacts** created during ETL extraction and normalization (e.g., extracted PDF text, OCR text output, or “pre-clean” text used before structured parsing). It is part of the `data/work/` staging area and should not be treated as canonical outputs.
 
-### Core Responsibilities
-- Extract and standardize text from OCR scans (PDF, TIFF, image files).  
-- Apply **tokenization, lemmatization, and entity recognition** using FAIR+CARE NLP.  
-- Conduct **checksum lineage verification** and ethical governance audits.  
-- Register metadata, FAIR+CARE outcomes, and sustainability telemetry to the **provenance ledger**.  
-- Prepare datasets for **knowledge graph ingestion** and **semantic alignment**.
+This directory supports the canonical pipeline ordering documented in `docs/MASTER_GUIDE_v12.md` (ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode).
 
----
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Intermediate extracted text (`.txt`, `.md`, `.json` sidecars) used to support parsing, QA, and downstream transforms | Canonical published text outputs (promote those to `data/processed/` and/or `data/stac/` as appropriate) |
+| Short-lived artifacts created per run / per source | Story nodes, narrative documents, or UI-facing text |
+| Debuggable/traceable “workbench” outputs | Long-term archival storage |
+
+### Audience
+- Primary: ETL / pipeline maintainers
+- Secondary: data QA reviewers
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc: ETL, extraction, normalization, provenance, run ID, sidecar metadata
+
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| ETL run outputs (temporary) | `data/work/tmp/text/…` | ETL | Intermediate only; may be cleared between runs |
+| Work logs | `data/work/logs/…` | ETL | Expected to link run IDs to artifacts |
+| Work metadata sidecars | `data/work/metadata/…` | ETL | Used to capture extraction warnings + inputs |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Folder purpose and “what belongs here” is explicit
+- [ ] Promoting artifacts to `data/processed/` / `data/stac/` is described
+- [ ] Sensitivity and redaction expectations stated (no leakage via temp artifacts)
 
 ## 🗂️ Directory Layout
 
-```plaintext
-data/work/tmp/text/
-├── README.md
-│
-├── ocr/                                    # OCR-processed historical scans
-│   ├── treaties_ocr_2025.json
-│   ├── archival_records_ocr.txt
-│   └── metadata.json
-│
-├── nlp/                                    # NLP tokenization & semantic enrichment outputs
-│   ├── tokens_treaties.parquet
-│   ├── embeddings_treaties.json
-│   └── metadata.json
-│
-├── validation/                             # FAIR+CARE and checksum validation reports
-│   ├── faircare_audit_report.json
-│   ├── checksum_registry.json
-│   ├── ai_explainability_audit.json
-│   └── metadata.json
-│
-└── logs/                                   # OCR/NLP runtime, checksum, & governance logs
-    ├── ocr_run.log
-    ├── nlp_pipeline_run.log
-    ├── governance_sync.log
-    └── metadata.json
-```
+### This document
+- `path`: `data/work/tmp/text/README.md`
 
----
-
-## ⚙️ Text TMP Workflow
-
-```mermaid
-flowchart TD
-    A["Raw Text Archives (PDF · TIFF · TXT)"] --> B["OCR Extraction + Cleaning (ocr/)"]
-    B --> C["NLP Tokenization + Embedding Generation (nlp/)"]
-    C --> D["Checksum & FAIR+CARE Validation (validation/)"]
-    D --> E["AI Explainability + Governance Sync (logs/)"]
-    E --> F["Promotion → Staging or Graph Layer (data/work/staging/text/graph/)"]
-```
-
-### Description
-1. **OCR Extraction** — Convert scanned images into machine-readable structured text.  
-2. **NLP Enrichment** — Tokenize, embed, and annotate entities and relationships.  
-3. **Checksum & FAIR+CARE Validation** — Verify integrity and ethical transparency.  
-4. **Explainability & Governance** — Log AI audit results and synchronize with ledger.  
-5. **Promotion** — Advance validated text assets to graph ingestion or staging layers.
-
----
-
-## 🧩 Example Metadata Record
-
-```json
-{
-  "id": "text_tmp_v10.0.0_2025Q4",
-  "source_files": [
-    "data/raw/text/kansas_treaties_1890.pdf",
-    "data/raw/text/state_archives_1885.tif"
-  ],
-  "ocr_output": "data/work/tmp/text/ocr/treaties_ocr_2025.json",
-  "nlp_output": "data/work/tmp/text/nlp/tokens_treaties.parquet",
-  "checksum_verified": true,
-  "faircare_status": "certified",
-  "ai_explainability_score": 0.997,
-  "telemetry": { "energy_wh": 8.9, "carbon_gco2e": 9.4 },
-  "governance_registered": true,
-  "validator": "@kfm-text-lab",
-  "created": "2025-11-10T00:00:00Z",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
-
----
-
-## 🧠 FAIR+CARE Governance Matrix
-
-| Principle | Implementation | Oversight |
+### Related repository paths
+| Area | Path | What lives here |
 |---|---|---|
-| **Findable** | Indexed OCR/NLP outputs via UUID + checksum lineage | @kfm-data |
-| **Accessible** | Open formats (JSON, TXT, Parquet) under CC-BY 4.0 | @kfm-accessibility |
-| **Interoperable** | Conforms to FAIR+CARE, ISO 19115, and DCAT schemas | @kfm-architecture |
-| **Reusable** | Provenance and checksum lineage ensure reproducibility | @kfm-design |
-| **Collective Benefit** | Increases accessibility to cultural and historical texts | @faircare-council |
-| **Authority to Control** | Council approves use of NLP models for sensitive data | @kfm-governance |
-| **Responsibility** | Validators record checksum, explainability, and ethics logs | @kfm-security |
-| **Ethics** | NLP audited for neutrality, inclusivity, and contextual fairness | @kfm-ethics |
+| Raw inputs | `data/raw/` | Source files (PDF/CSV/images/etc.) |
+| Work staging | `data/work/` | Intermediate outputs and run-local artifacts |
+| Processed outputs | `data/processed/` | Stable, versioned derived datasets |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Published catalogs and lineage bundles |
 
-**Governance & Audit References:**  
-`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
+### Expected file tree for this sub-area
+~~~text
+📁 data/work/tmp/text/
+├── 📄 README.md
+├── 📁 <run_id>/
+│   ├── 📄 <source_id>__<asset_id>.txt
+│   ├── 📄 <source_id>__<asset_id>.json
+│   └── 📄 <source_id>__<asset_id>.warnings.json
+└── 📁 <scratch>/
+    └── 📄 <any-temporary-text-artifacts>
+~~~
 
----
+> Naming conventions above are **recommended**, not confirmed in repo. Prefer stable IDs already used by the ETL/config system.
 
-## ⚙️ TMP Artifacts
+## 🧭 Context
 
-| File | Description | Format |
+### Background
+Text extraction is often required as an intermediate step before:
+- NLP/entity extraction,
+- structured parsing,
+- QA (spot-checking OCR),
+- or generating provenance-aware downstream products.
+
+Keeping these artifacts organized makes ETL runs easier to debug and reproduce.
+
+### Assumptions
+- Temporary artifacts may be **cleared** between runs or excluded from long-term retention.
+- Any “publishable” text artifact should be promoted and versioned in `data/processed/` and linked via STAC/DCAT/PROV.
+
+### Constraints / invariants
+- Preserve the canonical pipeline ordering: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode.
+- Frontend/UI should never depend on this temp directory directly (UI reads via APIs).
+
+### Open questions
+| Question | Owner | Target date |
 |---|---|---|
-| `ocr/treaties_ocr_2025.json` | OCR-processed archival treaty text | JSON |
-| `nlp/tokens_treaties.parquet` | NLP tokenization & semantic tagging results | Parquet |
-| `validation/faircare_audit_report.json` | FAIR+CARE audit outcomes | JSON |
-| `validation/checksum_registry.json` | Hash verification registry for TMP text assets | JSON |
-| `metadata.json` | Provenance, validator signatures, telemetry, governance refs | JSON |
+| Should `data/work/tmp/` be gitignored by default (and to what extent)? | TBD | TBD |
+| What is the canonical `<run_id>` format (timestamp, hash, UUID)? | TBD | TBD |
 
-**Automation:** `text_tmp_sync.yml`
+### Future extensions
+- Add a small sidecar schema in `schemas/` for extraction warning outputs (if not already present).
+- Add a deterministic “promotion” step that moves selected artifacts from `data/work/tmp/text/` → `data/processed/`.
 
----
+## 🗺️ Diagrams
 
-## ⚖️ Retention & Provenance Policy
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[data/raw sources] --> B[ETL extraction]
+  B --> C[data/work/tmp/text]
+  C --> D[Normalization/Parsing]
+  D --> E[data/processed]
+  E --> F[STAC/DCAT/PROV]
+~~~
 
-| Data Type | Retention | Policy |
-|---|---:|---|
-| TMP Data | 7 Days | Purged post-validation or ingestion |  
-| Validation Reports | 180 Days | Retained for reproducibility & ethics re-audit |  
-| Governance Logs | 365 Days | Archived under provenance chain |  
-| Metadata | Permanent | Immutable under blockchain governance ledger |
+## 📦 Data & Metadata
 
-Cleanup handled via `text_tmp_cleanup.yml`.
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Source documents | PDF/TXT/HTML/images | `data/raw/` or source fetch | hash recorded + parse warnings captured |
 
----
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Extracted text | `.txt` / `.md` | `data/work/tmp/text/...` | not confirmed in repo |
+| Extraction sidecar metadata | `.json` | `data/work/tmp/text/...` | not confirmed in repo |
 
-## 🌱 Sustainability & Telemetry Metrics
+### Sensitivity & redaction
+- Extracted text may contain sensitive content (including PII) depending on source material.
+- Do not treat raw extracted text as automatically safe for publication. Promote to `data/processed/` only after appropriate review/redaction consistent with governance references.
 
-| Metric | Value | Verified By |
-|---|---:|---|
-| Energy Use (per OCR/NLP cycle) | 8.9 Wh | @kfm-sustainability |
-| Carbon Output | 9.4 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
+### Quality signals
+- Extraction warnings captured (missing pages, encoding issues, OCR confidence if available).
+- Deterministic reruns produce identical text outputs for identical inputs/configs (where feasible).
 
-**Telemetry Reference:**  
-`../../../../releases/v10.0.0/focus-telemetry.json`
+## 🌐 STAC, DCAT & PROV Alignment
 
----
+### STAC
+- This temp directory is **not** a STAC source of truth.
+- If extracted text becomes a durable artifact, promote it and attach it as a STAC asset under `data/stac/…` (collection/item) with appropriate links.
 
-## 🧾 Citation
+### DCAT
+- DCAT mappings should reference stable, published datasets (not temporary ETL artifacts).
 
-```text
-Kansas Frontier Matrix (2025). Text TMP Workspace (v10.0.0).
-FAIR+CARE-certified OCR and NLP workspace for ethical, transparent, and reproducible text transformation and provenance auditing under MCP-DL v6.3.
-```
+### PROV-O
+- When promoting artifacts, ensure `prov:wasDerivedFrom` points to raw inputs and `prov:wasGeneratedBy` points to the ETL activity/run ID (recorded elsewhere).
 
----
+### Versioning
+- Temporary artifacts may be overwritten; published artifacts must use explicit versioning and predecessor/successor links where applicable.
+
+## 🧱 Architecture
+
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| ETL | extraction + normalization | configs + run logs |
+| Work staging | intermediate artifacts | filesystem paths under `data/work/` |
+| Catalogs | publishable metadata | STAC/DCAT/PROV outputs |
+| APIs/UI | consume published contracts | never read `data/work/tmp/` directly |
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Confirm temp artifacts are not referenced by STAC/DCAT outputs
+- [ ] Confirm sensitive text isn’t accidentally promoted or exposed
+- [ ] Confirm run logs/metadata exist for traceability (location may vary)
+
+### Reproduction
+~~~bash
+# Placeholder (repo-specific commands not confirmed in repo)
+# 1) run ETL extraction for a source bundle
+# 2) confirm extracted text appears under data/work/tmp/text/<run_id>/
+# 3) validate promotion step outputs under data/processed/ (if implemented)
+~~~
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- If extracted text contains sensitive or culturally restricted content: requires human review before promotion/public exposure.
+
+### CARE / sovereignty considerations
+- Do not infer or expose sensitive locations or protected knowledge from extracted text artifacts.
+
+### AI usage constraints
+- Follow `ai_transform_prohibited` list for any automated transforms over this directory.
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
-|---|---|---|
-| v10.0.0 | 2025-11-10 | Upgraded telemetry schema; integrated advanced XAI & FAIR+CARE pre-validation; improved checksum lineage tracking. |
-| v9.6.0 | 2025-11-03 | Added AI explainability integration and checksum lineage verification. |
-| v9.5.0 | 2025-11-02 | Enhanced FAIR+CARE linkage and graph ingestion compatibility. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial README for `data/work/tmp/text/` | TBD |
 
 ---
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Textual Intelligence × FAIR+CARE Ethics × Provenance Governance*  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Master Coder Protocol v6.3 · **Diamond⁹ Ω / Crown∞Ω** Ultimate Certified  
-
-[Back to TMP Layer](../README.md) · [Docs Portal](../../../../docs/) · [Governance Charter](../../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Master guide: `docs/MASTER_GUIDE_v12.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
