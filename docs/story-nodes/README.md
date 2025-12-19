@@ -1,282 +1,239 @@
 ---
-title: "🧠 Kansas Frontier Matrix — Story Nodes Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "Story Nodes — README"
 path: "docs/story-nodes/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · FAIR+CARE Council & Focus Mode Board"
-content_stability: "stable"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../releases/v11.2.2/github-infra-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/storynodes-v3.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "CC-BY 4.0"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Index"
-intent: "story-nodes-overview"
-role: "story-nodes-index"
-category: "Story Nodes · Focus Mode · Semantic Narrative System"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-classification: "Public Document"
-sensitivity: "General (non-sensitive)"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-risk_category: "Low"
-redaction_required: false
-indigenous_rights_flag: true
-data_steward: "KFM FAIR+CARE Council"
+doc_uuid: "urn:kfm:doc:story-nodes:readme:v1.0.0"
+semantic_document_id: "kfm-story-nodes-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:story-nodes:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:Feature"
-
-metadata_profiles:
-  - "STAC 1.0.0"
-  - "DCAT 3.0"
-  - "PROV-O"
-  - "FAIR+CARE"
-
-provenance_chain:
-  - "docs/story-nodes/README.md@v11.2.1"
-  - "docs/story-nodes/README.md@v11.0.0"
-  - "docs/story-nodes/README.md@v10.4.0"
-provenance_requirements:
-  versions_required: true
-  newest_first: true
-
-json_schema_ref: "../../schemas/json/storynodes-readme-v11.schema.json"
-shape_schema_ref: "../../schemas/shacl/storynodes-readme-v11-shape.ttl"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summaries"
-  - "semantic-highlighting"
-  - "metadata-extraction"
-  - "diagram-extraction"
-  - "a11y-adaptations"
+  - "summarize"
+  - "structure_extract"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "governance-override"
-  - "content-alteration"
-  - "speculative-additions"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-badge_profiles:
-  - "root-centered-badge-row"
-requires_purpose_block: true
-requires_directory_layout_section: true
-requires_version_history: true
-requires_governance_links_in_footer: true
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧠 **Kansas Frontier Matrix — Story Nodes Overview**  
-`docs/story-nodes/README.md`
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue "Master Coder Protocol v6.3")]() ·
-[![Story Nodes v3](https://img.shields.io/badge/Story%20Nodes-v3-informational "Story Node Schema v3")]() ·
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold "FAIR+CARE Compliant")]() ·
-[![WCAG AA+](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet "WCAG 2.1 AA+")]() ·
-[![Status: Active](https://img.shields.io/badge/Status-Active-brightgreen "Status: Active & Enforced")]()
-
-**Purpose**  
-Provide the **top-level index and architectural guide** for all **Story Nodes** in the Kansas Frontier Matrix (KFM) v11.2.2.  
-Story Nodes form the **semantic narrative layer** used by **Focus Mode v3** to connect text, space, time, data, and governance.
-
-</div>
-
----
-
-## 🗂️ Directory Layout
-
-~~~text
-docs/
-└── 📂 story-nodes/
-    ├── 📄 README.md                       # Global Story Nodes overview (this file)
-    ├── 📂 system/                         # System-level Story Nodes (CI/CD, infra, governance)
-    │   ├── 📄 README.md                   # System Story Nodes index
-    │   ├── 📄 kfm-auto-update.json        # Daily stage→prod auto-update narrative
-    │   ├── 📄 ci-health.json              # (planned) CI stability and SLO/SLA narrative
-    │   ├── 📄 releases-timeline.json      # (planned) Release cadence & quality history
-    │   └── 📂 templates/                  # Templates for new system Story Nodes
-    │       ├── 📄 system-node-template.json
-    │       └── 📄 README.md
-    └── 📂 domains/                        # Domain-specific storytelling (data & history)
-        ├── 📂 history/                    # Historical/cultural narratives (governed)
-        │   └── 📄 README.md
-        ├── 📂 hydrology/                  # Hydrology & water resources narratives
-        │   └── 📄 README.md
-        ├── 📂 climate/                    # Climate & atmospheric narratives
-        │   └── 📄 README.md
-        └── 📂 archaeology/                # Archaeology & heritage narratives (highly governed)
-            └── 📄 README.md
-~~~
-
-**Layout rules**
-
-- 📂 is used **only** for directories; 📄 is used **only** for files.  
-- No emojis appear inside the ASCII connectors themselves.  
-- Every directory above MUST maintain a `README.md` that documents its local Story Node collections.
-
----
+# Story Nodes
 
 ## 📘 Overview
 
-Story Nodes are **structured narrative objects** that describe:
+### Purpose
+Story Nodes are governed narrative artifacts designed to be **machine-ingestible** and **provenance-linked** for the KFM Story → Focus Mode experience. They connect human-readable narrative to catalog/graph evidence so Focus Mode can render context without unsourced claims.
 
-- **What**: a phenomenon, process, event, dataset family, or system behavior.  
-- **Where**: a place or region (geometry or generalized H3 index).  
-- **When**: an instant or interval in time (OWL-Time compatible).  
-- **Who/Which**: entities involved (places, agents, datasets, workflows).  
-- **How/Why**: explanatory narrative grounded in data, provenance, and governance.
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Story Node authoring conventions and required fields | Full historical interpretation not supported by evidence |
+| Provenance linking rules (STAC/DCAT/PROV + graph references) | UI styling/implementation details beyond contracted interfaces |
+| Validation expectations for Story Nodes | Adding new governance policy text (requires governance docs) |
 
-They are used by Focus Mode to generate contextual, data-backed narratives and system explainers across KFM.
+### Audience
+- Primary: KFM contributors authoring Story Nodes.
+- Secondary: Reviewers validating provenance, sensitivity handling, and Focus Mode readiness.
 
-Typical Story Node fields (JSON):
+### Definitions
+- Glossary: `docs/glossary.md` (not confirmed in repo)
+- Key terms used here:
+  - **Story Node**: A curated narrative document linked to evidence and graph entities.
+  - **Focus Mode**: UI mode that consumes provenance-linked context bundles.
+  - **Evidence**: Source documents/datasets/assets tracked through STAC/DCAT/PROV and the graph.
 
-- `id`, `version`, `label`  
-- `spacetime.geometry`, `spacetime.when`  
-- `narrative.summary`, `narrative.details`, `narrative.risk_summary`  
-- `links.targets`, `links.datasets`, `links.environments`  
-- `governance` (CARE, sovereignty, masking rules)  
-- `telemetry_refs` (for system nodes)
+### Key artifacts
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master guide | `docs/MASTER_GUIDE_v12.md` | Core maintainers | Canonical pipeline + invariants |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Docs maintainers | Required structure for Story Nodes |
+| Governance root | `docs/governance/ROOT_GOVERNANCE.md` | Governance | Review gates / policy roots |
+| Ethics | `docs/governance/ETHICS.md` | Governance | Human review triggers |
+| Sovereignty | `docs/governance/SOVEREIGNTY.md` | Governance | CARE / redaction rules |
 
----
+### Definition of done
+- [ ] Document follows `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- [ ] Every factual claim maps to a cited dataset/document ID (no unsourced narrative)
+- [ ] Any sensitive information is generalized/redacted per governance refs
+- [ ] Story Node includes references to STAC/DCAT/PROV identifiers where applicable
+- [ ] Validation checklist completed (see below)
+
+## 🗂️ Directory Layout
+
+### This document
+- `path`: `docs/story-nodes/README.md`
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Templates | `docs/templates/` | Governed templates including Story Node v3 |
+| Canonical guidance | `docs/MASTER_GUIDE_v12.md` | System pipeline + invariants |
+| Story Nodes (canonical) | `docs/reports/.../story_nodes/` + graph | Story Node instances (per Master Guide) |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Evidence catalogs + lineage |
+| Graph | `src/graph/` | Ontology bindings + graph build |
+| APIs | `src/server/` | Contracted access layer |
+| UI | `web/` | Focus Mode + map/narrative experience |
+
+> Note: This repo’s canonical Story Node instance directory is stated as `docs/reports/.../story_nodes/` in the Master Guide.
+> If your implementation stores Story Nodes elsewhere (e.g., directly under `docs/story-nodes/`), update this README accordingly.
+> (Directory convention beyond the Master Guide statement is not confirmed in repo.)
+
+### Expected file tree for this sub-area
+~~~text
+📁 docs/
+└── 📁 story-nodes/
+    └── 📄 README.md
+~~~
 
 ## 🧭 Context
 
-Story Nodes sit at the intersection of:
+### Background
+KFM’s pipeline explicitly preserves the ordering:
+ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode.
 
-- **Ontology** (KFM-OP v11): CIDOC-CRM, GeoSPARQL, OWL-Time, PROV-O mappings.  
-- **Catalogs**: STAC for assets, DCAT for datasets, JSON-LD contexts.  
-- **CI/CD & Telemetry**: OpenLineage + OpenTelemetry outputs.  
-- **Focus Mode v3**: UI layer that consumes Story Nodes to build narrative experiences.
+Story Nodes are the narrative layer that must remain **evidence-led** and **contracted** (UI does not read Neo4j directly; it consumes the API layer).
 
-This README anchors Story Nodes as a **first-class, governed artifact** of the monorepo, equal in importance to datasets and pipelines.
+### Constraints / invariants
+- Story Nodes must be provenance-linked; Focus Mode must not display hallucinated or unsourced claims.
+- Any predictive/AI-generated content must be opt-in and include uncertainty/confidence metadata (if applicable).
+- UI consumes Story Node and graph context only via API contracts (no direct graph dependency).
 
----
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Exact on-disk Story Node instance layout and naming convention | TBD | TBD |
+| Story Node identifier scheme (slug/uuid mapping) | TBD | TBD |
+| Where “citation rendering” rules are specified in the UI | TBD | TBD |
 
-## 🧠 Story Node & Focus Mode Integration
+## 🗺️ Diagrams
 
-Focus Mode v3 treats Story Nodes as:
-
-- **Narrative primitives** (small, linkable units of explanation).  
-- **Semantic waypoints** tying together:
-  - map views  
-  - timelines  
-  - dataset detail panels  
-  - CI/CD and system health views.
-
-### Story Node Consumption
-
-When a user focuses on:
-
-- a place (county, river, watershed, trail)  
-- a dataset (STAC collection or DCAT dataset)  
-- a system object (workflow, release, telemetry bundle)
-
-Focus Mode:
-
-1. Finds Story Nodes whose `links` or `targets` include that entity.  
-2. Renders summaries and details in a Focus panel.  
-3. Optionally builds multi-node timelines and comparisons.
-
-### System vs Domain Story Nodes
-
-- **System Story Nodes (system/)**  
-  - Explain CI/CD runs, auto-updates, release practices, telemetry evolution, governance events.  
-  - Example: `kfm-auto-update.json` describes the daily auto-update orchestrator.
-
-- **Domain Story Nodes (domains/)**  
-  - Explain real-world phenomena (floods, droughts, climate episodes, archaeological landscapes).  
-  - Highly governed, particularly in archaeology and history folders.
-
----
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[Primary source items] --> B[Extraction and curation activity]
+  B --> C[Story Node]
+  C --> D[Focus Mode narrative]
+~~~
 
 ## 📦 Data & Metadata
 
-Story Nodes are:
+### Minimum evidence bundle to reference
+A Story Node should reference, at minimum, one or more of:
+- STAC Item ID(s)
+- DCAT Dataset identifier(s)
+- PROV activity/run identifier(s)
+- Graph entity IDs (Place/Event/Person/Organization/Document/etc.)
 
-- **JSON documents** that validate against a **Story Node v3 JSON Schema** (`schemas/json/story-node-v3.schema.json` in the monorepo).  
-- **PROV-O aware**, referencing workflows, datasets, and releases as `prov:Entity`/`prov:Activity`.  
-- **STAC/DCAT-aware**, referencing catalog entries instead of hard-coded URLs.
+### Optional Focus Mode controls
+(Use only when the UI/contract supports these fields; behavior is not confirmed in repo beyond the template.)
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
-For each Story Node, authors should:
+## 🌐 STAC, DCAT & PROV Alignment
 
-1. Ensure all referenced datasets exist in STAC/DCAT catalogs.  
-2. Link to workflows via their `.github/workflows/*.yml` identifiers.  
-3. Include any relevant telemetry references (e.g., CI/CD or auto-update metrics).  
-4. Provide stable, versioned URNs (`urn:kfm:story-node:...`) for `id`.
+### Provenance requirements
+Story Nodes should include:
+- `prov:wasDerivedFrom`: list of source IDs (documents/datasets/assets)
+- `prov:wasGeneratedBy`: pipeline activity/run ID (when produced by a pipeline step)
+- Confidence/uncertainty fields **only if** predictive content is included
 
----
+## 🧱 Architecture
+
+### How story nodes are served
+- API route(s): TBD (not confirmed in repo)
+- UI component(s): TBD (not confirmed in repo)
+- Required invariant: frontend consumes Story Nodes via APIs, not via direct graph access.
+
+### Audit panel expectations
+When Focus Mode renders a Story Node, it should be able to show:
+- citations / source IDs
+- sensitivity notices
+- missing-reference warnings (if any)
+
+(Exact UI behavior not confirmed in repo; keep this aligned with implemented contracts.)
+
+## 🧠 Authoring workflow
+
+### Create a new Story Node
+1) Identify evidence:
+   - source document IDs and/or STAC/DCAT entries
+2) Copy the governed template:
+   - `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+3) Fill the template with:
+   - neutral, evidence-led narrative
+   - explicit entity linkage (Place/Event/Person/Org) where applicable
+   - cited source IDs for every factual claim
+4) Add optional Focus Mode controls only if supported by current UI/API
+5) Complete validation checklist before review
+
+## 🧪 Validation & CI/CD
+
+### Validation checklist
+- [ ] Uses Story Node v3 template structure
+- [ ] All referenced entities exist (or have creation tickets)
+- [ ] All dataset IDs resolve to catalog entries
+- [ ] No prohibited AI actions implied (no speculative additions, no inferring sensitive locations)
+- [ ] Sensitive information handled correctly and consistently
+- [ ] Links and IDs are stable (no “temporary” URLs where avoidable)
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) validate Markdown protocol
+# 2) validate STAC/DCAT/PROV artifacts referenced
+# 3) run contract tests (if Story Node is served by an endpoint)
+~~~
 
 ## ⚖ FAIR+CARE & Governance
 
-All Story Nodes—especially domain and historical/cultural nodes—are subject to:
+### Review gates
+Story Nodes should be flagged for additional review when they:
+- introduce new sensitive places/layers
+- reference new external data sources
+- change public-facing narrative behavior in Focus Mode
+- include predictive/AI-generated claims without uncertainty metadata
 
-- **FAIR**:
-  - Machine-readable JSON.  
-  - Stable identifiers.  
-  - Clear licensing & provenance.
-
-- **CARE**:
-  - Protection of Indigenous and community knowledge.  
-  - Use of **H3 generalization** for sensitive sites.  
-  - Compliance with `INDIGENOUS-DATA-PROTECTION.md`.  
-  - Avoidance of speculative or sensationalized narratives.
-
-System nodes (in `system/`) avoid human subjects and cultural interpretation but still carry FAIR+CARE metadata for consistency.
-
-Sensitive nodes may require:
-
-- Additional review by FAIR+CARE Council and relevant community partners.  
-- Restricted publication or partial redaction in public builds.
-
----
+### CARE / sovereignty considerations
+- Do not expose sensitive locations or culturally restricted knowledge.
+- Apply generalization/redaction rules as required by governance docs.
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary                                                                                          |
-|--------:|------------|--------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Rebuilt to mirror KFM-MDP v11.2.2 formatting; added badge row; moved directory layout near top; fixed emoji discipline. |
-| v11.2.1 | 2025-11-27 | Interim reorganization of system vs domain Story Node directories.                               |
-| v11.0.0 | 2025-11-20 | Initial Story Nodes README defining roles and basic directory structure.                         |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial Story Nodes README | TBD |
 
 ---
-
-<div align="center">
-
-🧠 **Kansas Frontier Matrix — Story Nodes Overview (v11.2.2)**  
-Semantic Narratives · Temporal Intelligence · FAIR+CARE-Governed  
-
-[📘 Docs Root](../README.md) · [🧠 System Story Nodes](system/README.md) · [⚖ Governance](../standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
