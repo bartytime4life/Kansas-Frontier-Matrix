@@ -1,326 +1,319 @@
 ---
-title: "📊 KFM v11.2.2 — Annual & Incremental Data Update Reports (Soils · DEM · Hydrology · Terrain · AI Layers)"
-path: "docs/data/updates/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-28"
-release_stage: "Stable / Governed"
-lifecycle: "Annual Data Refresh System"
-review_cycle: "Annual · FAIR+CARE Council · Data Integrity Board"
-content_stability: "stable"
+title: "KFM Data Updates — README"
+path: "data/updates/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-signature_ref: "../../../releases/v11.2.2/signature.sig"
-attestation_ref: "../../../releases/v11.2.2/slsa-attestation.json"
-
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.2/data-updates-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/data-updates-v11.2.2.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-license: "CC-BY 4.0"
-
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Domain Overview"
-header_profile: "standard"
-footer_profile: "standard"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-scope:
-  domain: "data-updates"
-  applies_to:
-    - "annual-diffs"
-    - "incremental-diffs"
-    - "soil"
-    - "dem"
-    - "hydrology"
-    - "terrain"
-    - "ai-layers"
-    - "stac-update-sets"
+doc_uuid: "urn:kfm:doc:data:updates:readme:v1.0.0"
+semantic_document_id: "kfm-data-updates-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:updates:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-semantic_intent:
-  - "annual-diff"
-  - "structural-refresh"
-  - "metadata-diff"
-  - "lineage-governance"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-sensitivity: "Environmental"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-
-metadata_profiles:
-  - "STAC 1.0.0"
-  - "DCAT 3.0"
-  - "PROV-O"
-  - "ISO-19115"
-  - "FAIR+CARE"
-
-immutability_status: "version-pinned"
-doc_uuid: "urn:kfm:doc:data:updates:index:v11.2.2"
-semantic_document_id: "kfm-data-updates-index-v11.2.2"
-event_source_id: "ledger:data-updates-index-v11.2.2"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-requires_purpose_block: true
-requires_directory_layout_section: true
-requires_version_history: true
-requires_governance_links_in_footer: true
-diagram_profiles:
-  - "mermaid-flowchart-v1"
-  - "mermaid-timeline-v1"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📊 **KFM v11.2.2 — Annual & Incremental Data Update Reports**  
-`docs/data/updates/README.md`
-
-**Purpose:**  
-Provide the unified index for all **annual** and **incremental** statewide data difference (diff) reports within the Kansas Frontier Matrix.  
-These diffs summarize year-to-year changes in **soils**, **DEM/terrain**, **hydrology**, **erosion/sediment models**, **AI affordance layers**, and related geospatial products.  
-Each diff is STAC-registered, lineage-tracked, and provides mandatory rebuild signals for downstream pipelines.
-
-</div>
-
----
+# data/updates
 
 ## 📘 Overview
 
-The **Data Updates Domain** exists to ensure that KFM remains synchronized with:
+### Purpose
+`data/updates/` is the **staging + audit** area for *discrete, reviewable update bundles* that propose changes to KFM datasets and/or their derived catalogs.
+It exists to make updates:
+- **Atomic** (one update = one bundle),
+- **Auditable** (who/what/why/when + checksums),
+- **Replayable** (ETL consumes a manifest; catalogs/graph are regenerated deterministically).
 
-- **USDA NRCS annual soil releases** (SSURGO / gNATSGO)  
-- **USGS 3DEP lidar & DEM updates**  
-- **NHDPlusHR hydrography refreshes**  
-- **NOAA/NASA environmental indices**  
-- **Terrain derivative changes** (slope, aspect, roughness, etc.)  
-- **AI environmental-affordance layers** derived from DEM + soils  
-- **Cross-domain structural shifts** affecting Story Nodes or Focus Mode interpretations  
+This directory does **not** replace the canonical lifecycle paths (`data/raw/`, `data/work/`, `data/processed/`, `data/stac/`, `data/catalog/dcat/`, `data/prov/`).
 
-Each update cycle produces:
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Update bundle folders with manifest + inputs + review notes + checksums | Canonical raw/processed datasets (those live under `data/raw/` and `data/processed/`) |
+| Change rationale + provenance pointers (issue/ticket IDs, source URLs/IDs, license notes) | Secrets/credentials, private keys, or PII dumps |
+| Optional “candidate” catalog deltas for review (if used) | Serving content directly to the UI (UI must only consume via APIs) |
 
-1. **Diff Report** — Changes between last and current year  
-2. **STAC Diff Manifest** — Machine-readable change set  
-3. **Pipeline Impact Summary** — Tiered rebuild requirements  
-4. **Lineage Ledger Entry** — Provenance for all changed assets  
-5. **Telemetry Record** — Metrics for drift, update volume, carbon/energy footprint  
+### Audience
+- Primary: Data maintainers, ETL/pipeline maintainers, catalog/graph maintainers
+- Secondary: Contributors proposing dataset changes, reviewers validating provenance + licensing
 
----
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc:
+  - **Update bundle**: A directory containing a single proposed change set + manifest + checksums.
+  - **update_id**: A stable identifier for the bundle used in logs/PROV.
+  - **Run ID**: A pipeline execution identifier recorded in PROV (when available).
+  - **Dataset ID**: Stable identifier used in DCAT (and mirrored in graph/API contracts).
+
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Updates root README | `data/updates/README.md` | DataOps | This file |
+| Update bundle folder | `data/updates/<update_bundle>/` | Contributor / Maintainer | Naming convention below |
+| Update manifest | `data/updates/<update_bundle>/manifest.yaml` | Contributor | Schema TBD |
+| Checksums | `data/updates/<update_bundle>/checksums/sha256sums.txt` | Contributor | Required for integrity |
+| Review notes | `data/updates/<update_bundle>/notes/` | Reviewer | Human review trace |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + path matches
+- [ ] Directory layout + naming convention documented
+- [ ] Update bundle minimum required files specified
+- [ ] Validation expectations listed (schema + provenance + checksums)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
+### This document
+- `path`: `data/updates/README.md`
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Update staging | `data/updates/` | Proposed change bundles + manifests + review notes |
+| Raw ingestion | `data/raw/` | Canonical raw inputs (after acceptance) |
+| Work/intermediate | `data/work/` | Temporary processing outputs |
+| Processed outputs | `data/processed/` | Canonical derived datasets |
+| STAC catalogs | `data/stac/` | STAC collections + items |
+| DCAT catalogs | `data/catalog/dcat/` | DCAT dataset views |
+| Provenance | `data/prov/` | PROV bundles for transforms/runs |
+| Governing docs | `docs/` | Master guide, standards, templates |
+
+### Expected file tree for this sub-area
 ~~~text
-📁 docs/
-└── 📁 data/
-    └── 📁 updates/
-        ├── 📄 README.md                         # This file (index)
-        ├── 📄 kansas-2024-2025-diff.md          # Current annual diff report
-        ├── 📄 2023-2024-diff.md                 # Previous annual cycle
-        └── 📁 stac/                             # Optional doc-local copies/pointers for diff STAC records
-            ├── 📄 kansas-2024-2025-diff.json
-            └── 📄 2023-2024-diff.json
+📁 data/
+└── 📁 updates/
+    ├── 📄 README.md
+    ├── 📁 YYYY-MM-DD__<domain>__<source>__<update_slug>/
+    │   ├── 📄 manifest.yaml
+    │   ├── 📁 inputs/
+    │   │   └── (new/changed source files, or pointers/metadata if too large)
+    │   ├── 📁 notes/
+    │   │   ├── 📄 CHANGELOG.md
+    │   │   └── 📄 REVIEW_NOTES.md
+    │   └── 📁 checksums/
+    │       └── 📄 sha256sums.txt
+    └── 📁 YYYY-MM-DD__<domain>__<source>__<update_slug>/
+        └── (repeat per update bundle)
 ~~~
-
-> **Normative:** Authoritative STAC Items for update diffs MUST live under `data/stac/` (per KFM-STAC v11);  
-> this directory MAY include convenience copies or pointers for documentation browsing.
-
----
 
 ## 🧭 Context
 
-### 🟦 Annual Structural Updates (Tier-1)
+### Background
+KFM is designed to evolve as new sources arrive and existing datasets are corrected or enriched.
+To keep the system reproducible and governed, updates should enter the pipeline as explicit, reviewable bundles that can be validated and linked to provenance outputs.
 
-Triggered by major upstream data releases:
+### Assumptions
+- Update bundles are intended to be consumed by an ETL/config runner that is **deterministic** and **idempotent**.
+- Catalog outputs (STAC/DCAT/PROV) remain the canonical machine-validated “truth” for downstream graph + API + UI.
+- Repo-specific commands and manifest schema may exist elsewhere; this README documents a minimal convention.
 
-- SDA / gNATSGO  
-- 3DEP DEM  
-- Hydrology (NHDPlusHR)  
-- Terrain derivations  
-- Ecosystem or geomorphological updates  
-- Heritage landscape interactions (if DEM-driven)  
+### Constraints / invariants
+- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- Do not commit secrets/credentials; do not include sensitive locations unless redaction/generalization rules are defined.
 
-Require **mandatory pipeline rebuilds**.
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| What is the canonical `manifest.yaml` schema? | TBD | TBD |
+| Are “candidate catalog deltas” allowed in update bundles, or should catalogs only live in `data/stac/`, `data/catalog/dcat/`, `data/prov/`? | TBD | TBD |
+| What is the repo’s standard update naming convention (date + domain + slug vs UUID)? | TBD | TBD |
 
-### 🟧 Incremental Updates (Tier-2)
+### Future extensions
+- Add `schemas/updates/update_manifest.schema.json` + CI validator.
+- Add a GitHub Action workflow to validate checksums + manifest schema on PR.
+- Add a PROV “update activity” profile to standardize run identifiers and agents.
 
-Smaller diffs driven by:
+## 🗺️ Diagrams
 
-- Replacement tiles  
-- Minor attribute/table changes  
-- Local hydrology fixes  
-- AI feature-space refinements  
-- Minor erosion/sediment predictor updates  
-
-Optionally trigger downstream rebuilds depending on impact level.
-
-### 🟩 Metadata-Only Updates (Tier-3)
-
-Updates to:
-
-- STAC metadata  
-- Provenance chains  
-- License updates  
-- Contact or distribution info  
-- Minor schema updates  
-
-Do **not** require ETL rebuilds.
-
----
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  U[Update bundle in data/updates/] --> E[ETL + Normalization]
+  E --> R[data/raw + data/work + data/processed]
+  R --> C[STAC/DCAT/PROV catalogs]
+  C --> G[Neo4j Graph]
+  G --> A[API Layer]
+  A --> UI[React/Map UI]
+  UI --> SN[Story Nodes]
+  SN --> FM[Focus Mode]
+~~~
 
 ## 📦 Data & Metadata
 
-Diff reports and their companion artifacts MUST capture (at minimum):
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Update manifest | YAML | `data/updates/<bundle>/manifest.yaml` | Schema validation (TBD) |
+| Update payload | Files / pointers | `data/updates/<bundle>/inputs/` | Checksums + basic format checks |
+| Review notes | Markdown | `data/updates/<bundle>/notes/` | Markdown lint (if enforced) |
 
-- **Diff period** (e.g., `2024–2025`)  
-- **Changed assets** (datasets, tables, rasters, tiles, collections)  
-- **Changed tiles** (where tiling is used; tile identifiers preferred over raw coordinate dumps)  
-- **Impact tier** (Tier-1 / Tier-2 / Tier-3)  
-- **Downstream dependency signals** (what pipelines must rebuild vs may rebuild)  
-- **Checksums / hashes** for changed assets (multihash where supported)  
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Canonical raw inputs (post-acceptance) | mixed | `data/raw/<domain>/...` | Domain-specific |
+| Canonical derived outputs | mixed | `data/processed/<domain>/...` | Domain-specific |
+| STAC items/collections | JSON | `data/stac/...` | STAC 1.0 + profile |
+| DCAT datasets | RDF/JSON-LD/Turtle | `data/catalog/dcat/...` | DCAT 3 + profile |
+| PROV lineage bundles | RDF/JSON-LD | `data/prov/...` | PROV-O + profile |
 
----
+### Sensitivity & redaction
+- If an update introduces or modifies sensitive content, the update bundle MUST:
+  - mark sensitivity in the manifest (field name TBD),
+  - include redaction/generalization guidance in `notes/REVIEW_NOTES.md`,
+  - avoid committing restricted coordinates or personal identifiers unless explicitly governed.
+
+### Quality signals
+- Presence of `sha256sums.txt` for all payload files.
+- Manifest includes source attribution + license notes.
+- Geometry validity checks for geospatial data (if applicable).
+- Record count/range checks for tabular datasets (if applicable).
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### STAC
-
-Every annual diff MUST:
-
-- Publish a STAC Item under:  
-  `data/stac/data-updates/<year-range>.json`
-- Include:
-  - `properties.diff_period`
-  - `properties.changed_assets`
-  - `properties.changed_tiles`
-  - `kfm:impact_level` (Tier-1 / Tier-2 / Tier-3)
+- If the update changes spatiotemporal assets, the resulting catalog artifacts belong in:
+  - `data/stac/collections/`
+  - `data/stac/items/`
+- Update bundles SHOULD reference intended STAC IDs in the manifest (field TBD).
+- Versioning: prefer predecessor/successor linking in STAC and mirror lineage in graph.
 
 ### DCAT
-
-Each diff MUST be registered under the **DCAT Dataset Catalog** as a discoverable record, with:
-
-- `dct:title`, `dct:description`, `dct:license`  
-- Publisher/creator fields as appropriate  
-- Linkage to the diff STAC Item and to impacted upstream datasets  
+- Update bundles SHOULD reference the target dataset identifier(s) used in DCAT.
+- License, publisher, and distribution links should be tracked in the catalog layer, not ad-hoc in the UI.
 
 ### PROV-O
+- Each accepted update SHOULD result in a PROV activity record (bundle/run) that captures:
+  - `prov:wasDerivedFrom` (source IDs, prior dataset versions),
+  - `prov:wasGeneratedBy` (pipeline run activity ID),
+  - agent attribution (human + pipeline).
 
-Each diff MUST emit a provenance trace that links:
-
-- Raw upstream releases → processed assets  
-- The diff activity (annual or incremental) → the generated diff artifacts  
-- The agent(s) responsible (scripts, CI bots, councils, maintainers)  
-
----
+### Versioning
+- Treat updates as creating a new version of a dataset/artifact when semantics change.
+- Keep stable IDs; use successor/predecessor relationships for lineage.
 
 ## 🧱 Architecture
 
-Diff reports propagate rebuild signals to (examples):
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| Update bundle | Staged change proposal | `manifest.yaml` + payload + checksums |
+| ETL | Ingest + normalize + validate | Config-driven runner (TBD) |
+| Catalogs | STAC/DCAT/PROV generation | JSON/RDF artifacts + validators |
+| Graph | Semantic integration | Neo4j build (via pipeline) |
+| APIs | Contracted access | REST/GraphQL |
+| UI | Map + narrative UX | API calls only |
+| Story Nodes | Provenance-linked narrative | docs + graph linkage |
 
-- `soil-index/`  
-- `soil-terrain/`  
-- `hydrology/`  
-- `dem/` and all derivatives  
-- `ai/interpretations/environmental-affordances/`  
-- `archaeology/settlement-morphology/`  
-- `climate/derived-layers/`  
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Update manifest schema | `schemas/updates/` (proposed) | Semver + changelog |
+| STAC schemas | `data/stac/` | Profile versioning |
+| DCAT schemas | `data/catalog/dcat/` | Profile versioning |
+| PROV bundles | `data/prov/` | Profile versioning |
 
-Pipelines consume:
-
-- **Impact level**  
-- **Changed tiles**  
-- **Changed attributes**  
-- **Dependency DAG** (auto-generated)  
-
----
-
-## 🧪 Validation & CI/CD
-
-Annual CI SHOULD include:
-
-- Hash diffs of SDA + gNATSGO tiles  
-- Tile inventory diffs for 3DEP DEM  
-- Hydrology reburn audits  
-- DEM derivation validity checks  
-- Metadata drift detection  
-- Telemetry ingestion (energy/carbon metrics)  
-- KFM Lineage Ledger entry creation  
-
-Failures SHOULD generate:
-
-- `alerts/data-integrity/` tickets  
-- OpenTelemetry error spans  
-- Auto-mitigation or fallback to previous release  
-
----
+### Extension points checklist (for future work)
+- [ ] Add update manifest schema + validator
+- [ ] Add checksum verification in CI
+- [ ] Add automated “promote update bundle → data/raw” workflow (if desired)
+- [ ] Add PROV run linkage for every accepted update
+- [ ] Add catalog diff reporting for reviewers
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Annual diffs automatically update:
+### How this work surfaces in Focus Mode
+If an update bundle introduces new narrative content, it must be placed under the governed docs area and follow the Story Node template. The UI should only render it when the API provides provenance-linked context bundles.
 
-- **Environmental affordance Story Nodes**  
-- **Hydrology-linked narratives**  
-- **Terrain/soil interactions** shown in Focus Mode  
-- **Archaeological landscape interpretations**  
+### Provenance-linked narrative rule
+- Every claim must trace to a dataset / record / asset ID.
 
-Focus Mode v3 uses:
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
-- `changed_tiles`  
-- `changed_attributes`  
-- `geomorphology updates`  
-- `DEM visibility/relief changes`  
+## 🧪 Validation & CI/CD
 
-This ensures narrative accuracy across time.
+### Validation steps
+- [ ] Checksums present and verifiable for bundle payload
+- [ ] Manifest schema validation (when schema is defined)
+- [ ] Schema validation for any changed STAC/DCAT/PROV artifacts (if included/modified)
+- [ ] Markdown lint for notes (if CI enforces)
+- [ ] Governance + sovereignty review triggers assessed
 
----
+### Reproduction
+~~~bash
+# Repo-specific commands are not defined here.
+# Suggested pattern:
+# 1) validate the update bundle manifest + checksums
+# 2) run ETL for the referenced domain/source
+# 3) regenerate STAC/DCAT/PROV and validate schemas
+# 4) rebuild graph + run tests
+~~~
+
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| update_id | manifest | `data/prov/` (via run activity), or `mcp/runs/` |
+| file hash coverage | checksums | CI logs |
 
 ## ⚖ FAIR+CARE & Governance
 
-Telemetry and diff summaries MUST NOT include:
+### Review gates
+- New external sources or license changes: requires human review.
+- New sensitive layers/locations: requires sovereignty + ethics review.
+- New public-facing API endpoints: requires contract + security review.
 
-- Raw coordinates of sensitive sites beyond what is allowed in governed STAC outputs  
-- Any non-governed or internal STAC drafts not intended for publication  
-- PII/PHI or credential/secrets material  
+### CARE / sovereignty considerations
+- Respect community-defined handling rules for culturally sensitive locations and narratives.
+- Do not infer or add precise sensitive locations through AI transforms.
 
-Where necessary, summary metrics SHOULD be aggregated (e.g., counts per collection) rather than per-feature details.
-
-All update reporting MUST remain consistent with:
-
-- FAIR+CARE guidance (`ethics_ref`)  
-- Governance baseline (`governance_ref`)  
-- Sovereignty and masking constraints (`sovereignty_policy`)  
-
----
+### AI usage constraints
+- AI transforms allowed for this doc: summarize, structure extract, translate, keyword index.
+- Prohibited: generating new policy or inferring sensitive locations.
 
 ## 🕰️ Version History
 
-| Version | Date       | Notes                                              |
-|--------:|------------|----------------------------------------------------|
-| v11.2.2 | 2025-11-28 | Converted to v11.2.2; emoji tree; metadata uplift  |
-| v11.0.0 | 2025-11-28 | Initial domain introduction                        |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial README for update bundle staging | TBD |
 
 ---
-
-<div align="center">
-
-### 🔗 Footer  
-[🌐 KFM Home](../../../README.md) · [📚 Standards](../../standards/README.md) · [⚖ Governance](../../standards/governance/ROOT-GOVERNANCE.md) · [📦 STAC Catalog](../../../data/stac/)
-
-</div>
+Footer refs:
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Templates: `docs/templates/`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
