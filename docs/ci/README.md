@@ -1,269 +1,367 @@
 ---
-title: "🧪 Kansas Frontier Matrix — CI Documentation Index"
+title: "KFM CI — README"
 path: "docs/ci/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-13"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Reliability Council · FAIR+CARE Council"
-content_stability: "stable"
-status: "Active / Enforced"
-
-doc_kind: "Index"
-header_profile: "standard"
-footer_profile: "standard"
-diagram_profiles: []
-
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-intent: "ci-docs-index"
-audience:
-  - "Reliability Engineering"
-  - "Data Engineering"
-  - "Catalog + Provenance Engineering"
-  - "Security / Supply Chain"
-  - "Governance Reviewers"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-scope:
-  domain: "ci-cd"
-  applies_to:
-    - "docs/ci/**"
-    - ".github/workflows/**"
-    - "schemas/**"
-    - "policies/**"
-
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-classification: "Public"
-sensitivity: "General (no secrets; provenance-safe)"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-jurisdiction: "Kansas / United States"
-indigenous_rights_flag: true
-data_steward: "Reliability Council · FAIR+CARE Council"
-
-doc_uuid: "urn:kfm:doc:ci:index:v11.2.6"
-semantic_document_id: "kfm-ci-index-v11.2.6"
-event_source_id: "ledger:kfm:doc:ci:index:v11.2.6"
+doc_uuid: "urn:kfm:doc:ci:readme:v1.0.0"
+semantic_document_id: "kfm-ci-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:ci:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
-governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-security_ref: "../security/supply-chain/README.md"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "metadata-extraction"
-  - "layout-normalization"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "fabricating approvals"
-  - "fabricating provenance or policy decisions"
-  - "governance-override"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧪 **Kansas Frontier Matrix — CI Documentation Index**
-`docs/ci/README.md`
-
-**Purpose**  
-Provide a governed entry point for Kansas Frontier Matrix (KFM) **CI/CD standards, patterns, and runbooks**:
-deterministic builds, validation gates, provenance emission, supply-chain controls, and policy enforcement.
-
-<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/CI%2FCD-Governed-brightgreen" />
-<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
-
-</div>
-
----
+# KFM CI README
 
 ## 📘 Overview
 
-This directory contains CI documentation that supports:
+### Purpose
+This document describes the Continuous Integration expectations for the Kansas Frontier Matrix (KFM)
+repository, focusing on validation gates that protect the canonical pipeline ordering and governance
+constraints.
 
-- **Deterministic, replayable pipelines** (same inputs + same config ⇒ same outputs + checksums).
-- **Validation gates** for contracts, catalogs, schemas, provenance, and governance requirements.
-- **Provenance-first delivery** (OpenLineage + PROV-O) and evidence artifacts attached to PRs.
-- **Supply-chain integrity** (SBOM, attestations, signature verification) for build outputs.
-- **FAIR+CARE governance controls** (rights, sensitivity, and sovereignty-aware policy gates).
+This README is a governed overview. It does not attempt to enumerate every workflow file or command
+used by the repo. If CI workflow definitions exist in the repository (for example under `.github/`),
+they are the implementation source of truth.
 
-### Key documents
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| CI quality gates that keep KFM artifacts valid and governed (docs, schemas, data, graph, APIs, UI) | Hosting/provider-specific CI infrastructure details and secrets management configuration |
+| Required validation categories for “v12-ready” contributions | Writing or changing governance policy text (must live under `docs/governance/`) |
+| How to propose or extend CI checks without breaking contracts | Bypassing review, forcing merges, or disabling gates |
 
-- **AI codegen preview + provenance gates**  
-  `docs/ci/ai-codegen-preview/README.md`
+### Audience
+- Primary: maintainers, reviewers, release managers
+- Secondary: contributors adding data, pipelines, graph changes, API changes, UI changes, or Story Nodes
 
-If additional CI patterns or runbooks are introduced under `docs/ci/`, they MUST be linked from this index.
+### Definitions
+- Link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc: CI, validation gate, provenance, STAC, DCAT, PROV, contract test, “v12-ready”
 
----
+### Key artifacts
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master guide (pipeline invariants) | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical pipeline and minimum CI gates live here |
+| CI documentation | `docs/ci/README.md` | Maintainers | This document |
+| GitHub automation | `.github/` | Maintainers | Workflows and community health files may live here (not confirmed in repo) |
+| Schemas | `schemas/` | DataOps | Validation of STAC/DCAT/PROV/telemetry (not confirmed in repo) |
+| Tests | `tests/` | Engineering | Unit/integration/contract tests (not confirmed in repo) |
 
-## 🗂 Directory Layout
+### Definition of done for this document
+- [ ] Front-matter complete + valid
+- [ ] CI gates described match the Master Guide requirements
+- [ ] Validation steps are listed and repeatable at a category level (even if commands are placeholders)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
+- [ ] No secrets, credentials, or sensitive locations included
 
-~~~text
-📁 docs/
-└── 📁 ci/
-    ├── 📄 README.md                               — This index (governed)
-    └── 📁 ai-codegen-preview/
-        └── 📄 README.md                           — AI codegen PR pattern: deterministic preview + provenance gates
-~~~
+## 🗂️ Directory Layout
 
-Recommended adjacent roots (referenced by CI docs):
+### This document
+- `path`: `docs/ci/README.md`
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| CI provider configuration | `.github/` | Workflow definitions, security files, templates (not confirmed in repo) |
+| Documentation standards and templates | `docs/standards/`, `docs/templates/` | Markdown protocol and governed templates |
+| Validation schemas | `schemas/` | JSON schemas for catalogs, telemetry, contracts (not confirmed in repo) |
+| Pipeline code | `src/pipelines/` | ETL + catalog generation + transforms (not confirmed in repo) |
+| Graph code | `src/graph/` | Ontology bindings, graph build, migrations (not confirmed in repo) |
+| API code | `src/server/` | REST/GraphQL contracts + tests (not confirmed in repo) |
+| UI code | `web/` | React/Map UI + layer registry + a11y checks (not confirmed in repo) |
+
+### Expected file tree for this sub-area
+The exact CI provider and filenames are not confirmed in repo. This is a target layout to keep CI
+documentation discoverable and reviewable.
 
 ~~~text
 📁 .github/
-└── 📁 workflows/                                 — CI workflows (policy-gated, deterministic, reproducible)
+├── 📁 workflows/
+│   ├── 📄 ci.yml
+│   ├── 📄 security.yml
+│   └── 📄 pages.yml
+└── 📄 SECURITY.md
 
-📁 schemas/                                       — JSON schemas and SHACL shapes used in validation gates
-📁 policies/                                      — OPA/Rego policies, GE suites, and governance gate rules
-📁 releases/                                      — Release packets (SBOM, attestations, signatures, manifests)
-📁 mcp/
-└── 📁 runs/                                      — Run logs and config snapshots for reproducibility
+📁 docs/
+├── 📄 MASTER_GUIDE_v12.md
+├── 📁 ci/
+│   ├── 📄 README.md
+│   ├── 📁 checklists/
+│   │   ├── 📄 PR_CHECKLIST.md
+│   │   └── 📄 RELEASE_CHECKLIST.md
+│   └── 📁 runbooks/
+│       └── 📄 CI_TROUBLESHOOTING.md
+└── 📁 templates/
+    ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
+    ├── 📄 TEMPLATE__STORY_NODE_V3.md
+    └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
 ~~~
-
----
 
 ## 🧭 Context
 
-KFM CI is not only “tests and lint.” It is a governed control plane that ensures:
+### Background
+KFM is a multi-stage, contract-driven system. CI exists to prevent invalid artifacts from entering the
+repository and to enforce non-negotiable invariants such as provenance-first, deterministic pipelines,
+and the canonical stage ordering:
 
-- **Contracts are enforced** at the repo boundary (KFM-PDC v11).
-- **Catalog integrity is preserved** (STAC/DCAT validation and linkage checks).
-- **Provenance is complete and machine-verifiable** (OpenLineage + PROV-O).
-- **Sensitive and sovereignty-affected data stays protected** (policy gates and escalation requirements).
-- **Build outputs are auditable** (SBOM, attestations, signatures, checksum manifests).
+ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode.
 
-CI must treat artifacts as governed evidence, not just build byproducts.
+### Assumptions
+- Git-based contribution flow with reviews and automated checks (not confirmed in repo)
+- Data and narrative outputs must remain reproducible and provenance-linked
 
----
+### Constraints and invariants
+- The canonical pipeline ordering is preserved.
+- Frontend consumes contracts via APIs only. UI must not read Neo4j directly.
+- No unsourced narrative is permitted in Focus Mode contexts.
+- Any sensitive content must follow sovereignty guidance, including redaction and generalization.
+- CI must not leak secrets, credentials, or restricted locations in logs or artifacts.
 
-## 🧱 Architecture
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Which CI provider and workflow files are authoritative in this repo? | Maintainers | TBD |
+| Where are schema validators and contract tests implemented? | Maintainers | TBD |
+| What is the release workflow and artifact publishing approach? | Maintainers | TBD |
 
-A typical governed CI flow is composed of:
+### Future extensions
+- Scheduled validations for dynamic sources and catalogs
+- Preview environments for UI and docs (if supported)
+- Dataset regression tests for geometry validity, ranges, and completeness
+- Provenance audits that fail builds when required PROV fields are missing
 
-- **Pre-merge checks**
-  - formatting and repo hygiene
-  - schema validation (JSON/SHACL where applicable)
-  - unit and integration tests
-  - policy evaluation (OPA/Rego)
-- **Evidence emission**
-  - build manifests and checksums
-  - validation reports (STAC/DCAT/PROV)
-  - telemetry snapshots (when enabled)
-- **Governance gating**
-  - required-review routing based on rights/sensitivity/sovereignty flags
-  - merge blocked unless all required gates pass
-  - steward override only with signed justification artifact (when allowed)
+## 🗺️ Diagrams
 
----
+### System validation flow
+~~~mermaid
+flowchart LR
+  PR[Pull request changes] --> Gate[CI validation gates]
+  Gate --> Docs[Docs lint + markdown protocol]
+  Gate --> Schemas[Schema validation: STAC/DCAT/PROV/telemetry]
+  Gate --> Graph[Graph integrity tests]
+  Gate --> API[API contract tests]
+  Gate --> UI[UI checks: build + a11y + layer registry]
+  Gate --> Sec[Security + sovereignty scans]
+  Docs --> Merge[Merge allowed]
+  Schemas --> Merge
+  Graph --> Merge
+  API --> Merge
+  UI --> Merge
+  Sec --> Merge
+~~~
+
+### Optional sequence for a typical PR
+~~~mermaid
+sequenceDiagram
+  participant Dev as Contributor
+  participant CI as CI system
+  participant Rev as Reviewer
+  Dev->>CI: Open PR
+  CI->>CI: Run required gates
+  CI-->>Dev: Report pass/fail + artifacts
+  Rev->>CI: Review checks + diffs
+  Rev-->>Dev: Approve or request changes
+~~~
 
 ## 📦 Data & Metadata
 
-CI and preview builds SHOULD emit machine-readable artifacts, including:
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Code changes | source | PR diff | lint + tests |
+| Documentation changes | Markdown | PR diff | markdown protocol + link checks |
+| Catalog changes | JSON/JSON-LD | PR diff | schema validation + integrity checks |
+| Data changes | files | PR diff | checksums + format checks + optional domain checks |
 
-- **Build manifests**
-  - artifact list + checksums (sha256)
-  - pinned toolchain and dependency locks
-- **Validation reports**
-  - STAC validation report
-  - DCAT SHACL report
-  - PROV-O validation report
-  - contract validation summary (KFM-PDC)
-- **Supply-chain artifacts**
-  - SBOM (SPDX)
-  - SLSA provenance/attestation
-  - signature verification report (when used)
-- **Telemetry (optional, governed)**
-  - runtime, energy/CO2e, reliability budget indicators
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Lint/test reports | logs | CI artifacts | CI-defined |
+| Schema validation reports | logs/json | CI artifacts | STAC/DCAT/PROV/telemetry schemas |
+| Build artifacts | optional | CI artifacts | depends on subsystem |
 
-All artifacts intended to justify merge decisions MUST be linkable from the PR checks or stored in governed run logs.
+### Sensitivity and redaction
+- CI logs and artifacts must not contain secrets, tokens, credentials, or private keys.
+- When validating restricted layers, ensure logs do not reveal sensitive coordinates or names that must be generalized.
 
----
+### Quality signals
+- Schema validity for catalogs and telemetry
+- Broken-link and reference integrity checks for docs
+- Determinism checks for pipelines where possible
+- Provenance completeness checks for story and evidence artifacts
 
-## 🧪 Validation & CI/CD
+## 🌐 STAC, DCAT & PROV Alignment
 
-Minimum CI expectations for governed changes:
+### STAC
+CI should validate:
+- STAC item and collection JSON schema conformance
+- Item-to-collection linkage integrity
+- Broken-link checks for asset hrefs where feasible
 
-- `markdown-lint` and `metadata-check` (KFM-MDP compliance)
-- schema validation for any emitted JSON/JSON-LD
-- contract validation for pipeline interfaces (KFM-PDC)
-- provenance validation for lineage artifacts (KFM-PROV)
-- supply-chain verification (SBOM + attestation policy, when artifacts are built)
-- policy evaluation (OPA/Rego gates)
-- secret-scan and PII-scan (non-negotiable)
+### DCAT
+CI should validate:
+- Minimum required fields for dataset descriptions
+- License and publisher mapping expectations (where defined)
 
-Where CI introduces new checks, they MUST be documented under `docs/ci/` and added to this index.
+### PROV-O
+CI should validate:
+- Presence of `prov:wasDerivedFrom` and `prov:wasGeneratedBy` where required
+- Activity/run identifiers are recorded for generated artifacts
 
----
+### Versioning
+- New versions should link predecessor/successor where applicable.
+- Graph should mirror version lineage for entities and artifacts.
+
+## 🧱 Architecture
+
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| Docs checks | Markdown lint + protocol enforcement | `docs/` |
+| Schema validation | STAC/DCAT/PROV/telemetry validation | `schemas/` + `data/` |
+| Graph tests | Graph integrity + constraints | `src/graph/` |
+| API checks | OpenAPI/GraphQL contract tests | `src/server/` |
+| UI checks | Build, lint, a11y, layer registry checks | `web/` |
+| Security checks | secret scanning + dependency scanning | repo-wide |
+
+### Interfaces and contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Markdown protocol | `docs/standards/` | Governed changes require review |
+| Templates | `docs/templates/` | Template updates are semver + changelog |
+| JSON schemas | `schemas/` | Semver + contract tests required |
+| API schemas | `src/server/` + docs | Backward compat or version bump |
+
+### Extension points checklist
+- [ ] Data: new domain added under `data/<domain>/...`
+- [ ] Catalog: STAC collection + item validation included
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests
+- [ ] UI: layer registry entry + access rules
+- [ ] Story/Focus: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
 
 ## 🧠 Story Node & Focus Mode Integration
 
-CI artifacts can be treated as evidence inputs for Story Nodes and Focus Mode when they are:
+### How this work surfaces in Focus Mode
+- Story Nodes and Focus Mode must only consume provenance-linked content.
+- Every narrative claim should trace to a dataset/record/asset identifier.
 
-- provenance-linked (PROV-O or OpenLineage IDs present),
-- immutable or version-pinned (checksums and commit hashes recorded),
-- rights-aware (no restricted content leaked through logs or previews).
+### Provenance-linked narrative rule
+- CI should include checks (where implemented) that prevent merging story content without citations and identifiers.
 
-Focus Mode MAY summarize CI outcomes and link to artifacts, but MUST NOT invent approvals or policy decisions.
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
----
+## 🧪 Validation & CI/CD
+
+### Required CI gates for v12-ready contributions
+The following gate categories are required at the project level. Exact commands and workflow
+definitions are implementation details.
+
+- Markdown protocol validation
+- JSON schema validation (STAC/DCAT/telemetry)
+- Graph integrity tests
+- API contract tests
+- UI layer registry schema checks
+- Security and sovereignty scanning gates where applicable
+
+### Reproduction
+Replace placeholders with repo-specific commands once confirmed.
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+
+# Docs
+# make docs-lint
+
+# Schemas (STAC/DCAT/PROV/telemetry)
+# make validate-schemas
+
+# Graph
+# make graph-test
+
+# API
+# make api-contract-test
+
+# UI
+# make ui-check
+
+# Security
+# make security-scan
+~~~
+
+### Telemetry signals
+| Signal | Source | Where recorded |
+|---|---|---|
+| CI run id | CI provider | CI logs / artifacts |
+| Validation summary | validators | `docs/telemetry/` (not confirmed in repo) |
+| Schema versions | schemas | `schemas/` |
 
 ## ⚖ FAIR+CARE & Governance
 
-CI gates MUST enforce:
+### Review gates
+Changes may require additional review when they affect governance, sensitive content, or public exposure.
 
-- license and rights compatibility checks (where applicable),
-- sovereignty policy constraints and escalation rules,
-- prohibition of secrets, PII, or restricted locations in logs, artifacts, or previews,
-- clear separation between:
-  - **facts** (validator outputs, attestations),
-  - **interpretation** (risk assessments),
-  - **policy** (required approvals and blocks).
+### Governance review triggers
+- New sensitive layers
+- New AI narrative behaviors
+- New external data sources
+- New public-facing endpoints
 
-Governance overrides (if allowed) MUST be accompanied by signed justification and preserved provenance.
+### CARE and sovereignty considerations
+- Document redaction and generalization rules for any restricted locations.
+- Ensure compliance with sovereignty constraints in both outputs and CI logs.
+
+### AI usage constraints
+- Ensure this document’s AI permissions and prohibitions match intended use.
+- Do not use AI processes to infer sensitive locations.
+
+## 🕰️ Version History
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial CI README scaffold | TBD |
 
 ---
-
-## 🕰 Version History
-
-| Version | Date       | Notes |
-|-------:|------------|------|
-| v11.2.6 | 2025-12-13 | Initial governed CI documentation index. |
-
----
-
-<div align="center">
-
-🧪 **Kansas Frontier Matrix — CI Documentation Index**  
-Deterministic Pipelines · Verifiable Lineage · Policy-Gated Merges
-
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
-<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
-
-[📘 Docs Root](../README.md) ·
-[🤖 AI Codegen Preview Pattern](./ai-codegen-preview/README.md) ·
-[🏛 Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) ·
-[🔐 Supply-Chain Security](../security/supply-chain/README.md)
-
-© 2025 Kansas Frontier Matrix — CC‑BY 4.0  
-MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
-
-</div>
-
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
