@@ -154,15 +154,15 @@ KFM’s pipeline is intentionally contract-driven: data is processed into standa
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  PR[Pull Request] --> CI[GitHub Actions: CI Gates]
+  PR["Pull Request"] --> CI["GitHub Actions: CI Gates"]
 
-  subgraph Gates
-    M[Markdown protocol validation]
-    S[Schema validation: STAC/DCAT/PROV/telemetry]
-    G[Graph integrity tests]
-    A[API contract tests]
-    U[UI schema checks (layer registry + a11y hooks)]
-    Sec[Security + sovereignty checks (as applicable)]
+  subgraph Gates["Gates"]
+    M["Markdown protocol validation"]
+    S["Schema validation: STAC/DCAT/PROV/telemetry"]
+    G["Graph integrity tests"]
+    A["API contract tests"]
+    U["UI schema checks (layer registry and a11y hooks)"]
+    Sec["Security and sovereignty checks (as applicable)"]
   end
 
   CI --> M
@@ -172,7 +172,7 @@ flowchart LR
   CI --> U
   CI --> Sec
 
-  M --> Status[Required checks pass]
+  M --> Status["Required checks pass"]
   S --> Status
   G --> Status
   A --> Status
