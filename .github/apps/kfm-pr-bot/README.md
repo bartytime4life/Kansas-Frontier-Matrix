@@ -1,417 +1,231 @@
 ---
-title: "🤖 KFM — Tiny PR Bot (JWT→Install Token · Idempotent Fixer · OpenLineage/PROV Emissions)"
+title: "kfm-pr-bot — GitHub App (PR Governance Assistant)"
 path: ".github/apps/kfm-pr-bot/README.md"
-version: "v11.2.6"
-last_updated: "2025-12-14"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Reliability & FAIR+CARE Council"
-content_stability: "stable"
-
-status: "Active / Canonical"
-doc_kind: "Runbook"
-header_profile: "standard"
-footer_profile: "standard"
-intent: "kfm-ci-pr-bot-mini"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
-openlineage_profile: "OpenLineage v2.5 · CI/CD and AI pipeline events"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:github:apps:kfm-pr-bot:readme:v1.0.0"
+semantic_document_id: "kfm-github-app-kfm-pr-bot-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:github:apps:kfm-pr-bot:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
 
-semantic_document_id: "kfm-ci-pr-bot-mini"
-doc_uuid: "urn:kfm:ci:pr-bot:mini:v11.2.6"
-event_source_id: "ledger:.github/apps/kfm-pr-bot/README.md"
-immutability_status: "version-pinned"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-security_ref: "../../../SECURITY.md"
-
-telemetry_schema: "../../../schemas/telemetry/github-workflows-v4.json"
-lineage_schema: "../../../schemas/lineage/prov-o-jsonld-v11.json"
-openlineage_schema: "../../../schemas/lineage/openlineage-v1beta.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
-
-reprokit_ref: "../../repro-kit/README.md"
-
-classification: "Public Document"
-sensitivity: "General (operational patterns; no secrets)"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-risk_category: "Low to Medium (automation + credentials)"
-indigenous_rights_flag: "Dataset-level"
-redaction_required: true
-
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🤖 **KFM — Tiny PR Bot**
-`.github/apps/kfm-pr-bot/README.md`
-
-**Purpose**  
-A tiny, production-safe GitHub App that authenticates via **JWT → installation token**, runs deterministic **validate/fix** routines, performs **idempotent writes**, and emits **OpenLineage + PROV‑O JSON‑LD** for every run.
-
-</div>
-
----
+# kfm-pr-bot — GitHub App (PR Governance Assistant)
 
 ## 📘 Overview
 
-The Tiny PR Bot is intentionally minimal so it can be adopted quickly inside KFM CI without widening risk surface.
+### Purpose
+`kfm-pr-bot` is a GitHub App intended to assist pull request reviews by:
+- Surfacing **governance / documentation** expectations early,
+- Pointing contributors to the correct KFM templates and required artifacts,
+- Reducing reviewer load while preserving required **human approvals**.
 
-It supports four outcomes, in order of preference:
+### Scope
 
-1. **No-op**: validation passes, nothing to change.
-2. **Suggest**: validation fails; bot posts a structured report without writing.
-3. **Fix**: validation fails; bot applies deterministic transforms and opens/updates a PR.
-4. **Quarantine**: policy prevents safe write (permissions, sensitive paths, governance gate); bot emits evidence and stops.
+| In Scope | Out of Scope |
+|---|---|
+| PR guidance via comments and/or check runs | Automatically merging PRs |
+| Path-based reminders (docs, schemas, data, API contracts) | Approving PRs on behalf of humans |
+| Least-privilege permissions + security notes | Posting secrets, dataset contents, or sensitive locations |
+| Routing to correct governed templates | Generating “policy” beyond repo-governed docs |
 
-Primary use cases in KFM:
+### Audience
+- Primary: Maintainers + reviewers
+- Secondary: Contributors who need to satisfy repo governance and CI expectations
 
-- Docs hygiene aligned with KFM-MDP (front-matter coherence, fence rules, directory tree formatting).
-- Small deterministic normalizations (formatting, ordering, schema-safe rewrites).
-- Evidence emission to make automation auditable (OpenLineage + PROV).
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used: PR, check run, required review, provenance, contract test, redaction
 
-Non-goals:
+### Key artifacts (what this doc points to)
 
-- Publishing datasets, modifying governance status, or bypassing required reviews.
-- Performing non-deterministic edits or “creative” refactors.
-- Running privileged operations in forked PRs.
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This doc | `.github/apps/kfm-pr-bot/README.md` | Maintainers | Repo-facing behavior |
+| Templates | `docs/templates/` | Maintainers | Used for guidance links |
+| Master guide | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical pipeline + invariants |
 
----
-
-## 🧭 Context
-
-The bot exists inside the `.github/` subsystem and is governed like any other automation component.
-
-KFM pipeline relationship:
-
-- Bot runs in CI contexts and contributes to the “governance and automation fabric.”
-- It must never introduce ungoverned changes into:
-  - `data/**` publish surfaces,
-  - sovereignty-protected content,
-  - or release packets.
-
-Evidence relationship:
-
-- Every run emits:
-  - OpenLineage event JSON (execution-level lineage)
-  - PROV-O JSON-LD (logical provenance)
-- Runs that fail in unexpected ways should follow the repo repro-kit pattern:
-  - `.github/repro-kit/README.md`
-
----
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Documented: events, permissions, security posture, runbook
+- [ ] Any write capabilities are justified and least-privilege
+- [ ] “Fork PR” safety behavior documented
+- [ ] Explicitly states what the bot will **not** do
 
 ## 🗂️ Directory Layout
 
-Canonical layout for this app folder:
+### This document
+- `path`: `.github/apps/kfm-pr-bot/README.md`
 
+### Expected file tree for this sub-area
 ~~~text
 📁 .github/
-└── 📁 apps/
-    └── 📁 kfm-pr-bot/
-        ├── 📄 README.md                         # This runbook
-        ├── 🧾 app.yml                           # GitHub App descriptor (scopes, webhooks)
-        ├── 📁 src/
-        │   ├── 🧠 app.ts                        # Single webhook handler (pull_request, push, check_suite)
-        │   ├── 🔐 auth.ts                       # JWT → installation token
-        │   ├── 🧰 gh.ts                         # Thin GitHub API client (retry + jitter + rate handling)
-        │   ├── 📁 ruleset/
-        │   │   ├── ✅ validator.ts              # Deterministic validation → stable decision + diff plan
-        │   │   └── 🛠️ fixer.ts                  # Deterministic transforms (pure, replayable)
-        │   ├── ♻️ idempotency.ts                # Branch/PR keys derived from inputs + hashes
-        │   ├── 📁 lineage/
-        │   │   ├── 🧬 prov.ts                   # PROV-O JSON-LD emitter
-        │   │   └── 🧾 openlineage.ts            # OpenLineage event emitter
-        │   └── 🧾 logging.ts                    # Structured logs (no secrets)
-        ├── 📁 var/
-        │   └── 📁 dlq/
-        │       └── 🧾 run-<timestamp>-<uuid>.json  # Failed-run envelopes (privacy-safe)
-        └── 📁 configs/
-            └── ⚙️ ruleset.yaml                  # Rules toggles (KFM-MDP checks, allowlist/denylist)
+├── 📁 apps/
+│   ├── 📄 README.md
+│   └── 📁 kfm-pr-bot/
+│       └── 📄 README.md
 ~~~
 
-Directory layout rules:
+## 🧭 Context
 
-- All writes by the bot MUST be attributable and bounded by:
-  - `configs/ruleset.yaml`,
-  - and the repo’s governance constraints.
-- The DLQ MUST contain sanitized envelopes only (no secrets, no raw PII).
+### Background
+KFM relies on governed documentation and an ordered data → catalog → graph → API → UI pipeline. A PR bot can help keep PRs aligned with that structure by flagging missing artifacts early (before reviewer time is spent).
 
----
+### Constraints / invariants (must not be violated)
+- Canonical ordering preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- Frontend never reads Neo4j directly; UI consumes API contracts.
+- No unsourced narrative introduced into Focus Mode contexts.
 
-## 🧱 Architecture
+### Safety posture (high-level)
+- Prefer **read-only** analysis of changed files.
+- If the bot writes (comments/check runs), it should never echo sensitive data and must avoid running untrusted code.
+- Any permission expansion requires security review.
 
-### Single-handler pattern
+## 🗺️ Diagrams
 
-The bot is implemented as a single webhook handler that routes to a deterministic ruleset:
+### Bot positioning in PR workflow
+~~~mermaid
+flowchart LR
+  PR[Pull Request] --> Bot[kfm-pr-bot]
+  PR --> CI[GitHub Actions CI]
+  Bot --> Out1[Guidance Comment / Checklist]
+  Bot --> Out2[Check Run Status]
+  CI --> Out2
+  Out1 --> Review[Human Review]
+  Out2 --> Review
+~~~
 
-1. **Receive event** (`pull_request`, `push`, `check_suite`)
-2. **Resolve repo context**
-   - repository, branch/ref, SHA(s), changed files list
-3. **Select ruleset**
-   - based on changed file paths and intent routing
-4. **Validate**
-   - compute stable decision + diff plan
-5. **Fix (optional)**
-   - apply deterministic transforms to a controlled branch
-6. **Report**
-   - PR comment and/or check run summary
-7. **Emit lineage**
-   - OpenLineage + PROV outputs for every run
-8. **DLQ on failure**
-   - persist a sanitized envelope for replay
+### Optional: sequence diagram (conceptual)
+~~~mermaid
+sequenceDiagram
+  participant Dev as Contributor
+  participant GH as GitHub
+  participant Bot as kfm-pr-bot
+  participant Maint as Maintainer
 
-### Authentication pattern
-
-- GitHub App private key signs a **JWT**
-- JWT exchanged for an **installation token**
-- Installation token used for GitHub API calls
-
-Hard constraints:
-
-- Tokens MUST be short-lived.
-- Private key MUST never be written to logs, DLQ, or PR comments.
-- If authentication fails, bot must fail closed and emit evidence.
-
-### Idempotency contract
-
-Idempotency prevents spam, avoids infinite fix loops, and enables stable replay.
-
-Deterministic keys:
-
-- **Branch name**
-  - `kfm/bot/{intent}/{content-hash-8}`
-- **PR title**
-  - `[KFM Bot] {intent}: {content-hash-8}`
-- **PR body**
-  - includes a provenance block with:
-    - run UUID
-    - commit SHA
-    - evidence paths/hrefs (no secrets)
-
-Stable hashing inputs (recommended minimum):
-
-- target SHA
-- list of changed file paths (sorted)
-- ruleset version string
-- bot version string
-
----
-
-## 🧪 Validation & CI/CD
-
-### What the bot is allowed to modify
-
-Allowed (typical safe set):
-
-- Markdown structure and formatting consistent with KFM-MDP:
-  - fence normalization
-  - directory-tree formatting and emoji alignment
-  - front-matter key normalization (order/required keys, when schema-safe)
-- Non-executable metadata files when explicitly allowlisted in `ruleset.yaml`
-
-Not allowed:
-
-- Anything that changes dataset meaning, governance status, or policy.
-- Any changes that introduce new data sources or assets into `data/raw/**`.
-- Anything under protected paths unless explicitly approved and code-owned.
-
-### Retry and backoff behavior
-
-All GitHub API calls MUST use:
-
-- exponential backoff
-- full jitter
-- rate-limit awareness (respect `Retry-After` and secondary rate limits)
-
-### DLQ behavior
-
-On unexpected failures:
-
-- write one DLQ envelope to `var/dlq/`
-- envelope MUST include:
-  - event type
-  - repo/ref/SHA
-  - ruleset id/version
-  - error class + message (sanitized)
-  - correlation ids (run_id, installation_id if safe)
-- envelope MUST NOT include:
-  - private key
-  - installation token
-  - raw request bodies containing secrets
-
----
+  Dev->>GH: Open PR / push commits
+  GH->>Bot: webhook event (PR updated)
+  Bot-->>GH: check run + guidance comment
+  Maint->>GH: review, request changes, approve
+~~~
 
 ## 📦 Data & Metadata
 
-### Run envelope (internal model)
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| PR event payload | JSON | GitHub webhooks | Signature verification |
+| PR file diff | Git tree | GitHub API | Path allowlist rules |
 
-A run is fully described by a stable envelope:
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Guidance checklist | PR comment | PR timeline | Deterministic wording + links |
+| Check run | GitHub Checks API | PR status | Clear “pass/fail” criteria |
 
-- `run_id` (uuid/ulid)
-- `event_name`
-- `repo_full_name`
-- `ref`
-- `head_sha`
-- `base_sha` (if PR)
-- `changed_files[]` (sorted)
-- `intent`
-- `ruleset_version`
-- `content_hash`
-- `decision` ∈ {`noop`,`suggest`,`fix`,`quarantine`,`error`}
-- `outputs` (paths or artifact hrefs)
-- `metrics` (timings, counts, API calls, backoff stats)
-
-### Ruleset configuration (`configs/ruleset.yaml`)
-
-A ruleset file SHOULD include:
-
-- allowlist paths
-- denylist paths
-- intents (routing)
-- fix toggles (enable/disable by intent)
-- maximum write set size (files, bytes)
-- comment templates (no secrets)
-
-Example skeleton:
-
-~~~yaml
-version: "1"
-intents:
-  - name: "mdp-fix"
-    allow_globs:
-      - "docs/**/*.md"
-      - ".github/**/*.md"
-    deny_globs:
-      - "data/**"
-    autofix: true
-    max_files: 50
-    max_bytes: 2000000
-~~~
-
----
+### Sensitivity & redaction
+- Do not quote large chunks of sensitive documents or raw dataset values in PR comments.
+- Prefer referencing file paths, dataset IDs, schema IDs, and required templates.
 
 ## 🌐 STAC, DCAT & PROV Alignment
+When PRs touch data/catalog areas, the bot may remind contributors to include:
+- STAC Collection + Item(s)
+- DCAT dataset mapping
+- PROV activity record for transformations
 
-This bot does not publish STAC/DCAT datasets directly. Its primary metadata integration is lineage:
+(Implementation may be delegated to CI checks; the bot’s role is to help reviewers and contributors spot omissions early.)
 
-### OpenLineage (execution-level)
+## 🧱 Architecture
 
-Job naming (recommended):
+### Responsibilities (intended)
+- Detect broad change categories by path patterns, e.g.:
+  - `data/` changes → remind about catalogs/provenance expectations
+  - `schemas/` changes → remind about validators + contract tests
+  - `src/server/` / API changes → remind about API contract extension docs
+  - `web/` UI changes → remind about API-only access and provenance rendering expectations
+  - `docs/` narrative changes → remind about provenance / citations
 
-- namespace: `kfm.ci`
-- name: `kfm-pr-bot.mini`
+### Non-goals (explicit)
+- The bot does not merge PRs.
+- The bot does not approve PRs.
+- The bot does not generate new governance policy beyond governed docs.
+- The bot does not expose secrets or privileged information.
 
-Nominal time:
+## 🔌 Interfaces & Contracts
 
-- for PR events: PR updated window (event time is authoritative)
-- for push events: commit time window (event time is authoritative)
+### GitHub API usage
+- Webhooks: PR opened/synchronized/reopened, issue comments (optional)
+- Outputs: check runs, PR comments
 
-Example event skeleton:
+### Contract alignment
+- Links to canonical docs and templates (Master Guide and templates) should be included in bot feedback.
+- The bot should never instruct contributors to violate the “API boundary” or pipeline ordering.
 
-~~~json
-{
-  "eventType": "COMPLETE",
-  "eventTime": "2025-12-14T00:00:00Z",
-  "job": { "namespace": "kfm.ci", "name": "kfm-pr-bot.mini" },
-  "run": {
-    "runId": "00000000-0000-0000-0000-000000000000",
-    "facets": {
-      "nominalTime": { "startTime": "2025-12-14T00:00:00Z", "endTime": "2025-12-14T00:00:05Z" },
-      "kfmBot": {
-        "intent": "mdp-fix",
-        "decision": "fix",
-        "content_hash_8": "deadbeef"
-      }
-    }
-  },
-  "inputs": [],
-  "outputs": []
-}
-~~~
+## 🔐 Permissions & Events
 
-### PROV-O (logical provenance)
+### Recommended minimal permission set (documented for least privilege)
+> Final permissions depend on how the app is implemented, but the default should be “minimum required”.
 
-- The run is a `prov:Activity`.
-- The bot is a `prov:SoftwareAgent`.
-- Inputs include:
-  - the repository commit(s) and changed files list
-  - the ruleset configuration version
-- Outputs include:
-  - the created/updated branch and PR metadata
-  - the diff artifact hash (if captured)
-  - evidence JSON locations
+| Capability | GitHub permission area | Level (recommended) | Why |
+|---|---|---|---|
+| Read repository contents | Contents | Read | Inspect changed files |
+| Comment on PRs | Pull requests / Issues | Write | Post checklist guidance |
+| Create check runs | Checks | Write | Provide pass/fail signal |
+| Read workflow results (optional) | Actions | Read | Summarize CI status (no secrets) |
 
-Example skeleton:
+### Event triggers (conceptual)
+- `pull_request` (opened, synchronize, reopened)
+- `pull_request_review` (optional, for follow-up guidance)
+- `check_suite` (optional, if summarizing CI outcomes)
 
-~~~json
-{
-  "@context": "https://www.w3.org/ns/prov.jsonld",
-  "@id": "urn:kfm:activity:ci:pr-bot-mini:run:<run_id>",
-  "@type": "prov:Activity",
-  "prov:startedAtTime": "2025-12-14T00:00:00Z",
-  "prov:endedAtTime": "2025-12-14T00:00:05Z",
-  "prov:wasAssociatedWith": {
-    "@id": "urn:kfm:agent:software:kfm-pr-bot-mini",
-    "@type": "prov:SoftwareAgent"
-  }
-}
-~~~
+## 🧪 Validation & CI/CD
 
----
+### Validation checklist
+- [ ] Bot feedback is deterministic for identical inputs
+- [ ] No secret material in logs or PR comments
+- [ ] Fork PR handling is safe (no privileged execution of untrusted code)
+- [ ] Bot does not bypass required human approvals
+- [ ] Clear mapping from advice → canonical KFM docs/templates
 
 ## ⚖ FAIR+CARE & Governance
 
-Governance is enforced through three mechanisms:
-
-1. **Path gating**
-   - denylist high-risk areas by default (e.g., `data/**`)
-2. **Review gating**
-   - bot PRs are still subject to CODEOWNERS and required checks
-3. **Evidence emission**
-   - every run produces auditable lineage
-
-Fail-closed rules:
-
-- If policy cannot determine safety, bot must quarantine and emit evidence.
-- If a change would affect sovereignty-protected content, bot must stop and request steward review.
-
----
+### Governance approvals required (if any)
+- Security council review: **required** for installation and any permission expansion
+- Maintainer review: **required** for changes to bot behavior and docs
+- Historian/editor review: **recommended** if bot affects narrative validation guidance
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v11.2.6 | 2025-12-14 | Standardized Tiny PR Bot runbook for KFM-MDP v11.2.6; emoji-aligned directory layout; clarified single-handler architecture, idempotency contract, retry/jitter, DLQ safety, and OpenLineage/PROV emission expectations. |
-
----
-
-<div align="center">
-
-🤖 **KFM — Tiny PR Bot (v11.2.6)**  
-Deterministic Fixes · Idempotent Writes · Evidence-First Automation
-
-[⬅ Back to `.github/` Overview](../../README.md) ·
-[🧳 Repro-Kit Pattern](../../repro-kit/README.md) ·
-[⚖ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🛡 Security Policy](../../../SECURITY.md)
-
-</div>
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial README for kfm-pr-bot governance documentation | TBD |
