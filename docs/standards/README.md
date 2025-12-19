@@ -1,329 +1,302 @@
 ---
-title: "📏 Kansas Frontier Matrix — Standards & Governance Documentation Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Standards — README"
 path: "docs/standards/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-version: "v11.2.2"
-last_updated: "2025-11-27"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Annual · FAIR+CARE Council & Focus Mode Board"
-content_stability: "stable"
-backward_compatibility: "v10.x → v11.x"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-signature_ref: "../../releases/v11.2.2/signature.sig"
-attestation_ref: "../../releases/v11.2.2/slsa-attestation.json"
-sbom_ref: "../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/docs-standards-index-v11.2.2.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
-
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.4"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Index"
-intent: "standards-index"
-semantic_document_id: "kfm-doc-standards-index"
-doc_uuid: "urn:kfm:docs:standards:standards-index:v11.2.2"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-data_steward: "KFM FAIR+CARE Council"
-immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
+doc_uuid: "urn:kfm:doc:standards:readme:v1.0.0"
+semantic_document_id: "kfm-standards-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:standards:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-provenance_chain:
-  - "docs/standards/README.md@v11.0.0"
-  - "docs/standards/README.md@v10.2.2"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  prov_o: "prov:Plan"
-
-metadata_profiles:
-  - "STAC 1.0.0"
-  - "DCAT 3.0"
-  - "PROV-O"
-  - "FAIR+CARE"
-
-jurisdiction: "Kansas / United States"
-classification: "Public"
-lifecycle_stage: "stable"
-ttl_policy: "24 months"
-sunset_policy: "Superseded by next major standards index version"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "timeline-generation"
-  - "a11y-adaptations"
-  - "diagram-extraction"
-  - "metadata-extraction"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "content-alteration"
-  - "speculative-additions"
-  - "unverified-architectural-claims"
-  - "narrative-fabrication"
-  - "governance-override"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-transform_registry:
-  allowed:
-    - "summary"
-    - "semantic-highlighting"
-    - "timeline-generation"
-    - "a11y-adaptations"
-    - "diagram-extraction"
-    - "metadata-extraction"
-  prohibited:
-    - "content-alteration"
-    - "speculative-additions"
-    - "unverified-architectural-claims"
-    - "narrative-fabrication"
-    - "governance-override"
-
-heading_registry:
-  approved_h2:
-    - "📘 Overview"
-    - "🗂️ Directory Layout"
-    - "🧱 Standards Catalog"
-    - "⚖ External Standards & Profiles"
-    - "🕰️ Version History"
-
-test_profiles:
-  - "markdown-lint"
-  - "schema-lint"
-  - "metadata-check"
-  - "accessibility-check"
-  - "provenance-check"
-  - "footer-check"
-
-ci_integration:
-  workflow: ".github/workflows/kfm-ci.yml"
-  environment: "dev → staging → production"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-badge_profiles:
-  - "root-centered-badge-row"
-
-branding_registry:
-  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
-  architecture: "Designed for Longevity · Governed for Integrity"
-
-requires_purpose_block: true
-requires_directory_layout_section: true
-requires_version_history: true
-requires_governance_links_in_footer: true
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📏 **Kansas Frontier Matrix — Standards & Governance Documentation Index (v11.2.2)**  
-`docs/standards/README.md`
-
-**Purpose:**  
-Provide the **central standards hub** for all governance, metadata, ethics, documentation, telemetry, data architecture, and AI-integration rules that control every component of KFM.  
-This is the *root* of the compliance system that pipelines, datasets, Story Nodes, Focus Mode, UI, and the knowledge graph depend on.
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs·MCP-v6.3-blue)]() ·
-[![KFM-MDP v11.2.4](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.4-informational)]() ·
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)]() ·
-[![Governance](https://img.shields.io/badge/Governance-Root-green)]()
-
-</div>
-
----
+# KFM Standards — README
 
 ## 📘 Overview
 
-The `docs/standards/` directory defines every **binding rule** in KFM, including:
+### Purpose
+This folder (`docs/standards/`) is the canonical home for **governed standards** that apply across the Kansas Frontier Matrix (KFM) system: documentation rules, metadata/contract conventions, validation expectations, and cross-cutting invariants that must remain stable as the system evolves.
 
-- **Data standards**  
-  STAC, DCAT, CIDOC-CRM, OWL-Time, GeoSPARQL, ISO 19115, ISO 50001, ISO 14064.  
-- **Governance & ethics**  
-  FAIR+CARE, sovereignty protocols, licensing, custodial protections, AI governance.  
-- **Metadata specifications**  
-  JSON-LD contexts, schema references, provenance models, data contracts.  
-- **Narrative interoperability**  
-  Story Nodes, Focus Mode v3, narrative lineage, governance-aware overlays.  
-- **Documentation system**  
-  Markdown protocols, output rules, directory structure, authoring guidance.  
-- **Telemetry & sustainability**  
-  Energy/carbon tracking, build metrics, governance telemetry, auditability.  
-- **Change-control & compliance**  
-  Versioning, provenance, supersession, sunset policies, CI enforcement, linting, governance checks.  
+This README is the **index + usage guide** for the standards area and should stay aligned with:
+- `docs/MASTER_GUIDE_v12.md` (pipeline ordering + subsystem map)
+- `docs/templates/` (the governed document templates)
 
-This index is the **authoritative landing page for every standard** that affects the platform’s architecture.
+### Scope
 
----
+| In Scope | Out of Scope |
+|---|---|
+| Markdown governance (format, front-matter, fences, doc structure) | Narrative content (Story Nodes) |
+| Cross-cutting invariants (pipeline ordering, API boundary) | API endpoint contracts (live in dedicated contract docs) |
+| Standards indexing + where-to-find-what | Implementation details of ETL/Graph/API/UI |
+| Validation expectations and review gates | Ad hoc team notes / meeting minutes |
+
+### Audience
+- Primary: Contributors writing or editing governed docs, reviewers, maintainers
+- Secondary: Engineers implementing validators/CI checks, authors creating Story Nodes
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` (**not confirmed in repo**)
+- Terms used in this doc: governed doc, profile, provenance, redaction/generalization, contract, invariant
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master Guide | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical pipeline ordering + subsystem map |
+| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | TBD | Default template for most docs |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | TBD | Focus Mode narratives (provenance-linked) |
+| API Contract Extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | TBD | REST/GraphQL contract changes |
+| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | TBD | **not confirmed in repo** (add if missing) |
+| Governance roots | `docs/governance/*` | TBD | **not confirmed in repo** (referenced by templates) |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Links point to canonical docs/templates (or clearly marked **not confirmed in repo**)
+- [ ] Invariants preserved: ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode
+- [ ] No new policies invented here (standards must point to governance docs, not replace them)
+- [ ] Validation steps listed and repeatable
 
 ## 🗂️ Directory Layout
 
-The KFM standards directory follows the **canonical layout** with emojis and one-branch descriptions:
+### This document
+- `path`: `docs/standards/README.md`
 
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Master guide | `docs/MASTER_GUIDE_v12.md` | System map + canonical pipeline ordering |
+| Standards | `docs/standards/` | Governed standards, protocols, style rules |
+| Templates | `docs/templates/` | Governed doc templates (choose exactly one per doc) |
+| Governance | `docs/governance/` | Ethics, sovereignty, review gates (**not confirmed in repo**) |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Standards-aligned outputs |
+
+### Expected file tree for this sub-area
 ~~~text
-📁 KansasFrontierMatrix/
-│
-├── 📂 docs/
-│   ├── 📂 standards/                        — All governance + metadata + ethics + documentation standards
-│   │   ├── 📄 README.md                     — ← This index (standards & governance hub)
-│   │   ├── 📄 faircare.md                   — FAIR+CARE data governance & sovereignty rules
-│   │   ├── 📄 data-contracts.md             — Dataset contracts, STAC/DCAT mappings, ontology alignment
-│   │   ├── 📄 licensing.md                  — SPDX licensing, IP, attribution requirements
-│   │   ├── 📄 ui_accessibility.md           — WCAG 2.1 AA+ UI and narrative accessibility super-standard
-│   │   ├── 📄 telemetry_standards.md        — Energy, carbon, lineage, sustainability telemetry super-standard
-│   │   ├── 📄 markdown_rules.md             — Core Markdown structure + formatting rules
-│   │   ├── 📄 markdown_guide.md             — Human-focused authoring guidance
-│   │   ├── 📄 kfm_markdown_protocol_v11.md  — v11 Markdown authoring protocol
-│   │   ├── 📄 kfm_markdown_output_protocol.md — Output behavior rules for generators/AI
-│   │   ├── 📄 ai-law-coevolution.md         — AI + Law co-evolution governance standard
-│   │   └── 📂 governance/                   — Governance charters, indexes, releases
-│   │       ├── 📄 README.md                 — Governance & ethical oversight index
-│   │       └── 📄 ROOT-GOVERNANCE.md        — Root governance charter (authoritative)
-│   │
-│   └── 📄 glossary.md                       — Shared terminology (governance, data, AI, story nodes)
+📁 docs/
+├── 📄 MASTER_GUIDE_v12.md
+├── 📁 standards/
+│   ├── 📄 README.md
+│   ├── 📄 KFM_MARKDOWN_WORK_PROTOCOL.md           (not confirmed in repo)
+│   ├── 📄 KFM_STAC_PROFILE.md                     (not confirmed in repo)
+│   ├── 📄 KFM_DCAT_PROFILE.md                     (not confirmed in repo)
+│   ├── 📄 KFM_PROV_PROFILE.md                     (not confirmed in repo)
+│   └── 📄 KFM_ONTology_PROTOCOL.md                (not confirmed in repo)
+├── 📁 templates/
+│   ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
+│   ├── 📄 TEMPLATE__STORY_NODE_V3.md
+│   └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
+└── 📁 governance/
+    ├── 📄 ROOT_GOVERNANCE.md                      (not confirmed in repo)
+    ├── 📄 ETHICS.md                               (not confirmed in repo)
+    └── 📄 SOVEREIGNTY.md                          (not confirmed in repo)
 ~~~
 
-**Author rules**
+## 🧭 Context
 
-- New standards **must** be placed under `docs/standards/` (or a clear subdirectory like `governance/`).  
-- Each new standard:
-  - Uses full KFM-MDP v11.2.4 front-matter,  
-  - Provides a Purpose block, Directory Layout (if applicable), and Version History,  
-  - Is linked from **🧱 Standards Catalog** below.  
+### Background
+KFM is a pipeline-based geospatial + historical knowledge system. Because many subsystems contribute content that becomes user-facing (map layers, narratives, evidence panels), **standards** are necessary to ensure consistency, provenance traceability, and safe handling of sensitive data.
 
----
+### Assumptions
+- Governed docs use YAML front-matter with shared profile/version fields.
+- The system’s canonical ordering is maintained:
+  **ETL → STAC/DCAT/PROV → Neo4j Graph → APIs → React/Map UI → Story Nodes → Focus Mode**.
+- The UI **never** queries Neo4j directly; it consumes contracts from the API layer.
 
-## 🧱 Standards Catalog
+### Constraints / invariants
+- Canonical pipeline ordering is preserved.
+- Provenance is first-class: Story Nodes and Focus Mode must be evidence-linked.
+- No sensitive locations are inferred or revealed by documentation standards.
+- CI is assumed strict (lint/schema/secret/PII/a11y checks).
 
-This catalog lists **live v11 standards** and their responsibilities. Treat each as **normative** unless explicitly marked otherwise.
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Where is the canonical glossary? | TBD | TBD |
+| Which standards are separate docs vs embedded in the Master Guide? | TBD | TBD |
+| Where are schema validators invoked (scripts/CI)? | TBD | TBD |
 
-### 1️⃣ Markdown & Documentation Standards (KFM-MDP v11.2.x family)
+### Future extensions
+- Add explicit, governed standards docs (profiles + checklists) under `docs/standards/`.
+- Add a lightweight “Standards change log” doc if frequent updates occur.
 
-| File | Description |
-|------|-------------|
-| `markdown_rules.md` | Structural & formatting rules for all Markdown (headings, fences, lists, diagrams). |
-| `markdown_guide.md` | Human-facing writing guidance; examples of good KFM documentation. |
-| `kfm_markdown_protocol_v11.md` | Authoring protocol with YAML requirements, heading registry, CI rules. |
-| `kfm_markdown_output_protocol.md` | Output behavior rules for generators/AI (single fenced block, no nested fences, no hidden markup). |
+## 🗺️ Diagrams
 
-These govern **how every document is written, structured, and validated**.
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[React/Map UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+~~~
 
----
+### Standards placement in the workflow
+~~~mermaid
+flowchart TB
+  S[docs/standards/*] --> T[docs/templates/*]
+  T --> W[Governed docs across repo]
+  S --> V[CI validators / schema checks]
+  W --> V
+~~~
 
-### 2️⃣ Data & Metadata Standards
+## 📦 Data & Metadata
 
-| File | Scope |
-|------|-------|
-| `data-contracts.md` | Dataset contracts; schema fields; STAC/DCAT alignment; temporal/spatial coverage; CARE metadata. |
-| `telemetry_standards.md` | Telemetry super-standard: performance, sustainability, FAIR+CARE, AI ethics, provenance, dashboards. |
-| `licensing.md` | SPDX licensing rules for code, data, models, docs; attribution requirements; CARE overrides. |
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Standards proposals | Markdown | PRs / issues | Doc lint + reviewer checklist |
+| Profile updates | Markdown / Schema refs | PRs | Versioning + compatibility review |
 
-Every dataset, STAC item, DCAT dataset, and pipeline output **must** comply with these data-layer standards.
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Standards docs | Markdown | `docs/standards/` | Template + lint rules |
+| Referenced schemas | JSON / JSON-LD | `schemas/` | Schema validation in CI |
 
----
+### Sensitivity & redaction
+- Standards must define how to **avoid leaking** sensitive locations or culturally sensitive context.
+- If redaction/generalization rules exist, they must live in governance docs and be referenced here (not duplicated).
 
-### 3️⃣ Governance, Ethics, Sovereignty & Accessibility
+### Quality signals
+- Consistent front-matter keys and values across governed docs.
+- Links resolve (no broken internal references).
+- No contradictory pipeline ordering or API-boundary violations.
 
-| File | Scope |
-|------|-------|
-| `faircare.md` | FAIR+CARE data governance framework; Indigenous rights; cultural sensitivity; narrative limits. |
-| `ui_accessibility.md` | UI accessibility & inclusion super-standard; WCAG 2.1 AA+ for web, maps, 3D, Story Nodes, Focus Mode. |
-| `governance/README.md` | Governance & ethical oversight framework index (councils, ledgers, dashboards). |
-| `governance/ROOT-GOVERNANCE.md` | Root governance charter; council authority; quorum; audit requirements. |
+## 🌐 STAC, DCAT & PROV Alignment
 
-These define **ethical invariants** and **oversight mechanisms** for all KFM operations.
+### STAC
+- Standards docs should describe:
+  - Where STAC collections and items live (`data/stac/collections/`, `data/stac/items/`)
+  - Which profile version is authoritative (from front-matter fields)
 
----
+### DCAT
+- Standards docs should describe:
+  - Where DCAT dataset views live (`data/catalog/dcat/`)
+  - Minimum required dataset metadata for publishing
 
-### 4️⃣ AI Governance & Law Co-Evolution
+### PROV-O
+- Standards docs should describe:
+  - Where provenance bundles live (`data/prov/`)
+  - Required lineage links for derived artifacts (including Story Nodes)
 
-| File | Scope |
-|------|-------|
-| `ai-law-coevolution.md` | AI + Law co-evolution standard; describes how human institutions and AI systems jointly reason about governance, without replacing human legal authority. |
+### Versioning
+- Prefer SemVer for schemas and contract documents.
+- Profile identifiers in front-matter should be updated intentionally and reviewed.
 
-This standard ensures AI:
+## 🧱 Architecture
 
-- Remains **advisory**,  
-- Respects FAIR+CARE & sovereignty,  
-- Operates within clearly defined governance pipelines and transform limits.
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| Standards docs | Define governed rules + invariants | Markdown (this folder) |
+| Templates | Enforce doc structure | `docs/templates/` |
+| Validators | Enforce consistency in CI | Linters + schema validation |
+| Governance docs | Define policy/ethics/sovereignty | `docs/governance/` (**not confirmed in repo**) |
 
----
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Document templates | `docs/templates/` | SemVer; template changes require reviewer sign-off |
+| Schema files | `schemas/` | SemVer + changelog |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Machine-validated |
 
-### 5️⃣ Cross-Cutting Behavior & Telemetry
+### Extension points checklist (for future work)
+- [ ] Add missing standards docs (if not present) under `docs/standards/`
+- [ ] Add validator pointers (where checks run) once confirmed in repo
+- [ ] Add a glossary (if missing) and link from here
 
-Across all standards:
+## 🧠 Story Node & Focus Mode Integration
 
-- **Telemetry** from CI/CD and runtime systems is consolidated into `focus-telemetry.json` per release.  
-- **Provenance** is recorded in:
-  - Governance ledgers,  
-  - Release manifests,  
-  - SBOMs,  
-  - PROV-compatible records in `schemas/` and `data/stac/`.  
-- **Focus Mode** must respect:
-  - AI transform permissions in each document’s front-matter,  
-  - FAIR+CARE & sovereignty constraints,  
-  - The distinction between **authoritative standards** and **derived narrative overlays**.
+### How this work surfaces in Focus Mode
+- Standards define what “provenance-linked narrative” means and how citations must work.
+- Story Nodes must follow the Story Node template and connect to catalog IDs and graph entities.
 
----
+### Provenance-linked narrative rule
+- Every factual claim must trace to a dataset / record / asset ID (or be labeled as hypothesis).
 
-## ⚖ External Standards & Profiles
+## 🧪 Validation & CI/CD
 
-KFM v11.2.2 adopts and profiles the following external standards:
+### Validation steps
+- [ ] Markdown protocol checks (front-matter keys, fence rules, headings)
+- [ ] Schema validation (STAC/DCAT/PROV where applicable)
+- [ ] Graph integrity checks (when graph artifacts are changed)
+- [ ] API contract tests (when contracts are changed)
+- [ ] UI schema checks (layer registry)
+- [ ] Security and sovereignty checks (as applicable)
 
-- **STAC 1.0.0** — via `KFM-STAC v11` profile for collections/items.  
-- **DCAT 3.0** — via `KFM-DCAT v11` profile for catalogs and datasets.  
-- **PROV-O** — via `KFM-PROV v11` profile for lineage and governance activities.  
-- **CIDOC-CRM (E29, E30, etc.)** — for cultural heritage and procedural design.  
-- **OWL-Time** — for temporal intervals & validity windows.  
-- **GeoSPARQL / GeoJSON** — for spatial footprints and geometry.  
-- **ISO 19115** — for geospatial metadata structure.  
-- **ISO 50001 / ISO 14064-1** — for energy and emissions modeling in telemetry.  
-- **WCAG 2.1 AA+** — for UI accessibility, including Focus Mode & Story Nodes.  
-- **SPDX 2.3** — for licensing and SBOM representations.
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) lint docs
+# 2) validate schemas (STAC/DCAT/PROV)
+# 3) run unit/integration tests
+~~~
 
-Each KFM standard identifies its mappings to these external schemas in its own front-matter and body sections.
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| TBD | TBD | `docs/telemetry/` + `schemas/telemetry/` |
 
----
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- Standards changes should be reviewed by maintainers responsible for:
+  - Docs + templates
+  - Catalog/schema validation
+  - Governance/ethics (when standards touch sensitivity)
+
+### CARE / sovereignty considerations
+- Any guidance related to culturally sensitive content must be anchored in governance docs.
+- Avoid naming or mapping restricted locations in public docs unless explicitly permitted.
+
+### AI usage constraints
+- This doc allows AI transformations like summarize/structure_extract, but prohibits:
+  - generating policy (policy belongs in governance docs)
+  - inferring sensitive locations
 
 ## 🕰️ Version History
 
-| Version | Date       | Author         | Summary                                                                                                 |
-|--------:|------------|----------------|---------------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | KFM Core Team  | Upgraded to KFM-MDP v11.2.4; aligned directory layout; added AI-law standard entry; updated telemetry & governance metadata. |
-| v11.0.0 | 2025-11-20 | KFM Core Team  | Initial v11 standards index; integrated v11 Markdown protocols, telemetry and FAIR+CARE references.    |
-| v10.2.2 | 2025-11-12 | KFM Core Team  | v10.2.x standards consolidation; introduced telemetry references and early governance layout.          |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial standards README | TBD |
 
 ---
-
-<div align="center">
-
-📏 **Kansas Frontier Matrix — Standards & Governance Index**  
-The root map for all authoritative rules governing **data, code, models, documents, UI, narratives, and pipelines**.
-
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-FAIR+CARE Council · Master Coder Protocol v6.3  
-Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[⬅ Back to Documentation Home](../README.md) ·  
-[🏛 Root Governance Charter](governance/ROOT-GOVERNANCE.md) ·  
-[🌐 Project Homepage](../../README.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
