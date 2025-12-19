@@ -1,286 +1,272 @@
 ---
-title: "🤖 Kansas Frontier Matrix — Agents & Orchestration Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM src/agents — README"
 path: "src/agents/README.md"
-version: "v11.2.4"
-last_updated: "2025-12-08"
+version: "v0.1.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Readme"
+license: "CC-BY-4.0"
 
-release_stage: "Stable · Governed (Index)"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Pipelines WG · FAIR+CARE Council"
-content_stability: "stable"
-status: "Active / Canonical"
-doc_kind: "Agents Index"
-
-header_profile: "standard"
-footer_profile: "standard"
-
-license: "MIT"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.4"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:src:agents:readme:v0.1.0"
+semantic_document_id: "kfm-src-agents-readme-v0.1.0"
+event_source_id: "ledger:kfm:doc:src:agents:readme:v0.1.0"
 commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-hash>"
-doc_integrity_checksum: "<sha256>"
 
-sbom_ref: "../../releases/v11.2.4/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.4/manifest.zip"
-telemetry_ref: "../../releases/v11.2.4/agents-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/agents-index-v1.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+  - "speculative_additions"
 
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🤖 **Kansas Frontier Matrix — Agents & Orchestration Index**  
-`src/agents/README.md`
-
-**Purpose**  
-Serve as the **canonical index and governance wrapper** for all **agents & orchestration components** in the Kansas Frontier Matrix (KFM), including LangGraph-based agents, pipeline orchestrators, lineage repair helpers, and future Focus Mode–aware agents.
-
-[![Docs · MCP_v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../docs/README.md)  
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../LICENSE)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Agents-orange)](../../docs/standards/faircare/FAIRCARE-GUIDE.md)  
-[![Status: Canonical](https://img.shields.io/badge/Status-Agents_Index-brightgreen)](../../releases/v11.2.4/manifest.zip)
-
-</div>
-
----
+# src/agents
 
 ## 📘 Overview
 
-KFM **agents** are governed, config-driven orchestration surfaces that sit between:
+### Purpose
 
-> **Deterministic ETL & STAC/DCAT/PROV pipelines**  
-> → **Neo4j Knowledge Graph**  
-> → **APIs & Frontends**  
-> → **Story Nodes & Focus Mode**
+`src/agents/` is the home for **automation agents** that support the Kansas Frontier Matrix pipeline with **repeatable, auditable, provenance-linked** tasks.
 
-They:
+Agents may be used to:
+- Assist ETL enrichment and normalization
+- Validate catalog artifacts
+- Support graph linkage and evidence products
+- Draft narrative artifacts that are later curated and traced to sources
 
-- React to **events** (e.g., `stac.update`, lineage alerts, telemetry thresholds).  
-- Plan and execute **minimal, deterministic recomputation** or **targeted workflows**.  
-- Emit **telemetry, PROV-O, and OpenLineage** records.  
-- Respect **FAIR+CARE** and **sovereignty** constraints defined in standards and pipeline docs.
+This directory must remain compatible with the canonical pipeline ordering:
 
-This index:
+ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode.
 
-- Describes the **agents surface area**.  
-- Defines the **directory layout** under `src/agents/`.  
-- Outlines **governance, CI/CD, and telemetry expectations**.  
-- Points to concrete agent designs (e.g., LangGraph STAC Refresh Agent).
+### Scope
 
----
+In scope:
+- Agent task definitions and implementations
+- Prompt and rules artifacts that are versioned and testable
+- Tool adapters that enforce allowlists, redaction, and audit logging
+- Contract tests and golden fixtures for deterministic outputs
+- Provenance emission helpers for STAC/DCAT/PROV-aligned outputs
+
+Out of scope:
+- Frontend UI code (lives under `web/`)
+- Direct UI-to-graph access patterns
+- Ad hoc scripts that write derived datasets into `src/` instead of `data/processed/`
+
+### Audience
+
+- Pipeline and graph engineers
+- Backend/API engineers adding evidence or narrative services
+- Curators and reviewers validating AI-assisted suggestions
+
+### Definitions
+
+- **Agent**: a component that performs a bounded task (often enrichment, validation, linking, or drafting) under strict governance constraints.
+- **Task**: a single unit of work with explicit inputs, outputs, and provenance.
+- **Provenance**: lineage metadata that connects outputs to source artifacts and transformation activities.
+
+See also:
+- `docs/MASTER_GUIDE_v12.md` for the system flow and invariants.
+- `docs/templates/` for governed document and narrative artifacts.
+
+### Definition of done
+
+A new agent or task is considered “done” when it:
+- Produces outputs with stable IDs and provenance pointers
+- Is deterministic or explicitly seed-locked where randomness exists
+- Has test coverage (unit + contract/golden tests)
+- Honors governance rules for sensitivity, sovereignty, and redaction
+- Does not bypass API-layer contracts when integrating with UI-facing features
 
 ## 🗂️ Directory Layout
 
-```text
-📁 repo-root/
-├── 📁 src/
-│   └── 📁 agents/
-│       ├── 📄 README.md                      # This document (global agents index)
-│       └── 📁 langgraph/
-│           ├── 📄 README.md                  # LangGraph Agents Index
-│           └── 📁 stac_refresh/
-│               ├── 📄 README.md              # Agent design: STAC differential recomputation
-│               ├── 📄 agent.py               # LangGraph DAG implementation
-│               ├── 📄 graph_refresh_manifest.yaml
-│               ├── 📁 planners/
-│               ├── 📁 executors/
-│               ├── 📁 validators/
-│               └── 📁 publish/
-├── 📁 docs/
-│   └── 📁 standards/
-│       ├── 📄 README.md                      # Global standards index
-│       ├── 📁 governance/
-│       │   └── 📄 ROOT-GOVERNANCE.md         # Root governance
-│       ├── 📁 faircare/
-│       │   └── 📄 FAIRCARE-GUIDE.md          # FAIR+CARE guidance
-│       └── 📁 events/
-│           └── 📄 README.md                  # Event standards index (contracts for agents)
-└── 📁 schemas/
-    └── 📁 telemetry/
-        ├── 📄 agents-index-v1.json           # Telemetry schema for this index (inventory & health)
-        ├── 📄 agents-langgraph-index-v1.json
-        └── 📄 agent-stac-refresh-v1.json
-```
+### This document
 
-> ⚠️ **New agents MUST:**
-> - Live under `src/agents/<framework_or_family>/<agent_name>/`, and  
-> - Include a **governed `README.md`** and telemetry schema references, and  
-> - Be **registered in this index** before any production use.
+- `src/agents/README.md` (this file)
 
----
+### Related repository paths
 
-## 🧩 Agent Categories
+Canonical subsystem locations (see the Master Guide):
+- `src/pipelines/` — ETL and transforms
+- `data/stac/`, `data/catalog/dcat/`, `data/prov/` — catalog + lineage artifacts
+- `src/graph/` — graph ingestion and ontology-aligned tooling
+- `src/server/` — API boundary for contracted access
+- `web/` — map and narrative UI
 
-### 1️⃣ LangGraph Agents
+### File tree
 
-**Path:** `src/agents/langgraph/`  
+~~~text
+📁 src/
+└── 📁 agents/
+    └── 📄 README.md
+~~~
 
-LangGraph agents:
+Optional internal layout for this area is **not confirmed in repo** and should be created as needed:
+- `src/agents/core/` — shared interfaces, base classes, run context
+- `src/agents/tasks/` — task implementations grouped by domain
+- `src/agents/tools/` — safe tool wrappers, allowlists, sanitizers
+- `src/agents/prompts/` — prompt templates with versioning and tests
+- `src/agents/policies/` — guardrails and redaction rules
+- `src/agents/tests/` — unit tests + golden fixtures
 
-- Use **LangGraph DAGs** to orchestrate planning, execution, and publishing steps.  
-- Typically react to **event streams** and **STAC/DCAT changes**.  
-- Must be:
-  - Config-driven (YAML/JSON manifests),  
-  - Deterministic (pure functions + explicit state),  
-  - Fully instrumented with OpenLineage and telemetry.
+## 🧭 Context
 
-Current example:
+### Constraints and invariants
 
-| Agent Path                       | Status                     | Purpose                                                         |
-|----------------------------------|----------------------------|-----------------------------------------------------------------|
-| `langgraph/stac_refresh/`        | ✅ Experimental · Governed | Differential recomputation on `stac.update` events; recompute only impacted layers and update DCAT/Neo4j. |
+The system enforces these non-negotiables:
+- **No unsourced narrative** in Focus Mode contexts.
+- **Provenance is first-class**, maintained through STAC/DCAT/PROV and graph lineage.
+- **Reproducibility** through deterministic, logged processing.
 
----
+Agents must also respect the UI contract behavior:
+- The frontend calls the API, which queries the graph and returns provenance-linked data.
+- Focus Mode content must remain traceable to source data, and AI-assisted content must be clearly identified and opt-in.
 
-### 2️⃣ Future Agent Families (Reserved)
+### What belongs in `mcp/` vs `src/agents/`
 
-The following families are **reserved** for future governed expansion:
+- Experimental prototypes, model cards, and exploratory runs belong under `mcp/`.
+- Production-ready agent code and stable task contracts belong under `src/agents/`.
 
-| Family Path                      | Intended Purpose                                               | Governance Note               |
-|----------------------------------|----------------------------------------------------------------|--------------------------------|
-| `focus/`                         | Agents coordinating Focus Mode queries and Story Node flows   | Requires Focus Mode governance |
-| `lineage/`                       | Agents for lineage repair, enrichment, and anomaly response   | Requires lineage governance   |
-| `alerting/`                      | Agents that respond to telemetry / SLO alerts with workflows  | Requires Reliability review   |
+## 🗺️ Diagrams
 
-Any new family:
+~~~mermaid
+flowchart LR
+  A[ETL] --> B[STAC DCAT PROV]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[React Map UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
 
-- Must define its own **index README** under `src/agents/<family>/README.md`.  
-- Must link back to this global index and relevant **standards docs**.
+  X[Agents]
+  X -.enrich.-> A
+  X -.catalog validate.-> B
+  X -.link suggest.-> C
+  X -.draft evidence.-> F
+~~~
 
----
+## 📦 Data and metadata expectations
 
-## 🧱 Common Agent Design Pattern
+### Minimum agent run metadata
 
-Regardless of framework, KFM agents should follow a shared design pattern:
+Every agent execution should be able to emit or reference:
+- `run_id`
+- `agent_id`
+- `task_id`
+- input references (dataset IDs, document IDs, STAC item IDs, etc.)
+- output references (derived artifact IDs)
+- confidence and uncertainty metadata when inference is involved
+- redaction decisions and sensitivity tags
+- timestamps and configuration versions
 
-1. **Event Intake**
-   - Validate incoming events against **event standards** (`docs/standards/events/**`).  
-   - Extract identifiers (dataset/STAC IDs, time windows, run IDs, risk flags).
+### Example output envelope
 
-2. **Planning**
-   - Load **config/manifest** (YAML/JSON).  
-   - Build an internal representation of affected **datasets, tasks, or Story Nodes**.  
-   - Compute a **minimal impacted set** (no full-graph recomputes by default).
+This is a recommended structure for agent outputs and is **not confirmed in repo**.
 
-3. **Execution**
-   - Orchestrate work via the chosen framework (e.g., LangGraph).  
-   - Use **typed state objects** (dicts or Pydantic models) with clear contracts.  
-   - Wrap execution in **OpenLineage spans** and governance-aware logging.
+~~~json
+{
+  "run_id": "run-2025-12-19T12:00:00Z-abc123",
+  "agent_id": "kfm.agent.entity_linker",
+  "task_id": "entity_link_suggest",
+  "inputs": [
+    {"kind": "stac_item", "id": "stac:item:..."},
+    {"kind": "document", "id": "doc:..."}
+  ],
+  "outputs": [
+    {"kind": "suggested_edge", "id": "edge_suggestion:..."}
+  ],
+  "confidence": {"score": 0.82, "calibration": "TBD"},
+  "provenance": {
+    "prov_activity_id": "prov:activity:...",
+    "wasDerivedFrom": ["stac:item:...", "doc:..."]
+  },
+  "redactions": [],
+  "warnings": []
+}
+~~~
 
-4. **Validation**
-   - Apply **Great Expectations** or equivalent where data is written.  
-   - Validate **lineage completeness** (Neo4j, STAC/DCAT links, PROV bundles).
+## 🌐 STAC, DCAT and PROV alignment
 
-5. **Publishing & Lineage**
-   - Write updated **STAC/DCAT** items via shared adapters.  
-   - Update **Neo4j** nodes/edges and optional PROV bundles.  
-   - Ensure events and updates align with **event schemas** and **Fair+CARE** rules.
+When an agent produces a **derived data product**:
+- Store derived datasets under `data/processed/`
+- Emit or update corresponding catalog records:
+  - STAC Items and Collections for spatial-temporal assets
+  - DCAT dataset records for datasets and groupings
+  - PROV activities for lineage and auditability
 
-6. **Telemetry & SLOs**
-   - Emit telemetry that conforms to:
-     - `telemetry_schema`,  
-     - `energy_schema`, `carbon_schema` when applicable.  
-   - Track run-level metrics (success, duration, recompute scope).
+When an agent produces **suggestions** (e.g., candidate merges or links):
+- Store as evidence artifacts with confidence metadata
+- Ensure a human review path exists for any high-impact change
+- Ensure provenance references the exact inputs used
 
----
+## 🧱 Architecture notes
 
-## ⚙️ Governance & CI/CD
+### Boundaries
 
-### Governance
+- The UI consumes contracted data through the API layer.
+- Agent outputs intended for UI presentation must be surfaced through API contracts and redaction rules.
 
-Agents are governed under:
+### Extension points
 
-- `governance_ref` — Root governance & decision-making.  
-- `ethics_ref` — FAIR+CARE & sovereignty guidance.
+Create new agents by:
+1. Defining a bounded task with explicit inputs and outputs
+2. Adding provenance emission for every output
+3. Adding tests:
+   - Unit tests for core logic
+   - Golden fixtures for stable outputs
+   - Contract checks for redaction and sensitivity handling
+4. Documenting:
+   - task purpose and expected inputs
+   - output schema and confidence conventions
+   - failure modes and fallback behavior
 
-Agents **must not**:
+## 🧠 Story Nodes and Focus Mode integration
 
-- Bypass schema versioning / deprecation standards.  
-- Mutate datasets or graph state outside of documented, deterministic pipelines.  
-- Introduce hidden side effects or untracked outputs.
+If an agent contributes to Story Nodes or Focus Mode:
+- Every factual claim must be traceable to source artifacts
+- Any inference must be clearly labeled and accompanied by confidence metadata
+- Opt-in controls must gate AI-generated content
+- Sensitivity and sovereignty rules apply to narrative display and map interactions
 
-### CI/CD Expectations
+## 🧪 Validation and CI/CD
 
-A shared agents workflow (e.g. `.github/workflows/agents-ci.yml`) should:
+Recommended checks for agent changes:
+- Lint and formatting
+- Unit tests
+- Determinism checks for seed-locked components
+- Schema validation for produced artifacts
+- Redaction and sensitivity tests for API-facing outputs
 
-- Lint and type-check all `src/agents/**` code.  
-- Validate all **manifests/configs** against schemas.  
-- Run **unit and integration tests** (including planner dry-runs for event-driven agents).  
-- Verify each agent has:
-  - A **governed README** with front-matter.  
-  - Telemetry references consistent with `schemas/telemetry/**`.  
-  - Links to relevant standards (events, pipelines, governance).
+## ⚖ FAIR+CARE and governance
 
-CI must block:
+Agents must:
+- Respect FAIR+CARE categorization and sensitivity labels
+- Avoid emitting precise protected locations when restricted
+- Produce audit-friendly provenance for all derived outputs
+- Require human review for merges, deletions, or high-impact narrative changes
 
-- Agents with missing or invalid docs.  
-- Removal or renaming of agents without manifest and governance updates.  
-- Any divergence from FAIR+CARE / sovereignty rules in agent behavior.
+## 🕰️ Version history
 
----
-
-## 🌿 FAIR+CARE & Sovereignty
-
-Agents may orchestrate workflows that touch:
-
-- **Culturally sensitive data** (e.g., heritage sites, community-linked layers).  
-- **Sovereignty-governed regions** or datasets (see sovereignty policies).
-
-Requirements:
-
-- Preserve upstream **sensitivity flags and sovereignty markers** (e.g., `x-indigenous`, `x-sovereignty-scope`) in all recomputed outputs.  
-- Never reduce masking/generalization levels below upstream requirements.  
-- Defer to FAIR+CARE and sovereignty governance when:
-  - Creating new views or recomputed layers.  
-  - Proposing public-facing Story Node updates.
-
-Any new agent intended to handle such data must be **explicitly flagged** in this index (risk category, governance contacts).
-
----
-
-## 📡 Telemetry, Energy & Carbon
-
-Agents are responsible for emitting **structured telemetry** that:
-
-- Uses `telemetry_schema` for:
-  - Agent runs, health, recompute scope, and error modes.  
-- Uses `energy_schema` / `carbon_schema` where energy & carbon can be estimated.
-
-Example metrics:
-
-- Number of impacted tasks vs total possible tasks per event.  
-- Distribution of agent run latency, error rates, and retry counts.  
-- Energy/carbon per recompute run (for heavy workloads).
-
-These metrics support:
-
-- Reliability & SLO dashboards.  
-- FAIR+CARE sustainability audits.  
-- Governance evaluations of recomputation policies.
-
----
-
-## 🕰️ Version History
-
-| Version | Date       | Author / Steward                     | Summary                                                                                      |
-|--------:|-----------:|--------------------------------------|----------------------------------------------------------------------------------------------|
-| v11.2.4 | 2025-12-08 | Pipelines WG · Agents Maintainers    | Initial Agents & Orchestration Index; defined layout, governance expectations, and CI/telemetry hooks. |
-
----
-
-<div align="center">
-
-© 2025 Kansas Frontier Matrix Project  
-Master Coder Protocol v6.3 · FAIR+CARE Certified · 🤖 Diamond⁹ Ω / 👑 Crown∞Ω Ultimate Certified  
-
-Deterministic ETL → STAC/DCAT/PROV → Neo4j Graph → API → React/MapLibre/Cesium → Story Nodes → Focus Mode  
-
-[⚙️ LangGraph Agents Index](./langgraph/README.md) • [📚 Standards Home](../../docs/standards/README.md) • [⚖️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+| Version | Date | Summary | Author |
+|---|---:|---|---|
+| v0.1.0 | 2025-12-19 | Initial README for `src/agents/` | (you) |
