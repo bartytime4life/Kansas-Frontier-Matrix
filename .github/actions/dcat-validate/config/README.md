@@ -1,348 +1,245 @@
 ---
-title: "🧾 Kansas Frontier Matrix — DCAT Validate Action Config"
+title: ".github/actions/dcat-validate/config — README"
 path: ".github/actions/dcat-validate/config/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-13"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
 
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Annual · FAIR+CARE Council · Architecture Board"
-content_stability: "stable"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../../../releases/v11.2.3/github-infra-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/github-workflows-v4.json"
-energy_schema: "../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Guide"
-intent: "github-dcat-validate-config"
-role: "dcat-validation-action-config"
-category: "Metadata · DCAT · CI/CD · Config"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-classification: "Public Document"
-sensitivity: "General (non-sensitive)"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-risk_category: "Metadata"
-indigenous_rights_flag: false
-redaction_required: false
-data_steward: "KFM FAIR+CARE Council"
+doc_uuid: "urn:kfm:doc:github-actions:dcat-validate:config-readme:v1.0.0"
+semantic_document_id: "kfm-github-actions-dcat-validate-config-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:github-actions:dcat-validate:config-readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
-
-provenance_chain:
-  - ".github/actions/dcat-validate/config/README.md@v11.2.3"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "SoftwareApplication"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../../../../schemas/json/github-actions-dcat-validate-config-v11.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/github-actions-dcat-validate-config-v11-shape.ttl"
-
-doc_uuid: "urn:kfm:doc:github-actions:dcat-validate:config:v11.2.3"
-semantic_document_id: "kfm-action-dcat-validate-config"
-event_source_id: "ledger:.github/actions/dcat-validate/config/README.md"
-immutability_status: "mutable-plan"
-machine_extractable: true
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "metadata-extraction"
+  - "summarize"
+  - "structure_extract"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "governance-override"
-  - "content-alteration"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "United States / Kansas"
-lifecycle_stage: "stable"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next dcat-validate config update"
-
-openlineage_profile: "OpenLineage v2.5 · CI/CD and catalog validation events"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧾 **Kansas Frontier Matrix — DCAT Validate Action Config**
-`.github/actions/dcat-validate/config/`
-
-**Purpose**  
-Define the **governed, deterministic configuration** consumed by the KFM **DCAT validation** CI action.
-This config controls:
-
-- Which **DCAT profile** to enforce (KFM‑DCAT v11)  
-- **Rule strictness**, severities, and allowlisted exceptions  
-- **Controlled vocabularies** (licenses, media types, themes)  
-- Repo path discovery for **DCAT records** and validation targets  
-
-</div>
-
----
+# dcat-validate config
 
 ## 📘 Overview
 
-This directory is part of KFM’s **catalog validation layer**. The `dcat-validate` action reads these files to
-ensure every DCAT record (e.g., dataset/distribution metadata) is:
+### Purpose
+This directory holds configuration files consumed by the `dcat-validate` composite GitHub Action.
 
-- **Spec-valid** (DCAT 3.0 semantics and shapes)
-- **Profile-valid** (KFM‑DCAT v11 project constraints)
-- **Governance-valid** (license, provenance, stewardship hooks)
-- **Deterministic** (config-driven; no environment-dependent behavior)
+The goal is to make DCAT validation behavior explicit, reviewable, and reproducible (configuration-as-code), without requiring code edits for routine rule/profile tuning.
 
-> **Normative:** Any change to validation thresholds, allowlists, or controlled vocabularies MUST be done
-> here (not inline in workflow YAML), and MUST be reviewable under KFM governance.
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Validator configuration (rules, profiles, paths, suppressions) | GitHub workflow wiring (`.github/workflows/*`) |
+| Non-secret settings that should be code-reviewed | Secrets / tokens / credentials |
+| Repo-default settings shared across workflows | Dataset content itself (`data/*`) |
 
----
+### Audience
+- Primary: CI/CD maintainers; catalog maintainers
+- Secondary: contributors adding datasets or changing DCAT generation
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` *(not confirmed in repo)*
+- Terms used in this doc:
+  - **DCAT**: dataset catalog metadata (W3C vocabulary)
+  - **Profile**: KFM’s constrained interpretation of a standard (e.g., `KFM-DCAT v11.0.0`)
+  - **Suppression**: an explicit “allow this known issue” entry, time-bounded and justified
+
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Action overview | `.github/actions/dcat-validate/README.md` | CI maintainers | What the action validates + contract |
+| Scripts overview | `.github/actions/dcat-validate/scripts/README.md` | CI maintainers | How config is loaded/used |
+| Config files | `.github/actions/dcat-validate/config/*` | CI maintainers | This directory |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Config naming + purpose documented (no “mystery files”)
+- [ ] Safe defaults explained (what fails CI vs what warns)
+- [ ] “Where to change what” is clear for contributors
+- [ ] No secrets encouraged or referenced
 
 ## 🗂️ Directory Layout
 
-~~~text
-.github/
-└── 🧱 actions/
-    └── 🧾 dcat-validate/
-        └── ⚙️ config/
-            ├── 📄 README.md                 # ← This file (what each config file does)
-            ├── 🧾 profiles.yml              # DCAT profile ids + validator/shape wiring
-            ├── 🧾 rules.yml                 # Rule toggles, severities, fail/pass thresholds
-            ├── 🧾 vocab.yml                 # Controlled vocabularies (licenses, media types, themes)
-            ├── 🧾 ignore.yml                # Allowlisted exceptions (scoped + expiring)
-            └── 🧾 paths.yml                 # Where to find DCAT records in-repo (globs, roots)
-~~~
+### This document
+- `path`: `.github/actions/dcat-validate/config/README.md`
 
----
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Workflows | `.github/workflows/` | CI pipelines calling composite actions |
+| Action | `.github/actions/dcat-validate/` | Composite action entrypoint + docs |
+| Config | `.github/actions/dcat-validate/config/` | Validator configuration (this folder) |
+| Catalog outputs | `data/catalog/dcat/` *(expected; not confirmed in repo)* | DCAT datasets produced by pipeline |
+| Schemas | `schemas/` *(expected; not confirmed in repo)* | Validation assets (JSON Schema / SHACL) |
+
+### Expected file tree for this sub-area
+~~~text
+📁 .github/
+└── 📁 actions/
+    └── 📁 dcat-validate/
+        ├── 📁 config/
+        │   ├── 📄 README.md
+        │   ├── 📄 <config-file-1>        # not confirmed in repo
+        │   ├── 📄 <config-file-2>        # not confirmed in repo
+        │   └── 📁 <optional-subdir>/     # not confirmed in repo
+        ├── 📁 scripts/
+        │   └── 📄 README.md
+        └── 📄 README.md
+~~~
 
 ## 🧭 Context
 
-**KFM pipeline placement:** ETL → **catalogs (STAC/DCAT/PROV)** → graph → API → frontend.
+### Background
+KFM’s pipeline treats **catalog artifacts** (STAC/DCAT/PROV) as machine-validated outputs. This configuration directory supports a CI validation gate by providing a stable, version-controlled place for validator settings.
 
-DCAT validation sits in the **catalogs** stage to prevent:
+### Assumptions
+- The action’s scripts read at least one config file from this directory. *(not confirmed in repo)*
+- The repo emits DCAT dataset metadata under `data/catalog/dcat/`. *(not confirmed in repo)*
 
-- broken or incomplete catalog exports,
-- missing license/provenance fields,
-- inconsistent dataset/distribution metadata that breaks downstream ingestion,
-- “quiet drift” of metadata semantics that would undermine governance and Focus Mode transparency.
+### Constraints / invariants
+- Config changes must be deterministic (no environment-specific behavior).
+- Config changes must be reviewable (avoid hidden defaults in workflow YAML).
+- UI/clients should not bypass the API layer to read catalogs directly.
 
----
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| What is the canonical config filename and schema for this action? | CI maintainer | TBD |
+| Do we validate DCAT in JSON-LD, Turtle, or both? | Catalog maintainer | TBD |
+| Do we publish a machine-readable validation report artifact? | CI maintainer | TBD |
+
+### Future extensions
+- Add schema validation for the config itself (JSON Schema) and run it in CI.
+- Support “strict” vs “warn-only” policies by branch / tag / environment.
+- Time-bound suppressions (expiry dates) to prevent permanent exceptions.
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[Catalog build] --> B[DCAT datasets<br/>data/catalog/dcat/]
+  B --> C[CI: dcat-validate action]
+  C --> D[PR status checks]
+~~~
 
 ## 📦 Data & Metadata
 
-The config files in this directory are **inputs** to the validator. They should be treated as governed
-infrastructure—small changes can affect release gating.
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Validator config | YAML/JSON *(recommended)* | `.github/actions/dcat-validate/config/` | Config schema *(recommended; not confirmed in repo)* |
+| DCAT dataset files | JSON-LD/Turtle *(not confirmed in repo)* | `data/catalog/dcat/` | DCAT validator (tooling depends on implementation) |
 
-### `profiles.yml`
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| CI check result | GitHub Check | PR / workflow run | Action exit code + logs |
+| Validation report *(optional)* | Text/JSON *(not confirmed in repo)* | workflow artifacts *(not confirmed in repo)* | TBD |
 
-Defines supported profile identifiers and how each profile is validated.
+### Sensitivity & redaction
+- Config files here should remain **non-sensitive**. Do not place secrets, credentials, or private endpoints in this folder.
 
-~~~yaml
-profiles:
-  - id: "kfm-dcat-v11"
-    dcat_version: "3.0"
-    serialization:
-      - "jsonld"
-      - "ttl"
-    # Shape locations are typically repo-root paths; keep them stable and versioned.
-    shacl_shape_ref: "schemas/shacl/kfm-dcat-v11-shape.ttl"
-    strict: true
-    notes: "KFM-DCAT v11 profile for public catalog publishing."
-~~~
-
-### `rules.yml`
-
-Defines rule behavior and severity mapping. This is where “what fails CI” is controlled.
-
-~~~yaml
-thresholds:
-  fail_on:
-    critical: true
-    high: true
-    medium: false
-    low: false
-
-rules:
-  # Examples (rule ids are project-owned; keep stable)
-  - id: "dcat.required.title"
-    severity: "high"
-    enabled: true
-    description: "Dataset MUST have a non-empty title."
-
-  - id: "dcat.required.license"
-    severity: "critical"
-    enabled: true
-    description: "Dataset MUST declare a license (governance requirement)."
-
-  - id: "dcat.distribution.access_url"
-    severity: "high"
-    enabled: true
-    description: "Each Distribution MUST include accessURL and/or downloadURL."
-
-  - id: "kfm.provenance.hook"
-    severity: "high"
-    enabled: true
-    description: "Dataset MUST include a provenance hook (e.g., prov:wasDerivedFrom or KFM lineage pointer)."
-~~~
-
-### `vocab.yml`
-
-Defines controlled vocabularies to reduce ambiguity and improve interoperability. Keep lists short, explicit,
-and aligned to published governance.
-
-~~~yaml
-licenses:
-  allowed:
-    - "CC-BY-4.0"
-    - "CC0-1.0"
-    - "MIT"
-  # If DCAT requires IRIs in your implementation, store IRIs here instead of SPDX ids.
-
-media_types:
-  allowed:
-    - "application/json"
-    - "application/geo+json"
-    - "text/csv"
-    - "application/pdf"
-
-themes:
-  allowed:
-    - "historical"
-    - "cultural"
-    - "ecological"
-    - "infrastructure"
-    - "archaeology"
-~~~
-
-### `ignore.yml`
-
-Allowlisted exceptions MUST be **scoped**, **justified**, and **expiring**. This prevents permanent policy
-bypass.
-
-~~~yaml
-exceptions:
-  - id: "EX-2025-0001"
-    rule_id: "dcat.distribution.access_url"
-    scope:
-      dataset_id: "urn:kfm:dataset:example:placeholder"
-    justification: "Legacy record pending migration to new distribution model."
-    expires_on: "2026-03-01"
-    owner: "KFM FAIR+CARE Council"
-~~~
-
-### `paths.yml`
-
-Controls what files are validated and where they live in the repo. Keep globbing deterministic and avoid
-ambiguous broad patterns unless necessary.
-
-~~~yaml
-targets:
-  - name: "primary-dcat"
-    root: "data/dcat"
-    include:
-      - "**/*.json"
-      - "**/*.jsonld"
-      - "**/*.ttl"
-    exclude:
-      - "**/_drafts/**"
-      - "**/tmp/**"
-~~~
-
----
+### Quality signals
+Recommended quality signals for validation config:
+- Explicit “fail vs warn” policy separation
+- Allowlist / suppression list is justified and time-bounded
+- Stable path globs (avoid absolute paths or runner-specific directories)
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-KFM treats **STAC, DCAT, and PROV** as linked outputs:
+### DCAT
+- Target profile: `KFM-DCAT v11.0.0`.
+- Typical validation aims (examples; align with your validator implementation):
+  - Required identifiers present
+  - License/publisher/contact fields present
+  - Spatial/temporal coverage present when applicable
 
-- **STAC** describes spatiotemporal assets (Items/Collections).
-- **DCAT** describes publishable datasets and distributions (catalog interoperability).
-- **PROV** provides lineage for trust, reproducibility, and governance.
+### PROV-O
+If validation reports are emitted as artifacts:
+- Prefer a provenance note that can be tied back to the workflow run (e.g., workflow run ID as an Activity identifier).
 
-This config SHOULD be used to enforce cross-standard coherence, such as:
+## 🧱 Architecture
 
-- `license` values consistent across STAC/DCAT representations
-- dataset temporal/spatial coverage present in publishable catalog fields
-- presence of provenance hooks that can be traced to governed ETL activities
+### How config should be used
+- Scripts should load config from this directory via an explicit path (no implicit CWD assumptions).
+- Defaults should live in-version here, not hidden inside workflow YAML.
+- Tool versions (validator/runtime) should be pinned in the action to keep validation stable.
 
----
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Config schema *(recommended)* | `schemas/` *(not confirmed in repo)* | Semver + changelog |
+| Validator behavior | `.github/actions/dcat-validate/scripts/` | Pin tool versions in the action |
+
+## 🧠 Story Node & Focus Mode Integration
+This action is CI-only and does not directly feed Story Nodes or Focus Mode.
+
+However, passing validation is a prerequisite for catalog artifacts to be considered “publishable” inputs to downstream stages.
 
 ## 🧪 Validation & CI/CD
 
-When config is changed, CI should validate:
+### Validation steps
+- [ ] Markdown protocol checks (front-matter + structure)
+- [ ] Config lint (YAML/JSON syntax) *(recommended)*
+- [ ] DCAT validation against profile
 
-- the YAML is parseable and schema-valid,
-- rule thresholds behave as intended (no accidental “always pass”),
-- ignore exceptions are not expired,
-- profile/shape references remain stable.
-
-### Local validation (developer runbook)
-
+### Reproduction
 ~~~bash
-# Example only — use the repository's canonical workflow/entrypoint if different.
-set -euo pipefail
+# Example placeholders — replace with repo-specific commands
 
-# From repo root:
-bash .github/actions/dcat-validate/entrypoint.sh \
-  --dcat-root "data/dcat" \
-  --config-dir ".github/actions/dcat-validate/config" \
-  --profile "kfm-dcat-v11"
+# 1) Lint config (if adopted):
+#    yamllint .github/actions/dcat-validate/config/
+
+# 2) Run DCAT validation locally (example shape):
+#    .github/actions/dcat-validate/scripts/validate_dcat.sh \
+#      --config .github/actions/dcat-validate/config/<config-file> \
+#      --inputs data/catalog/dcat/
 ~~~
-
----
 
 ## ⚖ FAIR+CARE & Governance
 
-This config is a governance boundary:
+### Review gates
+- CI maintainer review: required
+- Data/catalog maintainer review: recommended when rule/profile changes affect data publication
 
-- It MUST NOT weaken license/provenance requirements without explicit review.
-- It MUST NOT introduce allowlists that permanently bypass critical policy checks.
-- It SHOULD encourage **aggregation** over exposure in cases where sensitive metadata could leak.
+### CARE / sovereignty considerations
+- Ensure validation does not require exposing restricted datasets in CI logs/artifacts.
 
-If sovereignty or sensitive-data controls are required for any DCAT output, they MUST be enforced in the
-catalog generation pipeline and reflected in validation rules (e.g., required redaction flags, access rights,
-or distribution controls).
-
----
+### AI usage constraints
+- This directory is configuration for validation; no AI generation or inference is intended.
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v11.2.3 | 2025-12-13 | Initial governed README for DCAT validation config layout, conventions, and examples. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial config README | TBD |
 
 ---
-
-<div align="center">
-
-🧾 **KFM — DCAT Validate Action Config (v11.2.3)**  
-Catalog-First · FAIR+CARE-Governed · Deterministic Validation  
-
-[⬅ GitHub Infra Overview](../../../README.md) · [🧾 DCAT Validate Action](../README.md) · [📚 Data Standards](../../../../docs/data/README.md)
-
-</div>
-
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
