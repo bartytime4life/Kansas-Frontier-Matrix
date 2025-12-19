@@ -1,352 +1,367 @@
 ---
-title: "Kansas Frontier Matrix – Historical Data Domain"
+title: "KFM — Historical Data Domain README"
 path: "data/historical/README.md"
-version: "v11.2.6"
-last_updated: "2025-12-11"
-
-doc_kind: "data-domain-index"
-lifecycle: "active"
-release_stage: "stable"
-owner_team: "kfm-data-historical"
-contact: "data-historical@kfm.example.org"
-
-domain: "historical"
-domain_scope:
-  spatial: "Kansas and immediately adjacent regions"
-  temporal: "Pre-contact through present, with emphasis on historical-period change"
-  includes:
-    - "historical events and periods"
-    - "land tenure, treaties, and jurisdictional change"
-    - "historic infrastructure and land use"
-    - "demography and administrative units"
-    - "historic maps, atlases, registers, and newspapers"
-  excludes:
-    - "purely modern sensor streams (see data/sensing)"
-    - "purely ecological baselines (see data/ecology)"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-catalog_profile:
-  stac: "KFM-STAC v11"
-  dcat: "KFM-DCAT v11"
-  prov: "KFM-PROV v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-fair_label: "FAIR: F1-A1-I1-R1"
-care_label: "CARE-aware: historical and Indigenous content"
-sensitivity_default: "assess-per-dataset"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-telemetry_ref: "../../mcp/telemetry/data-historical-domain.json"
-governance_refs:
-  data_governance: "../../docs/standards/governance/DATA-GOVERNANCE.md"
-  indigenous_data: "../../docs/standards/governance/INDIGENOUS-DATA-GUIDE.md"
-  security_policy: "../../docs/standards/security/SECURITY-POLICY.md"
+doc_uuid: "urn:kfm:doc:data:historical:readme:v1.0.0"
+semantic_document_id: "kfm-data-historical-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:historical:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-doc_id: "urn:kfm:doc:data-historical-readme:v11.2.6"
-previous_version: "v11.2.5"
-change_request: "CR-HIST-001"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# Historical Data Domain (data/historical)
-
-**Purpose**  
-Provide the canonical entry point for all historical data under `data/historical/`. This README defines scope, directory layout, pipeline expectations, governance, and versioning for the historical data domain, and serves as the parent spec for all historical datasets and thematic subdomains.
-
----
+# KFM — Historical Data Domain README
 
 ## 📘 Overview
 
-The historical data domain covers datasets whose primary purpose is to represent Kansas history across time and space, from pre-contact through the present, with emphasis on historical-period change and land-tenure dynamics. Domain scope and exclusions are summarized in the front-matter `domain_scope` block.
+### Purpose
+This README defines the **Historical** data domain for Kansas Frontier Matrix (KFM): what belongs in this domain, how it is staged through the canonical pipeline, and how it must be cataloged (STAC/DCAT/PROV) to remain provenance-linked and reproducible.
 
-Historical data in this domain is expected to move through the standard Kansas Frontier Matrix pipeline:
+This document is a **domain landing guide**; it does not replace governed schemas, ingestion configs, or API contracts.
 
-> Deterministic ETL → STAC / DCAT / PROV catalogs → Neo4j graph → API layer → React / MapLibre / Cesium frontends → Story Nodes and Focus Mode.
+### Scope
 
-Every new dataset or subdirectory under `data/historical/` must:
+| In Scope | Out of Scope |
+|---|---|
+| Primary historical sources (e.g., diaries, newspapers, letters, photographs, historic maps) | Modern-only datasets with no historical relevance (belongs in another domain) |
+| Curated historical event/place/person datasets derived from primary sources | Untracked “ad hoc” exports without provenance or stable IDs |
+| Geospatial historical layers (points/lines/polygons) and raster scans when they map to time + place | Any content requiring restricted handling that is not yet covered by governance rules (**not confirmed in repo**) |
+| Provenance records (PROV) and catalog records (STAC/DCAT) for historical assets | UI or API implementation details (documented elsewhere) |
 
-- Declare how it fits into this pipeline.
-- Provide STAC, DCAT, and PROV metadata aligned with the KFM-STAC, KFM-DCAT, and KFM-PROV profiles.
-- Integrate with the historical section of the Neo4j graph using the KFM-OP ontology where graph ingestion is intended.
-- Respect FAIR+CARE principles, Indigenous sovereignty, and relevant sensitivity rules.
+### Audience
+- Primary: data engineers, catalog maintainers, historians/editors preparing ingest-ready materials
+- Secondary: API/UI developers consuming cataloged historical assets via contracts (no direct graph access)
 
-Specific datasets and subdomains add their own README files, which **must reference this one** as their parent domain spec.
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` (**not confirmed in repo**)
+- Terms used in this doc: Historical domain, source bundle, STAC Item, STAC Collection, DCAT dataset, PROV activity, stable ID, redaction/generalization.
 
----
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Domain landing doc | `data/historical/README.md` | TBD | This file |
+| Raw sources (by domain) | `data/sources/historical/` | TBD | Preferred location for source bundles; structure may vary by contributor (**not confirmed in repo**) |
+| Staging (raw/work/processed) | `data/raw/historical/`, `data/work/historical/`, `data/processed/historical/` | TBD | Deterministic + idempotent transforms required |
+| STAC catalogs | `data/stac/collections/`, `data/stac/items/` | TBD | Historical assets must be represented as STAC Items where applicable |
+| DCAT catalogs | `data/catalog/dcat/` | TBD | Dataset-level view of historical resources |
+| PROV lineage | `data/prov/` | TBD | `prov:wasDerivedFrom` and `prov:wasGeneratedBy` required for public artifacts |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Domain placement rules align with KFM canonical pipeline ordering
+- [ ] Validation steps listed and repeatable (even if commands are placeholders)
+- [ ] Sensitivity / redaction expectations stated for historical content
+- [ ] Any unknown repo specifics explicitly marked **not confirmed in repo**
 
 ## 🗂️ Directory Layout
 
-The historical domain is organized by **theme** rather than by source. This section defines the target layout; some directories may be planned but not yet present.
+### This document
+- `path`: `data/historical/README.md`
 
-Docs implementing this profile **must**:
+### Related repository paths
 
-- Use emoji-annotated trees with:
-  - `📁` for directories  
-  - `📄` for Markdown/text files  
-  - `🧾` for JSON/YAML/log-like artifacts  
-  - `🖼️` for images and visual assets  
-  - `🧪` for tests where helpful
-- Fence the layout in a `~~~text` block.
-- Show the `📁 data/` subtree focused on `📁 historical/` for this domain README.
+| Area | Path | What lives here |
+|---|---|---|
+| Source bundles | `data/sources/historical/` | Raw contributor/source bundles + manifests (preferred) |
+| Raw staging | `data/raw/historical/` | Raw, ingested copies normalized for tooling (no manual edits) |
+| Work staging | `data/work/historical/` | Intermediate artifacts, extracted text, temp geopackages, etc. |
+| Processed outputs | `data/processed/historical/` | Canonical processed datasets (ready for catalog + graph) |
+| STAC outputs | `data/stac/collections/` + `data/stac/items/` | Catalog records for assets (domain-scoped folders allowed) |
+| DCAT outputs | `data/catalog/dcat/` | Dataset catalog views (domain-scoped folders allowed) |
+| PROV outputs | `data/prov/` | Lineage bundles for transforms/derivations |
+| Docs (domain narrative) | `docs/` | Canonical governed docs + story nodes (not stored under `data/`) |
 
+### Expected file tree for this sub-area
 ~~~text
 📁 data/
-└── 📁 historical/                          # Historical data domain root
-    ├── 📄 README.md                        # This file – domain index and governance
-    ├── 📁 land-tenure/                     # Treaties, jurisdiction, land allocations (existing/planned)
-    │   ├── 📄 README.md
-    │   ├── 📁 raw/                         # As-ingested source materials
-    │   ├── 📁 work/                        # Normalized / intermediate
-    │   ├── 📁 processed/                   # Ready for catalog and graph ingestion
-    │   ├── 📁 stac/                        # STAC Collections and Items
-    │   │   ├── 📁 collections/
-    │   │   └── 📁 items/
-    │   └── 📁 dcat-prov/                   # DCAT dataset descriptions and PROV bundles
-    │       ├── 📁 dcat/
-    │       └── 📁 prov/
-    ├── 📁 events/                          # Historical events, periods, timelines (planned)
-    │   └── 📄 README.md
-    ├── 📁 infrastructure/                  # Rail, roads, canals, utilities, etc. (planned)
-    │   └── 📄 README.md
-    ├── 📁 demography/                      # Census extracts, population time series (planned)
-    │   └── 📄 README.md
-    ├── 📁 maps-atlases/                    # Historic maps, atlases, plats (planned)
-    │   └── 📄 README.md
-    ├── 📁 newspapers-gazetteers/           # Indexes to newspapers, gazetteers (planned)
-    │   └── 📄 README.md
-    └── 📁 oral-histories/                  # Oral history with special protections (planned)
-        └── 📄 README.md
+├── 📁 historical/
+│   └── 📄 README.md
+├── 📁 sources/
+│   └── 📁 historical/
+│       ├── 📄 <source-manifest>.yml
+│       └── 📁 <source-bundle>/
+├── 📁 raw/
+│   └── 📁 historical/
+├── 📁 work/
+│   └── 📁 historical/
+├── 📁 processed/
+│   └── 📁 historical/
+├── 📁 stac/
+│   ├── 📁 collections/
+│   │   └── 📁 historical/
+│   └── 📁 items/
+│       └── 📁 historical/
+├── 📁 catalog/
+│   └── 📁 dcat/
+│       └── 📁 historical/
+└── 📁 prov/
+    └── 📁 historical/
 ~~~
-
-Conventions:
-
-- Each thematic subdirectory must have its own `README.md` aligned with KFM-MDP v11.2.6.
-- The `raw / work / processed` pattern is mandatory wherever ETL is involved.
-- STAC / DCAT / PROV folders are required for any dataset that is published beyond private scratch use.
-- If a dataset does not yet fit this structure, it should live in a clearly marked temporary area (e.g. `data/historical/_staging/`) with an issue tracking the work to bring it into compliance.
-
----
 
 ## 🧭 Context
 
-### Domain data types and examples (non-exhaustive)
+### Background
+KFM is a geospatial + historical knowledge system that requires **deterministic**, **provenance-linked** data products flowing through the canonical pipeline:
+ETL → STAC/DCAT/PROV catalogs → Graph → APIs → UI → Story Nodes → Focus Mode.
 
-This domain includes, but is not limited to, the following categories of data. The examples are **types**, not specific datasets:
+This historical domain exists to:
+- separate historical sources and derived historical datasets from other data domains
+- standardize time/place anchoring early (ETL + catalog)
+- ensure every narrative claim can trace back to a cataloged source (STAC/DCAT) and lineage record (PROV)
 
-- **Land tenure and jurisdiction**
-  - Historical county and township boundaries.
-  - Administrative regions (territories, reservations, municipalities) over time.
-  - Records of boundary changes, annexations, and reclassifications.
-- **Treaties and legal-historical instruments**
-  - Spatial representations of jurisdictional effects where modeling is appropriate and lawful.
-  - Structured representations of articles, effective dates, and parties.
-- **Historical events and periods**
-  - Dated events with spatial extents (points, lines, polygons).
-  - Named periods with time spans and associated places.
-- **Infrastructure and land use**
-  - Historic transportation networks (rail, roads, trails).
-  - Major public works with known construction and decommission dates.
-- **Demography**
-  - Aggregated census units, population counts, and demographic indicators.
-- **Maps and atlases**
-  - Georeferenced historic map sheets and atlases.
-  - Vectorized features derived from those sources where allowed.
-- **Newspapers and gazetteers**
-  - Indexes of articles and notices with place and time references (not full-text reproduction).
-- **Oral histories**
-  - Time-anchored narratives, usually with non-public detail and stronger sovereignty constraints.
+### Assumptions
+- Stable identifiers exist (or will be created) for: sources, derived datasets, and catalog items (**not confirmed in repo**)
+- Domain-specific assets can be discovered via STAC/DCAT without UI reading the graph directly
+- Sensitive historical material may exist and requires governed handling (CARE/sovereignty)
 
-Each concrete dataset must document its own scope, methods, and limitations in its subdomain README and catalogs.
+### Constraints / invariants
+- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode ordering is preserved
+- Frontend consumes contracts via APIs (no direct graph dependency)
+- No unsourced narrative: any derived “summary” must link to evidence IDs
 
----
+### Open questions
+
+| Question | Owner | Target date |
+|---|---|---|
+| What is the canonical source-manifest schema for `data/sources/historical/`? | TBD | TBD |
+| Which STAC extensions are required for scanned historic maps vs. extracted vectors? | TBD | TBD |
+| What redaction/generalization rules apply to personal/tribal/culturally sensitive historical content? | TBD | TBD |
+
+### Future extensions
+- Add domain-level “collection registry” mapping historical subdomains (maps, newspapers, diaries, oral histories) to STAC Collection IDs (**not confirmed in repo**)
+- Add quality scoring signals for OCR quality, geocoding confidence, and temporal parsing confidence
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[Historical source bundles] --> B[ETL: extract/normalize]
+  B --> C[STAC Items + Collections]
+  B --> D[DCAT dataset views]
+  B --> E[PROV lineage bundles]
+  C --> F[Neo4j Graph build]
+  D --> F
+  E --> F
+  F --> G[API Layer]
+  G --> H[React/Map UI]
+  H --> I[Story Nodes]
+  I --> J[Focus Mode]
+~~~
+
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant UI
+  participant API
+  participant Catalog as STAC/DCAT/PROV
+  participant Graph
+  UI->>API: Request historical context bundle (entity_id)
+  API->>Graph: fetch subgraph + provenance refs
+  Graph-->>API: entity context + referenced IDs
+  API->>Catalog: resolve STAC/DCAT/PROV by IDs
+  Catalog-->>API: assets + dataset metadata + lineage
+  API-->>UI: narrative-safe payload + citations + audit flags
+~~~
+
+## 📦 Data & Metadata
+
+### Inputs
+
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Historic documents | PDF/TXT/DOCX/HTML | archives, libraries, scans | parse success + checksum |
+| Historic maps | GeoTIFF/JP2/PDF scan | map archives | CRS/extent + file integrity |
+| Historic photos | JPG/PNG/TIFF | archives, museums | EXIF/time attribution if present |
+| Vector layers | GeoJSON/GPKG/Shapefile | curated sources | geometry validity + CRS |
+| Tabular datasets | CSV/XLSX/JSON | curated compilations | schema validation + type checks |
+
+### Outputs
+
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Canonical extracted text | TXT/JSON | `data/processed/historical/` | TBD (**not confirmed in repo**) |
+| Curated tables | CSV/Parquet/JSON | `data/processed/historical/` | TBD (**not confirmed in repo**) |
+| STAC Items | JSON | `data/stac/items/historical/` | STAC 1.0 + KFM profile |
+| STAC Collections | JSON | `data/stac/collections/historical/` | STAC 1.0 + KFM profile |
+| DCAT dataset records | JSON-LD/Turtle | `data/catalog/dcat/historical/` | DCAT 3 + KFM profile |
+| PROV bundles | JSON-LD/Turtle | `data/prov/historical/` | PROV-O + KFM profile |
+
+### Sensitivity & redaction
+Historical sources may contain:
+- personally identifying information (PII) in letters, diaries, rosters
+- culturally sensitive locations or narratives
+- sensitive sites (exact coordinates) that require generalization
+
+Rules must follow:
+- do not infer sensitive locations
+- do not publish restricted coordinates; use generalization when required (**not confirmed in repo** governance specifics)
+- ensure API payloads include audit flags for redacted/generalized fields
+
+### Quality signals
+- OCR confidence / error rate (if applicable)
+- Temporal parsing confidence (date extraction success)
+- Geocoding confidence (place-name → coordinate)
+- Geometry validity and topology checks (for vector data)
+- Completeness checks (required fields present)
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+- Collections involved: `historical` (collection IDs **not confirmed in repo**)
+- Items involved: per asset (document/map/photo/vector/raster) with spatial + temporal fields where available
+- Extension(s): per KFM-STAC profile (**not confirmed in repo** beyond profile name)
+
+### DCAT
+- Dataset identifiers: stable dataset IDs for each curated historical dataset (**not confirmed in repo**)
+- License mapping: must reflect source license; derived datasets must preserve attribution
+- Contact / publisher mapping: per governance docs (**not confirmed in repo**)
+
+### PROV-O
+- `prov:wasDerivedFrom`: list the exact source bundle IDs / STAC asset IDs
+- `prov:wasGeneratedBy`: pipeline run/activity ID (include deterministic run configuration reference)
+- Activity / Agent identities: contributor + pipeline agent identifiers (**not confirmed in repo**)
+
+### Versioning
+- When regenerating a dataset, create a new version and link predecessor/successor (STAC versioning links + graph lineage).
 
 ## 🧱 Architecture
 
-Historical data in this domain participates in the KFM pipeline through deterministic ETL, cataloging, and graph integration.
+### Components
 
-### 1. ETL expectations (Deterministic and config-driven)
+| Component | Responsibility | Interface |
+|---|---|---|
+| ETL | Ingest + normalize historical sources | configs + run logs |
+| Catalogs | Produce STAC/DCAT/PROV records | JSON/JSON-LD validation |
+| Graph | Model entities + relationships | populated via pipeline; queried via API layer |
+| APIs | Serve historical domain payloads | REST/GraphQL contracts |
+| UI | Render maps/timelines/narratives | API calls only |
+| Story Nodes | Curated narrative from evidence | provenance-linked docs |
+| Focus Mode | Context bundle synthesis | provenance + audit rendering |
 
-Historical ETL logic lives under `src/pipelines/historical/` and must be:
+### Interfaces / contracts
 
-- **Deterministic**  
-  - No hidden randomness; any stochastic step must set and record a seed.
-- **Config-driven**  
-  - Config files under `configs/historical/` describe sources, transformations, CRS, time handling, and sensitivity rules.
-- **Layered**  
-  - ETL outputs map cleanly to `raw → work → processed` in the `data/historical/` directory tree.
+| Contract | Location | Versioning rule |
+|---|---|---|
+| JSON schemas | `schemas/` | Semver + changelog (**not confirmed in repo**) |
+| API schemas | `src/server/` + docs | Contract tests required (**not confirmed in repo**) |
+| Layer registry | `web/` | Schema-validated (**not confirmed in repo**) |
 
-Minimum expectations for any ETL touching `data/historical/`:
-
-- A config file (e.g. `configs/historical/<theme>-etl.yaml`).
-- A reproducible run command documented in the dataset-level README (e.g. `make etl-historical-<theme>`).
-- A log of the most recent runs under `mcp/experiments/historical/`.
-- Clear, stable identifiers in outputs so STAC / DCAT / PROV and the graph can reference them.
-
-### 2. Catalogs: STAC, DCAT, and PROV
-
-Historical datasets exposed to the graph or APIs must be cataloged consistently.
-
-#### STAC
-
-Every such dataset must have:
-
-- At least one **STAC Collection** per thematic grouping or series.
-- One or more **STAC Items** per spatiotemporally distinct asset (e.g., a specific boundary realization, a map sheet, an event layer).
-- Conformance to the KFM STAC profile, including:
-  - `id`, `title`, `description`, `license`, `providers`, `extent`, and `keywords`.
-  - Spatial and temporal extent expressed in EPSG:4326 and ISO-8601.
-  - Properties for:
-    - Sensitivity flags.
-    - Relevant governance or sovereignty tags where required.
-
-#### DCAT
-
-- Exactly one **DCAT dataset description** per dataset.
-- DCAT must describe:
-  - Title, description, publisher/maintainer.
-  - Spatial and temporal coverage.
-  - License and access level.
-  - Contact and usage notes.
-- DCAT files for historical datasets are written to  
-  `data/historical/<theme>/dcat-prov/dcat/`.
-
-#### PROV
-
-- One or more **PROV bundles** per ETL or curation flow.
-- Each bundle identifies:
-  - **Entities**: source files, intermediate layers, final products.
-  - **Activities**: ETL runs, manual curation steps, quality review.
-  - **Agents**: individuals, teams, automated systems.
-- PROV files are written to  
-  `data/historical/<theme>/dcat-prov/prov/` and must be valid JSON-LD.
-
-### 3. Graph integration (Neo4j)
-
-Historical data is integrated into the KFM Neo4j graph via ingestion code in `src/graph/historical/`. The exact labels and relationships are defined in the KFM-OP ontology and associated schema files, but the following general patterns apply:
-
-- **Nodes** (examples of types, not a full schema):
-  - `:HistoricalEvent`, `:Period`, `:Place`, `:AdministrativeUnit`
-  - `:BoundaryVersion`, `:Dataset`, `:SourceDocument`
-- **Relationships** (examples):
-  - `(:HistoricalEvent)-[:OCCURRED_IN]->(:Place)`
-  - `(:BoundaryVersion)-[:VALID_DURING]->(:Period)`
-  - `(:Dataset)-[:DERIVES_FROM]->(:SourceDocument)`
-  - `(:Dataset)-[:IMPLEMENTS]->(:Specification)` for formally defined models.
-
-Any new graph integration must:
-
-- Use stable identifiers derived from STAC / DCAT IDs, not ad-hoc strings.
-- Declare its schema in the appropriate ontology or schema file before ingestion runs in CI.
-- Include tests under `src/graph/historical/tests/` that exercise typical queries used by APIs, Story Nodes, and Focus Mode.
-
-If a historical dataset is **not** intended for graph ingestion, that must be stated explicitly in the dataset README, along with the reason.
-
----
+### Extension points checklist (for future work)
+- [ ] Data: new historical subdomain added under `data/.../historical/...`
+- [ ] STAC: new collection/item validation passes
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped with provenance
+- [ ] APIs: contract version bump + tests (if needed)
+- [ ] UI: layer registry entry + access rules
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Historical data often drives Story Nodes and Focus Mode views. For each major dataset or grouping, authors should plan for at least one Story Node that:
+### How this work surfaces in Focus Mode
+- Historical entities become focusable via graph + API context bundles.
+- Every story node must include citations that resolve to:
+  - a STAC item ID and/or DCAT dataset ID
+  - a PROV lineage reference for any derived claim
 
-- Has a stable ID and lives under `docs/story/historical/`.
-- Clearly separates:
-  - **Facts** supported directly by data (with references to STAC/DCAT/graph).
-  - **Interpretation** (reasoned narrative).
-  - **Speculation** (clearly labeled as such, or omitted).
-- Records:
-  - Spatial extent (bbox or named places).
-  - Temporal extent (start / end dates).
-- Links to:
-  - Relevant STAC Collections or Items.
-  - DCAT datasets.
-  - Graph entities (e.g., key places, events, boundaries).
+### Provenance-linked narrative rule
+Every factual claim must trace to a dataset / record / asset ID. Any predictive content must be opt-in and carry uncertainty/confidence fields.
 
-Any Story Node in the historical domain should reference this file to document its data dependencies and constraints.
-
----
-
-## ⚖ FAIR+CARE & Governance
-
-Historical data for Kansas can include:
-
-- Information about Indigenous nations and communities.
-- Locations of cemeteries, burial sites, and sacred or sensitive places.
-- Records of conflict, displacement, or other traumatic events.
-
-For this reason:
-
-- **FAIR** principles must be followed in terms of metadata, formats, and provenance.
-- **CARE** and related sovereignty principles must be applied, especially when:
-  - Publishing spatial detail for sensitive locations.
-  - Representing historical narratives that affect living communities.
-  - Handling oral histories and community-held knowledge.
-
-Concrete requirements for this domain:
-
-- Each dataset must declare:
-  - Its sensitivity level and access policy.
-  - Whether it includes content related to Indigenous communities, and if so, how authority and governance are handled.
-- Where necessary, public layers must:
-  - Generalize, buffer, or omit precise geometries.
-  - Provide metadata-only entries when full data cannot be made open.
-- Governance decisions must be documented and linked from:
-  - The dataset-level README.
-  - The DCAT record (`rights`, `accessLevel`, and related fields).
-
-If there is uncertainty about how to handle a dataset, the default is **conservative**: treat it as sensitive and seek guidance via the governance process before publication, using the `governance_refs` in front matter as starting points.
-
----
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
 ## 🧪 Validation & CI/CD
 
-Changes under `data/historical/` are subject to the standard KFM CI pipelines. At minimum, historical datasets must pass:
+### Validation steps
+- [ ] Markdown protocol checks (KFM-MDP)
+- [ ] Schema validation (STAC/DCAT/PROV)
+- [ ] Link integrity checks (catalog references resolve)
+- [ ] Geometry validation (if vectors present)
+- [ ] Security + sovereignty scanning gates (where applicable)
 
-### Required checks
+### Reproduction
+~~~bash
+# Placeholders — replace with repo-specific commands (not confirmed in repo)
 
-- **Markdown checks**  
-  - For this README and sub-READMEs, including front-matter schema validation.
-- **Schema checks**  
-  - STAC Collections and Items.
-  - DCAT datasets.
-  - PROV bundles.
-- **Data integrity checks**  
-  - Checksums where defined (e.g., under `data/checksums/`).
-  - CRS and geometry validity for spatial layers.
-- **Graph integration tests**  
-  - For any dataset that is ingested into Neo4j.
-- **Governance checks**  
-  - Presence of required metadata fields for sensitivity, rights, and governance.
-  - No disallowed fields or accidental exposure of sensitive coordinates where they must be generalized.
+# 1) Validate STAC
+# e.g., ./tools/validate-stac.sh data/stac/items/historical
 
-No dataset in this domain is to be considered **production-ready** until it clears these gates.
+# 2) Validate DCAT + PROV
+# e.g., ./tools/validate-schemas.sh data/catalog/dcat/historical data/prov/historical
 
-### Typical workflow when adding or modifying historical data
+# 3) Run unit/integration tests
+# e.g., npm test / pytest / etc.
+~~~
 
-When adding or updating historical data, typical next steps are:
+### Telemetry signals (if applicable)
 
-1. Create or update the subdomain README (e.g. `data/historical/land-tenure/README.md`) referencing this document.
-2. Define ETL configs under `configs/historical/`.
-3. Implement or update ETL code under `src/pipelines/historical/`.
-4. Generate and validate STAC / DCAT / PROV metadata in the appropriate `stac/` and `dcat-prov/` subfolders.
-5. Wire up graph ingestion and tests under `src/graph/historical/` where applicable.
-6. Update or create Story Nodes under `docs/story/historical/` if appropriate.
-7. Ensure CI passes and governance approvals are recorded, including any required entries in `mcp/experiments/historical/`.
+| Signal | Source | Where recorded |
+|---|---|---|
+| parse_warnings | ETL parsers | `docs/telemetry/` + `schemas/telemetry/` (**not confirmed in repo**) |
+| ocr_confidence | OCR stage | `docs/telemetry/` (**not confirmed in repo**) |
+| geocode_confidence | enrichment stage | `docs/telemetry/` (**not confirmed in repo**) |
 
-Each of these steps should be tracked by issues or pull requests referencing this README and the relevant change request (`change_request` in front matter).
+## ⚖ FAIR+CARE & Governance
 
----
+### Review gates
+- Historian/editor review: required for narrative-facing outputs
+- Security council review: required if new sensitive handling is introduced
+- FAIR+CARE council review: required if sovereignty rules apply
+
+### CARE / sovereignty considerations
+- Do not publish culturally sensitive locations at full precision.
+- Ensure restricted knowledge is not inferred or “filled in” by AI transforms.
+
+### AI usage constraints
+- Allowed: summarize, structure_extract, translate, keyword_index
+- Prohibited: generate_policy, infer_sensitive_locations
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary                                                                                                                                                                                                 |
-|------------:|:----------:|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **v11.2.6** | 2025-12-11 | Rewritten domain README to align with KFM-MDP v11.2.6; clarified directory layout with emoji profile; strengthened explicit ties to ETL configs, STAC/DCAT/PROV, Neo4j, Story Nodes, and CI expectations; supersedes v11.2.5. |
-| v11.2.5     | —          | Previous iteration of the historical data domain README; see repository history for details.                                                                                                            |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial `data/historical` domain README | TBD |
 
 ---
-
-<div align="center">
-
-📚 **Kansas Frontier Matrix — Historical Data Domain**  
-Historical data · Kansas & adjacent regions · ETL → Catalogs → Graph → Story Nodes  
-
-[📘 Docs Root](../../docs/README.md) · [📂 Data Index](../README.md) · [🧭 Architecture Overview](../../docs/architecture/README.md) · [⚖ Data Governance](../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
