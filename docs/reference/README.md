@@ -151,14 +151,14 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  R[Reference Library\n(non-normative)] --> D[Docs & Standards\n(governed)]
+  R["Reference Library - non normative"] --> D["Docs and Standards - governed"]
   D --> A[ETL]
-  A --> B[STAC/DCAT/PROV Catalogs]
-  B --> C[Neo4j Graph]
+  A --> B["STAC DCAT PROV Catalogs"]
+  B --> C["Neo4j Graph"]
   C --> E[APIs]
-  E --> F[React/Map UI]
-  F --> G[Story Nodes]
-  G --> H[Focus Mode]
+  E --> F["React Map UI"]
+  F --> G["Story Nodes"]
+  G --> H["Focus Mode"]
 ~~~
 
 ### Optional: sequence diagram
