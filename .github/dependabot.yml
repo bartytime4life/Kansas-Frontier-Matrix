@@ -1,224 +1,56 @@
-# 🧩 Kansas Frontier Matrix — Dependabot Configuration (MCP v6.3 · FAIR+CARE Certified)
-# File: .github/dependabot.yml
-# Purpose: Automate dependency updates, security alert triage, and ecosystem version governance.
-# Alignment: MCP-DL v6.3 · KFM-MDP v11.2.2 · FAIR+CARE · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
-# SPDX-License-Identifier: MIT
+~~~text
+📁 .github/
+└── 📄 dependabot.yml
+~~~
 
+~~~yaml
 version: 2
 
 updates:
-
-  # ============================================================
-  # 🐍 Python — Core Application and Pipelines (root)
-  # ============================================================
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Chicago"
-    labels: ["dependencies", "python", "security"]
-    reviewers: ["bartytime4life"]
-    assignees: ["bartytime4life"]
-    open-pull-requests-limit: 10
-    rebase-strategy: "auto"
-    versioning-strategy: "increase-if-necessary"
-    commit-message:
-      prefix: "deps(python)"
-      include: "scope"
-    allow:
-      - dependency-type: "direct"
-    groups:
-      python-security:
-        applies-to: "security-updates"
-        patterns:
-          - "*"
-      python-minor-patch:
-        applies-to: "version-updates"
-        update-types:
-          - "minor"
-          - "patch"
-        patterns:
-          - "*"
-
-  # ============================================================
-  # 🧱 Node.js — Web Frontend (`web/`)
-  # ============================================================
-  - package-ecosystem: "npm"
-    directory: "/web"
-    schedule:
-      interval: "weekly"
-      day: "tuesday"
-      time: "09:00"
-      timezone: "America/Chicago"
-    labels: ["dependencies", "frontend", "security"]
-    reviewers: ["bartytime4life"]
-    assignees: ["bartytime4life"]
-    open-pull-requests-limit: 10
-    rebase-strategy: "auto"
-    versioning-strategy: "increase-if-necessary"
-    commit-message:
-      prefix: "deps(frontend)"
-      include: "scope"
-    ignore:
-      - dependency-name: "react"
-        versions:
-          - "<18.0.0"
-      - dependency-name: "maplibre-gl"
-        versions:
-          - "<3.0.0"
-    allow:
-      - dependency-type: "direct"
-    groups:
-      frontend-security:
-        applies-to: "security-updates"
-        patterns:
-          - "*"
-      frontend-minor-patch:
-        applies-to: "version-updates"
-        update-types:
-          - "minor"
-          - "patch"
-        patterns:
-          - "*"
-
-  # ============================================================
-  # 🐳 Docker — Containerized Infrastructure
-  # ============================================================
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "10:00"
-      timezone: "America/Chicago"
-    labels: ["dependencies", "docker", "security"]
-    reviewers: ["bartytime4life"]
-    assignees: ["bartytime4life"]
-    open-pull-requests-limit: 10
-    rebase-strategy: "auto"
-    commit-message:
-      prefix: "deps(docker)"
-      include: "scope"
-    groups:
-      docker-security:
-        applies-to: "security-updates"
-        patterns:
-          - "*"
-      docker-patch:
-        applies-to: "version-updates"
-        update-types:
-          - "patch"
-        patterns:
-          - "*"
-
-  # ============================================================
-  # ⚙️ GitHub Actions — CI/CD Automation Dependencies
-  # ============================================================
+  # 1) Keep GitHub Actions pinned versions current
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "thursday"
-      time: "10:00"
-      timezone: "America/Chicago"
-    labels: ["dependencies", "ci-cd", "security"]
-    reviewers: ["bartytime4life"]
-    assignees: ["bartytime4life"]
-    open-pull-requests-limit: 10
-    rebase-strategy: "auto"
-    commit-message:
-      prefix: "deps(ci)"
-      include: "scope"
     groups:
-      gha-security:
-        applies-to: "security-updates"
+      github-actions:
         patterns:
           - "*"
-      gha-minor-patch:
-        applies-to: "version-updates"
-        update-types:
-          - "minor"
-          - "patch"
-        patterns:
-          - "*"
+    commit-message:
+      prefix: "deps"
+    open-pull-requests-limit: 5
 
-  # ============================================================
-  # 🧠 Neo4j / Graph Schema — Semantic Infrastructure (`src/graph`)
-  # ============================================================
+  # 2) Python dependency updates (requirements.txt / pyproject.toml / etc.)
+  #    TODO: If your Python manifests are not in repo root, change "directory".
   - package-ecosystem: "pip"
-    directory: "/src/graph"
+    directory: "/"
     schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "08:00"
-      timezone: "America/Chicago"
-    labels: ["dependencies", "graph", "maintenance"]
-    reviewers: ["bartytime4life"]
-    assignees: ["bartytime4life"]
-    open-pull-requests-limit: 10
-    rebase-strategy: "auto"
-    versioning-strategy: "increase-if-necessary"
-    commit-message:
-      prefix: "deps(graph)"
-      include: "scope"
+      interval: "weekly"
     groups:
-      graph-all:
-        applies-to: "version-updates"
+      python-minor-and-patch:
+        patterns:
+          - "*"
         update-types:
           - "minor"
           - "patch"
+    commit-message:
+      prefix: "deps"
+    open-pull-requests-limit: 5
+
+  # 3) Frontend / Node dependencies
+  #    TODO: If package.json lives somewhere else, change "directory".
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+    groups:
+      npm-minor-and-patch:
         patterns:
           - "*"
-
-  # ============================================================
-  # 📦 Data Validation — FAIR+CARE Compliance Tooling (`tools/validation`)
-  # ============================================================
-  - package-ecosystem: "pip"
-    directory: "/tools/validation"
-    schedule:
-      interval: "monthly"
-      day: "friday"
-      time: "09:30"
-      timezone: "America/Chicago"
-    labels: ["dependencies", "data", "validation"]
-    reviewers: ["bartytime4life"]
-    assignees: ["bartytime4life"]
-    open-pull-requests-limit: 10
-    rebase-strategy: "auto"
-    versioning-strategy: "increase-if-necessary"
-    commit-message:
-      prefix: "deps(validation)"
-      include: "scope"
-    groups:
-      validation-minor-patch:
-        applies-to: "version-updates"
         update-types:
           - "minor"
           - "patch"
-        patterns:
-          - "*"
-
-# ============================================================
-# 🔒 Global Governance & Security Integration (v11)
-# ============================================================
-# • All Dependabot PRs are subject to the same CI/CD and governance gates as manual PRs:
-#    - .github/workflows/ci.yml                   → core lint, tests, schema checks
-#    - .github/workflows/docs_validate.yml        → KFM-MDP v11.2.2 markdown & front-matter
-#    - .github/workflows/stac_validate.yml        → STAC Items/Collections (where relevant)
-#    - .github/workflows/dcat_validate.yml        → DCAT datasets (where relevant)
-#    - .github/workflows/jsonld_validate.yml      → JSON-LD / ontology checks (where relevant)
-#    - .github/workflows/faircare_validate.yml    → FAIR+CARE and sovereignty checks
-#    - .github/workflows/security_audit.yml       → static analysis, CVE scan (CRITICAL ⇒ block)
-#    - .github/workflows/sbom_verify.yml          → SBOM + manifest regeneration/verification
-#
-# • On merge to protected branches:
-#    - SBOM (SPDX) and release manifest are rebuilt and verified.
-#    - Telemetry (including dependency update history) is written into focus-telemetry.json.
-#
-# • Security alerts are routed to maintainers and, when appropriate, to the FAIR+CARE Council.
-#
-# • Commit messages use `deps(...)` prefixes for governance & audit classification.
-#
-# Governance Reference: docs/standards/governance/ROOT-GOVERNANCE.md
+    commit-message:
+      prefix: "deps"
+    open-pull-requests-limit: 5
+~~~
