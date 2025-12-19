@@ -1,426 +1,301 @@
 ---
-title: "📘 Kansas Frontier Matrix — Analyses Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "Analyses — README"
 path: "docs/analyses/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-14"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-hash>"
-
-doc_uuid: "urn:kfm:doc:analyses-overview:v11.2.6"
-semantic_document_id: "kfm-doc-analyses-overview"
-event_source_id: "ledger:kfm:doc:analyses-overview:v11.2.6"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.6/manifest.zip"
-telemetry_ref: "../../releases/v11.2.6/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/analyses-overview-v4.json"
-signature_ref: "../../releases/v11.2.6/signature.sig"
-attestation_ref: "../../releases/v11.2.6/slsa-attestation.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-sensitivity: "General (non-sensitive; auto-mask rules apply)"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-classification: "Public"
-jurisdiction: "Kansas / United States"
-indigenous_rights_flag: true
-immutability_status: "version-pinned"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-status: "Active / Enforced"
-doc_kind: "Overview"
-intent: "analyses-index"
+doc_uuid: "urn:kfm:doc:analyses:readme:v1.0.0"
+semantic_document_id: "kfm-analyses-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:analyses:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  prov_o: "prov:Plan"
-  owl_time: "ProperInterval"
-  geosparql: "geo:FeatureCollection"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-metadata_profiles:
-  - "STAC 1.0.0"
-  - "DCAT 3.0"
-  - "PROV-O"
-  - "FAIR+CARE"
-
-provenance_chain:
-  - "docs/analyses/README.md@v11.2.4"
-  - "docs/analyses/README.md@v11.0.0"
-  - "docs/analyses/README.md@v10.2.2"
-  - "docs/analyses/README.md@v10.2.0"
-  - "docs/analyses/README.md@v10.1.0"
-
-provenance_requirements:
-  versions_required: true
-  newest_first: true
-  must_reference_superseded: true
-  must_reference_origin_root: true
-
-json_schema_ref: "../../schemas/json/kfm-analyses-overview-v11.2.6.schema.json"
-shape_schema_ref: "../../schemas/shacl/kfm-analyses-overview-v11.2.6-shape.ttl"
-story_node_refs: []
-
-header_profile: "standard"
-footer_profile: "standard"
-diagram_profiles:
-  - "mermaid-flowchart-v1"
-  - "mermaid-timeline-v1"
-
-scope:
-  domain: "analyses"
-  applies_to:
-    - "docs/analyses/**"
-
-heading_registry:
-  approved_h2:
-    - "📘 Overview"
-    - "🗂️ Directory Layout"
-    - "🧭 Context"
-    - "🗺️ Diagrams"
-    - "🧠 Story Node & Focus Mode Integration"
-    - "🧪 Validation & CI/CD"
-    - "📦 Data & Metadata"
-    - "🌐 STAC, DCAT & PROV Alignment"
-    - "🧱 Architecture"
-    - "⚖ FAIR+CARE & Governance"
-    - "🕰️ Version History"
-
-test_profiles:
-  - "markdown-lint"
-  - "schema-lint"
-  - "metadata-check"
-  - "diagram-check"
-  - "accessibility-check"
-  - "provenance-check"
-  - "footer-check"
-
-ci_integration:
-  workflow: ".github/workflows/kfm-ci.yml"
-  environment: "dev → staging → production"
-
-branding_registry:
-  standard: "Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence"
-  architecture: "Designed for Longevity · Governed for Integrity"
-  analysis: "Research-Driven · Evidence-Led · FAIR+CARE Grounded"
-  data-spec: "Open Data × Responsible Stewardship"
-  pipeline: "Deterministic Pipelines · Explainable AI · Open Provenance"
-  telemetry: "Transparent Systems · Ethical Metrics · Sustainable Intelligence"
-  graph: "Semantics × Provenance × Spatial Intelligence"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-
-badge_profiles:
-  - "root-centered-badge-row"
-
-requires_purpose_block: true
-requires_directory_layout_section: true
-requires_version_history: true
-requires_governance_links_in_footer: true
-
-deprecated_fields:
-  - "old_markdown_standard_v10.4"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📘 **Kansas Frontier Matrix — Analyses Overview (v11.2.6)**
-`docs/analyses/README.md`
-
-**Purpose**
-Provide the canonical entry point for analysis work in the Kansas Frontier Matrix (KFM), including directory conventions, governance constraints, and how analysis outputs connect to catalogs, the graph, APIs, and Story Nodes.
-
-All analytical workflows follow:
-
-- FAIR+CARE governance
-- MCP-DL v6.3 reproducibility standards
-- KFM-MDP v11.2.6 formatting and metadata
-- KFM-OP v11 ontology alignment
-
-<img src="https://img.shields.io/badge/Docs-MCP_v6.3-blue" />
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/License-CC--BY%204.0-green" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Certified-gold" />
-<img src="https://img.shields.io/badge/Status-Active-brightgreen" />
-
-</div>
-
----
+# Analyses — README
 
 ## 📘 Overview
 
-The Analyses layer is where KFM transforms governed datasets into measurable insight and evidence-led interpretation.
+### Purpose
+This directory holds **governed analysis documentation**: reproducible, provenance-linked write-ups that
+justify or explain analytical methods and results used elsewhere in KFM (catalogs, graph, APIs, UI, Story
+Nodes, Focus Mode).
 
-KFM analyses commonly cover:
+Analyses are **documentation artifacts**. If an analysis produces a **derived dataset** or a **new evidence
+artifact**, those outputs belong in the appropriate pipeline locations (e.g., `data/processed/`, `data/stac/`,
+`data/prov/`), and the analysis doc should link to them.
 
-- Hydrology and watershed analysis
-- Climatology and anomaly modeling
-- Geology, soils, geomorphology, and geophysics
-- Ecology and biodiversity intelligence
-- Historical–environmental correlation
-- Cross-domain synthesis and multimodal reasoning
+### Scope
 
-Every analysis is expected to be:
+| In Scope | Out of Scope |
+|---|---|
+| Method descriptions, assumptions, limitations, and results summaries | Raw datasets (store under `data/`) |
+| Links to STAC item IDs, DCAT dataset IDs, PROV activity/run IDs | API contract changes (use API Contract Extension template) |
+| “Evidence product” documentation that can be referenced by Story Nodes / Focus Mode | Story Nodes themselves (use Story Node template) |
+| Validation steps and reproducibility notes | Sensitive location inference or ungrounded narrative |
 
-- versioned (manifests and stable IDs)
-- checksum-verifiable (release packet references)
-- catalog-linked (STAC/DCAT references to inputs and outputs)
-- provenance-complete (PROV-O activities and entities)
-- governance-aware (FAIR+CARE labels, sovereignty constraints)
+### Audience
+- Primary: Analysts (GIS / data / ML), pipeline maintainers, reviewers
+- Secondary: Historians/editors, educators, UI/UX implementers consuming evidence
 
-Telemetry is published into:
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used in this doc (non-exhaustive):
+  - **Analysis product**: a documented analytical result intended to support downstream evidence, narrative,
+    or decisions.
+  - **Evidence artifact**: a derived output (table, geometry, raster, model output) that must be cataloged
+    and provenance-traceable.
+  - **Provenance**: recorded lineage via STAC/DCAT identifiers and PROV activities/runs.
 
-`../../releases/v11.2.6/focus-telemetry.json`
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Analyses README (this) | `docs/analyses/README.md` | Docs/Analyses maintainers | Governs layout + rules |
+| Analysis write-up | `docs/analyses/<analysis_slug>/ANALYSIS.md` | Analysis author | Uses governed template headers + provenance refs |
+| Figures (optional) | `docs/analyses/<analysis_slug>/assets/` | Analysis author | Keep small + cite sources |
+| Derived dataset (if any) | `data/processed/...` | Data domain owner | Must be reproducible + referenced |
+| STAC catalog entries (if any) | `data/stac/...` | Catalog owner | Items/Collections for spatial/temporal assets |
+| PROV lineage (if any) | `data/prov/...` | Pipeline owner | Activity + agents + derivations |
+
+### Definition of done (for an analysis doc in this directory)
+- [ ] Front-matter complete + valid
+- [ ] Every quantitative/geospatial claim links to dataset IDs / record IDs / STAC item IDs (or is explicitly labeled as a hypothesis)
+- [ ] PROV run/activity identifier recorded (when outputs are derived)
+- [ ] Validation steps are listed and repeatable
+- [ ] Sensitivity + sovereignty considerations stated (even if “none known”)
+- [ ] No prohibited AI actions implied (e.g., no “infer sensitive locations”)
 
 ## 🗂️ Directory Layout
 
+### This document
+- `path`: `docs/analyses/README.md`
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed outputs per domain |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC/DCAT/PROV artifacts |
+| Documentation | `docs/` | Canonical governed docs |
+| Graph | `src/graph/` | Graph build + ontology bindings |
+| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Frontend | `web/` | React + map clients |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
+
+### Expected file tree for this sub-area
+This is a **target layout** for organizing analysis write-ups (create folders as needed).
+
 ~~~text
-📁 docs/analyses/                                — 📘 Root of analysis documentation and domain methods
-│
-├── 📄 README.md                                 — 📘 This overview file (Analyses index)
-│
-├── 📁 hydrology/                                — 🌊 Hydrology and streamflow analytics
-│   ├── 📄 README.md                             — Domain overview (methods, scope, governance)
-│   ├── 📁 datasets/                             — Linked datasets and catalog references
-│   ├── 📁 methods/                              — Drought/flood methods, harmonization notes
-│   ├── 📁 results/                              — Derived metrics, plots, maps, tables
-│   └── 📁 metadata/                             — Provenance notes and analysis run summaries
-│
-├── 📁 climatology/                              — 🌦 Climate trends and projections
-│   ├── 📄 README.md
-│   ├── 📁 datasets/
-│   ├── 📁 methods/
-│   ├── 📁 results/
-│   └── 📁 metadata/
-│
-├── 📁 geology/                                  — 🪨 Geology, soils, geomorphology
-│   ├── 📄 README.md
-│   ├── 📁 datasets/
-│   ├── 📁 methods/
-│   ├── 📁 results/
-│   └── 📁 metadata/
-│
-├── 📁 ecology/                                  — 🌱 Biodiversity and ecological modeling
-│   ├── 📄 README.md
-│   ├── 📁 datasets/
-│   ├── 📁 methods/
-│   ├── 📁 results/
-│   └── 📁 metadata/
-│
-├── 📁 historical/                               — 🏛 Historical and archival environmental linkage
-│   ├── 📄 README.md
-│   ├── 📁 datasets/
-│   ├── 📁 methods/
-│   ├── 📁 results/
-│   └── 📁 metadata/
-│
-├── 📁 cross-domain/                             — 🔗 Integrated multi-domain analytics
-│   ├── 📄 README.md
-│   ├── 📁 datasets/
-│   ├── 📁 methods/
-│   ├── 📁 results/
-│   └── 📁 metadata/
-│
-└── 📁 metadata/                                 — 🗄 Global analyses-level metadata, audits, and registries
+📁 docs/
+└── 📁 analyses/
     ├── 📄 README.md
-    └── 📁 audit-reports/
+    ├── 📁 <analysis_slug>/
+    │   ├── 📄 ANALYSIS.md
+    │   └── 📁 assets/
+    │       └── 📄 <figure_or_table>.<ext>
+    └── 📁 _archive/
+        └── 📄 README.md
 ~~~
-
-Layout rules:
-
-- New domains should mirror the folder set: README, datasets, methods, results, metadata.
-- Directory trees must use `~~~text` fences.
-- Use only approved H2 headings.
 
 ## 🧭 Context
 
-The Analyses layer sits downstream of governed acquisition and ETL, and upstream of narrative and user-facing products.
+### Background
+KFM’s architecture treats provenance and reproducibility as first-class constraints. Analyses exist to make
+the “why” behind derived evidence explicit and reviewable.
 
-Downstream dependencies (inputs):
+### Assumptions
+- The canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- The UI consumes data through the API layer (no direct graph access).
+- Derived outputs should be deterministically reproducible from declared inputs/configuration.
 
-- source and ETL pipelines (`data/sources/**`, `src/**`)
-- catalogs (`data/stac/**`, DCAT views)
-- graph entities for places, events, and datasets (Neo4j)
+### Constraints / invariants
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- No unsourced narrative: analysis results must be traceable to identifiers or clearly labeled as inference/hypothesis.
 
-Upstream consumers (outputs):
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Do we want a top-level index of analysis slugs with tags (domain, method, time range)? | TBD | TBD |
+| Where should larger figures live (docs vs data assets)? | TBD | TBD |
 
-- Story Nodes and Focus Mode narratives
-- map and dashboard layers (MapLibre/Cesium)
-- derived dataset publications (STAC/DCAT)
-- governance and sustainability reporting (telemetry)
-
-## 🧱 Architecture
-
-Analyses are treated as deterministic, replayable procedures.
-
-An analysis run should be modelable as:
-
-- a plan (this documentation)
-- one or more activities (analysis runs)
-- entities used (input datasets, parameters, configs)
-- entities generated (derived datasets, reports, figures)
-
-Recommended boundaries:
-
-- code and orchestration live under `src/` and `mcp/` (not here)
-- this directory documents methods, assumptions, and validation
-- derived data outputs belong under `data/processed/` and are cataloged under `data/stac/`
+### Future extensions
+- Auto-generated index page for `docs/analyses/` (linted and CI-checked).
+- Optional schema for analysis metadata (inputs/outputs/run_id) if this directory becomes machine-ingestible.
 
 ## 🗺️ Diagrams
 
-### Analytical governance workflow
-
+### System / dataflow diagram
 ~~~mermaid
-flowchart TD
-  A["Raw multidomain data"] --> B["ETL harmonization and STAC/DCAT registration"]
-  B --> C["Domain analysis pipelines (docs/analyses/*/methods)"]
-  C --> D["Results and visualizations (docs/analyses/*/results)"]
-  D --> E["Validation and FAIR+CARE audit"]
-  E --> F["Telemetry export (runtime, energy, CO2e, ethics)"]
-  F --> G["Governance ledger update (Diamond⁹ Ω / Crown∞Ω)"]
+flowchart LR
+  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[React/Map UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
 ~~~
-
-This flow shows the canonical lifecycle: governed inputs → deterministic methods → validated outputs → telemetry and governance trace.
-
-## 🧠 Story Node & Focus Mode Integration
-
-Analyses feed Story Nodes and Focus Mode in two ways:
-
-- evidence assets (maps, tables, derived datasets) referenced by Story Nodes
-- derived indicators and interpretations linked to graph entities (Place, Event, Dataset)
-
-Requirements:
-
-- narrative outputs must be evidence-led and provenance-aware
-- facts must be separable from interpretation, and speculation must be labeled as hypothetical
-- sensitive locations or restricted cultural knowledge must be generalized or withheld by default
-
-## 🧪 Validation & CI/CD
-
-Analyses documentation and outputs are validated through CI profiles listed in front matter.
-
-Minimum expectations:
-
-- front matter schema validation (`schema-lint`)
-- heading and fence constraints (`markdown-lint`)
-- diagrams parse (`diagram-check`)
-- provenance coherence (`provenance-check`)
-- footer includes governance links (`footer-check`)
-
-Sustainability and telemetry targets may be enforced in pipeline CI:
-
-| Metric | Target (v11) | Unit | Source |
-|---|---:|---:|---|
-| Energy per workflow | ≤ 12 | Wh | `energy_schema` |
-| Carbon footprint | ≤ 0.005 | gCO₂e | `carbon_schema` |
-| Telemetry completeness | ≥ 98 | % | `telemetry_schema` |
-| FAIR+CARE audit pass | 100 | % | Governance + FAIR+CARE checks |
 
 ## 📦 Data & Metadata
 
-Analyses should reference their canonical inputs and outputs via STAC/DCAT IDs rather than embedding raw datasets inside `docs/`.
-
-Common data sources referenced by analyses include:
-
-| Source | Description | Typical formats | FAIR+CARE status |
+### Inputs
+| Input | Format | Where from | Validation |
 |---|---|---|---|
-| NOAA / NCEI | Climate normals and station series | NetCDF, CSV | Certified (expected) |
-| Daymet / PRISM | Gridded daily climate | NetCDF, GeoTIFF/COG | Certified (expected) |
-| USGS NWIS | Streamflow and hydrology | CSV, JSON | Certified (expected) |
-| NASA Earthdata | Remote sensing imagery and derived layers | COG, NetCDF | Certified (expected) |
-| NRCS SSURGO | Soil maps and properties | GeoPackage, raster | Certified (expected) |
-| GBIF / KU Biodiversity | Species occurrence | CSV, JSON-LD | Certified (expected) |
-| Kansas Historical Society | Archival scans and records | TIFF, JSON-LD | Conditional (review) |
+| Source datasets | varies | `data/raw/` or external refs | domain checks + hashes |
+| STAC items/collections | JSON | `data/stac/` | STAC schema validation |
+| DCAT records | JSON-LD/Turtle | `data/catalog/dcat/` | DCAT profile validation |
+| PROV lineage | JSON-LD/RDF/etc | `data/prov/` | PROV profile validation |
 
-Example analysis-run record (documentation-safe):
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Analysis write-up | Markdown | `docs/analyses/<analysis_slug>/ANALYSIS.md` | Markdown protocol + doc lint |
+| Figures (optional) | png/svg/pdf | `docs/analyses/<analysis_slug>/assets/` | link checks |
+| Derived dataset (optional) | csv/parquet/geojson/etc | `data/processed/...` | domain schema + QC |
+| Catalog entries (optional) | JSON/JSON-LD | `data/stac/...`, `data/catalog/dcat/...`, `data/prov/...` | schema validation |
 
-~~~json
-{
-  "analysis_id": "kfm:analysis:example:v1",
-  "domains": ["Hydrology", "Climatology"],
-  "inputs": ["stac:collection:usgs-nwis", "stac:collection:prism"],
-  "outputs": ["stac:item:derived:flood-risk-index"],
-  "energy_wh": 58.4,
-  "carbon_gco2e": 0.021,
-  "faircare_compliance": "certified",
-  "validation_status": "passed",
-  "record_created": "2025-12-14T00:00:00Z"
-}
-~~~
+### Sensitivity & redaction
+- Analyses must not publish restricted locations or culturally sensitive details without following
+  `docs/governance/SOVEREIGNTY.md` and `docs/governance/ETHICS.md`.
+- If an analysis requires restricted inputs, document redaction/generalization rules and access boundaries.
+
+### Quality signals
+- Completeness (missing values, missing geometries)
+- Valid ranges and units
+- Geometry validity + CRS consistency (if spatial)
+- Reproducibility (pinned inputs/configs; deterministic runs)
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Analyses are represented in catalogs and lineage as follows.
+### STAC
+- If an analysis generates/uses spatiotemporal assets, reference:
+  - STAC Collection ID(s)
+  - STAC Item ID(s)
+  - Asset keys (e.g., `visual`, `data`, `thumbnail`) as applicable
 
-DCAT:
+### DCAT
+- If an analysis depends on a named dataset product, reference its DCAT identifier and license metadata.
 
-- this document may be treated as a documentation dataset (`dcat:Dataset` or `dcat:CatalogRecord`)
-- `semantic_document_id` maps to `dct:identifier`
-- Markdown is a `dcat:Distribution` (`mediaType: text/markdown`)
+### PROV-O
+- If an analysis produces a derived artifact:
+  - `prov:wasDerivedFrom`: list source IDs (STAC/DCAT/document IDs)
+  - `prov:wasGeneratedBy`: pipeline activity/run ID
+  - `prov:wasAssociatedWith`: agent(s) (person/tool) if modeled
 
-STAC:
+### Versioning
+- Use semver for analysis doc versions when changes affect interpretation.
+- When results change, document *why* (new inputs, bug fix, method change) and link predecessor/successor if applicable.
 
-- derived layers produced by analyses should be registered as STAC Items
-- collections may be organized by domain (hydrology, climate, ecology) or by indicator family
+## 🧱 Architecture
 
-PROV-O:
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| ETL | Ingest + normalize | Config + run logs |
+| Catalogs | STAC/DCAT/PROV | JSON/JSON-LD + validators |
+| Graph | Neo4j | Cypher behind API layer |
+| APIs | Serve contracts | REST/GraphQL |
+| UI | Map + narrative | API calls |
+| Story Nodes | Curated narrative | Provenance-linked docs |
+| Focus Mode | Context synthesis | Provenance-linked bundles |
 
-- each analysis run is a `prov:Activity`
-- inputs and outputs are `prov:Entity`
-- the method and constraints described here function as a `prov:Plan`
+### Interfaces / contracts
+- If an analysis output becomes a **served evidence product**, define the contract at the **API layer**
+  (not directly from the graph).
+- Any new schema must live under `schemas/` with validation and versioning.
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+- Analyses can be referenced by:
+  - Story Nodes as supporting evidence (link to analysis slug + cited dataset IDs)
+  - Audit panels as “method / limitations” documentation for derived layers (if implemented)
+
+### Provenance-linked narrative rule
+- Every claim in downstream narratives must trace to a dataset / record / asset ID.
+- Analyses should make that trace easy by listing:
+  - inputs
+  - transformations
+  - outputs
+  - run IDs
+  - known limitations
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Internal link checks (paths, anchors)
+- [ ] Schema validation for any referenced STAC/DCAT/PROV artifacts
+- [ ] Security and sovereignty checks (as applicable)
+
+### Reproduction
+~~~bash
+# Placeholder examples — replace with repo-specific commands.
+# 1) validate catalogs (STAC/DCAT/PROV)
+# 2) run pipeline steps needed to reproduce outputs
+# 3) run doc lint / link checks
+~~~
+
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| Analysis run identifier(s) | pipeline runner | `data/prov/` + telemetry (if configured) |
 
 ## ⚖ FAIR+CARE & Governance
 
-Analyses must not bypass governance.
+### Review gates
+- Historian/editor review: recommended when analyses influence Story Nodes
+- Security council review: required if restricted sources or sensitive layers are involved
+- FAIR+CARE council review: required if sovereignty-sensitive content is touched
 
-Hard constraints:
+### CARE / sovereignty considerations
+- Identify impacted communities and protection rules if the analysis touches Indigenous or culturally sensitive locations.
 
-- do not expose secrets, credentials, or internal endpoints
-- respect Indigenous data sovereignty and culturally sensitive information controls
-- apply masking/generalization rules for restricted locations by default
-
-Governance references:
-
-- governance: `governance_ref`
-- ethics: `ethics_ref`
-- sovereignty policy: `sovereignty_policy`
+### AI usage constraints
+- Analyses may use allowed AI transforms (summarize/structure_extract/translate/keyword_index) but must not:
+  - generate policy
+  - infer sensitive locations
+  - introduce uncited factual claims
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
-|---:|---:|---|
-| **v11.2.6** | 2025-12-14 | Updated to KFM-MDP v11.2.6; corrected Mermaid labels (no HTML); added missing required sections (Architecture, Story Node & Focus Mode Integration); updated release packet references and standardized footer links. |
-| v11.2.4 | 2025-12-06 | Upgraded to KFM-MDP v11.2.4; expanded metadata, alignment, sustainability targets, and directory layout. |
-| v11.0.0 | 2025-11-24 | Initial v11 analyses overview; introduced telemetry schema v4 and expanded FAIR+CARE matrix. |
-| v10.2.2 | 2025-11-10 | Added cross-domain integration section and ISO metrics alignment. |
-| v10.2.0 | 2025-11-09 | Linked metadata registry to FAIR+CARE pipelines for analyses. |
-| v10.1.0 | 2025-11-08 | Established initial analyses index across hydrology, climatology, ecology, geology, and history. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-19 | Initial `docs/analyses/` README scaffold | TBD |
 
 ---
-
-[⬅ Back to Documentation Index](../README.md) · [📂 Standards Index](../standards/README.md) · [🏛️ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) · [🤝 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md) · [🪶 Indigenous Data Protection](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+Footer refs:
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Templates: `docs/templates/`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
