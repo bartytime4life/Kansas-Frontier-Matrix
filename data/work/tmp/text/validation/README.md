@@ -1,196 +1,188 @@
 ---
-title: "✅ Kansas Frontier Matrix — Text TMP Validation Layer (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM — data/work/tmp/text/validation README"
 path: "data/work/tmp/text/validation/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.0.0/manifest.zip"
-data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/work-text-tmp-validation-v10.json"
-governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "CC-BY 4.0"
+version: "v1.0.0"
+last_updated: "2025-12-19"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:data:work:tmp:text:validation:readme:v1.0.0"
+semantic_document_id: "kfm-data-work-tmp-text-validation-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:work:tmp:text:validation:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# ✅ Kansas Frontier Matrix — **Text TMP Validation Layer**
-`data/work/tmp/text/validation/README.md`
-
-**Purpose:**  
-FAIR+CARE-certified **validation environment** for verifying OCR/NLP schema compliance, checksum lineage, explainability, and ethics alignment in the Kansas Frontier Matrix (KFM).  
-Ensures that digitized and tokenized text assets are **technically valid, ethically sound, and governance-certified** before promotion to staging or knowledge graph layers.
-
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/README.md)  
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Text%20Validation%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)  
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()  
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-blue)](../../../../../LICENSE)
-
-</div>
-
----
+# KFM — data/work/tmp/text/validation
 
 ## 📘 Overview
 
-The **Text TMP Validation Layer (v10.0.0)** serves as the ethical and technical checkpoint for text-based pipelines in KFM.  
-It validates OCR and NLP outputs for schema consistency, checksum continuity, FAIR+CARE compliance, and AI transparency, ensuring verifiable provenance for long-term archival inclusion.
+### Purpose
+This folder is a **work-area for validation artifacts** produced while extracting, cleaning, or normalizing text in the KFM pipeline. It exists to capture *what was checked* and *what failed or passed* before any results are promoted to longer-lived `work/` or `processed/` locations.
 
-### Core Responsibilities
-- Validate schema conformance with **FAIR+CARE**, **CIDOC-CRM**, **DCAT**, and **ISO 19115**.  
-- Verify **SHA-256** checksum lineage across OCR and NLP stages.  
-- Perform **FAIR+CARE** ethical and accessibility audits.  
-- Assess **AI explainability** and bias for interpretability compliance.  
-- Register outcomes to the **governance ledger** and telemetry system.
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Validation reports for extracted or transformed text | Canonical, curated datasets intended for downstream use |
+| Temporary diagnostics, diffs, samples of failures | Raw source data meant to remain in `data/raw/` |
+| Machine-readable checksums/manifests for text validation | Secrets, credentials, tokens, API keys |
+| Evidence needed to reproduce “why this text was accepted/rejected” | Personal data or sensitive content not approved for storage |
 
----
+### Audience
+- Primary: ETL/pipeline maintainers working on text extraction + normalization
+- Secondary: Curators verifying provenance and quality gates prior to catalog/graph loads
+
+### Definitions
+- Glossary link: `docs/glossary.md` (verify exists)
+- Terms used here:
+  - **Validation artifact**: any report, manifest, or diagnostic output that records quality checks
+  - **Promotion**: moving outputs to a longer-lived directory after passing checks
+  - **Run ID**: a stable identifier for a pipeline execution (format is implementation-defined)
+
+### Key artifacts
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `data/work/tmp/text/validation/README.md` | DataOps | Folder contract |
+| Validation report | (example) `runs/<run_id>/validation_report.json` | ETL | Suggested naming |
+| Human-readable summary | (example) `runs/<run_id>/validation_report.md` | ETL | Optional |
+| Failure samples | (example) `runs/<run_id>/samples/` | ETL | Keep minimal + redacted |
+| Hash/manifest | (example) `runs/<run_id>/hash_manifest.txt` | ETL | Optional |
+
+### Definition of done
+- [ ] Front-matter complete and `path` matches this file’s location
+- [ ] Folder purpose and non-goals clearly stated
+- [ ] Examples are clearly marked as examples and do not imply required filenames
+- [ ] Security and sensitivity expectations documented
 
 ## 🗂️ Directory Layout
 
-```plaintext
-data/work/tmp/text/validation/
-├── README.md
-├── schema_validation_summary.json    # OCR/NLP structure + metadata compliance
-├── faircare_audit_text.json          # FAIR+CARE ethics and accessibility audit results
-├── checksum_registry.json            # Hash lineage verification (source → OCR → NLP)
-├── ai_explainability_audit.json      # SHAP/LIME explainability + drift analysis
-├── validation_manifest.json          # Aggregated cross-link of validation outcomes
-└── metadata.json                     # Provenance, validator, governance, and telemetry records
-```
+### This document
+- `path`: `data/work/tmp/text/validation/README.md`
 
----
-
-## ⚙️ Validation Workflow
-
-```mermaid
-flowchart TD
-    A["OCR and NLP Outputs (data/work/tmp/text/ocr + nlp)"] --> B["Schema & Checksum Validation"]
-    B --> C["FAIR+CARE Ethical Audit"]
-    C --> D["AI Explainability & Bias Detection"]
-    D --> E["Governance Ledger Registration"]
-    E --> F["Promotion → Staging or Graph Integration"]
-```
-
-### Description
-1. **Schema Validation** — Confirm adherence to FAIR+CARE, CIDOC-CRM, and ISO metadata models.  
-2. **Checksum Verification** — Trace and confirm SHA-256 lineage across text workflow.  
-3. **Ethical Governance** — Evaluate accessibility, neutrality, and licensing compliance.  
-4. **Explainability Review** — Assess NLP model outputs for transparency and cultural bias.  
-5. **Governance Sync** — Publish audit results, checksums, and telemetry to provenance ledger.
-
----
-
-## 🧩 Example Validation Metadata Record
-
-```json
-{
-  "id": "text_tmp_validation_v10.0.0_2025Q4",
-  "datasets_validated": [
-    "treaties_ocr_2025.json",
-    "tokens_treaties.parquet"
-  ],
-  "schema_pass_rate": 99.9,
-  "checksum_verified": true,
-  "fairstatus": "certified",
-  "ai_explainability_score": 0.994,
-  "bias_detected": false,
-  "telemetry": { "energy_wh": 7.6, "carbon_gco2e": 8.4 },
-  "governance_registered": true,
-  "validator": "@kfm-text-lab",
-  "created": "2025-11-10T00:00:00Z",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
-
----
-
-## 🧠 FAIR+CARE Governance Matrix
-
-| Principle | Implementation | Oversight |
+### Related repository paths
+| Area | Path | What lives here |
 |---|---|---|
-| **Findable** | Validation manifests indexed by dataset ID and checksum lineage | @kfm-data |
-| **Accessible** | Validation outputs open in JSON and CSV formats | @kfm-accessibility |
-| **Interoperable** | CIDOC-CRM + DCAT + FAIR+CARE alignment | @kfm-architecture |
-| **Reusable** | Provenance + checksum lineage ensures reproducibility | @kfm-design |
-| **Collective Benefit** | Supports transparency in ethical text AI validation | @faircare-council |
-| **Authority to Control** | Council reviews FAIR+CARE and explainability compliance | @kfm-governance |
-| **Responsibility** | Validators document schema, checksum, and ethics results | @kfm-security |
-| **Ethics** | Bias + sensitivity audit results validated via explainability logs | @kfm-ethics |
+| Text work area | `data/work/tmp/text/` | Temporary text artifacts produced during extraction/cleanup |
+| Work logs | `data/work/logs/` | Pipeline logs and run diagnostics (verify conventions) |
+| Work staging | `data/work/staging/` | Intermediate staged artifacts prior to processing (verify usage) |
+| Work processed | `data/work/processed/` | Outputs ready to be promoted to `data/processed/` (verify usage) |
+| Curated processed | `data/processed/` | Stable processed outputs used downstream |
+| Provenance | `data/prov/` | PROV bundles or provenance exports (if used) |
+| Master guide | `docs/MASTER_GUIDE_v12.md` | Canonical pipeline ordering and invariants |
 
-**Audit Links:**  
-`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
+### Expected file tree for this sub-area
+This is a suggested organization. The directory may start empty except for this README.
 
----
+~~~text
+📁 data/
+└── 📁 work/
+    └── 📁 tmp/
+        └── 📁 text/
+            └── 📁 validation/
+                ├── 📄 README.md
+                └── 📁 runs/
+                    └── 📁 <run_id>/
+                        ├── 📄 validation_report.json
+                        ├── 📄 validation_report.md
+                        ├── 📄 hash_manifest.txt
+                        └── 📁 samples/
+                            └── 📄 sample_failures.txt
+~~~
 
-## ⚙️ Validation Artifacts
+## 🧭 Context
 
-| File | Description | Format |
+### Why this folder exists
+Text extraction and normalization can introduce silent failures (encoding issues, truncated outputs, malformed delimiters, etc.). This folder provides a dedicated place to store validation evidence so that:
+- The ETL stage can be debugged without polluting curated outputs.
+- Promotion decisions can be traced to explicit checks and artifacts.
+- Downstream steps (catalog/graph/story) only consume vetted outputs.
+
+### How this aligns with the KFM pipeline
+This directory supports **ETL and quality gating** prior to any cataloging (STAC/DCAT/PROV) or graph loading. It should not be treated as an API surface or a long-lived “source of truth.”
+
+## 🗺️ Diagrams
+
+~~~mermaid
+flowchart LR
+  A[Text extraction output in data/work/tmp/text] --> B[Validation checks]
+  B -->|pass| C[Promote to work processed or curated processed]
+  B -->|fail| D[Store reports + samples in data/work/tmp/text/validation]
+~~~
+
+## 📦 Data & Metadata
+
+### Inputs
+- Temporary text artifacts produced upstream in `data/work/tmp/text/` (exact filenames are pipeline-defined)
+
+### Outputs
+- Validation reports and diagnostics that explain:
+  - what was checked
+  - pass/fail outcomes
+  - any remediation hints
+  - hashes/manifests when applicable
+
+### Provenance expectations
+When possible, validation reports should include:
+- `run_id`
+- upstream input identifiers or hashes
+- tool/version identifiers for validators
+- timestamps in ISO 8601 format
+
+## ✅ Validation and QA
+
+### Recommended checks
+Pick checks appropriate to the text type being validated.
+- Encoding sanity (e.g., UTF-8 decodability)
+- Structural sanity (e.g., expected delimiter presence, line count bounds)
+- Empty/near-empty output detection
+- Truncation detection where feasible
+- Hash/manifest generation for reproducibility
+
+### Promotion rules
+- Only promote outputs once the relevant checks pass.
+- If failures are stored here, ensure samples are minimal and sanitized.
+
+## 🔐 Security, ethics, and sensitivity
+
+- Do not store secrets, credentials, tokens, or private keys.
+- If any text content could include sensitive information, store only redacted samples or summary statistics.
+- Follow `docs/governance/*` references in the front matter for handling sensitive or culturally restricted material.
+
+## 🧪 Operational notes
+
+- This is a *work/tmp* area. Periodic cleanup may be appropriate depending on repo policy and storage constraints.
+- If validation artifacts need to be retained for auditability or release notes, promote them to a long-lived location and record the move in PROV or run logs.
+
+## 🧾 Change log
+
+| Version | Date | Change |
 |---|---|---|
-| `schema_validation_summary.json` | OCR/NLP schema + metadata conformance results | JSON |
-| `faircare_audit_text.json` | FAIR+CARE ethical + accessibility validation | JSON |
-| `checksum_registry.json` | SHA-256 lineage for traceable datasets | JSON |
-| `ai_explainability_audit.json` | Explainability metrics (SHAP/LIME + drift) | JSON |
-| `validation_manifest.json` | Combined manifest linking validations and ledger refs | JSON |
-| `metadata.json` | Provenance and governance linkage record | JSON |
-
-Automation pipeline: `text_validation_sync.yml`
-
----
-
-## ⚖️ Retention & Provenance Policy
-
-| Type | Retention | Policy |
-|---|---:|---|
-| Schema Reports | 180 Days | Archived for reproducibility + re-audit |
-| FAIR+CARE Audits | 365 Days | Retained for ethics tracking + certification |
-| Explainability Reports | 365 Days | Stored for transparency + governance review |
-| Metadata | Permanent | Immutable in blockchain-ledger governance |
-
-Cleanup routine: `text_validation_cleanup.yml`
-
----
-
-## 🌱 Sustainability Metrics
-
-| Metric | Value | Verified By |
-|---|---:|---|
-| Energy Use (per validation cycle) | 7.6 Wh | @kfm-sustainability |
-| Carbon Output | 8.4 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Certified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
-
-**Telemetry Reference:**  
-`../../../../../releases/v10.0.0/focus-telemetry.json`
-
----
-
-## 🧾 Citation
-
-```text
-Kansas Frontier Matrix (2025). Text TMP Validation Layer (v10.0.0).
-FAIR+CARE-certified validation hub for OCR/NLP data ensuring schema accuracy, checksum lineage, AI explainability, and ethical compliance under MCP-DL v6.3 and ISO 19115.
-```
-
----
-
-## 🕰️ Version History
-
-| Version | Date | Summary |
-|---|---|---|
-| v10.0.0 | 2025-11-10 | Upgraded to v10.0.0; telemetry schema added; CIDOC-CRM alignment refined; governance integration expanded. |
-| v9.6.0 | 2025-11-03 | Added explainability and bias audit validation. |
-| v9.5.0 | 2025-11-02 | Improved FAIR+CARE synchronization and reporting. |
-
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Ethical Text Intelligence × FAIR+CARE Governance × Provenance Validation*  
-© 2025 Kansas Frontier Matrix — CC-BY 4.0 · Master Coder Protocol v6.3 · **Diamond⁹ Ω / Crown∞Ω** Ultimate Certified  
-
-[Back to Text TMP](../README.md) · [Docs Portal](../../../../../docs/) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+| v1.0.0 | 2025-12-19 | Initial README for `data/work/tmp/text/validation/` |
