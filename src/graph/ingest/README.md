@@ -1,178 +1,350 @@
 ---
-title: "⚙️ Kansas Frontier Matrix — Graph Ingestion & Provenance Sync (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "Graph Ingest — README"
 path: "src/graph/ingest/README.md"
-version: "v10.1.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v10.1.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v10.1.0/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-telemetry_ref: "../../../releases/v10.1.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/src-graph-ingest-v3.json"
-license: "MIT"
+version: "v1.0.0"
+last_updated: "2025-12-20"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:src:graph:ingest:readme:v1.0.0"
+semantic_document_id: "kfm-src-graph-ingest-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:src:graph:ingest:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# ⚙️ **Kansas Frontier Matrix — Graph Ingestion & Provenance Sync**
-`src/graph/ingest/README.md`
-
-**Purpose:**  
-Document the **ingestion and synchronization layer** that loads entities, relationships, and provenance metadata into the Neo4j knowledge graph.  
-Implements deterministic, FAIR+CARE-aligned data ingestion, entity linking, and blockchain/IPFS provenance registration under MCP-DL v6.3.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blueviolet)](../../../docs/standards/)
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Diamond%E2%81%B9%20%C3%98%20Certified-gold)](../../../docs/standards/faircare-validation.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![Neo4j](https://img.shields.io/badge/Graph-Neo4j%20v5.x-lightgrey)]()
-[![STAC/DCAT](https://img.shields.io/badge/Metadata-STAC%20%2F%20DCAT-blue)]()
-
-</div>
-
----
+# Graph Ingest — README
 
 ## 📘 Overview
 
-The **Graph Ingestion subsystem** bridges the ETL pipelines (`src/pipelines/etl/`) and the **Neo4j graph database**.  
-It ensures that all entities, relationships, and provenance metadata are:
-- Parsed from FAIR+CARE-compliant intermediate JSONs,  
-- Linked or merged into Neo4j using idempotent Cypher upserts,  
-- Checked against ontology and schema constraints, and  
-- Registered to the Governance Ledger (IPFS + blockchain manifest).  
+### Purpose
+This README documents the contracts and contributor expectations for `src/graph/ingest/`, the subsystem responsible for ingesting **STAC/DCAT/PROV** catalog artifacts into the **Neo4j knowledge graph**, mapping records to the KFM ontology, and preserving provenance and governance metadata.
 
-Each ingest step logs a verifiable checksum and follows MCP’s scientific reproducibility principle: **no silent transformations** — every action is traceable and reversible.
+### Scope
 
----
+| In Scope | Out of Scope |
+|---|---|
+| STAC/DCAT/PROV parsing for graph ingest | Raw source acquisition |
+| Ontology mapping (labels/relations/properties) | Upstream ETL normalization/cleaning |
+| Neo4j upsert/merge semantics | API contract definition (handled in `src/server/`) |
+| Provenance linkage (Activity/Agent, derived-from) | Frontend rendering / map styling |
+| Entity resolution + confidence scoring (if implemented here) | Story Node authoring / editorial |
 
-## 🧩 Workflow Overview
+### Audience
+- Primary: Graph + pipeline engineers working on ingest, ontology bindings, and migrations.
+- Secondary: API/UI contributors who need to understand graph shape, provenance references, and sensitivity handling.
 
-```mermaid
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used in this doc: STAC, DCAT, PROV-O, Neo4j, ontology mapping, entity resolution, provenance.
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master guide | `docs/MASTER_GUIDE_v12.md` | Docs | Pipeline invariants + repo map |
+| Architecture overview | `docs/architecture/` (PDFs) | Docs | Path may vary by repo; confirm location |
+| STAC catalogs | `data/stac/` | Pipelines | Collections + items (validated) |
+| DCAT catalogs | `data/catalog/dcat/` | Pipelines | RDF (Turtle/JSON-LD) records |
+| PROV bundles | `data/prov/` | Pipelines | JSON-LD provenance |
+| Graph contracts | `src/graph/` | Graph | Ontology bindings, migrations/constraints |
+| API boundary | `src/server/` | API | Contracted access; UI does not query Neo4j directly |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Describes ingest purpose + contract boundaries (Graph vs API vs UI)
+- [ ] Inputs/outputs + validation steps listed and repeatable
+- [ ] Provenance + “no unsourced narrative” expectations are explicit
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
+- [ ] Any entity resolution / merge behavior includes auditability guidance
+
+## 🗂️ Directory Layout
+
+### This document
+- `path`: `src/graph/ingest/README.md` (must match front-matter)
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Graph ingest | `src/graph/ingest/` | Catalog → graph ingestion logic |
+| Graph core | `src/graph/` | Ontology bindings, migrations/constraints, graph build |
+| Pipelines | `src/pipelines/` | ETL + catalog build + graph build orchestration |
+| Data domains | `data/` | Raw/work/processed outputs (including STAC/DCAT/PROV) |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| MCP runs | `mcp/runs/` | Run logs, experiment artifacts, manifests |
+| APIs | `src/server/` | REST/GraphQL contracted access layer |
+| Frontend | `web/` | React + MapLibre UI, Focus Mode |
+
+### Expected file tree for this sub-area
+> NOTE: This is the **intended** organization. Align to what already exists in-repo.
+
+~~~text
+📁 src/
+└── 📁 graph/
+    └── 📁 ingest/
+        ├── 📄 README.md
+        ├── 📁 mappers/                # (recommended) STAC/DCAT/PROV → ontology objects
+        ├── 📁 writers/                # (recommended) Neo4j upserts + batching
+        ├── 📁 provenance/             # (recommended) PROV → Activity/Agent links
+        ├── 📁 entity_resolution/      # (recommended) dedupe/merge w/ confidence + audit hooks
+        └── 📁 cypher/                 # (recommended) constraints/migrations snippets
+~~~
+
+## 🧭 Context
+
+### Background
+KFM produces standard metadata catalogs (STAC, DCAT, PROV) during ETL/catalog stages and then ingests them into a Neo4j graph. The graph layer models core entities (e.g., Place, Person, Event, Document, Organization, Artifact) and relations (e.g., `located_in`, `happened_at`, `mentions`, `derives_from`). Provenance is first-class: ingested nodes should retain traceability back to source records and processing steps.
+
+### Assumptions
+- STAC/DCAT/PROV artifacts are generated upstream and have passed schema validation.
+- Neo4j connectivity is available to the ingest runtime (connection details are repo-specific).
+- Graph schema constraints and migrations exist (location is repo-specific).
+- Ingest behavior is **deterministic and idempotent**: re-running on the same inputs should not create duplicates and should be reproducible.
+
+### Constraints / invariants
+- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode is preserved.
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- No unsourced narrative: Focus Mode/story contexts must reference evidence/provenance IDs.
+- Governance metadata (classification tags, sensitivity labels) must be preserved through ingest.
+- If entity merges are automated, they must be logged and reviewable (human-in-the-loop for critical merges).
+
+### Open questions
+
+| Question | Owner | Target date |
+|---|---|---|
+| What is the canonical ingest entrypoint (CLI/module) that drives this directory? | Graph | TBD |
+| Where are Neo4j constraints/migrations defined and how are they applied in CI? | Graph | TBD |
+| What are the configured entity-resolution thresholds (auto-merge vs review)? | Graph + Governance | TBD |
+| Where are ingest run logs written (`mcp/runs/` vs telemetry docs), and what schema governs them? | Pipelines + Telemetry | TBD |
+
+### Future extensions
+- Incremental ingest (diff-based updates) with reproducible run manifests.
+- Additional domain mappers (new STAC collections / DCAT datasets).
+- More robust entity resolution features (temporal + spatial constraints; richer evidence capture).
+- Automated graph integrity dashboards (constraints coverage; provenance completeness).
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram
+
+~~~mermaid
 flowchart LR
-    A["ETL Output (JSON, GeoJSON, CSV)"] -->|"Parse & Normalize"| B["load_entities.py"]
-    B -->|"Entity Matching & Linking"| C["link_entities.py"]
-    C -->|"Ontology & Constraint Validation"| D["validate_schema()"]
-    D -->|"Checksum + Provenance Ledger"| E["sync_provenance.py"]
-    E -->|"Neo4j Commit"| F["GraphDB (Neo4j)"]
-```
+  A["ETL + Normalization"] --> B["STAC/DCAT/PROV Catalogs"]
+  B --> C["Graph Ingest"]
+  C --> D["Neo4j Graph"]
+  D --> E["APIs (REST/GraphQL)"]
+  E --> F["React/Map UI"]
+  F --> G["Story Nodes"]
+  G --> H["Focus Mode"]
+~~~
 
-### Step Summary
-1. **load_entities.py** – Reads normalized data from the ETL output directory and inserts nodes/edges using Neo4j transactions.  
-2. **link_entities.py** – Performs entity resolution, fuzzy matching, and cross-graph linking for duplicates or aliases.  
-3. **validate_schema.py** – Confirms compliance with ontology rules from `src/graph/schema/`.  
-4. **sync_provenance.py** – Registers each graph update’s hash, timestamp, and metadata to the Governance Ledger (IPFS + Ethereum).  
+### Optional: sequence diagram
 
----
+~~~mermaid
+sequenceDiagram
+  participant UI
+  participant API
+  participant Graph
+  UI->>API: Focus query(entity_id)
+  API->>Graph: fetch subgraph + provenance refs
+  Graph-->>API: context bundle
+  API-->>UI: narrative + citations + audit flags
+~~~
 
-## ⚙️ Key Components
+## 📦 Data & Metadata
 
-| File | Function | Description |
-|------|-----------|-------------|
-| **load_entities.py** | ETL → Graph Loader | Creates or merges nodes/edges into Neo4j; enforces uniqueness constraints and IDs. |
-| **link_entities.py** | Entity Resolution | Detects duplicate entities using string similarity and context (Levenshtein, cosine, embeddings). |
-| **sync_provenance.py** | Provenance Sync | Pushes update hashes to IPFS and Ethereum; maintains local manifest consistency. |
-| **checksum_utils.py** | Integrity Utilities | Generates SHA-256 checksums and writes to `metadata.json`. |
+### Inputs
 
----
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| STAC Collections + Items | `application/json` | `data/stac/` | STAC 1.0 + KFM-STAC profile |
+| DCAT dataset catalog | RDF (Turtle/JSON-LD) | `data/catalog/dcat/` | DCAT 3 + KFM-DCAT profile |
+| PROV bundles | JSON-LD | `data/prov/` | PROV-O + KFM-PROV profile |
+| Entity-resolution config (optional) | YAML/JSON | `src/graph/ingest/` (repo-specific) | Schema (TBD) |
 
-## 🧠 Entity Linking Logic
+### Outputs
 
-### Algorithmic Steps
-1. **Exact Match** – Compare incoming entity ID or name against existing Neo4j nodes.  
-2. **Alias Resolution** – Use alias dictionaries and alternate spellings (e.g., “Fort Larned” ≈ “Fort Larnard”).  
-3. **Fuzzy Matching** – Apply string similarity (Levenshtein distance) and embedding-based context scoring.  
-4. **Context Validation** – Confirm candidates based on time and geography overlap.  
-5. **Merge / Create** – If match ≥ confidence threshold (0.90), merge; otherwise, create a new node flagged `provisional:true`.
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Neo4j nodes + relationships | Graph DB | Neo4j | KFM ontology bindings + migrations |
+| Provenance subgraph (Activity/Agent edges) | Graph DB | Neo4j | PROV profile mapping |
+| Ingest run log / manifest | JSON | `mcp/runs/<run_id>/` | Telemetry schema (TBD) |
+| Validation / audit report | MD/JSON | `mcp/runs/<run_id>/` (recommended) | Telemetry schema (TBD) |
 
-### Example (Cypher Pseudocode)
-```cypher
-MERGE (e:Event {id:$event_id})
-ON CREATE SET e.title=$title, e.start=$start, e.end=$end, e.source=$source
-WITH e
-MATCH (p:Place {name:$place})
-MERGE (e)-[:LOCATED_AT]->(p)
-RETURN e, p;
-```
+### Sensitivity & redaction
+- Preserve and propagate classification tags and sensitivity labels for all ingested entities and assets.
+- Precise locations for protected sites (or similarly sensitive records) must be governed by classification/sensitivity metadata and downstream enforcement rules (typically at the API layer).
 
----
+### Quality signals
+- Completeness: required IDs, titles/names, time ranges, and provenance pointers present.
+- Geometry validity (if geospatial): valid GeoJSON, sane bounds, coordinate reference consistency.
+- Referential integrity: relationships point to existing nodes; no orphaned provenance.
+- Deduplication health (if entity resolution enabled): number of candidate matches, merge confidence distributions, and human-review backlog.
 
-## 🔗 Provenance Synchronization
+## 🌐 STAC, DCAT & PROV Alignment
 
-Each ingestion session writes a full provenance record to:
-- `data/reports/audit/data_provenance_ledger.json`
-- `releases/<version>/manifest.zip`
-- IPFS (content-addressed hash)
-- Governance blockchain (Ethereum testnet / Polygon)
+### STAC
+- Collections involved: see `data/stac/collections/` (repo-specific inventory)
+- Items involved: see `data/stac/items/` (repo-specific inventory)
+- Extension(s): KFM-STAC + domain-specific extensions (confirm in schema registry)
 
-### Recorded Metadata
-| Field | Example | Description |
-|-------|----------|-------------|
-| `id` | `event_1867_treaty` | Unique graph object identifier |
-| `sha256` | `a89fcd...` | Checksum of record payload |
-| `timestamp` | `2025-11-10T18:30Z` | Ingestion timestamp |
-| `source` | `data/sources/fema.json` | Data origin path |
-| `ledger_tx` | `0x4e8f...` | Blockchain transaction reference |
+### DCAT
+- Dataset identifiers: map DCAT identifiers into stable graph keys (Dataset nodes and/or properties on relevant nodes).
+- License mapping: carry forward license metadata for downstream display and reuse constraints.
+- Contact / publisher mapping: map publishers/contacts into `Organization` nodes when appropriate.
 
-All records are validated by the FAIR+CARE Council during governance audits.
+### PROV-O
+- `prov:wasDerivedFrom`: connect ingested entities/assets back to source records.
+- `prov:wasGeneratedBy`: connect to `Activity` nodes representing ETL/ingest jobs.
+- Activity / Agent identities: Agents can represent scripts, services, or persons; IDs must be stable and recorded for audit.
 
----
+### Versioning
+- Use STAC Versioning links and graph predecessor/successor relationships as applicable.
 
-## 🧩 Directory Layout
+## 🏗️ Architecture
 
-```plaintext
-src/graph/ingest/
-├── README.md              # Documentation for ingestion and provenance sync
-├── load_entities.py       # Creates/merges nodes and relationships
-├── link_entities.py       # Entity resolution and alias mapping
-├── sync_provenance.py     # IPFS + blockchain provenance registration
-├── checksum_utils.py      # SHA256 hashing and integrity validation
-└── logs/
-    ├── ingest_2025-11-10.log   # Timestamped operational logs
-    └── provenance_audit.json   # Summaries of IPFS + ledger syncs
-```
+### Component map (within `src/graph/ingest/`)
+- Catalog readers/parsers: STAC JSON, DCAT RDF/JSON-LD, PROV JSON-LD.
+- Ontology mapping: translate catalog records into graph nodes/edges (labels/relations/properties).
+- Writers/upserters: Neo4j transactional writes, batching, idempotent upserts.
+- Provenance writer: Activity/Agent modeling; derived-from edges.
+- Entity resolution (optional): detect duplicates; propose/perform merges; record confidence + rationale.
+- Validation: pre-flight schema checks + post-flight graph integrity checks.
+- Run logging: record run inputs, versions, counts, and audit signals in run artifacts.
 
----
+### Interfaces / contracts
+- Input contracts: STAC 1.0 (KFM-STAC), DCAT 3 (KFM-DCAT), PROV-O (KFM-PROV).
+- Graph contract: stable labels/relations + migration plan (no breaking changes without versioning).
+- API boundary: UI must rely on API contracts, not direct Neo4j reads.
+- Auditability: provenance + merge decisions must be queryable and traceable.
 
-## 🧪 Validation & Telemetry
+### Extension points checklist (for future work)
+- [ ] Data: new domain added under `data/<domain>/.`
+- [ ] STAC: new collection + item schema validation
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests (if graph shape changes surface outward)
+- [ ] UI: layer registry entry + access rules (if new data becomes visible)
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
 
-| Metric | Description | Verified By |
-|--------|--------------|-------------|
-| **Entity Insert Rate** | Avg. nodes/edges created per second | @kfm-ops |
-| **Duplicate Detection Accuracy** | Fuzzy link confidence ≥ 0.9 | @kfm-ai |
-| **Checksum Integrity** | 100% match with `metadata.json` | @kfm-validation |
-| **Provenance Ledger Sync** | Blockchain + IPFS success rate | @kfm-governance |
-| **FAIR+CARE Compliance** | Ethics + transparency review | @faircare-council |
+## 🧠 Story Node & Focus Mode Integration
 
-Telemetry logged to `../../../reports/audit/graph_ingest_telemetry.json`.
+### How this work surfaces in Focus Mode
+- Entities that become focusable typically include: Place, Person, Event, Organization, Document, Artifact (as defined by the graph ontology).
+- For every focus bundle, evidence must include:
+  - pointers to STAC asset IDs and/or source Document nodes
+  - DCAT dataset identifiers (where applicable)
+  - PROV Activity/Agent references for “how it got here”
 
----
+### Provenance-linked narrative rule
+- Every claim must trace to a dataset / record / asset ID.
 
-## 🧾 Internal Citation
+### Optional structured controls
 
-```text
-Kansas Frontier Matrix (2025). Graph Ingestion & Provenance Sync (v10.1.0).
-Defines the ingestion, entity linking, and provenance synchronization processes for Neo4j-based knowledge graph in Kansas Frontier Matrix.
-```
+~~~yaml
+focus_layers:
+  - "places"
+  - "events"
+  - "documents"
+focus_time: "TBD"
+focus_center: [-98.0000, 38.0000]
+~~~
 
----
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV)
+- [ ] Graph integrity checks (constraints, uniqueness, referential integrity)
+- [ ] Entity-resolution audit checks (if auto-merge is enabled)
+- [ ] API contract tests (if ingest changes the surfaced graph shape)
+- [ ] UI schema checks (layer registry) (if new data becomes visible)
+- [ ] Security and sovereignty checks (as applicable)
+
+### Reproduction
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+
+# 1) validate catalog artifacts (STAC/DCAT/PROV)
+# <cmd>
+
+# 2) run graph ingest (dry run / plan)
+# <cmd>
+
+# 3) apply constraints/migrations and ingest into Neo4j
+# <cmd>
+
+# 4) run graph integrity tests
+# <cmd>
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| ingest_run_id | Graph ingest | `mcp/runs/` (recommended) |
+| nodes_written / relationships_written | Graph ingest | `mcp/runs/` (recommended) |
+| entity_resolution_candidates / merges_applied | Entity resolution | `mcp/runs/` (recommended) |
+| validation_failures | Validators | `mcp/runs/` + telemetry docs |
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- Ontology changes (labels/relations/properties) require Graph maintainer review.
+- Any change that affects sensitive-location handling, classification propagation, or merge behavior requires governance review (as defined in governance docs).
+
+### CARE / sovereignty considerations
+- Identify communities impacted and protection rules.
+- Ensure classification tags and sensitivity labels are present and enforceable.
+- Follow sovereignty/ethics policy documents for restricted or culturally sensitive content.
+
+### AI usage constraints
+- If AI is used to propose links/merges, ensure:
+  - transparency: confidence + rationale are stored
+  - auditability: machine vs human decisions are distinguishable
+  - human-in-the-loop: critical merges are reviewable before acceptance
+- Ensure this doc’s AI permissions/prohibitions match intended use.
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
-|----------|------|----------|
-| **v10.1.0** | 2025-11-10 | Added IPFS+Blockchain provenance sync; improved fuzzy linking with embeddings; telemetry integration. |
-| **v10.0.0** | 2025-11-08 | Refactored ETL → Graph bridge; introduced ontology validation hook. |
-| **v9.7.0** | 2025-11-05 | Initial FAIR+CARE-compliant ingestion framework with checksum validation. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-20 | Initial README for `src/graph/ingest/` | TBD |
 
 ---
 
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — MIT License**  
-*Deterministic Ingestion × FAIR+CARE Provenance × Ethical Data Automation*  
-[Back to Graph README](../README.md) · [Docs Portal](../../../docs/) · [Governance Ledger](../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
-
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
