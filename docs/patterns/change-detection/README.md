@@ -413,13 +413,13 @@ At minimum, each successful run should express:
 
 ~~~mermaid
 flowchart LR
-  W[Webhook/SSE Event] --> F[Watcher Handler]
-  F --> V[Signature Verify + Parse]
-  V --> D[Dedupe Store / Ledger]
-  D -->|new| Q[Durable Queue]
-  D -->|seen| X[Drop / No-op]
-  Q --> H[Idempotent Handler]
-  F -.-> P[Fallback Poll (ETag/IMS)]:::dim
+  W["Webhook/SSE Event"] --> F["Watcher Handler"]
+  F --> V["Signature Verify + Parse"]
+  V --> D["Dedupe Store (Ledger)"]
+  D -->|new| Q["Durable Queue"]
+  D -->|seen| X["Drop / No-op"]
+  Q --> H["Idempotent Handler"]
+  F -.-> P["Fallback Poll (ETag/IMS)"]
 
 classDef dim opacity:0.6;
 ~~~
