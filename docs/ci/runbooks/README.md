@@ -148,11 +148,11 @@ KFM’s pipeline is ordered and contract-driven. CI gates exist to keep that ord
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  A[CI Trigger: PR/Push] --> B[Lint / Formatting Gates]
-  B --> C[Schema Validation Gates]
-  C --> D[Tests (unit/integration)]
-  D --> E[Contract Gates (API/UI)]
-  E --> F[Security / Governance Gates]
+  A["CI Trigger (PR or Push)"] --> B["Lint & Formatting Gates"]
+  B --> C["Schema Validation Gates"]
+  C --> D["Tests (Unit + Integration)"]
+  D --> E["Contract Gates (API + UI)"]
+  E --> F["Security + Governance Gates"]
 ~~~
 
 ### Optional: sequence diagram
