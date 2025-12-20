@@ -171,12 +171,12 @@ Within summaries, explicitly label:
 ## 🗺️ Diagrams
 
 ~~~mermaid
-flowchart LR
-  A[External source: paper/standard/report] --> B[Source summary (this folder)]
-  B --> C[Design decision / ticket]
-  C --> D[Implementation: ETL/Catalog/Graph/API/UI]
-  D --> E[Story Node artifact]
-  E --> F[Focus Mode experience]
+graph LR
+  SRC["External source - paper, standard, report"] --> SUM["Source summary - this folder"]
+  SUM --> DEC["Design decision or ticket"]
+  DEC --> IMP["Implementation - ETL, Catalog, Graph, API, UI"]
+  IMP --> SN["Story Node artifact"]
+  SN --> FM["Focus Mode experience"]
 ~~~
 
 ~~~mermaid
