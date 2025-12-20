@@ -175,21 +175,21 @@ KFM prefers detection that is:
 ### System / dataflow diagram (canonical KFM flow + change detection)
 ~~~mermaid
 flowchart LR
-  subgraph Detect
-    U[Upstream Source] --> D[Detector: Event | Webhook | SSE | ETag/IMS | Manifest Diff]
+  subgraph Detect["Detect"]
+    U["Upstream Source"] --> D["Detector: Event · Webhook · SSE · ETag/IMS · Manifest Diff"]
   end
 
-  D --> G[Idempotency Gate: Ledger/WAL]
-  G -->|new| H[Handler: Fetch + Digest + Validate]
-  G -->|already processed| N[No-op: Safe Exit]
+  D --> G["Idempotency Gate: Ledger/WAL"]
+  G -->|new| H["Handler: Fetch + Digest + Validate"]
+  G -->|already processed| N["No-op: Safe Exit"]
 
-  H --> S[Stage + Normalize (content-addressed)]
-  S --> C[STAC/DCAT/PROV Updates]
-  C --> X[Neo4j Graph Load]
-  X --> A[API Layer]
-  A --> UI[React/Map UI]
-  UI --> SN[Story Nodes]
-  SN --> FM[Focus Mode]
+  H --> S["Stage + Normalize<br/>(content-addressed)"]
+  S --> C["STAC/DCAT/PROV Updates"]
+  C --> X["Neo4j Graph Load"]
+  X --> A["API Layer"]
+  A --> UI["React/Map UI"]
+  UI --> SN["Story Nodes"]
+  SN --> FM["Focus Mode"]
 ~~~
 
 ### Optional: sequence diagram (provider → watcher → catalogs)
