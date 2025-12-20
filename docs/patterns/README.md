@@ -83,7 +83,7 @@ This document is the **governed index** for reusable KFM patterns. Patterns exis
 - [ ] Front-matter complete + valid
 - [ ] Every listed pattern has a working relative link
 - [ ] Canonical pipeline + API boundary stated and preserved
-- [ ] Mermaid diagrams render (no `|` inside node labels; prefer `/` or line breaks)
+- [ ] Mermaid diagrams render (avoid `|` inside node labels; prefer `/` or line breaks)
 - [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ---
@@ -108,13 +108,13 @@ This document is the **governed index** for reusable KFM patterns. Patterns exis
 
 ### Expected file tree for this sub-area
 ~~~text
-docs/
-└── patterns/
-    ├── README.md
-    └── change-detection/
-        ├── README.md
-        └── idempotent-handler/
-            └── README.md
+📁 docs/
+└── 📁 patterns/
+    ├── 📄 README.md
+    └── 📁 change-detection/
+        ├── 📄 README.md
+        └── 📁 idempotent-handler/
+            └── 📄 README.md
 ~~~
 
 ---
@@ -132,8 +132,8 @@ Patterns provide a governed way to keep implementations consistent and auditable
 
 ### Assumptions
 - Pattern docs are **docs-first** and must stay compatible with the canonical KFM pipeline.
-- If a pattern implies an API change, it must be described using the **API Contract Extension** template (not here).
-- If a pattern is a narrative unit, it must use **Story Node v3** (not here).
+- If a pattern implies an API change, it must be described using the **API Contract Extension** template (not this index).
+- If a pattern is a narrative unit, it must use **Story Node v3** (not this index).
 
 ### Constraints / invariants
 - Canonical ordering is preserved:
@@ -204,7 +204,7 @@ sequenceDiagram
 
 | Output | Format | Path | Contract / Schema |
 |---|---|---|---|
-| Navigable pattern registry (this index) | Markdown | `docs/patterns/README.md` | Template compliance + link integrity |
+| Navigable pattern index (this doc) | Markdown | `docs/patterns/README.md` | Template compliance + link integrity |
 | Reusable implementation guidance | Markdown + snippets | pattern subfolders | Must not contradict governed contracts |
 
 ### Sensitivity & redaction
@@ -221,23 +221,23 @@ sequenceDiagram
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### STAC
-- Patterns that affect data artifacts must specify:
-  - Which Collections/Items change
-  - Which extensions/properties are required (e.g., checksums, lineage markers)
-  - Versioning behavior (links to predecessor/successor where applicable)
+Patterns that affect data artifacts should specify:
+- Which Collections/Items change
+- Which extensions/properties are required (e.g., checksums, lineage markers)
+- Versioning behavior (links to predecessor/successor where applicable)
 
 ### DCAT
-- Patterns that change publication/distribution behavior must specify:
-  - dataset identifiers impacted
-  - distribution versioning + checksum requirements
-  - license mapping expectations
+Patterns that change publication/distribution behavior should specify:
+- dataset identifiers impacted
+- distribution versioning + checksum requirements
+- license mapping expectations
 
 ### PROV-O
-- Patterns that change pipeline behavior must specify minimal lineage:
-  - `prov:Entity` inputs/outputs
-  - `prov:Activity` run identity
-  - `prov:Agent` pipeline identity
-  - link strategy for provenance artifacts from APIs/UI
+Patterns that change pipeline behavior should specify minimal lineage:
+- `prov:Entity` inputs/outputs
+- `prov:Activity` run identity
+- `prov:Agent` pipeline identity
+- link strategy for provenance artifacts from APIs/UI
 
 ### Versioning
 - Prefer additive changes (new fields) over breaking ones.
@@ -327,7 +327,7 @@ pattern_index:
 
 | Version | Date | Summary | Author |
 |---|---:|---|---|
-| v12.0.0-draft | 2025-12-20 | Added governed patterns index and navigation; aligned to v12 Universal Doc template | <name/handle> |
+| v12.0.0-draft | 2025-12-20 | Added governed patterns index and navigation; aligned to Universal Doc template | <name/handle> |
 
 ---
 
@@ -340,4 +340,3 @@ pattern_index:
 © 2025 Kansas Frontier Matrix — CC‑BY‑4.0
 
 </div>
-
