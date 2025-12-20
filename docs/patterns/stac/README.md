@@ -1,392 +1,433 @@
 ---
-title: "🛰 STAC Patterns for KFM v11"
+title: "🗺️ KFM — STAC Authoring & Integrity Pattern (Collections · Items · Assets · Validation)"
 path: "docs/patterns/stac/README.md"
-
-version: "v0.1.0"
-last_updated: "2025-12-16"
-release_stage: "Draft"
-lifecycle: "Working Draft"
-review_cycle: "Annual · FAIR+CARE Council & Focus Mode Board"
-content_stability: "evolving"
-
-status: "Draft"
+version: "v12.0.0-draft"
+last_updated: "2025-12-20"
+status: "active"
 doc_kind: "Pattern"
-header_profile: "standard"
-footer_profile: "standard"
-diagram_profiles:
-  - "mermaid-flowchart-v1"
+license: "CC-BY-4.0"
 
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-scope:
-  domain: "documentation"
-  applies_to:
-    - "docs/patterns/stac/**"
-    - "data/stac/**"
-    - "tools/validation/**"
-    - "schemas/**"
-    - "src/pipelines/**"
-    - "docs/data/**"
-  out_of_scope:
-    - "Direct frontend-to-graph access (UI consumes via APIs)"
-    - "STAC API infrastructure deployment details"
-
-fair_category: "F1-A1-I1-R1"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
 care_label: "Public · Low-Risk"
-sensitivity: "General (non-sensitive by default; apply masking rules for sensitive locations)"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-classification: "Public"
-jurisdiction: "Kansas / United States"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-indigenous_rights_flag: true
-data_steward: "KFM FAIR+CARE Council"
-
-ttl_policy: "24 months"
-sunset_policy: "Review on KFM-MDP major revision (v12)"
-
-governance_ref: "docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "TechArticle"
-  prov_o: "prov:Plan"
-  owl_time: "ProperInterval"
-  geosparql: "geo:FeatureCollection"
-
-metadata_profiles:
-  - "STAC 1.0.0"
-  - "DCAT 3.0"
-  - "PROV-O"
-  - "FAIR+CARE"
-  - "KFM Ontology (Neo4j)"
-
+doc_uuid: "urn:kfm:doc:patterns:stac:authoring-integrity:v12.0.0-draft"
+semantic_document_id: "kfm-pattern-stac-authoring-integrity-v12.0.0-draft"
+event_source_id: "ledger:kfm:doc:patterns:stac:authoring-integrity:v12.0.0-draft"
 commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-provenance_chain: []
-story_node_refs: []
-
-doc_uuid: "urn:kfm:doc:patterns:stac:readme:v0.1.0"
-semantic_document_id: "kfm-patterns-stac-readme"
-event_source_id: "ledger:kfm:doc:patterns:stac:readme:v0.1.0"
-doc_integrity_checksum: "<sha256>"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 
 ai_transform_permissions:
-  - "summary"
-  - "timeline-generation"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "diagram-extraction"
-  - "metadata-extraction"
-  - "layout-normalization"
-
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "content-alteration"
-  - "speculative-additions"
-  - "unverified-architectural-claims"
-  - "narrative-fabrication"
-  - "governance-override"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-fencing_profile: "outer-backticks-inner-tildes-v1"
-
-test_profiles:
-  - "markdown-lint"
-  - "schema-lint"
-  - "footer-check"
-  - "accessibility-check"
-  - "diagram-check"
-  - "metadata-check"
-  - "provenance-check"
-  - "secret-scan"
-  - "pii-scan"
-
-ci_integration:
-  workflow: ".github/workflows/kfm-ci.yml"
-  environment: "dev → staging → production"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-
-badge_profiles:
-  - "root-centered-badge-row"
-
-requires_purpose_block: true
-requires_version_history: true
-requires_directory_layout_section: true
-requires_governance_links_in_footer: true
-
-deprecated_fields:
-  - "old_markdown_standard_v10.4"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-
-<div align="center">
-
-# 🛰 STAC Patterns for KFM v11
-
-`docs/patterns/stac/README.md`
-
-**Purpose**  
-Define how KFM produces, validates, and publishes STAC catalogs so spatiotemporal assets are discoverable, versioned, and provenance-linked across the KFM pipeline (ETL → STAC/DCAT/PROV → Graph → APIs → UI).
-
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/STAC-1.0.0-blue" />
-<img src="https://img.shields.io/badge/Status-Draft-yellow" />
-
-[📘 Docs Root](../../README.md) ·
-[📂 Standards Index](../../standards/README.md) ·
-[📄 Templates Index](../../templates/README.md) ·
-[⚙ Workflows](../../workflows/README.md) ·
-[🏛️ Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
-
-© 2025 Kansas Frontier Matrix — CC‑BY 4.0
-
-</div>
+# 🗺️ KFM — STAC Authoring & Integrity Pattern (Collections · Items · Assets · Validation)
 
 ## 📘 Overview
 
-This pattern pack explains:
+### Purpose
+This pattern standardizes how KFM **authors, validates, and publishes STAC** so that:
+- catalogs are **deterministic** (stable IDs, stable links, stable structure),
+- catalogs are **reliable** (schema-valid, link-valid, consistent extents),
+- catalogs are **governable** (clear license/access signals, provenance links),
+- downstream systems (Graph, APIs, UI, Story Nodes) can depend on STAC without special-case logic.
 
-- What goes in `data/stac/` (Catalogs, Collections, Items).
-- How STAC records relate to DCAT (catalog interoperability) and PROV‑O (lineage).
-- How STAC versioning concepts are applied so updates remain traceable.
+### Scope
 
-Non-goals:
+| In Scope | Out of Scope |
+|---|---|
+| Static STAC artifacts (Collections, Items, Assets, Links) | Defining STAC API endpoints or server behavior (belongs to API Contract docs) |
+| Integrity invariants (IDs, link relations, extent coherence) | Dataset-specific content rules (belongs to dataset docs / QA patterns) |
+| Validation checklist + CI gates for STAC correctness | Frontend reading STAC directly from object storage (UI must use APIs) |
+| How STAC connects to DCAT and PROV for auditability | Replacing the KFM pipeline ordering or governance process |
 
-- Replacing domain schemas under `data/processed/`.
-- Defining UI behavior (UI consumes catalog through APIs; do not couple UI to STAC storage layout).
+### Audience
+- Primary: ETL and Catalog maintainers, Data‑Ops / Reliability
+- Secondary: API maintainers, UI/Story maintainers, Governance reviewers
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` *(not confirmed in repo)*
+- Terms used in this doc:
+  - **STAC Collection**: a grouped dataset description with extents and metadata.
+  - **STAC Item**: an individual spatiotemporal record referencing one or more assets.
+  - **Asset**: a file (data/metadata/QA/provenance) referenced by an Item.
+  - **Integrity**: the item/collection/link invariants that make catalogs navigable and safe.
+
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Patterns index | `docs/patterns/README.md` | platform@kfm.local | Entry point |
+| Change detection pattern | `docs/patterns/change-detection/README.md` | data-ops@kfm.local | Idempotent updates often produce STAC deltas |
+| Idempotent handler pattern | `docs/patterns/change-detection/idempotent-handler/README.md` | data-ops@kfm.local | Computes strong digests and promotes artifacts |
+| STAC outputs | `data/stac/` | data-ops@kfm.local | Collections + Items outputs |
+| DCAT outputs | `data/catalog/dcat/` | data-ops@kfm.local | Dataset + distribution metadata |
+| PROV outputs | `data/prov/` | data-ops@kfm.local | Provenance bundles |
+| STAC profile doc | `docs/standards/stac/README.md` *(not confirmed in repo)* | governance | Where KFM-specific STAC rules should be codified |
+
+### Definition of done (for this pattern)
+- [ ] Catalog structure and naming guidance is deterministic
+- [ ] Collection/Item integrity invariants are explicit and testable
+- [ ] Asset conventions include checksums + provenance links (where applicable)
+- [ ] Validation & CI gates are listed and repeatable
+- [ ] Story Node / Focus Mode integration guidance preserves API boundary
+- [ ] Mermaid diagrams render (avoid `|` in node labels; avoid `:::class` styling)
+
+---
 
 ## 🗂️ Directory Layout
 
-STAC metadata lives under `data/stac/` (Collections + Items). Domain assets referenced by STAC live under `data/processed/` (or other `data/**` subtrees).
+### This document
+- `path`: `docs/patterns/stac/README.md`
 
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| STAC outputs | `data/stac/` | Collections + Items for published layers |
+| STAC collections | `data/stac/collections/` | One folder per collection (recommended) |
+| STAC items | `data/stac/items/` | Items partitioned by collection (recommended) |
+| DCAT outputs | `data/catalog/dcat/` | DCAT datasets + distributions |
+| PROV outputs | `data/prov/` | PROV bundles for runs and artifacts |
+| Builders | `src/pipelines/catalog/` *(not confirmed in repo)* | Code that writes STAC/DCAT |
+| Validators | `tools/` or `src/.../validate` *(not confirmed in repo)* | Schema + link checks |
+| Run artifacts | `mcp/runs/` | Validation reports, link-check reports |
+
+### Expected file tree (recommended)
 ~~~text
-📁 KansasFrontierMatrix/
-├── 📁 data/                                      — Data lifecycle & catalogs
-│   ├── 📁 stac/                                  — STAC collections & items (spatiotemporal metadata)
-│   │   ├── 🧾 catalog.json                       — Root STAC Catalog (optional but recommended)
-│   │   └── 📁 collections/
-│   │       └── 📁 <collection-id>/
-│   │           ├── 🧾 collection.json            — STAC Collection
-│   │           └── 📁 items/
-│   │               └── 🧾 <item-id>.json         — STAC Item(s)
-│   ├── 📁 processed/                             — Canonical processed outputs (assets referenced by STAC)
-│   └── 📁 checksums/                             — Integrity hashes (when used)
-├── 📁 docs/                                      — Documentation (human + machine readable)
-│   ├── 📁 patterns/
-│   │   └── 📁 stac/
-│   │       └── 📄 README.md                      — This document
-│   ├── 📁 data/                                  — Data contracts, catalogs, schemas (DCAT docs)
-│   └── 📁 standards/                             — KFM standards (Markdown, governance, FAIR+CARE)
-├── 📁 tools/
-│   └── 📁 validation/                            — STAC/DCAT schema checks, link checks, lint scripts
-└── 📁 schemas/                                   — Schemas (docs, telemetry, SHACL, STAC/DCAT mappings)
-    ├── 📁 json/
-    └── 📁 shacl/
+📁 docs/
+└── 📁 patterns/
+    └── 📁 stac/
+        └── 📄 README.md
+
+📁 data/
+└── 📁 stac/
+    ├── 📁 collections/
+    │   └── 📁 <collection-id>/
+    │       └── 📄 collection.json
+    └── 📁 items/
+        └── 📁 <collection-id>/
+            └── 📄 <item-id>.json
+
+📁 data/
+├── 📁 catalog/
+│   └── 📁 dcat/
+└── 📁 prov/
 ~~~
 
-Notes:
-
-- Keep **data assets** under `data/processed/` (or other `data/**` subtrees).
-- Keep **metadata catalogs** under `data/stac/`.
-- Avoid duplicating large assets inside `data/stac/`; Items should reference assets by `assets.*.href`.
+---
 
 ## 🧭 Context
 
-In KFM, STAC functions as the “catalog spine” for geospatial (and time-aware) assets:
+### Background
+STAC is the primary **catalog surface** that connects KFM’s ETL outputs to:
+- catalog validation and governance review,
+- graph ingestion (via ETL loaders),
+- API responses used by UI/Story Nodes,
+- provenance and reproducibility.
 
-- **ETL / ingestion** extracts and normalizes raw sources into canonical artifacts.
-- **STAC (1.0.0)** describes each dataset with footprint, time, asset links, and properties.
-- **DCAT (3.0)** expresses dataset-level catalog metadata for broader interoperability.
-- **PROV‑O** captures lineage (what a dataset was derived from, and which activity produced it).
-- **Graph (Neo4j)** links STAC objects (and their versions) to semantic entities and Story Nodes.
+Without strict STAC integrity:
+- “freshness” becomes untrustworthy,
+- broken links silently degrade UI layers,
+- collection extents drift and become misleading,
+- versioning becomes inconsistent.
 
-## 🧱 Architecture
+### Assumptions
+- STAC artifacts are generated by ETL/catalog writers, not edited by hand.
+- KFM prefers **stable identifiers** and **idempotent publishing** (duplicate runs converge).
+- UI consumes STAC-derived views through APIs (no direct object-store reads).
 
-### Two supported publication modes
+### Constraints / invariants
+- Canonical pipeline ordering is preserved:
+  - ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode
+- Frontend does not read Neo4j directly (API boundary).
+- Every STAC Item must be attributable to a provenance record (directly or indirectly).
 
-1. **Static catalog (files on disk)**
-   - STAC JSON stored in `data/stac/`.
-   - Suitable for “release artifacts” and offline review.
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Where is the authoritative KFM STAC profile documented and versioned? | Governance | TBD |
+| Do we publish a root STAC Catalog document (catalog.json) or only collections/items? | Data‑Ops | TBD |
+| What is the official checksum field convention (properties vs asset fields)? | Data‑Ops | TBD |
 
-2. **Service-backed catalog (STAC API)**
-   - Catalog served via an API layer, backed by a database.
-   - Suitable for fast search (bbox/time/property filtering) and large item counts.
+### Future extensions
+- Add a governed “KFM STAC Profile” doc under `docs/standards/stac/`.
+- Add CI checks for: STAC schema validation, link integrity, extent coherence, and broken-link prevention.
+- Add a catalog delta format for update-only publishing (pairs well with idempotent handler pattern).
 
-KFM may use either (or both): static JSON for governance/release packaging and an API for interactive discovery.
+---
 
-### Versioning model
+## 🗺️ Diagrams
 
-KFM applies STAC versioning concepts to keep updates traceable:
+### STAC in the KFM flow (high level)
+~~~mermaid
+flowchart LR
+  ETL["ETL (ingest, normalize)"] --> CAT["Catalog Writer"]
+  CAT --> STAC["STAC (Collections, Items)"]
+  CAT --> DCAT["DCAT (datasets, distributions)"]
+  CAT --> PROV["PROV (lineage bundles)"]
 
-- When a source changes, mint a new Item version and relate it to the prior version (predecessor/successor).
-- Preserve stable identifiers where appropriate and expose “current vs historical” in downstream systems (graph + APIs).
+  STAC --> GRAPH["Neo4j Graph Load"]
+  DCAT --> GRAPH
+  PROV --> GRAPH
+
+  GRAPH --> API["APIs"]
+  API --> UI["React, Map UI"]
+  UI --> STORY["Story Nodes"]
+  STORY --> FOCUS["Focus Mode"]
+~~~
+
+### Item integrity loop (validation gates)
+~~~mermaid
+flowchart TD
+  W["Writer emits Collection and Items"] --> V1["Schema validate (STAC core + extensions)"]
+  V1 --> V2["Integrity validate (collection, links, assets)"]
+  V2 --> V3["Link check (href resolvable)"]
+  V3 --> V4["Extent check (bbox and time coherence)"]
+  V4 --> PASS["Publish / Promote"]
+  V2 --> FAIL["Fail build (block promotion)"]
+  V3 --> FAIL
+  V4 --> FAIL
+~~~
+
+---
 
 ## 📦 Data & Metadata
 
-### Core STAC objects
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| STAC Collection source metadata | YAML/JSON/config | ETL config | Schema + required fields |
+| STAC Item source records | tabular/geo | ETL outputs | Deterministic transforms |
+| Assets | files | object store / filesystem | checksum + media type checks |
+| Provenance references | JSON-LD | PROV emitter | reference integrity |
 
-- **Catalog**: entry point and link hub (optional but recommended).
-- **Collection**: groups related Items and declares extents.
-- **Item**: describes one asset or one logical dataset “unit” with geometry + time + assets.
+### Outputs
+| Output | Format | Path | Contract |
+|---|---|---|---|
+| Collection | JSON | `data/stac/collections/<collection-id>/collection.json` | STAC Collection |
+| Item | JSON | `data/stac/items/<collection-id>/<item-id>.json` | STAC Item |
+| Validation report | JSON/MD | `mcp/runs/<run-id>/...` | Internal |
+| Provenance bundle | JSON-LD | `data/prov/<run-id>/prov.jsonld` | PROV-O |
 
-### Minimal Item shape
+### Sensitivity & redaction
+- Do not embed secrets or internal-only endpoints in STAC `href` fields.
+- For restricted datasets (including Indigenous data protections), ensure:
+  - Item fields do not reveal sensitive coordinates beyond allowed resolution,
+  - assets are access-controlled and links are mediated via APIs as needed.
 
-Example below assumes the Item is stored at `data/stac/collections/<collection-id>/items/<item-id>.json` and references a processed asset under `data/processed/…`.
+### Quality signals
+- Catalog completeness: % Items with valid geometry/bbox/time
+- Link integrity: broken link count = 0 at publish time
+- Checksum coverage: % assets with sha256 attached (where policy requires)
+- Extent coherence: collection extent matches union of item extents (within policy)
 
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC invariants (MUST for KFM catalogs)
+1. **Stable IDs**
+   - Collection `id` and Item `id` must be stable across re-runs for the same logical object.
+2. **Collection reference coherence**
+   - Item must specify the correct `collection` value (matching a Collection `id`).
+3. **Spatial and temporal fields**
+   - Item must include `geometry` and `bbox` for spatial datasets (or explicitly documented exceptions).
+   - Item must include `datetime` OR `start_datetime` and `end_datetime`.
+4. **Asset minimums**
+   - Every data-bearing Item must include at least one asset with `href` and appropriate `type`.
+5. **Link minimums**
+   - Collection and Item should include consistent `self` and parent/root navigation links (strategy must be documented).
+
+> Note: “MUST” here means “required by KFM pattern intent.” The authoritative enforcement should live in a KFM STAC profile doc (not confirmed in repo).
+
+### Recommended asset conventions (SHOULD)
+- Roles: `data`, `metadata`, `thumbnail`, `provenance`, `qa`
+- Include checksums where required by policy:
+  - Prefer sha256 computed during ETL promotion (see idempotent handler pattern).
+- Include provenance as an asset or a link:
+  - `assets.provenance.href` points to a PROV bundle
+  - optional `assets.openlineage.href` if OpenLineage is used
+
+### DCAT mapping (SHOULD)
+- A STAC Collection typically maps to a DCAT dataset.
+- Assets or published artifacts map to DCAT distributions.
+- Checksums and media types should be consistent between STAC assets and DCAT distributions.
+
+### PROV mapping (MUST minimum lineage)
+- Each published Collection/Item should be traceable to:
+  - a `prov:Activity` (the run),
+  - input entities used to generate Items,
+  - output entities (published artifacts).
+
+---
+
+## 🧱 Architecture
+
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| Catalog writer | Build Collection + Items deterministically | ETL output → STAC JSON |
+| Validator | Schema + integrity + link checks | CLI/tool or pipeline step |
+| Promotion step | Publish only on pass | gate based on reports |
+| API layer | Serve catalog + derived views | REST/GraphQL |
+| UI | Render layers and update badges | API only |
+
+### Deterministic ID strategy (recommended)
+Pick one deterministic strategy per dataset family:
+- Stable upstream identifier (best), plus optional version key
+- Or content-addressed digest (sha256) for immutable artifacts
+
+Guidelines:
+- Avoid timestamps as primary IDs.
+- If Item IDs incorporate versioning, ensure predecessor/successor is represented consistently (via links or properties).
+
+### Minimal examples (illustrative)
+
+#### Collection skeleton
+~~~json
+{
+  "type": "Collection",
+  "stac_version": "1.0.0",
+  "id": "<collection-id>",
+  "description": "…",
+  "license": "…",
+  "extent": {
+    "spatial": { "bbox": [[-180, -90, 180, 90]] },
+    "temporal": { "interval": [["2020-01-01T00:00:00Z", null]] }
+  },
+  "links": [],
+  "summaries": {}
+}
+~~~
+
+#### Item skeleton
 ~~~json
 {
   "type": "Feature",
   "stac_version": "1.0.0",
   "id": "<item-id>",
   "collection": "<collection-id>",
-  "geometry": { "type": "Polygon", "coordinates": [] },
-  "bbox": [-180.0, -90.0, 180.0, 90.0],
+  "geometry": null,
+  "bbox": [-180, -90, 180, 90],
   "properties": {
-    "datetime": "2025-01-01T00:00:00Z"
+    "datetime": "2025-12-20T00:00:00Z"
   },
+  "links": [],
   "assets": {
     "data": {
-      "href": "../../../../processed/<domain>/<asset>",
+      "href": "s3://.../asset.ext",
       "type": "application/octet-stream",
       "roles": ["data"]
     }
-  },
-  "links": [
-    { "rel": "self", "href": "./<item-id>.json", "type": "application/geo+json" }
-  ]
+  }
 }
 ~~~
 
-Conventions:
-
-- Use deterministic, stable `<collection-id>` and `<item-id>` values (avoid timestamps in IDs unless the dataset identity is time-sliced).
-- Put domain-specific fields in `properties` and/or via `stac_extensions` rather than inventing ad-hoc top-level keys.
-- Prefer explicit licensing and citation metadata (via DCAT mapping and/or relevant STAC extensions).
-
-### Extensions
-
-Common extensions to consider (use only what you need):
-
-- **Versioning** (predecessor/successor and version fields)
-- **Projection** (`proj:*`) when CRS/transform matters
-- **Scientific / citations** when the asset is tied to publications
-- **EO** (electro‑optical metadata) when relevant
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-KFM treats these as complementary layers:
-
-- **STAC**: spatiotemporal *asset* metadata and discovery structure
-- **DCAT**: dataset catalog interoperability (titles/descriptions/keywords/licenses/distributions)
-- **PROV‑O**: transformation and derivation lineage
-
-### Mapping guidance
-
-| STAC field | What it represents | Where it tends to map in KFM |
-|---|---|---|
-| `id` | Stable dataset/item identifier | Dataset/Item UUID or semantic ID |
-| `geometry` / `bbox` | Spatial footprint / extent | GeoJSON geometry + graph spatial node |
-| `properties.datetime` (or time range) | Temporal scope | Temporal extent fields + graph time node |
-| `assets.*.href` | Distribution/asset location | DCAT Distribution + API access URL |
-| `links` | Relationship graph | Catalog traversal + version/predecessor edges |
-| `properties.*` | Domain metadata | Graph properties + search index fields |
-
-### Provenance pattern
-
-- Use PROV to express: *this item was derived from X via activity Y*.
-- Keep provenance “machine-first”: stable IDs, timestamped activities, and explicit agent/role when available.
+---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-STAC Items can represent:
+### Goal
+Story Nodes and Focus Mode should be able to:
+- cite a stable Collection/Item ID,
+- show “Updated on …” with evidence (catalog timestamps + provenance refs),
+- avoid silent changes (versioning and provenance links make changes auditable).
 
-- Primary assets (e.g., scanned maps, georeferenced rasters, vector layers)
-- Derived narrative artifacts (e.g., Story Node datasets produced from extraction/curation)
+### UI contract (MUST)
+- UI must not read STAC directly from object storage unless explicitly governed.
+- UI consumes catalog views through APIs that:
+  - resolve access rules,
+  - apply redaction/masking rules,
+  - provide provenance references.
 
-When STAC represents derived narrative artifacts:
+### Recommended API-facing fields derived from STAC (SHOULD)
+- `collection_id`
+- `item_id`
+- `updated_at` (from STAC properties or catalog writer metadata)
+- `checksum_sha256` (where policy requires)
+- `prov_ref` (link to PROV bundle)
+- `qa_summary` (non-sensitive)
 
-- Ensure the Item includes provenance links (PROV) back to original sources.
-- Keep versions explicit so Focus Mode can “lock” to a historical state for reproducibility.
+---
 
 ## 🧪 Validation & CI/CD
 
-Validation is mandatory before catalog publication:
+### Validation checklist (recommended)
+1. **Schema validity**
+   - Collection and Item conform to STAC 1.0 core (and any approved extensions).
+2. **Item/Collection integrity**
+   - Item `collection` matches an existing Collection ID.
+3. **Link integrity**
+   - `href` values resolve in the intended environment (API resolvers or absolute URLs).
+4. **Extent coherence**
+   - Item bbox consistent with geometry.
+   - Collection extent consistent with Items (policy-defined tolerance).
+5. **Asset sanity**
+   - Assets have `href`, `type`, and reasonable roles.
+   - Checksums present when required.
+6. **Governance gates**
+   - License, access constraints, sovereignty requirements are reflected and enforced.
 
-- **Schema checks**: STAC JSON schema compliance (Item/Collection/Catalog).
-- **Required fields**: at minimum `id`, `geometry`, and `datetime` for Items.
-- **Link integrity**: `self`, `parent`, `collection`, `root`, and asset `href` targets resolve.
-- **Versioning integrity**: predecessor/successor relationships are acyclic and coherent.
+### CI outputs to persist (recommended)
+- `mcp/runs/catalog/<run-id>/stac_validation.json`
+- `mcp/runs/catalog/<run-id>/link_check.json`
+- `mcp/runs/catalog/<run-id>/extent_check.json`
+- `mcp/runs/catalog/<run-id>/summary.md`
 
-Recommended artifacts:
-
-- Store validation outputs under `data/reports/` (e.g., `data/reports/stac-validation/`).
-- Pin validator versions in CI to keep results reproducible.
-
-## 🗺️ Diagrams
-
-### KFM catalog flow
-
-~~~mermaid
-flowchart LR
-  A["Raw sources\\ndata/raw"] --> B["ETL / normalization\\ndata/processed"]
-  B --> C["STAC metadata\\ndata/stac"]
-  B --> D["DCAT metadata\\ndocs/data or data catalogs"]
-  B --> E["PROV lineage\\ncatalog + graph"]
-  C --> F["Graph ingest\\nNeo4j"]
-  D --> F
-  E --> F
-  F --> G["APIs"]
-  G --> H["Web UI\\nReact + MapLibre"]
-  G --> I["Focus Mode\\nStory Nodes"]
-~~~
-
-### Versioning flow
-
-~~~mermaid
-flowchart TB
-  V1["Item v1"] -->|successor| V2["Item v2"]
-  V2 -->|successor| V3["Item v3"]
-  V2 -->|derived from| S["Source asset"]
-~~~
+---
 
 ## ⚖ FAIR+CARE & Governance
 
-- Treat catalog metadata as governed: if you change identifiers, licensing, or provenance semantics, it may require review under governance processes.
-- If an asset or location is sensitive (cultural heritage sites, vulnerable resources, etc.), avoid publishing precise coordinates and follow the Indigenous Data Protection policy.
-- Ensure license and attribution are present and consistent across STAC (where expressed), DCAT, and downstream graph/API representations.
-- Changes to **license terms**, **security policy**, or **sovereignty handling** should be treated as governance-reviewed edits (not AI-autopatched changes).
+- **FAIR**
+  - Findable: stable IDs and catalogs
+  - Accessible: access constraints explicit; APIs enforce them
+  - Interoperable: STAC/DCAT/PROV mappings documented
+  - Reusable: provenance and QA links available
+
+- **CARE / sovereignty**
+  - Ensure restricted datasets are redacted appropriately in catalog exposure.
+  - Avoid exposing sensitive coordinates or identifiers via public STAC fields.
+
+- **Security**
+  - No secrets in `href` or embedded metadata.
+  - Link resolution must not leak internal topology.
+
+---
 
 ## 🕰️ Version History
 
-| Version | Date | Changes |
-|---|---:|---|
-| v0.1.0 | 2025-12-16 | Initial STAC pattern README (front matter + structure, alignment, validation, diagrams). |
+| Version | Date | Summary | Author |
+|---|---:|---|---|
+| v12.0.0-draft | 2025-12-20 | Created STAC authoring/integrity pattern and validation gates; aligned to Universal v12 formatting | <name/handle> |
 
 ---
 
 <div align="center">
 
-[📘 Docs Root](../../README.md) ·
-[📂 Standards Index](../../standards/README.md) ·
-[🏛️ Governance Charter](../../standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+**Navigation**  
+[⬅️ Patterns Index](../README.md) ·
+[🔔 Change Detection](../change-detection/README.md) ·
+[✅ Idempotent Handler](../change-detection/idempotent-handler/README.md)
+
+© 2025 Kansas Frontier Matrix — CC‑BY‑4.0
 
 </div>
