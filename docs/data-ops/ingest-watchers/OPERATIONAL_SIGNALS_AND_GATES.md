@@ -3,6 +3,7 @@ title: "🛰️ KFM — Operational Signals, Trigger Rules, QC Gates, and Proven
 path: "docs/data-ops/ingest-watchers/OPERATIONAL_SIGNALS_AND_GATES.md"
 version: "v11.2.6"
 last_updated: "2025-12-20"
+
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · Data-Ops & FAIR+CARE Council"
@@ -12,18 +13,168 @@ doc_kind: "Standard"
 header_profile: "standard"
 footer_profile: "standard"
 intent: "kfm-ingest-watchers-operational-signals"
+
 license: "CC-BY-4.0"
-mcp_version: "MCP-DL v6.3"
+
 markdown_protocol_version: "KFM-MDP v11.2.6"
+mcp_version: "MCP-DL v6.3"
 ontology_protocol_version: "KFM-ONTO v4.1.0"
 pipeline_contract_version: "KFM-PPC v11.0.0"
 stac_profile: "KFM-STAC v1.0"
 dcat_profile: "KFM-DCAT v1.0"
 prov_profile: "KFM-PROV v1.0"
 telemetry_schema: "KFM-TEL v1.2"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:data-ops:ingest-watchers:operational-signals-and-gates:v11.2.6"
+semantic_document_id: "kfm-ingest-watchers-operational-signals-v11.2.6"
+event_source_id: "ledger:kfm:doc:data-ops:ingest-watchers:operational-signals-and-gates:v11.2.6"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
 # 🛰️ KFM — Operational Signals, Trigger Rules, QC Gates, and Provenance Attachments for Ingest Watchers
+
+## 📘 Overview
+
+### Purpose
+This standard defines **what an ingest watcher should observe**, **how it should decide**, and **what it must attach** so every data acceptance/rejection/quarantine event is measurable (telemetry), enforceable (QC gates + contracts), explainable (signals + rules), and reproducible (PROV lineage + immutable artifacts).
+
+### Scope
+
+| In Scope | Out of Scope |
+|---|---|
+| Signal taxonomy, gate stack, trigger rules, reason codes, provenance bundle requirements | Domain-specific scientific methods beyond “plausibility/validity bounds” (document those in domain standards) |
+| Deterministic replay expectations and artifact routing | Provider-specific credentials/secrets; runtime infrastructure implementation details |
+| STAC/DCAT/PROV + telemetry expectations for watcher decisions | UI rendering rules beyond provenance-linked requirements |
+
+### Audience
+- Primary: Data-Ops engineers, pipeline maintainers, ingestion/validation developers
+- Secondary: Governance reviewers (FAIR+CARE), security reviewers (as applicable), dataset owners
+
+### Definitions (link to glossary)
+- Glossary: `docs/glossary.md` (if present in repo)
+- Core terms used here (normative): **Signal**, **Gate**, **Trigger**, **Outcome**, **Reason Code** (defined below in the Operational Specification)
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This doc | `docs/data-ops/ingest-watchers/OPERATIONAL_SIGNALS_AND_GATES.md` | Data-Ops | Canonical watcher rules + attachments |
+| PROV bundle (per run) | `prov/run.jsonld` + `prov/summary.json` | Watcher | Minimum viable lineage |
+| Validation artifacts | `quality/expectations.json`, `quality/validation_result.json`, `quality/metrics.json` | Watcher | Gate evidence |
+| Catalog artifacts | STAC Items/Collections + DCAT Dataset/Distribution updates | Catalog stage | Publish-only unless policy says otherwise |
+| Telemetry | KFM-TEL signals + logs/traces | Watcher | Gate decisions + reason codes |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + `path` matches filesystem
+- [ ] Operational Specification preserved (signals, gates, triggers, provenance attachments, reason codes)
+- [ ] Determinism expectations stated (idempotency key + replay)
+- [ ] STAC/DCAT/PROV + telemetry obligations specified
+- [ ] Validation & CI steps listed
+
+---
+
+## 🗂️ Directory Layout
+
+### This document
+- `docs/data-ops/ingest-watchers/OPERATIONAL_SIGNALS_AND_GATES.md`
+
+### Related repository paths (by KFM pipeline stage)
+
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed outputs by domain |
+| Catalogs | `data/stac/` · `data/catalog/dcat/` | STAC + DCAT outputs |
+| Provenance | `data/prov/` | PROV bundles (run-level + aggregates) |
+| Pipelines | `src/pipelines/` | ETL + catalog build |
+| Graph | `src/graph/` | Graph build/migrations (API boundary preserved) |
+| APIs | `src/server/` | Contracted access layer |
+| Telemetry | `docs/telemetry/` · `schemas/telemetry/` | Observability contracts + schemas |
+
+### Expected file tree for this sub-area
+~~~text
+📁 docs/
+└── 📁 data-ops/
+    └── 📁 ingest-watchers/
+        └── 📄 OPERATIONAL_SIGNALS_AND_GATES.md
+~~~
+
+---
+
+## 🧭 Context
+
+### Background
+KFM’s canonical pipeline ordering is preserved:
+ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode.
+
+“Ingest watchers” live in the control-plane around ETL/cataloging: they detect upstream change/arrival, normalize/fetch, evaluate signals and gates, and then route to publish/quarantine while emitting provenance and telemetry.
+
+### Assumptions
+- Watchers run as a lightweight loop or event-driven function.
+- Inputs may be late, revised, silently backfilled, or schema-drifting.
+- Determinism is required: the same inputs/config produce the same outputs.
+
+### Constraints / invariants
+- Frontend consumes data via APIs (no direct graph dependency).
+- Publish is only allowed after passing required QC gates and producing a provenance bundle.
+- Sensitive location inference is prohibited; watchers must not “enhance” restricted location detail.
+
+---
+
+## 🗺️ Diagrams
+
+### Watcher decision flow
+~~~mermaid
+flowchart LR
+  T[Trigger: poll/event/hybrid] --> F[Fetch + normalize]
+  F --> S[Measure signals]
+  S --> G[Evaluate QC gates 0..7]
+  G -->|PASS| P[Publish processed + catalogs]
+  G -->|HOLD| R[Retry loop]
+  G -->|SOFT FAIL| Q[Quarantine + diagnostics]
+  G -->|DROP| D[Ignore]
+  P --> A[Emit PROV + telemetry]
+  Q --> A
+  R --> A
+  D --> A
+~~~
+
+### Catalog + provenance attachment expectations
+~~~mermaid
+flowchart LR
+  Raw[Raw artifacts] --> Act[Watcher activity: fetch/parse/validate]
+  Act --> Proc[Processed artifacts]
+  Act --> Rep[Validation reports]
+  Act --> Prov[PROV bundle]
+  Proc --> Stac[STAC Item/Collection updates]
+  Proc --> Dcat[DCAT Dataset/Distribution updates]
+  Prov --> Audit[Audit/telemetry signals]
+  Rep --> Audit
+~~~
+
+---
+
+## 📎 Operational Specification (Normative)
+
+> The sections below are normative for ingest watcher behavior and MUST be implemented or explicitly waived by a governed domain override.
 
 ## 🎯 Purpose
 
@@ -502,9 +653,57 @@ Gates:
 
 ---
 
+## 🧪 Validation & CI/CD (Project Gates)
+
+### Validation steps
+- [ ] Markdown protocol validation
+- [ ] Schema validation (STAC/DCAT/PROV) for publish artifacts
+- [ ] Gate decision + reason codes recorded for each run
+- [ ] PROV bundle emitted for each run attempt
+- [ ] Telemetry emitted with gate outcomes and error classes
+
+### Reproduction (deterministic replay expectations)
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) validate schemas (stac/dcat/prov)
+# 2) run watcher unit tests
+# 3) run doc lint
+~~~
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- FAIR+CARE council review: quarterly (per `review_cycle`)
+- Security council review: as applicable (new sensitive sources, new endpoints, new redaction rules)
+- Historian/editor review: as applicable (when watchers affect narrative-facing evidence products)
+
+### CARE / sovereignty considerations
+- No inference of sensitive locations.
+- Apply generalization/redaction rules where domain policies require it.
+
+### AI usage constraints
+- AI transforms are limited to the declared `ai_transform_permissions`.
+- Prohibited: generating new policy and inferring sensitive locations.
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v11.2.6 | 2025-12-20 | Standardized formatting to v12 Universal Doc layout; operational content preserved | TBD |
+
+---
+
 ## 🔗 Footer
 
 - 🔙 Back to Index: `docs/README.md`
 - 🧱 Data-Ops: `docs/data-ops/README.md`
 - 🛡️ Governance Charter: `docs/governance/README.md`
 ---
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
