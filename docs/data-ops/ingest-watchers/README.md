@@ -341,3 +341,17 @@ For an “ingest watcher” subsystem to be considered production-ready in KFM, 
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v0.1.0 | 2025-12-20 | Initial README scaffold for ingest watchers | TBD |
+
+---
+
+## 🔗 Footer
+
+- ⬅️ Back to Docs Index: `docs/README.md`
+- 🧰 Back to DataOps: `docs/data-ops/README.md`
+- 🧭 Master Guide (v12): `docs/MASTER_GUIDE_v12.md`
+
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+
