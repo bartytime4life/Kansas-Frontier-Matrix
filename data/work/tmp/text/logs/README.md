@@ -1,183 +1,241 @@
 ---
-title: "🧾 Kansas Frontier Matrix — Text TMP Logs (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM — data/work/tmp/text/logs — README"
 path: "data/work/tmp/text/logs/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Continuous / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v10.0.0/manifest.zip"
-data_contract_ref: "../../../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/work-text-tmp-logs-v10.json"
-governance_ref: "../../../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "Internal Governance Data"
+version: "v1.0.0"
+last_updated: "2025-12-20"
+status: "active"
+doc_kind: "README"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:data:work:tmp:text:logs:readme:v1.0.0"
+semantic_document_id: "kfm-data-work-tmp-text-logs-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:work:tmp:text:logs:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧾 Kansas Frontier Matrix — **Text TMP Logs**
-`data/work/tmp/text/logs/README.md`
-
-**Purpose:**  
-FAIR+CARE-certified centralized logging repository for **OCR** and **NLP** pipelines in the Kansas Frontier Matrix (KFM).  
-Captures traceable records of text extraction, tokenization, explainability, checksum lineage, and governance synchronization — aligned with **MCP-DL v6.3** and **ISO 19115**.
-
-[![Docs · MCP-DL v6.3](https://img.shields.io/badge/Docs-MCP--DL%20v6.3-blue)](../../../../../docs/architecture/README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Text%20Logs%20Certified-gold)](../../../../../docs/standards/faircare-validation.md)
-[![ISO 19115](https://img.shields.io/badge/ISO-19115%20Aligned-green)]()
-[![License: Internal Governance](https://img.shields.io/badge/License-Internal%20Governance-grey)](../../../../../LICENSE)
-
-</div>
-
----
+# data/work/tmp/text/logs
 
 ## 📘 Overview
 
-The **Text TMP Logs Directory** documents every OCR and NLP process executed within the temporary text workspace.  
-Each run emits machine-readable logs covering recognition quality, tokenization performance, **SHA-256** integrity, **FAIR+CARE** outcomes, and governance synchronization. Telemetry (energy/carbon) is captured for sustainability auditing.
+### Purpose
+This directory stores **temporary, non-canonical logs** produced while running **text-oriented pipeline steps** (e.g., text extraction, parsing, chunking, entity detection, validation checks) during local development or ad-hoc troubleshooting.
 
----
+These logs are **debug artifacts** and are:
+- safe to delete,
+- not considered authoritative run records,
+- not intended for long-term retention or cataloging.
+
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Temporary debug logs for text pipelines | Official run logs for repeatable ETL runs (use `data/work/logs/`) |
+| Local validation traces and warnings | Any dataset outputs intended for `data/processed/` or `data/stac/` |
+| Small, human-readable diagnostics | Secrets, credentials, or raw sensitive text dumps |
+
+### Audience
+- Primary: pipeline developers, data engineers, QA reviewers
+- Secondary: maintainers performing incident/debug review
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` *(create if missing)*
+- Terms used in this doc: ETL, validation run, redaction, provenance, PII
+
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Temp text logs | `data/work/tmp/text/logs/` | ETL | Non-canonical debug output |
+| Validation runs | `data/work/tmp/text/validation/runs/` | ETL/QA | Structured validation artifacts per run |
+| Durable logs | `data/work/logs/` | ETL | Canonical run logging (preferred for retention) |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Directory purpose is unambiguous
+- [ ] Sensitivity guidance prevents accidental PII/secret retention
+- [ ] Clear handoff to durable locations is documented
 
 ## 🗂️ Directory Layout
 
-```plaintext
-data/work/tmp/text/logs/
-├── README.md                           # This file — Text TMP logging overview
-│
-├── ocr_run.log                         # OCR extractions, accuracy, runtime
-├── nlp_pipeline_run.log                # Tokenization/embedding/classification trace
-├── faircare_audit.log                  # FAIR+CARE ethics/accessibility audit trace
-├── governance_sync.log                 # Provenance and checksum ledger sync
-└── metadata.json                       # Log session provenance, checksums, telemetry refs
-```
+### This document
+- `path`: `data/work/tmp/text/logs/README.md`
 
----
-
-## ⚙️ Logging Workflow
-
-```mermaid
-flowchart TD
-    A["OCR and NLP Pipeline Execution"] --> B["Process Runtime and Quality Metrics Logging"]
-    B --> C["Checksum and FAIR CARE Compliance Tracking"]
-    C --> D["Governance Ledger Synchronization"]
-    D --> E["Archival to Provenance Records"]
-```
-
-### Workflow Description
-1. **OCR Logging** — Record recognition accuracy, page structure, runtimes.  
-2. **NLP Tracking** — Log tokenization throughput, model outputs, and explainability results.  
-3. **Checksum Verification** — Validate integrity for all intermediate and final artifacts.  
-4. **Governance Sync** — Register ethics and validation reports to the provenance ledger.  
-5. **Archival** — Maintain immutable history for reproducibility and audit.
-
----
-
-## 🧩 Example Log Metadata Record
-
-```json
-{
-  "id": "text_tmp_log_v10.0.0_2025Q4",
-  "processes": ["ocr_extraction", "nlp_tokenization", "embeddings_generation"],
-  "records_processed": 3487,
-  "checksum_verified": true,
-  "faircare_status": "certified",
-  "ai_explainability_score": 0.996,
-  "bias_detected": false,
-  "telemetry": { "energy_wh": 7.9, "carbon_gco2e": 9.2 },
-  "governance_registered": true,
-  "validator": "@kfm-text-lab",
-  "created": "2025-11-10T00:00:00Z",
-  "governance_ref": "data/reports/audit/data_provenance_ledger.json"
-}
-```
-
----
-
-## 🧠 FAIR+CARE Governance Matrix
-
-| Principle | Implementation | Oversight |
+### Related repository paths
+| Area | Path | What lives here |
 |---|---|---|
-| **Findable** | Logs indexed by process type, checksum lineage, and cycle | @kfm-data |
-| **Accessible** | Open text/JSON artifacts available for Council review | @kfm-accessibility |
-| **Interoperable** | Logging schemas align with FAIR+CARE and MCP-DL | @kfm-architecture |
-| **Reusable** | Provenance tracking supports audit-ready reproducibility | @kfm-design |
-| **Collective Benefit** | Ensures ethical handling of cultural and historical texts | @faircare-council |
-| **Authority to Control** | Council certifies ethics and governance synchronization | @kfm-governance |
-| **Responsibility** | Validators maintain explainability and checksum accuracy | @kfm-security |
-| **Ethics** | Bias and interpretability audits safeguard inclusive outputs | @kfm-ethics |
+| Work root | `data/work/` | Work-in-progress artifacts (non-authoritative) |
+| Temp root | `data/work/tmp/` | Safe-to-delete transient artifacts |
+| Text temp root | `data/work/tmp/text/` | Transient text extraction + validation artifacts |
+| Text validation | `data/work/tmp/text/validation/` | Validation configs + intermediate checks |
+| Validation runs | `data/work/tmp/text/validation/runs/` | Per-run structured outputs |
+| Durable logs | `data/work/logs/` | Canonical, retained run logs |
 
-**Audit records:**  
-`data/reports/fair/data_care_assessment.json` · `data/reports/audit/data_provenance_ledger.json`
+### Expected file tree for this sub-area
+~~~text
+📁 data/
+└── 📁 work/
+    └── 📁 tmp/
+        └── 📁 text/
+            └── 📁 logs/
+                ├── 📄 README.md
+                ├── 📄 .gitkeep                (optional)
+                ├── 📄 <run_or_session>.log    (optional)
+                ├── 📄 <run_or_session>.jsonl  (optional)
+                └── 📁 <YYYY-MM-DD>/           (optional date partition)
+                    └── 📄 <tool>__<run>.log
+~~~
 
----
+## 🧭 Context
 
-## ⚙️ Key Log Artifacts
+### Background
+Text pipelines often require iterative debugging (parser errors, OCR anomalies, encoding issues, chunk boundary checks, entity extraction misses). Keeping these diagnostics in a predictable temporary location reduces clutter elsewhere and avoids mixing debug artifacts with canonical outputs.
 
-| File | Description | Format |
+### Assumptions
+- Artifacts in `data/work/tmp/` are **transient** and may be removed without breaking reproducibility.
+- Authoritative outputs flow through the canonical lifecycle:
+  `data/raw/ → data/work/ → data/processed/ → data/stac/` (with DCAT/PROV as applicable).
+
+### Constraints / invariants
+- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode ordering is preserved.
+- Frontend must not read from `data/work/tmp/` directly; tmp content is not a contract surface.
+
+### Open questions
+| Question | Owner | Target date |
 |---|---|---|
-| `ocr_run.log` | OCR runtime and recognition accuracy summary | Text |
-| `nlp_pipeline_run.log` | NLP pipeline performance and outputs | Text |
-| `faircare_audit.log` | FAIR+CARE validation and ethics trace | Text |
-| `governance_sync.log` | Provenance ledger synchronization report | Text |
-| `metadata.json` | Checksums, signatures, telemetry, and lineage refs | JSON |
+| Should we standardize a JSONL log schema for text steps? | TBD | TBD |
+| What is the preferred retention window for tmp logs (days)? | TBD | TBD |
 
-**Automation:** `text_log_sync.yml`
+### Future extensions
+- Add a structured log schema under `schemas/telemetry/` if/when tmp logs become part of repeatable diagnostics.
+- Provide a small helper script under `tools/` to purge tmp logs safely.
 
----
+## 🗺️ Diagrams
 
-## ⚖️ Retention & Provenance Policy
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[Text ETL step: extract/parse/chunk] --> B[Temp debug logs]
+  B --> C[data/work/tmp/text/logs/]
+  A --> D[Canonical outputs]
+  D --> E[data/processed/]
+  E --> F[data/stac/]
+~~~
 
-| Log Type | Retention Duration | Policy |
-|---|---:|---|
-| OCR Logs | 90 Days | Archived for validation reproducibility |
-| NLP Logs | 180 Days | Retained for explainability review |
-| FAIR+CARE Logs | 365 Days | Maintained for governance re-certification |
-| Metadata | Permanent | Immutable and blockchain-secured provenance |
+## 📦 Data & Metadata
 
-Cleanup handled by `text_log_cleanup.yml`.
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Text extraction runtime context | env/config | local run / pipeline runner | basic sanity checks |
+| Source identifiers | string | derived from ETL input | must not expose secrets |
 
----
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Debug log (human-readable) | `.log` / `.txt` | `data/work/tmp/text/logs/` | none (ad hoc) |
+| Debug log (structured) | `.jsonl` | `data/work/tmp/text/logs/` | none *(optional; avoid drift)* |
 
-## 🌱 Sustainability & Telemetry
+### Sensitivity & redaction
+Treat tmp logs as **potentially sensitive by default**:
+- Do **not** store credentials, tokens, cookies, API keys, or connection strings.
+- Avoid dumping full raw text if it may contain PII or restricted content.
+- Prefer logging **hashes/IDs**, counts, and short excerpts that are already public or have been redacted.
 
-| Metric | Value | Verified By |
-|---|---:|---|
-| Energy Use (per OCR/NLP run) | 7.9 Wh | @kfm-sustainability |
-| Carbon Output | 9.2 gCO₂e | @kfm-security |
-| Renewable Power | 100% (RE100 Verified) | @kfm-infrastructure |
-| FAIR+CARE Compliance | 100% | @faircare-council |
+### Quality signals
+- Logs should include enough context to reproduce: step name, tool name, timestamp, and a run/session identifier.
+- If structured logs are used, keep one JSON object per line to support grep/jq-style workflows.
 
-**Telemetry:** `../../../../../releases/v10.0.0/focus-telemetry.json`
+## 🌐 STAC, DCAT & PROV Alignment
 
----
+### STAC
+- No STAC Items should reference tmp logs as durable assets.
+- If a log must be preserved as evidence for an analysis artifact, copy it to an approved retained location and catalog it there.
 
-## 🧾 Internal Use Citation
+### DCAT
+- Tmp logs are not datasets and should not be exposed as DCAT distributions.
 
-```text
-Kansas Frontier Matrix (2025). Text TMP Logs (v10.0.0).
-FAIR+CARE-compliant log workspace for OCR and NLP pipelines, ensuring provenance tracking, checksum lineage, and ethical transparency under MCP-DL v6.3.
-```
+### PROV-O
+- Tmp logs may reference run identifiers, but they are not a substitute for canonical provenance bundles under `data/prov/`.
 
----
+### Versioning
+- This directory has no versioning semantics. If a diagnostic artifact must be versioned, treat it as a retained run artifact elsewhere.
+
+## 🧱 Architecture
+
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| ETL text steps | extract/parse/normalize text | configs + run context |
+| Tmp log sink | capture debug output | filesystem writes |
+| Durable logging | retained run logs | `data/work/logs/` |
+
+### Interfaces / contracts
+- This directory is **not** an API surface and should not be depended upon by services or UI components.
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+- It does not. Tmp logs should never be directly consumed in Focus Mode narratives.
+
+### Provenance-linked narrative rule
+- Any narrative/evidence used in Story Nodes must come from cataloged assets (STAC/DCAT/PROV), not from tmp logs.
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Ensure no secrets/credentials are written into tmp logs
+- [ ] Ensure tmp logs are not required for deterministic reproduction
+- [ ] Keep tmp logs out of PRs unless explicitly requested for debugging
+
+### Reproduction
+~~~bash
+# Placeholder examples; replace with repo-specific commands.
+# run text extraction step and write debug logs here
+# validate outputs under data/work/tmp/text/validation/
+~~~
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+- Changes to this README generally require maintainer review only.
+- If introducing retained logging schemas or publishing diagnostics, governance review may be required.
+
+### CARE / sovereignty considerations
+- Do not include restricted locations or culturally sensitive details in tmp logs.
+- If unavoidable during debugging, keep artifacts local and purge promptly.
+
+### AI usage constraints
+- No inference of sensitive locations from log content.
+- No auto-publishing of tmp artifacts.
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
-|---|---|---|
-| v10.0.0 | 2025-11-10 | Upgraded to v10: telemetry schema v10, governance links refreshed, sustainability fields added. |
-| v9.6.0 | 2025-11-03 | Introduced AI explainability tracking and checksum verification integration. |
-| v9.5.0 | 2025-11-02 | Improved FAIR+CARE ethics synchronization and governance registry. |
-
----
-
-<div align="center">
-
-**Kansas Frontier Matrix**  
-*Text Processing × FAIR+CARE Ethics × Provenance Assurance*  
-© 2025 Kansas Frontier Matrix — Internal Governance Data · Master Coder Protocol v6.3 · **Diamond⁹ Ω / Crown∞Ω** Ultimate Certified  
-
-[Back to Text TMP](../README.md) · [Docs Portal](../../../../../docs/) · [Governance Charter](../../../../../docs/standards/governance/DATA-GOVERNANCE.md)
-
-</div>
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-20 | Initial README for tmp text logs | TBD |
