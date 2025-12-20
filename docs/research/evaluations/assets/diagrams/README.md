@@ -140,9 +140,9 @@ Storing these alongside evaluation docs makes review and maintenance easier.
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  A[Diagram source files] --> B[Exports rendered (SVG/PNG/PDF)]
-  B --> C[Evaluation docs reference exports]
-  C --> D[Review + CI link checks]
+  A["Diagram source files"] --> B["Exports rendered (SVG / PNG / PDF)"]
+  B --> C["Evaluation docs reference exports"]
+  C --> D["Review + CI link checks"]
 ~~~
 
 ### Optional: sequence diagram
