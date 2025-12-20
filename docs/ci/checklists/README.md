@@ -147,15 +147,20 @@ KFM spans multiple subsystems (ETL, catalogs, graph, APIs, UI, story artifacts).
 ### CI + checklist intent (human + automated gates)
 ~~~mermaid
 flowchart LR
-  A[Change proposed (PR)] --> B[Automated CI gates]
-  A --> C[Human checklist]
-  B --> D{All pass?}
-  C --> E{All done?}
-  D -->|Yes| F[Review + approval]
+  A["Change proposed - PR"] --> B["Automated CI gates"]
+  A --> C["Human checklist"]
+
+  B --> D{CI passes}
+  C --> E{Checklist done}
+
+  D -->|Yes| F["Review and approval"]
   E -->|Yes| F
-  F --> G[Merge / release]
-  D -->|No| H[Fix issues]
+
+  F --> G["Merge and release"]
+
+  D -->|No| H["Fix issues"]
   E -->|No| H
+
   H --> A
 ~~~
 
