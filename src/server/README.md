@@ -151,7 +151,7 @@ flowchart LR
 
 sequenceDiagram
   participant UI
-  participant API as "API Boundary<br/>src/server"
+  participant API as "API Boundary - src/server"
   participant Graph
 
   UI->>API: Focus query(entity_id)
