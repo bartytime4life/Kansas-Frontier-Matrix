@@ -235,4 +235,241 @@ jobs:
             [ -z "$f" ] && continue
             echo "- ✅ \`graphql parse\` — \`$f\`" >> "$GITHUB_STEP_SUMMARY"
           done <<< "$GRAPHQL_FILES"
+~~~~~~yaml
+name: CI — API Contract Tests
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/ci__api_contract_tests.yml"
+      - ".github/workflows/README.md"
+      - "src/server/**"
+      - "docs/api/**"
+  push:
+    paths:
+      - ".github/workflows/ci__api_contract_tests.yml"
+      - ".github/workflows/README.md"
+      - "src/server/**"
+      - "docs/api/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-api-contract-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-contract-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect contract artifacts
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          ROOTS=()
+          for d in "src/server/contracts" "src/server" "docs/api"; do
+            if [ -d "$d" ]; then
+              ROOTS+=("$d")
+            fi
+          done
+
+          if [ "${#ROOTS[@]}" -eq 0 ]; then
+            echo "has_contract_roots=false" >> "$GITHUB_OUTPUT"
+            echo "has_openapi=false" >> "$GITHUB_OUTPUT"
+            echo "has_graphql=false" >> "$GITHUB_OUTPUT"
+
+            echo "search_roots<<EOF" >> "$GITHUB_OUTPUT"
+            echo "" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+
+            echo "openapi_files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+
+            echo "graphql_files<<EOF" >> "$GITHUB_OUTPUT"
+            echo "" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+
+            echo "No contract roots found (expected one of: src/server/contracts, src/server, docs/api). Skipping."
+            exit 0
+          fi
+
+          echo "has_contract_roots=true" >> "$GITHUB_OUTPUT"
+
+          echo "search_roots<<EOF" >> "$GITHUB_OUTPUT"
+          printf "%s\n" "${ROOTS[@]}" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+          # Collect YAML/JSON candidates (exclude common build/deps dirs).
+          CANDIDATE_DOCS=""
+          for r in "${ROOTS[@]}"; do
+            CANDIDATE_DOCS="${CANDIDATE_DOCS}$(find "$r" -type f \( -name '*.yml' -o -name '*.yaml' -o -name '*.json' \) \
+              -not -path '*/node_modules/*' \
+              -not -path '*/dist/*' \
+              -not -path '*/build/*' \
+              -not -path '*/.venv/*' \
+              2>/dev/null || true)"$'\n'
+          done
+          CANDIDATE_DOCS="$(echo "$CANDIDATE_DOCS" | sed '/^[[:space:]]*$/d' | sort -u)"
+
+          # Identify OpenAPI/Swagger specs by content (openapi/swagger root key).
+          OPENAPI_FILES=""
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            if grep -qE '^[[:space:]]*(openapi|swagger)[[:space:]]*:' "$f" 2>/dev/null; then
+              OPENAPI_FILES="${OPENAPI_FILES}${f}"$'\n'
+            elif grep -qE '"(openapi|swagger)"[[:space:]]*:' "$f" 2>/dev/null; then
+              OPENAPI_FILES="${OPENAPI_FILES}${f}"$'\n'
+            fi
+          done <<< "$CANDIDATE_DOCS"
+
+          # Identify GraphQL files by extension.
+          GRAPHQL_FILES=""
+          for r in "${ROOTS[@]}"; do
+            GRAPHQL_FILES="${GRAPHQL_FILES}$(find "$r" -type f \( -name '*.graphql' -o -name '*.gql' -o -name '*.graphqls' \) \
+              -not -path '*/node_modules/*' \
+              -not -path '*/dist/*' \
+              -not -path '*/build/*' \
+              -not -path '*/.venv/*' \
+              2>/dev/null || true)"$'\n'
+          done
+          GRAPHQL_FILES="$(echo "$GRAPHQL_FILES" | sed '/^[[:space:]]*$/d' | sort -u)"
+
+          if [ -n "${OPENAPI_FILES//[[:space:]]/}" ]; then
+            echo "has_openapi=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_openapi=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          if [ -n "${GRAPHQL_FILES//[[:space:]]/}" ]; then
+            echo "has_graphql=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_graphql=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "openapi_files<<EOF" >> "$GITHUB_OUTPUT"
+          printf "%s" "$OPENAPI_FILES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+          echo "graphql_files<<EOF" >> "$GITHUB_OUTPUT"
+          printf "%s" "$GRAPHQL_FILES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Summary — detection
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          echo "## API contract tests — detection" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Contract roots present:** \`${{ steps.detect.outputs.has_contract_roots }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "**OpenAPI detected:** \`${{ steps.detect.outputs.has_openapi }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "**GraphQL detected:** \`${{ steps.detect.outputs.has_graphql }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Search roots:**" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          while IFS= read -r r; do
+            [ -z "$r" ] && continue
+            echo "- \`$r\`" >> "$GITHUB_STEP_SUMMARY"
+          done <<< "${{ steps.detect.outputs.search_roots }}"
+
+      - name: Summary — skip (no contract roots)
+        if: ${{ steps.detect.outputs.has_contract_roots == 'false' }}
+        run: |
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "No contract roots found; skipping API contract tests." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Summary — skip (no OpenAPI/GraphQL files)
+        if: ${{ steps.detect.outputs.has_contract_roots == 'true' && steps.detect.outputs.has_openapi != 'true' && steps.detect.outputs.has_graphql != 'true' }}
+        run: |
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Contract roots exist, but no OpenAPI/Swagger or GraphQL files were detected; skipping." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set up Node
+        if: ${{ steps.detect.outputs.has_openapi == 'true' || steps.detect.outputs.has_graphql == 'true' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install contract tooling (pinned)
+        if: ${{ steps.detect.outputs.has_openapi == 'true' || steps.detect.outputs.has_graphql == 'true' }}
+        run: |
+          npm install -g @apidevtools/swagger-cli@4.0.4 graphql@16.8.1
+
+      - name: Validate OpenAPI / Swagger specs
+        if: ${{ steps.detect.outputs.has_openapi == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "## OpenAPI / Swagger validation" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          count=0
+          while IFS= read -r spec; do
+            [ -z "$spec" ] && continue
+            count=$((count+1))
+            swagger-cli validate "$spec"
+            echo "- ✅ \`swagger-cli validate\` — \`$spec\`" >> "$GITHUB_STEP_SUMMARY"
+          done <<< "${{ steps.detect.outputs.openapi_files }}"
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**OpenAPI files validated:** $count" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Validate GraphQL documents (parse)
+        if: ${{ steps.detect.outputs.has_graphql == 'true' }}
+        shell: bash
+        env:
+          GRAPHQL_FILES: ${{ steps.detect.outputs.graphql_files }}
+        run: |
+          set -euo pipefail
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "## GraphQL validation (parse)" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          node - <<'NODE'
+          const fs = require("fs");
+          const { parse } = require("graphql");
+
+          const files = (process.env.GRAPHQL_FILES || "")
+            .split("\n")
+            .map(s => s.trim())
+            .filter(Boolean);
+
+          if (files.length === 0) {
+            console.log("No GraphQL files provided to validator.");
+            process.exit(0);
+          }
+
+          let ok = 0;
+          for (const file of files) {
+            const content = fs.readFileSync(file, "utf8");
+            try {
+              parse(content);
+              ok += 1;
+              console.log(`OK: ${file}`);
+            } catch (err) {
+              console.error(`INVALID GraphQL: ${file}`);
+              console.error(err?.message || err);
+              process.exitCode = 1;
+            }
+          }
+
+          console.log(`GraphQL files validated: ${ok}`);
+          NODE
+
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            echo "- ✅ \`graphql parse\` — \`$f\`" >> "$GITHUB_STEP_SUMMARY"
+          done <<< "$GRAPHQL_FILES"
 ~~~
