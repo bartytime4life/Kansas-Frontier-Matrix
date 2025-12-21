@@ -140,7 +140,7 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ## 🗺️ Diagrams
 
 ### System / dataflow diagram
-~~~mermaid
+```mermaid
 flowchart LR
   A[ETL] --> B[STAC/DCAT/PROV Catalogs]
   B --> C[Neo4j Graph]
@@ -149,19 +149,16 @@ flowchart LR
   E --> F[Story Nodes]
   F --> G[Focus Mode]
 
-
-### Optional: sequence diagram
-~~~mermaid
 sequenceDiagram
   participant UI
-  participant API as API Boundary (src/server)
+  participant API as "API Boundary<br/>src/server"
   participant Graph
 
   UI->>API: Focus query(entity_id)
   API->>Graph: fetch subgraph + provenance refs (with redaction rules)
   Graph-->>API: context bundle (entities + evidence IDs)
   API-->>UI: contracted payload + citations + audit flags
-~~~
+
 
 ## 📦 Data & Metadata
 
