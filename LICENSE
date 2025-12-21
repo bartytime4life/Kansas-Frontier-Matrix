@@ -1,1 +1,21 @@
+~~~text
+📁 .
+└── 📄 LICENSE
+~~~
+
+--- FILE: LICENSE ---
+~~~text
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+The Kansas Frontier Matrix (KFM) project documentation and other non-code content in this
+repository are licensed under the Creative Commons Attribution 4.0 International License,
+unless otherwise noted.
+
+You may share (copy and redistribute) and adapt (remix, transform, and build upon) this
+material for any purpose, provided you give appropriate attribution and indicate if changes
+were made.
+
+Full license details:
+https://creativecommons.org/licenses/by/4.0/
+~~~
 
