@@ -1,385 +1,375 @@
 ---
-title: "⚙️ Kansas Frontier Matrix — AI Tools Config Profiles"
+title: "tools/ai/configs — AI Configuration Registry"
 path: "tools/ai/configs/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-21"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-15"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-status: "Active / Enforced"
-doc_kind: "Architecture"
-header_profile: "standard"
-footer_profile: "standard"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-doc_uuid: "urn:kfm:doc:tools-ai-configs-readme:v11.2.6"
-semantic_document_id: "kfm-doc-tools-ai-configs"
-event_source_id: "ledger:tools/ai/configs/README.md"
-immutability_status: "mutable-plan"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/tools-ai-governance-v4.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+doc_uuid: "urn:kfm:doc:tools:ai:configs:readme:v1.0.0"
+semantic_document_id: "kfm-tools-ai-configs-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:tools:ai:configs:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-fair_category: "F1-A1-I2-R3"
-care_label: "Public · Low-Risk"
-classification: "Public"
-jurisdiction: "United States · Kansas"
-sensitivity: "General"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-indigenous_data_flag: false
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-ai_training_allowed: false
-ai_training_guidance: "Governance configs and audit policy profiles MUST NOT be used as training data."
-
-machine_readable: true
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next AI-tools platform update"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# ⚙️ **KFM — AI Tools Config Profiles**
-`tools/ai/configs/README.md`
-
-**Purpose**  
-Define the **canonical configuration profile system** for `tools/ai/` governance tooling:  
-thresholds, actions, and policy constraints used by bias audits, explainability audits, drift monitoring, and AI telemetry emission.
-
-</div>
-
----
+# tools/ai/configs
 
 ## 📘 Overview
 
-### What lives in `tools/ai/configs/`
+### Purpose
 
-This directory contains **config profiles** used by `tools/ai/` audit runners and governance utilities to ensure:
+This directory contains **version-controlled configuration files** for AI/ML tooling that runs **offline as part of the KFM build pipeline** (e.g., text extraction, classification, embeddings, scoring). These configs make runs deterministic, replayable, and traceable (**config-as-code**).
 
-- determinism (same config → same decisions, given same inputs)
-- reproducibility (configs are versioned, reviewable, and hashable)
-- governance compliance (FAIR+CARE + sovereignty constraints are encoded and enforced)
-- CI safety (configs are schema-valid, contain no secrets, and are safe to load in automation)
+Configs here must preserve the KFM system invariant: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode** (no direct UI ↔ graph coupling).
 
-Configs here are treated as **policy-bearing artifacts**. They are not “just defaults”.
+### Scope
 
-### What configs MUST NOT contain (normative)
+| In Scope | Out of Scope |
+|---|---|
+| AI pipeline configs (YAML/JSON), prompt templates, model/pipeline profiles, redaction flags | Secrets/credentials, trained model binaries, run outputs, datasets, experiment logs |
 
-Configs MUST NOT include:
+### Audience
 
-- secrets (tokens, passwords, keys, access URLs with credentials)
-- PII (emails, phone numbers, addresses, SSNs, etc.)
-- precise protected-site coordinates or sensitive cultural site identifiers
-- raw data samples or record-level payloads
+- Primary: AI / data pipeline engineers; maintainers of `tools/ai/*`
+- Secondary: historians/curators reviewing AI-derived artifacts; API/UI developers consuming AI outputs indirectly via catalogs/graph
 
-If a threshold depends on sensitive context, encode that as **a label and a governance action** (e.g., “requires review”) rather than embedding sensitive details.
+### Definitions (link to glossary)
 
-### How configs are used
+- Link: `docs/glossary.md`
+- Terms used in this doc: config, run, profile, provenance, STAC, DCAT, PROV, Focus Mode
 
-Audit runners (examples):
+### Key artifacts (what this doc points to)
 
-- `tools/ai/bias_check.py`
-- `tools/ai/focus_audit.py`
-- `tools/ai/drift_monitor.py`
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| KFM Master Guide (pipeline invariants, CI gates) | `docs/MASTER_GUIDE_v12.md` | Maintainers | Source of pipeline ordering + “do not break” rules |
+| Governance (ethics/sovereignty) | `docs/governance/*` | Governance council | Redaction/generalization expectations |
+| AI run logs & experiment capsules | `mcp/runs/` and/or `mcp/experiments/` | AI team | Run outputs do **not** live under `tools/ai/configs/` |
+| Schemas for configs (if/when added) | `schemas/ai/configs/*` | Platform | **not confirmed in repo** — recommended future addition |
 
-…load a profile from this directory to determine:
+### Definition of done (for this document)
 
-- which metrics to compute
-- what thresholds apply for PASS/WARN/FAIL
-- what actions to recommend or enforce (block, review, quarantine, etc.)
-- what telemetry fields must be emitted
-
-The runner MUST record:
-
-- the config file path
-- a config hash (sha256 recommended)
-- the profile ID and version (from config metadata)
-
-### Profile types
-
-Profiles in this directory are typically one of:
-
-1. **Fairness / bias thresholds**  
-   What counts as PASS/WARN/FAIL for subgroup metrics (task-specific).
-
-2. **Explainability thresholds**  
-   What counts as “adequate explainability coverage”, evidence bundle completeness, and artifact validity.
-
-3. **Drift thresholds**  
-   What drift metrics are computed and what triggers warnings/blocks.
-
-4. **Telemetry policy**  
-   Minimum required telemetry fields and what collection method is allowed (safe defaults).
-
-5. **Governance actions policy**  
-   What happens on WARN/FAIL, escalation routing, and what is blocked automatically.
-
-Not every repo will have every profile type on day one, but the goal is to converge on a complete set before certification.
-
-### Profile selection and overrides
-
-Recommended override order (highest precedence last):
-
-1. Tool defaults (built-in safe baseline)
-2. `tools/ai/configs/*default*`
-3. Domain profile (e.g., hydrology / archives / remote-sensing)
-4. Environment profile (dev/staging/prod) **only when governance permits**
-5. Explicit CLI override (allowed only for authorized roles and must be logged)
-
-Normative rule: if a required profile is missing or invalid, the tool MUST fail closed (FAIL) rather than inventing behavior.
-
----
+- [ ] Front-matter complete + valid
+- [ ] All claims link to datasets / schemas / tickets / commits (as applicable)
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
-This is the **intended canonical layout**. Keep it accurate as files are added/removed.
+### This document
+
+- `path`: `tools/ai/configs/README.md` (must match front-matter)
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Tooling entrypoints | `tools/ai/` | CLI/scripts that consume configs (varies per tool) |
+| Data domains | `data/` | Raw/work/processed/stac outputs |
+| Documentation | `docs/` | Canonical governed docs |
+| Graph | `src/graph/` | Graph build + ontology bindings |
+| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Frontend | `web/` | React + map clients |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
+
+### Expected file tree for this sub-area
 
 ~~~text
 📁 tools/
-└── 🧠 ai/
+└── 📁 ai/
     └── 📁 configs/
-        ├── 📄 README.md                              # This file
-        │
-        ├── 🧾 fairness_thresholds.default.json        # Default fairness/bias thresholds (task-scoped)
-        ├── 🧾 explainability_thresholds.default.json  # Default XAI/evidence-bundle thresholds
-        ├── 🧾 drift_thresholds.default.json           # Default drift thresholds (data/output/concept)
-        ├── 🧾 telemetry_policy.default.json           # Minimum telemetry + safe collection policy
-        ├── 🧾 governance_actions.default.json         # PASS/WARN/FAIL actions + escalation routing
-        │
-        ├── 📁 domains/                                # Domain-specific overlays (optional; governed)
-        │   ├── 🧾 fairness.hydrology.json
-        │   ├── 🧾 fairness.remote_sensing.json
-        │   ├── 🧾 explainability.focus_mode.json
-        │   └── 🧾 drift.timeseries.json
-        │
-        └── 📁 environments/                           # Environment overlays (optional; strongly constrained)
-            ├── 🧾 dev.json
-            ├── 🧾 staging.json
-            └── 🧾 production.json
+        ├── 📄 README.md
+        ├── 📁 profiles/                # config overlays (dev/prod/local)
+        │   ├── 📄 default.yaml         # not confirmed in repo
+        │   └── 📄 local.example.yaml   # not confirmed in repo (copy → local.yaml, gitignored)
+        ├── 📁 pipelines/               # task-level configs (what to run)
+        │   ├── 📄 nlp_extract.yaml      # not confirmed in repo
+        │   └── 📄 embeddings.yaml       # not confirmed in repo
+        ├── 📁 models/                  # model selection + version pins
+        │   └── 📄 <model_id>.yaml       # not confirmed in repo
+        └── 📁 prompts/                 # prompt templates (if LLM-assisted extraction is used)
+            └── 📄 <prompt_id>.md        # not confirmed in repo
 ~~~
-
-Directory layout rules (normative):
-
-- Every JSON config file in this directory MUST include a `meta` block (see below).
-- Profiles MUST be small and readable; avoid giant monolithic configs.
-- Domain and environment overlays MUST NOT weaken governance requirements unless explicitly authorized and logged.
-- If `domains/` or `environments/` is not used, remove it from the tree (do not leave dead structure).
-
----
 
 ## 🧭 Context
 
-### Relationship to the model registry
+### Background
 
-Config profiles are referenced (directly or indirectly) by model registry entries (e.g., `tools/ai/ai_model_registry.json`) via:
+KFM’s design assumes heavy AI computations happen **offline** during pipeline runs, producing artifacts that are later surfaced through catalogs/graph/APIs rather than executed in the live web UI.
 
-- profile ID + version
-- or explicit config file path
+### Assumptions
 
-The registry SHOULD treat profile changes as governance-relevant and capture:
+- Config files are treated as code and versioned.
+- A given run should be reproducible from: (a) config file(s), (b) code commit, (c) dataset version references, and (d) environment spec.
 
-- when a model was certified under which profile version
-- what changed between profile versions (human-readable summary)
+### Config-as-code conventions (recommended)
 
-### Relationship to data contracts and catalogs
+> These are conventions intended to keep runs reproducible and auditable. If a stricter standard/schema exists elsewhere in the repo, that standard wins (**not confirmed in repo**).
 
-Profiles should not hard-code dataset specifics.
+**Naming + versioning**
 
-Instead, profiles should:
+- Prefer `kebab-case` filenames.
+- Include either:
+  - a semver in the filename (e.g., `nlp-extract.v1.2.0.yaml`), **or**
+  - a `version:` field in the config and keep the filename stable.
 
-- define behavior by task type and risk class
-- rely on dataset metadata (STAC/DCAT) for:
-  - spatial/temporal scope classification
-  - sensitivity labels
-  - stewardship and licensing constraints
-  - provenance lineage requirements
+**No secrets**
 
-### Governance constraints
+- Do **not** commit credentials, API keys, tokens, user identifiers, or sensitive coordinates.
+- Use environment variables or a secret manager. If you must include placeholders, use obvious stubs (e.g., `${LLM_API_KEY}`).
 
-This directory is governed by:
+**Provenance hooks**
 
-- `governance_ref`
-- `ethics_ref`
-- `sovereignty_policy`
+- Configs should make it easy for runners to emit PROV with: run ID, config ID, input dataset IDs, output artifact IDs.
 
-Practical implication:
+**Example config header (illustrative — not a schema)**
 
-- Profiles MUST support “requires review” pathways.
-- Profiles MUST support redaction-aware behavior (masking, suppression, safe summaries).
-- Profiles MUST not enable publication of restricted outputs through configuration tricks.
+~~~yaml
+config_id: "ai.nlp_extract.v1"
+version: "1.0.0"
+owner: "TBD"
+description: "Extract entities/events from source documents and emit evidence artifacts."
 
----
+inputs:
+  - dataset_id: "dcat:TBD"
+    selector: "data/work/TBD"
+
+outputs:
+  - dataset_id: "dcat:TBD"
+    path: "data/processed/TBD"
+
+model:
+  name: "TBD"
+  version: "TBD"     # pin exact version/hash
+
+runtime:
+  seed: 42
+  deterministic: true
+
+safety:
+  allow_sensitive: false
+  redaction_profile: "public"
+
+provenance:
+  prov_activity_type: "kfm:AiExtraction"
+  run_id: "<filled-at-runtime>"
+~~~
+
+### Constraints / invariants
+
+- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode is preserved.
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- No secrets in repo (use env vars / secret manager).
+
+### Open questions
+
+| Question | Owner | Target date |
+|---|---|---|
+| What is the canonical config format (YAML vs JSON) for AI tooling? | TBD | TBD |
+| Where is the config schema validated (CI step + schema location)? | TBD | TBD |
+| Are prompt templates governed like Story Nodes (citation requirements)? | TBD | TBD |
+
+### Future extensions
+
+- Add JSON Schema validation for configs under `schemas/ai/configs/` (**not confirmed in repo**).
+- Add a “config registry” index (machine-readable) to map config IDs → tasks → owners.
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram (AI configs in the KFM pipeline)
+
+~~~mermaid
+flowchart LR
+  A[tools/ai/configs/*] --> B[tools/ai/* scripts]
+  B --> C[data/processed/*]
+  C --> D[STAC/DCAT/PROV outputs]
+  D --> E[Neo4j Graph]
+  E --> F[API Layer]
+  F --> G[React/Map UI]
+  G --> H[Story Nodes]
+  H --> I[Focus Mode]
+~~~
+
+### Optional: sequence diagram (config → run → provenance)
+
+~~~mermaid
+sequenceDiagram
+  participant Runner as Pipeline Runner
+  participant Cfg as tools/ai/configs/*
+  participant Out as data/processed + catalogs
+  Runner->>Cfg: load config (config_id, version)
+  Runner->>Out: run task + write outputs
+  Runner->>Out: emit STAC/DCAT/PROV (includes run_id + config_id)
+~~~
+
+## 📦 Data & Metadata
+
+### Inputs
+
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| AI config | YAML/JSON | `tools/ai/configs/*` | YAML lint / JSON schema (if adopted) |
+| Input datasets | varied | `data/raw/` / `data/work/` | dataset-specific checks + catalog references |
+| Model artifacts | varied | model registry / DVC / external | hash/version pins |
+
+### Outputs
+
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| AI-derived features | GeoJSON/CSV/Parquet/etc. | `data/processed/` | dataset schema + validators |
+| Evidence artifacts | JSON/MD/assets | `mcp/runs/` and/or `data/reports/` | **not confirmed in repo** |
+| Catalog entries | JSON | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC 1.0 / DCAT 3 / PROV-O profiles |
+
+### Sensitivity & redaction
+
+- Configs may include flags to enable redaction/generalization in outputs.
+- Do not commit: API keys, tokens, user identifiers, sensitive location coordinates.
+
+### Quality signals
+
+- Deterministic runs: fixed seeds, pinned model versions, stable dataset references.
+- Provenance completeness: run ID + config ID + input dataset IDs appear in PROV.
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### Provenance requirements
+
+- `prov:wasDerivedFrom`: list source IDs
+- `prov:wasGeneratedBy`: pipeline activity/run ID
+- Confidence/uncertainty fields (if predictive content is included)
+
+### STAC
+
+If an AI job produces a spatial artifact (e.g., derived features, raster masks), the pipeline should:
+
+- write outputs under `data/processed/` and/or `data/stac/`
+- register them as STAC Items/Assets where applicable
+- include links between versions (predecessor/successor)
+
+### DCAT
+
+- Ensure derived datasets have a DCAT view (title/description/license/keywords at minimum).
+
+### PROV-O
+
+- Record a `prov:Activity` for each AI run (include run ID + config ID).
+- Link `prov:wasDerivedFrom` to input dataset IDs / STAC Item IDs.
+
+## 🧱 Architecture
+
+### Components
+
+| Component | Responsibility | Interface |
+|---|---|---|
+| AI configs | Define what to run + how | YAML/JSON files in this directory |
+| AI tooling | Execute extraction / inference | scripts under `tools/ai/` (varies) |
+| Pipelines | Orchestrate runs | `src/pipelines/` |
+| Catalogs | Publish machine-readable artifacts | STAC/DCAT/PROV outputs |
+| Graph | Connect artifacts to entities | via graph build + API layer |
+| UI / Focus | Render provenance-linked outputs | API calls only |
+
+### Extension points checklist
+
+- [ ] New task config added under `tools/ai/configs/pipelines/`
+- [ ] Output schema and catalog registration updated
+- [ ] PROV activity emission implemented
+- [ ] Graph mapping updated (if new entity types/relations)
+- [ ] API contract updated (if new UI-facing surface area)
+
+## 🧠 Story Node & Focus Mode Integration
+
+### Story Nodes as “machine-ingestible storytelling”
+
+- AI-derived outputs can be used to *assist* story node drafting, but Story Nodes must remain evidence-led and provenance-linked.
+
+### Focus Mode rule
+
+- Focus Mode only consumes provenance-linked content.
+- Any predictive content must be opt-in and carry uncertainty / confidence metadata.
 
 ## 🧪 Validation & CI/CD
 
-### Required config structure (recommended contract)
+### Minimum CI gates for “v12-ready” contributions
 
-Each config SHOULD be a JSON object with:
+- Markdown protocol validation
+- JSON schema validation (STAC/DCAT/telemetry)
+- Graph integrity tests
+- API contract tests (if changes affect API surfaces)
+- UI layer registry schema checks (if changes affect UI layer registry)
+- Security + sovereignty scanning gates (where applicable)
 
-- `meta` (required)
-- `thresholds` (required for audit profiles)
-- `actions` (required for governance action profiles)
-- `telemetry` (required for telemetry policy profiles)
-- optional `notes` (human-readable rationale; keep it policy-safe)
+### Validation checklist (configs)
 
-Minimum `meta` block:
+- [ ] Configs are linted (YAML/JSON) and schema-validated (if schema exists)
+- [ ] Model + dataset versions are pinned (or otherwise reproducible)
+- [ ] Run output locations match repo placement rules (`data/processed/`, `data/stac/`, `mcp/runs/`, etc.)
+- [ ] Provenance emission includes run_id + config_id + input/output IDs
+- [ ] No prohibited AI actions implied; no secrets or sensitive coordinates committed
 
-~~~json
-{
-  "meta": {
-    "profile_id": "fairness_thresholds.default",
-    "profile_version": "11.2.6",
-    "profile_kind": "fairness|explainability|drift|telemetry|actions",
-    "owner_role": "ai-governance-registry",
-    "last_updated": "2025-12-15",
-    "governance_ref": "../../../docs/standards/governance/ROOT-GOVERNANCE.md",
-    "ethics_ref": "../../../docs/standards/faircare/FAIRCARE-GUIDE.md",
-    "sovereignty_policy": "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-  }
-}
-~~~
+## ⚖ FAIR+CARE & Governance
 
-### Example fairness thresholds (illustrative)
+### Governance review triggers
 
-Numbers below are placeholders; actual thresholds must be set by governance review.
+- New sensitive layers
+- New AI narrative behaviors
+- New external data sources
+- New public-facing endpoints
 
-~~~json
-{
-  "meta": {
-    "profile_id": "fairness_thresholds.default",
-    "profile_version": "11.2.6",
-    "profile_kind": "fairness",
-    "owner_role": "ai-governance-registry",
-    "last_updated": "2025-12-15"
-  },
-  "thresholds": {
-    "classification": {
-      "required_metrics": [
-        "group_error_rate_delta",
-        "calibration_delta"
-      ],
-      "warn": {
-        "group_error_rate_delta": "<set-by-governance>",
-        "calibration_delta": "<set-by-governance>"
-      },
-      "fail": {
-        "group_error_rate_delta": "<set-by-governance>",
-        "calibration_delta": "<set-by-governance>"
-      }
-    },
-    "regression": {
-      "required_metrics": [
-        "group_mae_delta",
-        "tail_error_frequency_delta"
-      ],
-      "warn": {
-        "group_mae_delta": "<set-by-governance>"
-      },
-      "fail": {
-        "group_mae_delta": "<set-by-governance>"
-      }
-    }
-  },
-  "actions": {
-    "on_warn": ["require_review"],
-    "on_fail": ["block_certification", "quarantine"]
-  }
-}
-~~~
+### Governance approvals required (if any)
 
-### Example drift thresholds (illustrative)
+- FAIR+CARE council review: TBD
+- Security council review: TBD
+- Historian/editor review: TBD
 
-~~~json
-{
-  "meta": {
-    "profile_id": "drift_thresholds.default",
-    "profile_version": "11.2.6",
-    "profile_kind": "drift",
-    "owner_role": "ai-governance-registry",
-    "last_updated": "2025-12-15"
-  },
-  "thresholds": {
-    "required_metrics": [
-      "psi",
-      "ks_pvalue"
-    ],
-    "warn": {
-      "psi": "<set-by-governance>",
-      "ks_pvalue": "<set-by-governance>"
-    },
-    "fail": {
-      "psi": "<set-by-governance>",
-      "ks_pvalue": "<set-by-governance>"
-    }
-  },
-  "actions": {
-    "on_warn": ["monitor", "require_review_if_production"],
-    "on_fail": ["block_certification", "retrain_or_recalibrate"]
-  }
-}
-~~~
+### Sovereignty safety
 
-### Validation rules (normative)
+- Document redaction/generalization rules for any restricted locations.
 
-CI SHOULD enforce:
+### AI usage constraints
 
-- JSON validity (`.json` parses)
-- required keys exist (`meta.profile_id`, `meta.profile_version`, etc.)
-- no secrets, no PII, no restricted coordinates
-- profile IDs are unique and stable
-- profile version matches the repo release policy (or is explicitly documented)
-
-If a schema exists for these profiles, CI MUST validate against it. If a schema does not exist yet, the next governance update should add one and wire it into `tools/validation/`.
-
-### Recording config identity in audit runs (normative)
-
-All audit outputs MUST record:
-
-- `config_path`
-- `config_profile_id`
-- `config_profile_version`
-- `config_sha256`
-
-This prevents “silent policy drift” caused by config changes.
-
----
+- Do not hard-code prompts/configs that infer sensitive locations from protected or redacted inputs.
+- Prefer extraction pipelines that produce auditable, provenance-linked outputs.
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-15 | Initial configs README for `tools/ai/configs/`; defined canonical profile types, directory structure, recommended config contract, validation rules, and audit-run recording requirements. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-21 | Initial README for AI configs directory | TBD |
 
 ---
 
-<div align="center">
+Footer refs:
 
-© 2025 Kansas Frontier Matrix — MIT License  
-⚙️ AI Config Profiles · Governed for Integrity
-
-[⬅️ Back to AI Tools](../README.md) · [⬅️ Back to Tools](../../README.md) · [🛡 Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
