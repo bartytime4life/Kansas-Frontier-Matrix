@@ -140,13 +140,15 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ## 🗺️ Diagrams
 
 ### System / dataflow diagram
+~~~mermaid
 flowchart LR
-  A["ETL"] --> B["STAC/DCAT/PROV Catalogs"]
-  B --> C["Neo4j Graph"]
-  C --> D["API Boundary (src/server)"]
-  D --> E["React/Map UI (web/)"]
-  E --> F["Story Nodes"]
-  F --> G["Focus Mode"]
+  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D["API Boundary<br/>src/server"]
+  D --> E["React/Map UI<br/>web/"]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+
 
 ### Optional: sequence diagram
 ~~~mermaid
