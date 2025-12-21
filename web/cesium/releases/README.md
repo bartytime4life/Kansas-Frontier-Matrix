@@ -1,271 +1,286 @@
 ---
-title: "📦 KFM v11.2.3 — CesiumJS Web Release Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-description: "Governed index of CesiumJS release integrations for the Kansas Frontier Matrix web stack, including version history, compatibility, and telemetry/governance links."
+title: "Cesium Releases"
 path: "web/cesium/releases/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-03"
+version: "v1.0.0"
+last_updated: "2025-12-21"
+status: "draft"
+doc_kind: "Readme"
+license: "CC-BY-4.0"
 
-release_stage: "Stable · Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Web Visualization Systems · FAIR+CARE Council"
-content_stability: "stable"
-backward_compatibility: "Cesium 1.120 → 1.136 web-integration-contract compatible"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256-of-this-file>"
-doc_uuid: "urn:kfm:doc:web-cesium-releases-index-v11-2-3"
-semantic_document_id: "kfm-web-cesium-releases-index-v11.2.3"
-event_source_id: "ledger:kfm:web:cesium:releases:index:v11.2.3"
-
-sbom_ref: "../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../releases/v11.2.3/web-cesium-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/web-cesium-release-v1.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-
-license: "MIT"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.3"
-status: "Active / Enforced"
-doc_kind: "Release Index"
-intent: "web-cesium-releases-index"
-fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:web:cesium:releases:readme:v1.0.0"
+semantic_document_id: "kfm-web-cesium-releases-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:cesium:releases:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# Cesium Releases
 
-# 📦 **Kansas Frontier Matrix — CesiumJS Web Release Index**  
-`web/cesium/releases/README.md`
+## 📘 Overview
 
-**Purpose:**  
-Serve as the **governed index** of CesiumJS versions integrated into the KFM web stack, with links to per-version release notes, tests, artifacts, and upstream references.
+### Purpose
+This directory documents and hosts **versioned Cesium-related frontend “release bundles”** needed by the KFM web UI’s Cesium integration.
 
-</div>
+The intent is to make Cesium runtime assets and related packaging **deterministic, reviewable, and pin-able**, so the UI can load a known-good set of assets without relying on implicit “latest” behavior.
 
----
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Folder structure + naming conventions for Cesium release bundles | Generating geospatial datasets (ETL) |
+| “What belongs here vs elsewhere” guidance for UI assets vs cataloged data | STAC/DCAT/PROV generation (Catalog stage) |
+| Minimal governance / sensitivity rules for assets committed here | Neo4j/graph modeling and migrations |
+| Validation expectations for adding / updating a bundle | API contract design and versioning |
 
-## 📘 1. Overview
+### Audience
+- Primary: Frontend engineers working in `web/` and Cesium integration maintainers
+- Secondary: Data/catalog engineers (to ensure artifacts are stored in the correct subsystem), reviewers
 
-This index tracks **all CesiumJS releases** that have been:
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **Release bundle**: A versioned folder containing Cesium runtime assets (and/or KFM-specific Cesium UI assets) needed by the client at runtime.
+  - **Layer registry**: JSON config listing UI layers and sensitivity flags (expected under `web/cesium/layers/` in KFM conventions).
+  - **Sensitive layer**: A layer or asset whose exact locations/metadata should be generalized or access-controlled.
 
-- Evaluated for use in KFM  
-- Documented with **KFM-governed release notes**  
-- Covered by **smoke tests**, **artifacts**, and **telemetry hooks**  
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `web/cesium/releases/README.md` | Frontend | Governs release folder conventions |
+| Cesium release bundles | `web/cesium/releases/<release_id>/...` | Frontend | One folder per pinned release |
+| Layer registry | `web/cesium/layers/…` | Frontend | Source-of-truth list of UI layers |
+| Cataloged data | `data/stac/…` | Data/Catalog | UI should not treat this directory as a data catalog |
 
-For the subsystem-level overview of Cesium integration, see:
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Release bundle conventions are explicit (naming, manifest, licensing notes)
+- [ ] Constraints/invariants preserved (API boundary, pipeline ordering)
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
-- `web/cesium/README.md`
+## 🗂️ Directory Layout
 
-This file focuses on **per-version** status and directory layout.
+### This document
+- `path`: `web/cesium/releases/README.md`
 
----
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Frontend root | `web/` | React + mapping clients |
+| Cesium integration | `web/cesium/` | Cesium runtime wiring, layer configs |
+| Cesium releases | `web/cesium/releases/` | Versioned runtime bundles |
+| Layer registry | `web/cesium/layers/` | Layer definitions + sensitivity flags |
+| Data catalogs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Machine-validated catalogs and provenance |
 
-## 🗂️ 2. Directory Layout (Emoji-Prefix Standard)
-
+### Expected file tree for this sub-area
 ~~~text
-web/cesium/releases/
-│
-├── 📄 README.md                         # This file — CesiumJS web release index
-│
-└── 1.136/                               # CesiumJS v1.136 (current governed release)
-    ├── 📄 README.md                     # KFM-governed v1.136 release notes
-    │
-    ├── 🧪 tests/                        # Smoke tests for rendering, picking, terrain, glyphs
-    │   ├── 📄 README.md                 # Test suite overview
-    │   └── 📄 rendering-smoke.md        # Scenario-by-scenario smoke tests
-    │
-    ├── 🗄️ artifacts/                    # Screenshots, metrics, optional logs (non-sensitive)
-    │   ├── 📄 README.md                 # Artifact layout & usage
-    │   ├── 📸 terrain-picking.png
-    │   ├── 📸 billboard-scaling.png
-    │   └── 🧾 metrics.json
-    │
-    └── 📚 references/                   # Upstream docs & KFM integration notes
-        ├── 📄 README.md                 # Reference directory overview
-        ├── 📄 upstream-release-notes.md # Curated upstream release summary
-        ├── 📄 api-links.md              # Key API references used by KFM
-        └── 📄 integration-notes.md      # Deeper KFM-specific integration notes
+🌐 web/
+└── 🧊 cesium/
+    ├── 📦 releases/
+    │   ├── 📄 README.md
+    │   ├── 📁 <release_id>/
+    │   │   ├── 📄 MANIFEST.json
+    │   │   ├── 📄 THIRD_PARTY_NOTICES.md
+    │   │   └── 📁 assets/
+    │   │       └── 📁 ...
+    │   └── 📁 <release_id>/
+    │       └── 📁 ...
+    └── 🗺️ layers/
+        └── 📄 <layer_registry>.json
 ~~~
 
-**Layout contract:**
+Notes:
+- `MANIFEST.json` and `THIRD_PARTY_NOTICES.md` are **recommended** conventions for traceability and licensing hygiene. If the repo uses different filenames, update this README to match the canonical practice.
 
-- Each Cesium version integrated into KFM gets its **own subdirectory** under `web/cesium/releases/`.  
-- Each version **must** have a `README.md` with:
-  - Front matter aligned to **KFM-MDP v11.2.3**  
-  - Links to tests, artifacts, and references  
+## 🧭 Context
 
-Future versions (e.g., `1.137/`, `1.138/`) must follow the **same structure**.
+### Background
+KFM’s frontend supports map-centric exploration and may include a 3D mode powered by Cesium. This introduces a packaging concern: Cesium integrations typically require a set of runtime assets that must be served consistently and versioned to avoid breaking changes.
 
----
+### Assumptions
+- The web application reads **layer definitions** from a registry-style JSON file under `web/cesium/…`.
+- “Release bundles” here are treated as **frontend implementation artifacts**, not authoritative datasets.
 
-## 🧩 3. Release Catalog
+### Constraints / invariants
+- The canonical KFM pipeline ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- The frontend must consume data via APIs and contracts — **no direct Neo4j access**.
+- This directory must not become a dumping ground for large datasets; datasets should live under `data/` and be cataloged.
 
-### 3.1 Current Governed Release
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Do we need a single “active release” pointer file (e.g., `CURRENT.json`) or should selection be build-time only? | Frontend | TBD |
+| Should release bundles be checked for size and routed to artifact storage/CDN instead of git when large? | Maintainers | TBD |
 
-| Cesium Version | Status              | KFM Version | Notes                                                      | Entry Point                                                |
-|----------------|--------------------|------------|------------------------------------------------------------|-----------------------------------------------------------|
-| **1.136**      | 🟢 Stable / Governed | v11.2.3    | Async pick, terrain sampling improvements, glyph fixes, and performance updates validated in KFM. | `web/cesium/releases/1.136/README.md`                     |
+### Future extensions
+- Add a schema for `MANIFEST.json` under `schemas/web/cesium_release_manifest.schema.json` (requires governance + CI wiring).
+- Add CI checks that ensure each release bundle includes license notices and checksums.
 
-**Highlights for v1.136 in KFM:**
+## 🗺️ Diagrams
 
-- Adoption of `scene.pickAsync` as the **preferred picking API**.  
-- Terrain sampling performance improvements aligned with KFM hydrology & archaeology tools.  
-- Billboard/label rendering fixes improving glyph stacks and readability.  
-- Telemetry + smoke tests defined for regression detection.
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[ETL outputs] --> B[STAC/DCAT/PROV catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[Web UI]
+  E --> F[Cesium runtime]
+  F --> G[Release bundle pinned in web/cesium/releases]
+~~~
 
----
+## 📦 Data & Metadata
 
-### 3.2 Deprecated / Historical Releases
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Cesium runtime assets | files | vendored/build output | checksum + size review |
+| Layer registry entries | JSON | `web/cesium/layers/` | schema-validated (recommended) |
+| Feature data / tiles | API payloads | API layer | contract tests |
 
-> **Note:** Prior Cesium versions (e.g., `1.120–1.135`) may have been used historically but do not carry full KFM v11.2.3 documentation.  
-> If/when these versions require archival documentation, they should be added under versioned directories (e.g., `web/cesium/releases/1.120/`) with at least:
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Release bundle | folder | `web/cesium/releases/<release_id>/` | `MANIFEST.json` (recommended) |
+| UI layer toggles | JSON | `web/cesium/layers/*.json` | schema-validated (recommended) |
 
-- A minimal `README.md`  
-- Status: `"Deprecated"` or `"Internal-Only"`  
-- Upgrade guidance pointing to 1.136 or later
+### Sensitivity & redaction
+- Do not include restricted or sensitive location content directly in frontend bundles.
+- If a layer requires generalization/redaction, enforce it through API delivery + layer registry flags (never “bake in” sensitive geometries here).
 
-Until then, the **single source of truth** for active KFM web deployments is the **current governed release** row above.
+### Quality signals
+- Every release bundle should be:
+  - Identified by a stable `release_id`
+  - Traceable (source/version recorded in `MANIFEST.json`)
+  - Integrity-checked (hashes recorded, optional)
 
----
+## 🌐 STAC, DCAT & PROV Alignment
 
-## 🧪 4. Release Governance & CI Expectations
+This folder is **not** a STAC/DCAT/PROV output location.
 
-For each Cesium release directory (e.g., `1.136/`), KFM expects:
+Guidance:
+- If you are shipping geospatial assets (e.g., 3D Tiles, CZML) as data products, they belong under `data/…` and must be cataloged (STAC/DCAT) with provenance (PROV).
+- The UI may reference those assets via API routes, but should not treat this directory as the canonical dataset store.
 
-1. **Release Notes**  
-   - `1.136/README.md`  
-   - Includes:
-     - High-impact changes  
-     - KFM integration notes  
-     - Telemetry and governance references  
+## 🧱 Architecture
 
-2. **Tests**  
-   - `1.136/tests/README.md` and `1.136/tests/rendering-smoke.md`  
-   - Define:
-     - Smoke scenarios  
-     - Acceptance criteria  
-     - Manual & CI-friendly steps  
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| APIs | Serve contracted data + apply redaction rules | REST/GraphQL |
+| UI (React/Map) | Render 2D/3D maps + narrative panels | API calls |
+| Cesium runtime | 3D rendering engine | UI integration layer |
+| Release bundles (this dir) | Versioned runtime asset packaging | Build-time and/or runtime selection |
 
-3. **Artifacts**  
-   - `1.136/artifacts/README.md`  
-   - Optional, but recommended:
-     - Screenshots  
-     - Metrics JSON  
-     - Summarized logs  
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Layer registry | `web/cesium/layers/*.json` | Semver-compatible schema |
+| UI ↔ API | `src/server/` + docs | Contract tests required |
+| Release manifest (recommended) | `web/cesium/releases/<release_id>/MANIFEST.json` | Semver + changelog |
 
-4. **References**  
-   - `1.136/references/README.md`  
-   - Curated:
-     - Upstream release note summaries  
-     - Key API links  
-     - Integration notes
+### Release bundle requirements
+Each `web/cesium/releases/<release_id>/` should include:
+- A manifest describing the bundle’s provenance (what it is, where it came from, what version).
+- License / third-party notices if vendor assets are included.
+- A stable internal layout so that the UI can reference assets predictably.
 
-CI checks should:
+Recommended `MANIFEST.json` shape:
+~~~json
+{
+  "release_id": "cesium-runtime-vX.Y.Z",
+  "created_at": "YYYY-MM-DD",
+  "source": {
+    "type": "vendor|build",
+    "name": "CesiumJS",
+    "version": "X.Y.Z",
+    "ref": "commit/tag/url"
+  },
+  "integrity": {
+    "hash_alg": "sha256",
+    "files": {
+      "assets/...": "<sha256>"
+    }
+  },
+  "notes": "Human-readable build/release notes."
+}
+~~~
 
-- Validate **markdown structure** and **front matter** for all `README.md` and test files.  
-- Ensure all release directories follow the **directory layout contract**.  
-- Optionally verify that `metrics.json` (if present) is valid JSON and ***telemetry_ref*** is consistent.
+## 🧠 Story Node & Focus Mode Integration
 
----
+Cesium release bundles should not embed narrative content.
 
-## 📊 5. Telemetry & Performance Tracking
+Rules:
+- Story Nodes live under `docs/reports/.../story_nodes/` (or another governed doc location) and are served via API.
+- Focus Mode consumes provenance-linked context bundles; do not “shortcut” by hardcoding story content into UI release assets.
 
-All Cesium releases integrated at KFM v11.2.3 share:
+## 🧪 Validation & CI/CD
 
-- Telemetry schema:  
-  `../../schemas/telemetry/web-cesium-release-v1.json`  
+### Validation steps
+- [ ] Markdown protocol checks (front-matter present, headings, fences)
+- [ ] UI build succeeds with the new bundle wired in (repo-defined command)
+- [ ] Layer registry JSON validates against schema (if schema exists)
+- [ ] No sensitive assets accidentally committed (manual review + automated scans)
 
-- Default telemetry location:  
-  `../../releases/v11.2.3/web-cesium-telemetry.json`  
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) run frontend lint
+# 2) run frontend unit tests
+# 3) build web app
+# 4) smoke-test Cesium mode loads release assets
+~~~
 
-Per-release telemetry expectations:
+## ⚖ FAIR+CARE & Governance
 
-- Track:
-  - Picking latency distributions  
-  - Terrain sampling latency  
-  - Basic FPS / frame-time metrics under representative scenes  
+### Review gates
+- If a release bundle changes what layers are visible or alters sensitivity handling:
+  - Requires governance review for sovereignty/sensitivity implications.
+- If large third-party assets are introduced:
+  - Requires license review and size/performance review.
 
-- Telemetry should be:
-  - **Opt-in** and redacted  
-  - Focused on performance & reliability, not user behavior  
+### CARE / sovereignty considerations
+- Avoid publishing exact coordinates or culturally sensitive locations through UI artifacts.
+- Ensure restricted layers are delivered through APIs with appropriate gating.
 
-Each release’s `README.md` may add additional telemetry details as needed.
+### AI usage constraints
+- Do not use AI to infer or reconstruct sensitive locations when assembling UI assets.
+- Any AI-generated narrative belongs in Story Node workflow with explicit provenance.
 
----
+## 🕰️ Version History
 
-## ⚖ 6. FAIR+CARE & Sovereignty Requirements
-
-Cesium releases in KFM must comply with the same governance as other spatial tools:
-
-- **Sensitive locations** must be:
-  - Generalized or masked (e.g., H3 regions)  
-  - Controlled by CARE visibility rules in layer registries and Cesium components  
-
-- **Release notes, tests, and artifacts** must:
-  - Avoid revealing coordinates or views that violate these constraints.  
-  - Ensure screenshots and metrics are non-sensitive and properly redacted where necessary.
-
-Governance path:
-
-- Web Visualization Systems WG  
-- FAIR+CARE Council  
-- Sovereignty / heritage reviewers as appropriate for any specific content
-
----
-
-## 🧭 7. Adding a New Cesium Release
-
-When integrating a new Cesium version (e.g., `1.137`):
-
-1. **Create directory**
-
-   - `web/cesium/releases/1.137/`
-
-2. **Add core docs**
-
-   - `web/cesium/releases/1.137/README.md`  
-   - `web/cesium/releases/1.137/tests/README.md`  
-   - `web/cesium/releases/1.137/tests/rendering-smoke.md`  
-   - `web/cesium/releases/1.137/artifacts/README.md` (optional but recommended)  
-   - `web/cesium/releases/1.137/references/README.md`  
-   - Any of:
-     - `api-links.md`  
-     - `integration-notes.md`  
-     - `upstream-release-notes.md`
-
-3. **Wire CI**
-
-   - Ensure new release directory participates in documentation and lint checks.  
-   - Optionally add scenarios to automated test harnesses.
-
-4. **Update this index**
-
-   - Add a new row in the **Release Catalog** section.  
-   - Update status of previous releases if they become `Deprecated` or `Legacy`.
-
-5. **Governance review**
-
-   - Run smoke tests and record artifacts.  
-   - Present results to Web Visualization Systems WG + FAIR+CARE Council.  
-   - Only then mark the new version as **Stable / Governed**.
-
----
-
-## 🕰️ 8. Version History
-
-| Version  | Date       | Author                                      | Summary                                                                 |
-|----------|------------|---------------------------------------------|-------------------------------------------------------------------------|
-| v11.2.3  | 2025-12-03 | Web Visualization Systems WG · FAIR+CARE Council | Created CesiumJS web release index; documented directory layout, current governed release (1.136), CI expectations, telemetry wiring, and governance flow for future releases. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-21 | Initial README for Cesium release bundles | TBD |
 
 ---
 
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — MIT (Cesium Release Index & Docs)**  
-FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[⬅ Back to Cesium Web Integration Overview](../README.md) · [⬅ Back to Web Root](../..//README.md)
-
-</div>
+Footer refs:
+- Master guide: `docs/MASTER_GUIDE_v12.md`
+- Universal doc template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
