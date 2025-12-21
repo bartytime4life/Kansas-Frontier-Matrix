@@ -135,12 +135,12 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  A[ETL (src/pipelines)] --> B[STAC/DCAT/PROV (data/stac, data/catalog/dcat, data/prov)]
-  B --> C[Neo4j Graph (src/graph)]
-  C --> D[API boundary (src/server)]
-  D --> E[UI (web/)]
-  E --> F[Story Nodes (docs/reports/story_nodes)]
-  F --> G[Focus Mode (provenance-linked only)]
+  A["ETL — src/pipelines"] --> B["STAC/DCAT/PROV — data/stac · data/catalog/dcat · data/prov"]
+  B --> C["Neo4j Graph — src/graph"]
+  C --> D["API boundary — src/server"]
+  D --> E["UI — web/"]
+  E --> F["Story Nodes — docs/reports/story_nodes"]
+  F --> G["Focus Mode — provenance-linked"]
 ~~~
 
 ### Optional: sequence diagram
