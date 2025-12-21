@@ -1,271 +1,274 @@
 ---
-title: "🧰 KFM v11.2.3 — Cesium Web Utils Library (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-description: "Governed, side-effect-free TypeScript utilities for CesiumJS integration in the Kansas Frontier Matrix web stack: camera, coordinates, and layer helpers."
+title: "Cesium UI Utilities — README"
 path: "web/cesium/components/utils/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-03"
+version: "v1.0.0"
+last_updated: "2025-12-21"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
 
-release_stage: "Stable · Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Web Visualization Systems · FAIR+CARE Council"
-content_stability: "stable"
-backward_compatibility: "Cesium 1.120 → 1.136 utils-contract compatible"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256-of-this-file>"
-doc_uuid: "urn:kfm:doc:web-cesium-utils-v11-2-3"
-semantic_document_id: "kfm-web-cesium-utils-v11.2.3"
-event_source_id: "ledger:kfm:web:cesium:components:utils:v11.2.3"
-
-sbom_ref: "../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.3/web-cesium-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-cesium-release-v1.json"
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-
-license: "MIT"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.3"
-status: "Active / Enforced"
-doc_kind: "Utils Library Overview"
-intent: "web-cesium-utils"
-fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:web:cesium:components:utils:readme:v1.0.0"
+semantic_document_id: "kfm-web-cesium-components-utils-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:cesium:components:utils:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# Cesium UI Utilities — README
 
-# 🧰 **Kansas Frontier Matrix — Cesium Web Utils Library**  
-`web/cesium/components/utils/README.md`
+## 📘 Overview
 
-**Purpose:**  
-Describe the **governed, side-effect-free TypeScript utilities** that support CesiumJS integration in the KFM web stack:  
-camera helpers, coordinate conversions, and layer expansion utilities used by Cesium components & hooks.
+### Purpose
+This directory contains **shared utilities** used by Cesium-facing UI components under `web/cesium/`.
+The goal is to keep Cesium-specific logic **consistent, testable, and reusable**, and to reduce
+duplication across components.
 
-</div>
+This doc governs:
+- What **belongs** in `web/cesium/components/utils/`
+- What **does not** belong here (React components, state, direct data access)
+- Guardrails that preserve the KFM architecture (UI consumes data via APIs; no direct graph access)
 
----
+### Scope
 
-## 📘 1. Overview
+| In Scope | Out of Scope |
+|---|---|
+| Pure helpers (formatting, guards, math, coordinate transforms *as needed by UI*) | React components, hooks, pages |
+| Thin adapters around Cesium primitives (small, composable) | Direct Neo4j/graph access from UI |
+| Common error handling patterns for Cesium component code | Business logic owned by API layer |
+| UI-side generalization/redaction helpers *when driven by API-provided flags* | Inferring sensitive locations or generating new “hidden” coordinates |
 
-Utilities in `web/cesium/components/utils/`:
+### Audience
+- Primary: Frontend engineers working in `web/cesium/`
+- Secondary: Reviewers validating UI boundary + governance constraints
 
-- Provide **pure functions** to support Cesium hooks and components.  
-- Contain **no React hooks**, **no DOM access**, and **no global side effects**.  
-- Are fully **TypeScript-typed** and designed for:
-  - Camera state conversions & bookmarking  
-  - Coordinate conversions between Cesium and KFM representations  
-  - Expansion of layer/tileset configs into Cesium-ready structures  
+### Definitions (link to glossary)
+- Link: `../../../../docs/glossary.md`
+- Terms used in this doc:
+  - **UI boundary**: The frontend does not query the graph directly; it consumes contracted payloads via APIs.
+  - **Cesium viewer context**: Any wrapper/state used to interact with Cesium runtime objects (viewer/scene/camera).
 
-These utils help ensure:
+### Key artifacts (what this doc points to)
 
-- KFM-specific logic is **centralized and tested**.  
-- Cesium upgrade surface is **limited** to a few well-defined modules.  
-- FAIR+CARE and provenance decisions can be implemented consistently at higher layers.
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| KFM pipeline ordering + UI boundary | `../../../../docs/MASTER_GUIDE_v12.md` | KFM Maintainers | Canonical architecture constraints |
+| Markdown doc structure standard | `../../../../docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | KFM Maintainers | This README follows Universal template |
+| Cesium UI code | `../../` | UI | Components consume these utilities |
 
-For context:
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Directory purpose and boundaries are explicit
+- [ ] No repo-unknown specifics presented as fact
+- [ ] Validation steps listed and repeatable (with placeholders clearly marked)
 
-- Components overview: `web/cesium/components/README.md`  
-- Hooks overview: `web/cesium/components/hooks/README.md`  
+## 🗂️ Directory Layout
 
----
+### This document
+- `path`: `web/cesium/components/utils/README.md` (must match front-matter)
 
-## 🗂️ 2. Directory Layout (Emoji-Prefix Standard)
+### Related repository paths
 
+| Area | Path | What lives here |
+|---|---|---|
+| Documentation | `docs/` | Canonical governed docs |
+| Schemas | `schemas/` | Data/API/telemetry schemas (if present) |
+| Frontend | `web/` | React + map clients (MapLibre/Cesium) |
+| Pipelines | `src/pipelines/` | ETL + catalog + transforms |
+| Graph | `src/graph/` | Ontology bindings + graph build |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
+
+### Expected file tree for this sub-area
 ~~~text
-web/cesium/components/utils/
-│
-├── 📄 README.md                        # This file — utils library overview & contracts
-│
-├── 🎥 cesiumCameraUtils.ts             # Camera conversions, presets, bookmark encoding/decoding
-├── 📍 cesiumCoordinateUtils.ts         # Coordinate conversions (Cartesian/Cartographic/KFM IDs)
-└── 🗺️ cesiumLayerUtils.ts              # Layer registry → Cesium config expansion helpers
+📁 web/
+└── 📁 cesium/
+    └── 📁 components/
+        └── 📁 utils/
+            └── 📄 README.md
+            └── 📄 <utility-module>.<ts|js>            (not confirmed in repo)
+            └── 📁 __tests__/                           (optional; not confirmed in repo)
+                └── 📄 <utility-module>.test.<ts|js>    (not confirmed in repo)
 ~~~
 
-**Directory contract:**
+## 🧭 Context
 
-- Only **pure, non-React** utilities are allowed here.  
-- Each file must:
-  - Export **named, typed functions**.  
-  - Have no external side effects when imported.  
-  - Avoid hard-coded URLs, provider IDs, or dataset IDs (take them as inputs instead).
+### Background
+Cesium UI code tends to accumulate small, repeated patterns (viewer guards, safe accessors,
+units conversions, defensive checks around async scene readiness). Centralizing these patterns
+reduces drift and makes review easier.
 
----
+### Assumptions
+- Cesium is used as part of the UI mapping stack and may coexist with 2D map views.
+- Utilities in this folder should remain **small** and **component-facing** (not “app domain” utilities).
 
-## 🎥 3. `cesiumCameraUtils.ts` — Camera Helpers
+### Constraints / invariants
+- **Canonical pipeline ordering is preserved**: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode.
+- **UI never reads Neo4j directly**; all data access is mediated through the API layer.
 
-**Responsibility:**
+### Open questions
 
-- Provide **helper functions** for working with Cesium camera state and KFM concepts (regions, bookmarks, Story Nodes).
+| Question | Owner | Target date |
+|---|---|---|
+| What is the preferred coordinate reference convention in UI (lon/lat vs. Cesium Cartesian)? | TBD | TBD |
+| What is the preferred error/reporting pattern for Cesium runtime failures? | TBD | TBD |
 
-**Typical functions (illustrative):**
+### Future extensions
+- Add “golden path” utility patterns for common Cesium flows (camera moves, selection, highlighting), if they remain small and composable.
+- Add explicit typing contracts for utility I/O (as applicable to the repo’s chosen language/tooling).
 
-- `cameraToBookmark(camera: Cesium.Camera): KfmCameraBookmark`  
-- `bookmarkToCameraView(bookmark: KfmCameraBookmark): CameraViewOptions`  
-- `fitRegionExtent(regionExtent): CameraViewOptions`
+## 🗺️ Diagrams
 
-**Use cases:**
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  UI[Cesium Components] --> U[utils/ (this folder)]
+  UI --> API[API Client / Fetch Layer]
+  API --> SVC[KFM API Layer]
+  SVC --> G[Graph + Provenance]
+~~~
 
-- `CesiumCameraController.tsx`:
-  - Saving and restoring camera bookmarks from Story Nodes or KFM UI.  
-- Syncing MapLibre 2D and Cesium 3D:
-  - Converting between KFM 2D view state and Cesium camera view.
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant C as Cesium Component
+  participant U as Utils
+  participant A as API Client
+  participant S as KFM API
 
-**Constraints:**
+  C->>U: computeViewModel(inputs)
+  C->>A: fetchFocusBundle(entity_id)
+  A->>S: GET /focus/{entity_id}
+  S-->>A: contracted payload (+ provenance refs, redaction flags)
+  A-->>C: data for rendering
+~~~
 
-- Functions must be **deterministic** given inputs.  
-- No direct access to DOM or URL; those are managed by higher-level components.  
-- Any FAIR+CARE logic related to **where cameras may go** belongs in components/hooks, not here.
+## 📦 Data & Metadata
 
----
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Cesium runtime objects (viewer/scene/camera) | runtime object | Cesium integration code | Defensive null/ready checks |
+| Contracted API payloads | JSON | API layer | Schema/contract tests (owned by API) |
 
-## 📍 4. `cesiumCoordinateUtils.ts` — Coordinate Conversions
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| UI-safe derived values (e.g., computed camera targets, display strings) | JS/TS values | in-memory | N/A (unit tests recommended) |
 
-**Responsibility:**
+### Sensitivity & redaction
+- Utilities must **not** infer or reconstruct sensitive locations.
+- If the UI needs location generalization/redaction, it should rely on **API-provided flags/fields** and apply only the transformations explicitly required for presentation.
 
-- Provide safe, well-typed conversions between:
+### Quality signals
+- Deterministic output for deterministic inputs
+- Clear behavior for null/undefined inputs (fail fast vs. safe fallback), documented per function
 
-  - Cesium Cartesian types (`Cartesian3`, etc.)  
-  - Cesium `Cartographic` (lat/long/height)  
-  - KFM coordinate representations (e.g., `{ lat, lon }`, H3 indices, region IDs)
+## 🌐 STAC, DCAT & PROV Alignment
 
-**Typical functions (illustrative):**
+### STAC
+- Collections involved: N/A (UI utilities do not generate catalogs)
+- Items involved: N/A
+- Extension(s): N/A
 
-- `cartesianToLatLon(cartesian: Cesium.Cartesian3): { lat: number; lon: number; height: number }`  
-- `latLonToCartographic(lat: number, lon: number, height?: number): Cesium.Cartographic`  
-- `cartographicToH3(cartographic: Cesium.Cartographic, resolution: number): string` (if used)
+### DCAT
+- Dataset identifiers: N/A
+- License mapping: N/A
+- Contact / publisher mapping: N/A
 
-**Use cases:**
+### PROV-O
+- `prov:wasDerivedFrom`: N/A (UI utilities do not mint provenance)
+- `prov:wasGeneratedBy`: N/A
+- Activity / Agent identities: N/A
 
-- `useCesiumPicking.ts`:
-  - Map picked positions to lat/lon + height.  
-- `useCesiumTerrainSampling.ts`:
-  - Convert lat/lon arrays to `Cartographic[]` for terrain APIs.  
+### Versioning
+- When utility changes alter user-visible interpretation (labels, formatting), treat as a UI behavior change and document in PR notes/release notes as applicable.
 
-**Constraints & FAIR+CARE:**
+## 🧠 Story Node & Focus Mode Integration
 
-- Utils must **not** enforce CARE or sovereignty rules themselves.  
-- However, they must be implemented in a way that:
-  - Does not silently clamp or transform coordinates unexpectedly.  
-  - Leaves higher layers free to apply masking/generalization rules correctly.
+### How this work surfaces in Focus Mode
+This folder may support Focus Mode by providing:
+- small helpers that interpret Focus Mode UI state (e.g., “selected entity”, “active layers”) **without owning the state**
+- display helpers for showing citations/provenance pointers provided by APIs
 
----
+### Provenance-linked narrative rule
+- Any narrative claims shown in UI must trace to dataset/record IDs; utilities should help render these references but must not fabricate them.
 
-## 🗺️ 5. `cesiumLayerUtils.ts` — Layer Expansion Helpers
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
-**Responsibility:**
+## 🧪 Validation & CI/CD
 
-- Convert KFM layer registry entries into **Cesium-ready configuration objects**, without touching the actual `Viewer`/`Scene`.
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] UI lint/type checks (not confirmed in repo)
+- [ ] UI unit tests for utilities (not confirmed in repo)
+- [ ] Security and sovereignty checks (as applicable)
 
-**Typical functions (illustrative):**
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands (not confirmed in repo)
+# 1) run formatter / lint
+# 2) run unit tests
+# 3) run markdown/doc validation
+~~~
 
-- `expandTilesetConfig(layerConfig: TilesetLayerConfig): ExpandedTilesetOptions`  
-- `expandImageryConfig(layerConfig: ImageryLayerConfig): ExpandedImageryOptions`  
-- `expandRegionLayerConfig(layerConfig: RegionLayerConfig): ExpandedRegionOptions`
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| TBD | TBD | `docs/telemetry/` + `schemas/telemetry/` |
 
-Where `layerConfig` types correspond to entries in:
+## ⚖ FAIR+CARE & Governance
 
-- `web/cesium/layers/tilesets.json`  
-- `web/cesium/layers/regions.json`  
-- `web/cesium/layers/sensors.json`
+### Review gates
+- Standard PR review for UI changes
+- If a change impacts how sensitive data could be shown or generalized, follow governance and sovereignty docs referenced in front-matter.
 
-**Use cases:**
+### CARE / sovereignty considerations
+- Assume some locations/events may be culturally sensitive.
+- Do not add utilities that “guess” or “fill in” restricted details that the API did not provide.
 
-- `useCesiumLayers.ts`:
-  - Reads JSON from `web/cesium/layers/` and calls these helpers to obtain:
-    - URLs  
-    - Styling options  
-    - CARE/visibility hints  
-    - Provenance and dataset IDs
+### AI usage constraints
+- This document permits summarization/structure extraction but prohibits generating policy or inferring sensitive locations (see front-matter).
 
-**Constraints:**
+## 🕰️ Version History
 
-- No calls to Cesium constructors or global objects.  
-- No network requests or environment variable reads.  
-- Functions take plain objects and return plain objects.
-
----
-
-## 🧪 6. Testing & CI Expectations
-
-Each utils file should:
-
-- Be **TypeScript-typed** with clear function signatures.  
-- Have unit tests where logic is non-trivial (e.g., coordinate transformations, camera bookmark math).  
-- Be verified by:
-
-  - TypeScript type checking  
-  - Linting (ESLint)  
-  - Any dedicated unit test runner configured for the repo  
-
-CI should:
-
-- Ensure this README and `.ts` files pass:
-  - Markdown formatting rules.  
-  - Type/lint checks.  
-- Optionally run focused unit tests for these utilities.
-
----
-
-## ⚖ 7. FAIR+CARE & Sovereignty Considerations
-
-Although utils are “low-level,” they **must not** undermine FAIR+CARE guarantees:
-
-- **No built-in hard-coded masks or offsets** for sensitive data:
-  - Those belong in CARE-aware hooks and components.  
-
-- **No logging** or debug output that might leak raw coordinates or IDs:
-  - Logging must be performed at higher layers with appropriate redaction.
-
-- **Where generalization is involved** (e.g., converting coordinates to H3 or regions), ensure:
-  - The function is clearly named and documented.  
-  - Higher layers control when and how generalization is applied.
-
----
-
-## 🧭 8. Authoring & Maintenance Workflow
-
-When adding or modifying a util:
-
-1. **Determine scope**  
-   - Ensure the behavior belongs in a **pure** utility (not a hook or component).  
-
-2. **Add or update util file**  
-   - Keep functions small and focused.  
-   - Use descriptive names and types.  
-
-3. **Document here**  
-   - Update this README with:
-     - New file name  
-     - Responsibility summary  
-     - Key usage notes  
-
-4. **Add tests where needed**  
-   - Especially for transformations, serialization logic, or math-heavy helpers.  
-
-5. **Run CI**  
-   - Confirm type checks and lints pass.  
-
-6. **Coordinate with hooks/components**  
-   - Update any code that consumes these utils if signatures change.  
-   - Maintain backward compatibility where practical, or document breaking changes.
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-21 | Initial README for Cesium UI utilities folder | TBD |
 
 ---
-
-## 🕰️ 9. Version History
-
-| Version  | Date       | Author                                      | Summary                                                                 |
-|----------|------------|---------------------------------------------|-------------------------------------------------------------------------|
-| v11.2.3  | 2025-12-03 | Web Visualization Systems WG · FAIR+CARE Council | Initial governed Cesium utils overview; defined contracts for camera, coordinate, and layer helpers with side-effect-free guarantees. |
-
----
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — MIT (Cesium Utils Library)**  
-FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[⬅ Back to Cesium Components Overview](../README.md) · [⬅ Back to Cesium Web Integration Overview](../../README.md) · [⬅ Back to Web Root](../../../README.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
