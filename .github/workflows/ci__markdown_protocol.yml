@@ -1,1 +1,362 @@
+name: CI — Markdown Protocol
+
+on:
+  pull_request:
+    paths:
+      - "docs/**/*.md"
+      - "mcp/**/*.md"
+      - ".github/workflows/ci__markdown_protocol.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "docs/**/*.md"
+      - "mcp/**/*.md"
+      - ".github/workflows/ci__markdown_protocol.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci__markdown_protocol-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kfm_markdown_protocol:
+    name: KFM Markdown Protocol (KFM-MDP) validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # Keep in sync with templates (KFM-MDP referenced in governed doc front-matter).
+      KFM_MDP_REQUIRED_VERSION: "KFM-MDP v11.2.6"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyyaml
+
+      - name: Validate Markdown Protocol + repo lint
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          import sys
+          import subprocess
+          import pathlib
+          from collections import defaultdict
+
+          import yaml
+
+          ROOT = pathlib.Path(".").resolve()
+
+          REQUIRED_MDP = (os.getenv("KFM_MDP_REQUIRED_VERSION") or "").strip()
+
+          # Required KFM governed-doc front-matter keys (aligned to templates).
+          REQUIRED_KEYS = [
+              "title",
+              "path",
+              "version",
+              "last_updated",
+              "status",
+              "doc_kind",
+              "license",
+              "markdown_protocol_version",
+              "mcp_version",
+              "ontology_protocol_version",
+              "pipeline_contract_version",
+              "stac_profile",
+              "dcat_profile",
+              "prov_profile",
+              "governance_ref",
+              "ethics_ref",
+              "sovereignty_policy",
+              "fair_category",
+              "care_label",
+              "sensitivity",
+              "classification",
+              "jurisdiction",
+              "doc_uuid",
+              "semantic_document_id",
+              "event_source_id",
+              "commit_sha",
+              "ai_transform_permissions",
+              "ai_transform_prohibited",
+              "doc_integrity_checksum",
+          ]
+
+          GOVERNED_DIR_PREFIXES = ("docs/", "mcp/")
+
+          DEPRECATION_STATUSES = {"deprecated", "archived", "superseded"}
+          DEPRECATION_PATH_HINTS = ("/deprecated/", "/archives/", "/history/")
+
+          # "No YAML front-matter in code files" check: we apply it to common non-Markdown code/config formats.
+          # NOTE: We intentionally exclude YAML itself (.yml/.yaml) because '---' can be a legitimate YAML doc delimiter.
+          CODE_EXTS = {
+              ".py", ".js", ".jsx", ".ts", ".tsx",
+              ".java", ".kt", ".scala",
+              ".go", ".rs",
+              ".c", ".cc", ".cpp", ".h", ".hpp",
+              ".cs", ".swift",
+              ".rb", ".php",
+              ".sh", ".bash", ".zsh", ".ps1", ".bat", ".cmd",
+              ".sql", ".graphql", ".proto",
+              ".json", ".toml", ".ini", ".cfg",
+          }
+
+          def die(msg: str, code: int = 1) -> None:
+              print(msg, file=sys.stderr)
+              sys.exit(code)
+
+          def git_ls_files() -> list[str]:
+              try:
+                  out = subprocess.check_output(["git", "ls-files"], text=True)
+              except Exception as e:
+                  die(f"ERROR: failed to list tracked files via git ls-files: {e}", code=2)
+              return [line.strip() for line in out.splitlines() if line.strip()]
+
+          def read_text_utf8(path: pathlib.Path) -> str:
+              data = path.read_bytes()
+              # Strip UTF-8 BOM if present
+              if data.startswith(b"\xef\xbb\xbf"):
+                  data = data[3:]
+              return data.decode("utf-8", errors="replace")
+
+          def norm_newlines(s: str) -> str:
+              return s.replace("\r\n", "\n").replace("\r", "\n")
+
+          def extract_front_matter(md_text: str) -> tuple[str | None, str]:
+              """
+              Returns (front_matter_text, body_text). front_matter_text is None if missing/malformed.
+              Expects YAML front-matter to start at the first byte of the file.
+              """
+              md_text = norm_newlines(md_text)
+              if not md_text.startswith("---\n"):
+                  return None, md_text
+              m = re.match(r"^---\s*\n(.*?)\n---\s*\n", md_text, flags=re.DOTALL)
+              if not m:
+                  return None, md_text
+              return m.group(1), md_text[m.end():]
+
+          def is_governed_markdown(fp: str) -> bool:
+              return fp.endswith(".md") and fp.startswith(GOVERNED_DIR_PREFIXES)
+
+          def is_deprecation_marker(fp: str, status_val) -> bool:
+              status = (str(status_val).strip().lower() if status_val is not None else "")
+              if status in DEPRECATION_STATUSES:
+                  return True
+              fp_norm = fp.replace("\\", "/").lower()
+              return any(hint in fp_norm for hint in DEPRECATION_PATH_HINTS)
+
+          def strip_fenced_code(md: str) -> str:
+              """
+              Remove fenced code blocks (``` or ~~~) to avoid false positives in link checks.
+              """
+              md = norm_newlines(md)
+              # Remove blocks that start with ``` or ~~~ and end with matching fence.
+              # This is a pragmatic heuristic, not a full Markdown parser.
+              fence_pat = re.compile(r"(?ms)^(?:```|~~~)[^\n]*\n.*?^(?:```|~~~)\s*$")
+              return fence_pat.sub("", md)
+
+          def iter_markdown_links(md_body: str):
+              """
+              Yields link targets from Markdown inline links: [text](target) and images ![alt](target).
+              """
+              body = strip_fenced_code(md_body)
+              # Very small, pragmatic regex. It won't perfectly handle nested parentheses but is good for common cases.
+              link_pat = re.compile(r"!\[[^\]]*\]\(([^)]+)\)|\[[^\]]+\]\(([^)]+)\)")
+              for m in link_pat.finditer(body):
+                  target = m.group(1) or m.group(2)
+                  if target is None:
+                      continue
+                  yield target.strip()
+
+          def normalize_link_target(raw: str) -> str:
+              t = raw.strip()
+              if t.startswith("<") and t.endswith(">"):
+                  t = t[1:-1].strip()
+
+              # If a title is present (path "title"), keep only the first token.
+              # Paths with spaces should be URL-encoded, so this is a safe simplification.
+              if " " in t:
+                  t = t.split()[0].strip()
+
+              return t
+
+          def is_external_link(target: str) -> bool:
+              # schemes like https:, http:, mailto:, etc.
+              return re.match(r"^[a-zA-Z][a-zA-Z0-9+.\-]*:", target) is not None
+
+          def check_internal_links(fp: str, body: str, errors: list[str]) -> None:
+              base_dir = (ROOT / pathlib.Path(fp)).parent
+
+              for raw_target in iter_markdown_links(body):
+                  target = normalize_link_target(raw_target)
+
+                  if target == "" or target.startswith("#"):
+                      continue
+                  if is_external_link(target) or target.startswith("//"):
+                      continue
+
+                  # Strip fragment/query for filesystem resolution
+                  target_no_frag = target.split("#", 1)[0].split("?", 1)[0]
+                  if target_no_frag == "":
+                      continue
+
+                  if target_no_frag.startswith("/"):
+                      candidate_abs = (ROOT / target_no_frag.lstrip("/")).resolve(strict=False)
+                  else:
+                      candidate_abs = (base_dir / target_no_frag).resolve(strict=False)
+
+                  # Ensure target does not escape repo root
+                  if not candidate_abs.is_relative_to(ROOT):
+                      errors.append(f"{fp}: link target escapes repo root: ({raw_target})")
+                      continue
+
+                  rel = candidate_abs.relative_to(ROOT)
+
+                  # Allow directory links (e.g., docs/ or docs/some-dir/)
+                  if not rel.exists():
+                      errors.append(f"{fp}: broken relative link: ({raw_target}) -> '{rel.as_posix()}'")
+
+          def main() -> int:
+              errors: list[str] = []
+
+              files = git_ls_files()
+
+              # Repo lint: disallow README.me
+              for fp in files:
+                  if pathlib.Path(fp).name.lower() == "readme.me":
+                      errors.append(f"Repo lint: disallowed file name '{fp}' (use README.md).")
+
+              # Repo lint: detect YAML front-matter in non-Markdown "code" files
+              for fp in files:
+                  if fp.endswith((".md", ".markdown", ".mdx")):
+                      continue
+                  p = pathlib.Path(fp)
+                  ext = p.suffix.lower()
+                  if ext not in CODE_EXTS:
+                      continue
+                  try:
+                      head = read_text_utf8(p)[:4096]
+                  except Exception:
+                      continue
+                  head = norm_newlines(head)
+                  if head.startswith("---\n"):
+                      lines = head.splitlines()[:50]
+                      if sum(1 for ln in lines if ln.strip() == "---") >= 2:
+                          errors.append(f"Repo lint: YAML front-matter detected in non-Markdown file '{fp}'.")
+
+              # Governed Markdown validation
+              doc_uuid_index: dict[str, list[tuple[str, str]]] = defaultdict(list)
+              semantic_id_index: dict[str, list[tuple[str, str]]] = defaultdict(list)
+
+              governed_md_files = [fp for fp in files if is_governed_markdown(fp)]
+
+              for fp in governed_md_files:
+                  p = pathlib.Path(fp)
+                  text = read_text_utf8(p)
+                  fm_text, body = extract_front_matter(text)
+
+                  if fm_text is None:
+                      errors.append(f"{fp}: missing or malformed YAML front-matter (expected top-of-file '---' block).")
+                      continue
+
+                  try:
+                      fm = yaml.safe_load(fm_text) or {}
+                  except Exception as e:
+                      errors.append(f"{fp}: YAML front-matter parse error: {e}")
+                      continue
+
+                  if not isinstance(fm, dict):
+                      errors.append(f"{fp}: YAML front-matter must parse to a mapping/object.")
+                      continue
+
+                  # Required keys
+                  for k in REQUIRED_KEYS:
+                      if k not in fm:
+                          errors.append(f"{fp}: front-matter missing required key '{k}'.")
+
+                  # path must match file path
+                  if "path" in fm:
+                      declared = str(fm["path"]).lstrip("./")
+                      if declared != fp:
+                          errors.append(f"{fp}: front-matter 'path' must match file path (declared '{declared}').")
+
+                  # last_updated format
+                  if "last_updated" in fm:
+                      last_updated = str(fm["last_updated"])
+                      if not re.match(r"^\d{4}-\d{2}-\d{2}$", last_updated):
+                          errors.append(f"{fp}: 'last_updated' must be YYYY-MM-DD (got '{last_updated}').")
+
+                  # markdown_protocol_version exact match (template-aligned)
+                  if "markdown_protocol_version" in fm and REQUIRED_MDP:
+                      mpv = str(fm["markdown_protocol_version"]).strip()
+                      if mpv != REQUIRED_MDP:
+                          errors.append(
+                              f"{fp}: 'markdown_protocol_version' must be '{REQUIRED_MDP}' (got '{mpv}')."
+                          )
+
+                  # ai_transform_* must be YAML lists
+                  for k in ("ai_transform_permissions", "ai_transform_prohibited"):
+                      if k in fm and not isinstance(fm[k], list):
+                          errors.append(f"{fp}: '{k}' must be a YAML list.")
+
+                  # doc_integrity_checksum must look like sha256:...
+                  if "doc_integrity_checksum" in fm:
+                      chk = str(fm["doc_integrity_checksum"]).strip()
+                      if not chk.startswith("sha256:"):
+                          errors.append(f"{fp}: 'doc_integrity_checksum' must start with 'sha256:' (got '{chk}').")
+
+                  status = str(fm.get("status") or "").strip()
+                  doc_uuid = str(fm.get("doc_uuid") or "").strip()
+                  semantic_id = str(fm.get("semantic_document_id") or "").strip()
+
+                  if doc_uuid:
+                      doc_uuid_index[doc_uuid].append((fp, status))
+                  if semantic_id:
+                      semantic_id_index[semantic_id].append((fp, status))
+
+                  # Broken relative links in body should fail
+                  check_internal_links(fp, body, errors)
+
+              # Duplicate canonical homes (doc_uuid / semantic_document_id)
+              for doc_uuid, occurrences in doc_uuid_index.items():
+                  if len(occurrences) <= 1:
+                      continue
+                  if not any(is_deprecation_marker(fp, status) for fp, status in occurrences):
+                      locs = ", ".join(fp for fp, _ in occurrences)
+                      errors.append(
+                          f"Duplicate doc_uuid without deprecation marker: '{doc_uuid}' appears in {locs}."
+                      )
+
+              for semantic_id, occurrences in semantic_id_index.items():
+                  if len(occurrences) <= 1:
+                      continue
+                  if not any(is_deprecation_marker(fp, status) for fp, status in occurrences):
+                      locs = ", ".join(fp for fp, _ in occurrences)
+                      errors.append(
+                          f"Duplicate semantic_document_id without deprecation marker: '{semantic_id}' appears in {locs}."
+                      )
+
+              if errors:
+                  print("❌ KFM Markdown Protocol validation failed:\n", file=sys.stderr)
+                  for e in errors:
+                      print(f"- {e}", file=sys.stderr)
+                  return 1
+
+              print(f"✅ KFM Markdown Protocol validation passed ({len(governed_md_files)} governed Markdown files checked).")
+              return 0
+
+          if __name__ == "__main__":
+              raise SystemExit(main())
+          PY
 
