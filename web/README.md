@@ -171,14 +171,15 @@ ETL → STAC/DCAT/PROV catalogs → graph → APIs → UI → Story Nodes → Fo
 ### System / dataflow diagram
 
 ~~~mermaid
-flowchart LR
-  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
-  B --> C[Neo4j Graph]
-  C --> D[APIs / Contracts]
-  D --> E[Web UI (web/)]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode]
+graph LR
+  A["ETL"] --> B["STAC / DCAT / PROV Catalogs"];
+  B --> C["Neo4j Graph"];
+  C --> D["APIs / Contracts"];
+  D --> E["Web UI (web/)"];
+  E --> F["Story Nodes"];
+  F --> G["Focus Mode"];
 ~~~
+
 
 ### Optional: Focus Mode request sequence
 
