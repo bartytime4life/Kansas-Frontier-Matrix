@@ -1,4 +1,3 @@
-# FILE: src/server/README.md
 ---
 title: "KFM Server (API Boundary) — src/server"
 path: "src/server/README.md"
