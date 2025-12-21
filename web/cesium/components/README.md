@@ -155,9 +155,9 @@ while preserving the same governance constraints used across the app.
 
 ~~~mermaid
 flowchart LR
-  A[API Responses\n(context bundle + layers + provenance refs)] --> B[Cesium Components]
-  B --> C[Viewer Render\n(3D layers + entities)]
-  C --> D[UI Events\n(select/hover/time)]
+  A["API Responses<br/>(context bundle + layers + provenance refs)"] --> B["Cesium Components"]
+  B --> C["Viewer Render<br/>(3D layers + entities)"]
+  C --> D["UI Events<br/>(select / hover / time)"]
   D --> A
 ~~~
 
@@ -166,9 +166,9 @@ flowchart LR
 ~~~mermaid
 sequenceDiagram
   participant User
-  participant UI as React UI
-  participant Cesium as Cesium Components
-  participant API as API Layer
+  participant UI
+  participant API
+  participant Cesium
 
   User->>UI: Select entity / story
   UI->>API: Fetch Focus context bundle (entity_id)
