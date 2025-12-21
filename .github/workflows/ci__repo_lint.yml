@@ -1,1 +1,263 @@
+# .github/workflows/ci__repo_lint.yml
+name: "CI — Repo Lint"
+
+"on":
+  pull_request:
+    branches: ["main", "master"]
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "ci__repo_lint-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  repo_lint:
+    name: "Repo lint (structure + hygiene)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: "Run repo lint checks"
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import os
+          import sys
+          from pathlib import Path
+
+          ROOT = Path(".").resolve()
+
+          # Keep scans fast and deterministic by ignoring common vendor/output dirs.
+          SKIP_DIRS = {
+              ".git",
+              ".hg",
+              ".svn",
+              "node_modules",
+              ".venv",
+              "venv",
+              "__pycache__",
+              ".pytest_cache",
+              ".mypy_cache",
+              ".ruff_cache",
+              ".tox",
+              "dist",
+              "build",
+              ".next",
+              ".cache",
+          }
+
+          errors: list[str] = []
+          warnings: list[str] = []
+
+          def _annot(kind: str, msg: str, file: str | None = None) -> None:
+              # GitHub Actions workflow commands:
+              # https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions
+              if file:
+                  print(f"::{kind} file={file}::{msg}")
+              else:
+                  print(f"::{kind}::{msg}")
+
+          def error(msg: str, file: str | None = None) -> None:
+              errors.append(f"{file}: {msg}" if file else msg)
+              _annot("error", msg, file=file)
+
+          def warn(msg: str, file: str | None = None) -> None:
+              warnings.append(f"{file}: {msg}" if file else msg)
+              _annot("warning", msg, file=file)
+
+          def require_dir(rel: str) -> None:
+              p = ROOT / rel
+              if not p.exists() or not p.is_dir():
+                  error(f"Missing required directory: {rel}", file=rel)
+
+          def require_file(rel: str) -> None:
+              p = ROOT / rel
+              if not p.exists() or not p.is_file():
+                  error(f"Missing required file: {rel}", file=rel)
+
+          def maybe_dir(rel: str, note: str) -> None:
+              p = ROOT / rel
+              if not p.exists() or not p.is_dir():
+                  warn(f"Missing recommended directory: {rel}. {note}", file=rel)
+
+          # --------------------------------------------------------------------
+          # REQUIRED: repo top-levels (KFM Master Guide expected set)
+          # --------------------------------------------------------------------
+          REQUIRED_TOP_LEVEL_DIRS = [
+              ".github",
+              "data",
+              "docs",
+              "mcp",
+              "schemas",
+              "src",
+              "tests",
+              "tools",
+              "web",
+              "releases",
+          ]
+          for d in REQUIRED_TOP_LEVEL_DIRS:
+              require_dir(d)
+
+          # --------------------------------------------------------------------
+          # REQUIRED: canonical roots called out in v13 migration Phase 0
+          # --------------------------------------------------------------------
+          REQUIRED_CANONICAL_ROOTS = [
+              "schemas",
+              "releases",
+              "data/catalog/dcat",
+              "data/prov",
+              "data/graph",
+          ]
+          for d in REQUIRED_CANONICAL_ROOTS:
+              require_dir(d)
+
+          # --------------------------------------------------------------------
+          # REQUIRED: top-level compliance files called out in v13 migration Phase 0
+          # --------------------------------------------------------------------
+          REQUIRED_COMPLIANCE_FILES = [
+              "LICENSE",
+              "SECURITY.md",
+              ".editorconfig",
+              ".pre-commit-config.yaml",
+              "CITATION.cff",
+              "CHANGELOG.md",
+          ]
+          for f in REQUIRED_COMPLIANCE_FILES:
+              require_file(f)
+
+          # --------------------------------------------------------------------
+          # RECOMMENDED: canonical homes by stage (warn only)
+          # --------------------------------------------------------------------
+          maybe_dir("src/pipelines", "Canonical home for ETL / pipelines.")
+          maybe_dir("src/graph", "Canonical home for graph ingest + ontology tooling.")
+          maybe_dir("src/server", "Canonical home for API boundary.")
+          maybe_dir("docs/reports/story_nodes", "Canonical home for Story Nodes.")
+          maybe_dir("data/stac", "Canonical home for STAC catalogs.")
+          maybe_dir("docs/standards", "Expected location for governed standards.")
+          maybe_dir("docs/templates", "Expected location for governed templates.")
+
+          # --------------------------------------------------------------------
+          # RULE: no README.me anywhere
+          # --------------------------------------------------------------------
+          for dirpath, dirnames, filenames in os.walk(ROOT):
+              dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+              for fn in filenames:
+                  if fn.lower() == "readme.me":
+                      fp = Path(dirpath) / fn
+                      error("Disallowed file name `README.me` (use `README.md`).", file=str(fp))
+
+          # --------------------------------------------------------------------
+          # RULE: no YAML front-matter in code files
+          # --------------------------------------------------------------------
+          CODE_ROOTS = ["src", "web", "tests", "tools"]
+          CODE_EXTS = {
+              ".py",
+              ".js",
+              ".jsx",
+              ".ts",
+              ".tsx",
+              ".java",
+              ".go",
+              ".rs",
+              ".rb",
+              ".php",
+              ".cs",
+              ".c",
+              ".h",
+              ".cpp",
+              ".hpp",
+              ".sh",
+              ".bash",
+              ".ps1",
+              ".sql",
+          }
+
+          def first_nonempty_line(path: Path, max_lines: int = 50) -> str | None:
+              try:
+                  with path.open("r", encoding="utf-8") as f:
+                      for _ in range(max_lines):
+                          line = f.readline()
+                          if line == "":
+                              return None
+                          if line.strip() == "":
+                              continue
+                          return line.strip()
+              except UnicodeDecodeError:
+                  # Skip binary / non-utf8 files.
+                  return None
+              except Exception as e:
+                  warn(f"Could not read file for YAML front-matter check: {e}", file=str(path))
+                  return None
+
+          for root_rel in CODE_ROOTS:
+              base = ROOT / root_rel
+              if not base.exists():
+                  continue
+
+              for dirpath, dirnames, filenames in os.walk(base):
+                  dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
+                  for fn in filenames:
+                      fp = Path(dirpath) / fn
+                      if fp.suffix.lower() not in CODE_EXTS:
+                          continue
+                      first = first_nonempty_line(fp)
+                      if first == "---":
+                          error(
+                              "YAML front-matter marker `---` found as first non-empty line in a code file.",
+                              file=str(fp),
+                          )
+
+          # --------------------------------------------------------------------
+          # RULE: no duplicate canonical homes without explicit DEPRECATED.md markers
+          # --------------------------------------------------------------------
+          DUPLICATE_CANONICAL_PAIRS = [
+              # (canonical, legacy/alternate, label)
+              ("src/server", "src/api", "API boundary (canonical: src/server/)"),
+              ("web", "src/web", "UI (canonical: web/)"),
+              ("docs/reports/story_nodes", "docs/story_nodes", "Story Nodes (canonical: docs/reports/story_nodes/)"),
+              ("src/pipelines", "src/etl", "ETL / pipelines (canonical: src/pipelines/)"),
+              ("data/catalog/dcat", "data/dcat", "DCAT outputs (canonical: data/catalog/dcat/)"),
+              ("data/prov", "data/provenance", "PROV bundles (canonical: data/prov/)"),
+          ]
+
+          for canon_rel, alt_rel, label in DUPLICATE_CANONICAL_PAIRS:
+              canon = ROOT / canon_rel
+              alt = ROOT / alt_rel
+
+              if alt.exists() and not canon.exists():
+                  warn(
+                      f"Non-canonical path exists without canonical home for {label}: found `{alt_rel}` but not `{canon_rel}`.",
+                      file=alt_rel,
+                  )
+
+              if canon.exists() and alt.exists():
+                  marker_ok = (canon / "DEPRECATED.md").exists() or (alt / "DEPRECATED.md").exists()
+                  if not marker_ok:
+                      error(
+                          f"Duplicate canonical homes for {label}: both `{canon_rel}` and `{alt_rel}` exist, but no `DEPRECATED.md` marker found in either.",
+                          file=alt_rel,
+                      )
+
+          # --------------------------------------------------------------------
+          # Exit / summary
+          # --------------------------------------------------------------------
+          if errors:
+              print(f"Repo lint failed: {len(errors)} error(s), {len(warnings)} warning(s).")
+              sys.exit(1)
+
+          print(f"Repo lint passed: {len(warnings)} warning(s).")
+          PY
 
