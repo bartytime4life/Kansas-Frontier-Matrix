@@ -164,16 +164,18 @@ flowchart LR
 
 ### Optional: sequence diagram (Focus Mode + map focus)
 
-> Note: Some Mermaid renderers throw runtime errors on `sequenceDiagram` (e.g., “reading 'x' / t is undefined”).
-> When that happens, use this **sequence-style flowchart** instead (it is more portable across renderers). :contentReference[oaicite:0]{index=0}
-
 ~~~mermaid
 flowchart TB
-  U["User"] -->|Select entity / story| UI["React UI"]
-  UI -->|Fetch focus context bundle (entityId)| API["API Layer"]
-  API -->|Return: narrative + focus hints + provenance refs| UI
-  UI -->|Apply focus center/time; activate focus layers| C["Cesium Components"]
-  C -->|Selection/hover events + provenance pointers| UI
+  U["User"] --> S1["Select entity or story"]
+  S1 --> UI["React UI"]
+  UI --> Q1["Request focus context bundle"]
+  Q1 --> API["API Layer"]
+  API --> R1["Return narrative and provenance refs"]
+  R1 --> UI
+  UI --> A1["Apply focus center and focus time"]
+  A1 --> C["Cesium Components"]
+  C --> E1["Emit hover and select events"]
+  E1 --> UI
 ~~~
 
 ## 📦 Data & Metadata
