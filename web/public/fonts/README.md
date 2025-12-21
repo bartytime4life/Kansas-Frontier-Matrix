@@ -1,179 +1,264 @@
 ---
-title: "🔤 Kansas Frontier Matrix — Web Fonts & Typography Assets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Web Fonts — README"
 path: "web/public/fonts/README.md"
-version: "v9.7.0"
-last_updated: "2025-11-05"
-review_cycle: "Quarterly / Autonomous"
+version: "v1.0.0"
+last_updated: "2025-12-21"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:web:public:fonts:readme:v1.0.0"
+semantic_document_id: "kfm-web-public-fonts-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:public:fonts:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../../releases/v9.7.0/sbom.spdx.json"
-manifest_ref: "../../../../../releases/v9.7.0/manifest.zip"
-telemetry_ref: "../../../../../releases/v9.7.0/focus-telemetry.json"
-telemetry_schema: "../../../../../schemas/telemetry/web-public-fonts-v1.json"
-governance_ref: "../../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🔤 **Kansas Frontier Matrix — Web Fonts & Typography Assets**
-`web/public/fonts/README.md`
-
-**Purpose:** Provide a FAIR+CARE-certified, accessible, and sustainable typography system for the KFM web interface.  
-This directory contains open-source, ISO-compliant font assets licensed under **OFL 1.1 / CC-BY 4.0**, supporting inclusive multilingual readability under **MCP v6.3** and **WCAG 2.1 AA**.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../../../docs/README.md)
-[![License: OFL 1.1 / CC-BY 4.0](https://img.shields.io/badge/License-OFL%201.1%20%2F%20CC--BY%204.0-green)](../../../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../../../../../docs/standards/faircare.md)
-[![Status: Stable](https://img.shields.io/badge/Status-Stable-success)]()
-
-</div>
-
----
+# KFM Web Fonts
 
 ## 📘 Overview
 
-The **Typography layer** defines consistent, open, and accessible font usage for KFM’s web and visualization systems.  
-All font families undergo FAIR+CARE validation, checksum verification, and accessibility testing for legibility, energy efficiency, and multilingual compatibility.
+### Purpose
+This directory contains **redistributable webfont files** used by the KFM web UI. The intent is to:
+- keep font assets **local to the repo** (no runtime CDN dependency),
+- make **licensing explicit** per font family, and
+- support **repeatable builds** for the frontend UI.
 
----
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| Webfont binaries served as static assets (e.g., `.woff2`, `.woff`) | Font fetching from third-party CDNs at runtime |
+| Per-font licensing files and attribution | Fonts without a clear redistribution license |
+| Optional font manifest(s) used by UI build/runtime | Any data pipeline artifacts (ETL/Catalog/Graph/API) |
+
+### Audience
+- Primary: Frontend developers maintaining the KFM UI
+- Secondary: Designers / content curators selecting typography
+
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc: “webfont”, “WOFF2”, “subsetting”, “fallback stack”
+
+### Key artifacts (what this doc points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Font binaries | `web/public/fonts/<family>/*.(woff2|woff)` | UI | Prefer WOFF2 for production payload size |
+| Font license | `web/public/fonts/<family>/LICENSE*` or `OFL.txt` | UI | Must be included for each font family |
+| Font attribution | `web/public/fonts/<family>/ATTRIBUTION.md` (optional) | UI | Recommended when license requires attribution |
+| Optional manifest | `web/public/fonts/fonts.manifest.json` (optional) | UI | Only if the UI needs it (not required by this doc) |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Directory tree + conventions documented
+- [ ] Clear “how to add a font” checklist
+- [ ] License/attribution requirements stated
+- [ ] Validation steps listed and repeatable
 
 ## 🗂️ Directory Layout
 
-```
-web/public/fonts/
-├── README.md
-│
-├── Inter/                  # Primary UI font (sans-serif)
-│   ├── Inter-Regular.woff2
-│   ├── Inter-Bold.woff2
-│   ├── Inter-Italic.woff2
-│   └── metadata.json
-│
-├── Source_Serif_Pro/       # Secondary serif font for headings and reports
-│   ├── SourceSerifPro-Regular.woff2
-│   ├── SourceSerifPro-Bold.woff2
-│   └── metadata.json
-│
-├── Space_Mono/             # Monospace for telemetry & code visualization
-│   ├── SpaceMono-Regular.woff2
-│   └── metadata.json
-│
-└── metadata.json           # Global registry for font families and governance metadata
-```
+### This document
+- `path`: `web/public/fonts/README.md`
 
----
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Frontend | `web/` | React/Map UI code + static assets |
+| Static assets | `web/public/` | Files served as-is (static hosting) |
+| Fonts | `web/public/fonts/` | Webfont binaries + licenses |
 
-## 🧩 Font Governance Workflow
+### Expected file tree for this sub-area
+~~~text
+📁 web/
+└── 📁 public/
+    └── 📁 fonts/
+        ├── 📄 README.md
+        ├── 📁 <font-family-slug>/
+        │   ├── 📄 LICENSE.txt        (or OFL.txt / Apache-2.0.txt / etc.)
+        │   ├── 📄 ATTRIBUTION.md     (optional)
+        │   ├── 📄 <family>-regular.woff2
+        │   ├── 📄 <family>-italic.woff2
+        │   ├── 📄 <family>-bold.woff2
+        │   └── 📄 <family>-bolditalic.woff2
+        └── 📄 fonts.manifest.json     (optional)
+~~~
 
-```mermaid
-flowchart TD
-A["Font Acquisition (OFL / Apache Sources)"] --> B["Accessibility Audit (WCAG 2.1 AA)"]
-B --> C["Checksum + License Verification"]
-C --> D["FAIR+CARE & ISO Metadata Registration"]
-D --> E["Governance Ledger Sync (Provenance + Telemetry)"]
-```
+## 🧭 Context
 
-1. **Acquisition:** Fonts sourced only from verifiable, open repositories.  
-2. **Audit:** Readability, legibility, and language coverage validated.  
-3. **Checksum:** Hashes computed for version integrity.  
-4. **Governance:** Registered in FAIR+CARE and ISO 19115 metadata ledgers.  
+### Background
+Web UIs commonly bundle font assets as static files. Without explicit conventions, font files tend to drift:
+- unclear licensing/redistribution rights,
+- inconsistent naming (hard to reference in CSS),
+- bloated payload sizes (e.g., shipping TTF/OTF instead of WOFF2),
+- missing attribution.
 
----
+This README establishes conventions so font assets are traceable and legally distributable.
 
-## ⚙️ Font Contracts & Validation
+### Assumptions
+- `web/public/` is treated as a static asset root by the frontend build/dev server (not confirmed in repo).
+- Font usage is wired through CSS `@font-face` (exact CSS entrypoint not confirmed in repo).
 
-| Contract | Purpose | Validator |
-|----------|----------|-----------|
-| Accessibility | Ensure WCAG 2.1 AA legibility across all sizes. | `accessibility_scan.yml` |
-| FAIR+CARE | Audit provenance and inclusivity of typefaces. | `faircare-validate.yml` |
-| Telemetry | Record render performance and energy footprint. | `telemetry-export.yml` |
-| Metadata | SPDX + ISO 19115 font-level metadata validation. | CI/CD Audit |
+### Constraints / invariants
+- This is a **UI-layer** asset area; it must not introduce coupling that bypasses the API boundary.
+- Any third-party font added must have a license compatible with redistribution in this repository.
 
-Artifacts logged to:
-- `../../../../../releases/v9.7.0/focus-telemetry.json`  
-- `../../../../../docs/reports/audit/data_provenance_ledger.json`
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Where is the canonical CSS entrypoint for `@font-face` rules? | UI | TBD |
+| Do we need a `fonts.manifest.json`, or is direct CSS usage sufficient? | UI | TBD |
 
----
+### Future extensions
+- Extension point A: Add font-subsetting workflow (build step) to reduce payload sizes.
+- Extension point B: Add CI lint to ensure each `<family>/` includes a license file.
 
-## 🧠 FAIR+CARE Governance Matrix
+## 🗺️ Diagrams
 
-| Principle | Implementation | Oversight |
-|------------|----------------|------------|
-| **Findable** | Fonts indexed by name, version, and checksum. | @kfm-data |
-| **Accessible** | WCAG 2.1 AA visual contrast and readability ensured. | @kfm-accessibility |
-| **Interoperable** | ISO 19115 metadata + OFL licensing for reuse. | @kfm-architecture |
-| **Reusable** | Open licenses; easily embeddable in all frameworks. | @kfm-design |
-| **Collective Benefit** | Promotes inclusive, multilingual readability. | @faircare-council |
-| **Authority to Control** | Council certifies accessibility and ethics of typography. | @kfm-governance |
-| **Responsibility** | Monitors sustainability and carbon metrics per render. | @kfm-sustainability |
-| **Ethics** | Avoids cultural bias or proprietary restriction in design. | @kfm-ethics |
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  Browser["Browser"] -->|GET /fonts/...| Static["Static host (web/public)"]
+  Static --> FontFiles["WOFF2/WOFF files"]
+  Browser -->|CSS @font-face| UI["KFM UI"]
+~~~
 
----
+## 📦 Data & Metadata
 
-## 🧾 Example Font Metadata
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Font source package | zip/ttf/otf/woff/woff2 | Vendor/foundry distribution | License must allow redistribution |
+| License text | txt/md | Provided by font author | Must be present in repo next to fonts |
 
-```json
-{
-  "id": "font_registry_v9.7.0",
-  "families": ["Inter", "Source Serif Pro", "Space Mono"],
-  "license": "OFL-1.1",
-  "fairstatus": "certified",
-  "wcag_compliance": "2.1 AA",
-  "checksum_sha256": "a9efc512d4d237a67bc2ad6eb8e12f3f46aa71267ac96e1a40c2e7c39a88d918",
-  "energy_efficiency_score": 99.2,
-  "carbon_output_gco2e": 0.03,
-  "timestamp": "2025-11-05T19:20:00Z"
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Webfont(s) | `.woff2` (preferred), `.woff` (optional) | `web/public/fonts/<family>/` | Naming + license conventions (this doc) |
+
+### Sensitivity & redaction
+- Fonts in this directory are expected to be **public** and **redistributable**.
+- Do not include any font files embedded with sensitive/closed terms.
+
+### Quality signals
+- Prefer `.woff2` (smaller, web-optimized).
+- Keep file sizes reasonable; avoid shipping unnecessary weights/styles.
+- If subsetting is used, document it in `ATTRIBUTION.md` (optional).
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+- Not applicable (UI static asset, not a cataloged geospatial asset).
+
+### DCAT
+- Not applicable.
+
+### PROV-O
+- Not applicable, unless a font-subsetting pipeline is introduced later (in which case capture the transformation activity and inputs).
+
+### Versioning
+- Treat changes to font binaries as versioned assets. If a font file changes materially (subset, new version), note it in `ATTRIBUTION.md` and/or a changelog (optional).
+
+## 🧱 Architecture
+
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| UI Static Assets | Serve font files | HTTP GET (static hosting) |
+| UI Styling Layer | Reference fonts | CSS `@font-face` + font-family stacks |
+
+### Interfaces / contracts
+
+**CSS `@font-face` example (adjust paths to match actual filenames):**
+~~~css
+@font-face {
+  font-family: "ExampleFont";
+  src: url("/fonts/examplefont/examplefont-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
-```
+~~~
 
----
+**Naming convention (recommended):**
+- directory: `web/public/fonts/<font-family-slug>/`
+- files: `<family>-<style>.woff2` (lowercase, hyphenated)
+- include `LICENSE*` in each family folder
 
-## ⚙️ Font Usage Guidelines
+## 🧠 Story Node & Focus Mode Integration
 
-| Font Family | Type | Role | FAIR+CARE Status |
-|--------------|------|------|------------------|
-| `Inter` | Sans-serif | UI + data visualizations | ✅ Certified |
-| `Source Serif Pro` | Serif | Headings + narratives | ✅ Certified |
-| `Space Mono` | Monospace | Code + telemetry | ✅ Certified |
+### How this work surfaces in Focus Mode
+- Not applicable directly. Fonts are UI presentation assets.
 
-All fonts must load asynchronously with `font-display: swap` to minimize blocking and improve sustainability.
+### Provenance-linked narrative rule
+- Not applicable.
 
----
+## 🧪 Validation & CI/CD
 
-## ♿ Accessibility & Sustainability Standards
+### Validation steps
+- [ ] Each `<family>/` folder contains a license file (`LICENSE*` or `OFL.txt`, etc.)
+- [ ] Font files are referenced by CSS without 404s (check browser network panel)
+- [ ] No runtime dependency on third-party font CDNs unless explicitly approved
+- [ ] Filenames are stable and predictable (avoid renaming without updating references)
 
-- Minimum font size **16px**; scalable typography with user zoom support.  
-- Contrast ratio ≥ **4.5:1**; variable weights used for emphasis, not color alone.  
-- Fonts optimized (WOFF2) and compressed for energy efficiency.  
-- Energy use per render tracked in telemetry for every deployment.  
+### Reproduction
+~~~bash
+# Placeholder — replace with repo-specific UI dev/build commands
+# 1) run the UI locally
+# 2) load a page that uses the font
+# 3) verify the browser requests /fonts/... and receives 200
+~~~
 
----
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| (optional) font payload size | build output | `docs/telemetry/` (not confirmed in repo) |
 
-## 🌱 Sustainability Metrics
+## ⚖ FAIR+CARE & Governance
 
-| Metric | Target | Verified By |
-|-------|--------|-------------|
-| Avg. File Size | ≤ 150 KB | Build Metrics |
-| Render Energy | ≤ 0.02 Wh | Telemetry |
-| Carbon Output | ≤ 0.03 gCO₂e | CI Pipeline |
-| Renewable Hosting | 100% RE100 | @kfm-infrastructure |
+### Review gates
+- License review for any new font family (required).
+- UI review to confirm font is actually used and not dead weight.
 
----
+### CARE / sovereignty considerations
+- Not applicable (typography assets), except ensuring no restricted content is embedded in asset metadata.
+
+### AI usage constraints
+- Ensure any AI-assisted edits do not fabricate license terms. Licenses must be copied from the font author’s distribution.
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
-|----------|------|---------|----------|
-| v9.7.0 | 2025-11-05 | KFM Core Team | Upgraded & aligned: governance contracts, telemetry schema v1, and accessibility validation. |
-| v9.6.0 | 2025-11-04 | KFM Core Team | Introduced OFL-compliant registry and checksum lineage. |
-| v9.5.0 | 2025-11-02 | KFM Core Team | Integrated WCAG validation and multilingual readiness. |
-| v9.3.2 | 2025-10-28 | KFM Core Team | Established FAIR+CARE typography governance baseline. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-21 | Initial README for web font assets | TBD |
 
 ---
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — OFL 1.1 / CC-BY 4.0**  
-Maintained under **Master Coder Protocol v6.3** · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[Back to Public Assets](../README.md) · [Docs Index](../../../../../docs/README.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
