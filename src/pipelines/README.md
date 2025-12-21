@@ -1,7 +1,7 @@
 ---
 title: "KFM Pipelines — src/pipelines"
 path: "src/pipelines/README.md"
-version: "v0.1.0"
+version: "v0.1.1"
 last_updated: "2025-12-21"
 status: "draft"
 doc_kind: "Guide"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:src:pipelines:readme:v0.1.0"
-semantic_document_id: "kfm-src-pipelines-readme-v0.1.0"
-event_source_id: "ledger:kfm:doc:src:pipelines:readme:v0.1.0"
+doc_uuid: "urn:kfm:doc:src:pipelines:readme:v0.1.1"
+semantic_document_id: "kfm-src-pipelines-readme-v0.1.1"
+event_source_id: "ledger:kfm:doc:src:pipelines:readme:v0.1.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -102,28 +102,31 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 | Area | Path | What lives here |
 |---|---|---|
-| Data domains | `data/` | Domain folders + raw/work/processed outputs |
-| Pipeline runbooks | `docs/pipelines/` | Per-domain run instructions + assumptions |
-| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Generated STAC/DCAT/PROV artifacts |
-| Schemas | `schemas/` | JSON Schema (and optional shapes) used in validation |
-| Graph | `src/graph/` + `data/graph/` | Graph build/import artifacts and bindings |
-| API boundary | `src/server/` | Contracted access; redaction/generalization enforced here |
-| UI | `web/` | React-based UI; consumes APIs and catalog endpoints only |
-| Releases | `releases/` | Versioned artifacts (may include run manifests) |
-| Tests | `tests/` | Unit/integration/contract tests |
-| Tools | `tools/` | Dev tooling, validation helpers, scripts |
+| 📦 Data domains | `data/` | Domain folders + raw/work/processed outputs |
+| 🧰 Pipeline runbooks | `docs/pipelines/` | Per-domain run instructions + assumptions |
+| 🗺️ Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Generated STAC/DCAT/PROV artifacts |
+| 🧾 Schemas | `schemas/` | JSON Schema (and optional shapes) used in validation |
+| 🧠 Graph | `src/graph/` + `data/graph/` | Graph build/import artifacts and bindings |
+| 🧱 API boundary | `src/server/` | Contracted access; redaction/generalization enforced here |
+| 🗺️ UI | `web/` | React-based UI; consumes APIs and catalog endpoints only |
+| 🧪 Tests | `tests/` | Unit/integration/contract tests |
+| 🛠️ Tools | `tools/` | Dev tooling, validation helpers, scripts |
+| 🧾 Releases | `releases/` | Versioned artifacts (may include run manifests) |
 
 ### Expected file tree for this sub-area
 
-The repository conventions describe `src/pipelines/` as the pipeline code area, with subfolders such as `etl/` and `catalog/`. Exact per-domain layout is defined in domain runbooks.
+> Note: subfolders beyond `README.md` are **illustrative** until the repo defines/creates them.
 
 ~~~text
-src/pipelines/
-├── README.md
-├── etl/                 # extraction + parsing + normalization (domain entrypoints)
-│   └── <domain>/...      # domain-specific; see docs/pipelines/<domain>/
-└── catalog/             # STAC/DCAT/PROV builders (or orchestration code)
-    └── <catalog_type>/...# implementation-specific (not confirmed in repo)
+📁 src/
+└── 📁 pipelines/
+    ├── 📄 README.md
+    ├── 📁 etl/                              # (illustrative) extraction + normalization entrypoints
+    │   └── 📁 <domain>/                      # (illustrative) one folder per domain
+    │       └── 📄 README.md                  # (illustrative) domain-specific notes; canonical runbook lives in docs/
+    ├── 📁 transforms/                        # (illustrative) shared transforms (unit/CRS normalization, joins, etc.)
+    ├── 📁 catalog/                           # (illustrative) STAC/DCAT/PROV builders and validators
+    └── 📁 runners/                           # (illustrative) orchestration adapters (CLI, CI, scheduled runs)
 ~~~
 
 ## 🧭 Context
@@ -156,8 +159,6 @@ Non-negotiables for anything under `src/pipelines/`:
 - **No UI direct-to-graph reads**: the UI must not query Neo4j directly; graph access is via `src/server/`.
 
 ### Open questions
-
-(Tracked in v13 planning; copied here for visibility.)
 
 | Question | Owner | Target date |
 |---|---|---|
@@ -252,13 +253,6 @@ Implementation details (exact filenames, schema, and run-id strategy) belong in 
 | Graph ingestion | graph import artifacts referencing STAC/DCAT/PROV IDs | ingest only from processed + catalogs + provenance |
 | APIs | contracted access to graph + catalogs | UI never reads graph directly |
 
-### Next-evolution extension points
-
-- (A) Data: new domain with staged outputs + runbook
-- (B) Evidence: new derived evidence products as STAC assets with PROV
-- (C) Validation: richer schema and integrity checks in CI
-- (D) Orchestration: standardized runner interface (not confirmed in repo)
-
 ## 🧠 Story Node & Focus Mode Integration
 
 ### How this work surfaces in Focus Mode
@@ -296,14 +290,6 @@ Per-domain run steps must be documented in `docs/pipelines/<domain>/`.
 # 4) run unit/integration tests
 ~~~
 
-### Telemetry signals (if applicable)
-
-| Signal | Source | Where recorded |
-|---|---|---|
-| Pipeline run manifest | pipeline runner | `data/prov/` or `releases/<version>/` |
-| PROV activity bundle | pipeline runner | `data/prov/` |
-| Catalog validation report | catalog build | (not confirmed in repo) |
-
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
@@ -328,12 +314,5 @@ Pipeline changes may require governance review when they introduce:
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
+| v0.1.1 | 2025-12-21 | Add emoji-governed tree formatting for `src/pipelines/` layout section | TBD |
 | v0.1.0 | 2025-12-21 | Initial `src/pipelines/` README scaffold | TBD |
-
----
-
-Footer refs:
-
-- Governance: `docs/governance/ROOT_GOVERNANCE.md`
-- Ethics: `docs/governance/ETHICS.md`
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
