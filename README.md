@@ -1,9 +1,9 @@
 ---
-title: "Kansas Frontier Matrix"
+title: "Kansas Frontier Matrix — Repository README"
 path: "README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
-status: "active"
+last_updated: "2025-12-21"
+status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
 
@@ -41,196 +41,283 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# Kansas Frontier Matrix
+# Kansas Frontier Matrix (KFM)
 
-Kansas Frontier Matrix (KFM) is an open-source geospatial + historical knowledge system designed as a living atlas of Kansas, integrating historical, cultural, and ecological data into an interactive map and timeline experience.
+A geospatial + historical knowledge system with governed data, catalogs, graph semantics, APIs, and a map/narrative UI.
 
-This repository is organized around a governed, provenance-first pipeline that supports:
-- standards-based catalogs (STAC / DCAT / PROV),
-- a Neo4j knowledge graph,
-- contracted APIs,
-- a React map UI,
-- curated Story Nodes,
-- and Focus Mode narratives that must remain evidence-linked.
+**Canonical pipeline ordering (non‑negotiable):**  
+**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
 
-## Quick links
+## 📘 Overview
 
-- Master guide: `docs/MASTER_GUIDE_v12.md`
-- System documentation: `docs/architecture/` (see PDFs if present)
-- Templates:
-  - `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-  - `docs/templates/TEMPLATE__STORY_NODE_V3.md`
-  - `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+### Purpose
 
-## What KFM is
+- Provide a single entry point for contributors and readers to understand:
+  - what KFM is,
+  - how the repository is organized,
+  - where artifacts “live” across the pipeline,
+  - and which governance/validation rules must not be broken.
 
-KFM blends a data hub with a storytelling tool:
-- It ingests diverse sources (documents, images, maps, structured GIS layers).
-- It standardizes outputs into catalogs and lineage bundles.
-- It builds a semantic graph for query and context assembly.
-- It serves map + narrative experiences through APIs and a web UI.
-- It produces Story Nodes and Focus Mode narratives that always link back to cited source assets.
+### Scope
 
-## Canonical pipeline
+| In Scope | Out of Scope |
+|---|---|
+| Repository orientation + canonical pipeline + directory layout + contribution pointers | Full subsystem implementations, deployment specifics, and domain-specific dataset documentation (see domain READMEs + subsystem docs) |
 
-The pipeline ordering is non-negotiable:
+### Audience
 
-1. ETL
-2. STAC / DCAT / PROV catalogs
-3. Neo4j graph
-4. APIs
-5. React map UI
-6. Story Nodes
-7. Focus Mode
+- Primary: maintainers and contributors (data, catalog, graph, API, UI, narrative).
+- Secondary: reviewers (governance/ethics/sovereignty), historians/editors, and external collaborators.
+
+### Definitions (link to glossary)
+
+- Link: `docs/glossary.md` (if present)
+- Terms used in this doc:
+  - **Domain pack**: the minimal set that lets a domain participate in the pipeline (staging + mapping + tests + docs).
+  - **Contract artifact**: machine-validated schema/spec (JSON Schema, OpenAPI, GraphQL SDL, UI registry schema).
+  - **Evidence artifact**: catalog + provenance outputs consumed downstream (STAC/DCAT/PROV and derived products).
+  - **Story Node**: a provenance-linked narrative artifact designed to render in the UI.
+  - **Focus Mode**: an immersive UI view that consumes provenance-linked context only.
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master Guide v12 (draft) | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical pipeline + invariants + expected top-level layout |
+| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | TBD | Default template for governed markdown docs |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | TBD | Focus Mode narrative artifacts |
+| API Contract Extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | TBD | REST/GraphQL contract changes |
+
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid
+- [ ] References point to canonical docs/templates (no dead paths)
+- [ ] Directory layout matches the Master Guide’s expected top-levels
+- [ ] Constraints/invariants are stated clearly (pipeline order, API boundary, provenance rules)
+- [ ] Validation expectations are described (even if commands are placeholders)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
+
+## 🗂️ Directory Layout
+
+### This document
+
+- `path`: `README.md` (must match front-matter)
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Repo metadata + policy | `.github/` | security policy, workflows, issue templates |
+| Data domains | `data/` | domain staging (`raw/`, `work/`, `processed/`) + (optional) domain docs |
+| Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC items/collections, DCAT datasets, PROV lineage bundles |
+| Graph | `src/graph/` + `data/graph/` | ontology-governed ingest + import CSVs/scripts |
+| Pipelines | `src/pipelines/` | deterministic transforms; outputs written under `data/**` |
+| API boundary | `src/server/` | contracted access layer (REST/GraphQL); redaction + provenance refs |
+| Frontend | `web/` | map layers + Focus Mode UX; no direct graph access |
+| Schemas | `schemas/` | JSON Schemas for artifacts (catalogs, story nodes, UI registries, telemetry) |
+| Story Nodes | `docs/reports/story_nodes/` | draft/published narratives + assets |
+| MCP / experiments | `mcp/` | experiment logs, run manifests, SOPs |
+| Tests | `tests/` | unit + integration + contract tests |
+| Tooling | `tools/` | scripts and utilities (repo lint, validators, etc.) |
+| Releases | `releases/` | release manifests/SBOMs/telemetry snapshots (if used) |
+
+### Expected file tree for this sub-area
+
+~~~text
+📁 Kansas-Frontier-Matrix/
+├── 📄 README.md
+├── 📁 .github/
+├── 📁 data/
+├── 📁 docs/
+├── 📁 mcp/
+├── 📁 schemas/
+├── 📁 src/
+├── 📁 tests/
+├── 📁 tools/
+├── 📁 web/
+└── 📁 releases/
+~~~
+
+### Target data layout (reference)
+
+~~~text
+📁 data/
+├── 📁 stac/
+│   ├── 📁 collections/
+│   └── 📁 items/
+├── 📁 catalog/
+│   └── 📁 dcat/
+├── 📁 prov/
+├── 📁 graph/
+│   ├── 📁 csv/
+│   └── 📁 cypher/
+└── 📁 <domain>/
+    ├── 📁 raw/
+    ├── 📁 work/
+    ├── 📁 processed/
+    ├── 📁 mappings/
+    └── 📄 README.md
+~~~
+
+## 🧭 Context
+
+### Background
+
+KFM’s core design goal is an evidence-first, provenance-linked system where every downstream view (including narrative Focus Mode) remains traceable back to catalog + provenance artifacts.
+
+### Assumptions
+
+- The canonical pipeline ordering is preserved.
+- Schema/contracts are treated as first-class artifacts.
+- Pipelines are deterministic and reproducible.
+
+### Constraints / invariants
+
+- **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode** is preserved.
+- **Frontend consumes contracts via APIs (no direct graph dependency).**
+- **Focus Mode only presents provenance-linked content (no uncited facts).**
+- Predictive/AI-generated content (if any) is opt-in and must include uncertainty/confidence metadata.
+
+### Open questions
+
+| Question | Owner | Target date |
+|---|---|---|
+| Which paths are currently implemented vs “target layout”? | TBD | TBD |
+| Where is the canonical glossary located (and is it complete)? | TBD | TBD |
+| Which CI validators exist today (Markdown protocol, schema lint, contract tests)? | TBD | TBD |
+
+### Future extensions
+
+- New data domains with domain packs (staging + mapping + tests + docs).
+- New evidence artifacts (analysis products) treated as catalog assets and linked into Focus Mode.
+- New story node types (with schema validation and provenance requirements).
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram
 
 ~~~mermaid
 flowchart LR
-  A[ETL] --> B[STAC DCAT PROV Catalogs]
+  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
   B --> C[Neo4j Graph]
   C --> D[APIs]
-  D --> E[React Map UI]
+  D --> E[React/Map UI]
   E --> F[Story Nodes]
   F --> G[Focus Mode]
 ~~~
 
-## Repository layout
+### Optional: sequence diagram
 
-The repo is expected to follow this top-level structure:
-
-~~~text
-📁 .github/
-📁 data/
-📁 docs/
-📁 mcp/
-📁 schemas/
-📁 src/
-📁 tests/
-📁 tools/
-📁 web/
-📁 releases/
+~~~mermaid
+sequenceDiagram
+  participant UI
+  participant API
+  participant Graph
+  UI->>API: Focus query(entity_id)
+  API->>Graph: fetch subgraph + provenance refs (with redaction rules)
+  Graph-->>API: context bundle + evidence references
+  API-->>UI: contracted payload (narrative + citations + audit flags)
 ~~~
 
-### Where things go
+## 📦 Data & Metadata
 
-| Area | Path | What lives here |
+### Data lifecycle (required staging)
+
+- `data/raw/` → `data/work/` → `data/processed/` → catalog outputs (`data/stac/`, `data/catalog/dcat/`, `data/prov/`) → graph ingest exports (`data/graph/`)
+
+### Domain expansion pattern (recommended)
+
+- Add a new domain under: `data/<domain>/...`
+- Add ETL/pipeline logic under: `src/pipelines/<domain>/...` (or shared utilities under `src/pipelines/common/`)
+- Add mapping notes under: `data/<domain>/mappings/` and/or `docs/data/<domain>/` (choose one canonical home and link it)
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### Policy for every dataset / evidence product
+
+For each dataset or evidence product:
+- STAC Collection + Item(s)
+- DCAT mapping record (minimum title/description/license/keywords)
+- PROV activity describing lineage (sources + run/activity identifiers)
+- Version lineage links reflected in catalogs and (where applicable) the graph
+
+## 🧱 Architecture
+
+### Subsystem contracts (what must exist for each subsystem)
+
+| Subsystem | Contract artifacts | “Do not break” rule |
 |---|---|---|
-| Raw and staged data | `data/` | `raw/`, `work/`, `processed/` plus domain subfolders |
-| Catalog outputs | `data/stac/` and `data/catalog/dcat/` and `data/prov/` | STAC items/collections, DCAT datasets, PROV lineage |
-| Pipelines | `src/pipelines/` | ETL + catalog build + graph build |
-| Graph | `src/graph/` | Ontology bindings, migrations, constraints |
-| APIs | `src/server/` (or `src/api/` if used) | REST/GraphQL contracts and services |
-| Frontend | `web/` | React + MapLibre UI, layer registry, UX |
-| Story Nodes | `docs/reports/.../story_nodes/` | Narrative artifacts with provenance |
-| Standards and templates | `docs/standards/` and `docs/templates/` | Markdown protocol + governed doc templates |
-| Tests | `tests/` | Unit/integration/contract tests |
-| Tooling | `tools/` | Validation scripts, helpers |
-| Experiments | `mcp/` | Model cards, SOPs, runs, experiments |
+| ETL | configs + run logs + validation | deterministic, replayable |
+| Catalogs | schemas + validators | machine-validated |
+| Graph | ontology + migrations + constraints | stable labels/edges |
+| APIs | OpenAPI/GraphQL schema + tests | backward compat or version bump |
+| UI | layer registry + a11y + audit affordances | no hidden data leakage |
+| Focus Mode | provenance-linked context bundle | no hallucinated sources |
 
-## Working agreements and invariants
+## 🧠 Story Node & Focus Mode Integration
 
-- Preserve the canonical pipeline ordering.
-- Provenance is first-class: every public narrative must trace to source assets.
-- Frontend does **not** read Neo4j directly; it consumes contracts through the API layer.
-- Pipelines must be deterministic and idempotent.
-- Sensitive content must be generalized/redacted according to governance and sovereignty rules.
+### How this work surfaces in Focus Mode
 
-## Getting started
+- Story Nodes are designed to be “machine-ingestible storytelling”:
+  - provenance-linked,
+  - connected to graph entities,
+  - and reviewable/publishable artifacts.
 
-### Read first
+### Provenance-linked narrative rule
 
-1. `docs/MASTER_GUIDE_v12.md`
-2. `docs/templates/` (use templates for all governed docs)
-3. `docs/standards/` (Markdown protocol and any catalog/telemetry rules)
+- Every claim in Focus Mode contexts must trace to a dataset / record / asset identifier.
+- Any predictive content must be opt-in and carry uncertainty/confidence metadata.
 
-### Choose a contribution path
+## 🧪 Validation & CI/CD
 
-- Data contributor: add sources and metadata, validate catalogs.
-- Pipeline contributor: implement/adjust ETL, catalog, or graph build steps.
-- Graph contributor: update ontology mappings and migrations.
-- API contributor: add/extend endpoints with contract tests.
-- UI contributor: add layers and Focus Mode UI behavior.
-- Story curator: create Story Nodes with source-linked claims.
+### Validation steps
 
-## Data lifecycle
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV, story nodes, UI registries)
+- [ ] Graph integrity checks
+- [ ] API contract tests
+- [ ] UI schema checks (layer registry)
+- [ ] Security and sovereignty checks (as applicable)
 
-Data should move through these stages:
-
-- `data/raw/` → `data/work/` → `data/processed/` → `data/stac/` (plus `data/catalog/dcat/` and `data/prov/`)
-
-Guidelines:
-- Keep derived datasets out of `src/`.
-- Keep stable identifiers and record version lineage.
-
-## Catalogs and lineage
-
-KFM aligns outputs to:
-- STAC for spatiotemporal assets
-- DCAT for dataset-level catalog views
-- PROV-O for lineage and reproducibility
-
-Expected behavior:
-- Each dataset has discoverable catalog metadata.
-- Each transformation run has a recorded provenance activity.
-- Graph entities can be traced back to catalog item IDs.
-
-## Story Nodes and Focus Mode
-
-Story Nodes are curated narrative artifacts that:
-- reference concrete datasets/documents/asset IDs,
-- connect to graph entities,
-- and render in the UI with citations and audit warnings when applicable.
-
-Focus Mode is the interactive narrative experience that:
-- assembles context bundles from API responses,
-- enforces provenance-linked claims,
-- and exposes optional explanation / uncertainty affordances for predictive content.
-
-## Governance and ethics
-
-KFM is governed under FAIR+CARE principles and sovereignty-aware rules.
-When adding new datasets, narrative behaviors, or public endpoints:
-- document provenance and license terms,
-- tag sensitivity appropriately,
-- and follow review gates defined in governance documentation.
-
-## Contributing
-
-### Documentation requirements
-
-All non-trivial changes must include governed documentation updates:
-- Use exactly one template from `docs/templates/`.
-- Keep YAML front-matter keys intact.
-- Record affected pipeline stages.
-- List impacted paths and validation steps.
-
-### API changes
-
-If you add or change an endpoint:
-- use `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
-- update schemas and add contract tests
-
-### Story Nodes
-
-If you add a narrative node:
-- use `docs/templates/TEMPLATE__STORY_NODE_V3.md`
-- ensure every factual claim maps to a cited dataset/document ID
-
-## Validation
-
-Run the repo’s validation pipeline before submitting changes.
+### Reproduction
 
 ~~~bash
-# Commands are repo-specific.
-# Replace with the actual lint/test/schema validation commands used in this repository.
+# Example placeholders — replace with repo-specific commands
+# 1) validate schemas
+# 2) run unit/integration tests
+# 3) run doc lint
 ~~~
 
-## License
+## ⚖ FAIR+CARE & Governance
 
-- Code: see repository license files (not confirmed here).
-- Data/content: see dataset-level license fields in catalogs; some sources may carry additional restrictions.
+### Review gates
 
-## Version history
+Changes that typically require elevated review:
+- Adding new sensitive layers (restricted locations, cultural knowledge, PII, etc.)
+- Introducing or changing AI-generated narrative behavior visible to users
+- Adding new external data sources
+- Adding new public-facing endpoints
+
+### CARE / sovereignty considerations
+
+- Identify communities impacted and protection rules.
+- Use generalization/redaction for restricted locations.
+- Ensure sensitive assets (images/docs) follow review gates before publication.
+
+### AI usage constraints
+
+- Ensure the document’s AI permissions/prohibitions match intended use.
+- Do not imply prohibited actions (e.g., inferring sensitive locations).
+
+## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial README scaffold aligned to KFM v12 docs | TBD |
+| v1.0.0 | 2025-12-21 | Initial repository README (governed-doc format) | TBD |
+
+---
+
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
