@@ -1,198 +1,220 @@
 ---
-title: "🗃️ Kansas Frontier Matrix — DataCards Component Suite Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🗃️ Kansas Frontier Matrix — DataCards Component Suite Overview"
 path: "web/src/components/DataCards/README.md"
-version: "v11.2.2"
-last_updated: "2025-12-15"
-
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../releases/v11.2.2/web-datacards-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-components-datacards-v2.json"
-energy_schema: "../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT / CC-BY 4.0"
-classification: "Public / Dataset-Sensitive"
-jurisdiction: "United States / Kansas"
-
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-
-status: "Active / Enforced"
+version: "v12.0.0"
+last_updated: "2025-12-21"
+status: "active"
 doc_kind: "Component Overview"
-intent: "frontend-datacards"
-semantic_intent:
-  - "UI-component"
-  - "dataset-metadata"
-  - "governance-ui"
-  - "provenance-ui"
+license: "MIT / CC-BY-4.0"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Aware · Dataset Dependent"
-sensitivity: "Variable"
-public_exposure_risk: "Medium"
-indigenous_rights_flag: true
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Mixed"
-redaction_required: true
+markdown_protocol_version: "KFM-MDP v11.2.6"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-ttl_policy: "12 months"
-sunset_policy: "Superseded upon next DataCards system upgrade"
-immutability_status: "version-pinned"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "CARE-Aware"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-json_schema_ref: "../../../../schemas/json/web-components-datacards-readme-v11.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/web-components-datacards-readme-v11-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-components-datacards-readme-v11.2.2"
-semantic_document_id: "kfm-doc-web-components-datacards-readme-v11"
+doc_uuid: "urn:kfm:doc:web:components:datacards:readme:v12.0.0"
+semantic_document_id: "kfm-web-components-datacards-readme-v12.0.0"
 event_source_id: "ledger:web/src/components/DataCards/README.md"
+commit_sha: "<latest-commit-hash>"
 
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with guardrails"
 ai_transform_permissions:
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "diagram-extraction"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-content"
-  - "hallucinated-metadata"
-  - "unverified-claims"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-
-heading_registry:
-  approved_h2:
-    - "📘 Overview"
-    - "🗂️ Directory Layout"
-    - "🧭 Context"
-    - "🗺️ Diagrams"
-    - "🧠 Story Node & Focus Mode Integration"
-    - "🧪 Validation & CI/CD"
-    - "📦 Data & Metadata"
-    - "🌐 STAC, DCAT & PROV Alignment"
-    - "🧱 Architecture"
-    - "⚖ FAIR+CARE & Governance"
-    - "🕰️ Version History"
-
-provenance_chain:
-  - "web/src/components/DataCards/README.md@v10.4.0"
-  - "web/src/components/DataCards/README.md@v10.3.2"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# 🗃️ Kansas Frontier Matrix — DataCards Component Suite Overview
 
-# 🗃️ **Kansas Frontier Matrix — DataCards Component Suite Overview (v11.2.2)**
 `web/src/components/DataCards/README.md`
 
-**Purpose**  
-The **DataCards Suite** provides FAIR+CARE-governed, metadata-rich, provenance-linked UI components used throughout the Kansas Frontier Matrix (KFM) Web Client.
-DataCards render spatial/temporal previews, dataset classifications, licenses, CARE badges, and provenance details in a consistent, accessible, deterministic format — while enforcing masking/redaction rules for dataset-sensitive content.
+The **DataCards** component suite provides FAIR+CARE-aware, provenance-linked UI components used throughout the KFM Web Client to render dataset and evidence metadata in a **deterministic**, **accessible**, and **redaction-safe** way.
 
-<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Enforced-gold" />
-<img src="https://img.shields.io/badge/A11y-WCAG_2.1_AA%2B-brightgreen" />
-<img src="https://img.shields.io/badge/SLSA-Level_3-orange" />
-
-</div>
+DataCards are a **presentation-layer** suite:
+- They **render** already-normalized metadata and governance overlays.
+- They **never fetch** data (no API calls inside the suite).
+- They **never compute** governance policy (masking decisions must be upstream).
 
 ---
 
 ## 📘 Overview
 
-DataCards are a **governed metadata UI framework** used for:
+### Purpose
+- Define the **responsibilities, boundaries, and invariants** for the DataCards UI suite.
+- Provide a governed reference for:
+  - metadata rendering rules (no guessing / no enrichment inference)
+  - redaction + sovereignty-safe behavior
+  - provenance affordances
+  - telemetry constraints (non-PII)
 
-- STAC/DCAT dataset browsing and search results
-- Story Node asset previews (dataset and evidence attachments)
-- Focus Mode contextual dataset lists and “supporting evidence” trails
-- Map-adjacent dataset listings and layer browsers
-- Provenance and governance details (license, rights-holder, CARE label, sovereignty notices)
+### Scope
 
-**Core principles**
+| In Scope | Out of Scope |
+|---|---|
+| DataCards suite structure + component responsibilities | API calls, data fetching, caching |
+| Rendering rules for metadata + governance overlays | Computing governance policy / permissions |
+| Redaction-safe UI behavior + placeholder rules | Metadata enrichment / inference / “fixups” |
+| A11y requirements for composite card UIs | Graph queries, Neo4j access, ontology changes |
+| Telemetry emission constraints + event naming | Telemetry pipeline implementation details |
 
-- **Deterministic rendering:** schema-driven display; no inferred/hallucinated fields
-- **Governance-first:** CARE and sovereignty rules are enforced, never “optional”
-- **Redaction-aware:** if metadata is incomplete or restricted, DataCards show safe placeholders and explanations
-- **Accessibility:** WCAG 2.1 AA+ semantics for structure, focus order, and non-visual equivalents
-- **Telemetry:** interactions emit non-PII, governance-safe events tied to component version
+### Audience
+- Primary: Web/React engineers building KFM UI surfaces (search, map-adjacent panels, Focus Mode)
+- Secondary: Governance reviewers (FAIR+CARE), a11y reviewers, API/schema maintainers
 
-**Non-goals**
+### Definitions
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **Display model**: A UI-safe object produced upstream (API/hooks) containing display-ready fields.
+  - **Governance overlay**: Policy outputs attached upstream (CARE label, redaction flags, sovereignty notices).
+  - **Redaction-required**: A state where sensitive fields and/or previews must be omitted or generalized.
+  - **Provenance affordance**: UI control to view provenance (PROV trail, manifest references, “derived from”).
 
-- DataCards do not fetch data (no API calls)
-- DataCards do not compute policy (masking decisions come from upstream governance layers)
-- DataCards do not “improve” metadata (no guessing, no enrichment inference)
+### Key artifacts
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| DataCards suite | `web/src/components/DataCards/` | Web UI | Governed UI components; no data fetch |
+| This document | `web/src/components/DataCards/README.md` | Web UI | Component suite overview |
+| Telemetry schema | `schemas/telemetry/web-components-datacards-v2.json` | Telemetry | Event validation (non-PII) |
+| Energy schema | `schemas/telemetry/energy-v2.json` | Telemetry | Optional sustainability telemetry |
+| Carbon schema | `schemas/telemetry/carbon-v2.json` | Telemetry | Optional sustainability telemetry |
+| Governance docs | `docs/governance/` | Governance | ROOT + ethics + sovereignty |
+| Master guide | `docs/MASTER_GUIDE_v12.md` | Program | Canonical pipeline + v12 invariants |
+| Prior release SBOM | `releases/v11.2.2/sbom.spdx.json` | Release Eng | Historical reference (if present) |
+| Prior release manifest | `releases/v11.2.2/manifest.zip` | Release Eng | Historical reference (if present) |
+| Prior DataCards telemetry | `releases/v11.2.2/web-datacards-telemetry.json` | Telemetry | Historical reference (if present) |
+
+### Definition of done
+
+- [ ] Front-matter complete + valid (no extra keys)
+- [ ] Directory tree matches repo reality and is tilde-fenced
+- [ ] Boundaries are explicit: DataCards render only (no fetch, no policy compute)
+- [ ] Redaction + sovereignty behavior is defined and testable
+- [ ] Telemetry constraints documented (no raw sensitive IDs; no PII)
+- [ ] Validation steps and expected test locations listed
+- [ ] Version history updated for this rewrite
 
 ---
 
 ## 🗂️ Directory Layout
 
-KFM-MDP requires the directory tree to be box-safe, one-branch, and tildes-fenced.
+### This document
+- `path`: `web/src/components/DataCards/README.md` (must match front-matter)
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed + catalog outputs |
+| Documentation | `docs/` | Canonical governed docs |
+| Graph | `src/graph/` | Ontology bindings + graph build |
+| Pipelines | `src/pipelines/` | ETL + catalog build + transforms |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Frontend | `web/` | React + map UI |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
+
+### Expected file tree for this sub-area
 
 ~~~text
-📁 web/src/components/DataCards/
-├── 📄 README.md                     — This document (governed component overview)
-├── 📄 DataCard.tsx                  — 🗃️ Universal governed dataset/narrative card container
-├── 📄 DataCardHeader.tsx            — 🏷️ Title, dataset-type label, CARE badge, provenance chip
-├── 📄 DataCardMetadata.tsx          — 🧾 Key fields: publisher, license, time, space, rights
-├── 📄 DataCardPreview.tsx           — 🗺️ Spatial/temporal preview with masking/generalization
-├── 📄 DataCardFooter.tsx            — 🦶 Actions: open/explore/provenance (policy-aware)
-├── 📄 DataCardA11yHelpers.tsx       — ♿ ARIA scaffolding, focus order, SR-only helpers
-└── 📄 DataCardSkeleton.tsx          — 🧱 Non-sensitive loading state (no leaked metadata)
+📁 web/
+└── 📁 src/
+    └── 📁 components/
+        └── 📁 DataCards/
+            ├── 📄 README.md                   — This document (suite overview)
+            ├── 📄 DataCard.tsx                — Suite orchestrator / container
+            ├── 📄 DataCardHeader.tsx          — Title, classification, badges, provenance affordance
+            ├── 📄 DataCardMetadata.tsx        — Key metadata fields (publisher/license/time/space/rights)
+            ├── 📄 DataCardPreview.tsx         — Redaction-safe preview surface (only if allowed)
+            ├── 📄 DataCardFooter.tsx          — Policy-aware actions (open/map/provenance)
+            ├── 📄 DataCardA11yHelpers.tsx     — Shared ARIA + focus-order helpers
+            └── 📄 DataCardSkeleton.tsx        — Safe loading state (no leaked metadata)
 ~~~
 
-**Optional adjacency pattern (if/when added)**  
-If the suite expands, keep additions co-located and explicit (e.g., `types.ts`, `index.ts`, `*.test.tsx`, `*.stories.tsx`) and update this layout immediately.
+Optional adjacency pattern (if/when added): `types.ts`, `index.ts`, `*.test.tsx`, `*.stories.tsx`
 
 ---
 
 ## 🧭 Context
 
-DataCards sit in the **presentation layer** and should receive:
+### Background
+KFM requires consistent, governed UI rendering for:
+- STAC/DCAT dataset browsing and search results
+- Map-adjacent layer lists and dataset side panels
+- Focus Mode “supporting evidence” and contextual dataset lists
+- Story Node attachments (datasets, evidence artifacts, distributions)
 
-- already-resolved dataset/story metadata (STAC/DCAT/Graph-derived)
-- already-computed governance overlays (CARE label, sovereignty flags, redaction directives)
-- already-normalized extents (temporal/spatial), with masking/generalization applied upstream
+### Assumptions
+- DataCards receive **UI-safe** props produced upstream:
+  - normalized metadata fields
+  - governance overlay (CARE label, sovereignty flags, redaction directives)
+  - already-generalized spatial/temporal extents (if needed)
+- Any “open”, “download”, or “view raw” action is **policy-gated** by upstream decisions and/or parent context.
 
-DataCards return:
+### Constraints and invariants
+- The canonical pipeline ordering is preserved: DataCards sit in **UI**, downstream of APIs.
+- DataCards never query Neo4j or catalogs directly: **frontend consumes contracts via APIs**.
+- DataCards must never “sharpen” generalized extents (no recomputing precision from bboxes, IDs, or map state).
+- Missing metadata must be rendered as **explicit unknown** (never guessed).
+- Telemetry must be **non-PII** and must not leak sensitive identifiers.
 
-- accessible, deterministic UI
-- user actions via callbacks (e.g., `onOpen`, `onViewProvenance`, `onAddToMap`)
-- telemetry events (non-PII, schema-valid)
+### Open questions
 
-**Boundary rule:** DataCards must never “undo” upstream generalization by recomputing precise geometry from bboxes, centroids, IDs, or map state.
+| Question | Owner | Target date |
+|---|---|---|
+| Where is the canonical “DataCard display model” schema defined (API schema vs UI types)? | Web + API | TBD |
+| Which telemetry schema version is current for DataCards (v2 vs newer)? | Telemetry | TBD |
+| What is the preferred sovereignty notice component pattern (shared UI component vs DataCards-local)? | Governance + Web | TBD |
+
+### Future extensions
+- Support for “analysis products” (AI evidence artifacts) as first-class card types, linked as STAC assets.
+- Card variants for distributions (download gates, access rights badges).
+- A shared UI library for sovereignty + CARE badges to keep consistent across components.
 
 ---
 
 ## 🗺️ Diagrams
 
+### Canonical KFM placement
+
+~~~mermaid
+flowchart LR
+  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[React/Map UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+  E --> H[DataCards Suite]
+~~~
+
 ### DataCards data flow
 
 ~~~mermaid
 flowchart LR
-  A["STAC/DCAT/Graph Sources"] --> B["Upstream Normalizers + Governance Filters"]
-  B --> C["DataCards Props: DisplayModel + Governance"]
-  C --> D["Header / Metadata / Preview / Footer"]
-  D --> E["User Interactions"]
-  E --> F["Telemetry Events (non-PII)"]
+  API[API contract payload] --> N[Normalizer / UI display model]
+  N --> G[Governance overlay already computed]
+  G --> P[DataCards props]
+  P --> R[Render: Header / Metadata / Preview / Footer]
+  R --> U[User actions via callbacks]
+  U --> T[Telemetry events (non-PII)]
 ~~~
-
 
 ### Component composition
 
@@ -208,78 +230,34 @@ flowchart TB
 
 ---
 
-## 🧠 Story Node & Focus Mode Integration
-
-### Focus Mode v3 usage
-
-DataCards are commonly used to display:
-
-- supporting datasets relevant to a focal entity
-- evidence trails that justify a Focus narrative block
-- related distributions/assets (when allowed by governance)
-
-**Requirements for Focus Mode contexts**
-
-- When the Focus context is sovereign-controlled, DataCards must:
-  - show sovereignty notice components in the header region
-  - suppress preview surfaces that could imply precision
-  - route users to provenance/governance details rather than “open raw”
-
-### Story Node v3 usage
-
-DataCards may appear inside Story Node UI as:
-
-- “Referenced Datasets”
-- “Supporting Evidence”
-- “Assets / Distributions”
-
-**Story Node rule:** DataCards must not add narrative interpretation. They only display metadata and provenance already attached to the Story Node or dataset record.
-
----
-
-## 🧪 Validation & CI/CD
-
-DataCards are dataset-sensitive and must pass stricter validation gates:
-
-- Markdown lint + schema lint for this README
-- Component tests (unit + integration)
-- A11y checks (structure, focus order, reduced-motion compliance)
-- Governance tests (masking, redaction-required flows, sovereignty notices)
-- Telemetry schema validation for emitted events
-
-**Expected test locations**
-
-~~~text
-📁 tests/unit/web/components/DataCards/
-📁 tests/integration/web/components/DataCards/
-~~~
-
-**CI blocking conditions (non-exhaustive)**
-
-- A restricted/sovereign dataset renders a preview surface that implies precision
-- License / CARE label / rights-holder is present upstream but not rendered
-- A11y regressions for keyboard flow or missing textual equivalents
-- Telemetry includes raw IDs or other sensitive fields instead of hashed/abstract identifiers
-
----
-
 ## 📦 Data & Metadata
 
-### Display model inputs
+### Inputs
 
-DataCards should be fed by a “display model” produced upstream (hooks/services/pipelines). A common pattern is a single object that contains:
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Display model | TS object / JSON | API response → UI normalizer | Type checks + snapshot tests |
+| Governance overlay | TS object / JSON | API/governance layer | Governance tests |
+| Action callbacks | Functions | Parent container / router | Unit tests |
+| Telemetry context | Minimal object | Telemetry wrapper | Schema validation |
 
-- stable display fields (title, summary, publisher)
-- governance block (CARE label, redaction directives)
-- normalized extents (temporal, spatial) that are already safe to show
+### Outputs
 
-Example (illustrative) shape:
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Rendered card | DOM/React | `web/` | A11y + visual regression |
+| Telemetry events | JSON | Telemetry pipeline | `schemas/telemetry/...` |
+| User intents | Callback invocations | Parent container | Integration tests |
+
+### Display model guidance
+DataCards should be driven by a single UI-safe “display model” object produced upstream. If fields are absent, render “Unknown / Not provided” rather than inferring.
+
+Illustrative example shape:
 
 ~~~ts
 type CareLabel =
-  | "CARE-P"
-  | "CARE-Aware"
   | "Public"
+  | "CARE-Aware"
   | "Restricted"
   | "Sovereign-Controlled";
 
@@ -293,12 +271,20 @@ interface DataCardGovernance {
 }
 
 interface DataCardExtent {
-  temporal?: { start?: string; end?: string; precision?: "day" | "month" | "year" | "range" };
-  spatial?: { bbox?: [number, number, number, number]; generalized?: boolean; method?: "H3" | "bbox" | "none" };
+  temporal?: {
+    start?: string;
+    end?: string;
+    precision?: "day" | "month" | "year" | "range";
+  };
+  spatial?: {
+    bbox?: [number, number, number, number];
+    generalized?: boolean;
+    method?: "H3" | "bbox" | "none";
+  };
 }
 
 interface DataCardDisplayModel {
-  idHash: string;             // never raw dataset IDs in UI events/URLs unless policy allows
+  idHash: string; // prefer hashed IDs for telemetry + URLs unless explicitly public-safe
   title: string;
   subtitle?: string;
   publisher?: string;
@@ -309,37 +295,33 @@ interface DataCardDisplayModel {
 }
 ~~~
 
-### Redaction behavior
-
-- If `redactionRequired === true`, DataCards must:
+### Sensitivity and redaction
+- If `redactionRequired === true`:
   - hide or generalize preview surfaces
-  - replace sensitive fields with safe placeholders
-  - provide an explanation (tooltips/inline text) referencing governance context
-- If license/rights data is missing, DataCards must show “Unknown / Not provided” rather than guessing.
+  - suppress sensitive fields
+  - show safe placeholders + an explanation (“Restricted by governance”)
+- Never show precise coordinates for restricted/sovereign datasets.
+- Never emit raw dataset identifiers in telemetry unless policy explicitly marks them public-safe.
 
-### Telemetry event guidance
+### Telemetry guidance
+- Stable suite-scoped event names (examples):
+  - `datacard:open`
+  - `datacard:action`
+  - `datacard:provenance_expand`
+  - `datacard:care_warning`
+- Payload must include only minimum fields needed for analysis:
+  - component version
+  - care label bucket
+  - redaction flag
+  - hashed identifier
 
-Event names are stable and suite-scoped:
-
-- `datacard:open`
-- `datacard:hover`
-- `datacard:action`
-- `datacard:care-warning`
-- `datacard:provenance-expand`
-
-**Telemetry content rules**
-
-- never include raw dataset identifiers if they are not explicitly public-safe
-- prefer hashed IDs (already in the display model)
-- include the minimum governance context needed for analysis (e.g., care label bucket)
-
-Illustrative event payload:
+Illustrative payload:
 
 ~~~json
 {
   "event": "datacard:open",
   "component": "DataCards",
-  "version": "v11.2.2",
+  "version": "v12.0.0",
   "id_hash": "sha256:…",
   "care_label": "CARE-Aware",
   "redaction_required": true,
@@ -351,146 +333,167 @@ Illustrative event payload:
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-DataCards must remain interoperable with KFM’s public-facing metadata standards:
+DataCards must remain interoperable with the metadata standards used upstream.
 
-### STAC alignment (KFM-STAC v11)
-
+### STAC
 Commonly displayed (when present and allowed):
-
 - `id`, `collection`
-- `assets` (summarized, not exhaustive dumping)
 - `license`
-- `bbox` / `geometry` (only if already generalized)
 - `datetime` or `start_datetime`/`end_datetime`
+- spatial coverage summaries (only if already generalized)
+- selected `assets` summaries (do not dump all assets by default)
 
-### DCAT alignment (KFM-DCAT v11)
-
+### DCAT
 Commonly displayed (when present and allowed):
+- dataset title + description
+- publisher / contact (if provided)
+- license + access rights
+- distributions (safe listing; action gating may apply)
+- temporal + spatial coverage summaries
 
-- dataset title and publisher
-- license and access rights
-- distributions (safe-to-list; action gating may be required)
-- temporal and spatial coverage summaries
-
-### PROV alignment (KFM-PROV v11 / PROV-O)
-
-DataCards should provide at least one “provenance affordance”:
-
-- short provenance summary (“Source: … / Derived from: …”)
+### PROV-O
+DataCards should provide at least one provenance affordance:
+- short provenance summary
 - expandable provenance trail
-- link to dataset record provenance or manifest entry
+- link to a provenance/manifest view (when provided)
 
-**Rule:** provenance UI must reflect what is supplied. If provenance is absent, do not invent a chain.
+Rule: if provenance is absent upstream, do not invent a chain.
+
+### Versioning
+- If upstream includes predecessor/successor references, DataCards may display “Supersedes / Superseded by” links.
+- DataCards must never imply that a version relationship exists unless supplied upstream.
 
 ---
 
 ## 🧱 Architecture
 
 ### DataCard.tsx
-
-The suite orchestrator. Responsibilities:
-
+Suite orchestrator:
 - composes header/metadata/preview/footer
-- applies redaction directives (hide/disable components as needed)
-- ensures semantic HTML structure (`<article>` wrapper)
-- triggers telemetry events (suite-scoped)
+- applies redaction directives (hide/disable as needed)
+- provides semantic HTML wrapper (`<article>` + labeled regions)
+- triggers telemetry hooks (suite-scoped)
 
 ### DataCardHeader.tsx
-
-- renders title + optional type label
-- always displays CARE badge / classification when provided
-- includes provenance chip affordance (expand/open)
+- title, subtitle/type label
+- CARE/classification badges when provided
+- sovereignty notice placement (header prominence when present)
+- provenance affordance (expand/open)
 
 ### DataCardMetadata.tsx
-
-- renders key fields (publisher, license, rights-holder, temporal coverage, spatial coverage)
-- enforces masking/generalization (never implies precision)
-- uses “explicit unknown” placeholders for missing fields
+- key metadata fields (publisher, license, rights-holder, temporal/spatial summaries)
+- explicit unknown placeholders
+- no precision leaks
 
 ### DataCardPreview.tsx
-
-- renders spatial/temporal preview only when allowed
-- requires text equivalents (SR text, captions)
-- if generalized: must label as generalized (method + no-precision notice)
+- only renders when allowed by governance
+- requires textual equivalents (caption / SR summary)
+- if generalized: explicitly label as generalized and avoid precision language
 
 ### DataCardFooter.tsx
-
-- presents actions, all policy-aware:
+- action buttons, policy-aware:
   - open details
   - open in map (if allowed)
-  - view provenance (always safe)
-- restricted datasets: disable actions with explanation (not silent)
+  - view provenance (generally safe)
+- restricted datasets: disable actions with an explanation (not silently)
 
 ### DataCardA11yHelpers.tsx
-
-- provides shared ARIA scaffolding and screen-reader summaries
-- centralizes focus order management for composite card layouts
-- enforces reduced-motion alternatives for any animated placeholders
+- shared ARIA helpers and screen-reader summaries
+- focus order management for composite layouts
+- reduced-motion-friendly patterns for loading/animation
 
 ### DataCardSkeleton.tsx
-
-- renders safe loading state
+- safe loading state
 - must never reveal sensitive strings while loading
-- must respect reduced motion preference
+- must respect reduced motion preferences
 
 ---
 
-## ⚖ FAIR+CARE & Governance
+## 🧠 Story Node & Focus Mode Integration
 
-DataCards operate under dataset-sensitive governance constraints.
+### Focus Mode usage
+DataCards commonly display:
+- supporting datasets relevant to a focal entity
+- evidence trails backing a narrative block
+- related distributions/assets (when allowed)
 
-**Non-negotiables**
+Requirements:
+- sovereign-controlled contexts elevate sovereignty notices and suppress precision-implying previews
+- prefer routing users to provenance/governance details over “open raw” actions
 
-- Display CARE and sovereignty indicators when provided
+### Story Node usage
+DataCards may appear as:
+- referenced datasets
+- supporting evidence
+- assets/distributions
+
+Rule: DataCards must not add narrative interpretation. They only display metadata and provenance already attached to the Story Node or dataset record.
+
+---
+
+## 🧪 Validation and CI/CD
+
+Expected gates for DataCards changes:
+- markdown protocol validation for this README
+- unit + integration tests for DataCards components
+- a11y checks (keyboard flow, focus order, SR equivalents, reduced motion)
+- governance tests (redaction-required flows, sovereignty notices, action gating)
+- telemetry schema validation for emitted events
+
+Expected test locations:
+
+~~~text
+📁 tests/unit/web/components/DataCards/
+📁 tests/integration/web/components/DataCards/
+~~~
+
+CI blocking examples:
+- restricted dataset shows preview surface implying precision
+- license/CARE/rights-holder present upstream but missing in UI
+- telemetry includes raw IDs or sensitive fields
+- keyboard focus traps / missing SR equivalents
+
+---
+
+## ⚖ FAIR+CARE and Governance
+
+### Non-negotiables
+- Display CARE + sovereignty indicators when provided upstream
 - Never show precise coordinates for restricted datasets
-- Never display or emit sensitive identifiers in telemetry
-- Never “upgrade” or “sharpen” uncertain coverage (temporal or spatial)
-- Never replace missing metadata with inferred values
+- Never emit sensitive identifiers in telemetry
+- Never “upgrade” uncertain coverage (temporal/spatial)
+- Never infer missing metadata
 
-**Sovereignty-aware behavior (indigenous_rights_flag: true)**
+### Sovereignty-aware behavior
+If sovereign-control indicators are present:
+- elevate notices to header prominence
+- default to safer displays (generalized extents, disabled previews)
+- route users to rights/provenance rather than raw export actions
 
-- If sovereign-control indicators are present, DataCards must:
-  - elevate notices to header-level prominence
-  - default to safer displays (generalized extents, disabled preview)
-  - route users to rights/provenance rather than raw export actions
-
-**Redaction-required mode**
-
-When `redaction_required: true` at the doc level, this suite must maintain conservative defaults:
-
+### Redaction-required posture
+When a dataset’s governance overlay indicates redaction is required:
 - previews are opt-in and policy-gated
-- metadata fields must be whitelisted by governance layer
+- metadata fields are whitelisted by governance layer
 - user-facing explanations are required when data is hidden
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v11.2.2 | 2025-12-15 | KFM-MDP v11.2.6 compliance refresh: standardized headings, fencing, and directory layout; corrected relative refs; expanded STAC/DCAT/PROV + telemetry guidance; clarified redaction and sovereignty behavior. |
-| v11.2.2 | 2025-11-30 | Full v11 upgrade: governance, metadata, A11y, telemetry, masking. |
-| v10.4.0 | 2025-11-15 | Previous major update (pre-v11 standards). |
-| v10.3.2 | 2025-11-14 | CARE disclosure refinements. |
-| v10.3.1 | 2025-11-13 | Initial DataCards overview. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v12.0.0 | 2025-12-21 | Rebuilt from scratch to be v12-ready using the Universal Governed Doc structure; moved non-template YAML fields into body artifacts; clarified UI/API boundary and redaction invariants. | TBD |
+| v11.2.2 | 2025-12-15 | Prior governed suite overview (pre-v12 doc structure). | TBD |
+| v10.4.0 | 2025-11-15 | Earlier major update (pre-v11 standards). | TBD |
 
 ---
 
-<div align="center">
+## 📎 References
 
-**📚 Governance Links**  
-[Docs Root](../../../../README.md) ·
-[Standards Index](../../../../docs/standards/INDEX.md) ·
-[Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[FAIR+CARE Guide](../../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[Sovereignty Policy](../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
-
-**🔐 Compliance**  
-FAIR+CARE · CIDOC-CRM · OWL-Time · GeoSPARQL · STAC/DCAT · PROV-O · SLSA Level 3
-
-**♻️ Sustainability**  
-Energy & Carbon Telemetry Enabled (ISO 50001 / ISO 14064)
-
-© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0 · Public / Dataset-Sensitive · Version-Pinned
-
-</div>
+- Repo root: `../../../../README.md`
+- Master guide: `../../../../docs/MASTER_GUIDE_v12.md`
+- Governance: `../../../../docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `../../../../docs/governance/ETHICS.md`
+- Sovereignty: `../../../../docs/governance/SOVEREIGNTY.md`
+- Telemetry schemas: `../../../../schemas/telemetry/`
+---
