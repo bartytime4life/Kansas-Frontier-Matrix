@@ -1,8 +1,8 @@
 ---
-title: "CONTRIBUTING — Kansas Frontier Matrix"
+title: "Kansas Frontier Matrix — Contributing Guide"
 path: "CONTRIBUTING.md"
-version: "v1.0.0"
-last_updated: "2025-12-19"
+version: "v1.0.0-draft"
+last_updated: "2025-12-21"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:contributing:v1.0.0"
-semantic_document_id: "kfm-contributing-v1.0.0"
-event_source_id: "ledger:kfm:doc:contributing:v1.0.0"
+doc_uuid: "urn:kfm:doc:contributing:v1.0.0-draft"
+semantic_document_id: "kfm-contributing-v1.0.0-draft"
+event_source_id: "ledger:kfm:doc:contributing:v1.0.0-draft"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,322 +41,212 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# CONTRIBUTING — Kansas Frontier Matrix
+# Contributing to Kansas Frontier Matrix
 
-## 📘 Overview
+Thanks for helping build **Kansas Frontier Matrix (KFM)**. This repo is **contract-first** and **evidence-first**: changes should preserve the canonical ordering and the “no unsourced narrative” rule.
 
-### Purpose
-Kansas Frontier Matrix (KFM) is a governed geospatial + historical knowledge system. Contributions must preserve the canonical pipeline ordering and its contracts:
-
-- **ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
-
-This document describes how to contribute code, data, metadata, ontology/graph semantics, APIs, UI features, and Story Nodes in a way that remains reproducible, reviewable, and standards-compliant.
-
-### Scope
-| In scope | Out of scope |
-|---|---|
-| Bug fixes, features, refactors, docs | Sharing secrets/credentials, bypassing review gates |
-| Data ingestion + processing updates | Uploading restricted/sensitive data without governance review |
-| STAC/DCAT/PROV catalog updates | “UI talks directly to Neo4j” patterns |
-| Graph ontology + migrations | Non-deterministic ETL that can’t be reproduced |
-| API endpoints + contract updates | Large unreviewed dumps of raw data artifacts |
-| React/Map UI improvements | Unsourced narrative in Focus Mode / Story contexts |
-
-### Audience
-- Contributors adding data, docs, code, or narratives.
-- Maintainers/reviewers performing governance and CI reviews.
-- Data partners who need to understand required metadata + provenance.
-
-### Definitions
-- **Master Guide:** `docs/MASTER_GUIDE_v12.md` (canonical pipeline + invariants)
-- **STAC:** SpatioTemporal Asset Catalog (assets + Items/Collections)
-- **DCAT:** Dataset catalog vocabulary (dataset-level inventory)
-- **PROV-O:** W3C provenance model (lineage and reproducibility)
-- **Story Node:** Governed narrative artifact tied to evidence IDs and graph/cat references
-- **Focus Mode:** Narrative UX that must not contain unsourced claims
-
-### Key artifacts (use these before inventing anything)
-| Artifact | Path | Use when |
-|---|---|---|
-| Master guide | `docs/MASTER_GUIDE_v12.md` | Any change affecting pipeline, contracts, or repo structure |
-| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Default for governed docs |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Any new/updated narrative node |
-| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | Any new endpoint/contract, versioning, or schema changes |
-| Governance refs | `docs/governance/*` | Anything touching ethics, sovereignty, sensitivity, access controls |
-| Schemas | `schemas/` | Any JSON-LD/JSON schema validation, telemetry, catalogs |
-
-### Definition of done (for any contribution)
-- [ ] Change is **scoped** (small PRs preferred; large changes justified and structured)
-- [ ] Correct **repo placement** (data vs code vs docs)
-- [ ] **Standards alignment** preserved: STAC 1.0 / DCAT 3 / PROV-O where applicable
-- [ ] **API boundary** preserved: UI consumes via APIs (no direct graph access)
-- [ ] All required **validation + CI** checks pass (see “Validation & CI/CD”)
-- [ ] **No secrets / no PII leaks** / no sensitive-location inference
-- [ ] Story/Narrative contributions include **evidence IDs** (fact vs inference vs hypothesis)
+**Canonical flow (do not break):**  
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
 ---
 
-## 🗂️ Directory Layout
+## 🧭 What kinds of contributions we accept
 
-### This document
-- File: `CONTRIBUTING.md`
-- Role: repo-wide contribution protocol + checklists aligned to KFM invariants
+- **Docs & standards:** clarify guidance, templates, runbooks, ADRs.
+- **Data / domain packs:** add a new dataset (or domain) with provenance and catalog artifacts.
+- **ETL / pipelines:** deterministic transforms that write to `data/**`.
+- **Catalog outputs:** STAC / DCAT / PROV creation and validation.
+- **Graph / ontology:** ingest fixtures, ontology-aligned mappings.
+- **API boundary:** endpoints, query services, redaction rules, API contracts.
+- **UI:** map layers, focus mode UI, citation rendering.
+- **Story Nodes:** sourced, provenance-linked narrative nodes (draft → published).
 
-### Related repository paths
-| Area | Path | Notes |
-|---|---|---|
-| Data artifacts | `data/` | Raw/work/processed + catalogs + provenance |
-| STAC | `data/stac/` | Collections + Items |
-| DCAT | `data/catalog/dcat/` | Dataset catalog records |
-| PROV | `data/prov/` | Lineage bundles for runs/updates |
-| Pipelines | `src/pipelines/` | ETL + catalog generation |
-| Graph | `src/graph/` | Neo4j build + ontology bindings |
-| APIs | `src/api/` | Service layer (contracts live here) |
-| Frontend | `web/` | React/Map client (no direct graph dependency) |
-| Docs | `docs/` | Governed documentation and templates |
-| Schemas | `schemas/` | Validation contracts for JSON artifacts |
-| MCP | `mcp/` | Runs, experiments, model cards, SOPs |
-| CI/Workflows | `.github/` | CI checks and security policies |
+If you’re unsure where your change belongs, open a small PR that adds an ADR proposal under `docs/architecture/adr/` describing what you want to do and where it should live.
 
-### Expected file tree for this sub-area
+---
+
+## ✅ Non‑negotiables (architectural invariants)
+
+These are enforced by design and/or CI gates.
+
+1. **No UI direct-to-graph reads**  
+   - `web/` must never query Neo4j directly; all graph access is via `src/server/`.
+
+2. **No unsourced narrative**  
+   - Published Story Nodes must be provenance-linked and must validate.
+
+3. **Contracts are canonical**  
+   - Schemas/specs live in `schemas/`.  
+   - API contracts live in `src/server/contracts/`.  
+   - Contracts must validate in CI.
+
+4. **Data outputs are not code**  
+   - Derived datasets belong under `data/<domain>/processed/`, not under `src/`.
+
+5. **STAC/DCAT/PROV are first-class**  
+   - STAC, DCAT, and PROV remain required for datasets and evidence products.
+
+---
+
+## 🗂️ Directory layout
+
+### Top-level overview (target)
+
 ~~~text
-📁 .github/
-├── 📁 workflows/
+📁 .
+├── 📁 .github/
+├── 📁 data/
+├── 📁 docs/
+├── 📁 mcp/
+├── 📁 schemas/
+├── 📁 src/
+├── 📁 tests/
+├── 📁 tools/
+├── 📁 web/
+├── 📁 releases/
+├── 📄 README.md
+├── 📄 LICENSE
+├── 📄 CITATION.cff
+├── 📄 CHANGELOG.md
+├── 📄 CONTRIBUTING.md
 ├── 📄 SECURITY.md
-│
-📁 data/
-├── 📁 sources/
-├── 📁 raw/
-├── 📁 work/
-├── 📁 processed/
-├── 📁 stac/
-│   ├── 📁 collections/
-│   └── 📁 items/
-├── 📁 catalog/
-│   └── 📁 dcat/
-└── 📁 prov/
-│
-📁 docs/
-├── 📄 MASTER_GUIDE_v12.md
-├── 📁 templates/
-│   ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
-│   ├── 📄 TEMPLATE__STORY_NODE_V3.md
-│   └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
-├── 📁 standards/
-└── 📁 architecture/
-│
-📁 mcp/
-├── 📁 runs/
-└── 📁 experiments/
-│
-📁 schemas/
-📁 src/
-├── 📁 pipelines/
-├── 📁 graph/
-└── 📁 api/
-│
-📁 web/
-│
-📄 CONTRIBUTING.md
+├── 📄 .editorconfig
+├── 📄 .pre-commit-config.yaml
+├── 📄 docker-compose.yml
+└── 📄 .env.example
 ~~~
 
----
+### Canonical homes by stage
 
-## 🧭 Context
-
-### Background
-KFM is designed to:
-- retain raw sources and transformations,
-- package outputs into open catalogs (STAC/DCAT/PROV),
-- load semantic entities/relationships into a Neo4j graph,
-- expose contracts via APIs,
-- render map/timeline UI and narratives (Story Nodes + Focus Mode).
-
-### Assumptions
-- Contributions are made via pull requests (PRs) and reviewed.
-- CI enforces linting, schema validation, and governance checks.
-- Repository uses strict placement rules (data in `data/`, code in `src/`/`web/`, docs in `docs/`).
-
-### Constraints / invariants
-- **Pipeline ordering is non-negotiable:** ETL → Catalogs → Graph → APIs → UI → Story → Focus Mode.
-- **API boundary is non-negotiable:** UI must not read Neo4j directly; contracts live at the API layer.
-- **Determinism:** ETL must be idempotent and reproducible; seed-lock stochastic steps.
-- **Provenance:** New/updated outputs must be traceable to sources and transformation activities.
-- **Narratives:** No unsourced claims in Story Nodes / Focus Mode contexts; label inference/hypothesis.
-
-### Open questions
-| Question | Owner | Target date |
+| Stage | Canonical home | What belongs here |
 |---|---|---|
-| Do we require an issue before any PR? | Maintainers | TBD |
-| Do we enforce a commit message convention? | Maintainers | TBD |
-| What are the size thresholds for large data artifacts in git? | Maintainers | TBD |
-
-### Future extensions
-- Add new data domains (new ETL + catalogs + graph mappings + UI layers).
-- Add evidence products (AI outputs) that are stored and audited like other artifacts.
-- Expand narrative UX via new Story Node types and Focus Mode layouts.
-
----
-
-## 🗺️ Diagrams
-
-### System / dataflow diagram
-~~~mermaid
-flowchart LR
-  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
-  B --> C[Neo4j Graph]
-  C --> D[APIs]
-  D --> E[React/Map UI]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode]
-~~~
-
-### Optional: contribution sequence diagram
-~~~mermaid
-sequenceDiagram
-  participant Dev as Contributor
-  participant CI as CI Gates
-  participant Rev as Reviewer/Maintainer
-
-  Dev->>Dev: Create branch + implement change
-  Dev->>CI: Open PR (runs validation)
-  CI-->>Dev: Report failures (lint/schema/tests)
-  Dev->>CI: Push fixes (rerun CI)
-  CI-->>Rev: Green build + artifacts ready
-  Rev->>Dev: Review (contracts/governance/quality)
-  Rev-->>Dev: Approve / request changes
-  Rev->>Rev: Merge when DoD is met
-~~~
+| ETL / pipelines | `src/pipelines/` | deterministic transforms; run manifests; outputs in `data/**` |
+| Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC items/collections; DCAT datasets; PROV bundles |
+| Graph | `src/graph/` + `data/graph/` | ontology-governed ingest; import fixtures/CSVs |
+| API boundary | `src/server/` | contracts; redaction; query services |
+| UI | `web/` | map layers; focus mode UI; citation rendering |
+| Story Nodes | `docs/reports/story_nodes/` | templates; draft; published; assets |
+| Releases | `releases/` | manifests; SBOMs; signed bundles; telemetry snapshots |
 
 ---
 
-## 📦 Data & Metadata
+## 🧑‍💻 Local development expectations
 
-### Inputs
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Source datasets | files/APIs | `data/sources/` manifests + external sources | licensing + checksum + schema checks |
-| Raw data drops | many | `data/raw/` | immutability + basic integrity checks |
-| Pipeline configs | YAML/JSON | `src/pipelines/` | lint + deterministic behavior |
-| Narrative evidence refs | IDs/links | catalogs + graph | must resolve to governed artifacts |
+This repository supports multiple subsystems (pipelines, server, web UI). The exact commands may differ by environment; the expectations below are *contract-level*:
 
-### Outputs
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Processed data | dataset-specific | `data/processed/` | domain schema / validation rules |
-| STAC Items/Collections | JSON | `data/stac/items/` + `data/stac/collections/` | STAC profile + extension schema |
-| DCAT Dataset records | TTL/JSON-LD | `data/catalog/dcat/` | DCAT profile |
-| PROV bundles | JSON-LD (typical) | `data/prov/` | PROV profile |
-| Graph mappings/migrations | code + docs | `src/graph/` + `docs/graph/` | ontology + migration tests |
-| API contract docs | markdown + schemas | `docs/api/` + `schemas/` | API contract extension |
-| UI layers/registry | JSON + code | `web/` (+ schemas) | layer registry schema |
-| Story Nodes | markdown | `docs/story_nodes/` (or governed location) | Story Node template + evidence rules |
+1. **Run the pre-commit hooks** configured in `.pre-commit-config.yaml` before you open a PR.  
+2. **Run tests** relevant to your change (pipelines / server / web).  
+3. **Run validators** relevant to your change:
+   - Markdown protocol validation (docs)
+   - Schema validation (`schemas/…`)
+   - Story Node validation (`docs/reports/story_nodes/…`)
+   - API contract tests (`src/server/contracts/…`)
+   - Security and sovereignty scanning (where applicable)
 
-### Sensitivity & redaction
-- Do not include secrets, tokens, or private keys.
-- Do not publish personally identifying information unless governance explicitly allows it.
-- For culturally sensitive content (including Indigenous materials), follow `docs/governance/SOVEREIGNTY.md` and label restrictions.
-- Generalize/blur sensitive locations when required by governance.
-
-### Quality signals
-- Reproducibility: reruns produce identical outputs for same inputs.
-- Completeness: required fields populated; consistent identifiers.
-- Spatial validity: geometries valid; CRS standardized; extents correct.
-- Catalog integrity: STAC Items ↔ Collections consistent; links not broken.
-- Provenance: every major output has a lineage record.
+> Repo lint reminder: do **not** add YAML front-matter to code files. YAML front-matter is for Markdown documents only.
 
 ---
 
-## 🌐 STAC, DCAT & PROV Alignment
+## 🧩 Change-type guidance
 
-### STAC
-- Add/modify **STAC Collections** when introducing a new dataset family.
-- Add/modify **STAC Items** for each geospatial-temporal asset.
-- Validate against the repo’s STAC profile and any extensions used.
+### 1) Documentation changes
+- Use a governed template:
+  - General documentation → `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+  - Story Nodes / Focus Mode narratives → `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+  - API contract additions/changes → `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- Keep YAML front-matter keys intact (no ad-hoc fields).
 
-### DCAT
-- Create/update a **DCAT Dataset** record for each logical dataset series.
-- Maintain consistent dataset identifiers and license/publisher mapping.
+### 2) Data + catalog contributions (new dataset or update)
+When you add or update a dataset, include:
+- **Data placement**
+  - Raw sources → `data/<domain>/raw/`
+  - Working files → `data/<domain>/work/`
+  - Derived outputs → `data/<domain>/processed/`
+- **Catalog outputs**
+  - STAC items/collections → `data/stac/…`
+  - DCAT record(s) → `data/catalog/dcat/…`
+  - PROV bundle(s) → `data/prov/…`
+- **Determinism**
+  - Pipelines should be idempotent and produce stable outputs given the same inputs/config.
 
-### PROV-O
-- Record provenance for dataset creation and major updates:
-  - `prov:Entity` for inputs/outputs
-  - `prov:Activity` for pipeline runs/transforms
-  - `prov:Agent` for software/maintainers where applicable
-- Include stable IDs so provenance can be queried and audited.
+### 3) Graph / ontology contributions
+- Put ingest logic and transforms under `src/graph/`.
+- Put import fixtures/exports under `data/graph/`.
+- Align changes with the repo’s ontology protocol and relevant schemas/shapes.
 
-### Versioning
-- Use STAC versioning links where applicable.
-- Use graph predecessor/successor relationships for entity evolution when applicable.
-- Bump doc versions when changing contracts or contributor obligations.
+### 4) API boundary contributions
+- API code and contracts live under `src/server/`.
+- Put new/changed contracts under `src/server/contracts/` and add/adjust contract tests.
+- Ensure UI uses the API boundary (no direct graph access from `web/`).
 
----
+### 5) UI contributions
+- UI lives under `web/`.
+- UI must render citations and provenance links where required (especially in Focus Mode views).
+- UI must never query Neo4j directly.
 
-## 🧱 Architecture & Contract Boundaries
-
-### “No direct graph dependency” rule (UI)
-- The UI must only consume **API contracts**.
-- The graph is an internal implementation detail behind the API layer.
-
-### Contribution types and what “done” means
-
-#### Documentation
-- Use governed templates under `docs/templates/`.
-- Keep YAML frontmatter keys intact.
-- Avoid broken links and undocumented new conventions.
-
-#### Data / ETL
-- Keep raw inputs immutable (no in-place edits under `data/raw/`).
-- Make transformations deterministic and logged.
-- Emit catalogs (STAC/DCAT) and provenance (PROV) when applicable.
-
-#### Graph / Ontology
-- Extend ontology before adding new labels/relationships.
-- Provide migrations and integrity tests.
-- Ensure stable identifiers and provenance pointers.
-
-#### API / Contracts
-- Add/extend endpoints at the API layer.
-- Update contract docs + schemas together.
-- Prefer backward-compatible changes; otherwise version explicitly.
-
-#### UI (React/Map)
-- Consume API responses; do not embed graph queries.
-- Validate layer registries/configs via schema checks.
-- Maintain accessibility and safe rendering practices.
-
-#### Story Nodes / Focus Mode
-- Use Story Node template for any new narrative.
-- Every factual claim must map to evidence IDs (datasets/documents).
-- Clearly label **fact vs inference vs hypothesis**.
+### 6) Story Node contributions
+- Draft story nodes go under `docs/reports/story_nodes/draft/`.
+- Published story nodes go under `docs/reports/story_nodes/published/<story_slug>/`.
+- Published nodes must be provenance-linked and pass validation.
 
 ---
 
-## 🧪 Validation & CI/CD
+## 🧪 Validation & CI expectations (what your PR should pass)
 
-CI is expected to enforce (at minimum) the following gate categories:
-- Markdown protocol validation (frontmatter + template conformance)
-- JSON schema validation (STAC/DCAT/telemetry and other governed schemas)
-- Graph integrity tests (ontology constraints, migrations, relationships)
-- API contract tests (schemas, backward compatibility rules)
-- UI layer registry schema checks + basic a11y/lint checks
-- Security + sovereignty scanning gates where applicable
+Minimum CI gates for v13 readiness:
 
-Local runs:
-- Use the repo’s documented scripts/commands for linting, schema validation, and tests.
-- If you introduce a new schema or validation step, document how to run it locally.
+- Markdown protocol validation
+- Schema validation
+- Story Node validation
+- API contract tests
+- Security and sovereignty scanning gates
+
+Repo lint rules to respect:
+
+- No YAML front-matter in code files
+- No `README.me`
+- No duplicate canonical homes without explicit deprecation markers
 
 ---
 
-## ⚖️ FAIR+CARE & Governance
+## ⚖ FAIR+CARE & Governance
 
-- Treat FAIR (Findable, Accessible, Interoperable, Reusable) as a baseline for artifacts and metadata.
-- Treat CARE (Collective Benefit, Authority to Control, Responsibility, Ethics) as a baseline for culturally sensitive content and sovereignty rules.
-- Any change touching governance/policy, standards compliance, or sensitivity classification **requires human review**.
+Before submitting changes, check:
+
+- `docs/governance/ROOT_GOVERNANCE.md`
+- `docs/governance/ETHICS.md`
+- `docs/governance/SOVEREIGNTY.md`
+- `docs/governance/REVIEW_GATES.md`
+
+Some changes may require extra review (examples: sensitive content, redaction behavior, narrative/AI behaviors, or sovereignty constraints).
+
+---
+
+## ✅ PR checklist (copy into your PR description)
+
+- [ ] My change fits a single pipeline stage (or clearly explains cross-stage impact).
+- [ ] I used the correct canonical home(s) and did not create duplicate subsystem roots.
+- [ ] I ran the pre-commit hooks and fixed any failures.
+- [ ] I ran relevant tests and validators (schemas/contracts/story nodes/etc.).
+- [ ] If I added/updated data, I included STAC/DCAT/PROV outputs and provenance.
+- [ ] If I changed the API or contracts, I updated `src/server/contracts/` and tests.
+- [ ] If I changed the UI, it still relies only on `src/server/` for graph data.
+- [ ] If I changed Story Nodes, they remain provenance-linked and validate.
 
 ---
 
 ## 🧾 Version History
+
 | Version | Date | Change | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial CONTRIBUTING.md aligned to Master Guide + governed templates | ChatGPT |
+| v1.0.0-draft | 2025-12-21 | Initial CONTRIBUTING guide aligned to v13 blueprint | <your-name> |
+
+---
+
+## Footer refs
+
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- v13 Redesign Blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Templates: `docs/templates/`
+- Standards: `docs/standards/`
+- Governance: `docs/governance/`
