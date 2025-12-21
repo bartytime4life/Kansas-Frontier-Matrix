@@ -145,12 +145,13 @@ reduces drift and makes review easier.
 ## 🗺️ Diagrams
 
 ### System / dataflow diagram
+
 ~~~mermaid
 flowchart LR
-  UI[Cesium Components] --> U[utils/ (this folder)]
-  UI --> API[API Client / Fetch Layer]
-  API --> SVC[KFM API Layer]
-  SVC --> G[Graph + Provenance]
+  UI["Cesium Components"] --> U["utils (this folder)"]
+  UI --> API["API Client and Fetch Layer"]
+  API --> SVC["KFM API Layer"]
+  SVC --> G["Graph and Provenance"]
 ~~~
 
 ### Optional: sequence diagram
