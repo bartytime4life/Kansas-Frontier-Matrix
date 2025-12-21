@@ -1,10 +1,10 @@
 ---
-title: "Cesium UI Components"
+title: "KFM UI — Cesium Components README"
 path: "web/cesium/components/README.md"
-version: "v1.0.0-draft"
+version: "v1.0.0"
 last_updated: "2025-12-21"
 status: "draft"
-doc_kind: "Guide"
+doc_kind: "README"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:web:cesium:components-readme:v1.0.0-draft"
-semantic_document_id: "kfm-web-cesium-components-readme-v1.0.0-draft"
-event_source_id: "ledger:kfm:doc:web:cesium:components-readme:v1.0.0-draft"
+doc_uuid: "urn:kfm:doc:web:cesium:components-readme:v1.0.0"
+semantic_document_id: "kfm-web-cesium-components-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:cesium:components-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,123 +41,303 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# web/cesium/components
+# web/cesium/components — README
 
 ## 📘 Overview
 
-This directory contains **frontend UI components** for KFM’s **Cesium-based 3D** mode (globe/terrain/3D scene). Components here should be:
+### Purpose
 
-- **Config-driven**: layers and defaults should come from configuration when possible.
-- **API-fed**: data and provenance should come from the backend API boundary.
-- **State-preserving**: able to toggle between 2D and 3D modes without losing user context.
+This README governs **frontend conventions** for Cesium-based UI components in KFM, with special emphasis on:
 
-> This file documents folder responsibilities and boundaries. It intentionally avoids listing exact component filenames unless they’re stabilized (not confirmed in repo).
+- maintaining the **API boundary** (UI consumes API contracts; UI does not query Neo4j directly)
+- maintaining **provenance visibility** in Focus Mode and map interactions
+- keeping Cesium usage compatible with the broader map UI architecture (e.g., 2D/3D switching)
 
-## 🎯 Scope
+### Scope
 
-### In scope
+| In Scope | Out of Scope |
+|---|---|
+| Cesium UI component responsibilities, boundaries, patterns | Backend ETL, STAC/DCAT/PROV generation, graph modeling |
+| Focus Mode mapping behaviors that Cesium components must support | Authoring Story Nodes themselves (see story node template) |
+| UI safety rules: provenance display, opt-in predictive content behaviors | Defining new API endpoints/contracts (use API Contract Extension template) |
 
-- Cesium viewer lifecycle wrappers (create/destroy viewer, context/provider, resize handling).
-- Layer renderers/adapters (translate layer definitions into Cesium primitives/entities).
-- Interaction components (pick/hover, selection, camera controls, time scrubbing).
-- Cesium-coupled helpers (resource cleanup, event bridging).
+### Audience
 
-### Out of scope
+- Primary: Frontend engineers working on `web/` map UI and Cesium integration
+- Secondary: API engineers verifying UI contract expectations, reviewers checking governance/a11y
 
-- ETL, catalog generation, or graph ingestion logic.
-- API contract definitions (those belong in API contract docs).
-- Secrets/credentials or deployment environment configuration.
+### Definitions (link to glossary)
 
-## 🧭 Architecture alignment
+- Link: `docs/glossary.md`
+- Terms used in this doc: Cesium, Viewer, DataSource, Layer, Focus Mode, Provenance, STAC, PROV
 
-### Pipeline placement
+### Key artifacts (what this doc points to)
 
-These components are part of the **UI stage** of the canonical KFM pipeline:
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master guide (pipeline + invariants) | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical ordering + “do not break” rules |
+| Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Maintainers | Structure + CI expectations |
+| Story node template (Focus hints) | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Maintainers | `focus_center`, `focus_time`, optional focus layers |
+| API contract template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API owners | Use when changing endpoints/contracts |
 
-ETL → catalogs → graph → APIs → UI → Story Nodes → Focus Mode
+### Definition of done (for this document)
 
-**Implication:** components should consume **API outputs** as the contract boundary (no direct graph/database access; no backend filtering duplicated in UI).
+- [ ] Front-matter complete + valid
+- [ ] No repo-claims beyond what is verified (unknowns marked “not confirmed in repo”)
+- [ ] Constraints/invariants listed (API boundary, pipeline ordering, provenance rules)
+- [ ] Validation steps listed (lint + UI tests guidance)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
-### 2D/3D toggle expectation
+## 🗂️ Directory Layout
 
-KFM’s design supports switching between **2D (MapLibre)** and **3D (Cesium)** when required. The UI should preserve user context (e.g., layer selection, camera location, time selection) across toggles.
+### This document
 
-### Config-driven layers
+- `path`: `web/cesium/components/README.md`
 
-KFM expects that layers can be extended by updating a **layer configuration** (rather than adding code for every layer). Components should therefore:
+### Related repository paths
 
-- Render from a layer definition model (ids, defaults, data sources, styling parameters).
-- Avoid hard-coded layer lists inside components.
-- Keep Cesium-specific rendering details in this folder; keep shared layer metadata in config.
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed/stac outputs |
+| Documentation | `docs/` | Canonical governed docs |
+| Graph | `src/graph/` | Graph build + ontology bindings |
+| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Frontend | `web/` | React + map clients |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
 
-See `web/cesium/config/README.md`.
-
-## 🗂️ Directory layout
+### Expected file tree for this sub-area
 
 ~~~text
 📁 web/
 └── 📁 cesium/
-    ├── 📁 config/
-    │   └── 📄 README.md
     └── 📁 components/
         └── 📄 README.md
 ~~~
 
-## 🧩 Recommended component roles
+## 🧭 Context
 
-The names below are **examples** (not canonical; align to actual code):
+### Background
 
-- **Viewer wrapper**: owns the Cesium `Viewer` instance and exposes it through context.
-- **Layer renderer**: renders an enabled layer definition into Cesium primitives/entities.
-- **Entity/feature interaction**: selection, hover, click-through; emits “selected entity” events upward.
-- **Timeline/time controller**: binds Cesium clock/time and syncs to KFM’s time controls.
+KFM’s frontend is a map + narrative UI (React) that may render geospatial content in 2D and/or 3D.
+Cesium components exist to support 3D use cases (e.g., terrain, globe, time-dynamic visualization)
+while preserving the same governance constraints used across the app.
 
-## 🔁 Data flow
+### Assumptions
 
-A typical flow should look like:
+- Cesium usage is encapsulated in components that can be mounted/unmounted cleanly without memory leaks.
+- Data shown in Cesium is sourced through the same API layer used by the rest of the UI.
+- If a 2D/3D toggle exists, it should preserve user state (selected entity, active layers) across modes.
 
-1. Load *layer definitions* from `web/cesium/config`.
-2. Obtain user context from app state (current time, filters, active story/focus state).
-3. Fetch required data via **API endpoints** (e.g., features for current viewport/time range).
-4. Render in Cesium using layer renderer adapters.
-5. On interaction, emit events (selection/hover/camera change) to app state; request details via API as needed.
+### Constraints / invariants
 
-### Focus Mode hooks
+- Canonical pipeline ordering is preserved:
+  **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- Focus Mode must only present provenance-linked content; any predictive content must be opt-in and carry uncertainty/confidence metadata.
 
-When a user enters Focus Mode (or a story segment requests it), components should be able to apply:
+### Open questions
 
-- A target camera center/extent.
-- A target time (or time range).
-- A recommended set of layers (enable/disable).
+| Question | Owner | Target date |
+|---|---|---|
+| Where is the canonical layer registry/config for Cesium layers? (not confirmed in repo) | UI | TBD |
+| What is the chosen state management approach (Redux vs Context/Reducers)? (not confirmed in repo) | UI | TBD |
+| How are Cesium access tokens/keys managed (if needed)? (not confirmed in repo) | UI/Security | TBD |
 
-Where those hints come from (story-node metadata, a Focus API “focus bundle”, etc.) is handled at the app level; components should accept the resulting “focus state” via props/context.
+### Future extensions
 
-## 🧪 Testing and quality
+- Add adapter components for Cesium-native formats (e.g., CZML / 3D Tiles) when the data catalog provides them.
+- Add richer provenance overlays (hover/click reveals STAC asset + PROV run ID) when API contracts expose these fields.
 
-- Prefer deterministic tests for rendering decisions and data mapping.
-- Use integration tests sparingly for Cesium viewer init/cleanup (WebGL can be flaky in CI).
-- Validate cleanup: unmounting the viewer should release event handlers and WebGL resources.
+## 🗺️ Diagrams
 
-## 🔒 Security and governance notes
+### System / dataflow diagram
 
-- Never embed API keys, access tokens, or service URLs that should be environment-scoped.
-- Treat *what you render* as governed: **the API layer is responsible for filtering/redaction**, and UI must not bypass it.
-- Avoid leaking sensitive identifiers into logs/telemetry.
+~~~mermaid
+flowchart LR
+  A[API Responses\n(context bundle + layers + provenance refs)] --> B[Cesium Components]
+  B --> C[Viewer Render\n(3D layers + entities)]
+  C --> D[UI Events\n(select/hover/time)]
+  D --> A
+~~~
 
-## ✅ Definition of Done
+### Optional: sequence diagram (Focus Mode + map focus)
 
-- [ ] Component respects the API boundary (no direct database/graph access).
-- [ ] Layer rendering is config-driven (no hard-coded layer ids).
-- [ ] 2D/3D toggle preserves user context (camera/time/layer selection).
-- [ ] Viewer resources are cleaned up on unmount (no memory leaks).
-- [ ] Tests added/updated for the new behavior.
-- [ ] README updated if a new pattern or folder convention is introduced.
+~~~mermaid
+sequenceDiagram
+  participant User
+  participant UI as React UI
+  participant Cesium as Cesium Components
+  participant API as API Layer
 
-## 🔗 References
+  User->>UI: Select entity / story
+  UI->>API: Fetch Focus context bundle (entity_id)
+  API-->>UI: Narrative + focus hints + provenance refs
+  UI->>Cesium: Apply focus_center / focus_time; activate focus layers
+  Cesium-->>UI: Selection/hover events w/ provenance pointers
+~~~
 
-- `docs/MASTER_GUIDE_v12.md`
-- `docs/governance/ROOT_GOVERNANCE.md`
-- `docs/governance/ETHICS.md`
-- `docs/governance/SOVEREIGNTY.md`
-- `web/cesium/config/README.md`
+## 📦 Data & Metadata
+
+### Inputs
+
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Focus context bundle | JSON | API layer | Contract tests + runtime guards |
+| Layer registry/config | JSON | UI config (not confirmed in repo) | Schema validation |
+| User settings | UI state | Local state/store | Type checks + defaults |
+
+### Outputs
+
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Rendered 3D view | DOM/WebGL | `web/` runtime | N/A |
+| UI interaction events | JS events/state | `web/` runtime | N/A |
+| Telemetry events (if any) | JSON | `docs/telemetry/` + `schemas/telemetry/` | Telemetry schema (if present) |
+
+### Sensitivity & redaction
+
+- Components must respect any “sensitive layer” flags conveyed via API/config.
+- If a layer/entity is marked restricted, Cesium components must not reveal precise geometry beyond what policy allows.
+
+### Quality signals
+
+- Avoid blocking the main thread with large parsing; prefer incremental loading.
+- Ensure deterministic rendering given the same inputs (where possible) to support reproducibility in demos/tests.
+- Provide clean unmount behavior (detach handlers, destroy viewer/resources).
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+
+- Cesium UI should be able to link visualized layers back to **STAC Item / Asset IDs** when provided by the API.
+
+### DCAT
+
+- Where dataset-level metadata is shown in UI (layer info panels), prefer DCAT-aligned fields (title/description/license).
+
+### PROV-O
+
+- When showing derived or transformed layers, surface a **PROV activity/run identifier** if available in the API payload.
+- In Focus Mode, provenance references should be visible and usable (audit panel / sources panel pattern).
+
+### Versioning
+
+- UI should tolerate versioned datasets and prefer stable identifiers (e.g., predecessor/successor links) when present.
+
+## 🧱 Architecture
+
+### Components
+
+Recommended component boundary map (names are illustrative; not confirmed in repo):
+
+| Component type | Responsibility | Interface |
+|---|---|---|
+| Viewer host | Own Cesium viewer lifecycle (mount/unmount) | Props: initial camera, clock/time, imagery/terrain flags |
+| Layer bridge | Translate “layer config” to Cesium primitives | Input: layer registry + API layer metadata |
+| Data adapters | Convert API payloads to Cesium entities/data sources | Input: GeoJSON-like data, time series hints |
+| Interaction handlers | Click/hover/select → dispatch UI actions | Emits: selected entity ID + provenance pointers |
+| Focus helpers | Apply focus hints (`focus_center`, `focus_time`, layer toggles) | Input: Focus Mode bundle |
+
+### Interfaces / contracts
+
+- Cesium components **must not** query Neo4j or catalogs directly.
+- Cesium components consume:
+  - API responses (contracted JSON)
+  - local UI configuration (schema-validated)
+  - user state
+
+### Extension points checklist (for future work)
+
+- [ ] UI: add new 3D layer entry in registry/config (if used) with attribution + sensitivity flags
+- [ ] API: ensure contract exposes provenance refs (STAC/PROV IDs) for the layer
+- [ ] UI: implement adapter for the new layer type (CZML/3D Tiles/etc.)
+- [ ] Focus Mode: support focus hints for the layer (auto-enable when relevant)
+- [ ] Tests: add unit/integration coverage for rendering + provenance display
+- [ ] Governance: confirm redaction/generalization behavior for sensitive geometries
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+
+- When Focus Mode activates, Cesium components should:
+  - center/zoom camera to `focus_center` (if provided)
+  - align time controls to `focus_time` (if provided)
+  - enable/disable specific layers (if provided)
+  - preserve provenance affordances (“Sources/Audit” UI patterns)
+
+### Provenance-linked narrative rule
+
+- Any story/narrative UI rendered alongside Cesium must be provenance-linked.
+- If AI/predictive content appears, it must be clearly labeled and opt-in, with uncertainty/confidence metadata.
+
+### Optional structured controls (example)
+
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+
+- [ ] Markdown protocol checks (front-matter + structure)
+- [ ] UI lint/typecheck (tooling not confirmed in repo)
+- [ ] Unit tests for component lifecycle + focus hint application (tooling not confirmed in repo)
+- [ ] Integration test for Focus Mode → Cesium: provenance visible + no restricted leaks
+- [ ] Accessibility review for any Cesium-linked UI controls (keyboard/focus/labels)
+
+### Reproduction
+
+~~~bash
+# Replace with repo-specific commands (not confirmed in repo)
+
+# 1) run UI lint/typecheck
+# 2) run UI unit/integration tests
+# 3) run markdown/doc lint
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| FocusModeEntered | UI routing/state | `docs/telemetry/` + `schemas/telemetry/` |
+| LayerToggled3D | Cesium layer bridge | `docs/telemetry/` + `schemas/telemetry/` |
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+
+- UI maintainers review for lifecycle/perf correctness and contract alignment
+- Governance/ethics review required if:
+  - new sensitive layers are introduced
+  - new AI narrative behaviors are added
+  - new public-facing endpoints/contracts are added
+
+### CARE / sovereignty considerations
+
+- If layers contain culturally sensitive locations or community-restricted knowledge:
+  - ensure generalization/redaction rules are implemented at the API boundary and respected in UI
+  - avoid “precision by default” (e.g., exact coordinates) unless explicitly approved
+
+### AI usage constraints
+
+- Ensure this doc’s AI permissions/prohibitions match intended use.
+- Do not represent policy decisions as AI-generated content; defer to governed docs under `docs/governance/`.
+
+## 🕰️ Version History
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-21 | Initial Cesium components README (governed) | TBD |
+
 ---
+
+Footer refs:
+
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
