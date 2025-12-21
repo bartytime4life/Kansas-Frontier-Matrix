@@ -161,7 +161,6 @@ flowchart LR
   D --> A
 ~~~
 
-### Optional: sequence diagram (Focus Mode + map focus)
 
 ### Optional: sequence diagram (Focus Mode + map focus)
 
