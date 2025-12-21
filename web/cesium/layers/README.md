@@ -1,355 +1,339 @@
 ---
-title: "🗺️ KFM v11.2.3 — Cesium Layer Registry & Mappings (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-description: "Governed registry for wiring Kansas Frontier Matrix (KFM) datasets, regions, and sensors into CesiumJS layers in the web stack."
+title: "🗺️ KFM v12 — Cesium Layer Registry & Mappings"
 path: "web/cesium/layers/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-03"
-
-release_stage: "Stable · Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Web Visualization Systems · FAIR+CARE Council"
-content_stability: "stable"
-backward_compatibility: "Cesium 1.120 → 1.136 layer-registry compatible"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256-of-this-file>"
-doc_uuid: "urn:kfm:doc:web-cesium-layers-registry-v11-2-3"
-semantic_document_id: "kfm-web-cesium-layers-registry-v11.2.3"
-event_source_id: "ledger:kfm:web:cesium:layers:registry:v11.2.3"
-
-sbom_ref: "../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../releases/v11.2.3/web-cesium-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/web-cesium-release-v1.json"
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.3"
-status: "Active / Enforced"
+version: "v12.0.0-draft"
+last_updated: "2025-12-21"
+status: "draft"
 doc_kind: "Subsystem Registry"
-intent: "web-cesium-layers-registry"
-fair_category: "F1-A1-I1-R1"
-care_label: "CARE-Compliant"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:web:cesium:layers:registry:v12.0.0-draft"
+semantic_document_id: "kfm-web-cesium-layers-registry-v12.0.0-draft"
+event_source_id: "ledger:kfm:doc:web:cesium:layers:registry:v12.0.0-draft"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# 🗺️ Cesium Layer Registry & Mappings
 
-# 🗺️ **Kansas Frontier Matrix — Cesium Layer Registry & Mappings**  
-`web/cesium/layers/README.md`
+## 📘 Overview
 
-**Purpose:**  
-Define the **governed, declarative layer registry** that connects KFM datasets, regions, and sensors to **CesiumJS** primitives (3D Tiles, imagery, region overlays, sensor glyphs) in the web stack, with explicit **provenance** and **FAIR+CARE** constraints.
+### Purpose
+This directory is the **governed, declarative registry** that defines which Kansas Frontier Matrix (KFM) datasets, regions, and sensors appear as **CesiumJS layers**, and how they must behave under **provenance**, **auditability**, and **FAIR+CARE / sovereignty** constraints.
 
-</div>
+KFM’s implementation guidance explicitly anticipates a **JSON layer registry** under `web/cesium/layers/*.json` (or similar) that includes layer definitions such as source URLs, attributions, and sensitivity flags. This README governs the **contract and authoring rules** for that registry.
+
+> **Non-negotiable invariant:** The UI must have “no hidden data leakage.” The registry exists to make what is shown explicit, reviewable, and enforceable.
+
+### Scope
+
+| In Scope | Out of Scope |
+|---|---|
+| Declarative Cesium layer definitions (tilesets, overlays, sensors, imagery pointers) | Canonical datasets or derived data products (these belong in `data/` with STAC/DCAT/PROV) |
+| Layer-level governance metadata: CARE gating, masking strategy, allowed modes | Secrets, tokens, credentials, private endpoints |
+| Provenance pointers: dataset IDs, STAC refs, PROV lineage refs | Direct UI access to Neo4j (UI must not read graph directly) |
+| CI-validation expectations for registry integrity | Ad-hoc layer creation in app code with no registry entry |
+
+### Audience
+- Primary: Frontend engineers implementing Cesium scene + layer toggles.
+- Secondary: Reviewers validating governance posture (CARE/sovereignty), provenance surfacing, and attribution compliance.
+
+### Definitions
+- Glossary link: `docs/glossary.md` (**not confirmed in repo**)
+- Terms used in this doc:
+  - **Layer Registry**: declarative JSON that describes what the UI is allowed to render and how it is constrained.
+  - **UI asset**: static frontend resources (icons/textures) that ship with the bundle (see `web/cesium/assets/README.md`).
+  - **Data-backed asset**: tiles, rasters, vectors, 3D Tiles, etc. produced by the pipeline and served via governed endpoints.
+  - **CARE gating**: explicit constraints that prevent sensitive location precision or restricted materials from being exposed.
+
+### Key artifacts
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `web/cesium/layers/README.md` | Frontend | Registry contract + authoring rules |
+| Layer registries | `web/cesium/layers/*.json` | Frontend | Declarative layer entries; CI validated |
+| Cesium adapters | `web/cesium/adapters/` (**not confirmed in repo**) | Frontend | Code that maps registry entries → Cesium primitives |
+| Cesium runtime assets | `web/cesium/assets/` (**not confirmed in repo**) | Frontend | Icons/textures used by layers and UI |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` (**not confirmed in repo**) | Data/Catalog | Evidence + lineage; referenced by IDs/links |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Registry contract is explicit (fields, invariants, and what must be validated)
+- [ ] Governance + CARE/sovereignty behaviors are stated and review-triggering changes are defined
+- [ ] Validation expectations are listed and repeatable (schema + cross-link checks)
+- [ ] Clear separation between UI config vs. canonical data products (`data/` + catalogs)
 
 ---
 
-## 📘 1. Overview
+## 🗂️ Directory Layout
 
-The `web/cesium/layers/` registry is the **single source of truth** for:
+### This document
+- `path`: `web/cesium/layers/README.md`
 
-- Which **datasets** appear as layers in Cesium  
-- How those layers are **styled**, **masked**, and **gated by CARE**  
-- How each layer is linked to:
-  - STAC / dataset IDs  
-  - PROV-O provenance logs  
-  - Governance & sovereignty constraints  
+### Related repository paths
 
-No Cesium layer should be created in application code without a corresponding **registry entry** here.
+| Area | Path | What lives here |
+|---|---|---|
+| Web root | `web/` | React + map clients |
+| Cesium root | `web/cesium/` | Cesium viewer + scene orchestration |
+| Layer registry | `web/cesium/layers/` | Declarative layer definitions + schemas (this area) |
+| Assets | `web/cesium/assets/` | UI runtime assets (icons/textures); not datasets |
+| Adapters | `web/cesium/adapters/` | Registry → Cesium mapping layer (**not confirmed in repo**) |
+| Data pipeline outputs | `data/` | Raw/work/processed datasets (**not confirmed in repo**) |
+| Catalogs + lineage | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC/DCAT/PROV (**not confirmed in repo**) |
+| Schemas | `schemas/` | JSON schemas and validators (**not confirmed in repo**) |
 
-This document focuses on:
-
-- Directory layout and file roles  
-- The JSON **contract** for layer entries  
-- Integration with provenance, metadata, and telemetry  
-- FAIR+CARE and sovereignty rules around visibility and masking  
-
----
-
-## 🗂️ 2. Directory Layout (Emoji-Prefix Standard)
-
+### Expected file tree for this sub-area (recommended; not confirmed in repo)
 ~~~text
-web/cesium/layers/
-│
-├── 📄 README.md                     # This file — Cesium layer registry overview & contract
-│
-├── 🧱 tilesets.json                 # 3D Tileset registry (sites, buildings, volumetric tiles)
-├── 🗺️ regions.json                  # Region overlays registry (cultural regions, hydrology, basins)
-├── 📡 sensors.json                  # Sensor/telemetry overlays (gauges, stations, instruments)
-│
-└── 🧩 schemas/                      # Optional local schemas for layer JSON (if not in global schemas/)
-    ├── 📄 tilesets.schema.v1.json
-    ├── 📄 regions.schema.v1.json
-    └── 📄 sensors.schema.v1.json
+📁 web/
+└── 📁 cesium/
+    └── 📁 layers/
+        ├── 📄 README.md                      # This file — registry contract + rules
+        ├── 🧱 tilesets.json                  # 3D Tiles layer entries (sites/buildings/terrain tiles)
+        ├── 🗺️ regions.json                   # Region overlays (cultural regions, basins, masks)
+        ├── 📡 sensors.json                   # Sensor glyphs + telemetry overlays
+        ├── 🛰️ imagery.json                   # Optional imagery layers (WMTS/XYZ/COG proxies) (optional)
+        └── 🧩 schemas/                       # Optional local schemas (or link to global schemas/)
+            ├── 📄 tilesets.schema.v1.json
+            ├── 📄 regions.schema.v1.json
+            ├── 📄 sensors.schema.v1.json
+            └── 📄 imagery.schema.v1.json     # optional
 ~~~
 
-**Directory contract:**
+---
 
-- **This README** defines the layer registry contract and KFM governance.  
-- JSON registry files (`tilesets.json`, `regions.json`, `sensors.json`) are **declarative**, **CI-validated**, and **graph-safe**.  
-- `schemas/` is optional; global schemas under `schemas/web/` may also be used.  
+## 🧭 Context
+
+### Background
+KFM’s canonical ordering is:
+
+**ETL → STAC/DCAT/PROV → Neo4j → APIs → React/Map UI → Story Nodes → Focus Mode**
+
+This layer registry sits in the **UI stage**, but it must remain **catalog- and provenance-aligned**. The registry should not become an alternate data store.
+
+### Constraints and invariants
+- **API boundary:** UI must not access Neo4j directly.
+- **No hidden data leakage:** layer visibility and constraints must be explicit and reviewable.
+- **Provenance-first:** layer entries must point to dataset/cat/prov identifiers; the UI should surface provenance affordances where applicable.
+- **No policy bypass:** registry entries must not be used to bypass catalog + governance by pointing at untracked files.
+- **No secrets:** do not commit Cesium Ion tokens, API keys, or private endpoints into registry JSON.
+
+### What gets combined from `assets/README.md`
+The layer registry is *configuration*, not *content*:
+- UI-only assets (icons/textures) may live under `web/cesium/assets/`.
+- Data-backed assets (3D Tiles, rasters, vectors) must be produced and governed in `data/` and served via governed endpoints (exact serving mechanism **not confirmed in repo**).
+- Layer entries may reference UI-only assets (icons) but must not embed sensitive or identifying location precision.
 
 ---
 
-## 🧩 3. Common Layer Entry Contract
+## 🗺️ Diagrams
 
-All layer registries share a **common core** structure:
+### Where the registry sits in KFM
+~~~mermaid
+flowchart LR
+  A[ETL Pipelines] --> B[STAC / DCAT / PROV]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[UI: React + Cesium]
+  E --> F[Layer Registry JSON]
+  F --> G[Cesium Adapters]
+  G --> H[Cesium Primitives / Layers]
+  E --> I[Story Nodes]
+  I --> J[Focus Mode]
+~~~
 
-- **`id`** — local layer identifier (used in web code & feature flags)  
-- **`kfm_data_id`** — link to the KFM dataset/STAC/registry ID  
-- **`provider_id`** — entry in `web/cesium/config/cesium-providers.json`  
-- **`kind`** — `"tileset"`, `"region"`, `"sensor"`, etc.  
-- **`visibility`** — initial on/off + zoom constraints  
-- **`care`** — CARE + masking semantics  
-- **`provenance`** — pointers into PROV-O & metadata
+---
 
-Illustrative (conceptual) shape:
+## 📦 Data and Metadata
+
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Layer registries | JSON | `web/cesium/layers/*.json` | JSON schema + cross-link checks |
+| Provider/source refs | IDs/URLs | Provider config and/or API payloads (**not confirmed in repo**) | Existence + allowlist rules |
+| Governance annotations | JSON fields | Layer entries + dataset governance | Review triggers + CI lint |
+| UI asset references | relative paths | `web/cesium/assets/` | Link checks + license/NOTICE review |
+
+### Outputs
+| Output | Format | Produced by | Notes |
+|---|---|---|---|
+| Runtime layer menu | in-memory model | UI/adapters | Deterministic ordering + stable IDs |
+| Cesium layer objects | CesiumJS primitives | UI/adapters | Must follow registry constraints |
+| Audit hooks | UI affordances | UI | Provenance + attribution visibility |
+
+---
+
+## 🌐 STAC, DCAT and PROV Alignment
+
+### Rule of thumb
+If a layer corresponds to a real dataset or derived product, it must be traceable to:
+- **STAC** collection/item identifiers
+- **DCAT** dataset mapping (at least title/description/license/keywords)
+- **PROV** lineage bundle/activity for the transform that produced it
+
+### What the registry must capture
+Each layer entry must include:
+- A **KFM dataset identifier** (or region identifier) suitable for cross-linking
+- At least one provenance pointer:
+  - `stac_id` (item/collection) or equivalent
+  - `prov_ref` (path/URN to PROV bundle) (exact path conventions **not confirmed in repo**)
+- An attribution/credit mechanism (either:
+  - embedded `attribution` fields, or
+  - `attribution_ref` pointing to a NOTICE/credits file) (**not confirmed in repo**)
+
+---
+
+## 🧱 Architecture
+
+### “One fact, one place” for layers
+- **Registry JSON** is the single source of truth for *what layers exist and what constraints apply*.
+- **Adapters** are the single translation point for *how a registry entry becomes CesiumJS objects*.
+- **Catalog/APIs** are the single source of truth for *data, provenance, and redaction rules*.
+
+### Common Layer Entry Contract (v12 conceptual)
+The exact schema is enforced by CI (schema location **not confirmed in repo**). This section defines the *intended* shared structure.
 
 ~~~json
 {
-  "id": "smoky-hill-drainage-tileset",
-  "kfm_data_id": "urn:kfm:data:tileset:smoky-hill-drainage-v1",
-  "provider_id": "terrain-kfm-primary",
-  "kind": "tileset",
-  "visibility": {
+  "id": "flint-hills-region-overlay",
+  "kind": "region",
+  "title": "Flint Hills Region (Generalized)",
+  "kfm_data_id": "urn:kfm:data:region:flint-hills:v1",
+  "source": {
+    "provider_id": "kfm-public-geo",
+    "resource": "regions/flint-hills",
+    "url": null
+  },
+  "ui": {
+    "group": "Regions",
     "default_enabled": true,
     "min_zoom": 4,
-    "max_zoom": 14,
-    "modes": ["focus-mode", "debug-3d"]
+    "max_zoom": 12,
+    "order": 20,
+    "icon_ref": "../assets/icons/region.svg"
   },
   "care": {
     "sensitivity": "generalized",
-    "visibility_rules": "polygon-generalized",
-    "notes": "Generalized drainage extents only; no site-level detail."
+    "visibility_rules": [
+      "polygon-generalized",
+      "no-exact-boundaries"
+    ],
+    "notes": "Region overlay only; no site-level detail."
   },
   "provenance": {
-    "stac_id": "kfm-tiles-smoky-hill-drainage-v1",
-    "provenance_ref": "docs/analyses/archaeology/datasets/cultural-landscapes/provenance/smoky-hill-region-v1.json"
+    "stac_id": "kfm-region-flint-hills-v1",
+    "prov_ref": "data/prov/regions/flint-hills/v1/prov.json"
+  },
+  "telemetry": {
+    "tag": "region:flint-hills",
+    "perf_expectation": "low"
   }
 }
 ~~~
 
-> **Important:** Actual validation rules live in the JSON schemas referenced by CI. This snippet is illustrative only.
+> Notes:
+> - `source.url` should be optional; prefer provider-based resolution to avoid hardcoding environment-specific endpoints.
+> - Any path under `data/` is shown as an example and is **not confirmed in repo**.
+
+### Registry categories
+Recommended registries:
+- `tilesets.json` — 3D Tiles layers (heritage models, structures, volumetric/environment tiles)
+- `regions.json` — region overlays (cultural/hydrologic/admin), masks, boundary generalizations
+- `sensors.json` — sensor layers (gauges, stations), including aggregation/anonymization behavior
+- `imagery.json` (optional) — imagery providers, time-sliced rasters (if Cesium imagery is used)
+
+### ID stability and backward compatibility
+- `id` is a **stable public identifier** for UI state, bookmarks, Story Nodes, and Focus Mode.
+- Never rename an existing `id` without a deprecation plan (add alias support in adapters if needed).
+- If the schema changes incompatibly, bump schema version and provide a migration path.
 
 ---
 
-## 🧱 4. `tilesets.json` — 3D Tileset Layers
+## 🧠 Story Node & Focus Mode Integration
 
-### 4.1 Purpose
+### Layer registry ↔ Story Nodes
+Story Nodes may request map context (e.g., “turn these layers on”) via an adapter-safe mechanism:
+- A Story Node should reference layers **by `id`**, not by URLs.
+- The UI resolves these `id`s through the registry and applies governance constraints before display.
 
-`tilesets.json` describes all **3D Tiles** layers:
-
-- Archaeology & heritage tilesets (sites, excavations, reconstructions)  
-- Built environment (structures, terrain-aligned models)  
-- Environmental & hydrological 3D Tiles (where applicable)  
-
-### 4.2 Required Fields (per tileset entry)
-
-Each entry MUST include:
-
-- `id` — stable layer ID (e.g., `"flint-hills-heritage-tileset"`)  
-- `kfm_data_id` — dataset/tileset registry ID  
-- `provider_id` — Cesium provider configuration ID  
-- `url` — Tileset URL (from provider configuration or absolute)  
-- `kind` = `"tileset"`  
-- `visibility` block:
-  - `default_enabled` (bool)  
-  - `min_zoom`, `max_zoom` (integers)  
-- `care` block:
-  - `sensitivity` (`"generalized"` / `"restricted-generalized"`)  
-  - `visibility_rules` (e.g., `"polygon-generalized"`, `"h3-only"`, `"no-exact-boundaries"`)  
-- `provenance` block:
-  - `stac_id` or equivalent  
-  - `provenance_ref` path/URN (PROV-O log)
-
-Optional:
-
-- `style` theme ID  
-- `debug_only` flag  
-- `region_slug` (for cultural region association)
+### Focus Mode rule
+Focus Mode must only consume **provenance-linked** content, and any predictive content must be opt-in with uncertainty metadata. The layer registry supports this by requiring provenance pointers and CARE gating on every layer entry.
 
 ---
 
-## 🗺️ 5. `regions.json` — Region Overlay Layers
+## 🧪 Validation and CI/CD
 
-### 5.1 Purpose
+### Minimum CI expectations (v12-ready)
+The Master Guide calls out **UI layer registry schema checks** and **security + sovereignty scanning gates** as minimum CI requirements.
 
-`regions.json` is the wiring table for:
+### Registry validation checklist
+- [ ] JSON schema validation passes for all `web/cesium/layers/*.json`
+- [ ] No duplicate `id`s within or across registries (unless explicit aliasing rules exist)
+- [ ] All referenced providers exist (provider config location **not confirmed in repo**)
+- [ ] All referenced UI assets exist (icons/textures) and have attribution/NOTICE coverage (recommended)
+- [ ] No secrets in registry files (token/key scans)
+- [ ] CARE/sovereignty flags do not conflict with dataset governance (enforced either in CI or API contract tests)
+- [ ] Provenance refs are present and resolvable (at minimum: non-empty + path/URN format checks)
 
-- **Cultural landscape regions** (Flint Hills, Smoky Hill, Arkansas River Basin, etc.)  
-- Hydrological & drainage regions  
-- Administrative or analysis regions used in Focus Mode context
-
-Each entry maps a **KFM region** to:
-
-- One or more Cesium primitives (polygons, H3 mosaics, extruded overlays)  
-- CARE-driven **visibility/masking** logic
-
-### 5.2 Required Fields (per region layer)
-
-- `id` — layer ID (e.g., `"flint-hills-region-overlay"`)  
-- `region_slug` — e.g., `"flint-hills-region"`  
-- `kfm_data_id` — region dataset/metadata ID  
-- `provider_id` — region geometry source (if using a tileset/provider)  
-- `kind` = `"region"`  
-- `geometry_type` — `"polygon"`, `"h3"`, `"mixed"`  
-- `visibility`:
-  - `default_enabled`  
-  - `min_zoom`, `max_zoom`  
-- `care`:
-  - `sensitivity`  
-  - `visibility_rules` (e.g., `"polygon-generalized"`, `"h3-only"`)  
-  - `notes`  
-
-- `provenance`:
-  - `stac_id` (region STAC item/collection)  
-  - `provenance_ref` (PROV-O log for the region)
-
-These entries are how we **enforce** region-level constraints in Cesium:
-
-- For `"h3-only"` regions, region polygons may not be shown at certain zooms.  
-- For sensitive regions, overlays may be disabled in public modes entirely.
+### “Do not break” rule for this subsystem
+- **No hidden data leakage**: any newly visible layer must be explicit in the registry and pass governance review triggers.
 
 ---
 
-## 📡 6. `sensors.json` — Sensor & Telemetry Layers
+## ⚖ FAIR+CARE and Governance
 
-### 6.1 Purpose
+### Governance review triggers
+Human review is required when changes:
+- add a new layer that might expose sensitive locations
+- change `care.sensitivity` or `care.visibility_rules`
+- introduce a new external provider or endpoint
+- add any layer behavior that could increase precision of restricted locations
 
-`sensors.json` lists layers representing:
-
-- Stream gauges  
-- Weather & atmospheric sensors  
-- Other spatially anchored instruments & time series
-
-### 6.2 Required Fields (per sensor layer)
-
-- `id` — layer ID (e.g., `"ks-hydrology-stream-gauges"`)  
-- `kfm_data_id` — dataset ID for the sensor network  
-- `provider_id` — data/tiles provider (if applicable)  
-- `kind` = `"sensor"`  
-- `symbol` — icon ID / glyph theme  
-- `visibility`:
-  - `default_enabled`  
-  - `min_zoom`, `max_zoom`  
-
-- `care`:
-  - `sensitivity`  
-  - `visibility_rules`  
-  - `notes` (e.g., aggregation or anonymization behavior)
-
-- `provenance`:
-  - `metadata_ref` (dataset/registry entry)  
-  - `provenance_ref` (sensor provenance / lineage log)
-
-Sensors may have **time series**; the layer registry should not include raw series, but must indicate:
-
-- Whether there is **time-dependent styling**  
-- How Focus Mode should treat click/hover interactions (e.g., open time series panel)
+### CARE and sovereignty considerations
+- Prefer **generalization** at the serving layer (API/catalog-governed), not client-side “masking after the fact.”
+- If a layer is sensitive:
+  - do not ship exact boundaries
+  - enforce `min_zoom` / aggregation rules
+  - ensure it is disabled in public modes unless explicitly approved
+- Do not embed inferred sensitive locations or speculative claims into static registry content.
 
 ---
 
-## ⚖ 7. FAIR+CARE & Sovereignty Rules for Layers
+## 🕰️ Version History
 
-All layer entries must:
-
-- **Respect CARE constraints** defined at the dataset/region level:
-  - No layer may expose detail beyond dataset-level governance.  
-  - `"restricted-generalized"` layers may only appear in internal modes.  
-
-- **Declare visibility rules**:
-  - `"polygon-generalized"` — polygon overlays at region scale only.  
-  - `"h3-only"` — use only H3 mosaics; hide underlying polygons.  
-  - `"no-exact-boundaries"` — no exact boundaries; rely on shading or coarse cells.
-
-- **Integrate sovereignty constraints**:
-  - Certain layers may be completely disabled in public deployments.  
-  - Sensitive overlays must never be toggle-able without corresponding governance mode.
-
-Any change that alters `care.sensitivity` or `care.visibility_rules` in a layer entry is a **governance event** and must be:
-
-1. Reflected first in dataset provenance and metadata.  
-2. Approved via FAIR+CARE + sovereignty review.  
-3. Updated in the layer registry and validated by CI.
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v12.0.0-draft | 2025-12-21 | v12 rewrite of Cesium layer registry README: registry contract, governance/Care gating, provenance alignment, CI expectations, and adapter boundaries. | TBD |
 
 ---
-
-## 📊 8. Telemetry & Performance Hooks (Optional)
-
-While `web/cesium/layers/` is primarily configuration, layers may be annotated for **telemetry correlation**, e.g.:
-
-- `telemetry_tag` — short ID used in telemetry metrics (e.g., `"tileset:smoky-hill"`)  
-- `perf_expectation` — `"low"`, `"medium"`, `"high"` (expected cost)
-
-Telemetry is defined globally in:
-
-- Schema: `../../schemas/telemetry/web-cesium-release-v1.json`  
-- Data: `../../releases/v11.2.3/web-cesium-telemetry.json`
-
-Telemetry consumers can:
-
-- Track frame time impact by layer tag  
-- Flag extremely heavy layers for optimization or offline usage
-
----
-
-## 🧪 9. CI & Validation Expectations
-
-Layer registries are **CI-enforced**. Typical jobs:
-
-- `web-cesium-layers-validate.yml` (or equivalent), responsible for:
-  - JSON schema validation (`tilesets.schema.v1.json`, `regions.schema.v1.json`, `sensors.schema.v1.json` or global equivalents)  
-  - Cross-link checks with:
-    - Provider config (`web/cesium/config/cesium-providers.json`)  
-    - Dataset registries / STAC IDs  
-    - Provenance logs & metadata  
-
-CI must **block**:
-
-- Layers referencing unknown providers or dataset IDs.  
-- CARE/visibility values that conflict with dataset/region metadata.  
-- Registries that fail schema or introduce duplicate `id`/`kfm_data_id` collisions without explicit override logic.
-
----
-
-## 🧭 10. Authoring & Maintenance Workflow
-
-When adding or updating a Cesium layer:
-
-1. **Define or update the dataset/region**  
-   - Dataset registry, STAC, and provenance must exist or be created.
-
-2. **Update provider config (if needed)**  
-   - Add or adjust provider entries in `web/cesium/config/cesium-providers.json`.
-
-3. **Add or modify layer entry**  
-   - Update `tilesets.json`, `regions.json`, or `sensors.json` with:
-     - IDs, providers, visibility, CARE block, and provenance references.
-
-4. **Run local validation**  
-   - Execute layer validation/CI scripts (e.g., `make validate-web-cesium-layers`).
-
-5. **Submit PR & governance review**  
-   - Ensure FAIR+CARE & sovereignty checks are satisfied.  
-   - Confirm UI/UX behavior in Focus Mode & Story Nodes where applicable.
-
----
-
-## 🕰️ 11. Version History
-
-| Version  | Date       | Author                                      | Summary                                                                 |
-|----------|------------|---------------------------------------------|-------------------------------------------------------------------------|
-| v11.2.3  | 2025-12-03 | Web Visualization Systems WG · FAIR+CARE Council | Established governed Cesium layer registry contract; defined tilesets/regions/sensors JSON layouts, CARE rules, provenance hooks, and CI expectations for KFM v11.2.3. |
-
----
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — MIT (Cesium Layer Registry & Docs)**  
-FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-[⬅ Back to Cesium Web Overview](../README.md) · [⬅ Back to Web Root](../..//README.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
