@@ -1,8 +1,8 @@
 ---
-title: "KFM Web — Cesium Config"
+title: "Cesium Config"
 path: "web/cesium/config/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-18"
+last_updated: "2025-12-21"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:web:cesium:config:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:web:cesium:config-readme:v1.0.0"
 semantic_document_id: "kfm-web-cesium-config-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:web:cesium:config:readme:v1.0.0"
+event_source_id: "ledger:kfm:doc:web:cesium:config-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,314 +41,263 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Web — Cesium Config
+# Cesium Config
+
+This folder contains **frontend configuration artifacts** that shape how the KFM web client initializes and runs Cesium-related functionality, including the expected ability to switch between **2D (MapLibre)** and **3D (Cesium)** rendering contexts without losing user state.
+
+> Note: The exact config filenames and loader mechanism are **not confirmed in repo** from the materials available in this workspace. This README defines *what belongs here* and *how to document it*; update the “Key artifacts” table and file tree to match the actual implementation.
 
 ## 📘 Overview
 
 ### Purpose
-This folder defines **configuration conventions** for KFM’s Cesium-powered web UI surface: how Cesium defaults are set, how environment/runtime values are loaded, and how configuration relates to the **layer registry** and **Focus Mode** expectations.
 
-This doc is **UI-stage** guidance within the canonical pipeline:
-ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode.
+- Document the intent and usage of configuration under `web/cesium/config/`.
+- Make UI behavior extensible by configuration where appropriate (for example, adding UI-visible layers via registry-style config rather than code edits).
 
 ### Scope
-In-scope configuration topics:
-- Cesium viewer defaults (camera, terrain/imagery provider selection, time controls)
-- Layer registry integration (declarative, contract-governed layer enablement and gating)
-- Build-time vs runtime configuration boundaries
-- Safe handling of tokens/keys (no secrets committed)
-- Validation expectations for config changes (schema checks + UI checks)
 
-Out-of-scope:
-- API contract changes (use `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`)
-- Story Node content authoring (use `docs/templates/TEMPLATE__STORY_NODE_V3.md`)
-- ETL/catalog/graph generation (see `docs/MASTER_GUIDE_v12.md`)
+| In Scope | Out of Scope |
+|---|---|
+| Config files for Cesium viewer defaults, provider selection, and feature flags | Secrets/credentials committed to the repo |
+| Mappings between conceptual “layers” and renderers (2D/3D) | Backend ETL/catalog/graph changes |
+| Validation expectations for config inputs | API contract changes (use API Contract Extension template) |
 
 ### Audience
-- Web UI engineers working in `web/cesium/`
-- Data/catalog engineers adding new layers that must surface safely in UI
-- Governance reviewers auditing layer access / sensitivity behavior
 
-### Key invariants (non-negotiable)
-- **No direct graph/DB access from the frontend**: all data access flows through contract-governed APIs.
-- **No unauthorized data leakage**: layer access is governed via a declarative registry and policy flags.
-- **No secrets in repo**: tokens/keys must be injected via secure mechanisms (CI/CD, secrets manager).
-- **Focus Mode requires provenance-linked content**: configuration must not enable unsourced narrative paths.
+- Primary: Frontend engineers working in `web/` (Cesium/MapLibre UI)
+- Secondary: Platform engineers validating deploy-time environment configuration, QA reviewers verifying Focus Mode rendering behavior
 
-### Definitions (working)
-- **Config**: the normalized, validated object used by Cesium UI initialization and layer loading.
-- **Layer registry**: the declarative list of UI layers + their provenance references + gating rules.
-- **Runtime config**: config values that may differ by environment without rebuilding the bundle (pattern varies; not confirmed in repo).
-- **Build-time config**: config embedded at build/bundle time (pattern varies; not confirmed in repo).
+### Definitions and glossary
 
-### Key governed artifacts (related)
-- Master pipeline + invariants: `docs/MASTER_GUIDE_v12.md`
-- Web architecture: `web/ARCHITECTURE.md`
-- Cesium module overview: `web/cesium/README.md`
-- Cesium components overview: `web/cesium/components/README.md`
-- Layer registry (expected contract artifact): `web/cesium/layers/regions.json`
+- Glossary link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc:
+  - **Layer registry**: a configuration-driven list of map layers the UI can render/toggle
+  - **Focus Mode**: a dedicated story/entity view that adjusts map/timeline and shows provenance-linked narrative
+  - **Provider**: imagery/terrain/data source used by Cesium to render base layers
 
-### Definition of done (for config changes)
-- [ ] Config change is **documented here** (or in the owning module README, if more specific)
-- [ ] Config is **typed** (TS types or schema) and **validated** (schema or runtime checks)
-- [ ] Any new layer exposure goes through the **layer registry** (no ad-hoc hardcoded layers)
-- [ ] CI passes: lint/tests + UI schema checks + security/sovereignty checks (as applicable)
-- [ ] No secrets/tokens are committed; local dev uses safe, documented injection
+### Key artifacts
 
----
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `web/cesium/config/README.md` | Web/UI | Governs expectations for this config area |
+| Cesium config files | `web/cesium/config/*` | Web/UI | **Not confirmed in repo**: list concrete filenames here |
+| Layer registry | `web/cesium/layers/*` | Web/UI | Suggested by KFM guidance; confirm actual path/name |
+| Config schema | `schemas/web/*` | Platform | Recommended for CI validation; **not confirmed in repo** |
+
+### Definition of done
+
+- [ ] Front-matter complete and valid
+- [ ] No secrets or tokens committed in config files
+- [ ] Config keys documented with defaults and validation expectations
+- [ ] Any layer-name used by Story/Focus has a deterministic mapping to a UI layer entry
+- [ ] Validation steps listed and repeatable
+- [ ] CARE/sovereignty and sensitivity considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
-### This folder (expected)
-> Note: exact filenames may differ — **not confirmed in repo**. Treat this as the *intended* layout pattern for `web/cesium/config/`.
+### This document
+
+- `path`: `web/cesium/config/README.md`
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Frontend | `web/` | React + map clients (MapLibre/Cesium) |
+| Cesium UI code | `web/cesium/` | Cesium integration code (not confirmed in repo) |
+| Cesium config | `web/cesium/config/` | Data-only config artifacts for Cesium integration |
+| Layer registry | `web/cesium/layers/` | Layer registry config (not confirmed in repo) |
+| APIs | `src/server/` | Contracted access layer (UI does not read graph directly) |
+| Schemas | `schemas/` | JSON schema validation inputs for CI (recommended) |
+| Story nodes | `docs/reports/story_nodes/` | Narrative artifacts + Focus Mode controls (path not confirmed in repo) |
+
+### Expected file tree for this sub-area
 
 ~~~text
 📁 web/
 └── 📁 cesium/
-    ├── 📁 config/
-    │   ├── 📄 README.md
-    │   ├── 📄 (types + defaults + loaders)  ← not confirmed in repo
-    │   └── 📄 (schema/validation helpers)   ← not confirmed in repo
-    └── 📁 layers/
-        └── 📄 regions.json  ← declarative layer registry (contract-governed)
+    └── 📁 config/
+        └── 📄 README.md
+        # Optional config artifacts (examples only — not confirmed in repo):
+        # ├── 📄 viewer.defaults.json
+        # ├── 📄 providers.imagery.json
+        # ├── 📄 providers.terrain.json
+        # ├── 📄 feature_flags.json
+        # └── 📄 layer_renderer_map.json
 ~~~
-
-### Related paths (common touchpoints)
-- `web/cesium/layers/regions.json` — declarative layers + provenance refs + gating rules
-- `web/cesium/components/` — components should consume *normalized config* only (no env parsing)
-- `docs/` — governance, design docs, and validation standards
-
----
 
 ## 🧭 Context
 
-### Why configuration is governed here
-KFM’s frontend is a **governed presentation layer**: it must be able to safely render many datasets and derived evidence products without allowing:
-- accidental exposure of restricted layers,
-- hardcoded special cases that bypass review,
-- unsourced narrative in Focus Mode contexts.
+### Background
 
-Configuration is therefore treated as a **contract surface** between:
-- catalog/metadata products (STAC/DCAT/PROV),
-- API responses (contract-governed),
-- UI rendering behavior (layer registry + config defaults).
+KFM’s UI layer is designed to support map exploration and an immersive narrative experience. KFM guidance explicitly anticipates a UI that can switch between 2D and 3D contexts (MapLibre ↔ Cesium) and remain extensible via configuration updates (for example, adding new layers through a config update rather than code changes). (See project implementation guidance.)
 
-### What is “not confirmed in repo”
-Because this README is being generated from governed documentation patterns (not the live filesystem), the following are **not confirmed in repo** until verified in `web/`:
-- exact build tool (Vite/Next/CRA/etc.) and therefore the env var prefix rules,
-- whether runtime config is loaded from a `config.json`, injected global, or build-time only,
-- the exact module filenames under `web/cesium/config/`.
+### Assumptions
 
----
+- Configuration in this directory is **data-only** (JSON/YAML/TS constants) and does not execute side effects.
+- Environment-specific values (tokens, service URLs) are provided via runtime env or deployment secrets manager.
+- The UI uses **API contracts** to fetch data and provenance bundles for Focus Mode.
+
+### Constraints and invariants
+
+- The end-to-end pipeline ordering remains: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- The frontend consumes data via APIs and must not directly query the graph.
+
+### Open questions
+
+| Question | Owner | Target date |
+|---|---|---|
+| What is the exact config loader entrypoint and format (JSON vs TS)? | TBD | TBD |
+| Where is the layer registry file located and what schema does it use? | TBD | TBD |
+| What is the supported override order (defaults → env → runtime)? | TBD | TBD |
+
+### Future extensions
+
+- Add JSON Schema(s) under `schemas/` for each config artifact in this folder.
+- Add CI validation to fail builds on unknown keys, invalid URLs, or missing required fields.
+- Add a typed “normalized config” interface to prevent runtime drift between 2D/3D layer names.
 
 ## 🗺️ Diagrams
 
-### Config flow: source → validation → normalized config → Cesium initialization
+### Cesium config consumption flow
+
 ~~~mermaid
 flowchart LR
-  A["(1) Sources<br/>- defaults<br/>- env vars (build-time)<br/>- runtime config (optional)"] --> B["(2) Load + parse"]
-  B --> C["(3) Validate<br/>- type guards / schema<br/>- required fields<br/>- safe defaults"]
-  C --> D["(4) Normalized Config Object"]
-  D --> E["(5) Cesium Viewer Init"]
-  D --> F["(6) Layer Registry Resolver<br/>web/cesium/layers/regions.json"]
-  F --> G["(7) Layer Loader(s)"]
-  E --> G
-  G --> H["Map UI + Focus Mode UX"]
+  subgraph WebClient["Web Client (React)"]
+    Cfg["web/cesium/config (data-only)"] --> Loader["Config loader / normalizer"]
+    Loader --> Map2D["MapLibre (2D)"]
+    Loader --> Map3D["Cesium (3D)"]
+  end
+
+  Map2D --> API["API layer (REST/GraphQL)"]
+  Map3D --> API
+  API --> Provenance["Provenance-linked payloads"]
 ~~~
 
----
-
-## 🧾 Data & Metadata
+## 📦 Data and metadata
 
 ### Inputs
-- **Layer registry entries** (expected): `web/cesium/layers/regions.json`
-  - should include provenance references (e.g., STAC collection IDs) and gating flags
-- **Environment/runtime values** (pattern not confirmed in repo), commonly including:
-  - API base URL / gateway base URL
-  - Cesium Ion access token (if used)
-  - Basemap/imagery provider tokens (if used)
-  - Feature flags (enable/disable experimental layers)
+
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Cesium config artifacts | JSON/YAML/TS | `web/cesium/config/` | Schema validation recommended |
+| Environment variables | string | deploy/runtime | CI lint + runtime checks |
+| Focus Mode hints | JSON fields in API payloads | API | Contract tests |
 
 ### Outputs
-- A **single normalized config object** that:
-  - is safe to log at info-level (redacted where needed),
-  - is safe to expose in client bundle (no private secrets),
-  - is the only config interface consumed by Cesium components.
 
-### Provenance expectation (UI-facing)
-Even though UI config is not itself a catalog artifact, it must *support* provenance:
-- Layer config should be able to link rendered features back to **dataset IDs** / **STAC IDs**.
-- Focus Mode UI must be able to display citations and governance flags when configured to do so.
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Normalized viewer configuration | JS object | runtime | Type/interface recommended |
+| Active base providers | viewer state | runtime | N/A |
+| Layer renderer mapping | lookup table | runtime | Schema recommended |
 
----
+### Sensitivity and redaction
 
-## 🔌 Interfaces & Contracts
+- Never commit credentials (Cesium Ion tokens, API keys, signed URLs).
+- If a layer is sensitive (culturally sensitive sites, human subjects, restricted locations), the UI must only render it when the API contract authorizes it and provides generalized geometry as required by governance policy.
 
-### Layer Registry is a UI contract
-The Cesium UI must not introduce new visible layers by hardcoding.
-Instead, layers are declared in the layer registry (expected: `web/cesium/layers/regions.json`), which should support:
-- `visibility.default_enabled` (default on/off)
-- `zoom ranges` or other constraints
-- `sensitivity_class` / CARE-related gating
-- provenance pointers (e.g., `provenance.stac_id`)
+### Quality signals
 
-> If you need to add a new layer: update the layer registry + ensure the renderer supports the layer type.
+- Schema validation passes for all config files in this folder.
+- “Unknown key” detection for config objects to prevent silent typos.
+- Deterministic layer naming: story/Focus layer names resolve consistently across 2D and 3D renderers.
 
-### API boundaries
-Frontend config may store:
-- API base URL(s)
-- endpoint paths (if stable)
+## 🌐 STAC, DCAT and PROV alignment
 
-Frontend config must not:
-- encode DB connection details,
-- encode internal network endpoints,
-- bypass API contracts.
+### STAC
 
----
+- This config should not hardcode data values that belong in STAC Items/Collections.
+- If this config references a dataset/layer, prefer stable identifiers (collection/item IDs) over ad-hoc URLs.
 
-## 🧱 Architecture
+### DCAT
 
-### Recommended separation of concerns
-Even if filenames differ, the config responsibilities should be separated:
+- If external providers are used for base imagery/terrain, document licensing and attribution requirements here or in a linked UI attribution doc (recommended).
 
-1) **Defaults (versioned)**
-- stable, reviewable defaults committed to the repo
-- includes safe Cesium defaults, safe feature flags, and conservative layer enablement
+### PROV-O
 
-2) **Loading**
-- reads env/runtime sources (pattern not confirmed in repo)
-- normalizes types (string → number/boolean where applicable)
-- redacts sensitive values in logs
+- Focus Mode and any narrative surfaces must preserve provenance pointers provided by the API.
+- Config must not introduce “narrative facts”; it may only control presentation of provenance-linked content.
 
-3) **Validation**
-- schema or type-guard validation
-- fail-fast on missing required fields *only when needed*
-  - example: require token only if a provider is enabled
+### Versioning
 
-4) **Consumption**
-- Cesium components consume the normalized config only
-- components do not read env vars or `window` globals directly
+- If config changes affect user-visible behavior or interpretation of layer naming, treat as a UI contract change and version accordingly (release notes / changelog recommended).
 
-### Example config shape (illustrative — not confirmed in repo)
-~~~json
-{
-  "api": { "baseUrl": "TBD" },
-  "cesium": {
-    "ionToken": "TBD (do not commit)",
-    "defaultView": { "center": [-98.0, 38.0], "zoom": 6 }
-  },
-  "layers": {
-    "registryPath": "web/cesium/layers/regions.json",
-    "defaultRegion": "TBD"
-  },
-  "featureFlags": {
-    "enable3D": true,
-    "enableFocusMode": true
-  }
-}
-~~~
+## ✅ Extension points checklist
 
----
+- [ ] UI: layer registry entry + access rules
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump (if applicable)
 
-## 🧠 Story Node & Focus Mode Integration
+## 🧠 Story Node and Focus Mode Integration
 
 ### How this work surfaces in Focus Mode
-Config must support Focus Mode’s non-negotiable behaviors:
-- enforce provenance-linked content display,
-- surface governance flags (including sensitivity-related blurring/generalization),
-- control default layers/time bounds when entering Focus Mode (if the UI implements these features).
+
+- Focus Mode may request a “context bundle” from the API and then adjust map state (camera center/zoom) and active layers based on story metadata.
+- Configuration here must ensure that any layer names referenced by story controls map deterministically to UI-available layers in both 2D and 3D contexts.
 
 ### Provenance-linked narrative rule
-- Every claim shown in Focus Mode must trace to a dataset / record / asset ID.
-- Config must not introduce “free text narrative defaults” without a provenance model.
+
+- In Focus Mode contexts, narrative claims must trace to a dataset/record/asset ID and remain inspectable via UI “Sources” or “Audit” panels.
 
 ### Optional structured controls
-> These are *controls the UI may support* — actual support is **not confirmed in repo**.
 
 ~~~yaml
 focus_layers:
-  - "TBD-layer-id-from-registry"
-focus_time: "TBD-iso8601-or-range"
+  - "TBD-layer-name"
+focus_time: "TBD"
 focus_center: [ -98.0000, 38.0000 ]
 ~~~
 
----
-
-## 🧪 Validation & CI/CD
+## 🧪 Validation and CI
 
 ### Validation steps
+
 - [ ] Markdown protocol checks
+- [ ] Config schema validation (if schemas exist)
 - [ ] UI schema checks (layer registry)
-- [ ] Config schema/type validation (if implemented)
 - [ ] Security and sovereignty checks (as applicable)
-- [ ] No-secrets scan (ensure tokens/keys are not committed)
 
 ### Reproduction
+
 ~~~bash
 # Example placeholders — replace with repo-specific commands
-
-# 1) UI lint + typecheck
-# <pkg-manager> run lint
-# <pkg-manager> run typecheck
-
-# 2) validate layer registry schema (if a checker exists)
-# <pkg-manager> run validate:layers
-
-# 3) validate docs markdown protocol (if a checker exists)
-# <pkg-manager> run lint:docs
+# 1) validate JSON schemas (config + layer registry)
+# 2) run unit tests for config loader/normalizer
+# 3) run doc lint / markdown protocol validation
 ~~~
 
-### Telemetry signals (if applicable)
+### Telemetry signals
+
 | Signal | Source | Where recorded |
 |---|---|---|
-| Config validation failures | Web UI | `docs/telemetry/` + `schemas/telemetry/` |
-| Layer gating events (blocked/blurred) | Web UI | `docs/telemetry/` + `schemas/telemetry/` |
+| Config load success/failure | UI runtime | `docs/telemetry/` + `schemas/telemetry/` (not confirmed in repo) |
+| Layer toggle usage | UI runtime | telemetry pipeline (not confirmed in repo) |
 
----
-
-## ⚖ FAIR+CARE & Governance
+## ⚖ FAIR+CARE and governance
 
 ### Review gates
-Config changes that affect:
-- **layer visibility defaults**,
-- **sensitivity gating**,
-- **provenance display rules**,
-- **Focus Mode behavior**,
 
-…should be reviewed by:
-- Web UI maintainers, and
-- governance reviewers when data sensitivity/sovereignty is impacted.
+- Adding a new map layer that surfaces new datasets or sensitive content may require additional review (ethics / sovereignty / security) before release.
+- Any change that affects provenance rendering or Focus Mode citation behavior should be treated as a governed UI change and reviewed accordingly.
 
-### CARE / sovereignty considerations
-- If a layer or feature can expose precise site locations for protected or culturally sensitive resources, config must:
-  - default to **off** (where appropriate),
-  - enforce **generalization/blur** behaviors,
-  - surface a **governance notice** in UI (audit panel pattern).
+### CARE and sovereignty considerations
 
-### Secrets & security constraints
-- Do not commit tokens/keys in defaults or in the layer registry.
-- Prefer CI/CD secrets injection and local `.env` patterns (implementation depends on build tooling; not confirmed in repo).
+- Identify impacted communities when adding layers involving culturally sensitive locations, and apply generalization/redaction rules as required.
 
 ### AI usage constraints
-- Ensure the doc’s AI permissions/prohibitions match intended use.
-- Do not infer or embed sensitive locations or restricted site coordinates in configuration.
 
----
+- This document allows summarization/structure extraction but prohibits generating policy or inferring sensitive locations.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-18 | Initial README for Cesium config conventions | TBD |
+| v1.0.0 | 2025-12-21 | Initial README for Cesium config area | TBD |
 
 ---
 
 Footer refs:
-- Master Guide: `docs/MASTER_GUIDE_v12.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
-- Web: `web/ARCHITECTURE.md`
-- Cesium: `web/cesium/README.md`
-- Cesium Components: `web/cesium/components/README.md`
-- Layer Registry (expected): `web/cesium/layers/regions.json`
