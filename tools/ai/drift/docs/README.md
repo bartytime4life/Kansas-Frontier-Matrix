@@ -1,463 +1,377 @@
 ---
-title: "📚 Kansas Frontier Matrix — AI Drift Documentation Suite"
+title: "KFM Tool — AI Drift Monitor"
 path: "tools/ai/drift/docs/README.md"
+version: "v0.1.0"
+last_updated: "2025-12-22"
+status: "draft"
+doc_kind: "Tool Documentation"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-15"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-status: "Active / Enforced"
-doc_kind: "Architecture"
-intent: "tools-ai-drift-docs-index"
-role: "drift-documentation-registry"
-category: "AI · Drift · Monitoring · Governance · Documentation"
-
-header_profile: "standard"
-footer_profile: "standard"
-diagram_profiles:
-  - "mermaid-flowchart-v1"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-doc_uuid: "urn:kfm:doc:tools-ai:drift:docs-readme:v11.2.6"
-semantic_document_id: "kfm-doc-tools-ai-drift-docs"
-event_source_id: "ledger:tools/ai/drift/docs/README.md"
-immutability_status: "mutable-plan"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-prov_profile: "KFM-PROV v11"
-dcat_profile: "KFM-DCAT v11"
-stac_profile: "KFM-STAC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-# Release refs: update these if your governed “current release” differs.
-sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-telemetry_ref: "../../../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/tools-ai-governance-v4.json"
-energy_schema: "../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
+doc_uuid: "urn:kfm:doc:tools:ai:drift:readme:v0.1.0"
+semantic_document_id: "kfm-tool-ai-drift-readme-v0.1.0"
+event_source_id: "ledger:kfm:doc:tools:ai:drift:readme:v0.1.0"
+commit_sha: "<latest-commit-hash>"
 
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "speculative_additions"
+  - "infer_sensitive_locations"
+  - "generate_policy"
 
-# Optional (point these to real schema files if/when present).
-json_schema_ref: "../../../../schemas/json/tools-ai-drift-docs-readme-v11.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/tools-ai-drift-docs-readme-v11.shape.ttl"
-
-fair_category: "F1-A1-I2-R3"
-care_label: "Public · Low-Risk"
-classification: "Public"
-jurisdiction: "United States · Kansas"
-sensitivity: "General"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-indigenous_data_flag: false
-risk_category: "Low"
-redaction_required: false
-
-ai_training_allowed: false
-ai_training_guidance: "Drift documentation, incident playbooks, and governance/audit guidance MUST NOT be used as AI training data."
-
-machine_readable: true
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next AI-tools platform update"
-
-provenance_chain:
-  - "tools/ai/drift/README.md@v11.2.6"
-  - "tools/ai/README.md@v11.2.6"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📚 **KFM — AI Drift Documentation Suite**
-`tools/ai/drift/docs/README.md`
-
-**Purpose**  
-Provide the **canonical documentation hub** for the KFM drift subsystem — including detector/baseline concepts, operational playbooks, threshold rationales, incident response guidance, and safe examples — so drift monitoring remains **deterministic, auditable, and FAIR+CARE-governed**.
-
-</div>
-
----
+# KFM Tool — AI Drift Monitor
 
 ## 📘 Overview
 
-### What belongs in `tools/ai/drift/docs/` (normative)
+This directory documents the **AI Drift Monitor** capability for Kansas Frontier Matrix (KFM).
 
-This folder is the governed home for *human-readable drift knowledge* that must remain close to the drift implementation:
+**Goal:** detect and report “drift” (meaningful change over time) in **AI-adjacent pipeline outputs** and the **data distributions that those outputs depend on**, so downstream surfaces (APIs, UI, Story Nodes, Focus Mode) remain **evidence-first**, **contract-first**, and **provenance-anchored**.
 
-- **Concepts & definitions**  
-  Drift types, terminology, comparability rules, and why KFM uses summary-driven drift.
+This README is written as a **contract + operating guide**. Where an implementation detail is not verifiable from the repository snapshot available to this author, it is labeled **not confirmed in repo** and kept as a recommendation rather than a claim.
 
-- **Operational playbooks**  
-  How to interpret WARN/FAIL, what to check first, and safe remediation options.
+### Canonical references
 
-- **Threshold rationales**  
-  Why thresholds are set the way they are, how they were validated, and when they can change.
+- `docs/MASTER_GUIDE_v12.md` (pipeline ordering + invariants)
+- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` (this doc’s governing structure)
+- `docs/templates/TEMPLATE__STORY_NODE_V3.md` (story/focus invariants)
+- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` (if drift results become API-visible)
+- *Comprehensive Guide to Markdown in Programming and Documentation.pdf* (style + Markdown hygiene)
+- *KFM 1.0 System Documentation (PDF)* — **not confirmed in repo** (recommended path: `docs/architecture/`)
 
-- **Domain-specific guides**  
-  Hydrology, climate, remote sensing, retrieval, narrative generation (Focus Mode) — with domain-safe examples.
+### What “drift” means in KFM
 
-- **Templates**  
-  Drift report templates, incident triage templates, review checklists.
+Drift can occur at multiple boundaries. This tool’s scope is to detect, quantify, and record drift in a way that is:
 
-- **Diagrams & system context**  
-  High-level flow diagrams suitable for onboarding and governance review.
+- **replayable** (same inputs ⇒ same report),
+- **auditable** (PROV-linked, with stable IDs),
+- **safe** (no sensitive location inference; honors redaction/generalization),
+- **actionable** (clear “OK/WARN/FAIL” signals and human-readable summary).
 
-This folder MUST NOT contain raw datasets, private data, or secrets. Keep content policy-safe and broadly publishable.
+Common drift categories (non-exhaustive):
 
-### Drift definitions used by KFM (recommended canonical terms)
+1. **Input / dataset drift**
+   - Shifts in incoming source distributions (e.g., new imagery characteristics, new text OCR noise profile).
+2. **Feature / extraction drift**
+   - Changes in extracted entities, embeddings, classifications, topic tags, etc., given “equivalent” inputs.
+3. **Model / prompt drift**
+   - Changes in outputs tied to model version, prompt templates, or decoding parameters.
+4. **Narrative-support drift**
+   - Changes in draft summaries or draft Story Node candidates produced by AI assistance (must remain opt-in and clearly labeled if surfaced).
 
-KFM uses “drift” as an umbrella term covering:
+### Non-goals
 
-- **Data drift**: distribution shift in input features compared to baseline.
-- **Prediction drift**: distribution shift in model outputs compared to baseline.
-- **Concept drift**: performance/relationship shift between inputs and outputs over time.
-- **Upstream drift**: changes in sources/sensors/ETL that alter the feature meaning.
-- **Policy drift**: changes in redaction/suppression behavior that affect what’s observable.
-
-When authoring docs, always specify which drift class you mean.
-
-### Documentation is part of governance (normative)
-
-Drift monitoring is a governance-critical capability. Therefore:
-
-- Drift docs MUST be kept in sync with detector/baseline contracts.
-- Any change that alters drift semantics MUST be accompanied by documentation updates and a version bump.
-- Drift docs MUST remain evidence-led and avoid speculative claims.
+- This tool **does not** bypass KFM governance rules.
+- This tool **does not** publish Story Nodes automatically.
+- This tool **does not** introduce UI behavior that reads Neo4j directly (UI must remain API-contract-bound).
 
 ---
 
 ## 🗂️ Directory Layout
 
-### Location in the repo
-
 ~~~text
 📁 tools/
-└── 🧠 ai/
+└── 📁 ai/
     └── 📁 drift/
-        └── 📁 docs/
-            └── 📄 README.md                 # This file
+        ├── 📁 docs/
+        │   └── 📄 README.md
+        ├── 📁 src/                 (not confirmed in repo)
+        ├── 📁 configs/             (not confirmed in repo)
+        ├── 📁 schemas/             (not confirmed in repo; prefer `schemas/telemetry/`)
+        └── 📁 tests/               (not confirmed in repo)
 ~~~
 
-### Drift subtree (recommended context view)
+Related canonical locations (by KFM convention):
 
-This “context tree” is here so readers can quickly find related submodules.
-
-~~~text
-📁 tools/
-└── 🧠 ai/
-    └── 📁 drift/
-        ├── 📄 README.md                     # Drift subsystem overview (entrypoint)
-        ├── 📁 baselines/
-        │   └── 📄 README.md                 # Baseline definitions & lifecycle
-        ├── 📁 detectors/
-        │   └── 📄 README.md                 # Detector taxonomy & contracts
-        └── 📁 docs/
-            └── 📄 README.md                 # Drift documentation hub (this file)
-~~~
-
-### Target docs structure (create if missing)
-
-This is the **intended** documentation layout for drift. Keep it aligned with how the drift subsystem evolves.
-
-~~~text
-📁 tools/
-└── 🧠 ai/
-    └── 📁 drift/
-        └── 📁 docs/
-            ├── 📄 README.md                           # This file (docs hub)
-            │
-            ├── 📁 concepts/                           # Definitions, invariants, comparability rules
-            ├── 📁 playbooks/                          # Triage, remediation, incident response guides
-            ├── 📁 threshold_rationales/               # Why thresholds exist; evidence & change rules
-            ├── 📁 domain_guides/                      # Hydrology / climate / remote sensing / narrative
-            ├── 📁 templates/                          # Drift report + incident templates + review checklists
-            ├── 📁 diagrams/                           # Mermaid diagrams and lightweight visuals
-            └── 📁 references/                         # External citations (titles + links), no large copies
-~~~
-
-### Where “real outputs” belong (normative)
-
-Drift docs describe how drift works.
-
-Drift **outputs** (reports, telemetry, provenance bundles) belong in governed run or release locations, e.g.:
-
-~~~text
-📁 mcp/
-└── 📁 experiments/
-    └── 📁 <run-id>/
-        ├── 🧾 drift_report.json
-        ├── 🧾 telemetry.json
-        └── 🧾 provenance_bundle.jsonld
-~~~
-
-Do NOT commit drift run outputs under `tools/ai/drift/docs/`.
+- 📁 `schemas/telemetry/` — telemetry schemas used by CI and runs (preferred home for drift-report schemas)
+- 📁 `data/prov/` — PROV bundles for lineage
+- 📁 `data/stac/` and 📁 `data/catalog/dcat/` — evidence/catalog bindings
+- 📁 `mcp/runs/` — run logs / experiment artifacts (**preferred for drift runs if treated like analysis runs**)
 
 ---
 
 ## 🧭 Context
 
-### Why drift documentation is separate from baselines/detectors
+KFM’s core invariants include:
 
-- `baselines/` defines what a baseline is and how it’s built.
-- `detectors/` defines detector computation and output contracts.
-- `docs/` explains:
-  - what drift means in different domains,
-  - how to reason about results,
-  - how to respond safely,
-  - why certain governance decisions exist.
+- **No unsourced narrative** in Focus Mode contexts.
+- **Provenance is first-class** (STAC/DCAT/PROV and graph lineage).
+- **Reproducibility and deterministic pipelines**.
 
-This separation keeps implementation contracts stable while allowing richer explanatory material.
+The Drift Monitor exists to support those invariants when AI components (or AI-adjacent transforms) are introduced or evolve.
 
-### Audience map
+### When drift checks should run (recommended)
 
-Drift docs serve:
-
-- **Developers**: how to extend detectors/baselines without breaking contracts.
-- **Operators**: how to triage drift signals in CI or production monitoring.
-- **Governance reviewers**: why thresholds and actions are justified.
-- **Domain experts**: what drift means for their data (hydrology, archaeology masking, remote sensing).
-- **Focus Mode editors**: how to interpret drift signals for narrative reliability.
-
-### “Fail closed” guidance in docs
-
-When drift inputs are incomplete, incomparable, or policy-sensitive, drift monitoring should fail closed for certification paths. Drift docs should document:
-
-- what “incomparable” means,
-- what safe fallback paths exist (e.g., rebuild baseline, require review),
-- what must be escalated to governance.
+- **CI / PR gates**
+  - If model version, prompt templates, extraction logic, schemas, or redaction rules change.
+- **Scheduled drift audits**
+  - Periodic runs for critical domains/datasets to detect slow distribution shifts.
+- **Before publishing or promoting AI-derived artifacts**
+  - Especially if drift affects anything that could surface in Story Nodes or Focus Mode.
 
 ---
 
 ## 🗺️ Diagrams
 
-### How drift docs relate to drift runtime (conceptual)
-
 ~~~mermaid
-flowchart TD
-  A["Detectors + Baselines<br/>(tools/ai/drift/)"] --> B["Drift monitor runs<br/>(CI / scheduled monitoring)"]
-  B --> C["Drift report + telemetry<br/>(mcp/experiments/...)"]
-  C --> D["Docs + Playbooks<br/>(tools/ai/drift/docs/)"]
-  D --> E["Human interpretation<br/>(operators + governance)"]
-  E --> F["Actions<br/>(alert · review · block · retrain)"]
+flowchart LR
+  subgraph Data
+    A["Raw Sources"] --> B["ETL + Normalization"]
+    B --> C["Processed + Catalog-ready outputs"]
+    C --> D["STAC/DCAT/PROV"]
+  end
+
+  D --> G["Graph Build (Neo4j)"]
+  G --> H["API Layer"]
+  H --> I["UI (React/MapLibre/Cesium)"]
+  I --> J["Story Nodes"]
+  J --> K["Focus Mode"]
+
+  subgraph AI["AI / Analysis Stage"]
+    C --> M["AI Transforms (extraction, embeddings, summarization)"]
+    M --> N["Drift Monitor"]
+    N --> R["Drift Report + Telemetry Signal"]
+  end
+
+  R --> D
+  R --> H
 ~~~
 
-Accessibility note: docs are not part of runtime compute; they guide interpretation and response.
-
----
-
-## 🧠 Story Node & Focus Mode Integration
-
-### Why drift matters for Focus Mode (recommended)
-
-For narrative systems (Focus Mode, Story Nodes), drift can show up as:
-
-- shifting source availability (archives go offline / new scans appear),
-- changes in retrieval distributions (source types, time ranges, regions),
-- changes in redaction/suppression behavior (policy drift),
-- changes in model output behaviors (length, citation density proxies).
-
-Docs in `domain_guides/` SHOULD describe:
-
-- what drift features are tracked (aggregates only),
-- what ranges are expected and why,
-- what actions to take when drift is severe.
-
-### Safety note (normative)
-
-When documenting narrative drift:
-
-- do not include raw narrative outputs
-- do not include sensitive excerpts from restricted sources
-- use aggregate examples and policy-safe summaries only
-
----
-
-## 🧪 Validation & CI/CD
-
-### Documentation requirements (normative)
-
-All docs in this folder MUST:
-
-- follow KFM-MDP rules:
-  - front-matter required
-  - exactly one H1
-  - approved emoji H2 headings only
-  - internal fenced blocks use `~~~` (no backticks)
-- avoid secrets and PII (docs are scanned)
-- include a Version History section if the document is governed (recommended for anything beyond small notes)
-
-### “Docs must match contracts” checklist (recommended)
-
-When changing detectors/baselines, ensure docs are updated for:
-
-- input compatibility assumptions
-- metric definitions
-- severity mappings (PASS/WARN/FAIL inputs)
-- baseline selection rules
-- domain-specific failure modes
-- expected remediation steps
-
-### CI-friendly documentation style
-
-- Prefer short sections and structured lists.
-- Prefer Mermaid for diagrams (no ASCII art).
-- Keep examples minimal and policy-safe.
-- Provide “what changed” and “why it matters” in Version History.
+Key takeaway: drift outputs are treated as **evidence/telemetry artifacts** that can be referenced via **contracts** (schemas) and **provenance** (PROV), not as free-form narrative.
 
 ---
 
 ## 📦 Data & Metadata
 
-### Doc metadata patterns for drift docs (recommended)
+### Inputs (recommended contract)
 
-Drift docs should include:
+A drift run should declare *exactly what it is comparing*, including identifiers that can be resolved later.
 
-- stable IDs (`doc_uuid`, `semantic_document_id`)
-- links to governance (`governance_ref`, `ethics_ref`, `sovereignty_policy`)
-- protocol versions (`markdown_protocol_version`, `pipeline_contract_version`)
-- release references (when relevant)
-- sensitivity labels (keep them correct)
+- **Baseline bundle**
+  - STAC Item IDs and/or DCAT dataset IDs
+  - Reference window (time range or version pin)
+- **Monitor bundle**
+  - Same types of IDs, representing current/latest window/version
+- **Transform identity**
+  - Code version (`commit_sha`)
+  - Model identifier/version (if applicable) (**not confirmed in repo** how models are identified)
+  - Prompt template identifier (if applicable) (**not confirmed in repo**)
 
-### Template snippet (illustrative)
+### Outputs (recommended contract)
 
-~~~yaml
----
-title: "📘 KFM Drift — <Doc Title>"
-path: "tools/ai/drift/docs/<folder>/<doc>.md"
-version: "v11.2.6"
-last_updated: "2025-12-15"
-status: "Active / Enforced"
-doc_kind: "Guide"
-license: "MIT"
-markdown_protocol_version: "KFM-MDP v11.2.6"
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
----
-~~~
+At minimum:
 
-Use actual paths relative to the document location.
+1. **Machine-readable drift report** (JSON)
+2. **Human-readable summary** (Markdown)
+3. **Lineage record** (PROV Activity/Bundle)
+
+Recommended canonical output placement (choose one pattern and standardize):
+
+- Pattern A (analysis-run oriented): `mcp/runs/<run_id>/drift_report.json` (**not confirmed in repo**)
+- Pattern B (data-report oriented): `data/reports/ai/drift/<run_id>/drift_report.json` (**not confirmed in repo**)
+
+If surfaced to users, drift results should be exposed via **API contracts**, not direct file reads.
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### DCAT
+### Evidence-first linkage
 
-Drift docs can be indexed as DCAT records (documentation assets), but they are not datasets themselves.
+A drift report should be linkable as an **evidence artifact**:
 
-Recommended mapping:
+- STAC: attach drift report as an `asset` on an Item or as a dedicated Item representing the report (preferred if drift reports are first-class evidence products).
+- DCAT: reference drift reports as distributions or related resources (if externally published).
+- PROV: record drift evaluation as a `prov:Activity` with:
+  - `prov:used` ⇒ baseline bundle identifiers
+  - `prov:used` ⇒ monitor bundle identifiers
+  - `prov:wasAssociatedWith` ⇒ tool + model identity
+  - `prov:generated` ⇒ drift report artifact(s)
 
-- `title` → `dct:title`
-- Purpose paragraph → `dct:description`
-- `last_updated` → `dct:modified`
-- `doc_uuid` → `dct:identifier`
-- Markdown file → a `dcat:Distribution` (`mediaType: text/markdown`)
+### Drift as a “quality signal” (recommended)
 
-### STAC
+Treat drift status as a quality signal that can inform:
 
-If KFM catalogs documentation in STAC (optional), this README can be represented as a non-spatial STAC Item in a documentation Collection.
-
-### PROV-O
-
-Drift docs may be used as governed plans:
-
-- documentation artifact: `prov:Entity`
-- “drift monitoring” definition or playbook: `prov:Plan`
-
-Drift run artifacts should reference relevant docs by `semantic_document_id` (not by copying content).
+- curator review queues,
+- CI gating,
+- “data freshness / model changed” warnings in audit panels (UI),
+- opt-in AI sections in Focus Mode (never as unmarked fact).
 
 ---
 
 ## 🧱 Architecture
 
-### Documentation layering (recommended)
+### Components (conceptual)
 
-- **Layer 1: Contracts**  
-  `baselines/README.md` and `detectors/README.md` define what the code expects/produces.
+- **Collector**
+  - Resolves baseline/monitor bundles into comparable samples.
+- **Metric engine**
+  - Computes drift metrics (distribution distance, frequency shifts, embedding-space shifts, label drift, etc.).
+- **Evaluator**
+  - Compares metrics to thresholds and assigns status (OK/WARN/FAIL).
+- **Reporter**
+  - Writes JSON report + Markdown summary.
+- **Validator**
+  - Validates report payloads against JSON Schema (prefer `schemas/telemetry/`).
+- **Governance guardrails**
+  - Ensures output does not leak sensitive locations; enforces redaction/generalization where required.
 
-- **Layer 2: Operations**  
-  Playbooks explain how to act on drift outcomes safely.
+### Configuration (recommended shape)
 
-- **Layer 3: Domain interpretation**  
-  Domain guides explain what drift means in context (hydrology, remote sensing, narrative).
+~~~yaml
+# not confirmed in repo: example contract proposal only
 
-- **Layer 4: Governance evidence**  
-  Threshold rationales and change logs explain why gates exist.
+run:
+  run_id: "prov:activity:<uuid-or-stable-id>"
+  created_at: "2025-12-22T00:00:00Z"
+  commit_sha: "<latest-commit-hash>"
 
-### Adding new documentation (recommended process)
+compare:
+  baseline:
+    stac_item_ids: [ "stac:item:<id>" ]
+    dcat_dataset_ids: [ "dcat:<id>" ]
+    time_range: { start: "TBD", end: "TBD" }
+  monitor:
+    stac_item_ids: [ "stac:item:<id>" ]
+    dcat_dataset_ids: [ "dcat:<id>" ]
+    time_range: { start: "TBD", end: "TBD" }
 
-1. Create the doc in the right subfolder.
-2. Add front-matter and follow approved H2 headings.
-3. Link to the relevant contract docs (`baselines/`, `detectors/`) and configs (if applicable).
-4. Keep examples aggregate-only and policy-safe.
-5. Add a Version History entry describing the change.
-6. Ensure markdown/diagram lint passes.
+metrics:
+  - name: "population_stability_index"
+    field: "TBD"
+    warn: 0.1
+    fail: 0.2
+  - name: "js_divergence"
+    field: "TBD"
+    warn: 0.05
+    fail: 0.1
+
+governance:
+  infer_sensitive_locations: false
+  redact_restricted_geometry: true
+  include_ai_outputs: false
+~~~
+
+### Drift report payload (recommended shape)
+
+~~~json
+{
+  "schema_version": "kfm-telemetry-drift-report-v0.1.0",
+  "run_id": "prov:activity:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "created_at": "2025-12-22T00:00:00Z",
+  "commit_sha": "<latest-commit-hash>",
+  "baseline": {
+    "stac_item_ids": ["stac:item:..."],
+    "dcat_dataset_ids": ["dcat:..."],
+    "time_range": { "start": "TBD", "end": "TBD" }
+  },
+  "monitor": {
+    "stac_item_ids": ["stac:item:..."],
+    "dcat_dataset_ids": ["dcat:..."],
+    "time_range": { "start": "TBD", "end": "TBD" }
+  },
+  "metrics": [
+    { "name": "population_stability_index", "field": "TBD", "value": 0.12, "warn": 0.1, "fail": 0.2, "status": "warn" }
+  ],
+  "overall_status": "warn",
+  "provenance": {
+    "prov_bundle_path": "data/prov/<bundle>.json"
+  },
+  "notes": "Drift detected above WARN threshold for field TBD."
+}
+~~~
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How drift results should surface (recommended)
+
+- **Curator workflow**
+  - Drift reports flag areas where AI-derived drafts may need re-review.
+- **Story Nodes**
+  - Drift findings can be referenced as supporting evidence for “what changed,” but must not be used to fabricate narrative.
+- **Focus Mode**
+  - Focus Mode consumes **provenance-linked** context only.
+  - Predictive or AI-generated content must be **opt-in** and include uncertainty/confidence metadata.
+
+Recommended UX behaviors (if drift signals are surfaced):
+
+- show a non-intrusive **audit badge** (“AI outputs changed since baseline”),
+- link badge to drift report artifact IDs (STAC/DCAT/PROV),
+- never replace curated narrative automatically.
+
+---
+
+## 🧪 Validation & CI/CD
+
+### Minimum CI gates (align with repo standards)
+
+- Markdown protocol validation
+- JSON schema validation (STAC/DCAT/telemetry)
+- Graph integrity tests (if drift results are graph-linked)
+- API contract tests (if drift results are exposed)
+- Security + sovereignty scanning gates (where applicable)
+
+### Drift-tool PR checklist (recommended)
+
+- [ ] Determinism: repeated run on same inputs produces identical report (except timestamps/run_id)
+- [ ] Report schema exists and validates (prefer `schemas/telemetry/`)
+- [ ] PROV activity recorded and points to baseline + monitor bundles
+- [ ] No sensitive location inference; redaction/generalization rules honored
+- [ ] No UI direct reads from Neo4j introduced (API boundary preserved)
+- [ ] If surfaced externally: API contract doc + contract tests added
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-### Sensitive content rule (normative)
+### Governance review triggers (applies strongly here)
 
-Drift documentation MUST NOT:
+- New AI narrative behaviors
+- New telemetry signals
+- New external data sources used for baselines/monitors
+- Any public-facing endpoints that expose drift status
 
-- expose sensitive site locations
-- include protected cultural details
-- include raw data samples from restricted sources
-- weaken or bypass governance policies
+### Sovereignty safety
 
-If a domain guide requires discussing protected content:
-
-- generalize locations (coarse region categories)
-- describe methodology without revealing sensitive specifics
-- reference governance policy explicitly
-
-### Change control (normative)
-
-Any drift doc that changes:
-
-- definitions of drift,
-- severity interpretation,
-- required remediation steps,
-- threshold rationale,
-
-MUST be reviewed under the governance framework referenced in the front-matter.
-
-### Training prohibition
-
-All drift documentation and governance playbooks MUST NOT be used as AI training data.
+- Drift tooling must never “reconstruct” or infer restricted locations from partial signals.
+- Any geometry used for drift evaluation must obey the same generalization/redaction rules as other pipeline products.
+- Log redaction decisions and provenance, but do not log restricted coordinates.
 
 ---
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-15 | Created drift docs hub: defined what belongs in `tools/ai/drift/docs/`, established intended subfolder structure (concepts/playbooks/rationales/domain guides/templates/diagrams/references), and set policy-safe rules for drift documentation aligned to KFM governance and provenance practices. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v0.1.0 | 2025-12-22 | Initial README scaffold for AI drift tool docs | TBD |
 
 ---
 
-<div align="center">
-
-© 2025 Kansas Frontier Matrix — MIT License  
-📚 Drift Documentation · Governed for Integrity
-
-[⬅️ Back to Drift Monitoring](../README.md) · [🧱 Baselines](../baselines/README.md) · [🧭 Detectors](../detectors/README.md) · [⚙️ Configs](../../configs/README.md) · [📡 Telemetry](../../telemetry/README.md) · [🧾 Provenance](../../provenance/README.md) · [🛡 Governance](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
