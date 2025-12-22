@@ -1,56 +1,430 @@
-~~~text
-📁 .github/
-└── 📄 dependabot.yml
-~~~
-
-~~~yaml
-version: 2
-
-updates:
-  # 1) Keep GitHub Actions pinned versions current
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    groups:
-      github-actions:
-        patterns:
-          - "*"
-    commit-message:
-      prefix: "deps"
-    open-pull-requests-limit: 5
-
-  # 2) Python dependency updates (requirements.txt / pyproject.toml / etc.)
-  #    TODO: If your Python manifests are not in repo root, change "directory".
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    groups:
-      python-minor-and-patch:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-    commit-message:
-      prefix: "deps"
-    open-pull-requests-limit: 5
-
-  # 3) Frontend / Node dependencies
-  #    TODO: If package.json lives somewhere else, change "directory".
-  - package-ecosystem: "npm"
-    directory: "/web"
-    schedule:
-      interval: "weekly"
-    groups:
-      npm-minor-and-patch:
-        patterns:
-          - "*"
-        update-types:
-          - "minor"
-          - "patch"
-    commit-message:
-      prefix: "deps"
-    open-pull-requests-limit: 5
-~~~
+diff --git a/.github/workflows/README.md b/.github/workflows/README.md
+new file mode 100644
+index 0000000..c6e4d61
+--- /dev/null
++++ b/.github/workflows/README.md
+@@ -0,0 +1,292 @@
++---
++title: ".github/workflows — GitHub Actions Guide"
++path: ".github/workflows/README.md"
++version: "v1.0.0"
++last_updated: "2025-12-22"
++status: "active"
++doc_kind: "Guide"
++license: "CC-BY-4.0"
++
++markdown_protocol_version: "KFM-MDP v11.2.6"
++mcp_version: "MCP-DL v6.3"
++ontology_protocol_version: "KFM-ONTO v4.1.0"
++pipeline_contract_version: "KFM-PPC v11.0.0"
++stac_profile: "KFM-STAC v11.0.0"
++dcat_profile: "KFM-DCAT v11.0.0"
++prov_profile: "KFM-PROV v11.0.0"
++
++governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
++ethics_ref: "docs/governance/ETHICS.md"
++sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
++fair_category: "FAIR+CARE"
++care_label: "TBD"
++sensitivity: "public"
++classification: "open"
++jurisdiction: "US-KS"
++
++doc_uuid: "urn:kfm:doc:github:workflows:readme:v1.0.0"
++semantic_document_id: "kfm-github-workflows-readme-v1.0.0"
++event_source_id: "ledger:kfm:doc:github:workflows:readme:v1.0.0"
++commit_sha: "<latest-commit-hash>"
++
++ai_transform_permissions:
++  - "summarize"
++  - "structure_extract"
++  - "translate"
++  - "keyword_index"
++ai_transform_prohibited:
++  - "generate_policy"
++  - "infer_sensitive_locations"
++
++doc_integrity_checksum: "sha256:<calculate-and-fill>"
++---
++
++# .github/workflows — GitHub Actions Guide
++
++## 📘 Overview
++
++### Purpose
++
++This document is the canonical guide for **CI/CD workflows** stored in `.github/workflows/`.
++
++It explains:
++
++- how workflows map to the KFM pipeline stages,
++- what CI behaviors are required (determinism, validation, safety),
++- how to add or modify workflows without breaking repository invariants.
++
++### Scope
++
++| In scope | Out of scope |
++|---|---|
++| Workflows under `.github/workflows/` (CI gates, validation, release automation) | Cloud deployment / infra runbooks (belongs under `tools/` or ops repos) |
++| Dependency update automation via `.github/dependabot.yml` | Governance policy content itself (see `docs/governance/`) |
++| Repo-lint expectations that CI enforces | Issue triage and project management |
++
++### Audience
++
++- Maintainers editing workflows, gates, or required status checks.
++- Contributors who need to understand CI failures and reproduce checks locally.
++- Reviewers validating that changes preserve the KFM pipeline ordering and safety rules.
++
++### Definitions
++
++- See `docs/glossary.md` (canonical).
++- Terms used here: **CI gate**, **repo lint**, **canonical root**, **contract test**, **workflow**, **job**, **runner**.
++
++### Key artifacts
++
++| Artifact | Path / Identifier | Owner | Notes |
++|---|---|---|---|
++| Workflows guide (this doc) | `.github/workflows/README.md` | Maintainers | CI conventions + mappings |
++| Workflow definitions | `.github/workflows/*.yml` | Maintainers | Actual automation |
++| Dependabot config | `.github/dependabot.yml` | Maintainers | Dependency update PRs |
++| Master Guide (pipeline invariants) | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical pipeline order + expected repo top-levels |
++
++### Definition of done
++
++- [ ] YAML front-matter fields are complete (including `path`, `doc_uuid`, checksum placeholder).
++- [ ] This README reflects the actual workflow files in `.github/workflows/`.
++- [ ] CI gates are described in terms of **what they validate** and **what they fail on**.
++- [ ] Local reproduction instructions exist (even if some commands are placeholders pending implementation).
++- [ ] Security + sovereignty constraints are explicit (no leaking sensitive data in logs/artifacts).
++
++## 🗂️ Directory Layout
++
++### This document
++
++- `path`: `.github/workflows/README.md` (must match front-matter)
++
++### Related repository paths
++
++| Area | Path | What lives here |
++|---|---|---|
++| GitHub automation | `.github/` | Workflows, Dependabot, SECURITY |
++| Data domains + lifecycle | `data/` | `raw/ → work/ → processed/ → stac/` and other artifacts |
++| Documentation | `docs/` | Governed system docs, templates, standards |
++| Schemas | `schemas/` | JSON schemas, telemetry schemas |
++| Pipelines | `src/pipelines/` | ETL, transforms, catalog build |
++| Graph | `src/graph/` + `data/graph/` | Ontology-governed ingest + fixtures |
++| API boundary | `src/server/` | REST/GraphQL contracts + services |
++| Frontend | `web/` | React + map UI |
++| Releases | `releases/` | Manifests, SBOMs, signed bundles |
++
++### Expected file tree for this sub-area
++
++~~~text
++📁 .github/
++├── 📄 dependabot.yml
++└── 📁 workflows/
++    ├── 📄 README.md
++    └── 📄 <workflow>.yml
++~~~
++
++## 🧭 Context
++
++### Background
++
++KFM CI exists to enforce **contract-first** and **evidence-first** development:
++
++- validate artifacts when they exist (schemas, catalogs, story nodes),
++- prevent regressions in provenance integrity,
++- keep contributions reproducible and reviewable.
++
++### Canonical ordering reminder
++
++All workflows should respect and reinforce the canonical KFM ordering:
++
++**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
++
++### Required CI behavior (design invariant)
++
++Workflows should be written so that they behave deterministically and safely:
++
++- **validate if present**
++- **fail if invalid**
++- **skip if not applicable**
++
++(Example: a STAC validation workflow should skip if `data/stac/` does not exist on a branch, but fail if it exists and is invalid.)
++
++### Repo lint rules (CI-enforced)
++
++At minimum, CI should enforce:
++
++- no YAML front-matter in **code files** (front-matter is reserved for governed Markdown docs),
++- no `README.me`,
++- no duplicate canonical homes unless there is an explicit deprecation marker and link.
++
++### Open questions
++
++| Question | Owner | Target date |
++|---|---|---|
++| Which workflow files are required status checks for merge? | Maintainers | TBD |
++| Which dependency ecosystems are in use (npm/pip/docker/terraform/etc.) for Dependabot to manage? | Maintainers | TBD |
++| Where are canonical local commands documented (`make ci`, `pre-commit`, etc.)? | Maintainers | TBD |
++
++## 🗺️ Diagrams
++
++### CI gating mapped to pipeline stages
++
++~~~mermaid
++flowchart LR
++  PR[Pull Request] --> CI[GitHub Actions (CI)]
++
++  subgraph KFM["KFM Pipeline Stages (conceptual)"]
++    ETL[ETL] --> CATS[STAC/DCAT/PROV]
++    CATS --> GRAPH[Graph]
++    GRAPH --> API[API]
++    API --> UI[UI]
++    UI --> STORY[Story Nodes]
++    STORY --> FOCUS[Focus Mode]
++  end
++
++  CI --> DOCS[Docs checks]
++  CI --> SCHEMAS[Schema checks]
++  CI --> CATALOGS[Catalog checks]
++  CI --> GRAPHCHK[Graph checks]
++  CI --> APICHK[API contract checks]
++  CI --> UICHK[UI checks]
++  CI --> STORYCHK[Story Node checks]
++
++  DOCS -. guards .-> KFM
++  SCHEMAS -. guards .-> KFM
++  CATALOGS -. guards .-> KFM
++  GRAPHCHK -. guards .-> KFM
++  APICHK -. guards .-> KFM
++  UICHK -. guards .-> KFM
++  STORYCHK -. guards .-> KFM
++~~~
++
++### PR → checks → merge
++
++~~~mermaid
++sequenceDiagram
++  participant Dev as Contributor
++  participant GH as GitHub
++  participant WF as Actions Workflows
++
++  Dev->>GH: Push commits / open PR
++  GH->>WF: Trigger workflows (pull_request, push)
++  WF->>WF: Run validators/tests for affected areas
++  WF-->>GH: Report required status checks
++  GH-->>Dev: Merge allowed only if required checks pass
++~~~
++
++## 📦 Data & Metadata
++
++### Inputs
++
++| Input | Format | Where from | Validation |
++|---|---|---|---|
++| Workflow definitions | YAML | `.github/workflows/*.yml` | YAML parse + workflow review |
++| Repository content under test | Files | `actions/checkout` | Stage-specific validators/tests |
++| Dependency update config | YAML | `.github/dependabot.yml` | YAML parse + Dependabot schema rules |
++
++### Outputs
++
++| Output | Format | Path | Contract / Schema |
++|---|---|---|---|
++| PR status checks | GitHub Checks | PR UI | Required checks configured in branch rules |
++| Optional validation reports | Artifacts | Actions artifacts | TBD (repo-defined) |
++
++### Sensitivity & redaction
++
++- Treat CI logs and artifacts as **public by default** unless repo settings say otherwise.
++- Do not print secrets, tokens, or sensitive locations to logs.
++- Any redaction/generalization that happens in pipelines must be treated as part of provenance.
++
++### Quality signals
++
++- Deterministic pass/fail for the same commit.
++- Explicit version pinning for tools/actions where feasible.
++- Clear, actionable error messages with file paths.
++
++## 🌐 STAC, DCAT & PROV Alignment
++
++### STAC
++
++- When `data/stac/` exists, CI should validate:
++  - JSON schema conformance,
++  - Item ↔ Collection linkage,
++  - asset link integrity (no broken references).
++
++### DCAT
++
++- When `data/catalog/dcat/` exists, CI should validate dataset records against the governed DCAT profile.
++
++### PROV-O
++
++- When `data/prov/` exists, CI should validate lineage bundles against the governed PROV profile.
++
++### Versioning
++
++- If catalog outputs are versioned, CI should ensure predecessor/successor links are present and consistent.
++
++## 🧱 Architecture
++
++### Components
++
++| Component | Responsibility | Interface |
++|---|---|---|
++| GitHub Actions | Execute CI workflows | YAML workflows |
++| Jobs/steps | Run validators/tests | shell + actions |
++| Repo validators | Enforce schemas/contracts | CLI tools (repo-defined) |
++| Status checks | Block/allow merge | branch protection rules |
++
++### Interfaces / contracts
++
++| Contract | Location | Versioning rule |
++|---|---|---|
++| Workflow definitions | `.github/workflows/*.yml` | Review required; keep changes minimal + deterministic |
++| Dependabot config | `.github/dependabot.yml` | Keep minimal; expand ecosystems intentionally |
++| JSON schemas | `schemas/` | Semver + changelog |
++| API schemas | `src/server/` + docs | Contract tests required |
++| UI registries | `web/**` | Schema-validated |
++
++### Extension points checklist
++
++- [ ] Add new workflow under `.github/workflows/` with a clear name and scope.
++- [ ] Map the workflow to one or more pipeline stages (ETL / Catalog / Graph / API / UI / Story).
++- [ ] Ensure “validate if present; fail if invalid; skip if not applicable.”
++- [ ] Keep job permissions minimal (`permissions:`).
++- [ ] Update this README with the new workflow’s purpose + gates.
++
++## 🧠 Story Node & Focus Mode Integration
++
++### How this work surfaces in Focus Mode
++
++- CI should ensure Story Nodes remain machine-validated and provenance-linked.
++- CI should fail when Story Nodes reference missing entity IDs, missing evidence links, or invalid front matter (as applicable).
++
++### Provenance-linked narrative rule
++
++- Every factual claim in published story outputs must trace to a dataset / record / asset ID.
++
++### Optional structured controls
++
++~~~yaml
++focus_layers:
++  - "TBD"
++focus_time: "TBD"
++focus_center: [ -98.0000, 38.0000 ]
++~~~
++
++## 🧪 Validation & CI/CD
++
++### Minimum CI gates (recommended)
++
++- [ ] Markdown protocol validation
++- [ ] Schema validation (STAC/DCAT/PROV + other JSON schemas)
++- [ ] Story Node validation
++- [ ] API contract tests
++- [ ] UI registry schema checks
++- [ ] Security + sovereignty scanning gates (as applicable)
++
++### Local reproduction
++
++~~~bash
++# Example placeholders — replace with repo-specific commands
++
++# 1) markdown / doc validation
++# <command>
++
++# 2) schema validation (STAC/DCAT/PROV, telemetry, UI registries)
++# <command>
++
++# 3) tests (graph, API, UI)
++# <command>
++~~~
++
++### Telemetry signals (if applicable)
++
++- Prefer attaching a small, stable summary artifact (e.g., JSON report) rather than large logs.
++
++## 🔐 Security
++
++### Permissions & secrets
++
++- Prefer minimal `permissions:` in workflows/jobs.
++- Never echo secrets to logs.
++- Prefer short-lived credentials (OIDC where available) over long-lived secrets.
++
++### Supply chain hygiene
++
++- Prefer pinning third-party actions to a tag or commit SHA.
++- Use Dependabot to update GitHub Actions dependencies.
++
++## ⚖ FAIR+CARE & Governance
++
++### Governance review triggers
++
++- New sensitive layers or data sources.
++- New AI narrative behaviors or changes to provenance enforcement.
++- New public-facing endpoints or release artifacts.
++
++### Sovereignty safety
++
++- CI must not publish or leak sensitive locations in logs/artifacts.
++- If CI generates public artifacts, ensure redaction/generalization is applied upstream and recorded in provenance.
++
++## 🕰️ Version History
++
++| Version | Date | Summary | Author |
++|---|---|---|---|
++| v1.0.0 | 2025-12-22 | Initial workflows guide + Dependabot baseline | TBD |
++
++---
++
++Footer refs:
++
++- Governance: `docs/governance/ROOT_GOVERNANCE.md`
++- Ethics: `docs/governance/ETHICS.md`
++- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+diff --git a/.github/dependabot.yml b/.github/dependabot.yml
+new file mode 100644
+index 0000000..b9e8a12
+--- /dev/null
++++ b/.github/dependabot.yml
+@@ -0,0 +1,33 @@
++version: 2
++updates:
++  # Keep GitHub Actions dependencies (referenced in .github/workflows/*.yml) up to date.
++  - package-ecosystem: "github-actions"
++    directory: "/"
++    schedule:
++      interval: "weekly"
++      day: "monday"
++      time: "05:00"
++      timezone: "UTC"
++    open-pull-requests-limit: 5
++    commit-message:
++      prefix: "deps"
++      include: "scope"
++    groups:
++      github-actions:
++        patterns:
++          - "*"
++
++  # Optional ecosystems (enable only if manifests exist in the given directory).
++  # Not confirmed in repo:
++  #
++  # - package-ecosystem: "npm"
++  #   directory: "/web"
++  #   schedule:
++  #     interval: "weekly"
++  #
++  # - package-ecosystem: "pip"
++  #   directory: "/"
++  #   schedule:
++  #     interval: "weekly"
++  #
++  # - package-ecosystem: "docker"
++  #   directory: "/"
++  #   schedule:
++  #     interval: "weekly"
