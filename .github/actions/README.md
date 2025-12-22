@@ -1,8 +1,8 @@
 ---
-title: "KFM GitHub Actions Local Actions"
+title: ".github/actions — Local GitHub Actions (KFM)"
 path: ".github/actions/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-22"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:github:actions-readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:github:actions:readme:v1.0.0"
 semantic_document_id: "kfm-github-actions-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:github:actions-readme:v1.0.0"
+event_source_id: "ledger:kfm:doc:github:actions:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,229 +41,234 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM GitHub Actions Local Actions
+# .github/actions — Local GitHub Actions (KFM)
 
 ## 📘 Overview
 
 ### Purpose
-- Provide a single place to document **local GitHub Actions** (usually composite actions) stored in `.github/actions/`.
-- Standardize how local actions are authored and consumed by workflows in `.github/workflows/` so CI gates remain consistent and reusable across the repository.
+This directory holds **repository-local GitHub Actions** (primarily *composite actions*) used by CI workflows to enforce KFM’s **contract-first** validation gates across the canonical pipeline:
+
+**ETL → STAC/DCAT/PROV → Neo4j Graph → API → UI → Story Nodes → Focus Mode**
+
+This README defines how actions in this folder should be structured, documented, and safely reused.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Local actions in `.github/actions/` | Editing workflow definitions in `.github/workflows/` |
-| How to add, version, and test local actions | Production deployment infrastructure |
-| How local actions map to KFM CI gates | Replacing project governance/security policies |
+| Reusable actions called by `.github/workflows/*` | Defining workflow triggers / job matrices (belongs in workflows) |
+| Validation “gates” (schema checks, Story Node checks, contract checks) | Cloud deployment and runtime ops |
+| Action structure, naming, inputs/outputs, and safety rules | Secret provisioning/rotation and org-level GitHub settings |
+| Repo-lint guardrails for action authoring | Non-CI automation not run by GitHub Actions |
 
 ### Audience
-- Primary: repo maintainers and contributors who create or modify CI checks
-- Secondary: reviewers who need to understand what CI jobs are doing and where logic lives
+- Primary: CI maintainers, contracts owners (schemas + API contracts), repo maintainers
+- Secondary: Contributors adding new datasets/domains, Story Node authors/curators
 
-### Definitions
-- Link: `../../docs/glossary.md`
-- Terms used in this doc:
-  - **Local action**: a repo-contained action referenced as `./.github/actions/<name>`
-  - **Composite action**: an action that composes multiple steps and shells via `runs: using: composite`
-  - **Workflow**: a `.github/workflows/*.yml` pipeline that calls actions
-  - **CI gate**: a required validation check enforced on PRs and mainline builds
+### Definitions (link to glossary)
+- Glossary: `docs/glossary.md` (if present)
+- **Composite Action**: A GitHub Action implemented as a YAML step list in `action.yml`
+- **Gate**: A required check that must pass for “CI green”
+- **Contract**: A schema/spec that producers/consumers must obey (e.g., STAC/DCAT/PROV, Story Nodes, API contracts)
 
-### Key artifacts
+### Key artifacts (what this doc points to)
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| This directory | `.github/actions/` | TBD | Local actions live here |
-| Workflow entry points | `.github/workflows/` | TBD | Calls local actions |
-| Canonical pipeline and CI gates | `docs/MASTER_GUIDE_v12.md` | TBD | Defines minimum CI gates and pipeline ordering |
-| Doc templates | `docs/templates/` | TBD | Used for governed documentation |
-| Schemas | `schemas/` | TBD | JSON schemas, telemetry schemas |
-| Data catalogs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | TBD | Standard outputs validated by CI |
+| Local reusable actions | `.github/actions/` | TBD | This folder |
+| Workflows (callers) | `.github/workflows/` | TBD | Workflows invoke local actions |
+| Schemas (contracts) | `schemas/` | TBD | Canonical schema home; validated in CI |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | TBD | Validated against schemas |
+| Story Nodes | `docs/reports/story_nodes/` | TBD | Must validate before publish |
+| API contracts | `src/server/contracts/` | TBD | Must validate + pass contract tests |
 
-### Definition of done
+### Definition of done (for this document)
 - [ ] Front-matter complete + valid
-- [ ] Local actions directory conventions explained
-- [ ] Action inventory table exists (even if partially populated)
-- [ ] CI gates mapping is documented
-- [ ] Security and sovereignty considerations are stated
+- [ ] Directory conventions documented (action layout, naming, inputs/outputs)
+- [ ] CI gate mapping aligns with current KFM design docs
+- [ ] Safety guidance included (permissions, secrets hygiene, determinism)
+- [ ] Examples clearly marked as placeholders where repo content is unknown
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `.github/actions/README.md`
+- `path`: `.github/actions/README.md` (must match front-matter)
 
 ### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
-| Local actions | `.github/actions/` | Reusable repo-contained actions |
-| Workflows | `.github/workflows/` | CI pipelines that call local actions |
-| Documentation | `docs/` | Canonical governed docs and templates |
-| Data domains | `data/` | Raw/work/processed outputs and catalogs |
-| Schemas | `schemas/` | Schema definitions and validators |
-| Graph | `src/graph/` | Graph build + ontology bindings |
-| APIs | `src/server/` | API layer that fronts the graph |
-| Frontend | `web/` | React and map UI |
+| Local GitHub Actions | `.github/actions/` | Reusable actions (composite, node, docker) used by workflows |
+| GitHub Workflows | `.github/workflows/` | CI definitions that call these actions |
+| Schemas/contracts | `schemas/` | JSON Schema / constraints used by validators |
+| Pipelines | `src/pipelines/` | ETL + catalog build (validated via CI gates) |
+| Graph | `src/graph/` | Ontology bindings + ingest tooling (validated via integrity tests) |
+| API | `src/server/` | Contracted API boundary (contract tests in CI) |
+| UI | `web/` | Map UI + layer registries (schema-checked in CI) |
+| Story | `docs/reports/story_nodes/` | Draft/published story nodes + assets |
 
-### Expected file tree for this sub-area
+### Suggested local action structure (example skeleton)
+> This is a recommended structure. Folder/action names below are illustrative.
+
 ~~~text
 📁 .github/
-├── 📁 actions/
-│   ├── 📄 README.md
-│   ├── 📁 <action_name>/
-│   │   ├── 📄 action.yml
-│   │   ├── 📄 README.md
-│   │   ├── 📁 scripts/
-│   │   │   └── 📄 <optional helper scripts>
-│   │   └── 📁 fixtures/
-│   │       └── 📄 <optional test fixtures>
-└── 📁 workflows/
-    └── 📄 <workflow>.yml
+└── 📁 actions/
+    ├── 📄 README.md
+    └── 📁 <action-name>/                  # kebab-case (recommended)
+        ├── 📄 action.yml                  # GitHub Action definition
+        ├── 📄 README.md                   # action-specific docs (inputs/outputs/examples)
+        ├── 📁 scripts/                    # optional helper scripts (bash/python/node)
+        └── 📁 fixtures/                   # optional lightweight test fixtures (if needed)
 ~~~
+
+### Naming conventions
+- Action folder names: `kebab-case` (recommended)
+- Prefer names that match CI gates (examples): `validate-markdown`, `validate-schemas`, `validate-story-nodes`, `api-contract-tests`, `security-scan`
+- Avoid ambiguous names like `check` or `validate`
 
 ## 🧭 Context
 
-### Background
-KFM uses CI not only to run tests, but to enforce:
-- governed Markdown protocol and documentation structure
-- standards-based catalogs and provenance outputs
-- stable graph and API contracts
-- UI registry consistency and security safeguards
+### Why this folder exists
+KFM’s v12+ direction is “contracts-first” and “evidence-first”, with CI expected to enforce:
+- Markdown protocol validation
+- Schema validation
+- Story Node validation
+- API contract tests
+- Security and sovereignty scanning gates
 
-Local actions are the mechanism to keep these checks:
-- consistent across workflows
-- easier to update without copy-pasting YAML
-- reviewable as “units” of CI behavior
+Local actions allow these checks to be:
+- **Reusable** across workflows
+- **Consistent** across domains
+- **Versionable** (by commit SHA via the repo)
 
-### Assumptions
-- Workflows use a repository checkout step before calling local actions.
-- Local actions may call repository scripts or validators (preferred) rather than duplicating logic in YAML.
-
-### Constraints / invariants
-- Canonical pipeline ordering is preserved: ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode.
-- Frontend consumes contracts via APIs and does not read the graph directly.
-- Local actions must not introduce secrets, credentials, or PII into logs.
-- When checks concern sensitive or restricted locations, action behavior must support redaction or gating per governance docs.
-
-### Open questions
-
-| Question | Owner | Target date |
-|---|---|---|
-| Which local actions currently exist in this repo | TBD | TBD |
-| Do we require SHA pinning for third-party actions in workflows | TBD | TBD |
-| How are CI reports persisted, if at all | TBD | TBD |
-
-### Future extensions
-- Add an automated “Action Index” check that validates each action has an `action.yml` and a per-action `README.md`.
-- Add a consistent output format for CI gates so PR checks are predictable and easy to interpret.
+### Drift prevention (design intent)
+Design notes indicate the repo has referenced **schemas and composite actions** in CI/workflows even when canonical roots were missing; local actions should help make CI deterministic and explicit.
 
 ## 🗺️ Diagrams
 
-### CI and local actions flow
 ~~~mermaid
 flowchart LR
-  PR[Pull request] --> WF[Workflow in .github/workflows]
-  WF --> LA[Local actions in .github/actions]
-  LA --> REP[Checks and artifacts]
-  LA --> REPO[Repo scripts, schemas, and validators]
-  REPO --> REP
+  PR[Pull Request / Push] --> WF[.github/workflows/*]
+  WF --> ACT[.github/actions/* (local actions)]
+  ACT --> G1[Markdown protocol gate]
+  ACT --> G2[Schema validation gate]
+  ACT --> G3[Story Node validation gate]
+  ACT --> G4[API contract tests]
+  ACT --> G5[Security & sovereignty scans]
 ~~~
 
 ## 📦 Data & Metadata
 
-### Inputs
+### Artifacts commonly validated by CI actions
+| Artifact type | Canonical path (expected) | Notes |
+|---|---|---|
+| Schemas (contracts) | `schemas/**` | Validators should read from canonical contract home |
+| STAC outputs | `data/stac/**` | Validate against `schemas/stac/**` |
+| DCAT outputs | `data/catalog/dcat/**` | Validate against `schemas/dcat/**` |
+| PROV outputs | `data/prov/**` | Validate against `schemas/prov/**` |
+| Story Nodes | `docs/reports/story_nodes/**` | Validate front-matter, citations, entity refs, redaction rules |
+| API contracts | `src/server/contracts/**` | Validate + contract-test responses |
+| UI registries | `web/**/layers/**` | Schema validation for layer registry configs |
 
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Workflow definitions | YAML | `.github/workflows/` | YAML lint where applicable |
-| Local action definitions | YAML + shell | `.github/actions/<name>/action.yml` | `action.yml` schema, basic smoke run |
-| Schemas | JSON | `schemas/` | JSON schema validators |
-| Catalog outputs | JSON | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Schema + integrity checks |
-
-### Outputs
-
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Job status | GitHub Checks | CI UI | Required checks configuration |
-| Validation logs | text | CI logs | Must not leak secrets |
-| Optional reports | SARIF / JSON / artifacts | Workflow artifacts | Must match repository expectations |
-
-### Sensitivity and redaction
-- Any action that scans content for restricted locations, credentials, or sensitive text must:
-  - avoid printing sensitive matches
-  - prefer counts, hashes, or redacted excerpts over raw content
-
-### Quality signals
-- Deterministic outcomes for identical inputs
-- Clear error messages that identify:
-  - the failing contract or schema
-  - the file path or identifier involved
-  - how to reproduce locally when possible
+### Determinism rule (CI)
+Actions should:
+- fail deterministically when a required artifact exists but is invalid
+- optionally skip checks when optional roots are absent (when configured)
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### STAC
-Local actions may validate:
-- STAC JSON schema validity
-- item and collection integrity
-- link integrity and required fields
-
-### DCAT
-Local actions may validate:
-- DCAT record schema validity
-- required mappings such as title, description, license, and keywords
-
-### PROV-O
-Local actions may validate:
-- existence and basic shape of PROV activity records for transforms
-- presence of stable identifiers for activities and agents
+### What actions must preserve
+Where actions validate STAC/DCAT/PROV artifacts:
+- validation must reference the canonical schemas under `schemas/`
+- validators must treat machine-validated catalogs as first-class artifacts
+- failures must include actionable error messages (what failed + where)
 
 ## 🧱 Architecture
 
-### Action design rules
-- **Single responsibility**: one action corresponds to one CI gate or tightly related set of checks.
-- **Parameterizable**: accept inputs for paths, strictness, or modes rather than hardcoding.
-- **Deterministic**: avoid time-based outputs unless explicitly required.
-- **No hidden network dependency**: if external calls are required, document them and ensure they are allowed by policy.
+### Action design principles
+- **Single responsibility**: one action ≈ one “gate”
+- **Parameterize paths**: default to canonical paths; allow overrides via inputs
+- **Least privilege**: prefer minimal permissions in workflows; actions should not assume elevated privileges
+- **No secrets leakage**: never echo secrets; redact env output; avoid printing full tokens/credentials
+- **No YAML front-matter in code files**: do not use `---` YAML front-matter separators inside `action.yml` or scripts
 
-### Referencing local actions in workflows
+### Contracts are canonical (reminder)
+- Schema/spec sources belong in `schemas/`
+- API contracts belong under the canonical API contract home
+- CI actions should validate contracts and fail when contracts are present but invalid
+
+## 🧠 Story Node & Focus Mode Integration
+
+### Story Node validation intent
+Actions supporting Story Nodes should ensure:
+- front-matter present and valid
+- citations/evidence references resolve
+- entity references are consistent with the graph/IDs (where validation is available)
+- redaction/generalization rules are enforced for restricted content
+
+### Focus Mode rule of thumb
+Focus Mode should only consume provenance-linked content; Story Node validation actions are a primary enforcement point.
+
+## 🧪 Validation & CI/CD
+
+### Recommended gate-to-action mapping (suggested)
+> Names are illustrative; create/rename actions to match repo reality.
+
+| Gate | Suggested local action | Typical inputs |
+|---|---|---|
+| Markdown protocol validation | `validate-markdown` | `paths`, `fail_on_warnings` |
+| Schema validation | `validate-schemas` | `schemas_dir`, `targets`, `fail_on_missing` |
+| Story Node validation | `validate-story-nodes` | `story_dir`, `published_only` |
+| API contract tests | `api-contract-tests` | `contract_dir`, `base_url` (if applicable) |
+| Security/sovereignty scans | `security-scan` | `policy_refs`, `severity_threshold` |
+
+### Example workflow usage (placeholder)
 ~~~yaml
-# Example usage pattern
-- name: Run a local gate
-  uses: ./.github/actions/<action_name>
-  with:
-    mode: "strict"
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Placeholder example — replace with the actual action names in this repo
+      - name: Validate schemas
+        uses: ./.github/actions/validate-schemas
+        with:
+          schemas_dir: schemas
+          fail_on_missing: false
 ~~~
 
-### Action inventory
-Populate this table as local actions are created or discovered.
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) validate schemas
+# 2) run unit/integration tests
+# 3) run doc lint
+~~~
 
-| Action | Path | CI gate category | Used by workflows | Notes |
-|---|---|---|---|---|
-| TBD | `.github/actions/TBD` | TBD | TBD | TBD |
+## ⚖ FAIR+CARE & Governance
 
-## 🧪 Validation and CI/CD
+### Governance approvals required (if any)
+- FAIR+CARE council review: TBD
+- Security council review: TBD
+- Historian/editor review: TBD
 
-### Minimum CI gates
-See `docs/MASTER_GUIDE_v12.md` for the minimum CI gates expected for “v12-ready” contributions.
+### CARE / sovereignty considerations
+- Actions that validate or publish artifacts should not expand or expose restricted locations.
+- Any redaction/generalization rules must be enforced at the appropriate boundary (CI validation, API contracts, Story Node publication rules).
 
-### Local testing
-If you add or modify an action:
-- Ensure the action has a per-action `README.md` explaining inputs, outputs, and examples.
-- Ensure failure modes produce clear messages and do not leak sensitive data.
-- Prefer exercising the action via its calling workflow in a PR to confirm end-to-end behavior.
+### AI usage constraints
+- This document’s AI permissions/prohibitions must be respected (see front-matter).
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial `.github/actions` documentation scaffold | TBD |
+| v1.0.0 | 2025-12-22 | Initial `.github/actions` README scaffold | TBD |
 
 ---
 
 Footer refs:
-- Master guide: `../../docs/MASTER_GUIDE_v12.md`
-- Universal doc template: `../../docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-- Governance: `../../docs/governance/ROOT_GOVERNANCE.md`
-- Ethics: `../../docs/governance/ETHICS.md`
-- Sovereignty: `../../docs/governance/SOVEREIGNTY.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
