@@ -1,515 +1,411 @@
 ---
-title: "🧭 Kansas Frontier Matrix — AI Drift Detectors"
+title: "KFM AI Drift — Detectors"
 path: "tools/ai/drift/detectors/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-22"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-15"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-status: "Active / Enforced"
-doc_kind: "Architecture"
-header_profile: "standard"
-footer_profile: "standard"
-diagram_profiles:
-  - "mermaid-flowchart-v1"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-doc_uuid: "urn:kfm:doc:tools-ai-drift-detectors-readme:v11.2.6"
-semantic_document_id: "kfm-doc-tools-ai-drift-detectors"
-event_source_id: "ledger:tools/ai/drift/detectors/README.md"
-immutability_status: "mutable-plan"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-prov_profile: "KFM-PROV v11"
-dcat_profile: "KFM-DCAT v11"
-stac_profile: "KFM-STAC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-# NOTE: Repo snapshot (12-14-25) confirms releases/ exists and cites v11.2.2 as an example.
-# Update these refs if your current governed release folder differs.
-sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/tools-ai-governance-v4.json"
-energy_schema: "../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+doc_uuid: "urn:kfm:doc:tools:ai:drift:detectors:readme:v1.0.0"
+semantic_document_id: "kfm-tools-ai-drift-detectors-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:tools:ai:drift:detectors:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-# Optional (not confirmed in repo snapshot): point these at the actual schema files if/when present.
-json_schema_ref: "../../../../schemas/json/tools-ai-drift-detector-v11.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/tools-ai-drift-detector-v11.shape.ttl"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-fair_category: "F1-A1-I2-R3"
-care_label: "Public · Low-Risk"
-classification: "Public"
-jurisdiction: "United States · Kansas"
-sensitivity: "General"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-indigenous_data_flag: false
-risk_category: "Low"
-redaction_required: false
-
-ai_training_allowed: false
-ai_training_guidance: "Detector configs, detector outputs, and drift governance artifacts MUST NOT be used as training data."
-
-machine_readable: true
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next AI-tools platform update"
-
-provenance_chain:
-  - "tools/ai/drift/README.md@v11.2.6"
-  - "tools/ai/README.md@v11.2.6"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧭 **KFM — AI Drift Detectors**
-`tools/ai/drift/detectors/README.md`
-
-**Purpose**  
-Define the **drift detector subsystem** used by KFM drift monitoring:  
-the governed set of detector types, their input contracts (baseline + window summaries), output contracts (metrics + severity), and validation rules so drift scores are deterministic, provenance-bound, and policy-safe.
-
-</div>
-
----
+# KFM AI Drift — Detectors
 
 ## 📘 Overview
 
-### What a “drift detector” is (normative)
+### Purpose
 
-A **drift detector** is a governed, versioned computation that compares:
+- Document the **drift detector** subsystem under `tools/ai/drift/detectors/` and the expectations for adding or modifying detectors.
+- Provide a **minimum, reproducible contract** for drift detector inputs/outputs so results can be: (a) reviewed by humans, (b) diffed across runs, and (c) recorded as telemetry signals.
 
-- a **baseline summary** (what “normal” looked like), and
-- a **current window summary** (what is happening now),
+### Scope
 
-and produces:
+| In Scope | Out of Scope |
+|---|---|
+| Detector authoring guidance (structure, determinism, output contract) | Model training / fine-tuning workflows |
+| What “baseline vs current” means for KFM runs | Selecting or acquiring external datasets |
+| Output/report format for drift results | Building dashboards/alerting infra (unless explicitly added elsewhere) |
+| Governance + redaction expectations for drift artifacts | Changing API/UI contracts (belongs in API/UI docs) |
 
-- one or more drift metrics (numeric),
-- optional statistical signals (e.g., p-values, confidence bounds),
-- a severity mapping for governance (PASS/WARN/FAIL inputs, not final decisions).
+### Audience
 
-In KFM, detectors operate on **summaries**, not raw data, to preserve:
+- Primary: AI/pipeline engineers adding detectors; CI/quality maintainers.
+- Secondary: reviewers (governance/ethics), curators consuming quality/audit signals.
 
-- reproducibility (stable inputs),
-- privacy/safety (no row-level outputs),
-- performance (bounded memory and compute).
+### Definitions (link to glossary)
 
-### What this subsystem governs
+- Link: `docs/glossary.md` *(not confirmed in repo — referenced by template; add if missing)*
+- Terms used in this doc:
+  - **baseline**: the reference snapshot/window a detector compares against (e.g., last release, last successful run).
+  - **current**: the candidate snapshot/window being evaluated (e.g., PR build, scheduled run).
+  - **drift**: statistically meaningful change in distributions, outputs, or structures that can degrade quality.
+  - **detector**: a deterministic routine that computes drift metrics and returns a structured result.
+  - **gate**: a CI decision rule (pass/warn/fail) applied to detector results.
+  - **evidence artifact**: a run output that can be referenced by catalogs/PROV/Story Nodes if promoted.
 
-This directory defines:
+### Key artifacts (what this doc points to)
 
-- **detector taxonomy** (what detector kinds exist),
-- **detector contracts** (inputs required and outputs produced),
-- **selection rules** (which detectors apply to which feature types),
-- **safety constraints** (no PII, no secrets, no protected-site coords),
-- **validation expectations** (schema + invariant checks).
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master Guide (canonical pipeline + invariants) | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical ordering + non-negotiables. |
+| Governance root | `docs/governance/ROOT_GOVERNANCE.md` | TBD | Review gates / policy anchors. |
+| Ethics policy | `docs/governance/ETHICS.md` | TBD | AI + disclosure expectations. |
+| Sovereignty policy | `docs/governance/SOVEREIGNTY.md` | TBD | Sensitive knowledge handling. |
+| Telemetry docs | `docs/telemetry/` | TBD | Where signals are documented (template canonical). |
+| Telemetry schemas | `schemas/telemetry/` | TBD | Where telemetry schemas live (template canonical). |
+| This README | `tools/ai/drift/detectors/README.md` | TBD | Detector guidance + contracts. |
 
-Repo snapshot (12-14-25) confirms `tools/ai/` exists and is described as “AI evaluation and drift analysis tools.” This detectors submodule is part of that drift analysis umbrella. Deeper `tools/ai/drift/**` structure is not enumerated in the snapshot, so file-level inventories below are treated as **intended canonical structure** unless validated against the live repo checkout.
+### Definition of done (for this document)
 
-### Core invariants (normative)
-
-1. **Detectors MUST be deterministic**  
-   Same baseline summary + same window summary + same detector config → same drift metric.
-
-2. **Detectors MUST be summary-based**  
-   Detectors MUST NOT require raw record-level data as inputs in governed runs.
-
-3. **Detectors MUST be versioned**  
-   Every detector must have a stable `detector_id` and a `detector_version`.
-
-4. **Detectors MUST be policy-safe**  
-   Detector outputs MUST NOT include:
-   - PII,
-   - secrets,
-   - protected-site coordinates,
-   - raw samples.
-
-5. **Missing/invalid detector inputs MUST fail closed** for certification paths.
-
----
+- [ ] Front-matter complete + valid
+- [ ] Detector contracts are explicit (inputs, outputs, error handling, determinism expectations)
+- [ ] Reproduction/CI steps are listed (even if placeholders)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
+- [ ] Any “proposed / not confirmed in repo” sections are clearly marked
 
 ## 🗂️ Directory Layout
 
-### Where this fits in the repo
+### This document
+
+- `path`: `tools/ai/drift/detectors/README.md`
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed/STAC outputs |
+| Documentation | `docs/` | Canonical governed docs |
+| Graph | `src/graph/` | Graph build + ontology bindings |
+| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Frontend | `web/` | React + map clients |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
+| Tools | `tools/` | Developer tools (including drift detectors) |
+
+### Expected file tree for this sub-area
+
+> This tree is a **recommended target shape** to keep detectors discoverable and testable.  
+> Items marked “not confirmed in repo” are **proposals** until the codebase confirms exact filenames.
 
 ~~~text
 📁 tools/
-└── 🧠 ai/
+└── 📁 ai/
     └── 📁 drift/
         └── 📁 detectors/
-            └── 📄 README.md                 # This file
+            ├── 📄 README.md                        # this file
+            ├── 📄 base.py                          # detector protocol / base class (not confirmed in repo)
+            ├── 📄 registry.py                      # detector registration (not confirmed in repo)
+            ├── 📁 implementations/                 # concrete detectors (not confirmed in repo)
+            │   ├── 📄 schema_drift.py               # e.g., field/shape changes
+            │   ├── 📄 text_distribution_drift.py    # e.g., PSI/JS divergence over tokens
+            │   └── 📄 embedding_drift.py            # e.g., centroid / norm / cosine shift
+            └── 📁 fixtures/                         # golden test inputs/outputs (not confirmed in repo)
+                └── 📄 <detector_slug>_golden.json
 ~~~
-
-### Target detectors submodule structure (create if missing)
-
-Keep this structure accurate as detectors are implemented.
-
-~~~text
-📁 tools/
-└── 🧠 ai/
-    └── 📁 drift/
-        └── 📁 detectors/
-            ├── 📄 README.md                           # This file
-            │
-            ├── 📁 numeric/                            # Detectors for numeric distributions
-            ├── 📁 categorical/                        # Detectors for categorical distributions
-            ├── 📁 multivariate/                       # Detectors for multivariate/embedding drift
-            ├── 📁 timeseries/                         # Detectors tailored to temporal dynamics (optional)
-            │
-            ├── 📁 registries/                         # Detector registry + compatibility maps
-            ├── 📁 interfaces/                         # Shared detector interfaces/contracts
-            ├── 📁 validators/                         # Schema + safety validators for detector outputs
-            ├── 📁 tests/                              # Determinism + invariant tests (if repo pattern allows)
-            └── 📁 docs/                               # Optional notes (publishable and policy-safe)
-~~~
-
-### Where detector outputs belong (normative)
-
-Do not store detector outputs under `tools/ai/drift/detectors/`.
-
-Detector outputs should be stored with governed run artifacts:
-
-~~~text
-📁 mcp/
-└── 📁 experiments/
-    └── 📁 <run-id>/
-        ├── 🧾 drift_report.json
-        ├── 🧾 telemetry.json
-        └── 🧾 provenance_bundle.jsonld
-~~~
-
-If drift reports are promoted to release packets, store them in the release folder pattern used by your repo (not confirmed in snapshot at subfolder level).
-
----
 
 ## 🧭 Context
 
-### Detectors vs. drift decisions (normative)
+### Background
 
-Detectors produce **signals**. They do not make final governance decisions.
+KFM ingests evolving sources and may use AI-assisted transforms/extraction. Even when schemas stay stable, **distributions and model outputs can drift** (e.g., token distributions, entity extraction rates, geometry validity rates). Drift detection is an early-warning layer: it helps prevent silent quality regressions and supports repeatable governance review.
 
-A typical chain is:
+### Assumptions
 
-- detector computes metric(s)
-- drift monitor aggregates metrics across features/cohorts
-- governance thresholds map aggregate to PASS/WARN/FAIL
-- actions policy determines what happens next (alert, block, review, retrain)
+- Drift detectors are **deterministic** for the same inputs/config (diffable outputs).
+- Baselines are **versioned** and traceable (run ID, catalog ID, or commit/tag).
+- Drift results are captured as **structured artifacts** (JSON) and optionally as **telemetry signals**.
 
-This separation matters because:
+### Constraints / invariants
 
-- detectors should remain general and reusable
-- governance remains config-driven and domain-aware
-- policy changes should not require rewriting detector math
+- The canonical pipeline ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- The UI consumes contracts via APIs (no direct graph dependency).
+- Drift artifacts must not leak sensitive locations or restricted knowledge (follow sovereignty policy).
 
-### Baseline and window summaries as required inputs
+### Open questions
 
-Detectors require two inputs:
+| Question | Owner | Target date |
+|---|---|---|
+| What is the canonical baseline selector (last release? last scheduled run? curated baseline)? | TBD | TBD |
+| Do detectors fail the build by default, or only warn unless explicitly gated? | TBD | TBD |
+| What is the canonical storage path for drift artifacts (e.g., `mcp/runs/…` vs `data/processed/…`)? | TBD | TBD |
+| Which telemetry schema(s) should drift signals conform to? | TBD | TBD |
 
-- **baseline summary**: built via baseline builders (see `tools/ai/drift/baselines/README.md`)
-- **window summary**: built from the current evaluation window using the same feature definitions and binning
+### Future extensions
 
-Detectors must validate:
-
-- feature compatibility (same feature name/type/unit normalization)
-- binning compatibility (if histogram-based)
-- cohort/slice compatibility (if cohorting is applied)
-
-If compatibility fails, detectors must fail closed (or explicitly emit a “not comparable” status that blocks certification).
-
-### Why KFM prefers detector summaries
-
-Summary-driven detectors:
-
-- enable reproducible comparisons (histograms/quantiles/stats are stable)
-- reduce risk of leaking sensitive content
-- keep compute bounded for CI and scheduled monitoring
-
----
+- Add domain-specific detectors (e.g., spatial drift in geometry extents, temporal drift in event density).
+- Add a UI-facing “quality/audit overlay” that can be surfaced in Focus Mode as *non-narrative metadata* (requires API/UI contract work).
 
 ## 🗺️ Diagrams
 
-### Detector execution in the drift pipeline (conceptual)
+### System / dataflow diagram
 
 ~~~mermaid
-flowchart TD
-  A["Baseline summary<br/>(from baselines/)"] --> C["Detector compute()"]
-  B["Window summary<br/>(current slice)"] --> C
-  C --> D["Per-feature drift metrics<br/>(detector output contract)"]
-  D --> E["Aggregation layer<br/>(feature → cohort → model score)"]
-  E --> F["Threshold policy<br/>(PASS/WARN/FAIL inputs)"]
-  F --> G["Governance actions<br/>(review/block/retrain)"]
-  D --> H["Telemetry + provenance refs"]
+flowchart LR
+
+  A[ETL + Normalization] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[React/Map UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+
+  %% Drift as a sidecar (does not break canonical ordering)
+  A --> H[Drift Detectors]
+  B --> H
+  H --> I[Drift Report Artifacts]
+  H --> J[Telemetry Signals / CI Gates]
 ~~~
 
-Accessibility note: detectors sit between summaries and aggregation; they produce metrics and references.
+### Optional: sequence diagram
 
----
+~~~mermaid
+sequenceDiagram
+  participant CI as CI Runner
+  participant Drift as Drift Runner
+  participant Store as Artifact Store
+  participant Review as Reviewer
 
-## 🧠 Story Node & Focus Mode Integration
-
-### Drift detection for narrative systems (recommended)
-
-For Focus Mode / Story Node systems, drift detection is often about:
-
-- **retrieval drift**: sources used and their distribution changing over time
-- **evidence drift**: citation/reference density changing
-- **coverage drift**: which regions/time periods/domains are represented changing
-- **policy drift**: redaction/suppression patterns changing (should be logged)
-
-Detectors in narrative domains MUST remain policy-safe:
-
-- never store raw narrative text in detector outputs
-- compare aggregates and references only (counts, rates, distribution summaries)
-
-Recommended narrative drift features (examples; confirm implementation in code/config):
-
-- citations-per-1k-tokens distribution (summary-only)
-- sources-used-count distribution
-- source-type exposure distribution (top-k categories)
-- redaction-applied rate (boolean rate summary)
-
----
-
-## 🧪 Validation & CI/CD
-
-### Determinism requirements (normative)
-
-Detector implementations MUST:
-
-- be deterministic (no random sampling unless explicitly pinned and recorded)
-- avoid non-deterministic floating behaviors where possible (record versions and tolerances)
-- accept explicit config and avoid hidden global state
-
-### Compatibility validation (normative)
-
-Before computing a drift metric, a detector MUST validate:
-
-- `feature_name` matches
-- `feature_type` matches (`numeric`, `categorical`, `embedding`, etc.)
-- `summary_schema_version` matches (if versioned)
-- histogram bin edges match (if histogram-based)
-- cohort/slice identifiers match (when comparing cohort-specific summaries)
-
-If these checks fail:
-
-- certification-path drift should FAIL (fail closed), or
-- emit an explicit “NOT_COMPARABLE” status that downstream gating treats as FAIL.
-
-### Output validation (normative)
-
-Detector output MUST be:
-
-- schema-valid (when schema exists)
-- key-stable (predictable keys and types)
-- policy-safe (no PII/secrets/protected coords)
-
-CI SHOULD enforce:
-
-- schema validation on detector outputs (where applicable)
-- unit tests for determinism and invariants
-- safety scan on drift reports intended for repo storage
-
----
+  CI->>Drift: execute detectors(baseline, current, config)
+  Drift-->>Store: write drift_report.json (+ optional summary)
+  Drift-->>CI: return status(pass/warn/fail) + metrics
+  CI-->>Review: surface summary in logs/PR comment (if enabled)
+~~~
 
 ## 📦 Data & Metadata
 
-### Detector output contract (recommended minimal shape)
+### Inputs
 
-A single detector result SHOULD include:
+> The exact inputs depend on detector type. Use **stable IDs** for baseline/current references and avoid raw sensitive payloads.
 
-- identity:
-  - `detector_id`
-  - `detector_version`
-- what was measured:
-  - `feature_name`
-  - `feature_type`
-  - optional `cohort_id` (policy-safe cohort label)
-- metric:
-  - `metric_name`
-  - `metric_value`
-  - optional `p_value` / `confidence` (if meaningful)
-- interpretability:
-  - `direction` (optional; e.g., “higher means more drift”)
-  - `notes` (policy-safe)
-- references:
-  - `baseline_ref` (id/hash/path reference)
-  - `window_ref` (id/hash/path reference)
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Baseline artifact(s) | JSON/Parquet/CSV (TBD) | Prior run output / release artifact | Schema + checksum (TBD) |
+| Current artifact(s) | JSON/Parquet/CSV (TBD) | Current pipeline output | Schema + checksum (TBD) |
+| Detector config | YAML/JSON | Repo config (recommended) | Schema validation (if present) |
+| Thresholds / gates | YAML/JSON | Governed config (recommended) | Reviewer-approved changes |
+| Redaction rules | YAML/JSON | Governance policy + run config | Must pass “no sensitive leakage” checks |
 
-Example (illustrative):
+### Outputs
+
+> Outputs should be **machine-readable first** (JSON), and **human-readable second** (Markdown summary).
+
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Drift report (per detector) | JSON | `mcp/runs/<run_id>/drift/<detector_slug>.json` *(recommended; not confirmed in repo)* | Drift report schema (proposed below) |
+| Drift summary (optional) | Markdown | `mcp/runs/<run_id>/drift/summary.md` *(recommended; not confirmed in repo)* | N/A |
+| Telemetry event(s) (optional) | JSON | Recorded per `docs/telemetry/` + `schemas/telemetry/` | Telemetry schema (TBD) |
+
+#### Proposed drift report schema (not confirmed in repo)
 
 ~~~json
 {
-  "detector_id": "js_divergence_numeric",
-  "detector_version": "1.0.0",
-  "feature_name": "embedding_norm",
-  "feature_type": "numeric",
-  "metric_name": "js_divergence",
-  "metric_value": 0.042,
-  "direction": "higher_is_more_drift",
-  "refs": {
-    "baseline_ref": "mcp/experiments/<baseline-run-id>/baseline.json#sha256:<sha256>",
-    "window_ref": "mcp/experiments/<run-id>/window_summary.json#sha256:<sha256>"
-  }
+  "detector": { "name": "embedding_drift", "version": "0.1.0" },
+  "run": {
+    "run_id": "mcp-run-<id>",
+    "timestamp_utc": "2025-12-22T00:00:00Z",
+    "commit_sha": "<sha>",
+    "inputs": {
+      "baseline_ref": "baseline:<id>",
+      "current_ref": "current:<id>"
+    }
+  },
+  "metrics": [
+    {
+      "name": "centroid_cosine_distance",
+      "value": 0.12,
+      "threshold": 0.20,
+      "status": "ok"
+    }
+  ],
+  "overall_status": "ok",
+  "notes": []
 }
 ~~~
 
-### Detector registry (recommended)
+### Sensitivity & redaction
 
-KFM drift monitoring benefits from a registry that maps:
+- Do **not** store raw excerpts, full documents, or precise coordinates in drift logs unless explicitly permitted by governance.
+- Prefer aggregated statistics (counts, rates, distribution summaries) and hashed identifiers where needed.
+- If sensitive domains are included, ensure any drift summaries are reviewed before publishing beyond internal logs.
 
-- detector → supported feature types
-- detector → required summary inputs
-- detector → default thresholds (optional; thresholds usually live in config profiles)
+### Quality signals
 
-If implemented, place it under `detectors/registries/` and ensure it is governed and versioned.
-
----
+- Determinism: same inputs/config → same outputs (byte-diffable where feasible).
+- Completeness: drift report includes baseline/current refs + detector version.
+- Coverage: detectors declare which artifact types they support (text, embeddings, schema, graph stats, etc.).
+- Safety: drift report does not include prohibited fields (sensitive locations, restricted content).
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### DCAT alignment
+### STAC
 
-When detectors operate on dataset-level summaries:
+- Collections involved: **TBD** (depends on which dataset/evidence products are being monitored).
+- Items involved: baseline/current item IDs **if** drift is computed over cataloged artifacts.
+- Extension(s): **TBD** (only add if drift outputs are promoted to cataloged assets).
 
-- reference datasets using stable DCAT identifiers (`dataset_id`, `dataset_version`)
-- drift reports should link to the dataset metadata rather than embedding raw data
+### DCAT
 
-### STAC alignment
+- Dataset identifiers: **TBD** (if drift outputs are attached to a DCAT dataset record).
+- License mapping: inherit from dataset/evidence product license.
+- Contact / publisher mapping: inherit from dataset/evidence product publisher.
 
-When detectors operate on spatial assets:
+### PROV-O
 
-- reference STAC Item IDs and asset keys
-- compute drift on safe aggregates (histograms, quantiles) derived from assets
+- `prov:wasDerivedFrom`: baseline + current artifacts (entities)
+- `prov:wasGeneratedBy`: a drift `prov:Activity` (the detector run)
+- Activity / Agent identities: record the detector name/version and the run environment (as permitted)
 
-### PROV-O alignment
+### Versioning
 
-Detector computation can be represented as part of the drift monitoring activity:
-
-- baseline summary: `prov:Entity`
-- window summary: `prov:Entity`
-- detector run: `prov:Activity`
-- detector result: `prov:Entity`
-- agent (CI runner/pipeline): `prov:Agent`
-
-Relations:
-
-- `prov:used` (activity uses baseline and window summaries)
-- `prov:wasGeneratedBy` (detector result generated by detector activity)
-- `prov:wasAssociatedWith` (activity associated with a governed agent)
-
-This ensures detector outputs remain traceable and auditable.
-
----
+- Detector implementations should be versioned (SemVer recommended).
+- Drift report must include the detector version and baseline/current refs so comparisons remain meaningful.
 
 ## 🧱 Architecture
 
-### Detector taxonomy (recommended categories)
+### Components
 
-These categories are common in drift systems. Confirm exact implementation in code/config.
+| Component | Responsibility | Interface |
+|---|---|---|
+| ETL | Ingest + normalize | Config + run logs |
+| Catalogs | STAC/DCAT/PROV | JSON + validator |
+| Graph | Neo4j | Cypher + API layer |
+| APIs | Serve contracts | REST/GraphQL |
+| UI | Map + narrative | API calls |
+| Story Nodes | Curated narrative | Graph + docs |
+| Focus Mode | Contextual synthesis | Provenance-linked |
+| Drift detectors (this area) | Detect distribution/output/schema changes | Structured drift reports + telemetry |
 
-#### Numeric distribution detectors
-Operate on numeric feature summaries (histograms/quantiles/stats):
+### Interfaces / contracts
 
-- divergence-based (e.g., JS/KL on histograms)
-- distance-based (e.g., Wasserstein/EMD on binned distributions)
-- test-based (e.g., KS test using binned approximations or summary proxies)
-- stability indices (e.g., PSI using histogram bins)
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Detector interface | `tools/ai/drift/detectors/base.py` *(proposed; not confirmed in repo)* | SemVer + changelog |
+| Drift report schema | `schemas/telemetry/` or `schemas/ai/` *(TBD; not confirmed in repo)* | SemVer + contract tests |
+| Telemetry signals | `docs/telemetry/` + `schemas/telemetry/` | Schema bump required |
 
-#### Categorical distribution detectors
-Operate on categorical counts (top-k + “other” bucket):
+### Extension points checklist (for future work)
 
-- total variation distance (TVD) on category distributions
-- chi-square-like comparisons (aggregate-only; avoid small cell leaks)
-- entropy shift comparisons
+- [ ] Data: detectors added for a new domain’s artifacts (`data/<domain>/...`)
+- [ ] STAC: drift outputs promoted as cataloged assets (if needed)
+- [ ] PROV: drift activities recorded for promoted outputs
+- [ ] Graph: drift signals linked to affected entities (if applicable)
+- [ ] APIs: expose drift summaries (requires API contract doc)
+- [ ] UI: add quality/audit surfaces (requires UI registry + access rules)
+- [ ] Focus Mode: ensure provenance-linked disclosure rules remain intact
+- [ ] Telemetry: new signals documented + schema version bumped
 
-#### Multivariate / embedding drift detectors
-Operate on embedding summary statistics (aggregated):
+## 🧠 Story Node & Focus Mode Integration
 
-- centroid shift (mean vector delta; store only safe aggregates)
-- covariance/variance shift (summary-level)
-- MMD-like approximations (only if deterministic and summary-compatible)
+### How this work surfaces in Focus Mode
 
-#### Time-series drift detectors (domain-dependent)
-Operate on temporal summary features:
+- Drift detectors should **not** introduce narrative claims.
+- If drift results are surfaced at all, they should appear as **non-narrative audit/quality metadata** (e.g., “data quality warning” banner) and must not be presented as historical fact.
 
-- seasonal profile drift (compare seasonal summaries)
-- change-point or regime-shift signals (aggregate-only outputs)
+### Provenance-linked narrative rule
 
-### Detector selection rules (recommended defaults)
+- Every narrative claim must trace to a dataset / record / asset ID (drift results can only add *quality context*, not facts).
 
-Selection should be config-driven, but a typical safe mapping is:
+### Optional structured controls
 
-- numeric → one divergence detector + one distance detector
-- categorical → one distribution distance detector
-- embeddings → centroid/covariance summary drift
-- timeseries domains → add seasonal drift feature and corresponding detector
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
-### Adding a new detector (recommended process)
+## 🧪 Validation & CI/CD
 
-1. Implement detector under the correct category folder.
-2. Add detector to the detector registry (if used).
-3. Add/adjust config profiles to select and threshold the detector.
-4. Add determinism tests and safety validations.
-5. Update drift monitor docs and version history.
-6. Ensure CI passes (schema-lint, markdown-lint, tests, safety scans).
+### Validation steps
 
----
+- [ ] Markdown protocol checks (front-matter, headings, lint)
+- [ ] Unit tests for detectors (golden fixtures recommended)
+- [ ] Schema validation for drift reports (if a schema exists)
+- [ ] Determinism check (repeat run yields same outputs)
+- [ ] Redaction checks (no prohibited sensitive fields in outputs)
+- [ ] Security and sovereignty checks (as applicable)
+
+### Reproduction
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+
+# 1) run drift detectors against a baseline/current pair
+# python -m tools.ai.drift.run --baseline <ref> --current <ref> --out mcp/runs/<run_id>/drift/
+
+# 2) run tests
+# pytest -q
+
+# 3) validate schemas (if drift report schema exists)
+# <schema-validator-cmd>
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| `kfm.drift.<detector_slug>.status` *(proposed)* | Drift runner | `docs/telemetry/` + `schemas/telemetry/` |
+| `kfm.drift.<detector_slug>.<metric>` *(proposed)* | Drift runner | `docs/telemetry/` + `schemas/telemetry/` |
 
 ## ⚖ FAIR+CARE & Governance
 
-### Safety constraints (normative)
+### Review gates
 
-Detectors MUST:
+- New detectors that touch sensitive domains or change gating behavior should be reviewed under `docs/governance/ROOT_GOVERNANCE.md`.
+- New telemetry signals require updates in `docs/telemetry/` and schema changes in `schemas/telemetry/` (with a version bump).
 
-- avoid PII and secrets in outputs
-- avoid storing protected-site coordinates
-- suppress small cohort outputs if they risk re-identification
-- store only aggregates and stable references
+### CARE / sovereignty considerations
 
-### Sovereignty-sensitive domains
+- Drift work must not increase exposure risk: avoid logging sensitive locations, culturally restricted knowledge, or raw content.
+- If drift is computed over sensitive corpora, ensure outputs are aggregate-only and reviewed before broader sharing.
 
-For domains requiring masking/generalization:
+### AI usage constraints
 
-- detectors should operate on generalized spatial resolutions (e.g., coarse region classes)
-- avoid “drill-down” metrics that could reveal restricted locations
-- ensure suppression rules are enforced for low-count cohorts
-
-### Training prohibition
-
-Detector configs and detector outputs are governance artifacts and MUST NOT be used as training data (`ai_training_allowed: false`).
-
----
+- This doc permits: summarize, structure_extract, translate, keyword_index.
+- This doc prohibits: generating policy, inferring sensitive locations.
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-15 | Created drift detectors README: defined detector purpose and invariants, intended directory structure, input/output contracts, determinism and validation rules, and provenance/catalog alignment for KFM AI drift detector implementations. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-22 | Initial detectors README | TBD |
 
 ---
 
-<div align="center">
+Footer refs:
 
-© 2025 Kansas Frontier Matrix — MIT License  
-🧭 Drift Detectors · Governed for Integrity
-
-[⬅️ Back to Drift Monitoring](../README.md) · [🧱 Baselines](../baselines/README.md) · [⚙️ Config Profiles](../../configs/README.md) · [📡 Telemetry](../../telemetry/README.md) · [🧾 Provenance](../../provenance/README.md) · [🛡 Governance](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
