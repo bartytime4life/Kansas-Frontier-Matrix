@@ -1,509 +1,485 @@
 ---
-title: "📚 Kansas Frontier Matrix — AI Model Registry"
+title: "KFM AI Registry — README"
 path: "tools/ai/registry/README.md"
+version: "v0.1.0"
+last_updated: "2025-12-22"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-15"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-status: "Active / Enforced"
-doc_kind: "Architecture"
-header_profile: "standard"
-footer_profile: "standard"
-diagram_profiles:
-  - "mermaid-flowchart-v1"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-doc_uuid: "urn:kfm:doc:tools-ai-registry-readme:v11.2.6"
-semantic_document_id: "kfm-doc-tools-ai-registry"
-event_source_id: "ledger:tools/ai/registry/README.md"
-immutability_status: "mutable-plan"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/tools-ai-governance-v4.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+doc_uuid: "urn:kfm:doc:tools:ai:registry:readme:v0.1.0"
+semantic_document_id: "kfm-tools-ai-registry-readme-v0.1.0"
+event_source_id: "ledger:kfm:doc:tools:ai:registry:readme:v0.1.0"
+commit_sha: "<latest-commit-hash>"
 
-json_schema_ref: "../../../schemas/json/ai-model-registry-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/ai-model-registry-v11.shape.ttl"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-fair_category: "F1-A1-I2-R3"
-care_label: "Public · Low-Risk"
-classification: "Public"
-jurisdiction: "United States · Kansas"
-sensitivity: "General"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-indigenous_data_flag: false
-risk_category: "Low"
-redaction_required: false
-
-ai_training_allowed: false
-ai_training_guidance: "Model registry content and governance metadata MUST NOT be used as training data unless explicitly approved."
-
-machine_readable: true
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next AI-tools platform update"
-
-provenance_chain:
-  - "tools/ai/README.md@v11.2.6"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📚 **KFM — AI Model Registry**
-`tools/ai/registry/README.md`
-
-**Purpose**  
-Define the **AI Model Registry subsystem** for KFM:  
-how models are identified, versioned, audited, and approved for use—ensuring every deployed model is traceable, explainable, fairness-audited, drift-monitored (when applicable), and governance-compliant.
-
-</div>
-
----
+# KFM AI Registry — README
 
 ## 📘 Overview
 
-### What the AI Model Registry is (normative)
+### Purpose
 
-The **AI Model Registry** is KFM’s authoritative record of:
+The **AI Registry** is the single canonical place to **declare, version, and govern** AI/ML assets used by KFM, including:
 
-- which models exist,
-- what they are allowed to do,
-- what data they depend on,
-- what audits are current (bias / explainability / drift),
-- whether they are eligible for production use,
-- and how they connect to provenance, releases, and governance decisions.
+- models (LLMs, embedding models, classifiers),
+- prompt packs / extraction templates,
+- AI transforms (e.g., summarization, structure extraction),
+- evaluation harnesses and minimum quality thresholds,
+- drift/quality monitors and telemetry expectations.
 
-In KFM, the model registry is a **governance contract**, not a convenience list.
+This registry exists to keep KFM **contract-first** and **evidence-first**:
 
-If a model is not registered (or is registered but non-compliant), it MUST NOT be used for:
+- **Contract-first:** AI behavior is declared in a schema-validated registry (no “mystery model changes”).
+- **Evidence-first:** any AI outputs that become user-visible must be backed by provenance and (when applicable) STAC/DCAT/PROV artifacts.
 
-- production Focus Mode outputs,
-- Story Node generation/enrichment,
-- certification-impacting data products,
-- release packaging.
+### Scope
 
-### Where the canonical registry lives
+In scope:
 
-The canonical registry file is expected at:
+- Registry *format* (what gets registered, required fields, versioning rules)
+- Validation expectations (schema + policy gates)
+- Integration points (pipelines, API boundary, Focus Mode provenance/audit)
+- Governance triggers for adding/changing AI capabilities
 
-- `tools/ai/ai_model_registry.json`
+Out of scope:
 
-This `tools/ai/registry/` directory provides:
+- Full cloud deployment instructions (keep ops details in dedicated runbooks if/when introduced)
+- Training pipelines for custom models (handled as separate, reproducible workflows)
 
-- registry validation logic,
-- update helpers,
-- and documentation for how the registry is structured and governed.
+### Audience
 
-### Core invariants (normative)
+- AI / data engineering maintainers
+- API maintainers (who enforce registry-driven allowlists)
+- Governance reviewers (who approve new AI narrative behaviors)
+- Contributors adding a new AI evidence product or model integration
 
-1. **Stable identity**  
-   Every model MUST have a stable `model_id` and a version identifier (semantic version or content hash).
+### Definitions (link to glossary)
 
-2. **Audit traceability**  
-   Every model eligible for governed use MUST reference current audit artifacts:
-   - fairness/bias audit (required)
-   - explainability audit (required for narrative/user-facing systems)
-   - drift report (required for long-running production systems; recommended otherwise)
+- **AI asset**: any model, prompt pack, or transform component used to produce outputs (including evidence artifacts).
+- **AI transform**: a bounded, named operation applied to source/evidence (e.g., `summarize`, `structure_extract`).
+- **Prompt pack**: versioned prompts/templates used for extraction or summarization.
+- **Model card**: a governed description of model usage, limitations, evaluation, and risks (canonical home: `mcp/`).
+- **Evidence product**: AI-derived artifact treated as *evidence* (not narrative), represented in STAC/DCAT/PROV when it enters the pipeline.
 
-3. **Dataset traceability**  
-   Every model MUST reference dataset identities (DCAT/STAC IDs), not ad-hoc filenames.
+> Glossary location is **not confirmed in repo**. If a glossary exists, link it here (recommended: `docs/glossary.md` or `docs/standards/GLOSSARY.md`).
 
-4. **Policy labeling**  
-   Every model MUST include governance labels: CARE label, sensitivity, intended use, and prohibited use where relevant.
+### Key artifacts (what this doc points to)
 
-5. **Fail closed**  
-   Missing required registry fields MUST block certification and promotion flows.
+- This README: `tools/ai/registry/README.md`
+- Master Guide (canonical ordering + invariants): `docs/MASTER_GUIDE_v12.md`
+- v13 redesign blueprint (canonical homes + CI gates): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Governance / ethics / sovereignty:
+  - `docs/governance/ROOT_GOVERNANCE.md`
+  - `docs/governance/ETHICS.md`
+  - `docs/governance/SOVEREIGNTY.md`
 
----
+Registry files and schemas (**not confirmed in repo**, proposed canonical locations):
+
+- Registry source:
+  - `tools/ai/registry/registry.yaml`
+- Registry schema:
+  - `schemas/ai/registry.schema.json`
+- Registry validation entrypoint:
+  - `tools/ai/registry/validate.py` (or `src/pipelines/**` if treated as a pipeline step)
+- Model cards / eval reports:
+  - `mcp/model_cards/`
+  - `mcp/evaluations/`
+
+### Definition of done (for this document)
+
+- [ ] Describes what the registry controls and what it does *not* control
+- [ ] States non-negotiable constraints (no unsourced narrative; API boundary; provenance-first)
+- [ ] Defines the minimal registry entry contract (fields + versioning)
+- [ ] Defines validation expectations (schema + policy checks)
+- [ ] Specifies where registry artifacts live (or flags **not confirmed in repo**)
+- [ ] Includes CI validation steps and telemetry expectations
 
 ## 🗂️ Directory Layout
 
-### Position in the repo
+### This document
+
+- Path: `tools/ai/registry/README.md`
+- Owner: **TBD** (recommend assigning to “AI + Governance” maintainers)
+
+### Related repository paths
+
+- `tools/ai/` — operational and tooling utilities (this registry lives here)
+- `mcp/` — experiments, model cards, SOPs (referenced by registry entries)
+- `schemas/` — JSON Schemas and contract artifacts (registry schema belongs here)
+- `src/server/` — API boundary (registry enforcement should occur here)
+- `src/pipelines/` — deterministic transforms (AI evidence products must be reproducible)
+- `docs/telemetry/` + `schemas/telemetry/` — telemetry definitions and validation
+
+### Expected file tree for this sub-area
 
 ~~~text
 📁 tools/
-└── 🧠 ai/
-    ├── 🧾 ai_model_registry.json                # Canonical registry file (authoritative listing)
-    └── 📁 registry/
-        └── 📄 README.md                         # This file
+└── 🤖 ai/
+    ├── 🧭 registry/
+    │   ├── 📄 README.md
+    │   ├── 📄 registry.yaml                # not confirmed in repo
+    │   ├── 🧪 validate_registry.py         # not confirmed in repo
+    │   └── 📁 examples/                    # optional; not confirmed in repo
+    └── 📈 drift/                           # if present: drift monitoring tooling
 ~~~
-
-Canonical (intended) registry subsystem layout:
-
-~~~text
-📁 tools/
-└── 🧠 ai/
-    └── 📁 registry/
-        ├── 📄 README.md                            # This file
-        │
-        ├── 📁 validators/                           # Registry schema validation + invariant checks
-        ├── 📁 updaters/                             # Governed update helpers (add/retire models)
-        ├── 📁 id_minting/                           # Model ID minting conventions + helpers
-        ├── 📁 policies/                             # Registry policy rules (what is required when)
-        ├── 📁 reports/                              # Optional publishable summaries (policy-safe only)
-        └── 📁 docs/                                 # Notes and examples (policy-safe)
-~~~
-
-Directory rules (normative):
-
-- The registry file itself remains at `tools/ai/ai_model_registry.json`.
-- This directory contains code/docs to keep the registry valid—**not** the registry itself.
-- Do not store secrets, PII, or restricted location info in registry entries.
-
----
 
 ## 🧭 Context
 
-### How the registry fits the KFM pipeline
+### Background
 
-The registry sits at the center of AI governance:
+KFM uses AI to enhance discovery and assist with extraction/summarization, but it requires:
 
-- Pipelines produce models and audit artifacts.
-- Audit artifacts are stored in governed run locations (`mcp/experiments/...`).
-- The registry links:
-  - model identity,
-  - dataset dependencies,
-  - audit references,
-  - telemetry summaries,
-  - and deployment status.
+- **benchmarked quality** (tests on known examples, regression checks in CI),
+- **governance oversight** for new AI capabilities (especially user-visible narrative behavior),
+- **provenance-first integration** so AI outputs never become “unsourced narrative.”
 
-Then CI and governance tooling uses the registry to decide:
+The registry provides the contract surface that makes those expectations enforceable.
 
-- can the model run in production?
-- can its outputs be promoted to `data/processed/`?
-- can it be included in release packets?
+### Assumptions
 
-### Registry as “policy switchboard”
+- The system follows the canonical ordering: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.
+- AI is treated as an *assistant* that produces **evidence products**, not authoritative claims.
+- The API layer is the enforcement boundary for what the UI can access and what AI behaviors are allowed.
 
-The registry is the place where governance can encode and enforce:
+### Constraints / invariants
 
-- intended and prohibited uses,
-- environment restrictions (e.g., internal-only),
-- review requirements,
-- sunset/retirement policies,
-- special sovereignty constraints.
+Non-negotiables for registry-driven AI behavior:
 
-The registry is not meant to encode secrets; it encodes rules and references.
+1. **No unsourced narrative**
+   - Any user-visible AI text must be provenance-linked and auditable.
+2. **No UI direct-to-graph reads**
+   - `web/` must not query Neo4j directly; AI-related bundles flow through the API boundary.
+3. **Contracts are canonical**
+   - Registry must be schema-validated; API/pipelines must rely on the registry (no hard-coded “secret defaults”).
+4. **No secrets in-repo**
+   - The registry may reference *how* to locate secrets (e.g., environment variable names), but must never store keys/tokens.
 
----
+### Open questions
+
+- What is the minimum viable registry schema for “CI green”?
+- Where is the authoritative model-card format stored (under `mcp/`)? (**not confirmed in repo**)
+- Does the API expose a “registry introspection” endpoint for audit purposes? (**not confirmed in repo**)
+- Should registry entries be signed (e.g., checksum + provenance bundle) before release? (**not confirmed in repo**)
+
+### Future extensions
+
+- Tight integration with drift tooling (`tools/ai/drift/`) so registered assets can declare drift monitors.
+- Registry-driven evaluation “suites” so each model/prompt pack declares required benchmarks.
+- Support for multiple runtime backends (local inference vs managed service) without changing downstream contracts.
 
 ## 🗺️ Diagrams
 
-### Registry-centered governance flow
+### System / dataflow diagram
 
 ~~~mermaid
-flowchart TD
-  A["Model created/updated<br/>(training or tuning)"] --> B["Audits executed<br/>(bias + explainability + drift)"]
-  B --> C["Artifacts stored<br/>(mcp/experiments/<run-id>/...)"]
-  C --> D["Registry update proposed<br/>(tools/ai/ai_model_registry.json)"]
-  D --> E["Validation gates<br/>(schema + invariants + safety)"]
-  E -->|PASS| F["Registry entry accepted<br/>(eligible status set)"]
-  E -->|FAIL| G["Blocked<br/>(fix audits/metadata before use)"]
-  F --> H["Production use allowed<br/>(per deployment_status + policy)"]
+flowchart LR
+  A["Registry source<br/>tools/ai/registry/registry.yaml"] --> B["Schema + policy validation<br/>schemas/ai/registry.schema.json"]
+  B -->|pass| C["Registry resolver<br/>(build-time + runtime)"]
+  B -->|fail| X["CI gate fails"]
+
+  C --> D["API boundary enforcement<br/>src/server/"]
+  C --> E["Pipeline transforms<br/>src/pipelines/"]
+
+  E --> F["Evidence artifacts<br/>data/stac + data/catalog/dcat + data/prov"]
+  D --> G["Focus Mode bundles<br/>(narrative + provenance + AI audit)"]
+  G --> H["UI<br/>web/"]
+
+  C --> T["Telemetry signals<br/>docs/telemetry + schemas/telemetry"]
 ~~~
 
-Accessibility note: flow from model creation → audits → artifacts → registry update → validation → use or block.
+### Optional: sequence diagram
 
----
+~~~mermaid
+sequenceDiagram
+  participant Dev as Contributor
+  participant CI as CI
+  participant Reg as AI Registry
+  participant API as API Boundary
+  participant UI as UI (Focus Mode)
 
-## 🧠 Story Node & Focus Mode Integration
+  Dev->>Reg: Propose new registry entry (model/prompt/transform)
+  CI->>Reg: Validate schema + policy gates
+  CI-->>Dev: Pass/Fail + diffs
 
-### Why the registry matters for narrative systems
-
-Focus Mode and Story Node generation must remain evidence-led and policy safe. The registry provides:
-
-- which model(s) are allowed for narrative tasks,
-- required audit freshness (bias + explainability),
-- what corpora/datasets are approved for use,
-- whether the system must degrade to retrieval-only when audits are stale.
-
-### Recommended registry fields for narrative systems
-
-For narrative-capable models, entries SHOULD include:
-
-- `task_type: "generation"` or `task_type: "retrieval"`
-- `grounding_requirements`:
-  - minimum evidence density
-  - citation requirements (if policy defines it)
-- `redaction_requirements`:
-  - masking/generalization rules
-  - prohibited content flags
-- `audit_freshness_policy`:
-  - max age for bias audit and explainability audit
-  - required drift cadence
-
----
-
-## 🧪 Validation & CI/CD
-
-### Registry validation (normative)
-
-Registry validation MUST include:
-
-- schema validation (JSON schema + shapes if enforced)
-- required keys present and typed correctly
-- uniqueness:
-  - `model_id` unique
-  - `version` unique within model_id (unless explicitly versioned by hash)
-- reference checks:
-  - audit references exist and are path-safe
-  - model card references exist (when required)
-- safety checks:
-  - no secrets
-  - no PII
-  - no protected-site coordinates
-
-### Fail-closed rules (normative)
-
-Registry validation MUST FAIL if:
-
-- a production-status model lacks required audits,
-- a model references datasets without stable IDs/versions,
-- a model is missing CARE/sensitivity labels,
-- prohibited uses are required by policy but missing,
-- references are invalid or unsafe.
-
-### Recommended “audit freshness” checks
-
-CI SHOULD enforce that for `deployment_status: production` models:
-
-- bias audit reference exists and is within allowed age
-- explainability audit reference exists and is within allowed age (for narrative models)
-- drift report exists and is within allowed age (for long-running systems)
-
-The age thresholds should be config-driven (see `tools/ai/configs/`).
-
----
+  API->>Reg: Resolve allowed transforms for request
+  UI->>API: Request Focus bundle
+  API-->>UI: Bundle includes AI provenance refs + citations
+~~~
 
 ## 📦 Data & Metadata
 
-### Registry entry (recommended contract)
+### Inputs
 
-A registry entry SHOULD include the following groups:
+- Registry source (YAML/JSON): declared models/prompt packs/transforms
+- Model cards: `mcp/` (format and location **not confirmed in repo**)
+- Evaluation fixtures / gold sets:
+  - recommended: `tests/fixtures/ai/` (**not confirmed in repo**)
+- Run manifests and logs:
+  - recommended: `mcp/runs/` or `src/pipelines/**` manifests (**not confirmed in repo**)
 
-#### Identity
-- `model_id` (stable identifier)
-- `version` (semantic) and/or `hash` (content hash)
-- `name` (human-readable)
-- `task_type` (`classification` | `regression` | `segmentation` | `generation` | `retrieval`)
+### Outputs
 
-#### Governance labels
-- `care_label`
-- `sensitivity`
-- `intended_use`
-- `prohibited_use` (when policy requires it)
-- `risk_category` (low/medium/high)
+- Resolved registry (normalized JSON) for API/pipeline consumers (**not confirmed in repo**)
+- Validation reports (CI artifacts) proving:
+  - schema validity,
+  - policy compliance,
+  - evaluation baseline compatibility.
+- Provenance hooks to link AI runs to:
+  - STAC assets (when AI outputs become evidence artifacts),
+  - PROV activities/agents/entities.
 
-#### Dependencies
-- `datasets.train[]`, `datasets.eval[]` (DCAT/STAC IDs)
-- `code_ref` (commit SHA or module path reference; no secrets)
-- `config_profiles[]` (profiles used for audits)
+### Sensitivity & redaction
 
-#### Audits (required for eligibility)
-- `bias_audit_ref`
-- `explainability_audit_ref` (required for narrative/user-facing systems)
-- `drift_report_ref` (required for long-running production systems)
-- `last_audit_timestamp` (ISO)
+Potentially sensitive registry content:
 
-#### Deployment
-- `deployment_status` (`experimental` | `internal` | `production` | `retired`)
-- `release_eligible` (bool)
-- `sunset_policy` / `retirement_reason` (when applicable)
+- prompts that could reveal sensitive inference strategies,
+- references to restricted datasets or redaction rules,
+- deployment endpoints.
 
-#### Artifacts
-- `model_card_ref`
-- `telemetry_ref` (summary telemetry)
-- `provenance_bundle_ref`
+Rules:
 
-### Example registry entry (illustrative)
+- Never store secrets, tokens, or credentials in the registry.
+- Mark entries that touch culturally sensitive content as “review required” (see governance section).
+- Explicitly prohibit transforms that infer sensitive locations.
 
-~~~json
-{
-  "model_id": "focus_mode_v3_narrative",
-  "version": "11.2.6",
-  "name": "Focus Mode v3 Narrative Generator",
-  "task_type": "generation",
-  "deployment_status": "internal",
-  "release_eligible": false,
-  "care_label": "Public · Low-Risk",
-  "sensitivity": "General",
-  "risk_category": "Low",
-  "intended_use": [
-    "Generate evidence-led narrative summaries for KFM Focus Mode targets."
-  ],
-  "prohibited_use": [
-    "Do not use for high-stakes decisions or for generating sensitive site locations."
-  ],
-  "datasets": {
-    "train": ["dcat:kfm:dataset:docs-corpus:v11"],
-    "eval": ["dcat:kfm:dataset:docs-corpus:v11"]
-  },
-  "config_profiles": [
-    "fairness_thresholds.default@11.2.6",
-    "explainability_thresholds.default@11.2.6",
-    "drift_thresholds.default@11.2.6"
-  ],
-  "audits": {
-    "bias_audit_ref": "mcp/experiments/2025-12-15_focus_bias_audit/report.json",
-    "explainability_audit_ref": "mcp/experiments/2025-12-15_focus_xai_audit/evidence_bundle.json",
-    "drift_report_ref": "mcp/experiments/2025-12-15_focus_drift/report.json",
-    "last_audit_timestamp": "2025-12-15T00:00:00Z"
-  },
-  "artifacts": {
-    "model_card_ref": "mcp/model_cards/focus_mode_v3_narrative.md",
-    "telemetry_ref": "mcp/experiments/2025-12-15_focus_bias_audit/telemetry.json",
-    "provenance_bundle_ref": "mcp/experiments/2025-12-15_focus_bias_audit/provenance_bundle.jsonld"
-  }
-}
-~~~
+### Quality signals
 
-### Storage and publication rules
+Recommended minimum quality signals for registry entries:
 
-- Registry file: `tools/ai/ai_model_registry.json`
-- Audit artifacts: `mcp/experiments/<run-id>/...`
-- Publishable summaries (optional): `tools/ai/registry/reports/` **only if policy-safe**
-
-Do not publish row-level evaluation data.
-
----
+- benchmark metrics (precision/recall for extraction; qualitative rubric for summaries)
+- regression thresholds (fail CI if performance drops unexpectedly)
+- drift monitors (distribution shift alerts; output-stability checks)
+- reproducibility identifiers:
+  - model version / hash,
+  - prompt pack version,
+  - deterministic transform config hash.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### DCAT references (datasets)
+### STAC
 
-Registry must reference datasets using stable DCAT identifiers where possible:
+When AI produces an **evidence product** (e.g., structured extraction results, embeddings, entity link candidates):
 
-- `dcat:kfm:dataset:<name>:<version>`
+- represent outputs as STAC Items/Assets under `data/stac/`,
+- store an asset reference to the registry entry ID and transform run ID.
 
-### STAC references (spatial assets)
+### DCAT
 
-For spatial model products, registry entries should reference:
+When AI outputs are treated as datasets:
 
-- STAC Collection / Item IDs for:
-  - training data assets (if spatial),
-  - evaluation assets,
-  - produced data products.
+- register a DCAT dataset record under `data/catalog/dcat/`,
+- include license/keywords/description consistent with the evidence product’s purpose.
 
-### PROV references (lineage)
+### PROV-O
 
-Registry entries should reference provenance bundles that can be translated into:
+For every AI evidence-producing run:
 
-- `prov:Activity` for audits and training/evaluation
-- `prov:Entity` for model artifacts and audit outputs
-- `prov:Agent` for CI runners and governance roles
+- record a `prov:Activity` for the transform execution,
+- record a `prov:Agent` representing the model/prompt pack (linked to registry entry),
+- record a `prov:Entity` for produced artifacts (STAC/DCAT outputs).
 
-This provides end-to-end lineage: model ↔ audits ↔ data ↔ releases.
+### Versioning
 
----
+- Registry changes must be versioned and reviewable.
+- Prefer additive changes; breaking changes require an explicit version bump and downstream contract updates.
+- Deprecations should be explicit (e.g., `deprecated: true` with a replacement pointer) — schema **not confirmed in repo**.
 
 ## 🧱 Architecture
 
-### ID minting (recommended convention)
+### Components
 
-Model IDs should be:
+- **Registry source**: human-editable registry file(s)
+- **Schema validator**: machine validation (JSON Schema) + policy checks
+- **Resolver**: converts registry entries into runtime-ready configuration for:
+  - pipeline transforms,
+  - API allowlists.
+- **Governance hooks**: tagging entries that require review/approval
+- **Telemetry hooks**: emits signals on registry changes and runtime usage
 
-- stable
-- human-readable
-- lower_snake_case
-- domain/task scoped
+### Interfaces / contracts
 
-Recommended pattern:
+**Recommended minimum entry types** (schema details **not confirmed in repo**):
 
-~~~text
-<system_or_domain>_<component>_<task>[_v<major>]
+- `model`
+- `prompt_pack`
+- `transform`
+- `evaluation_suite`
+
+Example (illustrative) registry snippet:
+
+~~~yaml
+registry_version: "v1"
+entries:
+  - id: "urn:kfm:ai:model:llm:default"
+    kind: "model"
+    name: "Default LLM"
+    version: "TBD"
+    allowed_transforms:
+      - "summarize"
+      - "structure_extract"
+    artifacts:
+      model_card: "mcp/model_cards/TBD.md"     # not confirmed in repo
+      eval_report: "mcp/evaluations/TBD.md"    # not confirmed in repo
+    governance:
+      review_required: true
+      review_reason: "new AI narrative behaviors"
+    provenance:
+      prov_agent_id: "urn:kfm:agent:ai:model:llm:default"
+    notes: "Never store API keys here."
 ~~~
 
-Examples:
+### Extension points checklist (for future work)
 
-- `focus_mode_v3_narrative`
-- `hydrology_lstm_forecast_v8`
-- `remote_sensing_landcover_segmentation_v2`
+- [ ] AI registry schema added under `schemas/ai/`
+- [ ] Validator integrated into CI (fail if invalid; deterministic behavior)
+- [ ] Pipelines read registry entries by stable ID (no hard-coded model choices)
+- [ ] API allowlist enforced from registry (UI cannot bypass)
+- [ ] Evidence products emitted to STAC/DCAT/PROV when AI outputs become evidence
+- [ ] Telemetry signals recorded + schema version bump if new signals added
+- [ ] Governance review gates documented and enforced for sensitive AI behaviors
 
-### Registry update process (governed)
+## 🧠 Story Node & Focus Mode Integration
 
-A registry update should follow:
+### How this work surfaces in Focus Mode
 
-1. Generate or update model artifacts (training/tuning).
-2. Run required audits and store results in `mcp/experiments/…`.
-3. Propose registry changes:
-   - add model entry or update audit refs
-   - update deployment status if promotion is intended
-4. Validate registry:
-   - schema + invariants + safety checks
-5. Approve through governance/PR review (as required by policy)
+If AI contributes to a Focus Mode bundle:
 
-### Minimal “eligible for production” rule (normative)
+- show **which registry entry** was used (model + prompt pack versions),
+- provide a **provenance panel** linking to:
+  - the underlying evidence records,
+  - the AI run’s PROV activity,
+  - evaluation context (if relevant).
 
-To be eligible for `deployment_status: production`, a model MUST:
+### Provenance-linked narrative rule
 
-- have required audits present and current
-- have stable dataset references
-- have a model card reference
-- have provenance bundle reference(s)
-- be labeled with CARE and sensitivity
-- pass registry validation gates
+- Any narrative text produced/assisted by AI must have:
+  - citations to evidence IDs (documents, records, STAC assets),
+  - an AI audit reference (registry entry ID + run ID),
+  - clear labeling when content is AI-assisted vs curator-authored.
 
----
+### Optional structured controls
+
+~~~yaml
+focus_panels:
+  - "narrative"
+  - "provenance"
+  - "ai_audit"     # not confirmed in repo
+ai_audit:
+  registry_entry_ids:
+    - "urn:kfm:ai:model:llm:default"
+  show_eval_summary: true
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+
+- [ ] Markdown protocol checks
+- [ ] Registry schema validation (JSON Schema) (**not confirmed in repo**)
+- [ ] Policy checks:
+  - [ ] transforms allowed/prohibited
+  - [ ] no secret-like fields committed
+- [ ] “Golden” evaluation regression tests for key transforms (**not confirmed in repo**)
+- [ ] API contract tests if registry affects public endpoints (**not confirmed in repo**)
+- [ ] Security and sovereignty checks (as applicable)
+
+### Reproduction
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+
+# 1) validate the registry against its schema
+# ./tools/ai/registry/validate_registry.py tools/ai/registry/registry.yaml
+
+# 2) run AI evaluation smoke tests (small fixture set)
+# pytest -q tests/ai
+
+# 3) run markdown lint / protocol validation
+# ./tools/validate_markdown_protocol.sh
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| `ai_registry_change` | git + CI | `docs/telemetry/` + `schemas/telemetry/` |
+| `ai_transform_invocation` | API/pipelines | `docs/telemetry/` + `schemas/telemetry/` |
+| `ai_eval_regression` | CI eval harness | `docs/telemetry/` + `schemas/telemetry/` |
+| `ai_drift_alert` | drift tooling | `docs/telemetry/` + `schemas/telemetry/` |
 
 ## ⚖ FAIR+CARE & Governance
 
-### Policy constraints (normative)
+### Review gates
 
-Registry content must comply with:
+Registry changes that **require governance review** (recommended):
 
-- `governance_ref`
-- `ethics_ref`
-- `sovereignty_policy`
+- adding a new model that generates user-visible content,
+- changing prompt packs that affect narrative or extraction behavior,
+- enabling new transform types (especially anything beyond the allowed list),
+- changes involving culturally sensitive materials or locations.
 
-This means:
+### CARE / sovereignty considerations
 
-- do not embed sensitive location details
-- do not embed PII
-- encode restrictions as rules and labels, not as raw data
-- include prohibited-use notes when relevant
+- Treat culturally sensitive knowledge as requiring explicit review and access rules.
+- Avoid publishing granular locations for sensitive sites unless policy allows.
+- Ensure redaction rules are enforced at the API boundary and reflected in Focus Mode.
 
-### Training prohibition
+### AI usage constraints
 
-Registry metadata is governance data and MUST NOT be used as training data unless explicitly approved (`ai_training_allowed: false` by default).
+This document’s AI permissions/prohibitions must match front-matter:
 
----
+Allowed:
+
+- `summarize`
+- `structure_extract`
+- `translate`
+- `keyword_index`
+
+Prohibited:
+
+- `generate_policy`
+- `infer_sensitive_locations`
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-15 | Created registry subsystem README: defined registry purpose, invariants, validation gates, recommended entry contract, provenance/audit linking, and governance-safe publication rules for KFM AI model registry management. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v0.1.0 | 2025-12-22 | Initial README for AI registry | TBD |
 
 ---
 
-<div align="center">
+Footer refs:
 
-© 2025 Kansas Frontier Matrix — MIT License  
-📚 Model Registry · Governed for Integrity
-
-[⬅️ Back to AI Tools](../README.md) · [⚙️ Config Profiles](../configs/README.md) · [🧾 Provenance](../provenance/README.md) · [🛡 Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Redesign blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
