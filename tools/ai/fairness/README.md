@@ -1,494 +1,320 @@
 ---
-title: "⚖️ Kansas Frontier Matrix — AI Fairness & Bias Auditing"
+title: "KFM AI Fairness Toolkit — README"
 path: "tools/ai/fairness/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-22"
+status: "draft"
+doc_kind: "Tooling"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-15"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-status: "Active / Enforced"
-doc_kind: "Architecture"
-header_profile: "standard"
-footer_profile: "standard"
-diagram_profiles:
-  - "mermaid-flowchart-v1"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-doc_uuid: "urn:kfm:doc:tools-ai-fairness-readme:v11.2.6"
-semantic_document_id: "kfm-doc-tools-ai-fairness"
-event_source_id: "ledger:tools/ai/fairness/README.md"
-immutability_status: "mutable-plan"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/tools-ai-governance-v4.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+doc_uuid: "urn:kfm:doc:tools:ai:fairness:readme:v1.0.0"
+semantic_document_id: "kfm-tools-ai-fairness-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:tools:ai:fairness:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-json_schema_ref: "../../../schemas/json/tools-ai-fairness-report-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/tools-ai-fairness-report-v11.shape.ttl"
-
-fair_category: "F1-A1-I2-R3"
-care_label: "Public · Low-Risk"
-classification: "Public"
-jurisdiction: "United States · Kansas"
-sensitivity: "General"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-indigenous_data_flag: false
-risk_category: "Low"
-redaction_required: false
-
-ai_training_allowed: false
-ai_training_guidance: "Fairness reports, subgroup metrics, and governance audit artifacts MUST NOT be used as training data."
-
-machine_readable: true
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next AI-tools platform update"
-
-provenance_chain:
-  - "tools/ai/README.md@v11.2.6"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# ⚖️ **KFM — AI Fairness & Bias Auditing**
-`tools/ai/fairness/README.md`
-
-**Purpose**  
-Define the **fairness and bias auditing subsystem** for KFM AI governance:  
-how subgroup and intersectional bias is measured (when permitted), thresholded, reported, and escalated—without leaking sensitive data.
-
-</div>
-
----
+# KFM AI Fairness Toolkit — README
 
 ## 📘 Overview
 
-### What fairness means in KFM (normative)
+### Purpose
 
-In KFM, **fairness** is a governed, context-aware, and task-specific property that answers:
+- This README defines conventions and expected behavior for **fairness + harm evaluation** of AI components used anywhere in the KFM pipeline (extraction, classification, summarization, narrative assistance).
+- It governs **inputs, outputs, provenance expectations, and review gates** for fairness reporting so downstream systems can treat fairness artifacts as evidence (not anecdotes).
 
-- Do model errors or outcomes disproportionately affect groups, communities, or regions?
-- Are there systematic disparities in performance or outputs across cohorts?
-- Are those disparities acceptable under documented policy for the model’s *intended use*?
+### Scope
 
-KFM does not treat fairness as a single metric. Fairness auditing in KFM is:
+| In Scope | Out of Scope |
+|---|---|
+| Evaluation suites for AI outputs (sliced metrics, harm checks, reporting) | Training/fine-tuning models |
+| Reproducible run artifacts + provenance capture for evaluations | Making or changing governance policy (must live under `docs/governance/`) |
+| CI-friendly gating hooks (threshold checks, regression detection) | Adjudicating contested historical truth claims |
+| “Fairness as disclosure”: producing reviewable evidence for humans | Storing/deriving sensitive attributes without explicit governance approval |
 
-- **multi-metric** (classification, regression, ranking, generation require different checks),
-- **policy-scoped** (only audit sensitive attributes when authorized and properly governed),
-- **thresholded** (PASS/WARN/FAIL based on config profiles),
-- **provenance-bound** (model+data+config identity recorded).
+### Audience
 
-### What this subsystem governs
+- Primary: AI/pipeline maintainers implementing or running fairness checks.
+- Secondary: governance reviewers, story editors, release managers, and QA.
 
-Fairness auditing applies to any AI workload that:
+### Definitions (link to glossary)
 
-- influences user-facing outputs (Focus Mode, Story Nodes, UI layers),
-- affects certification of data products,
-- performs classification/regression/ranking with potential subgroup impacts,
-- uses human-centered content or community-relevant data.
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **Fairness evaluation**: measuring whether model performance/behavior differs meaningfully across defined slices (not necessarily protected classes).
+  - **Slice**: a subset of evaluation data (e.g., source type, time period, region, document quality band).
+  - **Harm check**: automated checks for unsafe/demeaning language, misrepresentation patterns, or systematic omission signals.
+  - **Evaluation suite**: a versioned collection of datasets + configs + expected outputs.
+  - **Evidence artifact**: a machine-readable report + provenance that can be referenced downstream.
 
-### Core invariants (normative)
+### Key artifacts (what this doc points to)
 
-1. Fairness audits MUST be **config-driven** (thresholds and required metrics are not hard-coded).
-2. Fairness audits MUST be **version-aware** (model + dataset + config identity).
-3. Fairness audits MUST be **safe**:
-   - no PII,
-   - no secrets,
-   - no protected-site coordinates,
-   - no raw record-level subgroup dumps.
-4. Fairness audits MUST fail closed if:
-   - required metadata is missing,
-   - subgroup definitions are ambiguous,
-   - policy constraints are not satisfied.
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `tools/ai/fairness/README.md` | TBD | Conventions + contracts |
+| Provenance tooling | `tools/ai/provenance/README.md` | TBD | Used to record PROV for fairness runs (path not confirmed in repo) |
+| Fairness run artifacts | `mcp/runs/<run_id>/fairness/` | TBD | Recommended run output location |
+| PROV bundle outputs | `data/prov/<run_id>/` | TBD | Optional: promote run lineage into canonical PROV store |
+| Fairness schemas | `schemas/ai/fairness/` | TBD | Recommended: JSON Schemas for reports (not confirmed in repo) |
 
----
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid
+- [ ] All claims link to datasets / schemas / tickets / commits (as applicable)
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
-This directory sits under `tools/ai/`:
+### This document
+
+- `path`: `tools/ai/fairness/README.md` (must match front-matter)
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed + catalog outputs |
+| Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC/DCAT/PROV outputs |
+| Documentation | `docs/` | Canonical governed docs |
+| Graph | `src/graph/` | Graph build + ontology bindings |
+| API boundary | `src/server/` | OpenAPI/GraphQL contracts, redaction, query services |
+| UI | `web/` | Map UI, layer registry, Focus Mode UI |
+| Story Nodes | `docs/reports/story_nodes/` | Draft/published Story Nodes + assets |
+| Schemas | `schemas/` | JSON schemas (telemetry, contracts, reports) |
+| Tests | `tests/` | Unit/integration/contract tests |
+| Tooling | `tools/` | Offline utilities, QA tooling, evaluators |
+| Run artifacts | `mcp/runs/` | Deterministic run logs/artifacts (experiments, evals) |
+
+### Expected local tree (this folder)
 
 ~~~text
 📁 tools/
-└── 🧠 ai/
-    ├── ⚖️ bias_check.py                        # Fairness runner (often lives at tools/ai root)
-    ├── 📁 configs/                              # Fairness threshold profiles (see configs README)
+└── 📁 ai/
     └── 📁 fairness/
-        └── 📄 README.md                         # This file
+        ├── 📄 README.md
+        ├── 📁 configs/                  # not confirmed in repo (recommended)
+        ├── 📁 checks/                   # not confirmed in repo (recommended)
+        ├── 📁 datasets/                 # not confirmed in repo (recommended)
+        └── 📁 reports/                  # not confirmed in repo (recommended)
 ~~~
-
-Canonical (intended) fairness subsystem layout:
-
-~~~text
-📁 tools/
-└── 🧠 ai/
-    └── 📁 fairness/
-        ├── 📄 README.md                            # This file
-        │
-        ├── 📁 metrics/                             # Metric calculators (task-aware)
-        │   ├── 🧾 classification.json               # Classification metric registry (optional)
-        │   ├── 🧾 regression.json                   # Regression metric registry (optional)
-        │   └── 🧾 ranking.json                      # Ranking metric registry (optional)
-        │
-        ├── 📁 cohorting/                            # Cohort and subgroup builders (policy-aware)
-        ├── 📁 validators/                           # Report validators (schema + safety + completeness)
-        ├── 📁 scorers/                              # Score aggregation (bias_score, severity mapping)
-        ├── 📁 redaction/                            # Safe summarization/redaction helpers
-        └── 📁 docs/                                 # Optional publishable notes (policy-safe only)
-~~~
-
-Directory rules (normative):
-
-- Do not store run payloads here. Store fairness run artifacts under:
-  - `mcp/experiments/<run-id>/...` (preferred),
-  - or `mcp/runs/<run-id>/...` if used.
-- Do not store raw cohort membership lists or row-level subgroup tables in repo outputs.
-- Prefer aggregates and safe cohort summaries.
-
----
-
-## 🧭 Context
-
-### Fairness auditing is policy-scoped
-
-Fairness audits can only be performed with the attributes and subgroup definitions that are:
-
-- explicitly permitted by governance policy,
-- present in the dataset metadata/data contracts,
-- safe to process and safe to summarize.
-
-If protected attributes are not permitted or not available, KFM still supports:
-
-- fairness auditing using **proxy cohorts** (e.g., region types, data quality tiers),
-- drift-aware fairness monitoring (bias changes over time),
-- uncertainty-aware reporting (explicitly marking gaps).
-
-### Subgroup definition sources
-
-Subgroup definitions should come from:
-
-- data contracts (e.g., a contract defining allowable cohorting fields),
-- DCAT/STAC metadata labels (e.g., “rural/urban”, “domain tier”, “coverage quality tier”),
-- governance policy overlays.
-
-Subgroups MUST NOT be invented by the tool.
-
-### When intersectional analysis is allowed
-
-Intersectional fairness checks (multiple attributes combined) are powerful but can increase privacy risk.
-
-Intersectional analysis is allowed only when:
-
-- policy permits it,
-- sample sizes are sufficient to avoid leaking small groups,
-- outputs are aggregated and redacted appropriately.
-
-If group sizes are too small, the tool must:
-
-- suppress the subgroup output,
-- mark the suppression in the report,
-- optionally recommend a different evaluation approach.
-
----
-
-## 🗺️ Diagrams
-
-### Fairness auditing decision flow
-
-~~~mermaid
-flowchart TD
-  A["Select model + dataset slice<br/>(ID + version)"] --> B["Load fairness profile<br/>(configs)"]
-  B --> C["Build cohorts<br/>(policy-permitted only)"]
-  C --> D["Compute metrics<br/>(task-aware)"]
-  D --> E["Aggregate bias score<br/>(config-driven)"]
-  E --> F["Threshold decision<br/>(PASS/WARN/FAIL)"]
-  F --> G["Emit report + telemetry<br/>(safe aggregates only)"]
-  G --> H["Bind to registry + provenance<br/>(model card refs, run ids)"]
-  F -->|WARN| I["Escalate to governance review"]
-  F -->|FAIL| J["Block certification / quarantine"]
-~~~
-
-Accessibility note: flow from selection → profile → cohorts → metrics → decision → reporting → governance actions.
-
----
-
-## 🧠 Story Node & Focus Mode Integration
-
-### Why fairness auditing matters for narratives
-
-Narrative systems can introduce fairness risk via:
-
-- retrieval skew (some sources dominate),
-- topic skew (some communities under/overrepresented),
-- style and framing differences by location/time,
-- disparities in evidence availability.
-
-For narrative generation, fairness auditing should emphasize safe aggregate signals such as:
-
-- distribution of sources by region/time
-- coverage parity across dataset slices
-- error/omission indicators by cohort (when measurable)
-
-Fairness auditing for narratives must be careful:
-
-- avoid auditing on protected personal attributes
-- focus on policy-permitted cohorts (e.g., region types, dataset quality tiers)
-
----
-
-## 🧪 Validation & CI/CD
-
-### Determinism rules (normative)
-
-Fairness tooling MUST:
-
-- be config-driven (see `tools/ai/configs/README.md`)
-- record config path + sha256
-- record model + dataset IDs/versions
-- pin seeds if sampling is used
-- emit stable JSON outputs
-
-### Minimal outputs (contract)
-
-Each fairness audit SHOULD produce:
-
-- `report.json` containing:
-  - `status`: `PASS` | `WARN` | `FAIL`
-  - model identity
-  - dataset identity + slice definition
-  - cohort definitions used (names/labels only; no row-level membership)
-  - metrics (aggregated)
-  - thresholds and comparisons
-  - actions and notes
-- `telemetry.json` containing:
-  - runtime + energy/carbon + summary `bias_score`
-
-### Fail-closed conditions (normative)
-
-A fairness audit MUST FAIL if:
-
-- model identity is missing/ambiguous,
-- dataset identity/version is missing,
-- cohort definitions are missing or not permitted,
-- config profile invalid/missing,
-- output violates safety checks (PII, secrets, protected-site coordinates),
-- schema validation fails.
-
-### Suggested CI checks
-
-- config validation + schema validation (when available)
-- “no secrets / no PII” scan on outputs intended for repo storage
-- minimum cohort size enforcement (suppress small groups; report suppression)
-
----
 
 ## 📦 Data & Metadata
 
-### Recommended fairness report structure
+### Inputs
 
-A fairness report should include:
+| Input | Example location | Format | Sensitivity | Notes |
+|---|---|---|---|---|
+| Evaluation suite config | `tools/ai/fairness/configs/<suite>.yaml` | YAML | public | Defines checks + slices + thresholds (path not confirmed in repo) |
+| Model outputs under test | `mcp/runs/<run_id>/outputs/` | JSON/NDJSON | varies | Must be tied to an upstream run manifest |
+| Ground truth / reference labels | `data/<domain>/processed/<eval_set>/` | CSV/JSON | varies | Must be versioned + provenance-linked |
+| Slice metadata | alongside eval set | CSV/JSON | varies | Prefer non-sensitive slices (source type, time, quality bands) |
+| Run manifest | `mcp/runs/<run_id>/run.json` | JSON | public | Inputs, code ref, config hash (path not confirmed in repo) |
 
-- `run_id`
-- `status`
-- `model`: `model_id`, `model_version` (or hash)
-- `dataset`: `dataset_id`, `dataset_version`, `slice`
-- `cohorts`: list of cohort labels and summary sizes (with suppression rules)
-- `metrics`: per-cohort metrics and disparity measures
-- `bias_score`: aggregated score used for gating
-- `thresholds`: warn/fail thresholds used
-- `actions`: recommended/enforced actions
-- `policy`: what was suppressed/redacted and why
+### Outputs
 
-Example (illustrative):
+| Output | Recommended location | Format | Sensitivity | Notes |
+|---|---|---|---|---|
+| Metrics (machine-readable) | `mcp/runs/<run_id>/fairness/metrics.json` | JSON | public | Must include suite version + slice definitions |
+| Summary report (human) | `mcp/runs/<run_id>/fairness/summary.md` | Markdown | public | “What changed” + limitations |
+| Slice table export | `mcp/runs/<run_id>/fairness/slices.csv` | CSV | public | Aggregate only (no row-level sensitive attributes) |
+| Artifacts (plots) | `mcp/runs/<run_id>/fairness/plots/` | PNG/SVG | public | Optional |
+| PROV bundle | `mcp/runs/<run_id>/fairness/prov/` | PROV-JSON/JSON-LD | public | Must reference inputs + outputs |
 
-~~~json
-{
-  "run_id": "2025-12-15_focus_bias_audit",
-  "status": "PASS",
-  "model": {
-    "model_id": "focus_mode_v3_narrative",
-    "model_version": "11.2.6",
-    "task_type": "generation"
-  },
-  "dataset": {
-    "dataset_id": "dcat:kfm:dataset:docs-corpus:v11",
-    "dataset_version": "v11",
-    "slice": { "time": "2025-11-01/2025-12-01", "notes": "monthly audit slice" }
-  },
-  "cohorts": [
-    { "cohort_id": "region_type:rural", "count": 1200 },
-    { "cohort_id": "region_type:urban", "count": 980 }
-  ],
-  "metrics": {
-    "coverage_parity_gap": 0.03,
-    "evidence_density_gap": 0.05
-  },
-  "bias_score": 0.97,
-  "thresholds": {
-    "warn": { "coverage_parity_gap": "<set-by-governance>" },
-    "fail": { "coverage_parity_gap": "<set-by-governance>" }
-  },
-  "actions": [],
-  "policy": {
-    "intersectional_analysis": false,
-    "suppressed_small_groups": true
-  }
-}
-~~~
+### Sensitivity & redaction
 
-### Telemetry requirements
+- Do **not** infer sensitive attributes (identity, affiliation, protected class) from names, locations, or text.
+- If slice definitions require sensitive labels, treat them as **restricted by default** and require explicit governance review and documented handling.
+- Reports should default to **aggregate metrics** (counts, rates, confidence intervals), not row-level dumps.
 
-Fairness audits SHOULD emit:
+### Quality signals
 
-- `runtime_ms`
-- `energy_wh`
-- `carbon_gco2e`
-- `bias_score`
-- counts (cohorts evaluated, cohorts suppressed)
-
-Telemetry must be schema-valid per the referenced telemetry schemas.
-
----
+- Minimum recommended signals (suite-dependent):
+  - Performance parity across slices (precision/recall/F1 or task-appropriate metrics)
+  - Error-mode parity (false positives/negatives by slice)
+  - Harm checks (e.g., unsafe language flags) and their slice distribution
+  - Regression detection vs a baseline run (same suite version)
+  - Coverage/omission indicators (e.g., extraction coverage by source type/time band)
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### STAC
-
-If fairness checks are applied to spatial outputs (e.g., classification rasters by region):
-
-- reference STAC Items/Collections for the evaluated assets
-- summarize by region categories without exposing protected locations
-
-### DCAT
-
-If fairness outcomes affect dataset publishing or re-issuance:
-
-- DCAT metadata should reference:
-  - fairness audit report,
-  - the applied thresholds profile,
-  - corrective actions taken.
-
-### PROV-O
-
-A fairness audit run should be representable as:
-
-- `prov:Activity` (audit)
-- using Entities:
-  - model artifact,
-  - dataset slice,
-  - config profile
-- generating Entities:
-  - report,
-  - telemetry record
-- attributed to Agents:
-  - CI runner, maintainer role, governance board (as required)
-
-Goal: bias audit outputs are first-class provenance events.
-
----
+- **PROV (required for fairness runs):**
+  - Each fairness evaluation is a PROV **Activity** that:
+    - *uses* evaluation dataset entities + model output entities
+    - *generates* metrics/report entities
+    - is attributed to an **Agent** (tool + operator, where appropriate)
+- **DCAT (optional):**
+  - If an evaluation dataset is promoted to a shareable asset, define a DCAT dataset entry (title/description/license/keywords/minimum required fields).
+- **STAC (typically N/A):**
+  - Fairness outputs are usually non-geospatial.
+  - If a fairness artifact is explicitly linked to geospatial assets (e.g., a STAC Item-based slice), record those IDs in the metrics/report as references rather than duplicating STAC.
 
 ## 🧱 Architecture
 
-### Metrics by task type (recommended)
+### Where this fits (pipeline-aligned)
 
-**Classification**
-- per-cohort FPR/FNR deltas
-- error-rate deltas
-- calibration deltas
-- coverage parity (when applicable)
+~~~mermaid
+flowchart LR
+  A[ETL / Pipelines] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[AI Components (extract/classify/summarize)]
+  D --> E[Fairness Toolkit (this folder)]
+  E --> F[Run Artifacts + PROV Evidence]
+  F --> G[API Layer]
+  G --> H[UI + Story Nodes + Focus Mode]
+~~~
 
-**Regression**
-- per-cohort MAE/RMSE deltas
-- residual distribution comparisons
-- tail error frequency deltas
+### Components
 
-**Ranking/Retrieval**
-- exposure parity (if exposure model exists)
-- top-k coverage parity
-- quality parity metrics
+| Component | Location | Responsibilities |
+|---|---|---|
+| ETL | `src/pipelines/` | Deterministic transforms that produce governed data artifacts |
+| Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Standardized metadata + lineage |
+| Graph | `src/graph/` | Ontology-governed entity/relationship layer |
+| **AI Fairness (this toolkit)** | `tools/ai/fairness/` | Evaluation suites, sliced metrics, harm checks, fairness reports |
+| API boundary | `src/server/` | Contracted access to graph + evidence; redaction/generalization rules |
+| UI | `web/` | Visualization, Focus Mode, provenance rendering |
+| Story Nodes | `docs/reports/story_nodes/` | Narrative artifacts with evidence references |
 
-**Narrative generation (Focus Mode / Story Nodes)**
-- evidence density parity (citations/refs per output length)
-- coverage parity across policy-permitted cohorts
-- omission/uncertainty parity proxies (safe aggregates)
+### Interfaces / contracts
 
-### Severity mapping (PASS/WARN/FAIL)
+- **Report schema** (recommended): `schemas/ai/fairness/metrics.schema.json` (not confirmed in repo)
+- **Suite config schema** (recommended): `schemas/ai/fairness/suite.schema.json` (not confirmed in repo)
+- **Run manifest coupling**: fairness runs should reference:
+  - upstream run identifier
+  - suite version
+  - input dataset identifiers
+  - code/config hash(es)
+- **API boundary invariant:** if fairness results are shown to users, they must be served via API contracts (UI must not read Neo4j directly).
 
-- Thresholds MUST be set by governance profiles in `tools/ai/configs/`.
-- Aggregation MUST be transparent and logged:
-  - metric → cohort → disparity → score → status.
+### Extension points checklist (for future work)
 
-Default actions (recommended):
+- [ ] Data: new domain added under `data/<domain>/...`
+- [ ] STAC: new collection + item schema validation
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests
+- [ ] UI: layer registry entry + access rules
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
 
-- PASS: record
-- WARN: require review (or increase cadence)
-- FAIL: block certification and quarantine dependent promotions
+## 🧠 Story Node & Focus Mode Integration
 
----
+### How this work surfaces in Focus Mode
+
+- If AI-assisted content appears in Story Nodes / Focus Mode, fairness artifacts can be attached as **supporting evidence**:
+  - suite name + version
+  - last evaluation run ID
+  - summary of key parity checks and known limitations
+- Any disclosure must be **provenance-linked** (run ID + artifact path) and never presented as a substitute for primary sources.
+
+### Provenance-linked narrative rule
+
+- Every claim must trace to a dataset / record / asset ID.
+- “Fairness passed” is **not** a factual claim about history; it is a statement about model behavior under a specific evaluation suite.
+
+### Optional structured controls
+
+~~~yaml
+focus_layers:
+  - "ai.fairness.summary"   # not confirmed in repo (placeholder)
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV) — if applicable to the change
+- [ ] Fairness report schema validation (if schemas exist)
+- [ ] Regression checks vs baseline fairness run (suite-dependent)
+- [ ] API contract tests (if fairness artifacts are exposed via API)
+- [ ] UI schema checks (if surfaced in UI)
+- [ ] Security and sovereignty checks (as applicable)
+
+### Reproduction
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+
+# 1) run a fairness suite
+# python -m tools.ai.fairness.run --suite tools/ai/fairness/configs/<suite>.yaml --run-id <run_id>
+
+# 2) validate produced metrics against schema
+# python -m tools.ai.fairness.validate --metrics mcp/runs/<run_id>/fairness/metrics.json --schema schemas/ai/fairness/metrics.schema.json
+
+# 3) promote PROV bundle to canonical store (optional)
+# cp -r mcp/runs/<run_id>/fairness/prov data/prov/<run_id>/
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| Slice parity deltas | Fairness metrics | `docs/telemetry/` + `schemas/telemetry/` |
+| Harm-check rates | Fairness metrics | `docs/telemetry/` + `schemas/telemetry/` |
+| Regression flags | CI | CI logs + run artifacts |
 
 ## ⚖ FAIR+CARE & Governance
 
-### Policy constraints (normative)
+### Review gates
 
-Fairness auditing must comply with:
+- Changes that should require explicit review (and may require human approval):
+  - new slice definitions involving sensitive attributes
+  - new harm-check categories that could change public-facing behavior
+  - threshold changes that alter CI pass/fail behavior
+  - exposing fairness artifacts via public API/UI
 
-- `governance_ref`
-- `ethics_ref`
-- `sovereignty_policy`
+### CARE / sovereignty considerations
 
-This implies:
+- Treat cultural/identity-adjacent evaluation slices as **high sensitivity** unless governance explicitly defines safe handling.
+- Prefer non-sensitive, domain-relevant slices (time period, source type, document quality band, region at coarse granularity).
+- If a community is impacted, document protections and redaction/generalization rules before running/recording evaluations at scale.
 
-- no protected-site coordinates in reports
-- no PII in reports
-- no secrets
-- no re-identification risk via small subgroup reporting
+### AI usage constraints
 
-### Publication rule
-
-Only policy-safe fairness summaries may be published in `docs/reports/`.  
-Full fairness artifacts belong in `mcp/experiments/` and should follow access controls.
-
-### Training prohibition
-
-Fairness reports are governance artifacts and MUST NOT be used as training data (`ai_training_allowed: false`).
-
----
+- Ensure this doc’s AI permissions/prohibitions match intended use.
+- Fairness artifacts may be summarized for reporting, but must not be used to generate or justify new governance policy.
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-15 | Created fairness subsystem README: policy-scoped cohorting, task-aware metrics, thresholded PASS/WARN/FAIL behavior, safe reporting rules, and provenance/governance alignment for KFM AI fairness auditing. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-22 | Initial fairness toolkit README (scaffold + contracts) | TBD |
 
 ---
 
-<div align="center">
+Footer refs:
 
-© 2025 Kansas Frontier Matrix — MIT License  
-⚖️ Fairness & Bias Auditing · Governed for Integrity
-
-[⬅️ Back to AI Tools](../README.md) · [⚙️ Config Profiles](../configs/README.md) · [🛡 Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
