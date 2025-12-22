@@ -1,373 +1,333 @@
 ---
-title: "🧩 Kansas Frontier Matrix — Reusable CI/CD Workflows (Workflow Call Library)"
-path: ".github/workflows/reusable/README.md"
+title: "KFM GitHub Issue Templates"
+path: ".github/ISSUE_TEMPLATE/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-22"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-13"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-status: "Active / Enforced"
-doc_kind: "Overview"
-intent: "github-reusable-workflows-library"
-role: "ci-cd-reusable-workflows"
-category: "CI/CD · Governance · Automation · Security · Telemetry"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-classification: "Public Document"
-sensitivity: "General"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-indigenous_rights_flag: false
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Low"
-redaction_required: false
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
+doc_uuid: "urn:kfm:doc:github:issue-templates-readme:v1.0.0"
+semantic_document_id: "kfm-github-issue-templates-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:github:issue-templates-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
 
-telemetry_ref: "../../../releases/v11.2.6/github-infra-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/github-workflows-v4.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
-
-json_schema_ref: "../../../schemas/json/github-reusable-workflows-readme-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/github-reusable-workflows-readme-v11-shape.ttl"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "CreativeWork"
-  prov_o: "prov:Plan"
-  owl_time: "TemporalEntity"
-  geosparql: "geo:FeatureCollection"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "diagram-extraction"
-  - "metadata-extraction"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "content-alteration"
-  - "speculative-additions"
-  - "unverified-architectural-claims"
-  - "narrative-fabrication"
-  - "governance-override"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-doc_uuid: "urn:kfm:doc:github-workflows:reusable:readme:v11.2.6"
-semantic_document_id: "kfm-doc-github-workflows-reusable-readme"
-event_source_id: "ledger:.github/workflows/reusable/README.md"
-immutability_status: "mutable-plan"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-badge_profiles:
-  - "root-centered-badge-row"
-requires_purpose_block: true
-requires_directory_layout_section: true
-requires_version_history: true
-requires_governance_links_in_footer: true
-
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "United States / Kansas"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next reusable-workflows architecture update"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧩 **Kansas Frontier Matrix — Reusable CI/CD Workflows (Workflow Call Library)**
-`.github/workflows/reusable/README.md`
-
-**Purpose**  
-Define the **reusable workflow library** (GitHub Actions `workflow_call`) used by KFM’s CI/CD system to:
-- reduce duplication across workflows,
-- standardize governance/security/telemetry steps,
-- enforce consistent interfaces (inputs, secrets, outputs),
-- keep CI/CD behavior deterministic and reviewable.
-
-</div>
-
----
+# KFM GitHub Issue Templates
 
 ## 📘 Overview
 
-Reusable workflows in this folder are **not triggered directly** by `push` / `pull_request` by default.
-They are **called** from “orchestrator” workflows in `.github/workflows/` via:
+### Purpose
+- Provide a single, governed reference for how to file KFM issues in a way that is pipeline-aware, reproducible, and reviewable.
+- Ensure issues collect the minimum information needed for traceability across data, catalogs, graph, APIs, UI, and story outputs.
 
-- `uses: ./.github/workflows/reusable/<workflow>.yml`
+### Scope
 
-This design:
+| In Scope | Out of Scope |
+|---|---|
+| How to choose and use KFM issue templates | Implementing fixes or features |
+| The required fields for KFM issues | Security incident response procedures |
+| Triage cues: pipeline stage, affected paths, sensitivity | Private project management policy beyond GitHub Issues |
 
-- keeps top-level workflows small and readable,
-- makes shared steps (lint, schema validation, security scans, telemetry export) centrally maintained,
-- provides stable, typed interfaces for CI/CD building blocks,
-- supports governance constraints (least privilege, provenance, FAIR+CARE checks) consistently.
+### Audience
+- Primary: Contributors filing issues (bugs, data requests, enhancements, documentation gaps).
+- Secondary: Maintainers triaging, labeling, and connecting issues to PRs, datasets, and releases.
 
-**Conventions**
+### Definitions
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - Pipeline stage
+  - STAC, DCAT, PROV
+  - Neo4j graph
+  - API boundary
+  - Story Node
+  - Focus Mode
+  - Sensitivity and redaction
 
-1. **Only reusable workflows live here**  
-   Each `*.yml` file in this directory MUST include:
-   - `on: workflow_call`
+### Key artifacts
 
-2. **Interface-first**  
-   Reusable workflows MUST declare:
-   - `inputs` (typed with defaults where reasonable),
-   - `secrets` (explicit, minimal),
-   - optional `outputs` (explicit, stable names).
+| Artifact | Path | Owner | Notes |
+|---|---|---|---|
+| Master Guide | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical pipeline ordering + invariants |
+| Universal Doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Maintainers | Default governed doc scaffold |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Maintainers | Narratives and Focus Mode inputs |
+| API Contract Extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | Maintainers | REST/GraphQL contract changes |
+| Governance docs | `docs/governance/` | Governance | If missing, add per Master Guide references |
 
-3. **Least-privilege by design**  
-   Reusable workflows MUST NOT silently escalate permissions.  
-   Callers set the final `permissions:` and pass required secrets explicitly.
-
-4. **Deterministic behavior**  
-   Where possible:
-   - avoid network-dependent “latest” installs without pinning,
-   - pin GitHub Actions to immutable versions/SHAs,
-   - produce machine-readable artifacts and summaries consistently.
-
----
+### Definition of done
+- [ ] Front-matter complete and valid
+- [ ] Links point to canonical KFM docs and folders
+- [ ] Guidance is pipeline-aware and does not imply bypassing the API boundary
+- [ ] Sensitivity, PII, and secrets guidance is explicit
+- [ ] Validation and review expectations are listed
 
 ## 🗂️ Directory Layout
 
-~~~text
-.github/
-└── 🤖 workflows/                                    — Governed CI/CD workflows
-    ├── 📄 README.md                                 — Master CI/CD architecture (overview)
-    └── 📁 reusable/                                 — Reusable workflows called via workflow_call
-        ├── 📄 README.md                             — This document
-        └── 📄 *.yml                                 — Reusable workflow definitions (workflow_call)
-~~~
+### This document
+- `path`: `.github/ISSUE_TEMPLATE/README.md`
 
----
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| GitHub meta | `.github/` | Issue templates, PR templates, workflows |
+| Documentation | `docs/` | Governed docs and templates |
+| Data domains | `data/` | Domain raw/work/processed outputs |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC, DCAT, PROV artifacts |
+| Pipelines | `src/pipelines/` | Deterministic ETL + catalog generation code |
+| Graph | `src/graph/`, `data/graph/` | Ontology, ingest, fixtures/imports |
+| API boundary | `src/server/` | Contracted access to graph/catalogs with redaction rules |
+| UI | `web/` | Map UI, Focus Mode UI, layer registry |
+| Schemas | `schemas/` | Machine-readable validation schemas |
+| Tests | `tests/` | Contract/schema/integration tests |
+
+### Expected file tree
+
+~~~text
+📁 .github/
+└── 📁 ISSUE_TEMPLATE/
+    ├── 📄 README.md
+    ├── 📄 config.yml
+    ├── 📄 <issue_template_1>.yml
+    ├── 📄 <issue_template_2>.yml
+    └── 📄 ...
+~~~
 
 ## 🧭 Context
 
-Reusable workflows are the **workflow-layer equivalent** of library functions:
+### Why issue templates exist in KFM
+Issue templates are designed to prompt for the information reviewers need to maintain:
+- traceability (sources, licenses, temporal/spatial coverage, provenance),
+- reproducibility (steps to reproduce, validation steps),
+- governance (sensitivity, redaction, sovereignty considerations).
 
-- Top-level workflows define **policy + orchestration**
-  - when things run,
-  - what gates apply,
-  - what environments are allowed.
+### Pipeline-first triage rule
+Every issue should name at least one pipeline stage it impacts:
 
-- Reusable workflows define **implementation primitives**
-  - how linting runs,
-  - how validators execute,
-  - how telemetry artifacts are produced,
-  - how supply-chain checks are applied.
+| Stage | Typical issue topics | Typical affected paths |
+|---|---|---|
+| ETL | Ingest bugs, transforms, new source adapters | `src/pipelines/`, `data/<domain>/{raw,work,processed}/` |
+| Catalogs | STAC/DCAT/PROV generation/validation | `data/stac/`, `data/catalog/dcat/`, `data/prov/`, `schemas/` |
+| Graph | Ontology, ingest mapping, migrations | `src/graph/`, `data/graph/`, `docs/graph/` |
+| API boundary | New endpoints, payload changes, redaction rules | `src/server/`, `schemas/`, `tests/` |
+| UI | Layer registry, map/timeline, Focus Mode UX | `web/` |
+| Story Nodes | Narrative gaps, missing citations, publishing | `docs/reports/story_nodes/` |
+| Focus Mode | Evidence display rules, synthesis constraints | `web/` + story node docs |
 
-This separation helps keep CI/CD **governable**:
-- policies remain visible in orchestrators,
-- primitives remain reusable and consistent,
-- changes to shared behavior can be reviewed in one place.
+### Required fields in every issue
+Regardless of template, include:
+- What you expected vs what happened
+- Pipeline stage(s) impacted
+- Affected paths (folders/files if known)
+- Evidence and provenance references where applicable
+- Sensitivity assessment
+- Acceptance criteria
 
----
+### Data Addition Request minimum checklist
+If you are proposing a new dataset or source, include:
+- Source link or identifier
+- License and redistribution terms
+- Temporal coverage
+- Spatial coverage
+- Data type and format
+- Sensitivity and redaction needs
+- What you want KFM to produce
+  - raw/work/processed artifacts
+  - catalog records (STAC/DCAT)
+  - provenance (PROV bundle)
+  - downstream linkage targets (graph entities, story nodes)
+
+### Bug Report minimum checklist
+- Steps to reproduce
+- Expected behavior
+- Actual behavior
+- Logs or error output
+- Environment details
+- Smallest failing example if possible
+
+### API or contract change minimum checklist
+- Proposed change summary and motivation
+- Backward compatibility considerations
+- Affected schema(s) and tests
+- Sensitivity and redaction implications
 
 ## 🗺️ Diagrams
 
 ~~~mermaid
-flowchart TB
-  A["Top-level workflow\n(.github/workflows/*.yml)\nPR / push / schedule"] --> B["Calls reusable workflow\nuses: ./.github/workflows/reusable/*.yml"]
-  B --> C["Reusable workflow runs\n(workflow_call)\nInputs + secrets + outputs"]
-  C --> D["Artifacts + reports\n(telemetry, logs, validation JSON)"]
-  D --> E["Caller aggregates + gates\n(required checks / release rules)"]
+flowchart LR
+  I[GitHub Issue] --> S[Pipeline stage tag]
+  S --> P1[ETL and pipelines]
+  S --> P2[STAC DCAT PROV catalogs]
+  S --> P3[Graph]
+  S --> P4[API boundary]
+  S --> P5[UI]
+  S --> P6[Story Nodes]
+  S --> P7[Focus Mode]
+  P2 --> E[Evidence artifacts with IDs]
+  P3 --> E
+  P4 --> U[Contracted payloads]
+  P5 --> U
 ~~~
-
----
-
-## 🧱 Architecture
-
-### 1. Interface contract (workflow_call)
-
-A reusable workflow MUST implement `on: workflow_call` and define a stable interface.
-
-Example skeleton:
-
-~~~yaml
-name: "Reusable · <purpose>"
-
-on:
-  workflow_call:
-    inputs:
-      run_mode:
-        type: string
-        required: false
-        default: "ci"
-      fail_fast:
-        type: boolean
-        required: false
-        default: true
-    secrets:
-      OPTIONAL_TOKEN:
-        required: false
-    outputs:
-      report_path:
-        description: "Path to generated report artifact"
-        value: ${{ jobs.<job_id>.outputs.report_path }}
-
-jobs:
-  <job_id>:
-    runs-on: ubuntu-latest
-    outputs:
-      report_path: ${{ steps.set_outputs.outputs.report_path }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@<PINNED_VERSION_OR_SHA>
-
-      - name: Run
-        run: echo "do work"
-
-      - id: set_outputs
-        run: echo "report_path=reports/<file>.json" >> "$GITHUB_OUTPUT"
-~~~
-
-### 2. Calling pattern (from top-level workflows)
-
-Callers invoke reusables using `uses:` at the job level:
-
-~~~yaml
-jobs:
-  shared_validation:
-    name: "Shared Validation"
-    uses: ./.github/workflows/reusable/<workflow>.yml
-    permissions:
-      contents: read
-      actions: read
-    with:
-      run_mode: "pr"
-      fail_fast: true
-    secrets:
-      OPTIONAL_TOKEN: ${{ secrets.OPTIONAL_TOKEN }}
-~~~
-
-### 3. Naming and structure
-
-Recommended naming conventions:
-
-- File: `reusable_<domain>_<purpose>.yml`
-  - Examples (illustrative): `reusable_docs_validate.yml`, `reusable_security_audit.yml`
-- Job names should be short, consistent, and stable.
-- Inputs should prefer:
-  - `string`, `boolean`, `number` types,
-  - stable enums documented in the workflow description.
-
-### 4. Security guardrails (mandatory)
-
-Reusable workflows SHOULD:
-
-- avoid `pull_request_target` unless explicitly justified and separately governed,
-- avoid writing to the repo unless required and explicitly granted by caller permissions,
-- treat all PR content as untrusted input,
-- minimize secret exposure:
-  - pass secrets only to the job/steps that require them,
-  - never echo secrets,
-  - never write secrets into artifacts or logs.
-
----
-
-## 🧪 Validation & CI/CD
-
-Reusable workflows are subject to the same governance standards as orchestrators.
-
-Minimum expectations:
-
-- YAML structure must be valid and consistent.
-- `workflow_call` interface changes MUST be treated as breaking changes unless backwards-compatible.
-- Any reusable workflow producing artifacts MUST:
-  - clearly name and document the artifact(s),
-  - use stable paths and formats,
-  - emit a concise run summary.
-
-Recommended checks (implementation-dependent):
-
-- workflow linting (YAML + GitHub Actions best practices),
-- pinned action verification,
-- permissions review (least privilege),
-- secret/PII scanning across emitted artifacts.
-
----
 
 ## 📦 Data & Metadata
 
-Reusable workflows MAY emit:
+### Inputs
 
-- validation reports (JSON),
-- schema lint results,
-- provenance/lineage events (where configured),
-- telemetry summaries for aggregation.
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Issue fields | GitHub issue form | Contributor | Required fields per template |
+| Evidence links | URLs or repo paths | Contributor | Must be attributable and license-aware |
+| Affected paths | Repo paths | Contributor | Must align with canonical homes |
 
-Where artifacts are emitted:
+### Outputs
 
-- use machine-readable formats first (`.json`, `.sarif`, `.xml` where applicable),
-- keep filenames stable to support deterministic downstream aggregation,
-- avoid embedding restricted or sensitive content.
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Issue triage labels | GitHub labels | GitHub | Maintainer conventions |
+| Linked artifacts | Links to PRs, docs, datasets | Repo + GitHub | Must reference canonical locations |
+| Validation notes | Markdown | Issue comments | Repeatable steps when applicable |
 
----
+### Sensitivity and redaction
+- Do not post secrets, credentials, tokens, or private keys.
+- Do not post private personal data.
+- If a location or community-sensitive attribute is involved, describe it at an appropriate level of generalization.
+
+### Quality signals
+- Repro steps that another contributor can follow
+- Sample data or a minimal failing case
+- Clear acceptance criteria
+- Provenance references for data and narrative claims
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-This folder primarily concerns CI/CD infrastructure, but CI/CD outputs are still provenance-relevant:
+### STAC
+- When issues mention geospatial assets, include relevant STAC collection and item IDs if known.
+- If a new dataset is proposed, describe the intended STAC collection grouping and item granularity.
 
-- Each reusable workflow run can be modeled as a `prov:Activity`.
-- Outputs (reports, logs, telemetry JSON) are `prov:Entity` artifacts.
-- The caller workflow and repository policies act as `prov:Plan` references.
+### DCAT
+- For dataset-centric issues, include a stable dataset identifier and license mapping expectations.
 
-Where CI/CD artifacts are cataloged, they SHOULD carry:
+### PROV-O
+- For pipeline-related issues, reference run IDs and provenance fields:
+  - `prov:wasDerivedFrom`
+  - `prov:wasGeneratedBy`
 
-- version (repo release or workflow version),
-- timestamp,
-- input scope (paths changed, dataset IDs where applicable),
-- governance flags (if the workflow enforces FAIR+CARE or sovereignty constraints).
+### Versioning
+- When an issue describes changes to existing assets or catalogs, include predecessor links or version notes.
 
----
+## 🧱 Architecture
+
+### Components
+
+| Component | Responsibility | Interface |
+|---|---|---|
+| ETL | Ingest and normalize | Configs and run logs |
+| Catalogs | STAC/DCAT/PROV | JSON plus validators |
+| Graph | Neo4j | Cypher behind API layer |
+| APIs | Serve contracts | REST/GraphQL |
+| UI | Map and narrative | API calls only |
+| Story Nodes | Curated narrative | Docs and graph linkage |
+| Focus Mode | Contextual synthesis | Provenance-linked rules |
+
+### Interfaces and contracts
+
+| Contract | Location | Versioning rule |
+|---|---|---|
+| JSON schemas | `schemas/` | Semver plus changelog |
+| API schemas | `src/server/` plus docs | Contract tests required |
+| Layer registry | `web/` | Schema-validated |
+
+### Extension points checklist
+- [ ] Data domain adds under `data/<domain>/...`
+- [ ] Catalog validation covers new STAC/DCAT/PROV outputs
+- [ ] PROV includes run activity and agent identifiers
+- [ ] Graph mappings align with ontology and migrations
+- [ ] API changes use contract extensions and tests
+- [ ] UI changes update layer registry where applicable
+- [ ] Story Nodes and Focus Mode keep provenance references enforced
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+- If the issue affects Focus Mode behavior, identify:
+  - which entities become focusable
+  - what evidence must be shown
+  - any redaction or uncertainty rules
+
+### Provenance-linked narrative rule
+- When issues propose narrative claims, require links to dataset or document identifiers that can be traced through catalogs and provenance.
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Markdown protocol checks
+- [ ] Schema validation for STAC/DCAT/PROV
+- [ ] Graph integrity checks
+- [ ] API contract tests
+- [ ] UI schema checks
+- [ ] Security and sovereignty checks where applicable
+
+### Reproduction
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) validate schemas
+# 2) run unit/integration tests
+# 3) run doc lint
+~~~
 
 ## ⚖ FAIR+CARE & Governance
 
-Reusable workflows are governance-bearing infrastructure:
+### Review gates
+- Identify who should review the issue
+- Call out whether the change is expected to require governance or community review
 
-- They MUST NOT weaken sovereignty protections or bypass masking/generalization checks.
-- They MUST keep enforcement deterministic and reviewable.
-- They MUST remain compatible with repository-wide scanning (secrets, PII, policy checks).
+### CARE and sovereignty considerations
+- If content impacts a community or contains potentially sensitive cultural or location information, describe required protection rules.
 
-If a reusable workflow is introduced that affects sensitive data handling, it MUST be reviewed under:
-
-- `governance_ref`
-- `ethics_ref`
-- `sovereignty_policy`
-
----
+### AI usage constraints
+- Do not request prohibited AI actions such as inferring sensitive locations.
+- Ensure any AI-related proposals include provenance and uncertainty expectations.
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-13 | Initial governed README for `.github/workflows/reusable/`; defines reusable workflow purpose, interface contracts, security guardrails, and governance alignment. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-22 | Initial issue template README | TBD |
 
 ---
 
-<div align="center">
-
-🧩 **KFM Reusable Workflows Library**  
-Deterministic Primitives · Least Privilege · Governance-Aware CI/CD
-
-[⬅ Workflows Master Architecture](../README.md) ·
-[🏛️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Templates: `docs/templates/`
