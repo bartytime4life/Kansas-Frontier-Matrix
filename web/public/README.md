@@ -1,329 +1,290 @@
 ---
-title: "🌐 KFM v11.2.3 — Web Public Assets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-description: "Governed collection of immutable public-facing assets (icons, images, fonts, PWA metadata) used across the KFM Web Application and FAIR+CARE dashboards."
+title: "KFM Web Public Assets"
 path: "web/public/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-03"
+version: "v1.0.0"
+last_updated: "2025-12-21"
+status: "draft"
+doc_kind: "Readme"
+license: "CC-BY-4.0"
 
-release_stage: "Stable · Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Web · FAIR+CARE Council Oversight"
-content_stability: "stable"
-backward_compatibility: "v11.0.0 → v11.2.3 web-public-assets-contract compatible"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256-of-this-file>"
-
-doc_uuid: "urn:kfm:web-public-readme-v11.2.3"
-semantic_document_id: "kfm-doc-web-public-v11.2.3"
-event_source_id: "ledger:kfm:web:public:assets:readme:v11.2.3"
-
-sbom_ref: "../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../releases/v11.2.3/web-public-telemetry.json"
-telemetry_schema: "../schemas/telemetry/web-public-v4.json"
-energy_schema: "../schemas/telemetry/energy-v2.json"
-carbon_schema: "../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
-faircare_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_ref: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT / CC-BY 4.0"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-doc_kind: "Assets"
-intent: "web-public-governance"
-status: "Active / Enforced"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public / Mixed-Risk"
-sensitivity: "General"
-sensitivity_level: "Medium"
-indigenous_data_flag: true
-public_benefit_level: "High"
-risk_category: "Moderate"
-redaction_required: true
+doc_uuid: "urn:kfm:doc:web:public:readme:v1.0.0"
+semantic_document_id: "kfm-web-public-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:public:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-ontology_alignment:
-  schema_org: "MediaObject"
-  cidoc: "E73 Information Object"
-  prov_o: "prov:Entity"
-  owl_time: "TemporalEntity"
-  geosparql: "geo:FeatureCollection"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-json_schema_ref: "../schemas/json/web-public-readme-v11.json"
-shape_schema_ref: "../schemas/shacl/web-public-readme-v11.shape.ttl"
-
-immutability_status: "version-pinned"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-
-ttl_policy: "12 Months"
-sunset_policy: "Replaced upon next Web Public Assets protocol update"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🌐 **Kansas Frontier Matrix — Web Public Assets**  
-`web/public/README.md`
-
-Governed collection of **immutable public-facing assets** (icons, images, fonts, PWA metadata) used across the KFM Web Application and FAIR+CARE dashboards.
-
-All assets strictly follow:
-
-**FAIR+CARE**,  
-**Sovereignty & cultural-sensitivity governance**,  
-**WCAG 2.1 AA accessibility**,  
-**ISO 19115 lineage**, and  
-**KFM-MDP v11.2.3 formatting & metadata rules**.
-
-</div>
-
----
+# KFM Web Public Assets
 
 ## 📘 Overview
 
-`web/public/` contains **static, cacheable, CDN-friendly assets** that must meet:
+### Purpose
+- `web/public/` contains **static, version-controlled assets** that are served verbatim to the browser by the web client.
+- This README defines what is allowed in `web/public/` and what must live elsewhere (datasets, catalogs, governed narratives, etc.), preserving KFM’s pipeline ordering and API boundary.
 
-- ✔️ **Checksum integrity (SHA-256)**  
-- ✔️ **Explicit licensing (MIT / CC-BY / CC0)**  
-- ✔️ **Alt text & accessibility annotations**  
-- ✔️ **FAIR+CARE sensitivity classification**  
-- ✔️ **Provenance & ledger linkage (DCAT + PROV-O)**  
-- ✔️ **Sovereignty constraints for sensitive imagery**  
-- ✔️ **Sustainability telemetry (energy, carbon)**  
+### Scope
+| In Scope | Out of Scope |
+|---|---|
+| UI-only static assets (favicons, logos, UI icons, placeholder images, `robots.txt`, `site.webmanifest`) | Any dataset outputs (`.geojson`, `.tif`, `.parquet`, etc.), STAC/DCAT/PROV catalogs, or cached API responses |
+| Styling assets needed by the UI (e.g., fonts, sprites) **when they do not encode sensitive information** | Story Node markdown, Focus Mode narrative text, evidence bundles, or citation data |
+| Public legal/attribution text needed by the UI | Secrets/config files (`.env`, API keys), user uploads, or generated build artifacts |
 
-Static assets in this directory **enter the KFM public domain surface**, making correctness, ethics, and lineage mandatory.
+### Audience
+- Primary: Frontend contributors working in `web/`
+- Secondary: API/graph contributors who expose catalog + focus bundles to the UI; governance reviewers
 
----
+### Definitions
+- Glossary: `docs/glossary.md`
+- Terms used here:
+  - **Public asset**: A file served as-is to the browser (no runtime governance/redaction applied).
+  - **API boundary**: The rule that UI consumes graph + catalog data through `src/server/` endpoints, not by reading Neo4j directly.
+  - **Story Node**: A governed narrative artifact rendered in Focus Mode (stored under `docs/reports/story_nodes/` per the v13 blueprint).
 
-## 🗂️ Directory Layout (v11.2.3 · Mixed-Mode Safe)
+### Key artifacts
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master pipeline ordering | `docs/MASTER_GUIDE_v12.md` | Core maintainers | Canonical “ETL → catalogs → graph → APIs → UI → Story Nodes → Focus Mode” ordering |
+| v13 redesign blueprint | `docs/architecture/` (blueprint reference) | Architecture | Defines UI/API boundary + Story Node placement |
+| UI schemas | `schemas/ui/` | UI maintainers | Validates layer registries and UI configuration |
+| Story nodes directory | `docs/reports/story_nodes/` | Story maintainers | Governed narrative sources; not stored in `web/public/` |
+| This README | `web/public/README.md` | UI maintainers | Directory contract |
+
+### Definition of done
+- [ ] Front-matter complete and `path` matches `web/public/README.md`
+- [ ] Scope table clearly separates static assets vs governed data artifacts
+- [ ] File tree reflects the actual contents of `web/public/`
+- [ ] Any third-party asset added includes attribution + license note
+- [ ] Validation steps are listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations are explicit for public assets
+
+## 🗂️ Directory Layout
+
+### This document
+- `path`: `web/public/README.md`
+- Update when:
+  - Adding/removing any public asset with user-visible impact (icons, logos, manifest, etc.)
+  - Changing how the UI references/loads static assets
+  - Introducing new governance constraints for static content (e.g., redaction rules that require moving assets out of `public/`)
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Frontend | `web/` | React + map client code |
+| Frontend public assets | `web/public/` | Static assets served verbatim |
+| API layer | `src/server/` | Contracted endpoints for catalogs, graph queries, focus bundles |
+| Graph | `src/graph/` | Graph build + ontology bindings |
+| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
+| Schemas | `schemas/` | JSON schemas (including UI schemas) |
+| STAC outputs | `data/stac/` | STAC collections + items |
+| DCAT outputs | `data/catalog/dcat/` | DCAT 3 dataset records |
+| PROV outputs | `data/prov/` | W3C PROV activities + entities |
+| Story nodes | `docs/reports/story_nodes/` | Narrative sources (versioned) |
+
+### Expected file tree for this sub-area
+The exact contents depend on the chosen frontend build tooling. Keep `web/public/` limited to static assets that are safe to expose publicly.
 
 ~~~text
-web/public/
-├── 📄 README.md                    # This document (governance & layout)
-│
-├── 🎨 icons/                       # SVG/Raster iconography
-│   ├── 🧭 app/                     # App-wide icons (PWA, splash, home-screen)
-│   ├── 🧱 ui/                      # UI icons (buttons, controls, navigation)
-│   └── 🧾 metadata.json            # Icon registry: license, checksum, a11y tags, provenance
-│
-├── 🖼️ images/                      # Public imagery (governed by CARE rules)
-│   ├── 🧩 ui/                      # UI-only images (non-sensitive, decorative + illustrative)
-│   ├── 🗺️ maps/                    # Base maps, historic layer previews (generalized)
-│   ├── 📊 data/                    # Data visual previews (graphs, thumbnails, diagrams)
-│   ├── ⚖️ governance/              # CARE/provenance legend graphics & policy diagrams
-│   ├── 📜 archive/                 # Historical images (requires provenance + context)
-│   ├── 🪶 sovereignty/             # Cultural/Indigenous/sensitive images (strict governance)
-│   └── 🧾 metadata.json            # Central registry for all image assets
-│
-├── 🔤 fonts/                       # Open-source fonts (WOFF2)
-│   ├── <font-files>                # Inter, Source Serif, Atkinson Hyperlegible, etc.
-│   └── 🧾 metadata.json            # Font licensing + checksum + usage notes
-│
-├── 📱 manifest.json                # PWA metadata (name, icons, theme, scope)
-└── 🧾 metadata.json                # Root FAIR+CARE + provenance + sustainability registry
+📁 web/
+├── 📁 public/
+│   ├── 📄 README.md
+│   ├── 📄 robots.txt            # optional
+│   ├── 📄 site.webmanifest      # optional
+│   ├── 🖼️ favicon.ico           # optional
+│   ├── 🖼️ logo.svg              # optional
+│   ├── 📁 icons/                # optional (UI icons)
+│   │   └── 🖼️ kfm-marker.svg
+│   └── 📁 images/               # optional (UI images)
+│       └── 🖼️ placeholder.png
+└── … (React app source, build config, etc.)
 ~~~
 
-**Directory contract:**
+## 🧭 Context
 
-- Every asset **MUST** be represented in the appropriate `metadata.json`.  
-- No asset is considered **published** until:
-  - It appears in `metadata.json` with checksum, license, FAIR+CARE block, and provenance.  
-  - It passes the FAIR+CARE + sovereignty audit pipeline.  
+### Background
+`web/public/` is served “as-is” by the frontend host/dev-server. Because no runtime redaction or provenance checks occur for these files, anything placed here is effectively **published content**.
 
----
+### Assumptions
+- The frontend toolchain treats `web/public/` as the static root for browser requests.
+- The UI references assets by stable, version-controlled paths (avoid runtime-generated filenames when possible).
 
-## 🔀 Mixed-Mode Rule (v11.2.3)
+### Constraints / invariants
+- The canonical pipeline ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- The frontend consumes governed data only via the API layer (no direct graph access).
+- `web/public/` must not contain:
+  - raw/processed datasets
+  - STAC/DCAT/PROV JSON outputs
+  - cached API responses
+  - sensitive location details (explicit coordinates, site names under restriction, etc.)
+- Any UI element that communicates “evidence” or “provenance” should be driven by API payloads (IDs, citations, run logs), not hard-coded in static files.
 
-- **`images/sovereignty/`**  
-  - Treated as **SENSITIVE / Mixed-Risk**.  
-  - Requires:
-    - **CARE + sovereignty review**  
-    - H3 generalization if spatial context is implied  
-    - Indigenous-rights safeguards and contextual framing  
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Does our chosen frontend build tool treat `web/public/` as the final static root? | UI maintainers | TBD |
 
-- **All other subdirectories**  
-  - Treated as **GENERAL PUBLIC**, but still require:
-    - FAIR+CARE review  
-    - Checksum and explicit license  
-    - Alt text / accessibility annotations (where applicable)  
+### Future extensions
+- Add a lightweight inventory table below for tracking third-party assets, licenses, and review sign-off.
+- Add CI checks (if not already present) to prevent large binaries or restricted file types from landing in `web/public/`.
 
-No asset under `images/sovereignty/` may be:
+## 🗺️ Diagrams
 
-- Used without explicit context in UI.  
-- Embedded into third-party contexts without governance review.  
-
----
-
-## 🧭 Governance & Publication Workflow (v11.2.3)
-
+### System / dataflow diagram
 ~~~mermaid
-flowchart TD
-    A["Asset Creation<br/>(Design · Archive Import · Data Viz)"]
-        --> B["FAIR+CARE + Sovereignty Audit<br/>(Ethics · A11y · Sensitivity)"]
-
-    B --> C["Checksum + License + Metadata Registration<br/>(metadata.json · SPDX · JSON-LD)"]
-
-    C --> D["Governance Ledger Sync<br/>(ISO 19115 · DCAT · PROV-O Ledger Entry)"]
-
-    D --> E["Telemetry Export<br/>(Energy · CO₂e · Access Counts)"]
-
-    E --> F["Publication<br/>Immutable CDN · Cache-Control=31536000, immutable"]
+flowchart LR
+  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[React/Map UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
 ~~~
 
-**All five stages are mandatory** before an asset becomes publicly accessible.
+### Sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant Browser
+  participant Static as web/public (static)
+  participant API as src/server (API)
+  participant Graph as Neo4j
 
-CI must verify that:
-
-- Every asset in `icons/`, `images/`, `fonts/` appears in **exactly one** `metadata.json`.  
-- Every `metadata.json` entry has:
-  - Valid checksum  
-  - Valid license string  
-  - FAIR+CARE block  
-  - Provenance + sustainability block  
-
----
-
-## 🧾 Example Asset Metadata (v11 Schema)
-
-~~~json
-{
-  "id": "kfm_public_img_kansas_topo_1890_v11",
-  "path": "images/maps/ks_topography_1890.webp",
-  "checksum_sha256": "8dbcd91aef7c0b32298e243c93e07aee9d5e4b3219d2...",
-  "license": "CC-BY-4.0",
-  "alt_text": "Topographic map of Kansas published circa 1890.",
-  "category": "maps",
-  "sensitivity": "general",
-  "faircare": {
-    "fair_status": "certified",
-    "care_label": "Public",
-    "sovereignty_notes": null
-  },
-  "provenance": {
-    "source_uri": "https://www.loc.gov/...",
-    "digitized_by": "KFM Archives",
-    "lineage": ["scan", "optimize", "webp-compress"]
-  },
-  "sustainability": {
-    "bytes": 244815,
-    "energy_wh": 0.028,
-    "co2_g": 0.041
-  },
-  "timestamp": "2025-11-24T17:21:00Z"
-}
+  Browser->>Static: GET /logo.svg (static asset)
+  Browser->>API: GET /v1/focus/{entity_id}
+  API->>Graph: Query (apply governance/redaction + attach provenance)
+  Graph-->>API: Context bundle + provenance refs
+  API-->>Browser: Narrative + citations + evidence panel data
 ~~~
 
-**Minimum required fields per asset:**
+## 📦 Data & Metadata
 
-- Stable `id` + `path`  
-- `checksum_sha256`  
-- `license` (SPDX-compatible string)  
-- `alt_text` (or explicit `"alt_text": null` with justification)  
-- `category`  
-- `sensitivity`  
-- `faircare` block  
-- `provenance` block  
-- `sustainability` block  
+### Inputs
+| Input | Typical format | Source | Notes |
+|---|---|---|---|
+| UI brand assets | SVG/PNG/ICO | Design system / UI maintainers | Must be safe for public release |
+| UI icons | SVG/PNG | UI maintainers | Prefer generic icons (no sensitive place names) |
+| Static config for browser | TXT/JSON | UI maintainers | e.g., `robots.txt`, `site.webmanifest` |
 
----
+### Outputs
+| Output | Sensitivity | Consumed by | Notes |
+|---|---|---|---|
+| Public static assets | public | Browsers | No governance/redaction applied at request time |
 
-## 📊 FAIR+CARE Governance Matrix (v11.2.3)
+### Sensitivity and redaction
+- Treat everything in `web/public/` as **public**.
+- If an asset might encode restricted knowledge (e.g., an annotated map image, a site-specific diagram, or anything tied to sensitive locations), it must not be stored here. Serve it via an API that can enforce policy.
 
-| Principle                 | Enforcement                                      | Owner                |
-|---------------------------|--------------------------------------------------|----------------------|
-| **Findable**             | IDs, checksums, JSON-LD metadata                 | @kfm-data            |
-| **Accessible**           | Alt text, semantic labeling, WCAG 2.1 AA         | @kfm-accessibility   |
-| **Interoperable**        | ISO 19115, DCAT 3.0, PROV-O                      | @kfm-architecture    |
-| **Reusable**             | MIT/CC-BY licenses + provenance                  | @kfm-design          |
-| **Collective Benefit**   | Non-extractive public imagery                    | @faircare-council    |
-| **Authority to Control** | Sovereignty checks for sensitive content         | @kfm-governance      |
-| **Responsibility**       | Ethical representation; contextual warnings      | @kfm-ethics          |
+### Quality signals
+- File sizes remain reasonable for web delivery.
+- Assets are optimized (lossless where needed) and named consistently.
+- Any third-party asset includes attribution and license notes.
 
-Assets under `images/sovereignty/` are subject to **strongest control** across all matrix dimensions.
+## 🌐 STAC, DCAT & PROV Alignment
+- `web/public/` does **not** store catalog artifacts.
+- Catalog + provenance are produced and stored under:
+  - `data/stac/`
+  - `data/catalog/dcat/`
+  - `data/prov/`
+- The UI accesses catalogs and provenance through API endpoints so governance can be applied consistently.
 
----
+## 🧱 Architecture
 
-## 🌱 Sustainability Targets (v11.2.3)
+### Components
+| Component | Responsibility | Owner |
+|---|---|---|
+| `web/public/` | Host static UI assets | UI maintainers |
+| `web/` app | Render map UI + Focus Mode | UI maintainers |
+| `src/server/` | Serve catalog + focus bundles (apply governance/redaction) | API maintainers |
+| `src/graph/` + Neo4j | Store/query semantic graph + provenance refs | Graph maintainers |
 
-| Metric            | Target         | Verified By       |
-|-------------------|----------------|-------------------|
-| Max image weight  | ≤ 350 KB       | Build pipeline    |
-| Energy / view     | ≤ 0.035 Wh     | Telemetry         |
-| CO₂ / view        | ≤ 0.045 g      | Telemetry         |
-| Renewable hosting | 100% (RE100)   | Infra audit       |
-| A11y score        | ≥ 98           | A11y CI           |
+### Interfaces / contracts
+- Static assets: referenced by deterministic paths (e.g., `/logo.svg`) and served directly.
+- Governed data: requested from API endpoints that return provenance-linked payloads (Story Nodes, focus bundles, layer registries).
 
-Assets exceeding thresholds must:
+### Extension points checklist
+- [ ] Add a new icon/image → ensure it is public-safe and add attribution (if third-party)
+- [ ] Reference the asset from UI code or layer registry (if applicable)
+- [ ] If the asset represents dataset-derived output → do **not** place in `web/public/`; serve via API instead
+- [ ] Update this README’s file tree and “third-party assets” inventory (below)
 
-- Be **recompressed** or redesigned, or  
-- Be explicitly whitelisted with justification and governance sign-off.
+### Third-party assets inventory
+| Asset path | License | Source | Reviewed by | Notes |
+|---|---|---|---|---|
+| TBD | TBD | TBD | TBD | TBD |
 
----
+## 🧠 Story Node & Focus Mode Integration
+- Story Nodes are governed narrative artifacts and should live under `docs/reports/story_nodes/` (not in `web/public/`).
+- `web/public/` may include **presentation-only** resources for Story Nodes (icons, UI chrome), but must not include narrative text, evidence bundles, or dataset extracts.
+- Focus Mode must present provenance/evidence panels driven by API payloads, not static hard-coding.
 
-## 📡 Telemetry Sink Paths (v11.2.3)
+## 🧪 Validation & CI/CD
+- [ ] No restricted file types or dataset artifacts are committed into `web/public/`
+- [ ] No secrets/config files are present
+- [ ] Third-party assets inventory updated (if applicable)
+- [ ] Links in this README resolve within the repo
+- [ ] UI build/lint/test passes (see `web/` tooling docs)
 
-Public asset telemetry and audit outputs are written to:
-
+### Reproduction
 ~~~text
-../releases/v11.2.3/web-public-telemetry.json
-../docs/reports/telemetry/web_public_assets.json
-../docs/reports/audit/web_public_assets_ledger.json
+# TBD: add repo-specific commands once the web toolchain is finalized
+# Example:
+#   cd web
+#   <install>
+#   <test>
 ~~~
 
-These files capture:
+### Telemetry signals
+| Signal | Source | Where recorded |
+|---|---|---|
+| Static asset inventory | repo tree | `web/public/README.md` |
+| UI build status | CI | `.github/workflows/` |
 
-- Aggregate access counts (non-identifying)  
-- Energy and CO₂ estimates per asset category  
-- Governance/audit events (additions, deprecations, redactions)
+## ⚖ FAIR+CARE & Governance
 
-Telemetry must never include:
+### Review gates
+- UI maintainers review all additions to `web/public/`.
+- Governance review required if an asset could relate to sensitive locations, communities, or restricted material.
 
-- User-level identifiers  
-- Raw IPs, user agents, or location hints beyond coarse region (if any)
+### CARE / sovereignty considerations
+- Do not publish assets that could reveal culturally sensitive or restricted site information.
+- Prefer serving such content through governed APIs that can generalize or redact as required.
 
----
-
-## 🧪 CI & Validation Expectations
-
-CI jobs (indicative):
-
-- `web-public-metadata-validate.yml`  
-- `web-public-a11y-check.yml`  
-- `web-public-sustainability-check.yml`  
-
-CI MUST:
-
-- Fail if an asset exists without a corresponding `metadata.json` entry.  
-- Fail if checksums do not match actual file content.  
-- Warn or fail when:
-  - Image size budgets are violated.  
-  - Alt text is missing or low-quality.  
-  - FAIR+CARE or sovereignty flags are inconsistent with placement.
-
----
+### AI usage constraints
+- Allowed: summarize/structure/translate/index this README.
+- Prohibited: generating new governance policy or inferring sensitive locations from asset content.
 
 ## 🕰️ Version History
-
-| Version  | Date       | Summary                                                                                   |
-|----------|------------|-------------------------------------------------------------------------------------------|
-| v11.2.3  | 2025-12-03 | Aligned with KFM-MDP v11.2.3; updated paths, telemetry references, governance language, and sustainability targets; clarified Mixed-Mode rules. |
-| v11.0.0  | 2025-11-24 | Full upgrade to KFM-MDP v11; added sovereignty rules, Mixed-Mode classification, energy/carbon v2 fields, new directory tree. |
-| v10.3.1  | 2025-11-13 | Aligned with telemetry v2 and FAIR+CARE v10.                                             |
-| v10.2.2  | 2025-11-12 | Added JSON-LD and checksum enforcement.                                                   |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-21 | Initial `web/public/` README | TBD |
 
 ---
-
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix · MIT / CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-Machine-Extractable · Version-Pinned  
-
-[⬅ Back to Web Overview](../README.md) · [⬅ Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
