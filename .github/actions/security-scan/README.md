@@ -1,8 +1,8 @@
 ---
-title: "GitHub Action — Security Scan"
+title: "KFM GitHub Action — Security Scan"
 path: ".github/actions/security-scan/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-22"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -25,7 +25,7 @@ classification: "open"
 jurisdiction: "US-KS"
 
 doc_uuid: "urn:kfm:doc:github-actions:security-scan:readme:v1.0.0"
-semantic_document_id: "kfm-action-security-scan-readme-v1.0.0"
+semantic_document_id: "kfm-github-actions-security-scan-readme-v1.0.0"
 event_source_id: "ledger:kfm:doc:github-actions:security-scan:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
@@ -41,239 +41,289 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# GitHub Action Security Scan
+# KFM GitHub Action — Security Scan
 
 ## 📘 Overview
 
 ### Purpose
-- Provide a reusable GitHub Action wrapper to run the repository’s security scanning gates in CI.
-- Standardize outputs (job summary + artifacts) and failure behavior (exit status / thresholds) across workflows.
+
+- Document the **local GitHub Action** in this directory (`.github/actions/security-scan/`) and how to use it as a **CI gate**.
+- Capture the action’s **high-level contract** (what it is responsible for, how it is invoked, and what “pass/fail” means), without duplicating the source-of-truth in `action.yml`.
 
 ### Scope
+
 | In Scope | Out of Scope |
 |---|---|
-| Running one or more repository-approved scanners (SAST, secrets, dependency scanning, etc.) | Remediation, automatic patching, or approving risk exceptions |
-| Producing machine-readable artifacts (for example SARIF or SBOM) and a human-readable step summary | Replacing GitHub org/repo security settings and policies |
-| Enforcing CI hygiene for KFM outputs and artifacts | Scanning external systems unless explicitly wired in a workflow |
+| How to invoke this action from workflows <br/> What categories of checks it enforces (security + sovereignty) <br/> Expected failure behavior (CI gate / branch protection) <br/> Redaction rules for scan outputs <br/> Governance expectations for changes to this action | Detailed implementation docs for each underlying scanner tool <br/> Organization-wide security policy text (belongs in `.github/SECURITY.md` + `docs/security/`) <br/> Incident response procedures |
 
 ### Audience
-- Primary: Repo maintainers and CI/CD maintainers
-- Secondary: Contributors who need to understand PR gate failures
+
+- **Primary:** KFM repo maintainers and CI/CD owners (workflow + branch protection maintainers).
+- **Secondary:** Contributors adding data/code/docs who need to understand required CI gates.
 
 ### Definitions
-- Link: `docs/glossary.md` (not confirmed in repo)
-- Terms used in this doc:
-  - **SAST**: Static application security testing
-  - **SCA**: Software composition analysis / dependency scanning
-  - **SARIF**: Static Analysis Results Interchange Format
-  - **SBOM**: Software bill of materials (SPDX or CycloneDX)
+
+- Link: `docs/glossary.md`
+- Terms used in this doc include: **CI gate**, **secret scanning**, **dependency vulnerability scanning**, **sovereignty rules**, **restricted locations**, **redaction/generalization**, **artifact hygiene**.
 
 ### Key artifacts
+
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Composite action definition | `.github/actions/security-scan/action.yml` | Repo maintainers | Authoritative inputs and outputs live here |
-| This README | `.github/actions/security-scan/README.md` | Repo maintainers | Intended behavior and usage examples |
-| Workflows using this action | `.github/workflows/*.yml` | Repo maintainers | Gate configuration per workflow |
+| Security Scan Action (this) | `.github/actions/security-scan/` | CI/CD Maintainers | Reusable action invoked by workflows |
+| Action definition | `.github/actions/security-scan/action.yml` | CI/CD Maintainers | **Source of truth** for inputs/outputs/runtime behavior |
+| Workflows (call sites) | `.github/workflows/*.yml` | CI/CD Maintainers | Where this action is invoked (PR/push/release) |
+| Security policy + standards | `.github/SECURITY.md` + `docs/security/` | Security Owners | Canonical policy location; keep action aligned |
+| Sovereignty policy | `docs/governance/SOVEREIGNTY.md` | Governance Council | Rules that may require additional checks/redaction |
+| Ethics policy | `docs/governance/ETHICS.md` | Governance Council | AI + narrative constraints (if relevant to scan scope) |
 
 ### Definition of done
-- [ ] Front-matter complete and valid
-- [ ] README matches the actual inputs and outputs in `action.yml`
-- [ ] Usage snippet included for common scenarios
-- [ ] Security considerations documented (permissions, token handling, artifact hygiene)
+
+- [ ] Front-matter complete + valid
+- [ ] README matches `action.yml` inputs/outputs and behavior (no drift)
+- [ ] Validation steps listed and repeatable (CI + local where possible)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
+- [ ] Output handling avoids leaking secrets or restricted coordinates
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `.github/actions/security-scan/README.md`
+
+- `path`: `.github/actions/security-scan/README.md` (must match front-matter)
 
 ### Related repository paths
+
 | Area | Path | What lives here |
 |---|---|---|
-| GitHub composite actions | `.github/actions/` | Reusable actions called from workflows |
-| GitHub workflows | `.github/workflows/` | CI pipelines that invoke this action |
-| Security docs | `docs/security/` | Security standards and playbooks (not confirmed in repo) |
-| Telemetry schemas | `schemas/telemetry/` | Scan telemetry schemas (not confirmed in repo) |
+| GitHub local actions | `.github/actions/` | Reusable, repo-local actions (composite or JS actions) |
+| Security scan action | `.github/actions/security-scan/` | This action’s definition + supporting scripts/assets |
+| GitHub workflows | `.github/workflows/` | CI pipelines that call this action |
+| Security policy | `.github/SECURITY.md` | Security policy entry point |
+| Security documentation | `docs/security/` | Detailed security standards, threat model notes, SOPs |
+| Governance policies | `docs/governance/` | FAIR/CARE, ethics, sovereignty policies |
+| Telemetry docs | `docs/telemetry/` | Documented metrics/events (if emitted) |
+| Telemetry schemas | `schemas/telemetry/` | JSON schemas for telemetry event payloads |
 
 ### Expected file tree for this sub-area
+
 ~~~text
 📁 .github/
-├── 📁 actions/
-│   └── 📁 security-scan/
-│       ├── 📄 action.yml
-│       └── 📄 README.md
-└── 📁 workflows/
-    ├── 📄 security.yml
-    └── 📄 ci.yml
+└── 📁 actions/
+    └── 📁 security-scan/
+        ├── 📄 README.md
+        ├── 📄 action.yml
+        └── 📁 scripts/   (optional; only if the action needs helper scripts)
 ~~~
 
 ## 🧭 Context
 
 ### Background
-KFM expects strict validation and governance gates (schema validity, security posture, controlled publication). This action centralizes security scanning so workflows stay consistent as the system grows.
+
+KFM uses CI gates to ensure repository changes remain trustworthy and compliant. Security-focused gates include:
+- **Dependency vulnerability scanning**
+- **Secret/PII leakage prevention** (including checks that outputs don’t inadvertently contain secrets or personal data)
+- **Sovereignty-rule compliance checks** (e.g., ensuring restricted locations are generalized/redacted in outputs)
+
+This action is intended to provide a single reusable place to implement that gate and keep workflows consistent.
 
 ### Assumptions
-- `action.yml` exists and defines the real inputs and outputs for this action.
-- Workflows invoking this action set appropriate permissions for any uploads they enable (for example SARIF to Code Scanning).
-- Scanners are executed either:
-  - locally in the GitHub runner, or
-  - via trusted GitHub Actions that are pinned and reviewed.
+
+- This action is invoked from GitHub workflows (PR + push) and participates in branch protection checks.
+- The action may need access to generated artifacts (e.g., `data/processed/`, `data/stac/`, build outputs) depending on the workflow.
 
 ### Constraints / invariants
-- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode ordering is preserved. This action is a cross-cutting CI gate, not a pipeline stage.
-- No secrets or credentials are committed to the repo or emitted in logs.
-- Artifacts must not leak sensitive data, including precise locations that should be generalized.
+
+- **Least privilege:** workflows should grant only the minimum permissions required for the chosen scanners and reporting.
+- **No sensitive leakage:** do not print raw findings that include secrets/PII/restricted coordinates to public logs.
+- **Sovereignty-aware outputs:** if a dataset or output is labeled restricted, the action must treat it according to `docs/governance/SOVEREIGNTY.md` (redaction/generalization rules).
+- **Architecture boundary stays intact:** UI does not read Neo4j directly; contracts remain at the API layer. (This action must not introduce backdoor data flows.)
+- **Deterministic and reproducible:** scans should be stable and produce consistent results given the same inputs and pinned tool versions.
 
 ### Open questions
-| Question | Owner | Target date |
-|---|---|---|
-| Which scanners are mandatory vs optional for this repo? | TBD | TBD |
-| What are the failing thresholds (severity, allowlist rules)? | TBD | TBD |
-| Should SARIF be uploaded to Code Scanning, or stored only as artifacts? | TBD | TBD |
+
+| Question | Why it matters | Owner | Status |
+|---|---|---|---|
+| Which scanners are used (deps, secrets, code, data-output checks)? | Determines tool configuration, permissions, runtime | CI/CD Maintainers | TBD |
+| Do we publish SARIF (GitHub Code Scanning) or artifacts? | Affects permissions + data leakage risk | Security Owners | TBD |
+| What are the failing thresholds (severity, allowlists, suppression policy)? | Defines consistent “pass/fail” | Security Owners | TBD |
+| What exact “sovereignty compliance checks” are implemented? | Ensures restricted location handling is enforced | Governance Council | TBD |
+| Where are redaction/generalization rules encoded? | Prevents accidental leaks | Governance Council | TBD |
 
 ### Future extensions
-- Add SBOM generation and signature verification as standard outputs.
-- Add supply-chain controls: action pinning enforcement, provenance attestations, dependency allow and deny rules.
 
-## 🗺️ Diagrams
+- Add optional reporting outputs (e.g., SARIF) *only if* redaction and permissions are correct.
+- Add domain-aware checks that validate restricted datasets are generalized prior to publication.
+- Add a “policy profile” input to support different enforcement modes (e.g., `pr` vs `release`), if needed.
 
-### System / dataflow diagram
+## 🖼️ Diagrams
+
+### CI gate placement
+
 ~~~mermaid
 flowchart LR
-  A[GitHub Workflow] --> B[security-scan composite action]
-  B --> C[Scanner 1..N]
-  C --> D[Reports: SARIF / SBOM / JSON]
-  D --> E[PR Check + Step Summary]
-  D --> F[Artifact Upload]
+  Dev[Contributor PR / Push] --> CI[GitHub Workflow Job]
+  CI --> Action[security-scan action]
+  Action --> Findings[Findings / Reports]
+  Findings --> Gate{Pass?}
+  Gate -- yes --> Merge[Merge / Release eligible]
+  Gate -- no --> Block[Block merge + require remediation]
 ~~~
 
-### Sequence diagram
+### Typical invocation sequence
+
 ~~~mermaid
 sequenceDiagram
-  participant GH as GitHub Workflow
-  participant ACT as security-scan action
-  participant SCN as scanners
-  participant ART as artifacts
+  participant Dev as Contributor
+  participant GH as GitHub Actions
+  participant SS as security-scan action
+  participant BP as Branch Protection
 
-  GH->>ACT: Invoke action with inputs
-  ACT->>SCN: Run configured scanners
-  SCN-->>ACT: Findings and reports
-  ACT-->>GH: Fail or pass gate and summary
-  ACT->>ART: Upload reports when enabled
+  Dev->>GH: Open PR / Push commit
+  GH->>SS: Run security scan job step
+  SS-->>GH: Exit 0 (pass) or non-zero (fail)
+  GH-->>BP: Report check status
+  BP-->>Dev: Allow merge (pass) / Block merge (fail)
 ~~~
 
 ## 📦 Data & Metadata
 
 ### Inputs
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Repository workspace | Git checkout | GitHub Actions | Clean checkout; submodules as needed |
-| Scan scope | paths or globs | workflow `with:` | Validate globs; default to whole repo |
-| Failure thresholds | severity list or numeric | workflow `with:` | Validate allowed values |
-| Allowlist | file path | repo or workflow | Ensure allowlist is versioned and reviewed |
-| GitHub token | secret env | GitHub Actions | Least privilege; no echoing |
+
+> Source of truth: `.github/actions/security-scan/action.yml`  
+> Keep this table synced with the `inputs:` section there.
+
+| Input | Format | Required? | Default | Description |
+|---|---|---|---|---|
+| (sync from `action.yml`) | — | — | — | Copy the action’s defined inputs here |
 
 ### Outputs
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Step summary | Markdown | GitHub job summary | Human-readable |
-| Findings report | SARIF recommended | artifact | SARIF v2.1.0 example, not confirmed in repo |
-| Dependency report | JSON | artifact | Tool-specific, not confirmed |
-| SBOM | SPDX or CycloneDX | artifact | Tool-specific, not confirmed |
+
+> Source of truth: `.github/actions/security-scan/action.yml`  
+> Keep this table synced with the `outputs:` section there (if any).
+
+| Output | Format | Description |
+|---|---|---|
+| (sync from `action.yml`) | — | Copy the action’s defined outputs here |
 
 ### Sensitivity & redaction
-- Do not include file contents or secrets in artifacts.
-- Prefer redacted findings where tools support it.
-- If scanning historical documents or datasets that may contain personal data, ensure reports do not expose raw PII.
+
+- Treat scan results as **potentially sensitive**:
+  - Secret findings should be **redacted** in logs.
+  - Data-output checks that touch restricted datasets should **not** emit raw restricted coordinates.
+- Prefer:
+  - Minimal summaries in logs (counts + severity)
+  - Artifacts stored with appropriate access controls (when applicable)
 
 ### Quality signals
-- Scanners and third-party actions should be pinned to immutable versions in workflows.
-- Deterministic behavior: prefer config-driven scanning and stable allowlists.
-- Keep allowlists explicit with rationale and require human review for additions.
+
+- The CI job provides a clear, deterministic **pass/fail**.
+- Findings are categorized (at least: dependency, secret/PII, sovereignty policy).
+- Output is consistent across runs (tool versions pinned, stable config).
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-This action does not generate catalogs directly. It supports KFM governance by helping prevent:
-- publication of secrets inside STAC, DCAT, or PROV outputs,
-- unsafe dependencies entering the pipeline,
-- accidental leakage of sensitive location data into public artifacts.
+This action does **not** produce STAC/DCAT/PROV by itself, but it may:
+
+- Validate that generated outputs **do not violate** sovereignty/security rules (e.g., restricted coordinate leakage).
+- Run as part of the broader CI gate set that also validates STAC/DCAT/PROV schemas.
+
+### Versioning
+
+- This README uses **semver** (`version:` in front-matter).
+- The action versioning strategy should be documented in `action.yml` and/or workflow pinning conventions (local action path vs ref).
 
 ## 🧱 Architecture
 
 ### Components
+
 | Component | Responsibility | Interface |
 |---|---|---|
-| GitHub workflow | Schedules and triggers the scan | `.github/workflows/*.yml` |
-| `security-scan` action | Orchestrates scanners and gate logic | `.github/actions/security-scan/action.yml` |
-| Scanners | Produce findings | Tool-specific CLI or actions |
-| Artifact storage | Stores reports | GitHub Actions artifacts |
+| GitHub workflow job | Orchestrates CI, supplies checkout/build outputs | `.github/workflows/*.yml` |
+| `security-scan` action | Runs configured security + sovereignty checks | `.github/actions/security-scan/action.yml` |
+| Scanner toolchain | Performs actual scanning (deps/secrets/data-output) | Implementation detail (must be documented) |
+| Policies + standards | Define what is allowed/prohibited | `.github/SECURITY.md`, `docs/security/`, governance docs |
+| Branch protection | Enforces gate before merge/release | GitHub settings + required checks |
 
-### Interfaces / contracts
-| Contract | Location | Versioning rule |
-|---|---|---|
-| Action inputs and outputs | `.github/actions/security-scan/action.yml` | Semver; update README and workflow callers |
-| Allowlist format | `docs/security/` or repo root | Schema plus review gate, not confirmed in repo |
+### Contracts & interfaces
 
-### Extension points checklist
-- [ ] Add new scanner with explicit config file and pinned version
-- [ ] Add new report output with schema and format documented
-- [ ] Add allowlist rules with rationale and reviewer requirement
+- **Action contract:** `action.yml` defines:
+  - inputs / outputs
+  - required permissions (if any)
+  - expected runtime behavior
+- **Policy contract:** `.github/SECURITY.md` + `docs/security/` define:
+  - security expectations
+  - allowed tools / disallowed behaviors (e.g., prohibited outbound calls)
+- **Sovereignty contract:** `docs/governance/SOVEREIGNTY.md` defines:
+  - restricted data handling rules (generalization/redaction)
+
+### Extension points (checklist)
+
+- [ ] Add/replace a scanner tool (document the change + rationale)
+- [ ] Add a new policy rule (document and link to governance decision)
+- [ ] Add “release mode” stricter enforcement (document thresholds + permissions)
+- [ ] Add artifact publishing (document redaction + retention + access)
 
 ## 🧠 Story Node & Focus Mode Integration
 
-This is CI infrastructure, but it protects downstream Story Nodes and Focus Mode by enforcing that generated narrative artifacts and catalogs cannot accidentally include secrets or sensitive location details.
+This action does not generate Story Nodes directly. It supports Focus Mode quality by preventing:
+- Secret/PII leakage into published artifacts or data exports
+- Restricted location leakage (sovereignty violations) into public-facing outputs
+
+If your workflow builds narrative artifacts (e.g., story node drafts), include them in the scan scope and apply the same redaction rules.
 
 ## 🧪 Validation & CI/CD
 
 ### Validation steps
-- [ ] Action is invoked in at least one workflow
-- [ ] Reports are generated or explicitly disabled in predictable locations
-- [ ] Failure thresholds behave as expected
-- [ ] Artifacts do not contain secrets
+
+- Run in CI via a workflow that invokes this action.
+- Confirm the action:
+  - Fails when a **known canary secret pattern** is introduced (use *dummy test strings only*; never real secrets).
+  - Fails when restricted outputs violate sovereignty rules (using a controlled test fixture).
+  - Passes when findings are remediated or legitimately allowlisted per policy.
 
 ### Reproduction
-~~~bash
-# Example placeholders — replace with repo-specific scanner commands.
-# The authoritative scanner list lives in `.github/actions/security-scan/action.yml`.
 
-# 1) run secret scan
-# <tool> scan --config <path>
+- CI is the primary execution environment.
+- Local reproduction depends on the scanner toolchain selected by the action.
+  - If local reproduction is required, document the exact commands here once toolchain is confirmed.
 
-# 2) run dependency scan
-# <tool> audit --format json
+### Telemetry signals (if applicable)
 
-# 3) run SAST
-# <tool> analyze --sarif out.sarif
-~~~
-
-### Telemetry signals
-| Signal | Source | Where recorded |
-|---|---|---|
-| Scan duration | GitHub Actions | Job logs |
-| Finding counts by severity | Scanner output | Step summary and artifacts |
-| Allowlist usage | Action logs | Step summary |
+| Signal | Source | Where recorded | Schema |
+|---|---|---|---|
+| TBD | GitHub Actions | `docs/telemetry/` | `schemas/telemetry/` |
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
-- Changes to gating behavior or thresholds require human review.
-- Introducing new external scanners or SaaS uploads requires security review. This process is not confirmed in repo.
+
+Changes to this action can affect repository safety and sovereignty compliance. Treat the following as governance-sensitive:
+- Changing scan coverage (what is/ isn’t scanned)
+- Changing thresholds (what blocks merges)
+- Changing redaction behavior (what is logged or uploaded)
 
 ### CARE / sovereignty considerations
-- Security reports must not reveal culturally sensitive or restricted locations. If findings include coordinates or place names from restricted datasets, redact or generalize before publication.
+
+- Ensure sovereignty-labeled datasets and restricted locations are handled according to:
+  - `docs/governance/SOVEREIGNTY.md`
+- Default stance: **generalize/redact** for public outputs unless policy explicitly allows detail.
 
 ### AI usage constraints
-- This action should not send repository content to third-party AI services.
+
+- Ensure the doc’s `ai_transform_permissions` and `ai_transform_prohibited` remain aligned with intended use.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial README for security-scan action | TBD |
+| v1.0.0 | 2025-12-22 | Initial README scaffold for the security-scan action | TBD |
 
 ---
+
 Footer refs:
 - Master Guide: `docs/MASTER_GUIDE_v12.md`
-- Templates: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
+- Security policy: `.github/SECURITY.md` and `docs/security/`
