@@ -1,10 +1,10 @@
 ---
-title: "GitHub Action — markdown-lint"
+title: "GitHub Action — Markdown Lint"
 path: ".github/actions/markdown-lint/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-22"
 status: "draft"
-doc_kind: "CI Action Doc"
+doc_kind: "Guide"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:github:actions:markdown-lint:readme:v1.0.0"
-semantic_document_id: "kfm-github-action-markdown-lint-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:github:actions:markdown-lint:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:github:action:markdown-lint:v1.0.0"
+semantic_document_id: "kfm-github-action-markdown-lint-v1.0.0"
+event_source_id: "ledger:kfm:doc:github:action:markdown-lint:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,58 +41,55 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# GitHub Action — markdown-lint
+# GitHub Action — Markdown Lint
 
 ## 📘 Overview
 
 ### Purpose
-This composite GitHub Action runs a Markdown lint pass as part of KFM’s CI gates, helping keep governed documentation (including templates, Story Nodes, and subsystem docs) consistent and reviewable.
-
-This action is intended to support the “Markdown protocol checks” expectation for v12-ready contributions, alongside other validators (e.g., schema validation for catalogs).  
+- Provide a single, reusable GitHub Action entrypoint for **Markdown linting** across the repository.
+- Reduce review burden by catching formatting/style issues early in CI, while preserving KFM’s **documentation-as-code** approach.
 
 ### Scope
-
 | In Scope | Out of Scope |
 |---|---|
-| Lint Markdown files using a repo-approved ruleset and/or config. | Validating STAC/DCAT/PROV JSON/JSON-LD schemas (use dedicated validators). |
-| Failing CI on lint violations to keep docs consistent. | Auto-generating or rewriting narrative content. |
-| Producing actionable CI feedback (exit code / annotations if supported by implementation). | Enforcing historical truth or source correctness (handled by review + evidence linking rules). |
+| Running a Markdown linter in CI (PRs/pushes) using a shared action. | Defining the full KFM Markdown Protocol (template/front-matter governance). |
+| Documenting configuration expectations and how to reproduce lint checks locally. | Semantic validation of Story Nodes (citations, evidence linkage) beyond formatting. |
+| Clear inputs/outputs guidance for workflow authors. | Any non-Markdown linting (YAML, JSON, Python, etc.). |
 
 ### Audience
-- Primary: Repo maintainers and CI/CD owners
-- Secondary: Contributors authoring docs, Story Nodes, or action READMEs
+- Primary: CI maintainers and repo maintainers authoring workflows under `.github/workflows/`.
+- Secondary: Contributors who want to run the same lint checks locally before opening a PR.
 
 ### Definitions (link to glossary)
 - Link: `docs/glossary.md`
-- Terms used in this doc: “governed docs”, “Markdown protocol”, “Story Node”, “CI gate”
+- Terms used in this doc: **Markdown lint**, **GFM** (GitHub Flavored Markdown), **CI gate**, **composite action**.
 
 ### Key artifacts (what this doc points to)
-
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Composite action definition | `.github/actions/markdown-lint/action.yml` | CI maintainers | **not confirmed in repo** (expected GitHub Action entrypoint). |
-| Local lint config (action-scoped) | `.github/actions/markdown-lint/config/` | CI maintainers | **not confirmed in repo** (recommended place for action-specific config). |
-| Helper scripts | `.github/actions/markdown-lint/scripts/` | CI maintainers | **not confirmed in repo** (recommended for deterministic script wrappers). |
-| Markdown protocol baseline | `docs/MASTER_GUIDE_v12.md` | Docs maintainers | Source of truth for pipeline invariants and CI expectations. |
+| This README | `.github/actions/markdown-lint/README.md` | CI maintainers | Usage + reproduction guidance. |
+| Action definition | `.github/actions/markdown-lint/action.yml` | CI maintainers | **Not confirmed in repo** (expected for an action). |
+| Repo Markdown rules | `.markdownlint.{yml,yaml,json}` | CI maintainers | **Not confirmed in repo** (config location may vary). |
+| Markdown Protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Governance | **Not confirmed in repo** (separate from lint rules). |
 
 ### Definition of done (for this document)
-- [ ] Front-matter complete + valid
-- [ ] Mentions only repo-grounded paths or clearly labels “not confirmed in repo”
-- [ ] Explains where configuration and scripts should live (and how they relate to CI)
-- [ ] Validation steps listed and repeatable
+- [x] Front-matter complete + structurally valid
+- [x] Action purpose + scope documented
+- [x] Validation steps listed and repeatable (with placeholders where repo-specific)
+- [x] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `.github/actions/markdown-lint/README.md`
+- `path`: `.github/actions/markdown-lint/README.md` (must match front-matter)
 
 ### Related repository paths
-
 | Area | Path | What lives here |
 |---|---|---|
-| GitHub Actions (local) | `.github/actions/` | Composite/local actions used by workflows |
-| Workflows | `.github/workflows/` | CI pipelines that call this action |
-| Documentation | `docs/` | Canonical governed docs (templates, guides, story nodes) |
+| GitHub Actions (workflows) | `.github/workflows/` | CI workflows that call this action |
+| GitHub Actions (local actions) | `.github/actions/` | Composite / JS / Docker actions vendored in-repo |
+| Documentation | `docs/` | Governed docs that must pass doc checks |
+| Templates | `docs/templates/` | Governed Markdown templates used across KFM |
 
 ### Expected file tree for this sub-area
 ~~~text
@@ -100,173 +97,207 @@ This action is intended to support the “Markdown protocol checks” expectatio
 └── 📁 actions/
     └── 📁 markdown-lint/
         ├── 📄 README.md
-        ├── 📄 action.yml                  (not confirmed in repo)
-        ├── 📁 config/                     (not confirmed in repo)
-        │   └── 📄 README.md               (optional; explain config usage)
-        └── 📁 scripts/                    (not confirmed in repo)
-            └── 📄 README.md               (optional; explain helper scripts)
+        ├── 📄 action.yml                 # not confirmed in repo
+        └── 📁 scripts/                   # optional helpers; not confirmed in repo
+            └── 📄 run.sh                 # not confirmed in repo
 ~~~
 
 ## 🧭 Context
 
 ### Background
-KFM relies on governed Markdown documentation to keep the pipeline understandable, auditable, and reviewable. The canonical pipeline ordering must remain intact, and CI gates are expected to enforce documentation quality alongside schema validation and tests.
-
-A Markdown lint action provides a consistent, automated check so documentation stays readable and structurally consistent across:
-- subsystem docs (`docs/`)
-- templates (`docs/templates/`)
-- Story Nodes (`docs/reports/.../story_nodes/`)
-- action docs (`.github/actions/**/README.md`)
+KFM treats documentation as a first-class, versioned artifact. CI gates exist to prevent docs from drifting into inconsistent or unreviewable states. Markdown linting is the **fastest** feedback loop to catch mechanical issues (broken list indentation, trailing whitespace, inconsistent heading spacing, etc.) before reviewers spend time on manual cleanup.
 
 ### Assumptions
-- The lint engine and rule configuration are defined in the composite action implementation (**not confirmed in repo**).
-- The lint process is deterministic and does not mutate repository files (no auto-fix in CI unless explicitly designed and approved).
+- Workflows calling this action have already checked out the repo (e.g., `actions/checkout`).
+- A Markdown linter is used consistently (the exact tool and rule set are repo-defined and **not confirmed in repo** in this document alone).
+- The action is intended to be deterministic: same input files + same config → same results.
 
 ### Constraints / invariants
-- The canonical pipeline ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
-- This action must not bypass governance (e.g., must not introduce generated policy text or infer sensitive locations).
-- CI should remain reproducible (same inputs → same results).
+- Canonical system ordering remains: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- This action is a **CI validation step only**: it must not mutate data artifacts committed to the repo (unless explicitly used in a local “fix” workflow).
+- The frontend/UI never reads Neo4j directly; linting does not change API/graph boundaries.
 
 ### Open questions
-
 | Question | Owner | Target date |
 |---|---|---|
-| What lint engine is standardized (and where is its version pinned)? | CI maintainers | TBD |
-| Where is the canonical lint ruleset stored (root config vs action-scoped config)? | CI maintainers + Docs maintainers | TBD |
-| Do we want “warnings only” in PRs, or “fail on error” for all protected branches? | Repo maintainers | TBD |
+| Which Markdown lint engine is standard here (markdownlint-cli, markdownlint-cli2, remark-lint, etc.)? | CI maintainers | TBD |
+| Where is the canonical lint config stored (repo root, `.github/`, `docs/`)? | CI maintainers | TBD |
+| Should “autofix” be allowed in CI, or only locally? | Governance + CI maintainers | TBD |
 
 ### Future extensions
-- Add a dedicated “KFM Markdown Protocol” validator step (beyond style lint) if the repo defines machine-checkable protocol rules.
-- Emit GitHub annotations to highlight exact lint failures inline in PR diffs (if not already supported).
+- Add an explicit “changed files only” optimization (lint only Markdown touched in a PR).
+- Add a separate **Markdown Protocol** validator gate (structure/front-matter/template compliance) if not already present.
+- Add link-checking as a separate action (avoid coupling lint + link validation).
 
 ## 🗺️ Diagrams
 
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  A[Pull Request / Push] --> B[GitHub Workflow Job]
-  B --> C[Local Composite Action: markdown-lint]
-  C --> D[Markdown Lint Engine + Ruleset]
-  D --> E{Violations?}
-  E -- No --> F[CI Pass]
-  E -- Yes --> G[CI Fail + Feedback]
+  PR[Pull Request / Push] --> WF[GitHub Workflow]
+  WF --> ML[markdown-lint action]
+  ML --> RES{Lint passes?}
+  RES -- yes --> OK[CI gate green]
+  RES -- no --> FAIL[CI gate red + annotations]
 ~~~
 
-## 📦 Data & Metadata
-
-### Inputs
-> Authoritative inputs MUST be documented in `.github/actions/markdown-lint/action.yml`.  
-> The list below is a suggested shape only (**not confirmed in repo**).
-
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| `paths` | glob(s) / newline list | workflow `with:` | Ensure paths stay within repo |
-| `config_path` | file path | workflow `with:` or default | File must exist (if set) |
-| `fail_on_error` | boolean | workflow `with:` or default | Must be explicit for protected branches |
-
-### Outputs
-This action is expected to communicate results via step exit code; it may optionally emit structured outputs (**not confirmed in repo**).
-
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Lint status | exit code | CI logs | GitHub Actions conventions |
-| Optional report | JSON/text | workspace artifact | **not confirmed in repo** |
-
-### Sensitivity & redaction
-- Markdown lint should not print secrets or tokens.
-- If logs include file paths, avoid leaking sensitive directories beyond repo contents (standard GitHub Actions behavior is acceptable).
-
-### Quality signals
-- Clean lint pass indicates consistent formatting and reduces review friction.
-- Persistent failure patterns can signal needed template updates or clearer authoring guidelines.
-
-## 🌐 STAC, DCAT & PROV Alignment
-This action does not validate STAC/DCAT/PROV artifacts directly. It complements catalog validators by ensuring the *documentation describing* those artifacts remains consistent and readable.
-
-## 🧱 Architecture
-
-### Components
-
-| Component | Responsibility | Interface |
-|---|---|---|
-| Workflow job | Invokes lint gate | `.github/workflows/*.yml` |
-| Composite action | Wraps lint behavior | `uses: ./.github/actions/markdown-lint` |
-| Lint engine + config | Applies rules to Markdown | Defined by action implementation |
-
-### Interfaces / contracts
-
-| Contract | Location | Versioning rule |
-|---|---|---|
-| This action’s contract | `.github/actions/markdown-lint/action.yml` | Semver bump if inputs/behavior change |
-| Markdown protocol baseline | `docs/MASTER_GUIDE_v12.md` | Update with governance review |
-
-### Extension points checklist (for future work)
-- [ ] Add action-scoped config under `.github/actions/markdown-lint/config/`
-- [ ] Add helper scripts under `.github/actions/markdown-lint/scripts/` for determinism
-- [ ] Add workflow-level allowlist for docs paths vs generated artifacts
-
-## 🧠 Story Node & Focus Mode Integration
-This action helps ensure Story Node Markdown remains consistent with repo-wide lint rules, which supports:
-- consistent headings/structure for ingestion and rendering
-- cleaner diffs and review cycles
-- fewer formatting regressions in Focus Mode narrative surfaces
-
-## 🧪 Validation & CI/CD
-
-### Validation steps
-- [ ] Run markdown lint in CI using this action
-- [ ] Ensure the workflow targets all governed docs directories
-- [ ] Confirm no auto-fix behavior occurs unless explicitly approved
-
-### Reproduction
-~~~bash
-# Replace these placeholders with the repo’s chosen lint command/tooling.
-# Goal: make local results match CI results exactly.
-
-# 1) Install the repo’s lint tooling (if needed)
-# 2) Run lint against the same paths as CI
-# 3) Confirm the same config is applied
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant Dev as Contributor
+  participant GH as GitHub Actions
+  participant ML as markdown-lint action
+  Dev->>GH: Push / open PR
+  GH->>ML: Run lint step
+  ML-->>GH: Exit code + annotations
+  GH-->>Dev: Status check (pass/fail)
 ~~~
 
-### Example workflow usage (illustrative; align with repo workflow conventions)
+## 🔌 Action Interface
+
+> Authoritative inputs/outputs should be defined in `.github/actions/markdown-lint/action.yml` (**not confirmed in repo**).  
+> This README documents **intended** usage patterns and safe defaults.
+
+### Recommended usage (in a workflow)
 ~~~yaml
 jobs:
   markdown_lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Markdown lint (KFM)
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Markdown lint
         uses: ./.github/actions/markdown-lint
-        with:
-          # paths/config inputs are illustrative; see action.yml for authoritative inputs
-          paths: |
-            docs/**/*.md
-            .github/**/*.md
+        # with:
+        #   config_path: ".markdownlint.yml"     # not confirmed in repo
+        #   targets: "**/*.md"                  # not confirmed in repo
+~~~
+
+### Inputs
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| (see `action.yml`) | TBD | Workflow `with:` block | Must be schema-valid per GitHub Actions |
+| `config_path` (recommended) | string path | repo root or `.github/` | fail if file missing (policy TBD) |
+| `targets` (recommended) | glob(s) | workflow | must expand to files; empty-set behavior TBD |
+| `fail_on_warning` (recommended) | boolean | workflow | default true recommended |
+
+### Outputs
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| (none required) | — | — | GitHub Actions status is the contract |
+| `summary` (optional) | string | step output | not confirmed in repo |
+
+### Sensitivity & redaction
+- This action must not print secrets (tokens, keys) to logs.
+- Avoid echoing environment variables unless explicitly safe.
+- If lint tooling generates file snippets, ensure it does not expose redacted/sensitive content.
+
+### Quality signals
+- Lint results are deterministic across runs.
+- Errors are actionable (clear rule + file + line/column).
+- CI runtime remains low (ideally seconds to a few minutes).
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+- Not applicable: Markdown lint does not generate or modify STAC artifacts.
+
+### DCAT
+- Not applicable: Markdown lint does not generate or modify DCAT artifacts.
+
+### PROV-O
+- Not applicable: Markdown lint does not generate provenance bundles.
+- Optional future enhancement: emit a lightweight CI “activity log” (not a PROV bundle) for observability.
+
+### Versioning
+- This README follows semver in `version:` front-matter.
+- The action implementation should be versioned via git history; if externally reused, consider tagging releases.
+
+## 🧱 Architecture
+
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| Workflow | Triggers lint checks | `.github/workflows/*.yml` |
+| markdown-lint action | Runs repo-standard Markdown lint | `uses: ./.github/actions/markdown-lint` |
+| Lint config | Encodes repo style rules | `.markdownlint.*` (not confirmed in repo) |
+| Contributors | Fix issues locally | local tooling + PR |
+
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Action interface | `.github/actions/markdown-lint/action.yml` | Any breaking change requires coordinated workflow updates |
+| Lint ruleset | `.markdownlint.*` | Changes should be reviewed; prefer additive changes |
+
+### Extension points checklist (for future work)
+- [ ] Add “only changed Markdown files” mode
+- [ ] Add GitHub annotation formatting (file/line)
+- [ ] Add pre-commit integration guidance (local dev)
+
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+- Indirect: keeping Markdown well-formed reduces rendering issues in Story Node viewers.
+- Does not validate evidence linkage; that belongs to Story Node rules and protocol checks.
+
+### Provenance-linked narrative rule
+- Not enforced here. This action only checks Markdown formatting.
+
+### Optional structured controls
+~~~yaml
+# Not applicable for this action.
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+- [ ] Markdown lint checks (this action)
+- [ ] Markdown protocol checks (template/front-matter compliance) — not confirmed here
+- [ ] Link checks — not confirmed here
+
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands.
+#
+# Option A (not confirmed): markdownlint-cli2
+#   npx markdownlint-cli2 "**/*.md" "#node_modules"
+#
+# Option B (not confirmed): markdownlint-cli
+#   npx markdownlint "**/*.md"
+#
+# Option C (not confirmed): run via a repo script
+#   ./tools/lint/markdown.sh
 ~~~
 
 ### Telemetry signals (if applicable)
-
 | Signal | Source | Where recorded |
 |---|---|---|
-| Lint pass/fail rate | CI logs | GitHub Actions run history |
+| lint_error_count | CI run logs | `mcp/runs/` or CI artifacts (not confirmed in repo) |
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
-- Doc lint rule changes should be reviewed by:
-  - Docs maintainers
-  - CI maintainers
-- If lint rules affect public-facing narrative behavior, mark **requires human review**.
+- Changes to lint rules should be reviewed by maintainers, since they affect contributor experience and CI pass/fail rates.
+- Any changes that risk leaking sensitive content in CI logs require human review.
 
 ### CARE / sovereignty considerations
-- Linting does not change content, but it should not encourage adding sensitive location detail.
-- Maintain the prohibition on inferring sensitive locations in narratives.
+- This action does not process community-sensitive datasets directly.
+- Still: documentation can contain sensitive context; avoid printing large file excerpts into public CI logs.
 
 ### AI usage constraints
-- This doc inherits the repo’s baseline AI constraints from governed documentation templates.
+- This document permits summarization/structure extraction per front-matter.
+- Do not use AI tooling to infer sensitive locations or generate policy from this action’s outputs.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial README for markdown-lint action | TBD |
+| v1.0.0 | 2025-12-22 | Initial README for markdown-lint action | TBD |
+
+---
+
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
