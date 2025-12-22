@@ -151,11 +151,11 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 ~~~mermaid
 flowchart LR
-  UI[web/ (UI)] -->|emit signal| V[Schema validation\n(schemas/telemetry)]
-  API[src/server/ (API)] -->|emit signal| V
-  ETL[src/pipelines/ (ETL)] -->|emit signal| V
-  V --> L[Append-only logs\n(location TBD)]
-  L --> A[Audit / governance review]
+  UI["web/ — UI"] -->|emit signal| V["Schema validation<br/>(schemas/telemetry)"]
+  API["src/server/ — API"] -->|emit signal| V
+  ETL["src/pipelines/ — ETL"] -->|emit signal| V
+  V --> L["Append-only logs<br/>(location TBD)"]
+  L --> A["Audit / governance review"]
 ~~~
 
 ### Optional: sequence diagram (conceptual)
