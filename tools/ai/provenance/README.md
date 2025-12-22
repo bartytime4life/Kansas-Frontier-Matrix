@@ -1,548 +1,358 @@
 ---
-title: "🧾 Kansas Frontier Matrix — AI Provenance & Lineage Binding"
+title: "KFM Tooling — AI Provenance"
 path: "tools/ai/provenance/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-22"
+status: "draft"
+doc_kind: "Tooling"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-15"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-status: "Active / Enforced"
-doc_kind: "Architecture"
-header_profile: "standard"
-footer_profile: "standard"
-diagram_profiles:
-  - "mermaid-flowchart-v1"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-doc_uuid: "urn:kfm:doc:tools-ai-provenance-readme:v11.2.6"
-doc_guid: "urn:kfm:doc:tools-ai-provenance-readme:v11.2.6"
-semantic_document_id: "kfm-doc-tools-ai-provenance"
-event_source_id: "ledger:tools/ai/provenance/README.md"
-immutability_status: "mutable-plan"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-prov_profile: "KFM-PROV v11"
-dcat_profile: "KFM-DCAT v11"
-stac_profile: "KFM-STAC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-sbom_ref: "../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.2/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/tools-ai-governance-v4.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+doc_uuid: "urn:kfm:doc:tools:ai-provenance:v1.0.0"
+semantic_document_id: "kfm-tools-ai-provenance-v1.0.0"
+event_source_id: "ledger:kfm:doc:tools:ai-provenance:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-json_schema_ref: "../../../schemas/json/tools-ai-provenance-bundle-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/tools-ai-provenance-bundle-v11.shape.ttl"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-fair_category: "F1-A1-I2-R3"
-care_label: "Public · Low-Risk"
-classification: "Public"
-jurisdiction: "United States · Kansas"
-sensitivity: "General"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-indigenous_data_flag: false
-risk_category: "Low"
-redaction_required: false
-
-ai_training_allowed: false
-ai_training_guidance: "Provenance bundles and governance lineage artifacts MUST NOT be used as training data."
-
-machine_readable: true
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next AI-tools platform update"
-
-provenance_chain:
-  - "tools/ai/README.md@v11.2.6"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧾 **KFM — AI Provenance & Lineage Binding**
-`tools/ai/provenance/README.md`
-
-**Purpose**  
-Define the **provenance subsystem** for KFM AI governance:  
-how audit runs, model evaluations, and AI-derived artifacts are bound to **PROV-O lineage**, versioned identities, and release-grade traceability.
-
-</div>
-
----
+# KFM Tooling — AI Provenance
 
 ## 📘 Overview
 
-### What “provenance” means in KFM AI governance (normative)
+### Purpose
 
-In KFM, provenance is the **reproducible, machine-readable chain of custody** that answers:
+This folder documents how KFM records **provenance (PROV-O)** for **AI-assisted transformations** so every derived artifact (and any downstream narrative use) can be traced back to evidence via stable identifiers.
 
-- **What produced this output?** (Activity)
-- **What inputs were used?** (Entities used)
-- **Who/what ran it?** (Agents)
-- **What exact versions were involved?** (model/data/config/code identity)
-- **Where are the audit artifacts?** (report/evidence bundle references)
-- **What policy constraints were applied?** (FAIR+CARE + sovereignty)
+This README governs the *expected behavior* of AI provenance emission and how it fits into KFM’s canonical pipeline: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
 
-KFM treats provenance as a **contract**, not optional metadata. If provenance cannot be produced safely and deterministically, certification paths must **fail closed**.
+### Scope
 
-### Provenance scope in `tools/ai/`
+| In Scope | Out of Scope |
+|---|---|
+| Provenance capture for AI transforms (extraction, classification, linking, summarization) used anywhere in the pipeline | Defining new governance policy (must live in governance docs) |
+| Run-level PROV bundles and links to inputs/outputs | Model training workflows |
+| Linking AI artifacts to STAC assets / graph nodes / API responses | UI design details beyond provenance references |
+| Redaction guidance for sensitive prompts/outputs | “Unsourced narrative” generation |
 
-This provenance subsystem focuses on lineage for:
+### Audience
 
-- fairness/bias audits (`bias_check`)
-- explainability audits (`focus_audit` / evidence bundles)
-- drift monitoring (`drift_monitor`)
-- model evaluation and governance gating outputs
-- “governed narrative” generation systems (Focus Mode, Story Nodes) when applicable
+- Primary: pipeline authors (ETL/catalog), AI tooling maintainers, provenance/catalog maintainers.
+- Secondary: graph/API developers who need provenance references in contracted payloads; reviewers validating Focus Mode sourcing.
 
-This README defines provenance **interfaces and artifact shapes**; actual execution is performed by runners and pipelines.
+### Definitions
 
-### Core invariants (normative)
+- Link: `docs/glossary.md` (if missing, create under `docs/`)
+- Terms used in this doc:
+  - **PROV-O**: W3C Provenance Ontology; used to express `Entity`, `Activity`, `Agent` and relationships.
+  - **Evidence product**: any artifact (raw or derived) that can be referenced and audited (e.g., extracted entities, embeddings, model outputs).
+  - **AI transform**: a deterministic/recorded transformation step using an LLM/ML component, producing an evidence product.
+  - **Run**: one execution of a pipeline or tool step that generates artifacts and provenance.
 
-1. **Version-correctness**
-   - Every provenance bundle MUST identify:
-     - model ID + version/hash,
-     - dataset ID + version,
-     - config profile ID + version + sha256,
-     - run ID and tool version.
-2. **Determinism**
-   - Given the same inputs + config, the provenance bundle MUST be re-creatable.
-3. **Policy safety**
-   - No secrets, PII, or protected-site coordinates are allowed inside provenance bundles.
-4. **Fail closed**
-   - Missing identity, missing baseline, missing config hash, or invalid schema ⇒ FAIL for certification paths.
-5. **Traceability-first**
-   - Provenance MUST be linkable to:
-     - run artifacts in `mcp/experiments/…`,
-     - model registry entries,
-     - release packets (when outputs are promoted).
+### Key artifacts
 
----
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master pipeline ordering | `docs/MASTER_GUIDE_v12.md` | Core maintainers | Canonical ordering + invariants |
+| Redesign blueprint (canonical paths, provenance-first) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Core maintainers | Establishes `data/prov/` as canonical PROV home |
+| PROV outputs | `data/prov/` | Catalog maintainers | PROV bundles per run / per dataset |
+| STAC outputs | `data/stac/` | Catalog maintainers | Items/collections that reference assets and provenance |
+| DCAT outputs | `data/catalog/dcat/` | Catalog maintainers | Dataset catalog as JSON-LD |
+| Pipelines | `src/pipelines/` | Data engineering | Where AI transforms may be invoked |
+| Graph build | `src/graph/` | Graph maintainers | Graph nodes should link to provenance refs |
+| API layer | `src/server/` | API maintainers | UI must consume provenance via APIs |
+| MCP runs & model artifacts | `mcp/` | AI/tooling | Experiments, model cards, SOPs (if present) |
+
+### Definition of done
+
+- [ ] Front-matter complete + valid
+- [ ] This README states where PROV bundles live and how they link to artifacts
+- [ ] Focus Mode provenance rule is explicitly supported (no unsourced narrative)
+- [ ] Validation steps listed and repeatable (even if placeholders)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
-This directory sits under `tools/ai/`:
+### This document
+
+- `path`: `tools/ai/provenance/README.md`
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed + domain readmes |
+| PROV bundles | `data/prov/` | Run/dataset provenance bundles |
+| Catalogs | `data/stac/` + `data/catalog/dcat/` | STAC items/collections + DCAT dataset catalog |
+| Pipelines | `src/pipelines/` | ETL + transforms + catalog build |
+| Graph | `src/graph/` | Ontology bindings + import/export |
+| APIs | `src/server/` | Contracted access layer for UI |
+| Frontend | `web/` | UI (must not query Neo4j directly) |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
+
+### Expected file tree for this sub-area
 
 ~~~text
 📁 tools/
-└── 🧠 ai/
-    ├── 📁 configs/                       # Threshold/action profiles (see tools/ai/configs/README.md)
-    ├── 🧾 ai_model_registry.json          # Model registry (governed references)
-    └── 📁 provenance/
-        └── 📄 README.md                  # This file
+├── 📁 ai/
+│   ├── 📁 provenance/
+│   │   ├── 📄 README.md
+│   │   ├── 📁 schemas/                 # (not confirmed in repo) JSON Schema for tool outputs
+│   │   ├── 📁 examples/                # (not confirmed in repo) sample PROV bundles
+│   │   └── 📄 cli.py                   # (not confirmed in repo) CLI entrypoint / wrapper
 ~~~
-
-Canonical (intended) provenance subsystem layout:
-
-~~~text
-📁 tools/
-└── 🧠 ai/
-    └── 📁 provenance/
-        ├── 📄 README.md                              # This file
-        │
-        ├── 📁 emitters/                               # Emit PROV/JSON-LD bundles from run context
-        ├── 📁 binders/                                # Bind provenance to registry, releases, and ledgers
-        ├── 📁 validators/                             # Schema + safety validation (no PII/secrets)
-        ├── 📁 adapters/                               # Optional adapters (e.g., OpenLineage → PROV mapping)
-        ├── 📁 vocab/                                  # Stable local vocabulary additions (governance-reviewed)
-        └── 📁 docs/                                   # Optional publishable notes (policy-safe only)
-~~~
-
-Directory rules (normative):
-
-- Do not store run payloads here.
-- Store provenance run artifacts (bundles + hashes + telemetry refs) under:
-  - `mcp/experiments/<run-id>/...` (preferred),
-  - or `mcp/runs/<run-id>/...` if used by the repo.
-- Keep this directory for **code + contracts**, not generated outputs.
-
----
 
 ## 🧭 Context
 
-### Where provenance fits in the KFM pipeline
+### Background
 
-KFM’s platform flow is:
+KFM is an evidence-first system: **catalogs and provenance are first-class**, and Focus Mode must only consume provenance-linked content. AI transforms can produce useful evidence products, but they must be recorded as auditable derivations rather than “free-floating” text.
 
-> ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → UI → Story Nodes / Focus Mode
+### Assumptions
 
-For AI governance, provenance sits at the “binding” layer:
+- KFM emits PROV bundles in **JSON-LD** form (or an equivalent machine-readable form aligned to PROV-O).
+- Derived AI artifacts can be treated as first-class evidence products and linked from STAC assets and/or graph entities.
+- The canonical pipeline ordering remains unchanged.
 
-- Audit runners compute results (bias/explainability/drift).
-- Provenance binders attach:
-  - inputs,
-  - activities,
-  - agents,
-  - outputs,
-  - governance decisions,
-  - telemetry records,
-  - release references.
+### Constraints and invariants
 
-The result is a lineage bundle that can be stored, validated, and (where allowed) published in summarized form.
+- Canonical ordering preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- Focus Mode consumes provenance-linked content only; predictive/AI content (if exposed) must be opt-in and carry uncertainty / confidence metadata.
 
-### Provenance sources of truth (recommended)
+### Open questions
 
-For a single AI governance run, the provenance bundle should be able to reference:
+| Question | Owner | Target date |
+|---|---|---|
+| Where should AI-specific PROV bundles live under `data/prov/` (flat vs `data/prov/ai/`)? | TBD | TBD |
+| What is the canonical run identifier format (UUID, timestamped slug, content hash)? | TBD | TBD |
+| Should prompts be stored (redacted) or only hashed + referenced? | TBD | TBD |
+| What minimal confidence/uncertainty fields are required for AI outputs? | TBD | TBD |
 
-- **Model identity**
-  - registry entry (`tools/ai/ai_model_registry.json`)
-  - model card reference (`mcp/model_cards/...`)
-- **Data identity**
-  - dataset IDs (DCAT)
-  - asset IDs (STAC) for spatial assets
-- **Configuration identity**
-  - profile path under `tools/ai/configs/`
-  - sha256 of the profile content
-- **Run artifacts**
-  - `mcp/experiments/<run-id>/report.json`
-  - `mcp/experiments/<run-id>/telemetry.json`
-  - (optional) `evidence_bundle.json` and safe artifacts
+### Future extensions
 
-### What provenance must never capture (normative)
-
-- secrets (tokens, keys, credentials)
-- PII (names/emails/addresses/phone numbers)
-- protected cultural site coordinates or restricted location identifiers
-- raw data samples that would violate governance constraints
-
-Use stable IDs and hashed references instead.
-
----
+- Integrate provenance generation into `src/pipelines/` so every AI step automatically emits a PROV activity.
+- Add JSON Schemas for AI provenance bundles under `schemas/` and validate in CI.
+- Add telemetry signals (provenance coverage, missing links, redaction counts).
 
 ## 🗺️ Diagrams
 
-### Provenance binding flow (conceptual)
+### System dataflow with provenance emphasis
 
 ~~~mermaid
-flowchart TD
-  A["Audit runner executes<br/>(bias / explainability / drift)"] --> B["Collect run context<br/>(model/dataset/config/tool/run-id)"]
-  B --> C["Build PROV bundle<br/>(Entities · Activities · Agents)"]
-  C --> D["Attach references<br/>(reports, telemetry, evidence bundles)"]
-  D --> E["Validate bundle<br/>(schema + safety + completeness)"]
-  E -->|PASS| F["Bind to model registry + release packet<br/>(refs + hashes)"]
-  E -->|FAIL| G["Fail closed<br/>(block certification / require review)"]
+flowchart LR
+  A[ETL + AI transforms] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[React/Map UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+
+  A --> P[AI Provenance Tooling]
+  P --> B
 ~~~
 
-Accessibility note: flow from run → context → PROV bundle → validation → binding or block.
+### AI transform provenance (conceptual)
 
----
-
-## 🧠 Story Node & Focus Mode Integration
-
-### Why provenance matters for Story Nodes and Focus Mode
-
-Narrative systems must be evidence-led. Provenance provides:
-
-- the “why this narrative exists” chain (inputs → processing → output)
-- traceability to:
-  - the dataset/corpus slice used,
-  - the retrieval neighborhood,
-  - the constraints and redactions applied,
-  - the audit status at time of output.
-
-### Recommended provenance for narrative outputs (policy-safe)
-
-If a narrative output is generated, provenance SHOULD capture:
-
-- target identity (what the narrative is about)
-- retrieval evidence IDs (document IDs, dataset IDs) — **not raw content**
-- audit status references:
-  - last bias audit ref
-  - last explainability audit ref
-  - last drift report ref (if applicable)
-- policy record:
-  - redactions applied
-  - confidence/uncertainty flags (aggregated)
-
-### Fail-closed recommendation
-
-If a narrative system cannot produce required provenance fields safely, it should:
-
-- degrade to retrieval-only mode, or
-- block narrative generation,
-
-depending on the governance policy for the domain.
-
----
-
-## 🧪 Validation & CI/CD
-
-### Determinism rules (normative)
-
-Provenance tooling MUST:
-
-- be config-driven
-- record config file path + sha256
-- record model + dataset identifiers and versions
-- record tool version and run ID
-- be reproducible without hidden network dependencies
-
-### Bundle validation rules (normative)
-
-A provenance bundle MUST fail validation if:
-
-- any required identity field is missing or ambiguous,
-- config hash is missing,
-- report references point to unknown/unsafe locations,
-- policy safety checks fail (PII/secrets/protected coords),
-- schema validation fails (when schema is enforced).
-
-### Recommended CI checks
-
-- JSON validity + schema validation of provenance bundles
-- “no secrets” scan
-- “no PII” scan
-- invariant checks:
-  - `run_id` present
-  - model/dataset/config identity present
-  - report/telemetry refs present
-  - hashes present where expected
-
----
-
-## 📦 Data & Metadata
-
-### Provenance bundle formats
-
-KFM provenance bundles may be serialized as:
-
-- **PROV-JSON / JSON-LD** (recommended for machine interoperability)
-- **PROV-N** (human-readable representation; optional)
-- **Turtle** (RDF serialization; optional)
-
-This subsystem is format-agnostic, but the artifact MUST be:
-
-- machine-readable,
-- schema-valid where schemas exist,
-- safe to store under governance constraints.
-
-### Recommended “AI audit provenance bundle” contract (minimum)
-
-A minimal provenance bundle SHOULD include:
-
-- `bundle_id` (stable run-based identifier)
-- `run_id`
-- `activity` (the audit run)
-- `entities_used`:
-  - model artifact reference
-  - dataset slice reference
-  - config profile reference
-- `entities_generated`:
-  - report reference
-  - telemetry reference
-  - evidence bundle reference (if applicable)
-- `agents`:
-  - runner agent (CI, pipeline, or operator role)
-  - governance agent (if decision issued)
-- `hashes`:
-  - config sha256
-  - report sha256 (if recorded)
-  - bundle sha256 (recommended)
-
-### Example PROV-JSONLD style snippet (illustrative)
-
-~~~json
-{
-  "@context": {
-    "prov": "http://www.w3.org/ns/prov#",
-    "dct": "http://purl.org/dc/terms/"
-  },
-  "bundle_id": "urn:kfm:prov:ai-audit:2025-12-15_focus_bias_audit",
-  "run_id": "2025-12-15_focus_bias_audit",
-  "prov:wasAssociatedWith": [
-    { "id": "urn:kfm:agent:ci-runner" }
-  ],
-  "prov:activity": {
-    "id": "urn:kfm:activity:ai-bias-audit:2025-12-15",
-    "prov:type": "kfm:ai_bias_audit",
-    "dct:created": "2025-12-15T00:00:00Z"
-  },
-  "prov:used": [
-    { "id": "urn:kfm:model:focus_mode_v3_narrative@11.2.6" },
-    { "id": "dcat:kfm:dataset:docs-corpus:v11" },
-    { "id": "urn:kfm:config:fairness_thresholds.default@11.2.6#sha256:<sha256>" }
-  ],
-  "prov:generated": [
-    { "id": "urn:kfm:entity:report:2025-12-15_focus_bias_audit" },
-    { "id": "urn:kfm:entity:telemetry:2025-12-15_focus_bias_audit" }
-  ],
-  "refs": {
-    "report_ref": "mcp/experiments/2025-12-15_focus_bias_audit/report.json",
-    "telemetry_ref": "mcp/experiments/2025-12-15_focus_bias_audit/telemetry.json"
-  }
-}
+~~~mermaid
+flowchart TB
+  IN[Input evidence entity/entities] --> ACT[AI Transform Activity]
+  AG[Agent: tool + model] --> ACT
+  ACT --> OUT[Output evidence product]
+  OUT --> LINK[Referenced by STAC asset / Graph node / API payload]
 ~~~
 
-Important: IDs above are illustrative. Real IDs must follow the repo’s ID minting conventions.
+## 📦 Data and Metadata
 
-### Storage guidance (normative)
+### Inputs
 
-Provenance bundles should live beside the run outputs:
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Input evidence references | IDs/URIs | STAC item IDs, dataset record IDs, graph IDs | Must resolve to an existing artifact |
+| Transform configuration | YAML/JSON | pipeline config / tool flags | Schema-validated (recommended) |
+| Model/tool identity | strings | model cards / env | Must include version + hash (recommended) |
+| Redaction rules | policy refs | governance/sovereignty docs | Must be applied before writing outputs |
 
-~~~text
-mcp/experiments/<run-id>/
-├── report.json
-├── telemetry.json
-├── provenance_bundle.jsonld
-└── hashes/
-    ├── report.sha256
-    ├── config.sha256
-    └── provenance_bundle.sha256
-~~~
+### Outputs
 
-Avoid placing provenance bundles directly under `tools/ai/provenance/`.
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| PROV bundle | JSON-LD | `data/prov/…` | KFM-PROV profile (see standards) |
+| Run manifest | JSON/YAML | `mcp/runs/…` or `data/prov/…` | (not confirmed in repo) |
+| Optional derived artifact | varies | `data/processed/…` | STAC asset references recommended |
 
----
+### Sensitivity and redaction
 
-## 🌐 STAC, DCAT & PROV Alignment
+- Do not write sensitive raw prompts/inputs to provenance logs if they may reveal restricted locations or personal data.
+- Prefer: store **hashes** (prompt hash, input bundle hash) + stable IDs, and keep any raw content in governed datasets with proper redaction/generalization.
 
-### DCAT alignment (dataset-level)
+### Quality signals
 
-When a model uses datasets that are cataloged, provenance SHOULD reference:
+- Record (at minimum): transform status, input/output counts, validation outcome.
+- If the transform produces predictions or classifications: record uncertainty/confidence fields (exact schema not confirmed in repo).
 
-- DCAT dataset identifiers
-- distribution references
-- versioning identifiers
-- licensing and governance labels
+## 🌐 STAC, DCAT and PROV Alignment
 
-### STAC alignment (asset-level)
+### STAC
 
-When AI outputs or inputs are spatial assets:
+- Derived AI artifacts should be linkable as STAC assets (recommended) so they are discoverable and versioned alongside other evidence products.
+- STAC items that reference AI-derived assets should also reference the corresponding PROV activity/run identifier.
 
-- reference STAC Item IDs and asset keys
-- avoid embedding large binaries or raw samples in provenance bundles
-- provenance should point to STAC assets by ID/path, plus checksums where available
+### DCAT
 
-### PROV-O alignment (lineage graph)
+- DCAT dataset identifiers should remain stable even as derived AI artifacts are regenerated.
+- If AI artifacts are published as datasets, they must have explicit publisher/contact/license mapping (per DCAT profile).
 
-Use the PROV core pattern:
+### PROV-O
 
-- **Entities**
-  - model artifact, dataset slice, config profile, report, evidence bundle, telemetry record
-- **Activities**
-  - training, evaluation, bias audit, explainability audit, drift check, release packaging
-- **Agents**
-  - CI runner (software agent), maintainer role, governance body (as an agent/authority)
+At minimum, each AI transform should express:
 
-Typical relations:
+- `prov:Activity` — the AI transform execution (with run ID)
+- `prov:Agent` — tool + model identity (and optionally operator identity if permitted)
+- `prov:Entity` — inputs and outputs
+- `prov:wasDerivedFrom` — output entity derived from input entity
+- `prov:wasGeneratedBy` — output entity generated by the AI transform activity
+- `prov:wasAssociatedWith` — activity associated with agent
 
-- `prov:used` (activity uses entity)
-- `prov:wasGeneratedBy` (entity generated by activity)
-- `prov:wasAssociatedWith` (activity associated with agent)
-- `prov:wasDerivedFrom` (entity derived from entity)
-- `prov:actedOnBehalfOf` (agent delegation, when applicable)
+### Versioning
 
----
+- Prefer deterministic regeneration and stable IDs.
+- Use predecessor/successor links where appropriate (STAC versioning and/or graph relationships).
 
 ## 🧱 Architecture
 
-### Identity and hashing (recommended)
+### Components
 
-To support reproducibility, every provenance bundle SHOULD include:
+| Component | Responsibility | Interface |
+|---|---|---|
+| AI Provenance Tooling | Emit PROV bundles for AI transforms | Library/CLI called by pipelines |
+| Catalogs | Persist and validate STAC/DCAT/PROV outputs | JSON + validators |
+| Graph | Link entities to evidence and provenance refs | Graph import + API access |
+| APIs | Serve contracted payloads with provenance refs | REST/GraphQL |
+| UI | Display evidence + provenance affordances | API calls only |
+| Story Nodes | Curated narrative; must carry provenance annotations | Markdown + graph links |
+| Focus Mode | Contextual synthesis over provenance-linked content | Provenance refs required |
 
-- `run_id` (globally unique in the repo context)
-- `model_id` + `model_version` or `model_hash`
-- `dataset_id` + `dataset_version` and a slice definition
-- `config_profile_id` + `config_profile_version` + sha256
-- `tool_version` (or commit SHA reference)
-- checksums for generated outputs:
-  - `report.sha256`
-  - `telemetry.sha256`
-  - `evidence_bundle.sha256` (when applicable)
+### Interfaces and contracts
 
-### “Binding” responsibilities (what this subsystem does)
+| Contract | Location | Versioning rule |
+|---|---|---|
+| JSON schemas | `schemas/` | Semver + changelog |
+| API schemas | `src/server/` + docs | Contract tests required |
+| PROV profile | `docs/standards/KFM_PROV_PROFILE.md` | Versioned standard (not confirmed in repo) |
 
-The provenance subsystem is responsible for:
+### Extension points checklist
 
-- converting run context into a prov graph bundle
-- validating bundle shape and safety
-- producing stable references into:
-  - the model registry
-  - release packets (when outputs are promoted)
-  - governance ledgers (where used)
+- [ ] PROV: activity + agent identifiers recorded for each AI transform
+- [ ] STAC: derived artifacts optionally represented as assets
+- [ ] Graph: derived artifacts linked to entities via provenance refs
+- [ ] APIs: provenance refs included in responses
+- [ ] UI: provenance pointers visible (no hidden data leakage)
+- [ ] Focus Mode: provenance references enforced; predictive content opt-in
 
-It is not responsible for:
+## 🧠 Story Node and Focus Mode Integration
 
-- model training
-- inference serving
-- data ingestion
+### How this work surfaces in Focus Mode
 
-### Minimal “bind-to-registry” rule (normative)
+- Any AI-derived evidence product used in Story Nodes or Focus Mode must carry:
+  - a stable identifier
+  - a provenance reference (PROV activity/run)
+  - links to underlying source evidence IDs
 
-If a model is considered for certification/promotion:
+### Provenance-linked narrative rule
 
-- the model registry entry MUST reference current provenance bundle(s) for:
-  - bias audit (required)
-  - explainability audit (required for narrative/user-facing systems)
-  - drift report (required for long-running systems; recommended otherwise)
+- Every claim must trace to a dataset / record / asset ID.
+- AI outputs do not become “facts” by default; they are evidence products with traceable derivation.
 
-If any required provenance reference is missing, promotion MUST be blocked.
+## 🧪 Validation and CI/CD
 
----
+### Validation steps
 
-## ⚖ FAIR+CARE & Governance
+- [ ] Markdown protocol checks
+- [ ] Schema validation (STAC/DCAT/PROV) where applicable
+- [ ] Graph integrity checks (if provenance refs are imported)
+- [ ] API contract tests (if provenance fields are surfaced)
+- [ ] Security and sovereignty checks (as applicable)
 
-### Policy constraints (normative)
+### Reproduction
 
-Provenance bundles and lineage artifacts MUST comply with:
+~~~bash
+# Example placeholders — replace with repo-specific commands
 
-- `governance_ref`
-- `ethics_ref`
-- `sovereignty_policy`
+# 1) Validate generated PROV bundles (JSON-LD / schema)
+# <command>
 
-Operationally, this means:
+# 2) Run pipeline step that emits AI provenance
+# <command>
 
-- provenance must be specific enough to reproduce and audit,
-- but not so specific that it reveals restricted information.
+# 3) Run markdown lint / protocol validation
+# <command>
+~~~
 
-Use:
+### Telemetry signals
 
-- stable IDs,
-- hashed references,
-- cohort/region generalization where required,
-- suppression when small group counts could re-identify.
+| Signal | Source | Where recorded |
+|---|---|---|
+| Provenance coverage (% AI outputs with PROV) | pipelines/tools | `docs/telemetry/` + `schemas/telemetry/` (not confirmed in repo) |
+| Redaction events count | provenance tool | `docs/telemetry/` + `schemas/telemetry/` (not confirmed in repo) |
+| Validation failures | CI / validators | CI logs |
 
-### Publication rule
+## ⚖ FAIR+CARE and Governance
 
-Only policy-safe summaries may be published to `docs/reports/`.  
-Full provenance bundles should remain within governed run artifacts (`mcp/experiments/…`) and release packets, as permitted.
+### Review gates
 
-### Training prohibition
+- Any change that affects:
+  - provenance schema or required fields
+  - exposure of AI/predictive content in public UI
+  - handling of sensitive locations or culturally sensitive sites
+  - new external data sources
+  should receive human review per governance docs.
 
-Provenance artifacts are governance outputs and MUST NOT be used as AI training data (`ai_training_allowed: false`).
+### CARE and sovereignty considerations
 
----
+- Ensure provenance does not leak restricted locations or sensitive personal data.
+- Prefer hashing + governed references over raw content storage for prompts/inputs.
+
+### AI usage constraints
+
+- This doc permits summarization/structure extraction/translation/keyword indexing for maintenance workflows.
+- This doc prohibits generating policy or inferring sensitive locations.
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-15 | Created provenance subsystem README: defined provenance invariants, bundle contracts, hashing/identity expectations, CI fail-closed rules, and STAC/DCAT/PROV alignment for KFM AI governance. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-22 | Initial README for AI provenance tooling | TBD |
 
 ---
 
-<div align="center">
+Footer refs:
 
-© 2025 Kansas Frontier Matrix — MIT License  
-🧾 Provenance & Lineage · Governed for Integrity
-
-[⬅️ Back to AI Tools](../README.md) · [⚙️ Config Profiles](../configs/README.md) · [⬅️ Back to Tools](../../README.md) · [🛡 Governance](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
