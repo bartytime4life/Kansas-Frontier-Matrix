@@ -1,8 +1,8 @@
 ---
-title: "Action README — stac-validate"
+title: "GitHub Action — STAC Validate"
 path: ".github/actions/stac-validate/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-22"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:github-actions:stac-validate:readme:v1.0.0"
-semantic_document_id: "kfm-github-action-stac-validate-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:github-actions:stac-validate:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:github-actions:stac-validate:v1.0.0"
+semantic_document_id: "kfm-github-action-stac-validate-v1.0.0"
+event_source_id: "ledger:kfm:doc:github-actions:stac-validate:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,266 +41,266 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# Action — stac-validate
+# GitHub Action — STAC Validate
 
 ## 📘 Overview
 
 ### Purpose
-This repository-local GitHub Action validates STAC JSON artifacts committed to the repo, so that catalog
-outputs remain machine-validated and safe to consume downstream.
 
-In KFM, STAC Items and Collections are expected to live under `data/stac/items/` and `data/stac/collections/`
-(or an equivalent domain-scoped STAC layout if adopted later). This action is intended to be used as a CI
-gate to prevent invalid STAC from merging.
+- Provide a **CI gate** that validates KFM STAC artifacts (Collections + Items) before merge.
+- Enforce that STAC outputs remain machine-valid and safe to consume downstream (Graph, API, UI).
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Validating STAC JSON structure and schema conformance for repo-tracked STAC assets | Generating STAC (ETL/catalog build), DCAT validation, PROV validation |
-| Failing CI on invalid STAC | Repairing or auto-modifying STAC files |
-| Optional: link/href integrity checks (if implemented) | Neo4j / API / UI changes |
+| Validate STAC JSON under `data/stac/**` | Generating STAC or modifying STAC outputs |
+| Validate against `schemas/stac/**` (and any referenced STAC/core schemas used by the action) | Validating DCAT/PROV (separate gates/actions) |
+| Fail CI on schema errors | Loading Neo4j / API/UI testing |
+| Optional: “changed files only” validation (if implemented in the action) | External network link checking unless explicitly implemented + allowed |
 
 ### Audience
-- Primary: Repo maintainers, CI owners, data/catalog contributors
-- Secondary: ETL authors, reviewers validating new datasets
+
+- Primary: Contributors who modify `data/stac/**`, `schemas/stac/**`, or catalog-generation pipelines.
+- Secondary: Reviewers/maintainers who need fast feedback that metadata contracts are preserved.
 
 ### Definitions (link to glossary)
-- Link: `docs/glossary.md` (not confirmed in repo)
-- Terms used in this doc: STAC Item, STAC Collection, schema validation, CI gate, provenance
+
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **STAC**: SpatioTemporal Asset Catalog
+  - **Collection**: STAC Collection JSON under `data/stac/collections/`
+  - **Item**: STAC Item JSON under `data/stac/items/`
+  - **KFM-STAC profile**: KFM constraints layered on top of STAC core
 
 ### Key artifacts (what this doc points to)
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Action README | `.github/actions/stac-validate/README.md` | CI/Platform (TBD) | This document |
-| Action definition | `.github/actions/stac-validate/action.yml` | CI/Platform (TBD) | Not confirmed in repo |
-| CI workflow(s) | `.github/workflows/*.yml` | CI/Platform (TBD) | Not confirmed in repo |
-| STAC outputs | `data/stac/` | Data/Catalog (TBD) | Items + collections |
+| This README | `.github/actions/stac-validate/README.md` | KFM maintainers | Usage + contract |
+| Action definition | `.github/actions/stac-validate/action.yml` | KFM maintainers | Inputs/outputs + implementation |
+| STAC outputs | `data/stac/collections/**` + `data/stac/items/**` | Catalog stage | Canonical paths |
+| STAC schemas | `schemas/stac/**` | Schema owners | KFM constraints + schema bundles |
+| Pipeline guide | `docs/MASTER_GUIDE_v12.md` | KFM maintainers | Canonical ordering + invariants |
 
 ### Definition of done (for this document)
+
 - [ ] Front-matter complete + valid
-- [ ] README explains what the action validates and where STAC lives
-- [ ] Example workflow usage included
-- [ ] Validation behavior, failure modes, and troubleshooting documented
-- [ ] Security + sovereignty considerations explicitly stated (even if “N/A”)
+- [ ] Usage example matches the action’s real `action.yml` inputs
+- [ ] Validation steps listed and repeatable
+- [ ] Notes clarify what this action validates vs what other gates validate
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
 ### This document
+
 - `path`: `.github/actions/stac-validate/README.md`
 
 ### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
-| GitHub Actions | `.github/actions/` | Repo-local reusable actions |
-| Workflows | `.github/workflows/` | CI pipelines invoking actions |
-| STAC catalogs | `data/stac/` | STAC Collections + Items (JSON) |
-| Schemas | `schemas/` | JSON schemas (if repo-managed) |
+| STAC outputs | `data/stac/` | Collections + items produced by catalog stage |
+| Schemas | `schemas/stac/` | STAC schemas + KFM constraints |
+| Workflows | `.github/workflows/` | CI pipelines calling this action |
+| Pipelines | `src/pipelines/` | ETL + catalog build producing `data/stac/**` |
+| Governance | `docs/governance/` | FAIR+CARE + sovereignty rules |
 
 ### Expected file tree for this sub-area
+
 ~~~text
 📁 .github/
 └── 📁 actions/
     └── 📁 stac-validate/
         ├── 📄 README.md
-        ├── 📄 action.yml                         # not confirmed in repo
-        ├── 📄 LICENSE                            # optional, not confirmed in repo
-        └── 📁 scripts/                           # optional, not confirmed in repo
-            ├── 📄 validate.sh                    # not confirmed in repo
-            └── 📄 validate.py                    # not confirmed in repo
+        ├── 📄 action.yml
+        └── 📁 scripts/
+            └── 📄 validate-stac.(sh|py|js)
 ~~~
 
 ## 🧭 Context
 
 ### Background
-KFM’s canonical pipeline includes a catalog stage where STAC is used to describe spatiotemporal assets,
-and CI is expected to enforce machine validation for these artifacts.
 
-This action is intended to provide the “STAC validation” piece of that CI posture, ensuring PRs cannot
-merge invalid STAC JSON.
+KFM uses a governed pipeline where catalogs (STAC/DCAT/PROV) sit between ETL outputs and graph/API/UI consumers. If STAC JSON breaks, it can cascade into ingestion failures, broken UI layers, or missing provenance.
+
+This action exists to make “STAC must validate” a repeatable, automated CI gate.
 
 ### Assumptions
-- The exact validator implementation (binary/library/container) is **not confirmed in repo** by this README alone.
-- The authoritative contract for inputs/outputs is the action definition file (`action.yml`) **(not confirmed in repo)**.
-- Validation is deterministic: same inputs → same results.
+
+- STAC artifacts are committed under `data/stac/collections/` and `data/stac/items/`.
+- KFM schema constraints exist under `schemas/stac/`.
+- Validation should be deterministic and not depend on external services.
 
 ### Constraints / invariants
-- This action must be safe in CI: **no secrets required**, **no repo writes**, and **no network dependency** unless explicitly approved.
-- Validation must not weaken governance: if restricted/sensitive content must be redacted upstream, this action does not “fix” that— it only detects invalid structure.
+
+- Preserve: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- Validation must not mutate repository data (read-only check).
+- No inference of sensitive locations; no enrichment; no “fixups” inside CI.
 
 ### Open questions
 
 | Question | Owner | Target date |
 |---|---|---|
-| Which STAC validator is used (pystac, stac-validator, custom schemas)? | TBD | TBD |
-| What STAC version + extensions are required (KFM-STAC profile details)? | TBD | TBD |
-| Should href/link integrity checks be enforced in CI? | TBD | TBD |
+| Should validation run on all STAC files or only changed files? | TBD | TBD |
+| Which validator engine is pinned (and where)? | TBD | TBD |
+| Do we enforce additional KFM rules (stable IDs, collection existence, etc.) beyond JSON Schema? | TBD | TBD |
 
 ### Future extensions
-- Link/href integrity checks (broken links, missing assets)
-- Extension schema enforcement (project-specific STAC profile checks)
-- Optional DCAT/PROV validation companion actions (separate actions recommended)
+
+- Optional: validate cross-file integrity (e.g., Item `collection` exists as a Collection ID).
+- Optional: validate STAC `assets` shape rules (required fields, media types).
+- Optional: produce a machine-readable report artifact (SARIF/JSON) for PR annotations.
 
 ## 🗺️ Diagrams
 
 ### System / dataflow diagram
+
 ~~~mermaid
 flowchart LR
-  PR[Pull Request] --> CI[GitHub Actions CI]
-  CI --> A[stac-validate action]
-  A --> V[Validate STAC JSON]
-  V -->|pass| OK[✅ Merge allowed]
-  V -->|fail| NO[❌ CI fails; fix STAC]
+  A[ETL outputs<br/>data/&lt;domain&gt;/processed/] --> B[Catalog build]
+  B --> C[STAC JSON<br/>data/stac/**]
+  C --> D[CI Gate: stac-validate]
+  D -->|pass| E[Graph ingest + API + UI consume]
+  D -->|fail| F[Fix STAC JSON / schema / pipeline]
+~~~
+
+### Optional: sequence diagram
+
+~~~mermaid
+sequenceDiagram
+  participant Dev as Contributor
+  participant CI as GitHub Actions
+  participant Repo as Repository
+
+  Dev->>Repo: Push/PR changes (data/stac/**, schemas/stac/**)
+  CI->>Repo: Checkout
+  CI->>CI: Run stac-validate (this action)
+  CI-->>Dev: Pass/Fail + logs
 ~~~
 
 ## 📦 Data & Metadata
 
-### Inputs
-The authoritative input list is defined in `.github/actions/stac-validate/action.yml` (not confirmed in repo).
+### What this action validates
 
-The following inputs are a **recommended contract** (not confirmed in repo) that keeps the action generic
-and reusable:
+- STAC Collections: `data/stac/collections/**/*.json`
+- STAC Items: `data/stac/items/**/*.json`
 
-| Input (proposed) | Format | Where from | Validation |
-|---|---|---|---|
-| `stac_root` | string path | workflow `with:` | directory exists |
-| `include_glob` | glob | workflow `with:` | glob parses |
-| `exclude_glob` | glob | workflow `with:` | glob parses |
-| `fail_on_warnings` | boolean | workflow `with:` | true/false |
-| `check_links` | boolean | workflow `with:` | true/false |
+### Inputs and outputs (action interface)
 
-### Outputs
-This action should fail the workflow step on invalid STAC. If outputs are implemented, keep them minimal:
+**Source of truth:** `.github/actions/stac-validate/action.yml`
 
-| Output (proposed) | Format | Path | Contract / Schema |
-|---|---|---|---|
-| `validated_file_count` | integer | step output | not confirmed in repo |
-| `error_count` | integer | step output | not confirmed in repo |
+This README describes the expected interface pattern for a STAC validation action:
+- Inputs (typical):
+  - `stac_root`: root folder for STAC (default: `data/stac`)
+  - `schemas_root`: root folder for schemas (default: `schemas/stac`)
+  - `fail_on_warning`: whether warnings should fail CI
+  - `changed_only`: validate only changed STAC files (if supported)
+- Outputs (typical):
+  - logs to stdout
+  - optional report path / summary
 
-### Sensitivity & redaction
-- This action does not perform redaction.
-- If any STAC metadata contains restricted location detail, the governance policy must be applied **before**
-  committing those STAC artifacts.
-
-### Quality signals
-- Number of STAC files validated
-- Number of schema errors/warnings
-- Optional: missing/invalid `bbox`, invalid geometry, invalid datetime fields (validator-dependent)
+If the real action uses different names, update this README to match.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### STAC
-- Expected target directories:
-  - `data/stac/collections/`
-  - `data/stac/items/`
-- This action is the CI enforcement layer that helps keep STAC artifacts machine-validated.
+### Alignment policy
 
-### DCAT
-- Out of scope for this action. Use a separate validator action if needed.
+- STAC artifacts are a **contract**: downstream consumers rely on them to be valid.
+- Validation should confirm compliance with:
+  - STAC core schema expectations used by the action
+  - KFM constraints in `schemas/stac/**`
 
-### PROV-O
-- Out of scope for this action. Use a separate validator action if needed.
+### Versioning expectations
 
-### Versioning
-- If STAC versioning links (predecessor/successor) are required by KFM profile, the validator and/or custom checks should enforce them.
+- Schema changes should be versioned and paired with:
+  - updated tests/validation rules
+  - updated pipelines that emit compliant STAC
 
 ## 🧱 Architecture
 
-### Components
+### How to use in a workflow
 
-| Component | Responsibility | Interface |
-|---|---|---|
-| Workflow | Decides when to run validation | `.github/workflows/*.yml` |
-| stac-validate action | Runs STAC schema validation | `uses: ./.github/actions/stac-validate` |
-| Validator tool | Performs actual validation | not confirmed in repo |
-
-### Interfaces / contracts
-
-#### Example usage in a workflow
 ~~~yaml
 name: Validate STAC
 
 on:
   pull_request:
     paths:
-      - "data/stac/**.json"
+      - "data/stac/**"
+      - "schemas/stac/**"
+      - ".github/actions/stac-validate/**"
 
 jobs:
-  stac_validate:
+  stac-validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate STAC catalogs
+      - name: Validate STAC artifacts
         uses: ./.github/actions/stac-validate
         with:
-          stac_root: "data/stac"          # not confirmed in repo
-          fail_on_warnings: true         # not confirmed in repo
+          stac_root: "data/stac"
+          schemas_root: "schemas/stac"
+          fail_on_warning: "true"
 ~~~
 
-#### Minimal usage (if the action has sensible defaults)
-~~~yaml
-- uses: ./.github/actions/stac-validate
-~~~
+### Local validation (developer workflow)
 
-### Extension points checklist (for future work)
-- [ ] Add custom checks for KFM-STAC profile compliance
-- [ ] Add optional link/href integrity checks
-- [ ] Add summary output for PR annotations (counts + file list)
+Use the same validator/toolchain that the action uses (see `action.yml`) so results match CI.
+If the action provides a script entrypoint under `.github/actions/stac-validate/`, run that locally.
+
+~~~text
+# Example patterns (update to match the action):
+# - ./ .github/actions/stac-validate/scripts/validate-stac.sh
+# - python .github/actions/stac-validate/scripts/validate_stac.py --stac-root data/stac --schemas-root schemas/stac
+~~~
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How this work surfaces in Focus Mode
-This action does not directly change Story Nodes or Focus Mode behavior. Indirectly, it helps ensure the
-catalog layer (STAC) remains valid for downstream ingestion and UI discovery.
-
-### Provenance-linked narrative rule
-N/A for this action (no narrative generation).
+- This action does **not** validate Story Nodes.
+- Story Node validation is a separate CI gate (front-matter, citations, entity references, redaction compliance).
 
 ## 🧪 Validation & CI/CD
 
-### Validation steps
-- [ ] CI triggers on changes to `data/stac/**`
-- [ ] Action validates STAC JSON and fails CI on schema errors
-- [ ] Validation output is readable in CI logs
+### Validation checklist
 
-### Reproduction
-~~~bash
-# Repo-local reproduction depends on the validator tool used (not confirmed in repo).
-# Recommended pattern:
-# 1) run the validator against data/stac
-# 2) ensure it matches CI behavior (same schema set, same ignore rules)
-~~~
-
-### Telemetry signals (if applicable)
-| Signal | Source | Where recorded |
-|---|---|---|
-| `stac_validation_pass/fail` | CI logs | GitHub Actions logs |
-| `validated_file_count` | action output | workflow summaries (optional) |
+- [ ] All `data/stac/collections/**/*.json` files validate
+- [ ] All `data/stac/items/**/*.json` files validate
+- [ ] Schema changes in `schemas/stac/**` are compatible with intended outputs
+- [ ] No CI step writes back to `data/stac/**` (validation is read-only)
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
-- If this action changes what is considered “valid” STAC (schema set, custom rules), treat as a governance-impacting change and route for review (security + data governance as applicable).
+
+- Schema changes in `schemas/stac/**` require maintainer review.
+- Changes impacting sensitivity/redaction handling require governance review per:
+  - `docs/governance/ROOT_GOVERNANCE.md`
+  - `docs/governance/SOVEREIGNTY.md`
 
 ### CARE / sovereignty considerations
-- If any datasets require location generalization, ensure the STAC artifacts committed to the repo comply before validation (this action only validates structure, not sensitivity).
+
+- This action must not attempt to infer or “repair” sensitive geometries.
+- Any restricted-location protections are enforced by:
+  - redaction/generalization policies in the pipeline and API boundary
+  - dedicated sovereignty scanning gates (if configured)
 
 ### AI usage constraints
-- None. This action should not invoke LLMs.
+
+- This action performs deterministic validation only; no AI generation.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial README for repo-local STAC validation action | TBD |
+| v1.0.0 | 2025-12-22 | Initial README for STAC validation action | TBD |
 
 ---
+
 Footer refs:
-- Master Guide: `docs/MASTER_GUIDE_v12.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
