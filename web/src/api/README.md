@@ -173,12 +173,12 @@ KFM’s UI must consume many evidence-backed data products (catalog metadata, gr
 
 ~~~mermaid
 flowchart LR
-  UI[React / Map UI] --> C[web/src/api (client boundary)]
-  C --> API[src/server (REST/GraphQL APIs)]
-  API --> CAT[STAC/DCAT/PROV catalogs]
-  API --> G[Neo4j graph]
-  API --> SN[Story Nodes store / renderer]
-  UI --> FM[Focus Mode UI]
+  UI["React · Map UI"] --> Client["web/src/api — client boundary"]
+  Client --> API["src/server — REST/GraphQL APIs"]
+  API --> CAT["STAC/DCAT/PROV catalogs"]
+  API --> G["Neo4j graph"]
+  API --> SN["Story Nodes store / renderer"]
+  UI --> FM["Focus Mode UI"]
 ~~~
 
 ### Optional: sequence diagram
