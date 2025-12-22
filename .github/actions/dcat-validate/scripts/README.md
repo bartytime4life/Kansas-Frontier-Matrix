@@ -1,8 +1,8 @@
 ---
-title: "GitHub Action DCAT Validate Scripts"
+title: "GitHub Action Scripts — DCAT Validate"
 path: ".github/actions/dcat-validate/scripts/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-22"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -25,7 +25,7 @@ classification: "open"
 jurisdiction: "US-KS"
 
 doc_uuid: "urn:kfm:doc:github-actions:dcat-validate:scripts-readme:v1.0.0"
-semantic_document_id: "kfm-gha-dcat-validate-scripts-readme-v1.0.0"
+semantic_document_id: "kfm-github-actions-dcat-validate-scripts-readme-v1.0.0"
 event_source_id: "ledger:kfm:doc:github-actions:dcat-validate:scripts-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
@@ -41,267 +41,276 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# GitHub Action DCAT Validate Scripts
+# GitHub Action Scripts — DCAT Validate
 
 ## 📘 Overview
 
 ### Purpose
-This directory contains the **implementation scripts** used by the **DCAT validation GitHub Action**.
 
-These scripts are responsible for:
-- locating generated **DCAT dataset records**
-- validating them against the repo’s governed **KFM-DCAT profile**
-- producing CI-friendly output (exit codes, concise logs, and optionally annotations)
+- Define **what lives in** `.github/actions/dcat-validate/scripts/` and how those scripts should behave when validating KFM **DCAT** catalog outputs.
+- Standardize script **interfaces (CLI args)**, **exit codes**, and **reporting conventions** so the parent action remains small, testable, and predictable.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Scripts under `.github/actions/dcat-validate/scripts/` | Writing or generating DCAT records |
-| Local developer workflow for running validation | ETL transforms that produce the catalogs |
-| CI-safe output behavior (fail/pass, summaries) | Graph ingestion, API serving, UI rendering |
+| Helper scripts intended to be invoked by `.github/actions/dcat-validate/`. | Defining the DCAT profile itself (see `KFM-DCAT v11.0.0` artifacts; exact file path not confirmed in repo). |
+| Local developer workflows for running validators against `data/catalog/dcat/`. | Implementing ETL, STAC build, PROV generation, graph build, API/UI features. |
+| Script-level conventions: arguments, outputs, exit codes, logging. | Choosing CI providers beyond GitHub Actions. |
 
 ### Audience
-- Primary: CI/CD maintainers and contributors editing validation logic
-- Secondary: data pipeline contributors debugging why a DCAT record fails validation
 
-### Definitions
-- Link: `docs/glossary.md`
-- Terms used in this doc: DCAT, JSON-LD, PROV, profile, catalog, validation
+- Primary: CI maintainers and catalog maintainers who own validation gates for `data/catalog/dcat/`.
+- Secondary: ETL developers generating DCAT outputs and needing fast feedback.
 
-### Key artifacts
+### Definitions (link to glossary)
+
+- Link: `docs/glossary.md` (not confirmed in repo)
+- Terms used in this doc: DCAT, catalog output, validator, schema validation, link checking.
+
+### Key artifacts (what this doc points to)
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Action overview | `.github/actions/dcat-validate/README.md` | CI/CD | High-level action docs |
-| Action definition | `.github/actions/dcat-validate/` | CI/CD | File name varies by repo conventions |
-| Scripts directory | `.github/actions/dcat-validate/scripts/` | CI/CD | This document lives here |
-| DCAT outputs | `data/catalog/dcat/` | Catalog | Canonical output location |
-| Governed pipeline guide | `docs/MASTER_GUIDE_v12.md` | Docs | Canonical pipeline ordering + invariants |
+| DCAT validation action | `.github/actions/dcat-validate/` | CI maintainers | Parent action that calls scripts in this directory. |
+| Scripts directory | `.github/actions/dcat-validate/scripts/` | CI maintainers | Script entrypoints and helpers. |
+| DCAT outputs | `data/catalog/dcat/` | Catalog maintainers | Canonical location for DCAT outputs. |
+| Schemas | `schemas/` | Platform maintainers | JSON schemas and (optionally) shape bundles; DCAT schema location not confirmed in repo. |
+| Master pipeline contract | `docs/MASTER_GUIDE_v12.md` | KFM core maintainers | Canonical pipeline ordering + profiles. |
 
-### Definition of done
-- [ ] Front-matter complete and `path` matches file location
-- [ ] Script inventory and file tree kept in sync with the actual directory
-- [ ] Local “how to run” steps do not assume secrets or proprietary services
-- [ ] Logging guidance avoids leaking sensitive content in CI logs
-- [ ] Validation steps are repeatable and deterministic
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid
+- [ ] Script inventory table reflects actual files in this directory (no stale entries)
+- [ ] Each script has `--help` output documenting required args and exit codes
+- [ ] Validation steps listed and repeatable (CI and local)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated (when scripts touch sensitive data)
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `.github/actions/dcat-validate/scripts/README.md`
+
+- `path`: `.github/actions/dcat-validate/scripts/README.md` (must match front-matter)
 
 ### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
-| GitHub Actions | `.github/actions/` | Local action implementations |
-| DCAT catalogs | `data/catalog/dcat/` | DCAT dataset records produced by pipelines |
-| STAC catalogs | `data/stac/` | STAC items/collections |
-| PROV lineage | `data/prov/` | Provenance bundles for pipeline activities |
-| Schemas | `schemas/` | JSON schemas, SHACL shapes, or schema bindings |
+| GitHub Actions | `.github/actions/` | Reusable actions (composite/custom) |
+| This action | `.github/actions/dcat-validate/` | DCAT validation action definition + config |
+| Scripts | `.github/actions/dcat-validate/scripts/` | Script entrypoints + utilities |
+| Catalog outputs | `data/catalog/dcat/` | DCAT datasets/distributions generated by pipelines |
+| Schemas | `schemas/` | JSON schema bundles + validators (profile-dependent) |
+| Pipelines | `src/pipelines/` | ETL + catalog build steps (producer of DCAT outputs) |
 
 ### Expected file tree for this sub-area
+
 ~~~text
 📁 .github/
 └── 📁 actions/
     └── 📁 dcat-validate/
         ├── 📄 README.md
-        ├── 📄 <action-definition-file>   # not confirmed in repo: update to actual file name
+        ├── 📄 action.yml                 (or action.yaml; not confirmed in repo)
         └── 📁 scripts/
-            ├── 📄 README.md
-            ├── 📄 <entrypoint-script>     # not confirmed in repo: update to actual file name
-            ├── 📄 <helpers-or-library>    # optional
-            └── 📁 <fixtures>              # optional
+            ├── 📄 README.md              ← you are here
+            ├── 📄 <script_1>             (not confirmed in repo)
+            ├── 📄 <script_2>             (not confirmed in repo)
+            └── 📁 lib/                   (optional; not confirmed in repo)
+                └── 📄 <shared_module>    (not confirmed in repo)
 ~~~
 
 ## 🧭 Context
 
 ### Background
-KFM treats catalog outputs as governed artifacts, and CI is expected to enforce validation gates so that
-invalid catalogs do not propagate into downstream stages (graph, APIs, UI, story nodes).
 
-This scripts folder exists to keep validation logic **close to** the GitHub Action that runs it, while still
-remaining deterministic and reviewable.
+- KFM treats **STAC/DCAT/PROV** as first-class catalog artifacts in the canonical pipeline.
+- Validation at the catalog boundary is a CI “gate”: malformed or incomplete DCAT should fail fast so downstream graph/API/UI components are never built from invalid metadata.
 
 ### Assumptions
-- DCAT records live under `data/catalog/dcat/`.
-- The action uses these scripts as the validation entrypoint.
-- Exact script names and runtimes are repository-dependent and must be kept current in this README.
 
-### Constraints and invariants
-- Preserve canonical pipeline ordering: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story → Focus Mode.
-- Scripts must be deterministic and CI-safe:
-  - no reliance on local machine state
-  - stable exit codes
-  - minimal, non-sensitive logs
-- Do not leak sensitive information into GitHub Action logs. Prefer paths + record identifiers over full payload dumps.
+- Scripts run in a CI job where the repository is checked out into a workspace.
+- Scripts validate files generated by earlier pipeline steps (local build or CI build).
+
+### Constraints / invariants
+
+- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- Catalog validation is **machine-validated** and should be deterministic and replayable.
+- Frontend consumes contracts via APIs (no direct graph dependency).
 
 ### Open questions
 
 | Question | Owner | Target date |
 |---|---|---|
-| What is the canonical entrypoint filename for this action? | CI/CD | TBD |
-| What is the authoritative schema/shape location for DCAT validation? | Catalog | TBD |
-| Should CI annotate failing files inline (GitHub annotations) or only print a summary? | CI/CD | TBD |
+| What is the canonical DCAT schema / SHACL location for validation? (path not confirmed in repo) | TBD | TBD |
+| Should JSON-LD context resolution be offline-only, or allow remote fetches? | TBD | TBD |
+| What is the minimum metadata bar for `KFM-DCAT v11.0.0` outputs in CI? | TBD | TBD |
 
 ### Future extensions
-- Add optional “warning mode” for non-blocking checks (style, optional fields).
-- Add a “changed files only” mode for faster PR validation.
+
+- Extension point A: Optional SHACL validation (if/when shape bundles are adopted).
+- Extension point B: Link integrity checks for DCAT distributions/assets that map back to STAC assets.
 
 ## 🗺️ Diagrams
 
-### System and validation flow
+### System / dataflow diagram
+
 ~~~mermaid
 flowchart LR
-  A[Pipeline outputs DCAT records] --> B[data/catalog/dcat/]
-  B --> C[GitHub Action dcat-validate]
-  C --> D[Scripts in this folder]
-  D --> E{Valid?}
-  E -- Yes --> F[CI pass]
-  E -- No --> G[CI fail + summary]
+  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[React/Map UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+
+  subgraph CI["CI Gate (dcat-validate)"]
+    B --> V[Scripts in .github/actions/dcat-validate/scripts]
+  end
+~~~
+
+### Optional: sequence diagram
+
+~~~mermaid
+sequenceDiagram
+  participant CI as CI Job
+  participant Scripts as dcat-validate/scripts
+  participant Catalog as data/catalog/dcat
+
+  CI->>Scripts: run validation (inputs: paths, schema refs)
+  Scripts->>Catalog: read DCAT outputs
+  Scripts-->>CI: exit code + report (stdout/stderr)
 ~~~
 
 ## 📦 Data & Metadata
 
-### Inputs
+### Data lifecycle (required staging)
 
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| DCAT records | JSON-LD / Turtle / RDF | `data/catalog/dcat/` | Parse + profile checks |
-| Profile rules | Config / schema / shapes | `schemas/` or action-local | Must be versioned |
-| File selection | glob / file list | CI step | Deterministic ordering recommended |
+- `data/raw/` → `data/work/` → `data/processed/` → `data/stac/` (+ `data/reports/` outputs as needed)
+- DCAT outputs are expected under `data/catalog/dcat/` when catalog build steps run.
 
-### Outputs
+### Domain expansion pattern
 
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Pass/fail signal | exit code | CI runtime | 0 success, nonzero failure |
-| Validation report | console log / summary | CI runtime | Human-readable + concise |
-| Optional artifacts | text/json | CI artifacts | Keep stable for downstream parsing |
-
-### Sensitivity and redaction
-Even when catalogs are public, validation logs should avoid printing entire records.
-Recommended log behavior:
-- print the failing file path(s)
-- print a short error code/category
-- print a small excerpt only when necessary (and never secrets)
-
-### Quality signals
-Typical checks to implement or support (depending on profile rules):
-- required fields present
-- valid RDF/JSON-LD parse
-- stable dataset identifiers
-- license field present and non-empty
-- spatial/temporal coverage fields well-formed
+- New domains go under `data/<domain>/...`
+- New domain docs go under `docs/<domain>/...` or `docs/data/<domain>/...` (choose one canonical location and link)
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### STAC
-This action focuses on **DCAT** validation, but catalogs are part of the same governed “catalog stage”.
-If DCAT records reference STAC items/collections, validators may optionally check that references resolve.
+### STAC/DCAT/PROV alignment policy (how to document)
 
-### DCAT
-- Primary outputs live under: `data/catalog/dcat/`
-- Validation should be aligned to: `KFM-DCAT v11.0.0`
+When validating DCAT outputs, scripts in this directory should support checks that help enforce KFM alignment expectations:
 
-### PROV-O
-If DCAT records include provenance pointers, validators may optionally check:
-- identifiers are present
-- values are well-formed (IDs, URNs, or run IDs as defined by the repo)
+- DCAT dataset identifiers are present and stable across versions.
+- Minimum mapping fields exist (title/description/license/keywords).
+- Provenance pointers exist where required (e.g., PROV activity/run ID references) — exact field mapping is profile-defined (not confirmed in repo).
 
-### Versioning
-- Prefer versioned profile rules and stable identifiers.
-- If records are versioned, ensure predecessor/successor links are not broken.
+### Versioning expectations
+
+- New versions link predecessor/successor
+- Graph mirrors version lineage
 
 ## 🧱 Architecture
 
-### Components
+### Subsystem contracts (what must exist for each subsystem)
 
-| Component | Responsibility | Interface |
+| Subsystem | Contract artifacts | “Do not break” rule |
 |---|---|---|
-| Entry script | Orchestrate validation run | CLI args or env vars |
-| Validators | Apply profile checks | Functions/modules |
-| Report formatter | Produce CI-friendly output | stdout/stderr + exit code |
+| ETL | configs + run logs + validation | deterministic, replayable |
+| Catalogs | STAC/DCAT/PROV schemas + validators | machine-validated |
+| Graph | ontology + migrations + constraints | stable labels/edges |
+| APIs | OpenAPI/GraphQL schema + tests | backward compat or version bump |
+| UI | layer registry + a11y + audit affordances | no hidden data leakage |
+| Focus Mode | provenance-linked context bundle | no hallucinated sources |
 
-### Interfaces and contracts
+### Script interface contract (recommended)
 
-| Contract | Location | Versioning rule |
-|---|---|---|
-| Markdown protocol | repo-wide | CI enforces front-matter validity |
-| DCAT profile rules | `schemas/` or action-local | Semver preferred + changelog |
-| File locations | `data/catalog/dcat/` | Treated as canonical output path |
+> NOTE: The exact CLI flags must match what `.github/actions/dcat-validate` calls. Update this section once scripts are implemented/confirmed.
 
-### Extension points checklist
-- [ ] Add new rule: update profile rules and tests
-- [ ] Add new input location: update action + scripts documentation
-- [ ] Add new output artifact: keep format stable and documented
-- [ ] Add annotations: ensure messages are short and non-sensitive
+Recommended baseline:
 
-## 🧠 Story Node and Focus Mode Integration
+- Each script must support `--help` and return a non-zero exit code on invalid inputs.
+- Prefer explicit inputs over implicit globbing:
+  - `--input` (file or directory)
+  - `--input-glob` (optional)
+  - `--schema` / `--shapes` (optional, profile-dependent)
+  - `--report` (optional path for writing a machine-readable report)
 
-### How this work surfaces in Focus Mode
-Not directly. This action is a **catalog stage guardrail**.
+Recommended exit codes:
 
-Indirectly, invalid catalogs can break downstream provenance-linked narratives, so keeping catalogs valid supports
-Focus Mode’s “no unsourced narrative” invariant.
+| Code | Meaning |
+|---:|---|
+| 0 | Validation passed |
+| 1 | Validation failed (schema/content/link failures) |
+| 2 | Script error (misconfiguration, unhandled exception) |
 
-### Provenance-linked narrative rule
-Every narrative claim must trace to a dataset/record/asset ID. This validator helps ensure catalogs used as
-evidence pointers remain well-formed.
+### Script inventory
+
+> Update this table so it reflects actual files in `.github/actions/dcat-validate/scripts/`.
+
+| Script | Language | Called by | Responsibility |
+|---|---|---|---|
+| `TBD` | `TBD` | `dcat-validate` | Validate DCAT outputs under `data/catalog/dcat/` |
+
+## 🧠 Story Node & Focus Mode Integration
+
+- This directory does not directly author Story Nodes, but catalog correctness is a prerequisite for provenance-linked storytelling.
+- If a script emits any derived evidence artifacts, ensure they are traceable (IDs, paths) and compatible with catalog + provenance conventions (profile-defined; not confirmed in repo).
 
 ## 🧪 Validation & CI/CD
 
 ### Validation steps
-- [ ] Scripts run without network access (unless explicitly required and documented)
-- [ ] Scripts run deterministically on the same inputs
-- [ ] Failures identify the file(s) and the rule category
-- [ ] Logs do not dump full datasets or sensitive strings
-- [ ] README inventory matches the actual scripts directory
+
+- [ ] Markdown protocol checks (this README)
+- [ ] Schema validation (STAC/DCAT/PROV) where applicable
+- [ ] Link integrity checks for DCAT distributions/assets (if enabled)
+- [ ] Security and sovereignty checks (as applicable)
 
 ### Reproduction
+
 ~~~bash
-# From the repo root:
-# 1) Inspect what scripts exist
-ls -la .github/actions/dcat-validate/scripts
+# Example placeholders — replace with repo-specific commands
 
-# 2) Run the entrypoint (update <entrypoint-script> to the actual filename)
-./.github/actions/dcat-validate/scripts/<entrypoint-script> --help
+# 1) Run a script locally (from repo root)
+# python .github/actions/dcat-validate/scripts/<script>.py --help
 
-# 3) Validate the canonical DCAT output directory
-./.github/actions/dcat-validate/scripts/<entrypoint-script> --input data/catalog/dcat
+# 2) Validate a DCAT directory (example)
+# python .github/actions/dcat-validate/scripts/<script>.py --input data/catalog/dcat/
+
+# 3) Point at a schema bundle if used
+# python .github/actions/dcat-validate/scripts/<script>.py --input data/catalog/dcat/ --schema schemas/<dcat-schema>.json
 ~~~
 
-### Telemetry signals
+### Telemetry signals (if applicable)
+
 | Signal | Source | Where recorded |
 |---|---|---|
-| Validation pass/fail | GitHub Action job | Workflow logs |
-| Failing file count | Scripts | Workflow logs / summary |
-| Rule category counts | Scripts | Optional job summary |
+| TBD | TBD | `docs/telemetry/` + `schemas/telemetry/` |
 
 ## ⚖ FAIR+CARE & Governance
 
-### Review gates
-- Changes to validation rules or profile bindings should receive:
-  - Catalog maintainer review
-  - CI/CD maintainer review
-- If validation logic affects how sensitive metadata is logged, it requires human review.
+### Governance review triggers
 
-### CARE and sovereignty considerations
-- Avoid printing precise locations or sensitive fields when logging invalid records.
-- If a dataset is classified as restricted, ensure the validator does not echo restricted values.
+- New sensitive layers
+- New AI narrative behaviors
+- New external data sources
+- New public-facing endpoints
+
+### Sovereignty safety
+
+- Document redaction/generalization rules for any restricted locations.
 
 ### AI usage constraints
-- This directory is for deterministic validation scripts.
-- AI-generated modifications to validation rules must be reviewed by a human maintainer.
+
+- Ensure this doc’s AI permissions/prohibitions match intended use.
+- Do not embed unsourced narrative or infer sensitive locations.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial scripts README for DCAT validation action | TBD |
+| v1.0.0 | 2025-12-22 | Initial README for dcat-validate scripts directory | TBD |
 
 ---
+
 Footer refs:
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
