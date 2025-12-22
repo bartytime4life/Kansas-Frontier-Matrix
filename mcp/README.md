@@ -1,344 +1,336 @@
 ---
-title: "🧬 Kansas Frontier Matrix — Master Coder Protocol Workspace (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "MCP — Model Cards & Prototypes"
 path: "mcp/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-27"
-review_cycle: "Annual · FAIR+CARE Council & Architecture Board"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
+version: "v1.0.0"
+last_updated: "2025-12-22"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-doc_integrity_checksum: "<sha256>"
-semantic_document_id: "kfm-mcp-root"
-doc_uuid: "urn:kfm:mcp:readme:v11.0.0"
-event_source_id: "ledger:mcp/README.md"
-immutability_status: "version-pinned"
-
-sbom_ref: "../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../releases/v11.2.2/mcp-telemetry.json"
-telemetry_schema: "../schemas/telemetry/mcp-v11.json"
-energy_schema: "../schemas/telemetry/energy-v2.json"
-carbon_schema: "../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "CC-BY 4.0"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Workspace Overview"
-intent: "mcp-workspace-overview"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-classification: "Public Document"
-sensitivity: "Low"
-fair_category: "F1-A1-I2-R3"
-care_label: "Mixed"
-jurisdiction: "Kansas / United States"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:mcp:readme:v1.0.0"
+semantic_document_id: "kfm-mcp-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:mcp:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# MCP Workspace
 
-# 🧬 **Kansas Frontier Matrix — Master Coder Protocol Workspace (v11)**  
-`mcp/README.md`  
+`mcp/` is the **documentation-first workspace** for experiments, model documentation, and repeatable procedures that support KFM’s evidence-first pipeline.
 
-**Purpose**  
-Define the **workspace, workflow, and governance rules** for all Master Coder Protocol (MCP) artifacts in KFM v11 — experiments, SOPs, model cards, lineage bundles, and reproducibility assets.
-
-</div>
-
----
-
-## 📘 1. Overview — What “MCP” Means in KFM v11
-
-The **Master Coder Protocol (MCP v6.3)** is the **documentation-first, experiment-first, reproducibility-first** framework governing all analytical, scientific, and AI/ML work inside the Kansas Frontier Matrix.
-
-The MCP workspace (`mcp/`) contains:
-
-- 🧪 **Experiments** — deterministic scientific or ML runs  
-- 📝 **SOPs** — Standard Operating Procedures for recurring workflows  
-- 📄 **Model Cards** — documentation for trained models and explainability results  
-- 🧵 **Reproducibility bundles** — configs, seeds, telemetry, lineage  
-- 🔗 **OpenLineage + PROV-O** artifacts  
-- 🧭 **Governed instructions** for contributors (MCP protocol enforcement)  
-
-The MCP subsystem ensures that **every scientific or computational result can be reproduced, audited, and governed** in accordance with:
-
-- FAIR+CARE  
-- Indigenous data sovereignty  
-- KFM Ontology v11  
-- Story Node v3 / Focus Mode v3 integration  
-- OpenLineage v2.5 provenance  
-- STAC / DCAT alignment for data-derived outputs  
+Use this directory to capture *how* results were produced (methods), *what* was produced (outputs + metrics), and *what the limitations are* (biases, known failure modes, governance constraints). Store **data outputs** under `data/**` and **code** under `src/**`; `mcp/**` is for the *research/ops record* of the work.
 
 ---
 
-## 🗂 2. Directory Layout — MCP Workspace Structure (Emoji Style A)
+## 📘 Overview
 
-```text
-mcp/
-├── 📄 README.md                  # This document (workspace overview)
-│
-├── 🧪 experiments/               # All formal experiments logged here
-│   ├── 🧪 2025-11-01_CLIMATE-EXP-001.md      # Example experiment (seeded, reproducible)
-│   ├── 🧪 2025-11-12_AI-EXP-004.md           # NLP or ML experiments
-│   └── 🧪 ...                                # Each experiment is versioned + lineage-bound
-│
-├── 📋 sops/                      # Standard Operating Procedures
-│   ├── 📋 climate_downscaling.md
-│   ├── 📋 hydrology_reconstruction.md
-│   ├── 📋 storynode_generation.md
-│   └── 📋 ai_bias_check.md
-│
-├── 🧾 model_cards/               # AI/ML model transparency + lineage docs
-│   ├── 🧾 climate_anomaly_net_v3.md
-│   ├── 🧾 hydrology_seq2seq_v11.md
-│   ├── 🧾 focus_mode_transformer_v3.md
-│   └── 🧾 ...
-│
-└── 📘 MCP-README.md              # Core MCP-DL v6.3 protocol reference (the “MCP bible”)
-```
+### Purpose
 
-The MCP filesystem is structured to be **machine-indexable**, **graph-safe**, and **CI-enforced**.
+- Provide a canonical home for:
+  - **Experiment reports** (what was tried, why, results, and how to reproduce).
+  - **Run manifests/logs** (what was executed, with input/output pointers).
+  - **Model cards** (intended use, training data, limitations, evaluation, ethical considerations).
+  - **SOPs** (repeatable procedures that keep work consistent across contributors).
 
----
+### Scope
 
-## 🧪 3. Experiments — Scientific Reproducibility at Scale
+In scope:
+- Documentation and metadata for AI/analysis workflows (including model evaluation and comparisons).
+- Reproducibility artifacts that *point to* canonical data/catalog/provenance outputs.
 
-All experiments must follow MCP-DL v6.3 and KFM-MDP v11.2.2.
+Out of scope:
+- Raw source data snapshots (belongs in `data/<domain>/raw/`).
+- Processed datasets and derived evidence artifacts (belongs in `data/<domain>/processed/` and catalogs).
+- API contracts (belongs at the API boundary), UI code, or graph migrations.
 
-### 3.1 Required Sections
+### Audience
 
-Each experiment file MUST include (at minimum):
+- Contributors running AI or analytic workflows
+- Maintainers performing governance/audit review
+- Curators validating evidence before narrative publication
 
-- **Objective / Hypothesis**  
-- **Background & references** (including dataset and model references)  
-- **Methods**  
-  - data sources + versions (STAC/DCAT IDs)  
-  - configs, seeds, hyperparameters  
-  - pipeline code + environment details  
-- **Execution logs** (summary; full logs stored separately if large)  
-- **Results** (tables, plots, metrics)  
-- **Analysis & interpretation**  
-- **Limitations**  
-- **Next steps**  
-- **Provenance** (PROV-O + OpenLineage links)  
-- **FAIR+CARE review** (critical for sensitive domains)  
+### Definition of done for this document
 
-### 3.2 Metadata Requirements
-
-Each experiment MUST declare:
-
-- Dataset versions (STAC/DCAT refs)  
-- Seeds used for deterministic runs  
-- Model version / config hash  
-- Pipeline contract version (`KFM-PDC v11`)  
-- Hardware metadata (CPU/GPU, region)  
-- Energy/Carbon telemetry (via `energy_schema`, `carbon_schema`) where applicable  
-
-This ensures transparency across climate, hydrology, NLP, geospatial, and simulation experiments.
+- [x] Front-matter complete and `path` matches file location
+- [x] Directory responsibilities + placement rules documented
+- [x] Expected `mcp/` tree provided
+- [ ] Repo lint / markdown lint run (CI or local)
+- [ ] Maintainer review
 
 ---
 
-## 📋 4. SOPs — Repeatable, Governed Procedures
+## 🗂 Directory Layout
 
-**SOPs** define **canonical, repeatable tasks**, including but not limited to:
+### This document
 
-- Climate anomaly downscaling  
-- Streamflow reconstruction and gap-filling  
-- Story Node generation (human-in-the-loop AI)  
-- H3 masking of sensitive archaeological and cultural sites  
-- Cleaning legacy historical datasets (OCR → structured)  
-- Geospatial harmonization workflows (CRS, grid, and tiling conventions)  
+- `path`: `mcp/README.md` (must match front-matter)
 
-Each SOP MUST:
+### Related repository paths (orientation)
 
-- Use the MCP template:
-  - **Purpose**  
-  - **Inputs** (data, parameters, contracts)  
-  - **Procedure** (step-by-step)  
-  - **Verification & validation**  
-  - **Failure modes & mitigation**  
-  - **Lineage & governance references**  
-- Be versioned (front-matter + in-text history)  
-- Refer to relevant:
-  - data contracts  
-  - STAC/DCAT schemas  
-  - FAIR+CARE and sovereignty policies  
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed domain data; catalog outputs by stage |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC/DCAT/PROV artifacts (canonical evidence + lineage) |
+| Graph | `src/graph/` (+ `data/graph/` if present) | Ontology bindings, graph build, import fixtures |
+| Pipelines | `src/pipelines/` | Deterministic transforms and catalog builders |
+| API boundary | `src/server/` *(v13 target)* or `src/api/` *(if legacy)* | Contracts, redaction, access controls, query services |
+| UI | `web/` | React/Map UI (never reads Neo4j directly) |
+| Story Nodes | `docs/reports/story_nodes/` | Curated narrative artifacts and assets |
+| Documentation | `docs/` | Governed designs, guides, reports, standards |
+| MCP | `mcp/` | Experiments, model cards, SOPs (this area) |
+| Schemas | `schemas/` | JSON Schemas, telemetry schemas, contract validation |
+| Tests | `tests/` | Unit/integration/contract tests |
+| Tools | `tools/` | Ops scripts and developer utilities |
 
----
+### Expected file tree for this sub-area
 
-## 🧾 5. Model Cards — Transparency for All AI Models
-
-Every AI/ML model in KFM MUST have a **model card** in `mcp/model_cards/` describing:
-
-- Model architecture & objectives  
-- Training and evaluation datasets (with FAIR+CARE considerations)  
-- Seeds, hyperparams, major config choices  
-- Training/evaluation pipeline (DAG, tools, hardware)  
-- Metrics (accuracy/F1/MSE/etc.) across relevant groups  
-- Limitations and known biases  
-- CARE rules (what outputs are disallowed, when to mask)  
-- Explainability results (SHAP/LIME, attention, counterfactuals)  
-- Provenance:
-  - OpenLineage activity chain IDs  
-  - Git commit + environment  
-- Deployment/usage boundaries:
-  - `allowed_use_cases` vs `prohibited_use_cases`  
-
-Model cards are **primary documentation** for models used in:
-
-- Focus Mode v3  
-- AI geospatial inference  
-- Climate/hydrology reconstruction  
-- NLP over archives and historical documents  
+~~~text
+📁 mcp/
+├── 📄 README.md
+├── 📁 runs/
+│   └── (run manifests, run logs, pointers to outputs)
+├── 📁 experiments/
+│   └── (experiment reports, notebooks/scripts used for analysis)
+├── 📁 model_cards/
+│   └── (model cards for any AI model used by KFM)
+└── 📁 sops/
+    └── (standard operating procedures for recurring workflows)
+~~~
 
 ---
 
-## 🔗 6. Provenance, Lineage & OpenLineage v2.5
+## 🧭 Context
 
-All MCP artifacts MUST write lineage using:
+### Background
 
-- **PROV-O**  
-  - `prov:Activity` for experiments, training runs, and major steps  
-  - `prov:Entity` for datasets, models, configs, and outputs  
-  - `prov:Agent` for people, bots, CI jobs  
+KFM’s pipeline is intentionally staged (ETL → catalogs → graph → API → UI → narratives) to keep the system modular, testable, and auditable. `mcp/` exists to make *experimentation and AI usage* transparent and reproducible—especially when AI outputs become “evidence products” that influence downstream graph and narrative.
 
-- **OpenLineage v2.5**  
-  - Standard `job` and `run` fields  
-  - Input/output dataset definitions  
-  - KFM-specific facets for:
-    - CARE classification  
-    - Sovereignty flags  
-    - Energy/carbon metrics  
+### Assumptions
 
-KFM-specific extensions:
+- Contributors will store large artifacts (datasets, derived evidence) under `data/**`, not under `mcp/**`.
+- `mcp/**` documents must link to canonical artifact identifiers (STAC/DCAT/PROV IDs, graph entity IDs, or release manifests) wherever applicable.
+- Not all subfolders may exist yet; this README defines the intended canonical structure.
 
-- STAC/DCAT dataset mapping fields  
-- H3 masking metadata for sensitive geometry  
-- Story Node & Focus Mode references for narrative-based outputs  
+### Constraints / invariants
 
-All pipelines in `src/pipelines/**` that are under MCP control must:
+- Preserve canonical ordering: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**
+- No UI direct-to-graph reads (all graph access via API boundary).
+- No unsourced narrative in published Story Nodes; `mcp/` artifacts should *help prevent* unsourced claims by keeping evidence traceable.
+- Do not store secrets, tokens, or credentials in `mcp/**`.
 
-- Emit OpenLineage events  
-- Produce PROV-O RDF/JSON-LD fragments  
-- Include experiment, SOP, and model card IDs in metadata  
+### Open questions
 
----
+| Question | Owner | Target date |
+|---|---|---|
+| Do we standardize a `run_manifest` schema (YAML/JSON) for `mcp/runs/`? | TBD | TBD |
+| Do we add an experiment report template under `mcp/experiments/`? | TBD | TBD |
+| Do we adopt a formal model card format (e.g., HF-style + KFM extensions)? | TBD | TBD |
 
-## ⚙️ 7. CI/CD Enforcement — MCP Validation Workflows
+### Future extensions
 
-`.github/workflows/mcp-validate.yml` and related jobs enforce:
-
-- KFM-MDP v11.2.2 markdown & metadata rules in `mcp/**`  
-- MCP experiment schema (via JSON Schema & SHACL)  
-- Model card schema compliance  
-- SOP format & completeness  
-- Lineage completeness (e.g., no “orphan” experiments without dataset refs)  
-- FAIR+CARE validations (sensitive experiments MUST be tagged/approved)  
-- Prohibited content checks (no raw sensitive coordinates or ungoverned archives)  
-
-**No experiment or model card can be merged** unless **all** validations pass.
+- Automated linking from `mcp/runs/**` → PROV bundles in `data/prov/**`
+- CI checks ensuring every model card references evaluation evidence
+- Optional metrics tracking (e.g., entity extraction accuracy over time)
 
 ---
 
-## 🧭 8. Integration with Story Nodes & Focus Mode
+## 🗺️ Diagrams
 
-MCP outputs directly feed KFM’s narrative engines:
+### System / dataflow diagram
 
-### 8.1 Story Nodes v3
+~~~mermaid
+flowchart LR
+  MCP[mcp/<br/>experiments + model cards + SOPs] -->|documents + pointers| D[data/<domain>/processed]
+  D --> C1[data/stac/**]
+  D --> C2[data/catalog/dcat/**]
+  D --> C3[data/prov/**]
+  C1 --> G[src/graph]
+  C2 --> G
+  C3 --> G
+  G --> API[src/server or src/api]
+  API --> UI[web/]
+  UI --> SN[docs/reports/story_nodes]
+  SN --> FM[Focus Mode<br/>provenance-linked only]
+~~~
 
-- Story Nodes referencing scientific conclusions must:
-  - Cite experiment IDs (`mcp/experiments/**`)  
-  - Reference model cards where AI is involved  
-  - Embed temporal and spatial context from MCP metadata  
+### Optional: sequence diagram (Focus Mode contract boundary)
 
-- Narrative claims must be:
-  - Traceable to experiments or authoritative references  
-  - Governed by FAIR+CARE and sovereignty rules  
-
-### 8.2 Focus Mode v3
-
-- Uses MCP outputs to:
-
-  - Provide scientifically accurate context for:
-    - Climate anomalies  
-    - Hydrology reconstructions  
-    - Historical reconstructions  
-    - Cultural landscape narratives  
-
-- Focus Mode v3 explainability panels may:
-  - Link directly to model cards  
-  - Visualize XAI artifacts (e.g., SHAP bar plots)  
-  - Show provenance/lineage chain fragments  
-
-This ensures narrative layers are **grounded**, **explainable**, and **governed**.
-
----
-
-## 📊 9. Telemetry & Sustainability — MCP-Level Metrics
-
-All MCP workflows (experiments, training, evaluations, audits) MUST capture:
-
-- `energy_wh` — energy used (per run or batch)  
-- `carbon_gco2e` — estimated CO₂-equivalent  
-- `runtime_sec` — execution runtime  
-- `io_bytes_read`, `io_bytes_written` (where available)  
-- `records_processed` — data volume indicator  
-
-Telemetry is aggregated into:
-
-```text
-../releases/<version>/mcp-telemetry.json
-docs/reports/telemetry/mcp/*.json
-```
-
-and used for:
-
-- Sustainability dashboards and reports  
-- Governance board reviews of computational footprint  
-- Optimization of experiments and model training strategies  
+~~~mermaid
+sequenceDiagram
+  participant UI as UI (web)
+  participant API as API boundary
+  participant Graph as Graph layer
+  UI->>API: focusContext(entity_id)
+  API->>Graph: fetch subgraph + provenance refs
+  Graph-->>API: context bundle (entities + evidence ids)
+  API-->>UI: narrative context + citations + flags
+~~~
 
 ---
 
-## 📐 10. MCP & Standards Interoperability
+## 📦 Data & Metadata
 
-MCP artifacts must align with:
+### Inputs
 
-- **DCAT 3.0** — experiments and model outputs as datasets/distributions  
-- **ISO 19115** — metadata lineage for spatial & environmental data  
-- **STAC 1.x** — for experiment-generated spatial outputs  
-- **PROV-O** and **OpenLineage** — full lifecycle provenance  
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Evidence products (processed data) | files (varies) | `data/<domain>/processed/` | domain validators + schema checks |
+| STAC/DCAT/PROV artifacts | JSON / JSON-LD (varies) | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` | schema validation in `schemas/**` (if present) |
+| Graph entity identifiers | strings | API/Graph outputs | contract tests (API) |
+| Prior model versions + eval outputs | refs/pointers | releases or `data/**` | reproducibility checks |
 
-Where possible, experiments and model cards should include:
+### Outputs
 
-- `dcat:Dataset` references for key derived datasets  
-- `stac_ref` fields for spatial outputs  
-- `prov:Activity` IDs mapping to OpenLineage job/run IDs  
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Experiment report | Markdown | `mcp/experiments/**` | Universal doc template conventions |
+| Run manifest/log | YAML/JSON/Markdown | `mcp/runs/**` | (recommended) schema in `schemas/telemetry/**` |
+| Model card | Markdown (+ optional JSON) | `mcp/model_cards/**` | model card format (TBD) |
+| SOP | Markdown | `mcp/sops/**` | SOP structure conventions |
+
+### Sensitivity & redaction
+
+- Do not publish exact coordinates or culturally sensitive locations in `mcp/**` unless governance explicitly allows it.
+- Treat `mcp/**` as potentially public by default (see front-matter). If a doc must be restricted, mark it and follow the repository’s publishing rules.
+
+### Quality signals
+
+- Every experiment report includes:
+  - a clear question/objective,
+  - inputs and environment assumptions,
+  - linkable output pointers,
+  - known limitations and failure modes.
+- Every model card links to evaluation evidence and states intended use + non-use.
+- No orphan references (paths or IDs that do not resolve).
 
 ---
 
-## 🕰 11. Version History
+## 🌐 STAC, DCAT & PROV Alignment
 
-| Version | Date       | Summary                                                                                             |
-|--------:|-----------:|-----------------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | Upgraded to KFM-MDP v11.2.2; added emoji directory layout; clarified CI enforcement & sustainability telemetry. |
-| v11.0.0 | 2025-11-23 | Initial MCP workspace overview for KFM v11; defined experiments, SOPs, model cards, and lineage rules. |
+### STAC
+
+- When an experiment/run produces a new evidence product, ensure the *canonical artifact* is cataloged:
+  - STAC Collection + Items under `data/stac/**`
+- `mcp/**` should reference STAC IDs (not duplicate the catalog content).
+
+### DCAT
+
+- For datasets/evidence products intended for publication or external interoperability:
+  - DCAT dataset record under `data/catalog/dcat/**`
+- `mcp/**` should reference DCAT identifiers and capture any license/attribution notes discovered during experimentation.
+
+### PROV-O
+
+- Prefer every meaningful run to produce (or link to) a PROV activity bundle under `data/prov/**`.
+- `mcp/runs/**` should contain pointers/IDs to PROV, rather than duplicating provenance payloads.
+
+### Versioning
+
+- Treat model cards, run manifests, and SOPs as versioned artifacts.
+- When a model is updated, update its model card with a changelog-style entry and link to evaluation evidence.
 
 ---
 
-<div align="center">
+## 🧱 Architecture
 
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-🧬 Master Coder Protocol Workspace · MCP-DL v6.3 · KFM-MDP v11.2.2 · Diamond⁹ Ω / Crown∞Ω  
+### Components
 
-[⬅️ Back to Root](../README.md) · [📘 MCP Protocol](MCP-README.md) · [🛡 Governance Charter](../docs/standards/governance/ROOT-GOVERNANCE.md)
+| Component | Responsibility | Interface |
+|---|---|---|
+| MCP workspace (`mcp/`) | Experiment record + model documentation + SOPs | Markdown docs + manifests + pointers |
+| ETL | Ingest + normalize | configs + run logs |
+| Catalogs | STAC/DCAT/PROV | JSON + validators |
+| Graph | Neo4j ingest | import fixtures + API boundary |
+| APIs | Serve contracts; enforce redaction | REST/GraphQL |
+| UI | Map + narrative exploration | API calls |
+| Story Nodes | Curated narrative | provenance-linked content |
+| Focus Mode | Contextual synthesis | provenance-linked only |
 
-</div>
+### Interfaces / contracts
+
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | semver + changelog |
+| Story node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | semver + changelog |
+| API contracts | `src/server/contracts/**` (or legacy) | semver + contract tests |
+| Schemas | `schemas/**` | semver + schema validation |
+| MCP artifacts | `mcp/**` | version per artifact + provenance pointers |
+
+---
+
+## ⚙️ Validation & CI/CD
+
+### Validation steps (recommended)
+
+- Markdown protocol check (front-matter, required sections)
+- Secrets scan (no tokens/keys)
+- Link/reference checks (no orphan file pointers)
+- If model card updated: ensure evaluation evidence is linked
+- If experiment produces evidence: ensure STAC/DCAT/PROV updates exist in canonical locations
+
+### CI expectations (if configured)
+
+- Markdown protocol validation
+- Schema validation (STAC/DCAT/PROV/story nodes/telemetry if present)
+- API contract tests (if API boundary exists)
+- Security and sovereignty scanning gates (if configured)
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+- Keep `mcp/**` evidence-first:
+  - clearly label *fact vs inference vs hypothesis* in experiment reports.
+- If an experiment or model concerns:
+  - culturally sensitive knowledge,
+  - restricted locations,
+  - protected personal data,
+  - or high-impact narrative generation,
+  then it requires governance review before downstream publication.
+
+---
+
+## 🧾 Version History
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-22 | Initial `mcp/` README establishing structure and conventions | (you) |
+
+---
+
+### Footer refs
+
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- v13 Blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty policy: `docs/governance/SOVEREIGNTY.md`
