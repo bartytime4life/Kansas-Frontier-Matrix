@@ -1,8 +1,8 @@
 ---
-title: ".github/apps — GitHub App Integrations"
+title: "GitHub Apps — Repository Automation"
 path: ".github/apps/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-22"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -18,6 +18,7 @@ prov_profile: "KFM-PROV v11.0.0"
 governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
 ethics_ref: "docs/governance/ETHICS.md"
 sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+
 fair_category: "FAIR+CARE"
 care_label: "TBD"
 sensitivity: "public"
@@ -41,268 +42,254 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# .github/apps — GitHub App Integrations
+# GitHub Apps
 
 ## 📘 Overview
 
 ### Purpose
-- This directory documents **GitHub Apps and equivalent repository-integrated automation** used by KFM repos (installed GitHub Apps, bots, and third-party repo integrations that operate via GitHub’s API/webhooks).
-- It provides a **reviewable inventory** of app intent, permission surface area, operational owners, and how each integration interacts with CI/CD.
-
-> This directory is documentation-first. Do **not** store credentials, private keys, webhook secrets, or other sensitive values in-repo.
+- Provide a single, repo-versioned location for GitHub App manifests and operational documentation used by repository automation.
+- Standardize how we request/review app permissions and how CI workflows authenticate **without committing secrets**.
 
 ### Scope
+
 | In Scope | Out of Scope |
 |---|---|
-| Installed GitHub Apps (org/repo installs) and their permissions, event subscriptions, and operational runbooks | GitHub Actions workflow logic itself (`.github/workflows/`) |
-| Bot identities used by integrations (naming, ownership, access patterns) | Pure documentation for contributors (use root `README.md` / `CONTRIBUTING.md`) |
-| Where configuration lives for a given integration (e.g., repo files, org settings, secrets) | Secrets values, private keys, tokens (must remain in GitHub Secrets / org secret stores) |
-| Governance/security review notes for third-party integrations | “Which apps are installed right now” if not maintained in this directory |
+| Public GitHub App manifests (no secrets), permission justifications, rotation/runbook notes, mapping apps → workflows/jobs | Private keys, webhook secrets, installation tokens, and other credentials (must live in secret storage); GitHub Action workflow definitions themselves |
 
 ### Audience
-- Primary: maintainers, security reviewers, CI/CD owners
-- Secondary: contributors proposing new automation
+- Primary: repo maintainers, CI/CD owners, security reviewers
+- Secondary: contributors who need to understand why an integration exists
 
-### Definitions
-- Link: `docs/glossary.md` (not confirmed in repo)
-- Terms used in this doc:
-  - **GitHub App**: a GitHub-native integration installed onto repos/orgs with scoped permissions.
-  - **Installation scope**: org-wide vs repo-specific install.
-  - **Permissions**: the GitHub API scopes granted to the app.
-  - **Webhook events**: repository/org events delivered to the app.
-  - **Operational owner**: human(s) responsible for reviewing permissions, incidents, and rotations.
+### Definitions (link to glossary)
+- Link: `docs/glossary.md`
+- Terms used in this doc: **GitHub App**, **App manifest**, **installation**, **webhook secret**, **private key**, **least privilege**, **OIDC**
 
-### Key artifacts
+### Key artifacts (what this doc points to)
+
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| This index | `.github/apps/README.md` | Repo maintainers | Inventory + governance expectations |
-| Per-app documentation | `.github/apps/<app-slug>/README.md` | App owner | Required for each installed integration |
-| Security policy | `.github/SECURITY.md` | Security owners | Canonical security policy location (expected by KFM) |
-| CI workflows | `.github/workflows/` | CI/CD owners | Where workflows call actions / use app tokens |
-| System pipeline reference | `docs/MASTER_GUIDE_v12.md` | Core maintainers | Canonical pipeline + governance invariants |
+| GitHub Apps README | `.github/apps/README.md` | Repo maintainers | This document |
+| App definition folder | `.github/apps/<app_slug>/` | App owner | One folder per GitHub App integration |
+| Workflow inventory | `.github/workflows/` | CI owners | Workflows that may use app-based auth |
+| Security standards | `.github/SECURITY.md` + `docs/security/` | Security reviewers | Cross-reference for credential handling |
 
-### Definition of done
+### Definition of done (for this document)
 - [ ] Front-matter complete + valid
-- [ ] Every installed app has a corresponding `.github/apps/<app-slug>/README.md`
-- [ ] Each app doc includes: purpose, permissions, data handling, secrets mapping (names only), last review date
-- [ ] No secrets committed to the repo
-- [ ] Governance + CARE/sovereignty considerations explicitly stated when applicable
-- [ ] Validation steps listed and repeatable
-
-### If you are adding a new app
-- Create a folder: `.github/apps/<app-slug>/`
-- Add a per-app README (minimum fields listed below)
-- Document requested permissions (and why each one is needed)
-- Confirm where secrets are stored (secret names only; never values)
-- Add/Update required status checks if the app participates in CI
-
----
+- [ ] App permission requests are documented and justified (least privilege)
+- [ ] No secrets committed (private keys/webhook secrets/tokens)
+- [ ] Workflows depending on an app are listed and reviewed
+- [ ] Validation steps below are repeatable
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `.github/apps/README.md`
+- `path`: `.github/apps/README.md` (must match front-matter)
 
 ### Related repository paths
+
 | Area | Path | What lives here |
 |---|---|---|
-| GitHub Apps documentation | `.github/apps/` | This inventory and per-app docs |
-| GitHub workflows | `.github/workflows/` | GitHub Actions workflows and status checks |
-| Security | `.github/SECURITY.md` + `docs/security/` | Policy and technical standards (not confirmed in repo) |
-| Governance | `docs/governance/` | Governance, ethics, sovereignty policies (not confirmed in repo) |
-| System guide | `docs/MASTER_GUIDE_v12.md` | Canonical pipeline + invariants |
+| GitHub platform config | `.github/` | Workflows, issue templates, security policy |
+| Workflows | `.github/workflows/` | CI/CD pipelines that may call GitHub APIs |
+| Documentation | `docs/` | Canonical governed docs (architecture, standards, runbooks) |
+| Pipelines | `src/pipelines/` | ETL + catalog + transforms (may be triggered by CI) |
+| API server | `src/server/` | Contracted access layer (REST/GraphQL) |
 
 ### Expected file tree for this sub-area
 ~~~text
 📁 .github/
 └── 📁 apps/
     ├── 📄 README.md
-    ├── 📁 <app-slug>/
-    │   ├── 📄 README.md
-    │   ├── 📄 permissions.md
-    │   ├── 📄 data-handling.md
-    │   └── 📄 runbook.md
-    └── 📄 APP_INVENTORY.yaml  (optional; see “Future extensions”)
+    └── 📁 <app_slug>/
+        ├── 📄 permissions.md
+        ├── 📄 manifest.json
+        ├── 📄 workflows.md
+        └── 📁 assets/
+            └── 📄 <optional_files>
 ~~~
-
----
 
 ## 🧭 Context
 
 ### Background
-KFM has a governed pipeline with strong provenance and validation expectations. Repository automation (including GitHub Apps) can materially affect:
-- CI/CD checks and merges
-- Code scanning and security posture
-- Generation of derived artifacts (data catalogs, documentation, reports)
-
-This directory exists so integrations do not become “invisible infrastructure.”
+- KFM uses repository automation (CI/CD + governance gates) to keep data, catalogs, graph, APIs, UI, and narrative outputs synchronized and reviewable.
+- GitHub Apps are preferred over long-lived personal tokens when automation needs to interact with GitHub (least privilege + auditable installations).
 
 ### Assumptions
-- Repositories use GitHub-native CI (Actions) and/or GitHub Apps for checks.
-- Some integrations may be installed at the organization level and apply to multiple repos.
+- This repository may be public; anything committed here should be safe to disclose.
+- Secrets are managed via GitHub Environments/Secrets or an external secret manager (not stored in git).
 
 ### Constraints / invariants
-- **No secrets in-repo**: never commit private keys, tokens, webhook secrets, or credentials.
-- **Least privilege**: permissions should be the minimum needed to accomplish the task.
-- **No bypassing the KFM pipeline**: if an integration generates artifacts (data, catalogs, graphs, docs), it must respect the canonical pipeline ordering and placement rules (e.g., derived outputs in `data/processed/`, catalogs in `data/stac/`, lineage in `data/prov/`).
-- **API boundary remains intact**: integrations must not introduce “UI reads graph directly” patterns; UI remains contract-driven via the API layer.
+- Preserve the canonical ordering: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- Frontend consumes contracts via APIs (no direct graph dependency).
+- Never commit private keys, webhook secrets, or tokens into this directory.
 
 ### Open questions
+
 | Question | Owner | Target date |
 |---|---|---|
-| Do we maintain an explicit machine-readable inventory file (e.g., `APP_INVENTORY.yaml`)? | TBD | TBD |
-| What is the required review cadence for app permissions (quarterly, semiannual)? | TBD | TBD |
-| Do we require a “permissions diff” in PRs when an app’s scopes change? | TBD | TBD |
+| Which GitHub Apps are installed and used for this repo/org? | TBD | TBD |
+| Do we require org-level installs for any automation, or repo-level only? | TBD | TBD |
+| Do any apps trigger/publish data artifacts (STAC/DCAT/PROV) as part of CI? | TBD | TBD |
 
 ### Future extensions
-- Add `APP_INVENTORY.yaml` and a CI check to ensure every installed app appears in the inventory (and vice versa).
-- Add an automation to generate a per-app “permissions snapshot” from GitHub metadata for review.
-
----
+- Add an `inventory.md` listing every installed app, installation scope (org/repo), and the workflows/jobs that depend on it.
+- Add a standardized `rotation.md` per app (key rotation cadence + incident response pointers).
 
 ## 🗺️ Diagrams
 
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  Dev[Developer] -->|push / PR| GH[GitHub Repo]
-  GH -->|webhook events| App[GitHub App or Integration]
-  App -->|check runs / comments| GH
-  GH -->|required checks| Merge[Merge gate]
-  GH -->|workflow jobs| CI[GitHub Actions]
+  PR[Pull Request] --> WF[GitHub Actions Workflow]
+  WF --> V[Validation Jobs]
+  WF --> APP[GitHub App Auth]
+  APP --> GH[GitHub API]
+  V --> ART[Artifacts: logs/reports]
 ~~~
 
----
+### Optional: sequence diagram
+~~~mermaid
+sequenceDiagram
+  participant Dev as Contributor
+  participant GH as GitHub
+  participant WF as Actions Workflow
+  participant App as GitHub App
+  participant API as KFM API
+  Dev->>GH: Open PR
+  GH->>WF: Trigger workflow
+  WF->>App: Request installation token (via stored credentials)
+  App-->>WF: Short-lived token
+  WF->>GH: Comment/status/update checks
+  WF->>API: (Optional) call KFM API to run contract tests
+~~~
 
 ## 📦 Data & Metadata
 
 ### Inputs
-| Input | Format | Where from | Validation |
+
+| Input | Source | Sensitivity | Notes |
 |---|---|---|---|
-| GitHub events | Webhook payloads | GitHub | Validate signatures (implementation-specific) |
-| Repo contents | Git trees/blobs | GitHub API | Scope via permissions; restrict to needed paths |
-| Secrets | GitHub Secrets | Repo/org secret store | Names documented here; values never stored here |
+| App manifest | `.github/apps/<app_slug>/manifest.json` | public | Must not contain secrets |
+| Permission justification | `.github/apps/<app_slug>/permissions.md` | public | Required for review |
+| Workflow mapping | `.github/apps/<app_slug>/workflows.md` | public | Which workflows rely on the app |
 
 ### Outputs
-| Output | Format | Path | Contract / Schema |
+
+| Output | Where it lives | Sensitivity | Notes |
 |---|---|---|---|
-| Check runs | GitHub Checks API | GitHub UI | Required checks configured in repo settings |
-| PR comments | Markdown | PR timeline | Follow repo contribution norms |
-| Artifacts | Files | GitHub Actions artifacts / releases | Must not leak sensitive data |
+| Installed GitHub App integration | GitHub org/repo settings | restricted | Not stored in repo |
+| Private key / webhook secret | Secret store | secret | Never commit |
+| Audit trail | GitHub audit logs / PR history | restricted | Use for investigations |
 
 ### Sensitivity & redaction
-- If an integration posts content externally (PR comments, issues, job logs), it must avoid:
-  - disclosing secrets
-  - disclosing restricted locations or sensitive dataset details without governance approval
-  - reproducing protected/PII content from datasets
+- Allowed in repo: public manifests, non-secret IDs, and documentation.
+- Prohibited in repo: private keys (`*.pem`), webhook secrets, installation access tokens, PATs, or any credential material.
+- If a configuration requires a shared secret, store it in GitHub Secrets/Environments and reference it in workflows.
 
 ### Quality signals
-- Required checks pass on default branch
-- App permissions reviewed and documented
-- Any generated artifacts link to provenance/run outputs where applicable
-
----
+- Permissions are minimal and justified in writing.
+- Workflows use short-lived auth (where possible) and scope-limited permissions.
+- Secret scanning and CI checks pass on every PR touching `.github/apps/`.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### STAC
-- If an integration generates or updates STAC outputs, it must:
-  - write to `data/stac/` and preserve collection/item integrity
-  - avoid “silent updates” without provenance references
+- N/A unless an app/workflow publishes STAC artifacts.
+- If publishing is automated, outputs must land in the canonical STAC directory and include stable IDs.
 
 ### DCAT
-- If an integration publishes or alters dataset catalog metadata:
-  - it must update DCAT mappings in the canonical location (expected: `data/catalog/dcat/`)
+- N/A unless an app/workflow publishes DCAT outputs.
 
 ### PROV-O
-- If an integration triggers transformations that create derived artifacts:
-  - record lineage (expected: `data/prov/`) so outputs can be traced to inputs and activities
+- N/A unless an app/workflow generates provenance bundles for a run.
 
 ### Versioning
-- Generated outputs should follow documented versioning expectations and avoid unreviewed breaking changes.
-
----
+- Changes to app permissions or scopes should be treated like contract changes:
+  - document the change,
+  - link to the PR/ticket,
+  - and ensure review gates are followed.
 
 ## 🧱 Architecture
 
 ### Components
-| Component | Responsibility | Notes |
-|---|---|---|
-| GitHub App | Receives events and performs repo actions | Scoped permissions; webhook-driven |
-| GitHub Actions | Runs CI workflows | May use app tokens or GitHub-provided tokens |
-| Repo settings | Required checks / branch protection | Must align with CI + app checks |
-| Secrets store | Holds sensitive material | Never commit secrets into repo |
+- GitHub Apps (installed at org/repo scope) for automation requiring GitHub API access
+- GitHub Actions workflows that may authenticate via a GitHub App
+- Secret storage for private keys / webhook secrets / other credentials
 
-### Interfaces and contracts
-| Interface | Contract | Where documented |
-|---|---|---|
-| App permissions | GitHub permission list | `.github/apps/<app-slug>/permissions.md` |
-| App config | Config files or org settings | `.github/apps/<app-slug>/README.md` |
-| CI gating | Required checks | `.github/workflows/` + repo settings |
+### Interfaces / contracts
+- GitHub App → GitHub API permissions: defined and justified in `permissions.md`
+- Workflow → App credentials: referenced via GitHub Secrets/Environments (never committed)
+- KFM boundary: workflows should call the KFM API layer rather than reading Neo4j directly
 
-### Per-app README minimum fields
-For each app under `.github/apps/<app-slug>/README.md`, include:
-- App name + vendor
-- Installation scope (org/repo) and where to manage it
-- Purpose and what workflows it supports
-- Permissions list with rationale per permission
-- Webhook events used
-- Secrets required (names only) and rotation notes
-- Data handling notes (what repo paths/data it reads)
-- Incident runbook / contact
-- Last reviewed date
-
----
+### Extension points checklist (for future work)
+- [ ] Create `.github/apps/<app_slug>/`
+- [ ] Add `permissions.md` (required)
+- [ ] Add `manifest.json` (optional; must be secret-free)
+- [ ] Add `workflows.md` mapping which workflows/jobs depend on the app
+- [ ] Document any rotation/revocation expectations (optional `rotation.md`)
+- [ ] Flag any permission increases as **requires human review**
 
 ## 🧠 Story Node & Focus Mode Integration
 
-If an integration generates narrative artifacts (e.g., Story Nodes):
-- every factual claim must be provenance-linked
-- any predictive content must be clearly labeled and governed
-- no unsourced narrative should be introduced into Focus Mode contexts
+### How this work surfaces in Focus Mode
+- Typically indirect: CI automation may generate or validate Story Node artifacts, data catalogs, or provenance bundles that later surface in the UI.
 
----
+### Provenance-linked narrative rule
+- Any automation that generates narrative content must preserve provenance and avoid unsourced narrative claims (link story artifacts to dataset/document IDs and/or PROV run IDs).
+
+### Optional structured controls
+- If an app is used to publish story artifacts automatically, consider adding:
+  - an approval gate before publishing
+  - a provenance completeness check
+  - a redaction/generalization step for sensitive locations
 
 ## 🧪 Validation & CI/CD
 
-### Minimum CI gates
-At a minimum, app-driven or app-impacted changes should not weaken these gates:
-- Markdown protocol validation
-- JSON schema validation (STAC/DCAT/telemetry)
-- Graph integrity tests
-- API contract tests
-- UI layer registry schema checks
-- Security + sovereignty scanning gates (where applicable)
+### Validation steps
+- [ ] Secret scan passes (no keys/tokens in `.github/apps/**`)
+- [ ] `permissions.md` exists for every `.github/apps/<app_slug>/`
+- [ ] Any permission change is reviewed by a security reviewer
+- [ ] Workflows referencing the app are updated and still pass
+- [ ] Documentation in this README (or per-app docs) updated
 
-### App change checklist
-- [ ] Permissions reviewed for least privilege
-- [ ] Branch protections and required checks updated as needed
-- [ ] Secrets are referenced by name only (no values committed)
-- [ ] Any generated artifacts have provenance/run references
-- [ ] Documentation updated in `.github/apps/`
+### Reproduction
+- To recreate an app from a manifest:
+  1. Use the secret-free manifest file in `.github/apps/<app_slug>/manifest.json`
+  2. Create/install the app in GitHub UI (org/repo settings)
+  3. Store generated private key and webhook secret in secret storage
+  4. Update workflows to reference secrets by name (never copy secrets into git)
 
----
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| App permission changes | PR review + GitHub audit logs | `docs/telemetry/` |
+| Workflow auth failures | Actions logs | `docs/telemetry/` |
+| Unexpected repo writes | GitHub audit logs | Security incident process |
 
 ## ⚖ FAIR+CARE & Governance
 
-### Governance review triggers
-- Adding a new external integration (GitHub App, Marketplace app, bot)
-- Expanding app permissions
-- Apps that post derived or sensitive information into PRs/issues/logs
-- Automation that affects public-facing endpoints or story outputs
+### Review gates
+- Permission increases and any automation that writes to `data/`, `docs/reports/`, or publishes story artifacts should be reviewed by:
+  - CI owners
+  - a security reviewer
+  - and (if narrative-facing) the governance/review gate owners
 
-### Sovereignty safety
-- If an integration touches restricted locations or culturally sensitive materials:
-  - document redaction/generalization rules
-  - require explicit governance review before enabling automated publication
+### CARE / sovereignty considerations
+- If an app/workflow processes culturally sensitive or restricted information, follow:
+  - redaction/generalization rules
+  - access controls
+  - and any sovereignty constraints referenced in the governance docs
 
----
+### AI usage constraints
+- Ensure this document’s AI permissions/prohibitions match intended use (see front matter).
+- Do not use automated tooling to infer sensitive locations or generate new policy text.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial `.github/apps` README scaffold | TBD |
+| v1.0.0 | 2025-12-22 | Initial README for `.github/apps/` | TBD |
 
 ---
 
