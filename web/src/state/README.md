@@ -165,10 +165,10 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 ~~~mermaid
 flowchart LR
-  A[User interaction] --> B[UI Components]
-  B --> C[State container (web/src/state)]
-  C --> D[API layer (contracted)]
-  D --> E[Render: map + timeline + narrative]
+  A["User interaction"] --> B["UI components"]
+  B --> C["State container - web/src/state"]
+  C --> D["API client layer - contracted"]
+  D --> E["Render map, timeline, narrative"]
 ~~~
 
 ### Optional: sequence diagram
