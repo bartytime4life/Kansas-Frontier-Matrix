@@ -1,10 +1,10 @@
 ---
-title: "KFM Data Directory (data/)"
+title: "KFM Data Directory README"
 path: "data/README.md"
-version: "v0.1.0-draft"
-last_updated: "2025-12-19"
+version: "v1.0.0"
+last_updated: "2025-12-22"
 status: "draft"
-doc_kind: "README"
+doc_kind: "Guide"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:data-readme:v0.1.0-draft"
-semantic_document_id: "kfm-data-readme-v0.1.0-draft"
-event_source_id: "ledger:kfm:doc:data-readme:v0.1.0-draft"
+doc_uuid: "urn:kfm:doc:data:readme:v1.0.0"
+semantic_document_id: "kfm-data-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:data:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,163 +41,176 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Data Directory (data/)
+# `data/` — KFM data directory
 
 ## 📘 Overview
 
 ### Purpose
-This directory is the canonical home for **KFM data assets** across the pipeline:
-- staged source inputs (**raw → work → processed**)
-- catalog outputs (**STAC / DCAT / PROV**)
-- domain-scoped organization for datasets that feed the graph, APIs, and UI experiences.
 
-### Scope
-In scope for `data/`:
-- **Domain data** staged by pipeline phase (raw/work/processed; plus optional reports)
-- **Catalog JSON outputs** (STAC Collections + Items; DCAT dataset views; PROV lineage bundles)
+The `data/` directory is the **canonical home for KFM datasets and pipeline artifacts**: immutable source snapshots, intermediate transforms, normalized “processed” outputs, and the machine-readable metadata that makes those outputs discoverable and auditable (STAC/DCAT/PROV, graph import fixtures).
 
-Out of scope for `data/`:
-- source code (goes in `src/`)
-- documentation (goes in `docs/`)
-- experiment/run artifacts (goes in `mcp/`)
+This directory exists to support KFM’s canonical pipeline:
 
-### Audience
-- ETL/pipeline developers
-- data contributors and curators
-- catalog/metadata maintainers
-- graph ingestion maintainers
+**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
 
-### Definitions
-- **Domain:** a top-level dataset family, typically stored under `data/<domain>/`
-- **Raw:** original source material (immutably preserved once committed)
-- **Work:** intermediate transforms and normalization outputs (regeneratable)
-- **Processed:** analysis-ready / normalized / derived datasets
-- **STAC:** SpatioTemporal Asset Catalog (Collections + Items)
-- **DCAT:** Dataset Catalog Vocabulary (dataset-level metadata “views”)
-- **PROV:** W3C PROV-O lineage describing activities, agents, and derivations
+### What belongs here
 
-### Key artifacts
-- Domain staging directories: `data/<domain>/{raw,work,processed,stac}/`
-- Global catalogs:
-  - `data/stac/collections/` (STAC Collections)
-  - `data/stac/items/` (STAC Items)
-  - `data/catalog/dcat/` (DCAT dataset records)
-  - `data/prov/` (PROV lineage bundles)
+- **Domain datasets** (organized per domain pack): raw / work / processed
+- **Catalog outputs**:
+  - STAC collections + items
+  - DCAT dataset records
+  - PROV lineage bundles
+- **Graph ingest fixtures** (CSV + Cypher) used by loaders/migrations (generated from processed data)
 
-### Definition of done
-A dataset/domain addition is “done” when:
-- inputs are staged through raw/work/processed (as applicable)
-- STAC Collection + Item(s) exist and validate
-- DCAT dataset record exists (minimum: title/description/license/keywords)
-- PROV lineage exists for the transform activity that generated outputs
-- docs exist for the new domain under `docs/<domain>/` or `docs/data/<domain>/` (choose one canonical location and link)
+### What does not belong here
 
-### Related repository paths
-| System / Area | Canonical location | What it governs |
-|---|---|---|
-| Data domains | `data/` | Raw/work/processed organization per domain |
-| STAC | `data/stac/` | STAC Collections + Items |
-| DCAT | `data/catalog/dcat/` | DCAT dataset views/records |
-| PROV | `data/prov/` | PROV lineage bundles (JSON-LD) |
-| Domain docs | `docs/<domain>/` or `docs/data/<domain>/` | Domain narrative + mappings + evidence notes |
+- Source code (belongs under `src/`)
+- API contracts (belongs under the API boundary)
+- UI runtime assets/config (belongs under `web/`)
+- Narrative Story Nodes (belongs under `docs/reports/story_nodes/`)
 
-### Expected file tree for this sub-area
+## 🗂️ Directory Layout
+
+### This document
+
+- `path`: `data/README.md` (must match front-matter)
+
+### Target layout (v13+)
+
 ~~~text
 📁 data/
 ├── 📄 README.md
+│
 ├── 📁 <domain>/
-│   ├── 📁 raw/
-│   ├── 📁 work/
-│   ├── 📁 processed/
-│   └── 📁 stac/
+│   ├── 📁 raw/                 # immutable source snapshots
+│   ├── 📁 work/                # intermediate transforms (rerunnable)
+│   └── 📁 processed/           # normalized outputs used downstream
+│
 ├── 📁 stac/
-│   ├── 📁 collections/
-│   └── 📁 items/
+│   ├── 📁 collections/         # STAC Collections (JSON)
+│   └── 📁 items/               # STAC Items (JSON)
+│
 ├── 📁 catalog/
-│   └── 📁 dcat/
-├── 📁 prov/
-└── 📁 reports/   # optional: generated summaries/figures (when required)
+│   └── 📁 dcat/                # DCAT Dataset records (JSON-LD / TTL as adopted)
+│
+├── 📁 prov/                    # PROV bundles (JSON-LD / TTL as adopted)
+│
+└── 📁 graph/
+    ├── 📁 csv/                 # import-ready CSVs (nodes/edges/etc.)
+    └── 📁 cypher/              # Cypher loaders/migrations (if used)
 ~~~
 
-## 🧭 Context
+### Folder responsibilities
 
-### Background
-KFM’s canonical system ordering is:
-- **ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
-
-The `data/` directory is where the **staged inputs** and **catalog outputs** live to support this chain.
-
-### Assumptions
-- Pipelines are intended to be deterministic and replayable, with artifacts traceable via provenance.
-- Catalog outputs (STAC/DCAT/PROV) are treated as first-class, machine-validated artifacts.
-
-### Constraints / invariants
-- Do not publish unsourced claims in narrative contexts; data outputs must remain provenance-linked.
-- Catalog outputs must stay consistent with their corresponding staged datasets.
-- Apply governance/ethics/sovereignty policies when handling sensitive data (see refs in front matter).
-
-## 🗺️ Diagrams
-
-~~~mermaid
-flowchart LR
-  A["ETL + Normalization"] --> B["Staged Data (raw/work/processed)"]
-  B --> C["Catalogs (STAC/DCAT/PROV)"]
-  C --> D["Neo4j Graph"]
-  D --> E["API Layer"]
-  E --> F["Web UI (Map + Story Nodes + Focus Mode)"]
-~~~
+| Folder | Responsibility | Typical producers | Typical consumers |
+|---|---|---|---|
+| `data/<domain>/raw/` | Immutable source snapshots | ETL ingest | ETL transforms (read-only) |
+| `data/<domain>/work/` | Intermediate transforms (can be regenerated) | ETL | ETL, validation |
+| `data/<domain>/processed/` | Normalized outputs for catalogs + graph ingest | ETL | Catalog build, graph build |
+| `data/stac/**` | STAC Collections + Items | Catalog build | Graph, API, UI |
+| `data/catalog/dcat/**` | DCAT dataset records | Catalog build | API, external exports |
+| `data/prov/**` | PROV lineage bundles | ETL + catalog build | Audits, provenance graph, Focus Mode |
+| `data/graph/**` | Import fixtures for Neo4j | Graph build | Neo4j loaders / migrations |
 
 ## 📦 Data & Metadata
 
-### Required staging lifecycle
-Staging follows the required lifecycle:
-- `raw/` → `work/` → `processed/` → catalog outputs (`stac/`, plus global STAC/DCAT/PROV locations)
+### Data lifecycle
 
-### Organizing by domain + stage
-Data is organized **by domain and by stage**. Example domain layout:
-- `data/environment/raw/`
-- `data/environment/work/`
-- `data/environment/processed/`
-- `data/environment/stac/` (domain-local STAC JSONs, when used)
+For each domain under `data/<domain>/`:
 
-### Catalog outputs (global)
-Where catalog outputs live:
-- STAC JSON:
-  - `data/stac/collections/`
-  - `data/stac/items/`
-- DCAT dataset records:
-  - `data/catalog/dcat/`
-- PROV lineage bundles:
-  - `data/prov/`
+- `raw/` — immutable source snapshots
+- `work/` — intermediate transforms
+- `processed/` — normalized outputs used for catalogs and graph ingest
 
-### When adding a new dataset/domain
-1. Create the domain directory and stage folders:
-   - `data/<domain>/raw/`
-   - `data/<domain>/work/`
-   - `data/<domain>/processed/`
-   - `data/<domain>/stac/` (if producing domain-local STAC)
-2. Add domain documentation:
-   - `docs/<domain>/` **or** `docs/data/<domain>/` (choose one canonical location and link)
-3. Ensure catalog artifacts exist and validate:
+Global metadata outputs:
+
+- STAC: `data/stac/collections/` and `data/stac/items/`
+- DCAT: `data/catalog/dcat/`
+- PROV: `data/prov/`
+- Graph import: `data/graph/csv/` and `data/graph/cypher/`
+
+### Domain expansion pattern
+
+A “domain pack” is the minimum set required for a new domain to participate in the pipeline.
+
+When adding a new domain:
+
+1. Create `data/<domain>/raw/`, `data/<domain>/work/`, `data/<domain>/processed/`
+2. Ensure the domain’s processed outputs can generate:
    - STAC Collection + Item(s)
-   - DCAT dataset record
-   - PROV lineage bundle for the generating transform activity
+   - DCAT dataset record(s)
+   - PROV activity/bundle(s)
+   - Graph import fixtures (if the domain is graph-ingested)
+3. Add domain documentation under `docs/data/<domain>/` (canonical location may vary by repo; choose one and link it from here)
 
-## 🌐 STAC, DCAT & PROV Alignment
+## 🌐 STAC, DCAT & PROV alignment
 
-### STAC
-- Use STAC **Collections** to define dataset groupings and metadata.
-- Use STAC **Items** to represent individual assets/records, linking to staged outputs.
+### Policy for every dataset
 
-### DCAT
-- Maintain DCAT dataset records as “views” for discovery and dataset-level metadata.
+For each dataset or evidence product:
 
-### PROV
-- Produce PROV lineage (JSON-LD) capturing:
-  - the transform activity
-  - responsible agents (as modeled)
-  - input and output derivations
+- STAC Collection + Item(s)
+- DCAT mapping record
+- PROV activity describing lineage
+- Version lineage links reflected in catalogs and the graph
 
-### Versioning
-- New dataset versions should link predecessor/successor.
-- The graph should mirror dataset version lineage.
+### Identifier and linkage expectations
+
+- Graph nodes and APIs should reference:
+  - STAC Item IDs
+  - DCAT dataset ID
+  - PROV activity ID
+
+This ensures any UI view (including Focus Mode) can resolve “what is this data?” into a traceable lineage bundle.
+
+## 🧠 Story Node & Focus Mode Integration
+
+### Story Nodes as evidence-first narrative
+
+- Story Nodes should cite **graph entity IDs** and **STAC/DCAT/PROV evidence IDs**
+- Story Nodes may reference local assets (images, excerpts) with attribution, but the **source-of-truth evidence** remains the catalog + provenance artifacts
+
+### Focus Mode rule (non-negotiable)
+
+Focus Mode must only consume **provenance-linked content**. Any predictive or AI-generated content must be clearly marked, opt-in, and include uncertainty metadata.
+
+## 🧪 Validation & CI/CD
+
+### Minimum checks (data-facing)
+
+- STAC/DCAT/PROV artifacts validate against schemas in `schemas/`
+- No orphan references (IDs cited by graph/API/UI resolve to catalog/provenance artifacts)
+- Deterministic pipelines: reruns produce diffable, stable outputs
+- Sensitivity/redaction rules are enforced at ingest and at API/story boundaries
+
+## ⚖ FAIR+CARE & Governance
+
+### Governance review triggers
+
+- New external data sources
+- New sensitive layers (protected locations / culturally sensitive knowledge)
+- New AI narrative behaviors that could surface unsourced claims
+- New public-facing endpoints that expose data directly
+
+### Sovereignty safety
+
+Any restricted locations or culturally sensitive knowledge must be protected by:
+
+- geometry generalization where required,
+- API-level redaction,
+- Story Node asset review gates.
+
+## 🕰️ Version History
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-22 | Initial `data/` README (v12/v13-aligned) | TBD |
+
+---
+
+Footer refs:
+
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
