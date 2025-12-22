@@ -2,7 +2,7 @@
 title: "GitHub Action — pytest-runner"
 path: ".github/actions/pytest-runner/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-22"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -18,15 +18,16 @@ prov_profile: "KFM-PROV v11.0.0"
 governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
 ethics_ref: "docs/governance/ETHICS.md"
 sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+
 fair_category: "FAIR+CARE"
 care_label: "TBD"
 sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:github:actions:pytest-runner:readme:v1.0.0"
-semantic_document_id: "kfm-github-actions-pytest-runner-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:github:actions:pytest-runner:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:github-actions:pytest-runner:v1.0.0"
+semantic_document_id: "kfm-github-action-pytest-runner-v1.0.0"
+event_source_id: "ledger:kfm:doc:github-actions:pytest-runner:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -46,256 +47,278 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ## 📘 Overview
 
 ### Purpose
-This document governs the local GitHub Action located at `.github/actions/pytest-runner/` that runs the repository’s Python test suite using `pytest` as a CI gate.
 
-The action is intended to support KFM’s pipeline invariants by ensuring code changes do not break:
-- ETL and normalization logic
-- STAC/DCAT/PROV catalog build utilities and validators
-- graph build/integrity tooling
-- API contract behavior (where tests exist)
-- UI-adjacent Python tooling (if applicable)
+This document defines the intended contract and usage guidance for the reusable GitHub Action located at:
+
+- `.github/actions/pytest-runner/`
+
+The goal is to standardize how KFM runs Python unit tests (`pytest`) inside CI workflows, in line with “CI gate alignment” expectations (deterministic, validate-if-present, fail-if-invalid, skip-if-not-applicable behavior).
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Running `pytest` in CI with repo-standard arguments | Deployments (Pages, releases, infra) |
-| Installing Python dependencies needed for tests | Running non-Python test frameworks |
-| Producing CI-friendly outputs (e.g., junit/coverage) *if implemented* | Performing data writes to `data/` or publishing catalogs |
-| Providing a stable interface for workflows to invoke tests | Any privileged operations requiring secrets by default |
+| Setting up Python for CI | Deployments / releases |
+| Installing Python dependencies for tests | Publishing packages |
+| Running `pytest` with configurable args | Full infra provisioning |
+| Optional caching (pip/uv/poetry, depending on implementation) | Security scanning / SAST (separate gates) |
+| Optional generation of test artifacts (e.g., JUnit XML / coverage) | Long-running e2e tests that require external services |
 
 ### Audience
-- Primary: maintainers of CI/CD and Python code paths (`src/`, `tests/`, `tools/`)
-- Secondary: contributors writing or updating tests; reviewers validating PR health
+
+- Primary: CI maintainers + contributors who need consistent test behavior.
+- Secondary: Governance / reviewers auditing validation expectations.
 
 ### Definitions (link to glossary)
-- Link: `docs/glossary.md` *(not confirmed in repo)*
-- Terms used in this doc: `pytest`, `junit`, `coverage`, `composite action`, `workflow`
+
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **CI gate**
+  - **deterministic**
+  - **contract artifact**
+  - **validate-if-present / fail-if-invalid / skip-if-not-applicable**
 
 ### Key artifacts (what this doc points to)
+
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Action definition | `.github/actions/pytest-runner/action.yml` | CI maintainers | *(not confirmed in repo — expected for a local action)* |
-| This README | `.github/actions/pytest-runner/README.md` | CI maintainers | Governed doc (this file) |
-| Python tests | `tests/` | Code owners | Exact layout varies *(not confirmed in repo)* |
-| Pytest config | `pytest.ini` / `pyproject.toml` | Code owners | *(not confirmed in repo)* |
+| Action implementation | `.github/actions/pytest-runner/action.yml` | CI maintainers | Required for use (not confirmed in repo) |
+| This README | `.github/actions/pytest-runner/README.md` | CI maintainers | Keep in sync with `action.yml` |
+| Workflows calling the action | `.github/workflows/*.yml` | CI maintainers | Not confirmed in repo |
+| Tests | `tests/` | Module owners | `pytest` discovers and runs these |
+| Source code under test | `src/` | Module owners | May include pipelines/graph/server/web helpers |
+| Security policy | `.github/SECURITY.md` | Maintainers | Disclosure and reporting process |
 
 ### Definition of done (for this document)
-- [ ] Front-matter complete + valid (`path` matches repo path)
-- [ ] Action intent + usage is documented with a stable interface (inputs/outputs)
-- [ ] Reproduction steps are documented for local runs
-- [ ] Security and sovereignty considerations are explicitly stated
-- [ ] Any “expected” behavior that is not implemented is clearly marked *(not confirmed in repo)*
+
+- [ ] Front-matter complete + valid
+- [ ] README describes the **same inputs/behavior** as `.github/actions/pytest-runner/action.yml`
+- [ ] Example workflow snippet is correct for this repo’s expected structure
+- [ ] Security constraints are stated (fork PRs, secrets handling)
+- [ ] Validation and reproduction steps are listed and repeatable
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `.github/actions/pytest-runner/README.md`
+
+- `path`: `.github/actions/pytest-runner/README.md` (must match front-matter)
 
 ### Related repository paths
+
 | Area | Path | What lives here |
 |---|---|---|
-| GitHub workflows | `.github/workflows/` | Workflow entrypoints that call this action *(not confirmed in repo)* |
-| Action implementations | `.github/actions/` | Local composite actions used by workflows |
-| Python code | `src/` | ETL/catalog/graph/api libs (repo-dependent) |
-| Tests | `tests/` | Pytest tests and fixtures *(not confirmed in repo)* |
-| Schemas | `schemas/` | JSON schemas for catalogs/telemetry *(not confirmed in repo)* |
+| GitHub Actions | `.github/workflows/` | Workflow entrypoints (CI gates) |
+| Composite actions | `.github/actions/` | Reusable CI building blocks |
+| Source code | `src/` | Pipelines, graph, API/server, etc. |
+| Tests | `tests/` | Unit/contract tests run by `pytest` |
+| Schemas | `schemas/` | Contract artifacts validated in CI (separate gates) |
+| Docs | `docs/` | Canonical governed docs |
+| Data | `data/` | Raw/work/processed + catalogs; tests should not mutate committed data |
 
-### Expected file tree for this sub-area
+### Expected subtree (pytest-runner)
+
 ~~~text
 📁 .github/
 └── 📁 actions/
     └── 📁 pytest-runner/
-        ├── 📄 README.md
-        ├── 📄 action.yml                 # not confirmed in repo (expected)
-        ├── 📁 scripts/                   # not confirmed in repo (optional)
-        │   └── 📄 run_pytest.sh           # not confirmed in repo (optional)
-        └── 📁 config/                    # not confirmed in repo (optional)
-            └── 📄 pytest.ini              # not confirmed in repo (optional)
+        ├── 📄 action.yml          # Composite action definition (not confirmed in repo)
+        └── 📄 README.md           # This doc
 ~~~
 
 ## 🧭 Context
 
-### Background
-KFM relies on deterministic, repeatable processing and strict contracts across its pipeline. A reliable Python test gate is a baseline safeguard that prevents regressions from reaching catalog, graph, API, or UI layers.
+### Where this fits in KFM
 
-### Assumptions
-- Python is used for some portion of KFM (ETL/catalog tooling/tests) *(not confirmed in repo)*
-- The repository uses `pytest` for test execution *(not confirmed in repo)*
-- Tests can run in CI without accessing restricted secrets by default
+KFM’s canonical ordering is:
 
-### Constraints / invariants
-- Canonical pipeline ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
-- Frontend must consume data through APIs (no direct graph access).
-- CI must not leak secrets or sensitive content via logs/artifacts.
-- Prefer deterministic tests (seed randomness; stable fixtures) where relevant.
+**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
 
-### Open questions
-| Question | Owner | Target date |
-|---|---|---|
-| Supported Python versions in CI? | TBD | TBD |
-| Dependency install method (pip/poetry/uv)? | TBD | TBD |
-| Should coverage be required for merge? | TBD | TBD |
-| Do we publish junit/coverage artifacts on PRs? | TBD | TBD |
+This action supports the **Validation & CI/CD** layer by running Python tests that protect contracts and invariants across those stages.
 
-### Future extensions
-- Add matrix testing across Python versions and OS runners *(requires human review for cost/coverage tradeoffs)*
-- Add contract tests for API schemas and schema validation utilities
-- Add smoke tests for core pipeline commands
+### Why use a reusable action
+
+- Avoids “drift” where different workflows install deps / run tests differently.
+- Enables consistent defaults (e.g., deterministic installs, consistent pytest args).
+- Central place for security posture (especially around forks + secrets).
 
 ## 🗺️ Diagrams
 
-### System / dataflow diagram
-~~~mermaid
-flowchart LR
-  PR[Pull Request] --> WF[GitHub Workflow]
-  WF --> ACT[Local action: pytest-runner]
-  ACT --> PY[Python env + deps]
-  PY --> T[pytest execution]
-  T --> R[Test reports / coverage (optional)]
-  T --> G[Required status check]
-~~~
-
-### Optional: sequence diagram
 ~~~mermaid
 sequenceDiagram
-  participant Dev as Contributor
-  participant GH as GitHub Actions
+  participant W as Workflow Job
   participant A as pytest-runner
-  participant Py as Python/pytest
-
-  Dev->>GH: Open PR / push commit
-  GH->>A: uses: ./.github/actions/pytest-runner
-  A->>Py: install deps + run pytest
-  Py-->>A: exit code + (optional) junit/coverage files
-  A-->>GH: step success/failure + artifacts (optional)
-  GH-->>Dev: PR check status
+  participant P as Python Toolchain
+  W->>W: Checkout repository
+  W->>A: uses: ./.github/actions/pytest-runner
+  A->>P: Setup Python + install deps
+  A->>P: Run pytest
+  P-->>W: Exit code + logs (+ optional artifacts)
 ~~~
 
 ## 📦 Data & Metadata
 
 ### Inputs
-> The inputs below define the **recommended contract** for this action. If the corresponding keys are not implemented in `action.yml`, treat this section as **not confirmed in repo** and align to the actual `action.yml`.
+
+**Authoritative contract:** inputs MUST be defined in `.github/actions/pytest-runner/action.yml`.
+
+Below is the *intended* minimum interface (update if `action.yml` differs):
 
 | Input | Format | Where from | Validation |
 |---|---|---|---|
-| `python-version` | string | workflow `with:` | must be a valid Python semver string |
-| `working-directory` | string | workflow `with:` | must exist in repo |
-| `requirements-file` | string | workflow `with:` | file exists if provided |
-| `pytest-args` | string | workflow `with:` | sanitized; no secret echo |
-| `report-junit-path` | string | workflow `with:` | path under workspace |
-| `coverage` | boolean | workflow `with:` | true/false |
-| `coverage-xml-path` | string | workflow `with:` | path under workspace |
+| `python-version` | string | workflow `with:` | must be a valid `actions/setup-python` version string |
+| `working-directory` | string | workflow `with:` | must exist in repo at runtime |
+| `install-command` | string | workflow `with:` | MUST be a safe shell command (avoid untrusted interpolation) |
+| `pytest-args` | string | workflow `with:` | treated as CLI args |
+| `cache` | enum (`none`, `pip`) | workflow `with:` | optional; depends on implementation |
 
 ### Outputs
+
+Composite actions may expose outputs, but many do not. If outputs are added, document them here and ensure `action.yml` declares them.
+
 | Output | Format | Path | Contract / Schema |
 |---|---|---|---|
-| junit report | XML | `report-junit-path` | junit format *(not confirmed in repo)* |
-| coverage report | XML | `coverage-xml-path` | cobertura/coverage.py *(not confirmed in repo)* |
+| (optional) `cache-hit` | string/bool | n/a | mirror cache step output |
 
 ### Sensitivity & redaction
-- Test fixtures and artifacts must not contain secrets, credentials, or sensitive locations.
-- If any datasets used in tests contain restricted coordinates, prefer synthetic fixtures or generalized geometry.
+
+- Do **not** print secrets to logs.
+- Avoid running this action in contexts where untrusted code can access privileged secrets.
+- Tests that require restricted data must use **sanitized fixtures** and avoid embedding sensitive locations or identities.
 
 ### Quality signals
-- Stable, deterministic tests: avoid time-sensitive assertions; seed randomness when applicable.
-- Clear failure modes: failing tests should point to actionable stack traces.
+
+- Passing test suite (`pytest` exit code 0)
+- Optional: coverage thresholds (if enforced by repository policy)
+- Optional: JUnit XML for CI annotations
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Although this action is not itself a catalog generator, it **supports** catalog integrity by running tests that may validate:
-- STAC JSON schema conformance and Item/Collection integrity *(if tests exist)*
-- DCAT mapping logic *(if tests exist)*
-- PROV generation logic *(if tests exist)*
+This action does not directly generate STAC/DCAT/PROV artifacts. Indirectly, unit and contract tests may validate:
 
-If such tests are present, they should be explicit and named so failures clearly indicate which contract broke.
+- STAC/DCAT/PROV schema conformance (if tests exist)
+- Deterministic behavior of catalog generation code
+
+If tests generate local catalogs as part of validation, they should write to ephemeral paths (e.g., temp dirs) or designated CI artifacts — not commit outputs.
 
 ## 🧱 Architecture
 
 ### Components
+
 | Component | Responsibility | Interface |
 |---|---|---|
-| pytest-runner action | Orchestrate pytest in CI | `uses: ./.github/actions/pytest-runner` |
-| Python toolchain | Install dependencies + run tests | `python -m pytest ...` |
-| Reports (optional) | Produce machine-readable CI artifacts | junit/coverage files |
+| Workflow caller | Selects runners + matrix strategy | `.github/workflows/*.yml` |
+| `pytest-runner` action | Standardizes Python test execution | composite action inputs in `action.yml` |
+| Python toolchain | Interpreter + pip/installer | `actions/setup-python` + install command |
+| Repository tests | Assertions / contracts | `pytest` test discovery under `tests/` |
 
 ### Interfaces / contracts
-#### Recommended action interface (expected)
-If this is a composite action, workflows should call it as:
 
-~~~yaml
-- name: Run pytest
-  uses: ./.github/actions/pytest-runner
-  with:
-    python-version: "3.11"
-    working-directory: "."
-    requirements-file: "requirements.txt"
-    pytest-args: "-q"
-    report-junit-path: "artifacts/junit.xml"
-    coverage: true
-    coverage-xml-path: "artifacts/coverage.xml"
-~~~
-
-> NOTE: The exact input names must match `.github/actions/pytest-runner/action.yml` *(not confirmed in repo)*.
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Action contract | `.github/actions/pytest-runner/action.yml` | Semver this README + keep in sync |
+| Test invocation standard | `.github/actions/pytest-runner/README.md` | Update alongside action changes |
+| Repo structures referenced | `docs/MASTER_GUIDE_v12.md` | Follow canonical paths |
 
 ### Extension points checklist (for future work)
-- [ ] Add test matrix (py versions / OS) with bounded cost
-- [ ] Add artifact upload step gated on PR context
-- [ ] Add caching strategy (pip/uv/poetry) with lockfile pinning
-- [ ] Add “changed-paths” optimization to skip tests only when safe *(requires human review)*
+
+- [ ] Add a “requirements mode” input (e.g., `requirements-file`) if repo uses `requirements*.txt`
+- [ ] Add a “project mode” input (e.g., editable install with extras) if repo uses `pyproject.toml`
+- [ ] Add optional artifact generation (JUnit/coverage) and document paths
+- [ ] Add caching strategy details (pip cache keys, lockfile hash)
 
 ## 🧠 Story Node & Focus Mode Integration
 
-This action does not directly surface in Story Nodes or Focus Mode. Indirectly, it protects those layers by preventing regressions in upstream pipeline components that generate and serve narrative artifacts.
+This action does not directly create Story Nodes or Focus Mode content.
+
+Indirectly, it can help enforce Story Node rules by testing:
+- provenance-link requirements in story node schemas (if tests exist)
+- “no unsourced narrative” validation gates (if implemented elsewhere)
 
 ## 🧪 Validation & CI/CD
 
 ### Validation steps
-- [ ] Action interface documented (inputs/outputs)
-- [ ] Local reproduction steps documented
-- [ ] No secrets required by default
-- [ ] Logs do not echo sensitive env vars
-- [ ] Fails fast on test failure (non-zero exit)
 
-### Reproduction
+- [ ] Markdown protocol checks (front-matter/structure)
+- [ ] `pytest-runner` README matches `action.yml` inputs/behavior
+- [ ] Workflows that reference this action have deterministic behavior:
+  - validate if present; fail if invalid; skip if not applicable
+- [ ] Test suite passes for the intended Python version matrix
+
+### Usage in a workflow (example)
+
+~~~yaml
+name: tests
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run pytest via composite action
+        uses: ./.github/actions/pytest-runner
+        with:
+          python-version: "3.11"
+          working-directory: "."
+          install-command: "python -m pip install -U pip && python -m pip install -e .[dev]"
+          pytest-args: "-q"
+          cache: "pip"
+~~~
+
+### Reproduction (local)
+
 ~~~bash
-# Local run (example — adjust to repo layout)
+# Example placeholders — replace with repo-specific commands
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -U pip
-python -m pip install -r requirements.txt  # or requirements-dev.txt (not confirmed in repo)
-python -m pytest -q
+
+# Choose ONE install approach (depends on repo packaging)
+# python -m pip install -r requirements-dev.txt
+# python -m pip install -e ".[dev]"
+
+pytest -q
 ~~~
 
 ### Telemetry signals (if applicable)
+
 | Signal | Source | Where recorded |
 |---|---|---|
-| test pass/fail | pytest exit code | GitHub check run |
-| junit report | pytest plugin | artifacts (optional) |
-| coverage % | coverage.py | artifacts (optional) |
+| CI pass/fail | GitHub Actions | workflow run logs |
+| (optional) coverage % | pytest-cov | uploaded artifact / CI annotation |
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
-- CI maintainers: review any action interface changes
-- Security review: required if introducing secrets, elevated permissions, or artifact publishing
-- Data governance review: required if tests begin using restricted datasets or sensitive locations
+
+- Changes to `.github/actions/pytest-runner/` require review by CI maintainers.
+- If test behavior changes could expose sensitive data (fixtures/logging), require governance review (see refs below).
 
 ### CARE / sovereignty considerations
-- Avoid embedding or exporting sensitive locations in test snapshots or fixtures.
-- Prefer synthetic/generic fixtures for restricted content.
+
+- Ensure test fixtures do not leak culturally sensitive content or precise sensitive locations.
+- Prefer generalized/sanitized fixtures for any restricted datasets.
 
 ### AI usage constraints
-- This README inherits repo governance and must not imply prohibited AI actions (e.g., inferring sensitive locations).
+
+- Respect the front-matter `ai_transform_permissions` / `ai_transform_prohibited`.
+- Do not use AI tooling to infer or reconstruct sensitive locations from redacted fixtures.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial governed README for pytest-runner action | TBD |
+| v1.0.0 | 2025-12-22 | Initial pytest-runner README (contract + usage) | TBD |
 
 ---
+
 Footer refs:
+
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
