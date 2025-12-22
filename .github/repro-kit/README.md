@@ -1,8 +1,8 @@
 ---
-title: "KFM Repro Kit README"
+title: "KFM Reproducibility Kit"
 path: ".github/repro-kit/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-22"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,136 +24,136 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:github:repro-kit:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:github:repro-kit-readme:v1.0.0"
 semantic_document_id: "kfm-github-repro-kit-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:github:repro-kit:readme:v1.0.0"
+event_source_id: "ledger:kfm:doc:github:repro-kit-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
-ai_transform_permissions:
-  - "summarize"
-  - "structure_extract"
-  - "translate"
-  - "keyword_index"
-ai_transform_prohibited:
-  - "generate_policy"
-  - "infer_sensitive_locations"
+ai_transform_permissions: [ "summarize", "structure_extract", "translate", "keyword_index" ]
+ai_transform_prohibited: [ "generate_policy", "infer_sensitive_locations" ]
 
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Repro Kit
+# KFM Reproducibility Kit
 
 ## 📘 Overview
 
 ### Purpose
-- Provide a **single, contributor-facing entry point** for how to reproduce KFM checks locally and how to capture run metadata consistently.
-- Reduce review friction by making “CI parity” expectations explicit and repeatable.
+This directory is the home for reproducibility helpers that make it easy to:
+- reproduce **pipeline runs** (ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode),
+- validate outputs against governed contracts and schemas,
+- review PRs with a consistent “can we reproduce this?” checklist.
+
+KFM’s architecture emphasizes deterministic processing and traceable lineage: ETL is deterministic and logged with hashes of inputs/outputs, enabling results to be verifiable and audit-friendly. This repro-kit exists to keep that promise operational for both local dev and CI.
 
 ### Scope
-| In Scope | Out of Scope |
+| In scope | Out of scope |
 |---|---|
-| Local reproduction workflow guidance | Defining new project-wide policy |
-| Checklists that mirror expected CI gates | Provisioning cloud infra, deploying services |
-| Run metadata capture conventions (manifests/logs) | Storing secrets or privileged credentials |
-| Cross-stage “what to validate” guidance | Writing or modifying the actual pipeline implementation |
+| Reproducing ETL outputs from the same input + config + code revision | Handling production secrets, credentials, or privileged access paths |
+| Validating STAC/DCAT/PROV artifacts and run provenance bundles | Defining new governance policies |
+| Re-running CI-like checks locally | Large-scale “full data” production replays of restricted datasets |
 
 ### Audience
-- Primary: contributors preparing PRs (data, ETL, graph, API, UI, Story Nodes)
-- Secondary: reviewers, maintainers, CI workflow authors
+- Maintainers and reviewers validating “v12-ready” contributions
+- Contributors authoring pipelines, catalogs, schemas, APIs, UI layers, and Story Nodes
+- CI maintainers (GitHub workflows / actions)
 
 ### Definitions
-- Link: `docs/glossary.md` (if present)
-- Terms used here:
-  - **Repro run**: a locally-executed set of validations intended to match CI behavior.
-  - **CI parity**: local results match (or explainably differ from) CI checks.
-  - **Repro manifest**: a small record of *what ran*, *with what inputs*, *what outputs*, and *from which commit*.
+- **Deterministic**: same inputs + same config + same code revision ⇒ same outputs (byte-for-byte when practical).
+- **Idempotent**: running the same job twice does not duplicate records or produce inconsistent results.
+- **Run manifest**: a small, portable record that captures how to reproduce a run (inputs, config, commit SHA, versions, parameters).
+- **PROV bundle**: provenance artifacts describing inputs, activities, outputs, and agents.
+- **Stable identifier**: an ID that does not change unexpectedly between runs; used to link STAC/DCAT/PROV to graph and UI.
 
 ### Key artifacts
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| Canonical pipeline + invariants | `docs/MASTER_GUIDE_v12.md` | Core maintainers | Non-negotiable ordering + subsystem contracts |
-| Documentation templates | `docs/templates/` | Core maintainers | Use governed templates for docs/contracts |
-| Data staging + catalog outputs | `data/raw/` → `data/work/` → `data/processed/` → `data/stac/` | Data owners | Outputs must be machine-validated |
-| Catalog schemas + validators | `schemas/` | Data/Platform | STAC/DCAT/PROV alignment expectations |
-| Runs / experiment artifacts | `mcp/runs/` (recommended) | Contributors | Store run logs, manifests, diffs |
-| Tests | `tests/` | Contributors | Unit/integration/contract tests |
+- `docs/MASTER_GUIDE_v12.md`
+- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- `docs/architecture/` (system architecture PDFs, if present)
 
-### Definition of done for this document
-- [ ] Front-matter complete + valid
-- [ ] Contains a clear “what to run” checklist for CI parity
-- [ ] Does **not** prescribe unverifiable repo-specific commands as facts
-- [ ] Includes provenance and sensitivity guidance (FAIR+CARE + sovereignty)
-- [ ] Aligns with KFM pipeline ordering and API boundary invariants
+### Definition of done
+- [ ] This README is updated when repro-kit scripts/actions are added or changed.
+- [ ] For any pipeline/catalog/graph/API/UI change, reviewers can identify the reproduction entrypoint (manifest, fixture, or scripted run).
+- [ ] Repro steps are aligned with minimum CI gates and do not bypass governance/sensitivity checks.
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `.github/repro-kit/README.md`
+| Artifact | Path |
+|---|---|
+| Repro kit README | `.github/repro-kit/README.md` |
 
 ### Related repository paths
-| Area | Path | What lives here |
-|---|---|---|
-| CI workflows | `.github/workflows/` | GitHub Actions workflows that enforce gates (if present) |
-| Data domains | `data/` | Raw/work/processed/stac outputs |
-| Documentation | `docs/` | Canonical governed docs |
-| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
-| Graph | `src/graph/` | Ontology bindings + graph build |
-| APIs | `src/server/` | Contracted access layer (REST/GraphQL) |
-| Frontend | `web/` | React + map clients |
-| Schemas | `schemas/` | JSON schemas + telemetry schemas |
-| Tests | `tests/` | Test suites and fixtures |
-| Tools | `tools/` | Dev utilities, validators, linters (if present) |
-| MCP | `mcp/` | Experiments, model cards, SOPs |
+| Area | Canonical path |
+|---|---|
+| Pipelines | `src/pipelines/` |
+| Pipeline runbooks | `docs/pipelines/<domain>/` |
+| Domain outputs | `data/<domain>/{raw,work,processed}/` |
+| STAC catalogs | `data/stac/collections/` and `data/stac/items/` |
+| DCAT catalogs | `data/catalog/dcat/` |
+| PROV bundles | `data/prov/` |
+| Graph | `src/graph/` and import artifacts under `data/graph/` |
+| API boundary | `src/server/` and contracts under `src/server/contracts/` |
+| UI | `web/` |
+| Story Nodes | `docs/reports/story_nodes/` |
+| Schemas | `schemas/` |
+| Tests | `tests/` |
+| MCP experiments | `mcp/` |
 
 ### Expected file tree for this sub-area
 ~~~text
 📁 .github/
 └── 📁 repro-kit/
-    └── 📄 README.md
+    ├── 📄 README.md
+    ├── 📁 actions/            # optional: composite actions for CI reproducibility
+    ├── 📁 scripts/            # optional: local wrappers for CI-equivalent checks
+    ├── 📁 fixtures/           # optional: small “golden” datasets for deterministic test runs
+    └── 📁 env/                # optional: environment lockfiles for deterministic execution
 ~~~
 
 ## 🧭 Context
 
 ### Background
-KFM’s architecture is intentionally contract-driven: data is ingested and normalized, cataloged with STAC/DCAT/PROV, materialized into a graph, exposed through APIs, rendered in the UI, and finally used to build Story Nodes and Focus Mode narratives.
+KFM’s platform emphasizes reproducibility:
+- ETL steps are designed to be deterministic and logged, including hashing of input/output transformations for traceability.
+- The system is configuration-driven so past versions can be regenerated by checking out the same code/config revision and re-running.
 
-This “Repro Kit” exists to keep contributor workflows aligned with those contracts and to make it easy to reproduce checks consistently before submitting changes.
+This kit is the documentation and “glue” layer to keep that reproducibility usable for contributors and reviewers.
 
 ### Assumptions
-- CI exists and enforces gates (check `.github/workflows/` if present).
-- Contributors may run subsets of the pipeline locally depending on the change type.
-- “Reproducible” means: identical or explainably equivalent results given the same inputs, commit, and environment constraints.
+- The pipeline flow is preserved: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode.
+- The UI does not read Neo4j directly; the API boundary mediates access and enforces redaction/generalization.
+- Contract and schema validation are treated as first-class build gates.
 
-### Constraints and invariants
-- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
-- Frontend consumes data via **API contracts**, not by querying the graph directly.
-- Provenance is first-class: outputs should link back to inputs and transformation activities.
-- No unsourced narrative in Focus Mode contexts.
-- Do not introduce secrets, private keys, or sensitive location inference in artifacts committed to the repo.
+### Constraints / invariants
+- Pipelines are idempotent and deterministic.
+- Every pipeline run emits a PROV activity bundle and a run manifest (location may be under `data/prov/` or `releases/<version>/`).
+- Catalog artifacts validate against schemas under `schemas/`.
+- UI consumes graph and catalog content through APIs and catalog endpoints only.
+- Focus Mode consumes provenance-linked content only.
 
 ### Open questions
 | Question | Owner | Target date |
 |---|---|---|
-| What are the canonical local commands for “CI parity” checks (lint/test/schema/build)? | TBD | TBD |
-| Where is the canonical location for repro manifests in this repo (`mcp/runs/` vs alternative)? | TBD | TBD |
-| Which checks are mandatory for each change type (data-only vs code-only vs story-only)? | TBD | TBD |
+| Where is the authoritative run manifest location for this repo: `data/prov/` vs `releases/<version>/`? | TBD | TBD |
+| Which fixture datasets are safe to include publicly under `.github/repro-kit/fixtures/`? | TBD | TBD |
+| What is the standard environment locking approach for pipelines and tests? | TBD | TBD |
 
 ### Future extensions
-- Add `.github/repro-kit/checklists/` with stage-specific checklists.
-- Add a `repro-manifest` schema and a small helper script to generate it.
-- Add a “CI parity” composite action that standardizes common checks.
+- Add composite actions under `.github/repro-kit/actions/` that run schema validation, contract tests, and reproducibility checks.
+- Add fixture datasets and “golden output” hashes for deterministic regression tests.
 
 ## 🗺️ Diagrams
 
-### System and dataflow
+### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  Dev[Contributor] --> RK[Repro Kit guidance]
-  RK --> A[ETL]
-  A --> B[STAC/DCAT/PROV Catalogs]
+  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
   B --> C[Neo4j Graph]
-  C --> D[APIs]
-  D --> E[React and Map UI]
+  C --> D[API boundary]
+  D --> E[UI]
   E --> F[Story Nodes]
   F --> G[Focus Mode]
 ~~~
@@ -161,158 +161,160 @@ flowchart LR
 ### Optional sequence diagram
 ~~~mermaid
 sequenceDiagram
-  participant Dev as Contributor
-  participant Local as Local Runner
-  participant Art as Run Artifacts
+  participant UI
+  participant API
+  participant Graph
 
-  Dev->>Local: Run repro checks for change type
-  Local->>Local: Validate schemas + tests + build steps
-  Local->>Art: Write repro manifest + logs + diffs
-  Art-->>Dev: Attach links/paths in PR description
+  UI->>API: Focus query(entity_id)
+  API->>Graph: fetch subgraph + provenance refs
+  Graph-->>API: context bundle
+  API-->>UI: narrative + citations + audit flags
 ~~~
 
-## 📦 Data and Metadata
+## 📦 Data & Metadata
 
 ### Inputs
 | Input | Format | Where from | Validation |
 |---|---|---|---|
-| Code revision | git commit | local checkout | clean working tree recommended |
-| Raw sources | files / APIs | `data/raw/` or external | documented source + license |
-| Working transforms | files | `data/work/` | deterministic transforms preferred |
-| Processed outputs | files | `data/processed/` | schema + QA checks |
-| Catalog artifacts | STAC/DCAT/PROV | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | schema validation + link integrity |
+| Run manifest | YAML/JSON | `data/prov/` or `releases/<version>/` | schema if defined |
+| Pipeline configuration | YAML/JSON | `src/pipelines/` + domain runbooks | lint + schema |
+| Source references | URL/file refs | `data/<domain>/raw/` | checksums + license metadata |
+| Schemas | JSON Schema | `schemas/` | CI schema validation |
 
 ### Outputs
 | Output | Format | Path | Contract / Schema |
 |---|---|---|---|
-| Repro manifest | JSON/YAML | `mcp/runs/<run_id>/manifest.(json|yaml)` (recommended) | TBD |
-| Logs | text | `mcp/runs/<run_id>/logs/` (recommended) | n/a |
-| Reports | files | `mcp/runs/<run_id>/reports/` (recommended) | n/a |
-| Catalog diffs | text/json | alongside run artifacts | STAC/DCAT/PROV integrity |
+| Run logs | text/JSON | `mcp/runs/` or pipeline-defined output | log schema if defined |
+| PROV activity bundle | JSON/Turtle | `data/prov/` | PROV profile |
+| STAC collections/items | JSON | `data/stac/{collections,items}/` | STAC schemas |
+| DCAT records | JSON-LD/RDF | `data/catalog/dcat/` | DCAT profile |
+| Repro checksums | text/JSON | repo-defined | sha256 format rule |
 
-### Sensitivity and redaction
-- If artifacts include sensitive sites, locations, or culturally restricted information, follow `docs/governance/SOVEREIGNTY.md`.
-- Prefer generalized geometry, bounding boxes, or redacted coordinates in public outputs when required.
+### Sensitivity & redaction
+- Do not commit secrets or credentials into repro-kit.
+- If a reproduction path touches sensitive locations or restricted data, ensure the public artifact is generalized/redacted and governance-reviewed.
 
 ### Quality signals
-- Schema validation passes for STAC/DCAT/PROV artifacts.
-- Deterministic outputs where expected (stable IDs, fixed seeds).
-- Graph integrity checks pass (constraints, expected labels/relationships).
-- API contract tests pass (or explicitly versioned changes are documented).
-- UI builds and accessibility checks pass for affected components.
-- Story Nodes are evidence-led with dataset/document identifiers for factual claims.
+- Determinism: repeated runs match expected hashes and stable identifiers.
+- Completeness: required catalogs and provenance artifacts exist for outputs.
+- Contract integrity: schemas and API contracts pass tests.
 
-## 🌐 STAC, DCAT and PROV Alignment
+## 🌐 STAC, DCAT & PROV Alignment
 
 ### STAC
-- Collections involved: change-dependent
-- Items involved: change-dependent
-- Extensions: change-dependent
+- Collections and Items live under `data/stac/collections/` and `data/stac/items/`.
+- Repro steps should include validating these JSON artifacts against the repo’s STAC schemas.
 
 ### DCAT
-- Dataset identifiers: change-dependent
-- License mapping: ensure explicit license is recorded for published datasets
-- Contact and publisher mapping: ensure publisher/contact fields exist where required
+- DCAT records live under `data/catalog/dcat/`.
+- Repro steps should confirm minimal DCAT mappings exist for each dataset when required.
 
 ### PROV-O
-- `prov:wasDerivedFrom`: raw → processed lineage should be representable
-- `prov:wasGeneratedBy`: each significant transform should be representable as an activity
-- Activity and agent identities: align with the repo’s PROV conventions (if defined)
+- Every pipeline run should produce a PROV activity record linking inputs to outputs.
+- Run logs may be treated as a PROV activity record when they capture commit SHA, inputs, and outputs.
 
 ### Versioning
-- New dataset versions should link predecessor/successor.
-- Graph should mirror dataset lineage where applicable.
+- Prefer stable identifiers and explicit predecessor/successor relationships for version lineage.
+- When output formats or schemas change, bump versions and update validation expectations.
 
 ## 🧱 Architecture
 
-### Components and responsibilities
-- **Repro Kit README**: defines “what to validate” and “how to capture evidence.”
-- **CI workflows**: enforce gates on PRs (if present).
-- **Pipeline code**: implements ETL/catalog/graph build.
-- **Schemas and validators**: define machine-checkable expectations.
-- **Run artifacts**: preserve reproducibility and review evidence.
+### Components
+| Component | Responsibility | Interface |
+|---|---|---|
+| Repro kit | Reproduction helpers and guidance | `.github/repro-kit/` |
+| ETL | Ingest + normalize | Config + run logs |
+| Catalogs | STAC/DCAT/PROV | JSON + validator |
+| Graph | Neo4j | Cypher + API layer |
+| APIs | Serve contracts | REST/GraphQL |
+| UI | Map + narrative | API calls |
+| Story Nodes | Curated narrative | Graph + docs |
+| Focus Mode | Contextual synthesis | Provenance-linked |
 
-### Interfaces and contracts
-- Repro runs should validate **contracts at boundaries**:
-  - Catalog schema integrity
-  - Graph constraints and migrations
-  - API contract compatibility
-  - UI build correctness and a11y expectations
-- Repro runs should not bypass the API boundary by coupling UI directly to graph internals.
+### Interfaces / contracts
+| Contract | Location | Versioning rule |
+|---|---|---|
+| JSON schemas | `schemas/` | Semver + changelog |
+| STAC catalogs | `data/stac/` | Validate against schemas |
+| DCAT catalogs | `data/catalog/dcat/` | Validate against schemas |
+| PROV bundles | `data/prov/` | Validate to profile and integrity rules |
+| API contracts | `src/server/contracts/` | Contract tests required |
+| UI registries | `web/` | Validate against `schemas/ui/` |
 
-### Extension points checklist
-- Adding a dataset: validate ETL outputs + catalogs (+ optional graph/API/UI integrations).
-- Adding a new analysis product: validate catalogs, graph ingestion, API exposure, UI rendering, story linkage.
-- Adding a story node type: validate provenance, graph references, API payload shape, UI rendering, telemetry signals.
+## 🧠 Story Node and Focus Mode Integration
 
-## 📚 Story Node and Focus Mode Integration
+### How this work surfaces in Focus Mode
+- Reproducibility ensures Focus Mode’s context bundle remains provenance-linked and auditable.
 
-- Story Nodes should be evidence-led and should reference dataset/document identifiers.
-- Focus Mode narratives must not introduce unsourced claims; reproduction checks should include a review step for provenance completeness.
+### Provenance-linked narrative rule
+- Every factual claim must trace to a dataset, record, or asset identifier.
 
-## ✅ Validation and CI/CD
+### Optional structured controls
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
-### CI parity checklist
-Use the checklist below as a **minimum** before requesting review:
+## 🧪 Validation and CI/CD
 
-- [ ] Workspace clean: no uncommitted changes except intentional outputs excluded by `.gitignore`
-- [ ] Lint and formatting checks pass for touched code
-- [ ] Unit tests pass for touched packages/modules
-- [ ] Integration tests pass for touched boundaries (graph/API/UI as applicable)
-- [ ] STAC/DCAT/PROV outputs validate (if catalogs changed)
-- [ ] Graph build and constraints checks pass (if graph changed)
-- [ ] API contract checks pass (if API changed)
-- [ ] UI build and a11y checks pass (if UI changed)
-- [ ] Story Node evidence completeness reviewed (if story content changed)
-- [ ] Repro manifest and logs captured for non-trivial changes
+### Validation steps
+Minimum CI gates for “v12-ready” contributions include:
+- [ ] Markdown protocol validation
+- [ ] JSON schema validation for STAC, DCAT, and telemetry
+- [ ] Graph integrity tests
+- [ ] API contract tests
+- [ ] UI layer registry schema checks
+- [ ] Security and sovereignty scanning gates where applicable
 
-### How to run locally
-This repo’s exact commands are intentionally **not hard-coded** here unless they exist and are stable.
-Recommended approach:
-1. Check for documented developer workflows in `docs/` (start with `docs/MASTER_GUIDE_v12.md`).
-2. Check for repo helper entry points (examples: `Makefile`, `tools/`, `scripts/`, package managers) if present.
-3. If no canonical command set exists yet, propose one in a PR and wire it into CI.
-
-Example placeholder structure only:
+### Reproduction
 ~~~bash
-# Example placeholders — replace with repo-specific commands if/when standardized.
-# 1) Lint/format
-# <lint-command>
+# Replace with repo-specific commands as they are added.
 
-# 2) Tests
-# <test-command>
+# 1) Run schema validation for catalogs and metadata
+# <TBD>
 
-# 3) Catalog validation
-# <stac-validate-command>
-# <dcat-validate-command>
-# <prov-validate-command>
+# 2) Run unit/integration tests (pipelines / graph / API / UI)
+# <TBD>
 
-# 4) Graph checks
-# <graph-build-command>
-# <graph-constraints-command>
+# 3) Run doc lint and markdown protocol checks
+# <TBD>
 
-# 5) API and UI
-# <api-contract-test-command>
-# <ui-build-command>
-# <ui-a11y-command>
+# 4) Optional: rerun a “golden” fixture pipeline and compare hashes
+# <TBD>
 ~~~
 
 ### Telemetry signals
-When possible, record:
-- run_id, timestamp, git SHA, OS/toolchain details
-- datasets touched and their identifiers
-- generated artifacts and their paths
-- warnings/errors and mitigation notes
+| Signal | Source | Where recorded |
+|---|---|---|
+| Repro run id | repro-kit scripts/actions | `mcp/runs/` or CI artifacts |
+| Schema validation summary | validators | CI logs |
+| Hash comparison report | repro-kit | CI artifacts |
 
-Store these in a repro manifest alongside logs to support review and future audits.
+## ⚖ FAIR+CARE & Governance
 
-## 🧾 FAIR+CARE and Governance
+### Review gates
+Governance review is required when changes introduce:
+- new sensitive layers,
+- new AI narrative behaviors,
+- new external data sources,
+- new public-facing endpoints.
 
-- Treat sovereignty, culturally sensitive content, and location data with care:
-  - generalize/redact when required
-  - avoid “exact coordinate” disclosure in public artifacts when sensitive
-- Follow `docs/governance/ETHICS.md` and `docs/governance/SOVEREIGNTY.md` where applicable.
-- Avoid “policy invention” in documentation: changes that affect governance must be marked for human review.
+### CARE / sovereignty considerations
+- If a reproduction involves culturally sensitive data or restricted locations, document the redaction/generalization behavior and ensure review before publishing artifacts.
+
+### AI usage constraints
+- AI-assisted outputs that surface in user-facing contexts must remain evidence-led, provenance-linked, and must not introduce unsourced claims.
 
 ## 🕰️ Version History
-- v1.0.0 (2025-12-19): Initial Repro Kit README scaffold aligned to KFM governed doc protocol.
+
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-22 | Initial repro-kit README scaffold | TBD |
+
+---
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
