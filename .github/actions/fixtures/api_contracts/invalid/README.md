@@ -167,12 +167,14 @@ Contract validators can regress in subtle ways (e.g., rules removed, resolution 
 flowchart LR
   Dev[Contributor] --> PR[Pull Request]
   PR --> CI[GitHub Actions CI]
-  CI --> Fixtures[Invalid Fixtures<br/>.github/actions/fixtures/api_contracts/invalid/**]
-  CI --> Validator[Contract Validator<br/>(action/script)]
+
+  CI --> Validator[Contract validator: action or script]
+  CI --> Fixtures[Invalid fixtures: api_contracts/invalid]
   Fixtures --> Validator
+
   Validator --> Result{Expected outcome?}
-  Result -->|Rejected (PASS)| OK[CI Check Passes]
-  Result -->|Accepted (REGRESSION)| Fail[CI Check Fails]
+  Result -->|Rejected = PASS| OK[CI check passes]
+  Result -->|Accepted = REGRESSION| Fail[CI check fails]
 ~~~
 
 ### Optional: canonical pipeline reminder
