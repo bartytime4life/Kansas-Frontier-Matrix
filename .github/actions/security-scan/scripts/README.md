@@ -1,400 +1,346 @@
 ---
-title: "🧩 Kansas Frontier Matrix — Security Scan Scripts"
+title: "Security Scan Action Scripts — README"
 path: ".github/actions/security-scan/scripts/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-13"
+version: "v1.0.0"
+last_updated: "2025-12-23"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Annual · FAIR+CARE Security Council · Architecture Board"
-content_stability: "stable"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../../../releases/v11.2.3/github-infra-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/github-workflows-v4.json"
-energy_schema: "../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Component Guide"
-intent: "github-security-scan-scripts"
-role: "security-scan-script-library"
-category: "Security · CI/CD · Tooling"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-classification: "Public Document"
-sensitivity: "General (non-sensitive)"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-risk_category: "Security"
-indigenous_rights_flag: false
-redaction_required: false
-data_steward: "KFM FAIR+CARE Security Council"
+doc_uuid: "urn:kfm:doc:github-actions:security-scan:scripts-readme:v1.0.0"
+semantic_document_id: "kfm-github-actions-security-scan-scripts-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:github-actions:security-scan:scripts-readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
-
-provenance_chain:
-  - ".github/actions/security-scan/scripts/README.md@v11.2.3"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "SoftwareSourceCode"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "geo:FeatureCollection"
-
-json_schema_ref: "../../../../schemas/json/github-actions-security-scan-scripts-v11.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/github-actions-security-scan-scripts-v11-shape.ttl"
-
-doc_uuid: "urn:kfm:doc:github-actions:security-scan:scripts:v11.2.3"
-semantic_document_id: "kfm-action-security-scan-scripts"
-event_source_id: "ledger:.github/actions/security-scan/scripts/README.md"
-immutability_status: "mutable-plan"
-machine_extractable: true
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "metadata-extraction"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "governance-override"
-  - "content-alteration"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "United States / Kansas"
-lifecycle_stage: "stable"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next security-scan scripts update"
-
-prov_profile: "PROV-O Plan + KFM Governance Extensions"
-openlineage_profile: "OpenLineage v2.5 · CI/CD and security pipeline events"
-
-heading_registry:
-  approved_h2:
-    - "📘 Overview"
-    - "🗂️ Directory Layout"
-    - "🧭 Context"
-    - "🧱 Architecture"
-    - "📦 Data & Metadata"
-    - "🧪 Validation & CI/CD"
-    - "⚖ FAIR+CARE & Governance"
-    - "🕰️ Version History"
-
-test_profiles:
-  - "markdown-lint"
-  - "schema-lint"
-  - "metadata-check"
-  - "footer-check"
-  - "accessibility-check"
-  - "provenance-check"
-  - "secret-scan"
-  - "pii-scan"
-
-ci_integration:
-  workflow: ".github/workflows/security_audit.yml"
-  environment: "dev · staging · production"
-
-layout_profiles:
-  - "immediate-one-branch-with-descriptions-and-emojis"
-badge_profiles:
-  - "root-centered-badge-row"
-
-fencing_profile: "outer-backticks-inner-tildes-v1"
-
-requires_purpose_block: true
-requires_version_history: true
-requires_directory_layout_section: true
-requires_governance_links_in_footer: true
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧩 **Kansas Frontier Matrix — Security Scan Scripts**  
-`.github/actions/security-scan/scripts/`
-
-**Purpose**  
-Document the **governed helper scripts** used by the `security-scan` composite action to:
-
-- Orchestrate dependency vulnerability scans across ecosystems  
-- Orchestrate secret scanning with redaction guarantees  
-- Normalize results into **machine-readable JSON** for policy evaluation & telemetry
-
-</div>
-
----
+# Security Scan Action Scripts — README
 
 ## 📘 Overview
 
-The `scripts/` directory contains **language-agnostic orchestration logic** (Python) invoked by:
+### Purpose
 
-- `.github/actions/security-scan/entrypoint.sh`  
-- (Optionally) `.github/actions/security-scan/action.yml` when used as a composite action
+- Document the scripts under `.github/actions/security-scan/scripts/` and how they are intended to be used by the repository’s security scanning automation.
+- Establish safe, repeatable conventions for running and maintaining these scripts in CI and locally, including logging, outputs, and redaction.
 
-These scripts are designed to be:
+### Scope
 
-- **Deterministic**: same repo state + same config → same result and stable JSON ordering
-- **Policy-aware**: severities and thresholds are evaluated against governed config
-- **Safe**: secrets must never be printed; findings must be redacted or hashed
-- **Composable**: each script can run independently and emits structured outputs
+| In Scope | Out of Scope |
+|---|---|
+| Script purpose + inventory for this folder | Organization-wide security policy, incident response, or disclosure policy |
+| Conventions for script inputs/outputs, exit codes, and logging | Selecting or endorsing specific third-party scanners (unless explicitly documented elsewhere) |
+| CI reproducibility guidance and validation checklist | Remediation guidance for specific vulnerabilities or findings |
 
-This directory is not a general-purpose CLI toolkit. It is the **internal implementation surface** of the governed action.
+### Audience
 
----
+- Primary: repo maintainers and CI owners working on `.github/actions/security-scan/`
+- Secondary: contributors who need to understand (or update) security scan behavior for PRs
+
+### Definitions
+
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **Composite action**: a reusable GitHub Action defined in-repo under `.github/actions/<name>/`.
+  - **Finding**: a single reportable issue detected by a scan (e.g., secret exposure, vulnerable dependency, insecure config).
+  - **Redaction**: removing or masking sensitive values so logs/artifacts are safe to publish.
+
+### Key artifacts
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Security scan action | `.github/actions/security-scan/` | Repo maintainers | Entrypoint is typically `action.yml` (verify in-repo) |
+| Scripts directory | `.github/actions/security-scan/scripts/` | Repo maintainers | Script inventory and conventions live here |
+| CI workflows | `.github/workflows/` | Repo maintainers | Workflows call the security scan action (verify which) |
+| Governance refs | `docs/governance/*` | Governance owners | Defines broader review + sovereignty rules |
+
+### Definition of done
+
+- [ ] Front-matter complete + valid
+- [ ] This README lists scripts in this directory (or documents how to enumerate them)
+- [ ] Script inputs/outputs are documented with safe defaults and redaction rules
+- [ ] Validation + reproduction steps are listed and repeatable
+- [ ] Governance and sensitivity considerations are explicit for scan outputs
 
 ## 🗂️ Directory Layout
 
+### This document
+
+- `path`: `.github/actions/security-scan/scripts/README.md`
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Security scan action | `.github/actions/security-scan/` | Action definition, inputs/outputs, orchestration |
+| Security scan scripts | `.github/actions/security-scan/scripts/` | Script helpers invoked by the action |
+| CI workflows | `.github/workflows/` | Jobs that run scanning and gating |
+| Governance | `docs/governance/` | Security posture, ethics, sovereignty constraints |
+| Schemas | `schemas/` | Any machine-readable contracts (if scan outputs are schema-governed) |
+
+### Expected file tree for this sub-area
+
 ~~~text
-.github/actions/security-scan/
-└── 📁 scripts/                                    # Helper scripts for security-scan action
-    ├── 📄 README.md                               # ← This file
-    ├── 🧬 run_dep_scans.py                        # Dependency scanners orchestration + normalization
-    ├── 🕵️ run_secret_scans.py                     # Secret scanners orchestration + redaction rules
-    └── 📊 summarize_results.py                    # Aggregates tool outputs → policy summary JSON
+📁 .github/
+└── 📁 actions/
+    └── 📁 security-scan/
+        ├── 📄 action.yml                  # expected composite action entrypoint (verify)
+        └── 📁 scripts/
+            ├── 📄 README.md               # this document
+            ├── 🧾 <script_1>              # bash/python helper (example placeholder)
+            └── 🧾 <script_n>
 ~~~
 
-> **Normative:** If a new script is added here, it MUST be:
-> - referenced from `entrypoint.sh` (or documented as unused),
-> - documented in this README under **Architecture**, and
-> - covered by at least one CI check under **Validation & CI/CD**.
+### Script inventory
 
----
+Maintain this table as scripts are added/removed.
+
+| Script | Purpose | Runtime | Local usage |
+|---|---|---|---|
+| TBD | TBD | TBD | TBD |
 
 ## 🧭 Context
 
-The scripts in this folder sit inside the KFM CI/CD pipeline as part of the **security gate**:
+### Background
 
-- They implement “glue logic” between third-party scanners and KFM governance policies.
-- They should be configured via governed inputs (repo configs), not via ad-hoc environment state.
+KFM’s architecture is layered and contract-driven. CI security scanning is a cross-cutting guardrail that helps keep the repository safe while preserving the canonical system pipeline and contracts (ETL → catalogs → graph → APIs → UI → story/focus layers). This scripts folder exists to keep scan logic close to the action definition, auditable, and reviewable.
 
-Related documentation:
+### Assumptions
 
-- Parent action README: `.github/actions/security-scan/README.md`
-- Action config documentation (if present): `.github/actions/security-scan/config/README.md`
-- Security governance: `.github/SECURITY.md` and `docs/security/**`
-- Governance baseline: `docs/standards/governance/ROOT-GOVERNANCE.md`
+- These scripts run in a CI context (GitHub Actions runners) and may also be executed locally for reproduction.
+- The action orchestrator (e.g., `action.yml`) is responsible for selecting which scripts to run and for providing configuration to them.
 
----
+### Constraints and invariants
 
-## 🧱 Architecture
+- Scripts should be safe to run on untrusted PR branches: do not execute untrusted code paths beyond the repository content being scanned.
+- Prefer deterministic behavior: given the same commit + config, the scripts should produce the same outputs (or explain unavoidable nondeterminism).
+- Do not leak secrets or sensitive data in logs, step summaries, or artifacts.
 
-### Script responsibilities (normative contract)
+### Open questions
 
-| Script | Responsibility | Primary inputs | Primary outputs | Failure conditions |
-|--------|----------------|----------------|-----------------|-------------------|
-| `run_dep_scans.py` | Run dependency vulnerability scanners and normalize findings | repo path; tool config; ecosystem detection | JSON findings per tool + per ecosystem | scanner failure; invalid config; policy-relevant critical tool errors |
-| `run_secret_scans.py` | Run secret scanners and enforce redaction rules | repo path; ignore patterns; optional history mode | JSON findings (redacted) per tool | any raw secret would be printed; scanner failure; policy-relevant secret hit |
-| `summarize_results.py` | Aggregate findings into a single governed summary | dep-scan JSON; secret-scan JSON; thresholds | summary JSON (counts, max severity, decisions) | summary schema invalid; thresholds violated |
+| Question | Owner | Target date |
+|---|---|---|
+| Do we standardize on a single machine-readable finding format (e.g., SARIF/JSON) for all scripts? | TBD | TBD |
+| Where should scan artifacts be written so they are easy to collect in workflows? | TBD | TBD |
+| What review gate is required for changes that modify pass/fail thresholds? | TBD | TBD |
 
-### Common interface conventions
+### Future extensions
 
-All scripts SHOULD support:
+- Add explicit schemas for scan outputs (and validate them in CI).
+- Add a normalized summary generator script to populate the workflow job summary.
+- Add caching strategy for any scanners that require large databases, while preserving determinism and provenance.
 
-- `--repo <path>`: root path to scan (typically `.` / `$GITHUB_WORKSPACE`)
-- `--config <path>`: path to a governed config file or config directory
-- `--output <path>`: file path where JSON output will be written
-- `--format json`: fixed output format (default `json`)
-- `--fail-on <severity>`: optional override for action-level wiring (governance-controlled)
+## 🗺️ Diagrams
 
-If `--output` is omitted, scripts MAY emit JSON to stdout, but MUST NOT interleave logs with JSON.
+### System and dataflow diagram
 
-### Example orchestration flow
-
-~~~text
-entrypoint.sh
-  ├─ run_dep_scans.py      → _security-deps.json
-  ├─ run_secret_scans.py   → _security-secrets.json
-  └─ summarize_results.py  → _security-summary.json (and exit code)
+~~~mermaid
+flowchart LR
+  PR[PR / Push] --> WF[GitHub Workflow Job]
+  WF --> ACT[security-scan composite action]
+  ACT --> S1[script A]
+  ACT --> S2[script B]
+  S1 --> OUT[Reports + logs]
+  S2 --> OUT[Reports + logs]
+  OUT --> GATE[Pass/Fail gate]
 ~~~
 
-### Exit code semantics
+### Optional sequence diagram
 
-To keep behavior consistent across tools and workflows:
+~~~mermaid
+sequenceDiagram
+  participant WF as Workflow
+  participant ACT as security-scan action
+  participant SCR as script
+  participant GH as GitHub Checks
 
-- `0` = success (no policy-relevant violations)
-- `1` = policy violation (threshold exceeded, secret detected, etc.)
-- `2` = execution/system error (misconfiguration, tool missing, parse error)
-
-> **Normative:** A “tool crash” MUST NOT be silently downgraded to a passing status.
-
----
+  WF->>ACT: run action (with inputs)
+  ACT->>SCR: invoke script (env + args)
+  SCR-->>ACT: exit code + outputs
+  ACT-->>GH: job summary / artifacts / status
+~~~
 
 ## 📦 Data & Metadata
 
-### Normalized finding schema (recommended)
+### Inputs
 
-All tool outputs SHOULD normalize into:
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Repository workspace | Filesystem tree | CI workspace / local checkout | N/A (script-specific checks apply) |
+| CI context | Environment variables | GitHub Actions context | Presence checks in script |
+| Action configuration | Strings / files | Action inputs or config files | Validate required keys + allowed values |
 
-~~~json
-{
-  "tool": "pip-audit",
-  "tool_version": "X.Y.Z",
-  "run": {
-    "repo": ".",
-    "started_at": "2025-12-13T00:00:00Z",
-    "ended_at": "2025-12-13T00:00:30Z"
-  },
-  "findings": [
-    {
-      "id": "CVE-YYYY-NNNN",
-      "type": "dependency_vulnerability",
-      "severity": "critical",
-      "package": {
-        "name": "example",
-        "version": "1.2.3",
-        "ecosystem": "python"
-      },
-      "evidence": {
-        "file": "requirements.txt",
-        "line": 42
-      },
-      "links": [
-        "https://osv.dev/vulnerability/..."
-      ]
-    }
-  ],
-  "counts": {
-    "critical": 0,
-    "high": 1,
-    "medium": 2,
-    "low": 3
-  }
-}
+### Outputs
+
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Console logs | Text | CI logs | No secrets; redact sensitive values |
+| Gate decision | Exit code | Process exit code | Script or action-defined convention |
+| Human summary | Markdown | CI step/job summary | Keep high-level; avoid sensitive content |
+| Machine report | TBD | TBD | If governed, define schema and validate |
+
+### Sensitivity and redaction
+
+- Do not print secret material, credentials, tokens, private keys, or raw matched secret strings.
+- Prefer reporting file paths and finding types without including the sensitive value.
+- If a script must show a snippet for triage, mask the value and keep the snippet minimal.
+
+### Quality signals
+
+- Stable exit behavior (success/failure/error distinct)
+- Findings count and severity distribution (if applicable)
+- Runtime consistency and clear failure modes
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+
+- Not applicable: these scripts do not define or emit STAC artifacts by default.
+
+### DCAT
+
+- Not applicable: these scripts do not define or emit DCAT artifacts by default.
+
+### PROV-O
+
+- Not applicable by default: these scripts do not emit `data/prov/` lineage bundles.
+- If scan outputs become governed artifacts, record provenance minimally (commit SHA + tool/script identity + inputs) and store it in an agreed location.
+
+### Versioning
+
+- If scripts change behavior materially (thresholds, output formats, contracts), update this README and bump `version`.
+
+## 🧱 Architecture
+
+### Components
+
+| Component | Responsibility | Interface |
+|---|---|---|
+| GitHub workflow job | Triggers scans on PR/push | `.github/workflows/*.yml` |
+| security-scan action | Orchestrates scan steps | `.github/actions/security-scan/*` |
+| Scripts in this folder | Execute specific checks | CLI args + env vars + exit code |
+| Governance docs | Define review triggers | `docs/governance/*` |
+
+### Interfaces and contracts
+
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Script conventions | `.github/actions/security-scan/scripts/README.md` | Semver bump for behavior changes |
+| Action interface | `.github/actions/security-scan/action.yml` | Keep backward compatibility or document breaking changes |
+| Report formats | TBD | If schema-governed, validate in CI |
+
+### Extension points checklist
+
+- [ ] Add a new script under `.github/actions/security-scan/scripts/`
+- [ ] Update the script inventory table in this README
+- [ ] Update the action orchestrator to invoke the new script
+- [ ] Document output format and redaction rules for new findings
+- [ ] Add validation/linting for the new script as applicable
+
+## 🧠 Story Node and Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+
+- This work does not surface directly in Focus Mode.
+- It supports the system by preventing unsafe or non-compliant changes from being merged.
+
+### Provenance-linked narrative rule
+
+- Not applicable to scan scripts directly.
+- If scan results are ever presented in user-facing UI, they must be provenance-linked and follow governance redaction rules.
+
+### Optional structured controls
+
+~~~yaml
+# Not applicable for this document.
 ~~~
 
-### Summary schema (recommended)
+## 🧪 Validation and CI/CD
 
-`summarize_results.py` SHOULD emit a single summary document:
+### Validation steps
 
-~~~json
-{
-  "action": "security-scan",
-  "version": "v11.2.3",
-  "repo": ".",
-  "issues_found": 3,
-  "severity_max": "high",
-  "policy": {
-    "fail_on_critical": true,
-    "fail_on_high": true,
-    "fail_on_medium": false
-  },
-  "by_category": {
-    "dependency_vulnerability": { "critical": 0, "high": 1, "medium": 2, "low": 0 },
-    "secret": { "critical": 0, "high": 0, "medium": 0, "low": 0 }
-  },
-  "decision": {
-    "status": "fail",
-    "exit_code": 1,
-    "reasons": [
-      "High severity dependency vulnerability threshold exceeded"
-    ]
-  },
-  "artifacts": {
-    "dependency_report": "_security-deps.json",
-    "secret_report": "_security-secrets.json"
-  }
-}
-~~~
+- [ ] Markdown protocol checks for this README
+- [ ] Script linting (shell/python/etc.), if configured
+- [ ] Action-level smoke run in CI workflow
+- [ ] Security and sovereignty checks remain enabled where applicable
 
-### Redaction requirements (non-negotiable)
-
-Secret-related findings MUST:
-
-- avoid printing raw secret values in JSON, logs, or GitHub step summaries
-- store only **hashes**, **prefix/suffix fragments**, or **rule identifiers**
-- mask any accidental exposure using GitHub masking (`::add-mask::`) if encountered
-
----
-
-## 🧪 Validation & CI/CD
-
-### Required CI behaviors
-
-The scripts and their outputs MUST be compatible with:
-
-- `.github/workflows/security_audit.yml` as the enforcing workflow gate
-- repository secret scanning (CI) and PII scanning (CI) on documentation and outputs
-- schema linting for any produced JSON summary (when checked in or published)
-
-### Local runbook (developer workflow)
-
-From repo root:
+### Reproduction
 
 ~~~bash
-set -euo pipefail
+# Example placeholders — replace with repo-specific commands and actual script names
 
-python .github/actions/security-scan/scripts/run_dep_scans.py \
-  --repo . \
-  --config .github/actions/security-scan/config/tools.yml \
-  --output _security-deps.json
+# From repo root:
+# 1) Inspect scripts available
+# ls .github/actions/security-scan/scripts
 
-python .github/actions/security-scan/scripts/run_secret_scans.py \
-  --repo . \
-  --config .github/actions/security-scan/config/tools.yml \
-  --output _security-secrets.json
+# 2) Run a specific script locally (example pattern)
+# bash .github/actions/security-scan/scripts/<script_name>.sh --help
 
-python .github/actions/security-scan/scripts/summarize_results.py \
-  --repo . \
-  --config .github/actions/security-scan/config/tools.yml \
-  --deps _security-deps.json \
-  --secrets _security-secrets.json \
-  --output _security-summary.json
+# 3) If scripts rely on env vars, export them explicitly for local repro
+# export <VAR>=<VALUE>
+# bash .github/actions/security-scan/scripts/<script_name>.sh
 ~~~
 
-> **Note:** The exact scanner binaries invoked (and their versions) are governance-controlled and
-> should be pinned by the action’s dependency management approach.
+### Telemetry signals
 
----
+| Signal | Source | Where recorded |
+|---|---|---|
+| security_scan_findings_total | security-scan action | CI logs / optional telemetry docs |
+| security_scan_exit_code | script/action | CI logs |
+| security_scan_duration_seconds | workflow runner | CI logs |
 
-## ⚖ FAIR+CARE & Governance
+## ⚖ FAIR+CARE and Governance
 
-These scripts are part of the **security boundary** and MUST adhere to governance constraints:
+### Review gates
 
-- **No secrets / no PII** in logs, JSON outputs, or artifacts
-- **Minimal disclosure**: findings should be actionable without exposing sensitive values
-- **Deterministic reporting**: stable ordering, stable severity mapping, stable output schema
-- **Sovereignty-aware posture**: scanning output MUST NOT reveal sensitive locations, restricted
-  identifiers, or protected cultural knowledge if present in repository artifacts
+- Changes that alter scan pass/fail thresholds, redaction behavior, or artifact publishing should receive heightened review (security-sensitive).
 
-If a scan discovers content that appears to violate sovereignty protections or privacy constraints:
+### CARE and sovereignty considerations
 
-- treat it as a governed incident (see `.github/SECURITY.md`)
-- redact outputs immediately and fail closed where required by policy
+- If scans touch data under `data/` that may include restricted or culturally sensitive content, do not emit that content into logs/artifacts beyond what is necessary for remediation.
+- Apply generalization and redaction rules defined in governance docs.
 
----
+### AI usage constraints
+
+- Respect `ai_transform_permissions` and `ai_transform_prohibited` in front-matter.
+- Do not use this document as a vehicle to generate policy text; policy lives under governance docs.
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v11.2.3 | 2025-12-13 | Initial governed documentation for `security-scan` helper scripts: interfaces, schemas, redaction rules. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-23 | Initial README scaffold for security-scan scripts | TBD |
 
 ---
 
-<div align="center">
+Footer refs:
 
-🧩 **KFM — Security Scan Scripts (v11.2.3)**  
-Deterministic Orchestration · Redaction-Safe · Governance-Enforced  
-
-[⬅ Security Scan Action](../README.md) · [⬅ Composite Actions Library](../../README.md) · [🛡 Security Policy](../../../SECURITY.md) · [⚖ Governance](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
-
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
