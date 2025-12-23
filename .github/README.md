@@ -1,9 +1,3 @@
-diff --git a/.github/README.md b/.github/README.md
-new file mode 100644
-index 0000000..1111111
---- /dev/null
-+++ b/.github/README.md
-@@ -0,0 +1,349 @@
 +---
 +title: "KFM GitHub Automation and Governance"
 +path: ".github/README.md"
