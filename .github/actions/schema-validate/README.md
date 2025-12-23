@@ -1,8 +1,8 @@
 ---
-title: "GitHub Action — Schema Validate"
+title: "Schema Validate Action — KFM CI Contract Gate"
 path: ".github/actions/schema-validate/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-23"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:github-actions:schema-validate:readme:v1.0.0"
-semantic_document_id: "kfm-gha-schema-validate-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:github-actions:schema-validate:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:ci:action:schema-validate-readme:v1.0.0"
+semantic_document_id: "kfm-ci-action-schema-validate-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:ci:action:schema-validate-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,117 +41,151 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# GitHub Action — Schema Validate
+# Schema Validate Action
 
 ## 📘 Overview
 
 ### Purpose
-This GitHub Action runs **schema validation** as a CI gate, ensuring that JSON-based artifacts in the repo
-(e.g., schemas, registries, catalogs, and other contract files) remain **machine-validated** and safe to consume
-downstream.
 
-This supports KFM’s pipeline invariant: **ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode** by
-catching contract breaks early. See: `docs/MASTER_GUIDE_v12.md`.
+- Document the reusable GitHub Action in `.github/actions/schema-validate/` that implements KFM’s **schema validation** CI gate.
+- Provide a stable place for contributors to understand what “schema validation” means in KFM, what it targets, and how to run it consistently across workflows.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Validate JSON files against JSON Schema contracts | STAC semantic checks (use `.github/actions/stac-validate`) |
-| Validate schema files for basic correctness and reference resolution | Vulnerability/dependency scanning (use `.github/actions/security-scan`) |
-| Enforce “CI-clean” contract discipline for schemas/registries used by the pipeline | Neo4j constraint checks / graph integrity checks (handled elsewhere) |
+| Validating **contract artifacts** and **evidence artifacts** (e.g., STAC/DCAT/PROV JSON/JSON-LD) against schemas in `schemas/`. | Running ETL, generating catalogs, or producing graph imports. |
+| Deterministic pass/fail behavior suitable for CI gating. | “Best effort” linting that never fails the build. |
+| Repo-local usage via `uses: ./.github/actions/schema-validate`. | Enforcing repository structure beyond what is required to validate the targeted files. |
 
 ### Audience
-- Primary: CI maintainers, DataOps maintainers, pipeline engineers
-- Secondary: Contributors adding or modifying schemas, catalog JSON, or UI registries
+
+- Primary: KFM maintainers and CI owners working on validation gates.
+- Secondary: Domain contributors adding datasets, catalogs, and schemas.
 
 ### Definitions
+
 - Link: `docs/glossary.md`
-- Terms used in this doc: JSON Schema, contract, registry, STAC, DCAT, PROV, telemetry
+- **Contract artifact**: machine-validated schema/spec that governs an interface boundary (e.g., JSON Schema).
+- **Evidence artifact**: machine-validated outputs consumed downstream (e.g., STAC/DCAT/PROV artifacts).
+- **Schema validation gate**: CI step that fails the build when governed artifacts are present but invalid.
 
 ### Key artifacts
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| This action README | `.github/actions/schema-validate/README.md` | CI maintainers | Governed description of intent + usage |
-| Action definition | `.github/actions/schema-validate/action.yml` | CI maintainers | Source of truth for inputs/outputs |
-| JSON Schemas | `schemas/` | DataOps | SemVer + changelog expected |
-| Catalog and metadata JSON | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | DataOps | Validity is required for downstream graph/API work |
-| UI registries | `web/` | UI team | Any registry files should be schema validated |
+| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | KFM Core Team | Canonical pipeline and non-negotiable ordering. |
+| Schemas root | `schemas/` | Contracts maintainers | Authoritative schemas for governed outputs. |
+| STAC outputs | `data/stac/` | Catalog maintainers | Collections + Items to validate when present. |
+| DCAT outputs | `data/catalog/dcat/` | Catalog maintainers | DCAT JSON-LD to validate when present. |
+| PROV outputs | `data/prov/` | Pipeline maintainers | Lineage bundles to validate when present. |
+| This action | `.github/actions/schema-validate/` | CI maintainers | Reusable gate invoked from workflows. |
 
 ### Definition of done
-- [ ] Front-matter complete + `path` matches file location
-- [ ] Validation intent is clearly stated (what is validated vs not validated)
-- [ ] Local reproduction guidance exists (even if tool-specific details live in `action.yml`)
-- [ ] Security notes included (no secrets, no sensitive leakage in logs)
-- [ ] References to KFM invariants and governance are present
+
+- [ ] Front-matter complete + valid
+- [ ] README describes what is validated and what is skipped
+- [ ] Usage example shows how workflows should call the action
+- [ ] Behavior is deterministic: valid → pass; invalid → fail; absent targets → skip with clear messaging
+- [ ] Governance and sovereignty considerations for logs are stated
 
 ## 🗂️ Directory Layout
 
 ### This document
+
 - `path`: `.github/actions/schema-validate/README.md`
 
 ### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
-| GitHub Actions | `.github/actions/` | Composite/local actions used by CI workflows |
-| Schemas | `schemas/` | JSON schemas + telemetry schemas |
-| Data catalogs | `data/stac/` | STAC Items + Collections |
-| Dataset catalogs | `data/catalog/dcat/` | DCAT 3 records |
-| Lineage | `data/prov/` | PROV-O bundles |
-| Frontend registries | `web/` | Layer registries and UI configuration files |
+| GitHub actions | `.github/actions/` | Reusable actions used by CI workflows |
+| Schemas | `schemas/` | JSON Schemas and other contract artifacts |
+| STAC | `data/stac/` | STAC collections/items produced by pipelines |
+| DCAT | `data/catalog/dcat/` | DCAT outputs (often JSON-LD) |
+| PROV | `data/prov/` | PROV bundles for lineage |
+| Workflows | `.github/workflows/` | CI workflows that call this action |
 
 ### Expected file tree for this sub-area
+
 ~~~text
 📁 .github/
-├── 📁 actions/
-│   ├── 📁 schema-validate/
-│   │   ├── 📄 README.md
-│   │   └── 📄 action.yml
-│   ├── 📁 stac-validate/
-│   └── 📁 security-scan/
+└── 📁 actions/
+    └── 📁 schema-validate/
+        ├── 📄 README.md
+        ├── 📄 action.yml
+        ├── 📁 scripts/
+        │   └── 📄 validate.* 
+        └── 📁 fixtures/
+            └── 📁 catalogs/
+                └── 📁 stac/
+                    └── 📁 edge_cases/
+                        └── 📄 README.md
 ~~~
 
 ## 🧭 Context
 
 ### Background
-KFM depends on **contracted, machine-validated artifacts**. Schema drift or invalid JSON commonly fails late
-(at catalog build, API contract tests, or UI runtime). This action pushes those failures left into CI.
+
+KFM relies on governed contracts so that each stage can evolve without breaking downstream consumers. Schema validation is a minimum CI gate to prevent invalid STAC/DCAT/PROV artifacts from entering the repo and cascading into graph ingest, API responses, and UI evidence rendering.
 
 ### Assumptions
-- JSON Schemas are stored under `schemas/`.
-- The action’s authoritative behavior (inputs/outputs/globs/validator runtime) is defined in `action.yml`.
-- CI workflows call this action on PRs that touch schema-governed files.
+
+- `schemas/` contains the authoritative schemas for the governed artifacts this action checks.
+- Catalog outputs are stored under canonical homes (`data/stac/`, `data/catalog/dcat/`, `data/prov/`) when present.
+- Workflows may run on repos/branches that do not contain all optional roots; the action must handle that cleanly.
 
 ### Constraints / invariants
-- The canonical pipeline ordering is preserved and documented in `docs/MASTER_GUIDE_v12.md`.
-- The UI never reads Neo4j directly; contracts must be enforced at the API layer.
-- Validation must be deterministic and reproducible (same inputs → same results).
+
+- Preserve the canonical ordering: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode.
+- Deterministic CI behavior:
+  - Skip when optional roots or targets are absent.
+  - Fail when targets are present but invalid.
+- Do not leak sensitive information in logs:
+  - Prefer printing file paths and validation errors without dumping full payloads.
 
 ### Open questions
 
 | Question | Owner | Target date |
 |---|---|---|
-| What file globs are covered by default | TBD | TBD |
-| Which validator runtime is standard for the repo | TBD | TBD |
-| Do we emit structured results (e.g., SARIF) | TBD | TBD |
+| Which validator(s) are used for JSON Schema and JSON-LD validation | CI maintainers | TBD |
+| What is the standard output format for CI annotations and summaries | CI maintainers | TBD |
+| Should schema validation be strict-by-default or allow warning-only modes | Governance + CI | TBD |
 
 ### Future extensions
-- Add schema validation for additional registries (e.g., layer registries, telemetry payloads).
-- Add a “changed files only” mode to speed up PR checks while keeping full validation on main.
+
+- Add SHACL validation for RDF-aligned outputs when applicable.
+- Add a “changed-files only” mode to reduce CI time for large catalogs.
+- Add a machine-readable report artifact for downstream CI gates.
 
 ## 🗺️ Diagrams
 
-### System and CI dataflow
+### System / dataflow diagram
+
 ~~~mermaid
 flowchart LR
-  PR[Pull Request changes] --> CI[CI job: schema-validate]
-  CI --> S1[Validate schemas]
-  CI --> S2[Validate instances]
-  S1 --> Gate[Pass or fail gate]
-  S2 --> Gate
-  Gate --> Downstream[Safe to run catalogs/API/UI checks]
+  PR[Pull Request / Push] --> WF[GitHub Workflow Job]
+  WF --> ACT[Action: schema-validate]
+  ACT --> S[schemas/]
+  ACT --> STAC[data/stac/]
+  ACT --> DCAT[data/catalog/dcat/]
+  ACT --> PROV[data/prov/]
+  ACT -->|valid| OK[✅ Pass gate]
+  ACT -->|invalid| FAIL[❌ Fail gate]
+~~~
+
+### Sequence diagram
+
+~~~mermaid
+sequenceDiagram
+  participant WF as Workflow
+  participant ACT as schema-validate action
+  participant FS as Repo files
+  WF->>ACT: uses ./.github/actions/schema-validate
+  ACT->>FS: read schemas + targeted artifacts
+  ACT->>ACT: run validators
+  ACT-->>WF: exit 0 on success
+  ACT-->>WF: exit 1 on failure
 ~~~
 
 ## 📦 Data & Metadata
@@ -160,42 +194,52 @@ flowchart LR
 
 | Input | Format | Where from | Validation |
 |---|---|---|---|
-| Schema documents | JSON | `schemas/` | Must be valid JSON + internally consistent |
-| Schema-governed instances | JSON | Repo paths configured in `action.yml` | Must validate against selected schema(s) |
+| Contract schemas | JSON Schema (and related) | `schemas/` | Must be internally consistent and resolvable |
+| STAC Collections/Items | JSON | `data/stac/**` | Validate against STAC-related schemas when present |
+| DCAT datasets | JSON-LD or JSON | `data/catalog/dcat/**` | Validate against DCAT mapping schema when present |
+| PROV bundles | JSON-LD or JSON | `data/prov/**` | Validate against PROV mapping schema when present |
 
 ### Outputs
 
 | Output | Format | Path | Contract / Schema |
 |---|---|---|---|
-| CI pass/fail | Exit code | GitHub Actions step result | Non-zero on any validation error |
-| Human-readable report | Log output | Workflow logs | Keep logs free of secrets/PII |
+| CI pass/fail | process exit code | workflow job | GitHub Actions convention |
+| Validation summary | text / markdown | GitHub step summary | Must not leak sensitive data |
+| Optional report artifact | JSON | workflow artifact | Not yet standardized |
 
 ### Sensitivity & redaction
-- Do not print secrets, tokens, or environment values.
-- If validation errors include excerpts from documents, ensure those documents are not restricted content
-  (or redact in logging behavior as required by governance).
+
+- Validation output must avoid printing full document bodies when they may contain sensitive location details or other restricted fields.
+- Prefer reporting: file path, schema name, and the smallest possible error context.
 
 ### Quality signals
-- Total validations run (schemas + instances)
-- Error count by category (parse error vs schema error vs reference error)
-- Deterministic ordering for output to make diffs stable
+
+- Number of files validated (by type).
+- “Skipped because absent” counts (explicitly reported).
+- Strictness mode (if configurable) recorded in the summary.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### STAC
-- This action may validate STAC JSON against local schemas if configured, but **STAC semantic validation**
-  (collection-item integrity, required links, extension rules) is handled by `.github/actions/stac-validate`.
+
+- Collections involved: `data/stac/collections/**`
+- Items involved: `data/stac/items/**`
+- Extensions: profile-specific; governed under `schemas/` and KFM STAC profile.
 
 ### DCAT
-- DCAT records should be validated against a repo-approved schema or shape (implementation-specific).
+
+- Dataset identifiers: governed by KFM DCAT profile.
+- License mapping: required fields must validate at the schema level.
 
 ### PROV-O
-- PROV bundles should be validated for structural correctness where schemas exist.
+
+- `prov:wasDerivedFrom`: must be representable in the chosen PROV serialization and validated at the schema level where applicable.
+- `prov:wasGeneratedBy`: activity identity should remain stable and machine-checkable.
 
 ### Versioning
-- If schemas are versioned (recommended), this action should enforce:
-  - stable schema IDs and references
-  - backwards-compat behavior rules (where defined by repo standards)
+
+- Schemas should follow semantic versioning and maintain a changelog.
+- Changes that tighten validation rules should be communicated clearly because they can break existing artifacts.
 
 ## 🧱 Architecture
 
@@ -203,89 +247,115 @@ flowchart LR
 
 | Component | Responsibility | Interface |
 |---|---|---|
-| GitHub workflow | Orchestrates CI | `.github/workflows/*.yml` |
-| schema-validate action | Runs validations | `.github/actions/schema-validate/action.yml` |
-| Schemas | Define contracts | `schemas/` |
-| Instances | Must conform | configured globs |
+| GitHub workflow | Calls validation gates | `.github/workflows/*.yml` |
+| schema-validate action | Runs validators and reports results | `uses: ./.github/actions/schema-validate` |
+| Schemas root | Holds authoritative contracts | `schemas/` |
+| Catalog outputs | Evidence artifacts to validate | `data/stac/`, `data/catalog/dcat/`, `data/prov/` |
 
 ### Interfaces / contracts
 
 | Contract | Location | Versioning rule |
 |---|---|---|
-| JSON schemas | `schemas/` | SemVer + changelog recommended |
-| UI registries schemas | `schemas/` + `web/` | Schema change requires UI review |
-| Catalog schemas | `schemas/` + `data/stac/` / `data/catalog/dcat/` / `data/prov/` | Must remain machine-validated |
+| JSON schemas | `schemas/` | Semver + changelog |
+| Action interface | `.github/actions/schema-validate/action.yml` | Inputs/outputs versioned with action |
 
-### Extension points checklist
-- [ ] Add new schema under `schemas/` with a stable ID
-- [ ] Update `action.yml` globs/mapping to include new instance locations
-- [ ] Add tests (if repo has contract tests) for representative valid/invalid instances
-- [ ] Ensure downstream docs reference the new schema
+### Usage
+
+In a workflow job:
+
+~~~yaml
+jobs:
+  schema_validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate governed schemas and artifacts
+        uses: ./.github/actions/schema-validate
+        with:
+          # See action.yml for the authoritative list of inputs.
+          # Keys below are illustrative placeholders and may differ.
+          schemas_dir: schemas
+          targets: |
+            schemas/**/*.json
+            data/stac/**/*.json
+            data/catalog/dcat/**/*.json
+            data/catalog/dcat/**/*.jsonld
+            data/prov/**/*.json
+            data/prov/**/*.jsonld
+~~~
 
 ## 🧠 Story Node & Focus Mode Integration
 
 ### How this work surfaces in Focus Mode
-Schema validity is a prerequisite for any content served into Focus Mode contexts:
-- Catalog JSON validity supports provenance-linked narratives.
-- Registry validity supports consistent UI rendering of layers and audit notices.
+
+- This action does not render UI itself, but it protects downstream Focus Mode by ensuring the evidence artifacts (catalogs + provenance) are structurally valid before they are ingested or served.
 
 ### Provenance-linked narrative rule
-- This action does not create narratives.
-- It supports the rule by preventing broken contracts that would block provenance linkage downstream.
+
+- Schema validation supports the “provenance-first” rule by ensuring catalog/provenance artifacts remain machine-readable and contract-compliant.
+
+### Optional structured controls
+
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
 ## 🧪 Validation & CI/CD
 
 ### Validation steps
-- [ ] Run schema validator against schema files
-- [ ] Validate instances against schemas per `action.yml` mapping
-- [ ] Fail CI on any errors
+
+- [ ] Markdown protocol checks
+- [ ] Schema validation for governed outputs (STAC/DCAT/PROV and other contract artifacts as configured)
+- [ ] Deterministic behavior: skip absent targets; fail invalid targets
 
 ### Reproduction
-The exact validator and command line are implementation-defined. Use `action.yml` as the source of truth.
-
-Examples of local approaches (choose the one matching the repo’s implementation):
 
 ~~~bash
-# Example approach A: Node-based validator (AJV)
-# npx ajv-cli validate -s schemas/<schema>.json -d <instances-glob>
+# CI path (recommended):
+# - run the workflow that invokes this action
 
-# Example approach B: Python-based validator
-# python -m pip install jsonschema
-# python -c "import json, jsonschema; ..."
-
-# Example approach C: Dedicated schema tool
-# <tool> validate --schema <schema> --data <file-or-glob>
+# Local path (TBD; must match the implementation in action.yml/scripts):
+# - run the same validator command(s) pinned by the action
+# - validate the same target globs used in CI
 ~~~
 
 ### Telemetry signals
+
 | Signal | Source | Where recorded |
 |---|---|---|
-| Validation errors count | CI job logs | Workflow logs (and optional artifacts) |
-| Files validated | CI job logs | Workflow logs |
+| Files validated | action runtime | workflow logs / summaries |
+| Failures by type | validator output | workflow logs / summaries |
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
-- Schema changes that affect public outputs: requires human review (DataOps + relevant subsystem owner).
-- Any schema that touches sensitive/restricted content: requires governance review per:
-  - `docs/governance/ROOT_GOVERNANCE.md`
-  - `docs/governance/SOVEREIGNTY.md`
+
+- Changes to schemas or validation rules can change what is acceptable as evidence artifacts and should be reviewed by the relevant maintainers.
+- If new artifact types are validated here, ensure their canonical home and governance review triggers are documented.
 
 ### CARE / sovereignty considerations
-- This action should not broaden access to restricted data.
-- Validation logs must avoid echoing restricted content.
+
+- Avoid emitting sensitive locations or restricted details into public CI logs.
+- Prefer high-level error summaries and link contributors to local reproduction steps.
 
 ### AI usage constraints
-- This doc does not authorize AI-generated policy. It permits summarization/structure extraction only.
+
+- This document inherits the repo’s governance references and prohibits generating policy or inferring sensitive locations.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial action README | TBD |
+| v1.0.0 | 2025-12-23 | Initial action README scaffold | TBD |
 
 ---
+
 Footer refs:
+
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
