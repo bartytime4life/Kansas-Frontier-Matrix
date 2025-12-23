@@ -1,429 +1,296 @@
 ---
-title: "📡 Kansas Frontier Matrix — Telemetry & Sustainability Tools (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Tools — Telemetry"
 path: "tools/telemetry/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-23"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-15"
-release_stage: "Stable / Governed"
-review_cycle: "Continuous · Autonomous · FAIR+CARE Council Oversight"
-lifecycle: "Long-Term Support (LTS)"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-
-doc_uuid: "urn:kfm:doc:tools-telemetry-readme-v11.0.0"
-semantic_document_id: "kfm-tools-telemetry"
-doc_kind: "Architecture"
-intent: "tools-telemetry-platform"
-role: "telemetry-registry"
-category: "Telemetry · Sustainability · Governance"
-immutability_status: "mutable-plan"
-
-sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.6/manifest.zip"
-signature_ref: "../../releases/v11.2.6/signature.sig"
-data_contract_ref: "../../docs/contracts/data-contract-v3.json"
-
-telemetry_ref: "../../releases/v11.2.6/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/tools-telemetry-v4.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-classification: "Public"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-fair_category: "F1-A1-I2-R2"
-care_label: "Public · Low-Risk"
-sensitivity: "General"
-sensitivity_level: "Low"
-public_exposure_risk: "Low"
-public_benefit_level: "High"
-indigenous_data_flag: false
-risk_category: "Low"
-redaction_required: false
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-provenance_chain:
-  - "tools/telemetry/README.md@v10.0.0"
-  - "tools/telemetry/README.md@v10.2.2"
-  - "tools/telemetry/README.md@v11.0.0"
-  - "tools/telemetry/README.md@v11.1.0"
-  - "tools/telemetry/README.md@v11.2.2"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "CreativeWork"
-  owl_time: "ProperInterval"
-  prov_o: "prov:Activity"
-  geosparql: "N/A"
-
-json_schema_ref: "../../schemas/json/tools-telemetry-readme-v11.json"
-shape_schema_ref: "../../schemas/shacl/tools-telemetry-readme-v11.shape.ttl"
-
-event_source_id: "ledger:tools/telemetry/README.md"
-
-ai_training_allowed: false
-ai_training_guidance: "Do not use telemetry logs or governance-linked telemetry bundles as model training data."
-ai_outputs_require_explainability: true
-ai_outputs_require_bias_audit: false
+doc_uuid: "urn:kfm:doc:tools:telemetry:v1.0.0"
+semantic_document_id: "kfm-tools-telemetry-v1.0.0"
+event_source_id: "ledger:kfm:doc:tools:telemetry:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "metadata-extraction"
-  - "diagram-extraction"
-  - "a11y-adaptations"
-  - "timeline-generation"
-  - "layout-normalization"
-
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "normative-requirements-alteration"
-  - "policy-invention"
-  - "governance-status-fabrication"
-  - "provenance-fabrication"
-  - "dataset-relationship-fabrication"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_readable: true
-accessibility_compliance: "WCAG 2.1 AA"
-jurisdiction: "United States · Kansas"
-lifecycle_stage: "operational"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon next telemetry-tools architecture update"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 📡 **Kansas Frontier Matrix — Telemetry & Sustainability Tools (v11.2.6)**  
-`tools/telemetry/README.md`
-
-**Purpose**  
-Provide the **canonical telemetry + sustainability architecture** for KFM’s Tools Platform and pipelines, measuring and reporting:
-
-- Runtime & reliability characteristics (latency, errors, retries, SLO signals)  
-- Energy usage (Wh) & estimated carbon emissions (gCO₂e)  
-- Governance-aligned outcomes (validation gates, certification states, exceptions)  
-- Focus Mode / Story Node observability context (evidence-led, non-PII)
-
-Telemetry & Sustainability Tools are the **observability anchor** for Reliable Pipelines v11 and governed releases.
-
-<img alt="FAIR+CARE aligned" src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
-<img alt="ISO 14064 aligned" src="https://img.shields.io/badge/ISO-14064%20Sustainability-green" />
-<img alt="ISO 50001 aligned" src="https://img.shields.io/badge/ISO-50001%20Energy%20Mgmt-lightgrey" />
-<img alt="License MIT" src="https://img.shields.io/badge/License-MIT-green" />
-<img alt="MCP-DL v6.3" src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
-<img alt="KFM-MDP v11.2.6" src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-
-</div>
-
----
+# KFM Tools — Telemetry
 
 ## 📘 Overview
 
-Telemetry in KFM is **not optional observability**—it is part of the **governance evidence chain**.
+### Purpose
 
-This module defines the expectations and patterns for capturing telemetry across:
+This directory is the canonical home for **telemetry tooling**: utilities that help validate, package, and audit telemetry artifacts produced across KFM (pipelines, APIs, and UI). Telemetry is governed elsewhere; this folder is specifically for *tools* that enforce those governed contracts.
 
-- **ETL** (ingest → normalize → validate → publish)  
-- **Cataloging** (STAC / DCAT) and lineage (PROV)  
-- **Graph operations** (Neo4j load/link/derive)  
-- **APIs** (query + delivery)  
-- **Web UI** (React / MapLibre / Cesium)  
-- **Story Nodes & Focus Mode** (narrative + explainability overlays)
+Telemetry docs and schemas are defined under:
+- `docs/telemetry/`
+- `schemas/telemetry/`
 
-Telemetry outputs are designed to be:
+Telemetry snapshots may be bundled into releases:
+- `releases/` (telemetry snapshots are referenced as release artifacts)
 
-- **Machine-readable** (schema-validated JSON/NDJSON)  
-- **Deterministic** (replayable, run-id scoped, versioned schemas)  
-- **Safe** (no secrets, no PII, no raw sensitive coordinates)  
-- **Governable** (linked to manifests, SBOMs, and audit ledgers)
+### Scope
 
----
+| In Scope | Out of Scope |
+|---|---|
+| Tooling for telemetry schema validation | Defining new governance policy (see governance docs) |
+| Packaging telemetry snapshots for releases | Production monitoring vendor deployment specifics |
+| Developer utilities for local inspection and CI checks | UI/ETL/API feature development (lives in `web/`, `src/pipelines/`, `src/server/`) |
+
+### Audience
+
+- Primary: KFM maintainers implementing validation and release packaging workflows.
+- Secondary: Governance and review gate maintainers auditing telemetry practices.
+
+### Definitions and glossary
+
+- Glossary: `docs/glossary.md`
+- Terms used in this doc: telemetry, signal, event, snapshot, schema, run ID, provenance, redaction.
+
+### Key artifacts
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master Guide (canonical pipeline + inventory) | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical ordering and subsystem homes |
+| Telemetry documentation | `docs/telemetry/` | TBD | Human-readable descriptions of signals |
+| Telemetry schemas | `schemas/telemetry/` | TBD | JSON Schemas for telemetry payloads |
+| Releases and telemetry snapshots | `releases/` | TBD | Telemetry snapshots may be bundled with releases |
+| PROV bundles for runs | `data/prov/` | TBD | Run-level provenance; may be referenced by telemetry |
+
+### Definition of done
+
+- [ ] Front-matter complete + valid
+- [ ] This README clearly points to the governed homes: `docs/telemetry/` and `schemas/telemetry/`
+- [ ] Any example paths or commands are clearly marked as placeholders when not implemented
+- [ ] Sensitivity, redaction, and governance references are explicit
 
 ## 🗂️ Directory Layout
 
+### This document
+
+- `path`: `tools/telemetry/README.md` (must match front-matter)
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Telemetry tooling | `tools/telemetry/` | Validation and packaging utilities |
+| Telemetry schemas | `schemas/telemetry/` | Schema contracts for telemetry payloads |
+| Telemetry documentation | `docs/telemetry/` | Signal definitions and human-readable descriptions |
+| Releases | `releases/` | Manifests, SBOMs, signed bundles, telemetry snapshots |
+| Provenance | `data/prov/` | PROV bundles and run manifests for pipeline runs |
+| Pipelines | `src/pipelines/` | ETL + catalog build code; emits run/prov artifacts |
+| API boundary | `src/server/` | Contracted telemetry exposure or collection endpoints (if used) |
+| UI | `web/` | Focus Mode and interaction instrumentation (if used) |
+
+### Suggested local layout
+
+The following is a suggested structure for this directory. Some entries may not exist yet.
+
 ~~~text
 📁 tools/
-└── 📁 telemetry/                                   — Telemetry & sustainability tools (this module)
-    ├── 📄 README.md                                — This document (architecture + contracts)
-    ├── 📄 ARCHITECTURE.md                          — (Optional) module deep-dive (if present)
-    ├── 📄 __init__.py                              — (If Python package boundary is used)
-    ├── 📄 collector*.py                            — Collect/normalize metrics (implementation-specific)
-    ├── 📄 analyzer*.py                             — SLO/error-budget scoring (implementation-specific)
-    ├── 📄 sustainability*.py                       — Energy/carbon estimation + reporting
-    ├── 🧾 telemetry_dashboard*.json                 — Dashboard-ready aggregates (optional)
-    └── 🧾 metadata*.json                            — Module configuration + lineage (optional)
-
-📁 schemas/
-└── 📁 telemetry/                                   — Telemetry schemas (energy, carbon, tool registries)
-    ├── 🧾 tools-telemetry-v4.json                   — Tools telemetry schema (referenced by this doc)
-    ├── 🧾 energy-v2.json                            — Energy measurement/estimation schema
-    └── 🧾 carbon-v2.json                            — Carbon estimation schema
-
-📁 releases/
-└── 📁 v11.2.6/                                     — Certified release packet (governed artifacts)
-    ├── 🧾 focus-telemetry.json                      — Release-scoped telemetry bundle
-    ├── 🧾 sbom.spdx.json                            — SPDX SBOM (release evidence)
-    ├── 🧾 manifest.zip                              — Release manifest (checksums + inventory)
-    └── 🧾 signature.sig                             — Release signature/attestation
+└── 📁 telemetry/
+    ├── 📄 README.md
+    ├── 📁 scripts/                       # not confirmed in repo
+    │   ├── 📄 validate_telemetry.py       # not confirmed in repo
+    │   ├── 📄 build_snapshot.py           # not confirmed in repo
+    │   └── 📄 summarize_report.py         # not confirmed in repo
+    └── 📁 fixtures/                      # not confirmed in repo
+        └── 📄 example_event.json         # not confirmed in repo
 ~~~
-
----
-
-## 🧭 Context
-
-KFM’s pipeline is contract-driven and evidence-led:
-
-> Deterministic ETL → STAC/DCAT/PROV catalogs → Neo4j → API → React/MapLibre/Cesium → Story Nodes → Focus Mode
-
-Telemetry & sustainability instrumentation is expected at **each stage**, but must respect role boundaries:
-
-- The **frontend does not read directly from the graph**. Telemetry that needs UI exposure must be served via governed APIs.
-- Telemetry is **governance-aware**: it can be used to explain reliability and sustainability context, but it must not be used to invent status, fabricate provenance, or “smooth over” failures.
-
----
-
-## 🗺️ Diagrams
-
-### Telemetry flow across the KFM pipeline
-
-~~~mermaid
-flowchart TD
-  A["ETL Runs · Graph Loads · API Requests · UI Sessions · CI/CLI Jobs"]
-    --> B["Telemetry Capture\n(run_id, tool_id, timestamps)"]
-  B --> C["Normalization\nschema validate + tag controls"]
-  C --> D["Aggregation\nSLO + error budget + sustainability rollups"]
-  D --> E["Governance Evidence\nmanifest + SBOM + ledger references"]
-  E --> F["Exports\nrelease telemetry + dashboards + summaries"]
-~~~
-
-### Minimal tool interaction model
-
-~~~mermaid
-flowchart LR
-  CLI["CLI / CI / Pipelines"] --> COL["Collector"]
-  COL --> ANA["Analyzer"]
-  ANA --> SUS["Sustainability"]
-  SUS --> OUT["Telemetry Bundle Export"]
-~~~
-
----
-
-## 🧱 Architecture
-
-### Core responsibilities
-
-1. **Capture**  
-   Collect telemetry from tools and pipelines with stable identifiers (run id, tool id, dataset id where applicable).
-
-2. **Normalize and validate**  
-   Ensure telemetry conforms to:
-   - module schema (`telemetry_schema`)
-   - energy schema (`energy_schema`)
-   - carbon schema (`carbon_schema`)
-
-3. **Protect**  
-   Enforce safety constraints:
-   - No secrets/tokens
-   - No PII fields
-   - No raw sensitive geometry in logs
-   - Prefer aggregation over raw traces for long retention
-
-4. **Aggregate**  
-   Compute rollups useful for governance and reliability:
-   - latency (wall clock)
-   - failure counts, retries
-   - energy_wh and carbon_gco2e
-   - pass/fail of required gates
-
-5. **Export**  
-   Write governed outputs:
-   - release telemetry bundle (`telemetry_ref`)
-   - dashboard summaries (optional)
-   - CI/QA summaries (optional; stored under `data/reports/**` when used)
-
-### Metric naming and tagging rules
-
-- Metric names should be **stable and namespaced** (e.g., `kfm.tools.*`, `kfm.pipeline.*`).
-- Tags/attributes MUST be **domain-safe**. Recommended tags:
-  - `run_id`
-  - `tool_id`
-  - `stage` (etl | catalog | graph | api | ui | story | ci)
-  - `release_version`
-  - `status` (success | failure)
-- Tags MUST NOT include:
-  - secrets
-  - user identifiers
-  - raw coordinates or restricted locations
-
----
 
 ## 📦 Data & Metadata
 
-### Telemetry bundle structure (minimum)
+### Inputs
 
-A telemetry bundle is expected to be a JSON object with:
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Telemetry event records | JSON | Produced by pipeline/API/UI instrumentation | Validate against `schemas/telemetry/**` |
+| PROV run bundle references | JSON-LD / PROV | `data/prov/**` | Validate against `schemas/prov/**` |
+| Release identifiers | string | Release workflow | N/A |
 
-- **identity**: `id`, `run_id`, `created_at`, `release_version`
-- **evidence pointers**: references to SBOM/manifest/signature (release runs)
-- **metrics**: runtime, error counts, retry counts
-- **sustainability**: energy and carbon estimates
-- **governance outcomes**: gate states and exceptions (if any)
+### Outputs
 
-### Example record (illustrative)
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Telemetry snapshot bundle | JSON | `releases/<version>/...` | `schemas/telemetry/**` |
+| Validation report | JSON/TXT | `tools/telemetry/...` | N/A |
 
-~~~json
-{
-  "id": "telemetry_run_v11.2.6_2025-12-15_001",
-  "run_id": "run_2025-12-15T12:00:00Z_abc123",
-  "release_version": "v11.2.6",
-  "commit_sha": "<latest-commit-hash>",
-  "stage": "ci",
-  "status": "success",
-  "metrics": {
-    "runtime_sec": 312,
-    "error_count": 0,
-    "retry_count": 0
-  },
-  "sustainability": {
-    "energy_wh": 1.3,
-    "carbon_gco2e": 1.7
-  },
-  "governance": {
-    "sbom_ref": "../../releases/v11.2.6/sbom.spdx.json",
-    "manifest_ref": "../../releases/v11.2.6/manifest.zip",
-    "signature_ref": "../../releases/v11.2.6/signature.sig",
-    "gates": {
-      "schema_passed": true,
-      "security_passed": true,
-      "faircare_passed": true
-    }
-  }
-}
-~~~
+> Note: exact output file names and CLI commands are placeholders until implemented.
 
-### Retention guidance (governance-safe)
+### Sensitivity and redaction
 
-Retention is treated as a **risk-managed policy**, not merely an ops convenience:
+Telemetry must be treated as a **governed interface**:
+- Do not include direct personal identifiers.
+- Do not capture or emit sensitive locations or culturally sensitive details without governance review.
+- Use the governance references in front-matter as the controlling documents.
 
-- Keep raw logs short-lived (rotation after aggregation).
-- Keep aggregated summaries longer-lived (audit and trend analysis).
-- Treat governance-linked telemetry as provenance evidence (append-only where applicable).
+### Quality signals
 
----
+At minimum, telemetry tooling should surface:
+- Schema validation pass/fail
+- Missing required fields count
+- Unknown field count (to detect drift)
+- Snapshot completeness checks (expected signals present)
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Telemetry artifacts are designed to be indexable and linkable:
+### STAC
+
+- Not a STAC artifact.
+- Telemetry should never replace STAC/DCAT catalogs as the source of truth for datasets.
 
 ### DCAT
 
-- Telemetry bundles can be represented as `dcat:Dataset` or `dcat:CatalogRecord`.
-- `semantic_document_id` maps to a stable `dct:identifier`.
-- `focus-telemetry.json` and related exports can be distributions (`dcat:Distribution`) with `mediaType: application/json`.
-
-### STAC
-
-- Telemetry bundles may be represented as a **non-spatial STAC Item** when cataloging is useful:
-  - `geometry: null`
-  - `properties.datetime = created_at`
-  - `assets.telemetry.href` points to the exported JSON
+- Not a DCAT artifact.
+- Telemetry may reference dataset identifiers, but does not define them.
 
 ### PROV-O
 
-- Telemetry capture is a `prov:Activity` associated with:
-  - `prov:Agent` (CI bot, operator, service principal)
-  - `prov:Entity` outputs (telemetry bundles)
-- Telemetry records should be able to reference:
-  - `prov:used` inputs (workflow runs, datasets, models)
-  - `prov:wasGeneratedBy` the capture activity
+- Telemetry related to pipeline execution should reference run/provenance identifiers where available (e.g., the run activity recorded under `data/prov/`).
 
----
+### Versioning
 
-## 🧪 Validation & CI/CD
+- Telemetry schemas are versioned like other interface schemas (semver + changelog discipline applies under `schemas/`).
 
-Telemetry tooling is expected to be enforced by CI profiles that verify:
+## 🧱 Architecture
 
-- schema compliance (telemetry + energy + carbon)
-- absence of secrets and PII
-- stable IDs (run ids, tool ids)
-- release evidence links (manifest/SBOM/signature when pinned)
+### Components
 
-Recommended minimum checks for this module:
+| Component | Responsibility | Interface |
+|---|---|---|
+| Telemetry producers | Emit events and metrics | UI/API/ETL code paths |
+| Telemetry schemas | Define payload shape and allowed fields | `schemas/telemetry/**` |
+| Telemetry tooling | Validate and package telemetry artifacts | `tools/telemetry/**` |
+| Releases | Store telemetry snapshots as artifacts | `releases/**` |
 
-- `markdown-lint` / `schema-lint` for this README and any standards docs
-- telemetry schema validation for any exported `focus-telemetry.json` (or equivalent)
+### Telemetry flow
 
-Operational rule of thumb:
+~~~mermaid
+flowchart LR
+  ETL[src/pipelines] --> E[Telemetry events]
+  API[src/server] --> E
+  UI[web] --> E
 
-- If telemetry capture fails, record the failure (best-effort) and treat release gating as **fail-closed** unless governance explicitly grants an exception.
+  E --> V[tools/telemetry]
+  S[schemas/telemetry] --> V
+  V --> R[releases]
+  V --> D[docs/telemetry]
+~~~
 
----
+### Interfaces and contracts
+
+| Contract | Location | Versioning rule |
+|---|---|---|
+| Telemetry JSON schemas | `schemas/telemetry/` | Semver + changelog (schema changes require version bump) |
+| Telemetry docs | `docs/telemetry/` | Updated alongside schema/version changes |
+
+### Extension points checklist
+
+- [ ] Data: new domain added under `data/<domain>/...`
+- [ ] STAC: new collection + item schema validation
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests
+- [ ] UI: layer registry entry + access rules
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Telemetry may be surfaced in Story Nodes / Focus Mode only when it improves:
+### How this work surfaces in Focus Mode
 
-- transparency (e.g., “data freshness”, “validation passed”)
-- explainability (e.g., “this output is derived from X under process Y”)
-- sustainability context (e.g., aggregate energy/carbon for a batch run)
+Telemetry can record product usage signals such as entering Focus Mode for a story context. Telemetry must not be used as narrative evidence and must not substitute for Story Node citations.
 
-Constraints:
+### Provenance-linked narrative rule
 
-- Never show secrets, operator tokens, or internal credentials.
-- Never expose raw sensitive coordinates or restricted location detail.
-- Never fabricate governance status (“certified”) unless evidence links exist.
+- Every narrative claim in Story Nodes must trace to datasets/records/assets, not telemetry.
 
----
+## 🧪 Validation & CI/CD
+
+### Validation steps
+
+- [ ] Markdown protocol checks
+- [ ] Telemetry schema validation against `schemas/telemetry/**`
+- [ ] Governance and sovereignty checks as applicable
+- [ ] Release packaging validation for telemetry snapshots if snapshots are emitted
+
+### Reproduction
+
+~~~bash
+# Placeholder commands — replace with repo-specific commands once tools exist.
+
+# Validate telemetry payloads against schemas/telemetry
+# python tools/telemetry/scripts/validate_telemetry.py --schemas schemas/telemetry --input <path>
+
+# Build a release telemetry snapshot
+# python tools/telemetry/scripts/build_snapshot.py --out releases/<version>/telemetry/
+~~~
+
+### Telemetry signals
+
+Examples of signals (schemas and docs must exist for each signal):
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| Focus Mode entered | UI | `docs/telemetry/` + `schemas/telemetry/` |
+| ETL run duration | ETL | `data/prov/` + `schemas/telemetry/` |
+| API response time | API | `docs/telemetry/` + `schemas/telemetry/` |
 
 ## ⚖ FAIR+CARE & Governance
 
-Telemetry is governed because it shapes trust.
+### Review gates
 
-### Governance commitments
+Telemetry changes may require human review when:
+- A new signal is introduced
+- A schema changes (version bump required)
+- Fields could expose sensitive information
 
-- **FAIR**: stable identifiers, schemas, and provenance links support findability and reuse.
-- **CARE**: sovereignty and stewardship constraints are enforced; telemetry cannot become a side-channel leak.
+### CARE and sovereignty considerations
 
-### Governance matrix (tools-telemetry)
+- Treat telemetry as potentially sensitive when it can be joined with other data to infer protected information.
+- Follow `docs/governance/SOVEREIGNTY.md` for constraints on culturally sensitive locations and community protections.
 
-| Principle | Implementation in telemetry tools | Oversight surface |
-|---|---|---|
-| Findable | Stable run/tool IDs; schema-validated bundles; release indexing | `@kfm-data` |
-| Accessible | Public-safe aggregates; clear formats; versioned schemas | `@kfm-accessibility` |
-| Interoperable | JSON + schema contracts; STAC/DCAT/PROV alignment patterns | `@kfm-architecture` |
-| Reusable | Deterministic exports; consistent metric semantics | `@kfm-design` |
-| Collective Benefit | Sustainability and reliability transparency | FAIR+CARE Council |
-| Authority to Control | Sovereignty policy governs any sensitive domains | `@kfm-governance` |
-| Responsibility | Evidence pointers (SBOM/manifest/signature); auditability | `@kfm-security` |
-| Ethics | Guardrails against misleading telemetry narratives | `@kfm-ethics` |
+### AI usage constraints
 
----
+- This doc inherits the AI usage permissions/prohibitions declared in front-matter.
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-15 | Updated to KFM‑MDP v11.2.6: normalized headings, corrected relative paths, enforced tilde fencing, strengthened governance/PII constraints, and clarified pipeline-stage coverage. |
-| v11.2.2     | 2025-11-27 | Introduced heading registry alignment; expanded telemetry metadata; clarified sustainability fields and governance linkage. |
-| v11.1.0     | 2025-11-24 | Integrated telemetry tooling expectations into Tools v11; expanded sustainability reporting and release bundle patterns. |
-| v11.0.0     | 2025-11-20 | First v11 telemetry uplift; aligned telemetry tooling with Reliable Pipelines v11 evidence model. |
-| v10.2.2     | 2025-11-12 | Added energy/carbon schema hooks and dashboard-oriented exports (where applicable). |
-| v10.0.0     | 2025-11-10 | Established telemetry module baseline and early sustainability reporting conventions. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-23 | Initial telemetry tooling README | TBD |
 
 ---
 
-<div align="center">
-
-© 2025 Kansas Frontier Matrix — MIT License  
-📡 Telemetry & Sustainability Tools v11.2.6 · FAIR+CARE Governed · ISO 14064/50001 Aligned · Diamond⁹ Ω / Crown∞Ω
-
-[⬅️ Back to Tools Index](../README.md) · [🧱 Tools Architecture](../ARCHITECTURE.md) · [🛡 Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
