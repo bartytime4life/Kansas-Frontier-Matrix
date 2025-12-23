@@ -162,16 +162,16 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ~~~mermaid
 flowchart LR
   subgraph CI["CI / GitHub Actions"]
-    F[DCAT fixtures<br/>.github/actions/fixtures/catalogs/dcat] --> V[Validate (schema/profile)]
-    V --> R[CI status + logs]
+    F["DCAT fixtures<br/>.github/actions/fixtures/catalogs/dcat"] --> V["Validate<br/>schema/profile"]
+    V --> R["CI status + logs"]
   end
 
-  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
-  B --> C[Neo4j Graph]
+  A[ETL] --> B["STAC/DCAT/PROV Catalogs"]
+  B --> C["Neo4j Graph"]
   C --> D[APIs]
-  D --> E[React/Map UI]
-  E --> S[Story Nodes]
-  S --> FM[Focus Mode]
+  D --> E["React/Map UI"]
+  E --> S["Story Nodes"]
+  S --> FM["Focus Mode"]
 
   B --> V
 ~~~
