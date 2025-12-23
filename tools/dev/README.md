@@ -1,8 +1,8 @@
 ---
-title: "KFM tools/dev — Developer Tooling"
+title: "KFM — Dev Tooling Guide (tools/dev/)"
 path: "tools/dev/README.md"
-version: "v1.0.0-draft"
-last_updated: "2025-12-22"
+version: "v1.0.0"
+last_updated: "2025-12-23"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:tools-dev-readme:v1.0.0-draft"
-semantic_document_id: "kfm-tools-dev-readme-v1.0.0-draft"
-event_source_id: "ledger:kfm:doc:tools-dev-readme:v1.0.0-draft"
+doc_uuid: "urn:kfm:doc:tools:dev-readme:v1.0.0"
+semantic_document_id: "kfm-tools-dev-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:tools:dev-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,250 +41,270 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# tools/dev — Developer Tooling
+# KFM Dev Tooling (`tools/dev/`)
 
-## 📌 Summary
+## 📘 Overview
 
-### Change summary
+### Purpose
 
-- Adds a governed README for `tools/dev/` explaining what belongs here, what does not, and how developer tooling should align with KFM’s pipeline contracts.
+- Provide a **single, predictable home** for developer-focused helpers that make it easier to work on KFM locally:
+  - validation (schemas, docs, contracts),
+  - repeatable “run this stage” wrappers,
+  - developer-only bootstrap tooling.
+- Keep dev tooling **separate from runtime subsystems** (ETL, catalogs, graph, API, UI) while still supporting the canonical pipeline:
 
-### Why this matters
+  **ETL → STAC/DCAT/PROV → Neo4j graph → APIs → UI → Story Nodes → Focus Mode**
 
-- KFM’s canonical pipeline ordering is non-negotiable. Developer tooling should support the pipeline and its contracts without introducing alternate sources of truth.
-- A clear `tools/dev/` scope reduces onboarding friction and helps contributors reproduce CI gates locally.
+### Scope
 
-## 🗂 Directory Layout
+| In Scope | Out of Scope |
+|---|---|
+| Local dev helpers (scripts, wrappers, small fixtures) | Production deployment + infrastructure-as-code (belongs elsewhere under `tools/` and/or an ops repo) |
+| Local validation steps that mirror CI gates | Large datasets or derived products (must live under `data/…`) |
+| Developer experience improvements (repeatable commands, docs) | Any tool that bypasses the API boundary (e.g., UI reading Neo4j directly) |
+
+### Audience
+
+- Primary: KFM developers / maintainers (data, graph, API, web)
+- Secondary: Contributors running local checks before PRs
+
+### Definitions
+
+- Glossary: `docs/glossary.md`
+- Terms used in this doc:
+  - **Dev tooling**: scripts/config intended for local workflows (not production runtime).
+  - **Contract artifact**: machine-validated schema/spec (JSON Schema, OpenAPI, GraphQL SDL, UI registry schema).
+  - **Evidence artifact**: catalog + provenance outputs consumed downstream (STAC/DCAT/PROV and derived evidence products).
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master Guide v12 (Draft) | `docs/MASTER_GUIDE_v12.md` | Core maintainers | Canonical pipeline + invariants |
+| v13 Redesign Blueprint (Draft) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Core maintainers | Canonical repo structure direction |
+| Universal Doc Template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Maintainers | Governed doc structure used here |
+| Story Node Template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Maintainers | Narrative artifact structure |
+
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid
+- [ ] `path` in front-matter matches repository path
+- [ ] Describes what belongs in `tools/dev/` vs elsewhere
+- [ ] Provides a safe “recommended layout” that does not assume specific scripts exist
+- [ ] Validation guidance included (with clearly labeled placeholders)
+
+## 🗂️ Directory Layout
 
 ### This document
 
-- `path`: `tools/dev/README.md` (must match front-matter)
+- `path`: `tools/dev/README.md`
 
 ### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
-| Dev tooling | `tools/` | Utilities for development, operations, and repo maintenance |
-| Pipelines | `src/pipelines/` | ETL jobs, transforms, catalog builders, graph build inputs |
-| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC/DCAT/PROV evidence artifacts |
-| Graph | `src/graph/` | Ontology bindings, ingest, migrations |
-| API boundary | `src/server/` | Contracted access layer, redaction, access controls |
-| Frontend | `web/` | React/Map UI (consumes APIs, not direct-to-graph) |
-| Schemas | `schemas/` | STAC/DCAT/PROV/Story Node/UI/Telemetry schemas |
-| Story Nodes | `docs/reports/story_nodes/` | Narrative artifacts and Focus Mode sources |
+| Dev tooling (this area) | `tools/dev/` | Local helpers, validation wrappers, dev-only bootstrap |
+| Tooling (broader) | `tools/` | Cross-cutting tooling; may include ops/deploy tooling in separate subdirs |
+| Data domains | `data/` | Raw/work/processed/stac outputs |
+| Schemas | `schemas/` | JSON Schema (STAC/DCAT/PROV, storynodes, UI registry, telemetry) |
+| Pipelines | `src/pipelines/` | ETL + catalog build + graph build code |
+| Graph | `src/graph/` | Ontology bindings + migrations + constraints |
+| API layer | `src/server/` | Contracted access layer (REST/GraphQL) |
+| Frontend | `web/` | Map + Focus Mode UI (React/MapLibre/Cesium) |
+| Story nodes | `docs/reports/story_nodes/` | Draft/published narratives with provenance linkage |
+| Experiments/SOPs | `mcp/` | Run logs, experiment artifacts, SOPs |
 
-### Expected file tree for this sub-area
+### Recommended (minimal) layout for `tools/dev/`
 
 ~~~text
 📁 tools/
 └── 📁 dev/
     ├── 📄 README.md
-    ├── 📁 scripts/                # Optional: local dev utilities (lint, validate, smoke tests)
-    ├── 📁 ci/                     # Optional: local entrypoints mirroring CI gates
-    ├── 📁 docker/                 # Optional: local-only Docker/Compose helpers
-    ├── 📁 fixtures/               # Optional: small, non-sensitive test fixtures for tooling
-    └── 📁 docs/                   # Optional: tool-specific notes, scoped to dev tooling
+    ├── 📁 scripts/        # optional — small local helpers (validation, wrappers)
+    ├── 📁 docker/         # optional — dev-only compose fragments / service stubs
+    └── 📁 fixtures/       # optional — tiny, non-sensitive test fixtures
 ~~~
 
 ## 🧭 Context
 
-### Scope
+### Why `tools/dev/` exists
 
-- Developer-only utilities: validation, formatting, local orchestration, and reproducibility helpers.
-- Scripts in this folder may read repository artifacts across stages, but should not become a second implementation of a canonical subsystem (ETL, catalogs, graph, API, UI).
+KFM is a contract-first, evidence-first system. Local developer workflows should make it easy to:
 
-### Non-goals
+- run validations early (before CI),
+- keep pipelines deterministic and replayable,
+- preserve boundaries:
+  - **UI does not read Neo4j directly** (contracts live at the API layer),
+  - catalogs are machine-validated (STAC/DCAT/PROV),
+  - story outputs must avoid unsourced narrative in Focus Mode contexts.
 
-- Shipping production services or runtime code from `tools/dev/`.
-- Defining new pipeline policies or contracts. Canonical rules belong in governed docs (e.g., `docs/MASTER_GUIDE_v12.md`).
+### What belongs here (guiding rules)
 
-### Key invariants
+- ✅ Small, composable helpers that:
+  - validate schema outputs,
+  - run doc checks,
+  - run unit/integration tests,
+  - spin up dev-only services (if applicable) without embedding secrets.
+- ❌ Anything that:
+  - writes to `src/` with generated data,
+  - stores derived datasets outside `data/processed/`,
+  - embeds credentials, tokens, or PII,
+  - shortcuts the API boundary.
 
-- Pipeline ordering remains canonical and must not be bypassed.
-- `web/` must not query Neo4j directly; graph access is via the API boundary.
-- Derived data outputs are not code: if a tool generates datasets, they belong under `data/<domain>/processed/` and require STAC/DCAT/PROV plus validation.
+### Conventions for new dev tools
+
+- **Idempotent**: safe to re-run without requiring manual cleanup.
+- **Deterministic outputs**: stable file ordering, stable IDs where applicable.
+- **Controlled writes**:
+  - write outputs to `mcp/runs/…` (logs) or to explicit `data/…` staging paths (pipeline artifacts),
+  - avoid scattering outputs across the repo root.
+- **Document the contract**: any script that produces artifacts should document:
+  - inputs, outputs, validation rules, and where outputs live.
 
 ## 🗺️ Diagrams
 
-### Typical local workflow
-
 ~~~mermaid
 flowchart LR
-  DEV[Developer] --> TOOL[tools/dev script]
-  TOOL --> LINT[Repo lint and markdown protocol]
-  TOOL --> SCHEMA[Schema validation<br/>schemas/*]
-  TOOL --> TESTS[Unit and integration tests]
-  SCHEMA --> ARTIFACTS[Artifacts validated<br/>data/stac + data/catalog/dcat + data/prov]
-  TESTS --> PR[Pull request]
-  LINT --> PR
-  ARTIFACTS --> PR
+  Dev[Developer] --> Tools[tools/dev/ helpers]
+  Tools --> Validate[Validate: docs + schemas + tests]
+  Validate --> RunStage[Run stage: ETL / Catalog / Graph / API / UI]
+  RunStage --> Artifacts[Artifacts: data/ + schemas/ + docs/ + web/]
+  Artifacts --> PR[PR + CI gates]
 ~~~
 
 ## 📦 Data & Metadata
 
 ### Inputs
 
-- Repository source code and configs (e.g., `src/`, `web/`, `schemas/`)
-- Repository artifacts to validate (e.g., `data/stac/`, `data/catalog/dcat/`, `data/prov/`)
-- Optional local environment variables for local testing
-  - Do not commit secrets or credentials
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Local config | env / yaml / json | developer machine | lint + schema checks (if applicable) |
+| Schemas | JSON Schema | `schemas/` | schema validators |
+| Docs | Markdown | repo | markdown protocol validation |
+| Test fixtures (optional) | files | `tools/dev/fixtures/` | keep minimal + non-sensitive |
 
 ### Outputs
 
-- Human-readable reports (lint output, schema validation results, test summaries)
-- Temporary build artifacts
-  - Keep local and ignored, or place in a clearly-scoped workspace
-- If a tool emits formal artifacts that participate in the pipeline (catalogs, provenance bundles), write them to canonical locations and ensure they validate
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Local logs (optional) | text/json | `mcp/runs/…` (recommended) | N/A |
+| Validation reports (optional) | json/md | `mcp/runs/…` or `data/reports/…` | N/A |
+| Build artifacts (dev-only) | varies | dev temp dirs | N/A |
 
-### Schemas and contracts touched
+### Sensitivity & redaction
 
-- STAC schemas: `schemas/stac/`
-- DCAT schemas: `schemas/dcat/`
-- PROV schemas: `schemas/prov/`
-- Story Node schemas: `schemas/storynodes/`
-- UI layer registry schemas: `schemas/ui/`
-- Telemetry schemas: `schemas/telemetry/`
+- Do not place sensitive data (PII, culturally sensitive locations, credentials) in `tools/dev/fixtures/`.
+- Prefer **synthetic or minimized** fixtures that are safe to publish.
 
-## 🌐 STAC, DCAT, and PROV alignment
+### Quality signals
 
-### What dev tools may validate
+- Scripts should fail fast with clear error messages.
+- Prefer machine-readable outputs for validators when feasible (JSON reports).
 
-- STAC Collections and Items (`data/stac/**`)
-- DCAT dataset records (`data/catalog/dcat/**`)
-- PROV lineage bundles (`data/prov/**`)
+## 🌐 STAC, DCAT & PROV Alignment
 
-### Notes
+Dev tooling may include helpers to validate or regenerate:
 
-- This folder should not define alternative “mini-profiles” for STAC/DCAT/PROV.
-- If new constraints are needed, they belong in `schemas/` and the appropriate governed standard docs.
+- STAC collections/items under `data/stac/…`
+- DCAT views under `data/catalog/dcat/…`
+- PROV bundles under `data/prov/…`
+
+Any validator wrapper should:
+- run schema validation,
+- run integrity checks (link resolution, item↔collection consistency),
+- produce a reproducible report/log.
 
 ## 🧱 Architecture
 
-### Where dev tooling sits in the system
+### Components
 
-- `tools/dev/` is supportive infrastructure: it helps contributors run validations and reproduce CI gates locally.
-- Canonical subsystem homes remain:
-  - ETL + transforms: `src/pipelines/`
-  - Graph: `src/graph/`
-  - API boundary and contracts: `src/server/`
-  - UI: `web/`
+| Component | Responsibility | Interface |
+|---|---|---|
+| Dev scripts | Convenience wrappers for local work | CLI scripts under `tools/dev/scripts/` |
+| Validators | Mirror CI checks locally | schemas + docs + tests |
+| Dev-only stack helpers | Optional local services | docker-compose fragments, local configs |
+| Fixtures | Minimal reproducible inputs | small, non-sensitive files |
 
-### Recommended conventions
+### Interfaces / contracts
 
-> These are recommended conventions for `tools/dev/` and may require maintainer review if adopted as enforced policy.
+| Contract | Location | Versioning rule |
+|---|---|---|
+| JSON schemas | `schemas/` | SemVer + changelog where applicable |
+| API schemas | `src/server/` + docs | contract tests required |
+| UI registries | `web/…` | schema-validated |
 
-- Prefer explicit, self-documenting entrypoints
-  - Each script should have `--help` usage and clear “what it changes” messaging
-- Prefer safe defaults
-  - Read-only validation by default
-  - If writing, require an explicit apply flag (e.g., `--write`, `--apply`) and document outputs
-- Keep outputs diffable and reproducible
-  - Deterministic operations where possible (fixed seeds, stable ordering, pinned versions)
-- Never introduce forbidden boundaries
-  - No UI direct-to-graph access
-  - Keep tooling aligned with API contracts and schema validations
+### Extension points checklist (for future work)
 
-### Extension points checklist
-
-- [ ] Data: new domain added under `data/<domain>/...`
-- [ ] STAC: new collection + item schema validation
-- [ ] PROV: activity + agent identifiers recorded
-- [ ] Graph: new labels/relations mapped + migration plan
-- [ ] APIs: contract version bump + tests
-- [ ] UI: layer registry entry + access rules
-- [ ] Focus Mode: provenance references enforced
-- [ ] Telemetry: new signals + schema version bump
-
-### Risks
-
-- Accidental modification of pipeline artifacts (especially `data/processed/` and `data/stac/**`) leading to non-reproducible diffs
-- Introducing tooling that bypasses contracts (e.g., direct writes into Neo4j without provenance)
+- [ ] Add a validator wrapper for STAC/DCAT/PROV outputs
+- [ ] Add a local doc/protocol linter wrapper
+- [ ] Add a single “dev quickcheck” wrapper that runs the subset of CI checks feasible locally
+- [ ] Ensure all scripts document inputs/outputs + safe paths
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How this work surfaces in Focus Mode
+Dev tooling can support story workflows by providing local checks that help enforce:
 
-- Tools in this folder may include validators to ensure Story Nodes:
-  - have valid front matter
-  - reference existing evidence IDs
-  - comply with redaction and sovereignty rules
-
-### Provenance-linked narrative rule
-
-- Every Story Node claim shown in Focus Mode must trace to a dataset, record, or asset ID.
-
-### Optional structured controls
-
-~~~yaml
-# Optional defaults for local Focus Mode previews, if implemented
-focus_layers:
-  - "TBD"
-focus_time: "TBD"
-focus_center: [-98.0000, 38.0000]
-~~~
+- provenance-linked narrative rules (no unsourced claims),
+- schema validation for story node front-matter (if schema exists),
+- link checks for dataset/document IDs referenced from narratives.
 
 ## 🧪 Validation & CI/CD
 
 ### Validation steps
 
-- [ ] Markdown protocol checks
+- [ ] Markdown protocol checks (governed docs)
 - [ ] Schema validation (STAC/DCAT/PROV)
-- [ ] Graph integrity checks
-- [ ] API contract tests
-- [ ] UI schema checks (layer registry)
-- [ ] Security and sovereignty checks (as applicable)
+- [ ] Graph integrity checks (constraints/migrations, if runnable locally)
+- [ ] API contract tests (OpenAPI/GraphQL, if runnable locally)
+- [ ] UI schema checks (layer registries, if applicable)
+- [ ] Security + sovereignty checks (as applicable)
 
 ### Reproduction
 
 ~~~bash
-# Example placeholders — replace with repo-specific commands.
+# Example placeholders — replace with repo-specific commands
 
-# 1) run doc + markdown protocol checks
-# <command>
+# 1) validate schemas (STAC/DCAT/PROV)
+# ./tools/dev/scripts/validate_catalogs.sh
 
-# 2) validate schemas against artifacts (STAC/DCAT/PROV/storynodes/ui)
-# <command>
+# 2) run unit/integration tests
+# ./tools/dev/scripts/test.sh
 
-# 3) run unit and integration tests
-# <command>
+# 3) run doc lint / markdown protocol validation
+# ./tools/dev/scripts/lint_docs.sh
 ~~~
 
-### Telemetry signals
+### Telemetry signals (if applicable)
 
 | Signal | Source | Where recorded |
 |---|---|---|
-| TBD | TBD | `docs/telemetry/` + `schemas/telemetry/` |
+| Dev validation run metadata | local script wrappers | `mcp/runs/…` |
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
 
-- Changes that alter validation gates, schema checks, or data-writing behavior should be reviewed by maintainers for the affected subsystem.
-- Tooling that touches redaction, sensitivity, or sovereignty controls requires governance review.
+- Any change that affects governed contracts, schema profiles, or sovereignty rules should follow the repo’s review gates (see governance refs in front-matter).
 
 ### CARE / sovereignty considerations
 
-- Ensure tooling does not expose or export restricted locations or culturally sensitive information.
-- If tooling produces reports or artifacts, treat them as governed outputs when they contain sensitive content.
+- Tools must not infer or publish sensitive locations.
+- Tools that touch culturally sensitive materials should implement redaction/generalization steps upstream (documented in the relevant domain runbooks).
 
 ### AI usage constraints
 
-- Ensure tooling that generates summaries or narratives does not bypass the “no unsourced narrative” rule.
-- Any AI-generated content must be explicitly marked and provenance-linked where applicable.
+- This doc’s AI permissions/prohibitions are declared in front-matter. Do not use tooling to generate new policy.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0-draft | 2025-12-22 | Initial `tools/dev/` README scaffold | TBD |
+| v1.0.0 | 2025-12-23 | Initial `tools/dev/README.md` scaffold | TBD |
 
 ---
 
 Footer refs:
 
-- Master Guide: `docs/MASTER_GUIDE_v12.md`
-- v13 Blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
-
