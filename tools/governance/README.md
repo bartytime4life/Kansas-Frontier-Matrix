@@ -1,278 +1,256 @@
 ---
-title: "⚖️ Kansas Frontier Matrix — Governance & Provenance Tools (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Governance Tooling — README"
 path: "tools/governance/README.md"
-version: "v11.2.6"
-last_updated: "2025-12-15"
-release_stage: "Stable / Governed"
-review_cycle: "Continuous · FAIR+CARE Council Oversight"
-lifecycle: "Long-Term Support (LTS)"
+version: "v1.0.0"
+last_updated: "2025-12-23"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-doc_uuid: "urn:kfm:doc:tools:governance:readme:v11.2.6"
-semantic_document_id: "kfm-tools-governance-readme-v11.2.6"
-event_source_id: "ledger:tools/governance/README.md"
-immutability_status: "version-pinned"
-
-sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.6/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-
-telemetry_ref: "../../../releases/v11.2.6/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/tools-governance-registry-v3.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-doc_kind: "Architecture"
-intent: "tools-platform-governance"
-role: "governance-registry"
-category: "Governance · Provenance · FAIR+CARE"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-indigenous_rights_flag: true
-risk_category: "Low"
-redaction_required: false
-data_steward: "KFM FAIR+CARE Council"
+doc_uuid: "urn:kfm:doc:tools:governance:readme:v1.0.0"
+semantic_document_id: "kfm-tools-governance-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:tools:governance:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-provenance_chain:
-  - "tools/governance/README.md@v11.2.2"
-  - "tools/governance/README.md@v11.0.0"
-  - "tools/governance/README.md@v10.2.2"
-  - "tools/governance/README.md@v10.0.0"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "SoftwareSourceCode"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-  geosparql: "N/A"
-
-json_schema_ref: "../../../schemas/json/tools-governance-readme-v11.json"
-shape_schema_ref: "../../../schemas/shacl/tools-governance-readme-v11.shape.ttl"
-
-ai_training_allowed: false
-ai_training_guidance: "Do not use governance ledger contents as model training data."
-ai_outputs_require_explainability: true
-ai_outputs_require_bias_audit: true
-
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-jurisdiction: "Kansas · United States"
-lifecycle_stage: "operational"
-ttl_policy: "Review required every 6 months"
-sunset_policy: "Superseded upon next major tools-platform governance update"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# ⚖️ Kansas Frontier Matrix — Governance & Provenance Tools (v11.2.6)
-`tools/governance/README.md`
-
-**Purpose**  
-Define the governance + provenance tooling that records **what ran**, **what changed**, **what passed**, and **what is publishable** under FAIR+CARE oversight.
-
-<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
-<img src="https://img.shields.io/badge/License-MIT-green" />
-
-</div>
-
----
+# KFM Governance Tooling — README
 
 ## 📘 Overview
 
-The `tools/governance/` module is the KFM **provenance + governance consolidation layer**. It:
+This directory is the **implementation home for automated governance checks** (validators, linters, and “review gate” detectors) that keep Kansas Frontier Matrix contributions compliant with:
 
-- aggregates validation, ETL, telemetry, and AI audit outputs
-- appends governed records into ledgers (append-only, reviewable)
-- produces release-facing governance manifests linked to SBOM + attestations
-- enforces publication constraints (license, sensitivity, sovereignty, CARE labels)
+- The canonical pipeline ordering (**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**)
+- The “contract-first / evidence-first” constraints (schemas, API contracts, provenance, redaction)
+- FAIR+CARE requirements and sovereignty safeguards
 
-This layer is designed to run in CI/CD, release workflows, and controlled backfill jobs.
+**Important boundary rule:** governance *policy* lives under `docs/governance/`. This folder exists to make those policies **executable** (CI gates, pre-commit checks, and local developer commands).
 
 ## 🗂️ Directory Layout
 
+### Current
+
 ~~~text
 📁 tools/
-└── 📁 governance/                              — Governance + provenance tooling
-    ├── 📄 README.md                            — This document
-    ├── 📄 governance_sync.py                   — Aggregate + normalize governance signals
-    ├── 📄 certification_audit.py               — FAIR+CARE / ethics / sovereignty evaluation
-    ├── 📄 ledger_update.py                     — Append ledger entries (deterministic format)
-    ├── 📄 governance_manifest_generator.py      — Build release governance manifest bundle
-    └── 🧾 metadata.json                         — JSON-LD context + mapping configuration
+└── 📁 governance/
+    └── 📄 README.md
 ~~~
 
-Notes:
-- Checksum validation belongs to the validation layer (e.g., `tools/validation/**`) and is referenced from governance manifests (do not duplicate hashing logic here).
+### Recommended structure (add as needed)
+
+~~~text
+📁 tools/
+└── 📁 governance/
+    ├── 📄 README.md
+    ├── 📁 runners/                   # entrypoints that CI / devs call
+    ├── 📁 checks/                    # individual checks grouped by subsystem
+    │   ├── 📁 markdown/              # Markdown protocol + front-matter validation
+    │   ├── 📁 schemas/               # STAC/DCAT/PROV/telemetry schema validation
+    │   ├── 📁 graph/                 # ontology + import constraint checks
+    │   ├── 📁 api/                   # OpenAPI/GraphQL contract checks
+    │   ├── 📁 ui/                    # layer-registry schema checks
+    │   └── 📁 security_sovereignty/  # scanning gates + redaction rules
+    ├── 📁 configs/                   # machine-readable rule configs/allowlists (no policy prose)
+    └── 📁 fixtures/                  # deterministic test fixtures for validation
+~~~
 
 ## 🧭 Context
 
-KFM pipeline placement (tooling view):
+Governance checks are cross-cutting: they do **not** introduce new product features, but they **prevent** breaking the governed architecture.
 
-~~~text
-ETL outputs
-  ↓
-tools/validation/        — schema + integrity checks
-  ↓
-tools/governance/        — consolidate → decide → record
-  ↓
-releases/**              — signed bundles (SBOM, manifest, telemetry)
-  ↓
-catalogs + graph + APIs  — STAC/DCAT/PROV → Neo4j → API → UI
-~~~
+### What governance tooling protects
 
-Governance tools must not “fix” data. They record results, decisions, and provenance so downstream systems can trust what they ingest.
-
-## 🧱 Architecture
-
-Core scripts (responsibilities are stable; exact CLI flags may vary by release):
-
-- `governance_sync.py`
-  - inputs: normalized outputs from validation/audit/telemetry layers
-  - output: a staging bundle used by the audit + ledger steps
-
-- `certification_audit.py`
-  - evaluates: FAIR+CARE, ethics constraints, sovereignty policy, accessibility requirements (where applicable)
-  - output: a deterministic certification decision (`certified` / `provisional` / `blocked`) plus reasons
-
-- `ledger_update.py`
-  - writes: append-only governance/provenance events (machine-readable; schema-validated)
-  - must record: inputs used, outputs generated, and the responsible agent (human or bot)
-
-- `governance_manifest_generator.py`
-  - builds: release governance manifest bundle referencing SBOM/attestations/telemetry
-  - output is pinned into `manifest_ref` for the release
+- **Pipeline order** stays intact: artifacts flow ETL → catalogs → graph → APIs → UI → Story Nodes → Focus Mode.
+- **Contract boundaries** stay intact: UI reads via API contracts; catalogs and schemas are machine-validated.
+- **Provenance requirements** are enforced: Story Nodes and Focus Mode must only surface provenance-linked content.
+- **Sovereignty and sensitivity** rules are enforced: redact/generalize restricted locations and honor CARE triggers.
 
 ## 🗺️ Diagrams
 
 ~~~mermaid
-flowchart TD
-  A["ETL / Validation / AI / Telemetry Outputs"] --> B["governance_sync.py\nNormalize + stage"]
-  B --> C["certification_audit.py\nFAIR+CARE / ethics / sovereignty"]
-  C --> D["ledger_update.py\nAppend governance ledger"]
-  D --> E["governance_manifest_generator.py\nRelease manifest bundle"]
-  E --> F["Publication boundary\n(releases/**, catalogs, graph, APIs)"]
+flowchart LR
+  A[ETL / Pipelines] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[API Layer]
+  D --> E[Map UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+
+  subgraph "Governance Tooling (tools/governance/)"
+    M1[Markdown protocol validation]
+    M2[Schema validation]
+    M3[Graph integrity]
+    M4[API contract tests]
+    M5[UI registry schema checks]
+    M6[Security + sovereignty scanning]
+  end
+
+  M1 -. gates .-> A
+  M1 -. gates .-> F
+  M2 -. gates .-> B
+  M3 -. gates .-> C
+  M4 -. gates .-> D
+  M5 -. gates .-> E
+  M6 -. gates .-> A
+  M6 -. gates .-> B
+  M6 -. gates .-> C
+  M6 -. gates .-> D
+  M6 -. gates .-> E
+  M6 -. gates .-> F
+  M6 -. gates .-> G
 ~~~
 
 ## 📦 Data & Metadata
 
-Typical artifacts this module references or produces:
+Governance tooling may generate **reports**, but should not become a new canonical data home.
 
-- Governance ledgers (append-only):
-  - `data/reports/audit/**` (exact filenames are governed by schema + release)
-
-- Release bundles:
-  - `releases/**/manifest.zip`
-  - `releases/**/sbom.spdx.json`
-  - `releases/**/focus-telemetry.json`
-
-Retention guidance (governed; see `ttl_policy`):
-
-| Artifact | Retention | Notes |
-|---|---:|---|
-| Ledger records | Permanent | Canonical provenance |
-| Release manifests | Permanent | Release boundary evidence |
-| Staging bundles | ≥ 1 year | Safe to rotate after manifesting |
+- Preferred write targets for derived artifacts:
+  - run logs / validation outputs → `mcp/runs/` (or `mcp/experiments/`)
+  - build reports (optional) → `data/reports/`
+- Avoid committing generated outputs unless explicitly versioned and referenced.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Governance outputs must remain interoperable with KFM catalogs + graph.
+This folder is expected to host validators that check:
 
-- DCAT: governance artifacts may be represented as catalog records; `semantic_document_id` maps to a stable identifier.
-- STAC: releases can expose governed artifacts as non-spatial Items/Assets.
-- PROV-O: ledger entries must be expressible as `prov:Activity` / `prov:Entity` / `prov:Agent` links.
+- **STAC**: `data/stac/collections/` and `data/stac/items/`
+- **DCAT**: `data/catalog/dcat/` (JSON-LD outputs)
+- **PROV**: `data/prov/` (run/dataset lineage bundles)
 
-Schematic example (illustrative only):
+Validation should be **deterministic** and fail with actionable errors.
 
-~~~json
-{
-  "governance_id": "kfm_gov_record_YYYYMMDD_###",
-  "entity_type": "dataset",
-  "dataset_id": "processed_example_v11",
-  "certification_status": "certified",
-  "prov": {
-    "wasGeneratedBy": "prov:Activity/kfm-governance-run-<id>",
-    "used": ["prov:Entity/input-report-<id>"],
-    "wasAssociatedWith": "prov:Agent/kfm-governance-bot"
-  },
-  "integrity": {
-    "sha256": "sha256-<placeholder>",
-    "sbom": "releases/<ver>/sbom.spdx.json",
-    "manifest": "releases/<ver>/manifest.zip"
-  }
-}
-~~~
+## 🧱 Architecture
 
-## 🧪 Validation & CI/CD
+### Minimum CI gates (what these tools should enable)
 
-This documentation and its referenced schemas are expected to pass the repo’s CI profiles, including:
+The governance toolchain should support (directly or via wrappers):
 
-- markdown formatting and structure checks (KFM-MDP)
-- schema validation for front-matter + ledger/manifests
-- provenance and link checks (refs must resolve inside the repo)
-- secret/PII scanning (no credentials, no personal data)
+- Markdown protocol validation
+- Schema validation (STAC/DCAT/PROV/telemetry)
+- Graph integrity tests
+- API contract tests
+- UI layer registry schema checks
+- Security + sovereignty scanning gates (where applicable)
 
-CI entrypoint is typically the monorepo workflow (see `.github/workflows/kfm-ci.yml`).
+### “Validate / fail / skip” behavior
 
-## ⚖ FAIR+CARE & Governance
+Checks should follow deterministic CI semantics:
 
-Governance is binding. This module must support:
-
-- Authority to Control: sovereignty policy + classification gates
-- Responsibility: who/what/when recorded for every decision
-- Ethics: narratives and publish decisions cannot exceed evidence
-- Collective Benefit: transparency where public exposure is allowed
-
-Operational constraints:
-
-- Never record secrets (tokens, keys) in ledgers or manifests.
-- Avoid precise sensitive locations; use approved generalization/masking rules.
-- Prefer stable IDs over raw names in audit records.
+- **Validate if present**
+- **Fail if invalid**
+- **Skip if not applicable** (optional subsystems not yet present)
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Focus Mode may summarize governance state, but it must not override it.
+Governance checks should enforce:
 
-- Story Nodes should link to governed evidence (ledger ID + manifest ref) when presenting certification status.
-- AI summaries must treat `certification_status` and `care_label` as authoritative fields.
+- Every Story Node claim is traceable to a dataset/record/asset ID.
+- Focus Mode only consumes provenance-linked content.
+- Any predictive or AI-generated content is:
+  - opt-in,
+  - labeled as such, and
+  - carries uncertainty/confidence metadata (where applicable).
+
+## 🧪 Validation & CI/CD
+
+### Local reproduction (placeholders)
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+
+# 1) Markdown protocol validation
+# ./tools/governance/runners/validate_markdown.sh
+
+# 2) Schema validation (STAC/DCAT/PROV/telemetry)
+# ./tools/governance/runners/validate_schemas.sh
+
+# 3) Graph integrity checks
+# ./tools/governance/runners/validate_graph.sh
+
+# 4) API contract tests
+# ./tools/governance/runners/validate_api_contracts.sh
+
+# 5) UI layer registry schema checks
+# ./tools/governance/runners/validate_ui_registry.sh
+
+# 6) Security + sovereignty scanning gates
+# ./tools/governance/runners/scan_security_and_sovereignty.sh
+~~~
+
+### Repo lint rules (target gates)
+
+Governance tooling is expected to enforce repo-level lint rules such as:
+
+- No YAML front-matter in code files
+- No `README.me`
+- No duplicate canonical homes without explicit deprecation markers
+
+### Suggested CI integration points
+
+- Pre-commit: fast format + Markdown/front-matter checks
+- Pull request: full validation suite + review-gate detection
+- Release: full validation + release artifacts checks (e.g., SBOMs) when present
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+
+Escalate to governance review (and ensure the PR/doc explicitly flags it) when changes introduce:
+
+- New sensitive layers
+- New AI narrative behaviors
+- New external data sources
+- New public-facing endpoints or tools
+
+### CARE / sovereignty considerations
+
+- Identify impacted communities.
+- Apply redaction/generalization rules for restricted locations.
+- Ensure access controls and UI presentation follow sovereignty policy.
+
+### AI usage constraints
+
+- AI should not be used to “invent policy”.
+- AI outputs must not infer sensitive locations.
+- Documentation front-matter must reflect allowed vs prohibited AI transforms.
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
-|---:|---:|---|
-| **v11.2.6** | 2025-12-15 | Updated to KFM-MDP v11.2.6; normalized approved H2 headings; converted internal fences to `~~~`; refreshed release refs to v11.2.6. |
-| v11.2.2 | 2025-11-27 | Introduced v11 governance tool README format and expanded metadata/provenance fields. |
-| v11.0.0 | 2025-11-24 | v11 governance platform alignment; clarified checksum validation separation. |
-| v10.2.2 | 2025-11-12 | JSON-LD exports; STAC/DCAT parity; signed ledger integration; telemetry wiring. |
-| v10.0.0 | 2025-11-10 | Initial governance tools documentation. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-23 | Initial README scaffold for governance tooling | TBD |
 
 ---
 
-<div align="center">
+Footer refs:
 
-© 2025 Kansas Frontier Matrix — MIT License  
-MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
-
-[⬅️ Tools Index](../README.md) ·
-[🧱 Tools Architecture](../ARCHITECTURE.md) ·
-[🏛️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
-
-</div>
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
