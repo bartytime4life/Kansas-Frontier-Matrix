@@ -1,328 +1,327 @@
 ---
-title: "🖼️ KFM v11.2.3 — Public Image Assets (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-description: "Governed library of public-facing image assets (UI, maps, data viz, governance imagery) for the Kansas Frontier Matrix web ecosystem."
+title: "KFM Web UI — Public Images (web/public/images)"
 path: "web/public/images/README.md"
-version: "v11.2.3"
-last_updated: "2025-12-03"
+version: "v1.0.0"
+last_updated: "2025-12-23"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-release_stage: "Stable · Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Web · FAIR+CARE Council Oversight"
-content_stability: "stable"
-backward_compatibility: "v9.7.0 → v11.2.3 web-public-images-contract compatible"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256-of-this-file>"
-
-doc_uuid: "urn:kfm:web-public-images-readme-v11.2.3"
-semantic_document_id: "kfm-doc-web-public-images-v11.2.3"
-event_source_id: "ledger:kfm:web:public:images:readme:v11.2.3"
-
-sbom_ref: "../../releases/v11.2.3/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.3/manifest.zip"
-telemetry_ref: "../../releases/v11.2.3/web-public-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/web-public-images-v1.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-faircare_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_ref: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT / CC-BY 4.0"
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-doc_kind: "Assets"
-intent: "web-public-images-governance"
-status: "Active / Enforced"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public / Mixed-Risk"
-sensitivity: "General"
-sensitivity_level: "Medium"
-indigenous_data_flag: true
-public_benefit_level: "High"
-risk_category: "Moderate"
-redaction_required: true
+doc_uuid: "urn:kfm:doc:web:public-images-readme:v1.0.0"
+semantic_document_id: "kfm-web-public-images-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:public-images-readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-ontology_alignment:
-  schema_org: "ImageObject"
-  cidoc: "E38 Image"
-  prov_o: "prov:Entity"
-  owl_time: "TemporalEntity"
-  geosparql: "geo:FeatureCollection"
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-json_schema_ref: "../../schemas/json/web-public-images-readme-v11.json"
-shape_schema_ref: "../../schemas/shacl/web-public-images-readme-v11.shape.ttl"
-
-immutability_status: "version-pinned"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-
-ttl_policy: "12 Months"
-sunset_policy: "Replaced upon next Web Public Images protocol update"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🖼️ **Kansas Frontier Matrix — Public Image Assets**  
-`web/public/images/README.md`
-
-**Purpose:**  
-Define and govern **public-facing image assets** used throughout the KFM web ecosystem — including UI, data visualization, and governance communication imagery.  
-All images are **FAIR+CARE-certified**, **ISO 19115-aligned**, and **WCAG 2.1 AA accessibility-validated**, and must conform to **KFM-MDP v11.2.3**.
-
-</div>
-
----
+# KFM Web UI — Public Images (`web/public/images`)
 
 ## 📘 Overview
 
-The **Public Image Assets Library** under `web/public/images/` contains all **open-licensed, traceable, and accessible images** powering KFM’s web presentation layer.
+### Purpose
 
-Each image:
+- Define what belongs in `web/public/images/` and how these assets are referenced by the KFM UI.
+- Prevent mixing **UI chrome assets** (logos, icons, illustrations) with **evidence/data images** (historic photos, scanned maps, dataset outputs), which should remain governed by the catalog + provenance pipeline.
 
-- Has a **SHA-256 checksum** and SPDX-compatible license.  
-- Is described by **JSON metadata** (ISO 19115 + FAIR+CARE blocks).  
-- Includes **alt text** or documented justification if omitted.  
-- Is subject to **sensitivity classification**, including Indigenous data & sovereignty safeguards.  
-- Contributes to **sustainability telemetry** (bytes, energy, CO₂ estimates).
+### Scope
 
-This README is the **image-specific supplement** to the root web public asset governance in:
+| In Scope | Out of Scope |
+|---|---|
+| UI visuals: logos, icons, UI illustrations, decorative/brand images used by the frontend | Evidence imagery (historic photos, scanned maps), dataset-derived rasters/tiles, sensitive imagery requiring redaction rules |
+| Lightweight static files served with the web app | Any asset that must be tracked as a STAC/DCAT/PROV evidence product |
 
-- `web/public/README.md`
+### Audience
 
----
+- Primary: UI developers maintaining `web/`
+- Secondary: Designers, reviewers, and maintainers who curate the look/feel of KFM
 
-## 🗂️ Directory Layout (v11.2.3)
+### Definitions (link to glossary)
+
+- Link: `docs/glossary.md`
+- Terms used in this doc:
+  - **Public UI image asset:** A static image bundled/served with the frontend (icons/logos/UI illustrations).
+  - **Evidence image:** A historical or dataset-derived image that must be provenance-linked and cataloged (STAC/DCAT/PROV) before being surfaced in the UI.
+  - **Sidecar metadata (optional):** A small file describing source/license/notes for an image (convention not confirmed in repo).
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `web/public/images/README.md` | UI maintainers | Conventions + boundary rules |
+| Public UI images | `web/public/images/` | UI maintainers | Icons/logos/etc. used by the web app |
+| Evidence images (canonical home) | `data/<domain>/processed/` + catalogs | Data + catalog maintainers | Must be provenance-linked and cataloged (do not place in `web/public/images/`) |
+
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid
+- [ ] The boundary between UI images vs. evidence images is explicit
+- [ ] File tree is accurate for this sub-area
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + CARE/sovereignty considerations explicitly stated (even if “none”)
+
+## 🗂️ Directory Layout
+
+### This document
+
+- `path`: `web/public/images/README.md` (must match front-matter)
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Data domains | `data/` | Raw/work/processed + catalog outputs |
+| Documentation | `docs/` | Canonical governed docs |
+| Graph | `src/graph/` | Graph build + ontology bindings |
+| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
+| Schemas | `schemas/` | JSON schemas + telemetry schemas |
+| Frontend | `web/` | React + map clients |
+| Public UI assets | `web/public/` | Static assets served by the frontend |
+| MCP | `mcp/` | Experiments, model cards, SOPs |
+
+### Expected file tree for this sub-area
 
 ~~~text
-web/public/images/
-├── 📄 README.md                    # This document (image governance & layout)
-│
-├── 🧩 ui/                          # Interface elements and widget imagery
-│   ├── …                           # Buttons, headers, hero images, decorative vectors
-│   └── 🧾 metadata.json            # UI image registry (license, checksum, alt text, FAIR+CARE)
-│
-├── 📊 data/                        # Dataset visualization and preview imagery
-│   ├── …                           # Thumbnails, charts, diagrams, Story Node previews
-│   └── 🧾 metadata.json            # Data visualization image registry
-│
-├── 🗺️ maps/                        # Cartographic and topographic imagery
-│   ├── …                           # Generalized rasters, hillshades, historic previews
-│   └── 🧾 metadata.json            # Map image registry (provenance-heavy)
-│
-├── ⚖️ governance/                  # FAIR+CARE, governance, audit visuals
-│   ├── …                           # Legend graphics, governance diagrams, badges
-│   └── 🧾 metadata.json            # Governance imagery registry
-│
-├── 📜 archive/                     # Legacy / retired imagery kept for provenance
-│   ├── …                           # Decommissioned assets (never used in new UI)
-│   └── 🧾 metadata.json            # Archive registry (immutability + lineage only)
-│
-└── 🧾 metadata.json                # Root roll-up index for all image assets (optional)
+📁 web/
+└── 📁 public/
+    └── 📁 images/
+        └── 📄 README.md
 ~~~
 
-**Directory contract:**
+## 🧭 Context
 
-- Each **subdirectory** (`ui/`, `data/`, `maps/`, `governance/`, `archive/`) must maintain its **own `metadata.json`**.  
-- An optional top-level `metadata.json` may roll up all entries, but **MUST NOT** contradict subdirectory metadata.  
-- No image file may be present without a corresponding, validated **metadata entry**.
+### Background
 
----
+- The UI needs a simple, cache-friendly place for **static** images that ship with the frontend.
+- KFM’s evidence-first architecture requires that **historical or dataset-derived imagery** remain provenance-linked and discoverable via catalogs and APIs (rather than being silently embedded as UI assets).
 
-## 🔀 Image Lifecycle Workflow (v11.2.3)
+### Assumptions
+
+- The `web/` build and deploy process serves files under `web/public/` as static assets (verify with the project’s actual web build configuration).
+- The frontend references these assets via stable, public paths (for example, `/images/<file>`), subject to the build tool’s conventions.
+
+### Constraints / invariants
+
+- The canonical pipeline ordering is preserved: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode.
+- The UI does not connect to Neo4j directly; it consumes content through the API boundary.
+- Do **not** place dataset-derived imagery or evidence images in `web/public/images/`. If it’s evidence, it belongs in `data/<domain>/processed/` and must be cataloged and provenance-linked.
+
+### Open questions
+
+| Question | Owner | Target date |
+|---|---|---|
+| Do we enforce image size budgets (KB/MB caps) in CI for `web/public/images/`? | UI maintainers | TBD |
+| Do we require sidecar metadata for every non-trivial image (source/license/notes)? | Governance + UI | TBD |
+| Do we standardize subfolders (e.g., `icons/`, `logos/`) or keep flat? | UI maintainers | TBD |
+
+### Future extensions
+
+- Add an image lint step (naming, file size, basic format checks).
+- Add an optional image optimization workflow (build-time compression).
+- Add an optional metadata sidecar convention (source/license/provenance pointers).
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram
 
 ~~~mermaid
-flowchart TD
-    A["Image Created or Imported"] --> B["FAIR+CARE + Accessibility Review<br/>(A11y · Ethics · Sensitivity)"]
-    B --> C["Checksum + SPDX + Metadata Generation<br/>(metadata.json · JSON-LD)"]
-    C --> D["Governance Ledger Registration<br/>(ISO 19115 · DCAT · PROV-O)"]
-    D --> E["Sustainability Estimation<br/>(Bytes · Energy · CO₂e)"]
-    E --> F["Publication<br/>web/public/images/ + Immutable CDN"]
+flowchart LR
+  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
+  B --> C[Neo4j Graph]
+  C --> D[APIs]
+  D --> E[React/Map UI<br/>+ static assets under web/public/images]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
 ~~~
 
-**Stages (all required):**
+### Optional: sequence diagram
 
-1. **Creation / Import**  
-   - Images originate from verified, open datasets or KFM design workflows.  
+~~~mermaid
+sequenceDiagram
+  participant Browser
+  participant UI as Web UI (web/)
+  participant API as API boundary (src/server)
+  participant Assets as Static assets (web/public/images)
 
-2. **FAIR+CARE + A11y Audit**  
-   - Check for **WCAG 2.1 AA** color contrast and textual equivalents.  
-   - Review for **cultural sensitivity**, Indigenous data concerns, and potential harm.  
+  Browser->>UI: Load app shell
+  Browser->>Assets: GET /images/<asset>
+  Assets-->>Browser: 200 image bytes
 
-3. **Checksum + Metadata**  
-   - Compute **SHA-256**; register SPDX license and attribution.  
-   - Capture provenance (source URI, digitizer, processing steps).  
-
-4. **Ledger Registration**  
-   - Register in the governance ledger (DCAT + PROV-O + FAIR+CARE status).  
-
-5. **Sustainability Estimation & Publication**  
-   - Estimate per-asset bytes → energy/CO₂; log to telemetry.  
-   - Publish to `web/public/images/` with long-lived immutable caching.
-
----
-
-## 🧾 Example Image Metadata Record (v11 Schema)
-
-~~~json
-{
-  "id": "kfm_public_img_kansas_topo_1890_v11",
-  "path": "maps/ks_topography_1890.webp",
-  "checksum_sha256": "8dbcd91aef7c0b32298e243c93e07aee9d5e4b3219d2...",
-  "license": "CC-BY-4.0",
-  "alt_text": "Topographic map of Kansas published circa 1890.",
-  "category": "maps",
-  "sensitivity": "general",
-  "faircare": {
-    "fair_status": "certified",
-    "care_label": "Public",
-    "sovereignty_notes": null
-  },
-  "provenance": {
-    "source_uri": "https://www.loc.gov/...",
-    "digitized_by": "KFM Archives",
-    "lineage": ["scan", "color-correct", "optimize", "webp-compress"]
-  },
-  "sustainability": {
-    "bytes": 244815,
-    "energy_wh": 0.028,
-    "co2_g": 0.041
-  },
-  "wcag": {
-    "compliant": true,
-    "standard": "2.1 AA",
-    "notes": "Alt text present; no text embedded in image."
-  },
-  "timestamp": "2025-11-24T17:21:00Z"
-}
+  Browser->>API: GET /api/<contracted-endpoint>
+  API-->>Browser: Contracted payload + provenance refs
 ~~~
 
-**Minimum required fields per image:**
+## 📦 Data & Metadata
 
-- `id`, `path`, `checksum_sha256`, `license`, `category`, `sensitivity`  
-- `alt_text` (or explicit justification for omission)  
-- `faircare` block  
-- `provenance` block  
-- `sustainability` block  
-- `timestamp`
+### Inputs
 
----
+- Image files committed under `web/public/images/` intended for UI use.
+- (Recommended) A note of the image’s source and license when not originally created for KFM (process not confirmed in repo).
 
-## 🧠 FAIR+CARE Governance Matrix (Image-Specific)
+Recommended conventions (not confirmed in repo):
+- Naming: `kebab-case` (e.g., `kfm-logo.svg`, `icon-search.svg`)
+- Prefer SVG for icons/logos; use PNG/JPG only when raster is required.
+- Avoid embedding sensitive locations or personally identifying information in UI images.
 
-| Principle               | Implementation                                             | Oversight              |
-|-------------------------|-----------------------------------------------------------|------------------------|
-| **Findable**           | IDs, checksums, JSON-LD metadata in `metadata.json`       | @kfm-data              |
-| **Accessible**         | Alt text, WCAG 2.1 AA, semantic roles                     | @kfm-accessibility     |
-| **Interoperable**      | ISO 19115, DCAT, PROV-O alignment                         | @kfm-architecture      |
-| **Reusable**           | MIT/CC-BY licenses, clear attribution requirements        | @kfm-design            |
-| **Collective Benefit** | Non-extractive, non-harmful public imagery                | @faircare-council      |
-| **Authority to Control** | Sovereignty, Indigenous data rules for sensitive content | @kfm-governance        |
-| **Responsibility**     | Designers and engineers maintain provenance & checksums   | @kfm-sustainability    |
-| **Ethics**             | Respectful representation of people, cultures, landscapes | @kfm-ethics            |
+### Outputs
 
-Images involving **Indigenous sites or cultural materials** must also:
+- Static, public assets that the frontend can reference at runtime.
 
-- Reference `sovereignty_ref`.  
-- Be tagged with `indigenous_data_flag: true` in metadata.  
-- Undergo enhanced review before publication.
+### Sensitivity & redaction
 
----
+- This directory is **public** (`sensitivity: public`). Do not store:
+  - sensitive imagery requiring redaction/generalization
+  - content restricted by sovereignty/community rules
+- If an image must be shown but requires redaction/generalization, it should be managed as a governed evidence asset surfaced via the API boundary (not placed here).
 
-## 🖼️ Image Categories & Standards
+### Quality signals
 
-| Directory       | Description                                 | Typical Format     | FAIR+CARE Status |
-|-----------------|---------------------------------------------|--------------------|------------------|
-| `ui/`           | Backgrounds, headers, widget visuals        | SVG / PNG / WebP   | Certified        |
-| `data/`         | Dataset previews and visualization exports  | PNG / WebP / SVG   | Certified        |
-| `maps/`         | Cartographic and topographic imagery        | WebP / PNG / GeoTIFF (derived) | Certified (Generalized) |
-| `governance/`   | Audit, certification, FAIR+CARE visuals     | SVG / PNG          | Certified        |
-| `archive/`      | Deprecated imagery retained for lineage     | Various            | Archived (Read-only) |
+- File sizes are reasonable for web delivery (optimize when possible).
+- Images render crisply at expected UI sizes (icons vs. high-res).
+- Changes are intentional and reviewed (especially for branding).
 
-Assets in `archive/`:
+## 🌐 STAC, DCAT & PROV Alignment
 
-- Must **not** be used in new UI work.  
-- Remain available solely for provenance and audit.
+### STAC
 
----
+- UI assets in `web/public/images/` are **not** STAC Items.
+- If an image is an evidence artifact (historic photo, scanned map, dataset output), it should be handled as a data product:
+  - stored under `data/<domain>/processed/`
+  - cataloged under `data/stac/`
+  - referenced by the UI through API/cat endpoints
 
-## ⚖️ Retention & Provenance Policy
+### DCAT
 
-| Record Type        | Retention        | Policy                                            |
-|--------------------|------------------|---------------------------------------------------|
-| Active Images      | Continuous       | Versioned and replaceable under FAIR+CARE rules   |
-| Image Metadata     | Permanent        | Ledger-backed, PROV-O/JSON-LD preserved          |
-| Archived Assets    | Permanent        | Immutable checksum lineage                        |
-| Audit Reports      | ≥ 365 Days       | Reviewed annually by FAIR+CARE Council           |
+- UI assets are not DCAT datasets.
+- DCAT applies to published datasets/evidence products, not UI chrome.
 
-Audit outputs (indicative):
+### PROV-O
 
-- `../../docs/reports/audit/web_public_images_ledger.json`  
-- `../../docs/reports/audit/web_public_assets.json`
+- UI assets typically do not require PROV activity bundles.
+- Evidence imagery displayed by the UI must be provenance-linked (PROV) through the API boundary.
 
----
+### Versioning
 
-## 🌱 Sustainability Metrics (Image Layer)
+- Image changes are versioned through the repository history (Git).
+- If a major branding change occurs, consider documenting it in a design or release note (location not confirmed in repo).
 
-| Metric              | Target       | Verified By          |
-|---------------------|-------------|----------------------|
-| Average file size   | ≤ 500 KB    | @kfm-design          |
-| Render energy/view  | ≤ 0.04 Wh   | @kfm-sustainability  |
-| CO₂ / view          | ≤ 0.06 g    | @kfm-sustainability  |
-| Renewable hosting   | 100% (RE100) | @kfm-infrastructure |
-| FAIR+CARE coverage  | 100%        | @faircare-council    |
+## 🧱 Architecture
 
-Telemetry captured in:
+### Components
 
-- `../../releases/v11.2.3/web-public-telemetry.json`
+- `web/public/images/` — static public image assets
+- `web/` — UI application (React + map client)
+- Deploy target (static hosting/CDN) — serves `/images/...` to browsers (implementation not confirmed in repo)
 
-Large or high-impact images (e.g., hero backgrounds) must:
+### Interfaces / contracts
 
-- Be explicitly justified in metadata.  
-- Be subject to **extra compression** and **progressive loading** strategies.
+- The UI references these assets as static files (for example, `/images/<file>`), subject to the web build conventions.
+- No API contract is required to fetch these images; they are static assets.
 
----
+### Extension points checklist (for future work)
 
-## 🧪 Validation & CI Contracts
+- [ ] Add CI checks for file size limits and forbidden formats
+- [ ] Add a standard subfolder layout (icons/logos/illustrations) if needed
+- [ ] Add a metadata sidecar convention (source/license/notes)
+- [ ] Add an image optimization step to the web build pipeline
 
-CI workflows (names illustrative):
+## 🧠 Story Node & Focus Mode Integration
 
-- `web-public-images-metadata-validate.yml`  
-- `web-public-images-a11y-check.yml`  
-- `web-public-images-sustainability-check.yml`  
+### How this work surfaces in Focus Mode
 
-CI MUST:
+- These assets may be used for UI chrome (buttons, branding, decorative visuals).
+- Story Node evidence images should not be stored here; Focus Mode should surface evidence images via provenance-linked APIs/catalogs.
 
-- Fail if any image exists without a matching metadata entry.  
-- Fail on checksum mismatch or missing/invalid license.  
-- Warn or fail when:
-  - Alt text fails quality checks.  
-  - Size/energy/carbon budgets are exceeded without justification.  
-  - FAIR+CARE or sovereignty flags conflict with directory placement.
+### Provenance-linked narrative rule
 
----
+- If an image is presented as historical evidence in a narrative context, it must remain provenance-linked and traceable to catalog/provenance identifiers (not embedded as an untracked UI asset).
+
+### Optional structured controls
+
+~~~yaml
+# Not typically applicable for UI image assets.
+# If you introduce Focus Mode behavior tied to UI assets, document it here.
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+## 🧪 Validation & CI/CD
+
+### Validation steps
+
+- [ ] Markdown protocol checks (front-matter present, path matches)
+- [ ] No evidence/data imagery incorrectly stored under `web/public/images/`
+- [ ] Basic sanity checks for image assets (file names, sizes) (implementation not confirmed in repo)
+- [ ] Security and sovereignty checks (as applicable)
+
+### Reproduction
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) run doc lint
+# 2) run web build
+# 3) (optional) run image lint / size checks
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| TBD | TBD | `docs/telemetry/` + `schemas/telemetry/` |
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+
+- UI maintainer review: yes
+- Governance review: only if imagery includes external sources, sensitive cultural content, or policy-relevant branding
+
+### CARE / sovereignty considerations
+
+- Avoid using imagery that conflicts with sovereignty/community rules.
+- If culturally sensitive imagery is required, follow the governance and sovereignty docs and consider redaction/generalization pathways.
+
+### AI usage constraints
+
+- Ensure this doc’s AI permissions/prohibitions match intended use.
 
 ## 🕰️ Version History
 
-| Version  | Date       | Author        | Summary                                                                 |
-|----------|------------|---------------|-------------------------------------------------------------------------|
-| v11.2.3  | 2025-12-03 | KFM Core Team | Aligned with KFM-MDP v11.2.3; updated telemetry paths, governance refs, sustainability targets, and Mixed-Mode rules; harmonized with `web/public/README.md`. |
-| v9.7.0   | 2025-11-05 | KFM Core Team | Upgraded with telemetry schema and ISO alignment for image metadata.    |
-| v9.6.0   | 2025-11-04 | KFM Core Team | Added sustainability registry and checksum governance for images.       |
-| v9.5.0   | 2025-11-02 | KFM Core Team | Expanded FAIR+CARE validation and accessibility scoring.                |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-23 | Initial README for `web/public/images/` | TBD |
 
 ---
 
-<div align="center">
-
-**© 2025 Kansas Frontier Matrix — MIT / CC-BY 4.0**  
-FAIR+CARE Certified · MCP-DL v6.3 · KFM-MDP v11.2.3 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-Machine-Extractable · Version-Pinned  
-
-[⬅ Back to Web Public Assets](../README.md) · [⬅ Back to Web Overview](../../README.md) · [📜 Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+Footer refs:
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
