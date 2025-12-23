@@ -1,8 +1,8 @@
 ---
 title: "Kansas Frontier Matrix — Repository README"
 path: "README.md"
-version: "v1.0.0"
-last_updated: "2025-12-21"
+version: "v1.0.1"
+last_updated: "2025-12-23"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:readme:v1.0.0"
-semantic_document_id: "kfm-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:readme:v1.0.1"
+semantic_document_id: "kfm-readme-v1.0.1"
+event_source_id: "ledger:kfm:doc:readme:v1.0.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -84,6 +84,8 @@ A geospatial + historical knowledge system with governed data, catalogs, graph s
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
 | Master Guide v12 (draft) | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical pipeline + invariants + expected top-level layout |
+| Standards index | `docs/standards/` | TBD | Governed standards, including KFM-MDP |
+| Templates index | `docs/templates/` | TBD | Document + MCP templates |
 | Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | TBD | Default template for governed markdown docs |
 | Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | TBD | Focus Mode narrative artifacts |
 | API Contract Extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | TBD | REST/GraphQL contract changes |
@@ -103,6 +105,21 @@ A geospatial + historical knowledge system with governed data, catalogs, graph s
 
 - `path`: `README.md` (must match front-matter)
 
+### Repo top-levels (expected)
+
+~~~text
+.github/
+data/
+docs/
+mcp/
+schemas/
+src/
+tests/
+tools/
+web/
+releases/
+~~~
+
 ### Related repository paths
 
 | Area | Path | What lives here |
@@ -110,12 +127,18 @@ A geospatial + historical knowledge system with governed data, catalogs, graph s
 | Repo metadata + policy | `.github/` | security policy, workflows, issue templates |
 | Data domains | `data/` | domain staging (`raw/`, `work/`, `processed/`) + (optional) domain docs |
 | Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC items/collections, DCAT datasets, PROV lineage bundles |
-| Graph | `src/graph/` + `data/graph/` | ontology-governed ingest + import CSVs/scripts |
-| Pipelines | `src/pipelines/` | deterministic transforms; outputs written under `data/**` |
+| Pipelines (code) | `src/pipelines/` | deterministic transforms; outputs written under `data/**` |
+| Pipelines (docs) | `docs/pipelines/` | runbooks, domain pipeline notes (if used) |
+| Graph (code) | `src/graph/` | ontology-governed ingest + migrations/constraints |
+| Graph (imports) | `data/graph/` | import CSVs/scripts (and generated extracts for Neo4j) |
 | API boundary | `src/server/` | contracted access layer (REST/GraphQL); redaction + provenance refs |
-| Frontend | `web/` | map layers + Focus Mode UX; no direct graph access |
+| API contracts | `src/server/contracts/` | OpenAPI/GraphQL schema snapshots + contract tests (if used) |
+| Frontend | `web/` | map layers + Focus Mode UX; **no direct graph access** |
+| Frontend docs | `docs/design/` | UI/UX design notes, a11y guidance (if used) |
 | Schemas | `schemas/` | JSON Schemas for artifacts (catalogs, story nodes, UI registries, telemetry) |
 | Story Nodes | `docs/reports/story_nodes/` | draft/published narratives + assets |
+| Telemetry | `docs/telemetry/` + `schemas/telemetry/` | observability + governance/security metrics (if used) |
+| Security | `.github/SECURITY.md` + `docs/security/` | policy + technical standards (if used) |
 | MCP / experiments | `mcp/` | experiment logs, run manifests, SOPs |
 | Tests | `tests/` | unit + integration + contract tests |
 | Tooling | `tools/` | scripts and utilities (repo lint, validators, etc.) |
@@ -151,6 +174,7 @@ A geospatial + historical knowledge system with governed data, catalogs, graph s
 ├── 📁 graph/
 │   ├── 📁 csv/
 │   └── 📁 cypher/
+├── 📁 reports/   # optional evidence products (if used)
 └── 📁 <domain>/
     ├── 📁 raw/
     ├── 📁 work/
@@ -174,7 +198,10 @@ KFM’s core design goal is an evidence-first, provenance-linked system where ev
 ### Constraints / invariants
 
 - **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode** is preserved.
-- **Frontend consumes contracts via APIs (no direct graph dependency).**
+- **No UI direct-to-graph reads:** `web/` must never query Neo4j directly; all graph access is via `src/server/`.
+- **Schemas/specs live in `schemas/` and API contracts live under `src/server/contracts/` (validated in CI).**
+- **Derived datasets belong under `data/<domain>/processed/` (not under `src/`).**
+- **Catalog outputs (STAC/DCAT/PROV) are evidence artifacts and must not be authored in `docs/`.**
 - **Focus Mode only presents provenance-linked content (no uncited facts).**
 - Predictive/AI-generated content (if any) is opt-in and must include uncertainty/confidence metadata.
 
@@ -185,6 +212,7 @@ KFM’s core design goal is an evidence-first, provenance-linked system where ev
 | Which paths are currently implemented vs “target layout”? | TBD | TBD |
 | Where is the canonical glossary located (and is it complete)? | TBD | TBD |
 | Which CI validators exist today (Markdown protocol, schema lint, contract tests)? | TBD | TBD |
+| Do we standardize domains as `air-quality` vs `air_quality` and resolve naming inconsistencies? | TBD | TBD |
 
 ### Future extensions
 
@@ -200,8 +228,8 @@ KFM’s core design goal is an evidence-first, provenance-linked system where ev
 flowchart LR
   A[ETL] --> B[STAC/DCAT/PROV Catalogs]
   B --> C[Neo4j Graph]
-  C --> D[APIs]
-  D --> E[React/Map UI]
+  C --> D[API Layer]
+  D --> E[Map UI — React · MapLibre · Cesium]
   E --> F[Story Nodes]
   F --> G[Focus Mode]
 ~~~
@@ -223,12 +251,13 @@ sequenceDiagram
 
 ### Data lifecycle (required staging)
 
-- `data/raw/` → `data/work/` → `data/processed/` → catalog outputs (`data/stac/`, `data/catalog/dcat/`, `data/prov/`) → graph ingest exports (`data/graph/`)
+- `data/raw/` → `data/work/` → `data/processed/` → catalog outputs (`data/stac/`, `data/catalog/dcat/`, `data/prov/`) (+ `data/reports/` outputs as needed) → graph ingest exports (`data/graph/`)
 
 ### Domain expansion pattern (recommended)
 
 - Add a new domain under: `data/<domain>/...`
 - Add ETL/pipeline logic under: `src/pipelines/<domain>/...` (or shared utilities under `src/pipelines/common/`)
+- Add domain docs under: `docs/<domain>/...` or `docs/data/<domain>/...` (choose one canonical home and link it)
 - Add mapping notes under: `data/<domain>/mappings/` and/or `docs/data/<domain>/` (choose one canonical home and link it)
 
 ## 🌐 STAC, DCAT & PROV Alignment
@@ -236,10 +265,16 @@ sequenceDiagram
 ### Policy for every dataset / evidence product
 
 For each dataset or evidence product:
+
 - STAC Collection + Item(s)
 - DCAT mapping record (minimum title/description/license/keywords)
 - PROV activity describing lineage (sources + run/activity identifiers)
 - Version lineage links reflected in catalogs and (where applicable) the graph
+
+### Versioning expectations
+
+- New versions link predecessor/successor in catalogs.
+- The graph mirrors version lineage (entities and evidence artifacts).
 
 ## 🧱 Architecture
 
@@ -273,7 +308,7 @@ For each dataset or evidence product:
 ### Validation steps
 
 - [ ] Markdown protocol checks
-- [ ] Schema validation (STAC/DCAT/PROV, story nodes, UI registries)
+- [ ] Schema validation (STAC/DCAT/PROV, story nodes, UI registries, telemetry)
 - [ ] Graph integrity checks
 - [ ] API contract tests
 - [ ] UI schema checks (layer registry)
@@ -293,6 +328,7 @@ For each dataset or evidence product:
 ### Review gates
 
 Changes that typically require elevated review:
+
 - Adding new sensitive layers (restricted locations, cultural knowledge, PII, etc.)
 - Introducing or changing AI-generated narrative behavior visible to users
 - Adding new external data sources
@@ -314,6 +350,7 @@ Changes that typically require elevated review:
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-21 | Initial repository README (governed-doc format) | TBD |
+| v1.0.1 | 2025-12-23 | Align README with Master Guide v12 directory map + v13 invariants | TBD |
 
 ---
 
