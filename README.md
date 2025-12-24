@@ -1,8 +1,8 @@
 ---
 title: "Kansas Frontier Matrix — Repository README"
 path: "README.md"
-version: "v1.0.1"
-last_updated: "2025-12-23"
+version: "v1.0.2"
+last_updated: "2025-12-24"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:readme:v1.0.1"
-semantic_document_id: "kfm-readme-v1.0.1"
-event_source_id: "ledger:kfm:doc:readme:v1.0.1"
+doc_uuid: "urn:kfm:doc:readme:v1.0.2"
+semantic_document_id: "kfm-readme-v1.0.2"
+event_source_id: "ledger:kfm:doc:readme:v1.0.2"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -53,12 +53,15 @@ A geospatial + historical knowledge system with **governed data**, **catalogs (S
 Recommended reading order (paths are expected; if missing, treat as **not confirmed in repo** and update links):
 
 1) `docs/MASTER_GUIDE_v12.md` — system + pipeline source of truth  
-2) `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` — canonical roots + v13 readiness gates (draft; if adopted)  
-3) `docs/README.md` — documentation index  
-4) `data/README.md` — data lifecycle + domain layout  
-5) `src/README.md` — subsystem boundaries (pipelines/graph/server)  
-6) `schemas/README.md` — schema registry + minimum contract set  
-7) `.github/workflows/README.md` — CI gates + validation expectations
+2) `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` — near-term roadmap + vertical-slice checklist *(draft; not confirmed in repo)*  
+3) `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` — canonical roots + v13 readiness gates *(draft; if adopted)*  
+4) `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` — end‑to‑end architecture vision *(draft; not confirmed in repo)*  
+5) `docs/README.md` — documentation index  
+6) `data/README.md` — data lifecycle + domain layout  
+7) `schemas/README.md` — schema registry + minimum contract set  
+8) `src/README.md` — subsystem boundaries (pipelines/graph/server)  
+9) `mcp/README.md` — experiments, run manifests, model cards, SOPs *(not confirmed in repo)*  
+10) `.github/workflows/README.md` — CI gates + validation expectations
 
 ## 📘 Overview
 
@@ -96,7 +99,9 @@ Recommended reading order (paths are expected; if missing, treat as **not confir
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
 | Master Guide v12 (draft) | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical pipeline + invariants + expected top‑level layout |
+| Next Stages Blueprint (draft) | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | TBD | Roadmap + vertical-slice checklist (v12→v13) |
 | v13 redesign blueprint (draft; if adopted) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | TBD | Canonical roots + minimum contract set + readiness gates |
+| Full architecture vision (draft) | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | TBD | End-to-end architecture context (long-term guidance) |
 | Docs index | `docs/README.md` | TBD | Where governed documentation is organized |
 | Schema registry | `schemas/README.md` | TBD | Contract home for catalogs/story/UI/telemetry |
 | Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | TBD | Default template for governed Markdown docs |
@@ -120,23 +125,26 @@ Recommended reading order (paths are expected; if missing, treat as **not confir
 | Area | What to open first | Why |
 |---|---|---|
 | Docs | `docs/README.md` | Canonical index for governed docs + templates/standards |
-| Data | `data/README.md` | Domain staging + processed outputs + catalog/prov locations |
-| Source | `src/README.md` | Subsystem boundaries (pipelines/graph/server) |
+| Data | `data/README.md` | Data lifecycle + domain layout + catalog/prov locations |
 | Schemas | `schemas/README.md` | Contract home for validations (catalogs/story/UI/telemetry) |
+| Source | `src/README.md` | Subsystem boundaries (pipelines/graph/server) |
 | CI | `.github/workflows/README.md` | Gatekeeping rules and expected checks |
 | Story Nodes | `docs/reports/story_nodes/` | Draft/published narratives for Focus Mode |
+| MCP | `mcp/README.md` | Experiment logs, run manifests, model cards, SOPs *(if present)* |
 
 ### Common contribution patterns
 
 | You are adding/changing… | Put it here | Also update / validate |
 |---|---|---|
-| A new dataset/domain | `data/<domain>/{raw,work,processed}/` | STAC/DCAT/PROV outputs + PROV activity; tests if present |
+| A new dataset/domain (data staging) | **v12 baseline:** `data/raw/<domain>/`, `data/work/<domain>/`, `data/processed/<domain>/`  \n**v13 target (domain packs):** `data/<domain>/{raw,work,processed}/` | STAC/DCAT/PROV outputs + PROV activity; tests if present |
+| Domain governance docs (sources, classification, QA) | `data/<domain>/governance/` *(or `docs/data/<domain>/...` — choose one canonical and link)* | Ensure classifications propagate into catalogs/UI |
 | ETL or transforms | `src/pipelines/<domain>/` (or `src/pipelines/common/`) | Determinism (stable IDs) + run logs + provenance |
 | Catalog schemas/profiles | `schemas/{stac,dcat,prov}/` | Schema validation + changelog/semver (if adopted) |
 | Graph ingest/mappings | `src/graph/` and `data/graph/` | Ontology constraints + import fixtures |
 | API endpoints/contracts | `src/server/` and `src/server/contracts/` | Contract tests + redaction rules at boundary |
 | UI layers / registry entries | `web/` (and UI schemas in `schemas/ui/`) | UI registry schema validation + governance gates |
 | Story Nodes | `docs/reports/story_nodes/` | Story Node schema validation + provenance-linked citations |
+| Experiments / evaluation artifacts | `mcp/` | Keep outputs referenced (not duplicated); record run IDs + pointers to evidence |
 
 ## 🗂️ Directory Layout
 
@@ -151,10 +159,10 @@ Recommended reading order (paths are expected; if missing, treat as **not confir
 | Repo metadata + policy | `.github/` | workflows, issue templates, security policy, reproducibility kits (if adopted) |
 | Standards + protocols | `docs/standards/` | repo standards, KFM‑MDP, profiles (STAC/DCAT/PROV), structure rules |
 | Governance | `docs/governance/` | governance, ethics, sovereignty controls |
-| Architecture | `docs/architecture/` | system architecture, ADRs, diagrams, redesign blueprints |
+| Architecture | `docs/architecture/` | system architecture, ADRs, diagrams, redesign/roadmap blueprints |
 | Documentation index | `docs/README.md` | canonical navigation for docs (if present) |
 | Telemetry | `docs/telemetry/` + `schemas/telemetry/` | observability + security/governance signals |
-| Data domains | `data/` | domain staging (`raw/`, `work/`, `processed/`) + catalogs per pipeline |
+| Data domains + staging | `data/` | staging (`raw/`, `work/`, `processed/`) by domain *(v12 baseline)* OR domain packs under `data/<domain>/...` *(v13 target)* |
 | Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC, DCAT datasets, PROV lineage bundles |
 | Graph | `src/graph/` + `data/graph/` + `docs/graph/` | ontology‑governed ingest + exports + graph docs |
 | Pipelines | `src/pipelines/` + `docs/pipelines/` | deterministic transforms; outputs written under `data/**` |
@@ -162,7 +170,7 @@ Recommended reading order (paths are expected; if missing, treat as **not confir
 | Frontend | `web/` + `docs/web/` | map layers + Focus Mode UX; no direct graph access |
 | Schemas | `schemas/` | JSON Schemas for catalogs, story nodes, UI registries, telemetry |
 | Story Nodes | `docs/reports/story_nodes/` | draft/published narratives + assets |
-| MCP / experiments | `mcp/` | experiment logs, run manifests, SOPs |
+| MCP / experiments | `mcp/` | experiment logs, run manifests, SOPs, model cards |
 | Tests | `tests/` | unit + integration + contract tests |
 | Tooling | `tools/` | scripts and utilities (repo lint, validators, etc.) |
 | Releases | `releases/` | release manifests/SBOMs/telemetry snapshots (if used) |
@@ -184,7 +192,35 @@ Recommended reading order (paths are expected; if missing, treat as **not confir
 └── 📁 releases/
 ~~~
 
-### Target data layout (reference)
+### Data layout patterns (baseline vs target)
+
+#### Baseline staging layout (v12)
+
+Use this layout if the repo stages data by lifecycle stage (with per-domain subfolders):
+
+~~~text
+📁 data/
+├── 📁 raw/
+│   └── 📁 <domain>/
+├── 📁 work/
+│   └── 📁 <domain>/
+├── 📁 processed/
+│   └── 📁 <domain>/
+├── 📁 stac/
+│   ├── 📁 collections/
+│   └── 📁 items/
+├── 📁 catalog/
+│   └── 📁 dcat/
+├── 📁 prov/
+├── 📁 graph/
+│   ├── 📁 csv/
+│   └── 📁 cypher/
+└── 📄 README.md
+~~~
+
+#### v13 target domain-pack layout (reference)
+
+Use this layout if the repo stages data inside a domain pack (one domain owns its lifecycle folders):
 
 ~~~text
 📁 data/
@@ -206,6 +242,8 @@ Recommended reading order (paths are expected; if missing, treat as **not confir
     └── 📄 README.md
 ~~~
 
+> Choose **one** data layout pattern per domain (and document it in the domain README). Do not mix baseline and domain-pack staging for the same domain without an explicit migration note.
+
 ## 🧭 Context
 
 ### Background
@@ -225,15 +263,22 @@ KFM’s core design goal is an **evidence‑first, provenance‑linked** system 
 - **Focus Mode only presents provenance‑linked content (no uncited facts).**
 - Predictive/AI‑generated content (if any) is opt‑in and must include uncertainty/confidence metadata.
 - Canonical homes should not be duplicated without explicit deprecation/migration notes.
+- Documentation and code must remain separated:
+  - governed docs live under `docs/` (and other doc roots such as `data/<domain>/governance/` if adopted),
+  - executable code lives under `src/` / `tools/` / `tests/` (no mixed “.py with YAML front‑matter” artifacts).
 
 ### Open questions
 
 | Question | Owner | Target date |
 |---|---|---|
 | Which paths are currently implemented vs “target layout”? | TBD | TBD |
+| Which data layout is canonical per domain: v12 baseline staging vs v13 domain packs? | TBD | TBD |
+| Are there legacy duplicate roots (e.g., `src/api/` vs `src/server/`, `src/map/` vs `web/`), and what is the migration/deprecation plan? | TBD | TBD |
 | Where is the canonical glossary located (and is it complete)? | TBD | TBD |
-| Which CI validators exist today (Markdown protocol, schema lint, contract tests)? | TBD | TBD |
+| Which CI validators exist today (Markdown protocol, schema lint, contract tests, link checks)? | TBD | TBD |
 | Where is the authoritative run manifest location: `data/prov/` vs `releases/<version>/`? | TBD | TBD |
+| Is story content already aligned to `docs/reports/story_nodes/` (draft/published), or does a legacy path still exist? | TBD | TBD |
+| Are domain naming conventions standardized (e.g., `air-quality` vs `air_quality`)? | TBD | TBD |
 
 ### Future extensions
 
@@ -248,7 +293,8 @@ KFM’s core design goal is an **evidence‑first, provenance‑linked** system 
 
 ~~~mermaid
 flowchart LR
-  A["ETL — src/pipelines"] --> B["STAC/DCAT/PROV — data/stac · data/catalog/dcat · data/prov"]
+  R["Raw sources — data/raw or data/<domain>/raw"] --> A["ETL — src/pipelines"]
+  A --> B["STAC/DCAT/PROV — data/stac · data/catalog/dcat · data/prov"]
   B --> C["Graph — src/graph + data/graph"]
   C --> D["API boundary — src/server + contracts"]
   D --> E["UI — web/"]
@@ -273,14 +319,23 @@ sequenceDiagram
 
 ### Data lifecycle (required staging)
 
-- `data/<domain>/raw/` → `data/<domain>/work/` → `data/<domain>/processed/`
-- Then: catalog outputs (`data/stac/`, `data/catalog/dcat/`, `data/prov/`)
-- Then: graph ingest exports (`data/graph/`)
-- Optional derived outputs (evidence products) may be written under `data/reports/` and treated as catalog assets.
+Choose the lifecycle layout used for a given domain and keep it consistent:
+
+- **v12 baseline:** `data/raw/<domain>/` → `data/work/<domain>/` → `data/processed/<domain>/`  
+- **v13 target (domain packs):** `data/<domain>/raw/` → `data/<domain>/work/` → `data/<domain>/processed/`
+
+Then:
+
+- catalog outputs: `data/stac/`, `data/catalog/dcat/`, `data/prov/`
+- graph ingest exports: `data/graph/`
+- optional derived outputs (evidence products): `data/reports/` (treated as catalog assets)
 
 ### Domain expansion pattern (recommended)
 
-- Add a new domain under: `data/<domain>/...`
+- Add a domain README at: `data/<domain>/README.md` (and governance/runbooks as needed)
+- Stage data using either:
+  - `data/raw|work|processed/<domain>/` (v12 baseline), or
+  - `data/<domain>/{raw,work,processed}/` (v13 target)
 - Add ETL/pipeline logic under: `src/pipelines/<domain>/...` (shared utilities under `src/pipelines/common/`)
 - Add mapping docs under one canonical docs home (recommended): `docs/data/<domain>/...`
 - If `data/<domain>/mappings/` is used, it MUST be linked from canonical docs to prevent drift.
@@ -352,6 +407,13 @@ This enables Focus Mode to resolve “what is this data?” into a traceable lin
 - [ ] Link integrity checks for docs (if tooling exists)
 - [ ] Security and sovereignty checks (as applicable)
 
+### Repo lint invariants (recommended CI gates)
+
+- No YAML front‑matter in executable code files (split into docs + metadata).
+- No duplicate canonical homes for the same subsystem without explicit deprecation markers.
+- No “typo-paths” (e.g., `README.me`).
+- No mixed doc/code artifacts (e.g., scripts under `docs/` that contain runnable code).
+
 ### Local reproduction (placeholders)
 
 ~~~bash
@@ -395,12 +457,15 @@ Changes that typically require elevated review:
 |---|---|---|---|
 | v1.0.0 | 2025-12-21 | Initial repository README (governed-doc format) | TBD |
 | v1.0.1 | 2025-12-23 | Added repo navigation + clarified canonical roots/CI behavior; aligned wording with v13 contract-first guidance | TBD |
+| v1.0.2 | 2025-12-24 | Added Next Stages + Full Vision references; reconciled v12 baseline vs v13 target data layout language; tightened doc/code separation and repo-lint invariants | TBD |
 
 ---
 
 Footer refs (do not remove):
 - Master guide: `docs/MASTER_GUIDE_v12.md`
+- Next stages blueprint: `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md`
 - Redesign blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Full architecture vision: `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md`
 - Template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
