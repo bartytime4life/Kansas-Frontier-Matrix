@@ -1,8 +1,8 @@
 ---
-title: "KFM Graph Import CSVs — README"
+title: "KFM — data/graph/csv/ (Neo4j Import CSVs)"
 path: "data/graph/csv/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-23"
+last_updated: "2025-12-24"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:data:graph:csv-readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:data:graph:csv:readme:v1.0.0"
 semantic_document_id: "kfm-data-graph-csv-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:data:graph:csv-readme:v1.0.0"
+event_source_id: "ledger:kfm:doc:data:graph:csv:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,331 +41,252 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Graph Import CSVs
+# KFM — `data/graph/csv/` (Neo4j Import CSVs)
+
+> **Purpose (required):** Define the folder-level contract for **graph import CSV artifacts** used to load/update the KFM Neo4j graph. This includes what belongs in this directory, minimum structural expectations (stable IDs, referential integrity), and how these artifacts must remain traceable to **STAC/DCAT/PROV** evidence and governance constraints.
 
 ## 📘 Overview
 
-### Purpose
+### What this directory is
+`data/graph/csv/` is the canonical location for **generated, import-ready CSV tables** representing:
+- **Node tables** (entities: Place, Person, Event, Document, Organization, Artifact, etc.)
+- **Relationship tables** (edges between entities)
 
-- This README defines what belongs in `data/graph/csv/` and how these artifacts fit into the KFM canonical pipeline.
-- This directory is the canonical home for **Neo4j loader import CSVs** produced by the **Graph build** stage (import artifacts only; not UI-facing).
+These CSVs are consumed by the **Graph stage** of the canonical pipeline:
 
-### Scope
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
-| In Scope | Out of Scope |
-|---|---|
-| Folder purpose + expectations for CSV import artifacts | Neo4j deployment/runtime configuration |
-| Relationship to catalog + provenance identifiers (STAC/DCAT/PROV) | API contract definitions (`src/server/contracts/**`) |
-| Quality, determinism, and sensitivity expectations for import artifacts | Story Node authoring and publish workflow |
+### What this directory is not
+This directory must **not** contain:
+- Graph build source code (belongs under `src/graph/` or repo-defined equivalent)
+- Ontology definitions and schema contracts (belongs under governed ontology/graph docs + `schemas/`)
+- API code/contract artifacts (belongs under `src/server/`)
+- UI code or configuration (belongs under `web/`)
+- “Hand-edited” CSVs that drift from deterministic pipeline outputs
 
 ### Audience
+- Primary: graph maintainers producing Neo4j load artifacts
+- Secondary: ETL/catalog maintainers validating evidence linkage; reviewers validating governance boundaries
 
-- Primary: graph/ontology maintainers; pipeline engineers generating import artifacts.
-- Secondary: debuggers and curators inspecting graph ingest inputs.
+### Definitions
+- Glossary: `docs/glossary.md` (not confirmed in repo)
+- Terms used here:
+  - **import CSV**: a tabular export intended for a Neo4j loader (bulk import or scripted load)
+  - **stable ID**: an identifier that does not change between deterministic rebuilds
+  - **referential integrity**: every relationship endpoint ID exists as a node ID
+  - **evidence linkage**: references from graph rows to STAC/DCAT/PROV identifiers (directly or via joinable keys)
 
-### Definitions (link to glossary)
-
-- Link: `docs/glossary.md`
-- Terms used in this doc:
-  - **Graph import CSVs**: CSV files formatted for Neo4j bulk load or scripted ingestion.
-  - **Neo4j loader**: the import tool/process that consumes CSVs and writes the Neo4j store.
-  - **Evidence identifiers**: STAC Item/Collection IDs, DCAT dataset IDs, PROV activity IDs.
-
-### Key artifacts (what this doc points to)
-
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| Graph import CSVs | `data/graph/csv/` | Graph build | This directory |
-| Graph import Cypher | `data/graph/cypher/` | Graph build | Loader scripts / migrations / glue logic (if used) |
-| Graph build code | `src/graph/` | Graph maintainers | Generates graph import artifacts |
-| STAC catalogs | `data/stac/**` | Catalog stage | Evidence referenced by graph entities |
-| DCAT records | `data/catalog/dcat/**` | Catalog stage | Dataset identifiers referenced by graph entities |
-| PROV bundles | `data/prov/**` | Pipeline + catalog | Lineage referenced by graph entities and Focus Mode |
-
-### Definition of done (for this document)
-
-- [ ] Front-matter complete + valid
-- [ ] Directory purpose + boundaries clearly stated
-- [ ] Expected file tree shown for this sub-area
-- [ ] Validation steps listed and repeatable (even if placeholders)
-- [ ] Governance + CARE/sovereignty considerations explicitly stated
+### Definition of done
+- [ ] `path` matches the file location (`data/graph/csv/README.md`)
+- [ ] CSV artifacts are clearly categorized (nodes vs relationships) and are loader-compatible
+- [ ] Stable IDs are enforced; no blank identifiers
+- [ ] Referential integrity checks exist (CI or reproducible local checks)
+- [ ] Sensitive or restricted content is not leaked (or is generalized/redacted per governance)
+- [ ] Evidence/provenance linkage is present (direct columns or documented join strategy)
 
 ## 🗂️ Directory Layout
 
 ### This document
-
-- `path`: `data/graph/csv/README.md`
+- `path`: `data/graph/csv/README.md` (must match front-matter)
 
 ### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
-| Data domains | `data/<domain>/{raw,work,processed}/` | Domain data lifecycle outputs |
-| Catalog outputs | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` | STAC/DCAT/PROV artifacts used as evidence + lineage |
-| Graph build code | `src/graph/` | Graph build + ontology bindings |
-| Graph import artifacts | `data/graph/` | Import-ready artifacts (CSV + Cypher) |
-| API boundary | `src/server/` | Contracts and redaction enforced here |
-| UI | `web/` | API consumers only (no direct Neo4j reads) |
-| Story Nodes | `docs/reports/story_nodes/**` | Narrative artifacts linked to graph + evidence |
+| Graph import root | `data/graph/` | Import artifacts (CSV + optional Cypher) |
+| Graph import CSVs | `data/graph/csv/` | Loader-ready CSVs (this folder) |
+| Post-import scripts | `data/graph/cypher/` | Optional Cypher scripts to run after import |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Evidence + lineage artifacts |
+| Graph subsystem | `src/graph/` | Ontology bindings, graph build, migrations (code) |
+| Pipelines | `src/pipelines/` | ETL + catalog build; may also orchestrate graph exports |
+| API boundary | `src/server/` | Contracted access to graph + catalogs (UI never reads Neo4j directly) |
+| Story Nodes | `docs/reports/story_nodes/` | Evidence-led narratives |
 
-### Expected file tree for this sub-area
+### Expected tree (examples)
 
 ~~~text
 📁 data/
 └── 📁 graph/
     ├── 📁 csv/
     │   ├── 📄 README.md
-    │   ├── 📄 <generated_node_csvs>.csv
-    │   ├── 📄 <generated_relationship_csvs>.csv
-    │   └── 📄 <optional_import_manifest>.json
+    │   ├── 📄 <nodes-table>.csv
+    │   ├── 📄 <relationships-table>.csv
+    │   └── 📄 ...
     └── 📁 cypher/
-        ├── 📄 <optional_loader_scripts>.cypher
-        └── 📄 <optional_migrations>.cypher
+        ├── 📄 README.md
+        └── 📄 <post-import>.cypher
 ~~~
+
+Notes:
+- CSV naming conventions are **repo-local**. If the graph loader expects a specific naming scheme, document it in `src/graph/` and keep this README aligned.
+- If subfolders (e.g., `nodes/`, `rels/`) are adopted, reflect that in the tree above (not confirmed in repo).
 
 ## 🧭 Context
 
 ### Background
+KFM treats catalogs and provenance artifacts as evidence products. Graph imports must therefore:
+- remain consistent with the governed ontology and canonical pipeline ordering
+- preserve traceability to catalog and provenance IDs
+- avoid “mystery duplicates” by keeping one canonical output location (`data/graph/csv/`)
 
-KFM preserves a non-negotiable system ordering:
+### Constraints and invariants
+- **API boundary:** the UI must not read Neo4j directly; graph access is via contracted APIs.
+- **Determinism:** graph export reruns with unchanged inputs must yield stable, diffable outputs.
+- **Governance:** restricted locations / culturally sensitive knowledge must be generalized or redacted before publication/consumption.
 
-**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**.
-
-`data/graph/csv/` exists to hold the **graph import CSV artifacts** that allow the graph build stage to materialize (or update) the Neo4j database in a repeatable way.
-
-### Assumptions
-
-- CSV import artifacts here are **build outputs** (generated), not hand-authored narratives.
-- Graph entities should carry **references back to STAC/DCAT/PROV identifiers** to preserve evidence-first behavior.
-- Any sensitivity controls required for restricted locations or culturally sensitive knowledge must be enforced consistently (see Governance section).
-
-### Constraints / invariants
-
-- The canonical pipeline ordering is preserved.
-- UI consumers never read Neo4j directly; the API boundary is the only contract surface.
-- Graph ingest should be derived from **processed** domain outputs plus catalog/provenance artifacts (STAC/DCAT/PROV), not from raw snapshots.
-
-### Open questions
-
-| Question | Owner | Target date |
-|---|---|---|
-| What is the canonical CSV schema (required columns) for each label/relationship? | TBD | TBD |
-| Where is the authoritative mapping from STAC/DCAT/PROV IDs into node/edge properties defined? | TBD | TBD |
-| Should this directory store only build outputs, or also checked-in fixtures/samples for tests? | TBD | TBD |
-
-### Future extensions
-
-- Add `schemas/graph/csv/**` to validate import CSV structure (columns/types) in CI.
-- Add a small, synthetic “vertical slice” dataset fixture for import regression tests.
-- Add a manifest format (if adopted) that records: producing run ID, input artifact IDs, row counts, and checksums.
+### Common failure modes to prevent
+- Unstable IDs (random UUIDs regenerated each run) → breaks lineage and downstream caching.
+- Missing relationship endpoints → import failures or dangling edges.
+- CSVs edited by hand → drift from source-of-truth pipeline behavior.
+- Sensitive coordinates included without controls → governance breach.
 
 ## 🗺️ Diagrams
 
-### System / dataflow diagram
-
 ~~~mermaid
 flowchart LR
-  A[ETL outputs<br/>data/&lt;domain&gt;/processed] --> B[Catalog outputs<br/>data/stac + data/catalog/dcat + data/prov]
-  B --> C[Graph build<br/>src/graph]
-  C --> D[Import artifacts<br/>data/graph/csv]
-  D --> E[Neo4j loader]
-  E --> F[Neo4j Graph]
-  F --> G[API boundary<br/>src/server]
-  G --> H[UI<br/>web]
-  H --> I[Story Nodes<br/>docs/reports/story_nodes]
-  I --> J[Focus Mode<br/>provenance-linked only]
-~~~
-
-### Optional: sequence diagram
-
-~~~mermaid
-sequenceDiagram
-  participant Build as GraphBuild
-  participant CSV as data/graph/csv
-  participant Loader as Neo4jLoader
-  participant Graph as Neo4j
-  Build->>CSV: write import CSVs (nodes + rels)
-  Build->>CSV: write optional manifest (counts/checksums)
-  Loader->>CSV: read import CSVs
-  Loader->>Graph: load nodes/relationships (+ provenance refs)
+  A[ETL outputs<br/>data/<domain>/processed] --> B[Catalog evidence<br/>STAC/DCAT/PROV]
+  B --> C[Graph build/export<br/>src/graph]
+  C --> D[Import CSVs<br/>data/graph/csv]
+  D --> E[Neo4j graph]
+  E --> F[API boundary<br/>src/server]
+  F --> G[UI<br/>web]
+  G --> H[Story Nodes<br/>docs/reports/story_nodes]
+  H --> I[Focus Mode<br/>provenance-linked]
 ~~~
 
 ## 📦 Data & Metadata
 
-### Inputs
+### Inputs (conceptual)
+The CSVs in this directory are typically generated from:
+- `data/<domain>/processed/` (normalized domain outputs)
+- `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` (evidence + lineage)
+- governed ontology mappings (typically under `src/graph/` + standards/docs)
 
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Processed domain outputs | CSV/GeoJSON/etc. | `data/<domain>/processed/` | Domain schema/geo checks (domain-specific) |
-| STAC catalogs | JSON (STAC) | `data/stac/**` | STAC schema validation |
-| DCAT records | JSON-LD/RDF | `data/catalog/dcat/**` | DCAT profile validation |
-| PROV bundles | JSON-LD | `data/prov/**` | PROV profile validation |
+### Outputs (what lives here)
+- **Node CSVs:** one or more tables representing graph nodes
+- **Relationship CSVs:** one or more tables representing graph relationships
 
-### Outputs
+Optional (repo-defined; not confirmed in repo):
+- manifest files (listing produced CSVs, row counts, checksums)
+- integrity reports (referential integrity counts, orphan counts)
 
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Graph import CSVs (nodes + rels) | CSV | `data/graph/csv/**` | CSV schema (TBD / not confirmed in repo) |
-| Optional import manifest | JSON | `data/graph/csv/<manifest>.json` | Manifest schema (TBD / not confirmed in repo) |
+### Minimum CSV format expectations (directory-level)
+These are folder-level expectations. The **exact** header schema must match your loader and ontology mappings.
 
-### Sensitivity & redaction
+- Encoding: UTF-8 (avoid BOM where possible)
+- Delimiter: comma (`,`), unless loader requires otherwise (document any deviation)
+- Header row: required
+- Line endings: consistent (LF preferred)
+- No blank IDs: every row must have its required identifier fields populated
 
-- Import artifacts must not bypass governance constraints:
-  - if restricted locations require generalization, those transformations must be applied consistently,
-  - API-level redaction/generalization remains the contract boundary for UI delivery,
-  - any sensitive assets/locations used to build the graph must be tracked and auditable via provenance.
+### Minimum structural expectations (independent of loader choice)
+**Node tables** should have:
+- a stable primary key column (commonly `id`)
+- label/type representation (explicit columns or loader-provided mapping)
+- optional evidence/provenance reference columns (recommended)
 
-### Quality signals
+**Relationship tables** should have:
+- stable endpoint identifiers:
+  - `source_id` (or equivalent)
+  - `target_id` (or equivalent)
+- a relationship type (explicit column or loader mapping)
+- optional evidence/provenance reference columns (recommended)
 
-- Deterministic runs and diffable outputs (CSV changes should be explainable via provenance/run IDs).
-- No orphan references:
-  - evidence IDs referenced in import outputs must resolve to STAC/DCAT/PROV artifacts.
-- Basic integrity checks:
-  - stable identifiers for nodes/relationships,
-  - relationship endpoints exist,
-  - expected label/relationship sets are present for the build target.
+### Evidence linkage columns (recommended)
+To keep graph content audit-ready, include (or provide a join strategy for) the following identifiers when applicable:
+- `stac_item_id` and/or `stac_collection_id`
+- `dcat_dataset_id`
+- `prov_activity_id` (run/build activity)
+- `source_doc_id` (document registry ID, if applicable)
+
+If these columns are not embedded in the CSVs, document where the linkage is defined (e.g., mapping config under `src/graph/`).
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### STAC
+### Rule of record
+Graph entities and relationships that originate from datasets must remain traceable back to:
+- **STAC** (asset-level spatiotemporal metadata)
+- **DCAT** (dataset-level discovery metadata)
+- **PROV** (lineage: inputs → activities → outputs)
 
-- Collections involved: determined by the build target (see `data/stac/collections/**`).
-- Items involved: determined by the build target (see `data/stac/items/**`).
-- Extension(s): TBD (as needed by KFM STAC profile).
-
-### DCAT
-
-- Dataset identifiers: determined by the build target (see `data/catalog/dcat/**`).
-- License mapping: tracked in DCAT records and/or STAC metadata.
-- Contact / publisher mapping: tracked in DCAT records.
-
-### PROV-O
-
-- `prov:wasDerivedFrom`: graph entities/edges should reference upstream evidence artifacts.
-- `prov:wasGeneratedBy`: graph build activities should be represented in provenance records where applicable.
-- Activity / Agent identities: recorded by pipeline and/or graph build tooling (TBD).
-
-### Versioning
-
-- Use catalog versioning links and graph predecessor/successor relationships when versions change (TBD: concrete mechanism).
+### Practical linkage strategy
+At minimum, ensure one of the following is true:
+1) The CSV row includes evidence/provenance IDs directly, **or**
+2) The CSV row includes stable keys that can be joined to catalog/provenance artifacts deterministically.
 
 ## 🧱 Architecture
 
-### Components
+### Responsibilities by layer
 
-| Component | Responsibility | Interface |
-|---|---|---|
-| ETL | Ingest + normalize | Domain pipeline configs + run logs |
-| Catalogs | STAC/DCAT/PROV generation | JSON/JSON-LD artifacts + validators |
-| Graph build | Produce import artifacts | CSV (+ optional Cypher) |
-| Neo4j loader | Consume import artifacts | Bulk import / scripted import |
-| Neo4j graph | Queryable knowledge base | Accessed only via API boundary |
-| APIs | Serve contracts + enforce redaction | REST/GraphQL contracts |
-| UI | Map + narrative | API calls only |
-| Story Nodes | Curated narrative | Graph IDs + evidence IDs |
-| Focus Mode | Provenance-linked context view | Provenance-aware bundles |
+| Layer | Responsibility | Reads from | Writes to |
+|---|---|---|---|
+| Catalog stage | Produce evidence artifacts | `data/<domain>/processed/` | `data/stac/`, `data/catalog/dcat/`, `data/prov/` |
+| Graph stage | Build/refresh graph | catalogs + processed outputs | `data/graph/csv/` (+ Neo4j) |
+| API boundary | Serve contracted data | Neo4j + catalogs | API responses (no direct UI→Neo4j) |
+| UI | Render maps/narratives | APIs only | UI views |
+| Story Nodes | Evidence-led narrative | APIs + evidence IDs | published narrative docs |
 
-### Interfaces / contracts
-
-| Contract | Location | Versioning rule |
-|---|---|---|
-| JSON schemas | `schemas/` | Semver + changelog |
-| API contracts | `src/server/contracts/` | Contract tests required |
-| Graph import CSV schema | `schemas/graph/csv/` | (TBD / not confirmed in repo) |
-
-### Extension points checklist (for future work)
-
-- [ ] Data: new domain added under `data/<domain>/...`
-- [ ] STAC: new collection + item schema validation
-- [ ] PROV: activity + agent identifiers recorded
-- [ ] Graph: new labels/relations mapped + migration plan
-- [ ] APIs: contract version bump + tests
-- [ ] UI: layer registry entry + access rules
-- [ ] Focus Mode: provenance references enforced
-- [ ] Telemetry: new signals + schema version bump
+### Why `data/graph/csv/` exists (contract boundary)
+This folder makes graph ingestion:
+- reproducible (artifacts are explicit)
+- reviewable (diffable exports)
+- testable (CI can lint CSVs + referential integrity)
+- governable (sensitivity checks can run before import/exposure)
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How this work surfaces in Focus Mode
+### How this directory affects Story Nodes
+Story Nodes should never cite CSV files directly as primary evidence. Instead:
+- CSVs feed Neo4j
+- Story Nodes cite the **evidence artifacts** (STAC/DCAT/PROV IDs) that the graph nodes reference
 
-- Entities created via graph import become focusable only when they can present provenance-linked evidence.
-- Focus Mode should be able to trace displayed facts back to STAC/DCAT/PROV identifiers represented in the graph.
-
-### Provenance-linked narrative rule
-
-- Every claim surfaced to users must trace to a dataset / record / asset ID.
-- Graph ingest must preserve the evidence pointers required for Story Nodes and Focus Mode.
-
-### Optional structured controls
-
-~~~yaml
-focus_layers:
-  - "TBD"
-focus_time: "TBD"
-focus_center: [ -98.0000, 38.0000 ]
-~~~
+### Focus Mode rule
+Focus Mode must only present content that can be traced to provenance-linked evidence. If graph entities are created without evidence linkage, Focus Mode must treat them as non-displayable or “uncited” until remediated.
 
 ## 🧪 Validation & CI/CD
 
-### Validation steps
+### Minimum checks (recommended)
+- [ ] CSV parse check (delimiter/quoting/header)
+- [ ] Required columns present for each CSV type (as defined by loader + ontology mapping)
+- [ ] Stable IDs: no blank IDs; uniqueness where expected
+- [ ] Referential integrity: every relationship endpoint ID exists in node tables
+- [ ] Determinism: stable ordering and stable identifiers across identical rebuilds
+- [ ] Governance scans: ensure restricted/sensitive locations are generalized/redacted
+- [ ] Security scans: secret/PII scanning on artifacts (if artifacts are committed)
 
-- [ ] Markdown protocol checks
-- [ ] Schema validation (STAC/DCAT/PROV)
-- [ ] Graph integrity checks (node/edge referential integrity)
-- [ ] Security and sovereignty checks (as applicable)
-
-### Reproduction
-
+### Reproduction (placeholders)
 ~~~bash
-# Example placeholders — replace with repo-specific commands
+# Placeholder only — replace with repo-specific commands:
+# 1) Build graph export artifacts
+# <command>
 
-# 1) validate schemas
-# (stac/dcat/prov)
+# 2) Run CSV validation + referential integrity checks
+# <command>
 
-# 2) run graph build to emit CSV import artifacts
-# (graph build tooling emits into data/graph/csv/)
-
-# 3) run loader/import step (local/dev)
-# (neo4j loader consumes data/graph/csv/**)
-
-# 4) run integrity checks
-# (relationships resolve, evidence IDs present, etc.)
+# 3) (Optional) Load into a test Neo4j instance and run smoke tests
+# <command>
 ~~~
-
-### Telemetry signals (if applicable)
-
-| Signal | Source | Where recorded |
-|---|---|---|
-| Graph build run ID | Graph build tooling | `data/prov/**` and/or `mcp/runs/**` (TBD) |
-| Import artifact checksums | Build manifest | `data/graph/csv/<manifest>.json` (TBD) |
-| Integrity check results | CI | CI logs (TBD) |
 
 ## ⚖ FAIR+CARE & Governance
 
-### Review gates
-
-- Changes that affect what gets imported into Neo4j, or how evidence/provenance is represented, require human review (TBD: role owners).
-- Any changes involving sensitive locations or culturally sensitive knowledge require governance review per policy docs.
-
-### CARE / sovereignty considerations
-
-- Do not expose restricted locations or culturally sensitive knowledge in ways that violate sovereignty requirements.
-- Ensure any generalization/redaction requirements are respected and auditable (e.g., via provenance).
+### Sensitivity and sovereignty safeguards
+- Do not publish or expose protected locations or culturally sensitive knowledge in import CSVs unless policy explicitly allows.
+- When restriction applies, generalize geometry and/or redact attributes before export, and ensure the API layer enforces access constraints.
 
 ### AI usage constraints
-
-- Ensure doc’s AI permissions/prohibitions match intended use (see front-matter).
-- Prohibited: generating new policy or inferring sensitive locations.
+- AI must not infer sensitive locations from artifacts.
+- Any AI-authored narrative content must be provenance-linked and audit-ready (downstream rule; included here for cross-layer clarity).
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-23 | Initial README for graph import CSV directory | TBD |
+| v1.0.0 | 2025-12-24 | Initial README for `data/graph/csv/` import artifacts | TBD |
 
 ---
 
 Footer refs:
+- Graph import root: `data/graph/README.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
