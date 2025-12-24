@@ -1,8 +1,4 @@
-import os, textwrap, datetime, pathlib, json, re
-docs_dir = "/mnt/data/docs"
-os.makedirs(docs_dir, exist_ok=True)
-
-content = """---
+---
 title: "KFM Glossary"
 path: "docs/glossary.md"
 version: "v1.0.0"
