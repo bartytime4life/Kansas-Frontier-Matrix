@@ -333,7 +333,3 @@ Footer refs:
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
-
-🔙 Back to Fixtures: `../README.md`  
-🧭 Back to Cesium Assets: `../../README.md`  
-🏠 Back to Master Guide: `../../../../../docs/MASTER_GUIDE_v12.md`
