@@ -1,8 +1,8 @@
 ---
 title: "KFM Web — Cesium"
 path: "web/cesium/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-21"
+version: "v1.0.1"
+last_updated: "2025-12-24"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:web:cesium:readme:v1.0.0"
-semantic_document_id: "kfm-web-cesium-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:web:cesium:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:web:cesium:readme:v1.0.1"
+semantic_document_id: "kfm-web-cesium-readme-v1.0.1"
+event_source_id: "ledger:kfm:doc:web:cesium:readme:v1.0.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -43,170 +43,224 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 # KFM Web — Cesium
 
-Cesium support for the KFM web client. This area is intended to provide a 3D rendering mode (terrain / globe / immersive views) that can be toggled alongside the primary 2D map experience, while preserving KFM’s pipeline invariants and provenance rules.
+Cesium support for the KFM web client. This area provides an optional **3D rendering mode** (globe/terrain/3D tiles) that can be toggled alongside the primary 2D map experience, while preserving KFM’s pipeline invariants, API boundary, and provenance rules.
+
+> **Purpose (required):** Define what belongs in `web/cesium/`, how Cesium integrates into the `web/` UI, and what invariants must be enforced (API boundary, provenance-first Focus Mode, sensitivity/redaction, schema-validated layer registries).
 
 ## 📘 Overview
 
 ### Purpose
-- Provide a governed home for Cesium-related UI code and configuration.
-- Document how Cesium participates in KFM’s map UI + Focus Mode experiences without breaking the API boundary.
+
+- Provide a governed home for Cesium-related UI code/config and integration notes.
+- Document how 3D rendering participates in KFM’s map UI + Focus Mode without breaking:
+  - the **API boundary**,
+  - **provenance-linked narrative** rules,
+  - **sensitivity / sovereignty** constraints,
+  - and **contract-first** validation expectations.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Cesium scene/viewer integration used by the `web/` UI | ETL, STAC/DCAT/PROV generation, graph ingest, server/API implementation |
-| Mapping “layer registry” entries into Cesium-renderable layers | Defining authoritative data products (those belong in `data/` + catalogs) |
-| Focus Mode map synchronization behavior (camera/time/layer hints) | Story Node authoring and curation workflows (those live under `docs/`) |
-| UI governance notes: provenance, sensitive layers, redaction expectations | Any attempt to query Neo4j directly from `web/` |
+| Cesium viewer/scene integration used by the `web/` UI | ETL, catalog generation (STAC/DCAT/PROV), graph ingest, server/API implementation |
+| Translating UI layer registries into Cesium-renderable layers (3D Tiles, terrain, imagery, entities) | Defining authoritative data products (those belong under `data/**` + catalogs) |
+| Focus Mode map synchronization behavior (camera/time/layer hints) | Story Node authoring workflows (canonical home is `docs/reports/story_nodes/`) |
+| Governance notes for 3D rendering: provenance, sensitive layers, redaction expectations | Any attempt to query Neo4j directly from `web/` |
 
 ### Audience
-- Primary: Frontend developers working on the KFM map UI (React / MapLibre / Cesium).
-- Secondary: API/contract owners validating that UI consumption stays within the `src/server/` boundary.
 
-### Definitions
-- Glossary: `docs/glossary.md`
-- Terms used here:
-  - **Layer Registry** — JSON config enumerating UI-available map layers (schema-validated).
-  - **Focus Mode** — a UI mode that renders a provenance-linked “context bundle”.
-  - **Context Bundle** — API response that includes narrative + structured map/timeline data.
-  - **Story Node** — curated narrative artifact (Markdown + citations) that can drive Focus Mode.
-  - **Provenance-linked** — content includes evidence identifiers/citations and audit affordances.
+- Primary: Frontend developers working on KFM’s map UI (React / MapLibre / Cesium).
+- Secondary: API/contract owners ensuring UI consumption stays within the `src/server/` boundary; governance reviewers for sensitive layers.
+
+### Definitions (link to glossary)
+
+- Glossary: `docs/glossary.md` *(not confirmed in repo — add or repair link if glossary lives elsewhere)*
+
+Terms used here:
+- **Layer registry** — declarative JSON (or equivalent) listing UI-available layers, sources, attribution, and sensitivity flags (schema-validated if `schemas/ui/` exists).
+- **Focus Mode** — an immersive UI view that renders a provenance-linked “context bundle”.
+- **Context bundle** — API response that includes narrative + structured map/timeline hints + evidence identifiers.
+- **Story Node** — curated narrative artifact (Markdown + citations) that can drive Focus Mode (canonical home: `docs/reports/story_nodes/`).
+- **Provenance-linked** — content includes evidence identifiers/citations and audit affordances.
 
 ### Key artifacts
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
+| Web UI README | `web/README.md` | UI | Entry point for UI boundaries + invariants |
+| Web source README | `web/src/README.md` | UI | Runtime implementation boundaries (API clients, Focus Mode rendering) |
 | Cesium sub-area README | `web/cesium/README.md` | UI | This document |
-| Layer registry | `web/cesium/layers/regions.json` | UI + Governance | Schema-validated; add layers here (and/or other files in `layers/`) |
-| UI schema(s) | `schemas/ui/` | Contracts owners | Validates layer registries |
-| API boundary | `src/server/` | API | UI must consume graph/catalog via API (no direct Neo4j reads) |
+| Cesium layer registries | `web/cesium/layers/` | UI + Governance | **If present:** schema-validated registry files for 3D layers |
+| UI schema(s) | `schemas/ui/` | Schemas/Contracts | **If present:** JSON Schemas for layer registries and UI contracts |
+| API boundary | `src/server/` + `src/server/contracts/` | API | UI consumes via contracts; no direct graph access |
 | Story Nodes (canonical) | `docs/reports/story_nodes/` | Curators | Served to UI via API context bundles |
 
-### Definition of done
-- [ ] Front-matter complete + valid; `path` matches file location.
-- [ ] Constraints/invariants explicitly stated (no direct-to-graph; provenance rules).
-- [ ] Layer registry guidance includes schema validation expectations.
-- [ ] Focus Mode integration notes include provenance and sensitive-layer handling.
-- [ ] Validation steps are repeatable (even if commands are placeholders).
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid; `path` matches file location
+- [ ] Constraints/invariants explicit (no direct-to-graph; provenance + sensitivity rules)
+- [ ] Layer registry guidance includes schema validation expectations (and marks paths “not confirmed” if uncertain)
+- [ ] Focus Mode integration notes include provenance + sensitive-layer handling
+- [ ] Validation steps are repeatable (commands may be placeholders)
 
 ## 🗂️ Directory Layout
 
 ### This document
+
 - `path`: `web/cesium/README.md` (must match front-matter)
 
 ### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
-| Frontend | `web/` | React + map clients (MapLibre + Cesium) |
-| UI layer registries | `web/cesium/layers/` | JSON layer catalogs for the map UI |
-| UI schemas | `schemas/ui/` | JSON Schemas for layer registries and UI contracts |
-| API boundary | `src/server/` | REST/GraphQL; contract enforcement + redaction |
-| Story Nodes | `docs/reports/story_nodes/` | Curated narrative artifacts that drive Focus Mode |
+| Frontend root | `web/` | UI app root (MapLibre + Focus Mode; Cesium is optional) |
+| Frontend source | `web/src/` | React runtime: API clients, state, Focus Mode rendering |
+| Cesium sub-area | `web/cesium/` | Cesium integration notes/config (this area) |
+| UI layer registries | `web/**/layers/**` | Layer registry files (repo-specific) |
+| UI schemas | `schemas/ui/` | JSON Schemas for UI registries (if present) |
+| API boundary | `src/server/` | REST/GraphQL services + redaction + provenance linking |
+| Story Nodes | `docs/reports/story_nodes/` | Draft/published narrative artifacts (served via API) |
+| Evidence catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Evidence artifacts for traceability |
 
 ### Expected file tree for this sub-area
+
+> Target/typical layout. Keep this section updated if your actual tree differs.
+
 ~~~text
 📁 web/
 ├── 📁 cesium/
 │   ├── 📄 README.md
-│   └── 📁 layers/
-│       ├── 📄 regions.json
-│       └── 📄 <other-layer-registry>.json
+│   ├── 📁 layers/                    # optional (3D-focused layer registries)
+│   │   ├── 📄 regions.json            # example only — not confirmed in repo
+│   │   └── 📄 <registry>.json
+│   ├── 📁 adapters/                  # optional (Cesium layer adapters/translators)
+│   ├── 📁 assets/                    # optional (presentation-only, public-safe assets)
+│   └── 📁 test/                      # optional (fixtures/unit tests for adapters)
+└── 📁 src/                           # main app runtime (React)
 ~~~
 
 ## 🧭 Context
 
 ### Background
-KFM’s canonical flow is preserved end-to-end:
-**ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
 
-The map UI is React-based and may support switching between 2D (MapLibre) and 3D (Cesium) without losing UI state. Cesium is used when 3D terrain / immersive visualization is required.
+KFM’s canonical flow is preserved end-to-end:
+
+**ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**
+
+Cesium, if enabled, is a **UI-only rendering mode**. It must not introduce new “data authority” paths; all authoritative data remains produced upstream (ETL/catalog/graph) and delivered through contracted APIs.
 
 ### Assumptions
-- The `web/` app is an SPA with predictable state management for selected entity, active layers, and user settings.
-- Layer availability is primarily configured via JSON “layer registry” files under `web/cesium/layers/`.
-- Focus Mode content arrives via an API “context bundle” that includes narrative + provenance links.
 
-### Constraints and invariants
+- `web/` is a single-page application (SPA) that can toggle between:
+  - a primary **2D map** mode (e.g., MapLibre),
+  - and an optional **3D** mode (Cesium).
+- 2D ↔ 3D switching preserves user intent (selected entity, active layers, time window) using deterministic state.
+- Layer availability is configured via a registry (repo-specific location), ideally schema-validated (`schemas/ui/` if present).
+- Focus Mode content arrives via an API “context bundle” that includes narrative + provenance links + structured map/timeline hints.
+
+### Constraints / invariants
+
 Non-negotiables:
+
 - **No UI direct-to-graph reads:** `web/` must never query Neo4j directly; graph access is only via `src/server/`.
-- **Contracts are canonical:** schemas live under `schemas/` and API contracts under `src/server/contracts/` (with CI validation).
-- **Layer registry is schema-validated:** layer registry JSON files must validate against `schemas/ui/`.
-- **Focus Mode is provenance-linked only:** do not show uncited narrative by default; any AI-derived content must be opt-in and clearly labeled.
+- **Contracts are canonical:**
+  - API contracts live under `src/server/contracts/` (or repo-defined equivalent).
+  - UI schemas live under `schemas/` (e.g., `schemas/ui/`).
+- **Provenance-first Focus Mode:** the UI must not present uncited narrative as fact.
+- **Sensitive layers are governed:** the UI must respect sensitivity/redaction flags delivered by the API and/or registry.
+- **No secrets in repo:** Cesium Ion tokens, API keys, and provider credentials must not be committed. Use runtime configuration patterns (repo-specific).
+
+Implementation safety expectations:
+
+- UI must not “reconstruct” restricted location detail client-side from generalized values.
+- Any third-party tile/asset service must be vetted for licensing + data export risks.
 
 ### Open questions
 
 | Question | Owner | Target date |
 |---|---|---|
-| What is the canonical schema filename(s) under `schemas/ui/` for layer registry validation? | UI + Contracts | TBD |
-| What is the canonical “Focus API” contract location/version used by the UI? | API | TBD |
-| What is the expected directory structure for Cesium code (components/adapters) under `web/cesium/`? | UI | TBD |
+| Where is the canonical layer registry stored in this repo (`web/**/layers/**`)? | UI Team | TBD |
+| What schema file(s) under `schemas/ui/` validate Cesium layer registry entries? | UI + Schemas | TBD |
+| What is the canonical “Focus API” contract location/version used by the UI? | API Team | TBD |
+| Does Cesium integration live as a separate module under `web/cesium/` or inside `web/src/**`? | UI Team | TBD |
 
 ### Future extensions
-- Additional 3D experiences (e.g., story-driven camera tours, time-dynamic layers) as long as the pipeline and provenance constraints remain intact.
-- Optional integration patterns for richer visualization modes (WebXR, etc.)—only if contracts and sensitivity rules are preserved.
+
+- Time-dynamic 3D layers (only if contracts + provenance are preserved).
+- Story-driven camera tours (scripted views) that reference provenance-linked Story Nodes.
+- Progressive enhancement: browsers without WebGL2 still get a complete 2D experience.
 
 ## 🗺️ Diagrams
 
 ### System and dataflow
+
 ~~~mermaid
 flowchart LR
-  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
-  B --> C[Neo4j Graph]
-  C --> D[API boundary src/server]
-  D --> E[UI web]
-  E --> F[Focus Mode UI state]
-  G[Story Nodes docs/reports/story_nodes] --> D
-  D --> F
+  A["ETL (src/pipelines)"] --> B["STAC/DCAT/PROV (data/stac · data/catalog/dcat · data/prov)"]
+  B --> C["Graph (Neo4j via src/graph)"]
+  C --> D["API Boundary (src/server + contracts)"]
+  D --> E["UI (web/)"]
+  E --> F["2D Map (MapLibre)"]
+  E --> G["3D Map (Cesium)"]
+  E --> H["Story Nodes / Focus Mode"]
 ~~~
 
-### Focus Mode sequence
+### Focus Mode sequence (3D-enabled path)
+
 ~~~mermaid
 sequenceDiagram
   participant UI as UI (web)
   participant API as API (src/server)
-  participant Graph as Graph (Neo4j)
-  UI->>API: Focus query(entity_id)
-  API->>Graph: fetch subgraph + provenance refs
-  Graph-->>API: subgraph + evidence IDs
-  API-->>UI: context bundle (narrative + citations + map/timeline hints)
+  participant Graph as Graph (Neo4j + catalogs)
+
+  UI->>API: GET /focus?entity_id=...
+  API->>Graph: Fetch subgraph + evidence refs (STAC/DCAT/PROV IDs)
+  Graph-->>API: Context bundle + provenance identifiers
+  API-->>UI: Contracted payload (narrative + citations + map/timeline hints)
+  UI-->>UI: Optionally apply hints to Cesium camera + layers
 ~~~
 
-## 📦 Data and Metadata
+## 📦 Data & Metadata
 
 ### Inputs
 
 | Input | Format | Where from | Validation |
 |---|---|---|---|
-| Layer registry | JSON | `web/cesium/layers/*.json` | JSON Schema under `schemas/ui/` |
+| Layer registry entries | JSON | `web/**/layers/**` (repo-specific) | JSON Schema under `schemas/ui/` (if present) |
 | Focus Mode context bundle | JSON | API boundary (`src/server/`) | API contract tests + runtime guards |
-| Catalog endpoints | JSON | STAC/DCAT/PROV endpoints | Schema validation at source |
+| Evidence identifiers | IDs/URLs | STAC/DCAT/PROV artifacts via API | ID integrity + link validation at source |
 
 ### Outputs
 
-| Output | Format | Path | Contract / Schema |
+| Output | Format | Path | Notes |
 |---|---|---|---|
-| Interactive 3D map experience | Runtime UI | `web/` | UI invariants + a11y + audit affordances |
-| Layer toggles/visibility state | Runtime UI state | (runtime) | Deterministic behavior; no data leakage |
+| Interactive 3D map experience | Runtime UI | `web/` | Presentation only; no authoritative data is authored here |
+| Layer visibility/camera state | Runtime UI state | (runtime) | Deterministic behavior; must not leak restricted detail |
 
 ### Sensitivity and redaction
-- Layer registries may include sensitivity flags; sensitive layers must be gated by access rules.
-- Redaction/generalization is enforced at the API boundary; the UI must not “reconstruct” restricted detail client-side.
-- Any sensitive locations must not be inferred or exposed via UI interactions.
+
+- Treat registry + API-delivered sensitivity flags as authoritative.
+- Do not encode restricted coordinates in client-side logs/telemetry.
+- Avoid UI interactions that enable triangulation of redacted sites (e.g., repeated “center to feature” on generalized points).
 
 ### Quality signals
-- Layer registry validates against `schemas/ui/` (CI gate).
-- No orphan layer references (registry entries reference reachable endpoints/assets).
-- Focus Mode narrative renders with citations and audit affordances intact.
 
-## 🌐 STAC, DCAT, and PROV alignment
+- Layer registry validates against `schemas/ui/` (CI gate, if implemented).
+- Focus Mode narrative renders with citations + audit affordances intact.
+- 2D ↔ 3D toggling does not drop provenance context (sources panel remains available).
+- Performance budgets are respected (acceptable frame rate; reasonable tile/3D asset weight).
 
-This UI area does not author catalogs; it consumes catalog and provenance artifacts via APIs/endpoints.
+## 🌐 STAC, DCAT & PROV Alignment
 
-- STAC: consumed for map-ready assets and evidence references.
-- DCAT: consumed for dataset-level metadata and attribution surfaces.
-- PROV: consumed for audit/provenance panels in Focus Mode.
+This UI sub-area does **not** author catalogs; it consumes catalog and provenance artifacts.
+
+Expected linkage for 3D-enabled assets:
+
+- **STAC**: 3D tilesets / terrain / derived rasters should be cataloged as STAC Items with assets (e.g., COG, 3D Tiles).
+- **DCAT**: dataset-level metadata and licensing should remain accessible (UI surfaces attribution).
+- **PROV**: Focus Mode should be able to show “how this was made” (activity/run identifiers).
+
+If a 3D visualization depends on derived products, those products must live upstream (under `data/**`) and be referenced via catalogs and the API boundary.
 
 ## 🧱 Architecture
 
@@ -214,77 +268,110 @@ This UI area does not author catalogs; it consumes catalog and provenance artifa
 
 | Component | Responsibility | Interface |
 |---|---|---|
-| ETL | Ingest + normalize | Config + run logs |
-| Catalogs | STAC/DCAT/PROV artifacts | JSON + validators |
-| Graph | Neo4j knowledge graph | API boundary only |
-| APIs | Serve contracts + redaction | REST/GraphQL |
-| UI | Map + narrative | API calls + catalog endpoints |
-| Story Nodes | Curated narrative | Served through API context bundles |
-| Focus Mode | Provenance-linked synthesis | Context bundle only |
+| Cesium adapter | Translate KFM layer registry → Cesium primitives | Registry entries + typed adapters |
+| Camera synchronizer | Keep Focus Mode state consistent across 2D/3D | Focus hints (center/time/layers) |
+| Layer registry loader | Load/validate registries | `schemas/ui/` (if present) |
+| API client | Fetch focus bundles + layer metadata | Contracted REST/GraphQL |
 
-### Interfaces and contracts
+### Interfaces / contracts
 
 | Contract | Location | Versioning rule |
 |---|---|---|
-| JSON schemas | `schemas/` | Semver + changelog |
-| API schemas | `src/server/` + `docs/api/` | Contract tests required |
-| Layer registry | `web/cesium/layers/regions.json` | Schema-validated; additive changes preferred |
+| UI registry schemas | `schemas/ui/` | Semver + schema validation (if adopted) |
+| API schemas/contracts | `src/server/contracts/` | Contract tests required |
+| Story Node schema/template | `schemas/storynodes/` + `docs/templates/` | Must validate before publish |
+| Focus bundle payload | API contract | Backward compatible or version bump |
 
-### Adding a new layer
-1) Add a new entry to an existing registry (or add a new registry file) under `web/cesium/layers/`.
-2) Ensure the entry validates against the schema in `schemas/ui/`.
-3) Ensure the data source is served via the API boundary (and any needed redaction/sensitivity rules are applied there).
-4) Confirm attribution and licensing fields are present as required by the schema.
+### Cesium configuration rules
+
+- Any Cesium Ion usage (if adopted) must treat tokens as secrets:
+  - do not commit tokens,
+  - do not embed tokens in registries committed to git,
+  - do not expose privileged tokens to the browser.
+- Prefer serving KFM-owned 3D assets via governed endpoints where access, attribution, and redaction can be enforced consistently.
+
+### Adding a new Cesium-capable layer (checklist)
+
+1) Add/modify a layer entry in the canonical registry location (repo-specific; may be `web/**/layers/**`).
+2) Validate the registry entry against `schemas/ui/` (if present).
+3) Ensure the underlying data source is served via the API boundary (or other governed endpoints), with redaction/sensitivity applied.
+4) Ensure attribution and licensing metadata are present (registry and/or API payload).
+5) Add/extend the Cesium adapter to support the layer type (if new).
 
 Illustrative example only (confirm exact schema fields under `schemas/ui/`):
+
 ~~~json
 {
-  "id": "kfm-example-layer",
-  "name": "Example Layer",
-  "source_url": "https://example.invalid/data.geojson",
+  "id": "kfm-example-3dtiles",
+  "name": "Example 3D Tiles Layer",
+  "kind": "3dtiles",
+  "source": {
+    "href": "https://api.example.invalid/v1/tilesets/example-tileset",
+    "format": "3dtiles"
+  },
   "attribution": "TBD",
-  "sensitive": false
+  "license": "TBD",
+  "sensitivity": "public",
+  "requires_auth": false
 }
 ~~~
 
-## 🧠 Story Node and Focus Mode integration
+## 🧠 Story Node & Focus Mode Integration
 
 ### How this surfaces in Focus Mode
-- Focus Mode is entered when the user selects a focusable entity (place/person/event/story).
-- The UI requests a Focus Mode context bundle from the API.
-- The UI:
-  - updates the map camera/center,
-  - enables relevant layers,
-  - renders the narrative (Markdown) with citations and an audit/provenance panel.
 
-Optional structured controls are commonly provided by Story Nodes:
+- Focus Mode is entered when the user selects a focusable entity (Place/Person/Event/Organization/Story Node).
+- The UI requests a **Focus Mode context bundle** from the API.
+- The UI may apply optional structured hints to Cesium:
+  - camera center/heading/pitch/range,
+  - enabled layers,
+  - time range / timeline window.
+
+Optional structured controls (returned by API and/or embedded in Story Nodes):
+
 ~~~yaml
 focus_layers:
   - "TBD"
 focus_time: "TBD"
-focus_center: [-98.0000, 38.0000]
+focus_center: [-98.0000, 38.0000] # lon, lat (example only)
 ~~~
 
 ### Rendering Story Node citations
-Story Nodes are Markdown and may embed citations in the `【source†Lx-Ly】` style. The UI should render these as interactive references (e.g., hyperlinks or popovers) rather than plain text.
 
-### AI-derived content
+Story Nodes are Markdown and may embed citations in the `【source†Lx-Ly】` style. The UI should render these as interactive references (links/popovers/sources panel), not as plain text.
+
+### AI-derived content (if present)
+
 If AI-generated explanations are exposed in the UI:
 - they must be opt-in,
 - clearly labeled,
-- and accompanied by source references and uncertainty metadata.
+- accompanied by uncertainty/confidence metadata,
+- and never presented as unmarked fact.
 
-## 🧪 Validation and CI/CD
+## 🧪 Validation & CI/CD
 
 ### Validation steps
-- [ ] Markdown protocol checks (front-matter + structure)
-- [ ] UI schema checks (layer registry validates against `schemas/ui/`)
-- [ ] Frontend component tests for Focus Mode rendering (narrative + citations)
-- [ ] E2E flow tests (enter/exit Focus Mode; 2D/3D toggle; layer toggles)
+
+- [ ] Markdown protocol checks (front-matter + required sections)
+- [ ] UI schema checks (layer registry validates against `schemas/ui/`, if present)
+- [ ] Frontend unit tests for:
+  - layer registry parsing,
+  - Cesium adapter mapping,
+  - Focus Mode rendering (narrative + citations)
+- [ ] E2E flow tests:
+  - enter/exit Focus Mode,
+  - toggle 2D/3D,
+  - enable/disable Cesium layers,
+  - verify sources panel remains present and correct
+- [ ] Security checks:
+  - secret scan (tokens/keys),
+  - telemetry redaction checks (no sensitive coordinates)
 
 ### Reproduction
+
 ~~~bash
 # Example placeholders — replace with repo-specific commands
+# (typically driven by web/package.json scripts)
 
 # 1) validate UI layer registry schemas
 # 2) run UI unit/integration tests
@@ -292,22 +379,45 @@ If AI-generated explanations are exposed in the UI:
 # 4) run doc lint / markdown checks
 ~~~
 
-### Telemetry signals
-- TBD (not confirmed in repo): performance and error telemetry for Cesium render loop, layer load failures, and Focus Mode load failures.
+### Telemetry signals (if applicable)
 
-## ⚖ FAIR+CARE and governance
+- Cesium render loop performance (frame time / dropped frames)
+- 3D asset load failures (tileset/terrain)
+- Focus Mode load failures (context bundle fetch errors)
+
+## ⚖ FAIR+CARE & Governance
 
 ### Governance review triggers
-- Adding a new sensitive layer or exposing a new location-precise dataset in the UI.
+
+- Adding a new sensitive 3D layer or exposing location-precise datasets in the UI.
 - Any change that alters how provenance/citations are displayed or enforced.
-- Any new public-facing endpoint required for 3D assets.
+- Any new third-party 3D tile/terrain service integration.
+- Any change that could enable inference of restricted locations (camera snapping, precision tooltips).
 
 ### Sovereignty safety
+
 - Do not expose restricted locations or culturally sensitive knowledge.
-- Enforce generalization/redaction at the API layer; ensure the UI respects gating flags in layer registries and payloads.
+- Enforce generalization/redaction at the API layer; ensure the UI respects gating flags in registry entries and payloads.
+
+### Third-party services & licensing
+
+- Ensure registries or UI copy surface required attributions.
+- Do not “bake in” third-party data products into UI artifacts without catalog/provenance.
 
 ## 🕰️ Version history
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-21 | Initial `web/cesium/README.md` | TBD |
+| v1.0.1 | 2025-12-24 | Clarified optional 3D role, strengthened invariants (API boundary, provenance, sensitivity), added cross-links and tightened registry guidance | TBD |
+
+---
+
+Footer refs:
+- Master guide: `docs/MASTER_GUIDE_v12.md`
+- Redesign blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Web UI: `web/README.md`
+- Web source: `web/src/README.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
