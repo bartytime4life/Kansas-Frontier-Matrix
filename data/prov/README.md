@@ -1,8 +1,8 @@
 ---
 title: "KFM PROV Directory Lineage Bundles"
 path: "data/prov/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-23"
+version: "v1.0.1"
+last_updated: "2025-12-24"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:data:prov:readme:v1.0.0"
-semantic_document_id: "kfm-data-prov-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:data:prov:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:data:prov:readme:v1.0.1"
+semantic_document_id: "kfm-data-prov-readme-v1.0.1"
+event_source_id: "ledger:kfm:doc:data:prov:readme:v1.0.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,59 +41,80 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM PROV Directory Lineage Bundles
+# KFM PROV Directory — Lineage Bundles (`data/prov/`)
 
-This directory is the **canonical repository location** for provenance outputs (lineage bundles) produced by KFM pipelines and catalog stages.
+This directory is the **canonical repository location** for **machine-readable provenance outputs** (lineage bundles) produced by KFM pipelines and catalog stages.
 
-Path: `data/prov/`
+**Pipeline position (non-negotiable):** **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+---
 
 ## 📘 Overview
 
 ### Purpose
 
-- Store **machine-readable provenance** for KFM transformations so that every output can be traced to its inputs, producing activity, and responsible agent.
-- Provide provenance references for **audits**, graph provenance linkage, and Focus Mode “evidence” panels.
-- Define the folder-level contract for what belongs in `data/prov/` and what does not.
+`data/prov/` exists to keep KFM **auditable** and **traceable**.
+
+It stores provenance that lets any downstream consumer (Graph/API/UI/Story/Focus Mode) answer:
+
+- **What is this artifact?**
+- **Where did it come from?**
+- **How was it produced?**
+- **Who/what produced it?**
+- **Was anything redacted/generalized and why?** (without leaking protected details)
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| PROV bundles for pipeline runs and/or catalog builds | Raw source data (belongs under `data/<domain>/raw/`) |
-| Run-level provenance manifests and integrity metadata | Pipeline code (belongs under `src/pipelines/`) |
-| Redaction/generalization notes that apply to provenance artifacts | STAC catalogs (belongs under `data/stac/`) |
-| Links (by ID or stable reference) to STAC/DCAT outputs | DCAT catalogs (belongs under `data/catalog/dcat/`) |
+| PROV bundles emitted by ETL, transforms, catalog builds, and graph ingest | Raw source data (belongs under `data/<domain>/raw/`) |
+| Run manifests and integrity metadata (checksums, content inventory) | Pipeline implementation code (belongs under `src/pipelines/`) |
+| Safe redaction/generalization notices for provenance artifacts | STAC catalogs (belongs under `data/stac/`) |
+| Stable cross-links (by ID) to STAC/DCAT outputs and graph entities | DCAT catalogs (belongs under `data/catalog/dcat/`) |
+| Minimal, non-sensitive run diagnostics for reproducibility | Secrets, credentials, PII, or sensitive location details |
 
 ### Audience
 
 - Primary: pipeline maintainers, catalog maintainers
-- Secondary: graph/ontology maintainers, API developers, UI/Focus Mode implementers, auditors/curators
+- Secondary: graph/ontology maintainers, API developers, UI/Focus Mode implementers, auditors/curators, Story Node authors
 
 ### Definitions
 
-- Link: `docs/glossary.md` (if present)
+- Glossary: `docs/glossary.md` *(if missing, treat as **not confirmed in repo** and repair link)*
 - Terms used in this doc:
-  - **PROV-O**: W3C provenance model (entities, activities, agents)
-  - **Bundle**: a serialized package of PROV statements for a single run or product
-  - **run_id**: stable identifier for a pipeline/catal og activity
-  - **agent**: the script/service/person responsible for the run (as captured in PROV)
+  - **PROV-O**: W3C provenance model (Entities, Activities, Agents)
+  - **Bundle**: a serialized package of PROV statements for a single run and/or product
+  - **run_id**: stable identifier for a pipeline/catalog activity
+  - **product_id**: stable identifier for a versioned dataset/evidence product
+  - **agent**: script/service/person responsible for the activity (as captured in PROV)
 
-### Key artifacts
+### Key artifacts (what this doc points to)
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| PROV bundles | `data/prov/**` | Pipelines + catalog maintainers | Produced by runs/builds |
-| PROV schema/profile | `schemas/prov/**` | Catalog maintainers | Validates PROV bundle shape |
-| STAC catalogs | `data/stac/**` | Catalog stage | Outputs should reference provenance |
-| DCAT records | `data/catalog/dcat/**` | Catalog stage | Outputs should reference provenance |
-| Graph build imports | `data/graph/**` | Graph build | Should reference provenance identifiers |
+| PROV bundles | `data/prov/**` | Pipelines + catalog maintainers | Generated outputs; avoid hand-edits |
+| PROV schema/profile | `schemas/prov/**` | Schema/catalog maintainers | Contract for validation (KFM-PROV profile) |
+| STAC catalogs | `data/stac/**` | Catalog stage | Evidence artifacts should reference PROV IDs where profile requires |
+| DCAT records | `data/catalog/dcat/**` | Catalog stage | Discovery records should reference PROV IDs where profile requires |
+| Graph ingest fixtures | `data/graph/**` | Graph build | Import fixtures should carry provenance IDs for traceability |
 
-### Definition of done
+### Non-negotiables (folder contract)
 
-- [ ] Front-matter complete + valid
-- [ ] Folder contract is clear: what belongs here, and what does not
-- [ ] Validation steps are listed and repeatable
-- [ ] Governance + CARE/sovereignty considerations explicitly stated
+1. **Provenance is evidence, not narrative.** Keep bundles machine-first and minimal.
+2. **No secrets.** Never write API keys, tokens, credentials, private endpoints, or internal hostnames into provenance artifacts.
+3. **No sensitive location leakage.** Provenance must not reconstruct restricted locations (see sovereignty policy).
+4. **Deterministic + reproducible.** Re-runs with the same inputs and pinned versions should yield diffable, stable bundles.
+5. **Generated, not hand-edited.** Treat bundles as build artifacts. If a manual edit is unavoidable, record it in `manifest.json`.
+
+### Definition of done (for this README)
+
+- [ ] Front-matter complete + valid and `path` matches file location
+- [ ] Folder contract is explicit (in scope/out of scope + non-negotiables)
+- [ ] Directory layout + naming expectations documented
+- [ ] Validation steps listed and repeatable
+- [ ] Governance + FAIR+CARE/sovereignty considerations explicitly stated
+
+---
 
 ## 🗂️ Directory Layout
 
@@ -106,69 +127,87 @@ Path: `data/prov/`
 | Area | Path | What lives here |
 |---|---|---|
 | Data domains | `data/<domain>/{raw,work,processed}/` | Source snapshots → transforms → normalized outputs |
-| PROV outputs | `data/prov/` | Lineage bundles and run manifests |
-| STAC catalogs | `data/stac/` | STAC collections + items |
-| DCAT catalogs | `data/catalog/dcat/` | Dataset catalog records |
+| PROV outputs | `data/prov/` | Lineage bundles + run manifests + integrity metadata |
+| STAC catalogs | `data/stac/` | STAC Collections + Items |
+| DCAT catalogs | `data/catalog/dcat/` | DCAT dataset records |
 | Pipelines | `src/pipelines/` | ETL + transforms that emit PROV |
-| Schemas | `schemas/` | JSON schemas (STAC/DCAT/PROV/UI/etc.) |
-| Graph | `src/graph/` | Graph build + ontology bindings |
+| Schemas | `schemas/` | JSON Schemas (STAC/DCAT/PROV/UI/telemetry) |
+| Graph | `src/graph/` + `data/graph/` | Graph build + ontology bindings + import fixtures |
 | API boundary | `src/server/` | Contracted access to graph + catalogs |
 | UI | `web/` | React/Map clients |
-| Story Nodes | `docs/reports/story_nodes/` | Narrative artifacts (provenance-linked) |
+| Story Nodes | `docs/reports/story_nodes/` | Provenance-linked narratives |
 
-### Expected file tree for this sub-area
+### Canonical target layout (v13+)
 
-The exact sub-structure under `data/prov/` is **a repo-local convention**. If the repository already has an established convention, align this tree to match it and keep one canonical layout.
+If the repository already has an established layout, **align to it** and treat this as the target end-state.
 
 ~~~text
 📁 data/
 └── 📁 prov/
     ├── 📄 README.md
+    │
     ├── 📁 runs/
     │   └── 📁 <run_id>/
-    │       ├── 📄 prov.jsonld
-    │       ├── 📄 manifest.json
-    │       └── 📄 integrity.json
+    │       ├── 📄 prov.jsonld           # PROV bundle for the run/activity
+    │       ├── 📄 manifest.json         # inventory, run metadata, version pins
+    │       └── 📄 integrity.json        # checksums, sizes, and link integrity
+    │
     └── 📁 products/
         └── 📁 <product_id>/
-            └── 📄 prov.jsonld
+            ├── 📄 prov.jsonld           # PROV bundle for the product/entity
+            ├── 📄 manifest.json
+            └── 📄 integrity.json
 ~~~
+
+### Folder responsibilities
+
+| Folder | Responsibility | Typical producers | Typical consumers |
+|---|---|---|---|
+| `data/prov/runs/<run_id>/` | Provenance about one execution/activity | ETL/catalog/graph build | Auditors, graph ingest, API “evidence” endpoints |
+| `data/prov/products/<product_id>/` | Provenance about one data product/entity | Catalog build / release packaging | UI/Focus Mode evidence panels, Story Node citations |
+| `manifest.json` | Stable inventory + version pins | Pipelines | CI + debugging + audits |
+| `integrity.json` | Checksums + reference/link checks | Pipelines/CI | CI + release packaging |
+
+---
 
 ## 🧭 Context
 
 ### Background
 
-KFM’s architecture is contract-first and provenance-first. Provenance bundles are required so that:
+KFM is **contract-first** and **provenance-first**. PROV bundles are required so that:
 
-- catalog artifacts (STAC/DCAT/PROV) remain machine-validatable,
+- catalog artifacts (STAC/DCAT/PROV) remain machine-validatable evidence,
 - graph entities can carry references to the evidence that created them,
 - Focus Mode can enforce “provenance-linked only” narrative behavior.
 
 ### Assumptions
 
 - PROV outputs represent **Activities** (runs/builds), **Entities** (inputs/outputs), and **Agents** (pipelines/services/people).
-- PROV bundles are treated as **build artifacts**: most changes should come from pipeline code/config, not hand edits.
-- PROV artifacts validate against `schemas/prov/` (KFM-PROV profile).
+- Bundles are treated as **build artifacts**; most changes should come from pipeline code/config, not by editing PROV directly.
+- PROV artifacts validate against `schemas/prov/**` (KFM-PROV profile).
 
 ### Constraints / invariants
 
-- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode is preserved.
-- UI consumes contracts via APIs and catalog endpoints (no direct graph dependency).
+- **Pipeline order is preserved:** **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+- **API boundary is enforced:** UI does not read Neo4j directly; it consumes contracted APIs.
 - Pipelines must not write STAC/DCAT/PROV artifacts into `docs/`.
+- Provenance must be safe to publish under the doc’s classification (no secrets; no protected locations).
 
 ### Open questions
 
 | Question | Owner | Target date |
 |---|---|---|
-| What is the canonical `run_id` format? | TBD | TBD |
-| What serialization formats are accepted (JSON-LD vs PROV-JSON vs RDF)? | TBD | TBD |
-| What fields are required by `schemas/prov/` in this repo? | TBD | TBD |
+| Canonical `run_id` format and stability rules | TBD | TBD |
+| Accepted serialization formats beyond JSON-LD (if any) | TBD | TBD |
+| Required fields enforced by `schemas/prov/**` in this repo | TBD | TBD |
 
 ### Future extensions
 
-- Add signing or checksum enforcement for bundles.
-- Record container image/SBOM identifiers for reproducibility.
-- Add “redaction justification” logging for sensitive/protected datasets.
+- Bundle signing and/or checksum enforcement at release packaging time.
+- Recording container image digests and SBOM identifiers for reproducibility.
+- “Redaction justification” logging that is safe for public distribution.
+
+---
 
 ## 🗺️ Diagrams
 
@@ -188,7 +227,7 @@ flowchart LR
   SN --> FM[Focus Mode]
 ~~~
 
-### Optional sequence diagram
+### Optional sequence diagram (evidence resolution)
 
 ~~~mermaid
 sequenceDiagram
@@ -205,171 +244,210 @@ sequenceDiagram
   API-->>UI: narrative + citations + provenance panel data
 ~~~
 
+---
+
 ## 📦 Data & Metadata
 
-### Inputs
+### Accepted serialization formats
 
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Pipeline run metadata | JSON | pipeline runtime / orchestrator | required fields present |
-| Source references | URI/ID | `data/<domain>/raw/` + external refs | resolvable IDs |
-| Output references | URI/ID | `data/<domain>/processed/` + catalogs | resolvable IDs |
+The repo’s authoritative accepted formats should be enforced by `schemas/prov/**`:
 
-### Outputs
+- **Preferred:** JSON-LD (`prov.jsonld`)
+- **Optional:** RDF/Turtle (`.ttl`) *(only if supported by repo schemas/profile; otherwise treat as **not confirmed in repo**)*
 
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| PROV bundle | JSON-LD (recommended) | `data/prov/**/prov.jsonld` | `schemas/prov/**` |
-| Run manifest | JSON | `data/prov/**/manifest.json` | repo-defined |
-| Integrity metadata | JSON | `data/prov/**/integrity.json` | repo-defined |
+### Minimum required PROV content (conceptual)
 
-### Sensitivity & redaction
+A bundle should include:
 
-- Provenance must not leak restricted locations or sensitive fields.
-- If an input/output is restricted, store **generalized identifiers** in PROV where required and ensure redaction actions are logged (without revealing protected details).
-- Prefer API-layer redaction for user-facing access; keep internal lineage complete where policy permits.
+- **Activities**
+  - ETL run
+  - catalog build
+  - graph ingest
+- **Entities**
+  - inputs: raw/work/processed artifacts and external sources (by stable reference)
+  - outputs: processed artifacts + STAC/DCAT outputs + graph ingest fixtures
+- **Agents**
+  - pipeline/service identity
+  - operator identity (if policy allows; avoid PII)
 
-### Quality signals
+Expected core relations:
 
-- Schema validation passes for all PROV bundles (`schemas/prov/**`).
-- Referential integrity: referenced STAC/DCAT IDs resolve.
-- No “orphan” data products without provenance linkage.
+- `prov:used` (Activity → Entity input)
+- `prov:wasGeneratedBy` (Entity output → Activity)
+- `prov:wasAssociatedWith` (Activity → Agent)
+- `prov:wasDerivedFrom` (Entity output → Entity input)
+
+### `manifest.json` (recommended)
+
+`manifest.json` should be stable, diffable, and safe to publish.
+
+Recommended (repo-defined) fields:
+
+~~~json
+{
+  "run_id": "string",
+  "job_name": "string",
+  "started_at": "ISO-8601",
+  "ended_at": "ISO-8601",
+  "inputs": [{"id": "string", "uri": "string", "sha256": "string"}],
+  "outputs": [{"id": "string", "uri": "string", "sha256": "string"}],
+  "profiles": {
+    "kfm_mdp": "KFM-MDP v11.2.6",
+    "kfm_ppc": "KFM-PPC v11.0.0",
+    "kfm_prov": "KFM-PROV v11.0.0"
+  },
+  "code": {"commit_sha": "<latest-commit-hash>"},
+  "environment": {"container_image": "optional", "python": "optional"},
+  "redactions": [{"type": "optional", "scope": "optional", "justification": "optional"}]
+}
+~~~
+
+### `integrity.json` (recommended)
+
+`integrity.json` is intended for CI and release packaging.
+
+Recommended (repo-defined) fields:
+
+- SHA-256 digests for `prov.jsonld` and referenced in-repo artifacts
+- File sizes/byte counts (truncation detection)
+- Link integrity results (referenced STAC/DCAT IDs resolve)
+
+---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### STAC
+### Alignment rule
 
-- Collections involved: varies by domain.
-- Items involved: outputs should carry stable IDs that can be referenced by provenance.
-- Extensions: as defined by the repo’s STAC profile.
+Each dataset or evidence product is expected to have:
 
-### DCAT
+- STAC catalog entry (Collection + Item(s)) where applicable
+- DCAT dataset record(s) where applicable
+- PROV activity describing lineage
 
-- Dataset identifiers: as defined by the repo’s DCAT profile.
-- License mapping: align with dataset license fields.
-- Contact/publisher mapping: align with DCAT records where applicable.
+This enables “follow the evidence” navigation in Graph/API/UI and supports Focus Mode auditability.
 
-### PROV-O
+### Identifier linkage expectations
 
-- `prov:wasDerivedFrom`: link derived entities to their sources.
-- `prov:wasGeneratedBy`: link outputs to the run activity.
-- Activity/Agent identities: record the pipeline service/script identity and (where appropriate) the human/operator identity.
+Downstream systems should be able to resolve:
 
-### Versioning
+- PROV activity IDs ↔ ETL/catalog `run_id`s
+- PROV entity IDs ↔ STAC Item IDs and/or DCAT dataset IDs
+- PROV IDs ↔ graph entities (via properties on nodes/edges)
 
-- Each run/build is a distinct provenance activity.
-- When outputs are versioned, ensure predecessor/successor links are reflected consistently in catalogs and the graph.
+> Exact field/property names are governed by the KFM profiles and schemas. Use `schemas/prov/**`, `schemas/stac/**`, and `schemas/dcat/**` as the contract source of truth.
+
+---
 
 ## 🧱 Architecture
 
 ### Components
 
-| Component | Responsibility | Interface |
+| Component | Responsibility | Output that links to PROV |
 |---|---|---|
-| ETL | Ingest + normalize | Config + run logs |
-| Catalogs | STAC/DCAT/PROV | JSON + validator |
-| Graph | Neo4j | Cypher + API layer |
-| APIs | Serve contracts | REST/GraphQL |
-| UI | Map + narrative | API calls |
-| Story Nodes | Curated narrative | Graph + docs |
-| Focus Mode | Contextual synthesis | Provenance-linked |
+| ETL | ingest + normalize | `data/<domain>/{raw,work,processed}/` + run provenance |
+| Catalog build | publish STAC/DCAT/PROV | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` |
+| Graph build | ingest evidence into Neo4j | `data/graph/**` with provenance IDs |
+| API boundary | enforce contracts + redaction | API payloads include evidence/provenance refs |
+| UI | map + narrative | consumes provenance-linked content via API only |
+| Story Nodes | curated narrative | cite STAC/DCAT/PROV evidence IDs |
+| Focus Mode | contextual synthesis | shows provenance panel and citations |
 
 ### Interfaces / contracts
 
-| Contract | Location | Versioning rule |
+| Contract | Canonical location | Notes |
 |---|---|---|
-| PROV schemas | `schemas/prov/` | Semver + changelog |
-| STAC schemas | `schemas/stac/` | Semver + changelog |
-| DCAT schemas | `schemas/dcat/` | Semver + changelog |
-| API contracts | `src/server/contracts/` | contract tests required |
+| PROV schemas | `schemas/prov/**` | Semver + changelog (repo-defined) |
+| STAC schemas | `schemas/stac/**` | Used to validate `data/stac/**` |
+| DCAT schemas | `schemas/dcat/**` | Used to validate `data/catalog/dcat/**` |
+| API contracts | `src/server/` | REST/OpenAPI or GraphQL SDL (repo-defined) |
 
 ### Extension points checklist
 
-- [ ] Data: new domain added under `data/<domain>/...`
-- [ ] STAC: new collection + item schema validation
-- [ ] DCAT: dataset record updated
-- [ ] PROV: activity + agent identifiers recorded under `data/prov/`
-- [ ] Graph: new labels/relations mapped + migration plan
-- [ ] APIs: contract version bump + tests
-- [ ] UI: layer registry entry + access rules
-- [ ] Focus Mode: provenance references enforced
-- [ ] Telemetry: new signals + schema version bump
+- [ ] New dataset added under `data/<domain>/...`
+- [ ] STAC Collections and Items generated and validated
+- [ ] DCAT dataset record created or updated
+- [ ] PROV activity/bundle recorded under `data/prov/`
+- [ ] Graph ingest updated (if applicable) and carries provenance IDs
+- [ ] API endpoints expose provenance refs
+- [ ] UI/Story Nodes updated only via API contracts
+
+---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How this work surfaces in Focus Mode
+### What Focus Mode needs from `data/prov/`
 
-- Focus Mode should be able to show an “evidence / provenance” panel that includes:
-  - PROV activity/run identifiers
-  - linked STAC/DCAT evidence IDs
-  - (optional) redaction/generalization notices
+For any displayed claim, Focus Mode should be able to retrieve:
+
+- the **PROV activity/run** that produced the evidence,
+- the **input sources** used,
+- the **output artifacts** (STAC/DCAT IDs, files, graph entities),
+- any **redaction/generalization notices** (without exposing protected details).
 
 ### Provenance-linked narrative rule
 
-- Every claim shown in Focus Mode must trace to a dataset / record / asset ID.
-- Predictive or AI-generated content must be opt-in and carry uncertainty metadata.
+- Story Nodes and Focus Mode content must cite evidence IDs that resolve to STAC/DCAT/PROV artifacts.
+- Predictive or AI-generated content must be opt-in and include uncertainty metadata (where used).
 
-### Optional structured controls
-
-~~~yaml
-focus_layers:
-  - "TBD"
-focus_time: "TBD"
-focus_center: [ -98.0000, 38.0000 ]
-~~~
+---
 
 ## 🧪 Validation & CI/CD
 
-### Validation steps
+### Minimum validation checks (folder-level)
 
-- [ ] Markdown protocol checks
-- [ ] Schema validation (STAC/DCAT/PROV)
-- [ ] Graph integrity checks
-- [ ] API contract tests
-- [ ] UI schema checks (layer registry)
-- [ ] Security and sovereignty checks (as applicable)
+- [ ] PROV bundles validate against `schemas/prov/**`
+- [ ] No orphan references: any STAC/DCAT IDs referenced by PROV resolve to artifacts under `data/stac/**` and `data/catalog/dcat/**`
+- [ ] Deterministic outputs: repeated runs produce diffable, stable bundles (where stable IDs are defined)
+- [ ] No secrets/PII: repository scanners pass (CI gate)
+- [ ] Sovereignty/ethics gates: provenance does not expose restricted locations or sensitive fields
 
 ### Reproduction
 
 ~~~bash
-# Example placeholders — replace with repo-specific commands
-
-# 1) validate schemas (stac/dcat/prov)
-# 2) run unit/integration tests
-# 3) run doc lint / markdown protocol validation
+# Placeholder: replace with repo-specific commands.
+# 1) Run ETL/catalog build to generate PROV
+# 2) Validate PROV bundles against schemas
+# 3) Run link integrity checks across STAC/DCAT/PROV
 ~~~
 
-### Telemetry signals
-
-- Not applicable unless provenance validation results are logged as telemetry (repo-defined).
+---
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
 
-- Changes that introduce new provenance fields, new sensitive datasets, or new redaction behaviors require human review.
-- Any changes to `schemas/prov/**` require review by schema/catalog maintainers.
+Human review is required when changes:
+
+- introduce new provenance fields or schemas (`schemas/prov/**`),
+- introduce new external data sources or new run agents,
+- affect redaction/generalization behavior,
+- change how provenance links to STAC/DCAT/Graph are represented.
 
 ### CARE / sovereignty considerations
 
-- Follow `docs/governance/SOVEREIGNTY.md` for handling culturally sensitive knowledge and protected locations.
-- Do not store secrets/credentials in provenance artifacts.
+- Provenance must not leak protected locations or culturally sensitive knowledge.
+- Where redaction is required, provenance may record the *fact of redaction* and a justification category without disclosing protected details.
+- Apply any additional controls required by `docs/governance/SOVEREIGNTY.md` (if present).
 
 ### AI usage constraints
 
-- PROV artifacts and this README must not be used to infer sensitive locations.
-- AI transformation permissions/prohibitions must match the front-matter.
+- AI must not infer sensitive locations from provenance artifacts.
+- AI transformation permissions/prohibitions must match the front-matter of this document.
+
+---
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-23 | Initial README for `data/prov/` | TBD |
+| v1.0.1 | 2025-12-24 | Aligned to universal template; clarified folder contract and linkage expectations | TBD |
 
 ---
 
-Footer refs:
+## ⚖ Footer
 
+- Master Guide: `docs/MASTER_GUIDE_v12.md` *(if missing, treat as **not confirmed in repo** and repair link)*
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
