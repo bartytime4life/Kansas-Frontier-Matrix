@@ -1,8 +1,8 @@
 ---
 title: "Cesium Assets — README"
 path: "web/cesium/assets/README.md"
-version: "v0.1.0"
-last_updated: "2025-12-21"
+version: "v0.1.1"
+last_updated: "2025-12-24"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:web:cesium:assets:readme:v0.1.0"
-semantic_document_id: "kfm-web-cesium-assets-readme-v0.1.0"
-event_source_id: "ledger:kfm:doc:web:cesium:assets:readme:v0.1.0"
+doc_uuid: "urn:kfm:doc:web:cesium:assets:readme:v0.1.1"
+semantic_document_id: "kfm-web-cesium-assets-readme-v0.1.1"
+event_source_id: "ledger:kfm:doc:web:cesium:assets:readme:v0.1.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -46,185 +46,167 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ## 📘 Overview
 
 ### Purpose
-This directory contains **frontend-runtime assets** used by the Cesium client under `web/cesium/`.
+
+This directory contains **frontend runtime assets** used by the Cesium client under `web/cesium/`.
 
 Assets here exist to support:
-- Cesium viewer UX (icons, small UI textures, UI images)
-- runtime resources that must ship with the frontend bundle
-- optional demo/fixture assets used strictly for UI development and tests (if applicable)
+- Cesium viewer UX (icons, small UI textures, small UI images)
+- runtime resources that must ship with (or be referenced by) the frontend bundle
+- optional **demo/fixture** assets used strictly for UI development and tests (if applicable)
 
-This directory is **not** the canonical home for KFM datasets. Canonical data and derived outputs must follow KFM’s pipeline and catalog rules.
+This directory is **not** the canonical home for KFM datasets. Canonical data and derived outputs must follow KFM’s governed pipeline and catalog rules.
+
+**Canonical ordering (non‑negotiable):**  
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
 ### Scope
+
 | In Scope | Out of Scope |
 |---|---|
-| UI assets used directly by the Cesium frontend | Canonical datasets or derived data products |
-| Small static files that must be served with the app | Anything requiring STAC/DCAT/PROV generation but stored only here |
-| Attribution + license documentation for third-party UI assets | Secrets, credentials, tokens, or user-provided uploads |
+| UI-only assets used directly by the Cesium frontend (icons, textures, small images) | Canonical datasets or derived evidence products (tilesets, rasters, vectors, historical map scans as data products) |
+| Small static files that must ship with the UI build | Anything that *should* be cataloged (STAC/DCAT/PROV) but is committed only here |
+| Attribution + license documentation for third-party UI assets | Secrets, credentials, tokens (e.g., Cesium Ion tokens), or user-provided uploads |
+| Dev/test fixtures that contain no sensitive locations and no real evidence content | Cached API responses, catalog JSON outputs, or any “evidence bundles” |
 
 ### Audience
-- Primary: Frontend engineers implementing Cesium UI behaviors and layer visuals.
-- Secondary: Curators/reviewers validating license, attribution, and sensitivity posture of shipped UI assets.
+- Primary: Frontend engineers implementing Cesium UI behaviors, adapters, and layer visuals.
+- Secondary: Reviewers validating license/attribution and sensitivity posture of shipped UI assets.
 
-### Definitions (link to glossary)
-- Glossary link: `docs/glossary.md` (not confirmed in repo)
-- Terms used in this doc:
-  - **UI asset**: static file shipped with the frontend (icons, images, fonts, small textures, small JSON fixtures).
-  - **Data asset**: dataset or derived artifact that belongs in `data/` with STAC/DCAT/PROV, even if rendered in the UI.
-  - **Attribution bundle**: minimal record of a third-party asset’s origin, license, and required credit.
-  - **Asset inventory**: a machine-readable list of shipped assets and their compliance metadata (recommended; not confirmed in repo).
+### Definitions
 
-### Key artifacts
+- Glossary: `docs/glossary.md` *(not confirmed in repo — add or repair link if glossary lives elsewhere)*
+
+Terms used in this doc:
+- **UI asset**: Static file shipped with or referenced by the frontend (icons, images, fonts, small textures, small JSON fixtures).
+- **Data asset**: Dataset or derived artifact that belongs in `data/**` with STAC/DCAT/PROV, even if rendered in the UI.
+- **Attribution bundle**: Minimal record of a third-party asset’s origin, license, and required credit.
+- **Asset inventory**: A machine-readable list of shipped assets and their compliance metadata (recommended; not confirmed in repo).
+
+### Key artifacts (what this doc points to)
+
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| This README | `web/cesium/assets/README.md` | Frontend | Directory purpose, constraints, and review gates |
-| Cesium adapters README | `web/cesium/adapters/README.md` | Frontend | Adapters should reference assets in a bundler-safe way |
-| Cesium layer registry | `web/cesium/layers/` | Frontend | Data-backed layers are registered here; not confirmed in repo |
-| Canonical datasets | `data/raw/`, `data/work/`, `data/processed/` | Data/ETL | Do not bypass |
-| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Data/Catalog | Provenance-first evidence |
-| Schemas | `schemas/` | Platform | Registry schemas + telemetry schemas (if present) |
+| Cesium area README | `web/cesium/README.md` | UI | 3D mode scope + invariants |
+| Cesium adapters README | `web/cesium/adapters/README.md` | UI | Adapter conventions + lifecycle |
+| Web public assets README | `web/public/README.md` | UI | Rules for assets served **verbatim** |
+| UI schemas | `schemas/ui/` | Schemas/Contracts | Layer registry + UI contract validation (if present) |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Data/Catalog | Canonical evidence artifacts |
+| Governance refs | `docs/governance/*` | Governance | Review gates + sovereignty policy |
 
 ### Definition of done (for this document)
+
 - [ ] No secrets or tokens stored in this directory
-- [ ] Third-party assets have recorded license + attribution (see recommendations below)
+- [ ] Third-party assets have recorded license + attribution (see “Attribution & licensing” below)
 - [ ] Assets do not contain sensitive locations or increase restricted precision
-- [ ] Anything that is actually a dataset is routed through `data/` + STAC/DCAT/PROV, not committed only here
+- [ ] Anything that is actually a dataset is routed through `data/**` + STAC/DCAT/PROV, not committed only here
 - [ ] Asset references in code are stable and compatible with the frontend bundler (no fragile runtime paths)
-- [ ] Validation steps are listed and repeatable
+- [ ] Validation steps are listed and repeatable (even if commands are placeholders)
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `web/cesium/assets/README.md`
+- `path`: `web/cesium/assets/README.md` (must match front-matter)
 
 ### Related repository paths
+
 | Area | Path | What lives here |
 |---|---|---|
 | Frontend | `web/` | React + map clients |
-| Cesium | `web/cesium/` | Cesium viewer + scene + layer wiring |
+| Cesium | `web/cesium/` | Cesium viewer + scene + adapters + registries |
 | Cesium assets | `web/cesium/assets/` | Static UI runtime assets (this folder) |
 | Cesium adapters | `web/cesium/adapters/` | Cesium-specific adapter layer (loads/uses assets) |
 | Cesium layers | `web/cesium/layers/` | Declarative layer registry (data-backed) |
-| Data | `data/` | Raw/work/processed datasets |
-| Catalogs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC/DCAT/PROV outputs |
+| Data | `data/` | Canonical raw/work/processed datasets (not UI assets) |
+| Catalogs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Evidence metadata + provenance bundles |
 | Schemas | `schemas/` | Validation schemas (incl. UI registries if present) |
+| Story Nodes | `docs/reports/story_nodes/` | Narrative artifacts (rendered in UI via API) |
 
 ### Expected file tree for this sub-area
+
+Recommended conventions (update to match actual contents):
+
 ~~~text
 📁 web/
 └── 📁 cesium/
     └── 📁 assets/
-        ├── 📄 README.md                 — this file
-        ├── 📁 icons/                    — UI icons (SVG/PNG)
-        ├── 📁 textures/                 — small textures used by Cesium materials
-        ├── 📁 images/                   — small UI images (optional convention)
-        ├── 📁 models/                   — small demo models only (glTF); avoid large binaries
-        ├── 📁 fixtures/                 — dev/test fixtures (non-production), if applicable
-        ├── 📄 NOTICE.md                 — third-party attribution bundle (recommended)
-        └── 📄 assets.manifest.json      — machine-readable asset inventory (recommended)
+        ├── 📄 README.md                 # this file
+        ├── 📁 icons/                    # UI icons (SVG/PNG)
+        ├── 📁 textures/                 # small textures used by Cesium materials
+        ├── 📁 images/                   # small UI images (optional convention)
+        ├── 📁 models/                   # demo models only (glTF); avoid large binaries
+        ├── 📁 fixtures/                 # dev/test fixtures (non-production), if applicable
+        ├── 📄 NOTICE.md                 # third-party attribution bundle (recommended)
+        └── 📄 assets.manifest.json      # machine-readable asset inventory (recommended)
 ~~~
 
 Notes:
-- Subfolders above are **recommended** conventions; actual contents are not confirmed in repo.
+- Subfolders/files above are **recommended** conventions; actual contents are not confirmed in repo.
 - If large binary assets are required, prefer a governed artifact store and reference via API/CDN (mechanism not confirmed in repo).
 
 ## 🧭 Context
 
 ### Background
-KFM’s canonical ordering is:
 
-ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode.
+KFM’s pipeline is **evidence-first** and **provenance-linked**:
 
-This directory sits in the **UI stage**. Its purpose is to support rendering and UI behavior—not to become an alternate data lake.
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+This directory is in the **UI stage**. Its purpose is to support rendering and UI behavior — not to become an alternate data lake.
 
 ### Assumptions
-- The frontend build system can bundle or statically serve assets under `web/` (build tooling not confirmed in repo).
-- Cesium adapters and UI components can reference assets using bundler-safe paths or imports.
+- The frontend build toolchain can bundle or statically serve assets under `web/` (exact tooling not confirmed in repo).
+- Cesium adapters and UI components reference assets using bundler-safe paths/imports.
 - Public deployments must not ship restricted-precision location material as “UI assets.”
 
 ### Constraints and invariants
-- **API boundary**: the UI must not access Neo4j directly.
-- **Provenance-first**: if the UI renders data derived from real sources, provenance must be present via catalogs and API payloads.
-- **No policy bypass**: assets here must not be used as a shortcut around `data/` staging or catalog generation.
-- **Security**: do not store credentials, tokens, or private endpoints in committed asset files.
-- **Sensitivity**: do not store precise restricted locations or materials that increase sensitive location precision.
 
-### Two classes of assets
-1) **UI-only assets (allowed here)**
-   - Icons, images, textures, fonts, small static UI helper files.
-   - Governed primarily by license/attribution and security constraints.
+- **API boundary:** the UI must not access Neo4j directly (graph access is via `src/server/`).
+- **Provenance-first:** if the UI renders data derived from real sources, provenance must be present via catalogs and API payloads.
+- **No policy bypass:** assets here must not be used as a shortcut around `data/**` staging or catalog generation.
+- **Security:** do not store credentials, tokens, or private endpoints in committed asset files.
+- **Sensitivity:** do not store assets that encode or increase the precision of restricted locations.
 
-2) **Data-backed assets (generally not allowed here as canonical)**
-   - Raster/tiles, vector layers, 3D Tiles datasets, terrain sets, historical maps as data products.
-   - Canonical location must be `data/` with STAC/DCAT/PROV, and the UI should reference them through the API layer (or a governed public asset endpoint served by the system).
+## ✅ What belongs here
 
-If a Cesium feature needs a URL to a data-backed asset, that URL should be produced/served by the system’s catalog + API layer, not hardcoded to an untracked file.
+### Allowed UI-only assets (examples)
+- Icons (SVG/PNG) used by the Cesium UI chrome (buttons, legends, markers)
+- Small textures used for Cesium materials (patterns, alpha masks) that carry no sensitive meaning
+- Placeholder images (generic; not dataset-derived)
+- Demo models used only for local development (non-sensitive and properly licensed)
 
-### Open questions
-| Question | Why it matters | Owner | Status |
-|---|---|---|---|
-| Is there an enforced max file size for assets committed under `web/cesium/assets/`? | Prevents repo bloat and slow CI | TBD | TBD |
-| Is `assets.manifest.json` required or optional? | Enables auditable licensing + scanning | TBD | TBD |
-| Where should large UI binaries live (if needed)? | Prevents “UI assets” becoming a shadow data lake | TBD | TBD |
-| What CI checks exist for asset license compliance? | Ensures CC-BY/MIT/etc obligations are met | TBD | TBD |
+### Not allowed as canonical content (examples)
+- 3D Tiles datasets, terrain sets, orthomosaics, rasters, vector layers, historic map scans as data products
+- STAC/DCAT/PROV outputs
+- Cached API responses or “prebaked” evidence bundles
+- Any asset that materially increases restricted location precision (annotated maps, site diagrams, labeled boundaries under restriction)
 
-### Future extensions
-- Add a schema for `assets.manifest.json` under `schemas/web/` (not confirmed in repo).
-- Add CI gates:
-  - file size limits
-  - third-party license scan / NOTICE enforcement
-  - image metadata scan to prevent accidental sensitive precision or EXIF leakage
-- Add “asset hashing” in build output for deterministic caching and reproducibility (implementation not confirmed).
-
-## 🗺️ Diagrams
-
-### UI asset flow (high level)
-~~~mermaid
-flowchart LR
-  A[web/cesium/assets/*] --> B[Frontend build pipeline]
-  B --> C[Deployed static assets]
-  C --> D[Cesium Viewer + UI Components]
-  D --> E[User-visible UI (icons/textures)]
-~~~
-
-### Relationship to adapters + data pipeline
-~~~mermaid
-flowchart LR
-  subgraph Data_Pipeline["Data pipeline (canonical)"]
-    R[Raw sources] --> ETL[ETL]
-    ETL --> Catalogs[STAC/DCAT/PROV]
-    Catalogs --> API[API layer]
-  end
-
-  subgraph UI["UI (web/)"]
-    Assets[web/cesium/assets] --> Build[Build/Bundle]
-    API --> Adapters[web/cesium/adapters]
-    Build --> Adapters
-    Adapters --> Viewer[Cesium Viewer]
-  end
-~~~
+### Quick decision rule
+If the file is used to communicate **evidence** (what happened/where/when) rather than **presentation** (how it looks), it does **not** belong here; route it through `data/**` + catalogs + API.
 
 ## 📦 Data and Metadata
 
 ### Inputs
+
 | Input | Format | Where from | Validation |
 |---|---|---|---|
-| UI asset files | SVG/PNG/JPG/glTF/JSON/etc. | Repo | Lint + link checks + size checks (if implemented) |
+| UI asset files | SVG/PNG/JPG/glTF/JSON/etc. | Repo | Review + size checks + secret scan (if implemented) |
 | Third-party attribution | Markdown/JSON | Repo | Review + license check |
-| Data-backed layer references | URLs + IDs | API payload | Contract tests |
+| Data-backed layer references | URLs + IDs | API payload | Contract tests + runtime guards |
 
 ### Outputs
+
 | Output | Format | Path | Contract / Schema |
 |---|---|---|---|
 | Shipped static assets | Bundled/static served files | Build output | Build-system rules (not confirmed in repo) |
 | Attribution surfacing | UI help/about panel content | UI | UI contract (not confirmed in repo) |
 
 ### Recommended metadata (not confirmed in repo)
+
 To keep compliance auditable, it is recommended to include one or both:
 - `NOTICE.md` listing third-party assets and required attribution
 - `assets.manifest.json` with per-asset metadata
 
-Example manifest shape (reference only):
+Reference-only manifest shape:
 
 ~~~json
 {
@@ -236,6 +218,7 @@ Example manifest shape (reference only):
       "source": "TBD",
       "license": "TBD",
       "attribution": "TBD",
+      "reviewed_by": "TBD",
       "notes": "UI-only asset"
     }
   ]
@@ -243,19 +226,19 @@ Example manifest shape (reference only):
 ~~~
 
 ### Sensitivity and redaction
-- Do not store precise site coordinates, detailed boundary polygons, or sensitive overlays as “static assets.”
-- Do not add images/models that materially increase the precision of restricted locations.
+- Do not store precise site coordinates, detailed boundary polygons, or sensitive overlays as static assets.
 - Avoid embedded metadata that could leak sensitive context (e.g., EXIF/GPS) unless explicitly sanitized (sanitization mechanism not confirmed in repo).
 
 ### Quality signals
-- Deterministic references: stable filenames and stable import paths.
-- Asset sizes remain small and reviewable.
-- License/attribution coverage for any third-party items.
+- Deterministic references: stable filenames and stable import paths
+- Assets are optimized for web delivery (reasonable file sizes)
+- License/attribution coverage for any third-party items
 
 ## 🌐 STAC, DCAT and PROV Alignment
 
 ### Rule of thumb
 If an asset represents a **dataset** or **derived evidence product**, it must be cataloged:
+
 - STAC: `data/stac/collections/` + `data/stac/items/`
 - DCAT: `data/catalog/dcat/`
 - PROV: `data/prov/` lineage bundles
@@ -292,15 +275,13 @@ import markerIconUrl from "../assets/icons/marker.svg";
 // ...use markerIconUrl in UI or adapter code
 ~~~
 
-### What must never live here
-- Cesium Ion tokens, API keys, OAuth client secrets
-- private endpoints or internal hostnames
-- user uploads or raw sensitive records
-- large datasets that should be governed through KFM’s pipeline
+### Secrets and tokens (non-negotiable)
+- Do not commit Cesium Ion tokens, API keys, OAuth client secrets, or private endpoints.
+- If Cesium Ion is used (not confirmed in repo), tokens must be injected via approved secret management at build/deploy time.
 
 ### Performance notes
 - Keep textures and images small; prefer vector icons where possible.
-- Avoid committing large binary models; treat `models/` as demo-only unless explicitly governed.
+- Treat `models/` as demo-only unless explicitly governed.
 - If a layer needs large textures/models, source them via governed endpoints (API/CDN), not from this folder.
 
 ## 🧠 Story Node and Focus Mode Integration
@@ -321,8 +302,9 @@ Rules:
 - [ ] Asset filenames are stable and do not imply PII
 - [ ] No restricted/sensitive location precision is introduced by static assets
 - [ ] Any data-backed assets are referenced via API/catalog outputs, not only via `web/cesium/assets/`
+- [ ] Large binaries are reviewed (and avoided unless explicitly governed)
 
-### Reproduction
+### Reproduction (placeholders)
 ~~~bash
 # Example placeholders — replace with repo-specific commands
 # 1) frontend lint/typecheck
@@ -352,6 +334,7 @@ Changes here require human review if they:
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v0.1.0 | 2025-12-21 | Initial Cesium assets README | TBD |
+| v0.1.1 | 2025-12-24 | Clarified allowed vs disallowed asset classes; added secret/token and evidence-vs-presentation rules; strengthened validation gates | TBD |
 
 ---
 Footer refs:
