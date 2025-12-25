@@ -1,10 +1,10 @@
 ---
-title: "KFM Web — API Client Layer (web/src/api)"
+title: "Web UI — API Client (web/src/api) README"
 path: "web/src/api/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-22"
+last_updated: "2025-12-25"
 status: "draft"
-doc_kind: "Guide"
+doc_kind: "README"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:web:api:readme:v1.0.0"
-semantic_document_id: "kfm-web-api-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:web:api:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:web:api-client-readme:v1.0.0"
+semantic_document_id: "kfm-web-api-client-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:api-client-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,332 +41,409 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Web API Client Layer
+# Web UI — API Client (`web/src/api`)
+
+This folder is the **canonical home for web UI API consumption code**: request helpers, endpoint wrappers, client-side response typing/validation, and policy-aligned handling of provenance/citations.
+
+It exists to prevent:
+- ad-hoc `fetch()` scattered across components,
+- accidental drift from server contracts,
+- and violations of the KFM invariant: **UI → API only** (no direct graph access).
+
+---
 
 ## 📘 Overview
 
 ### Purpose
 
-This directory is the **frontend API client boundary** for Kansas Frontier Matrix (KFM). It defines how the React/Map UI calls KFM backend services **without** bypassing the API layer.
-
-This README governs:
-
-- **Where** API-call code lives (`web/src/api/`).
-- **How** requests are made (one transport + consistent auth + consistent error handling).
-- **What must be preserved** across the boundary (IDs, provenance references, redaction expectations).
+- Provide a **single, consistent** place for the React/map UI to call KFM backend services.
+- Enforce KFM architectural constraints at the UI boundary:
+  - **UI never reads Neo4j directly**; all graph access is through contracted APIs.
+  - **Provenance-first**: the UI should render citations and provenance references that come from the API; it must not invent or “guess” sources.
+- Make it easy to add/upgrade endpoints while remaining contract-first:
+  - contract update (server) → client wrapper update (here) → UI feature update.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Frontend HTTP client utilities (fetch wrappers, headers, auth token injection) | Defining backend endpoints (belongs under `src/server/` + docs) |
-| Request/response typing strategy (manual types or generated types) | Direct graph access (UI never queries Neo4j directly) |
-| Error normalization + retry/backoff guidelines | ETL, catalog building, graph ingest |
-| Contract-sync workflow (how frontend stays aligned with backend contracts) | Writing Story Nodes (belongs under `docs/reports/.../story_nodes/`) |
+| API client utilities (base URL, headers, auth token wiring, timeouts, retries) | Server API implementation (belongs in `src/server/`) |
+| Endpoint wrapper functions / hooks used by UI | Neo4j drivers, Cypher queries, or graph access from web code |
+| Client-side typing and (optional) runtime validation for API payloads | Editing or defining API contracts (belongs in `src/server/contracts/`) |
+| Guidance for Focus Mode / Story Node retrieval & rendering rules | Authoring Story Nodes (belongs in `docs/reports/story_nodes/`) |
 
 ### Audience
 
-- **Primary:** Frontend engineers working in `web/`.
-- **Secondary:** Backend/API engineers (contract evolution), QA/validation reviewers, governance reviewers (safety/redaction boundary).
+- UI maintainers and contributors working under `web/`
+- API maintainers coordinating contract changes
+- Reviewers enforcing governance/ethics/sovereignty requirements
 
 ### Definitions
 
-- **API boundary:** The server contract layer (REST/GraphQL) that mediates all access to catalogs/graph/data products.
-- **Contract artifact:** A machine-validated API schema (e.g., OpenAPI JSON, GraphQL SDL) published by the server.
-- **Provenance reference:** A stable ID or pointer to evidence (e.g., STAC item ID, DCAT dataset ID, PROV activity ID, source document/record ID).
+- Glossary: `docs/glossary.md` *(not confirmed in repo — add or repair link if the glossary lives elsewhere)*
+- Terms used here:
+  - **API boundary**: the contracted interface surface (REST/GraphQL) exposed from `src/server/`.
+  - **Contract artifact**: OpenAPI / GraphQL schema files (and related schemas) that must validate in CI.
+  - **Context bundle**: an API response shaped for Focus Mode (entity + related entities + narrative + sources/provenance references).
+  - **Provenance-linked**: all factual elements in narratives trace to a source ID (STAC/DCAT/PROV or other governed source identifiers).
 
-### Key artifacts
+### Key artifacts (what this doc points to)
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline + invariants (ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode). |
-| API contracts | `src/server/` + docs | API Team | Source of truth for endpoint shapes and redaction rules. |
-| Data schemas | `schemas/` | DataOps | JSON Schema for STAC/DCAT/PROV and other governed artifacts. |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Story Team | Requires provenance-linked narrative. |
+| Master Guide v12 (draft) | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline + invariants |
+| v13 redesign blueprint (draft; if adopted) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Arch | Canonical roots + “UI→API only” enforcement |
+| API contracts | `src/server/contracts/**` | API maintainers | Contract-first boundary |
+| API Contract Extension Template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API maintainers | Used when contract changes |
+| Story Node Template v3 | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Curators | Narrative + citation rules |
+| Universal Doc Template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Govered Markdown structure |
 
-### Definition of done
+### Definition of done (for this document)
 
-- [ ] Front-matter complete + valid
-- [ ] This README describes the **single, canonical** frontend API boundary (no duplicate “mystery clients” elsewhere in `web/`).
-- [ ] No secrets, tokens, or environment-specific URLs are committed in examples.
-- [ ] Validation steps are listed (even if commands are placeholders).
+- [ ] Front-matter complete + valid, and `path:` matches file location
+- [ ] Directory responsibilities and placement rules documented (no UI→graph bypass)
+- [ ] Example patterns documented without claiming unverified in-repo tooling
+- [ ] Validation expectations are listed (contract + schema + lint)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
-## 🗂️ Directory Layout
+---
+
+## 🗂 Directory Layout
 
 ### This document
 
 - `path`: `web/src/api/README.md` (must match front-matter)
 
-### Related repository paths
+### Related repository paths (orientation)
 
 | Area | Path | What lives here |
 |---|---|---|
-| Data domains | `data/` | Raw/work/processed data; STAC/DCAT/PROV outputs |
-| Documentation | `docs/` | Canonical governed docs |
-| Graph | `src/graph/` | Ontology bindings, graph build tooling |
-| Pipelines | `src/pipelines/` | ETL + transforms + catalog builders |
-| Schemas | `schemas/` | JSON schemas (validation contracts) |
-| **Backend APIs** | `src/server/` | REST/GraphQL services + contract artifacts |
-| Frontend | `web/` | React + map UI, including this API client boundary |
+| UI root | `web/` | React/map UI; consumes APIs only |
+| UI API client (this area) | `web/src/api/` | API wrappers + typing/validation + client utilities |
+| API boundary (server) | `src/server/` | REST/GraphQL implementation; redaction + policy enforcement |
+| API contracts | `src/server/contracts/**` | OpenAPI/GraphQL + versioning; contract tests required |
+| Graph subsystem | `src/graph/` | Ontology bindings + ingest/build tooling |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Evidence + provenance artifacts |
+| Story Nodes | `docs/reports/story_nodes/` | Draft/published narrative artifacts + assets |
+| Schemas | `schemas/` | JSON Schemas (STAC/DCAT/PROV/UI/telemetry) |
 
 ### Expected file tree for this sub-area
 
-> The non-README entries below are **recommended** structure (not confirmed in repo). Keep it minimal unless/until the code exists.
+> Note: The specific filenames below are **illustrative** unless they already exist in-repo. If a file/path doesn’t exist, treat it as **not confirmed in repo** and either (a) create it intentionally, or (b) adjust this README to match actual structure.
 
 ~~~text
 📁 web/
 └── 📁 src/
     └── 📁 api/
         ├── 📄 README.md
-        ├── 📄 index.ts                 # public exports (recommended)
-        ├── 📄 transport.ts             # fetch wrapper (recommended)
-        ├── 📄 auth.ts                  # token wiring (recommended)
-        ├── 📄 errors.ts                # normalized error types (recommended)
-        ├── 📁 endpoints/               # endpoint modules by domain (recommended)
-        │   └── 📄 focus.ts             # Focus Mode fetches (example name; not confirmed)
-        ├── 📁 contracts/               # contract snapshots or generated types (recommended)
-        │   └── 📄 openapi.json         # if checked-in (not confirmed)
-        └── 📁 __tests__/               # client/contract tests (recommended)
-            └── 📄 transport.test.ts
+        ├── 📁 client/                    # (not confirmed in repo) shared HTTP, auth, retries, error mapping
+        ├── 📁 endpoints/                 # (not confirmed in repo) feature/domain endpoint wrappers
+        ├── 📁 types/                     # (not confirmed in repo) TS types + optional runtime validators
+        ├── 📁 __tests__/                 # (not confirmed in repo) client contract tests + mocked responses
+        └── 📄 index.ts                   # (not confirmed in repo) public surface exports
 ~~~
+
+---
 
 ## 🧭 Context
 
 ### Background
 
-KFM’s UI must consume many evidence-backed data products (catalog metadata, graph-derived context bundles, Story Node artifacts). A centralized `web/src/api/` layer prevents:
+KFM’s architecture is **pipeline-ordered** and **boundary-governed**:
 
-- duplicated request logic (headers/auth/error handling scattered across UI components),
-- accidental direct coupling to implementation details (graph queries, storage paths),
-- loss of provenance identifiers needed for citations, audits, and Focus Mode.
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+The web UI is intentionally **not** the system-of-record for data semantics or provenance; it renders what the API delivers, and it must do so in a way that preserves contract + provenance guarantees.
 
 ### Assumptions
 
-- The backend publishes **versioned** API contracts (format and location not confirmed in repo).
-- The UI has an environment-specific **API base URL** injected at build/runtime (specific env var naming not confirmed in repo).
-- Redaction/sensitivity enforcement occurs **server-side**; the UI treats missing/redacted fields as expected.
+- The UI is a React-based web app with a map engine (e.g., MapLibre/Cesium is referenced in design docs; exact setup is repo-defined).
+- The server API exposes contract-validated endpoints (REST and/or GraphQL).
+- Focus Mode expects provenance-linked narrative artifacts (Story Nodes) and related evidence pointers.
 
-### Constraints / invariants
+### Constraints and invariants
 
-- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
-- **UI never reads Neo4j directly.** All graph access is mediated by `src/server/` APIs.
-- Client code must not log secrets (tokens) or attempt to “reconstruct” redacted fields.
-- Inputs that cross the boundary (query params, filters) must be treated as untrusted and sanitized/encoded appropriately.
+Non-negotiables:
 
-### Open questions
+1. **No UI direct-to-graph reads**
+   - `web/` code must never query Neo4j directly.
+   - The UI must not import Neo4j drivers or run Cypher.
+   - All graph access must go through the API boundary in `src/server/`.
 
-| Question | Owner | Target date |
+2. **Contracts are canonical**
+   - Client wrappers should be derived from / aligned to the server contracts in `src/server/contracts/**`.
+   - Do not “silently” change response shapes in UI code.
+
+3. **Focus Mode is provenance-only**
+   - UI must not display unsourced narrative.
+   - Citations/provenance must render from API-delivered sources.
+
+4. **Governance is enforced at boundaries**
+   - Assume the API applies redaction and access controls.
+   - The UI must avoid logging/exposing sensitive content (including URLs/tokens, restricted coordinates) and must not attempt to reconstruct redacted data.
+
+### Open questions (keep updated)
+
+| Question | Owner | Target |
 |---|---|---|
-| REST, GraphQL, or both for UI consumption? | TBD | TBD |
-| Contract strategy: generated client from OpenAPI/GraphQL vs hand-written wrappers? | TBD | TBD |
-| Caching strategy in UI (library + invalidation rules)? | TBD | TBD |
-| Standard error envelope for all endpoints? | TBD | TBD |
+| Are API client types generated from OpenAPI/GraphQL (codegen), or authored manually? | UI/API | TBD |
+| Is there a standard response “envelope” (e.g., `{ data, sources, provenance }`)? | API | TBD |
+| What caching library is canonical (if any) for API calls (React Query/SWR/custom)? | UI | TBD |
 
 ### Future extensions
 
-- Add a codegen pipeline that generates TypeScript types from API contracts (if adopted).
-- Add contract tests that verify frontend assumptions against the published API schema.
+- Codegen pipeline for client types from `src/server/contracts/**`
+- “Contract drift” CI check that compares client expectations to contract snapshots
+- Offline-first caching for map layers (careful: must respect governance)
+
+---
 
 ## 🗺️ Diagrams
 
-### System / dataflow diagram
+### Where `web/src/api` sits in the canonical pipeline
 
 ~~~mermaid
 flowchart LR
-  UI["React · Map UI"] --> Client["web/src/api — client boundary"]
-  Client --> API["src/server — REST/GraphQL APIs"]
-  API --> CAT["STAC/DCAT/PROV catalogs"]
-  API --> G["Neo4j graph"]
-  API --> SN["Story Nodes store / renderer"]
-  UI --> FM["Focus Mode UI"]
+  A["UI components<br/>web/src/**"] --> B["API client wrappers<br/>web/src/api/**"]
+  B --> C["API boundary<br/>src/server/**<br/>(contracted)"]
+  C --> D["Graph services<br/>src/graph/**"]
+  C --> E["Catalog evidence<br/>data/stac + data/catalog/dcat + data/prov"]
+  C --> F["Story Nodes<br/>docs/reports/story_nodes/** or graph-backed"]
 ~~~
 
-### Optional: sequence diagram
+### Typical Focus Mode request sequence
 
 ~~~mermaid
 sequenceDiagram
-  participant UI as UI (Focus Mode)
-  participant Client as web/src/api
-  participant API as src/server
-  participant Graph as Neo4j (server-side only)
+  participant UI as UI Component (web/)
+  participant APIClient as API Client (web/src/api)
+  participant Server as API Boundary (src/server)
+  participant Graph as Graph Services (Neo4j via src/graph)
+  participant Catalog as STAC/DCAT/PROV Evidence
 
-  UI->>Client: getFocusBundle(entity_id, options)
-  Client->>API: GET /focus?entity_id=...
-  API->>Graph: fetch subgraph + evidence refs
-  Graph-->>API: context bundle
-  API-->>Client: focus bundle + provenance references
-  Client-->>UI: typed data + normalized errors
+  UI->>APIClient: loadFocus(entityId)
+  APIClient->>Server: GET /focus?entityId=...
+  Server->>Graph: fetch entity + related subgraph
+  Server->>Catalog: attach evidence refs (STAC/DCAT/PROV IDs)
+  Server-->>APIClient: context bundle (narrative + citations + refs)
+  APIClient-->>UI: typed response (render-ready)
 ~~~
 
-## 📦 Data & Metadata
-
-### Inputs
-
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| API base URL | string | build/runtime config | must be a valid URL |
-| Auth credentials | bearer token / session | auth provider | never logged; injected via headers |
-| Request params | query/body | UI state | encode/sanitize; type-check |
-| Responses | JSON (sometimes GeoJSON/STAC/DCAT/PROV JSON) | `src/server/` | validate shape via types/guards (strategy not confirmed) |
-
-### Outputs
-
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Typed UI data | TS types | `web/src/api/*` | derived from API contract |
-| Normalized errors | typed error objects | `web/src/api/errors.*` (recommended) | consistent envelope across endpoints |
-| Provenance IDs | strings/objects | returned with domain payloads | must be preserved for citation rendering |
-
-### Sensitivity & redaction
-
-- Treat redaction as **normal**: null/missing fields must not break rendering.
-- Do not add client-only workarounds that leak/guess sensitive locations or identities.
-- Do not store tokens in local logs or analytics events.
-
-### Quality signals
-
-- Request success rate / error rate per endpoint (telemetry location not confirmed in repo).
-- Presence of provenance references for any “claim-like” UI element (e.g., a narrative sentence, an entity summary).
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-### STAC
-
-- If the API returns STAC Collections/Items directly, the client should:
-  - preserve `id`, `links`, and asset identifiers as-is,
-  - avoid rewriting `href` unless explicitly required by contract,
-  - treat broken links as a server/data issue (surface gracefully in UI).
-
-### DCAT
-
-- If the API returns DCAT datasets, the client should render:
-  - license and attribution fields when present,
-  - publisher/contact fields when present (subject to redaction rules).
-
-### PROV-O
-
-- If the API returns provenance bundles or provenance pointers:
-  - preserve `prov:wasDerivedFrom`, `prov:wasGeneratedBy`, and activity/agent IDs,
-  - keep provenance pointers attached to the UI objects they justify (so citations remain stable).
-
-### Versioning
-
-- The client should assume the API is **contract-first**:
-  - breaking changes require a contract version bump (server-side),
-  - frontend updates should be tied to that contract change (tests recommended).
-
-## 🧱 Architecture
-
-### Components
-
-| Component | Responsibility | Interface |
-|---|---|---|
-| `transport` | HTTP request wrapper (timeouts, headers, JSON parsing) | `request(method, path, opts)` |
-| `auth` | attach credentials to requests | `getAuthHeaders()` |
-| `endpoints/*` | domain-oriented API calls | `getX()`, `searchY()` |
-| `errors` | normalize server/network errors | `ApiError` / `ProblemDetails` (names not confirmed) |
-
-### Interfaces / contracts
-
-| Contract | Location | Versioning rule |
-|---|---|---|
-| API schema | `src/server/` + docs | semver + contract tests |
-| STAC/DCAT/PROV schemas | `schemas/` | profile version bumps as needed |
-| UI consumption boundary | `web/src/api/` | must track server contract version |
-
-### Extension points checklist
-
-- [ ] Add new endpoint module under `web/src/api/endpoints/`
-- [ ] Add/extend types (generated or manual)
-- [ ] Add tests (mock transport + contract expectations)
-- [ ] Ensure provenance references remain attached to returned objects
-- [ ] Update UI callers to use the centralized API boundary (no ad-hoc `fetch()` in components)
+---
 
 ## 🧠 Story Node & Focus Mode Integration
 
 ### How this work surfaces in Focus Mode
 
-- Focus Mode screens should fetch a **single focus bundle** (entity + context + evidence pointers) through `web/src/api/`.
-- UI components must render citations/attribution using provenance references provided by the API (not invented client-side).
+- Focus Mode typically requires:
+  - the focused entity (Place/Person/Event/Artifact),
+  - related entities for context,
+  - a Story Node narrative (stored/retrieved, not invented at render-time),
+  - and a `sources[]`/provenance reference list that citations map to.
 
-### Provenance-linked narrative rule
+### UI-side enforcement checklist (client responsibilities)
 
-- Any narrative text rendered in the UI that implies a claim should be accompanied by a provenance reference:
-  - dataset ID (DCAT),
-  - item/asset ID (STAC),
-  - activity/agent reference (PROV),
-  - or source document/record identifier.
+Even when the server enforces provenance rules, the UI should still guard against accidental regression:
 
-### Optional structured controls
-
-~~~yaml
-focus_layers:
-  - "TBD"
-focus_time: "TBD"
-focus_center: [ -98.0000, 38.0000 ]
-~~~
-
-## 🧪 Validation & CI/CD
-
-### Validation steps
-
-- [ ] Markdown protocol checks (front-matter keys present; no forbidden fields)
-- [ ] Type-check frontend API layer (TypeScript)
-- [ ] Contract alignment checks (client assumptions vs server schema)
-- [ ] Unit tests for transport/auth/error normalization
-- [ ] Security checks: no secrets in repo; safe logging
-
-### Reproduction
-
-~~~bash
-# Example placeholders — replace with repo-specific commands
-
-# 1) lint + type-check the web app
-# (e.g., npm/pnpm/yarn — not confirmed in repo)
-# <package-manager> -C web run lint
-# <package-manager> -C web run typecheck
-
-# 2) run tests
-# <package-manager> -C web test
-
-# 3) docs lint (if configured)
-# <package-manager> run docs:lint
-~~~
-
-### Telemetry signals (if applicable)
-
-| Signal | Source | Where recorded |
-|---|---|---|
-| API latency p95 | browser + server | `docs/telemetry/` + `schemas/telemetry/` (not confirmed) |
-| API error rate | transport | same |
-| Missing provenance refs | UI assertion | same |
-
-## ⚖ FAIR+CARE & Governance
-
-### Review gates
-
-- Changes to authentication handling, request logging, or anything that could affect redaction/sensitivity should be flagged **requires human review**.
-- Changes that alter how provenance is displayed or stored should be reviewed for compliance with Story Node and Focus Mode rules.
-
-### CARE / sovereignty considerations
-
-- If an endpoint returns culturally sensitive or community-sensitive materials, the UI must respect server-provided redaction/generalization.
-- Do not add client-side “enhancements” that increase specificity of protected locations or identities.
-
-### AI usage constraints
-
-- Ensure this document’s AI permissions/prohibitions match intended use (see front-matter).
-
-## 🕰️ Version History
-
-| Version | Date | Summary | Author |
-|---|---|---|---|
-| v1.0.0 | 2025-12-22 | Initial README for frontend API client boundary | TBD |
+- [ ] Do not render narrative blocks if citations/sources references are missing or invalid.
+- [ ] Render citations in a consistent, inspectable way (source IDs and links).
+- [ ] If AI-assisted content is ever delivered (opt-in), clearly label it and keep it visually distinct from curated narrative.
+- [ ] Never fabricate citations or merge “similar” sources client-side.
+- [ ] Treat redacted values as final (do not attempt inference or reconstruction).
 
 ---
 
-Footer refs:
-- Governance: `docs/governance/ROOT_GOVERNANCE.md`
-- Ethics: `docs/governance/ETHICS.md`
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+## 🧪 Validation & CI/CD
 
+### Minimum CI gates (relevant to this area)
+
+At minimum, changes touching API usage should remain compatible with expected repository gates:
+
+- Markdown protocol validation (for docs)
+- API contract tests (server side; client should track shape/version)
+- UI schema checks (e.g., layer registry, if applicable)
+- Security + sovereignty scanning (where applicable)
+
+### Suggested local validation (examples only)
+
+> Commands below are examples only (actual scripts are **not confirmed in repo**). Replace with repo-specific commands once known.
+
+~~~bash
+# Example: run UI typecheck / unit tests
+# npm test
+# npm run typecheck
+
+# Example: run lint
+# npm run lint
+~~~
+
+### Testing strategy (recommended)
+
+- **Unit tests** for:
+  - request builder (URL + query params),
+  - error mapping,
+  - runtime validation (if used).
+- **Mocked integration tests** for:
+  - endpoint wrappers returning expected typed objects,
+  - failure scenarios (401/403, redaction responses, schema mismatch).
+- **Contract drift detection** (ideal):
+  - compare client expectations against `src/server/contracts/**` snapshots (implementation approach TBD).
+
+---
+
+## 📦 Data & Metadata
+
+### What this folder should preserve
+
+This folder is not just “HTTP glue.” It is where the UI should:
+- preserve **stable IDs** from upstream (graph IDs, dataset IDs),
+- preserve **provenance pointers** (STAC/DCAT/PROV identifiers, source references),
+- preserve **policy state** (redacted flags, audit hints if provided by API),
+- and preserve **version semantics** (API versioning if present).
+
+### Example: “context bundle” response shape (illustrative)
+
+> The exact response envelope is API-defined. The pattern below reflects common KFM guidance: the UI receives narrative plus a `sources` array that citations map to.
+
+~~~json
+{
+  "entity": { "id": "place:ks:example", "label": "Example Place" },
+  "storyNode": {
+    "id": "story:example",
+    "title": "Example Narrative",
+    "body": [
+      { "text": "A sourced claim.", "citations": ["source:stac:item:123"] }
+    ]
+  },
+  "relatedEntities": [
+    { "id": "event:example", "label": "Example Event" }
+  ],
+  "sources": [
+    {
+      "id": "source:stac:item:123",
+      "kind": "stac-item",
+      "ref": "data/stac/items/... (or external URL)",
+      "license": "CC-BY-4.0"
+    }
+  ]
+}
+~~~
+
+### Sensitivity & redaction (UI handling)
+
+- Do not log raw API responses containing sensitive details.
+- Never store sensitive payloads in long-lived client storage unless explicitly allowed by governance.
+- If coordinates are generalized/redacted, treat them as canonical for UI rendering.
+- Do not “guess” missing locations or fill in gaps with heuristics.
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+
+- The UI may receive STAC Item/Collection identifiers or asset references.
+- Client wrappers must preserve those IDs as-is (do not rewrite or “normalize” IDs unless required by contract).
+
+### DCAT
+
+- The UI may receive dataset-level descriptors/IDs for discovery and attribution.
+- Ensure dataset license and attribution fields are surfaced where required.
+
+### PROV-O
+
+- Provenance bundles may be referenced by ID/run.
+- The UI should expose provenance pointers in an inspectable way (e.g., “Data lineage” link/panel) when the UI design includes it.
+
+---
+
+## 🏛️ Architecture
+
+### Design goal
+
+Create a **small, predictable API surface** for the UI that is:
+- typed,
+- testable,
+- contract-aligned,
+- provenance-preserving,
+- and governance-safe.
+
+### Recommended layering (implementation-neutral)
+
+1. **Transport/client layer**
+   - base URL resolution
+   - auth header injection (if applicable)
+   - consistent timeout/cancel
+   - error normalization
+
+2. **Endpoint wrappers**
+   - one module per feature/domain (e.g., `focus`, `layers`, `search`)
+   - stable function signatures (prefer objects over positional params)
+
+3. **Type + validation layer**
+   - TypeScript types (and optional runtime validation)
+   - explicit “unknown field” handling
+
+4. **UI-facing helpers**
+   - hooks/adapters (if present)
+   - map-friendly transformations (only formatting, never semantic inference)
+
+### Error handling conventions (recommended)
+
+- Normalize errors into a small set of categories the UI can render:
+  - network/timeout,
+  - auth/permission (401/403),
+  - not found (404),
+  - contract mismatch (schema/type error),
+  - server error (5xx).
+
+~~~ts
+// Example only — not confirmed in repo.
+export type ApiErrorKind =
+  | "network"
+  | "timeout"
+  | "auth"
+  | "not_found"
+  | "contract_mismatch"
+  | "server";
+
+export type ApiError = {
+  kind: ApiErrorKind;
+  message: string;
+  status?: number;
+  requestId?: string;
+};
+~~~
+
+---
+
+## ⚖️ FAIR+CARE & Governance
+
+This folder is part of the **governed boundary** between “what exists in data/graph” and “what the user sees.”
+
+- Favor “show the evidence” over “summarize the evidence.”
+- Do not introduce UI behavior that reconstructs redacted content.
+- Treat culturally sensitive or sovereignty-restricted content as high risk by default.
+- If new UI features would surface new classes of data (e.g., restricted layers), require governance review.
+
+---
+
+## 🕰️ Version History
+
+| Version | Date | Change | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-25 | Initial README for `web/src/api` | <author> |
+
+---
+
+## 🔗 Footer refs (do not remove)
+
+- `docs/MASTER_GUIDE_v12.md`
+- `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` *(if adopted)*
+- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- `src/server/contracts/**`
+- `docs/governance/ROOT_GOVERNANCE.md`
+- `docs/governance/ETHICS.md`
+- `docs/governance/SOVEREIGNTY.md`
