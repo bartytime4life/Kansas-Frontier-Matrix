@@ -1,10 +1,10 @@
 ---
-title: "KFM Web UI — web/src/ui"
+title: "KFM UI Subsystem README"
 path: "web/src/ui/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-22"
+last_updated: "2025-12-25"
 status: "draft"
-doc_kind: "Guide"
+doc_kind: "README"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:web:ui:readme:v1.0.0"
-semantic_document_id: "kfm-web-ui-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:web:ui:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:web:src:ui:readme:v1.0.0"
+semantic_document_id: "kfm-web-src-ui-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:src:ui:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,52 +41,62 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Web UI — `web/src/ui`
+# web/src/ui
+
+This directory is the **UI subsystem surface area** for KFM’s `web/` frontend: reusable UI primitives for **map + timeline + Focus Mode + Story Node rendering**, designed to enforce KFM’s core invariants (API boundary, provenance-first narrative, contract-driven configuration).
+
+> Note: Folder names in this README include a recommended “target” layout. If the current repo layout differs, update this file so documentation matches reality.
 
 ## 📘 Overview
 
 ### Purpose
 
-- Define **how shared UI primitives/components** are organized and implemented under `web/src/ui/`.
-- Encode KFM’s UI invariants: **contract-only data access**, **provenance-first presentation**, and **accessible Focus Mode UX**. (See “Context” for non-negotiables.)
+- Explain what belongs in `web/src/ui/` and what does not.
+- Document the **non-negotiable UI invariants**: the UI never reads Neo4j directly, and Focus Mode/Story Nodes must not present unsourced narrative.
+- Provide contributor checklists for adding layers, Focus Mode UX, and narrative rendering safely.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Reusable UI components/primitives used across the web app | ETL, catalog generation, graph ingest, Neo4j migrations |
-| Citation/provenance rendering patterns (“audit affordances”) | Backend endpoint implementation details |
-| Focus Mode UI composition patterns | Defining new Story Node schemas/templates |
-| Map UI controls and layer toggles (presentation layer) | Authoring data products (STAC/DCAT/PROV) |
+| UI components, hooks, state, and utilities used by the KFM React app | ETL implementations, graph migrations, and server-side authorization |
+| Map + timeline + Focus Mode UI contracts and patterns | Direct Neo4j access from frontend code |
+| Story Node rendering UX and citation/provenance panels | Authoring new governance policy (belongs under `docs/governance/`) |
+| Layer registry patterns (config-driven UI) | Storing data outputs under `web/` or `src/` |
 
 ### Audience
 
-- Primary: Frontend engineers working in `web/` (React + map UI).
-- Secondary: API/contract engineers (to understand what the UI expects), curators/editors who publish Story Nodes consumed by the UI.
+- Primary: Frontend contributors implementing map/timeline/Focus Mode UX.
+- Secondary: API and data contributors who need to understand how UI consumes contracts and evidence.
 
-### Definitions (link to glossary)
+### Definitions
 
-- Link: `docs/glossary.md`
-- Terms used in this doc: **Story Node**, **Focus Mode**, **Layer Registry**, **Provenance**, **Audit affordances**, **Context bundle**.
+- Link: `docs/glossary.md` *(not confirmed in repo)*
+- Terms used in this doc include: **API boundary**, **Focus Mode**, **Story Node**, **layer registry**, **provenance panel**, **redaction**, **generalization**, **STAC**, **DCAT**, **PROV**, **stable identifier**.
 
-### Key artifacts (what this doc points to)
+### Key artifacts
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | TBD | Defines canonical pipeline ordering and invariants |
-| Redesign Blueprint v13 | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | TBD | Defines canonical homes + contract sets (incl. `schemas/ui/`) |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | TBD | Defines optional Focus Mode controls (`focus_center`, etc.) |
-| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | TBD | Governs this README’s structure |
-| API contracts | `src/server/contracts/**` | TBD | UI consumes **contracts**, not raw DB |
-| UI schemas | `schemas/ui/**` | TBD | Schema validation for UI registries/config |
+| Master pipeline ordering + invariants | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline + invariants |
+| v13 redesign constraints | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | “No UI direct-to-graph reads”, “No unsourced narrative”, “Contracts are canonical” |
+| Roadmap + directory responsibilities | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | Architecture | Confirms `web/` as UI home and MapLibre/Cesium UI scope |
+| Governed Markdown template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs/Platform | Template used by this README |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative | Story Node + Focus Mode metadata expectations |
+| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API | Preferred way to add/extend endpoints |
+| UI config schema | `schemas/ui/` | Platform | JSON Schemas for UI registry/config *(not confirmed in repo)* |
+| API contracts | `src/server/contracts/` | API | Canonical contract location *(v13 target; not confirmed in repo)* |
+| Story Nodes | `docs/reports/story_nodes/` | Narrative | Draft + published narrative artifacts |
 
-### Definition of done (for this document)
+### Definition of done
 
-- [ ] Front-matter complete + valid
-- [ ] UI invariants (API boundary, provenance rules, a11y) stated clearly
-- [ ] Related paths and contracts are linked
-- [ ] Validation steps listed and repeatable
-- [ ] Governance + CARE/sovereignty considerations explicitly stated
+- [ ] Front-matter complete + `path` matches file location
+- [ ] UI invariants match the Master Guide / architecture blueprints
+- [ ] Directory tree reflects the **actual** `web/src/ui` layout (or is explicitly marked as recommended)
+- [ ] Extension checklists are actionable and do not bypass governance/sensitivity review
+- [ ] Mermaid diagrams render (no parse errors)
+- [ ] Any build/test commands are either repo-accurate or explicitly marked “not confirmed in repo”
+- [ ] Governance + CARE/sovereignty considerations explicitly stated (especially for map layers that could reveal sensitive locations)
 
 ## 🗂️ Directory Layout
 
@@ -98,250 +108,384 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 | Area | Path | What lives here |
 |---|---|---|
-| Frontend app | `web/` | React/Map UI implementation |
-| UI primitives/components | `web/src/ui/` | Shared UI building blocks, provenance UI patterns |
-| API boundary | `src/server/` | REST/GraphQL endpoints + redaction + query services |
-| API contracts | `src/server/contracts/**` | Contracted request/response types + tests |
-| Story Nodes | `docs/reports/story_nodes/**` | Draft/published narrative artifacts consumed by UI |
-| UI schemas | `schemas/ui/**` | UI registry schemas (layer registry, etc.) |
-| Story Node schemas | `schemas/storynodes/**` | Validation of story node front-matter + refs |
-| Governance | `docs/governance/**` | Ethics/sovereignty/redaction policies and review gates |
+| UI app | `web/` | React frontend (map + timeline + Focus Mode) |
+| UI subsystem | `web/src/ui/` | Reusable UI modules and feature primitives (this area) |
+| API boundary | `src/server/` | Canonical API access layer *(v13 target; not confirmed in repo)* |
+| API contracts | `src/server/contracts/` | Contract-first API specs *(v13 target; not confirmed in repo)* |
+| Graph model + ingest | `src/graph/` | Ontology bindings + graph build/import tooling |
+| Pipelines | `src/pipelines/` | ETL and catalog generation code |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Evidence + lineage artifacts (outputs) |
+| Story Nodes | `docs/reports/story_nodes/` | Draft/published narrative content and assets |
+| Schemas | `schemas/` | Schema validation for STAC/DCAT/PROV/storynodes/ui/telemetry |
+| Tests | `tests/` | Unit/integration/contract/e2e tests *(split may vary)* |
+| MCP | `mcp/` | Model cards, experiments, SOPs (AI work is governed) |
 
 ### Expected file tree for this sub-area
 
-> This is an **example** layout for `web/src/ui/` (adapt to the current codebase). Do not treat the optional folders as guaranteed.
+> This is the **recommended** structure. Some directories may not exist yet (**not confirmed in repo**).
 
 ~~~text
 📁 web/
 └── 📁 src/
     └── 📁 ui/
         ├── 📄 README.md
-        ├── 📁 components/                # optional: reusable UI components
-        ├── 📁 focus-mode/                # optional: Focus Mode UI composition
-        ├── 📁 map/                       # optional: map controls + layer toggles (UI only)
-        ├── 📁 provenance/                # optional: citations + audit affordances
-        ├── 📁 hooks/                     # optional: shared UI hooks
-        └── 📁 styles/                    # optional: tokens/theme/a11y helpers
+        ├── 📁 components/
+        │   ├── 📁 map/
+        │   │   ├── 📁 layers/
+        │   │   ├── 📁 controls/
+        │   │   └── 📁 widgets/
+        │   ├── 📁 timeline/
+        │   ├── 📁 focus_mode/
+        │   ├── 📁 story/
+        │   ├── 📁 provenance/
+        │   └── 📁 common/
+        ├── 📁 hooks/
+        ├── 📁 state/
+        ├── 📁 registry/
+        ├── 📁 types/
+        ├── 📁 utils/
+        └── 📁 assets/
 ~~~
+
+---
 
 ## 🧭 Context
 
-KFM’s canonical flow is:
+### Canonical placement in the KFM pipeline
 
-**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**:contentReference[oaicite:2]{index=2}
+KFM’s ordering is intentional and enforced:
 
-This directory sits in the **React/Map UI** stage. The UI is where KFM’s “evidence-first” design becomes visible: story panels, citations, sources lists, and Focus Mode deep-dives. Focus Mode is intended to be an immersive view that still enforces provenance (no uncited facts) and clearly marks any AI/predictive content as opt-in with uncertainty metadata:contentReference[oaicite:3]{index=3}:contentReference[oaicite:4]{index=4}.
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
-### Non-negotiable UI invariants
+This directory participates at the **UI stage** only. UI must not short-circuit earlier stages or fabricate narrative without evidence.
 
-- 🚫 **UI must not query Neo4j directly.** The UI only speaks to the **API boundary** (REST/GraphQL) via contract-defined payloads:contentReference[oaicite:5]{index=5}:contentReference[oaicite:6]{index=6}.
-- ✅ **Focus Mode consumes provenance-linked content only.** If an item has no source, it should not appear as factual narrative:contentReference[oaicite:7]{index=7}.
-- ✅ **Audit affordances are required.** Provide a “Sources”/provenance panel and interactive citations so users can inspect evidence:contentReference[oaicite:8]{index=8}.
-- ✅ **Predictive / AI-generated content is opt-in and labeled with uncertainty.** Never present it as unmarked fact:contentReference[oaicite:9]{index=9}.
-- ✅ **Accessibility (a11y) is a governed feature.** Keyboard navigation, ARIA labels, and structured headings for story content are required:contentReference[oaicite:10]{index=10}.
+### UI non-negotiables
 
-## 🗺️ Diagrams
+The UI must enforce the following constraints:
 
-~~~mermaid
-flowchart LR
-  U[User] --> UI[React/Map UI<br/>web/]
-  UI -->|contracted REST/GraphQL| API[API boundary<br/>src/server/]
-  API --> G[Neo4j graph]
-  API --> M[Catalog artifacts<br/>data/stac/** + data/catalog/dcat/** + data/prov/**]
-  API --> SN[Story Nodes<br/>docs/reports/story_nodes/**]
-  UI --> FM[Focus Mode UI<br/>provenance-linked view]
+1. **No UI direct-to-graph reads**
+   - The frontend must not query Neo4j directly. UI reads only through the API boundary.
+2. **No unsourced narrative**
+   - Story rendering and Focus Mode must provide citations/provenance links and show warnings when evidence is missing.
+3. **Contracts are canonical**
+   - UI consumes schemas and API contracts; configuration should validate in CI.
+4. **Sensitive content discipline**
+   - UI must support redaction/generalization patterns for restricted locations and culturally sensitive knowledge.
+
+### UI responsibilities versus API responsibilities
+
+| Concern | UI responsibility | API responsibility |
+|---|---|---|
+| Data access | Call contract-defined endpoints only | Enforce auth, redaction/generalization, query limits |
+| Narrative rendering | Render Story Nodes and citations; show provenance panel | Serve Story Node content and evidence references safely |
+| Layer behavior | Toggle layers; map styling; UX | Serve layer tiles/features and metadata; enforce sensitivity rules |
+| Provenance UX | Provide “sources” panel and evidence drilldown | Provide STAC/DCAT/PROV resolvers and stable IDs |
+| AI outputs | Display as **opt-in**, clearly labeled, provenance-annotated | Generate/serve AI products only when governed; never infer sensitive locations |
+
+---
+
+## 🗺️ Map and layer system
+
+### Map engines
+
+- Primary: **MapLibre** for 2D mapping.
+- Optional/advanced: **Cesium** for 3D globe views (if present in the UI app).
+
+### Layer registry
+
+KFM aims to be **config-driven**: adding a new dataset layer should be mostly a registry + contract exercise, not a UI rewrite.
+
+Recommended characteristics:
+
+- A machine-readable registry of layers (JSON/YAML) under `web/` *(exact path not confirmed in repo)*.
+- A JSON Schema under `schemas/ui/` that validates:
+  - IDs are stable and namespaced (e.g., `air-quality.aqi`, `treaties.tribal_land`, etc.)
+  - Attribution is present
+  - Sensitivity classification is present
+  - API endpoint references match contract IDs
+
+Example registry entry shape (illustrative only; adjust to actual schema):
+
+~~~json
+{
+  "id": "example.layer_id",
+  "title": "Example Layer",
+  "source": {
+    "kind": "api",
+    "endpoint": "/v1/layers/example/layer_id"
+  },
+  "render": {
+    "type": "vector",
+    "minZoom": 4,
+    "maxZoom": 12
+  },
+  "time": {
+    "supported": false
+  },
+  "governance": {
+    "sensitivity": "public",
+    "requires_review": true,
+    "notes": "Set true if interaction/zoom could reveal restricted locations."
+  },
+  "attribution": "TBD"
+}
 ~~~
 
-## 📦 Data & Metadata
+### Timeline coupling
 
-### Inputs
+If a layer is time-aware, the UI should:
 
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Focus Mode “context bundle” | JSON | API endpoint(s) (e.g., `/focus/{id}` pattern) | API contract tests + runtime checks |
-| Story Node content | Markdown (+ front-matter) | `docs/reports/story_nodes/**` (or API served) | Story Node schema (`schemas/storynodes/**`) |
-| Map layer registry | JSON | `web/**/layers/**` (or API served) | UI schema (`schemas/ui/**`) |
-| STAC/DCAT/PROV references | JSON IDs/links | API payloads referencing `data/**` artifacts | Schema validation in `schemas/**` |
+- expose a global time window selector (and/or per-layer time filters),
+- keep map + timeline interactions consistent,
+- avoid implying precision beyond the evidence resolution (e.g., don’t present daily precision if evidence is monthly).
 
-### Outputs
+---
 
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Rendered map + narrative panels | UI runtime | `web/` build output | UI tests + a11y checks |
-| Citation/audit UI | UI runtime | (within Focus Mode UI) | Must render evidence links reliably |
-| Telemetry events (if enabled) | JSON records | `docs/telemetry/**` | `schemas/telemetry/**` |
+## 🧠 Focus Mode
 
-### Sensitivity & redaction
+Focus Mode is the UI feature that synchronizes narrative, map, and timeline into a guided analytic “lens”.
 
-- The **API is responsible** for redaction/generalization before data reaches the browser.
-- The UI must treat any sensitivity flags as **presentation constraints**, not “nice-to-have” metadata:
-  - do not re-derive restricted locations,
-  - do not display suppressed geometries,
-  - ensure Story Node assets are review-gated if required.
+### High-level behavior
 
-### Quality signals
+When a user enters Focus Mode from a Story Node:
 
-- Citations render consistently and are discoverable (tooltips, clickable footnotes, or Sources panel).
-- Focus Mode renders only provenance-linked narrative by default.
-- a11y checks pass for interactive controls and reading flow.
-- UI layer registry validates against `schemas/ui/**`.
+- The UI loads the Story Node content.
+- The UI loads a **context bundle** (layers, time window, map center, highlighted entities) from Story Node metadata and/or API response.
+- The UI updates:
+  - layer toggles,
+  - map viewport (center/zoom),
+  - timeline window,
+  - provenance panel with evidence references.
 
-## 🌐 STAC, DCAT & PROV Alignment
+### Story Node Focus Mode controls
 
-### STAC
-
-- UI should be able to surface **STAC Collection/Item IDs** and provide “About this data” affordances where appropriate (especially for map layers and evidence artifacts).
-
-### DCAT
-
-- UI may display dataset-level metadata (publisher/license/coverage) when shown in dataset detail views.
-
-### PROV-O
-
-- UI should support provenance inspection (“what generated this?”) via:
-  - PROV activity IDs,
-  - derivation links,
-  - and “sources” bundles returned by the API.
-
-### Versioning
-
-- When the API provides version lineage (previous/next/derived_from), the UI should display it in a consistent, non-confusing way.
-
-## 🧱 Architecture
-
-### Components (conceptual responsibilities)
-
-| Component | Responsibility | Interface |
-|---|---|---|
-| Map UI | Render layers + interactions | MapLibre/Cesium wrapper(s) + layer registry |
-| Focus Mode shell | Dedicated UI state for deep dive | Focus/context bundle endpoint(s) |
-| Story renderer | Markdown → HTML with citation handling | Story Node markdown + sources map |
-| Audit/Sources panel | Evidence inspection + provenance drilldown | Sources list + IDs/links from API |
-| Layer toggles | Enable/disable layers safely | Registry-driven + schema validated |
-| a11y helpers | Keyboard navigation + ARIA | Shared hooks/components |
-
-### Interfaces / contracts
-
-| Contract | Location | Versioning rule |
-|---|---|---|
-| JSON schemas | `schemas/**` | Semver + changelog |
-| API schemas/contracts | `src/server/contracts/**` | Contract tests required |
-| UI layer registry schema | `schemas/ui/**` | Schema-validated registry/config |
-
-### Extension points checklist (for UI work)
-
-- [ ] New map layer: add to layer registry + validate against `schemas/ui/**`
-- [ ] New Focus Mode panel/widget: must include evidence hooks and a11y checks
-- [ ] New narrative rendering feature: must not allow “uncited facts” to render as fact
-- [ ] New AI/predictive UI surface: opt-in only + show uncertainty metadata + label clearly
-- [ ] Telemetry changes: update `schemas/telemetry/**` + docs as needed
-
-## 🧠 Story Node & Focus Mode Integration
-
-### How this work surfaces in Focus Mode
-
-Focus Mode UI typically works like:
-
-1) User clicks an entity/story marker or a linked entity in narrative  
-2) UI enters Focus Mode state (routing/state management)  
-3) UI calls the API to fetch a **context bundle** (story content, related entities, sources, and UI hints)  
-4) UI renders narrative + citations and adjusts map/timeline accordingly:contentReference[oaicite:11]{index=11}
-
-### Provenance-linked narrative rule
-
-- Story nodes are Markdown and use a citation marker format like `【source_id†Lx-Ly】`.
-- The UI must render citations as interactive affordances (link, tooltip, footnote, or a Sources panel jump), and must not imply a source exists if it does not (“no hallucinated sources”).:contentReference[oaicite:12]{index=12}
-
-### Optional structured controls
-
-Story Nodes may include structured hints for Focus Mode (e.g., map center/time/layers). The UI should support these hints without making them mandatory.
+Story Nodes may include Focus Mode hints. Example (illustrative):
 
 ~~~yaml
 focus_layers:
-  - "TBD_layer_id"
-focus_time: "TBD_time_range_or_anchor"
+  - "example.layer_id"
+focus_time: "1930-01-01/1939-12-31"
 focus_center: [-98.0000, 38.0000]
 ~~~
 
-## 🧪 Validation & CI/CD
+UI guidance:
 
-### Validation steps
+- Treat these fields as **hints**, not commands.
+- If a referenced layer is missing, show a warning and degrade gracefully.
+- Never fetch data outside what the API contract permits.
 
-- [ ] UI unit tests for shared components (rendering, state behavior)
-- [ ] Integration tests for Focus Mode flows (context bundle → narrative + citations)
-- [ ] End-to-end tests for key user journeys (open Focus Mode, toggle layers, open sources):contentReference[oaicite:13]{index=13}
-- [ ] UI registry/schema validation (`schemas/ui/**`)
-- [ ] Story Node/schema validation where relevant (`schemas/storynodes/**`)
-- [ ] a11y checks (keyboard navigation, ARIA labeling, heading structure):contentReference[oaicite:14]{index=14}
+### Focus Mode sequence
 
-### Reproduction
-
-~~~bash
-# Example placeholders — replace with repo-specific commands
-
-# 1) install deps
-# npm ci
-
-# 2) run unit tests
-# npm test
-
-# 3) run lint + a11y checks
-# npm run lint
-# npm run test:a11y
-
-# 4) validate UI registries/schemas
-# npm run validate:ui-schemas
-
-# 5) run e2e tests (optional)
-# npm run test:e2e
+~~~mermaid
+sequenceDiagram
+  participant U as User
+  participant UI as web/src/ui
+  participant API as src/server API
+  U->>UI: Select Story Node and enter Focus Mode
+  UI->>API: GET Story Node + context bundle
+  API-->>UI: Markdown + evidence refs + focus hints
+  UI->>UI: Apply focus layers, time window, map center
+  UI-->>U: Render story + map + timeline + provenance panel
 ~~~
 
-### Telemetry signals (if applicable)
+### AI content in Focus Mode
 
-Common UI events worth tracking (schema-governed):
+If AI-generated explanations or summaries are shown:
 
-- Focus Mode entered/exited
-- Layer toggled
-- Citation clicked / Sources panel opened
-- AI content toggle opened (opt-in)
+- They must be **opt-in**.
+- They must be clearly labeled as AI-generated.
+- They must include provenance pointers and must not imply that AI created new evidence.
+- The UI must not present outputs that would infer or reveal sensitive locations.
 
-Record signals under `docs/telemetry/**` and validate under `schemas/telemetry/**`.
+---
 
-## ⚖ FAIR+CARE & Governance
+## 🧾 Story Node rendering and provenance UX
 
-### Review gates
+### Rendering expectations
 
-Requires human review when UI changes introduce:
+The UI should render Story Node Markdown with support for:
 
-- new sensitive layers or exposure paths,
-- new AI narrative behaviors,
-- new public-facing endpoints/flows dependent on governance constraints.
+- headings, lists, tables,
+- inline citations,
+- “sources” or “evidence” sections,
+- a provenance panel that can resolve evidence references (STAC/DCAT/PROV IDs).
 
-### CARE / sovereignty considerations
+### Citation and evidence rules
 
-- If UI work touches culturally sensitive knowledge or restricted locations, ensure:
-  - API-level redaction/generalization is in place,
-  - Story Node assets comply with review gates,
-  - UI does not re-derive or “helpfully” reconstruct restricted detail.
+UI should surface warnings if:
 
-### AI usage constraints
+- a Story Node lacks evidence references,
+- citations reference IDs that do not resolve via API,
+- a narrative section makes claims without citations.
 
-- AI/predictive content must be:
-  - opt-in,
-  - clearly labeled as AI/predictive,
-  - accompanied by uncertainty/confidence metadata,
-  - never presented as unmarked fact.
+Recommended UX:
+
+- Inline citation chips that open a drawer/popup.
+- “Sources” sidebar that lists evidence artifacts with stable IDs.
+- A “Provenance” tab that shows STAC/DCAT/PROV lineage pointers at a high level.
+
+---
+
+## 🔌 API consumption patterns
+
+### Contract-first consumption
+
+- Prefer a typed API client generated from contracts *(approach and tooling not confirmed in repo)*.
+- Avoid hardcoding endpoint strings in UI components; centralize under a small “client” module.
+
+### Error handling
+
+- Distinguish between:
+  - “not found” (missing layer/story ID),
+  - “forbidden” (redacted/restricted),
+  - “contract mismatch” (schema drift),
+  - “network/transient”.
+
+### Performance expectations
+
+- Cache layer metadata and story metadata where safe.
+- Virtualize large lists (layers, entities, citations).
+- Defer expensive rendering in Focus Mode until evidence metadata resolves.
+
+---
+
+## ♿ Accessibility
+
+Minimum expectations:
+
+- Keyboard navigation for map controls, layer toggles, timeline, and Focus Mode drawer panels.
+- Visible focus indicators and correct tab order.
+- ARIA labels for icon-only controls.
+- Avoid color-only encodings for meaning; provide patterns/labels/tooltips.
+- Respect reduced-motion preferences for animated transitions.
+
+---
+
+## 🔐 Security, ethics, and sovereignty
+
+UI changes can be governance-impacting. Treat the following as high-risk:
+
+- adding a new layer that can reveal sensitive locations by zoom/interaction,
+- changing classification/sensitivity labels,
+- adding new imagery/documents without review gates.
+
+Minimum safeguards:
+
+- No secrets in the repo (no API keys, tokens, credentials).
+- Prefer generalized/coarse public products when data intersects with sensitive/restricted contexts.
+- Ensure AI usage constraints match front-matter permissions/prohibitions.
+
+---
+
+## 🧪 Testing and CI expectations
+
+Recommended test mix (tooling not confirmed in repo):
+
+- Unit tests for utilities/parsers and “pure” components.
+- Integration tests for layer registry validation + API client mocks.
+- End-to-end tests for Focus Mode flows (enter, apply layers/time, render citations).
+- Accessibility checks (static + runtime where possible).
+
+---
+
+## 🧩 Common extension workflows
+
+### Add a new map layer
+
+1. Ensure the dataset exists upstream with evidence artifacts (STAC/DCAT/PROV).
+2. Ensure the API boundary exposes a contract-defined endpoint for the layer.
+3. Add a registry entry for the layer (and attribution + sensitivity).
+4. Validate registry against `schemas/ui/` (CI gate).
+5. Add UI toggles and default styling.
+6. Add at least one Story Node that references the layer in Focus Mode metadata.
+7. Add tests: registry validation + basic render.
+
+### Add a new Focus Mode capability
+
+1. Define behavior in a Story Node contract field (or context bundle schema).
+2. Add API response support (contract-first).
+3. Implement UI behavior behind a feature flag if risky.
+4. Add provenance UX updates (warnings, evidence drilldown).
+5. Add accessibility and e2e tests.
+
+---
+
+## 📚 Project reference library
+
+This UI README was informed by the project’s current “reference pack”. These are **inputs** (not necessarily committed to the repo); if stored in-repo, prefer a governed location under `docs/` *(exact placement not confirmed in repo)*.
+
+### Core KFM architecture and planning
+
+- `MASTER_GUIDE_v12.md.pdf`
+- `Kansas Frontier Matrix — v13 Redesign Blueprint.pdf`
+- `KFM Next Stages Planning.pdf`
+- `Kansas Frontier Matrix_ System Structure and Scope.pdf`
+- `Kansas Frontier Matrix (KFM) Implementation Guide.pdf`
+- `Comprehensive vision draft.pdf`
+- `Expanding the Kansas Frontier Matrix Knowledge Base.pdf`
+- `Expanding the Kansas Frontier Matrix: External Data, Tools, and Frameworks.pdf`
+- `README Information.docx`
+
+### Governed templates and Markdown protocol
+
+- `TEMPLATE__KFM_UNIVERSAL_DOC.md.docx`
+- `TEMPLATE__STORY_NODE_V3.md.docx`
+- `TEMPLATE__API_CONTRACT_EXTENSION.md.docx`
+- `Universal Markdown templates.docx`
+- `Comprehensive Guide to Markdown in Programming and Documentation.pdf`
+
+### Web UI, rendering, and visual systems
+
+- `CSS Notes for Professionals - CSSNotesForProfessionals.pdf`
+- `KFM-responsive-web-design-with-html5-and-css3.pdf`
+- `KFM-webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+- `DesigningVirtualWorlds.pdf`
+- `KFM- Computer Graphics using JAVA 2D & 3D.pdf`
+
+### Spatial analysis and geospatial tooling references
+
+- `An Introduction to Spatial Data Analysis and Visualisation in R - An Introduction to Spatial Data Analysis in R.pdf`
+- `KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf`
+
+### Data science, modeling, and uncertainty references
+
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `KFM- Bayesian computational methods.pdf`
+- `KFM- Understanding Statistics & Experimental Design.pdf`
+- `KFM-regression-analysis-with-python.pdf`
+- `KFM- Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf`
+- `KFM- Data Mining Concepts & applictions.pdf`
+- `KFM- Artificial-neural-networks-an-introduction.pdf`
+- `KFM- deep-learning-in-python-prerequisites.pdf`
+- `KFM- AI Foundations of Computational Agents 3rd Ed.pdf`
+- `KFM- Spectral Geometry of Graphs.pdf`
+- `KFM- Scalable Data Management for Future Hardware.pdf`
+- `KFM- Generalized Topology Optimization for Structural Design.pdf`
+
+### Data reference documents
+
+- `KFM data Refrences.docx`
+- `KFM data References 2.docx`
+- `KFM DATA Refrences 3.docx`
+
+---
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
-|---|---|---|---|
-| v1.0.0 | 2025-12-22 | Initial `web/src/ui` README (governed) | TBD |
+|---:|---:|---|---|
+| v1.0.0 | 2025-12-25 | Initial governed UI README for `web/src/ui/` | TBD |
 
 ---
 
-Footer refs:
+## Footer refs
+
+- Master guide: `docs/MASTER_GUIDE_v12.md`
+- Redesign blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Next stages blueprint: `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md`
+- Universal doc template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- API contract template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
-
