@@ -169,13 +169,13 @@ KFM treats telemetry as a first-class subsystem (alongside data/catalog/graph/ap
 
 ~~~mermaid
 flowchart LR
-  U[User Interaction] --> UI[Web UI Components]
-  UI --> T[web/src/telemetry<br/>event + metric capture]
-  T --> R[Redaction + minimization]
-  R --> X[Transport (batch/beacon)]
-  X --> API[API / Telemetry Ingest Boundary]
-  API --> S[(Telemetry Store / Dashboard)]
-  S --> G[Governance + Reliability Review]
+  U["User interaction"] --> UI["Web UI components"]
+  UI --> T["web/src/telemetry: event and metric capture"]
+  T --> R["Redaction and minimization"]
+  R --> X["Transport: batch and beacon"]
+  X --> API["Telemetry ingest boundary (API)"]
+  API --> S[(Telemetry store and dashboards)]
+  S --> G["Governance and reliability review"]
 ~~~
 
 ## 🧱 Architecture
