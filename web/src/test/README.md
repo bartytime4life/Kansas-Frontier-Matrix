@@ -1,10 +1,10 @@
 ---
-title: "KFM Web UI — Test Guide"
+title: "KFM Web UI — Test Area README"
 path: "web/src/test/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-22"
+last_updated: "2025-12-25"
 status: "draft"
-doc_kind: "Guide"
+doc_kind: "README"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:web:test-readme:v1.0.0"
-semantic_document_id: "kfm-web-test-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:web:test-readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:web:src:test-readme:v1.0.0"
+semantic_document_id: "kfm-web-src-test-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:src:test-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,197 +41,298 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Web UI Test Guide
+# KFM Web UI Test Area
+
+> **Purpose (required):** Document how the **Web UI test area** under `web/src/test/` is structured and used to produce **deterministic, contract-aligned** UI tests that preserve KFM’s non-negotiables: **API-boundary access**, **provenance-first rendering**, and **FAIR+CARE governance posture**.
 
 ## 📘 Overview
 
-### Purpose
+### What this directory is for
 
-`web/src/test/` is the shared home for **web UI test utilities** (fixtures, factories, mocks, helpers) and the
-rules we expect tests to follow.
+`web/src/test/` is the **UI test harness area** for:
 
-This guide is written to keep tests aligned with KFM’s architectural boundaries:
-
-- The web UI is a consumer of **API contracts**, not a direct consumer of the graph layer.
-- Tests should reinforce “contract-first” behavior (types/shapes from the API layer are the source of truth).
+- test helpers and shared test utilities used by the Web UI,
+- fixtures that simulate **API responses** and **Story Node** payloads,
+- validation helpers that ensure UI code stays aligned with:
+  - the API boundary (UI never reads the graph directly),
+  - provenance-focused rendering expectations,
+  - accessibility and deterministic behavior in CI.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Unit/integration test utilities for `web/` | ETL, catalog, graph, or server tests (see their subsystem homes) |
-| Mocking APIs and map engine seams | Writing/defining API contracts themselves |
-| Fixtures for Story Nodes / Focus Mode UI rendering | Publishing Story Nodes / narrative authoring standards |
+| UI unit tests and UI integration tests that exercise rendering and user flows | ETL, catalog, graph ingest, or server-side tests |
+| Test utilities, mocks, fixtures, and deterministic helpers | End-to-end tests in a dedicated E2E area *(not confirmed in repo)* |
+| Contract-oriented UI checks (schema validation of UI registry / Story Node shapes) | Changing API contracts *(requires `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`)* |
 
 ### Audience
 
-- Primary: Web UI developers working in `web/`
-- Secondary: API/contract owners who need UI expectations for contract changes
+- Primary: Web UI contributors working under `web/`.
+- Secondary: API / schema maintainers who want to verify UI contract alignment.
 
 ### Definitions
 
-- **Unit test:** Tests a single function/component with minimal dependencies.
-- **Integration test:** Tests multiple modules/components together (often with mocked network).
-- **E2E test:** Tests the running app via a browser automation tool.
-- **Contract test:** Verifies request/response shapes match API contracts (OpenAPI/GraphQL/JSON Schema).
-- **Focus Mode:** UI mode that surfaces provenance-linked narrative context.
+- Glossary: `docs/glossary.md` *(not confirmed in repo)*
+
+Terms used in this README:
+
+- **API boundary**: UI accesses data **only** through server APIs (no direct Neo4j/graph access).
+- **Contract test**: a test that fails when the UI shape expectations diverge from schemas/contracts.
+- **Fixture**: a synthetic or redacted payload used for tests.
 
 ### Key artifacts
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Canonical pipeline + subsystem homes | `docs/MASTER_GUIDE_v12.md` | Maintainers | UI is downstream of API boundary |
-| v13 UI/graph boundary invariant | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Maintainers | “No UI direct-to-graph reads” |
-| API contracts | `src/server/contracts/` | API owners | UI tests should follow these shapes |
-| UI schemas (layer registry, etc.) | `schemas/ui/` | UI/Contracts owners | Use for registry validation tests |
+| Repo pipeline ordering | `README.md` | Maintainers | Canonical pipeline is non-negotiable |
+| Master Guide | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical system/pipeline source of truth |
+| v13 blueprint | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Maintainers | Draft readiness gates *(if adopted)* |
+| Schemas | `schemas/` | Contracts owners | Used for validation *(not confirmed in repo)* |
+| API server | `src/server/` | Backend owners | UI must go through contracted endpoints |
+| UI registry config | `web/` | UI owners | Validate layer/config schemas *(where applicable)* |
 
-### Definition of done
+### Definition of Done
 
-- [ ] New test utilities live under `web/src/test/` (not scattered ad-hoc)
-- [ ] Tests are deterministic (no real network, stable time, stable random seed where applicable)
-- [ ] API calls are mocked at the boundary (no Neo4j drivers or direct graph access in `web/`)
-- [ ] Any new contract or schema assumptions are reflected in `src/server/contracts/` / `schemas/` (as applicable)
-- [ ] CI checks pass (unit tests, typecheck/lint, and any configured a11y/registry/schema checks)
+- [ ] Tests in this area are deterministic (no live network, no clock drift, no random seeds).
+- [ ] Any mocked data uses synthetic or redacted fixtures (no PII, no sensitive coordinates).
+- [ ] UI tests assert API-boundary behavior (requests go to API client layer, not the graph).
+- [ ] Where schemas exist, fixtures are validated against them.
+- [ ] A11y checks are present for core UI surfaces *(tooling not confirmed in repo)*.
+- [ ] Documentation changes preserve KFM Markdown protocol (front-matter + required sections).
 
 ## 🗂️ Directory Layout
 
-### This document
+### Where this document lives
 
-- `path`: `web/src/test/README.md`
+- This README: `web/src/test/README.md`
 
-### Recommended structure inside `web/src/test/`
+### Related repository paths
 
-Create what you need, but prefer a predictable, reusable layout:
+- Web UI root: `web/`
+- API boundary: `src/server/`
+- Schemas registry: `schemas/` *(not confirmed in repo)*
+- Repo-wide CI expectations: `.github/workflows/` *(not confirmed in repo)*
+
+### Expected local structure
+
+The exact contents of `web/src/test/` are repo-dependent, but the following structure is recommended:
 
 ~~~text
-📁 web/
-└── 📁 src/
-    └── 📁 test/
-        ├── 📄 README.md
-        ├── 📁 fixtures/          # small, stable JSON fixtures (API payloads, Story Nodes)
-        ├── 📁 factories/         # builders for typed test objects
-        ├── 📁 mocks/             # module mocks (map engine seams, browser APIs)
-        ├── 📁 msw/               # request handlers for mocked API calls (if used)
-        ├── 📁 utils/             # shared helpers (render wrappers, router/state setup)
-        └── 📄 setupTests.*       # global test setup (matchers, polyfills)
+🌐 web/
+└─ 🧩 src/
+   └─ 🧪 test/
+      ├─ README.md
+      ├─ 🧰 helpers/           # render helpers, time/random determinism helpers (recommended)
+      ├─ 🎭 mocks/             # API client mocks, mock servers (recommended)
+      ├─ 🧪 fixtures/          # synthetic/redacted payload fixtures (recommended)
+      └─ ⚙️ setup/             # test runner setup hooks (recommended)
 ~~~
+
+> If your repo uses a different test layout (e.g., `__tests__/`, `test/`, or `tests/`), treat the above tree as a **recommended convention** and align to the existing structure.
 
 ## 🧭 Context
 
-KFM’s system contract is a staged pipeline:
+### How this fits into KFM’s pipeline
 
-- ETL → STAC/DCAT/PROV → Graph → API boundary → UI → Story Nodes → Focus Mode
+KFM’s canonical ordering is:
 
-The UI lives at the **end** of the pipeline. It must not bypass the API boundary to query the graph layer.
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
-In practice, that means:
+UI tests live at the **UI** stage and should treat upstream layers as **contracts**:
 
-- UI code (and UI tests) should interact with data via API responses, not via Neo4j drivers or raw graph queries.
-- UI tests should “lock in” expected contract behavior so that contract changes are intentional and reviewed.
+- the UI consumes **API responses**,
+- API responses are derived from graph + catalogs,
+- story nodes are rendered with provenance-first behavior.
 
-## 🧱 Architecture
+### Boundary rule enforced by tests
 
-### Test pyramid for the UI
+UI tests must preserve the boundary:
 
-1. **Unit tests**
-   - Pure utilities (formatting, parsing, filtering)
-   - Small components with mocked hooks/dependencies
+- ✅ UI code may call an API client/service abstraction
+- ❌ UI code must not call Neo4j/graph directly
+- ❌ UI tests must not “cheat” by reading graph fixtures as if they are UI inputs
 
-2. **Integration tests**
-   - Feature components with routing/state
-   - Network mocked at the API boundary
-   - Focus Mode render paths with realistic (but minimal) fixtures
+## 🗺️ Diagrams
 
-3. **E2E tests**
-   - Only for critical user journeys (map loads, layer toggles, Focus Mode entry)
-   - Prefer running against a locally hosted API stub (or mocked server) for determinism
+### Pipeline placement
 
-### Mocking guidance
+~~~mermaid
+flowchart LR
+  A[ETL] --> B[STAC/DCAT/PROV]
+  B --> C[Graph]
+  C --> D[API]
+  D --> E[UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+~~~
 
-- **API boundary mocking**
-  - Prefer one consistent approach (e.g., request interception or a mock service worker) and keep handlers here.
-  - Avoid “deep mocking” internal implementation details of components unless unavoidable.
+### UI test harness concept
 
-- **Map engine seams**
-  - Map engines are typically hard to run under JSDOM.
-  - Keep map glue code thin and mock the map adapter at the boundary.
-  - Test map-related logic at the “adapter interface” level (inputs → expected calls), not pixel-perfect rendering.
-
-- **Time and randomness**
-  - Freeze time for tests that depend on “now”.
-  - Seed randomness (or inject PRNG) for any stochastic behavior.
-
-## 📦 Data & Metadata
-
-### Fixtures
-
-- Keep fixtures **small and explicit**.
-- Prefer fixtures that look like **API responses**, since that is what the UI consumes.
-- Do not include real restricted coordinates or sensitive content in fixtures.
-
-### “Provenance-like” test data
-
-Where possible, fixtures should include:
-
-- Stable identifiers (e.g., dataset IDs, story node IDs)
-- Citation-like fields (so Focus Mode/citation UI paths are exercised)
-- Minimal geometry (or generalized geometry) for map-facing tests
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-Even though the UI does not build catalogs, it consumes catalog-derived content.
-
-Testing recommendations:
-
-- Don’t embed full catalogs in unit tests.
-- Use small fixture slices that represent the **contracted** subset the UI expects.
-- If a UI feature depends on schema validation (e.g., a layer registry), add a test that validates the sample config
-  against the relevant schema under `schemas/`.
+~~~mermaid
+flowchart TD
+  T[Test Runner] --> U[UI Components / Map UI]
+  U --> C[API Client Layer]
+  C --> M[Mock Server / Mock Fetch]
+  M --> F[Fixtures]
+  F --> V[Schema Validators]
+~~~
 
 ## 🧠 Story Node & Focus Mode Integration
 
-When adding or updating Focus Mode UI behavior, tests should cover:
+### Story Nodes as machine-ingestible storytelling
 
-- Story Node text renders (including headings, citations/footnotes if present)
-- Evidence/asset panels render safely (no untrusted HTML injection)
-- “No unsourced narrative” UI affordances (warnings when citations are missing, where applicable)
+When UI tests involve story nodes:
+
+- fixtures must represent **story node payloads** that the UI actually renders,
+- story node fixtures should include provenance fields where expected,
+- story node fixtures should link to evidence IDs where possible (STAC/DCAT/PROV identifiers).
+
+### Focus Mode rule
+
+UI tests that cover Focus Mode behavior should assert that:
+
+- Focus Mode consumes **provenance-linked content** only,
+- any predictive/AI-derived content (if present) is:
+  - opt-in,
+  - labeled as predictive,
+  - accompanied by uncertainty/confidence metadata.
+
+> If Focus Mode features are not yet implemented in the UI, keep this section as the **contract expectation** for when they are introduced.
 
 ## 🧪 Validation & CI/CD
 
-### Local runs
+### Minimum CI gates relevant to this directory
 
-Use the scripts defined for the web app (adjust to whatever is configured in `web/package.json`). Example:
+This area should be compatible with repo-wide baseline gates such as:
+
+- Markdown protocol validation
+- Schema validation (where schemas exist)
+- API contract tests (UI ↔ API boundary)
+- UI registry schema checks (where applicable)
+- Security + sovereignty scanning gates (where applicable)
+- Accessibility checks (where applicable)
+
+> The exact workflow wiring (and scripts) is **not confirmed in repo**; align with `.github/workflows/` and the repo’s package scripts.
+
+### Local reproduction
 
 ~~~bash
-cd web
-# examples only — use the script names defined in this repo
-npm run test
-npm run test:watch
-npm run lint
-npm run typecheck
+# NOTE: Commands below are placeholders; replace with repo-approved tooling.
+# The intent is to provide a deterministic “same as CI” workflow for UI tests.
+
+# cd web
+# npm test
+# npm run test:unit
+# npm run test:integration
+# npm run test:contracts
 ~~~
 
-### CI expectations
+### Determinism checklist for UI tests
 
-CI commonly enforces (at minimum):
+- Freeze time where relevant (avoid snapshot churn).
+- Seed randomness where used (or remove randomness entirely).
+- Never call real external services.
+- Prefer fixtures checked into the repo (small + synthetic).
+- Avoid brittle DOM selectors (prefer semantic roles / stable test IDs).
 
-- Markdown protocol validation for markdown files
-- Contract/schema validation (API + UI schemas)
-- Unit/integration test execution
-- Lint + typecheck
-- Security/dependency scans
+## 📦 Data & Metadata
+
+### Fixture rules
+
+Fixtures in UI tests should be:
+
+- **synthetic by default**,
+- **redacted/generalized** if derived from real sources,
+- small and focused on the UI contract.
+
+Do not store:
+
+- API tokens or secrets,
+- PII (names/emails/phone numbers),
+- restricted/sensitive coordinates or geometries.
+
+### Stable identifiers
+
+Where IDs are required in fixtures:
+
+- use stable, explicit IDs (e.g., `fixture:storynode:demo:001`),
+- avoid IDs that imply real people/communities unless approved and properly governed.
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+UI tests do not generate catalogs, but they **must** respect downstream expectations:
+
+- provenance fields should round-trip through UI rendering where applicable,
+- citations/sources panels (if present) should show **evidence identifiers**,
+- “expert drill-down” should surface STAC IDs and PROV lineage where applicable.
+
+If a UI surface claims to display provenance:
+
+- test fixtures must include those fields,
+- tests must assert they render correctly (and fail if missing).
+
+## 🧱 Architecture
+
+### Layering principle
+
+UI tests should treat the UI as an **outer layer**:
+
+- talk inward using simple structures (plain objects from API clients),
+- talk outward through interfaces (API client abstractions),
+- keep dependencies replaceable (mocks/fakes) to preserve determinism.
+
+### WebGL and map rendering considerations
+
+If map rendering is part of tests:
+
+- prefer integration tests around UI logic (layer toggles, data bindings) over pixel-perfect rendering,
+- be explicit about WebGL context behavior (context loss/recover) if you simulate it.
+
+> Exact MapLibre/WebGL harness utilities are **not confirmed in repo**; keep tests resilient to headless renderer constraints.
 
 ## ⚖ FAIR+CARE & Governance
 
-Even tests can leak sensitive information if fixtures contain restricted content.
+### Review gates
 
-- Keep fixtures synthetic or generalized.
-- If you must use real examples, ensure they comply with sovereignty/redaction rules and are approved for the
-  repo’s `classification` level.
+Changes that touch any of the following should trigger **human review**:
+
+- provenance rendering rules,
+- redaction/generalization behavior,
+- public-facing UI messaging related to sensitive topics,
+- any new AI narrative behavior surfaced in the UI.
+
+### CARE and sovereignty considerations
+
+- Assume sensitive location handling is high-risk by default.
+- Do not allow tests or fixtures to reconstruct restricted locations.
+- Respect the sovereignty policy when using any real-world geographic references.
+
+### AI usage constraints
+
+- This README’s AI permissions are informational only.
+- Do not use UI tests to “infer” sensitive locations from nearby measurements or proxies.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-22 | Initial `web/src/test/` README scaffold | TBD |
+| v1.0.0 | 2025-12-25 | Initial `web/src/test/` README scaffold | `<your-name>` |
 
+---
+
+<div align="center">
+
+**📚 Governance Links**  
+[Repo README](../../../README.md) ·  
+[Docs Root](../../../docs/README.md) ·  
+[Governance Charter](../../../docs/governance/ROOT_GOVERNANCE.md) ·  
+[Ethics](../../../docs/governance/ETHICS.md) ·  
+[Sovereignty](../../../docs/governance/SOVEREIGNTY.md)
+
+**🔐 Compliance**  
+FAIR+CARE · KFM‑MDP v11.2.6 · KFM‑STAC v11 · KFM‑DCAT v11 · KFM‑PROV v11
+
+**End of Document**
+
+</div>
