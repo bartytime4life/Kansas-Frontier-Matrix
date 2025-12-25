@@ -153,9 +153,9 @@ Logos in the UI are a common source of accidental non-compliance (missing attrib
 
 ~~~mermaid
 flowchart LR
-  A[web/cesium UI code] --> B[assets/images/logos]
-  B --> C[Bundled UI artifact]
-  C --> D[Rendered UI (branding + credits)]
+  A["web/cesium UI code"] --> B["assets/images/logos"]
+  B --> C["Bundled UI artifact"]
+  C --> D["Rendered UI — branding & credits"]
 ~~~
 
 ## 🧠 Story Node & Focus Mode Integration
