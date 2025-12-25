@@ -171,14 +171,15 @@ The KFM architecture is contract-first and provenance-bound:
 
 ~~~mermaid
 flowchart LR
-  A[Story Node (Markdown)] --> B[Story Parser/Renderer]
-  C[Focus API Context Bundle] --> D[Focus Mode UI]
+  A["Story Node Markdown"] --> B["Story Parser and Renderer"]
+  C["Focus API Context Bundle"] --> D["Focus Mode UI"]
   B --> D
-  D --> E[Audit / Provenance Panel (UI)]
-  subgraph Tests[web/src/story/__tests__/]
-    T1[Fixture story nodes] --> B
-    T2[Mock context bundles] --> D
-    T3[Assertions: citations, provenance, redaction-safe UI] --> D
+  D --> E["Audit and Provenance Panel"]
+
+  subgraph T["Story Tests: web/src/story/__tests__"]
+    T1["Fixture story nodes"] --> B
+    T2["Mock context bundles"] --> D
+    T3["Assertions: citations + provenance + redaction"] --> D
   end
 ~~~
 
