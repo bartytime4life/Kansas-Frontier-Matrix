@@ -1,10 +1,10 @@
 ---
-title: "KFM Web — UI State Layer"
+title: "KFM web/src/state — State Layer (README)"
 path: "web/src/state/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-22"
+last_updated: "2025-12-25"
 status: "draft"
-doc_kind: "Guide"
+doc_kind: "README"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -41,56 +41,69 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Web — UI State Layer
+# KFM web/src/state — State Layer
 
 ## 📘 Overview
 
 ### Purpose
 
-- Provide a single, predictable source of truth for cross-cutting UI state (map layers, timeline, Focus Mode selection, etc.).
-- Define invariants so the map, story panel, and search results stay in sync.
-- Enforce the KFM UI contract: **API-only consumption** and **provenance-first Focus Mode** (no direct graph access; no uncited narrative by default).
+- Define the **frontend state conventions** for KFM’s web UI (React SPA under `web/`).
+- Keep **map**, **timeline**, and **Focus Mode** panels in sync using a **predictable state container** (e.g., Redux or React Context/Reducers — exact library **not confirmed in repo**).
+- Enforce KFM invariants at the UI boundary:
+  - **no UI direct-to-graph reads** (UI only calls contracted APIs),
+  - **provenance-first UX** (citations + evidence identifiers are first-class),
+  - **sensitivity-aware rendering** (respect redaction/generalization and “sensitive layer” flags).
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| State shape + module conventions for `web/src/state/` (actions/events, reducers/slices, selectors, middleware) | ETL, STAC/DCAT/PROV generation, graph ingest/migrations |
-| Focus Mode UI state (selected entity/story node, context bundle cache, breadcrumbs/back navigation) | API implementation and contracts (`src/server/`) |
-| Map + timeline synchronization state (viewport, layer toggles, time window, filters) | Authoring Story Nodes under `docs/reports/story_nodes/` |
-| Provenance references carried through UI state (IDs/citations passed through from the API) | Storing secrets/credentials in any client-side state |
+| Cross-component application state (Focus Mode, layer toggles, selected entities, timeline window, UI prefs) | Backend query logic, Neo4j/Cypher, graph ingestion |
+| Async request orchestration and request-status tracking (loading/error/refresh) | Defining/altering API contracts (see `src/server/contracts/` — not confirmed in repo) |
+| “Serializable state only” rules (no map engine instances in store) | Styling/theming (CSS) and component layout details |
+| Patterns for consuming Story Node metadata (focus_center/time/layers) | Authoring Story Nodes themselves (see `docs/reports/story_nodes/` — not confirmed in repo) |
 
 ### Audience
 
-- Primary: UI/frontend developers working in `web/` (React/MapLibre/Cesium)
-- Secondary: API engineers (contract alignment), QA (Focus Mode regression tests), governance reviewers (sensitivity leakage checks)
+- **Primary:** Frontend contributors working under `web/`.
+- **Secondary:** API contract contributors (to understand UI expectations), Story/Focus Mode authors (to understand how UI consumes focus hints).
 
-### Definitions (link to glossary)
+### Definitions
 
-- Link: `docs/glossary.md`
+- Link: `docs/glossary.md` *(not confirmed in repo)*
 - Terms used in this doc:
-  - **Focus Mode** — a dedicated view that deep-dives into a single story/entity.
-  - **Context bundle** — Focus Mode API payload (narrative + citations + audit/provenance + map/timeline hints).
-  - **Provenance** — dataset/document identifiers and lineage references (STAC/DCAT/PROV and/or graph lineage) surfaced to the UI.
-  - **Layer registry** — schema-validated configuration describing map layers and sensitivity/access flags.
+  - **State container**: A predictable global store for cross-component state.
+  - **Slice**: A cohesive, namespaced subset of state and its reducers/actions.
+  - **Selector**: A pure function that derives view-ready data from state.
+  - **Effect / thunk**: Async orchestration that calls APIs and dispatches actions.
+  - **Layer registry**: JSON configuration describing map layers (including sensitivity flags).
+  - **Focus Mode**: UI state for deep, provenance-linked exploration of an entity/story.
+  - **Provenance panel**: UI surface that maps narrative claims to dataset/evidence IDs.
+  - **Redaction/generalization**: Policy-driven omission or coarsening of sensitive fields.
 
-### Key artifacts (what this doc points to)
+### Key artifacts
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | KFM Core Team | Canonical pipeline + invariants |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Docs Team | Focus hints (`focus_layers`, `focus_time`, `focus_center`) |
-| API contracts | `src/server/` + docs | API Team | Source of truth for UI payload shapes + redaction |
-| Layer registry | `web/**/layers/**/*.json` | UI Team | Must be schema-validated |
-| System/UI architecture docs | `docs/architecture/` | Architecture Team | Focus Mode provenance + opt-in AI rules (not confirmed in repo) |
+| Master pipeline ordering + invariants | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical ordering + minimum gates *(not confirmed in repo)* |
+| Universal governed doc structure | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | KFM Core | This README follows the Universal template shape *(not confirmed in repo)* |
+| v13 architecture alignment | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | KFM Core | “No UI direct-to-graph reads”; one canonical home per subsystem *(not confirmed in repo)* |
+| Story Node schema + focus hints | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative | Defines optional `focus_center`, `focus_time`, `focus_layers` *(not confirmed in repo)* |
+| API contract extensions | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API owners | Contracts define what Focus Mode can request/receive *(not confirmed in repo)* |
+| Layer registry config | `web/**/layers/*.json` | Frontend | Registry entries include “sensitive” flag *(path not confirmed in repo)* |
+| UI schemas | `schemas/ui/` | Data/Platform | Used for registry/schema validation *(not confirmed in repo)* |
 
-### Definition of done (for this document)
+### Definition of done
 
-- [ ] Front-matter complete + valid
-- [ ] Describes Focus Mode state transitions (enter/exit, restore previous view state, breadcrumbs/back)
-- [ ] Describes how provenance + citations are carried through UI state
-- [ ] Validation steps listed and repeatable (unit + integration + e2e)
-- [ ] Governance + CARE/sovereignty considerations explicitly stated (sensitive layers, restricted locations)
+- [ ] Front-matter complete and `path` matches `web/src/state/README.md`
+- [ ] State responsibilities and boundaries are explicit (what belongs in global state vs local component state)
+- [ ] “No UI direct-to-graph reads” is explicit and enforced by design
+- [ ] Focus Mode state flow is documented (enter → fetch context bundle → render → exit)
+- [ ] Layer registry + sensitivity handling is documented
+- [ ] Examples are either repo-accurate or explicitly marked **not confirmed in repo**
+- [ ] Governance, CARE/sovereignty considerations, and AI opt-in constraints are stated
+
+---
 
 ## 🗂️ Directory Layout
 
@@ -102,187 +115,149 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 | Area | Path | What lives here |
 |---|---|---|
-| UI (frontend) | `web/` | React + map/narrative UI |
-| UI state | `web/src/state/` | State container setup, reducers/slices, selectors, middleware |
-| APIs | `src/server/` | Contracted access layer (REST/GraphQL); redaction rules |
-| Schemas | `schemas/` | JSON schemas (including layer registry + telemetry) |
-| Story Nodes | `docs/reports/story_nodes/` | Narrative artifacts with provenance |
+| Frontend root | `web/` | React SPA + map/timeline + Focus Mode UI |
+| State layer | `web/src/state/` | Global state container, slices, selectors, effects |
+| UI components | `web/src/components/` | React components (map, story panel, timeline, etc.) *(not confirmed in repo)* |
+| API clients | `web/src/api/` | Typed fetch clients / adapters calling `src/server` endpoints *(not confirmed in repo)* |
+| Layer registry | `web/**/layers/*.json` | Layer configuration (incl. sensitivity) *(not confirmed in repo)* |
+| API boundary | `src/server/` | Contracted REST/GraphQL API layer (no UI direct graph access) *(not confirmed in repo)* |
+| API contracts | `src/server/contracts/` | OpenAPI/GraphQL schemas; contract tests *(not confirmed in repo)* |
+| Story Nodes | `docs/reports/story_nodes/` | Draft/published narrative content used in Focus Mode *(not confirmed in repo)* |
+| Schemas | `schemas/` | JSON Schemas (STAC/DCAT/PROV/story/UI/telemetry) *(not confirmed in repo)* |
 
 ### Expected file tree for this sub-area
+
+> This is the **recommended** structure. Some files/dirs may not exist yet (**not confirmed in repo**).
 
 ~~~text
 📁 web/
 └── 📁 src/
-    └── 📁 state/
-        ├── 📄 README.md
-        ├── 📄 index.ts                  # public exports (optional)
-        ├── 📄 store.ts                  # store config (if using Redux-style container)
-        ├── 📄 types.ts                  # shared state types (TypeScript)
-        ├── 📁 slices/                   # feature reducers (Focus Mode, map, timeline, settings…)
-        ├── 📁 selectors/                # shared + feature selectors
-        ├── 📁 middleware/               # provenance/telemetry interceptors (optional)
-        ├── 📁 persistence/              # hydration (URL state, localStorage) (optional)
-        └── 📁 __tests__/                # reducer/selector tests
+    ├── 📁 state/
+    │   ├── 📄 README.md                 # this file
+    │   ├── 📄 store.ts                  # store setup (not confirmed in repo)
+    │   ├── 📄 types.ts                  # shared state types (not confirmed in repo)
+    │   ├── 📁 slices/                   # feature slices (recommended)
+    │   │   ├── 📄 focus.slice.ts        # Focus Mode state + context bundle refs (not confirmed in repo)
+    │   │   ├── 📄 map.slice.ts          # viewport + active layers + selection (not confirmed in repo)
+    │   │   ├── 📄 timeline.slice.ts     # time window + playback (not confirmed in repo)
+    │   │   ├── 📄 registry.slice.ts     # layer registry + sensitivity flags (not confirmed in repo)
+    │   │   ├── 📄 data.slice.ts         # normalized cache + request status (not confirmed in repo)
+    │   │   └── 📄 ui.slice.ts           # preferences (theme, reduced motion, panels) (not confirmed in repo)
+    │   ├── 📁 selectors/                # pure derived state (recommended)
+    │   ├── 📁 effects/                  # async orchestration / thunks (recommended)
+    │   ├── 📁 middleware/               # request dedupe, logging, etc. (optional; not confirmed in repo)
+    │   └── 📁 __tests__/                # reducer + selector tests (recommended)
+    ├── 📁 api/                          # HTTP clients / adapters (not confirmed in repo)
+    └── 📁 components/                   # React components (not confirmed in repo)
 ~~~
+
+---
 
 ## 🧭 Context
 
 ### Background
 
-- The KFM UI must keep multiple components in sync (map view, timeline, story panel, search), while supporting a dedicated Focus Mode flow.
-- A predictable state container (e.g., Redux or Context/Reducers) helps coordinate these transitions consistently.
+KFM’s frontend is a map-and-story-driven UI. The state layer exists to:
 
-### Assumptions
+- coordinate **map/timeline/story panels** so they are consistent,
+- orchestrate **Focus Mode** requests and rendering,
+- enforce boundary rules:
+  - **UI never queries Neo4j directly**,
+  - UI uses contracted APIs and renders provenance-linked narratives.
 
-- The frontend lives under `web/`.
-- State is managed via a predictable container (e.g., Redux or React Context/Reducers).
-- Focus Mode enters via a user selection, then an API request fetches a “context bundle” (narrative + citations + map/timeline hints).
+### Constraints and invariants
 
-### Constraints / invariants
+Non-negotiables that the state layer must make easy (and hard to violate):
 
-- Canonical pipeline ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
-- Frontend consumes contracts via **APIs only** (no direct graph dependency).
-- Focus Mode must only present content with provenance; any AI-generated/predictive content is clearly labeled and opt-in.
-- Sensitive layer or restricted-location handling must prevent “hidden data leakage” (including persistence and telemetry).
+1. **No UI direct-to-graph reads**
+   - `web/` must never query Neo4j directly; all graph access is via `src/server/` APIs.
 
-### Open questions
+2. **Serializable, deterministic state**
+   - Store only JSON-serializable values; treat the state as a deterministic function of actions.
+   - Never put MapLibre/Cesium instances, DOM nodes, or class instances in global state.
 
-| Question | Owner | Target date |
-|---|---|---|
-| Which state container is canonical in this repo (Redux vs Context/Reducers)? | UI Team | TBD |
-| What parts of state are persisted (URL/localStorage) and what is explicitly non-persisted (sensitive)? | UI + Governance | TBD |
-| Do we standardize an “audit/provenance panel” state shape across Focus Mode? | UI + Docs | TBD |
+3. **Layer registry is configuration-driven**
+   - Layer toggles should be driven by a registry JSON (including **sensitive** flags).
 
-### Future extensions
+4. **2D/3D mode switching must not lose conceptual state**
+   - Switching MapLibre (2D) ↔ Cesium (3D) should preserve:
+     - active conceptual layers,
+     - focused entity/story,
+     - timeline window.
 
-- URL-driven state (deep links into Focus Mode with entity ID + time window).
-- Offline-friendly caching for non-sensitive layers (opt-in).
-- Telemetry hooks for state transitions (focus enter/exit, layer toggles) tied to a schema.
+5. **Focus Mode is provenance-linked**
+   - Focus Mode renders story text and shows evidence/citations via a provenance panel.
+   - AI narrative is **opt-in** and must be explicitly labeled and separable.
+
+### Practical “what goes where” rule of thumb
+
+- Put it in **global state** when:
+  - multiple components need it (map + timeline + story panel),
+  - it must survive route/page transitions,
+  - it needs URL-deep-linking (recommended),
+  - it affects governance/sensitivity (e.g., whether sensitive layers are visible).
+
+- Keep it **component-local** when:
+  - it is purely visual and isolated (hover state, local input draft),
+  - it does not need to persist,
+  - it has no governance impact.
+
+---
 
 ## 🗺️ Diagrams
 
-### System / dataflow diagram
+### UI state dataflow
 
 ~~~mermaid
 flowchart LR
-  A["User interaction"] --> B["UI components"]
-  B --> C["State container - web/src/state"]
-  C --> D["API client layer - contracted"]
-  D --> E["Render map, timeline, narrative"]
+  U[User actions] -->|dispatch| S[State container<br/>web/src/state]
+  S -->|effects/thunks| C[API clients<br/>web/src/api]
+  C -->|HTTP| A[API boundary<br/>src/server]
+  A -->|queries| G[Graph<br/>Neo4j via src/graph]
+  A -->|contracted payloads + provenance refs| C
+  C -->|normalized data| S
+  S -->|selectors| R[React views<br/>map · timeline · story]
 ~~~
 
-### Optional: sequence diagram
+### Focus Mode sequence
 
 ~~~mermaid
 sequenceDiagram
-  participant UI as UI (FocusMode)
-  participant State as State container
-  participant API as API
-  participant Graph as Graph
+  participant User
+  participant UI as UI (web/)
+  participant Store as State (web/src/state)
+  participant API as API (src/server)
 
-  UI->>State: dispatch(enterFocus(entity_id))
-  State->>API: request Focus context bundle (entity_id)
-  API->>Graph: fetch subgraph + provenance refs (with redaction)
-  Graph-->>API: context bundle
-  API-->>State: narrative + citations + audit flags + focus hints
-  State-->>UI: update focus + map/timeline hints
+  User->>UI: Click entity / story link
+  UI->>Store: dispatch enterFocus(entityId)
+  Store->>API: GET /focus/{entityId} (includeAI? false by default)
+  API-->>Store: context bundle + sources/citations + sensitivity flags
+  Store-->>UI: state update (focus + map + timeline)
+  UI-->>User: Story panel + provenance panel + highlighted map context
 ~~~
 
-## 📦 Data & Metadata
-
-### Inputs
-
-| Input | Source | Sensitivity | Notes |
-|---|---|---|---|
-| Focus Mode context bundle | API (`src/server/`) | mixed | Narrative + citations + audit flags + focus hints |
-| Search results / entity lists | API | public/mixed | Should include provenance refs where applicable |
-| Layer registry config | UI config (`web/**/layers/**/*.json`) | mixed | Includes layer metadata + sensitivity/access flags |
-| Map interaction events | MapLibre/Cesium component | public | Viewport, selected feature IDs, hover state |
-| Timeline interaction events | Timeline component | public | Selected time window, cursor, filters |
-| User preferences | UI | public | Accessibility toggles, display preferences |
-
-### Sensitivity & redaction
-
-- Treat API payloads as the source of truth for sensitivity flags; state must preserve these flags so UI gates match.
-- Avoid persisting sensitive state by default (e.g., restricted layer selections, precise coordinates when flagged).
-- If URL state is used, ensure it does not encode restricted locations without a governance-reviewed generalization rule.
-
-### Quality signals
-
-- Deterministic state transitions (same inputs → same state).
-- Focus Mode always has an “audit path” from rendered narrative to sources (IDs/citations present).
-- State cleanup is reliable on exit (no cross-entity bleed; prior layers/viewport restored correctly).
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-### STAC
-
-- Collections involved: returned indirectly via API payloads (store IDs as opaque strings).
-- Items involved: returned indirectly via API payloads (store IDs as opaque strings).
-- Extension(s): not confirmed in repo (UI should not assume any specific STAC extensions).
-
-### DCAT
-
-- Dataset identifiers: displayed in audit/provenance panels when provided by the API.
-- License mapping: UI should be able to show dataset license/attribution if present.
-- Contact / publisher mapping: optional; display if present.
-
-### PROV-O
-
-- `prov:wasDerivedFrom`: store and render “source list” when provided (do not invent).
-- `prov:wasGeneratedBy`: store run/activity IDs when provided.
-- Activity / Agent identities: display if present.
-
-### Versioning
-
-- Treat IDs as versioned references; if the API exposes predecessor/successor links, use them for navigation/history.
-- Never “merge” versions client-side without an explicit contract; defer to the API.
-
-## 🧱 Architecture
-
-### Components
-
-| Component | Responsibility | Interface |
-|---|---|---|
-| UI state (`web/src/state`) | Predictable UI state, sync map/timeline/narrative, caching + persistence rules | store/actions/selectors |
-| APIs | Serve contracts + redaction | REST/GraphQL |
-| UI | Map + narrative rendering | API calls + selectors |
-| Focus Mode | Contextual narrative view | provenance-linked bundle |
-
-### Interfaces / contracts
-
-| Contract | Location | Versioning rule |
-|---|---|---|
-| API schemas | `src/server/` + docs | Contract tests required |
-| Layer registry | `web/**/layers/**/*.json` | Schema-validated |
-| Telemetry schemas | `schemas/telemetry/` | Semver + changelog |
-| State types | `web/src/state/types.ts` (proposed) | Semver at app-level |
-
-### Extension points checklist (for future work)
-
-- [ ] UI: add new feature state slice + selectors + tests
-- [ ] APIs: contract updates for new Focus Mode bundle fields + tests
-- [ ] UI: layer registry entry + access rules (if new layers)
-- [ ] Focus Mode: provenance references enforced (no uncited default rendering)
-- [ ] Telemetry: new signals + schema version bump (if adding new UI events)
+---
 
 ## 🧠 Story Node & Focus Mode Integration
 
 ### How this work surfaces in Focus Mode
 
-State should hold:
-
-- the active focus target (`entity_id` / `story_node_id`)
-- the loaded context bundle (narrative + citations + audit/provenance + flags)
-- view synchronization hints (map center/zoom, time window, suggested layers)
-- navigation history (breadcrumbs / back stack) so prior view state can be restored on exit
+- **What becomes focusable?**
+  - Entities that have stable identifiers returned by APIs (entity IDs) and/or Story Nodes.
+- **What evidence must be shown?**
+  - Every claim should map to a dataset/record/asset identifier that can be inspected in the provenance panel.
 
 ### Provenance-linked narrative rule
 
-- Every narrative claim shown in Focus Mode must trace to a dataset / record / asset ID.
-- If a context bundle contains narrative without citations/provenance, treat it as **non-displayable by default** (or display only with an explicit, governance-approved warning).
+- Every factual claim presented in Focus Mode must trace to a dataset / record / asset identifier.
+- UI state should preserve:
+  - the selected focus target,
+  - the evidence/source list (or references to it),
+  - any redaction/sensitivity flags needed for correct rendering.
 
-### Optional structured controls
+### Optional structured controls from Story Nodes
+
+Story Nodes may include structured hints used by the UI:
 
 ~~~yaml
 focus_layers:
@@ -291,64 +266,172 @@ focus_time: "TBD"
 focus_center: [ -98.0000, 38.0000 ]
 ~~~
 
+State-layer guidance:
+
+- Store these hints in Focus Mode state when present.
+- Apply them by dispatching updates to:
+  - map state (viewport center/zoom + layer toggles),
+  - timeline state (time window, highlight interval).
+
+### Recommended “enter focus” pattern
+
+1. **Set focus target immediately** (fast UI response)
+2. **Fetch context bundle** (async)
+3. **Normalize & store payload** (entities, sources, flags)
+4. **Apply view hints** (center/time/layers)
+5. **Render narrative + citations + provenance panel**
+6. **Exit Focus Mode restores prior state** (breadcrumbs/back)
+
+---
+
 ## 🧪 Validation & CI/CD
 
 ### Validation steps
 
-- [ ] Markdown protocol checks (this README included)
-- [ ] Unit tests for reducers/slices + selectors (`__tests__/`)
-- [ ] Integration tests for Focus Mode flow (enter/exit, restore state, citation rendering)
-- [ ] UI schema checks (layer registry)
-- [ ] E2E test for critical paths (map click → focus → back navigation)
+- [ ] State is serializable (no MapLibre/Cesium instances in store)
+- [ ] Reducers/selectors are deterministic (pure functions)
+- [ ] Request/effect layer handles races (request IDs, cancel/ignore stale responses)
+- [ ] Layer registry consumption validates sensitivity flags
+- [ ] Focus Mode requires provenance references when rendering narrative
+- [ ] “include AI” behavior is explicit, off by default, and clearly labeled when enabled
+- [ ] UI a11y checks for Focus Mode panels and map controls (recommended)
 
 ### Reproduction
 
 ~~~bash
 # Example placeholders — replace with repo-specific commands
 
-# 1) run unit tests
-# pnpm test
-
-# 2) run e2e tests
-# pnpm test:e2e
-
-# 3) lint markdown
-# pnpm lint:docs
+# 1) run unit tests for reducers/selectors
+# 2) run typecheck / lint
+# 3) run UI schema validation for layer registry (if present)
 ~~~
 
-### Telemetry signals (if applicable)
+### Telemetry signals
 
 | Signal | Source | Where recorded |
 |---|---|---|
-| focus_enter / focus_exit | state container | `docs/telemetry/` + `schemas/telemetry/` |
-| layer_toggle | map layer UI | `docs/telemetry/` + `schemas/telemetry/` |
-| citation_click | story renderer | `docs/telemetry/` + `schemas/telemetry/` |
-| api_focus_latency_ms | API client | `docs/telemetry/` + `schemas/telemetry/` |
+| UI request errors | Web app | telemetry sink defined by UI *(not confirmed in repo)* |
+| Focus Mode usage events | Web app | telemetry sink *(not confirmed in repo)* |
+| Sensitive layer access attempts | Web app + API | API logs + governance review trail *(not confirmed in repo)* |
+
+---
+
+## 📦 Data & Metadata
+
+### Inputs
+
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Layer registry | JSON | `web/**/layers/*.json` *(not confirmed in repo)* | UI schema checks *(not confirmed in repo)* |
+| Focus Mode context bundle | JSON | `src/server` Focus API | Contract tests *(not confirmed in repo)* |
+| Story Node content | Markdown + structured hints | Story Node store (docs/graph) | Story schema validation *(not confirmed in repo)* |
+| Provenance refs | IDs/arrays | Focus API payload (`sources`, dataset IDs, etc.) | “no orphan refs” checks (recommended) |
+
+### Outputs
+
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| UI view state | in-memory | state container | serialization discipline (this doc) |
+| User preferences | JSON | local storage/session *(not confirmed in repo)* | do not persist sensitive data |
+| Deep links | URL params | router *(not confirmed in repo)* | stable IDs only |
+
+### Sensitivity & redaction
+
+- Treat sensitivity flags as **authoritative**:
+  - do not “reconstruct” precise locations from generalized fields,
+  - do not persist restricted fields to local storage.
+- If an API response marks fields as restricted/generalized, the state layer must carry those flags through to rendering.
+
+### Quality signals
+
+- State updates are traceable (action naming conventions).
+- Normalized caches use stable IDs.
+- No orphan references: narrative citations resolve to source entries in the same context bundle.
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+
+- UI should treat STAC item identifiers as first-class for:
+  - linking map overlays to catalog items,
+  - powering “source details” views in the provenance panel.
+
+### DCAT
+
+- UI may display dataset-level metadata (publisher, license, description) using DCAT dataset IDs.
+
+### PROV-O
+
+- UI should surface provenance relationships (derived-from, generated-by, activity/agent IDs) when available via APIs.
+
+### Versioning
+
+- If payloads include version links (e.g., predecessor/successor), state should store them so the UI can show “this narrative/data changed” affordances.
+
+---
+
+## 🧱 Architecture
+
+### Components
+
+| Component | Responsibility | Interface |
+|---|---|---|
+| State container | Global app state + serialization discipline | `dispatch`, `getState`, selectors |
+| Slices | Cohesive domain state (focus/map/timeline/ui/data) | actions + reducers |
+| Selectors | Derived view-ready data | pure functions |
+| Effects/thunks | Async orchestration (fetch, dedupe, retry) | calls API clients |
+| API clients | Typed network calls to `src/server` | `fetch` wrappers (not confirmed in repo) |
+| Map renderer | MapLibre/Cesium instances (NOT in state) | driven by state via props/hooks |
+| Story renderer | Markdown → UI, citations clickable | uses state for sources/provenance |
+
+### Interfaces / contracts
+
+| Contract | Location | Versioning rule |
+|---|---|---|
+| API contracts | `src/server/contracts/` *(not confirmed in repo)* | contract tests required |
+| UI registry schema | `schemas/ui/` *(not confirmed in repo)* | schema validation gate |
+| Story Node schema | `schemas/story_nodes/` *(not confirmed in repo)* | validate before publish |
+
+### Extension points checklist
+
+- [ ] Add a new slice for new UX surface (keep it serializable)
+- [ ] Add a new effect for a new API call (request IDs + dedupe)
+- [ ] Add a new selector for derived view state (pure + tested)
+- [ ] Add a new layer registry entry and ensure sensitivity flags are handled
+- [ ] Ensure Focus Mode provenance rule remains intact (citations resolvable)
+
+---
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
 
-- UI maintainer review is required for changes affecting Focus Mode state, provenance rendering, or persistence behavior.
-- Governance review is required if a change can expose sensitive layers/locations or weakens opt-in requirements for AI-generated content.
+Changes to state design should require governance review if they:
 
-### CARE / sovereignty considerations
+- introduce storage/persistence of any sensitive fields,
+- add new UI affordances that could reveal restricted locations through interaction/zoom,
+- add AI-generated narrative into Focus Mode without an explicit opt-in and labeling path,
+- weaken provenance traceability between narrative claims and evidence identifiers.
 
-- Sensitive or culturally restricted locations must not be revealed via:
-  - persisted state (localStorage/URL)
-  - telemetry events
-  - screenshots/export flows
-- Prefer generalization (area/region) over point precision when sensitivity flags require it.
+### CARE and sovereignty considerations
+
+- Identify communities impacted by new narrative render paths or layer toggles.
+- Preserve redaction/generalization rules end-to-end: API → state → UI.
 
 ### AI usage constraints
 
-- State must not automatically surface AI-generated summaries or predictions; they must be opt-in and clearly labeled with uncertainty metadata.
+- Permitted: summarize/structure/translate/index this document.
+- Prohibited: generating new policy text or inferring sensitive locations.
+
+---
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-22 | Initial `web/src/state` README | TBD |
+| v1.0.0 | 2025-12-25 | Initial state layer README (conventions + boundaries + Focus Mode integration) | TBD |
 
 ---
 
@@ -357,4 +440,3 @@ Footer refs:
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
-
