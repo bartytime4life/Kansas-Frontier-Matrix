@@ -182,14 +182,14 @@ KFM’s UI is a **map + narrative** exploration surface. The map engine exists s
 
 ~~~mermaid
 flowchart LR
-  U[User actions<br/>(pan/zoom/click/time)] --> R[React UI]
-  R --> E[Map Engine (this directory)]
-  E --> L[Layer Registry<br/>(declarative config)]
-  E --> A[API boundary<br/>src/server]
-  A --> G[Graph services<br/>(Neo4j behind API)]
-  A --> C[Catalog services<br/>(STAC/DCAT/PROV)]
-  E --> V[Viewport renderers<br/>(MapLibre / optional 3D)]
-  E --> P[Panels<br/>(popups + Focus Mode)]
+  U["User actions\n(pan / zoom / click / time)"] --> R["React UI"]
+  R --> E["Map Engine (web/src/map/engine)"]
+  E --> L["Layer Registry (declarative config)"]
+  E --> A["API boundary (src/server)"]
+  A --> G["Graph services (Neo4j behind API)"]
+  A --> C["Catalog services (STAC / DCAT / PROV)"]
+  E --> V["Viewport renderers (MapLibre; optional 3D)"]
+  E --> P["Panels (popups; Focus Mode)"]
 ~~~
 
 ### Optional: sequence diagram (feature selection → provenance-backed context)
