@@ -163,11 +163,11 @@ Layers are the UI’s **most common “contract surface”**:
 
 ~~~mermaid
 flowchart LR
-  A[STAC/DCAT/PROV<br/>data/stac + data/catalog/dcat + data/prov] --> B[Graph<br/>src/graph]
-  B --> C[API Boundary<br/>src/server]
-  C --> D[UI Layer Registry<br/>web/**/layers/**]
-  D --> E[Map Renderers<br/>MapLibre (2D) / Cesium (3D optional)]
-  E --> F[User Interactions<br/>toggle / hover / click / filter]
+  A["STAC / DCAT / PROV<br/>(data/stac, data/catalog/dcat, data/prov)"] --> B["Graph<br/>(src/graph)"]
+  B --> C["API boundary<br/>(src/server)"]
+  C --> D["UI layer registry<br/>(web/src/map/layers)"]
+  D --> E["Map renderers<br/>MapLibre 2D; Cesium 3D optional"]
+  E --> F["User interactions<br/>toggle · hover · click · filter"]
 ~~~
 
 ### Focus Mode layer activation (story-driven)
