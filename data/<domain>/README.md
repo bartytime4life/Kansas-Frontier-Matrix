@@ -197,15 +197,15 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 ~~~mermaid
 flowchart LR
-  A[ETL runs for <domain>\n(src/pipelines/...)] --> B[data/raw/<domain>/]
-  B --> C[data/work/<domain>/]
-  C --> D[data/processed/<domain>/]
-  D --> E[Catalog outputs\nSTAC/DCAT/PROV]
-  E --> F[Neo4j Graph\n(src/graph ingest)]
-  F --> G[API Layer\n(src/server)]
-  G --> H[UI\n(web/)]
-  H --> I[Story Nodes\n(docs/reports/story_nodes/)]
-  I --> J[Focus Mode\n(provenance-linked only)]
+  A["ETL runs for DOMAIN<br/>(src/pipelines/...)"] --> B["data/raw/DOMAIN/"]
+  B --> C["data/work/DOMAIN/"]
+  C --> D["data/processed/DOMAIN/"]
+  D --> E["Catalog outputs<br/>STAC/DCAT/PROV"]
+  E --> F["Neo4j Graph<br/>(src/graph ingest)"]
+  F --> G["API Layer<br/>(src/server)"]
+  G --> H["UI<br/>(web/)"]
+  H --> I["Story Nodes<br/>(docs/reports/story_nodes/)"]
+  I --> J["Focus Mode<br/>(provenance-linked only)"]
 ~~~
 
 ## 📦 Data & Metadata
