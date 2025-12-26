@@ -165,12 +165,12 @@ This directory sits in the **UI stage**. Style decisions are still “high-impac
 
 ~~~mermaid
 flowchart LR
-  ETL[ETL / Pipelines] --> CAT[STAC / DCAT / PROV]
-  CAT --> G[Graph (Neo4j)]
-  G --> API[APIs (REST/GraphQL)]
-  API --> UI[UI (React + MapLibre)]
-  UI --> SN[Story Nodes]
-  SN --> FM[Focus Mode]
+  ETL["ETL / Pipelines"] --> CAT["STAC / DCAT / PROV"]
+  CAT --> G["Graph — Neo4j"]
+  G --> API["APIs — REST + GraphQL"]
+  API --> UI["UI — React + MapLibre"]
+  UI --> SN["Story Nodes"]
+  SN --> FM["Focus Mode"]
 ~~~
 
 ### Style + registry interaction (conceptual)
