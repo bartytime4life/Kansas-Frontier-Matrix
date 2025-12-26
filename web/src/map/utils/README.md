@@ -168,12 +168,12 @@ Avoid placing these here:
 
 ~~~mermaid
 flowchart LR
-  subgraph UI["UI (web/)"]
-    M[Map components] --> U[map/utils/*]
-    U --> R[Map engine adapters<br/>(MapLibre/Cesium)]
-  end
+  API["API (src/server/)"] -->|contracted payloads| M
 
-  API["API (src/server/)"] -->|contracted payloads| UI
+  subgraph WEB_UI["UI (web/)"]
+    M["Map components"] --> U["map/utils/*"]
+    U --> R["Map engine adapters\n(MapLibre/Cesium)"]
+  end
 
   Note1["Invariant: UI never talks to Neo4j directly"] --- API
 ~~~
