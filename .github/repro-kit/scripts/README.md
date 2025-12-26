@@ -1,7 +1,7 @@
 ---
 title: "KFM Reproducibility Kit — Scripts"
 path: ".github/repro-kit/scripts/README.md"
-version: "v1.0.0"
+version: "v1.0.1"
 last_updated: "2025-12-26"
 status: "draft"
 doc_kind: "Guide"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:github:repro-kit-scripts-readme:v1.0.0"
-semantic_document_id: "kfm-github-repro-kit-scripts-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:github:repro-kit-scripts-readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:github:repro-kit-scripts-readme:v1.0.1"
+semantic_document_id: "kfm-github-repro-kit-scripts-readme-v1.0.1"
+event_source_id: "ledger:kfm:doc:github:repro-kit-scripts-readme:v1.0.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -175,16 +175,16 @@ KFM emphasizes reproducibility and governed validation:
 
 ## 🗺️ Diagrams
 
-### “Local script” flow vs canonical pipeline
+### Local script flow vs canonical pipeline
 
 ~~~mermaid
 flowchart LR
-  A[Contributor / Reviewer] --> B[.github/repro-kit/scripts/*]
-  B --> C[Validators + Test Runners<br/>(Makefile/tools/tests)]
-  C --> D[Reports / Logs / Hashes / Manifests]
-  D --> E[Catalogs + Provenance<br/>(STAC/DCAT/PROV)]
-  E --> F[Graph → API → UI]
-  F --> G[Story Nodes → Focus Mode]
+  A["Contributor or reviewer"] --> B[".github/repro-kit/scripts"]
+  B --> C["Validators and test runners (Makefile, tools, tests)"]
+  C --> D["Reports, logs, hashes, manifests"]
+  D --> E["Catalogs and provenance (STAC, DCAT, PROV)"]
+  E --> F["Graph to API to UI"]
+  F --> G["Story Nodes to Focus Mode"]
 ~~~
 
 ## 🧪 Validation & CI/CD
@@ -264,6 +264,7 @@ When adding scripts here, prefer conventions that keep CI and local runs aligned
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-26 | Initial `.github/repro-kit/scripts/` README scaffold | TBD |
+| v1.0.1 | 2025-12-26 | Fix Mermaid diagram rendering (remove HTML line breaks and path fragments in labels) | TBD |
 
 ---
 
