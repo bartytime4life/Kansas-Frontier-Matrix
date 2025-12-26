@@ -280,11 +280,11 @@ flowchart LR
 
 ~~~mermaid
 flowchart TD
-  WF[Workflow<br/>.github/workflows/*.yml] --> A[Local action(s)<br/>.github/actions/*]
-  A --> C1[Check: Markdown protocol]
-  A --> C2[Check: Schemas]
-  A --> C3[Check: Tests]
-  A --> C4[Check: Security posture]
+  WF["Workflow\n.github/workflows/*.yml"] --> A["Local action(s)\n.github/actions/*"]
+  A --> C1["Check: Markdown protocol"]
+  A --> C2["Check: Schemas"]
+  A --> C3["Check: Tests"]
+  A --> C4["Check: Security posture"]
 ~~~
 
 ## 📦 Data & Metadata
