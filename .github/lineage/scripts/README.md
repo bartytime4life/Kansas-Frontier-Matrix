@@ -171,17 +171,16 @@ This folder exists to keep validator code close to the CI entrypoints while rema
 ### Lineage gate in the canonical pipeline
 
 ~~~mermaid
-flowchart LR
-  A[ETL] --> B[STAC/DCAT/PROV outputs]
-  B --> C[Graph (Neo4j)]
-  C --> D[API layer]
-  D --> E[UI + Story Nodes + Focus Mode]
-
-  P[PR / local change] --> CI[CI job]
-  CI --> S[Lineage scripts]
-  S --> R[Report + exit code]
-  R -->|pass| M[Merge OK]
-  R -->|fail| F[Fix required]
+flowchart LR;
+  A["ETL"] --> B["STAC/DCAT/PROV outputs"];
+  B --> C["Graph (Neo4j)"];
+  C --> D["API layer"];
+  D --> E["UI → Story Nodes → Focus Mode"];
+  P["PR or local change"] --> CI["CI job"];
+  CI --> S["Lineage scripts"];
+  S --> R["Report + exit code"];
+  R -->|pass| M["Merge OK"];
+  R -->|fail| F["Fix required"];
 ~~~
 
 ## 🧱 Architecture
