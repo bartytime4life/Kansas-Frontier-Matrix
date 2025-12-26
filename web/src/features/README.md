@@ -1,506 +1,325 @@
 ---
-title: "✨ Kansas Frontier Matrix — Web Features Layer Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Web UI — Feature Modules"
 path: "web/src/features/README.md"
-version: "v11.2.6"
-last_updated: "2025-12-16"
+version: "v1.0.0"
+last_updated: "2025-12-25"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
 
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
-content_stability: "stable"
-
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.6/manifest.zip"
-telemetry_ref: "../../../releases/v11.2.6/web-features-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-features-readme-v2.json"
-energy_schema: "../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../schemas/telemetry/carbon-v2.json"
-signature_ref: "../../../releases/v11.2.6/signature.sig"
-attestation_ref: "../../../releases/v11.2.6/slsa-attestation.json"
-
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-license: "MIT"
-
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Overview"
-intent: "web-features-overview"
-role: "overview"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Mixed (feature-dependent)"
-sensitivity_level: "Feature-dependent"
-public_exposure_risk: "Low · Medium"
-indigenous_rights_flag: false
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Low · Medium"
-redaction_required: false
+doc_uuid: "urn:kfm:doc:web:features:readme:v1.0.0"
+semantic_document_id: "kfm-web-features-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:web:features:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
-provenance_chain:
-  - "web/src/features/README.md@v11.2.2"
-  - "web/src/features/README.md@v10.4.1"
-  - "web/src/features/README.md@v10.3.2"
-  - "web/src/features/README.md@v10.3.1"
-
-ontology_alignment:
-  cidoc: "E29 Design or Procedure"
-  schema_org: "SoftwareApplication"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-
-json_schema_ref: "../../../schemas/json/web-features-readme-v11.schema.json"
-shape_schema_ref: "../../../schemas/shacl/web-features-readme-v11-shape.ttl"
-
-doc_uuid: "urn:kfm:doc:web-features-readme-v11.2.6"
-semantic_document_id: "kfm-doc-web-features-readme-v11"
-event_source_id: "ledger:web/src/features/README.md"
-immutability_status: "version-pinned"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "semantic-highlighting"
-  - "a11y-adaptations"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "unverified-historical-claims"
-  - "governance-override"
-  - "content-alteration"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "Kansas / United States"
-classification: "Public Document"
-lifecycle_stage: "stable"
-ttl_policy: "Review annually"
-sunset_policy: "Superseded on next feature-architecture revision"
-
-fencing_profile: "outer-backticks-inner-tildes-v1"
-directory_layout_profile: "immediate-one-branch-with-descriptions-and-emojis"
-badge_profile: "standard-four-badges"
-
-test_profiles:
-  - "markdown-lint-v1"
-  - "schema-lint-v1"
-  - "link-check-v1"
-  - "heading-registry-check-v1"
-  - "a11y-lint-v1"
-
-ci_integration:
-  required_checks:
-    - "markdown-lint"
-    - "schema-lint"
-    - "link-check"
-    - "footer-check"
-    - "accessibility-check"
-    - "diagram-check"
-    - "metadata-check"
-    - "provenance-check"
-
-heading_registry:
-  approved_h2:
-    - "📘 Overview"
-    - "🗂️ Directory Layout"
-    - "🧱 Architecture"
-    - "🧭 Context"
-    - "🗺️ Diagrams"
-    - "🧠 Story Node & Focus Mode Integration"
-    - "🌐 STAC, DCAT & PROV Alignment"
-    - "📦 Data & Metadata"
-    - "🧪 Validation & CI/CD"
-    - "⚖ FAIR+CARE & Governance"
-    - "🕰️ Version History"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# ✨ **Kansas Frontier Matrix — Web Features Layer Overview (v11.2.6)**
-`web/src/features/README.md`
-
-**Purpose**  
-Define the canonical structure, responsibilities, boundaries, governance rules, and telemetry expectations for the
-**Features Layer** in the KFM Web Platform. Each feature is a **self-contained user-facing capability** that integrates
-pipelines, hooks, view-models, governance, accessibility, and telemetry — while keeping rendering concerns in
-`web/src/components/**` and routing concerns in `web/src/pages/**`.
-
-[![Docs · MCP v6.3](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../../../mcp/MCP-README.md)
-· [![KFM–MDP v11.2.6](https://img.shields.io/badge/KFM%E2%80%93MDP-v11.2.6-purple)](../../../docs/standards/kfm_markdown_protocol_v11.2.6.md)
-· [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Aligned-orange)](../../../docs/standards/faircare/FAIRCARE-GUIDE.md)
-· [![License: MIT](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-
-</div>
-
----
+# KFM Web UI — Feature Modules
 
 ## 📘 Overview
 
-`web/src/features/**` is where KFM groups **domain-driven capabilities** that span multiple architectural layers
-without becoming UI components themselves.
+### Purpose
+This directory contains **feature-oriented modules** for the KFM web application (the canonical UI home is `web/`). Feature modules package UI, state, and API-adapter logic around a single user-facing capability (e.g., “Focus Mode”, “Map Layers”, “Search”, “Timeline”), while enforcing KFM’s core invariants:
 
-A feature is responsible for:
+- **UI → API only** (no direct graph access)
+- **Provenance-first UX** (citations and source audit always visible)
+- **Contract-first integration** (UI schemas + API contracts are canonical)
 
-- Orchestrating feature flows (user intent → validated inputs → pipeline/service calls → view-models → UI wiring).
-- Providing **typed, deterministic** “feature APIs” that can be consumed by `pages/`, hooks, and pipeline wrappers.
-- Applying **FAIR+CARE** and sovereignty constraints *at the feature boundary* (never later, never optionally).
-- Producing UI-ready view models and state slices **without embedding React rendering**.
+### Scope
 
-A feature is *not* responsible for:
+| In Scope | Out of Scope |
+|---|---|
+| Code under `web/src/features/**` | Global app shell (routing/bootstrap), shared UI kit, build tooling (lives elsewhere in `web/`) |
+| Feature-specific components, hooks, services/adapters, tests | Server implementation details (`src/server/**`) |
+| Feature integration rules for Focus Mode, citations, layer registry, and governance | Authoring Story Nodes (belongs under `docs/reports/story_nodes/**`) |
 
-- Rendering UI (belongs in `web/src/components/**`).
-- Owning global application state (belongs in `web/src/context/**`).
-- Calling backend endpoints ad hoc (belongs in `web/src/services/**`, often coordinated via `web/src/pipelines/**`).
-- Inventing types or relationships not present in governed schemas (`web/src/types/**`).
+### Audience
+- Primary: UI contributors working in `web/` (React/Map UI, narrative UX)
+- Secondary: API maintainers and story curators who need predictable UI integration points
 
-**Design intent:** Features are the “capability layer” between architectural primitives (types, services, pipelines, entities)
-and UI assembly (components, pages).
+### Definitions (link to glossary)
+- Link: `../../../docs/glossary.md` (**not confirmed in repo**; follow repo canonical glossary if different)
+- Terms used: **Feature module**, **Layer registry**, **Focus Mode**, **Story Node**, **Context bundle**, **Provenance panel**, **UI schema**
 
----
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master guide | `../../../docs/MASTER_GUIDE_v12.md` | Core maintainers | Canonical pipeline + invariants |
+| Redesign blueprint v13 | `../../../docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture maintainers | “UI→API only”, minimum contract set, CI gates |
+| Implementation guide (PDF) | *(repo location not confirmed)* | Dev maintainers | UI architecture patterns (React/MapLibre, Focus Mode flow) |
+| Story Node template | `../../../docs/templates/TEMPLATE__STORY_NODE_V3.md` | Story maintainers | Narrative + citation requirements |
+| UI schemas | `../../../schemas/ui/**` (**may be placeholder in early v13**) | Schema maintainers | Validates layer registry + UI contracts |
+| API contracts | `../../../src/server/contracts/**` | API maintainers | The only supported boundary to graph/data |
+
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] “Feature module” boundaries and invariants are explicit
+- [ ] Expected directory layout documented (with examples)
+- [ ] Validation + CI expectations listed (UI + contract checks)
+- [ ] Governance / CARE considerations included
 
 ## 🗂️ Directory Layout
 
-~~~text
-📁 web/src/features/
-├── 📄 README.md                — This document (feature-layer contract)
-├── 📁 accessibility/           — Cross-cutting A11y capability helpers (feature-scoped)
-├── 📁 admin/                   — Governed admin capabilities (restricted routes; governance tooling)
-├── 📁 focus-mode/              — Focus Mode v3 feature module (logic + VMs + orchestration)
-├── 📁 map/                     — Map feature module (layer toggles, map interactions, workflows)
-├── 📁 search/                  — Search feature module (entity/dataset search; query parsing; results shaping)
-├── 📁 story/                   — Story Node v3 feature module (narrative flows; relation navigation)
-├── 📁 telemetry/               — Telemetry feature module (event builders, Vitals adapters, error taxonomy helpers)
-└── 📁 timeline/                — Timeline feature module (range/brush/zoom flows; TimeContext coupling)
-~~~
+### This document
+- `path`: `web/src/features/README.md` (must match front-matter)
 
-**Naming conventions**
+### Related repository paths
 
-- Directories are lowercase and hyphen-separated (e.g., `focus-mode/`, `ar-mode/`).
-- Each feature directory should include its own `README.md` when the module is non-trivial.
+| Area | Path | What lives here |
+|---|---|---|
+| UI (canonical home) | `web/` | Web application runtime (map + narrative UX) |
+| API boundary (canonical home) | `src/server/` | REST/GraphQL services + redaction + contract tests |
+| UI schema contracts | `schemas/ui/` | Layer registry schemas + UI validation |
+| Story Nodes (canonical home) | `docs/reports/story_nodes/` | Draft/published narratives + assets |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Evidence products + provenance bundles |
 
----
+### Recommended feature module structure
 
-## 🧱 Architecture
-
-### Feature module contract
-
-Each feature should expose a **stable public surface** and keep internal details private.
-
-Recommended pattern:
-
-- `web/src/features/<feature>/index.ts` exports the feature’s intended API surface.
-- Internals remain under `hooks/`, `pipelines/`, `state/`, `view-models/`, `telemetry/`, etc.
-
-A typical (non-normative) feature module shape:
+> This is the **recommended** layout for each feature directory. Exact filenames/framework choices are **not confirmed in repo**; treat this as a contract-friendly pattern that keeps UI testable and bounded.
 
 ~~~text
-📁 web/src/features/<feature>/
-├── 📄 README.md                — Feature contract, workflows, governance notes
-├── 📄 index.ts                 — Public export surface (barrel)
-├── 📁 hooks/                   — Feature hooks (no JSX; effect boundaries)
-├── 📁 pipelines/               — Orchestration wrappers (multi-step flows)
-├── 📁 state/                   — Feature-local state machines/slices (not global contexts)
-├── 📁 view-models/             — UI-ready derived models (typed, governance-carrying)
-├── 📁 telemetry/               — Event builders + attribute mappers (non-PII)
-└── 📁 __tests__/               — Feature-level unit/integration tests (if co-located)
+📁 web/
+└── 📁 src/
+    └── 📁 features/
+        ├── 📁 <feature-name>/               # kebab-case (recommended)
+        │   ├── 📁 components/               # UI components (feature-scoped)
+        │   ├── 📁 hooks/                    # feature-scoped hooks
+        │   ├── 📁 services/                 # API adapters + parsing + redaction-safe helpers
+        │   ├── 📁 state/                    # reducers/stores (if used)
+        │   ├── 📁 __tests__/                # unit/integration tests for this feature
+        │   ├── 📄 index.(ts|js)             # public surface (barrel export)
+        │   └── 📄 README.md                 # optional: feature-local notes
+        └── 📄 README.md                     # (this file)
 ~~~
 
-### Import boundaries
-
-To preserve layered architecture, feature code:
-
-**May import from (down-layer and peer utilities):**
-
-- `web/src/types/**` (DTOs and domain typing)
-- `web/src/entities/**` (entity view-models and mappers/factories)
-- `web/src/utils/**` (pure helpers and guards)
-- `web/src/services/**` and/or `web/src/pipelines/**` (governed data access and orchestration)
-- `web/src/context/**` (consume and update shared state through approved APIs)
-
-**Must not import from (up-layer composition):**
-
-- `web/src/pages/**` (routes compose features; features do not know routes)
-- `web/src/App.tsx` or `web/src/main.tsx`
-- UI components directly as implementation details
-
-If a feature needs to “expose” UI components, do so as an **import surface** only (re-export),
-without co-locating rendering logic inside the feature module.
-
-### Determinism and side-effect boundaries
-
-Feature logic must remain deterministic given the same inputs and governed backend responses:
-
-- Validation occurs at the edge (guards/schemas) before view-model creation.
-- Side effects are isolated to hooks and pipeline/service boundaries.
-- Feature modules must not mutate global state outside context APIs.
-
----
+#### Rules of thumb
+- **Feature internals stay internal.** Other features should only import from `features/<feature-name>/index.*` (public surface).
+- **Network calls belong in `services/`.** Components should not “reach into” APIs directly; they consume typed/validated adapters.
+- **Cross-feature/shared utilities** belong outside `features/` (e.g., `web/src/shared/` or `web/src/lib/`) (**not confirmed in repo**). Avoid creating ad-hoc “shared” folders inside a single feature.
 
 ## 🧭 Context
 
-Features integrate with the global state layer via `web/src/context/**`.
+### Background
+KFM’s canonical system flow is:
 
-Core expectations:
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
-- Features **read/write** shared state only through context APIs.
-- Features must not invent “shadow global state” in module singletons.
-- Feature-local state is allowed, but must remain *feature-scoped* and must not conflict with contexts.
+`web/src/features/` sits in the **UI** stage and must preserve downstream rules: UI never bypasses contracts, and narrative UX must remain evidence-linked.
 
-Typical context usage by feature:
+### Architecture assumptions (UI)
+The intended UI is a React-based SPA under `web/` with a map engine (MapLibre GL JS) and optional 3D support (Cesium). The UI loads map layers from a **layer registry** (JSON config) and provides a governed “Focus Mode” experience that fetches a **context bundle** via the API and renders narrative + citations + provenance affordances.  
+(**Some details may vary by implementation; treat these as the target architecture.**)
 
-- `timeline/` uses `TimeContext` as the canonical temporal source of truth.
-- `map/` uses `MapContext` for camera/layers/selection and must respect `GovernanceContext`.
-- `focus-mode/` uses `FocusContext` and coordinates with `TimeContext` and `MapContext`.
-- `story/` updates `FocusContext` and `TimeContext` when navigating narrative relations.
-- Cross-cutting `telemetry/` observes context transitions (non-PII) to emit events.
+### Constraints / invariants (non‑negotiables)
+1. **No UI direct-to-graph reads**  
+   - `web/` must never query Neo4j directly; all graph access is via `src/server/`.
 
-Suggested rule of thumb:
+2. **No unsourced narrative**  
+   - Published Story Nodes must be provenance-linked and validate (front-matter, citations, entity refs, redaction compliance).
 
-- **Contexts own state**; **features own workflows**.
+3. **Contracts are canonical**  
+   - Schemas live in `schemas/` and API contracts under `src/server/contracts/` and must validate in CI.
 
----
+4. **Data outputs are not code**  
+   - Derived datasets belong under `data/**`, not under `src/` or `web/`.
 
-## 🗺️ Diagrams
-
-### Feature layering relative to the rest of `web/src/`
-
-~~~mermaid
-flowchart TD
-  P[Pages · Route Containers] --> C[Components · UI Rendering]
-  P --> F[Features · Capability Modules]
-  C --> F
-
-  F --> E[Entities · View Models]
-  F --> H[Hooks · Effect Boundaries]
-  H --> S[Services · API Clients]
-  H --> PL[Pipelines · Orchestration]
-  F --> X[Contexts · Shared State]
-
-  PL --> S
-  S --> API[Backend APIs · REST · GraphQL · STAC · DCAT]
-  E --> X
-~~~
-
-### Canonical journey wiring (example)
-
-~~~mermaid
-flowchart LR
-  Search[search/] --> Select[entity:select]
-  Select --> Focus[focus-mode/]
-  Focus --> Story[story/]
-  Focus --> Map[map/]
-  Story --> Timeline[timeline/]
-  Timeline --> Map
-  Focus --> Tel[telemetry/]
-  Story --> Tel
-  Map --> Tel
-  Timeline --> Tel
-~~~
-
----
-
-## 🧠 Story Node & Focus Mode Integration
-
-Two feature modules are structurally central to KFM’s v11 UX:
-
-### `focus-mode/` (Focus Mode v3)
-
-Feature responsibilities include:
-
-- Orchestrating Focus requests (validated inputs → pipeline/service calls → view-model shaping).
-- Maintaining feature-local state for loading/error/retry states (global focus selection remains in `FocusContext`).
-- Producing view models for:
-  - focus target summaries
-  - relations and ranked neighbors
-  - explainability/evidence sets
-- Enforcing governance display obligations:
-  - provenance references must be present
-  - CARE labels and sovereignty flags must be available to the UI
-  - no client-side speculative additions
-
-### `story/` (Story Node v3)
-
-Feature responsibilities include:
-
-- Validating Story Node payloads before they reach UI layers.
-- Producing view models for list/detail display and relationship navigation.
-- Coordinating synchronization:
-  - selecting a Story Node updates `FocusContext`
-  - Story Node temporal spans update `TimeContext` (when appropriate)
-  - Story Node spatial references update map highlight state (through `MapContext`)
-
-**Shared contract:** Both features must keep map, timeline, and focus views coherent by updating shared contexts,
-not by maintaining hidden global state.
-
----
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-Feature modules must treat catalog and provenance systems as first-class constraints.
-
-### STAC (KFM-STAC v11)
-
-- Features may browse STAC collections/items through services/pipelines.
-- Any derived view model must preserve:
-  - STAC identifiers
-  - license/rights fields
-  - spatial/temporal extent fields (as provided; no expansion by assumption)
-
-### DCAT (KFM-DCAT v11)
-
-- Search and dataset-related features may expose DCAT datasets/distributions.
-- View models must surface:
-  - publisher/creator where present
-  - distribution access links (when allowed)
-  - rights and licensing constraints
-
-### PROV-O (KFM-PROV v11)
-
-- Features that render narratives or derived summaries must carry provenance references:
-  - source datasets/documents
-  - transformation activities (when available)
-  - agents (systems/councils/bots) where applicable
-
----
+5. **Focus Mode is provenance-only**  
+   - Focus Mode consumes only provenance-linked content. Predictive/AI content is opt-in, labeled, and includes uncertainty metadata.
 
 ## 📦 Data & Metadata
 
-### Telemetry
+### Inputs
 
-Feature modules participate in telemetry through the shared telemetry system:
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Layer registry | JSON | `web/**/layers/**` (or legacy `web/cesium/layers/*.json`) | `schemas/ui/**` (schema validation) |
+| Focus Mode context bundle | JSON | `src/server/` Focus API | API contract tests + UI runtime checks |
+| Story Nodes | Markdown | `docs/reports/story_nodes/**` | Story Node schema + citation rules |
+| Evidence identifiers | IDs/refs | STAC/DCAT/PROV outputs | Must remain stable + traceable |
 
-- Feature events should be non-PII, schema-valid, and aggregatable.
-- Recommended patterns:
-  - `feature:<featureKey>:open`
-  - `feature:<featureKey>:close`
-  - `feature:<featureKey>:action` (with typed attributes describing outcome)
+### Outputs
 
-Release storage:
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Rendered map + narrative UI | Web runtime | `web/` | UI a11y + provenance affordances |
+| UI telemetry (optional) | JSON/logs | `docs/telemetry/` (**not confirmed**) | `schemas/telemetry/**` |
 
-~~~text
-../../../releases/<version>/web-features-telemetry.json
+### Sensitivity & redaction
+- Treat any layer or content marked **sensitive/restricted** as requiring:
+  - reduced precision / generalized geometry,
+  - API-level redaction as the source of truth,
+  - UI affordances that avoid “zoom-to-exact” leaks (e.g., clamp zoom, blur locations, or hide toggles).
+
+### Quality signals
+- Feature renders are deterministic for a fixed input payload (testable)
+- Citations render correctly and link back to evidence identifiers
+- Layer toggles reflect the registry and sensitivity rules
+- Focus Mode always provides a provenance/sources view
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+Even though UI code does not *produce* STAC/DCAT/PROV, features must **surface and preserve** these identifiers:
+
+- When showing narrative claims, the UI should provide a **Sources** view that lists cited documents/datasets (STAC items, DCAT datasets, PROV activities where available).
+- When showing map markers or derived facts, the UI should expose “why/where from” via tooltips, side panels, or provenance drawers.
+
+## 🧱 Architecture
+
+### Components (pipeline context)
+
+| Component | Responsibility | Interface |
+|---|---|---|
+| ETL | Ingest + normalize | Config + run logs |
+| Catalogs | STAC/DCAT/PROV | JSON + validator |
+| Graph | Neo4j | Accessed **only** via API layer |
+| APIs | Serve contracts + redaction | REST/GraphQL (`src/server/`) |
+| UI | Map + narrative | API calls + UI schemas (`web/`) |
+| Story Nodes | Curated narrative | Markdown templates + validators |
+| Focus Mode | Contextual synthesis | Provenance-linked context bundle |
+
+### Interfaces / contracts
+
+| Contract | Location | Versioning rule |
+|---|---|---|
+| JSON schemas | `schemas/` | Semver + changelog |
+| API contracts | `src/server/contracts/` | Contract tests required |
+| UI layer registry | `web/**/layers/**` | Schema-validated (`schemas/ui/`) |
+| Story Node template | `docs/templates/` | Template versions pinned |
+
+## 🗺️ Diagrams
+
+### Target system flow (UI in context)
+~~~mermaid
+flowchart LR
+  A[ETL<br/>src/pipelines] --> B[Catalogs<br/>data/stac + data/catalog/dcat + data/prov]
+  B --> C[Graph<br/>Neo4j]
+  C --> D[API<br/>src/server]
+  D --> E[UI Features<br/>web/src/features]
+  E --> F[Story Nodes<br/>docs/reports/story_nodes]
+  F --> G[Focus Mode<br/>feature module]
 ~~~
 
-### Sustainability instrumentation
+### Focus Mode sequence (feature-to-API boundary)
+~~~mermaid
+sequenceDiagram
+  participant User
+  participant UI as UI Feature (web)
+  participant API as API (src/server)
+  participant Graph as Graph (Neo4j)
 
-Feature workflows should support energy and carbon accounting by:
+  User->>UI: select entity / story link
+  UI->>API: Focus query(entity_id, optional time_window)
+  API->>Graph: fetch subgraph + provenance refs
+  Graph-->>API: context bundle
+  API-->>UI: narrative + citations + audit flags
+  UI-->>User: render story + sources + map/timeline focus
+~~~
 
-- emitting stable, low-cardinality signals (e.g., “focus-run”, “stac-search”, “timeline-scrub”)
-- avoiding per-entity unique identifiers in telemetry payloads (aggregate instead)
+## 🧠 Story Node & Focus Mode Integration
 
-### Feature documentation metadata
+### How features surface in Focus Mode
+Feature modules that render Focus Mode must:
+- Render narrative text **with citations** (and refuse/flag missing citations in published content).
+- Provide an “audit/provenance” panel and/or “Sources” drawer for traceability.
+- Synchronize map + timeline to Story Node metadata (e.g., `focus_center`, `focus_time`, `focus_layers`) when present.
 
-When a feature introduces a new capability with governance implications (e.g., new visualization mode),
-the feature README should include:
+### Provenance-linked narrative rule
+- Every claim must trace to a dataset / record / asset ID.
+- Any predictive/AI content must be explicitly labeled, opt-in, and carry uncertainty metadata.
 
-- governance notes (risk, masking expectations)
-- A11y notes (keyboard/screen-reader expectations)
-- telemetry notes (events and error taxonomy)
-
----
+### Optional structured controls (Story Node front-matter example)
+~~~yaml
+# Example only — see TEMPLATE__STORY_NODE_V3.md for the canonical schema
+focus_layers:
+  - "trail_segments:primary"
+focus_time: "1861-01-01/1865-12-31"
+focus_center: [-98.0000, 38.0000]
+~~~
 
 ## 🧪 Validation & CI/CD
 
-This README and the features layer are validated as part of governed CI.
+### Validation steps (expected)
+- [ ] UI lint + typecheck (if TypeScript is used)
+- [ ] Unit tests for feature logic and rendering
+- [ ] Integration tests for Focus Mode rendering (citations, provenance UI)
+- [ ] E2E smoke tests for critical flows (map → focus mode → sources)
+- [ ] UI schema checks (layer registry validates against `schemas/ui/`)
+- [ ] Repo lint: forbid patterns like direct DB calls from `web/` code
 
-### Documentation validation (README)
-
-Expected checks include:
-
-- Markdown linting and formatting validation
-- Schema/metadata validation
-- Heading registry validation (H2 headings must match `heading_registry`)
-- Link checks
-- Footer and governance-link checks
-- Diagram validation (Mermaid hygiene)
-
-### Code validation (features layer)
-
-Feature modules should be covered by:
-
-- **Unit tests** for:
-  - view-model builders
-  - guards and parsers
-  - state reducers/machines
-- **Integration tests** for:
-  - feature flows that coordinate multiple contexts
-  - pipeline/service orchestration wrappers
-- **Governance tests** for:
-  - masking and redaction behavior (feature-dependent)
-  - sovereignty flags and CARE labels propagation
-- **Accessibility tests** for:
-  - feature-driven workflows that affect keyboard/screen-reader flows
-- **Telemetry tests** for:
-  - schema-valid event shapes
-  - correct aggregation behavior for sensitive content
-
-Suggested test locations:
-
-~~~text
-tests/unit/web/features/<feature>/**
-tests/integration/web/features/<feature>/**
-tests/e2e/web/features/<feature>/**
+### Reproduction
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) install deps
+# 2) run unit tests
+# 3) run e2e tests (optional)
+# 4) validate UI schemas (layer registry)
 ~~~
 
----
+### Telemetry signals (if applicable)
+| Signal | Source | Where recorded |
+|---|---|---|
+| ui.focusmode.open | UI | `docs/telemetry/` + `schemas/telemetry/` (**not confirmed**) |
+| ui.layer.toggle | UI | `docs/telemetry/` + `schemas/telemetry/` (**not confirmed**) |
 
 ## ⚖ FAIR+CARE & Governance
 
-Features are a governance-critical layer because they:
+### Governance review triggers
+- Adding a **new layer** that could reveal sensitive locations by interaction/zoom
+- Adding or changing **AI narrative behaviors**
+- Adding new **public-facing endpoints** (requires API review + contract tests)
+- Downgrading sensitivity/classification for any surfaced content
 
-- translate user intent into data access patterns,
-- shape view-models that UI components render,
-- coordinate interactions across map/time/story/focus.
+### CARE / sovereignty considerations
+- If a feature can expose culturally sensitive knowledge or restricted locations:
+  - prefer coarse/aggregate public products,
+  - ensure redaction is applied at the API boundary,
+  - document handling decisions in governance notes.
 
-Therefore, every feature must:
-
-- Respect backend governance decisions (frontend may be stricter; never looser).
-- Enforce masking/generalization rules before view-models reach UI.
-- Keep governance metadata attached:
-  - CARE labels
-  - sovereignty flags
-  - provenance references
-  - license/rights
-- Avoid speculative relationships, inferred facts, or unverified historical claims.
-- Ensure warnings and disclosure signals remain available to governance UI components.
-
-Governance failures introduced at the feature layer are treated as **CI-blocking defects**.
-
----
+### AI usage constraints
+- Allowed: summarization, structure extraction, translation, keyword indexing (as governed)
+- Prohibited: generating new policy; inferring sensitive locations (directly or indirectly)
+- Human review required for any sensitivity or governance label changes
 
 ## 🕰️ Version History
 
-| Version     | Date       | Summary |
-|------------:|-----------:|---------|
-| **v11.2.6** | 2025-12-16 | Updated to KFM-MDP v11.2.6 formatting and metadata; normalized H2 headings via `heading_registry`; clarified feature boundaries, import surfaces, and CI expectations. |
-| v11.2.2     | 2025-11-30 | Updated to KFM-MDP v11.2.2; improved governance, telemetry v2, A11y rules, and feature schema alignment. |
-| v10.4.1     | 2025-11-15 | Polished v10.4.1 structure; removed deprecated `focus/` folder. |
-| v10.4.0     | 2025-11-15 | Feature architecture rewrite aligned with pipelines & governance. |
-| v10.3.2     | 2025-11-14 | Added governance + dataset explorer alignment. |
-| v10.3.1     | 2025-11-13 | Initial baseline structure. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-25 | Initial `web/src/features` README scaffold | TBD |
 
 ---
 
-<div align="center">
-
-© 2025 Kansas Frontier Matrix — MIT License  
-FAIR+CARE Certified · Public Document · Version-Pinned
-
-[⬅️ Back to Web Source Overview](../README.md) ·
-[🧱 Web Source Architecture](../ARCHITECTURE.md) ·
-[👥 Entities Layer](../entities/README.md) ·
-[🧠 Context System](../context/README.md) ·
-[🛡 Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md)
-
-</div>
+## Footer refs (do not remove)
+- Master guide: `../../../docs/MASTER_GUIDE_v12.md`
+- Template: `../../../docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Redesign blueprint: `../../../docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Governance: `../../../docs/governance/ROOT_GOVERNANCE.md`
+- Sovereignty: `../../../docs/governance/SOVEREIGNTY.md`
+- Ethics: `../../../docs/governance/ETHICS.md`
