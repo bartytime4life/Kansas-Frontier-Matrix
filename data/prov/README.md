@@ -164,14 +164,13 @@ Note: The internal partitioning of `data/prov/` is a **repository convention**. 
 
 ~~~mermaid
 flowchart LR
-
-  A[ETL / Pipelines<br/>src/pipelines/] --> B[Staging Outputs<br/>data/&lt;domain&gt;/{raw,work,processed}]
-  B --> C[Catalogs<br/>data/stac + data/catalog/dcat + data/prov]
-  C --> D[Graph Build<br/>src/graph + data/graph]
-  D --> E[API Boundary<br/>src/server]
-  E --> F[UI<br/>web/]
-  E --> G[Story Nodes<br/>docs/reports/story_nodes]
-  G --> H[Focus Mode<br/>provenance-linked only]
+  A["ETL / Pipelines\nsrc/pipelines/"] --> B["Staging Outputs\n(data/DOMAIN/raw → data/DOMAIN/work → data/DOMAIN/processed)"]
+  B --> C["Catalogs\n(data/stac + data/catalog/dcat + data/prov)"]
+  C --> D["Graph Build\n(src/graph + data/graph)"]
+  D --> E["API Boundary\nsrc/server"]
+  E --> F["UI\nweb/"]
+  E --> G["Story Nodes\ndocs/reports/story_nodes"]
+  G --> H["Focus Mode\nprovenance-linked only"]
 ~~~
 
 ### Optional: sequence diagram
