@@ -67,6 +67,7 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 - Link: `docs/glossary.md`
 - Terms used in this doc:
+
   - **Workflow**: A GitHub Actions workflow YAML file under `.github/workflows/`.
   - **Local action**: An action defined in this repo under `.github/actions/<action-name>/`.
   - **Gate**: A validation step that fails CI if a required contract/invariant is violated.
@@ -168,6 +169,7 @@ Some canonical roots may not exist in a given repository snapshot (“not confir
 
 ~~~mermaid
 flowchart LR
+
   PR["Pull Request / Push"] --> WF[".github/workflows/ (workflow files)"]
   WF --> ACT[".github/actions/ (local actions)"]
 
@@ -205,62 +207,72 @@ flowchart LR
 
 Local actions in this directory may validate:
 
-- **STAC** collections/items (`data/stac/**`) against `schemas/stac/**` *(paths not confirmed in repo)*.
-- **DCAT** dataset records (`data/catalog/dcat/**`) against `schemas/dcat/**` *(paths not confirmed in repo)*.
-- **PROV** bundles (`data/prov/**`) against `schemas/prov/**` *(paths not confirmed in repo)*.
+### STAC
 
-If your action validates any of the above, it must be:
+- `data/stac/collections/**` and `data/stac/items/**` *(if present)*
+- Schema validation + cross-link integrity (Collection↔Item)
+- Stable IDs and predictable asset paths
 
-- Deterministic (same inputs → same results).
-- Strict about schema errors.
-- Careful about sovereignty rules (restricted locations, culturally sensitive knowledge).
+### DCAT
 
----
+- `data/catalog/dcat/**` *(if present)*
+- Basic dataset/distribution completeness checks
+- Linkage from datasets to STAC Items/Collections where required
+
+### PROV-O
+
+- `data/prov/**` *(if present)*
+- Lineage integrity: outputs link to inputs and run activities
+- “No orphan provenance”: no dangling references across artifacts
+
+### Versioning
+
+- Enforce version bumps where contract outputs change.
+- Ensure predecessor/successor relationships are represented consistently (catalogs and graph, where applicable).
 
 ## 🧱 Architecture
 
-### How workflows reference local actions
+### Components
 
-In workflow YAML, reference local actions via a relative path:
+| Component | Responsibility | Interface |
+|---|---|---|
+| Workflow(s) | Orchestrate CI jobs | `.github/workflows/*.yml` |
+| Local actions | Reusable gate implementations | `.github/actions/<action-name>/action.yml` |
+| Validators | Schema + contract validation tooling | Repo scripts/CLIs *(not confirmed in repo)* |
+| Catalog outputs | Evidence artifacts to validate | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` |
+| Graph | Consume validated evidence IDs | `src/graph/**` + API boundary |
+| API boundary | Enforce access/redaction; serve contracts | `src/server/**` *(not confirmed in repo)* |
+| UI | Consumes only API outputs | `web/**` *(not confirmed in repo)* |
 
-~~~yaml
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+### Interfaces / contracts
 
-      # Example local action usage
-      - name: Run schema validation
-        uses: ./.github/actions/<action-name>
-        with:
-          # define inputs in the action.yml
-          target: "schemas/"
-~~~
+| Contract | Location | Versioning rule |
+|---|---|---|
+| CI gate behavior | `.github/actions/**` | deterministic behavior required |
+| JSON schemas | `schemas/**` | SemVer + changelog *(not confirmed in repo)* |
+| API contracts | `src/server/contracts/**` | Backward compatible or version bump + contract tests *(not confirmed in repo)* |
 
-### Action types supported here
+### API boundary reminder
 
-- **Composite actions** (`runs: using: composite`) are recommended for repo-local validation glue.
-- Docker/JS actions are possible but should be justified (complex runtime needs, performance, etc.).
+- The UI does **not** connect to Neo4j directly.
+- The API boundary mediates access and enforces provenance + redaction/generalization rules.
 
-### Action documentation expectations
+### Extension points checklist (for future work)
 
-Each local action directory should include:
-
-- `action.yml` (required)
-- `README.md` explaining:
-  - what it validates
-  - inputs/outputs
-  - what constitutes failure
-  - how to reproduce locally (if applicable)
+- [ ] Add a new composite action under `.github/actions/<name>/`
+- [ ] Document inputs/outputs in the action’s own README
+- [ ] Ensure it is deterministic and does not require secrets by default
+- [ ] Add/upgrade schema validations when new artifact types are introduced
+- [ ] Add tests or fixtures if the action performs non-trivial parsing/validation
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
+Local actions may validate Story Nodes and narrative artifacts.
+
 If an action validates Story Nodes, it should enforce:
 
-- front-matter validity (required keys, versioning)
 - citations/provenance-linking rules
 - entity reference resolution (IDs/links resolve)
 - redaction/generalization compliance for restricted material
