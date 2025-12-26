@@ -1,11 +1,12 @@
 ---
-title: "KFM GitHub Issue Templates"
+title: ".github/ISSUE_TEMPLATE — Issue Forms for KFM"
 path: ".github/ISSUE_TEMPLATE/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-22"
+last_updated: "2025-12-26"
 status: "draft"
-doc_kind: "Guide"
+doc_kind: "Reference"
 license: "CC-BY-4.0"
+
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
@@ -14,6 +15,7 @@ pipeline_contract_version: "KFM-PPC v11.0.0"
 stac_profile: "KFM-STAC v11.0.0"
 dcat_profile: "KFM-DCAT v11.0.0"
 prov_profile: "KFM-PROV v11.0.0"
+
 
 governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
 ethics_ref: "docs/governance/ETHICS.md"
@@ -24,10 +26,12 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
+
 doc_uuid: "urn:kfm:doc:github:issue-templates-readme:v1.0.0"
 semantic_document_id: "kfm-github-issue-templates-readme-v1.0.0"
 event_source_id: "ledger:kfm:doc:github:issue-templates-readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
+
 
 ai_transform_permissions:
   - "summarize"
@@ -38,296 +42,318 @@ ai_transform_prohibited:
   - "generate_policy"
   - "infer_sensitive_locations"
 
+
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM GitHub Issue Templates
+
+# .github/ISSUE_TEMPLATE — Issue Forms for KFM
 
 ## 📘 Overview
 
 ### Purpose
-- Provide a single, governed reference for how to file KFM issues in a way that is pipeline-aware, reproducible, and reviewable.
-- Ensure issues collect the minimum information needed for traceability across data, catalogs, graph, APIs, UI, and story outputs.
+
+This directory standardizes how contributors and maintainers open issues in Kansas Frontier Matrix (KFM).
+
+Issue templates exist to:
+- capture the *minimum required context* to reproduce and triage problems quickly,
+- route issues cleanly to the correct **pipeline stage** (ETL → catalogs → graph → API → UI → story),
+- reduce governance risk by prompting for provenance/licensing and preventing accidental disclosure of sensitive information.
+
+> Design intent (reference): collaboration templates (issue templates + PR templates) are part of the repo’s operational scaffolding and should prompt for key info like source/licensing/coverage for data-related work. (Details live in higher-level governed docs.) 
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| How to choose and use KFM issue templates | Implementing fixes or features |
-| The required fields for KFM issues | Security incident response procedures |
-| Triage cues: pipeline stage, affected paths, sensitivity | Private project management policy beyond GitHub Issues |
+| GitHub Issue Forms (YAML) and/or Markdown issue templates stored under `.github/ISSUE_TEMPLATE/` | Implementing fixes (belongs in code/data/docs areas) |
+| Guidance on what information each issue must include to be actionable | Defining new governance policies (belongs in governed policy docs; requires human review) |
+| Triage routing to canonical pipeline stages | Reporting secrets, credentials, or restricted coordinates (use security process; do not post publicly) |
 
 ### Audience
-- Primary: Contributors filing issues (bugs, data requests, enhancements, documentation gaps).
-- Secondary: Maintainers triaging, labeling, and connecting issues to PRs, datasets, and releases.
 
-### Definitions
-- Link: `docs/glossary.md`
-- Terms used in this doc:
-  - Pipeline stage
-  - STAC, DCAT, PROV
-  - Neo4j graph
-  - API boundary
-  - Story Node
-  - Focus Mode
-  - Sensitivity and redaction
+- Contributors filing bugs, data requests, feature ideas, or governance questions.
+- Maintainers triaging issues and mapping them to the correct pipeline stage / owners.
+- Reviewers validating that proposed work stays aligned to KFM contracts (schemas, API boundaries, provenance rules).
 
-### Key artifacts
+### Definitions (link to glossary)
 
-| Artifact | Path | Owner | Notes |
+- Link (expected): `docs/glossary.md` (**not confirmed in repo**)
+- **Pipeline stage**: the canonical segment of work a change belongs to (ETL, catalogs, graph, API, UI, story).
+- **Deterministic**: same inputs + same config + same code revision ⇒ same outputs (byte-for-byte when practical).
+- **Idempotent**: running the same job twice does not duplicate records or produce inconsistent results.
+- **Run manifest**: a small record capturing how to reproduce a run (inputs, config, commit SHA, versions).
+- **PROV bundle**: provenance artifacts describing inputs, activities, outputs, and agents.
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master Guide | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical pipeline ordering + invariants |
-| Universal Doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Maintainers | Default governed doc scaffold |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Maintainers | Narratives and Focus Mode inputs |
-| API Contract Extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | Maintainers | REST/GraphQL contract changes |
-| Governance docs | `docs/governance/` | Governance | If missing, add per Master Guide references |
+| System + pipeline source of truth | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical ordering + invariants |
+| Redesign blueprint (if adopted) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | KFM Core | Canonical roots + v13 readiness gates (**not confirmed in repo**) |
+| Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | KFM Core | Default governed Markdown structure |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | KFM Core | Narrative + evidence rules |
+| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | KFM Core | Contract-first API change process |
+| CI gates + validation expectations | `.github/workflows/README.md` | CI maintainers | Where “what failed” is mapped to “where to debug” (**not confirmed in repo**) |
+| Schemas registry | `schemas/` | Data/Platform | STAC/DCAT/PROV + contract schemas |
+| Data lifecycle layout | `data/README.md` | Data Eng | raw/work/processed + metadata outputs |
 
-### Definition of done
-- [ ] Front-matter complete and valid
-- [ ] Links point to canonical KFM docs and folders
-- [ ] Guidance is pipeline-aware and does not imply bypassing the API boundary
-- [ ] Sensitivity, PII, and secrets guidance is explicit
-- [ ] Validation and review expectations are listed
+### Definition of done (for this document)
+
+- [ ] Front-matter complete and `path` matches file location.
+- [ ] This README reflects the **actual** templates present in `.github/ISSUE_TEMPLATE/` (no drift).
+- [ ] Every template (or the “blank issue” fallback) captures:
+  - pipeline stage,
+  - reproduction/evidence,
+  - expected vs actual,
+  - provenance/licensing when data-related,
+  - governance/sensitivity notes when relevant.
+- [ ] Security note included: no secrets / no restricted coordinates in public issues.
+- [ ] Version history updated when templates are added/removed/renamed.
+
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `.github/ISSUE_TEMPLATE/README.md`
+
+- `path`: `.github/ISSUE_TEMPLATE/README.md` (must match front-matter)
 
 ### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
-| GitHub meta | `.github/` | Issue templates, PR templates, workflows |
-| Documentation | `docs/` | Governed docs and templates |
-| Data domains | `data/` | Domain raw/work/processed outputs |
-| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC, DCAT, PROV artifacts |
-| Pipelines | `src/pipelines/` | Deterministic ETL + catalog generation code |
-| Graph | `src/graph/`, `data/graph/` | Ontology, ingest, fixtures/imports |
-| API boundary | `src/server/` | Contracted access to graph/catalogs with redaction rules |
-| UI | `web/` | Map UI, Focus Mode UI, layer registry |
-| Schemas | `schemas/` | Machine-readable validation schemas |
-| Tests | `tests/` | Contract/schema/integration tests |
+| CI workflows | `.github/workflows/` | Validation gates (markdown-lint, schema-lint, tests, scans) |
+| PR template(s) | `.github/PULL_REQUEST_TEMPLATE.md` | PR intake scaffold (**not confirmed in repo**) |
+| Governance | `docs/governance/` | ROOT_GOVERNANCE, ETHICS, SOVEREIGNTY |
+| Documentation templates | `docs/templates/` | Universal / Story Node / API contract templates |
+| Pipelines | `src/pipelines/` | ETL + transforms + catalog builders |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC/DCAT/PROV artifacts |
+| Graph | `src/graph/` (+ `data/graph/` if present) | Ontology bindings + import fixtures |
+| API boundary | `src/server/` | Contracted REST/GraphQL boundary (**target; not confirmed in repo**) |
+| UI | `web/` | React/MapLibre UI (never reads Neo4j directly) |
+| Story Nodes | `docs/reports/story_nodes/` | Governed narrative artifacts |
 
-### Expected file tree
+### Expected file tree for this sub-area
+
+> This is the **recommended** structure. Some templates may not exist yet (**not confirmed in repo**).
 
 ~~~text
 📁 .github/
-└── 📁 ISSUE_TEMPLATE/
-    ├── 📄 README.md
-    ├── 📄 config.yml
-    ├── 📄 <issue_template_1>.yml
-    ├── 📄 <issue_template_2>.yml
-    └── 📄 ...
+└── 🧩 ISSUE_TEMPLATE/
+    ├── 📘 README.md
+    ├── 🐛 bug_report.yml                  # recommended (not confirmed in repo)
+    ├── ✨ feature_request.yml              # recommended (not confirmed in repo)
+    ├── ➕ data_addition_request.yml         # recommended (not confirmed in repo)
+    ├── 🧱 graph_model_change.yml            # recommended (not confirmed in repo)
+    ├── 📜 api_contract_change.yml           # recommended (not confirmed in repo)
+    ├── 🗺️ ui_layer_issue.yml                # recommended (not confirmed in repo)
+    ├── 🧠 story_node_request.yml            # recommended (not confirmed in repo)
+    └── ⚙️ config.yml                        # optional GitHub issue forms config (not confirmed in repo)
 ~~~
+
 
 ## 🧭 Context
 
-### Why issue templates exist in KFM
-Issue templates are designed to prompt for the information reviewers need to maintain:
-- traceability (sources, licenses, temporal/spatial coverage, provenance),
-- reproducibility (steps to reproduce, validation steps),
-- governance (sensitivity, redaction, sovereignty considerations).
+### Background
 
-### Pipeline-first triage rule
-Every issue should name at least one pipeline stage it impacts:
+KFM is a governed geospatial + historical knowledge system. Work is deliberately staged so that:
+- transformations are deterministic (ETL),
+- metadata is schema-valid (STAC/DCAT/PROV),
+- semantics are explicit (graph),
+- access is contract-first (API),
+- presentation is provenance-linked (UI + Story Nodes + Focus Mode).
 
-| Stage | Typical issue topics | Typical affected paths |
+Issue templates are the “front door” for changes and must help route requests to the correct stage with enough evidence to reproduce.
+
+### Assumptions
+
+- Contributors may not know which subsystem owns a problem.
+- Canonical paths may differ by repo snapshot (some are “target layout”); missing roots are treated as **not confirmed in repo**.
+- CI is treated as contract enforcement, not just unit tests.
+
+### Constraints / invariants
+
+- **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode** is preserved.
+- The **UI must not connect to Neo4j directly**; all graph access is via contracted APIs.
+- Focus Mode and Story Nodes must remain **provenance-linked** (no uncited factual claims).
+
+### Open questions
+
+| Question | Owner | Target date |
 |---|---|---|
-| ETL | Ingest bugs, transforms, new source adapters | `src/pipelines/`, `data/<domain>/{raw,work,processed}/` |
-| Catalogs | STAC/DCAT/PROV generation/validation | `data/stac/`, `data/catalog/dcat/`, `data/prov/`, `schemas/` |
-| Graph | Ontology, ingest mapping, migrations | `src/graph/`, `data/graph/`, `docs/graph/` |
-| API boundary | New endpoints, payload changes, redaction rules | `src/server/`, `schemas/`, `tests/` |
-| UI | Layer registry, map/timeline, Focus Mode UX | `web/` |
-| Story Nodes | Narrative gaps, missing citations, publishing | `docs/reports/story_nodes/` |
-| Focus Mode | Evidence display rules, synthesis constraints | `web/` + story node docs |
+| Which issue templates are currently implemented in this repo snapshot? | TBD | TBD |
+| What label taxonomy is used for pipeline stages and priorities? | TBD | TBD |
+| Where should sensitive reports be routed (SECURITY.md process)? | TBD | TBD |
 
-### Required fields in every issue
-Regardless of template, include:
-- What you expected vs what happened
-- Pipeline stage(s) impacted
-- Affected paths (folders/files if known)
-- Evidence and provenance references where applicable
-- Sensitivity assessment
-- Acceptance criteria
+### Future extensions
 
-### Data Addition Request minimum checklist
-If you are proposing a new dataset or source, include:
-- Source link or identifier
-- License and redistribution terms
-- Temporal coverage
-- Spatial coverage
-- Data type and format
-- Sensitivity and redaction needs
-- What you want KFM to produce
-  - raw/work/processed artifacts
-  - catalog records (STAC/DCAT)
-  - provenance (PROV bundle)
-  - downstream linkage targets (graph entities, story nodes)
+- Add “stage picker” + “risk/sensitivity picker” to every issue form.
+- Add template(s) for “CI gate failure” to standardize failure reports.
+- Add an issue template for “governance exception request” (human review required).
 
-### Bug Report minimum checklist
-- Steps to reproduce
-- Expected behavior
-- Actual behavior
-- Logs or error output
-- Environment details
-- Smallest failing example if possible
-
-### API or contract change minimum checklist
-- Proposed change summary and motivation
-- Backward compatibility considerations
-- Affected schema(s) and tests
-- Sensitivity and redaction implications
 
 ## 🗺️ Diagrams
 
+### Issue intake → triage → pipeline stage
+
 ~~~mermaid
 flowchart LR
-  I[GitHub Issue] --> S[Pipeline stage tag]
-  S --> P1[ETL and pipelines]
-  S --> P2[STAC DCAT PROV catalogs]
-  S --> P3[Graph]
-  S --> P4[API boundary]
-  S --> P5[UI]
-  S --> P6[Story Nodes]
-  S --> P7[Focus Mode]
-  P2 --> E[Evidence artifacts with IDs]
-  P3 --> E
-  P4 --> U[Contracted payloads]
-  P5 --> U
+  I["Issue opened<br/>.github/ISSUE_TEMPLATE"] --> T["Triage<br/>labels + stage + priority"]
+  T --> S1["ETL<br/>src/pipelines + data/<domain>"]
+  T --> S2["Catalogs<br/>data/stac + data/catalog/dcat + data/prov"]
+  T --> S3["Graph<br/>src/graph (+ data/graph)"]
+  T --> S4["API boundary<br/>src/server + contracts"]
+  T --> S5["UI<br/>web/"]
+  T --> S6["Story Nodes<br/>docs/reports/story_nodes/"]
 ~~~
+
+
+## 🧪 Validation & CI/CD
+
+### What to include when reporting a CI failure
+
+Include:
+- workflow name + job name + failing step,
+- exact error output (redact secrets),
+- the changed paths in your PR/branch,
+- whether the failure is reproducible locally (commands if known; otherwise mark **not confirmed in repo**).
+
+Common failure “buckets” (names are conceptual; actual job names may differ):
+- markdown protocol / lint failures,
+- schema validation (STAC/DCAT/PROV),
+- graph integrity checks,
+- API contract tests,
+- UI schema/a11y checks,
+- security / secret / PII scans.
+
+### Reproduction (pattern)
+
+~~~text
+1) Identify pipeline stage from the failure context.
+2) Capture minimal repro: smallest set of changed files + commands.
+3) Provide evidence:
+   - validator output
+   - dataset/item IDs
+   - run manifest / PROV bundle references (when applicable)
+~~~
+
 
 ## 📦 Data & Metadata
 
-### Inputs
+### If your issue involves adding or correcting data
 
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Issue fields | GitHub issue form | Contributor | Required fields per template |
-| Evidence links | URLs or repo paths | Contributor | Must be attributable and license-aware |
-| Affected paths | Repo paths | Contributor | Must align with canonical homes |
+Provide at minimum:
+- **source** (publisher/authority + citation or reference),
+- **license/terms** (explicit; include restrictions if any),
+- **retrieval date** (when the source was accessed),
+- **spatial coverage** (bbox or narrative description; avoid restricted coordinates),
+- **temporal coverage** (start/end or specific event date window),
+- **intended domain placement** (e.g., `data/<domain>/{raw,work,processed}/`),
+- **known sensitivity** (PII risk, culturally sensitive locations, sovereignty constraints).
 
-### Outputs
+If you cannot provide all fields, open the issue anyway but clearly mark unknowns as “TBD”.
 
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Issue triage labels | GitHub labels | GitHub | Maintainer conventions |
-| Linked artifacts | Links to PRs, docs, datasets | Repo + GitHub | Must reference canonical locations |
-| Validation notes | Markdown | Issue comments | Repeatable steps when applicable |
+### If your issue is about a processed output
 
-### Sensitivity and redaction
-- Do not post secrets, credentials, tokens, or private keys.
-- Do not post private personal data.
-- If a location or community-sensitive attribute is involved, describe it at an appropriate level of generalization.
+Include:
+- the schema/contract you believe applies (e.g., a `schemas/...` reference),
+- sample record(s) (small, non-sensitive),
+- the expected normalization rules (units, CRS, time zone conventions),
+- the stable identifier key(s) expected to remain consistent between runs.
 
-### Quality signals
-- Repro steps that another contributor can follow
-- Sample data or a minimal failing case
-- Clear acceptance criteria
-- Provenance references for data and narrative claims
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### STAC
-- When issues mention geospatial assets, include relevant STAC collection and item IDs if known.
-- If a new dataset is proposed, describe the intended STAC collection grouping and item granularity.
+
+When relevant, include:
+- Collection identifier(s) involved (path under `data/stac/collections/**`),
+- Item identifier(s) involved (path under `data/stac/items/**`),
+- asset key(s) and the referenced artifact path(s),
+- the validator error output (schema + any KFM profile constraints).
 
 ### DCAT
-- For dataset-centric issues, include a stable dataset identifier and license mapping expectations.
+
+When relevant, include:
+- dataset record path(s) under `data/catalog/dcat/**`,
+- license consistency concerns (STAC vs DCAT mismatch),
+- publisher/contact/keywords concerns (if required by adopted profile).
 
 ### PROV-O
-- For pipeline-related issues, reference run IDs and provenance fields:
-  - `prov:wasDerivedFrom`
-  - `prov:wasGeneratedBy`
 
-### Versioning
-- When an issue describes changes to existing assets or catalogs, include predecessor links or version notes.
+When relevant, include:
+- PROV bundle path(s) under `data/prov/**`,
+- the activity/run identifier(s),
+- which raw/work/processed artifacts should be linked by provenance.
+
 
 ## 🧱 Architecture
 
-### Components
+### Use this stage-to-evidence matrix when opening issues
 
-| Component | Responsibility | Interface |
+| Stage | When to use | Include these fields |
 |---|---|---|
-| ETL | Ingest and normalize | Configs and run logs |
-| Catalogs | STAC/DCAT/PROV | JSON plus validators |
-| Graph | Neo4j | Cypher behind API layer |
-| APIs | Serve contracts | REST/GraphQL |
-| UI | Map and narrative | API calls only |
-| Story Nodes | Curated narrative | Docs and graph linkage |
-| Focus Mode | Contextual synthesis | Provenance-linked rules |
+| ETL | Ingest/transforms, raw→processed issues | source + license + retrieval date; input sample; expected output; run manifest (if available) |
+| STAC/DCAT/PROV | Catalog validation failures; metadata drift | collection/item IDs; dataset record IDs; PROV bundle IDs; validator output |
+| Graph | Ontology/entity/edge modeling issues | label/relationship expectations; entity IDs; import artifacts; migration notes |
+| API | Contract/endpoint behavior or redaction | endpoint + contract ref; request/response samples; breaking-change assessment |
+| UI | Layer rendering, time slider, interaction bugs | reproduction steps; screenshots if safe; API response excerpt; browser/device info |
+| Story Nodes | Narrative evidence or citation issues | Story Node doc ID/path; claim→evidence mapping; provenance refs |
 
-### Interfaces and contracts
+### Minimal “must-have” fields for every issue (if templates are missing)
 
-| Contract | Location | Versioning rule |
-|---|---|---|
-| JSON schemas | `schemas/` | Semver plus changelog |
-| API schemas | `src/server/` plus docs | Contract tests required |
-| Layer registry | `web/` | Schema-validated |
+- What happened (actual)
+- What you expected
+- Reproduction steps / evidence
+- Pipeline stage (best guess)
+- Affected paths (best guess)
+- Governance note (any sensitivity concerns?)
 
-### Extension points checklist
-- [ ] Data domain adds under `data/<domain>/...`
-- [ ] Catalog validation covers new STAC/DCAT/PROV outputs
-- [ ] PROV includes run activity and agent identifiers
-- [ ] Graph mappings align with ontology and migrations
-- [ ] API changes use contract extensions and tests
-- [ ] UI changes update layer registry where applicable
-- [ ] Story Nodes and Focus Mode keep provenance references enforced
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How this work surfaces in Focus Mode
-- If the issue affects Focus Mode behavior, identify:
-  - which entities become focusable
-  - what evidence must be shown
-  - any redaction or uncertainty rules
+If the issue relates to narrative or Focus Mode:
+- link the relevant Story Node(s) under `docs/reports/story_nodes/` (**not confirmed in repo**),
+- list each claim that is in question,
+- provide the dataset/document IDs that should support each claim (STAC/DCAT/PROV preferred),
+- do **not** introduce new factual claims without citations/evidence identifiers.
 
-### Provenance-linked narrative rule
-- When issues propose narrative claims, require links to dataset or document identifiers that can be traced through catalogs and provenance.
-
-## 🧪 Validation & CI/CD
-
-### Validation steps
-- [ ] Markdown protocol checks
-- [ ] Schema validation for STAC/DCAT/PROV
-- [ ] Graph integrity checks
-- [ ] API contract tests
-- [ ] UI schema checks
-- [ ] Security and sovereignty checks where applicable
-
-### Reproduction
-
-~~~bash
-# Example placeholders — replace with repo-specific commands
-# 1) validate schemas
-# 2) run unit/integration tests
-# 3) run doc lint
-~~~
 
 ## ⚖ FAIR+CARE & Governance
 
-### Review gates
-- Identify who should review the issue
-- Call out whether the change is expected to require governance or community review
+### Do not post in public issues
 
-### CARE and sovereignty considerations
-- If content impacts a community or contains potentially sensitive cultural or location information, describe required protection rules.
+- secrets, tokens, credentials, private keys,
+- restricted coordinates or culturally sensitive site locations (use generalized descriptions),
+- personal data or anything that could identify private individuals.
+
+### CARE / sovereignty considerations
+
+- If the issue involves Indigenous knowledge, culturally sensitive places, or restricted locations:
+  - flag it clearly in the issue,
+  - prefer coarse/generalized geography,
+  - reference `docs/governance/SOVEREIGNTY.md` for handling rules.
 
 ### AI usage constraints
-- Do not request prohibited AI actions such as inferring sensitive locations.
-- Ensure any AI-related proposals include provenance and uncertainty expectations.
+
+- Allowed uses for issue content: summarization, structure extraction, translation, keyword indexing.
+- Prohibited: generating new policy or inferring sensitive locations from data.
+
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-22 | Initial issue template README | TBD |
+| v1.0.0 | 2025-12-26 | Initial README scaffold for `.github/ISSUE_TEMPLATE/` | TBD |
+
 
 ---
 
-Footer refs:
+Footer refs (do not remove)
+
+- Master guide: `docs/MASTER_GUIDE_v12.md`
+- Template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Templates: `docs/templates/`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
-- Master Guide: `docs/MASTER_GUIDE_v12.md`
-- Templates: `docs/templates/`
