@@ -92,7 +92,7 @@ Out of scope:
 
 - `path`: `mcp/README.md` (must match front-matter)
 
-### Related repository paths (orientation)
+### Related repository paths orientation
 
 | Area | Path | What lives here |
 |---|---|---|
@@ -167,26 +167,31 @@ KFM’s pipeline is intentionally staged (ETL → catalogs → graph → API →
 
 ~~~mermaid
 flowchart LR
+
   MCP[mcp/<br/>experiments + model cards + SOPs] -->|documents + pointers| D[data/<domain>/processed]
   D --> C1[data/stac/**]
   D --> C2[data/catalog/dcat/**]
   D --> C3[data/prov/**]
+
   C1 --> G[src/graph]
   C2 --> G
   C3 --> G
+
   G --> API[src/server or src/api]
   API --> UI[web/]
   UI --> SN[docs/reports/story_nodes]
   SN --> FM[Focus Mode<br/>provenance-linked only]
 ~~~
 
-### Optional: sequence diagram (Focus Mode contract boundary)
+### Optional sequence diagram for Focus Mode contract boundary
 
 ~~~mermaid
 sequenceDiagram
+
   participant UI as UI (web)
   participant API as API boundary
   participant Graph as Graph layer
+
   UI->>API: focusContext(entity_id)
   API->>Graph: fetch subgraph + provenance refs
   Graph-->>API: context bundle (entities + evidence ids)
@@ -287,7 +292,7 @@ sequenceDiagram
 
 ## ⚙️ Validation & CI/CD
 
-### Validation steps (recommended)
+### Validation steps recommended
 
 - Markdown protocol check (front-matter, required sections)
 - Secrets scan (no tokens/keys)
@@ -295,7 +300,7 @@ sequenceDiagram
 - If model card updated: ensure evaluation evidence is linked
 - If experiment produces evidence: ensure STAC/DCAT/PROV updates exist in canonical locations
 
-### CI expectations (if configured)
+### CI expectations if configured
 
 - Markdown protocol validation
 - Schema validation (STAC/DCAT/PROV/story nodes/telemetry if present)
