@@ -1,8 +1,8 @@
 ---
 title: "🏺 Kansas Frontier Matrix — Unified Heritage Standards v11 (Schemas · Examples · Assets)"
 path: "docs/standards/heritage/HERITAGE_STANDARDS_v11.md"
-version: "v11.0.1"
-last_updated: "2025-12-06"
+version: "v11.0.2"
+last_updated: "2025-12-27"
 
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
@@ -10,11 +10,11 @@ review_cycle: "Annual · FAIR+CARE Council & Focus Mode Board"
 content_stability: "stable"
 
 commit_sha: "<latest-commit-hash>"
-signature_ref: "releases/v11.0.1/signature.sig"
-attestation_ref: "releases/v11.0.1/slsa-attestation.json"
-sbom_ref: "releases/v11.0.1/sbom.spdx.json"
-manifest_ref: "releases/v11.0.1/manifest.zip"
-telemetry_ref: "releases/v11.0.1/focus-telemetry.json"
+signature_ref: "releases/v11.0.2/signature.sig"
+attestation_ref: "releases/v11.0.2/slsa-attestation.json"
+sbom_ref: "releases/v11.0.2/sbom.spdx.json"
+manifest_ref: "releases/v11.0.2/manifest.zip"
+telemetry_ref: "releases/v11.0.2/focus-telemetry.json"
 telemetry_schema: "schemas/telemetry/heritage-standards-v11.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
@@ -22,15 +22,15 @@ carbon_schema: "schemas/telemetry/carbon-v2.json"
 governance_ref: "../governance/ROOT-GOVERNANCE.md"
 ethics_ref: "../faircare/FAIRCARE-GUIDE.md"
 sovereignty_policy: "../sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-license: "CC-BY 4.0"
+license: "CC-BY-4.0"
 
 mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.4"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+markdown_protocol_version: "KFM-MDP v11.2.6"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
 status: "Active / Enforced"
 doc_kind: "HeritageStandards"
@@ -57,7 +57,7 @@ sensitivity: "Heritage (sensitive by default)"
 sensitivity_level: "High"
 public_exposure_risk: "Medium"
 classification: "Internal Heritage Governance Document"
-jurisdiction: "Kansas / United States"
+jurisdiction: "US-KS"
 indigenous_rights_flag: true
 risk_category: "Heritage Protection"
 redaction_required: true
@@ -80,9 +80,10 @@ metadata_profiles:
   - "FAIR+CARE"
 
 provenance_chain:
-  - "docs/standards/heritage/HERITAGE_STANDARDS_v10.md@v10.x"
-  - "docs/standards/heritage/HERITAGE_STANDARDS_v11.md@v11.0.0"
+  - "docs/standards/heritage/HERITAGE_STANDARDS_v11.md@v11.0.2"
   - "docs/standards/heritage/HERITAGE_STANDARDS_v11.md@v11.0.1"
+  - "docs/standards/heritage/HERITAGE_STANDARDS_v11.md@v11.0.0"
+  - "docs/standards/heritage/HERITAGE_STANDARDS_v10.md@v10.x"
 
 provenance_requirements:
   versions_required: true
@@ -96,10 +97,10 @@ story_node_refs: []
 
 immutability_status: "version-pinned"
 
-doc_uuid: "urn:kfm:doc:heritage:standards:v11.0.1"
-semantic_document_id: "kfm-heritage-standards-v11.0.1"
-event_source_id: "ledger:kfm:doc:standards:heritage:HERITAGE_STANDARDS_v11.0.1"
-doc_integrity_checksum: "<sha256>"
+doc_uuid: "urn:kfm:doc:heritage:standards:v11.0.2"
+semantic_document_id: "kfm-heritage-standards-v11.0.2"
+event_source_id: "ledger:kfm:doc:standards:heritage:HERITAGE_STANDARDS_v11.0.2"
+doc_integrity_checksum: "sha256:<calculated-in-ci>"
 
 ai_training_inclusion: false
 ai_focusmode_usage: "Allowed with restrictions"
@@ -114,6 +115,7 @@ ai_transform_prohibited:
   - "unverified-historical-claims"
   - "culturally-sensitive-inference"
   - "governance-override"
+  - "infer_sensitive_locations"
 
 transform_registry:
   allowed:
@@ -127,6 +129,7 @@ transform_registry:
     - "unverified-historical-claims"
     - "culturally-sensitive-inference"
     - "governance-override"
+    - "infer_sensitive_locations"
 
 machine_extractable: true
 accessibility_compliance: "WCAG 2.1 AA+"
@@ -149,10 +152,14 @@ test_profiles:
   - "markdown-lint"
   - "schema-lint"
   - "metadata-check"
+  - "provenance-check"
+  - "accessibility-check"
+  - "diagram-check"
+  - "secret-scan"
+  - "pii-scan"
   - "heritage-schema-lint"
   - "heritage-redaction-check"
   - "heritage-assets-check"
-  - "provenance-check"
   - "footer-check"
 
 ci_integration:
@@ -170,6 +177,8 @@ branding_registry:
 layout_profiles:
   - "immediate-one-branch-with-descriptions-and-emojis"
 
+fencing_profile: "outer-backticks-inner-tildes-v1"
+
 badge_profiles:
   - "root-centered-badge-row"
 
@@ -183,24 +192,27 @@ deprecated_fields: []
 
 <div align="center">
 
-# 🏺 **Kansas Frontier Matrix — Unified Heritage Standards v11**  
+# 🏺 **Kansas Frontier Matrix — Unified Heritage Standards v11**
 **Schemas · Examples · Assets**  
 `docs/standards/heritage/HERITAGE_STANDARDS_v11.md`
 
-**Status:** Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+**Status:** Stable / Governed (LTS) · **High‑Risk Domain** · **Redaction Required**
 
 **Purpose:**  
-Provide the canonical, governance-safe **single-source-of-truth** for all **heritage‑protection standards** in KFM v11, merging:
+Provide the canonical, governance‑safe **single source of truth** for KFM **heritage‑protection** rules across:
 
-- The **Schemas Index**  
-- The **Example Library**  
-- The **Assets Index**  
+- **Schemas** (JSON Schema + SHACL)  
+- **Example Library** (synthetic only)  
+- **Assets** (diagrams/icons/templates, abstraction‑only)
 
-This unified document governs ALL heritage pipelines, visual assets, spatial generalization methods, metadata rules, and FAIR+CARE / sovereignty requirements.
+This document governs heritage handling across the canonical pipeline:  
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
-[![FAIR+CARE Certified](https://img.shields.io/badge/FAIR%2BCARE-Certified-gold.svg)]()  
-[![Markdown KFM-MDP v11.2.4](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.4-blue.svg)]()  
-[![License CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-brightgreen.svg)]()
+[![MCP‑DL v6.3](https://img.shields.io/badge/MCP--DL-v6.3-blue)]()  
+[![KFM‑MDP v11.2.6](https://img.shields.io/badge/KFM--MDP-v11.2.6-purple)]()  
+[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Compliant-gold)]()  
+[![WCAG 2.1 AA+](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA%2B-brightgreen)]()  
+[![License CC‑BY‑4.0](https://img.shields.io/badge/License-CC--BY--4.0-brightgreen)]()
 
 </div>
 
@@ -208,162 +220,198 @@ This unified document governs ALL heritage pipelines, visual assets, spatial gen
 
 ## 📘 Overview
 
-### 1. Scope and Intent
+### Purpose
 
-This v11 heritage standard applies to **all KFM artifacts that intersect with cultural heritage**, including:
+KFM heritage content is **sensitive by default**. This standard exists to ensure that **no heritage pipeline, dataset, visualization, or story** can accidentally publish (or help re‑identify) protected locations or culturally restricted knowledge.
 
-- Archaeological sites and landscapes  
-- Sacred or culturally significant places  
-- Historic structures, districts, and viewsheds  
-- Oral‑history‑linked locations and story layers  
-- Any derived product that could be used to infer **precise** heritage locations  
+This document is normative for:
 
-It unifies three previously separate strands:
+- Heritage ETL (generalization/redaction as deterministic steps)
+- Heritage metadata (STAC/DCAT/PROV flags and linkage)
+- Heritage graph mappings (first‑class nodes + relationships)
+- Heritage UI behaviors (zoom limits, search exclusions, disclosure rules)
+- Heritage Story Nodes and Focus Mode rendering rules
 
-1. **Schemas** — JSON/SHACL schemas for heritage datasets, sensitive locations, H3 generalization, and provenance.  
-2. **Examples** — A curated set of **synthetic** examples that demonstrate correct usage while *never* exposing real sites.  
-3. **Assets** — Diagrams, icons, and templates that are abstraction‑only and sovereignty‑aware.
+### Scope
 
-Wherever there is tension between openness and protection, this document **prioritizes protection**, in alignment with Kansas legal requirements and Indigenous data sovereignty guidance.
+| In scope | Out of scope |
+|---|---|
+| Standards for handling cultural heritage locations, assets, and narratives (archaeology, historic preservation, cultural landscapes, oral‑history‑linked geographies). | Publishing raw site coordinates or unmasked site geometries. |
+| Deterministic generalization/redaction rules and required metadata flags for any distributable artifact. | Creating/overriding access control policy (RBAC/OIDC) — defined in governance/security docs. |
+| Synthetic examples demonstrating correct usage **without** exposing real sites. | “Best guess” inference of locations, affiliations, or cultural protocols not explicitly documented. |
+| Provenance requirements for auditing: what dataset/run produced a generalized output. | Legal interpretation; this doc may reference laws as context, but does not replace counsel or community governance. |
 
-### 2. Core Heritage Principles
+### Audience
 
-1. **Generalization‑First**  
-   Raw coordinates for protected sites are never published in KFM public or shared layers. Heritage products use H3 or equivalent generalization with minimum aggregation thresholds.
+- **Data stewards / heritage curators** (policy + approvals)
+- **Pipeline developers** (ETL + validation + provenance)
+- **Graph/ontology maintainers** (entity modeling + linkage)
+- **API/UI engineers** (enforced redaction + safe rendering)
+- **Narrative editors** (Story Nodes + Focus Mode compliance)
 
-2. **Sovereignty‑First**  
-   Indigenous communities retain authority over how their cultural data are represented. Relevant datasets **must** carry sovereignty flags and CARE‑aligned metadata, and may be further restricted or withdrawn.
+### Non‑negotiable invariants
 
-3. **Least‑Reveal Principle**  
-   Public or shared outputs expose only the information required for research, education, or management — no more. All examples in this document are synthetic and safe by design.
+1. **Canonical pipeline ordering**  
+   Heritage artifacts must follow: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.
 
-4. **Full Provenance, Controlled Access**  
-   Internally, raw location and workflow provenance are preserved as PROV‑O entities. Access is governed by separate authorization policies; this standard controls **what may leave** protected contexts.
+2. **API boundary**  
+   The UI must **never** read Neo4j directly; all access is via contracted APIs.
 
-5. **Graph‑Native, Catalog‑Native**  
-   Heritage entities are first‑class nodes and datasets: they must be representable in Neo4j (KFM‑OP v11), STAC Collections/Items, and DCAT catalogs.
+3. **Generalization‑first**  
+   Raw coordinates for protected heritage sites are never published in KFM public artifacts. Distributable products use coarse/generalized spatial references (e.g., H3 cells, generalized polygons, bounding regions).
 
-6. **Reproducible Redaction**  
-   Generalization and redaction are deterministic, config‑driven ETL steps. Given the same inputs and configs, KFM must be able to reproduce the same generalized heritage products.
+4. **Sovereignty‑first**  
+   Indigenous communities retain authority over how cultural data are represented. If community protocols require stricter handling than baseline rules, the stricter regime applies.
 
-### 3. Relationship to Other KFM Standards
+5. **Least‑reveal**  
+   Public outputs expose only what is required for research, education, or management — no more.
 
-This document sits alongside:
+6. **Reproducible redaction**  
+   Generalization and redaction must be deterministic and configuration‑driven, producing reproducible outputs given the same inputs and configs.
 
-- **KFM‑MDP v11.2.4 (Markdown Protocol)** — governs this file’s structure, headings, and metadata.  
-- **STAC / DCAT / PROV standards** — define how heritage datasets and workflows are cataloged and traced.  
-- **Indigenous Data Protection & FAIR+CARE guides** — define sovereignty, consent, and ethical use obligations.  
-- **Kansas Frontier Matrix architecture and history docs** — describe how heritage layers integrate into maps, timelines, and story views.
+7. **Provenance‑linked narrative**  
+   Focus Mode and Story Nodes must remain provenance‑linked. Any AI‑derived content must be clearly labeled and carry uncertainty/confidence metadata (if included at all).
 
-Any heritage‑related SOP, pipeline design, or UI spec **must reference and conform to this standard**.
+### Key artifacts and references
+
+| Artifact | Canonical path | Role |
+|---|---|---|
+| Master guide | `docs/MASTER_GUIDE_v12.md` | Canonical pipeline + extension matrix |
+| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Governed Markdown structure |
+| Story Node template v3 | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Provenance‑linked narrative structure |
+| Governance root (v11) | `docs/standards/governance/ROOT-GOVERNANCE.md` | Governance source of truth |
+| FAIR+CARE guide (v11) | `docs/standards/faircare/FAIRCARE-GUIDE.md` | Ethics framework |
+| Indigenous data protection (v11) | `docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md` | Sovereignty/consent constraints |
+| This doc’s JSON schema | `schemas/json/heritage-standards-v11.schema.json` | Front‑matter validation |
+| This doc’s SHACL shape | `schemas/shacl/heritage-standards-v11-shape.ttl` | Shape/graph validation |
 
 ---
 
 ## 🗂️ Directory Layout
 
-This layout describes the **heritage standards subtree** plus its immediate companions.
+Emoji‑enriched, CI‑safe layout for this module (per `fencing_profile: outer-backticks-inner-tildes-v1`).
+
+### Repo top‑levels (expected)
+
+~~~text
+.github/
+data/
+docs/
+mcp/
+schemas/
+src/
+tests/
+tools/
+web/
+releases/
+~~~
+
+### Heritage governance + data locations
 
 ~~~text
 docs/
 ├── 📂 standards/
 │   ├── 📂 heritage/
-│   │   ├── 🏺 HERITAGE_STANDARDS_v11.md        # This file (unified heritage schemas · examples · assets)
-│   │   ├── 📂 schemas/                        # JSON / SHACL heritage schemas
-│   │   │   ├── 📄 h3-generalization-standard.json
-│   │   │   ├── 📄 heritage-sensitive-location.schema.json
-│   │   │   ├── 📄 heritage-dataset.schema.json
-│   │   │   ├── 📄 heritage-protection-flags.schema.json
-│   │   │   └── 📄 lineage-provenance.schema.json
-│   │   ├── 📂 examples/                       # Synthetic, non-sensitive examples
-│   │   │   ├── 📄 h3-generalization-demo.json
-│   │   │   ├── 📄 sensitive-location-example.json
-│   │   │   ├── 📄 heritage-dataset-stac.json
-│   │   │   ├── 📄 heritage-dataset-dcat.json
-│   │   │   ├── 📄 provenance-lineage-example.json
-│   │   │   └── 📄 storynode-heritage-demo.json
-│   │   ├── 📂 assets/                         # Diagrams, icons, infographics, templates
-│   │   │   ├── 📂 diagrams/
-│   │   │   ├── 📂 icons/
-│   │   │   ├── 📂 infographics/
-│   │   │   └── 📂 templates/
-│   │   └── 📄 README.md                       # Heritage standards index / navigation
+│   │   ├── 🏺 HERITAGE_STANDARDS_v11.md        # This file (unified standards)
+│   │   ├── 📄 README.md                       # Heritage standards index
+│   │   ├── 📂 examples/                       # Synthetic examples only
+│   │   └── 📂 assets/                         # Abstraction-only diagrams/icons/templates
 │   ├── 📂 governance/
 │   ├── 📂 faircare/
 │   └── 📂 sovereignty/
 │
-├── 📂 data/
-│   ├── 📂 sources/                            # Heritage source manifests (DCAT / provenance)
-│   ├── 📂 raw/                               # Access-controlled raw heritage locations (non-public)
-│   ├── 📂 work/                              # Masked / intermediate heritage products
-│   ├── 📂 processed/                         # Generalized heritage layers (H3, hexes, tiles)
-│   └── 📂 stac/                              # STAC Collections/Items for heritage assets
-└── 📂 schemas/
-    ├── 📂 json/
-    └── 📂 shacl/
+├── 📂 reports/
+│   └── 📂 story_nodes/                        # Canonical story node home (draft/published)
+│       ├── 📂 draft/
+│       └── 📂 published/
+│
+└── 📄 MASTER_GUIDE_v12.md
+
+schemas/
+├── 📂 json/
+│   └── 📂 heritage/                           # Machine-validated heritage schemas
+└── 📂 shacl/
+    └── 📂 heritage/                           # SHACL shapes / ontology fragments
+
+data/
+├── 📂 raw/
+│   └── 📂 heritage/                           # RESTRICTED: raw coordinates, confidential notes
+├── 📂 work/
+│   └── 📂 heritage/                           # Masked/intermediate artifacts
+├── 📂 processed/
+│   └── 📂 heritage/                           # Generalized layers (hexes/tiles/summaries)
+├── 📂 stac/
+│   ├── 📂 collections/
+│   └── 📂 items/
+├── 📂 catalog/
+│   └── 📂 dcat/
+└── 📂 prov/
+
+src/
+├── 📂 pipelines/                              # ETL + catalog build code (no executable code in docs/)
+├── 📂 graph/                                  # Ontology + ingest/migrations
+└── 📂 server/                                 # API boundary (REST/GraphQL contracts)
+
+web/                                           # React/Map UI (no direct Neo4j calls)
+mcp/
+└── 📂 runs/                                   # Run records + pointers to PROV bundles (no duplication)
+releases/
+└── 📂 v11.0.2/                                # Signed manifests, SBOMs, attestations (if used)
 ~~~
 
 **Directory rules:**
 
-- Every directory above must have a small `README.md` or explanatory section in a parent README.  
-- Anything under `docs/standards/heritage/examples/` MUST be **synthetic** or **irrevocably generalized**.  
-- Raw site coordinates belong only under `data/raw/` and protected stores, never in `docs/` or `assets/`.
+- **No raw coordinates in `docs/`** — raw heritage locations live only in restricted stores (typically `data/raw/heritage/**`).
+- `schemas/**` holds machine‑validated schemas; `docs/standards/**` may describe them but should not become the schema source of truth.
+- Story Nodes belong in `docs/reports/story_nodes/**` so they can be validated and reviewed consistently before publication.
 
 ---
 
 ## 🧭 Context
 
-KFM aims to function as a **scientific‑grade historical atlas** with verifiable lineage and transparent data handling. Heritage content adds an additional layer of responsibility:
+KFM aims to operate as a provenance‑first geospatial + historical atlas. Heritage content adds **heightened sensitivity** and additional governance constraints:
 
-- Archaeological site locations and certain cultural resource records are exempt from open disclosure under Kansas law and federal frameworks (e.g., NHPA §304), requiring **masking or omission** in public products.  
-- KFM explicitly integrates **Indigenous perspectives and oral histories**, which may carry cultural protocols that differ from Western archival practice; these must be reflected in metadata and access rules.  
-- Heritage datasets often intersect with other domains (hydrology, agriculture, climate). This standard ensures that cross‑domain pipelines do not accidentally de‑anonymize or re‑locate sensitive sites when joining datasets.
+- Heritage datasets often contain **precise locations** (or contextual clues) that should not be publicly disclosed.
+- Cross‑domain joins can accidentally re‑identify sensitive locations (e.g., combining generalized heritage layers with detailed environmental or infrastructure datasets).
+- Indigenous cultural knowledge can carry community protocols that differ from conventional archival norms; those protocols must be respected in metadata, access, and narrative framing.
 
-Heritage standards therefore:
+**Heritage standards therefore:**
 
-- Define how **location precision** is managed (H3 resolutions, aggregation thresholds).  
-- Govern **cataloging** of heritage layers in STAC/DCAT with explicit protection flags.  
-- Specify how **provenance** is recorded so that every generalized product can be traced back to workflows and (where appropriate) raw confidential inputs.  
-- Coordinate with Focus Mode / Story Node features so that narrative overlays never leak restricted detail.
+- Define how **location precision** is managed (generalization and masking policies).
+- Govern **cataloging** of heritage layers in STAC/DCAT with explicit protection flags.
+- Require **provenance** so every generalized product can be traced to workflow runs and (where appropriate) restricted inputs.
+- Coordinate with Story Nodes and Focus Mode so narrative overlays never leak restricted detail.
 
 ---
 
 ## 🗺️ Diagrams
 
-Diagrams in heritage standards and assets:
+### Allowed diagram profiles
 
-1. **Allowed diagram profiles**
+- `mermaid-flowchart-v1` — heritage ETL/generalization/publication flows
+- `mermaid-timeline-v1` — high‑level stewardship or historical timelines (no sensitive coordinates)
 
-   - `mermaid-flowchart-v1` — illustration of heritage ETL, generalization, and publication flows.  
-   - `mermaid-timeline-v1` — high‑level historical / stewardship timelines (no sensitive coordinates).
+### Heritage diagram rules
 
-2. **Heritage‑specific diagram rules**
+- No diagram may depict the **exact geometry** or **precise coordinates** of a sensitive site.
+- Map‑like diagrams use **schematic shapes, H3 cells, coarse regions**, or abstraction-only visuals.
+- Every diagram must have a short textual summary nearby (a11y requirement).
 
-   - No diagram may depict the **exact geometry** or **precise coordinates** of a sensitive site.  
-   - Generalized diagrams use **H3 cells, bounding boxes, or schematic shapes** only.  
-   - Any map‑like figure must represent **aggregated regions** or stylized forms.
+### Example — Heritage protection pipeline (non‑negotiable ordering)
 
-3. **Example — Heritage Generalization Flow**
+_Text summary:_ Restricted inputs are generalized during ETL, then cataloged (STAC/DCAT/PROV), then mapped into the graph, served through APIs, and finally rendered in the UI and Story/Focus experiences.
 
 ~~~mermaid
 flowchart LR
-    RAW["Raw heritage inputs (restricted)"]
-        --> GEN["H3 generalization & masking"]
-    GEN --> META["Heritage STAC/DCAT metadata"]
-    META --> GRAPH["Heritage entities in KFM graph"]
-    GRAPH --> VIEWS["Generalized public & research views"]
+    RAW["Restricted heritage inputs (internal)"]
+      --> ETL["ETL: normalize + generalize + redact (deterministic)"]
+    ETL --> CAT["STAC/DCAT/PROV catalogs (generalized outputs only)"]
+    CAT --> GRAPH["Graph build (heritage entities as first-class nodes)"]
+    GRAPH --> API["Contracted APIs (enforce redaction + access tiers)"]
+    API --> UI["UI (React/Map: safe rendering rules)"]
+    UI --> STORY["Story Nodes (provenance-linked)"]
+    STORY --> FOCUS["Focus Mode (provenance-linked only)"]
 ~~~
-
-4. **Accessibility**
-
-   - All diagrams must have a short textual summary in the surrounding prose.  
-   - Color is not the only distinguishing feature; use shapes/labels as well.  
-   - SVGs must meet WCAG 2.1 AA contrast requirements.
-
-5. **Forbidden practices**
-
-   - ASCII art to depict precise site shapes.  
-   - Embedding secret URLs, raw coordinates, or identifiers that could be joined to external leaks.  
-   - Using real aerial imagery or scans that clearly reveal protected locations without masking.
 
 ---
 
@@ -371,184 +419,164 @@ flowchart LR
 
 ### 1. Heritage Story Nodes
 
-Heritage‑related Story Nodes (e.g., for cultural landscapes, generalized mound regions, or interpreted narratives):
+Heritage Story Nodes:
 
-- Must reference generalized spatial footprints (H3 cells, buffered polygons), not raw site points.  
-- Should carry explicit flags such as `heritage_protected`, `care_level`, and `cultural_sensitivity`.  
-- **Must not** embed raw coordinates or sensitive site codes in free text; those belong only in protected internal systems.
+- Must follow `docs/templates/TEMPLATE__STORY_NODE_V3.md` structure.
+- Must reference **generalized spatial footprints** (H3 cells, coarse polygons, or metadata-only) — never raw points.
+- Must keep all factual claims **source-linked** (dataset/document IDs) and provenance-linked.
 
-Example Story Node snippet (synthetic):
+**Do not** embed raw coordinates, restricted site codes, or sensitive notes in narrative text.
 
-~~~json
-{
-  "id": "node-ks-heritage-102",
-  "type": "story-node",
-  "title": "Generalized Mound Landscape",
-  "heritage_protected": true,
-  "cultural_sensitivity": "restricted",
-  "care_level": "Level III",
-  "summary": "A generalized representation of a culturally significant mound landscape.",
-  "h3_id": "872830829ffffff",
-  "h3_resolution": 7,
-  "display_rules": {
-    "map": "hex",
-    "timeline": true,
-    "min_zoom": 8
-  }
-}
+#### Example Story Node (synthetic, Markdown shape)
+
+~~~markdown
+---
+title: "Story Node — Generalized Heritage Landscape (Synthetic Example)"
+path: "docs/reports/story_nodes/draft/node-heritage-syn-0001.md"
+version: "v0.1.0"
+last_updated: "YYYY-MM-DD"
+status: "draft"
+doc_kind: "StoryNode"
+license: "CC-BY-4.0"
+
+heritage_protected: true
+cultural_sensitivity: "restricted"
+care_level: "KFM-Level-III"
+
+# Generalized-only location reference (no raw coords)
+h3_id: "872830829ffffff"
+h3_resolution: 7
+
+source_bundle:
+  - type: "stac_item"
+    id: "stac:item:kfm-heritage-generalized-syn-2025"
+  - type: "prov_activity"
+    id: "prov:activity:urn:kfm:workflow:heritage-generalization-v11"
+---
+
+## Narrative (factual + source-linked)
+A generalized representation of a heritage landscape. This narrative is synthetic and intended
+to demonstrate structure and governance flags, not to describe a real site.
 ~~~
 
-All identifiers, codes, and descriptions in examples must be **synthetic** and **non‑identifying**.
+### 2. Focus Mode behavior
 
-### 2. Focus Mode Behavior
+When Focus Mode renders heritage content:
 
-When Focus Mode is applied to this document or heritage Story Nodes:
+- **MUST** be provenance-linked (no orphan facts).
+- **MUST NOT** attempt to infer hidden locations from generalized data.
+- **MUST** label any AI-derived content clearly (if shipped at all) and include uncertainty/confidence metadata.
 
-- **Focus Mode MAY:**
-  - Summarize sections (e.g., H3 policy, asset rules) within `ai_transform_permissions`.  
-  - Highlight key constraints (no raw coordinates, sovereignty flags, redaction rules).  
-  - Extract metadata for catalogs and dashboards.
+This document’s AI permissions/prohibitions apply to any Focus Mode transforms of this file.
 
-- **Focus Mode MUST NOT:**
-  - Attempt to infer hidden locations from generalized data.  
-  - Synthesize “likely coordinates” for heritage sites.  
-  - Generate new historical or cultural claims that are not present in the source documents.  
-  - Override or omit sovereignty, CARE, or governance references.
+### 3. Writing patterns for safe heritage narratives
 
-These constraints are enforced by the `ai_transform_*` fields in the front‑matter and the system’s governance layer.
-
-### 3. Writing Patterns for Heritage Narratives
-
-To remain Focus‑friendly and sovereignty‑aligned:
-
-- Use **explicit, descriptive language** (“generalized mound landscape in northeast Kansas”) rather than fine‑grained locational hints.  
-- Avoid combining too many specific context clues (e.g., detailed landscape features, micro‑toponyms) in a way that could re‑identify a site.  
-- Keep each H3/H4 subsection focused on a single heritage concept (e.g., “H3 Resolution Policy”, “Sovereignty Flags”) for clean Story Node extraction.
+- Prefer **regional** language over micro-toponyms.
+- Avoid combining multiple “nearby” clues that could triangulate a protected site.
+- Keep each subsection single-purpose so extraction does not create accidental composite hints.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-### 1. Document‑Level Checks
+### Document-level checks
 
-All heritage standards Markdown files must pass core KFM‑MDP checks:
+All heritage standards Markdown must pass:
 
-- `markdown-lint` — heading structure, lists, spacing.  
-- `schema-lint` — front‑matter validation against `heritage-standards-v11` JSON schema.  
-- `metadata-check` — required identity, lifecycle, and ethics metadata present.  
-- `provenance-check` — front‑matter `provenance_chain` consistent with Version History.  
-- `footer-check` — governance footer present and correctly linked.
+- `markdown-lint` — headings/lists/spacing
+- `schema-lint` — front‑matter validation against `schemas/json/heritage-standards-v11.schema.json`
+- `metadata-check` — required identity/lifecycle/ethics metadata present
+- `provenance-check` — front‑matter `provenance_chain` consistent with Version History
+- `footer-check` — required governance links present
 
-### 2. Heritage‑Specific Checks
+### Heritage-specific checks
 
-Additional test profiles for heritage content:
+- `heritage-redaction-check` — scans docs/examples/assets for:
+  - raw lat/lon values above precision thresholds
+  - restricted identifiers accidentally pasted into examples
+  - unmasked geometries in embedded GeoJSON
+- `heritage-schema-lint` — validates heritage schemas under `schemas/**`
+- `heritage-assets-check` — validates that heritage assets:
+  - are vector-first (SVG preferred)
+  - have required metadata (license, creator, sensitivity tags)
+  - are abstraction-only and do not reveal protected sites
 
-- `heritage-schema-lint` — validates the heritage JSON/SHACL schemas under `docs/standards/heritage/schemas/`.  
-- `heritage-redaction-check` — scans Markdown, JSON examples, and assets for:
-  - Raw lat/lon values above precision thresholds.  
-  - Site codes or identifiers flagged as restricted.  
-  - Unmasked geometries in embedded GeoJSON.  
-- `heritage-assets-check` — ensures that diagrams and icons:
-  - Are vector‑first (SVG).  
-  - Use abstraction‑only visuals.  
-  - Have required metadata (creator, license, CARE tags).
+### CI behavior contract (governed)
 
-Suggested local commands (example; actual tooling may vary):
+CI should validate what exists and is applicable:
 
-~~~text
-make validate-heritage-docs
-make validate-heritage-schemas
-make validate-heritage-assets
+- **Validate if present:** STAC/DCAT/PROV/schemas/telemetry/story nodes referenced by the doc.
+- **Skip if not applicable:** If a subsystem is not present in the current repo revision, CI should not invent failures; it should warn and/or mark “missing required artifact” for governance follow‑up.
+
+### Suggested local commands (placeholders)
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+
+# 1) Validate governed docs (Markdown protocol + required sections)
+# 2) Run schema checks (JSON Schema + SHACL)
+# 3) Run heritage redaction scan (coordinates/identifiers/geometry)
+# 4) Run link checks (no orphan pointers)
 ~~~
 
-All of these should be wired into `.github/workflows/kfm-ci.yml` so that heritage violations block merges.
+### Definition of done (for changes to this document)
+
+- [ ] Front‑matter metadata is complete and consistent (path, version, governance refs).
+- [ ] No sensitive location data appears anywhere in the document/examples/assets.
+- [ ] Examples are synthetic and cannot be re-linked to real sites.
+- [ ] Validation profiles are actionable (can be enforced in CI).
+- [ ] Story Node and Focus Mode rules are provenance‑linked and aligned with governance.
 
 ---
 
 ## 📦 Data & Metadata
 
-This section merges the **Schemas**, **Example Library**, and **Assets** from the earlier v11 drafts into a single, structured reference.
+This section merges the **Schemas**, **Example Library**, and **Assets** into a single reference.
 
-### 1. Heritage Schema Registry
+### 1. Heritage schema registry (machine-validated)
 
-#### 1.1 Schema Directory Layout
+**Canonical home:** `schemas/**` (machine validation).  
+**Documentation home:** `docs/standards/heritage/**` (human guidance).
+
+Recommended layout:
 
 ~~~text
-docs/standards/heritage/schemas/
-│
-├── 📄 h3-generalization-standard.json
-├── 📄 heritage-sensitive-location.schema.json
-├── 📄 heritage-dataset.schema.json
-├── 📄 heritage-protection-flags.schema.json
-└── 📄 lineage-provenance.schema.json
+schemas/
+├── 📂 json/
+│   └── 📂 heritage/
+│       ├── 📄 h3-generalization-standard.schema.json
+│       ├── 📄 heritage-sensitive-location.schema.json
+│       ├── 📄 heritage-dataset.schema.json
+│       ├── 📄 heritage-protection-flags.schema.json
+│       └── 📄 heritage-lineage-provenance.schema.json
+└── 📂 shacl/
+    └── 📂 heritage/
+        ├── 📄 heritage-sensitive-location.shape.ttl
+        ├── 📄 heritage-dataset.shape.ttl
+        └── 📄 heritage-lineage-provenance.shape.ttl
 ~~~
 
-#### 1.2 Schema Descriptions
+**Implementation note:** If any referenced schema does not yet exist, treat it as a required artifact to be created under the canonical `schemas/**` tree before publishing heritage data.
 
-**🧮 `h3-generalization-standard.json`**
-
-Defines:
-
-- Allowed H3 resolutions (e.g., r5–r8) for public and partner‑only releases.  
-- Minimum **site count per cell** or equivalent aggregation thresholds.  
-- Rules for removing raw coordinates and any single‑site cells from generalized outputs.  
-- Parameters for **NHPA §304** and state‑level heritage protection compliance.  
-- Overrides for Indigenous sovereignty requirements (e.g., stricter masking in certain territories).
-
-**🏺 `heritage-sensitive-location.schema.json`**
-
-Defines:
-
-- `cultural_sensitivity` levels (e.g., open / restricted / confidential).  
-- CARE labels and `indigenous_rights_flag`.  
-- Tribal or community affiliation fields (controlled vocabulary; may be redacted in exports).  
-- Prohibition of `lat`/`lon` fields — only generalized spatial references like H3, coarse polygons, or bounding boxes.  
-- Required governance metadata (legal basis, access conditions).
-
-**📦 `heritage-dataset.schema.json`**
-
-Defines:
-
-- Dataset‑level STAC/DCAT alignment for heritage collections.  
-- Temporal and spatial extent fields that refer to generalized geometries.  
-- Links to underlying lineage and workflow configurations.  
-- Required protection flags (`heritage_protected`, `care_level`, `redaction_policy`).
-
-**🔐 `heritage-protection-flags.schema.json`**
-
-Defines:
-
-- Protection tiers (e.g., Tier I–III) mapped to allowed zoom levels, export rules, and sharing scopes.  
-- UI hints (e.g., icon choice, color theme) for protected content.  
-- Rules for indexing or excluding records from public search.
-
-**🧬 `lineage-provenance.schema.json`**
-
-Defines:
-
-- PROV‑O‑aligned lineage for generalized heritage datasets:
-  - Relationships like `prov:wasDerivedFrom`, `prov:used`, `prov:wasGeneratedBy`.  
-  - SHA256 or equivalent integrity hashes for inputs and outputs.  
-  - Workflow version identifiers and configuration fingerprints.
-
-### 2. Example Library (Synthetic Only)
-
-#### 2.1 Example Directory Layout
+### 2. Example library (synthetic only)
 
 ~~~text
 docs/standards/heritage/examples/
-│
 ├── 📄 h3-generalization-demo.json
 ├── 📄 sensitive-location-example.json
-├── 📄 heritage-dataset-stac.json
-├── 📄 heritage-dataset-dcat.json
+├── 📄 heritage-dataset-stac.example.json
+├── 📄 heritage-dataset-dcat.example.json
 ├── 📄 provenance-lineage-example.json
-└── 📄 storynode-heritage-demo.json
+└── 📄 storynode-heritage-demo.example.md
 ~~~
 
-_All examples are synthetic and must never encode real or easily re‑linkable sites._
+All examples MUST be:
 
-#### 2.2 Example: H3 Generalization
+- Synthetic
+- Non-identifying
+- Safe to publish within internal docs (no raw coords, no real site IDs, no restricted notes)
+
+#### 2.1 Example — H3 generalized cell summary (synthetic)
 
 ~~~json
 {
@@ -559,22 +587,22 @@ _All examples are synthetic and must never encode real or easily re‑linkable s
   "heritage_protected": true,
   "generalization_method": "H3",
   "raw_coordinates_removed": true,
-  "mcp_protected": true,
-  "care_level": "Level III"
+  "care_level": "KFM-Level-III",
+  "mcp_protected": true
 }
 ~~~
 
-#### 2.3 Example: Sensitive Location Metadata (Synthetic)
+#### 2.2 Example — Sensitive location metadata (synthetic)
 
 ~~~json
 {
-  "id": "KS-ARCH-004198",
+  "id": "KFM-SYN-HER-0001",
   "type": "heritage_site",
   "cultural_sensitivity": "restricted",
-  "legal_basis": "NHPA Section 304",
-  "care_level": "Level III",
-  "tribal_affiliation": ["Kaw Nation"],
-  "description": "Earthen mound feature with significant cultural importance (generalized).",
+  "legal_basis": "Applicable heritage confidentiality policy (example)",
+  "care_level": "KFM-Level-III",
+  "community_affiliation": ["Example Nation (synthetic)"],
+  "description": "Synthetic example record demonstrating governance fields and generalized location handling.",
   "h3_id": "872830829ffffff",
   "h3_resolution": 7,
   "raw_coordinates_removed": true,
@@ -582,19 +610,20 @@ _All examples are synthetic and must never encode real or easily re‑linkable s
 }
 ~~~
 
-> **Note:** IDs and affiliations here are illustrative; curators must never paste real site codes or confidential notes into example files.
-
-#### 2.4 Example: Heritage STAC Item
+#### 2.3 Example — Heritage STAC Item (generalized / metadata-only)
 
 ~~~json
 {
   "stac_version": "1.0.0",
   "type": "Item",
-  "id": "ks-heritage-generalized-2025",
+  "id": "kfm-heritage-generalized-syn-2025",
   "collection": "kfm-heritage",
+  "geometry": null,
+  "bbox": null,
   "properties": {
+    "datetime": "2025-01-01T00:00:00Z",
     "heritage_protected": true,
-    "care_level": "Level III",
+    "care_level": "KFM-Level-III",
     "generalization_method": "H3",
     "h3_resolution": 7,
     "raw_coordinates_removed": true,
@@ -602,251 +631,184 @@ _All examples are synthetic and must never encode real or easily re‑linkable s
   },
   "assets": {
     "hex_geojson": {
-      "href": "hexes/ks-heritage-2025.geojson",
+      "href": "hexes/kfm-heritage-generalized-syn-2025.geojson",
       "type": "application/geo+json",
-      "roles": ["data"]
+      "roles": ["data", "generalized"]
     }
   }
 }
 ~~~
 
-#### 2.5 Example: Heritage DCAT Metadata
+#### 2.4 Example — Heritage DCAT metadata (example shape)
 
 ~~~json
 {
-  "dct:title": "Kansas Protected Heritage (Generalized to H3-r7)",
-  "dct:description": "Generalized heritage dataset with H3-based masking and NHPA-compliant redaction.",
+  "dct:title": "Kansas Protected Heritage (Generalized, Synthetic Example)",
+  "dct:description": "Synthetic example describing a generalized heritage dataset with redaction and provenance requirements.",
   "dct:spatialResolution": "H3-r7",
-  "dct:provenance": "Generalized from protected archaeological coordinates.",
-  "dct:conformsTo": "KFM Heritage H3 Generalization Standard v11",
-  "dct:rights": "NHPA §304 restrictions apply; CARE Level III."
+  "dct:provenance": "Generalized from restricted inputs via deterministic redaction workflow.",
+  "dct:conformsTo": "KFM Heritage Standards v11",
+  "dct:rights": "Restricted handling; do not redistribute raw locations."
 }
 ~~~
 
-#### 2.6 Example: Lineage Metadata
+#### 2.5 Example — PROV lineage (example shape)
 
 ~~~json
 {
-  "version": "2025.11.20",
+  "version": "2025.12.27",
   "lineage": {
-    "predecessor": "2025.07.15",
-    "successor": "2026.02.01",
-    "latest": "2026.02.01"
+    "predecessor": "2025.12.06",
+    "latest": "2025.12.27"
   },
   "reproducibility": {
-    "workflow_hash": "sha256-b94c...",
-    "inputs_hash": "sha256-09af...",
+    "workflow_hash": "sha256:<workflow-config-hash>",
+    "inputs_hash": "sha256:<restricted-inputs-hash>",
     "prov": {
-      "wasDerivedFrom": "urn:kfm:raw:heritage:2025-07-15",
+      "wasDerivedFrom": "urn:kfm:raw:heritage:<restricted-dataset-id>",
       "generatedBy": "urn:kfm:workflow:heritage-generalization-v11"
     }
   }
 }
 ~~~
 
-#### 2.7 Example: Story Node (Heritage)
-
-~~~json
-{
-  "id": "node-ks-heritage-102",
-  "type": "story-node",
-  "title": "Ancient Mound Site (Generalized)",
-  "heritage_protected": true,
-  "cultural_sensitivity": "restricted",
-  "periods": ["Late Woodland"],
-  "summary": "A generalized representation of an important cultural heritage location.",
-  "h3_id": "872830829ffffff",
-  "h3_resolution": 7,
-  "mcp_protected": true,
-  "display_rules": {
-    "map": "hex",
-    "timeline": true
-  },
-  "relations": [],
-  "spacetime": {
-    "geometry": { "type": "Point", "coordinates": [0, 0] },
-    "when": { "start": "1600-01-01T00:00:00Z", "precision": "year" }
-  }
-}
-~~~
-
-The `[0, 0]` coordinates are a **non‑location placeholder** indicating that any real coordinates must be generalized or omitted.
-
-### 3. Heritage Assets
-
-#### 3.1 Asset Directory Layout
+### 3. Heritage assets (abstraction-only)
 
 ~~~text
 docs/standards/heritage/assets/
-│
-├── 📂 diagrams/
-│   ├── 📄 h3-protection-flow.svg
-│   ├── 📄 heritage-protection-overview.svg
-│   ├── 📄 sensitive-location-governance.svg
-│   ├── 📄 lineage-flow.svg
-│   └── 📄 ...
-│
-├── 📂 icons/
-│   ├── 📄 heritage_protected.svg
-│   ├── 📄 heritage_level_III.svg
-│   ├── 📄 cultural_care_flag.svg
-│   └── 📄 ...
-│
-├── 📂 infographics/
-│   ├── 📄 heritage_risk_matrix.svg
-│   ├── 📄 h3-resolution-scale.svg
-│   └── 📄 ...
-│
-└── 📂 templates/
-    ├── 📄 heritage_stac_template.json
-    ├── 📄 heritage_dcat_template.json
-    └── 📄 storynode_heritage_template.json
+├── 📂 diagrams/        # SVG preferred; no exact site shapes
+├── 📂 icons/           # Sensitivity flags, tier icons
+├── 📂 infographics/    # Risk matrices, generalization scales
+└── 📂 templates/       # STAC/DCAT/Story Node templates (example scaffolds)
 ~~~
 
-#### 3.2 Asset Requirements
+**Asset requirements:**
 
-All heritage assets must:
-
-- Avoid sensitive or sacred imagery unless explicitly vetted and approved.  
-- Represent locations only in generalized or symbolic form.  
-- Adhere to WCAG 2.1 AA+ contrast standards.  
-- Prefer SVG (vector‑first) for scalability and clarity.  
-- Carry metadata for license, creator, `heritage_protected`, `care_level`, and relevant sovereignty tags.  
-- Never depict real‑world coordinates or recognizable burial sites, shrines, or restricted landscapes without explicit, documented consent and governance approval.
-
-#### 3.3 Asset Validation
-
-Assets are subject to:
-
-- Heritage Stewardship Unit review for cultural appropriateness.  
-- FAIR+CARE Council sign‑off for high‑risk materials.  
-- Automated checks via `heritage-assets-check` (file types, metadata completeness, and basic redaction scanning).
+- Avoid sensitive/sacred imagery unless explicitly vetted and approved.
+- Locations must be abstracted (no recognizable sites, no unmasked imagery).
+- Prefer SVG and meet WCAG 2.1 AA+ needs (contrast + text alternatives).
+- Include license/creator metadata and heritage sensitivity tags where applicable.
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### 1. DCAT Alignment
+### 1. Linkage requirements (cross-system)
 
-Heritage datasets appear in DCAT as:
+Heritage artifacts must remain linkable across standards:
 
-- `dcat:Dataset` records with:
-  - `dct:title`, `dct:description`, `dct:identifier`.  
-  - `dct:spatial` using generalized geometries (e.g., bounding boxes or coarse polygons).  
-  - `dct:accessRights` and `dct:rights` describing NHPA/CARE‑driven restrictions.  
-  - `dct:provenance` pointing to generalized workflows and legal basis for redaction.
+- **STAC** Item/Collection IDs identify distributable assets.
+- **DCAT** Dataset/Distribution IDs support discovery and access metadata.
+- **PROV** bundles record lineage for ETL runs and transformations.
+- **Graph** nodes reference STAC/DCAT/PROV identifiers (no “floating” entities).
+- **Story Nodes** reference dataset/document IDs and graph IDs.
 
-Distributions (e.g., GeoJSON, tiles, CSV) must specify whether they are:
+### 2. DCAT alignment
 
-- Fully public (generalized only).  
-- Restricted (available only to approved partners under data‑sharing agreements).  
-- Internal (for stewardship and research, not exposed via public portals).
+Heritage datasets should be represented as DCAT `dcat:Dataset` with:
 
-### 2. STAC Alignment
+- `dct:title`, `dct:description`, `dct:identifier`
+- generalized `dct:spatial` (coarse geometries only)
+- explicit `dct:accessRights` / `dct:rights` describing restrictions and handling expectations
+- provenance pointers (e.g., `dct:provenance`) that link to PROV runs
 
-Heritage layers are represented in STAC via:
+### 3. STAC alignment
 
-- A `kfm-heritage` Collection whose Items may be:
-  - Non‑spatial (e.g., metadata‑only records).  
-  - Spatial with generalized geometries (H3 aggregated footprints, coarse polygons).
+Heritage layers should be represented in STAC with:
 
-Key fields:
+- generalized spatial representations only (or metadata-only items with `geometry: null`)
+- properties that surface protection signals:
+  - `heritage_protected: true`
+  - `care_level`
+  - `generalization_method`
+  - `h3_resolution` (if used)
+- assets clearly labeled as generalized: `roles: ["data", "generalized"]`
 
-- `properties.heritage_protected: true`  
-- `properties.care_level`  
-- `properties.generalization_method` (e.g., `"H3"`).  
-- `properties.h3_resolution` (where applicable).  
-- Asset roles that clearly label generalized products (`roles: ["data", "generalized"]`).
+### 4. PROV-O alignment
 
-Spatial fields (`geometry`, `bbox`) must never reflect ungeneralized site footprints.
+Heritage pipelines must emit provenance such that:
 
-### 3. PROV‑O Alignment
+- restricted raw inputs are `prov:Entity` (access-controlled)
+- generalization workflows are `prov:Activity` with config and version identifiers
+- generalized outputs are derived `prov:Entity` with:
+  - `prov:wasDerivedFrom` restricted input IDs
+  - `prov:wasGeneratedBy` workflow run IDs
+  - integrity hashes for auditing
 
-Heritage pipelines must produce PROV‑O‑compatible provenance graphs:
-
-- Raw heritage datasets are `prov:Entity` instances with restricted access.  
-- Generalization workflows are `prov:Activity` instances with:
-  - References to configuration files, container images, and code versions.  
-  - Timestamps and responsible Agents (e.g., stewardship team, automated ETL service).  
-- Generalized heritage outputs are derived `prov:Entity` instances with:
-  - `prov:wasDerivedFrom` pointing to protected raw entities.  
-  - `prov:wasGeneratedBy` linking to the generalization activity.  
-  - Integrity hashes and identifiers that match the STAC/DCAT records.
-
-This alignment ensures that, even while public products remain carefully generalized, stewards can audit and reconstruct the full heritage data lifecycle.
+**Recommended practice:** Prefer meaningful runs to produce (or link to) PROV bundles under `data/prov/**`, while `mcp/runs/**` stores pointers/IDs rather than duplicating provenance payloads.
 
 ---
 
 ## 🧱 Architecture
 
-### 1. Heritage Data Flow (Conceptual)
+### 1. Heritage data flow (conceptual)
 
-Heritage content moves through the KFM stack in a controlled way:
+Heritage content moves through KFM in a controlled, contract-driven way:
 
-1. **Ingest Restricted Sources** — archival records, archaeological inventories, oral histories, and related GIS layers are ingested into protected storage.  
-2. **Normalize & Link** — data are normalized into heritage schemas and linked to the KFM graph, but remain access‑controlled.  
-3. **Generalize & Mask** — deterministic H3 generalization and redaction workflows transform raw inputs into safe outputs.  
-4. **Catalog** — generalized products are registered in STAC/DCAT with protection flags and provenance links.  
-5. **Expose** — appropriate slices are surfaced to maps, timelines, and Story Nodes, respecting tiered access and sovereignty restrictions.
+1. **Ingest restricted sources** into protected storage (`data/raw/heritage/**`).
+2. **Normalize & link** to internal schemas and graph (still access-controlled).
+3. **Generalize & redact** via deterministic workflows (policy-driven configuration).
+4. **Catalog** generalized outputs in STAC/DCAT/PROV.
+5. **Serve** through APIs (enforce redaction + tiering).
+6. **Render** in UI/Story/Focus with safety constraints and provenance.
 
-### 2. Mermaid Architecture Sketch
+### 2. Mermaid architecture sketch (including API boundary)
 
 ~~~mermaid
 flowchart LR
-    INGEST["Restricted heritage ingest"]
-        --> NORM["Normalize & link (internal schemas)"]
-    NORM --> MASK["H3 generalization & redaction"]
-    MASK --> CATALOG["STAC/DCAT registration"]
-    CATALOG --> GRAPH["Heritage nodes in KFM graph"]
-    GRAPH --> VIZ["Generalized UI views & Story Nodes"]
+    INGEST["Restricted ingest (data/raw/heritage)"] --> NORM["Normalize & link (internal)"]
+    NORM --> MASK["Generalize & redact (deterministic)"]
+    MASK --> CAT["STAC/DCAT/PROV (generalized only)"]
+    CAT --> GRAPH["Graph build (Neo4j)"]
+    GRAPH --> API["APIs (contracted boundary)"]
+    API --> UI["UI (React/Map: safe rendering)"]
+    UI --> STORY["Story Nodes"]
+    STORY --> FOCUS["Focus Mode"]
 ~~~
 
-### 3. Author & Implementer Responsibilities
+### 3. Implementer responsibilities
 
-- Authors of heritage documentation must adhere to this standard and reference relevant schemas and examples.  
-- Pipeline developers must treat redaction and generalization steps as **non‑optional**, config‑driven ETL stages.  
-- UI designers must respect protection flags in rendering (e.g., disable high‑zoom for sensitive hexes; avoid overlays that could re‑identify locations).
+- **Docs authors:** do not include sensitive coordinates, identifiers, or unapproved imagery.
+- **Pipeline developers:** treat redaction/generalization as non-optional ETL stages with reproducible configs.
+- **Graph/API engineers:** ensure restricted details cannot be retrieved via public endpoints.
+- **UI designers:** enforce zoom/search/overlay rules so generalized layers cannot be re-identified.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-### 1. Legal & Policy Anchors
+### 1. Legal/policy anchors (context)
 
-Heritage standards are grounded in:
+Heritage confidentiality may be required by applicable legal and policy frameworks and by community governance protocols. When external law and community guidance differ in strictness, KFM defaults to the **stricter protective regime**.
 
-- Kansas and U.S. legal frameworks governing archaeological and cultural resource data (e.g., NHPA §304).  
-- CARE principles for Indigenous data governance.  
-- KFM’s own sovereignty policies for community‑controlled data.
+### 2. CARE & sovereignty practice (minimum)
 
-Where law and community guidance diverge in strictness, KFM defaults to **the stricter protective regime**.
+Heritage datasets must:
 
-### 2. CARE & Sovereignty Practice
+- flag `indigenous_rights_flag: true` when any Indigenous community heritage is involved
+- record consent/handling constraints as metadata (where governance permits)
+- support community decisions about visibility, generalization, and narrative framing
+- maintain stewardship contacts and escalation paths (via governance docs)
 
-At minimum, heritage datasets must:
+### 3. Governance review triggers
 
-- Flag `indigenous_rights_flag: true` when any Indigenous community’s heritage is involved.  
-- Provide fields for community affiliation, consent status, and any special handling instructions.  
-- Respect community decisions regarding visibility, generalization levels, and narrative framing.  
-- Maintain clear contacts and governance notes so that questions about use can be escalated to the appropriate stewards.
+Changes to this document or to heritage pipelines require governance review when they:
 
-### 3. Governance Review & Audit
-
-- Material changes to this standard require review by the KFM FAIR+CARE Council and relevant community partners.  
-- Heritage ETL pipelines and UI behaviors are subject to periodic audits:
-  - Spot‑checking generalized products for potential re‑identification risk.  
-  - Reviewing telemetry and provenance logs for unauthorized access patterns.  
-- This document is a **plan** within the KFM governance stack; authoritative decisions always rest with human councils and community partners.
+- change generalization/redaction policy
+- introduce new heritage sources or new public distributions
+- alter UI rendering behavior for protected content
+- introduce any AI-derived narrative content beyond permitted transforms
 
 ---
 
 ## 🕰️ Version History
 
-| Version   | Date       | Notes                                                                                                       |
-|-----------|------------|-------------------------------------------------------------------------------------------------------------|
-| **v11.0.1** | 2025-12-06 | Aligned with KFM‑MDP v11.2.4, added heading registry, CI test profiles, and explicit STAC/DCAT/PROV mapping. Clarified synthetic‑only examples and asset rules. |
-| v11.0.0  | 2025-11-20 | Unified heritage schemas, examples, and assets into a single v11 heritage standards document.               |
-| v10.x    | 2025       | Earlier separate heritage documents and drafts (schemas, examples, and asset guidelines maintained ad‑hoc). |
+| Version | Date | Notes |
+|---|---|---|
+| **v11.0.2** | 2025-12-27 | Refined to align with KFM‑MDP v11.2.6 conventions, made pipeline ordering + API boundary explicit, strengthened CI profiles, and hardened synthetic examples (no real-looking IDs/affiliations). |
+| v11.0.1 | 2025-12-06 | Aligned with earlier v11 doc structure; added CI test profiles and explicit STAC/DCAT/PROV mapping; clarified synthetic-only examples and asset rules. |
+| v11.0.0 | 2025-11-20 | Unified heritage schemas, examples, and assets into a single v11 heritage standards document. |
+| v10.x | 2025 | Earlier separate heritage documents and drafts (schemas, examples, and asset guidelines maintained ad‑hoc). |
 
 ---
 
@@ -855,6 +817,6 @@ At minimum, heritage datasets must:
 🏺 **Kansas Frontier Matrix — Unified Heritage Standards v11**  
 Heritage Protection · Sovereignty‑First · FAIR+CARE Governance  
 
-[📘 Docs Root](../..) · [📂 Standards Index](../README.md) · [🏺 Heritage Index](./README.md) · [⚖ Governance](../governance/ROOT-GOVERNANCE.md)
+[📘 Docs Root](../..) · [📂 Standards Index](../README.md) · [🏺 Heritage Index](./README.md) · [🧭 Master Guide](../../MASTER_GUIDE_v12.md) · [⚖ Governance](../governance/ROOT-GOVERNANCE.md) · [🤝 FAIR+CARE Guide](../faircare/FAIRCARE-GUIDE.md) · [🪶 Indigenous Data Protection](../sovereignty/INDIGENOUS-DATA-PROTECTION.md)
 
 </div>
