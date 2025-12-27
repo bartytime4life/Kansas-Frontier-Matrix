@@ -2,15 +2,16 @@
 title: "KFM Templates — README"
 path: "docs/templates/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-22"
+last_updated: "2025-12-27"
 status: "draft"
-doc_kind: "Guide"
+doc_kind: "Directory README"
 license: "CC-BY-4.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
 ontology_protocol_version: "KFM-ONTO v4.1.0"
 pipeline_contract_version: "KFM-PPC v11.0.0"
+
 stac_profile: "KFM-STAC v11.0.0"
 dcat_profile: "KFM-DCAT v11.0.0"
 prov_profile: "KFM-PROV v11.0.0"
@@ -18,6 +19,7 @@ prov_profile: "KFM-PROV v11.0.0"
 governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
 ethics_ref: "docs/governance/ETHICS.md"
 sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+
 fair_category: "FAIR+CARE"
 care_label: "TBD"
 sensitivity: "public"
@@ -41,60 +43,68 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Templates
+# 🧩 KFM Documentation Templates
+
+> **Purpose (required):** Provide the canonical governed templates under `docs/templates/` and a single, consistent set of rules for using them across the KFM pipeline (ETL → catalogs → graph → API → UI → Story Nodes → Focus Mode).
 
 ## 📘 Overview
 
-### Purpose
+### What this folder contains
 
-- Provide a governed, copy-first set of Markdown templates for KFM documentation.
-- Keep documentation aligned with the canonical pipeline ordering and contract boundaries.
-- Reduce drift by making consistent structure the default.
+This directory is the **canonical source** for KFM governed documentation templates. These templates exist to ensure:
 
-### Template selection
+- consistent front‑matter (IDs, sensitivity/classification, protocol versions)
+- consistent section structure (approved headings, checklists, footers)
+- consistent linkage to evidence products (STAC/DCAT/PROV identifiers and run IDs)
+- consistent architecture boundaries (UI uses contracted APIs, not direct graph access)
 
-Use the template that matches the artifact you are producing:
+### Template selection rule
 
-- Universal documentation: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-- Story Nodes and Focus Mode narratives: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
-- API changes and contract updates: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+Use exactly one governed template per new document:
 
-### Scope
+- **Default:** `TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- **Narrative + Focus Mode artifact:** `TEMPLATE__STORY_NODE_V3.md`
+- **REST/GraphQL contract change:** `TEMPLATE__API_CONTRACT_EXTENSION.md`
 
-| In Scope | Out of Scope |
-|---|---|
-| Template selection guidance and “how to use” notes | Implementing pipeline code, schemas, or APIs |
-| The templates under `docs/templates/` | One-off docs that intentionally do not follow governed templates |
-| Minimal rules for front matter, IDs, and doc hygiene | Governance decisions that belong in `docs/governance/` |
+If a doc type does not map cleanly to one of the above, mark it as **not confirmed in repo** and propose adding a new governed template before writing ad‑hoc docs.
 
 ### Audience
 
-- Primary: Contributors writing governed docs and contracts.
-- Secondary: Reviewers validating doc consistency, CI gates, and repository structure.
+- Contributors authoring or maintaining docs across ETL, catalogs, graph, API, UI, and story layers
+- Reviewers enforcing governance, reproducibility, and provenance integrity
 
 ### Definitions
 
-- Glossary: `docs/glossary.md`
-- Governed doc: a Markdown document with KFM front matter and CI-validatable structure.
-- Story Node: a narrative document that is provenance-linked and machine-ingestible.
-- Contract extension: a governed addition/update to an API contract (REST/OpenAPI or GraphQL).
+- **STAC/DCAT/PROV:** discovery + dataset metadata + provenance lineage
+- **Story Node:** governed narrative artifact intended to be rendered in Focus Mode
+- **Focus Mode:** UI experience where narrative + map/timeline are presented; all claims must be provenance‑linked
+- **Contract‑first API:** schemas (OpenAPI / GraphQL) are the source of truth for API behavior
+
+`docs/glossary.md` is referenced in several project documents, but is **not confirmed in repo**.
 
 ### Key artifacts
 
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| Master Guide | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical pipeline + invariants |
-| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | TBD | Default for most docs |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | TBD | Narrative + citations + evidence |
-| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | TBD | Endpoint/schema changes |
+| Artifact | Path / Identifier | Notes |
+|---|---|---|
+| Master Guide | `docs/MASTER_GUIDE_v12.md` | System + pipeline source of truth |
+| Universal Doc Template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Default governed doc template |
+| Story Node Template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Story Nodes + Focus Mode narratives |
+| API Contract Extension Template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | Contract changes for REST/GraphQL |
+| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | **not confirmed in repo** |
+| Governance root | `docs/governance/ROOT_GOVERNANCE.md` | required reference for governed docs (existence **not confirmed in repo**) |
+| Ethics policy | `docs/governance/ETHICS.md` | required reference for governed docs (existence **not confirmed in repo**) |
+| Sovereignty policy | `docs/governance/SOVEREIGNTY.md` | required reference for governed docs (existence **not confirmed in repo**) |
 
 ### Definition of done
 
-- [ ] Selected the correct template for the document type.
-- [ ] Copied the template and fully populated front matter.
-- [ ] `path` in front matter matches the file location.
-- [ ] Any claims about data/schemas/contracts reference canonical IDs/paths.
-- [ ] Validation and review steps are listed and repeatable.
+- [ ] Front‑matter complete and valid, and `path:` matches file location
+- [ ] Exactly one governed template used (Universal / Story Node / API Contract Extension)
+- [ ] H2 headings conform to the approved heading registry used by the templates
+- [ ] Internal references resolve (no broken paths)
+- [ ] Any system rule stated is backed by the Master Guide or explicitly marked *not confirmed in repo*
+- [ ] Validation steps are listed and repeatable (CI‑ready)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated when relevant
+- [ ] No implied prohibited AI actions (see `ai_transform_prohibited`)
 
 ## 🗂️ Directory Layout
 
@@ -102,179 +112,200 @@ Use the template that matches the artifact you are producing:
 
 - `path`: `docs/templates/README.md`
 
-### Related repository paths
-
-| Area | Path | What lives here |
-|---|---|---|
-| Templates | `docs/templates/` | Governed Markdown templates |
-| Governing guide | `docs/MASTER_GUIDE_v12.md` | Canonical pipeline ordering + invariants |
-| Governance | `docs/governance/` | Review gates, ethics, sovereignty |
-| Standards | `docs/standards/` | STAC/DCAT/PROV/ontology + repo standards |
-| Schemas | `schemas/` | JSON Schemas and validation bundles |
-| API boundary | `src/server/` | Contracts, services, redaction, query boundary |
-| UI | `web/` | React-based map UI, layer registry |
-| Story Nodes | `docs/reports/story_nodes/` | Canonical in the v13 blueprint; not confirmed in repo on older branches |
-
 ### Expected file tree for this sub-area
 
 ~~~text
 📁 docs/
-└── 📁 templates/
-    ├── 📄 README.md
-    ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
-    ├── 📄 TEMPLATE__STORY_NODE_V3.md
-    └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
+├── 📁 templates/
+│   ├── 📄 README.md
+│   ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
+│   ├── 📄 TEMPLATE__STORY_NODE_V3.md
+│   └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
 ~~~
+
+### Templates catalog
+
+| Template | Intended use | Typical reviewers | Notes |
+|---|---|---|---|
+| `TEMPLATE__KFM_UNIVERSAL_DOC.md` | Default for most docs (designs, runbooks, domain readmes, standards drafts) | Domain owners + Docs reviewers + Governance when sensitive | Includes standard sections + checklists |
+| `TEMPLATE__STORY_NODE_V3.md` | Story Nodes rendered in Focus Mode (narrative must be evidence‑linked) | Narrative curators + Governance + Editor | Every factual claim maps to dataset/document ID |
+| `TEMPLATE__API_CONTRACT_EXTENSION.md` | Document an API change (REST/GraphQL), plus tests and schema placement | API owners + Security/Governance + UI owners | Contract-first; includes redaction rules and provenance hooks |
 
 ## 🧭 Context
 
-### Background
+### Canonical pipeline ordering
 
-KFM documentation is part of the system contract. A small set of standardized templates makes it easier to:
+KFM’s pipeline order is non‑negotiable:
 
-- Keep the canonical pipeline ordering intact.
-- Keep contract boundaries clear, especially at the API boundary.
-- Make Story Nodes and Focus Mode auditable by requiring citations and provenance links.
+ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode.
 
-### Assumptions
+Documentation templates exist to keep this ordering explicit in every doc and to prevent “shortcuts” that bypass provenance, contracts, or governance.
 
-- CI enforces (or will enforce) Markdown protocol checks and schema validation for contract artifacts.
-- Templates are versioned. Breaking structural changes require a version bump and review.
-- Template consumers treat front matter as machine-readable metadata.
+### Formatting invariants used by governed templates
 
-### Constraints and invariants
-
-- Do not change front-matter keys without governance review.
-- The UI must not read Neo4j directly; all graph access is via the API boundary (`src/server/`).
-- Published Story Nodes must be provenance-linked and validate before publication.
-- Predictive or AI-generated narrative content is opt-in and must carry uncertainty metadata.
-
-### Open questions
-
-| Question | Owner | Target |
-|---|---|---|
-| Do we want a dedicated “Doc Index” template separate from Universal docs? | Docs governance | TBD |
-| Should templates be mirrored under Story Node canonical paths for curator workflow? | Story + governance | TBD |
-
-### Future extensions
-
-- Add specialized templates under `docs/templates/` for:
-  - Data domain runbooks
-  - Ontology change proposals
-  - Threat models and security reviews
-- Introduce template linting checks that confirm:
-  - required keys exist
-  - `path` matches filesystem path
-  - IDs are unique within the repo
+- **Path fidelity:** `path:` in front‑matter must match the file’s repository location.
+- **Stable IDs:** `doc_uuid` and `semantic_document_id` must be stable across edits; bump `version` when semantics change.
+- **AI constraints:** `ai_transform_permissions` and `ai_transform_prohibited` must be respected by authors and reviewers.
+- **Fencing convention:** use outer backticks only for chat wrappers; inside repo docs, prefer inner tildes for code/trees/mermaid blocks (see Data & Metadata section).
 
 ## 🗺️ Diagrams
 
-### How templates fit the pipeline
-
 ~~~mermaid
 flowchart LR
-  A[Docs authored<br/>using templates] --> B[CI validation<br/>front matter + schema checks]
-  B --> C[Governed docs in repo]
-  C --> D[Consumed by stage owners<br/>ETL / Catalog / Graph / API / UI / Story]
+  A[ETL] --> B[STAC/DCAT/PROV]
+  B --> C[Neo4j Graph]
+  C --> D[API Contracts]
+  D --> E[UI]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+
+  T1["Universal Doc Template"] --- A
+  T1 --- B
+  T1 --- C
+  T1 --- D
+  T1 --- E
+
+  T2["Story Node Template v3"] --- F
+  T2 --- G
+
+  T3["API Contract Extension Template"] --- D
 ~~~
 
 ## 📦 Data & Metadata
 
-### Front-matter rules
+### Front-matter expectations
 
-When you create a new doc from a template:
+All governed templates require YAML front‑matter. Minimum expectations:
 
-- Copy the entire template file.
-- Update at minimum:
-  - `title`
-  - `path`
-  - `version`
-  - `last_updated`
-  - `status`
-  - `doc_kind`
-  - `doc_uuid`
-  - `semantic_document_id`
-  - `event_source_id`
-  - `commit_sha`
-  - `doc_integrity_checksum`
-- Keep the key set intact.
+- `title`, `path`, `version`, `last_updated`, `status`, `doc_kind`, `license`
+- protocol versions (KFM‑MDP / MCP‑DL / KFM‑ONTO / KFM‑PPC)
+- governance and sensitivity fields (`fair_category`, `care_label`, `sensitivity`, `classification`, `jurisdiction`)
+- stable identifiers (`doc_uuid`, `semantic_document_id`, `event_source_id`)
+- AI usage constraints (`ai_transform_permissions`, `ai_transform_prohibited`)
+- integrity placeholder (`doc_integrity_checksum`)
 
-### Evidence linkage
-
-For Story Nodes and anything that can surface in Focus Mode:
-
-- Link claims to evidence identifiers where possible:
-  - STAC Item / Collection IDs
-  - DCAT dataset IDs
-  - PROV activity IDs
-  - graph entity IDs
-- Treat uncited narrative as a validation failure for published content.
-
-## 🧠 Story Node and Focus Mode Integration
-
-### Provenance-linked narrative rule
-
-- Every factual claim should trace to a dataset, record, or asset identifier.
-- Story Nodes are intended to be machine-ingestible for UI rendering and auditing.
-
-### Optional structured controls
-
-Some Story Node documents may include structured Focus Mode hints.
+### Minimal example snippet
 
 ~~~yaml
-focus_layers:
-  - "TBD"
-focus_time: "TBD"
-focus_center: [ -98.0000, 38.0000 ]
+---
+title: "TBD"
+path: "docs/<area>/<doc>.md"
+version: "v1.0.0"
+last_updated: "YYYY-MM-DD"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
+
+doc_uuid: "urn:kfm:doc:<namespace>:v1.0.0"
+semantic_document_id: "kfm-<namespace>-v1.0.0"
+event_source_id: "ledger:kfm:doc:<namespace>:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
+---
 ~~~
 
-## 🧪 Validation and CI/CD
+## 🌐 STAC, DCAT & PROV Alignment
 
-### Validation steps
+### Required linkage
 
-- [ ] Markdown protocol validation
-- [ ] Schema validation for any referenced STAC/DCAT/PROV assets
-- [ ] Story Node checks for citations, entity references, and redaction compliance
-- [ ] API contract tests when updating/adding endpoint contracts
-- [ ] UI schema checks when touching layer registry or UI contracts
-- [ ] Security and sovereignty checks when handling restricted knowledge
+When a document describes data, outputs, or claims, it should link to identifiers in:
+
+- **STAC**: collection IDs and item IDs
+- **DCAT**: dataset identifiers and distributions
+- **PROV**: activity/run IDs and derivation chains
+
+### Round-trip traceability
+
+Graph nodes should store **references** back to catalog identifiers (STAC/DCAT) rather than duplicating large payloads. This enables round‑trip traceability between graph and catalogs and keeps provenance first‑class.
+
+## 🧱 Architecture
+
+### Contract-first + API boundary
+
+- APIs are contract‑first: OpenAPI/GraphQL schemas are the authoritative contract.
+- UI must consume data via contracted APIs or static catalogs, **never** by directly reading Neo4j.
+- Any new interactive UI feature must have corresponding API support and tests.
+
+### Where changes land
+
+| Layer | Canonical location | Notes |
+|---|---|---|
+| ETL/pipelines | `src/pipelines/` | Deterministic, reproducible runs |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Validate schemas + integrity |
+| Graph | `src/graph/` | Ontology aligned; store catalog references |
+| API | `src/server/` | Contracts + tests required |
+| UI | `web/` | No direct graph calls |
+| Story Nodes | `docs/reports/story_nodes/` | Evidence-linked narrative |
+
+Some exact subpaths may vary by repo revision; if a path is missing, mark as **not confirmed in repo** and reconcile with the Master Guide before proceeding.
+
+## 🧠 Story Node & Focus Mode Integration
+
+### Narrative integrity rule
+
+Story Nodes must be written in a neutral, evidence-led tone, and **every factual claim must map to a cited dataset/document ID**.
+
+### Focus Mode expectations
+
+Focus Mode content must be provenance-linked (no “orphan facts”). Any AI-generated elements must be clearly indicated and must not imply prohibited actions (e.g., inferring sensitive locations).
+
+## 🧪 Validation & CI/CD
+
+### Recommended checks
+
+- [ ] `markdown-lint`
+- [ ] `schema-lint` (STAC/DCAT/PROV where applicable)
+- [ ] `footer-check` (required refs present)
+- [ ] `accessibility-check`
+- [ ] `diagram-check`
+- [ ] `metadata-check`
+- [ ] `provenance-check`
+- [ ] `secret-scan`
+- [ ] `pii-scan`
 
 ### Reproduction
 
 ~~~bash
-# Example placeholders — replace with repo-specific commands
-# 1) validate markdown protocol
-# 2) validate schemas
-# 3) run contract tests
+# Replace with repo-specific commands once confirmed.
+# 1) validate schemas (STAC/DCAT/PROV)
+# 2) run unit/integration tests
+# 3) run doc lint / markdown checks
 ~~~
 
-## ⚖ FAIR+CARE and Governance
+## ⚖ FAIR+CARE & Governance
 
 ### Review gates
 
-- Use `docs/governance/` as the canonical source for approval requirements.
-- Treat changes that affect:
-  - sensitive locations
-  - culturally sensitive content
-  - public API contracts
-  - Story Node publication rules
-  as requiring human review.
+Trigger governance/security review when:
+
+- changing classification or sensitivity of an artifact
+- publishing derived datasets from sensitive or restricted inputs
+- adding a UI layer that could reveal sensitive locations by interaction or zoom
+
+### CARE / sovereignty considerations
+
+When content intersects with community-defined sensitive areas, ensure redaction/generalization is applied and decisions are documented.
 
 ### AI usage constraints
 
-- Ensure the doc’s AI permissions and prohibitions match the intended use.
-- Never allow policy generation output to become a governance artifact without explicit review.
+- Allowed AI actions should match `ai_transform_permissions`.
+- Prohibited AI actions must remain prohibited; do not imply “policy generation” or “sensitive location inference” in docs.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
-|---|---|---|---|
-| v1.0.0 | 2025-12-22 | Initial templates README | TBD |
+|---|---:|---|---|
+| v1.0.0 | 2025-12-27 | Initial templates README | TBD |
 
 ---
 
-Footer refs:
+Footer refs (do not remove)
 
-- Governance: `docs/governance/ROOT_GOVERNANCE.md`
-- Ethics: `docs/governance/ETHICS.md`
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+- Master guide: `docs/MASTER_GUIDE_v12.md`
+- Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Story node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- API contract template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md` (not confirmed in repo)
+- Sovereignty: `docs/governance/SOVEREIGNTY.md` (not confirmed in repo)
+- Ethics: `docs/governance/ETHICS.md` (not confirmed in repo)
+---
