@@ -193,18 +193,18 @@ KFM scales by adding new data domains, evidence products, graph entities, APIs, 
 
 ~~~mermaid
 flowchart LR
-  subgraph S[docs/standards]
-    MDP[KFM-MDP (Markdown Protocol)] --> CI[CI validation gates]
-    RS[Repo Structure Standard] --> CI
-    STAC[KFM-STAC Profile] --> CAT[Catalog build outputs]
-    DCAT[KFM-DCAT Profile] --> CAT
-    PROV[KFM-PROV Profile] --> CAT
-    ONTO[KFM-ONTO Protocol] --> G[Graph ingest]
-    FAIR[FAIR+CARE] --> CI
-    SOV[Sovereignty] --> CI
+  subgraph S["docs/standards"]
+    MDP["KFM-MDP: Markdown Protocol"] --> CI["CI validation gates"]
+    RS["Repo Structure Standard"] --> CI
+    STAC["KFM-STAC Profile"] --> CAT["Catalog build outputs"]
+    DCAT["KFM-DCAT Profile"] --> CAT
+    PROV["KFM-PROV Profile"] --> CAT
+    ONTO["KFM-ONTO Protocol"] --> G["Graph ingest"]
+    FAIR["FAIR+CARE"] --> CI
+    SOV["Sovereignty"] --> CI
   end
 
-  CAT --> G --> API[Contracted APIs] --> UI[React/Map UI] --> STORY[Story Nodes] --> FOCUS[Focus Mode]
+  CAT --> G --> API["Contracted APIs"] --> UI["React / Map UI"] --> STORY["Story Nodes"] --> FOCUS["Focus Mode"]
   CI --> CAT
   CI --> G
   CI --> API
