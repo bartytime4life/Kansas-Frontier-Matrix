@@ -43,62 +43,90 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 # Schemas — Contract Registry
 
-This folder is the **schema registry** for KFM: machine-validated contracts that define file formats and interface payloads at key pipeline boundaries.
+This folder is the **schema registry** for KFM: machine-validated contracts that define the file formats and payload shapes that are allowed to cross subsystem boundaries.
 
-KFM is contract-first and evidence-first. Schemas exist so producers and consumers can evolve independently while CI fails deterministically when artifacts are invalid.
+KFM is **contract-first** and **evidence-first**. Schemas exist so producers and consumers can evolve independently while CI fails deterministically when artifacts drift out of compliance.
+
+The schema registry supports (and must remain aligned with) the canonical pipeline ordering:
+
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+---
 
 ## 📘 Overview
 
 ### Purpose
 
-- Provide a single canonical home for **data-output schemas** (STAC/DCAT/PROV), **Story Node schemas**, **UI registry schemas**, and **telemetry schemas**.
-- Enable repeatable validation in CI and in local dev to prevent “silent drift” across ETL, catalogs, graph ingest, APIs, and UI.
+- Provide **one canonical home** for schema contracts (no per-domain “mystery duplicates”).
+- Enable repeatable validation in CI and local development to prevent **silent drift** across ETL, catalog outputs, graph ingest, API payloads, UI registries, Story Nodes, and telemetry.
+- Make governance and provenance enforceable by design:
+  - schemas define “what we accept”;
+  - provenance documents “how we got it”;
+  - both are required for Focus Mode consumption.
 
 ### Scope
 
 | In scope | Out of scope |
 |---|---|
-| JSON Schemas and optional shape bundles used to validate repo artifacts | Implementing ETL jobs, APIs, or UI features |
-| Folder conventions, schema versioning expectations, and validation boundaries | Defining new governance policy (policy lives under `docs/governance/`) |
-| Guidance for adding/updating schemas and wiring validators | Hosting raw data, processed data, or catalog outputs (those live under `data/`) |
+| JSON Schemas used to validate repo artifacts at boundaries | Implementing ETL jobs, APIs, UI features, or graph queries |
+| Optional SHACL shape bundles if adopted by the repo | Defining new governance policy (policy lives under `docs/governance/`) |
+| Schema versioning, deprecation expectations, and validation boundaries | Hosting raw data, processed data, or catalog outputs (these live under `data/`) |
 
 ### Audience
 
-- Primary: schema maintainers, pipeline/catalog maintainers, CI maintainers
-- Secondary: domain contributors adding datasets, Story Node authors/editors, UI maintainers
+- Primary: schema maintainers, catalog maintainers, CI/workflow maintainers
+- Secondary: domain contributors adding datasets, Story Node authors/editors, UI maintainers, API maintainers
 
 ### Definitions
 
-- Glossary reference: `docs/glossary.md` (**not confirmed in repo** — create or update link if absent)
-- Terms used here:
-  - **Contract**: a machine-validated schema/spec that producers and consumers agree on.
-  - **Producer**: the subsystem that emits an artifact (ETL, catalog builder, UI config author, etc.).
-  - **Consumer**: the subsystem that reads an artifact (graph ingest, API, UI runtime, Focus Mode, etc.).
-  - **Boundary validation**: validating an artifact as soon as it crosses a subsystem boundary.
-  - **Schema version**: semantic version identifier tied to a schema’s meaning and compatibility.
+- **Contract:** a machine-validated schema/spec that producers and consumers agree on.
+- **Schema family:** a logical group of schemas for a boundary (STAC, DCAT, PROV, story nodes, UI registries, telemetry).
+- **Producer:** subsystem that emits an artifact (ETL, catalog builder, Story Node publish step, UI config author, API runtime, etc.).
+- **Consumer:** subsystem that reads an artifact (graph ingest, API, UI runtime, Focus Mode, audit tools).
+- **Boundary validation:** validate an artifact as soon as it is produced, before any downstream system accepts it.
+- **Profile:** a governed standardization layer (e.g., KFM-STAC/KFM-DCAT/KFM-PROV). Schemas are the executable enforcement of those profiles.
 
-### Key artifacts
+Glossary reference:
+- `docs/glossary.md` (**not confirmed in repo** — create or update link if absent)
 
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| Master Guide | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical pipeline + invariants |
-| Redesign blueprint (v13) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Maintainers | Canonical roots + minimum contract set |
-| This registry | `schemas/README.md` | Schema maintainers | Explains schema layout + usage |
-| STAC outputs | `data/stac/` | Catalog stage | Collections + Items |
-| DCAT outputs | `data/catalog/dcat/` | Catalog stage | Dataset records |
-| PROV lineage bundles | `data/prov/` | ETL + catalog | Provenance for runs and artifacts |
-| API contracts | `src/server/contracts/` (**or repo-defined equivalent**) | API maintainers | OpenAPI / GraphQL specs live outside `schemas/` |
-| Story Nodes | `docs/reports/story_nodes/` | Story editors | Draft + published nodes |
-| UI app + registries | `web/` | UI maintainers | UI configs must validate against UI schemas |
+### Key artifacts and canonical homes
+
+| Artifact | Canonical path | Notes |
+|---|---|---|
+| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | Canonical pipeline + invariants |
+| v13 Redesign Blueprint | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Canonical roots + minimum contract set |
+| Schema registry | `schemas/` | This folder |
+| STAC outputs | `data/stac/collections/` and `data/stac/items/` | Catalog stage outputs (validate before graph ingest) |
+| DCAT outputs | `data/catalog/dcat/` | Catalog stage outputs |
+| PROV bundles | `data/prov/` | ETL + catalog provenance outputs |
+| Graph ingest artifacts | `data/graph/` | Import fixtures (CSV/Cypher) as defined by graph subsystem |
+| API boundary | `src/server/` | UI must access graph via APIs (no direct graph reads) |
+| API contracts | `src/server/contracts/` | OpenAPI / GraphQL contracts |
+| UI layer registries | `web/` | Configs validate against `schemas/ui/` |
+| Story Nodes | `docs/reports/story_nodes/` | Draft + published nodes must validate |
+| Telemetry docs | `docs/telemetry/` | Pairs with `schemas/telemetry/` |
+
+### Quickstart for common changes
+
+- Adding a new dataset:
+  - you likely need schema-governed outputs under `data/stac/**`, `data/catalog/dcat/**`, and `data/prov/**`.
+- Adding a new UI layer registry entry:
+  - update the UI registry file(s) under `web/` and ensure they validate against `schemas/ui/`.
+- Adding a new Story Node field:
+  - update `schemas/storynodes/` and ensure publish-time validation remains deterministic.
+- Adding a new telemetry signal:
+  - define the event shape under `schemas/telemetry/` and document it under `docs/telemetry/`.
 
 ### Definition of done
 
-- [ ] Front-matter complete and consistent with path/version
-- [ ] Minimum contract set folder layout is documented and understandable
-- [ ] Schema versioning rules are explicit and actionable
-- [ ] Validation steps are listed and repeatable
-- [ ] Governance and CARE/sovereignty considerations are stated where relevant
-- [ ] Open questions are tracked with owners
+- [ ] This README front-matter is complete and `path` matches file location
+- [ ] The minimum contract set is documented and consistent with canonical homes
+- [ ] Versioning + deprecation rules are explicit and actionable
+- [ ] Validation expectations are listed and repeatable
+- [ ] Governance / CARE / sovereignty triggers are documented for schema changes
+- [ ] Open questions are tracked with owners and next actions
+
+---
 
 ## 🗂️ Directory Layout
 
@@ -106,22 +134,18 @@ KFM is contract-first and evidence-first. Schemas exist so producers and consume
 
 - `path`: `schemas/README.md`
 
-### Related repository paths
-
-| Area | Path | What lives here |
-|---|---|---|
-| ETL and catalog code | `src/pipelines/` | Ingest + normalize + produce derived artifacts |
-| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Standardized discovery + provenance |
-| Graph ingest | `src/graph/` and `data/graph/` | Ontology bindings + import artifacts |
-| API boundary | `src/server/` | APIs expose graph/data to UI; contracts under `src/server/contracts/` |
-| UI boundary | `web/` | React + map clients; no direct graph access |
-| Story Nodes | `docs/reports/story_nodes/` | Draft/published narrative nodes |
-| CI workflows | `.github/workflows/` | Validation gates |
-| Reproducibility evidence | `mcp/runs/` | Run manifests + pointers to provenance |
-
 ### Minimum contract set
 
-Organize schemas into these canonical roots:
+The minimum contract set for v13 readiness is:
+
+- `schemas/stac/` — STAC JSON Schemas plus KFM constraints  
+- `schemas/dcat/` — DCAT constraints and shape bundles as needed  
+- `schemas/prov/` — PROV constraints and profiles  
+- `schemas/storynodes/` — Story Node schema  
+- `schemas/ui/` — UI layer registry schema  
+- `schemas/telemetry/` — telemetry schemas used by CI and runs
+
+Expected layout:
 
 ~~~text
 📁 schemas/
@@ -131,83 +155,57 @@ Organize schemas into these canonical roots:
 ├── 📁 prov/
 ├── 📁 storynodes/
 ├── 📁 ui/
-└── 📁 telemetry/
+├── 📁 telemetry/
+└── 📁 shacl/                  (optional; not confirmed in repo)
 ~~~
 
-Suggested contents by folder:
+### What belongs in each folder
 
 | Folder | What it holds | Primary producers | Primary consumers |
 |---|---|---|---|
-| `schemas/stac/` | STAC schemas + KFM constraints | Catalog build stage | Graph ingest, API, UI |
-| `schemas/dcat/` | DCAT constraints + any required shape bundles | Catalog build stage | API, external catalogs |
-| `schemas/prov/` | PROV constraints/profiles | ETL + catalog stages | Audit, reproducibility, Focus Mode |
-| `schemas/storynodes/` | Story Node validation schemas | Story Node authors/editors | Story publishing, Focus Mode |
-| `schemas/ui/` | UI registry schemas | UI maintainers | UI build + runtime config |
-| `schemas/telemetry/` | Telemetry/event schemas | ETL, API, UI | CI quality gates, monitoring |
+| `schemas/stac/` | STAC collection/item validation schemas + KFM constraints | Catalog build stage | Graph ingest, API, UI |
+| `schemas/dcat/` | DCAT dataset/distribution validation constraints | Catalog build stage | API, external catalog export |
+| `schemas/prov/` | PROV validation constraints (JSON-LD or other repo-chosen encoding) | ETL + catalog stages | Audit, reproducibility, Focus Mode |
+| `schemas/storynodes/` | Story Node validation schemas (front-matter + structure) | Story Node authors/publish workflow | Story publishing, Focus Mode |
+| `schemas/ui/` | UI registry schemas for layer/config files | UI maintainers | UI build + runtime |
+| `schemas/telemetry/` | Telemetry/event schemas | ETL/API/UI | CI quality gates, monitoring, governance signals |
 
-Optional extensions (allowed, but not part of the minimum contract set):
+### Registry invariants
 
-- `schemas/shacl/` for SHACL shape bundles (**not confirmed in repo**)
-- `schemas/common/` for shared definitions across schema families (**not confirmed in repo**)
+- **Schemas and specs live here** (`schemas/`). Do not create per-domain schema registries.
+- **API contracts live at the API boundary** (`src/server/contracts/`), not in `schemas/`.
+- **Data outputs are not code**: derived datasets and catalogs must not be written into `src/` or `docs/`.
+- **No YAML front-matter in code files**: JSON Schemas and shape bundles are code artifacts and must not use YAML front matter.
 
-### Schema naming and versioning conventions
-
-Schema changes must be versioned. Recommended practices:
-
-- Use semantic versioning for schema meaning:
-  - **Major**: breaking change (consumer updates required)
-  - **Minor**: backward-compatible additions (new optional fields, relaxed constraints)
-  - **Patch**: non-semantic fixes (typos, metadata changes, refactor with identical validation)
-- Keep a changelog for schema evolution:
-  - Option A: `schemas/CHANGELOG.md` (**not confirmed in repo**)
-  - Option B: per-schema `CHANGELOG.md` inside each root (e.g., `schemas/stac/CHANGELOG.md`)
-
-Recommended schema metadata (for JSON Schema files):
-
-- `$id` (stable identifier)
-- `title`, `description`
-- A machine-readable version field (either inside schema or in filename)
-- Clear compatibility notes (breaking vs non-breaking)
+---
 
 ## 🧭 Context
 
-### Background
+### Why schemas are first-class
 
-KFM’s canonical pipeline ordering is preserved:
+Schemas are the enforcement mechanism for contract-first behavior: artifacts must be valid at the boundary where they are produced.
 
-**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
-
-Schemas are the enforcement mechanism for “contract-first” behavior: artifacts must be valid at the boundary where they are produced.
-
-### Assumptions
-
-- The folders in the minimum contract set exist (even if some are empty placeholders).
-- If a referenced path is missing in a given checkout, treat it as **not confirmed in repo** and either:
-  - add the canonical path and link to it, or
-  - update this README to point to the repo’s true canonical location.
+This prevents “silent drift” such as:
+- ETL emits a new field without updating catalog builders
+- catalog outputs diverge from profile expectations
+- UI registry config changes break map rendering in production
+- Story Nodes accumulate unvalidated narrative structure
+- telemetry payload shape changes make CI signals incomparable
 
 ### Constraints and invariants
 
-- UI must not read Neo4j directly. All graph access is mediated by the API boundary.
-- Documentation and Story Nodes must not introduce unsourced narrative.
-- Schema validation should fail deterministically:
-  - if schema roots are present but invalid, CI should fail,
-  - if optional roots are absent, CI should skip cleanly.
+Non-negotiables across the system that schemas help enforce:
 
-### Open questions
+1. **No UI direct-to-graph reads**
+   - `web/` must not query Neo4j directly; all graph access is via `src/server/`.
+2. **No unsourced narrative**
+   - Published Story Nodes must be provenance-linked and must validate.
+3. **Contracts are canonical**
+   - Schemas/specs must live in `schemas/` and API contracts under `src/server/contracts/`.
+4. **Deterministic validation**
+   - CI should validate if present; fail if invalid; skip cleanly only when a check is not applicable.
 
-| Question | Owner | Target date |
-|---|---|---|
-| Which JSON Schema dialect and validator are canonical (AJV, check-jsonschema, other)? | TBD | TBD |
-| Where should SHACL shapes live if adopted (`schemas/shacl/` vs per-domain)? | TBD | TBD |
-| Do we want generated types (TypeScript/Python) from schemas, and where do they live? | TBD | TBD |
-| What is the canonical location for schema changelogs? | TBD | TBD |
-
-### Future extensions
-
-- Add a small “schema registry index” file to enumerate canonical schema IDs and versions (**not confirmed in repo**).
-- Add fixtures for schema validation under `tests/fixtures/` (**not confirmed in repo**).
-- Add schema-driven type generation for API and UI consumers (**not confirmed in repo**).
+---
 
 ## 🗺️ Diagrams
 
@@ -215,11 +213,11 @@ Schemas are the enforcement mechanism for “contract-first” behavior: artifac
 
 ~~~mermaid
 flowchart LR
-  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
-  B --> C[Graph Ingest]
-  C --> D[APIs]
-  D --> E[UI]
-  E --> F[Story Nodes]
+  A[ETL<br/>src/pipelines] --> B[Catalogs<br/>data/stac + data/catalog/dcat + data/prov]
+  B --> C[Graph Ingest<br/>src/graph + data/graph]
+  C --> D[APIs<br/>src/server]
+  D --> E[UI<br/>web]
+  E --> F[Story Nodes<br/>docs/reports/story_nodes]
   F --> G[Focus Mode]
 
   S[schemas/] --> B
@@ -229,7 +227,7 @@ flowchart LR
   S --> F
 ~~~
 
-### Validation boundaries
+### Validation boundary pattern
 
 ~~~mermaid
 flowchart TB
@@ -240,53 +238,79 @@ flowchart TB
   subgraph Examples
     X1[Catalog emits STAC JSON] --> X2[Validate STAC schema] --> X3[Graph ingest reads STAC]
     Y1[Story author edits Story Node] --> Y2[Validate story node schema] --> Y3[Publish step]
-    Z1[UI layer registry updated] --> Z2[Validate UI registry schema] --> Z3[UI build/runtime]
+    Z1[UI registry updated] --> Z2[Validate UI registry schema] --> Z3[UI build/runtime]
   end
 ~~~
 
-## 📦 Data and Metadata
+---
+
+## 📦 Data & Metadata
 
 ### Inputs
 
-Schemas in this directory are used to validate artifacts such as:
-
-- STAC Collections and Items (`data/stac/**`)
-- DCAT dataset records (`data/catalog/dcat/**`)
-- PROV bundles (`data/prov/**`)
-- Story Node metadata extracted at publish time (`docs/reports/story_nodes/**`)
-- UI registry/config files (`web/**`)
-- Telemetry/event payloads emitted by pipeline/API/UI systems
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| Standard profiles and constraints | Markdown | `docs/standards/` | Human review + link checks |
+| Contract schemas | JSON / SHACL | `schemas/**` | Schema lint + CI contract checks |
+| Reference artifacts | JSON | `data/**`, `web/**`, `docs/reports/story_nodes/**` | Validated against schemas |
 
 ### Outputs
 
-This folder produces:
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Schema contracts | JSON / SHACL | `schemas/**` | This registry |
+| Validation results | logs / manifests | `mcp/runs/**` and/or `data/prov/**` | Tooling-specific |
 
-- A versioned set of schemas used by validators
-- A stable contract surface for producers/consumers
-- A reviewable set of “what we accept” constraints for audit and governance
+### Sensitivity and redaction
+
+Schemas influence what can be produced and what can be displayed. Treat schema changes as governance-relevant if they affect:
+- location precision,
+- redaction/generalization behavior,
+- attribution fields,
+- fields that could enable inference of sensitive locations or protected community data.
 
 ### Provenance hooks
 
-Where possible, capture:
+Where possible, run manifests and provenance bundles should capture:
+- schema family and schema version used to validate each artifact,
+- validator tool and version,
+- timestamp and result (pass/fail).
 
-- schema version used to validate each artifact,
-- validator tool/version,
-- validation timestamp and result,
-in run manifests and/or provenance bundles.
+---
 
-## 🧩 STAC/DCAT/PROV Alignment
+## 🌐 STAC, DCAT & PROV Alignment
 
-Schemas support the catalog stage and are aligned to KFM profiles:
+Schemas in this registry are aligned to KFM profiles and enforce boundary validity before downstream ingest.
 
-| Standard family | Output location | Schema root | Notes |
-|---|---|---|---|
-| STAC | `data/stac/` | `schemas/stac/` | Used to validate Collections and Items before graph ingest |
-| DCAT | `data/catalog/dcat/` | `schemas/dcat/` | Used to validate discovery metadata for non-map consumers |
-| PROV | `data/prov/` | `schemas/prov/` | Used to validate lineage for audit, reproducibility, and Focus Mode |
+### STAC
 
-Note:
-- The profiles referenced in front-matter (`KFM-STAC`, `KFM-DCAT`, `KFM-PROV`) define constraints that schemas implement.
-- If profile documents are missing or incomplete, treat those paths as **not confirmed in repo** and add the canonical profile docs before tightening schemas.
+- Output location:
+  - Collections: `data/stac/collections/`
+  - Items: `data/stac/items/`
+- Validation:
+  - Validate JSON structure and required fields at catalog build time.
+  - Validate any KFM-specific constraints (extensions, identifiers, asset conventions) via KFM schema overlays.
+
+### DCAT
+
+- Output location:
+  - `data/catalog/dcat/`
+- Validation:
+  - Validate dataset/distribution metadata required for discovery, reuse, and external federation.
+
+### PROV-O
+
+- Output location:
+  - `data/prov/`
+- Validation:
+  - Validate lineage bundles that connect raw → work → processed → catalog outputs and publish steps.
+
+### Versioning expectations
+
+- New versions should link predecessor/successor in the relevant standard mechanism when applicable.
+- The graph should mirror version lineage (entities point to catalog/provenance identifiers).
+
+---
 
 ## 🧱 Architecture
 
@@ -294,75 +318,130 @@ Note:
 
 | Component | Responsibility | Interface |
 |---|---|---|
-| Schema registry (`schemas/`) | Contract definitions for artifacts | JSON Schema files and optional shape bundles |
-| Producers | Emit artifacts at boundaries | ETL outputs, catalogs, Story Nodes, UI registries, telemetry events |
-| Validators | Enforce contract compliance | CI jobs and local scripts (**validator tooling not confirmed in repo**) |
+| Schema registry (`schemas/`) | Contract definitions for artifacts | JSON Schema + optional SHACL |
+| Producers | Emit artifacts at boundaries | ETL outputs, catalogs, Story Nodes, UI registries, telemetry |
+| Validators | Enforce contract compliance | CI jobs + local scripts |
 | Consumers | Read artifacts | Graph ingest, API, UI runtime, Focus Mode |
 
 ### Interfaces and contract locations
 
-Representative contract locations across the repo:
-
 | Contract type | Canonical location | Versioning rule |
 |---|---|---|
-| Data output schemas | `schemas/` | semantic versioning + changelog |
-| API schemas (OpenAPI/GraphQL) | `src/server/` + `src/server/contracts/` (**or repo-defined equivalent**) | versioned APIs + contract tests |
-| UI layer registry | `web/` (layer config files) | validated against `schemas/ui/` |
+| Data output schemas | `schemas/` | Semver + changelog (location TBD) |
+| API contracts | `src/server/contracts/` | Contract tests required |
+| UI layer registry schemas | `schemas/ui/` | Schema-validated before runtime |
+| Story Node schemas | `schemas/storynodes/` | Publish must validate |
+| Telemetry schemas | `schemas/telemetry/` | Contracted signals for CI/governance |
 
-## ⚙️ Validation and CI/CD
+### Extension points checklist
+
+- [ ] Data: new domain added under `data/<domain>/...`
+- [ ] STAC: new collection + item schema validation
+- [ ] DCAT: dataset/distribution validation
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests
+- [ ] UI: layer registry entry + access rules
+- [ ] Story Nodes: schema updates + publish validation
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+### Story Nodes as machine-ingestible storytelling
+
+Story Nodes are governed narrative artifacts:
+- they must validate structurally,
+- they must reference provenance-linked evidence,
+- they must connect to entities in the graph by stable identifiers.
+
+### Focus Mode rule
+
+Focus Mode only consumes provenance-linked content:
+- any predictive or AI-generated content must be opt-in,
+- must include uncertainty metadata,
+- must never appear as unmarked fact.
+
+### Optional structured controls
+
+The Story Node schema may define structured “Focus Mode controls” for UI behavior. Any such fields must be schema-defined and validated.
+
+~~~yaml
+# Illustrative placeholders only; actual supported fields are defined by schemas/storynodes/**
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+---
+
+## 🧪 Validation & CI/CD
 
 ### Validation steps
 
-Recommended checks when schemas or schema-governed artifacts change:
+- [ ] Markdown protocol checks for governed docs (including this README)
+- [ ] JSON Schema parse/lint checks for schema files
+- [ ] Artifact validation:
+  - [ ] STAC Collections and Items (`data/stac/**`) validate against `schemas/stac/`
+  - [ ] DCAT records (`data/catalog/dcat/**`) validate against `schemas/dcat/`
+  - [ ] PROV bundles (`data/prov/**`) validate against `schemas/prov/`
+  - [ ] Story Nodes (`docs/reports/story_nodes/**`) validate against `schemas/storynodes/`
+  - [ ] UI registries (`web/**`) validate against `schemas/ui/`
+  - [ ] Telemetry payloads validate against `schemas/telemetry/`
+- [ ] API contract tests at `src/server/contracts/`
+- [ ] Security and sovereignty scanning gates (as applicable)
 
-- Markdown protocol validation for governed docs (including this README)
-- Schema syntax validation (JSON Schema parse/lint)
-- Artifact validation:
-  - STAC JSON against `schemas/stac/`
-  - DCAT records against `schemas/dcat/`
-  - PROV bundles against `schemas/prov/`
-  - Story Node publish validation using `schemas/storynodes/` (typically applied to extracted metadata representation)
-  - UI registry config validation using `schemas/ui/`
-  - Telemetry payload validation using `schemas/telemetry/`
-- Secrets/PII scanning and sovereignty gates where configured
+### Deterministic CI behavior
 
-Example command patterns (illustrative only — tooling not confirmed in repo):
+- If a schema-governed root exists and artifacts are invalid, CI must **fail**.
+- If a check is not applicable to a change, CI may **skip** cleanly.
+- Link/reference checks should ensure internal links resolve and that “not confirmed in repo” markers are used where appropriate.
+
+### Reproduction
 
 ~~~bash
-# Validate a JSON artifact against a schema (tooling not confirmed in repo)
-# check-jsonschema --schemafile schemas/stac/<schema>.json data/stac/items/<item>.json
-
-# Validate UI registry config (tooling not confirmed in repo)
-# check-jsonschema --schemafile schemas/ui/<layer-registry>.json web/<layers>.json
+# Example placeholders — replace with repo-specific commands and tools
+# 1) validate schemas
+# 2) validate schema-governed artifacts (STAC/DCAT/PROV/storynodes/ui/telemetry)
+# 3) run tests + contract checks
+# 4) run doc lint / link checks
 ~~~
 
-### CI expectations
+### Telemetry signals
 
-Minimum CI gates for “v13 readiness” should include:
+| Signal | Source | Where recorded |
+|---|---|---|
+| Schema validation pass/fail | CI validators | `docs/telemetry/` + `schemas/telemetry/` |
+| Story Node publish validation | Story pipeline | `docs/telemetry/` + `schemas/storynodes/` |
+| UI registry validation | UI build | `docs/telemetry/` + `schemas/ui/` |
 
-- Markdown protocol validation
-- Schema validation
-- Story Node validation
-- API contract tests
-- Security and sovereignty scanning gates
-
-CI should fail deterministically when schema roots exist but contain invalid schemas or invalid governed artifacts.
+---
 
 ## ⚖ FAIR+CARE and Governance
 
-Schemas influence what can be produced, published, and displayed. Treat schema changes as governance-relevant when they affect:
+### Review gates
 
-- redaction rules,
-- classification sensitivity,
-- location precision requirements,
-- fields that could enable inference of sensitive locations or protected community data.
+Schema changes require careful review when they affect:
+- what becomes public-facing,
+- what becomes inferable (especially locations and protected community data),
+- redaction/generalization behavior,
+- API payload expectations that UI depends on.
 
-AI usage constraints for this document and this repo area:
+### CARE and sovereignty considerations
 
-- Allowed: summarization, structure extraction, translation, keyword indexing
-- Prohibited: generating new policy, inferring sensitive locations
+- If a schema enables higher precision locations, expands identity-revealing fields, or reduces redaction, treat the change as sovereignty-sensitive and require governance review.
+- When in doubt, prefer conservative defaults and explicitly document exceptions under governance.
 
-## 🧾 Version History
+### AI usage constraints
+
+This document’s front matter sets the allowed and prohibited AI transforms. Schema content must not be used as a backdoor to create policy; policy belongs under `docs/governance/`.
+
+---
+
+## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
