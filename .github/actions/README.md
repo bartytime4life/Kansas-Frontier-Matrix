@@ -11,6 +11,7 @@ markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
 ontology_protocol_version: "KFM-ONTO v4.1.0"
 pipeline_contract_version: "KFM-PPC v11.0.0"
+
 stac_profile: "KFM-STAC v11.0.0"
 dcat_profile: "KFM-DCAT v11.0.0"
 prov_profile: "KFM-PROV v11.0.0"
@@ -67,7 +68,6 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 - Link: `docs/glossary.md`
 - Terms used in this doc:
-
   - **Workflow**: A GitHub Actions workflow YAML file under `.github/workflows/`.
   - **Local action**: An action defined in this repo under `.github/actions/<action-name>/`.
   - **Gate**: A validation step that fails CI if a required contract/invariant is violated.
@@ -112,7 +112,8 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 | Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Generated STAC/DCAT/PROV artifacts *(some roots may be optional depending on repo state)* |
 | Graph | `src/graph/` | Graph build + ontology bindings |
 | API boundary | `src/server/` | Canonical API access layer *(not confirmed in repo)* |
-| UI | `web/` | Canonical UI app *(not confirmed in repo)* |
+| UI | `web/` | React/MapLibre UI + governed layer configs *(not confirmed in repo)* |
+| Story Nodes | `docs/reports/story_nodes/` | Governed narrative nodes *(not confirmed in repo)* |
 
 ### Expected local action layout
 
@@ -169,7 +170,6 @@ Some canonical roots may not exist in a given repository snapshot (“not confir
 
 ~~~mermaid
 flowchart LR
-
   PR["Pull Request / Push"] --> WF[".github/workflows/ (workflow files)"]
   WF --> ACT[".github/actions/ (local actions)"]
 
@@ -207,71 +207,39 @@ flowchart LR
 
 Local actions in this directory may validate:
 
-### STAC
+- STAC Collections/Items: `data/stac/**` against `schemas/stac/**` *(if present)*
+- DCAT datasets/distributions: `data/catalog/dcat/**` against `schemas/dcat/**` *(if present)*
+- PROV bundles: `data/prov/**` against `schemas/prov/**` *(if present)*
 
-- `data/stac/collections/**` and `data/stac/items/**` *(if present)*
-- Schema validation + cross-link integrity (Collection↔Item)
-- Stable IDs and predictable asset paths
+> CI actions that emit artifacts must ensure those artifacts are safe for logs and do not contain restricted coordinates, signed URLs, or sensitive material.
 
-### DCAT
-
-- `data/catalog/dcat/**` *(if present)*
-- Basic dataset/distribution completeness checks
-- Linkage from datasets to STAC Items/Collections where required
-
-### PROV-O
-
-- `data/prov/**` *(if present)*
-- Lineage integrity: outputs link to inputs and run activities
-- “No orphan provenance”: no dangling references across artifacts
-
-### Versioning
-
-- Enforce version bumps where contract outputs change.
-- Ensure predecessor/successor relationships are represented consistently (catalogs and graph, where applicable).
+---
 
 ## 🧱 Architecture
 
-### Components
+### How workflows reference local actions
 
-| Component | Responsibility | Interface |
-|---|---|---|
-| Workflow(s) | Orchestrate CI jobs | `.github/workflows/*.yml` |
-| Local actions | Reusable gate implementations | `.github/actions/<action-name>/action.yml` |
-| Validators | Schema + contract validation tooling | Repo scripts/CLIs *(not confirmed in repo)* |
-| Catalog outputs | Evidence artifacts to validate | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` |
-| Graph | Consume validated evidence IDs | `src/graph/**` + API boundary |
-| API boundary | Enforce access/redaction; serve contracts | `src/server/**` *(not confirmed in repo)* |
-| UI | Consumes only API outputs | `web/**` *(not confirmed in repo)* |
+A workflow step can call a local action via a relative path:
 
-### Interfaces / contracts
+~~~yaml
+- name: Run schema validation gate
+  uses: ./.github/actions/<action-name>
+  with:
+    # action-specific inputs
+    path: "data/stac/"
+~~~
 
-| Contract | Location | Versioning rule |
-|---|---|---|
-| CI gate behavior | `.github/actions/**` | deterministic behavior required |
-| JSON schemas | `schemas/**` | SemVer + changelog *(not confirmed in repo)* |
-| API contracts | `src/server/contracts/**` | Backward compatible or version bump + contract tests *(not confirmed in repo)* |
+### Local action implementation expectations
 
-### API boundary reminder
-
-- The UI does **not** connect to Neo4j directly.
-- The API boundary mediates access and enforces provenance + redaction/generalization rules.
-
-### Extension points checklist (for future work)
-
-- [ ] Add a new composite action under `.github/actions/<name>/`
-- [ ] Document inputs/outputs in the action’s own README
-- [ ] Ensure it is deterministic and does not require secrets by default
-- [ ] Add/upgrade schema validations when new artifact types are introduced
-- [ ] Add tests or fixtures if the action performs non-trivial parsing/validation
+- Keep actions deterministic and repo-local.
+- Prefer composite actions (`runs: using: "composite"`) for portability.
+- If scripts are used, keep them under the action folder (e.g., `.github/actions/<action-name>/scripts/`) and avoid network-dependent behavior unless explicitly documented.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Local actions may validate Story Nodes and narrative artifacts.
-
-If an action validates Story Nodes, it should enforce:
+Local actions may implement Story Node gates such as:
 
 - citations/provenance-linking rules
 - entity reference resolution (IDs/links resolve)
