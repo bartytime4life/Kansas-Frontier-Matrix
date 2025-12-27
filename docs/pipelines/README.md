@@ -199,12 +199,12 @@ Pipelines sit at the front of this chain and must produce **evidence + lineage a
 
 ~~~mermaid
 flowchart LR
-  A[ETL / Pipelines<br/>src/pipelines] --> B[Catalogs<br/>data/stac + data/catalog/dcat + data/prov]
-  B --> C[Graph<br/>src/graph (+ data/graph if present)]
-  C --> D[API<br/>src/server]
-  D --> E[UI<br/>web]
-  E --> F[Story Nodes<br/>docs/reports/story_nodes]
-  F --> G[Focus Mode]
+  A["ETL / Pipelines\nsrc/pipelines/"] --> B["Catalogs\ndata/stac + data/catalog/dcat + data/prov/"]
+  B --> C["Graph\nsrc/graph + data/graph (if present)"]
+  C --> D["API\nsrc/server/"]
+  D --> E["UI\nweb/"]
+  E --> F["Story Nodes\ndocs/reports/story_nodes/"]
+  F --> G["Focus Mode"]
 ~~~
 
 ---
