@@ -1,468 +1,382 @@
 ---
-title: "🧱 Kansas Frontier Matrix — Test Fixtures & Mock Data (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Tests Fixtures — README"
 path: "tests/fixtures/README.md"
-version: "v11.2.6"
-last_updated: "2025-12-13"
-review_cycle: "Continuous · Autonomous Systems Oversight · FAIR+CARE Council"
+version: "v1.0.0"
+last_updated: "2025-12-27"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
 
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-version-sha256>"
-doc_integrity_checksum: "<sha256>"
-signature_ref: "../../../releases/v11.2.6/signatures/tests-fixtures-readme.sig"
-event_source_id: "ledger:tests/fixtures/README.md"
-immutability_status: "version-pinned"
-
-sbom_ref: "../../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../../releases/v11.2.6/manifest.zip"
-data_contract_ref: "../../../docs/contracts/data-contract-v3.json"
-telemetry_ref: "../../../releases/v11.2.6/tests-fixtures-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/tests-fixtures-v11.json"
-
-validation_reports:
-  - "../../../reports/self-validation/work-tests-fixtures.json"
-  - "../../../reports/fair/tests_fixtures_summary.json"
-  - "../../../reports/audit/ai_tests_fixtures_ledger.json"
-
-governance_ref: "../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11.0"
-pipeline_contract_version: "KFM-PDC v11.0"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-status: "Active / Enforced"
-doc_kind: "Fixtures Guide"
-intent: "tests-fixtures-overview"
-semantic_document_id: "kfm-doc-tests-fixtures"
-doc_uuid: "urn:kfm:tests:fixtures:v11.2.6"
-machine_extractable: true
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-accessibility_compliance: "WCAG 2.1 AA+"
-classification: "Testing · Mock Data · Synthetic Data"
-sensitivity: "Low"
-fair_category: "F1-A1-I2-R3"
-care_label: "Ethical · Public · Low-Risk"
-
-ttl_policy: "12-month review"
-sunset_policy: "Superseded upon v12 fixture architecture"
-
-provenance_chain:
-  - "tests/fixtures/README.md@v11.0.0"
-  - "tests/fixtures/README.md@v11.2.6"
+doc_uuid: "urn:kfm:doc:tests:fixtures:readme:v1.0.0"
+semantic_document_id: "kfm-tests-fixtures-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:tests:fixtures:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
   - "summarize"
-  - "extract_metadata"
-  - "generate_checklists"
-  - "propose_fixture_additions_non_authoritative"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "fabricate_provenance_or_hashes"
-  - "insert_secrets_tokens_or_credentials"
-  - "include_or_infer_pii"
-  - "introduce_real_world_sensitive_coordinates"
-  - "weaken_sovereignty_or_masking_rules"
-  - "change_governance_status_language"
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# KFM Tests Fixtures — README
 
-# 🧱 **Kansas Frontier Matrix — Test Fixtures & Mock Data (v11 LTS)**
-`tests/fixtures/README.md`
-
-**Purpose**  
-Define the **canonical synthetic fixture suite** used by the KFM v11 Test Platform to enable **deterministic, sovereignty-safe, FAIR+CARE-aligned testing** of ETL, AI, governance, Story Node v3, Focus Mode v3, STAC/DCAT, and telemetry pipelines.
-
-<img src="https://img.shields.io/badge/MCP--DL-v6.3-blueviolet" />
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/FAIR%2BCARE-Governance%20Aligned-orange" />
-<img src="https://img.shields.io/badge/Accessibility-WCAG_2.1_AA%2B-blueviolet" />
-<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
-
-</div>
-
----
+> **Purpose (required):** Define how to create, store, and maintain **small, synthetic** fixtures under `tests/fixtures/` so KFM tests remain deterministic and aligned to the canonical pipeline and CI validation behavior.
 
 ## 📘 Overview
 
-The fixture layer is the **safety boundary** for KFM tests.
+### Purpose
 
-Fixtures are **synthetic**, **non-identifying**, **version-pinned** datasets and payloads that:
+- Provide a canonical home for **tiny, synthetic** inputs used by unit/integration/contract tests.
+- Encode “contract expectations” for:
+  - STAC/DCAT/PROV schema & integrity tests,
+  - Graph ingest/import tests,
+  - API request/response contract tests,
+  - (optionally) UI registry and Story Node validator tests.
+- Prevent silent drift by keeping fixtures **stable, diffable, and governance-safe**.
 
-- prevent accidental leakage of sensitive or sovereign information
-- enable deterministic CI runs (local and hosted)
-- provide representative shapes for schema, provenance, and governance checks
-- validate behavior under both **success** and **expected failure** conditions
+### Scope
 
-### ✅ Guarantees
+| In Scope | Out of Scope |
+|---|---|
+| Small synthetic fixtures used by tests (JSON/GeoJSON/CSV, tiny binaries) | Raw source data snapshots (belongs in `data/<domain>/raw/`) |
+| Minimal/edge/invalid fixtures for schema validation (STAC/DCAT/PROV/etc.) | Full production catalogs or “golden dumps” of `data/stac/**` |
+| Contract fixtures for API boundary and UI registries | Secrets/credentials, PII, or restricted locations (unless generalized + approved) |
+| Fixture notes/metadata that describe “what this tests” | Defining new governance policy text or bypassing review gates |
 
-Fixtures in `tests/fixtures/` MUST guarantee:
+### Audience
 
-- **No PII** (names, emails, phone numbers, addresses, IDs)
-- **No real-world sensitive locations** (sacred sites, archaeological sites, restricted lands)
-- **No production secrets** (tokens, keys, credentials, internal endpoints)
-- **Determinism** (seeded generation, stable ordering, reproducible hashes)
-- **Schema fidelity** (aligns with:
-  - Story Node v3 schema + SHACL shapes
-  - STAC 1.x + DCAT 3.0 metadata expectations
-  - Telemetry v11 events
-  - `data-contract-v3.json` constraints)
+- **Primary:** Contributors adding/changing pipelines, catalogs, schemas, graph ingestion, API contracts, or UI registries.
+- **Secondary:** Maintainers reviewing PRs and debugging CI failures.
 
-### 🚫 Non-goals
+### Definitions
 
-Fixtures are not intended to:
+- Link: `docs/glossary.md` *(not confirmed in repo)*
+- Terms used in this doc include: **fixture**, **golden file**, **deterministic**, **idempotent**, **contract test**, **schema validation**, **provenance**, **redaction**.
 
-- mirror full production volumes
-- encode private, licensed, or restricted datasets
-- approximate real tribal geographies or culturally sensitive water-use patterns
-- serve as “sample data” for public demonstrations unless explicitly curated for that purpose
+### Key artifacts (what this doc points to)
 
-### 🧩 Fixture categories
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Canonical pipeline ordering + invariants | `docs/MASTER_GUIDE_v12.md` | KFM Core | Architectural ordering + constraints |
+| Tests taxonomy + CI behavior contract | `tests/README.md` | KFM Core | Determinism + “skip vs fail” semantics |
+| Governed markdown structure | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | KFM Core | Template used by this README |
+| Schemas (STAC/DCAT/PROV/UI/telemetry) | `schemas/` | Data/Platform | Validators should reference these |
+| Canonical catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Data/Platform | Evidence + lineage (not fixtures) |
+| Pipelines | `src/pipelines/` | Data Eng | Deterministic transforms |
+| Graph build + ontology bindings | `src/graph/` | Graph Eng | Graph integrity tests |
+| API boundary | `src/server/` *(v13 target)* or `src/api/` *(legacy; not confirmed in repo)* | API Eng | UI must consume via API |
+| UI | `web/` | Frontend | Never reads Neo4j directly |
+| Story Nodes | `docs/reports/story_nodes/` | Narrative | Published artifacts live here |
 
-KFM fixtures are organized into **four primary categories**:
+### Definition of done (for this document)
 
-1. **📦 Data fixtures** — tabular, vector, raster, time-series, document snippets (synthetic)
-2. **🧠 AI fixtures** — deterministic mock model outputs + XAI artifacts (SHAP/LIME-like payloads)
-3. **🧬 Governance fixtures** — synthetic ledger entries, policy outcomes, audit traces
-4. **📊 Observability fixtures** — telemetry events, energy/CO₂ stubs, runtime summaries
+- [ ] Front-matter complete and `path` matches file location
+- [ ] Fixture responsibilities + placement rules documented
+- [ ] Recommended sub-tree documented (and marked “not confirmed” where applicable)
+- [ ] Governance/sensitivity constraints included
+- [ ] Repo lint / markdown lint run (CI or local)
+- [ ] Maintainer review
 
 ---
 
 ## 🗂️ Directory Layout
 
+### This document
+
+- `path`: `tests/fixtures/README.md` (must match front-matter)
+
+### Related repository paths (orientation)
+
+| Area | Path | What lives here |
+|---|---|---|
+| Tests | `tests/` | Unit/integration/contract/e2e tests + fixtures |
+| Schemas | `schemas/` | JSON Schemas, telemetry schemas, contract validation |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Canonical STAC/DCAT/PROV evidence artifacts |
+| Pipelines | `src/pipelines/` | ETL + transforms + catalog builders |
+| Graph | `src/graph/` (+ `data/graph/` if present) | Ontology bindings, graph build, import constraints |
+| API boundary | `src/server/` *(v13 target)* or `src/api/` *(legacy; not confirmed in repo)* | Contracts, redaction, access control |
+| UI | `web/` | React/Map UI (no direct graph reads) |
+| Story Nodes | `docs/reports/story_nodes/` | Curated narrative artifacts and assets |
+| Tools | `tools/` | Ops scripts and developer utilities |
+
+### Expected file tree for this sub-area
+
+> This is the **recommended** structure. Some directories may not exist yet (**not confirmed in repo**).
+
 ~~~text
 📁 tests/
-├── 📁 fixtures/                                      — Synthetic, deterministic fixtures (THIS DIRECTORY)
-│   ├── 📄 README.md                                  — Fixture governance + usage rules (this document)
-│   ├── 🧾 metadata.json                               — Fixture pack metadata (IDs, dates, owners, scopes)
-│   ├── 🧾 mock_manifest.json                          — SHA-256 manifest for all fixture files
-│   │
-│   ├── 📁 data/                                       — Synthetic datasets (contract-aligned)
-│   │   ├── 🧾 mock_dataset.contract_v3.json            — Minimal contract-aligned dataset (tabular-like)
-│   │   ├── 🧾 mock_timeseries.daily.json               — Synthetic hydrology/climate time-series
-│   │   ├── 🧾 mock_vector.geojson                      — Synthetic GeoJSON geometries (safe region)
-│   │   └── 🧾 mock_raster.stac_item.json               — STAC Item stub for a raster-like asset
-│   │
-│   ├── 📁 ai/                                         — Synthetic AI inputs/outputs (NO training data)
-│   │   ├── 🧾 mock_ai_output.focusmode_v3.json         — Focus Mode-like payload + citations stubs
-│   │   ├── 🧾 mock_xai.shap_summary.json               — SHAP-style summary payload (synthetic)
-│   │   └── 🧾 mock_drift_report.json                   — Embedding/drift report stub (synthetic)
-│   │
-│   ├── 📁 governance/                                 — Synthetic governance + sovereignty artifacts
-│   │   ├── 🧾 mock_ledger_entry.prov_care.json          — Ledger entry with CARE + sovereignty flags
-│   │   ├── 🧾 mock_policy_decision.json                — Policy result: allow/restrict/escalate
-│   │   └── 🧾 mock_audit_trace.json                    — Governance audit trace (synthetic)
-│   │
-│   ├── 📁 telemetry/                                  — Telemetry event fixtures
-│   │   ├── 🧾 mock_tests_telemetry_v11.json             — Tests telemetry event bundle (energy/CO₂/runtime)
-│   │   └── 🧾 mock_accessibility_metrics.json           — A11y summary fixture (WCAG checks)
-│   │
-│   └── 📁 negative/                                   — Intentional failures to assert CI gates
-│       ├── 🧾 bad_schema.storynode.json                 — Violates Story Node schema (expected fail)
-│       ├── 🧾 bad_metadata.stac_item.json               — Violates STAC fields (expected fail)
-│       └── 🧾 bad_governance.flags.json                 — Violates CARE/sovereignty policy (expected fail)
-└── …
+├── 📄 README.md
+└── 📁 fixtures/
+    ├── 📄 README.md
+    ├── 📁 catalogs/
+    │   ├── 📁 stac/
+    │   │   ├── 📁 minimal_valid/
+    │   │   ├── 📁 edge_cases/
+    │   │   └── 📁 invalid/
+    │   ├── 📁 dcat/
+    │   │   ├── 📁 minimal_valid/
+    │   │   ├── 📁 edge_cases/
+    │   │   └── 📁 invalid/
+    │   └── 📁 prov/
+    │       ├── 📁 minimal_valid/
+    │       ├── 📁 edge_cases/
+    │       └── 📁 invalid/
+    ├── 📁 graph/
+    │   └── 📁 import_samples/
+    ├── 📁 api/
+    │   ├── 📁 requests/
+    │   └── 📁 responses/
+    ├── 📁 ui/
+    │   └── 📁 registry/
+    ├── 📁 assets/
+    │   └── 📁 tiny/
+    └── 📁 manifests/
+        └── (optional per-fixture descriptors)
+~~~
+
+---
+
+## 🧭 Context
+
+### Background
+
+KFM’s canonical ordering is:
+
+**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**.
+
+Fixtures exist to make subsystem contracts **testable, reproducible, and auditable** without requiring “full data” replays.
+
+### Constraints / invariants (fixtures must respect)
+
+- **Determinism (tests + fixtures):**
+  - no network calls by default,
+  - no reliance on local machine state,
+  - no non-pinned randomness (seed if needed).
+- **Deterministic CI behavior (“skip vs fail”):**
+  - if an optional fixture root is **absent**, CI may **skip** that validation,
+  - if the root is **present** but invalid, CI must **fail deterministically**.
+- **No secrets/PII:** fixtures must not contain secrets, tokens, credentials, or personally identifying information.
+- **API boundary preserved:** UI tests must not query Neo4j directly; they consume only API payloads/contracts.
+- **No duplicate canonical homes:** fixtures are not a second copy of `data/**` or `schemas/**`.
+
+### Assumptions
+
+- The repo’s exact test runner(s) and commands are **not confirmed in repo**; this README focuses on placement and behavior rather than tooling.
+
+---
+
+## 🗺️ Diagrams
+
+### Fixtures as contract anchors
+
+~~~mermaid
+flowchart LR
+  F["tests/fixtures/**"] --> T["tests/** (unit · integration · contract · e2e)"]
+  T --> V["CI gates (schema · contract · security · sovereignty)"]
+  V --> C["Catalog outputs (data/stac · data/catalog/dcat · data/prov)"]
+  C --> G["Graph (src/graph)"]
+  G --> A["API boundary (src/server)"]
+  A --> U["UI (web/)"]
+  U --> S["Story Nodes (docs/reports/story_nodes)"]
+  S --> FM["Focus Mode (provenance-linked)"]
 ~~~
 
 ---
 
 ## 📦 Data & Metadata
 
-### 1) Naming conventions
+### Fixture design principles
 
-Fixtures MUST follow:
+1. **Small and synthetic:** fixtures are “toy” data meant to exercise logic and schemas—not a dataset mirror.
+2. **Stable identifiers:** use stable IDs and filenames so snapshots don’t churn across PRs.
+3. **Deterministic timestamps:** prefer fixed datetimes; avoid ingest-time “now()” fields in fixtures.
+4. **License-safe:** include only open-licensed or synthetic content; add attribution when applicable.
+5. **Explicit sensitivity:** if a fixture includes any location or cultural knowledge, it must be generalized/redacted and reviewed.
 
-- lowercase filenames
-- explicit domain + purpose + version markers where relevant  
-  Examples:
-  - `mock_dataset.contract_v3.json`
-  - `mock_ai_output.focusmode_v3.json`
-  - `mock_tests_telemetry_v11.json`
+### Recommended per-fixture metadata
 
-### 2) Determinism and seed policy
+Not confirmed in repo, but recommended for non-trivial fixtures:
 
-All generated fixtures MUST be reproducible.
+- A short `README.md` beside the fixture explaining:
+  - what contract it exercises,
+  - what should pass/fail,
+  - any governance notes.
 
-- Use a single constant seed for the fixture pack:
-  - `KFM_TEST_SEED = 114226` (do not change without bumping pack version)
-- If a fixture needs multiple streams, derive sub-seeds deterministically:
-  - `seed_sub = sha256("fixture-name" + KFM_TEST_SEED)[:8]`
+Optionally, a tiny manifest file:
 
-Record seed usage in `metadata.json`.
-
-### 3) Geometry and coordinate policy
-
-Fixtures MUST be sovereignty-safe.
-
-Rules:
-
-- Prefer **H3-only** geometry representations for governance-sensitive flows.
-- If raw GeoJSON is required, use the **KFM Synthetic Reference Box (SRB)**:
-  - a small bounding box around **Null Island** (0,0) to avoid Kansas/tribal geography coupling
-  - never use real-world heritage coordinates
-
-Recommended SRB:
-
-~~~json
-{
-  "srb_name": "KFM_SRB_NULL_ISLAND",
-  "crs": "EPSG:4326",
-  "bbox": [-0.01, -0.01, 0.01, 0.01]
-}
+~~~yaml
+# not confirmed in repo — example only
+fixture_id: "kfm.fixture.stac.minimal_valid.v1"
+type: "stac_item"
+expected: "pass"        # pass | fail
+schemas:
+  - "schemas/stac/item.schema.json"
+notes: "Minimal valid STAC Item with KFM provenance hooks."
 ~~~
-
-### 4) Minimum required fixture metadata
-
-`tests/fixtures/metadata.json` MUST include:
-
-- `fixture_pack_id` (stable)
-- `version` (matches front-matter)
-- `created_utc`
-- `seed`
-- `scope` (what tests rely on it)
-- `owner_group` (routing)
-- `policy_assertions` (e.g., “no_pii”, “no_sensitive_coords”)
-- `hash_manifest_ref`
-
-Example:
-
-~~~json
-{
-  "fixture_pack_id": "kfm-tests-fixtures",
-  "version": "v11.2.6",
-  "created_utc": "2025-12-13T00:00:00Z",
-  "seed": 114226,
-  "owner_group": "@kfm-tests",
-  "scope": ["unit", "integration", "e2e", "schema", "governance", "telemetry", "a11y"],
-  "policy_assertions": ["no_pii", "no_secrets", "no_sensitive_coords", "deterministic"],
-  "hash_manifest_ref": "tests/fixtures/mock_manifest.json"
-}
-~~~
-
-### 5) Checksum manifest rules
-
-`mock_manifest.json` is the integrity anchor.
-
-Requirements:
-
-- SHA-256 for every file in `tests/fixtures/**`
-- stable sort order by path
-- manifest includes its own SHA-256 in the footer metadata
-
-Example structure:
-
-~~~json
-{
-  "algorithm": "sha256",
-  "generated_utc": "2025-12-13T00:00:00Z",
-  "files": [
-    { "path": "tests/fixtures/data/mock_timeseries.daily.json", "sha256": "<sha256>" }
-  ],
-  "manifest_sha256": "<sha256>"
-}
-~~~
-
----
-
-## 🧱 Architecture
-
-### 1) Fixture lifecycle
-
-Fixtures follow a controlled lifecycle:
-
-1. **Author or generator** creates/updates fixture files (deterministic)
-2. **Schema validation** runs locally and in CI
-3. **Manifest rebuild** updates checksums
-4. **Governance checks** assert no PII/secrets/sensitive coords
-5. **Telemetry snapshot** records fixture-run cost envelope
-6. **Merge gating** blocks if any rule fails
-
-### 2) Fixture “pack” concept
-
-Fixtures are treated as a **pack** with a single version:
-
-- pack changes require:
-  - bumping `version`
-  - updating `last_updated`
-  - updating `provenance_chain`
-  - regenerating `mock_manifest.json`
-
-### 3) Negative fixtures
-
-Negative fixtures are REQUIRED to prevent silent regressions.
-
-Rules:
-
-- Store under `tests/fixtures/negative/`
-- Each negative fixture MUST document the expected failure:
-  - schema failure
-  - governance failure
-  - telemetry schema failure
-
-Include an “expected failure descriptor” adjacent to the file when useful:
-
-~~~json
-{
-  "fixture": "bad_schema.storynode.json",
-  "expected_failure": "schema-lint",
-  "reason": "missing required field: spacetime.when"
-}
-~~~
-
----
-
-## 🗺️ Diagrams
-
-~~~mermaid
-flowchart TD
-  A["Test runner loads fixture pack"] --> B["Schema and contract validation"]
-  B --> C["Pipeline under test executes"]
-  C --> D["Governance checks: CARE and sovereignty"]
-  D --> E["Provenance output checks: PROV-O and OpenLineage"]
-  E --> F["Telemetry checks: energy, CO2, runtime, A11y"]
-  F --> G["CI gate decision: pass or block"]
-~~~
-
-This flow is intentionally **linear and deterministic** so failures are attributable to a single step boundary.
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Fixtures exist to validate KFM’s interoperability layer without using real data.
+### STAC fixtures
 
-### STAC expectations (fixture-level)
+Use three buckets to keep CI behavior explicit:
 
-- Provide minimal viable STAC Item / Collection shapes for schema tests
-- Include placeholder `assets` with safe dummy URIs
-- Keep geometry within SRB (or omit geometry if schema allows)
+- `minimal_valid/` — MUST pass validation (baseline contract)
+- `edge_cases/` — MUST pass while exercising rare/optional fields
+- `invalid/` — MUST fail (to prevent “silent regressions”)
 
-### DCAT expectations (fixture-level)
+**KFM provenance hooks (recommended for valid STAC fixtures):**
 
-- DCAT fixtures should validate:
-  - dataset identity and versioning fields
-  - license and access fields (public)
-  - temporal coverage shapes
+- `properties.kfm:provenance_ref` — pointer to a PROV Activity/Entity bundle
+- `properties.kfm:lineage_sha` — commit that produced the artifact
+- `properties.kfm:telemetry_ref` — run/telemetry identifier
 
-### PROV-O / OpenLineage expectations (fixture-level)
+**Link + size discipline (recommended):**
 
-Fixtures validate that tests and pipelines can emit provenance **without inventing** relationships.
+- Avoid remote links where possible.
+- If a fixture includes `http(s)` assets/links, tests should:
+  - check that links resolve,
+  - enforce a small size budget (e.g., ≤ 5 MB per asset).
 
-A minimal PROV-O fixture block should include:
+### DCAT fixtures
 
-~~~json
-{
-  "prov:entity": "fixture_run_output",
-  "prov:wasGeneratedBy": "tests.fixtures.validation",
-  "prov:used": ["tests/fixtures/metadata.json", "tests/fixtures/mock_manifest.json"],
-  "prov:wasAssociatedWith": "kfm-ci"
-}
-~~~
+- Mirror the same `minimal_valid/ | edge_cases/ | invalid/` buckets.
+- Ensure dataset/distribution records include explicit license and publisher/contact fields consistent with governance.
+
+### PROV fixtures
+
+- Mirror the same `minimal_valid/ | edge_cases/ | invalid/` buckets.
+- Include the minimal PROV triad:
+  - `prov:Activity` (the run),
+  - `prov:Entity` (the produced artifact),
+  - `prov:Agent` (the pipeline or actor).
+- Keep identifiers stable and linkable from STAC/DCAT fixtures (e.g., via `kfm:provenance_ref`).
+
+---
+
+## 🧱 Architecture
+
+### Where fixtures fit
+
+Fixtures support tests at each contract boundary:
+
+- **ETL/pipelines**: parser/normalizer unit tests (no network by default)
+- **Catalogs**: STAC/DCAT/PROV schema + integrity checks
+- **Graph**: import schema and ontology binding tests
+- **API boundary**: request/response contract tests + redaction behaviors
+- **UI**: registry schema checks + accessibility gates
+- **Story**: Story Node validator tests (published nodes remain in `docs/reports/story_nodes/`)
+
+### Non-negotiable boundary
+
+The UI layer (`web/`) must never read Neo4j directly; fixtures used by UI tests should be API payloads, not graph queries.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-Fixtures support **safe testing** for narrative-adjacent subsystems:
+### Fixture role in narrative safety
 
-### Story Node v3
+- Fixtures may be used to test Story Node validators and “provenance-linked narrative” rules.
+- **Do not** store published Story Nodes under `tests/fixtures/`. Published nodes live under `docs/reports/story_nodes/`.
 
-Fixtures should exercise:
+### Suggested (optional) fixture pattern
 
-- schema-required fields and shapes
-- sovereignty masking behavior (prefer H3-only)
-- citation placeholders (no real citations required in fixtures)
-- narrative safety checks (no speculation; neutral tone)
+Not confirmed in repo:
 
-### Focus Mode v3
-
-Fixtures should exercise:
-
-- “3-panel” payload structures (Context, Timeline, Map)
-- citation formatting and provenance links
-- refusal behavior when a prompt attempts to bypass governance
+- `tests/fixtures/story_nodes/` may hold **non-published** sample nodes used only by validators (clearly marked as test-only).
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Fixture compliance is CI-enforced (minimum profiles):
+### Deterministic behavior contract
 
-- `schema-lint`
-- `metadata-check`
-- `provenance-check`
-- `secret-scan`
-- `pii-scan`
-- `diagram-check`
-- `footer-check`
+- If `tests/fixtures/` (or any sub-root) is absent, validations may **skip**.
+- If present but invalid, CI must **fail deterministically**.
 
-### Local validation checklist
+### Recommended validation checks for fixtures
 
-Run before committing fixture changes:
+- Schema validation for any STAC/DCAT/PROV fixtures present
+- “Invalid fixture must fail” assertions for `invalid/` buckets
+- Secret/PII scanning
+- Sovereignty/sensitivity checks (especially for location data)
 
-~~~text
-1) Validate JSON schemas (Story Node / STAC / telemetry)
-2) Validate fixture metadata completeness
-3) Regenerate mock_manifest.json (sha256)
-4) Run secret scan + PII scan
-5) Run tests that consume fixtures (unit + integration smoke)
+### Local reproduction (placeholders)
+
+~~~bash
+# not confirmed in repo — replace with repo’s actual commands
+# make test
+# make validate-schemas
+# make validate-fixtures
 ~~~
 
-### CI behavior
+### Optional: supply-chain / attestation fixtures
 
-- Any fixture failure blocks:
-  - PR merges
-  - release promotion
-  - governance certification
+If/when the repo enforces signed provenance:
+
+- Store **valid and invalid** DSSE envelopes and provenance predicates under a dedicated fixture folder (e.g., `tests/fixtures/attestations/`) to test fail-closed promotion gates.
 
 ---
 
 ## ⚖ FAIR+CARE & Governance
 
-Fixtures are governed artifacts even when “only tests”.
+### Review gates
 
-### CARE posture (fixture pack)
+Governance review is required when fixtures introduce:
 
-- **Collective Benefit:** ensures safe QA across the platform
-- **Authority to Control:** fixtures cannot approximate restricted geographies
-- **Responsibility:** maintainers must prevent leakage and bias patterns
-- **Ethics:** fixtures must not encode harmful or discriminatory content
+- new sensitive locations or culturally sensitive knowledge (even as “test data”),
+- new external data sources or licenses,
+- new public-facing schema fields.
 
-### Sovereignty posture (fixture pack)
+### CARE / sovereignty considerations
 
-- fixtures MUST NOT contain:
-  - tribal land boundaries
-  - sacred sites
-  - sensitive archaeological coordinates
-  - culturally identifying text
+- Treat fixtures as publishable artifacts: they must not leak restricted locations or sensitive knowledge.
+- When in doubt, generalize or redact geometries and document the choice.
 
-If a test requires verifying masking behavior, it must do so with:
+### AI usage constraints
 
-- SRB geometry and/or H3-only representations
-- synthetic policy flags (no real-world inferences)
+AI transform permissions/prohibitions are defined in front-matter; they must remain aligned with repo governance.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
-|--------:|------|---------|
-| v11.2.6 | 2025-12-13 | Upgraded to KFM-MDP v11.2.6; added fixture pack taxonomy, negative fixtures, SRB geometry policy, deterministic seed rules, checksum manifest requirements, and CI validation checklist. |
-| v11.0.0 | 2025-11-24 | Initial v11 fixtures guide; sovereignty-safe synthetic fixtures; telemetry v11 alignment; CARE-aware test scaffolding. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-27 | Initial fixtures README scaffold | TBD |
 
 ---
 
-<div align="center">
+Footer refs (do not remove):
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Universal Template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
 
-© 2025 Kansas Frontier Matrix — MIT License  
-🧱 Synthetic QA · FAIR+CARE Governance · Sovereignty-Safe Testing · KFM-MDP v11.2.6
-
-[⬅️ Back to Tests Index](../README.md) ·
-[🧪 Test Architecture](../ARCHITECTURE.md) ·
-[🏛️ Governance Charter](../../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
-
-</div>
+---
