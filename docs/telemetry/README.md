@@ -1,8 +1,8 @@
 ---
-title: "Telemetry — README"
+title: "KFM Telemetry — README"
 path: "docs/telemetry/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-19"
+last_updated: "2025-12-27"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -30,134 +30,152 @@ event_source_id: "ledger:kfm:doc:telemetry:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
-  - "summarize"
+  - "summarization"
   - "structure_extract"
   - "translate"
   - "keyword_index"
 ai_transform_prohibited:
   - "generate_policy"
   - "infer_sensitive_locations"
-
+  - "identify_individual_users"
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# Telemetry
+# KFM Telemetry — README
+
+Telemetry is an **optional**, **schema-governed** subsystem for capturing operational, quality, and governance signals across the KFM pipeline:
+
+**ETL → STAC/DCAT/PROV Catalogs → Graph (Neo4j) → API → UI → Story Nodes → Focus Mode**
+
+This README defines:
+- Where telemetry lives in the repo
+- What telemetry is allowed to contain (and what it must never contain)
+- The recommended **event envelope** shape (idempotent + schema-pinned)
+- How telemetry ties to STAC/DCAT/PROV and Focus Mode
+- CI/CD expectations for validating telemetry artifacts and release snapshots
 
 ## 📘 Overview
 
 ### Purpose
-This directory contains **governed documentation for KFM telemetry**: what signals are collected, how they are validated, and how they support observability, security posture, and governance metrics across the canonical pipeline.
-
-Telemetry is treated as a first-class subsystem that:
-- supports reproducibility and auditability (run IDs, validations, redaction actions),
-- helps enforce “no unsourced narrative” by recording provenance-linking behaviors,
-- provides CI/CD-visible quality and integrity signals.
+- Provide a single **contract-first** reference for telemetry conventions in KFM.
+- Support:
+  - **observability** (run success/failure, latency, throughput),
+  - **governance evidence** (classification/redaction/promotion controls),
+  - **release quality** (schema validation pass/fail summaries),
+  - **maintenance prioritization** via *aggregate*, *non-identifying* usage signals.
 
 ### Scope
-
 | In Scope | Out of Scope |
 |---|---|
-| Telemetry signal definitions and naming conventions | Vendor selection for logging/metrics infrastructure |
-| Telemetry schema locations + versioning expectations | Operational SRE runbooks not checked into this repo |
-| CI/CD validation expectations for telemetry artifacts | Runtime secrets/keys, deployment configuration |
-| Guidance on sensitivity, redaction, and “do not log” rules | Collecting or storing end-user PII |
+| Schema-governed events/metrics (performance, quality, governance) | Any collection of personal data (PII), user identifiers, or behavioral profiling |
+| Minimal Focus Mode usage logging (story_id + timestamp) | Cross-site tracking, device fingerprinting, ad tech |
+| Release-level telemetry snapshots (non-sensitive) | Operational secrets (tokens, internal URLs), raw access logs with IPs |
+| Linking telemetry to STAC/DCAT/PROV IDs | Duplicating full catalogs or PROV bundles inside telemetry payloads |
 
 ### Audience
-- Primary: Data pipeline engineers, backend/API engineers, frontend engineers, governance/security reviewers
-- Secondary: historians/editors reviewing narrative provenance + audit panels
+- Primary: Maintainers, pipeline/CI owners, governance reviewers
+- Secondary: Domain module authors, story authors, API/UI developers
 
-### Definitions
-- Link: `docs/glossary.md` (not confirmed in repo)
-- Terms used in this doc (intended meanings):
-  - **signal**: a named telemetry event/metric/tracing span emitted by a subsystem
-  - **producer**: component that emits telemetry
-  - **schema**: JSON schema that validates a telemetry payload (versioned)
-  - **run_id**: stable identifier for a deterministic pipeline execution (ETL/catalog/graph build)
-  - **audit flag**: a UI/API surfaced warning tied to provenance/sensitivity
+### Definitions (link to glossary)
+- Link: `docs/glossary.md` (add/confirm telemetry terms there as needed)
+- Terms used in this doc:
+  - **Telemetry event**: a schema-validated JSON record describing a system action/signal.
+  - **Telemetry snapshot**: an aggregated, versioned bundle of selected events/metrics packaged with a release.
 
-### Key artifacts
+### Key artifacts (what this doc points to)
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Telemetry docs (this area) | `docs/telemetry/` | Repo maintainers | Narrative + governance for telemetry |
-| Telemetry schemas | `schemas/telemetry/` | DataOps / Platform | Schema validation + SemVer |
-| Pipeline run artifacts | `mcp/runs/` | DataOps / MCP | Run logs + evidence products (if used) |
+| Telemetry docs | `docs/telemetry/` | Maintainers | Human-readable contracts + signal catalog |
+| Telemetry schemas | `schemas/telemetry/` | Maintainers | JSON schemas for events/metrics (semver) |
+| Run logs / run manifests | `mcp/runs/` | Maintainers | Per-run artifacts; may include telemetry refs |
+| Release telemetry snapshots | `releases/<version>/telemetry/` | Maintainers | Only non-sensitive, schema-validated snapshots |
+| Governance policies | `docs/governance/**` | Governance | Sensitivity, CARE, review gates |
 
-### Definition of done
+### Definition of done (for this document)
 - [ ] Front-matter complete + valid
-- [ ] Directory map points to canonical locations (docs/schemas/mcp)
-- [ ] Signal definitions do not require logging sensitive data
-- [ ] Validation steps are explicit and repeatable
-- [ ] Any changes that affect governance/sensitivity are marked **requires human review**
+- [ ] Telemetry boundaries explicitly forbid PII and user tracking
+- [ ] Minimum event envelope documented with schema pinning + idempotency guidance
+- [ ] Telemetry ↔ STAC/DCAT/PROV linkage expectations documented
+- [ ] Validation steps listed and repeatable (schema validation + privacy scans)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `docs/telemetry/README.md`
+- `path`: `docs/telemetry/README.md` (must match front-matter)
 
 ### Related repository paths
 | Area | Path | What lives here |
 |---|---|---|
-| Telemetry docs | `docs/telemetry/` | Human-readable standards and indexes for telemetry |
-| Telemetry schemas | `schemas/telemetry/` | JSON Schemas for telemetry payloads |
-| Pipelines | `src/pipelines/` | Telemetry producers for ETL/catalog/graph builds |
-| APIs | `src/server/` | Telemetry for contracted endpoints and redaction behavior |
-| Frontend | `web/` | UX telemetry for Focus Mode and audit panel interactions |
-| MCP runs | `mcp/runs/` | Run bundles, logs, experiment metadata (if applicable) |
+| Telemetry docs | `docs/telemetry/` | Telemetry conventions, signal catalog, privacy notes |
+| Telemetry schemas | `schemas/telemetry/` | Event/metric schemas (JSON Schema, semver) |
+| Pipelines | `src/pipelines/` | ETL + catalog generation; emits run telemetry |
+| Graph | `src/graph/` | Graph build/ingest; emits ingest telemetry |
+| API boundary | `src/server/` (or repo-defined) | APIs + access controls; can emit aggregate request metrics |
+| UI | `web/` | Focus Mode + map UI; can emit minimal usage events |
+| MCP runs | `mcp/runs/` | Run manifests; telemetry refs for reproducibility |
+| Releases | `releases/` | Versioned bundles incl. optional telemetry snapshot |
 
 ### Expected file tree for this sub-area
+> This is the **recommended** structure. Some directories/files may not exist yet (**not confirmed in repo**).
+
 ~~~text
 📁 docs/
 └── 📁 telemetry/
     ├── 📄 README.md
-    ├── 📄 SIGNALS.md              # not confirmed in repo (recommended index of signals)
-    ├── 📄 SCHEMAS.md              # not confirmed in repo (recommended schema map)
-    ├── 📄 GOVERNANCE_NOTES.md     # not confirmed in repo (review triggers, redaction rules)
-    └── 📄 CHANGELOG.md            # not confirmed in repo (telemetry changes, SemVer notes)
+    ├── 📄 SIGNAL_CATALOG.md                 # recommended (not confirmed in repo)
+    ├── 📄 PRIVACY_AND_SAFETY.md             # recommended (not confirmed in repo)
+    └── 📁 examples/                         # recommended (not confirmed in repo)
+        ├── 📄 focus_mode_entry.v1.json
+        └── 📄 governance_redaction_applied.v1.json
 
 📁 schemas/
 └── 📁 telemetry/
-    ├── 📄 README.md               # not confirmed in repo (schema index + ownership)
-    └── 📁 v1/
-        ├── 📄 telemetry.event.schema.json   # not confirmed in repo
-        └── 📄 telemetry.metric.schema.json  # not confirmed in repo
+    ├── 📄 event_envelope.schema.json        # recommended canonical envelope (not confirmed in repo)
+    ├── 📄 focus_mode_entry.v1.schema.json   # minimal Focus Mode entry event (not confirmed in repo)
+    ├── 📄 governance_signals.v1.schema.json # classification/redaction/publish signals (not confirmed in repo)
+    ├── 📄 energy-v2.json                    # optional sustainability telemetry (not confirmed in repo)
+    └── 📄 carbon-v2.json                    # optional sustainability telemetry (not confirmed in repo)
 ~~~
 
 ## 🧭 Context
 
 ### Background
-KFM’s canonical pipeline requires strong provenance and deterministic processing. Telemetry provides:
-- operational visibility (did a run succeed, what validations failed),
-- governance visibility (did redaction occur, was content served with provenance),
-- quality visibility (schema checks, integrity checks, contract tests).
+KFM is contract-first and evidence-first: catalogs (STAC/DCAT) and lineage (PROV) are required for trustworthy outputs. Telemetry is an optional layer that helps answer operational/governance questions like:
+- Are pipelines succeeding and how long do they take?
+- Are governance controls (classification/redaction) being applied and enforced?
+- How often are stories/layers used (at an aggregate level) so we can prioritize maintenance?
 
 ### Assumptions
-- Telemetry documentation is stored under `docs/telemetry/`, and schema definitions live under `schemas/telemetry/` (as a canonical pairing).  
-- Telemetry is cross-cutting, i.e., every pipeline stage may emit telemetry.
+- Telemetry is **schema-governed**: every recorded event conforms to a versioned schema.
+- Telemetry is **privacy-preserving by design**: no personal data; only aggregate or technical metrics.
+- Telemetry is **secondary to canonical evidence**:
+  - STAC/DCAT/PROV remain the system of record for data + metadata.
+  - Telemetry provides operational and compliance signals.
 
-### Constraints and invariants
-- Canonical ordering is preserved: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode.
-- Frontend consumes data through the API layer (no direct graph access).
-- Telemetry must not introduce leakage of secrets or sensitive locations.
-- Telemetry events that involve sensitivity decisions must record *that a redaction occurred*, not the raw sensitive value.
+### Constraints / invariants
+- ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode is preserved.
+- Frontend consumes contracts via APIs (**no direct graph dependency**).
+- Telemetry must not introduce a side-channel that leaks sensitive locations or restricted knowledge.
 
 ### Open questions
 | Question | Owner | Target date |
 |---|---|---|
-| What telemetry schema set is v1 baseline for this repo? | TBD | TBD |
-| Where are telemetry events stored/aggregated at runtime? | TBD | TBD |
-| What is the minimal signal set required for “v12-ready” CI? | TBD | TBD |
+| What is the canonical telemetry sink (file snapshots only vs. external observability backend)? | Maintainers | TBD |
+| What is the retention policy for raw events vs. aggregated snapshots? | Governance + Maintainers | TBD |
+| Should release telemetry snapshots be signed (and with which tooling)? | Governance + Security | TBD |
+| Which events are required vs. optional for a “domain pack” to be considered complete? | Maintainers | TBD |
 
 ### Future extensions
-- Telemetry dashboards / audit reports linked from this directory (not confirmed in repo)
-- Focus Mode “audit panel” telemetry standardization for citations and warnings (not confirmed in repo)
-- Energy/carbon telemetry for workloads (mentioned as an extension area; not confirmed in repo)
+- Add a formal, machine-readable signal registry (YAML/JSON) used by CI to enforce allowlists (not confirmed in repo).
+- Add energy/carbon accounting signals during ETL/model runs (optional; schema-governed).
 
 ## 🗺️ Diagrams
 
-### System and telemetry dataflow diagram
+### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  subgraph Pipeline
+  subgraph KFM_Pipeline["KFM Canonical Pipeline"]
     A[ETL] --> B[STAC/DCAT/PROV Catalogs]
     B --> C[Neo4j Graph]
     C --> D[APIs]
@@ -166,144 +184,272 @@ flowchart LR
     F --> G[Focus Mode]
   end
 
-  A --> T[Telemetry Events]
-  B --> T
-  C --> T
-  D --> T
-  E --> T
-  F --> T
-  G --> T
+  subgraph Telemetry["Telemetry (optional, schema-governed)"]
+    T1[Events/Metrics] --> T2[Validation (CI)]
+    T2 --> T3[Run logs (mcp/runs)]
+    T2 --> T4[Release snapshot (releases/<version>/telemetry)]
+  end
 
-  T --> S[Schemas: schemas/telemetry/]
-  T --> H[Docs: docs/telemetry/]
+  A -. emits .-> T1
+  B -. emits .-> T1
+  C -. emits .-> T1
+  D -. emits .-> T1
+  E -. emits .-> T1
+  F -. emits .-> T1
+  G -. emits .-> T1
 ~~~
 
-## 📦 Data and Metadata
+### Optional: sequence diagram (Focus Mode entry)
+~~~mermaid
+sequenceDiagram
+  participant UI as UI (Focus Mode)
+  participant API as API
+  participant Tele as Telemetry Sink
+
+  UI->>API: GET /focus/<story_id> (or equivalent)
+  API-->>UI: story content + provenance refs
+  UI->>Tele: emit focus_mode_entry (story_id + occurred_at)
+  Note over UI,Tele: No user identifiers; schema-validated event only
+~~~
+
+## 📦 Data & Metadata
 
 ### Inputs
 | Input | Format | Where from | Validation |
 |---|---|---|---|
-| Telemetry event payloads | JSON | Pipeline/API/UI producers | JSON Schema in `schemas/telemetry/` |
-| CI telemetry summaries | JSON/Markdown | CI workflows | Markdown + schema validation (where applicable) |
+| Focus Mode entry signal | JSON event | `web/` client + API context | JSON Schema + privacy rules |
+| Pipeline run timing | JSON event/metric | `src/pipelines/` | Schema validation + determinism checks |
+| Governance actions | JSON event | pipeline/CI/governance tooling | Schema validation + review gates |
+| Energy/carbon signals (optional) | JSON event/metric | pipeline/model runs | Schema validation (energy/carbon schemas) |
 
 ### Outputs
 | Output | Format | Path | Contract / Schema |
 |---|---|---|---|
-| Telemetry documentation | Markdown | `docs/telemetry/` | KFM-MDP governed docs |
-| Telemetry schemas | JSON Schema | `schemas/telemetry/` | SemVer + schema lint |
-| Optional run summaries | Markdown/JSON | `mcp/runs/` | Repo conventions (TBD) |
+| Raw/per-run telemetry refs | JSON/MD | `mcp/runs/<run_id>/...` | Schema pinned per event |
+| Aggregated release snapshot | JSON/CSV | `releases/<version>/telemetry/` | Snapshot schema + checksums |
+| Telemetry signal catalog | Markdown | `docs/telemetry/SIGNAL_CATALOG.md` | Markdown protocol checks |
+| Event schemas | JSON Schema | `schemas/telemetry/*.json` | Semver + changelog |
 
-### Sensitivity and redaction
-Telemetry must never require:
-- raw secrets (tokens/keys),
-- raw user identifiers (PII),
-- sensitive location coordinates.
+### Sensitivity & redaction
+Telemetry payloads **must not** include:
+- personal identifiers (names, emails, IPs, user ids),
+- exact sensitive coordinates or reconstructable location traces,
+- secrets (tokens, keys) or internal-only endpoints.
 
-Telemetry may include:
-- boolean flags (e.g., `redaction_applied: true`),
-- stable internal run identifiers,
-- counts/aggregates (e.g., “items processed”, “errors by type”).
+When telemetry references a sensitive artifact, it should reference **opaque IDs** (e.g., dataset_id, stac_item_id, prov_activity_id) rather than embedding raw content.
 
 ### Quality signals
-Recommended telemetry quality checks (examples; not confirmed as implemented):
-- payload validates against the referenced schema version
-- required IDs present (run_id, dataset_id, stac_item_id, prov_activity_id) when applicable
-- timestamps are present and ISO-8601 formatted
-- geometry is never emitted in telemetry unless explicitly governed
+Telemetry is intended to record (examples; extend via schema):
+- pipeline performance: run duration, counts, validation results,
+- governance controls: classification assigned, redaction applied, promotion blocked,
+- catalog health: stac/dcat/prov validation pass/fail, publish counts,
+- UI compliance signals: redaction notices shown, provenance links present.
 
-## 🌐 STAC, DCAT and PROV Alignment
+### Minimal event envelope (recommended)
+Telemetry events should follow an envelope pattern that supports idempotency, schema pinning, and governance labels.
 
-Telemetry events should include **references** (not copies) to catalog and lineage artifacts:
-- STAC: include STAC Collection/Item IDs when a signal pertains to catalog creation/validation.
-- DCAT: include dataset identifier when signal pertains to dataset-level changes.
-- PROV-O: include provenance activity/run identifiers for transforms and builds.
+~~~json
+{
+  "id": "evt_01JABCDE9YZ7KFM12345",
+  "idempotency_key": "sha256:5fd8... (stable hash of deterministic tuple)",
+  "type": "focus_mode_entry",
+  "source": "web/focus-mode",
+  "generation": "release/v13.0.0@<commit_sha>",
+  "version": "1.0.0",
+  "occurred_at": "2025-12-27T00:00:00Z",
+  "schema": {
+    "ref": "schemas/telemetry/focus_mode_entry.v1.schema.json",
+    "sha256": "<schema-hash>"
+  },
+  "provenance": {
+    "run_id": "mcp_run_<id>",
+    "prov_activity_id": "prov:activity:<id>",
+    "stac_item_id": "stac:item:<id>"
+  },
+  "labels": {
+    "sensitivity": "low",
+    "classification": "open",
+    "jurisdiction": "US-KS"
+  },
+  "payload": {
+    "story_id": "kfm-story:<id>"
+  },
+  "signatures": [
+    {
+      "alg": "ed25519",
+      "key_id": "kfm:signing-key:<id>",
+      "sig": "<base64>"
+    }
+  ]
+}
+~~~
 
-Versioning expectations:
-- Telemetry schema versions follow SemVer and are referenced in each event payload.
-- New schema versions must be backward compatible or require an explicit version bump.
+> Notes:
+> - Signing is optional unless governance/security requires it.
+> - `idempotency_key` should be stable so retries are safe (put-if-absent dedup).
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+### STAC
+- Telemetry should reference STAC identifiers rather than duplicating STAC JSON.
+- Examples of references:
+  - `stac_collection_id`
+  - `stac_item_id`
+  - `asset_key` / `asset_href_hash`
+
+### DCAT
+- Telemetry should reference DCAT dataset identifiers when reporting publish/validation stats:
+  - `dcat_dataset_id`
+  - `distribution_id` (if used)
+- License/sensitivity signals should be aligned with DCAT metadata and governance rules.
+
+### PROV-O
+- Telemetry should attach lineage pointers, not full PROV payloads:
+  - `prov_activity_id` for runs/transforms,
+  - `prov_entity_id` for produced artifacts,
+  - `prov_agent_id` for tools/owners (role-based, not personal where possible).
+
+### Versioning
+- Telemetry schemas use semver. Any breaking change requires:
+  - new schema file (new major),
+  - documentation updates in `docs/telemetry/`,
+  - CI allowlist updates (if present).
 
 ## 🧱 Architecture
 
 ### Components
 | Component | Responsibility | Interface |
 |---|---|---|
-| Telemetry producers | Emit events/metrics | Code in pipeline/API/UI subsystems |
-| Schema validators | Validate payload shape | JSON Schemas in `schemas/telemetry/` |
-| Governance reviewers | Ensure compliance | `docs/governance/*` (not confirmed in repo) |
-| CI checks | Fail builds on invalid telemetry artifacts | GitHub workflows (not confirmed in repo) |
+| Producers | Emit telemetry events/metrics | JSON events (schema-pinned) |
+| Schema registry | Define event contracts | `schemas/telemetry/` |
+| Validation | Enforce schema + safety | CI checks + scanners |
+| Storage | Store raw events/snapshots | `mcp/runs/` + `releases/<version>/telemetry/` |
+| Consumers | Dashboards/analysis (optional) | Aggregated, non-sensitive views |
 
-### Interfaces and contracts
+### Interfaces / contracts
 | Contract | Location | Versioning rule |
 |---|---|---|
-| Telemetry event schema | `schemas/telemetry/` | SemVer + changelog recommended |
-| Telemetry docs | `docs/telemetry/` | Governed docs, link to schemas |
-| CI validation | `.github/workflows/` | Contract tests must pass |
+| Telemetry event envelope | `schemas/telemetry/event_envelope.schema.json` | Semver + changelog |
+| Telemetry signal schemas | `schemas/telemetry/*.schema.json` | Semver; new signal = minor unless breaking |
+| Release telemetry snapshot | `releases/<version>/telemetry/` | Snapshot schema pinned per release |
+| Governance labels | `docs/governance/**` | Human-reviewed; changes require governance review |
 
-### Extension points checklist
-- [ ] Add a new telemetry signal: update `docs/telemetry/SIGNALS.md` (recommended) and schema (if needed)
-- [ ] Add a new schema version: place under `schemas/telemetry/v<major>/` and document changes
-- [ ] Add pipeline stage telemetry: ensure run IDs and provenance references are included
-- [ ] Add UI telemetry: ensure aggregation-only and no PII
+### Implementation pattern (recommended; may be staged)
+- Producers write to an **outbox** (transactional) and dispatch asynchronously.
+- Consumers use a **dedup store** keyed by `idempotency_key` (put-if-absent).
+- Observability emits aggregate metrics/spans (e.g., publish counts, retries, dedup hits, latency).
 
-## 🧠 Story Node and Focus Mode Integration
+> The specific backend (files vs. OTel backend) is intentionally not fixed here; the contract is the schema-governed event envelope + validation gates.
 
-Telemetry may be used to confirm that Focus Mode behavior remains provenance-linked:
-- when a narrative is displayed, the payload should record which evidence references were available (IDs only)
-- when redaction/generalization is applied, log a non-sensitive flag and the policy reference (ID/path only)
-- if predictive content is used (opt-in), record that predictions were included and include uncertainty fields (IDs/metrics only)
+### Extension points checklist (for future work)
+- [ ] Add/confirm `schemas/telemetry/event_envelope.schema.json` and pin in docs
+- [ ] Add minimal `focus_mode_entry` schema and example payload
+- [ ] Add governance signal schemas (classification/redaction/publish)
+- [ ] Add CI job: telemetry schema validation + PII/secret scans
+- [ ] Add release packaging step: `releases/<version>/telemetry/` snapshot
+- [ ] Add energy/carbon telemetry schemas and emitters (optional)
 
-## 🧪 Validation and CI/CD
+## 🧠 Story Node & Focus Mode Integration
+
+### How this work surfaces in Focus Mode
+Minimum required telemetry (if enabled):
+- `focus_mode_entry` event when a story is opened (**story_id + timestamp** only).
+
+Recommended additional compliance signals (schema-governed):
+- `focus_mode_redaction_notice_shown` when a redaction/generalization notice is displayed,
+- `provenance_link_missing` when a required citation/provenance ref is absent (CI and/or runtime).
+
+### Provenance-linked narrative rule
+- Every claim must trace to a dataset / record / asset ID.
+- Telemetry must never become a substitute for provenance; it can only point to provenance.
+
+### Optional structured controls (example shape)
+~~~yaml
+focus_layers:
+  - "telemetry:enabled"         # example; not confirmed in repo
+focus_time: "2025-12-27"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+## 🧪 Validation & CI/CD
 
 ### Validation steps
-- [ ] Markdown protocol checks for docs under `docs/`
-- [ ] JSON schema validation for `schemas/telemetry/`
-- [ ] Contract tests for APIs that emit telemetry-relevant responses
-- [ ] Security and sovereignty scanning gates where applicable
+- [ ] Markdown protocol checks (KFM-MDP)
+- [ ] Telemetry schema validation (JSON Schema) for any emitted event samples
+- [ ] Privacy scans (no PII; no sensitive coordinate leakage)
+- [ ] Secret scanning (no keys/tokens in telemetry payloads or docs)
+- [ ] Release packaging checks (if telemetry snapshot is produced)
+- [ ] Governance checks (classification propagation and redaction rules, as applicable)
 
 ### Reproduction
 ~~~bash
-# Example placeholders — replace with repo-specific commands
-# 1) validate telemetry schemas
-# 2) run unit/integration tests
-# 3) run doc lint / markdown protocol validation
+# Example placeholders — replace with repo-specific commands.
+# These commands are NOT confirmed in repo; they document intent.
+
+# 1) Validate telemetry schemas
+# <schema-validate> schemas/telemetry/
+
+# 2) Validate sample telemetry payloads (if stored in repo)
+# <schema-validate> docs/telemetry/examples/*.json
+
+# 3) Run privacy scans (PII + sensitive locations)
+# <scan-pii> docs/telemetry/ docs/telemetry/examples/
+# <scan-sensitive-locations> docs/telemetry/examples/
+
+# 4) Package telemetry snapshot for a release (tag pipeline)
+# <release-build> --include-telemetry
 ~~~
 
-### Telemetry signals
-This repo has not confirmed a canonical signal catalog yet. Recommended baseline categories:
-| Category | Producer(s) | Example purpose |
+### Telemetry signals (recommended examples)
+| Signal | Source | Where recorded |
 |---|---|---|
-| pipeline.run | ETL/catalog/graph builders | Start/end, counts, warnings |
-| catalog.validation | STAC/DCAT/PROV builders | Schema validity, broken links |
-| graph.integrity | Graph build | Constraint violations, missing refs |
-| api.contract | API layer | Contract-test result, response shape |
-| ui.audit | UI / Focus Mode | Citation rendered, warnings shown (no PII) |
+| `focus_mode_entry` (story_id, occurred_at) | UI | `docs/telemetry/` + `schemas/telemetry/` |
+| `etl.<domain>.run` (duration, status) | ETL | `mcp/runs/` + optional release snapshot |
+| `catalog_validation_result` (PASS/WARN/FAIL) | CI | CI logs + optional snapshot |
+| `classification_assigned` (dataset_id, sensitivity, classification) | Governance gate | telemetry events (schema-governed) |
+| `redaction_applied` (method, fields_removed, geometry_generalization) | ETL/curation | telemetry events (schema-governed) |
+| `promotion_blocked` (reason, scan_results_ref) | CI/governance | telemetry events (schema-governed) |
+| `catalog_published` (public|internal, counts, validation_status) | Release/publish | telemetry snapshot |
+| `focus_mode_redaction_notice_shown` (layer_id, redaction_method) | UI | telemetry events (schema-governed) |
 
-## ⚖ FAIR+CARE and Governance
+## ⚖ FAIR+CARE & Governance
 
 ### Review gates
-Telemetry changes should be flagged for review when they:
-- add new fields that could leak sensitive location or identity
-- expand logging around restricted datasets
-- affect the audit panel and provenance visibility
+Telemetry changes require review when they:
+- add a new signal (new schema) or change an existing schema,
+- change what telemetry is collected (especially anything that could increase sensitivity),
+- introduce new external sinks or dashboards (risk of exposure),
+- alter retention or aggregation rules.
 
-### CARE and sovereignty considerations
-- Telemetry must not be a backchannel for sensitive location disclosure.
-- Redaction/generalization actions should be observable, but not reversible from telemetry alone.
+### CARE / sovereignty considerations
+Telemetry must not be used to infer or expose:
+- protected cultural sites,
+- community-sensitive locations,
+- restricted knowledge flows.
+
+If a telemetry event references a sensitive artifact, the event must:
+- preserve the artifact’s classification labels,
+- avoid embedding sensitive content (use ID references),
+- respect “no output less restricted than any input” lineage logic.
 
 ### AI usage constraints
-This document does not authorize any prohibited AI transformations. Telemetry must not encourage:
-- speculative additions
-- inference of sensitive locations
-- generation of new policy outside governed docs
+- Allowed: summarization, structure extraction, translation, keyword indexing.
+- Prohibited:
+  - generating new policy from telemetry,
+  - inferring sensitive locations or identities from telemetry,
+  - identifying individual users via telemetry event correlation.
+- Any AI-driven aggregation/classification suggestions must be reviewed by humans before adoption.
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-19 | Initial telemetry README scaffold | TBD |
+| v1.0.0 | 2025-12-27 | Initial telemetry README (contracts, boundaries, validation) | TBD |
 
 ---
 Footer refs:
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
+- Master guide: `docs/MASTER_GUIDE_v12.md`
+- Template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
