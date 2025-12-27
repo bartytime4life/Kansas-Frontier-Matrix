@@ -201,24 +201,24 @@ KFM treats “data documentation” as a **governed contract surface**: it expla
 
 ~~~mermaid
 flowchart LR
-  S[Upstream Sources] --> E[src/pipelines/**\nETL & normalization]
-  E --> W[data/<domain>/work/**]
-  W --> P[data/<domain>/processed/**]
+  S["Upstream Sources"] --> E["src/pipelines/ (ETL & normalization)"]
+  E --> W["data/{domain}/work/"]
+  W --> P["data/{domain}/processed/"]
 
-  P --> STAC[data/stac/**]
-  P --> DCAT[data/catalog/dcat/**]
-  E --> PROV[data/prov/**]
+  P --> STAC["data/stac/"]
+  P --> DCAT["data/catalog/dcat/"]
+  E --> PROV["data/prov/"]
 
-  DOCS[docs/data/**\nDomain docs + mapping specs] -.documents.-> STAC
-  DOCS -.documents.-> DCAT
-  DOCS -.documents.-> PROV
+  DOCS["docs/data/ (domain docs + mapping specs)"] -. "documents" .-> STAC
+  DOCS -. "documents" .-> DCAT
+  DOCS -. "documents" .-> PROV
 
-  STAC --> G[src/graph/** + data/graph/**\nGraph ingest fixtures]
+  STAC --> G["src/graph/ + data/graph/ (graph ingest fixtures)"]
   PROV --> G
-  G --> API[src/server/**\nContract-first APIs]
-  API --> UI[web/**\nReact/MapLibre UI]
-  UI --> SN[docs/reports/story_nodes/**\nStory Nodes]
-  SN --> FM[Focus Mode\n(provenance-linked context)]
+  G --> API["src/server/ (contract-first APIs)"]
+  API --> UI["web/ (React/MapLibre UI)"]
+  UI --> SN["docs/reports/story_nodes/ (Story Nodes)"]
+  SN --> FM["Focus Mode (provenance-linked context)"]
 ~~~
 
 ---
