@@ -1,204 +1,399 @@
 ---
-title: "⚖️ Kansas Frontier Matrix — Governance Framework & Ethical Oversight (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Governance — README"
 path: "docs/governance/README.md"
-version: "v10.0.0"
-last_updated: "2025-11-10"
-review_cycle: "Quarterly / FAIR+CARE Governance Board"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../releases/v10.0.0/sbom.spdx.json"
-manifest_ref: "../../releases/v10.0.0/manifest.zip"
-telemetry_ref: "../../releases/v10.0.0/focus-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/governance-framework-v1.json"
-governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
-license: "CC-BY 4.0"
+version: "v1.0.0"
+last_updated: "2025-12-27"
+status: "draft"
+doc_kind: "README"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:governance:readme:v1.0.0"
+semantic_document_id: "kfm-governance-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:governance:readme:v1.0.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# ⚖️ **Kansas Frontier Matrix — Governance Framework & Ethical Oversight**
-`docs/governance/README.md`
-
-**Purpose:**  
-Define the **governance architecture**, **ethical oversight**, and **compliance framework** that guide the operation, validation, and release management of the **Kansas Frontier Matrix (KFM)** system.  
-Governance ensures every dataset, interface, and AI output adheres to **FAIR+CARE principles**, **ISO standards**, and **Master Coder Protocol (MCP-DL v6.3)** reproducibility mandates.
-
-[![Docs · MCP](https://img.shields.io/badge/Docs-MCP_v6.3-blue)](../README.md)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Certified-orange)](../standards/faircare.md)
-[![License: CC-BY 4.0](https://img.shields.io/badge/License-CC--BY%204.0-green)](../../LICENSE)
-[![Status: Active](https://img.shields.io/badge/Status-Active-success)](../../releases/v10.0.0/manifest.zip)
-
-</div>
-
----
+# KFM Governance — README
 
 ## 📘 Overview
 
-Governance is the **ethical backbone** of the Kansas Frontier Matrix, combining open data management, AI accountability, and cultural stewardship.  
-It integrates **technical validation pipelines** with **FAIR+CARE Council ethics review**, ensuring responsible innovation across every version of the platform.
+### Purpose
 
-This document summarizes:
-- Governance hierarchy and council responsibilities  
-- FAIR+CARE integration mechanisms  
-- Compliance and validation pipelines  
-- Community engagement and Indigenous sovereignty practices  
+This directory is the **canonical home for project-wide governance** in KFM. It exists to:
 
----
+- define **FAIR+CARE-aligned** governance rules that apply across the pipeline (data → catalogs → graph → APIs → UI → story),
+- document **review gates** and change-control expectations for sensitive or high-impact modifications,
+- ensure KFM stays **architecture-synced** (no bypassing contracts, provenance, or access policy),
+- provide a single starting point for contributors who need to understand **what requires governance review** and how approvals are tracked.
+
+### Scope
+
+| In Scope | Out of Scope |
+|---|---|
+| Project-wide governance policies and their change-control expectations | Domain-specific governance (belongs under `data/<domain>/governance/`) |
+| Ethics and sovereignty policy references and review triggers | Writing new policy text without an approved governance process |
+| Review gates and exception logging mechanisms (if adopted) | Implementing ETL/API/UI code (belongs under `src/**` or `web/**`) |
+| Classification / sensitivity invariants that must hold across the pipeline | Legal advice or jurisdiction-specific requirements beyond what is explicitly governed in-repo |
+
+### Audience
+
+- Primary: maintainers, governance reviewers/owners, DataOps, security reviewers
+- Secondary: contributors adding/modifying datasets, schemas, graph mappings, APIs, UI layers, or Story Nodes
+
+### Definitions
+
+- Link: `docs/glossary.md` *(if missing, add via governance process)*
+- Terms used in this doc (non-exhaustive):
+  - **Governance gate**: a review or CI validation step that must pass before merge/release.
+  - **Sensitivity**: content-based risk label that can require redaction/generalization and governance review.
+  - **Classification**: distribution/access label that controls publishing and API authorization behavior.
+  - **Redaction / generalization**: techniques used to prevent leakage of sensitive locations/knowledge.
+  - **Provenance-linked narrative**: narrative claims traceable to evidence identifiers (STAC/DCAT/PROV).
+  - **CARE**: governance principles for Indigenous data (Collective benefit, Authority, Responsibility, Ethics).
+  - **FAIR**: Findable, Accessible, Interoperable, Reusable.
+  - **Story Node / Focus Mode**: governed narrative artifacts and UI mode that surface provenance-linked context.
+
+### Key artifacts (what this README points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| This README | `docs/governance/README.md` | Repo maintainers | Index + process guidance |
+| Root governance policy | `docs/governance/ROOT_GOVERNANCE.md` | Governance owners | Canonical definitions (labels, approvals, exceptions) |
+| Ethics policy | `docs/governance/ETHICS.md` | Governance owners | AI/ML transparency + bias + disclosure requirements |
+| Sovereignty policy | `docs/governance/SOVEREIGNTY.md` | Governance owners | Indigenous data sovereignty + culturally sensitive handling |
+| Review gates list | `docs/governance/REVIEW_GATES.md` | Governance owners | *(not confirmed in repo; roadmap suggests adding)* |
+| Exception log | `docs/governance/exceptions.yaml` | Governance owners | *(not confirmed in repo; roadmap suggests adding)* |
+| Master Guide | `docs/MASTER_GUIDE_v12.md` | KFM maintainers | Canonical pipeline + baseline gates |
+| Templates | `docs/templates/` | KFM maintainers | Required doc structures + front matter |
+
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid (all required keys present)
+- [ ] Directory layout reflects actual governance files (unknowns marked **not confirmed in repo**)
+- [ ] Review-gate guidance is consistent with governed pipeline ordering (no “skip the API boundary”)
+- [ ] Describes how governance affects Story Nodes / Focus Mode (provenance-linked narrative rule)
+- [ ] Validation/CI expectations are stated at least at “minimum gates” level
+- [ ] Footer refs present and point to canonical governance documents
 
 ## 🗂️ Directory Layout
 
-```
-docs/governance/
-├── README.md                            # This file
-├── council-structure.md                 # Governance hierarchy and voting rules
-├── validation-pipelines.md              # FAIR+CARE validation and CI/CD integration
-├── transparency-reports.md              # Public compliance and audit summaries
-├── community-participation.md           # Public & Indigenous engagement framework
-└── risk-and-ethics.md                   # AI, data, and privacy risk mitigation guide
-```
+### This document
 
----
+- `docs/governance/README.md` — navigation + process summary for governance in KFM
 
-## 🧭 Governance Model
+### Related repository paths
 
-| Council | Role | Frequency | Documentation |
-|---|---|---|---|
-| **FAIR+CARE Council** | Ethical oversight of datasets, AI models, and cultural content. | Quarterly | `docs/data/governance/review-council-minutes.md` |
-| **Data Standards Committee (DSC)** | Maintains schemas, contracts, and metadata standards. | Biannual | `docs/data/contracts/README.md` |
-| **Indigenous Data Governance Board (IDGB)** | Reviews and approves cultural and tribal datasets. | Quarterly | `docs/data/governance/indigenous-data-protocol.md` |
-| **Accessibility & Design Council** | Monitors A11y, UX, and sustainable interface design. | Continuous | `docs/design/README.md` |
-| **Governance Secretariat** | Records, audits, and publishes council minutes and telemetry reports. | Continuous | `docs/data/governance/review-council-minutes.md` |
+- `docs/MASTER_GUIDE_v12.md` — canonical pipeline ordering and baseline CI gates
+- `docs/templates/` — governed doc templates (Universal / Story Node / API Contract Extension)
+- `docs/standards/` — work protocol and standards *(not confirmed in repo)*
+- `.github/` — CI workflows and automation that enforce gates *(not confirmed in repo; repo-dependent)*
+- `data/**` — domain modules and datasets (domain governance lives under `data/<domain>/governance/`)
+- `schemas/**` — schema constraints for STAC/DCAT/PROV/story/UI/telemetry *(not confirmed in repo)*
+- `src/**` — ETL/catalog/graph/API code (policy is documented here, not implemented here)
+- `web/**` — UI (must not read Neo4j directly; API boundary is mandatory)
 
----
+### Expected file tree
 
-## ⚙️ Governance Functions
+~~~text
+docs/
+└── 📁 governance/
+    ├── 📄 README.md
+    ├── 📄 ROOT_GOVERNANCE.md
+    ├── 📄 ETHICS.md
+    ├── 📄 SOVEREIGNTY.md
+    ├── 📄 REVIEW_GATES.md            # not confirmed in repo (roadmap suggests adding/maintaining)
+    └── 📄 exceptions.yaml            # not confirmed in repo (roadmap suggests adding)
+~~~
 
-| Function | Description | Oversight |
-|---|---|---|
-| **Ethical Validation** | Ensures all releases meet FAIR+CARE and MCP compliance. | FAIR+CARE Council |
-| **Data Provenance Assurance** | Verifies source lineage and consent metadata. | Data Standards Committee |
-| **Accessibility Certification** | Confirms adherence to WCAG 2.1 AA and ISO 9241-210. | Accessibility Council |
-| **Cultural Consent Enforcement** | Implements Indigenous sovereignty through IDGB protocols. | Indigenous Data Governance Board |
-| **AI Accountability** | Audits Focus Mode outputs for explainability, tone, and ethics. | AI Oversight Team |
-| **Sustainability Audits** | Monitors energy use and computational efficiency. | Environmental Compliance Team |
+## 🧭 Context
 
----
+### Background
 
-## 🧠 FAIR+CARE Governance Integration
+KFM is a governed knowledge system. Governance exists because:
 
-| Principle | Governance Implementation |
-|---|---|
-| **Collective Benefit** | All data and AI outputs contribute to public understanding, not exploitation. |
-| **Authority to Control** | Indigenous and community groups retain governance over their data visibility. |
-| **Responsibility** | Each dataset is reviewed for ethical provenance, consent, and representation. |
-| **Ethics** | Councils ensure content reflects integrity, neutrality, and cultural respect. |
+- KFM integrates **external sources**, **geospatial data**, and **narratives** that can include sensitive or culturally protected knowledge.
+- KFM’s architecture is contract- and provenance-first: changes must remain consistent with the canonical pipeline ordering:
+  - **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+- Governance is a cross-cutting concern: it constrains **what can be ingested**, **how it can be represented**, **what can be served**, and **what can be narrated/published**.
 
-Every release must receive **FAIR+CARE Certification** before inclusion in the `manifest.zip`.
+### Assumptions
 
----
+- Contributions happen via PRs and are reviewed before merge.
+- All governed docs use the template front-matter (sensitivity/classification/jurisdiction included).
+- “Allowed values” for sensitivity/classification and their ordering are governed globally (see `ROOT_GOVERNANCE.md`).
 
-## ♿ Accessibility & Equity Mandates
+### Constraints / invariants
 
-- Every interface and document must meet **WCAG 2.1 AA** accessibility standards.  
-- Cultural materials require **contextual consent and community attribution**.  
-- Governance workflows emphasize **inclusive decision-making** — all council votes must include Indigenous and accessibility representatives.  
-- Public dashboards ensure **transparency and visibility** of FAIR+CARE metrics.
+- **API boundary is mandatory**: UI must not read Neo4j directly; all access is via contracted APIs.
+- **No unsourced narrative**: published Story Nodes must be provenance-linked (dataset/asset IDs).
+- **Classification propagation**: outputs must not have lower restriction than any input used to generate them (exact ordering is governed in `ROOT_GOVERNANCE.md`).
+- **Restricted location protection**: if data could reveal protected locations, redaction/generalization is required and must be enforceable at API/UI layers.
+- **No secrets/PII**: governance docs must not embed credentials, private URLs, personal data, or disallowed sensitive details.
 
----
+### Open questions (track here until resolved)
 
-## 🧩 Compliance & Validation Pipelines
+- What is the canonical sensitivity/classification taxonomy and ordering? *(see `ROOT_GOVERNANCE.md`; not restated here)*
+- Which roles/groups are the designated governance reviewers (ethics / sovereignty / security)? *(not confirmed in repo)*
+- Is `docs/governance/REVIEW_GATES.md` adopted as the canonical gate registry? *(not confirmed in repo)*
+- Is an exception registry (e.g., `docs/governance/exceptions.yaml`) adopted and CI-enforced? *(not confirmed in repo)*
 
-```mermaid
+### Future extensions (optional)
+
+- Add machine-readable governance gates (YAML) for CI enforcement.
+- Add automated reviewer-request rules based on touched paths (e.g., sovereignty paths, story node paths).
+- Add an exception process with expirations and CI suppression semantics for known temporary deviations.
+
+## 🗺️ Diagrams
+
+### Governance decision flow (PR → gates → review)
+
+~~~mermaid
 flowchart TD
-A["Dataset or Model Submission"] --> B["FAIR+CARE Validation Pipeline"]
-B --> C["Accessibility & Ethics Audit"]
-C --> D["Governance Council Review"]
-D --> E["Telemetry & Ledger Logging"]
-E --> F["FAIR+CARE Certification + Public Release"]
-```
+  A["Change proposed (PR)"] --> B["Run CI gates (contracts + policy checks)"]
+  B --> C{"Governance trigger hit?"}
+  C -- "No" --> D["Standard review + merge (maintainers)"]
+  C -- "Yes" --> E["Request governance review (ethics/sovereignty/security as applicable)"]
+  E --> F["Address findings / approvals recorded"]
+  F --> D
+  D --> G["Release/publish (if applicable)"]
+  G --> H["Audit trail + telemetry (if applicable)"]
+~~~
 
-| Workflow | Purpose | Artifact |
+## 🧠 Story Node & Focus Mode Integration
+
+### Provenance-linked narrative rule
+
+- Story Nodes must ensure every factual claim can trace to a dataset/record/asset identifier.
+- If a Story Node depends on restricted inputs, it must inherit the appropriate classification and must not be published as open.
+
+### Focus Mode behavior expectations
+
+- Focus Mode should surface **provenance-linked context only**:
+  - narrative + citations + audit/governance flags
+  - no leakage of exact restricted locations (even if stored internally)
+- If “AI explanation” or generated narrative exists anywhere in the system, it must be:
+  - opt-in,
+  - clearly labeled,
+  - accompanied by uncertainty metadata where applicable,
+  - reviewed per ethics policy.
+
+### Optional structured controls (illustrative only)
+
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+governance:
+  allow_public_render: true
+  location_precision: "coarse"   # coarse | exact (exact requires governance review)
+~~~
+
+## ⚙️ Validation & CI/CD
+
+### Minimum CI gates (baseline expectations)
+
+Workflows should enforce a baseline set of gates for governed contributions:
+
+- [ ] Markdown protocol validation (template + front matter + links)
+- [ ] Schema validation (STAC/DCAT/PROV + story node schemas, where applicable)
+- [ ] Graph integrity tests (where applicable)
+- [ ] API contract tests (OpenAPI/GraphQL), where applicable
+- [ ] UI registry schema checks, where applicable
+- [ ] Security + sovereignty scanning where applicable
+
+### CI behavior principle
+
+- If a gate depends on a root that does not exist in the current repo snapshot, the workflow should **skip** that gate.
+- If the root exists, validation must be **strict** and must **fail deterministically** when invalid.
+
+### Reproduction (placeholders)
+
+~~~bash
+# Example placeholders — replace with repo-specific commands/scripts.
+
+# 1) Markdown protocol checks
+# <TBD>
+
+# 2) Schema validation (STAC/DCAT/PROV/storynodes/ui/telemetry)
+# <TBD>
+
+# 3) Graph integrity tests
+# <TBD>
+
+# 4) API contract tests
+# <TBD>
+
+# 5) Security + sovereignty scanning
+# <TBD>
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
 |---|---|---|
-| `faircare-audit.yml` | Validates FAIR+CARE compliance across data and design layers. | `reports/data/faircare-validation.json` |
-| `data-provenance.yml` | Confirms lineage, consent, and licensing. | `reports/data/provenance-summary.json` |
-| `accessibility_scan.yml` | Tests web components and dashboards. | `reports/self-validation/web/a11y_summary.json` |
-| `telemetry-export.yml` | Logs all governance metrics into telemetry. | `releases/v10.0.0/focus-telemetry.json` |
+| CI gate results | GitHub Actions | CI logs + artifacts (location TBD) |
+| Pipeline run signals | ETL/catalog runs | `data/prov/` and/or run manifests |
+| Governance review approvals | Review process | PR history and/or governed registry (TBD; not confirmed in repo) |
 
----
+## 📦 Data & Metadata
 
-## 🪶 Indigenous Data Governance Protocol Integration
+### Required metadata fields (governed docs)
 
-Governance respects the sovereignty of Indigenous data through active collaboration with the **Indigenous Data Governance Board (IDGB)**.  
+All governed docs (including governance docs) should include in front-matter:
 
-Key practices:
-- All tribal datasets tagged with **CARE consent metadata**.  
-- Heritage content restricted or anonymized until reviewed by IDGB.  
-- IDGB retains **final authority** on cultural visibility decisions.  
-- Council publishes joint statements on cultural representation annually.  
+- identifiers: `doc_uuid`, `semantic_document_id`, `event_source_id`, `commit_sha`
+- governance labels: `sensitivity`, `classification`, `jurisdiction`, `fair_category`, `care_label`
+- references: `governance_ref`, `ethics_ref`, `sovereignty_policy`
+- AI constraints: `ai_transform_permissions`, `ai_transform_prohibited`
+- integrity fields: `doc_integrity_checksum`
 
-> See `docs/data/governance/indigenous-data-protocol.md` for full procedural guidance.
+### Sensitivity & redaction (project-wide invariant)
 
----
+- Provenance artifacts, catalogs, and docs must not leak restricted locations or culturally sensitive knowledge.
+- If uncertain, default to **more restrictive** handling until reviewed.
+- Do not attempt to infer protected locations from indirect fields (device IDs, unique timestamps, sparse metadata).
 
-## 📊 Governance Metrics Dashboard
+### Common governance “inputs” and “outputs”
 
-| Metric | Target | Verification |
+| Category | Inputs | Outputs |
 |---|---|---|
-| **FAIR+CARE Compliance Rate** | ≥ 95% | `faircare-audit.yml` |
-| **Consent Metadata Coverage** | 100% (for cultural datasets) | IDGB Review |
-| **Accessibility Certification** | 100% | `accessibility_scan.yml` |
-| **Telemetry Transparency Index** | ≥ 90% | Governance Dashboard |
-| **Council Participation Rate** | ≥ 75% | Secretariat Minutes |
+| Policy change | PR text + governed markdown | Updated policy doc(s) + version history |
+| Review gate change | Proposed trigger list + CI implications | Updated `REVIEW_GATES.md` (if adopted) + automation changes |
+| Exception request | Justification + approver + expiry | Entry in `exceptions.yaml` (if adopted) + audit trail |
+| Domain expansion | Domain governance doc + licensing summary | Domain acceptance decision + required constraints recorded |
 
----
+## 🌐 STAC, DCAT & PROV Alignment
 
-## 🧾 Council Decision Transparency (JSON-LD Schema)
+### Provenance requirements (minimum)
 
-```json
-{
-  "@context": "https://schema.org/",
-  "@type": "CreativeWork",
-  "identifier": "FDGC-2025-Q4-Decision-02",
-  "name": "Approval of NOAA Climate Dataset",
-  "author": {
-    "name": "FAIR+CARE Governance Council",
-    "role": "approver"
-  },
-  "datePublished": "2025-11-08",
-  "decision": "approved",
-  "rationale": "Dataset verified for FAIR+CARE and consent compliance."
-}
-```
+- `prov:wasDerivedFrom`: list upstream source IDs / dataset IDs
+- `prov:wasGeneratedBy`: pipeline activity/run ID
+- Confidence/uncertainty fields when predictive content is included (ethics review may be required)
 
-All decisions are versioned in `docs/data/governance/review-council-minutes.md` and logged into the Governance Ledger.
+### Governance expectations for catalogs/lineage
 
----
+- STAC items/collections should encode governance labels where the KFM profile allows (e.g., sensitivity/classification/redaction notes).
+- DCAT records should reflect access level (e.g., access rights) and must not misrepresent restricted assets.
+- PROV should record where and when redaction/generalization occurred (if applicable).
 
-## 🧮 Governance Lifecycle
+### Classification propagation rule (invariant)
 
-```mermaid
-flowchart LR
-A["Submission of Dataset or AI Model"] --> B["FAIR+CARE + Accessibility Validation"]
-B --> C["Council Review & Ethics Vote"]
-C --> D["Telemetry Logging & Manifest Inclusion"]
-D --> E["Quarterly Audit & Transparency Report"]
-E --> F["Public FAIR+CARE Certification"]
-```
+- Outputs must not have “lower restriction” than any input used to generate them.
+- Exact allowed values and ordering are governed in `docs/governance/ROOT_GOVERNANCE.md`.
 
----
+## 🧱 Architecture
+
+### Governance enforcement points across the canonical pipeline
+
+| Component | Responsibility | Enforcement point for governance |
+|---|---|---|
+| ETL ingest | Acquire + normalize sources | Assign initial labels; default conservative when unsure |
+| Work/staging | Intermediate transforms + QA | Run governance scans; block promotion if violations |
+| Processed | Certified outputs | Only store publishable artifacts after passing checks |
+| Catalog builder | STAC/DCAT/PROV emission | Encode labels; build redacted catalogs if applicable |
+| Graph ingest | Neo4j load | Store governance labels for query-time filtering (via APIs) |
+| API boundary | Serve data to UI/clients | Authorize + redact/generalize responses by classification |
+| UI / Focus Mode | Present layers + narratives | Display governance flags; avoid exposing sensitive locations |
+
+### API boundary reminder (non-negotiable)
+
+- UI must not consume Neo4j directly.
+- All access to graph and catalog content must flow through contracted APIs that apply authorization and redaction/generalization.
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates (examples; canonical list belongs in `REVIEW_GATES.md` if adopted)
+
+The roadmap indicates governance reviews should trigger for conditions like:
+
+- Adding a dataset with `sensitivity: restricted` or culturally sensitive info → sovereignty review.
+- Introducing/modifying any AI/ML component generating or summarizing narrative → ethics review (transparency/bias).
+- Adding a new external data source API → license/FAIR review (rights + metadata mapping).
+- New major UI/API feature affecting security posture (e.g., file downloads, public query endpoints) → security review.
+
+*(For the canonical list, see `docs/governance/REVIEW_GATES.md` if present; otherwise treat these as guidance and record triggers in PR descriptions.)*
+
+### PR template updates (recommended)
+
+- Add a governance checklist to the PR template (not confirmed in repo), e.g.:
+  - “Does this change add/modify data with sensitivity concerns? If yes, has approval been obtained?”
+  - “If adding a new dataset, confirm PROV + metadata are included.”
+  - “If adding story content, confirm every claim is provenance-linked.”
+
+### Automated notifications (recommended)
+
+- Auto-request governance review if a PR touches:
+  - `docs/governance/**`
+  - sovereignty-sensitive domains (example path: `data/historical/indigenous/**`)
+  - Story Nodes (`docs/reports/story_nodes/**`)
+
+### Exception logging (recommended, time-bounded)
+
+- For temporary deviations (e.g., staleness waivers, incomplete upstream availability), consider a governed exception registry:
+  - `docs/governance/exceptions.yaml` *(not confirmed in repo)*
+- Each entry should include:
+  - what is waived,
+  - who approved,
+  - why,
+  - an expiry date,
+  - any mitigations.
+
+### CARE / sovereignty considerations
+
+- Identify impacted communities and protection rules for sensitive/restricted locations.
+- Ensure provenance and audit logs don’t re-expose restricted geometry or identifiers.
+- If in doubt, escalate to sovereignty review before publishing or promoting a dataset/story.
+
+### AI usage constraints
+
+- This document permits structural extraction, summarization, translation, and keyword indexing.
+- Prohibited:
+  - generating new policy text (“generate_policy”),
+  - inferring sensitive locations (“infer_sensitive_locations”).
 
 ## 🕰️ Version History
 
-| Version | Date | Author | Summary |
+| Version | Date | Summary | Author |
 |---|---|---|---|
-| v10.0.0 | 2025-11-10 | FAIR+CARE Governance Secretariat | Established centralized governance documentation outlining ethical oversight, council functions, validation pipelines, and Indigenous sovereignty protocols. |
+| v1.0.0 | 2025-12-27 | Initial governance README scaffold | TBD |
 
 ---
 
-<div align="center">
+## Footer refs (do not remove)
 
-**© 2025 Kansas Frontier Matrix — CC-BY 4.0**  
-Governed under **Master Coder Protocol v6.3** · Certified by **FAIR+CARE Council** · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-[⬅ Back to Documentation Index](../README.md) · [Standards →](../standards/README.md)
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Templates: `docs/templates/`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
 
-</div>
+---
