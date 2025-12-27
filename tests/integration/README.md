@@ -175,15 +175,15 @@ Integration tests exist to keep *cross-stage contracts* stable and to prevent â€
 ### System / dataflow diagram
 ~~~mermaid
 flowchart LR
-  T[Test runner] --> F[Integration fixtures<br/>tests/fixtures + tests/integration/fixtures]
+  T["Test runner"] --> F["Integration fixtures<br/>tests/fixtures + tests/integration/fixtures"]
 
-  F --> P[ETL/Pipeline run<br/>src/pipelines]
-  P --> C[Catalog outputs<br/>STAC/DCAT/PROV]
-  C --> G[Graph ingest<br/>src/graph + data/graph]
-  G --> A[API boundary<br/>src/server (target) / src/api (legacy)]
-  A --> Assert[Assertions<br/>schema + links + redaction + provenance]
+  F --> P["ETL / Pipeline run<br/>src/pipelines"]
+  P --> C["Catalog outputs<br/>STAC / DCAT / PROV"]
+  C --> G["Graph ingest<br/>src/graph + data/graph"]
+  G --> A["API boundary<br/>src/server (target) / src/api (legacy)"]
+  A --> Assert["Assertions<br/>schema + links + redaction + provenance"]
 
-  Assert -. does not call .-> UI[UI (web) uses API only]
+  Assert -. "does not call" .-> UI["UI (web) uses API only"]
 ~~~
 
 ### Optional: sequence diagram
