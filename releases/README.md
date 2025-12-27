@@ -2,7 +2,7 @@
 title: "KFM Releases"
 path: "releases/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-21"
+last_updated: "2025-12-27"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -48,14 +48,14 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ### Purpose
 
 - Provide a **single, versioned home** for KFM release bundles (artifacts intended for distribution, audit, and reproducibility).
-- Standardize what gets stored in `releases/` (e.g., manifests, SBOMs, signed bundles, telemetry snapshots) and how those artifacts link back to the canonical KFM pipeline outputs.
+- Standardize what gets stored in `releases/` (manifests, SBOMs, checksums, signatures/attestations, telemetry snapshots) and how those artifacts link back to the canonical KFM pipeline outputs.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Versioned release bundles under `releases/<version>/` | Day-to-day working outputs (use `data/work/`), raw ingest sources (use `data/raw/` / `data/sources/`) |
-| Release manifests, SBOMs, signatures, checksums | Secrets/credentials, signing private keys, or any PII |
+| Versioned release bundles under `releases/<version>/` | Day-to-day working outputs (use `data/<domain>/work/`), raw ingest sources (use `data/<domain>/raw/` / `data/sources/`) |
+| Release manifests, SBOMs, signatures/attestations, checksums | Secrets/credentials, signing private keys, or any PII |
 | Documentation snapshots and sample exports tied to a release | Ad-hoc exports not tied to a versioned run |
 | Telemetry snapshots that are schema-governed and non-sensitive | Unreviewed sensitive datasets or restricted-location material |
 
@@ -64,35 +64,41 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 - Primary: Release managers / maintainers, DataOps, CI/CD maintainers
 - Secondary: Auditors, downstream integrators, curators, researchers consuming packaged releases
 
-### Definitions (link to glossary)
+### Definitions
 
-- Link: `docs/glossary.md` (if not present, add via governance process)
-- Terms used in this doc:
-  - **Release bundle:** A versioned collection of KFM artifacts intended to be reproducible.
-  - **Release manifest:** A machine-readable index of artifacts, checksums, and provenance pointers.
-  - **SBOM:** “Software Bill of Materials” for the release build and its dependencies.
-  - **Telemetry snapshot:** A versioned capture of selected operational/quality signals (schema-governed).
+- Glossary: `docs/glossary.md` (**not confirmed in repo** — update this link if the glossary lives elsewhere)
 
-### Key artifacts (what this doc points to)
+Terms used in this document:
+
+- **Release bundle**: A versioned collection of KFM artifacts intended to be reproducible and auditable.
+- **Release manifest**: A machine-readable index of artifacts, checksums, and provenance pointers.
+- **SBOM**: “Software Bill of Materials” for the release build and its dependencies.
+- **Attestation**: A verifiable statement (e.g., SLSA provenance) binding a build/run to specific artifact digests.
+- **Telemetry snapshot**: A versioned capture of selected operational/quality signals (schema-governed).
+
+### Key artifacts (what this folder should contain)
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
 | Release directory | `releases/` | Maintainers | Top-level home for release bundles |
 | Versioned bundle | `releases/<version>/` | Maintainers | One folder per release version |
-| Release manifest | `releases/<version>/release-manifest.*` | Maintainers | Filename/format TBD; must be machine-readable |
-| SBOM | `releases/<version>/sbom.*` | Maintainers | Format TBD (SPDX or CycloneDX) |
+| Release manifest | `releases/<version>/release-manifest.*` | Maintainers | Machine-readable; schema TBD (**not confirmed in repo**) |
+| SBOM | `releases/<version>/sbom.*` | Maintainers | Recommended: SPDX JSON or CycloneDX JSON |
 | Checksums | `releases/<version>/checksums.sha256` | Maintainers | Strongly recommended for all artifacts |
-| Signatures | `releases/<version>/signatures/` | Maintainers | Signing mechanism/tooling TBD |
+| Signatures | `releases/<version>/signatures/` | Maintainers | Detached signatures for critical artifacts |
+| Attestation | `releases/<version>/slsa-attestation.json` | Maintainers | Optional but recommended; mechanism/tooling may vary |
 | Telemetry snapshot | `releases/<version>/telemetry/` | Maintainers | Only non-sensitive, schema-validated snapshots |
 | Docs snapshot | `releases/<version>/docs-snapshot/` | Maintainers | Optional: frozen docs used for the release |
-| Sample exports | `releases/<version>/exports/` | Maintainers | Optional: curated “sample exports” for validation demos |
+| Sample exports | `releases/<version>/exports/` | Maintainers | Optional: curated samples for validation demos |
 
-### Definition of done (for this document)
+### Definition of done (for this README)
 
 - [ ] Front-matter complete + valid
 - [ ] `releases/` purpose and boundaries are clear (what belongs here vs. elsewhere)
 - [ ] A versioned bundle layout is defined (even if some fields remain “TBD”)
 - [ ] Validation + governance expectations are explicit (esp. sensitivity and provenance)
+
+---
 
 ## 🗂️ Directory Layout
 
@@ -107,20 +113,25 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ~~~text
 📁 releases/
 ├── 📄 README.md
-└── 📁 <version>/
-    ├── 📄 release-manifest.<json|yaml>        # index + provenance pointers
-    ├── 📄 sbom.<spdx|cdx|json>                # SBOM (format TBD)
-    ├── 📄 checksums.sha256                    # checksums for artifacts
-    ├── 📁 signatures/                         # detached signatures (tooling TBD)
+└── 📁 vX.Y.Z/
+    ├── 📄 release-manifest.json              # machine-readable index + provenance pointers (recommended)
+    ├── 📄 manifest.zip                       # optional: bundle container (legacy/compat; policy TBD)
+    ├── 📄 sbom.spdx.json                     # recommended if SPDX JSON adopted (or sbom.cdx.json)
+    ├── 📄 checksums.sha256                   # sha256 for ALL distributable artifacts
+    ├── 📄 slsa-attestation.json              # optional: provenance attestation (tooling TBD)
+    ├── 📁 signatures/                        # detached signatures (mechanism TBD)
+    │   ├── 📄 release-manifest.json.sig
+    │   ├── 📄 sbom.spdx.json.sig
     │   └── 📄 <artifact>.sig
-    ├── 📁 catalogs/                           # optional snapshots/pointers
+    ├── 📁 catalogs/                          # optional: snapshots OR pointers (define policy)
     │   ├── 📁 stac/
     │   ├── 📁 dcat/
     │   └── 📁 prov/
-    ├── 📁 docs-snapshot/                      # optional frozen docs
-    ├── 📁 exports/                            # optional sample exports
-    └── 📁 telemetry/                          # optional telemetry snapshots
+    ├── 📁 docs-snapshot/                     # optional frozen docs
+    ├── 📁 exports/                           # optional sample exports
+    └── 📁 telemetry/                         # optional telemetry snapshots (schema-governed)
 ~~~
+
 
 ### Related repository paths
 
@@ -131,44 +142,81 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 | DCAT | `data/catalog/dcat/` | DCAT outputs (canonical) |
 | PROV | `data/prov/` | Provenance bundles (canonical) |
 | Documentation | `docs/` | Canonical governed docs |
-| Schemas | `schemas/` | JSON schemas (telemetry, catalogs, etc.) |
-| CI/CD | `.github/workflows/` | Validation and release automation |
+| Schemas | `schemas/` | JSON schemas (telemetry, catalogs, Story Nodes, etc.) |
+| CI/CD | `.github/workflows/` | Validation and release automation (if present) |
+
+---
 
 ## 🧭 Context
 
 ### What “release” means in KFM
 
-A **KFM release** is a *versioned snapshot of outputs* intended to be:
+KFM’s canonical flow is:
+
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+A **KFM release** is a versioned snapshot of *distribution-ready artifacts* that is intended to be:
+
 - reproducible (re-runnable from pinned inputs/config + recorded lineage),
 - auditable (clear checksums + provenance pointers),
 - safe to distribute (no restricted/secret material).
 
-**Important boundary:** `releases/` is for *packaging and distribution*, not as the canonical source of truth for datasets or catalogs.
+**Important boundary:** `releases/` is for *packaging and distribution*, not the canonical source of truth for datasets or catalogs. Canonical sources remain under `data/**`, `docs/**`, `schemas/**`, and the code roots (`src/**`, `web/**`).
+
+### Versioning expectations
+
+- Version folders should follow a stable, sortable tag pattern (recommended): `v<MAJOR>.<MINOR>.<PATCH>`.
+- Every release bundle should record:
+  - the `commit_sha` used,
+  - the pipeline contract/profile versions (PPC/STAC/DCAT/PROV) applicable to the release,
+  - checksums for all distributed artifacts.
+
+If a new release supersedes another, the relationship should be recorded in the manifest and/or PROV lineage.
+
+---
 
 ## 📦 Data & Metadata
 
 ### What may be included in a release bundle
 
 A release bundle may contain (or point to) the artifacts below:
+
 - **Manifests** that enumerate exactly what is in the bundle and where it came from.
 - **SBOMs** describing the build’s software dependency graph.
-- **Signed bundles / signatures** for integrity verification (mechanism TBD).
+- **Signed bundles / signatures** for integrity verification (mechanism/tooling TBD).
 - **Telemetry snapshots** used for quality and reproducibility checks.
 - **Documentation snapshots, run manifests, and sample exports** (if the project chooses to freeze these alongside a release).
+
+### What must never be included
+
+- Secrets/credentials (tokens, keys, private signing material)
+- Unredacted PII
+- Restricted locations or culturally sensitive knowledge without explicit approvals and required redaction/generalization
+- Any artifact that bypasses governance rules defined in `docs/governance/**`
+
+---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### Provenance requirements (release bundle level)
 
 Release artifacts should link back to:
+
 - STAC collection/item identifiers for published datasets
 - DCAT dataset identifiers/mappings (where applicable)
 - PROV activity/run identifiers and upstream sources
 
-### Versioning expectations
+### Optional provenance “index line” pattern (recommended, not confirmed in repo)
 
-- Each `releases/<version>/` folder should represent **one coherent versioned bundle**.
-- If a new release supersedes another, the relationship should be recorded in the manifest and/or PROV lineage.
+Some KFM documents reference a minimal provenance index approach to prevent copy/paste drift across README ↔ STAC ↔ DCAT. A recommended “single source of truth” pattern is:
+
+- `data/releases/<dataset_id>/<release_tag>/PROVENANCE.index.json` (**not confirmed in repo**)
+
+and then reference it from other artifacts (README, STAC, DCAT) via pointers rather than duplicating values.
+
+If adopted, keep the index minimal, stable, and content-addressed (e.g., SHA256 digests), and enforce cross-link validation in CI.
+
+---
 
 ## 🧱 Architecture
 
@@ -186,7 +234,7 @@ flowchart LR
 
 ### Manifest contract (recommended shape)
 
-> Format and schema are **TBD** (not confirmed in repo). The example below illustrates the minimum intent.
+> Format and schema are **TBD** (**not confirmed in repo**). The example below illustrates the minimum intent.
 
 ~~~json
 {
@@ -202,7 +250,7 @@ flowchart LR
       "notes": "Snapshot or pointer (define policy)."
     },
     {
-      "path": "sbom.json",
+      "path": "sbom.spdx.json",
       "type": "sbom",
       "sha256": "<checksum>"
     }
@@ -214,29 +262,35 @@ flowchart LR
 }
 ~~~
 
+---
+
 ## 🧠 Story Node & Focus Mode Integration
 
 - If a release includes Story Nodes (or Focus Mode bundles), they must remain **provenance-linked** and safe to render.
 - Any predictive/AI-derived content (if shipped at all) should be clearly labeled and carry uncertainty/confidence metadata.
+- The UI must not read Neo4j directly; the API boundary mediates access and enforces redaction/generalization.
+
+---
 
 ## 🧪 Validation & CI/CD
 
-### Validation steps
+### Validation steps (recommended)
 
 - [ ] Markdown protocol checks (front-matter keys, paths)
 - [ ] Schema validation for any included catalogs (STAC/DCAT/PROV snapshots)
 - [ ] Checksums computed and stored for included artifacts
 - [ ] Signature verification process documented (if signatures are used)
+- [ ] Attestation verification documented (if attestations are used)
 - [ ] Security and sovereignty checks applied to any distributable artifacts
 
-### Reproduction
+### Reproduction (placeholder)
 
 ~~~bash
-# Example placeholders — replace with repo-specific commands
+# Example placeholders — replace with repo-specific commands (not confirmed in repo)
 # 1) validate schemas (STAC/DCAT/PROV)
 # 2) run pipeline tests / integrity checks
 # 3) generate release manifest + checksums
-# 4) (optional) sign artifacts + verify signatures
+# 4) (optional) sign artifacts + verify signatures / attestations
 ~~~
 
 ### Telemetry signals (if applicable)
@@ -244,6 +298,8 @@ flowchart LR
 | Signal | Source | Where recorded |
 |---|---|---|
 | TBD | TBD | `releases/<version>/telemetry/` |
+
+---
 
 ## ⚖ FAIR+CARE & Governance
 
@@ -261,17 +317,22 @@ flowchart LR
 - Ensure this doc’s AI permissions/prohibitions match intended use.
 - Do not treat release packaging documentation as permission to generate or infer policies.
 
-## 🕰️ Version History
+---
+
+## 🧾 Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-21 | Initial `releases/` README scaffold | TBD |
+| v1.0.0 | 2025-12-27 | Initial `releases/` README scaffold | TBD |
 
 ---
 
 Footer refs:
 
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- v13 Blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
-
+- Sovereignty policy: `docs/governance/SOVEREIGNTY.md`
