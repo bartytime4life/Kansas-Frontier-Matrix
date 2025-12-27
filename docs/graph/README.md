@@ -1,241 +1,404 @@
 ---
-title: "🗺️ KFM — Graph Documentation: Neo4j, Ontologies, Mappings, Provenance"
+title: "KFM Graph — README"
 path: "docs/graph/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-27"
+status: "active"
+doc_kind: "Reference"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-14"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Graph Board · FAIR+CARE Council"
-content_stability: "stable"
-status: "Active / Enforced"
-
-doc_kind: "Index"
-header_profile: "standard"
-footer_profile: "standard"
-
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
-intent: "graph-docs-index"
-audience:
-  - "Graph Engineering"
-  - "Data Engineering"
-  - "Search Engineering"
-  - "Reliability Engineering"
-  - "Governance Reviewers"
-  - "API Engineering"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
 
-classification: "Public"
-sensitivity: "General (non-sensitive)"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-jurisdiction: "Kansas / United States"
-indigenous_rights_flag: true
-data_steward: "Graph Board · FAIR+CARE Council"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
 
-governance_ref: "../standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
+doc_uuid: "urn:kfm:doc:graph:readme:v1.0.0"
+semantic_document_id: "kfm-graph-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:graph:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
-doc_uuid: "urn:kfm:doc:graph:index:v11.2.6"
-semantic_document_id: "kfm-graph-docs-index"
-event_source_id: "ledger:docs/graph/README.md"
-provenance_chain:
-  - "initial:v11.2.6"
 
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
 ai_transform_permissions:
-  - "summary"
-  - "semantic-highlighting"
-  - "metadata-extraction"
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "fabricated-claims"
-  - "unverified-architectural-claims"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
+# KFM Graph — README
 
-# 🗺️ **KFM — Graph Documentation**
-`docs/graph/README.md`
-
-**Purpose**  
-Index and governance anchor for KFM’s graph layer: **Neo4j modeling**, **ontology alignment**, **ingest mappings**,
-**query patterns**, and **provenance-first** graph operations.
-
-</div>
-
----
+This README documents the **governed conventions** for KFM’s **Graph subsystem** (Neo4j): ontology, migrations/constraints, ingest/import artifacts, and how the graph integrates with catalogs, APIs, Story Nodes, and Focus Mode.
 
 ## 📘 Overview
 
-The KFM graph layer provides:
+### Purpose
 
-- a queryable representation of People, Places, Events, Documents, Datasets, Runs, and Story Nodes,
-- explicit relationships that power navigation, search expansion, and provenance traceability,
-- governance-aware access patterns that respect FAIR+CARE constraints.
+- Define the **Graph subsystem contract**: ontology + migrations + constraints, with **stable labels/edges**.
+- Document how graph entities/relationships must remain **provenance-linked** to STAC/DCAT/PROV so Focus Mode can surface *only* evidence-backed context.
+- Reinforce the **API boundary rule**: the UI must never query Neo4j directly; all graph access is mediated via contracted APIs.
 
-Pipeline placement:
+### Scope
 
-- ETL produces governed assets and catalogs
-- Catalogs and provenance are ingested into the graph
-- The API is the only supported boundary for the frontend
-- The frontend does not query Neo4j directly
+| In Scope | Out of Scope |
+|---|---|
+| Graph modeling conventions (labels, relationships, IDs, core properties) | Writing ETL transforms for raw sources (see `src/pipelines/`) |
+| Ontology governance + schema evolution (migrations/constraints) | UI implementation details (see `web/`) |
+| Catalog-to-graph linkage rules (STAC/DCAT/PROV → graph identifiers) | Defining new policies beyond governed docs |
+| Graph import artifacts (`data/graph/**`) and how they’re produced | Operational deployment details for Neo4j (ops runbooks live elsewhere; not confirmed in repo) |
 
----
+### Audience
+
+- **Primary:** Contributors working on `src/graph/**`, ontology bindings, and graph integrity tests.
+- **Secondary:** API maintainers (`src/server/**`), UI maintainers (`web/**`), and curators authoring Story Nodes.
+
+### Definitions (link to glossary)
+
+- Link: `docs/glossary.md` *(not confirmed in repo — create if missing)*
+- Terms used in this doc include: **property graph**, **ontology**, **label**, **relationship type**, **migration**, **constraint**, **entity resolution**, **provenance**, **evidence ID**, **Focus Mode**.
+
+### Key artifacts (what this doc points to)
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Master ordering + invariants | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline and invariants |
+| Graph docs home | `docs/graph/` | Graph Maintainers | This README + ontology notes |
+| Ontology definition | `docs/graph/ontology.md` | Graph Maintainers | Update when labels/edges change |
+| Graph build + bindings | `src/graph/**` | Graph Eng | Generates/loads graph import artifacts |
+| Graph import artifacts | `data/graph/csv/**` + `data/graph/cypher/**` | Graph Eng | CSV for bulk load; Cypher for constraints/migrations |
+| Catalog outputs | `data/stac/**` + `data/catalog/dcat/**` + `data/prov/**` | Data Eng | Inputs to graph ingest and provenance |
+| API boundary contracts | `src/server/contracts/**` | API Eng | Contract-first access to graph/context |
+| Story Nodes | `docs/reports/story_nodes/**` | Curators | Must reference graph entity IDs + evidence IDs |
+
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid
+- [ ] Canonical paths and invariants are stated (graph contract, API boundary, provenance-only Focus Mode)
+- [ ] Directory layout + expected file tree present
+- [ ] Validation steps listed (schema + graph integrity + contract tests)
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
+### This document
+
+- `path`: `docs/graph/README.md` *(must match front-matter)*
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| Graph docs | `docs/graph/` | Ontology notes, migrations guidance, query examples |
+| Graph build | `src/graph/` | Graph ingest/build logic + ontology bindings |
+| Graph import | `data/graph/` | Import CSVs + Cypher migrations/constraints |
+| STAC catalogs | `data/stac/` | Collections + Items used for discovery and traceability |
+| DCAT catalogs | `data/catalog/dcat/` | Dataset-level catalog records |
+| PROV bundles | `data/prov/` | Lineage bundles used by audits + Focus Mode |
+| Schemas | `schemas/` | STAC/DCAT/PROV/Story Node/UI schemas |
+| API boundary | `src/server/` | Contract-first access; redaction + query services |
+| UI | `web/` | React/MapLibre UI (no direct Neo4j access) |
+| Story Nodes | `docs/reports/story_nodes/` | Narrative documents with citations + entity refs |
+| Runs/experiments | `mcp/runs/` + `mcp/experiments/` | Pointers to PROV + evidence artifacts (avoid duplication) |
+
+### Expected file tree for this sub-area
+
+> Note: Some subfolders below are **recommended conventions** derived from project design docs. If they don’t exist yet, create them or adjust to match repo governance (avoid inventing new roots).
+
 ~~~text
-📁 docs/graph/                                         — Graph documentation root (this directory)
-├── 📄 README.md                                       — This index (you are here)
-└── 📁 cypher/                                         — Cypher docs and governed query patterns
-    ├── 📄 README.md                                   — Cypher index
-    └── 📁 patterns/                                   — Pattern library
-        ├── 📄 README.md                               — Pattern library index
-        └── 📄 change-windows.md                       — Ops change windows and diffs
+📁 docs/
+└── 📁 graph/
+    ├── 📄 README.md                          # (this file)
+    ├── 📄 ontology.md                         # graph ontology overview (create if missing)
+    ├── 📁 migrations/                         # Cypher migrations/changelog (optional; not confirmed in repo)
+    │   ├── 📄 README.md
+    │   └── 📄 <YYYYMMDD>_<slug>.cypher
+    ├── 📁 queries/                            # curated Cypher queries (optional; not confirmed in repo)
+    │   ├── 📄 README.md
+    │   └── 📄 <slug>.cypher
+    ├── 📁 examples/                           # small example subgraphs (optional; not confirmed in repo)
+    │   └── 📄 example_subgraph.md
+    └── 📁 ops/                                # operational notes (optional; not confirmed in repo)
+        └── 📄 README.md
 ~~~
 
----
+## 🧭 Context
 
-## 🧭 Quick links
+### Background
 
-- Cypher index: [`docs/graph/cypher/README.md`](cypher/README.md)
-- Cypher patterns: [`docs/graph/cypher/patterns/README.md`](cypher/patterns/README.md)
-- Ops change windows and diffs: [`docs/graph/cypher/patterns/change-windows.md`](cypher/patterns/change-windows.md)
+KFM uses a **Neo4j property graph** to connect entities, evidence, and provenance across domains so that:
+- APIs can return a **context bundle** (entities + links + evidence references) for a given focus entity.
+- Story Nodes can reference **graph entity IDs** and **evidence IDs** (STAC/DCAT/PROV) in a machine-checkable way.
+- Focus Mode can enforce the rule: **provenance-linked only** (no unsourced narratives).
 
----
+The graph is **ontology-driven**: label and relationship types are treated as a governed contract (changes require migrations and review). The graph is also designed to remain interoperable with semantic standards where applicable (e.g., PROV-O / GeoSPARQL alignment and optional RDF export).
 
-## 🧩 Graph layer principles
+### Assumptions
 
-### Typed nodes and relationships
+- Neo4j is the operational graph store for KFM (property graph).
+- Graph ingest is driven by canonical artifacts produced earlier in the pipeline:
+  - STAC (`data/stac/**`)
+  - DCAT (`data/catalog/dcat/**`)
+  - PROV (`data/prov/**`)
+- Graph access from the UI is **always** mediated by APIs (no direct Neo4j connectivity from `web/`).
+- Graph nodes store **references** back to catalog identifiers instead of duplicating large payloads.
 
-- Prefer strong labels and explicit relationship types over unstructured blobs.
-- Store key fields as properties that can be indexed and filtered.
+### Constraints / invariants
 
-### Stable identifiers
+- Canonical ordering is preserved:
+  **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+- **Graph contract is canonical**: ontology + migrations + constraints must exist and remain consistent; labels/edges are stable.
+- **No UI direct-to-graph reads**: the web client must never query Neo4j directly; API boundary enforces provenance + redaction.
+- **Round-trip traceability**: when applicable, graph nodes include identifiers linking back to:
+  - STAC Item IDs
+  - DCAT dataset IDs
+  - PROV activity IDs
+- **No hallucinated sources**: any narrative surfaced in Focus Mode must resolve to real evidence references (datasets/documents), not fabricated citations.
+- **Sensitive locations are protected**: restricted or culturally sensitive geometry/attributes must be generalized/redacted via governance rules before exposure.
 
-- Prefer stable URNs for core entities:
-  - `urn:kfm:place:…`
-  - `urn:kfm:event:…`
-  - `urn:kfm:dataset:…`
-  - `urn:kfm:run:…`
-- Store source identifiers in provenance-aware properties so lineage remains queryable.
+### Open questions
 
-### Ontology alignment
+| Question | Owner | Target date |
+|---|---|---|
+| What is the canonical ID strategy for graph entities (URN/URI vs UUID)? | TBD | TBD |
+| What is the authoritative list of labels/relationship types for the current ontology? | Graph Maintainers | TBD |
+| Is RDF export (e.g., via Neo4j n10s) required or optional for v13 readiness? | TBD | TBD |
+| Where should graph migration history be recorded (docs vs `data/graph/cypher/` vs both)? | TBD | TBD |
 
-KFM graph modeling SHOULD align with:
+### Future extensions
 
-- CIDOC-CRM for cultural and historical entities and events
-- GeoSPARQL for geometries and spatial relations
-- OWL-Time for instants and intervals
-- PROV-O for lineage and activities
+- Add a governed “ontology changelog” that ties:
+  - ontology version → migration files → CI graph integrity checks → API contract version bump.
+- Add optional RDF export jobs and SHACL validation (if adopted; not confirmed in repo).
+- Add stronger entity-resolution workflows (human review queues; confidence thresholds; audit logs).
 
-### Provenance and rights are queryable
+## 🗺️ Diagrams
 
-At minimum, graph entities SHOULD carry:
+### System / dataflow diagram
 
-- source reference and license posture
-- sensitivity and governance labels
-- provenance links to generating activities and upstream entities
+~~~mermaid
+flowchart LR
+  A["ETL — src/pipelines"] --> B["STAC/DCAT/PROV — data/stac · data/catalog/dcat · data/prov"]
+  B --> C["Graph — src/graph + data/graph"]
+  C --> D["API boundary — src/server + contracts"]
+  D --> E["UI — web/"]
+  E --> F["Story Nodes — docs/reports/story_nodes"]
+  F --> G["Focus Mode — provenance-linked"]
+~~~
 
----
+### Optional: sequence diagram (Focus Mode context query)
 
-## 🧱 Ingestion and change management
+~~~mermaid
+sequenceDiagram
+  participant UI as UI (web/)
+  participant API as API (src/server)
+  participant Graph as Graph (Neo4j via src/graph)
+  UI->>API: Focus query(entity_id)
+  API->>Graph: fetch subgraph + provenance refs (with redaction rules)
+  Graph-->>API: context bundle + evidence references
+  API-->>UI: contracted payload (narrative + citations + audit flags)
+~~~
 
-### Idempotent ingestion
+## 📦 Data & Metadata
 
-Graph ingestion MUST be:
+### Inputs
 
-- incremental
-- idempotent
-- version-aware
+| Input | Format | Where from | Validation |
+|---|---|---|---|
+| STAC Collections/Items | JSON | `data/stac/**` | `schemas/stac/**` + KFM constraints |
+| DCAT dataset records | JSON / JSON-LD | `data/catalog/dcat/**` | `schemas/dcat/**` (and/or shapes if used) |
+| PROV bundles | JSON / JSON-LD | `data/prov/**` | `schemas/prov/**` |
+| Domain processed outputs | mixed | `data/<domain>/processed/**` | domain-specific schemas + geometry validity |
+| Ontology/migration artifacts | Markdown + Cypher | `docs/graph/**` + `data/graph/cypher/**` | review + graph integrity tests |
 
-### Constraints and indexes
+### Outputs
 
-Graph schemas SHOULD define:
+| Output | Format | Path | Contract / Schema |
+|---|---|---|---|
+| Graph import CSVs | CSV | `data/graph/csv/**` | ontology bindings + loader constraints |
+| Graph migration/constraint scripts | Cypher | `data/graph/cypher/**` | stable labels/edges contract |
+| Graph context bundles | API payloads | `src/server/**` | contract tests required |
 
-- uniqueness constraints for stable ids
-- indexes for common retrieval paths
-- dedupe and merge rules with tests
+### Sensitivity & redaction
 
-### Drift and diffs
+- Restricted locations or culturally sensitive knowledge must be protected via:
+  - geometry generalization where required,
+  - API-level redaction rules,
+  - Story Node review gates before publication.
+- Avoid placing raw sensitive coordinates into graph properties that could be returned by APIs without governance gating.
 
-Operational drift is managed by:
+### Quality signals
 
-- time-window rollups over versions and items
-- property diffs for changed entities
-- provenance comparisons between runs
+- Schema validation passes for STAC/DCAT/PROV artifacts.
+- Deterministic runs and diffable outputs (idempotent pipelines).
+- No orphan references:
+  - graph entity refs resolve,
+  - STAC/DCAT/PROV evidence refs resolve,
+  - Story Node refs resolve.
+- Graph integrity tests validate ontology bindings and constraint expectations.
 
-See the ops patterns here:
+## 🌐 STAC, DCAT & PROV Alignment
 
-- [`cypher/patterns/change-windows.md`](cypher/patterns/change-windows.md)
+### Alignment policy (minimum)
 
----
+For each dataset or evidence product:
+- STAC Collection + Item(s)
+- DCAT mapping record (minimum title/description/license/keywords)
+- PROV activity describing lineage (sources + run/activity identifiers)
+- Version lineage links reflected in catalogs and (where applicable) the graph
 
-## 🛡️ FAIR+CARE and sovereignty
+### Identifier linkage expectation
 
-Graph queries and exports MUST avoid leakage.
+Graph nodes (and the APIs that serve them) should reference:
+- STAC Item IDs
+- DCAT dataset ID
+- PROV activity ID
 
-Default posture:
+This enables Focus Mode to resolve “what is this?” into a traceable lineage bundle.
 
-- avoid returning raw sensitive geometry where policy requires generalization
-- filter or aggregate restricted entities by governance label
-- record policy decisions in provenance for auditability
+### Provenance modeling (graph-side)
 
-If sovereignty labels conflict or are unknown, systems SHOULD fail closed:
+- PROV artifacts can be represented as graph nodes (e.g., `Activity`, `Agent`) and linked to domain entities/artifacts.
+- Keep the authoritative provenance payloads in `data/prov/**`; the graph should store identifiers/links and relationship structure.
 
-- deny or return aggregated counts only
-- require manual review under governance policy
+### Interop note (optional)
 
----
+- The graph may be exported or mapped to RDF where required for interoperability (e.g., PROV-O / GeoSPARQL alignment). Treat this as an extension point unless explicitly mandated by governance (not confirmed in repo).
 
-## 🧪 Validation and CI/CD
+## 🧱 Architecture
 
-Recommended checks for graph docs and query patterns:
+### Components
 
-- `markdown-lint` for KFM-MDP v11.2.6 structure and fence style
-- `diagram-check` for Mermaid blocks when present
-- `query-smoke-test` against a staging graph snapshot for pattern queries
-- governance leakage checks for dashboards and public-facing outputs
+| Component | Responsibility | Interface |
+|---|---|---|
+| Ontology (graph schema) | Defines allowed labels/edges/properties and their meaning | `docs/graph/ontology.md` |
+| Migrations + constraints | Evolves schema safely; enforces uniqueness/shape rules | `data/graph/cypher/**` |
+| Import artifact builder | Produces CSV/Cypher import artifacts from catalogs/prov | `src/graph/**` → `data/graph/**` |
+| Entity resolution | Merges/links entities across datasets; carries confidence + review gates | graph pipelines + review workflow (not confirmed in repo) |
+| Query services | Retrieve subgraphs/context bundles for APIs | `src/server/**` |
+| Redaction enforcement | Prevents sensitive leakage; generalizes restricted geometry | API boundary + governance rules |
 
----
+### Modeling guidelines (minimum safe rules)
+
+- Use **stable identifiers** for entities (example URN style):
+  - `urn:kfm:entity:Place:Fort_Leavenworth` *(example format; confirm canonical ID policy in ontology docs)*
+- Use only ontology-approved labels and relationship types; do not invent new ones ad hoc.
+  - Typical core labels referenced in design docs include: `Place`, `Person`, `Event`, `Document`, `Organization`, `Artifact` (authoritative list lives in `docs/graph/ontology.md`).
+- When applicable, store **references** back to catalog/provenance IDs rather than duplicating large content:
+  - `stac_item_id`, `dcat_dataset_id`, `prov_activity_id` (field names may vary; follow ontology bindings).
+- AI- or heuristic-derived links must carry:
+  - confidence/uncertainty metadata,
+  - evidence pointers,
+  - and must be reviewable (human-in-the-loop) before publication in public contexts.
+
+### API boundary rule (non-negotiable)
+
+- The UI does **not** connect to Neo4j directly.
+- The API boundary mediates access and enforces provenance + redaction/generalization rules.
+
+## 🧠 Story Node & Focus Mode Integration
+
+### Story Nodes as evidence-first narrative
+
+- Story Nodes should cite:
+  - **graph entity IDs**, and
+  - **STAC/DCAT/PROV evidence IDs**.
+- Story Nodes must follow the Story Node template and validation rules (front-matter, citations, entity references, redaction compliance).
+
+### Focus Mode rule
+
+- Focus Mode only consumes **provenance-linked** content.
+- Any predictive or AI-generated content must be:
+  - opt-in,
+  - labeled,
+  - accompanied by uncertainty/confidence metadata,
+  - and never presented as unmarked fact.
+
+## 🧪 Validation & CI/CD
+
+### Minimum CI gates (baseline)
+
+- Markdown protocol validation
+- Schema validation (STAC/DCAT/PROV)
+- Graph integrity tests (no broken links; ontology bindings consistent)
+- API contract tests (if graph-facing endpoints change)
+- UI registry schema checks (if UI layers are affected)
+- Security + sovereignty scanning gates (where applicable)
+
+### Local reproduction (placeholder)
+
+~~~bash
+# NOTE: commands are placeholders; replace with repo-approved tooling.
+# Intent:
+# 1) validate STAC/DCAT/PROV schemas
+# 2) build graph import artifacts
+# 3) run graph integrity tests
+# 4) run API contract tests (if changed)
+~~~
+
+### Telemetry signals (optional)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| Graph build run ID → PROV activity ID | pipeline run | `mcp/runs/**` (pointer) + `data/prov/**` |
+| Orphan reference count | CI | telemetry schema (not confirmed in repo) |
+| Redaction hits / suppressed fields | API logs | API observability (not confirmed in repo) |
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
+
+- Any change to:
+  - ontology definitions (labels/edges),
+  - sensitivity classification,
+  - redaction/generalization behavior,
+  - or public-facing graph-derived API outputs
+  requires governance review per `docs/governance/ROOT_GOVERNANCE.md` *(process not confirmed in repo; treat as mandatory)*.
+
+### CARE / sovereignty considerations
+
+- Treat culturally sensitive knowledge and restricted locations as high-risk by default.
+- Prefer coarse/aggregate public products and document decisions in:
+  - catalog metadata (STAC/DCAT),
+  - provenance bundles (PROV),
+  - and Story Node review notes.
+
+### AI usage constraints
+
+- Allowed transformations: summarization, structure extraction, translation, keyword indexing.
+- Prohibited: generating new policy, inferring sensitive locations.
+- Any AI-suggested graph links must remain reviewable and must not bypass evidence requirements.
 
 ## 🕰️ Version History
 
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v11.2.6 | 2025-12-14 | Initial governed graph documentation index; linked Cypher docs and ops query patterns. |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-27 | Initial Graph subsystem README (ontology + provenance + API boundary conventions) | TBD |
 
 ---
 
-<div align="center">
+## Footer refs (do not remove)
 
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
-
-[🧾 Cypher](cypher/README.md) ·
-[🧩 Cypher Patterns](cypher/patterns/README.md) ·
-[🏛️ Governance Charter](../standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md) ·
-[⬅ Docs Index](../README.md)
-
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
-MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified
-
-</div>
+- Master guide: `docs/MASTER_GUIDE_v12.md`
+- Template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- API Contract Extension template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+- Ethics: `docs/governance/ETHICS.md`
+---
