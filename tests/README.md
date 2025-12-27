@@ -1,8 +1,8 @@
 ---
 title: "KFM Tests — README"
 path: "tests/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-26"
+version: "v1.0.1"
+last_updated: "2025-12-27"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:tests:readme:v1.0.0"
-semantic_document_id: "kfm-tests-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:tests:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:tests:readme:v1.0.1"
+semantic_document_id: "kfm-tests-readme-v1.0.1"
+event_source_id: "ledger:kfm:doc:tests:readme:v1.0.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -43,53 +43,79 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 # KFM Tests — README
 
+> Contract-first tests for an evidence-first pipeline.  
+> Goal: make every stage **deterministic**, **schema-valid**, **provenance-linked**, and **safe to publish**.
+
 ## 📘 Overview
 
 ### Purpose
 
-- Define the **testing and validation conventions** for KFM.
-- Map tests to the **minimum CI gates** required for “v12-ready” contributions.
-- Provide a single place to document how to add new tests and keep them deterministic.
+- Define **testing and validation conventions** across the KFM pipeline.
+- Map test areas to the **minimum CI gates** required for “v12-ready” contributions.
+- Provide patterns for adding new tests that remain **deterministic, hermetic, and CI-safe**.
+- Provide a “gate → debug” map so CI failures are **fast to triage**.
 
 ### Scope
 
-| In Scope | Out of Scope |
+| In scope | Out of scope |
 |---|---|
-| Test taxonomy (unit/integration/contract/e2e), fixtures, and validation gates | Implementing specific pipelines or features |
-| Where new tests belong and how they should behave (determinism, no hidden I/O) | Selecting a specific test framework/tooling (not confirmed in repo) |
-| Schema validation expectations for STAC/DCAT/PROV outputs | Replacing governance/security policies |
+| Test taxonomy (unit/integration/contract/e2e) and what belongs where | Implementing specific pipelines/features |
+| Fixture policy, golden outputs, determinism + hermeticity rules | Selecting a specific test runner/tooling *(use repo-standard runner; not confirmed here)* |
+| CI gate mapping + “skip vs fail” behavior | Replacing governance/security policy documents |
+| Validation expectations for STAC/DCAT/PROV, Story Nodes, and UI registries | Writing new policy (propose via governance review) |
 
 ### Audience
 
-- **Primary:** KFM contributors writing or updating pipelines, schemas, APIs, UI layers, and Story Nodes.
-- **Secondary:** Maintainers reviewing PRs and debugging CI failures.
+- **Primary:** KFM contributors working on pipelines, schemas, graph ingest, APIs, UI, Story Nodes.
+- **Secondary:** maintainers reviewing PRs and debugging CI failures.
 
-### Definitions (link to glossary)
+### Definitions
 
-- Link: `docs/glossary.md` *(not confirmed in repo — add/repair link if glossary lives elsewhere)*
-- Terms used in this doc include: **unit test**, **integration test**, **contract test**, **schema validation**, **idempotence**, **deterministic pipeline**, **redaction**, **provenance**.
+- Glossary: `docs/glossary.md` *(expected canonical home; not confirmed in repo — repair link if glossary lives elsewhere)*
+- Terms used in this doc include: **unit test**, **integration test**, **contract test**, **schema validation**, **idempotence**, **determinism**, **hermetic test**, **golden file**, **redaction/generalization**, **provenance**.
 
-### Key artifacts (what this doc points to)
+### Pipeline invariants tests must protect
 
-| Artifact | Path / Identifier | Owner | Notes |
+- Canonical flow is preserved: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.
+- **UI never queries Neo4j directly**; all access is via **contracted APIs**.
+- Focus Mode only presents **provenance-linked content** (no uncited facts).
+- Determinism: same inputs + config + code ⇒ same outputs.
+
+### Contributor quick checklist
+
+When adding or modifying tests:
+
+- [ ] Choose the correct test type (unit / integration / contract / e2e).
+- [ ] Add/extend a **small, synthetic fixture** (no secrets, no PII, no restricted coordinates).
+- [ ] Make the test deterministic (fixed seed, stable ordering, no wall-clock timestamps).
+- [ ] If you change any interface boundary, add/update **contract tests**:
+  - catalog schemas (STAC/DCAT/PROV),
+  - API schema/contracts (OpenAPI/GraphQL),
+  - UI registry schemas,
+  - Story Node validation.
+- [ ] Ensure CI behavior is deterministic: **skip if root missing; fail if invalid**.
+- [ ] Update this README if you introduce a new test area, fixture type, or gate.
+
+### Key references (canonical)
+
+| Artifact | Path / Identifier | Status | Notes |
 |---|---|---|---|
-| Master pipeline ordering + invariants | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline + invariants |
-| Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | KFM Core | Template used by this README |
-| JSON Schemas (STAC/DCAT/PROV/storynodes/ui/telemetry) | `schemas/` | Data/Platform | Schema validation gates should reference these |
-| ETL + catalog pipelines | `src/pipelines/` | Data Eng | Determinism + idempotence checks |
-| Graph build + ontology bindings | `src/graph/` | Graph Eng | Graph integrity tests |
-| API boundary | `src/server/` *(preferred)* or `src/api/` *(legacy; not confirmed in repo)* | API Eng | Contract tests required |
-| UI layer registry + map client | `web/` | Frontend | Schema checks + a11y gates |
-| Story Nodes + Focus Mode | `docs/reports/story_nodes/` + UI | Narrative | Provenance-linked narrative rule enforcement |
-| CI workflows (if present) | `.github/workflows/` | CI Maintainers | Gate enforcement + artifacts |
+| Master pipeline ordering + minimum CI gates | `docs/MASTER_GUIDE_v12.md` | expected | Canonical ordering + v12 “minimum CI gates” |
+| v13 redesign CI mapping + skip/fail rule | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | expected | Adds explicit “validate if present; fail if invalid; skip if not applicable” |
+| Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | expected | This README follows Universal template |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | expected | Story Node structure + narrative constraints |
+| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | expected | Required for endpoint changes |
+| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | expected | Formatting/linking rules *(not confirmed in repo)* |
+| Schemas | `schemas/` | canonical root | Schema validation gates reference this *(root may be missing in current repo)* |
+| CI workflows | `.github/workflows/` | canonical root | Gate enforcement *(not confirmed in repo)* |
 
 ### Definition of done (for this document)
 
-- [ ] Front-matter complete + valid
+- [ ] Front-matter complete + valid (path matches file location)
 - [ ] Test taxonomy + directory conventions are explicit
-- [ ] Minimum CI gates are mapped to where failures should be debugged
+- [ ] Minimum CI gates are enumerated + mapped to debug starting points
 - [ ] Commands are either repo-accurate or explicitly marked “not confirmed in repo”
-- [ ] Governance + CARE/sovereignty considerations explicitly stated
+- [ ] Governance + CARE/sovereignty constraints explicitly stated for fixtures, logs, and outputs
 
 ## 🗂️ Directory Layout
 
@@ -97,98 +123,115 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 - `path`: `tests/README.md` (must match front-matter)
 
-### Related repository paths
+### Canonical homes by stage (context)
 
-| Area | Path | What lives here |
-|---|---|---|
-| Tests | `tests/` | Unit/integration/contract/e2e tests + fixtures |
-| Data domains | `data/` | Raw/work/processed/stac outputs |
-| Documentation | `docs/` | Canonical governed docs |
-| Graph | `src/graph/` | Graph build + ontology bindings |
-| Pipelines | `src/pipelines/` | ETL + catalogs + transforms |
-| Schemas | `schemas/` | JSON schemas + telemetry schemas |
-| API boundary | `src/server/` | Contracted access layer (REST/GraphQL); redaction + provenance refs |
-| Frontend | `web/` | React + map clients |
-| MCP | `mcp/` | Experiments, model cards, SOPs |
-| Tooling | `tools/` | Validators, scripts, developer utilities |
+| Stage | Canonical home | Evidence outputs | Tests should validate |
+|---|---|---|---|
+| ETL / pipelines | `src/pipelines/` | `data/**` | determinism + idempotence + fixture-driven transforms |
+| Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC/DCAT/PROV | schema validity + link integrity + lineage completeness |
+| Graph | `src/graph/` (+ `data/graph/`) | graph ingest fixtures | ontology constraints + stable IDs + required edges |
+| API boundary | `src/server/` | contracted responses | OpenAPI/GraphQL contract tests + provenance refs |
+| UI | `web/` | registries + rendering | schema checks + a11y + no leakage |
+| Story Nodes | `docs/reports/story_nodes/` | draft/published nodes | schema + provenance linking + redaction compliance |
 
-### Expected file tree for this sub-area
+### Recommended `tests/` structure
 
-> This is the **recommended** structure. Some directories may not exist yet (**not confirmed in repo**).
+> This is the **recommended** layout. Some subfolders may not exist yet (**not confirmed in repo**).
 
 ~~~text
 📁 tests/
-├── 📄 README.md
-├── 📁 unit/                 # fast, deterministic, no external deps (recommended)
-├── 📁 integration/          # multi-module tests (recommended)
-├── 📁 contract/             # schema + API contract tests (recommended)
-├── 📁 e2e/                  # UI/API end-to-end (recommended; may be split under web/)
-├── 📁 fixtures/             # small synthetic fixtures only (recommended)
-└── 📁 helpers/              # shared test utilities (recommended)
+├─ 📄 README.md
+├─ 📁 unit/                         # fast, deterministic, no external deps
+│  ├─ 📁 python/                     # optional (only if Python is used)
+│  └─ 📁 node/                       # optional (only if Node is used)
+├─ 📁 integration/                  # multi-module tests using fixtures
+├─ 📁 contract/                     # schema + contract tests
+│  ├─ 📁 stac/
+│  ├─ 📁 dcat/
+│  ├─ 📁 prov/
+│  ├─ 📁 storynodes/
+│  ├─ 📁 ui/
+│  └─ 📁 api/
+├─ 📁 e2e/                          # end-to-end flows (may live under `web/`)
+├─ 📁 fixtures/                     # small synthetic fixtures only
+│  ├─ 📁 data/
+│  ├─ 📁 stac/
+│  ├─ 📁 dcat/
+│  ├─ 📁 prov/
+│  ├─ 📁 graph/
+│  └─ 📁 api/
+└─ 📁 helpers/                      # shared test utilities (pure + deterministic)
 ~~~
+
+### What belongs where (rules of thumb)
+
+- **Unit:** pure logic and helpers (no network, no DB, no repo writes).
+- **Integration:** multiple modules interacting via fixtures; may write to temp directories only.
+- **Contract:** validates “what we promise” (schemas, API contracts, registry shapes).
+- **E2E:** verifies vertical slice behavior across boundaries (API→UI→Story), using staged fixtures.
 
 ## 🧭 Context
 
-### Background
+### Why tests are first-class in KFM
 
-KFM is an evidence-first, provenance-linked system where each stage of the pipeline must remain reproducible and contract-valid:
+KFM is contract-first and evidence-first. Most failures are boundary failures:
+- a pipeline output stops validating,
+- a catalog link breaks,
+- a graph ingest violates ontology constraints,
+- an API response drifts from contract,
+- a UI registry entry becomes invalid,
+- a Story Node loses provenance, or leaks sensitive info.
 
-- **ETL** produces deterministic outputs.
-- **STAC/DCAT/PROV** catalogs provide machine-valid evidence and lineage.
-- **Graph** integrates semantics in Neo4j (via governed ingest).
-- **APIs** are the access boundary (UI never queries Neo4j directly).
-- **UI** renders map + narrative views.
-- **Story Nodes** + **Focus Mode** are provenance-linked narrative artifacts and experiences.
+Tests exist to keep these failures **detectable, localizable, and fixable**.
 
-Tests exist to keep these boundaries **true, enforced, and debug-able**.
+### Core constraints / invariants
 
-### Assumptions
+All tests must be:
 
-- The pipeline flow is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
-- The UI does not read Neo4j directly; the API boundary mediates access and enforces redaction/generalization.
-- Contract and schema validation are treated as first-class build gates.
+- **Deterministic**
+  - same inputs/config/code ⇒ same outputs
+- **Hermetic by default**
+  - no hidden network I/O
+  - no reliance on developer machine state
+- **CI-safe**
+  - no secrets, no PII
+  - no restricted coordinates in committed fixtures
+  - no culturally sensitive locations unless protected and approved
 
-### Constraints / invariants
+### Determinism checklist (practical)
 
-- Tests must be:
-  - **Deterministic** (same inputs/config/code ⇒ same outputs).
-  - **Hermetic by default** (no hidden network I/O; no hidden filesystem dependencies).
-  - **CI-safe** (no secrets/PII in fixtures; no restricted coordinates in committed test data).
+If a test touches serialization, IDs, or timestamps, ensure:
 
-- “Do not break” rules that tests should enforce:
-  - Pipelines are idempotent and deterministic.
-  - Catalog artifacts validate against schemas under `schemas/`.
-  - UI consumes graph and catalog content through **APIs only** (no direct graph dependency).
-  - Focus Mode only presents **provenance-linked** content (no uncited facts).
-  - Any predictive/AI-generated content (if present) is opt-in and must include uncertainty/confidence metadata.
+- fixed seeds for randomness (no implicit RNG),
+- controlled time (no “now” in golden outputs; inject/freeze time),
+- stable ordering (sort before writing JSON/CSV),
+- explicit version pinning (schema/contract versions recorded where applicable),
+- no dependency on environment quirks (TZ/locale/path separators).
 
-### Open questions
+### CI gate behavior rule (must hold)
 
-| Question | Owner | Target date |
-|---|---|---|
-| What is the repo’s canonical test runner(s) and command set (Python/Node/etc.)? | TBD | TBD |
-| Where is the authoritative Story Node validation schema set located (and how is it invoked in CI)? | TBD | TBD |
-| Where is the authoritative run manifest location for this repo: `data/prov/` vs `releases/<version>/`? | TBD | TBD |
-| Which fixture datasets are safe to include publicly under `tests/fixtures/`? | TBD | TBD |
-
-### Future extensions
-
-- Add “golden” fixtures + output hashes for deterministic regression tests.
-- Add composite actions / scripts to run CI gates locally (kept in sync with workflows).
-- Add property-based tests for stable IDs and schema compatibility (tooling not confirmed in repo).
+- If a gate depends on a root that does **not** exist, CI should **skip** it.
+- If the root exists, validation must be **strict** and must **fail deterministically** when invalid.
 
 ## 🗺️ Diagrams
 
-### System / dataflow diagram (canonical pipeline)
+### Pipeline + validation boundaries
 
 ~~~mermaid
 flowchart LR
-  A["ETL — src/pipelines"] --> B["STAC/DCAT/PROV — data/stac · data/catalog/dcat · data/prov"]
-  B --> C["Graph — src/graph (+ data/graph outputs)"]
+  A["ETL — src/pipelines/"] --> B["STAC/DCAT/PROV — data/stac · data/catalog/dcat · data/prov"]
+  B --> C["Graph — src/graph (+ data/graph)"]
   C --> D["API Boundary — src/server (contracts + redaction)"]
-  D --> E["UI — web/ (React/Map UI; no direct graph reads)"]
+  D --> E["UI — web/ (no direct graph reads)"]
   E --> F["Story Nodes — docs/reports/story_nodes/"]
   F --> G["Focus Mode — provenance-linked rendering"]
+
+  A -. "unit + integration" .- A
+  B -. "contract (schema)" .- B
+  C -. "graph integrity" .- C
+  D -. "API contract" .- D
+  E -. "UI schema + a11y" .- E
+  F -. "Story Node validation" .- F
 ~~~
 
 ## 📦 Data & Metadata
@@ -199,73 +242,91 @@ flowchart LR
 
 ### Fixture policy
 
-- **Allowed:** small, synthetic, non-sensitive fixtures (minimal rows/features; no real raw snapshots).
-- **Disallowed:** production-sized datasets, restricted coordinates, culturally sensitive locations, secrets/credentials, PII.
+- **Allowed:** small, synthetic, non-sensitive fixtures (minimal rows/features; minimal geometry detail).
+- **Disallowed:** production-sized datasets, real raw snapshots, restricted coordinates, culturally sensitive locations (unless generalized + approved), secrets/credentials, PII.
+
+### Golden files (deterministic regression)
+
+Where a test compares outputs across time:
+
+- store “expected” outputs as **small golden files** under `tests/fixtures/**`,
+- ensure deterministic serialization (stable ordering, stable timestamps),
+- update goldens only as part of an explicit “intentional change” PR (documented in PR notes / changelog).
 
 ### Stable IDs and determinism
 
 Where tests touch IDs or keys, they should verify:
 
-- stable ID generation rules (no randomness without fixed seed),
-- deterministic ordering for serialized outputs (JSON stable sort, stable timestamps where applicable),
-- explicit version pinning for schemas and contracts.
+- stable ID generation (no randomness without fixed seed),
+- deterministic ordering for serialized outputs,
+- explicit schema/contract version references where applicable.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Contract tests should validate (when the relevant roots exist):
+Contract tests should validate (when relevant roots exist):
 
 - **STAC**
   - collection ↔ item integrity
-  - required fields + extension profiles (if used)
+  - required fields + profile/extension expectations (if used)
   - asset links are valid (no broken references)
 
 - **DCAT**
   - dataset/distribution metadata completeness (title/description/license/keywords at minimum)
-  - stable identifiers match catalog conventions
+  - stable identifiers follow catalog conventions
 
 - **PROV**
-  - every transform emits an activity record and links inputs → outputs
-  - run identifiers are recorded and resolvable where used downstream
+  - each transform emits an activity record linking inputs → outputs
+  - run identifiers are recorded and referenced where used downstream
 
 ## 🧱 Architecture
 
-### Subsystem contracts (what must exist for each subsystem)
+### Subsystem contracts and what tests must cover
 
-| Subsystem | Contract artifacts | “Do not break” rule |
-|---|---|---|
-| ETL | configs + run logs + validation | deterministic, replayable |
-| Catalogs | STAC/DCAT/PROV schemas + validators | machine-validated |
-| Graph | ontology + migrations + constraints | stable labels/edges |
-| APIs | OpenAPI/GraphQL schema + tests | backward compat or version bump |
-| UI | layer registry + a11y + audit affordances | no hidden data leakage |
-| Focus Mode | provenance-linked context bundle | no hallucinated sources |
+| Subsystem | Contract artifacts | “Do not break” rule | Tests expected |
+|---|---|---|---|
+| ETL | configs + run logs + validation | deterministic, replayable | unit/integration + golden outputs |
+| Catalogs | STAC/DCAT/PROV schemas + validators | machine-validated | schema/contract tests |
+| Graph | ontology + migrations + constraints | stable labels/edges | graph integrity tests |
+| APIs | OpenAPI/GraphQL schema + tests | backward compat or version bump | contract + compatibility tests |
+| UI | layer registry + a11y + audit affordances | no hidden data leakage | schema + a11y/smoke |
+| Focus Mode | provenance-linked context bundle | no hallucinated sources | provenance + linkage validation |
 
 ### Test-to-subsystem mapping (recommended)
 
 | Test area | What it validates | Suggested location |
 |---|---|---|
 | Unit | pure functions, ID helpers, schema helpers | `tests/unit/` |
-| Integration | multi-module behavior; pipeline stage outputs using fixtures | `tests/integration/` |
-| Contract | schema validation (STAC/DCAT/PROV/story nodes), API contract snapshots | `tests/contract/` |
-| E2E | UI/API flows using staged fixtures | `tests/e2e/` *(or `web/` if UI runner lives there — not confirmed in repo)* |
+| Integration | multi-module behavior; stage outputs using fixtures | `tests/integration/` |
+| Contract | schema validation (STAC/DCAT/PROV/story nodes/UI), API contract snapshots | `tests/contract/` |
+| E2E | vertical slice flows across boundaries (API→UI→Story) | `tests/e2e/` *(or under `web/` if UI runner lives there — not confirmed in repo)* |
+
+### Vertical slice (recommended E2E focus)
+
+To prevent “everything passes except the actual user flow,” prefer at least one vertical slice test per domain:
+
+- minimal ETL producing a processed fixture,
+- STAC collection + items,
+- DCAT dataset record,
+- PROV bundle,
+- graph ingest fixture,
+- one API endpoint and one map layer,
+- one published Story Node.
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How this work surfaces in Focus Mode
+### Story Nodes as machine-ingestible storytelling
 
-Tests should enforce the invariant that **Focus Mode consumes provenance-linked content only**.
+Story Node validation (for published nodes) should include:
 
-Story Node validation checks (for published nodes) should include:
+- structure validation (template + required fields),
+- citations/provenance-linking rules,
+- entity reference resolution (IDs/links resolve),
+- redaction/generalization compliance for restricted material.
 
-- citations/provenance-linking rules
-- entity reference resolution (IDs/links resolve)
-- redaction/generalization compliance for restricted material
+### Focus Mode rule
 
-This supports the KFM invariant that **published narratives must not be unsourced**.
-
-### Provenance-linked narrative rule
-
-- Every claim must trace to a dataset / record / asset ID.
+- Focus Mode only consumes **provenance-linked** content.
+- Predictive/AI-generated content (if present) must be opt-in and include uncertainty/confidence metadata.
 
 ### Optional structured controls (if used)
 
@@ -278,34 +339,44 @@ focus_center: [ -98.0000, 38.0000 ]
 
 ## 🧪 Validation & CI/CD
 
-### Minimum CI gates
+### Minimum CI gates (baseline)
 
-The baseline gates workflows should enforce (via local actions and/or workflow steps):
+The baseline gates expected for “v12-ready” contributions include:
 
-- [ ] Markdown protocol validation (template + front matter + links)
-- [ ] Schema validation (STAC/DCAT/PROV + story node schemas)
+- [ ] Markdown protocol validation
+- [ ] Schema validation (STAC/DCAT/PROV + telemetry, where applicable)
 - [ ] Graph integrity tests
 - [ ] API contract tests (OpenAPI/GraphQL)
 - [ ] UI layer registry schema checks
-- [ ] Security + sovereignty scanning where applicable
+- [ ] Security + sovereignty scanning gates (where applicable)
 
-### CI behavior principle
+Additional v13-readiness expectations include:
 
-CI workflows must be deterministic in “skip vs fail” behavior:
+- [ ] Story Node validation gates
 
-- If a gate depends on a root that does not exist in the current repo snapshot, the workflow should **skip** that gate.
+### Repo lint rules (recommended)
+
+Enforce:
+- no YAML front-matter in code files,
+- no `README.me`,
+- no duplicate canonical homes without explicit deprecation markers.
+
+### CI behavior principle (must be deterministic)
+
+- If a gate depends on a root that does not exist, CI should **skip** that gate.
 - If the root exists, validation must be **strict** and must **fail deterministically** when invalid.
 
 ### Gate → debug map (quick orientation)
 
 | CI gate | Primary roots | If it fails, start here |
 |---|---|---|
-| Markdown protocol validation | `docs/`, governed READMEs | the doc’s front matter / headings / links |
-| Schema validation | `schemas/`, `data/stac/`, `data/catalog/dcat/`, `data/prov/`, story node schemas | schema definition or emitted artifacts |
-| Graph integrity tests | `src/graph/` (+ `data/graph/` if present) | ontology bindings / ingest transforms |
-| API contract tests | `src/server/contracts/` *(preferred)* | OpenAPI/GraphQL contract + compatibility notes |
-| UI registry checks | `web/` (+ any UI registry schemas) | layer registry JSON + schema |
-| Security/sovereignty scanning | repo-wide | remove secrets/PII; enforce redaction/generalization |
+| Markdown protocol validation | `docs/`, governed READMEs | front-matter, headings, links, “not confirmed in repo” markings |
+| Schema validation | `schemas/`, `data/stac/`, `data/catalog/dcat/`, `data/prov/` | schema definitions or emitted artifacts (missing required fields/links) |
+| Graph integrity tests | `src/graph/` (+ `data/graph/` if present) | ontology constraints, ingest transforms, stable IDs |
+| API contract tests | `src/server/` (contracts) | contract schema + response shape + provenance refs |
+| UI registry checks | `web/` (+ registry schemas) | registry JSON + schema + build-time validation |
+| Story Node validation | `docs/reports/story_nodes/` | missing citations, broken evidence refs, invalid structure |
+| Security/sovereignty scanning | repo-wide | remove secrets/PII; generalize/redact restricted material |
 
 ### Reproduction
 
@@ -314,19 +385,19 @@ CI workflows must be deterministic in “skip vs fail” behavior:
 ~~~bash
 # Example placeholders — replace with repo-specific commands/scripts.
 
-# 1) Markdown protocol checks
+# 1) Run unit + integration tests
 # <TBD>
 
-# 2) Schema validation (STAC/DCAT/PROV/storynodes/ui/telemetry)
+# 2) Run contract/schema validation (STAC/DCAT/PROV/storynodes/ui/telemetry)
 # <TBD>
 
-# 3) Graph integrity tests
+# 3) Run graph integrity checks
 # <TBD>
 
-# 4) API contract tests
+# 4) Run API contract tests
 # <TBD>
 
-# 5) Security + sovereignty scanning
+# 5) Run security + sovereignty scans
 # <TBD>
 ~~~
 
@@ -340,16 +411,18 @@ CI workflows must be deterministic in “skip vs fail” behavior:
 
 ### Review gates
 
-- CI maintainers approve changes to `.github/workflows/` and local actions (if used).
-- Governance owners review anything that:
-  - changes sovereignty handling or redaction behavior
-  - affects handling of culturally sensitive or restricted locations
-  - introduces new automated inference over sensitive content
+Governance owners should review any change that:
+
+- introduces new sensitive layers or restricted geographies,
+- changes redaction/generalization logic,
+- adds new AI narrative behaviors,
+- adds a new external data source,
+- adds/changes a public-facing API endpoint.
 
 ### CARE / sovereignty considerations
 
-- Tests and fixtures must not introduce leakage of restricted coordinates or culturally sensitive material.
-- Any scans must treat restricted outputs as sensitive and avoid publishing them in public logs/artifacts.
+- Tests and fixtures must not leak restricted coordinates or culturally sensitive material.
+- CI logs/artifacts must avoid publishing restricted content (prefer summary errors over raw dumps).
 
 ### AI usage constraints
 
@@ -360,12 +433,14 @@ This README’s AI transform permissions/prohibitions are defined in front-matte
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-26 | Initial `tests/` README aligned to KFM pipeline + minimum CI gates | TBD |
+| v1.0.1 | 2025-12-27 | Strengthened determinism + fixture rules, clarified CI skip/fail principle, expanded gate→debug map | TBD |
 
 ---
 
 Footer refs:
 
 - Master Guide: `docs/MASTER_GUIDE_v12.md`
+- v13 Redesign Blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
 - Templates: `docs/templates/`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
