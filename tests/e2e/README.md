@@ -1,379 +1,385 @@
 ---
-title: "🧭 Kansas Frontier Matrix — End-to-End (E2E) Tests (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "KFM Tests — E2E (End-to-End) README"
 path: "tests/e2e/README.md"
+version: "v1.0.0"
+last_updated: "2025-12-27"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
 
-version: "v11.2.6"
-last_updated: "2025-12-13"
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Continuous · Autonomous Systems Oversight · FAIR+CARE Council"
-content_stability: "stable"
-
-status: "Active / Enforced"
-doc_kind: "Testing Guide"
-header_profile: "standard"
-footer_profile: "standard"
-intent: "tests-e2e-guide"
-
-semantic_document_id: "kfm-tests-e2e-readme"
-doc_uuid: "urn:kfm:tests:e2e:readme:v11.2.6"
-event_source_id: "ledger:tests/e2e/README.md"
-immutability_status: "version-pinned"
-machine_extractable: true
-
-classification: "Public Document"
-sensitivity: "Low"
-public_exposure_risk: "Low"
-fair_category: "F1-A1-I2-R3"
-care_label: "Public · Low-Risk"
-accessibility_compliance: "WCAG 2.1 AA+"
-
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
 markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
 
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:tests:e2e:readme:v1.0.0"
+semantic_document_id: "kfm-tests-e2e-readme-v1.0.0"
+event_source_id: "ledger:kfm:doc:tests:e2e:readme:v1.0.0"
 commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
-
-signature_ref: "../../releases/v11.2.6/signature.sig"
-attestation_ref: "../../releases/v11.2.6/slsa-attestation.json"
-sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.6/manifest.zip"
-
-telemetry_ref: "../../releases/v11.2.6/tests-e2e-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/tests-e2e-v11.json"
-energy_schema: "../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-ttl_policy: "6-month review"
-sunset_policy: "Superseded upon next v12 E2E framework update"
 
 ai_transform_permissions:
   - "summarize"
-  - "semantic-highlighting"
-  - "metadata-extraction"
-  - "layout-normalization"
-  - "a11y-adaptations"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
 ai_transform_prohibited:
-  - "speculative-additions"
-  - "citation-fabrication"
-  - "narrative-fabrication"
-  - "governance-override"
-  - "sensitive-coordinate-disclosure"
-  - "pii-insertion"
-  - "secret-insertion"
+  - "generate_policy"
+  - "infer_sensitive_locations"
 
-provenance_chain:
-  - "tests/e2e/README.md@v11.2.6"
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧭 **Kansas Frontier Matrix — End-to-End (E2E) Tests (v11 LTS)**
-`tests/e2e/README.md`
-
-**Purpose**  
-Define the canonical E2E test suite for Kansas Frontier Matrix (KFM) v11:  
-UI + API + governance + narrative flows validated end-to-end using deterministic, sovereignty-safe, synthetic data and CI-enforced gates.
-
-<img src="https://img.shields.io/badge/KFM--MDP-v11.2.6-purple" />
-<img src="https://img.shields.io/badge/WCAG-2.1_AA%2B-blueviolet" />
-<img src="https://img.shields.io/badge/Status-Active%20%2F%20Enforced-brightgreen" />
-
-[🧪 Tests Index](../README.md) ·
-[🧱 Test Architecture](../ARCHITECTURE.md) ·
-[🧱 Fixtures](../fixtures/README.md) ·
-[🏛️ Governance](../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE](../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Sovereignty](../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
-
-</div>
-
----
+# KFM Tests — E2E (End-to-End) README
 
 ## 📘 Overview
 
-E2E tests are the system-level trust harness for KFM. They validate that:
+### Purpose
 
-- 🧩 user-facing workflows behave correctly (navigation, rendering, interactions)
-- 🔒 governance controls are enforced (FAIR+CARE, sovereignty masking, prohibited outputs)
-- 🧠 narrative surfaces remain grounded and safe (Story Nodes, Focus Mode panels)
-- 🗺️ spatial and temporal UX is coherent (map layers, timeline interactions, query filters)
-- 📊 telemetry and provenance are emitted in expected shapes (test run artifacts, energy/carbon summaries)
+- Define **end-to-end (E2E)** testing conventions for Kansas Frontier Matrix (KFM).
+- Make E2E tests **deterministic, reviewable, and CI-friendly**.
+- Align E2E tests to the canonical system flow:
+  - **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**
 
-### Definition
-An E2E test is any test that crosses at least two boundaries in one run:
+### Scope
 
-- UI ↔ API
-- UI ↔ graph-backed behavior (via API)
-- UI ↔ governance overlays / provenance views
-- dataset workflow ↔ validation ↔ publish gating
-- narrative surface ↔ masking / ethics / citation rules
+| In Scope | Out of Scope |
+|---|---|
+| Cross-subsystem flows (“vertical slices”) across API + UI + narrative rendering | Choosing a specific E2E framework/tooling *(not confirmed in repo)* |
+| E2E fixtures (synthetic), environment contracts, and artifact handling | Load/performance testing (use a dedicated perf harness) |
+| Validation of provenance-linked narrative + Focus Mode behaviors | Replacing governance/security policy text |
 
-### Non-goals
-E2E tests must not rely on:
-- real individuals, real sensitive locations, production tokens, or restricted datasets
-- external networks as a required dependency (unless explicitly whitelisted and mocked)
-- non-deterministic clocks, random seeds, or arbitrary sleep-based timing
+### Audience
 
----
+- **Primary:** KFM contributors implementing pipelines, graph ingest, API endpoints, or UI features.
+- **Secondary:** CI maintainers and governance reviewers validating release readiness.
+
+### Definitions (link to glossary)
+
+- Link: `docs/glossary.md` *(not confirmed in repo)*
+- Terms used in this doc include: **E2E test**, **fixture**, **deterministic run**, **idempotence**, **contract test**, **redaction/generalization**, **provenance**, **Story Node**, **Focus Mode**.
+
+### Key artifacts (what this doc points to)
+
+> Paths reflect canonical placement. Some may not exist yet in the current repo snapshot (**not confirmed in repo**).
+
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Test taxonomy + shared conventions | `tests/README.md` | KFM Core | Defines unit/integration/contract/e2e split |
+| Canonical pipeline ordering + invariants | `docs/MASTER_GUIDE_v12.md` | KFM Core | Architecture contract + sequencing |
+| v13 target architecture (if adopted) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | KFM Core | Canonical paths, subsystem boundaries |
+| API contracts | `src/server/contracts/` | API Eng | E2E should align to versioned contracts |
+| Schemas (STAC/DCAT/PROV/story nodes/telemetry) | `schemas/` | Data/Platform | E2E fixtures should validate where applicable |
+| Provenance bundles | `data/prov/` | Data Eng | E2E may assert presence/shape of provenance pointers |
+
+### Definition of done (for this document)
+
+- [ ] Front-matter complete + valid
+- [ ] `path` matches file location
+- [ ] Directory layout + “where things go” is explicit
+- [ ] Run steps are repeatable (or explicitly marked “not confirmed in repo”)
+- [ ] Determinism + flakiness controls documented
+- [ ] Governance + CARE/sovereignty considerations explicitly stated
 
 ## 🗂️ Directory Layout
 
+### This document
+
+- `path`: `tests/e2e/README.md` (must match front-matter)
+
+### Related repository paths
+
+| Area | Path | What lives here |
+|---|---|---|
+| E2E tests | `tests/e2e/` | Browser/API flows spanning multiple subsystems |
+| Shared test utilities | `tests/helpers/` | Common assertions, stubs, deterministic helpers *(recommended)* |
+| Synthetic fixtures | `tests/fixtures/` | Small, synthetic fixture datasets only *(recommended)* |
+| Schemas | `schemas/` | Validation profiles for catalogs, story nodes, telemetry |
+| API boundary | `src/server/` *(v13 target)* | Redaction, access controls, query services |
+| UI | `web/` | React/Map UI and story rendering |
+| Provenance | `data/prov/` | Run provenance bundles / pointers |
+| CI workflows | `.github/workflows/` | CI gates; may run E2E optionally |
+
+### Expected file tree for this sub-area
+
+> This is the **recommended** structure. Some directories may not exist yet (**not confirmed in repo**).
+
 ~~~text
 📁 tests/
-└── 📁 e2e/
-    ├── 📄 README.md                       — This guide (rules + runbook)
-    │
-    ├── 📁 web-app/                        — Browser-driven UI flows
-    │   ├── 📁 smoke/                      — Fast PR gate scenarios (minimal, high-signal)
-    │   ├── 📁 regression/                 — Broader UI behavior coverage
-    │   └── 📁 accessibility/              — WCAG flows (keyboard, landmarks, reduced motion)
-    │
-    ├── 📁 dataset-workflows/              — Intake → validate → publish flows (synthetic)
-    │   ├── 📁 ingest-validate/            — Contract + schema gates
-    │   └── 📁 publish-preview/            — Preview modes + publish gating
-    │
-    ├── 📁 governance/                     — Ledger/provenance surfaces + masking enforcement
-    │   ├── 📁 care/                       — CARE classification and routing
-    │   └── 📁 sovereignty/                — Masking + restricted-output assertions
-    │
-    ├── 📁 storynodes/                     — Story Node v3 UI flows (rendering + provenance chips)
-    ├── 📁 focus-mode/                     — Focus Mode v3 flows (Context/Timeline/Map panels)
-    │
-    ├── 📁 resources/                      — E2E-only deterministic fixtures (synthetic, non-sensitive)
-    └── 📁 utils/                          — Page objects, selectors, stable helpers, wait strategies
+├── 📄 README.md
+├── 📁 e2e/
+│   ├── 📄 README.md
+│   ├── 📁 specs/                 # E2E specs/scenarios (recommended)
+│   ├── 📁 fixtures/              # E2E-specific fixtures (recommended)
+│   ├── 📁 helpers/               # E2E helpers: selectors, waits, API clients (recommended)
+│   ├── 📁 snapshots/             # visual snapshots (if used; recommended)
+│   └── 📁 artifacts/             # local outputs (screenshots/traces/videos); should be gitignored
+└── 📁 fixtures/                  # shared synthetic fixtures (recommended)
 ~~~
-
----
 
 ## 🧭 Context
 
-### Determinism rules
-E2E tests MUST:
-- use stable deterministic fixtures (no live random generation unless seeded and recorded)
-- use deterministic time where possible (fixed clock / injectable time provider)
-- prefer event-based waits over sleeps (state change, selector visible, network idle)
-- avoid cross-test coupling (each test is isolated and idempotent)
+### Background
 
-### Sovereignty and ethics rules
-E2E tests MUST:
-- never embed or assert raw sensitive coordinates (or plausible real-site geometry)
-- validate that restricted outputs remain masked/generalized at required H3 resolutions
-- avoid narratives implying genealogy, sacred-site inference, or culturally harmful framing
-- use synthetic examples that simulate governance states without enabling real-world harm
+KFM is intentionally **pipeline-ordered** and **contract-driven**:
 
-### Tagging policy
-Use tags to control CI behavior:
-- `@smoke` — PR gate, fastest, deterministic
-- `@regression` — broader coverage, allowed to take longer
-- `@governance` — CARE + sovereignty gating
-- `@a11y` — accessibility flows
-- `@nightly` — slow or high-volume suites
+- Catalog artifacts (STAC/DCAT/PROV) serve as durable, auditable evidence.
+- The graph (Neo4j) is accessed via an **API boundary** that enforces redaction/generalization.
+- The UI (map + narrative) consumes data **through APIs/contracts**, and published narrative must be **provenance-linked**.
 
----
+E2E tests are the place we validate that a “vertical slice” still works when all parts are wired together.
+
+### Assumptions
+
+- The system flow is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
+- The **UI does not connect to Neo4j directly**; API mediates access and enforces governance rules.
+- E2E tests are designed to be **deterministic** and **repeatable**.
+
+### Constraints / invariants
+
+- **No production data** in E2E fixtures.
+- **No hidden network I/O:** external calls should be stubbed, recorded, or blocked.
+- **Deterministic inputs/outputs:** fixed seeds, pinned time, stable fixtures, stable selectors.
+- **Governance-safe artifacts:** screenshots/logs must not leak restricted coordinates, sensitive locations, or secrets.
+
+### When to add an E2E test (vs. other test types)
+
+Use E2E tests when you need to prove a **cross-subsystem contract** holds, such as:
+
+- A new API endpoint + UI feature + story rendering all agree on identifiers and fields.
+- Redaction/generalization rules are enforced end-to-end.
+- Story Nodes / Focus Mode surfaces **only evidence-linked claims**.
+
+Prefer **unit/integration/contract** tests for:
+- Field-level validation, schema edge cases, or endpoint correctness in isolation.
+- High-cardinality permutations (E2E should remain small and strategic).
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram (E2E perspective)
+
+~~~mermaid
+flowchart LR
+  A[Small Synthetic Fixtures] --> B[Catalog + Provenance Fixtures]
+  B --> C[Graph Fixture Import]
+  C --> D[API Boundary]
+  D --> E[UI (Map + Narrative)]
+  E --> F[Story Nodes]
+  E --> G[Focus Mode]
+
+  H[E2E Runner] --> D
+  H --> E
+~~~
+
+### Sequence diagram (UI path)
+
+~~~mermaid
+sequenceDiagram
+  participant T as E2E Runner
+  participant U as Web UI
+  participant A as API Boundary
+  participant G as Graph Store
+  participant P as Provenance/Catalog Artifacts
+
+  T->>U: open page / story node / focus mode
+  U->>A: request data (contracted endpoint)
+  A->>G: query graph (server-side only)
+  A->>P: (optional) resolve provenance pointers / catalog refs
+  A-->>U: redacted + contract-shaped response
+  U-->>T: rendered map/narrative with citations
+~~~
 
 ## 📦 Data & Metadata
 
-### Fixture source of truth
-E2E tests MUST use synthetic fixtures from:
-- `tests/fixtures/` (global synthetic assets)
-- `tests/e2e/resources/` (E2E-specific synthetic assets)
+### Fixture rules (E2E)
 
-No production data. No sensitive coordinates. No identifying text.
+E2E fixtures should be:
 
-### Required E2E artifacts
-Every E2E run MUST produce:
-- machine-readable report (JUnit and/or JSON)
-- screenshots for failures
-- trace or video artifact (where supported)
-- deterministic run manifest (seed, environment hash, suite tags)
+- **Small** (fast to load in CI)
+- **Synthetic** (no real personal data; no restricted coordinates)
+- **Stable** (identifiers do not change; deterministic ordering)
+- **Documented** (each fixture folder includes a brief README)
 
-Recommended artifact locations:
-~~~text
-reports/
-└── e2e/
-    ├── junit.xml
-    ├── report.json
-    ├── traces/
-    ├── screenshots/
-    └── run-manifest.json
-~~~
+Recommended fixture contents (adapt to repo reality):
 
-### Run manifest (recommended minimum)
-~~~json
-{
-  "run_id": "e2e_2025-12-13_001",
-  "suite_tags": ["@smoke", "@governance"],
-  "browser_matrix": ["chromium"],
-  "seed": 112233,
-  "env_hash": "<sha256>",
-  "artifacts": {
-    "report": "reports/e2e/report.json",
-    "junit": "reports/e2e/junit.xml",
-    "traces_dir": "reports/e2e/traces/"
-  }
-}
-~~~
+- Minimal dataset records with stable IDs (e.g., `Place`, `Event`, `Document`, `Organization`).
+- Optional STAC/DCAT/PROV artifacts that validate against `schemas/` (if the repo runs catalog validation in CI).
+- A minimal “story node” example that references evidence IDs rather than free-form claims.
 
-### Telemetry requirements
-E2E should contribute to repo-level telemetry:
-- runtime duration
-- failures by category
-- a11y counts (violations, regressions)
-- energy/carbon where available
+### Environment variables & secrets
 
-Aggregation target:
-~~~text
-releases/<version>/tests-e2e-telemetry.json
-~~~
-
----
-
-## 🧱 Architecture
-
-### E2E platform components
-E2E testing is composed of:
-- runner (suite execution, quarantine rules, artifact capture)
-- stack bootstrap (UI/API in deterministic test mode)
-- synthetic fixture loader (known states, non-sensitive inputs)
-- governance gate (masking and policy enforcement is testable and visible)
-- telemetry sink (validates and aggregates run summaries)
-
-### Flake policy
-- flaky tests are quarantined behind `@nightly` until fixed
-- retries are allowed only with a recorded reason and an issue reference
-- governance-related failures are not retryable by default
-
-### Diagrams
-~~~mermaid
-flowchart TD
-  A["Trigger"] --> B["Boot deterministic test stack"]
-  B --> C["Load synthetic fixtures"]
-  C --> D["Run suites"]
-  D --> E["Collect artifacts"]
-  E --> F["Validate governance and telemetry"]
-  F --> G["CI gate decision"]
-~~~
-
----
-
-## 🧠 Story Node & Focus Mode Integration
-
-### Story Node v3 E2E expectations
-E2E tests SHOULD validate:
-- rendering of Story Node v3 fields (title, narrative body, spacetime, relations)
-- provenance chips/evidence links present and non-empty
-- spatial geometry is rendered only at permitted precision (masked/generalized if required)
-- timeline respects OWL-Time intervals (start/end, ordering, granularity)
-
-### Focus Mode v3 E2E expectations
-E2E tests SHOULD validate:
-- three-panel behavior (Context/Timeline/Map) with consistent entity grounding
-- claims surfaced are attributable to an entity/dataset/experiment/model-card reference
-- governance overlays trigger correctly (CARE tier visible; sovereignty flags visible)
-- restricted material is withheld, redacted, or generalized
-
----
-
-## 🧪 Validation & CI/CD
-
-### Where E2E runs in CI
-E2E is merge-blocking for `@smoke` (and optionally `@governance`).
-
-Common CI stages:
-1. unit tests
-2. schema tests
-3. integration tests
-4. E2E smoke
-5. accessibility
-6. governance validation
-7. telemetry validation
-
-### Local runbook
-Use repo scripts (preferred) and keep them stable.
-
-~~~bash
-make test-stack-up
-make e2e-smoke
-make test-stack-down
-~~~
-
-If using Playwright/Cypress scripts, ensure the intent exists:
-- `e2e:smoke`
-- `e2e:regression`
-- `e2e:a11y`
-- `e2e:governance`
-
----
+- E2E tests must not require real credentials.
+- If environment variables are needed (ports, base URLs), provide:
+  - `.env.example`-style documentation *(not confirmed in repo)*
+  - CI-safe defaults (e.g., loopback only)
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### STAC / DCAT (optional representations)
-- This document may be treated as documentation metadata (DCAT-style dataset record).
-- E2E reports may be treated as distributions (JSON, JUnit XML).
-- E2E outputs may be represented as non-spatial STAC Items:
-  - `geometry: null`
-  - `properties.datetime` set to run timestamp
-  - assets include report, junit, traces, screenshots
+If E2E uses catalog/provenance fixtures, tests should validate:
 
-### PROV-O alignment (what E2E produces)
-- an E2E run is a `prov:Activity`
-- fixtures/configs/built artifacts are `prov:Entity`
-- CI and maintainers are `prov:Agent`
+- Fixtures align with current schema expectations under `schemas/`.
+- Any “evidence” referenced by Story Nodes or Focus Mode corresponds to:
+  - a stable dataset/document ID, and
+  - a provenance pointer (or catalog identifier) when applicable.
 
-Minimal fragment example:
-~~~json
-{
-  "prov:entity": {
-    "e2e_report": { "prov:label": "E2E report JSON", "prov:type": "kfm:TestArtifact" }
-  },
-  "prov:activity": {
-    "e2e_run": { "prov:label": "E2E run", "prov:type": "kfm:TestRun" }
-  }
-}
+Recommended “E2E assertions” (high-level):
+
+- [ ] The API returns stable IDs and contract-shaped fields.
+- [ ] Provenance pointers (if included) resolve to artifacts under `data/prov/` and/or catalog roots.
+- [ ] The UI displays citations/provenance affordances where required (Story Nodes / Focus Mode).
+
+## 🧱 Architecture
+
+### Components under test (typical E2E slice)
+
+| Component | Responsibility | Typical E2E assertion |
+|---|---|---|
+| Graph | Stores entities + relations | Seed/import succeeded; queries return expected stable IDs |
+| API boundary | Serves contract-shaped data; enforces redaction | Responses match contracts; restricted fields are removed/generalized |
+| UI | Renders map layers + narrative | UI renders deterministically with stable selectors |
+| Story Nodes | Curated narrative artifacts | Facts displayed map to cited evidence IDs |
+| Focus Mode | Contextual synthesis | Output is provenance-linked; no “unsourced narrative” |
+
+### Test topology patterns
+
+> Choose the pattern that matches how the repo is actually wired. Tooling below is illustrative (**not confirmed in repo**).
+
+1) **API-only E2E (service-level smoke)**
+- Start graph + API server with fixture seed.
+- Run HTTP scenarios against API endpoints.
+- Pros: faster, less flaky.
+- Cons: doesn’t validate UI rendering.
+
+2) **Full UI E2E (browser + API)**
+- Start graph + API + UI.
+- Drive browser to validate UX flows + provenance visibility.
+- Pros: validates “real” user path.
+- Cons: slower; requires stable selectors and careful timing.
+
+### Interfaces / contracts
+
+- E2E should treat **contracts as authoritative**.
+- If contracts are versioned (OpenAPI/GraphQL), E2E should fail when:
+  - UI depends on an undocumented field, or
+  - API breaks a documented response shape.
+
+## 🧠 Story Node & Focus Mode Integration
+
+### Provenance-linked narrative rule (E2E)
+
+E2E tests must protect the KFM invariant:
+
+- **Published narratives must not be unsourced.**
+- **Focus Mode surfaces provenance-linked content only.**
+
+Recommended E2E scenarios:
+
+- **Story Node rendering**
+  - Load a known Story Node fixture.
+  - Assert that each displayed factual claim is associated with an evidence/citation affordance (ID/link).
+  - Assert that broken/unknown evidence IDs are surfaced as errors (not silently ignored).
+
+- **Focus Mode behavior**
+  - Open Focus Mode on a bounded context (layer/time/area).
+  - Assert the UI displays provenance links/pointers for surfaced claims/cards.
+  - Assert the UI shows a redaction/generalization notice when applicable.
+
+- **Redaction/generalization enforcement**
+  - Use a fixture that includes at least one “restricted” field/geometry.
+  - Assert restricted details are not present in API response payloads.
+  - Assert UI does not render restricted details (including in screenshots/artifacts).
+
+## 🧪 Validation & CI/CD
+
+### Minimum CI gates (E2E-specific)
+
+E2E tests are typically **optional** gates unless the repo explicitly requires them. The general principle:
+
+- If the E2E root exists and CI is configured to run it: **strict** validation.
+- If required dependencies/configs are absent in a given environment: **skip deterministically** (no flaky partial runs).
+
+Recommended E2E-related CI gates:
+
+- [ ] E2E specs compile/parse (syntax + lint where applicable)
+- [ ] E2E run completes on fixtures (no external network)
+- [ ] Artifacts generated (screenshots/logs) are sanitized and do not leak secrets/sensitive locations
+- [ ] Contract checks pass (if contracts are present and wired to E2E)
+
+### Reproduction (local)
+
+~~~bash
+# Example placeholders — replace with repo-specific commands/scripts (not confirmed in repo)
+
+# 1) Start dependencies (graph + api + ui)
+# <TBD: docker compose up / dev scripts / make targets>
+
+# 2) Seed fixtures
+# <TBD: load tests/e2e/fixtures into graph + catalogs>
+
+# 3) Run E2E
+# <TBD: e2e runner invocation>
+
+# 4) Collect artifacts (screenshots/traces/logs)
+# <TBD: output path conventions + sanitation rules>
 ~~~
 
----
+### Telemetry signals (recommended)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| E2E run ID | CI / local runner | CI logs + artifacts |
+| Fixture version/hash | E2E harness | test report metadata |
+| Flake retries | E2E runner | test report |
+| Artifact refs (sanitized) | E2E runner | CI artifacts (private) |
 
 ## ⚖ FAIR+CARE & Governance
 
-E2E suites MUST block merges if they detect:
-- sensitive precision leakage (coordinates, geometry dumps, tooltips, downloads)
-- CARE routing failures (Tier A/B/C logic mismatched)
-- narrative safety failures in governed surfaces
-- provenance UI missing required references (IDs/hashes/links)
-- accessibility regressions (WCAG-critical failures)
+### Review gates
 
-Escalation rule:
-- governance-related failures are stop-ship for merges that affect governed outputs
-- route to FAIR+CARE Council and the relevant working group for review
-- record the failure in the audit ledger where applicable
+Governance review is required when E2E changes introduce:
 
----
+- New fixtures containing sensitive/restricted information.
+- New test flows that could expose restricted coordinates via screenshots, logs, traces, or videos.
+- Any automation that attempts to infer sensitive locations or produce policy text.
+
+### CARE / sovereignty considerations
+
+- Treat E2E artifacts (screenshots, traces, logs) as potential leakage vectors.
+- If fixtures include locations, prefer:
+  - synthetic coordinates, or
+  - coarse generalized geometry consistent with sovereignty policy.
+- Do not publish raw E2E artifacts publicly when they could expose restricted content.
+
+### AI usage constraints
+
+- This document permits structural extraction, summarization, translation, and keyword indexing.
+- Prohibited: generating new policy text or inferring sensitive locations.
 
 ## 🕰️ Version History
 
-| Version | Date | Summary |
-|---:|---|---|
-| v11.2.6 | 2025-12-13 | Aligned to KFM-MDP v11.2.6 (approved H2 registry, tilde fences, Mermaid-safe labels, governed metadata and footer). |
+| Version | Date | Summary | Author |
+|---|---|---|---|
+| v1.0.0 | 2025-12-27 | Initial `tests/e2e/README.md` scaffold aligned to Master Guide v12 + test conventions | TBD |
 
 ---
 
-<div align="center">
+Footer refs:
 
-[🏛️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
-
-© 2025 Kansas Frontier Matrix — MIT License  
-Diamond⁹ Ω / Crown∞Ω Ultimate Certified
-
-</div>
+- Tests root: `tests/README.md`
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- Templates: `docs/templates/`
+- v13 Blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
