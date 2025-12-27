@@ -176,14 +176,15 @@ Unit tests exist to prevent “silent drift” by enforcing correctness and dete
 
 ~~~mermaid
 flowchart LR
-  UT[Unit tests<br/>(tests/unit)] --> C[Code correctness<br/>pure functions]
-  C --> ETL[ETL]
-  C --> CAT[STAC/DCAT/PROV builders]
-  C --> G[Graph ingest helpers]
-  C --> API[API services/helpers]
-  C --> UI[UI utilities]
+  UT["Unit tests\n(tests/unit)"] --> C["Code correctness\n(pure functions)"]
 
-  ETL --> CAT --> G --> API --> UI --> SN[Story Nodes] --> FM[Focus Mode]
+  C --> ETL["ETL"]
+  C --> CAT["STAC / DCAT / PROV builders"]
+  C --> G["Graph ingest helpers"]
+  C --> API["API services / helpers"]
+  C --> UI["UI utilities"]
+
+  ETL --> CAT --> G --> API --> UI --> SN["Story Nodes"] --> FM["Focus Mode"]
 ~~~
 
 ## 🧠 Story Node & Focus Mode Integration
