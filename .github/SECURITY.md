@@ -310,13 +310,13 @@ Recommended role concepts to align with governance:
 ### Coordinated disclosure workflow
 ~~~mermaid
 flowchart LR
-  R[Reporter] --> C[Private reporting channel<br/>(Security Advisory / email)]
-  C --> T[Triage + reproduce]
-  T --> S[Severity + sensitivity classification<br/>(incl. governance)]
-  S --> M[Mitigation/containment<br/>(rotate secrets, restrict surface)]
-  M --> F[Fix + tests + contract validation]
-  F --> P[Patch release + artifact rebuilds]
-  P --> A[Advisory + coordinated disclosure]
+  R[Reporter] --> C["Private reporting channel\n(Security Advisory / email)"]
+  C --> T["Triage + reproduce"]
+  T --> S["Severity + sensitivity classification\n(incl. governance)"]
+  S --> M["Mitigation / containment\n(rotate secrets, restrict surface)"]
+  M --> F["Fix + tests + contract validation"]
+  F --> P["Patch release + artifact rebuilds"]
+  P --> A["Advisory + coordinated disclosure"]
 ~~~
 
 ### Canonical pipeline + security enforcement points
