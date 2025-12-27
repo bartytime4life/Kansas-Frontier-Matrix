@@ -1,24 +1,39 @@
-~~~text
-FILE: CITATION.cff
-~~~yaml
 cff-version: 1.2.0
-message: "If you use this software, please cite it using the metadata from this file."
+message: "If you use this software (or derived datasets/stories produced by it), please cite Kansas Frontier Matrix (KFM) using the metadata from this file."
 title: "Kansas Frontier Matrix (KFM)"
 type: software
-license: CC-BY-4.0
+version: "v12.0.0-draft"
+license: "CC-BY-4.0"
+license-url: "https://creativecommons.org/licenses/by/4.0/"
+url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+repository-code: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
 authors:
   - name: "KFM Core Team"
-abstract: "A geospatial + historical knowledge system with governed data, catalogs, graph semantics, APIs, and a map/narrative UI."
+contact:
+  - name: "KFM Core Team"
+abstract: "Kansas Frontier Matrix (KFM) is a governed geospatial + historical knowledge system. It uses a canonical, contract-first pipeline—ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode—to produce reproducible, citable, policy-aware datasets and narrative outputs."
 keywords:
   - Kansas
   - geospatial
   - history
+  - digital humanities
   - knowledge graph
+  - ontology
+  - deterministic pipelines
+  - ETL
   - STAC
   - DCAT
   - PROV
+  - PROV-O
+  - provenance
+  - governance
+  - FAIR+CARE
+  - sovereignty
   - Neo4j
+  - APIs
+  - API contracts
   - React
   - Map UI
-~~~
-
+  - MapLibre
+  - Story Nodes
+  - Focus Mode
