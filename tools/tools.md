@@ -187,15 +187,15 @@ KFM’s canonical flow is:
 
 ~~~mermaid
 flowchart LR
-  T[tools/* operational tooling] --> P[src/pipelines/*]
-  P --> C[Catalog outputs<br/>data/stac · data/catalog/dcat · data/prov]
-  C --> X[Graph fixtures<br/>data/graph/csv · data/graph/cypher]
-  X --> G[Graph<br/>Neo4j (via src/graph)]
-  G --> A[API boundary<br/>src/server]
-  A --> U[UI<br/>web]
-  U --> S[Story Nodes<br/>docs/reports/story_nodes]
-  S --> F[Focus Mode]
-  T --> R[Release packaging<br/>releases/ (optional)]
+  T[tools operational tooling] --> P[src/pipelines]
+  P --> C[data catalogs STAC DCAT PROV]
+  C --> X[data graph fixtures csv and cypher]
+  X --> G[graph Neo4j via src/graph]
+  G --> A[api boundary src/server]
+  A --> U[ui web]
+  U --> S[story nodes docs/reports/story_nodes]
+  S --> F[focus mode]
+  T --> R[release packaging releases]
 ~~~
 
 ## 🧠 Story Node & Focus Mode Integration
