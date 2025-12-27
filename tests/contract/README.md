@@ -196,23 +196,22 @@ Add/update a contract test whenever you change:
 
 ~~~mermaid
 flowchart LR
-
-  A["ETL (src/pipelines)"] --> B["Catalogs (STAC/DCAT/PROV)"]
-  B --> C["Graph (Neo4j via src/graph)"]
-  C --> D["API Boundary (src/server or src/api)"]
+  A["ETL (src/pipelines/)"] --> B["Catalogs (STAC/DCAT/PROV)"]
+  B --> C["Graph (Neo4j via src/graph/)"]
+  C --> D["API boundary (src/server/ or src/api/)"]
   D --> E["UI (web/)"]
-  E --> F["Story Nodes (docs/...)"]
-  F --> G["Focus Mode (provenance-linked)"]
+  E --> F["Story Nodes (docs/reports/.../story_nodes/)"]
+  F --> G["Focus Mode"]
 
-  subgraph Contract Tests (tests/contract)
+  subgraph CT["Contract Tests (tests/contract/)"]
     T1["schemas/: STAC/DCAT/PROV + telemetry + story nodes"]
     T2["api/: OpenAPI/GraphQL conformance + compatibility"]
     T3["ui/: layer registry schema + leakage guardrails"]
   end
 
-  T1 -. validates .- B
-  T2 -. validates .- D
-  T3 -. validates .- E
+  T1 -. "validates" .-> B
+  T2 -. "validates" .-> D
+  T3 -. "validates" .-> E
 ~~~
 
 ## 🧠 Story Node & Focus Mode Integration
