@@ -171,14 +171,14 @@ Prefer **unit/integration/contract** tests for:
 
 ~~~mermaid
 flowchart LR
-  A[Small Synthetic Fixtures] --> B[Catalog + Provenance Fixtures]
-  B --> C[Graph Fixture Import]
-  C --> D[API Boundary]
-  D --> E[UI (Map + Narrative)]
-  E --> F[Story Nodes]
-  E --> G[Focus Mode]
+  A["Small Synthetic Fixtures"] --> B["Catalog + Provenance Fixtures"]
+  B --> C["Graph Fixture Import"]
+  C --> D["API Boundary"]
+  D --> E["UI — Map + Narrative"]
+  E --> F["Story Nodes"]
+  E --> G["Focus Mode"]
 
-  H[E2E Runner] --> D
+  H["E2E Runner"] --> D
   H --> E
 ~~~
 
