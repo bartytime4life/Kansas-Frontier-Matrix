@@ -1,8 +1,8 @@
 ---
 title: "KFM Security Policy"
 path: ".github/SECURITY.md"
-version: "v1.0.2"
-last_updated: "2025-12-27"
+version: "v1.0.3"
+last_updated: "2025-12-28"
 status: "draft"
 doc_kind: "Policy"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:github:security-policy:v1.0.2"
-semantic_document_id: "kfm-security-policy-v1.0.2"
-event_source_id: "ledger:kfm:doc:github:security-policy:v1.0.2"
+doc_uuid: "urn:kfm:doc:github:security-policy:v1.0.3"
+semantic_document_id: "kfm-security-policy-v1.0.3"
+event_source_id: "ledger:kfm:doc:github:security-policy:v1.0.3"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -106,19 +106,18 @@ KFM treats security as “software + data + narrative”:
 - **Contracts are canonical:** schemas define structure; code must conform; CI validates.
 - **Provenance is part of security:** a “fixed” codebase is insufficient if affected artifacts remain public.
 
-### Key artifacts
-
+### Key artifacts (security-relevant)
 | Artifact | Path / identifier | Primary owner | Notes |
 |---|---|---|---|
 | Security policy | `.github/SECURITY.md` | Maintainers | This document |
 | CI workflows | `.github/workflows/` | Maintainers | Security + contract enforcement gates |
-| Schemas registry | `schemas/` | Maintainers | STAC/DCAT/PROV/story/UI/telemetry schemas |
+| Schemas registry | `schemas/` | Maintainers | STAC/DCAT/PROV/story/UI/telemetry schemas *(if present)* |
 | Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Maintainers | Evidence + discovery + lineage |
 | Graph layer | `src/graph/` (+ `data/graph/` if present) | Maintainers | Ontology + ingest artifacts |
 | API boundary | `src/server/` | Maintainers | Auth + redaction/generalization enforcement |
 | UI | `web/` | Maintainers | Map/narrative client; no direct graph access |
 | Story Nodes | `docs/reports/story_nodes/` | Maintainers + reviewers | Narrative artifacts; provenance/citation requirements |
-| Security standards | `docs/security/` | Maintainers | Threat model, incident response, supply chain integrity (recommended) |
+| Security standards | `docs/security/` | Maintainers | Threat model, incident response, supply chain integrity *(if present; recommended)* |
 | Governance references | `docs/governance/*` | Governance reviewers | Sovereignty/Ethics/CARE constraints |
 
 ### Definition of done for this document
@@ -132,7 +131,138 @@ KFM treats security as “software + data + narrative”:
 
 ---
 
-## 🧩 Supported versions
+## 🗂️ Directory layout
+
+### This document
+- `path`: `.github/SECURITY.md`
+
+### Related repository paths (canonical targets)
+| Area | Path | What lives here |
+|---|---|---|
+| GitHub governance & CI | `.github/` | Repo health + policy + workflows |
+| CI workflows | `.github/workflows/` | CI gates for contracts, security scans, validation |
+| Governance | `docs/governance/` | Ethics + sovereignty + approval workflow references |
+| Schemas | `schemas/` | Contract validation schemas *(if present)* |
+| Pipelines | `src/pipelines/` | Deterministic ETL + catalog builders |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Published evidence + lineage |
+| Graph | `src/graph/` (+ `data/graph/` if present) | Ontology + ingest artifacts |
+| API boundary | `src/server/` | Contracted access; enforce redaction/authorization |
+| UI | `web/` | React/Map client; config validated; no direct graph access |
+| Story Nodes | `docs/reports/story_nodes/` | Narrative artifacts; provenance/citation requirements |
+| Tests | `tests/` | Unit + integration tests |
+| Tools | `tools/` | Validators, QA scripts |
+
+### Repo drift note (safety relevance)
+Some KFM design docs describe **repo drift** that can create security ambiguity (duplicate subsystem homes, missing canonical roots, Story Node location mismatch). If your repo exhibits drift:
+- treat it as a governance + security risk (inconsistent gates, bypassable checks),
+- prefer canonical subsystem homes (API under `src/server/`, UI under `web/`),
+- ensure CI gates scan the true publication paths (catalog outputs, story nodes, UI bundles).
+
+*(Details and migration guidance are maintained elsewhere; not confirmed in repo path.)*
+
+### Expected file tree (minimum)
+~~~text
+📁 .github/
+├── 📄 SECURITY.md
+└── 📁 workflows/
+    └── 📄 *.yml
+
+📁 docs/
+├── 📁 governance/
+└── 📁 reports/
+    └── 📁 story_nodes/
+
+📁 data/
+├── 📁 stac/
+├── 📁 catalog/
+│   └── 📁 dcat/
+└── 📁 prov/
+
+📁 src/
+├── 📁 pipelines/
+├── 📁 graph/
+└── 📁 server/
+
+📁 web/
+~~~
+
+---
+
+## 🧭 Context
+
+### Background
+KFM is a geospatial + historical knowledge system with a governed pipeline designed for auditability and harm reduction. The architecture is intentionally staged so that:
+- deterministic transforms happen in ETL,
+- discovery and evidence are expressed through STAC/DCAT/PROV catalogs,
+- semantics are expressed in the graph,
+- the API boundary enforces access control and redaction,
+- the UI renders only what the API serves,
+- story nodes and Focus Mode remain provenance-linked and governance-safe.
+
+Security in KFM therefore includes:
+- software security (code, dependencies, CI),
+- data security (sensitivity classification, redaction/generalization),
+- narrative safety (preventing leakage through storytelling and interaction),
+- AI safety (prompt injection pathways; provenance/uncertainty requirements).
+
+### Core invariants (non-negotiable)
+- Preserve canonical ordering: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**
+- **No UI direct-to-graph reads:** UI must never bypass the API to query the graph directly.
+- **Contracts are canonical:** schemas/specs define structure; code must conform; CI validates.
+- **No unsourced narrative in published stories:** factual claims must be supported by evidence and pass validation.
+- **Governance uncertainty fails closed:** treat as restricted until reviewed.
+
+### Threat model snapshot (categories)
+- Supply chain compromise: malicious dependency update, compromised CI signing, artifact replacement.
+- Data poisoning and malicious inputs: hostile upstream files, crafted geospatial assets, malformed metadata.
+- Unauthorized access: weak authn/authz, RBAC gaps, leaked credentials, insecure defaults.
+- Injection and web vulnerabilities: query injection, XSS/CSRF, SSRF, unsafe deserialization.
+- Sensitive-content leakage: precise coordinates, metadata re-identification, inference-by-interaction.
+- Integrity loss: tampering with catalogs, provenance, or story evidence.
+- Prompt injection: untrusted narrative/data causing unsafe tool calls or data exfiltration via AI systems.
+
+### Roles (recommended)
+- Maintainers: technical triage, patching, releases.
+- Governance reviewers: sensitivity/sovereignty decisions; approval for disclosures involving restricted impacts.
+- Incident lead: coordinates containment and communications (role assignment TBD).
+
+---
+
+## 🗺️ Diagrams
+
+### Coordinated disclosure workflow
+~~~mermaid
+flowchart LR
+  R[Reporter] --> C["Private reporting channel\n(Security Advisory / email)"]
+  C --> T["Triage + reproduce"]
+  T --> S["Severity + sensitivity classification\n(incl. governance)"]
+  S --> M["Mitigation / containment\n(rotate secrets, restrict surface)"]
+  M --> F["Fix + tests + contract validation"]
+  F --> P["Patch release + artifact rebuilds"]
+  P --> A["Advisory + coordinated disclosure"]
+~~~
+
+### Canonical pipeline and security enforcement points
+~~~mermaid
+flowchart TB
+  A[ETL<br/>src/pipelines] --> B[Catalogs<br/>data/stac + data/catalog/dcat + data/prov]
+  B --> C[Graph<br/>src/graph + data/graph]
+  C --> D[API Boundary<br/>src/server]
+  D --> E[UI<br/>web]
+  E --> F[Story Nodes<br/>docs/reports/story_nodes]
+  F --> G[Focus Mode<br/>provenance-linked only]
+
+  CI[CI Gates<br/>.github/workflows] -. validates .-> A
+  CI -. validates .-> B
+  CI -. validates .-> C
+  CI -. validates .-> D
+  CI -. validates .-> E
+  CI -. validates .-> F
+~~~
+
+---
+
+## 📌 Supported versions
 KFM support policy can vary by release cadence. Until maintainers define it explicitly:
 
 - **Supported (recommended default):**
@@ -266,7 +396,7 @@ High-level workflow:
 7. **Disclose** via coordinated advisory and release notes (timelines case-by-case).
 8. **Record** remediation in governance/provenance artifacts where applicable.
 
-### Incident response
+### Incident response (confirmed)
 A confirmed incident requires additional steps:
 - Preserve evidence safely (redacted logs; do not collect extra PII).
 - Identify blast radius:
@@ -306,146 +436,9 @@ This project intends to support good-faith security research. A safe-harbor stat
 
 ---
 
-## 🗂️ Directory layout
-
-### This document
-- `path`: `.github/SECURITY.md`
-
-### Related repository paths
-
-| Area | Path | What lives here |
-|---|---|---|
-| GitHub governance & CI | `.github/` | Repo health + policy + workflows |
-| CI workflows | `.github/workflows/` | CI gates for contracts, security scans, validation |
-| Security docs | `docs/security/` | Threat model, incident response, supply chain integrity |
-| Governance | `docs/governance/` | Ethics + sovereignty + approval workflow references |
-| Schemas | `schemas/` | Contract validation schemas |
-| Pipelines | `src/pipelines/` | Deterministic ETL + catalog builders |
-| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Published evidence + lineage |
-| Graph | `src/graph/` (+ `data/graph/` if present) | Ontology + ingest artifacts |
-| API boundary | `src/server/` | Contracted access; enforce redaction/authorization |
-| UI | `web/` | React/Map client; config validated; no direct graph access |
-| Story Nodes | `docs/reports/story_nodes/` | Narrative artifacts; provenance/citation requirements |
-
-### Expected file tree
-
-~~~text
-📁 .github/
-├── 📄 SECURITY.md
-└── 📁 workflows/
-    └── 📄 *.yml
-
-📁 docs/
-└── 📁 security/
-    ├── 📄 threat_model.md
-    ├── 📄 incident_response.md
-    ├── 📄 supply_chain_integrity.md
-    └── 📁 advisories/
-        └── 📄 *.md
-~~~
-
----
-
-## 🧭 Context
-
-### Background
-KFM is a geospatial + historical knowledge system with a governed pipeline designed for auditability and harm reduction. The architecture is intentionally staged so that:
-- deterministic transforms happen in ETL,
-- discovery and evidence are expressed through STAC/DCAT/PROV catalogs,
-- semantics are expressed in the graph,
-- the API boundary enforces access control and redaction,
-- the UI renders only what the API serves,
-- story nodes and Focus Mode remain provenance-linked and governance-safe.
-
-Security in KFM therefore includes:
-- software security (code, dependencies, CI),
-- data security (sensitivity classification, redaction/generalization),
-- narrative safety (preventing leakage through storytelling and interaction),
-- AI safety (prompt injection pathways; provenance/uncertainty requirements).
-
-### Core invariants
-- Preserve canonical ordering: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**
-- **No UI direct-to-graph reads:** UI must never bypass the API to query the graph directly.
-- **Contracts are canonical:** schemas/specs define structure; code must conform; CI validates.
-- **No unsourced narrative in published stories:** factual claims must be supported by evidence and pass validation.
-- **Governance uncertainty fails closed:** treat as restricted until reviewed.
-
-### Threat model snapshot
-Primary threat categories:
-- Supply chain compromise: malicious dependency update, compromised CI signing, artifact replacement.
-- Data poisoning and malicious inputs: hostile upstream files, crafted geospatial assets, malformed metadata.
-- Unauthorized access: weak authn/authz, RBAC gaps, leaked credentials, insecure defaults.
-- Injection and web vulnerabilities: query injection, XSS/CSRF, SSRF, unsafe deserialization.
-- Sensitive-content leakage: precise coordinates, metadata re-identification, inference-by-interaction.
-- Integrity loss: tampering with catalogs, provenance, or story evidence.
-- Prompt injection: untrusted narrative/data causing unsafe tool calls or data exfiltration via AI systems.
-
-### Roles
-Recommended role concepts to align with governance:
-- Maintainers: technical triage, patching, releases.
-- Governance reviewers: sensitivity/sovereignty decisions; approval for disclosures involving restricted impacts.
-- Incident lead: coordinates containment and communications (role assignment TBD).
-
-### Open questions
-| Question | Owner | Target date |
-|---|---|---|
-| Official security contact email/URI | Maintainers | TBD |
-| Are GitHub private Security Advisories enabled | Maintainers | TBD |
-| Do we publish a PGP key for reports | Maintainers | TBD |
-| Supported versions policy | Maintainers | TBD |
-| Advisory publication defaults | Maintainers + Governance | TBD |
-| Incident notification procedure for sensitive-content exposure | Governance owners | TBD |
-
-### Future extensions
-- `docs/security/threat_model.md` with assets, actors, trust boundaries, abuse cases
-- `docs/security/incident_response.md` with severity rubric, comms, postmortems
-- `docs/security/supply_chain_integrity.md` with SBOM/attestations and verification steps
-- CI gates for:
-  - secret scanning,
-  - PII and sensitive-location scanning for public outputs,
-  - classification propagation checks,
-  - provenance/attestation cross-checks.
-
----
-
-## 🗺️ Diagrams
-
-### Coordinated disclosure workflow
-~~~mermaid
-flowchart LR
-  R[Reporter] --> C["Private reporting channel\n(Security Advisory / email)"]
-  C --> T["Triage + reproduce"]
-  T --> S["Severity + sensitivity classification\n(incl. governance)"]
-  S --> M["Mitigation / containment\n(rotate secrets, restrict surface)"]
-  M --> F["Fix + tests + contract validation"]
-  F --> P["Patch release + artifact rebuilds"]
-  P --> A["Advisory + coordinated disclosure"]
-~~~
-
-### Canonical pipeline and security enforcement points
-~~~mermaid
-flowchart TB
-  A[ETL<br/>src/pipelines] --> B[Catalogs<br/>data/stac + data/catalog/dcat + data/prov]
-  B --> C[Graph<br/>src/graph + data/graph]
-  C --> D[API Boundary<br/>src/server]
-  D --> E[UI<br/>web]
-  E --> F[Story Nodes<br/>docs/reports/story_nodes]
-  F --> G[Focus Mode<br/>provenance-linked only]
-
-  CI[CI Gates<br/>.github/workflows] -. validates .-> A
-  CI -. validates .-> B
-  CI -. validates .-> C
-  CI -. validates .-> D
-  CI -. validates .-> E
-  CI -. validates .-> F
-~~~
-
----
-
-## 📦 Data and metadata
+## 📦 Data & Metadata
 
 ### Inputs
-
 | Input | Format | Source | Handling |
 |---|---|---|---|
 | Vulnerability report | Advisory text / email | Reporter | Treat as sensitive until resolved |
@@ -455,7 +448,6 @@ flowchart TB
 | Artifact integrity concern | Digest/attestation mismatch | CI / reviewers | Block promotion; investigate supply chain |
 
 ### Outputs
-
 | Output | Format | Location | Notes |
 |---|---|---|---|
 | Patch | Code | repo | Includes tests + validation |
@@ -480,8 +472,7 @@ flowchart TB
 - No new secrets introduced; no new disclosure pathways
 - If data artifacts affected: catalogs and provenance updated consistently
 
-### Telemetry signals
-If telemetry is implemented, recommended signals include:
+### Telemetry signals (if applicable)
 | Signal | Source | Where recorded |
 |---|---|---|
 | `vulnerability_reported` | Reporter | Advisory + optional telemetry |
@@ -492,7 +483,7 @@ If telemetry is implemented, recommended signals include:
 
 ---
 
-## 🌐 STAC, DCAT and PROV alignment
+## 🌐 STAC, DCAT & PROV alignment
 
 Security issues in KFM often affect **published artifacts**, not only source code. When a vulnerability impacts catalogs, assets, or narratives, remediation must consider catalog and provenance integrity.
 
@@ -523,7 +514,7 @@ For incidents involving data corrections or redactions:
 - The graph should mirror version lineage where applicable.
 - Advisories should reference affected versions of both code and artifacts.
 
-### Supply-chain provenance hooks
+### Supply-chain provenance hooks (if adopted)
 If the project adopts artifact attestations and SBOM linking, provenance metadata may include:
 - artifact digest,
 - build job/run identity,
@@ -536,7 +527,6 @@ If the project adopts artifact attestations and SBOM linking, provenance metadat
 ## 🧱 Architecture
 
 ### Components and responsibilities
-
 | Component | Security responsibility | Primary interface |
 |---|---|---|
 | ETL (`src/pipelines/`) | Treat inputs as untrusted; deterministic transforms; no secret leakage | Config + run logs |
@@ -565,7 +555,6 @@ If the project adopts artifact attestations and SBOM linking, provenance metadat
 - Narrative rendering: treat story content and linked assets as potentially risky.
 
 ### Security controls by pipeline stage
-
 | Stage | Common risks | Baseline controls | Primary enforcement |
 |---|---|---|---|
 | ETL | malicious files, parser vulnerabilities, data poisoning | input validation, strict parsing, pinned deps, deterministic runs | `src/pipelines/**` + CI |
@@ -575,8 +564,7 @@ If the project adopts artifact attestations and SBOM linking, provenance metadat
 | UI | XSS, CSRF, inference-by-interaction | safe rendering, CSP, strict API use, config validation | `web/**` + CI |
 | Story and Focus | leakage, unsourced claims, unsafe assets, prompt injection | story validator, provenance requirements, redaction notices, restricted asset handling | CI + publish workflow |
 
-### Supply chain integrity
-Recommended (adopt if implemented):
+### Supply chain integrity (recommended)
 - SBOM generation for releases/artifacts (SPDX or CycloneDX).
 - Build attestations/provenance for release outputs (SLSA-aligned).
 - Digest verification on artifacts consumed by downstream stages.
@@ -584,7 +572,7 @@ Recommended (adopt if implemented):
 
 ---
 
-## 🧠 Story Node and Focus Mode integration
+## 🧠 Story Node & Focus Mode integration
 
 ### Narrative security constraints
 Security controls must prevent Story Nodes / Focus Mode from:
@@ -605,8 +593,7 @@ Security controls must prevent Story Nodes / Focus Mode from:
 - AI content must be opt-in.
 - AI outputs must carry uncertainty/confidence metadata and must not be presented as sourced fact.
 
-### Recommended UI behaviors
-If implemented:
+### Recommended UI behaviors (if implemented)
 - Show sensitivity/redaction notices when geometry is generalized or content is withheld.
 - Provide an audit panel with:
   - citations and evidence IDs,
@@ -615,23 +602,22 @@ If implemented:
 
 ---
 
-## 🧪 Validation and CI/CD
+## 🧪 Validation & CI/CD
 
-### Validation steps
-Recommended checks:
-- Markdown protocol checks (front-matter + required sections + fences)
-- Secret scanning
-- PII and sensitive-location scanning for public outputs
-- Classification propagation checks where labels exist
-- Schema validation:
-  - STAC (`data/stac/**`)
-  - DCAT (`data/catalog/dcat/**`)
-  - PROV (`data/prov/**`)
-  - UI registries (`web/**`)
-  - Story Nodes (`docs/reports/story_nodes/**`)
-- Graph integrity checks (constraints, required links)
-- API contract tests (OpenAPI/GraphQL)
-- UI boundary enforcement (forbid Neo4j drivers/connection strings in `web/**`)
+### Validation steps (recommended)
+- [ ] Markdown protocol checks (front-matter + required sections + fences)
+- [ ] Secret scanning
+- [ ] PII and sensitive-location scanning for public outputs
+- [ ] Classification propagation checks where labels exist
+- [ ] Schema validation:
+  - [ ] STAC (`data/stac/**`)
+  - [ ] DCAT (`data/catalog/dcat/**`)
+  - [ ] PROV (`data/prov/**`)
+  - [ ] UI registries (`web/**`)
+  - [ ] Story Nodes (`docs/reports/story_nodes/**`)
+- [ ] Graph integrity checks (constraints, required links)
+- [ ] API contract tests (OpenAPI/GraphQL)
+- [ ] UI boundary enforcement (forbid Neo4j drivers/connection strings in `web/**`)
 
 ### CI expectations
 CI is a pipeline contract enforcement layer: it should fail deterministically when contracts, provenance rules, or governance rules are violated.
@@ -654,7 +640,7 @@ Recommended security-focused gates:
 
 ---
 
-## ⚖ FAIR+CARE and governance
+## ⚖ FAIR+CARE & governance
 
 ### Review gates
 Security fixes require governance review when they involve:
@@ -691,11 +677,11 @@ Practical rule:
 | v1.0.0 | 2025-12-23 | Initial SECURITY.md scaffold: private reporting, response process, STAC/DCAT/PROV remediation guidance | TBD |
 | v1.0.1 | 2025-12-27 | Expanded triage/severity, control matrix, and governance fail-closed posture | TBD |
 | v1.0.2 | 2025-12-27 | Template-aligned upgrade: added reporting quickstart, incident response, contracts table, AI/prompt-injection considerations, and clarified artifact rebuild requirements | TBD |
+| v1.0.3 | 2025-12-28 | Universal-template alignment pass: normalized headings, canonical paths, repo-drift guardrails, and CI gate checklist wording | TBD |
 
 ---
 
-## Footer refs
-Do not remove:
+Footer refs:
 - Master guide: `docs/MASTER_GUIDE_v12.md`
 - Template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
