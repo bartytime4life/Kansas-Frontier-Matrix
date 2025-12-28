@@ -226,14 +226,14 @@ A KFM release bundle provides an auditable “snapshot of intent” that binds:
 
 ~~~mermaid
 flowchart LR
-  A[ETL outputs<br/>data/{raw,work,processed}/<domain>] --> B[Catalogs<br/>data/stac + data/catalog/dcat + data/prov]
-  B --> C[Graph build<br/>src/graph (+ optional data/graph fixtures)]
-  C --> D[API boundary<br/>src/server]
-  D --> E[UI<br/>web]
-  E --> F[Story Nodes<br/>docs/reports/story_nodes]
-  F --> G[Focus Mode<br/>provenance-linked only]
-  B --> H[Release packaging<br/>releases/]
-  H --> I[Release bundle<br/>releases/<version>/]
+  A["ETL outputs<br/>data/raw | data/work | data/processed (per domain)"] --> B["Catalogs<br/>data/stac + data/catalog/dcat + data/prov"]
+  B --> C["Graph build<br/>src/graph (+ optional data/graph fixtures)"]
+  C --> D["API boundary<br/>src/server"]
+  D --> E["UI<br/>web"]
+  E --> F["Story Nodes<br/>docs/reports/story_nodes"]
+  F --> G["Focus Mode<br/>provenance-linked only"]
+  B --> H["Release packaging<br/>releases/"]
+  H --> I["Release bundle<br/>releases/vX.Y.Z/"]
 ~~~
 
 ### Optional: release verification sequence
