@@ -1,8 +1,8 @@
 ---
-title: "KFM Web UI — web/src/app (Route + Layout Layer) README"
+title: "KFM Web UI — web/src/app README"
 path: "web/src/app/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-25"
+version: "v1.0.1"
+last_updated: "2025-12-28"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:web:src-app:readme:v1.0.0"
-semantic_document_id: "kfm-web-src-app-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:web:src-app:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:web:src-app:readme:v1.0.1"
+semantic_document_id: "kfm-web-src-app-readme-v1.0.1"
+event_source_id: "ledger:kfm:doc:web:src-app:readme:v1.0.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,79 +41,87 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-> **Purpose (required):** Define what belongs in `web/src/app/` (the **route + layout layer** of the KFM web UI), and document the *non-negotiable* rules for how route-level UI code consumes KFM data: **API boundary only**, **provenance-linked narrative only**, and **redaction/sensitivity respected end-to-end**.
+> **Purpose required:** Define what belongs in `web/src/app/` and the non-negotiable rules for route-level UI code:
+> **API boundary only**, **provenance-linked narrative only**, and **redaction and sensitivity respected end-to-end**.
 
-# `web/src/app/` — Route + layout layer (UI)
+# `web/src/app/` — Route and layout layer
 
-This folder is the **entry layer** for the KFM web UI’s route tree and top-level layouts.
+This folder is the route tree and top-level layout entry point for the KFM web UI.
 
-It is where we define:
-- what pages exist (route segments),
-- how global layout/providers are wired,
-- how errors/not-found states are surfaced,
-- and how route-level components request data **through the API boundary** (never directly from the graph).
+It defines:
+- what routes exist and how they are grouped,
+- global layout, providers, and app shell wiring,
+- route-level loading, error, and not-found boundaries,
+- the required route-level pattern for requesting KFM data through the API boundary.
 
-> If your routing framework differs (not confirmed in repo), keep this README but update the “Expected file tree” and route conventions accordingly.
+If your routing framework differs, keep the invariants in this README and update:
+- the expected file tree,
+- route conventions and filenames,
+- and any framework-specific examples.
 
 ---
 
 ## 📘 Overview
 
 ### Purpose
-- Provide a **governed contract** for what belongs in `web/src/app/`.
-- Keep route-level UI aligned with KFM’s canonical pipeline:
+- Provide a governed contract for what belongs in `web/src/app/`.
+- Keep the route layer aligned with KFM’s canonical pipeline ordering:
   **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.
 - Prevent architectural drift by enforcing:
-  - **no UI direct-to-graph reads**, and
-  - **Focus Mode / narrative views only surface provenance-linked claims**.
+  - UI never reads Neo4j directly,
+  - UI consumes only contracted APIs and published catalogs,
+  - Focus Mode renders provenance-linked narrative only,
+  - sensitivity and redaction are honored end-to-end.
 
 ### Scope
 
 | In scope | Out of scope |
 |---|---|
-| Route tree, layout shells, route-level loading/error boundaries, route-level data-fetch patterns | Implementing the API itself (belongs in `src/server/`), graph logic (belongs in `src/graph/`), or ETL/catalog output generation (belongs in `src/pipelines/` + `data/**`) |
-| Where to add new UI routes for map, timeline, Story Nodes, and Focus Mode | Pixel-level design system details (belongs under UI/design docs if present) |
-| Rules for displaying provenance, citations, and redaction notices in route-level pages | Governance policy authoring (belongs in governed governance docs) |
+| Route folders/files, layout shells, provider wiring, route-level loading/error boundaries | Implementing the API service (belongs in `src/server/`) |
+| Route-level patterns for data-fetching via the API boundary | Graph logic, ontology changes, ingest and migrations (belongs in `src/graph/`) |
+| Rules for provenance display, citations, and redaction notices in route-level pages | ETL, catalog build, and provenance emission (belongs in `src/pipelines/` + `data/**`) |
+| How to add routes for map, stories, and Focus Mode | Governance policy authoring (belongs in governed governance docs) |
 
 ### Audience
-- **Primary:** Frontend maintainers and contributors working under `web/`.
-- **Secondary:** API maintainers and narrative curators who need to know how the UI consumes contracts and story artifacts.
+- Primary: Frontend maintainers and contributors working in `web/`.
+- Secondary: API maintainers and narrative curators who need to understand UI consumption rules.
 
-### Definitions (link to glossary)
-- Glossary: `docs/glossary.md` *(not confirmed in repo — update if the glossary lives elsewhere)*
+### Definitions and glossary link
+- Glossary: `docs/glossary.md` (not confirmed in repo — update if located elsewhere)
 
-Terms used here:
-- **API boundary:** The contracted REST/GraphQL layer that mediates all graph/catalog access for clients.
-- **Story Node:** A governed narrative artifact (markdown + metadata) that links every claim to evidence.
-- **Focus Mode:** A UI view that renders a story/analysis with map/timeline context and requires provenance-linked content.
-- **Layer registry:** The UI’s schema-validated list of map layers/toggles/legends used by the map client.
+Terms used in this doc:
+- **API boundary:** The contracted REST/GraphQL layer that mediates all graph and catalog access for clients.
+- **Story Node:** A governed narrative artifact that links claims to evidence identifiers.
+- **Focus Mode:** A UI view that renders provenance-linked narrative with map/timeline context.
+- **Layer registry:** A schema-validated list of map layers, toggles, legends, and access rules.
 
-### Key artifacts (what this doc points to)
+### Key artifacts this doc points to
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master pipeline ordering + invariants | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline + extension matrix |
-| v13 redesign blueprint (if adopted) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | Canonical roots + minimum contract set |
-| Web UI root | `web/` | Frontend | React/MapLibre/Cesium UI surface |
-| UI layer registry instances | `web/**/layers/**` | Frontend | Layer registries must validate against `schemas/ui/` |
-| UI registry schemas | `schemas/ui/**` | Platform | Schema contract for layers/legends/toggles |
+| Master pipeline ordering + invariants | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline + CI gates |
+| v13 redesign blueprint | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | Canonical homes + contract rules |
+| Web UI root | `web/` | Frontend | React + map client + narrative surfaces |
+| UI schemas | `schemas/ui/**` | Platform | JSON Schemas for layer registries |
+| Layer registries | `web/**/layers/**` | Frontend | Must validate against `schemas/ui/**` |
 | API boundary | `src/server/**` | API | UI consumes contracts only |
-| API contracts | `src/server/contracts/**` | API | UI should treat these as source-of-truth payload definitions |
+| API contracts | `src/server/contracts/**` | API | Source-of-truth payload definitions |
 | Story Nodes | `docs/reports/story_nodes/**` | Narrative | Focus Mode consumes governed story artifacts |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative | Standard structure for provenance-linked narratives |
-| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Governed Markdown requirements (this README follows it) |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative | Provenance-linked story standard |
+| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Governed Markdown structure |
+| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API | Required for API contract changes |
 
-### Definition of done (for this document)
+### Definition of done for this document
 - [ ] Front-matter complete and `path` matches `web/src/app/README.md`
-- [ ] States the UI invariants clearly:
+- [ ] States UI invariants clearly:
   - [ ] UI never reads Neo4j directly
-  - [ ] Focus Mode surfaces provenance-linked content only
-  - [ ] AI-generated/predictive content (if any) is opt-in and labeled
-- [ ] Directory responsibilities + placement rules are explicit
-- [ ] “Add a route” pattern is described and repeatable
-- [ ] Mentions layer registry + schema validation expectations
-- [ ] Governance/sensitivity constraints are stated for UI interactions (zoom/filter/export)
-- [ ] Version history updated for changes
+  - [ ] UI consumes only API and catalog endpoints
+  - [ ] Focus Mode renders provenance-linked content only
+- [ ] Directory responsibilities and placement rules are explicit
+- [ ] Route addition checklist is repeatable and framework-agnostic
+- [ ] Mentions layer registry schema validation expectations
+- [ ] Governance, sensitivity, and redaction obligations are explicit
+- [ ] Version history updated
 
 ---
 
@@ -122,41 +130,40 @@ Terms used here:
 ### This document
 - `path`: `web/src/app/README.md` (must match front-matter)
 
-### Related repository paths (orientation)
+### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
-| UI root | `web/` | Front-end application code (map + narrative UI) |
-| Layer registry | `web/**/layers/**` | Schema-valid layer toggles/legends/metadata used by the map |
-| UI schemas | `schemas/ui/**` | JSON Schemas for UI registries |
-| API boundary | `src/server/**` | Contracted access layer; redaction/generalization enforced here |
-| API contracts | `src/server/contracts/**` | OpenAPI/GraphQL schemas/contracts |
-| Graph | `src/graph/**` + `data/graph/**` | Ontology + ingest fixtures (clients must not connect directly) |
-| Catalog outputs | `data/stac/**` + `data/catalog/dcat/**` + `data/prov/**` | Evidence + discovery + lineage |
-| Story Nodes | `docs/reports/story_nodes/**` | Governed narrative artifacts consumed by Focus Mode |
+| UI | `web/` | Web app code and UI registries |
+| UI layer registries | `web/**/layers/**` | Layer toggles, legends, metadata and access rules |
+| UI schemas | `schemas/ui/**` | JSON Schemas used to validate UI registries |
+| API boundary | `src/server/**` | Contracted access layer with redaction enforcement |
+| API contracts | `src/server/contracts/**` | OpenAPI/GraphQL schemas and payload definitions |
+| Graph | `src/graph/**` | Ontology bindings, ingest, migrations |
+| Catalog outputs | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` | Evidence, discovery, and lineage artifacts |
+| Story Nodes | `docs/reports/story_nodes/**` | Governed narratives consumed by Focus Mode |
 
 ### Expected file tree for this sub-area
-
-> This is the **recommended** structure for an “app router” style UI. Some filenames/routes may differ (**not confirmed in repo**). Keep this README synchronized with the actual files present.
+This is the recommended structure for an app-router style route tree. Filenames and conventions may differ.
 
 ~~~text
 📁 web/
 └── 📁 src/
     └── 📁 app/
         ├── 📄 README.md
-        ├── 📄 layout.<ext>                  # global app shell + providers (not confirmed in repo)
-        ├── 📄 page.<ext>                    # root route entry (not confirmed in repo)
-        ├── 📄 error.<ext>                   # route error boundary (not confirmed in repo)
-        ├── 📄 not-found.<ext>               # 404 boundary (not confirmed in repo)
-        ├── 📄 globals.<ext>                 # global styles (not confirmed in repo)
+        ├── 📄 layout.<ext>                     # global app shell + providers
+        ├── 📄 page.<ext>                       # root route entry
+        ├── 📄 error.<ext>                      # route error boundary
+        ├── 📄 not-found.<ext>                  # 404 boundary
+        ├── 📄 globals.<ext>                    # global styles
         │
-        ├── 📁 (routes)/                     # optional route groups (not confirmed in repo)
-        │   ├── 📁 <map-or-explore>/          # map/timeline exploration pages
-        │   ├── 📁 <stories>/                 # Story Node index + browsing
-        │   └── 📁 <focus>/                   # Focus Mode route(s)
+        ├── 📁 (routes)/                        # optional route groups
+        │   ├── 📁 explore/                     # map/timeline exploration
+        │   ├── 📁 stories/                     # Story Node browsing
+        │   └── 📁 focus/                       # Focus Mode routes
         │
-        ├── 📁 _components/                  # route-local components (optional; not confirmed in repo)
-        └── 📁 _lib/                         # route-local helpers (optional; not confirmed in repo)
+        ├── 📁 _components/                     # route-local components
+        └── 📁 _lib/                            # route-local helpers
 ~~~
 
 ---
@@ -164,195 +171,292 @@ Terms used here:
 ## 🧭 Context
 
 ### How this fits the canonical pipeline
-KFM’s UI layer is **downstream** of the API boundary:
+KFM’s UI layer is downstream of the API boundary.
 
-- Upstream evidence + lineage is produced as **STAC/DCAT/PROV**.
-- The graph references those identifiers and is accessed through the **API boundary**.
+Upstream outputs and identifiers:
+- ETL emits staged datasets under `data/<domain>/{raw,work,processed}/`.
+- Catalog build emits STAC/DCAT/PROV under:
+  - `data/stac/collections/` and `data/stac/items/`
+  - `data/catalog/dcat/`
+  - `data/prov/`
+
+Downstream consumption:
+- The graph stores references to catalog identifiers and is accessed through the API boundary.
 - The UI consumes:
-  - contracted API responses, and
-  - catalog endpoints (as published),
-  and renders them as map layers, timelines, and narrative views.
+  - contracted API responses,
+  - published catalog endpoints,
+  - governed story artifacts.
 
-### Constraints / invariants (non-negotiables)
-- **No UI direct-to-graph reads.**
-  - Do not import Neo4j drivers in the UI.
-  - Do not embed Cypher or graph credentials in `web/`.
-- **API boundary is mandatory.**
-  - Route-level UI code calls **only** API endpoints (and/or catalog endpoints), never the database.
-- **Focus Mode is provenance-linked only.**
-  - If a story element cannot provide evidence identifiers, it must not render as fact.
-- **AI-generated or predictive content (if present)**
-  - is **opt-in**,
-  - shows uncertainty metadata,
-  - and must never appear as unmarked fact.
+### Non-negotiable invariants
+- UI does not connect to Neo4j directly.
+  - No Neo4j drivers, no Cypher, no graph credentials in `web/`.
+- API boundary is mandatory.
+  - Route code calls only API endpoints and catalog endpoints.
+- Focus Mode is provenance-linked only.
+  - If a story element cannot produce evidence identifiers, it must not render as fact.
+- Redaction and generalization must be respected.
+  - If the API indicates redaction was applied, the UI must surface a clear notice and must not attempt to reconstruct detail.
 
 ### Practical placement rule
-Keep `web/src/app/` **thin**:
-- Routes/layouts compose screens from UI components that live elsewhere in the UI codebase (e.g., `web/src/components/**` or `web/src/features/**` — not confirmed in repo).
-- Data shaping rules belong at the API boundary; UI should not “reconstruct” redacted fields.
+Keep `web/src/app/` thin:
+- Routes and layouts compose screens from reusable UI building blocks.
+- Data shaping and redaction logic lives at the API boundary, not in the route layer.
+
+---
+
+## 🧱 Route and layout responsibilities
+
+### What belongs in `web/src/app/`
+- Route segment definitions and grouping
+- Layout shells and provider wiring
+- Route-level boundaries:
+  - loading states
+  - error states
+  - not-found states
+- Route-level composition that assembles a page from existing components
+
+### What does not belong in `web/src/app/`
+- Domain feature logic that should be reused across multiple routes
+- Complex client-side state machines for map and narrative features
+- API payload reshaping that attempts to bypass redaction or classification
+- Direct reads of `data/**` outputs
+
+### Route conventions
+Use route-level code to do only what routes must do:
+- choose what data is needed,
+- request it through the API boundary,
+- render it with provenance and sensitivity signals.
+
+Prefer reusable modules elsewhere in `web/src/**` for:
+- map components and layer rendering,
+- story rendering and citation UI,
+- shared UI elements and services.
+
+Paths for those modules vary by repo; update based on the actual `web/src/**` structure.
+
+---
+
+## 🔌 Data access pattern
+
+### Required data sources
+Route-level UI code may consume:
+- API responses from `src/server/**` endpoints
+- published STAC/DCAT/PROV catalogs
+- Story Nodes served via API or a governed content pipeline
+
+### Forbidden data sources
+Route-level UI code must not:
+- connect to Neo4j
+- import or read raw/work/processed datasets from `data/**` via filesystem shortcuts
+- render narrative text as fact without evidence identifiers
+
+### Contract-first usage
+When requesting data:
+1. Use the API boundary and contract-defined payload shapes.
+2. Validate and render classification/redaction flags, not just the “happy path”.
+3. Treat contract changes as governed changes:
+   - if you need a new field or endpoint, use the API Contract Extension template.
+
+### Error and not-found behavior
+- Use route-level boundaries to keep failure modes consistent:
+  - missing entity or story node → not-found state
+  - upstream service failure → error state with retry guidance
+  - redaction applied → render with redaction notice, not as an error
+
+### Example route request
+~~~ts
+// Pseudocode — adapt to your framework/router and API client.
+// Key rule: call only the API boundary; do not connect to the graph.
+
+async function loadFocusContext(focusId: string) {
+  const res = await fetch(`/api/focus/${focusId}`); // endpoint shape not confirmed in repo
+  if (res.status === 404) return { kind: "not_found" };
+  if (!res.ok) return { kind: "error" };
+
+  const payload = await res.json();
+
+  // Required UI behavior:
+  // - render citations/evidence IDs
+  // - render redaction indicators if present
+  // - do not infer or reconstruct sensitive locations
+  return { kind: "ok", payload };
+}
+~~~
+
+---
+
+## 🧠 Story Node and Focus Mode integration
+
+### What Focus Mode must guarantee
+- Every factual claim displayed must trace to evidence identifiers:
+  - STAC Item or Collection IDs
+  - DCAT dataset identifiers
+  - PROV activity or bundle identifiers
+- The UI must provide an evidence surface:
+  - citations, source metadata, and “view dataset” affordances
+- The UI must preserve fact vs inference separation when story content includes interpretation.
+
+### Recommended context bundle fields
+When rendering a Story Node or Focus Mode context, ensure the UI can handle:
+- canonical graph entity IDs (resolved via API)
+- evidence identifiers (STAC/DCAT/PROV)
+- licensing and attribution for assets
+- sensitivity and redaction flags
+
+### Optional structured controls
+Story Nodes may include structured controls to guide Focus Mode. These are UI inputs and are not evidence.
+
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
+
+### Sensitivity handling
+If a Story Node or layer touches sensitive or restricted locations:
+- prefer generalized geometry and coarse regions as provided by the API
+- do not encourage precision zooming or “reconstruction by overlay”
+- render a clear redaction or generalization notice when indicated by the API
 
 ---
 
 ## 🗺️ Diagrams
 
-### System boundary (UI perspective)
+### System boundary view
 
 ~~~mermaid
 flowchart TB
-  subgraph UI["UI (web)"]
-    A["Routes + Layout (web/src/app)"]
-    L["Layer registry (web/**/layers/**)"]
-    S["Story views (Story Nodes + Focus Mode)"]
+  subgraph UI["UI web"]
+    A["Routes and layouts web/src/app"]
+    L["Layer registries web/**/layers/**"]
+    V["Views map timeline story focus"]
   end
 
-  subgraph API["API Boundary (src/server)"]
-    C["Contracts (src/server/contracts)"]
-    E["Endpoints (REST/GraphQL)"]
-    R["Redaction / generalization enforcement"]
+  subgraph API["API boundary src/server"]
+    C["Contracts src/server/contracts"]
+    E["Endpoints REST or GraphQL"]
+    R["Redaction and generalization enforcement"]
   end
 
-  subgraph Graph["Graph + Evidence"]
-    G["Neo4j graph (src/graph + loader)"]
-    P["STAC/DCAT/PROV (data/stac + data/catalog/dcat + data/prov)"]
+  subgraph Evidence["Evidence and provenance"]
+    S["STAC data/stac"]
+    D["DCAT data/catalog/dcat"]
+    P["PROV data/prov"]
+  end
+
+  subgraph Graph["Graph src/graph"]
+    G["Neo4j graph layer"]
   end
 
   A --> E
-  A --> L
-  A --> S
-  E --> R
-  E --> G
-  E --> P
+  V --> E
+  L --> V
   C --> E
+  E --> R
+  E --> S
+  E --> D
+  E --> P
+  E --> G
 ~~~
 
 ---
 
-## 🧠 Story Node & Focus Mode Integration
-
-### What Focus Mode must guarantee
-- Every factual claim displayed in Focus Mode must be traceable to evidence identifiers (dataset/document IDs).
-- The UI must be able to present evidence context (e.g., citations, source popovers, “view dataset” links) rather than hiding it.
-
-### Recommended rendering contract (UI-side)
-When rendering a Story Node (or a Focus Mode view derived from one), ensure the UI can display:
-- **Graph entity references** (canonical IDs; resolved via API),
-- **Evidence identifiers**:
-  - STAC Item/Collection IDs,
-  - DCAT dataset IDs,
-  - PROV activity IDs,
-- **Attribution/licensing** for any local assets.
-
-> If the Story Node includes optional Focus Mode controls (e.g., “focus layers” or “focus time”), treat them as *inputs* to the UI view — never as evidence by themselves.
-
-### Sensitivity handling
-If a Story Node or a layer touches sensitive/restricted locations:
-- Prefer generalized geometry or coarse regions (enforced at the API boundary).
-- The UI must not “undo” redaction by recombining fields, correlating overlays, or encouraging precision zoom.
-- Show a clear **redaction/generalization notice** when the API indicates redaction was applied.
-
----
-
-## 🧪 Validation & CI/CD
-
-### Validation expectations (recommended)
-Even if the exact CI workflow names differ (not confirmed in repo), route-level UI changes should pass:
-- Typecheck + lint (TS/JS)
-- UI layer registry schema validation against `schemas/ui/**`
-- Accessibility checks (keyboard navigation, focus order, semantic headings, contrast)
-- “Forbidden dependency” checks to prevent Neo4j direct access strings/imports in `web/`
-- Secrets/PII scanning (no tokens, no credentials, no sensitive data embedded)
-
-### Reproduction (placeholders)
-~~~bash
-# Example placeholders — replace with repo-specific commands (not confirmed in repo)
-
-# UI checks
-# <package-manager> lint
-# <package-manager> typecheck
-# <package-manager> test
-
-# Schema validation (UI registries)
-# <validator> schemas/ui/** web/**/layers/**
-
-# Security regression check: ensure no Neo4j client usage in web/
-# <grep-tool> "neo4j://" web/
-~~~
-
----
-
-## 📦 Data & Metadata
+## 📦 Data and metadata
 
 ### What the route layer consumes
-Route-level UI code should consume:
-- **API responses** (contracted payloads),
-- **catalog endpoints** (STAC/DCAT/PROV, as published),
-- **Story Nodes** (via API or a governed content pipeline — implementation detail not specified here).
+Route-level code should consume:
+- API responses shaped by contracts
+- catalog endpoints that expose STAC/DCAT/PROV artifacts
+- story artifacts that include evidence identifiers
 
-### What the route layer must not consume
-- Neo4j directly
-- raw/work/processed datasets from `data/**` via filesystem shortcuts
-- unvetted narrative text without evidence identifiers
+### Provenance surface requirements
+When displaying a dataset layer, evidence panel, or story claim, the UI should make it possible to:
+- identify the dataset or artifact ID
+- view license and attribution
+- navigate to catalog context for STAC/DCAT/PROV records
+
+### Layer registry rules
+- Layer registries must validate against `schemas/ui/**`.
+- Layers that reference evidence must include provenance pointers and must not bypass access rules.
 
 ---
 
-## 🌐 STAC, DCAT & PROV Alignment
+## 🌐 STAC, DCAT and PROV alignment
 
 When the UI displays:
-- a dataset layer,
-- an evidence panel,
-- or a story claim,
+- a map layer,
+- a claim in Focus Mode,
+- or a dataset metadata panel,
 
-it should be possible (through the UI) to trace to:
-- a STAC Item/Collection,
-- a DCAT dataset record (if applicable),
-- and a PROV activity describing lineage.
+it must be possible to trace to:
+- a STAC Item or Collection
+- a DCAT dataset record where applicable
+- a PROV activity or bundle that describes lineage
 
-This is the UI-facing expression of the “provenance-linked narrative rule”:
-**no orphan facts, and no orphan datasets.**
-
----
-
-## 🧱 Architecture
-
-### Route responsibilities
-`web/src/app/` should primarily contain:
-- route folders/files,
-- layout + provider wiring,
-- error/not-found boundaries,
-- and minimal route-level composition.
-
-Move reusable logic into:
-- components, features, and services under `web/src/**` (exact paths not confirmed in repo).
-
-### Data access pattern (required)
-Routes and route-composed screens:
-1) call a typed API client / fetch wrapper (implementation-specific),
-2) receive contract-shaped payloads,
-3) render UI with provenance and redaction indicators.
-
-They must not:
-- query the graph directly,
-- “join” graph + catalog payloads in an unreviewed manner,
-- bypass classification or redaction flags.
+No orphan facts and no orphan datasets.
 
 ---
 
-## ⚖ FAIR+CARE & Governance
+## 🧪 Validation and CI/CD
 
-### Review gates (UI)
+### Validation checklist
+- [ ] Markdown protocol validation
+- [ ] Link and reference checks
+- [ ] UI lint and typecheck
+- [ ] UI layer registry schema validation against `schemas/ui/**`
+- [ ] Forbidden dependency checks for direct graph access in `web/`
+- [ ] Accessibility checks
+- [ ] Secrets and PII scanning
+- [ ] Sensitive location leakage checks where applicable
+
+### Reproduction commands
+~~~bash
+# Example placeholders — replace with repo-specific commands
+
+# UI checks
+# <pkg> lint
+# <pkg> typecheck
+# <pkg> test
+
+# UI schema validation
+# <validator> schemas/ui/** web/**/layers/**
+
+# Forbidden dependency scan
+# <grep-tool> "neo4j://" web/
+# <grep-tool> "neo4j-driver" web/
+~~~
+
+### Telemetry signals
+If telemetry is implemented, UI should emit signals that allow audits without exposing sensitive detail.
+
+~~~text
+- focus_mode_redaction_notice_shown (layer_id, redaction_method)
+- promotion_blocked (reason, scan_results_ref)
+~~~
+
+---
+
+## ⚖ FAIR+CARE and governance
+
+### Review gates
 Governance review is required when UI changes:
-- could expand access to sensitive/restricted location detail,
-- add export/download affordances for potentially sensitive layers,
-- change how provenance/citations are displayed (or remove them),
-- introduce AI-generated narrative text into user-visible surfaces.
+- expand access to sensitive or restricted location detail
+- add export or download affordances for potentially sensitive layers
+- change provenance and citation rendering
+- introduce AI-generated narrative into user-visible surfaces
 
-### CARE / sovereignty considerations
-- Treat culturally sensitive locations as **high-risk** by default.
-- Ensure any interaction patterns (filters, clustering, zoom thresholds, tooltips) do not undermine generalization/redaction.
+### CARE and sovereignty considerations
+- Treat culturally sensitive locations as high-risk by default.
+- Ensure interaction patterns do not undermine generalization:
+  - zoom thresholds
+  - clustering behavior
+  - tooltips and coordinate precision
+  - filtering and layer composition
 
 ### AI usage constraints
-- Allowed: UI summarization / formatting / accessibility adaptations.
-- Prohibited: presenting generated content as fact, inferring sensitive locations, or “policy override” behaviors.
+- Allowed: summarization and formatting that preserves evidence links and uncertainty labels.
+- Prohibited: presenting generated content as fact, inferring sensitive locations, or bypassing governance rules.
 
 ---
 
@@ -360,16 +464,17 @@ Governance review is required when UI changes:
 
 | Version | Date | Summary | Author |
 |---|---:|---|---|
+| v1.0.1 | 2025-12-28 | Re-structured to align with Universal template sections, clarified invariants, added route checklist and governance gates | (you) |
 | v1.0.0 | 2025-12-25 | Initial `web/src/app/` README establishing route-layer responsibilities and invariants | (you) |
 
 ---
 
-## Footer refs (do not remove)
+Footer refs:
 - Master guide: `docs/MASTER_GUIDE_v12.md`
-- v13 blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- v13 blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
 - Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
 - Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- API contract extension template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
 - Ethics: `docs/governance/ETHICS.md`
----
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
