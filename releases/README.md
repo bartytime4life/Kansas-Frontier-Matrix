@@ -1,8 +1,8 @@
 ---
 title: "KFM Releases"
 path: "releases/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-27"
+version: "v1.0.1"
+last_updated: "2025-12-28"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:releases:readme:v1.0.0"
-semantic_document_id: "kfm-releases-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:releases:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:releases:readme:v1.0.1"
+semantic_document_id: "kfm-releases-readme-v1.0.1"
+event_source_id: "ledger:kfm:doc:releases:readme:v1.0.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -48,20 +48,20 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ### Purpose
 
 - Provide a **single, versioned home** for KFM **release bundles**: artifacts packaged for distribution, verification, audit, and reproduction.
-- Enable downstream consumers (including institutional partners and auditors) to verify they have **exactly** what was reviewed and approved (via checksums, and optionally signatures/attestations).
-- Keep release bundles aligned to KFM’s canonical ordering:
+- Enable downstream consumers (including institutional partners and auditors) to verify they have **exactly** what was reviewed and approved (via checksums and, when used, signatures/attestations).
+- Keep release packaging aligned to KFM’s canonical ordering:
 
   **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
-- Make release packaging explicit so the repo maintains **one canonical home per subsystem** (no “mystery duplicates”).
+- Enforce the “one canonical home per subsystem” rule: `releases/` is the **distribution edge**, not a second copy of canonical data/catalog/code.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Versioned bundles under `releases/<version>/` | Day-to-day working outputs (use `data/<domain>/work/`) |
-| Release manifest + checksums for all shipped artifacts | Raw ingest sources (use `data/<domain>/raw/` and/or `data/sources/`) |
-| SBOM(s) and optional signatures/attestations | Secrets/credentials/private keys; unredacted PII |
+| Versioned bundles under `releases/<version>/` | Day-to-day working outputs (use `data/work/<domain>/`) |
+| Release manifest + checksums for all shipped artifacts | Raw ingest sources (use `data/raw/<domain>/` and/or `data/sources/` if present) |
+| Optional SBOM(s) and optional signatures/attestations | Secrets/credentials/private keys; unredacted PII |
 | Optional snapshots for offline audit (catalogs/docs/exports) when explicitly chosen per release | Unreviewed sensitive datasets, restricted locations, or culturally sensitive knowledge without approvals and required redaction/generalization |
 | Telemetry snapshots that are schema-governed, non-sensitive, and reviewable | Unbounded logs, raw traces, or telemetry containing identifiers/PII |
 
@@ -79,7 +79,7 @@ Terms used in this document:
 - **Release bundle**: A versioned collection of artifacts intended to be **verifiable**, **reproducible**, and **safe to distribute**.
 - **Release manifest**: Machine-readable index of bundle contents (paths, digests, media types) plus pointers back to provenance and contracts.
 - **Run manifest**: Machine-readable summary of the pipeline run(s) used to produce released artifacts (may live in `data/prov/` and/or in the release bundle).
-- **SBOM**: “Software Bill of Materials” for the code/build environment used to generate release artifacts.
+- **SBOM**: Software Bill of Materials for the code/build environment used to generate release artifacts.
 - **Attestation**: A verifiable statement binding a build/run to specific artifact digests (e.g., SLSA provenance).
 - **Telemetry snapshot**: A curated capture of CI/quality signals used to validate or reproduce a release (schema-governed, non-sensitive).
 
@@ -87,13 +87,15 @@ Terms used in this document:
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Release directory | `releases/` | Maintainers | Home for release bundles (distribution edge) |
+| Release directory | `releases/` | Maintainers | Home for release bundles (**distribution edge**) |
+| This guide | `releases/README.md` | Maintainers | Governs what “belongs” under `releases/` |
 | Versioned bundle | `releases/<version>/` | Maintainers | One folder per release version tag |
+| Release notes | `releases/<version>/RELEASE_NOTES.md` | Maintainers | Recommended summary + known issues (filename **not confirmed in repo**) |
 | Release manifest | `releases/<version>/release-manifest.json` | Maintainers | **Required**; schema recommended (**not confirmed in repo**) |
 | Checksums | `releases/<version>/checksums.sha256` | Maintainers | **Required**; must cover **all shipped files** |
 | SBOM | `releases/<version>/sbom.*` | Maintainers | Recommended: SPDX JSON or CycloneDX JSON |
 | Signatures | `releases/<version>/signatures/` | Maintainers | Optional; detached signatures for critical artifacts |
-| Attestations | `releases/<version>/attestations/` | Maintainers | Optional; e.g., `*.slsa.json` (naming/tooling TBD) |
+| Attestations | `releases/<version>/attestations/` | Maintainers | Optional; build/run provenance attestations (tooling TBD) |
 | Run manifest | `releases/<version>/run-manifest.json` | Pipelines / Maintainers | Optional; may instead be referenced from `data/prov/` |
 | Telemetry snapshot | `releases/<version>/telemetry/` | Maintainers | Optional; schema-validated + non-sensitive only |
 | Catalog snapshots | `releases/<version>/catalogs/` | Maintainers | Optional; snapshot vs pointer policy must be explicit |
@@ -108,6 +110,7 @@ This README is considered complete when:
 - [ ] `releases/` purpose and boundaries are explicit (what belongs here vs. canonical data/catalog locations)
 - [ ] A **minimum required bundle** is defined (manifest + checksums, with clear rules)
 - [ ] Validation + governance expectations are explicit (esp. sensitivity, provenance, reproducibility)
+- [ ] Paths match the v12 Master Guide repo layout where confirmed; any uncertainty is marked **not confirmed in repo**
 
 ---
 
@@ -117,6 +120,30 @@ This README is considered complete when:
 
 - `path`: `releases/README.md` (must match front-matter)
 
+### Related repository paths
+
+| Area | Canonical path | What lives here |
+|---|---|---|
+| Sources | `data/sources/` | Source bundles “as received” (licenses, checksums, original packages) (**if present**) |
+| Raw data | `data/raw/<domain>/` | Raw inputs (no edits; provenance anchors) |
+| Working data | `data/work/<domain>/` | Intermediate outputs; not distributable by default |
+| Processed data | `data/processed/<domain>/` | Published/derived datasets (distribution candidates) |
+| STAC | `data/stac/{collections,items}/` | Canonical STAC catalogs |
+| DCAT | `data/catalog/dcat/` | Canonical DCAT outputs |
+| PROV | `data/prov/` | Canonical provenance bundles (per run / per dataset) |
+| Graph ingest | `data/graph/` | Import fixtures (CSV/Cypher) if used (**not confirmed in repo**) |
+| ETL / pipelines | `src/pipelines/` | Deterministic transforms; write outputs to `data/**` |
+| Graph code | `src/graph/` | Ontology + ingest logic (no UI access) |
+| API boundary | `src/server/` | REST/GraphQL APIs + redaction/generalization |
+| API contracts | `src/server/contracts/` | Contracts + contract tests (**if present**) |
+| UI | `web/` | React/Map UI; must not query Neo4j directly |
+| Story Nodes | `docs/reports/story_nodes/` | Draft/published Story Nodes and assets |
+| Schemas | `schemas/` | JSON Schema constraints (STAC/DCAT/PROV/story/ui/telemetry) |
+| Runs & experiments | `mcp/runs/` / `mcp/experiments/` | Run logs, experiment artifacts (if used) |
+| Tools | `tools/` | Validators, QA scripts, release helpers (if present) |
+| Tests | `tests/` | Unit + integration tests |
+| CI | `.github/` | Workflows + policy gates |
+
 ### Expected layout (recommended)
 
 > Note: exact filenames and formats for manifests/SBOM/signatures/attestations may be finalized by governance. The structure below keeps organization stable even as formats evolve.
@@ -125,6 +152,7 @@ This README is considered complete when:
 📁 releases/
 ├── 📄 README.md
 └── 📁 vX.Y.Z/
+    ├── 📄 RELEASE_NOTES.md                   # RECOMMENDED (filename not confirmed in repo)
     ├── 📄 release-manifest.json              # REQUIRED: machine index (paths + digests + provenance pointers)
     ├── 📄 checksums.sha256                   # REQUIRED: sha256 for ALL shipped files
     ├── 📄 sbom.spdx.json                     # RECOMMENDED: SPDX JSON (or sbom.cdx.json)
@@ -145,31 +173,87 @@ This README is considered complete when:
     └── 📁 telemetry/                         # OPTIONAL: schema-governed, non-sensitive snapshots
 ~~~
 
-### Related repository paths
+---
 
-| Area | Canonical path | What lives here |
+## 🧭 Context
+
+### Background
+
+Releases exist to solve a predictable downstream problem: **“Which exact set of artifacts was reviewed, validated, and approved?”**  
+Without a bundle + manifest + digests, consumers are forced to trust moving targets (branch heads, regenerated catalogs, or unpinned artifacts).
+
+A KFM release bundle provides an auditable “snapshot of intent” that binds:
+
+- the producing commit (`commit_sha`),
+- the produced artifacts (via `sha256` digests),
+- and the evidence chain (STAC/DCAT/PROV pointers, run IDs).
+
+### Assumptions
+
+- Release bundles are **optional** (“if used”) and should remain **lightweight** by default (pointer mode).
+- Any snapshot-mode bundle must remain **verbatim** with canonical artifacts and must still be digest-verified.
+- Governance may require additional artifacts (SBOM/signature/attestation) depending on distribution context.
+
+### Constraints / invariants
+
+- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.
+- `releases/` is packaging only; canonical artifacts remain in `data/`, `src/`, `web/`, `docs/`, `schemas/`.
+- UI must not read Neo4j directly; all access is through contracted APIs that enforce redaction/generalization.
+- No sensitive leakage: release bundles must not contain unreviewed restricted locations, culturally sensitive knowledge, secrets, or unredacted PII.
+
+### Open questions
+
+| Question | Owner | Target date |
 |---|---|---|
-| ETL / pipelines | `src/pipelines/` | Deterministic transforms; write outputs to `data/**` |
-| Domain data | `data/<domain>/{raw,work,processed}/` | Canonical lifecycle for datasets |
-| STAC | `data/stac/{collections,items}/` | Canonical STAC catalogs |
-| DCAT | `data/catalog/dcat/` | Canonical DCAT outputs |
-| PROV | `data/prov/` | Canonical provenance bundles (per run / per dataset) |
-| Graph ingest | `data/graph/` | Import CSV/Cypher fixtures and derived ingest artifacts |
-| Graph code | `src/graph/` | Ontology + ingest logic (no UI access) |
-| API boundary | `src/server/` | REST/GraphQL APIs + redaction/generalization |
-| API contracts | `src/server/contracts/` | OpenAPI/GraphQL contracts + tests |
-| UI | `web/` | React/Map UI; must not query Neo4j directly |
-| Story Nodes | `docs/reports/story_nodes/` | Draft/published Story Nodes and assets |
-| Schemas | `schemas/` | JSON Schema constraints (STAC/DCAT/PROV/storynodes/ui/telemetry) |
-| Runs & experiments | `mcp/runs/` / `mcp/experiments/` | Run logs, experiment artifacts (if used) |
+| Do we standardize a `schemas/releases/release-manifest.schema.json` and enforce it in CI? | TBD | TBD |
+| Do we require SBOM for every release (or only public distribution)? | TBD | TBD |
+| Do we adopt signing + verification tooling (and which mechanism)? | TBD | TBD |
+| Do we allow snapshot-mode bundles by default, or only for auditor/offline needs? | TBD | TBD |
 
-### Extension points checklist (for future work)
+### Future extensions
 
-- (A) Releases: a governed `release-manifest.schema.json` under `schemas/releases/` (**not confirmed in repo**)
-- (B) Releases: standard signing + verification tooling (documented and CI-verified)
-- (C) Telemetry: schema-governed release-quality metrics under `schemas/telemetry/`
-- (D) Catalog snapshots: clear “snapshot vs pointer” policy and drift detection in CI
-- (E) Attestations: consistent SLSA provenance generation and verification gates
+- Release manifest schema under `schemas/releases/` (**not confirmed in repo**)
+- Standard signing + verification tooling (documented and CI-verified)
+- Telemetry schema + stable metrics under `schemas/telemetry/`
+- Snapshot drift detection in CI (“snapshot matches canonical digests”)
+- Attestation generation/verification gates (SLSA or equivalent)
+
+---
+
+## 🗺️ Diagrams
+
+### System / dataflow diagram
+
+~~~mermaid
+flowchart LR
+  A[ETL outputs<br/>data/{raw,work,processed}/<domain>] --> B[Catalogs<br/>data/stac + data/catalog/dcat + data/prov]
+  B --> C[Graph build<br/>src/graph (+ optional data/graph fixtures)]
+  C --> D[API boundary<br/>src/server]
+  D --> E[UI<br/>web]
+  E --> F[Story Nodes<br/>docs/reports/story_nodes]
+  F --> G[Focus Mode<br/>provenance-linked only]
+  B --> H[Release packaging<br/>releases/]
+  H --> I[Release bundle<br/>releases/<version>/]
+~~~
+
+### Optional: release verification sequence
+
+~~~mermaid
+sequenceDiagram
+  participant Consumer
+  participant Release as Release bundle
+  participant Canonical as Canonical artifacts (data/**, docs/**, etc.)
+
+  Consumer->>Release: Fetch release-manifest.json + checksums.sha256
+  Consumer->>Release: Verify checksums (and signatures/attestations if present)
+  alt bundle_mode == snapshot
+    Consumer->>Release: Use bundled copies under releases/<version>/
+  else bundle_mode == pointer
+    Consumer->>Canonical: Fetch canonical artifacts by path
+  end
+  Consumer->>Consumer: Verify sha256 digests match manifest
+  Consumer->>Consumer: Proceed with audit / integration
+~~~
 
 ---
 
@@ -185,12 +269,13 @@ A **release bundle** is the distribution edge of KFM. It packages *reviewed* art
 - audit sensitivity compliance (explicitly non-sensitive public bundle).
 
 **Important boundary:** `releases/` is for packaging and distribution. Canonical sources remain under:
+
 - `data/**` (datasets and catalogs),
 - `schemas/**` (validation contracts),
 - `src/**` and `web/**` (code),
 - `docs/**` (governed documentation).
 
-Also note: pipeline/catalog systems must not treat `docs/` as an output location for STAC/DCAT/PROV artifacts.
+Pipeline/catalog systems must not treat `docs/` as an output location for STAC/DCAT/PROV artifacts.
 
 ### Snapshot vs pointer policy
 
@@ -250,16 +335,12 @@ At minimum:
 
 ### Release bundle as the distribution edge
 
-~~~mermaid
-flowchart LR
-  A[ETL outputs<br/>data/&lt;domain&gt;] --> B[Catalogs<br/>data/stac + data/catalog/dcat + data/prov]
-  B --> C[Graph build<br/>src/graph + data/graph]
-  C --> D[API boundary<br/>src/server]
-  D --> E[UI<br/>web]
-  E --> F[Story Nodes<br/>docs/reports/story_nodes]
-  B --> G[Release packaging<br/>releases/]
-  G --> H[Release bundle<br/>releases/&lt;version&gt;/]
-~~~
+Release packaging is the last-mile step that **must not mutate canonical artifacts**. It should only:
+
+- enumerate outputs (manifest),
+- bind digests (checksums),
+- bind to provenance (PROV pointers / attestations),
+- and (optionally) snapshot copies for offline audit.
 
 ### Subsystem contracts (release-aware)
 
@@ -318,6 +399,19 @@ flowchart LR
 
 ---
 
+## 🧩 Extension points checklist (for future work)
+
+- [ ] Data: new domain added under `data/{raw,work,processed}/<domain>/...`
+- [ ] STAC: new collection + item schema validation
+- [ ] PROV: activity + agent identifiers recorded
+- [ ] Graph: new labels/relations mapped + migration plan
+- [ ] APIs: contract version bump + tests
+- [ ] UI: layer registry entry + access rules
+- [ ] Focus Mode: provenance references enforced
+- [ ] Telemetry: new signals + schema version bump
+
+---
+
 ## 🧠 Story Node & Focus Mode Integration
 
 - If a release includes Story Nodes (or Focus Mode bundles), they must remain **provenance-linked** and safe to render.
@@ -337,6 +431,7 @@ flowchart LR
 - [ ] Markdown protocol checks (front-matter keys, `path`, required sections)
 - [ ] Release manifest is present and lists **every shipped artifact**
 - [ ] `checksums.sha256` covers all shipped artifacts and matches actual digests
+- [ ] Snapshot drift check (if snapshot-mode): snapshotted files match canonical digests
 - [ ] Schema validation for included catalogs (STAC/DCAT/PROV) when snapshot-mode is used
 - [ ] Provenance pointers resolve (PROV bundle paths + run/activity IDs exist and are consistent)
 - [ ] SBOM generated (if required by policy) and included in checksums
@@ -349,6 +444,7 @@ flowchart LR
 Release packaging should not bypass the system’s standard CI gates, including:
 
 - Markdown protocol validation
+- Link/reference checks (no orphan pointers)
 - JSON schema validation (STAC/DCAT/PROV/telemetry as applicable)
 - Graph integrity tests (when graph fixtures are included)
 - API contract tests (when API artifacts are included)
@@ -373,6 +469,11 @@ Release packaging should not bypass the system’s standard CI gates, including:
 | Schema validation pass/fail | CI / validators | `releases/<version>/telemetry/` |
 | Reference integrity (no orphans) | graph/catalog checks | `releases/<version>/telemetry/` |
 | Sensitivity gate results | governance scans | `releases/<version>/telemetry/` |
+| `classification_assigned` | catalog/CI | `releases/<version>/telemetry/` |
+| `redaction_applied` | API/ETL/CI | `releases/<version>/telemetry/` |
+| `promotion_blocked` | CI policy gate | `releases/<version>/telemetry/` |
+| `catalog_published` | catalog pipeline | `releases/<version>/telemetry/` |
+| `focus_mode_redaction_notice_shown` | UI telemetry | `releases/<version>/telemetry/` |
 
 ---
 
@@ -400,20 +501,22 @@ Route through governance review when a release includes:
 
 ---
 
-## 🧾 Version History
+## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-27 | Initial `releases/` README (universal template-aligned) | TBD |
+| v1.0.1 | 2025-12-28 | Align paths to Master Guide v12 + add Context/Diagrams + tighten release boundaries | TBD |
 
 ---
 
 Footer refs:
 
 - Master Guide: `docs/MASTER_GUIDE_v12.md`
-- v13 Blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` (**not confirmed in repo**)
 - Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
 - Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty policy: `docs/governance/SOVEREIGNTY.md`
+- Markdown work protocol: `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` (**not confirmed in repo**)
+- v13 Blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` (**not confirmed in repo**)
