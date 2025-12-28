@@ -1,8 +1,8 @@
 ---
 title: "KFM src — Source Code Layout README"
 path: "src/README.md"
-version: "v1.1.0"
-last_updated: "2025-12-27"
+version: "v1.2.0"
+last_updated: "2025-12-28"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:src:readme:v1.1.0"
-semantic_document_id: "kfm-src-readme-v1.1.0"
-event_source_id: "ledger:kfm:doc:src:readme:v1.1.0"
+doc_uuid: "urn:kfm:doc:src:readme:v1.2.0"
+semantic_document_id: "kfm-src-readme-v1.2.0"
+event_source_id: "ledger:kfm:doc:src:readme:v1.2.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -43,19 +43,19 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 # src — Source Code Layout
 
-This README is the **governed placement contract** for what belongs under `src/` and how it maps to the KFM architecture. Its job is to keep code placement **deterministic**, boundaries **enforced**, and the system’s canonical pipeline **unchanged**.
+This README is the **governed placement contract** for what belongs under `src/` and how it maps to the KFM architecture. Its job is to keep code placement **deterministic**, subsystem boundaries **enforced**, and the system’s canonical pipeline **unchanged**:
+
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
 ## 📘 Overview
 
 ### Purpose
 
 - Provide a **single, governed map** of what lives under `src/` and how it aligns to KFM’s layered architecture.
-- Act as a **navigation and placement contract** so contributors put new code in the correct subsystem and do not break the API boundary.
-- Keep the repo architecture synced to the canonical flow:
+- Act as a **navigation + placement contract** so contributors put new code in the correct subsystem and do not break the API boundary.
+- Encode “one canonical home per subsystem” (no duplicates) and keep the repo synced to the canonical pipeline ordering.
 
-  **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
-
-### TLDR placement
+### TL;DR placement
 
 - **`src/pipelines/`**: ETL + transforms + catalog builders that produce governed artifacts under `data/` (processed datasets + STAC/DCAT/PROV).
 - **`src/graph/`**: ontology bindings + graph ingest/build logic + integrity checks (Neo4j layer).
@@ -66,9 +66,9 @@ This README is the **governed placement contract** for what belongs under `src/`
 
 | In Scope | Out of Scope |
 |---|---|
-| High-level `src/` layout, responsibilities, and contract boundaries | Repo-specific deployment/run commands and environment secrets |
+| `src/` layout, responsibilities, and contract boundaries | Repo-specific deployment/run commands, infrastructure provisioning, environment secrets |
 | Placement rules for pipelines, graph, and API code | Deep implementation details of any single domain pipeline |
-| Cross-links to governance, contracts, and schemas | Creating new policy text (policy belongs under `docs/governance/`) |
+| Drift-detection guidance + migration targets | Creating new policy text (policy belongs under `docs/governance/`) |
 
 ### Audience
 
@@ -84,11 +84,14 @@ This README is the **governed placement contract** for what belongs under `src/`
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical ordering + system inventory + extension matrix |
-| Redesign blueprint v13 | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | KFM Core | Canonical homes, “one home per subsystem,” drift control |
+| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical ordering + repo layout + subsystem invariants |
+| Redesign blueprint v13 | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | KFM Core | Drift fixes + one canonical home enforcement |
+| Next stages blueprint | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | Architecture | Roadmap + gap closure plan (**not confirmed in repo**) |
+| Full architecture & vision | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | Architecture | End-to-end vision (**not confirmed in repo**) |
 | Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | KFM Core | Template applied here |
 | API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API | Required for public API evolution |
 | Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative | Provenance-first narrative structure |
+| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Docs | **not confirmed in repo** |
 | Schema registry | `schemas/` | Data/Platform | JSON Schemas for catalogs, story nodes, telemetry, contracts |
 
 ### Definition of done for this document
@@ -98,7 +101,8 @@ This README is the **governed placement contract** for what belongs under `src/`
 - [ ] Canonical pipeline ordering and API boundary invariants are stated
 - [ ] Expected `src/` tree is documented and clearly labeled “recommended”
 - [ ] Contract surfaces are listed (`schemas/`, `src/server/contracts/`, ontology bindings)
-- [ ] Validation gates are listed (schema, contract, security, provenance)
+- [ ] Drift rules reflect v12 + v13 guidance (no duplicate subsystem homes)
+- [ ] Validation gates are listed (schema, link checks, contract, security, provenance)
 - [ ] Sovereignty and sensitivity rules are acknowledged and not weakened
 
 ### Quick placement guide
@@ -107,11 +111,11 @@ Use this table when deciding where to put new work.
 
 | What you are adding or changing | Primary home in `src/` | Also update | Minimum gates |
 |---|---|---|---|
-| New connector or ETL transform | `src/pipelines/` | `data/**` outputs + `schemas/` if needed + domain docs | schema validation + idempotence checks |
+| New connector or ETL transform | `src/pipelines/` | `data/**` outputs + `schemas/` if needed + domain runbook under `docs/` | schema validation + idempotence checks |
 | New catalog mapping or provenance emission | `src/pipelines/` | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC/DCAT/PROV validation |
 | New entity type or relationship | `src/graph/` | ontology bindings + ingest mappings + upstream pipeline export | graph integrity + provenance pointer checks |
 | New API endpoint or field | `src/server/` | `src/server/contracts/` + contract tests + version notes | OpenAPI/GraphQL lint + contract tests |
-| New UI feature or layer | **not `src/`** (`web/`) | API contract + UI layer registry | a11y + contract conformance |
+| New UI feature or map layer | **not `src/`** (`web/`) | API contract + UI layer registry | a11y + contract conformance |
 | New Story Node type or narrative workflow | **not `src/`** (`docs/reports/story_nodes/`) | graph + API + UI as needed | story node schema + citation validation |
 | New security or telemetry gate | varies | `.github/` workflows + `docs/security/` + telemetry schemas | secrets/PII scan + policy enforcement tests |
 
@@ -133,7 +137,7 @@ These are the canonical subsystem homes. Keep them single-homed and drift-free.
 | API boundary | `src/server/` | OpenAPI/GraphQL contracts, policy + redaction, query services |
 | UI | `web/` | map layers, Focus Mode UX, citation rendering |
 | Story Nodes | `docs/reports/story_nodes/` | draft/published narratives + assets |
-| Experiments and run logs | `mcp/` | manifests, experiments, model cards, SOPs |
+| Experiments and run logs | `mcp/runs/` + `mcp/experiments/` *(preferred)* | manifests, experiments, model cards, SOPs |
 | Schemas | `schemas/` | JSON Schemas, validation contracts |
 | Tests | `tests/` | unit, integration, contract, schema validation |
 | Utilities | `tools/` | dev scripts, validators, repo hygiene |
@@ -143,9 +147,9 @@ These are the canonical subsystem homes. Keep them single-homed and drift-free.
 
 | Area | Path | What lives here |
 |---|---|---|
-| Data lifecycle | `data/` | raw, work, processed datasets, plus published catalog + provenance outputs |
+| Data lifecycle | `data/` | raw/work/processed datasets, plus published catalog + provenance outputs |
 | Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | evidence artifacts consumed downstream |
-| Graph import artifacts | `data/graph/` | CSV/Cypher exports for Neo4j ingest if used |
+| Graph import artifacts | `data/graph/` | CSV/Cypher exports for Neo4j ingest (if used) |
 | Documentation | `docs/` | governed docs (guides, standards, runbooks, reports) |
 | Schemas | `schemas/` | validation contracts (catalogs, story nodes, telemetry, API schemas) |
 | Pipelines | `src/pipelines/` | ETL + transforms + catalog builders |
@@ -155,8 +159,8 @@ These are the canonical subsystem homes. Keep them single-homed and drift-free.
 | Story Nodes | `docs/reports/story_nodes/` | narrative artifacts + assets |
 | Tests | `tests/` | unit/integration/contract/schema tests |
 | Tools | `tools/` | utilities, validators, hygiene scripts |
-| MCP | `mcp/` | experiments, run manifests, model cards, SOPs |
-| Security | `.github/` + `docs/security/` | security standards and workflows |
+| MCP | `mcp/runs/` + `mcp/experiments/` | experiments, run manifests, model cards, SOPs |
+| Security | `.github/` + `docs/security/` | security standards and workflows (**docs path not confirmed**) |
 
 ### Expected file tree for this sub-area
 
@@ -173,7 +177,8 @@ This is a **recommended** structure. Some directories may not exist yet. Keep th
 │   │       ├── 📁 ingest/                 # source connectors
 │   │       ├── 📁 transform/              # normalization/joins/QA
 │   │       ├── 📁 catalog/                # STAC/DCAT/PROV builders
-│   │       └── 📁 export/                 # processed + graph export (optional)
+│   │       ├── 📁 export/                 # processed + graph export (optional)
+│   │       └── 📁 tests/                  # pipeline-focused tests/fixtures (optional)
 │   └── 📁 shared/                         # shared utilities (keep stable and minimal)
 ├── 📁 graph/
 │   ├── 📄 README.md
@@ -192,10 +197,31 @@ This is a **recommended** structure. Some directories may not exist yet. Keep th
     └── 📁 adapters/                       # graph + catalog adapters (Neo4j, STAC readers, etc.)
 ~~~
 
+### Dependency direction rules
+
+These rules are a practical enforcement of the canonical pipeline ordering:
+
+- `src/pipelines/` **may produce** artifacts under `data/**` and **must not** depend on API/server code.
+- `src/graph/` **may consume** processed + catalog + PROV artifacts and build graph ingest logic; it **must not** depend on UI code.
+- `src/server/` **may consume** graph query services and catalog/provenance readers to serve contracted responses; it is the **only** subsystem allowed to mediate UI ↔ graph access.
+- `web/` (UI) **must not** query Neo4j directly; it consumes APIs and (optionally) published catalog endpoints.
+
+### File-type correctness
+
+Do not mix governed Markdown and runnable scripts in the same file.
+
+- If a pipeline recipe needs YAML front-matter and Markdown narrative, it belongs under `docs/` (typically `docs/pipelines/<domain>/`).
+- If it is runnable code, it belongs under `src/` (typically `src/pipelines/...`).
+- If you find a `.py`/`.js` file containing YAML front-matter + Markdown, split it into:
+  - a Markdown recipe under `docs/pipelines/`, and
+  - a runnable script/module under `src/pipelines/`.
+
 ### Legacy drift and migration notes
 
+The v13 redesign blueprint documents common drift patterns and the target fixes.
+
 - Do **not** create alternative subsystem roots under `src/` such as `src/api/`, `src/ui/`, `src/map/`, or `src/neo4j/`.
-- If you encounter such directories in the repo, treat them as **legacy drift** and:
+- If you encounter such directories, treat them as **legacy drift** and:
   1) document deprecation intent,
   2) migrate functionality into the canonical home,
   3) keep a compatibility shim only if required by contract tests,
@@ -211,7 +237,7 @@ KFM is a governed geospatial and historical knowledge system designed around **e
 
 - `src/` contains **code**, not datasets.
 - `data/` contains **artifacts and outputs** (raw/work/processed + catalogs + provenance).
-- `docs/` contains **governed documents**, templates, and runbooks.
+- `docs/` contains **governed documents**, templates, runbooks, and reports.
 - `schemas/` contains **validation contracts** used across pipeline, graph, API, UI, and Story Node validation.
 
 ### Constraints and invariants
@@ -225,16 +251,16 @@ These are non-negotiable and should be treated as architecture contracts:
 - **Evidence-first narrative:** Story Nodes and Focus Mode must not contain unsourced claims. If interpretive, label as inference or hypothesis.
 - **Determinism and idempotence:** pipelines should produce reproducible outputs (stable IDs, pinned inputs where applicable, fixed seeds).
 - **Classification monotonicity:** outputs must not become less restrictive than their inputs. Redaction and generalization must be applied consistently across data, catalogs, API, and UI.
-- **CI gates are expected:** schema validation, contract tests, secret and PII scans, and sensitive-location leakage checks.
+- **CI gates are expected:** schema validation, link/reference checks, contract tests, secret and PII scans, and sensitive-location leakage checks.
 
 ### Open questions
 
 | Question | Owner | Target date |
 |---|---|---|
 | Which `src/` subtrees exist today vs target layout? | TBD | TBD |
-| What are the canonical build and test commands per subsystem? | TBD | TBD |
+| Which data staging convention is canonical in this repo: `data/raw/<domain>/...` or an equivalent variant? | TBD | TBD |
+| Where do domain pipeline recipes/runbooks live: `docs/pipelines/<domain>/` or `docs/data/<domain>/`? | TBD | TBD |
 | Where do contract tests live and are they enforced in CI? | TBD | TBD |
-| Are STAC and PROV profile docs complete or still placeholders? | TBD | TBD |
 
 ### Future extensions
 
@@ -275,8 +301,8 @@ sequenceDiagram
 
 | Input | Format | Where from | Validation |
 |---|---|---|---|
-| Raw source files | varies | `data/**/raw/` | domain QA + license/sensitivity checks |
-| Intermediate artifacts | varies | `data/**/work/` | optional; determinism preferred |
+| Raw source files | varies | `data/raw/<domain>/` *(or repo’s canonical equivalent)* | domain QA + license/sensitivity checks |
+| Intermediate artifacts | varies | `data/work/<domain>/` *(optional)* | determinism preferred |
 | Schemas | JSON Schema | `schemas/` | schema validation in CI |
 | Governed docs and runbooks | Markdown | `docs/` | doc lint + template validation |
 
@@ -284,13 +310,26 @@ sequenceDiagram
 
 | Output | Format | Path | Contract or schema |
 |---|---|---|---|
-| Processed datasets | CSV/Parquet/GeoJSON/etc. | `data/**/processed/` | domain schema or constraints |
+| Processed datasets | CSV/Parquet/GeoJSON/etc. | `data/processed/<domain>/` *(or repo’s canonical equivalent)* | domain schema or constraints |
 | STAC catalogs | JSON | `data/stac/` | KFM-STAC profile |
 | DCAT catalog | JSON-LD/RDF | `data/catalog/dcat/` | KFM-DCAT profile |
 | PROV bundles | JSON/Turtle/etc. | `data/prov/` | KFM-PROV profile |
 | Graph ingest artifacts | CSV/Cypher/etc. | `data/graph/` | graph ingest constraints |
 | API contracts | OpenAPI/GraphQL SDL | `src/server/contracts/` | contract lint + versioning |
 | API responses | JSON | runtime | contract tests |
+
+### Sensitivity & redaction
+
+Even though `src/` is code-only, it contains the enforcement logic that controls what can be exposed downstream:
+
+- Redaction/generalization and classification propagation should be implemented and tested in `src/server/` (middleware/services).
+- Pipelines and graph ingest must preserve sensitivity metadata and provenance pointers so the server can enforce policy consistently.
+
+### Quality signals
+
+- Deterministic behavior (stable IDs, pinned dependencies/config, idempotent reruns).
+- Contract conformance: API responses, schemas, and catalogs validate in CI.
+- Link/reference checks for governed docs and contracts remain green.
 
 Rule: **outputs do not belong in `src/`**. If a file is an artifact (data, catalog, provenance), it belongs under `data/` (or `releases/` for packaged outputs).
 
@@ -327,14 +366,15 @@ Rule: **outputs do not belong in `src/`**. If a file is an artifact (data, catal
 
 Primary job: turn raw sources into governed, validated evidence outputs.
 
-- Read: `data/**/raw/` (and optionally `data/**/work/`)
-- Write: `data/**/processed/`, `data/stac/`, `data/catalog/dcat/`, `data/prov/`
+- Read: `data/raw/<domain>/` (and optionally `data/work/<domain>/`)
+- Write: `data/processed/<domain>/`, `data/stac/`, `data/catalog/dcat/`, `data/prov/`
 - Optional: export graph ingest bundles to `data/graph/`
 
 Non-negotiables:
 
 - deterministic behavior (stable IDs, pinned inputs where applicable)
 - idempotent reruns (unchanged inputs → unchanged outputs)
+- every run emits PROV (+ a run manifest if required by the repo’s release process)
 - no secrets in committed configs
 
 ### `src/graph` responsibilities
@@ -360,7 +400,7 @@ Primary job: expose a safe, stable interface to KFM capabilities.
 
 Non-negotiables:
 
-- contracts live under `src/server/contracts/`
+- contracts live under `src/server/contracts/` (keep OpenAPI/GraphQL canonical here)
 - changes require versioning discipline and contract tests
 - do not bypass governance checks with “quick fixes” in the UI
 
@@ -378,8 +418,13 @@ These are the “hard edges” that keep subsystems decoupled:
 Even though Story Nodes live under `docs/`, `src/` must support narrative integrity.
 
 - `src/server/` should expose endpoints that return:
-  - data needed to render evidence layers,
+  - data needed to render evidence layers, and
   - provenance references sufficient for citation rendering.
+- Evidence artifacts (including AI/analysis outputs) are treated like datasets:
+  - generated under `data/processed/<domain>/...`,
+  - cataloged (STAC/DCAT) and traced (PROV),
+  - optionally linked into the graph with explicit provenance,
+  - exposed only via APIs that implement redaction and classification rules.
 - If predictive or AI-derived outputs are introduced, they must be:
   - clearly labeled as not-fact,
   - opt-in for UI display,
@@ -390,6 +435,7 @@ Even though Story Nodes live under `docs/`, `src/` must support narrative integr
 ### Validation steps
 
 - [ ] Markdown protocol checks for governed docs
+- [ ] **Link + reference checks** (internal links resolve; “not confirmed in repo” used where appropriate)
 - [ ] Schema validation for STAC/DCAT/PROV artifacts
 - [ ] Pipeline determinism and idempotence checks
 - [ ] Graph integrity checks (constraints + provenance pointers)
@@ -405,18 +451,18 @@ Even though Story Nodes live under `docs/`, `src/` must support narrative integr
 # 1) validate schemas
 # 2) run unit/integration tests
 # 3) run contract tests
-# 4) run doc lint
+# 4) run doc lint + link check
 ~~~
 
 ### Telemetry signals
 
 | Signal | Source | Where recorded |
 |---|---|---|
-| Schema validation results | CI | CI logs + artifacts |
+| Link + schema validation results | CI | CI logs + artifacts |
 | Catalog publish lineage | pipelines | `data/prov/` + run receipts |
 | Contract conformance | API tests | `tests/**` (recommended) |
-| Promotion blocked | CI / publish step | CI logs + governance events |
 | Graph integrity | graph checks | CI logs + ingest reports |
+| Promotion blocked / policy violations | CI / publish step | CI logs + governance events |
 
 ## ⚖ FAIR+CARE & Governance
 
@@ -446,6 +492,7 @@ Even though Story Nodes live under `docs/`, `src/` must support narrative integr
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
+| v1.2.0 | 2025-12-28 | Synced `src/` contract to Master Guide v12 + v13 drift rules; clarified dependency direction, file-type correctness, and CI link checks; added sensitivity/quality signals | TBD |
 | v1.1.0 | 2025-12-27 | Reworked `src/` README to align with v12 inventory + extension matrix and v13 canonical homes | TBD |
 | v1.0.0 | 2025-12-26 | Initial `src/` layout README (governed) | TBD |
 
@@ -453,9 +500,10 @@ Footer refs:
 
 - Master Guide: `docs/MASTER_GUIDE_v12.md`
 - Redesign blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Next stages blueprint: `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` (**not confirmed in repo**)
+- Full architecture & vision: `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` (**not confirmed in repo**)
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
 - Templates: `docs/templates/`
 - Schemas: `schemas/`
----
