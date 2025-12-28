@@ -188,15 +188,14 @@ Route it through the API.
 
 ~~~mermaid
 flowchart LR
-  A[ETL / Pipelines] --> B[STAC / DCAT Catalogs]
-  B --> C[PROV Lineage]
-  C --> D[Graph (Neo4j)]
-  D --> E[API Layer]
-  E --> F[UI (web/)]
-  F --> G[Story Nodes]
-  G --> H[Focus Mode]
-
-  F --> P[web/public/<static assets>]
+  A["ETL / Pipelines"] --> B["STAC / DCAT Catalogs"];
+  B --> C["PROV Lineage"];
+  C --> D["Graph (Neo4j)"];
+  D --> E["API Layer"];
+  E --> F["UI (web/)"];
+  F --> G["Story Nodes"];
+  G --> H["Focus Mode"];
+  F --> P["web/public — static assets"];
 ~~~
 
 ## 📦 Data & Metadata
