@@ -6,19 +6,71 @@
 Creative Commons Attribution 4.0 International (CC BY 4.0)
 SPDX-License-Identifier: CC-BY-4.0
 
-Unless otherwise noted, the Kansas Frontier Matrix (KFM) documentation, Story Nodes, and other
-original non-code content in this repository are licensed under the Creative Commons Attribution
-4.0 International License.
+Kansas Frontier Matrix (KFM) — Repository Licensing
+==================================================
 
-License overrides and third-party material:
-- If a document includes a YAML front matter `license:` field, that value governs that document.
-- If a dataset/asset includes a `license` field in STAC or DCAT metadata, that value governs that
-  dataset/asset.
-- Third-party material (e.g., externally sourced text, images, scans, datasets) is governed by its
-  original license and attribution requirements.
+Default license (KFM-authored, non-code content)
+------------------------------------------------
+Unless otherwise noted, the Kansas Frontier Matrix (KFM) documentation, Story Nodes, templates,
+schemas, and other original non-code content in this repository are licensed under the Creative
+Commons Attribution 4.0 International License (CC BY 4.0).
 
-You may share (copy and redistribute) and adapt (remix, transform, and build upon) this material
-for any purpose, provided you give appropriate attribution and indicate if changes were made.
+KFM’s artifact-level licensing model (how to determine the governing license)
+----------------------------------------------------------------------------
+KFM is designed to track provenance and usage constraints at the artifact level (not just repo-wide).
+Licensing should be captured and discovered alongside evidence metadata wherever possible:
+
+- Documents: a YAML front matter `license:` field (if present) governs that document.
+- Datasets / assets: a `license` field in STAC or DCAT metadata (or the equivalent license field in
+  the adopted DCAT serialization/profile) governs that dataset/asset/distribution.
+- Third-party material: governed by its original license and attribution requirements.
+
+License precedence (highest to lowest)
+--------------------------------------
+If multiple license signals exist, apply the first one that exists:
+
+1) Explicit per-file license header / SPDX identifier (if present)
+2) YAML front matter `license:` (governed docs, including Story Nodes)
+3) STAC metadata license field
+4) DCAT metadata license field
+5) Third-party license/credit lines bundled with the source material
+6) Repository default for KFM-authored non-code content (CC BY 4.0)
+
+Path-based guidance (non-normative convenience)
+-----------------------------------------------
+These are convenience hints based on KFM’s canonical directory layout. Always prefer the
+artifact-level license signals above.
+
+- docs/** : governed docs + Story Nodes -> CC BY 4.0 unless overridden by YAML front matter.
+- data/stac/**, data/catalog/dcat/**, data/prov/** : catalog/provenance artifacts -> governed by the
+  license recorded in the corresponding STAC/DCAT record.
+- data/raw/** and any externally sourced files anywhere -> governed by the original source license.
+
+Software / code notice
+----------------------
+This repository may also contain software (e.g., src/**, web/**, tools/**, tests/**). CC BY 4.0 is the
+default for non-code content only. Software code must be covered by an explicit software license
+and/or per-file SPDX identifiers; if you do not see one, do not assume reuse rights.
+
+Third-party material (externally sourced)
+-----------------------------------------
+Third-party material (e.g., externally sourced text, images, scans, datasets) is governed by its
+original license and attribution requirements. Where possible, KFM records these obligations in
+STAC/DCAT metadata and provenance logs so downstream users can comply.
+
+Attribution requirements (CC BY 4.0)
+------------------------------------
+You may share (copy and redistribute) and adapt (remix, transform, and build upon) CC BY 4.0
+material for any purpose, provided you give appropriate attribution and indicate if changes were
+made.
+
+For datasets and assets, follow the attribution and citation instructions recorded in STAC/DCAT
+metadata and the referenced original sources.
+
+Governance note (license + provenance review)
+---------------------------------------------
+New external data sources are a governance review trigger and must include explicit license and
+source attribution in STAC/DCAT metadata before being used in Story Nodes or surfaced via APIs.
 
 Full license details:
 https://creativecommons.org/licenses/by/4.0/
