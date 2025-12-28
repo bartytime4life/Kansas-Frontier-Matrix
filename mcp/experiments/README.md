@@ -1,280 +1,352 @@
 ---
-title: "🧪 Kansas Frontier Matrix — MCP Experiments Index (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
+title: "🧪 MCP Experiments — Index & Rules (v11 LTS · Diamond⁹ Ω / Crown∞Ω)"
 path: "mcp/experiments/README.md"
-
 version: "v11.2.6"
-last_updated: "2025-12-12"
+last_updated: "2025-12-28"
+status: "active"
+doc_kind: "Index"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Quarterly · FAIR+CARE Council & MCP Board"
 content_stability: "stable"
 
-status: "Active / Enforced"
-doc_kind: "Index"
 header_profile: "standard"
 footer_profile: "standard"
 intent: "mcp-experiment-index"
 
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
-
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "../../releases/v11.2.6/signature.sig"
-attestation_ref: "../../releases/v11.2.6/slsa-attestation.json"
-sbom_ref: "../../releases/v11.2.6/sbom.spdx.json"
-manifest_ref: "../../releases/v11.2.6/manifest.zip"
+signature_ref: "releases/v11.2.6/signature.sig"
+attestation_ref: "releases/v11.2.6/slsa-attestation.json"
+sbom_ref: "releases/v11.2.6/sbom.spdx.json"
+manifest_ref: "releases/v11.2.6/manifest.zip"
 
-telemetry_ref: "../../releases/v11.2.6/mcp-experiments-telemetry.json"
-telemetry_schema: "../../schemas/telemetry/mcp-experiments-v11.json"
+telemetry_ref: "releases/v11.2.6/mcp-experiments-telemetry.json"
+telemetry_schema: "schemas/telemetry/mcp-experiments-v11.json"
 
-governance_ref: "../../docs/standards/governance/ROOT-GOVERNANCE.md"
-ethics_ref: "../../docs/standards/faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
 
 semantic_document_id: "kfm-mcp-experiments-index"
 event_source_id: "ledger:kfm:mcp:experiments:index:v11.2.6"
 doc_uuid: "urn:kfm:mcp:experiments:index:v11.2.6"
 
 machine_extractable: true
-classification: "Public"
-sensitivity: "Low"
-fair_category: "F1-A1-I2-R3"
-care_label: "Mixed"
 immutability_status: "version-pinned"
 accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "Kansas / United States"
+jurisdiction: "US-KS"
+
+classification: "open"
+sensitivity: "public"
+fair_category: "FAIR+CARE"
+care_label: "Mixed"
 
 ai_transform_permissions:
-  - "summarization"
-  - "timeline-generation"
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "metadata-extraction"
-  - "layout-normalization"
+  - "summarize"
+  - "timeline_generation"
+  - "semantic_highlighting"
+  - "a11y_adaptations"
+  - "metadata_extraction"
+  - "layout_normalization"
 ai_transform_prohibited:
-  - "content-alteration"
-  - "speculative-additions"
-  - "narrative-fabrication"
-  - "governance-override"
-  - "provenance-fabrication"
+  - "content_alteration"
+  - "speculative_additions"
+  - "narrative_fabrication"
+  - "governance_override"
+  - "provenance_fabrication"
 
 provenance_chain:
   - "urn:kfm:mcp:experiments:index:v11.0.0"
   - "urn:kfm:mcp:experiments:index:v11.2.6"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-<div align="center">
-
-# 🧪 **MCP Experiments — Official Index (v11 LTS)**  
-`mcp/experiments/README.md`
-
-**Purpose**  
-Provide the **canonical index and ruleset** for all experiments executed under the Kansas Frontier Matrix Master Coder Protocol (MCP‑DL v6.3).  
-This directory forms the **scientific and computational backbone** of KFM v11: every climate run, hydrology reconstruction, geospatial inference, narrative validation, and AI/ML model is documented here with **full provenance, reproducibility, and governance metadata.**
-
-</div>
-
----
+# 🧪 MCP Experiments — Index & Rules (v11 LTS)
 
 ## 📘 Overview
 
-### What counts as an experiment?
+### Purpose
+This README is the **canonical index and enforcement surface** for all experiment work under **MCP-DL v6.3**.
+An “experiment” in KFM is any reproducible activity that produces **new evidence artifacts** (data, models, metrics, derived layers, evaluations) that may later feed catalogs, graph, APIs, UI, Story Nodes, or Focus Mode.
 
-Any activity that produces **new information**, **processed data**, **trained models**, **derived spatial/temporal layers**, or **AI-generated narrative components** must be logged as an MCP experiment.
+### Scope
 
-This includes (non-exhaustive):
+| In Scope | Out of Scope |
+|---|---|
+| Experiment records (IDs, intent, inputs/outputs, configs, seeds), artifact locations, reproducibility rules, catalog/provenance expectations, governance and sensitivity guardrails. | Domain ETL recipes (live in `src/pipelines/**`), deployment/ops procedures (live in `tools/**`), unsourced narrative (belongs only in Story Nodes with evidence links). |
 
-- Climate anomaly calculations
-- Hydrology reconstruction (1900 → 2100)
-- ETL harmonization experiments
-- Geospatial alignment / vertical datum conversions
-- H3 generalization tuning (heritage masking trials)
-- Story Node generation tests
-- Explainability studies (SHAP/LIME overlays)
-- NLP over newspapers / archives
-- Any model training or re-training
-- CrewAI or LangGraph agent-driven transformations
+### Audience
+- Primary: contributors running experiments (data engineering, modeling/AI, QA, pipeline maintainers).
+- Secondary: governance reviewers, editors, and auditors validating reproducibility and provenance.
 
-If a dataset or narrative **changes because of your code**, it must be reproducible and therefore must be logged.
+### Definitions (link to glossary)
+- Glossary: `docs/glossary.md` *(not confirmed in repo; recommended)*
+- **Experiment**: a bounded investigation whose outputs are **replayable** and **auditable**.
+- **Run record**: machine-readable execution log + config snapshot stored under `mcp/runs/`.
+- **Evidence artifact**: an output that is treated as **data + metadata** (STAC/DCAT/PROV) before it can appear in UI/narrative.
+- **Provenance-first**: catalogs and lineage are produced **before** graph/UI/story surfacing.
 
-### Index of experiments
+### Key artifacts (what this document points to)
+| Artifact | Path / Identifier | Owner | Notes |
+|---|---|---|---|
+| Experiments index (this doc) | `mcp/experiments/README.md` | MCP Board | Rules + index |
+| Run records | `mcp/runs/` | MCP Board | Execution logs, configs, seeds |
+| Telemetry bundle | `releases/<version>/mcp-experiments-telemetry.json` | MCP Board | Energy/carbon + perf |
+| Telemetry schema | `schemas/telemetry/mcp-experiments-v11.json` | Schemas | Validation contract |
+| STAC outputs | `data/stac/` | Catalog Maintainers | Items/Collections for spatial outputs |
+| DCAT outputs | `data/catalog/dcat/` | Catalog Maintainers | Dataset/distribution discovery |
+| PROV outputs | `data/prov/` | Catalog Maintainers | Lineage bundles |
 
-This table is intended to be **auto-generated friendly** (or maintained manually when needed).
-
-| Experiment ID | Title | Domain | Date | Status |
-|--------------:|-------|--------|------|--------|
-| _None yet_ | — | — | — | — |
-
----
+### Definition of done (for this document)
+- [ ] Front-matter complete + valid
+- [ ] Directory layout matches canonical homes (no “mystery” paths)
+- [ ] Rules are explicit (MUST/SHOULD) and CI-checkable
+- [ ] Governance + sovereignty guardrails are stated
+- [ ] Index table format is stable and automation-friendly
 
 ## 🗂️ Directory Layout
 
+### This document
+- `path`: `mcp/experiments/README.md` (must match front-matter)
+
+### Related repository paths
+| Area | Path | What lives here |
+|---|---|---|
+| Experiments | `mcp/experiments/` | Experiment records + index |
+| Run logs | `mcp/runs/` | Replayable run logs + configs + seeds |
+| Model cards | `mcp/model_cards/` | Model documentation + limitations |
+| Raw data | `data/raw/` | Immutable inputs |
+| Working data | `data/work/` | Intermediate artifacts |
+| Processed outputs | `data/processed/` | Published/derived datasets |
+| STAC | `data/stac/` | STAC Items/Collections |
+| DCAT | `data/catalog/dcat/` | DCAT datasets/distributions |
+| PROV | `data/prov/` | PROV lineage bundles |
+
+### Expected file tree for this sub-area
 ~~~text
 📁 mcp/
-└── 📁 experiments/                              — MCP experiment logs (timestamped)
-    ├── 📄 README.md                             — Canonical index + rules (this file)
-    ├── 📄 2025-11-01_CLIMATE-EXP-001.md          — Climate anomaly reconstruction experiment
-    ├── 📄 2025-11-02_HYDRO-EXP-002.md            — Hydrology temporal smoothing experiment
-    ├── 📄 2025-11-05_AI-EXP-003.md               — Story Node v3 generation trial
-    ├── 📄 2025-11-12_AI-EXP-004.md               — CrewAI harmonization test
-    └── 📄 YYYY-MM-DD_<DOMAIN>-EXP-###.md         — Additional experiments (required format)
+├── 📁 experiments/
+│   ├── 📄 README.md                           — Canonical index + rules (this file)
+│   ├── 📄 YYYY-MM-DD_<DOMAIN>-EXP-###.md       — Experiment record (single-file mode)
+│   └── 📁 YYYY/
+│       └── 📁 YYYY-MM-DD_<DOMAIN>-EXP-###/
+│           ├── 📄 README.md                    — Experiment record (folder mode)
+│           ├── 📁 config/                      — Frozen configs (copies; source-of-truth in repo)
+│           ├── 📁 results/                     — Figures/tables/maps (small, reviewable)
+│           └── 📁 notes/                       — Optional scratch notes (no governance bypass)
+├── 📁 runs/
+│   └── 📄 README.md                           — Run records and reproducibility logbook
+└── 📁 model_cards/
+    └── 📄 README.md                           — Model cards index
 ~~~
-
-### Filename convention
-
-All experiment filenames MUST follow:
-
-~~~text
-YYYY-MM-DD_<DOMAIN>-EXP-###.md
-~~~
-
-### Domain codes
-
-Domains may include:
-
-- CLIMATE
-- HYDRO
-- GEO
-- AI
-- NLP
-- ARCH
-- HAZARD
-- STORY
-- PIPELINE
-
----
 
 ## 🧭 Context
 
-### Where experiment artifacts live
+### Background
+KFM treats experiments as **governed scientific work**: reproducible by design, provenance-linked by default, and safe for public release under FAIR+CARE and sovereignty constraints.
+Any output that could influence graph/UI/story must have an auditable chain from inputs → transforms → outputs.
 
-- Source intake manifests and checksums: `data/sources/`
-- Derived artifacts: `data/processed/` (or a clearly named subfolder)
-- Run logs / config snapshots / seeds: `mcp/runs/`
-- Lineage outputs: `data/provenance/experiments/`
+### Constraints / invariants
+- Canonical pipeline ordering is preserved:
+  - **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+- **No UI direct-to-graph access**: UI consumes only API contracts.
+- **No unsourced narrative**: experiments may generate drafts, but Story Nodes must remain evidence-linked and reviewable.
+- **Determinism**: where randomness exists, seeds and non-default parameters MUST be logged.
 
-### Determinism requirement
+### Assumptions
+- Experiments are executed via repo-tracked code and config (or clearly referenced external tooling) with sufficient detail to replay.
+- Large artifacts are stored as datasets under `data/**` and referenced by catalogs, not embedded into experiment Markdown.
 
-Experiments MUST be config-driven, replayable, and deterministic where possible. If randomness is used, record **seed values** and all non-default parameters in the experiment log.
+### Open questions
+| Question | Owner | Target date |
+|---|---|---|
+| Do we standardize on single-file vs folder-mode experiment records (or allow both permanently)? | MCP Board | TBD |
+| Do we publish a machine index (CSV/JSON) alongside this README for automation? | MCP Board | TBD |
 
----
+### Future extensions
+- A machine-readable experiment registry (JSON/CSV) generated from front-matter.
+- Optional validation schema for experiment records (JSON Schema under `schemas/mcp/`).
 
-## 🧠 Story Node & Focus Mode Integration
+## 🗺️ Diagrams
 
-Experiments that generate or modify Story Nodes must:
-
-- Separate **facts**, **interpretation**, and **speculation**
-- Preserve **evidence links** back to source datasets/documents
-- Respect sovereignty rules (mask/generalize sensitive locations by default)
-
----
-
-## 🧪 Validation & CI/CD
-
-Markdown and experiment compliance is CI-enforced.
-
-Minimum expectations for this directory:
-
-- Filename pattern enforcement (`YYYY-MM-DD_<DOMAIN>-EXP-###.md`)
-- KFM-MDP v11.2.6 Markdown rules (single H1; approved H2s; tilde-fenced blocks)
-- Required experiment metadata presence (IDs, versions, seeds, environment)
-- Provenance completeness (PROV-O + OpenLineage + checksums)
-- No prohibited coordinate exposure / PII / secrets
-
----
+### System / dataflow diagram
+~~~mermaid
+flowchart LR
+  A[mcp/experiments record] --> B[mcp/runs run record]
+  B --> C[data artifacts]
+  C --> D[STAC/DCAT/PROV catalogs]
+  D --> E[Graph ingest]
+  E --> F[API boundary]
+  F --> G[UI surfaces]
+  G --> H[Story Nodes]
+  H --> I[Focus Mode]
+~~~
 
 ## 📦 Data & Metadata
 
-### Required structure for each experiment log (MCP-DL v6.3)
+### What counts as an experiment
+An activity MUST be recorded as an MCP experiment if it produces any of the following:
+- new derived datasets (tables/rasters/vectors/time series),
+- trained or fine-tuned models,
+- evaluation results (benchmarks, ablations, bias audits),
+- transformations that change interpretation-ready outputs (e.g., harmonization, masking/generalization, datum conversions),
+- AI-assisted artifacts intended to influence Story Nodes or Focus Mode.
 
-Each experiment MUST contain:
+### Experiment ID and naming
+**Supported patterns**
+- **Single-file mode:** `YYYY-MM-DD_<DOMAIN>-EXP-###.md`
+- **Folder mode:** `YYYY/YYYY-MM-DD_<DOMAIN>-EXP-###/README.md`
 
-- Metadata header (Experiment ID; date; authors/agents; dataset versions; model versions; seed values; hardware/environment; contract version; CARE classification)
-- Objective / hypothesis
-- Background (prior work, citations, linked documents; STAC/DCAT references)
-- Methods (full reproducibility: steps; parameters; code refs; config files; seeds; inputs/transformations)
-- Execution log (actual run logs; errors/retries; pipeline steps; OpenLineage event IDs)
-- Results (tables; graphs; maps; derived datasets; metrics)
-- Analysis (interpretation; uncertainty; ethical/CARE considerations)
-- Limitations
-- Next steps
-- Provenance block (PROV-O JSON-LD + OpenLineage v2.5 metadata + output checksums)
+**Domain codes (non-exhaustive)**
+- `CLIMATE`, `HYDRO`, `GEO`, `AI`, `NLP`, `ARCH`, `HAZARD`, `STORY`, `PIPELINE`
 
-### Telemetry & sustainability
+### Minimum required contents for an experiment record
+Each experiment record MUST include:
+- **Identity:** experiment ID, date, domain, owner/agent(s), status
+- **Objective:** hypothesis/question, success criteria
+- **Inputs:** dataset IDs / paths + checksums (or references to manifests)
+- **Method:** steps + parameters + seed(s) + environment notes
+- **Outputs:** artifact paths + intended catalog actions (STAC/DCAT/PROV)
+- **Results:** key metrics, plots/tables (or links), uncertainty/limitations
+- **Governance:** sensitivity notes, sovereignty handling, CARE notes
+- **Provenance pointers:** run record ID(s) + lineage bundle reference(s)
 
-Each experiment is measured for:
-
-- Execution duration
-- Energy (Wh)
-- Carbon (gCO₂e)
-- IO and memory usage
-
-Telemetry is written to:
-
-~~~text
-releases/<version>/mcp-experiments-telemetry.json
+### Suggested (optional) record skeleton
+~~~yaml
+# (Place in the experiment record, not in this README.)
+experiment_id: "2025-12-28_AI-EXP-001"
+domain: "AI"
+status: "draft|active|completed|blocked|archived"
+owners:
+  - "handle-or-team"
+run_records:
+  - "mcp/runs/<run-id>/"
+inputs:
+  - "data/raw/<domain>/... (checksum: sha256:...)"
+outputs:
+  - "data/processed/<domain>/... (intended catalogs: stac|dcat|prov)"
+seeds:
+  - 1337
+contracts:
+  stac_profile: "KFM-STAC v11.0.0"
+  dcat_profile: "KFM-DCAT v11.0.0"
+  prov_profile: "KFM-PROV v11.0.0"
 ~~~
 
----
+### Index of experiments
+This table is intended to remain **automation-friendly** (stable columns, minimal formatting).
+
+| Experiment ID | Title | Domain | Start date | Status | Primary outputs |
+|---:|---|---|---:|---|---|
+| _none_ | — | — | — | — | — |
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-Experiments that produce artifacts MUST:
+### STAC
+Experiments that produce spatial assets SHOULD emit STAC Items (and update/attach to an appropriate Collection):
+- Spatial datasets: STAC Item with geometry/bbox/time.
+- Non-spatial artifacts: STAC Item MAY use `geometry: null` with clear asset metadata.
 
-- Emit **STAC Items** for spatial datasets (or `geometry: null` for non-spatial artifacts)
-- Emit **DCAT** dataset records for publishable outputs
-- Emit **PROV-O** lineage linking raw → processed → derived outputs and the activity/run that generated them
+### DCAT
+Experiments producing publishable datasets SHOULD register a DCAT dataset record and distributions (formats, access methods).
 
-Lineage is stored in:
+### PROV-O
+Experiments that transform data MUST produce provenance lineage linking:
+- raw inputs (`prov:used` / `prov:wasDerivedFrom`)
+- run/activity (`prov:wasGeneratedBy`)
+- outputs (with stable IDs + checksums)
 
+### Canonical locations
 ~~~text
-data/provenance/experiments/
+📁 data/
+├── 📁 stac/                 — STAC collections + items
+├── 📁 catalog/dcat/         — DCAT datasets + distributions
+└── 📁 prov/                 — PROV bundles (lineage)
 ~~~
 
-Experiments lacking lineage **do not pass CI**.
+## 🧱 Architecture
 
----
+### Components touched by experiments
+| Component | Responsibility | Interface |
+|---|---|---|
+| Experiment record | Human-readable + reviewable log | Markdown file(s) in `mcp/experiments/` |
+| Run record | Replayable execution record | `mcp/runs/` |
+| Artifact store | Data outputs | `data/{raw,work,processed}/**` |
+| Catalogs | Discovery + lineage | `data/stac/`, `data/catalog/dcat/`, `data/prov/` |
+| Contracts | Validation schemas | `schemas/**` |
+
+### Interfaces / contracts (expectations)
+- Experiments MUST reference:
+  - dataset locations under `data/**`,
+  - run logs under `mcp/runs/**`,
+  - catalog outputs under `data/{stac,catalog/dcat,prov}/**` where applicable.
+- Experiments MUST NOT imply:
+  - UI consumption of Neo4j directly,
+  - narrative publication without evidence and review.
+
+## 🧠 Story Node & Focus Mode Integration
+
+Experiments that generate or modify Story Nodes MUST:
+- separate **facts** vs **interpretation** vs **hypotheses**,
+- include evidence IDs (STAC/DCAT/PROV/document identifiers),
+- apply sovereignty-first handling (generalize/mask sensitive locations by default),
+- route final narrative through Story Node review gates (no direct Focus Mode injection).
+
+## 🧪 Validation & CI/CD
+
+### CI expectations (minimum)
+- Filename pattern checks for experiment records.
+- Markdown protocol checks (single H1; stable H2 structure; tilde-fenced blocks).
+- Required experiment metadata presence (ID, dates, run record refs, inputs/outputs).
+- Provenance expectations where outputs are produced (PROV refs + checksums).
+- Secret/PII scanning + sovereignty checks for sensitive location leakage.
+
+### Local checklist (author)
+- [ ] Experiment record created and filled
+- [ ] Config snapshot captured (or referenced) + seed(s) recorded
+- [ ] Run record created under `mcp/runs/`
+- [ ] Outputs stored under `data/**`
+- [ ] Catalog updates planned/emitted (STAC/DCAT/PROV) where applicable
+- [ ] Governance notes included
 
 ## ⚖ FAIR+CARE & Governance
 
-All experiments must:
+### FAIR+CARE notes
+- **FAIR profile:** evidence artifacts must be findable and attributable via catalogs.
+- **CARE label:** this index is `Mixed` because experiments may span multiple sensitivity regimes.
 
-- Annotate CARE status appropriately
-- Avoid sensitive heritage coordinates
-- Use H3 masking/generalization for archaeological/cultural locations
-- Document any potentially sensitive outputs
-- Request FAIR+CARE Council review where required (Tier A datasets; cultural sensitivity; hazard projections)
+### Sovereignty and sensitive locations
+- Do not publish precise coordinates for culturally sensitive resources by default.
+- Prefer generalized representations (e.g., grid/H3, buffered extents, or redacted geometry) when risk exists.
+- If an experiment touches Tier-A or culturally sensitive datasets, request review per governance procedures.
 
-Ethics notes are required for:
-
-- AI narrative generation
-- Cultural datasets
-- Sensitive historical records
-- Climate/hazard projections
-
----
+### Required approvals (when applicable)
+- [ ] FAIR+CARE Council review (sensitivity high, Tier-A, cultural/heritage)
+- [ ] Security review (secrets, access tokens, restricted endpoints, threat model changes)
+- [ ] Editorial review (Story Node publication)
 
 ## 🕰️ Version History
 
 | Version | Date | Summary |
-|--------:|------|---------|
-| **v11.2.6** | 2025-12-12 | Updated to KFM‑MDP v11.2.6 compliance (approved H2s + ordering; `~~~` fences; required front‑matter keys; governance links in footer). |
-| v11.0.0 | 2025-11-23 | Initial MCP experiments index for KFM v11. |
+|---:|---:|---|
+| v11.2.6 | 2025-12-28 | Re-structured to Universal governed-doc layout; normalized canonical paths; strengthened reproducibility + catalog/provenance expectations; removed HTML-only centering in favor of protocol-safe Markdown. |
+| v11.2.6 | 2025-12-12 | Prior draft baseline. |
 
-<div align="center">
+---
 
-[🏛️ Governance Charter](../../docs/standards/governance/ROOT-GOVERNANCE.md) ·
-[🤝 FAIR+CARE Guide](../../docs/standards/faircare/FAIRCARE-GUIDE.md) ·
-[🪶 Indigenous Data Protection](../../docs/standards/sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+[⬅️ MCP Home](../README.md) · [📘 Master Guide](../../docs/MASTER_GUIDE_v12.md) · [🏛️ Governance Charter](../../docs/governance/ROOT_GOVERNANCE.md)
 
-© 2025 Kansas Frontier Matrix — CC‑BY 4.0  
-MCP‑DL v6.3 · KFM‑MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
-
-</div>
+© 2025 Kansas Frontier Matrix — CC-BY-4.0  
+MCP-DL v6.3 · KFM-MDP v11.2.6 · Diamond⁹ Ω / Crown∞Ω
