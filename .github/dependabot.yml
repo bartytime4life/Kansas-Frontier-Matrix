@@ -1,15 +1,3 @@
-# Dependabot Upgrade — KFM CI/Supply-Chain Hygiene
-
-## File tree (context)
-~~~text
-📁 .github/
-├── 📄 dependabot.yml
-└── 📁 workflows/
-    └── 📄 README.md
-~~~
-
-## File: .github/dependabot.yml
-~~~yaml
 version: 2
 updates:
   # Keep GitHub Actions dependencies (referenced in .github/workflows/** and composite actions) up to date.
@@ -35,19 +23,40 @@ updates:
       separator: "-"
 
     # Group minor+patch updates into fewer PRs; majors remain individual PRs for explicit review.
+    # Split first-party actions (GitHub orgs) from third-party actions to reduce review blast-radius.
     groups:
-      actions-minor-patch:
+      actions-first-party-minor-patch:
+        patterns:
+          - "actions/*"
+          - "github/*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      actions-third-party-minor-patch:
         patterns:
           - "*"
+        exclude-patterns:
+          - "actions/*"
+          - "github/*"
         update-types:
           - "minor"
           - "patch"
 
       # If Dependabot Security Updates are enabled, group Actions security fixes too.
-      actions-security:
+      actions-first-party-security:
+        applies-to: "security-updates"
+        patterns:
+          - "actions/*"
+          - "github/*"
+
+      actions-third-party-security:
         applies-to: "security-updates"
         patterns:
           - "*"
+        exclude-patterns:
+          - "actions/*"
+          - "github/*"
 
     # Delay major releases briefly to reduce churn from just-published majors.
     # Note: cooldown applies only to version updates (not security updates).
@@ -55,23 +64,77 @@ updates:
       semver-major-days: 7
 
   # Optional ecosystems (enable only after confirming manifests exist in the given directory).
+  # These align to KFM canonical roots (UI in `web/`, APIs in `src/server/`, etc.):contentReference[oaicite:2]{index=2}
   # Not confirmed in repo:
   #
   # - package-ecosystem: "npm"
   #   directory: "/web"
   #   schedule:
   #     interval: "weekly"
+  #     day: "monday"
+  #     time: "05:00"
+  #     timezone: "UTC"
   #   open-pull-requests-limit: 5
+  #   commit-message:
+  #     prefix: "deps"
+  #   pull-request-branch-name:
+  #     separator: "-"
+  #   groups:
+  #     npm-minor-patch:
+  #       patterns:
+  #         - "*"
+  #       update-types:
+  #         - "minor"
+  #         - "patch"
+  #     npm-security:
+  #       applies-to: "security-updates"
+  #       patterns:
+  #         - "*"
   #
   # - package-ecosystem: "pip"
   #   directory: "/"
   #   schedule:
   #     interval: "weekly"
+  #     day: "monday"
+  #     time: "05:00"
+  #     timezone: "UTC"
   #   open-pull-requests-limit: 5
+  #   commit-message:
+  #     prefix: "deps"
+  #   pull-request-branch-name:
+  #     separator: "-"
+  #   groups:
+  #     pip-minor-patch:
+  #       patterns:
+  #         - "*"
+  #       update-types:
+  #         - "minor"
+  #         - "patch"
+  #     pip-security:
+  #       applies-to: "security-updates"
+  #       patterns:
+  #         - "*"
   #
   # - package-ecosystem: "docker"
   #   directory: "/"
   #   schedule:
   #     interval: "weekly"
+  #     day: "monday"
+  #     time: "05:00"
+  #     timezone: "UTC"
   #   open-pull-requests-limit: 5
-~~~
+  #   commit-message:
+  #     prefix: "deps"
+  #   pull-request-branch-name:
+  #     separator: "-"
+  #   groups:
+  #     docker-minor-patch:
+  #       patterns:
+  #         - "*"
+  #       update-types:
+  #         - "minor"
+  #         - "patch"
+  #     docker-security:
+  #       applies-to: "security-updates"
+  #       patterns:
+  #         - "*"
