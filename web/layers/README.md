@@ -43,14 +43,14 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 # Web Layers — Registry, Styles, and Governance
 
-This directory defines:
+This directory defines the **UI-side contract** for map layers rendered in the KFM web application (React + MapLibre; optional Cesium if present):
 
-- **What map layers exist** in the Web UI (MapLibre; optionally Cesium if present),
-- **Where each layer’s data comes from** (contracted APIs and/or immutable, cataloged artifacts),
-- **How each layer is styled** (style fragments + legends + icons), and
-- **How each layer is governed** (license, attribution, sensitivity/classification, redaction).
+- **Which layers exist** (stable IDs and user-facing metadata),
+- **Where layer data comes from** (contracted API endpoints and/or cataloged, immutable artifacts),
+- **How layers are styled** (MapLibre style assets, legends, icons), and
+- **How layers are governed** (license, attribution, sensitivity/classification, redaction/generalization).
 
-It is the Web/UI-side contract within the canonical pipeline ordering:
+This module sits in the canonical pipeline ordering:
 
 **ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
 
@@ -59,49 +59,52 @@ It is the Web/UI-side contract within the canonical pipeline ordering:
 ## 📘 Overview
 
 ### Purpose
-- Provide a **schema-validated layer registry** the Web UI can load deterministically (runtime or build-time) to render MapLibre layers (and optional Cesium layers).
-- Centralize **styles, legends, and icons** so map rendering is reviewable, versioned, and reproducible.
-- Ensure every public-facing layer can surface **audit affordances** (license, attribution, provenance pointers, vintage) and comply with **FAIR+CARE / sovereignty** constraints.
+- Provide a **deterministic, schema-validated layer registry** the Web UI can load (build-time or runtime) to render map layers.
+- Make styling **reviewable and reproducible** by versioning style assets, legends, and icons alongside their layer definitions.
+- Ensure every layer can surface **audit affordances** (license, attribution, provenance pointers, vintage) and comply with **FAIR+CARE / sovereignty** constraints.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Layer registry structure + semantics (IDs, required fields, evolution rules) | Implementing ETL/pipelines that generate artifacts |
-| UI styling fragments + legends + icons | Defining/altering the graph ontology (labels/edges) |
-| Provenance pointers surfaced to UI (STAC/DCAT/PROV IDs/refs) | API implementation internals beyond the published contract |
+| Layer registry semantics (IDs, required fields, versioning, deprecation rules) | Implementing ETL jobs that generate datasets/artifacts |
+| Style assets, legends, icons (reviewable map rendering inputs) | Defining/altering the graph ontology (labels/edges) |
+| Provenance pointers surfaced to UI (STAC/DCAT/PROV identifiers/refs) | API implementation internals beyond the published contract |
 | Validation expectations for registry/style changes (CI gates) | Cloud deployment specifics (CDN/object storage/proxy configs) |
 
 ### Audience
 - Primary: Web UI developers (React + MapLibre; optional Cesium)
-- Secondary: API developers (tiles/features), catalog maintainers (STAC/DCAT/PROV), governance reviewers
+- Secondary: API developers (tiles/features endpoints), catalog maintainers (STAC/DCAT/PROV), governance reviewers
 
 ### Definitions
 Glossary: `docs/glossary.md` (**not confirmed in repo**; create under `docs/` if missing).
 
 Key terms used in this README:
-- **Layer registry**: One or more JSON documents enumerating available layers and how to load/style/govern them.
-- **Layer entry**: A single layer definition with stable `id`, data source(s), style/legend refs, and governance metadata.
-- **Style fragment**: A MapLibre layer snippet (or equivalent) composed into a base map style.
-- **Audit affordances**: UI-visible license/attribution/provenance/vintage details for review and traceability.
-- **Redaction/generalization**: Controls that prevent sensitive location leakage through geometry, zoom, queries, or UI interactions.
+- **Layer registry**: JSON document enumerating available layers, how to load them, and how they are governed.
+- **Layer entry**: A single layer definition with stable `id`, source(s), style/legend refs, and governance metadata.
+- **Style asset**: Either a complete MapLibre style JSON or a fragment used to compose the final style.
+- **Audit affordances**: UI-visible license/attribution/provenance/vintage details.
+- **Redaction/generalization**: Controls that prevent sensitive location leakage through geometry, zoom, queries, or export.
 
 ### Key artifacts
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
 | Master guide | `docs/MASTER_GUIDE_v12.md` | Core maintainers | Canonical pipeline ordering + invariants |
-| v13 redesign blueprint | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Core maintainers | Canonical subsystem homes + CI gates |
+| v13 redesign blueprint | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Core maintainers | “One canonical home”, contract-first, evidence-first |
 | Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs maintainers | Required sections + front-matter keys |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative/curation | Evidence-linked narrative patterns |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Story maintainers | Evidence-linked narrative patterns |
 | API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API maintainers | Use when layers require new endpoints/contracts |
-| UI schemas | `schemas/ui/` (**not confirmed in repo**) | Web + Platform | JSON schemas for registries/styles/legends |
+| UI registry schemas | `schemas/ui/` (**not confirmed in repo**) | Web + Platform | JSON Schemas for registries/styles/legends |
+| Governance root | `docs/governance/ROOT_GOVERNANCE.md` (**not confirmed in repo**) | Governance | Policy source of truth |
+| Sovereignty policy | `docs/governance/SOVEREIGNTY.md` (**not confirmed in repo**) | Governance | CARE and sovereignty gates |
+| Ethics | `docs/governance/ETHICS.md` (**not confirmed in repo**) | Governance | Ethical constraints |
 
 ### Definition of done
 - [ ] Front-matter complete + valid (path, IDs, versions)
-- [ ] Registry contract documented (minimum required fields + evolution rules)
-- [ ] Styling/legend/icon conventions documented (including accessibility notes)
-- [ ] Provenance mapping described (STAC/DCAT/PROV pointers, vintage)
+- [ ] Registry contract documented (required fields + evolution/deprecation rules)
+- [ ] Style/legend/icon conventions documented (including accessibility notes)
+- [ ] Provenance mapping described (STAC/DCAT/PROV pointers + vintage)
 - [ ] Validation steps listed and repeatable
 - [ ] Governance + CARE/sovereignty considerations explicitly stated
 
@@ -116,20 +119,22 @@ Key terms used in this README:
 
 | Area | Path | What lives here |
 |---|---|---|
-| UI | `web/` | React app + MapLibre components; optional Cesium |
-| Layer registries + assets | `web/layers/` | Registries, styles, legends, icons for map layers |
-| Legacy layer registries | `web/cesium/layers/` (**if present**) | Legacy registry home referenced by templates |
-| Schemas | `schemas/` (**not confirmed in repo**) | JSON Schemas (STAC/DCAT/PROV/story/ui/telemetry) |
-| API boundary | `src/server/` | Versioned REST/GraphQL endpoints; enforcement/redaction |
-| Graph | `src/graph/` | Ontology bindings + graph build/migrations |
-| ETL/pipelines | `src/pipelines/` | ETL + catalog generation code |
+| UI app | `web/` | React app + MapLibre; optional Cesium |
+| Web layer contract | `web/layers/` | Registries, style assets, legends, icons, README (this doc) |
+| Map engine internals | `web/src/map/engine/` (**not confirmed in repo**) | Registry loader + style composition logic |
+| Focus Mode UI | `web/src/story/focus_mode/` (**not confirmed in repo**) | Provenance-first narrative + map context |
+| Schemas | `schemas/` | JSON Schemas (STAC/DCAT/PROV/story/ui/telemetry) |
+| API boundary | `src/server/` | Versioned endpoints; redaction/generalization enforcement |
+| Graph | `src/graph/` | Ontology bindings + graph ingest/migrations |
+| ETL/pipelines | `src/pipelines/` | Ingest + transformations + catalog builds |
 | STAC outputs | `data/stac/` | STAC collections + items for datasets/artifacts |
 | DCAT outputs | `data/catalog/dcat/` | DCAT dataset/distribution metadata |
 | PROV outputs | `data/prov/` | Lineage bundles linking raw→work→processed→published |
 | Story Nodes | `docs/reports/story_nodes/` | Draft + published Story Nodes (if split exists) |
+| Legacy Cesium registries | `web/cesium/layers/` (**if present**) | Legacy registry location; migrate with deprecation markers |
 
 ### Expected file tree for this sub-area
-Target layout (align with current repo if it differs; do not relocate without explicit deprecation markers):
+Target layout (adjust to current repo if it differs; do not relocate without explicit deprecation markers):
 
 ~~~text
 📁 web/
@@ -138,48 +143,56 @@ Target layout (align with current repo if it differs; do not relocate without ex
     ├── 📁 registries/
     │   ├── 📄 layers.public.json
     │   ├── 📄 layers.overlays.json
+    │   ├── 📄 layers.experimental.json
     │   └── 📄 layers.restricted.json
     ├── 📁 styles/
     │   ├── 📄 base.style.json
     │   └── 📁 fragments/
-    │       └── 📄 <layer_id>.style.json
+    │       ├── 📄 <layer_id>.style.json
+    │       └── 📄 <layer_id>.hover.style.json
     ├── 📁 legends/
     │   ├── 📄 <layer_id>.legend.json
     │   └── 📁 icons/
     │       └── 📄 <icon>.svg
-    └── 📁 icons/
-        └── 📄 <layer_id>.svg
+    ├── 📁 icons/
+    │   └── 📄 <layer_id>.svg
+    └── 📁 sprites/                          # optional; if used by MapLibre style
+        ├── 📄 sprite.json
+        └── 📄 sprite.png
 ~~~
 
 Notes:
-- If `web/cesium/layers/*.json` exists in the repo, treat it as a supported legacy location. Prefer explicit `deprecated` markers and migration notes over silent moves/removals.
+- Prefer **additive evolution**: add files/fields rather than moving or renaming.
+- If `web/cesium/layers/*.json` exists, treat it as supported legacy. Use explicit `deprecated` markers and a migration note rather than silent moves/removals.
 
 ---
 
 ## 🧭 Context
 
 ### Background
-The KFM Web UI must remain **contract-driven and audit-ready**. Map layers are one of the highest-risk surfaces for:
+Map layers are a high‑risk surface for:
 - provenance drift (“where did this geometry come from?”),
 - licensing/attribution mistakes, and
-- sensitive-location leakage (through zoom, clicks, filters, or export).
+- sensitive-location leakage (through zoom, click queries, filters, exports, or screenshots).
 
-A layer registry makes behavior deterministic and reviewable, and it creates a single place to enforce: **every layer is attributable + traceable + governed**.
+A registry makes behavior deterministic and reviewable, and it creates a single place to enforce:
+
+**every layer is attributable + traceable + governed**
 
 ### Assumptions
-- The Web UI consumes the API boundary (`src/server/`) and does not query Neo4j directly.
+- The Web UI consumes **contracted APIs** and does not query Neo4j directly.
 - Layers are backed by either:
   - versioned API endpoints (tiles/features), and/or
-  - immutable artifacts (e.g., PMTiles/MBTiles/COGs/GeoParquet) referenced by STAC.
+  - immutable artifacts (e.g., PMTiles/MBTiles/COGs/GeoParquet) referenced by STAC and served through governed endpoints.
 - Layer metadata required for UI audit panels is available via registries and/or catalog lookups.
 
-### Constraints / invariants
+### Constraints and invariants
 1. **Canonical ordering is preserved**: ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode.
 2. **No UI direct-to-graph reads**: all graph access is via contracted APIs.
 3. **Fail closed on sensitivity**: if a layer’s classification/sensitivity is unresolved, it must not ship in public registries/builds.
-4. **Provenance-first**: a layer intended for Story Nodes / Focus Mode must provide STAC/DCAT/PROV pointers (directly or resolvable).
+4. **Provenance-first UI**: public layers must expose license + attribution + provenance pointers (STAC/DCAT/PROV) and a data vintage.
 5. **Backward-compatible evolution**: adding optional registry fields is non-breaking; breaking changes require a schema/version bump and migration notes.
-6. **No hidden data leakage**: redaction/generalization must be enforced at the API boundary and reflected in UI behavior (zoom limits, interaction limits, export rules).
+6. **UI is not a security boundary**: redaction/generalization must be enforced at the API boundary; UI may add safeguards but cannot be the only control.
 
 ### Open questions
 
@@ -187,8 +200,8 @@ A layer registry makes behavior deterministic and reviewable, and it creates a s
 |---|---|---|
 | Where is the JSON Schema for layer registries (`schemas/ui/…`)? | Platform + Web | TBD |
 | Do we load registries at runtime (fetch) or compile-time (bundle)? | Web | TBD |
-| Do we need separate public vs restricted registries beyond filename conventions? | Governance + Web | TBD |
-| Do we support Cesium/3D layer registries in this area or keep them isolated under `web/cesium/`? | Web | TBD |
+| What is the canonical split between public vs restricted registries (filenames vs auth gating)? | Governance + Web | TBD |
+| Do we support Cesium/3D registries in `web/layers/` or keep them isolated under `web/cesium/`? | Web | TBD |
 
 ### Future extensions
 - Time-enabled layers (temporal filters + “vintage” UI)
@@ -200,7 +213,7 @@ A layer registry makes behavior deterministic and reviewable, and it creates a s
 
 ## 🗺️ Diagrams
 
-### System / dataflow diagram
+### System dataflow diagram
 
 ~~~mermaid
 flowchart LR
@@ -212,7 +225,7 @@ flowchart LR
   F --> G[Focus Mode]
 ~~~
 
-### Optional: sequence diagram for toggling a layer
+### Sequence toggling a layer
 
 ~~~mermaid
 sequenceDiagram
@@ -240,34 +253,34 @@ sequenceDiagram
 
 | Input | Format | Where from | Validation |
 |---|---|---|---|
-| Layer registry | JSON | `web/layers/registries/*.json` | JSON schema (if present under `schemas/ui/`) + referential integrity |
-| Style fragments | JSON | `web/layers/styles/**` | File exists + MapLibre style validation (as configured) |
+| Layer registries | JSON | `web/layers/registries/*.json` | JSON schema (if present under `schemas/ui/`) + referential integrity |
+| Style assets | JSON | `web/layers/styles/**` | File exists + MapLibre style validation (as configured) |
 | Legends | JSON | `web/layers/legends/**` | File exists + legend schema (if present) |
-| Icons | SVG/PNG | `web/layers/icons/**` | File exists + size/a11y conventions |
+| Icons/sprites | SVG/PNG | `web/layers/icons/**`, `web/layers/sprites/**` | File exists + accessibility conventions |
 | Tiles/features | HTTP | `src/server/` endpoints | API contract tests + policy/redaction enforcement |
-| Catalog refs | HTTP/file | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC/DCAT/PROV validators |
+| Catalog refs | JSON/HTTP | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC/DCAT/PROV validators |
 
 ### Outputs
 
-| Output | Format | Path | Contract / Schema |
+| Output | Format | Where | Contract / Schema |
 |---|---|---|---|
-| Rendered map layers | Runtime | Web UI | Registry + styles must be deterministic |
-| Attribution + license display | UI panel | Web UI | Must match upstream license/attribution |
-| Provenance panel content | UI panel | Web UI | Must resolve to STAC/DCAT/PROV IDs/links |
-| Layer-toggle telemetry (optional) | Events/logs | `docs/telemetry/` (**not confirmed**) | Telemetry schema (if present) |
+| Rendered map layers | Runtime | Web UI | Registry + style assets must be deterministic |
+| Attribution/license panel | UI | Web UI | Must match upstream license/attribution |
+| Provenance panel | UI | Web UI | Must resolve to STAC/DCAT/PROV identifiers/refs |
+| Layer-toggle telemetry | Events/logs | `docs/telemetry/` (**not confirmed**) | Telemetry schema (if present) |
 
-### Sensitivity & redaction
+### Sensitivity and redaction
 Every layer entry MUST document:
 - `sensitivity` and `classification`,
-- redaction/generalization summary (including zoom-level or interaction limits),
+- a redaction/generalization summary (including zoom/interaction/export limits),
 - the enforcement plane: **dataset**, **catalog**, **API**, and/or **UI**.
 
 Do not rely on UI-only masking for sensitive layers; UI is not a security boundary.
 
 ### Quality signals
 - Registry completeness: required fields present for each layer.
-- Link integrity: referenced local assets and API endpoints exist.
-- Render integrity: style fragments don’t reference missing sources/source-layers.
+- Referential integrity: referenced local assets and API endpoints exist.
+- Render integrity: style assets don’t reference missing sources/source-layers.
 - Audit completeness: license + attribution + provenance pointers are consistent.
 - Performance sanity: min/max zoom and tile endpoints avoid pathological over-fetching.
 
@@ -276,29 +289,23 @@ Do not rely on UI-only masking for sensitive layers; UI is not a security bounda
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### STAC
-- Collections: referenced via `data.stac.collection_id` (or equivalent).
-- Items: referenced via `data.stac.item_id` (or equivalent).
-- Assets: for immutable artifacts, prefer referencing the STAC asset key/href (and digest) over “latest” URLs.
+- Prefer referencing **collection + item IDs** and (for immutable artifacts) **asset keys + digests** rather than unversioned “latest” URLs.
+- Layers that are derived products should point to the STAC item representing the published artifact (e.g., PMTiles, GeoParquet).
 
 ### DCAT
-- Dataset identifiers: referenced via `data.dcat.dataset_id` (or URI).
-- License mapping: registry `license` / `attribution` SHOULD match DCAT dataset/distribution metadata.
-- Publisher/contact: sourced from DCAT when available; surface in UI audit panels as needed.
+- Registry `license` / `attribution` SHOULD match DCAT dataset/distribution metadata.
+- Publisher/contact metadata should be sourced from DCAT when available and surfaced in UI audit panels.
 
 ### PROV-O
-- `prov:wasDerivedFrom`: represented by the published lineage bundle; registry stores pointers (IDs/refs) rather than copying full graphs.
-- `prov:wasGeneratedBy`: `data.prov.activity_id` identifies the run/activity that produced the layer artifact.
-- Activity/Agent identities: include pipeline IDs, tool versions, and run IDs where available.
+- Registry stores pointers to PROV bundles/activities rather than copying full lineage graphs.
+- `data.prov.activity_id` identifies the run that produced the layer artifact.
 
-### Versioning
-- Prefer explicit predecessor/successor linkages in STAC and PROV; the graph mirrors version lineage where modeled.
-- Avoid unversioned “latest” sources unless explicitly intended and governed.
-
-### Recommended registry fields for evidence linkage
+### Recommended evidence pointer fields
 A layer entry SHOULD include:
 - STAC: `data.stac.collection_id`, `data.stac.item_id`
 - DCAT: `data.dcat.dataset_id` (and optional distribution identifier)
 - PROV: `data.prov.activity_id` (and optional agent reference)
+- Vintage: `data.vintage` (date or version string shown to users)
 
 ### Mapping table
 
@@ -317,72 +324,81 @@ A layer entry SHOULD include:
 ## 🧱 Architecture
 
 ### Components
-High-level KFM contract boundary (for context):
+KFM contract boundary context:
 
 | Component | Responsibility | Interface |
 |---|---|---|
 | ETL | Ingest + normalize | Config + run logs |
-| Catalogs | STAC/DCAT/PROV | JSON + validator |
-| Graph | Neo4j | Cypher + API layer |
-| APIs | Serve contracts | REST/GraphQL |
-| UI | Map + narrative | API calls |
-| Story Nodes | Curated narrative | Graph + docs |
-| Focus Mode | Contextual synthesis | Provenance-linked |
+| Catalogs | STAC/DCAT/PROV | JSON + validators |
+| Graph | Neo4j | Queried only via API |
+| APIs | Serve contracts + enforce policy | REST/GraphQL (as implemented) |
+| UI | Map + narrative | API calls + catalog reads |
+| Story Nodes | Curated narrative | Provenance-linked docs |
+| Focus Mode | Contextual synthesis | Provenance-linked bundles only |
 
-Web-layer module components (this directory):
+Web-layer module components:
 
 | Component | Responsibility | Interface |
 |---|---|---|
 | Registry loader | Load + validate registries | JSON schema (if present) |
 | Style composer | Compose base style + fragments | MapLibre style JSON |
 | Legend renderer | Render legends + icons | Legend JSON + SVG/PNG |
-| Audit/provenance panel | Surface license/attribution + STAC/DCAT/PROV refs | Registry + catalog fetch |
+| Audit panel | Surface license/attribution + STAC/DCAT/PROV refs | Registry + catalog refs |
 | API clients | Fetch tiles/features | Versioned API endpoints |
 
-### Interfaces / contracts
+### Interfaces and contracts
 
 | Contract | Location | Versioning rule |
 |---|---|---|
 | UI registry schemas | `schemas/ui/` (**not confirmed**) | Semver + changelog |
-| API schemas | `src/server/` + docs | Contract tests required |
-| Layer registries | `web/layers/registries/` (or legacy `web/cesium/layers/`) | Schema-validated |
-| Style fragments | `web/layers/styles/**` | Validate against base style + MapLibre spec |
+| API contracts | `src/server/contracts/` (**if present**) | Contract tests required |
+| Layer registries | `web/layers/registries/` | Schema-validated JSON |
+| Style assets | `web/layers/styles/**` | Validate against MapLibre spec |
 | Legends | `web/layers/legends/**` | Schema-validated (if schema exists) |
 
-### Registry contract
-If a UI schema exists under `schemas/ui/`, it is the source of truth. Until then, treat the following as the minimum contract for each layer entry:
+### Registry contract minimum draft
+If `schemas/ui/` exists, it is the source of truth. Until then, treat the following as the minimum contract for each layer entry.
 
 **Stable identifiers**
-- `id` (kebab-case; stable across releases)
+- `id` (kebab-case; stable across releases; referenced by Story Nodes and Focus Mode)
 - `title` (UI display name)
 - `kind` (e.g., `vector-tiles`, `raster-tiles`, `features`, `3d`)
 
 **UI behavior**
-- `ui.order` (layer ordering)
+- `ui.order` (numeric ordering)
 - `ui.default_visible` (boolean)
 - `ui.minzoom` / `ui.maxzoom`
 - `ui.style_ref` / `ui.legend_ref` (local path refs)
 - optional: `ui.interactive`, `ui.queryable_fields`, `ui.exportable`
 
-**Data source**
-- `data.api.tilejson` and/or `data.api.tiles` and/or `data.api.features`
-- optional: immutable artifact pointer (prefer via STAC asset)
+**Data sources**
+- API: `data.api.tilejson` and/or `data.api.tiles` and/or `data.api.features`
+- optional: immutable artifact pointer via STAC (`data.stac.*`) rather than hardcoded “latest” URLs
 
 **Evidence pointers**
-- `data.stac.collection_id`, `data.stac.item_id`
-- `data.dcat.dataset_id`
-- `data.prov.activity_id`
+- STAC: `data.stac.collection_id`, `data.stac.item_id`
+- DCAT: `data.dcat.dataset_id`
+- PROV: `data.prov.activity_id`
+- Vintage: `data.vintage`
 
 **Governance**
 - `governance.sensitivity`, `governance.classification`
-- `governance.redaction` summary + enforcement plane
+- redaction/generalization summary + enforcement plane(s)
 - `governance.care_notes` (required when sensitivity is anything other than public/open)
+
+### Evolution rules
+- Do not rename `id`. If the public name needs to change, change `title`, not `id`.
+- Prefer additive fields; breaking changes require:
+  - a schema/version bump, and
+  - a migration note (including any `replaced_by` mapping).
+- Removal: mark a layer as deprecated first; keep it for at least one release window unless it is an emergency governance takedown.
 
 ### Example minimal registry file
 
 ~~~json
 {
-  "schema_version": "KFM-UI-LAYER-REGISTRY v1",
+  "schema_version": "KFM-UI-LAYER-REGISTRY v1.0.0-draft",
+  "registry_id": "layers.public",
   "generated_at": "2025-12-28T00:00:00Z",
   "layers": [
     {
@@ -394,10 +410,12 @@ If a UI schema exists under `schemas/ui/`, it is the source of truth. Until then
         "default_visible": false,
         "minzoom": 4,
         "maxzoom": 12,
+        "interactive": true,
         "legend_ref": "../legends/surficial-geology.legend.json",
         "style_ref": "../styles/fragments/surficial-geology.style.json"
       },
       "data": {
+        "vintage": "2025-10-01",
         "api": {
           "tilejson": "/api/v1/tiles/surficial-geology/tilejson.json"
         },
@@ -410,10 +428,10 @@ If a UI schema exists under `schemas/ui/`, it is the source of truth. Until then
         },
         "prov": {
           "activity_id": "prov:activity:geology:2025-10-01:abc123"
-        },
-        "license": "CC-BY-4.0",
-        "attribution": "Source: <publisher>; Processed by KFM"
+        }
       },
+      "license": "CC-BY-4.0",
+      "attribution": "Source: <publisher>; Processed by KFM",
       "governance": {
         "sensitivity": "public",
         "classification": "open",
@@ -424,6 +442,14 @@ If a UI schema exists under `schemas/ui/`, it is the source of truth. Until then
   ]
 }
 ~~~
+
+### MapLibre style assets
+Two supported patterns are allowed. Choose one and document the rule in code and schema.
+
+1. Full style ref: `ui.style_ref` points to a complete MapLibre style JSON.
+2. Fragment ref: `ui.style_ref` points to one or more MapLibre `layer` objects appended to a base style.
+
+If fragments are used, ensure the runtime has a consistent rule for where `sources` are defined (e.g., base style or a dedicated `sources.json`).
 
 ### Example MapLibre style fragment
 
@@ -455,32 +481,48 @@ If a UI schema exists under `schemas/ui/`, it is the source of truth. Until then
 }
 ~~~
 
-### Extension points checklist (for future work)
-- [ ] Data: new domain added under `data/<domain>/...`
-- [ ] STAC: new collection + item schema validation
-- [ ] PROV: activity + agent identifiers recorded
-- [ ] Graph: new labels/relations mapped + migration plan
-- [ ] APIs: contract version bump + tests
-- [ ] UI: layer registry entry + access rules
-- [ ] Focus Mode: provenance references enforced
-- [ ] Telemetry: new signals + schema version bump
+---
+
+## 🛠️ Layer lifecycle workflow
+
+### Add a new layer checklist
+- [ ] Dataset exists as processed output (`data/processed/<domain>/...`) and has stable IDs.
+- [ ] STAC collection + item exist under `data/stac/` for the published artifact (or resolvable catalog endpoint).
+- [ ] DCAT dataset/distribution exist under `data/catalog/dcat/` and license + attribution were reviewed.
+- [ ] PROV bundle exists under `data/prov/` and includes the generating activity/run.
+- [ ] API endpoint(s) exist for tiles/features and enforce redaction/generalization as required.
+- [ ] Add layer entry to the correct registry (`layers.public.json` vs `layers.restricted.json`).
+- [ ] Add style fragment(s), legend, and icon assets; ensure accessibility (contrast, keyboard toggles, readable legend).
+- [ ] Run validations (schema checks, referential integrity, API contract tests).
+- [ ] If the layer can affect sovereignty/sensitivity, trigger governance review.
+
+### Change an existing layer checklist
+- [ ] Keep `id` stable; update `title` and metadata as needed.
+- [ ] If data changed, update `data.vintage` and provenance pointers (STAC/DCAT/PROV).
+- [ ] If style changed, update fragments and confirm legend remains accurate.
+- [ ] If sensitivity changed, fail closed until governance approves publication.
+
+### Deprecate or remove a layer
+- [ ] Mark deprecated (and `replaced_by` if applicable).
+- [ ] Keep compatibility for at least one release window unless emergency takedown.
+- [ ] Update Story Nodes / Focus Mode references that include the layer id.
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How this work surfaces in Focus Mode
-Layers may be referenced as evidence by `layer_id` and used to pre-configure the map for a story/focus view.
+### How this surfaces in Focus Mode
+Layers may be referenced as evidence by `layer_id` and used to pre-configure the map for a Story Node or Focus Mode view.
 
 For any enabled layer, Focus Mode SHOULD be able to surface:
 - license/attribution,
-- data vintage (updated-at or version),
-- STAC/DCAT/PROV identifiers,
+- data vintage,
+- STAC/DCAT/PROV identifiers/refs,
 - sensitivity/redaction notes (and an explicit “why” if a layer is blocked).
 
 ### Provenance-linked narrative rule
 - Focus Mode consumes provenance-linked content only.
-- Any derived/aggregated layer must include uncertainty metadata and a resolvable provenance chain.
+- Any derived or aggregated layer must include uncertainty metadata and a resolvable provenance chain.
 
 ### Optional structured controls
 
@@ -499,25 +541,23 @@ focus_center: [-98.0000, 38.0000]
 ### Validation steps
 - [ ] Markdown protocol checks (front-matter + required sections)
 - [ ] Registry schema validation (if `schemas/ui/` exists)
-- [ ] Style/legend referential integrity (files exist; fragments compile)
+- [ ] Style and legend referential integrity (files exist; fragments compile)
 - [ ] STAC/DCAT/PROV validation (for referenced artifacts)
 - [ ] API contract tests (tiles/features endpoints)
-- [ ] Security + sovereignty checks (PII, sensitive-location leakage, classification propagation)
-- [ ] Accessibility checks (legend readability, icon a11y, keyboard navigation for layer toggles)
+- [ ] Security and sovereignty checks (PII, sensitive-location leakage, classification propagation)
+- [ ] Accessibility checks (legend readability, icon accessibility, keyboard navigation for layer toggles)
 
 ### Reproduction
 
 ~~~bash
-# Example placeholders — replace with repo-specific commands
+# Placeholders — replace with repo-specific commands.
 
 # 1) validate schemas (UI registries, STAC/DCAT/PROV, etc.)
-
 # 2) run web lint/tests
-
 # 3) run link-check / markdown lint (if configured)
 ~~~
 
-### Telemetry signals (if applicable)
+### Telemetry signals if applicable
 
 | Signal | Source | Where recorded |
 |---|---|---|
@@ -531,14 +571,14 @@ focus_center: [-98.0000, 38.0000]
 
 ### Governance review triggers
 A review is required when:
-- A layer is new and/or changes sensitivity/classification.
+- A layer is new and or changes sensitivity/classification.
 - A layer is derived from restricted inputs or could reveal sensitive locations.
-- A layer introduces a new external data source (license/provenance review).
+- A layer introduces a new external data source and needs license/provenance review.
 - A layer requires a new public-facing endpoint or interaction pattern.
 
 ### CARE and sovereignty considerations
 - Identify impacted communities and applicable protection rules.
-- Prefer coarse/aggregate public products when sovereignty/sensitivity is uncertain.
+- Prefer coarse and aggregate public products when sovereignty/sensitivity is uncertain.
 - Redaction/generalization must be documented and enforced across datasets, catalogs, APIs, and UI.
 - Fail closed: do not publish public layers when sensitivity is unresolved.
 
@@ -552,7 +592,7 @@ A review is required when:
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.1 | 2025-12-28 | Refined structure + clarified registry contract, validation, governance | TBD |
+| v1.0.1 | 2025-12-28 | Refined registry contract, lifecycle workflow, validation and governance notes | TBD |
 | v1.0.0 | 2025-12-27 | Initial `web/layers` README draft | TBD |
 
 ---
