@@ -1,8 +1,8 @@
 ---
 title: "MCP Runs — Run Records and Reproducibility Logbook"
 path: "mcp/runs/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-22"
+version: "v1.1.0"
+last_updated: "2025-12-28"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:mcp:runs:readme:v1.0.0"
-semantic_document_id: "kfm-mcp-runs-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:mcp:runs:readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:mcp:runs:readme:v1.1.0"
+semantic_document_id: "kfm-mcp-runs-readme-v1.1.0"
+event_source_id: "ledger:kfm:doc:mcp:runs:readme:v1.1.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -46,196 +46,231 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ## 📘 Overview
 
 ### Purpose
-`mcp/runs/` is the **run logbook** for KFM’s MCP (Master Coder Protocol) work: a place to capture **human-readable, reviewable run records** that make experimentation and pipeline execution **traceable and repeatable**.
+`mcp/runs/` is KFM’s **run logbook**: a human-readable, reviewable record of *what ran*, *why*, *with what inputs/config*, *what changed*, and *where the canonical artifacts landed*. It is designed to make pipeline executions, experiments, and validations **auditable and reproducible**.
 
-This directory is intended to complement (not replace) the repository’s **canonical artifact locations** for pipeline outputs, catalogs, and provenance.
+This directory **complements** (does not replace) KFM’s canonical artifact homes: `data/**` for outputs and catalogs, `src/**` for code, and `docs/**` for governed narrative.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Run records for experiments, validations, and analysis work (what was run, why, with what inputs/params, and what happened). | Canonical STAC/DCAT/PROV outputs (these live under `data/…` as defined in the system architecture). |
-| Pointers to canonical artifacts: PROV bundle paths, dataset IDs, STAC item IDs, API contract versions, etc. | Large binary artifacts, raw dumps, or datasets that belong under `data/` (or an external artifact store). |
-| Lightweight run metadata: parameters, config snapshots, metrics summaries, known limitations, next actions. | Secrets/credentials, private keys, tokens, or any sensitive/regulated content. |
-| Reproducibility breadcrumbs: commit SHA, environment notes, deterministic seed notes (when applicable). | “Unsourced narrative” claims: conclusions must be backed by cited datasets/doc IDs elsewhere. |
+| Run records for experiments, validations, and analysis work (intent → setup → steps → results → pointers). | Canonical STAC/DCAT/PROV outputs (these live under `data/…`). |
+| Pointers to evidence artifacts (STAC Item IDs, DCAT dataset IDs, PROV bundle paths, graph ingest fixtures, API contract versions). | Large binary artifacts, raw data dumps, or duplicate copies of processed datasets. |
+| Minimal reproducibility breadcrumbs (commit SHA, config snapshot refs, deterministic seeds, environment notes). | Secrets/credentials, private keys, tokens, sensitive coordinates, or regulated content. |
+| Failure records (what failed, where, why, and how to reproduce the failure). | Unsourced narrative conclusions (belongs in Story Nodes with evidence IDs). |
 
 ### Audience
-- **Primary:** maintainers and contributors running ETL, analysis, or AI experiments.
-- **Secondary:** reviewers/auditors validating provenance, reproducibility, and governance compliance.
+- **Primary:** maintainers/contributors running ETL, catalog builds, graph ingest, API contract tests, UI checks, or AI experiments.
+- **Secondary:** reviewers/auditors validating provenance, reproducibility, governance, and CI gate behavior.
 
 ### Definitions (link to glossary)
-- Link: `../../docs/glossary.md`
+- Link: `../../docs/glossary.md` *(not confirmed in repo; recommended)*
 
 ### Key artifacts (what this doc points to)
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| **MASTER_GUIDE_v12.md** | `../../docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline invariants and repo rules. |
-| **KFM_REDESIGN_BLUEPRINT_v13.md** | `../../docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | Canonical homes-by-stage + provenance-first rules. |
+| Master Guide v12 | `../../docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical ordering + invariants (non-negotiable). |
+| v13 Redesign Blueprint | `../../docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | “One canonical home”, contract-first, evidence-first. |
+| Universal Doc Template | `../../docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Baseline governed doc structure. |
 
 ### Definition of done (for this document)
 - [x] Front-matter complete + valid
-- [x] Clear scope + boundaries (what goes here vs. canonical homes)
-- [x] Provides a minimal, repeatable run-record pattern
-- [x] Includes sensitivity/redaction guidance
-- [ ] Linked run-record schema (if/when `schemas/telemetry/` is introduced)
+- [x] Clear scope boundaries (run logbook vs canonical homes)
+- [x] Run record conventions (IDs, required fields, redaction rules)
+- [x] Repro pointers to STAC/DCAT/PROV/Graph/API artifacts
+- [ ] Optional: linked run-record schema in `schemas/telemetry/` *(not confirmed in repo)*
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `mcp/runs/README.md` (must match front-matter)
+- `path`: `mcp/runs/README.md` *(must match front-matter)*
 
 ### Related repository paths
 
 | Area | Canonical home | What lives there |
 |---|---|---|
-| MCP docs | `mcp/` | Experiments, model cards, SOPs, and MCP resources. |
-| **Run logbook** | `mcp/runs/` | **Run records** (this directory). |
-| ETL / pipelines | `src/pipelines/` | Deterministic transforms and pipeline-run mechanics. |
-| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC/DCAT/PROV artifacts (canonical). |
-| Graph | `src/graph/` + `data/graph/` | Graph ingest + fixtures. |
-| API boundary | `src/server/` | API contracts + redaction/query services. |
-| UI | `web/` | Map layers, focus mode UI, citation rendering. |
-| Story Nodes | `docs/reports/story_nodes/` | Draft/published Story Nodes and assets. |
+| MCP root | `mcp/` | Experiments, model cards, SOPs, run logbook. |
+| **Run logbook** | `mcp/runs/` | **Run records + small support files** (this directory). |
+| Pipelines | `src/pipelines/` | Deterministic ETL + catalog builders + run mechanics. |
+| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Canonical STAC/DCAT/PROV artifacts. |
+| Graph | `src/graph/` (+ optional fixtures in `data/graph/`) | Ontology bindings + ingest/migrations + fixtures. |
+| API boundary | `src/server/` | REST/GraphQL contracts, redaction, query services. |
+| UI | `web/` | Map + Focus Mode UI consuming APIs only. |
+| Story Nodes | `docs/reports/story_nodes/` | Draft/published Story Nodes + narrative assets. |
 
 ### Expected file tree for this sub-area
 ~~~text
 📁 mcp/
 └── 📁 runs/
     ├── 📄 README.md
-    ├── 📁 <run_id>/
-    │   ├── 📄 README.md              # run record (recommended)
-    │   ├── 📄 params.yaml            # optional: parameters snapshot (small text)
-    │   ├── 📄 metrics.json           # optional: metrics summary (small text)
-    │   ├── 📄 artifacts.md           # optional: pointers to large artifacts stored elsewhere
-    │   └── 📁 logs/                  # optional: small logs (no secrets)
+    ├── 📁 RUN_ID/
+    │   ├── 📄 README.md                # REQUIRED: run record (human-readable)
+    │   ├── 📄 run.yaml                 # RECOMMENDED: small machine-readable manifest
+    │   ├── 📄 params.yaml              # OPTIONAL: parameter snapshot (text)
+    │   ├── 📄 metrics.json             # OPTIONAL: metrics summary (small)
+    │   ├── 📄 artifacts.md             # OPTIONAL: pointers to canonical outputs + external blobs
+    │   └── 📁 logs/                    # OPTIONAL: small logs (no secrets)
     └── 📁 _templates/
-        └── 📄 RUN_RECORD_TEMPLATE.md # optional: shared skeleton
+        └── 📄 RUN_RECORD_TEMPLATE.md   # OPTIONAL: shared skeleton (if you want one)
 ~~~
 
 ## 🧭 Context
 
 ### Background
-KFM emphasizes **reproducibility** and **provenance-first** workflows. Run records are the “glue” that connects:
-- why we ran something,
-- what inputs/versions we used,
-- what artifacts we produced (and where the canonical copies live),
-- and how to reproduce or audit the result later.
+KFM is **evidence-first** and **provenance-first**: the run record is the “glue” connecting:
+- intent (why we ran it),
+- execution context (what code/config/environment),
+- evidence artifacts (what was produced),
+- and auditability (how to reproduce/verify).
 
-### Assumptions
-- Runs may be manual (developer executed) or automated (CI / scheduled).
-- Canonical artifacts (catalogs + PROV) live under `data/…` per the architecture blueprint.
-- `mcp/runs/` is optimized for **readability + traceability**, not bulk storage.
+### Constraints / invariants (non-negotiable)
+- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.
+- **No UI direct-to-graph reads** (UI consumes contracts via API only).
+- Run records contain **no secrets**, **no PII**, and **no sensitive-location inference**.
+- Run records **do not become narrative truth**: any conclusions must be surfaced as Story Nodes with evidence IDs.
 
-### Constraints / invariants
-- Preserve the canonical ordering: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.
-- **UI must never connect to Neo4j directly**; all graph access is via APIs (boundary enforced at `src/server/`).
-- No secrets, no PII leakage, no sensitive-location inference in run notes.
+### Run ID conventions
+Run IDs must be:
+- unique within `mcp/runs/`,
+- stable enough to reference in PROV and Story Nodes,
+- filesystem-safe (ASCII, no spaces).
 
-### Open questions
-- Should KFM formalize a JSON Schema for run records under `schemas/telemetry/`?
-- Should `mcp/runs/` be strictly “human-readable markdown,” or allow machine-readable manifests as first-class citizens?
+Recommended patterns:
+- `YYYY-MM-DD__<area>__<slug>__<shortsha>`
+- `YYYYMMDDTHHMMSSZ__<area>__<slug>__<shortsha>`
 
-### Future extensions
-- Add a validated run-record schema (JSON Schema) + CI gate for minimum metadata completeness.
-- Add automated tooling to generate run folders with consistent IDs and pre-filled metadata.
+Examples:
+- `2025-12-28__etl__air-quality-refresh__a1b2c3d`
+- `20251228T173012Z__ai__focus-bundle-eval__a1b2c3d`
 
 ## 🗺️ Diagrams
 
 ### Run record relationship to canonical artifacts
 ~~~mermaid
 flowchart LR
-  A["Run execution<br/>(manual or CI)"] --> B["Run record<br/>mcp/runs/&lt;run_id&gt;/README.md"]
-  A --> C["Pipeline code<br/>src/pipelines/"]
-  C --> D["Outputs<br/>data/**"]
-  D --> E["Catalogs<br/>data/stac + data/catalog/dcat"]
-  D --> F["Provenance bundles<br/>data/prov/"]
-  E --> G["Graph ingest fixture<br/>data/graph/"]
-  G --> H["API boundary<br/>src/server/"]
-  H --> I["UI<br/>web/"]
-  I --> J["Story Nodes<br/>docs/reports/story_nodes/"]
+  A["Run execution (manual or CI)"] --> B["Run record: mcp/runs/RUN_ID/README.md"]
+  A --> C["Code + configs: src/**"]
+  C --> D["Outputs: data/{raw,work,processed}/..."]
+  D --> E["Catalogs: data/stac + data/catalog/dcat"]
+  D --> F["Provenance bundles: data/prov/..."]
+  E --> G["Graph ingest fixtures (optional): data/graph/..."]
+  G --> H["API boundary: src/server/..."]
+  H --> I["UI: web/..."]
+  I --> J["Story Nodes: docs/reports/story_nodes/..."]
 ~~~
 
-## 📥 Inputs
+## 📦 Data & Metadata
 
-| Input artifact | Where it lives | Required? | Notes |
-|---|---:|:---:|---|
-| Code version | Git commit SHA / tag | ✅ | Always record the commit SHA. |
-| Pipeline config / parameters | `src/pipelines/` and/or this run folder | ✅ | Capture parameter snapshots (text). |
-| Dataset identifiers | `data/<domain>/…` + catalog IDs | ✅ | Use stable IDs/paths; avoid copying large files into `mcp/runs/`. |
-| Environment snapshot | lockfile / container tag / python version | ◻ | Recommended for high-value runs. |
+### Inputs (what a run record must reference)
+| Input | Where | Required? | Notes |
+|---|---|:---:|---|
+| Code version | Git `commit_sha` | ✅ | Always record commit SHA and branch/tag if relevant. |
+| Run intent | Run record `README.md` | ✅ | What question/task, what changed, why now. |
+| Parameters/config | `run.yaml` and/or `params.yaml` | ✅ | Keep small; prefer linking to canonical config in `src/**`. |
+| Dataset/source IDs | STAC/DCAT IDs or stable paths | ✅ | Prefer IDs over copying data into `mcp/runs/`. |
+| Environment snapshot | container tag / lockfiles / runtime | ◻ | Recommended for high-value runs and reproducibility audits. |
 
-## 📤 Outputs
+### Outputs (what a run record must point to)
+| Output | Where | Required? | Notes |
+|---|---|:---:|---|
+| Run record | `mcp/runs/RUN_ID/README.md` | ✅ | The canonical log entry for the run. |
+| Evidence artifacts | `data/**` | ◻ | Prefer pointers (STAC/DCAT/PROV refs) over duplication. |
+| PROV bundle references | `data/prov/...` | ◻ | Strongly recommended for ETL/catalog/graph-affecting runs. |
+| Metrics summary | `mcp/runs/RUN_ID/metrics.json` | ◻ | Keep small; store big results elsewhere, link in `artifacts.md`. |
 
-| Output artifact | Where it lives | Required? | Notes |
-|---|---:|:---:|---|
-| Run record | `mcp/runs/<run_id>/README.md` | ✅ | Human-readable summary of intent + results. |
-| PROV bundle reference | `data/prov/...` (canonical) | ◻ | Add a pointer to the generated PROV bundle if applicable. |
-| STAC/DCAT references | `data/stac/...`, `data/catalog/dcat/...` | ◻ | If a run produced new/updated datasets, cite the relevant IDs/paths. |
-| Metrics summary | `mcp/runs/<run_id>/metrics.json` | ◻ | Keep small; store large outputs elsewhere and link. |
+### Recommended minimal run manifest (`run.yaml`)
+~~~yaml
+run_id: "2025-12-28__etl__example__a1b2c3d"
+run_kind: "etl"          # etl | catalog | graph | api | ui | ai | validation | ad_hoc
+status: "success"        # success | failed | partial | cancelled
+started_at: "2025-12-28T17:30:12Z"
+ended_at: "2025-12-28T17:46:03Z"
 
-## 🔐 Sensitivity & redaction notes
-- Do **not** include tokens, API keys, credentials, private URLs, or personal data.
-- Avoid listing sensitive coordinates or restricted locations; use generalized references when needed.
-- If you must reference sensitive materials for reproducibility, reference **access-controlled identifiers** (not raw content).
+commit_sha: "a1b2c3d4e5f6..."
+branch: "main"
+runner: "manual"         # manual | ci
+actor: "TBD"             # human or service principal (no secrets)
 
-## ✅ Quality signals
-A “high quality” run record:
-- includes commit SHA + parameter snapshot,
-- references canonical outputs (PROV/STAC/DCAT) instead of duplicating them,
-- includes enough context to rerun deterministically,
-- states limitations and what changed vs prior runs,
-- avoids unsourced claims; results should be tied to evidence artifacts.
+inputs:
+  - kind: "stac-item"
+    id: "TBD"
+  - kind: "source"
+    id: "TBD"
+
+outputs:
+  - kind: "prov-bundle"
+    path: "data/prov/TBD"
+  - kind: "stac-item"
+    path: "data/stac/items/TBD.json"
+
+notes:
+  limitations: []
+  followups: []
+~~~
+
+### Sensitivity & redaction
+- **Never** include secrets (tokens, keys, private URLs), private data, or embargoed content.
+- Avoid sensitive coordinates or restricted locations; reference generalized IDs (tile/H3 bucket) or access-controlled identifiers.
+- If a run must reference restricted material for reproducibility, store details in the canonical restricted system (not here) and link by **opaque identifier**.
+
+### Quality signals (what “good” looks like)
+A high-quality run record:
+- captures `commit_sha` + a parameter snapshot,
+- points to canonical STAC/DCAT/PROV artifacts (does not duplicate them),
+- is reproducible (explicit steps + stable IDs + deterministic seed notes where applicable),
+- documents deltas vs prior runs and known limitations,
+- avoids narrative claims without evidence links.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### STAC
-If the run produced/updated geospatial assets, reference the relevant:
-- STAC Collection(s): `data/stac/collections/...`
-- STAC Item(s): `data/stac/items/...`
+If the run produces/updates spatiotemporal assets, reference:
+- STAC Collections: `data/stac/collections/...`
+- STAC Items: `data/stac/items/...`
 
 ### DCAT
-If the run produced/updated dataset-level metadata, reference:
-- DCAT dataset record(s): `data/catalog/dcat/...` (JSON-LD)
+If dataset-level discovery metadata changes, reference:
+- DCAT datasets/distributions: `data/catalog/dcat/...` (JSON-LD)
 
 ### PROV-O
-If the run produced derivations or transformations, reference:
-- PROV bundle(s): `data/prov/...` (canonical home)
+If the run transforms or derives outputs, reference:
+- PROV bundles: `data/prov/...` (canonical home)
 
 ### Versioning
-- Run records should record:
-  - the run ID,
-  - the commit SHA,
-  - and any dataset/catalog version identifiers used or produced.
+Run records should record:
+- `run_id`
+- `commit_sha`
+- relevant dataset/catalog versions (if your domain pack uses them)
+- predecessor/successor links when runs supersede prior evidence
 
-## 🧩 Architecture
+## 🧱 Architecture
 
-### Components touched
+### What this directory is (and is not)
+- **Is:** a traceable logbook for MCP activity with pointers to canonical artifacts.
+- **Is not:** a data lake, an artifact store, or a narrative publication surface.
 
-| Component | Path | Change type |
-|---|---|---|
-| Run logbook | `mcp/runs/` | Documentation / provenance pointers |
-| ETL / pipelines | `src/pipelines/` | Referenced (canonical) |
-| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Referenced (canonical) |
+### Interfaces / contracts
+This directory defines **no APIs**. It documents runs and references contracts elsewhere (OpenAPI/GraphQL, schemas, catalogs).
 
-### Interfaces/contracts
-- This directory does not define APIs; it documents runs and references canonical artifacts and contracts elsewhere.
-
-### Extension points checklist (for future work)
-- [ ] Add run-record schema under `schemas/telemetry/`
-- [ ] Add CI check: run record minimum metadata
-- [ ] Add a generator script for new run folders
+### Extension points (future work)
+- Run-record schema + CI gate under `schemas/telemetry/` *(not confirmed in repo)*.
+- A generator script to create `RUN_ID/` skeletons deterministically *(not confirmed in repo)*.
+- Optional cross-linking into PROV as a first-class `prov:Activity` ID (run → activity mapping).
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How this work surfaces in Focus Mode
-Run records are **supporting evidence** and should be referenced when a Story Node depends on a derived dataset/model result.
+### How run records surface in Focus Mode
+Run records are **supporting evidence** and should be referenced when:
+- a Story Node depends on a derived dataset or model output,
+- an audit panel needs reproducibility breadcrumbs (run ID, commit, PROV bundle).
 
 ### Provenance-linked narrative rule
-If a Story Node references a result produced by a run, it should reference:
-- the dataset/document IDs used,
-- the run ID (this folder),
-- and the canonical PROV bundle path (if generated).
+If a Story Node references a result from a run, it should reference:
+- dataset/document IDs used,
+- `run_id` (this folder),
+- canonical PROV bundle path (if generated),
+- and any redaction constraints (if applicable).
 
 ### Optional structured controls (if relevant)
 ~~~yaml
@@ -246,39 +281,30 @@ focus_mode_controls:
 
 ## 🧪 Validation & CI/CD
 
-### Validation steps
-- Ensure Markdown passes the repo’s markdown protocol validation.
-- Ensure internal links resolve (if link checking is enabled).
-- Ensure no secrets or sensitive data were accidentally committed.
+### Validation steps (recommended)
+- [ ] Markdown protocol checks (KFM-MDP)
+- [ ] Link check (internal links resolve)
+- [ ] Secret scanning / credential detection (must be clean)
+- [ ] If referenced: STAC/DCAT/PROV schemas validate
+- [ ] If referenced: API contract tests pass
 
-### Reproduction
+### Reproduction (pattern)
 ~~~bash
-# (Replace with repo-specific commands)
-# 1) Checkout the recorded commit SHA
-# 2) Re-run the pipeline/experiment with recorded params
-# 3) Confirm artifacts match referenced PROV/STAC/DCAT outputs
+# 1) checkout the recorded commit SHA
+# 2) run the recorded command(s) with recorded params/config
+# 3) validate STAC/DCAT/PROV outputs referenced by the run record
+# 4) compare expected vs observed outputs (hashes/IDs where applicable)
 ~~~
-
-### Telemetry signals (optional future schema)
-
-| Field | Example | Notes |
-|---|---|---|
-| run_id | `2025-12-22__example__abc1234` | Stable, unique ID |
-| stage | `ETL` / `AI` / `Catalog` | KFM stage(s) touched |
-| commit_sha | `abc1234...` | Required |
-| inputs | list of dataset IDs/paths | Avoid embedding raw data |
-| outputs | list of canonical artifact refs | Prefer `data/...` pointers |
-| status | `success` / `failed` | Optional but useful |
 
 ## ⚖ FAIR+CARE & Governance
 
 ### Review gates
-- Any run record that references restricted/sensitive materials requires human review.
-- Any run record that implies new narrative conclusions should be paired with sourced Story Nodes.
+- Any run referencing **restricted/sensitive** materials requires human review.
+- Any run implying interpretive conclusions should be paired with governed Story Nodes.
 
 ### CARE / sovereignty considerations
 - Respect sovereignty constraints and cultural sensitivity when describing datasets, places, or people.
-- Prefer generalized descriptions over sensitive specifics when necessary.
+- Prefer generalized descriptions when precise locations or identifiers could create harm.
 
 ### AI usage constraints
 - Allowed: summarization, structuring, translation, keyword indexing.
@@ -288,11 +314,13 @@ focus_mode_controls:
 
 | Version | Date | Author | Change summary |
 |---:|---:|---|---|
-| v1.0.0 | 2025-12-22 | ChatGPT | Initial `mcp/runs/` README scaffold (template-aligned). |
+| v1.0.0 | 2025-12-22 | ChatGPT | Initial `mcp/runs/` README scaffold. |
+| v1.1.0 | 2025-12-28 | ChatGPT | Tightened run ID + manifest conventions; clarified canonical pointers, redaction rules, and CI expectations. |
 
 ---
 
 ### Footer refs
-Governance: `docs/governance/ROOT_GOVERNANCE.md`  
-Ethics: `docs/governance/ETHICS.md`  
-Sovereignty: `docs/governance/SOVEREIGNTY.md`
+- 🧭 Master Guide: `../../docs/MASTER_GUIDE_v12.md`
+- 🏛️ Governance: `../../docs/governance/ROOT_GOVERNANCE.md`
+- 🧾 Ethics: `../../docs/governance/ETHICS.md`
+- 🪶 Sovereignty: `../../docs/governance/SOVEREIGNTY.md`
