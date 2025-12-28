@@ -44,10 +44,10 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 # KFM Web UI Source README
 
 **Path:** `web/src/`  
-**Companion docs:** `README.md` (repo-level), `web/README.md` (web root; if present).  
+**Companion docs:** `README.md` (repo root), `web/README.md` (web root; if present).  
 **Canonical pipeline ordering (non-negotiable):** **ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
 
-> Purpose: Provide a contract-first, provenance-first guide for implementing KFM Web UI source code under `web/src/` without breaking the API boundary, sovereignty/generalization rules, or Focus Mode provenance requirements.
+> Purpose: Provide a **contract-first, provenance-first** guide for implementing UI code under `web/src/` without breaking the API boundary, sovereignty/generalization rules, or Focus Mode provenance requirements.
 
 ---
 
@@ -55,21 +55,22 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 ### Purpose
 
-- Define what belongs in `web/src/` and how frontend work stays architecture-synced to KFM’s canonical pipeline.
-- Make UI invariants explicit, testable, and reviewable:
-  - **API boundary** access only (no direct graph/data reads),
-  - **contract-first** UI behavior (types/fields are governed by contracts/schemas),
-  - **evidence-first** UX (citations + provenance are first-class UI affordances),
-  - **Focus Mode** hard gate: no unsourced narrative.
+This README governs **how frontend work is organized and reviewed** under `web/src/` so it stays synced to KFM’s canonical pipeline and contract boundaries.
+
+It makes UI invariants explicit and testable:
+- **API boundary only** (no direct graph/database access),
+- **contract-first** behavior (UI shape follows governed contracts/schemas),
+- **evidence-first** UX (citations + provenance are first-class affordances),
+- **Focus Mode hard gate**: no unsourced narrative.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| React/map UI source code under `web/src/` (map runtime, Focus Mode UI, Story Node rendering, citation UX, state management, frontend tests) | ETL/pipelines (`src/pipelines/`), catalog generation outputs (`data/**`), graph ingest/migrations (`src/graph/`), server implementation internals (`src/server/`), infra/deployments |
-| UI consumption of API contracts and schema-governed registries (layer registry, Story Node schema, telemetry schema) | Authoring or editing STAC/DCAT/PROV from the UI (catalogs are produced upstream) |
+| React/map UI source code under `web/src/` (map runtime, Focus Mode UI, Story Node rendering, citation/provenance UX, state management, frontend tests) | ETL/pipelines (`src/pipelines/`), catalog generation outputs (`data/**`), graph ingest/migrations (`src/graph/`), server implementation internals (`src/server/`), infra/deployments |
+| UI consumption of API contracts + schema-governed registries (layer registry, Story Node schema, telemetry schema) | Authoring/editing STAC/DCAT/PROV from the UI (catalogs are produced upstream) |
 | Accessibility, performance, and telemetry wiring (when implemented) | Governance policy authoring (`docs/governance/**`) |
-| Contract-safe UI evolution (respect semver + deprecation rules) | Any attempt to bypass redaction/generalization or infer restricted locations client-side |
+| Contract-safe UI evolution (semver + deprecation readiness) | Any attempt to bypass redaction/generalization or infer restricted locations client-side |
 
 ### Audience
 
@@ -80,20 +81,29 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 - Glossary link: `docs/glossary.md` — if missing, treat as **not confirmed in repo** and fix links rather than creating a parallel glossary.
 - Terms used in this document:
-  - **API boundary**: contracted server layer under `src/server/` that enforces redaction/generalization and serves governed payloads.
-  - **Story Node**: governed narrative artifact (machine-ingestible + provenance-linked); canonical home is `docs/reports/story_nodes/`.
-  - **Focus Mode**: deep-dive UX that consumes only provenance-linked context bundles (no unsourced narrative).
-  - **Layer registry**: declarative map layer configuration intended to be schema-validated (location TBD).
-  - **Evidence artifacts**: STAC/DCAT/PROV products referenced by the UI for traceability and audit.
-  - **Classification propagation**: UI must not present outputs less restrictive than upstream inputs.
+  - **API boundary:** the contracted server layer under `src/server/` that enforces redaction/generalization and serves governed payloads.
+  - **Contract-first:** the UI is a strict consumer of versioned schemas/contracts; it does not “guess” field shapes.
+  - **Story Node:** a governed narrative artifact (machine-ingestible + provenance-linked); canonical home is `docs/reports/story_nodes/`.
+  - **Focus Mode:** deep-dive UX that renders only provenance-linked context bundles (no unsourced narrative).
+  - **Evidence artifacts:** STAC/DCAT/PROV products referenced by the UI for traceability and audit.
+  - **Classification propagation:** the UI must not present outputs less restrictive than upstream inputs in their lineage.
 
 ### Quick rules (read before coding)
 
-1) **UI never reads Neo4j directly.**  
-2) **UI never reads `data/**` as authoritative evidence.** Evidence is surfaced via API-provided references.  
-3) **If you need a new field, update contracts first** (API Contract Extension workflow) → implement server → then consume from UI.  
+1) **UI never reads Neo4j (or any database) directly.**  
+2) **UI consumes governed data only via contracted APIs** (REST/GraphQL).  
+3) **If you need a new field:** update contracts first → implement server → then consume in UI.  
 4) **Focus Mode only shows provenance-linked narrative.** Missing evidence must show a “missing provenance” state.  
-5) **Do not infer sensitive locations** via joins, zoom behavior, reverse geocoding, centroid guessing, or caching.
+5) **Do not infer sensitive locations** through client-side correlation (joins, caching, reverse geocoding, centroid guessing, zoom-based deduction).
+
+### When do I need an API Contract Extension?
+
+Use `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` when:
+- The UI needs **new fields** or **new endpoints**.
+- Focus Mode needs a new **context bundle** element (citations, map payload, policy flags).
+- You need a new **filter/search** behavior that changes request/response shapes.
+
+Do **not** “work around” missing fields by scraping, guessing, or reading `data/**` at runtime.
 
 ### Key artifacts
 
@@ -103,8 +113,8 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 | Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Maintainers | Governs this document’s structure |
 | Story Node template v3 | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Story curators | Narrative structure + citation rules |
 | API Contract Extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API team | Contract-first change workflow |
-| v13 redesign blueprint (draft) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Maintainers | “One canonical home” + vertical-slice readiness |
-| Web root README | `web/README.md` | UI team | Web directory rules (**not confirmed in repo** if absent) |
+| v13 redesign blueprint (draft) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Maintainers | One canonical home per subsystem; schemas/contracts first-class |
+| Web root README | `web/README.md` | UI team | Web directory build/run rules (**not confirmed in repo** if absent) |
 | API contracts | `src/server/contracts/**` | API team | OpenAPI/GraphQL contracts (**not confirmed in repo** if absent) |
 | Schemas | `schemas/**` | Maintainers | JSON Schemas (STAC/DCAT/PROV/story/ui/telemetry) (**not confirmed in repo** if absent) |
 | Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Maintainers | Markdown governance (**not confirmed in repo** if absent) |
@@ -114,10 +124,10 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 - [ ] Front-matter is complete and `path:` matches `web/src/README.md`.
 - [ ] Section structure aligns to `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`.
-- [ ] Canonical pipeline ordering matches the Master Guide.
-- [ ] All “MUST/SHALL” statements are traceable to governed docs or explicitly labeled **not confirmed in repo**.
-- [ ] Validation steps are listed and reproducible (repo script names are linked/derived from `web/package.json` if present).
-- [ ] Governance, CARE, and sovereignty considerations are explicitly stated for UI changes that could expose sensitive data.
+- [ ] Canonical pipeline ordering is preserved (no stage reordering or “shortcut” claims).
+- [ ] All **MUST/SHALL** statements are traceable to governed docs, or downgraded to **recommended**.
+- [ ] Validation steps are listed and reproducible (source of truth: `web/package.json` if present).
+- [ ] Governance, CARE, and sovereignty considerations are explicit for UI changes that could expose sensitive data.
 
 ---
 
@@ -146,26 +156,33 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 ### Expected file tree for `web/src/` (recommended shape)
 
-This is a recommended shape. Update it to match the repo and avoid creating duplicate canonical homes.
+This is a recommended shape aligned to “one canonical home per subsystem.” If the repo already has an established structure (e.g., `web/src/story/focus_mode/`), **prefer matching the existing canonical home** rather than creating parallel roots.
 
 ~~~text
 📁 web/
-├── 📄 README.md                          # web root rules (if present)
+├── 📄 README.md                              # web root rules (if present)
 └── 📁 src/
-    ├── 📁 api/                           # API clients + contract-bound types
-    ├── 📁 map/                           # Map runtime adapters (MapLibre; optional 3D adapters)
-    ├── 📁 layers/                        # Layer registry loader + schema validation hooks
-    ├── 📁 focus/                         # Focus Mode UI shell + provenance panel
-    ├── 📁 story/                         # Story Node renderer + citation UI
-    ├── 📁 features/                      # Vertical feature slices (Search, Timeline, Layers)
-    ├── 📁 ui/                            # Shared components
-    ├── 📁 state/                         # State management
-    ├── 📁 styles/                        # Tokens + global styles
-    ├── 📁 telemetry/                     # Telemetry emitters + privacy guards (optional)
-    ├── 📁 utils/                         # Guards, formatters, evidence helpers
-    ├── 📁 test/                          # Fixtures + test helpers
-    └── 📄 README.md                      # this file
+    ├── 📁 api/                               # API clients + contract-bound types
+    ├── 📁 map/                               # Map runtime adapters (MapLibre; optional 3D adapters)
+    ├── 📁 layers/                            # Layer registry loader + validation hooks
+    ├── 📁 story/                             # Story Node rendering + narrative utilities
+    │   └── 📁 focus_mode/                    # Focus Mode UI + provenance/citation panels (preferred single home)
+    ├── 📁 features/                          # Vertical feature slices (Search, Timeline, Layers)
+    ├── 📁 ui/                                # Shared components
+    ├── 📁 state/                             # State management
+    ├── 📁 styles/                            # Tokens + global styles
+    ├── 📁 telemetry/                         # Telemetry emitters + privacy guards (optional)
+    ├── 📁 utils/                             # Guards, formatters, evidence helpers
+    ├── 📁 test/                              # Fixtures + test helpers
+    └── 📄 README.md                          # this file
 ~~~
+
+### Import + runtime boundaries (do not cross)
+
+- ✅ Allowed: `web/src/**` importing `web/src/**` and consuming API contracts via generated/manual clients.
+- 🚫 Forbidden: UI importing from `src/server/**` or `src/graph/**` (server internals / graph internals).
+- 🚫 Forbidden: UI directly connecting to Neo4j, Postgres, or other DBs.
+- 🚫 Discouraged: treating `data/**` as a runtime source of truth (UI should render evidence refs returned by the API boundary).
 
 ---
 
@@ -173,16 +190,15 @@ This is a recommended shape. Update it to match the repo and avoid creating dupl
 
 ### Background
 
-`web/src/` implements the user-facing KFM map and narrative experience. The UI is strictly downstream:
-it visualizes governed data returned by the API boundary and renders provenance and evidence for end users.
+`web/src/` implements the user-facing KFM map + narrative experience. The UI is strictly downstream:
+it visualizes governed payloads returned by the API boundary and renders provenance and evidence for end users.
 
-Because UI is downstream of catalogs + graph, **provenance visibility, sensitivity handling, and contract adherence are functional requirements**, not “polish”.
+Because the UI is downstream of catalogs + graph, **provenance visibility, sensitivity handling, and contract adherence are functional requirements**.
 
 ### Assumptions
 
-- The UI is a React-based web application under `web/`.
-- The map runtime is typically MapLibre (2D) with optional 3D adapters (e.g., Cesium) — treat optionality as configuration, not a separate canonical UI home.
-- The UI never reads Neo4j directly. The API boundary is the enforcement point for redaction/generalization and access control.
+- The UI is a web application (React-based) under `web/`, typically using MapLibre for mapping; optional 3D adapters may exist/configure alongside (e.g., Cesium). Treat optionality as configuration, not a second UI root.
+- The UI reads from the API layer and does not require direct access to raw catalogs/graph; it displays layers + Story Nodes returned by the API boundary.
 - Focus Mode is a first-class UX and is provenance-linked by default.
 
 ### Constraints and invariants
@@ -190,36 +206,36 @@ Because UI is downstream of catalogs + graph, **provenance visibility, sensitivi
 **Pipeline ordering is preserved**  
 - **ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
 
-**Canonical homes (do not fork subsystem roots)**  
-- UI lives under `web/` (do not introduce new UI roots under `src/`).
+**One canonical home per subsystem**  
+- UI lives under `web/` (do not introduce new UI roots).
 - API boundary lives under `src/server/`.
 - Story Nodes live under `docs/reports/story_nodes/`.
 
 **API boundary (hard rule)**  
 - UI consumes data only through contracted endpoints (REST/GraphQL).
-- UI must not connect to Neo4j, import server internals, or directly read `data/**` as a runtime data source.
+- UI must not connect to Neo4j, import server internals, or query DBs directly.
 
 **Contract-first behavior**  
 - UI does not guess field shapes or silently accept breaking changes.
-- If UI needs new data: update the API contract (and tests) first, then implement server behavior, then consume in UI.
+- If UI needs new data: update the API contract first (and tests), then implement server behavior, then consume in UI.
 
 **Evidence-first / provenance-first UX**  
-- Focus Mode surfaces explicit evidence identifiers and shows missing-provenance states.
-- Story Node rendering must preserve citations, dataset IDs, and (where available) PROV lineage identifiers.
+- Every visible layer and narrative claim should be traceable to an evidence identifier.
+- Missing evidence is handled as a user-visible “missing provenance” state (not silently ignored).
+
+**Redaction + generalization awareness**  
+- Treat API-delivered redaction/generalization flags as authoritative.
+- UI must not provide an interaction path that defeats redaction (e.g., “zoom to exact point” when only generalized geometry is allowed).
 
 **No sensitive location inference**  
-- Do not reconstruct restricted locations through client-side joins, zoom behavior, centroid guessing, reverse geocoding, or cache correlation.
-
-**Classification propagation**  
-- UI must not present outputs less restrictive than upstream inputs in their lineage.
-- If API indicates redaction/generalization, UI must not provide an interaction path that defeats it.
+- Do not reconstruct restricted locations via client-side correlation (joins, reverse geocoding, centroid guessing, zoom-based deduction, caching).
 
 ### Open questions (resolve before “hardening”)
 
 | Question | Owner | Target date |
 |---|---|---|
 | Where is the layer registry stored and what schema validates it (`schemas/ui/`?) | UI | TBD |
-| What is the Focus Mode context bundle contract surface and required provenance fields | API | TBD |
+| What is the Focus Mode context bundle contract and required provenance fields | API | TBD |
 | Where are Story Node schemas located (`schemas/story_nodes/` vs `schemas/storynodes/`) | Maintainers | TBD |
 | What is the frontend test stack + command set (source of truth: `web/package.json`) | UI | TBD |
 | Where are telemetry event schemas stored and how are events validated (`schemas/telemetry/`?) | Maintainers | TBD |
@@ -255,7 +271,7 @@ sequenceDiagram
   participant Graph as Graph + Catalog access
 
   UI->>API: Focus query(entity_id, options)
-  API->>Graph: fetch context + evidence refs
+  API->>Graph: fetch context + evidence refs (with policy)
   Graph-->>API: context bundle + provenance identifiers + policy flags
   API-->>UI: contracted payload (narrative + citations + audit flags)
 ~~~
@@ -282,7 +298,7 @@ flowchart TD
 | API responses | JSON | `src/server/` endpoints | Contract tests + UI runtime guards |
 | Layer registry configs | JSON/TS | repo-defined | Schema validation if present |
 | Story Nodes | Markdown + assets | `docs/reports/story_nodes/**` | Template/schema validation if present |
-| Evidence identifiers | IDs + links | STAC/DCAT/PROV artifacts | Link checks + integrity checks if tooling exists |
+| Evidence identifiers | IDs + links | STAC/DCAT/PROV artifacts (referenced by API) | Link checks + integrity checks if tooling exists |
 
 ### Outputs
 
@@ -297,21 +313,29 @@ flowchart TD
 - Treat API-delivered redaction/generalization as authoritative.
 - Do not log PII, sensitive identifiers, or precise coordinates in client telemetry.
 - Avoid persistent storage of sensitive content unless governance-approved.
-- If a dataset or response is labeled with restrictive classification, UI presentation must not downgrade it.
+- If a dataset/response is labeled restrictive, UI presentation must not downgrade it.
 
-### Quality signals
+### Contract mismatch behavior (recommended)
 
-- Contract adherence and explicit error handling for contract mismatches.
-- Attribution completeness for layers and datasets.
-- Provenance UX correctness and discoverability in Focus Mode.
-- Accessibility baseline for map controls, Focus Mode, and citation interactions (target: WCAG 2.1 AA if governed).
-- Performance budgets for layer load, Focus bundle fetch, and Story Node render.
+- Fail loudly (user-visible) on contract incompatibilities.
+- Prefer explicit “This view requires a newer server contract” messaging over silent degradation.
+- Log a structured error event (without sensitive payloads) if telemetry is enabled.
 
 ---
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 The UI makes provenance visible and inspectable. The UI **does not author** STAC/DCAT/PROV artifacts; it consumes evidence references returned by the API boundary and renders them consistently.
+
+### Evidence linking UI conventions (recommended)
+
+| Reference type | Typical identifier | UI behavior |
+|---|---|---|
+| STAC Item | `stac_item_id` | “Source” link/affordance; map asset attribution; copyable ID |
+| STAC Collection | `stac_collection_id` | Collection-level context + grouping |
+| DCAT Dataset | `dcat_dataset_id` | Dataset metadata panel (license/publisher/distributions) |
+| PROV Activity/Run | `prov_activity_id` / `run_id` | “How produced” lineage panel |
+| Graph Entity | `entity_id` (stable) | Related items navigation (via API only) |
 
 ### STAC
 
@@ -327,7 +351,7 @@ The UI makes provenance visible and inspectable. The UI **does not author** STAC
 ### PROV-O
 
 - Surface lineage identifiers when provided (run IDs, activity IDs, derivation relationships).
-- Prefer a “how this was produced” affordance in Focus Mode (panel/section) rather than tooltips only.
+- Prefer a “how this was produced” affordance in Focus Mode (panel/section), not tooltips only.
 
 ### Versioning
 
@@ -349,7 +373,7 @@ The UI makes provenance visible and inspectable. The UI **does not author** STAC
 | API boundary | Contracted data access + policy enforcement | `src/server/` |
 | Web UI | Map + narrative experience | `web/src/` |
 | Story Nodes | Governed narrative content | `docs/reports/story_nodes/` |
-| Focus Mode | Provenance-linked deep dive UX | `web/src/focus/` + API payloads |
+| Focus Mode | Provenance-linked deep dive UX | `web/src/story/focus_mode/` + API payloads |
 
 ### Interfaces and contracts
 
@@ -481,7 +505,7 @@ UI changes that typically require elevated review:
 - Changing redaction or generalization handling.
 - Changing citation/provenance display behavior in Focus Mode.
 - Adding AI-generated or predictive narrative surfaces visible to users.
-- Adding or changing client-side storage behavior for content marked sensitive.
+- Adding/changing client-side storage behavior for content marked sensitive.
 - New public-facing endpoints or interactions that could reveal restricted locations.
 
 ### CARE / sovereignty considerations
@@ -503,7 +527,7 @@ UI changes that typically require elevated review:
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.4 | 2025-12-28 | Template-synced rewrite; tightened “hard rules”; aligned paths to Master Guide + v13 blueprint; clarified contract-first UI workflow | TBD |
+| v1.0.4 | 2025-12-28 | Template-synced rewrite; tightened API boundary + “one canonical home” alignment; clarified Focus Mode + provenance expectations | TBD |
 | v1.0.3 | 2025-12-27 | Aligned canonical pipeline wording; expanded provenance + schema/telemetry sections; added drift guardrails | TBD |
 | v1.0.2 | 2025-12-27 | Tightened contract-first workflow, provenance UX requirements, and validation gates | TBD |
 | v1.0.1 | 2025-12-24 | Clarified invariants and section structure | TBD |
