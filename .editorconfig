@@ -1,3 +1,7 @@
+# KFM repo-wide EditorConfig
+# Goal: reduce diff-noise and keep formatting deterministic across the canonical repo roots
+# (docs/, data/, schemas/, src/, web/, tools/, tests/, mcp/, .github/, releases/).
+
 root = true
 
 [*]
@@ -7,28 +11,68 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
+tab_width = 2
+
+# -----------------------
+# Language-specific rules
+# -----------------------
 
 [*.py]
 indent_size = 4
+tab_width = 4
 
-[Makefile]
+# Make requires tab-indented recipes
+[{Makefile,makefile,GNUmakefile}]
 indent_style = tab
 
-[makefile]
-indent_style = tab
-
-[GNUmakefile]
-indent_style = tab
-
-[*.bat]
+# Windows command scripts keep CRLF
+[*.{bat,cmd}]
 end_of_line = crlf
 
-[*.cmd]
-end_of_line = crlf
+# -----------------------
+# Data files (whitespace may be meaningful)
+# -----------------------
 
-[*.csv]
+[*.{csv,tsv}]
 trim_trailing_whitespace = false
 
-[*.tsv]
-trim_trailing_whitespace = false
+# -----------------------
+# Common repo artifact types
+# -----------------------
 
+# Schemas + configs
+[*.{json,jsonc,geojson,topojson}]
+indent_size = 2
+
+[*.{yml,yaml}]
+indent_size = 2
+
+[*.toml]
+indent_size = 2
+
+# Web / UI
+[*.{js,jsx,mjs,cjs,ts,tsx}]
+indent_size = 2
+
+[*.{css,scss,less}]
+indent_size = 2
+
+# Docs (KFM governed Markdown lives heavily in docs/)
+[*.{md,mdx}]
+indent_size = 2
+
+# Containers
+[Dockerfile]
+indent_size = 2
+
+# Shell scripts (explicit for clarity)
+[*.{sh,bash,zsh}]
+end_of_line = lf
+indent_size = 2
+
+# Optional-but-common in data platforms
+[*.sql]
+indent_size = 2
+
+[*.{graphql,gql}]
+indent_size = 2
