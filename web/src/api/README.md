@@ -2,7 +2,7 @@
 title: "Web UI — API Client (web/src/api) README"
 path: "web/src/api/README.md"
 version: "v1.0.0"
-last_updated: "2025-12-25"
+last_updated: "2025-12-28"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -41,14 +41,30 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# Web UI — API Client (`web/src/api`)
+# Web UI — API Client
 
-This folder is the **canonical home for web UI API consumption code**: request helpers, endpoint wrappers, client-side response typing/validation, and policy-aligned handling of provenance/citations.
+`web/src/api/` is the **canonical home for Web UI API consumption code**: request helpers, endpoint wrappers, client-side response typing/validation, and **policy-aligned** handling of provenance/citations.
 
-It exists to prevent:
+This folder exists to prevent:
+
 - ad-hoc `fetch()` scattered across components,
 - accidental drift from server contracts,
 - and violations of the KFM invariant: **UI → API only** (no direct graph access).
+
+## Non-negotiables
+
+1. **UI never connects to Neo4j directly**
+   - No Neo4j drivers in `web/`.
+   - No Cypher in the browser.
+   - Graph access happens only through contracted APIs.
+
+2. **Focus Mode consumes only provenance-linked content**
+   - The UI must not display unsourced narrative.
+   - Citations/sources must be rendered from API-delivered provenance pointers.
+
+3. **Contracts are canonical**
+   - Do not “patch around” server contract changes in UI components.
+   - Fix/update: contract → client wrapper/types → UI feature.
 
 ---
 
@@ -57,90 +73,102 @@ It exists to prevent:
 ### Purpose
 
 - Provide a **single, consistent** place for the React/map UI to call KFM backend services.
-- Enforce KFM architectural constraints at the UI boundary:
-  - **UI never reads Neo4j directly**; all graph access is through contracted APIs.
-  - **Provenance-first**: the UI should render citations and provenance references that come from the API; it must not invent or “guess” sources.
-- Make it easy to add/upgrade endpoints while remaining contract-first:
+- Enforce KFM boundary constraints at the UI edge:
+  - **UI → API only** (no direct graph access).
+  - **Provenance-first**: render citations/provenance references that come from the API; do not invent or guess sources.
+- Make endpoint evolution predictable:
   - contract update (server) → client wrapper update (here) → UI feature update.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| API client utilities (base URL, headers, auth token wiring, timeouts, retries) | Server API implementation (belongs in `src/server/`) |
-| Endpoint wrapper functions / hooks used by UI | Neo4j drivers, Cypher queries, or graph access from web code |
-| Client-side typing and (optional) runtime validation for API payloads | Editing or defining API contracts (belongs in `src/server/contracts/`) |
-| Guidance for Focus Mode / Story Node retrieval & rendering rules | Authoring Story Nodes (belongs in `docs/reports/story_nodes/`) |
+| Base client utilities (base URL, headers, auth token wiring, timeouts, retries, cancellation) | Server API implementation (belongs in `src/server/`) |
+| Endpoint wrapper functions (and optional UI hooks/adapters) used by UI | Neo4j drivers, Cypher queries, or graph access from web code |
+| Client-side typing and (optional) runtime validation for API payloads | Authoring/defining contracts (belongs in `src/server/contracts/**` if present) |
+| Provenance-preserving request/response handling for Focus Mode + Story Node retrieval | Authoring Story Nodes (belongs in `docs/reports/story_nodes/`) |
 
 ### Audience
 
-- UI maintainers and contributors working under `web/`
-- API maintainers coordinating contract changes
-- Reviewers enforcing governance/ethics/sovereignty requirements
+- Primary: UI maintainers and contributors working under `web/`
+- Secondary: API maintainers coordinating contract changes; reviewers enforcing governance/ethics/sovereignty constraints
 
 ### Definitions
 
 - Glossary: `docs/glossary.md` *(not confirmed in repo — add or repair link if the glossary lives elsewhere)*
-- Terms used here:
-  - **API boundary**: the contracted interface surface (REST/GraphQL) exposed from `src/server/`.
-  - **Contract artifact**: OpenAPI / GraphQL schema files (and related schemas) that must validate in CI.
-  - **Context bundle**: an API response shaped for Focus Mode (entity + related entities + narrative + sources/provenance references).
-  - **Provenance-linked**: all factual elements in narratives trace to a source ID (STAC/DCAT/PROV or other governed source identifiers).
 
-### Key artifacts (what this doc points to)
+Terms used here:
+
+- **API boundary**: the contracted interface surface (REST/GraphQL) exposed from `src/server/`.
+- **Contract artifact**: machine-validated schema/spec (OpenAPI, GraphQL SDL, JSON Schema).
+- **Context bundle**: a Focus Mode payload shaped as: entity + related entities + narrative + sources/provenance references.
+- **Provenance-linked**: factual elements trace to source IDs (STAC/DCAT/PROV or other governed identifiers).
+- **Redaction/generalization**: server-enforced transformation for sensitive content; the UI treats redacted outputs as final.
+
+### Key artifacts
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master Guide v12 (draft) | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline + invariants |
-| v13 redesign blueprint (draft; if adopted) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Arch | Canonical roots + “UI→API only” enforcement |
-| API contracts | `src/server/contracts/**` | API maintainers | Contract-first boundary |
-| API Contract Extension Template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API maintainers | Used when contract changes |
+| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical pipeline + invariants |
+| v13 redesign blueprint | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | “one canonical home”, contract-first, evidence-first |
+| API contracts | `src/server/contracts/**` *(if present)* | API maintainers | Contract-first boundary |
+| API Contract Extension Template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API maintainers | Used for contract changes |
 | Story Node Template v3 | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Curators | Narrative + citation rules |
-| Universal Doc Template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Govered Markdown structure |
+| Universal Doc Template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Governs structure |
 
-### Definition of done (for this document)
+### Definition of done
 
-- [ ] Front-matter complete + valid, and `path:` matches file location
-- [ ] Directory responsibilities and placement rules documented (no UI→graph bypass)
-- [ ] Example patterns documented without claiming unverified in-repo tooling
-- [ ] Validation expectations are listed (contract + schema + lint)
-- [ ] Governance + CARE/sovereignty considerations explicitly stated
+- [ ] Front-matter complete + valid, and `path:` matches file location.
+- [ ] Responsibilities + boundaries stated (UI→API only).
+- [ ] Contract + provenance expectations documented (no unsourced narrative).
+- [ ] Validation expectations listed (lint/typecheck/tests + contract drift strategy).
+- [ ] Governance + CARE/sovereignty considerations explicitly stated.
 
 ---
 
-## 🗂 Directory Layout
+## 🗂️ Directory Layout
 
 ### This document
 
 - `path`: `web/src/api/README.md` (must match front-matter)
 
-### Related repository paths (orientation)
+### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
 | UI root | `web/` | React/map UI; consumes APIs only |
 | UI API client (this area) | `web/src/api/` | API wrappers + typing/validation + client utilities |
 | API boundary (server) | `src/server/` | REST/GraphQL implementation; redaction + policy enforcement |
-| API contracts | `src/server/contracts/**` | OpenAPI/GraphQL + versioning; contract tests required |
+| API contracts | `src/server/contracts/**` *(if present)* | OpenAPI/GraphQL + versioning; contract tests required |
 | Graph subsystem | `src/graph/` | Ontology bindings + ingest/build tooling |
 | Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Evidence + provenance artifacts |
 | Story Nodes | `docs/reports/story_nodes/` | Draft/published narrative artifacts + assets |
-| Schemas | `schemas/` | JSON Schemas (STAC/DCAT/PROV/UI/telemetry) |
+| Schemas | `schemas/` | JSON Schemas (STAC/DCAT/PROV/story/ui/telemetry) |
 
-### Expected file tree for this sub-area
+### Expected local layout for `web/src/api`
 
-> Note: The specific filenames below are **illustrative** unless they already exist in-repo. If a file/path doesn’t exist, treat it as **not confirmed in repo** and either (a) create it intentionally, or (b) adjust this README to match actual structure.
+> The structure below is a recommended, contract-first layout. If a file/path does not exist, treat it as **not confirmed in repo** and either (a) create intentionally, or (b) adjust this README to match the actual structure.
 
 ~~~text
 📁 web/
 └── 📁 src/
     └── 📁 api/
         ├── 📄 README.md
-        ├── 📁 client/                    # (not confirmed in repo) shared HTTP, auth, retries, error mapping
-        ├── 📁 endpoints/                 # (not confirmed in repo) feature/domain endpoint wrappers
-        ├── 📁 types/                     # (not confirmed in repo) TS types + optional runtime validators
-        ├── 📁 __tests__/                 # (not confirmed in repo) client contract tests + mocked responses
-        └── 📄 index.ts                   # (not confirmed in repo) public surface exports
+        ├── 📄 index.ts                         # (not confirmed in repo) public surface exports
+        ├── 📁 client/                          # (not confirmed in repo) base HTTP + auth + retries + error mapping
+        │   ├── 📄 http.ts
+        │   ├── 📄 auth.ts
+        │   └── 📄 errors.ts
+        ├── 📁 endpoints/                       # (not confirmed in repo) endpoint wrappers grouped by feature/domain
+        │   ├── 📄 focus.ts
+        │   ├── 📄 search.ts
+        │   └── 📄 layers.ts
+        ├── 📁 types/                           # (not confirmed in repo) TS types + optional runtime validators
+        │   ├── 📄 focus.ts
+        │   └── 📄 provenance.ts
+        └── 📁 __tests__/                       # (not confirmed in repo) unit + mocked integration tests
+            ├── 📄 focus.test.ts
+            └── 📄 http-errors.test.ts
 ~~~
 
 ---
@@ -149,58 +177,53 @@ It exists to prevent:
 
 ### Background
 
-KFM’s architecture is **pipeline-ordered** and **boundary-governed**:
+KFM is pipeline-ordered and boundary-governed. The canonical ordering is:
 
 **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
-The web UI is intentionally **not** the system-of-record for data semantics or provenance; it renders what the API delivers, and it must do so in a way that preserves contract + provenance guarantees.
+The UI is not a system-of-record for semantics/provenance. It **renders contract-delivered payloads** and preserves provenance guarantees.
 
-### Assumptions
+### Boundary constraints and invariants
 
-- The UI is a React-based web app with a map engine (e.g., MapLibre/Cesium is referenced in design docs; exact setup is repo-defined).
-- The server API exposes contract-validated endpoints (REST and/or GraphQL).
-- Focus Mode expects provenance-linked narrative artifacts (Story Nodes) and related evidence pointers.
+1. **UI only reads from API endpoints and catalog endpoints**
+   - No direct DB/Neo4j access.
+   - If STAC/DCAT/PROV artifacts are accessed directly, they must be served as governed “catalog endpoints” (deployment-specific).
 
-### Constraints and invariants
+2. **Focus Mode rule is a hard gate**
+   - Focus Mode consumes only provenance-linked context bundles.
+   - Predictive/suggestive content (if any) must be opt-in, carry uncertainty metadata, and must not infer sensitive locations.
 
-Non-negotiables:
+3. **Governance is enforced at boundaries**
+   - Assume the server applies redaction + access controls.
+   - UI must not reconstruct, infer, or “fill in” redacted content.
 
-1. **No UI direct-to-graph reads**
-   - `web/` code must never query Neo4j directly.
-   - The UI must not import Neo4j drivers or run Cypher.
-   - All graph access must go through the API boundary in `src/server/`.
+### Extension points
 
-2. **Contracts are canonical**
-   - Client wrappers should be derived from / aligned to the server contracts in `src/server/contracts/**`.
-   - Do not “silently” change response shapes in UI code.
+This folder participates primarily in two “where to add capability” extension points:
 
-3. **Focus Mode is provenance-only**
-   - UI must not display unsourced narrative.
-   - Citations/provenance must render from API-delivered sources.
+- (D) **API**: new endpoints with contract tests + redaction rules (server-side work).
+- (E) **UI**: new features/layers that reference provenance pointers + CARE gating (this repo’s web work).
 
-4. **Governance is enforced at boundaries**
-   - Assume the API applies redaction and access controls.
-   - The UI must avoid logging/exposing sensitive content (including URLs/tokens, restricted coordinates) and must not attempt to reconstruct redacted data.
+If you are trying to “add capability” but you are in the wrong stage:
 
-### Open questions (keep updated)
+- New dataset/evidence → start at `data/**` + STAC/DCAT/PROV + PROV (not here).
+- New entity/relationship semantics → start at `src/graph/` + ontology mapping (not here).
+- New endpoint behavior/shape → start at `src/server/` + contracts (not here).
+
+### Open questions
 
 | Question | Owner | Target |
 |---|---|---|
-| Are API client types generated from OpenAPI/GraphQL (codegen), or authored manually? | UI/API | TBD |
+| Are client types generated from OpenAPI/GraphQL (codegen), or authored manually? | UI/API | TBD |
 | Is there a standard response “envelope” (e.g., `{ data, sources, provenance }`)? | API | TBD |
 | What caching library is canonical (if any) for API calls (React Query/SWR/custom)? | UI | TBD |
-
-### Future extensions
-
-- Codegen pipeline for client types from `src/server/contracts/**`
-- “Contract drift” CI check that compares client expectations to contract snapshots
-- Offline-first caching for map layers (careful: must respect governance)
+| Are STAC/DCAT/PROV served via the API, or via dedicated static catalog endpoints? | API/UI | TBD |
 
 ---
 
 ## 🗺️ Diagrams
 
-### Where `web/src/api` sits in the canonical pipeline
+### Where `web/src/api` sits in the pipeline
 
 ~~~mermaid
 flowchart LR
@@ -231,79 +254,21 @@ sequenceDiagram
 
 ---
 
-## 🧠 Story Node & Focus Mode Integration
-
-### How this work surfaces in Focus Mode
-
-- Focus Mode typically requires:
-  - the focused entity (Place/Person/Event/Artifact),
-  - related entities for context,
-  - a Story Node narrative (stored/retrieved, not invented at render-time),
-  - and a `sources[]`/provenance reference list that citations map to.
-
-### UI-side enforcement checklist (client responsibilities)
-
-Even when the server enforces provenance rules, the UI should still guard against accidental regression:
-
-- [ ] Do not render narrative blocks if citations/sources references are missing or invalid.
-- [ ] Render citations in a consistent, inspectable way (source IDs and links).
-- [ ] If AI-assisted content is ever delivered (opt-in), clearly label it and keep it visually distinct from curated narrative.
-- [ ] Never fabricate citations or merge “similar” sources client-side.
-- [ ] Treat redacted values as final (do not attempt inference or reconstruction).
-
----
-
-## 🧪 Validation & CI/CD
-
-### Minimum CI gates (relevant to this area)
-
-At minimum, changes touching API usage should remain compatible with expected repository gates:
-
-- Markdown protocol validation (for docs)
-- API contract tests (server side; client should track shape/version)
-- UI schema checks (e.g., layer registry, if applicable)
-- Security + sovereignty scanning (where applicable)
-
-### Suggested local validation (examples only)
-
-> Commands below are examples only (actual scripts are **not confirmed in repo**). Replace with repo-specific commands once known.
-
-~~~bash
-# Example: run UI typecheck / unit tests
-# npm test
-# npm run typecheck
-
-# Example: run lint
-# npm run lint
-~~~
-
-### Testing strategy (recommended)
-
-- **Unit tests** for:
-  - request builder (URL + query params),
-  - error mapping,
-  - runtime validation (if used).
-- **Mocked integration tests** for:
-  - endpoint wrappers returning expected typed objects,
-  - failure scenarios (401/403, redaction responses, schema mismatch).
-- **Contract drift detection** (ideal):
-  - compare client expectations against `src/server/contracts/**` snapshots (implementation approach TBD).
-
----
-
 ## 📦 Data & Metadata
 
-### What this folder should preserve
+### What this folder must preserve
 
-This folder is not just “HTTP glue.” It is where the UI should:
-- preserve **stable IDs** from upstream (graph IDs, dataset IDs),
-- preserve **provenance pointers** (STAC/DCAT/PROV identifiers, source references),
-- preserve **policy state** (redacted flags, audit hints if provided by API),
-- and preserve **version semantics** (API versioning if present).
+This folder is not “just HTTP glue.” It preserves:
 
-### Example: “context bundle” response shape (illustrative)
+- **Stable IDs** (graph IDs, dataset IDs, story node IDs).
+- **Evidence pointers** (STAC/DCAT identifiers, licenses, attributions).
+- **Lineage pointers** (PROV activity/run IDs if included by the API).
+- **Policy state** (redaction flags, access/permission hints if provided by API).
+- **Version semantics** (API versioning if present; explicit compatibility strategies for breaking changes).
 
-> The exact response envelope is API-defined. The pattern below reflects common KFM guidance: the UI receives narrative plus a `sources` array that citations map to.
+### Example “context bundle” envelope
+
+> API-defined; illustrative only.
 
 ~~~json
 {
@@ -322,19 +287,23 @@ This folder is not just “HTTP glue.” It is where the UI should:
     {
       "id": "source:stac:item:123",
       "kind": "stac-item",
-      "ref": "data/stac/items/... (or external URL)",
+      "ref": "data/stac/items/... (or served catalog URL)",
       "license": "CC-BY-4.0"
     }
-  ]
+  ],
+  "provenance": {
+    "prov_activity_id": "prov:activity:run:2025-12-01T12:00:00Z",
+    "prov_bundle_ref": "data/prov/... (or served provenance URL)"
+  }
 }
 ~~~
 
-### Sensitivity & redaction (UI handling)
+### Sensitivity and redaction
 
-- Do not log raw API responses containing sensitive details.
+- Do not log raw API responses that may contain sensitive details.
 - Never store sensitive payloads in long-lived client storage unless explicitly allowed by governance.
 - If coordinates are generalized/redacted, treat them as canonical for UI rendering.
-- Do not “guess” missing locations or fill in gaps with heuristics.
+- Do not guess missing locations or infer sensitive locations from related fields.
 
 ---
 
@@ -348,54 +317,57 @@ This folder is not just “HTTP glue.” It is where the UI should:
 ### DCAT
 
 - The UI may receive dataset-level descriptors/IDs for discovery and attribution.
-- Ensure dataset license and attribution fields are surfaced where required.
+- Ensure dataset license and attribution fields are surfaced where required (UI design-dependent).
 
 ### PROV-O
 
-- Provenance bundles may be referenced by ID/run.
-- The UI should expose provenance pointers in an inspectable way (e.g., “Data lineage” link/panel) when the UI design includes it.
+- Provenance bundles may be referenced by run/activity IDs and/or artifact refs.
+- If the UI includes a “lineage” affordance, it should point to PROV references delivered by the API (inspectable, not inferred).
 
 ---
 
-## 🏛️ Architecture
+## 🧱 Architecture
 
 ### Design goal
 
-Create a **small, predictable API surface** for the UI that is:
+Create a small, predictable API surface for the UI that is:
+
 - typed,
 - testable,
 - contract-aligned,
 - provenance-preserving,
 - and governance-safe.
 
-### Recommended layering (implementation-neutral)
+### Recommended layering
 
 1. **Transport/client layer**
    - base URL resolution
    - auth header injection (if applicable)
-   - consistent timeout/cancel
+   - timeout/cancellation
+   - retries (careful: do not retry non-idempotent operations)
    - error normalization
 
 2. **Endpoint wrappers**
    - one module per feature/domain (e.g., `focus`, `layers`, `search`)
-   - stable function signatures (prefer objects over positional params)
+   - stable function signatures (prefer object params over positional params)
 
-3. **Type + validation layer**
+3. **Types and optional runtime validation**
    - TypeScript types (and optional runtime validation)
-   - explicit “unknown field” handling
+   - explicit “unknown field” and “contract mismatch” handling
 
 4. **UI-facing helpers**
    - hooks/adapters (if present)
-   - map-friendly transformations (only formatting, never semantic inference)
+   - map-friendly transformations that only format (never infer new facts)
 
-### Error handling conventions (recommended)
+### Error normalization conventions
 
-- Normalize errors into a small set of categories the UI can render:
-  - network/timeout,
-  - auth/permission (401/403),
-  - not found (404),
-  - contract mismatch (schema/type error),
-  - server error (5xx).
+Normalize errors into categories the UI can render consistently:
+
+- network/timeout
+- auth/permission (401/403)
+- not found (404)
+- contract mismatch (schema/type error)
+- server error (5xx)
 
 ~~~ts
 // Example only — not confirmed in repo.
@@ -411,15 +383,88 @@ export type ApiError = {
   kind: ApiErrorKind;
   message: string;
   status?: number;
-  requestId?: string;
+  requestId?: string; // if server returns one
 };
 ~~~
 
+### Adding or changing endpoints
+
+If the API contract changes (new endpoint, new fields, deprecations, breaking changes):
+
+1. Update/author a governed contract change doc using:
+   - `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+2. Update server contracts and tests under:
+   - `src/server/contracts/**` *(if present)* and associated server-side test suites
+3. Update client wrappers + types here (`web/src/api/**`)
+4. Update UI features/components to consume the wrapper (not raw `fetch()`)
+
 ---
 
-## ⚖️ FAIR+CARE & Governance
+## 🧠 Story Node and Focus Mode Integration
 
-This folder is part of the **governed boundary** between “what exists in data/graph” and “what the user sees.”
+### How this work surfaces in Focus Mode
+
+Focus Mode typically needs:
+
+- the focused entity (Place/Person/Event/Artifact),
+- related entities for context,
+- a governed narrative artifact (Story Node),
+- and a `sources[]`/provenance reference list that citations map to.
+
+### UI-side enforcement checklist
+
+- [ ] Do not render narrative blocks if citations/sources references are missing or invalid.
+- [ ] Render citations in a consistent, inspectable way (IDs + resolvable refs).
+- [ ] If AI-assisted content is ever delivered (opt-in), clearly label it and keep it visually distinct from curated narrative.
+- [ ] Never fabricate citations or merge “similar” sources client-side.
+- [ ] Treat redacted values as final (no reconstruction/inference).
+
+---
+
+## 🧪 Validation & CI/CD
+
+### Minimum CI gates relevant to this area
+
+- Markdown protocol validation (front-matter + required sections)
+- Typecheck/lint/unit tests for `web/`
+- API contract tests (server side; client must track shape/version)
+- Security + sovereignty scanning gates (as applicable):
+  - secret scan
+  - PII scan
+  - sensitive-location leakage checks
+  - classification propagation checks (no downgrades without review)
+
+### Suggested local validation
+
+> Commands below are examples only (actual scripts are not confirmed in repo). Replace with repo-specific commands once known.
+
+~~~bash
+# Example placeholders — replace with repo-specific commands
+# 1) run UI typecheck/tests
+# npm test
+# npm run typecheck
+#
+# 2) run lint
+# npm run lint
+~~~
+
+### Testing strategy
+
+- Unit tests for:
+  - request builder (URL + query params),
+  - error mapping,
+  - runtime validation (if used).
+- Mocked integration tests for:
+  - endpoint wrappers returning expected typed objects,
+  - failure scenarios (401/403, redaction responses, schema mismatch).
+- Contract drift detection (ideal):
+  - compare client expectations against `src/server/contracts/**` snapshots (approach TBD).
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+This folder is part of the governed boundary between “what exists in data/graph” and “what the user sees.”
 
 - Favor “show the evidence” over “summarize the evidence.”
 - Do not introduce UI behavior that reconstructs redacted content.
@@ -430,20 +475,20 @@ This folder is part of the **governed boundary** between “what exists in data/
 
 ## 🕰️ Version History
 
-| Version | Date | Change | Author |
+| Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-25 | Initial README for `web/src/api` | <author> |
+| v1.0.0 | 2025-12-28 | Restructured to match Universal template; clarified invariants, extension points, and governance | <author> |
 
 ---
 
-## 🔗 Footer refs (do not remove)
-
-- `docs/MASTER_GUIDE_v12.md`
-- `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` *(if adopted)*
-- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
-- `docs/templates/TEMPLATE__STORY_NODE_V3.md`
-- `src/server/contracts/**`
-- `docs/governance/ROOT_GOVERNANCE.md`
-- `docs/governance/ETHICS.md`
-- `docs/governance/SOVEREIGNTY.md`
+Footer refs:
+- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- v13 redesign blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Universal Doc Template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- API Contract Extension Template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- Story Node Template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- API contracts: `src/server/contracts/**` *(if present)*
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
