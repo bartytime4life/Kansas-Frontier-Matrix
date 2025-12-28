@@ -2,7 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software (or derived datasets/stories produced by it), please cite Kansas Frontier Matrix (KFM) using the metadata from this file."
 title: "Kansas Frontier Matrix (KFM)"
 type: software
-version: "v12.0.0-draft"
+version: "v12.0.1-draft"
+date-released: "2025-12-27"
 license: "CC-BY-4.0"
 license-url: "https://creativecommons.org/licenses/by/4.0/"
 url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
@@ -14,12 +15,15 @@ contact:
 abstract: "Kansas Frontier Matrix (KFM) is a governed geospatial + historical knowledge system. It uses a canonical, contract-first pipeline—ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode—to produce reproducible, citable, policy-aware datasets and narrative outputs."
 keywords:
   - Kansas
+  - KFM
   - geospatial
   - history
   - digital humanities
   - knowledge graph
   - ontology
   - deterministic pipelines
+  - contract-first
+  - evidence-first
   - ETL
   - STAC
   - DCAT
@@ -37,3 +41,17 @@ keywords:
   - MapLibre
   - Story Nodes
   - Focus Mode
+  - "KFM-MDP v11.2.6"
+  - "MCP-DL v6.3"
+  - "KFM-ONTO v4.1.0"
+  - "KFM-PPC v11.0.0"
+  - "KFM-STAC v11.0.0"
+  - "KFM-DCAT v11.0.0"
+  - "KFM-PROV v11.0.0"
+identifiers:
+  - type: url
+    value: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+    description: "Canonical source code repository."
+  - type: other
+    value: "urn:kfm:doc:master-guide:v12.0.1-draft"
+    description: "Canonical Master Guide document ID (pipeline + governance source of truth)."
