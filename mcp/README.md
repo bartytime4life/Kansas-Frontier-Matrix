@@ -1,8 +1,8 @@
 ---
 title: "MCP Workspace — Runs, Experiments, Model Cards & SOPs"
 path: "mcp/README.md"
-version: "v1.1.0"
-last_updated: "2025-12-27"
+version: "v1.1.1"
+last_updated: "2025-12-28"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:mcp:readme:v1.1.0"
-semantic_document_id: "kfm-mcp-readme-v1.1.0"
-event_source_id: "ledger:kfm:doc:mcp:readme:v1.1.0"
+doc_uuid: "urn:kfm:doc:mcp:readme:v1.1.1"
+semantic_document_id: "kfm-mcp-readme-v1.1.1"
+event_source_id: "ledger:kfm:doc:mcp:readme:v1.1.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -43,6 +43,10 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 # MCP Workspace — Runs, Experiments, Model Cards & SOPs
 
+## 📘 Overview
+
+### Purpose
+
 `mcp/` is the **documentation-first workspace** for experiments, model documentation, and repeatable procedures that support KFM’s evidence-first pipeline.
 
 Use this directory to capture:
@@ -52,29 +56,24 @@ Use this directory to capture:
 - **Why** the work matters (objectives, decisions, tradeoffs)
 - **What can go wrong** (limitations, failure modes, governance constraints)
 
+**Non-negotiable ordering (canonical pipeline):**  
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
 **Do not store canonical datasets or production code in `mcp/`.**  
-- Store **data** under `data/**` (raw/work/processed + STAC/DCAT/PROV outputs).  
-- Store **pipeline code** under `src/**`.  
-- Store **UI code** under `web/**`.  
+Prefer “pointer, don’t duplicate”:
+
+- Store **data** under `data/**` (raw/work/processed + STAC/DCAT/PROV outputs).
+- Store **pipeline code** under `src/**`.
+- Store **UI code** under `web/**`.
 - Store **Story Nodes** under `docs/reports/story_nodes/**`.
-
----
-
-## 📘 Overview
-
-### Purpose
-
-- Define the canonical role of `mcp/` in KFM.
-- Standardize how AI/analysis experiments, run manifests, model cards, and SOPs are documented and linked to **STAC/DCAT/PROV** and the **API boundary**.
-- Reduce “orphan work” by making experimentation **auditable, reproducible, and governance-reviewable**.
 
 ### Scope
 
 | In Scope | Out of Scope |
 |---|---|
-| Experiment reports (questions, methods, results, limitations) | Raw source data snapshots (belongs in `data/**/raw/`) |
-| Run manifests/logs that **point to** canonical artifacts | Canonical processed datasets (belongs in `data/**/processed/`) |
-| Model cards for models used by KFM | Graph migrations and ontology changes (belongs in `src/graph/**` + governed docs) |
+| Experiment reports (questions, methods, results, limitations) | Raw source data snapshots (belongs in `data/raw/<domain>/`) |
+| Run manifests/logs that **point to** canonical artifacts | Canonical processed datasets (belongs in `data/processed/<domain>/`) |
+| Model cards for models used by KFM | Graph migrations / ontology changes (belongs in `src/graph/**` + governed docs) |
 | SOPs for recurring workflows | API contracts (belongs in `src/server/**` + contract templates) |
 | Prototyping notes and evaluation summaries | UI implementations (belongs in `web/**`) |
 
@@ -83,38 +82,43 @@ Use this directory to capture:
 - Primary: contributors running AI/analytics workflows and generating evidence products
 - Secondary: maintainers performing governance/audit review; curators validating evidence before narrative publication
 
-### Definitions
+### Definitions (link to glossary)
 
-- Link: `docs/glossary.md`
+- Link: `docs/glossary.md` *(if present; not confirmed in repo)*
+
 - Terms used in this doc:
   - **MCP workspace**: the controlled, versioned “lab notebook” layer for experiments, run context, and model documentation.
   - **Run manifest**: a structured record of *one execution* (inputs, code ref, outputs, metrics, and provenance pointers).
-  - **Evidence artifact**: a downstream-consumable output (catalog + provenance) surfaced via STAC/DCAT/PROV and then through APIs.
+  - **Experiment report**: a narrative + technical write-up that frames an objective, method, results, and limitations.
+  - **Evidence artifact**: a downstream-consumable output surfaced via STAC/DCAT/PROV and then through APIs.
   - **Model card**: a structured description of intended use, training/eval data, performance, risks, and limitations.
   - **SOP**: a step-by-step repeatable process with prerequisites, procedure, expected outcomes, and troubleshooting notes.
 
-### Key artifacts
+### Key artifacts (what this doc points to)
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
 | Master Guide (canonical pipeline + invariants) | `docs/MASTER_GUIDE_v12.md` | KFM maintainers | System map and non-negotiable ordering |
-| Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | KFM maintainers | Required governed doc structure |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | KFM maintainers | Narrative artifacts must be provenance-linked |
+| Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Required governed doc structure |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Docs/Story | Narrative artifacts must be provenance-linked |
 | API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API maintainers | Extends REST/GraphQL contracts at the boundary |
-| STAC/DCAT/PROV profiles | `docs/standards/` | Data/catalog maintainers | Validate catalog + provenance compliance (if present) |
+| STAC/DCAT/PROV profiles | `docs/standards/` | Data/catalog maintainers | Validate catalog + provenance compliance *(if present)* |
+| v13 redesign blueprint (draft reference) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | “One canonical home” alignment *(if present)* |
+| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Docs | *not confirmed in repo* |
 
-### Definition of done for this document
+### Definition of done (for this document)
 
 - [x] Front-matter complete and `path` matches file location
 - [x] Directory responsibilities + placement rules documented
 - [x] Expected `mcp/` structure provided
-- [x] Story Node / Focus Mode integration rules included
+- [x] Validation steps listed and repeatable
+- [x] Governance + CARE/sovereignty considerations explicitly stated
 - [ ] Repo markdown lint / link checks executed (CI or local)
 - [ ] Maintainer review
 
 ---
 
-## 🗂 Directory Layout
+## 🗂️ Directory Layout
 
 ### This document
 
@@ -137,7 +141,7 @@ Use this directory to capture:
 
 > Note: If prototype code becomes part of the production pipeline, move it into `src/` and link to it from `mcp/` rather than duplicating it.
 
-### Related repository paths orientation
+### Related repository paths
 
 | Area | Path | What lives here |
 |---|---|---|
@@ -152,11 +156,12 @@ Use this directory to capture:
 | Schemas | `schemas/` | JSON Schemas, telemetry schemas, contract validation |
 | Tests | `tests/` | Unit/integration/contract tests |
 | Tools | `tools/` | Ops scripts and developer utilities |
-| Releases | `releases/` | Release manifests, snapshots, bundles (if present) |
+| Releases | `releases/` | Release manifests, snapshots, bundles *(if present)* |
 
 ### Conventions
 
 #### 1) “Pointer, don’t duplicate”
+
 When `mcp/` needs to reference a dataset or evidence artifact, prefer:
 
 - a **path pointer** into `data/**`, and/or
@@ -166,7 +171,22 @@ When `mcp/` needs to reference a dataset or evidence artifact, prefer:
 
 Avoid copying catalog payloads into `mcp/`. Keep one canonical home per subsystem.
 
-#### 2) Recommended run manifest minimal fields (optional, but encouraged)
+#### 2) Stable IDs + file naming (recommended)
+
+Use predictable file names to make audits and cross-links easy:
+
+- **Run manifests:** `mcp/runs/run-YYYYMMDDTHHMMSSZ-<slug>.yml`  
+- **Experiment reports:** `mcp/experiments/exp-YYYYMMDD-<slug>/README.md` *(or a single `.md` if small)*  
+- **Model cards:** `mcp/model_cards/<model_id>__vX.Y.Z.md`  
+- **SOPs:** `mcp/sops/sop-<slug>__vX.Y.Z.md`
+
+When possible, reuse the same stable identifiers in:
+- PROV activity IDs,
+- STAC item IDs / collection IDs,
+- DCAT dataset IDs,
+- API references (endpoint + version).
+
+#### 3) Recommended run manifest minimal fields (optional, but encouraged)
 
 If you store run manifests as YAML/JSON, keep a minimal predictable shape:
 
@@ -175,22 +195,34 @@ run_id: "run-YYYYMMDDTHHMMSSZ-<slug>"
 run_kind: "etl|catalog|graph|evaluation|experiment|adhoc"
 owners: ["<handle-or-role>"]
 created_at: "YYYY-MM-DD"
+
 code_ref:
   paths:
     - "src/pipelines/<...>"
   commit_sha: "<git-sha>"
+
+command:
+  - "TBD: exact invocation used to reproduce"
+
 inputs:
   - kind: "dataset"
-    path: "data/<domain>/processed/<...>"
+    path: "data/raw/<domain>/<...>"
     stac_item_id: "<optional>"
+
 outputs:
   - kind: "evidence_artifact"
-    path: "data/<domain>/processed/<...>"
+    path: "data/processed/<domain>/<...>"
   - kind: "prov_bundle"
     path: "data/prov/<...>"
+
+catalog_refs:
+  stac_item_ids: ["<optional>"]
+  dcat_dataset_ids: ["<optional>"]
+
 metrics:
   - name: "<metric_name>"
     value: 0
+
 notes: "Short summary + known limitations"
 ~~~
 
@@ -221,8 +253,9 @@ KFM is intentionally staged to keep the system **modular, testable, and auditabl
 - **No unsourced narrative** in published Story Nodes or Focus Mode contexts.
 - Do not store secrets, tokens, credentials, or private keys in `mcp/**`.
 - Treat `mcp/**` as *public by default* unless governance explicitly marks an artifact restricted.
+- Prefer deterministic, reproducible runs (stable IDs, logged inputs/outputs, captured parameters).
 
-### Extension matrix (how MCP work propagates)
+### “Extension Matrix” (how MCP work propagates)
 
 Use this table to anticipate what else must change when MCP artifacts create new “evidence”:
 
@@ -255,7 +288,7 @@ Use this table to anticipate what else must change when MCP artifacts create new
 
 ~~~mermaid
 flowchart LR
-  MCP["mcp/<br/>runs + experiments + model cards + SOPs"] -->|docs + pointers| DATA["data/<domain>/<br/>raw/work/processed"]
+  MCP["mcp/<br/>runs + experiments + model cards + SOPs"] -->|docs + pointers| DATA["data/<br/>raw/work/processed"]
   DATA --> STAC["data/stac/**"]
   DATA --> DCAT["data/catalog/dcat/**"]
   DATA --> PROV["data/prov/**"]
@@ -292,8 +325,8 @@ sequenceDiagram
 
 | Input | Format | Where from | Validation |
 |---|---|---|---|
-| Evidence products (processed data) | files (varies) | `data/<domain>/processed/` | domain validators + schema checks |
-| STAC/DCAT/PROV artifacts | JSON / JSON-LD (varies) | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` | schema validation in `schemas/**` (if present) |
+| Evidence products (processed data) | files (varies) | `data/processed/<domain>/` | domain validators + schema checks |
+| STAC/DCAT/PROV artifacts | JSON / JSON-LD (varies) | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` | schema validation in `schemas/**` *(if present)* |
 | Graph entity identifiers | strings | API/Graph outputs | contract tests (API) |
 | Prior model versions + eval outputs | refs/pointers | releases or `data/**` | reproducibility checks |
 
@@ -302,9 +335,23 @@ sequenceDiagram
 | Output | Format | Path | Contract / Schema |
 |---|---|---|---|
 | Experiment report | Markdown | `mcp/experiments/**` | Universal doc conventions + governed headings |
-| Run manifest/log | YAML/JSON/Markdown | `mcp/runs/**` | recommended schema in `schemas/**` (if adopted) |
+| Run manifest/log | YAML/JSON/Markdown | `mcp/runs/**` | recommended schema in `schemas/**` *(if adopted)* |
 | Model card | Markdown (+ optional JSON) | `mcp/model_cards/**` | model card format (TBD) |
 | SOP | Markdown | `mcp/sops/**` | SOP conventions (purpose, prereqs, steps, expected outcomes, troubleshooting) |
+
+### Data lifecycle (required staging)
+
+Canonical staging is:
+
+- Raw snapshots: `data/raw/<domain>/...`
+- Working intermediates: `data/work/<domain>/...`
+- Published/derived outputs: `data/processed/<domain>/...`
+- Catalog outputs:
+  - STAC: `data/stac/**`
+  - DCAT: `data/catalog/dcat/**`
+  - PROV: `data/prov/**`
+
+`mcp/` should generally **reference** these locations, not replace them.
 
 ### Sensitivity & redaction
 
@@ -374,6 +421,18 @@ sequenceDiagram
 | Schemas | `schemas/**` | semver + schema validation |
 | MCP artifacts | `mcp/**` | version per artifact + provenance pointers |
 
+### Extension points checklist (when MCP outputs become “evidence”)
+
+- [ ] Evidence artifact saved under `data/processed/<domain>/...`
+- [ ] STAC item/collection created or updated (`data/stac/**`)
+- [ ] DCAT dataset updated *(if applicable)* (`data/catalog/dcat/**`)
+- [ ] PROV bundle created or updated (`data/prov/**`)
+- [ ] Graph ingest updated *(if applicable)* (`src/graph/**`)
+- [ ] API contract / endpoint updated *(if applicable)* (`src/server/**`)
+- [ ] UI surfaced via API (no direct graph reads) *(if applicable)* (`web/**`)
+- [ ] Story Node references evidence IDs *(if applicable)* (`docs/reports/story_nodes/**`)
+- [ ] Governance review completed *(if required)*
+
 ---
 
 ## 🧩 Story Node & Focus Mode Integration
@@ -383,7 +442,7 @@ sequenceDiagram
 Use `mcp/` to **incubate** and **validate** evidence before it becomes narrative:
 
 1. Experiment or evaluation happens (documented in `mcp/experiments/**`)
-2. Evidence products land in `data/**/processed/`
+2. Evidence products land in `data/processed/<domain>/`
 3. Catalog artifacts updated: `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**`
 4. Graph ingest fixture updated (if new entities/relationships are introduced)
 5. API contract surfaces evidence with citations
@@ -409,24 +468,62 @@ When MCP work influences Story Nodes, include at least:
 
 ---
 
-## ⚙️ Validation & CI/CD
+## 🧪 Validation & CI/CD
 
-### Recommended validation steps
+### Validation steps
 
-- Markdown protocol check (front-matter, required sections)
-- Secrets scan (no tokens/keys)
-- Link/reference checks (no orphan file pointers)
-- If model card updated: ensure evaluation evidence is linked
-- If experiment produces evidence: ensure STAC/DCAT/PROV updates exist in canonical locations
+Recommended minimum gates (CI or local):
 
-### CI expectations if configured
+- Markdown protocol validation (front-matter + required sections)
+- Link/reference checks (no orphan pointers)
+- JSON schema validation (if applicable):
+  - STAC/DCAT/PROV
+  - story node schemas *(if present)*
+  - telemetry schemas *(if present)*
+  - UI layer registry schemas *(if present)*
+- Graph integrity tests *(if applicable)* (constraints, expected labels/edges)
+- API contract tests *(if applicable)* (OpenAPI/GraphQL schema + resolver tests)
+- Security + sovereignty scanning gates *(as applicable)*:
+  - secret scan
+  - PII scan
+  - sensitive-location leakage checks
+  - classification propagation checks (no downgrades without review)
+- Release hygiene *(if applicable / used in repo)*:
+  - SBOM generation
+  - provenance attestations (e.g., SLSA)
 
-- Markdown protocol validation
-- Schema validation (STAC/DCAT/PROV/story nodes/telemetry if present)
-- API contract tests (API boundary)
-- Security and sovereignty scanning gates (when configured)
+### Reproduction
 
-### Governance review triggers
+For any run that could influence downstream evidence, the run manifest should record the exact `command` and `code_ref` needed to reproduce.
+
+~~~bash
+# Example (placeholder): reproduce a run from its manifest.
+# 1) Checkout the recorded commit
+git checkout <git-sha>
+
+# 2) Execute the recorded command(s)
+# (copy/paste from: mcp/runs/<run_id>.yml -> command)
+TBD
+
+# 3) Validate produced artifacts (schemas + link checks)
+TBD
+~~~
+
+### Telemetry signals (if applicable)
+
+| Signal | Source | Where recorded |
+|---|---|---|
+| `classification_assigned` (dataset_id, sensitivity, classification) | catalog/governance | `docs/telemetry/` + `schemas/telemetry/` *(if present)* |
+| `redaction_applied` (method, fields_removed, geometry_generalization) | API/catalog | `docs/telemetry/` + `schemas/telemetry/` *(if present)* |
+| `promotion_blocked` (reason, scan_results_ref) | CI/publishing gate | `docs/telemetry/` + `schemas/telemetry/` *(if present)* |
+| `catalog_published` (scope, counts, validation_status) | catalog pipeline | `docs/telemetry/` + `schemas/telemetry/` *(if present)* |
+| `focus_mode_redaction_notice_shown` (layer_id, redaction_method) | UI | `docs/telemetry/` + `schemas/telemetry/` *(if present)* |
+
+---
+
+## ⚖ FAIR+CARE & Governance
+
+### Review gates
 
 Flag for human review when MCP work includes:
 
@@ -434,35 +531,48 @@ Flag for human review when MCP work includes:
 - protected personal data
 - new model behavior that affects narrative generation
 - any change that alters redaction or provenance rules at the API boundary
+- new sensitive layers or sovereignty-obligated content
+- new external data sources (license/provenance review)
+- new public-facing endpoints or layer interactions that could reveal sensitive locations
+- any classification/sensitivity change or publication derived from restricted inputs
+
+### CARE / sovereignty considerations
+
+- Redaction/generalization must be documented and enforced:
+  - in datasets (`data/processed/**`),
+  - in catalogs (STAC/DCAT),
+  - in API responses (redaction policies),
+  - and in UI rendering (CARE gating).
+- No output may be less restricted than any upstream input in its lineage.
+
+### AI usage constraints
+
+- AI may assist only within the allowed transforms in front-matter (`ai_transform_permissions`).
+- AI must not:
+  - generate governance/policy content, or
+  - infer sensitive locations.
+- Any AI-assisted experimental finding that could become narrative must be labeled as **fact / inference / hypothesis** and backed by evidence identifiers before publication.
 
 ---
 
-## ⚖ FAIR+CARE & Governance
-
-- Keep `mcp/**` evidence-first:
-  - clearly label *fact vs inference vs hypothesis* in experiment reports.
-- If an experiment or model concerns high-impact outputs (e.g., narrative synthesis, entity linking at scale, sensitive locations), it requires governance review before downstream publication.
-- Never use MCP artifacts to bypass catalog/provenance requirements.
-
----
-
-## 🧾 Version History
+## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-22 | Initial `mcp/` README establishing structure and conventions | KFM maintainers |
+| v1.1.1 | 2025-12-28 | Tightened alignment to Universal template headings; corrected canonical data staging paths; added reproduction + telemetry table; expanded governance/CI gates | KFM maintainers |
 | v1.1.0 | 2025-12-27 | Reworked to fully align with Universal template sections + Story/Focus integration + run-manifest conventions | KFM maintainers |
+| v1.0.0 | 2025-12-22 | Initial `mcp/` README establishing structure and conventions | KFM maintainers |
 
 ---
 
-### Footer refs
-
+Footer refs:
 - Master Guide: `docs/MASTER_GUIDE_v12.md`
-- v13 Blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
 - Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
 - Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
 - API contract extension template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- v13 Blueprint (draft reference): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` *(if present)*
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty policy: `docs/governance/SOVEREIGNTY.md`
-- Glossary: `docs/glossary.md`
+- Glossary: `docs/glossary.md` *(if present; not confirmed in repo)*
+---
