@@ -1,1 +1,90 @@
+# KFM — CODEOWNERS
+#
+# This file aligns ownership patterns to KFM canonical subsystem homes:
+# ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode.
+#
+# NOTE: Only @bartytime4life is confirmed in repo-linked references right now.
+#       When KFM governance teams exist, replace/split owners by subsystem.
+
+# --------------------------------------------------------------------
+# Default fallback (everything not explicitly matched below)
+# --------------------------------------------------------------------
+* @bartytime4life
+
+# --------------------------------------------------------------------
+# CI / policy gates (canonical home: .github/)
+# --------------------------------------------------------------------
+/.github/ @bartytime4life
+/.github/workflows/ @bartytime4life
+/.github/CODEOWNERS @bartytime4life
+
+# --------------------------------------------------------------------
+# Documentation (canonical home: docs/)
+# --------------------------------------------------------------------
+/docs/ @bartytime4life
+/docs/templates/ @bartytime4life
+/docs/architecture/ @bartytime4life
+/docs/standards/ @bartytime4life
+/docs/data/ @bartytime4life
+
+# Story Nodes canonical home (v12/v13): docs/reports/story_nodes/
+/docs/reports/story_nodes/ @bartytime4life
+
+# Legacy story nodes location guardrail (if present during migration)
+/docs/story-nodes/ @bartytime4life
+
+# --------------------------------------------------------------------
+# Data lifecycle + catalogs (canonical home: data/)
+# --------------------------------------------------------------------
+/data/ @bartytime4life
+/data/raw/ @bartytime4life
+/data/work/ @bartytime4life
+/data/processed/ @bartytime4life
+
+# Catalog outputs
+/data/stac/ @bartytime4life
+/data/catalog/ @bartytime4life
+/data/catalog/dcat/ @bartytime4life
+/data/prov/ @bartytime4life
+
+# --------------------------------------------------------------------
+# Schemas (canonical home: schemas/)
+# --------------------------------------------------------------------
+/schemas/ @bartytime4life
+
+# --------------------------------------------------------------------
+# Pipelines / ETL + catalog generation (canonical home: src/pipelines/)
+# --------------------------------------------------------------------
+/src/pipelines/ @bartytime4life
+
+# --------------------------------------------------------------------
+# Graph build / ontology bindings (canonical home: src/graph/)
+# --------------------------------------------------------------------
+/src/graph/ @bartytime4life
+
+# --------------------------------------------------------------------
+# API boundary (canonical home: src/server/)
+# --------------------------------------------------------------------
+/src/server/ @bartytime4life
+/src/server/contracts/ @bartytime4life
+
+# --------------------------------------------------------------------
+# UI (canonical home: web/)
+# --------------------------------------------------------------------
+/web/ @bartytime4life
+
+# --------------------------------------------------------------------
+# Tests / tools / experiments / releases
+# --------------------------------------------------------------------
+/tests/ @bartytime4life
+/tools/ @bartytime4life
+/mcp/ @bartytime4life
+/releases/ @bartytime4life
+
+# --------------------------------------------------------------------
+# Drift-guard: legacy/duplicate subsystem homes noted in v13 blueprint
+# (keep owned so changes are deliberate during migration)
+# --------------------------------------------------------------------
+/src/api/ @bartytime4life
+/src/map/ @bartytime4life
 
