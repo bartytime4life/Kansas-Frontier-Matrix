@@ -224,14 +224,18 @@ flowchart LR
   WF --> VAL[Validation Jobs]
   WF --> AUTH[Auth Strategy]
   AUTH -->|GitHub App| APP[GitHub App Auth]
-  AUTH -->|Default| GT[GITHUB_TOKEN]
-  APP --> GH[GitHub API]
-  GT --> GH
-  WF --> PIPE[Pipeline Jobs (optional)]
-  PIPE --> CAT[STAC/DCAT/PROV (optional)]
-  CAT --> GRAPH[Graph ingest (optional)]
-  GRAPH --> API[API boundary]
-  API --> UI[UI + Focus Mode]
+  AUTH -->|Default| GH_TOKEN[GITHUB_TOKEN]
+  APP --> GH_API[GitHub API]
+  GH_TOKEN --> GH_API
+
+  WF --> PL_JOB[Pipeline Jobs - optional]
+  PL_JOB --> CATALOG[Catalogs STAC/DCAT/PROV - optional]
+  CATALOG --> GRAPH_INGEST[Graph ingest - optional]
+  GRAPH_INGEST --> API_LAYER[API boundary]
+  API_LAYER --> UI[UI]
+  UI --> STORY[Story Nodes]
+  STORY --> FOCUS[Focus Mode]
+
   WF --> ART[Artifacts: logs/reports]
 ~~~
 
