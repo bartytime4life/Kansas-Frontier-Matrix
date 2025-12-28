@@ -2,7 +2,6 @@ version: "3.9"
 
 # KFM docker-compose: local/dev harness aligned with canonical pipeline:
 # ETL → STAC/DCAT/PROV → Graph (Neo4j) → API → UI → Story Nodes → Focus Mode
-# (Canonical ordering + invariants are defined in Master Guide v12; v13 blueprint reinforces roots/homes.)
 #
 # IMPORTANT invariant: "No UI direct-to-graph reads" is enforced here by networks:
 # - neo4j is ONLY on kfm_backend
@@ -10,7 +9,7 @@ version: "3.9"
 # - kfm-server straddles both (API boundary)
 
 x-kfm-common-env: &kfm_common_env
-  # Canonical repo roots (v12/v13 expected layout)
+  # Canonical repo roots (v12 expected layout)
   KFM_REPO_ROOT: /workspace
   KFM_DATA_ROOT: /workspace/data
   KFM_SCHEMAS_ROOT: /workspace/schemas
@@ -18,7 +17,7 @@ x-kfm-common-env: &kfm_common_env
   KFM_MCP_ROOT: /workspace/mcp
   KFM_RELEASES_ROOT: /workspace/releases
 
-  # Canonical stage roots (helps keep code/config from hard-coding paths)
+  # Canonical stage roots
   KFM_STAC_ROOT: /workspace/data/stac
   KFM_DCAT_ROOT: /workspace/data/catalog/dcat
   KFM_PROV_ROOT: /workspace/data/prov
@@ -30,40 +29,45 @@ x-kfm-common-env: &kfm_common_env
   KFM_NEO4J_USER: neo4j
   KFM_NEO4J_PASSWORD: ${KFM_NEO4J_PASSWORD:-kfm_dev_password}
 
+  # Optional common toggles (override in .env)
+  KFM_ENV: ${KFM_ENV:-dev}
+  KFM_LOG_LEVEL: ${KFM_LOG_LEVEL:-info}
+
 services:
-  # Bootstrap service: creates canonical roots referenced by v12/v13 so a fresh clone
-  # can run deterministically without manual mkdir steps.
+  # Bootstrap service: creates canonical roots so a fresh clone can run deterministically.
   #
   # Run once (fresh repo): docker compose --profile bootstrap run --rm kfm-bootstrap
   kfm-bootstrap:
     profiles: ["bootstrap"]
     image: alpine:3.20
+    init: true
     working_dir: /workspace
     volumes:
       - ./:/workspace:rw
     command:
-      [
-        "sh",
-        "-lc",
-        "set -eu; \
-         mkdir -p \
-           data/raw data/work data/processed \
-           data/stac/collections data/stac/items \
-           data/catalog/dcat \
-           data/prov \
-           data/graph/csv data/graph/cypher \
-           docs/reports/story_nodes/templates \
-           docs/reports/story_nodes/draft \
-           docs/reports/story_nodes/published \
-           schemas/stac schemas/dcat schemas/prov schemas/storynodes schemas/ui schemas/telemetry \
-           releases; \
-         echo \"✅ KFM canonical roots ensured.\""
-      ]
+      - sh
+      - -lc
+      - |
+          set -eu
+          mkdir -p \
+            data/raw data/work data/processed \
+            data/stac/collections data/stac/items \
+            data/catalog/dcat \
+            data/prov \
+            data/graph/csv data/graph/cypher \
+            docs/reports/story_nodes/templates \
+            docs/reports/story_nodes/draft \
+            docs/reports/story_nodes/published \
+            mcp/runs mcp/experiments \
+            schemas/stac schemas/dcat schemas/prov schemas/story_nodes schemas/ui schemas/telemetry \
+            releases
+          echo "✅ KFM canonical roots ensured."
 
   # Central graph database (Neo4j) used by KFM
   neo4j:
     image: ${KFM_NEO4J_IMAGE:-neo4j:5}
     restart: unless-stopped
+    init: true
     environment:
       # NOTE: Override in a local .env (recommended) rather than editing this file.
       # Neo4j requires auth to be set on first start.
@@ -112,6 +116,7 @@ services:
       context: ./src/server
       dockerfile: Dockerfile
     restart: unless-stopped
+    init: true
     depends_on:
       neo4j:
         condition: service_healthy
@@ -137,6 +142,7 @@ services:
       context: ./web
       dockerfile: Dockerfile
     restart: unless-stopped
+    init: true
     depends_on:
       - kfm-server
     environment:
@@ -153,11 +159,27 @@ services:
     networks:
       - kfm_frontend
 
+  # Optional: quick HTTP browser for local catalog + derived artifacts under ./data
+  # (Convenience only; the UI still MUST NOT read Neo4j directly.)
+  kfm-catalog:
+    profiles: ["tools"]
+    image: python:3.11-slim
+    init: true
+    working_dir: /workspace/data
+    ports:
+      - "127.0.0.1:${KFM_CATALOG_PORT:-9000}:9000"
+    volumes:
+      - ./data:/workspace/data:ro
+    command: ["python", "-m", "http.server", "9000", "--directory", "/workspace/data"]
+    networks:
+      - kfm_frontend
+
   # Optional: tooling container to run ETL/catalog/graph scripts against Neo4j.
   # Profile-gated so it doesn't run unless requested.
   kfm-pipelines:
     profiles: ["tools"]
     image: python:3.11-slim
+    init: true
     working_dir: /workspace
     depends_on:
       neo4j:
@@ -170,11 +192,83 @@ services:
     tty: true
     stdin_open: true
     command:
-      [
-        "sh",
-        "-lc",
-        "python --version && echo \"kfm-pipelines ready. Use: docker compose run --rm kfm-pipelines <cmd>\" && sleep infinity"
-      ]
+      - sh
+      - -lc
+      - |
+          python --version
+          echo "kfm-pipelines ready. Use: docker compose run --rm kfm-pipelines <cmd>"
+          sleep infinity
+
+  # Minimal local preflight: required directories exist + JSON files parse.
+  # (Fast helper; not a replacement for full schema validation / contract tests.)
+  kfm-validate:
+    profiles: ["qa"]
+    image: python:3.11-slim
+    init: true
+    working_dir: /workspace
+    environment: *kfm_common_env
+    volumes:
+      - ./data:/workspace/data:ro
+      - ./schemas:/workspace/schemas:ro
+      - ./docs:/workspace/docs:ro
+    command:
+      - sh
+      - -lc
+      - |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          REQUIRED_DIRS = [
+              Path("/workspace/data/raw"),
+              Path("/workspace/data/work"),
+              Path("/workspace/data/processed"),
+              Path("/workspace/data/stac/collections"),
+              Path("/workspace/data/stac/items"),
+              Path("/workspace/data/catalog/dcat"),
+              Path("/workspace/data/prov"),
+              Path("/workspace/docs/reports/story_nodes"),
+              Path("/workspace/schemas/stac"),
+              Path("/workspace/schemas/dcat"),
+              Path("/workspace/schemas/prov"),
+              Path("/workspace/schemas/story_nodes"),
+          ]
+
+          missing = [str(p) for p in REQUIRED_DIRS if not p.exists()]
+          if missing:
+              print("❌ Missing required KFM paths:")
+              for p in missing:
+                  print("  -", p)
+              raise SystemExit(2)
+
+          def iter_json_files(root: Path):
+              if not root.exists():
+                  return
+              for p in root.rglob("*.json"):
+                  if p.is_file():
+                      yield p
+
+          json_roots = [
+              Path("/workspace/data/stac"),
+              Path("/workspace/data/catalog/dcat"),
+              Path("/workspace/data/prov"),
+              Path("/workspace/schemas"),
+          ]
+
+          total = 0
+          for root in json_roots:
+              for f in iter_json_files(root):
+                  total += 1
+                  try:
+                      json.loads(f.read_text(encoding="utf-8"))
+                  except Exception as e:
+                      print(f"❌ Invalid JSON: {f}")
+                      print(f"   {e}")
+                      raise SystemExit(3)
+
+          print(f"✅ Preflight OK. Parsed {total} JSON files across catalogs + schemas.")
+          PY
 
 networks:
   # Private network: Neo4j + API + pipelines
