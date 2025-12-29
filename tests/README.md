@@ -1,8 +1,8 @@
 ---
 title: "KFM Tests — README"
 path: "tests/README.md"
-version: "v1.2.0"
-last_updated: "2025-12-28"
+version: "v1.2.1"
+last_updated: "2025-12-29"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:tests:readme:v1.2.0"
-semantic_document_id: "kfm-tests-readme-v1.2.0"
-event_source_id: "ledger:kfm:doc:tests:readme:v1.2.0"
+doc_uuid: "urn:kfm:doc:tests:readme:v1.2.1"
+semantic_document_id: "kfm-tests-readme-v1.2.1"
+event_source_id: "ledger:kfm:doc:tests:readme:v1.2.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -71,7 +71,7 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 ### Definitions
 
-- Glossary: `docs/glossary.md` *(canonical target; if absent, treat as v13 Phase 0 “missing canonical root”)*
+- Glossary link: `docs/glossary.md` *(not confirmed in repo; recommended)*.
 
 Terms used in this doc:
 
@@ -85,7 +85,7 @@ Terms used in this doc:
 
 ### Pipeline invariants tests must protect
 
-Tests are guardians of KFM’s non-negotiables:
+Tests are guardians of KFM’s non-negotiables (see Master Guide for canonical ordering and invariants):
 
 - Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.
 - **One canonical home per subsystem** (no duplicate “mystery” implementations).
@@ -93,6 +93,18 @@ Tests are guardians of KFM’s non-negotiables:
 - Focus Mode consumes **provenance-linked** content only (no unsourced narrative).
 - Deterministic outputs with **stable IDs** and repeatable lineage (PROV).
 - **No output may be less restricted than any upstream input** in its lineage (classification propagation).
+
+### CI decision rule (must hold)
+
+All gates should follow one consistent decision rule:
+
+| Condition | Example | Expected CI behavior |
+|---|---|---|
+| Root missing / gate not applicable | `releases/` does not exist | **Skip** (explicit “not applicable”) |
+| Root present and valid | `data/stac/` exists and validates | **Pass** |
+| Root present but invalid | `data/stac/` exists, invalid STAC item | **Fail deterministically** |
+
+> “Skip” means “not applicable”; it must not be used to hide invalid artifacts.
 
 ### Contributor quick checklist
 
@@ -118,16 +130,16 @@ When adding or modifying tests:
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
 | Master pipeline ordering + minimum CI gates | `docs/MASTER_GUIDE_v12.md` | Architecture | System + pipeline source of truth |
-| v13 redesign blueprint (draft) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | Canonical homes + v13 CI mapping + migration phases |
-| Next stages blueprint | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | Architecture | Roadmap + gap closure plan *(verify presence)* |
-| Full architecture & vision | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | Architecture | End-to-end vision *(verify presence)* |
+| v13 redesign blueprint (draft reference) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | Consolidates “one canonical home”, contract-first, evidence-first |
+| Next stages blueprint | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | Architecture | Roadmap + gap closure plan |
+| Full architecture & vision | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | Architecture | End-to-end vision |
 | Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Baseline governed doc structure |
 | Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Docs/Story | Narrative constraints + validation expectations |
 | API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API | Required for endpoint/contract changes |
-| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Docs | Canonical protocol *(not confirmed in repo)* |
-| Repo structure standard | `docs/standards/KFM_REPO_STRUCTURE_STANDARD.md` | Docs | Canonical structure rules *(not confirmed in repo)* |
+| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Docs | *not confirmed in repo* |
+| Repo structure standard | `docs/standards/KFM_REPO_STRUCTURE_STANDARD.md` | Docs | *not confirmed in repo; propose adding under `docs/standards/` if governance approves* |
 | Schemas | `schemas/` | Schema owners | JSON Schemas (STAC/DCAT/PROV/story/ui/telemetry) |
-| CI workflows | `.github/workflows/` | Maintainers | Gate enforcement *(expected; verify presence)* |
+| CI workflows | `.github/workflows/` | Maintainers | Gate enforcement |
 
 ### Definition of done (for this document)
 
@@ -142,7 +154,7 @@ When adding or modifying tests:
 
 ### This document
 
-- `path`: `tests/README.md` (must match front-matter)
+- `path`: `tests/README.md` *(must match front-matter)*
 
 ### Related repository paths (canonical homes)
 
@@ -213,6 +225,10 @@ When adding or modifying tests:
 
 ## 🧭 Context
 
+### What KFM is (briefly)
+
+KFM is an open-source **geospatial + historical** knowledge system (a “living atlas” of Kansas) that ingests heterogeneous sources, publishes governed metadata catalogs (STAC/DCAT/PROV), builds a semantically structured Neo4j graph, and serves evidence through contracted APIs into a map + narrative UI. KFM is designed so that **every narrative claim can be traced to versioned evidence**, and every derived product has explicit lineage.
+
 ### Why tests are first-class in KFM
 
 KFM is contract-first and evidence-first. Most failures are boundary failures:
@@ -239,18 +255,6 @@ All tests must be:
   - no secrets, no PII
   - no restricted coordinates in committed fixtures
   - no culturally sensitive locations unless generalized + approved
-
-### CI gate behavior rule (must hold)
-
-CI gates should follow the same decision rule everywhere:
-
-| Condition | Example | Expected CI behavior |
-|---|---|---|
-| Root missing / gate not applicable | `schemas/` does not exist yet | **Skip** (do not fail just because a subsystem is not yet present) |
-| Root present and valid | `data/stac/` exists and validates | **Pass** |
-| Root present but invalid | `data/stac/` exists, invalid STAC item | **Fail deterministically** |
-
-> “Skip” means “not applicable”; it must not be used to hide invalid artifacts.
 
 ### Determinism checklist (practical)
 
@@ -312,6 +316,12 @@ Where tests touch IDs, keys, or sensitivity:
 - deterministic ordering for serialized outputs,
 - explicit schema/contract version references where applicable,
 - no classification “downgrades” along provenance chains (enforced by CI scanning gates).
+
+### CI logs and artifacts (safety rule)
+
+- CI logs and uploaded artifacts must not contain restricted coordinates, culturally sensitive locations, secrets, or PII.
+- Prefer **summary diagnostics** (counts, failing IDs, schema paths) over raw record dumps.
+- If a failure requires showing example records, use **synthetic fixtures** or redact/generalize before printing.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
@@ -426,7 +436,8 @@ The baseline gates expected for “v12-ready” contributions include:
 - [ ] Repo lint rules:
   - no YAML front-matter in code files,
   - no `README.me`,
-  - no duplicate canonical homes without explicit deprecation markers.
+  - no duplicate canonical homes without explicit deprecation markers,
+  - references to missing files must be marked **“not confirmed in repo”** (or the missing artifact must be added).
 - [ ] (If `releases/` exists) release artifact validation:
   - manifests/SBOMs/attestations validate and are internally consistent.
 
@@ -515,6 +526,7 @@ This README’s AI transform permissions/prohibitions are defined in front-matte
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
+| v1.2.1 | 2025-12-29 | Aligned language and “not confirmed in repo” marking with Master Guide v12 patterns; clarified CI log/artifact safety and link-check expectations; minor structural cleanup | TBD |
 | v1.2.0 | 2025-12-28 | Aligned with Master Guide v12 and v13 redesign blueprint: added releases + repo lint gates, clarified canonical homes and Phase 0/1/2 mapping, tightened DoD to include “claims link to evidence” | TBD |
 | v1.1.0 | 2025-12-28 | Aligned minimum CI gates to Master Guide; normalized Key Artifacts table to Universal template; added link checks, detailed security scans, and repo lint rules | TBD |
 | v1.0.1 | 2025-12-27 | Strengthened determinism + fixture rules, clarified CI skip/fail principle, expanded gate→debug map | TBD |
