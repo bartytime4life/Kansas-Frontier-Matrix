@@ -1,7 +1,7 @@
 ---
 title: "Kansas Frontier Matrix — Repository README"
 path: "README.md"
-version: "v1.0.5"
+version: "v1.0.6"
 last_updated: "2025-12-29"
 status: "draft"
 doc_kind: "README"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:readme:v1.0.5"
-semantic_document_id: "kfm-readme-v1.0.5"
-event_source_id: "ledger:kfm:doc:readme:v1.0.5"
+doc_uuid: "urn:kfm:doc:readme:v1.0.6"
+semantic_document_id: "kfm-readme-v1.0.6"
+event_source_id: "ledger:kfm:doc:readme:v1.0.6"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -43,14 +43,23 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 
 # Kansas Frontier Matrix — Repository README
 
-Kansas Frontier Matrix (KFM) is an open-source **geospatial + historical** knowledge system (a “living atlas” of Kansas) that ingests heterogeneous sources, publishes governed evidence catalogs (**STAC/DCAT/PROV**), builds a semantically structured **Neo4j graph**, and serves evidence through **contracted APIs** into a **map + narrative UI**. KFM is designed so that **every narrative claim can be traced to versioned evidence**, and every derived product has explicit lineage.
+Kansas Frontier Matrix (KFM) is an open-source **geospatial + historical** knowledge system (a “living atlas” of Kansas) that ingests heterogeneous sources, publishes governed metadata catalogs (**STAC/DCAT/PROV**), builds a semantically structured **Neo4j graph**, and serves evidence through **contracted APIs** into a **map + narrative UI**. KFM is designed so that **every narrative claim can be traced to versioned evidence**, and every derived product has explicit lineage.
+
+> **Non-negotiable discipline:** no new narrative without sources; no new data without provenance; no user-facing AI without explicit opt-in + uncertainty metadata; no UI access that bypasses contracted APIs.
 
 **Canonical pipeline ordering (non‑negotiable):**  
-**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
 
 **API boundary (non‑negotiable):** The UI never reads Neo4j directly; all access is via contracted APIs.
 
-**Repo hygiene invariant:** KFM enforces “one canonical home per subsystem” and “one source of truth” for schemas/contracts/docs to reduce repo drift; avoid ad‑hoc folders outside canonical roots.
+**Repo hygiene invariant:** KFM enforces “one canonical home per subsystem” and “one source of truth” for schemas/contracts/docs to reduce drift; avoid ad‑hoc folders outside canonical roots.
+
+Quick navigation:
+- `docs/MASTER_GUIDE_v12.md` (pipeline + invariants)
+- `docs/templates/` (governed templates)
+- `data/` (raw/work/processed + evidence catalogs)
+- `src/` (pipelines + graph + API boundary)
+- `web/` (UI; map + Focus Mode)
 
 ---
 
@@ -73,7 +82,7 @@ Kansas Frontier Matrix (KFM) is an open-source **geospatial + historical** knowl
 
 ### Audience
 
-- Primary: maintainers and contributors (data, catalog, graph, API, UI, narrative).
+- Primary: maintainers and contributors (ETL, catalogs, graph/ontology, API, UI, narrative).
 - Secondary: reviewers (governance/ethics/sovereignty), historians/editors, external collaborators.
 
 ### Definitions
@@ -89,33 +98,102 @@ Core terms used in this README:
 - **Focus Mode**: a UI experience that consumes only provenance‑linked context bundles (no unsourced narrative).
 - **Contract-first**: schemas + API contracts are first‑class artifacts; breaking changes require versioning + compatibility tests.
 - **Deterministic pipeline**: idempotent, config-driven transforms with logged inputs/outputs and stable IDs.
+- **Sensitivity propagation**: no derived output can be less restricted than any input in its lineage.
 
-### Quick links
+### Quick links (recommended reading order)
 
-Suggested reading order (treat any missing paths as “not confirmed in repo” and repair as part of repo hygiene):
+Treat any missing paths as *not confirmed in repo* and repair per repo hygiene:
 
 1) `docs/MASTER_GUIDE_v12.md` (system + pipeline source of truth)  
-2) `docs/README.md` (docs index; *not confirmed in repo*)  
-3) `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`  
-4) `docs/templates/TEMPLATE__STORY_NODE_V3.md`  
-5) `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`  
-6) `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` (draft; “if adopted”)  
-7) `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` (*not confirmed in repo*)  
-8) `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` (*not confirmed in repo*)
+2) `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`  
+3) `docs/templates/TEMPLATE__STORY_NODE_V3.md`  
+4) `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`  
+5) Domain module READMEs under `docs/data/**` and/or `data/**` (when present)  
+6) Architecture/roadmap docs under `docs/architecture/**` (when present)
 
 ### Key artifacts
 
-| Artifact | Path / Identifier | Status | Notes |
+| Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | present | Canonical pipeline + invariants + extension matrix |
-| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | present | Default governed doc template |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | present | Focus Mode narrative artifacts |
-| API Contract Extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | present | REST/GraphQL contract changes |
-| v13 redesign blueprint | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | present | Draft proposal; treat as “if adopted” |
-| Repo structure standard | `docs/standards/KFM_REPO_STRUCTURE_STANDARD.md` | not confirmed in repo | Proposed standard; keep paths canonical |
-| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | not confirmed in repo | Referenced standard; create if missing |
-| Full architecture vision | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | not confirmed in repo | Vision doc; create/repair if missing |
-| Next stages blueprint | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | not confirmed in repo | Roadmap doc; create/repair if missing |
+| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical pipeline + invariants + extension points |
+| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Default governed doc template |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Docs/Story | Narrative + Focus Mode surfacing |
+| API Contract Extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API | REST/GraphQL contract changes |
+| v13 redesign blueprint | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | Draft proposal; treat as “if adopted” (*not confirmed in repo*) |
+| Next stages blueprint | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | Architecture | Roadmap + gap closure plan (*not confirmed in repo*) |
+| Full architecture vision | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | Architecture | End-to-end vision (*not confirmed in repo*) |
+| Land Treaties module | `docs/data/historical/land-treaties/README.md` | Domain steward | Example domain module (governance-sensitive; *not confirmed in repo*) |
+| Air Quality module | `docs/data/air-quality/README.md` | Domain steward | Example domain module (*not confirmed in repo*) |
+| Soils (SDA) module | `data/soils/sda/README.md` | Domain steward | Example domain module (*not confirmed in repo*) |
+| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Docs | *not confirmed in repo* |
+| Repo structure standard | `docs/standards/KFM_REPO_STRUCTURE_STANDARD.md` | Docs | *not confirmed in repo* |
+
+### Project reference library (optional; project PDFs)
+
+These project files are **supporting references** (background, implementation notes, or design discussion). They should not be treated as authoritative over the Master Guide + templates unless incorporated into governed docs.
+
+- System + scope + roadmap (KFM-specific)
+  - `Kansas Frontier Matrix_ System Structure and Scope.pdf`
+  - `Kansas Frontier Matrix (KFM) Implementation Guide.pdf`
+  - `Kansas Frontier Matrix (KFM) System – Visual and Functional Overview.pdf`
+  - `Expanding the Kansas Frontier Matrix Knowledge Base.pdf`
+  - `Expanding the Kansas Frontier Matrix: External Data, Tools, and Frameworks.pdf`
+  - `Elevating the Kansas Frontier Matrix: Gaps and Proposed Enhancements.pdf`
+  - `KFM Reference Data.pdf`
+
+- Templates (source exports / working docs)
+  - `Universal Markdown templates.docx`
+  - `TEMPLATE__KFM_UNIVERSAL_DOC.md.docx`
+  - `TEMPLATE__STORY_NODE_V3.md.docx`
+  - `TEMPLATE__API_CONTRACT_EXTENSION.md.docx`
+  - `MASTER_GUIDE_v12.md.pdf`
+  - `MASTER_GUIDE_v13.md.gdoc` (*not confirmed in repo / access varies*)
+
+- Markdown & documentation practice
+  - `Comprehensive Guide to Markdown in Programming and Documentation.pdf`
+  - `The Comprehensive Markdown Guide.pdf`
+
+- Geospatial + spatial analysis
+  - `geoprocessing-with-python.pdf`
+  - `KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf`
+  - `An Introduction to Spatial Data Analysis and Visualisation in R - An Introduction to Spatial Data Analysis in R.pdf`
+  - `graphical-data-analysis-with-r.pdf`
+
+- Data science / stats / ML (for evidence artifacts and uncertainty)
+  - `KFM- Understanding Statistics & Experimental Design.pdf`
+  - `KFM-regression-analysis-with-python.pdf`
+  - `KFM- Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf`
+  - `KFM- Data Mining Concepts & applictions.pdf`
+  - `KFM- Bayesian computational methods.pdf`
+  - `KFM- Artificial-neural-networks-an-introduction.pdf`
+  - `KFM- deep-learning-in-python-prerequisites.pdf`
+  - `KFM- AI Foundations of Computational Agents 3rd Ed.pdf`
+
+- Graph/geometry/optimization & simulation (advanced/optional)
+  - `KFM- Spectral Geometry of Graphs.pdf`
+  - `KFM- Generalized Topology Optimization for Structural Design.pdf`
+  - `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+  - `KFM- Scalable Data Management for Future Hardware.pdf`
+
+- UI / web / graphics
+  - `CSS Notes for Professionals - CSSNotesForProfessionals.pdf`
+  - `KFM-responsive-web-design-with-html5-and-css3.pdf`
+  - `KFM-webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+  - `KFM- Computer Graphics using JAVA 2D & 3D.pdf`
+  - `DesigningVirtualWorlds.pdf`
+
+- Developer tooling / databases
+  - `Git Notes for Professionals - GitNotesForProfessionals.pdf`
+  - `Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf`
+  - `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+  - `MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf`
+
+### Contributing (high-level)
+
+- **Docs:** use `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` for governed docs.
+- **Story Nodes:** use `docs/templates/TEMPLATE__STORY_NODE_V3.md` and ensure every claim is source-linked.
+- **API changes:** use `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`; contract tests + redaction expectations are required.
+- **Data domains:** add a vertical slice (raw → work → processed → STAC/DCAT/PROV → graph mapping → API → UI layer → at least one Story Node).
 
 ### Definition of done
 
@@ -140,30 +218,27 @@ Suggested reading order (treat any missing paths as “not confirmed in repo” 
 
 | Area | Path | What lives here |
 |---|---|---|
+| Data domains | `data/` | Staged data + catalog outputs (STAC/DCAT/PROV) |
 | Documentation | `docs/` | Canonical governed docs (guides, designs, domain notes) |
 | Templates | `docs/templates/` | Governed doc templates (universal/story/API) |
 | Architecture | `docs/architecture/` | System designs, roadmaps, ADRs (if present) |
-| Data domains + staging | `data/` | Raw/work/processed data + evidence artifacts |
-| Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC, DCAT, and PROV outputs |
-| Pipelines | `src/pipelines/` | Deterministic transforms; outputs written under `data/**` |
-| Graph | `src/graph/` + `data/graph/` | Ontology-governed ingest + fixtures/imports |
-| API boundary | `src/server/` | Contracted access layer (REST/GraphQL); redaction + provenance refs |
-| UI | `web/` | React map UI (MapLibre/Cesium as configured); no direct graph access |
-| Schemas | `schemas/` | JSON Schemas for catalogs, Story Nodes, UI registries, telemetry |
-| Story Nodes | `docs/reports/story_nodes/` | Draft/published narratives + assets |
-| MCP / experiments | `mcp/` | Run manifests, evaluations, model cards, SOPs |
-| Tests | `tests/` | Unit + integration + contract tests |
-| Tooling | `tools/` | Validators, scripts, repo lint |
-| CI | `.github/` | Workflows, issue templates, security policies |
-| Releases | `releases/` | Release manifests/SBOMs/attestations/telemetry snapshots (if used) |
+| Schemas | `schemas/` | JSON Schemas (STAC/DCAT/PROV/story/ui/telemetry) |
+| Pipelines | `src/pipelines/` | ETL + catalog generation code |
+| Graph | `src/graph/` | Ontology bindings + graph build/migrations |
+| API boundary | `src/server/` | API service + contracts + redaction logic |
+| UI | `web/` | React + map client + Focus Mode UI |
+| MCP | `mcp/` | Experiments, runs, model cards, SOPs |
+| Tests | `tests/` | Unit + integration tests |
+| Tools | `tools/` | Validators, utilities, QA scripts |
+| CI | `.github/` | Workflows + policy gates |
+| Releases | `releases/` | Versioned packaged artifacts (if used) |
 
-Optional roots (if present; keep one canonical home per concern):
+Optional docs sub-roots (if adopted; keep one canonical home per concern):
 
-- Security: `.github/SECURITY.md` and/or `docs/security/`
-- Telemetry docs: `docs/telemetry/` and schemas under `schemas/telemetry/`
 - Standards: `docs/standards/`
-
-> Some directories may not exist yet. If a canonical root is missing, treat it as a gap and implement it per the Master Guide rather than introducing new top-level structure.
+- Security docs: `docs/security/` and/or `.github/SECURITY.md`
+- Telemetry docs: `docs/telemetry/` with schemas under `schemas/telemetry/`
+- Reference PDFs: `docs/library/` (*not confirmed in repo; recommended if project PDFs are committed*)
 
 ### Repo top-levels (expected)
 
@@ -220,14 +295,14 @@ Optional roots (if present; keep one canonical home per concern):
 └── 📁 releases/
 ~~~
 
+> Some directories may not exist yet. If a canonical root is missing, treat it as a gap and implement it per the Master Guide rather than introducing new top-level structure.
+
 ### Documentation map
 
 - `docs/MASTER_GUIDE_v12.md` (system + pipeline source of truth)
-- `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` (draft reference; if adopted)
-- `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` (roadmap; *not confirmed in repo*)
-- `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` (vision; *not confirmed in repo*)
-- `docs/standards/` (governed standards; *some items not confirmed in repo*)
 - `docs/templates/` (document + MCP templates)
+- `docs/architecture/` (designs/roadmaps; if present)
+- `docs/reports/story_nodes/` (Story Nodes; draft/published split if defined)
 
 ---
 
@@ -247,7 +322,7 @@ As KFM scales to more domains and evidence products, it also hardens repository 
 
 ### Constraints and invariants
 
-- **Pipeline ordering is non-negotiable:** **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+- **Pipeline ordering is non-negotiable:** **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**
 - **API boundary is non-negotiable:** UI consumes contracted data via the API boundary only (no direct Neo4j dependency).
 - **Evidence-first narrative:** no unsourced narrative in Story Nodes; Focus Mode is provenance-only.
 - **Maintain one source of truth:** avoid duplicating schemas/contracts/docs across the repo; minimize redundancy to prevent drift.
@@ -271,30 +346,36 @@ As KFM scales to more domains and evidence products, it also hardens repository 
 
 ### Future extensions
 
-- New domains built as domain packs: inputs + ETL + catalogs + graph + API + UI + at least one Story Node.
-- AI evidence products treated as catalog assets (STAC) and linked into Focus Mode with explicit uncertainty.
-- External entity linking (optional): reconcile to external identifiers (e.g., Wikidata/GeoNames/VIAF) without violating governance constraints.
-- Graph nuance (optional): represent contested knowledge / uncertainty (confidence/qualification fields) while preserving provenance.
-- “Vertical slice” expectation for readiness (recommended): one dataset → STAC/DCAT/PROV → graph ingest fixture → API endpoint → UI layer → one published Story Node.
+Use these “next-evolution extension points” to add capability without breaking contracts:
+
+- **(A) Data:** new domain, new STAC extension profiles (if required)
+- **(B) AI evidence:** analysis artifacts as STAC assets, linked into Focus Mode (with uncertainty metadata)
+- **(C) Graph:** new entity types with explicit provenance + ontology mapping
+- **(D) API:** new endpoints with contract tests + redaction rules
+- **(E) UI:** new layer registry entries with provenance pointers + CARE gating
+
+Readiness “vertical slice” expectation (recommended):
+
+- one dataset → STAC/DCAT/PROV → graph ingest fixture → API endpoint → UI layer → one published Story Node
 
 ---
 
 ## 🗺️ Diagrams
 
-### System and dataflow diagram
+### System / dataflow diagram
 
 ~~~mermaid
 flowchart LR
   R["Raw sources — data/**"] --> A["ETL — src/pipelines/**"]
   A --> B["STAC/DCAT/PROV — data/stac · data/catalog/dcat · data/prov"]
-  B --> C["Graph — src/graph + data/graph"]
-  C --> D["API boundary — src/server + contracts"]
-  D --> E["UI — web/"]
+  B --> C["Graph — src/graph (Neo4j)"]
+  C --> D["API boundary — src/server (contracts + redaction)"]
+  D --> E["UI — web/ (React + map + Focus Mode)"]
   E --> F["Story Nodes — docs/reports/story_nodes"]
   F --> G["Focus Mode — provenance-linked only"]
 ~~~
 
-### Optional sequence diagram
+### Optional: sequence diagram
 
 ~~~mermaid
 sequenceDiagram
@@ -304,39 +385,35 @@ sequenceDiagram
   UI->>API: Focus query(entity_id)
   API->>Graph: fetch subgraph + provenance refs (with redaction rules)
   Graph-->>API: context bundle + evidence references
-  API-->>UI: contracted payload (narrative + citations + audit flags)
+  API-->>UI: contracted payload (citations + audit flags + sensitivity notices)
 ~~~
 
 ---
 
 ## 📦 Data & Metadata
 
-### Inputs
+### Inputs (staging model)
 
-Preferred staging model (baseline):
+| Input | Typical content | Canonical location | Notes |
+|---|---|---|---|
+| Raw source snapshots | PDFs, CSVs, imagery, vectors, transcripts, etc. | `data/raw/<domain>/` | Immutable snapshots (prefer stable source IDs) |
+| Intermediate transforms | Parsed text, normalized tables, reprojection outputs | `data/work/<domain>/` | Replaceable; should be reproducible |
+| Processed outputs | Clean, join-ready datasets for publication | `data/processed/<domain>/` | Inputs to catalogs + graph ingest |
+| Source manifests | source_id, provider, license, attribution | `data/sources/**` | Recommended (*not confirmed in repo*) |
+| Run logs / manifests | inputs/outputs, code version, validation results | `mcp/runs/**` | Map to PROV Activities where possible |
 
-- `data/raw/<domain>/` — immutable source snapshots
-- `data/work/<domain>/` — intermediate transforms
-- `data/processed/<domain>/` — normalized outputs used for catalogs and graph ingest
+### Outputs (boundary artifacts)
 
-Recommended metadata/supporting inputs (as applicable):
-
-- `data/sources/**` — upstream source manifests (source_id, provider, license, spatial/temporal extent, attribution)
-- run logs/manifests (record inputs, code version, outputs, and validation results) — map to PROV Activities where possible
-
-### Outputs
-
-Global evidence artifacts:
-
-- STAC: `data/stac/collections/` + `data/stac/items/`
-- DCAT: `data/catalog/dcat/`
-- PROV: `data/prov/`
-
-Downstream consumers:
-
-- Graph ingest references STAC/DCAT/PROV identifiers.
-- API responses include provenance references and apply redaction/generalization.
-- UI renders evidence and Story Nodes with citations and disclosure flags.
+| Output | Format | Canonical location | Consumer(s) |
+|---|---|---|---|
+| STAC collections | JSON | `data/stac/collections/` | Catalog discovery, downstream linking |
+| STAC items | JSON | `data/stac/items/` | Asset-level indexing + provenance pointers |
+| DCAT datasets/distributions | JSON-LD | `data/catalog/dcat/` | Dataset discovery + federation |
+| PROV bundles | JSON-LD / RDF | `data/prov/` | Lineage + auditability |
+| Graph ingest fixtures/mappings | CSV/JSON/config | `src/graph/**` (+ `data/**` if used) | Neo4j graph build |
+| API responses | JSON | `src/server/**` | UI + external consumers |
+| UI layer registry | JSON (+ schema) | `web/**` + `schemas/ui/**` | Map layers + provenance links |
+| Story Nodes | Markdown (+ schema) | `docs/reports/story_nodes/**` | Focus Mode narrative |
 
 ### Sensitivity and redaction
 
@@ -380,6 +457,12 @@ For each dataset/evidence product:
   - `prov:Agent` for tools and responsible parties.
 - Prefer one PROV activity bundle per meaningful run under `data/prov/**`.
 
+### Provenance requirements (minimum)
+
+- `prov:wasDerivedFrom`: list source IDs
+- `prov:wasGeneratedBy`: pipeline activity/run ID
+- Confidence/uncertainty fields (if predictive content is included)
+
 ### Versioning
 
 - IDs are stable; versions are explicit and machine-readable.
@@ -392,13 +475,34 @@ For each dataset/evidence product:
 
 ### Components
 
-- **ETL / pipelines:** deterministic transforms in `src/pipelines/**`
-- **Catalogs:** STAC/DCAT/PROV evidence in `data/**`
-- **Graph:** ontology-aligned ingest in `src/graph/**` with fixtures/imports in `data/graph/**`
-- **API boundary:** contracted REST/GraphQL interface in `src/server/**`
-- **UI:** `web/**` renders map and Focus Mode from API payloads
-- **Story Nodes:** `docs/reports/story_nodes/**` for provenance-linked narratives
-- **Telemetry/security/governance:** docs + schemas to keep behavior auditable
+| Subsystem | Responsibility | Canonical home | Primary outputs |
+|---|---|---|---|
+| ETL / pipelines | Deterministic transforms | `src/pipelines/` | `data/work/**`, `data/processed/**`, run logs |
+| Catalogs | Evidence metadata + discovery | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` | STAC/DCAT/PROV bundles |
+| Graph | Ontology-aligned knowledge graph | `src/graph/` | Neo4j-ready ingest + constraints |
+| API boundary | Contracted access + redaction | `src/server/` | REST/GraphQL + audits |
+| UI | Map + Focus Mode client | `web/` | Layer registry + narrative rendering |
+| Story Nodes | Governed narratives | `docs/reports/story_nodes/` | Provenance-linked story artifacts |
+| Focus Mode | Provenance-only deep dives | `web/` (UI) + `src/server/` (API) | Context bundles + citations |
+
+### Subsystem contracts (what must exist for each subsystem)
+
+| Subsystem | Contract artifacts | “Do not break” rule |
+|---|---|---|
+| ETL | configs + run logs + validation notes | deterministic + replayable |
+| Catalogs | STAC/DCAT/PROV schemas + validators | machine-validated outputs |
+| Graph | ontology + migrations + constraints | stable labels/edges (unless migrated) |
+| APIs | OpenAPI/GraphQL schema + contract tests | backwards compatible or version bump |
+| UI | layer registry + a11y + audit affordances | no hidden data leakage |
+| Story/Focus | provenance-linked context bundle | no hallucinated/unsourced claims |
+
+### Canonical subsystem homes (one home per subsystem)
+
+- Pipelines: `src/pipelines/`
+- Catalog build/validation tooling: `tools/` and/or `src/pipelines/` (keep one canonical home)
+- Graph build: `src/graph/`
+- API boundary: `src/server/` (contracts under `src/server/contracts/**` if present)
+- UI: `web/`
 
 ### Interfaces and contracts
 
@@ -407,17 +511,6 @@ For each dataset/evidence product:
 - API contracts: `src/server/contracts/**` (or repo-defined equivalent; if different, *not confirmed in repo*)
 - UI registries: schema-validated layer registries under `web/**` and `schemas/ui/**`
 
-### Story Nodes and Focus Mode
-
-- Story Nodes must:
-  - carry explicit citations to cataloged artifacts (STAC/DCAT/PROV),
-  - connect to graph entities (Place/Person/Event/Document/etc.) via stable identifiers,
-  - separate **fact vs inference vs hypothesis** where applicable (especially if AI-generated text is included).
-- Focus Mode is a hard-gated provenance-only view:
-  - no narrative text is shown without proper citations or lineage ties,
-  - predictive/suggestive content must be opt-in, carry uncertainty/confidence metadata, and must not infer or reveal sensitive locations,
-  - redaction/generalization must be visible via disclosure/audit affordances.
-
 ### Extension points checklist
 
 For every new capability (dataset, domain, endpoint, UI layer, Story Node type):
@@ -425,12 +518,48 @@ For every new capability (dataset, domain, endpoint, UI layer, Story Node type):
 - [ ] Add or update deterministic pipeline steps (`src/pipelines/**`)
 - [ ] Produce/refresh STAC/DCAT/PROV evidence (`data/**`)
 - [ ] Validate against schemas (`schemas/**`)
-- [ ] Update graph mappings/fixtures (`src/graph/**`, `data/graph/**`)
+- [ ] Update graph mappings/fixtures (`src/graph/**`)
 - [ ] Add/update API contracts + tests (`src/server/**`)
 - [ ] Add/update UI registry entries (`web/**`)
 - [ ] Add/update Story Node(s) with provenance-linked citations (`docs/reports/story_nodes/**`)
 - [ ] Record telemetry signals + update schema if needed (`schemas/telemetry/**`)
 - [ ] Add regression tests/validators and update release notes if applicable
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+### Story Nodes as “machine-ingestible storytelling”
+
+Story Nodes must:
+
+- carry provenance annotations and explicit citations to cataloged artifacts,
+- connect to graph entities (Place/Person/Event/Document/etc.) via stable identifiers,
+- separate **fact vs inference vs hypothesis** where applicable (especially for AI-generated text).
+
+### Focus Mode rule (hard gate)
+
+- Focus Mode only consumes **provenance-linked** content.
+- Any predictive/suggestive content:
+  - must be opt-in,
+  - must carry uncertainty/confidence metadata,
+  - must not infer or reveal sensitive locations.
+
+### Focus Mode behavior expectations (UI + API)
+
+- Map and timeline can narrow to the story’s scope.
+- Only relevant layers should be enabled by default; unrelated layers are hidden/disabled.
+- Citations must be rendered as first-class UI affordances (evidence is always one click away).
+- Redaction/generalization must be visible via audit/disclosure affordances (never “silent”).
+
+### Optional Focus Mode controls (Story Node-driven)
+
+~~~yaml
+focus_layers:
+  - "TBD"
+focus_time: "TBD"
+focus_center: [ -98.0000, 38.0000 ]
+~~~
 
 ---
 
@@ -449,6 +578,7 @@ Recommended minimum checks:
   - UI layer registry schemas (if present)
 - [ ] Graph integrity tests (constraints, expected labels/edges)
 - [ ] API contract tests (OpenAPI/GraphQL schema + resolver tests)
+- [ ] UI layer registry schema checks
 - [ ] Security + sovereignty scanning gates (as applicable):
   - secret scan
   - PII scan
@@ -471,21 +601,19 @@ Recommended minimum checks:
 # make scan-governance
 ~~~
 
-### Telemetry signals
+### Telemetry signals (recommended)
 
-If telemetry is implemented, useful signals include:
+| Signal | Source | Where recorded |
+|---|---|---|
+| `classification_assigned` | pipeline + catalog | `docs/telemetry/` + `schemas/telemetry/` (*if present*) |
+| `redaction_applied` | catalog + API | `docs/telemetry/` + `schemas/telemetry/` (*if present*) |
+| `promotion_blocked` | CI governance gate | `docs/telemetry/` + `schemas/telemetry/` (*if present*) |
+| `catalog_published` | catalog build | `docs/telemetry/` + `schemas/telemetry/` (*if present*) |
+| `focus_mode_redaction_notice_shown` | UI audit affordance | `docs/telemetry/` + `schemas/telemetry/` (*if present*) |
 
-| Signal | Why it matters |
-|---|---|
-| `classification_assigned` | proves classification decisions were recorded |
-| `redaction_applied` | proves masking/generalization is auditable |
-| `promotion_blocked` | proves unsafe promotion was prevented |
-| `catalog_published` | proves catalog publication is tracked |
-| `focus_mode_redaction_notice_shown` | proves UI disclosure for redaction |
+### Release hardening (if `releases/` is used)
 
-### Release hardening
-
-If releases are packaged under `releases/`, recommended artifacts include:
+Recommended artifacts:
 
 - SBOM (Software Bill of Materials)
 - build provenance attestations (e.g., SLSA)
@@ -535,6 +663,7 @@ Changes that typically require elevated review:
 | v1.0.3 | 2025-12-26 | Clarified staging vs domain-pack patterns; added provenance/run-pointer guidance | TBD |
 | v1.0.4 | 2025-12-27 | Aligned sections and subheadings to Universal template; synced directory roots to Master Guide v12 inventory; normalized Data & Metadata and STAC/DCAT/PROV subsections | TBD |
 | v1.0.5 | 2025-12-29 | Synced README language and file tree to Master Guide v12; consolidated Story Node/Focus Mode guidance under Architecture; tightened “one source of truth” + link-check expectations | TBD |
+| v1.0.6 | 2025-12-29 | Added missing Universal-template H2 (`🧠 Story Node & Focus Mode Integration`); normalized directory layout + subsystem contracts; expanded project reference library | TBD |
 
 ---
 
