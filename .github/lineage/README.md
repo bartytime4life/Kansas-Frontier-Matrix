@@ -1,8 +1,8 @@
 ---
 title: "KFM — Lineage & Provenance (CI)"
 path: ".github/lineage/README.md"
-version: "v1.1.0"
-last_updated: "2025-12-28"
+version: "v1.1.1"
+last_updated: "2025-12-29"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:github:lineage:readme:v1.1.0"
-semantic_document_id: "kfm-github-lineage-readme-v1.1.0"
-event_source_id: "ledger:kfm:doc:github:lineage:readme:v1.1.0"
+doc_uuid: "urn:kfm:doc:github:lineage:readme:v1.1.1"
+semantic_document_id: "kfm-github-lineage-readme-v1.1.1"
+event_source_id: "ledger:kfm:doc:github:lineage:readme:v1.1.1"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -47,74 +47,79 @@ This directory documents how Kansas Frontier Matrix (KFM) enforces **provenance 
 
 - evidence artifacts are traceable end-to-end (inputs → transforms → outputs),
 - downstream systems can rely on stable identifiers and deterministic outputs,
-- Story Nodes and Focus Mode only surface **provenance-linked** content.
+- Story Nodes and Focus Mode surface **provenance-linked** content only.
 
 This directory does **not** store provenance payloads. Canonical provenance artifacts are published under `data/prov/**`.
-
----
 
 ## 📘 Overview
 
 ### Purpose
 
-- Define the minimum lineage/provenance expectations for artifacts that move through the KFM pipeline.
-- Document CI “lineage gates” and where they plug in.
+- Define minimum lineage and provenance expectations for artifacts that cross KFM pipeline boundaries.
+- Document CI “lineage gates” and where they plug into the repo’s canonical subsystem layout.
 - Provide contributor guidance to prevent:
   - orphan references,
-  - duplicate “canonical homes”,
-  - and unsourced narrative that can’t be traced back to evidence.
+  - duplicate canonical homes,
+  - narrative claims that cannot be traced back to evidence.
 
 ### Scope
 
 | In scope | Out of scope |
 |---|---|
-| CI expectations for validating PROV bundles and their cross-links | Selecting a specific PROV serialization or validator tool (maintainer choice) |
-| Cross-link policy between STAC, DCAT, PROV, Graph, APIs, UI, and Story Nodes | Domain-specific ETL logic (lives under `src/pipelines/` + domain data roots) |
+| CI expectations for validating PROV bundles and their cross-links | Selecting a specific PROV serialization or validator library (maintainer choice) |
+| Cross-link policy between STAC, DCAT, PROV, Graph, APIs, UI, Story Nodes, and Focus Mode | Domain-specific ETL logic (lives under `src/pipelines/` + domain data roots) |
 | Determinism and “skip vs fail” behavior for lineage gates | Implementing CI workflows themselves (lives under `.github/workflows/`) |
 
 ### Audience
 
-- Contributors adding or updating datasets, “evidence products,” Story Nodes, or catalogs.
-- Maintainers who implement and evolve CI validation workflows.
+- Contributors adding/updating datasets, evidence products, Story Nodes, catalogs, or UI registries.
+- Maintainers implementing and evolving CI validation workflows.
 - Reviewers auditing provenance coverage, governance compliance, and reproducibility.
 
 ### Definitions
 
 > See also: `docs/glossary.md` *(if present; not confirmed in repo).*
 
-- **Evidence artifact**: a dataset or derived product meant for downstream use, represented via STAC/DCAT and backed by PROV lineage.
+- **Catalogs**: KFM metadata catalogs: STAC (assets), DCAT (dataset/distribution discovery), PROV (lineage).
+- **Contract artifact**: a machine-validated schema/spec that defines an interface (e.g., JSON Schema, OpenAPI, GraphQL SDL, UI registry schema).
+- **Evidence artifact**: any dataset or derived product intended for downstream use that is cataloged (STAC/DCAT) and backed by PROV lineage.
+- **Boundary artifacts**: STAC/DCAT/PROV outputs that must exist before data is considered “published” and allowed into downstream stages.
 - **PROV bundle**: a provenance record containing activities, entities, agents, and derivations (serialization is implementation-defined).
-- **Lineage gate**: a CI check that validates provenance structure and cross-links (**fail closed** when artifacts exist but are invalid).
-- **Orphan reference**: an identifier or citation that does not resolve to an existing artifact/entity (e.g., missing STAC item, missing PROV activity, missing graph entity).
-- **Canonical home**: the single authoritative location for a subsystem/artifact class (duplicates require explicit deprecation markers and links to the canonical home).
+- **Lineage gate**: a CI check that validates provenance structure and cross-links; fails closed when artifacts exist but are invalid.
+- **Orphan reference**: an identifier/citation that does not resolve to an existing artifact/entity (e.g., missing STAC Item, missing PROV Activity, missing graph entity ID).
+- **Story Node**: a governed narrative artifact that is machine-ingestible and provenance-linked.
+- **Focus Mode**: an experience that consumes only provenance-linked context bundles (no unsourced narrative).
+- **Deterministic pipeline**: idempotent, config-driven transforms with logged inputs/outputs and stable IDs.
+- **Canonical home**: the single authoritative location for a subsystem/artifact class; duplicates require explicit deprecation markers and links to the canonical home.
 
 ### Key artifacts
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master Guide (pipeline ordering) | `docs/MASTER_GUIDE_v12.md` | Core | Canonical non-negotiable ordering + invariants |
-| v13 redesign blueprint (draft) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | “One canonical home”, contract-first, provenance-first expectations |
+| Master Guide (pipeline ordering + invariants) | `docs/MASTER_GUIDE_v12.md` | Core | Canonical ordering + “do not break” invariants |
 | Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Default governed doc template |
 | Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Docs/Story | Evidence-first narrative + Focus Mode surfacing |
 | API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API | Contract-first API changes |
-| CI entrypoints | `.github/workflows/**` | CI | Workflows run validators and enforce gates |
-| PROV bundles | `data/prov/**` | Catalog/Pipelines | Canonical provenance exports |
+| v13 redesign blueprint (draft reference) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | “One canonical home”, contract-first, provenance-first expectations |
+| KFM STAC profile | `docs/standards/KFM_STAC_PROFILE.md` | Standards | *placeholder/presence varies; not confirmed in repo* |
+| KFM DCAT profile | `docs/standards/KFM_DCAT_PROFILE.md` | Standards | *placeholder/presence varies; not confirmed in repo* |
+| KFM PROV profile | `docs/standards/KFM_PROV_PROFILE.md` | Standards | *placeholder/presence varies; not confirmed in repo* |
+| CI workflows | `.github/workflows/**` | CI | Workflows execute validators and enforce gates |
 | STAC outputs | `data/stac/**` | Catalog | Collections/items for evidence discovery |
 | DCAT outputs | `data/catalog/dcat/**` | Catalog | Dataset discovery metadata |
-| Schemas | `schemas/**` | Core | JSON Schemas and optional shapes (if present) |
-| Story Nodes | `docs/reports/story_nodes/**` | Story | Must be provenance-linked for publication |
+| PROV outputs | `data/prov/**` | Catalog/Pipelines | Canonical provenance exports |
+| Schemas | `schemas/**` | Core | JSON Schemas and shapes (if present) |
+| Story Nodes | `docs/reports/story_nodes/**` | Story | Must be provenance-linked to publish |
 | Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Docs | *not confirmed in repo* |
 
-### Definition of done for this document
+### Definition of done
 
-- [x] Uses the governed Markdown protocol and approved headings.
-- [x] States canonical homes and “one home per subsystem” rule.
-- [x] Defines CI behavior contract: **validate if present → fail if invalid → skip if not applicable**.
-- [x] Defines cross-link expectations between STAC/DCAT/PROV and downstream consumers.
-- [x] Captures “repo lint” invariants relevant to provenance and discoverability.
-- [ ] Names specific workflow filenames (intentionally left generic; workflows live under `.github/workflows/**`).
-
----
+- [x] Front-matter complete and matches the governed template structure.
+- [x] Canonical homes and “one home per subsystem” rule stated.
+- [x] CI behavior contract stated: validate if present → fail if invalid → skip if not applicable.
+- [x] Cross-link expectations between STAC/DCAT/PROV and downstream consumers documented.
+- [x] Governance, CARE/sovereignty, and sensitivity constraints stated.
+- [ ] CI workflow filenames listed (intentionally generic; workflows live under `.github/workflows/**`).
 
 ## 🗂️ Directory Layout
 
@@ -126,17 +131,20 @@ This directory does **not** store provenance payloads. Canonical provenance arti
 
 | Area | Path | What lives here |
 |---|---|---|
-| CI workflows | `.github/workflows/**` | Validation jobs and policy gates |
+| CI workflows | `.github/workflows/**` | GitHub Actions jobs + policy gates |
 | Lineage documentation | `.github/lineage/**` | Expectations, gate definitions, contributor guidance |
-| STAC outputs | `data/stac/**` | Evidence discovery artifacts |
-| DCAT outputs | `data/catalog/dcat/**` | Dataset discovery artifacts |
-| PROV outputs | `data/prov/**` | Provenance bundles and lineage exports |
+| Data staging | `data/raw/**`, `data/work/**`, `data/processed/**` | Canonical staged data roots (domain folders) |
+| Catalog outputs | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` | Boundary artifacts required for publishing |
 | Schemas | `schemas/**` | Structural constraints and validator inputs |
-| Pipelines | `src/pipelines/**` | Deterministic transforms producing outputs |
-| Graph | `src/graph/**` + `data/graph/**` | Ontology + ingest fixtures |
+| Pipelines | `src/pipelines/**` | Deterministic transforms producing data + catalogs |
+| Graph | `src/graph/**` | Ontology + ingest logic (graph references catalogs) |
+| Graph import fixtures | `data/graph/**` | CSV/Cypher fixtures *(if present)* |
 | API boundary | `src/server/**` | Contracts + redaction + query services |
-| UI | `web/**` | Layer registry + Focus Mode UX |
+| UI | `web/**` | Layer registry + Focus Mode UX (no direct graph calls) |
 | Story Nodes | `docs/reports/story_nodes/**` | Draft and published story artifacts |
+| Tools | `tools/**` | Validators, utilities, QA scripts *(if present)* |
+| Tests | `tests/**` | Unit + integration tests *(if present)* |
+| MCP runs | `mcp/runs/**` | Run logs and artifacts *(if present)* |
 
 ### Expected file tree for this sub-area
 
@@ -150,44 +158,38 @@ This directory does **not** store provenance payloads. Canonical provenance arti
         └── 📄 validate_lineage.<ext>         # optional; not confirmed in repo
 ~~~
 
----
-
 ## 🧭 Context
 
 ### Background
 
 KFM’s canonical flow is:
 
-**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+**ETL → STAC/DCAT/PROV catalogs → Graph → API → UI → Story Nodes → Focus Mode**
 
 Lineage and provenance are treated as first-class so that:
 
-- Story Nodes and Focus Mode can only surface **provenance-linked content**.
+- Story Nodes and Focus Mode can only surface provenance-linked content.
 - Missing links (evidence IDs, entity references, provenance activities) are caught early via CI.
-- Outputs remain **deterministic and diffable**, supporting audits and reproducible builds.
+- Outputs remain deterministic and diffable, supporting audits and reproducible builds.
 
 This `.github/lineage/` area exists so CI rules for provenance stay discoverable and consistent as domains expand.
 
 ### Assumptions
 
-- Canonical roots exist (or are being created) for `schemas/`, `data/catalog/dcat/`, `data/prov/`, and `data/graph/` (some may be added during migration).
+- Canonical roots exist (or are being created) for `schemas/`, `data/stac/`, `data/catalog/dcat/`, `data/prov/`, and `src/pipelines/`.
 - Validators use schemas in `schemas/**` where available.
-- PROV serialization/tooling is selected by maintainers (the CI contract is about behavior + outcomes, not a specific library).
+- PROV serialization/tooling is selected by maintainers; this guide defines required behavior and cross-links, not a specific library.
 
-### Constraints / invariants
+### Constraints and invariants
 
-- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
-- **API boundary is mandatory**: the UI never queries Neo4j directly; it consumes contracted API responses.
-- **Provenance-first**: downstream surfacing (especially Focus Mode) requires provenance-linked context.
-- CI is deterministic:
+- Pipeline ordering is absolute: **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**.
+- API boundary is mandatory: the UI never queries Neo4j directly; it consumes contracted API responses.
+- Provenance-first publishing: boundary artifacts are required before graph ingest, UI exposure, or Story Node publication.
+- Deterministic ETL: runs must be idempotent and logged; identical inputs produce identical outputs.
+- CI behavior is deterministic:
   - optional root absent → checks may skip,
   - optional root present but invalid → checks fail closed.
-- One canonical home per subsystem:
-  - avoid duplicate canonical homes without explicit deprecation markers + link to canonical.
-- Repo lint invariants (CI should enforce where tooling exists):
-  - no YAML front-matter in code files,
-  - no `README.me`,
-  - no duplicate canonical homes without explicit deprecation markers.
+- One canonical home per subsystem: avoid duplicates without explicit deprecation markers and a link to the canonical home.
 
 ### Open questions
 
@@ -195,41 +197,46 @@ This `.github/lineage/` area exists so CI rules for provenance stay discoverable
 |---|---|---|
 | Canonical PROV serialization (PROV-JSON vs JSON-LD vs Turtle)? | TBD | TBD |
 | Where should cross-link rules live (schemas vs scripts vs tests)? | TBD | TBD |
-| What is the minimal lineage gate required for a “new domain pack”? | TBD | TBD |
-| Which data staging layout is canonical during migration (stage-first vs domain-first)? | TBD | TBD |
+| Minimal lineage gate required for a “new domain pack”? | TBD | TBD |
+| How should dataset-level versioning links be encoded across STAC/DCAT/PROV? | TBD | TBD |
 
 ### Future extensions
 
-- Add a repository-standard validator script under `.github/lineage/scripts/` *(optional; not confirmed in repo)* that:
+- Add a repository-standard validator (script or CLI) that:
   - validates PROV bundles against `schemas/prov/**`,
-  - checks cross-links into STAC/DCAT,
-  - reports orphan references and missing evidence IDs.
-- Emit a machine-readable CI report (telemetry schema) for lineage health trends and governance signals.
-
----
+  - checks cross-links into STAC and DCAT,
+  - reports orphan references and missing evidence IDs,
+  - emits a machine-readable report suitable for CI artifacts or `mcp/runs/**`.
+- Introduce a telemetry schema under `schemas/telemetry/**` to track lineage health trends across PRs/runs.
 
 ## 🗺️ Diagrams
 
-### System / dataflow diagram
+### System and dataflow diagram
 
 ~~~mermaid
 flowchart LR
-  A[ETL runs<br/>src/pipelines] --> B[STAC/DCAT/PROV outputs<br/>data/stac + data/catalog/dcat + data/prov]
-  B --> C[Neo4j Graph<br/>src/graph + data/graph]
-  C --> D[API boundary<br/>src/server]
-  D --> E[React/Map UI<br/>web]
-  E --> F[Story Nodes<br/>docs/reports/story_nodes]
-  F --> G[Focus Mode<br/>provenance-linked only]
+  A[Raw Sources] --> B[ETL + Normalization<br/>src/pipelines]
+  B --> C[STAC Items + Collections<br/>data/stac]
+  C --> D[DCAT Dataset Views<br/>data/catalog/dcat]
+  C --> E[PROV Lineage Bundles<br/>data/prov]
+
+  C --> G[Neo4j Graph<br/>src/graph]
+  G --> H[API Layer<br/>src/server]
+  H --> I[Map UI<br/>web]
+  I --> J[Story Nodes<br/>docs/reports/story_nodes]
+  J --> K[Focus Mode<br/>provenance-linked only]
 
   PR[Pull Request] --> CI[GitHub Actions CI]
   CI --> L[Lineage gates]
   L -->|pass| M[Merge allowed]
   L -->|fail| X[Block merge + report]
 
-  B --> L
+  D --> L
+  E --> L
+  C --> L
 ~~~
 
-### Optional: sequence diagram
+### Optional sequence diagram
 
 ~~~mermaid
 sequenceDiagram
@@ -245,32 +252,50 @@ sequenceDiagram
   CI-->>Dev: Status checks + actionable log output
 ~~~
 
----
-
 ## 📦 Data & Metadata
 
 ### Data lifecycle
 
-KFM’s governed docs reference two staging layout concepts; CI should treat the **repo’s selected canonical layout** as authoritative and flag mixed patterns unless an explicit migration plan exists.
-
-**Stage-first (v12-style) staging roots:**
+KFM’s required staging layout is stage-first:
 
 - `data/raw/<domain>/` — immutable source snapshots
 - `data/work/<domain>/` — intermediate transforms
-- `data/processed/<domain>/` — normalized outputs used for catalogs and graph ingest
+- `data/processed/<domain>/` — final normalized outputs used for catalogs and graph ingest
 
-**Domain-first (v13 draft) staging roots:**
-
-- `data/<domain>/raw/` — immutable source snapshots
-- `data/<domain>/work/` — intermediate transforms
-- `data/<domain>/processed/` — normalized outputs used for catalogs and graph ingest
-
-**Global metadata outputs (canonical locations):**
+At the point of publication, every dataset produces boundary artifacts in canonical locations:
 
 - STAC: `data/stac/collections/` and `data/stac/items/`
 - DCAT: `data/catalog/dcat/`
 - PROV: `data/prov/`
-- Graph import: `data/graph/csv/` and `data/graph/cypher/` *(if present)*
+
+These boundary artifacts are required before data is considered fully published and allowed into downstream stages.
+
+### Domain expansion pattern
+
+When adding a new domain:
+
+- Place raw sources under `data/raw/<new-domain>/`, write intermediates to `data/work/<new-domain>/`, publish normalized outputs to `data/processed/<new-domain>/`.
+- Publish STAC/DCAT/PROV artifacts in the canonical locations above.
+- Maintain a concise domain README under `docs/data/<new-domain>/README.md` describing:
+  - upstream sources and licenses,
+  - ETL/runbook steps,
+  - governance and sensitivity notes,
+  - and the evidence IDs produced.
+
+### Evidence artifact pattern
+
+KFM treats analysis outputs (including AI-derived outputs) as first-class evidence artifacts:
+
+- Store derived datasets in `data/processed/**` (under a domain or project subfolder).
+- Catalog them:
+  - STAC Item(s) for geospatial assets (and optionally a Collection),
+  - a DCAT dataset entry for discovery,
+  - a PROV activity bundle describing the run (inputs, method/config, agents, timestamps).
+- Integrate with the graph cautiously:
+  - graph entities and edges MUST reference the evidence artifact IDs that justify them.
+- Expose to the UI only via governed APIs:
+  - API layer enforces redaction and classification rules;
+  - the UI must not hard-code or bypass evidence restrictions.
 
 ### Inputs
 
@@ -279,8 +304,8 @@ KFM’s governed docs reference two staging layout concepts; CI should treat the
 | PROV bundle(s) | JSON/JSON-LD/Turtle (TBD) | `data/prov/**` | `schemas/prov/**` *(if present)* |
 | STAC collections/items | JSON | `data/stac/**` | `schemas/stac/**` *(if present)* |
 | DCAT dataset records | RDF/JSON-LD/Turtle (TBD) | `data/catalog/dcat/**` | `schemas/dcat/**` *(if present)* |
-| Graph import fixtures | CSV/Cypher | `data/graph/**` | graph integrity tests *(if present)* |
-| Story Node references | Markdown + front-matter | `docs/reports/story_nodes/**` | `schemas/storynodes/**` *(if present)* |
+| Graph import fixtures | CSV/Cypher | `data/graph/**` *(if present)* | graph integrity tests *(if present)* |
+| Story Node references | Markdown + front-matter | `docs/reports/story_nodes/**` | `schemas/story_nodes/**` *(if present)* |
 | UI registries | JSON/YAML (repo-defined) | `web/**` | `schemas/ui/**` *(if present)* |
 
 ### Outputs
@@ -288,147 +313,169 @@ KFM’s governed docs reference two staging layout concepts; CI should treat the
 | Output | Format | Path | Contract / Schema |
 |---|---|---|---|
 | CI status | GitHub check | GitHub UI | workflow contract |
-| Validation report | JSON/Markdown | CI artifact (TBD) | `schemas/telemetry/**` *(optional)* |
+| Validation report | JSON/Markdown | CI artifact or `mcp/runs/**` *(TBD)* | `schemas/telemetry/**` *(if present)* |
 
-### Sensitivity & redaction
+### Sensitivity and redaction
 
-- Provenance artifacts must not leak restricted locations or culturally sensitive knowledge.
-- If a dataset is restricted, provenance logs must follow governance rules and apply redaction/generalization consistently.
-- Outputs must not be less restricted than any of their inputs (classification propagation rule).
+- Provenance artifacts must not leak restricted locations, culturally sensitive knowledge, or PII.
+- Classification must not be downgraded automatically; outputs must not be less restricted than any of their inputs.
+- Redaction/generalization must be applied consistently across:
+  - processed datasets,
+  - STAC/DCAT metadata,
+  - PROV lineage records,
+  - API responses,
+  - UI rendering.
 
 ### Quality signals
 
-- Schema validity for all present artifacts (STAC/DCAT/PROV, plus Story Nodes/UI registries if applicable).
+- Schema validity for all present artifacts (STAC/DCAT/PROV and any applicable Story Node/UI schemas).
 - No orphan references:
   - evidence refs resolve (STAC/DCAT/PROV identifiers exist),
-  - graph/story refs resolve (entity IDs exist; citations exist).
+  - graph/story refs resolve (entity IDs and citations exist).
 - Deterministic, diffable outputs (stable IDs + reproducible generation).
-
----
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
-### Policy for every dataset / evidence product
+### STAC/DCAT/PROV alignment policy
 
-For each dataset or evidence product intended for downstream use:
+Every dataset or evidence artifact intended for downstream use must have:
 
 - STAC Collection + Item(s)
-- DCAT dataset record (minimum title/description/license/keywords)
-- PROV activity describing lineage with source and run identifiers
-- Version lineage links reflected in catalogs and, where applicable, the graph
+- DCAT dataset entry (minimum title/description/license/keywords/distributions)
+- PROV activity bundle describing lineage, including source and run identifiers
 
-### Identifier linkage expectation
+### Cross-layer linkage expectations
 
-Graph nodes and APIs should reference:
+To keep catalogs, graph, and narratives in sync:
 
-- STAC Item IDs
-- DCAT dataset ID
-- PROV activity ID
-
-This enables Focus Mode to resolve “what is this data” into a traceable lineage bundle.
-
-### STAC (what CI should confirm)
-
-- IDs referenced by PROV / graph / story exist and are unique.
-- Declared assets referenced by provenance exist at expected paths or are resolvable via catalogs.
-- Collections and items maintain integrity (item ↔ collection relationships).
-
-### DCAT (what CI should confirm)
-
-- Dataset identifiers referenced by PROV and by graph/story exist and remain stable.
-- Licensing fields are present for open/public artifacts (when applicable).
-- Distributions are consistent with the actual published artifacts (when modeled).
-
-### PROV-O (what CI should confirm)
-
-- Derivation links connect outputs → inputs (source snapshots, upstream artifacts).
-- Generated-by links connect outputs → the generating activity.
-- Activities and agents use stable identifiers for:
-  - pipeline activities and runs,
-  - agents such as pipelines, maintainers, systems as appropriate.
+- STAC Items → data assets:
+  - STAC must link to the actual data resources (files under `data/processed/**` or a stable storage reference).
+- DCAT → distributions:
+  - DCAT distributions should reference STAC records and/or direct downloads.
+- PROV end-to-end:
+  - PROV must link raw inputs → intermediate work → processed outputs,
+  - include a run identifier (and/or commit hash) that can reproduce the output.
+- Graph and stories reference catalogs:
+  - graph nodes and Story Nodes should reference STAC Item IDs and/or DCAT dataset IDs rather than duplicating payloads.
 
 ### Versioning expectations
 
-- New versions link predecessor/successor (where a version model exists).
-- If a dataset is replaced, lineage must point to:
-  - the prior artifact for continuity,
-  - the new artifact for current consumption.
+- Dataset versions should link predecessor/successor where a version model exists.
+- Replacements must preserve continuity:
+  - lineage points to the prior artifact,
+  - catalogs and UI prefer the current artifact.
+- Breaking changes to schemas or API contracts require:
+  - explicit versioning,
+  - compatibility checks and contract tests,
+  - clear deprecation markers.
 
----
+## 🧱 Architecture
+
+### Subsystem contracts
+
+| Subsystem | Contract artifacts | Do not break rule |
+|---|---|---|
+| ETL | pipeline configs + run logs + validation | deterministic and replayable |
+| Catalogs | schemas + validators + profiles | machine-validated |
+| Graph | ontology + constraints + migrations | stable labels/edges |
+| APIs | OpenAPI/GraphQL schema + tests | backward compatible or version bump |
+| UI | layer registry + a11y + audit affordances | no hidden data leakage |
+| Story and Focus | provenance-linked context bundle | no unsourced narrative |
+
+### Canonical subsystem homes
+
+- Pipelines: `src/pipelines/`
+- Catalog build/validation tooling: `tools/` and/or `src/pipelines/` *(keep one canonical home)*
+- Graph build: `src/graph/`
+- API boundary: `src/server/` *(contracts under `src/server/contracts/**` if present)*
+- UI: `web/`
+
+### Next-evolution extension points
+
+- (A) Data: new domain, new STAC extension profiles if required
+- (B) AI evidence: artifacts as STAC assets, linked into Focus Mode
+- (C) Graph: new entity types with explicit provenance + ontology mapping
+- (D) API: new endpoints with contract tests + redaction rules
+- (E) UI: new layer registry entries with provenance pointers + CARE gating
+
+### API boundary rule
+
+- The UI does not connect to Neo4j directly.
+- The API boundary mediates access and enforces provenance plus redaction/generalization rules.
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### Story Nodes as evidence-first narrative
+### Story Nodes as machine-ingestible storytelling
 
-- Story Nodes should cite:
-  - graph entity IDs,
-  - STAC/DCAT/PROV evidence IDs.
-- Story Nodes may reference local assets with attribution, but the source of truth remains catalog + provenance artifacts.
-- Story Nodes must separate fact vs inference vs hypothesis where applicable (especially for AI-generated text).
+Story Nodes must:
+
+- carry explicit citations to cataloged artifacts,
+- connect to graph entities (Place/Person/Event/Document/etc.) via stable identifiers,
+- separate fact vs inference vs hypothesis where applicable, especially for AI-assisted text.
 
 ### Focus Mode rule
 
-- Focus Mode must only consume provenance-linked content.
-- Any predictive or AI content must be:
-  - opt-in,
-  - accompanied by uncertainty metadata,
-  - and never presented as unmarked fact.
-- No workflows or narratives should infer or reveal sensitive locations.
-
----
+- Focus Mode only consumes provenance-linked content.
+- Predictive/suggestive content:
+  - must be opt-in,
+  - must carry uncertainty/confidence metadata,
+  - must not infer or reveal sensitive locations.
 
 ## 🧪 Validation & CI/CD
 
 ### CI behavior contract
 
-- Validate if present: if a canonical root exists or changes, validate its artifacts.
-- Fail if invalid: schema errors, missing links, or orphan references fail deterministically.
-- Skip if not applicable: optional roots absent → skip without failing the overall pipeline.
+- Validate if present:
+  - when a canonical root exists, or when artifacts under it change, run the validator(s).
+- Fail if invalid:
+  - schema errors, missing links, or orphan references fail deterministically.
+- Skip if not applicable:
+  - optional roots absent → skip without failing the overall pipeline.
 
 ### Minimum CI gates
 
-This list describes the minimum expected gates (workflows implement these under `.github/workflows/**`):
+Workflows implement these under `.github/workflows/**`:
 
 - Markdown protocol validation (front-matter + required sections)
-- Link/reference checks (no orphan pointers)
-- Schema validation (where schemas exist):
-  - STAC / DCAT / PROV
-  - Story Nodes
-  - UI registries
-  - Telemetry
-- Graph integrity checks (constraints, expected labels/edges)
-- API contract tests (OpenAPI/GraphQL schema + resolver/integration tests)
-- Security + sovereignty scanning gates (as applicable):
+- Link and reference checks (no orphan pointers)
+- JSON schema validation (where schemas exist):
+  - STAC/DCAT/PROV
+  - Story Nodes (if present)
+  - UI registries (if present)
+  - Telemetry (if present)
+- Graph integrity tests (constraints, expected labels/edges)
+- API contract tests (OpenAPI/GraphQL schema + resolver tests)
+- Security and sovereignty scanning gates (as applicable):
   - secret scan
   - PII scan
   - sensitive-location leakage checks
-  - classification propagation checks (no downgrades without review)
+  - classification propagation checks
 
-### Repo lint rules (structural invariants)
+### Repo lint invariants
 
-Enforce (where tooling exists):
+Enforce where tooling exists (policy-defined):
 
 - no YAML front-matter in code files,
 - no `README.me`,
-- no duplicate canonical homes without explicit deprecation markers.
+- no duplicate canonical homes without explicit deprecation markers and links to the canonical home.
 
-### Gate-to-artifact mapping (recommended)
+### Gate-to-artifact mapping
 
 | Gate | Typical trigger | Artifacts | Fails when | Typical fix |
 |---|---|---|---|---|
-| Markdown protocol gate | PR changes in `docs/**` or governed markdown | Markdown files w/ front-matter | missing required sections / malformed front-matter | align to the governed template |
-| Schema validation gate | PR changes under `data/stac/`, `data/catalog/dcat/`, `data/prov/`, `schemas/` | JSON/RDF/PROV artifacts | schema mismatch, missing required fields, invalid structure | update artifact to satisfy schema or bump schema with review |
-| Cross-link resolver gate | any catalog/prov/story changes | STAC/DCAT/PROV/Story Node refs | orphan IDs; missing referenced artifact | add missing artifact or correct reference |
-| Story Node validation gate | PR changes under `docs/reports/story_nodes/` | Story Nodes + assets | missing citations; unresolved entity IDs; redaction rules violated | fix citations/IDs; add redaction/generalization; adjust status |
-| Graph integrity gate | PR changes under `src/graph/` or `data/graph/` | graph fixtures + ontology bindings | constraints violated; missing evidence refs | update ingest fixtures + ensure evidence IDs resolve |
-| API contract tests | PR changes under `src/server/` | OpenAPI/GraphQL contracts + tests | contract breaks; failing resolver tests | version bump or add compatible fields + tests |
-| UI registry checks | PR changes under `web/**` | layer registries | schema invalid; missing provenance pointers | fix registry entry + add provenance/evidence refs |
-| Security/sovereignty gate | any PR | repo content | secrets/PII; sensitive location leakage; classification downgrade | remove secrets; redact/generalize; fix classification propagation |
-| Repo lint gate | any PR | repo structure | forbidden patterns (e.g., code-file front-matter, duplicate canonical homes) | relocate content; add deprecation markers + links |
+| Markdown protocol gate | PR changes in governed docs | Markdown files with front-matter | malformed front-matter; missing required sections | align to governed template |
+| Schema validation gate | PR changes under catalogs/schemas | STAC/DCAT/PROV (+ others) | schema mismatch; missing required fields | update artifacts or schema with review |
+| Cross-link resolver gate | catalog/prov/story changes | STAC/DCAT/PROV/story refs | orphan IDs; missing referenced artifact | add missing artifact or correct ref |
+| Story Node validation gate | story changes | Story Nodes + assets | missing citations; unresolved entity IDs; redaction violations | fix citations/IDs; redact/generalize; adjust status |
+| Graph integrity gate | graph changes | ontology + fixtures | constraints violated; missing evidence refs | update mappings; ensure evidence IDs resolve |
+| API contract tests | API changes | contracts + tests | contract break; failing resolver tests | version bump or add compatible fields + tests |
+| UI registry checks | UI changes | registries | schema invalid; missing provenance pointers | fix registry entry; add evidence refs |
+| Security/sovereignty gate | any PR | repo content | secrets/PII; leakage; classification downgrade | remove secrets; redact/generalize; fix propagation |
+| Repo lint gate | any PR | repo structure | forbidden patterns (policy-defined) | relocate; add deprecation markers |
 
-### Telemetry signals (recommended)
+### Telemetry signals
 
-If telemetry schemas exist, CI and runs should be able to emit (examples):
+If telemetry schemas exist, CI and runs should be able to emit:
 
 - `classification_assigned` (dataset_id, sensitivity, classification)
 - `redaction_applied` (method, fields_removed, geometry_generalization)
@@ -451,87 +498,41 @@ If telemetry schemas exist, CI and runs should be able to emit (examples):
 # make test
 ~~~
 
----
-
-## 🧱 Architecture
-
-### Subsystem contracts
-
-| Subsystem | Contract artifacts | Do not break rule |
-|---|---|---|
-| ETL | configs + run logs + validation | deterministic, replayable |
-| Catalogs | schemas + validators | machine-validated |
-| Graph | ontology + migrations + constraints | stable labels/edges |
-| APIs | OpenAPI/GraphQL schema + tests | backward compatible or version bump |
-| UI | layer registry + a11y + audit affordances | no hidden data leakage |
-| Story/Focus | provenance-linked context bundle | no hallucinated/unsourced claims |
-
-### API boundary rule
-
-- The UI does not connect to Neo4j directly.
-- The API boundary mediates access and enforces provenance plus redaction/generalization rules.
-
-### Components
-
-| Component | Responsibility | Interface |
-|---|---|---|
-| CI workflow(s) | Run validators on PR/push | GitHub Actions YAML |
-| Lineage validator | Validate PROV + cross-links | CLI/script (TBD) |
-| Schemas | Define structural constraints | `schemas/**` |
-| Catalog outputs | Provide evidence artifacts | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` |
-| Graph | Consume evidence refs; enforce ontology | `src/graph/**`, `data/graph/**` |
-| API boundary | Serve contracted payloads + provenance refs | `src/server/**` |
-| UI | Render provenance-linked content | `web/**` |
-
-### Interfaces / contracts
-
-| Contract | Location | Versioning rule |
-|---|---|---|
-| JSON schemas | `schemas/**` | semver + changelog |
-| CI validation behavior | `.github/workflows/**` | deterministic behavior required |
-| Provenance reference fields | API contracts (TBD) | contract tests required |
-
----
-
 ## ⚖ FAIR+CARE & Governance
 
-### Review gates
+### Governance review triggers
 
 Changes that typically require elevated review:
 
-- Adding new sensitive layers (restricted locations, cultural knowledge, PII)
-- Introducing or changing AI-generated narrative behavior visible to users
-- Adding new external data sources (license + provenance review)
-- Adding new public-facing endpoints
-- Changing provenance rules, redaction behavior, or public-facing evidence exports
-- Any classification/sensitivity change or publication derived from restricted inputs
+- new sensitive layers or content intersecting sovereignty obligations
+- new AI narrative behaviors or automated summarization that could be interpreted as fact
+- new external data sources (license and provenance review)
+- new public-facing endpoints or layer interactions that could reveal sensitive locations
+- any classification/sensitivity change or publication derived from restricted inputs
 
-### CARE / sovereignty considerations
+### Sovereignty and safety measures
 
-- Classification must not be automatically downgraded without explicit review.
+- Classification must not be downgraded without explicit review.
 - Outputs must not be less restricted than any of their inputs.
-- If sensitive datasets appear in discovery catalogs, prefer metadata-only redacted entries when policy permits.
-- Redaction/generalization rules must be enforced consistently across:
-  - processed datasets,
-  - catalogs,
-  - API responses,
-  - UI rendering (including Focus Mode).
-
----
+- Prefer metadata-only redacted catalog entries when policy permits.
+- Redaction/generalization must be documented and enforced in:
+  - datasets (`data/processed/**`),
+  - catalogs (STAC/DCAT),
+  - API responses (redaction policies),
+  - UI rendering (CARE gating).
 
 ## 🕰️ Version History
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
+| v1.1.1 | 2025-12-29 | Align terminology and sections with governed universal template + Master Guide lineage/CI language; clarify required staging and boundary artifacts; normalize canonical subsystem homes list | (you) |
 | v1.1.0 | 2025-12-28 | Align with v12/v13 contract language; add repo lint invariants, gate mapping matrix, telemetry signals, and data lifecycle clarification | (you) |
 | v1.0.0 | 2025-12-26 | Initial `.github/lineage/` README establishing lineage gates and cross-link expectations | (you) |
-
----
 
 Footer refs:
 
 - Master Guide: `docs/MASTER_GUIDE_v12.md`
-- v13 Blueprint (draft): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- v13 Blueprint (draft reference): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
 - Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
 - Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
 - API contract template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
