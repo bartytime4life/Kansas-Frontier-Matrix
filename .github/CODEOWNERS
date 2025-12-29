@@ -1,30 +1,46 @@
 # KFM — CODEOWNERS
 #
-# This file aligns ownership patterns to KFM canonical subsystem homes:
-# ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode.
+# Purpose:
+#   Align review ownership patterns to canonical KFM subsystem homes and pipeline ordering:
+#     ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode
 #
-# NOTE: Only @bartytime4life is confirmed in repo-linked references right now.
-#       When KFM governance teams exist, replace/split owners by subsystem.
-
+# Canonical references (repo docs):
+#   - docs/MASTER_GUIDE_v12.md  (directory layout + subsystem homes)
+#   - docs/MASTER_GUIDE_v13.md  (v13 evolution; directory layout + governance refs)
+#
+# NOTE:
+#   - Only @bartytime4life is configured as an owner here (replace/split by subsystem teams when those exist).
+#   - KFM v12/v13 materials show two staging layouts for domain data. Both are covered below:
+#       A) data/{raw,work,processed}/<domain>/...
+#       B) data/<domain>/{raw,work,processed}/...
+#
 # --------------------------------------------------------------------
 # Default fallback (everything not explicitly matched below)
 # --------------------------------------------------------------------
 * @bartytime4life
 
 # --------------------------------------------------------------------
+# CODEOWNERS file locations (support either placement)
+# --------------------------------------------------------------------
+/CODEOWNERS @bartytime4life
+/.github/CODEOWNERS @bartytime4life
+
+# --------------------------------------------------------------------
 # CI / policy gates (canonical home: .github/)
 # --------------------------------------------------------------------
 /.github/ @bartytime4life
 /.github/workflows/ @bartytime4life
-/.github/CODEOWNERS @bartytime4life
+/.github/SECURITY.md @bartytime4life
 
 # --------------------------------------------------------------------
-# Documentation (canonical home: docs/)
+# Documentation + governance (canonical home: docs/)
 # --------------------------------------------------------------------
 /docs/ @bartytime4life
 /docs/templates/ @bartytime4life
 /docs/architecture/ @bartytime4life
 /docs/standards/ @bartytime4life
+/docs/governance/ @bartytime4life
+/docs/telemetry/ @bartytime4life
 /docs/data/ @bartytime4life
 
 # Story Nodes canonical home (v12/v13): docs/reports/story_nodes/
@@ -37,15 +53,37 @@
 # Data lifecycle + catalogs (canonical home: data/)
 # --------------------------------------------------------------------
 /data/ @bartytime4life
+
+# (A) Staging layout: data/{raw,work,processed}/<domain>/...
 /data/raw/ @bartytime4life
 /data/work/ @bartytime4life
 /data/processed/ @bartytime4life
 
-# Catalog outputs
+# (B) Staging layout: data/<domain>/{raw,work,processed}/...
+/data/*/raw/ @bartytime4life
+/data/*/work/ @bartytime4life
+/data/*/processed/ @bartytime4life
+
+# Nested module variant: data/<domain>/<module>/{raw,work,processed}/...
+/data/*/*/raw/ @bartytime4life
+/data/*/*/work/ @bartytime4life
+/data/*/*/processed/ @bartytime4life
+
+# Catalog outputs (publication boundary artifacts)
 /data/stac/ @bartytime4life
+/data/stac/collections/ @bartytime4life
+/data/stac/items/ @bartytime4life
 /data/catalog/ @bartytime4life
 /data/catalog/dcat/ @bartytime4life
 /data/prov/ @bartytime4life
+
+# Graph import/export artifacts (if present)
+/data/graph/ @bartytime4life
+/data/graph/csv/ @bartytime4life
+/data/graph/cypher/ @bartytime4life
+
+# Optional evidence/report outputs (if used)
+/data/reports/ @bartytime4life
 
 # --------------------------------------------------------------------
 # Schemas (canonical home: schemas/)
@@ -87,4 +125,3 @@
 # --------------------------------------------------------------------
 /src/api/ @bartytime4life
 /src/map/ @bartytime4life
-
