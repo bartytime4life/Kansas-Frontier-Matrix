@@ -1,8 +1,8 @@
 ---
 title: "KFM Web — Telemetry (UI Instrumentation)"
 path: "web/src/telemetry/README.md"
-version: "v0.1.0-draft"
-last_updated: "2025-12-25"
+version: "v0.1.1-draft"
+last_updated: "2025-12-28"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:web:telemetry:readme:v0.1.0-draft"
+doc_uuid: "urn:kfm:doc:web:telemetry:readme:v0.1.1-draft"
 semantic_document_id: "kfm-web-telemetry-readme"
-event_source_id: "ledger:kfm:doc:web:telemetry:readme:v0.1.0-draft"
+event_source_id: "ledger:kfm:doc:web:telemetry:readme:v0.1.1-draft"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -67,6 +67,7 @@ This README governs the **frontend telemetry module** under `web/src/telemetry/`
 - What telemetry is allowed to be collected in the UI (and what is prohibited).
 - How event payloads should be shaped and **redacted** before leaving the client.
 - How UI telemetry should reference system artifacts (layer IDs, Story Node IDs, STAC Item IDs) without leaking sensitive data.
+- How UI telemetry aligns to **system-level telemetry signals** and CI gates (schema validation + privacy/security scanning).
 
 ### Scope
 
@@ -75,7 +76,7 @@ This README governs the **frontend telemetry module** under `web/src/telemetry/`
 | UI event emission (interaction + UX signals) | Backend collector/storage implementation (server-side) |
 | Client performance + error instrumentation | ETL/Graph/API telemetry (handled in their subsystems) |
 | Redaction + PII/sensitive-location protections | Defining new governance policy (must be in governance docs) |
-| Schema-aligned payload shaping | Any raw recording of user-entered free text |
+| Schema-aligned payload shaping (client-side) | Any raw recording of user-entered free text |
 
 ### Audience
 
@@ -84,7 +85,7 @@ This README governs the **frontend telemetry module** under `web/src/telemetry/`
 
 ### Definitions (link to glossary)
 
-- Link: `docs/glossary.md` (**not confirmed in repo**)
+- Link: `docs/glossary.md` *(not confirmed in repo; recommended)*.
 - Terms used in this doc:
   - Telemetry (events/metrics/traces/logs)
   - PII (personally identifiable information)
@@ -95,18 +96,20 @@ This README governs the **frontend telemetry module** under `web/src/telemetry/`
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| Master pipeline ordering + invariants | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical pipeline + extension matrix |
+| Master pipeline ordering + invariants | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical pipeline ordering + cross-cutting gates |
 | Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | TBD | Governs structure of this README |
-| Telemetry docs | `docs/telemetry/` | TBD | Signals, retention, review gates (directory referenced by Master Guide) |
-| Telemetry schemas | `schemas/telemetry/` | TBD | JSON Schemas for telemetry payloads (directory referenced by Master Guide) |
-| API boundary | `src/server/` (or repo-defined equivalent) | TBD | UI must emit via API/collector boundary (UI never reads Neo4j directly) |
+| Telemetry docs | `docs/telemetry/` | TBD | Cross-stack telemetry signals + governance *(expected; not confirmed in repo)* |
+| Telemetry schemas | `schemas/telemetry/` | TBD | JSON Schemas for telemetry payloads *(expected; may be v13 target)* |
+| UI layer registry schemas | `schemas/ui/` | TBD | Schema for layer registry IDs referenced in telemetry *(expected; not confirmed in repo)* |
+| API boundary | `src/server/` (or repo-defined equivalent) | TBD | UI emits via contracted boundary (UI never reads Neo4j directly) |
 
 ### Definition of done (for this document)
 
 - [ ] Front-matter complete + valid, and `path:` matches file location
 - [ ] Directory layout section exists with emoji tree
-- [ ] Clear rules for PII + sensitive-location handling
-- [ ] Event naming + payload shaping guidance is explicit
+- [ ] Explicit rules for PII + sensitive-location handling (URL + error + map interactions)
+- [ ] Event naming + payload shaping guidance is explicit and matches schema conventions
+- [ ] Minimal event envelope is defined + example payload included
 - [ ] Validation steps listed (and any command examples are clearly marked placeholders)
 - [ ] Governance refs included at the end
 
@@ -124,6 +127,7 @@ This README governs the **frontend telemetry module** under `web/src/telemetry/`
 | UI telemetry module | `web/src/telemetry/` | Client telemetry plumbing (this sub-area) |
 | Telemetry docs | `docs/telemetry/` | Cross-stack telemetry signals + governance (expected) |
 | Telemetry schemas | `schemas/telemetry/` | JSON Schemas for telemetry payloads (expected) |
+| UI schemas | `schemas/ui/` | Layer registry + UI contract schemas (expected) |
 | API boundary | `src/server/` | Contracted API layer (REST/GraphQL); may include telemetry ingest endpoints |
 
 ### Expected file tree for this sub-area
@@ -136,26 +140,34 @@ web/src/telemetry/
 ├── 📄 index.ts                   # Public exports (recommended)
 ├── 📄 init.ts                    # Initialize telemetry providers (recommended)
 ├── 📄 events.ts                  # Event name registry + payload builders (recommended)
-├── 📄 redaction.ts               # Redaction helpers (recommended; required if telemetry enabled)
+├── 📄 redaction.ts               # Redaction helpers (required if telemetry enabled)
 ├── 📄 transport.ts               # Beacon/batch transport (recommended)
 ├── 📄 context.ts                 # Correlation + session context helpers (recommended)
-├── 📁 providers/                 # Vendor adapters (recommended)
-│   ├── 📄 noop.ts                # No-op provider (recommended)
+├── 📁 providers/                 # Provider adapters (recommended)
+│   ├── 📄 noop.ts                # No-op provider (recommended; default in dev)
 │   └── 📄 otel.ts                # OpenTelemetry adapter (optional; not confirmed in repo)
 └── 📁 __tests__/                 # Unit tests (recommended)
-    └── 📄 redaction.test.ts      # Verify no PII / sensitive coords leak (recommended)
+    ├── 📄 redaction.test.ts      # Verify no PII / sensitive coords leak
+    └── 📄 envelope.test.ts       # Verify envelope + schema conformance (if schema exists)
 ~~~
 
 ## 🧭 Context
 
 ### Background
 
-KFM treats telemetry as a first-class subsystem (alongside data/catalog/graph/api/ui/story) with canonical references in `docs/telemetry/` and `schemas/telemetry/`. This UI module exists to ensure **frontend signals** are consistent with those system-wide contracts.
+KFM treats telemetry as a first-class subsystem with contracts and validation gates. The UI module exists to ensure **frontend signals** are:
+
+- consistent with system-level telemetry expectations (signals + CI gates),
+- safe under governance (no sensitive location leakage),
+- and shaped for schema validation (where schemas exist).
+
+> **Repo reality check:** Client-side JSON schemas for telemetry events may be missing or incomplete (not confirmed in repo). This README defines the *expected envelope and rules* so adding `schemas/telemetry/**` becomes a straightforward follow-on.
 
 ### Design goals
 
-- **Schema-first:** telemetry payloads should be shaped to match `schemas/telemetry/**` (if present).
-- **Privacy-first:** avoid collecting PII and avoid emitting precise coordinates for sensitive locations.
+- **Schema-first:** telemetry payloads should validate against `schemas/telemetry/**` (if present).
+- **Privacy-first:** avoid collecting PII and avoid emitting precise coordinates for sensitive/protected locations.
+- **No hidden data leakage:** telemetry must not introduce side-channels that bypass UI/Map safeguards.
 - **Low overhead:** telemetry must not materially degrade UI responsiveness.
 - **Fail-safe:** telemetry failures must not block core UI functionality.
 
@@ -164,18 +176,19 @@ KFM treats telemetry as a first-class subsystem (alongside data/catalog/graph/ap
 - Replacing server-side observability.
 - Persisting telemetry locally beyond short buffering needed for transport.
 - Capturing raw user input, prompts, or narrative free text.
+- Emitting full STAC/DCAT/PROV payloads from the browser.
 
 ## 🗺️ Diagrams
 
 ~~~mermaid
 flowchart LR
   U["User interaction"] --> UI["Web UI components"]
-  UI --> T["web/src/telemetry: event and metric capture"]
-  T --> R["Redaction and minimization"]
-  R --> X["Transport: batch and beacon"]
+  UI --> T["web/src/telemetry: capture + shape"]
+  T --> R["Redaction + minimization"]
+  R --> X["Transport: batch / beacon"]
   X --> API["Telemetry ingest boundary (API)"]
-  API --> S[(Telemetry store and dashboards)]
-  S --> G["Governance and reliability review"]
+  API --> S[(Telemetry store / dashboards)]
+  S --> G["Governance + reliability review"]
 ~~~
 
 ## 🧱 Architecture
@@ -183,32 +196,142 @@ flowchart LR
 ### Layering rule (UI ↔ API boundary)
 
 - UI telemetry is emitted outward via a **contracted boundary** (e.g., API endpoint / collector), never by direct graph access.
-- Any telemetry requiring graph context should carry only **stable identifiers** (e.g., `story_node_id`, `stac_item_id`) and let the backend resolve details if allowed.
+- Any telemetry requiring graph context MUST carry only **stable identifiers** (e.g., `story_node_id`, `stac_item_id`) and let the backend resolve details if allowed.
 
 ### Event naming and stability
 
-Recommended pattern:
+**Naming convention (recommended):**
 
-- Use stable, namespaced event names such as:
-  - `ui.page_view`
-  - `ui.layer_toggle`
-  - `ui.focus_mode_open`
-  - `ui.story_node_loaded`
-  - `ui.api_request`
-  - `ui.error_boundary`
+- `lower_snake_case`
+- prefix by subsystem or feature area:
+  - `ui_*`
+  - `focus_mode_*`
+  - `story_node_*`
+  - `map_*`
 
-> Event names above are examples; align to the repo’s canonical telemetry schema(s) if they exist.
+**Use system-recommended signal names verbatim when applicable** (example: `focus_mode_redaction_notice_shown`).
 
 ### Minimal event envelope (recommended)
 
-All events SHOULD carry:
+All telemetry MUST be emitted as a *single* envelope shape that supports three kinds of signals:
 
-- `event_name`
-- `timestamp`
-- `environment` (dev/staging/prod)
+- `kind: "event"` (user/system actions)
+- `kind: "metric"` (performance numbers)
+- `kind: "error"` (error signals)
+
+#### Envelope fields
+
+Required fields:
+
+- `event_name` (string, `lower_snake_case`)
+- `event_id` (string; random UUID)
+- `timestamp` (string; ISO 8601)
+- `kind` (`event` | `metric` | `error`)
+- `environment` (`dev` | `staging` | `prod` | other env labels)
 - `ui_version` (build/version string)
-- `correlation_id` (random, per session or per interaction chain)
-- `context` (safe identifiers only: layer IDs, Story Node IDs, STAC IDs)
+- `correlation_id` (random; per interaction chain)
+- `session_id` (random; short-lived; not a user identifier)
+
+Optional fields (safe only):
+
+- `context` (stable IDs + coarse context)
+- `metrics` (numbers only; no user content)
+- `error` (sanitized error fields only)
+- `sampling_rate` (0.0–1.0)
+
+#### Example payload (sanitized)
+
+~~~json
+{
+  "event_name": "ui_layer_toggle",
+  "event_id": "a7f2c8d2-9a5d-4b14-9f1b-3c5b9f0d6a1a",
+  "timestamp": "2025-12-28T18:40:00Z",
+  "kind": "event",
+  "environment": "dev",
+  "ui_version": "0.0.0-local",
+  "correlation_id": "c17d7af0-9c8a-4cf2-86d1-93a8f7a7c013",
+  "session_id": "e4eddf4f-2cf5-43e0-9c4b-2d3f5f9b72c0",
+  "sampling_rate": 1.0,
+  "context": {
+    "layer_id": "land_treaties",
+    "enabled": true,
+    "route_id": "map",
+    "map_zoom_bucket": "z08-z10"
+  }
+}
+~~~
+
+### Context rules (what can go in `context`)
+
+Allowlist guidance:
+
+- ✅ stable identifiers: `layer_id`, `story_node_id`, `dataset_id`, `stac_item_id`, `prov_activity_id`
+- ✅ booleans + small enums: `enabled`, `panel_open`, `redaction_method`
+- ✅ coarse buckets: `map_zoom_bucket`, `region_bucket`, `viewport_tile_id`
+- ✅ numbers that are not identifiers: latency ms, counts
+
+Denylist guidance:
+
+- ❌ user-entered free text (search terms, prompts, notes)
+- ❌ URL query strings / hash fragments
+- ❌ authentication tokens, cookies, request headers
+- ❌ raw coordinates, raw geometries, or high-precision viewport bounds
+
+### URL + route handling (required)
+
+If emitting navigation/page-view telemetry:
+
+- Emit a **route ID** (e.g., `map`, `story`, `focus_mode`) rather than a full URL.
+- If a URL is needed for debugging, emit **path only**, stripped of:
+  - query parameters (`?…`)
+  - fragments (`#…`)
+  - any dynamic segments that may contain identifiers
+
+### Location-bearing events (required)
+
+For map interactions (pan/zoom/click):
+
+- NEVER emit raw `lat`/`lon`, raw GeoJSON, or viewport bounds at high precision.
+- Prefer **coarse** location encodings:
+  - tile IDs / region buckets / generalized cells (e.g., H3 at coarse resolution — exact resolution governed elsewhere)
+- If the UI enforces safeguards (e.g., max zoom on sensitive layers), telemetry SHOULD prefer:
+  - `max_zoom_enforced: true`
+  - `redaction_method: "<enum>"`
+  - rather than any high-precision location details.
+
+### Redaction strategy (required)
+
+Telemetry MUST be redacted **before** transport.
+
+Recommended implementation strategy:
+
+- centralize redaction in `redaction.ts`
+- use an **allowlist-first** approach:
+  - only fields explicitly allowed by schema are emitted
+  - any unknown keys are dropped by default
+- apply **string scrubbing** for allowed string fields:
+  - hard cap lengths (e.g., 256 chars)
+  - remove obvious secrets (bearer tokens, API keys) when detected
+  - do not emit stack traces unless scrubbed and governance-approved
+
+### Transport (recommended)
+
+- Prefer batching in memory and sending periodically.
+- Use `navigator.sendBeacon` for unload-safe emission when available.
+- Use `fetch(..., { keepalive: true })` as a fallback where appropriate.
+- Never store telemetry in `localStorage` or other persistent client storage by default.
+- Telemetry transport failures must not throw uncaught errors.
+
+### Sampling + rate limiting (recommended)
+
+- Apply sampling to high-volume events (e.g., map pan/zoom) to reduce noise and cost.
+- Rate limit per session to avoid abusive event storms.
+- Errors SHOULD be higher priority (lower sampling) than interaction events.
+
+### Providers (recommended)
+
+- Default provider SHOULD be a no-op (`providers/noop.ts`) for local development or when telemetry is disabled.
+- Any third-party SDK or remote collector integration requires governance review and explicit documentation in `docs/telemetry/` (if present).
 
 ### Example usage (pseudocode)
 
@@ -219,31 +342,32 @@ All events SHOULD carry:
 //
 // initTelemetry({ environment: "dev" });
 //
-// emitEvent("ui.layer_toggle", {
-//   layer_id: "land-treaties",
+// emitEvent("ui_layer_toggle", {
+//   layer_id: "land_treaties",
 //   enabled: true,
+//   map_zoom_bucket: "z08-z10",
 // });
 ~~~
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### How this work surfaces in Focus Mode
+### Focus Mode UX signals (examples)
 
-This module is expected to support **Focus Mode UX signals**, such as:
+This module is expected to support Focus Mode UX signals, such as:
 
-- Focus Mode opened / closed
-- Story Node loaded / rendered
-- Evidence panel shown (by ID only)
-- Redaction notice shown (when sensitive layers are generalized/masked)
+- `focus_mode_opened` / `focus_mode_closed`
+- `story_node_loaded` (by `story_node_id`)
+- `evidence_panel_opened` (by evidence/stac/prov IDs only)
+- `focus_mode_redaction_notice_shown` (by `layer_id` + `redaction_method`)
 
 ### Provenance-linked narrative rule (telemetry alignment)
 
 When emitting events tied to narrative or evidence:
 
-- Prefer emitting **identifiers** (e.g., `story_node_id`, `dataset_id`, `stac_item_id`) rather than embedding narrative text.
+- Prefer emitting **identifiers** (`story_node_id`, `dataset_id`, `stac_item_id`) rather than embedding narrative text.
 - Never emit full STAC/PROV payloads from the client; emit IDs and let the server resolve if permitted.
 
-### Optional structured controls
+### Optional structured controls (registry-style)
 
 ~~~yaml
 # Optional (if you maintain a Focus Mode instrumentation registry)
@@ -257,12 +381,22 @@ focus_center: "<coarse-or-redacted>"
 
 ### Validation steps (recommended)
 
-- [ ] Markdown protocol checks (front-matter + required sections)
+Align this module to repo-wide “v12-ready” CI gates (see Master Guide), including:
+
+- [ ] Markdown protocol validation (front-matter + required sections)
+- [ ] Link/reference checks (no orphan pointers)
+- [ ] JSON schema validation (if schemas exist):
+  - [ ] telemetry schemas (`schemas/telemetry/**`)
+  - [ ] UI layer registry schemas (`schemas/ui/**`)
 - [ ] Secrets scan (no tokens/keys in client code)
 - [ ] PII scan (telemetry payloads must not contain emails, names, etc.)
-- [ ] Sensitive-location scan (no precise restricted coords in payloads)
-- [ ] Schema validation against `schemas/telemetry/**` (if present)
+- [ ] Sensitive-location leakage checks (no precise restricted coords in payloads)
+- [ ] Classification propagation checks (no downgrades without review)
+
+UI-level checks (recommended):
+
 - [ ] Unit tests for redaction + payload shaping
+- [ ] Unit tests for envelope shaping (and schema conformance if available)
 
 ### Reproduction
 
@@ -275,15 +409,16 @@ focus_center: "<coarse-or-redacted>"
 
 ### Telemetry signals (examples)
 
+> Keep the signal list aligned with canonical telemetry docs/schemas (do not “invent” production signals without updating the schema + docs).
+
 | Signal | Source | Where recorded |
 |---|---|---|
-| `ui.layer_toggle` | UI layer registry toggles | `docs/telemetry/` + `schemas/telemetry/` |
-| `ui.focus_mode_open` | Focus Mode entry | `docs/telemetry/` + `schemas/telemetry/` |
-| `ui.story_node_loaded` | Story Node fetch/render | `docs/telemetry/` + `schemas/telemetry/` |
-| `ui.api_request` | API calls (latency/status) | `docs/telemetry/` + `schemas/telemetry/` |
-| `ui.error_boundary` | Uncaught UI errors | `docs/telemetry/` + `schemas/telemetry/` |
-
-> Keep the signal list aligned with the canonical telemetry docs/schemas (do not “invent” production signals without updating the schema + docs).
+| `ui_layer_toggle` | UI layer registry toggles | `docs/telemetry/` + `schemas/telemetry/` |
+| `focus_mode_opened` | Focus Mode entry | `docs/telemetry/` + `schemas/telemetry/` |
+| `story_node_loaded` | Story Node fetch/render | `docs/telemetry/` + `schemas/telemetry/` |
+| `ui_api_request` | API calls (latency/status buckets) | `docs/telemetry/` + `schemas/telemetry/` |
+| `ui_error_boundary` | Uncaught UI errors (sanitized) | `docs/telemetry/` + `schemas/telemetry/` |
+| `focus_mode_redaction_notice_shown` | Redaction notices shown | `docs/telemetry/` + `schemas/telemetry/` |
 
 ## 📦 Data & Metadata
 
@@ -292,7 +427,8 @@ focus_center: "<coarse-or-redacted>"
 - `layer_id` (UI layer registry ID)
 - `story_node_id` (Story Node identifier)
 - `dataset_id` / `collection_id` (catalog identifiers)
-- `stac_item_id` (STAC Item `id` only; avoid embedding full geometry)
+- `stac_item_id` (STAC Item `id` only; avoid embedding geometry)
+- `prov_activity_id` (run/activity ID; if surfaced to UI — not confirmed in repo)
 
 ### Prohibited payload fields (default)
 
@@ -300,10 +436,12 @@ focus_center: "<coarse-or-redacted>"
 - Email addresses, phone numbers, names, precise home/work addresses
 - Authentication tokens, session cookies, request headers
 - Exact coordinates for sensitive/protected locations (unless explicitly allowed by governance policy)
+- Full URLs with query strings/fragments
+- Full user-agent strings (prefer coarse buckets if needed)
 
 ### Redaction strategy (recommended)
 
-- Coarsen location signals (e.g., tile/region buckets) instead of raw lat/lon.
+- Coarsen location signals (tile/region buckets) instead of raw lat/lon.
 - Hash or replace device/user identifiers with short-lived random session identifiers.
 - Prefer enumerations (IDs, booleans) over arbitrary strings.
 
@@ -328,7 +466,7 @@ Governance review is required when:
 ### CARE / sovereignty considerations
 
 - Follow `docs/governance/SOVEREIGNTY.md` for rules on culturally sensitive content and protected locations.
-- When in doubt: **collect less**, generalize more, and document the decision in `docs/telemetry/`.
+- When in doubt: **collect less**, generalize more, and document the decision in `docs/telemetry/` (if present).
 
 ### AI usage constraints
 
@@ -340,6 +478,7 @@ Governance review is required when:
 | Version | Date | Summary | Author |
 |---|---:|---|---|
 | v0.1.0-draft | 2025-12-25 | Initial `web/src/telemetry/` README scaffold | TBD |
+| v0.1.1-draft | 2025-12-28 | Upgrade: add envelope contract, naming alignment, and CI/privacy gates | TBD |
 
 ---
 
