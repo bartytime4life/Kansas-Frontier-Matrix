@@ -1,5 +1,13 @@
 <!--
-Kansas Frontier Matrix (KFM) — Pull Request Template (vNext)
+Kansas Frontier Matrix (KFM) — Pull Request Template
+Version: v12.1.0
+Last updated: 2025-12-29
+
+Alignment anchors (read before inventing a new pattern):
+- docs/MASTER_GUIDE_v12.md (pipeline ordering + invariants + CI gates)
+- docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md (KFM-MDP v11.2.6, KFM-PPC v11.0.0)
+- docs/templates/TEMPLATE__STORY_NODE_V3.md (governed narrative artifacts)
+- docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md (API contract surface changes)
 
 Canonical pipeline (non-negotiable ordering):
 ETL → STAC/DCAT/PROV → Graph → API boundary → UI → Story Nodes → Focus Mode
@@ -10,25 +18,22 @@ Hard review blockers (do not merge if violated):
 3) Contracts + schemas are versioned + validated (breaking changes require versioning + compat tests)
 4) Pipelines write outputs under data/**; do NOT write derived catalogs/artifacts into docs/**
 
-Minimum CI expectations (v12+ style gates; run what applies):
-- Markdown protocol checks + link/reference checks
-- Schema validation (STAC/DCAT/PROV/story nodes/ui/telemetry as applicable)
-- Graph integrity tests (constraints, required relations, no orphans) when graph changes
-- API contract tests when contracts changed
-- Security/governance scanning: secrets/PII + sensitive-location leakage + classification propagation
-
-Tip: Delete sections that clearly do not apply, but keep the “Core merge gate” checklist.
+How to use:
+- Delete sections that clearly do not apply, but keep the “Core merge gate” checklist.
+- If you mark an item N/A, include a one-line rationale.
+- Prefer stable IDs (STAC/DCAT/PROV/graph/story) and link them here; reviewers shouldn't have to hunt.
 -->
 
 ## 📌 Summary
 <!-- 1–5 sentences: what changed + why now -->
 
 ## 🧾 Evidence & identifiers (fill what applies)
-<!-- The goal: reviewers can verify provenance + contracts without hunting. -->
-- PROV bundle / activity / run ID(s): <!-- e.g., data/prov/<prov-bundle>.json OR run-id -->
+<!-- Goal: reviewers can verify provenance + contracts without hunting. -->
+- PROV bundle / activity / run ID(s): <!-- e.g., data/prov/<activity_id>.jsonld OR run-id -->
 - STAC Collection ID(s): <!-- e.g., stac:<collection-id> -->
 - STAC Item ID(s): <!-- e.g., stac:<item-id-1>, stac:<item-id-2> -->
 - DCAT Dataset ID(s): <!-- e.g., dcat:<dataset-id> -->
+- Dataset version(s): <!-- semantic version or date-stamped version if used -->
 - Graph build/migration ID(s): <!-- e.g., graph:migration:<id> -->
 - API endpoints touched: <!-- e.g., GET /v1/... -->
 - Contract file(s) touched: <!-- e.g., src/server/contracts/... -->
@@ -36,10 +41,16 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 - Story Node ID(s) + path(s): <!-- e.g., urn:kfm:story:..., docs/reports/story_nodes/... -->
 - MCP run ID(s) / report path(s): <!-- e.g., mcp/runs/<run-id>/... -->
 
+### 🔐 Classification / sensitivity (required if data, catalogs, UI layers, or Story Nodes change)
+- Sensitivity level (dataset/content): <!-- public / internal / restricted / other -->
+- Classification propagation check: <!-- confirmed / N/A (why) -->
+- Redaction/generalization applied: <!-- none / fields removed / geometry generalized / API-only redaction / other -->
+- Governance review needed: <!-- yes/no; if yes, tag @governance -->
+
 ## 🔗 Related work
 - Issue / ticket: <!-- e.g., Closes #123 -->
 - Design / ADR / spec (if any):
-- Data source / license register (if any):
+- Data source / license register entry (if any): <!-- e.g., updated sources registry path -->
 - Reviewer routing (if known): <!-- e.g., @data-steward, @api-owner, @ui-owner, @governance -->
 
 ## 🧭 Scope
@@ -60,9 +71,15 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 - [ ] Release / packaging
 
 ### Pipeline stages impacted (check all that apply)
-- [ ] ETL / pipelines (`src/pipelines/**`) → outputs in `data/**/{raw,work,processed}`
-- [ ] Catalogs (`data/stac/**`, `data/catalog/dcat/**`, `data/prov/**`)
-- [ ] Graph (`src/graph/**`, `data/graph/**`)
+- [ ] ETL / pipelines (`src/pipelines/**`) → outputs staged in:
+  - `data/raw/<domain>/` (immutable snapshots)
+  - `data/work/<domain>/` (reproducible intermediates)
+  - `data/processed/<domain>/` (deterministic, diffable products)
+- [ ] Catalogs:
+  - STAC: `data/stac/{collections,items}/`
+  - DCAT: `data/catalog/dcat/`
+  - PROV: `data/prov/`
+- [ ] Graph (`src/graph/**`, optionally `data/graph/**` if present)
 - [ ] API boundary (`src/server/**`, `src/server/contracts/**`) <!-- if legacy: note `src/api/**` -->
 - [ ] UI (`web/**`)
 - [ ] Story Nodes (`docs/reports/story_nodes/**`)
@@ -108,12 +125,14 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 - Output datasets (high level):
 
 ### Checks
-- [ ] Raw snapshots are treated as immutable (`data/**/raw/**`).
-- [ ] Intermediate artifacts are reproducible (`data/**/work/**`).
-- [ ] Processed outputs are deterministic + diffable (`data/**/processed/**`).
+- [ ] Raw snapshots are treated as immutable (`data/raw/<domain>/**`).
+- [ ] Intermediate artifacts are reproducible (`data/work/<domain>/**`).
+- [ ] Processed outputs are deterministic + diffable (`data/processed/<domain>/**`).
 - [ ] IDs/keys used downstream are stable (no silent re-keying without a migration note).
 - [ ] Geometry + temporal fields validated (where applicable).
 - [ ] License + attribution captured (prefer DCAT + source register where used).
+- [ ] Sensitivity/classification tagged; no outputs are less restricted than inputs.
+- [ ] If sensitive: redaction/generalization method documented (fields + geometry + rationale).
 - [ ] If new/changed dataset: a PROV activity bundle exists (or is linked) under `data/prov/**`.
 
 </details>
@@ -135,6 +154,7 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 - [ ] No orphan references (IDs/refs resolve across STAC/DCAT/PROV and any graph mappings).
 - [ ] Version lineage recorded (prefer “new version + links”; avoid in-place overwrites without lineage).
 - [ ] License + distribution metadata present (DCAT) and matches source terms.
+- [ ] Sensitivity/classification present and consistent across STAC/DCAT/PROV.
 
 </details>
 
@@ -152,6 +172,7 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 - [ ] Constraints / tests updated (uniqueness, required relationships, no orphan domain nodes).
 - [ ] Any new labels/relations align with the repo ontology bindings (no ad-hoc semantics).
 - [ ] Rollback plan for graph schema/migration included (if applicable).
+- [ ] Breaking ontology changes are versioned and include a migration note.
 
 </details>
 
@@ -170,6 +191,7 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 - [ ] Contract tests updated/added and passing.
 - [ ] Redaction/generalization rules are enforced at the API boundary (not in UI).
 - [ ] Responses link back to provenance identifiers (STAC item IDs, DCAT IDs, PROV activity/run IDs) where relevant.
+- [ ] Classification propagation enforced (no downgrade without governance review).
 - [ ] No “ungoverned narrative” added to API responses (data + governed content only).
 
 </details>
@@ -187,6 +209,7 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 - [ ] Layer registry changes validate against `schemas/ui/**` (if present).
 - [ ] Focus Mode surfaces **provenance-linked** content only (no uncited narrative).
 - [ ] If introducing any AI-assisted UI narrative: it is opt-in, clearly labeled, and includes uncertainty metadata.
+- [ ] CARE gating/sensitivity handling present where applicable (no sensitive-location leakage).
 - [ ] Performance considerations noted (hot paths, bundle size, map render cost).
 
 </details>
@@ -201,6 +224,7 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 ### Checks
 - [ ] Story Nodes follow `docs/templates/TEMPLATE__STORY_NODE_V3.md`.
 - [ ] Every factual claim is source-linked (dataset/document IDs).
+- [ ] Fact vs inference vs hypothesis is explicit where relevant.
 - [ ] Key entity references resolve (Place/Person/Event IDs exist or have creation tickets).
 - [ ] Sensitivity/redaction compliance reviewed (generalization where required).
 - [ ] If any AI-generated text is included: it is explicitly marked, opt-in (where surfaced), and includes uncertainty metadata.
@@ -214,6 +238,7 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 - Run ID:
 - Manifest path:
 - Evaluation / evidence links:
+- Model version(s) (if applicable):
 
 ### Checks
 - [ ] `mcp/runs/**` contains run manifests/logs/pointers (not duplicated provenance payloads).
@@ -231,7 +256,8 @@ Tip: Delete sections that clearly do not apply, but keep the “Core merge gate�
 
 ~~~bash
 # Paste the commands you ran (examples only):
-# <data validator> ...
+# <markdown validator> ...
+# <link checker> ...
 # <schema validator> ...
 # <unit tests> ...
 # <ui tests> ...
