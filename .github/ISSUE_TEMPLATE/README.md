@@ -1,12 +1,11 @@
 ---
 title: ".github/ISSUE_TEMPLATE — Issue Forms for KFM"
 path: ".github/ISSUE_TEMPLATE/README.md"
-version: "v1.0.1"
-last_updated: "2025-12-27"
+version: "v1.0.2"
+last_updated: "2025-12-29"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
-
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
@@ -15,7 +14,6 @@ pipeline_contract_version: "KFM-PPC v11.0.0"
 stac_profile: "KFM-STAC v11.0.0"
 dcat_profile: "KFM-DCAT v11.0.0"
 prov_profile: "KFM-PROV v11.0.0"
-
 
 governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
 ethics_ref: "docs/governance/ETHICS.md"
@@ -26,12 +24,10 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-
-doc_uuid: "urn:kfm:doc:github:issue-templates-readme:v1.0.1"
-semantic_document_id: "kfm-github-issue-templates-readme-v1.0.1"
-event_source_id: "ledger:kfm:doc:github:issue-templates-readme:v1.0.1"
+doc_uuid: "urn:kfm:doc:github:issue-templates-readme:v1.0.2"
+semantic_document_id: "kfm-github-issue-templates-readme-v1.0.2"
+event_source_id: "ledger:kfm:doc:github:issue-templates-readme:v1.0.2"
 commit_sha: "<latest-commit-hash>"
-
 
 ai_transform_permissions:
   - "summarize"
@@ -42,14 +38,14 @@ ai_transform_prohibited:
   - "generate_policy"
   - "infer_sensitive_locations"
 
-
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
-
 
 # .github/ISSUE_TEMPLATE — Issue Forms for KFM
 
 > **Purpose:** Provide a governed “front door” for opening issues in Kansas Frontier Matrix (KFM) so every issue captures enough **stage**, **evidence**, **provenance/licensing**, and **sensitivity** context for maintainers to triage work into the correct subsystem without breaking KFM contracts.
+
+> ⚠️ **Security / sensitive disclosure:** If your report includes secrets, credentials, private keys, PII, or restricted/sensitive coordinates, **do not** open a public issue. Use the repository’s security reporting process (`SECURITY.md` or `.github/SECURITY.md` **if present**), or contact maintainers privately.
 
 
 ## 📘 Overview
@@ -60,7 +56,7 @@ This directory standardizes how contributors and maintainers open issues in Kans
 
 Issue templates exist to:
 - capture the *minimum required context* to reproduce and triage problems quickly,
-- route issues cleanly to the correct **pipeline stage** (ETL → catalogs → graph → API → UI → story → Focus Mode),
+- route issues cleanly to the correct **pipeline stage** (**ETL → STAC/DCAT/PROV catalogs → Graph → API → UI → Story Nodes → Focus Mode**),
 - reduce governance risk by prompting for provenance/licensing and preventing accidental disclosure of sensitive information.
 
 > Design intent: collaboration templates (issue templates + PR templates) are part of the repo’s operational scaffolding. They should prompt for key “contract inputs” (stage, evidence, licensing, sensitivity) rather than attempting to define new governance policy.
@@ -70,8 +66,8 @@ Issue templates exist to:
 | In Scope | Out of Scope |
 |---|---|
 | GitHub Issue Forms (YAML) and/or Markdown issue templates stored under `.github/ISSUE_TEMPLATE/` | Implementing fixes (belongs in code/data/docs areas) |
-| Guidance on what information each issue must include to be actionable | Defining new governance policies (belongs in governed policy docs; requires human review) |
-| Triage routing to canonical pipeline stages | Reporting secrets, credentials, private keys, or restricted coordinates (use security process; do not post publicly) |
+| Guidance on what information each issue must include to be actionable | Defining or generating new governance policies (belongs in governed policy docs; requires human review) |
+| Triage routing to canonical pipeline stages | Reporting secrets, credentials, private keys, PII, or restricted coordinates in public issues |
 
 ### Audience
 
@@ -79,41 +75,51 @@ Issue templates exist to:
 - Maintainers triaging issues and mapping them to the correct pipeline stage / owners.
 - Reviewers validating that proposed work stays aligned to KFM contracts (schemas, API boundaries, provenance rules).
 
-### Definitions (link to glossary)
+### Definitions
 
-- Link (expected): `docs/glossary.md` (**not confirmed in repo snapshot**)
+- Glossary link (expected): `docs/glossary.md` (**not confirmed in repo snapshot**)
+
+Key terms used in this document:
+
 - **Pipeline stage**: the canonical segment of work a change belongs to (ETL, catalogs, graph, API, UI, story).
+- **Contract-first**: schemas + API contracts are first-class artifacts; breaking changes require versioning/compat tests.
 - **Deterministic**: same inputs + same config + same code revision ⇒ same outputs (byte-for-byte when practical).
 - **Idempotent**: running the same job twice does not duplicate records or produce inconsistent results.
 - **Run manifest**: a small record capturing how to reproduce a run (inputs, config, commit SHA, versions).
 - **PROV bundle**: provenance artifacts describing inputs, activities, outputs, and agents.
+- **Story Node**: a governed narrative artifact that is machine-ingestible and provenance-linked.
+- **Focus Mode**: a read-only “evidence trace” view that consumes only provenance-linked context bundles (no unsourced narrative).
 
-### Key artifacts (what this doc points to)
+### Key artifacts
 
 | Artifact | Path / Identifier | Owner | Notes |
 |---|---|---|---|
-| System + pipeline source of truth | `docs/MASTER_GUIDE_v12.md` | KFM Core | Canonical ordering + invariants |
-| v13 redesign blueprint (if adopted) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture Team | Canonical homes + migration targets |
-| Full architecture vision (if adopted) | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | Architecture Team | End-to-end context + extension checklist |
-| Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs Team | Default governed Markdown structure |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative Curators | Narrative + evidence rules |
-| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API Maintainers | Contract-first API change process |
-| CI/debugging map | `tests/README.md` | CI Maintainers | Where “what failed” is mapped to “where to debug” (**not confirmed in repo snapshot**) |
-| Schemas registry | `schemas/` | Data/Platform | STAC/DCAT/PROV + contract schemas |
-| Data lifecycle layout | `data/README.md` | Data Eng | raw/work/processed + metadata outputs (**not confirmed in repo snapshot**) |
-| Security reporting process | `SECURITY.md` or `.github/SECURITY.md` | Security | Vulnerability / sensitive disclosure process (**not confirmed in repo snapshot**) |
+| System + pipeline source of truth | `docs/MASTER_GUIDE_v12.md` | TBD | Canonical ordering + invariants |
+| Universal governed doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | TBD | Default governed Markdown structure |
+| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | TBD | Narrative + evidence rules |
+| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | TBD | Contract-first API change process |
+| v13 redesign blueprint (draft, if adopted) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | TBD | Canonical homes + migration targets |
+| Next stages blueprint (if adopted) | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | TBD | Roadmap + gap closure plan |
+| Full architecture & vision (if adopted) | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | TBD | End-to-end context + extension checklist |
+| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | TBD | Authoring + lint conventions (**not confirmed in repo snapshot**) |
+| Schemas registry | `schemas/` | TBD | STAC/DCAT/PROV + contract schemas |
+| Security reporting process | `SECURITY.md` or `.github/SECURITY.md` | TBD | Vulnerability / sensitive disclosure process (**not confirmed in repo snapshot**) |
 
 ### Definition of done (for this document)
 
-- [ ] Front-matter complete and `path` matches file location.
+- [ ] Front-matter complete + valid YAML (`path` matches file location).
 - [ ] This README reflects the **actual** templates present in `.github/ISSUE_TEMPLATE/` (no drift).
+- [ ] All claims link to repo artifacts (paths, schemas, governance refs, tickets/PRs where applicable).
+- [ ] Any uncertain paths/commands are explicitly marked **not confirmed in repo**.
 - [ ] Every template (or the “blank issue” fallback) captures:
   - pipeline stage (best guess),
   - reproduction/evidence (or minimal failure context),
   - expected vs actual,
   - provenance/licensing when data-related,
   - governance/sensitivity notes when relevant.
-- [ ] Security note included: no secrets / no restricted coordinates in public issues.
+- [ ] Validation steps listed and repeatable (or clearly labeled as examples).
+- [ ] Governance + CARE/sovereignty considerations explicitly stated.
+- [ ] Security note included: no secrets / no PII / no restricted coordinates in public issues.
 - [ ] Version history updated when templates are added/removed/renamed.
 
 
@@ -135,9 +141,9 @@ Issue templates exist to:
 | Pipelines | `src/pipelines/` | ETL + transforms + catalog builders |
 | Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC/DCAT/PROV artifacts |
 | Graph | `src/graph/` (+ `data/graph/` if present) | Ontology bindings + import fixtures (Neo4j ingest) |
-| API boundary | `src/server/` (canonical target) | Contracted REST/GraphQL boundary (**`src/api/` treated as legacy if present**) |
-| UI | `web/` | React/MapLibre UI (never reads Neo4j directly) |
-| Story Nodes | `docs/reports/story_nodes/` | Governed narrative artifacts |
+| API boundary | `src/server/` | Contracted REST/GraphQL boundary (contracts typically under `src/server/contracts/**` if present) |
+| UI | `web/` | React/MapLibre UI (**never reads Neo4j directly**) |
+| Story Nodes | `docs/reports/story_nodes/` | Governed narrative artifacts (**not confirmed in repo snapshot**) |
 
 ### Expected file tree for this sub-area
 
@@ -154,7 +160,7 @@ Issue templates exist to:
     ├── 🧱 graph_model_change.yml             # recommended (may be missing)
     ├── 📜 api_contract_change.yml            # recommended (may be missing)
     ├── 🗺️ ui_layer_issue.yml                 # recommended (may be missing)
-    ├── 🧠 story_node_request.yml             # recommended (may be missing)
+    ├── 🧠 story_node_request.yml            # recommended (may be missing)
     ├── 🧪 ci_failure.yml                     # recommended (may be missing)
     └── ⚖️ governance_question.yml             # recommended (may be missing)
 ~~~
@@ -199,11 +205,14 @@ Issue templates are the intake surface for changes and should help route request
 
 ### Constraints / invariants
 
-- Canonical ordering is preserved: **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**.
+- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV catalogs → Graph → API → UI → Story Nodes → Focus Mode**.
 - The **UI must not connect to Neo4j directly**; all graph access is via the contracted API boundary.
-- **Contracts are canonical**: schemas/specs live under `schemas/`, and API contracts live under the API boundary (target: `src/server/contracts/`).
+- **Contracts are canonical**:
+  - schemas/specs live under `schemas/`,
+  - API contracts live under the API boundary (commonly `src/server/contracts/`),
+  - catalog artifacts live under `data/stac/`, `data/catalog/dcat/`, `data/prov/`.
 - **No unsourced narrative**: Story Nodes intended for publication must be provenance-linked and validate.
-- **No secrets in issues**: do not post credentials, private keys, or restricted coordinates in public issues.
+- **No secrets in issues**: do not post credentials, private keys, PII, or restricted coordinates in public issues.
 
 ### Open questions
 
@@ -244,17 +253,19 @@ flowchart LR
 
 Include:
 - workflow name + job name + failing step,
-- exact error output (redact secrets),
+- exact error output (**redact secrets**),
 - the changed paths in your PR/branch,
 - whether the failure is reproducible locally (commands if known; otherwise mark **not confirmed in repo**).
 
-Common failure “buckets” (names are conceptual; actual job names may differ):
+Common failure “buckets” (conceptual; actual job names may differ):
 - markdown protocol / lint failures,
+- link/reference checks,
 - schema validation (STAC/DCAT/PROV),
 - graph integrity checks,
 - API contract tests,
 - UI schema/a11y checks,
-- security / secret / PII scans.
+- security / secret / PII scans,
+- sovereignty / sensitive-location leakage checks.
 
 ### Reproduction (pattern)
 
@@ -265,6 +276,21 @@ Common failure “buckets” (names are conceptual; actual job names may differ)
    - validator output
    - dataset/item IDs
    - run manifest / PROV bundle references (when applicable)
+~~~
+
+### Reproduction (example commands)
+
+> Example placeholders — replace with repo-specific commands (some may be **not confirmed in repo snapshot**):
+
+~~~bash
+# 1) validate catalogs/schemas (if present)
+./scripts/validate_all_catalogs.sh
+
+# 2) run unit/integration tests (if present)
+pytest -q
+
+# 3) lint docs / check provenance links (if present)
+markdownlint docs/ && ./scripts/check_provenance_links.py
 ~~~
 
 
@@ -351,6 +377,21 @@ If the issue relates to narrative or Focus Mode:
 
 ## ⚖ FAIR+CARE & Governance
 
+### Review gates
+
+Changes to issue templates (or this README) that modify:
+- required provenance/licensing prompts,
+- sensitivity/redaction prompts,
+- sovereignty/culturally sensitive handling prompts,
+
+should be reviewed against the governing documents:
+
+- `docs/governance/ROOT_GOVERNANCE.md`
+- `docs/governance/ETHICS.md`
+- `docs/governance/SOVEREIGNTY.md`
+
+> This README and the issue forms are **intake scaffolding**. They must not attempt to generate new policy; they should only reference the governing docs.
+
 ### Do not post in public issues
 
 - secrets, tokens, credentials, private keys,
@@ -359,10 +400,10 @@ If the issue relates to narrative or Focus Mode:
 
 ### CARE / sovereignty considerations
 
-- If the issue involves Indigenous knowledge, culturally sensitive places, or restricted locations:
-  - flag it clearly in the issue,
-  - prefer coarse/generalized geography,
-  - reference `docs/governance/SOVEREIGNTY.md` for handling rules.
+If the issue involves Indigenous knowledge, culturally sensitive places, or restricted locations:
+- flag it clearly in the issue,
+- prefer coarse/generalized geography,
+- reference `docs/governance/SOVEREIGNTY.md` for handling rules.
 
 ### AI usage constraints
 
@@ -375,15 +416,16 @@ If the issue relates to narrative or Focus Mode:
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-26 | Initial README scaffold for `.github/ISSUE_TEMPLATE/` | TBD |
-| v1.0.1 | 2025-12-27 | Align to canonical pipeline wording + v13 API/UI boundary invariants; standardize footer refs | TBD |
-
+| v1.0.1 | 2025-12-27 | Align to canonical pipeline wording + API/UI boundary invariants; standardize footer refs | TBD |
+| v1.0.2 | 2025-12-29 | Align structure/terminology to Universal Doc + Master Guide v12; tighten security + CI guidance; normalize key artifacts | TBD |
 
 ---
 
 ## Footer refs (do not remove)
 
 - Master guide: `docs/MASTER_GUIDE_v12.md`
-- v13 blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- v13 redesign blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- Next stages blueprint (if adopted): `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md`
 - Full architecture vision (if adopted): `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md`
 - Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
 - Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
