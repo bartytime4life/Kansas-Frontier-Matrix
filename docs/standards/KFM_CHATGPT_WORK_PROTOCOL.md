@@ -207,11 +207,11 @@ ChatOps integration (assistant role)
 
 ~~~mermaid
 flowchart TD
-  U[User request] --> S[Search/ground in project files]
-  S --> T[Select governed template]
-  T --> D[Draft change (paths + contracts + validation)]
-  D --> O[Output: one commit-ready artifact]
-  O --> R[Human review + CI gates]
+  U["User request"] --> S["Search/ground in project files"]
+  S --> T["Select governed template"]
+  T --> D["Draft change: paths, contracts, validation"]
+  D --> O["Output: one commit-ready artifact"]
+  O --> R["Human review + CI gates"]
 ~~~
 
 📦 Data & Metadata
