@@ -1,6 +1,3 @@
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-FILE: docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ---
 title: "TEMPLATE — API Contract Extension (REST/GraphQL)"
 path: "docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md"
@@ -134,4 +131,3 @@ type TBD { id: ID! }
 | Version | Date | Summary | Author |
 |---|---|---|---|
 | v1.0.0 | 2025-12-17 | Initial template | TBD |
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
