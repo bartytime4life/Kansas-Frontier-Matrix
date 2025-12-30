@@ -194,13 +194,12 @@ Future extensions
 System / dataflow diagram (canonical)
 
 ~~~mermaid
-flowchart LR
-  A[ETL] --> B[STAC/DCAT/PROV Catalogs]
-  B --> C[Neo4j Graph]
-  C --> D[APIs]
-  D --> E[React/Map UI]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode]
+flowchart TD
+  U[User request] --> S[Search/ground in project files]
+  S --> T[Select governed template]
+  T --> D[Draft change (paths + contracts + validation)]
+  D --> O[Output: one commit-ready artifact]
+  O --> R[Human review + CI gates]
 ~~~
 
 ChatOps integration (assistant role)
