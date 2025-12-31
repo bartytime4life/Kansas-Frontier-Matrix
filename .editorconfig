@@ -1,6 +1,6 @@
-# KFM repo-wide EditorConfig
-# Goal: reduce diff-noise and keep formatting deterministic across the canonical repo roots
-# (docs/, data/, schemas/, src/, web/, tools/, tests/, mcp/, .github/, releases/).
+# Kansas Frontier Matrix (KFM) — .editorconfig
+# Keep whitespace + line endings consistent across docs, schemas, pipelines, API, and UI.
+# https://editorconfig.org
 
 root = true
 
@@ -11,68 +11,56 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
-tab_width = 2
 
-# -----------------------
-# Language-specific rules
-# -----------------------
-
-[*.py]
+# ---------- Code ----------
+[*.{py,pyi}]
 indent_size = 4
-tab_width = 4
 
-# Make requires tab-indented recipes
-[{Makefile,makefile,GNUmakefile}]
-indent_style = tab
-
-# Windows command scripts keep CRLF
-[*.{bat,cmd}]
-end_of_line = crlf
-
-# -----------------------
-# Data files (whitespace may be meaningful)
-# -----------------------
-
-[*.{csv,tsv}]
-trim_trailing_whitespace = false
-
-# -----------------------
-# Common repo artifact types
-# -----------------------
-
-# Schemas + configs
-[*.{json,jsonc,geojson,topojson}]
+[*.{js,jsx,ts,tsx,cjs,mjs}]
 indent_size = 2
 
+[*.{sh,bash,zsh}]
+indent_size = 2
+
+# ---------- Data / metadata ----------
 [*.{yml,yaml}]
 indent_size = 2
 
-[*.toml]
+[*.{json,jsonc,jsonld,jsonl,ndjson,geojson,topojson,ipynb,avsc}]
 indent_size = 2
 
-# Web / UI
-[*.{js,jsx,mjs,cjs,ts,tsx}]
+[*.{ttl,nt,nq,rdf,owl,sparql}]
 indent_size = 2
 
-[*.{css,scss,less}]
+[*.{toml,ini,cfg,conf,properties}]
 indent_size = 2
 
-# Docs (KFM governed Markdown lives heavily in docs/)
-[*.{md,mdx}]
+# ---------- Docs ----------
+[*.{md,mdx,rst}]
 indent_size = 2
 
-# Containers
-[Dockerfile]
+# ---------- Query / graph ----------
+[*.{sql,cypher,cql,graphql,gql}]
 indent_size = 2
 
-# Shell scripts (explicit for clarity)
-[*.{sh,bash,zsh}]
-end_of_line = lf
+# ---------- Web assets ----------
+[*.{css,scss,less,html,htm,xml,svg}]
 indent_size = 2
 
-# Optional-but-common in data platforms
-[*.sql]
-indent_size = 2
+# Makefiles require tabs
+[{Makefile,makefile,*.mk}]
+indent_style = tab
+indent_size = tab
+tab_width = 4
 
-[*.{graphql,gql}]
-indent_size = 2
+# Don’t auto-strip whitespace in delimiter-based data files
+[*.{csv,tsv,psv}]
+trim_trailing_whitespace = false
+
+# Logs often shouldn’t be auto-mutated by editor save hooks
+[*.log]
+trim_trailing_whitespace = false
+
+# Windows scripts: keep CRLF for compatibility with cmd.exe / some PowerShell setups
+[*.{bat,cmd,ps1}]
+end_of_line = crlf
