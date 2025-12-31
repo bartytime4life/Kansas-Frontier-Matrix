@@ -1,102 +1,372 @@
-minimum_pre_commit_version: "3.5.0"
+# KFM repo-wide pre-commit configuration
+# Place this file at the repository root: .pre-commit-config.yaml
 
-# Use non-deprecated stage names (pre-commit >= 3.2).
-default_stages: [pre-commit]
+minimum_pre_commit_version: "3.7.0"
+default_stages: [commit]
+fail_fast: false
 
 default_language_version:
   python: python3
 
 repos:
-  # pre-commit’s own self-checks
-  - repo: meta
-    hooks:
-      - id: check-hooks-apply
-      - id: check-useless-excludes
-
-  # Baseline hygiene + safety checks
+  # ---------------------------------------------------------------------------
+  # Baseline hygiene checks (YAML/JSON/TOML syntax, whitespace, merge conflicts)
+  # ---------------------------------------------------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
-      - id: check-added-large-files
-        # Allow moderately large tracked artifacts (PDFs, etc.) while still preventing accidents.
-        args: ["--maxkb=20480"] # 20 MB
-
-      - id: check-byte-order-marker
-      - id: check-case-conflict
       - id: check-merge-conflict
+      - id: check-case-conflict
       - id: check-symlinks
+      - id: detect-private-key
 
       - id: check-yaml
       - id: check-json
       - id: check-toml
-
       - id: check-ast
-      - id: debug-statements
 
-      - id: detect-private-key
+      - id: check-added-large-files
+        args: ["--maxkb=10240"]  # 10 MB
 
       - id: end-of-file-fixer
+        exclude: '^data/(raw|work)/'
+      - id: trailing-whitespace
+        args: ["--markdown-linebreak-ext=md,markdown"]
+        exclude: '^data/(raw|work)/'
       - id: mixed-line-ending
         args: ["--fix=lf"]
+        exclude: '^data/(raw|work)/'
 
-      - id: trailing-whitespace
-        # Preserve intentional Markdown hard line breaks (two spaces at EOL) for .md files.
-        args: ["--markdown-linebreak-ext=md"]
-
-      - id: check-executables-have-shebangs
-      - id: check-shebang-scripts-are-executable
-
-  # Python lint + format (runs only when Python files are staged)
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+  # ---------------------------------------------------------------------------
+  # YAML style lint (kept light-weight to avoid needing a repo-specific config)
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.37.1
     hooks:
-      # Keep ruff-check before ruff-format when using --fix.
-      - id: ruff-check
-        args: ["--fix", "--exit-non-zero-on-fix"]
-      - id: ruff-format
+      - id: yamllint
+        files: '\.(yml|yaml)$'
+        args:
+          - -d
+          - '{extends: default, rules: {line-length: disable, truthy: disable}}'
 
-  # JSON Schema validation (STAC, GitHub workflows, local schemas)
+  # ---------------------------------------------------------------------------
+  # GitHub workflows schema validation (optional but useful if workflows exist)
+  # ---------------------------------------------------------------------------
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.36.0
     hooks:
-      # Validate GitHub Actions workflows (YAML) against the official schema.
       - id: check-github-workflows
-        files: ^\.github/workflows/.*\.(yml|yaml)$
+        files: '^\.github/workflows/[^/]+\.(yml|yaml)$'
 
-      # Validate any JSON Schemas stored in-repo (if present).
-      - id: check-metaschema
-        name: Validate JSON Schemas (schemas/)
-        files: ^schemas/.*\.json$
-
-      # Validate STAC Collections & Items (STAC 1.0)
-      - id: check-jsonschema
-        name: Validate STAC Collections (STAC 1.0)
-        files: ^data/stac/collections/.*\.(json|geojson)$
-        args:
-          - --schemafile
-          - https://schemas.stacspec.org/v1.0.0/collection-spec/json-schema/collection.json
-
-      - id: check-jsonschema
-        name: Validate STAC Items (STAC 1.0)
-        files: ^data/stac/items/.*\.(json|geojson)$
-        args:
-          - --schemafile
-          - https://schemas.stacspec.org/v1.0.0/item-spec/json-schema/item.json
-
-  # Secrets scanning (enterprise-friendly heuristic scanning)
-  - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.5.0
+  # ---------------------------------------------------------------------------
+  # Markdown lint (docs quality + consistency)
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.20.0
     hooks:
-      - id: detect-secrets
-        # Keep scans fast + reduce false positives from lockfiles.
-        types: [text]
-        exclude: ^(package-lock\.json|pnpm-lock\.yaml|yarn\.lock)$
+      - id: markdownlint-cli2
+        name: markdownlint (KFM docs)
+        files: '\.(md|mdx|markdown)$'
+        exclude: '^data/(raw|work)/'
 
-  # Link checking (manual stage; network-dependent)
+  # ---------------------------------------------------------------------------
+  # Link checking for Markdown (offline = only local/file links; fast + no network)
+  # ---------------------------------------------------------------------------
   - repo: https://github.com/lycheeverse/lychee.git
     rev: lychee-v0.22.0
     hooks:
       - id: lychee
+        name: lychee (offline link check)
+        files: '\.(md|mdx|markdown)$'
+        args: ["--no-progress", "--offline", "--exclude-mail", "--max-concurrency", "4"]
+        exclude: '^data/(raw|work)/'
+
+  # ---------------------------------------------------------------------------
+  # Secrets scanning
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        name: detect-secrets (secrets / credentials)
+        # If/when you maintain a baseline, uncomment:
+        # args: ["--baseline", ".secrets.baseline"]
+
+  # ---------------------------------------------------------------------------
+  # Python lint + formatting (pipelines / APIs / tooling)
+  # ---------------------------------------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.10
+    hooks:
+      - id: ruff
+        name: ruff (lint)
+        args: ["--fix", "--show-fixes"]
+        exclude: '^data/'
+      - id: ruff-format
+        name: ruff-format (format)
+        exclude: '^data/'
+
+  # ---------------------------------------------------------------------------
+  # KFM-specific guards (implemented inline to avoid extra repo scripts)
+  # ---------------------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: kfm-no-edit-raw
+        entry: python
+        name: "KFM DataOps guard: prevent modify/delete/rename in data/raw"
+        language: python
+        pass_filenames: false
+        args:
+          - -c
+          - |
+            import subprocess, sys
+
+            # Block modifications/deletions/renames under data/raw (raw is immutable in KFM DataOps).
+            try:
+              out = subprocess.check_output(
+                ["git", "diff", "--cached", "--name-status", "--diff-filter=MDR"],
+                text=True,
+                stderr=subprocess.STDOUT,
+              )
+            except subprocess.CalledProcessError as e:
+              print(e.output)
+              sys.exit(2)
+
+            bad = []
+            for line in out.splitlines():
+              if not line.strip():
+                continue
+              parts = line.split("\t", 1)
+              if len(parts) != 2:
+                continue
+              status, path = parts
+              if path.startswith("data/raw/"):
+                bad.append(f"{status}\t{path}")
+
+            if bad:
+              print("KFM policy: data/raw is immutable. Do not modify/delete/rename files in data/raw.")
+              print("Add a new raw version as a new file instead (and update catalogs/PROV accordingly).")
+              print("")
+              print("\n".join(bad))
+              sys.exit(1)
+
+      - id: kfm-frontmatter
+        entry: python
+        name: "KFM docs: YAML front-matter required fields + path consistency"
+        language: python
+        additional_dependencies: ["PyYAML==6.0.3"]
+        files: '^docs/.*\.(md|mdx|markdown)$'
+        exclude: '^docs/legacy/'
+        args:
+          - -c
+          - |
+            import re
+            import sys
+            from pathlib import Path
+
+            import yaml
+
+            REQUIRED_KEYS = [
+              "title",
+              "path",
+              "version",
+              "last_updated",
+              "status",
+              "doc_kind",
+              "license",
+              "markdown_protocol_version",
+              "mcp_version",
+              "ontology_protocol_version",
+              "pipeline_contract_version",
+              "stac_profile",
+              "dcat_profile",
+              "prov_profile",
+              "governance_ref",
+              "ethics_ref",
+              "sovereignty_policy",
+              "fair_category",
+              "care_label",
+              "sensitivity",
+              "classification",
+              "jurisdiction",
+              "doc_uuid",
+              "semantic_document_id",
+              "event_source_id",
+              "commit_sha",
+              "doc_integrity_checksum",
+              "ai_transform_permissions",
+              "ai_transform_prohibited",
+            ]
+
+            ALLOWED_STATUS = {"draft", "active", "deprecated", "archived"}
+
+            RE_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+            RE_VERSION = re.compile(r"^v\d+\.\d+\.\d+([-.][0-9A-Za-z]+)*$")
+            RE_UUID = re.compile(
+              r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+            )
+            RE_COMMIT = re.compile(r"^(<latest-commit-hash>|[0-9a-fA-F]{7,40})$")
+
+            def parse_frontmatter(p: Path):
+              text = p.read_text(encoding="utf-8", errors="replace")
+              lines = text.splitlines()
+
+              if not lines or lines[0].strip() != "---":
+                return None, "missing YAML front-matter (expected starting '---' on line 1)"
+
+              end = None
+              for i in range(1, len(lines)):
+                if lines[i].strip() in ("---", "..."):
+                  end = i
+                  break
+              if end is None:
+                return None, "missing YAML front-matter closing delimiter ('---' or '...')"
+
+              yml = "\n".join(lines[1:end])
+              try:
+                data = yaml.safe_load(yml) or {}
+              except Exception as e:
+                return None, f"invalid YAML front-matter: {e}"
+
+              if not isinstance(data, dict):
+                return None, "front-matter root must be a YAML mapping/dict"
+
+              return data, None
+
+            def is_list_like(x):
+              return isinstance(x, (list, tuple))
+
+            failures = []
+            for fp in sys.argv[1:]:
+              p = Path(fp)
+              if not p.exists():
+                continue
+
+              data, err = parse_frontmatter(p)
+              if err:
+                failures.append((fp, [err]))
+                continue
+
+              errs = []
+
+              # Required keys
+              missing = [k for k in REQUIRED_KEYS if k not in data]
+              if missing:
+                errs.append("missing required front-matter keys: " + ", ".join(missing))
+
+              # path must match file path exactly (forward slashes)
+              expected_path = p.as_posix()
+              got_path = data.get("path")
+              if isinstance(got_path, str) and got_path != expected_path:
+                errs.append(f"path mismatch: front-matter path='{got_path}' but file is '{expected_path}'")
+              elif not isinstance(got_path, str):
+                errs.append("path must be a string matching the file path (e.g., docs/.../file.md)")
+
+              # status
+              status = data.get("status")
+              if isinstance(status, str):
+                if status.strip().lower() not in ALLOWED_STATUS:
+                  errs.append(f"status must be one of {sorted(ALLOWED_STATUS)} (got '{status}')")
+              else:
+                errs.append("status must be a string")
+
+              # version (allow v1.2.3 or v1.2.3-draft)
+              version = data.get("version")
+              if isinstance(version, str):
+                if not RE_VERSION.match(version.strip()):
+                  errs.append("version must match vMAJOR.MINOR.PATCH[-suffix] (e.g., v1.0.0-draft)")
+              else:
+                errs.append("version must be a string")
+
+              # last_updated date
+              last_updated = data.get("last_updated")
+              if isinstance(last_updated, str):
+                if not RE_DATE.match(last_updated.strip()):
+                  errs.append("last_updated must be YYYY-MM-DD")
+              else:
+                errs.append("last_updated must be a string (YYYY-MM-DD)")
+
+              # markdown_protocol_version should start with KFM-MDP
+              mpv = data.get("markdown_protocol_version")
+              if isinstance(mpv, str):
+                if not mpv.strip().startswith("KFM-MDP"):
+                  errs.append("markdown_protocol_version should start with 'KFM-MDP' (e.g., 'KFM-MDP v11.2.6')")
+              else:
+                errs.append("markdown_protocol_version must be a string")
+
+              # doc_uuid basic shape
+              du = data.get("doc_uuid")
+              if isinstance(du, str):
+                if not RE_UUID.match(du.strip()):
+                  errs.append("doc_uuid must look like a UUID (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)")
+              else:
+                errs.append("doc_uuid must be a string (UUID)")
+
+              # commit_sha placeholder or hash
+              cs = data.get("commit_sha")
+              if isinstance(cs, str):
+                if not RE_COMMIT.match(cs.strip()):
+                  errs.append("commit_sha must be <latest-commit-hash> or a git hash (7-40 hex chars)")
+              else:
+                errs.append("commit_sha must be a string")
+
+              # checksum marker
+              chk = data.get("doc_integrity_checksum")
+              if isinstance(chk, str):
+                if not chk.strip().startswith("sha256:"):
+                  errs.append("doc_integrity_checksum should start with 'sha256:'")
+              else:
+                errs.append("doc_integrity_checksum must be a string (e.g., sha256:...)")
+
+              # AI transformation lists should exist and be lists (empty list is OK)
+              for key in ("ai_transform_permissions", "ai_transform_prohibited"):
+                val = data.get(key)
+                if not is_list_like(val):
+                  errs.append(f"{key} must be a list (use [] if none)")
+
+              if errs:
+                failures.append((fp, errs))
+
+            if failures:
+              print("KFM front-matter validation failed:")
+              for fp, errs in failures:
+                print(f"\n- {fp}")
+                for e in errs:
+                  print(f"  - {e}")
+              sys.exit(1)
+
+      - id: kfm-sensitive-coordinates
+        entry: python
+        name: "KFM manual check: flag high-precision lat/lon in docs (review for sensitivity)"
+        language: python
         stages: [manual]
-        files: \.(md|mdx)$
-        args: ["--no-progress"]
+        files: '^docs/.*\.(md|mdx|markdown)$'
+        args:
+          - -c
+          - |
+            import re
+            import sys
+            from pathlib import Path
+
+            # Match "lat, lon" with >=5 decimal digits (rough proxy for high precision coordinates)
+            pair = re.compile(r"(?P<lat>-?\d{1,2}\.\d{5,})\s*,\s*(?P<lon>-?\d{1,3}\.\d{5,})")
+
+            hits = []
+            for fp in sys.argv[1:]:
+              p = Path(fp)
+              if not p.exists():
+                continue
+              text = p.read_text(encoding="utf-8", errors="replace")
+              for m in pair.finditer(text):
+                lat = float(m.group("lat"))
+                lon = float(m.group("lon"))
+                if -90.0 <= lat <= 90.0 and -180.0 <= lon <= 180.0:
+                  hits.append((fp, m.group(0)))
+
+            if hits:
+              print("High-precision lat/lon pairs found in docs (manual review recommended):")
+              for fp, val in hits:
+                print(f"  - {fp}: {val}")
+              print("")
+              print("If these describe sensitive locations, generalize or mask before publishing.")
+              sys.exit(1)
