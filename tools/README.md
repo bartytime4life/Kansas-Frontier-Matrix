@@ -1,12 +1,11 @@
 ---
-title: "Tools — KFM Operational Tooling and Deployment Scaffolding"
+title: "🧰 Kansas Frontier Matrix — Tools Directory (README)"
 path: "tools/README.md"
-version: "v1.0.5"
-last_updated: "2025-12-29"
+version: "v1.0.0-draft"
+last_updated: "2025-12-31"
 status: "draft"
-doc_kind: "Guide"
+doc_kind: "Standard"
 license: "CC-BY-4.0"
-
 markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
 ontology_protocol_version: "KFM-ONTO v4.1.0"
@@ -14,7 +13,6 @@ pipeline_contract_version: "KFM-PPC v11.0.0"
 stac_profile: "KFM-STAC v11.0.0"
 dcat_profile: "KFM-DCAT v11.0.0"
 prov_profile: "KFM-PROV v11.0.0"
-
 governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
 ethics_ref: "docs/governance/ETHICS.md"
 sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
@@ -23,12 +21,10 @@ care_label: "TBD"
 sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
-
-doc_uuid: "urn:kfm:doc:tools:readme:v1.0.5"
-semantic_document_id: "kfm-tools-readme-v1.0.5"
-event_source_id: "ledger:kfm:doc:tools:readme:v1.0.5"
+doc_uuid: "urn:kfm:doc:tools:readme:v1.0.0-draft"
+semantic_document_id: "kfm-tools-readme-v1.0.0-draft"
+event_source_id: "ledger:kfm:doc:tools:readme:v1.0.0-draft"
 commit_sha: "<latest-commit-hash>"
-
 ai_transform_permissions:
   - "summarize"
   - "structure_extract"
@@ -37,559 +33,289 @@ ai_transform_permissions:
 ai_transform_prohibited:
   - "generate_policy"
   - "infer_sensitive_locations"
-
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# Tools — KFM Operational Tooling and Deployment Scaffolding
+KFM Tools Directory (README)
 
-Operational tooling and deployment scaffolding that **supports** the Kansas Frontier Matrix (KFM) pipeline without replacing any canonical subsystem roots.
-
-**Tools may validate and orchestrate; canonical subsystems implement.**
+Governed document. The `tools/` directory is the canonical home for **utility scripts, validators, and DevOps helpers** that support KFM’s reproducibility, contract enforcement, and governance checks. Tools are here to make the pipeline *verifiable* and *repeatable* — not to bypass it.
 
 ## 📘 Overview
 
 ### Purpose
 
-- Provide a canonical home for **operational tooling** (wrappers, validators, runbooks, packaging helpers, deployment scaffolding) that operates *around* the canonical pipeline.
-- Preserve the non-negotiable system ordering:
+The `tools/` directory exists to provide standalone utilities that:
 
-  **ETL → STAC/DCAT/PROV → Graph (Neo4j) → API → UI (React/MapLibre) → Story Nodes → Focus Mode**
-
-- Prevent drift: `tools/` must not become a second implementation home for ETL, catalogs, graph, API, UI, or story publishing.
-- Ensure outputs produced by tooling land in canonical destinations (`data/**`, `mcp/runs/**`, `releases/**`) rather than accumulating under `tools/`.
-
-> Cloud deployment specifics belong under `tools/` (when repo-contained) and/or a separate ops repository (if adopted). This folder is where repo-contained deployment scaffolding should live.
-
-**At a glance**
-- `tools/` holds **wrappers, validators, runbooks, packaging helpers, and deployment scaffolding** that operate around the canonical pipeline.
-- `tools/` must not become a “shadow implementation” for any canonical subsystem.
-- Outputs produced by tools must land in **canonical destinations** — especially `data/**`, `mcp/runs/`, and `releases/` (if used) — not inside `tools/`.
-
-**Non-negotiables for tool authors**
-- **One canonical home per subsystem** (no parallel implementations under `tools/`).
-- **Catalog artifacts are data**: STAC/DCAT/PROV live under `data/**` (tools may validate/orchestrate; do not create a parallel catalog implementation under `tools/`).
-- **No UI direct-to-graph reads**: `web/` must not query Neo4j directly; all graph access is via contracted APIs in `src/server/`.
-- **CI semantics**: validate artifacts when present; fail if invalid; skip only when not applicable.
+- validate **STAC / DCAT / PROV** boundary artifacts against KFM profiles
+- run **governance/sensitivity** checks (redaction, leakage prevention)
+- generate or validate **operational artifacts** (telemetry, ledger updates, SBOM/release checks) when applicable
+- lint governed docs (front-matter + heading registry) and enforce “Definition of Done” expectations
+- provide small “glue” helpers used in CI or local workflows (without duplicating core pipeline logic)
 
 ### Scope
 
-| In Scope | Out of Scope |
-|---|---|
-| **Deployment/runbooks & environment scaffolding** (local dev, CI parity, staging scaffolds).<br><br>**Validators & repo lint** enforcing Markdown protocol + schema integrity (STAC/DCAT/PROV/story nodes) + release packaging checks.<br><br>**Wrapper scripts** orchestrating canonical subsystems (ETL/catalog/graph/API/UI/story) **without** duplicating subsystem logic.<br><br>**Release packaging helpers** (manifests/SBOM/checksum scaffolding) that write into canonical release roots.<br><br>**Promotion tooling** that *validates and moves* artifacts into canonical locations (when adopted), e.g., `data/work/<domain>/ → data/processed/<domain>/` with provenance pointers. | **Core pipeline implementations** (canonical home: `src/pipelines/`).<br><br>**Catalog generation logic** (canonical home: `src/pipelines/`; catalog artifacts live in `data/stac/`, `data/catalog/dcat/`, `data/prov/`).<br><br>**Graph build/migrations & ontology enforcement logic** (canonical home: `src/graph/`).<br><br>**Production API/server implementation code** (canonical home: `src/server/`).<br><br>**UI application code** (canonical home: `web/`).<br><br>**Schemas/specs** (canonical home: `schemas/`).<br><br>**Derived datasets or catalog/provenance outputs committed under `tools/`** (canonical homes: `data/**`, `releases/`). |
+In scope (typical patterns):
 
-### Audience
+- **validators & linters** (metadata schema checks, doc schema checks, link integrity checks)
+- **preflight checks** for graph build, API contracts, UI layer registries
+- **release/ops helpers** (ledger entries, telemetry export, SBOM validation, manifest generation)
+- **governance checks** (e.g., coordinate masking / redaction enforcement)
 
-- Primary: KFM maintainers (data engineering, catalogs, graph/ontology, API, UI, narrative/story).
-- Secondary: contributors running builds locally or in CI; deployment/ops owners.
+Out of scope (should live elsewhere):
 
-### Definitions (link to glossary)
+- Primary ETL pipelines (canonical home: `src/pipelines/etl/`)
+- Graph build + migrations (canonical home: `src/graph/`)
+- API runtime + contracts (canonical home: `src/server/`)
+- UI runtime (canonical home: `web/`)
 
-- Link: `docs/glossary.md` *(not confirmed in repo — repair link once glossary location is finalized)*
+### Tooling principles (non-negotiable)
 
-Key terms used in this document:
-- **Contract artifact**: a machine-validated schema/spec (JSON Schema, OpenAPI, GraphQL SDL, UI registry schema).
-- **Evidence artifact**: catalog + provenance outputs consumed downstream (STAC/DCAT/PROV and derived evidence products).
-- **Thin wrapper**: a tool that invokes canonical subsystem modules and orchestrates inputs/outputs **without** re-implementing subsystem logic.
-- **Run manifest**: a record that captures how to reproduce a run (inputs, config, commit SHA, versions, parameters). Recommended location: `mcp/runs/` (as pointers + hashes, not duplicated data).
-- **Repo lint**: deterministic checks enforcing naming/placement rules and preventing drift (e.g., duplicate subsystem homes).
-- **Promotion**: a governed move from intermediate → published artifacts, with lineage captured (e.g., `work` → `processed` + updated STAC/DCAT/PROV).
-- **Validate-if-present semantics**: CI behavior where validators (a) validate when inputs/artifacts exist, (b) fail if invalid, and (c) skip only when roots are absent or the check is not applicable.
-- **Tool (KFM sense)**: code/config under `tools/` that wraps, validates, packages, or deploys canonical subsystems and writes outputs only to canonical destinations.
+1. **Respect the canonical pipeline**  
+   Tools must reinforce (not contradict) the ordered flow:  
+   `ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode`
 
-### Key artifacts (what this doc points to)
+2. **No out-of-band publishing**  
+   “Published” outputs must follow staging + boundary artifacts rules (see 📦 Data & Metadata). Tools may validate downstream systems, but should not “sneak” data into them.
 
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| Master Guide v12 | `docs/MASTER_GUIDE_v12.md` | KFM Core Team | Canonical pipeline ordering + invariants + expected repo layout |
-| v13 Redesign Blueprint (draft) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | Canonical homes + CI readiness gates; tools support (do not replace) |
-| Next Stages Blueprint | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | Architecture | Roadmap + gap closure plan |
-| Full Architecture & Vision | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | Architecture | End-to-end vision |
-| Ingestion Architecture (draft) | `docs/architecture/KFM_INGEST_ARCHITECTURE.md` | Data engineering | Intake/ETL patterns + provenance expectations |
-| Universal Doc Template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs maintainers | Default template for governed guides/runbooks/READMEs |
-| Story Node Template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative maintainers | Story nodes consumed by Focus Mode |
-| API Contract Extension Template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API maintainers | Contract-first API changes |
-| Markdown Work Protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Docs | *not confirmed in repo* |
-| Schemas (contracts) | `schemas/` | Contract owners | STAC/DCAT/PROV/story nodes/UI/telemetry schemas *(as adopted)* |
-| API boundary | `src/server/` | API maintainers | Contracted boundary between UI and graph/catalogs |
-| UI app | `web/` | UI maintainers | React/MapLibre UI; no direct graph reads |
-| MCP runs/manifests | `mcp/runs/` | Ops + ML | Run manifests, pointers, evaluation artifacts |
-| Releases | `releases/` | Release owners | Manifests, SBOMs, signed bundles *(if adopted)* |
-| Data + metadata outputs | `data/**` | Data maintainers | Canonical destinations for datasets + evidence artifacts |
+3. **Deterministic + replayable**  
+   Tools should be deterministic given pinned inputs/config. If non-determinism is unavoidable (timestamps, network calls), provide flags to pin behavior and log run context clearly.
 
-### Definition of done (for this document)
+4. **Provenance-first for any derived data**  
+   If a tool produces a dataset-like artifact (including AI/analysis outputs), treat it as a first-class governed output:
+   - store under `data/processed/...`
+   - generate/refresh STAC/DCAT/PROV boundary artifacts
+   - emit run logs / validation reports
 
-- [x] Front-matter complete and `path` matches `tools/README.md`.
-- [x] Scope clearly distinguishes what belongs in `tools/` vs canonical subsystem roots.
-- [x] Canonical pipeline ordering and “one home per subsystem” invariants are preserved.
-- [x] Contains approved headings for **Story Node & Focus Mode integration** and **Validation & CI/CD**.
-- [x] Uses canonical staging roots (`data/raw/`, `data/work/`, `data/processed/`) for data outputs.
-- [ ] Repo lint / Markdown protocol checks run (CI or local).
-- [ ] Maintainer review.
+5. **Safe by default**  
+   Avoid leaking sensitive locations or personal data in logs, reports, or stdout. Prefer generalized outputs; fail closed if classification/sensitivity is unknown.
+
+### Quick start
+
+```bash
+# See what tools exist
+ls tools/
+
+# Each tool should provide CLI help
+python tools/<tool_name>.py --help
+
+# (Optional) if a tool is packaged as a module
+python -m tools.<tool_name> --help
+```
+
+### Tool inventory (maintainers: keep current)
+
+> This table is intentionally “living”. Add a row whenever a tool is added, renamed, or removed.
+
+| Tool / Path | Category | Description | Inputs | Outputs | Stage it supports | CI integration |
+|---|---|---|---|---|---|---|
+| (add tools here) | validate | Schema/profile validation for artifacts | files/dirs | reports + exit code | Catalogs | pre-commit / GH Actions |
+| (add tools here) | governance | Sensitivity/redaction enforcement | data + metadata | pass/fail + report | Catalogs/API/UI | GH Actions |
+| (add tools here) | devops | Ledger/telemetry/SBOM helpers | build artifacts | artifacts + report | Release/ops | GH Actions |
+
+### Reference library (non-normative)
+
+This project includes external reference texts (modeling/simulation, statistics & experimental design, GIS/geoprocessing, Google Earth Engine, WebGL/graphics, clean architecture, shell scripting, etc.). These are **implementation guidance only** and **do not override** KFM contracts/templates/governance.
 
 ## 🗂️ Directory Layout
 
 ### This document
+- `tools/README.md` (this file)
 
-- `path`: `tools/README.md` *(must match front-matter)*
+### `tools/` scaffold (recommended)
 
-### Related repository paths
+Note: The structure below is a **recommended** layout to keep tooling organized by pipeline boundary.
+If your repo uses different names, keep the same intent and update this tree accordingly.
 
-| Area | Path | What lives here |
-|---|---|---|
-| **CI + policy gates** | `.github/` | Workflows, security policy, contribution templates |
-| **CI workflows** | `.github/workflows/` | Build/test/validate gates *(if present)* |
-| **Data domains + catalogs** | `data/` | Staged datasets + catalog/provenance outputs (STAC/DCAT/PROV) |
-| **STAC outputs** | `data/stac/` | Collections + Items for spatiotemporal assets |
-| **DCAT outputs** | `data/catalog/dcat/` | Dataset/distribution metadata for discovery |
-| **PROV outputs** | `data/prov/` | Lineage bundles for traceability |
-| **Documentation** | `docs/` | Governed docs, standards, templates, reports |
-| **Templates** | `docs/templates/` | Universal + Story Node + API Contract templates |
-| **Schemas** | `schemas/` | Machine-validated schemas/specs (STAC/DCAT/PROV/story nodes/ui/telemetry/etc.) |
-| **Pipelines** | `src/pipelines/` | ETL + transforms + catalog builders (writes outputs to `data/**`) |
-| **Graph** | `src/graph/` | Ontology, constraints, migrations, ingest code |
-| **API boundary** | `src/server/` | Contracted access layer (REST/GraphQL), redaction, query services |
-| **Frontend** | `web/` | React-based UI (map + Focus Mode UX) |
-| **Story Nodes** | `docs/reports/story_nodes/` *(pattern)* | Narrative artifacts consumed by Focus Mode *(draft/published split not confirmed in repo)* |
-| **MCP / experiments** | `mcp/` | Run manifests, experiment logs, model cards, evaluation artifacts |
-| **Releases** | `releases/` | Bundles (SBOMs/manifests/attestations) and release metadata *(if adopted)* |
-| **Tests** | `tests/` | Automated tests for contracts and behaviors |
-| **Tools** | `tools/` | Validators, utilities, QA scripts, deployment scaffolding |
+    📁 tools/
+    ├── 📄 README.md
+    ├── 📁 bin/                                 # entrypoints (thin CLIs)
+    │   ├── 📄 kfm-tools                         # bash/sh wrapper (example)
+    │   └── 📄 kfm-tools.ps1                     # PowerShell wrapper (example)
+    ├── 📁 validate/                             # validators (local + CI)
+    │   ├── 📄 README.md
+    │   ├── 📁 stac/
+    │   │   ├── 📄 validate_stac.py
+    │   │   └── 📄 README.md
+    │   ├── 📁 dcat/
+    │   │   ├── 📄 validate_dcat.py
+    │   │   └── 📄 README.md
+    │   ├── 📁 prov/
+    │   │   ├── 📄 validate_prov.py
+    │   │   └── 📄 README.md
+    │   ├── 📁 storynodes/
+    │   │   ├── 📄 validate_story_nodes.py
+    │   │   └── 📄 README.md
+    │   └── 📁 ui/
+    │       ├── 📄 validate_ui_registry.py
+    │       └── 📄 README.md
+    ├── 📁 run/                                  # thin runners (call into src/*)
+    │   ├── 📁 etl/
+    │   │   └── 📄 run_etl.py
+    │   ├── 📁 catalog/
+    │   │   ├── 📄 build_stac.py
+    │   │   ├── 📄 build_dcat.py
+    │   │   └── 📄 build_prov.py
+    │   ├── 📁 graph/
+    │   │   └── 📄 load_graph.py
+    │   └── 📁 api/
+    │       └── 📄 contract_smoke_test.sh
+    ├── 📁 dev/                                  # contributor ergonomics
+    │   ├── 📄 bootstrap_env.sh
+    │   ├── 📄 lint.sh
+    │   └── 📄 precommit.sh
+    └── 📁 config/                               # tooling templates (commit-safe)
+        ├── 📄 .env.tools.example
+        └── 📄 logging.yaml
+```
 
-> Some paths above reflect target/standardized structure; if a path is missing in the current repo state, treat it as **not confirmed in repo** and repair links once canonical locations are finalized.
+### Suggested internal organization (optional)
 
-### Expected file tree for this sub-area (recommended)
+If `tools/` grows large, consider grouping by intent (keep tooling discoverable):
 
-~~~text
-📁 tools/
-├── 📄 README.md
-├── 📁 <tool-name>/
-│   ├── 📄 README.md
-│   ├── 📁 bin/              # entrypoints (optional)
-│   ├── 📁 configs/          # example configs (no secrets)
-│   ├── 📁 scripts/          # operational scripts/wrappers
-│   └── 📁 tests/            # tool tests (optional)
-└── 📁 shared/               # shared helpers (optional; avoid duplicating `src/**`)
-~~~
+- `tools/validate/` — schema/profile validators (STAC/DCAT/PROV, docs schema, link checks)
+- `tools/governance/` — sensitivity + redaction checks, FAIR+CARE enforcement utilities
+- `tools/devops/` — release helpers, SBOM/attestation checks, telemetry/ledger tasks
+- `tools/docs/` — markdown lint helpers, heading registry checks
 
-### Anti-patterns (do not do this in `tools/`)
-
-- **Implementing core pipeline logic** under `tools/` (ETL/catalogs/graph/API/UI/story publish).
-- **Writing derived datasets** to `tools/**` (outputs must go to canonical roots).
-- **Committing secrets** (even “dev” secrets) in `tools/**/configs/`.
-- **Introducing a backdoor API/UI → Neo4j path** (all graph access is via `src/server/`).
-- **Treating `tools/` as a long-lived state store** (cache/temp outputs must be gitignored and must not become a hidden dataset home).
+*(Folder names above are suggested; adapt to the repo’s existing structure.)*
 
 ## 🧭 Context
 
-### Background
+### Where tools fit in the pipeline
 
-KFM’s architecture is intentionally split into canonical subsystem homes (ETL, catalogs, graph, API, UI, story). `tools/` exists so we can run, validate, package, and deploy **without** blurring those boundaries.
+Tools exist to **support** the canonical pipeline stages:
 
-### Canonical homes by stage (quick reference for tool authors)
+- **ETL** produces transformed datasets and prepares publishable outputs.
+- **Boundary artifacts** (STAC/DCAT/PROV) are generated and validated.
+- Only then do **graph loads**, **API publication**, and **UI/story** consumption proceed.
 
-Tools should assume the canonical homes below, and only orchestrate/validate around them.
+Tools are commonly used as:
+- local preflight checks (before committing changes)
+- CI gates (blocking merges/promotions when validations fail)
+- release/ops automation steps (ledger, telemetry, SBOM checks)
 
-| Stage | Canonical home(s) | What tools do (allowed) | What tools do NOT do |
-|---|---|---|---|
-| ETL / pipelines | `src/pipelines/` (outputs in `data/**`) | run wrappers; validate configs; collect run manifests | re-implement ETL logic in `tools/` |
-| Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | validate integrity; package; report | create a second catalog generator in `tools/` |
-| Graph | `src/graph/` (+ optional derived fixtures under `data/graph/**`) | validate fixtures; run migrations via canonical entrypoints | embed graph schema/migration logic in tools “shortcuts” |
-| API boundary | `src/server/` | contract tests; smoke checks; deploy scaffolding | bypass contract/versioning rules |
-| UI | `web/` | build/test wrappers; static asset checks | direct database/graph reads |
-| Story Nodes | `docs/reports/story_nodes/` | validate schemas + evidence refs; scaffold drafts (not publish) | auto-publish unsourced narrative |
-| Releases | `releases/` | manifests/SBOM/checksums; verify bundles | store datasets under releases without provenance refs |
+### Architectural boundaries you must not break
 
-### Assumptions
-
-- Operational work should prefer **thin wrappers** that call canonical modules (rather than duplicating implementations).
-- Contracts and evidence artifacts must be validated consistently in CI and local dev.
-- Governance and redaction rules apply across all stages; operational convenience must not bypass them.
-
-### Constraints / invariants (non-negotiables)
-
-- **Canonical ordering is preserved:** ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode.
-- **One canonical home per subsystem:** avoid “mystery duplicates.”
-- **Catalog generation code belongs with pipelines:** implement in `src/pipelines/`; publish artifacts into `data/stac/`, `data/catalog/dcat/`, `data/prov/`.
-- **No UI direct-to-graph reads:** `web/` must never query Neo4j directly; all graph access is via `src/server/`.
-- **No unsourced narrative:** published Story Nodes must be provenance-linked and must validate; Focus Mode consumes provenance-linked content only.
-- **Contracts are canonical:** schemas/specs live in `schemas/` and API contracts (if used) live under the API boundary (commonly `src/server/contracts/`).
-- **Data outputs are not code:** derived datasets belong under `data/processed/<domain>/`, not in `src/` or `tools/`.
-- **Repo lint discipline:** prevent drift patterns (duplicate subsystem homes; malformed README names; YAML front-matter in code files).
-
-### Open questions
-
-| Question | Owner | Target date |
-|---|---|---|
-| Do we standardize a common tool interface (e.g., `make`, `task`, `python -m`, `node`) for local + CI execution? | Maintainers | v13.0.0 |
-| Where is the single canonical “run manifest” home: `mcp/runs/` vs `data/prov/` vs `releases/<version>/`? | Provenance + CI owners | v13.0.0 |
-| What is the minimum contract set required for CI green (stac/dcat/prov/storynodes/ui/telemetry)? | Contract owners | v13.0.0 |
-| Do we adopt SHACL validation for JSON-LD bundles now or later? | Catalog + graph owners | v13.1.0 |
-| Do we want “promotion tooling” standardized (work → processed + catalog + prov) as a first-class tool family? | Data engineering | v13.1.0 |
-
-### Future extensions
-
-- Reproducible “domain pack generator” tooling (scaffolds domain staging + mapping + tests + docs).
-- Release attestation tooling (SBOMs, signing, verification) under `releases/` (if adopted).
-- Optional contract enforcement for UI registries, telemetry, and story node assets when those roots exist.
+- The **UI consumes data via the API layer**, not by directly querying Neo4j or reading raw files.
+- **Heavy computations happen in ETL**, not at request time in the API layer.
+- Catalog metadata is the formal gatekeeper: **if it’s not valid catalog/prov, it doesn’t move forward.**
 
 ## 🗺️ Diagrams
 
-### System / dataflow diagram
-
-~~~mermaid
+```mermaid
 flowchart LR
-  T[tools wrappers + scaffolding] --> P[src/pipelines]
-  P --> C[data catalogs stac dcat prov]
-  C --> G[src/graph -> neo4j]
-  G --> A[src/server api boundary]
-  A --> U[web ui]
-  U --> S[docs/reports/story_nodes]
-  S --> F[focus mode]
-  T --> R[releases packaging]
-  T --> M[mcp/runs manifests]
-~~~
+  A[ETL outputs] --> B[Boundary artifacts<br/>STAC + DCAT + PROV]
+  B --> C[Graph load / sync]
+  C --> D[API contracts + redaction]
+  D --> E[UI / Story Nodes / Focus Mode]
 
-### Optional: sequence diagram
+  subgraph T["tools/ utilities (support layer)"]
+    V1[Metadata validators]
+    V2[Governance checks]
+    V3[Doc lint / schema checks]
+    V4[Release + ops helpers]
+  end
 
-~~~mermaid
-sequenceDiagram
-  participant Dev as Developer / CI
-  participant Tool as tools/<tool>
-  participant Pipe as src/pipelines
-  participant Data as data/**
-  participant Val as validators (schemas/tests)
-
-  Dev->>Tool: run tool (validate/build/package)
-  Tool->>Pipe: call canonical module (if applicable)
-  Pipe->>Data: write outputs to canonical destinations
-  Tool->>Val: run protocol + schema + contract checks
-  Val-->>Tool: pass/fail + summary
-  Tool-->>Dev: exit code + report (CI gate)
-~~~
+  T -. validates .-> B
+  T -. preflight .-> C
+  T -. contract checks .-> D
+  T -. lint/evidence checks .-> E
+```
 
 ## 📦 Data & Metadata
 
-### Data lifecycle (required staging)
+### IO rules (default)
 
-For each domain, data staging is organized as:
-- `data/raw/<domain>/` — immutable source snapshots
-- `data/work/<domain>/` — intermediate transforms
-- `data/processed/<domain>/` — normalized outputs used for catalogs and graph ingest
+- **Read:** Prefer reading from:
+  - `data/raw/`, `data/work/`, `data/processed/`
+  - `data/stac/`, `data/catalog/dcat/`, `data/prov/`
 
-Global metadata outputs:
-- STAC: `data/stac/collections/` and `data/stac/items/`
-- DCAT: `data/catalog/dcat/`
-- PROV: `data/prov/`
+- **Write:** Prefer writing to:
+  - `data/work/…` for intermediate/scratch outputs, OR
+  - `docs/reports/…` for validation/audit reports, OR
+  - `releases/…` for release artifacts (SBOM, telemetry, manifests) *(if present in this repo)*
 
-Optional (if adopted) graph import fixtures:
-- `data/graph/**` (e.g., `csv/`, `cypher/`), treated as derived artifacts with provenance.
+Avoid:
+- writing into `data/raw/` (raw is immutable by definition)
+- direct mutation of Neo4j without using sanctioned graph build/sync mechanisms
+- producing “orphan outputs” with no STAC/DCAT/PROV linkage
 
-### Inputs
+### Boundary artifacts required for publishable outputs
 
-| Input | Source | Notes |
-|---|---|---|
-| Tool config (examples only) | `tools/**` | No secrets committed; use `.env.example` patterns if adopted |
-| Canonical subsystem code | `src/**` | Tools should call canonical modules rather than re-implement |
-| Contracts/schemas | `schemas/**` | Tools validate outputs against these schemas |
-| Docs/templates | `docs/**` | Tools may validate doc structure/links/protocol |
-| CI environment variables | `.github/**` | Secrets must come from CI secret stores |
+When a tool creates or materially changes a dataset-like output:
 
-### Outputs (canonical destinations only)
-
-| Output | Canonical destination | Notes |
-|---|---|---|
-| Derived domain datasets | `data/processed/<domain>/` | Never store derived datasets under `tools/` |
-| Catalog + provenance artifacts | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Required for datasets/evidence products |
-| Release artifacts | `releases/` | Manifests/SBOMs/signed bundles *(if adopted)* |
-| Run metadata pointers | `mcp/runs/` *(recommended)* | Prefer pointers/hashes; avoid duplicating data |
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-STAC/DCAT/PROV are first-class evidence artifacts. If a tool generates or validates them, it must enforce integrity checks appropriate to each layer.
-
-Canonical global output locations:
-- **STAC**: `data/stac/collections/` and `data/stac/items/`
-- **DCAT**: `data/catalog/dcat/`
-- **PROV**: `data/prov/`
-
-### STAC/DCAT/PROV alignment policy (required)
-
-Every new dataset or evidence artifact must have:
-- **STAC Collection + Item(s)** (for spatiotemporal assets)
-- **DCAT mapping** (minimum title/description/license/keywords + distributions)
-- **PROV activity bundle** describing the transformation that produced the outputs (inputs, parameters, tool/run IDs, hashes)
-
-### Cross-layer linkage expectations
-
-Minimum expectations when artifacts exist:
-- STAC item↔collection integrity holds.
-- DCAT records include license/attribution and stable IDs.
-- PROV bundles identify activities/agents and link raw → work → processed → evidence.
-- The graph should reference catalog identifiers (STAC/DCAT IDs and/or stable artifact IDs) rather than duplicating large payloads.
-
-### Versioning expectations
-
-- New versions link predecessor/successor in catalogs and PROV.
-- Graph mirrors version lineage (do not break stable labels/edges without an explicit migration/version bump).
-- API-breaking changes require versioned endpoints or explicit compatibility strategy.
+1. Write the output under `data/processed/<domain>/…`
+2. Generate/refresh:
+   - STAC Collection + Item(s) in `data/stac/...`
+   - DCAT dataset record in `data/catalog/dcat/...`
+   - PROV lineage bundle in `data/prov/...`
+3. Run validators (preferably in strict mode)
+4. Only then proceed to graph sync / API publication / UI exposure
 
 ## 🧱 Architecture
 
-### Subsystem contracts (what must exist for each subsystem)
+### Contract-first interfaces
 
-| Subsystem | Contract artifacts | “Do not break” rule |
-|---|---|---|
-| ETL | configs + run logs + validation notes | deterministic + replayable |
-| Catalogs | STAC/DCAT/PROV schemas + validators | machine-validated outputs |
-| Graph | ontology + migrations + constraints | stable labels/edges (unless migrated) |
-| APIs | OpenAPI/GraphQL schema + contract tests | backwards compatible or version bump |
-| UI | layer registry + a11y + audit affordances | no hidden data leakage |
-| Story/Focus | provenance-linked context bundle | no hallucinated/unsourced claims |
+Tools that touch contracts must treat the following as first-class artifacts:
 
-### Tool families (what belongs here)
+- **Ontology**: stable labels/relations; changes require migrations.
+- **OpenAPI / GraphQL**: versioned contracts; breaking changes require explicit versioning.
+- **UI layer registry**: validate layer configs and redaction behavior.
+- **Story Node templates**: evidence-linking rules must be enforced.
 
-| Tool family | Contract artifact | Notes |
-|---|---|---|
-| Deployment scaffolding | Runbook/README + validation steps | Must not bypass security or governance standards |
-| CI/build helpers | Repeatable commands + canonical references | Prefer calling canonical validators rather than re-implementing |
-| Orchestration wrappers | CLI entrypoints + documented IO | Outputs must route to canonical destinations |
-| Promotion tooling (optional) | Promotion plan + prov update rules | Must update STAC/DCAT/PROV when moving artifacts |
-| Release packaging | Release manifest + SBOM references | Artifacts belong under `releases/` |
-| Policy/security gates | Checklists + machine validators (optional) | Changes may require governance/security review |
+### Determinism & reproducibility expectations
 
-### Tool design rules (tooling-safe defaults)
+When possible, tools should:
 
-When adding new tooling under `tools/`:
-- **Deterministic:** stable IDs, pinned deps, fixed seeds where relevant.
-- **Idempotent:** re-running should not corrupt state; prefer atomic writes/promotions.
-- **Safe-by-default logging:** no secrets; avoid raw restricted coordinates; redact sensitive fields.
-- **Fail closed in CI:** if artifacts exist and are invalid → fail; skip only when inputs/roots are absent.
-- **No contract drift:** tool behavior should be explainable via schema + documented interface.
-
-### Extension points checklist (tooling-safe)
-
-When adding new tooling under `tools/`, ensure pipeline alignment:
-- [ ] **Placement:** tool source/config stays in `tools/`; outputs go to canonical roots (`data/**`, `releases/`, `mcp/runs/`).
-- [ ] **Determinism:** repeatable behavior in CI (stable IDs, pinned deps, fixed seeds if relevant).
-- [ ] **Catalogs:** if generating STAC/DCAT/PROV, enforce schema validation and integrity checks.
-- [ ] **Graph:** do not introduce UI-to-graph coupling; keep graph access behind the API boundary.
-- [ ] **API:** if tooling depends on endpoints, link to relevant contract docs and tests.
-- [ ] **UI:** tools must not create direct Neo4j access paths for `web/`.
-- [ ] **Story:** if tooling affects story publication, enforce provenance/citation validation workflows.
-- [ ] **Telemetry:** if emitting governed telemetry, align with telemetry schemas/docs (if present).
-
-### Add a new tool (repeatable pattern)
-
-#### 0) First decide: does it belong in `tools/`?
-
-A new component belongs in `tools/` when it:
-- orchestrates existing canonical subsystems,
-- validates contracts/artifacts,
-- packages/promotes artifacts into canonical destinations,
-- provides runbooks or deployment scaffolding.
-
-A new component likely belongs elsewhere when it:
-- implements core ETL/transforms/catalog generation (→ `src/pipelines/`),
-- implements graph ingest/migrations/ontology rules (→ `src/graph/`),
-- implements API logic (→ `src/server/`),
-- implements UI features (→ `web/`).
-
-#### 1) Create the tool folder + README
-
-`tools/<tool-name>/README.md` must include:
-- Usage (local + CI)
-- Inputs (paths/env vars; **no secrets committed**)
-- Outputs (canonical destinations only)
-- Validation (what constitutes pass/fail)
-- Security (secrets/PII/sovereignty notes)
-- Reproducibility (manifest pointer + checksums)
-
-#### 2) Define a minimal interface
-
-- Prefer a single entrypoint under `bin/` or `scripts/`.
-- Tool entrypoints should be CI-friendly:
-  - deterministic behavior
-  - non-zero exit code on failure
-  - structured logs where practical
-  - `--help` output describing inputs/outputs
-  - `--dry-run` mode when outputs are written/promoted (recommended)
-
-#### 3) Keep outputs out of `tools/`
-
-Data + evidence outputs go to canonical roots:
-- Domain data staging:
-  - `data/raw/<domain>/`
-  - `data/work/<domain>/`
-  - `data/processed/<domain>/`
-- Global metadata outputs:
-  - `data/stac/`
-  - `data/catalog/dcat/`
-  - `data/prov/`
-- Releases:
-  - `releases/` *(if adopted)*
-- Run metadata pointers:
-  - `mcp/runs/` *(recommended; pointers/hashes, not duplicated datasets)*
-
-#### 4) Emit reproducibility pointers
-
-- Record a run manifest (or pointer) under `mcp/runs/` that references produced artifacts by stable IDs and/or checksums (no duplicated datasets).
-- If provenance is generated, ensure PROV bundles land under `data/prov/`.
-
-#### 5) Wire validation into CI (if applicable)
-
-Validators should be callable in CI, with deterministic outcomes:
-- validate if present
-- fail if invalid
-- skip if not applicable (when inputs/roots are absent)
-
-#### 6) Add tests where appropriate
-
-- Put tool-specific tests under `tools/<tool-name>/tests/` and/or `tests/` depending on project conventions.
-
-#### Optional: tool metadata record (recommended; schema not confirmed in repo)
-
-If the repo adopts a tool registry later, a minimal `tools/<tool-name>/tool.yaml` can be used as a metadata stub:
-
-~~~yaml
-tool_id: "kfm-<tool-name>"
-owner: "TBD"
-entrypoints:
-  - "tools/<tool-name>/scripts/<entrypoint>"
-reads:
-  - "data/**"
-  - "schemas/**"
-writes:
-  - "data/**"
-  - "releases/**"
-  - "mcp/runs/**"
-ci:
-  runnable: true
-security:
-  secrets_required: false
-  sensitivity: "public"
-~~~
-
-## 🧠 Story Node & Focus Mode Integration
-
-### Story Nodes as “machine-ingestible storytelling”
-
-Tools may touch narrative artifacts in two ways:
-1) **Validating** Story Nodes and their evidence links.
-2) Generating **draft** scaffolds for human review (never auto-publish).
-
-### Focus Mode rule
-
-- Focus Mode only consumes **provenance-linked** content.
-- Any predictive content must be opt-in and carry uncertainty/confidence metadata (when adopted).
-
-Rules of engagement:
-- **Provenance-linked hard gate:** Focus Mode consumes provenance-linked context bundles only.
-- **No unsourced narrative:** tools must not “publish” or auto-promote story content that lacks citations to governed sources (datasets, documents, evidence artifacts).
-- **Draft vs published separation:** if a tool generates story content, it must clearly mark it as draft and keep it out of end-user visibility until reviewed.
-- **Evidence linkage:** Story Nodes should reference stable identifiers (STAC Item IDs, DCAT dataset IDs, PROV bundle/activity IDs, graph entity IDs) that resolve in canonical roots.
-- **Safety posture:** tools should avoid logging sensitive locations or raw restricted coordinates; prefer generalized/synthetic fixtures in tests.
-
-Optional structured controls (Story Node hints that tools may validate):
-~~~yaml
-focus_layers:
-  - "TBD"
-focus_time: "TBD"
-focus_center: [ -98.0000, 38.0000 ]
-~~~
+- accept explicit inputs/outputs via CLI flags
+- emit machine-readable logs (JSON preferred)
+- record:
+  - tool/script version
+  - dependency lock hash (if applicable)
+  - git commit SHA
+  - data snapshot identifiers
+- exit with **non-zero** code on validation failure
 
 ## 🧪 Validation & CI/CD
 
-### What tools should validate
+### Common checks expected in CI
 
-When applicable, tooling should provide repeatable validators that CI can run deterministically:
-- **Docs hygiene:** Markdown protocol checks and link integrity for governed docs.
-- **Schema integrity:** STAC/DCAT/PROV JSON validation (and Story Node schema validation where applicable).
-- **Catalog integrity rules:** STAC item↔collection integrity and broken-link checks (as adopted).
-- **Graph ingest readiness:** validate `data/graph/**` fixtures (if present).
-- **API boundary:** contract tests for `src/server/` (OpenAPI/GraphQL as adopted) and redaction rules.
-- **Security & sovereignty:** secret scanning, PII scanning, sensitive-location leakage checks, and classification propagation checks (implementation-defined).
-- **CI gate behavior:** validate artifacts when present; fail if invalid; skip only when not applicable.
+Depending on what changed, CI may run:
 
-### Minimum CI gates for “v12-ready” contributions
+- Markdown lint + front-matter schema validation
+- STAC/DCAT/PROV schema validation
+- Graph integrity checks (ontology constraints, migration consistency)
+- API contract tests (OpenAPI schema compatibility)
+- UI checks (layer registry schema, accessibility)
+- Governance checks (sensitivity, redaction, ledger/telemetry)
 
-CI should enforce (at minimum, where applicable):
-- Markdown protocol validation
-- JSON schema validation (STAC/DCAT/PROV/storynodes/UI registries/telemetry — as applicable)
-- Graph integrity tests
-- API contract tests
-- Security + sovereignty scanning gates (where applicable)
+### Adding a new tool (checklist)
 
-### Validation steps (checklist)
-
-- [ ] Markdown protocol validation (front-matter keys, paths, required headings)
-- [ ] Link/reference checks (no orphan pointers)
-- [ ] Repo lint rules (naming + duplicate canonical homes + prohibited patterns)
-- [ ] Schema validation (STAC/DCAT/PROV, Story Nodes, UI registries — as applicable)
-- [ ] Graph fixture integrity (if `data/graph/**` is used)
-- [ ] API contract tests (if API contracts are touched)
-- [ ] Security & sovereignty scanning gates (as applicable)
-
-### Reproduction (placeholders)
-
-Replace these with repo-accurate commands/scripts (or clearly mark “not confirmed in repo” at the tool level):
-
-~~~bash
-# Example placeholders — replace with repo-specific commands
-
-# 1) validate docs (markdown protocol / links)
-# 2) validate schemas (stac/dcat/prov/storynodes)
-# 3) run tests (unit/integration)
-~~~
-
-### Telemetry signals (if applicable)
-
-| Signal | Source | Where recorded |
-|---|---|---|
-| Run ID / manifest pointer | tool wrapper / CI | `mcp/runs/` (recommended) or CI artifacts |
-| Schema validation summary | validators | CI logs |
-| Artifact checksums | packaging tools | `releases/` (if adopted) or CI artifacts |
-| Sovereignty/redaction gate status | policy checks | CI logs + governance review notes |
+1. Create the tool under `tools/` with a clear, descriptive name.
+2. Ensure it has `--help` and a minimal usage example.
+3. Ensure it is deterministic (or documents why it is not and how to pin it).
+4. Ensure IO follows staging layout + boundary artifacts requirements.
+5. Add it to the Tool inventory table above.
+6. Add/extend CI so the tool runs in the appropriate situations.
+7. If it touches governance/sensitivity, implement **fail-closed** behavior and flag uncertain cases for governance review.
 
 ## ⚖ FAIR+CARE & Governance
 
-### Review gates
+Tools must support FAIR+CARE by:
 
-Follow the governance, ethics, and sovereignty references in this file’s front-matter for any tool that affects:
-- data handling or publication,
-- access control, redaction/generalization,
-- story publication workflows,
-- contract/schema changes,
-- CI enforcement behavior.
+- enforcing metadata completeness (license, spatial/temporal extents, attribution)
+- preventing leakage of sensitive information (especially precise locations)
+- recording governance outcomes in audit artifacts when applicable (ledger/telemetry)
 
-### CARE / sovereignty considerations
+If a tool processes content that might include:
+- culturally sensitive locations
+- personal data
+- restricted archives
 
-- If tooling processes culturally sensitive content or restricted locations, it must align with sovereignty policy and domain-specific redaction requirements.
-- Prefer synthetic fixtures and generalized coordinates for tests when sensitive locations are involved.
-- Ensure operational logs do not leak restricted coordinates, identifiers, or assets.
-- No output may be **less restricted** than any upstream input in its lineage.
-
-### AI usage constraints
-
-- This document permits summarization/structure extraction/translation/keyword indexing.
-- This document prohibits generating policy or inferring sensitive locations.
+…default to **generalize/redact**, and require human governance review before promotion.
 
 ## 🕰️ Version History
 
-| Version | Date | Summary | Author |
-|---|---|---|---|
-| v1.0.5 | 2025-12-29 | Universal-template alignment: normalized section headings + footer refs; updated key artifacts to match Master Guide v12; added ingestion-architecture reference; removed stray trailing separators | TBD |
-| v1.0.4 | 2025-12-28 | Tightened canonical-home boundaries (catalog artifacts are data under `data/**`); added explicit “non-negotiables” + anti-patterns; added canonical homes quick-reference + validate-if-present semantics; kept Universal-template structure and Master Guide pipeline ordering | TBD |
-| v1.0.3 | 2025-12-27 | Universal-template alignment pass; clarified invariants, reordered sections to match governed structure, added open questions + repo lint discipline | TBD |
-| v1.0.2 | 2025-12-27 | Align Tools README to Universal template patterns; add explicit “add a tool” workflow; tighten CI/validation + run manifest guidance; standardize footer style | TBD |
-| v1.0.1 | 2025-12-24 | Align `tools/` README to Master Guide v12 + v13 canonical roots; add Story/CI sections; remove non-repo citations | TBD |
-| v1.0.0 | 2025-12-23 | Initial `tools/` README | TBD |
-
----
-
-Footer refs:
-- Master Guide: `docs/MASTER_GUIDE_v12.md`
-- v13 Blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
-- Governance: `docs/governance/ROOT_GOVERNANCE.md`
-- Ethics: `docs/governance/ETHICS.md`
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+| Version | Date | Notes |
+|---|---|---|
+| v1.0.0-draft | 2025-12-31 | Initial governed README for the `tools/` directory. |
