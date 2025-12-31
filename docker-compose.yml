@@ -1,284 +1,139 @@
-version: "3.9"
-
-# KFM docker-compose: local/dev harness aligned with canonical pipeline:
-# ETL → STAC/DCAT/PROV → Graph (Neo4j) → API → UI → Story Nodes → Focus Mode
+# docker-compose.yml — Kansas Frontier Matrix (KFM) local stack
+# Components: Neo4j (graph), FastAPI (API), React/MapLibre (UI)
+# Optional "ops" profile: ETL runner + graph sync jobs
 #
-# IMPORTANT invariant: "No UI direct-to-graph reads" is enforced here by networks:
-# - neo4j is ONLY on kfm_backend
-# - kfm-web is ONLY on kfm_frontend
-# - kfm-server straddles both (API boundary)
-
-x-kfm-common-env: &kfm_common_env
-  # Canonical repo roots (v12 expected layout)
-  KFM_REPO_ROOT: /workspace
-  KFM_DATA_ROOT: /workspace/data
-  KFM_SCHEMAS_ROOT: /workspace/schemas
-  KFM_DOCS_ROOT: /workspace/docs
-  KFM_MCP_ROOT: /workspace/mcp
-  KFM_RELEASES_ROOT: /workspace/releases
-
-  # Canonical stage roots
-  KFM_STAC_ROOT: /workspace/data/stac
-  KFM_DCAT_ROOT: /workspace/data/catalog/dcat
-  KFM_PROV_ROOT: /workspace/data/prov
-  KFM_GRAPH_ROOT: /workspace/data/graph
-  KFM_STORY_NODES_ROOT: /workspace/docs/reports/story_nodes
-
-  # Neo4j connection (API boundary + tooling containers)
-  KFM_NEO4J_URI: bolt://neo4j:7687
-  KFM_NEO4J_USER: neo4j
-  KFM_NEO4J_PASSWORD: ${KFM_NEO4J_PASSWORD:-kfm_dev_password}
-
-  # Optional common toggles (override in .env)
-  KFM_ENV: ${KFM_ENV:-dev}
-  KFM_LOG_LEVEL: ${KFM_LOG_LEVEL:-info}
+# Canonical code homes (v13): src/pipelines/, src/graph/, src/server/, web/
+# Canonical data roots: data/<domain>/{raw,work,processed}, data/stac/, data/catalog/dcat/, data/prov/, data/graph/
+#
+# Tip: Copy .env.example -> .env (if your repo has one) and override vars as needed.
 
 services:
-  # Bootstrap service: creates canonical roots so a fresh clone can run deterministically.
-  #
-  # Run once (fresh repo): docker compose --profile bootstrap run --rm kfm-bootstrap
-  kfm-bootstrap:
-    profiles: ["bootstrap"]
-    image: alpine:3.20
-    init: true
-    working_dir: /workspace
-    volumes:
-      - ./:/workspace:rw
-    command:
-      - sh
-      - -lc
-      - |
-          set -eu
-          mkdir -p \
-            data/raw data/work data/processed \
-            data/stac/collections data/stac/items \
-            data/catalog/dcat \
-            data/prov \
-            data/graph/csv data/graph/cypher \
-            docs/reports/story_nodes/templates \
-            docs/reports/story_nodes/draft \
-            docs/reports/story_nodes/published \
-            mcp/runs mcp/experiments \
-            schemas/stac schemas/dcat schemas/prov schemas/story_nodes schemas/ui schemas/telemetry \
-            releases
-          echo "✅ KFM canonical roots ensured."
-
-  # Central graph database (Neo4j) used by KFM
   neo4j:
-    image: ${KFM_NEO4J_IMAGE:-neo4j:5}
+    image: "neo4j:${NEO4J_IMAGE_TAG:-5}"
+    container_name: kfm-neo4j
     restart: unless-stopped
-    init: true
-    environment:
-      # NOTE: Override in a local .env (recommended) rather than editing this file.
-      # Neo4j requires auth to be set on first start.
-      KFM_NEO4J_PASSWORD: ${KFM_NEO4J_PASSWORD:-kfm_dev_password}
-      NEO4J_AUTH: neo4j/${KFM_NEO4J_PASSWORD:-kfm_dev_password}
-
-      # Optional (enable if you load CSVs from /import with file:/// URLs):
-      # NEO4J_dbms_security_allow__csv__import__from__file__urls: "true"
-
-      # Optional (plugins): keep off by default unless the repo's graph code requires them.
-      # NEO4J_PLUGINS: '["apoc","graph-data-science"]'
-      # NEO4J_dbms_security_procedures_unrestricted: "apoc.*,gds.*"
     ports:
-      # Bound to localhost by default for safer dev. Change if you need LAN access.
-      - "127.0.0.1:${KFM_NEO4J_HTTP_PORT:-7474}:7474"
-      - "127.0.0.1:${KFM_NEO4J_BOLT_PORT:-7687}:7687"
+      - "127.0.0.1:${NEO4J_HTTP_PORT:-7474}:7474"
+      - "127.0.0.1:${NEO4J_BOLT_PORT:-7687}:7687"
+    environment:
+      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:-kfm_dev_password}"
+      # Expose password for healthcheck / helper tools (do not use in production).
+      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
+      # Optional plugins (comment out if you don't need them):
+      NEO4J_PLUGINS: '["apoc"]'
     volumes:
       - neo4j_data:/data
       - neo4j_logs:/logs
-
-      # Align Neo4j /import with KFM canonical graph ingest artifacts:
-      # - CSV import sources live under data/graph/csv
-      # - Cypher scripts live under data/graph/cypher
-      - ./data/graph/csv:/import:ro
-      - ./data/graph/cypher:/cypher:ro
-
       - neo4j_plugins:/plugins
-    networks:
-      - kfm_backend
+      # Make graph exports available for LOAD CSV and seeding workflows:
+      - ./data/graph/csv:/import:ro
+      - ./data/graph/cypher:/kfm-graph-cypher:ro
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "cypher-shell -a bolt://localhost:7687 -u neo4j -p \"$${KFM_NEO4J_PASSWORD}\" \"RETURN 1\" >/dev/null 2>&1"
-        ]
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p $NEO4J_PASSWORD 'RETURN 1' >/dev/null 2>&1"]
       interval: 10s
       timeout: 5s
-      retries: 20
-      start_period: 20s
-
-  # Contracted API boundary (canonical home: src/server/)
-  # Put behind both networks: can talk to Neo4j (backend) and serve the UI (frontend).
-  kfm-server:
-    profiles: ["app"]
-    build:
-      context: ./src/server
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    init: true
-    depends_on:
-      neo4j:
-        condition: service_healthy
-    environment: *kfm_common_env
-    ports:
-      # Expose API on container port 8080 by default (adjust to your server).
-      - "127.0.0.1:${KFM_API_PORT:-8080}:8080"
-    volumes:
-      - ./data:/workspace/data:rw
-      - ./schemas:/workspace/schemas:ro
-      - ./docs:/workspace/docs:ro
-      - ./mcp:/workspace/mcp:ro
-      - ./releases:/workspace/releases:rw
+      retries: 30
     networks:
       - kfm_backend
-      - kfm_frontend
 
-  # React/Map UI (canonical home: web/)
-  # IMPORTANT: UI MUST NOT connect to Neo4j directly; it only joins kfm_frontend.
-  kfm-web:
-    profiles: ["app"]
+  api:
     build:
-      context: ./web
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./src/server/Dockerfile
+    image: kfm-api:dev
+    container_name: kfm-api
     restart: unless-stopped
-    init: true
-    depends_on:
-      - kfm-server
     environment:
-      # For browser-based apps, default to host-reachable API URL.
-      KFM_API_BASE_URL: http://localhost:${KFM_API_PORT:-8080}
-
-      # Internal service URL (useful if your UI container proxies/SSR server-side):
-      KFM_API_INTERNAL_URL: http://kfm-server:8080
-
-      # If using Vite, you may instead want:
-      # VITE_API_BASE_URL: http://localhost:${KFM_API_PORT:-8080}
-    ports:
-      - "127.0.0.1:${KFM_WEB_PORT:-3000}:3000"
-    networks:
-      - kfm_frontend
-
-  # Optional: quick HTTP browser for local catalog + derived artifacts under ./data
-  # (Convenience only; the UI still MUST NOT read Neo4j directly.)
-  kfm-catalog:
-    profiles: ["tools"]
-    image: python:3.11-slim
-    init: true
-    working_dir: /workspace/data
-    ports:
-      - "127.0.0.1:${KFM_CATALOG_PORT:-9000}:9000"
+      FASTAPI_ENV: "${FASTAPI_ENV:-development}"
+      NEO4J_URI: "${NEO4J_URI:-bolt://neo4j:7687}"
+      NEO4J_USER: "${NEO4J_USER:-neo4j}"
+      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
+      KFM_REPO_ROOT: "/workspace"
+      KFM_DATA_ROOT: "/workspace/data"
+      KFM_DOCS_ROOT: "/workspace/docs"
+      KFM_SCHEMAS_ROOT: "/workspace/schemas"
     volumes:
-      - ./data:/workspace/data:ro
-    command: ["python", "-m", "http.server", "9000", "--directory", "/workspace/data"]
-    networks:
-      - kfm_frontend
-
-  # Optional: tooling container to run ETL/catalog/graph scripts against Neo4j.
-  # Profile-gated so it doesn't run unless requested.
-  kfm-pipelines:
-    profiles: ["tools"]
-    image: python:3.11-slim
-    init: true
+      - ./:/workspace
     working_dir: /workspace
+    ports:
+      - "127.0.0.1:${API_PORT:-8000}:${API_CONTAINER_PORT:-8000}"
     depends_on:
       neo4j:
         condition: service_healthy
-    environment: *kfm_common_env
-    volumes:
-      - ./:/workspace:rw
     networks:
       - kfm_backend
-    tty: true
-    stdin_open: true
-    command:
-      - sh
-      - -lc
-      - |
-          python --version
-          echo "kfm-pipelines ready. Use: docker compose run --rm kfm-pipelines <cmd>"
-          sleep infinity
+      - kfm_app
 
-  # Minimal local preflight: required directories exist + JSON files parse.
-  # (Fast helper; not a replacement for full schema validation / contract tests.)
-  kfm-validate:
-    profiles: ["qa"]
-    image: python:3.11-slim
-    init: true
-    working_dir: /workspace
-    environment: *kfm_common_env
+  ui:
+    build:
+      context: .
+      dockerfile: ./web/Dockerfile
+    image: kfm-ui:dev
+    container_name: kfm-ui
+    restart: unless-stopped
+    environment:
+      # For Vite:
+      VITE_API_BASE_URL: "http://api:${API_CONTAINER_PORT:-8000}"
+      # For Create React App:
+      REACT_APP_API_BASE_URL: "http://api:${API_CONTAINER_PORT:-8000}"
+    ports:
+      - "127.0.0.1:${UI_PORT:-3000}:${UI_CONTAINER_PORT:-3000}"
+    depends_on:
+      - api
+    networks:
+      - kfm_app
+
+  # ----- Optional ops containers (run with: docker compose --profile ops up ...) -----
+
+  etl:
+    image: kfm-api:dev
+    container_name: kfm-etl
+    profiles: ["ops"]
+    environment:
+      NEO4J_URI: "${NEO4J_URI:-bolt://neo4j:7687}"
+      NEO4J_USER: "${NEO4J_USER:-neo4j}"
+      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
+      KFM_REPO_ROOT: "/workspace"
+      KFM_DATA_ROOT: "/workspace/data"
     volumes:
-      - ./data:/workspace/data:ro
-      - ./schemas:/workspace/schemas:ro
-      - ./docs:/workspace/docs:ro
-    command:
-      - sh
-      - -lc
-      - |
-          set -euo pipefail
-          python - <<'PY'
-          import json
-          from pathlib import Path
+      - ./:/workspace
+    working_dir: /workspace
+    # NOTE: run_agent.py path/args not confirmed in provided docs — adjust to match your repo.
+    command: ["bash", "-lc", "python src/pipelines/etl/run_agent.py"]
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    networks:
+      - kfm_backend
 
-          REQUIRED_DIRS = [
-              Path("/workspace/data/raw"),
-              Path("/workspace/data/work"),
-              Path("/workspace/data/processed"),
-              Path("/workspace/data/stac/collections"),
-              Path("/workspace/data/stac/items"),
-              Path("/workspace/data/catalog/dcat"),
-              Path("/workspace/data/prov"),
-              Path("/workspace/docs/reports/story_nodes"),
-              Path("/workspace/schemas/stac"),
-              Path("/workspace/schemas/dcat"),
-              Path("/workspace/schemas/prov"),
-              Path("/workspace/schemas/story_nodes"),
-          ]
-
-          missing = [str(p) for p in REQUIRED_DIRS if not p.exists()]
-          if missing:
-              print("❌ Missing required KFM paths:")
-              for p in missing:
-                  print("  -", p)
-              raise SystemExit(2)
-
-          def iter_json_files(root: Path):
-              if not root.exists():
-                  return
-              for p in root.rglob("*.json"):
-                  if p.is_file():
-                      yield p
-
-          json_roots = [
-              Path("/workspace/data/stac"),
-              Path("/workspace/data/catalog/dcat"),
-              Path("/workspace/data/prov"),
-              Path("/workspace/schemas"),
-          ]
-
-          total = 0
-          for root in json_roots:
-              for f in iter_json_files(root):
-                  total += 1
-                  try:
-                      json.loads(f.read_text(encoding="utf-8"))
-                  except Exception as e:
-                      print(f"❌ Invalid JSON: {f}")
-                      print(f"   {e}")
-                      raise SystemExit(3)
-
-          print(f"✅ Preflight OK. Parsed {total} JSON files across catalogs + schemas.")
-          PY
-
-networks:
-  # Private network: Neo4j + API + pipelines
-  kfm_backend:
-    driver: bridge
-  # UI network: UI + API (no Neo4j here)
-  kfm_frontend:
-    driver: bridge
+  graph_sync:
+    image: kfm-api:dev
+    container_name: kfm-graph-sync
+    profiles: ["ops"]
+    environment:
+      NEO4J_URI: "${NEO4J_URI:-bolt://neo4j:7687}"
+      NEO4J_USER: "${NEO4J_USER:-neo4j}"
+      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
+      KFM_REPO_ROOT: "/workspace"
+      KFM_DATA_ROOT: "/workspace/data"
+    volumes:
+      - ./:/workspace
+    working_dir: /workspace
+    # NOTE: entrypoint not confirmed — replace with your graph build/sync command under src/graph/.
+    command: ["bash", "-lc", "python src/graph/sync.py"]
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    networks:
+      - kfm_backend
 
 volumes:
   neo4j_data:
   neo4j_logs:
   neo4j_plugins:
+
+networks:
+  # Internal graph/data network (UI is intentionally NOT attached here)
+  kfm_backend:
+  # App-facing network (UI <-> API)
+  kfm_app:
