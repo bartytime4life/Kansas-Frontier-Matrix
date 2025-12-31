@@ -167,7 +167,6 @@ If your repo uses different names, keep the same intent and update this tree acc
         ├── 📄 .env.tools.example
         └── 📄 logging.yaml
         
-```
 
 ### Suggested internal organization (optional)
 
