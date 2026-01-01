@@ -28,10 +28,10 @@ Everything in CI/CD and repo policy assumes this canonical order (no “leapfrog
 
 ```mermaid
 flowchart LR
-  A[ETL] --> B[STAC / DCAT / PROV catalogs]
+  A[ETL] --> B[STAC-DCAT-PROV catalogs]
   B --> C[Neo4j graph]
-  C --> D[APIs (contract boundary)]
-  D --> E[React / Map UI]
+  C --> D["APIs - contract boundary"]
+  D --> E[React-Map UI]
   E --> F[Story Nodes]
   F --> G[Focus Mode]
 ```
