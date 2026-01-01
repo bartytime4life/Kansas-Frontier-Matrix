@@ -1,386 +1,401 @@
 # Kansas Frontier Matrix (KFM)
 
-**Kansas Frontier Matrix (KFM)** is a research-and-engineering workspace for building a **Frontier Matrix**: a living, versioned map of relationships between
+**Kansas Frontier Matrix** is an open-source, *governed* “living atlas” of Kansas that turns geospatial + historical sources into **reproducible datasets**, **open catalogs**, a **Neo4j knowledge graph**, a **contract-first API**, and a **MapLibre/React UI**—with **Story Nodes** and **Focus Mode** delivering *evidence-linked* narrative context.
 
-- **phenomena** (what we observe),
-- **models** (what we compute),
-- **hypotheses/claims** (what we assert),
-- **datasets** (what we measure), and
-- **experiments** (what we can do next),
+If you’re new, start here:
 
-with strict emphasis on **validated math**, **error checking**, **reproducibility**, and **real-world application**.
-
-KFM treats scientific progress as a *computable process*: we continuously ingest evidence, update belief weights, run simulations, score knowledge gaps (“frontiers”), and rank the next best experiments.
+- **Canonical pipeline + repo structure (v13):** `docs/MASTER_GUIDE_v13.md`
+- **Governance & review gates:** `docs/governance/ROOT_GOVERNANCE.md`, `docs/governance/REVIEW_GATES.md`
+- **Templates (required formats):** `docs/templates/`
+- **Narrative content home:** `docs/reports/story_nodes/`
 
 ---
 
-## Project status
+## What KFM produces
 
-This README is intentionally written as a **high-quality scaffold**. If you already have code and a concrete directory layout, replace the “recommended layout” and command examples with your repo’s actual structure.
+KFM is designed so that every user-facing claim, map layer, or narrative can be traced back to governed sources.
 
----
-
-## Table of contents
-
-- [What is the Frontier Matrix?](#what-is-the-frontier-matrix)
-- [Core data model](#core-data-model)
-- [Evidence update and scoring](#evidence-update-and-scoring)
-- [Frontier detection](#frontier-detection)
-- [Recommended repository layout](#recommended-repository-layout)
-- [Quickstart](#quickstart)
-- [Reproducibility standards](#reproducibility-standards)
-- [Simulation workflow](#simulation-workflow)
-- [Experiment design workflow](#experiment-design-workflow)
-- [Validation and testing](#validation-and-testing)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [Citation](#citation)
-- [License](#license)
+- **Data products:** `data/raw/ → data/work/ → data/processed/`
+- **Boundary catalogs (required):**  
+  - STAC: `data/stac/`  
+  - DCAT: `data/catalog/dcat/`  
+  - PROV: `data/prov/`
+- **Knowledge graph (derived, reproducible):** Neo4j graph built from catalog + provenance references
+- **API boundary (governed):** `src/server/` (REST + optional GraphQL) with redaction + contract enforcement
+- **UI:** `web/` (React + MapLibre; optional Cesium)
+- **Narratives:** Story Nodes (`docs/reports/story_nodes/`) + Focus Mode (evidence-only context bundle)
 
 ---
 
-## What is the Frontier Matrix?
+## Non‑negotiables (v13 invariants)
 
-The Frontier Matrix is a structured way to answer questions like:
+These are hard rules. If a change violates them, CI should fail.
 
-- Which models explain which phenomena, under what assumptions, and with what empirical support?
-- Where are the “gaps” between regimes (quantum/classical, micro/macro, deterministic/stochastic, weak/strong coupling, etc.)?
-- Which experiments or simulations would reduce uncertainty fastest per unit cost?
-
-Instead of holding this in people’s heads or scattered notes, KFM represents it as a typed, evidence-weighted relational system that can be queried and optimized.
-
----
-
-## Core data model
-
-### Typed nodes
-
-KFM treats the world as a set of **typed entities**:
-
-- \(\mathcal{P}\): phenomena
-- \(\mathcal{M}\): models
-- \(\mathcal{H}\): hypotheses / claims
-- \(\mathcal{D}\): datasets
-- \(\mathcal{E}\): experiments
-
-Define the universe of nodes:
-
-\[
-\mathcal{V} = \mathcal{P} \cup \mathcal{M} \cup \mathcal{H} \cup \mathcal{D} \cup \mathcal{E}
-\]
-
-Each node has:
-
-- stable `id`
-- `type`
-- human-readable `name`
-- `description`
-- optional regime/scale metadata
-- citations / provenance
-
-### Typed relations as a multi-relational graph (or adjacency tensor)
-
-Let \(\mathcal{R}\) be the set of relation types, e.g.
-
-- `EXPLAINS`, `PREDICTS`, `CONSTRAINS`, `USES_DATASET`, `SUPPORTED_BY`, `CONTRADICTS`, `DEPENDS_ON`
-
-Represent relations as a family of adjacency matrices—equivalently, an adjacency tensor:
-
-\[
-A_r(i,j) \in \mathbb{R}, \quad r \in \mathcal{R},\; i,j \in \mathcal{V}
-\]
-
-In practice, each edge stores a *structured weight*:
-
-\[
-A_r(i,j) = (w,\; \sigma,\; s_{rep},\; \text{evidence},\; \text{notes})
-\]
-
-Where:
-
-- \(w\) is the current strength of support (or signed support if you allow negative evidence)
-- \(\sigma\) is uncertainty/dispersion
-- \(s_{rep}\) is a reproducibility score (repeatability, cross-lab support, data availability)
-
-This yields a computable object for:
-
-- coverage analysis (what is unexplained / weakly supported)
-- contradiction discovery (cycles, inconsistent assumption sets)
-- experiment prioritization (expected information gain)
+1. **Pipeline ordering is absolute:**  
+   **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**
+2. **API boundary rule:** the frontend **never** queries Neo4j directly—**all access goes through the API**.
+3. **Provenance first:** nothing is “published” or referenced downstream without STAC/DCAT **and** PROV.
+4. **Deterministic ETL:** idempotent, config-driven, fully logged (reproducible outputs for identical inputs).
+5. **Evidence-first narrative:** Story Nodes and Focus Mode require sourced claims; AI text must be flagged + provenance-linked.
+6. **Sovereignty/classification propagation:** outputs can’t be less restricted than inputs (redaction/approval is required).
 
 ---
 
-## Evidence update and scoring
+## High-level pipeline diagram
 
-A simple, auditable update mechanism is **log-odds accumulation**.
+```mermaid
+flowchart LR
+  subgraph Data
+    A["Raw Sources"] --> B["ETL + Normalization"]
+    B --> C["STAC Items + Collections"]
+    C --> D["DCAT Dataset Views"]
+    C --> E["PROV Lineage Bundles"]
+  end
 
-Maintain log-odds \(\ell\) for an edge being “true/useful”:
-
-\[
-\ell = \log\frac{P(\text{edge true})}{1 - P(\text{edge true})}
-\]
-
-Each new evidence item \(e\) contributes \(\Delta\ell(e)\) (positive or negative):
-
-\[
-\ell \leftarrow \ell + \sum_e \Delta\ell(e)
-\]
-
-Then convert back to a bounded score with the logistic function:
-
-\[
- w = \sigma(\ell) = \frac{1}{1 + e^{-\ell}}
-\]
-
-Why this is useful:
-
-- updates are monotonic unless explicitly overridden
-- contributions are explainable (“this paper moved \(\ell\) by +0.7”)
-- it composes across heterogeneous evidence sources
-
-If you prefer Bayesian updates with explicit likelihood functions, store them per evidence type and use a shared interface; log-odds is still a convenient summary.
-
----
-
-## Frontier detection
-
-A **frontier** is a region of the matrix with:
-
-- low coverage (few strong edges)
-- high uncertainty
-- high contradiction density
-
-One practical per-phenomenon frontier score:
-
-\[
-F(p) = \alpha\,(1-\max_m w_{m\to p}) + \beta\,\mathrm{Uncertainty}(p) + \gamma\,\mathrm{Contradictions}(p)
-\]
-
-High \(F\) means “this is where new simulations/experiments are likely to matter.”
-
----
-
-## Recommended repository layout
-
-If you want a clean, scalable structure for compute-heavy R\&D, this layout works well:
-
+  C --> G["Neo4j Graph (references back to catalogs)"]
+  G --> H["API Layer (contracts + redaction)"]
+  H --> I["Map UI — React · MapLibre · (optional) Cesium"]
+  I --> J["Story Nodes (governed narratives)"]
+  J --> K["Focus Mode (provenance-linked context bundle)"]
 ```
-Kansas-Frontier-Matrix/
-  README.md
-  pyproject.toml              # or requirements.txt
-  kfm/                        # python package (core library)
-    __init__.py
-    cli.py                    # command line entry points
-    matrix/                   # data model + storage
-    evidence/                 # scoring, Bayesian/log-odds updates
-    simulate/                 # simulation drivers
-    experiments/              # experiment cards + planning
-    validate/                 # invariants, schema checks
-    viz/                      # plotting / dashboards
-  schemas/                    # JSONSchema / pydantic models exported
-  evidence/                   # evidence records (json/yaml)
-  data/
-    raw/
-    processed/
-  configs/
-  notebooks/
-  runs/                       # output artifacts, organized by run id
-  tests/
-  docs/
-```
-
-If your repo already exists with different paths, keep the **concepts** and update the **paths/commands**.
 
 ---
 
 ## Quickstart
 
-### Install
+> The exact service names/ports are defined in `docker-compose.yml`. The steps below describe the standard v13 workflow.
 
-Create a virtual environment:
+### Prerequisites
+
+- Git
+- Docker + Docker Compose
+- Python (recommended: 3.11+)
+- Node.js (recommended: 20+)
+
+Optional but recommended:
+
+- `pre-commit`
+- A Python env manager (`venv`, `conda`, `micromamba`, or `uv`)
+
+### 1) Clone
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -U pip
+git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
+cd Kansas-Frontier-Matrix
 ```
 
-Install dependencies:
-
-- If using `pyproject.toml`:
+### 2) Configure environment
 
 ```bash
-pip install -e .
+cp .env.example .env
 ```
 
-- If using `requirements.txt`:
+Open `.env` and set values as needed. Common variables include:
+
+- `NEO4J_URI`
+- `NEO4J_USER`
+- `NEO4J_PASSWORD`
+
+### 3) Start core services
 
 ```bash
-pip install -r requirements.txt
+docker compose up -d
 ```
 
-### Validate and build the matrix (example CLI)
+Typical local endpoints (confirm in `docker-compose.yml`):
 
-If you provide a CLI (recommended), you’ll typically want the following commands:
+- Neo4j Browser: `http://localhost:7474`
+- Neo4j Bolt: `bolt://localhost:7687`
+- API: `http://localhost:8000`
+- Web dev server: `http://localhost:5173`
+
+### 4) Run the web UI
 
 ```bash
-# 1) Validate schemas + invariants
-python -m kfm.cli validate
-
-# 2) Build/update the frontier matrix from evidence records
-python -m kfm.cli build-matrix --in evidence/ --out runs/latest/
-
-# 3) Generate a human-readable report
-python -m kfm.cli report --run runs/latest/ --out docs/report.md
+cd web
+npm ci
+npm run dev
 ```
 
-### Run a small simulation campaign (example)
+### 5) Run validation locally (recommended)
 
 ```bash
-python -m kfm.cli simulate --config configs/demo.yaml --out runs/sim_demo/
+pre-commit install
+pre-commit run --all-files
+pytest -q
 ```
 
 ---
 
-## Reproducibility standards
+## Repository layout (v13)
 
-KFM aims to be “low entropy” by default. Each run artifact should record:
+This is the **canonical** structure (one home per subsystem):
 
-- code version (git commit hash or equivalent)
-- dependency lock (e.g., `pip freeze`, `uv lock`, or `poetry.lock`)
-- random seeds
-- machine / runtime metadata (CPU/GPU, OS)
-- full config used
+```text
+📁 docs/
+├── 📁 governance/
+│   ├── 📄 ROOT_GOVERNANCE.md
+│   ├── 📄 ETHICS.md
+│   ├── 📄 SOVEREIGNTY.md
+│   └── 📄 REVIEW_GATES.md
+└── 📁 reports/
+    └── 📁 story_nodes/
+        ├── 📁 templates/
+        ├── 📁 draft/
+        └── 📁 published/
+            └── 📁 <story_slug>/
+                ├── 📄 story.md
+                └── 📁 assets/
 
-Recommended pattern:
+📁 mcp/
+   ├── 📁 runs/
+   └── 📁 experiments/
 
-- every run produces a **run manifest** (JSON)
-- outputs are content-addressed or at least uniquely named
-- report generation is deterministic from `(inputs, config, code)`
+📁 schemas/
+├── 📁 stac/
+├── 📁 dcat/
+├── 📁 prov/
+├── 📁 storynodes/
+├── 📁 ui/
+└── 📁 telemetry/
 
----
+📁 src/
+├── 📁 pipelines/
+├── 📁 graph/
+└── 📁 server/
 
-## Simulation workflow
+📁 tests/
+📁 tools/
+📁 web/
+📁 releases/
 
-A robust simulation system naturally separates into:
-
-1. **Model layer** (pure, testable): deterministic functions/solvers that map inputs → outputs
-2. **Campaign layer** (orchestration): sweeps, sensitivity analysis, caching, regression comparisons
-
-Minimum deliverables:
-
-- parameter schemas + bounds
-- seed control
-- run manifests (inputs/outputs)
-- metrics extraction
-- regression tests for known scenarios
-
-If you later add accelerators (JAX/Numba/CUDA), keep the model layer reference implementation intact for validation.
-
----
-
-## Experiment design workflow
-
-Treat experiments as *versioned proposals* with explicit hypotheses and predicted outcomes.
-
-An “experiment card” should include:
-
-- objective (which frontier score are we reducing?)
-- target edges to update (which claims should move?)
-- measurement protocol
-- predicted effect size and uncertainty
-- power / sensitivity estimate
-- cost and feasibility notes
-- failure modes
-
-Then compute an **expected information gain (EIG)** (or a proxy score) to rank candidate experiments.
-
----
-
-## Validation and testing
-
-Validation is not optional in a matrix-of-claims project.
-
-### Suggested invariants
-
-- no dangling references (`src` and `dst` must exist)
-- relation types must be in an allowlist
-- schema-valid nodes/edges only
-- contradictions must be explicit (no “silent” inconsistency)
-- evidence updates must be auditable (each delta recorded)
-
-### Suggested test layers
-
-- unit tests for scoring and aggregation
-- property tests for invariants (e.g., random graphs still validate)
-- regression tests for simulation outputs
-
-Tooling suggestions (optional):
-
-- `pytest` (tests)
-- `ruff` (lint)
-- `black` (format)
-- `pre-commit` (automation)
+📄 README.md
+📄 LICENSE
+📄 CITATION.cff
+📄 CHANGELOG.md
+📄 CONTRIBUTING.md
+📄 SECURITY.md
+📄 .editorconfig
+📄 .pre-commit-config.yaml
+📄 docker-compose.yml
+📄 .env.example
+```
 
 ---
 
-## Roadmap
+## Canonical pipeline (how work should flow)
 
-### Milestone 1 — Minimal matrix engine
+### 1) ETL (deterministic)
 
-- [ ] Node/edge schema (JSONSchema or pydantic)
-- [ ] Graph/tensor builder + validation
-- [ ] Evidence aggregation (log-odds or Bayesian)
-- [ ] CLI: `validate`, `build-matrix`
+- **Code:** `src/pipelines/`
+- **Inputs:** `data/raw/<domain>/`
+- **Intermediates:** `data/work/<domain>/`
+- **Outputs:** `data/processed/<domain>/`
 
-### Milestone 2 — Frontier scoring + reporting
+Rules:
+- Keep ETL deterministic (no “creative” inference in extraction).
+- Emit stable IDs/hashes where possible.
+- Log run configuration and inputs/outputs.
 
-- [ ] Frontier score definitions
-- [ ] Contradiction detection
-- [ ] Report generator (Markdown/HTML)
-- [ ] Basic visualization
+### 2) Catalog boundary artifacts (required)
 
-### Milestone 3 — Simulation campaigns
+At “publish time,” every dataset/evidence artifact must generate:
 
-- [ ] Config-driven runs
-- [ ] Parameter sweeps + caching
-- [ ] Regression suite for sim outputs
+- **STAC:** `data/stac/collections/` and `data/stac/items/`
+- **DCAT:** `data/catalog/dcat/` (JSON-LD)
+- **PROV:** `data/prov/` (lineage bundle: inputs → activities → outputs)
 
-### Milestone 4 — Experiment planner
+These are the **only** valid interfaces into downstream stages.
 
-- [ ] Experiment cards
-- [ ] EIG ranking
-- [ ] “next best experiment” suggestions
+### 3) Graph build (derived store)
+
+- **Code:** `src/graph/`
+- **Imports/static graph data:** `data/graph/`
+
+Graph principle:
+- Graph nodes should **reference catalogs** (STAC/DCAT/PROV IDs/links) instead of duplicating payloads.
+
+### 4) API boundary (contract-first + governed)
+
+- **Code:** `src/server/`
+- **Contracts/specs:** place under `src/server/contracts/` (or a consistent subfolder)
+
+Rules:
+- Redaction/classification enforcement happens here.
+- API is the only interface the UI can use.
+
+### 5) Web UI (Map + Timeline + Panels)
+
+- **Code:** `web/`
+- UI fetches governed datasets/story bundles from the API.
+- UI must not contain “hidden data files” that bypass catalogs/provenance.
+
+### 6) Story Nodes (governed narrative content)
+
+- **Templates:** `docs/templates/`
+- **Draft:** `docs/reports/story_nodes/draft/`
+- **Published:** `docs/reports/story_nodes/published/<story_slug>/`
+
+Rules:
+- Story Nodes must be machine-ingestible and provenance-linked.
+- Every claim/media item must reference cataloged evidence.
+
+### 7) Focus Mode (evidence-only contextual bundle)
+
+Focus Mode is an interactive view that presents Story Node context (map + timeline) using only provenance-linked content.
+
+Rules:
+- No unsourced narrative.
+- AI suggestions (if used) must be clearly labeled, provenance-linked, and governance-filtered.
+
+---
+
+## Domain expansion pattern
+
+When adding a new data domain:
+
+1. Create domain staging folders:
+   - `data/raw/<new-domain>/`
+   - `data/work/<new-domain>/`
+   - `data/processed/<new-domain>/`
+
+2. Add ETL under:
+   - `src/pipelines/<new-domain>/` (or consistent structure within `src/pipelines/`)
+
+3. Publish boundary artifacts:
+   - STAC → `data/stac/`
+   - DCAT → `data/catalog/dcat/`
+   - PROV → `data/prov/`
+
+4. Add a domain runbook:
+   - `docs/data/<new-domain>/README.md`
+
+---
+
+## Evidence artifacts (AI/analysis outputs) pattern
+
+KFM treats analysis outputs and AI-generated datasets as **first-class datasets**:
+
+- Store under `data/processed/<domain-or-project>/`
+- Catalog in STAC/DCAT with clear “derived/AI-generated” labeling
+- Trace in PROV with method + parameters + confidence/uncertainty
+- Integrate into graph only with explicit provenance pointers
+- Expose via API only (never directly embedded in UI)
+
+---
+
+## Validation & CI/CD expectations
+
+KFM CI enforces “data like code” gates, including:
+
+- Markdown protocol & YAML front-matter validation
+- Link/reference validation (docs + Story Nodes)
+- JSON Schema validation (STAC/DCAT/PROV + Story Node schemas + telemetry/UI schemas)
+- Graph integrity tests (fixtures, constraints, ontology consistency)
+- API contract tests (OpenAPI/GraphQL + endpoint behavior)
+- Security/governance scans (secrets, PII, sensitive locations, classification downgrades)
+
+Automation note:
+- The project supports scheduled ingestion/refresh workflows (e.g., daily automation at **03:00 UTC**) that stage updates, run governance checks, and promote/tag releases if compliant.
 
 ---
 
 ## Contributing
 
-A suggested contribution loop:
+- Read: `CONTRIBUTING.md`
+- Security reporting: `SECURITY.md`
+- Follow governance: `docs/governance/*`
 
-1. Add/update nodes, edges, and evidence records.
-2. Run validation.
-3. Run tests.
-4. Rebuild the matrix and regenerate reports.
+Common contribution types:
 
-Keep changes **small and reviewable**: in a project like this, provenance and auditability matter.
+### Add/modify a dataset
+- Add/modify ETL in `src/pipelines/`
+- Update `data/processed/` outputs (or ensure pipelines can produce them)
+- Add STAC/DCAT/PROV artifacts
+- Add/update schemas if needed (`schemas/`)
+- Add tests (`tests/`)
+- Add or update domain docs (`docs/data/<domain>/README.md`)
+
+### Add a Story Node
+- Start from `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- Place draft in `docs/reports/story_nodes/draft/`
+- Publish into `docs/reports/story_nodes/published/<story_slug>/`
+- Ensure all claims cite cataloged evidence
+
+### Change an API contract
+- Use `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- Update contract artifacts + tests
+- Keep changes backward-compatible unless versioned
 
 ---
 
-## Citation
+## Release artifacts
 
-If you publish results derived from this repository, cite it as:
+`releases/` is reserved for generated, versioned artifacts such as:
 
-```text
-Kansas Frontier Matrix (KFM), version <commit>, <year>.
-```
+- SBOMs
+- Manifests
+- Telemetry exports
+- Governance ledger sync packages
 
 ---
 
-## License
+## License & citation
 
-Choose one and add a `LICENSE` file:
+- License: `LICENSE`
+- Citation: `CITATION.cff` (preferred for academic/research use)
 
-- Apache-2.0 (permissive, patent-friendly)
-- MIT (simple permissive)
-- GPL-3.0 (copyleft)
+---
+
+## Project reference library (design & implementation)
+
+This project’s architecture and methods were developed alongside a curated set of reference documents. These are not “required reading,” but they’re the baseline for consistent engineering, reproducible science, and GIS correctness.
+
+> Recommended repo location (optional): `docs/library/` (or maintain locally in your workspace).
+
+### KFM core / governance / repo operations
+- `Kansas Frontier Matrix System.docx`
+- `MARKDOWN_GUIDE_v13.md` (Master Guide v13 source)
+- `Inside and Out of GitHub_ A Deep Guide for the Kansas Frontier Matrix.docx`
+- `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`
+- `clean-architectures-in-python.pdf`
+- `Command Line Kung Fu_ Bash Scripting Tricks, Linux Shell Programming Tips, and Bash One-liners - Command_Line_Kung_Fu_Bash_Scripting_Tricks,_Linux_Shell_Program.pdf`
+
+### GIS, cartography, web mapping, and Earth Engine
+- `Geographic Information System Basics - geographic-information-system-basics.pdf`
+- `geoprocessing-with-python.pdf`
+- `python-geospatial-analysis-cookbook.pdf`
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `Google Maps API Succinctly - google_maps_api_succinctly.pdf`
+- `google-maps-javascript-api-cookbook.pdf`
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `Google Earth Engine Applications.pdf`
+- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+- `responsive-web-design-with-html5-and-css3.pdf`
+- `Computer Graphics using JAVA 2D & 3D.pdf`
+
+### Data science, statistics, ML, and simulation rigor
+- `Understanding Statistics & Experimental Design.pdf`
+- `Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf`
+- `regression-analysis-with-python.pdf`
+- `Bayesian computational methods.pdf`
+- `graphical-data-analysis-with-r.pdf`
+- `Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf`
+- `Data Mining Concepts & applictions.pdf`
+- `deep-learning-in-python-prerequisites.pdf`
+- `Artificial-neural-networks-an-introduction.pdf`
+- `AI Foundations of Computational Agents 3rd Ed.pdf`
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+
+### Databases, scalability, and systems
+- `Scalable Data Management for Future Hardware.pdf`
+- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf`
+
+### Graphs, optimization, and theory
+- `Spectral Geometry of Graphs.pdf`
+- `Generalized Topology Optimization for Structural Design.pdf`
+
+### Programming ecosystems
+- `Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf`
+- `implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf`
