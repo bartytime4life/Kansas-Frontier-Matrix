@@ -76,21 +76,21 @@ flowchart LR
 Below is the **expected** docs structure (v13-style). If your repo differs, align toward this.
 
 ```text
-docs/
-  README.md                          # you are here
-  architecture/                      # system & redesign blueprints
-  standards/                         # STAC/DCAT/PROV profiles, ontology protocols
-  governance/                        # ethics, sovereignty, FAIR+CARE policy gates
-  templates/                         # governed templates (universal doc, story node, API contract changes)
-  api/                               # API contracts, schemas, examples
-  ui/                                # UI behavior, map conventions, accessibility notes
-  pipelines/                         # ETL module contracts, runbooks, dataset onboarding
-  reports/
-    story_nodes/
-      draft/                         # narrative drafts (must cite evidence)
-      published/                     # reviewed/published story nodes
-  glossary/                          # project glossary + controlled vocabulary
-  images/                            # diagrams/screenshots used by docs
+📁 docs/
+  📄 README.md                          # you are here
+  🏛️ architecture/                      # system & redesign blueprints
+  📏 standards/                         # STAC/DCAT/PROV profiles, ontology protocols
+  🧭 governance/                        # ethics, sovereignty, FAIR+CARE policy gates
+  🧩 templates/                         # governed templates (universal doc, story node, API contract changes)
+  🔌 api/                               # API contracts, schemas, examples
+  🗺️ ui/                                # UI behavior, map conventions, accessibility notes
+  ⚙️ pipelines/                         # ETL module contracts, runbooks, dataset onboarding
+  🧾 reports/
+    📚 story_nodes/
+      🧪 draft/                         # narrative drafts (must cite evidence)
+      ✅ published/                     # reviewed/published story nodes
+  📖 glossary/                          # project glossary + controlled vocabulary
+  🖼️ images/                            # diagrams/screenshots used by docs
 ```
 
 ### 🧾 Key docs you should be able to find
