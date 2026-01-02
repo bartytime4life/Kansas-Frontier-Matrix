@@ -32,10 +32,6 @@ KFM’s architecture explicitly supports **task queues + worker pools** for heav
 
 ## 🔁 Task lifecycle (Mermaid-safe)
 
-> ✅ Replace your current diagram with this version (it avoids line-join parsing issues and uses quoted labels).
-
-## 🔁 Task lifecycle (Mermaid-safe)
-
 ```mermaid
 flowchart LR
   ui["🖥️ UI / Client"]
