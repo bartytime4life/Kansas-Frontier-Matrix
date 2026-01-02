@@ -32,25 +32,12 @@ KFM’s architecture explicitly supports **task queues + worker pools** for heav
 
 ## 🔁 Task lifecycle (Mermaid-safe)
 
-```mermaid
-flowchart LR
-  ui["🖥️ UI / Client"]
-  api["🌐 API Endpoint"]
-  auth["🔐 AuthZ/AuthN"]
-  q[("📬 Queue / Broker")]
-  w["👷 Worker Pool"]
-  t["🧠 Task Handler"]
-  db[("🗄️ DB / Cache / Object Storage")]
+## 🔁 Task lifecycle (Mermaid-safe, single-line)
 
-  ui -->|POST action| api
-  api -->|Validate + Auth| auth
-  api -->|Enqueue job + return job_id| q
-  q -->|pull| w
-  w -->|run task| t
-  t -->|write outputs| db
-  ui -->|GET status(job_id)| api
-  api -->|read status/results| db
+```mermaid
+flowchart LR ui["🖥️ UI / Client"] -->|POST action| api["🌐 API Endpoint"]; api -->|Validate + Auth| auth["🔐 AuthZ/AuthN"]; api -->|Enqueue job + return job_id| q["📬 Queue / Broker"]; q -->|pull| w["👷 Worker Pool"]; w -->|run task| t["🧠 Task Handler"]; t -->|write outputs| db["🗄️ DB / Cache / Object Storage"]; ui -->|GET status(job_id)| api; api -->|read status/results| db;
 ```
+
 
 
 
