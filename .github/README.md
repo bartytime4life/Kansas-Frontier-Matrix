@@ -1,291 +1,299 @@
-# .github — GitHub Automation & Community Health (Kansas Frontier Matrix)
+# 🤝 `.github/` — Collaboration & Automation Hub (Kansas-Frontier-Matrix)
 
-This folder is the **operational control plane** for the Kansas Frontier Matrix (KFM): CI/CD workflows, community health files, and governance guardrails.
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](#-how-to-contribute)
+[![GitHub Issues](https://img.shields.io/github/issues/bartytime4life/Kansas-Frontier-Matrix)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)](#-pull-requests-prs)
 
-> **Derived from KFM Master Guide v13 (draft, 2025-12-28)** — the goal is to encode “contract-first + evidence-first” work into GitHub so the repo can scale without losing provenance, ethics, or reproducibility.
-
----
-
-## What this folder is responsible for
-
-- **CI/CD**: build, test, validate catalogs/schemas, deploy, monitor, and write governance records.
-- **Community health**: issue templates, PR templates, contributing hygiene, and security policy.
-- **Reproducibility**: “repro-kit” environment scaffolding (e.g., local Neo4j/Docker patterns).
-- **Governance enforcement**: approvals, audit artifacts, ledgers, and supply-chain checks.
-
-If you’re looking for broader system architecture, start here:
-
-- KFM Master Guide: `../docs/MASTER_GUIDE_v13.md`
-- System deep-dive: `../Kansas Frontier Matrix System.docx`
-- GitHub operations: `../Inside and Out of GitHub_ A Deep Guide for the Kansas Frontier Matrix.docx`
-- Documentation standards: `../Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`
+> [!NOTE]
+> This README documents **how we collaborate on GitHub**: issues, pull requests, reviews, labels, and automation.
+>
+> ✅ Start with the project overview: **[`../README.md`](../README.md)**
 
 ---
 
-## The non-negotiable pipeline ordering
+## 🧭 What we’re building (context in 20 seconds)
 
-Everything in CI/CD and repo policy assumes this canonical order (no “leapfrogging” stages):
+Kansas-Frontier-Matrix is an **open-source geospatial + historical mapping hub**: we ingest historical maps, modern GIS layers, and archival documents; normalize them into consistent spatial formats (e.g., GeoTIFF/COG + GeoJSON); connect text ↔ places ↔ time; and surface everything in an interactive map UI (2D/3D + time slider). 🗺️⏳
 
 ```mermaid
 flowchart LR
-  A[ETL] --> B[STAC-DCAT-PROV catalogs]
-  B --> C[Neo4j graph]
-  C --> D["APIs - contract boundary"]
-  D --> E[React-Map UI]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode]
+  A[📦 Data Sources<br/>maps • GIS • docs] --> B[🧰 Ingestion & Processing<br/>georef • convert • parse/OCR]
+  B --> C[🗃️ Data Catalog<br/>STAC-like metadata]
+  B --> D[📚 Document KB<br/>places • dates • excerpts]
+  C --> E[🧠 AI/Analysis Layer<br/>cross-reference & pattern finding]
+  D --> E
+  E --> F[🌐 Web UI<br/>Map + Timeline + Insights]
 ```
 
-**Implication for workflows:** any workflow that produces derived artifacts (data, tiles, model outputs, narrative) must also produce (or update) the **catalog + provenance** artifacts that make it admissible in later stages.
+---
+
+## 🧩 What lives in `.github/`
+
+This folder is the **operations layer** for GitHub collaboration: templates, workflows, and rules. ✅
+
+```text
+📁 .github/
+├─ 📁 workflows/                 # 🤖 CI/CD + automation
+│  ├─ ci.yml                     # ✅ tests + lint + typecheck
+│  ├─ pages.yml                  # 🌐 build/deploy web UI (if using GitHub Pages)
+│  ├─ data-refresh.yml           # 🗺️ scheduled catalog/layer refresh (optional)
+│  └─ security.yml               # 🔐 security scans (optional)
+├─ 📁 ISSUE_TEMPLATE/            # 🧾 guided issue creation
+│  ├─ bug_report.yml
+│  ├─ feature_request.yml
+│  ├─ data_layer_request.yml
+│  └─ question.yml
+├─ 📄 PULL_REQUEST_TEMPLATE.md   # ✅ PR checklist & review prompts
+├─ 📄 CODEOWNERS                 # 👀 review routing
+└─ 📄 README.md                  # 📍 you are here
+```
+
+> [!TIP]
+> If any of the files above don’t exist yet, this README acts as the **spec** for what we should add next.
 
 ---
 
-## Expected contents of `.github/`
+## 🧠 How to contribute
 
-> Some repos evolve; if a file isn’t present yet, treat this as the **target standard layout** for this directory.
+### 🧾 1) Issues
 
-| Path | What it’s for | Notes |
-|---|---|---|
-| `.github/workflows/` | GitHub Actions pipelines | CI, scheduled ingest/update, deploy gates, audit writes |
-| `.github/ISSUE_TEMPLATE/` | Issue templates | Bug reports, data additions, doc changes, governance flags |
-| `.github/PULL_REQUEST_TEMPLATE.md` | PR checklist & routing | Forces evidence + contract compliance |
-| `.github/CODEOWNERS` | Required reviewers | Used for governance-critical paths (schemas, catalogs, workflows) |
-| `.github/SECURITY.md` | Security policy | Disclosure + response expectations |
-| `.github/dependabot.yml` | Dependency updates | Optional, but recommended |
-| `.github/repro-kit/` | Reproducible dev env scaffolding | Often includes Neo4j, local stack quickstarts |
+Use issues for **everything**: bugs, data layers, UI changes, pipeline improvements, docs, research notes.
 
----
+**Before filing:**
+- Search existing issues/PRs
+- Add screenshots (UI), logs (pipelines), or minimal repro (code)
+- Include **time range** + **spatial extent** for geospatial requests (bbox, county, township/range, etc.)
 
-## CI/CD lifecycle (how workflows are conceptually staged)
-
-KFM CI/CD is designed as **phases**, so each PR or scheduled run is validated systematically:
-
-1. **Pre-Commit**  
-   Lint + validate configuration files and documentation structure (YAML, Markdown rules, schema presence).
-
-2. **Build**  
-   Create reproducible environments (container builds, consistent Python/Node toolchains).
-
-3. **Test**  
-   Unit/integration tests, catalog/schema validation, and governance checks (FAIR+CARE).
-
-4. **Deploy**  
-   Staging first; production behind approvals (and environment protections).
-
-5. **Monitor**  
-   Emit telemetry artifacts: runtime metrics, failures, performance, sustainability metrics (if enabled).
-
-6. **Govern**  
-   Write an auditable record of what changed (ledger entry with hashes, statuses, timestamps).
+**Recommended issue categories (labels):**
+- `type:bug` 🐛 — something broken
+- `type:feature` ✨ — new capability
+- `type:data` 🗺️ — new layer/source, ingestion, catalog updates
+- `type:docs` 📚 — documentation improvements
+- `type:chore` 🧹 — refactor, tooling, dependencies
+- `type:security` 🔐 — security-related changes (avoid public details; see below)
 
 ---
 
-## Common workflow categories
+### ✅ 2) Pull Requests (PRs)
 
-Your repo may name these differently, but these are the patterns this folder should support:
+PRs should be **small, reviewable, and testable**.
 
-### 1) Pull Request validation (PR gate)
-Triggered by `pull_request`:
+**Branch naming:**
+- `feat/<short-scope>` — new features
+- `fix/<short-scope>` — bug fixes
+- `data/<source-or-layer>` — data/catalog changes
+- `docs/<topic>` — documentation
 
-- Lint + format check (Python + Node + Markdown)
-- Validate **STAC/DCAT/PROV** JSON / JSON-LD structure (schema validation)
-- Run unit tests + integration tests (including small-graph integrity fixtures if configured)
-- Fail fast if:
-  - new dataset lacks catalog entries
-  - provenance is missing
-  - sensitive material violates governance rules
+**PR size guideline:**
+- Prefer < **400 lines** changed unless there’s a strong reason
 
-### 2) Scheduled data/model refresh (auto-update / orchestrator)
-Triggered by `schedule` (cron) and optionally `workflow_dispatch`:
+**PR must include:**
+- A clear summary (“what + why”)
+- Testing notes (unit/integration/manual)
+- Docs updates **if behavior changes**
+- Data provenance notes **if layers change** (see below)
 
-- Fetch new upstream datasets or model artifacts into a staging area
-- Run validation + governance checks
-- Promote to production only if all checks pass
-- Tag / release if applicable
-
-### 3) Deployment workflows (staging → production)
-Triggered by `workflow_dispatch`, `push` to protected branches, or release tags:
-
-- Deploy services (API, UI, graph ingest, tiles, etc.)
-- Require approval gates for production (use GitHub Environments + reviewers)
-- Produce deploy logs and governance entries
-
-### 4) Governance + supply-chain workflows
-Often run on releases/tags and/or deploys:
-
-- SBOM generation + validation
-- Signed build manifests / provenance attestations (SLSA-like patterns)
-- Ledger sync / governance trail writes
+> [!IMPORTANT]
+> For geospatial changes: include **EPSG**, **bbox**, **time coverage**, and **format** (COG/GeoJSON/etc.) in the PR description.
 
 ---
 
-## Governance & security controls enforced from `.github`
+## 🏷️ Label taxonomy (keep it consistent)
 
-### Council / human approval gates
-Production is not “just a green build.” Use **protected environments** and **required reviewers** for:
+Use prefixes so filters and boards stay sane:
 
-- Deploy-to-prod workflows
-- Schema and governance policy changes
-- Any change that impacts sensitive data handling
-
-### Audit trail artifacts
-Workflows should produce versioned artifacts like:
-
-- build manifests (hashes)
-- SBOM outputs
-- governance ledger entries (what changed + when + status)
-- redaction/audit signals when sensitive material is involved
-
-### Sovereignty & sensitive-data safety
-If your workflows touch anything potentially sensitive (e.g., culturally restricted sites, private landowner data, vulnerable locations), ensure:
-
-- **precision masking** / generalization where required
-- explicit labeling (CARE labels / sensitivity fields)
-- extra review triggers (CODEOWNERS + approvals)
+- `type:*` → intent (bug/feature/data/docs/chore/security)
+- `area:*` → subsystem
+  - `area:pipeline` 🧰
+  - `area:catalog` 🗃️
+  - `area:ai` 🧠
+  - `area:web` 🌐
+  - `area:db` 🗄️
+- `priority:*` → urgency (`p0`, `p1`, `p2`)
+- `status:*` → workflow state (`blocked`, `needs-info`, `ready`, `in-progress`)
+- `good-first-issue` 🌱 → newcomer-friendly
 
 ---
 
-## Secrets & environment configuration
+## 🗺️ Data & layer contribution rules (non-negotiable)
 
-Workflows should rely on **environment variables and secrets** (never hardcode):
+### ✅ Provenance checklist (required)
+Any new/updated dataset **must** include:
 
-- Neo4j connection (e.g., `NEO4J_URI`, `NEO4J_USER`, `NEO4J_PASSWORD`)
-- Deployment credentials / tokens (scoped + rotated)
-- API keys for upstream data pulls (if any)
+- Source name + link (or archive reference)
+- License/terms (or “unknown” with rationale)
+- Spatial reference (EPSG) and units
+- Time coverage (single year, range, or “undated”)
+- Processing steps (georef points count, resampling, simplification, etc.)
+- Checksums (recommended) and version stamp
 
-Recommended repo patterns:
+> [!WARNING]
+> If we can’t explain where the data came from and how it was processed, we can’t trust it — and it won’t ship.
 
-- `../.env.example` for local development defaults
-- `.github/repro-kit/` for reproducible local stack docs (Neo4j in Docker, etc.)
+### 🧱 Preferred formats
+- Raster: **COG** (Cloud-Optimized GeoTIFF) ✅
+- Vector: **GeoJSON** (or GeoPackage/Shapefile when justified)
+- Interchange for Google Earth: **KML/KMZ** (regionated if large)
+- Tiles: vector/raster tiles only when needed for UX/performance
 
----
-
-## Local workflow development tips
-
-You should be able to validate most workflow logic without burning CI minutes:
-
-- Run linters locally (Python + Node).
-- Validate JSON/JSON-LD schema locally when editing catalogs.
-- Validate Markdown structure locally if your repo enforces templates.
-
-Optional tooling that helps:
-- `act` (simulate GitHub Actions locally)
-- `shellcheck` (if workflows call shell scripts)
-- `yamllint` (for workflow YAML hygiene)
-
----
-
-## PR checklist for `.github` changes
-
-Use this checklist whenever you modify workflows/templates/policies:
-
-- [ ] Workflow YAML validates (syntax + lint).
-- [ ] Any new workflow has clear triggers (`pull_request`, `push`, `schedule`, `workflow_dispatch`) and is documented here.
-- [ ] Security posture preserved: least-privilege permissions, no plaintext secrets, no unsafe logging.
-- [ ] Governance maintained: changes still produce required audit artifacts (ledger/telemetry) where applicable.
-- [ ] Changes do not bypass the canonical pipeline ordering.
-- [ ] CODEOWNERS updated if governance-critical paths changed.
-- [ ] If the workflow affects data publication, it enforces catalog + provenance updates (STAC/DCAT/PROV).
+### 🧪 Validation expectations
+- Geometry validity checks (self-intersections, empty geometries)
+- Topology checks where relevant (boundaries, networks)
+- “Looks right” QA: render a quick preview in the web UI / QGIS
+- Document the test: screenshot + bbox + zoom level
 
 ---
 
-## Project reference library
+## 🧠 AI / analytics contributions (keep it scientific)
 
-These files support contributor onboarding and the engineering standards behind KFM. If you store these PDFs elsewhere, update the paths. Suggested home: `../docs/library/`.
+We accept AI/ML contributions when they are:
+- Transparent (inputs/outputs + limitations)
+- Evaluated (not vibes)
+- Reproducible (seeded, versioned, documented)
 
-<details>
-<summary><strong>Architecture, governance, and engineering standards</strong></summary>
+**Required artifacts for ML-ish PRs:**
+- A short **dataset note** (what, where from, known biases)
+- An **evaluation note** (metrics + what “good” means)
+- A **model/experiment card** in `mcp/model_cards/` (or equivalent)
 
-- `../Kansas Frontier Matrix System.docx`
-- `../Inside and Out of GitHub_ A Deep Guide for the Kansas Frontier Matrix.docx`
-- `../Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`
-- `../Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- `../clean-architectures-in-python.pdf`
-- `../Command Line Kung Fu_ Bash Scripting Tricks, Linux Shell Programming Tips, and Bash One-liners - Command_Line_Kung_Fu_Bash_Scripting_Tricks,_Linux_Shell_Program.pdf`
+> [!TIP]
+> Avoid statistical foot-guns: document sampling, leakage risks, p-hacking risks, and how you validated.
 
-</details>
+---
 
-<details>
-<summary><strong>Geospatial, GIS, mapping, and remote sensing</strong></summary>
+## 🧱 Architecture & code quality expectations
 
-- `../Geographic Information System Basics - geographic-information-system-basics.pdf`
-- `../geoprocessing-with-python.pdf`
-- `../python-geospatial-analysis-cookbook.pdf`
-- `../making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `../Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-- `../Google Earth Engine Applications.pdf`
-- `../Google Maps API Succinctly - google_maps_api_succinctly.pdf`
-- `../google-maps-javascript-api-cookbook.pdf`
+### 🧼 Clean boundaries
+We bias toward **clean architecture**:
+- UI concerns stay in `web/`
+- Domain logic stays testable (not glued to frameworks)
+- Adapters (DB/API/IO) are swappable and mocked in tests
 
-</details>
+### 🧰 Tooling norms
+- Prefer reproducible CLI tooling (`make`, `task`, or scripts)
+- Keep pipelines deterministic (idempotent steps, clear outputs)
+- Log important steps (inputs, outputs, counts, timings)
 
-<details>
-<summary><strong>Web UI, visualization, and graphics</strong></summary>
+### 🐳 Docker-first (when possible)
+If it runs in CI, it should run locally. Containerization helps.
 
-- `../responsive-web-design-with-html5-and-css3.pdf`
-- `../webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-- `../Computer Graphics using JAVA 2D & 3D.pdf`
+---
 
-</details>
+## 🔐 Security & privacy
 
-<details>
-<summary><strong>Databases and scalable data management</strong></summary>
+- Never commit secrets (tokens, keys, credentials)
+- Use GitHub Secrets + environment variables
+- For vulnerabilities: open a **private** report (or follow `SECURITY.md` if present)
 
-- `../PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `../MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf`
-- `../Scalable Data Management for Future Hardware.pdf`
+> [!CAUTION]
+> Don’t paste sensitive endpoints, server IPs, or access patterns in public issues.
 
-</details>
+---
 
-<details>
-<summary><strong>JavaScript/Node toolchain</strong></summary>
+## 🌐 Frontend contributions (maps + time)
 
-- `../Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf`
+UI work should keep these goals in mind:
+- Layer toggles + strong legend behavior 🗺️
+- Timeline/time slider that filters layers cleanly ⏳
+- Progressive loading for heavy data (tiles, regionated KML, etc.)
+- Accessibility + responsive layouts 📱🖥️
 
-</details>
+---
 
-<details>
-<summary><strong>Statistics, experimental design, regression, and Bayesian methods</strong></summary>
+## ✅ Definition of Done (DoD)
 
-- `../Understanding Statistics & Experimental Design.pdf`
-- `../Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf`
-- `../regression-analysis-with-python.pdf`
-- `../Bayesian computational methods.pdf`
-- `../graphical-data-analysis-with-r.pdf`
+Use this as the final self-check before requesting review:
 
-</details>
+- [ ] Issue is linked (or clearly explained why not)
+- [ ] Tests added/updated (or explained why not)
+- [ ] Docs updated (README/ARCHITECTURE/SOP) if behavior changed
+- [ ] Data provenance included (if data touched)
+- [ ] No secrets in commits, logs, or screenshots
+- [ ] Reviewer can reproduce locally (steps included)
 
-<details>
-<summary><strong>AI, data mining, and neural networks</strong></summary>
+---
 
-- `../deep-learning-in-python-prerequisites.pdf`
-- `../AI Foundations of Computational Agents 3rd Ed.pdf`
-- `../Data Mining Concepts & applictions.pdf`
-- `../Artificial-neural-networks-an-introduction.pdf`
-- `../Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf`
-
-</details>
+## 📚 Project reference library (the “why” behind our standards)
 
 <details>
-<summary><strong>Advanced math / optimization / graphs (supporting theory)</strong></summary>
+<summary><strong>📖 Expand the full reading map (PDFs)</strong></summary>
 
-- `../Generalized Topology Optimization for Structural Design.pdf`
-- `../Spectral Geometry of Graphs.pdf`
+### 🧭 Core project docs
+- `docs/design/Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf`
+- `docs/architecture/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
 
-</details>
+### 🗺️ GIS, geoprocessing, remote sensing
+- `docs/library/Geographic Information System Basics - geographic-information-system-basics.pdf`
+- `docs/library/geoprocessing-with-python.pdf`
+- `docs/library/python-geospatial-analysis-cookbook.pdf`
+- `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `docs/library/Google Earth Engine Applications.pdf`
 
-<details>
-<summary><strong>Compilers and language tooling (useful for DSLs & contracts)</strong></summary>
+### 🧭 Maps APIs & web mapping
+- `docs/library/Google Maps API Succinctly - google_maps_api_succinctly.pdf`
+- `docs/library/google-maps-javascript-api-cookbook.pdf`
 
-- `../implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf`
+### 🌐 Web + graphics + 3D
+- `docs/library/responsive-web-design-with-html5-and-css3.pdf`
+- `docs/library/webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+- `docs/library/Computer Graphics using JAVA 2D & 3D.pdf`
+
+### 🧠 AI, agents, ML foundations
+- `docs/library/AI Foundations of Computational Agents 3rd Ed.pdf`
+- `docs/library/Artificial-neural-networks-an-introduction.pdf`
+- `docs/library/deep-learning-in-python-prerequisites.pdf`
+- `docs/library/Data Mining Concepts & applictions.pdf`
+
+### 📈 Statistics, experiments, and modeling discipline
+- `docs/library/Understanding Statistics & Experimental Design.pdf`
+- `docs/library/Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf`
+- `docs/library/Bayesian computational methods.pdf`
+- `docs/library/regression-analysis-with-python.pdf`
+- `docs/library/graphical-data-analysis-with-r.pdf`
+- `docs/library/Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf`
+
+### 🧪 Simulation, optimization, and advanced math
+- `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `docs/library/Generalized Topology Optimization for Structural Design.pdf`
+- `docs/library/Spectral Geometry of Graphs.pdf`
+
+### 🧰 Engineering foundations (systems, DBs, tooling)
+- `docs/library/clean-architectures-in-python.pdf`
+- `docs/library/implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf`
+- `docs/library/Introduction-to-Docker.pdf`
+- `docs/library/Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf`
+- `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `docs/library/MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf`
+- `docs/library/Scalable Data Management for Future Hardware.pdf`
+- `docs/library/applied-data-science-with-python-and-jupyter.pdf`
+- `docs/library/MATLAB Programming for Engineers Stephen J. Chapman.pdf`
+
+### 🧑‍⚖️ Ethics & philosophy (how we treat data + people)
+- `docs/library/Introduction to Digital Humanism.pdf`
+- `docs/library/Principles of Biological Autonomy - book_9780262381833.pdf`
 
 </details>
 
 ---
 
-## License & content note
+## 🧑‍💻 Maintainers & ownership
 
-If this repository is public/open-source, verify that any non-original PDFs and commercial book content are stored and distributed in compliance with their licenses. If not, replace PDFs with:
-- citations,
-- purchase/official links,
-- or internal-only storage references.
+- CODEOWNERS live in **[`./CODEOWNERS`](./CODEOWNERS)** 👀  
+- If you’re unsure who owns an area, open an issue with `status:needs-triage` and we’ll route it.
+
+---
+
+## 🚀 Next “missing but expected” files
+
+If they don’t exist yet, consider adding:
+
+- `SECURITY.md` 🔐 (vulnerability reporting)
+- `CONTRIBUTING.md` 🤝 (expanded dev setup + conventions)
+- `docs/ARCHITECTURE.md` 🧱 (system boundaries + runtime diagram)
+- `.github/workflows/ci.yml` ✅ (lint/test/build)
+- `.github/PULL_REQUEST_TEMPLATE.md` ✅ (checklist)
+
+---
+
+**Thanks for building the Matrix.** 🧭🗺️✨
