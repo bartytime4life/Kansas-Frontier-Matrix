@@ -1,435 +1,346 @@
----
-title: "KFM Raw Data"
-path: "data/raw/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-26"
-status: "draft"
-doc_kind: "README"
-license: "CC-BY-4.0"
+# 🗃️ `data/raw/` — Raw Data (Immutable Inputs)
 
-markdown_protocol_version: "KFM-MDP v11.2.6"
-mcp_version: "MCP-DL v6.3"
-ontology_protocol_version: "KFM-ONTO v4.1.0"
-pipeline_contract_version: "KFM-PPC v11.0.0"
+![stage](https://img.shields.io/badge/data%20stage-raw-blue)
+![policy](https://img.shields.io/badge/policy-append--only-success)
+![lineage](https://img.shields.io/badge/lineage-provenance--first-informational)
+![governance](https://img.shields.io/badge/governance-FAIR%2BCARE-purple)
 
-stac_profile: "KFM-STAC v11.0.0"
-dcat_profile: "KFM-DCAT v11.0.0"
-prov_profile: "KFM-PROV v11.0.0"
+Raw data is the **first boundary** of the KFM pipeline: we ingest external sources here, keep them **as raw as possible**, and only then run deterministic ETL into `data/work/` and publish outputs in `data/processed/`. 📦➡️🛠️➡️✅ [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
 
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+> 🧊 **Rule of thumb:** If you changed bytes, *it’s not raw anymore* — it belongs in `data/work/` or `data/processed/`.
 
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US-KS"
-
-doc_uuid: "urn:kfm:doc:data:raw:readme:v1.0.0"
-semantic_document_id: "kfm-data-raw-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:data:raw:readme:v1.0.0"
-
-commit_sha: "<latest-commit-hash>"
-
-ai_transform_permissions:
-  - "summarize"
-  - "structure_extract"
-  - "translate"
-  - "keyword_index"
-ai_transform_prohibited:
-  - "generate_policy"
-  - "infer_sensitive_locations"
-
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Raw Data
+## 🎯 What belongs in `data/raw/`
 
-> **Purpose (required):** Define what belongs in the **raw landing layer** (`data/raw/`), the **immutability + provenance rules** for storing source artifacts, and how raw inputs connect to downstream **work → processed → STAC/DCAT/PROV → Graph/API → UI → Story Nodes → Focus Mode**.
+✅ **Allowed**
+- Vendor dumps, agency downloads, scans, exports, archives, sensor drops
+- API pulls (when you can persist the response payloads without semantic edits)
+- Delivered bundles in their **original format** (ZIP/TAR, GeoTIFF, CSV, JSON, PDF, etc.)
+- Lossless extraction output (unzip/untar) **without transformation** (see `extracted/` rules)
 
-## 📘 Overview
+❌ **Not allowed**
+- Reprojected rasters, cleaned/normalized tables, renamed columns, “fixed” geometries
+- Re-encoded/converted formats (COG conversion, Parquet conversion, OCR text, etc.)
+- Anything that is an **analysis/evidence artifact** (those are first-class datasets in `data/processed/`) [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-### Purpose
+---
 
-- `data/raw/` is the **landing zone for source artifacts “as received”** from external providers (downloads, dumps, exports, archives, API responses).
+## 🗂️ Folder layout (recommended)
 
-- This layer is **append-only** and **must not be hand-edited**; corrections happen by adding a new snapshot/version while retaining prior inputs for auditability.
+Raw data should be **organized by domain**, then **dataset**, then **version/date**.
 
-- Raw is **evidence**, not a product: it supports provenance, reproducibility, and governance review, while user-facing outputs come from `data/processed/` and catalogs.
+```text
+data/raw/
+└── <domain>/                      # e.g., land_treaties, imagery, census, hydro, documents, sensors
+    └── <dataset_slug>/            # kebab-case, stable ID
+        └── <YYYY-MM-DD_or_vX>/    # immutable drop boundary
+            ├── 📄 README.md
+            ├── 📄 source.json
+            ├── 📄 checksums.sha256
+            ├── 📁 original/       # optional: the exact upstream archive(s) or delivered bundle
+            └── 📁 extracted/      # optional: extraction output (ONLY lossless unpacking; no transforms)
+```
 
-### Scope
+### 🏷️ Naming rules (keep it boring = keep it reproducible)
+- **`<domain>/`**: short, meaningful bucket (team-agreed). Don’t overfit.
+- **`<dataset_slug>/`**: `kebab-case`, stable identifier (no dates inside the slug).
+- **`<YYYY-MM-DD_or_vX>/`**: immutable “drop boundary”
+  - Use `YYYY-MM-DD` when the source is a dated pull/delivery.
+  - Use `vX` when the upstream has explicit releases (or you’re mirroring a versioned archive).
+  - If you re-pull the same upstream date, create a new boundary: `YYYY-MM-DDb` (or bump `vX`), don’t overwrite.
 
-| In Scope | Out of Scope |
-|---|---|
-| Raw source snapshots (“as received”) and pointer files for large assets | Data cleaning/normalization (belongs in `data/work/`) |
-| Minimum metadata to reproduce ingestion (source, retrieval time, license/terms, checksums) | Certified/public datasets (belongs in `data/processed/`) |
-| Provenance linkage expectations (PROV references to raw entities) | STAC/DCAT authoring details (belongs in catalog docs + schemas) |
-| Governance and sensitivity expectations for raw inputs | API/UI behaviors and contracts (documented under `src/server/` + `web/`) |
+---
 
-### Audience
+## 📄 Raw drop contract (what every drop MUST contain)
 
-- Primary: ETL/pipeline contributors, data maintainers, release managers.
+Each immutable drop is a **contract boundary**: a human can understand it and a machine can validate it. This matches KFM’s **contract-first** and **deterministic pipeline** expectations. [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-- Secondary: governance reviewers, auditors, story authors who need evidence lineage.
+| Artifact | Required | Why it exists | “Good enough” contents |
+|---|---:|---|---|
+| 📄 `README.md` | ✅ | Human context & caveats | what it is, where it came from, what’s inside, how to reproduce |
+| 📄 `source.json` | ✅ | Machine-readable provenance | source URLs, license, retrieval method/time, classification, extents |
+| 📄 `checksums.sha256` | ✅ | Integrity & tamper-evidence | sha256 over all files in the drop (excluding itself) |
+| 📁 `original/` | ◻️ | Exact upstream bundle | ZIP/TAR/PDFs, vendor delivery, “as received” |
+| 📁 `extracted/` | ◻️ | Lossless unpack only | unzip/untar output ONLY (no reprojection, no cleaning) |
 
-### Definitions (link to glossary)
+> ⚠️ **Append-only policy:** never mutate an existing drop. If something changes, create a new drop boundary and document why.
 
-- Link: `docs/glossary.md` (**not confirmed in repo**).
+---
 
-- Terms used in this doc:
+## 🧾 `source.json` template (recommended)
 
-  - **Raw**: landed artifacts as received from a source.
+`source.json` is the “receipt” 🧾 — it should let future-you re-acquire and re-verify the same raw inputs.
 
-  - **Work**: intermediate, reproducible transformation outputs; safe to delete/rebuild.
+```json
+{
+  "dataset_id": "<domain>/<dataset_slug>",
+  "domain": "<domain>",
+  "dataset_slug": "<dataset_slug>",
+  "drop_id": "<YYYY-MM-DD_or_vX>",
 
-  - **Processed**: certified, schema-aligned outputs suitable for catalog + graph + UI.
+  "title": "Human-friendly dataset name",
+  "description": "What this drop contains (1–3 sentences).",
 
-  - **Snapshot**: a time/version-bounded raw capture of a source.
+  "upstream": {
+    "publisher": "Agency / org / vendor",
+    "source_urls": ["https://…"],
+    "retrieved_from": "https://…",
+    "license": "SPDX or link / statement",
+    "citation": "Preferred citation string (if provided)"
+  },
 
-### Key artifacts (what this doc points to)
+  "retrieval": {
+    "retrieved_at": "YYYY-MM-DDTHH:MM:SSZ",
+    "method": "manual|script|api|mirror",
+    "performed_by": "name_or_handle",
+    "tooling": {
+      "script_path": "tools/fetch/<something>.sh",
+      "container": "docker image tag (if used)",
+      "commit": "git commit hash (if applicable)"
+    }
+  },
 
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| Master guide | `docs/MASTER_GUIDE_v12.md` | KFM Maintainers | Canonical pipeline ordering + invariants |
-| Data root README | `data/README.md` | Data Maintainers | Repository-wide data layout conventions (may reflect v13 target layout) |
-| v13 redesign blueprint (if adopted) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Architecture | Target directory layout and migration direction |
-| Universal template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs | Governs this README structure |
-| Domain ingestion docs | `data/<domain>/ingestion/README.md` (**not confirmed in repo**) | Domain Owners | Domain-level landing/processing rules (if present) |
+  "coverage": {
+    "spatial": {
+      "crs": "EPSG:4326 (if known; otherwise 'unknown')",
+      "bbox_wgs84": [-180.0, -90.0, 180.0, 90.0]
+    },
+    "temporal": {
+      "start": "YYYY-MM-DD",
+      "end": "YYYY-MM-DD"
+    }
+  },
 
-### Definition of done (for this document)
+  "sensitivity": {
+    "classification": "public|restricted|confidential",
+    "notes": "Anything about privacy, sovereignty, access constraints, redactions."
+  },
 
-- [ ] Front-matter complete + valid; `path` matches file location.
+  "files": [
+    {
+      "path": "original/source_bundle.zip",
+      "media_type": "application/zip",
+      "size_bytes": 0,
+      "sha256": "<optional duplicate of checksums.sha256>"
+    }
+  ]
+}
+```
 
-- [ ] Raw layer invariants stated (immutability, checksums, license capture, no hand edits).
+> 🧠 Tip: keep **README.md human**, keep **source.json machine**. Don’t hide critical licensing/sensitivity notes in prose only.
 
-- [ ] Directory layout reflects KFM staging semantics and avoids broken internal links.
+---
 
-- [ ] Validation + governance expectations listed (secrets/PII scanning, sensitivity propagation).
+## 🔑 `checksums.sha256` (how to generate + verify)
 
-- [ ] Version history included.
+### Generate (macOS/Linux)
+```bash
+# from inside the drop directory (…/<YYYY-MM-DD_or_vX>/)
+find . -type f \
+  ! -name 'checksums.sha256' \
+  -print0 | sort -z | xargs -0 sha256sum > checksums.sha256
+```
 
-## 🗂️ Directory Layout
+### Verify (macOS/Linux)
+```bash
+sha256sum -c checksums.sha256
+```
 
-### This document
+### Windows (PowerShell)
+```powershell
+Get-ChildItem -Recurse -File |
+  Where-Object { $_.Name -ne "checksums.sha256" } |
+  ForEach-Object {
+    $h = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower()
+    "$h  $($_.FullName.Replace((Get-Location).Path + '\','').Replace('\','/'))"
+  } | Set-Content checksums.sha256
+```
 
-- `path`: `data/raw/README.md` (must match front-matter)
+---
 
-### Related repository paths
+## 📦 Large files (recommended: DVC)
 
-| Area | Path | What lives here |
-|---|---|---|
-| Data (root) | `data/` | Domains + staging + catalogs |
-| Raw stage | `data/raw/` | Landed source artifacts (this document governs) |
-| Work stage | `data/work/` | Intermediate artifacts (rebuildable) |
-| Processed stage | `data/processed/` | Certified artifacts (schema-aligned) |
-| STAC catalogs | `data/stac/` | STAC Collections/Items + assets |
-| DCAT catalogs | `data/catalog/dcat/` | DCAT datasets/distributions |
-| Provenance | `data/prov/` | PROV bundles (activities/entities/agents) |
-| ETL/pipelines | `src/pipelines/` | Ingest + transform code/config |
-| Graph ingest | `src/graph/` | Ontology + ingest/build steps |
-| API boundary | `src/server/` | Contracted access (UI never reads Neo4j directly) |
-| UI | `web/` | Map/narrative front end (React/MapLibre per architecture) |
+For big rasters / imagery / long time-series, prefer **DVC** so Git stays fast while datasets remain reproducible. The project design explicitly suggests DVC for large artifacts and reproducible data versioning. [oai_citation:4‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw) [oai_citation:5‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
 
-### Supported layout patterns
+**Pattern**
+- Keep `source.json` + `checksums.sha256` **in Git**
+- Store heavy binaries in DVC remote (or equivalent artifact storage)
+- Treat each `<drop_id>/` as immutable even when tracked by DVC
 
-KFM documents describe two common staging layouts:
+> 🧯 If the upstream license forbids redistribution: store *only* metadata + retrieval instructions in Git, and keep the data in restricted storage.
 
-1) **Stage-scoped (this folder):** `data/raw/<domain>/...`
+---
 
-2) **Domain-scoped (v13 target pattern):** `data/<domain>/raw/...`
+## 🗺️ Geospatial specifics (raw-stage rules)
 
-If the repository migrates to domain-scoped staging, update this README (or replace it with the domain-scoped equivalent) to avoid ambiguity.
+### ✅ In raw
+- Keep original CRS, resolution, and encoding (“as delivered”)
+- Store upstream metadata sidecars exactly (e.g., `.xml`, `.aux`, `.tfw`)
+- Record bbox/time coverage in `source.json`
 
-### Expected file tree for this sub-area
+### ❌ Not in raw
+- Reprojection, resampling, tiling, simplification, topology repair
+- “Make it a COG” conversions
+- “Cleaned” geometries or normalized attribute schemas
 
-> Note: Example domain folders below are illustrative; presence/absence is **not confirmed in repo**.
+When publishing, KFM expects metadata boundary artifacts (STAC/DCAT/PROV) **before** downstream use. [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-~~~text
-📁 data/
-├── 📁 raw/
-│   ├── 📄 README.md                         # This file (raw layer rules)
-│   ├── 📁 <domain>/                         # e.g., air-quality/, hydrology/, landcover/, terrain/ (examples)
-│   │   ├── 📄 README.md                     # Domain raw index (recommended)
-│   │   └── 📁 <dataset_or_source>/          # Dataset/source grouping (recommended)
-│   │       ├── 📁 <snapshot>/               # Date/version bucket (recommended)
-│   │       │   ├── 📄 <source_artifact>     # “As received” file(s) or pointer(s)
-│   │       │   ├── 📄 checksums.sha256      # Checksums for artifacts (recommended)
-│   │       │   └── 📄 snapshot.meta.yml     # Minimal capture metadata (recommended)
-│   │       └── 📄 README.md                 # Dataset/source-level notes (recommended)
-│   └── 📁 _quarantine/                      # Optional: fails validation / pending review (not confirmed in repo)
-└── 📁 (siblings: work/, processed/, stac/, catalog/dcat/, prov/)
-~~~
+---
 
-## 🧭 Context
+## 🧬 Metadata, standards, and interoperability
 
-### Why raw exists in KFM
+Good raw stewardship starts with **metadata discipline**:
+- Metadata categories commonly include: identification, distribution, data quality, spatial reference, entity/attribute information, and metadata reference info. [oai_citation:7‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
+- Interoperability is the ability of systems to exchange information and then use it (not just “send files”). [oai_citation:8‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
 
-- KFM’s pipeline is designed to be **deterministic and explainable**, with traceable lineage from inputs to outputs.
+### 📜 Copyright & licensing (common gotcha)
+A key distinction in cartography is between:
+- the **data** (facts/coordinates), and
+- the **map** as a **cartographic representation** (creative work). This affects what you can redistribute and how you cite/attribute. [oai_citation:9‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
 
-- Raw is where we preserve the **original evidence** so downstream:
+---
 
-  - transformations can be rerun,
+## 🔐 Privacy, security, sovereignty (FAIR+CARE mindset)
 
-  - provenance can be validated, and
+Geospatial and historical data can carry real-world risk:
+- Digital geographic data can implicate **locational privacy** (e.g., data from phones/vehicles/sensors). Treat raw drops as potentially sensitive by default. [oai_citation:10‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
+- Security is commonly framed around protecting **confidentiality, integrity, availability**; privacy includes the right to determine/limit access to personal information. [oai_citation:11‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)
 
-  - governance can verify that no public output becomes “less restricted” than its inputs.
+KFM also expects governance and sovereignty considerations to be stated explicitly (FAIR/CARE alignment). [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-### Raw-layer invariants
+### 🛡️ CI / review expectations (don’t skip)
+The repo standards include automated scanning for:
+- secrets,
+- PII/sensitive data,
+- classification downgrade issues, etc. [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-These invariants are treated as “must not break” unless the Master Guide is updated accordingly:
+---
 
-- **Append-only:** do not mutate or overwrite raw snapshots.
+## 🧰 Intake workflow (drop SOP)
 
-- **No hand edits:** any “fix” must be represented as a new snapshot/version with its own metadata + checksums.
+### 1) Create the directory 🧱
+- Choose `<domain>/` and `<dataset_slug>/`
+- Create the immutable drop boundary folder
 
-- **Capture the minimum to reproduce:** at least source identity, retrieval time, license/terms (or best-known terms), and checksums.
+### 2) Acquire upstream data 📥
+- Put delivered bundle(s) in `original/` (recommended)
+- If you extract, extract **losslessly** into `extracted/`
 
-- **No secrets:** credentials, API keys, tokens must never be committed; use secure runtime configuration.
+### 3) Document it 🧾
+- Write dataset-drop `README.md`
+- Create `source.json` (include license + sensitivity)
 
-- **Sensitivity propagation:** if a raw input is sensitive/restricted, downstream outputs must not reduce restriction without governance review.
+### 4) Lock integrity 🔒
+- Generate `checksums.sha256`
+- If large: DVC-track the data files (keep manifests in Git)
 
-### When to add something to raw vs sources vs work
+### 5) Submit for review ✅
+Open a PR with:
+- What changed (new drop, new domain, license notes)
+- Any sensitivity/sovereignty flags
+- Reproduction steps (how to re-download / re-verify)
 
-- Put in **raw**:
+> 🧪 Design reminder: the project audit calls out missing reproducibility workflows as a risk; this SOP is the antidote. 🧯 [oai_citation:14‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)
 
-  - immutable snapshots (files, exports, dumps) and/or *pointer files* to externally stored large assets.
+---
 
-- Put in **work**:
+## 🧭 Where does raw data go next?
 
-  - normalized tables, reprojected rasters, cleaned joins—anything derived from raw.
+KFM uses required staging:
+- `data/raw/<domain>/` → `data/work/<domain>/` → `data/processed/<domain>/` [oai_citation:15‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-- Put in **sources** (if present; **not confirmed in repo**):
+And publication requires boundary metadata outputs:
+- STAC, DCAT, PROV (catalog + lineage) [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-  - registries/manifests describing upstream sources and access patterns (not the raw bytes themselves).
-
-## 🗺️ Diagrams
-
-### Canonical data flow with raw landing
-
-~~~mermaid
+```mermaid
 flowchart LR
-
-  S["External Source Systems"] --> R["data/raw/ (landed snapshots)"]
-  R --> W["data/work/ (normalize/clean)"]
-  W --> P["data/processed/ (certified outputs)"]
-
-  P --> STAC["data/stac/ (STAC)"]
-  P --> DCAT["data/catalog/dcat/ (DCAT)"]
-  P --> PROV["data/prov/ (PROV)"]
-
-  STAC --> G["Graph (Neo4j ingest)"]
-  DCAT --> G
-  PROV --> G
-
-  G --> API["APIs (contract boundary)"]
-  API --> UI["UI (React/MapLibre)"]
-  UI --> SN["Story Nodes"]
-  SN --> FM["Focus Mode"]
-~~~
-
-## 🧠 Story Node & Focus Mode Integration
-
-### How raw should (and should not) surface
-
-- Raw artifacts are primarily **internal evidence**.
-
-- Story Nodes and Focus Mode should cite:
-
-  - certified datasets (`data/processed/**`),
-
-  - catalog records (`data/stac/**`, `data/catalog/dcat/**`), and
-
-  - provenance (`data/prov/**`) that links back to raw.
-
-- Avoid exposing raw directly in UI/Focus Mode unless explicitly approved by governance, and only with sensitivity-aware generalization/redaction.
-
-### Provenance-linked narrative rule
-
-- Any narrative claim must trace to an identifiable dataset/record/asset ID.
-
-- Raw snapshots support this by providing stable checksums/identifiers that PROV can reference.
-
-## 🧪 Validation & CI/CD
-
-### Validation steps (recommended for any raw additions)
-
-- [ ] Raw snapshot is added as a new directory/version (no overwrite).
-
-- [ ] Checksums exist for all new artifacts (or pointer targets) and are recorded.
-
-- [ ] Source license/terms are captured (or explicitly marked unknown with a follow-up ticket).
-
-- [ ] Minimal capture metadata exists (retrieval time, source ID, method, parameters).
-
-- [ ] Secret scan passes (no tokens/keys in files).
-
-- [ ] PII / sensitive-location risk is assessed (especially if raw contains precise coordinates or personal data).
-
-### CI expectations (if configured)
-
-- Markdown protocol validation for this README (front-matter, required sections, footer refs).
-
-- Secret scanning / PII scanning (if enabled in CI).
-
-- Provenance checks downstream: any promotion from raw → processed should be accompanied by PROV linkage.
-
-> Repo-specific commands and validators are **not confirmed in repo**; document them here once tool paths are finalized (e.g., under `tools/` or `src/pipelines/`).
-
-## 📦 Data & Metadata
-
-### Inputs
-
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Source artifacts | mixed (CSV/JSON/GeoJSON/NetCDF/TIFF/etc.) | External providers | Checksums; format sanity; license recorded |
-| Source docs/metadata | text/PDF/web exports | Provider documentation | Capture title, publisher, license/terms, retrieval date |
-
-### Outputs
-
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Landed raw artifacts | mixed | `data/raw/**` | Immutable snapshot + checksums |
-| Minimal capture metadata | YAML/JSON/MD | `data/raw/**` | Must be sufficient to reproduce retrieval |
-| Pointer files (large assets) | text | `data/raw/**` | Must include stable external URI + checksum (recommended) |
-
-### Minimal snapshot metadata (recommended)
-
-This is a recommended sidecar schema to keep raw “reproducible enough” without over-engineering:
-
-~~~yaml
-source_id: "<domain>:<provider>:<dataset>"
-retrieved_at: "YYYY-MM-DDTHH:MM:SSZ"
-retrieval_method: "http_download | api_export | manual_archive | other"
-upstream_terms:
-  license: "<SPDX id or URL or 'unknown'>"
-  attribution: "<required attribution text if known>"
-artifacts:
-  - path: "<filename-or-pointer>"
-    sha256: "<sha256>"
-notes: "<anything important: auth used? pagination? query params?>"
-~~~
-
-If your domain uses a richer per-source registry JSON, ensure it at least contains:
-
-- `id`, `title`, `description`, `license`, `providers`, `assets` (URLs/formats/checksums), `spatial`, `temporal`, `provenance`, `stac_version`.
-
-### What does *not* belong in raw
-
-- Any transformed/reprojected/cleaned output.
-
-- Any derived aggregate that is intended for UI use.
-
-- Any credentials, tokens, secrets, or private keys.
-
-- Any “fixed” version of a raw file (instead: add a new snapshot and document why).
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-### STAC
-
-- STAC should represent **certified outputs** (usually `data/processed/**`) as Collections/Items with Assets.
-
-- Raw artifacts may be referenced as supporting assets only if appropriate for licensing and sensitivity.
-
-### DCAT
-
-- DCAT dataset/distributions should be derived from the same authoritative metadata used for STAC.
-
-- Raw sources are typically not published as public DCAT distributions unless governance explicitly approves.
-
-### PROV-O
-
-- Provenance must link:
-
-  - certified entities back to raw entities (checksums enable stable identity), and
-
-  - transformation activities (ETL runs) that used/generate them.
-
-### Versioning
-
-- Prefer versioned snapshot folders and checksum manifests so downstream PROV can reference exact inputs.
-
-## 🧱 Architecture
-
-### Components
-
-| Component | Responsibility | Interface |
-|---|---|---|
-| ETL | Ingest + normalize | Configs + run logs + provenance |
-| Catalogs | STAC/DCAT/PROV | JSON + validators |
-| Graph | Neo4j | Ingest fixtures + API layer |
-| APIs | Serve contracts; enforce redaction | REST/GraphQL |
-| UI | Map + narrative | API calls only (no direct graph access) |
-| Story Nodes | Curated narrative | Evidence/provenance-linked |
-| Focus Mode | Contextual synthesis | Provenance-linked only |
-
-### Raw-layer contract to downstream stages
-
-- Downstream stages may assume:
-
-  - raw snapshots are immutable once committed,
-
-  - snapshot metadata exists for reproducibility,
-
-  - checksums are present (or explicitly waived with justification).
-
-- Downstream stages must ensure:
-
-  - classification/sensitivity does not get relaxed in derived outputs without governance review,
-
-  - provenance is emitted and points back to raw snapshot inputs.
-
-## ⚖ FAIR+CARE & Governance
-
-### Review gates
-
-Governance review should occur when:
-
-- a new raw source is introduced (license/terms and sensitivity must be evaluated),
-
-- a source changes its terms or access pattern (may impact publication),
-
-- any raw input contains (or could imply) restricted locations, culturally sensitive knowledge, or PII,
-
-- any change would expand what is exposed through catalogs, APIs, or UI.
-
-(Approver roles/process are **not confirmed in repo**; follow `docs/governance/ROOT_GOVERNANCE.md`.)
-
-### CARE / sovereignty considerations
-
-- Treat culturally sensitive or sovereignty-controlled information as **high-risk by default**.
-
-- Prefer aggregation/generalization in downstream products; do not publish precise sensitive coordinates.
-
-- Ensure `docs/governance/SOVEREIGNTY.md` is consulted for any affected communities/jurisdictions.
-
-### AI usage constraints
-
-- Allowed: summarization, structure extraction, translation, keyword indexing.
-
-- Prohibited: generating new policy; inferring sensitive locations from raw artifacts (directly or indirectly).
-
-## 🕰️ Version History
-
-| Version | Date | Summary | Author |
-|---|---|---|---|
-| v1.0.0 | 2025-12-26 | Initial `data/raw/` README defining raw-layer rules and linkage to downstream catalogs | TBD |
+  A[Raw Sources<br/>data/raw/] --> B[ETL + Normalization<br/>data/work/]
+  B --> C[Published Outputs<br/>data/processed/]
+  C --> D[STAC / DCAT / PROV<br/>catalog + lineage]
+```
 
 ---
 
-### Footer refs
+## 🚫 Common anti-patterns (please don’t 🙃)
 
-- Master Guide: `docs/MASTER_GUIDE_v12.md`
+- “I fixed the CSV in place” (➡️ new drop boundary instead)
+- “I reprojected it so it lines up” (➡️ do it in `data/work/` / `data/processed/`)
+- “I renamed files for convenience” (➡️ keep original names; add a mapping doc elsewhere)
+- “I added a secret token to a download script” (➡️ use `.env`, never commit secrets)
+- “I copied sensitive coordinates into a public drop” (➡️ classify + restrict + review gates)
 
-- v13 Blueprint (if adopted): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+---
 
-- Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+## 📚 Project reference shelf (local library)
 
-- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+<details>
+<summary><b>Open the project library 📚 (reference PDFs & design docs)</b></summary>
 
-- Ethics: `docs/governance/ETHICS.md`
+### 🧱 KFM architecture & governance
+- KFM Technical Documentation  [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
+- KFM Open-Source Geospatial Historical Mapping Hub Design  [oai_citation:18‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)  
+- KFM Master Guide v13 (repo + pipeline standards)  [oai_citation:19‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
+- KFM Design Audit (gaps & enhancements)  [oai_citation:20‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)  
+- Scientific Method / Research MCP (experiment + versioning discipline)  [oai_citation:21‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)  
 
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+### 🗺️ GIS / mapping / geospatial processing
+- Making Maps (map design, metadata, copyright)  [oai_citation:22‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)  
+- Python Geospatial Analysis Cookbook  [oai_citation:23‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)  
+- Geoprocessing with Python
+- Geographic Information System Basics
+- Google Maps API Succinctly
+- Google Maps JavaScript API Cookbook
 
+### 🌍 Remote sensing / Earth Engine
+- Cloud-Based Remote Sensing with Google Earth Engine  [oai_citation:24‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)  
+- Google Earth Engine Applications
+
+### 📊 Stats / ML (keep raw clean so analysis stays honest)
+- Data Science & Machine Learning (Math & Stats Methods)  [oai_citation:25‡Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf](file-service://file-MRNb2uGPEwpkSDsxF983PC)  
+- Statistics Done Wrong
+- Regression Analysis with Python
+- Bayesian Computational Methods
+- Understanding Statistics & Experimental Design
+- Graphical Data Analysis with R
+- Deep Learning in Python (prereqs)
+- Artificial Neural Networks (intro)
+- AI Foundations of Computational Agents (3rd ed.)
+- Data Mining: Concepts & Applications
+
+### 🧰 Engineering / systems / tooling
+- Command Line Kung Fu (shell + one-liners)
+- Introduction to Docker
+- Clean Architectures in Python  [oai_citation:26‡clean-architectures-in-python.pdf](file-service://file-6YHot4AqfpdbcrdfiYfpHM)  
+- Scalable Data Management for Future Hardware
+- PostgreSQL / MySQL / Node.js Notes for Professionals
+- Implementing Programming Languages (compilers/interpreters)
+
+### 🎨 Web / visualization / graphics (downstream of processed data)
+- Responsive Web Design with HTML5 & CSS3
+- WebGL Programming Guide
+- Computer Graphics using Java 2D & 3D
+
+### 🧑‍⚖️ Ethics / human-centered constraints
+- Introduction to Digital Humanism  [oai_citation:27‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
+- Principles of Biological Autonomy
+
+</details>
+
+---
+
+## 🧷 Footnotes (evidence anchors)
+
+[^pipeline]: KFM’s repo standards require raw → work → processed staging, and emphasize deterministic, contract-first data handling. [oai_citation:28‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:29‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+[^kfmraw]: KFM ingestion guidance explicitly emphasizes keeping data as raw as possible and storing raw data reliably before transformations. [oai_citation:30‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+
+[^catalogs]: At publication boundaries, datasets produce STAC/DCAT/PROV artifacts for discovery and provenance tracing. [oai_citation:31‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+[^dvc]: The project design + MCP guidance both support dataset versioning and using tools like DVC for large artifacts and reproducibility. [oai_citation:32‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw) [oai_citation:33‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+[^privacy]: Security and privacy framing (CIA + privacy as control of personal info) aligns with digital humanism’s human-centered approach and is relevant to raw data handling. [oai_citation:34‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)
+
+[^maps]: GIS metadata categories, interoperability expectations, and copyright distinctions matter for how we store and redistribute cartographic data. [oai_citation:35‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP) [oai_citation:36‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
+
+[^scans]: KFM repo standards call for automated scanning for secrets/PII/sensitive data and classification consistency to prevent leaks and unsafe publication. [oai_citation:37‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
