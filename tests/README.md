@@ -1,343 +1,381 @@
----
-title: "🧪 Kansas Frontier Matrix — Test Suite Guide"
-path: "tests/README.md"
-version: "v1.0.0-draft"
-last_updated: "2025-12-31"
-status: "draft"
-doc_kind: "Guide"
-license: "CC-BY-4.0"
-markdown_protocol_version: "KFM-MDP v11.2.6"
-mcp_version: "MCP-DL v6.3"
-ontology_protocol_version: "KFM-ONTO v4.1.0"
-pipeline_contract_version: "KFM-PPC v11.0.0"
-stac_profile: "KFM-STAC v11.0.0"
-dcat_profile: "KFM-DCAT v11.0.0"
-prov_profile: "KFM-PROV v11.0.0"
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US-KS"
-doc_uuid: "urn:kfm:doc:tests:readme:v1.0.0-draft"
-semantic_document_id: "kfm-tests-readme-v1.0.0-draft"
-event_source_id: "ledger:kfm:doc:tests:readme:v1.0.0-draft"
-commit_sha: "<latest-commit-hash>"
-ai_transform_permissions:
-  - "summarize"
-  - "structure_extract"
-  - "translate"
-  - "keyword_index"
-ai_transform_prohibited:
-  - "generate_policy"
-  - "infer_sensitive_locations"
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
+# 🧪 Tests — Kansas Frontier Matrix (KFM) / Kansas‑Matrix‑System
+
+![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2ea44f?logo=githubactions&logoColor=white)
+![Coverage](https://img.shields.io/badge/Coverage-target%20%F0%9F%9A%80-informational)
+![Python](https://img.shields.io/badge/Python-pytest-blue?logo=python&logoColor=white)
+![Node](https://img.shields.io/badge/Node.js-test%20runner-brightgreen?logo=node.js&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?logo=docker&logoColor=white)
+
+> KFM is a “trust-first” geospatial + simulation + AI system. This folder is where we prove (continuously) that our code, data pipelines, and UI behaviors are **correct**, **reproducible**, and **honest about uncertainty**.  
+> (KFM’s stack spans React + responsive UI, geospatial pipelines, APIs, and CI gates.) [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+
 ---
 
-# KFM Test Suite
+## 🧭 What this README is
 
-Governed document. This guide describes how tests are organized and executed in Kansas Frontier Matrix (KFM), and how tests enforce KFM’s pipeline contracts and governance invariants.
+This file is the **tests playbook**:
+- ✅ how to run tests locally (fast + full)
+- ✅ where tests live (by layer & domain)
+- ✅ what to test (and what *not* to test)
+- ✅ CI gates & “Definition of Done”
+- ✅ domain-specific validation (GIS, remote sensing, ML, simulation, visualization)
 
-## 📘 Overview
+---
 
-### Purpose
+## 🚀 Quickstart
 
-KFM tests exist to prevent regressions against the platform’s non‑negotiable pipeline and governance rules:
-
-- **Pipeline ordering is absolute**: ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode.
-- **Contract-first**: schemas/contracts are first-class artifacts; changes trigger compatibility checks.
-- **Provenance-first**: nothing reaches Graph/UI/Story unless catalogs + provenance exist and validate.
-- **Sovereignty & classification propagate**: derivatives cannot be less restricted than inputs.
-
-This README tells contributors:
-- where tests live,
-- what they validate,
-- how to run the right subset locally,
-- what CI gates will run on every PR.
-
-### Scope
-
-In scope:
-- test code under `tests/` (unit, integration, contract, and governance checks)
-- schema validation harnesses for:
-  - governed Markdown (front‑matter + headings)
-  - STAC/DCAT/PROV artifacts
-  - Story Node schema compliance
-- cross-layer tests enforcing API boundaries and redaction/classification rules
-
-Out of scope:
-- domain-specific ETL recipes (those live under domain docs like `docs/data/<domain>/README.md`)
-- deployment/ops details (covered in infra/deploy docs, if present)
-
-### Audience
-
-- Contributors modifying ETL/pipelines, catalogs, graph/ontology, APIs, UI layers, Story Nodes, or Focus Mode.
-- Reviewers who need a checklist of what “done” means for a compliant change.
-
-### Definitions
-
-- **Contract artifact**: a machine-validated spec defining an interface (JSON Schema, OpenAPI, GraphQL SDL, UI registry schema).
-- **Boundary artifact**: KFM’s required “gatekeeper” outputs between stages (STAC/DCAT/PROV).
-- **Fixture dataset**: a small, deterministic mini‑domain used for integration tests (raw → work → processed + catalogs).
-
-## 🗂️ Directory Layout
-
-### Repository areas tests commonly target (context)
-
-KFM’s repo layout (v13 draft) includes these top-level homes relevant to testing:
-
-- `schemas/` — schema contracts
-- `src/` — implementations (`pipelines/`, `graph/`, `server/`)
-- `tests/` — test suite root (this README)
-- `tools/` — validators, linters, build/test helpers
-- `web/` — UI app (React/MapLibre/Cesium optional)
-- `docs/` — governed documentation, story nodes, governance
-
-### Recommended `tests/` layout
-
-Your repo may already have a test layout. If not, this structure is recommended because it maps cleanly to KFM’s pipeline stages and CI gates:
-
-```text
-📁 tests/
-├── 📄 README.md
-├── 📁 unit/                    # fast, pure logic tests (no I/O if possible)
-├── 📁 integration/             # end-to-end stage integration on fixtures
-├── 📁 contracts/               # API + schema contract tests
-├── 📁 schemas/                 # schema-lint harness wrappers (markdown, stac/dcat/prov, storynodes)
-├── 📁 graph/                   # ontology mapping + graph integrity checks
-├── 📁 ui/                      # UI config/schema checks; optional e2e tests
-├── 📁 security/                # secret/PII/sensitivity checks (or wrappers)
-└── 📁 fixtures/                # small deterministic test datasets
-```
-
-Notes:
-- **Schema files themselves** should live under `/schemas/**`. The `tests/schemas/**` folder holds test code that validates those schema files and validates data against them.
-- Prefer **stage-aligned naming**: a failing test should immediately indicate *which pipeline boundary* is violated.
-
-## 🧭 Context
-
-### Background
-
-KFM is designed to be **governed and reproducible by construction**. Tests are part of the governance mechanism: they enforce that data and narrative cannot “skip ahead” in the pipeline and that contracts remain stable as the repo evolves.
-
-### Constraints & invariants this test suite must enforce
-
-At minimum, tests and CI must detect:
-
-1. **Pipeline ordering violations**
-   - Any attempt to load graph/UI/story content that lacks validated catalog artifacts.
-2. **API boundary violations**
-   - UI must never query Neo4j/graph directly.
-3. **Provenance gaps**
-   - Missing PROV for outputs; missing licenses; missing required catalog fields.
-4. **Non-deterministic ETL**
-   - Same inputs/config producing different outputs across runs.
-5. **Evidence-first narrative violations**
-   - Story Node claims without citations; unresolvable dataset IDs; uncited media.
-6. **Sovereignty/classification regressions**
-   - Output artifacts less restricted than inputs; sensitive coordinates exposed.
-
-### Test matrix
-
-This table describes what each stage should validate. The exact tools/runners are repo-specific.
-
-| Pipeline stage | What must be true | Typical test types |
-|---|---|---|
-| ETL (`src/pipelines/`) | Deterministic, idempotent transforms; stable IDs/hashes; correct `data/raw → data/work → data/processed` staging | Unit + integration; golden outputs on fixtures |
-| Catalogs (`data/stac`, `data/catalog/dcat`, `data/prov`) | STAC/DCAT/PROV validate against KFM profiles; cross-links resolve; required fields present | Schema tests; link/reference tests |
-| Graph (`src/graph/`) | Graph loads reference catalogs (not duplicating payloads); ontology alignment; referential integrity | Graph integrity tests on fixture dataset |
-| API (`src/server/`) | Contract tests pass; redaction/classification rules enforced; authz rules correct | Contract tests; integration tests; negative tests (unauthorized) |
-| UI (`web/`) | Uses API only; layer registry schema valid; source citations shown in UI where required | UI config tests; e2e smoke tests (optional) |
-| Story Nodes (`docs/reports/**/story_nodes`) | Template compliance; all claims cite evidence; IDs resolvable | Story node schema + content validation |
-| Focus Mode | Consumes only provenance-linked content; flags AI text properly | Integration tests over Story Node bundles |
-
-## 🗺️ Diagrams
-
-High-level testing alignment with KFM pipeline (conceptual):
-
-```mermaid
-flowchart LR
-  A["ETL (src/pipelines/)"] --> B["Catalogs (STAC/DCAT/PROV)"]
-  B --> C["Graph (src/graph/)"]
-  C --> D["API (src/server/)"]
-  D --> E["UI (web/)"]
-  E --> F["Story Nodes (docs/reports/**/story_nodes/)"]
-  F --> G["Focus Mode"]
-
-  subgraph CI["CI Test Gates (examples)"]
-    T1["schema-lint (docs + metadata)"]
-    T2["graph-integrity (fixture)"]
-    T3["api-contract-tests"]
-    T4["security/governance scans"]
-  end
-```
-
-## 📦 Data & Metadata
-
-### Fixture datasets (recommended)
-
-Fixtures should be:
-- **small**
-- **deterministic**
-- **safe for open distribution** (no sensitive locations, PII, or restricted cultural data unless stored in a restricted testing context and explicitly gated)
-
-Recommended pattern:
-
-```text
-📁 tests/fixtures/<fixture_name>/
-├── 📁 data/
-│   ├── 📁 raw/<domain>/
-│   ├── 📁 work/<domain>/
-│   └── 📁 processed/<domain>/
-├── 📁 catalogs/
-│   ├── 📁 stac/              # items + collections for the fixture
-│   ├── 📁 dcat/              # DCAT dataset entry for the fixture
-│   └── 📁 prov/              # PROV bundle describing raw→processed
-└── 📄 README.md              # what this fixture is meant to test
-```
-
-Guidelines:
-- Use fixtures to test the *entire pipeline boundary*, not just one file.
-- If a test produces outputs, write them to a temp directory, then compare against golden fixture outputs (or validate schema + hashes).
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-KFM tests must validate that boundary artifacts exist and are compliant:
-
-- **STAC**: collections/items are present and conform to KFM STAC profile.
-- **DCAT**: dataset entries conform to KFM DCAT profile; distributions link to STAC or processed assets.
-- **PROV**: lineage captures raw inputs → work intermediates → processed outputs, including run IDs/commit hashes where used.
-
-Cross-link expectations:
-- STAC Items must link to the actual processed assets.
-- DCAT must link to STAC/distributions.
-- PROV must link to the pipeline activity and inputs/outputs.
-
-Practical rule of thumb:
-- If it is not cataloged and validated, it does not proceed to graph/UI/story consumption.
-
-## 🧱 Architecture
-
-### Boundary enforcement tests
-
-Because KFM is contract-first and API-mediated, include tests that verify:
-
-- **API contract stability**
-  - Contract artifacts under `schemas/**` and API specs under `src/server/**` (or equivalent) must be validated in CI.
-- **UI does not bypass API**
-  - Ensure UI code/configs reference API endpoints, not graph connection strings.
-- **Redaction & classification enforcement**
-  - Sensitive fields or locations must be filtered/blurred at the API boundary, not “handled in UI”.
-
-### Suggested layering for tests
-
-- Unit tests should not require network, DB, or filesystem where feasible.
-- Integration tests should use fixture datasets and ephemeral services (e.g., via Docker) and must be reproducible.
-- Contract tests should run early and fail fast (schemas and specs are gatekeepers).
-
-## 🧠 Story Node & Focus Mode Integration
-
-Story Nodes are machine-ingestible and must remain evidence-linked.
-
-Tests should validate that Story Nodes:
-- use the correct template version,
-- include required front-matter and section ordering,
-- cite datasets/documents by stable identifiers (resolvable to catalog entries),
-- distinguish fact from interpretation (especially for AI-assisted content),
-- do not include sensitive coordinates or restricted details unless explicitly governed.
-
-Focus Mode tests (as applicable):
-- confirm the “no uncited narrative” rule by checking that all displayed claims resolve to evidence references.
-- confirm any AI text is clearly labeled and constrained by evidence.
-
-## 🧪 Validation & CI/CD
-
-### Minimum CI gates (expected)
-
-The Master Guide v13 and Markdown Protocol describe CI gates that should run on every PR. At minimum, expect checks like:
-
-- **markdownlint + schema-lint**
-  - YAML front-matter required fields, allowed headings, section order
-- **link/reference validation**
-  - internal links to docs/catalogs resolve
-- **metadata validation**
-  - STAC JSON Schema validation
-  - DCAT shape validation (SHACL/ShEx, as implemented)
-  - PROV structure validation
-- **Story Node schema validation**
-  - Story Node v3 template compliance + citation requirements
-- **graph integrity**
-  - run on a small fixture dataset; ensure ontology alignment + catalog references
-- **API contract tests**
-  - ensure OpenAPI/GraphQL contract matches implementation; protect backward compatibility
-- **security & governance scans**
-  - secrets detection
-  - PII/sensitive location checks
-  - classification consistency checks
-
-### Running tests locally (patterns)
-
-Exact commands depend on the repo’s chosen toolchain. Check:
-- `.github/workflows/**`
-- `Makefile` / `justfile` / `package.json` / `pyproject.toml`
-- `tools/**`
-
-Common patterns you may see:
-
+### 1) Fast checks (pre‑commit vibes)
 ```bash
-# Run fast checks
-make lint
-make schema-lint
+# Python
+pytest -q
 
-# Run unit tests
-make test-unit
-
-# Run integration tests (may require docker-compose)
-make test-integration
-
-# Run everything
-make test
-```
-
-If your repo uses language-specific runners, typical equivalents are:
-
-```bash
-# Python (example)
-python -m pytest -q
-
-# Node (example)
+# Node/Web (if applicable)
 npm test
 ```
 
-### PR “Definition of Done” for test-impacting changes
+### 2) Full suite (recommended on feature branches)
+```bash
+# If we use Make targets (recommended for repeatability)
+make test
 
-- [ ] Any contract change (schema/API/UI registry) includes updated contract tests
-- [ ] Any ETL change includes deterministic fixture coverage (or hash-based checks)
-- [ ] Any catalog/profile change includes validator updates + new failing/green cases
-- [ ] Story Node/template changes include Story Node schema validation updates
-- [ ] All CI gates pass locally or are confirmed in CI
-- [ ] No secrets/PII/sensitive locations introduced in fixtures or expected outputs
-- [ ] Version History updated (this file, if changed)
+# Or run suites explicitly (examples)
+pytest -m "not slow"
+pytest -m "integration"
+npm run test:e2e
+```
 
-## ⚖️ FAIR+CARE & Governance
+### 3) Integration tests with containers (preferred)
+If your tests require a DB / services, use Docker Compose so everyone runs the same stack:
+```bash
+docker compose up -d --build
+pytest -m integration
+docker compose down -v
+```
 
-Tests and fixtures must honor KFM governance defaults:
+> Why Docker-first? It makes CI ≈ local and reduces “works on my machine” drift. KFM’s DevOps approach explicitly centers containerized components and Compose/Kubernetes‑style orchestration. [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
 
-- **No secrets**: do not commit credentials; ensure secret scans stay green.
-- **No PII by default**: use synthetic identities; anonymize unless explicitly governed.
-- **No sensitive location inference**: do not add precise coordinates for sacred/vulnerable sites.
-- **Classification propagation**: derived fixtures/outputs cannot be less restricted than inputs.
-- **Human review required** for anything touching sovereignty-sensitive domains, even in tests.
+---
 
-If you are unsure whether a test asset is permissible:
-- omit it,
-- replace with a synthetic stand-in,
-- and flag for governance review.
+## 🧱 Test pyramid (how we keep velocity + confidence)
 
-## 🕰️ Version History
+**Rule of thumb:** most tests should be cheap, deterministic, and close to the code.  
+Then we add fewer (but high-value) integration + end-to-end flows.
 
-| Version | Date | Summary | Author |
-|---|---:|---|---|
-| v1.0.0-draft | 2025-12-31 | Initial test-suite README aligned to v13 pipeline + CI gate expectations. | AI-assisted draft (human review required) |
+```
+          🔺 E2E (few)        → critical user journeys, UI + API + DB
+        🔺🔺 Integration (some) → services together (DB, API, pipelines)
+      🔺🔺🔺 Unit (many)        → pure logic, models, transforms, validators
+```
+
+KFM explicitly calls out:
+- unit tests for pure functions
+- integration tests for API endpoints with a test DB
+- component tests (Jest + React Testing Library)
+- end-to-end tests (Cypress/Selenium) for key flows [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+
+---
+
+## 🗂️ Suggested folder layout
+
+Adapt as needed to match the repo, but keep intent obvious:
+
+```
+📦 repo-root/
+├─ 🧪 tests/
+│  ├─ README.md                 👈 you are here
+│  ├─ 🧷 fixtures/              # tiny, deterministic test data
+│  ├─ 🐍 python/
+│  │  ├─ unit/
+│  │  ├─ integration/
+│  │  ├─ validation/            # “scientific correctness” checks
+│  │  └─ performance/           # benchmarks (nightly)
+│  ├─ 🌐 web/
+│  │  ├─ unit/
+│  │  ├─ component/
+│  │  ├─ e2e/
+│  │  └─ visual/                # screenshot / render snapshots
+│  └─ 🗄️ db/
+│     ├─ migrations/
+│     └─ integration/
+└─ 🧰 scripts/ (optional)        # test helpers, data seeders, CI glue
+```
+
+---
+
+## ✅ CI gates (non‑negotiable)
+
+**Policy:** the pipeline must be green before merge. CI should run on every PR/push and execute tests + static checks. [oai_citation:4‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+Typical PR gates:
+1) 🧹 format + lint (Python + JS/TS)
+2) 🧪 unit tests
+3) 🔌 integration tests (with ephemeral DB/services)
+4) 🌐 build web bundle (catch compile issues)
+5) 🧾 contract/schema validation (OpenAPI, STAC/DCAT/PROV if used)
+6) 📈 coverage thresholds (target, not a religion)
+
+> KFM documentation describes CI that runs tests + linting/type checks and blocks merges on failures. [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+
+---
+
+## 🧠 Writing great tests (the KFM way)
+
+### ✅ Test public behavior, not private plumbing
+Don’t lock tests to implementation details unless it’s truly business-critical. Prefer testing public entry points; private helpers are validated indirectly. This reduces refactor friction. [oai_citation:6‡clean-architectures-in-python.pdf](file-service://file-6YHot4AqfpdbcrdfiYfpHM)
+
+### 🔁 Determinism is a feature
+For research/AI/simulation code: set seeds, pin dependencies, and eliminate hidden state. Deterministic outputs allow re-running results exactly. [oai_citation:7‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+**Checklist:**
+- [ ] seeds set (Python, NumPy, ML frameworks)
+- [ ] stable sorting (don’t rely on hash order)
+- [ ] time mocked/frozen where needed
+- [ ] no network calls in unit tests (record/replay if unavoidable)
+- [ ] fixtures are tiny & versioned
+
+### 🧩 Prefer contracts at boundaries
+- API boundary: OpenAPI schema tests + golden requests
+- data boundary: schema + constraints + “expected distribution” smoke checks (especially for pipelines)
+
+The project’s QA guidance explicitly calls out:
+- unit/integration/e2e tests
+- pipeline integrity checks
+- scientific “known result / analytical solution” comparisons [oai_citation:8‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+---
+
+## 🐍 Python test guidance
+
+### Unit tests
+Best for:
+- coordinate transforms
+- unit conversions
+- parser/validator logic
+- pure math transforms
+- domain rules
+
+### Integration tests
+Best for:
+- PostGIS / DB interactions
+- API endpoints
+- “glue code” that hits filesystem, cloud, queues, etc.
+
+### Scientific / simulation validation
+Treat simulation/analysis code like scientific instruments:
+- **verification**: does the implementation match the intended math?
+- **validation**: does it match reality (within uncertainty)?
+- **regression baselines**: freeze known-good outputs to detect drift
+
+---
+
+## 🌐 Web / Frontend test guidance
+
+KFM’s frontend is a browser-based React app that must be responsive across devices and modern browsers. [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+
+### Component tests (fast)
+- render correctness given props/state
+- event dispatch correctness
+- accessibility checks (labels, keyboard nav)
+
+### E2E tests (few but powerful)
+Focus on “money paths”:
+- login
+- load a layer
+- timeline navigation
+- select a field → chart/metadata shows correctly
+- export/report
+
+### Visual regression (maps + 3D)
+When rendering matters, use snapshot-based checks:
+- map symbology doesn’t silently change
+- overlays remain legible at common zoom levels
+- dark/light modes don’t break contrast
+
+---
+
+## 🗺️ Geospatial tests (GIS correctness)
+
+Geospatial pipelines are fragile in predictable ways; test these explicitly:
+- **CRS sanity:** EPSG correctness, meters vs degrees issues  
+- **topology:** valid geometries, no self-intersections if required
+- **overlay correctness:** clip/intersect/union behaviors
+- **raster alignment:** resolution, nodata handling, resampling method
+- **format IO:** GeoJSON/GeoPackage/COG round-trips
+
+The geospatial cookbook and geoprocessing resources in this repo cover common patterns (DB + geometry + GeoJSON) and are a good reference for realistic test fixtures and “known output” comparisons. [oai_citation:10‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp) [oai_citation:11‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp)
+
+---
+
+## 🛰️ Remote sensing tests (Earth Engine & imagery)
+
+Remote sensing pipelines fail quietly unless you test the assumptions:
+- band availability & naming
+- scale / resolution
+- cloud masking logic (QA bits)
+- temporal compositing rules
+- normalization & index calculations (e.g., NDVI)
+- export formats & metadata consistency
+
+Add “truthiness checks”:
+- output image has expected range
+- masked pixels count within expected band
+- time series has monotonic timestamps
+
+---
+
+## 📊 ML / stats tests (don’t fool yourself)
+
+Data science code needs tests beyond “it runs”:
+- Train/val/test split is correct and leak-free
+- Metrics are stable (within tolerance)
+- Baseline model comparison exists
+- Confidence intervals / uncertainty reporting is present when relevant
+- Guard against “multiple comparisons” / p-hacking patterns
+
+KFM explicitly emphasizes evidence-driven evaluation and communicating uncertainty (not false precision). [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+
+---
+
+## 🧩 Graphs, agents, optimization, and “hard math” modules
+
+If the code includes:
+- graph algorithms (spectral methods, routing)
+- autonomous agents / planners
+- optimization loops (topology/structure/constraints)
+
+Add tests that check:
+- invariants (symmetry, conservation, monotonicity)
+- convergence behavior (within iteration limits)
+- gradient checks (finite difference sanity)
+- known benchmark problems (tiny, deterministic)
+
+---
+
+## 🗄️ Database tests (PostgreSQL / MySQL)
+
+Principles:
+- isolate with ephemeral DBs (containers)
+- run migrations in CI
+- use transactions for isolation
+- seed minimal fixtures, not production dumps
+
+**Recommended:**
+- migration tests: upgrade/downgrade + schema assertions
+- query tests: correctness + indexes used (where critical)
+- contract tests: API responses match schema
+
+---
+
+## 🐳 Docker + Compose: the integration test backbone
+
+KFM DevOps guidance calls out Dockerfiles for components and Compose for multi-container setups. [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+
+**Pattern:**
+- Compose defines `db`, `api`, maybe `worker`
+- tests bring stack up, run, and tear down
+- CI runs the same Compose profile
+
+---
+
+## 🧾 PR checklist (copy/paste)
+
+- [ ] Unit tests added/updated
+- [ ] Integration tests added (if behavior crosses boundaries)
+- [ ] Seeds fixed / deterministic output confirmed (if ML/sim) [oai_citation:14‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- [ ] Any new data schema validated (and documented)
+- [ ] UI changes include component tests + (if visual) snapshot updates
+- [ ] CI is green (required) [oai_citation:15‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+---
+
+## 🧯 Troubleshooting
+
+**Tests fail only in CI?**
+- compare dependency lockfiles
+- ensure Docker-based services run identical versions locally
+- check for reliance on local paths, locale, timezone, GPU availability
+
+**Flaky tests?**
+- eliminate timing sleeps; wait on conditions
+- stabilize randomness (seed)
+- isolate external services (record/replay or mock)
+
+---
+
+## 📚 Project library map (used to shape this test strategy)
+
+<details>
+<summary>📦 Click to expand the full “project files” list (with how each informs testing)</summary>
+
+### 🧱 Architecture, devops, and engineering discipline
+- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+- Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf  [oai_citation:17‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
+- clean-architectures-in-python.pdf  [oai_citation:18‡clean-architectures-in-python.pdf](file-service://file-6YHot4AqfpdbcrdfiYfpHM)
+- Introduction-to-Docker.pdf (Compose-driven integration & CI parity)
+- Command Line Kung Fu_ Bash Scripting Tricks… (CLI workflows for test automation)
+- implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf (parser/AST “golden file” testing patterns)
+- MARKDOWN_GUIDE_v13.md.gdoc  [oai_citation:19‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) (validation + CI/CD gates & doc governance)
+
+### 📊 Statistics, scientific rigor, and reproducibility
+- Scientific Method _ Research _ Master Coder Protocol Documentation.pdf  [oai_citation:20‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf (V&V + uncertainty thinking)
+- Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf (avoid statistical traps)
+- Understanding Statistics & Experimental Design.pdf (randomization/power/validity)
+- Bayesian computational methods.pdf (posterior predictive checks & uncertainty)
+- regression-analysis-with-python.pdf (diagnostics & evaluation)
+- graphical-data-analysis-with-r.pdf  [oai_citation:21‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L) (visual diagnostics mindset)
+- applied-data-science-with-python-and-jupyter.pdf (reproducible notebooks → testable pipelines)
+
+### 🧠 ML / AI / agents
+- deep-learning-in-python-prerequisites.pdf (train/val/test splits & generalization)
+- Artificial-neural-networks-an-introduction.pdf (overtraining/generalization guardrails)
+- Data Mining Concepts & applictions.pdf (evaluation metrics, validation discipline)
+- Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf (CV/bootstrap grounding)
+- AI Foundations of Computational Agents 3rd Ed.pdf (agent evaluation & safety checks)
+
+### 🗺️ Geospatial, GIS, cartography, mapping
+- Geographic Information System Basics - geographic-information-system-basics.pdf (CRS/projection correctness)
+- geoprocessing-with-python.pdf (vector/raster processing patterns)
+- python-geospatial-analysis-cookbook.pdf (topology/overlays/routing fixtures)
+- making-maps-a-visual-guide-to-map-design-for-gis.pdf (visual correctness & map design checks)
+- Google Maps API Succinctly - google_maps_api_succinctly.pdf (map UI behaviors & API assumptions)
+- google-maps-javascript-api-cookbook.pdf (Map API patterns)
+- webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf  [oai_citation:22‡webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf](file-service://file-7quELMw4FrspPczB9Y3BTp) (rendering + shader pipeline considerations)
+- responsive-web-design-with-html5-and-css3.pdf (breakpoints/responsive test strategy)
+
+### 🛰️ Remote sensing (GEE)
+- Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf (cloud masks, band logic)
+- Google Earth Engine Applications.pdf (workflows & edge cases)
+
+### 🗄️ Data systems & performance
+- PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf (DB behaviors, backups, transactions)
+- MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf (DB ops/testing hygiene)
+- Scalable Data Management for Future Hardware.pdf  [oai_citation:23‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE) (performance/throughput thinking → benchmarks)
+
+### 🧮 Optimization, graphs, graphics, and tooling
+- Spectral Geometry of Graphs.pdf (spectral invariants & graph algorithm tests)
+- Generalized Topology Optimization for Structural Design.pdf (optimization convergence/gradient tests)
+- Computer Graphics using JAVA 2D & 3D.pdf (render pipeline mindset)
+- Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf (server/runtime test practices)
+- MATLAB Programming for Engineers Stephen J. Chapman.pdf (MATLAB scripts/functions test approach)
+
+### ⚖️ Human-centered / ethics / autonomy
+- Introduction to Digital Humanism.pdf (human-centered QA + safety expectations)
+- Principles of Biological Autonomy - book_9780262381833.pdf (systems thinking for autonomous behaviors)
+
+</details>
+
+---
+
+## 🧷 Links
+- 🔙 Return to repo root README: `../README.md` (if present)
+- 🧑‍💻 Contribution guidelines: `../CONTRIBUTING.md` (recommended)
+- 🧾 Test policy docs (suggested): `../docs/testing/TEST_POLICY.md`
+
+---
+
+### ✨ Small “next improvements” (optional but recommended)
+- Add `make test`, `make test-unit`, `make test-integration`, `make test-e2e` targets
+- Add CI artifacts: coverage report + E2E screenshots on failure
+- Add metadata validation for outputs (STAC/DCAT/PROV if used)
+- Add nightly performance benchmarks (separate from PR gating)
