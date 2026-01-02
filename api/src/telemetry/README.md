@@ -1,10 +1,4 @@
 ---
-title: "Telemetry 📡"
-path: "api/src/telemetry/README.md"
-version: "v0.1.0"
-status: "draft"
-last_updated: "2026-01-02"
----
 
 # Telemetry 📡
 
