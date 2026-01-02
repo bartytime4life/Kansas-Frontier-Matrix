@@ -40,19 +40,19 @@ This directory (`api/src/kfm_api/`) contains the **API-layer code** responsible 
 
 ```mermaid
 flowchart LR
-  UI[🖥️ KFM Web UI] -->|HTTPS / REST| API[🌾 kfm_api<br/>FastAPI/Flask]
-  EXT[🔌 External Clients] -->|API Keys / JWT| API
+  UI["🖥️ KFM Web UI"] -->|HTTPS / REST| API["🌾 kfm_api<br/>FastAPI / ASGI"]
+  EXT["🔌 External Clients"] -->|API Keys / JWT| API
 
-  API -->|SQL/ORM| DB[(🗄️ PostgreSQL + PostGIS)]
-  API -->|enqueue jobs| Q[(📬 Task Queue / Broker)]
-  Q --> W[⚙️ Workers<br/>ETL / Analytics / Simulations]
+  API -->|SQL / ORM| DB["🗄️ PostgreSQL + PostGIS"]
+  API -->|enqueue jobs| Q["📬 Task Queue / Broker"]
+  Q --> W["⚙️ Workers<br/>ETL · Analytics · Simulations"]
   W --> DB
 
-  API -->|inference calls| ML[🧠 ML Inference Service<br/>(TorchServe/TF Serving/etc)]
-  API -->|tiles/images| MAP[🗺️ Geospatial Rendering Service]
+  API -->|inference calls| ML["🧠 ML Inference Service<br/>TorchServe · TF Serving · etc"]
+  API -->|tiles / images| MAP["🗺️ Geospatial Rendering Service"]
 
-  ING[📥 Ingestion<br/>Satellite / CSV / Sensors] -->|events| Q
-  API -->|WebSockets / SSE| RT[📡 Realtime Channels]
+  ING["📥 Ingestion<br/>Satellite · CSV · Sensors"] -->|events| Q
+  API -->|WebSockets / SSE| RT["📡 Realtime Channels"]
   RT --> UI
 ```
 
