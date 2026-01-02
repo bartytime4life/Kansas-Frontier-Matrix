@@ -130,30 +130,31 @@ flowchart LR
 <summary><strong>📁 Recommended structure</strong> (adjust to match current code)</summary>
 
 ```text
-application/
-  README.md                      👈 you are here
-  __init__.py
+📦 application/
+  📘 README.md                      👈📍 you are here
+  🧬🐍 __init__.py
 
-  use_cases/
-    field_timeseries/
-      __init__.py
-      use_case.py                # orchestration
-      request.py                 # request object / validation
-      response.py                # response object (success + errors)
-    simulation_run/
-      use_case.py
-      request.py
-      response.py
+  🧠 use_cases/
+    🌾 field_timeseries/
+      🧬🐍 __init__.py
+      🎬🐍 use_case.py                # orchestration
+      📥🐍 request.py                 # request object / validation
+      📤🐍 response.py                # response object (success + errors)
 
-  ports/
-    repositories.py              # Protocols / ABCs
-    gateways.py                  # external service interfaces
-    queues.py                    # background task interfaces
+    🧪 simulation_run/
+      🎬🐍 use_case.py
+      📥🐍 request.py
+      📤🐍 response.py
 
-  dto/
-    common.py                    # shared DTOs (pagination, time-range, etc.)
+  🔌 ports/
+    🗄️🐍 repositories.py              # Protocols / ABCs
+    🛰️🐍 gateways.py                  # external service interfaces
+    📨🐍 queues.py                    # background task interfaces
 
-  errors.py                      # shared app-level error types
+  🧩 dto/
+    🧩🐍 common.py                    # shared DTOs (pagination, time-range, etc.)
+
+  ⚠️🐍 errors.py                      # shared app-level error types
 ```
 
 </details>
