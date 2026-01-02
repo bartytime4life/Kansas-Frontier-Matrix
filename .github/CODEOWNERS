@@ -1,127 +1,148 @@
-# KFM — CODEOWNERS
+# CODEOWNERS 🧭 Kansas Frontier Matrix (KFM)
+# -------------------------------------------------------------------
+# ✅ Auto-assign PR reviewers by subsystem (ETL → Catalogs → Graph → API → UI → Story Nodes).
+# 🧩 Matches the v13 canonical homes: src/pipelines, src/graph, src/server, web, docs/reports/story_nodes, etc.
+# 🔁 Start simple (single maintainer). Split into GitHub teams later as the org grows.
 #
-# Purpose:
-#   Align review ownership patterns to canonical KFM subsystem homes and pipeline ordering:
-#     ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode
-#
-# Canonical references (repo docs):
-#   - docs/MASTER_GUIDE_v12.md  (directory layout + subsystem homes)
-#   - docs/MASTER_GUIDE_v13.md  (v13 evolution; directory layout + governance refs)
-#
-# NOTE:
-#   - Only @bartytime4life is configured as an owner here (replace/split by subsystem teams when those exist).
-#   - KFM v12/v13 materials show two staging layouts for domain data. Both are covered below:
-#       A) data/{raw,work,processed}/<domain>/...
-#       B) data/<domain>/{raw,work,processed}/...
-#
-# --------------------------------------------------------------------
-# Default fallback (everything not explicitly matched below)
-# --------------------------------------------------------------------
+# Suggested future GitHub teams (optional, create later + swap in):
+#   @Kansas-Frontier-Matrix/core
+#   @Kansas-Frontier-Matrix/data
+#   @Kansas-Frontier-Matrix/graph
+#   @Kansas-Frontier-Matrix/api
+#   @Kansas-Frontier-Matrix/web
+#   @Kansas-Frontier-Matrix/docs
+#   @Kansas-Frontier-Matrix/security
+# -------------------------------------------------------------------
+
+# ───────────────────────────────────────────────────────────────────
+# 🌾 Global default (fallback)
+# ───────────────────────────────────────────────────────────────────
 * @bartytime4life
 
-# --------------------------------------------------------------------
-# CODEOWNERS file locations (support either placement)
-# --------------------------------------------------------------------
-/CODEOWNERS @bartytime4life
-/.github/CODEOWNERS @bartytime4life
-
-# --------------------------------------------------------------------
-# CI / policy gates (canonical home: .github/)
-# --------------------------------------------------------------------
+# ───────────────────────────────────────────────────────────────────
+# 🔐 Repo security, CI, and governance controls
+# ───────────────────────────────────────────────────────────────────
 /.github/ @bartytime4life
+/.github/CODEOWNERS @bartytime4life
 /.github/workflows/ @bartytime4life
-/.github/SECURITY.md @bartytime4life
 
-# --------------------------------------------------------------------
-# Documentation + governance (canonical home: docs/)
-# --------------------------------------------------------------------
+/SECURITY.md @bartytime4life
+/.github/SECURITY.md @bartytime4life
+/CONTRIBUTING.md @bartytime4life
+/CODE_OF_CONDUCT.md @bartytime4life
+/LICENSE @bartytime4life
+/CITATION.cff @bartytime4life
+/CHANGELOG.md @bartytime4life
+
+/.editorconfig @bartytime4life
+/.pre-commit-config.yaml @bartytime4life
+/.env.example @bartytime4life
+/docker-compose.yml @bartytime4life
+
+# ───────────────────────────────────────────────────────────────────
+# 📚 Documentation, standards, governance, and story content
+# ───────────────────────────────────────────────────────────────────
 /docs/ @bartytime4life
-/docs/templates/ @bartytime4life
 /docs/architecture/ @bartytime4life
+/docs/architecture/adr/ @bartytime4life
+/docs/architecture/diagrams/ @bartytime4life
+
 /docs/standards/ @bartytime4life
+/docs/templates/ @bartytime4life
+
 /docs/governance/ @bartytime4life
-/docs/telemetry/ @bartytime4life
+/docs/governance/REVIEW_GATES.md @bartytime4life
+/docs/governance/ROOT_GOVERNANCE.md @bartytime4life
+/docs/governance/ETHICS.md @bartytime4life
+/docs/governance/SOVEREIGNTY.md @bartytime4life
+
+# 🧠 Narratives (governed)
+/docs/reports/story_nodes/ @bartytime4life
+/docs/reports/story_nodes/templates/ @bartytime4life
+/docs/reports/story_nodes/draft/ @bartytime4life
+/docs/reports/story_nodes/published/ @bartytime4life
+/docs/reports/story_nodes/**/assets/ @bartytime4life
+
+# Domain runbooks (data + ETL guidance lives here)
 /docs/data/ @bartytime4life
 
-# Story Nodes canonical home (v12/v13): docs/reports/story_nodes/
-/docs/reports/story_nodes/ @bartytime4life
-
-# Legacy story nodes location guardrail (if present during migration)
-/docs/story-nodes/ @bartytime4life
-
-# --------------------------------------------------------------------
-# Data lifecycle + catalogs (canonical home: data/)
-# --------------------------------------------------------------------
+# ───────────────────────────────────────────────────────────────────
+# 🗃️ Data lifecycle + catalogs + provenance
+# ───────────────────────────────────────────────────────────────────
 /data/ @bartytime4life
 
-# (A) Staging layout: data/{raw,work,processed}/<domain>/...
+# Standardized staging (raw → work → processed)
 /data/raw/ @bartytime4life
 /data/work/ @bartytime4life
 /data/processed/ @bartytime4life
 
-# (B) Staging layout: data/<domain>/{raw,work,processed}/...
-/data/*/raw/ @bartytime4life
-/data/*/work/ @bartytime4life
-/data/*/processed/ @bartytime4life
-
-# Nested module variant: data/<domain>/<module>/{raw,work,processed}/...
-/data/*/*/raw/ @bartytime4life
-/data/*/*/work/ @bartytime4life
-/data/*/*/processed/ @bartytime4life
-
-# Catalog outputs (publication boundary artifacts)
+# Catalogs (STAC/DCAT) + lineage (PROV)
 /data/stac/ @bartytime4life
 /data/stac/collections/ @bartytime4life
 /data/stac/items/ @bartytime4life
-/data/catalog/ @bartytime4life
 /data/catalog/dcat/ @bartytime4life
 /data/prov/ @bartytime4life
 
-# Graph import/export artifacts (if present)
+# Graph import artifacts (e.g., node/edge CSVs)
 /data/graph/ @bartytime4life
-/data/graph/csv/ @bartytime4life
-/data/graph/cypher/ @bartytime4life
 
-# Optional evidence/report outputs (if used)
-/data/reports/ @bartytime4life
+# Data source registry configs (e.g., data/sources/*.json)
+/data/sources/ @bartytime4life
 
-# --------------------------------------------------------------------
-# Schemas (canonical home: schemas/)
-# --------------------------------------------------------------------
+# ───────────────────────────────────────────────────────────────────
+# 📜 Schemas & “contract-first” artifacts (validation + CI gates)
+# ───────────────────────────────────────────────────────────────────
 /schemas/ @bartytime4life
+/schemas/stac/ @bartytime4life
+/schemas/dcat/ @bartytime4life
+/schemas/prov/ @bartytime4life
+/schemas/storynodes/ @bartytime4life
+/schemas/ui/ @bartytime4life
+/schemas/telemetry/ @bartytime4life
 
-# --------------------------------------------------------------------
-# Pipelines / ETL + catalog generation (canonical home: src/pipelines/)
-# --------------------------------------------------------------------
+# ───────────────────────────────────────────────────────────────────
+# 🧱 Core code: pipelines, graph, and API server
+# ───────────────────────────────────────────────────────────────────
+/src/ @bartytime4life
+
+# ETL + normalization pipelines (write catalogs + processed data)
 /src/pipelines/ @bartytime4life
 
-# --------------------------------------------------------------------
-# Graph build / ontology bindings (canonical home: src/graph/)
-# --------------------------------------------------------------------
+# Graph init, ontology, migrations, sync (Neo4j)
 /src/graph/ @bartytime4life
 
-# --------------------------------------------------------------------
-# API boundary (canonical home: src/server/)
-# --------------------------------------------------------------------
+# Server-side API (REST/GraphQL) + contract definitions + redaction boundary
 /src/server/ @bartytime4life
 /src/server/contracts/ @bartytime4life
 
-# --------------------------------------------------------------------
-# UI (canonical home: web/)
-# --------------------------------------------------------------------
+# ───────────────────────────────────────────────────────────────────
+# 🗺️ UI (map + timeline interface)
+# ───────────────────────────────────────────────────────────────────
 /web/ @bartytime4life
 
-# --------------------------------------------------------------------
-# Tests / tools / experiments / releases
-# --------------------------------------------------------------------
+# ───────────────────────────────────────────────────────────────────
+# 🧪 Tests + tooling + runs
+# ───────────────────────────────────────────────────────────────────
 /tests/ @bartytime4life
 /tools/ @bartytime4life
+
+# MCP runs/experiments (auditability + repeatability)
 /mcp/ @bartytime4life
+/mcp/runs/ @bartytime4life
+/mcp/experiments/ @bartytime4life
+
+# ───────────────────────────────────────────────────────────────────
+# 🏷️ Releases
+# ───────────────────────────────────────────────────────────────────
 /releases/ @bartytime4life
 
-# --------------------------------------------------------------------
-# Drift-guard: legacy/duplicate subsystem homes noted in v13 blueprint
-# (keep owned so changes are deliberate during migration)
-# --------------------------------------------------------------------
-/src/api/ @bartytime4life
-/src/map/ @bartytime4life
+# ───────────────────────────────────────────────────────────────────
+# 🧩 Monorepo safety net (if KFM lives under a subfolder)
+# ───────────────────────────────────────────────────────────────────
+/Kansas-Frontier-Matrix/ @bartytime4life
+/Kansas-Frontier-Matrix/.github/ @bartytime4life
+/Kansas-Frontier-Matrix/docs/ @bartytime4life
+/Kansas-Frontier-Matrix/data/ @bartytime4life
+/Kansas-Frontier-Matrix/src/ @bartytime4life
+/Kansas-Frontier-Matrix/web/ @bartytime4life
+/Kansas-Frontier-Matrix/schemas/ @bartytime4life
