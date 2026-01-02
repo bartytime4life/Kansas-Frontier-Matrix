@@ -69,14 +69,48 @@ The goal is to keep everything above this layer **framework-agnostic** and **eas
 **Use-cases call repositories via small contracts.**  
 Repositories should feel like “a tiny set of verbs” the use-case needs — not a full ORM surface area.
 
+# 🧩 Mermaid Flowchart Fix (Parse-Safe Labels)
+
+When Mermaid renderers are strict, **slashes (`/`) and some punctuation inside `[]` labels** can trigger parse errors.  
+This version removes slashes from labels (replacing them with line breaks) and wraps labels in quotes for safety.
+
+---
+
+## ✅ Parse-safe diagram (recommended)
+
 ```mermaid
 flowchart LR
-  A[Controller / Route Handler] --> B[Use-Case / Service]
-  B -->|calls contract| C[Repository Interface (Port)]
-  C --> D[Repository Implementation (Adapter)]
-  D --> E[(Database / PostGIS)]
-  D --> F[(External API)]
+  A["Controller<br/>Route Handler"] --> B["Use-Case<br/>Service"]
+  B -->|calls contract| C["Repository Interface<br/>(Port)"]
+  C --> D["Repository Implementation<br/>(Adapter)"]
+  D --> E[("Database<br/>PostGIS")]
+  D --> F[("External API")]
 ```
+
+---
+
+## 🧪 If you want the *cylinder* database shape
+
+Some renderers are pickier with `[( ... )]` too. This version is usually safe:
+
+```mermaid
+flowchart LR
+  A["Controller<br/>Route Handler"] --> B["Use-Case<br/>Service"]
+  B -->|calls contract| C["Repository Interface<br/>(Port)"]
+  C --> D["Repository Implementation<br/>(Adapter)"]
+  D --> E[("DB: Postgres<br/>+ PostGIS")]
+  D --> F["External API"]
+```
+
+---
+
+## 🧠 Rule of thumb (to avoid Mermaid pain)
+
+- ✅ Prefer **quoted labels**: `A["..."]`
+- ✅ Replace `/` with `<br/>` or words (`and`, `plus`)
+- ✅ Keep punctuation minimal inside node labels
+- ✅ If a renderer is still cranky, simplify shapes to `["..."]` everywhere
+
 
 ---
 
