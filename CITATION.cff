@@ -1,39 +1,38 @@
 cff-version: 1.2.0
 message: >-
-  If you use Kansas Frontier Matrix (KFM), please cite it using the metadata in this file.
-title: "Kansas Frontier Matrix (KFM)"
+  If you use this software, please cite it using the metadata from this file.
+title: Kansas Frontier Matrix (KFM)
 type: software
 authors:
-  - name: "bartytime4life"
-  - name: "Kansas Frontier Matrix Contributors"
-repository-code: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
-url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+  - name: Kansas Frontier Matrix Contributors
+  - name: bartytime4life
+url: https://github.com/bartytime4life/Kansas-Frontier-Matrix
+repository-code: https://github.com/bartytime4life/Kansas-Frontier-Matrix
 abstract: >-
-  Kansas Frontier Matrix (KFM) is an open-source, provenance-first geospatial-historical
-  knowledge platform designed as a "living atlas" of Kansas. It follows a strict canonical
-  pipeline (ETL → Catalogs → Graph → API → UI → Story Nodes → Focus Mode) so every narrative
-  claim is traceable to versioned evidence via governed catalogs and lineage.
+  Kansas Frontier Matrix (KFM) is an open-source, multidisciplinary geospatial platform
+  integrating data engineering, GIS/remote sensing, machine learning, and scientific
+  modeling & simulation to support Kansas-focused mapping and decision-making workflows.
+  It emphasizes modular architecture, reproducibility, and human-centered, ethically
+  grounded design.
 keywords:
   - Kansas
   - geospatial
   - GIS
+  - remote sensing
   - historical mapping
-  - knowledge graph
-  - provenance
-  - STAC
-  - DCAT
-  - PROV
-  - Neo4j
-  - Story Nodes
-  - Focus Mode
-version: "v13.0.0-draft"
-date-released: "2025-12-28"
+  - data science
+  - data engineering
+  - machine learning
+  - scientific modeling
+  - simulation
+  - decision support
+  - web mapping
+  - digital humanism
+  - human-centered design
 preferred-citation:
   type: software
-  title: "Kansas Frontier Matrix (KFM)"
+  title: Kansas Frontier Matrix (KFM)
   authors:
-    - name: "bartytime4life"
-    - name: "Kansas Frontier Matrix Contributors"
-  version: "v13.0.0-draft"
-  date-released: "2025-12-28"
-  url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+    - name: Kansas Frontier Matrix Contributors
+    - name: bartytime4life
+  url: https://github.com/bartytime4life/Kansas-Frontier-Matrix
