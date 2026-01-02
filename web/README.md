@@ -1,302 +1,378 @@
----
-title: "KFM Web UI (web/)"
-path: "web/README.md"
-version: "v0.1.0-draft"
-last_updated: "2025-12-31"
-status: "draft"
-doc_kind: "component_readme"
-license: "TBD (inherit repo root LICENSE)"
-markdown_protocol_version: "KFM-MDP v11.2.6"
+# 🌾🗺️ `web/` — Kansas Frontier Matrix Web Viewer
 
-# Contract + profile alignment (fill from canonical standards/templates)
-mcp_version: "TBD"
-ontology_protocol_version: "TBD"
-pipeline_contract_version: "TBD"
-stac_profile_version: "TBD"
-dcat_profile_version: "TBD"
-prov_profile_version: "TBD"
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Frontend](https://img.shields.io/badge/frontend-MapLibre%20%7C%20Leaflet%20%7C%20React-blue)
+![3D](https://img.shields.io/badge/3D-Cesium%20(optional)-informational)
+![License](https://img.shields.io/badge/license-see%20LICENSE-lightgrey)
 
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
-
-fair_category: "FAIR+CARE"
-care_label: "Public · Low-Risk (TBD)"
-sensitivity: "low"
-classification: "public"
-jurisdiction: "US-KS"
-
-doc_uuid: "TBD"
-semantic_document_id: "kfm:web:readme"
-event_source_id: "TBD"
-commit_sha: "TBD"
-doc_integrity_checksum: "TBD"
-
-ai_assistance:
-  used: true
-  tool: "ChatGPT (GPT-5.2 Pro)"
-  notes: "Drafted from KFM project docs; requires human review before merge."
----
-
-# 🌐 KFM Web UI
-
-The `web/` directory contains the **user-facing frontend** for Kansas Frontier Matrix (KFM): an interactive, map-based narrative interface (React + MapLibre) that consumes governed APIs and presents Story Nodes and Focus Mode experiences.
-
-> **Non-negotiable invariant:** the UI is *downstream* of ETL → Catalogs → Graph → API.  
-> The UI must never bypass contracts by reading the graph or raw data directly.
+A browser-based **interactive map + timeline** experience for the Kansas-Frontier-Matrix (KFM).  
+This is where users **explore spatiotemporal layers**, **toggle historical eras**, and **open linked documents / insights** in a human-centered way. 🧭✨
 
 ---
 
-## 📘 Overview
+## 🧩 What lives in `web/`?
 
-### Purpose
-Provide a modern, map-first web interface that:
-- Renders KFM geospatial layers (MapLibre GL) with time filtering (timeline slider).
-- Displays Story Nodes (governed narrative Markdown) with citations.
-- Provides **Focus Mode**: an evidence-only “truth audit” view that shows only provenance-linked content.
+This folder is the **front-end viewer** and GitHub Pages-ready site:
 
-### Scope
-In scope:
-- Web app code, UI state, map configuration, rendering Story Nodes and citations, Focus Mode UX.
-- Consuming API endpoints and honoring API schema + classification/redaction fields.
+- **Static site assets** (e.g., `index.html`, `app.js`, `style.css`) for a lightweight deploy 🚀  
+- **Precomputed JSON** used by the UI (e.g., document index, timeline configuration, layer manifests) 🧾  
+- The **interactive map UI** that renders geospatial layers (vector + raster) and connects them to narrative / archival context 📚🗺️
 
-Out of scope:
-- ETL pipelines, metadata catalog generation, graph construction, and API implementation.
-
-### Audience
-- Frontend engineers, UI/UX contributors, and reviewers validating “evidence-first” UI behavior.
-- Backend/API contributors who need to understand UI expectations at the contract boundary.
+> 🧠 In practice, the repo supports both a “static viewer” approach and a more componentized “app” approach:
+> - **Static viewer**: MapLibre/Leaflet + vanilla JS (fast to iterate, easy to deploy)
+> - **App viewer**: React components (MapView / Sidebar / TimelineSlider / ChartPanel / DataTable) for richer UI patterns
 
 ---
 
-## 🗂️ Directory Layout
+## ✨ What the viewer is designed to do
 
-### This document
-- 📄 `web/README.md` (this file)
+### Core experience (2D)
+- 🗺️ **Map rendering** via open web mapping libraries (MapLibre GL JS recommended; Leaflet supported)
+- 🧅 **Layer toggles** with time-aware visibility (turn layers on/off by era)
+- ⏳ **Timeline slider** (drag, step, play/pause animation) for temporal navigation
+- 🪟 **Popups / side panels** showing:
+  - layer metadata & provenance
+  - feature attributes
+  - linked document excerpts + citations / references
+- 🔎 **Search & filtering** (place names, tags, date ranges, “sites of interest”)
 
-### Repo context (expected top-levels)
-> This is the **v13 “one canonical home per subsystem”** layout (trimmed to what matters for UI work).
-
-~~~text
-📁 data/
-├── 📁 raw/                      # Immutable originals (by domain)
-├── 📁 work/                     # Intermediates
-├── 📁 processed/                # Published/derived outputs
-├── 📁 stac/                     # STAC collections/items
-├── 📁 catalog/
-│   └── 📁 dcat/                 # DCAT metadata
-└── 📁 prov/                     # PROV lineage bundles
-
-📁 docs/
-├── 📄 MASTER_GUIDE_v13.md
-├── 📁 standards/
-├── 📁 templates/
-└── 📁 reports/
-    └── 📁 story_nodes/          # Story Node content (draft/published)
-
-📁 schemas/                      # JSON Schemas (STAC/DCAT/PROV/storynodes/ui/telemetry)
-📁 src/
-├── 📁 pipelines/                # ETL jobs
-├── 📁 graph/                    # Graph build code
-└── 📁 server/                   # API implementation + contracts (OpenAPI/GraphQL)
-
-📁 web/                          # ✅ Frontend UI (you are here)
-~~~
-
-### `web/` internal layout (project-specific)
-The exact file tree under `web/` depends on whether the repo stores:
-1) **built static site assets** (e.g., `index.html`, bundled JS/CSS), or  
-2) **source + bundler** (React/TypeScript + `package.json`), or both.
-
-If your repo is using a typical SPA + bundler pattern, an **expected** (but **not confirmed in repo**) layout is:
-
-~~~text
-📁 web/
-├── 📄 README.md
-├── 📄 index.html                 # SPA entrypoint (if static build output lives here)
-├── 📁 public/                    # Static assets (favicons, images)
-├── 📁 src/                       # React/TS source
-│   ├── 📁 components/
-│   ├── 📁 features/
-│   │   ├── 📁 map/
-│   │   ├── 📁 story/
-│   │   └── 📁 focus_mode/
-│   ├── 📁 styles/
-│   ├── 📁 lib/
-│   └── 📄 main.tsx
-├── 📄 package.json               # Node toolchain (if applicable)
-└── 📄 (build config files)       # e.g., vite/webpack configs (if applicable)
-~~~
-
-If instead `web/` is deployed as a **pure static folder** (e.g., GitHub Pages builds from `web/`), then the key expectation is:
-- `web/` contains **only UI assets** (or build outputs),
-- it does **not** become a “hidden data storage” location.
+### Optional experience (3D)
+- 🌍 **3D globe mode** (CesiumJS) to visualize terrain + time-indexed overlays  
+- 🛰️ Raster tile overlays, GeoJSON draped vectors, and time-dynamic updates tied to the same timeline UI
 
 ---
 
-## 🧭 Context
+## 🚀 Quickstart (local)
 
-### Where `web/` fits in the canonical pipeline
-KFM’s pipeline ordering is strict:
+> ⚠️ **Do not open `index.html` by double-clicking** (you’ll hit CORS/file:// limits). Always run a local server.
 
-ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → UI → Story Nodes → Focus Mode
+### Option A — Static viewer (no build step) ✅
+From the repo root:
 
-`web/` is the **UI** stage. It must never:
-- read Neo4j directly,
-- read raw/processed data files directly,
-- “smuggle” uncataloged evidence into the interface.
-
-### API boundary rule (hard requirement)
-The frontend is contract-driven:
-- The API is the sole integration boundary for KFM data access.
-- UI features must be implementable using API responses + their governed schemas.
-
-### Evidence-first UI behavior
-UI behaviors must reinforce provenance:
-- Citations are visible and actionable (clickable markers, evidence popovers/panels).
-- Focus Mode is an evidence-only view:
-  - Anything not linked to a source is hidden or flagged.
-  - Missing citations are surfaced as a quality control signal (and should be caught by CI earlier).
-
-### Stateless frontend principle
-The UI should not maintain its own persistent database.  
-Caching is allowed for performance, but the API remains the source of truth.
-
-### Sensitive / sovereign data handling
-If source data is restricted, derivatives and UI presentation must **not** reduce that restriction level.
-Map presentations may need safeguards (e.g., generalized/blurred locations) depending on policy.
-
----
-
-## 🧩 Key UI Capabilities
-
-### 🗺️ Interactive Map Viewer (MapLibre)
-Expected map UX:
-- Layer toggles (forts, trails, boundaries, ecological zones, etc.)
-- Timeline slider / time filter to show changes over time
-- Click/hover identify for features → fetch entity details via API
-
-Implementation notes:
-- Prefer vector tiles or bounded-viewport GeoJSON fetches for performance.
-- Keep map rendering logic separate from API client logic (contract-first).
-
-### 📖 Story Node Reader
-Story Nodes are governed narrative Markdown that:
-- embed citations to datasets/documents via identifiers
-- may define map sync behavior (highlight/zoom as user scrolls)
-
-Reader UX expectations:
-- Render Markdown with citation markers.
-- Clicking a citation reveals evidence (doc snippet, dataset excerpt, map highlight, etc.).
-- Story scroll ↔ map context synchronization.
-
-### 🔎 Focus Mode (Evidence-Only)
-Focus Mode is a dedicated layout for verification:
-- Story text pane shows citations explicitly
-- Evidence pane/tab view shows each cited item
-- Evidence retrieval is API-driven (possibly via a convenience “citations bundle” endpoint)
-
-Performance:
-- Cache repeated cited items within a session.
-- Prefer “bundle” APIs when available to avoid N+1 requests.
-
-### 🏷️ Provenance & uncertainty indicators
-UI should communicate data quality and provenance:
-- Badge/icon for AI-assisted content
-- Badge/icon for generalized/blurred locations
-- UI affordances for uncertainty (±, tooltip explaining confidence, etc.)
-
-### ♿ Accessibility & inclusive design
-Baseline expectations:
-- Keyboard operability
-- Screen-reader-friendly narrative content
-- Sufficient contrast and scalable text
-- Content warnings / context notices when appropriate
-
----
-
-## 🔌 API Integration
-
-### Contract source of truth
-The contract definitions live under:
-- `src/server/` (and possibly `src/server/contracts/`) *(path is canonical for API code; subpath is project-specific)*
-
-Frontend work should treat API schemas as first-class:
-- generate types (if TS) from OpenAPI/GraphQL
-- validate response shapes for critical flows (Story Node, citations, map layers)
-
-### Example endpoints (illustrative; confirm in API contracts)
-- Story Nodes:
-  - `GET /api/v1/storynodes/{id}`
-  - `GET /api/v1/storynodes/{id}/citations` (bundle convenience endpoint)
-- Search:
-  - `GET /api/v1/search?q=...`
-- Map data:
-  - `GET /api/v1/tiles/{layer}/{z}/{x}/{y}`
-  - or `GET /api/v1/features?layer=...&bbox=...&time=...`
-
-> Do not “invent” endpoints in the UI. Confirm names/paths in the API contract docs/schemas.
-
----
-
-## 🧪 Local Development
-
-Because the exact build toolchain is project-specific, use one of the patterns below:
-
-### Option A: Static folder dev (no bundler)
-If `web/` contains a plain `index.html` + JS/CSS assets:
-~~~bash
+```bash
 cd web
-python -m http.server 8000
-# open http://localhost:8000
-~~~
 
-### Option B: Bundler-based dev (React/TS)
-If `web/package.json` exists (not confirmed in repo):
-~~~bash
+# Python (simple)
+python -m http.server 8000
+
+# OR Node (simple)
+npx serve -l 8000
+```
+
+Open:
+- `http://localhost:8000`
+
+### Option B — React/dev server (if this folder contains a package.json) ⚛️
+If you see `web/package.json`:
+
+```bash
 cd web
 npm install
-npm run dev
-~~~
+npm run dev    # or: npm start
+```
 
-### Environment configuration
-- Prefer `.env.example` at repo root for required variables.
-- UI must allow API base URL configuration (name is project-specific).
+Open the URL printed in your terminal.
 
 ---
 
-## 🚦 Validation & Quality Gates
+## ⚙️ Configuration (`.env`)
 
-UI contributions should pass:
-- Frontend linting and formatting checks (tooling is project-specific)
-- Any UI schema validation (if `schemas/ui/` exists)
-- End-to-end “evidence-first” checks:
-  - citations resolve via API
-  - Focus Mode hides/flags uncited content
-  - classification/sensitivity indicators render correctly
+Front-end builds often need **public** configuration (tile endpoints, public tokens, base API URL).
+
+Create a local env file **without committing secrets**:
+
+```bash
+cp ../.env.example ../.env
+# or (if scoped to web only)
+cp .env.example .env
+```
+
+### Common env keys (recommended)
+```bash
+# Backend API (if running services)
+VITE_API_BASE_URL=http://localhost:8080
+
+# Map tiles / styles
+VITE_MAP_STYLE_URL=/data/styles/kfm-style.json
+VITE_TILE_BASE_URL=/tiles
+
+# Optional: Map provider key (keep it public-scope only)
+VITE_MAPTILER_KEY=YOUR_PUBLIC_KEY
+```
+
+✅ If it’s a **secret**, it should NOT be in the web bundle.  
+Frontend tokens must be considered “public enough” and restricted (domain restrictions, quotas).
 
 ---
 
-## ⚖️ FAIR+CARE & Governance Notes
+## 🗂️ Suggested `web/` structure
 
-- The UI must propagate classification and sensitivity labels returned by the API.
-- Never expose sensitive locations/details that were not already approved and contractually permitted.
-- If a UI feature changes how restricted data is rendered, flag for governance review.
+> This is the recommended layout that supports both “static” and “app” styles cleanly.
+
+```text
+web/
+├─ 🧾 index.html
+├─ 🎨 style.css
+├─ 🧠 app.js                 # static entry (or compiled entry)
+├─ 📦 package.json           # optional (only if using a build tool)
+├─ 🧩 src/                   # optional React source
+│  ├─ 🗺️ components/
+│  │  ├─ MapView/
+│  │  ├─ Sidebar/
+│  │  ├─ TimelineSlider/
+│  │  ├─ ChartPanel/
+│  │  └─ DataTable/
+│  ├─ 🔌 api/
+│  ├─ 🧱 state/
+│  └─ 🧪 tests/
+├─ 📚 data/
+│  ├─ 🗃️ catalog/            # STAC-like layer manifests (JSON)
+│  ├─ ⏳ timeline.json        # timeline config (ticks, eras)
+│  ├─ 🧾 doc_index.json       # document knowledge base index (precomputed)
+│  ├─ 🗺️ styles/             # MapLibre style JSON + sprites/fonts if local
+│  └─ 🧭 ui_config.json       # optional UI defaults
+└─ 🖼️ assets/
+   ├─ logos/
+   └─ icons/
+```
 
 ---
 
-## 🕰️ Version History
+## 🧠 UI architecture (how we think about the app)
 
-- v0.1.0-draft — 2025-12-31 — Initial `web/README.md` draft aligned to KFM v13 pipeline and UI principles.
+If you’re building the richer UI (React-style), the mental model is:
+
+- 🗺️ **MapView**: owns the map instance + rendering lifecycle
+- 🧰 **Sidebar**: layer toggles, legend, filters, metadata
+- ⏳ **TimelineSlider**: global time control (ticks + playback)
+- 📈 **ChartPanel**: time-series, histograms, comparisons (Plotly/Chart.js/D3)
+- 📋 **DataTable**: exportable tables and provenance
+- 🧭 **Header/Nav**: mode switching (2D/3D), global controls, settings
+
+State patterns:
+- 🧠 Global UI state (selected time, active layers, selected feature) via **Redux** or **Context/hooks**
+- 🔁 Keep **URL-deep-linkable state** when possible (shareable exploration links)
 
 ---
 
-## 📚 References (project docs)
+## 🗺️ Data contracts (what the web viewer expects)
 
-- `docs/MASTER_GUIDE_v13.md` — canonical pipeline order + subsystem homes
-- `docs/standards/` — markdown work protocol, repo structure standard, STAC/DCAT/PROV profiles
-- `docs/templates/` — Universal Doc, Story Node v3, API Contract Extension templates
-- **KFM Architecture Document** — Focus Mode and end-to-end contract layering
-- **KFM Unified Technical Plan** — UI component behaviors (map viewer, story reader, Focus Mode)
-- **KFM Master Documentation** — UI ↔ API separation, React/MapLibre overview, stateless UI notes
-- **Open-Source Geospatial Historical Mapping Hub Design** — repo structure and Pages deployment concept
+KFM is built around **traceable, reproducible, time-aware layers**.
+
+### 1) Layer catalog (STAC-like JSON)
+Each layer should have:
+- `id`, `title`, `description`
+- `bbox`, `crs`
+- `time` coverage (single date, range, or discrete list)
+- `assets`:
+  - raster tiles / COGs
+  - vector sources (GeoJSON / tiles)
+  - optional KML/KMZ exports
+- `source` + attribution
+- processing notes (how it was derived)
+
+Example sketch:
+
+```json
+{
+  "id": "ks_hillshade",
+  "title": "Kansas LiDAR Hillshade",
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "time": { "type": "static" },
+  "assets": {
+    "raster_tiles": { "type": "xyz", "url": "/tiles/ks_hillshade/{z}/{x}/{y}.png" }
+  },
+  "provenance": {
+    "source_name": "KARS GeoPlatform (ArcGIS REST)",
+    "license": "see source",
+    "processing": ["download", "reproject", "COG", "tile"]
+  }
+}
+```
+
+### 2) Document index (knowledge base)
+A lightweight JSON index the UI can query by:
+- place
+- date / era
+- tags / themes
+- linked geometry (point/line/polygon) or nearest-feature lookup
+
+UI behavior:
+- Clicking a feature can show linked excerpts and citations
+- Searching a place can jump to geometry + related documents
+
+---
+
+## ⏳ Time slider semantics (the “4D” promise)
+
+Time changes should synchronize:
+- 🗺️ visible layers (swap sources or filter features)
+- 📈 chart indicators (vertical marker at current time)
+- 🧾 derived stats panels (“current value at T”)
+- 🧭 bookmarks / share links (optional)
+
+Recommended patterns:
+- Discrete time steps when data is episodic (historic maps by year)
+- Continuous slider + snapping for dense time series (remote sensing)
+
+---
+
+## 🌐 API integration (optional but powerful)
+
+If the backend services are running, the web viewer can:
+- fetch metadata + data products via REST
+- stream updates via WebSockets / SSE for real-time dashboards (sensor feeds, job progress)
+
+Typical calls:
+- `GET /api/catalog` → layer manifests
+- `GET /api/layers/:id?time=YYYY-MM-DD` → time-filtered assets
+- `GET /api/docs?bbox=...&time=...` → document mentions in view
+- `WS /ws` → live updates (progress, sensor streams)
+
+---
+
+## ♿ UX + accessibility checklist (non-negotiable)
+
+We build for humans first (and we mean it). 🧑‍🤝‍🧑🌱
+
+- ⌨️ Keyboard navigation (map focus, slider control, sidebar)
+- 🏷️ ARIA labels for:
+  - timeline slider
+  - layer toggles
+  - dialogs / popovers
+- 🎨 Color isn’t the only signal (patterns, labels, tooltips)
+- 📱 Mobile-first layouts (map + panels stack cleanly)
+- 🧾 Provenance shown where users make decisions (sources, uncertainty, “what changed?”)
+
+---
+
+## ⚡ Performance rules of thumb
+
+Geospatial web apps can melt laptops if we’re not careful 🔥💻 — here’s how we keep it smooth:
+
+- 🧊 Prefer **tiled raster (WMTS/XYZ)** and **vector tiles** for large layers
+- 🧬 Simplify geometry at small zoom levels (server-side or build-time)
+- 🧰 Lazy-load heavy layers (only when toggled)
+- 🧠 Cache aggressively (HTTP caching headers for tiles + manifests)
+- 🧵 Offload parsing to Web Workers for big GeoJSON (if needed)
+- 🗜️ Compress JSON (gzip/brotli) and prefer NDJSON for big streams
+
+---
+
+## 🚢 Deployment
+
+### GitHub Pages (recommended)
+This folder is designed to be the **publish root** for Pages.
+
+- Keep assets relative (`./data/...`, `./assets/...`)
+- Avoid absolute `/` paths unless you control the domain root
+- If using a build step, configure the base path so routing works in Pages
+
+### Docker (optional)
+If you prefer containerized local preview:
+
+```bash
+# Example pattern (adjust to your repo setup)
+docker run --rm -p 8000:80 -v "$(pwd)/web:/usr/share/nginx/html:ro" nginx:alpine
+```
+
+Then open `http://localhost:8000`.
+
+---
+
+## 🧪 Dev quality: linting + consistency
+
+- Follow repo-wide conventions: `../.editorconfig`
+- Use repo pre-commit hooks: `../.pre-commit-config.yaml` (when available)
+- Keep map styling changes reviewable (prefer JSON style files + small diffs)
+
+---
+
+## 🤝 Contributing
+
+- Start here: `../CONTRIBUTING.md` ✅  
+- Security reporting: `../.github/SECURITY.md` 🔒  
+- PR format: `../.github/PULL_REQUEST_TEMPLATE.md` 🧾
+
+When contributing to `web/`:
+- Keep UI changes **traceable** (screenshots + notes in PR)
+- Prefer **open formats** (GeoJSON, COG, KML/KMZ exports)
+- Preserve **provenance metadata** whenever you add/modify layers
+
+---
+
+## 📚 Project Reading Room (why there are so many PDFs 😄)
+
+This project is intentionally multidisciplinary: mapping, visualization, data engineering, AI, statistics, simulation, and ethics.
+
+<details>
+<summary><b>📖 Click to expand the full project library</b></summary>
+
+### 🌐 Web / UI / Graphics
+- `responsive-web-design-with-html5-and-css3.pdf`
+- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+- `Computer Graphics using JAVA 2D & 3D.pdf`
+
+### 🗺️ GIS / Mapping / Remote Sensing
+- `Geographic Information System Basics - geographic-information-system-basics.pdf`
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `geoprocessing-with-python.pdf`
+- `python-geospatial-analysis-cookbook.pdf`
+- `Google Maps API Succinctly - google_maps_api_succinctly.pdf`
+- `google-maps-javascript-api-cookbook.pdf`
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `Google Earth Engine Applications.pdf`
+
+### 🧱 Data engineering / Systems
+- `Scalable Data Management for Future Hardware.pdf`
+- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf`
+- `Introduction-to-Docker.pdf`
+- `Command Line Kung Fu_ Bash Scripting Tricks, Linux Shell Programming Tips, and Bash One-liners - Command_Line_Kung_Fu_Bash_Scripting_Tricks,_Linux_Shell_Program.pdf`
+
+### 🤖 AI / ML / Data mining
+- `AI Foundations of Computational Agents 3rd Ed.pdf`
+- `deep-learning-in-python-prerequisites.pdf`
+- `Artificial-neural-networks-an-introduction.pdf`
+- `Data Mining Concepts & applictions.pdf`
+- `applied-data-science-with-python-and-jupyter.pdf`
+- `Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf`
+
+### 📊 Statistics / Experimentation
+- `Understanding Statistics & Experimental Design.pdf`
+- `Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf`
+- `regression-analysis-with-python.pdf`
+- `graphical-data-analysis-with-r.pdf`
+- `Bayesian computational methods.pdf`
+
+### 🧪 Modeling / Simulation / Optimization
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `Generalized Topology Optimization for Structural Design.pdf`
+- `Spectral Geometry of Graphs.pdf`
+- `MATLAB Programming for Engineers Stephen J. Chapman.pdf`
+
+### 🧭 Architecture / Humanism
+- `clean-architectures-in-python.pdf`
+- `implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf`
+- `Introduction to Digital Humanism.pdf`
+- `Principles of Biological Autonomy - book_9780262381833.pdf`
+
+### 🧠 KFM core docs
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
+- `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf`
+
+</details>
+
+---
+
+## ✅ Next implementation targets (web)
+
+- [ ] Finalize `data/catalog/*.json` schema + validator
+- [ ] Implement TimelineSlider (ticks + play/pause) tied to layer visibility
+- [ ] Add “Document mentions near cursor/feature” panel
+- [ ] Add robust error UI (missing tiles, slow network, stale manifests)
+- [ ] Ship a “demo dataset” bundle for instant onboarding 📦
+
+---
+
+> 🔙 Back to project root: `../README.md`
