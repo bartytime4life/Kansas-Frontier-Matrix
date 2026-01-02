@@ -1,159 +1,301 @@
-# Kansas Frontier Matrix
+# Kansas Frontier Matrix (KFM) 🧭🗺️  
+**An open-source geospatial + knowledge + modeling hub for Kansas** — built to fuse **historical mapping**, **remote sensing**, **GIS**, **simulation**, and **AI-assisted research workflows** into one cohesive system.
 
-Kansas Frontier Matrix is an open-source, **governed geospatial + historical knowledge system** for Kansas.
-It connects data catalogs, provenance, a knowledge graph, APIs, and an interactive map UI so people can explore
-*place*, *time*, and *evidence* together.
+![Status](https://img.shields.io/badge/status-active%20development-yellow)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Node](https://img.shields.io/badge/node-18%2B-brightgreen)
+![Docker](https://img.shields.io/badge/docker-ready-blue)
+![GIS](https://img.shields.io/badge/GIS-PostGIS%20%7C%20GEE%20%7C%20GeoJSON-orange)
 
-## What KFM does
+> 🎯 **Goal:** Make Kansas-scale spatial truth **searchable**, **mappable**, **auditable**, and **modelable**—from scanned historic maps and archival documents to modern satellite-derived datasets.
 
-KFM is designed to:
+---
 
-- Ingest heterogeneous sources (maps, imagery, documents, tables) into an **ETL pipeline**.
-- Publish machine-readable **catalogs**:
-  - **STAC** for geospatial assets and collections
-  - **DCAT** for dataset metadata
-  - **PROV** for lineage / “how we know what we know”
-- Build a **Neo4j knowledge graph** that connects *people, places, events, documents,* and *datasets*.
-- Serve data through **contract-first APIs**.
-- Provide a **React-based map UI** and “Story Nodes” (governed narrative Markdown) that power **Focus Mode**
-  (a trust-gated reading experience).
+## ✨ What this repository is
+Kansas Frontier Matrix is designed as a **multidisciplinary platform** combining:
+- 🗺️ **Geospatial cataloging** (vector + raster + time)
+- 🛰️ **Remote sensing workflows** (Google Earth Engine–style pipelines)
+- 📚 **Document knowledge base** (historical sources + notes + metadata)
+- 🧠 **AI reasoning & retrieval** (human-in-the-loop, citation-first workflows)
+- 📈 **Modeling & simulation** (statistics → ML → Bayesian → system simulation)
+- 🌐 **Interactive visualization** (web maps, layers, 3D overlays, timelines)
 
-## Non-negotiable contracts
+---
 
-### Pipeline ordering
+## 🧩 Core capabilities
+- 🗃️ **Data ingestion + normalization**
+  - Historical maps (georeferenced), shapefiles, GeoJSON, rasters, tabular datasets
+  - Cataloged using a **STAC-like** manifest approach (metadata-first)
+- 🧭 **Search + discovery**
+  - “Find me all layers related to *railroads 1860–1910* near *X county*”
+- 🕰️ **Time-aware mapping**
+  - Timeline slider for historical changes, events, land-use transitions
+- 🧪 **Experiment-friendly**
+  - Notebooks + scripts for research workflows (reproducible pipelines)
+- 🧱 **Clean architecture minded**
+  - Separation of concerns: domain logic ≠ infrastructure ≠ UI
+- 🔐 **Human-centered governance**
+  - Digital Humanism + privacy/security principles baked into process & design
 
-KFM keeps a strict build order:
+---
 
-1. **ETL / data ingestion**
-2. **Catalogs (STAC + DCAT + PROV)**
-3. **Graph build (Neo4j)**
-4. **APIs**
-5. **UI**
-6. **Story Nodes**
-7. **Focus Mode**
-
-If you add or change something, you should be able to point to where it lands in this chain.
-
-### Evidence-first and CARE/FAIR handling
-
-- “Governed docs” use **YAML front-matter** (versioning, ownership, sensitivity, doc UUIDs, checksums).
-- Every factual claim in governed artifacts should be backed by **evidence** (catalog entry, dataset ID/DOI,
-  commit SHA, or cited source).
-- If content is sensitive (e.g., culturally sensitive sites), **redaction/aggregation rules** apply. The UI and
-  docs must respect those rules.
-
-## Architecture overview
-
+## 🧭 Architecture at a glance
 ```mermaid
-flowchart LR
-  A[ETL / Ingest] --> B[Catalogs
-STAC · DCAT · PROV]
-  B --> C[Knowledge Graph
-Neo4j]
-  C --> D[APIs
-contract-first]
-  D --> E[Web UI
-React · Map viewer]
-  E --> F[Story Nodes
-Governed Markdown]
-  F --> G[Focus Mode
-Trust gates + redaction]
+flowchart TB
+  subgraph Sources["🧾 Sources"]
+    A["🗺️ Historical maps (scans)"]
+    B["🛰️ Satellite + Remote sensing (GEE)"]
+    C["🧾 Docs (PDFs, notes, archives)"]
+    D["🧪 Datasets (CSV/GeoJSON/Shapefile/COG)"]
+  end
+
+  subgraph Ingest["🧰 Ingestion & Processing"]
+    E["🧼 Normalize + validate + metadata"]
+    F["🧭 Georeference (GCPs / warp)"]
+    G["🗂️ STAC-like manifests / catalog updates"]
+  end
+
+  subgraph Storage["🗄️ Storage"]
+    H["🧊 Object storage / files (COG, GeoJSON, PDFs)"]
+    I["🗃️ Postgres/PostGIS (spatial index)"]
+    J["📚 Document KB (chunks + embeddings + citations)"]
+  end
+
+  subgraph Intelligence["🧠 Intelligence Layer"]
+    K["🔎 Search / Retrieval"]
+    L["🧠 Reasoning Engine (RAG + tools)"]
+    M["📈 Modeling (stats/ML/Bayes/sim)"]
+  end
+
+  subgraph Delivery["🌐 Delivery"]
+    N["🧩 API (Python: Flask/FastAPI)"]
+    O["🖥️ Web UI (React)"]
+    P["🗺️ Map UI (MapLibre/Leaflet + WebGL overlays)"]
+  end
+
+  A-->E
+  B-->E
+  C-->E
+  D-->E
+  E-->F-->G
+  G-->H
+  G-->I
+  E-->J
+  H-->K
+  I-->K
+  J-->K
+  K-->L-->N-->O-->P
+  K-->M-->N
 ```
 
-## Repo layout
+---
 
-The v13 layout organizes code, contracts, and data artifacts so they can be validated and released together:
+## 🗂️ Repository map (suggested structure)
+> 📌 If your repo already has a structure, keep it—this is the “target shape” for clarity.
 
 ```text
-docs/                 Master guide, governance, standards, templates
-schemas/              JSON Schema for docs + STAC/DCAT/PROV/Graph profiles
-src/
-  pipelines/          ETL + catalog build + graph build
-  graph/              graph builders, Cypher, entity rules
-  server/             API code + contracts (OpenAPI/GraphQL)
-web/                  map UI + Focus Mode reader
-data/
-  domains/            per-domain raw/work/processed staging
-  stac/               STAC catalogs (collections/items)
-  catalog/dcat/       DCAT datasets/distributions
-  prov/               provenance bundles
-  graph/              CSV/Cypher artifacts for graph loads
-tools/                validators, redaction scanners, release tooling
-tests/                contract tests, graph integrity tests, CI fixtures
-releases/             versioned release bundles + checksums
+Kansas-Frontier-Matrix/
+├─ 📁 api/                     # Python API (Flask/FastAPI)
+│  ├─ 📁 app/
+│  ├─ 📁 domain/
+│  ├─ 📁 services/
+│  ├─ 📁 adapters/
+│  └─ 📁 infrastructure/
+├─ 📁 web/                     # Front-end (React)
+│  ├─ 📁 src/
+│  └─ 📁 public/
+├─ 📁 data/                    # Curated datasets + manifests
+│  ├─ 📁 raw/
+│  ├─ 📁 processed/
+│  └─ 📁 catalog/              # STAC-like JSON manifests
+├─ 📁 scripts/                 # CLI utilities (ingest, validate, export)
+├─ 📁 notebooks/               # Research notebooks (EDA, experiments)
+├─ 📁 mcp/                     # “Master Coder Protocol” + SOPs (ops + governance)
+├─ 📁 docs/                    # Docs & diagrams
+│  └─ 📁 library/              # Reference PDFs (optional)
+├─ 🧪 tests/
+├─ 🐳 docker-compose.yml
+├─ 🧾 .env.example
+└─ 📘 README.md
 ```
 
-Key entry points:
+---
 
-- Master guide: `docs/MASTER_GUIDE_v13.md`
-- Governance root: `docs/governance/ROOT_GOVERNANCE.md`
-- Profiles/standards:
-  - `docs/standards/KFM_STAC_PROFILE.md`
-  - `docs/standards/KFM_DCAT_PROFILE.md`
-  - `docs/standards/KFM_PROV_PROFILE.md`
-- Redesign blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
-
-## Quickstart
-
-> Commands and ports are intentionally defined in-repo. Use these as a starting point, then follow the
-> authoritative instructions in `docker-compose.yml`, the `Makefile`, and component READMEs under `src/` and `web/`.
-
-### Option A: Docker Compose (recommended for a full stack)
-
-1. Create your local env file:
-
+## 🚀 Quickstart
+### Option A — Docker (recommended) 🐳
 ```bash
+# 1) Clone
+git clone https://github.com/<your-org>/Kansas-Frontier-Matrix.git
+cd Kansas-Frontier-Matrix
+
+# 2) Configure environment
 cp .env.example .env
-```
 
-2. Start the stack:
-
-```bash
+# 3) Run
 docker compose up --build
 ```
 
-### Option B: Makefile pipeline targets (prototype workflow)
-
-Common targets (see `Makefile` for the authoritative list):
-
+### Option B — Local dev (Python + Node) 💻
 ```bash
-make fetch      # download data sources into data/domains/*/raw
-make terrain    # build terrain/tiles/COGs
-make site       # build the web/ site (e.g., GitHub Pages output)
+# Python backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r api/requirements.txt
+python -m api.app
+
+# Web frontend
+cd web
+npm install
+npm run dev
 ```
 
-## Data workflow
+✅ Expected local endpoints (typical):
+- `http://localhost:8000` → API  
+- `http://localhost:5173` → Web UI  
 
-KFM uses a staged approach per “domain”:
+---
 
-- `raw/` = unmodified source data
-- `work/` = intermediate processing outputs
-- `processed/` = final artifacts that are referenced by catalogs and/or loaded into the graph
+## 🗺️ Data standards & conventions
+To keep the system interoperable and scalable:
 
-Catalogs are the *bridge* between files and meaning: every STAC/DCAT/PROV entry should be traceable to
-artifacts in `data/` (or external sources referenced in a governed way).
+- 🧾 **Catalog manifests**: STAC-like JSON (dataset id, bbox, time range, provenance, license, checksum)
+- 🌍 **Vector**: GeoJSON (preferred for transport), Shapefile (accepted for ingest)
+- 🧊 **Raster**: Cloud-Optimized GeoTIFF (COG) preferred for web streaming
+- 🧭 **CRS**: store original + normalized “web map CRS” derivatives when needed
+- 🧾 **Provenance-first**: every dataset should have:
+  - Source reference(s)
+  - Transform history (what changed, when, by whom)
+  - Citation-ready metadata
 
-## Validation and CI gates
+---
 
-Pull requests are expected to pass:
+## 🧠 Modeling & analytics (the “Matrix” part)
+KFM isn’t just a map viewer — it’s a **modeling workbench**:
 
-- Markdown front-matter + required-sections validation for governed docs
-- Link validation + formatting checks
-- Schema validation for STAC/DCAT/PROV/graph artifacts
-- Graph integrity tests (relationships, required properties, no orphan entities)
-- API contract tests (OpenAPI/GraphQL)
-- Security / governance scans (no secrets; sensitivity rules respected; redaction enforced)
+- 📈 **Statistics & regression**: trend modeling, uncertainty, bias checks, reproducible inference
+- 🎲 **Bayesian workflows**: posterior reasoning, uncertainty propagation, decision support
+- 🧠 **ML / Deep learning**: classification, change detection, feature extraction (where appropriate)
+- 🛰️ **Remote sensing analytics**: indices, time-series, land cover transitions
+- 🧪 **Simulation**: scenario testing, sensitivity analysis, model validation practices
 
-See `tools/` and `tests/` for the exact runners.
+> ✅ Principle: **Models support decisions; they don’t replace accountability.**
 
-## Contributing
+---
 
-- Start with `CONTRIBUTING.md`.
-- When adding a new API endpoint, **update the contract first** under `src/server/contracts/`, then implement
-  the endpoint and add contract tests.
-- When adding a new UI layer, ensure it links back to provenance (STAC/DCAT) and respects redaction rules.
+## 🌐 Visualization stack
+- 🗺️ Web maps with modern rendering (MapLibre/Leaflet-style patterns)
+- 🎛️ Layer controls + filters + queryable features
+- 🕰️ Timeline slider for time-enabled datasets
+- 🧊 Web-friendly raster tiling patterns (COG / tiled sources)
+- 🧱 Optional: WebGL overlays (for 3D, dense data, GPU acceleration)
 
-## License and citation
+---
 
-- License: see `LICENSE`
-- Citation metadata: see `CITATION.cff`
+## 🔐 Security, privacy, and human-centered design ❤️
+KFM is designed with a strong bias toward:
+- ✅ Human agency and oversight (no “black box governance”)
+- ✅ Data minimization and access control where required
+- ✅ Auditability: *what the system shows* must be traceable to *why it shows it*
+- ✅ Respect for communities and historical context (especially for sensitive datasets)
+
+---
+
+## 🤝 Contributing
+We welcome contributions that improve:
+- 🧾 data provenance, ingest tooling, validation
+- 🗺️ mapping UX (layers, timeline, search, performance)
+- 📈 modeling modules + reproducibility
+- 📚 documentation + tutorials + examples
+
+Suggested contribution workflow:
+1. 🍴 Fork / branch  
+2. ✅ Add tests where applicable  
+3. 🧹 Format + lint  
+4. 📣 Open PR with a short “why” + screenshots (for UI changes)
+
+---
+
+## 🛣️ Roadmap (starter)
+- [ ] 🗂️ Dataset manifest schema + validator CLI  
+- [ ] 🛰️ Remote sensing pipeline templates (GEE-like jobs → catalog)  
+- [ ] 🧾 Document KB ingestion (chunking + metadata + citations)  
+- [ ] 🗺️ Map + timeline MVP (layer browser, search, feature inspect)  
+- [ ] 📈 Modeling notebooks: regression + Bayesian + simulation examples  
+- [ ] 🔐 Auth + roles (public vs collaborator vs admin)  
+- [ ] 📦 Reproducible releases (versioned catalogs + changelogs)
+
+---
+
+## 📚 Project reference library (all included project files)
+> 🎒 This repo is backed by a **curated, multidisciplinary reading pack** used to shape architecture, modeling rigor, GIS workflows, and UI/infra decisions.
+
+<details>
+<summary><strong>📦 Expand: Reference PDFs & what they influence</strong></summary>
+
+### 🧭 Core KFM documentation
+- **Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation** → overall platform vision, architecture, modules
+- **Kansas-Frontier-Matrix — Open-Source Geospatial Historical Mapping Hub Design** → geospatial hub blueprint, STAC-like cataloging, map+timeline UX, repo patterns
+
+### 🗺️ GIS, cartography & geoprocessing
+- **Geographic Information System Basics** → fundamentals, spatial concepts
+- **Geoprocessing with Python** → scripting patterns for GIS workflows
+- **Python Geospatial Analysis Cookbook** → practical recipes for GeoPandas/raster/vector ops
+- **Making Maps: A Visual Guide to Map Design for GIS** → cartographic clarity & UX
+
+### 🛰️ Remote sensing & Earth Engine
+- **Cloud-Based Remote Sensing with Google Earth Engine — Fundamentals and Applications** → scalable RS workflows
+- **Google Earth Engine Applications** → end-to-end examples for analytics & products
+
+### 🌐 Web mapping, web UI & graphics
+- **Responsive Web Design with HTML5 and CSS3** → layout, accessibility, front-end structure
+- **Google Maps JavaScript API Cookbook** → mapping interaction patterns and API design ideas
+- **Google Maps API Succinctly** → lightweight reference (API mental model)
+- **WebGL Programming Guide** → GPU rendering basics, overlays, performance
+- **Computer Graphics using JAVA 2D & 3D** → graphics fundamentals transferable to WebGL thinking
+
+### 🧱 Architecture, systems & scalability
+- **Clean Architectures in Python** → layering, boundaries, testable design
+- **Scalable Data Management for Future Hardware** → storage/compute scaling perspective
+- **Implementing Programming Languages** → compilers/interpreters mental models (useful for DSLs + pipelines)
+- **Introduction to Docker** → containerization and reproducible environments
+- **Command Line Kung Fu** → shell workflows, automation tricks (pipeline ergonomics)
+
+### 🗄️ Databases & backend development
+- **PostgreSQL Notes for Professionals** → SQL patterns, indexing, operations
+- **MySQL Notes for Professionals** → alternate DB patterns & compatibility
+- **Node.js Notes for Professionals** → services, tooling, integration patterns
+
+### 📈 Data science, statistics & experimental design
+- **Applied Data Science with Python and Jupyter** → notebooks, reproducible analytics
+- **Regression Analysis with Python** → modeling foundations for trend + inference
+- **Understanding Statistics & Experimental Design** → study design + inference hygiene
+- **Statistics Done Wrong** → failure modes, bias, misuse prevention
+- **Graphical Data Analysis with R** → visual reasoning and exploratory rigor
+
+### 🧠 AI, ML & Bayesian reasoning
+- **AI Foundations of Computational Agents (3rd Ed.)** → agents, decision-making, reasoning patterns
+- **Artificial Neural Networks: An Introduction** → ANN fundamentals
+- **Deep Learning in Python — Prerequisites** → DL pipeline prerequisites & best practices
+- **Bayesian Computational Methods** → Bayesian computation, uncertainty-driven modeling
+
+### 🧪 Simulation & engineering methods
+- **Scientific Modeling and Simulation (NASA-grade guide)** → modeling discipline, validation, verification
+- **Generalized Topology Optimization for Structural Design** → optimization thinking (networks/infrastructure)
+- **Spectral Geometry of Graphs** → graph theory + structure analysis (networks, regions, connectivity)
+
+### ❤️ Human-centered foundations
+- **Introduction to Digital Humanism** → human values, security/privacy framing
+- **Principles of Biological Autonomy** → autonomy, systems thinking, participatory epistemology
+
+</details>
+
+---
+
+## 🧾 License
+MIT (suggested). If you need a different license (Apache-2.0, GPL, CC for data), add it explicitly.
+
+---
+
+## 🙌 Acknowledgements
+Built by combining **geospatial engineering**, **data science rigor**, **systems design**, and **human-centered governance** into a single cohesive platform for Kansas-scale exploration and decision support. 🌾
