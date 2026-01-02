@@ -1,475 +1,487 @@
----
-title: "Kansas Frontier Matrix — Contributing Guide"
-path: "CONTRIBUTING.md"
-version: "v1.1.0-draft"
-last_updated: "2025-12-27"
-status: "draft"
-doc_kind: "Guide"
-license: "CC-BY-4.0"
+# 🤝 Contributing to Kansas Frontier Matrix (KFM)
 
-markdown_protocol_version: "KFM-MDP v11.2.6"
-mcp_version: "MCP-DL v6.3"
-ontology_protocol_version: "KFM-ONTO v4.1.0"
-pipeline_contract_version: "KFM-PPC v11.0.0"
-stac_profile: "KFM-STAC v11.0.0"
-dcat_profile: "KFM-DCAT v11.0.0"
-prov_profile: "KFM-PROV v11.0.0"
+![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)
+![Docs](https://img.shields.io/badge/docs-Markdown%20first-informational.svg)
 
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US-KS"
+**Last updated:** 2026-01-02
 
-doc_uuid: "urn:kfm:doc:contributing:v1.1.0-draft"
-semantic_document_id: "kfm-contributing-v1.1.0-draft"
-event_source_id: "ledger:kfm:doc:contributing:v1.1.0-draft"
-commit_sha: "<latest-commit-hash>"
-
-ai_transform_permissions:
-  - "summarize"
-  - "structure_extract"
-  - "translate"
-  - "keyword_index"
-ai_transform_prohibited:
-  - "generate_policy"
-  - "infer_sensitive_locations"
-
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
----
-
-# Contributing to Kansas Frontier Matrix
-
-Thanks for helping build **Kansas Frontier Matrix (KFM)**.
-
-KFM is **contract-first** and **evidence-first**: contributions must preserve the canonical pipeline ordering and the **“no unsourced narrative”** rule in any user-facing context (especially Story Nodes and Focus Mode).
-
-**Canonical flow (do not break):**  
-**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+> [!NOTE]
+> KFM is a multidisciplinary, GIS + data + modeling + human-centered initiative. We care about **reproducibility, clarity, and real-world usability**—not just “it runs on my machine.” 🌾🗺️🧠
 
 ---
 
-## 📘 Overview
+## 🧭 Table of Contents
 
-### Purpose
-This guide defines **how** to contribute changes to KFM while preserving architectural invariants, governance requirements (FAIR+CARE + sovereignty), and validation expectations across the pipeline.
-
-### Scope
-
-| In Scope | Out of Scope |
-|---|---|
-| Docs, templates, runbooks, ADRs | Ad-hoc policies not grounded in repo standards |
-| Data domain additions + updates (with provenance + catalogs) | Unsourced narratives presented as fact |
-| ETL/pipeline work that writes outputs under `data/**` | Pipelines that write catalog artifacts into `docs/` |
-| STAC/DCAT/PROV generation + validation | UI querying Neo4j directly (bypassing API boundary) |
-| Graph/ontology mappings + ingest fixtures | Publishing sensitive locations without required redaction/generalization |
-| API endpoints, contracts, redaction rules, contract tests | Unreviewed predictive/AI content in Focus Mode |
-
-### Audience
-- Primary: contributors adding data, pipelines, catalogs, graph mappings, APIs, UI layers, Story Nodes.
-- Secondary: reviewers verifying governance, provenance, and CI readiness.
-
-### Definitions
-- Glossary (if present): `docs/glossary.md`
-- Key terms used here:
-  - **Domain pack**: the minimal set of data + docs + transforms + tests that makes a domain participate in the canonical pipeline.
-  - **Evidence product**: a dataset/artifact that can be referenced by Story Nodes and UI with STAC/DCAT/PROV identifiers.
-  - **Focus Mode**: provenance-only consumption view (no uncited narrative; predictive content opt-in with uncertainty metadata).
-
-### Key artifacts (what this guide points to)
-
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| Master Guide | `docs/MASTER_GUIDE_v12.md` | Maintainers | Canonical pipeline + invariants |
-| v13 Blueprint | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Maintainers | v13-ready structure + CI mapping |
-| Universal doc template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs governance | Required doc structure |
-| Story Node template | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Story governance | Provenance-linked narrative format |
-| API contract extension template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API governance | Contract-first endpoint changes |
-| Schemas | `schemas/**` | Data/API governance | STAC/DCAT/PROV/story/ui/telemetry validation |
-
-### Definition of done (for this guide)
-- [ ] Front-matter complete + valid
-- [ ] Canonical pipeline ordering and invariants stated unambiguously
-- [ ] Canonical repo layout + “where things go” table included
-- [ ] Contribution workflows include stage-specific checklists
-- [ ] Validation/CI expectations are listed and repeatable
-- [ ] Governance + CARE/sovereignty + sensitivity handling is explicit
+- [👋 Ways to contribute](#-ways-to-contribute)
+- [🗺️ “KFM-first” principles](#️-kfm-first-principles)
+- [🚀 Quick start setup](#-quick-start-setup)
+- [🧪 Quality gates](#-quality-gates)
+- [🧱 Architecture rules](#-architecture-rules)
+- [🌍 Geospatial & remote sensing rules](#-geospatial--remote-sensing-rules)
+- [🧠 Data science, ML, and statistics rules](#-data-science-ml-and-statistics-rules)
+- [🧬 Modeling & simulation rules](#-modeling--simulation-rules)
+- [🎨 Frontend & visualization rules](#-frontend--visualization-rules)
+- [🗄️ Database & data management rules](#️-database--data-management-rules)
+- [🔐 Security & privacy](#-security--privacy)
+- [🧾 Git workflow + PR standards](#-git-workflow--pr-standards)
+- [📝 Documentation standards](#-documentation-standards)
+- [🏷️ Issue labels & triage](#️-issue-labels--triage)
+- [📚 Project reference shelf](#-project-reference-shelf)
 
 ---
 
-## 🗂️ Directory Layout
+## 👋 Ways to contribute
 
-### This document
-- `path`: `CONTRIBUTING.md` (must match front-matter)
+You can contribute in **any** of these lanes:
 
-### Related repository paths (canonical)
+- 🐛 **Bug fixes** (logic, data quality, UI issues, performance regressions)
+- ✨ **Features** (new analysis modules, new map layers, new workflows)
+- 🗺️ **GIS layers & ETL** (ingestion, transforms, QA, metadata)
+- 🤖 **ML/AI** (model training, evaluation, inference integration, monitoring)
+- 🧪 **Experiments** (validation studies, benchmarks, simulation experiments)
+- 🎨 **Frontend** (React components, responsive layouts, WebGL overlays)
+- 🔧 **Infra/DevOps** (Docker, orchestration, CI improvements, observability)
+- 📚 **Documentation** (READMEs, tutorials, diagrams, “why” explanations)
 
-| Area | Path | What lives here |
-|---|---|---|
-| Data domains | `data/<domain>/{raw,work,processed}/` | immutable snapshots → intermediates → normalized outputs |
-| Catalog outputs | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` | STAC/DCAT/PROV artifacts (machine-validated) |
-| Graph import artifacts | `data/graph/csv/**`, `data/graph/cypher/**` | Neo4j loader inputs / graph build exports |
-| Pipelines (code) | `src/pipelines/**` | deterministic transforms; write outputs to `data/**` |
-| Pipelines (docs/runbooks) | `docs/pipelines/<domain>/**` | domain ETL docs, runbooks, ADR links |
-| Graph (code) | `src/graph/**` | ontology bindings, ingest, migrations, constraints |
-| API boundary | `src/server/**` | endpoints, redaction, query services |
-| API contracts | `src/server/contracts/**` | OpenAPI/GraphQL contracts + tests |
-| UI | `web/**` | React/MapLibre (and optional 3D) UI; no direct graph calls |
-| Story Nodes | `docs/reports/story_nodes/**` | draft → published narrative nodes |
-| Runs/experiments | `mcp/runs/**`, `mcp/experiments/**` | run manifests, logs, artifacts |
-| Releases | `releases/**` | signed bundles, manifests, SBOMs, telemetry snapshots |
-
-### Top-level overview (target)
-
-~~~text
-📁 .
-├── 📁 .github/
-├── 📁 data/
-├── 📁 docs/
-├── 📁 mcp/
-├── 📁 schemas/
-├── 📁 src/
-├── 📁 tests/
-├── 📁 tools/
-├── 📁 web/
-├── 📁 releases/
-├── 📄 README.md
-├── 📄 LICENSE
-├── 📄 CITATION.cff
-├── 📄 CHANGELOG.md
-├── 📄 CONTRIBUTING.md
-├── 📄 SECURITY.md
-├── 📄 .editorconfig
-├── 📄 .pre-commit-config.yaml
-├── 📄 docker-compose.yml
-└── 📄 .env.example
-~~~
-
-### Canonical homes by stage
-
-| Stage | Canonical home | What belongs here |
-|---|---|---|
-| ETL / pipelines | `src/pipelines/` | deterministic transforms; run manifests; outputs in `data/**` |
-| Domain pipeline docs | `docs/pipelines/<domain>/` | runbooks, domain conventions, known caveats |
-| Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC items/collections; DCAT datasets; PROV bundles |
-| Graph | `src/graph/` + `data/graph/` | ontology-governed ingest; import fixtures/CSVs/Cypher |
-| API boundary | `src/server/` | contracts; redaction; query services |
-| UI | `web/` | map layers, Focus Mode UI, citation rendering |
-| Story Nodes | `docs/reports/story_nodes/` | templates; draft; published; assets |
-| Releases | `releases/` | manifests; SBOMs; signed bundles; telemetry snapshots |
+> [!TIP]
+> If you’re new: start with a small docs fix or a “good first issue” and learn the system boundaries as you go. ✅
 
 ---
 
-## 🧭 How to contribute (workflow)
+## 🗺️ “KFM-first” principles
 
-### 1) Pick a pipeline stage first
-Before writing code or adding data, decide which stage your change primarily impacts:
+These are the project-wide expectations (applies to code, docs, and data):
 
-- **Docs**: templates, governance docs, runbooks, ADRs
-- **Data**: new domain pack, new dataset, corrected dataset, new evidence assets
-- **ETL**: transforms producing `data/<domain>/{work,processed}`
-- **Catalogs**: generating/validating STAC/DCAT/PROV artifacts
-- **Graph**: ontology bindings, ingest, migrations, constraints
-- **API**: endpoints, query services, redaction/generalization rules, contracts
-- **UI**: layers, Focus Mode UI, citation rendering, a11y
-- **Story Nodes**: draft/published nodes + provenance
-
-If your change is cross-stage, include a short **impact note** in your PR description covering:
-- what changed,
-- why it changed,
-- which pipeline stages are touched,
-- how you validated each stage.
-
-### 2) Use an ADR for ambiguous placement or new invariants
-If you’re unsure where your change belongs, open a small PR that adds an ADR proposal under:
-- `docs/architecture/adr/`
-
-The ADR should describe: placement, contracts touched, validation plan, and governance implications.
-
-### 3) Keep PRs reviewable
-KFM favors smaller PRs that preserve provenance and contract integrity over “mega merges.”
-If you must do a large cross-stage change, structure it as:
-- PR 1: contracts + schemas + doc updates
-- PR 2: pipeline + data outputs + catalogs
-- PR 3: graph ingest + API + UI integration
-- PR 4: Story Nodes (draft → published) + governance sign-off
+- **Human-centered decision support** 🧑‍🌾  
+  We build tools that *augment* human judgment. Make uncertainty visible; don’t overclaim.
+- **Architecture > cleverness** 🧱  
+  Keep core logic independent from frameworks/vendors. Prefer simple, testable modules.
+- **Reproducibility is a feature** 🔁  
+  Seeds, configs, dependencies, and data provenance must be documented.
+- **Geospatial correctness matters** 🌍  
+  CRS, units, and temporal alignment must be explicit.
+- **Security & privacy by default** 🔐  
+  Never commit secrets; avoid shipping PII; follow responsible disclosure.
 
 ---
 
-## 📦 Data & Metadata
+## 🚀 Quick start setup
 
-### Data lifecycle (required staging)
-For each domain under `data/<domain>/`:
-- `raw/` — immutable source snapshots (do not “edit in place”; add new versions)
-- `work/` — intermediate transforms
-- `processed/` — normalized outputs used for catalogs and graph ingest
+> [!NOTE]
+> KFM supports a **Docker-first** workflow and a **local-first** workflow. Pick what fits your role.
 
-Global metadata outputs:
-- STAC: `data/stac/collections/` and `data/stac/items/`
-- DCAT: `data/catalog/dcat/`
-- PROV: `data/prov/`
-- Graph import: `data/graph/csv/` and `data/graph/cypher/`
+### 🐳 Option A — Docker-first (recommended)
 
-### Domain expansion pattern
-- New domains go under `data/<domain>/...`
-- Domain docs and runbooks go under `docs/pipelines/<domain>/...`
-- Choose one canonical doc location for a domain (avoid duplicates); link from `docs/MASTER_GUIDE_v12.md` when appropriate.
+1. Install Docker / Docker Desktop  
+2. Create your local env file:
+   - Copy `.env.example` → `.env`
+3. Bring the stack up (if compose files exist in this repo):
+   ```bash
+   docker compose up --build
+   ```
+4. Run tests/linters inside the container (or via `make`, `task`, or npm scripts if provided).
 
-### Domain pack (recommended minimum structure)
-~~~text
-📁 data/<domain>/
-├── 📁 raw/
-├── 📁 work/
-└── 📁 processed/
+**Docker contribution expectations**
+- Prefer multi-stage builds where possible.
+- Don’t bake secrets into images; use env vars and secret mechanisms.
+- Add healthchecks for long-running services if supported.
 
-📁 docs/pipelines/<domain>/
-├── 📄 README.md
-├── 📄 RUNBOOK.md
-└── 📄 DATA_SOURCES.md
+### 🧪 Option B — Local-first (Python + Node)
 
-📁 src/pipelines/<domain>/
-├── 📄 README.md
-└── 📁 etl/
+#### 1) System prerequisites (common)
+- Git
+- Python (3.x)
+- Node.js (LTS)
+- Docker (optional but helpful)
+- Postgres + PostGIS (if running DB locally)
+- GIS tooling (often needed): GDAL / PROJ (or run via Docker)
 
-📁 data/stac/
-├── 📁 collections/
-└── 📁 items/
+#### 2) Python environment
+```bash
+python -m venv .venv
+# activate:
+#   macOS/Linux: source .venv/bin/activate
+#   Windows:     .venv\Scripts\activate
+python -m pip install --upgrade pip
+```
 
-📁 data/catalog/dcat/
-└── 📄 <domain>.dcat.jsonld  (or equivalent)
+Install dependencies **based on what the repo uses**:
+```bash
+# If pyproject.toml exists (preferred)
+python -m pip install -e ".[dev]"
 
-📁 data/prov/
-└── 📄 <domain>.<run_id>.prov.json  (or equivalent)
-~~~
+# OR if requirements files exist
+python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt
+```
 
-### Determinism and reproducibility rules
-- Pipelines are **idempotent** and **deterministic** given the same inputs/config.
-- Pipeline runs should emit provenance (PROV activity bundle) under `data/prov/`.
-- Pipelines never write STAC/DCAT/PROV artifacts into `docs/`.
+#### 3) Node environment (if frontend exists)
+```bash
+npm ci
+# or: npm install
+```
 
----
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-### Policy for every dataset / evidence product
-For each dataset or evidence product you add or update, include:
-- STAC Collection + Item(s)
-- DCAT mapping record (minimum: title/description/license/keywords)
-- PROV activity describing lineage
-- Version lineage links reflected in catalogs and the graph
-
-### Graph linkage expectations
-Graph nodes should reference:
-- STAC Item IDs
-- DCAT dataset ID
-- PROV activity ID
-
-### Story Node linkage expectations
-Story Nodes should link to:
-- graph entity IDs,
-- STAC/DCAT/PROV evidence IDs,
-- local assets with attribution.
-
-### Versioning expectations
-- New versions link predecessor/successor.
-- Graph mirrors version lineage (so UI and Focus Mode remain traceable over time).
+#### 4) Environment variables
+- Copy `.env.example` → `.env`
+- Never commit `.env` 🚫
 
 ---
 
-## 🧱 Architecture
+## 🧪 Quality gates
 
-### Non‑negotiables (architectural invariants)
-These are enforced by design and/or CI gates:
+Before opening a PR, you should be able to say “✅ green” on these:
 
-1. **No UI direct-to-graph reads**
-   - `web/` must never query Neo4j directly; all graph access is via `src/server/`.
+### ✅ Pre-commit (recommended)
+If the repo includes `.pre-commit-config.yaml`:
+```bash
+python -m pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
 
-2. **No unsourced narrative in governed views**
-   - Focus Mode consumes provenance-linked context only.
-   - Published Story Nodes must be provenance-linked and validate.
+### 🧼 Formatting & linting
+Typical commands (use what the repo defines):
+```bash
+# Python
+python -m black .
+python -m ruff check .   # if ruff is used
+python -m pylint your_package  # if used
+python -m mypy .         # if types are used
 
-3. **Contracts are canonical**
-   - Schemas/specs live in `schemas/`.
-   - API contracts live in `src/server/contracts/`.
-   - Contracts must validate in CI.
+# JS/TS
+npm run lint
+npm run format
+```
 
-4. **Data outputs are not code**
-   - Derived datasets belong under `data/<domain>/processed/`, not under `src/`.
+### 🧪 Tests
+```bash
+# Python
+pytest
 
-5. **STAC/DCAT/PROV are first-class**
-   - STAC, DCAT, and PROV remain required for datasets and evidence products.
+# JS/TS
+npm test
+```
 
-6. **Redaction/generalization is layered**
-   - Any restricted or sensitive knowledge must be protected consistently across data, catalog, API, and UI layers.
-
-### Subsystem contracts (what must exist for each subsystem)
-
-| Subsystem | Contract artifacts | “Do not break” rule |
-|---|---|---|
-| ETL | configs + run logs + validation | deterministic, replayable |
-| Catalogs | STAC/DCAT/PROV schemas + validators | machine-validated |
-| Graph | ontology + migrations + constraints | stable labels/edges + resolvable references |
-| APIs | OpenAPI/GraphQL schema + tests | backward compat or version bump |
-| UI | layer registry + a11y + audit affordances | no hidden data leakage |
-| Focus Mode | provenance-linked context bundle | no hallucinated sources |
-
-### Next-evolution extension points (use the extension matrix mindset)
-- (A) Data: new domain, new STAC extension profiles
-- (B) AI evidence: artifacts as STAC assets, linked into Focus Mode
-- (C) Graph: new entity types with explicit provenance
-- (D) API: new endpoints with contract tests and redaction policies
-- (E) UI: new layer registry entries with provenance pointers and CARE gating
+> [!IMPORTANT]
+> If you change behavior, add/adjust tests. If you change outputs, update docs/screenshots/examples accordingly.
 
 ---
 
-## 🧠 Story Node & Focus Mode Integration
+## 🧱 Architecture rules
 
-### Story Nodes as “machine-ingestible storytelling”
-- Draft story nodes live under `docs/reports/story_nodes/draft/`.
-- Published story nodes live under `docs/reports/story_nodes/published/<story_slug>/`.
-- Published Story Nodes must validate (front-matter, citations, entity references, redaction compliance).
+KFM follows a layered / clean-architecture approach:
 
-### Focus Mode rule (hard gate)
-- Focus Mode only consumes provenance-linked content.
-- Predictive or AI-generated content:
-  - is **opt-in**,
-  - includes **uncertainty metadata**,
-  - never appears as unmarked fact.
+- 🧠 **Domain (Entities)**: pure models + domain rules  
+- 🧩 **Use cases (Application services)**: workflows + orchestration of domain logic  
+- 🔌 **Interfaces (Ports)**: abstract contracts (repositories, gateways, presenters)  
+- 🧰 **Infrastructure (Adapters)**: DB, web frameworks, external APIs, queues, file systems
 
-### Citation expectations (Story Nodes + Focus Mode)
-- Use the governed Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`.
-- Ensure citations resolve to evidence (dataset/document IDs, STAC/DCAT/PROV IDs, or approved document sources).
-- Citation rendering expects the `【source†Lx-Ly】` style references.
+**Golden rules**
+- ✅ Inner layers must not import outer layers.
+- ✅ Business logic must not depend on frameworks.
+- ✅ External services are called through interfaces (ports).
+- ✅ Keep use cases small and single-responsibility.
 
-### Optional Focus Mode controls (when authoring Story Nodes)
-~~~yaml
-focus_layers:
-  - "TBD"
+**When adding a new feature**
+- Start with a use case and domain data.
+- Define interfaces for anything “outside” (DB, remote sensing API, filesystem).
+- Implement adapters in infrastructure.
+- Add tests at the use case level (mock interfaces).
 
-focus_time: "TBD"
-focus_center: [ -98.0000, 38.0000 ]
-~~~
+> [!TIP]
+> If your change requires touching domain + infrastructure in the same file, you’re probably crossing boundaries—split it. 🪓
 
 ---
 
-## 🧪 Validation & CI/CD
+## 🌍 Geospatial & remote sensing rules
 
-### Minimum CI gates (baseline)
-Your PR should pass the gates relevant to what you changed:
+This is a GIS-first system. Treat spatial correctness like you’d treat financial correctness. 💸➡️🗺️
 
-- Markdown protocol validation (front-matter + required section structure)
-- Schema validation (STAC/DCAT/PROV/story/ui/telemetry as applicable)
-- Story Node validation (if touching `docs/reports/story_nodes/**`)
-- Graph integrity tests (if touching graph ingest/constraints/artifacts)
-- API contract tests (if touching `src/server/contracts/**` or API behaviors)
-- UI layer registry schema checks (if touching `web/**/layers/**`)
-- Security + sovereignty scanning gates (where applicable)
+### ✅ CRS & units
+- Always declare **CRS** for geometries and rasters.
+- Avoid “mystery coordinates.” Store SRID / EPSG with data.
+- Make **units explicit** (meters vs feet, mm vs inches, etc.).
 
-### Local development expectations (contract-level)
-The exact commands may differ by environment, but the expectations are:
+### ✅ Temporal alignment
+- Document timestamps & timezones.
+- Align remote sensing snapshots with ground truth windows (don’t “mix dates” silently).
 
-1. Run the pre-commit hooks configured in `.pre-commit-config.yaml`.
-2. Run tests relevant to your change (pipelines / server / web).
-3. Run validators relevant to your change (schemas/contracts/story nodes/etc.).
+### ✅ Data provenance
+Every GIS layer should have:
+- source (where it came from)
+- acquisition date/time
+- processing steps (what you did to it)
+- version or hash if possible
+- licensing/usage constraints (if applicable)
 
-Repo lint reminders:
-- Do **not** add YAML front-matter to code files. YAML front-matter is for Markdown documents only.
-- Prefer `~~~` fences for code blocks inside governed Markdown docs.
-- Avoid introducing new canonical roots (duplicate subsystem roots require explicit deprecation markers).
+### ✅ Remote sensing + Earth Engine
+- Avoid hardcoding API keys.
+- Keep Earth Engine scripts reproducible:
+  - pin datasets/collections (by ID)
+  - document region of interest + scale
+  - include export parameters
+- Prefer pipelines that allow re-processing from raw inputs.
 
----
-
-## ⚖ FAIR+CARE & Governance
-
-Before submitting changes, check:
-- `docs/governance/ROOT_GOVERNANCE.md`
-- `docs/governance/ETHICS.md`
-- `docs/governance/SOVEREIGNTY.md`
-- `docs/governance/REVIEW_GATES.md`
-
-### Governance review triggers
-Extra review is typically required for:
-- New sensitive layers
-- New AI narrative behaviors
-- New external data sources
-- New public-facing endpoints
-
-### Sovereignty safety
-Any restricted locations or culturally sensitive knowledge must be protected by:
-- generalization of geometry where required,
-- API-level redaction,
-- Story Node asset review gates.
-
-### AI usage boundaries (repo-governed)
-Allowed transformations for contributors (when used to assist docs/data work):
-- summarize
-- structure_extract
-- translate
-- keyword_index
-
-Prohibited actions:
-- generate_policy
-- infer_sensitive_locations
-
-If you introduce any AI-assisted behavior in the product (API/UI/Story pipeline), it must be:
-- explicitly opt-in where required,
-- annotated with uncertainty metadata,
-- excluded from Focus Mode unless it remains provenance-linked and correctly labeled.
+> [!NOTE]
+> If you add a new layer that influences decisions, include uncertainty notes and validation strategy.
 
 ---
 
-## ✅ PR checklist (copy into your PR description)
+## 🧠 Data science, ML, and statistics rules
 
-### General
-- [ ] My change fits a single pipeline stage (or clearly explains cross-stage impact).
-- [ ] I used the correct canonical home(s) and did not create duplicate subsystem roots.
-- [ ] I ran the pre-commit hooks and fixed any failures.
-- [ ] I ran relevant tests and validators (schemas/contracts/story nodes/etc.).
-- [ ] I did not introduce unsourced narrative in any governed context.
+KFM cares about **truthful uncertainty** and **avoiding statistical self-deception**.
 
-### Data / ETL / Catalog
-- [ ] If I added/updated data, it is placed under `data/<domain>/{raw,work,processed}/`.
-- [ ] I included STAC/DCAT/PROV outputs (and they validate).
-- [ ] Pipeline outputs are deterministic/diffable; provenance is emitted to `data/prov/**`.
+### ✅ Reproducible experiments
+- Fix random seeds where relevant.
+- Record dataset versions / queries / filters.
+- Provide a minimal “rerun” path:
+  - config file
+  - command(s)
+  - expected outputs
 
-### Graph
-- [ ] Graph ingest aligns with ontology bindings and uses only processed + catalog + provenance artifacts.
-- [ ] Graph nodes reference STAC/DCAT/PROV identifiers where required.
-- [ ] No orphan references (entity/evidence/story refs resolve).
+### ✅ Avoid common pitfalls
+- No leakage (train/test contamination).
+- No “metric shopping” without disclosure.
+- Report uncertainty (CIs, error bars, posterior intervals, calibration).
+- If using p-values: don’t treat “p<0.05” as magic.
 
-### API
-- [ ] If I changed the API or contracts, I updated `src/server/contracts/` and tests.
-- [ ] Redaction/generalization rules are enforced at the API boundary where applicable.
-- [ ] Changes are backward-compatible or explicitly versioned/deprecated.
+### ✅ Evaluation
+Include:
+- baseline comparison
+- failure cases
+- calibration / reliability (when applicable)
+- spatial & temporal generalization checks (not just random split)
 
-### UI
-- [ ] UI still relies only on `src/server/` (API) for graph data (no direct Neo4j calls).
-- [ ] UI layer registry entries validate against `schemas/ui/**` where applicable.
-- [ ] Citation rendering and audit/provenance affordances remain intact.
-
-### Story Nodes / Focus Mode
-- [ ] Draft story nodes are in `docs/reports/story_nodes/draft/`.
-- [ ] Published story nodes are provenance-linked and validate (front-matter, citations, entity refs, redaction).
-- [ ] Focus Mode content remains provenance-linked only; any AI content is opt-in and clearly labeled.
+### ✅ Notebooks (if used)
+- Keep notebooks narrative + reproducible.
+- Clear outputs before committing (unless the output is the point).
+- Promote stable work into scripts/modules for production use.
 
 ---
 
-## 🕰️ Version History
+## 🧬 Modeling & simulation rules
 
-| Version | Date | Change | Author |
-|---|---|---|---|
-| v1.0.0-draft | 2025-12-21 | Initial CONTRIBUTING guide aligned to v13 blueprint | <your-name> |
-| v1.1.0-draft | 2025-12-27 | Enriched to universal governed doc structure + stage checklists + v13-ready contracts and CI mapping | <your-name> |
+Simulation contributions must be credible and reviewable:
+
+- ✅ **Verification**: did we implement the equations/logic correctly?
+- ✅ **Validation**: does the model match reality (within uncertainty)?
+- ✅ **Sensitivity analysis**: which parameters matter most?
+- ✅ **Unit consistency**: enforce and test units early
+- ✅ **Document assumptions**: what you *assumed* is often more important than what you computed
+
+> [!IMPORTANT]
+> If a simulation is used for advisory outputs, it must surface uncertainty and assumptions in UI/docs.
 
 ---
 
-## Footer refs
+## 🎨 Frontend & visualization rules
 
-- Master Guide: `docs/MASTER_GUIDE_v12.md`
-- v13 Redesign Blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
-- Templates: `docs/templates/`
-- Standards: `docs/standards/`
-- Governance: `docs/governance/`
+### ✅ Responsive-first
+- UI must work on desktop and mobile.
+- Use sensible breakpoints, accessible controls, readable text.
+
+### ✅ Accessibility
+- Provide alt text for important images.
+- Maintain heading order.
+- Avoid “color-only meaning” in maps/charts.
+
+### ✅ Mapping & 3D
+- Make layers discoverable (legend, toggles, metadata).
+- Don’t block interaction with heavy rendering; use progressive loading.
+- If using WebGL overlays: test performance on modest hardware.
+
+---
+
+## 🗄️ Database & data management rules
+
+### ✅ Schema & migrations
+- Prefer migrations over “manual DB changes.”
+- Consider indexing for spatial queries (PostGIS GiST, etc.).
+- If you add a column: document it + add tests.
+
+### ✅ Query hygiene
+- Avoid `SELECT *` in production paths.
+- Use parameterized queries to avoid injection.
+- Validate and sanitize user inputs (especially geometry uploads).
+
+### ✅ Large data
+- Don’t commit large binaries or raw imagery to git.
+- Use designated storage (object store, data lake, artifacts) and track metadata in-repo.
+
+---
+
+## 🔐 Security & privacy
+
+Please read: `.github/SECURITY.md` (responsible disclosure) 🔒
+
+**Hard rules**
+- 🚫 Never commit secrets (API keys, tokens, private certs)
+- 🚫 Don’t upload real PII into example datasets
+- ✅ Use `.env` locally; keep `.env.example` safe and documented
+- ✅ If you find a vulnerability, follow the security policy instead of opening a public issue
+
+**Privacy rules**
+- Treat location traces, sensor data, and user data as potentially sensitive.
+- If a dataset could identify individuals/farms/entities, anonymize/aggregate and document the approach.
+
+---
+
+## 🧾 Git workflow + PR standards
+
+### 🌿 Branch naming
+Use descriptive branches:
+- `feature/<short-name>`
+- `fix/<short-name>`
+- `docs/<short-name>`
+- `chore/<short-name>`
+
+Example:
+- `feature/crop-rotation-analysis`
+- `fix/map-layer-caching`
+
+### ✅ Commit messages
+Prefer clear, scoped commits (Conventional Commits encouraged):
+- `feat: add soil moisture interpolation`
+- `fix: correct CRS handling in NDVI export`
+- `docs: clarify docker compose setup`
+- `test: add regression tests for ETL pipeline`
+
+### 🔁 PR checklist (Definition of Done)
+Before you open a PR:
+
+- [ ] The change is linked to an issue (or explains why none exists)
+- [ ] Tests added/updated
+- [ ] Lint/format passes
+- [ ] Docs updated (if behavior changed)
+- [ ] No secrets committed
+- [ ] Data provenance included (if new data/layer)
+- [ ] Architecture boundaries respected
+
+### 🧑‍⚖️ Review expectations
+- Small PRs merge faster 🏎️
+- If your change is big, split into:
+  1) refactor/scaffolding  
+  2) behavior change  
+  3) UI/UX polish  
+- Respect CODEOWNERS reviews (see `.github/CODEOWNERS`)
+
+---
+
+## 📝 Documentation standards
+
+Docs are part of the product. ✅
+
+**Write docs like you write code**
+- Clear headings
+- Short paragraphs
+- Examples that actually run
+- Minimal duplication (link instead)
+- Keep docs in Markdown (GitHub-friendly)
+
+**Good doc PRs include**
+- before/after screenshots (UI)
+- examples and sample data (where safe)
+- Mermaid diagrams (when helpful)
+
+> [!TIP]
+> If you fix a bug, update the docs in the same PR whenever feasible. 📚
+
+---
+
+## 🏷️ Issue labels & triage
+
+Recommended labels (use what the repo already has):
+- `bug` 🐛
+- `enhancement` ✨
+- `docs` 📚
+- `good first issue` 🌱
+- `help wanted` 🙋
+- `security` 🔐
+- `data` 🗂️
+- `gis` 🗺️
+- `ml` 🤖
+- `simulation` 🧬
+
+When filing issues, include:
+- expected behavior vs actual behavior
+- steps to reproduce
+- logs / screenshots
+- environment (OS, python/node versions, docker version)
+
+---
+
+## 📚 Project reference shelf
+
+These contribution guidelines were shaped by the project’s internal reference library. 📖✨
+
+<details>
+<summary><strong>📦 Core KFM master doc (read this daily)</strong></summary>
+
+- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+
+</details>
+
+<details>
+<summary><strong>🧱 Architecture & engineering</strong></summary>
+
+- Clean Architectures in Python  [oai_citation:1‡clean-architectures-in-python.pdf](file-service://file-6YHot4AqfpdbcrdfiYfpHM)  
+- Scalable Data Management for Future Hardware  [oai_citation:2‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)  
+- Implementing Programming Languages (Compilers & Interpreters)  [oai_citation:3‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)  
+- Node.js Notes for Professionals  [oai_citation:4‡Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf](file-service://file-9qS1yEFvCBXbDdtTfpt3Ye)  
+- PostgreSQL Notes for Professionals  [oai_citation:5‡PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf](file-service://file-742sw3gADJniEdmC19JeAC)  
+- MySQL Notes for Professionals  [oai_citation:6‡MATLAB Programming for Engineers Stephen J. Chapman.pdf](file-service://file-GVz6J2tWsQSJL4sFY1Niqe)  
+- Introduction to Docker  [oai_citation:7‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)  
+
+</details>
+
+<details>
+<summary><strong>🌍 GIS, mapping, remote sensing</strong></summary>
+
+- Geoprocessing with Python  [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
+- Making Maps: A Visual Guide to Map Design for GIS  [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
+- Geographic Information System Basics  [oai_citation:10‡Geographic Information System Basics - geographic-information-system-basics.pdf](file-service://file-Kjn2enYFqXQtK3J4zN2DWz)  
+- Python Geospatial Analysis Cookbook  [oai_citation:11‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)  
+- Google Maps JavaScript API Cookbook  [oai_citation:12‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)  
+- Cloud-Based Remote Sensing with Google Earth Engine (Fundamentals & Applications)  [oai_citation:13‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)  
+- Google Earth Engine Applications  [oai_citation:14‡Google Earth Engine Applications.pdf](file-service://file-SmoZrQ3nZSAdHHNqcVzYCq)  
+- WebGL Programming Guide (Interactive 3D Graphics)  [oai_citation:15‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
+
+</details>
+
+<details>
+<summary><strong>🧠 ML, statistics, data science</strong></summary>
+
+- AI Foundations of Computational Agents (3rd Ed.)  [oai_citation:16‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)  
+- Deep Learning in Python — Prerequisites  [oai_citation:17‡deep-learning-in-python-prerequisites.pdf](file-service://file-9pQhD3FNUGoYzmKrdm26cg)  
+- Artificial Neural Networks: An Introduction  [oai_citation:18‡regression-analysis-with-python.pdf](file-service://file-NCS6ThhvajwNUm4crVVcGM)  
+- Data Mining Concepts & Applications  [oai_citation:19‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L)  
+- Regression Analysis with Python  [oai_citation:20‡Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf](file-service://file-THLZMx2BnXCR4bvvPJsMQm)  
+- Data Science & Machine Learning (Mathematical & Statistical Methods)  [oai_citation:21‡Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf](file-service://file-MRNb2uGPEwpkSDsxF983PC)  
+- Statistics Done Wrong  [oai_citation:22‡Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf](file-service://file-THLZMx2BnXCR4bvvPJsMQm)  
+- Understanding Statistics & Experimental Design  [oai_citation:23‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3)  
+- Bayesian Computational Methods  [oai_citation:24‡Bayesian computational methods.pdf](file-service://file-6NmuxfJsrfDTxQmEi8A7jo)  
+- Graphical Data Analysis with R  [oai_citation:25‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L)  
+- Applied Data Science with Python and Jupyter  [oai_citation:26‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
+
+</details>
+
+<details>
+<summary><strong>🧬 Simulation, visualization, and ethics</strong></summary>
+
+- Scientific Modeling and Simulation (NASA-grade guide)  [oai_citation:27‡Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf](file-service://file-LuWF23hffNAZJaZm2Gzvcd)  
+- Computer Graphics using JAVA 2D & 3D  [oai_citation:28‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)  
+- Generalized Topology Optimization for Structural Design  [oai_citation:29‡geoprocessing-with-python.pdf](file-service://file-NkXrdB4FwTruwhQ9Ggn53T)  
+- Spectral Geometry of Graphs  [oai_citation:30‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)  
+- Introduction to Digital Humanism  [oai_citation:31‡Data Mining Concepts & applictions.pdf](file-service://file-CCSRY2RwLx1w6m1RMReuBG)  
+- Principles of Biological Autonomy  [oai_citation:32‡Artificial-neural-networks-an-introduction.pdf](file-service://file-DhnuQ12UtyRb9q5u5CptWo)  
+- MATLAB Programming for Engineers  [oai_citation:33‡PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf](file-service://file-742sw3gADJniEdmC19JeAC)  
+
+</details>
+
+> [!NOTE]
+> Some legacy/reference PDFs may be partially unparseable depending on how they were generated; if a reference can’t be searched, it can still be useful as background reading.
+
+---
+
+✅ Thanks for helping build KFM—every doc fix, test, and careful boundary line makes the system more trustworthy. 🌾🧭
