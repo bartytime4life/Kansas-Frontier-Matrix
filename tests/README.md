@@ -81,25 +81,50 @@ Adapt as needed to match the repo, but keep intent obvious:
 
 ```
 📦 repo-root/
-├─ 🧪 tests/
-│  ├─ README.md                 👈 you are here
-│  ├─ 🧷 fixtures/              # tiny, deterministic test data
-│  ├─ 🐍 python/
-│  │  ├─ unit/
-│  │  ├─ integration/
-│  │  ├─ validation/            # “scientific correctness” checks
-│  │  └─ performance/           # benchmarks (nightly)
-│  ├─ 🌐 web/
-│  │  ├─ unit/
-│  │  ├─ component/
-│  │  ├─ e2e/
-│  │  └─ visual/                # screenshot / render snapshots
-│  └─ 🗄️ db/
-│     ├─ migrations/
-│     └─ integration/
-└─ 🧰 scripts/ (optional)        # test helpers, data seeders, CI glue
-```
-
+├─ 📂 🧪 tests/
+│  ├─ 📄 README.md                      # this playbook
+│  ├─ 📂 🧷 fixtures/                   # tiny, deterministic test data
+│  │  ├─ 📂 🗺️ geo/                     # small vector/raster samples (safe + tiny)
+│  │  ├─ 📂 🧬 ml/                      # toy datasets / model artifacts (non-sensitive)
+│  │  ├─ 📂 🧾 schemas/                 # JSON/YAML schemas used in tests
+│  │  └─ 📄 📘 FIXTURES.md              # fixture rules + provenance notes
+│  ├─ 📂 🐍 python/
+│  │  ├─ 📂 🧩 unit/                    # pure functions, domain rules
+│  │  ├─ 📂 🔌 integration/             # DB/API/service interactions
+│  │  ├─ 📂 ✅ validation/              # “scientific correctness” checks
+│  │  ├─ 📂 ⏱️ performance/             # benchmarks (nightly / non-gating)
+│  │  ├─ 📂 🧷 helpers/                 # shared utilities
+│  │  ├─ 📄 🧱 conftest.py              # shared fixtures
+│  │  ├─ 📄 🧾 pytest.ini               # markers, defaults (optional)
+│  │  └─ 📄 📘 PYTHON_TESTS.md          # python suite conventions
+│  ├─ 📂 🌐 web/
+│  │  ├─ 📂 🧩 unit/                    # JS/TS unit tests
+│  │  ├─ 📂 🧱 component/               # React component tests
+│  │  ├─ 📂 🧭 e2e/                     # Cypress/Playwright/Selenium
+│  │  ├─ 📂 🖼️ visual/                  # screenshot / render snapshots
+│  │  ├─ 📂 🧷 helpers/                 # test helpers, mocks
+│  │  └─ 📄 📘 WEB_TESTS.md             # web suite conventions
+│  ├─ 📂 🗄️ db/
+│  │  ├─ 📂 🧬 migrations/              # migration assertions
+│  │  ├─ 📂 🔌 integration/             # DB-level integration tests
+│  │  ├─ 📂 🧪 seed/                    # minimal seed data for tests
+│  │  └─ 📄 📘 DB_TESTS.md              # DB test guidance
+│  ├─ 📂 🧾 contracts/
+│  │  ├─ 📂 📜 api/                     # OpenAPI/GraphQL contract fixtures
+│  │  ├─ 📂 🗺️ stac/                    # STAC Item/Collection contract fixtures
+│  │  ├─ 📂 🧾 dcat/                    # DCAT dataset contract fixtures
+│  │  ├─ 📂 🧬 prov/                    # PROV lineage contract fixtures
+│  │  └─ 📄 📘 CONTRACT_TESTS.md        # contract testing rules
+│  ├─ 📂 🧰 tools/
+│  │  ├─ 📄 🔧 run_unit.sh              # optional helper
+│  │  ├─ 📄 🔧 run_integration.sh       # optional helper
+│  │  ├─ 📄 🔧 run_e2e.sh               # optional helper
+│  │  └─ 📄 📘 TOOLS.md                 # helper scripts doc
+│  └─ 📄 📘 TEST_POLICY.md              # definition of done + CI gates
+└─ 📂 🧰 scripts/                       # optional: CI glue, seeders, utilities
+   ├─ 📄 🧪 test_env_up.sh
+   ├─ 📄 🧪 test_env_down.sh
+   └─ 📄 📘 SCRIPTS.md```
 ---
 
 ## ✅ CI gates (non‑negotiable)
