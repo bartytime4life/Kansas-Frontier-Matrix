@@ -1,312 +1,304 @@
 <!--
-Kansas Frontier Matrix (KFM) — Pull Request Template
-Version: v12.1.0
-Last updated: 2025-12-29
+🚀 Kansas Frontier Matrix (KFM) / Kansas-Frontier-Matrix — Pull Request Template
 
-Alignment anchors (read before inventing a new pattern):
-- docs/MASTER_GUIDE_v12.md (pipeline ordering + invariants + CI gates)
-- docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md (KFM-MDP v11.2.6, KFM-PPC v11.0.0)
-- docs/templates/TEMPLATE__STORY_NODE_V3.md (governed narrative artifacts)
-- docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md (API contract surface changes)
+Tip: PR Title format (pick one)
+- [web] Add timeline slider snapping
+- [data] Ingest 1870s county boundaries (COG/GeoJSON)
+- [ml] Improve NER for 19th-century spelling
+- [api] Add /layers/{id} endpoint
+- [infra] Harden Docker + CI caching
 
-Canonical pipeline (non-negotiable ordering):
-ETL → STAC/DCAT/PROV → Graph → API boundary → UI → Story Nodes → Focus Mode
-
-Hard review blockers (do not merge if violated):
-1) UI reads via API only (no direct Neo4j/graph calls from web/**)
-2) No unsourced narrative (Story Nodes + Focus Mode must be provenance-linked)
-3) Contracts + schemas are versioned + validated (breaking changes require versioning + compat tests)
-4) Pipelines write outputs under data/**; do NOT write derived catalogs/artifacts into docs/**
-
-How to use:
-- Delete sections that clearly do not apply, but keep the “Core merge gate” checklist.
-- If you mark an item N/A, include a one-line rationale.
-- Prefer stable IDs (STAC/DCAT/PROV/graph/story) and link them here; reviewers shouldn't have to hunt.
+(Please keep this template intact—delete helper comments as you fill it out.)
 -->
 
-## 📌 Summary
-<!-- 1–5 sentences: what changed + why now -->
+# 🚀 Pull Request
 
-## 🧾 Evidence & identifiers (fill what applies)
-<!-- Goal: reviewers can verify provenance + contracts without hunting. -->
-- PROV bundle / activity / run ID(s): <!-- e.g., data/prov/<activity_id>.jsonld OR run-id -->
-- STAC Collection ID(s): <!-- e.g., stac:<collection-id> -->
-- STAC Item ID(s): <!-- e.g., stac:<item-id-1>, stac:<item-id-2> -->
-- DCAT Dataset ID(s): <!-- e.g., dcat:<dataset-id> -->
-- Dataset version(s): <!-- semantic version or date-stamped version if used -->
-- Graph build/migration ID(s): <!-- e.g., graph:migration:<id> -->
-- API endpoints touched: <!-- e.g., GET /v1/... -->
-- Contract file(s) touched: <!-- e.g., src/server/contracts/... -->
-- UI layer ID(s) / registry key(s): <!-- e.g., layer:<id> -->
-- Story Node ID(s) + path(s): <!-- e.g., urn:kfm:story:..., docs/reports/story_nodes/... -->
-- MCP run ID(s) / report path(s): <!-- e.g., mcp/runs/<run-id>/... -->
+## 📌 Summary (what + why)
+<!--
+1–3 sentences. Assume a reviewer is seeing this cold.
 
-### 🔐 Classification / sensitivity (required if data, catalogs, UI layers, or Story Nodes change)
-- Sensitivity level (dataset/content): <!-- public / internal / restricted / other -->
-- Classification propagation check: <!-- confirmed / N/A (why) -->
-- Redaction/generalization applied: <!-- none / fields removed / geometry generalized / API-only redaction / other -->
-- Governance review needed: <!-- yes/no; if yes, tag @governance -->
+Example:
+Adds a new ingestion step that converts scanned historical map TIFFs to COGs and registers metadata in the spatial catalog, enabling the web viewer to time-filter layers reliably.
+-->
+**What changed?**  
 
-## 🔗 Related work
-- Issue / ticket: <!-- e.g., Closes #123 -->
-- Design / ADR / spec (if any):
-- Data source / license register entry (if any): <!-- e.g., updated sources registry path -->
-- Reviewer routing (if known): <!-- e.g., @data-steward, @api-owner, @ui-owner, @governance -->
+**Why does it matter?**  
 
-## 🧭 Scope
-
-### Type of change (check all that apply)
-- [ ] Data ingestion / refresh
-- [ ] New dataset / evidence artifact
-- [ ] Catalog metadata (STAC/DCAT/PROV)
-- [ ] Graph / ontology / ingest fixtures
-- [ ] API boundary / contracts
-- [ ] UI / map layers / Focus Mode UX
-- [ ] Story Node content
-- [ ] MCP / analysis / model artifacts
-- [ ] Schemas / validators
-- [ ] Tests
-- [ ] CI / tooling
-- [ ] Docs / standards
-- [ ] Release / packaging
-
-### Pipeline stages impacted (check all that apply)
-- [ ] ETL / pipelines (`src/pipelines/**`) → outputs staged in:
-  - `data/raw/<domain>/` (immutable snapshots)
-  - `data/work/<domain>/` (reproducible intermediates)
-  - `data/processed/<domain>/` (deterministic, diffable products)
-- [ ] Catalogs:
-  - STAC: `data/stac/{collections,items}/`
-  - DCAT: `data/catalog/dcat/`
-  - PROV: `data/prov/`
-- [ ] Graph (`src/graph/**`, optionally `data/graph/**` if present)
-- [ ] API boundary (`src/server/**`, `src/server/contracts/**`) <!-- if legacy: note `src/api/**` -->
-- [ ] UI (`web/**`)
-- [ ] Story Nodes (`docs/reports/story_nodes/**`)
-- [ ] Focus Mode behavior (provenance-linked only)
-- [ ] Schemas (`schemas/**`)
-- [ ] Tests (`tests/**`)
-- [ ] Tooling/CI (`.github/**`, `tools/**`)
-- [ ] Releases (`releases/**`)
-
-### Change risk (pick one)
-- [ ] Low (docs-only / non-functional refactor / cosmetics)
-- [ ] Medium (new dataset, new layer, non-breaking contract/schema change)
-- [ ] High (breaking contract/schema, ontology changes, sensitive content, security-related)
-
-### Key paths touched (high level)
-<!-- Keep this short; list top-level or “root-ish” paths. -->
-- `...`
+**User impact / outcome:**  
 
 ---
 
-## ✅ Core merge gate checklist (do not skip)
-- [ ] **Architecture boundary preserved:** UI consumes data through APIs/contracts (no direct graph/DB calls from `web/**`).
-- [ ] **Sourced narrative preserved:** no uncited facts in published Story Nodes / Focus Mode outputs; provenance links exist.
-- [ ] **Provenance-first order preserved:** evidence is cataloged (STAC/DCAT/PROV) before graph load, API serving, or narrative surfacing.
-- [ ] **Contracts remain canonical:** schema/contract changes are versioned, validated, and tested (breaking changes include compat/deprecation notes).
-- [ ] **Determinism + stable IDs:** pipelines are idempotent/reproducible; downstream IDs/keys remain stable (or migrations are documented).
-- [ ] **Data-vs-code separation preserved:** pipelines write outputs under `data/**` (not `docs/**`); STAC/DCAT/PROV not written into `docs/**`.
-- [ ] **Security hygiene:** no secrets/tokens/keys committed; no accidental PII.
-- [ ] **Governance + sovereignty checks:** sensitive-location leakage + classification propagation checks addressed (or marked N/A with rationale).
-- [ ] **Link/reference integrity:** no broken internal references (paths/IDs) introduced; artifacts referenced by ID resolve.
+## 🎯 Type of Change
+- [ ] 🐛 Bug fix
+- [ ] ✨ New feature
+- [ ] 🧹 Refactor / cleanup (no behavior change)
+- [ ] ⚡ Performance improvement
+- [ ] 🔐 Security hardening
+- [ ] 🗄️ Data / database change (schemas, migrations, catalog metadata)
+- [ ] 🗺️ GIS / remote sensing / mapping change
+- [ ] 🤖 AI/ML change (training, inference, prompts, evaluation)
+- [ ] 🧪 Scientific modeling / simulation change
+- [ ] 📝 Documentation / SOP / research workflow change
+- [ ] 🧰 DevOps / CI / Docker / infra change
 
 ---
 
-## 📦 Evidence, provenance, and contracts
+## 🧩 Scope / Areas Touched (check all that apply)
+- [ ] 📂 `web/` (UI, map viewer, timeline controls, charts)
+- [ ] 📂 `scripts/` (ingestion, georeferencing, conversions, batch jobs)
+- [ ] 📂 `notebooks/` (EDA, prototypes, demos)
+- [ ] 📂 `mcp/` (experiments/, sops/, glossary, research protocols)
+- [ ] 🔌 API / services (REST/RPC, queues, adapters)
+- [ ] 🗄️ Database (PostgreSQL/PostGIS / migrations / indexes)
+- [ ] 🛰️ Remote sensing / raster pipeline (COG, tiles, QA)
+- [ ] 🧠 NLP / CV / ML models
+- [ ] 🧭 Visualization / 3D (WebGL / Cesium / terrain tiles)
+- [ ] 🐳 Docker / Compose / CI workflows
+
+---
+
+## 🔗 Related Issues / Context
+Closes: <!-- #123 -->  
+Related: <!-- #456, discussion link, doc link -->  
+
+---
+
+## 🧭 Design & Architecture Notes (keep reviewers oriented)
+<!--
+KFM is built as a layered system with clean architecture principles:
+- keep domain/use-case logic independent of frameworks
+- talk inwards with simple structures; talk outwards through interfaces
+Add notes here only if it helps reviewers understand boundaries or tradeoffs.
+-->
+**What layer(s) changed?**
+- [ ] 🧩 Domain entities / core models
+- [ ] 🧠 Use cases / application services
+- [ ] 🔁 Interfaces (ports)
+- [ ] 🔌 Adapters (DB/web/external services)
+- [ ] 🏗️ Infrastructure (frameworks, DB, cloud, containers)
+
+**New/changed interfaces (ports):**
+- 
+
+**Data contracts touched (schemas, GeoJSON properties, STAC-like metadata, API payloads):**
+- 
+
+**Notable tradeoffs / decisions:**
+- 
+
+---
+
+## 🧪 How to Test (repro steps)
+### ✅ Local (required)
+<!-- Provide exact commands + expected outcome. -->
+1. 
+2. 
+3. 
+
+### 🧰 Suggested Commands (if applicable)
+- [ ] `make test`
+- [ ] `make lint` / `make format`
+- [ ] `pytest`
+- [ ] `npm test` / `npm run lint`
+- [ ] `docker compose up --build` (or `docker-compose up --build`)
+- [ ] DB migration run + rollback verified
+
+### 🧬 Reproducibility Notes (datasets/experiments)
+<!-- If you changed data pipelines, models, or simulation results, explain how a reviewer can reproduce. -->
+- Inputs used:
+- Seed(s) / config(s):
+- Output artifacts:
+
+---
+
+## 🖼️ Evidence (screenshots, maps, before/after)
+<!-- If UI/maps changed, include screenshots or short clips. If data changed, include sample output or a small diff snippet. -->
+- Before:
+- After:
+
+---
+
+## 🧾 Data Provenance & Licensing (required if you added/updated data)
+**Source(s) / citation:**  
+**License / usage constraints:**  
+**Temporal coverage:**  
+**Spatial coverage (bbox / region):**  
+**Processing steps recorded:**  
+- [ ] Updated `sources.json` / catalog metadata
+- [ ] Added/updated README/docs for the dataset
+- [ ] Included validation notes (QA checks)
+
+---
+
+## 🗄️ Database / Storage Impact (required if DB changes)
+- [ ] Migration included (forward + rollback)
+- [ ] PostGIS/geometry columns validated (SRID, geometry type)
+- [ ] Indexes reviewed (esp. spatial + time filters)
+- [ ] Query plan / performance checked for hot paths
+- [ ] Backfill strategy documented (if needed)
+
+**Migration notes / commands:**
+- 
+
+**Rollback plan:**
+- 
+
+---
+
+## 🔐 Security, Privacy, and Human-Centered Impact
+<!-- Digital humanism lens: preserve user agency, transparency, privacy, and safety. -->
+- [ ] No secrets committed (keys, tokens, credentials)
+- [ ] Dependencies reviewed (new packages pinned + vetted)
+- [ ] Sensitive data handling considered (PII, location traces, private documents)
+- [ ] Outputs are explainable enough for intended users (no “black box surprise”)
+- [ ] If AI is involved: limitations + uncertainty are communicated
+
+**Security notes / threat considerations:**
+- 
+
+---
+
+## 📈 Performance & Cost Notes (if relevant)
+- [ ] Large rasters/tiles are streamed efficiently (COG/tiling strategy)
+- [ ] Frontend remains responsive (map layer count, tile sizes, GPU load)
+- [ ] API endpoints measured (latency/throughput)
+- [ ] Batch jobs tracked (runtime, memory, cloud cost considerations)
+
+**Benchmarks / profiling results:**
+- 
+
+---
+
+## 🚦 Rollout / Backout Plan
+- [ ] Safe to merge as-is
+- [ ] Needs feature flag
+- [ ] Needs staged rollout
+- [ ] Needs data migration window
+
+**Rollout steps:**
+1.  
+2.  
+
+**Backout steps:**
+1.  
+2.  
+
+---
+
+# ✅ Final Review Checklist (required)
+- [ ] My PR is scoped (no unrelated drive-by changes)
+- [ ] I wrote/updated tests **or** explained why not
+- [ ] I updated docs/SOPs where behavior changed
+- [ ] I ran the relevant commands in “How to Test”
+- [ ] I didn’t break clean architecture boundaries (domain/use-cases don’t import infrastructure)
+- [ ] I considered edge cases (nulls, missing geometry, CRS mismatches, time ranges)
+- [ ] I included screenshots/evidence for UI/map changes
+- [ ] I recorded data provenance + license (if data changed)
+- [ ] I included model card/datasheet updates (if ML changed)
+- [ ] I did a quick security sanity check (secrets, deps, input validation)
+
+---
 
 <details>
-<summary><strong>Data / ETL checklist</strong> (open if this PR touches <code>src/pipelines/**</code> or <code>data/**</code>)</summary>
+<summary>🧭 Clean Architecture Guardrails (fill out if you changed core logic)</summary>
 
-### Data run metadata (recommended)
-- Run ID / activity ID:
-- Config snapshot / parameters (path or commit):
-- Input sources (high level):
-- Output datasets (high level):
+- [ ] Domain entities remain framework-agnostic (no DB/web/FS imports)
+- [ ] Use cases call outward through interfaces (ports), not concrete adapters
+- [ ] Adapters translate external formats ↔ simple domain structures
+- [ ] New dependency added only in outer layers (infrastructure), not core
+- [ ] Unit tests exist at the use-case level with mocked/stubbed ports
 
-### Checks
-- [ ] Raw snapshots are treated as immutable (`data/raw/<domain>/**`).
-- [ ] Intermediate artifacts are reproducible (`data/work/<domain>/**`).
-- [ ] Processed outputs are deterministic + diffable (`data/processed/<domain>/**`).
-- [ ] IDs/keys used downstream are stable (no silent re-keying without a migration note).
-- [ ] Geometry + temporal fields validated (where applicable).
-- [ ] License + attribution captured (prefer DCAT + source register where used).
-- [ ] Sensitivity/classification tagged; no outputs are less restricted than inputs.
-- [ ] If sensitive: redaction/generalization method documented (fields + geometry + rationale).
-- [ ] If new/changed dataset: a PROV activity bundle exists (or is linked) under `data/prov/**`.
+Notes:
+- 
 
 </details>
 
 <details>
-<summary><strong>Catalogs (STAC/DCAT/PROV) checklist</strong> (open if this PR touches catalog outputs)</summary>
+<summary>🗺️ GIS / Remote Sensing Checklist (fill out if you touched geospatial/raster)</summary>
 
-### IDs (fill what applies)
-- STAC Collection ID(s):
-- STAC Item ID(s):
-- DCAT Dataset ID(s):
-- PROV bundle/activity ID(s):
+### Coordinate Systems & Geometry
+- [ ] CRS/SRID is explicit and consistent end-to-end
+- [ ] Geometry validity checked (self-intersections, empties, wrong types)
+- [ ] Spatial joins/overlays tested with representative Kansas-area samples
 
-### Checks
-- [ ] STAC Collection + Item(s) updated under `data/stac/**`.
-- [ ] DCAT dataset record updated under `data/catalog/dcat/**`.
-- [ ] PROV bundle updated under `data/prov/**`.
-- [ ] Artifacts validate against the relevant schemas in `schemas/**` (if present).
-- [ ] No orphan references (IDs/refs resolve across STAC/DCAT/PROV and any graph mappings).
-- [ ] Version lineage recorded (prefer “new version + links”; avoid in-place overwrites without lineage).
-- [ ] License + distribution metadata present (DCAT) and matches source terms.
-- [ ] Sensitivity/classification present and consistent across STAC/DCAT/PROV.
+### Raster / Imagery (GeoTIFF/COG/Tiles)
+- [ ] Rasters are cloud-optimized (COG) when intended for web streaming
+- [ ] Overviews/pyramids generated as appropriate
+- [ ] Nodata handling verified (visual + analytic)
+- [ ] Tile generation verified (zoom levels, bounds, seams)
 
-</details>
-
-<details>
-<summary><strong>Graph checklist</strong> (open if this PR touches <code>src/graph/**</code> or <code>data/graph/**</code>)</summary>
-
-### Graph change summary
-- New labels / relationships (if any):
-- Ontology binding impact (if any):
-- Migration ID / name (if any):
-
-### Checks
-- [ ] Graph ingest uses **processed** outputs + catalog/prov artifacts (no raw ingestion).
-- [ ] Graph nodes reference STAC/DCAT/PROV identifiers where applicable.
-- [ ] Constraints / tests updated (uniqueness, required relationships, no orphan domain nodes).
-- [ ] Any new labels/relations align with the repo ontology bindings (no ad-hoc semantics).
-- [ ] Rollback plan for graph schema/migration included (if applicable).
-- [ ] Breaking ontology changes are versioned and include a migration note.
+### Metadata / Catalog
+- [ ] STAC-like metadata updated (bbox, time range, source, processing)
+- [ ] Provenance recorded (inputs, tooling, parameters)
+- [ ] Any OCR/georeferencing steps documented in SOP/notes
 
 </details>
 
 <details>
-<summary><strong>API boundary checklist</strong> (open if this PR touches <code>src/server/**</code> / contracts)</summary>
+<summary>🤖 AI/ML Checklist (fill out if you changed models, prompts, training, or inference)</summary>
 
-### API surface summary
-- Endpoint(s) touched:
-- Contract file(s) touched:
-- Compatibility: <!-- compatible / version bump / deprecation -->
-- Redaction/generalization rules touched (if any):
+### Reproducibility
+- [ ] Training config captured (hyperparams, seeds, data version)
+- [ ] Train/val/test separation is clear; leakage avoided
+- [ ] Metrics reported with uncertainty where sensible
 
-### Checks
-- [ ] Contract(s) updated in `src/server/contracts/**` (or legacy path noted in this PR).
-- [ ] Backward compatibility assessed (compatible vs version bump vs deprecation).
-- [ ] Contract tests updated/added and passing.
-- [ ] Redaction/generalization rules are enforced at the API boundary (not in UI).
-- [ ] Responses link back to provenance identifiers (STAC item IDs, DCAT IDs, PROV activity/run IDs) where relevant.
-- [ ] Classification propagation enforced (no downgrade without governance review).
-- [ ] No “ungoverned narrative” added to API responses (data + governed content only).
+### Documentation
+- [ ] Model Card updated (`docs/model_cards/` if applicable)
+- [ ] Dataset datasheet updated (if you curated/modified a dataset)
+- [ ] Limitations & failure modes noted (esp. historical spelling/scan artifacts)
 
-</details>
-
-<details>
-<summary><strong>UI / Focus Mode checklist</strong> (open if this PR touches <code>web/**</code>)</summary>
-
-### UI impact summary
-- View(s)/component(s) touched:
-- Layer ID(s) / registry key(s) touched:
-- A11y notes (if applicable):
-
-### Checks
-- [ ] UI reads only from API endpoints and/or catalog endpoints (no direct Neo4j calls).
-- [ ] Layer registry changes validate against `schemas/ui/**` (if present).
-- [ ] Focus Mode surfaces **provenance-linked** content only (no uncited narrative).
-- [ ] If introducing any AI-assisted UI narrative: it is opt-in, clearly labeled, and includes uncertainty metadata.
-- [ ] CARE gating/sensitivity handling present where applicable (no sensitive-location leakage).
-- [ ] Performance considerations noted (hot paths, bundle size, map render cost).
+### Quality & Safety
+- [ ] Bias/fairness considerations documented (where applicable)
+- [ ] Prompted/LLM outputs include citations or traceability when needed
+- [ ] Monitoring plan noted for productionized inference
 
 </details>
 
 <details>
-<summary><strong>Story Nodes checklist</strong> (open if this PR touches <code>docs/reports/story_nodes/**</code>)</summary>
+<summary>🧪 Statistics / Experimental Design Checklist (fill out if you report results)</summary>
 
-### Story Node inventory
-- Story Node ID(s):
-- File path(s):
-
-### Checks
-- [ ] Story Nodes follow `docs/templates/TEMPLATE__STORY_NODE_V3.md`.
-- [ ] Every factual claim is source-linked (dataset/document IDs).
-- [ ] Fact vs inference vs hypothesis is explicit where relevant.
-- [ ] Key entity references resolve (Place/Person/Event IDs exist or have creation tickets).
-- [ ] Sensitivity/redaction compliance reviewed (generalization where required).
-- [ ] If any AI-generated text is included: it is explicitly marked, opt-in (where surfaced), and includes uncertainty metadata.
+- [ ] Hypothesis/objective stated clearly
+- [ ] Report effect sizes + uncertainty (not just “significant/not significant”)
+- [ ] Multiple comparisons / p-hacking risks considered
+- [ ] Validation approach described (holdout, k-fold, time-split, spatial-split)
+- [ ] Plots/tables are labeled (units, axes, CRS/time window if geospatial)
 
 </details>
 
 <details>
-<summary><strong>MCP / analysis / models checklist</strong> (open if this PR touches <code>mcp/**</code>)</summary>
+<summary>🧫 Scientific Modeling / Simulation Checklist (fill out if you changed simulation/modeling)</summary>
 
-### Run metadata
-- Run ID:
-- Manifest path:
-- Evaluation / evidence links:
-- Model version(s) (if applicable):
-
-### Checks
-- [ ] `mcp/runs/**` contains run manifests/logs/pointers (not duplicated provenance payloads).
-- [ ] PROV is produced (or linked) under `data/prov/**` for meaningful runs.
-- [ ] If a model changed: model card updated (intended use, limits, evaluation evidence).
-- [ ] Experiment reports clearly label **fact vs inference vs hypothesis**.
-- [ ] Governance review flagged if work touches culturally sensitive knowledge, restricted locations, protected personal data, or high-impact narrative generation.
+- [ ] Verification: numerical correctness checks (units, invariants, convergence)
+- [ ] Validation: compared against baseline/observations where available
+- [ ] Sensitivity analysis noted (key parameters)
+- [ ] Assumptions documented (boundary conditions, simplifications)
+- [ ] Results are reproducible (inputs + configuration captured)
 
 </details>
 
----
+<details>
+<summary>🐳 DevOps / Docker / CI Checklist (fill out if you touched infra)</summary>
 
-## 🧪 Validation / tests run
-<!-- Include commands and results. Use ~~~ fences per repo Markdown protocol. Replace examples with actual commands used. -->
+- [ ] Docker images follow best practices (small base, pinned versions)
+- [ ] Containers run as non-root where feasible
+- [ ] Secrets are injected via env/secret manager (not committed)
+- [ ] CI updated (tests, lint, caching)
+- [ ] Security scanning considered (deps + images)
 
-~~~bash
-# Paste the commands you ran (examples only):
-# <markdown validator> ...
-# <link checker> ...
-# <schema validator> ...
-# <unit tests> ...
-# <ui tests> ...
-~~~
+</details>
 
-### Checks (mark what applies)
-- [ ] Markdown protocol checks (front-matter/required sections where applicable)
-- [ ] Link/reference checks (internal refs, artifact IDs, docs links)
-- [ ] Schema validation (STAC/DCAT/PROV/story nodes/UI/telemetry as applicable)
-- [ ] Graph integrity tests (constraints, required relations, no orphans) (if graph changed)
-- [ ] API contract tests (if contracts changed)
-- [ ] Unit/integration tests (if code changed)
-- [ ] Secrets scan clean (no tokens/keys)
-- [ ] PII scan clean (if data touched)
-- [ ] Sensitive-location leakage check addressed (if applicable)
-- [ ] Classification propagation check addressed (if applicable)
+<details>
+<summary>📝 Docs / MCP Workflow Checklist (fill out if you touched docs, experiments, SOPs)</summary>
 
----
+- [ ] Updated relevant SOPs (`mcp/sops/`) for repeatable processes
+- [ ] Added/updated experiment log (`mcp/experiments/`) for new results
+- [ ] Updated glossary if new terms/acronyms introduced
+- [ ] Docs reviewed like code (clear, accurate, linked to changes)
 
-## ⚠️ Breaking change / migration notes (if applicable)
-- What breaks?
-- Who is impacted (ETL, catalogs, graph, API clients, UI)?
-- Migration path / deprecation window:
-- Version bump (schemas/contracts/docs) needed?
-- Rollback plan:
+</details>
 
----
-
-## 🖼️ UI evidence (if applicable)
-- Screenshots / screen recordings:
-- Accessibility notes (keyboard nav, contrast, map interactions):
-- Performance notes (bundle size, render hotspots):
-
----
-
-## 🧩 Extension points (only if this PR adds net-new capability)
-<!-- Mirrors KFM’s cross-subsystem extension checklist: Data, STAC, PROV, Graph, APIs, UI, Focus Mode, Telemetry. -->
-- [ ] Data / ETL
-- [ ] STAC
-- [ ] PROV
-- [ ] Graph
-- [ ] APIs
-- [ ] UI
-- [ ] Focus Mode
-- [ ] Telemetry
-
----
-
-## 🧭 Reviewer notes
-- Areas to focus review:
-- Risk / rollback plan:
-- Follow-ups / tickets created:
+<!--
+🔎 Project-doc grounding markers (for traceability of this template’s intent):
+:contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1} :contentReference[oaicite:2]{index=2} :contentReference[oaicite:3]{index=3} :contentReference[oaicite:4]{index=4} :contentReference[oaicite:5]{index=5}
+:contentReference[oaicite:6]{index=6} :contentReference[oaicite:7]{index=7} :contentReference[oaicite:8]{index=8} :contentReference[oaicite:9]{index=9} :contentReference[oaicite:10]{index=10} :contentReference[oaicite:11]{index=11} :contentReference[oaicite:12]{index=12} :contentReference[oaicite:13]{index=13}
+-->
