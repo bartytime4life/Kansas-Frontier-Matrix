@@ -114,12 +114,13 @@ Avoid importing or depending on:
 
 ```mermaid
 flowchart LR
-  UI[🧑‍🌾 Frontend / External Client] -->|HTTP| API[🌐 Interface Layer\n(FastAPI router/controller)]
-  API -->|Request DTO| UC[🧠 Application Use Case]
-  UC -->|calls Port interface| PORT[🔌 Port\n(Repository/Gateway/Queue)]
-  PORT -->|implemented by| ADAPTER[🏗️ Infrastructure Adapter]
-  ADAPTER -->|SQL/PostGIS / RPC / Queue| EXT[(External System)]
-  UC -->|Response DTO| API -->|JSON| UI
+  UI["🧑‍🌾 Frontend / External Client"] -->|HTTP| API["🌐 Interface Layer<br/>(FastAPI router/controller)"]
+  API -->|Request DTO| UC["🧠 Application Use Case"]
+  UC -->|calls Port interface| PORT["🔌 Port<br/>(Repository / Gateway / Queue)"]
+  PORT -->|implemented by| ADAPTER["🏗️ Infrastructure Adapter"]
+  ADAPTER -->|SQL/PostGIS · RPC · Queue| EXT["🛰️ External System"]
+  UC -->|Response DTO| API
+  API -->|JSON| UI
 ```
 
 ---
