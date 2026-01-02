@@ -1,66 +1,136 @@
-# Kansas Frontier Matrix (KFM) — .editorconfig
-# Keep whitespace + line endings consistent across docs, schemas, pipelines, API, and UI.
+# .editorconfig
+# EditorConfig helps maintain consistent coding styles across editors and IDEs.
 # https://editorconfig.org
 
 root = true
 
+# ------------------------------------------------------------
+# Defaults (safe for mixed Python + Node/Web + Data/Docs repos)
+# ------------------------------------------------------------
 [*]
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
+
 indent_style = space
 indent_size = 2
+tab_width = 2
 
-# ---------- Code ----------
-[*.{py,pyi}]
+# Some editors respect this (helps keep diffs readable)
+max_line_length = 120
+
+# -----------------------
+# Python (PEP 8 / Black)
+# -----------------------
+[*.py]
 indent_size = 4
+tab_width = 4
+max_line_length = 88
 
+[*.pyi]
+indent_size = 4
+tab_width = 4
+max_line_length = 88
+
+# Jupyter notebooks are JSON
+[*.ipynb]
+indent_size = 2
+tab_width = 2
+
+# -----------------------
+# JavaScript / TypeScript
+# -----------------------
 [*.{js,jsx,ts,tsx,cjs,mjs}]
 indent_size = 2
+tab_width = 2
+max_line_length = 120
 
-[*.{sh,bash,zsh}]
+# -------------
+# Web / Styling
+# -------------
+[*.{html,htm}]
 indent_size = 2
+tab_width = 2
 
-# ---------- Data / metadata ----------
+[*.{css,scss,sass,less}]
+indent_size = 2
+tab_width = 2
+
+# -------------------
+# Config / Data files
+# -------------------
+[*.{json,jsonc,geojson}]
+indent_size = 2
+tab_width = 2
+
 [*.{yml,yaml}]
 indent_size = 2
+tab_width = 2
 
-[*.{json,jsonc,jsonld,jsonl,ndjson,geojson,topojson,ipynb,avsc}]
+[*.{toml,ini,cfg}]
 indent_size = 2
+tab_width = 2
 
-[*.{ttl,nt,nq,rdf,owl,sparql}]
+[*.{env,example}]
 indent_size = 2
+tab_width = 2
 
-[*.{toml,ini,cfg,conf,properties}]
-indent_size = 2
-
-# ---------- Docs ----------
+# ----------
+# Markdown
+# ----------
+# NOTE: trailing whitespace can be meaningful in Markdown (line breaks).
 [*.{md,mdx,rst}]
 indent_size = 2
+tab_width = 2
+trim_trailing_whitespace = false
+max_line_length = 120
 
-# ---------- Query / graph ----------
-[*.{sql,cypher,cql,graphql,gql}]
+# -------------------------
+# Shell / CLI / Dev tooling
+# -------------------------
+[*.{sh,bash,zsh}]
 indent_size = 2
+tab_width = 2
 
-# ---------- Web assets ----------
-[*.{css,scss,less,html,htm,xml,svg}]
-indent_size = 2
-
-# Makefiles require tabs
+# -------------------------
+# Makefiles must use tabs
+# -------------------------
 [{Makefile,makefile,*.mk}]
 indent_style = tab
-indent_size = tab
 tab_width = 4
 
-# Don’t auto-strip whitespace in delimiter-based data files
-[*.{csv,tsv,psv}]
-trim_trailing_whitespace = false
+# -------------------------
+# Go (gofmt uses tabs)
+# -------------------------
+[*.go]
+indent_style = tab
+tab_width = 4
 
-# Logs often shouldn’t be auto-mutated by editor save hooks
-[*.log]
-trim_trailing_whitespace = false
+# -------------------------
+# SQL
+# -------------------------
+[*.{sql,psql}]
+indent_size = 2
+tab_width = 2
 
-# Windows scripts: keep CRLF for compatibility with cmd.exe / some PowerShell setups
+# -------------------------
+# MATLAB / Octave
+# -------------------------
+[*.m]
+indent_size = 4
+tab_width = 4
+
+# -----------------------------------
+# Windows scripts keep CRLF newlines
+# -----------------------------------
 [*.{bat,cmd,ps1}]
 end_of_line = crlf
+indent_size = 2
+tab_width = 2
+
+# -------------------------
+# CSV/TSV: preserve spacing
+# -------------------------
+[*.{csv,tsv}]
+trim_trailing_whitespace = false
