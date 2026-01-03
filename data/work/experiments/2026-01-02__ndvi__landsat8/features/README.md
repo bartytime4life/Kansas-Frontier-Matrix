@@ -164,13 +164,13 @@ Recommended naming:
 
 ```mermaid
 flowchart LR
-  A[📥 Landsat 8 Surface Reflectance] --> B[☁️ Cloud/Shadow Mask (QA/CFMask)]
-  B --> C[🧮 NDVI Compute (B5,B4)]
-  C --> D[🧱 Temporal Composite or Windowing]
-  D --> E[🧩 Feature Extraction<br/>AOI reducers + stats]
-  E --> F[💾 Write Artifacts<br/>Parquet / GeoTIFF]
-  F --> G[✅ QA Checks + Reports]
-  G --> H[📦 (Optional) Promote to Processed<br/>+ STAC/DCAT/PROV]
+  A["📥 Landsat 8 Surface Reflectance"] --> B["☁ Cloud/Shadow Mask (QA/CFMask)"]
+  B --> C["🧮 NDVI Compute (B5,B4)"]
+  C --> D["🧱 Temporal Composite or Windowing"]
+  D --> E["🧩 Feature Extraction<br/>AOI reducers + stats"]
+  E --> F["💾 Write Artifacts<br/>Parquet / GeoTIFF"]
+  F --> G["✅ QA Checks + Reports"]
+  G --> H["📦 (Optional) Promote to Processed<br/>+ STAC/DCAT/PROV"]
 ```
 
 ### Recommended parameters to log (`params.yaml`)
