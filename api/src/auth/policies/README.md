@@ -62,12 +62,12 @@ This keeps authorization logic:
 
 ```mermaid
 flowchart TD
-  A[Client Request] -->|Authorization: Bearer &lt;JWT&gt;| B[API Gateway / Router]
-  B --> C[AuthN: verify token + build actor context]
-  C --> D[AuthZ: call policy(action, actor, resource)]
-  D -->|allow ✅| E[Controller / Use Case]
-  D -->|deny ❌| F[403 Forbidden (or equivalent)]
-  E --> G[Data access is filtered + redacted as needed]
+  A["Client Request"] -->|Authorization: Bearer JWT| B["API Gateway / Router"]
+  B --> C["AuthN: verify token + build actor context"]
+  C --> D["AuthZ: policy check (action, actor, resource)"]
+  D -->|allow| E["Controller / Use Case"]
+  D -->|deny| F["403 Forbidden"]
+  E --> G["Data access filtered + redacted as needed"]
 ```
 
 ### Key expectation
