@@ -1,209 +1,216 @@
-# 🧰 API Tasks (Background Jobs)
+# 🧩 Background Tasks (api/src/tasks)
 
-> ⚙️ **Goal:** run long or asynchronous work *outside* the request/response path (simulations, exports, ingestion triggers, maintenance).  
-> 🧵 **Pattern:** API enqueues ➜ workers execute ➜ results stored ➜ client polls job status. :contentReference[oaicite:0]{index=0}
+![scope](https://img.shields.io/badge/scope-api%2Fsrc%2Ftasks-blue)
+![pattern](https://img.shields.io/badge/pattern-async%20jobs-orange)
+![ops](https://img.shields.io/badge/ops-retries%20%7C%20idempotency%20%7C%20observability-success)
 
----
+This folder defines **background jobs** (a.k.a. tasks) that run **outside** the request/response path.
 
-## 📌 What lives in `api/src/tasks/`
-
-This folder is the **home for background “tasks”** that would otherwise:
-- block the API thread/event-loop,
-- exceed request timeouts,
-- or require retries / backoff / concurrency limits.
-
-KFM’s architecture explicitly supports **task queues + worker pools** for heavy computation, external API calls, and long-running analysis. :contentReference[oaicite:1]{index=1}:contentReference[oaicite:2]{index=2}
+They exist so the API can **authenticate + validate**, then **enqueue work**, return a **jobId**, and let the client **poll for status/results** without blocking the web server. ✅
 
 ---
 
-## 🧭 When to use Tasks vs Pipelines vs Cron
+## 🎯 What belongs here
 
-| Need | Use | Why |
-|---|---|---|
-| Multi-step ETL + dependencies + backfills + lineage + dashboards | **Pipelines (Airflow DAGs)** | Pipeline-as-code, scheduled runs, retries, lineage, incremental processing, deduplication, and data-quality checks. :contentReference[oaicite:3]{index=3} |
-| Simple operational chores (backup, prune cache/logs) | **Cron / Kubernetes CronJob** | Lightweight scheduling for “small tasks not worth a whole pipeline DAG”. :contentReference[oaicite:4]{index=4} |
-| User-triggered long analysis / async processing | **Task Queue + Workers** | Enqueue jobs so the API can return a job id immediately; workers process and store results. :contentReference[oaicite:5]{index=5}:contentReference[oaicite:6]{index=6} |
-| Event-driven reactions (e.g., new imagery arrives) | **Queue/Event Stream + Subscribers** | Publish/subscribe decouples ingestion from processing and improves resilience. :contentReference[oaicite:7]{index=7} |
+- ✅ Long-running compute (simulation, ML retrain, geoprocessing)
+- ✅ IO-heavy work (batch imports, external API pulls, large file transforms)
+- ✅ Event-driven handlers (react to new data arrivals / internal events)
+- ✅ Fan-out/fan-in orchestration (split work, aggregate outputs)
+- ✅ Task status + progress reporting hooks
 
-> ⚠️ **Rule of thumb:**  
-> If it’s **ETL that produces official datasets**, it should live in the **pipeline subsystem** (single source of truth), not scattered across multiple places. :contentReference[oaicite:8]{index=8}
+## 🚫 What should NOT belong here
+
+- ❌ HTTP request routing / controllers (API layer concern)
+- ❌ UI formatting (frontend concern)
+- ❌ One-off scripts with no operational contract (put in `/scripts` or `/tools`)
+- ❌ Tiny synchronous work that should finish inside the request (<~100ms)
 
 ---
 
-## 🔁 Task lifecycle (Mermaid-safe, single-line)
+## 🔁 Task lifecycle
+
+> Mermaid note: this diagram avoids emojis + parentheses in labels to reduce GitHub/Mermaid parsing issues.
 
 ```mermaid
-flowchart LR ui["🖥️ UI / Client"] -->|POST action| api["🌐 API Endpoint"]; api -->|Validate + Auth| auth["🔐 AuthZ/AuthN"]; api -->|Enqueue job + return job_id| q["📬 Queue / Broker"]; q -->|pull| w["👷 Worker Pool"]; w -->|run task| t["🧠 Task Handler"]; t -->|write outputs| db["🗄️ DB / Cache / Object Storage"]; ui -->|GET status(job_id)| api; api -->|read status/results| db;
+graph LR
+  UI[UI Client] -->|POST action| API[API Endpoint]
+  API -->|auth validate| AUTH[AuthN AuthZ]
+  API -->|enqueue return jobId| Q[Queue Broker]
+  Q -->|pull| W[Worker Pool]
+  W -->|execute| T[Task Handler]
+  T -->|store results| STORE[Storage]
+  UI -->|GET status jobId| API
+  API -->|read status results| STORE
 ```
 
-
-## 🧩 Common task types in KFM
-
-- 🧪 **Simulation / Monte Carlo** (CPU heavy)  
-- 📦 **Exports** (CSV/GeoJSON/PDF report generation)
-- 🌦️ **External API pulls** (e.g., NOAA forecasts; pushes to dashboards) :contentReference[oaicite:11]{index=11}
-- 🧠 **ML jobs** (retrain requests, batch inference kickoffs)
-- 🗺️ **Geo operations** (tile/cache warmers, layer refresh)
-- 🧹 **Maintenance** (cache cleanup, log pruning, backups) :contentReference[oaicite:12]{index=12}
-
----
-
-## 🗂️ Suggested folder layout (expand as needed)
-
-> This is a recommended structure — align it to the actual codebase conventions.
+### 🧯 Plain-text fallback (always works)
 
 ```text
-📁 api/
-  📁 src/
-    📁 tasks/
-      📄 README.md              # you are here ✅
-      📄 registry.*             # task name ➜ handler mapping
-      📄 worker.*               # worker bootstrap (connect broker, concurrency)
-      📄 scheduler.*            # optional recurring schedules (if not handled by Airflow/cron)
-      📁 handlers/              # task implementations
-        📄 analysis.*           # long-running compute
-        📄 exports.*            # exports & reports
-        📄 ingest.*             # pull/push integrations
-        📄 maintenance.*        # cleanup & housekeeping
-      📁 models/                # task status/results schemas (DB)
-      📁 utils/                 # retry, idempotency, tracing helpers
-      📁 __tests__/             # unit/integration tests
+UI/Client -> API -> auth/validate -> queue -> worker -> task -> storage
+UI/Client -> API -> status/results -> storage
 ```
 
 ---
 
-## 🧾 Task “Contract” (what every task should declare)
+## 📦 Task contract
 
-Think of each task as a mini-service with a stable interface:
+Every task should read like a product: **name, version, inputs, outputs, and behavior**.
 
-### ✅ Required
-- **Name**: stable identifier (used in logs, metrics, UI status checks)
-- **Inputs**: validated + serialized parameters
-- **Outputs**: where results are persisted (DB/cache/files)
-- **Status model**: `queued → running → succeeded|failed` (plus optional: `canceled`, `expired`)
-- **Retry policy**: max attempts + exponential backoff when appropriate :contentReference[oaicite:13]{index=13}
-- **Idempotency strategy**: safe to rerun without duplicating outcomes (critical for retries) :contentReference[oaicite:14]{index=14}
-- **Observability**: log start/finish + key steps + failures :contentReference[oaicite:15]{index=15}
+### Required metadata
 
-### ⭐ Strongly recommended
-- **Lineage tags**: dataset/run identifiers so outputs can be traced to inputs and pipeline runs :contentReference[oaicite:16]{index=16}
-- **Concurrency class**: e.g., `cpu-heavy`, `io-heavy`, `latency-sensitive` so we can cap parallelism :contentReference[oaicite:17]{index=17}
-- **Timeouts**: prevent runaway jobs
-- **Ownership**: who maintains this task + on-call expectations
+- **name**: stable identifier (example: `simulation.run`)
+- **version**: bump when *meaning* or *output schema* changes
+- **input**: JSON-serializable payload (validated before enqueue)
+- **output**: stored result payload OR a pointer (object key / URL)
+- **status**: `PENDING | RUNNING | SUCCEEDED | FAILED | CANCELLED`
+- **progress** (optional): `0..100`
+- **timestamps**: created/started/finished (recommended)
+
+### Operational guarantees ✅
+
+- **Idempotent where possible**
+- **Retry-safe** (no double-charging, no duplicate writes)
+- **Deterministic** given the same inputs + same version
+- **Observable**: logs include `jobId`, `taskName`, `taskVersion`
 
 ---
 
-## 🧪 Template: Task Spec (drop this into a PR description or `docs/`)
+## 🗂️ Suggested layout
 
-```yaml
-name: "analysis.run_simulation"
-purpose: "Run scenario simulation asynchronously; store results; expose status"
-triggered_by:
-  - "POST /api/simulation/run"
-queue: "cpu-heavy"
-concurrency_limit: 2
-retries:
-  max_attempts: 3
-  backoff: "exponential"
-timeout_seconds: 3600
-idempotency:
-  key_fields: ["user_id", "scenario_id", "params_hash"]
-outputs:
-  location: "postgres"
-  tables: ["simulation_runs", "simulation_run_artifacts"]
-observability:
-  logs: ["start", "finish", "step", "error"]
-  metrics: ["duration_ms", "success_count", "failure_count", "queue_lag"]
-security:
-  auth: "JWT"
-  required_role: "analyst"
-lineage:
-  include: ["input_dataset_versions", "pipeline_run_id"]
+> Adjust to match the real codebase — the goal is consistent boundaries and discoverability.
+
+📁 `api/src/tasks/`  
+- 📄 `README.md` (this file)  
+- 🧰 `registry.py` (task registration + routing)  
+- 🧾 `schemas/` (input/output validation models)  
+- 🧠 `handlers/` (task implementations)  
+- 🧪 `tests/` (unit + integration tests)  
+- 🧱 `adapters/` (queue/db/object-store wrappers, if needed)
+
+---
+
+## 📨 Enqueue pattern (pseudo-code)
+
+### API layer
+
+```python
+# API controller/service layer
+payload = validate_request(body)          # schema + domain validation
+job_id = tasks.enqueue(
+    name="simulation.run",
+    payload=payload,
+    requested_by=user.id,
+)
+return {"jobId": job_id}
+```
+
+### Worker side
+
+```python
+def simulation_run(job_id: str, payload: dict) -> None:
+    tasks.mark_running(job_id)
+
+    result = run_simulation(payload)
+
+    tasks.store_result(job_id, result)
+    tasks.mark_succeeded(job_id)
+```
+
+### Status polling
+
+```python
+# API layer
+status = tasks.get_status(job_id)
+# optionally: include result pointer if SUCCEEDED
+return status
 ```
 
 ---
 
-## 🩺 Observability & ops expectations
+## 🕒 Scheduling vs queuing
 
-Background tasks must be **operationally visible**:
-- Log **start + finish** and meaningful steps; log stack traces internally; return safe error IDs to clients when needed. :contentReference[oaicite:18]{index=18}
-- Monitor queue health: if tasks pile up or fail repeatedly, alert (watchdog / monitors). :contentReference[oaicite:19]{index=19}
-- Prefer instrumenting task duration + success/failure counters.
+Use **queuing** when work is triggered by:
+- a user action (button click / API call),
+- an internal event (new data arrived),
+- a webhook or external integration.
 
-> 🔎 Tip: treat tasks like production endpoints — because they *are* production pathways, just asynchronous.
+Use **scheduling** when work runs on a cadence (hourly/daily/weekly):
+- ingestion refresh,
+- backfills,
+- maintenance tasks,
+- periodic evaluation / retraining checks.
 
----
-
-## ♻️ Reliability rules (idempotency, dedup, incremental runs)
-
-Tasks that touch durable data must assume they can be retried or re-run:
-- Keep a **marker** (DB state / last processed date) for incremental work. :contentReference[oaicite:20]{index=20}
-- Prevent duplicates via **upsert**, unique constraints, or pre-checks. :contentReference[oaicite:21]{index=21}
-- Add **data-quality checks** and fail early if inputs look wrong or empty. :contentReference[oaicite:22]{index=22}
-
----
-
-## 🗓️ Scheduling notes
-
-- If a job is **recurring** and is part of data production → **Airflow** (preferred): monitoring, retries, lineage, backfills. :contentReference[oaicite:23]{index=23}
-- If it’s a small operational chore → **Cron/Kubernetes CronJob** (simple + explicit). :contentReference[oaicite:24]{index=24}
-- If it’s reactive or user-triggered → **Queue + Workers** (keeps API responsive). :contentReference[oaicite:25]{index=25}
+**Rule of thumb**
+- 🕰️ Simple cadence: cron
+- 🛫 DAGs with dependencies + monitoring: Airflow (or equivalent)
 
 ---
 
-## 🔐 Security expectations
+## 🧷 Reliability patterns (do these by default)
 
-Tasks are part of the backend security boundary:
-- Tasks triggered via API must enforce **authorization** (JWT + role/permission checks). :contentReference[oaicite:26]{index=26}
-- Never log sensitive payloads unredacted; store secrets only in environment/secret managers.
-- If tasks call external APIs, treat responses as untrusted input and validate/sanitize.
+### 🔁 Retries + backoff
+- Prefer bounded retries with **exponential backoff**
+- Classify failures:
+  - transient (retry): timeouts, 5xx, network flake
+  - permanent (fail fast): schema mismatch, forbidden, invalid inputs
 
----
+### 🧬 Idempotency + dedup
+- Introduce a **dedup key** when tasks can be triggered multiple times
+- Prefer **upsert** semantics for data writes where appropriate
+- Make re-runs safe (no duplicated outputs)
 
-## ➕ Adding a new task (checklist)
-
-1. 🧠 **Decide the right home**  
-   - ETL/data product? → pipeline subsystem. :contentReference[oaicite:27]{index=27}  
-   - Async work / long compute? → task queue + workers. :contentReference[oaicite:28]{index=28}
-
-2. 🧱 **Implement the handler**  
-   - Validate inputs  
-   - Write deterministic outputs  
-   - Log steps + errors :contentReference[oaicite:29]{index=29}
-
-3. 🗂️ **Register it** (task name ➜ handler mapping)
-
-4. 🧪 **Add tests** (unit + integration for DB writes / external calls mocked)
-
-5. 🩺 **Add observability** (metrics + structured logs + status transitions)
-
-6. 📚 **Document the task** (spec + ownership + operational notes)
+### 🧾 Lineage (traceability)
+- Persist enough metadata so you can answer:
+  - “What input produced this output?”
+  - “Which job run generated this dataset/layer?”
 
 ---
 
-## ✅ Definition of Done (for a new task)
+## 📡 Observability checklist
 
-Inspired by KFM’s doc rigor: templates + checklists help keep work reviewable and trustworthy. :contentReference[oaicite:30]{index=30}
-
-- [ ] Task has a stable **name** and **purpose**
-- [ ] Inputs validated (schema/type checks)
-- [ ] Task is **idempotent** or has dedup protections
-- [ ] Retries/backoff defined (and safe)
-- [ ] Concurrency class defined (CPU/IO) and limits set
-- [ ] Logs include start/finish + key steps
-- [ ] Status is persisted and queryable (job id flow)
-- [ ] Tests added/updated
-- [ ] Owner listed + operational runbook notes included
+- [ ] Every log line includes: `jobId`, `taskName`, `taskVersion`
+- [ ] Progress updates are throttled (don’t spam DB/queue)
+- [ ] Errors store both:
+  - human-readable message
+  - machine-readable code/category
+- [ ] Timeouts are explicit per task
+- [ ] “Poison pill” inputs are quarantined (don’t retry forever)
 
 ---
 
-## 📚 References (project grounding)
+## 🧠 Common task types in KFM-style systems
 
-- Task queue + workers (Celery/RQ/message queue), workers execute and store results, status polling, concurrency limits. :contentReference[oaicite:31]{index=31}
-- API coordinates jobs and returns job IDs; FastAPI/OpenAPI/async context. :contentReference[oaicite:32]{index=32}
-- Pipeline workflow governance: retries, lineage, incremental processing, deduplication, data quality checks. :contentReference[oaicite:33]{index=33}
-- Cron/Kubernetes CronJob for small scheduled ops tasks. :contentReference[oaicite:34]{index=34}
-- Logging/monitoring expectations + watchdog for jammed queues; /health checks. :contentReference[oaicite:35]{index=35}
-- Canonical subsystem homes (avoid scattering ETL; one source of truth). :contentReference[oaicite:36]{index=36}
-- Definition-of-done checklist pattern for docs/work items. :contentReference[oaicite:37]{index=37}
+### 🌾 Simulation runs
+- long-running, heavy compute
+- output: summary metrics + artifacts
 
+### 🛰️ Geospatial processing
+- raster/vector transforms
+- tiling, aggregation, indexing
+- output: layers + metadata
+
+### 🤖 ML retraining / batch inference
+- scheduled or manual triggers
+- output: model registry entries + evaluation artifacts
+
+---
+
+## ✅ Adding a new task (quick recipe)
+
+1. 🧾 Define input/output schema (`schemas/`)
+2. 🧠 Implement handler (`handlers/`)
+3. 🧰 Register it (`registry.py`)
+4. 🧪 Add tests (`tests/`)
+5. 📝 Document it here:
+   - name + version
+   - payload example
+   - expected outputs
+   - retry + idempotency notes
+
+---
+
+## 🧭 Next docs to add (recommended)
+
+- `api/src/tasks/CONTRIBUTING.md` (local runner, test strategy, conventions)
+- `api/src/tasks/ERRORS.md` (canonical error codes + retry categories)
+- `api/src/tasks/STATUS.md` (status machine + transitions)
