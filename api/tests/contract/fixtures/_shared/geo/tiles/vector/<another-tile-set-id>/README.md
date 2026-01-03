@@ -99,11 +99,11 @@ This fixture is the “downstream artifact” that protects the API boundary whi
 
 ```mermaid
 flowchart LR
-  A[📥 Source vectors<br/>GeoJSON / Shapefile] --> B[🛠️ Processing<br/>GDAL / GeoPandas / PyProj]
-  B --> C[🧱 Tiling<br/>MVT generator]
-  C --> D[📦 Outputs<br/>TileJSON + MBTiles]
-  D --> E[🧪 Contract fixtures<br/>this folder]
-  E --> F[🚀 API responses<br/>{z}/{x}/{y}.mvt]
+  A["📥 Source vectors<br/>GeoJSON / Shapefile"] --> B["🛠️ Processing<br/>GDAL / GeoPandas / PyProj"]
+  B --> C["🧱 Tiling<br/>MVT generator"]
+  C --> D["📦 Outputs<br/>TileJSON + MBTiles"]
+  D --> E["🧪 Contract fixtures<br/>this folder"]
+  E --> F["🚀 API responses<br/>&#123;z&#125;/&#123;x&#125;/&#123;y&#125;.mvt"]
 ```
 
 ---
