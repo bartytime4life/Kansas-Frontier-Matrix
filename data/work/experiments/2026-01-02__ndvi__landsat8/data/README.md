@@ -1,19 +1,3 @@
----
-title: "Experiment Data — NDVI (Landsat 8)"
-path: "data/work/experiments/2026-01-02__ndvi__landsat8/data/README.md"
-experiment_id: "2026-01-02__ndvi__landsat8"
-created: "2026-01-02"
-last_updated: "2026-01-03"
-doc_kind: "Data README"
-stage: "work"
-status: "active"
-owner: "TBD"
-contact: "TBD"
-sensitivity: "public (verify if AOI/outputs are derived from restricted inputs)"
-care_label: "Public"
-license: "TBD (inherit from source + KFM policy)"
----
-
 # 🌿 NDVI (Landsat 8) — Experiment Data
 
 ![stage](https://img.shields.io/badge/stage-data%2Fwork-informational)
