@@ -127,12 +127,12 @@ var ndvi = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
 
 ```mermaid
 flowchart LR
-  A[🛰️ Landsat 8 SR] --> B[☁️ QA Mask (cloud/shadow/snow)]
-  B --> C[🌿 NDVI per-scene]
-  C --> D[🧩 Composite / Mosaic]
-  D --> E[📦 Export GeoTIFF/COG + Preview]
-  E --> F[📊 Stats + Hist + QA]
-  F --> G[🧾 Manifest + (Publish: STAC/DCAT/PROV)]
+  A["🛰️ Landsat 8 SR"] --> B["☁️ QA Mask: cloud, shadow, snow"]
+  B --> C["🌿 NDVI per scene"]
+  C --> D["🧩 Composite / Mosaic"]
+  D --> E["📦 Export: GeoTIFF, COG, Preview"]
+  E --> F["📊 Stats, Histogram, QA"]
+  F --> G["🧾 Manifest + Publish: STAC, DCAT, PROV"]
 ```
 
 ### ✅ Minimum steps we expect were done
