@@ -1,222 +1,279 @@
-# 🧾 Contract Test Config (`api/tests/contract/config`)
+# ⚙️ API Contract Test Config
 
-| ✅ Purpose | 🧩 Scope | 🔒 Secrets | 🧪 CI Gate |
-|---|---|---|---|
-| Centralize contract-test settings | API contract verification | **Never** commit tokens/keys | Failures should block merges |
+![Contract Tests](https://img.shields.io/badge/tests-contract-blue?style=flat-square)
+![Contract--First](https://img.shields.io/badge/contract--first-enforced-2ea44f?style=flat-square)
+![CI Gate](https://img.shields.io/badge/CI-merge%20gated-orange?style=flat-square)
 
-This directory is the **single home** for configuration that powers **API contract tests** (a.k.a. “does the API still behave exactly like the contract says?”). In KFM, the philosophy is **contract-first**: schemas/specs are first-class artifacts, and changes to contracts trigger compatibility and versioning checks.  [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
----
-
-## 🎯 Overview
-
-Contract tests exist to protect the **API boundary** by continuously validating that endpoints match the declared **OpenAPI spec** or **GraphQL schema** and remain **backwards-compatible** unless a deliberate version bump is performed.  [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-In CI, the contract-test gate is expected to:
-- build/deploy the API (test environment or mocked data),  
-- run contract tests against known inputs,  
-- lint the OpenAPI/GraphQL definitions,  
-- and **block merges** when the contract unexpectedly breaks.  [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+> [!NOTE]
+> This folder contains **non-secret** configuration used by the **API contract test** suite.
+> Keep secrets in **environment variables** / CI secret stores — not in git.
 
 ---
 
-## 🧭 Canonical “Source of Truth” for Contracts
+<details>
+  <summary><strong>📚 Table of Contents</strong></summary>
 
-Contract artifacts (OpenAPI YAML / GraphQL SDL) should live in the API layer’s canonical contract home (e.g., `src/server/contracts/` or equivalent). This config folder should **point to those artifacts**, not duplicate them.  [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- [🧭 Purpose](#-purpose)
+- [📦 What belongs in `config/`](#-what-belongs-in-config)
+- [🗂️ Suggested structure](#️-suggested-structure)
+- [🧩 How config is resolved](#-how-config-is-resolved)
+- [🧾 Config keys](#-config-keys)
+- [🔐 Environment variables](#-environment-variables)
+- [🧪 Running contract tests](#-running-contract-tests)
+- [🚦 CI expectations](#-ci-expectations)
+- [🧱 Adding/changing endpoints](#-addingchanging-endpoints)
+- [🛡️ Governance & safety checks](#️-governance--safety-checks)
+- [🆘 Troubleshooting](#-troubleshooting)
 
-> 🧠 If you discover contracts stored in multiple places, consolidate: KFM’s rule is **one canonical location per major component**.  [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+</details>
 
 ---
 
-## 🗂️ Directory Layout
+## 🧭 Purpose
 
-This folder is intentionally small and boring. Typical layout (names may vary by runner, but **keep the intent** the same):
+Contract tests protect the **API boundary** by verifying that:
+
+- endpoints respond with **known outputs for known inputs** ✅  
+- the **OpenAPI / GraphQL contract** stays accurate ✅  
+- changes remain **backwards-compatible** unless explicitly versioned ✅  
+- redaction/classification rules are respected (no accidental leakage) ✅  
+
+This `config/` directory exists so the contract suite can run consistently across:
+- 👩‍💻 local dev
+- 🤖 CI
+- 🧪 ephemeral test environments (docker-compose / preview deploys)
+
+---
+
+## 📦 What belongs in `config/`
+
+✅ Good candidates:
+- environment-specific **base URLs**
+- **timeouts**, retries, rate limits
+- paths to **contract artifacts** (OpenAPI / GraphQL schema)
+- fixture selection (dataset snapshot / seed)
+- report output formats (JUnit, JSON, etc.)
+
+🚫 Keep OUT of git:
+- API keys, tokens, passwords
+- database credentials
+- private endpoint URLs
+
+> [!WARNING]
+> CI is expected to run secret scanning — a leaked token here can block merges and force rotation. 😬
+
+---
+
+## 🗂️ Suggested structure
+
+> Adapt filenames to your runner, but keep the intent consistent.
 
 ```text
-api/
-  tests/
-    contract/
-      config/
-        README.md                    👈 you are here
-        local.example.json           🧪 local dev config (safe defaults)
-        ci.example.json              🤖 CI config (no secrets)
-        staging.example.json         🚦 staging config (no secrets)
-        .env.example                 🔐 env var names ONLY (no real values)
-        schemas/
-          contract-test-config.schema.json  📜 optional config validation schema
+📁 api/
+ └─ 📁 tests/
+    └─ 📁 contract/
+       ├─ 📁 config/               👈 you are here
+       │  ├─ 📄 README.md
+       │  ├─ 📄 default.yaml       # safe defaults (checked in)
+       │  ├─ 📄 ci.yaml            # CI overrides (checked in)
+       │  ├─ 📄 local.example.yaml # template only (checked in)
+       │  └─ 📄 local.yaml         # developer overrides (gitignored)
+       └─ 📁 cases/                # contract test cases / snapshots (typical)
 ```
 
-✅ Guiding rule: **profiles are public**, secrets stay in **environment variables**.
+> [!TIP]
+> Prefer **one config “shape”** (YAML or JSON) and keep it stable; only environment values should vary.
 
 ---
 
-## ⚙️ What This Config Should Define
+## 🧩 How config is resolved
 
-Contract tests should be able to run **deterministically** against a known target. At a minimum, config should answer:
+A common (recommended) precedence model:
 
-### 1) Target API
-- `baseUrl` (e.g., `http://localhost:8080`)
-- optional `basePath` (if the API is mounted under `/api`)
+1. `default.yaml` (baseline)
+2. `{env}.yaml` (e.g., `ci.yaml`, `staging.yaml`)
+3. `local.yaml` (developer-only; gitignored)
+4. environment variables (secrets + last-mile overrides)
 
-### 2) Contract Artifact Inputs
-- `openapiSpecPath` **or** `graphqlSchemaPath`
-- optional: `contractVersion` (helps smoke-check you’re targeting the right major)
+Example pseudo-flow:
 
-📌 KFM framing: OpenAPI/GraphQL **is the contract**, and breaking it should require versioning or explicit updates.  [oai_citation:5‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-### 3) Auth Mode (no secrets in files)
-- `auth.mode`: `none | bearer | basic | apiKey | oauth2` (whatever your API supports)
-- `auth.*` should reference **env var names**, not literal tokens
-
-### 4) Stability Controls
-- timeouts, retries, and a **bounded** rate limit
-- deterministic fixtures/seeds (if your contract tests depend on seeded data)
-
-### 5) Reporting
-- machine-readable output (JUnit, JSON, etc.) so CI can annotate failures
-
----
-
-## 🧬 Recommended Config Shape (Example)
-
-> This is an **example schema**, not a hard requirement. Align it to your actual runner.
-
-```json
-{
-  "profile": "local",
-  "target": {
-    "baseUrl": "http://localhost:8080",
-    "basePath": "/api"
-  },
-  "contracts": {
-    "openapiSpecPath": "src/server/contracts/openapi.yaml"
-  },
-  "auth": {
-    "mode": "bearer",
-    "tokenEnv": "KFM_API_TOKEN"
-  },
-  "timeouts": {
-    "requestMs": 10000,
-    "suiteMs": 300000
-  },
-  "retries": {
-    "network": 1,
-    "idempotentOnly": true
-  },
-  "fixtures": {
-    "seed": "minimal",
-    "resetBetweenTests": true
-  },
-  "reporting": {
-    "format": "junit",
-    "outputPath": "api/tests/contract/reports/junit.xml"
-  }
-}
+```text
+effective_config =
+  merge(default.yaml,
+        env.yaml,
+        local.yaml,
+        process.env)
 ```
 
 ---
 
-## 🧩 Config Resolution Order
+## 🧾 Config keys
 
-Keep overrides predictable (especially for CI). Suggested precedence:
+Below is a **runner-agnostic** key map you can use as a shared contract between:
+- the test runner 🧪
+- CI 🧩
+- contributors 👥
 
-1. CLI flags (highest priority)
-2. Environment variables
-3. Profile config file (e.g., `local.json`)
-4. Defaults in the runner (lowest priority)
+> If your runner already has a schema, map these concepts to it.
+
+| Key | Type | Required | Example | Notes |
+|---|---:|:---:|---|---|
+| `target.mode` | string | ✅ | `live` \| `mocked` | `mocked` is useful when CI runs against fixture data |
+| `target.baseUrl` | string | ✅ | `http://localhost:8000` | Prefer env var override for CI |
+| `contracts.openApiPath` | string | ⛔/✅ | `../../../../src/server/contracts/openapi.yaml` | Required if REST/OpenAPI is used |
+| `contracts.graphQlSchemaPath` | string | ⛔/✅ | `../../../../src/server/contracts/schema.graphql` | Required if GraphQL is used |
+| `auth.strategy` | string | ✅ | `none` \| `bearer` \| `apiKey` | Keep creds in env vars |
+| `auth.tokenEnvVar` | string | ⛔/✅ | `KFM_API_TOKEN` | Required if `bearer` |
+| `timeouts.requestMs` | number | ✅ | `10000` | Keep CI slightly higher than local |
+| `retries.count` | number | ✅ | `1` | Avoid masking real regressions |
+| `fixtures.profile` | string | ⛔ | `minimal-fixture` | Helps deterministic responses |
+| `fixtures.seed` | number | ⛔ | `1337` | Only if your system uses seeded generators |
+| `reporting.junitPath` | string | ⛔ | `./artifacts/contract.junit.xml` | CI-friendly output |
+| `reporting.jsonPath` | string | ⛔ | `./artifacts/contract.report.json` | Debug-friendly output |
+
+### 📄 Example config (YAML)
+
+```yaml
+# default.yaml
+target:
+  mode: live
+  baseUrl: ${KFM_API_BASE_URL:-http://localhost:8000}
+
+contracts:
+  openApiPath: ../../../../src/server/contracts/openapi.yaml
+  # graphQlSchemaPath: ../../../../src/server/contracts/schema.graphql
+
+auth:
+  strategy: bearer
+  tokenEnvVar: KFM_API_TOKEN
+
+timeouts:
+  requestMs: 10000
+
+retries:
+  count: 1
+
+fixtures:
+  profile: minimal-fixture
+  seed: 1337
+
+reporting:
+  junitPath: ./artifacts/contract.junit.xml
+  jsonPath: ./artifacts/contract.report.json
+```
+
+> [!NOTE]
+> `${VAR:-fallback}` syntax depends on your loader. If your runner doesn’t support this, keep raw values here and do env var substitution in the runner.
+
+---
+
+## 🔐 Environment variables
+
+| Variable | Required | Example | Purpose |
+|---|:---:|---|---|
+| `KFM_CONTRACT_ENV` | ⛔ | `local` / `ci` | selects `{env}.yaml` |
+| `KFM_API_BASE_URL` | ✅ | `http://localhost:8000` | where tests run |
+| `KFM_API_TOKEN` | ⛔/✅ | `***` | bearer token (if needed) |
+
+> [!TIP]
+> Add a `.env.example` at the **API root** (not here) to document required env vars without storing secrets.
+
+---
+
+## 🧪 Running contract tests
+
+The exact command depends on the runner, but the *pattern* should be consistent.
+
+### ✅ Typical local run
+
+```bash
+export KFM_CONTRACT_ENV=local
+export KFM_API_BASE_URL=http://localhost:8000
+export KFM_API_TOKEN="…optional…"
+
+# run the contract test suite (your project’s command)
+# e.g. make test-contract
+# e.g. npm run test:contract
+# e.g. poetry run pytest -m contract
+```
+
+### ✅ Typical CI run
+
+```bash
+export KFM_CONTRACT_ENV=ci
+export KFM_API_BASE_URL="$CI_DEPLOYED_API_URL"
+export KFM_API_TOKEN="$CI_SECRET_TOKEN"
+
+# run contract suite (same entrypoint as local)
+```
+
+---
+
+## 🚦 CI expectations
+
+Contract tests are a **merge gate**:
+- the API is built and deployed (or run with mocked data)
+- OpenAPI / GraphQL contracts are linted
+- contract tests verify responses with known inputs  
+- failures block merges until resolved ✅
 
 ```mermaid
-flowchart TD
-  A[Start contract test runner] --> B{Profile selected?}
-  B -->|env/flag| C[Load profile config file]
-  B -->|no| D[Use default profile]
-  C --> E[Apply env var overrides]
-  D --> E[Apply env var overrides]
-  E --> F[Apply CLI overrides]
-  F --> G[Validate config (optional schema)]
-  G --> H[Run contract tests]
+flowchart LR
+  Contracts["📜 Contract Artifacts<br/>OpenAPI / GraphQL"] --> Runner["🧪 Contract Tests"]
+  Config["⚙️ Config (this folder)"] --> Runner
+  Runner --> Reports["🧾 Reports (JUnit/JSON)"]
+  Runner --> Gate["🚦 CI Gate<br/>(merge blocked on failure)"]
 ```
 
 ---
 
-## 🌍 Environments & Profiles
+## 🧱 Adding/changing endpoints
 
-KFM practice is to keep environment configuration **separate** (dev/test/prod), commonly via config files and/or environment variables.  [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+When you add or change an API endpoint, keep the flow contract-first:
 
-### Suggested profiles
-- `local` 🧑‍💻: points to a local API instance
-- `ci` 🤖: points to CI-spun services (or mocked API)
-- `staging` 🚦: points to staging deployments (non-prod)
-- `prod` 🏛️: **usually read-only checks only** (avoid destructive tests)
+1. ✍️ Update the contract artifact (OpenAPI / GraphQL schema)
+2. 🧪 Add/adjust contract test coverage (known inputs → expected outputs)
+3. ⚙️ If needed, extend config keys (avoid breaking existing keys)
+4. 🧭 If breaking, **version** the endpoint (don’t silently break existing clients)
+5. ✅ Ensure CI passes (lint + contract tests + scans)
 
-> 🧯 Contract tests should never require “real” production secrets in git. If a prod smoke check is needed, it should use narrowly scoped credentials injected by CI.
+### ✅ Definition of Done (DoD) checklist
 
----
-
-## 🧪 Running Contract Tests
-
-Your repo may implement contract tests in different runners (Node, Python, etc.). The **configuration goal stays the same**: select a profile + target URL + contract artifact and run.
-
-### Common patterns
-```bash
-# Option A: profile via env var (example)
-CONTRACT_TEST_PROFILE=local CONTRACT_TEST_BASE_URL=http://localhost:8080 \
-  ./run-contract-tests.sh
-
-# Option B: profile via CLI (example)
-./run-contract-tests.sh --profile ci --base-url "$CI_API_URL"
-```
-
-If your workflow uses containers, KFM expects Dockerized components and Compose/K8s manifests to support local dev/test stacks.  [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+- [ ] No secrets added to config (or anywhere in git)
+- [ ] Contract artifact updated **and** valid
+- [ ] Contract tests updated to match the change
+- [ ] If breaking: new versioned route / negotiation strategy added
+- [ ] Reports generated (JUnit/JSON) in CI artifacts
+- [ ] No sensitive/covert data appears in public responses (redaction honored)
 
 ---
 
-## 🔐 Security & “No Secrets” Rule
+## 🛡️ Governance & safety checks
 
-CI includes automated secret scanning to prevent API keys/passwords/tokens from being committed in code or config. Treat this directory as **public-by-default**.  [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+Contract tests are an ideal place to enforce “no surprises” rules like:
 
-✅ Do:
-- commit `*.example.*` files
-- reference secrets by **env var name**
-- document required env vars in `.env.example`
+- 🔎 **No PII** or sensitive attributes in responses unless explicitly allowed
+- 🗺️ **Sensitive locations** are generalized/withheld when required
+- 🏷️ **Classification doesn’t downgrade** across transformations or endpoints
+- 🧼 Redaction rules remain stable even when schemas evolve
 
-❌ Don’t:
-- commit tokens, passwords, private keys
-- embed production URLs that imply privileged access (unless explicitly approved)
-
----
-
-## 🧱 When You Change an Endpoint
-
-Use this checklist to keep KFM’s “contract-first” pipeline happy:
-
-1. Update the OpenAPI/GraphQL contract artifact
-2. Update/extend contract tests + fixtures for the new behavior
-3. Confirm backwards compatibility or bump version explicitly
-4. Run contract tests locally + in CI
-
-KFM rule: contract changes must be tested against known inputs/outputs to ensure consistency, and breaking changes require explicit versioning strategy.  [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:11‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+> [!IMPORTANT]
+> Treat these checks as part of the API’s public contract — not “extra tests”.
 
 ---
 
-## 🧯 Troubleshooting
+## 🆘 Troubleshooting
 
-### “Spec mismatch” / “schema validation failed”
-- You likely updated implementation but not the contract artifact (or vice versa).
-- Confirm your config points at the correct canonical contract path (`src/server/contracts/...`).  [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-### “401/403 Unauthorized”
-- Confirm `auth.mode` is correct
-- Confirm CI injected the expected env var(s)
-- Verify you didn’t commit secrets (CI may block you even if tests pass).  [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-### “Flaky tests in CI”
-- Prefer mocked/test data targets (CI can run contract tests against a test environment or mocked data).  [oai_citation:14‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- Reduce dependence on clock time, ordering, and random IDs.
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| “Schema lint failed” | missing response schema / incomplete OpenAPI | update contract artifact first |
+| 401/403 everywhere | token missing/expired | set `KFM_API_TOKEN` (or switch auth strategy) |
+| Flaky response fields | non-deterministic fixtures | use stable fixture profile + seeded data |
+| CI passes locally but fails in CI | base URL / env mismatch | confirm `KFM_CONTRACT_ENV` + `KFM_API_BASE_URL` in CI |
+| Sensitive fields appear | redaction regression | add explicit contract assertions; fix API boundary logic |
 
 ---
 
-## 📚 References (Project Files)
+### 🧠 Philosophy (why we’re strict)
 
-- 📘 Kansas Frontier Matrix — Technical Documentation  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-- 🧭 KFM Master Guide v13 (Markdown Guide extract)  [oai_citation:17‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  [oai_citation:18‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:19‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:20‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+The KFM pipeline treats **schemas + API specs as first-class artifacts** and expects **contract tests** to catch regressions early — especially at the API boundary where downstream UI/narratives depend on stable behavior. ✅
