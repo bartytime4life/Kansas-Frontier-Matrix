@@ -31,22 +31,23 @@ Contract cases are the **“known inputs → expected outputs”** snapshots tha
 Inside `cases/`, each **case is a folder** with a required `case.json`.
 
 ```text
-📁 api/
-  📁 tests/
-    📁 contract/
-      📁 fixtures/
-        📁 <operationId-or-route-slug>/
-          📁 cases/
-            📄 README.md   ← (this file)
-            📁 00-smoke-ok/
-              📄 case.json
-            📁 10-bad-request-missing-field/
-              📄 case.json
-            📁 20-unauthorized/
-              📄 case.json
-            📁 30-not-found/
-              📄 case.json
+📁 api/                                                      🧩 API repository root
+└── 📁 tests/                                                🧪 Test suites (contract/unit/etc.)
+    └── 📁 contract/                                         📜 Contract runner + assertions
+        └── 📁 fixtures/                                     📦 Golden request/response snapshots
+            └── 📁 <operationId-or-route-slug>/              🎯 One endpoint/operation fixture set
+                └── 📁 cases/                                🗂️ Scenario folders for this operation
+                    ├── 📄 README.md                         📘 Case catalog + rules (this file)
+                    ├── 📁 00-smoke-ok/                      ✅ Minimal “works at all” success case
+                    │   └── 📄 case.json                     🧾 Request + expected response (+ optional asserts)
+                    ├── 📁 10-bad-request-missing-field/     🧱 400 validation/error-shape contract
+                    │   └── 📄 case.json                     🧾 Request + expected error response
+                    ├── 📁 20-unauthorized/                  🔒 401 auth-required contract
+                    │   └── 📄 case.json                     🧾 Request + expected auth error response
+                    └── 📁 30-not-found/                     🕳️ 404 missing-resource contract
+                        └── 📄 case.json                     🧾 Request + expected not-found response
 ```
+
 
 ### 🏷️ Case folder naming
 Use **kebab-case** plus a numeric prefix so ordering is deterministic:
