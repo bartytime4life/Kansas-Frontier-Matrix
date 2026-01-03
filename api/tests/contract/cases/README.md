@@ -47,10 +47,10 @@ These cases *execute* the contract — they do **not** define it.
 
 ```mermaid
 flowchart LR
-  Spec[📜 OpenAPI / GraphQL Contract] --> Runner[🧪 Contract Test Runner]
-  Cases[🗂️ Cases (this folder)] --> Runner
-  Runner --> API[🌐 API Implementation]
-  Runner --> CI[✅ CI Gate / Merge Blocker]
+  Spec["📜 OpenAPI / GraphQL Contract"] --> Runner["🧪 Contract Test Runner"]
+  Cases["🗂️ Cases (this folder)"] --> Runner
+  Runner --> API["🌐 API Implementation"]
+  Runner --> CI["✅ CI Gate / Merge Blocker"]
 ```
 
 CI should treat failures here as **breaking changes** (unless the change is intentional and properly versioned).
