@@ -97,25 +97,24 @@ If the API calls internal services (ML, ingestion, etc.), support one of:
 
 ```mermaid
 flowchart TD
-  A["Incoming request"] --> B["Extract access token"]
-  B --> C{"Token required?"}
+  A[Incoming_request] --> B[Extract_access_token]
+  B --> C{Token_required}
 
-  C -->|No|  H["Proceed - optional auth"]
-  C -->|Yes| D["Verify JWT signature and expiry"]
+  C -->|No| H[Proceed_optional_auth]
+  C -->|Yes| D[Verify_JWT]
 
-  D --> E{"Valid?"}
-  E -->|No|  U["401 Unauthorized"]
-  E -->|Yes| F["Attach AuthContext to request"]
+  D --> E{JWT_valid}
+  E -->|No| U[HTTP_401]
+  E -->|Yes| F[Attach_AuthContext]
 
-  F --> G["Authorization guard - role, permission, ownership, level"]
-  G --> I{"Allowed?"}
+  F --> G[Authorize]
+  G --> I{Allowed}
 
-  I -->|No|  X["403 Forbidden"]
-  I -->|Yes| J["Handler or controller"]
+  I -->|No| X[HTTP_403]
+  I -->|Yes| J[Handler]
 
-  J --> K["Audit log when needed"]
+  J --> K[Audit_log]
 ```
-
 
 ---
 
