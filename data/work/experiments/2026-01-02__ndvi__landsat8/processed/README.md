@@ -68,13 +68,13 @@ This directory should contain:
 ### 🌳 Expected layout (example)
 
 ```text
-processed/
-├── README.md
-├── run_manifest.json
-├── ndvi__<roi>__<start>_<end>__landsat8__30m.cog.tif
-├── ndvi__<roi>__<start>_<end>__landsat8__30m.preview.png
-├── ndvi__<roi>__<start>_<end>__landsat8__30m.stats.csv
-└── (optional) mask__<...>.tif
+📦 processed/                                                           # 🧪 Experiment outputs (work-stage “processed” artifacts)
+├── 📘 README.md                                                         # 👈 You are here — folder contract, QC notes, promotion rules
+├── 🧾 run_manifest.json                                                 # 🔗 Run manifest — inputs → params → outputs (+ hashes/refs)
+├── 🛰️🌿🗺️ ndvi__<roi>__<start>_<end>__landsat8__30m.cog.tif             # 🧱 Primary NDVI raster — Cloud-Optimized GeoTIFF (COG)
+├── 🖼️ ndvi__<roi>__<start>_<end>__landsat8__30m.preview.png            # 👀 Quicklook — visual QA / PR diff / spot cloud artifacts fast
+├── 📊 ndvi__<roi>__<start>_<end>__landsat8__30m.stats.csv              # 🧮 Summary stats — min/max/mean/std, pixel counts, % masked
+└── 🛡️☁️ mask__<...>.tif                                                # (optional) QA mask — clouds/shadows/snow/water (if exported)
 ```
 
 ### 📦 Artifact inventory (update after every run)
