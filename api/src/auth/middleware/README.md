@@ -93,23 +93,29 @@ If the API calls internal services (ML, ingestion, etc.), support one of:
 
 ---
 
-## 🗺️ Request Lifecycle
+## 🗺️ Request Lifecycle (Mermaid — Renderer-Safe)
 
 ```mermaid
 flowchart TD
-  A[Incoming request] --> B[Extract access token]
-  B --> C{Token required?}
-  C -- No --> H[Proceed (optional auth)]
-  C -- Yes --> D[Verify JWT signature + expiry]
-  D --> E{Valid?}
-  E -- No --> U[401 Unauthorized]
-  E -- Yes --> F[Attach AuthContext to request]
-  F --> G[Authorization guard: role/permission/ownership/level]
-  G --> I{Allowed?}
-  I -- No --> X[403 Forbidden]
-  I -- Yes --> J[Handler / Controller]
-  J --> K[Audit log (when needed)]
+  A["Incoming request"] --> B["Extract access token"]
+  B --> C{"Token required?"}
+
+  C -->|No|  H["Proceed - optional auth"]
+  C -->|Yes| D["Verify JWT signature and expiry"]
+
+  D --> E{"Valid?"}
+  E -->|No|  U["401 Unauthorized"]
+  E -->|Yes| F["Attach AuthContext to request"]
+
+  F --> G["Authorization guard - role, permission, ownership, level"]
+  G --> I{"Allowed?"}
+
+  I -->|No|  X["403 Forbidden"]
+  I -->|Yes| J["Handler or controller"]
+
+  J --> K["Audit log when needed"]
 ```
+
 
 ---
 
