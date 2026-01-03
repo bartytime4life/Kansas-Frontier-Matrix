@@ -76,14 +76,19 @@ Ensure the API responds predictably (and contract-compliantly) when a client omi
 ### Placement in repo 🧭
 This file is located at:
 
-📁 `api/`  
-└── 📁 `tests/`  
-&nbsp;&nbsp;&nbsp;&nbsp;└── 📁 `contract/`  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 📁 `fixtures/`  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 📁 `<operationId-or-route-slug>/`  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 📁 `cases/`  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 📁 `10-bad-request-missing-field/`  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── 📄 `README.md` ✅
+```text
+📁 api/
+└── 📁 tests/
+    └── 📁 contract/
+        └── 📁 fixtures/
+            └── 📁 <operationId-or-route-slug>/
+                └── 📁 cases/
+                    └── 📁 10-bad-request-missing-field/
+                        ├── 📄 README.md              👈 you are here
+                        ├── 📄 request.*              ✅ required (omit ONE required field)
+                        ├── 📄 response.*             ✅ required (expect 400 + error body)
+                        └── 📄 meta.*                 ➕ optional (matchers/notes/overrides)
+```
 
 ### Case folder contents 📦
 Case folders typically include a **request variant** (with the missing field) and an **expected response** (400 + error payload). Filenames may vary by runner—follow whatever files already exist alongside this README.
