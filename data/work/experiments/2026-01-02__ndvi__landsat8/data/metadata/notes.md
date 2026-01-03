@@ -1,16 +1,3 @@
----
-id: 2026-01-02__ndvi__landsat8
-kind: experiment-notes
-created: 2026-01-02
-status: draft
-tags:
-  - ndvi
-  - landsat8
-  - remote-sensing
-  - gee
-  - kfm
----
-
 # 🛰️ NDVI (Landsat 8) — Experiment Notes — 2026-01-02
 
 ![type](https://img.shields.io/badge/type-experiment%20notes-blue)
