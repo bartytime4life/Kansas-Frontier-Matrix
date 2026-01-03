@@ -58,17 +58,17 @@ This folder should contain **reusable building blocks**, not test cases.
 
 ```text
 api/
-└── tests/
-    └── contract/
-        ├── helpers/
-        │   ├── README.md                👈 you are here
-        │   ├── client.*                 # test client / request wrapper
-        │   ├── contracts.*              # spec/schema loading + caching
-        │   ├── assertions.*             # schema + invariants assertions
-        │   ├── fixtures.*               # known inputs / seed helpers
-        │   ├── normalization.*          # stable snapshots (sort keys, redact volatile fields)
-        │   └── auth.*                   # tokens/roles helpers (NO real secrets)
-        └── test_*.*
+└── 🧪 tests/
+    └── 📜 contract/
+        ├── 🧰 helpers/
+        │   ├── 📘 README.md                 👈 you are here
+        │   ├── 🌐 client.*                  # test client / request wrapper
+        │   ├── 📜🧾 contracts.*              # spec/schema loading + caching
+        │   ├── ✅🔍 assertions.*             # schema + invariants assertions
+        │   ├── 📦🧬 fixtures.*               # known inputs / seed helpers
+        │   ├── 🧼🧊 normalization.*          # stable snapshots (sort keys, redact volatile fields)
+        │   └── 🔐🪪 auth.*                   # tokens/roles helpers (NO real secrets)
+        └── 🧪🧾 test_*.*                     # contract test files
 ```
 
 ---
