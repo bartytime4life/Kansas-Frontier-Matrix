@@ -39,14 +39,14 @@ Keeping fixtures small + deterministic makes failures actionable (diffs are obvi
 
 ```mermaid
 flowchart LR
-  F[📦 Fixture case<br/>request.graphql + variables.json] --> T[🧪 Contract test runner]
-  T --> A[🚀 API in test env<br/>or mocked data]
-  A --> G[🌐 GraphQL endpoint]
-  G --> R[🧾 Response JSON]
-  R --> N[🧼 Normalize (optional)]
-  N --> C{🔍 Compare<br/>to expected.json}
-  C -->|match| P[✅ pass]
-  C -->|diff| X[❌ fail + diff]
+  F["📦 Fixture case<br/>request.graphql + variables.json"] --> T["🧪 Contract test runner"]
+  T --> A["🚀 API in test env<br/>or mocked data"]
+  A --> G["🌐 GraphQL endpoint"]
+  G --> R["🧾 Response JSON"]
+  R --> N["🧼 Normalize (optional)"]
+  N --> C{"🔍 Compare<br/>to expected.json"}
+  C -->|match| P["✅ pass"]
+  C -->|diff| X["❌ fail + diff"]
 ```
 
 > [!NOTE]
