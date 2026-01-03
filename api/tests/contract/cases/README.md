@@ -62,18 +62,18 @@ CI should treat failures here as **breaking changes** (unless the change is inte
 > The runner typically discovers cases by iterating directories under `cases/`.
 
 ```text
-api/tests/contract/cases/
-├── README.md                         ← you are here
-├── 📁 GET__v1_layers__happy_path/
-│   ├── meta.yml
-│   ├── request.json
-│   ├── expected.json
-│   └── fixtures/                     (optional)
-│       └── seed.graph.json           (optional)
-└── 📁 POST__v1_layers__invalid_body/
-    ├── meta.yml
-    ├── request.json
-    └── expected.json
+📁 api/tests/contract/cases/
+├── 📘 README.md                              ← you are here (case index + conventions)
+├── 📁 GET__v1_layers__happy_path/             ✅ GET /v1/layers → 200 (happy path)
+│   ├── 🧾 meta.yml                            (case metadata: ids, tags, runner hints)
+│   ├── 📤 request.json                        (fixture request: method/path/headers/body)
+│   ├── 📥 expected.json                       (expected response: status/headers/body)
+│   └── 📁 fixtures/                           ➕ optional (case-local setup/state)
+│       └── 🌱 seed.graph.json                 ➕ optional (seed data for this case)
+└── 📁 POST__v1_layers__invalid_body/          ❌ POST /v1/layers → 400 (invalid body)
+    ├── 🧾 meta.yml                            (case metadata: ids, tags, runner hints)
+    ├── 📤 request.json                        (fixture request: invalid payload/params)
+    └── 📥 expected.json                       (expected error response)
 ```
 
 ### ✅ Naming convention
