@@ -65,13 +65,13 @@ Typical interpretation:
 
 ```mermaid
 flowchart LR
-  A[🗺️ ROI + 📆 Date Range] --> B[🛰️ Load Landsat 8 L2 (GEE)]
-  B --> C[☁️ Mask QA_PIXEL (clear pixels)]
-  C --> D[🌿 Compute NDVI (NIR, RED)]
-  D --> E[🧩 Composite (median/max NDVI)]
-  E --> F[📦 Export GeoTIFF/COG]
-  E --> G[📊 Optional: Zonal stats]
-  F --> H[📁 ../results/ (artifacts)]
+  A["🗺 ROI + 📆 Date Range"] --> B["🛰 Load Landsat 8 L2 (GEE)"]
+  B --> C["☁ Mask QA_PIXEL (clear pixels)"]
+  C --> D["🌿 Compute NDVI (NIR, RED)"]
+  D --> E["🧩 Composite (median/max NDVI)"]
+  E --> F["📦 Export GeoTIFF + COG"]
+  E --> G["📊 Optional: Zonal stats"]
+  F --> H["📁 ../results (artifacts)"]
   G --> H
 ```
 
