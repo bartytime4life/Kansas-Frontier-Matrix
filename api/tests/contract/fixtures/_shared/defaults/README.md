@@ -13,10 +13,16 @@ This folder contains **shared, baseline fixture fragments** used by **API contra
 
 ## 📍 Where this fits
 
-```
-api/tests/contract/fixtures/
-└── _shared/
-    └── defaults/  👈 you are here
+```text
+🧪 api/tests/contract/fixtures/
+└── 🧩 _shared/
+    ├── 🧱 defaults/          👈 you are here (baseline fragments)
+    ├── 🧾 headers/           (shared header fixtures)
+    ├── 📦 envelopes/         (shared response envelope shapes)
+    ├── 🧭 ids/               (stable synthetic IDs)
+    ├── ⏱️ time/              (stable timestamps + time windows)
+    ├── 🌍 geo/               (shared geo primitives)
+    └── ❗ errors/            (shared error shapes)
 ```
 
 Contract tests validate the API’s behavior against **known inputs/outputs**, and these defaults are the **lowest common denominator** used to build those fixtures.
