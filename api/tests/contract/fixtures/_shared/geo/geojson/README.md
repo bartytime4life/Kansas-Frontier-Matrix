@@ -18,15 +18,15 @@ These files are the **canonical, reusable GeoJSON payloads** used across **KFM A
 ## 🗂️ Where this folder sits
 
 ```text
-📁 api/
-  📁 tests/
-    📁 contract/
-      📁 fixtures/
-        📁 _shared/
-          📁 geo/
-            📁 geojson/
-              📄 README.md   👈 you are here
-              📄 *.geojson
+📁 api/                                   🧩 Backend workspace (API + tests)
+└─ 📁 tests/                               🧪 Automated test suite root
+   └─ 📁 contract/                          📜 Contract/spec conformance tests
+      └─ 📁 fixtures/                       📦 Test inputs + expected outputs (snapshots)
+         └─ 📁 _shared/                     ♻️ Reusable fixtures shared across many cases
+            └─ 📁 geo/                      🗺️ Geospatial shared fixtures (multiple formats)
+               └─ 📁 geojson/               🌍 GeoJSON fixtures (canonical shapes + edge cases)
+                  ├─ 📄 README.md           📘 Rules, conventions, and usage for this folder
+                  └─ 📄 *.geojson           🧱 Shared GeoJSON samples (Feature / FeatureCollection)
 ```
 
 ---
