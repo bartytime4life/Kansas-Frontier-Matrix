@@ -93,17 +93,17 @@ The project’s documentation guidance emphasizes that outputs should be **machi
 
 ```mermaid
 flowchart TD
-  A[Incoming Request] --> B[context/requestId]
-  B --> C[security headers + CORS]
-  C --> D[body parsing + content negotiation]
-  D --> E[rate limiting + abuse checks]
-  E --> F[auth (JWT) + RBAC]
-  F --> G[request validation (schema)]
-  G --> H[route handler/controller]
-  H --> I[response shaping (envelope + cache headers)]
-  I --> J[notFound (if no route)]
-  J --> K[errorHandler (only for thrown/next(err))]
-  K --> L[Outgoing Response]
+  A["Incoming request"] --> B["🧩 Context (request_id, trace)"]
+  B --> C["🛡️ Security (CORS, trusted host, headers)"]
+  C --> D["📦 Parsing + content negotiation"]
+  D --> E["🧯 Abuse controls (rate limits, payload limits)"]
+  E --> F["🔐 Auth + RBAC gates"]
+  F --> G["✅ Validation gateways"]
+  G --> H["🧭 Router / endpoint handler"]
+  H --> I["📤 Response shaping (envelope, cache headers)"]
+  I --> J["🕳️ Not Found (404)"]
+  J --> K["💥 Exception translation (safe errors)"]
+  K --> L["Outgoing response"]
 ```
 
 ---
