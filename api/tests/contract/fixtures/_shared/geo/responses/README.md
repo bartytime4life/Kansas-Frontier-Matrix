@@ -180,14 +180,14 @@ If the project uses classification/sensitivity tags, ensure tests and fixtures r
 <summary>🗂️ Example directory layout (illustrative)</summary>
 
 ```text
-api/tests/contract/fixtures/_shared/geo/
-├─ requests/
-│  └─ README.md
-└─ responses/
-   ├─ README.md  ← you are here
-   ├─ featurecollection-empty.geojson
-   ├─ featurecollection-single-point.geojson
-   └─ error-400-invalid-bbox.json
+🧪📦 api/tests/contract/fixtures/_shared/geo/
+├─ 📨🧰 requests/                                      → Shared geo request fixtures (inputs / payloads)
+│  └─ 📘 README.md                                     → Request fixture rules, naming, and examples
+└─ 🧾🧰 responses/                                     → Shared geo response fixtures (expected outputs)
+   ├─ 📘 README.md                                      ← you are here (response fixture rules + conventions)
+   ├─ 🗺️📄 featurecollection-empty.geojson              → Canonical empty FeatureCollection (baseline “no results”)
+   ├─ 📍🗺️📄 featurecollection-single-point.geojson     → Minimal FeatureCollection with one Point feature
+   └─ 🚫📄 error-400-invalid-bbox.json                  → Canonical 400 error response for invalid bbox input
 ```
 
 </details>
