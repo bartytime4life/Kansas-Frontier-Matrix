@@ -41,10 +41,10 @@ This directory contains the **unmodified** (or “first-export”) data artifact
 
 ```mermaid
 flowchart LR
-  A[🛰️ Landsat 8 collection / provider] -->|download or export| B[📦 raw/ (this folder)]
-  B --> C[🧹 work/ (mask/clip/reproject/QA decisions)]
-  C --> D[✅ processed/ (final NDVI products)]
-  D --> E[📚 catalogs: STAC/DCAT + provenance: PROV]
+  A["🛰️ Landsat 8 collection / provider"] -->|"download or export"| B["📦 raw (this folder)"]
+  B --> C["🧹 work (mask/clip/reproject/QA decisions)"]
+  C --> D["✅ processed (final NDVI products)"]
+  D --> E["📚 catalogs: STAC/DCAT + provenance: PROV"]
 ```
 
 ---
