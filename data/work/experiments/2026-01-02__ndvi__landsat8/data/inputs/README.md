@@ -1,13 +1,3 @@
----
-id: exp-2026-01-02-ndvi-landsat8__inputs
-kind: kfm-experiment-inputs
-experiment_id: 2026-01-02__ndvi__landsat8
-stage: data/work (intermediate)
-owner: TBD
-created: 2026-01-02
-last_updated: 2026-01-03
----
-
 # 📥 Inputs — `2026-01-02__ndvi__landsat8`
 
 ![KFM](https://img.shields.io/badge/KFM-living_atlas-blue)
