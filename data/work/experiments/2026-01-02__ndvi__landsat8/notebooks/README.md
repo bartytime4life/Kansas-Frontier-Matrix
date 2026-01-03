@@ -21,13 +21,13 @@ This notebook folder focuses on **Landsat 8 → NDVI** so we can:
 
 ```mermaid
 flowchart TD
-  A[Define AOI + time window] --> B[Fetch Landsat 8 Surface Reflectance]
-  B --> C[Cloud/shadow masking via QA (CFMask)]
+  A[Define AOI and time window] --> B[Fetch Landsat 8 surface reflectance]
+  B --> C[Mask clouds and shadows using QA]
   C --> D[Compute NDVI]
-  D --> E[Optional: temporal compositing (e.g., 16-day)]
-  E --> F[QC: range checks + visual overlays + stats]
-  F --> G[Export: GeoTIFF/COG + tiles + run manifest]
-  G --> H[Register/Integrate into KFM timeline layer]
+  D --> E[Optional temporal composite]
+  E --> F[Quality checks]
+  F --> G[Export GeoTIFF and COG]
+  G --> H[Register into KFM timeline]
 ```
 
 **Why compositing?** Landsat acquisitions can overlap within a period and composites are often built by selecting the “best available” pixel observation within a window (commonly 16-day windows in Landsat-derived workflows).:contentReference[oaicite:3]{index=3}
