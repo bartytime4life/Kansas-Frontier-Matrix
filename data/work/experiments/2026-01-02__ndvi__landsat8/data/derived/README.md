@@ -38,17 +38,14 @@ This folder contains **generated outputs** (derived artifacts) from the Landsat 
 <details>
 <summary><strong>📁 Typical layout (recommended)</strong></summary>
 ```text
-📁 derived/                                    # 🧪 Regenerable pipeline outputs (work-stage artifacts)
-├── 📄 README.md                               # 📌 This file (scope, contracts, navigation)
-│
-├── 🌿📁 ndvi/                                 # 🌱 NDVI rasters, composites, summaries
-│   └── 📄 README.md                           # 🧮 NDVI naming, ranges, nodata rules, palettes
-│
-├── ☁️📁 masks/                                # 🛡️ Cloud/shadow/valid-pixel masks + QA support rasters
-│   └── 📄 README.md                           # 🧷 Mask semantics (0/1 or code tables) + edge cases
-│
-└── 📊📁 stats/                                # 📈 Zonal + summary statistics (CSV/Parquet), QA tables
-    └── 📄 README.md                           # 🧾 Stats schema, aggregation rules, validation checks
+📁 derived/
+├── 📄 README.md                      # 👈 you are here ✅ (scope, rules, navigation)
+├── 🌿📁 ndvi/                        # NDVI rasters/composites + NDVI-specific notes
+│   └── 📄 README.md                  # NDVI contract: naming, ranges, nodata, QC
+├── ☁️📁 masks/                       # Cloud/shadow/valid-pixel masks + QA support rasters
+│   └── 📄 README.md                  # Mask semantics (0/1 or codes) + edge cases
+└── 📊📁 stats/                       # Zonal stats + summary tables (CSV/Parquet) + QA tables
+    └── 📄 README.md                  # Stats schema, aggregation rules, validation checks
 ```
 
 </details>
