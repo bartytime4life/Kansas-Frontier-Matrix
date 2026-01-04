@@ -43,19 +43,19 @@ These fixtures exist so tests can cover:
 > This is the **recommended** structure. Your repo may flatten this into a single folder (that’s fine—just keep names consistent).
 
 ```text
-📦 api/src/auth/tests/fixtures/tokens/
-└─ 🧾 claims/
-   ├─ ✅ valid/                  # Good claim payloads (role/level scenarios)
-   │  ├─ user.access.json
-   │  ├─ researcher.access.json
-   │  ├─ admin.access.json
-   │  └─ service.access.json
-   ├─ 🚫 invalid/                # Bad claim payloads (negative testing)
-   │  ├─ expired.access.json
-   │  ├─ missing-roles.access.json
-   │  ├─ wrong-aud.access.json
-   │  └─ malformed.json
-   └─ 📄 README.md               # ← you are here
+📦 api/src/auth/tests/fixtures/tokens/                         🧪🧷
+└─ 🧾 claims/                                                  🧬🪪
+   ├─ ✅ valid/                  # 🟢 Good claim payloads (role/level scenarios)
+   │  ├─ 👤 user.access.json
+   │  ├─ 🧑‍🔬 researcher.access.json
+   │  ├─ 🧑‍💼 admin.access.json
+   │  └─ 🤖 service.access.json
+   ├─ 🚫 invalid/                # 🛑 Bad claim payloads (negative testing)
+   │  ├─ ⏳ expired.access.json
+   │  ├─ 🕳️ missing-roles.access.json
+   │  ├─ 🎯❌ wrong-aud.access.json
+   │  └─ 🧩💥 malformed.json
+   └─ 📘 README.md               # 👈 you are here
 ```
 
 ---
