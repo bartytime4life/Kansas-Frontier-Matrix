@@ -1,9 +1,10 @@
+# 🧾 Metadata README — NDVI (Landsat 8) Experiment
+
 ![Status](https://img.shields.io/badge/status-draft-yellow)
 ![Experiment](https://img.shields.io/badge/experiment-NDVI%20%E2%80%94%20Landsat%208-blue)
 ![Metadata](https://img.shields.io/badge/metadata-STAC%20%2B%20DCAT%20%2B%20PROV-6f42c1)
 ![Reproducibility](https://img.shields.io/badge/pipeline-deterministic%20%26%20logged-brightgreen)
 
-# 🧾 Metadata README — NDVI (Landsat 8) Experiment
 
 This folder contains **run-level metadata** and **draft catalog/provenance artifacts** for the experiment:
 
