@@ -48,19 +48,21 @@ This folder should contain **GraphQL contract artifacts**, for example:
 ### ✅ Typical layout (example)
 
 ```text
-api/src/contracts/graphql/
-├── README.md                      👈 you are here
-├── schema.graphql                 🧩 schema entry (optional pattern)
-├── scalars.graphql                🧱 shared scalars (optional pattern)
-├── directives.graphql             🏷️ custom directives (optional pattern)
-├── types/
-│   ├── dataset.graphql            🗂️ domain types
-│   ├── storyNode.graphql          📖 narrative types
-│   └── ...
-├── operations/                    🧪 optional contract-test ops
-│   ├── queries.graphql
-│   └── mutations.graphql
-└── snapshots/                     🧾 optional printed schema / introspection JSON
+📦 api/src/contracts/graphql/                      🧬📜 (GraphQL Contract Surface)
+├── 📝 README.md                                   👈 you are here
+├── 🧩 schema.graphql                               🧭 schema entrypoint (optional pattern)
+├── 🧱 scalars.graphql                              🧊 custom/shared scalars (optional pattern)
+├── 🏷️ directives.graphql                           🧷 directives (auth, deprecations, governance) (optional pattern)
+├── 🧬 types/                                       🧱 domain type modules (SDL)
+│   ├── 🗂️ dataset.graphql                           🧾 dataset/catalog domain types
+│   ├── 📖 storyNode.graphql                         🧠 narrative + Story Node types
+│   └── ➕ ...                                      🧩 additional domain modules
+├── 🧪 operations/                                  🧫 contract-test operations (optional pattern)
+│   ├── 🔎 queries.graphql                           🧭 golden queries (stability + redaction checks)
+│   └── 🧨 mutations.graphql                         🛠️ golden mutations (behavior + permissions)
+└── 🧾 snapshots/                                   🧷 schema snapshots (optional pattern)
+    ├── 🗺️ schema.printed.graphql                    🧾 printed schema snapshot (optional)
+    └── 🧬 schema.introspection.json                 🧪 introspection JSON snapshot (optional)
 ```
 
 > 📝 **Note:** The *exact* filenames may differ—follow the established layout in this repo. The goal is consistency and a single source of truth.
