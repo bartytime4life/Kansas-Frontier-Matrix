@@ -1,281 +1,372 @@
-# 🔐 Auth Test Helpers
+<a id="top"></a>
 
-<p align="center">
-  <img alt="scope" src="https://img.shields.io/badge/scope-auth_tests-6c5ce7" />
-  <img alt="session" src="https://img.shields.io/badge/session-JWT%20%2B%20refresh-0984e3" />
-  <img alt="goal" src="https://img.shields.io/badge/goal-fast%20%26%20deterministic-00b894" />
+<div align="center">
+
+# 🔐 Auth Integration Tests
+
+<p>
+  <img alt="scope" src="https://img.shields.io/badge/scope-auth-purple" />
+  <img alt="tests" src="https://img.shields.io/badge/tests-integration-blue" />
+  <img alt="security" src="https://img.shields.io/badge/security-JWT%20%2B%20Refresh-orange" />
+  <img alt="db" src="https://img.shields.io/badge/db-PostgreSQL-336791" />
+  <img alt="dev" src="https://img.shields.io/badge/dev-Docker-2496ED" />
 </p>
 
-> A small toolbox for writing **clear** auth tests: create users, mint tokens, call endpoints, reset state.  
-> Keep it boring ✅ (boring tests are reliable tests).
+<p><code>api/src/auth/tests/integration/</code></p>
+
+</div>
+
+> [!NOTE]
+> These tests validate the **Auth module as a running system** (HTTP layer ➜ database ➜ token issuance ➜ role checks).  
+> If you only need logic validation (no DB / no HTTP), prefer **unit tests** closer to the service layer.
+
+> [!IMPORTANT]
+> Integration tests must run against a **dedicated test database**. Never point these tests at dev/stage/prod data.
 
 ---
 
-## 🧭 TL;DR
-
-- **Unit tests:** use factories + fakes (no server, no DB).
-- **Integration tests:** use request helpers + test DB (and optionally mint tokens directly).
-- **Always:** deterministic time + deterministic randomness + no real secrets.
-
----
-
-## 📍 Location
-
-`api/src/auth/tests/helpers/`
-
----
-
-## 🗂️ Folder map
-
-```text
-📦 api/src/auth/tests/helpers
-├─ 📄 README.md              👈 you are here
-├─ 📄 index.ts               # recommended: barrel exports
-├─ 🧩 users.ts               # userFactory(), roleFactory()
-├─ 🧩 tokens.ts              # makeAccessToken(), makeRefreshToken()
-├─ 🧩 headers.ts             # authHeader(), jsonHeaders()
-├─ 🧩 http.ts                # buildTestClient(), asUser(), request helpers
-├─ 🧩 db.ts                  # resetDb(), seedAuth()
-├─ 🧩 time.ts                # freezeTime(), withClock()
-└─ 🧩 mocks.ts               # mockEmail(), mockMfa(), mockOauth()
-```
-
-> If your actual filenames differ, keep the **roles** the same (users/tokens/http/db/time/mocks) so contributors can predict where things live.
+## 🧭 Quick navigation
+- [✅ What we cover](#what-we-cover)
+- [🔁 How auth works in KFM](#how-auth-works-in-kfm)
+- [🚀 Run locally](#run-locally)
+- [🐳 Run in Docker (CI-like)](#run-in-docker-ci-like)
+- [🔧 Environment variables](#environment-variables)
+- [🧪 Test patterns & conventions](#test-patterns--conventions)
+- [🐞 Debugging](#debugging)
+- [🧯 Troubleshooting](#troubleshooting)
+- [🧩 Contribution checklist](#contribution-checklist)
 
 ---
 
-## 🎯 Design goals
+<a id="what-we-cover"></a>
 
-1. **Readability** — tests should read like a story (arrange → act → assert).
-2. **Determinism** — no flaky clock, randomness, or external network calls.
-3. **Speed** — helpers must not make the suite slow (avoid expensive hashing unless needed).
-4. **Single source of truth** — shared mechanics live here (no copy/paste helper code in tests).
+## ✅ What we cover
 
----
+### 🎯 Core scenarios (must-have)
+- **Login** returns an *access token* + *refresh token* ✅
+- **Refresh** returns a *new access token* ✅
+- **Protected endpoints** reject missing/invalid/expired JWT ✅
+- **Role-protected endpoints** return **403** when the user lacks permissions ✅
 
-## ✅ What belongs here?
+### 🛡️ Security & abuse (highly recommended)
+- Invalid credentials return **401** (and never leak which field was wrong)
+- Optional: rate limiting / lockout behavior after repeated failed logins
+- Refresh token invalidation (logout / rotation), if implemented
+- Audit / logging basics (no token leakage in logs)
 
-- 👤 User / session fixtures & factories
-- 🪙 JWT builders (access + refresh tokens)
-- 🧾 Header builders (`Authorization: Bearer …`)
-- 🌐 HTTP test client wrappers (supertest/fetch-style)
-- 🧪 DI adapters and mocks (email sender, MFA provider, OAuth provider, etc.)
-- 🧊 Time & randomness control (freeze time, seed PRNG)
-- 🧹 State cleanup (DB reset, transaction rollback helpers)
+### 👤 User lifecycle (optional, if implemented)
+- Password reset request creates a one-time token and allows password change
+- Email verification flow
 
----
-
-## 🚫 What does *not* belong here?
-
-- ❌ Test cases themselves (`*.test.ts`)
-- ❌ One-off fixtures used in only a single test file (keep them next to the test)
-- ❌ Business rules (“admins can do X because…”) — that belongs in production code
-
----
-
-## 🧰 Helper catalog
-
-| Helper | What it does | Use it when… |
-| --- | --- | --- |
-| `users.ts` | Creates user fixtures (roles, defaults, passwords) | you need a user in any auth test |
-| `tokens.ts` | Builds signed access/refresh tokens | you want auth headers without going through `/login` |
-| `headers.ts` | Produces consistent request headers | you want repeatable header formatting |
-| `http.ts` | Wraps a test client & common flows | you’re testing endpoints |
-| `db.ts` | Seeds & resets auth-related persistence | tests touch the database |
-| `time.ts` | Freezes/controls time | testing token expiry, lockouts, OTP windows |
-| `mocks.ts` | Mocks external services | flows include email/MFA/OAuth |
+#### 📌 Suggested test matrix
+| Area | Endpoint examples (adjust to actual routes) | Minimum assertions |
+|---|---|---|
+| Login | `POST /api/auth/login` | `200`, tokens exist, token claims include roles |
+| Refresh | `POST /api/auth/refresh` | `200`, new access token differs, old token can expire |
+| RBAC | `GET /api/admin/*` | `403` for non-admin, `200` for admin |
+| JWT guard | `GET /api/me` | `401` without token, `200` with token |
+| Reset | `POST /api/auth/password-reset/*` | token issued, token consumed once |
 
 ---
 
-## 🚀 Usage patterns
+<a id="how-auth-works-in-kfm"></a>
 
-### 1) Import from the barrel (recommended)
+## 🔁 How auth works in KFM
 
-Maintain an `index.ts` that re-exports helpers:
+KFM uses a **token-based** auth model:
 
-```ts
-// api/src/auth/tests/helpers/index.ts
-export * from './users';
-export * from './tokens';
-export * from './headers';
-export * from './http';
-export * from './db';
-export * from './time';
-export * from './mocks';
-```
+- Users authenticate via a login endpoint and receive a **signed JWT** that includes user identity + roles.
+- JWTs are short-lived and are renewed via a **refresh token** mechanism.
+- Passwords are stored as **strong hashes** (bcrypt / Argon2), and user accounts map to roles like *farmer*, *researcher*, *admin*.
 
-Then tests can do:
+### 🧾 Header convention
+For protected calls, clients should send the access token in:
+- `Authorization: Bearer <accessToken>`
 
-```ts
-import { userFactory, makeAccessToken, authHeader } from './helpers';
-```
-
----
-
-### 2) Unit-test pattern (no HTTP)
-
-```ts
-import { userFactory, fakePasswordHasher, fakeUserRepo } from './helpers';
-
-describe('AuthService', () => {
-  it('rejects invalid password', async () => {
-    const user = userFactory({ password: 'correct-horse-battery-staple' });
-
-    const auth = makeAuthService({
-      userRepo: fakeUserRepo([user]),
-      passwordHasher: fakePasswordHasher(),
-    });
-
-    await expect(auth.login(user.email, 'wrong')).rejects.toThrow('INVALID_CREDENTIALS');
-  });
-});
-```
-
-✅ Good when you’re testing domain logic (credential checks, lockout thresholds, role mapping).
-
----
-
-### 3) Integration-test pattern (HTTP + token minting)
-
-```ts
-import { buildTestClient, userFactory, makeAccessToken, authHeader } from './helpers';
-
-it('GET /auth/me returns current user', async () => {
-  const client = await buildTestClient();
-
-  const user = await client.db.insertUser(userFactory({ role: 'researcher' }));
-  const token = makeAccessToken({ userId: user.id, roles: [user.role] });
-
-  const res = await client.get('/auth/me', {
-    headers: authHeader(token),
-  });
-
-  expect(res.status).toBe(200);
-  expect(res.body.id).toBe(user.id);
-});
-```
-
-✅ Good when you’re testing middleware, routing, serialization, auth guards.
-
----
-
-### 4) Full login flow (recommended for `/login` tests)
-
-```ts
-import { buildTestClient, loginViaApi } from './helpers';
-
-it('POST /auth/login issues access + refresh tokens', async () => {
-  const client = await buildTestClient();
-
-  await client.db.insertUser({
-    email: 'a@b.com',
-    // Use real hashing here only if you want an end-to-end password verification test
-    passwordHash: await client.db.hash('p@ssw0rd'),
-    role: 'user',
-  });
-
-  const { accessToken, refreshToken } = await loginViaApi(client, {
-    email: 'a@b.com',
-    password: 'p@ssw0rd',
-  });
-
-  expect(accessToken).toMatch(/^eyJ/); // JWT header is base64 JSON
-  expect(refreshToken).toBeTruthy();
-});
-```
-
-✅ Good when you’re validating the full auth contract (input validation, hashing, issuance).
-
----
-
-## 🔐 Token & security notes
-
-KFM auth is JWT-based with **short-lived access tokens** (commonly ~1 hour, configurable) and a **refresh-token mechanism** to keep sessions alive without re-login. Passwords are hashed using a strong algorithm (bcrypt/Argon2). Roles drive authorization checks.
-
-**Implications for test helpers:**
-
-- 🔑 Prefer a **test-only signing key/secret** (never production keys, never shared with dev/prod).
-- ⏱️ If tokens embed `iat/exp`, use `time.ts` to freeze time in expiry tests.
-- 🧑‍🤝‍🧑 Always mint tokens with explicit roles so authorization tests are self-explanatory.
-
----
-
-## 🧠 Visual: typical auth test flow
+### 🧠 Token flow (mental model)
 
 ```mermaid
 sequenceDiagram
-  participant T as Test
-  participant H as Helpers
-  participant API as Auth API
+  autonumber
+  participant C as Client (Web / Mobile)
+  participant A as Auth API
+  participant U as User Store (DB)
 
-  T->>H: userFactory(role=admin)
-  H-->>T: user fixture (+ pwHash)
+  C->>A: POST /auth/login (username + password)
+  A->>U: Verify user + password hash
+  U-->>A: userId + roles
+  A-->>C: accessJWT (exp) + refreshToken
 
-  T->>API: POST /auth/login
-  API-->>T: accessToken + refreshToken
+  C->>A: GET /protected (Authorization: Bearer accessJWT)
+  A-->>C: 200 OK (if allowed)
 
-  T->>H: authHeader(accessToken)
-  H-->>T: { Authorization: "Bearer ..." }
+  C->>A: POST /auth/refresh (refreshToken)
+  A-->>C: new accessJWT
+```
 
-  T->>API: GET /protected
-  API-->>T: 200 OK / 403 Forbidden
+> [!TIP]
+> For refresh-token tests, it’s common to shorten access-token TTL in test config so you can verify expiry + refresh quickly.
+
+---
+
+<a id="run-locally"></a>
+
+## 🚀 Run locally
+
+### ✅ Prereqs
+- Node.js (LTS) + npm
+- Docker (recommended for a disposable Postgres)
+- A test env file (ex: `.env.test`) or exported env vars
+
+---
+
+### 1) Start the test database (recommended: Docker)
+
+If the repo already ships a compose file for tests, use it.
+
+If you need a quick one, drop a `docker-compose.test.yml` near the API root:
+
+```yaml
+version: "3.9"
+services:
+  test-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: kfm_test
+      POSTGRES_USER: kfm_test
+      POSTGRES_PASSWORD: kfm_test
+    ports:
+      - "54322:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kfm_test"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+```
+
+Run it:
+
+```bash
+docker compose -f docker-compose.test.yml up -d test-db
 ```
 
 ---
 
-## 🧊 Determinism checklist
+### 2) Run migrations / bootstrap (if applicable)
 
-- [ ] **Seed randomness** (faker/uuid/PRNG) so IDs/snapshots don’t change between runs.
-- [ ] **Freeze time** when testing expiry, lockouts, OTP windows.
-- [ ] **Reset DB state** between tests (transaction rollback or `resetDb()`).
-- [ ] **Avoid external network** calls (mock email/MFA/OAuth).
-- [ ] **No real secrets** committed (keys are test fixtures or env vars).
+Depending on our DB layer, you may need one of these (pick what matches our stack):
+
+```bash
+# Example patterns — adjust to our repo scripts/tools:
+npm run db:migrate:test
+npm run db:seed:test
+```
 
 ---
 
-## 🧩 Adding a new helper
+### 3) Execute only Auth integration tests
 
-1. Add a focused module (`<topic>.ts`) with a small, composable API.
-2. Export it from `index.ts`.
-3. Add/extend a usage snippet in this README (keep docs current ✅).
+Pick the command that matches our test runner:
 
-### Naming conventions
+```bash
+# Jest (common)
+npx jest src/auth/tests/integration --runInBand
 
-- `*Factory()` → creates fixtures (plain objects)
-- `make*Token()` → signs tokens
-- `authHeader()` / `jsonHeaders()` → header builders
-- `mock*()` → stubs/mocks external dependencies
-- `build*Client()` → boots runtime (server/DI/DB)
+# Or via npm scripts (preferred if configured)
+npm run test:integration -- src/auth/tests/integration
+```
+
+> [!NOTE]
+> `--runInBand` is recommended if parallel workers would collide on the same DB/schema.
+
+---
+
+<a id="run-in-docker-ci-like"></a>
+
+## 🐳 Run in Docker (CI-like)
+
+This is useful when you want your local run to behave like CI.
 
 <details>
-  <summary>📌 What counts as “too much” for a helper?</summary>
+<summary><strong>Example docker-compose (app + test-db + test runner)</strong></summary>
 
-If a helper starts encoding **policy** (business rules), it’s no longer a helper.  
-Helpers should be **mechanics**, not decisions. Put decisions in production code and test them directly.
+```yaml
+version: "3.9"
+services:
+  test-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: kfm_test
+      POSTGRES_USER: kfm_test
+      POSTGRES_PASSWORD: kfm_test
+
+  api:
+    build: .
+    environment:
+      NODE_ENV: test
+      DATABASE_URL: postgres://kfm_test:kfm_test@test-db:5432/kfm_test
+    depends_on:
+      test-db:
+        condition: service_started
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      NODE_ENV: test
+      DATABASE_URL: postgres://kfm_test:kfm_test@test-db:5432/kfm_test
+    depends_on:
+      - api
+      - test-db
+    command: ["npm", "run", "test"]
+```
 
 </details>
 
+Run:
+
+```bash
+docker compose -f docker-compose.test.yml up --build --abort-on-container-exit
+```
+
 ---
+
+<a id="environment-variables"></a>
+
+## 🔧 Environment variables
+
+At minimum, integration tests need a DB connection and auth secrets that are **safe for test**.
+
+| Variable | Required | Example | Why it exists |
+|---|:---:|---|---|
+| `NODE_ENV` | ✅ | `test` | Enables test-only configuration paths |
+| `DATABASE_URL` | ✅ | `postgres://user:pass@localhost:54322/kfm_test` | Real DB for integration tests |
+| `JWT_SECRET` | ✅ | `test-only-secret` | Signing access JWTs |
+| `JWT_EXPIRES_IN` | ⛳ | `1h` | Access token TTL (often shortened in tests) |
+| `REFRESH_TOKEN_SECRET` | ✅ | `test-only-refresh-secret` | Signing/encrypting refresh tokens |
+| `REFRESH_EXPIRES_IN` | ⛳ | `30d` | Refresh TTL |
+| `PASSWORD_HASH_COST` | ⛳ | `4` | Lower cost speeds tests (but keep logic consistent) |
+
+> [!TIP]
+> Keep test secrets in `.env.test` and ensure CI injects them securely (never commit real secrets).
+
+---
+
+<a id="test-patterns--conventions"></a>
+
+## 🧪 Test patterns & conventions
+
+### 🗂️ Suggested folder layout (recommended)
+
+```
+📦 api/
+ └─ 📂 src/
+    └─ 📂 auth/
+       └─ 📂 tests/
+          └─ 📂 integration/
+             ├─ 📄 README.md  👈 you are here
+             ├─ 🧪 login.int.test.ts
+             ├─ 🧪 refresh.int.test.ts
+             ├─ 🧪 rbac.int.test.ts
+             ├─ 📂 helpers/
+             │  ├─ 🧰 createTestApp.ts
+             │  ├─ 🧰 db.ts
+             │  └─ 🧰 tokens.ts
+             └─ 📂 fixtures/
+                └─ 👤 users.ts
+```
+
+### 🧱 Golden rules
+- **Test at the boundary**: treat the API like a client would (HTTP requests + real DB).
+- **One assertion target per test**: keep tests small and focused.
+- **Reset state**: every test should leave the DB clean.
+  - Prefer transactions + rollback, or truncate tables in `afterEach`.
+- **Never assume ordering**: integration tests must be order-independent.
+- **Avoid token snapshots**: validate claims/structure instead of exact string matches.
+
+### 🧪 Example test skeleton (Jest + Supertest style)
+
+```ts
+/**
+ * NOTE: This is a template — adjust imports/helpers to match the repo.
+ */
+import request from "supertest";
+import { createTestApp } from "./helpers/createTestApp";
+import { seedUser } from "./fixtures/users";
+
+describe("Auth: login", () => {
+  it("returns access + refresh tokens for valid credentials", async () => {
+    const app = await createTestApp();
+
+    await seedUser({
+      email: "farmer@example.com",
+      password: "Password123!",
+      roles: ["farmer"],
+    });
+
+    const res = await request(app)
+      .post("/api/auth/login")
+      .send({ email: "farmer@example.com", password: "Password123!" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.accessToken).toBeDefined();
+    expect(res.body.refreshToken).toBeDefined();
+  });
+});
+```
+
+---
+
+<a id="debugging"></a>
+
+## 🐞 Debugging
+
+### ▶️ Run a single test file
+```bash
+npx jest src/auth/tests/integration/login.int.test.ts --runInBand
+```
+
+### 🧷 Attach a debugger
+```bash
+node --inspect-brk ./node_modules/.bin/jest src/auth/tests/integration/login.int.test.ts --runInBand
+```
+
+Then open Chrome DevTools for Node and set breakpoints.
+
+> [!TIP]
+> If a test is flaky, add temporary logs around **token issuance**, **DB cleanup**, and **clock/time handling**.
+
+---
+
+<a id="troubleshooting"></a>
 
 ## 🧯 Troubleshooting
 
-| Symptom | Likely cause | Fix |
-| --- | --- | --- |
-| `401 Unauthorized` even with a token | Wrong signing key, issuer, audience, or token shape | Ensure `makeAccessToken()` mirrors middleware expectations |
-| Flaky expiry/lockout tests | Real clock is used | Freeze time (`freezeTime()`), or inject a test clock |
-| Passes locally, fails in CI | Hidden dependency on local env or DB state | Use `.env.test` defaults + `resetDb()`; avoid machine-specific config |
-| Slow auth tests | Real bcrypt/Argon2 hashing everywhere | Stub the hasher for unit tests; use real hashing only in dedicated integration tests |
+- **DB connection refused**  
+  ✅ Confirm Postgres is running and `DATABASE_URL` host/port matches your compose mapping.
+
+- **Tests hang on startup**  
+  ✅ The DB may not be “ready” yet. Add a healthcheck (see compose example) or a wait-for script.
+
+- **Parallel tests collide**  
+  ✅ Run with `--runInBand` or allocate a unique schema/database per worker.
+
+- **“Works locally, fails in CI”**  
+  ✅ Ensure CI spins up the same disposable DB and exports the same env vars used in `.env.test`.
 
 ---
 
-## 🔗 Related
+<a id="contribution-checklist"></a>
 
-- `api/src/auth/` — auth module implementation (middleware, services, routes)
-- `api/src/auth/tests/` — auth test suite (unit + integration)
-- `docs/` — architecture + security notes (JWT, refresh tokens, roles)
+## 🧩 Contribution checklist
+
+- [ ] Added/updated integration tests for new auth behavior
+- [ ] Tests pass locally **and** in Docker/CI mode
+- [ ] DB state is cleaned up after each test
+- [ ] No secrets or tokens committed/logged
+- [ ] Updated this README if run instructions changed
 
 ---
 
-🛡️ **Remember:** Auth tests are part of the security perimeter.  
-Make them boring, deterministic, and hard to misunderstand.
-
+<p align="right"><a href="#top">⬆️ Back to top</a></p>
