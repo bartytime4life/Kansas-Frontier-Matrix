@@ -98,11 +98,11 @@ A practical taxonomy that keeps client behavior predictable:
 
 ```mermaid
 flowchart LR
-  A[throw / reject anywhere] --> B[normalizeError(err)]
-  B --> C[map to code + HTTP status]
-  B --> D[log full error + context]
-  C --> E[toErrorResponse()]
-  E --> F[send standard error envelope]
+  A["throw or reject anywhere"] --> B["normalizeError(err)"]
+  B --> C["map to code + HTTP status"]
+  B --> D["log full error + context"]
+  C --> E["toErrorResponse()"]
+  E --> F["send standard error envelope"]
 ```
 
 **Why normalize?** In JS/TS, “errors” can be strings, library objects, or standard `Error` instances. Normalization makes outputs deterministic and contract-safe.
