@@ -52,12 +52,12 @@ KFM is designed as a **layered system** (clean-architecture style): core domain 
 
 ```mermaid
 flowchart LR
-  A[🧾 Path contract<br/>paths/...] --> B[📜 OpenAPI<br/>(generated or validated)]
-  B --> C[🧩 Server router/controllers]
-  B --> D[🧠 Typed client SDK<br/>(optional)]
-  A --> E[🧪 Contract tests]
+  A["🧾 Path contract\npaths/*"] --> B["📜 OpenAPI\n(generated or validated)"]
+  B --> C["🧩 Server router/controllers"]
+  B --> D["🧠 Typed client SDK\n(optional)"]
+  A --> E["🧪 Contract tests"]
   E --> C
-  C --> F[🗃️ Use-cases + data access<br/>(not in contracts)]
+  C --> F["🗃️ Use-cases + data access\n(not in contracts)"]
 ```
 
 ---
