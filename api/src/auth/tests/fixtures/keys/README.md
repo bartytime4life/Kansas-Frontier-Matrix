@@ -28,11 +28,16 @@ This directory should contain **only** fixtures that are safe to commit and safe
 Typical contents (filenames may differ — treat this as the *shape*, not the *truth*):
 
 ```text
-api/src/auth/tests/fixtures/keys/
-├── README.md
-├── jwt.test.private.pem        # private signing key (tests only)
-├── jwt.test.public.pem         # public verification key
-└── jwks.test.json              # optional: JWKS fixture for "kid" / JWKS endpoint tests
+🧪 api/
+└─ 🧩 src/
+   └─ 🛡️ auth/
+      └─ 🧫 tests/
+         └─ 🧰 fixtures/
+            └─ 🔑 keys/                              # 👈 test-only signing material (deterministic)
+               ├─ 📝 README.md                        # documentation + rules (you are here)
+               ├─ 🔐 jwt.test.private.pem             # private signing key (tests only — NEVER prod)
+               ├─ 🛂 jwt.test.public.pem              # public verification key (paired with private)
+               └─ 🗝️ jwks.test.json                   # optional JWKS fixture ("kid" resolution / JWKS tests)
 ```
 
 ### ✅ Good fixture properties
