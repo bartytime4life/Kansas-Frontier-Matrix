@@ -1,19 +1,3 @@
----
-kfm:
-  artifact_type: "data-derived-folder"
-  experiment_id: "2026-01-02__ndvi__landsat8"
-  stage: "data/work (experiment sandbox)"
-  status: "experimental"
-  created: "2026-01-02"
-  owner: "TBD"
-  tags:
-    - ndvi
-    - landsat8
-    - remote-sensing
-    - raster
-    - geospatial
----
-
 # 🌿 Derived Data — NDVI (Landsat 8)
 
 ![Stage](https://img.shields.io/badge/stage-work%2Fderived-blue)
