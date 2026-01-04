@@ -1,26 +1,3 @@
----
-title: "Experiment Metadata — NDVI (Landsat 8) — 2026-01-02"
-path: "data/work/experiments/2026-01-02__ndvi__landsat8/data/metadata/README.md"
-version: "v0.1.0"
-status: "draft"
-last_updated: "2026-01-03"
-doc_kind: "ExperimentMetadata"
-project: "Kansas Frontier Matrix"
-experiment_id: "2026-01-02__ndvi__landsat8"
-tags:
-  - ndvi
-  - landsat8
-  - remote-sensing
-  - raster
-  - vegetation-index
-license: "TBD"
-sensitivity: "public"
-care_label: "Public"
-markdown_protocol_version: "v13"
-commit_sha: "TBD" # fill with git commit that generated these artifacts
-doc_uuid: "urn:kfm:experiment:ndvi:landsat8:2026-01-02:metadata-readme:v0.1.0"
----
-
 ![Status](https://img.shields.io/badge/status-draft-yellow)
 ![Experiment](https://img.shields.io/badge/experiment-NDVI%20%E2%80%94%20Landsat%208-blue)
 ![Metadata](https://img.shields.io/badge/metadata-STAC%20%2B%20DCAT%20%2B%20PROV-6f42c1)
