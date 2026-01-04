@@ -54,12 +54,12 @@ Typical “good pixel” definition for NDVI is:
 ### 📍 Location (context)
 
 ```text
-data/work/experiments/2026-01-02__ndvi__landsat8/
-└── data/
-    └── derived/
-        ├── ndvi/          # NDVI outputs (rasters, composites, summaries)
-        └── masks/         # 👈 you are here
-            └── README.md
+🧪 data/work/experiments/2026-01-02__ndvi__landsat8/        # 🧬 Experiment root (NDVI via Landsat 8 SR)
+└── 🗂️ data/                                                # 📦 Working data area (inputs/derived/exports/etc.)
+    └── 🧱 derived/                                         # 🏭 Derived artifacts (regeneratable outputs)
+        ├── 🌿 ndvi/                                        # 🌱 NDVI outputs (rasters, composites, summaries)
+        └── 🧩 masks/                                       # 🧼 Pixel masks (QA/cloud/shadow/water/snow/validity) 👈 you are here
+            └── 📄 README.md                                # 📘 Folder contract + mask catalog + conventions
 ```
 
 ### 🧱 Required properties (must-haves)
