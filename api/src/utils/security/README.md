@@ -80,27 +80,27 @@ flowchart LR
 > Your actual file list may differ — update this README when utilities evolve. ✍️
 
 ```text
-📁 api/src/utils/security/
-├─ 📁 auth/
-│  ├─ jwt.ts                 # sign/verify access tokens + helpers
-│  ├─ refresh.ts             # refresh token rotation patterns (if used)
-│  ├─ password.ts            # hash/verify + reset-token helpers
-│  └─ mfa.ts                 # optional MFA helpers (admin/sensitive accounts)
-├─ 📁 access/
-│  ├─ roles.ts               # role definitions + mapping
-│  ├─ acl.ts                 # permission evaluation + resource scoping
-│  └─ guards.ts              # reusable allow/deny guard helpers
-├─ 📁 request/
-│  ├─ csrf.ts                # CSRF strategy for cookie-based auth (if applicable)
-│  ├─ rateLimit.ts           # per-IP / per-user rate limiting helpers
-│  └─ sanitize.ts            # input allowlists, search sanitization, etc.
-├─ 📁 crypto/
-│  ├─ hash.ts                # safe hashing wrappers (non-password)
-│  └─ encrypt.ts             # app-level field encryption helper (if required)
-├─ 📁 audit/
-│  └─ securityEvents.ts      # normalize + emit security event objects
-└─ 📁 secrets/
-   └─ getSecret.ts           # server-side secret retrieval (env/vault)
+🛡️ api/src/utils/security/
+├─ 🔐 auth/
+│  ├─ 🎟️ jwt.ts                 # sign/verify access tokens + helpers
+│  ├─ 🔁 refresh.ts             # refresh token rotation patterns (if used)
+│  ├─ 🔑 password.ts            # hash/verify + reset-token helpers
+│  └─ 🧿 mfa.ts                 # optional MFA helpers (admin/sensitive accounts)
+├─ 🧑‍⚖️ access/
+│  ├─ 🧭 roles.ts               # role definitions + mapping
+│  ├─ 📜 acl.ts                 # permission evaluation + resource scoping
+│  └─ 🛑 guards.ts              # reusable allow/deny guard helpers
+├─ 🛡️ request/
+│  ├─ 🧯 csrf.ts                # CSRF strategy for cookie-based auth (if applicable)
+│  ├─ 🚦 rateLimit.ts           # per-IP / per-user rate limiting helpers
+│  └─ 🧽 sanitize.ts            # input allowlists, search sanitization, etc.
+├─ 🔒 crypto/
+│  ├─ 🧬 hash.ts                # safe hashing wrappers (non-password)
+│  └─ 🧊 encrypt.ts             # app-level field encryption helper (if required)
+├─ 🧾 audit/
+│  └─ 🧾 securityEvents.ts      # normalize + emit security event objects
+└─ 🗝️ secrets/
+   └─ 🧰 getSecret.ts           # server-side secret retrieval (env/vault)
 ```
 
 ---
