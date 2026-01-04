@@ -27,21 +27,21 @@ KFM’s security model is JWT-based: the backend issues **signed JWTs** (contain
 > Your repo may have a slightly different layout—this README documents the **intended contract** for what belongs here.
 
 ```text
-api/src/auth/tests/fixtures/tokens/
-├── README.md
-├── claims/                       # ✅ Preferred: claim templates (JSON)
-│   ├── access__admin.json
-│   ├── access__researcher.json
-│   ├── access__farmer.json
-│   ├── access__missing_role.json
-│   └── refresh__valid.json
-├── keys/                         # ✅ Test-only signing material (never prod)
-│   ├── jwt_test_private.pem      # (if using RS256/ES256)
-│   └── jwt_test_public.pem
-└── serialized/                   # ⚠ Optional: prebuilt JWT strings (see notes)
-    ├── access__expired.jwt
-    ├── access__bad_signature.jwt
-    └── access__wrong_audience.jwt
+📦 api/src/auth/tests/fixtures/tokens/
+├── 📄 README.md                          # 📍 you are here
+├── 🧾 claims/                            # ✅ Preferred: claim templates (JSON)
+│   ├── 🧾 access__admin.json             # 👑 full privileges
+│   ├── 🧾 access__researcher.json        # 🔬 restricted privileges
+│   ├── 🧾 access__farmer.json            # 🌾 scoped/owner-centric privileges
+│   ├── 🧾 access__missing_role.json      # 🧩 valid JWT, missing auth claim(s)
+│   └── 🧾 refresh__valid.json            # 🔁 refresh token claim set
+├── 🔑 keys/                              # ✅ Test-only signing material (never prod)
+│   ├── 🔐 jwt_test_private.pem           # ✍️ signing key (RS256/ES256, tests only)
+│   └── 🗝️ jwt_test_public.pem            # ✅ verification key
+└── 🧨 serialized/                        # ⚠ Optional: prebuilt JWT strings (see notes)
+    ├── 🧨 access__expired.jwt            # ⏳ exp in the past
+    ├── 🧨 access__bad_signature.jwt      # 🧯 wrong key / tampered signature
+    └── 🧨 access__wrong_audience.jwt     # 🎯 aud mismatch
 ```
 
 ### Why `claims/` first?
