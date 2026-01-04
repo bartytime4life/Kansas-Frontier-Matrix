@@ -47,21 +47,21 @@ flowchart LR
 
 > Use this as the mental model (actual files may vary by module conventions):
 
+
 ```text
 📁 api/
-  📁 src/
-    📁 contracts/
-      📁 events/
-        📁 envelopes/              # 📨 transport-agnostic metadata contracts
-        📁 payloads/               # 📦 (you are here)
-          📁 telemetry/
-            🧾 focus_mode_redaction_notice_shown.v1.ts
-          📁 ingestion/
-            🧾 new_image_available.v1.ts
-          🧾 index.ts              # barrel exports
-          🧾 README.md
+└── 📁 src/
+    └── 📁 contracts/
+        └── 📁 events/
+            ├── 📁 envelopes/                    📨 transport-agnostic metadata contracts
+            └── 📁 payloads/                     📦 (you are here)
+                ├── 📁 ingestion/
+                │   └── 🧾 new_image_available.v1.ts
+                ├── 📁 telemetry/
+                │   └── 🧾 focus_mode_redaction_notice_shown.v1.ts
+                ├── 🧾 index.ts                  📦 barrel exports
+                └── 📝 README.md                 📘 payloads guide
 ```
-
 ---
 
 ## 🏷️ Naming rules
