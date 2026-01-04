@@ -37,23 +37,18 @@ This folder contains **generated outputs** (derived artifacts) from the Landsat 
 
 <details>
 <summary><strong>📁 Typical layout (recommended)</strong></summary>
-
 ```text
-derived/
-  ├─ rasters/
-  │  ├─ ndvi/
-  │  │  └─ ndvi__*.tif
-  │  └─ masks/
-  │     └─ mask__*.tif
-  ├─ tables/
-  │  └─ ndvi_stats__*.csv
-  ├─ previews/
-  │  ├─ ndvi__*.png
-  │  └─ ndvi__*.geojson (optional AOI outline / footprints)
-  └─ manifest/
-     ├─ run_manifest.json
-     ├─ checksums.sha256
-     └─ software_versions.txt
+📁 derived/                                    # 🧪 Regenerable pipeline outputs (work-stage artifacts)
+├── 📄 README.md                               # 📌 This file (scope, contracts, navigation)
+│
+├── 🌿📁 ndvi/                                 # 🌱 NDVI rasters, composites, summaries
+│   └── 📄 README.md                           # 🧮 NDVI naming, ranges, nodata rules, palettes
+│
+├── ☁️📁 masks/                                # 🛡️ Cloud/shadow/valid-pixel masks + QA support rasters
+│   └── 📄 README.md                           # 🧷 Mask semantics (0/1 or code tables) + edge cases
+│
+└── 📊📁 stats/                                # 📈 Zonal + summary statistics (CSV/Parquet), QA tables
+    └── 📄 README.md                           # 🧾 Stats schema, aggregation rules, validation checks
 ```
 
 </details>
