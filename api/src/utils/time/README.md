@@ -35,17 +35,18 @@ Time is a **first-class feature** in KFM (timeline slider, time-series layers, a
 ## 🗂️ Folder map
 
 ```text
-api/
-└─ src/
-   └─ utils/
-      └─ time/                ⏱️
-         ├─ README.md         📝  (you are here)
-         ├─ index.ts          📦  re-exports (single import surface)
-         ├─ parse*            🧩  request/query parsing helpers
-         ├─ format*           🧩  stable output formatting helpers
-         ├─ range*            🧩  clamp/normalize/step utilities
-         └─ clock*            🧩  time source + test doubles
+🧱 api/
+└─ 🧬 src/
+   └─ 🧰 utils/
+      └─ ⏱️ time/                        # time parsing/formatting/ranges/clock utilities (UTC-first)
+         ├─ 🧾 README.md                 # docs + patterns (you are here)
+         ├─ 📦 index.ts                  # public exports (single import surface)
+         ├─ 🧩 parse*                    # request/query parsing helpers (ISO, ms, ranges, steps)
+         ├─ 🧷 format*                   # stable output formatting helpers (canonical ISO UTC, etc.)
+         ├─ 🧭 range*                    # clamp/normalize/step utilities (half-open intervals, ticks)
+         └─ 🕰️ clock*                    # time source abstractions + test doubles (freeze/offset)
 ```
+
 
 > [!TIP]
 > Filenames can differ. What matters: **one job per file** + a clean `index` export.
