@@ -88,11 +88,11 @@ Use this table as a **practical contract** when adding fixtures. If the project 
 
 ```mermaid
 flowchart LR
-  A[🧾 claims/*.json<br/>payload fixtures] --> B[🧰 signTestToken()<br/>adds iat/exp if needed<br/>signs with test key]
-  B --> C[📨 HTTP Request<br/>Authorization: Bearer &lt;token&gt;]
-  C --> D[🛡️ auth middleware<br/>verify signature + exp<br/>read roles/levels]
-  D --> E[🧭 route / controller<br/>permission checks]
-  E --> F[✅ test assertions]
+  A["🧾 claims/*.json (payload fixtures)"] --> B["🧰 signTestToken() (adds iat/exp; signs with test key)"]
+  B --> C["📨 HTTP request (Authorization: Bearer TOKEN)"]
+  C --> D["🛡️ auth middleware (verify signature + exp; read roles/levels)"]
+  D --> E["🧭 route/controller (permission checks)"]
+  E --> F["✅ test assertions"]
 ```
 
 ---
