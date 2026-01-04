@@ -251,12 +251,12 @@ export const loginMissingPassword = { email: "user@example.com" } as const;
 
 ```mermaid
 flowchart LR
-  A[📄 Fixture JSON/TS] --> B[🧪 Test Case]
-  B --> C[🌐 HTTP Client (supertest/fetch)]
-  C --> D[🔐 Auth Route/Controller]
-  D --> E[⚙️ Auth Service / Use Case]
-  E --> F[📦 Response]
-  F --> G[✅ Assertions]
+  A["📄 Fixture JSON/TS"] --> B["🧪 Test Case"]
+  B --> C["🌐 HTTP Client (supertest / fetch)"]
+  C --> D["🔐 Auth Route / Controller"]
+  D --> E["⚙️ Auth Service / Use Case"]
+  E --> F["📦 Response"]
+  F --> G["✅ Assertions"]
 ```
 
 ---
