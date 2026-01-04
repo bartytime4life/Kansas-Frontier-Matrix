@@ -26,11 +26,11 @@ KFM is built around a strict pipeline and boundary contracts. GraphQL is one of 
 
 ```mermaid
 flowchart LR
-  A[🗃️ Data / ETL Outputs] --> B[📚 Catalogs<br/>(STAC / DCAT / PROV)]
-  B --> C[🕸️ Graph / Ontology]
-  C --> D[🧩 API Boundary<br/>(GraphQL / REST)]
-  D --> E[🖥️ UI]
-  E --> F[📖 Story Nodes / Focus Mode]
+  A["🗃️ Data / ETL Outputs"] --> B["📚 Catalogs<br>STAC • DCAT • PROV"]
+  B --> C["🕸️ Graph / Ontology"]
+  C --> D["🧩 API Boundary<br>GraphQL • REST"]
+  D --> E["🖥️ UI"]
+  E --> F["📖 Story Nodes / Focus Mode"]
 ```
 
 ✨ **Rule of thumb:** If a user can see it, it must be reachable through *this contract* (and enforced by the server).
