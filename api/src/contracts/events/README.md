@@ -243,17 +243,18 @@ KFM’s governance guidance calls out emitting an event like `focus_mode_redacti
 
 > You don’t have to use this exact layout, but keeping shared envelope parts centralized reduces drift.
 
+
 ```text
 api/src/contracts/events/
-├─ README.md
-├─ _shared/
-│  ├─ event-envelope.schema.json
-│  └─ event-meta.schema.json
-├─ ingestion/
-│  └─ new_image_available.v1.schema.json
-├─ ui/
-│  └─ focus_mode_redaction_notice_shown.v1.schema.json
-└─ registry.ts   (optional: maps type+version → schema)
+├─ 🧭 README.md
+├─ 🧰 _shared/                         🧱 shared envelope + meta building blocks
+│  ├─ 📦 event-envelope.schema.json     📨 canonical event envelope schema
+│  └─ 🏷️ event-meta.schema.json         🧾 shared meta schema (ids, timestamps, trace, etc.)
+├─ 🚚 ingestion/                        🌾 ingestion-domain event contracts
+│  └─ 🛰️ new_image_available.v1.schema.json
+├─ 🖥️ ui/                               🎛️ UI/telemetry-domain event contracts
+│  └─ 🛡️ focus_mode_redaction_notice_shown.v1.schema.json
+└─ 🗺️ registry.ts                       🧩 (optional) maps (type, version) → schema
 ```
 
 ---
