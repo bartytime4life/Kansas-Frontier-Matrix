@@ -26,13 +26,14 @@ At a high level:
 
 ## 🗂️ Where you are
 
+
 ```text
-api/
-└─ src/
-   └─ contracts/
-      └─ schemas/
-         ├─ requests/   👈 you are here
-         └─ (responses/ , shared/ , errors/ ... depending on the repo layout)
+api/src/contracts/schemas/requests/
+├── 📁 _shared/                 # reusable fragments (pagination, time ranges, etc.)
+├── 📁 auth/                    # auth-related requests
+├── 📁 fields/                  # field operations (geo, crop, irrigation, etc.)
+├── 📁 simulation/              # simulation runs, scenarios, constraints
+└── 📄 README.md                # ← you are here
 ```
 
 Quick links (if present):
