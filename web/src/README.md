@@ -48,20 +48,20 @@ KFM’s frontend is intentionally componentized around a small set of “anchor�
 KFM’s docs recommend structuring React **by feature**, with shared primitives in `components/` and integration points in `services/` and `store/`.:contentReference[oaicite:11]{index=11}
 
 ```text
-web/
-└── src/
-    ├── components/            # reusable UI primitives (Button, Modal, Chart wrappers, etc.)
-    ├── features/
-    │   ├── map/               # MapView + map utils (layers, sources, interactions)
-    │   ├── timeline/          # TimelineSlider + time utilities
-    │   ├── auth/              # auth context, login flows (if enabled)
-    │   └── dashboard/         # dashboards + composed views
-    ├── styles/                # global styles, tokens, CSS modules
-    ├── services/              # API clients (axios/fetch wrappers) + typed endpoints
-    ├── store/                 # Redux slices OR Context providers + selectors
-    ├── utils/                 # shared helpers (formatting, geo helpers, guards)
-    ├── App.(jsx|tsx)          # app shell + routing
-    └── index.(jsx|tsx)        # bootstraps SPA
+🌐 web/
+└── 🧬 src/
+    ├── 🧱 components/            # reusable UI primitives (Button, Modal, Chart wrappers, etc.)
+    ├── 🧩 features/
+    │   ├── 🗺️ map/               # MapView + map utils (layers, sources, interactions)
+    │   ├── 🕒 timeline/          # TimelineSlider + time utilities
+    │   ├── 🔐 auth/              # auth context, login flows (if enabled)
+    │   └── 📊 dashboard/         # dashboards + composed views
+    ├── 🎨 styles/                # global styles, tokens, CSS modules
+    ├── 🔌 services/              # API clients (axios/fetch wrappers) + typed endpoints
+    ├── 🧠 store/                 # Redux slices OR Context providers + selectors
+    ├── 🧰 utils/                 # shared helpers (formatting, geo helpers, guards)
+    ├── 🧭 App.(jsx|tsx)          # app shell + routing
+    └── 🚀 index.(jsx|tsx)        # bootstraps SPA
 ```
 
 ✅ **TypeScript is preferred where possible** to make API responses + component props safer and easier to refactor.:contentReference[oaicite:12]{index=12}
