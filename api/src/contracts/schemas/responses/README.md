@@ -297,14 +297,27 @@ When responses deal with sensitive data:
 
 ## 🗺️ Response flow (high level)
 
-```mermaid
-flowchart LR
-  Client[Client/UI] --> API[API Route / Resolver]
-  API --> ValidateIn[Validate Request (Contract)]
-  ValidateIn --> UseCase[Domain Use Case]
-  UseCase --> MapOut[Map Domain -> Response DTO]
-  MapOut --> ValidateOut[Validate Response (Schema)]
-  ValidateOut --> Client
+
+```text
+🧑‍💻 Client/UI
+   │
+   ▼
+🌐 API Route / Resolver
+   │
+   ▼
+🧾 Validate Request (Contract)
+   │
+   ▼
+🧠 Domain Use Case
+   │
+   ▼
+🧬 Map Domain → Response DTO
+   │
+   ▼
+✅ Validate Response (Schema)
+   │
+   ▼
+🧑‍💻 Client/UI
 ```
 
 ---
