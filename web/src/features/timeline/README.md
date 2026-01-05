@@ -1,291 +1,227 @@
----
-title: "⏱️ Kansas Frontier Matrix — Timeline Feature Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "web/src/features/timeline/README.md"
-version: "v10.4.0"
-last_updated: "2025-11-15"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../../releases/v10.4.0/sbom.spdx.json"
-manifest_ref: "../../../../releases/v10.4.0/manifest.zip"
-telemetry_ref: "../../../../releases/v10.4.0/focus-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-feature-timeline-v1.json"
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v10.4"
-status: "Active / Enforced"
-doc_kind: "Feature Overview"
-intent: "timeline-feature"
-fair_category: "F1-A1-I1-R1"
-care_label: "Public / Low-Risk"
-sensitivity_level: "None"
-public_exposure_risk: "Low"
-indigenous_rights_flag: false
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Low"
-redaction_required: false
-provenance_chain:
-  - "web/src/features/timeline/README.md@v10.3.2"
-previous_version_hash: "<previous-sha256>"
-ontology_alignment:
-  cidoc: "E52 Time-Span"
-  schema_org: "WebApplication"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Plan"
-json_schema_ref: "../../../../schemas/json/web-feature-timeline.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/web-feature-timeline-shape.ttl"
-doc_uuid: "urn:kfm:doc:web-feature-timeline-v10.4.0"
-semantic_document_id: "kfm-doc-web-feature-timeline"
-event_source_id: "ledger:web/src/features/timeline/README.md"
-immutability_status: "version-pinned"
-doc_integrity_checksum: "<sha256>"
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
-ai_transform_permissions:
-  - "summaries"
-  - "a11y-adaptations"
-  - "semantic-highlighting"
-ai_transform_prohibited:
-  - "speculative additions"
-  - "unverified historical claims"
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA"
-jurisdiction: "Kansas / United States"
-classification: "Public Document"
-role: "feature-overview"
-lifecycle_stage: "stable"
-ttl_policy: "Review each release cycle"
-sunset_policy: "Superseded upon next timeline feature revision"
----
+# 🕰️ Timeline (Temporal Navigation) — `web/src/features/timeline/`
 
-<div align="center">
+![Feature](https://img.shields.io/badge/feature-timeline-blue)
+![UI](https://img.shields.io/badge/UI-React-61DAFB?logo=react&logoColor=white)
+![State](https://img.shields.io/badge/state-Redux-764ABC?logo=redux&logoColor=white)
+![Maps](https://img.shields.io/badge/maps-MapLibre-2E7D32)
+![Governance](https://img.shields.io/badge/governance-provenance%20first-0aa)
 
-# ⏱️ **Kansas Frontier Matrix — Timeline Feature Overview**  
-`web/src/features/timeline/README.md`
-
-**Purpose:**  
-Document the architecture, responsibilities, accessibility rules, governance interactions,  
-data flows, and telemetry expectations for the **Timeline Feature** of the  
-KFM Web Platform — responsible for temporal navigation, time-window filtering,  
-map synchronization, Story Node alignment, and Focus Mode v2.5 integrations.
-
-</div>
+> **One sentence:** The Timeline feature provides a **global “time cursor”** for the app — moving it updates **time-aware map layers**, **charts**, and **Focus Mode context** (when active). 🧭
 
 ---
 
-# 📘 Overview
+## ✨ What this feature does
 
-The **Timeline Feature** is one of the core interaction surfaces of the  
-Kansas Frontier Matrix Web Platform. It powers:
+### Core UX
+- **Scrubber/slider** with **discrete steps** (tick marks) for available dates 🧷
+- **Step controls** (`<< < > >>`) to move one time-step at a time ⏪⏩
+- **Play/Pause** animation loop to “flip-book” a phenomenon across time ▶️⏸️
+- **Date picker / manual entry** for precision 🎯
+- **Irregular time-series support** (e.g., satellite captures not exactly every N days) — timeline steps only where data exists 🛰️
+- Optional: **time-range zoom** (scale changes when the time range changes) 🔎
 
-- Time-range selection  
-- Temporal navigation  
-- Synchronization of narrative + spatial layers  
-- Filtering of Story Nodes, STAC assets, and vector layers  
-- OWL-Time–aligned interpretation of dataset intervals  
-- Temporal slices for 2D maps and 3D Cesium views  
-- Integration with Focus Mode timelines  
-- Telemetry for time-based exploration  
-- Accessibility-compliant controls and keyboard interactions  
-
-The timeline is tightly connected to:
-
-- `TimeContext`  
-- `useTimeline.ts`  
-- `timelinePipeline.ts`  
-- Story Node v3 metadata  
-- STAC/DCAT temporal extents  
-- Governance metadata (for sensitive temporal ranges)
+### What Timeline *does not* do (by design)
+- ❌ It should not be responsible for **business logic** of how a layer renders at time *t*.
+- ❌ It should not directly query the **graph database** (all data goes through governed APIs).
+- ❌ It should not surface dates/times for content that is not **provenance-linked** and approved for the current view mode (esp. Focus Mode).
 
 ---
 
-# 🧱 Directory Structure
+## 🧠 Mental model
 
-~~~text
-web/src/features/timeline/
-├── components/                    # Timeline UI components
-│   ├── TimelineBar.tsx            # Main temporal axis
-│   ├── TimelineHandle.tsx         # Drag/select handle
-│   ├── TimelineMarkers.tsx        # Story Node + dataset markers
-│   ├── GranularityControls.tsx    # Year/decade/century zoom levels
-│   └── TimelineA11y.tsx           # Accessibility-specific timeline helpers
-│
-├── hooks/                         # Feature-specific logic
-│   ├── useTimelineFeature.ts      # Timeline state + pipeline integration
-│   └── useTemporalZoom.ts         # Controls temporal granularity
-│
-├── pipelines/                     # Timeline orchestration logic
-│   └── timelinePipeline.ts        # Timeline → Map → Focus Mode sync
-│
-└── telemetry/                     # Timeline telemetry signals
-    ├── timelineEvents.ts          # Event taxonomy ("timeline:range-change", etc.)
-    └── timelinePerformance.ts     # FPS/interaction stats (non-PII)
-~~~
+Think of Timeline as a **single source of truth** for “what time is it?” in the UI.
+
+```mermaid
+flowchart LR
+  UI[🕰️ Timeline UI] -->|dispatch: setTime| STORE[(🌐 Global State)]
+  STORE --> MAP[🗺️ Map layer controller]
+  STORE --> CHARTS[📈 Chart panel]
+  STORE --> FOCUS[📖 Focus Mode context]
+  MAP -->|TIME param / URL swap / filter| DATA[🧊 Tiles / vectors]
+```
 
 ---
 
-# 🧩 Responsibilities
+## 🧩 Integration points
 
-The Timeline Feature coordinates several interacting systems:
+### 1) Global state (Redux)
+Timeline is typically wired to global state so that **any** part of the UI can react:
+- Map layer renderers
+- Chart highlight cursor
+- Numeric readouts (“current NDVI = X”)
+- Focus Mode “story-in-context” panels
 
-## 1. **Temporal Navigation**
-- Users select a time window.  
-- Supports:
-  - Year-level  
-  - Decade-level  
-  - Century-level  
-  - Custom intervals  
-- Provides smooth scrubbing interactions.  
-
-## 2. **Map Synchronization**
-All spatial layers update automatically:
-
-- STAC footprints  
-- Story Node footprints  
-- Environmental layers  
-- Archaeological layers  
-- Focus Mode entity highlights  
-
-MapLibre & Cesium views receive deterministic updates from `TimeContext`.
-
-## 3. **Story Node v3 Alignment**
-Timeline determines:
-
-- Active Story Nodes  
-- Narrative boundaries  
-- Temporal overlays  
-- Visual Highlights (range bands, markers)
-
-## 4. **Focus Mode v2.5 Integration**
-Timeline modifies:
-
-- Which events/entities are highlighted  
-- Which narratives appear in Focus Mode  
-- Which Story Nodes are suggested  
-- How temporal clusters are grouped  
-
-## 5. **Governance & CARE Controls**
-Timeline must:
-
-- Respect CARE-sensitive temporal ranges  
-- Show warnings when data is restricted  
-- Provide provenance metadata for datasets bound to time  
+✅ **Rule of thumb:** Timeline dispatches **intent** (`setCurrentTime` / `setIsPlaying`) and downstream systems subscribe to the state.
 
 ---
 
-# ♿ Accessibility Requirements (WCAG 2.1 AA)
+### 2) Map layers (2D + optional 3D)
+When time changes, map layers update in one of these common strategies:
 
-Timeline UI MUST:
+#### A) WMS/WMTS time dimension (preferred when supported)
+- Send a `TIME=...` (or equivalent) parameter with tile/image requests.
 
-- Support full keyboard navigation  
-- Provide visible focus states  
-- Offer high-contrast, accessible color ramps  
-- Respect `prefers-reduced-motion`  
-- Offer textual descriptions for Story Node markers  
-- Expose ARIA labels for handles + temporal controls  
+#### B) URL swap (date embedded in path/query)
+- Example: `.../ndvi/{date}/{z}/{x}/{y}.png`
+- Changing date triggers tile reload.
 
-Accessibility regressions block CI merges.
+#### C) Vector filtering / source swap
+- Filter features by date, or load a new GeoJSON/source for the selected time step.
 
----
-
-# 🔐 Governance Integration
-
-Timeline components must surface:
-
-- CARE labels for sensitive narratives  
-- Provenance for historical ranges  
-- Warnings for culturally sensitive periods  
-- Masks or reduced granularity when required  
-
-If temporal data is restricted:
-
-- H3 masking rules may apply to spatial overlays  
-- Timeline defaults to “generalized” bands  
-- UI reveals the reason (CARE notice)
+> 💡 **Important:** Timeline should be fast to scrub. If layer updates are expensive, treat slider movement as:
+> - **Preview / scrub** (cheap UI updates)
+> - **Commit** (on release) to trigger heavy map reloads
 
 ---
 
-# 📈 Telemetry Responsibilities
+### 3) Charts & analytics panels
+Charts typically:
+- Render the full time series, then
+- Highlight the chosen time with a **vertical cursor line** or a **selected point**
 
-Timeline generates telemetry for:
-
-- `"timeline:range-change"`  
-- `"timeline:granularity-change"`  
-- `"timeline:focus-sync"`  
-- `"timeline:storynode-highlight"`  
-- `"timeline:drag-start"` / `"drag-end"`  
-
-Telemetry must:
-
-- Be non-PII  
-- Follow schemas in telemetry config  
-- Record sustainability metrics when expensive operations occur  
-- Include governance metadata when masking occurs
-
-Telemetry flows to:
-
-`releases/<version>/focus-telemetry.json`
+This keeps temporal context visible even while scrubbing.
 
 ---
 
-# 🧪 Testing Requirements
+### 4) Focus Mode (Story Node + Map + Timeline)
+Focus Mode is the “read a story with context” experience:
+- Story Node in one panel
+- Map + Timeline showing only provenance-linked assets in the other panels
 
-Timeline Feature MUST include:
-
-- Unit tests (`TimelineBar`, `Markers`, accessibility helpers)  
-- Integration tests (timeline → map → focus sync)  
-- Schema tests for temporal metadata  
-- Governance tests for sensitive period handling  
-- A11y tests (keyboard, reduced-motion, labels)  
-- Telemetry correctness tests  
-- State propagation tests (TimeContext interactions)
-
-Test directories:
-
-~~~text
-tests/unit/web/features/timeline/**
-tests/integration/web/features/timeline/**
-tests/e2e/web/features/timeline/**
-~~~
+✅ Timeline must behave like a **trust boundary** here:
+- Only show time steps that correspond to **cataloged** data used in the Focus Mode bundle
+- Never “invent” dates, layers, or intermediate states
 
 ---
 
-# 🧠 Pipeline Flow (Conceptual)
+## 📦 Data contract expectations
 
-~~~text
-User Adjusts Timeline Handle
-        │
-        ▼
-useTimelineFeature.ts
-        │
-        ▼
-timelinePipeline.ts
-        │
-        ├──► MapLibre layers filtered
-        ├──► Cesium time slices updated
-        ├──► Story Node v3 list filtered
-        └──► Focus Mode narrative recalculated
-        │
-        ▼
-Telemetry + governance + provenance recording
-~~~
+Timeline needs **a list of available time steps** (per dataset / per layer), coming from:
+- A governed API endpoint (contract-first), **or**
+- A precomputed timeline config bundle (JSON) shipped with the web app
 
----
+### Recommended representation
+- Use **ISO 8601** date/time strings (`YYYY-MM-DD` or full timestamp with `Z`)
+- Keep internal comparisons in UTC to avoid timezone drift
 
-# 🕰 Version History
-
-| Version | Date       | Summary |
-|--------:|------------|---------|
-| v10.4.0 | 2025-11-15 | Full rewrite for KFM-MDP v10.4; added governance, A11y, STAC, Story Node, Focus Mode sync |
-| v10.3.2 | 2025-11-14 | Improved granularity logic + temporal sync |
-| v10.3.1 | 2025-11-13 | Initial timeline feature overview |
+### Example (illustrative) timeline config
+```json
+{
+  "layerId": "ndvi",
+  "availableTimes": ["2018-01-01", "2018-02-01", "2018-03-01"],
+  "defaultTime": "2018-02-01",
+  "labelFormat": "MMM yyyy",
+  "stepBehavior": "discrete"
+}
+```
 
 ---
 
-<div align="center">
+## 🗂️ Suggested folder layout (feature-first)
 
-© 2025 Kansas Frontier Matrix — MIT License  
-FAIR+CARE Certified · Public Document · Version-Pinned  
-Validated under MCP-DL v6.3 and KFM-MDP v10.4  
+> Your exact filenames may vary — this is the *recommended* shape for maintainability.
 
-</div>
+```text
+📁 web/src/features/timeline/
+├── 📄 README.md
+├── 📁 components/
+│   ├── 📄 TimelineSlider.tsx
+│   ├── 📄 TimelineControls.tsx
+│   └── 📄 TimelineDatePicker.tsx
+├── 📁 hooks/
+│   └── 📄 useTimeline.ts
+├── 📁 store/
+│   └── 📄 timelineSlice.ts
+├── 📁 utils/
+│   ├── 📄 timeFormat.ts
+│   ├── 📄 timeSteps.ts
+│   └── 📄 clampIndex.ts
+└── 📁 __tests__/
+    ├── 📄 timelineSlice.test.ts
+    └── 📄 timeline.integration.test.ts
+```
+
+---
+
+## 🧰 “Add a new temporal layer” checklist ✅
+
+### 1) Data readiness (pipeline + provenance)
+- The layer’s assets must exist in catalogs (e.g., STAC/DCAT) with temporal metadata.
+- If the dataset is sensitive/restricted, ensure redaction/classification rules are already enforced upstream.
+
+### 2) API contract-first (if timeline steps come from backend)
+- Define/extend the API contract first (OpenAPI/GraphQL).
+- Implement server logic + tests.
+- Ensure the endpoint returns:
+  - Available times (sorted)
+  - Optional default time
+  - Any redaction constraints (e.g., missing steps)
+
+### 3) UI registry/config
+- Add the layer to the UI layer registry/config.
+- Ensure the layer includes:
+  - Provenance link (source citations / IDs)
+  - Legend/info popup citing the dataset source
+  - Time behavior (WMS time param vs URL swap vs vector filter)
+
+### 4) Timeline integration
+- Connect the layer to the global `currentTime`.
+- Verify:
+  - Scrubbing updates the map layer correctly
+  - Chart cursor updates (if applicable)
+  - Focus Mode only shows provenance-linked time steps
+
+---
+
+## ♿ Accessibility expectations
+- Slider is keyboard operable:
+  - `←/→` = step
+  - `Shift + ←/→` = bigger step
+  - `Home/End` = first/last step
+- Buttons have labels (not icon-only), or icon buttons include `aria-label`
+- Visible focus states in high-contrast mode
+
+---
+
+## 🧪 Testing strategy
+- **Unit tests**
+  - time parsing/formatting
+  - discrete stepping logic
+  - reducer state transitions (play/pause, set time, clamp index)
+- **Integration tests**
+  - “changing time triggers layer update”
+  - “changing time updates chart cursor”
+- **E2E (recommended)**
+  - Play animation for N steps without crashes
+  - Scrub quickly without UI lockups
+  - Irregular time list behaves (no intermediate phantom steps)
+
+---
+
+## 🧯 Troubleshooting
+- **Map doesn’t change when timeline changes**
+  - Confirm the layer is time-enabled and subscribed to `currentTime`
+  - Confirm the layer update strategy (TIME param vs URL swap vs filter) is implemented
+- **Slider shows dates that have no data**
+  - Ensure `availableTimes` comes from the real catalog/API for that layer
+  - For irregular series, use discrete list stepping only
+- **Animation is choppy**
+  - Consider caching or prefetching adjacent time steps
+  - Avoid triggering expensive reloads on every drag event (use “commit” on release)
+
+---
+
+## 🔗 Related docs (repo)
+- 📘 Master Guide: `docs/MASTER_GUIDE_v13.md`
+- 🧠 Story Nodes / Focus Mode rules: `docs/templates/` and `docs/reports/story_nodes/`
+- ⚖ Governance: `docs/governance/`
+- 📜 API contracts: `src/server/contracts/`
+- 🧾 UI schemas/config: `schemas/ui/` (if present)
+
+---
+
+## 🧭 Future ideas (nice-to-have)
+- Range brushing (start/end) for comparative windows 📏
+- Multi-layer sync groups (e.g., lock NDVI + rainfall to same cursor) 🔗
+- “Bookmark” time moments for story playback ⭐
+- Performance telemetry hooks (playback FPS, tile latency) 📊
