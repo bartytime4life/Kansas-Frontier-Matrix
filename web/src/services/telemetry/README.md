@@ -59,22 +59,22 @@ Telemetry follows the same intent:
 
 ```mermaid
 flowchart LR
-  subgraph Web["🌐 Web UI"]
-    UI["React UI<br/>(Map • Story Nodes • Focus Mode)"]
-    TS["🛰️ Telemetry Service<br/>(web/src/services/telemetry)"]
-    UI -->|track(...) / audit(...) • non-blocking| TS
+  subgraph Web[Web UI]
+    UI[React UI<br/>Map • Story Nodes • Focus Mode]
+    TS[Telemetry Service<br/>web/src/services/telemetry]
+    UI -->|track and audit - async| TS
   end
 
-  subgraph API["🔐 Governed API (src/server)"]
-    ING["Telemetry ingest<br/>(auth • validation • policy)"]
+  subgraph API[Governed API - src/server]
+    ING[Telemetry ingest<br/>auth • validation • policy]
   end
 
-  subgraph Store["🧾 Storage & Dashboards"]
-    EVT["Event Store"]
-    GOV["Governance Dashboards<br/>(FAIR/CARE signals)"]
+  subgraph Store[Storage & Dashboards]
+    EVT[Event Store]
+    GOV[Governance Dashboards<br/>FAIR/CARE signals]
   end
 
-  TS -->|POST (batched)| ING --> EVT --> GOV
+  TS -->|POST - batched| ING --> EVT --> GOV
 ```
 
 ---
