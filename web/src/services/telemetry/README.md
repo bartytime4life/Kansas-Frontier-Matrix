@@ -60,21 +60,21 @@ Telemetry follows the same intent:
 ```mermaid
 flowchart LR
   subgraph Web[Web UI]
-    UI[React UI<br/>Map • Story Nodes • Focus Mode]
-    TS[Telemetry Service<br/>web/src/services/telemetry]
-    UI -->|track and audit - async| TS
+    UI[React UI - Map, Story Nodes, Focus Mode]
+    TS[Telemetry Service - web/src/services/telemetry]
+    UI -->|track_audit_nonblocking| TS
   end
 
   subgraph API[Governed API - src/server]
-    ING[Telemetry ingest<br/>auth • validation • policy]
+    ING[Telemetry ingest - auth, validation, policy]
   end
 
-  subgraph Store[Storage & Dashboards]
+  subgraph Store[Storage and Dashboards]
     EVT[Event Store]
-    GOV[Governance Dashboards<br/>FAIR/CARE signals]
+    GOV[Governance Dashboards - FAIR, CARE signals]
   end
 
-  TS -->|POST - batched| ING --> EVT --> GOV
+  TS -->|POST_batched| ING --> EVT --> GOV
 ```
 
 ---
