@@ -79,22 +79,23 @@ In the v13 layout guidance, **server-side API code lives in one canonical place*
 
 ```text
 📁 api/
-  📁 src/
-    📁 contracts/
-      📁 http/
-        📄 README.md                # 👈 you are here
-        📁 openapi/                 # 📜 OpenAPI specs (versioned)
-          📄 openapi.v1.yaml
-          📄 openapi.v2.yaml
-        📁 schemas/                 # 🧩 JSON Schemas (request/response)
-          📄 search.request.schema.json
-          📄 search.response.schema.json
-        📁 examples/                # 🧪 human-readable examples
-          📄 search.request.example.json
-          📄 search.response.example.json
-        📁 fixtures/                # 🔬 contract-test fixtures (known inputs/outputs)
-          📄 search.case-01.json
+└── 📁 src/
+    └── 📁 contracts/
+        └── 📁 http/
+            ├── 📄 README.md                          # 👈 you are here
+            ├── 📁 openapi/                           # 📜 OpenAPI specs (versioned)
+            │   ├── 📄 openapi.v1.yaml
+            │   └── 📄 openapi.v2.yaml
+            ├── 📁 schemas/                           # 🧩 JSON Schemas (request/response)
+            │   ├── 📄 search.request.schema.json
+            │   └── 📄 search.response.schema.json
+            ├── 📁 examples/                          # 🧪 human-readable examples
+            │   ├── 📄 search.request.example.json
+            │   └── 📄 search.response.example.json
+            └── 📁 fixtures/                          # 🔬 contract-test fixtures (known inputs/outputs)
+                └── 📄 search.case-01.json
 ```
+
 
 ---
 
