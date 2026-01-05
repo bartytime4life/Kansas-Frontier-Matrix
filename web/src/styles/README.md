@@ -1,470 +1,348 @@
----
-title: "KFM Web UI Styles — README"
-path: "web/src/styles/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-25"
-status: "draft"
-doc_kind: "Guide"
-license: "CC-BY-4.0"
+# 🎨 KFM Web Styles (`web/src/styles`)
 
-markdown_protocol_version: "KFM-MDP v11.2.6"
-mcp_version: "MCP-DL v6.3"
-ontology_protocol_version: "KFM-ONTO v4.1.0"
-pipeline_contract_version: "KFM-PPC v11.0.0"
-stac_profile: "KFM-STAC v11.0.0"
-dcat_profile: "KFM-DCAT v11.0.0"
-prov_profile: "KFM-PROV v11.0.0"
+![CSS3](https://img.shields.io/badge/CSS3-ready-blue) ![Responsive](https://img.shields.io/badge/Responsive-mobile--first-success) ![A11y](https://img.shields.io/badge/Accessibility-key-important) ![Design Tokens](https://img.shields.io/badge/Design%20Tokens-CSS%20Variables-informational)
 
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US-KS"
+> [!NOTE]
+> This folder houses the **global styling primitives** (tokens, themes, resets, utilities) that power the **Kansas Frontier Matrix (KFM)** frontend UI — built for an interface that stays **intuitive, responsive, and informative** across maps, charts, dashboards, and mobile.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
 
-doc_uuid: "urn:kfm:doc:web:styles:readme:v1.0.0"
-semantic_document_id: "kfm-web-styles-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:web:styles:readme:v1.0.0"
-commit_sha: "<latest-commit-hash>"
-
-ai_transform_permissions:
-  - "summarize"
-  - "structure_extract"
-  - "translate"
-  - "keyword_index"
-ai_transform_prohibited:
-  - "generate_policy"
-  - "infer_sensitive_locations"
-
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# KFM Web UI Styles — README
+## 🧭 What this folder is for
 
-> **Purpose (required):** Define the **styling contract** for the KFM Web UI (React + Map UI), including **design tokens, theming, CSS architecture**, and **map-style integration points** (MapLibre/Cesium), with **accessibility**, **determinism**, and **governance** considerations.
+KFM’s frontend is a React SPA with interactive mapping + data visualization, and it relies on **CSS3 (Flexbox/Grid) + media queries** to keep layouts responsive (e.g., mobile layout changes when width is under a breakpoint like ~768px).  [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
 
-## 📘 Overview
+This `styles/` directory is the “single source of truth” for:
 
-### Purpose
+- 🎛️ **Design tokens** (spacing, typography, color, elevation, z-index, motion)
+- 🌓 **Theming** (light/dark + high-contrast options)
+- 🧼 **Resets + base styles** (cross-browser sanity)
+- 🧰 **Utilities** (small reusable helpers when CSS Modules aren’t ideal)
+- 🗺️ **Visualization styling conventions** (legends, tooltips, overlays, panels)
 
-- Provide a single, repo-local reference for **how styles are organized, named, and validated** in the KFM UI.
-- Establish **stable styling contracts** (tokens, theming, layering rules) so UI work stays deterministic and reviewable.
-- Define how the UI should **consume dataset-provided cartographic styles** (e.g., MapLibre style JSON + legend YAML) without coupling UI code to data internals.
+> [!TIP]
+> Keep *component-specific styling* as close to the component as possible (CSS Modules or scoped styles), and keep *system primitives* here. KFM’s code structure explicitly calls out `styles/` for global CSS or CSS module definitions.  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
 
-### Scope
+---
 
-| In Scope | Out of Scope |
-|---|---|
-| Design tokens (colors, typography, spacing), theming strategy, and CSS layering rules | Authoring domain cartography from scratch (belongs with the dataset/domain; UI consumes published styles) |
-| Component styling conventions (scoped styles, naming, composition) | Backend/API contract definitions (see API contract docs) |
-| UI accessibility styling requirements (focus rings, reduced motion, contrast) | Neo4j/graph access patterns (UI must not query Neo4j directly; via API only) |
-| Guidance for loading/validating map style assets (MapLibre JSON, legend YAML) | ETL/catalog generation details (see `src/pipelines/**`, `data/**`) |
+## 🗂️ Suggested layout
 
-### Audience
+> [!IMPORTANT]
+> Your repo may not have every file below yet — treat this as the **recommended contract** for how `web/src/styles` should evolve.
 
-- Primary: Web/UI contributors (React components, Map UI, Focus Mode UI)
-- Secondary: Accessibility reviewers; governance reviewers; data/domain owners publishing map styles
-
-### Definitions (link to glossary)
-
-- Link: `docs/glossary.md` (**not confirmed in repo**)
-- Terms used in this doc:
-  - **Design tokens**: Named, versioned values used across UI (e.g., spacing scale, colors).
-  - **Theme**: A coherent set of tokens (e.g., light/dark/high-contrast).
-  - **UI chrome**: Panels/controls/labels around the map (CSS-driven).
-  - **Map style**: Renderer-driven styling (e.g., MapLibre style JSON), not CSS.
-  - **Legend YAML**: Machine-readable legend definitions that can drive UI legends.
-  - **Focus Mode**: Immersive narrative + map/timeline view; must display provenance-linked content only.
-
-### Key artifacts (what this doc points to)
-
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| This README | `web/src/styles/README.md` | UI | Contract for styling conventions |
-| Tokens (CSS variables) | `web/src/styles/tokens.css` (**not confirmed in repo**) | UI | Prefer `--kfm-*` variables |
-| Theme(s) | `web/src/styles/theme*.css` (**not confirmed in repo**) | UI | Light/dark/high-contrast (as adopted) |
-| Global reset/base | `web/src/styles/reset.css` (**not confirmed in repo**) | UI | Normalize + base element styles |
-| Component styles | `web/src/**/<Component>.module.css` (**not confirmed in repo**) | UI | Preferred: component-scoped styles |
-| Layer registry | `web/**/layers/*.json` (**not confirmed in repo**) | UI | UI-extensible layer config registry |
-| Dataset “styles pack” example | `extras/styles/*.json` + `extras/styles/*.yaml` (**pattern; not confirmed in repo**) | Data domain | MapLibre style JSON + legend YAML for deterministic styling across clients |
-| Governance refs | `docs/governance/*` | Governance | Required review gates + sovereignty rules |
-
-### Definition of done (for this document)
-
-- [ ] Front-matter complete + valid
-- [ ] Scope clearly separates **UI CSS** vs **renderer map styles**
-- [ ] “Not confirmed in repo” labels used wherever paths/tools are speculative
-- [ ] Validation steps listed and repeatable (even if commands are placeholders)
-- [ ] Governance + CARE/sovereignty considerations explicitly stated
-- [ ] Version history present
-
-## 🗂️ Directory Layout
-
-### This document
-
-- `path`: `web/src/styles/README.md` (must match front-matter)
-
-### Related repository paths
-
-| Area | Path | What lives here |
-|---|---|---|
-| Data domains | `data/` | Raw/work/processed + STAC/DCAT/PROV outputs |
-| Documentation | `docs/` | Canonical governed docs + templates |
-| Pipelines | `src/pipelines/` | Deterministic ETL/transforms producing outputs |
-| Catalogs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC/DCAT/PROV metadata + lineage |
-| Graph | `src/graph/` | Graph build + ontology bindings |
-| API boundary | `src/server/` (**or repo-defined equivalent; not confirmed**) | Contracts + redaction + query services |
-| UI | `web/` | React + Map UI, Focus Mode UX |
-| Schemas | `schemas/` | JSON schemas + optional shapes |
-| Tests | `tests/` | Unit/integration/contract tests |
-
-### Expected file tree for this sub-area
-
-> This is a **target layout** to keep styles predictable. Adjust to the repo’s actual UI stack.
-
-~~~text
+```text
 📁 web/
-└── 📁 src/
-    └── 📁 styles/
-        ├── 📄 README.md                           # (this file)
-        ├── 📄 tokens.css                          # design tokens as CSS variables (target; not confirmed)
-        ├── 📄 theme.light.css                     # theme override (target; not confirmed)
-        ├── 📄 theme.dark.css                      # theme override (target; not confirmed)
-        ├── 📄 theme.high-contrast.css             # a11y theme (target; not confirmed)
-        ├── 📄 reset.css                           # base reset/normalize (target; not confirmed)
-        ├── 📄 globals.css                         # global element styles (target; not confirmed)
-        ├── 📁 utilities/                          # small opt-in utilities (target; not confirmed)
-        │   └── 📄 visually-hidden.css              # a11y helper (target; not confirmed)
-        ├── 📁 components/                         # shared component style modules (target; not confirmed)
-        │   └── 📄 <Component>.module.css           # example
-        └── 📁 map/                                # map UI chrome styles (target; not confirmed)
-            ├── 📄 map-chrome.css                   # panels/controls/overlays (target; not confirmed)
-            └── 📄 attribution.css                  # attribution/license UI (target; not confirmed)
-~~~
-
-### Extension points checklist (for future work)
-
-- [ ] Data: If UI styling depends on dataset-specific styling artifacts, ensure they are **versioned** and **referenced** (not inlined ad-hoc).
-- [ ] Catalog: If datasets publish styles, consider linking them as catalog assets (STAC/DCAT) (**pattern may vary; not confirmed in repo**).
-- [ ] Graph: No direct styling dependencies; UI should consume style references via API payloads where appropriate.
-- [ ] APIs: If style references are served dynamically, define/extend an API contract (**not in this doc**).
-- [ ] UI: Theme toggles, high-contrast mode, legend rendering, map layer toggles.
-- [ ] Focus Mode: Ensure narrative/citation UI styling supports provenance display.
-- [ ] Telemetry: Theme changes, contrast mode toggles, redaction notice display (recommended; schema/versioning **not confirmed in repo**).
-
-## 🧭 Context
-
-### Background
-
-KFM’s canonical flow is:
-
-**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
-
-Lineage and provenance are first-class so **Story Nodes and Focus Mode can only surface provenance-linked content**, and missing links should be caught via CI. The **API boundary is mandatory**: the UI never queries Neo4j directly; it consumes contracted API responses.
-
-### Where “styles” fit
-
-UI styling spans three distinct (and intentionally separated) concerns:
-
-1. **UI chrome CSS** (this folder): typography/layout/controls/panels, Focus Mode readability, a11y affordances.
-2. **Renderer styles** (MapLibre/Cesium): how polygons/lines/points are colored and labeled on the map.
-3. **Legend + cartography metadata** (often dataset-owned): machine-readable legend definitions that the UI can display consistently.
-
-### Map UI assumptions
-
-- The frontend is expected to be an SPA under `web/` (React components, map view, story panels, search). (**not confirmed in repo**)  
-- Map rendering may use MapLibre GL JS (2D) and optionally Cesium (3D). (**not confirmed in repo**)  
-- A layer registry may exist as JSON configuration describing map layers (name, sources, sensitivity flags). (**not confirmed in repo**)
-
-### Constraints / invariants
-
-- **Determinism:** Token names and theme variables should be stable and version-controlled.
-- **Accessibility:** UI must remain navigable and legible (keyboard, reduced motion, contrast).
-- **Governance:** UI styling and UI-layer additions must not accidentally increase access to sensitive/restricted information (e.g., by enabling interaction/zoom that reveals sensitive locations).
-
-## 🗺️ Diagrams
-
-### UI styling flow (conceptual)
-
-~~~mermaid
-flowchart LR
-  subgraph StyleArtifacts["Versioned style artifacts"]
-    Tokens["Design tokens\n(CSS variables / JSON)"]
-    Themes["Themes\n(light/dark/high-contrast)"]
-    MapStyles["Map styles\n(MapLibre JSON + legend YAML)"]
-  end
-
-  Tokens --> CSS["CSS output\n(globals + modules)"]
-  Themes --> CSS
-  CSS --> UI["React UI components\n(map + panels + Focus Mode)"]
-
-  MapStyles --> Map["MapLibre / Cesium renderers"]
-  UI --> Focus["Focus Mode\n(narrative + citations + audit cues)"]
-~~~
-
-### CSS layering model (recommended)
-
-~~~mermaid
-flowchart TD
-  Reset["reset / base"] --> Tokens["tokens (CSS vars)"]
-  Tokens --> Theme["theme overrides"]
-  Theme --> Globals["globals (element styles)"]
-  Globals --> Components["component-scoped styles"]
-  Components --> MapChrome["map chrome styles"]
-~~~
-
-## 🧠 Story Node & Focus Mode Integration
-
-Focus Mode is an immersive UI view with the narrative alongside maps/timelines. In Focus Mode v3, content displayed must be provenance-linked, and any AI-generated elements must be clearly indicated.
-
-**Style implications for Focus Mode:**
-
-- Make citations visually distinct and consistently placed (e.g., inline citation chips + “provenance” panel styling).
-- Ensure warning banners and redaction notices are highly visible (do not allow “pretty” themes to hide governance cues).
-- Provide accessible typography defaults (line length, spacing, headings) for long-form reading.
-
-### Optional: Story Node-driven UI controls (shape)
-
-(Provided for styling context; actual Story Node schema is governed elsewhere.)
-
-~~~yaml
-focus_mode:
-  focus_center: [ -98.0, 38.5 ]   # lon,lat
-  focus_time: "1854-01-01/1861-12-31"
-  focus_layers:
-    - "trails_overview"
-    - "settlements_points"
-  ui_prefs:
-    theme: "dark"
-    high_contrast: false
-~~~
-
-## 🧪 Validation & CI/CD
-
-### Validation steps (recommended)
-
-- Markdown protocol check (front-matter present; required sections present; footer refs present)
-- Style linting (if configured): CSS lint + formatting consistency (**not confirmed in repo**)
-- Build/test gates (if configured): UI build, unit tests, and accessibility checks (**not confirmed in repo**)
-- Contrast checks (recommended): enforce AA/AAA thresholds for key UI text (**not confirmed in repo**)
-- Map style validation (recommended): validate MapLibre style JSON shape before shipping (**not confirmed in repo**)
-
-### Reproduction (deterministic)
-
-~~~bash
-# Example placeholders — replace with repo-specific commands
-
-# Lint styles (if configured)
-# npm run lint:css
-
-# Run UI a11y checks (if configured)
-# npm run test:a11y
-
-# Build UI
-# npm run build
-~~~
-
-### Telemetry signals (recommended)
-
-- `ui_theme_changed` (theme_id)
-- `ui_high_contrast_toggled` (enabled)
-- `focus_mode_entered` (entity_id)
-- `focus_mode_redaction_notice_shown` (layer_id, method)
-
-(Exact telemetry schemas/locations are **not confirmed in repo**.)
-
-## 📦 Data & Metadata
-
-### Inputs
-
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Design token definitions | CSS/JSON | UI team | Naming conventions + review |
-| Theme overrides | CSS | UI team | Contrast + a11y review |
-| Map style packs | JSON + YAML | Data domains (recommended) | Schema/shape checks (recommended) |
-| Layer registry | JSON | UI config (recommended) | Schema validation (recommended) |
-
-### Outputs
-
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| UI tokens | CSS variables | `web/src/styles/tokens.css` (**not confirmed**) | Naming + review |
-| UI themes | CSS variables | `web/src/styles/theme.*.css` (**not confirmed**) | Contrast/a11y checks |
-| UI chrome styles | CSS | `web/src/styles/**` | Lint + visual review |
-| Legend UI render | UI component | `web/src/**` (**not confirmed**) | Must match legend YAML contract (if adopted) |
-
-### Sensitivity & redaction
-
-- UI styles must not embed secrets, private URLs, or internal-only endpoints.
-- Avoid styling patterns that could “hide” access-control indicators (e.g., low-contrast warning banners).
-- If a dataset/layer is sensitive, ensure the UI has a clear visual representation of:
-  - restricted visibility,
-  - generalization applied,
-  - redaction status.
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-This styles area does **not** produce STAC/DCAT/PROV directly, but it must align with how KFM publishes and links artifacts:
-
-- **If datasets publish a canonical visualization style** (recommended), treat style packs as **first-class artifacts**:
-  - Link them from dataset metadata (e.g., STAC collection/assets) (**pattern varies; not confirmed in repo**).
-  - Include a legend definition so the UI can render consistent legends across clients.
-
-- **PROV:** If a style is generated or converted (e.g., Mapbox → MapLibre), record a provenance activity (preferred under `data/prov/**` or `mcp/runs/**`; exact convention **not confirmed in repo**).
-
-## 🧱 Architecture
-
-### Principles
-
-- **Token-first:** Use named design tokens; avoid “magic” colors/spacings scattered across components.
-- **Scoped by default:** Prefer component-scoped styles; keep global CSS minimal and intentional.
-- **Accessible by default:** Always-visible focus states; reduced motion support; readable typography.
-- **Deterministic and diffable:** Style changes should be reviewable in PRs and stable across environments.
-
-### Design tokens
-
-**Recommendation:** Use CSS custom properties as the primary token interface.
-
-- Prefix all tokens with `--kfm-` (e.g., `--kfm-color-text`, `--kfm-space-2`).
-- Use `rem` for typography/spacing where practical.
-- Keep z-indexes tokenized to avoid collisions.
-
-Example token set (illustrative):
-
-~~~css
-:root {
-  --kfm-color-bg: #ffffff;
-  --kfm-color-text: #111111;
-  --kfm-color-accent: #1f6feb;
-
-  --kfm-font-sans: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  --kfm-font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  --kfm-space-1: 0.25rem;
-  --kfm-space-2: 0.5rem;
-  --kfm-space-3: 0.75rem;
-  --kfm-space-4: 1rem;
-
-  --kfm-z-base: 0;
-  --kfm-z-overlay: 100;
-  --kfm-z-modal: 1000;
-}
-~~~
-
-### Theming
-
-- Implement themes as **variable overrides**, not duplicated CSS rules.
-- Support user preferences:
-  - `prefers-color-scheme` (optional)
-  - `prefers-reduced-motion` (required)
-  - high contrast (recommended)
-
-Example (illustrative):
-
-~~~css
-[data-theme="dark"] {
-  --kfm-color-bg: #0b0f14;
-  --kfm-color-text: #e6edf3;
-}
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
-}
-~~~
-
-### Component styling conventions
-
-- Prefer:
-  - CSS Modules (e.g., `<Component>.module.css`) (**not confirmed in repo**), or
-  - a consistent component style colocation pattern if using a different approach (**not confirmed in repo**).
-- Avoid:
-  - deep selector chains (`.a .b .c .d`)
-  - global element overrides beyond `globals.css`
-  - inline styles except for truly dynamic values
-
-### Map UI styling vs map renderer styles
-
-**Key rule:** CSS styles UI chrome; **MapLibre/Cesium styles are renderer-driven**.
-
-- Use CSS for:
-  - map container sizing and layout
-  - overlays (legend, attribution, scale bar, layer toggles)
-  - Focus Mode panels and narrative typography
-- Use MapLibre/Cesium styles for:
-  - feature fills/strokes/labels
-  - zoom-dependent styling rules
-  - symbol placement
-
-### Dataset “style pack” pattern (example)
-
-A dataset may ship an additive “styles pack” to ensure deterministic styling across clients:
-
-- Mapbox style JSON (optional)
-- MapLibre style JSON
-- Legend YAML
-- Scale-dependent generalization rules (for tile production)
-
-(Exact locations depend on domain module layout; this doc only defines how UI should *consume* these artifacts.)
-
-### Accessibility requirements (styling)
-
-- Always provide visible focus indicators (`:focus-visible`) for keyboard navigation.
-- Ensure minimum contrast for:
-  - body text
-  - interactive controls
-  - warning/error banners
-- Avoid “information by color alone” (e.g., add patterns/icons/labels where needed).
-- Respect reduced motion user preferences.
-
-### Performance guidelines
-
-- Keep selectors shallow and fast.
-- Prefer transforms for animations (when motion is enabled).
-- Avoid heavy box-shadows and expensive filters on frequently updating UI elements.
-
-## ⚖ FAIR+CARE & Governance
-
-### Review gates
-
-Governance review is required when changes could expand access to sensitive/restricted information, including **adding a new UI layer that could reveal sensitive locations by interaction/zoom**.
-
-### CARE / sovereignty considerations
-
-- If UI styling affects how culturally sensitive or sovereignty-controlled information is displayed:
-  - ensure authority-to-control expectations are respected (see sovereignty policy),
-  - prefer coarse/aggregate public presentation when required,
-  - make redaction/generalization visually explicit.
-
-### AI usage constraints
-
-- Allowed:
-  - summarization, structure extraction, translation, keyword indexing
-- Prohibited:
-  - generating new policy
-  - inferring sensitive locations (directly or indirectly)
-- AI may propose changes, but **human review** must approve any classification/sensitivity implications.
-
-### PR checklist (styling)
-
-- [ ] No new UI affordance enables deeper inspection of restricted layers without review (e.g., zoom-to, hover-tooltips on restricted points)
-- [ ] Focus Mode warnings/citations remain visible in all themes
-- [ ] Reduced motion honored
-- [ ] Contrast checked for key UI surfaces
-- [ ] No secrets/PII embedded in CSS or static assets
-
-## 🕰️ Version History
-
-| Version | Date | Summary | Author | PR / Issue |
-|---|---:|---|---|---|
-| v1.0.0 | 2025-12-25 | Initial styles README (tokens/theming/CSS architecture + map style integration guidance) | TBD | TBD |
+  📁 src/
+    📁 styles/
+      📄 README.md               ← you are here ✅
+      📄 index.css               ← single import point (app entry)
+      📄 reset.css               ← baseline reset / normalize
+      📄 tokens.css              ← raw tokens (scales)
+      📄 theme.light.css         ← semantic tokens (light)
+      📄 theme.dark.css          ← semantic tokens (dark)
+      📄 globals.css             ← base element styles (body, links, etc.)
+      📄 utilities.css           ← tiny helpers (opt-in)
+      📁 viz/
+        📄 map.css               ← map + layer UI styling conventions
+        📄 charts.css            ← chart containers + tooltips
+        📄 legend.css            ← legend blocks, ramps, labels
+      📁 components/
+        📄 buttons.module.css    ← shared UI primitives if not using a UI kit
+        📄 panels.module.css
+        📄 forms.module.css
+```
 
 ---
 
-Footer refs:
+## 🔌 How styles are consumed (React)
 
-- Master guide: `docs/MASTER_GUIDE_v12.md`
-- Template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-- Governance: `docs/governance/ROOT_GOVERNANCE.md`
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
-- Ethics: `docs/governance/ETHICS.md`
+### ✅ One global entry import
+Import **one** file at the app entry (e.g., `src/main.tsx`, `src/index.tsx`, or `src/App.tsx`) so ordering stays consistent:
+
+```ts
+import "@/styles/index.css";
+```
+
+### ✅ Component scope by default (CSS Modules)
+For component-specific styling, prefer co-located modules:
+
+```tsx
+import styles from "./MapView.module.css";
+
+export function MapView() {
+  return <div className={styles.container}>...</div>;
+}
+```
+
+> [!NOTE]
+> KFM’s frontend is designed around reusable components (MapView, Sidebar, TimelineSlider, ChartPanel), so CSS Modules help keep map/chart complexity from bleeding into global scope.  [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+
+---
+
+## 🧬 CSS layering strategy (recommended)
+
+If you want predictable CSS cascade in a complex app (maps + charts + panels), you can adopt **cascade layers**:
+
+```css
+/* index.css */
+@layer reset, tokens, theme, base, components, utilities, overrides;
+
+@import "./reset.css" layer(reset);
+@import "./tokens.css" layer(tokens);
+@import "./theme.light.css" layer(theme); /* or theme.dark.css */
+@import "./globals.css" layer(base);
+@import "./utilities.css" layer(utilities);
+```
+
+> [!WARNING]
+> `@import` can increase HTTP requests and impact load speed if misused. Use sparingly and rely on your bundler whenever possible.  [oai_citation:4‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-4pQLNMB3Rk5n5vUPTqxpNa)
+
+---
+
+## 🧱 Design tokens
+
+### 🎛️ Raw tokens vs semantic tokens
+**Raw tokens** define consistent scales (spacing steps, font sizes, radii).  
+**Semantic tokens** map those scales to meaning (surface, text, border, accent).
+
+#### `tokens.css` (raw scales)
+```css
+:root {
+  /* 🧷 Spacing (4px baseline grid) */
+  --kfm-space-0: 0;
+  --kfm-space-1: 0.25rem; /* 4px */
+  --kfm-space-2: 0.5rem;  /* 8px */
+  --kfm-space-3: 0.75rem; /* 12px */
+  --kfm-space-4: 1rem;    /* 16px */
+  --kfm-space-6: 1.5rem;  /* 24px */
+  --kfm-space-8: 2rem;    /* 32px */
+
+  /* 🔤 Typography */
+  --kfm-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  --kfm-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --kfm-text-0: 0.875rem; /* 14px */
+  --kfm-text-1: 1rem;     /* 16px */
+  --kfm-text-2: 1.125rem; /* 18px */
+  --kfm-text-3: 1.25rem;  /* 20px */
+
+  /* 🧊 Radius */
+  --kfm-radius-1: 0.25rem;
+  --kfm-radius-2: 0.5rem;
+  --kfm-radius-3: 0.75rem;
+
+  /* 🧭 Z-index (keep map + panels sane) */
+  --kfm-z-map: 1;
+  --kfm-z-overlay: 10;
+  --kfm-z-panel: 20;
+  --kfm-z-modal: 100;
+  --kfm-z-toast: 200;
+
+  /* 🎞️ Motion */
+  --kfm-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --kfm-dur-fast: 120ms;
+  --kfm-dur-base: 180ms;
+  --kfm-dur-slow: 260ms;
+}
+```
+
+#### `theme.light.css` (semantic mapping)
+```css
+:root[data-theme="light"] {
+  --kfm-surface: #ffffff;
+  --kfm-surface-2: #f7f7f9;
+  --kfm-text: #111827;
+  --kfm-text-muted: #4b5563;
+  --kfm-border: #e5e7eb;
+
+  --kfm-accent: #2563eb;
+  --kfm-accent-contrast: #ffffff;
+
+  --kfm-focus: #2563eb;
+}
+```
+
+#### `theme.dark.css`
+```css
+:root[data-theme="dark"] {
+  --kfm-surface: #0b1220;
+  --kfm-surface-2: #111a2e;
+  --kfm-text: #e5e7eb;
+  --kfm-text-muted: #9ca3af;
+  --kfm-border: #24324a;
+
+  --kfm-accent: #60a5fa;
+  --kfm-accent-contrast: #0b1220;
+
+  --kfm-focus: #93c5fd;
+}
+```
+
+> [!TIP]
+> For map layers (NDVI, soil moisture, rainfall), define **named ramps** as tokens (e.g., `--kfm-ramp-ndvi-0..n`) so legends, overlays, and charts stay consistent. KFM explicitly prioritizes intuitive styling and accessibility (including colorblind-friendly choices).  [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+
+---
+
+## 📱 Responsive design rules
+
+KFM’s UI is expected to be fully responsive and to adapt layouts (side-by-side vs stacked, swipeable panels, etc.) using **Flexbox/Grid + media queries**.  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+
+### ✅ Breakpoints
+KFM documentation gives an example breakpoint behavior at **~768px** for switching to mobile layout.  [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+
+Recommended baseline breakpoints:
+
+```css
+/* Mobile-first: base styles first */
+
+@media (min-width: 48rem) { /* 768px */
+  /* tablet+ */
+}
+
+@media (min-width: 64rem) { /* 1024px */
+  /* desktop */
+}
+
+@media (min-width: 80rem) { /* 1280px */
+  /* large desktop */
+}
+```
+
+### ✅ Prefer em/rem for MQs when appropriate
+Media queries can be specified in pixels **or** em/rem units. Example: `800px` can be expressed as `50em` (800/16) for a font-relative breakpoint.  [oai_citation:8‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-4pQLNMB3Rk5n5vUPTqxpNa)
+
+```css
+/* 800px ≈ 50em when 1em = 16px */
+@media (min-width: 50em) {
+  .layout { display: grid; }
+}
+```
+
+---
+
+## ♿ Accessibility & UX essentials
+
+KFM’s frontend emphasizes accessibility and cross-browser behavior (semantic elements, labels, ARIA where needed, and color choices that are colorblind-friendly).  [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+
+### ✅ Focus rings that don’t disappear
+```css
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--kfm-focus);
+  outline-offset: 2px;
+}
+```
+
+### ✅ Reduced motion support (maps + charts can be intense)
+```css
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+### ✅ Color + shape (not just color)
+For legends and status indicators, pair:
+- 🎨 color ramps
+- 🔣 labels (text)
+- ▦ patterns / icons when possible (e.g., dashed vs solid outlines)
+
+> [!NOTE]
+> This matters especially in KFM because users compare geospatial layers and trends; clarity and trust are core UX requirements.  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+
+---
+
+## 🗺️ Maps, layers, legends, and overlays
+
+KFM’s UI includes interactive mapping (2D/3D) and a layer-toggling workflow, so the visual system must stay coherent across:
+- Map tiles / vector overlays
+- Sidebar toggles + legend
+- Timeline slider states
+- Popups/tooltips
+- Dashboard mini-panels  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+
+### 🎛️ Suggested “viz primitives”
+Put these in `styles/viz/*` so MapView/Cesium/Leaflet/Mapbox components share a consistent look.
+
+```css
+/* viz/legend.css */
+.kfmLegend {
+  background: color-mix(in oklab, var(--kfm-surface) 92%, transparent);
+  border: 1px solid var(--kfm-border);
+  border-radius: var(--kfm-radius-2);
+  padding: var(--kfm-space-3);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+}
+
+.kfmLegend__title {
+  font-weight: 700;
+  font-size: var(--kfm-text-2);
+  margin-bottom: var(--kfm-space-2);
+}
+
+.kfmLegend__row {
+  display: flex;
+  align-items: center;
+  gap: var(--kfm-space-2);
+  margin: 0 0 var(--kfm-space-1) 0;
+}
+
+.kfmLegend__swatch {
+  inline-size: 1rem;
+  block-size: 1rem;
+  border-radius: 0.2rem;
+  border: 1px solid var(--kfm-border);
+}
+```
+
+### 🧠 Keep “meaning” in tokens, not in components
+Instead of:
+- `background: #00ff00; /* NDVI good */`
+
+Prefer:
+- `background: var(--kfm-ramp-ndvi-high);`
+
+This makes it easier to:
+- tune palettes for accessibility
+- keep charts and legends consistent
+- share ramps between 2D/3D modes  [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+
+---
+
+## 🧰 Naming conventions & best practices
+
+### ✅ Naming
+Pick one and keep it consistent:
+
+- **CSS Modules:** `camelCase` for local classes (recommended)
+  - `container`, `panelHeader`, `legendRow`
+- **Global/Viz primitives:** `kfmPrefix__block--modifier` (BEM-ish)
+  - `.kfmLegend`, `.kfmLegend__row`, `.kfmLegend--compact`
+
+### ✅ Rules of thumb
+- 🧊 Use tokens: `var(--kfm-*)` for spacing, colors, radii, durations.
+- 🧱 Prefer layout with Flexbox/Grid (KFM explicitly expects this).  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+- 🧼 Keep global selectors minimal (avoid `div { ... }`).
+- 🧵 Avoid `!important` (unless you’re writing a small “override” layer for a 3rd-party widget).
+- 🧪 Test at breakpoints + common browsers (Chrome/Firefox/Safari/Edge + mobile).  [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
+
+---
+
+## ✅ Style PR checklist
+
+- [ ] Uses tokens (`--kfm-*`) instead of hard-coded magic numbers where practical 🎯  
+- [ ] Works at mobile breakpoint (≈768px) + desktop layout 📱💻  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- [ ] Keyboard focus is visible (`:focus-visible`) ⌨️  
+- [ ] Motion respects `prefers-reduced-motion` 🎞️  
+- [ ] Legend / overlays remain readable on map backgrounds 🗺️  
+- [ ] No global leakage (CSS Modules for component styling) 🧩  
+
+---
+
+## 📚 References (project source material)
+
+- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- Responsive Web Design with HTML5 and CSS3 (media queries, px vs em/rem guidance, @import considerations)  [oai_citation:18‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-4pQLNMB3Rk5n5vUPTqxpNa)  
+
+---
