@@ -62,7 +62,7 @@ flowchart LR
   subgraph Web["🌐 Web UI"]
     UI["React UI<br/>(Map • Story Nodes • Focus Mode)"]
     TS["🛰️ Telemetry Service<br/>(web/src/services/telemetry)"]
-    UI -->|track(...) / audit(...) (non-blocking)| TS
+    UI -->|track(...) / audit(...) • non-blocking| TS
   end
 
   subgraph API["🔐 Governed API (src/server)"]
