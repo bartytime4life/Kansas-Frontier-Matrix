@@ -1,441 +1,386 @@
----
-title: "🎯 Kansas Frontier Matrix — Focus Mode Feature Overview (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
-path: "web/src/features/focus-mode/README.md"
-version: "v11.2.2"
-last_updated: "2025-11-30"
+# 🧠 Focus Mode
 
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · Autonomous · FAIR+CARE Council Oversight"
-content_stability: "stable"
+![Feature](https://img.shields.io/badge/feature-focus%20mode-2ea44f)
+![UI](https://img.shields.io/badge/ui-react-61DAFB?logo=react&logoColor=white)
+![Trust](https://img.shields.io/badge/trust-provenance%20first-blue)
+![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE-orange)
+![Hard%20Gate](https://img.shields.io/badge/hard%20gate-enabled-critical)
 
-commit_sha: "<latest-commit-hash>"
-previous_version_hash: "<previous-sha256>"
-doc_integrity_checksum: "<sha256>"
+Focus Mode is KFM’s **interactive reading experience**: a governed **Story Node** 📄 presented alongside **map 🗺️ + timeline ⏱️ context**.
 
-sbom_ref: "../../../../releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "../../../../releases/v11.2.2/manifest.zip"
-telemetry_ref: "../../../../releases/v11.2.2/web-feature-focusmode-telemetry.json"
-telemetry_schema: "../../../../schemas/telemetry/web-feature-focusmode-v2.json"
-energy_schema: "../../../../schemas/telemetry/energy-v2.json"
-carbon_schema: "../../../../schemas/telemetry/carbon-v2.json"
-
-governance_ref: "../../../../docs/standards/governance/ROOT-GOVERNANCE.md"
-license: "MIT"
-
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.2"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-
-status: "Active / Enforced"
-doc_kind: "Feature Architecture Overview"
-intent: "focus-mode-feature"
-role: "feature"
-
-fair_category: "F1-A1-I1-R1"
-care_label: "Public / Entity-Dependent"
-sensitivity_level: "Medium"
-public_exposure_risk: "Low–Medium"
-indigenous_rights_flag: true
-data_steward: "KFM FAIR+CARE Council"
-risk_category: "Mixed"
-redaction_required: true
-
-provenance_chain:
-  - "web/src/features/focus-mode/README.md@v10.4.0"
-  - "web/src/features/focus-mode/README.md@v10.3.2"
-
-ontology_alignment:
-  cidoc: "E7 Activity"
-  schema_org: "AboutPage"
-  owl_time: "TemporalEntity"
-  prov_o: "prov:Activity"
-
-json_schema_ref: "../../../../schemas/json/web-feature-focusmode.schema.json"
-shape_schema_ref: "../../../../schemas/shacl/web-feature-focusmode-shape.ttl"
-
-doc_uuid: "urn:kfm:doc:web-feature-focusmode-v11.2.2"
-semantic_document_id: "kfm-doc-web-feature-focusmode"
-event_source_id: "ledger:web/src/features/focus-mode/README.md"
-immutability_status: "version-pinned"
-
-ai_training_inclusion: false
-ai_focusmode_usage: "Allowed with restrictions"
-ai_transform_permissions:
-  - "semantic-highlighting"
-  - "a11y-adaptations"
-  - "summaries"
-ai_transform_prohibited:
-  - "speculative-additions"
-  - "unverified-historical-claims"
-  - "inferred-relationships"
-  - "governance-override"
-
-machine_extractable: true
-accessibility_compliance: "WCAG 2.1 AA+"
-jurisdiction: "United States / Kansas"
-classification: "Public Document"
-lifecycle_stage: "stable"
-ttl_policy: "Annual review"
-sunset_policy: "Superseded upon Focus Mode v4 release"
----
-
-<div align="center">
-
-# 🎯 **Kansas Frontier Matrix — Focus Mode Feature Overview**  
-`web/src/features/focus-mode/README.md`
-
-**Purpose:**  
-Document the **Focus Mode v3 feature layer**, which powers entity-centric reasoning,  
-spatial + temporal synchronization, narrative explainability, and governance-aware  
-data presentation within the Kansas Frontier Matrix Web Platform.
-
-</div>
+**Design intent:** trust-preserving storytelling.  
+**Operational rule:** *if it can’t be traced to provenance, it must not render.*
 
 ---
 
-## 📘 Overview
+## 📍 Location
 
-**Focus Mode v3** is the entity-centric exploration surface of KFM. It provides users with:
-
-- Narrative summaries (AI-labeled, provenance-aware)  
-- Spatial footprints + map highlights  
-- Timeline highlights + temporal relationships  
-- Related entities and Story Node recommendations  
-- Explainability overlays (SHAP/LIME-style integrations from the AI layer)  
-- CARE + sovereignty governance notices  
-- A unified, multimodal context for each selected entity  
-
-Focus Mode integrates **data, narrative, provenance, space, time, and governance**  
-into a single adaptive UI flow, orchestrated across the **graph**, **pipelines**, and **web** layers.
-
-The `web/src/features/focus-mode/` feature module provides **logic, state, and view-models**  
-only; all presentational UI components live in `web/src/components/FocusMode/**`.
+```text
+📁 web/
+  └── 📁 src/
+      └── 📁 features/
+          └── 📁 focus-mode/
+              └── 📄 README.md  👈 you are here
+```
 
 ---
 
-## 🗂️ Directory Layout
+## 🧭 Where Focus Mode sits in the KFM pipeline
 
-~~~text
-web/src/features/focus-mode/
-│
-├── 📦 index.ts                      # Public exports for the Focus Mode feature
-│
-├── 🪝 hooks/                        # Focus-specific hooks (logic only)
-│   ├── 🧠 useFocusEntity.ts         # Active focused-entity orchestrator (entry point)
-│   ├── 🔗 useFocusRelations.ts      # Fetch + normalize related entities from graph/API
-│   ├── 🤖 useFocusExplainability.ts # Explainability integration (SHAP/LIME-style payloads)
-│   ├── 📜 useFocusProvenance.ts     # Provenance pipeline for the focused entity
-│   └── 🗺️ useFocusSpatial.ts        # Spatial highlight + masking logic (MapView integration)
-│
-├── 🧠 state/                        # State slices (Zustand/Context) for Focus Mode
-│   ├── 🎯 focusState.ts             # Focus entity ID, loading, errors, payload
-│   ├── 📊 explainabilityState.ts    # Derived explainability vectors + flags
-│   ├── 🗺️ spatialState.ts           # Map highlight + layer toggles
-│   └── ⏱️ timelineState.ts          # Local timeline window for Focus Mode
-│
-├── 🧬 view-models/                  # DTO → UI-ready view-model converters
-│   ├── 🎯 FocusViewModel.ts         # Root Focus Mode entity view-model
-│   ├── 🔗 RelationsViewModel.ts     # Relation grouping + typed relation VMs
-│   ├── 🤖 ExplainabilityVM.ts       # Explainability UI model
-│   ├── 📖 StoryNodeVM.ts            # Story Node v3 lightweight projections for Focus Mode
-│   └── 🧾 ProvenanceVM.ts          # Flattened provenance + attribution structures
-│
-├── 🔗 pipelines/                    # Pipeline wrappers (thin orchestration layer)
-│   └── 🚀 runFocusPipeline.ts       # Calls graph/API focus pipeline + dispatches state updates
-│
-├── 🎨 components/                   # UI wrappers for Focus Mode
-│   └── README.md                   # Redirect note (UI lives in web/src/components/FocusMode)
-│
-└── 📘 README.md                    # This document
-~~~
-
-> **Important:** Feature folders contain **logic, state, hooks, and view-models — NOT React UI.**  
-> All UI surfaces live under: `web/src/components/FocusMode/**`.
-
----
-
-## 🧩 Feature Responsibilities
-
-Focus Mode unifies 6 independent domains into a single synchronized experience:
-
-1. **Entity Reasoning**  
-2. **Narrative Rendering (AI-labeled)**  
-3. **Spatial Integration**  
-4. **Temporal Integration**  
-5. **Explainability & Transparency**  
-6. **Governance Enforcement (FAIR+CARE)**  
-
-Each responsibility is implemented via **hooks + state + view-models**, not via UI components.
-
----
-
-### 1️⃣ Entity Reasoning
-
-- Fetch entity details from `/api/focus/{id}` (REST) or equivalent GraphQL query.  
-- Validate schema + type mappings against Focus DTO and graph contracts.  
-- Construct a `FocusViewModel` representing:
-  - core identity (type, label, IDs)  
-  - typed relations (people, places, events, documents, datasets)  
-  - CARE + sovereignty metadata  
-- Guard against incomplete/ambiguous data:
-  - entity must be resolvable in the graph  
-  - missing critical fields → safe fallbacks + error surfaces (never silent failures)
-
-`useFocusEntity.ts` is the **primary controller hook**, orchestrating the full focus lifecycle.
-
----
-
-### 2️⃣ Narrative Rendering (AI-Labeled)
-
-- Accept narratives from backend LLM pipelines (precomputed or on-demand).  
-- Clearly label speculative or AI-generated text (UI surfaces show “AI-generated” badges).  
-- Apply governance rules:
-  - mark low-confidence segments  
-  - require source-backed factual claims  
-- Attach provenance overlays:
-  - link narrative segments to entities and source documents via IDs  
-  - ensure Story Node–compatible structure for later insertion into the narrative graph.
-
-Narrative content is treated as **data**, not free-form text.
-
----
-
-### 3️⃣ Spatial Integration
-
-Uses shared geospatial utilities:
-
-- `geospatial/footprint.ts`  
-- `geospatial/masking.ts`  
-- `geospatial/layers.ts`  
-
-Focus Mode spatial responsibilities:
-
-- Build highlight geometries (Points, Lines, Polygons) for the Focus entity & neighbors.  
-- Apply H3 generalization/masking for sensitive places (archaeology, tribal lands, etc.).  
-- Integrate sovereignty overlays (tribal boundaries, treaty polygons).  
-- Push derived spatial overlays to `MapView` via `spatialState` and `useFocusSpatial`.
-
-Map-facing outputs must be **GeoJSON-safe** and aligned with MapLibre layer schema.
-
----
-
-### 4️⃣ Temporal Integration
-
-Via `timelineState` and time utilities:
-
-- Highlight relevant intervals:
-  - event dates, person lifespans, treaty effective periods, dataset validity.  
-- Map fuzzy/open-ended spans:
-  - approximate ranges (e.g., “ca. 1850s”) modeled using precision flags.  
-- Propagate temporal uncertainty to UI:
-  - timeline labels + styling show approximate vs exact periods.  
-
-Focus Mode time logic is OWL-Time–compatible and integrates with global `TimeContext`.
-
----
-
-### 5️⃣ Explainability & Transparency
-
-Powered by:
-
-- `useFocusExplainability.ts`  
-- explainability payloads (SHAP/LIME-style vectors) from the AI pipelines  
-
-Focus Mode explainability:
-
-- Surfaces **why** an entity or relation is highlighted:
-  - which features or data points drive relevance.  
-- Exposes per-field or per-entity contribution scores to the UI.  
-- Provides structured models (`ExplainabilityVM`) suitable for:
-  - charts, badges, and textual explanations without leaking model internals unsafely.  
-
-Explainability outputs must never override governance or CARE rules.
-
----
-
-### 6️⃣ Governance Enforcement (FAIR+CARE)
-
-Focus Mode is one of the **highest-governance** surfaces in KFM.
-
-It must:
-
-- Display CARE labels prominently for focused entities.  
-- Apply H3 generalization and masking for sensitive sites (especially archaeology & sovereignty).  
-- Never show raw coordinates for sovereignty-protected places.  
-- Label any AI-derived text clearly (“AI-generated”, “low confidence”, etc.).  
-- Indicate missing or uncertain provenance.  
-- Warn when narratives contain low-confidence or contested material.  
-- Ensure Story Node suggestions and relation graphs obey governance metadata.
-
-**Strictly prohibited:**
-
-- Invented relationships  
-- Unverified historical claims  
-- Coordinate inference for masked sites  
-- Speculative narrative reconstruction  
-- Any “governance-override” behavior  
-
-Governance failures → **hard CI BLOCKER** for Focus Mode feature changes.
-
----
-
-## 🧠 Focus Mode Data Flow & Architecture
-
-~~~mermaid
+```mermaid
 flowchart LR
-    U[User selects entity] --> C["useFocusEntity() Controller"]
-    C --> API["/api/focus/{id} (REST/GraphQL)"]
-    API --> DTO[Focus DTO]
-    DTO --> VM[Focus ViewModel Builder]
-    VM --> GOV[CARE + Sovereignty Guard]
-    VM --> SPATIAL[Spatial Highlight Builder]
-    VM --> TIME[Temporal Range Normalizer]
-    VM --> REL[Relations Builder]
-    VM --> EXPL[Explainability Formatter]
+  A[ETL] --> B[Catalogs<br/>(STAC / DCAT / PROV)]
+  B --> C[Graph]
+  C --> D[API<br/>(src/server)]
+  D --> E[UI<br/>(web)]
+  E --> F[Story Nodes]
+  F --> G[Focus Mode]
+```
 
-    SPATIAL --> MAP[MapView Highlight]
-    TIME --> TL[Timeline Highlight]
-    REL --> UI[FocusMode UI Components]
-    EXPL --> UI
-    GOV --> UI
-~~~
-
-This flow describes **Focus Mode v3** orchestration between:
-
-- **Feature layer** (`web/src/features/focus-mode/**`)  
-- **Graph/API** (Neo4j + FastAPI/GraphQL)  
-- **UI components** (`web/src/components/FocusMode/**`)  
+> [!IMPORTANT]
+> Focus Mode is the **last stage**. It must only consume governed outputs from earlier stages (especially via the **API boundary**).
 
 ---
 
-## 🔐 Governance Requirements
+## 🚧 Hard Gate Rules
 
-Focus Mode MUST:
+> [!IMPORTANT]
+> These are **non-negotiable invariants**. Don’t merge changes that weaken them.
 
-- Always surface CARE labels for the focal entity and sensitive neighbors.  
-- Apply H3 masking / generalization for:
-  - sacred/archaeological sites  
-  - sovereignty-controlled territories  
-- Avoid exposing raw coordinates where masking is required.  
-- Propagate sovereignty notices into the Focus Detail view.  
-- Ensure all suggestions (related entities, Story Nodes) respect:
-  - CARE tags  
-  - license constraints  
-  - indigenous data sovereignty policies  
+### 1) Only provenance‑linked content ✅
+- Story text must come from **published Story Nodes** (with citations).
+- Dynamic content (maps, images, charts, overlays) must come from **cataloged data** or **graph entities** with stable IDs.
+- Any UI element without a provenance reference is **blocked** (fail closed).
 
-Any governance regression in Focus Mode triggers:
+### 2) AI is opt‑in + transparent 🤖
+- AI output must **never render by default**.
+- AI output must be:
+  - user-triggered (opt-in)
+  - labeled as AI-generated
+  - accompanied by uncertainty/confidence metadata (when available)
+- AI must **respect all sensitivity/redaction rules** (no speculation that bypasses governance).
 
-- **CI failure** in governance-validation jobs.  
-- Blocked merges until remediation and governance review.
-
----
-
-## ♿ Accessibility Requirements
-
-Focus Mode feature logic supports A11y-compliant UI by ensuring:
-
-- All Focus entities have:
-  - clear labels, summaries, and types for ARIA usage.  
-- Explainability sections have:
-  - text equivalents, not only visualizations.  
-- Temporal and spatial uncertainty are surfaced in structured metadata:
-  - enabling screen readers to convey approximate vs exact.  
-
-Consuming components in `web/src/components/FocusMode/**` must:
-
-- Provide keyboard navigation across tabs/panels.  
-- Use ARIA roles for dialog, tablist, tabpanel, etc.  
-- Respect high-contrast and reduced-motion preferences from `A11yContext`.  
-
-Accessibility regressions in Focus Mode flows → **CI BLOCKER**.
+### 3) No sensitive location leaks 🛡️
+- The Focus Mode map must **generalize or omit** sensitive locations according to sovereignty rules.
+- Focus Mode must not become a **side‑channel** that reveals restricted coordinates (zooming, hover tooltips, network calls, cached tiles, etc.).
 
 ---
 
-## 📈 Telemetry Responsibilities
+## 🎯 What Focus Mode is responsible for
 
-Focus Mode feature MUST cooperate with telemetry by:
-
-- Emitting/forwarding event hooks for:
-  - `"focus:open"` / `"focus:close"`  
-  - `"focus:entity-select"`  
-  - `"focus:summary-expand"`  
-  - `"focus:relation-select"`  
-  - `"focus:explanation-view"`  
-  - `"focus:spatial-highlight"`  
-  - `"focus:care-warning"`  
-
-Telemetry requirements:
-
-- All events are **non-PII** and schema-valid (`web-feature-focusmode-v2.json`).  
-- CARE-sensitive interactions may be aggregated or anonymized as needed.  
-- Telemetry is recorded in:
-  - `releases/<version>/web-feature-focusmode-telemetry.json`  
-
-Telemetry events must never leak raw coordinates for masked entities or sensitive IDs.
+- 📖 **Render Story Nodes safely**
+  - deterministic, sanitized Markdown rendering
+  - stable anchors for citations & entity references
+- 🧷 **Evidence UX**
+  - citations are clickable / traceable
+  - evidence drawer/panel for sources
+- 🗺️ **Map context**
+  - layers are provenance-backed
+  - each layer can show a “Source” tooltip linking to its catalog provenance
+- ⏱️ **Timeline context**
+  - story-aligned temporal navigation
+  - highlights entities/events referenced in the narrative
+- 🧯 **Redaction UX**
+  - blurred markers / regionalization / omission + clear notices
+- 📊 **Audit-friendly telemetry**
+  - record user-visible governance actions (e.g., redaction notices)
 
 ---
 
-## 🧪 Testing Requirements
+## ❌ What Focus Mode must NOT do
 
-Tests MUST validate:
-
-- Focus pipeline orchestration:
-  - `runFocusPipeline.ts` behavior for success/error cases.  
-- View-model generation:
-  - correctness of `FocusViewModel`, `RelationsViewModel`, `ExplainabilityVM`, etc.  
-- Governance propagation:
-  - CARE/sovereignty flags present on Focus entities and relations.  
-- Narrative safety:
-  - no speculative/inferred relationships emitted by feature logic.  
-- Spatial highlight generation:
-  - correct masking/generalization behavior.  
-- Temporal normalization:
-  - proper modeling of fuzzy dates and precision levels.  
-- Explainability integrity:
-  - explainability payloads correspond to underlying data features.  
-- A11y integration:
-  - feature outputs supply adequate metadata for consuming components.
-
-Test locations:
-
-~~~text
-tests/unit/web/features/focus-mode/**
-tests/integration/web/features/focus-mode/**
-tests/e2e/web/features/focus-mode/**      # where applicable, for full-stack flows
-~~~
-
-CI must run these suites on every PR touching `web/src/features/focus-mode/**`.
+- 🚫 Query the graph or databases directly (Neo4j/PostGIS/etc.)
+- 🚫 Render “helpful” context that has no provenance ID
+- 🚫 Auto-inject AI summaries/suggestions into the reading flow
+- 🚫 Leak sensitive locations through UI behavior or metadata
 
 ---
 
-## 🕰️ Version History
+## 📦 Inputs
 
-| Version  | Date       | Summary                                                                                         |
-|---------:|------------|-------------------------------------------------------------------------------------------------|
-| v11.2.2  | 2025-11-30 | Upgraded to KFM-MDP v11.2.2; aligned with v11 Focus Mode v3 design, telemetry v2, and governance. |
-| v10.4.0  | 2025-11-15 | Complete Focus Mode v2.5 feature documentation; aligned with full KFM pipeline architecture.    |
-| v10.3.2  | 2025-11-14 | Added explainability + provenance enforcement.                                                  |
-| v10.3.1  | 2025-11-13 | Initial feature-scoped Focus Mode folder added.                                                 |
+### 1) Published Story Nodes (governed content)
+Expected to live under:
+
+- `docs/reports/story_nodes/published/<story_slug>/story.md`
+- `docs/reports/story_nodes/published/<story_slug>/assets/*`
+
+Story Nodes should include:
+- citations for factual claims
+- stable entity references (graph IDs)
+- explicit separation of **fact vs interpretation** (especially if AI-assisted)
+
+### 2) Focus Mode Context Bundle (from the governed API)
+Focus Mode should request a single “bundle” that includes:
+- story content (or pointer)
+- entity references
+- timeline items
+- map layers/overlays + view constraints
+- evidence list
+- redaction & sensitivity flags
+- optional AI capabilities (if enabled)
+
+> [!TIP]
+> Keep the UI “dumb”: redaction, access control, and contract validation belong server-side. The UI still enforces **fail-closed** behavior.
 
 ---
 
-## ⚖️ Footer
+## 🧩 Suggested module layout
 
-<div align="center">
+```text
+📁 web/src/features/focus-mode/
+├── 📄 README.md
+├── 🧭 routes/
+│   └── FocusModeRoute.tsx
+├── 📄 FocusModePage.tsx
+├── 📁 components/
+│   ├── 📁 StoryNodeReader/
+│   ├── 📁 EvidenceDrawer/
+│   ├── 📁 MapPanel/
+│   ├── 📁 TimelinePanel/
+│   └── 📁 AIInsightsPanel/
+├── 📁 hooks/
+│   ├── useFocusModeBundle.ts
+│   ├── useProvenanceGuard.ts
+│   └── useRedactionPolicy.ts
+├── 📁 services/
+│   ├── focusModeApi.ts
+│   └── telemetry.ts
+├── 📁 types/
+│   ├── focusMode.types.ts
+│   └── storyNode.types.ts
+└── 🧪 __tests__/
+    ├── provenanceGuard.test.ts
+    ├── redactionPolicy.test.ts
+    └── focusModeBundle.contract.test.ts
+```
 
-**Kansas Frontier Matrix — Focus Mode Feature**  
-🎯 Entity-Centric Exploration · 🛡️ FAIR+CARE Governance · 🧠 Explainable Narratives  
+> [!NOTE]
+> Filenames can differ — the key is **feature cohesion**: everything Focus Mode owns stays in this folder.
 
-[← Back to Web Features](../README.md) •  
-[📚 Docs Root](../../../../README.md) •  
-[🛡 Governance Charter](../../../../docs/standards/governance/ROOT-GOVERNANCE.md)
+---
 
-© 2025 Kansas Frontier Matrix — MIT License  
+## 🧾 Contracts & Types
 
-**End of Document**
+### TypeScript sketch (client-side)
 
-</div>
+```ts
+export type ProvenanceRef = {
+  /** Stable ID (STAC/DCAT/PROV/Graph ID) */
+  id: string;
+  /** Human label for evidence UX */
+  label?: string;
+  /** Optional deep-link for evidence viewer */
+  href?: string;
+};
+
+export type RedactionPolicy = {
+  sensitivity: "open" | "restricted" | "sensitive";
+  hidePreciseLocation: boolean;
+
+  /**
+   * Optional generalized geometry (region polygon, bbox, etc.)
+   * Never assume this is precise. Treat as display-only.
+   */
+  generalizedGeometry?: unknown;
+
+  /** UX copy shown to the user when redaction occurs */
+  notice?: string;
+};
+
+export type FocusModeBundle = {
+  storyNode: {
+    slug: string;
+    title: string;
+    markdown: string;
+    provenance: ProvenanceRef;
+
+    // governance metadata (when available)
+    careLabel?: string;
+    sensitivity?: "open" | "restricted" | "sensitive";
+    lastUpdated?: string;
+  };
+
+  entities: Array<{
+    id: string;
+    label: string;
+    kind: "person" | "place" | "event" | "document" | "dataset" | "other";
+    provenance: ProvenanceRef;
+    redaction?: RedactionPolicy;
+  }>;
+
+  timeline: {
+    items: Array<{
+      id: string;
+      label: string;
+      start: string; // ISO
+      end?: string;  // ISO
+      provenance: ProvenanceRef;
+    }>;
+  };
+
+  map: {
+    layers: Array<{
+      id: string;
+      title: string;
+      provenance: ProvenanceRef;
+      config: unknown;
+      redaction?: RedactionPolicy;
+    }>;
+    viewConstraints?: {
+      maxZoom?: number;
+      bounds?: unknown;
+    };
+  };
+
+  evidence: {
+    items: Array<{
+      id: string;
+      title: string;
+      provenance: ProvenanceRef;
+      kind?: "scan" | "photo" | "dataset" | "report" | "other";
+    }>;
+  };
+
+  ai?: {
+    enabled: boolean;
+    capabilities: Array<string>; // e.g. ["summarize", "suggestConnections"]
+  };
+};
+```
+
+### Provenance guard (fail closed)
+```ts
+export function assertRenderable<T extends { provenance?: ProvenanceRef }>(
+  item: T,
+  label: string
+): asserts item is T & { provenance: ProvenanceRef } {
+  if (!item.provenance?.id) {
+    throw new Error(`[FocusMode] Missing provenance for ${label}`);
+  }
+}
+```
+
+---
+
+## 🗺️ Map + Timeline behavior
+
+### Map panel
+- Only renders layers returned by the API bundle (no hidden layers)
+- Every layer has a **Source** affordance (ℹ️) that points back to provenance
+- Sensitive locations render as:
+  - generalized regions, or
+  - blurred markers, or
+  - omitted entirely
+- When any sensitive layer is visible:
+  - enforce view constraints (e.g., clamp zoom)
+  - show a redaction notice
+
+### Timeline panel
+- Shows events connected to the story and its referenced entities
+- Clicking a timeline item:
+  - highlights related passages (if available)
+  - highlights map features (only if allowed by redaction policy)
+
+---
+
+## 🧯 Redaction & Sovereignty
+
+> [!WARNING]
+> Treat the UI as an attack surface: hover tooltips, URL params, cached tiles, debug logs, and telemetry can leak restricted coordinates.
+
+**UI safeguards (minimum):**
+- Clamp zoom / restrict panning when `hidePreciseLocation` is true anywhere in view
+- Never log/store raw coordinates client-side for redacted entities
+- Ensure source popovers do not include restricted geometry
+- Render clear notices when redaction occurs
+
+**Telemetry (recommended):**
+- `focus_mode_redaction_notice_shown`
+
+---
+
+## 🤖 AI in Focus Mode
+
+AI in Focus Mode is allowed only when it follows this shape:
+
+- ✅ user-triggered (button/menu)
+- ✅ labeled “AI-generated”
+- ✅ includes confidence/uncertainty (when supported)
+- ✅ never bypasses redaction
+- ✅ refuses to “fill gaps” when evidence is missing
+
+Suggested UX actions:
+- **Generate summary (AI)** → short summary + confidence
+- **Suggest connections (AI)** → explicit hypotheses + uncertainty, never treated as fact
+
+---
+
+## 📊 Telemetry & Audit Trails
+
+Focus Mode should emit events that support review and compliance:
+
+- `focus_mode_opened`
+- `focus_mode_evidence_opened`
+- `focus_mode_redaction_notice_shown`
+- `focus_mode_ai_hint_requested`
+- `focus_mode_ai_hint_shown`
+
+> [!TIP]
+> Prefer stable IDs (story slug, entity IDs, provenance IDs). Avoid raw data payloads.
+
+---
+
+## 🧪 Testing
+
+Minimum tests that protect the hard gate:
+
+- ✅ Unit: provenance guard blocks render when provenance is missing
+- ✅ Unit: redaction policy prevents coordinate display + clamps zoom
+- ✅ Contract: bundle matches API schema (JSON schema validation / snapshot)
+- ✅ E2E: sensitive Story Nodes do not leak coordinates via:
+  - map interactions
+  - tooltips
+  - network calls
+  - exported URLs
+
+---
+
+## ✅ Definition of Done (DoD) for Focus Mode changes
+
+- [ ] Nothing renders without a provenance ID
+- [ ] Redaction cannot be bypassed via UI behavior
+- [ ] AI is opt-in, labeled, and includes uncertainty (when available)
+- [ ] Telemetry is safe (IDs, not raw restricted data)
+- [ ] Evidence UX works (citations are traceable)
+- [ ] Tests updated/added to protect invariants
+
+---
+
+## 🔗 Related docs (repo)
+
+From this folder, repo root is `../../../../`.
+
+- 📘 Master Guide v13: `../../../../docs/` *(find the canonical v13 Master Guide file there)*
+- 🧩 Story Node template: `../../../../docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- 🧾 API contract extension template: `../../../../docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- ⚖️ Governance: `../../../../docs/governance/ROOT_GOVERNANCE.md`
+- 🛡️ Sovereignty: `../../../../docs/governance/SOVEREIGNTY.md`
+- 🧪 Telemetry schemas: `../../../../schemas/telemetry/`
+- 🗺️ UI schemas: `../../../../schemas/ui/`
+- 🧠 Story Node schemas: `../../../../schemas/storynodes/`
+
+---
+
+<details>
+<summary>🧰 Troubleshooting</summary>
+
+### “Why is my layer not showing up?”
+- Does it have a provenance ID?
+- Is it blocked by sovereignty/redaction?
+- Is it returned by the API context bundle?
+
+### “Why is some text missing?”
+- Focus Mode should fail closed if citations/provenance are missing.
+- Validate Story Node citation formatting and entity tags (graph IDs).
+
+</details>
