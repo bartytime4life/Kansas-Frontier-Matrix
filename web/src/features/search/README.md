@@ -1,253 +1,324 @@
----
-title: "🔎 Search & Discovery — GraphQL Query Interface (KFM-Ready)"
-path: "web/src/features/search/README.md"
-version: "v9.9.0"
-last_updated: "2025-11-08"
-review_cycle: "Quarterly / Autonomous"
-commit_sha: "<latest-commit-hash>"
-sbom_ref: "../../../releases/v9.9.0/sbom.spdx.json"
-manifest_ref: "../../../releases/v9.9.0/manifest.zip"
-telemetry_ref: "../../../releases/v9.9.0/focus-telemetry.json"
-telemetry_schema: "../../../schemas/telemetry/web-search-v1.json"
-governance_ref: "../../../docs/standards/governance/DATA-GOVERNANCE.md"
-license: "MIT"
----
+<!--
+📄 Path: web/src/features/search/README.md
+🧩 Feature: Search (🔎)
+Status: Draft (living doc)
+-->
 
-<div align="center">
+# 🔎 Search Feature (web/src/features/search)
 
-# 🔎 **Search & Discovery — GraphQL Query Interface**  
-`web/src/features/search/README.md`
+![Feature](https://img.shields.io/badge/feature-search-1f6feb)
+![UI](https://img.shields.io/badge/UI-React-61DAFB?logo=react&logoColor=white)
+![GIS](https://img.shields.io/badge/GIS-geo--referenced%20search-2E7D32)
+![Security](https://img.shields.io/badge/security-permission--filtered-critical)
+![UX](https://img.shields.io/badge/UX-responsive-8a2be2)
 
-**Purpose:**  
-Provide a unified **semantic and keyword search engine** for Kansas Frontier Matrix (KFM), connecting **map**, **timeline**, and **Focus Mode** through an integrated query and autocomplete system.  
-Built under **MCP-DL v6.3**, **FAIR+CARE**, and **ISO 19115 provenance**, it enables users to locate entities (people, places, events, datasets) quickly, ethically, and transparently.
+The **Search** feature is the user’s fastest path from **intent → map context → actionable insight**.  
+In KFM terms, it supports:
 
-[![Docs · MCP](https://img.shields.io/badge/Docs·MCP-v6.3-blue)](../../../docs/)
-[![License](https://img.shields.io/badge/License-MIT-green)](../../../LICENSE)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR+CARE-Validated-orange)](../../../docs/standards/)
-[![Status](https://img.shields.io/badge/Status-Stable-brightgreen)](#)
+- **Geo-referenced search** (names → coordinates → zoom) 🧭
+- **Search + query workflows** (selection / attribute / geography) 🗺️
+- **Full‑text lookup** of supporting artifacts (docs, records, notes) 📚
+- **Permission-safe discovery** (never leak what the user can’t access) 🔐
 
-</div>
+This design aligns with the KFM frontend being a modern **React SPA** with reusable UI components and responsive layouts.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)
 
 ---
 
-## 📘 Overview
+## 🧭 Table of contents
 
-The **Search & Discovery** module powers:
-- 🔍 **GraphQL + REST queries** to KFM’s backend (`/api/search?q=`).  
-- 🧠 **Semantic embeddings** for AI-assisted query expansion.  
-- 🗺️ **Results synchronization** across the **MapLibre map**, **timeline**, and **Focus Mode**.  
-- ♻️ **Telemetry capture** for performance, fairness, and audit reporting.  
-
-### Core Capabilities
-| Function | Description |
-|-----------|-------------|
-| **Autocomplete** | Suggests entities (people, events, places) as user types. |
-| **Semantic Expansion** | Embedding-based retrieval finds conceptually related results. |
-| **Filtered Search** | Limit by type, date, or region (GraphQL filters). |
-| **Result Linking** | Clicking result triggers Focus Mode and timeline alignment. |
-| **Telemetry Hooks** | Logs latency, query success rate, FAIR+CARE compliance tags. |
+- [What “Search” means in KFM](#-what-search-means-in-kfm)
+- [User stories](#-user-stories)
+- [UX rules + states](#-ux-rules--states)
+- [Architecture](#-architecture)
+- [Search modalities](#-search-modalities)
+- [Data contracts](#-data-contracts)
+- [Security requirements](#-security-requirements)
+- [Performance rules](#-performance-rules)
+- [Testing checklist](#-testing-checklist)
+- [Feature folder layout](#-feature-folder-layout)
+- [Project references](#-project-references)
 
 ---
 
-## 🗂️ Directory Layout
+## 🧠 What “Search” means in KFM
 
-```plaintext
-web/
-└─ src/
-   └─ features/
-      └─ search/
-         README.md             # This file — Search system overview
-         search-bar.tsx        # React UI with autocomplete + query input
-         useSearch.ts          # Hook for query lifecycle and telemetry logging
-         search-context.ts     # Context provider storing recent queries
-         filters.tsx           # Filter controls (type, date, category)
-         gql/
-         ├─ search.graphql     # Base query template
-         ├─ filters.graphql    # Filter metadata query
-         └─ schema.graphql     # Local GraphQL type definitions
-         utils/
-         ├─ search-utils.ts    # Debounce, tokenization, semantic helpers
-         └─ highlight.ts       # Text highlighting for matched results
+KFM’s UI is built around map-based exploration and “drill‑down” analysis. Search is not just text matching—it’s a **navigation + filtering primitive** that can:
+
+1. **Find a place / boundary / field by name** and zoom there (gazetteer behavior).  [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+2. Support classic GIS query approaches:
+   - **Selection** (click / lasso / polygon select)
+   - **Query by attribute**
+   - **Query by geography**  [oai_citation:2‡Geographic Information System Basics - geographic-information-system-basics.pdf](file-service://file-Kjn2enYFqXQtK3J4zN2DWz)  
+3. Optionally support **client-side full-text search** for static deployments via a **pre-built JSON index** (or a lightweight JS search library), keeping the web app fast.  [oai_citation:3‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)
+
+> 🧩 In short: Search should feel like a “spotlight” for the whole system—**map, layers, timeline, and documents**.
+
+---
+
+## 👤 User stories
+
+### Farmer / operator 🌾
+- As a user, I can search my **fields by name** and jump to them on the map.  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- As a user, I only see results I’m allowed to see (no cross-tenant leakage).  [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+
+### Researcher 🔬
+- As a user, I can find a **county / boundary** and zoom there to start analysis.  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- As a user, I can filter results by type (Field / County / Dataset / Document / Layer).
+- As a user, I can pivot from a search result to:
+  - turning on the right layer(s),
+  - setting an appropriate time (if relevant),
+  - opening supporting documentation.
+
+### Admin / curator 🧰
+- As a user, I can verify that search indices do **not include restricted artifacts** and that search endpoints are rate-limited.  [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+
+---
+
+## 🎛️ UX rules + states
+
+### Non-negotiables ✅
+- **Keyboard-first**: arrow keys to navigate results; Enter to open; Esc closes.
+- **Debounced input**: don’t spam the API while typing.
+- **Clear “no results” state**: explain what to try next (broaden filters, check spelling).
+- **Result types are obvious**: icon + label (📍place, 🟩field, 🗺️layer, 📄doc).
+
+### UI states (minimum set)
+| State | Trigger | UI behavior |
+|---|---|---|
+| Idle | empty query | show hint / recent searches |
+| Typing | user entering text | show “suggestions…” if available |
+| Loading | fetch/index search | spinner + keep input responsive |
+| Results | matches found | grouped list + shortcuts |
+| Empty | no matches | “No results” + suggestions |
+| Error | provider failure | show message + retry |
+
+### State machine (Mermaid) 🧩
+```mermaid
+stateDiagram-v2
+  [*] --> Idle
+  Idle --> Typing: input change
+  Typing --> Loading: debounce elapsed
+  Loading --> Results: matches > 0
+  Loading --> Empty: matches = 0
+  Loading --> Error: provider fails
+  Results --> Typing: input change
+  Empty --> Typing: input change
+  Error --> Loading: retry
+  Typing --> Idle: cleared
 ```
 
 ---
 
-## ⚙️ Data Flow
+## 🧱 Architecture
 
+KFM’s frontend is organized as a component-based SPA (React), using state management (Redux or Context/hooks) and responsive CSS layouts.  [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+
+For Search specifically, treat it as a **feature module** with:
+
+- **UI components** (SearchBar, ResultsList, Filters)
+- **Domain-ish types** (query, filters, result)
+- **Providers** (local index vs API)
+- **Integration actions** (map zoom/highlight, open document, toggle layer)
+
+### Search flow (Mermaid) 🔁
 ```mermaid
 flowchart LR
-  A["User input (search-bar.tsx)"] --> B["useSearch() Hook (debounced query)"]
-  B --> C["GraphQL API /api/search?q="]
-  C --> D["Results Cache (search-context.ts)"]
-  D --> E["Focus Mode Trigger / timeline alignment"]
-  B --> F["Telemetry log → focus-telemetry.json"]
+  U[User types 🔎] --> D[Debounce]
+  D --> Q[Query Builder 🧾]
+  Q --> P{Search Provider}
+  P -->|Local Index| L[(JSON Index 📦)]
+  P -->|API| A[/REST API 🌐/]
+  L --> R[Result Normalizer 🧹]
+  A --> R
+  R --> G[Group & Rank ⭐]
+  G --> UI[Results UI 📋]
+  UI --> M[Map + Sidebar Actions 🗺️]
 ```
-
-**Notes:**
-- GraphQL query returns structured entities, ready for Focus Mode or map highlighting.  
-- Telemetry includes latency, results count, and user role (for governance).  
-- All network calls validated against **MCP data contract** and **FAIR+CARE schema**.
 
 ---
 
-## 🧩 Example GraphQL Query (`gql/search.graphql`)
+## 🧭 Search modalities
 
-```graphql
-query SearchEntities($q: String!, $limit: Int, $type: [String!], $bbox: [Float!]) {
-  search(query: $q, limit: $limit, type: $type, bbox: $bbox) {
-    id
-    label
-    type
-    summary
-    year
-    location {
-      lat
-      lon
-    }
-    governance {
-      care_tag
-    }
-  }
+### 1) Geo-referenced search (gazetteer) 🧭
+When the user searches a known geographic name (e.g., county), Search returns a result with coordinates / bounds and triggers map navigation (“zoom there”).  [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+
+**Implementation notes**
+- Prefer **stored boundary data** in KFM where possible.
+- If external geocoding is ever used, ensure:
+  - privacy review,
+  - rate limiting,
+  - and no sensitive query leakage.  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+
+### 2) Query by attribute 🧾
+Classic GIS behavior: find features by attributes (name, ID, tags, classification). GIS fundamentals treat this as a core search approach.  [oai_citation:11‡Geographic Information System Basics - geographic-information-system-basics.pdf](file-service://file-Kjn2enYFqXQtK3J4zN2DWz)  
+
+**Example**
+- “Fields where crop = wheat”
+- “Counties with population density ≥ X”
+- “Docs tagged ‘survey’”
+
+### 3) Query by geography 🗺️
+This includes:
+- “within this polygon”
+- “intersects this boundary”
+- “near this point”
+
+GIS sources describe this as a primary query technique alongside selection and attribute queries.  [oai_citation:12‡Geographic Information System Basics - geographic-information-system-basics.pdf](file-service://file-Kjn2enYFqXQtK3J4zN2DWz)  
+
+### 4) Full-text search (documents / narratives) 📚
+If the deployment is static (no server), KFM design materials suggest generating a **pre-built search index** (JSON) and searching it client-side.  [oai_citation:13‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)  
+
+> 🧠 Keep heavy NLP/AI offline and ship only lightweight indices to the browser.
+
+---
+
+## 📦 Data contracts
+
+> These are **recommended** contracts for this feature folder. Adjust to match the repo’s existing types & API conventions.
+
+### `SearchQuery`
+- `text: string`
+- `filters: SearchFilters`
+- `scope?: "global" | "map" | "docs"`
+- `bbox?: [minLng, minLat, maxLng, maxLat]` (optional map constraint)
+- `time?: { start?: string; end?: string }` (optional)
+
+### `SearchResult`
+Common normalized result (all providers map into this):
+- `id: string`
+- `type: "field" | "county" | "place" | "layer" | "doc" | "dataset" | "event"`
+- `title: string`
+- `subtitle?: string`
+- `score?: number`
+- `access: "allowed" | "denied"` *(ideally never return denied results to UI)*
+- `geometry?: GeoJSON.Geometry`
+- `bbox?: [minLng, minLat, maxLng, maxLat]`
+- `actions: Array<"zoom" | "highlight" | "open" | "toggleLayer">`
+- `meta?: Record<string, unknown>`
+
+### Provider interface (TypeScript-ish)
+```ts
+export interface SearchProvider {
+  search(query: SearchQuery, ctx: SearchContext): Promise<SearchResult[]>;
+}
+
+export interface SearchContext {
+  userRole?: string;
+  // Optional: current map view, zoom, active layers, etc.
 }
 ```
 
 ---
 
-## 🖥️ React Component Example
+## 🔐 Security requirements
 
-```tsx
-import React from 'react';
-import { useSearch } from './useSearch';
+KFM explicitly calls out **Search Security** as a risk surface:
 
-export function SearchBar() {
-  const { results, query, setQuery, loading } = useSearch();
+- Search must **only return results the user has access to** (avoid “someone else’s field name” leaks).
+- Sanitize input to prevent injection.
+- Rate limit endpoints to prevent scraping / enumeration.  [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
 
-  return (
-    <div role="search" aria-label="Entity Search">
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search people, events, places..."
-        aria-autocomplete="list"
-      />
-      {loading && <span>⏳</span>}
-      <ul role="listbox">
-        {results.map((r) => (
-          <li key={r.id} onClick={() => window.dispatchEvent(
-            new CustomEvent('kfm:focus:select', { detail: { entityId: r.id } })
-          )}>
-            <strong>{r.label}</strong> <em>({r.type})</em> — {r.summary}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-```
+### UI-side rules (also important)
+- Do **not** persist sensitive search results in `localStorage` by default.
+- Don’t show “smart suggestions” that could reveal restricted entity names.
+- Treat search analytics as sensitive telemetry (aggregate or anonymize where possible).
 
 ---
 
-## 🧠 Semantic Expansion (AI-Assisted Search)
+## ⚡ Performance rules
 
-### Overview
-When enabled, KFM’s **Focus Transformer v2** expands search queries using **text embeddings**.  
-This captures semantically related terms (e.g., *“buffalo”* ↔ *“bison”*, *“frontier war”* ↔ *“Bleeding Kansas”*).
+KFM’s frontend-backend interaction guidance emphasizes throttling frequent requests and keeping the UI responsive.  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
 
-### Embedding Workflow
-| Step | Description |
-|------|--------------|
-| **1. Encode query** | Convert text → embedding vector via transformer model. |
-| **2. Compare** | Compute cosine similarity with indexed embeddings. |
-| **3. Merge** | Combine top matches with keyword results (de-duplicate). |
-| **4. Return** | Serve sorted results with similarity score and provenance. |
+Apply that here:
 
-**Config file:** `search-config.json` defines model, similarity threshold, and bias filters.
+- ✅ Debounce keystrokes (e.g., 150–300ms)
+- ✅ Cancel in-flight requests when query changes
+- ✅ Cache recent queries (short-lived, memory cache)
+- ✅ Virtualize long result lists (when needed)
+- ✅ Prefer local index for static deployments; avoid heavy work in-browser  [oai_citation:16‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)  
 
 ---
 
-## 🧾 Telemetry & Governance
+## 🧪 Testing checklist
 
-Every search query emits a telemetry event captured in `focus-telemetry.json`:
+### Unit tests ✅
+- Query parsing / normalization
+- Provider mapping (API → normalized `SearchResult`)
+- Ranking + grouping logic
 
-```json
-{
-  "event": "search",
-  "query": "fort larned",
-  "timestamp": "2025-11-08T15:10:00Z",
-  "results": 8,
-  "latency_ms": 142,
-  "semantic_enabled": true,
-  "user_role": "public",
-  "governance": "approved"
-}
-```
+### Integration tests 🧩
+- Keyboard navigation across results
+- Selecting a geo-result triggers map zoom/highlight (mock MapView)
 
-Telemetry metrics:
-- Average latency ≤ 250 ms  
-- FAIR+CARE compliance checks (restricted results redacted)  
-- Query success rate ≥ 99%  
+### Security tests 🔐
+- Confirm restricted content never appears in results UI
+- Input sanitization + escaping (esp. if results include snippets)
 
-Governance filter ensures restricted or sensitive records are masked in UI.
+### Regression tests 🧯
+- “No results” state messaging remains helpful (doesn’t break layout)
+- Slow network behavior stays stable (no jitter, no stale results)
 
 ---
 
-## ♿ Accessibility & UX
+## 🧰 Feature folder layout
 
-| Element | Requirement | Implementation |
-|----------|--------------|----------------|
-| Search Input | Keyboard navigation & ARIA roles | `role="search"`, `aria-label` |
-| Results List | Keyboard-selectable | `role="listbox"` with arrow key handlers |
-| Contrast | ≥ 4.5:1 for text | CSS token variables from `palette.json` |
-| Focus Feedback | Clear highlight on selection | Outline + scroll-into-view |
-
-> WCAG 2.1 AA compliance validated via `a11y-lint.yml`.
-
----
-
-## 🧱 FAIR+CARE Data Contract
-
-| Field | Required | Description |
-|-------|-----------|-------------|
-| `id` | ✅ | Unique entity identifier |
-| `label` | ✅ | Human-readable title |
-| `type` | ✅ | Entity class (Person, Event, Place, Document) |
-| `summary` | ✅ | Concise description |
-| `governance.care_tag` | ✅ | FAIR+CARE compliance tag |
-| `year` | — | Optional for temporal relevance |
-| `location` | — | Optional for spatial mapping |
-
-Data contracts are enforced by CI using schema: `schemas/contracts/search-contract-v1.json`.
-
----
-
-## 🧾 Internal Citation
+> Suggested structure for `web/src/features/search/` (adjust to match existing conventions).
 
 ```text
-Kansas Frontier Matrix (2025). Search & Discovery — GraphQL Query Interface (v9.9.0).
-FAIR+CARE and MCP-DL v6.3 compliant search architecture integrating semantic retrieval, accessibility, and governance telemetry.
+📦 web/src/features/search
+├─ 📄 README.md              👈 you are here
+├─ 📄 index.ts               (public exports)
+├─ 📂 components
+│  ├─ 🧩 SearchBar.tsx
+│  ├─ 🧩 SearchFilters.tsx
+│  ├─ 🧩 SearchResultsList.tsx
+│  ├─ 🧩 SearchResultItem.tsx
+│  └─ 🧩 SearchEmptyState.tsx
+├─ 📂 hooks
+│  ├─ 🪝 useSearch.ts
+│  └─ 🪝 useDebouncedValue.ts
+├─ 📂 providers
+│  ├─ 🌐 apiSearchProvider.ts
+│  ├─ 📦 localIndexProvider.ts
+│  └─ 🧭 gazetteerProvider.ts
+├─ 📂 state
+│  ├─ 🧠 searchSlice.ts       (if Redux)
+│  └─ 🧠 searchStore.ts       (if Zustand/Context)
+├─ 📂 types
+│  ├─ 🧾 searchTypes.ts
+│  └─ 🧾 geoTypes.ts
+├─ 📂 utils
+│  ├─ 🧮 rankResults.ts
+│  ├─ 🧹 normalizeResults.ts
+│  └─ 🛡️ sanitize.ts
+└─ 🧪 __tests__
+   ├─ ✅ searchProviders.test.ts
+   └─ ✅ rankResults.test.ts
 ```
 
 ---
 
-## 🕰️ Version History
+## ✅ Definition of Done (DoD)
 
-| Version | Date       | Author | Summary |
-|--------:|------------|--------|----------|
-| v9.9.0 | 2025-11-08 | `@kfm-web` | Added semantic embeddings, GraphQL filters, and telemetry integration. |
-| v9.8.0 | 2025-11-05 | `@kfm-ui` | Improved Focus Mode synchronization and UX performance. |
-| v9.7.0 | 2025-11-02 | `@kfm-core` | Baseline search interface and autocomplete setup. |
+- [ ] Search returns **only authorized** results (server + UI)  [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- [ ] Geo-referenced search zooms to the selected boundary/place  [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- [ ] Input is debounced + cancellable; no request storms  [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- [ ] Mobile responsive layout verified (breakpoints, touch targets)  [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- [ ] Error + empty states are human-friendly and actionable
+- [ ] Unit tests added for normalization + ranking
+- [ ] Accessibility: keyboard nav + ARIA roles + focus management
 
 ---
 
-<div align="center">
+## 📚 Project references
 
-**Kansas Frontier Matrix**  
-*Semantic Discovery × FAIR+CARE Governance × Accessible Web Architecture*  
-© 2025 Kansas Frontier Matrix · Master Coder Protocol v6.3 · FAIR+CARE Certified · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
+These are the primary “source-of-truth” documents guiding this feature:
 
-[Back to Web Features](../README.md) · [Governance Charter](../../../docs/standards/governance/DATA-GOVERNANCE.md)
+- 🧭 KFM technical + frontend architecture notes  [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- 🔐 KFM security section (Search security, sanitization, rate limiting)  [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- 🗺️ Geo-referenced search pattern (gazetteer / boundary zoom)  [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation & Markdown Guide.gdoc](file-service://file-XGC3Vf2AfbA2JWvTvmHNGF)  
+- 🧾 GIS query methods: selection / attribute / geography  [oai_citation:24‡Geographic Information System Basics - geographic-information-system-basics.pdf](file-service://file-Kjn2enYFqXQtK3J4zN2DWz)  
+- 📦 Static-app search index idea (pre-built JSON index / lightweight JS search)  [oai_citation:25‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)  
+- 🌍 Remote sensing context (Earth Engine workflows)  [oai_citation:26‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)  
 
-</div>
-
+---
