@@ -1,3 +1,19 @@
+# 🤖 Dependabot Config v2 (GitHub Actions) 🔄
+
+> ✅ Goal: keep GitHub Actions dependencies fresh **weekly**, while keeping PR noise low with **grouping** + a short **major-version cooldown**.
+
+---
+
+## 📁 Where this lives
+
+- Folder: `📂 .github/`
+- File: `📄 dependabot.yml`
+
+---
+
+## ✅ Recommended `.github/dependabot.yml`
+
+```yaml
 version: 2
 updates:
   # Keep GitHub Actions dependencies (referenced in .github/workflows/** and composite actions) up to date.
@@ -63,8 +79,8 @@ updates:
     cooldown:
       semver-major-days: 7
 
-  # Optional ecosystems (enable only after confirming manifests exist in the given directory).
-  # These align to KFM canonical roots (UI in `web/`, APIs in `src/server/`, etc.):contentReference[oaicite:2]{index=2}
+  # 🧩 Optional ecosystems (enable only after confirming manifests exist in the given directory).
+  # These align to canonical repo roots (example: UI in `web/`, APIs in `src/server/`, etc.).
   # Not confirmed in repo:
   #
   # - package-ecosystem: "npm"
@@ -138,3 +154,18 @@ updates:
   #       applies-to: "security-updates"
   #       patterns:
   #         - "*"
+```
+
+---
+
+## 🧠 Behavior Summary (quick mental model)
+
+- ✅ **Weekly cadence** (Mondays @ 05:00 UTC)
+- ✅ **Minor + patch** updates are grouped into **2 PR streams**:
+  - 🧩 first-party Actions (`actions/*`, `github/*`)
+  - 🌍 third-party Actions (everything else)
+- ✅ **Major** updates stay **individual PRs** (easier review)
+- ✅ **Major cooldown** waits **7 days** before proposing brand-new major releases
+- ✅ **Security update grouping** mirrors the same split (if security updates are enabled)
+
+---
