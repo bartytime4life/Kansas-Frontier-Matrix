@@ -1,19 +1,30 @@
 # Kansas Frontier Matrix (KFM) 🧭🗺️  
 **An open-source geospatial + knowledge + modeling hub for Kansas** — built to fuse **historical mapping**, **remote sensing**, **GIS**, **simulation**, and **AI-assisted research workflows** into one cohesive system.
 
-![Status](https://img.shields.io/badge/status-active%20development-yellow)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![Node](https://img.shields.io/badge/node-18%2B-brightgreen)
-![Docker](https://img.shields.io/badge/docker-ready-blue)
-![GIS](https://img.shields.io/badge/GIS-PostGIS%20%7C%20GEE%20%7C%20GeoJSON-orange)
+<p align="left">
+  <img alt="Status" src="https://img.shields.io/badge/status-active%20development-yellow" />
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-green" />
+  <img alt="Python" src="https://img.shields.io/badge/python-3.10%2B-blue" />
+  <img alt="Node" src="https://img.shields.io/badge/node-18%2B-brightgreen" />
+  <img alt="Docker" src="https://img.shields.io/badge/docker-ready-blue" />
+  <img alt="GIS" src="https://img.shields.io/badge/GIS-PostGIS%20%7C%20GEE%20%7C%20GeoJSON-orange" />
+</p>
 
-> 🎯 **Goal:** Make Kansas-scale spatial truth **searchable**, **mappable**, **auditable**, and **modelable**—from scanned historic maps and archival documents to modern satellite-derived datasets.
+> 🎯 **Goal:** Make Kansas-scale spatial truth **searchable**, **mappable**, **auditable**, and **modelable** — from scanned historic maps and archival documents to modern satellite-derived datasets.
 
 ---
 
-## ✨ What this repository is
-Kansas Frontier Matrix is designed as a **multidisciplinary platform** combining:
+## 🔗 Quick links
+- 📦 **Roadmap:** see **🛣️ Roadmap** below  
+- 🧱 **Architecture:** see **🧭 Architecture at a glance**  
+- 🗃️ **Data standards:** see **🗺️ Data standards & conventions**  
+- 📚 **Reference library:** see **📚 Project reference library**
+
+---
+
+## 🧭 What this repository is
+Kansas Frontier Matrix is a **multidisciplinary platform** combining:
+
 - 🗺️ **Geospatial cataloging** (vector + raster + time)
 - 🛰️ **Remote sensing workflows** (Google Earth Engine–style pipelines)
 - 📚 **Document knowledge base** (historical sources + notes + metadata)
@@ -23,10 +34,20 @@ Kansas Frontier Matrix is designed as a **multidisciplinary platform** combining
 
 ---
 
+## ✅ Core principles (KFM “north stars”) ⭐
+- 🧾 **Provenance-first:** every layer has source(s), transform history, and license info.
+- 🔎 **Searchable + mappable:** “find it” and “see it” are first-class features.
+- 🧠 **Citations over vibes:** answers and outputs should point back to evidence.
+- 🧱 **Clean boundaries:** domain logic ≠ infrastructure ≠ UI.
+- 🧪 **Reproducible by default:** scripts/notebooks run the same on any machine.
+- ❤️ **Human-centered governance:** the system supports decisions; it doesn’t replace accountability.
+
+---
+
 ## 🧩 Core capabilities
 - 🗃️ **Data ingestion + normalization**
   - Historical maps (georeferenced), shapefiles, GeoJSON, rasters, tabular datasets
-  - Cataloged using a **STAC-like** manifest approach (metadata-first)
+  - Cataloged using a **STAC-like** manifest approach (**metadata-first**)
 - 🧭 **Search + discovery**
   - “Find me all layers related to *railroads 1860–1910* near *X county*”
 - 🕰️ **Time-aware mapping**
@@ -91,8 +112,8 @@ flowchart TB
 
 ---
 
-## 🗂️ Repository map (suggested structure)
-> 📌 If your repo already has a structure, keep it—this is the “target shape” for clarity.
+## 🗂️ Repository map (target structure)
+> 📌 If your repo already has a structure, keep it — this is the “target shape” for clarity.
 
 ```text
 Kansas-Frontier-Matrix/
@@ -113,6 +134,8 @@ Kansas-Frontier-Matrix/
 ├─ 📁 notebooks/               # Research notebooks (EDA, experiments)
 ├─ 📁 mcp/                     # “Master Coder Protocol” + SOPs (ops + governance)
 ├─ 📁 docs/                    # Docs & diagrams
+│  ├─ 📁 architecture/
+│  ├─ 📁 specs/
 │  └─ 📁 library/              # Reference PDFs (optional)
 ├─ 🧪 tests/
 ├─ 🐳 docker-compose.yml
@@ -168,6 +191,34 @@ To keep the system interoperable and scalable:
   - Transform history (what changed, when, by whom)
   - Citation-ready metadata
 
+### 🧾 STAC-like manifest (proposed mini-example)
+> 🧠 This is intentionally minimal — evolve it as the catalog grows.
+
+```json
+{
+  "id": "kfm.ks.railroads.1870_1910.v1",
+  "title": "Kansas Railroads (1870–1910)",
+  "type": "vector",
+  "format": "geojson",
+  "bbox": [-102.05, 36.99, -94.59, 40.00],
+  "time_range": {"start": "1870-01-01", "end": "1910-12-31"},
+  "crs": "EPSG:4326",
+  "provenance": {
+    "sources": [
+      {"label": "Kansas Historical Society", "ref": "KHS:<id or url>", "accessed": "2026-01-06"}
+    ],
+    "license": "TBD",
+    "attribution": "TBD"
+  },
+  "transforms": [
+    {"step": "georeference", "tool": "gdalwarp", "date": "2026-01-06", "by": "user@handle"}
+  ],
+  "assets": {
+    "data": {"href": "data/processed/railroads_1870_1910.geojson", "sha256": "<checksum>"}
+  }
+}
+```
+
 ---
 
 ## 🧠 Modeling & analytics (the “Matrix” part)
@@ -180,6 +231,14 @@ KFM isn’t just a map viewer — it’s a **modeling workbench**:
 - 🧪 **Simulation**: scenario testing, sensitivity analysis, model validation practices
 
 > ✅ Principle: **Models support decisions; they don’t replace accountability.**
+
+### 🧪 Modeling hygiene checklist (quick)
+- ✅ Define objective + assumptions
+- ✅ Version the dataset + manifest
+- ✅ Track train/test splits + seeds
+- ✅ Report uncertainty + sensitivity
+- ✅ Store artifacts (plots, metrics, model cards)
+- ✅ Tie outputs back to sources/citations
 
 ---
 
@@ -214,6 +273,13 @@ Suggested contribution workflow:
 3. 🧹 Format + lint  
 4. 📣 Open PR with a short “why” + screenshots (for UI changes)
 
+### 🗃️ Data contribution checklist (recommended)
+- [ ] Dataset has a **manifest** + **license** + **source link**
+- [ ] Transform history documented (scripts, commands, parameters)
+- [ ] CRS is explicit
+- [ ] BBox/time range present (when applicable)
+- [ ] Any sensitive fields reviewed/redacted (if needed)
+
 ---
 
 ## 🛣️ Roadmap (starter)
@@ -228,7 +294,8 @@ Suggested contribution workflow:
 ---
 
 ## 📚 Project reference library (all included project files)
-> 🎒 This repo is backed by a **curated, multidisciplinary reading pack** used to shape architecture, modeling rigor, GIS workflows, and UI/infra decisions.
+> 🎒 This repo is backed by a **curated, multidisciplinary reading pack** used to shape architecture, modeling rigor, GIS workflows, and UI/infra decisions.  
+> 📌 **Note:** Reference materials may have **different licenses** than the repository code. Keep them in `docs/library/` (or similar) and respect upstream terms.
 
 <details>
 <summary><strong>📦 Expand: Reference PDFs & what they influence</strong></summary>
@@ -236,6 +303,7 @@ Suggested contribution workflow:
 ### 🧭 Core KFM documentation
 - **Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation** → overall platform vision, architecture, modules
 - **Kansas-Frontier-Matrix — Open-Source Geospatial Historical Mapping Hub Design** → geospatial hub blueprint, STAC-like cataloging, map+timeline UX, repo patterns
+- **Unified Knowledge Base — Future-Proof Tech Documentation** → cross-domain best practices spanning modeling, GIS, AI, infra, and human-centered governance
 
 ### 🗺️ GIS, cartography & geoprocessing
 - **Geographic Information System Basics** → fundamentals, spatial concepts
@@ -294,6 +362,8 @@ Suggested contribution workflow:
 
 ## 🧾 License
 MIT (suggested). If you need a different license (Apache-2.0, GPL, CC for data), add it explicitly.
+
+> 🗃️ **Data note:** datasets and scanned sources may require different licenses/attribution than the code. Track that in manifests.
 
 ---
 
