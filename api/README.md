@@ -1,77 +1,136 @@
 # KFM API 🛰️🗺️  
-_Backend + integration layer for the Kansas Frontier Matrix (KFM) system_
+_Backend + integration boundary for the Kansas Frontier Matrix (KFM) platform_
 
 ![Status](https://img.shields.io/badge/status-WIP-orange)
 ![API](https://img.shields.io/badge/API-v1-blue)
 ![OpenAPI](https://img.shields.io/badge/OpenAPI-docs-brightgreen)
+![Contracts](https://img.shields.io/badge/contracts-contract--first-0aa3a3)
 ![Python](https://img.shields.io/badge/python-3.11%2B-3776AB)
 ![FastAPI](https://img.shields.io/badge/FastAPI-ready-009688)
 ![Docker](https://img.shields.io/badge/docker-ready-2496ED)
 ![DB](https://img.shields.io/badge/Postgres-PostGIS-informational)
-![Async](https://img.shields.io/badge/jobs-async%20workers-purple)
-![Security](https://img.shields.io/badge/auth-JWT%20Bearer-yellow)
+![Jobs](https://img.shields.io/badge/jobs-async%20workers-purple)
+![Auth](https://img.shields.io/badge/auth-JWT%20Bearer-yellow)
+![Governance](https://img.shields.io/badge/FAIR%2BCARE-governed-2ea043)
 
-> **Purpose:** Provide a stable, versioned, secure API for **geospatial data**, **remote sensing**, **ML/analytics**, **simulation**, and **data ingestion** — with support for **async jobs** + **real-time updates**.
+> [!IMPORTANT]
+> **KFM invariant (non‑negotiable):**  
+> **ETL → STAC/DCAT/PROV Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode**  
+> This API is the **governed boundary**: it must not serve “mystery data” that isn’t cataloged, provenance-linked, and policy-checked.
 
 ---
 
 ## 🧭 Quick links
-- 📘 **API Docs**: `/docs` (Swagger UI) · `/redoc` (ReDoc)
-- 🧱 **Architecture**: Clean Architecture layers + adapters
-- 🧵 **Async**: Job orchestration + worker execution
-- 📡 **Realtime**: WebSockets / SSE for progress + sensor streams
-- 🗺️ **Geo**: PostGIS-first spatial operations; GeoJSON I/O
+- 📘 **API Docs (Swagger):** `/docs`  
+- 📕 **ReDoc:** `/redoc`  
+- 🧾 **OpenAPI JSON:** `/openapi.json`  
+- ❤️ **Health:** `/api/v1/health`  
+- 📈 **Metrics (optional):** `/metrics`  
+- 🧭 **Project overview:** `../README.md`  
+- 🤝 **Collaboration rules:** `../.github/README.md` *(if present)*
 
 ---
 
 ## 📚 Table of contents
 - [✨ What this API is responsible for](#-what-this-api-is-responsible-for)
+- [🚫 Non-goals](#-non-goals)
 - [🧱 Architecture snapshot](#-architecture-snapshot)
-- [🧰 Tech stack](#-tech-stack)
+- [📁 Repository layout](#-repository-layout)
 - [🚀 Quick start](#-quick-start)
 - [⚙️ Configuration](#️-configuration)
 - [🔐 Authentication & authorization](#-authentication--authorization)
 - [📏 API conventions](#-api-conventions)
 - [🗺️ Geospatial conventions](#️-geospatial-conventions)
+- [🏷️ Catalog & provenance rules](#️-catalog--provenance-rules)
 - [🧩 Endpoint map (baseline)](#-endpoint-map-baseline)
 - [🧪 Example flows](#-example-flows)
 - [🧵 Async jobs & workers](#-async-jobs--workers)
 - [📡 Real-time (push)](#-real-time-push)
-- [🛰️ External integrations](#️-external-integrations)
 - [📊 Logging, monitoring, tracing](#-logging-monitoring-tracing)
 - [🛡️ Security notes](#️-security-notes)
-- [📚 Project reference library](#-project-reference-library-used-by-this-repo)
 - [✅ Roadmap](#-roadmap)
+- [🤝 Contributing](#-contributing)
+- [📚 Reference library](#-reference-library)
 
 ---
 
 ## ✨ What this API is responsible for
 
-- 📥 **Data ingestion** (uploads, scheduled pulls, sensor streams)
-- 🗺️ **Geospatial queries** (fields, regions, overlays, buffers, spatial joins)
-- 🛰️ **Remote sensing integrations** (Earth Engine exports, raster → indices like NDVI)
-- 🤖 **ML inference & analytics** (on-demand or batch-style job orchestration)
-- 🧪 **Simulation runs** (“what-if” scenarios; long-running jobs)
-- 📡 **Push updates** (WebSockets / SSE for sensor + job progress)
-- 🧾 **Exports** (CSV, GeoJSON, tiles/images when needed)
+This service exists to provide a **stable, versioned, secure** interface for the KFM ecosystem:
 
-### 🚫 Non-goals (for now)
-- Building the UI (this repo is API + orchestration only)
-- Storing raw satellite archives locally (prefer cloud catalogs + cached derivatives)
-- Running “forever streams” in the API process (streams should be broker/worker driven)
+- 📥 **Ingestion orchestration**  
+  uploads, scheduled pulls, ETL triggers, dataset registrations (but heavy lifting belongs in pipelines/workers)
+- 🗺️ **Geospatial query boundary**  
+  fields/regions/overlays/buffers/spatial joins, served safely (policy + performance)
+- 🛰️ **Remote sensing integrations**  
+  Earth Engine tasks, raster derivatives (NDVI, composites), export tracking
+- 🤖 **Analytics / ML / inference orchestration**  
+  batch/on-demand jobs with reproducible parameters & stored artifacts
+- 🧪 **Simulation orchestration**  
+  long-running scenarios; reproducible inputs; results stored + traceable
+- 🧾 **Governed exports**  
+  CSV/GeoJSON/tiles/images when needed (subject to redaction/classification)
+- 📡 **Progress & updates**  
+  WebSockets/SSE for job progress, sensors, and streaming status updates
+
+---
+
+## 🚫 Non-goals
+
+- ❌ Building the UI (frontend lives elsewhere)
+- ❌ Storing raw satellite archives locally by default (prefer catalogs + cached derivatives)
+- ❌ Running “forever streams” in the API process (use brokers/workers; keep API stateless)
+- ❌ Serving uncataloged outputs (no “just return this file” unless it is **cataloged + governed**)
 
 ---
 
 ## 🧱 Architecture snapshot
 
-This repo follows a **Clean Architecture / layered** approach:
+KFM favors **Clean Architecture** boundaries:
 
-- **🧠 Domain**: entities + invariants (pure Python, no framework imports)
-- **🧰 Application**: use cases (orchestrate domain rules + policies)
-- **🔌 Adapters**: FastAPI routes, DB repositories, external clients
-- **🏗️ Infrastructure**: Postgres/PostGIS, queues/workers, object storage, cloud wiring
+- **🧠 Domain** — entities + invariants (pure Python, no framework imports)
+- **🧰 Application** — use cases (policy, authorization decisions, orchestration)
+- **🔌 Adapters** — FastAPI routes, repositories, external clients
+- **🏗️ Infrastructure** — Postgres/PostGIS, queues, object storage, cloud wiring
 
-### Folder layout (recommended) 📁
+### 🔁 Runtime “shape” (typical deployment)
+```mermaid
+flowchart LR
+  subgraph Clients["👥 Clients"]
+    UI[🌐 KFM UI]
+    NB[📓 Notebooks / CLI]
+    EXT[🤝 Partner Apps]
+  end
+
+  UI -->|HTTPS| API[🚪 FastAPI /api/v1]
+  NB -->|HTTPS| API
+  EXT -->|HTTPS| API
+
+  API -->|SQL| DB[(🗄️ Postgres + PostGIS)]
+  API -->|enqueue| Q[(🧵 Queue)]
+  Q --> W[👷 Workers]
+
+  W -->|read/write| OBJ[(📦 Object Store)]
+  W -->|calls| GEE[🛰️ Google Earth Engine]
+  W -->|calls| EXTAPI[🌦️ NOAA / Other APIs]
+
+  API -->|SSE/WS| RT[📡 Realtime Hub]
+  W -->|events| RT
+
+  %% Governance signals
+  W -->|emit| CAT[🏷️ STAC/DCAT/PROV Artifacts]
+  CAT --> API
+```
+
+> [!NOTE]
+> **Catalogs are the gate.** Workers/pipelines should emit STAC/DCAT/PROV so downstream layers (graph/UI) can trust outputs.
+
+---
+
+## 📁 Repository layout
+
+> 📌 Treat this as the **target shape**. If the code differs today, update this file when structure changes.
+
 ```text
 📦 api/
 ├─ 📄 README.md
@@ -92,49 +151,15 @@ This repo follows a **Clean Architecture / layered** approach:
 └─ 🔧 scripts/                       # dev helpers (seed, migrate, etc.)
 ```
 
-### Runtime “shape” (typical deployment) 🔁
-```mermaid
-flowchart LR
-  subgraph Clients
-    UI[🌐 KFM UI / Dashboards]
-    NOTE[📓 Notebooks / CLI]
-    EXT[🤝 Partner Apps]
-  end
+### 📜 Contracts (source of truth)
+Pick one approach and keep it consistent:
 
-  UI -->|HTTPS| API[🚪 FastAPI /api/v1]
-  NOTE -->|HTTPS| API
-  EXT -->|HTTPS| API
+- ✅ **Option A (recommended):** `api/contracts/openapi.yaml` + CI checks  
+- ✅ **Option B:** “code-first” OpenAPI generation + pinned snapshots + diff checks  
+- ✅ GraphQL (optional): `api/contracts/schema.graphql`
 
-  API -->|SQL| DB[(🗄️ Postgres + PostGIS)]
-  API -->|enqueue| Q[(🧵 Queue)]
-  Q --> W[👷 Workers]
-  W -->|read/write| OBJ[(📦 Object Store)]
-  W -->|calls| GEE[🛰️ Google Earth Engine]
-  W -->|calls| EXTAPI[🌦️ NOAA / Other APIs]
-
-  API -->|SSE/WS| RT[📡 Realtime Hub]
-  W -->|events| RT
-```
-
----
-
-## 🧰 Tech stack
-
-**Core**
-- 🐍 Python (FastAPI + Pydantic)
-- 🗄️ Postgres + PostGIS (spatial source of truth)
-- 🧵 Queue + workers (Redis/RabbitMQ/Kafka + your worker framework of choice)
-- 📦 Object storage (S3/MinIO) for rasters + artifacts
-
-**Geo & remote sensing**
-- 🗺️ PostGIS spatial ops (buffers, intersects, within, joins)
-- 🛰️ Earth Engine for scalable raster workflows (exports, composites, indices)
-- 🧮 Optional: GDAL/Rasterio stack for local transforms
-
-**Observability**
-- 📜 structured logs + correlation IDs
-- 📈 metrics (Prometheus) + dashboards (Grafana)
-- 🧵 tracing (OpenTelemetry)
+> [!TIP]
+> **Contract changes first**, then implementation. If we can’t test the contract, it’s not ready to ship.
 
 ---
 
@@ -158,10 +183,11 @@ cd api
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+
 uvicorn kfm_api.main:app --reload --port 8000
 ```
 
-### Common commands (suggestion) 🧪🧹
+### Common commands (suggested) 🧪🧹
 ```bash
 # lint + format
 ruff check .
@@ -181,60 +207,81 @@ alembic upgrade head
 Create a `.env` file (or supply env vars via your orchestrator).
 
 ### Minimum set (suggested)
-- `APP_ENV=dev|staging|prod`
-- `API_BASE_URL=http://localhost:8000`
-- `JWT_SECRET=...`
-- `JWT_ISSUER=kfm`
-- `JWT_AUDIENCE=kfm-ui`
-- `DATABASE_URL=postgresql+psycopg://user:pass@db:5432/kfm`
-- `CORS_ALLOWED_ORIGINS=http://localhost:3000`
-- `OBJECT_STORE_URL=s3://...` (or `http://minio:9000/...`)
-- `QUEUE_URL=redis://...` (or rabbitmq/kafka depending on implementation)
-- `GEE_PROJECT=...` (if using Earth Engine tasks)
-- `LOG_LEVEL=INFO`
+| Variable | Example | Why |
+|---|---|---|
+| `APP_ENV` | `dev` | environment gating |
+| `API_BASE_URL` | `http://localhost:8000` | URL building / links |
+| `DATABASE_URL` | `postgresql+psycopg://user:pass@db:5432/kfm` | Postgres/PostGIS |
+| `JWT_SECRET` | `...` | token signing |
+| `JWT_ISSUER` | `kfm` | token validation |
+| `JWT_AUDIENCE` | `kfm-ui` | token validation |
+| `CORS_ALLOWED_ORIGINS` | `http://localhost:5173` | browser safety |
+| `OBJECT_STORE_URL` | `s3://bucket/...` | rasters/artifacts |
+| `QUEUE_URL` | `redis://...` | background jobs |
+| `LOG_LEVEL` | `INFO` | observability |
 
 ### Nice-to-have (prod readiness) ✅
-- `SENTRY_DSN=...` (or OTEL exporter config)
+- `SENTRY_DSN=...` *(or OTEL exporter config)*
 - `RATE_LIMIT_ENABLED=true`
 - `REQUEST_ID_HEADER=X-Request-Id`
 - `MAX_UPLOAD_MB=...`
+- `OTEL_SERVICE_NAME=kfm-api`
 
 ---
 
 ## 🔐 Authentication & authorization
 
+### Tokens
 - Use **JWT Bearer tokens**
 - Clients send: `Authorization: Bearer <token>`
-- Role / org / ownership checks happen per resource (field ownership, admin-only actions, etc.)
 
-**Design rule:** Keep authorization rules in the **application/use-case** layer, not in route handlers.
+### Claims (recommended)
+- `sub` (user id)
+- `org_id` (tenant/org scope)
+- `roles` (e.g., `viewer`, `editor`, `admin`)
+- `scopes` (optional)
+- `exp`, `iss`, `aud`
 
-**Multi-tenant note:** Prefer `org_id` scoping everywhere (explicitly or derived from JWT claims).
+### Rules
+- Authorization decisions belong in **application/use-case layer** (not route handlers).
+- All resource access is scoped by `org_id` (explicit in path/query or implicit from token).
+- Audit “write” actions (dataset uploads, deletes, redactions, publishing steps).
+
+> [!CAUTION]
+> Treat ingestion as hostile by default: validate file types, size, and content; scan uploads; avoid SSRF patterns.
 
 ---
 
 ## 📏 API conventions
 
 ### Versioning
-- All public endpoints should be versioned under:  
-  `/api/v1/...`
+All public endpoints live under:
+- `/api/v1/...`
 
 ### Content types
 - `application/json` (default)
 - `application/geo+json` (GeoJSON)
-- `text/csv` (bulk exports)
-- `image/png` / `application/x-protobuf` (tiles, if supported)
+- `text/csv` (exports)
+- `image/png` / `application/x-protobuf` (tiles if supported)
 
 ### Pagination & filtering
-Preferred patterns:
-- `?limit=50&offset=0`
-- or cursor-based: `?cursor=...&limit=...`
-- Filters: `?start=YYYY-MM-DD&end=YYYY-MM-DD&var=ndvi`
+Preferred:
+- `?limit=50&offset=0`  
+or
+- `?cursor=...&limit=...`
+
+For time filtering:
+- `?start=YYYY-MM-DD&end=YYYY-MM-DD`
+- or ISO timestamps for high-resolution datasets
 
 ### Idempotency (recommended)
-For endpoints that create jobs/records:
+For create/trigger endpoints:
 - Accept: `Idempotency-Key: <uuid>`
-- Store per-user/per-org for a short TTL to prevent accidental duplicates
+- Store per-user/per-org for TTL (prevents duplicate jobs/uploads)
+
+### Correlation IDs (recommended)
+- Accept `X-Request-Id` (or generate if absent)
+- Return it in responses and error payloads
 
 ### Error shape (recommended)
 ```json
@@ -252,40 +299,86 @@ For endpoints that create jobs/records:
 
 ## 🗺️ Geospatial conventions
 
-- **Coordinates**: default **WGS84** (EPSG:4326) for API I/O
-- **Geometry transport**: GeoJSON (Feature / FeatureCollection)
-- **Server-side spatial operations**: prefer PostGIS (buffers, intersects, within, etc.)
-- **Tiles** (optional): Web Mercator (EPSG:3857) for map tile math
+- **Default API CRS:** WGS84 (`EPSG:4326`)
+- **Geometry transport:** GeoJSON (`Feature` / `FeatureCollection`)
+- **Server-side ops:** prefer PostGIS (buffers, intersects, within, joins)
+- **Tiles (optional):** Web Mercator (`EPSG:3857`) for tile math
 
-**Tip:** Store geometries in PostGIS with a consistent SRID and use explicit transforms at boundaries.
+### Parameter conventions (recommended)
+- `bbox=minLon,minLat,maxLon,maxLat` (EPSG:4326)
+- `geom=<GeoJSON>` (for POST bodies; avoid massive query strings)
+- `simplify=<meters>` (only for derived outputs; never mutate source)
+
+> [!TIP]
+> Store geometries in PostGIS with explicit SRIDs and perform transforms at boundaries.
+
+---
+
+## 🏷️ Catalog & provenance rules
+
+> [!IMPORTANT]
+> **Publishing rule:** If a dataset/result isn’t **cataloged + provenance-linked**, it isn’t “published” in KFM.
+
+### Required metadata outputs (KFM standard)
+For anything that becomes user-visible or reusable:
+- 🗺️ **STAC** (Collections + Items) for assets/layers
+- 🏷️ **DCAT** dataset entries for discovery & distribution
+- 🧬 **PROV** lineage bundles for inputs → activities → outputs
+
+### How the API participates
+- The API can **trigger** ETL/jobs, but workers/pipelines must:
+  - write outputs to stable storage (object store / DB)
+  - emit STAC/DCAT/PROV artifacts
+  - return catalog IDs / stable URLs (not random temp paths)
+- The API serves:
+  - catalog discovery endpoints (STAC/DCAT)
+  - provenance views (PROV)
+  - evidence bundles (for Story Nodes + Focus Mode)
+
+### Sensitivity propagation (always-on)
+- Outputs cannot be **less restricted** than inputs unless a documented redaction step exists.
+- Any AI-assisted outputs must be **labeled** and provenance-linked (model + version + config where allowed).
 
 ---
 
 ## 🧩 Endpoint map (baseline)
 
-> These endpoints are the **core contract** this API aims to support. Add/remove as the repo evolves, but keep `/api/v1` stable.
+> These are the **target contracts**. Keep `/api/v1` stable and version breaking changes.
 
 ### ✅ Core
 | Method | Path | Auth | What it does |
 |---:|---|:---:|---|
 | GET | `/api/v1/health` | ❌ | Liveness / readiness |
 | POST | `/api/v1/auth/login` | ❌ | Issue JWT |
-| POST | `/api/v1/auth/refresh` | ❌/✅ | Refresh token flow (if used) |
 | GET | `/api/v1/auth/me` | ✅ | Current user + roles |
 | POST | `/api/v1/data/upload` | ✅ | Upload dataset / trigger ingest |
+| GET | `/api/v1/fields?bbox=...` | ✅ | List fields with filters |
 | GET | `/api/v1/field/{field_id}` | ✅ | Field metadata + geometry |
-| GET | `/api/v1/field/{field_id}/timeseries?var=ndvi` | ✅ | NDVI or other variable timeseries |
+| GET | `/api/v1/field/{field_id}/timeseries?var=ndvi` | ✅ | Variable timeseries |
 | POST | `/api/v1/simulation/run` | ✅ | Start simulation → returns job id |
 | GET | `/api/v1/jobs/{job_id}` | ✅ | Job status/progress |
+| GET | `/api/v1/jobs/{job_id}/result` | ✅ | Result links / payload (when ready) |
 | GET | `/api/v1/export/fielddata.csv?...` | ✅ | Bulk export (CSV) |
 
-### 🗺️ Optional (common expansions)
+### 🏷️ Catalog & provenance (recommended)
 | Method | Path | Auth | What it does |
 |---:|---|:---:|---|
-| GET | `/api/v1/fields?bbox=...` | ✅ | List fields with filters |
-| POST | `/api/v1/fields` | ✅ | Create field geometry + metadata |
-| GET | `/api/v1/jobs/{job_id}/result` | ✅ | Fetch job outputs (links/JSON) |
-| GET | `/api/v1/tiles/{z}/{x}/{y}.pbf` | ✅ | Vector tiles (if enabled) |
+| GET | `/api/v1/catalog/stac` | ✅/❌ | STAC root / catalog entrypoint |
+| GET | `/api/v1/catalog/stac/collections/{id}` | ✅/❌ | STAC Collection by id |
+| GET | `/api/v1/catalog/stac/items/{id}` | ✅/❌ | STAC Item by id |
+| GET | `/api/v1/catalog/dcat/{id}` | ✅/❌ | DCAT dataset view |
+| GET | `/api/v1/prov/runs/{run_id}` | ✅ | PROV lineage bundle |
+
+### 📚 Evidence bundles (Story Nodes + Focus Mode)
+| Method | Path | Auth | What it does |
+|---:|---|:---:|---|
+| GET | `/api/v1/evidence/bundle/{bundle_id}` | ✅ | Evidence-only payload (citations + assets) |
+
+### 🗺️ Tiles (optional)
+| Method | Path | Auth | What it does |
+|---:|---|:---:|---|
+| GET | `/api/v1/tiles/{z}/{x}/{y}.pbf` | ✅ | Vector tiles |
+| GET | `/api/v1/tiles/{z}/{x}/{y}.png` | ✅ | Raster tiles |
 
 ---
 
@@ -335,10 +428,6 @@ curl -X POST \
 { "job_id": "sim_01HZZY8VQ7...", "status": "queued" }
 ```
 
-Then:
-- poll `GET /api/v1/jobs/{job_id}`
-- or subscribe via WebSocket/SSE for progress
-
 ### 3) Export data 🧾
 ```bash
 curl -L \
@@ -350,31 +439,40 @@ curl -L \
 
 ## 🧵 Async jobs & workers
 
-Use async jobs when:
-- data volumes are large (big rasters / long time windows)
-- analysis is compute-heavy (ML inference on imagery, simulation)
-- external APIs are involved (Earth Engine exports, NOAA pulls)
+Use jobs when:
+- rasters/time windows are large
+- compute is heavy (ML, simulation, mosaics)
+- external APIs are involved (GEE exports, NOAA pulls)
 
 ### Common pattern ✅
-1) `POST` creates a job, returns `job_id` immediately  
-2) workers execute, store results  
-3) client pulls result or gets pushed updates  
-4) results exposed via `/jobs/{job_id}` + export links
+1) `POST` creates job → returns `job_id`
+2) worker executes → writes artifacts (object store / DB)
+3) worker emits **STAC/DCAT/PROV**
+4) API exposes results by:
+   - `GET /jobs/{job_id}` + `GET /jobs/{job_id}/result`
+   - plus catalog endpoints once “published”
 
 ### Suggested job states 🔁
 - `queued` → `running` → `succeeded`
-- `queued|running` → `failed` (with error code)
+- `queued|running` → `failed`
 - optional: `canceled`
+
+### Governance expectations
+- Job outputs are **never** served “raw” from temp storage.
+- Results become stable by:
+  - publishing to catalog with stable IDs
+  - generating lineage (PROV) + classification propagation
+  - returning evidence bundles where needed
 
 ---
 
 ## 📡 Real-time (push)
 
 Use WebSockets/SSE for:
-- sensor dashboards (avoid manual refresh)
-- long-running job progress updates (avoid aggressive polling)
+- job progress updates (avoid aggressive polling)
+- sensor dashboards / streaming status
 
-**WebSocket examples**
+**WebSocket endpoints (example)**
 - `ws://localhost:8000/ws`
 - `ws://localhost:8000/ws/jobs/{job_id}`
 - `ws://localhost:8000/ws/sensors/field/{field_id}`
@@ -392,124 +490,84 @@ Use WebSockets/SSE for:
 
 ---
 
-## 🛰️ External integrations
-
-### Google Earth Engine (GEE)
-Typical patterns:
-- **Export task request** → enqueue worker → track status → publish output (tiles/GeoTIFF/aggregates)
-- Persist provenance: dataset id, time window, processing steps
-
-### NOAA / other external APIs
-- use scheduled jobs for data pulls
-- cache results to avoid rate-limit failures
-
----
-
 ## 📊 Logging, monitoring, tracing
 
 Recommended baseline:
-- Structured logs: method, endpoint, user_id, params, status_code, latency
-- Correlation IDs for debugging
-- `/health` endpoint for uptime monitors
-- Metrics (Prometheus) + dashboards (Grafana)
+- 📜 Structured logs: method, endpoint, user_id, org_id, params summary, status_code, latency
+- 🧷 Correlation IDs: `X-Request-Id`
+- 📈 Metrics: Prometheus + Grafana
+- 🧵 Tracing: OpenTelemetry (`traceparent` propagation)
+- ✅ Health endpoint split (optional): liveness vs readiness
 
 ---
 
 ## 🛡️ Security notes
 
-- Keep the DB in a **private network segment**
-- Public exposure limited to HTTPS (443) on web/API layer
-- Prefer DMZ + internal-only message brokers
-- Rate-limit login, hash passwords (bcrypt/argon2), rotate secrets
-- Treat all external ingestion as untrusted: validate file types + scan uploads
+- 🔒 Keep DB/brokers in private network segments
+- 🌐 Public exposure limited to HTTPS (web/API)
+- 🧯 Rate-limit login, lockout policies, strong password hashing (bcrypt/argon2)
+- 🧪 Validate ingestion: file type allowlist + AV scanning + size limits
+- 🧾 Audit logging for “write” actions (upload, publish, redaction, delete)
+- 🔐 Secrets via env/secret managers (never commit tokens)
 
----
-
-## 🧰 Tooling (suggested)
-
-- ✅ `ruff` + formatter (fast lint + format)
-- ✅ `pytest` + `httpx` (tests)
-- ✅ `pre-commit` (lint gates)
-- ✅ DB migrations (Alembic or equivalent)
-- ✅ OpenAPI checks in CI (contract stability)
-
----
-
-## 📚 Project reference library (used by this repo)
-
-> Suggestion: store these under `docs/library/` and keep filenames stable for citations in ADRs & docs.
-
-<details>
-<summary>📦 Click to expand the full set of project PDFs (37 files)</summary>
-
-### 🧱 Architecture, DevOps, & Data Infrastructure
-- 📄 `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
-- 📄 `clean-architectures-in-python.pdf`
-- 📄 `Introduction-to-Docker.pdf`
-- 📄 `Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf`
-- 📄 `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- 📄 `MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf`
-- 📄 `implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf`
-- ⚠️ `Command Line Kung Fu_ ... Command_Line_Kung_Fu_...pdf` (appears truncated/corrupted in repo; re-download recommended)
-
-### 🗺️ GIS, Cartography, Web Maps, & Visualization
-- 📄 `Geographic Information System Basics - geographic-information-system-basics.pdf`
-- 📄 `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- 📄 `geoprocessing-with-python.pdf`
-- 📄 `python-geospatial-analysis-cookbook.pdf`
-- 📄 `graphical-data-analysis-with-r.pdf`
-- 📄 `google-maps-javascript-api-cookbook.pdf`
-- ⚠️ `Google Maps API Succinctly - google_maps_api_succinctly.pdf` (appears truncated/corrupted in repo; re-download recommended)
-- 📄 `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-- 📄 `Computer Graphics using JAVA 2D & 3D.pdf`
-- 📄 `responsive-web-design-with-html5-and-css3.pdf`
-
-### 🤖 Data Science, ML, & Statistics
-- 📄 `applied-data-science-with-python-and-jupyter.pdf`
-- 📄 `deep-learning-in-python-prerequisites.pdf`
-- 📄 `regression-analysis-with-python.pdf`
-- 📄 `Bayesian computational methods.pdf`
-- 📄 `Understanding Statistics & Experimental Design.pdf`
-- 📄 `Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf`
-- 📄 `Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf`
-- 📄 `Artificial-neural-networks-an-introduction.pdf`
-- 📄 `AI Foundations of Computational Agents 3rd Ed.pdf`
-- 📄 `Data Mining Concepts & applictions.pdf`
-
-### 🛰️ Remote Sensing, Simulation, Optimization, Graphs
-- 📄 `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-- 📄 `Google Earth Engine Applications.pdf`
-- 📄 `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- 📄 `Scalable Data Management for Future Hardware.pdf`
-- 📄 `Spectral Geometry of Graphs.pdf`
-- 📄 `Generalized Topology Optimization for Structural Design.pdf`
-- 📄 `MATLAB Programming for Engineers Stephen J. Chapman.pdf`
-
-### 🧑‍🤝‍🧑 Human-centered framing & ethics
-- 📄 `Introduction to Digital Humanism.pdf`
-- 📄 `Principles of Biological Autonomy - book_9780262381833.pdf`
-
-</details>
+> [!CAUTION]
+> “Public repo” implies “public download.” Never commit sensitive GeoJSON/CSVs or “temporary exports” into version control.
 
 ---
 
 ## ✅ Roadmap
 
-- [ ] Lock an initial **OpenAPI spec** (v1) + CI contract check
-- [ ] Implement auth middleware (JWT) + role/ownership guards
-- [ ] Add PostGIS-backed field + timeseries endpoints
-- [ ] Add queue + worker for simulation + heavy analytics
-- [ ] Add WebSocket topics for sensor updates + job progress
-- [ ] Add export endpoints (CSV/GeoJSON) + provenance tracking
-- [ ] Add rate limits + audit logging + secret management
+- [ ] Lock OpenAPI v1 (source-of-truth file + CI diff checks)
+- [ ] Implement JWT auth middleware + org/role guards
+- [ ] PostGIS-backed field + query endpoints (bbox, intersects, search)
+- [ ] Queue + worker for simulation + heavy analytics
+- [ ] Catalog endpoints (STAC/DCAT) + PROV lineage views
+- [ ] WebSocket/SSE topics for job progress + streaming
+- [ ] Export endpoints (CSV/GeoJSON/tiles) + redaction policies
+- [ ] Rate limits + audit logs + secret management + security scans
 
 ---
 
 ## 🤝 Contributing
 
-- Keep business rules in **domain/application**, not in FastAPI routes
-- Add tests for every use-case and every route (happy path + auth + edge cases)
-- Prefer small PRs with clear intent 🧩
-- Document decisions in `/docs/adr/` (Architecture Decision Records)
+- 🧠 Keep business rules in **domain/application**, not in FastAPI routes
+- 🧪 Add tests for every use-case and route (happy path + auth + edge cases)
+- 🧩 Prefer small PRs with clear intent
+- 📓 Document decisions in `/docs/adr/` (Architecture Decision Records) *(if present)*
+- 🏷️ If you touch data outputs: ensure STAC/DCAT/PROV artifacts are emitted and validated
+
+---
+
+## 📚 Reference library
+
+> These are **implementation guidance** only; they must not override KFM contracts/governance.  
+> Also ensure licensing allows redistribution before committing PDFs into the repo.
+
+<details>
+<summary><strong>📦 Expand: Key PDFs that shape API + infrastructure decisions</strong></summary>
+
+### 🧱 Architecture & engineering discipline
+- 📄 **Kansas Frontier Matrix (KFM) – Master Technical Specification**  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Master Technical Specification.pdf](file-service://file-MLtTh4CX1AqH6dNnKyYYEp)  
+- 📄 **Clean Architectures in Python**  [oai_citation:1‡clean-architectures-in-python.pdf](file-service://file-6YHot4AqfpdbcrdfiYfpHM)  
+- 📄 **Introduction to Docker**  [oai_citation:2‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)  
+
+### 🗄️ Databases
+- 📄 **PostgreSQL Notes for Professionals**  [oai_citation:3‡PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf](file-service://file-742sw3gADJniEdmC19JeAC)  
+- 📄 **MySQL Notes for Professionals**  [oai_citation:4‡MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf](file-service://file-GQ5jWwmLZCFb6enxwykaRh)  
+
+### 🌐 Web & backend tooling
+- 📄 **Node.js Notes for Professionals**  [oai_citation:5‡Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf](file-service://file-9qS1yEFvCBXbDdtTfpt3Ye)  
+
+### 🗺️ Geospatial practice
+- 📄 **Python Geospatial Analysis Cookbook**  [oai_citation:6‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)  
+
+### 📈 Analytics & notebooks
+- 📄 **Applied Data Science with Python and Jupyter**  [oai_citation:7‡applied-data-science-with-python-and-jupyter.pdf](file-service://file-2PdBHtR24Wq7MYWfG8agQo)  
+
+### ❤️ Human-centered governance
+- 📄 **Introduction to Digital Humanism**  [oai_citation:8‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
+- 📄 **Principles of Biological Autonomy**  [oai_citation:9‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf)  
+
+</details>
 
 ---
