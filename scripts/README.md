@@ -1,24 +1,54 @@
 # 🧰 `scripts/` — KFM Automation Toolkit
 
-> Repeatable commands for dev, data ops, GIS/remote-sensing workflows, and deployment “glue”.
->
+![Safe by default](https://img.shields.io/badge/safe--by--default-yes-success)
+![Idempotent](https://img.shields.io/badge/idempotent-expected-blue)
+![Provenance first](https://img.shields.io/badge/provenance--first-required-informational)
+![Documented](https://img.shields.io/badge/--help-required-brightgreen)
+
+> Repeatable commands for dev, data ops, GIS/remote-sensing workflows, and deployment “glue”.  
 > **Safe-by-default** ✅ • **Idempotent** ♻️ • **Provenance-first** 🧾 • **Documented** 📓
+
+---
+
+<details>
+<summary><b>🧭 Table of Contents</b></summary>
+
+- [🎯 What belongs here (and what doesn’t)](#-what-belongs-here-and-what-doesnt)
+- [🏁 Quickstart](#-quickstart)
+- [🗂️ Recommended folder map](#️-recommended-folder-map)
+- [🧱 Standard script contract](#-standard-script-contract)
+- [🧭 Data lifecycle rules scripts must respect](#-data-lifecycle-rules-scripts-must-respect)
+- [🧨 Safety guardrails (non-negotiable)](#-safety-guardrails-non-negotiable)
+- [🧾 Observability & provenance](#-observability--provenance)
+- [🧱 Script templates](#-script-templates)
+- [🗺️ GIS + PostGIS scripting tips](#️-gis--postgis-scripting-tips)
+- [🧪 QA scripts (contracts & acceptance gates)](#-qa-scripts-contracts--acceptance-gates)
+- [🧩 Adding a new script (checklist)](#-adding-a-new-script-checklist)
+- [📋 Script registry](#-script-registry-keep-this-current)
+- [🧯 Troubleshooting (CLI “kung fu”)](#-troubleshooting-cli-kung-fu)
+- [🤝 Related docs (inside this repo)](#-related-docs-inside-this-repo)
+- [✅ Definition of “done” for a script](#-definition-of-done-for-a-script)
+
+</details>
 
 ---
 
 ## 🎯 What belongs here (and what doesn’t)
 
 ### ✅ Good fits for `scripts/`
-- 🧱 **Environment bootstrap**: install deps, initialize DB schema, load seed/reference data
-- 🗺️ **GIS tooling wrappers**: convert shapefiles/GeoJSON, generate tiles, reproject rasters, etc.
-- 🧪 **Data import/export**: one-off admin imports (e.g., boundaries) and exports (snapshots, extracts)
-- 🕒 **Scheduled jobs**: backups, cache cleanup, log rotation (cron / Kubernetes CronJob)
-- 🧰 **Dev helpers**: run local stack, health checks, smoke tests, “make my laptop match CI”
+- 🧱 **Environment bootstrap**: install deps, initialize DB schema, load seed/reference data  
+- 🗺️ **GIS tooling wrappers**: convert shapefiles/GeoJSON, generate tiles, reproject rasters, etc.  
+- 🧪 **Data import/export**: one-off admin imports (e.g., boundaries) and exports (snapshots, extracts)  
+- 🕒 **Scheduled jobs**: backups, cache cleanup, log rotation (cron / Kubernetes CronJob)  
+- 🧰 **Dev helpers**: run local stack, health checks, smoke tests, “make my laptop match CI”  
 
 ### ❌ Not a good fit for `scripts/`
-- 🚫 **Core ETL logic** (belongs in `src/pipelines/` / the canonical pipeline subsystem)
-- 🚫 **Domain/business rules** (belongs in the core `src/` modules)
-- 🚫 **Duplicate implementations** of pipeline steps (scripts should *call into* canonical modules)
+- 🚫 **Core ETL logic** (belongs in `src/pipelines/` / the canonical pipeline subsystem)  
+- 🚫 **Domain/business rules** (belongs in core `src/` modules)  
+- 🚫 **Duplicate implementations** of pipeline steps (scripts should *call into* canonical modules)  
+
+> [!TIP]
+> Scripts are orchestration and glue. If it’s “the truth,” it belongs in `src/`.
 
 ---
 
@@ -30,14 +60,15 @@
   - `./scripts/<path>/my_script.sh --help`
   - `python scripts/<path>/my_script.py --help`
 
-> 💡 Tip: Every script should support `--help` and print clear examples.
+> [!IMPORTANT]
+> Every script **must** support `--help` and include at least 2 runnable examples.
 
 ### 2) Set environment (no secrets in git)
 - Copy env template:
   - `cp .env.example .env`
 - Load env (shell-specific), then run scripts.
 
-> 🔐 Scripts must read configuration from environment variables (or a config file referenced by env),
+> 🔐 Scripts must read configuration from environment variables (or a config file referenced by env)  
 > and **never** hardcode credentials.
 
 ---
@@ -60,45 +91,83 @@
 
 ---
 
+## 🧱 Standard script contract
+
+To keep `scripts/` predictable (and safe), every script **must** follow the same behavioral contract.
+
+### ✅ CLI interface requirements
+- `--help` prints:
+  - purpose (1–2 lines)
+  - inputs/outputs (paths or tables)
+  - required env vars
+  - examples
+- `--dry-run` is the default (or clearly supported)
+- `--apply` performs writes/changes
+- `--yes` skips interactive prompts
+- `--env {dev|staging|prod}` when environment matters
+- Exit codes:
+  - `0` success
+  - `2` usage/CLI error (bad args)
+  - `>=10` runtime failures (I/O, network, DB, validation, etc.)
+
+> [!NOTE]
+> It’s okay to add flags, but don’t break the standard ones.
+
+### 🧾 “Script header” (recommended)
+At the top of each script, include a short header comment:
+- Name
+- Purpose
+- Inputs / Outputs
+- Side effects (DB writes? file writes?)
+- Owner/team
+- Safety mode defaults
+
+---
+
 ## 🧭 Data lifecycle rules scripts must respect
 
 KFM’s data work is **staged** and **traceable**. Scripts that ingest or transform data must:
 
-1) 📥 **Write raw inputs** to `data/raw/<domain>/`
-2) 🧱 **Write intermediates** to `data/work/<domain>/`
-3) ✅ **Write publishable outputs** to `data/processed/<domain>/`
-4) 🗃️ **Emit metadata + lineage artifacts** (STAC/DCAT/PROV) *before* anything is used downstream
+1) 📥 **Write raw inputs** to `data/raw/<domain>/`  
+2) 🧱 **Write intermediates** to `data/work/<domain>/`  
+3) ✅ **Write publishable outputs** to `data/processed/<domain>/`  
+4) 🗃️ **Emit metadata + lineage artifacts** (STAC/DCAT/PROV) *before* anything is used downstream  
 
-> 🧾 If a script produces “evidence artifacts” (derived analyses, model outputs, generated map layers),
+> 🧾 If a script produces “evidence artifacts” (derived analyses, model outputs, generated map layers),  
 > treat them like first-class datasets: store them properly, catalog them, and capture provenance.
 
 ---
 
-## 🧨 Safety guardrails (non‑negotiable)
+## 🧨 Safety guardrails (non-negotiable)
 
 ### ✅ Safe-by-default behavior
 - 🛑 **No destructive actions by default**
 - 🧪 Default mode should be `--dry-run` (or at minimum support it)
-- 🧯 Destructive actions require explicit confirmation flags (example patterns below)
+- 🧯 Destructive actions require explicit confirmation flags
 
 **Recommended confirmation pattern**
-- `--dry-run` prints what would happen
-- `--apply` performs changes
-- `--yes` skips interactive prompts
-- `--env {dev|staging|prod}` and **refuse** dangerous combos without extra confirmation
+- `--dry-run` prints what would happen  
+- `--apply` performs changes  
+- `--yes` skips interactive prompts  
+- `--env {dev|staging|prod}` and **refuse** dangerous combos without extra confirmation  
 
 ### 🏭 Production protection
-- Scripts that can write to prod must:
-  - require explicit `--env prod`
-  - require an additional “I really mean it” confirmation flag (e.g., `--i-acknowledge-production`)
-  - log who/what/when (user, git SHA if available, host, timestamp)
+Scripts that can write to prod must:
+- require explicit `--env prod`
+- require an additional “I really mean it” confirmation flag  
+  - e.g., `--i-acknowledge-production`
+- log who/what/when (user, git SHA if available, host, timestamp)
+
+> [!CAUTION]
+> If a script can delete, drop, truncate, overwrite, or revoke:  
+> **dry-run default + explicit apply + explicit confirmation** is mandatory.
 
 ---
 
 ## 🧾 Observability & provenance
 
 Every script should:
-- 🪵 Use structured logging (timestamp, level, component, run_id)
+- 🪵 Use structured logging (`timestamp`, `level`, `component`, `run_id`)
 - 🧷 Print where outputs were written (paths) and what changed
 - 🧾 Capture provenance inputs/outputs:
   - input file list + checksums (when feasible)
@@ -111,7 +180,9 @@ Every script should:
 
 ## 🧱 Script templates
 
-### 🐚 Bash template (portable + strict)
+<details>
+<summary><b>🐚 Bash template (portable + strict)</b></summary>
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -152,13 +223,18 @@ fi
 echo "[OK] Done."
 ```
 
-### 🐍 Python template (CLI + logging + exit codes)
+</details>
+
+<details>
+<summary><b>🐍 Python template (CLI + logging + exit codes)</b></summary>
+
 ```python
 #!/usr/bin/env python3
 from __future__ import annotations
 
 import argparse
 import logging
+import os
 import sys
 from dataclasses import dataclass
 
@@ -169,6 +245,7 @@ class Args:
     dry_run: bool
     apply: bool
     verbose: bool
+    run_id: str
 
 def parse_args(argv: list[str]) -> Args:
     p = argparse.ArgumentParser(
@@ -178,21 +255,23 @@ def parse_args(argv: list[str]) -> Args:
     mode = p.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true", help="Print actions without changing state.")
     mode.add_argument("--apply", action="store_true", help="Perform actions (writes/changes).")
+    p.add_argument("--run-id", default=os.getenv("KFM_RUN_ID", ""), help="Optional run identifier.")
     p.add_argument("-v", "--verbose", action="store_true", help="Verbose logs.")
     ns = p.parse_args(argv)
 
     dry_run = ns.dry_run or not ns.apply  # default safe
     apply = ns.apply
-    return Args(dry_run=dry_run, apply=apply, verbose=ns.verbose)
+    run_id = ns.run_id or "run-unknown"
+    return Args(dry_run=dry_run, apply=apply, verbose=ns.verbose, run_id=run_id)
 
 def main(argv: list[str]) -> int:
     args = parse_args(argv)
     logging.basicConfig(
         level=logging.DEBUG if args.verbose else logging.INFO,
-        format="%(asctime)s %(levelname)s %(name)s - %(message)s",
+        format="%(asctime)s %(levelname)s %(name)s [%(message)s]",
     )
 
-    log.info("start dry_run=%s apply=%s", args.dry_run, args.apply)
+    log.info("start run_id=%s dry_run=%s apply=%s", args.run_id, args.dry_run, args.apply)
 
     # ✅ Put your logic here
     if args.dry_run:
@@ -200,12 +279,14 @@ def main(argv: list[str]) -> int:
     else:
         log.info("APPLY: doing work…")
 
-    log.info("done")
+    log.info("done run_id=%s", args.run_id)
     return 0
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
 ```
+
+</details>
 
 ---
 
@@ -213,7 +294,7 @@ if __name__ == "__main__":
 
 - Prefer **PostGIS for heavy lifting** when appropriate (buffers, intersections, within queries)
 - Use scripts to:
-  - validate CRS
+  - validate CRS (and refuse unexpected CRS)
   - load data into PostGIS safely (staging tables, transactions)
   - export to GeoJSON for UI consumption
   - generate derived layers that can be tiled
@@ -225,9 +306,9 @@ if __name__ == "__main__":
 ## 🧪 QA scripts (contracts & acceptance gates)
 
 `scripts/qa/` is for “trust checks” — scripts that keep the system honest:
-- ✅ schema validation for metadata records
-- ✅ linting / formatting
-- ✅ “definition of done” checks (data present, metadata present, provenance present)
+- ✅ schema validation for metadata records  
+- ✅ linting / formatting  
+- ✅ “definition of done” checks (data present, metadata present, provenance present)  
 
 > 📦 Any dataset/evidence artifact should be verifiable via a repeatable command.
 
@@ -235,18 +316,20 @@ if __name__ == "__main__":
 
 ## 🧩 Adding a new script (checklist)
 
-1) 📁 Put it in the right subfolder (bootstrap/db/gis/remote_sensing/ml/qa/…)
-2) 🏷️ Name it as a verb: `import_*`, `export_*`, `generate_*`, `validate_*`, `backup_*`
+1) 📁 Put it in the right subfolder (`bootstrap/ db/ gis/ remote_sensing/ ml/ qa/ …`)
+2) 🏷️ Name it as a **verb**: `import_*`, `export_*`, `generate_*`, `validate_*`, `backup_*`
 3) 🧪 Add `--help` + examples
 4) 🛡️ Add `--dry-run` (or safe default) and explicit confirmations for writes
 5) 🧾 Write outputs to the correct `data/` stage + generate provenance/metadata when relevant
 6) 🪵 Log clearly (what, where, how many records, elapsed time)
-7) 🧼 Make it idempotent (re-runs should not duplicate)
-8) 📝 Update this README (and any script registry table below)
+7) ♻️ Make it idempotent (re-runs should not duplicate)
+8) 📝 Update this README (and the script registry below)
 
 ---
 
 ## 📋 Script registry (keep this current)
+
+> ✍️ Add rows as scripts are introduced.
 
 | Category | Script | Purpose | Safe mode |
 |---|---|---|---|
@@ -255,8 +338,6 @@ if __name__ == "__main__":
 | 🧪 qa | `validate_*` | Validate schemas/contracts/metadata | read-only |
 | 🧹 housekeeping | `purge_*` | Cleanup caches/logs | confirm required |
 
-> ✍️ Add rows as scripts are introduced.
-
 ---
 
 ## 🧯 Troubleshooting (CLI “kung fu”)
@@ -264,7 +345,8 @@ if __name__ == "__main__":
 A few battle-tested patterns:
 - 🔎 Inspect logs quickly: `grep`, `tail -f`, `less`
 - 🧮 Quick stats: `cut`, `awk`, `sort | uniq -c`
-- 🧹 Cleanup old logs: `find … -mtime +N -delete` *(be careful — pair with `--dry-run` style previews)*
+- 🧹 Cleanup old logs: `find … -mtime +N -delete`  
+  *(be careful — pair with `--dry-run` style previews)*
 
 ---
 
@@ -280,9 +362,9 @@ A few battle-tested patterns:
 ## ✅ Definition of “done” for a script
 
 A script is considered complete when:
-- ✅ It’s safe by default
-- ✅ It’s repeatable/idempotent
-- ✅ It logs what it did
-- ✅ Outputs land in the correct stage
-- ✅ (When applicable) it emits/updates metadata + provenance artifacts
-- ✅ It has a minimal usage example and is referenced in this README
+- ✅ It’s safe by default  
+- ✅ It’s repeatable/idempotent  
+- ✅ It logs what it did  
+- ✅ Outputs land in the correct stage  
+- ✅ (When applicable) it emits/updates metadata + provenance artifacts  
+- ✅ It has a minimal usage example and is referenced in this README  
