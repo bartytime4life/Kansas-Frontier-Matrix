@@ -5,6 +5,8 @@
 ![GIS](https://img.shields.io/badge/GIS-Geospatial-success)
 ![Remote%20Sensing](https://img.shields.io/badge/Remote%20Sensing-GEE%20%26%20EO-informational)
 ![Docker](https://img.shields.io/badge/Docker-Recommended-2496ED)
+![Reproducibility](https://img.shields.io/badge/Reproducible-Preferred-brightgreen)
+![Artifacts](https://img.shields.io/badge/Artifacts-Gitignored-lightgrey)
 
 Welcome to the **KFM notebooks workspace** 🧭 — a practical lab for:
 - 🧪 exploratory research & rapid prototyping  
@@ -12,18 +14,36 @@ Welcome to the **KFM notebooks workspace** 🧭 — a practical lab for:
 - 📊 statistics, modeling, validation, and “don’t fool yourself” checks  
 - 🤖 ML/AI baselines, agent-style decision logic, and model eval  
 - 🌐 map/UI visualization spikes (Google Maps, WebGL)  
-- 🧱 architecture proof-of-concepts before productionizing into `src/` / services  
+- 🧱 architecture proof-of-concepts before graduating into `src/` / services  
 
 > ✅ **Rule of thumb:** notebooks are for *learning, exploration, and reproducible experiments*.  
-> 🏭 Anything that becomes “real” should graduate into production modules, tests, pipelines, and docs.
+> 🏭 Anything that becomes “real” must **graduate** into production modules, tests, pipelines, and docs.
+
+---
+
+## 🧭 Quick navigation
+
+- [Where this fits](#-where-this-fits-in-the-repo)
+- [Folder layout](#-suggested-folder-layout)
+- [Notebook tracks](#-notebook-tracks-what-to-expect)
+- [Quick start](#-quick-start)
+- [Conventions](#-notebook-conventions-kfm-standard)
+- [Lifecycle: notebook → production](#-lifecycle-notebook--production)
+- [Roadmap](#-notebook-roadmap-starter-set)
+- [Data & ethics](#-data-licensing-and-ethics-notes)
+- [Reference library](#-reference-library-all-project-pdfs)
 
 ---
 
 ## 🧭 Where this fits in the repo
 
 - **Production code**: lives in `src/` / services (not here).
-- **Notebooks**: are the *sandbox + research journal* with repeatable outputs.
-- **Artifacts**: notebooks should export clean outputs into an `artifacts/`-style folder (gitignored).
+- **Notebooks**: the *sandbox + research journal* with repeatable outputs.
+- **Artifacts**: notebooks should export clean outputs into an `_artifacts/`-style folder (**gitignored**).
+- **Figures for docs**: commit only “final” figures into `_figures/`.
+
+> 🧠 If it can break prod, it doesn’t belong here.  
+> 📦 If it’s valuable, repeatable, and stable → ship it to `src/`.
 
 ---
 
@@ -48,6 +68,23 @@ Welcome to the **KFM notebooks workspace** 🧭 — a practical lab for:
 └─ 🧠 09_human_factors/
 ```
 
+<details>
+<summary>🧹 Recommended <code>.gitignore</code> snippets for <code>notebooks/</code></summary>
+
+```gitignore
+# local data + outputs
+notebooks/_data/
+notebooks/_artifacts/
+
+# local envs
+notebooks/.venv/
+notebooks/.ipynb_checkpoints/
+
+# optional: large local caches
+notebooks/**/.cache/
+```
+</details>
+
 ---
 
 ## 🧩 Notebook Tracks (what to expect)
@@ -61,7 +98,7 @@ Welcome to the **KFM notebooks workspace** 🧭 — a practical lab for:
 | 📊 Statistics | `04_stats/` | EDA, regression, Bayesian, experimental design, pitfalls | Stats/Exp Design • Regression • Bayesian Methods • Stats Done Wrong • Graphical Data Analysis (R) |
 | 🤖 ML + Agents | `05_ml_agents/` | mining, agents, deep learning prerequisites, ANN baselines | Data Mining • Computational Agents • Deep Learning prereqs • ANN intro • Math/Stats for ML |
 | 🧪 Simulation + Optimization | `06_simulation_optimization/` | simulation patterns, model validation, optimization, graphs | NASA-grade modeling/sim • Topology optimization • Spectral graphs • Scalable data mgmt • MATLAB |
-| 🌐 Web Maps + Viz | `07_web_mapping_viz/` | cartography, UI spikes, browser rendering | Making Maps • Google Maps API (succinct + cookbook) • WebGL • Responsive Web Design • Java 2D/3D Graphics |
+| 🌐 Web Maps + Viz | `07_web_mapping_viz/` | cartography, UI spikes, browser rendering | Making Maps • Google Maps API • WebGL • Responsive Web Design • Java 2D/3D Graphics |
 | 🧬 Language Tools | `08_language_tools/` | DSLs, parsers, compilers for domain workflows | Implementing Programming Languages |
 | 🧠 Human Factors | `09_human_factors/` | autonomy, ethics, governance constraints | Biological Autonomy • Digital Humanism |
 
@@ -89,6 +126,9 @@ docker compose up --build
 
 > 🔐 Never bake secrets (tokens/keys) into images. Use `.env` + runtime environment variables.
 
+### Option C — VS Code / Devcontainer (nice for teams)
+If you use devcontainers, keep the notebook kernel inside the same container to avoid “it works on my machine” drift.
+
 ---
 
 ## ✅ Notebook conventions (KFM standard)
@@ -100,10 +140,20 @@ Use a **two-digit prefix** for ordering + a short, verb-first slug:
 - `03_gee_ndvi_timeseries.ipynb`
 - `04_regression_baselines.ipynb`
 
+### 🧱 Standard notebook header (recommended)
+Every notebook should start with these sections (use `_templates/`):
+1. **Purpose** (1–3 sentences)
+2. **Inputs** (data sources + assumptions)
+3. **Outputs** (what goes into `_artifacts/` / `_figures/`)
+4. **Parameters** cell (paths, AOI, dates, EPSG, seeds)
+5. **Environment** cell (Python version + key libraries)
+
+> 🧩 Tip: a consistent header makes notebooks searchable and reviewable.
+
 ### 🧼 Reproducibility checklist
-- [ ] “Parameters” cell at the top (paths, region AOI, dates, EPSG, seeds)
-- [ ] deterministic random seeds (`numpy`, `random`, frameworks)
-- [ ] record environment info (python version, key packages)
+- [ ] “Parameters” cell at the top (paths, AOI, dates, EPSG, seeds)
+- [ ] deterministic random seeds (`random`, `numpy`, and ML frameworks)
+- [ ] record environment info (Python version, key packages)
 - [ ] write outputs to `notebooks/_artifacts/` (gitignored) or `notebooks/_figures/` (committed)
 - [ ] keep notebooks readable: markdown + headings + short code cells
 - [ ] avoid giant outputs; prefer saved artifacts (CSV/GeoJSON/Parquet/PNG)
@@ -112,6 +162,43 @@ Use a **two-digit prefix** for ordering + a short, verb-first slug:
 - Always store CRS metadata (EPSG) and document reprojection steps.
 - Keep AOIs explicit (geometry + CRS + intended resolution).
 - Prefer “analysis-ready” layers; document QA steps (cloud masking, filtering).
+- Track units (meters vs degrees) — don’t mix silently 😅
+
+### 🧾 Output rules (clean repos)
+- **Never commit**: `_data/`, `_artifacts/`, massive rasters, API keys, derived cache folders  
+- **Do commit**: `_figures/` only when used in docs or reports  
+- If you *must* commit a notebook, keep output cells minimal (or use output stripping tools).
+
+<details>
+<summary>🧽 Optional: output stripping for cleaner diffs</summary>
+
+- `nbstripout` (git filter)  
+- `jupytext` pairing (`.ipynb` + `.py`/`.md`) for clean diffs  
+- CI smoke tests using `nbconvert --execute` on selected notebooks  
+
+(Choose the policy that matches your repo culture.)
+</details>
+
+---
+
+## 🧬 Lifecycle: notebook → production
+
+```mermaid
+flowchart LR
+  A[🧪 Notebook experiment] --> B[📦 Artifacts exported<br/>_artifacts/]
+  A --> C[🧾 Findings + notes]
+  C --> D[🧱 Extract core logic<br/>src/ modules]
+  D --> E[✅ Unit tests + fixtures]
+  E --> F[🔁 Pipeline / service integration]
+  F --> G[📚 Docs + examples]
+```
+
+**Graduation checklist 🏁**
+- [ ] core functions extracted into `src/` (no notebook-only globals)
+- [ ] tests added (unit + small integration)
+- [ ] data contracts documented (schemas, CRS, expected columns)
+- [ ] deterministic outputs (or explained nondeterminism)
+- [ ] clear README/docs and a “hello world” example
 
 ---
 
@@ -187,6 +274,9 @@ Use a **two-digit prefix** for ordering + a short, verb-first slug:
 - 🌍 Some references are **Open Access** (e.g., Springer OA / CC licenses). Still cite properly.
 - 🧠 Ethics is not a “nice-to-have.” KFM explicitly includes **human-centered** and **governance** concerns (privacy, bias, autonomy, accountability).
 
+> 🧭 Practical rule: treat every dataset and every model output as “decision-influencing.”  
+> That means: document assumptions, validate, and communicate uncertainty.
+
 ---
 
 ## 📚 Reference library (all project PDFs)
@@ -196,6 +286,7 @@ Use a **two-digit prefix** for ordering + a short, verb-first slug:
 
 ### 🧭 KFM Core & Architecture
 - **Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation** (`Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`)
+- **Unified Knowledge Base: Future-Proof Tech Documentation** (`Unified Knowledge Base_ Future-Proof Tech Documentation.docx`)
 - **Clean Architectures in Python** (`clean-architectures-in-python.pdf`)
 
 ### 🧰 Dev Workflow & Infrastructure
@@ -254,29 +345,12 @@ Use a **two-digit prefix** for ordering + a short, verb-first slug:
 ---
 
 <details>
-<summary>📎 ChatGPT attachment link tokens (safe to remove for GitHub)</summary>
+<summary>🧷 Optional: repo-local link style (recommended for GitHub)</summary>
 
-These are conversation-specific links that help surface the PDFs in ChatGPT UI.
+If your library is stored at `docs/library/`, link like:
 
-- geoprocessing-with-python.pdf —  [oai_citation:0‡geoprocessing-with-python.pdf](file-service://file-NkXrdB4FwTruwhQ9Ggn53T)  
-- making-maps-a-visual-guide-to-map-design-for-gis.pdf —  [oai_citation:1‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)  
-- google-maps-javascript-api-cookbook.pdf —  [oai_citation:2‡google-maps-javascript-api-cookbook.pdf](file-service://file-6w897pmf6KhF1cHXFQ1zdf)  
-- Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf —  [oai_citation:3‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)  
-- Google Earth Engine Applications.pdf —  [oai_citation:4‡Google Earth Engine Applications.pdf](file-service://file-SmoZrQ3nZSAdHHNqcVzYCq)  
-- Geographic Information System Basics - geographic-information-system-basics.pdf —  [oai_citation:5‡Geographic Information System Basics - geographic-information-system-basics.pdf](file-service://file-Kjn2enYFqXQtK3J4zN2DWz)  
-- responsive-web-design-with-html5-and-css3.pdf —  [oai_citation:6‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-4pQLNMB3Rk5n5vUPTqxpNa)  
-- webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf —  [oai_citation:7‡webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf](file-service://file-7Nd7iS68ES97NmWhPiRWTP)  
-- python-geospatial-analysis-cookbook.pdf —  [oai_citation:8‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)  
-- clean-architectures-in-python.pdf —  [oai_citation:9‡clean-architectures-in-python.pdf](file-service://file-6YHot4AqfpdbcrdfiYfpHM)  
-- implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf —  [oai_citation:10‡implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf](file-service://file-JaNsY7yoyJTAzMJSwt9LDA)  
-- Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf —  [oai_citation:11‡Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf](file-service://file-9qS1yEFvCBXbDdtTfpt3Ye)  
-- PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf —  [oai_citation:12‡PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf](file-service://file-742sw3gADJniEdmC19JeAC)  
-- MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf —  [oai_citation:13‡MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf](file-service://file-GQ5jWwmLZCFb6enxwykaRh)  
-- Principles of Biological Autonomy - book_9780262381833.pdf —  [oai_citation:14‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf)  
-- Introduction to Digital Humanism.pdf —  [oai_citation:15‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
-- MATLAB Programming for Engineers Stephen J. Chapman.pdf —  [oai_citation:16‡MATLAB Programming for Engineers Stephen J. Chapman.pdf](file-service://file-GVz6J2tWsQSJL4sFY1Niqe)  
-- applied-data-science-with-python-and-jupyter.pdf —  [oai_citation:17‡applied-data-science-with-python-and-jupyter.pdf](file-service://file-2PdBHtR24Wq7MYWfG8agQo)  
-- Introduction-to-Docker.pdf —  [oai_citation:18‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)  
-- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf —  [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
+- `docs/library/geoprocessing-with-python.pdf`
+- `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
 
+This keeps links stable across environments ✅
 </details>
