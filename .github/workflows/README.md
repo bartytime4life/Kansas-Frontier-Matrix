@@ -4,139 +4,145 @@
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
 [![Pages](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pages.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pages.yml)
 
-> 🧩 This folder contains GitHub Actions workflows that keep KFM **buildable, testable, secure, and shippable** — from geospatial pipelines to the web map UI.  
+> 🧩 This folder contains GitHub Actions workflows that keep KFM **buildable**, **testable**, **secure**, and **shippable** — from geospatial pipelines to the web map UI.
+
+> [!IMPORTANT]
 > ✅ **Principle:** CI mirrors KFM’s system order → **ETL → Catalogs → Graph → API → UI** (with policy + security checks throughout).
 
 ---
 
 ## ⚡ Quick links
 
-- 🧪 **All Actions runs:** https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions
-- 🐛 **Open issues:** https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues
-- 🔐 **Security policy:** `../SECURITY.md` *(recommended)*
-- 🧾 **Collaboration hub:** `../README.md` (the `.github/` README)
+- ✅ All Actions runs → https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions
+- 🐛 Open issues → https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues
+- 🔐 Security policy → [`../SECURITY.md`](../SECURITY.md)
+- 🤝 Collaboration hub → [`../README.md`](../README.md) *(the `.github/` README)*
 
 > [!TIP]
 > If a badge 404s, that workflow file probably doesn’t exist yet. This README is also the **spec** for what we intend to add.
 
 ---
 
-## 🧭 Table of contents
+<details>
+<summary><b>🧭 Table of contents</b></summary>
 
 - [📁 What lives here](#-what-lives-here)
 - [🧱 Why our workflows are layered](#-why-our-workflows-are-layered)
+- [🗺️ Workflow map](#️-workflow-map)
 - [🗂️ Workflow catalog](#️-workflow-catalog-recommended-baseline)
 - [✅ Quality gates](#-quality-gates-what-must-pass)
 - [🧪 Integration tests with PostGIS](#-integration-tests-with-postgis-kfm-specific)
 - [🐳 Docker builds](#-docker-builds-caching--multi-arch)
-- [🔐 Security scanning](#-security-scanning-containers--deps--secrets)
-- [🗺️ Data + catalogs workflows](#️-data--catalog-workflows-stacdcatsprov)
-- [📦 Artifacts & reporting](#-artifacts--reporting)
-- [🧷 Secrets & environments](#-secrets--environments-keep-it-boring)
+- [🔐 Security scanning](#-security-scanning-containers--deps)
+- [🧠 Data and AI lanes](#-data-and-ai-lanes-earth-engine-analytics-reproducibility)
+- [📦 Artifacts and reporting](#-artifacts--reporting)
+- [🧷 Secrets and environments](#-secrets--environments-keep-it-boring)
 - [🧼 Workflow hygiene](#-workflow-hygiene-do-this-everywhere)
-- [🧩 Reusable workflows](#-reusable-workflows-optional-but-powerful)
 - [🛠️ Starter templates](#️-starter-templates-copy--paste)
 - [🧰 Debug locally](#-debugging-workflows-locally)
 - [🧾 New workflow checklist](#-adding-a-new-workflow-checklist)
 - [📚 References](#-references-for-this-folder)
+
+</details>
 
 ---
 
 ## 📁 What lives here
 
 ```text
-📁 .github/
-  └─ 📁 workflows/
-     ├─ 🧪 ci.yml                # fast lane: lint + unit tests
-     ├─ 🧬 integration.yml       # PostGIS + service integration tests
-     ├─ 🔐 codeql.yml            # SAST security scanning (recommended)
-     ├─ 🔎 security.yml          # deps/secret/container scans (optional add-on)
-     ├─ 🗺️ data-refresh.yml      # scheduled ETL/catalog refresh (optional)
-     ├─ 🐳 docker.yml            # build/push images (optional)
-     ├─ 🌐 pages.yml             # GitHub Pages deploy (optional)
-     ├─ 🏷️ release.yml           # release automation (optional)
-     └─ 🧾 README.md             # you are here 👋
+📁 .github/workflows/
+├─ 🧪 ci.yml                # fast PR lane: lint + unit tests
+├─ 🧬 integration.yml       # PostGIS + adapter/service integration tests
+├─ 🔐 codeql.yml            # SAST (CodeQL)
+├─ 🔐 security.yml          # dep review, secret scan helpers, container scan hooks (optional)
+├─ 🐳 docker.yml            # build/push images (optional)
+├─ 📚 docs.yml              # docs build/link checks (optional)
+├─ 🌐 pages.yml             # GitHub Pages deploy (optional)
+├─ 🏷️ release.yml           # release packaging/changelog (optional)
+└─ 🧾 README.md             # you are here 👋
 ```
 
-> [!IMPORTANT]
-> KFM’s CI is **not** “just tests.” It’s also lifecycle governance:
-> - contracts (OpenAPI + STAC/DCAT/PROV)
-> - provenance checks
-> - security scans
-> - reproducibility guardrails
+> [!NOTE]
+> It’s okay if you don’t have all of these yet — but the **intent** should stay stable as the repo grows.
 
 ---
 
 ## 🧱 Why our workflows are layered
 
-KFM is intentionally modular (domain logic separated from infrastructure details), so our CI mirrors that separation:
+KFM is intentionally modular (clean boundaries + contract-first integration), so CI mirrors that structure:
 
-1) ✅ **Fast lane**: lint + unit tests + type checks (quick PR feedback)  
-2) ✅ **Integration lane**: PostGIS + API/worker integration + contract checks  
-3) ✅ **Ship lane**: build images, publish artifacts, deploy (only when allowed)
+1) ✅ Validate **core logic** (lint, unit tests, type checks)  
+2) ✅ Validate **adapters/integration** (DB + services, PostGIS, contracts)  
+3) ✅ Package & ship (**images**, artifacts, deploy lanes)
+
+This prevents a “mega-workflow” that is slow, flaky, and hard to debug. 🛣️
+
+---
+
+## 🗺️ Workflow map
+
+> [!TIP]
+> GitHub’s Mermaid renderer is strict. To avoid parse errors:
+> - Keep **one edge per line**
+> - Wrap labels in quotes when using punctuation/emoji
+> - Avoid HTML (`<br/>`) inside nodes unless you *really* need it
 
 ```mermaid
 flowchart LR
-  PR["🔀 Pull Request"] --> CI["🧪 ci.yml<br>fast checks"];
-  CI --> INT["🧬 integration.yml<br>DB + adapters"];
-  CI --> SEC["🔐 codeql.yml / security.yml<br>scans"];
-  CI --> DOCS["📚 docs checks (optional)"];
-  INT --> IMG["🐳 docker.yml<br>build/publish (optional)"];
-  IMG --> DEPLOY["🚀 deploy/pages/release<br>promotion (optional)"];
+  PR["🔀 Pull Request"] --> CI["🧪 ci.yml · fast checks"]
+  CI --> INT["🧬 integration.yml · PostGIS + adapters"]
+  CI --> SEC["🔐 codeql.yml / security.yml · scans"]
+  CI --> DOCS["📚 docs.yml · build + link checks (optional)"]
+  INT --> IMG["🐳 docker.yml · build/publish (optional)"]
+  IMG --> DEPLOY["🚀 pages.yml / release.yml · promotion (optional)"]
 ```
-
-> 🛣️ Multiple “lanes” keeps PR checks fast while still allowing heavyweight geospatial validation on schedules or manual dispatch.
 
 ---
 
 ## 🗂️ Workflow catalog (recommended baseline)
 
-> If a workflow file isn’t present yet, treat this table as the **roadmap/spec**.
+> If a workflow file isn’t present yet, treat this section as the **spec** for creating it.
 
-| Workflow 📄 | Protects ✅ | Typical triggers ⏱️ | Scope 🎯 | Outputs 📦 |
-|---|---|---|---|---|
-| `ci.yml` | PR correctness | `pull_request`, `push` | lint • unit tests • type checks | junit • coverage |
-| `integration.yml` | real service wiring | `workflow_dispatch`, scheduled, (optional PR) | PostGIS • API contracts • worker flows | logs • junit |
-| `codeql.yml` | code security | schedule + PR | SAST (Python/JS) | SARIF |
-| `security.yml` | supply chain security | schedule + PR | dependency review • secrets • container scan | SARIF • reports |
-| `data-refresh.yml` | catalog freshness | schedule + manual | ETL sampling • STAC/DCAT/PROV validation | catalogs • QA report |
-| `docker.yml` | reproducible images | push to `main`, tags | buildx • cache • SBOM/attest | GHCR images |
-| `pages.yml` | web publishing | push to `main` | web build • deploy | Pages site |
-| `release.yml` | packaged releases | tags / manual | build artifacts • changelog | GitHub Release |
+| Workflow 📄 | What it protects ✅ | Typical triggers ⏱️ | Outputs 📦 |
+|---|---|---|---|
+| `ci.yml` | fast PR checks (lint + unit tests + type checks) | `pull_request`, `push` | test reports, coverage |
+| `integration.yml` | PostGIS + service integration (API/DB/worker boundaries) | `workflow_dispatch`, nightly; optionally PR | logs, reports |
+| `codeql.yml` | SAST security scanning | `pull_request`, schedule | SARIF results |
+| `security.yml` | dependency review + container scan glue | `pull_request`, schedule | SARIF/scan logs |
+| `docker.yml` | build/push images + cache | `push` to `main`, tags | OCI images (GHCR) |
+| `docs.yml` | docs build + link checks | `pull_request` | built docs artifact |
+| `pages.yml` | web deploy to GitHub Pages | `push` to `main` or dispatch | deployed Pages site |
+| `release.yml` | release packaging + notes | tags | release assets, notes |
 
 ---
 
 ## ✅ Quality gates (what must pass)
 
 ### 1) Code health 🧼
-- formatting + linting (fast fail)
-- unit tests (core logic)
-- type checks (where applicable)
-- optional: coverage floor (**target**, not a religion)
+- Formatting + linting (fast fail)
+- Unit tests (core logic first)
+- Type checks (where applicable)
+- Coverage floor (optional, but recommended)
 
-### 2) Contract integrity 📜
-KFM is contract-first. CI should validate:
-- OpenAPI/GraphQL schemas (if present)
-- STAC/DCAT/PROV schema validity (if emitting catalogs)
-- link integrity (STAC assets exist; DCAT distributions point somewhere real)
+### 2) Contracts and metadata boundaries 🧾
+KFM treats interfaces as contracts:
+- API contracts (OpenAPI/GraphQL)
+- Data boundary artifacts (STAC/DCAT/PROV) when pipelines touch `data/`
 
-### 3) Geo + data correctness 🗺️
-Geospatial pipelines fail in predictable ways; CI should catch:
-- CRS surprises (meters vs degrees 😅)
-- geometry validity (self-intersections, empties)
-- raster metadata drift (nodata, resolution, alignment)
-- deterministic outputs (stable IDs, pinned inputs/configs)
-
-> [!NOTE]
-> Heavy geospatial validation should be **scheduled** (nightly/weekly) unless a PR directly modifies the pipeline logic.
+### 3) Geo and data correctness 🗺️
+Geospatial work fails from schema drift + toolchain mismatch:
+- validate schemas
+- validate links (assets exist)
+- keep runs deterministic where possible (pin versions + stable IDs)
 
 ---
 
 ## 🧪 Integration tests with PostGIS (KFM-specific)
 
-KFM uses PostgreSQL + PostGIS for spatial indexing and analysis, so integration tests should run against a real PostGIS engine.
+KFM uses PostgreSQL + PostGIS for spatial query integrity. Run integration tests against a **real** PostGIS container.
 
-### Option A: GitHub Actions service container ✅ (fast + simple)
+### Option A: GitHub Actions service container (fast lane)
+✅ Best when your integration tests only need DB (and maybe Redis)
 
 ```yaml
 services:
@@ -155,16 +161,15 @@ services:
       --health-retries=10
 ```
 
-### Option B: Docker Compose ✅ (best for API + worker + cache)
+### Option B: Docker Compose (multi-service parity)
+✅ Best when you also run API + worker + cache
 
 ```yaml
-# docker-compose.ci.yml (example)
 services:
   db:
     image: postgis/postgis:15-3.4
     environment:
       POSTGRES_DB: kfm_test
-      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
@@ -175,16 +180,20 @@ services:
       retries: 10
 ```
 
-> 🔎 #1 cause of flaky integration CI: tests start **before** the DB is ready. Use healthchecks + explicit waits.
+> [!CAUTION]
+> The #1 source of CI flake is “tests started before the DB was ready.”  
+> Add health checks + explicit waits. Always.
 
 ---
 
 ## 🐳 Docker builds: caching + multi-arch
 
-### ✅ Buildx with GitHub cache (simple + fast)
+### ✅ Prefer BuildKit + GHA cache
+Fast builds, minimal setup:
 
 ```yaml
 - uses: docker/setup-buildx-action@v3
+
 - uses: docker/build-push-action@v6
   with:
     context: .
@@ -194,86 +203,72 @@ services:
     cache-to: type=gha,mode=max
 ```
 
-### 🧪 Runtime matrix checks (recommended)
-Validate multiple runtimes without slowing a single job:
+### 🧪 Compatibility via matrix
+Useful for Node tooling or Python versions:
 
 ```yaml
 strategy:
   matrix:
     python: ["3.11", "3.12"]
-    node: ["20", "22"]
 ```
 
-> [!TIP]
-> Keep matrices for PR lanes **small**. Push broad compatibility sweeps to nightly schedules.
+---
+
+## 🔐 Security scanning (containers + deps)
+
+Baseline expectations:
+- ✅ dependency review on PRs
+- ✅ CodeQL (SAST)
+- ✅ secret scanning (and push protection)
+- ✅ container image scanning on `main` + tags (optional but recommended)
+
+> [!NOTE]
+> For forks: publishing workflows should not run with secrets on untrusted PRs. Keep publish steps on `push` to `main`, tags, or `workflow_dispatch`.
 
 ---
 
-## 🔐 Security scanning: containers + deps + secrets
+## 🧠 Data and AI lanes (Earth Engine, analytics, reproducibility)
 
-**Baseline expectations (recommended):**
-- ✅ dependency review on PRs (blocks risky dependency changes)
-- ✅ CodeQL SAST on schedule + PR
-- ✅ secret scanning (GitHub-native) + optional custom checks
-- ✅ container image scanning on `main` + tags (Trivy/Grype/etc.)
-- ✅ upload results as **SARIF** when possible (GitHub can surface findings in Security tab)
+CI shouldn’t run planet-scale pipelines on every PR. Instead:
 
-**Fork safety rule (non-negotiable):**
-- avoid running secret-bearing jobs on `pull_request` from forks
-- do not use `pull_request_target` unless you fully understand the security implications
+- ✅ **PR lane:** lightweight unit tests + schema checks + small fixtures
+- 🗓️ **Nightly/weekly:** heavy geospatial jobs + regression comparisons
+- 📦 **Artifacts:** store summaries, metrics, diffs (don’t spam logs)
 
----
-
-## 🗺️ Data + catalog workflows: STAC/DCAT/PROV
-
-CI should treat “catalog + provenance” as a first-class interface.
-
-### Recommended patterns
-- ✅ PR lane: validate schema + link integrity on **small fixtures**
-- 🗓️ Scheduled lane: run heavyweight pipelines with sampling and produce:
-  - diff summaries
-  - QA reports
-  - updated catalogs (if policy allows automation)
-
-### Good triggers
-- `workflow_dispatch` for manual reruns
-- `schedule` for nightlies
-- `push` for main-branch data publishing (only if trusted)
-
-> 🧠 Rule of thumb: if it needs cloud credentials or has long runtimes → schedule or manual dispatch.
+Rule of thumb:
+- If it needs credentials or takes >10 minutes → schedule it (or manual dispatch).
 
 ---
 
 ## 📦 Artifacts & reporting
 
-Standardize outputs so debugging is painless:
+Recommended artifacts to standardize across workflows:
 
-- ✅ JUnit results: `**/*test-results*.xml`
-- ✅ coverage: `coverage.xml` (+ HTML for deep dives)
-- ✅ integration logs: zipped folder
-- ✅ security: SARIF
-- ✅ E2E failures: screenshots + videos
+- `unit-test-results.xml` / `pytest.xml`
+- `coverage.xml` (+ HTML if desired)
+- integration logs (zipped)
+- security reports (SARIF)
+- image digests / SBOM outputs (optional)
 
-**Naming tip:** include workflow + job + sha
-- `ci-unit-${{ github.sha }}`
-- `integration-postgis-${{ github.sha }}`
+💡 Naming tip: include workflow + sha → `ci-unit-${{ github.sha }}`
 
 ---
 
 ## 🧷 Secrets & environments (keep it boring)
 
 Common secrets you’ll likely need:
-- `GITHUB_TOKEN` permissions for GHCR pushes *(preferred)*
-- deploy credentials for cloud targets (only in environment-protected jobs)
-- service tokens (Earth Engine, map providers, etc.) — **never** in PR lanes for forks
+- `GITHUB_TOKEN` (usually sufficient for GHCR with `packages: write`)
+- deploy credentials (only in protected envs)
+- 3rd-party tokens (e.g., Earth Engine), scoped and rotated
 
 ✅ Use GitHub **Environments** (`dev`, `stage`, `prod`) to:
 - scope secrets safely
 - require approvals for prod
-- attach deployment history to commits
+- attach deploy history to commits
 
 > [!CAUTION]
-> If a job can deploy, publish catalogs, or push images: gate it behind an environment with review/approval.
+> Avoid `pull_request_target` unless you deeply understand the security model.  
+> Default to `pull_request` + read-only permissions.
 
 ---
 
@@ -285,18 +280,18 @@ permissions:
   contents: read
 ```
 
-For GHCR push:
-```yaml
-permissions:
-  contents: read
-  packages: write
-```
-
-For SARIF uploads:
-```yaml
-permissions:
-  security-events: write
-```
+Common upgrades:
+- Push images:
+  ```yaml
+  permissions:
+    contents: read
+    packages: write
+  ```
+- Upload SARIF:
+  ```yaml
+  permissions:
+    security-events: write
+  ```
 
 ### 🧵 Concurrency (avoid dogpiling)
 ```yaml
@@ -305,44 +300,14 @@ concurrency:
   cancel-in-progress: true
 ```
 
-### 🧠 Path filters (keep PR CI fast)
-Only run workflows when relevant files change:
-
-```yaml
-on:
-  pull_request:
-    paths:
-      - "src/**"
-      - "api/**"
-      - "web/**"
-      - "data/**"
-      - ".github/workflows/**"
-```
-
-### 📌 Pin actions (reduce supply-chain risk)
-- Minimum: pin to major versions (v4/v5/etc.)
-- Maximum safety: pin third-party actions by commit SHA
-
----
-
-## 🧩 Reusable workflows (optional but powerful)
-
-When patterns repeat (setup Python, run tests, upload artifacts), consider reusable workflows:
-
-- `.github/workflows/_reusable-python-test.yml` (`workflow_call`)
-- `.github/workflows/_reusable-node-test.yml`
-- `.github/workflows/_reusable-docker-build.yml`
-
-✅ Benefits:
-- consistent quality gates
-- less YAML duplication
-- easier upgrades
+### 📌 Pin action versions
+At minimum, pin major versions. For maximum safety, pin commit SHAs.
 
 ---
 
 ## 🛠️ Starter templates (copy / paste)
 
-> These are baseline skeletons. Replace tool choices (`pytest`, `ruff`, `uv`, `npm`, `pnpm`) with the repo’s actual stack.
+> Keep PR checks fast, make slow lanes scheduled, and always upload logs on failure. 🥇
 
 <details>
 <summary><strong>🧪 <code>ci.yml</code> — Lint + Unit Tests (fast PR lane)</strong></summary>
@@ -391,7 +356,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: unit-test-artifacts-${{ github.sha }}
+          name: unit-test-artifacts
           path: |
             unit-test-results.xml
             coverage.xml
@@ -453,7 +418,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: integration-artifacts-${{ github.sha }}
+          name: integration-artifacts
           path: |
             integration-results.xml
 ```
@@ -506,7 +471,7 @@ jobs:
 </details>
 
 <details>
-<summary><strong>🔐 <code>security.yml</code> — Dependency + Image Scanning</strong></summary>
+<summary><strong>🔐 <code>security.yml</code> — Dependency + Security Scans</strong></summary>
 
 ```yaml
 name: Security
@@ -550,7 +515,38 @@ jobs:
 </details>
 
 <details>
-<summary><strong>🌐 <code>pages.yml</code> — Build + Deploy GitHub Pages</strong></summary>
+<summary><strong>📚 <code>docs.yml</code> — Docs Build + Link Check</strong></summary>
+
+```yaml
+name: Docs
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Replace with your docs toolchain (mkdocs, docusaurus, sphinx, etc.)
+      - name: Build docs (placeholder)
+        run: |
+          echo "TODO: build docs"
+          mkdir -p site && echo "docs build output" > site/index.html
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docs-site
+          path: site
+```
+</details>
+
+<details>
+<summary><strong>🌐 <code>pages.yml</code> — GitHub Pages Deploy (static web viewer)</strong></summary>
 
 ```yaml
 name: Pages
@@ -574,22 +570,22 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     steps:
       - uses: actions/checkout@v4
 
-      # Replace with your web build toolchain
-      - name: Build site (placeholder)
+      # Replace with your build step (or skip if web/ is static)
+      - name: Build (placeholder)
         run: |
-          mkdir -p web/dist
-          echo "KFM web build output" > web/dist/index.html
+          mkdir -p dist
+          cp -R web/* dist/
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: web/dist
+          path: dist
 
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4
 ```
 </details>
 
@@ -599,8 +595,8 @@ jobs:
 
 Options:
 - ✅ Run the same commands as CI (best parity)
-- 🧪 Use `act` to simulate GitHub Actions (best-effort parity; not perfect)
-- 🐳 Use Docker Compose profiles to run targeted service subsets (API-only / DB-only / full stack)
+- 🐳 Use Compose profiles to mimic integration dependencies
+- 🧪 Use `act` to simulate GitHub Actions locally (helpful, not perfect)
 
 ---
 
@@ -613,22 +609,20 @@ Options:
 - [ ] Upload artifacts on failure (logs are gold 🥇)
 - [ ] Pin action versions
 - [ ] Avoid secrets on `pull_request` from forks
-- [ ] Add minimal `permissions:` and only elevate where required
+- [ ] Add minimal `permissions:` and only elevate when required
 - [ ] Add `concurrency:` cancellation to reduce queue noise
-- [ ] Add `paths:` filters so unrelated changes don’t burn CI minutes
+- [ ] Keep the KFM order intact: **ETL → Catalogs → Graph → API → UI**
 
 ---
 
 ## 📚 References for this folder
 
-> 📌 Repo convention (recommended): keep CI/CD rationale docs under `docs/` and link them here.
+> 📌 Repo convention (recommended): store reference PDFs under `docs/library/` and internal specs under `docs/specs/`.
 
-- 🧱 KFM architecture principles + layering rationale → `docs/architecture/`
-- 🗺️ Data lifecycle + catalogs (STAC/DCAT/PROV) → `data/README.md`
-- 🧪 Test strategy + gates → `tests/README.md`
-- 🔐 Security policy → `.github/SECURITY.md` *(recommended)*
+- 🧱 Architecture and layering rationale → `docs/architecture/`
+- 🗺️ Data staging and catalogs (STAC/DCAT/PROV) → `data/README.md`
+- 🧪 Test strategy and CI gates → `tests/README.md`
+- 🔐 Security and disclosure process → `.github/SECURITY.md`
+- 🌐 Web viewer deployment notes → `web/README.md`
 
----
-
-🧭 **Goal:** green CI is not a vibe — it’s a contract.  
-🧾 **Promise:** if it ships, it has receipts.
+> 🔁 If you rename workflows or reorganize docs, update this README — it’s the “single source of truth” for CI/CD intent.
