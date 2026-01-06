@@ -1,23 +1,34 @@
-# 📦 `data/` — Kansas Frontier Matrix Data & Metadata Hub
+# 📦 `data/` — Kansas Frontier Matrix Data & Metadata Hub 🧭🗺️
 
 ![KFM](https://img.shields.io/badge/KFM-data%20%26%20metadata-blue)
+![STAC](https://img.shields.io/badge/STAC-Collections%20%26%20Items-purple)
+![DCAT](https://img.shields.io/badge/DCAT-JSON--LD-purple)
+![PROV](https://img.shields.io/badge/PROV-lineage%20bundles-purple)
 ![Pipeline](https://img.shields.io/badge/pipeline-ETL%E2%86%92Catalogs%E2%86%92Graph%E2%86%92API%E2%86%92UI%E2%86%92Story%E2%86%92Focus-informational)
-![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE%20%2B%20Sovereignty-success)
-![Geospatial](https://img.shields.io/badge/geospatial-STAC%20%7C%20DCAT%20%7C%20PROV-purple)
+![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-success)
 
-> ✅ **Purpose:** `data/` is the canonical home for **raw inputs**, **intermediate work**, **published/processed outputs**, and the **required metadata boundary artifacts** (STAC/DCAT/PROV) that make KFM traceable, governed, and shippable. [^staging]  
-> ⚠️ **Rule:** If it isn’t **cataloged + provenance-linked**, it isn’t “published” in KFM. [^provenance-first]
+> **Last updated:** 2026-01-06  
+> ✅ **Purpose:** `data/` is the canonical home for **raw inputs**, **intermediate work**, **published/processed outputs**, and the **metadata boundary artifacts** (STAC/DCAT/PROV) that make KFM traceable, governed, and shippable. [^staging]  
+> ⚠️ **Rule:** If it isn’t **cataloged + provenance-linked**, it isn’t **published** in KFM. [^provenance-first]
+
+**⬅️ Back to repo overview:** [`../README.md`](../README.md)  
+**🤝 Collaboration & automation:** [`../.github/README.md`](../.github/README.md) *(if present)*  
+**📘 Master pipeline guide:** `docs/MASTER_GUIDE_v13.md` *(recommended if present)*
 
 ---
 
 ## 🧭 Quick Nav
-- [🚦 Non‑negotiables](#-non-negotiables)
+- [🏁 5‑minute publish checklist](#-5minute-publish-checklist)
+- [🧠 KFM pipeline snapshot](#-kfm-pipeline-snapshot)
+- [🚦 Non‑negotiables](#-nonnegotiables)
+- [✅ What “published” means in KFM](#-what-published-means-in-kfm)
 - [🗂️ Directory layout](#️-directory-layout)
 - [🔁 Data lifecycle](#-data-lifecycle)
 - [🏷️ Metadata boundary artifacts](#️-metadata-boundary-artifacts)
+- [🧰 KFM profiles, schemas, and contracts](#-kfm-profiles-schemas-and-contracts)
 - [🧩 Minimal artifact templates](#-minimal-artifact-templates)
-- [🧾 Evidence artifacts](#-evidence-artifacts)
-- [🧬 Versioning](#-versioning)
+- [🧾 Evidence artifacts (AI + analysis outputs)](#-evidence-artifacts-ai--analysis-outputs)
+- [🧬 Versioning & releases](#-versioning--releases)
 - [🧷 Stable IDs + hashing](#-stable-ids--hashing)
 - [📐 Conventions](#-conventions)
 - [🧪 Validation & CI gates](#-validation--ci-gates)
@@ -28,8 +39,28 @@
 
 ---
 
-## 🧠 KFM Pipeline Snapshot
-KFM enforces a strict ordering from **data → catalogs → graph → API → UI → narrative**, ensuring traceability end-to-end. [^pipeline-diagram]
+## 🏁 5‑minute publish checklist
+
+> [!IMPORTANT]
+> **Publishing** = **processed output + boundary artifacts + validation**.  
+> Raw files alone are *never* “published” in KFM.
+
+**Minimum bar (per dataset):**
+- [ ] Place sources under `data/raw/<domain>/…` (keep as close to original as practical)
+- [ ] Produce outputs under `data/processed/<domain>/…`
+- [ ] Write boundary artifacts:
+  - [ ] **STAC Collection** → `data/stac/collections/<collection-id>.json`
+  - [ ] **STAC Item(s)** → `data/stac/items/<item-id>.json`
+  - [ ] **DCAT Dataset (JSON‑LD)** → `data/catalog/dcat/<dataset-id>.jsonld`
+  - [ ] **PROV bundle (JSON‑LD)** → `data/prov/<run-id>.jsonld`
+- [ ] Add hashes (SHA256) for outputs (+ ideally for raw inputs)
+- [ ] Add evidence/QA artifacts (screenshot / bbox / zoom / validation report) to `data/qa/…`
+- [ ] Run CI validators locally (or via PR) and ensure everything passes
+
+---
+
+## 🧠 KFM pipeline snapshot
+KFM enforces a strict ordering from **data → catalogs → graph → API → UI → narrative**, ensuring traceability end‑to‑end. [^pipeline-diagram]
 
 ```mermaid
 flowchart LR
@@ -40,7 +71,7 @@ flowchart LR
     C --> E["PROV Lineage Bundles"]
   end
 
-  C --> G["Neo4j Graph (references back to catalogs)"]
+  C --> G["Graph (references back to catalogs)"]
   G --> H["API Layer (contracts + redaction)"]
   H --> I["Map UI — React · MapLibre · (optional) Cesium"]
   I --> J["Story Nodes (governed narratives)"]
@@ -53,155 +84,230 @@ flowchart LR
 These invariants keep the platform consistent and governed:
 
 - **Pipeline ordering is absolute:** `ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode`. [^pipeline-order]
-- **API boundary rule:** UI never queries Neo4j directly; all access goes through the governed API layer (enforces access control + redaction). [^api-boundary]
+- **API boundary rule:** UI never queries the graph directly; all access goes through the governed API layer (enforces access control + redaction). [^api-boundary]
 - **Deterministic, idempotent ETL:** config-driven, repeatable runs with stable IDs/hashes and logging for reproducibility. [^deterministic-etl]
-- **Evidence-first narrative:** Story Nodes/Focus Mode must cite evidence; AI outputs must be labeled and provenance-linked. [^evidence-first]
+- **Evidence-first narrative:** Story Nodes / Focus Mode must cite evidence; AI outputs must be labeled and provenance-linked. [^evidence-first]
 - **Sovereignty & classification propagation:** outputs cannot be **less restricted** than inputs without approved redaction/handling. [^sovereignty]
 
-> 🧩 Governance reminder: **FAIR** makes data *findable/accessible/interoperable/reusable*; **CARE** ensures *collective benefit, authority to control, responsibility, and ethics*; **sovereignty** ensures the right people control sensitive data.
+> [!TIP]
+> **FAIR** makes data *findable/accessible/interoperable/reusable*.  
+> **CARE** ensures *collective benefit, authority to control, responsibility, and ethics*.  
+> **Sovereignty** ensures the right people control sensitive data.
+
+---
+
+## ✅ What “published” means in KFM
+KFM uses **stages** and **contracts**. This avoids “mystery layers” and makes audits possible.
+
+### 🧊 Stages (data state)
+- **Raw** (`data/raw/**`) → source truth snapshot; minimally transformed; reprocessing baseline.
+- **Work** (`data/work/**`) → intermediate artifacts (joins, temporary rasters, staging tables).
+- **Processed** (`data/processed/**`) → final, publishable outputs (COGs, GeoJSON, tiles, reports).
+- **Published** ✅ → processed outputs that have:
+  - STAC/DCAT/PROV boundary artifacts **and**
+  - passing validations/CI gates **and**
+  - classification/handling rules applied.
+
+### 🧾 Boundary artifacts (metadata state)
+- **STAC** = asset-level + spatial/temporal indexing
+- **DCAT** = dataset/distribution discovery entry
+- **PROV** = lineage graph: inputs → activities → outputs
+
+> [!WARNING]
+> If you ship a file without a STAC/DCAT/PROV trail, you ship an **orphan**. Orphans don’t go to prod.
 
 ---
 
 ## 🗂️ Directory layout
-KFM’s required staging and boundary artifacts (plus a few recommended “helper” dirs):
+KFM’s required staging and boundary artifacts (plus recommended helper dirs):
 
 ```text
 data/
-  raw/                      # 1) Raw, minimally transformed source inputs (per domain)
+  raw/                         # 1) Raw, minimally transformed inputs (per domain)
     <domain>/
-      ...                   # preserve source structure as much as practical
+      ...
 
-  work/                     # 2) Intermediate artifacts produced during ETL (per domain)
+  work/                        # 2) Intermediate artifacts produced during ETL (per domain)
     <domain>/
-      ...                   # temp joins, intermediate rasters, staging tables, etc.
+      ...
 
-  processed/                # 3) Final, publishable outputs (per domain)
+  processed/                   # 3) Final, publishable outputs (per domain)
     <domain>/
-      ...                   # analysis outputs, tiles, derived rasters/vectors, feature tables
+      ...
 
-  stac/                     # Required: STAC catalog artifacts
-    catalog.json            # ✅ Recommended: root STAC catalog entrypoint
-    collections/            # STAC Collections (dataset-level)
-    items/                  # STAC Items (asset-level)
+  stac/                        # ✅ Required: STAC catalog artifacts
+    catalog.json               # ⭐ Recommended: root STAC catalog entrypoint
+    collections/               # STAC Collections (dataset-level)
+    items/                     # STAC Items (asset-level)
 
   catalog/
-    dcat/                   # Required: DCAT JSON-LD dataset entries
+    dcat/                      # ✅ Required: DCAT JSON-LD dataset entries
 
-  prov/                     # Required: PROV lineage bundles (inputs → activities → outputs)
+  prov/                        # ✅ Required: PROV lineage bundles (inputs → activities → outputs)
 
-  manifests/                # ⭐ Recommended: dataset manifests, schemas, dictionaries, QA contracts
-  qa/                       # ⭐ Recommended: validation reports (schema checks, link checks, QA metrics)
+  manifests/                   # ⭐ Recommended: dataset manifests, schemas, dictionaries, QA contracts
+  qa/                          # ⭐ Recommended: validation reports (schema checks, link checks, QA metrics)
+
+  graph/                       # ⭐ Optional: graph import/export artifacts (CSV/Cypher), if needed
+    csv/
+    cypher/
+
+  README.md                    # 📍 you are here
 ```
 
-> ✅ The staged layout is required (`raw → work → processed`), and publishing requires STAC/DCAT/PROV artifacts in their canonical locations. [^staging]
+> [!NOTE]
+> Some repos prefer a domain‑scoped layout (`data/<domain>/{raw,work,processed}`).
+> If we ever migrate to that, this README becomes the compatibility map. [^staging]
 
 ---
 
 ## 🔁 Data lifecycle
-KFM’s data pipeline is conceptualized in stages and can be **batch** or **streaming** depending on the source. [^kfm-pipeline-overview]
+KFM’s pipeline can be **batch** or **streaming** depending on the source. [^kfm-pipeline-overview]
 
 ### 1) Ingestion
-- Scheduled batch ingest (e.g., daily imagery, weekly reports) via schedulers like cron/Airflow. [^kfm-ingestion]
-- Streaming ingest (e.g., sensor readings) via brokers/protocols (MQTT/HTTP ingest endpoints), validating + timestamping quickly. [^kfm-ingestion]
-- Manual uploads (expert-provided CSVs, surveys) into a staging area with controlled import. [^kfm-ingestion]
-- **Raw-first principle:** store raw inputs with minimal transformations to preserve a reprocessing baseline. [^raw-first]
+- Scheduled batch ingest (cron/Airflow/GitHub Actions schedules). [^kfm-ingestion]
+- Streaming ingest (MQTT/HTTP endpoints) with fast validation + timestamping. [^kfm-ingestion]
+- Manual uploads (expert CSVs/surveys) into a staging area with controlled import. [^kfm-ingestion]
+- **Raw-first principle:** preserve raw inputs to allow reprocessing. [^raw-first]
 
 ### 2) Processing
-This is where value is added: cleaning, joining, deriving metrics, running models/simulations.
-- Prefer “compute close to data” where appropriate (e.g., PostGIS spatial SQL). [^postgis-processing]
-- Support scalable processing (Spark/Dask) for very large spatiotemporal archives. [^postgis-processing]
-- Shell scripts and CLI tools are valid “glue” for reproducible pipelines (e.g., `ogr2ogr`, `raster2pgsql`). [^postgis-processing]
+Cleaning, joining, deriving metrics, OCR, georeferencing, modeling, simulation.
+- Prefer “compute close to data” when appropriate (e.g., PostGIS spatial SQL). [^postgis-processing]
+- Support scale-out processing (Dask/Spark) for huge spatiotemporal archives. [^postgis-processing]
+- CLI glue is allowed and often best (GDAL/OGR, raster2pgsql, etc.). [^postgis-processing]
 
 ### 3) Storage & indexing
-Processed outputs land in:
-- **Structured stores** (tables optimized for query patterns, including spatial indices). [^storage]
-- **Geospatial stores/files** for imagery + map layers (GeoTIFF/tiles), including **tile pyramids** for efficient web serving. [^storage]
+Processed outputs live in:
+- **Queryable stores** (PostGIS tables + spatial indices)
+- **Geospatial files** (COG/GeoJSON/tiles) optimized for web streaming. [^storage]
 
 ### 4) Publication / serving
-- Frontend requests go through the API, which retrieves from databases or stable file/tiles storage and returns map layers or URLs. [^serve-frontend]
-- Event-driven workflows (queues/topics) can publish “new data available” signals for downstream processors. [^event-driven]
+- UI requests go through the **API**, which enforces classification/redaction and returns governed outputs. [^serve-frontend]
+- Event-driven workflows can publish “new data available” signals for downstream stages. [^event-driven]
 
 ---
 
 ## 🏷️ Metadata boundary artifacts
-Before data is considered “published,” KFM requires “boundary artifacts” that downstream stages consume (graph/API/UI). [^boundary-artifacts]
+
+> [!IMPORTANT]
+> Boundary artifacts are the “interfaces” that downstream stages consume.
+> Graph/API/UI/story work must reference **catalog IDs**, not ad-hoc local paths. [^boundary-artifacts]
 
 ### ✅ Required metadata outputs
 - **STAC (Collections + Items)** for geospatial assets (and consistent collection records even for some non-spatial datasets). [^stac-dcat-prov]
-- **DCAT dataset entry** (JSON-LD) for discovery: title/description/license/keywords/distributions. [^stac-dcat-prov]
-- **PROV lineage bundle** capturing inputs → processing activities → outputs with configs/params and run identifiers. [^prov-end-to-end]
+- **DCAT dataset entry (JSON‑LD)** for discovery: title/description/license/keywords/distributions. [^stac-dcat-prov]
+- **PROV lineage bundle** capturing inputs → activities → outputs with configs/params and run identifiers. [^prov-end-to-end]
 
 ### 🔗 Cross-layer linkage expectations (don’t break these)
-- STAC Items must link to the actual stable assets (often in `data/processed/**`). [^stac-links]
+- STAC Items must link to stable assets (usually under `data/processed/**`). [^stac-links]
 - DCAT should link to STAC and/or direct downloads. [^dcat-links]
 - PROV must link raw → work → processed and record run/config identifiers. [^prov-end-to-end]
-- Graph stores references to catalog IDs rather than duplicating bulky payloads. [^graph-references]
+- Graph stores references to catalog IDs (not bulky data payloads). [^graph-references]
 
 ### 🔐 Classification propagation (always-on)
-- Carry classification labels and handling notes through **STAC**, **DCAT**, and **PROV**.
+- Carry classification/handling labels through **STAC**, **DCAT**, and **PROV**.
 - Outputs cannot be published at a *lower restriction* than any input unless a documented redaction step exists. [^sovereignty]
+
+> [!CAUTION]
+> Public repo = public downloads. Treat **GeoJSON** and other “easy-to-copy” formats as disclosure boundaries. [^geojson-privacy]
+
+---
+
+## 🧰 KFM profiles, schemas, and contracts
+
+> [!TIP]
+> If you need custom fields, extend **KFM profiles** (don’t invent one-off metadata keys).  
+> Keep project-specific keys namespaced (e.g., `kfm:*`) and validate in CI.
+
+**Recommended docs (repo‑local standards):**
+- `docs/standards/KFM_STAC_PROFILE.md` 🗺️
+- `docs/standards/KFM_DCAT_PROFILE.md` 🏷️
+- `docs/standards/KFM_PROV_PROFILE.md` 🧬
+- `docs/governance/SOVEREIGNTY.md` 🔐
+
+**Recommended schema locations:**
+- `schemas/stac/**`
+- `schemas/dcat/**`
+- `schemas/prov/**`
 
 ---
 
 ## 🧩 Minimal artifact templates
 Use these as starter scaffolds. Keep them small, validate in CI, and extend via KFM profiles.
 
+> [!NOTE]
+> IDs below use a consistent, Kansas‑scoped naming pattern:
+> - **Dataset/Collection ID:** `kfm.ks.<domain>.<dataset>`  
+> - **Item ID:** `kfm.ks.<domain>.<dataset>.<yyyymmdd>.<variant>.v<major>`  
+> You can still use hyphens if your tooling prefers, but keep the pattern stable. [^stable-ids]
+
 <details>
-<summary><strong>🗺️ STAC Collection</strong> (data/stac/collections/&lt;collection-id&gt;.json)</summary>
+<summary><strong>🗺️ STAC Collection</strong> — <code>data/stac/collections/&lt;collection-id&gt;.json</code></summary>
 
 ```json
 {
   "type": "Collection",
   "stac_version": "1.0.0",
-  "id": "kfm-agriculture-ndvi",
-  "title": "KFM Agriculture — NDVI",
+  "id": "kfm.ks.agriculture.ndvi",
+  "title": "KFM Kansas — Agriculture NDVI",
   "description": "NDVI composites derived from satellite imagery for Kansas agriculture monitoring.",
   "license": "proprietary",
   "extent": {
     "spatial": { "bbox": [[-102.05, 36.99, -94.59, 40.00]] },
     "temporal": { "interval": [["2020-01-01T00:00:00Z", null]] }
   },
+  "keywords": ["KFM", "Kansas", "agriculture", "NDVI"],
+  "providers": [
+    { "name": "Kansas Frontier Matrix", "roles": ["producer"] }
+  ],
   "links": [
     { "rel": "root", "href": "../catalog.json", "type": "application/json" }
   ],
-  "keywords": ["KFM", "agriculture", "NDVI"],
-  "providers": [
-    { "name": "Kansas Frontier Matrix", "roles": ["producer"] }
-  ]
+  "kfm:classification": "public",
+  "kfm:quality_tier": "silver"
 }
 ```
 </details>
 
 <details>
-<summary><strong>🛰️ STAC Item</strong> (data/stac/items/&lt;item-id&gt;.json)</summary>
+<summary><strong>🛰️ STAC Item</strong> — <code>data/stac/items/&lt;item-id&gt;.json</code></summary>
 
 ```json
 {
   "type": "Feature",
   "stac_version": "1.0.0",
-  "id": "kfm-agriculture-ndvi-20250301",
-  "collection": "kfm-agriculture-ndvi",
+  "id": "kfm.ks.agriculture.ndvi.20250301.composite.v1",
+  "collection": "kfm.ks.agriculture.ndvi",
   "geometry": null,
   "bbox": null,
   "properties": {
-    "datetime": "2025-03-01T00:00:00Z"
+    "datetime": "2025-03-01T00:00:00Z",
+    "proj:epsg": 4326
   },
   "assets": {
     "cog": {
       "href": "../../processed/agriculture/agriculture__ndvi__20250301__epsg4326__30m__v1.0.tif",
       "type": "image/tiff; application=geotiff; profile=cloud-optimized",
-      "roles": ["data"]
+      "roles": ["data"],
+      "file:checksum": "sha256:<sha256>"
+    },
+    "qa": {
+      "href": "../../qa/agriculture/agriculture__ndvi__20250301__qa.md",
+      "type": "text/markdown",
+      "roles": ["metadata"]
     }
   },
   "links": [
-    { "rel": "collection", "href": "../collections/kfm-agriculture-ndvi.json", "type": "application/json" }
-  ]
+    { "rel": "collection", "href": "../collections/kfm.ks.agriculture.ndvi.json", "type": "application/json" }
+  ],
+  "kfm:classification": "public",
+  "kfm:derived": true
 }
 ```
 </details>
 
 <details>
-<summary><strong>🏷️ DCAT Dataset (JSON-LD)</strong> (data/catalog/dcat/&lt;dataset-id&gt;.jsonld)</summary>
+<summary><strong>🏷️ DCAT Dataset (JSON‑LD)</strong> — <code>data/catalog/dcat/&lt;dataset-id&gt;.jsonld</code></summary>
 
 ```json
 {
@@ -211,24 +317,30 @@ Use these as starter scaffolds. Keep them small, validate in CI, and extend via 
     "foaf": "http://xmlns.com/foaf/0.1/"
   },
   "@type": "dcat:Dataset",
-  "dct:identifier": "kfm-agriculture-ndvi",
-  "dct:title": "KFM Agriculture — NDVI",
+  "dct:identifier": "kfm.ks.agriculture.ndvi",
+  "dct:title": "KFM Kansas — Agriculture NDVI",
   "dct:description": "NDVI composites derived for KFM agriculture monitoring.",
   "dct:license": "proprietary",
-  "dcat:keyword": ["KFM", "NDVI", "agriculture"],
+  "dcat:keyword": ["KFM", "Kansas", "NDVI", "agriculture"],
   "dcat:distribution": [
     {
       "@type": "dcat:Distribution",
       "dct:title": "STAC Collection",
-      "dcat:accessURL": "data/stac/collections/kfm-agriculture-ndvi.json"
+      "dcat:accessURL": "data/stac/collections/kfm.ks.agriculture.ndvi.json"
+    },
+    {
+      "@type": "dcat:Distribution",
+      "dct:title": "COG (latest)",
+      "dcat:accessURL": "data/processed/agriculture/agriculture__ndvi__latest__epsg4326__30m__v1.0.tif"
     }
-  ]
+  ],
+  "kfm:classification": "public"
 }
 ```
 </details>
 
 <details>
-<summary><strong>🧬 PROV Bundle</strong> (data/prov/&lt;run-id&gt;.jsonld)</summary>
+<summary><strong>🧬 PROV Bundle (JSON‑LD)</strong> — <code>data/prov/&lt;run-id&gt;.jsonld</code></summary>
 
 ```json
 {
@@ -238,79 +350,131 @@ Use these as starter scaffolds. Keep them small, validate in CI, and extend via 
   },
   "@graph": [
     {
-      "@id": "prov:activity/etl_run_2025_03_01_001",
+      "@id": "prov:activity/etl_20250301_010203_a1b2c3d",
       "@type": "prov:Activity",
+      "prov:label": "NDVI ETL run",
       "prov:startedAtTime": { "@value": "2025-03-01T01:02:03Z", "@type": "xsd:dateTime" },
       "prov:endedAtTime": { "@value": "2025-03-01T01:15:00Z", "@type": "xsd:dateTime" },
-      "prov:label": "NDVI ETL run",
-      "prov:used": [
-        { "@id": "prov:entity/raw_landsat_scene_2025_03_01" }
-      ],
-      "prov:generated": [
-        { "@id": "prov:entity/processed_ndvi_2025_03_01" }
-      ]
+      "prov:used": [{ "@id": "prov:entity/raw_landsat_scene_20250301" }],
+      "prov:generated": [{ "@id": "prov:entity/processed_ndvi_20250301" }],
+      "prov:wasAssociatedWith": [{ "@id": "prov:agent/kfm_pipeline" }]
     },
     {
-      "@id": "prov:entity/raw_landsat_scene_2025_03_01",
+      "@id": "prov:entity/raw_landsat_scene_20250301",
       "@type": "prov:Entity",
       "prov:label": "Raw Landsat input",
-      "prov:location": "data/raw/agriculture/landsat/2025/03/01/..."
+      "prov:location": "data/raw/agriculture/landsat/2025/03/01/...",
+      "kfm:classification": "public"
     },
     {
-      "@id": "prov:entity/processed_ndvi_2025_03_01",
+      "@id": "prov:entity/processed_ndvi_20250301",
       "@type": "prov:Entity",
-      "prov:label": "Processed NDVI GeoTIFF",
-      "prov:location": "data/processed/agriculture/agriculture__ndvi__20250301__epsg4326__30m__v1.0.tif"
+      "prov:label": "Processed NDVI COG",
+      "prov:location": "data/processed/agriculture/agriculture__ndvi__20250301__epsg4326__30m__v1.0.tif",
+      "kfm:hash_sha256": "<sha256>",
+      "kfm:classification": "public"
+    },
+    {
+      "@id": "prov:agent/kfm_pipeline",
+      "@type": "prov:Agent",
+      "prov:label": "KFM pipeline runner",
+      "kfm:git_sha": "<shortsha>",
+      "kfm:container_image": "<image-digest>"
     }
   ]
 }
 ```
 </details>
 
+<details>
+<summary><strong>📄 Optional: Dataset Manifest (KFM)</strong> — <code>data/manifests/&lt;dataset-id&gt;.yml</code></summary>
+
+> ⭐ Recommended: treat this manifest as the *human-friendly anchor* that can generate STAC/DCAT/PROV.
+
+```yaml
+id: kfm.ks.agriculture.ndvi
+title: "KFM Kansas — Agriculture NDVI"
+domain: agriculture
+classification: public
+license: proprietary
+keywords: ["KFM", "Kansas", "agriculture", "NDVI"]
+
+sources:
+  - label: "Landsat collection X"
+    ref: "USGS:<id or url>"
+    accessed: "2026-01-06"
+
+coverage:
+  bbox: [-102.05, 36.99, -94.59, 40.00]
+  crs: "EPSG:4326"
+  time_range: { start: "2020-01-01", end: null }
+
+outputs:
+  - path: "data/processed/agriculture/agriculture__ndvi__20250301__epsg4326__30m__v1.0.tif"
+    sha256: "<sha256>"
+    type: "cog"
+
+artifacts:
+  stac_collection: "data/stac/collections/kfm.ks.agriculture.ndvi.json"
+  stac_items_glob: "data/stac/items/kfm.ks.agriculture.ndvi.*.json"
+  dcat_dataset: "data/catalog/dcat/kfm.ks.agriculture.ndvi.jsonld"
+  prov_runs_glob: "data/prov/etl_*.jsonld"
+
+qa:
+  - "data/qa/agriculture/agriculture__ndvi__20250301__qa.md"
+```
+</details>
+
 ---
 
-## 🧾 Evidence artifacts
+## 🧾 Evidence artifacts (AI + analysis outputs)
+
 KFM treats **analysis outputs** (including AI-generated artifacts and simulations) as first-class datasets that must be stored + cataloged + provenance-linked. [^evidence-artifacts]
 
 Evidence artifacts must be:
 - Stored in `data/processed/...` (domain or project subfolder). [^evidence-artifacts]
-- Cataloged in STAC/DCAT and labeled as derived/AI-generated as needed. [^evidence-artifacts]
+- Cataloged in STAC/DCAT and labeled as derived/AI-assisted as needed. [^evidence-artifacts]
 - Traced in PROV with inputs, method/model, parameters, and confidence/uncertainty where applicable. [^evidence-artifacts]
 - Exposed only via governed APIs (enforcing classification and redaction). [^evidence-artifacts]
 
-> 🤖 If AI participates: label the artifact **AI-assisted / AI-generated**, store the prompt/config (as allowed), and record model/version + constraints in PROV.
+> [!TIP]
+> If AI participates: label the artifact **AI-assisted / AI-generated**, store prompt/config (as allowed), and record model/version + constraints in PROV.
 
 ---
 
-## 🧬 Versioning
+## 🧬 Versioning & releases
 KFM is versioned at both dataset and system levels. [^versioning]
 
-- **Dataset versioning:** link revisions using DCAT + PROV (e.g., `prov:wasRevisionOf`). Prefer persistent identifiers (DOI/ARK) for published versions. [^versioning]
-- **Graph & ontology versioning:** keep backward compatibility unless a deliberate migration occurs. [^versioning]
-- **API versioning:** breaking changes require versioned endpoints or negotiated deprecation strategy; OpenAPI/GraphQL schemas are contracts. [^versioning]
-- **Release versioning:** repo releases follow semantic versioning; major versions reflect structural changes (e.g., v13). [^versioning]
+- **Dataset versioning:** link revisions using DCAT + PROV (e.g., `prov:wasRevisionOf`). Prefer persistent identifiers (DOI/ARK) for externally published versions. [^versioning]
+- **API versioning:** breaking changes require versioned endpoints or a documented deprecation strategy. [^versioning]
+- **Release versioning:** repo releases follow semver; major bumps reflect structural changes (including metadata schema changes). [^versioning]
+
+> [!NOTE]
+> Consider a `releases/` or GitHub Releases strategy for distributing **large datasets**:
+> ship **metadata + checksums** in git; ship heavy binaries via release assets or object storage.
 
 ---
 
 ## 🧷 Stable IDs + hashing
-Stable IDs are what make the pipeline deterministic and linkable.
+Stable IDs make the pipeline deterministic and linkable. [^stable-ids]
 
 ### ✅ Recommended ID rules
-- **Dataset ID**: `kfm-<domain>-<dataset>` (stable, human-readable)
-- **Item ID**: `kfm-<domain>-<dataset>-<yyyymmdd or yyyymm>-<variant>`
-- **Run ID**: `etl_<yyyymmdd>_<hhmmss>_<shortgitsha>` (or equivalent)
+- **Dataset/Collection ID:** `kfm.ks.<domain>.<dataset>`
+- **Item ID:** `kfm.ks.<domain>.<dataset>.<yyyymmdd or yyyymm>.<variant>.v<major>`
+- **Run ID:** `etl_<yyyymmdd>_<hhmmss>_<shortgitsha>`
 
 ### 🔒 Hashing rules
-- Record **SHA256** for:
-  - raw inputs (when feasible)
-  - processed outputs
-  - configs (ETL config snapshot)
-- Store hashes in:
-  - STAC asset extra fields (or via extension)
-  - PROV entities
-  - `data/manifests/**` (as a simple index for auditing)
+Record **SHA256** for:
+- raw inputs (when feasible)
+- processed outputs
+- configs (ETL config snapshot)
 
-> 🧠 Determinism tip: if an output changes, it *should be* explainable via changed inputs, config, code revision, or environment.
+Store hashes in:
+- STAC assets (via a profile field or extension)
+- PROV entities
+- `data/manifests/**` (audit-friendly index)
+
+> 🧠 Determinism tip: if an output changes, it *must* be explainable via changed inputs, config, code revision, or environment.
 
 ---
 
@@ -323,14 +487,15 @@ Use names that support reproducibility and routing:
 
 ### 🌍 CRS & units
 - Store CRS explicitly in geospatial files and metadata.
-- Keep units consistent and document conversions in PROV/configs (especially for time-series and model features).
+- Document unit conversions in PROV/configs (especially for time-series and model features).
 
-### 🗺️ Web serving friendly assets
-- For web maps, prefer publishable outputs in web-friendly formats (tiles, simplified vectors).
-- When committing sample vectors (e.g., GeoJSON) for demos, remember public repos imply public downloads (don’t leak sensitive data). [^geojson-privacy]
+### 🗺️ Web-serving friendly assets
+- Raster: prefer **COG**; precompute overviews where appropriate.
+- Vector: simplify where needed; consider tiles for heavy layers.
+- Never commit sensitive data in easy-to-exfiltrate formats without governance review. [^geojson-privacy]
 
-### 🗃️ Databases (when relevant)
-PostGIS enables spatial storage + analysis close to data (buffers, within, distance, joins, etc.). [^postgis-intro]
+### 🐘 Databases (when relevant)
+PostGIS enables spatial storage + analysis close to data (buffers, within, distance, joins). [^postgis-intro]
 
 ---
 
@@ -338,12 +503,11 @@ PostGIS enables spatial storage + analysis close to data (buffers, within, dista
 KFM expects automated validation and governance checks to prevent regressions and sensitive leaks. [^ci-gates]
 
 ### ✅ Typical gates
-- Markdown/front-matter validation for governed docs.
 - Schema validation for STAC/DCAT/PROV outputs.
 - Link checks (STAC assets exist, DCAT distributions resolve, PROV locations present).
-- Graph integrity tests for ontology constraints.
-- API contract tests (OpenAPI/GraphQL).
-- Secret scanning, PII/sensitive data scanning, and classification-consistency checks (no “downgrades” without approved steps). [^ci-gates]
+- Classification-consistency checks (no “downgrades” without an approved redaction step). [^sovereignty]
+- Secret scanning + sensitive data scanning.
+- API contract tests (OpenAPI/GraphQL) if the dataset is served.
 
 ### 🧰 Practical “starter” checks (example)
 ```bash
@@ -356,11 +520,11 @@ python tools/validate_stac_links.py data/stac/items
 # 3) Provenance completeness (raw→work→processed)
 python tools/validate_prov.py data/prov
 
-# 4) No accidental leaks (example placeholder)
+# 4) No accidental leaks (placeholder example)
 python tools/scan_sensitive.py data/processed
 ```
 
-> ⭐ Keep CI fast: treat heavy geospatial QA (large rasters) as nightly unless critical.
+> ⭐ Keep CI fast: treat heavy geospatial QA (huge rasters) as nightly unless critical.
 
 ---
 
@@ -374,23 +538,42 @@ Follow the domain expansion pattern and keep domains isolated. [^domain-expansio
   - [ ] `data/processed/<new-domain>/`  [^staging]
 - [ ] Add/confirm ETL pipeline config (idempotent, logged, hashable). [^deterministic-etl]
 - [ ] Produce boundary artifacts:
-  - [ ] STAC Collection + Item(s) → `data/stac/...` [^staging]
-  - [ ] DCAT entry → `data/catalog/dcat/...` [^staging]
-  - [ ] PROV lineage → `data/prov/...` [^staging]
+  - [ ] STAC Collection + Item(s) → `data/stac/...` [^stac-dcat-prov]
+  - [ ] DCAT entry → `data/catalog/dcat/...` [^stac-dcat-prov]
+  - [ ] PROV lineage → `data/prov/...` [^prov-end-to-end]
 - [ ] Validate schemas + links in CI (no broken references). [^ci-gates]
 - [ ] (If needed) Load references into graph **after** catalogs exist; don’t duplicate raw payloads in graph. [^graph-references]
 - [ ] Expose via governed API (redaction/classification). [^api-boundary]
 - [ ] Create/Update domain runbook: `docs/data/<new-domain>/README.md`. [^domain-expansion]
 
+<details>
+<summary><strong>🧱 Dataset skeleton (copy/paste)</strong></summary>
+
+```text
+data/raw/<domain>/<source>/
+data/work/<domain>/<dataset>/
+data/processed/<domain>/<dataset>/
+
+data/stac/collections/kfm.ks.<domain>.<dataset>.json
+data/stac/items/kfm.ks.<domain>.<dataset>.<yyyymmdd>.<variant>.v1.json
+
+data/catalog/dcat/kfm.ks.<domain>.<dataset>.jsonld
+data/prov/etl_<yyyymmdd>_<hhmmss>_<shortgitsha>.jsonld
+
+data/qa/<domain>/<dataset>__<yyyymmdd>__qa.md
+data/manifests/kfm.ks.<domain>.<dataset>.yml   # optional, recommended
+```
+</details>
+
 ---
 
 ## 🛠️ Toolchain
-KFM’s data layer is meant to interoperate across geospatial + ML + simulation + web delivery:
+KFM’s data layer interoperates across geospatial + ML + simulation + web delivery:
 
 - 🐍 **Python geospatial stack:** geopandas/rasterio/pyproj + PostGIS integrations
 - 🐘 **PostgreSQL + PostGIS:** spatial SQL for analysis and query performance [^postgis-intro]
-- 🧰 **CLI tooling:** `ogr2ogr`, `raster2pgsql`, shell automation for repeatable jobs [^postgis-processing]
-- 🧩 **Workflow orchestration:** cron/Airflow-style scheduling for batch + dependency graphs [^postgis-processing]
+- 🧰 **GDAL/OGR CLI:** `gdalwarp`, `gdal_translate`, `ogr2ogr`, etc.
+- 🧩 **Workflow orchestration:** cron/Airflow/GitHub Actions scheduling for batch + dependency graphs
 - 🌐 **Serving layer:** governed API returns JSON/tiles/layers to the map UI [^serve-frontend]
 - 🗺️ **Frontend visualization:** React + MapLibre, with optional Cesium for 3D views [^pipeline-diagram]
 
@@ -398,49 +581,9 @@ KFM’s data layer is meant to interoperate across geospatial + ML + simulation 
 
 ## 📚 Reference library
 > 📌 Repo convention (recommended): store reference PDFs under `/docs/library/` (use **Git LFS** if needed).  
-> Internal KFM specs should live under `/docs/specs/` and `/docs/policies/`.
+> Internal KFM specs should live under `/docs/specs/` and `/docs/standards/`.
 
-### 🧱 Core system + pipeline standards (internal)
-- 📘 **Unified Knowledge Base — Future‑Proof Tech Documentation** → `/docs/specs/Unified_Knowledge_Base_Future_Proof_Tech_Documentation.docx`
-- 📗 **KFM Technical Documentation** → `/docs/specs/KFM_Technical_Documentation.pdf` *(internal)*
-- 📙 **KFM Master Guide v13 / Markdown Guide** → `/docs/specs/MARKDOWN_GUIDE_v13.md` *(internal)*
-
-### 🗺️ GIS + Geoprocessing
-- 🧭 Geographic Information System Basics → `/docs/library/geographic-information-system-basics.pdf`
-- 🐍 Python Geospatial Analysis Cookbook → `/docs/library/python-geospatial-analysis-cookbook.pdf`
-- 🧪 Geoprocessing with Python → `/docs/library/geoprocessing-with-python.pdf`
-- 🎨 Making Maps (Map Design) → `/docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- 🧩 Google Maps API Succinctly → `/docs/library/google_maps_api_succinctly.pdf`
-- 🗺️ Google Maps JavaScript API Cookbook → `/docs/library/google-maps-javascript-api-cookbook.pdf`
-- 🧊 WebGL Programming Guide → `/docs/library/webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-- 📱 Responsive Web Design (HTML5/CSS3) → `/docs/library/responsive-web-design-with-html5-and-css3.pdf`
-
-### 🛰️ Remote sensing + Earth Engine
-- ☁️ Cloud-Based Remote Sensing with Google Earth Engine → `/docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-- 🌍 Google Earth Engine Applications → `/docs/library/Google Earth Engine Applications.pdf`
-
-### 🧠 ML / Data Science / Statistics
-- 📓 Applied Data Science with Python + Jupyter → `/docs/library/applied-data-science-with-python-and-jupyter.pdf`
-- 📈 Data Science & Machine Learning (Math & Stats Methods) → `/docs/library/Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf`
-- 📉 Regression Analysis with Python → `/docs/library/regression-analysis-with-python.pdf`
-- 🧪 Understanding Statistics & Experimental Design → `/docs/library/Understanding Statistics & Experimental Design.pdf`
-- ⚠️ Statistics Done Wrong → `/docs/library/Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf`
-- 🎲 Bayesian Computational Methods → `/docs/library/Bayesian computational methods.pdf`
-- 🧠 Deep Learning in Python (Prereqs) → `/docs/library/deep-learning-in-python-prerequisites.pdf`
-- 🤖 AI Foundations of Computational Agents (3rd Ed.) → `/docs/library/AI Foundations of Computational Agents 3rd Ed.pdf`
-
-### 🏗️ Architecture + DevOps + Backend
-- 🧱 Clean Architectures in Python → `/docs/library/clean-architectures-in-python.pdf`
-- 🧠 Implementing Programming Languages → `/docs/library/implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf`
-- 🟩 Node.js Notes for Professionals → `/docs/library/NodeJSNotesForProfessionals.pdf`
-- 🐘 PostgreSQL Notes for Professionals → `/docs/library/PostgreSQLNotesForProfessionals.pdf`
-- 🐬 MySQL Notes for Professionals → `/docs/library/MySQLNotesForProfessionals.pdf`
-- 🐳 Introduction to Docker → `/docs/library/Introduction-to-Docker.pdf`
-- 🥷 Command Line Kung Fu (Shell) → `/docs/library/Command_Line_Kung_Fu_Bash_Scripting_Tricks,_Linux_Shell_Program.pdf`
-
-### ⚖️ Ethics + Human-centered constraints
-- 🧑‍⚖️ Introduction to Digital Humanism → `/docs/library/Introduction to Digital Humanism.pdf`
-- 🧬 Principles of Biological Autonomy → `/docs/library/book_9780262381833.pdf`
+For the full reading map, see the root README: [`../README.md`](../README.md) ✅
 
 ---
 
@@ -460,7 +603,8 @@ KFM’s data layer is meant to interoperate across geospatial + ML + simulation 
 [^dcat-links]: DCAT entries should link to STAC/distributions for discovery and access.
 [^prov-end-to-end]: PROV must link raw → work → processed and identify pipeline run/config identifiers.
 [^graph-references]: Graph should reference catalog IDs rather than storing bulky payloads; graph models relationships.
-[^versioning]: Dataset/graph/API/release versioning expectations (incl. `prov:wasRevisionOf` and semantic versioning).
+[^versioning]: Dataset/API/release versioning expectations (incl. `prov:wasRevisionOf` and semantic versioning).
+[^stable-ids]: Stable dataset/item/run ID rules + hash requirements to ensure determinism and linkability.
 [^kfm-pipeline-overview]: KFM pipeline stages overview (Ingestion → Processing → Storage → Publication/Serving) and batch/streaming framing.
 [^kfm-ingestion]: Ingestion modes: scheduled batch, streaming ingest, manual uploads.
 [^raw-first]: “Store raw data reliably first” principle (keep raw as baseline for reprocessing).
@@ -470,5 +614,5 @@ KFM’s data layer is meant to interoperate across geospatial + ML + simulation 
 [^storage]: Storage outcomes include relational tables with indices and geospatial stores; tile pyramids are used for efficient raster serving.
 [^postgis-intro]: PostGIS enables complex spatial analysis functions for vectors and rasters; used for answering spatial questions efficiently.
 [^geojson-privacy]: Public GeoJSON in public repos is downloadable; treat as a disclosure boundary.
-[^ci-gates]: CI validation expectations including schema validation, link checks, and security/governance scans (secrets, PII, classification consistency).
+[^ci-gates]: CI validation expectations including schema validation, link checks, and security/governance scans (secrets, sensitive data, classification consistency).
 [^domain-expansion]: Domain expansion pattern: raw/work/processed per domain, publish to catalogs, and maintain a domain README under `docs/data/<domain>/`.
