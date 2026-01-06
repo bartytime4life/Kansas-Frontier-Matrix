@@ -82,13 +82,13 @@ This folder is the **operations layer** for GitHub collaboration: templates, wor
 
 ```mermaid
 flowchart LR
-  I[🧾 Issue] --> T[🏷️ Triage + Labels]
-  T --> B[🌿 Branch]
-  B --> P[✅ Pull Request]
-  P --> C[🤖 CI Checks]
-  C --> R[👀 Review (CODEOWNERS)]
-  R --> M[🔀 Merge]
-  M --> D[📦 Deploy / Data Publish]
+  I["🧾 Issue"] --> T["🏷️ Triage + Labels"];
+  T --> B["🌿 Branch"];
+  B --> P["✅ Pull Request"];
+  P --> C["🤖 CI Checks"];
+  C --> R["👀 Review<br/>CODEOWNERS"];
+  R --> M["🔀 Merge"];
+  M --> D["📦 Deploy / Data Publish"];
 ```
 
 **Working agreements (short + strict):**
