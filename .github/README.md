@@ -1,28 +1,27 @@
-# 🤝 `.github/` — Collaboration & Automation Hub (Kansas-Frontier-Matrix)
+# 🤝 `.github/` — Collaboration & Automation Hub (Kansas Frontier Matrix)
 
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](#-how-to-contribute)
 [![GitHub Issues](https://img.shields.io/github/issues/bartytime4life/Kansas-Frontier-Matrix)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)](#-pull-requests-prs)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)](#-pull-requests)
 [![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
 [![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)](../LICENSE)
 
 > [!NOTE]
-> This README documents **how we collaborate on GitHub**: issues, pull requests, reviews, labels, and automation.
->
+> This README documents **how we collaborate on GitHub**: issues, pull requests, reviews, labels, protection rules, and automation.  
 > ✅ Start with the project overview: **[`../README.md`](../README.md)**
 
 ---
 
-## ⚡ Quick links (fastest path to “doing the thing”)
+## ⚡ Quick links
 
 | Action | Link |
 |---|---|
-| 🐛 Report a bug | https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=bug_report.yml |
-| ✨ Request a feature | https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=feature_request.yml |
-| 🗺️ Request a data layer/source | https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=data_layer_request.yml |
-| ❓ Ask a question | https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=question.yml |
-| 🧪 See CI runs | https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions |
+| 🐛 Report a bug | [Open bug report](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=bug_report.yml) |
+| ✨ Request a feature | [Open feature request](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=feature_request.yml) |
+| 🗺️ Request a data layer/source | [Request a layer/source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=data_layer_request.yml) |
+| ❓ Ask a question | [Ask a question](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=question.yml) |
+| 🧪 See CI runs | [GitHub Actions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions) |
 | 🔐 Security policy | [`./SECURITY.md`](./SECURITY.md) *(add if missing)* |
 
 > [!TIP]
@@ -32,7 +31,7 @@
 
 ## 🧭 What we’re building (context in 20 seconds)
 
-Kansas-Frontier-Matrix is an **open-source geospatial + historical mapping hub**: we ingest historical maps, modern GIS layers, and archival documents; normalize them into consistent spatial formats (e.g., GeoTIFF/COG + GeoJSON); connect text ↔ places ↔ time; and surface everything in an interactive map UI (2D/3D + time slider). 🗺️⏳
+Kansas Frontier Matrix (KFM) is an **open-source geospatial + historical mapping hub**: we ingest historical maps, modern GIS layers, and archival documents; normalize them into consistent spatial formats (e.g., GeoTIFF/COG + GeoJSON); connect text ↔ places ↔ time; and surface everything in an interactive map UI (2D/3D + time slider). 🗺️⏳
 
 ```mermaid
 flowchart LR
@@ -44,22 +43,25 @@ flowchart LR
   E --> F["🌐 Web UI<br/>Map + Timeline + Insights"];
 ```
 
+> [!IMPORTANT]
+> This `.github/` folder is the **GitHub operations layer** for KFM — keep it clean, predictable, and boring (in the best way). ✅
+
 ---
 
 ## 🧩 What lives in `.github/`
 
-This folder is the **operations layer** for GitHub collaboration: templates, workflows, and rules. ✅
+This folder defines the “how we ship” layer: templates, workflows, routing, and governance. 🤖🧾
 
 ```text
 📁 .github/
 ├─ 📁 workflows/                      # 🤖 CI/CD + automation
 │  ├─ ci.yml                          # ✅ tests + lint + typecheck
 │  ├─ codeql.yml                      # 🔐 CodeQL security scan (recommended)
-│  ├─ pages.yml                       # 🌐 build/deploy web UI (optional)
+│  ├─ pages.yml                       # 🌐 build/deploy docs/UI (optional)
 │  ├─ data-refresh.yml                # 🗺️ scheduled catalog/layer refresh (optional)
 │  ├─ security.yml                    # 🔎 dependency + secret scans (optional)
 │  └─ release.yml                     # 🏷️ release packaging (optional)
-├─ 📁 ISSUE_TEMPLATE/                 # 🧾 guided issue creation
+├─ 📁 ISSUE_TEMPLATE/                 # 🧾 guided issue creation (issue forms)
 │  ├─ bug_report.yml
 │  ├─ feature_request.yml
 │  ├─ data_layer_request.yml
@@ -73,12 +75,12 @@ This folder is the **operations layer** for GitHub collaboration: templates, wor
 └─ 📄 README.md                       # 📍 you are here
 ```
 
-> [!IMPORTANT]
+> [!NOTE]
 > If any of the files above don’t exist yet, this README acts as the **spec** for what we should add next.
 
 ---
 
-## 🧠 How we work (issue → PR → merge)
+## 🔁 Workflow: Issue → PR → Merge → Ship
 
 ```mermaid
 flowchart LR
@@ -91,7 +93,7 @@ flowchart LR
   M --> D["📦 Deploy / Data Publish"];
 ```
 
-**Working agreements (short + strict):**
+### 🧠 Working agreements (short + strict)
 - **If it changes behavior, it needs docs.** 📚
 - **If it changes data, it needs provenance.** 🧾🗺️
 - **If CI fails, we don’t merge.** 🤖🚫
@@ -99,16 +101,32 @@ flowchart LR
 
 ---
 
-## 🧾 1) Issues
+## 🛡️ Branch protection & merge strategy
+
+These are configured in **Repo Settings** (not as files). Recommended guardrails:
+
+- ✅ Require PRs (no direct pushes to `main`)
+- ✅ Require status checks (CI + security checks)
+- ✅ Require at least **1–2 approvals** (CODEOWNERS if relevant)
+- ✅ Require “Resolve conversations” before merge
+- ✅ Block force-pushes to protected branches
+- ✅ Prefer **Squash merge** to keep history clean (or **Rebase merge** if you enforce linear history)
+
+> [!TIP]
+> If you enable auto-merge, only allow it when **all required checks** pass.
+
+---
+
+## 🧾 Issues
 
 Use issues for **everything**: bugs, data layers, UI changes, pipeline improvements, docs, research notes.
 
-**Before filing:**
+### ✅ Before filing
 - Search existing issues/PRs
 - Add screenshots (UI), logs (pipelines), or minimal repro (code)
-- Include **time range** + **spatial extent** for geospatial requests (bbox, county, township/range, etc.)
+- For geospatial requests: include **time range** + **spatial extent** (bbox, county, township/range, etc.)
 
-**Recommended issue categories (labels):**
+### 🏷️ Recommended issue categories (labels)
 - `type:bug` 🐛 — something broken
 - `type:feature` ✨ — new capability
 - `type:data` 🗺️ — new layer/source, ingestion, catalog updates
@@ -121,7 +139,7 @@ Use issues for **everything**: bugs, data layers, UI changes, pipeline improveme
 
 ---
 
-## ✅ 2) Pull Requests (PRs)
+## ✅ Pull Requests
 
 PRs should be **small, reviewable, and testable**.
 
@@ -170,7 +188,7 @@ Include:
 
 ## 🏷️ Label taxonomy (keep it consistent)
 
-Use prefixes so filters and boards stay sane:
+Use prefixes so filters, search, and boards stay sane:
 
 - `type:*` → intent (bug/feature/data/docs/chore/security)
 - `area:*` → subsystem
@@ -210,6 +228,23 @@ Use prefixes so filters and boards stay sane:
 - Fix the root cause (don’t “just rerun” unless it’s a flaky upstream)
 - Paste the key error lines into the PR description or a comment
 - If it’s flaky: open an issue labeled `type:chore` + `status:needs-triage`
+
+---
+
+## 🏷️ Releases & changelogs
+
+Recommended flow (if/when you formalize releases):
+
+- Use **Release Drafter** to keep release notes up-to-date (`release-drafter.yml`) 📝
+- Tag releases (`vX.Y.Z`) when:
+  - the public API changes,
+  - data catalog schema changes,
+  - the UI has user-visible changes,
+  - ingestion pipelines change in a non-trivial way.
+- Keep release notes **user-facing** (what changed, why it matters, breaking changes, migration steps).
+
+> [!TIP]
+> If you adopt **Conventional Commits** later, you can auto-generate changelogs more reliably.
 
 ---
 
@@ -254,7 +289,7 @@ We accept AI/ML contributions when they are:
 - Evaluated (not vibes)
 - Reproducible (seeded, versioned, documented)
 
-**Required artifacts for ML-ish PRs:**
+### 🧾 Required artifacts for ML-ish PRs
 - A short **dataset note** (what, where from, known biases)
 - An **evaluation note** (metrics + what “good” means)
 - A **model/experiment card** in `mcp/model_cards/` (or equivalent)
@@ -303,7 +338,7 @@ UI work should keep these goals in mind:
 
 ---
 
-## ✅ Definition of Done (DoD)
+## ✅ Definition of Done
 
 Use this as the final self-check before requesting review:
 
@@ -322,8 +357,8 @@ Use this as the final self-check before requesting review:
 <summary><strong>📖 Expand the full reading map (PDFs)</strong></summary>
 
 ### 🧭 Core project docs
-- `docs/design/Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf`
-- `docs/architecture/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
+- `docs/architecture/Kansas Frontier Matrix (KFM) – Master Technical Specification.pdf`
+- `docs/architecture/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` *(if separate)*
 
 ### 🗺️ GIS, geoprocessing, remote sensing
 - `docs/library/Geographic Information System Basics - geographic-information-system-basics.pdf`
@@ -387,7 +422,7 @@ Use this as the final self-check before requesting review:
 
 ---
 
-## 🚀 Next “missing but expected” files
+## 🧾 Next “missing but expected” files
 
 If they don’t exist yet, consider adding:
 
@@ -399,6 +434,17 @@ If they don’t exist yet, consider adding:
 - `.github/dependabot.yml` ♻️ (dependency updates)
 - `.github/labels.yml` 🏷️ (label source of truth)
 - `.github/release-drafter.yml` 📝 (release notes automation)
+
+---
+
+## 🙌 How to contribute
+
+1. Pick an issue (or open one) 🧾  
+2. Claim it (comment) ✍️  
+3. Create a branch 🌿  
+4. Open a PR ✅  
+5. Iterate with review feedback 👀  
+6. Merge when checks are green 🤖🟢  
 
 ---
 
