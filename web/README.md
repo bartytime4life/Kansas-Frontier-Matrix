@@ -1,10 +1,10 @@
 # 🌾🗺️ `web/` — Kansas Frontier Matrix Web Viewer
 
-![Status](./assets/badges/status-active.svg)
-![Frontend](./assets/badges/frontend-maplibre-leaflet-react.svg)
-![Timeline](./assets/badges/timeline-spatiotemporal.svg)
-![3D](./assets/badges/3d-cesium-optional.svg)
-![License](./assets/badges/license-see-license.svg)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Frontend](https://img.shields.io/badge/frontend-React%20%7C%20MapLibre%20%7C%20Leaflet-blue)
+![Timeline](https://img.shields.io/badge/timeline-spatiotemporal-purple)
+![3D](https://img.shields.io/badge/3D-Cesium%20(optional)-informational)
+![License](https://img.shields.io/badge/license-see%20LICENSE-lightgrey)
 
 A browser-based **interactive map + timeline** experience for the Kansas Frontier Matrix (KFM).  
 This is where users **explore spatiotemporal layers**, **toggle eras**, and **open linked documents / insights** in a human-centered way. 🧭✨
