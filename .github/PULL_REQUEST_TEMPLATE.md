@@ -1,17 +1,37 @@
 <!--
 🚀 Kansas Frontier Matrix (KFM) / Kansas-Frontier-Matrix — Pull Request Template
 
-Tip: PR Title format (pick one)
+✅ Keep this template intact.
+🧹 Delete helper comments (`<!-- ... -->`) as you fill it out.
+🧭 Prefer concrete paths, commands, and sample outputs over vague descriptions.
+
+PR Title format (pick one)
 - [web] Add timeline slider snapping
 - [data] Ingest 1870s county boundaries (COG/GeoJSON)
 - [ml] Improve NER for 19th-century spelling
 - [api] Add /layers/{id} endpoint
 - [infra] Harden Docker + CI caching
-
-(Please keep this template intact—delete helper comments as you fill it out.)
 -->
 
+> [!NOTE]
+> **Reviewer-friendly PRs win.** If you can’t explain it in 2–3 sentences + reproducible steps, it’s not done yet.
+
+---
+
 # 🚀 Pull Request
+
+## 🧭 Quick Nav
+- [📌 Summary](#-summary-what--why)
+- [🧩 Scope](#-scope--areas-touched-check-all-that-apply)
+- [🧠 Architecture](#-design--architecture-notes-keep-reviewers-oriented)
+- [🧪 How to Test](#-how-to-test-repro-steps)
+- [🖼️ Evidence](#-evidence-screenshots-maps-beforeafter)
+- [🧾 Data Provenance](#-data-provenance--licensing-required-if-you-addedupdated-data)
+- [🗄️ DB Impact](#-database--storage-impact-required-if-db-changes)
+- [🔐 Security & Privacy](#-security-privacy-and-human-centered-impact)
+- [🚦 Rollout](#-rollout--backout-plan)
+
+---
 
 ## 📌 Summary (what + why)
 <!--
@@ -20,11 +40,15 @@ Tip: PR Title format (pick one)
 Example:
 Adds a new ingestion step that converts scanned historical map TIFFs to COGs and registers metadata in the spatial catalog, enabling the web viewer to time-filter layers reliably.
 -->
-**What changed?**  
+**Problem / context:**  
 
-**Why does it matter?**  
+**What changed (solution):**  
+
+**Why it matters (impact):**  
 
 **User impact / outcome:**  
+
+**Release note (1 line, optional):**  
 
 ---
 
@@ -40,6 +64,24 @@ Adds a new ingestion step that converts scanned historical map TIFFs to COGs and
 - [ ] 🧪 Scientific modeling / simulation change
 - [ ] 📝 Documentation / SOP / research workflow change
 - [ ] 🧰 DevOps / CI / Docker / infra change
+- [ ] 💥 Breaking change (requires coordination)
+
+---
+
+## 🧯 Risk & Compatibility
+**Risk level:**  
+- [ ] 🟢 Low (localized, easy rollback)
+- [ ] 🟡 Medium (touches hot paths / data contracts)
+- [ ] 🔴 High (migrations, infra, widespread behavior change)
+
+**Compatibility / migration required?**
+- [ ] No migration needed
+- [ ] Data migration needed (describe below)
+- [ ] API clients may break (describe below)
+- [ ] Feature flag / staged rollout recommended
+
+**Feature flag (if any):** `FLAG_NAME_HERE`  
+**Rollback lever:** (e.g., revert migration / disable flag / deploy previous image)  
 
 ---
 
@@ -48,18 +90,25 @@ Adds a new ingestion step that converts scanned historical map TIFFs to COGs and
 - [ ] 📂 `scripts/` (ingestion, georeferencing, conversions, batch jobs)
 - [ ] 📂 `notebooks/` (EDA, prototypes, demos)
 - [ ] 📂 `mcp/` (experiments/, sops/, glossary, research protocols)
+- [ ] 📂 `docs/` (guides, datasets, model cards, architecture)
 - [ ] 🔌 API / services (REST/RPC, queues, adapters)
 - [ ] 🗄️ Database (PostgreSQL/PostGIS / migrations / indexes)
 - [ ] 🛰️ Remote sensing / raster pipeline (COG, tiles, QA)
 - [ ] 🧠 NLP / CV / ML models
 - [ ] 🧭 Visualization / 3D (WebGL / Cesium / terrain tiles)
 - [ ] 🐳 Docker / Compose / CI workflows
+- [ ] 🧱 Infrastructure (cloud resources, secrets, networking)
 
 ---
 
 ## 🔗 Related Issues / Context
 Closes: <!-- #123 -->  
 Related: <!-- #456, discussion link, doc link -->  
+
+**Context links (optional):**
+- Design doc:  
+- SOP / MCP protocol:  
+- Dataset card / model card:  
 
 ---
 
@@ -83,38 +132,50 @@ Add notes here only if it helps reviewers understand boundaries or tradeoffs.
 **Data contracts touched (schemas, GeoJSON properties, STAC-like metadata, API payloads):**
 - 
 
-**Notable tradeoffs / decisions:**
+**Notable tradeoffs / decisions (and why):**
 - 
+
+**Reviewer focus (where to look):**
+- Key files:  
+- Non-obvious logic:  
+- Known limitations:  
 
 ---
 
 ## 🧪 How to Test (repro steps)
 ### ✅ Local (required)
 <!-- Provide exact commands + expected outcome. -->
-1. 
-2. 
-3. 
+1.  
+2.  
+3.  
 
-### 🧰 Suggested Commands (if applicable)
+### 🧰 Suggested Commands (check what you ran)
 - [ ] `make test`
 - [ ] `make lint` / `make format`
 - [ ] `pytest`
 - [ ] `npm test` / `npm run lint`
 - [ ] `docker compose up --build` (or `docker-compose up --build`)
 - [ ] DB migration run + rollback verified
+- [ ] Smoke test: map loads + timeline filter works + layers render
 
-### 🧬 Reproducibility Notes (datasets/experiments)
+### 🧬 Reproducibility Notes (datasets/experiments/simulations)
 <!-- If you changed data pipelines, models, or simulation results, explain how a reviewer can reproduce. -->
-- Inputs used:
-- Seed(s) / config(s):
-- Output artifacts:
+- Inputs used (paths/IDs):  
+- Seed(s) / config(s):  
+- Output artifacts (where to find):  
+- Expected metrics / checks (what “good” looks like):  
 
 ---
 
 ## 🖼️ Evidence (screenshots, maps, before/after)
 <!-- If UI/maps changed, include screenshots or short clips. If data changed, include sample output or a small diff snippet. -->
-- Before:
-- After:
+**Before:**  
+**After:**  
+
+**Helpful extras (optional):**
+- [ ] GIF / short clip of interaction (timeline slider, layer toggles)
+- [ ] Sample GeoJSON snippet / STAC item snippet
+- [ ] Query plan / EXPLAIN output (for hot SQL paths)
 
 ---
 
@@ -123,10 +184,13 @@ Add notes here only if it helps reviewers understand boundaries or tradeoffs.
 **License / usage constraints:**  
 **Temporal coverage:**  
 **Spatial coverage (bbox / region):**  
-**Processing steps recorded:**  
+**Processing steps recorded (tooling + parameters):**  
+
+Checklist:
 - [ ] Updated `sources.json` / catalog metadata
 - [ ] Added/updated README/docs for the dataset
 - [ ] Included validation notes (QA checks)
+- [ ] Captured CRS/SRID + units explicitly
 
 ---
 
@@ -143,6 +207,11 @@ Add notes here only if it helps reviewers understand boundaries or tradeoffs.
 **Rollback plan:**
 - 
 
+**Storage impact (rough):**
+- New data size:  
+- New indexes size:  
+- Expected growth rate (if known):  
+
 ---
 
 ## 🔐 Security, Privacy, and Human-Centered Impact
@@ -150,6 +219,7 @@ Add notes here only if it helps reviewers understand boundaries or tradeoffs.
 - [ ] No secrets committed (keys, tokens, credentials)
 - [ ] Dependencies reviewed (new packages pinned + vetted)
 - [ ] Sensitive data handling considered (PII, location traces, private documents)
+- [ ] Input validation added/updated for new endpoints / ingestion
 - [ ] Outputs are explainable enough for intended users (no “black box surprise”)
 - [ ] If AI is involved: limitations + uncertainty are communicated
 
@@ -216,18 +286,19 @@ Notes:
 <details>
 <summary>🗺️ GIS / Remote Sensing Checklist (fill out if you touched geospatial/raster)</summary>
 
-### Coordinate Systems & Geometry
+### 🧭 Coordinate Systems & Geometry
 - [ ] CRS/SRID is explicit and consistent end-to-end
 - [ ] Geometry validity checked (self-intersections, empties, wrong types)
 - [ ] Spatial joins/overlays tested with representative Kansas-area samples
+- [ ] Time fields validated (timezone assumptions, missing dates, ranges)
 
-### Raster / Imagery (GeoTIFF/COG/Tiles)
+### 🛰️ Raster / Imagery (GeoTIFF/COG/Tiles)
 - [ ] Rasters are cloud-optimized (COG) when intended for web streaming
 - [ ] Overviews/pyramids generated as appropriate
 - [ ] Nodata handling verified (visual + analytic)
 - [ ] Tile generation verified (zoom levels, bounds, seams)
 
-### Metadata / Catalog
+### 🧾 Metadata / Catalog
 - [ ] STAC-like metadata updated (bbox, time range, source, processing)
 - [ ] Provenance recorded (inputs, tooling, parameters)
 - [ ] Any OCR/georeferencing steps documented in SOP/notes
@@ -237,17 +308,17 @@ Notes:
 <details>
 <summary>🤖 AI/ML Checklist (fill out if you changed models, prompts, training, or inference)</summary>
 
-### Reproducibility
+### ♻️ Reproducibility
 - [ ] Training config captured (hyperparams, seeds, data version)
 - [ ] Train/val/test separation is clear; leakage avoided
 - [ ] Metrics reported with uncertainty where sensible
 
-### Documentation
+### 🧾 Documentation
 - [ ] Model Card updated (`docs/model_cards/` if applicable)
 - [ ] Dataset datasheet updated (if you curated/modified a dataset)
 - [ ] Limitations & failure modes noted (esp. historical spelling/scan artifacts)
 
-### Quality & Safety
+### 🛡️ Quality & Safety
 - [ ] Bias/fairness considerations documented (where applicable)
 - [ ] Prompted/LLM outputs include citations or traceability when needed
 - [ ] Monitoring plan noted for productionized inference
@@ -298,7 +369,5 @@ Notes:
 </details>
 
 <!--
-🔎 Project-doc grounding markers (for traceability of this template’s intent):
-:contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1} :contentReference[oaicite:2]{index=2} :contentReference[oaicite:3]{index=3} :contentReference[oaicite:4]{index=4} :contentReference[oaicite:5]{index=5}
-:contentReference[oaicite:6]{index=6} :contentReference[oaicite:7]{index=7} :contentReference[oaicite:8]{index=8} :contentReference[oaicite:9]{index=9} :contentReference[oaicite:10]{index=10} :contentReference[oaicite:11]{index=11} :contentReference[oaicite:12]{index=12} :contentReference[oaicite:13]{index=13}
+🔎 Grounding marker (template intent): KFM is interdisciplinary: maps + time + data provenance + clean architecture + human-centered impact.
 -->
