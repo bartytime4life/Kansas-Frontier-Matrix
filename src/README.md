@@ -1,37 +1,3 @@
----
-title: "src/ — KFM Source Code Guide"
-path: "src/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-31"
-status: "draft"
-doc_kind: "readme"
-license: "TBD (inherit repo license or set explicitly)"
-markdown_protocol_version: "KFM-MDP v11.2.6"
-mcp_version: "TBD"
-ontology_protocol_version: "TBD"
-pipeline_contract_version: "TBD"
-stac_profile_version: "TBD"
-dcat_profile_version: "TBD"
-prov_profile_version: "TBD"
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
-fair_category: "FAIR+CARE"
-care_label: "Public · Low-Risk"
-sensitivity: "low"
-classification: "public"
-jurisdiction: "Kansas Frontier Matrix (KFM)"
-doc_uuid: "d037ed35-8902-48e4-bcd6-d347be222449"
-semantic_document_id: "kfm:doc:src:readme:v1"
-event_source_id: "repo"
-commit_sha: "TBD"
-doc_integrity_checksum: "TBD"
-ai_transformation_permissions: "Allowed for refactors + doc improvements IF pipeline invariants + citations + governance tags are preserved."
-ai_transformation_prohibitions: "Do not invent policies, schemas, dataset facts, or directory standards; do not bypass ETL→Catalog→Graph→API→UI ordering; do not add sensitive/PII content."
----
-
-# src/ — KFM Source Code
-
 ## 📘 Overview
 
 ### Purpose
