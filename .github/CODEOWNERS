@@ -3,6 +3,8 @@
 # ✅ Auto-assign PR reviewers by subsystem (ETL → Catalogs → Graph → API → UI → Story Nodes).
 # 🧩 Matches the v13 canonical homes: src/pipelines, src/graph, src/server, web, docs/reports/story_nodes, etc.
 # 🔁 Start simple (single maintainer). Split into GitHub teams later as the org grows.
+# 🧠 NOTE: Order matters — the *last* matching pattern wins. Keep the global fallback first,
+#          then layer in more specific rules below.
 #
 # Suggested future GitHub teams (optional, create later + swap in):
 #   @Kansas-Frontier-Matrix/core
