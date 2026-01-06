@@ -4,27 +4,77 @@
 ![Security](https://github.com/<ORG>/<REPO>/actions/workflows/security.yml/badge.svg)
 ![Docker](https://github.com/<ORG>/<REPO>/actions/workflows/docker.yml/badge.svg)
 
-> This folder contains GitHub Actions workflows that keep KFM **buildable, testable, secure, and shippable**—from geospatial pipelines to web UI.
+> 🧩 This folder contains GitHub Actions workflows that keep KFM **buildable, testable, secure, and shippable**—from geospatial pipelines to web UI.
 
 ---
 
-## 🌐 Why our workflows look “layered”
+## 🧭 Quick navigation
 
-KFM is intentionally modular (domain logic separated from infrastructure details), so our CI mirrors that separation: we validate **core logic**, then adapters, then deployment packaging. This lines up with KFM’s stated architectural principles (layer separation, dependency direction, interface-based integration, testability, replaceability).  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+- [🗂️ Workflow catalog](#️-workflow-catalog-recommended-baseline)
+- [🧱 Why our workflows are “layered”](#-why-our-workflows-are-layered)
+- [✅ Quality gates](#-quality-gates-what-must-pass)
+- [🧪 PostGIS integration tests](#-integration-tests-with-postgis-kfm-specific)
+- [🐳 Docker builds](#-docker-builds-caching--multi-arch)
+- [🔐 Security scanning](#-security-scanning-containers--deps)
+- [🧠 Data/AI + Earth Engine](#-dataai-workflows-earth-engine-analytics-reproducibility)
+- [📦 Artifacts & reporting](#-artifacts--reporting)
+- [🧷 Secrets & environments](#-secrets--environments-keep-it-boring)
+- [🛠️ Starter templates](#️-starter-templates-copy--paste)
+- [🧰 Debug locally](#-debugging-workflows-locally)
+- [🧾 New workflow checklist](#-adding-a-new-workflow-checklist)
+- [📚 References](#-references-for-this-folder)
 
-KFM also spans multiple system surfaces (data ingestion → repositories → AI/analysis → visualization UI), so CI needs multiple “lanes” to avoid coupling everything into one mega-job.  [oai_citation:1‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
+---
+
+## 📁 What lives here
+
+```text
+📁 .github/
+  └─ 📁 workflows/
+     ├─ 🧪 ci.yml
+     ├─ 🧬 integration.yml
+     ├─ 🐳 docker.yml
+     ├─ 🔐 security.yml
+     ├─ 📚 docs.yml
+     ├─ 🚀 deploy.yml
+     └─ 🧾 README.md  ← you are here
+```
+
+---
+
+## 🧱 Why our workflows are “layered”
+
+KFM is intentionally modular (domain logic separated from infrastructure details), so our CI mirrors that separation:
+
+1) ✅ Validate **core logic** (lint, unit tests, type checks)  
+2) ✅ Validate **adapters/integration** (DB + services, PostGIS, contracts)  
+3) ✅ Package & ship (**Docker**, artifacts, deploy lanes)
+
+This lines up with KFM’s architectural principles: **layer separation, dependency direction, interface-based integration, testability, replaceability**. See internal architecture docs for the full rationale. 📄
+
+KFM spans multiple system surfaces (data ingestion → repositories → AI/analysis → visualization UI), so CI uses multiple “lanes” to avoid coupling everything into one mega-job. 🛣️
+
+```mermaid
+flowchart LR
+  PR[Pull Request] --> CI[🧪 ci.yml<br/>fast checks]
+  CI --> INT[🧬 integration.yml<br/>DB + adapters]
+  INT --> IMG[🐳 docker.yml<br/>build/publish]
+  CI --> SEC[🔐 security.yml<br/>deps + scans]
+  CI --> DOCS[📚 docs.yml<br/>docs build]
+  IMG --> DEPLOY[🚀 deploy.yml<br/>env promotion]
+```
 
 ---
 
 ## 🗂️ Workflow catalog (recommended baseline)
 
-> Filenames below are the **intended** baseline. If a file isn’t present yet, treat this README as the spec for creating it.
+> If a workflow file isn’t present yet, treat this README as the **spec** for creating it.
 
 | Workflow 📄 | What it protects ✅ | Typical triggers ⏱️ | Outputs 📦 |
 |---|---|---|---|
 | `ci.yml` | Fast PR checks (lint + unit tests) | `pull_request`, `push` | Test results, coverage |
-| `integration.yml` | PostGIS + service integration tests | `pull_request` (optional), nightly | Logs, reports |
-| `docker.yml` | Build/push images + cache | `push` to `main`, tags | OCI images to GHCR |
+| `integration.yml` | PostGIS + service integration tests | optional `pull_request`, nightly | Logs, reports |
+| `docker.yml` | Build/push images + cache | `push` to `main`, tags | OCI images → GHCR |
 | `security.yml` | Dependency + container scanning | `pull_request`, nightly | SARIF, scan reports |
 | `docs.yml` | Docs build/link checks | `pull_request` | Built docs artifact |
 | `deploy.yml` | Promote to envs (dev/stage/prod) | tags / manual dispatch | Deployment logs |
@@ -37,29 +87,52 @@ KFM also spans multiple system surfaces (data ingestion → repositories → AI/
 - Formatting + linting (fast fail)
 - Unit tests (core logic first)
 - Type checks (if applicable)
+- Coverage floor (optional, but recommended)
 
 ### 2) Geo + data correctness 🗺️
-Geospatial work tends to fail from data mismatch and unclear requirements, so CI should enforce:
+Geospatial work tends to fail from schema drift + “it works on my machine” toolchains, so CI should enforce:
 - schema validation
 - reproducible pipelines
 - deterministic outputs where possible (pin versions & seeds)
 
-(As a reminder: defining requirements early pays dividends in data-heavy GIS workflows.)  [oai_citation:2‡Geographic Information System Basics - geographic-information-system-basics.pdf](file-service://file-Kjn2enYFqXQtK3J4zN2DWz)
-
 ### 3) Infra parity 🐳
-Use containers to keep build/test environments consistent across dev + CI, which is a core CI/CD advantage of Dockerized workflows.  [oai_citation:3‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)
+Use containers to keep build/test environments consistent across dev + CI:
+- containerize integration dependencies (DB/services)
+- keep CI image builds close to prod images
+- cache build layers aggressively
 
 ---
 
 ## 🧪 Integration tests with PostGIS (KFM-specific)
 
-KFM’s infra explicitly calls out PostgreSQL + PostGIS for geospatial storage.  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
-So integration tests should run against a real PostGIS container (Docker Compose is fine).
+KFM uses PostgreSQL + PostGIS for geospatial storage, so integration tests should run against a real PostGIS container.
+
+### Option A: GitHub Actions service container (fastest + simplest)
+✅ Great for PR integration tests
+
+```yaml
+services:
+  db:
+    image: postgis/postgis:15-3.4
+    env:
+      POSTGRES_DB: kfm_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    options: >-
+      --health-cmd="pg_isready -U postgres -d kfm_test"
+      --health-interval=10s
+      --health-timeout=5s
+      --health-retries=10
+```
+
+### Option B: Docker Compose (best when multiple services are involved)
+✅ Great when you also spin up API + workers + cache
 
 Example `docker-compose.ci.yml` snippet:
 
 ```yaml
-version: "3.9"
 services:
   db:
     image: postgis/postgis:15-3.4
@@ -70,100 +143,444 @@ services:
       - "5432:5432"
 ```
 
-And your CI can run tests via Compose (pattern commonly used in CI/CD).  [oai_citation:5‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)
+> 🔎 Tip: Always add healthchecks + explicit waits. The #1 flake cause is “tests started before DB was ready”.
 
 ---
 
 ## 🐳 Docker builds: caching + multi-arch
 
-### Layer caching (BuildKit/buildx)
-Caching Buildx layers can dramatically speed up CI builds.  [oai_citation:6‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)
-
-Example (conceptual):
+### ✅ Prefer buildx cache via GitHub Actions cache (simple + fast)
+This avoids manual cache folder management and works well with BuildKit:
 
 ```yaml
-- name: Cache Docker layers
-  uses: actions/cache@v2
+- uses: docker/setup-buildx-action@v3
+- uses: docker/build-push-action@v6
   with:
-    path: /tmp/.buildx-cache
-    key: ${{ runner.os }}-buildx-${{ github.sha }}
-    restore-keys: |
-      ${{ runner.os }}-buildx-
+    context: .
+    push: true
+    tags: ghcr.io/<ORG>/<REPO>:${{ github.sha }}
+    cache-from: type=gha
+    cache-to: type=gha,mode=max
 ```
 
-### Matrix builds/tests
-Matrix strategies can validate multiple runtime versions in parallel (useful for Node services).  [oai_citation:7‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)
+### 🧪 Matrix tests (runtime compatibility)
+Use matrices to validate multiple runtime versions in parallel (especially for Node services).
+
+```yaml
+strategy:
+  matrix:
+    node: ["20", "22"]
+```
 
 ---
 
 ## 🔐 Security scanning (containers + deps)
 
-Integrate image scanning into the pipeline (example tool: Trivy).  [oai_citation:8‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)
+**Baseline expectations:**
+- dependency review on PRs
+- SAST / CodeQL (where applicable)
+- container image scanning on `main` + tags
+- upload results as SARIF when possible
 
-Also: governance & assurance matter—AI/data systems need lifecycle thinking (design → deployment → decommissioning) and data governance.  [oai_citation:9‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
-In practice: scan in PRs, enforce policy on `main`, and keep reports.
+**Policy note:** For forks, avoid workflows that expose secrets. Prefer:
+- `pull_request` with read-only permissions  
+- scheduled scans on `main`  
+- manual dispatch for sensitive publishing steps
 
 ---
 
 ## 🧠 Data/AI workflows (Earth Engine, analytics, reproducibility)
 
-KFM’s research surface includes remote sensing workflows (image collections, large catalogs, time series, etc.). CI shouldn’t try to run **all** of that on every PR—prefer:
-- lightweight unit tests + static checks on PR
-- scheduled “heavy” pipelines nightly/weekly
+CI shouldn’t run “planet-scale” pipelines on every PR. Instead:
 
-Earth Engine work often revolves around image collections as an organizing structure (and learning outcomes revolve around accessing, filtering, and visualizing those collections).  [oai_citation:10‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)
+- ✅ PR lane: lightweight unit tests + static checks  
+- 🗓️ Nightly/weekly: heavy geospatial pipelines + regression checks  
+- 📦 Artifacts: store summaries, metrics, and diffs
+
+**Rule of thumb:** if it needs credentials, long runtimes, or big compute → schedule it.
 
 ---
 
 ## 📦 Artifacts & reporting
 
-Recommended artifacts:
+Recommended artifacts to standardize across workflows:
+
 - ✅ `unit-test-results.xml` / `pytest.xml`
 - ✅ coverage report (`coverage.xml`, HTML)
 - ✅ integration logs (zipped)
 - ✅ security reports (SARIF)
-- ✅ built images digests (for deploy traceability)
+- ✅ built image digests (for deploy traceability)
+
+💡 **Naming tip:** include job + sha in artifact names to make debugging painless.
 
 ---
 
-## 🧭 Secrets & environments (keep it boring)
+## 🧷 Secrets & environments (keep it boring)
 
 Common secrets you’ll likely need:
-- `GHCR_TOKEN` (push container images)
+- `GHCR_TOKEN` (or use `GITHUB_TOKEN` with correct permissions for GHCR)
 - `DEPLOY_SSH_KEY` / `CLOUD_CREDENTIALS` (deployment)
 - `POSTGRES_PASSWORD` (CI integration DB, or use ephemeral defaults)
 
-Tip: keep “outer layer” concerns (networking, cloud provider details) in the workflow/env layer—don’t leak them into domain tests. This mirrors KFM’s stated separation where networking details stay at the edges.  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+✅ Use GitHub **Environments** (dev/stage/prod) to:
+- scope secrets safely
+- require approvals for prod
+- attach deployment history to commits
+
+> 🧱 Keep “outer layer” concerns (networking, cloud provider details) at the workflow/env layer—don’t leak them into domain tests.
+
+---
+
+## 🛠️ Workflow hygiene (do this everywhere)
+
+### 🔏 Minimal permissions by default
+Set workflow permissions explicitly and only elevate where required:
+
+```yaml
+permissions:
+  contents: read
+```
+
+For container pushes to GHCR, add:
+```yaml
+permissions:
+  contents: read
+  packages: write
+```
+
+For SARIF uploads, add:
+```yaml
+permissions:
+  security-events: write
+```
+
+### 🧵 Concurrency (avoid dogpiling)
+Cancel older runs for the same branch:
+
+```yaml
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+```
+
+### 📌 Pin actions (reduce supply-chain risk)
+Prefer pinning to major versions at minimum (and to commit SHA if you want maximum safety).
+
+---
+
+## 🧩 Starter templates (copy / paste)
+
+> These are **baseline skeletons**. Keep them small, fast, and easy to reason about. 🧠  
+> Replace tool choices (`pytest`, `ruff`, `npm`, `pnpm`, etc.) with your stack.
+
+<details>
+<summary><strong>🧪 <code>ci.yml</code> — Lint + Unit Tests (fast PR lane)</strong></summary>
+
+```yaml
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Lint (example)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Unit tests (example)
+        run: |
+          pytest -q --junitxml=unit-test-results.xml --cov=. --cov-report=xml
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-artifacts
+          path: |
+            unit-test-results.xml
+            coverage.xml
+```
+</details>
+
+<details>
+<summary><strong>🧬 <code>integration.yml</code> — PostGIS + Integration Tests</strong></summary>
+
+```yaml
+name: Integration
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *" # daily @ 04:00 UTC (adjust)
+
+permissions:
+  contents: read
+
+jobs:
+  postgis-integration:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgis/postgis:15-3.4
+        env:
+          POSTGRES_DB: kfm_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d kfm_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run integration tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/kfm_test
+        run: |
+          pytest -q -m "integration" --junitxml=integration-results.xml
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-artifacts
+          path: |
+            integration-results.xml
+```
+</details>
+
+<details>
+<summary><strong>🐳 <code>docker.yml</code> — Build + Push Images to GHCR</strong></summary>
+
+```yaml
+name: Docker
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+```
+</details>
+
+<details>
+<summary><strong>🔐 <code>security.yml</code> — Dependency + Image Scanning</strong></summary>
+
+```yaml
+name: Security
+
+on:
+  pull_request:
+  schedule:
+    - cron: "30 3 * * 1" # weekly (adjust)
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+
+  codeql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: "javascript,python"
+      - uses: github/codeql-action/analyze@v3
+
+  image-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Build image locally, then scan with your preferred tool (Trivy, Grype, etc.)
+      - name: Build image (local)
+        run: docker build -t kfm:scan .
+      - name: Scan image (placeholder)
+        run: |
+          echo "TODO: run container scan tool (e.g., Trivy) and upload SARIF"
+```
+</details>
+
+<details>
+<summary><strong>📚 <code>docs.yml</code> — Docs Build + Link Check</strong></summary>
+
+```yaml
+name: Docs
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Replace with your docs toolchain (mkdocs, docusaurus, sphinx, etc.)
+      - name: Build docs (placeholder)
+        run: |
+          echo "TODO: build docs"
+          mkdir -p site && echo "docs build output" > site/index.html
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docs-site
+          path: site
+```
+</details>
+
+<details>
+<summary><strong>🚀 <code>deploy.yml</code> — Promote to Environments</strong></summary>
+
+```yaml
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        type: choice
+        options: [dev, stage, prod]
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy (placeholder)
+        run: |
+          echo "Deploying to ${{ inputs.environment }}..."
+          echo "TODO: run deployment scripts"
+```
+</details>
 
 ---
 
 ## 🧰 Debugging workflows locally
 
 Options:
-- Run the same commands as CI (recommended)
-- Use `act` to simulate GitHub Actions locally (best effort; not perfect parity)
-- Use Docker Compose profiles when you want targeted service subsets (handy for front/back splits).  [oai_citation:12‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)
+- ✅ Run the same commands as CI (recommended)
+- 🧪 Use `act` to simulate GitHub Actions locally (best effort; not perfect parity)
+- 🐳 Use Docker Compose profiles to run targeted service subsets (front/back splits)
 
 ---
 
 ## 🧾 Adding a new workflow (checklist)
 
 - [ ] Name jobs after outcomes (e.g., `lint`, `unit-tests`, `integration-tests`, `build-image`)
-- [ ] Keep PR checks fast (≤ ~10 minutes target)
+- [ ] Keep PR checks fast (aim ≤ ~10 minutes)
 - [ ] Put slow jobs behind schedules or manual dispatch
 - [ ] Cache dependencies and Docker layers
-- [ ] Upload artifacts on failure (logs are gold)
+- [ ] Upload artifacts on failure (logs are gold 🥇)
 - [ ] Pin action versions (avoid surprise breakage)
 - [ ] Avoid secrets on `pull_request` from forks
+- [ ] Add minimal `permissions:` and only elevate when required
+- [ ] Add `concurrency:` cancellation to reduce queue noise
 
 ---
 
-## 📚 Internal references used for this folder
+## 📚 References for this folder
 
-- KFM architecture principles + layering rationale  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
-- KFM infrastructure note (PostgreSQL + PostGIS)  [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
-- KFM mapping hub architecture (data→AI→UI)  [oai_citation:15‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)  
-- Docker in CI/CD (compose, scanning, caching, matrices)  [oai_citation:16‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)  [oai_citation:17‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)  
-- Governance + assurance framing (why we enforce security & lifecycle checks)  [oai_citation:18‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
+> 📌 Recommend storing PDFs/books under `docs/references/` with **slugged filenames** (no spaces) for stable links.
 
-KFM master doc (link marker):  [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+- 🧱 KFM architecture principles + layering rationale  
+  - `docs/references/kfm-technical-documentation.pdf`  
+- 🗺️ KFM mapping hub architecture (data → AI → UI)  
+  - `docs/references/kfm-mapping-hub-design.pdf`
+- 🧭 GIS workflows + requirements discipline  
+  - `docs/references/gis-basics.pdf`
+- 🐳 Docker in CI/CD (compose, scanning, caching, matrices)  
+  - `docs/references/introduction-to-docker.pdf`
+- 🔐 Governance + assurance framing (why we enforce security & lifecycle checks)  
+  - `docs/references/introduction-to-digital-humanism.pdf`
+- 🛰️ Earth Engine + remote sensing workflows  
+  - `docs/references/cloud-remote-sensing-gee.pdf`
+
+> 🔁 If you rename or relocate references, update links here (this README is the “single source of truth” for CI/CD design intent).
