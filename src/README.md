@@ -1,106 +1,189 @@
+# 🧩 `src/` — Kansas Frontier Matrix (KFM) Executable Source Code
+
+![KFM](https://img.shields.io/badge/KFM-src%2F%20canonical-1f6feb)
+![README](https://img.shields.io/badge/README-v1.0.1-8957e5)
+![Order](https://img.shields.io/badge/invariant-ETL%E2%86%92Catalog%E2%86%92Graph%E2%86%92API%E2%86%92UI-critical)
+![Contracts](https://img.shields.io/badge/contracts-contract--first-0aa3a3)
+![Governance](https://img.shields.io/badge/FAIR%2BCARE-governed-2ea043)
+
+> Canonical home for **auditable**, **reproducible** KFM source code: **🧪 ETL Pipelines → 🗂️ Catalogs (STAC/DCAT/PROV) → 🕸️ Graph → 🛡️ APIs**.
+
+---
+
+## 🧭 Quick Navigation
+- [📘 Overview](#overview)
+- [🧠 Core invariants](#core-invariants)
+- [🗂️ Directory layout](#directory-layout)
+- [📌 Where does this go?](#where-does-this-go)
+- [🧱 Architecture](#architecture)
+  - [🧪 Pipelines](#pipelines-srcpipelines)
+  - [🕸️ Graph](#graph-srcgraph)
+  - [🛡️ Server](#server-srcserver)
+  - [📜 Contracts](#contracts-srcservercontracts)
+- [🧪 Validation & CI/CD](#validation--cicd)
+- [⚖️ FAIR+CARE & governance](#faircare--governance)
+- [📚 Reference library](#reference-library)
+- [🕰️ Version history](#version-history)
+
+---
+
+<a id="overview"></a>
+
 ## 📘 Overview
 
 ### Purpose
-`src/` is the canonical home for Kansas Frontier Matrix (KFM) executable source code. It implements the system layers that must remain auditable and reproducible:
+`src/` is the **canonical home** for Kansas Frontier Matrix (KFM) executable source code. It implements the system layers that must remain **auditable** and **reproducible**:
 
 - **🧪 Pipelines**: data ingestion + ETL + metadata generation (STAC/DCAT/PROV) and validation
-- **🕸️ Graph**: knowledge graph build/load utilities (from cataloged outputs)
+- **🕸️ Graph**: knowledge graph build/load utilities (**from cataloged outputs**)
 - **🛡️ Server**: the API boundary (REST/GraphQL contracts + implementation)
 
 ### Scope
-In scope for `src/`:
-- Code that runs ETL jobs and writes data lifecycle outputs (raw/work/processed) and catalogs (STAC/DCAT/PROV)
-- Code that builds/loads the knowledge graph *from* cataloged products
+✅ In scope for `src/`:
+- Code that runs ETL jobs and writes data lifecycle outputs (`raw/`, `work/`, `processed/`) and catalogs (STAC/DCAT/PROV)
+- Code that builds/loads the knowledge graph **from cataloged products**
 - API services and **contract-first** schemas (OpenAPI/GraphQL) consumed by UI and Focus Mode
 
-Out of scope for `src/` (canonical homes elsewhere):
+🚫 Out of scope for `src/` (canonical homes elsewhere):
 - Governed documentation and templates → `docs/`
 - Data assets and outputs → `data/`
 - Schema registries / JSON schema artifacts → `schemas/`
 - Frontend UI code → `web/`
 
-### Core invariants (read before changing code)
-KFM enforces this *non-negotiable* order:
+---
 
-**ETL → STAC/DCAT/PROV Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode**
+<a id="core-invariants"></a>
 
-Implications for `src/` contributors:
-- Nothing enters the graph or UI unless it has passed ETL and has catalog records.
-- The UI must never query the graph directly; it only uses contracted APIs.
-- Derived products (including AI/ML outputs) must be treated as data with lineage (PROV).
+## 🧠 Core invariants
 
-## 🗂️ Directory Layout
+> [!IMPORTANT]
+> KFM enforces this **non-negotiable** order:
+>
+> **ETL → STAC/DCAT/PROV Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode**
+
+```mermaid
+flowchart LR
+  A[🧪 ETL Pipelines] --> B[🗂️ STAC/DCAT/PROV Catalogs]
+  B --> C[🕸️ Graph Build/Load]
+  C --> D[🛡️ APIs]
+  D --> E[🖥️ UI]
+  E --> F[📚 Story Nodes]
+  F --> G[🎯 Focus Mode]
+```
+
+### Implications for `src/` contributors
+- ✅ Nothing enters the graph or UI unless it has passed ETL **and** has catalog records.
+- ✅ The UI must never query the graph directly; it only uses contracted APIs.
+- ✅ Derived products (including AI/ML outputs) must be treated as data with lineage (PROV).
+
+### Constraints you must not break
+- **No out-of-band data**: If it isn’t produced via ETL and cataloged, it doesn’t belong in graph/UI.
+- **Contract-first APIs**: UI and other clients integrate via API contracts (OpenAPI/GraphQL), not internal DB schema.
+- **Provenance-first**: derived outputs (joins, interpolations, AI annotations, model results) must log lineage and uncertainty.
+- **Sensitivity propagation**: classification/sensitivity controls must carry through catalogs → graph → APIs → UI.
+
+---
+
+<a id="directory-layout"></a>
+
+## 🗂️ Directory layout
 
 ### Repository context (expected structure)
-This tree is the KFM “easy to read” emoji layout pattern used across docs. Treat it as the target structure for v13+.
+This tree is the KFM “easy to read” emoji layout pattern used across docs. Treat it as the target structure for **v13+**.
 
-    📁 docs/ — governed documentation (templates, standards, architecture, reports)
-    ├── 📄 MASTER_GUIDE_v13.md
-    ├── 📄 MASTER_GUIDE_v12.md
-    ├── 📁 architecture/
-    │   ├── 📄 KFM_VISION_FULL_ARCHITECTURE.md
-    │   ├── 📄 KFM_REDESIGN_BLUEPRINT_v13.md
-    │   ├── 📄 KFM_FOCUS_MODE_SPEC.md
-    │   └── 📄 KFM_LAYER_REGISTRY.md
-    ├── 📁 standards/
-    │   ├── 📄 KFM_MARKDOWN_WORK_PROTOCOL.md
-    │   ├── 📄 KFM_CHATGPT_WORK_PROTOCOL.md
-    │   ├── 📄 KFM_DATA_CONTRACTS.md
-    │   ├── 📄 KFM_STAC_PROFILE.md
-    │   ├── 📄 KFM_DCAT_PROFILE.md
-    │   └── 📄 KFM_PROV_PROFILE.md
-    ├── 📁 templates/
-    │   ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
-    │   ├── 📄 TEMPLATE__STORY_NODE_V3.md
-    │   └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
-    └── 📁 reports/
-        └── 📁 <topic>/
-            └── 📁 story_nodes/
+```text
+📁 docs/ — governed documentation (templates, standards, architecture, reports)
+├── 📄 MASTER_GUIDE_v13.md
+├── 📄 MASTER_GUIDE_v12.md
+├── 📁 architecture/
+│   ├── 📄 KFM_VISION_FULL_ARCHITECTURE.md
+│   ├── 📄 KFM_REDESIGN_BLUEPRINT_v13.md
+│   ├── 📄 KFM_FOCUS_MODE_SPEC.md
+│   └── 📄 KFM_LAYER_REGISTRY.md
+├── 📁 standards/
+│   ├── 📄 KFM_MARKDOWN_WORK_PROTOCOL.md
+│   ├── 📄 KFM_CHATGPT_WORK_PROTOCOL.md
+│   ├── 📄 KFM_DATA_CONTRACTS.md
+│   ├── 📄 KFM_STAC_PROFILE.md
+│   ├── 📄 KFM_DCAT_PROFILE.md
+│   └── 📄 KFM_PROV_PROFILE.md
+├── 📁 templates/
+│   ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
+│   ├── 📄 TEMPLATE__STORY_NODE_V3.md
+│   └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
+└── 📁 reports/
+    └── 📁 <topic>/
+        └── 📁 story_nodes/
 
-    📁 src/ — executable code (this folder)
-    ├── 🧪 pipelines/
-    ├── 🕸️ graph/
-    └── 🛡️ server/
-        └── 📜 contracts/
+📁 src/ — executable code (this folder)
+├── 🧪 pipelines/
+├── 🕸️ graph/
+└── 🛡️ server/
+    └── 📜 contracts/
 
-    📁 data/ — data lifecycle roots (raw → work → processed + catalogs + prov)
-    ├── 📁 raw/
-    ├── 📁 work/
-    ├── 📁 processed/
-    ├── 📁 stac/
-    ├── 📁 catalog/
-    │   └── dcat/
-    └── 📁 prov/
+📁 data/ — data lifecycle roots (raw → work → processed + catalogs + prov)
+├── 📁 raw/
+├── 📁 work/
+├── 📁 processed/
+├── 📁 stac/
+├── 📁 catalog/
+│   └── 📁 dcat/
+└── 📁 prov/
 
-    📁 schemas/ — schema/profile registry (machine validated)
-    ├── 📁 stac/
-    ├── 📁 dcat/
-    └── 📁 prov/
+📁 schemas/ — schema/profile registry (machine validated)
+├── 📁 stac/
+├── 📁 dcat/
+└── 📁 prov/
 
-    📁 web/ — frontend UI (React/MapLibre + Focus Mode UI)
-    ├── 🌍 map_viewer/
-    ├── 🗺️ focus_mode_ui/
-    └── 📚 story_reader/
+📁 web/ — frontend UI (React/MapLibre + Focus Mode UI)
+├── 🌍 map_viewer/
+├── 🗺️ focus_mode_ui/
+└── 📚 story_reader/
 
-    📁 .github/
-    └── workflows/
+📁 .github/
+└── workflows/
 
-    📁 releases/ — packaged release artifacts
-    └── <version>/
+📁 releases/ — packaged release artifacts
+└── <version>/
+```
 
 ### `src/` layout (canonical homes)
 Minimum canonical homes (must exist conceptually even if implementations evolve):
 
-    📁 src/
-    ├── 🧪 pipelines/ — ETL + catalog writers/validators (STAC/DCAT/PROV)
-    │   └── 🧫 etl/ — dataset ingestion + transforms (expected sub-home for ETL jobs)
-    ├── 🕸️ graph/ — graph build/load tools (from cataloged outputs)
-    └── 🛡️ server/ — API boundary (policy + contracts + services)
-        └── 📜 contracts/ — OpenAPI + GraphQL contracts (source of truth)
+```text
+📁 src/
+├── 🧪 pipelines/ — ETL + catalog writers/validators (STAC/DCAT/PROV)
+│   └── 🧫 etl/ — dataset ingestion + transforms (expected sub-home for ETL jobs)
+├── 🕸️ graph/ — graph build/load tools (from cataloged outputs)
+└── 🛡️ server/ — API boundary (policy + contracts + services)
+    └── 📜 contracts/ — OpenAPI + GraphQL contracts (source of truth)
+```
 
 Suggested internal structure (recommended; align with Master Guide + team conventions):
 - Keep modules small and layered. Prefer “thin” adapters around stable contracts.
 - Keep file paths stable once published (contracts, schema versions, catalog IDs).
+
+---
+
+<a id="where-does-this-go"></a>
+
+## 📌 Where does this go?
+
+Use this quick map when you’re unsure:
+
+| You are adding… | Put it in… | Why |
+|---|---|---|
+| Ingestion/ETL logic, transformations, validators | `src/pipelines/` | Produces reproducible data outputs + catalogs |
+| STAC/DCAT/PROV writers + validators | `src/pipelines/` | Catalogs are the gate into graph + UI |
+| Graph build artifacts + loaders/migrations | `src/graph/` | Graph is derived from cataloged products |
+| REST/GraphQL server implementation | `src/server/` | API is the only boundary for clients |
+| OpenAPI / GraphQL schemas | `src/server/contracts/` | Contracts are source of truth |
+| Docs, templates, standards | `docs/` | Governed documentation lives here |
+| Data outputs and catalogs | `data/` | Data lifecycle root |
+| JSON schemas / profiles | `schemas/` | Machine-validation registry |
+| UI/Frontend code | `web/` | Client-side consumers |
+
+---
 
 ## 🧭 Context
 
@@ -113,13 +196,13 @@ KFM is an evidence-driven geospatial knowledge platform that intertwines:
 
 This is why `src/` is organized by pipeline stages and contracts rather than “random utils.”
 
-### Constraints & invariants you must not break
-- **No out-of-band data**: If it isn’t produced via ETL and cataloged, it doesn’t belong in graph/UI.
-- **Contract-first APIs**: UI and other clients integrate via API contracts (OpenAPI/GraphQL), not internal DB schema.
-- **Provenance-first**: derived outputs (joins, interpolations, AI annotations, model results) must log lineage and uncertainty.
-- **Sensitivity propagation**: classification/sensitivity controls must carry through catalogs → graph → APIs → UI.
+---
+
+<a id="architecture"></a>
 
 ## 🧱 Architecture
+
+<a id="pipelines-srcpipelines"></a>
 
 ### 🧪 Pipelines (`src/pipelines/`)
 What goes here:
@@ -140,6 +223,8 @@ Expected I/O pattern:
 - Catalogs: `data/stac/`, `data/catalog/dcat/`
 - Lineage: `data/prov/`
 
+<a id="graph-srcgraph"></a>
+
 ### 🕸️ Graph (`src/graph/`)
 What goes here:
 - building graph-ready artifacts from cataloged datasets
@@ -149,6 +234,8 @@ What goes here:
 Hard rule:
 - graph loads are driven from **catalog outputs**, not from ad-hoc UI calls or manual inserts.
 
+<a id="server-srcserver"></a>
+
 ### 🛡️ Server (`src/server/`)
 What goes here:
 - API service implementation
@@ -156,7 +243,9 @@ What goes here:
 - “bundle” endpoints for evidence retrieval (e.g., Focus Mode citation bundles)
 - telemetry/logging at the API boundary
 
-#### 📜 Contracts (`src/server/contracts/`)
+<a id="contracts-srcservercontracts"></a>
+
+### 📜 Contracts (`src/server/contracts/`)
 Contracts are the stable interface between KFM internals and the outside world:
 - REST (OpenAPI)
 - GraphQL (SDL/schema)
@@ -165,6 +254,14 @@ Contracts are the stable interface between KFM internals and the outside world:
 Treat contracts as:
 - versioned, reviewed, and backward compatible (when possible)
 - the place where breaking changes are explicitly managed
+
+> [!TIP]
+> Prefer **contract changes first**, then adapters, then implementation.  
+> If you can’t write a contract test for it, it’s probably not ready.
+
+---
+
+<a id="validation--cicd"></a>
 
 ## 🧪 Validation & CI/CD
 
@@ -180,7 +277,20 @@ If you’re adding new code under `src/`:
 - ensure deterministic outputs (stable IDs, repeatable runs)
 - ensure outputs land in the correct `data/` roots and have catalogs + PROV
 
-## ⚖️ FAIR+CARE & Governance
+### Contributor checklist (before you open a PR)
+- [ ] Outputs are deterministic (stable IDs; repeatable runs)
+- [ ] Pipeline outputs land in correct `data/` roots (`raw/` → `work/` → `processed/`)
+- [ ] STAC/DCAT/PROV catalogs are emitted + validated
+- [ ] Graph loads are driven from catalogs (no manual inserts)
+- [ ] Contracts updated first (if API surface changed)
+- [ ] Tests added/updated for contracts and pipeline outputs
+- [ ] Sensitivity/classification propagates end-to-end
+
+---
+
+<a id="faircare--governance"></a>
+
+## ⚖️ FAIR+CARE & governance
 
 `src/` code changes can have governance impact when they affect:
 - how sensitivity/classification is computed or propagated
@@ -193,9 +303,14 @@ When in doubt:
 - prefer conservative defaults (redact/generalize; require review)
 - ensure all “evidence-only” features remain strict: uncited/unsupported content must be hidden/flagged in Focus Mode
 
-## 📚 Reference Library
+---
 
-These materials are **implementation guidance** only; they must not override KFM contracts/governance. Also: ensure licensing allows redistribution before committing any PDFs into the repo.
+<a id="reference-library"></a>
+
+## 📚 Reference library
+
+These materials are **implementation guidance** only; they must not override KFM contracts/governance.  
+Also: ensure licensing allows redistribution before committing any PDFs into the repo.
 
 ### KFM canonical project docs (source of truth)
 - KFM Architecture Document
@@ -239,8 +354,13 @@ These materials are **implementation guidance** only; they must not override KFM
 - Google Maps API Succinctly.pdf
 - google-maps-javascript-api-cookbook.pdf
 
-## 🕰️ Version History
+---
 
-| Version | Date       | Summary of Changes | Author |
-|--------:|------------|-------------------|--------|
-| v1.0.0  | 2025-12-31 | Initial `src/README.md` created from Master Guide v13 + KFM docs; added emoji directory layout and subsystem guide. | TBD (KFM Engineering) |
+<a id="version-history"></a>
+
+## 🕰️ Version history
+
+| Version | Date | Summary of Changes | Author |
+|---:|---|---|---|
+| v1.0.1 | 2026-01-06 | Polished structure + navigation; added contributor checklist; clarified contract-first + governance guardrails. | KFM Engineering |
+| v1.0.0 | 2025-12-31 | Initial `src/README.md` created from Master Guide v13 + KFM docs; added emoji directory layout and subsystem guide. | TBD (KFM Engineering) |
