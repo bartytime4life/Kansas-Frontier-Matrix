@@ -3,11 +3,30 @@
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](#-how-to-contribute)
 [![GitHub Issues](https://img.shields.io/github/issues/bartytime4life/Kansas-Frontier-Matrix)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)](#-pull-requests-prs)
+[![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+[![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)](../LICENSE)
 
 > [!NOTE]
 > This README documents **how we collaborate on GitHub**: issues, pull requests, reviews, labels, and automation.
 >
 > ✅ Start with the project overview: **[`../README.md`](../README.md)**
+
+---
+
+## ⚡ Quick links (fastest path to “doing the thing”)
+
+| Action | Link |
+|---|---|
+| 🐛 Report a bug | https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=bug_report.yml |
+| ✨ Request a feature | https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=feature_request.yml |
+| 🗺️ Request a data layer/source | https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=data_layer_request.yml |
+| ❓ Ask a question | https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=question.yml |
+| 🧪 See CI runs | https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions |
+| 🔐 Security policy | [`./SECURITY.md`](./SECURITY.md) *(add if missing)* |
+
+> [!TIP]
+> If a template link 404s, use the chooser: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new/choose
 
 ---
 
@@ -33,29 +52,54 @@ This folder is the **operations layer** for GitHub collaboration: templates, wor
 
 ```text
 📁 .github/
-├─ 📁 workflows/                 # 🤖 CI/CD + automation
-│  ├─ ci.yml                     # ✅ tests + lint + typecheck
-│  ├─ pages.yml                  # 🌐 build/deploy web UI (if using GitHub Pages)
-│  ├─ data-refresh.yml           # 🗺️ scheduled catalog/layer refresh (optional)
-│  └─ security.yml               # 🔐 security scans (optional)
-├─ 📁 ISSUE_TEMPLATE/            # 🧾 guided issue creation
+├─ 📁 workflows/                      # 🤖 CI/CD + automation
+│  ├─ ci.yml                          # ✅ tests + lint + typecheck
+│  ├─ codeql.yml                      # 🔐 CodeQL security scan (recommended)
+│  ├─ pages.yml                       # 🌐 build/deploy web UI (optional)
+│  ├─ data-refresh.yml                # 🗺️ scheduled catalog/layer refresh (optional)
+│  ├─ security.yml                    # 🔎 dependency + secret scans (optional)
+│  └─ release.yml                     # 🏷️ release packaging (optional)
+├─ 📁 ISSUE_TEMPLATE/                 # 🧾 guided issue creation
 │  ├─ bug_report.yml
 │  ├─ feature_request.yml
 │  ├─ data_layer_request.yml
 │  └─ question.yml
-├─ 📄 PULL_REQUEST_TEMPLATE.md   # ✅ PR checklist & review prompts
-├─ 📄 CODEOWNERS                 # 👀 review routing
-└─ 📄 README.md                  # 📍 you are here
+├─ 📄 PULL_REQUEST_TEMPLATE.md        # ✅ PR checklist & review prompts
+├─ 📄 CODEOWNERS                      # 👀 review routing by area
+├─ 📄 dependabot.yml                  # ♻️ dependency updates (recommended)
+├─ 📄 labels.yml                      # 🏷️ canonical label taxonomy (recommended)
+├─ 📄 release-drafter.yml             # 📝 auto-draft release notes (optional)
+├─ 📄 SECURITY.md                     # 🔐 vuln reporting (recommended)
+└─ 📄 README.md                       # 📍 you are here
 ```
 
-> [!TIP]
+> [!IMPORTANT]
 > If any of the files above don’t exist yet, this README acts as the **spec** for what we should add next.
 
 ---
 
-## 🧠 How to contribute
+## 🧠 How we work (issue → PR → merge)
 
-### 🧾 1) Issues
+```mermaid
+flowchart LR
+  I[🧾 Issue] --> T[🏷️ Triage + Labels]
+  T --> B[🌿 Branch]
+  B --> P[✅ Pull Request]
+  P --> C[🤖 CI Checks]
+  C --> R[👀 Review (CODEOWNERS)]
+  R --> M[🔀 Merge]
+  M --> D[📦 Deploy / Data Publish]
+```
+
+**Working agreements (short + strict):**
+- **If it changes behavior, it needs docs.** 📚
+- **If it changes data, it needs provenance.** 🧾🗺️
+- **If CI fails, we don’t merge.** 🤖🚫
+- **If it’s unclear, open an issue first.** 🧭
+
+---
+
+## 🧾 1) Issues
 
 Use issues for **everything**: bugs, data layers, UI changes, pipeline improvements, docs, research notes.
 
@@ -70,31 +114,57 @@ Use issues for **everything**: bugs, data layers, UI changes, pipeline improveme
 - `type:data` 🗺️ — new layer/source, ingestion, catalog updates
 - `type:docs` 📚 — documentation improvements
 - `type:chore` 🧹 — refactor, tooling, dependencies
-- `type:security` 🔐 — security-related changes (avoid public details; see below)
+- `type:security` 🔐 — security-related changes *(avoid public details; see below)*
+
+> [!TIP]
+> Use **checklists** inside issues when the task has multiple steps. It makes PR review faster. ✅✅✅
 
 ---
 
-### ✅ 2) Pull Requests (PRs)
+## ✅ 2) Pull Requests (PRs)
 
 PRs should be **small, reviewable, and testable**.
 
-**Branch naming:**
+### 🌿 Branch naming
 - `feat/<short-scope>` — new features
 - `fix/<short-scope>` — bug fixes
 - `data/<source-or-layer>` — data/catalog changes
 - `docs/<topic>` — documentation
 
-**PR size guideline:**
-- Prefer < **400 lines** changed unless there’s a strong reason
-
-**PR must include:**
+### 🧪 PR must include
 - A clear summary (“what + why”)
 - Testing notes (unit/integration/manual)
 - Docs updates **if behavior changes**
 - Data provenance notes **if layers change** (see below)
 
+### 📏 PR size guideline
+Prefer < **400 lines** changed unless there’s a strong reason.
+
+### 🧾 PR description essentials (geo-specific)
+Include:
+- **EPSG**
+- **bbox** (or named region)
+- **time coverage** (year / range / undated)
+- **format** (COG/GeoJSON/etc.)
+- **preview proof** (screenshot + zoom level)
+
 > [!IMPORTANT]
-> For geospatial changes: include **EPSG**, **bbox**, **time coverage**, and **format** (COG/GeoJSON/etc.) in the PR description.
+> Link issues in the PR body using: `Closes #123` ✅  
+> This auto-closes issues on merge and keeps history tidy.
+
+---
+
+## 👀 Reviews & ownership
+
+### ✅ CODEOWNERS = routing
+- CODEOWNERS live in **[`./CODEOWNERS`](./CODEOWNERS)** 👀  
+- If you’re unsure who owns an area, open an issue with `status:needs-triage` and we’ll route it.
+
+### 🤝 Review etiquette
+- Review **the change**, not the person.
+- Ask for evidence: screenshots, logs, benchmarks, repro steps.
+- Prefer “suggestion” comments over blockers when possible.
+- If you request changes, be explicit: **what** and **why**.
 
 ---
 
@@ -109,9 +179,37 @@ Use prefixes so filters and boards stay sane:
   - `area:ai` 🧠
   - `area:web` 🌐
   - `area:db` 🗄️
+  - `area:docs` 📚
 - `priority:*` → urgency (`p0`, `p1`, `p2`)
 - `status:*` → workflow state (`blocked`, `needs-info`, `ready`, `in-progress`)
 - `good-first-issue` 🌱 → newcomer-friendly
+
+> [!TIP]
+> Keep labels **predictable**. “Cute” labels are fun… until boards become unusable. 😅
+
+---
+
+## 🤖 Automation & required checks
+
+### ✅ What CI should do (minimum bar)
+- Lint + formatting checks
+- Unit tests (fast)
+- Type checking (where applicable)
+- Build (web + CLI tooling)
+- Optional: integration tests for pipelines (nightly or on-demand)
+
+### 🔐 Security automation (recommended)
+- CodeQL scanning
+- Secret scanning (and push protection)
+- Dependency alerts + Dependabot PRs
+
+> [!CAUTION]
+> GitHub Actions should follow **least privilege**: minimal permissions, pinned actions, no secret echoing.
+
+### 🧯 If CI fails
+- Fix the root cause (don’t “just rerun” unless it’s a flaky upstream)
+- Paste the key error lines into the PR description or a comment
+- If it’s flaky: open an issue labeled `type:chore` + `status:needs-triage`
 
 ---
 
@@ -141,6 +239,11 @@ Any new/updated dataset **must** include:
 - Topology checks where relevant (boundaries, networks)
 - “Looks right” QA: render a quick preview in the web UI / QGIS
 - Document the test: screenshot + bbox + zoom level
+
+### 🧳 Large files policy (recommended)
+- Prefer **data in releases or external object storage**, not Git history
+- Use **Git LFS** only when necessary and agreed upon
+- Never commit raw scans if licensing is unclear
 
 ---
 
@@ -293,6 +396,9 @@ If they don’t exist yet, consider adding:
 - `docs/ARCHITECTURE.md` 🧱 (system boundaries + runtime diagram)
 - `.github/workflows/ci.yml` ✅ (lint/test/build)
 - `.github/PULL_REQUEST_TEMPLATE.md` ✅ (checklist)
+- `.github/dependabot.yml` ♻️ (dependency updates)
+- `.github/labels.yml` 🏷️ (label source of truth)
+- `.github/release-drafter.yml` 📝 (release notes automation)
 
 ---
 
