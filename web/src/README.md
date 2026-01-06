@@ -1,4 +1,7 @@
-<!-- According to a document from 2026-01-05 (project docs linked in “Sources”). -->
+<!--
+📌 KFM Web UI conventions are distilled from the project reference library listed in “Sources”.
+🗓️ Last reviewed: 2026-01-06
+-->
 
 # 🌐 KFM Web UI — `web/src/` (Frontend Source)
 
@@ -6,240 +9,392 @@
 ![SPA](https://img.shields.io/badge/App-SPA-informational)
 ![State](https://img.shields.io/badge/State-Redux%20%7C%20Context%2FHooks-blueviolet)
 ![Maps](https://img.shields.io/badge/Maps-MapLibre%20%7C%20Leaflet-2b9348)
-![3D](https://img.shields.io/badge/3D-CesiumJS-0b7285)
-![Charts](https://img.shields.io/badge/Charts-Plotly.js-7c3aed)
-![Responsive](https://img.shields.io/badge/UX-Responsive%20CSS3-ff922b)
+![WebGL](https://img.shields.io/badge/Render-WebGL-0b7285)
+![3D](https://img.shields.io/badge/3D-Cesium%20%7C%20Three.js-0b7285)
+![Charts](https://img.shields.io/badge/Charts-D3%20%7C%20Plotly-7c3aed)
+![Responsive](https://img.shields.io/badge/UX-Mobile--first%20%2B%20Responsive-ff922b)
 ![A11y](https://img.shields.io/badge/A11y-Semantic%20HTML%20%2B%20ARIA-1c7ed6)
 
-> 🧭 **What this folder is:** the **browser UI** for Kansas Frontier Matrix (KFM) — an SPA that turns geospatial + analytics outputs into an interactive map-first workflow (layers, timeline, charts, tables).:contentReference[oaicite:0]{index=0}
+> 🧭 **Purpose:** this folder contains the **browser UI** for Kansas Frontier Matrix (KFM) — an interactive, map‑first SPA that lets users **pan/zoom**, **toggle layers**, **inspect features**, and **explore time‑sliced simulation + remote‑sensing outputs** with linked charts and tables. 🗺️📈
 
 ---
 
-## ✨ What the UI is responsible for
+## 🔗 Quick links
 
-The frontend is the primary interface where users:
-- explore **interactive maps** (toggle layers, inspect features, view legends):contentReference[oaicite:1]{index=1}
-- navigate **time** via a **timeline slider** (time-sliced layers + linked views):contentReference[oaicite:2]{index=2}
-- view **analytics** via charts/graphs tied to map selections:contentReference[oaicite:3]{index=3}
-- download/inspect **tabular outputs** (DataTable patterns):contentReference[oaicite:4]{index=4}
-
-KFM’s UI design prioritizes:
-- **modern browser compatibility** + mobile support:contentReference[oaicite:5]{index=5}
-- **responsive layout** (Flexbox/Grid + breakpoints):contentReference[oaicite:6]{index=6}
-- **cross-browser testing & accessibility** (semantic HTML, labels, ARIA, colorblind-safe choices):contentReference[oaicite:7]{index=7}
+- [🧾 Doc metadata](#-doc-metadata)
+- [✨ What lives here](#-what-lives-here)
+- [🚫 What does not live here](#-what-does-not-live-here)
+- [🧭 Architectural guardrails](#-architectural-guardrails-dont-break-these)
+- [🗂️ Expected folder structure](#️-expected-folder-structure)
+- [🔁 Data flow & state](#-data-flow--state-how-data-moves)
+- [🗺️ Mapping stack](#️-mapping-stack)
+- [🕒 Timeline & time-sliced layers](#-timeline--time-sliced-layers)
+- [📈 Charts & dashboards](#-charts--dashboards-linked-to-spatial-selections)
+- [🌍 3D mode](#-3d-mode-optional-but-designed-in)
+- [⚡ Performance](#-performance-guidelines-dont-let-maps-melt-laptops)
+- [♿ Accessibility & UX](#-accessibility--ux-guardrails)
+- [🔐 Security & data governance](#-security--data-governance-ui-side)
+- [🧪 Testing & quality gates](#-testing--quality-gates)
+- [➕ Add/change features](#-adding-or-changing-a-feature-checklist)
+- [📚 Sources](#-sources)
 
 ---
 
-## 🧱 Key UI building blocks (mental model)
+## 🧾 Doc metadata
 
-KFM’s frontend is intentionally componentized around a small set of “anchor” components:​:contentReference[oaicite:8]{index=8}
+| Field | Value |
+|---|---|
+| Folder | `web/src/` |
+| Role | 🌐 Frontend app source (UI boundary) |
+| Primary users | Analysts · researchers · operators · maintainers |
+| Update policy | Keep aligned with API contracts + governance rules |
+| Last updated | **2026-01-06** |
 
-- 🗺️ **`MapView`** — interactive 2D map (layers + click/hover + popups)
-- 🧩 **`Sidebar`** — layer toggles, legend, mode/context controls
-- 🕒 **`TimelineSlider`** — time navigation (dispatches updates to map + charts):contentReference[oaicite:9]{index=9}
-- 📈 **`ChartPanel`** — Plotly/Chart.js/D3 views, often tied to map selection:contentReference[oaicite:10]{index=10}
-- 🧾 **`DataTable`** — tables for export/inspection
-- 🧭 **`Header`** — global navigation (modes, settings, account)
+---
+
+## ✨ What lives here
+
+This folder is the **UI boundary implementation** — it’s a *view + interaction layer* that turns governed backend outputs into an experience humans can reason about.
+
+Typical responsibilities:
+
+- 🗺️ **Interactive mapping**: pan/zoom, base layers, overlays, feature hover/click, legends
+- 🧩 **UI composition**: map + sidebar + charts + tables + settings
+- 🕒 **Time navigation**: time slider / discrete time steps / animation controls
+- 📈 **Linked analytics**: charts update based on map selection + filters
+- 🧾 **Exports**: trigger safe downloads (GeoJSON/CSV/images) via API endpoints
+- 📣 **UX feedback**: loading states, progress indicators, error IDs, empty states
+- ♻️ **Progressive enhancement**: baseline usability first, then enhance for capable devices/browsers
+
+> [!NOTE]
+> KFM’s web UI is intended to be a **live control panel** — not just static dashboards. Expect interactive controls like sliders, play/pause, and map drawing tools to initiate analysis or simulations and then visualize incremental updates.
+
+---
+
+## 🚫 What does not live here
+
+Keep these out of `web/src/` (or isolate them behind clear boundaries):
+
+- 🛑 **Direct database / graph access** (Neo4j/Postgres/etc.)  
+  ✅ The UI talks to **the API boundary** only.
+- 🧠 **Core domain rules** (governance/redaction/business logic belongs server-side)  
+  ✅ UI can *display* policy and *request* allowed actions; it shouldn’t *invent* policy.
+- 🧱 **Data pipeline + ETL**  
+  ✅ UI should consume cataloged/provenanced outputs, not generate them ad hoc.
+- 🔑 **Secrets** (API keys, tokens, credentials)  
+  ✅ Use runtime config + secure auth flows; never hardcode.
+
+---
+
+## 🧭 Architectural guardrails (don’t break these)
+
+These are the “KFM-style” invariants for the UI:
+
+- 🔒 **API boundary rule:** the UI **must not** bypass governance. All data access goes through the governed API (contracts + authZ + redaction).
+- 🧪 **Predictable state:** changes flow through **explicit state updates** (Redux/Flux patterns or disciplined Context/hooks).  
+  Selecting a feature must update charts/tables consistently.
+- 🧾 **Provenance-friendly UX:** when a view “makes a claim” (e.g., a metric, anomaly, alert), the UI should have a place to show **evidence pointers** and metadata (IDs/links).
+- 🧭 **CRS sanity:** treat coordinate systems seriously — do not mix projections silently; rely on clearly labeled transforms and metadata.
+- 🧊 **Graceful degradation:** heavy WebGL/3D views must **fail soft** on older devices (fallback to 2D or pre-rendered output).
+- 🧠 **Human-in-the-loop:** the UI should support *interpretability* (tooltips, contextual help, what-changed views) to keep users in control.
+
+> [!TIP]
+> If you’re unsure whether something belongs in `web/src/`, ask:  
+> “Is this **presentation + interaction**, built on **contracted API outputs**, with **no hidden governance logic**?”  
+> If yes → it likely belongs here.
 
 ---
 
 ## 🗂️ Expected folder structure
 
-KFM’s docs recommend structuring React **by feature**, with shared primitives in `components/` and integration points in `services/` and `store/`.:contentReference[oaicite:11]{index=11}
+> 🧩 Recommended layout: **feature-first**, with shared primitives in `components/`, integration points in `services/` and state in `store/`.
 
 ```text
 🌐 web/
 └── 🧬 src/
-    ├── 🧱 components/            # reusable UI primitives (Button, Modal, Chart wrappers, etc.)
+    ├── 🧱 components/             # reusable primitives (Button, Modal, Chart wrappers, etc.)
     ├── 🧩 features/
-    │   ├── 🗺️ map/               # MapView + map utils (layers, sources, interactions)
-    │   ├── 🕒 timeline/          # TimelineSlider + time utilities
-    │   ├── 🔐 auth/              # auth context, login flows (if enabled)
-    │   └── 📊 dashboard/         # dashboards + composed views
-    ├── 🎨 styles/                # global styles, tokens, CSS modules
-    ├── 🔌 services/              # API clients (axios/fetch wrappers) + typed endpoints
-    ├── 🧠 store/                 # Redux slices OR Context providers + selectors
-    ├── 🧰 utils/                 # shared helpers (formatting, geo helpers, guards)
-    ├── 🧭 App.(jsx|tsx)          # app shell + routing
-    └── 🚀 index.(jsx|tsx)        # bootstraps SPA
+    │   ├── 🗺️ map/                # MapView + layer registry + map interactions
+    │   ├── 🕒 timeline/           # TimelineSlider + time utilities + animation controls
+    │   ├── 📊 dashboard/          # composed views: charts + tables + selection summaries
+    │   ├── 🧾 catalog/            # dataset browser: STAC/DCAT-style browsing (if enabled)
+    │   ├── 🧪 simulations/        # run/configure jobs + progress + result viewer (if enabled)
+    │   └── 🔐 auth/               # auth UI + session handling (if enabled)
+    ├── 🎨 styles/                 # tokens, themes, CSS modules, global styles
+    ├── 🔌 services/               # API client(s), contract-typed endpoints, request helpers
+    ├── 🧠 store/                  # Redux slices OR Context providers + selectors
+    ├── 🧰 utils/                  # geo helpers, formatting, guards, feature flags
+    ├── 🧭 App.(jsx|tsx)           # app shell + routing
+    └── 🚀 index.(jsx|tsx)         # SPA bootstrap
 ```
 
-✅ **TypeScript is preferred where possible** to make API responses + component props safer and easier to refactor.:contentReference[oaicite:12]{index=12}
+✅ **TypeScript is preferred** (where possible) for safer API payloads + refactors.
 
 ---
 
-## 🔁 Data flow & state management (how things “move”)
+## 🔁 Data flow & state (how data “moves”)
 
-KFM is designed around predictable state updates (Redux or Context/hooks), where UI changes trigger actions and dependent components reactively refresh.:contentReference[oaicite:13]{index=13}
+KFM UI is designed around **predictable state updates** and **linked views**:
 
 ```mermaid
 flowchart LR
-  U[User Interaction] --> A[Action / Dispatch]
-  A --> S[Store: Redux or Context]
-  S -->|state/props| M[MapView]
-  S -->|state/props| C[ChartPanel]
-  S -->|state/props| D[DataTable]
-  M --> R[services/apiClient]
+  U[🧑 User Interaction] --> A[🎛️ Action / Dispatch]
+  A --> S[🧠 Store: Redux or Context]
+  S -->|state/props| M[🗺️ MapView]
+  S -->|state/props| C[📈 ChartPanel]
+  S -->|state/props| T[🧾 DataTable]
+  M --> R[🔌 services/apiClient]
   C --> R
-  D --> R
-  R --> B[(Backend APIs + GeoServer/WMS/WFS + Tile services)]
-  B -->|GeoJSON / tiles / time-series| R
+  T --> R
+  R --> B[(🛡️ Backend APIs + Geo endpoints + tile/WMS/WFS services)]
+  B -->|GeoJSON · tiles · time-series| R
   R -->|normalized payloads| S
 ```
 
 ### 🕒 Timeline is a “global lever”
-The timeline slider updates a shared `currentDate` (or equivalent), which triggers dependent components (map layers + charts) to refresh.:contentReference[oaicite:14]{index=14}
+The timeline slider updates shared state (e.g., `currentDate` / `timeIndex`). Map layers + charts subscribe to that state and refresh accordingly.
 
 ---
 
 ## 🗺️ Mapping stack
 
-### 2D Map: **MapLibre GL JS** or **Leaflet**
-Project design notes call out:
-- **MapLibre GL JS** (open-source Mapbox GL fork) or **Leaflet** for interactive maps:contentReference[oaicite:15]{index=15}
-- MapLibre supports high-performance WebGL rendering and timeline slider patterns:contentReference[oaicite:16]{index=16}
+### 2D maps (MapLibre GL JS or Leaflet)
+Common front-end mapping choices for KFM-style apps:
 
-**Data formats we expect to visualize:**
-- GeoJSON vectors (clickable features, overlays):contentReference[oaicite:17]{index=17}
-- raster tiles or WMS/WMTS imagery overlays:contentReference[oaicite:18]{index=18}
-- vector tiles (MBTiles / pbf) for performance when appropriate:contentReference[oaicite:19]{index=19}
+- **MapLibre GL JS** (WebGL, fast vector rendering, good for timeline animation)
+- **Leaflet** (lightweight, huge plugin ecosystem; pairs well with raster tiles and GeoJSON)
 
-### Map server integration (GeoServer/WMS/WFS)
-KFM notes recommend using a map server (e.g., GeoServer backed by PostGIS) to publish layers as **WMS/WFS**, keeping heavy GIS serving outside the core app logic.:contentReference[oaicite:20]{index=20}
+**Typical layer inputs:**
+- 🧩 **GeoJSON** vectors (inspectable features, overlays)
+- 🧊 raster tiles or **WMS/WMTS** imagery overlays
+- 🧱 vector tiles (PBF/MBTiles) for large-scale performance
 
-### CRS sanity
-Docs emphasize a consistent pipeline:
-- **WGS84** for universal storage
-- **Web Mercator** for web maps
-- transforms handled at system boundaries:contentReference[oaicite:21]{index=21}
+> [!IMPORTANT]
+> Treat all external GeoJSON / vector tiles / 3D assets as **untrusted input**. Validate and sanitize where appropriate.
+
+### 🛰️ Map services (WMS/WFS + geo-optimized APIs)
+The UI commonly consumes:
+- a **geo-optimized API** (contracted JSON/time-series endpoints), and/or
+- **WMS/WFS** endpoints for map imagery and feature queries.
+
+> [!NOTE]
+> A WMS may offer multiple CRS options — clients can only request projections the service provides.
+
+### 🧭 CRS sanity (don’t let projections lie)
+Baseline expectations:
+
+- 🌍 **GeoJSON default CRS:** WGS84 **EPSG:4326** (lat/lon) is the common default when CRS isn’t explicitly included.
+- 🗺️ **Web maps often use “pseudo‑Mercator”** (commonly EPSG:3857) for tile rendering.
+- 🔁 If datasets arrive in mixed CRSs (WGS84 vs UTM, etc.), handle transforms at clear system boundaries and show the user metadata when it matters.
 
 ---
 
-## 🕒 Time slider & time-sliced layers
+## 🕒 Timeline & time-sliced layers
 
-Many layers are explicitly time-indexed (NDVI, rainfall, soil moisture, etc.). The UI pattern is:
+A standard pattern for time-indexed layers (NDVI, rainfall, soil moisture, simulation outputs):
 
-1) user chooses a date (slider)  
-2) frontend requests a date-specific tile/layer OR calls an endpoint  
-3) the map layer updates for the selected date:contentReference[oaicite:22]{index=22}
+1) user chooses a date/time (slider / stepper)  
+2) UI requests a date-specific tile/layer or calls a time-parameterized endpoint  
+3) map layer updates for the selected time  
+4) charts/tables refresh to match selection + time
 
-Additionally, the slider is described as a **custom component** with tick marks + discrete steps, connected to global state so it can fan out updates to map and charts.:contentReference[oaicite:23]{index=23}
+> [!TIP]
+> Keep time steps **discrete and explicit** when the underlying data is discrete (e.g., monthly composites). Users trust “snap points” more than fuzzy time.
 
 ---
 
 ## 📈 Charts & dashboards (linked to spatial selections)
 
-KFM recommends:
-- **Plotly.js** for interactive charts (hover, zoom, rich plot types), via React wrapper (`react-plotly`):contentReference[oaicite:24]{index=24}
-- optionally Chart.js (simple) or D3 (custom):contentReference[oaicite:25]{index=25}
+KFM-style charting emphasizes:
+- **interactive exploration** (hover tooltips, zoom, brushing)
+- **linked state** (map selection updates charts)
+- **safe defaults** (show summary first, then allow drill-down)
 
-Key UX pattern:
-- selecting a feature (e.g., a field boundary) triggers a request for time-series data (NDVI over time, etc.)
-- chart updates to reflect the selected spatial entity:contentReference[oaicite:26]{index=26}
+Typical libraries:
+- **D3.js** (custom, powerful)
+- **Plotly** (quick interactive charts, rich plot types)
+
+Common pattern:
+- select a feature (field boundary, region, point)
+- request a time-series or distribution
+- chart updates to reflect that spatial entity
 
 ---
 
-## 🌍 3D mode (CesiumJS) — optional but designed-in
+## 🌍 3D mode (optional but designed-in)
 
-KFM supports a **2D Map ↔ 3D Globe** toggle:
-- 2D for lighter tasks
-- CesiumJS for 3D terrain + earth overlays:contentReference[oaicite:27]{index=27}
+A common KFM flow is **2D Map ↔ 3D viewer**:
 
-Cesium integration notes include:
-- imagery overlays via URL templates or WMS
-- vectors via GeoJSON (draped/clamped) or CZML for time-dynamic content:contentReference[oaicite:28]{index=28}
+- 2D for fast navigation + clarity
+- 3D for terrain, time animation, and “shape understanding”
 
-The historical mapping hub design also notes:
-- Cesium considered for future expansion (terrain + 3D Tiles/CZML)
-- Google Earth KML supported as a lightweight 3D option in some contexts:contentReference[oaicite:29]{index=29}
+3D can be implemented with:
+- **Cesium** (globe/terrain, geospatial 3D)
+- **Three.js** (general 3D; custom scenes/shaders)
+
+> [!IMPORTANT]
+> 3D must **degrade gracefully**:
+> - if WebGL isn’t supported or is too slow → fall back to 2D or a pre-rendered animation
+> - avoid hard failures that block core workflows
 
 ---
 
 ## ⚡ Performance guidelines (don’t let maps melt laptops)
 
-KFM’s frontend guidance calls out:
-- **code splitting** and dynamic imports for heavy modules (e.g., 3D globe libraries):contentReference[oaicite:30]{index=30}
-- React memoization / avoiding unnecessary re-renders for heavy components like maps:contentReference[oaicite:31]{index=31}
+The UI must stay responsive even with:
+- thousands of features
+- long time-series
+- live-updating simulations
 
 **Practical do’s ✅**
-- memoize expensive derived state (selectors)
-- keep map rendering “controlled” (only update the layers that changed)
-- prefer vector tiles for large/complex vectors when possible:contentReference[oaicite:32]{index=32}
+- 🧊 **Level of detail (LOD)** + **progressive loading** (only load what’s needed for view/time window)
+- ♻️ **Client caching** of results where safe and correct
+- 🧵 Offload heavy computations to **Web Workers** (never block the main UI thread)
+- ✂️ **Code splitting** for heavy modules (3D, advanced analytics panels)
+- 🧠 Memoize expensive derived state (selectors) and avoid re-render cascades
+- 🧱 Prefer vector tiles for very large vector layers
+
+**Practical don’ts ❌**
+- render 50k DOM nodes without virtualization
+- refetch the same layer repeatedly on small UI changes
+- attach expensive work to mousemove without throttling
+
+> [!TIP]
+> If you introduce a feature that can spike CPU/GPU, add a “safe mode” toggle (reduce detail / pause animation / lower sample rate).
 
 ---
 
 ## ♿ Accessibility & UX guardrails
 
-The UI should be usable beyond “power GIS users.” Key requirements include:
-- semantic HTML controls (`<button>`, `<label>`, etc.)
-- ARIA where needed
-- color choices that remain meaningful for colorblind users
-- alternative summary views (tables/summaries) for map-driven insights:contentReference[oaicite:33]{index=33}
+KFM UI should be usable beyond “power GIS users.”
+
+**Requirements**
+- semantic HTML (`<button>`, `<label>`, landmarks like `<header>`, `<main>`, etc.)
+- keyboard navigability (focus outlines, skip links where relevant)
+- ARIA only when needed (don’t ARIA-fy everything)
+- responsive layout (Flexbox/Grid + breakpoints)
+- reduce-motion friendly (respect OS settings; don’t force animation)
+
+> [!NOTE]
+> A “progressive enhancement” mindset helps accessibility: start with meaningful markup and enhance as capabilities allow.
 
 ---
 
-## 🧹 Code quality: types, lint, formatting
+## 🔐 Security & data governance (UI side)
 
-KFM encourages:
-- TypeScript where possible:contentReference[oaicite:34]{index=34}
-- ESLint + Prettier for consistent style and quality gates:contentReference[oaicite:35]{index=35}
+Even though governance is enforced at the API boundary, the UI must still behave safely:
 
----
+- 🔒 Don’t store secrets in source, localStorage, or logs
+- 🧼 Never render untrusted strings as HTML
+- 🧷 Display classification/sensitivity indicators when provided
+- 📤 Only allow exports the API explicitly authorizes
+- 🧾 Prefer showing evidence/provenance links over opaque claims
+- 🧯 Treat browser logs as sensitive (avoid dumping payloads)
 
-## 🧩 Adding a new map layer (recommended workflow)
-
-> This is the “golden path” for new overlays so they integrate with legend, timeline, and feature inspection.
-
-1. **Confirm how the layer will be served**
-   - WMS/WFS via GeoServer/PostGIS:contentReference[oaicite:36]{index=36}
-   - vector tiles (pbf/MBTiles) if performance requires it:contentReference[oaicite:37]{index=37}
-   - GeoJSON for small/interactive overlays:contentReference[oaicite:38]{index=38}
-
-2. **Register it in `features/map/`**
-   - add a layer definition (id, label, type, source URL template)
-   - add legend metadata (colors, ranges, attribution)
-
-3. **If the layer is time-indexed**
-   - connect it to `TimelineSlider` state (`currentDate`) so URL/endpoints can reflect date selection:contentReference[oaicite:39]{index=39}
-
-4. **If it supports “click → details”**
-   - implement feature selection + popup binding (MapView)
-   - optionally add a linked chart in ChartPanel (field id → time-series endpoint):contentReference[oaicite:40]{index=40}
+> [!IMPORTANT]
+> If you discover a security issue, **do not** report it in public issues/PR comments. Follow the repo’s security policy.
 
 ---
 
-## 🧭 Routing & deep links
+## 🧪 Testing & quality gates
 
-KFM uses client-side routing (e.g., React Router) for separate views like `/map`, `/analysis`, `/about`, and supports deep linking to specific states (zoom/time/selection).:contentReference[oaicite:41]{index=41}
+A pragmatic UI test strategy:
+
+- ✅ **Unit tests**: reducers/selectors, utilities, component behavior
+- 🧩 **Integration tests**: map interactions + service mocking, time slider fan-out
+- 🧪 **Contract tests**: API client matches OpenAPI (typed schemas, runtime validation where used)
+- 🧭 **E2E**: critical user flows (load map → select feature → chart updates → export)
+
+Quality gates:
+- ESLint + formatting
+- TypeScript checks (if using TS)
+- build succeeds without warnings
+- basic accessibility checks (labels, contrast where tested)
+
+---
+
+## ➕ Adding or changing a feature (checklist)
+
+Follow this order to avoid UI drift and broken governance:
+
+1) 📜 **Confirm the API contract** (or request the API endpoint)
+   - payload shape, filters, time parameters
+   - auth requirements and classification behavior
+
+2) 🧠 **Add state model**
+   - define slice/context state + actions
+   - selectors for derived data
+
+3) 🗺️ **Implement the view**
+   - MapView layer/interaction OR dashboard panel
+   - consistent loading/error/empty states
+
+4) 🔌 **Wire the service call**
+   - typed request/response
+   - caching strategy (if safe)
+
+5) 🧪 **Add tests**
+   - unit + integration (at minimum)
+   - E2E if it’s a core workflow
+
+6) 📣 **Add UX polish**
+   - tooltips, legends, help text
+   - “what changed” hints for time slider changes
+
+### ✅ Quick self-check (before you PR)
+- [ ] No direct access to DB/graph/tile secrets from the UI
+- [ ] New UI state updates are predictable and testable
+- [ ] Timeline changes update map + charts consistently
+- [ ] Large layers use LOD/progressive loading where needed
+- [ ] A11y basics: semantic controls, keyboard, sensible focus
+- [ ] 3D/animation features degrade gracefully
 
 ---
 
 ## 📚 Sources
 
-These project files were used to define the conventions and expectations in this `web/src/README.md`:
+These project files shaped the expectations and conventions in this `web/src/README.md`:
 
-- KFM master documentation: :contentReference[oaicite:42]{index=42}  
-  - Frontend architecture & core components:contentReference[oaicite:43]{index=43}  
-  - Performance + a11y considerations:contentReference[oaicite:44]{index=44}  
-  - React folder structure + TypeScript + lint/formatting:contentReference[oaicite:45]{index=45}  
-  - Time slider + linked map/charts patterns:contentReference[oaicite:46]{index=46}  
-  - Mapping/3D libs (Leaflet/MapboxGL/Cesium) + Plotly notes:contentReference[oaicite:47]{index=47}
+<details>
+<summary><strong>🛰️ KFM system + UI interaction patterns</strong></summary>
 
-- Open-source mapping hub design notes: :contentReference[oaicite:48]{index=48}  
-  - MapLibre/Leaflet + timeline slider + Cesium/KML direction:contentReference[oaicite:49]{index=49}
+- **Kansas Frontier Matrix (KFM) – Master Technical Specification**  
+  - Interactive mapping (pan/zoom, layer toggles, click-to-inspect)  
+  - Time slider animation patterns  
+  - WebGL/3D visualization and graceful degradation  
+  - Performance strategies (LOD, progressive loading, caching, Web Workers)  
+  - Responsive design + component-based UI architecture
 
-- Repo layout / markdown governance guide: :contentReference[oaicite:50]{index=50}  
-  - `web/` described as the UI app area (React, MapLibre, etc.):contentReference[oaicite:51]{index=51}
+</details>
+
+<details>
+<summary><strong>🗺️ Mapping hub design direction</strong></summary>
+
+- **Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design**  
+  - MapLibre/Leaflet + timeline concept  
+  - 2D ↔ 3D (terrain/globe) direction and KML/KMZ export ideas  
+  - Popups/side-panels for contextual narrative and AI-highlighted sites
+
+</details>
+
+<details>
+<summary><strong>🌐 Web UI engineering practices</strong></summary>
+
+- **Responsive Web Design with HTML5 and CSS3** (progressive enhancement, semantic markup, support matrix thinking)  
+- **WebGL Programming Guide (Interactive 3D Graphics)**  
+- **Computer Graphics using JAVA 2D & 3D** (graphics fundamentals that inform rendering intuition)
+
+</details>
+
+<details>
+<summary><strong>🧭 GIS & projection sanity</strong></summary>
+
+- **Python Geospatial Analysis Cookbook** (GeoJSON CRS assumptions, EPSG:4326 baseline, EPSG:3857/pseudo-Mercator transforms, WMS CRS options)  
+- **Geoprocessing with Python** (pipeline-oriented spatial processing patterns)  
+- **Making Maps** (visual communication and map design instincts)
+
+</details>
 
 ---
-
-## 📌 Quick “where do I start?” (for new contributors)
-
-- Want to change the map? ➜ `features/map/`
-- Want to change the time slider? ➜ `features/timeline/`
-- Want to add/change charts? ➜ `components/` (shared wrappers) + `features/dashboard/`
-- Want to change API calls? ➜ `services/`
-- Want to change global state? ➜ `store/`
-- Want to adjust layout/styling? ➜ `styles/`
 
 Happy mapping 🧭🗺️
