@@ -77,12 +77,12 @@ KFM is intentionally modular (domain logic separated from infrastructure details
 
 ```mermaid
 flowchart LR
-  PR[🔀 Pull Request] --> CI[🧪 ci.yml<br/>fast checks]
-  CI --> INT[🧬 integration.yml<br/>DB + adapters]
-  CI --> SEC[🔐 codeql.yml / security.yml<br/>scans]
-  CI --> DOCS[📚 docs checks (optional)]
-  INT --> IMG[🐳 docker.yml<br/>build/publish (optional)]
-  IMG --> DEPLOY[🚀 deploy/pages/release<br/>promotion (optional)]
+  PR["🔀 Pull Request"] --> CI["🧪 ci.yml<br>fast checks"];
+  CI --> INT["🧬 integration.yml<br>DB + adapters"];
+  CI --> SEC["🔐 codeql.yml / security.yml<br>scans"];
+  CI --> DOCS["📚 docs checks (optional)"];
+  INT --> IMG["🐳 docker.yml<br>build/publish (optional)"];
+  IMG --> DEPLOY["🚀 deploy/pages/release<br>promotion (optional)"];
 ```
 
 > 🛣️ Multiple “lanes” keeps PR checks fast while still allowing heavyweight geospatial validation on schedules or manual dispatch.
