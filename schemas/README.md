@@ -26,12 +26,12 @@ This enforces the catalog stage as a formal gatekeeper: **malformed metadata doe
 
 ```mermaid
 flowchart LR
-  ETL[🔧 ETL / Processing] --> O[📦 Deterministic Outputs]
-  O --> C[📚 Catalog Stage<br/>(STAC/DCAT/PROV)]
-  C -->|✅ Schema Validation Gate| G[🧠 Graph Ingest]
-  G --> A[🔌 API Contracts]
-  A --> U[🖥️ UI + Story/Focus Experiences]
-  C --> T[📡 Telemetry / Audit Events]
+  ETL["ETL / Processing"] --> O["Deterministic Outputs"]
+  O --> C["Catalog Stage (STAC / DCAT / PROV)"]
+  C -->|Schema Validation Gate| G["Graph Ingest"]
+  G --> A["API Contracts"]
+  A --> U["UI + Story + Focus Experiences"]
+  C --> T["Telemetry / Audit Events"]
 ```
 
 Schemas enforce the contract boundary at **every** handoff:
