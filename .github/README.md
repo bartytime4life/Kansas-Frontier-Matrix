@@ -36,12 +36,12 @@ Kansas-Frontier-Matrix is an **open-source geospatial + historical mapping hub**
 
 ```mermaid
 flowchart LR
-  A[📦 Data Sources<br/>maps • GIS • docs] --> B[🧰 Ingestion & Processing<br/>georef • convert • parse/OCR]
-  B --> C[🗃️ Data Catalog<br/>STAC-like metadata]
-  B --> D[📚 Document KB<br/>places • dates • excerpts]
-  C --> E[🧠 AI/Analysis Layer<br/>cross-reference & pattern finding]
-  D --> E
-  E --> F[🌐 Web UI<br/>Map + Timeline + Insights]
+  A["📦 Data Sources<br/>maps • GIS • docs"] --> B["🧰 Ingestion & Processing<br/>georef • convert • parse/OCR"];
+  B --> C["🗃️ Data Catalog<br/>STAC-like metadata"];
+  B --> D["📚 Document KB<br/>places • dates • excerpts"];
+  C --> E["🧠 AI/Analysis Layer<br/>cross-reference & pattern finding"];
+  D --> E;
+  E --> F["🌐 Web UI<br/>Map + Timeline + Insights"];
 ```
 
 ---
