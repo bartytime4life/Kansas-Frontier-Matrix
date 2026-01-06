@@ -4,122 +4,164 @@
 ![Docs-first](https://img.shields.io/badge/docs-documentation--first-blue)
 ![Reproducible](https://img.shields.io/badge/reproducible-audit--ready-success)
 ![Evidence](https://img.shields.io/badge/evidence-traceable-informational)
+![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE%20%2B%20Sovereignty-2ea043)
 ![KFM](https://img.shields.io/badge/KFM-Kansas%20Frontier%20Matrix-orange)
 
-> **TL;DR:** `mcp/` is the project’s **lab notebook + playbook** 📓🧠  
+> **TL;DR:** `mcp/` is KFM’s **lab notebook + playbook** 📓🧠  
 > It holds experiment reports, run receipts, SOPs, notebooks, and model cards—so every result can be **re-run, reviewed, and trusted** ✅
 
 > [!IMPORTANT]
-> In this repo, **MCP = Master Coder Protocol** (not “Model Context Protocol”).  
+> In this repo, **MCP = Master Coder Protocol** (✅ correct)  
+> **MCP ≠ Model Context Protocol** (🚫 not what we mean here)  
 > Keep this distinction consistent in docs, PRs, and issues.
 
 ---
 
-## 🧭 Quick Start (do this when you run anything “real”)
-
-**Create an experiment report** 🧪  
-- Add: `mcp/experiments/EXP-YYYY-MM-DD-<slug>.md`
-
-**Create a run receipt** 🏃  
-- Add: `mcp/runs/RUN-YYYY-MM-DD-<slug>/` with config, env snapshot, logs, metrics, and a `MANIFEST.md`
-
-**Store evidence outputs elsewhere** 📦  
-- Put artifacts in: `data/processed/...` (not in `mcp/`)
-- Catalog + provenance: **STAC/DCAT/PROV** 🧾🧬
-
-> **Bar:** “If I can’t reproduce it in 30 minutes, it’s not done.” ⏱️
+## ⚡ Quick Nav
+- [🚦 Non‑negotiables](#-non-negotiables)
+- [🏁 Quick Start](#-quick-start)
+- [🗂️ Directory layout](#️-directory-layout)
+- [🔁 The MCP workflow loop](#-the-mcp-workflow-loop)
+- [📦 Required artifacts](#-required-artifacts)
+- [🧪 Experiment reports](#-experiment-reports)
+- [🏃 Run receipts](#-run-receipts)
+- [🧰 SOPs](#-sops)
+- [🧠 Model cards](#-model-cards)
+- [📓 Notebooks](#-notebooks)
+- [🔗 MCP ↔ KFM evidence pipeline](#-mcp--kfm-evidence-pipeline)
+- [🧩 Domain checklists](#-domain-checklists)
+- [🔐 Safety & hygiene](#-safety--hygiene)
+- [🤝 PR / review checklist](#-pr--review-checklist)
+- [🕰️ Version history](#️-version-history)
 
 ---
 
-## 🎯 Why this folder exists
+## 🚦 Non‑negotiables
 
-Kansas Frontier Matrix (KFM) is built to be:
+These rules keep KFM **scientific**, **auditable**, and **governed**:
 
-- **Evidence-first** 🧾
-- **Reproducible** 🔁
-- **Audit-ready** ✅
-- **Human-reviewable** 👀
+1. **Evidence lives in `data/` — not in `mcp/`.** 📦  
+   - `mcp/` = methods, decisions, receipts  
+   - `data/processed/...` = outputs (and they must be cataloged)
 
-`mcp/` keeps the “how we did it” artifacts in one place:
+2. **No “magic results.”** 🪄🚫  
+   If you can’t reproduce it using:
+   - a commit hash
+   - an environment snapshot
+   - a config
+   - and linked inputs/outputs  
+   …then it’s not “done.”
 
-- 🧪 **Experiments:** what we tried + why + what happened  
-- 🏃 **Runs:** concrete run metadata/artifacts (configs, seeds, logs, metrics)  
-- 🧰 **SOPs:** repeatable procedures for recurring tasks  
-- 🧠 **Model Cards:** responsible documentation for ML models  
-- 📓 **Notebooks:** exploratory work that should be readable & reproducible  
-- 🧩 **Templates:** optional local templates (if not using `docs/templates/`)
+3. **Immutable receipts.** 🧾  
+   Don’t edit a run receipt to “fix history.”  
+   Make a new run folder if anything changes.
 
-If you’re new, start here:
-- `../docs/MASTER_GUIDE_v13.md` 📌 *(canonical pipeline & repo structure)*
-- `../CONTRIBUTING.md` 🤝 *(how to contribute safely & consistently)*
+4. **Label AI involvement.** 🤖  
+   Any AI-assisted outputs must be labeled and provenance-linked.
+
+5. **KFM pipeline order is sacred.** 🧱  
+   **ETL → Catalogs (STAC/DCAT/PROV) → Graph → APIs → UI → Story Nodes → Focus Mode**
+
+> [!TIP]
+> Motto: **“If I can’t reproduce it in 30 minutes, it’s not complete.”** ⏱️✅
+
+---
+
+## 🏁 Quick Start
+
+### 1) Create an experiment report 🧪
+Add:
+- `mcp/experiments/EXP-YYYY-MM-DD-<slug>.md`
+
+### 2) Create a run receipt 🏃
+Add:
+- `mcp/runs/RUN-YYYY-MM-DD-<slug>/`
+  - with config, env snapshot, logs, metrics, and a `MANIFEST.md`
+
+### 3) Store evidence outputs in the governed data layer 📦
+Put artifacts in:
+- `data/processed/...` ✅  
+Then catalog them:
+- **STAC/DCAT/PROV** 🧾🧬
+
+> [!IMPORTANT]
+> `mcp/` should stay **lightweight** and human-readable.  
+> Large artifacts go to `data/processed/` (or object storage) and get catalog records.
 
 ---
 
 ## 🗂️ Directory layout
 
 ```text
-mcp/
-├── README.md                 # you are here 👋
-├── experiments/              # human-readable experiment reports 🧾
-├── runs/                     # run artifacts + metadata (configs, logs, metrics) 🏃
-├── sops/                     # Standard Operating Procedures (SOPs) 🧰
-├── model_cards/              # model cards for any ML/AI used or trained 🧠
-├── notebooks/                # exploratory notebooks (kept tidy & reproducible) 📓
-└── templates/                # optional: local templates 🧩
+📁 mcp/
+├── 📄 README.md                 # you are here 👋
+├── 📁 experiments/              # human-readable experiment reports 🧪🧾
+├── 📁 runs/                     # run receipts (configs, env, logs, metrics) 🏃🧾
+├── 📁 sops/                     # Standard Operating Procedures (repeatable tasks) 🧰
+├── 📁 model_cards/              # model cards for any ML/AI used or trained 🧠
+├── 📁 notebooks/                # tidy, reproducible notebooks 📓
+└── 📁 templates/                # optional: local templates 🧩 (or use docs/templates/)
 ```
 
-> [!NOTE]
-> **Rule of thumb:** `mcp/` documents *methods & decisions*.  
-> **Data products** (including AI/analysis outputs) belong in `data/processed/...` and must be cataloged (STAC/DCAT/PROV).
+### 🧭 Where to look next
+- 📘 Repo principles + structure: `../README.md`
+- 🧱 Source architecture: `../src/README.md`
+- 📦 Data governance & metadata: `../data/README.md`
+- 🧩 Contribution workflow: `../.github/README.md` *(if present)*
 
 ---
 
 ## 🔁 The MCP workflow loop
 
-When you do *anything* that affects evidence (data, analysis outputs, models), follow this loop:
+KFM work is **question → protocol → run → evidence → report → review**:
 
-1. **Ask a question** ❓ *(What are we trying to learn or improve?)*  
-2. **Write the protocol** 🧾 *(What exactly will we do? Variables? Controls?)*  
-3. **Run it** 🏃 *(Capture configs, versions, seeds, environment)*  
-4. **Publish evidence artifacts** 📦 *(store outputs as datasets + catalogs + provenance)*  
-5. **Write the report** 🧪 *(interpret results; record limitations & next steps)*  
-6. **Review** ✅ *(someone else can reproduce it from your documentation)*
+```mermaid
+flowchart LR
+  Q["❓ Question"] --> P["🧾 Protocol (EXP)"]
+  P --> R["🏃 Run (RUN receipt)"]
+  R --> E["📦 Evidence (data/processed + catalogs)"]
+  E --> S["🧪 Summary report (interpretation + limits)"]
+  S --> V["👀 Review (repro check)"]
+  V --> Q
+```
 
 ---
 
-## ✅ Minimum required artifacts (for any “real” experiment)
+## 📦 Required artifacts
 
-When an experiment goes beyond a quick local poke, it must include:
+### ✅ “Real work” minimum bar
+If an experiment influences decisions, pipelines, or published results, it must include:
 
-- 🧾 **Experiment Report** in `mcp/experiments/…`
-- 🏃 **Run Record** in `mcp/runs/…` *(or a link to an external run folder)*
-- 🔗 **Code pointer:** commit hash + main entrypoint script/notebook
-- 🧱 **Environment pointer:** Docker image tag/digest OR `requirements*.txt` / `environment.yml`
-- 🎲 **Randomness controls:** seeds + deterministic flags (when applicable)
-- 📦 **Evidence outputs:** stored under `data/processed/...` *(not inside `mcp/`)*
-- 🧬 **Provenance links:** STAC/DCAT/PROV IDs/paths for inputs + outputs
+- 🧪 **Experiment report** → `mcp/experiments/...`
+- 🏃 **Run receipt** → `mcp/runs/...`
+- 🔗 **Code pointer** → commit hash + entrypoint
+- 🧱 **Environment snapshot** → Docker image digest **or** lockfile/requirements
+- 🎲 **Seeds / determinism flags** (where applicable)
+- 📦 **Outputs stored as evidence** → `data/processed/...`
+- 🧬 **Provenance links** → STAC/DCAT/PROV IDs (inputs + outputs)
 
 > [!WARNING]
 > Avoid committing large binaries to `mcp/`.  
-> Keep `mcp/` lightweight and human-readable. Evidence belongs in governed data storage.
+> If it’s an “output,” it probably belongs in `data/processed/` with catalogs + lineage.
 
 ---
 
 ## 🧪 Experiment reports
 
 ### 📛 Naming convention
-Pick one and be consistent:
+Use one pattern consistently:
 
 - `EXP-YYYY-MM-DD-<short-slug>.md`  
   Example: `EXP-2026-01-02-ocr-ner-baseline.md`
-- or numeric: `EXP-001-<short-slug>.md`
 
-### 🏷️ Status definitions (recommended)
-- `draft` 📝: in progress; may be missing evidence links
-- `complete` ✅: reproducible; evidence + run receipts linked
-- `superseded` 🧯: replaced by a newer experiment
+*(Optional alternative: `EXP-001-<slug>.md` — only if you maintain an index.)*
 
-### 🧾 Experiment report template (copy/paste)
+### 🏷️ Status values
+- `draft` 📝 — in progress
+- `complete` ✅ — reproducible; linked receipts + evidence
+- `superseded` 🧯 — replaced by a newer experiment
+
+### 🧾 Experiment template (copy/paste)
 
 ```md
 ---
@@ -130,7 +172,7 @@ owner: "@github-handle"
 status: draft | complete | superseded
 supersedes: []          # optional: [EXP-...]
 superseded_by: []       # optional: [EXP-...]
-tags: [gis, ocr, nlp, stac, dcat, prov, web, graph]
+tags: [gis, ocr, nlp, stac, dcat, prov, web, graph, sim, stats]
 ---
 
 # Objective / Question ❓
@@ -142,62 +184,68 @@ tags: [gis, ocr, nlp, stac, dcat, prov, web, graph]
 # Hypothesis ✅/❌
 - What do we expect and why?
 
-# Data Used 🗃️
-- Inputs (STAC/DCAT references, dataset IDs, checksums if available).
-- Any sampling/filter criteria.
+# Inputs (Evidence In) 🗃️
+- Dataset IDs + STAC/DCAT references (paths/IDs).
+- Sampling rules, inclusion/exclusion, time range, bbox.
 
 # Method / Protocol 🧾
 - Step-by-step procedure.
-- Parameters and configs.
-- Tools + versions (including OS/GPU if relevant).
+- Parameters and configs (link to run receipt config).
+- Tools + versions (OS/GPU/driver notes if relevant).
 
-# Run Record 🏃
+# Run Receipt 🏃
 - Code commit: `abcdef1`
-- Entrypoint: `src/pipelines/...` or notebook path
+- Entrypoint: `src/...` or notebook path
 - Run folder: `mcp/runs/RUN-YYYY-MM-DD-.../`
 - Seeds: `...`
 - Duration: `...`
 
+# Outputs (Evidence Out) 📦
+- Where outputs live (paths under `data/processed/...`)
+- Catalog pointers:
+  - STAC item(s): `...`
+  - DCAT dataset: `...`
+  - PROV bundle: `...`
+
 # Results 📈
-- Metrics, charts, qualitative examples.
-- Link to produced evidence artifacts under `data/processed/...`
+- Metrics, charts, qualitative examples (keep small).
+- Add 1–3 “sanity check” examples.
 
 # Uncertainty & Validation 🔍
 - What could be wrong?
-- Sanity checks, cross-validation, spot-check counts, error bounds, etc.
+- Checks performed (spot checks, CV, error bounds, leakage checks).
 
 # Interpretation 🧠
-- What do the results mean for KFM?
+- What do results mean for KFM decisions?
 
 # Decision / Next Steps 🧭
-- What do we do next?
-- What should be repeated, scaled, or abandoned?
+- Adopt / iterate / abandon (and why).
 
 # Reproducibility Checklist ✅
-- [ ] All parameters & configs documented
+- [ ] Parameters & configs documented
 - [ ] Code committed + hash recorded
 - [ ] Environment captured (Docker/lockfile)
 - [ ] Seeds recorded (if applicable)
 - [ ] Inputs/outputs linked via STAC/DCAT/PROV
-- [ ] Another person can re-run it using this doc
+- [ ] Another person can re-run using this doc
 ```
 
 ---
 
-## 🏃 Runs
+## 🏃 Run receipts
 
-Runs are the **receipt** for an experiment: configs, logs, and machine outputs needed to reproduce.
+Runs are the **receipt** for an experiment: what you ran, how you ran it, and where outputs went.
 
 ### 📛 Naming convention
-`RUN-YYYY-MM-DD-<slug>/`
+- `RUN-YYYY-MM-DD-<slug>/`
 
 ### 📦 Suggested run folder contents
-- `config/` 🧾 *(YAML/JSON config used for the run)*
-- `env/` 🧱 *(pip freeze / conda export / docker image digest)*
-- `logs/` 🪵 *(structured logs)*
-- `metrics/` 📈 *(CSV/JSON metrics, eval outputs)*
-- `artifacts/` 🧩 *(small artifacts like thumbnails, sample outputs)*
-- `MANIFEST.md` 🧾 *(human-readable summary + links to evidence in `data/processed/...`)*
+- `config/` 🧾 — YAML/JSON config used for the run
+- `env/` 🧱 — `pip freeze`, `conda env export`, Docker digest, OS info
+- `logs/` 🪵 — structured logs (redacted if needed)
+- `metrics/` 📈 — CSV/JSON metrics, evaluations
+- `artifacts/` 🧩 — *small* artifacts (thumbnails, sample outputs)
+- `MANIFEST.md` 🧾 — summary + reproduction instructions + links to evidence outputs
 
 ### 🧾 Minimal `MANIFEST.md` template (copy/paste)
 
@@ -207,47 +255,57 @@ run_id: RUN-YYYY-MM-DD-<slug>
 related_experiment: EXP-YYYY-MM-DD-<slug>
 date: YYYY-MM-DD
 owner: "@github-handle"
-code_commit: abcdef1
-entrypoint: "src/pipelines/..."
+
+code:
+  commit: abcdef1
+  entrypoint: "src/pipelines/..."
+  args: ["--config", "config/run.yml"]
+
 environment:
   docker_image: "ghcr.io/org/project:tag@sha256:..."
   # or:
-  requirements: "requirements.txt"
+  requirements: "env/requirements.lock.txt"
+
 randomness:
   seeds: [123, 456]
   deterministic_flags: ["torch.use_deterministic_algorithms=True"]
+
 inputs:
-  - stac: "..."
-  - dcat: "..."
+  - stac: "data/stac/items/..."
+  - dcat: "data/catalog/dcat/..."
+  - prov: "data/prov/..."
+
 outputs:
-  - path: "data/processed/<dataset-id>/..."
-    stac_item: "..."
-    prov: "..."
+  - path: "data/processed/<domain>/<dataset>/..."
+    stac_item: "data/stac/items/..."
+    prov: "data/prov/<run-id>.jsonld"
+
 notes: ""
 ---
 
 # Summary 🧾
 - What did this run do?
 
-# Where to find outputs 📦
-- `data/processed/...` links + catalog IDs
+# Evidence outputs 📦
+- Where outputs are stored (`data/processed/...`) + catalog IDs
 
 # How to reproduce 🔁
 1. Checkout commit: `abcdef1`
-2. Restore env: ...
+2. Restore environment: ...
 3. Run: ...
 4. Validate: ...
 ```
 
 > [!TIP]
-> Treat run folders as immutable receipts. If you change parameters, make a new run folder.
+> Treat run folders as **immutable receipts**.  
+> New parameters → new run folder ✅
 
 ---
 
 ## 🧰 SOPs
 
-SOPs turn “tribal knowledge” into a reproducible procedure.  
-Write an SOP whenever a task is repeated or has meaningful risk (data integrity, georeferencing, catalog publishing, etc.).
+SOPs turn “tribal knowledge” into a repeatable, reviewable procedure.  
+Write an SOP whenever a task is repeated or risky (georeferencing, publishing catalogs, redaction, etc.).
 
 ### SOP template (copy/paste)
 
@@ -266,10 +324,10 @@ What this SOP accomplishes and when to use it.
 What’s included / excluded.
 
 # Prerequisites 🧱
-Accounts, tools, data access, permissions.
+Accounts, tools, access, permissions.
 
 # Tools & Versions 🧰
-List software + versions.
+Software + versions.
 
 # Procedure 🧭
 1. Step...
@@ -277,32 +335,32 @@ List software + versions.
 3. Step...
 
 # Verification ✅
-How to confirm it worked (checks, expected outputs).
+How to confirm it worked (checks + expected outputs).
 
 # Troubleshooting 🧯
 Common failure modes + fixes.
 
 # Audit Trail 🧾
-- Links to example PRs, experiment reports, or run folders that used this SOP.
+Example PRs / runs / experiments that used this SOP.
 ```
 
-**High-value SOPs for KFM (starter set):**
+### ⭐ High-value SOPs to add (starter set)
 - `sops/georeference_map.md` 🗺️
-- `sops/build_cog_tiles.md` 🧱
+- `sops/build_cog_tiles.md` 🧊
 - `sops/ocr_pipeline.md` 🔎
-- `sops/publish_stac_dcat_prov.md` 🌐
+- `sops/publish_stac_dcat_prov.md` 🧾🧬
 - `sops/train_or_update_model.md` 🧠
 
 ---
 
-## 🧠 Model Cards
+## 🧠 Model cards
 
-Any ML/AI model used in the pipeline (trained or adopted) needs a model card:
+Any ML/AI model used in KFM (trained or adopted) needs a model card:
 - what it is
-- what it was trained on (or sourced from)
+- what it was trained on / sourced from
 - what it should be used for ✅
-- what it should **not** be used for 🚫
-- known limitations, bias risks, and failure modes ⚠️
+- what it must **not** be used for 🚫
+- known limitations, bias risks, failure modes ⚠️
 
 ### Model card template (copy/paste)
 
@@ -321,19 +379,19 @@ source:
 - What problem does it solve?
 
 # Intended use ✅
-- Supported use-cases
+- Supported use-cases.
 
 # Out-of-scope / prohibited use 🚫
-- What it must not be used for
+- What it must not be used for.
 
 # Training data 🗃️
-- Datasets used (STAC/DCAT references), sampling, labeling notes
+- Datasets used (STAC/DCAT refs), sampling, labeling notes.
 
 # Evaluation 📈
-- Metrics, test sets, qualitative examples
+- Metrics, test sets, qualitative examples.
 
 # Limitations & biases ⚠️
-- Known failure modes, bias risks, uncertainty notes
+- Known failure modes, bias risks, uncertainty notes.
 
 # Reproducibility 🧪
 - Training code commit hash
@@ -349,29 +407,42 @@ source:
 Notebooks are welcome—**but must be readable and reproducible**:
 
 - Start with a markdown cell: **purpose + inputs + outputs**
-- Keep output cells small *(no giant embedded blobs)*
-- Prefer parameterized notebooks (or export to scripts) when a notebook becomes “real”
-- If a notebook produces evidence artifacts: store outputs in `data/processed/...` and link them from an experiment report 🧾
+- Keep outputs small *(no huge embedded blobs)*
+- Prefer parameterized notebooks or export to scripts when it becomes “real”
+- If a notebook produces evidence artifacts:
+  - store outputs in `data/processed/...`
+  - link them from an experiment report + run receipt
+
+> [!CAUTION]
+> Notebooks that silently write files without catalogs + provenance are **not shippable**.
 
 ---
 
-## 🔗 MCP ↔ KFM pipeline (non-negotiable)
+## 🔗 MCP ↔ KFM evidence pipeline
 
 KFM uses a strict evidence pipeline:
 
-**ETL → STAC/DCAT/PROV catalogs → Graph → APIs → UI → Story Nodes**
+**ETL → Catalogs (STAC/DCAT/PROV) → Graph → APIs → UI → Story Nodes → Focus Mode**
 
 So for MCP work:
 
-- ✅ Experiment reports live here: `mcp/experiments/…`
-- ✅ Run receipts live here: `mcp/runs/…`
+- ✅ Experiment reports live here: `mcp/experiments/...`
+- ✅ Run receipts live here: `mcp/runs/...`
 - ✅ Evidence artifacts live here: `data/processed/...`
 - ✅ Evidence artifacts must be:
-  - cataloged in **STAC/DCAT** 🧾
-  - linked with **PROV** lineage 🧬
-  - integrated into graph/UI only through governed contracts 🔒
+  - cataloged (STAC/DCAT) 🧾
+  - lineage-linked (PROV) 🧬
+  - integrated through governed contracts (API boundary) 🔒
 
-This keeps “cool experiments” from turning into untraceable claims.
+```mermaid
+flowchart LR
+  EXP["🧪 EXP report"] --> RUN["🏃 RUN receipt"]
+  RUN --> OUT["📦 data/processed outputs"]
+  OUT --> CAT["🗂️ STAC/DCAT/PROV"]
+  CAT --> GR["🕸️ Graph"]
+  GR --> API["🛡️ APIs"]
+  API --> UI["🗺️ UI / Story / Focus"]
+```
 
 ---
 
@@ -380,48 +451,67 @@ This keeps “cool experiments” from turning into untraceable claims.
 Use the checklist that matches your work:
 
 ### 🗺️ GIS / Remote Sensing
-- [ ] CRS documented (EPSG code + axis order)
+- [ ] CRS documented (EPSG + axis order)
 - [ ] Georeferencing method + control points documented
-- [ ] RMS / fit error recorded (if applicable)
-- [ ] Raster outputs are COGs / tiled in a documented way
-- [ ] Vector outputs validate (topology, geometry validity)
+- [ ] Fit error/RMS recorded (if applicable)
+- [ ] Raster outputs are COGs / tiled (with parameters)
+- [ ] Vector outputs validate (geometry validity, topology as needed)
 
 ### 🔎 OCR / NLP
 - [ ] Input corpus + sampling documented
 - [ ] Labeling rules / evaluation rubric included
-- [ ] Precision/recall (or at least spot-check protocol) documented
-- [ ] Known failure classes logged (fonts, scan quality, place-name ambiguity)
+- [ ] Precision/recall (or spot-check protocol) documented
+- [ ] Failure classes logged (scan quality, fonts, ambiguity)
 
 ### 📊 Statistics / Inference
-- [ ] Outcome variables + units defined
-- [ ] Assumptions checked (normality, independence, etc.)
+- [ ] Outcomes + units defined
+- [ ] Assumptions checked (independence, distribution, etc.)
 - [ ] Effect sizes reported (not just p-values)
-- [ ] Multiple comparisons / researcher degrees of freedom handled
+- [ ] Multiple comparisons handled (or explicitly scoped)
 
 ### 🛰️ Modeling & Simulation
 - [ ] Assumptions enumerated explicitly
-- [ ] Validation approach documented (comparisons, back-to-back tests)
-- [ ] Uncertainty quantified or bounded where possible
-- [ ] Results reported with error/uncertainty context (not just point estimates)
+- [ ] Validation approach documented (comparisons, backtests)
+- [ ] Uncertainty quantified or bounded
+- [ ] Results reported with uncertainty context
 
 ---
 
-## 🔐 Safety & hygiene rules
+## 🔐 Safety & hygiene
 
-- 🚫 Don’t store secrets, tokens, private keys, or sensitive PII in `mcp/`
-- 🧽 Redact logs before committing if they contain identifiers or confidential paths
+- 🚫 Don’t store secrets, tokens, keys, or sensitive PII in `mcp/`
+- 🧽 Redact logs before committing if they contain identifiers, endpoints, or sensitive paths
 - 🧊 Prefer immutable receipts: new run folder > editing old run folder
-- 🧭 If an experiment is superseded, mark it as `superseded` and link the successor
+- 🧭 If superseded, mark as `superseded` and link the replacement
 
 ---
 
-## 🤝 Contributing
+## 🤝 PR / review checklist
 
-- See `../CONTRIBUTING.md`
-- Security concerns: see `../.github/SECURITY.md`
-- When in doubt: open an issue with an MCP stub (question + proposed experiment) 🧾
+When your PR includes experiments, runs, or evidence:
+
+- [ ] EXP report added/updated (`mcp/experiments/...`)
+- [ ] RUN receipt folder added (`mcp/runs/...`) with `MANIFEST.md`
+- [ ] Evidence outputs stored under `data/processed/...`
+- [ ] STAC/DCAT/PROV pointers added (IDs or paths)
+- [ ] AI involvement labeled (if applicable)
+- [ ] Reproduction steps included (1–4 steps; copy/paste runnable)
+- [ ] No secrets / no sensitive leaks in logs or outputs
+- [ ] Reviewer can reproduce within ~30 minutes
+
+> [!TIP]
+> A good review comment is: **“I reproduced this and got the same outputs.”** ✅
+
+---
+
+## 🕰️ Version history
+
+| Version | Date | Summary | Author |
+|---:|---|---|---|
+| v1.1.0 | 2026-01-06 | Clarified non‑negotiables + pipeline linkage; added run receipt template, PR checklist, and workflow diagram. | KFM Engineering |
+| v1.0.0 | 2025-12-31 | Initial MCP README: experiments, runs, SOPs, model cards, notebooks, safety rules. | KFM Engineering |
 
 ---
 
 🧭 **Goal:** Make every output auditable and every method teachable.  
-🧾 **Promise:** If it’s in production, it has a paper trail.
+🧾 **Promise:** If it’s in production, it has a paper trail. ✅
