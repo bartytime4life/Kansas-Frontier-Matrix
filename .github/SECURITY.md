@@ -2,29 +2,38 @@
 
 ![Security Policy](https://img.shields.io/badge/security-policy-blue)
 ![Coordinated Disclosure](https://img.shields.io/badge/disclosure-coordinated-success)
-![Do Not Publicly Disclose](https://img.shields.io/badge/reporting-private%20channel-important)
+![Private Reporting](https://img.shields.io/badge/reporting-private%20channel-important)
 ![PSA](https://img.shields.io/badge/PSA-no%20issues%2FPR%20comments-red)
 
 > [!IMPORTANT]
 > 🚨 **Do not report security vulnerabilities via public GitHub Issues, Discussions, or PR comments.**  
 > Please use **private vulnerability reporting** (preferred) or the alternative contact methods below.
 
+> [!NOTE]
+> If a security report is accidentally posted publicly, maintainers may **edit/remove** it to reduce exposure, then ask you to re-submit privately.
+
 ---
+
+<a id="quick-links"></a>
 
 ## 📌 Quick links
 
-- [🎯 Scope](#-scope)
-- [✅ Supported versions](#-supported-versions)
-- [🐛 Reporting a vulnerability](#-reporting-a-vulnerability)
-- [🧾 What to include](#-what-to-include-in-a-report)
-- [⏱️ Coordinated disclosure](#️-coordinated-disclosure-cvd-expectations)
-- [🧭 Safe harbor](#-safe-harbor-good-faith-research)
-- [🚫 Out of scope](#-out-of-scope-typical-examples)
-- [🔐 Secure development guidelines](#-secure-development-guidelines-for-contributors)
-- [✅ PR security checklist](#-pr-security-checklist-copy-into-prs)
-- [📚 Security reference library](#-project-security-reference-library-used-to-shape-this-policy)
+- [🎯 Scope](#scope)
+- [✅ Supported versions](#supported-versions)
+- [🐛 Reporting a vulnerability](#reporting)
+- [🧾 What to include](#report-contents)
+- [🗞️ Advisories & notifications](#advisories)
+- [⏱️ Coordinated disclosure](#cvd)
+- [🧭 Safe harbor](#safe-harbor)
+- [🚫 Out of scope](#out-of-scope)
+- [🔐 Secure development guidelines](#secure-dev)
+- [✅ PR security checklist](#pr-checklist)
+- [🗂️ Recommended repo security files](#repo-security-files)
+- [📚 Security reference library](#security-reference-library)
 
 ---
+
+<a id="metadata"></a>
 
 ## 🧾 Policy metadata
 
@@ -37,16 +46,32 @@
 
 ---
 
+<a id="scope"></a>
+
 ## 🎯 Scope
 
 Kansas Frontier Matrix (KFM) is a multi-layered platform designed around clean separation of concerns (interface, infrastructure, and supporting frameworks). It includes a modern web UI plus service/integration layers, and the documentation references integrations common to geospatial/remote-sensing workflows (APIs, data pipelines, credentials, and third‑party integrations).
 
-This policy is focused on:
+This policy focuses on:
 - 🌎 **Geospatial & mapping workflows** (data integrity + access control)
 - 🛰️ **Remote sensing pipelines** (credentials, cloud assets, data governance)
 - 🧠 **ML/analytics components** (data poisoning, leakage, reproducibility risks)
-- 🧱 **Web + API security** (authZ/authN, input validation, SSRF/XSS/CSRF, etc.)
+- 🧱 **Web + API security** (authN/authZ, input validation, SSRF/XSS/CSRF, etc.)
 - 🐳 **Containerized deployments** (image hardening, secrets, supply chain)
+
+<details>
+<summary><strong>🧩 KFM trust boundaries at a glance</strong></summary>
+
+```mermaid
+flowchart LR
+  U[🌐 User / Client] -->|HTTPS| FE[🧑‍💻 Web UI (incl. WebGL)]
+  FE -->|API calls| API[🔌 API / Services]
+  API --> W[⚙️ Workers / Pipelines]
+  API --> DB[(🗄️ Database)]
+  W --> OBJ[(🪣 Cloud Assets / Object Storage)]
+  W --> EXT[🛰️ External Providers / GIS APIs]
+```
+</details>
 
 ### ✅ In-scope vulnerability examples
 
@@ -62,7 +87,7 @@ This policy is focused on:
 
 ### ✅ Where to focus testing
 
-- 🧑‍💻 UI / WebGL / frontend asset handling (treat 3D assets as untrusted)
+- 🧑‍💻 UI / WebGL / frontend asset handling (**treat 3D assets as untrusted input**)
 - 🔌 API / services / queues / background workers
 - 🗄️ DB layer (PostgreSQL/MySQL), migrations, role separation
 - 🗺️ GIS & remote sensing connectors / external provider integrations
@@ -71,11 +96,13 @@ This policy is focused on:
 
 ---
 
-## ✅ Supported Versions
+<a id="supported-versions"></a>
+
+## ✅ Supported versions
 
 We prioritize fixes for actively developed code.
 
-| Target | Supported for Security Fixes | Notes |
+| Target | Supported for security fixes | Notes |
 |---|---:|---|
 | `main` branch | ✅ | Always supported |
 | Latest tagged release | ✅ | Recommended for deployments |
@@ -86,7 +113,9 @@ We prioritize fixes for actively developed code.
 
 ---
 
-## 🐛 Reporting a Vulnerability
+<a id="reporting"></a>
+
+## 🐛 Reporting a vulnerability
 
 ### ✅ Preferred: GitHub Private Vulnerability Reporting
 
@@ -96,12 +125,12 @@ We prioritize fixes for actively developed code.
 
 This keeps the report private while we investigate.
 
-### 📧 Alternative: Security contact (fallback)
+### 📧 Alternative: security contact (fallback)
 
 If GitHub private reporting is not available in your environment, use:
 
 - 📧 **Security email:** `security@YOUR-DOMAIN.example` *(maintainers: replace with your real inbox)*  
-- 🔐 **Encryption:** publish a PGP public key in-repo (recommended) and reference it here.
+- 🔐 **Encryption:** publish a PGP public key in-repo (recommended) and reference it here (fingerprint + link).
 
 > [!CAUTION]
 > Please avoid sending secrets in plaintext if email is your only option.  
@@ -116,6 +145,8 @@ If you believe there is **active exploitation** or imminent risk:
 - If safe: include indicators of compromise (IoCs), logs (redacted), and a scope estimate
 
 ---
+
+<a id="report-contents"></a>
 
 ## 🧾 What to include in a report
 
@@ -144,9 +175,59 @@ To speed up triage, please include:
 > - Network reachable? public/private/internal-only  
 > - Data exposure type: metadata/PII/secrets/infra access  
 
+### 🧾 Copy/paste report template
+
+```text
+Title:
+Severity guess (optional):
+Component(s):
+Tested version/commit:
+Environment:
+
+Summary:
+Impact:
+Attack scenario:
+
+Reproduction steps:
+1)
+2)
+3)
+
+Proof of concept (safe):
+Expected result:
+Actual result:
+
+Suggested fix (optional):
+
+Notes / context:
+- Auth required? Y/N
+- User interaction required? Y/N
+- Network: public/private/internal-only
+- Data exposure: metadata/PII/secrets/infra access
+```
+
 ---
 
-## ⏱️ Coordinated Disclosure (CVD) expectations
+<a id="advisories"></a>
+
+## 🗞️ Security advisories & notifications
+
+We use GitHub’s security tooling when available:
+- 🧾 **GitHub Security Advisories** for private triage + coordinated disclosure
+- 📦 **Tagged releases** for patched versions (when applicable)
+
+How to stay informed:
+- ⭐ Watch this repository for **Releases**
+- 🔔 If an advisory is published, GitHub can notify dependents and subscribers automatically
+
+> [!NOTE]
+> We avoid publishing exploit details before a fix is available (unless otherwise agreed as part of coordinated disclosure).
+
+---
+
+<a id="cvd"></a>
+
+## ⏱️ Coordinated disclosure (CVD) expectations
 
 We follow a coordinated disclosure approach:
 
@@ -178,11 +259,13 @@ We follow a coordinated disclosure approach:
 | **Low** | minor info leaks, non-exploitable misconfigurations |
 
 > [!TIP]
-> If you have a CVSS score or vector, include it (optional). We will still apply our own assessment.
+> If you have a CVSS vector/score (v3.1 or v4.0), include it (optional). We will still apply our own assessment.
 
 ---
 
-## 🧭 Safe Harbor (good-faith research)
+<a id="safe-harbor"></a>
+
+## 🧭 Safe harbor (good-faith research)
 
 We support good‑faith security research that is:
 - ✅ Non-destructive
@@ -201,6 +284,8 @@ We support good‑faith security research that is:
 
 ---
 
+<a id="out-of-scope"></a>
+
 ## 🚫 Out of scope (typical examples)
 
 - Issues requiring **physical access** to a device
@@ -209,12 +294,20 @@ We support good‑faith security research that is:
 - Reports without a plausible security impact
 - Automated scanner output **without** exploitation detail or actionable context
 
+Common “informational” findings that are usually out of scope *unless chained to impact*:
+- Missing security headers without exploitability context
+- Clickjacking on non-sensitive pages
+- Open redirects without a realistic impact
+- Self-XSS without a privilege/impact chain
+
 > [!NOTE]
 > If you’re unsure, report anyway — we’ll help route it.
 
 ---
 
-## 🔐 Secure Development Guidelines (for contributors)
+<a id="secure-dev"></a>
+
+## 🔐 Secure development guidelines (for contributors)
 
 Security is a design constraint, not an afterthought. These practices are expected across the stack.
 
@@ -269,7 +362,9 @@ Security is a design constraint, not an afterthought. These practices are expect
 
 ---
 
-## ✅ PR Security Checklist (copy into PRs)
+<a id="pr-checklist"></a>
+
+## ✅ PR security checklist (copy into PRs)
 
 - [ ] No secrets committed (keys, tokens, `.env`, credentials)
 - [ ] Inputs validated + outputs encoded (XSS/Injection resistant)
@@ -282,6 +377,8 @@ Security is a design constraint, not an afterthought. These practices are expect
 
 ---
 
+<a id="repo-security-files"></a>
+
 ## 🗂️ Recommended repo security files (optional but 🔥 useful)
 
 <details>
@@ -290,6 +387,8 @@ Security is a design constraint, not an afterthought. These practices are expect
 ```text
 📦 .github/
  ├─ 🛡️ SECURITY.md
+ ├─ 🧾 dependabot.yml
+ ├─ 🧑‍⚖️ CODEOWNERS
  ├─ 🧪 workflows/
  │   ├─ 🔍 code-scanning.yml
  │   ├─ 🔐 secret-scanning.yml
@@ -298,11 +397,14 @@ Security is a design constraint, not an afterthought. These practices are expect
  ├─ 🔐 security/
  │   ├─ 🔑 pgp-public-key.asc
  │   ├─ 🧾 threat-model.md
- │   └─ 📋 security-testing.md
+ │   ├─ 📋 security-testing.md
+ │   └─ 🧪 incident-response.md
 ```
 </details>
 
 ---
+
+<a id="security-reference-library"></a>
 
 ## 📚 Project Security Reference Library (used to shape this policy)
 
@@ -311,7 +413,7 @@ These project files influenced our security posture across architecture, web, da
 <details>
 <summary><strong>🏗️ Architecture & engineering foundations</strong></summary>
 
-- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation  
+- Kansas Frontier Matrix (KFM) – Master Technical Specification  
 - Clean Architectures in Python  
 - Implementing Programming Languages (Compilers/Interpreters)  
 - Introduction to Docker  
@@ -397,4 +499,5 @@ Maintainers’ TODOs (remove before publishing if you prefer):
 - Replace security@YOUR-DOMAIN.example with a real monitored inbox.
 - Add a PGP key at docs/security/pgp-public-key.asc and reference its fingerprint.
 - Optionally add workflows for code scanning + dependency review + secret scanning.
+- Consider adding dependabot.yml, CODEOWNERS, and an incident-response runbook.
 -->
