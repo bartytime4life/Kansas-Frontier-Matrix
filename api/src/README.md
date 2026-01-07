@@ -1,17 +1,25 @@
-# 🛰️ Kansas Frontier Matrix (KFM) API — `api/src`
+# 🛰️ Kansas Frontier Matrix (KFM) API — `api/src/`
 
-[![KFM](https://img.shields.io/badge/Kansas%20Frontier%20Matrix-API-2b6cb0)](#-kansas-frontier-matrix-kfm-api--apisrc)
-[![Framework](https://img.shields.io/badge/framework-FastAPI-009688?logo=fastapi&logoColor=white)](#-local-development)
-[![Contract](https://img.shields.io/badge/contract-OpenAPI-85EA2D?logo=openapiinitiative&logoColor=white)](#-contracts--schemas)
-[![Auth](https://img.shields.io/badge/auth-JWT%20%2B%20RBAC-6f42c1)](#-auth-roles-and-redaction)
-[![Governance](https://img.shields.io/badge/governance-redaction%20%2B%20classification-critical)](#-security--governance-contract)
-[![Ops](https://img.shields.io/badge/ops-docker--compose-2496ED?logo=docker&logoColor=white)](#-local-development)
+<p align="left">
+  <a href="#-kansas-frontier-matrix-kfm-api--apisrc"><img alt="KFM API" src="https://img.shields.io/badge/Kansas%20Frontier%20Matrix-API-2b6cb0" /></a>
+  <a href="#-local-development"><img alt="FastAPI" src="https://img.shields.io/badge/framework-FastAPI-009688?logo=fastapi&logoColor=white" /></a>
+  <a href="#-contracts--schemas"><img alt="OpenAPI" src="https://img.shields.io/badge/contract-OpenAPI-85EA2D?logo=openapiinitiative&logoColor=white" /></a>
+  <a href="#-auth-roles-and-redaction"><img alt="Auth" src="https://img.shields.io/badge/auth-JWT%20%2B%20RBAC%2FABAC-6f42c1" /></a>
+  <a href="#-security--governance-contract"><img alt="Governance" src="https://img.shields.io/badge/governance-redaction%20%2B%20classification-critical" /></a>
+  <a href="#-background-jobs--real-time-updates"><img alt="Workers" src="https://img.shields.io/badge/workers-queue%20%2B%20jobs-purple" /></a>
+  <a href="#-logging-monitoring-and-health"><img alt="Observability" src="https://img.shields.io/badge/observability-logs%20%7C%20metrics%20%7C%20traces-7c3aed" /></a>
+  <a href="#-local-development"><img alt="Ops" src="https://img.shields.io/badge/ops-docker--compose-2496ED?logo=docker&logoColor=white" /></a>
+</p>
 
-> 🧭 **Purpose:** `api/src` is the **governed API boundary** for KFM — the single place where clients (UI + external integrations) access data, graph-backed views, simulations, and evidence artifacts.
+> 🧭 **Purpose:** `api/src/` is the **governed API boundary** for KFM — the one place where clients (UI + external integrations) access **catalog-backed views**, **graph-backed context**, **jobs/simulations**, and **evidence artifacts**.
 
 > [!IMPORTANT]
 > 🛑 **API boundary rule:** clients **must never** query internal stores (Neo4j/Postgres/object store) directly.  
-> This layer enforces **contracts + auth + redaction + classification propagation** by design.
+> This layer enforces **contracts + auth + policy + redaction + classification propagation** by design.
+
+> [!IMPORTANT]
+> 🧱 **Pipeline order is absolute:** **ETL → STAC/DCAT/PROV Catalogs → Graph → API → UI → Story Nodes → Focus Mode**  
+> If a result isn’t **cataloged + provenance-linked**, it isn’t *publishable* in KFM.
 
 ---
 
@@ -35,6 +43,7 @@
 - [🔌 Interoperability & exports](#-interoperability--exports)
 - [🤝 Contributing notes](#-contributing-notes)
 - [🔗 Related docs](#-related-docs-repo-level)
+- [📚 Project reference library → implementation rules](#-project-reference-library--implementation-rules-uses-all-project-files)
 
 ---
 
@@ -44,8 +53,9 @@
 |---|---|
 | Doc | `api/src/README.md` |
 | Status | Active ✅ |
-| Last updated | **2026-01-06** |
-| Applies to | API boundary code, contracts, routers, middleware, workers, integrations |
+| Last updated | **2026-01-07** |
+| Scope | API boundary code, contracts, routers, middleware, workers, integrations |
+| Promise | “No mystery data” — everything served is policy-checked & provenance-linked |
 
 ---
 
@@ -53,15 +63,17 @@
 
 This folder is the **API boundary implementation** (the “front door” to KFM). Typical responsibilities:
 
-- 📜 **Contract-first endpoints** (OpenAPI + JSON Schemas)
-- 🔐 **Authentication & authorization** (JWT + RBAC/Scopes)
-- 🧼 **Redaction + classification enforcement** (no data leakage)
+- 📜 **Contract-first endpoints** (OpenAPI + JSON Schemas + examples)
+- 🔐 **Authentication & authorization** (JWT, RBAC/ABAC, service-to-service patterns)
+- 🧼 **Redaction + classification enforcement** (deny-by-default, “no privacy downgrade”)
+- 🧾 **Evidence & provenance linking** (STAC/DCAT/PROV IDs, evidence bundles for Story/Focus)
 - 🧠 **Orchestration** for long-running jobs (simulations, batch analyses, model runs)
-- 🛰️ **Interoperable outputs** (GeoJSON/CSV/GeoTIFF/COG/NetCDF where relevant)
+- 🛰️ **Interoperable outputs** (GeoJSON/CSV/tiles/thumbnails, and pointers to COG/NetCDF artifacts)
 - 📈 **Telemetry** (structured logs, request IDs, health/ready/metrics, tracing hooks)
+- 🧯 **Abuse resistance** (request size limits, rate limiting, safe file handling, SSRF controls)
 
 > [!TIP]
-> If you’re unsure whether something belongs in `api/src`, ask:  
+> If you’re unsure whether something belongs in `api/src/`, ask:  
 > **“Is this enforcing governance, contracts, redaction, or translating internal stores into stable client responses?”**  
 > If yes → it likely belongs here.
 
@@ -74,17 +86,25 @@ KFM treats security as a **design constraint** at the API boundary, not “polic
 ### ✅ Minimum guarantees this layer must provide
 
 - 🔐 **AuthN**: verify token signature, issuer, audience, expiry, key rotation (`kid`)
-- 🧑‍⚖️ **AuthZ**: role/scope enforcement for every data access path (no “implicit allow”)
-- 🧼 **Redaction**: remove or transform restricted fields (deny-by-default)
-- 🧷 **Classification propagation**: outputs must be **at least as restricted** as inputs  
+- 🧑‍⚖️ **AuthZ**: role/scope enforcement for every data access path (**no implicit allow**)
+- 🧼 **Redaction**: remove/mask/generalize restricted fields (**deny-by-default**)
+- 🧷 **Classification propagation**: outputs must be **≥ strictest input classification**  
   *(no privacy downgrade via aggregation or derived views)*
-- 🧾 **Evidence pointers**: responses that make claims should link to provenance (STAC/DCAT/PROV IDs/URLs)
+- 🧾 **Evidence pointers**: any response that “makes a claim” links to provenance (STAC/DCAT/PROV + run IDs)
 - 🧯 **Abuse resistance**: request size limits, rate limiting, SSRF controls, safe file handling
-- 🧾 **Auditable behavior**: request-id / trace-id / “who did what” logs (never log secrets)
+- 🧾 **Auditable behavior**: request-id / trace-id / “who did what” logs (**never log secrets**)
+- 🧬 **Reproducibility**: job endpoints store parameters + versions + artifacts; results are not “magic”
 
-> [!IMPORTANT]
-> Security reporting is private: see `../../SECURITY.md` and `../../docs/security/README.md` (once added).  
-> **Never** handle vulnerability reports in public Issues/PR comments.
+### 🧨 Threat posture (assume hostile inputs)
+Treat everything as untrusted:
+- GeoJSON & WKT payloads
+- file uploads (archives, rasters, zips)
+- external URLs (SSRF risk)
+- 3D/model assets (parser risks)
+- user-provided query filters (injection / cost amplification)
+
+> [!CAUTION]
+> “It’s internal” is not a defense. Internal systems are breached too. Build as if everything will be fuzzed. 🧪🛡️
 
 ---
 
@@ -131,6 +151,12 @@ flowchart TB
   Entities --> Rules
 ```
 
+### 🔍 “Where does this code go?” (fast rule)
+- Route handlers = **IO + validation + auth gate + call use-case**
+- Use-cases/services = **policy + orchestration + business decisions**
+- Repositories/integrations = **how to talk to stores/APIs**
+- Domain = **pure invariants** (no framework imports)
+
 ---
 
 ## 🧭 Architectural guardrails (don’t break these)
@@ -139,15 +165,16 @@ Project invariants for KFM-style development:
 
 - ⛓️ **Pipeline ordering is absolute:** ETL → catalogs → graph → API → UI → story/focus  
 - 🛑 **API boundary rule:** clients never query graph stores directly
-- 🧬 **Provenance-first:** responses should carry evidence pointers when expressing a claim
+- 🧬 **Provenance-first:** claim-like responses carry evidence pointers
 - 🧷 **Classification propagation:** outputs ≥ strictest input classification
-- 🧪 **Validation gates:** contract + schema + security checks should fail CI when violated
-- 🧼 **Pure logic stays pure:** routers should be thin; business logic belongs in `services/` / `application/`
-- 🧯 **Safe-by-default errors:** never leak stack traces or internals to clients; return error IDs
-- 🔁 **Idempotency for “do work” endpoints:** job creation endpoints should support idempotency keys
+- 🧪 **Validation gates:** contract + schema + security checks fail CI when violated
+- 🧼 **Pure logic stays pure:** routers thin; business logic lives in services/application
+- 🧯 **Safe-by-default errors:** no stack traces; return error IDs + correlation IDs
+- 🔁 **Idempotency:** “do work” endpoints support idempotency keys
+- 🧵 **Bounded work:** avoid unbounded fanout / unbounded parsing / unbounded response sizes
 
 > [!NOTE]
-> The fastest way to create tech debt: “just put the query in the router.” Don’t.
+> The fastest way to create tech debt: “just put the query in the router.” Don’t. 😅
 
 ---
 
@@ -157,24 +184,25 @@ Project invariants for KFM-style development:
 flowchart LR
   subgraph Data["📦 Data & Metadata"]
     A["Raw Sources"] --> B["ETL + Normalization"]
-    B --> C["STAC Items + Collections"]
-    C --> D["DCAT Dataset Views"]
-    C --> E["PROV Lineage Bundles"]
+    B --> C["🏷️ STAC Items + Collections"]
+    C --> D["🧾 DCAT Dataset Views"]
+    C --> E["🧬 PROV Lineage Bundles"]
   end
 
-  C --> G["🕸️ Neo4j Graph (references back to catalogs)"]
-  D --> H["🛰️ API Layer (contracts + auth + redaction)"]
+  C --> G["🕸️ Graph (references back to catalogs)"]
+  D --> H["🚪 API Boundary (contracts + auth + policy + redaction)"]
   E --> H
   G --> H
 
-  H --> UI["🗺️ Map UI — React · MapLibre · (optional) Cesium"]
-  H --> Ext["🔌 External Integrations (partners, pipelines)"]
+  H --> UI["🌐 UI (React + MapLibre/Cesium)"]
+  H --> Ext["🔌 External Integrations"]
 
-  H --> Jobs["🧵 Job Queue / Workers (simulations, batch)"]
-  Jobs --> Artifacts["📦 Artifacts Store (results, evidence)"]
+  H --> Jobs["🧵 Queue / Workers (simulations, batch, ML)"]
+  Jobs --> Artifacts["📦 Object Store (results, thumbnails, tiles)"]
+  Jobs --> C
 
   UI --> Story["📚 Story Nodes (governed narratives)"]
-  Story --> Focus["🎯 Focus Mode (provenance-linked context bundle)"]
+  Story --> Focus["🎯 Focus Mode (evidence bundle)"]
 ```
 
 ---
@@ -187,15 +215,43 @@ To make governance + debugging consistent, prefer a stable envelope:
 {
   "meta": {
     "request_id": "req_...",
-    "classification": "public|restricted|confidential|... ",
+    "classification": "public|internal|restricted",
     "provenance": {
-      "stac": ["stac://..."],
-      "dcat": ["dcat://..."],
-      "prov": ["prov://..."]
+      "dataset_ids": ["kfm.ks.ndvi.weekly.v1"],
+      "stac": ["stac://collection/.../item/..."],
+      "dcat": ["dcat://dataset/..."],
+      "prov": ["prov://run/..."]
     },
     "warnings": ["redacted_fields_applied"]
   },
   "data": {}
+}
+```
+
+### 🧾 Evidence bundle payload (Story Nodes + Focus Mode)
+When the UI needs a “defensible narrative packet”, return an evidence-first shape:
+
+```json
+{
+  "bundle_id": "evb_01HZZ...",
+  "classification": "internal",
+  "claims": [
+    {
+      "id": "claim_001",
+      "text": "NDVI declined 0.12 vs baseline in July.",
+      "support": {
+        "stac_items": ["..."],
+        "prov_runs": ["..."],
+        "artifacts": [{"type": "plot", "href": "s3://.../ndvi_plot.png"}]
+      },
+      "uncertainty": {
+        "type": "interval",
+        "lower": -0.18,
+        "upper": -0.07,
+        "confidence": 0.9
+      }
+    }
+  ]
 }
 ```
 
@@ -206,48 +262,48 @@ To make governance + debugging consistent, prefer a stable envelope:
 
 ## 📁 Directory layout (inside `api/src`)
 
-> 🧩 This is the **recommended** structure for KFM-style API code.  
-> If your repo differs, keep the same *intent* (contracts separate from handlers, business logic separate from IO).
+> 🧩 Recommended KFM structure: contracts separate from handlers, business logic separate from IO, and policy gates centralized.
 
 ```text
 📁 api/
 └── 📁 src/
-    ├── 📁 contracts/                # 📜 OpenAPI + shared contract fragments
-    │   ├── 📄 openapi.yaml
-    │   └── 📁 schemas/              # ✅ JSON Schemas used by API + validators
-    ├── 📁 routers/                  # 🚦 HTTP route handlers (FastAPI routers)
+    ├── 📁 contracts/                 # 📜 OpenAPI + shared contract fragments
+    │   ├── 📄 openapi.yaml           # ✅ API source of truth
+    │   └── 📁 schemas/               # ✅ JSON Schemas: STAC/DCAT/PROV/Evidence
+    ├── 📁 routers/                   # 🚦 HTTP route handlers (FastAPI routers)
     │   ├── 📁 v1/
     │   │   ├── 📄 health.py
     │   │   ├── 📄 auth.py
     │   │   ├── 📄 fields.py
-    │   │   ├── 📄 simulations.py
-    │   │   └── 📄 catalog.py
+    │   │   ├── 📄 catalog.py
+    │   │   ├── 📄 evidence.py
+    │   │   ├── 📄 analysis.py
+    │   │   └── 📄 simulations.py
     │   └── 📄 __init__.py
-    ├── 📁 middleware/               # 🧱 auth, request-id, CORS, rate limits, caching, etc.
-    ├── 📁 auth/                     # 🔐 JWT verification, role checks, service tokens
-    ├── 📁 services/                 # 🧠 use-cases; orchestration; policy gates
-    ├── 📁 repositories/             # 🗃️ persistence ports (Postgres, Neo4j, object store)
-    ├── 📁 integrations/             # 🔌 external APIs (NOAA, tile servers, inference svc, etc.)
-    ├── 📁 tasks/                    # 🧵 async jobs (Celery/RQ/worker adapters)
-    ├── 📁 telemetry/                # 📈 logging, metrics, tracing helpers
-    ├── 📁 utils/                    # 🧰 shared helpers (small + boring)
-    ├── 📁 tests/                    # 🧪 unit + contract + integration tests (API-focused)
-    └── 📄 main.py                   # 🚀 app entrypoint (FastAPI() app)
+    ├── 📁 middleware/                # 🧱 auth, request-id, CORS, rate limits, caching
+    ├── 📁 auth/                      # 🔐 JWT verification, role checks, service tokens
+    ├── 📁 policy/                    # 🧷 classification/redaction + (optional) OPA bundles
+    ├── 📁 services/                  # 🧠 use-cases; orchestration; policy gates
+    ├── 📁 repositories/              # 🗃️ Postgres/Neo4j/object store adapters
+    ├── 📁 integrations/              # 🔌 external APIs (GEE, NOAA, etc.)
+    ├── 📁 tasks/                     # 🧵 worker jobs + queue adapters
+    ├── 📁 telemetry/                 # 📈 logging, metrics, tracing helpers
+    ├── 📁 utils/                     # 🧰 small + boring helpers
+    ├── 📁 tests/                     # 🧪 unit + contract + integration (API-focused)
+    └── 📄 main.py                    # 🚀 app entrypoint (FastAPI() app)
 ```
 
 <details>
-<summary><strong>🧠 Optional: “clean architecture flavored” package split</strong></summary>
-
-If you want a more explicit split, you can group internals like this:
+<summary><strong>🧠 Optional: “explicit clean architecture” package split</strong></summary>
 
 ```text
 📁 api/src/
-├── 📁 app/                 # FastAPI app wiring (routers, middleware, DI)
-├── 📁 domain/              # entities + invariants (no FastAPI imports)
-├── 📁 application/         # use-cases (calls ports)
-├── 📁 adapters/            # repositories/integrations (implements ports)
-├── 📁 infrastructure/      # DB drivers, cloud clients, queue wiring
-└── 📁 contracts/           # OpenAPI + JSON Schemas
+├── 📁 app/                  # FastAPI wiring (routers, middleware, DI)
+├── 📁 domain/               # entities + invariants (pure Python)
+├── 📁 application/          # use-cases (calls ports)
+├── 📁 adapters/             # repositories/integrations (implements ports)
+├── 📁 infrastructure/       # DB drivers, cloud clients, queue wiring
+└── 📁 contracts/            # OpenAPI + JSON Schemas
 ```
 
 </details>
@@ -257,27 +313,34 @@ If you want a more explicit split, you can group internals like this:
 ## 📜 Contracts & schemas
 
 ### OpenAPI (source of truth)
-- ✅ Keep OpenAPI **versioned** and **reviewed**
-- 🧪 Add **contract tests** that lock known inputs → known outputs
-- 🔄 Avoid breaking changes; if unavoidable, bump a version (`/v2`, new schemas)
+- ✅ Keep OpenAPI **versioned**, **reviewed**, and **diff-checked** in CI
+- 🧪 Add **contract tests** (examples validate against OpenAPI + JSON Schema)
+- 🔄 Breaking changes require version bump (`/v2`) or parallel route set
 
-### JSON Schemas (validation gates)
+### JSON Schema validation (gates)
 Use JSON Schema to validate:
-
 - request payloads (server-side)
 - response envelopes (CI checks)
 - evidence pointers + provenance bundles
+- job result manifests (artifact metadata)
+
+### Contract-first workflow (golden path)
+1) edit OpenAPI + schema  
+2) update service/use-case  
+3) update router  
+4) update tests + examples  
+5) ship ✅
 
 > [!TIP]
-> Contract-first workflow: update **contracts first**, then handlers/services, then tests.
+> If the schema can’t express the rule, the contract isn’t done yet.
 
 ---
 
 ## 🚀 Local development
 
 ### 1) Prereqs
-- 🐍 Python (primary service language)
-- 🐳 Docker (recommended for DB/Neo4j/queues consistency)
+- 🐍 Python (primary)
+- 🐳 Docker (recommended for DB/graph/queues consistency)
 
 ### 2) Environment variables (typical)
 
@@ -306,29 +369,26 @@ KFM_NEO4J_USER=neo4j
 KFM_NEO4J_PASSWORD=please-change-me
 
 # Ops (recommended)
-KFM_CORS_ORIGINS=http://localhost:3000
+KFM_CORS_ORIGINS=http://localhost:5173
 KFM_REQUEST_MAX_BYTES=10485760   # 10MB
+KFM_RATE_LIMIT_ENABLED=true
 ```
 
 > [!CAUTION]
 > Never commit real secrets. Use `.env` locally and secret managers in CI/prod.
 
 ### 3) Run dependencies (example compose)
-
 ```bash
 docker compose up -d postgres neo4j redis
 ```
 
 ### 4) Run the API (example)
-
 ```bash
-# from repo root
 cd api
 
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# FastAPI typical
 uvicorn <your_package>.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
@@ -342,28 +402,26 @@ uvicorn <your_package>.main:app --reload --host 0.0.0.0 --port 8000
 
 ### JWT authentication
 Typical client call:
-
 ```http
 Authorization: Bearer <jwt>
 ```
 
-### What to enforce at the boundary
-- 🧍 **Identity**: valid signature, issuer, audience, expiry
-- 🧑‍🔬 **Roles/scopes**: least privilege for endpoints and dataset classes
-- 🧷 **Operational access levels**: admin-only actions are explicitly gated
-- 🔒 **Service-to-service auth**: service tokens or mTLS (when applicable)
+### RBAC + ABAC (recommended)
+- **RBAC**: user roles (`viewer`, `editor`, `admin`)
+- **ABAC**: data attributes (classification, license constraints, org ownership, export permissions)
 
-### Redaction + classification propagation
-Outputs must respect:
+### Redaction strategies (choose explicitly)
+- ✂️ **Drop**: remove fields entirely
+- 🫥 **Mask**: partially hide sensitive text/IDs
+- 🧮 **Generalize**: reduce precision (e.g., centroid to county)
+- 📉 **Aggregate**: roll up to safe statistics
+- ⏳ **Delay**: only publish after review / time threshold
+- 🚫 **Deny**: return 403 for restricted assets
 
-- user role/scopes
-- dataset classification tags
-- governance restrictions (sovereignty constraints, private infrastructure, etc.)
-
+### Classification propagation (strict)
 If an endpoint aggregates multiple datasets, the output classification must be:
-
-- **the strictest classification** of its inputs
-- plus any added restrictions introduced by derived inference risk
+- **the strictest classification** of its inputs  
+- plus any added restrictions introduced by inference risk
 
 > ✅ Prefer “deny-by-default” middleware + explicit allowlists for fields.
 
@@ -372,45 +430,46 @@ If an endpoint aggregates multiple datasets, the output classification must be:
 ## 🧵 Background jobs & real-time updates
 
 ### Long-running work (simulations / analyses / pipelines)
-
 For expensive tasks:
+- `POST /api/v1/.../run` → returns `job_id`
+- `GET /api/v1/jobs/{job_id}` → status/progress
+- `GET /api/v1/jobs/{job_id}/result` → stable pointers once published
 
-- `POST /api/simulation/run` → returns `job_id`
-- `GET /api/jobs/{job_id}` → progress + status + logs pointer (if allowed)
-- results stored in DB/object store, referenced with provenance (PROV bundle IDs)
-
-**Job safety expectations:**
+**Job safety expectations**
 - 🔁 Idempotency keys for create/run endpoints
 - 🧯 Explicit timeouts/deadlines for workers
-- 🧾 Provenance recorded for inputs + outputs (reproducibility)
+- 🧾 Provenance recorded for inputs + outputs (PROV run bundles)
+- 🧪 Deterministic params: store seeds, versions, and exact inputs
 
-### Streaming / real-time (optional)
-- WebSockets or Server-Sent Events for:
-  - job state changes
-  - “new sensor data” notifications
-  - UI refresh triggers (map layers / charts)
+### Real-time (optional)
+- WebSockets or SSE for:
+  - job progress changes
+  - publish events (“new STAC item available”)
+  - UI refresh triggers (layers/charts)
+
+> [!TIP]
+> Prefer push updates for progress to avoid poll-storms.
 
 ---
 
 ## 📈 Logging, monitoring, and health
 
 Recommended minimum endpoints:
-
 - `GET /health` ✅ liveness
 - `GET /ready` ✅ readiness (DB/graph connectivity)
-- `GET /metrics` 📊 (internal Prometheus-style metrics)
+- `GET /metrics` 📊 (Prometheus style, if enabled)
 
 Logging baseline (per request):
-
 - method + route
-- user id (if authenticated)
+- user id + org id (if authenticated)
 - parameter metadata (never secrets)
 - status code
 - duration
 - correlation/request id
+- classification outcome (safe label only)
 
 > [!IMPORTANT]
-> Return safe errors to clients. Log stack traces internally with an error ID.
+> Return safe errors to clients. Log stack traces internally with an error ID + request ID.
 
 ---
 
@@ -418,17 +477,17 @@ Logging baseline (per request):
 
 A pragmatic KFM API test pyramid:
 
-- ✅ **Unit tests** (services + redaction logic + auth checks)
-- 🔁 **Contract tests** (OpenAPI + JSON Schema validation)
-- 🧩 **Integration tests** (API ↔ Postgres/Neo4j/queue)
-- 🧨 **Security regression tests** (auth bypass attempts, redaction regressions)
+- ✅ **Unit tests**: services + policy gates + redaction + auth helpers
+- 🔁 **Contract tests**: OpenAPI + JSON Schema validation (golden examples)
+- 🧩 **Integration tests**: API ↔ Postgres/Neo4j/queue (happy path + timeouts)
+- 🧨 **Security regression tests**: auth bypass attempts, redaction regressions, SSRF prevention
 
 Example commands (adjust to repo):
-
 ```bash
 pytest -q
 pytest -q -m contract
 pytest -q -m integration
+pytest -q -m security
 ```
 
 <details>
@@ -447,7 +506,7 @@ pytest -q -m integration
 
 ## ➕ Adding an endpoint (checklist)
 
-When adding or changing an endpoint, do this **in order**:
+When adding/changing an endpoint, do this **in order**:
 
 1) 📜 **Update the contract**
    - OpenAPI path + request/response schemas
@@ -457,42 +516,44 @@ When adding or changing an endpoint, do this **in order**:
 2) 🧠 **Implement the use-case**
    - service function (pure logic)
    - call repositories/integrations via interfaces (clean boundaries)
+   - apply governance policy gates in the service layer (not in routers)
 
 3) 🚦 **Add the router**
    - validate input
    - enforce auth + scopes
    - apply redaction + classification
+   - return envelope + evidence pointers (when claim-like)
 
 4) 🧪 **Add tests**
-   - contract snapshots
+   - contract example validation
    - redaction regression cases
    - integration path (if it touches stores)
 
 5) 📈 **Add telemetry**
    - structured logs
-   - metrics / traces if relevant
+   - metrics/traces if relevant
 
 6) 🔒 **Threat-check**
-   - What’s the worst abuse case?
-   - What’s the maximum data exposure if compromised?
-   - Is the output classification correct?
+   - worst abuse case?
+   - maximum data exposure if compromised?
+   - output classification correct?
 
 ---
 
 ## 🔌 Interoperability & exports
 
 Prefer standards-friendly outputs:
-
 - 🗺️ GeoJSON (vector)
-- 🧊 GeoTIFF / COG (raster)
-- 🌦️ NetCDF (climate / gridded time series)
+- 🧊 GeoTIFF / COG (raster) *(usually via object-store pointers)*
+- 🌦️ NetCDF (gridded time series; if used)
 - 📄 CSV (tabular)
+- 🧬 PROV bundles (lineage)
+- 🏷️ STAC/DCAT for discovery (catalog gate)
 
-Where helpful, support:
-
+Where helpful:
 - content negotiation (`Accept` headers)
-- dedicated export endpoints (`/api/export/...`)
-- stable IDs for datasets/collections/items (STAC/DCAT) and lineage (PROV)
+- dedicated export endpoints (sync for small, async for large)
+- stable IDs for datasets/collections/items and runs
 
 ---
 
@@ -502,15 +563,16 @@ Where helpful, support:
 - 🧾 If you touch an endpoint, you likely touch:
   - `contracts/`
   - `routers/`
+  - `services/`
   - `tests/`
-- 🧠 Keep domain/use-case logic in `services/`, not in route handlers
+- 🧠 Keep domain/use-case logic out of route handlers
 - 🔐 Treat governance + redaction as non-optional engineering
 
 ---
 
 ## 🔗 Related docs (repo-level)
 
-> These should exist at the repo root in a v13-aligned layout.
+> These should exist at the repo root in a v13-aligned layout (add if missing).
 
 - 📘 `../../docs/MASTER_GUIDE_v13.md`
 - 🧭 `../../docs/architecture/`
@@ -518,3 +580,55 @@ Where helpful, support:
 - 🛡️ `../../docs/security/README.md`
 - 🧩 `../../schemas/`
 - 🧪 `../../tests/`
+
+---
+
+## 📚 Project reference library → implementation rules (uses all project files)
+
+> Requirement: this section maps **every project file** to a concrete `api/src` convention, guardrail, or implementation rule.
+
+<details>
+<summary><strong>🧠 Expand: Influence map (all project files)</strong></summary>
+
+| Project file | What it changes in `api/src` (practical impact) |
+|---|---|
+| `Kansas Frontier Matrix (KFM) – Comprehensive Engineering Design.docx` | Defines boundary invariants, “catalog gate” rule, Story/Focus evidence flows, and system-of-systems integration posture |
+| `Latest Ideas.docx` | Drives CI guardrails, governance enforcement emphasis, “policy as code” posture, and roadmap alignment for evidence bundles and 3D/tile delivery |
+| `Data Spaces.pdf` | Strengthens pointer-over-payload design (serve references, not blobs), interoperability contracts, and trust signals in metadata |
+| `Introduction to Digital Humanism.pdf` | Human-centered constraints: transparency, agency, and accountability; drives labeling of AI-assisted outputs and safe UX-facing explanations |
+| `Principles of Biological Autonomy - book_9780262381833.pdf` | Systems thinking: feedback loops and closure → encourages explicit state transitions (jobs), bounded behavior, and human-in-the-loop controls |
+| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | Requires AI outputs be auditable/labeled; informs “evidence bundle” posture and dispute/appeal readiness |
+| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | Informs GEE orchestration endpoints, time-series/derivative patterns, and catalog emission for remote-sensing jobs |
+| `python-geospatial-analysis-cookbook.pdf` | CRS sanity, geometry transport conventions, PostGIS operations, and boundary transforms become explicit API conventions |
+| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | Map-serving endpoints must avoid misleading defaults (ramps/legends/tiles); encourages evidence links for cartographic choices |
+| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | Pushes offline/low-bandwidth patterns: tile endpoints, caching, small payloads, and location sensitivity awareness |
+| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | Encourages robust indexing/paging, query cost awareness, stable IDs, and safe export patterns |
+| `Scalable Data Management for Future Hardware.pdf` | Drives streaming, caching, concurrency bounds, and “avoid huge JSON blobs” discipline |
+| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | Reinforces bounded queues/backpressure, safe concurrency, and avoiding runaway thread/worker behavior |
+| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | Threat modeling mindset: segmentation, auth hardening, and safe network interaction patterns |
+| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | Defensive posture: hostile inputs, unsafe parsing avoidance, strict validation, and minimal attack surface |
+| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | Impacts quicklook/thumbnail endpoints: format choice, performance budgets, and content-type correctness |
+| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | Informs 3D asset delivery: coordinate conventions, safe loading patterns, and keeping 3D as optional/policy-gated |
+| `Spectral Geometry of Graphs.pdf` | Justifies explainable graph endpoints, bounded subgraph exports, and optional spectral metrics services |
+| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | Demands simulation V&V posture: scenario metadata, reproducibility, explicit assumptions, and artifact tracking |
+| `Generalized Topology Optimization for Structural Design.pdf` | Shapes optimization job contracts: objective/constraints metadata, reproducibility, and safe artifact delivery |
+| `Understanding Statistics & Experimental Design.pdf` | Requires inference endpoints to include context/assumptions and avoid misleading comparisons; informs diagnostics-first outputs |
+| `graphical-data-analysis-with-r.pdf` | Encourages EDA artifacts (distributions/outliers) and exploration-safe response designs |
+| `regression-analysis-with-python.pdf` | Regression endpoints should emit diagnostics (residuals, checks) and avoid “trendline as truth” outputs |
+| `Regression analysis using Python - slides-linear-regression.pdf` | Standardizes minimal regression output shapes (coeff tables, fit metrics) for UI + evidence bundles |
+| `think-bayes-bayesian-statistics-in-python.pdf` | Bayesian endpoints treat uncertainty as first-class: priors disclosed, posteriors summarized, intervals returned |
+| `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` | ML jobs should be artifact/version driven; discourages training inside API process; encourages model-card artifacts and reproducible configs |
+| `A programming Books.pdf` | Contributor shelf: broad language/tool references for adapters, scripts, and future integrations |
+| `B-C programming Books.pdf` | Contributor shelf: broad language/tool references for adapters, scripts, and future integrations |
+| `D-E programming Books.pdf` | Contributor shelf: broad language/tool references for adapters, scripts, and future integrations |
+| `F-H programming Books.pdf` | Contributor shelf: broad language/tool references for adapters, scripts, and future integrations |
+| `I-L programming Books.pdf` | Contributor shelf: broad language/tool references for adapters, scripts, and future integrations |
+| `M-N programming Books.pdf` | Contributor shelf: broad language/tool references for adapters, scripts, and future integrations |
+| `O-R programming Books.pdf` | Contributor shelf: broad language/tool references for adapters, scripts, and future integrations |
+| `S-T programming Books.pdf` | Contributor shelf: broad language/tool references for adapters, scripts, and future integrations |
+| `U-X programming Books.pdf` | Contributor shelf: broad language/tool references for adapters, scripts, and future integrations |
+
+</details>
+
+---
+🌾 **KFM API is the boundary of trust.** If it can’t be explained, versioned, licensed, governed, and reproduced — it doesn’t ship.
