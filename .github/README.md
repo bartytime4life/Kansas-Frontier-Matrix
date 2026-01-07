@@ -5,6 +5,9 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)](#-pull-requests)
 [![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+[![KFM-MDP](https://img.shields.io/badge/KFM--MDP-v11.2.6-5865F2)](#-kfm-mdp--why-our-gates-are-strict)
+[![Metadata](https://img.shields.io/badge/Metadata-STAC%20%7C%20DCAT%20%7C%20PROV-0ea5e9)](#-data-promotion-gates-stacdcatprov)
+[![Governance](https://img.shields.io/badge/Governance-FAIR%20%2B%20CARE-7c3aed)](#-security--privacy)
 [![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)](../LICENSE)
 
 > [!NOTE]
@@ -20,8 +23,11 @@
 | 🐛 Report a bug | [Open bug report](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=bug_report.yml) |
 | ✨ Request a feature | [Open feature request](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=feature_request.yml) |
 | 🗺️ Request a data layer/source | [Request a layer/source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=data_layer_request.yml) |
+| 🧰 Request a pipeline / automation | [Open pipeline request](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=pipeline_request.yml) *(add if missing)* |
+| 🎬 Request a Story Node (3D narrative) | [Open Story Node request](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=story_node_request.yml) *(add if missing)* |
 | ❓ Ask a question | [Ask a question](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=question.yml) |
 | 🧪 See CI runs | [GitHub Actions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions) |
+| 🔎 Catalog QA gate | [`catalog-qa.yml`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/catalog-qa.yml) *(add if missing)* |
 | 🔐 Security policy | [`./SECURITY.md`](./SECURITY.md) *(add if missing)* |
 
 > [!TIP]
@@ -31,16 +37,25 @@
 
 ## 🧭 What we’re building (context in 20 seconds)
 
-Kansas Frontier Matrix (KFM) is an **open-source geospatial + historical mapping hub**: we ingest historical maps, modern GIS layers, and archival documents; normalize them into consistent spatial formats (e.g., GeoTIFF/COG + GeoJSON); connect text ↔ places ↔ time; and surface everything in an interactive map UI (2D/3D + time slider). 🗺️⏳
+Kansas Frontier Matrix (KFM) is a **living atlas of Kansas** 🏛️🗺️ — integrating **historical archives**, **modern geospatial/sensor data**, and **future projections** into a single system that supports:
+- interactive **maps + timelines** ⏳
+- narrative **Story Mode / Story Nodes** 🎬
+- an advisory **Focus Mode** AI assistant 🧠 (grounded + human-controlled)
+
+KFM is intentionally **pipeline-driven**: data flows through a governed order (ETL → catalog → graph → API → UI), with validation gates that can’t be skipped. ✅
 
 ```mermaid
 flowchart LR
-  A["📦 Data Sources<br/>maps • GIS • docs"] --> B["🧰 Ingestion & Processing<br/>georef • convert • parse/OCR"];
-  B --> C["🗃️ Data Catalog<br/>STAC-like metadata"];
-  B --> D["📚 Document KB<br/>places • dates • excerpts"];
-  C --> E["🧠 AI/Analysis Layer<br/>cross-reference & pattern finding"];
-  D --> E;
-  E --> F["🌐 Web UI<br/>Map + Timeline + Insights"];
+  A["📦 Sources<br/>maps • GIS • docs • sensors"] --> B["🧰 ETL / Pipelines<br/>deterministic • idempotent"];
+  B --> C["🗃️ Catalog Layer<br/>STAC + DCAT"];
+  B --> D["🧾 Provenance<br/>PROV records"];
+  B --> E["🧭 Spatial Store<br/>PostGIS + COG/tiles"];
+  C --> F["🕸️ Knowledge Graph<br/>entities • places • time"];
+  D --> F;
+  E --> G["🔌 API Layer<br/>FastAPI / services"];
+  F --> G;
+  G --> H["🌐 Web UI<br/>Map + Timeline + Story Nodes"];
+  G --> I["🧠 Focus Mode<br/>advisory narratives + insights"];
 ```
 
 > [!IMPORTANT]
@@ -54,25 +69,30 @@ This folder defines the “how we ship” layer: templates, workflows, routing, 
 
 ```text
 📁 .github/
-├─ 📁 workflows/                      # 🤖 CI/CD + automation
-│  ├─ ci.yml                          # ✅ tests + lint + typecheck
-│  ├─ codeql.yml                      # 🔐 CodeQL security scan (recommended)
-│  ├─ pages.yml                       # 🌐 build/deploy docs/UI (optional)
-│  ├─ data-refresh.yml                # 🗺️ scheduled catalog/layer refresh (optional)
-│  ├─ security.yml                    # 🔎 dependency + secret scans (optional)
-│  └─ release.yml                     # 🏷️ release packaging (optional)
-├─ 📁 ISSUE_TEMPLATE/                 # 🧾 guided issue creation (issue forms)
+├─ 📁 workflows/                         # 🤖 CI/CD + automation
+│  ├─ ci.yml                             # ✅ tests + lint + typecheck + build
+│  ├─ codeql.yml                         # 🔐 CodeQL security scan
+│  ├─ catalog-qa.yml                     # 🔎 STAC quick gate (data/** PRs)
+│  ├─ stac-validate.yml                  # 🧾 full STAC validation (optional)
+│  ├─ prov-validate.yml                  # 🧾 PROV validation (optional)
+│  ├─ data-pipelines.yml                 # 🗺️ scheduled data refresh (optional)
+│  ├─ pages.yml                          # 🌐 build/deploy docs/UI (optional)
+│  ├─ release.yml                        # 🏷️ release packaging (optional)
+│  └─ security.yml                       # 🔎 dependency + secret scans (optional)
+├─ 📁 ISSUE_TEMPLATE/                    # 🧾 guided issue creation (issue forms)
 │  ├─ bug_report.yml
 │  ├─ feature_request.yml
 │  ├─ data_layer_request.yml
+│  ├─ pipeline_request.yml               # 🧰 add if missing
+│  ├─ story_node_request.yml             # 🎬 add if missing
 │  └─ question.yml
-├─ 📄 PULL_REQUEST_TEMPLATE.md        # ✅ PR checklist & review prompts
-├─ 📄 CODEOWNERS                      # 👀 review routing by area
-├─ 📄 dependabot.yml                  # ♻️ dependency updates (recommended)
-├─ 📄 labels.yml                      # 🏷️ canonical label taxonomy (recommended)
-├─ 📄 release-drafter.yml             # 📝 auto-draft release notes (optional)
-├─ 📄 SECURITY.md                     # 🔐 vuln reporting (recommended)
-└─ 📄 README.md                       # 📍 you are here
+├─ 📄 PULL_REQUEST_TEMPLATE.md           # ✅ PR checklist & review prompts
+├─ 📄 CODEOWNERS                         # 👀 review routing by area
+├─ 📄 dependabot.yml                     # ♻️ dependency updates (recommended)
+├─ 📄 labels.yml                         # 🏷️ canonical label taxonomy (recommended)
+├─ 📄 release-drafter.yml                # 📝 auto-draft release notes (optional)
+├─ 📄 SECURITY.md                        # 🔐 vuln reporting (recommended)
+└─ 📄 README.md                          # 📍 you are here
 ```
 
 > [!NOTE]
@@ -80,37 +100,56 @@ This folder defines the “how we ship” layer: templates, workflows, routing, 
 
 ---
 
-## 🔁 Workflow: Issue → PR → Merge → Ship
+## 🔁 Workflow: Issue → PR → Merge → Promote → Ship
 
 ```mermaid
 flowchart LR
   I["🧾 Issue"] --> T["🏷️ Triage + Labels"];
   T --> B["🌿 Branch"];
   B --> P["✅ Pull Request"];
-  P --> C["🤖 CI Checks"];
+  P --> C["🤖 CI Checks<br/>+ data gates"];
   C --> R["👀 Review<br/>CODEOWNERS"];
   R --> M["🔀 Merge"];
-  M --> D["📦 Deploy / Data Publish"];
+  M --> G["🚦 Promotion Gate<br/>Validate → Publish → Catalog"];
+  G --> D["📦 Deploy / Data Publish"];
 ```
 
 ### 🧠 Working agreements (short + strict)
-- **If it changes behavior, it needs docs.** 📚
-- **If it changes data, it needs provenance.** 🧾🗺️
-- **If CI fails, we don’t merge.** 🤖🚫
-- **If it’s unclear, open an issue first.** 🧭
+- **If it changes behavior, it needs docs.** 📚  
+- **If it changes data, it needs provenance.** 🧾🗺️  
+- **If it touches `data/**`, it must pass Catalog QA.** 🔎✅  
+- **If CI fails, we don’t merge.** 🤖🚫  
+- **If it’s unclear, open an issue first.** 🧭  
+
+---
+
+## 🧱 KFM-MDP & why our gates are strict
+
+KFM uses a governance-driven workflow (KFM-MDP) where **validation is a first-class citizen**:
+- data moves through **staging → validation → atomic publish**
+- failures trigger **rollbacks** (or kill-switch behavior) instead of pushing broken catalogs
+- catalogs must remain **federation-ready** (indexers hate missing `license/providers/stac_extensions`)
+
+> [!TIP]
+> Treat metadata like code: **schema drift** is a bug. 🐛
 
 ---
 
 ## 🛡️ Branch protection & merge strategy
 
-These are configured in **Repo Settings** (not as files). Recommended guardrails:
+Configured in **Repo Settings** (not files). Recommended guardrails:
 
 - ✅ Require PRs (no direct pushes to `main`)
-- ✅ Require status checks (CI + security checks)
+- ✅ Require status checks (CI + security + data gates)
 - ✅ Require at least **1–2 approvals** (CODEOWNERS if relevant)
 - ✅ Require “Resolve conversations” before merge
 - ✅ Block force-pushes to protected branches
-- ✅ Prefer **Squash merge** to keep history clean (or **Rebase merge** if you enforce linear history)
+- ✅ Prefer **Squash merge** (or **Rebase merge** if you enforce linear history)
+
+### ✅ Recommended required checks (baseline)
+- `ci` ✅
+- `codeql` 🔐 *(if enabled)*
+- `catalog-qa` 🔎 *(required when `data/**` changes)*
 
 > [!TIP]
 > If you enable auto-merge, only allow it when **all required checks** pass.
@@ -125,17 +164,17 @@ Use issues for **everything**: bugs, data layers, UI changes, pipeline improveme
 - Search existing issues/PRs
 - Add screenshots (UI), logs (pipelines), or minimal repro (code)
 - For geospatial requests: include **time range** + **spatial extent** (bbox, county, township/range, etc.)
+- For catalog/pipeline requests: include **dataset id**, **expected STAC/DCAT shape**, and **provenance needs**
 
 ### 🏷️ Recommended issue categories (labels)
 - `type:bug` 🐛 — something broken
 - `type:feature` ✨ — new capability
 - `type:data` 🗺️ — new layer/source, ingestion, catalog updates
+- `type:pipeline` 🧰 — ETL/automation/schedulers/validators
 - `type:docs` 📚 — documentation improvements
+- `type:story` 🎬 — Story Nodes / narrative layer
 - `type:chore` 🧹 — refactor, tooling, dependencies
 - `type:security` 🔐 — security-related changes *(avoid public details; see below)*
-
-> [!TIP]
-> Use **checklists** inside issues when the task has multiple steps. It makes PR review faster. ✅✅✅
 
 ---
 
@@ -147,6 +186,7 @@ PRs should be **small, reviewable, and testable**.
 - `feat/<short-scope>` — new features
 - `fix/<short-scope>` — bug fixes
 - `data/<source-or-layer>` — data/catalog changes
+- `pipe/<pipeline-or-validator>` — pipeline/CI/automation work
 - `docs/<topic>` — documentation
 
 ### 🧪 PR must include
@@ -160,11 +200,12 @@ Prefer < **400 lines** changed unless there’s a strong reason.
 
 ### 🧾 PR description essentials (geo-specific)
 Include:
-- **EPSG**
+- **EPSG / CRS** (and whether you used STAC `proj:*` fields)
 - **bbox** (or named region)
 - **time coverage** (year / range / undated)
-- **format** (COG/GeoJSON/etc.)
+- **format** (COG/GeoJSON/tiles/etc.)
 - **preview proof** (screenshot + zoom level)
+- **catalog impact**: which `collection.json` / `catalog.json` was updated
 
 > [!IMPORTANT]
 > Link issues in the PR body using: `Closes #123` ✅  
@@ -190,13 +231,17 @@ Include:
 
 Use prefixes so filters, search, and boards stay sane:
 
-- `type:*` → intent (bug/feature/data/docs/chore/security)
+- `type:*` → intent (bug/feature/data/pipeline/story/docs/chore/security)
 - `area:*` → subsystem
   - `area:pipeline` 🧰
   - `area:catalog` 🗃️
+  - `area:stac` 🧾
+  - `area:prov` 🧾
+  - `area:graph` 🕸️
   - `area:ai` 🧠
   - `area:web` 🌐
   - `area:db` 🗄️
+  - `area:story` 🎬
   - `area:docs` 📚
 - `priority:*` → urgency (`p0`, `p1`, `p2`)
 - `status:*` → workflow state (`blocked`, `needs-info`, `ready`, `in-progress`)
@@ -216,35 +261,64 @@ Use prefixes so filters, search, and boards stay sane:
 - Build (web + CLI tooling)
 - Optional: integration tests for pipelines (nightly or on-demand)
 
-### 🔐 Security automation (recommended)
-- CodeQL scanning
-- Secret scanning (and push protection)
-- Dependency alerts + Dependabot PRs
+### 🔎 Catalog QA (STAC quick gate) — fast PR filter
 
-> [!CAUTION]
-> GitHub Actions should follow **least privilege**: minimal permissions, pinned actions, no secret echoing.
+This is a **high-ROI** gate that runs on PRs touching `data/**` (and validator code). It prevents broken catalogs from merging.
 
-### 🧯 If CI fails
-- Fix the root cause (don’t “just rerun” unless it’s a flaky upstream)
-- Paste the key error lines into the PR description or a comment
-- If it’s flaky: open an issue labeled `type:chore` + `status:needs-triage`
+**Checks (fast):**
+- `license` must exist and be non-empty ✅  
+- `providers` must be a non-empty array ✅  
+- `stac_extensions` must exist (warn if empty; can fail on warn) ✅  
+- top-level `links[].href` are checked via HEAD/GET ✅  
+
+**Reference implementation (recommended):**
+- Script: `tools/validation/catalog_qa/run_catalog_qa.py`
+- Config (optional): `tools/validation/catalog_qa/config.yml`
+- CI: `.github/workflows/catalog-qa.yml`
+
+**Local usage:**
+```bash
+python3 tools/validation/catalog_qa/run_catalog_qa.py \
+  --root data/ \
+  --glob "**/collection.json" \
+  --fail-on-warn
+```
+
+> [!TIP]
+> Catalog QA is a **quick gate**. It’s not a substitute for full JSON-Schema validation — it’s the “stop bad PRs early” filter. 🧯
 
 ---
 
-## 🏷️ Releases & changelogs
+## 🚦 Data promotion gates (STAC/DCAT/PROV)
 
-Recommended flow (if/when you formalize releases):
+KFM data isn’t “done” when files exist. It’s done when it’s **discoverable + trustworthy**:
 
-- Use **Release Drafter** to keep release notes up-to-date (`release-drafter.yml`) 📝
-- Tag releases (`vX.Y.Z`) when:
-  - the public API changes,
-  - data catalog schema changes,
-  - the UI has user-visible changes,
-  - ingestion pipelines change in a non-trivial way.
-- Keep release notes **user-facing** (what changed, why it matters, breaking changes, migration steps).
+- **STAC**: Items/Collections for geospatial assets (COGs, tiles, quicklooks, etc.)
+- **DCAT**: Dataset-level roll-ups and distributions for portal/federation
+- **PROV**: a traceable chain from raw → processed → published
 
-> [!TIP]
-> If you adopt **Conventional Commits** later, you can auto-generate changelogs more reliably.
+### ✅ Promotion checklist (what reviewers should look for)
+- [ ] Catalog QA passed 🔎✅
+- [ ] Full schema validation ran (STAC/DCAT/PROV) 🧾✅ *(nightly or manual OK)*
+- [ ] Atomic publish / staging approach documented 📦
+- [ ] Rollback story exists (kill-switch or rollback tag) 🧯
+- [ ] Links in catalog are reachable 🔗✅
+
+---
+
+## 🔐 Security & privacy
+
+- Never commit secrets (tokens, keys, credentials)
+- Use GitHub Secrets + environment variables
+- For vulnerabilities: open a **private** report (or follow `SECURITY.md` if present)
+
+### 🧭 Data sensitivity rule
+If a dataset contains **sensitive locations** (e.g., culturally sensitive sites):
+- generalize location precision (mask/jitter/grid indexing)
+- do not publish exact coordinates unless explicitly allowed by governance policy
+
+> [!CAUTION]
+> Don’t paste sensitive endpoints, server IPs, or access patterns in public issues.
 
 ---
 
@@ -269,16 +343,14 @@ Any new/updated dataset **must** include:
 - Interchange for Google Earth: **KML/KMZ** (regionated if large)
 - Tiles: vector/raster tiles only when needed for UX/performance
 
-### 🧪 Validation expectations
-- Geometry validity checks (self-intersections, empty geometries)
-- Topology checks where relevant (boundaries, networks)
-- “Looks right” QA: render a quick preview in the web UI / QGIS
-- Document the test: screenshot + bbox + zoom level
+### 🧾 STAC projection metadata (recommended for rigor)
+When applicable, include STAC **Projection Extension** fields in Items/Collections:
+- `proj:code` (e.g., `EPSG:4326`)
+- `proj:bbox`, `proj:geometry`
+- `proj:shape`, `proj:transform` (rasters)
 
-### 🧳 Large files policy (recommended)
-- Prefer **data in releases or external object storage**, not Git history
-- Use **Git LFS** only when necessary and agreed upon
-- Never commit raw scans if licensing is unclear
+> [!TIP]
+> Prefer **Stable** STAC extensions for “production” catalogs; warn when an extension is Pilot/Proposal. 🧾🟢
 
 ---
 
@@ -289,52 +361,27 @@ We accept AI/ML contributions when they are:
 - Evaluated (not vibes)
 - Reproducible (seeded, versioned, documented)
 
+### 🧭 Focus Mode rules (human-first)
+- Focus Mode is **advisory** (never autonomous)
+- Outputs should be grounded in KFM sources where possible
+- Sensitive topics must follow CARE-aligned filters (generalize/omit precise sensitive info)
+- AI-generated content must be labeled, and citations provided when available
+
 ### 🧾 Required artifacts for ML-ish PRs
 - A short **dataset note** (what, where from, known biases)
 - An **evaluation note** (metrics + what “good” means)
 - A **model/experiment card** in `mcp/model_cards/` (or equivalent)
 
-> [!TIP]
-> Avoid statistical foot-guns: document sampling, leakage risks, p-hacking risks, and how you validated.
-
 ---
 
-## 🧱 Architecture & code quality expectations
-
-### 🧼 Clean boundaries
-We bias toward **clean architecture**:
-- UI concerns stay in `web/`
-- Domain logic stays testable (not glued to frameworks)
-- Adapters (DB/API/IO) are swappable and mocked in tests
-
-### 🧰 Tooling norms
-- Prefer reproducible CLI tooling (`make`, `task`, or scripts)
-- Keep pipelines deterministic (idempotent steps, clear outputs)
-- Log important steps (inputs, outputs, counts, timings)
-
-### 🐳 Docker-first (when possible)
-If it runs in CI, it should run locally. Containerization helps.
-
----
-
-## 🔐 Security & privacy
-
-- Never commit secrets (tokens, keys, credentials)
-- Use GitHub Secrets + environment variables
-- For vulnerabilities: open a **private** report (or follow `SECURITY.md` if present)
-
-> [!CAUTION]
-> Don’t paste sensitive endpoints, server IPs, or access patterns in public issues.
-
----
-
-## 🌐 Frontend contributions (maps + time)
+## 🌐 Frontend contributions (maps + time + story)
 
 UI work should keep these goals in mind:
 - Layer toggles + strong legend behavior 🗺️
 - Timeline/time slider that filters layers cleanly ⏳
 - Progressive loading for heavy data (tiles, regionated KML, etc.)
 - Accessibility + responsive layouts 📱🖥️
+- Story Nodes should be deterministic (camera path, timing, fades) 🎬
 
 ---
 
@@ -346,6 +393,7 @@ Use this as the final self-check before requesting review:
 - [ ] Tests added/updated (or explained why not)
 - [ ] Docs updated (README/ARCHITECTURE/SOP) if behavior changed
 - [ ] Data provenance included (if data touched)
+- [ ] Catalog QA passed (if `data/**` touched)
 - [ ] No secrets in commits, logs, or screenshots
 - [ ] Reviewer can reproduce locally (steps included)
 
@@ -354,62 +402,55 @@ Use this as the final self-check before requesting review:
 ## 📚 Project reference library (the “why” behind our standards)
 
 <details>
-<summary><strong>📖 Expand the full reading map (PDFs)</strong></summary>
+<summary><strong>📖 Expand the full reading map (project files)</strong></summary>
 
-### 🧭 Core project docs
-- `docs/architecture/Kansas Frontier Matrix (KFM) – Master Technical Specification.pdf`
-- `docs/architecture/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` *(if separate)*
+### 🧭 Canonical KFM design docs
+- `docs/architecture/Kansas Frontier Matrix (KFM) – Comprehensive Engineering Design.docx`
+- `docs/notes/Latest Ideas.docx`
 
 ### 🗺️ GIS, geoprocessing, remote sensing
-- `docs/library/Geographic Information System Basics - geographic-information-system-basics.pdf`
-- `docs/library/geoprocessing-with-python.pdf`
 - `docs/library/python-geospatial-analysis-cookbook.pdf`
 - `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
 - `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-- `docs/library/Google Earth Engine Applications.pdf`
-
-### 🧭 Maps APIs & web mapping
-- `docs/library/Google Maps API Succinctly - google_maps_api_succinctly.pdf`
-- `docs/library/google-maps-javascript-api-cookbook.pdf`
+- `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
 
 ### 🌐 Web + graphics + 3D
 - `docs/library/responsive-web-design-with-html5-and-css3.pdf`
 - `docs/library/webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-- `docs/library/Computer Graphics using JAVA 2D & 3D.pdf`
 
-### 🧠 AI, agents, ML foundations
-- `docs/library/AI Foundations of Computational Agents 3rd Ed.pdf`
-- `docs/library/Artificial-neural-networks-an-introduction.pdf`
-- `docs/library/deep-learning-in-python-prerequisites.pdf`
-- `docs/library/Data Mining Concepts & applictions.pdf`
-
-### 📈 Statistics, experiments, and modeling discipline
+### 📈 Statistics, experiments, modeling discipline
 - `docs/library/Understanding Statistics & Experimental Design.pdf`
-- `docs/library/Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf`
-- `docs/library/Bayesian computational methods.pdf`
 - `docs/library/regression-analysis-with-python.pdf`
+- `docs/library/Regression analysis using Python - slides-linear-regression.pdf`
 - `docs/library/graphical-data-analysis-with-r.pdf`
-- `docs/library/Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf`
+- `docs/library/think-bayes-bayesian-statistics-in-python.pdf`
 
-### 🧪 Simulation, optimization, and advanced math
+### 🧪 Simulation, optimization, advanced math
 - `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
 - `docs/library/Generalized Topology Optimization for Structural Design.pdf`
 - `docs/library/Spectral Geometry of Graphs.pdf`
 
 ### 🧰 Engineering foundations (systems, DBs, tooling)
-- `docs/library/clean-architectures-in-python.pdf`
-- `docs/library/implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf`
-- `docs/library/Introduction-to-Docker.pdf`
-- `docs/library/Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf`
 - `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `docs/library/MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf`
 - `docs/library/Scalable Data Management for Future Hardware.pdf`
-- `docs/library/applied-data-science-with-python-and-jupyter.pdf`
-- `docs/library/MATLAB Programming for Engineers Stephen J. Chapman.pdf`
+- `docs/library/concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
+- `docs/library/Data Spaces.pdf`
 
-### 🧑‍⚖️ Ethics & philosophy (how we treat data + people)
+### 🧑‍⚖️ Ethics & governance
 - `docs/library/Introduction to Digital Humanism.pdf`
 - `docs/library/Principles of Biological Autonomy - book_9780262381833.pdf`
+- `docs/library/On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
+
+### 🧱 General programming shelf (bundles)
+- `docs/library/A programming Books.pdf`
+- `docs/library/B-C programming Books.pdf`
+- `docs/library/D-E programming Books.pdf`
+- `docs/library/F-H programming Books.pdf`
+- `docs/library/I-L programming Books.pdf`
+- `docs/library/M-N programming Books.pdf`
+- `docs/library/O-R programming Books.pdf`
+- `docs/library/S-T programming Books.pdf`
+- `docs/library/U-X programming Books.pdf`
 
 </details>
 
@@ -430,6 +471,7 @@ If they don’t exist yet, consider adding:
 - `CONTRIBUTING.md` 🤝 (expanded dev setup + conventions)
 - `docs/ARCHITECTURE.md` 🧱 (system boundaries + runtime diagram)
 - `.github/workflows/ci.yml` ✅ (lint/test/build)
+- `.github/workflows/catalog-qa.yml` 🔎 (STAC quick gate)
 - `.github/PULL_REQUEST_TEMPLATE.md` ✅ (checklist)
 - `.github/dependabot.yml` ♻️ (dependency updates)
 - `.github/labels.yml` 🏷️ (label source of truth)
