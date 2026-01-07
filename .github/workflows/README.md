@@ -1,48 +1,46 @@
-# 🧰 `.github/workflows/` — CI/CD + Data Promotion Gates for Kansas Frontier Matrix (KFM)
+# 🧰 `.github/workflows/` — CI/CD for Kansas Frontier Matrix (KFM)
 
 [![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
 [![Pages](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pages.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pages.yml)
 
-> 🧩 This folder contains GitHub Actions workflows that keep KFM **buildable**, **testable**, **secure**, and **shippable** — from **geospatial ETL + STAC catalogs** to the **MapLibre/Cesium web viewer**.
+> 🧩 This folder contains GitHub Actions workflows that keep KFM **buildable**, **testable**, **secure**, and **shippable** — from data pipelines to the map UI.  
+> ✅ **Principle:** CI follows KFM’s governed system order → **ETL → Metadata (STAC/DCAT/PROV) → Graph → API → UI** (with policy + security checks throughout).
 
 > [!IMPORTANT]
-> ✅ **KFM CI/CD principle:** workflows follow the platform’s system order → **ETL → Catalogs → Graph → API → UI**, with **governance + security gates** throughout.
-
-> [!NOTE]
-> This README is both a **map** *and* a **spec**. If a workflow file doesn’t exist yet, consider the sections below the intended blueprint for adding it cleanly. 🧱✨
+> CI is intentionally **boring** (predictable, repeatable, least-privilege) — because our *data* is the interesting part. 🗺️✨
 
 ---
 
 ## ⚡ Quick links
 
-- ✅ All Actions runs → https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions
-- 🐛 Open issues → https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues
-- 🔐 Security policy → [`../SECURITY.md`](../SECURITY.md)
-- 🤝 Collaboration hub → [`../README.md`](../README.md) *(the `.github/` README)*
-- 🧪 Workflow dispatch (manual runs) → https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows
+| Action | Link |
+|---|---|
+| ✅ All Actions runs | https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions |
+| 🐛 Open issues | https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues |
+| 🤝 `.github/` Collaboration hub | [`../README.md`](../README.md) |
+| 🔐 Security policy | [`../SECURITY.md`](../SECURITY.md) *(or adjust if you keep it at repo root)* |
+| 📦 Releases | https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases |
 
 > [!TIP]
-> If a badge 404s, that workflow file probably doesn’t exist yet — or it was renamed. Update the badge + this README together so the repo stays “single source of truth.” ✅
+> If a badge 404s, that workflow file probably doesn’t exist yet. This README doubles as the **spec** for what we intend to add next. 🧾
 
 ---
 
 <details>
 <summary><b>🧭 Table of contents</b></summary>
 
-- [📦 The workflow philosophy](#-the-workflow-philosophy)
-- [🗺️ Workflow lanes](#️-workflow-lanes)
+- [📺 Mermaid Workflow TV](#-mermaid-workflow-tv)
 - [📁 What lives here](#-what-lives-here)
+- [🧠 CI philosophy](#-ci-philosophy)
 - [🗂️ Workflow catalog](#️-workflow-catalog-recommended-baseline)
 - [✅ Quality gates](#-quality-gates-what-must-pass)
-- [🧾 Data contracts & catalog gates](#-data-contracts--catalog-gates-stac--links)
-- [🧪 Integration tests with PostGIS](#-integration-tests-with-postgis--optional-neo4j)
-- [🌐 Web UI lane](#-web-ui-lane-maplibre--cesium-story-nodes)
-- [🐳 Docker builds](#-docker-builds-caching--multi-arch)
-- [🔐 Security scanning](#-security-scanning-code--deps--supply-chain)
-- [📦 Artifacts & reporting](#-artifacts--reporting)
+- [🗺️ Data + catalog gates](#️-data--catalog-gates-kfm-specific)
+- [🧪 Integration tests (PostGIS + Graph)](#-integration-tests-postgis--graph)
+- [🧱 Build & packaging](#-build--packaging-condamamba--docker)
+- [🔐 Security scanning](#-security-scanning-sast-deps-secrets-containers)
+- [📦 Artifacts & traceability](#-artifacts--traceability)
 - [🧷 Secrets & environments](#-secrets--environments-keep-it-boring)
-- [🧼 Workflow hygiene](#-workflow-hygiene-do-this-everywhere)
 - [🛠️ Starter templates](#️-starter-templates-copy--paste)
 - [🧰 Debug locally](#-debugging-workflows-locally)
 - [🧾 New workflow checklist](#-adding-a-new-workflow-checklist)
@@ -52,33 +50,53 @@
 
 ---
 
-## 📦 The workflow philosophy
+## 📺 Mermaid Workflow TV
 
-KFM isn’t “just an app” — it’s a **data + provenance + visualization system**. That means CI/CD must validate *more than code*:
+A “TV guide” of how work flows through KFM CI/CD (fast lane → promotion → heavy jobs). 📺🧪
 
-- ✅ Code correctness (lint, unit tests, types)
-- ✅ Data correctness (schemas, STAC required fields, link health, CRS/projection rules)
-- ✅ Governance (licenses, provenance, “no secrets”, ethics constraints)
-- ✅ Reproducibility (pinned environments, build metadata artifacts, deterministic steps)
-- ✅ Shipping (containers, releases, Pages deploy)
+```mermaid
+flowchart TB
+  subgraph PR["🧪 PR Lane (fast • required)"]
+    PR1["ci.yml<br/>lint • unit • typecheck"]
+    PR2["catalog-qa.yml<br/>STAC/DCAT quick gate"]
+    PR3["security.yml<br/>dep review • secrets • scans"]
+  end
 
-> [!IMPORTANT]
-> **CI is a safety rail, not a ritual.** If a check doesn’t prevent real breakage, remove it.  
-> If a check prevents breakage but takes too long, move it to **nightly** or **manual dispatch**. 🛣️
+  subgraph MAIN["🚀 Main Lane (promotion)"]
+    M1["docker.yml<br/>build • tag • push (GHCR)"]
+    M2["deploy.yml / pages.yml<br/>deploy previews or docs"]
+  end
 
----
+  subgraph NIGHTLY["🌙 Nightly Lane (slow • scheduled)"]
+    N1["integration.yml<br/>PostGIS + graph + API contracts"]
+    N2["data-refresh.yml<br/>ETL refresh + diffs"]
+    N3["model-regression.yml<br/>metrics + drift checks"]
+  end
 
-## 🗺️ Workflow lanes
+  subgraph RELEASE["🏷️ Release Lane (tags)"]
+    R1["release.yml<br/>notes + artifacts + provenance"]
+    R2["sbom.yml<br/>SBOM + attestations (optional)"]
+  end
 
-KFM uses multiple lanes so we don’t build a single “mega workflow” that’s slow, flaky, and impossible to debug.
+  PR1 --> M1
+  PR2 --> M1
+  PR3 --> M1
 
-| Lane | Runs when | Goal 🎯 | Typical workflows |
-|---|---|---|---|
-| 🧪 **PR lane (fast)** | `pull_request` | Catch breakage quickly | `ci.yml`, `catalog-qa.yml`, `codeql.yml` |
-| 🟢 **Main lane (promote)** | `push` to `main` | Build artifacts we ship | `docker.yml`, `pages.yml`, `release-draft.yml` |
-| 🗓️ **Nightly/weekly** | `schedule` | Heavy validation + regression | `integration.yml`, `data-refresh.yml`, `e2e.yml` |
-| 🏷️ **Release lane** | tags `v*` | Package + sign + publish | `release.yml`, `docker.yml` |
-| 🧰 **Manual** | `workflow_dispatch` | On-demand runs | `integration.yml`, `data-refresh.yml`, `catalog-qa.yml` |
+  M1 --> M2
+  M1 --> R1
+  R1 --> R2
+
+  PR1 --> N1
+  PR2 --> N2
+  N1 --> N2
+  N2 --> N3
+```
+
+> [!TIP]
+> Mermaid on GitHub can be picky. To avoid parse errors:
+> - Keep **one edge per line**
+> - Use simple IDs (`PR1`, `M1`, etc.)
+> - Prefer labels in quotes or brackets when using punctuation/emoji 😄
 
 ---
 
@@ -86,106 +104,135 @@ KFM uses multiple lanes so we don’t build a single “mega workflow” that’
 
 ```text
 📁 .github/workflows/
-├─ 🧪 ci.yml                      # fast PR lane: lint + unit tests + typecheck (code + docs)
-├─ 🧾 catalog-qa.yml              # STAC quick gate: required fields + top-level link checks
-├─ 🧬 integration.yml             # PostGIS (+ optional Neo4j) integration tests (nightly/dispatch)
-├─ 🌐 web.yml                     # web UI build/tests (MapLibre + Story Nodes + Cesium)
-├─ 🔎 e2e.yml                     # Playwright/Selenium end-to-end (nightly/dispatch)
-├─ 🔐 codeql.yml                  # SAST (CodeQL)
-├─ 🧯 dependency-review.yml        # PR dependency review (recommended)
-├─ 🔐 security.yml                # container scan + secret scan helpers + policy gates (optional)
-├─ 🐳 docker.yml                  # build/push images (optional until you ship containers)
-├─ 🧾 attest.yml                  # cosign/SBOM/attestations (optional but 🔥)
-├─ 📚 docs.yml                    # docs build + link checks (optional)
-├─ 🗺️ data-refresh.yml            # scheduled ETL refresh / catalog rebuild (optional)
-├─ 🏷️ release.yml                 # release packaging/changelog (optional)
-├─ 🌐 pages.yml                   # GitHub Pages deploy (optional)
-└─ 📄 README.md                   # you are here 👋
+├─ 🧪 ci.yml                    # fast PR lane: lint + unit tests + type checks
+├─ 🧾 catalog-qa.yml             # STAC/DCAT quick gate + link check (recommended)
+├─ 🧬 integration.yml            # PostGIS + graph/db + adapter/service integration tests
+├─ 🔐 codeql.yml                 # SAST (CodeQL)
+├─ 🔐 security.yml               # dependency review + secret scan helpers + container scan hooks
+├─ 🐳 docker.yml                 # build/push images (optional early, essential later)
+├─ 🌙 data-refresh.yml           # scheduled ETL + catalog refresh + diffs (optional)
+├─ 📚 docs.yml                   # docs build + link checks (optional)
+├─ 🌐 pages.yml                  # GitHub Pages deploy (optional)
+├─ 🏷️ release.yml                # release packaging + changelog + provenance (optional)
+└─ 📄 README.md                  # you are here 👋
 ```
 
 > [!NOTE]
-> If you only implement **three** workflows to start, make them:
-> 1) `ci.yml` ✅  
-> 2) `catalog-qa.yml` 🧾  
-> 3) `codeql.yml` 🔐
+> It’s okay if you don’t have all of these yet — but the **intent** should stay stable as the repo grows.
+
+---
+
+## 🧠 CI philosophy
+
+### ✅ “Layered gates” beat “mega workflows”
+KFM is modular by design, so CI mirrors that structure:
+
+1) **Code gate**: lint, unit tests, type checks  
+2) **Metadata gate**: catalogs, schemas, provenance checks  
+3) **Integration gate**: DBs/services/queues with real containers  
+4) **Security gate**: SAST, dependency review, secret detection, container scan  
+5) **Promotion gate**: build/publish/deploy with protected environments
+
+This prevents CI from becoming a single slow pipeline that no one trusts. 🛣️
+
+### 🧾 Contracts over vibes
+KFM treats key interfaces as contracts:
+- API contracts (OpenAPI / GraphQL)
+- Data catalogs (STAC/DCAT/PROV)
+- Model & analysis artifacts (metrics + reproducibility notes)
+
+If a contract drifts, CI should fail fast — **before** it ships. ✅
 
 ---
 
 ## 🗂️ Workflow catalog (recommended baseline)
 
-| Workflow 📄 | Protects ✅ | Triggers ⏱️ | Outputs 📦 |
-|---|---|---|---|
-| `ci.yml` | code quality + unit tests + type checks + doc/config lint | PRs, pushes | junit/coverage, logs |
-| `catalog-qa.yml` | STAC catalog health (required fields + link checks) | PRs touching `data/**`, dispatch | QA logs |
-| `integration.yml` | DB/service integration boundaries | nightly, dispatch | integration logs + reports |
-| `web.yml` | MapLibre/Cesium web build + unit tests | PRs touching `web/**`, pushes | built artifact |
-| `e2e.yml` | user-flow tests (UI + API) | nightly, dispatch | videos/screenshots |
-| `codeql.yml` | static analysis | PRs, schedule | SARIF |
-| `dependency-review.yml` | dependency drift checks | PRs | PR annotations |
-| `security.yml` | container scan glue + policy checks | schedule, dispatch | SARIF/scan logs |
-| `docker.yml` | build/push images | `main`, tags | OCI images |
-| `attest.yml` | SBOM + signing/attestations | `main`, tags | SBOM + attestations |
-| `docs.yml` | docs build/link checks | PRs | built docs artifact |
-| `pages.yml` | deploy viewer/docs | `main`, dispatch | Pages deploy |
-| `release.yml` | release packaging | tags | release assets |
+> If a workflow file isn’t present yet, treat this section as the **spec** for creating it.
 
-> [!TIP]
-> Use **path filters** so PR lane jobs only run when they matter (example: only run `catalog-qa.yml` when `data/**` changes). This keeps CI fast and contributor-friendly. 🌱
+| Workflow 📄 | What it protects ✅ | Typical triggers ⏱️ | Budget 🎯 | Outputs 📦 |
+|---|---|---|---:|---|
+| `ci.yml` | lint + unit tests + type checks | `pull_request`, `push` | ≤ 10 min | junit, coverage |
+| `catalog-qa.yml` | STAC/DCAT quick gate + link-check | `pull_request`, `workflow_dispatch` | ≤ 5 min | QA report |
+| `integration.yml` | PostGIS + graph + adapter integration | nightly + dispatch | 10–45 min | logs, junit |
+| `codeql.yml` | SAST (CodeQL) | `pull_request`, schedule | n/a | SARIF |
+| `security.yml` | dep review + secrets + container scan glue | PR + schedule | ≤ 15 min | SARIF/logs |
+| `docker.yml` | build + tag + push images | `push` to `main`, tags | ≤ 20 min | OCI images |
+| `docs.yml` | docs build + link checks | PR | ≤ 10 min | docs artifact |
+| `pages.yml` | deploy static docs/viewer | `push` to `main` or dispatch | n/a | Pages deploy |
+| `release.yml` | release notes + pinned artifacts | tags | n/a | release assets |
 
 ---
 
 ## ✅ Quality gates (what must pass)
 
-### 1) Code & config health 🧼
+### 1) Code health 🧼
 - Formatting + linting (fast fail)
-- Unit tests (core logic first)
+- Unit tests (core logic)
 - Type checks (where applicable)
-- JSON/YAML validity (configs, catalogs, metadata)
+- Coverage floor (optional, but recommended)
 
-### 2) Contract-first boundaries 🧾
-KFM treats interfaces as contracts:
-- API contracts (OpenAPI/GraphQL, if present)
-- “Data contracts” for catalogs + metadata (STAC/DCAT/PROV patterns)
-- Build artifacts should include metadata: versions + checksums (traceability)
+### 2) Metadata + contracts 🗃️
+- JSON/YAML schema validity
+- STAC/DCAT/PROV requirements (license, providers, extensions, etc.)
+- Link integrity (top-level asset hrefs)
+- Provenance presence (source + processing steps)
 
-### 3) Governance gates 🧭
-- License/provenance fields present for datasets
-- Ethics constraints applied when relevant
-- “No secrets” checks (and GitHub secret scanning enabled)
+### 3) Integration fidelity 🧪
+- PostGIS container integration
+- Graph DB integration (if used)
+- “Can we run the pipeline end-to-end on a tiny fixture?” ✅
 
-> [!IMPORTANT]
-> **If CI fails, we don’t merge.**  
-> Broken main breaks everyone. 🤖🚫
+### 4) Security posture 🔐
+- Dependency review (PR gate)
+- CodeQL (SAST)
+- Secret scanning (prevents foot-guns)
+- Container scan on promoted images (recommended)
+
+### 5) Governance & policy 🏛️
+- “No secrets” checks
+- License + usage terms checks for new data
+- Optional: FAIR/CARE checklist automation when data touches sensitive domains
 
 ---
 
-## 🧾 Data contracts & catalog gates (STAC + links)
+## 🗺️ Data + catalog gates (KFM-specific)
 
-KFM catalogs are discoverability infrastructure — if they drift, everything breaks downstream (indexing, browsing, automation, UI layer toggles).
+### ✅ The STAC/DCAT quick gate (recommended)
+Run a fast, deterministic QA pass on every PR that touches catalogs:
 
-### ✅ Minimum “fast gate” for STAC (high ROI)
-A single fast workflow should verify:
-- `license` is present + non-empty  
-- `providers` is present + non-empty array  
-- `stac_extensions` is present (warn if empty)  
-- Root/collection `links[].href` respond (HEAD/GET)
+- `license` present + non-empty  
+- `providers` present + non-empty  
+- `stac_extensions` present *(warn if empty, fail if missing)*  
+- Top-level `links[].href` **HEAD/GET link-check**  
+- Optional: enforce “Stable-only” STAC extensions for production catalogs
 
 > [!TIP]
-> Keep this fast gate small + strict. Run heavier schema validation in a nightly lane.
+> This gate pays for itself immediately: it stops schema drift and broken hrefs before they become “mystery failures” later.
 
-### 🧭 Projection + CRS rules (STAC `proj:`)
-For geo integrity, treat CRS metadata as a contract:
-- Require `proj:code` (EPSG) on items/collections that represent spatial assets
-- Encourage explicit `stac_extensions` schema URIs
-- Prefer Stable STAC extensions for “production catalogs” (warn on Proposal/Pilot)
+### 🧭 CRS + projection sanity checks
+Geospatial bugs often come from silent CRS drift. Add lightweight checks:
+- Required `EPSG` values present where expected
+- Raster grid metadata present for raster assets
+- BBox/geometry validity for footprint fields
+
+### 🧪 Geometry validity checks
+Where vector data is involved, validate geometries:
+- invalid/self-intersecting geometries
+- empty geometries
+- unexpected coordinate ranges
+
+> [!CAUTION]
+> Data QA should be **fast** on PRs (tiny fixtures), and **deep** on nightly jobs (full runs).
 
 ---
 
-## 🧪 Integration tests with PostGIS (+ optional Neo4j)
+## 🧪 Integration tests (PostGIS + Graph)
 
-KFM’s spatial correctness depends on real spatial query engines. Integration tests should run against **real** PostGIS containers.
+KFM’s spatial correctness depends on real PostGIS (and often a graph DB for relationships). Prefer containerized integration tests.
 
-### Option A: GitHub Actions service container ✅
+### Option A: GitHub Actions service containers (fast + simple)
+
+**PostGIS service**
 ```yaml
 services:
   db:
@@ -203,51 +250,38 @@ services:
       --health-retries=10
 ```
 
-### Option B: Compose parity (multi-service) 🐳
-Use Compose when you also need API + worker + cache + graph DB.
+**Neo4j (optional / if applicable)**
+```yaml
+services:
+  neo4j:
+    image: neo4j:5
+    env:
+      NEO4J_AUTH: neo4j/testpass
+    ports:
+      - 7474:7474
+      - 7687:7687
+```
 
 > [!CAUTION]
 > The #1 source of CI flake is “tests started before DB was ready.”  
-> Always use health checks + explicit waits. ✅
+> Always add health checks + explicit waits. ✅
+
+### Option B: Docker Compose (multi-service parity)
+Best when you need API + workers + cache + DB for a realistic end-to-end test.
 
 ---
 
-## 🌐 Web UI lane (MapLibre + Cesium Story Nodes)
+## 🧱 Build & packaging (Conda/Mamba + Docker)
 
-KFM’s UI is not “just a map” — it’s also narrative + 2D/3D context. Keep CI aligned with that reality.
+### ✅ Match production with reproducible environments
+If KFM uses Conda/Mamba environments, CI should:
+- resolve deps the same way every time
+- build inside containers where possible
+- output **build metadata** (versions, digests, checksums) as artifacts
 
-### 🧩 Story Nodes (2D → 3D → 2D)
-Recommended shape (non-disruptive):
+### 🐳 Docker builds: caching + multi-arch
+Use BuildKit + GHA cache:
 
-```text
-🌐 web/
-├─ 🧭 story_nodes/
-│  └─ kansas_from_above/
-│     ├─ config.json
-│     ├─ cesium_scene.js
-│     └─ narrative.md
-├─ 🗺️ viewers/
-│  ├─ maplibre/
-│  └─ cesium/
-│     └─ bootstrap.js
-└─ 🎛️ assets/
-   └─ tiles/
-```
-
-### ✅ Web workflow expectations
-- Install deps with lockfiles (`npm ci` / `pnpm i --frozen-lockfile`)
-- Unit tests for UI logic
-- Build step produces a deterministic `dist/` (or equivalent)
-- (Optional) Playwright E2E on nightly to avoid slowing PRs
-
-> [!TIP]
-> Treat 3D assets as **untrusted input**. If your viewer loads external tiles/models, validate + constrain origins and parse steps.
-
----
-
-## 🐳 Docker builds: caching + multi-arch
-
-### ✅ Prefer BuildKit + GHA cache
 ```yaml
 - uses: docker/setup-buildx-action@v3
 
@@ -260,50 +294,32 @@ Recommended shape (non-disruptive):
     cache-to: type=gha,mode=max
 ```
 
-### 🧪 Multi-version compatibility via matrix
-```yaml
-strategy:
-  matrix:
-    python: ["3.11", "3.12"]
-```
-
-> [!NOTE]
-> Build environments should be reproducible. If you use Conda/Mamba locally, mirror that in CI (or build inside Docker). 🔁
-
 ---
 
-## 🔐 Security scanning (code + deps + supply chain)
+## 🔐 Security scanning (SAST, deps, secrets, containers)
 
 Baseline expectations:
-- ✅ dependency review on PRs
-- ✅ CodeQL (SAST)
-- ✅ secret scanning (and push protection)
-- ✅ container image scanning on `main` + tags *(recommended once containers exist)*
+- ✅ Dependency review on PRs
+- ✅ CodeQL scanning
+- ✅ Secret scanning (and push protection)
+- ✅ Container image scan on `main` + tags (recommended)
 
-### 🔏 Artifact trust (optional but 🔥)
-Once you ship containers or data artifacts:
-- generate SBOMs
-- sign images/artifacts
-- attach attestations (provenance)
-
-> [!CAUTION]
-> Avoid secrets on untrusted PRs from forks. Keep publish/sign steps on:
-> - `push` to `main`
-> - tags
-> - protected environments
-> - `workflow_dispatch`
+> [!NOTE]
+> For forks: publishing workflows should not run with secrets on untrusted PRs.  
+> Keep publish steps on `push` to `main`, tags, or `workflow_dispatch`.
 
 ---
 
-## 📦 Artifacts & reporting
+## 📦 Artifacts & traceability
 
-Standardize artifacts so debugging is easy:
+Standardize artifacts across workflows (debuggability + audit):
 
 - `unit-test-results.xml` / `pytest.xml`
-- `coverage.xml` (+ HTML optional)
+- `coverage.xml` (+ optional HTML coverage)
 - integration logs (zipped)
 - security reports (SARIF)
-- build metadata: versions + checksums (traceability)
+- build metadata (`build-info.json`, image digest, lockfiles)
+- optional: SBOM outputs (`spdx.json`, `cyclonedx.json`)
 
 💡 Naming tip: include workflow + sha → `ci-unit-${{ github.sha }}`
 
@@ -313,46 +329,17 @@ Standardize artifacts so debugging is easy:
 
 Common secrets:
 - `GITHUB_TOKEN` (often enough for GHCR with `packages: write`)
-- Deploy credentials (only in protected environments)
-- Third-party tokens (Earth Engine, map tiles, etc.), scoped + rotated
+- deploy credentials (only in protected envs)
+- third-party tokens (scoped + rotated)
 
 ✅ Use GitHub **Environments** (`dev`, `stage`, `prod`) to:
 - scope secrets safely
 - require approvals for prod
 - attach deploy history to commits
 
----
-
-## 🧼 Workflow hygiene (do this everywhere)
-
-### 🔏 Minimal permissions by default
-```yaml
-permissions:
-  contents: read
-```
-
-Common upgrades:
-- Push images:
-  ```yaml
-  permissions:
-    contents: read
-    packages: write
-  ```
-- Upload SARIF:
-  ```yaml
-  permissions:
-    security-events: write
-  ```
-
-### 🧵 Concurrency (avoid dogpiling)
-```yaml
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-```
-
-### 📌 Pin action versions
-At minimum, pin major versions. For maximum safety, pin commit SHAs.
+> [!CAUTION]
+> Avoid `pull_request_target` unless you deeply understand the security model.  
+> Default to `pull_request` + read-only permissions.
 
 ---
 
@@ -361,7 +348,7 @@ At minimum, pin major versions. For maximum safety, pin commit SHAs.
 > Keep PR checks fast, make slow lanes scheduled, and always upload logs on failure. 🥇
 
 <details>
-<summary><strong>🧪 <code>ci.yml</code> — Fast PR Lane (lint + unit tests + typecheck)</strong></summary>
+<summary><strong>🧪 <code>ci.yml</code> — Lint + Unit Tests (fast PR lane)</strong></summary>
 
 ```yaml
 name: CI
@@ -379,12 +366,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  python:
-    name: 🐍 Python — lint + unit tests
+  python-lint-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+
     steps:
       - uses: actions/checkout@v4
 
+      # Option A (pip): good for early stage repos
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -393,7 +382,6 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install -U pip
-          # Adjust to your repo (requirements.txt / pyproject.toml)
           pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Lint
@@ -409,82 +397,63 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: python-unit-artifacts
+          name: unit-test-artifacts-${{ github.sha }}
           path: |
             unit-test-results.xml
             coverage.xml
-
-  web:
-    name: 🌐 Web — build + tests (optional)
-    runs-on: ubuntu-latest
-    if: ${{ hashFiles('web/package.json') != '' }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-          cache-dependency-path: web/package-lock.json
-
-      - name: Install
-        working-directory: web
-        run: npm ci
-
-      - name: Test
-        working-directory: web
-        run: npm test --if-present
-
-      - name: Build
-        working-directory: web
-        run: npm run build --if-present
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: web-build
-          path: |
-            web/dist
 ```
 </details>
 
 <details>
-<summary><strong>🧾 <code>catalog-qa.yml</code> — STAC Quick Gate (fields + link checks)</strong></summary>
+<summary><strong>🧾 <code>catalog-qa.yml</code> — STAC/DCAT Quick Gate (recommended)</strong></summary>
 
 ```yaml
-name: Catalog QA (STAC quick gate)
+name: Catalog QA
 
 on:
   pull_request:
     paths:
       - "data/**"
-      - "tools/validation/catalog_qa/**"
-  workflow_dispatch: {}
+      - "catalog/**"
+      - "tools/validation/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  qa:
+  catalog-qa:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install QA deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements-dev.txt
 
       - name: Run catalog QA
         run: |
-          python tools/validation/catalog_qa/run_catalog_qa.py \
-            --root data/ \
-            --glob "**/collection.json" \
-            --fail-on-warn
+          python tools/validation/catalog_qa/run_catalog_qa.py --fail-on-broken-links
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalog-qa-${{ github.sha }}
+          path: |
+            tools/validation/catalog_qa/out/**
 ```
 </details>
 
 <details>
-<summary><strong>🧬 <code>integration.yml</code> — PostGIS Integration Tests (nightly/dispatch)</strong></summary>
+<summary><strong>🧬 <code>integration.yml</code> — PostGIS + Integration Tests (nightly)</strong></summary>
 
 ```yaml
 name: Integration
@@ -500,6 +469,7 @@ permissions:
 jobs:
   postgis-integration:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     services:
       db:
@@ -515,6 +485,15 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
+
+      # Optional graph service if your integration tests need it:
+      # neo4j:
+      #   image: neo4j:5
+      #   env:
+      #     NEO4J_AUTH: neo4j/testpass
+      #   ports:
+      #     - 7474:7474
+      #     - 7687:7687
 
     steps:
       - uses: actions/checkout@v4
@@ -538,9 +517,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: integration-artifacts
+          name: integration-artifacts-${{ github.sha }}
           path: |
             integration-results.xml
+            .pytest_cache/**
+            logs/**
 ```
 </details>
 
@@ -563,6 +544,8 @@ permissions:
 jobs:
   build-push:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+
     steps:
       - uses: actions/checkout@v4
 
@@ -591,7 +574,7 @@ jobs:
 </details>
 
 <details>
-<summary><strong>🔐 <code>security.yml</code> — Dependency Review + CodeQL + Image Scan Hooks</strong></summary>
+<summary><strong>🔐 <code>security.yml</code> — Dependency + Security Scans</strong></summary>
 
 ```yaml
 name: Security
@@ -623,7 +606,6 @@ jobs:
       - uses: github/codeql-action/analyze@v3
 
   image-scan:
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -636,7 +618,7 @@ jobs:
 </details>
 
 <details>
-<summary><strong>🌐 <code>pages.yml</code> — GitHub Pages Deploy (static viewer)</strong></summary>
+<summary><strong>🌐 <code>pages.yml</code> — GitHub Pages Deploy (static docs/viewer)</strong></summary>
 
 ```yaml
 name: Pages
@@ -646,6 +628,7 @@ on:
     branches: [main]
     paths:
       - "web/**"
+      - "docs/**"
       - ".github/workflows/pages.yml"
 
 permissions:
@@ -662,14 +645,16 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
+
     steps:
       - uses: actions/checkout@v4
 
-      # Replace with your build step (or skip if web/ is static)
+      # Replace with your build step (or skip if static)
       - name: Build (placeholder)
         run: |
           mkdir -p dist
-          cp -R web/* dist/
+          if [ -d web ]; then cp -R web/* dist/; fi
+          if [ -d docs/site ]; then cp -R docs/site/* dist/; fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -683,38 +668,39 @@ jobs:
 
 ## 🧰 Debugging workflows locally
 
-Options:
-- ✅ Run the same commands as CI (best parity)
-- 🐳 Use Compose profiles to mimic integration dependencies
-- 🧪 Use `act` to simulate GitHub Actions locally (helpful, not perfect)
+Preferred order:
+
+1) ✅ Run the same commands CI runs (best parity)  
+2) 🐳 Use Compose profiles to mimic integration dependencies  
+3) 🧪 Use `act` to simulate GitHub Actions locally *(helpful, not perfect)*
 
 ---
 
-## 🧾 Adding a new workflow (checklist)
+## 🧾 Adding a new workflow checklist
 
-- [ ] Name jobs after outcomes (`lint`, `unit-tests`, `catalog-qa`, `integration-tests`, `build-web`, `build-image`)
+- [ ] Name jobs after outcomes (`lint`, `unit-tests`, `integration-tests`, `catalog-qa`, `build-image`)
 - [ ] Keep PR checks fast (aim ≤ ~10 minutes)
 - [ ] Put slow jobs behind schedules or manual dispatch
 - [ ] Cache dependencies and Docker layers
 - [ ] Upload artifacts on failure (logs are gold 🥇)
-- [ ] Pin action versions
+- [ ] Pin action versions (at least major versions)
 - [ ] Avoid secrets on `pull_request` from forks
-- [ ] Add minimal `permissions:` and only elevate when required
+- [ ] Use minimal `permissions:` and only elevate when required
 - [ ] Add `concurrency:` cancellation to reduce queue noise
-- [ ] Keep the KFM order intact: **ETL → Catalogs → Graph → API → UI**
-- [ ] If it touches data: include provenance + STAC/DCAT validation hooks 🧾🗺️
+- [ ] Keep the KFM order intact: **ETL → Metadata → Graph → API → UI**
 
 ---
 
 ## 📚 References for this folder
 
-> 📌 Repo convention (recommended): store reference PDFs under `docs/library/`, internal specs under `docs/specs/`, and validation scripts under `tools/validation/`.
+> 📌 Convention (recommended): store reference PDFs under `docs/library/` and internal specs under `docs/specs/`.
 
-- 🧱 Architecture + CI/CD stages → `docs/architecture/` *(see KFM comprehensive engineering design docs)*
-- 🧾 Catalog QA gate → `tools/validation/catalog_qa/` + `.github/workflows/catalog-qa.yml`
-- 🗺️ Data staging/catlogs (STAC/DCAT/PROV) → `data/README.md`
-- 🧪 Test strategy + CI gates → `tests/README.md`
-- 🔐 Security & disclosure → `.github/SECURITY.md`
-- 🌐 Web viewer deployment → `web/README.md`
+- 🧱 Architecture & pipeline order → `docs/architecture/`
+- 🗺️ Data staging + catalogs (STAC/DCAT/PROV) → `../../data/README.md`
+- 🧪 Test strategy + CI gates → `../../tests/README.md`
+- 🔐 Security & disclosure → `../SECURITY.md`
+- 🌐 Web viewer deployment notes → `../../web/README.md`
 
-> 🔁 If you rename workflows or reorganize docs, update this README — it’s the “single source of truth” for CI/CD intent.
+---
+
+<p align="right"><a href="#-kansas-frontier-matrix-kfm">⬆️ Back to top</a></p>
