@@ -1,75 +1,103 @@
-# 🧩 `src/` — Kansas Frontier Matrix (KFM) Executable Source Code
+<!--
+📌 This README documents the *canonical* executable code boundary for KFM.
+🗓️ Last updated: 2026-01-07
+-->
+
+# 🧩 `src/` — Kansas Frontier Matrix (KFM) Executable Source Code 🧭🗺️
 
 ![KFM](https://img.shields.io/badge/KFM-src%2F%20canonical-1f6feb)
-![README](https://img.shields.io/badge/README-v1.1.0-8957e5)
-![Order](https://img.shields.io/badge/invariant-ETL%E2%86%92Catalog%E2%86%92Graph%E2%86%92API%E2%86%92UI-critical)
+![README](https://img.shields.io/badge/README-v1.2.0-8957e5)
+![Order](https://img.shields.io/badge/invariant-ETL%E2%86%92Catalog%E2%86%92Graph%E2%86%92API%E2%86%92UI%E2%86%92Story%E2%86%92Focus-critical)
 ![Contracts](https://img.shields.io/badge/contracts-contract--first-0aa3a3)
-![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE%20%2B%20Sovereignty-2ea043)
+![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-2ea043)
+![Security](https://img.shields.io/badge/security-hostile--inputs%20%2B%20deny--by--default-red)
 
-> Canonical home for **auditable**, **reproducible** KFM source code:  
-> **🧪 ETL Pipelines → 🗂️ Catalogs (STAC/DCAT/PROV) → 🕸️ Graph → 🛡️ APIs** ✅
+> Canonical home for **auditable**, **reproducible**, **governed** KFM executable code:  
+> **🧪 ETL Pipelines → 🗂️ Catalogs (STAC/DCAT/PROV) → 🕸️ Graph → 🛡️ APIs** ✅  
+> Everything else (docs, data assets, UI) lives outside this boundary.
+
+> [!IMPORTANT]
+> **KFM’s non‑negotiable order:**  
+> **ETL → STAC/DCAT/PROV Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode**  
+> If your change breaks this ordering (even “temporarily”), it’s not mergeable.
 
 ---
 
 ## 🔗 Quick links
-- 🧭 Project overview (root): **[`../README.md`](../README.md)**
-- 🤝 Collaboration & automation: **[`../.github/README.md`](../.github/README.md)**
+- 🧭 Repo overview: **[`../README.md`](../README.md)**
 - 📦 Data + metadata boundary: **[`../data/README.md`](../data/README.md)**
+- 🛰️ API boundary (backend): **[`../api/README.md`](../api/README.md)** *(if present)*
+- 🌐 Web UI boundary: **[`../web/README.md`](../web/README.md)** *(if present)*
+- 🧠 Governance + SOPs: **[`../mcp/MCP-README.md`](../mcp/MCP-README.md)** *(recommended)*
+- 🤝 Collaboration & automation: **[`../.github/README.md`](../.github/README.md)** *(if present)*
 
 ---
 
-## 🧭 Quick Navigation
+## 🧭 Quick navigation
 - [📘 Overview](#-overview)
 - [🧠 Core invariants](#-core-invariants)
-- [🗂️ Directory layout](#️-directory-layout)
-- [📌 Where does this go?](#-where-does-this-go)
+- [📌 Repository boundaries](#-repository-boundaries-what-goes-where)
 - [🧱 Architecture](#-architecture)
   - [🧪 Pipelines](#-pipelines-srcpipelines)
+  - [🏷️ Catalog writers & validators](#-catalog-writers--validators-stacdcatprov)
   - [🕸️ Graph](#-graph-srcgraph)
   - [🛡️ Server](#-server-srcserver)
   - [📜 Contracts](#-contracts-srcservercontracts)
+- [🗂️ Directory layout](#️-directory-layout)
+- [🏁 Golden paths](#-golden-paths-most-common-workflows)
 - [🧪 Local dev norms](#-local-dev-norms)
-- [🧪 Validation & CI/CD](#-validation--cicd)
-- [⚖️ FAIR+CARE & governance](#️-faircare--governance)
-- [📚 Reference library](#-reference-library)
+- [✅ Validation & CI/CD](#-validation--cicd)
+- [🔒 Security & hostile inputs](#-security--hostile-inputs)
+- [📈 Modeling & simulation discipline](#-modeling--simulation-discipline)
+- [⚙️ Scaling & data management](#️-scaling--data-management)
+- [📚 Project reference library influence map](#-project-reference-library-influence-map)
 - [🕰️ Version history](#️-version-history)
+
+---
+
+## 🧾 Doc metadata
+
+| Field | Value |
+|---|---|
+| Doc | `src/README.md` |
+| Status | Active ✅ |
+| Last updated | **2026-01-07** |
+| Audience | Contributors shipping pipelines, catalogs, graph loaders, API services |
+| Prime directive | If it changes “spatial truth,” it must be **traceable + contractable + testable** |
 
 ---
 
 ## 📘 Overview
 
 ### ✅ Purpose
-`src/` is the **canonical home** for Kansas Frontier Matrix (KFM) executable source code. It implements the layers that must remain **auditable**, **contracted**, and **reproducible**:
+`src/` is the canonical home for KFM **executable source code** that must remain:
 
-- **🧪 Pipelines**: ingestion + ETL + normalization + metadata generation (STAC/DCAT/PROV) + validators
-- **🕸️ Graph**: knowledge graph build/load utilities (**from cataloged outputs**, not ad‑hoc inserts)
-- **🛡️ Server**: the governed API boundary (REST/GraphQL contracts + policy enforcement)
+- 🧾 **auditable** (what changed, why, by whom)
+- 🧬 **reproducible** (same inputs + config → same outputs)
+- 🧷 **contracted** (explicit interfaces between stages)
+- 🔐 **governed** (classification propagation, redaction readiness, evidence links)
 
-### 🎯 Design bias
-We optimize for:
-- ✅ *traceability* (outputs point back to inputs)
-- ✅ *determinism* (stable IDs, repeatable runs)
-- ✅ *contract-first change* (APIs and data interfaces are explicit and versionable)
-- ✅ *governance safety* (classification/sensitivity propagation)
+### 🎯 What belongs in `src/`
+- 🧪 ETL/pipeline code that turns **`data/raw/ → data/work/ → data/processed/`**
+- 🏷️ Catalog emitters & validators that produce **STAC/DCAT/PROV**
+- 🕸️ Graph build/load utilities **from catalog outputs** (never from ad‑hoc “mystery data”)
+- 🛡️ API boundary code (or equivalent server layer) that enforces contracts + governance
 
-### ✅ In scope for `src/`
-- Code that produces `data/raw/ → data/work/ → data/processed/` **and** emits catalogs (`data/stac`, `data/catalog/dcat`, `data/prov`)
-- Code that builds/loads graph structures **from** the catalogs
-- API services and contract schemas consumed by UI + Focus Mode
+### 🚫 What does *not* belong in `src/`
+- 📚 governed docs → `docs/`
+- 📦 data assets & metadata outputs → `data/`
+- 🌐 UI/web client → `web/`
+- 📓 experiments → `notebooks/` *(and anything “real” must graduate back into `src/` + catalogs + tests)*
 
-### 🚫 Out of scope for `src/`
-- Governed documentation → `docs/`
-- Data assets / outputs → `data/`
-- Schema registries (JSON Schema, profiles) → `schemas/`
-- Frontend UI → `web/`
-- One-off notebooks that write “mystery outputs” without catalogs/PROV → `notebooks/` (and must still follow provenance rules)
+> [!TIP]
+> If you can’t explain the lineage (inputs → transforms → outputs) in one paragraph, your code probably isn’t ready to live in `src/`. 🧾
 
 ---
 
 ## 🧠 Core invariants
 
 > [!IMPORTANT]
-> KFM enforces this **non-negotiable** order:
+> KFM enforces this pipeline ordering end‑to‑end:
 >
 > **ETL → STAC/DCAT/PROV Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode**
 
@@ -83,233 +111,352 @@ flowchart LR
   F --> G[🎯 Focus Mode]
 ```
 
-### ✅ Implications for `src/` contributors
-- ✅ **Nothing enters the graph or UI unless it passed ETL and has catalog records.**
-- ✅ **UI must never query the graph directly**; all access is via the governed API.
-- ✅ **Derived products** (joins, interpolations, AI/ML outputs, simulations) are *data*, and require lineage (PROV) + cataloging.
-- ✅ **Outputs cannot be less restricted than inputs** without an explicit, reviewed redaction/handling step.
+### ✅ What this means for contributors
+- ✅ **Nothing enters the graph/UI unless it has catalog records.**
+- ✅ **UI never queries internal stores directly** — only via governed APIs.
+- ✅ **Derived products** (joins, AI/ML outputs, simulations) are treated as datasets:
+  - stored in `data/processed/**`
+  - cataloged (STAC/DCAT)
+  - traced (PROV)
+- ✅ **No privacy downgrade:** outputs cannot be less restricted than inputs without an explicit, reviewed redaction step.
 
-### 🚫 Constraints you must not break
-- **No out-of-band data:** if it isn’t produced via ETL and cataloged, it doesn’t belong in graph/UI.
-- **Contract-first APIs:** clients integrate via contracts (OpenAPI/GraphQL), not internal DB schema.
-- **Provenance-first:** log lineage + parameters + run IDs; store uncertainty/limits when relevant.
-- **Sensitivity propagation:** classification must carry through catalogs → graph → API → UI.
-
----
-
-## 🗂️ Directory layout
-
-### 🧭 Repository context (expected shape)
-This tree is a readable **target layout** for KFM (v13+). Keep what exists today, but bias toward converging on this shape.
-
-```text
-📁 docs/                 # 📚 governed documentation (standards, policies, architecture)
-📁 src/                  # 🧩 executable source (this folder)
-📁 data/                 # 📦 raw → work → processed + STAC/DCAT/PROV
-📁 schemas/              # 📐 machine-validated profiles/schemas (STAC/DCAT/PROV + extensions)
-📁 web/                  # 🌐 UI (maps + timeline + Focus Mode)
-📁 .github/              # 🤝 workflows, templates, CODEOWNERS, governance automation
-📁 releases/             # 📦 packaged release artifacts (optional)
-```
-
-### 🧩 `src/` layout (canonical homes)
-Minimum canonical homes (must exist conceptually even if implementations evolve):
-
-```text
-📁 src/
-├── 🧪 pipelines/            # ETL + catalog writers/validators (STAC/DCAT/PROV)
-├── 🕸️ graph/                # graph build/load tools (from cataloged outputs)
-└── 🛡️ server/               # API boundary (policy + services)
-    └── 📜 contracts/         # OpenAPI + GraphQL contracts (source of truth)
-```
-
-### ⭐ Recommended internal layering (clean boundaries)
-You can keep `src/` “flat,” but this structure scales best:
-
-```text
-src/server/
-  domain/                    # 🧠 core types + rules (no framework imports)
-  application/               # 🧰 use-cases/services (orchestrate domain logic)
-  adapters/                  # 🔌 db/http/graph adapters (translation layer)
-  infrastructure/            # 🧱 framework glue (FastAPI/Flask, auth, DI, config)
-  contracts/                 # 📜 OpenAPI/GraphQL (source of truth)
-```
-
-> [!TIP]
-> Keep file paths stable once clients depend on them (especially contracts + schema versions).  
-> If it’s part of a contract, treat it like an API. 🧷
+### 🚫 Things you must not do
+- ❌ “Quick hack” ETL outputs without catalogs/PROV
+- ❌ Manual graph inserts that bypass catalog IDs
+- ❌ Contract-breaking API changes without versioning
+- ❌ Silent projection/unit changes (CRS + units must be explicit)
 
 ---
 
-## 📌 Where does this go?
+## 📌 Repository boundaries: what goes where?
 
-Use this map when you’re unsure:
+Use this when you’re unsure:
 
 | You are adding… | Put it in… | Why |
 |---|---|---|
-| Ingestion/ETL logic, transforms, validators | `src/pipelines/` | Produces reproducible outputs + catalogs |
-| STAC/DCAT/PROV writers + validators | `src/pipelines/` | Catalogs are the gate into graph + UI |
-| Graph build artifacts + loaders/migrations | `src/graph/` | Graph is derived from cataloged products |
-| REST/GraphQL API implementation | `src/server/` | API is the only boundary for clients |
-| OpenAPI / GraphQL schemas | `src/server/contracts/` | Contracts are the source of truth |
-| Docs, templates, standards | `docs/` | Governed documentation lives here |
-| Data outputs and catalogs | `data/` | Data lifecycle root |
-| JSON schemas / profiles | `schemas/` | Machine-validation registry |
-| UI / frontend | `web/` | Client-side consumers |
+| ETL + transforms + QA validators | `src/pipelines/` | Reproducible outputs + catalog emission |
+| STAC/DCAT/PROV writers | `src/pipelines/` | Catalogs are the “gate” to graph & UI |
+| Graph build/load + ontology mapping | `src/graph/` | Graph is a derived reference index |
+| API services + policy enforcement | `src/server/` | Single client boundary (auth/redaction/contracts) |
+| Contracts (OpenAPI/GraphQL) | `src/server/contracts/` | Stable integration surface |
+| Docs/runbooks/standards | `docs/` | Governed writing lives here |
+| Data & metadata artifacts | `data/` | Canonical lifecycle + publication boundary |
+| Schemas/profiles | `schemas/` | Machine validation registry |
+| UI client | `web/` | View + interaction boundary |
 
 ---
 
 ## 🧱 Architecture
 
+KFM is “clean boundaries first”: domain logic stays pure; IO and frameworks stay at the edges.
+
+```mermaid
+flowchart TB
+  subgraph Data["📦 Data & Metadata Boundary"]
+    RAW["data/raw/**"] --> WORK["data/work/**"] --> PROC["data/processed/**"]
+    PROC --> STAC["data/stac/**"]
+    PROC --> DCAT["data/catalog/dcat/**"]
+    PROC --> PROV["data/prov/**"]
+  end
+
+  subgraph SRC["🧩 src/ (Executable Code)"]
+    PIPES["🧪 pipelines/"]
+    GRAPH["🕸️ graph/"]
+    SERVER["🛡️ server/"]
+  end
+
+  RAW --> PIPES --> WORK --> PIPES --> PROC
+  PIPES --> STAC
+  PIPES --> DCAT
+  PIPES --> PROV
+  STAC --> GRAPH
+  DCAT --> GRAPH
+  PROV --> GRAPH
+  GRAPH --> SERVER
+  STAC --> SERVER
+  DCAT --> SERVER
+  PROV --> SERVER
+```
+
 ### 🧪 Pipelines (`src/pipelines/`)
 What goes here:
-- 🔽 downloaders / loaders / connectors
-- 🧼 transforms (CRS fixes, time normalization, schema harmonization)
-- 🧾 **catalog writers**: STAC/DCAT/PROV
-- ✅ validators + quality gates (schema checks, link checks, determinism/idempotency checks)
+- 🔌 connectors (downloaders, scrapers, importers)
+- 🧼 transforms (CRS fixes, cleaning, normalization, georeferencing)
+- 🧾 catalog writers: STAC/DCAT/PROV
+- ✅ validation gates (schema, links, determinism, QA reports)
 
-What should *not* go here:
-- ❌ manual edits to graph databases
-- ❌ UI logic
-- ❌ one-off scripts that write outputs without metadata/PROV
+**Hard rule:** outputs are not “publishable” unless catalogs + PROV exist.
 
-Expected I/O contract:
-- Inputs: `data/raw/` + trusted upstream sources
-- Intermediate: `data/work/`
-- Published outputs: `data/processed/`
-- Catalogs: `data/stac/`, `data/catalog/dcat/`
-- Lineage: `data/prov/`
+### 🏷️ Catalog writers & validators (STAC/DCAT/PROV)
+Catalogs are *interfaces* downstream systems trust:
+- STAC: spatial/temporal + asset indexing
+- DCAT: dataset discovery + distributions
+- PROV: lineage (inputs → activity → outputs) + config + run identity
 
-> [!IMPORTANT]
-> “Published” in KFM means: **asset exists + STAC/DCAT exists + PROV exists**.  
-> If any of those are missing, the output is staging-only. 🚧
-
----
+**Hard rule:** graph and API must reference catalog IDs, not local ad-hoc paths.
 
 ### 🕸️ Graph (`src/graph/`)
 What goes here:
-- building graph-ready artifacts from **cataloged datasets**
-- graph load scripts (idempotent) and migrations
-- graph validation utilities (ontology alignment, referential integrity)
+- graph-ready artifact builders from **catalogs**
+- idempotent loaders/migrations
+- validation utilities (referential integrity, ontology alignment)
 
-Hard rule:
-- Graph loads are driven from **catalog outputs** (STAC/DCAT IDs + PROV run IDs), not ad‑hoc inserts.
-
-Preferred pattern:
-- Graph stores **references** to catalog IDs and “thin” relationship edges; it should not become a duplicate data warehouse.
-
----
+Graph is:
+- ✅ a relationship index + navigation accelerator  
+- ❌ not a second data warehouse
 
 ### 🛡️ Server (`src/server/`)
 What goes here:
-- API service implementation (REST/GraphQL)
-- authn/authz + policy enforcement hooks (classification + redaction)
-- “bundle” endpoints for evidence retrieval (Focus Mode = citations-first)
-- telemetry/logging at the API boundary
+- API boundary (REST/GraphQL)
+- authn/authz + redaction + classification propagation
+- evidence bundles for Story Nodes & Focus Mode
+- telemetry at the boundary
 
-Hard rule:
-- Clients integrate through the API boundary. No direct DB/Graph access from UI.
-
----
+**Hard rule:** clients integrate via contracts; they don’t bind to DB/graph schemas.
 
 ### 📜 Contracts (`src/server/contracts/`)
 Contracts are the stable interface between KFM internals and the outside world:
-- REST (OpenAPI)
-- GraphQL (SDL/schema)
-- shared types for evidence bundles + provenance display
-
-Treat contracts as:
-- versioned, reviewed, and backward compatible (when possible)
-- the place where breaking changes are explicitly managed
+- versioned
+- reviewed
+- testable
+- explicit about error semantics and provenance pointers
 
 > [!TIP]
-> Prefer **contract changes first**, then adapters, then implementation.  
-> If you can’t write a contract test for it, it’s not ready to ship. ✅
+> Contract change → tests → implementation.  
+> If you can’t write a contract test, it’s not ready to ship. ✅
+
+---
+
+## 🗂️ Directory layout
+
+### 🧭 Repo context (target shape)
+```text
+📁 docs/                 # 📚 governed docs (policies, standards, architecture)
+📁 src/                  # 🧩 executable source (this folder)
+📁 data/                 # 📦 raw → work → processed + STAC/DCAT/PROV
+📁 schemas/              # 📐 machine-validated profiles/schemas (STAC/DCAT/PROV)
+📁 web/                  # 🌐 UI (maps + timeline + Focus Mode)
+📁 .github/              # 🤝 CI/CD + templates + CODEOWNERS + automation
+```
+
+### 🧩 `src/` (canonical homes)
+```text
+📁 src/
+├── 🧪 pipelines/            # ETL + catalog writers/validators (STAC/DCAT/PROV)
+├── 🕸️ graph/                # graph build/load tools (from cataloged outputs)
+└── 🛡️ server/               # API boundary (policy + services)
+    └── 📜 contracts/         # OpenAPI/GraphQL contracts (source of truth)
+```
+
+### ⭐ Recommended internal layering (clean boundaries)
+```text
+src/server/
+  domain/                    # 💠 types + invariants (no framework imports)
+  application/               # 🧠 use-cases/services (calls ports)
+  adapters/                  # 🔌 db/http/graph adapters (translation layer)
+  infrastructure/            # 🧱 framework glue (FastAPI, auth, DI, config)
+  contracts/                 # 📜 OpenAPI/GraphQL (source of truth)
+```
+
+---
+
+## 🏁 Golden paths (most common workflows)
+
+### 1) Add a new pipeline job ✅
+1. 🧾 Define inputs + outputs + classification expectations (document in code + README)
+2. 🧪 Implement transforms (deterministic, config-driven)
+3. 📦 Write outputs to `data/processed/<domain>/...`
+4. 🏷️ Emit:
+   - STAC (Collection + Items)
+   - DCAT dataset entry
+   - PROV run bundle
+5. ✅ Add validators (schema + link checks + “no downgrade” checks)
+6. 🧪 Add tests (unit + fixtures + at least one end-to-end “mini run”)
+
+### 2) Add a new graph relationship type ✅
+1. 🏷️ Confirm catalog IDs represent what you need (STAC/DCAT/PROV links exist)
+2. 🕸️ Update graph schema/ontology layer
+3. 🔁 Update loader to ingest references (idempotent)
+4. ✅ Validate referential integrity (no orphan IDs)
+5. 🧪 Add graph validation tests
+
+### 3) Add or change an API endpoint ✅
+1. 📜 Update contracts **first** (`src/server/contracts/`)
+2. 🧠 Add/modify use-case in `application/`
+3. 🔌 Implement adapters/repositories if needed
+4. 🛡️ Enforce auth + redaction + classification
+5. 🧪 Add tests (contract + route + auth regression)
+6. 📈 Add telemetry (request IDs, safe logs)
 
 ---
 
 ## 🧪 Local dev norms
 
-These are **recommended norms** (implement via `Makefile`, `Taskfile`, or scripts as your repo prefers):
+> Goal: **“If it runs in CI, it should run locally.”** 🐳
 
-### ✅ Minimal dev commands (recommended surface)
+### ✅ Suggested command surface
 ```bash
 # quality gates
 make lint
 make test
 
-# pipeline jobs
-make pipeline-run JOB=<job-id>           # produces data/* + catalogs + prov
-make pipeline-validate                   # validates STAC/DCAT/PROV + links
+# pipelines
+make pipeline-run JOB=<job-id>
+make pipeline-validate
 
 # graph
-make graph-build                         # builds graph artifacts from catalogs
-make graph-load                          # idempotent load into graph store
+make graph-build
+make graph-load
 
 # server
-make serve                               # starts API server
+make serve
 ```
 
-### 🧭 “If it runs in CI, it should run locally”
-- Prefer containers for parity (`docker compose`) 🐳
-- Pin tool versions when possible
-- Keep pipeline runs reproducible (config snapshots + stable IDs)
+### 🧭 Reproducibility defaults
+- pin dependency versions where feasible
+- record run configs + hashes
+- seed randomness for modeling/simulation paths
+- keep environments consistent (Docker recommended)
 
 ---
 
-## 🧪 Validation & CI/CD
+## ✅ Validation & CI/CD
 
-### CI intent (conceptual minimum bar)
-KFM CI should enforce:
-- formatting + linting
-- schema validation (STAC/DCAT/PROV + governed doc front-matter when applicable)
-- contract checks (OpenAPI/GraphQL)
-- safety/governance checks (FAIR+CARE labeling; no secrets; no accidental PII; no classification downgrades)
+### CI intent (minimum bar)
+- 🧹 lint + formatting
+- ✅ unit tests
+- 🤝 contract tests (OpenAPI/GraphQL)
+- 🧾 schema validation (STAC/DCAT/PROV)
+- 🔗 link checks (assets exist; IDs resolve)
+- 🔐 security scans (secrets; common foot-guns)
+- 🧷 governance checks (classification propagation; redaction regressions)
 
-### Contributor checklist (before opening a PR)
-- [ ] Outputs are deterministic (stable IDs; repeatable runs)
-- [ ] Pipeline outputs land correctly (`raw/` → `work/` → `processed/`)
-- [ ] STAC/DCAT/PROV are emitted + validated
-- [ ] Graph loads are driven from catalogs (no manual inserts)
-- [ ] Contracts updated first (if API surface changed)
-- [ ] Tests added/updated for contracts + pipeline outputs
-- [ ] Sensitivity/classification propagates end-to-end
+### PR self-check (before opening)
+- [ ] outputs deterministic (stable IDs + hashes)
+- [ ] outputs land correctly (`raw/` → `work/` → `processed/`)
+- [ ] STAC/DCAT/PROV emitted + validated
+- [ ] graph loads driven from catalogs (no ad-hoc inserts)
+- [ ] contract updated first (if API surface changed)
+- [ ] tests added/updated
+- [ ] classification propagates end-to-end
 
 > [!CAUTION]
 > “Green CI” is a merge requirement. If CI fails, fix the root cause — don’t ship flaky behavior. 🤖🚫
 
 ---
 
-## ⚖️ FAIR+CARE & governance
+## 🔒 Security & hostile inputs
 
-`src/` changes can have governance impact when they affect:
-- how sensitivity/classification is computed or propagated
-- how provenance is generated or displayed
-- how AI/ML derived outputs are created, stored, and surfaced
-- how Story Nodes and Focus Mode retrieve evidence bundles
+KFM processes a lot of “files from the world” (maps, documents, imagery, exports). Assume inputs are hostile by default. 🧯
 
-When in doubt:
-- treat changes as governance-relevant ✅
-- prefer conservative defaults (redact/generalize; require review)
-- keep Focus Mode strict: **uncited content must be hidden or flagged**
+### ✅ Required safety posture
+- 🔐 Never commit secrets; never log secrets
+- 🧼 Validate and sanitize all untrusted inputs (files, URLs, metadata)
+- 🧯 Guard against:
+  - path traversal (uploads/extractors)
+  - SSRF (any URL fetching)
+  - decompression bombs (archives / images)
+  - parser exploitation (complex formats, 3D models, PDFs)
+- 🧷 Deny-by-default classification: if unsure, treat as restricted until proven otherwise
+- 🧪 Add security regression tests for every “new surface”
+
+### “Worst-case” question to ask
+> “If someone malicious controls this input, what’s the maximum harm?”  
+If the answer is “exfiltrate data / run code / crash the system,” add guards **before** merging.
 
 ---
 
-## 📚 Reference library
-Implementation guidance only — contracts and governance win.
+## 📈 Modeling & simulation discipline
 
-- See the curated reading map in the root README: **[`../README.md#-project-reference-library-all-included-project-files`](../README.md#-project-reference-library-all-included-project-files)** 📚
+KFM treats models as **decision-support**, not truth generators.
+
+### ✅ Minimum expectations for any model/simulation code in `src/`
+- define objective + assumptions explicitly
+- record parameters + seeds
+- report uncertainty (not just point estimates)
+- validate (unit tests + sanity checks) and verify (V&V mindset)
+- publish outputs as governed evidence artifacts:
+  - store in `data/processed/**`
+  - catalog (STAC/DCAT)
+  - trace (PROV)
+
+### 🧪 “Model hygiene” checklist
+- [ ] train/test split recorded (or reason why not)
+- [ ] diagnostics captured (residuals, calibration, error bars)
+- [ ] sensitivity analysis for key parameters
+- [ ] artifacts versioned (plots/metrics/model cards)
+- [ ] provenance pointers included in outputs
+
+---
+
+## ⚙️ Scaling & data management
+
+The KFM stack should scale from “small demo” to “Kansas-wide spatiotemporal workloads” without architectural rewrites.
+
+### ✅ Practical scaling rules
+- keep data formats web-friendly (COG, tiles, compact GeoJSON/TopoJSON)
+- index spatial data (PostGIS) rather than brute-force scanning
+- separate compute from serving (jobs/workers for heavy work)
+- keep metadata as the interface (catalogs are first-class)
+
+---
+
+## 📚 Project reference library influence map
 
 > [!NOTE]
-> Before committing PDFs into the repo, confirm redistribution rights.  
-> If licensing is unclear, store only a citation/manifest pointer (not the file). 🧾
+> These project files inform *how we design and review* `src/` code: reproducibility, governance, security, data management, modeling rigor, and visualization constraints.
+
+<details>
+<summary><strong>📦 Expand: All project files → what they influence in <code>src/</code></strong></summary>
+
+| Project file | Primary lens | How it upgrades `src/` decisions |
+|---|---|---|
+| `Kansas Frontier Matrix (KFM) – Comprehensive Engineering Design.docx` | 🧭 System blueprint | Defines the platform ordering (ETL→catalog→graph→API→UI→story→focus) and “governed boundary” mindset. |
+| `Latest Ideas.docx` | 💡 Roadmap seed | Captures experiments/features that should graduate into contracts + pipelines instead of living as one-offs. |
+| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | 🛰️ RS pipelines | Informs ETL patterns for EO time-series, export workflows, and how to treat derived indices as publishable datasets (with provenance). |
+| `python-geospatial-analysis-cookbook.pdf` | 🗺️ GIS engineering | Guides CRS hygiene, vector/raster IO, PostGIS integration, and “do transforms at boundaries” discipline. |
+| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | 🎨 Cartography | Reminds that symbology/aggregation choices shape meaning; pipeline outputs should be designed for honest downstream visualization. |
+| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | 📱 Mobile/offline | Reinforces constraints that matter upstream: simplify, tile, cache, and support offline/low-bandwidth workflows. |
+| `responsive-web-design-with-html5-and-css3.pdf` | 🌐 Web constraints | Encourages producing web-friendly assets (sizes, payload budgets, progressive loading) and documentation that respects real devices. |
+| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 🧊 GPU/3D | Informs how dense spatial data should be prepared (tiling/LOD) and why coordinate conventions must be explicit. |
+| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | 🖼️ Image pipelines | Helps upstream choices for thumbnails, QA screenshots, compression, and avoiding bloated repos/artifacts. |
+| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | 🐘 Data store | Shapes Postgres conventions: schema discipline, indexes, migrations, role separation, and export/import patterns. |
+| `Scalable Data Management for Future Hardware.pdf` | ⚙️ Performance | Encourages thinking in partitions, locality, concurrency, and “metadata-driven” access patterns that scale with new hardware. |
+| `Data Spaces.pdf` | 🔗 Interop & federation | Supports the “catalogs as interfaces” mentality and treating data products as discoverable, governed assets across domains. |
+| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | 🧪 V&V discipline | Brings verification/validation, sensitivity analysis, and simulation ethics into pipeline + modeling code reviews. |
+| `Understanding Statistics & Experimental Design.pdf` | 📊 Rigor | Reminds about bias, confounders, experimental design, and when “pretty results” are misleading. |
+| `regression-analysis-with-python.pdf` | 📈 Regression | Guides baseline modeling, diagnostics, reproducible regression workflows, and careful interpretation. |
+| `Regression analysis using Python - slides-linear-regression.pdf` | 📈 Quick reference | Handy reminders for linear regression assumptions, feature scaling, and evaluation conventions. |
+| `graphical-data-analysis-with-r.pdf` | 📉 EDA instincts | Encourages visualization-driven sanity checks and spotting artifacts early (before publishing outputs). |
+| `think-bayes-bayesian-statistics-in-python.pdf` | 🎲 Uncertainty | Encourages Bayesian thinking, posterior uncertainty reporting, and explicit priors when appropriate. |
+| `Spectral Geometry of Graphs.pdf` | 🕸️ Graph analytics | Supports graph feature engineering and cautious interpretation of network metrics as “evidence signals,” not facts. |
+| `Generalized Topology Optimization for Structural Design.pdf` | 🧮 Optimization | Informs how to structure optimization jobs as reproducible workflows with constraints, objectives, and audit trails. |
+| `Principles of Biological Autonomy - book_9780262381833.pdf` | 🧠 Systems thinking | Encourages feedback-loop awareness, stability, and resilience in pipeline + governance design. |
+| `Introduction to Digital Humanism.pdf` | ❤️ Human-centered | Reinforces accountability, transparency, and dignity in governance decisions and “human-in-the-loop” defaults. |
+| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | ⚖️ AI governance | Encourages documentation and labeling of AI-assisted outputs, traceability, and risk framing (esp. for decision support). |
+| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | 🛡️ Security mindset | Reinforces hostile-input handling, secure coding posture, and understanding exploit mechanics when building parsers/pipelines. |
+| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | 🧯 Threat modeling | Informs network/service hardening thinking, privilege boundaries, and defensive assumptions for ingest/integration code. |
+| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | 🧵 Concurrency | Reminds that concurrency is hard; supports careful design of worker/job orchestration and avoiding race conditions. |
+| `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` | 🤖 ML practice | Encourages pragmatic baselines, data-centric iteration, and evaluation discipline before “fancy models.” |
+| `A programming Books.pdf` | 🧰 Polyglot reference | General language/tooling reference; supports choosing the right tool while maintaining boundaries and code quality. |
+| `B-C programming Books.pdf` | 🧰 Polyglot reference | General reference for foundational languages/patterns and interoperability thinking. |
+| `D-E programming Books.pdf` | 🧰 Polyglot reference | General reference; supports standardized engineering practices across stacks. |
+| `F-H programming Books.pdf` | 🧰 Polyglot reference | General reference; supports careful API/interface thinking and tooling discipline. |
+| `I-L programming Books.pdf` | 🧰 Polyglot reference | General reference; supports maintainability and stable interfaces in shared systems. |
+| `M-N programming Books.pdf` | 🧰 Polyglot reference | General reference; supports systems + networking awareness where needed. |
+| `O-R programming Books.pdf` | 🧰 Polyglot reference | General reference; supports practical engineering across languages and ecosystems. |
+| `S-T programming Books.pdf` | 🧰 Polyglot reference | General reference; supports testing, tooling, and software craftsmanship culture. |
+| `U-X programming Books.pdf` | 🧰 Polyglot reference | General reference; supports cross-discipline integration and long-term maintainability. |
+
+</details>
 
 ---
 
 ## 🕰️ Version history
 
-| Version | Date | Summary of Changes | Author |
+| Version | Date | Summary of changes | Author |
 |---:|---|---|---|
+| v1.2.0 | 2026-01-07 | Strengthened `src/` as an executable governance boundary; added “golden paths,” hostile-input security posture, modeling/simulation discipline, scaling notes, and a full project-file influence map. | KFM Engineering |
 | v1.1.0 | 2026-01-06 | Aligned `src/` doc with contract-first + provenance-first rules; added clean-boundary layout guidance; added local dev norms; strengthened governance guardrails. | KFM Engineering |
 | v1.0.1 | 2026-01-06 | Polished structure + navigation; added contributor checklist; clarified contract-first + governance guardrails. | KFM Engineering |
 | v1.0.0 | 2025-12-31 | Initial `src/README.md` created from Master Guide v13 + KFM docs; added emoji directory layout and subsystem guide. | KFM Engineering |
