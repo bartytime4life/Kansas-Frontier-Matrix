@@ -1,34 +1,3 @@
-```markdown
----
-title: "data/processed — Final Data Products"
-path: "data/processed/README.md"
-version: "v1.1.0"
-last_updated: "2026-01-08"
-status: "active"
-doc_kind: "Data Runbook"
-license: "mixed (see per-dataset manifests)"
-
-# Protocol + contracts (KFM)
-markdown_protocol_version: "1.0"
-pipeline_contract_version: "v13"
-
-# Governance (folder-level; per-dataset may override)
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_ref: "docs/governance/SOVEREIGNTY.md"
-security_ref: "SECURITY.md"
-fair_category: "FAIR+CARE"
-care_label: "mixed"
-sensitivity: "mixed"
-classification: "mixed"
-jurisdiction: "US"
-
-# Integrity
-doc_uuid: "urn:kfm:doc:data:processed:readme:v1.1.0"
-commit_sha: "TBD"
-doc_integrity_checksum: "sha256:TBD"
----
-
 <div align="center">
 
 # 📦 `data/processed/` — Final Data Products (KFM)
