@@ -1,400 +1,405 @@
----
-title: "KFM Data Reports — README"
-path: "data/reports/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-26"
-status: "draft"
-doc_kind: "README"
-license: "CC-BY-4.0"
+<div align="center">
 
-markdown_protocol_version: "KFM-MDP v11.2.6"
-mcp_version: "MCP-DL v6.3"
-ontology_protocol_version: "KFM-ONTO v4.1.0"
-pipeline_contract_version: "KFM-PPC v11.0.0"
-stac_profile: "KFM-STAC v11.0.0"
-dcat_profile: "KFM-DCAT v11.0.0"
-prov_profile: "KFM-PROV v11.0.0"
+# 📑 `data/reports/` — KFM Data Reports (Evidence Outputs)
 
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US-KS"
+![KFM](https://img.shields.io/badge/KFM-Kansas%20Frontier%20Matrix-222222)
+![Artifacts](https://img.shields.io/badge/artifacts-reports%20%7C%20figures%20%7C%20tables-0B7285)
+![Traceability](https://img.shields.io/badge/traceability-STAC%20%7C%20DCAT%20%7C%20PROV-6F42C1)
+![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-blueviolet)
+![Rule](https://img.shields.io/badge/rule-no%20mystery%20outputs-red)
 
-doc_uuid: "urn:kfm:doc:data:reports:readme:v1.0.0"
-semantic_document_id: "kfm-data-reports-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:data:reports:readme:v1.0.0"
-commit_sha: "<latest-commit-hash>"
+**A governed home for optional analysis outputs** (PDF/MD/HTML/figures/tables/export bundles) **derived from KFM datasets** — when those outputs need to be reviewed, shared, cited, or shipped. 🧭
 
-ai_transform_permissions:
-  - "summarize"
-  - "structure_extract"
-  - "translate"
-  - "keyword_index"
-ai_transform_prohibited:
-  - "generate_policy"
-  - "infer_sensitive_locations"
+</div>
 
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
----
-
-# KFM Data Reports — README
-
-`data/reports/` is the canonical home for **optional evidence products / analysis outputs** generated from KFM data domains (e.g., charts, summaries, validation reports, export bundles) when those outputs are meant to be reviewed, shared, or referenced downstream.
-
-**Non‑negotiable alignment rule:** `data/reports/` must not bypass KFM’s canonical pipeline ordering:
-
-**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
-
-Reports may be generated at any point, but if a report becomes a *public-facing* or *decision-significant* evidence artifact, it must be made **discoverable + traceable** via the catalogs (STAC/DCAT/PROV) and referenced through the contracted API boundary.
+> [!IMPORTANT]
+> **Reports do not bypass the pipeline.**  
+> Canonical ordering (non‑negotiable): **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.  
+> If a report becomes **public-facing** or **decision-significant**, it must be made **discoverable + traceable** through the catalogs (STAC/DCAT/PROV) and served via the contracted API boundary (never UI → Neo4j direct). 🔐🧾
 
 ---
 
-## 📘 Overview
+## ⚡ Quick links
 
-### Purpose
+- 🧪 Certified datasets (inputs should come from here) → [`../processed/`](../processed/)
+- 📥 Raw + work staging (where transformations live) → [`../raw/`](../raw/) · [`../work/`](../work/)
+- 🛰️ STAC (asset indexing) → [`../stac/collections/`](../stac/collections/) · [`../stac/items/`](../stac/items/)
+- 🗂️ DCAT (dataset discoverability) → [`../catalog/dcat/`](../catalog/dcat/)
+- 🧬 PROV (lineage bundles) → [`../prov/`](../prov/)
+- 🧼 QA outputs (if you split QA vs reports) → [`../qa/`](../qa/) *(if present)*
+- 🎬 Story Nodes (narrative, not data) → [`../../docs/reports/story_nodes/`](../../docs/reports/story_nodes/) *(if present)*
+- 🔐 Security reporting → [`../../SECURITY.md`](../../SECURITY.md) *(or `../../.github/SECURITY.md` if that’s your canonical location)*
 
-- Provide a predictable, governed place to store **report-style artifacts** that are derived from KFM datasets.
-- Clarify how reports relate to:
-  - domain staging (`data/raw/`, `data/work/`, `data/processed/`)
-  - catalog outputs (`data/stac/`, `data/catalog/dcat/`, `data/prov/`)
-  - narrative outputs (`docs/reports/story_nodes/`)
-- Prevent “mystery outputs” that are not traceable to inputs, runs, and catalogs.
+---
 
-### Scope
+<details>
+<summary><strong>📌 Table of contents</strong></summary>
 
-| In Scope | Out of Scope |
+- [What this folder is](#-what-this-folder-is)
+- [What belongs here (and what does not)](#-what-belongs-here-and-what-does-not)
+- [Report taxonomy](#-report-taxonomy)
+- [Where reports fit in the KFM pipeline](#-where-reports-fit-in-the-kfm-pipeline)
+- [“Where should I put this?” decision guide](#-where-should-i-put-this-decision-guide)
+- [Directory layout](#️-directory-layout)
+- [Report bundle contract (minimum required)](#-report-bundle-contract-minimum-required)
+- [Traceability rules (STAC ↔ DCAT ↔ PROV ↔ Graph)](#-traceability-rules-stac--dcat--prov--graph)
+- [Reproducibility & scientific integrity](#-reproducibility--scientific-integrity)
+- [Security, privacy & sensitive-location handling](#-security-privacy--sensitive-location-handling)
+- [Validation & CI/CD expectations](#-validation--cicd-expectations)
+- [Reference shelf (project library)](#-reference-shelf-project-library)
+- [Version history](#-version-history)
+- [Footer refs](#-footer-refs)
+
+</details>
+
+---
+
+## 🧭 What this folder is
+
+`data/reports/` is the canonical place for **reviewable, shareable outputs** derived from KFM data — **when the output is not itself the canonical dataset**.
+
+Reports are typically:
+- 📊 *summaries* (EDA, trends, comparisons, diagnostics)
+- 🧠 *model artifacts* (metrics, calibration, residual plots, posterior summaries)
+- 🧪 *simulation outputs* (verification/validation notes, sensitivity analyses, uncertainty runs)
+- 🧼 *validation outputs* (schema checks, geometry validity summaries, link checks, QA diffs)
+- 📦 *export bundles* (what a reviewer needs to audit a dataset change)
+
+> [!NOTE]
+> This folder is **optional**. If your repo doesn’t use `data/reports/`, that’s okay.  
+> But if it exists, it must remain **governed**: reproducible, provenance-linked, and classification-aware.
+
+---
+
+## ✅ What belongs here (and what does not)
+
+| ✅ Put it in `data/reports/` when… | 🚫 Don’t put it here when… |
 |---|---|
-| Human-facing evidence outputs (tables, figures, report PDFs/HTML/MD, validation summaries) | Raw source snapshots (belongs in `data/raw/<domain>/`) |
-| Automated QA / validation reports emitted by pipelines or CI | Intermediate transforms (belongs in `data/work/<domain>/`) |
-| Export bundles intended for reviewers or release candidates | Canonical processed datasets (belongs in `data/processed/<domain>/`) |
-| Evidence artifacts that are referenced by Story Nodes (via catalog IDs) | Story Nodes themselves (belongs in `docs/reports/story_nodes/`) |
-| Optional derived outputs explicitly treated as catalog assets | API/UI code or graph migrations |
-
-### Audience
-
-- Data + pipeline contributors producing analysis outputs
-- Curators/reviewers verifying traceability before publication
-- Governance/security reviewers validating sensitivity + sovereignty handling
-- API/UI maintainers ensuring evidence can be served with redaction rules (as applicable)
-
-### Definitions (link to glossary)
-
-- Link: `docs/glossary.md` (not confirmed in repo)
-
-Terms used in this README:
-
-- **report**: a presentation-oriented artifact (tables/figures/summary) derived from canonical datasets
-- **evidence product**: a report/output that is intended to be referenced downstream (graph, API, UI, Story Nodes)
-- **catalog linkage**: an explicit mapping from report outputs to STAC/DCAT/PROV identifiers
-- **provenance pointer**: a reference to the generating PROV activity (and its used/generated entities)
-
-### Key artifacts (what this README points to)
-
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| Canonical pipeline ordering | `docs/MASTER_GUIDE_v12.md` | KFM Maintainers | ETL → catalogs → graph → APIs → UI → story → focus |
-| Data lifecycle rules | `data/README.md` | Data/Pipeline Maintainers | Governs raw/work/processed/stac semantics |
-| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Data/Catalog Maintainers | Evidence + lineage source of truth |
-| Story Nodes | `docs/reports/story_nodes/` | Editors/Curators | Evidence-first narrative artifacts |
-| MCP runs/experiments | `mcp/runs/`, `mcp/experiments/` | Contributors | Run manifests + reproducibility artifacts |
-
-### Definition of done (for this README)
-
-- [ ] Front-matter complete + valid (path matches)
-- [ ] `data/reports/` responsibilities and placement rules documented
-- [ ] Relationship to catalogs + provenance is explicit
-- [ ] Sensitivity + governance constraints stated (reports may contain sensitive derivatives)
-- [ ] Validation expectations listed (even if commands are placeholders)
-- [ ] Maintainer review
+| You created a PDF/MD/HTML report with charts/tables meant for review or citation | The output is a **final dataset** meant for downstream computation (→ `data/processed/`) |
+| You exported figures/tables that summarize a certified dataset | You’re storing raw downloads or “as received” archives (→ `data/raw/`) |
+| You generated a validation/QA summary that needs to be kept long-term | It’s an intermediate transform / scratch join (→ `data/work/`) |
+| You produced a release candidate bundle for maintainers | You’re writing narrative Story content (→ `docs/reports/story_nodes/`) |
+| The report is referenced by a Story Node (and you can link it to evidence IDs) | It contains secrets/PII/restricted coordinates without protection (→ stop + follow governance/security) |
 
 ---
 
-## 🗂️ Directory Layout
+## 🧩 Report taxonomy
 
-### This document
+Use this taxonomy to keep “report intent” consistent:
 
-- `path`: `data/reports/README.md` (must match front-matter)
+| Type | Examples | Typical audience | Traceability requirement |
+|---|---|---|---|
+| 🧼 QA / validation | schema compliance, geometry validity, link checks, catalog QA diffs | maintainers + reviewers | **Required** if used to approve/publish |
+| 📈 EDA / analytics | distributions, time-series charts, anomaly summaries | analysts + contributors | Required if cited in Story/UI |
+| 🧠 Modeling | regression diagnostics, Bayesian posterior plots, drift checks | analysts + maintainers | **Required** (STAC/DCAT/PROV pointers) |
+| 🧪 Simulation & V&V | verification notes, sensitivity runs, UQ summaries | analysts + domain stewards | **Required** for decision-significant outputs |
+| 🗺️ Cartographic exports | map sheets, legend comps, print layouts, thumbnails | UI/story maintainers | Required if shipped |
+| 📦 Release evidence bundles | “what changed / why / impact” with links | maintainers | **Required** for releases |
 
-### Related repository paths (orientation)
+---
 
-| Area | Path | What lives here |
-|---|---|---|
-| Data staging (required) | `data/raw/`, `data/work/`, `data/processed/` | Raw → intermediate → certified outputs |
-| Catalog outputs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | STAC/DCAT/PROV evidence + lineage |
-| Pipelines | `src/pipelines/` | Deterministic ETL + transforms + catalog builders |
-| Graph | `src/graph/` (+ `data/graph/` if present) | Ontology bindings + ingest fixtures |
-| API boundary | `src/server/` | Contracted access + redaction + provenance mediation |
-| UI | `web/` | Map + narrative UX (never reads Neo4j directly) |
-| Story Nodes | `docs/reports/story_nodes/` | Curated narrative artifacts + assets |
-| MCP | `mcp/` | Experiments, model cards, run manifests |
+## 🧱 Where reports fit in the KFM pipeline
 
-### Expected file tree for this sub-area
+```mermaid
+flowchart LR
+  ETL["🧰 ETL / Pipelines"] --> CAT["🗂️ Catalogs (STAC • DCAT • PROV)"]
+  CAT --> GRAPH["🕸️ Graph (Neo4j)"]
+  GRAPH --> API["🔌 API Boundary"]
+  API --> UI["🖥️ UI (Map / Timeline)"]
+  UI --> STORY["🎬 Story Nodes"]
+  STORY --> FOCUS["🧠 Focus Mode"]
 
-> Notes:
-> - Items marked **(recommended)** may not exist yet (not confirmed in repo).
-> - `data/reports/` is optional; if present, it must remain governed and provenance-linked.
+  REP["📑 data/reports/ (optional)"] -. "references evidence IDs" .-> CAT
+  REP -. "can be cited by" .-> STORY
+```
 
-~~~text
+**Interpretation:** reports are *downstream artifacts* that should point back to the canonical evidence chain (catalogs + provenance). They should not become “shadow datasets.”
+
+---
+
+## 🧭 “Where should I put this?” decision guide
+
+```mermaid
+flowchart TB
+  A["I produced an output artifact"] --> B{Is it a canonical dataset?}
+  B -->|Yes| C["➡️ data/processed/<domain>/... + STAC/DCAT/PROV"]
+  B -->|No| D{Is it a raw input?}
+  D -->|Yes| E["➡️ data/raw/<domain>/... (append-only)"]
+  D -->|No| F{Is it intermediate/scratch?}
+  F -->|Yes| G["➡️ data/work/<domain>/... (rebuildable)"]
+  F -->|No| H{Is it a reviewable summary/figure/export?}
+  H -->|Yes| I["➡️ data/reports/<domain>/... (this folder)"]
+  H -->|No| J["➡️ docs/ (narrative/specs) or CI artifacts"]
+```
+
+---
+
+## 🗂️ Directory layout
+
+> [!TIP]
+> Keep bundles **small + reviewable**. For large binaries, use pointers + checksums + external storage (DVC/LFS/release assets), but keep the manifest and README in Git.
+
+```text
 📁 data/
 └── 📁 reports/
-    ├── 📄 README.md
+    ├── 📄 README.md                     👈 you are here
     ├── 📁 <domain>/
-    │   ├── 📄 README.md (recommended)
-    │   ├── 📁 <report_slug>/ (recommended)
-    │   │   ├── 📄 README.md (required for report bundles)
-    │   │   ├── 📄 report.md (optional)
-    │   │   ├── 📄 report.pdf (optional)
-    │   │   ├── 📁 assets/ (optional)
-    │   │   │   ├── 🖼️ figure-*.png
-    │   │   │   └── 🎞️ animation-*.mp4
-    │   │   ├── 📁 tables/ (optional)
-    │   │   │   └── 📄 *.csv
-    │   │   └── 📄 checksums.sha256 (recommended)
-    │   └── 📁 validation/ (optional)
-    │       └── 📄 *.md
-    └── 📁 _shared/ (optional; use sparingly)
+    │   ├── 📄 README.md                 (recommended domain index)
+    │   └── 📁 <YYYY-MM-DD>__<slug>__v<semver>/
+    │       ├── 📄 README.md             ✅ required (bundle “report card”)
+    │       ├── 📄 report.md             (optional)
+    │       ├── 📄 report.pdf            (optional)
+    │       ├── 📄 REPORT_MANIFEST.json  ✅ recommended (machine-readable)
+    │       ├── 📄 checksums.sha256      ✅ recommended
+    │       ├── 📁 assets/               (figures, maps, thumbnails)
+    │       ├── 📁 tables/               (csv/parquet extracts)
+    │       ├── 📁 notebooks/            (ipynb / qmd / rmd)
+    │       └── 📁 refs/                 ✅ recommended (evidence pointers)
+    │           ├── 📄 stac_refs.txt
+    │           ├── 📄 dcat_refs.txt
+    │           └── 📄 prov_refs.txt
+    └── 📁 _shared/                      (optional; avoid unless truly cross-domain)
         └── 📄 README.md
-~~~
+```
 
 ---
 
-## 🧭 Context
+## 🧾 Report bundle contract (minimum required)
 
-### Background
+Every report bundle should be auditable like a dataset drop: **human context + machine pointers + integrity**.
 
-KFM’s system design prioritizes **auditability** and **traceability**. The core invariant is that anything consumed by UI/Story/Focus must be resolvable through **catalog + provenance** artifacts and served via the API boundary (no direct UI → graph reads).
+| Artifact | Required | Why | Minimum “good enough” |
+|---|---:|---|---|
+| `README.md` | ✅ | Human-friendly “report card” | summary, scope, inputs, outputs, caveats, how to reproduce |
+| `REPORT_MANIFEST.json` | ⭐ recommended | Machine-readable linkage | evidence IDs (STAC/DCAT), PROV activity IDs, file list, checksums |
+| `checksums.sha256` | ⭐ recommended | Tamper-evidence + portability | sha256 for report outputs (and any included tables/figures) |
+| `refs/*.txt` | ⭐ recommended | Evidence pointers (no “orphan facts”) | list of IDs/paths to STAC/DCAT/PROV items used |
 
-`data/reports/` exists to capture “analysis outputs” *without* mixing them into the canonical staging folders. When reports become evidence products, they must still connect back to the evidence chain (STAC/DCAT/PROV + run IDs).
-
-### Assumptions
-
-- Not all domains will have reports.
-- Not all reports are “evidence products” — some are internal review artifacts.
-- When a report is used in Story Nodes or UI, it must be provenance-linked and reviewable.
-
-### Constraints / invariants
-
-- Preserve canonical ordering: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**
-- **No UI direct-to-graph reads:** all graph access is via `src/server/`.
-- Reports must not “hide” derived datasets:
-  - derived datasets → `data/processed/<domain>/`
-  - presentation outputs → `data/reports/<domain>/`
-- Do not store secrets, tokens, credentials, or personal data in this area.
-
-### Open questions
-
-| Question | Owner | Target date |
-|---|---|---|
-| Do we standardize a minimal `report_manifest.json` schema for report bundles? | TBD | TBD |
-| Do we require every report bundle to have a PROV activity pointer file? | TBD | TBD |
-| Do we publish certain reports via Releases (`releases/`)? | TBD | TBD |
-
-### Future extensions
-
-- Automated linking from `data/reports/**` → STAC assets → PROV activities
-- CI gate that flags report bundles lacking provenance pointers when referenced by Story Nodes
-- Optional report registry schema under `schemas/` (not confirmed in repo)
+> [!IMPORTANT]
+> If the report is referenced by a Story Node, a UI feature, or a release note: **the evidence pointers become mandatory**.
 
 ---
 
-## 🗺️ Diagrams
+## 🔗 Traceability rules (STAC ↔ DCAT ↔ PROV ↔ Graph)
 
-### Where `data/reports/` fits in the canonical pipeline
+### ✅ Golden rule: pointers > copies 🧷
+- Reports should **reference** certified datasets via stable IDs (STAC/DCAT) and lineage via PROV.
+- Avoid duplicating big datasets in report bundles (unless it’s a tiny review extract).
 
-~~~mermaid
-flowchart LR
-  A["ETL<br/>src/pipelines"] --> B["Catalogs<br/>data/stac + data/catalog/dcat + data/prov"]
-  B --> C["Graph<br/>src/graph (+ data/graph if present)"]
-  C --> D["API boundary<br/>src/server"]
-  D --> E["UI<br/>web"]
-  E --> F["Story Nodes<br/>docs/reports/story_nodes"]
-  F --> G["Focus Mode<br/>provenance-linked only"]
+### ✅ Minimum pointer set (recommended)
+A report bundle should be able to answer:
 
-  P["Presentation outputs<br/>data/reports"] -. optional evidence assets .-> B
-  P -. referenced by .-> F
-~~~
+1) **What inputs?** → STAC/DCAT IDs  
+2) **How generated?** → PROV activity ID (plus run config/commit where possible)  
+3) **What outputs?** → files in this bundle + checksums  
+4) **Can we reproduce?** → commands or notebook + pinned environment
 
----
+### 🧩 `REPORT_MANIFEST.json` starter (copy/paste)
 
-## 📦 Data & Metadata
+```json
+{
+  "report_id": "kfm.report.<domain>.<slug>.v1.0.0",
+  "title": "Human-readable report title",
+  "domain": "<domain>",
+  "created": "2026-01-08",
+  "classification": "public|internal|confidential|restricted",
+  "summary": "1–3 sentences explaining why this report exists.",
 
-### Inputs
+  "evidence": {
+    "stac": ["kfm.ks.<...>.v1", "path:data/stac/items/<...>.json"],
+    "dcat": ["path:data/catalog/dcat/<...>.jsonld"],
+    "prov": ["path:data/prov/<...>.jsonld"]
+  },
 
-| Input | Where from | Notes |
-|---|---|---|
-| Certified datasets | `data/processed/<domain>/` | Prefer to derive reports from certified outputs |
-| Catalog IDs | `data/stac/**`, `data/catalog/dcat/**` | Use stable IDs in report metadata and links |
-| Provenance bundles | `data/prov/**` | Reports should reference the generating activity |
-| Run manifests / configs | `mcp/runs/**`, `src/pipelines/**` | Keep generation reproducible |
+  "methods": {
+    "type": ["eda|regression|bayesian|simulation|qa|cartography"],
+    "tools": ["python", "r", "qgis", "gee", "postgis"],
+    "notes": "Keep it short; point to README for narrative."
+  },
 
-### Outputs
+  "repro": {
+    "commit_sha": "TBD",
+    "entrypoint": "notebooks/report.ipynb",
+    "seeds": [42],
+    "environment": {
+      "python": "3.12",
+      "notes": "Pin deps via lockfiles where possible."
+    }
+  },
 
-| Output | Typical formats | Destination | Notes |
-|---|---|---|---|
-| Report artifacts | PDF/MD/HTML/PNG/CSV/MP4 | `data/reports/<domain>/...` | Presentation-first outputs |
-| Validation summaries | MD/JSON | `data/reports/<domain>/validation/` | Optional, but recommended for review |
-| Checksums | sha256 list | alongside report outputs | Recommended for integrity |
+  "outputs": [
+    { "path": "report.pdf", "media_type": "application/pdf", "sha256": "TBD" },
+    { "path": "assets/figure-01.png", "media_type": "image/png", "sha256": "TBD" }
+  ]
+}
+```
 
-> Format allowance: KFM catalogs commonly reference assets such as COG, GeoJSON, CSV, NetCDF, and MP4; if reports introduce additional formats (PDF/PNG/HTML), ensure catalog + schema expectations support them (not confirmed in repo).
+### 🌐 If a report becomes a “shipped evidence asset”
+Choose one pattern (repo-specific):
 
-### Placement rules
+- **Pattern A:** add report files as **STAC Assets** on an existing STAC Item (best when the report documents a specific dataset version).
+- **Pattern B:** create a dedicated STAC Item where the primary assets are the report files (best when the report is its own standalone evidence product).
 
-- If the artifact is a **dataset** intended for downstream computation:
-  - land it in `data/processed/<domain>/` and catalog it.
-- If the artifact is a **presentation/report** derived from certified datasets:
-  - land it under `data/reports/<domain>/`.
-- If a report is used in Story Nodes or UI:
-  - it must be traceable through the catalogs and provenance chain (see below).
-
-### Naming conventions (recommended)
-
-Not confirmed in repo. Recommended pattern for report bundle folder names:
-
-- `<YYYY-MM-DD>__<short-slug>__v<semver>`
-- Example: `2025-12-26__air-quality-summary__v1.0.0`
-
-Avoid ambiguous names like `final/` or `new/`.
-
----
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-### Policy for every dataset / evidence product
-
-For each dataset or evidence product:
-
-- STAC Collection + Item(s)
-- DCAT mapping record (minimum title/description/license/keywords)
-- PROV activity describing lineage (sources + run/activity identifiers)
-- Version lineage links reflected in catalogs and (where applicable) the graph
-
-### How reports connect to catalogs (recommended)
-
-When a report becomes an evidence product, ensure at least one of the following (project-specific choice; not confirmed in repo):
-
-- **Option A:** Add the report files as **STAC Assets** on an existing relevant STAC Item.
-- **Option B:** Create a dedicated **STAC Item** whose primary asset(s) are the report artifacts.
-
-When using STAC Assets, prefer the required + recommended fields used across KFM:
-
-- Required: `href`, `type`, `roles`
-- Recommended: checksum (sha256), `title`, `description`
-
-### Identifier linkage expectation
-
-Graph nodes and APIs should reference:
-
-- STAC Item IDs
-- DCAT dataset ID
-- PROV activity ID
-
-This enables Focus Mode to resolve “what is this?” into a traceable lineage bundle.
+Either way:
+- add (or update) a DCAT distribution for discoverability
+- ensure PROV links “inputs → activity → report outputs”
 
 ---
 
-## 🧱 Architecture
+## 🧪 Reproducibility & scientific integrity
 
-### Components and contracts
+Reports are where “it looked right on my machine” goes to die ☠️ — unless we keep them reproducible.
 
-| Component | Responsibility | Interface |
-|---|---|---|
-| `data/reports/**` | Store report-style derived outputs | Files + README metadata |
-| Catalogs | Provide discoverable evidence + lineage | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` |
-| Graph | Reference evidence IDs; enforce semantics | `src/graph/**` (+ ingest fixtures) |
-| API boundary | Serve report links with provenance + redaction | `src/server/**` + contracts |
-| UI | Render evidence-first views | `web/**` |
-| Story Nodes | Cite evidence IDs and link to report assets | `docs/reports/story_nodes/**` |
+### ✅ Baseline integrity checklist
+- [ ] Inputs are **certified** (prefer `data/processed/<domain>/` + evidence IDs)
+- [ ] Any sampling is explained (filters, time windows, inclusion criteria)
+- [ ] Any modeling includes uncertainty/diagnostics (not just point estimates)
+- [ ] Any simulation includes V&V notes and sensitivity where appropriate
+- [ ] Outputs are checksummed and versioned
+- [ ] Narrative conclusions clearly separate **facts vs interpretation**
+- [ ] If AI-assisted: clearly label assistance + point to evidence IDs (no unsourced claims)
 
-### API boundary rule
-
-- The UI does **not** connect to Neo4j directly.
-- The API boundary mediates access and enforces provenance + redaction/generalization rules.
-
-### Story Node & Focus Mode integration
-
-- Story Nodes should cite **graph entity IDs** and **STAC/DCAT/PROV evidence IDs**.
-- Focus Mode must only consume **provenance-linked** content (no hallucinated sources).
-
----
-
-## 🧪 Validation & CI/CD
-
-### CI behavior contract
-
-- **Validate if present**: if a canonical root exists (or changes), validate its artifacts.
-- **Fail if invalid**: schema errors, missing links, or orphan references fail deterministically.
-- **Skip if not applicable**: optional roots absent → skip without failing the overall pipeline.
-
-### Minimum checks (recommended)
-
-- [ ] Markdown protocol checks (for governed docs)
-- [ ] Link integrity checks for docs (if tooling exists)
-- [ ] If reports are cataloged: STAC/DCAT/PROV schema validation
-- [ ] Provenance linkage checks (no dangling PROV refs for published evidence products)
-- [ ] Security and sovereignty checks (as applicable)
-
-### Local reproduction (placeholders)
-
-~~~bash
-# NOTE: commands are placeholders; replace with repo-approved tooling.
-
-# 1) validate schemas
-# make validate-schemas
-
-# 2) validate provenance bundles / lineage
-# make validate-lineage
-
-# 3) lint docs / link checks
-# make lint-docs
-~~~
+### 📈 Recommended “report card” headings (`README.md` inside each bundle)
+```text
+# Report title
+## Why this report exists (intent)
+## Inputs (STAC/DCAT IDs)
+## Methods (tools, parameters, assumptions)
+## Outputs (files + checksums)
+## Findings (with links to figures/tables)
+## Uncertainty / limitations
+## Sensitivity / governance notes
+## How to reproduce (commands + env)
+```
 
 ---
 
-## ⚖ FAIR+CARE & Governance
+## 🔐 Security, privacy & sensitive-location handling
 
-### Review gates
+Reports can leak sensitive information even if the underlying dataset is protected (e.g., aggregation + joins can re-identify a location). Treat this as a first-class risk. 🧨
 
-Changes that typically require elevated review:
+### Hard rules
+- 🚫 Do not store secrets, tokens, credentials, private keys
+- 🚫 Do not publish restricted coordinates or culturally sensitive locations without explicit review
+- ✅ Preserve (or increase) classification — never “downgrade” sensitivity through reporting
+- ✅ When in doubt: generalize (coarse bbox), redact, or keep internal
 
-- Adding new sensitive layers (restricted locations, cultural knowledge, PII, etc.)
-- Introducing/changing AI-generated narrative behavior visible to users
-- Adding new external data sources
-- Adding new public-facing endpoints
-- Publishing report outputs that include high-precision locations or culturally sensitive interpretations
-
-### CARE / sovereignty considerations
-
-Reports can unintentionally increase risk (e.g., by combining datasets into more precise location inference). Treat location-bearing or culturally sensitive derivatives conservatively:
-
-- avoid inferring private/sensitive locations
-- apply generalization where required
-- require explicit review before publication
-
-### AI usage constraints
-
-This README allows AI transforms like summarization and structure extraction, but prohibits generating new policy or inferring sensitive locations (see front matter). Any AI-derived report intended as evidence must be explicitly marked and linked to source evidence IDs and provenance.
+> [!IMPORTANT]
+> If a report involves security-sensitive findings, follow the repo’s coordinated disclosure process (`SECURITY.md`) and do **not** open public issues with exploit details.
 
 ---
 
-## 🧾 Version History
+## 🧪 Validation & CI/CD expectations
+
+### Recommended CI behavior
+- **If a report is referenced by Story Nodes / UI / release notes:** validate it (pointers exist, links resolve, checksums present).
+- **If a report is purely internal and not referenced:** treat it as optional (but keep the bundle contract).
+
+### Suggested automated checks (fast gates)
+- [ ] Markdown lint / front-matter sanity (if used)
+- [ ] `REPORT_MANIFEST.json` schema validation *(if you add a schema)*
+- [ ] Evidence pointer validation:
+  - STAC/DCAT IDs exist (or paths resolve)
+  - PROV activity referenced exists
+- [ ] Basic link checks for internal relative links
+- [ ] No secrets / PII patterns in committed artifacts (defense-in-depth)
+
+> [!TIP]
+> CI artifacts (Actions uploaded files) are great for ephemeral outputs.  
+> Commit to `data/reports/` when the report must be reviewable long-term and referenced by IDs.
+
+---
+
+## 📚 Reference shelf (project library)
+
+`data/reports/` is influenced by the repo’s multidisciplinary library — especially around **statistical hygiene**, **simulation discipline**, **GIS rigor**, **systems scaling**, **security**, and **human-centered governance**.
+
+<details>
+<summary><strong>📖 Full reference list (grouped)</strong></summary>
+
+### 🧭 Core KFM specs
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
+- `docs/specs/MARKDOWN_GUIDE_v13.md` *(or equivalent master work protocol)*
+- `docs/specs/Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` *(if present)*
+
+### 🛰️ Remote sensing + geospatial analytics
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `python-geospatial-analysis-cookbook.pdf`
+- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+
+### 🎨 Cartography + mapping practice
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
+
+### 🌐 Web + visualization (reports often ship to the UI)
+- `responsive-web-design-with-html5-and-css3.pdf`
+- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+
+### 📈 Statistics, experiments, inference (report integrity)
+- `Understanding Statistics & Experimental Design.pdf`
+- `graphical-data-analysis-with-r.pdf`
+- `regression-analysis-with-python.pdf`
+- `Regression analysis using Python - slides-linear-regression.pdf`
+- `think-bayes-bayesian-statistics-in-python.pdf`
+
+### 🧪 Simulation & modeling discipline (V&V, UQ, sensitivity)
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+
+### 🧠 ML practice (when reports include model outputs)
+- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf`
+
+### ⚙️ Systems + scaling (when reports include performance/infra diagnostics)
+- `Scalable Data Management for Future Hardware.pdf`
+- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
+- `Data Spaces.pdf`
+
+### 🧠 Advanced math + optimization (specialized analytic reports)
+- `Spectral Geometry of Graphs.pdf`
+- `Generalized Topology Optimization for Structural Design.pdf`
+
+### ❤️ Ethics + accountability (when reports carry real-world implications)
+- `Introduction to Digital Humanism.pdf`
+- `Principles of Biological Autonomy - book_9780262381833.pdf`
+- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
+
+### 🛡️ Security (defensive mindset; do not contribute misuse-ready content)
+- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
+- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
+
+### 🧰 General programming shelf (bundles)
+- `A programming Books.pdf`
+- `B-C programming Books.pdf`
+- `D-E programming Books.pdf`
+- `F-H programming Books.pdf`
+- `I-L programming Books.pdf`
+- `M-N programming Books.pdf`
+- `O-R programming Books.pdf`
+- `S-T programming Books.pdf`
+- `U-X programming Books.pdf`
+
+</details>
+
+---
+
+## 🕰️ Version history
 
 | Version | Date | Change | Author |
 |---|---|---|---|
-| v1.0.0 | 2025-12-26 | Initial `data/reports/` README | TBD |
+| v1.0.0 | 2025-12-26 | Initial `data/reports/` README scaffold | TBD |
+| v1.1.0 | 2026-01-08 | Align to v13 pipeline + evidence-first report bundles, add manifest + traceability rules | TBD |
 
 ---
 
-## Footer refs
+## 🧷 Footer refs
 
-- `docs/MASTER_GUIDE_v12.md`
-- `data/README.md`
-- `docs/governance/ROOT_GOVERNANCE.md`
-- `docs/reports/story_nodes/` (if present)
-- `schemas/` (if present; for catalog/story validation)
-- `src/pipelines/`, `src/graph/`, `src/server/`, `web/`
-- `mcp/runs/`, `mcp/experiments/`
+- Canonical ordering + invariants: `docs/specs/MARKDOWN_GUIDE_v13.md`
+- System design: `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
+- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Ethics: `docs/governance/ETHICS.md`
+- Sovereignty: `docs/governance/SOVEREIGNTY.md`
+- Data lifecycle: `data/raw/` · `data/work/` · `data/processed/`
+- Catalogs + lineage: `data/stac/` · `data/catalog/dcat/` · `data/prov/`
+- Story Nodes: `docs/reports/story_nodes/` *(if present)*
 
+<p align="right"><a href="#-datareports--kfm-data-reports-evidence-outputs">⬆️ Back to top</a></p>
