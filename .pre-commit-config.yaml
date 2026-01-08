@@ -1,19 +1,23 @@
 # Kansas-Frontier-Matrix (KFM) — pre-commit configuration ✅
 # Docs: https://pre-commit.com
+#
 # Install once:
 #   pre-commit install
-# Run manually (all files):
+#
+# Run manually:
 #   pre-commit run --all-files
 #
 # Notes 🧭
-# - Fast hooks run on commit (default).
-# - Heavier / toolchain-dependent hooks (Docker, security scans, tests) are "manual".
+# - “Fast” hooks run on commit (default).
+# - Heavier hooks (Docker, security, full tests, contract gates) are manual or CI-gated.
+# - KFM adds a trust-first supply-chain hook (kfm-dtk) to stop lockfile / registry / SBOM nonsense early. 🛡️🌾
 
 minimum_pre_commit_version: "3.2.0"
 default_stages: [pre-commit]
 fail_fast: false
 
 # Exclude heavy/binary/derived artifacts 🧱
+# (Keep contracts/metadata JSON in-scope; exclude raw/work/processed + image assets.)
 exclude: |
   (?x)^(
     # --- caches / envs ---
@@ -33,11 +37,13 @@ exclude: |
     releases/|
     mcp/runs/|
 
-    # --- data dirs (raw/work/processed) ---
-    data/.*/(raw|processed|work)/|
+    # --- data dirs (raw/work/processed/tmp/exports) ---
+    data/(raw|work|processed|tmp|exports)/|
 
-    # --- published story assets ---
+    # --- published story / focus-mode static assets ---
     docs/reports/story_nodes/published/.*/assets/|
+    docs/reports/visualization/focus_mode/story_nodes/published/.*/assets/|
+    docs/reports/visualization/focus_mode/story_nodes/assets/|
 
     # --- binary / large / non-text ---
     .*\.pdf$|
@@ -57,19 +63,31 @@ exclude: |
     .*\.feather$|
     .*\.arrow$|
     .*\.sqlite$|
-    .*\.db$
+    .*\.db$|
+    .*\.docx$|
+    .*\.pptx$|
+    .*\.xlsx$
   )
 
 # pre-commit.ci settings 🤖 (safe defaults)
+# - pre-commit.ci runs in a clean environment; local-only KFM toolchain hooks are skipped here.
 ci:
   autofix_prs: true
   autoupdate_schedule: monthly
   autoupdate_commit_msg: "chore(pre-commit): autoupdate hooks"
-  # Keep CI snappy; manual hooks are triggered explicitly in workflows
   skip:
     - hadolint-docker
     - bandit
     - pytest
+    - kfm-precommit
+    - kfm-lock-verify
+    - kfm-reg-audit
+    - kfm-ns-scan
+    - kfm-provenance-verify
+    - kfm-sbom-diff
+    - kfm-fallback-test
+    - kfm-stac-gate
+    - kfm-stac-policy
 
 repos:
   # ──────────────────────────────────────────────────────────────────────────────
@@ -93,8 +111,17 @@ repos:
       - id: trailing-whitespace
         args: ["--markdown-linebreak-ext=md"]
 
+      # Also treat *.md.gdoc as Markdown (KFM internal docs export) 📝
+      - id: trailing-whitespace
+        name: trailing-whitespace (md.gdoc)
+        files: '\.md\.gdoc$'
+        args: ["--markdown-linebreak-ext=md.gdoc"]
+
+      # YAML (include CITATION.cff), JSON (include GeoJSON), TOML, XML
       - id: check-yaml
+        files: '\.(yml|yaml|cff)$'
       - id: check-json
+        files: '\.(json|geojson|topojson|jsonld)$'
       - id: check-toml
       - id: check-xml
 
@@ -107,6 +134,15 @@ repos:
       # Catch stray debugging before it lands 🔥
       - id: debug-statements
 
+      # Optional but useful: avoid committing directly to protected branches 🌿
+      - id: no-commit-to-branch
+        args: ["--branch", "main", "--branch", "master"]
+
+      # Keep schema JSON tidy + deterministic (scope to /schemas only) 🧾
+      - id: pretty-format-json
+        args: ["--autofix", "--indent", "2"]
+        files: '^schemas/.*\.(json|jsonld)$'
+
   # ──────────────────────────────────────────────────────────────────────────────
   # 🧩 Schema + config validation (GitHub workflows, CITATION.cff, compose, metaschema)
   # ──────────────────────────────────────────────────────────────────────────────
@@ -116,14 +152,22 @@ repos:
       - id: check-github-workflows
       - id: check-citation-file-format
       - id: check-compose-spec
+
+      # Ensure KFM's JSON Schemas are valid schemas (contract-first + deterministic) 🧾🧬
       - id: check-metaschema
         files: '^schemas/.*\.json$'
+
+      # Optional: validate KFM "governed" JSON docs (only if you vendor schemas)
+      # - id: check-jsonschema
+      #   name: KFM UI/Telemetry JSON instances (schema) 📡
+      #   files: '^docs/reports/visualization/focus_mode/.*\.json$'
+      #   args: ["--schemafile", "schemas/telemetry/reports-visualization-focusmode-panels-v1.json"]
 
   # ──────────────────────────────────────────────────────────────────────────────
   # 🧪 GitHub Actions workflow linting (semantic checks beyond schema)
   # ──────────────────────────────────────────────────────────────────────────────
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.7.9
+    rev: v1.7.10
     hooks:
       - id: actionlint
 
@@ -133,7 +177,7 @@ repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.10
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: ["--fix", "--exit-non-zero-on-fix"]
       - id: ruff-format
 
@@ -144,12 +188,12 @@ repos:
     rev: v2.4.1
     hooks:
       - id: codespell
-        files: '\.(md|rst|txt)$'
+        files: '\.(md|md\.gdoc|rst|txt)$'
         args:
           - "--check-filenames"
           - "--check-hidden"
-          # Common domain-ish tokens to reduce noise (extend as needed)
-          - "--ignore-words-list=nd,prov,stac,dcat"
+          # Common KFM domain tokens to reduce noise (extend as needed)
+          - "--ignore-words-list=nd,ndvi,epsg,postgis,prov,stac,dcat,rego,sbom,slsa,geotiff,cog"
 
   # ──────────────────────────────────────────────────────────────────────────────
   # 📝 Markdown style checks (line-length + HTML are allowed in KFM docs)
@@ -158,16 +202,21 @@ repos:
     rev: v0.46.0
     hooks:
       - id: markdownlint
-        files: '\.md$'
+        files: '\.(md|md\.gdoc)$'
         args: ["--disable", "MD013", "MD033", "MD041"]
 
   # ──────────────────────────────────────────────────────────────────────────────
-  # 🌐 Web formatting (scoped to /web to avoid reformatting doc systems)
+  # 🌐 Web formatting (Prettier, pinned & isolated via pre-commit Node env)
+  # - Runs only when files under /web change → Python-only contributors don’t need Node.
+  # - Pinning exact Prettier version keeps diffs deterministic across machines. ✨
   # ──────────────────────────────────────────────────────────────────────────────
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.1.0
+  - repo: local
     hooks:
-      - id: prettier
+      - id: web-prettier
+        name: web: prettier (pinned) 🌐✨
+        entry: prettier --write
+        language: node
+        additional_dependencies: ["prettier@3.7.4"]
         files: '^web/.*\.(js|jsx|ts|tsx|json|css|scss|less|html|md|yaml|yml)$'
 
   # ──────────────────────────────────────────────────────────────────────────────
@@ -219,3 +268,117 @@ repos:
         language: system
         pass_filenames: false
         stages: [manual]
+
+  # ──────────────────────────────────────────────────────────────────────────────
+  # 🧯 Guardrails: never commit local .env (defense-in-depth)
+  # ──────────────────────────────────────────────────────────────────────────────
+  - repo: local
+    hooks:
+      - id: forbid-dotenv
+        name: forbid committing .env 🚫🧪
+        entry: bash -lc 'git diff --cached --name-only | grep -E "(^|/)\.env$" && echo "❌ .env is not allowed in git. Use .env.example + env vars/secrets." && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+
+  # ──────────────────────────────────────────────────────────────────────────────
+  # 🛡️ KFM DTK — Supply-chain & governance pre-commit (recommended on dev machines)
+  #
+  # Implements KFM “trust-first” gates:
+  # - lockfile pinning verification
+  # - registry audit (strict)
+  # - namespace/dependency-confusion scan
+  # - provenance verification (local)
+  # - SBOM drift detection (local)
+  # - fallback / hermetic sandbox validation
+  #
+  # Script path is repo-owned:
+  #   tools/kfm-dtk/hooks/kfm-precommit.sh
+  #
+  # Tip: keep this scoped to dependency / contract / security changes to stay fast.
+  # ──────────────────────────────────────────────────────────────────────────────
+  - repo: local
+    hooks:
+      - id: kfm-precommit
+        name: KFM supply-chain + governance gate 🛡️🌾
+        entry: bash -lc 'tools/kfm-dtk/hooks/kfm-precommit.sh'
+        language: system
+        pass_filenames: false
+        files: |
+          (?x)^(
+            pyproject\.toml|
+            uv\.lock|
+            poetry\.lock|
+            requirements(\..+)?\.txt|
+            package\.json|
+            package-lock\.json|
+            pnpm-lock\.yaml|
+            yarn\.lock|
+            docker-compose\.ya?ml|
+            Dockerfile|
+            \.github/workflows/.*\.ya?ml|
+            schemas/.*|
+            data/(stac|catalog|prov)/.*|
+            docs/security/.*|
+            docs/governance/.*|
+            SBOM(\..+)?\.(json|spdx|spdx\.json|cyclonedx\.json)
+          )$
+
+      # Optional: expose sub-commands as manual hooks for quick isolation/debugging 🧰
+      - id: kfm-lock-verify
+        name: KFM lockfile verify (manual) 🔒
+        entry: kfm-lock-verify
+        language: system
+        pass_filenames: false
+        stages: [manual]
+
+      - id: kfm-reg-audit
+        name: KFM registry audit (manual, strict) 🧾
+        entry: kfm-reg-audit --strict
+        language: system
+        pass_filenames: false
+        stages: [manual]
+
+      - id: kfm-ns-scan
+        name: KFM namespace scan (manual) 🛰️
+        entry: kfm-ns-scan .
+        language: system
+        pass_filenames: false
+        stages: [manual]
+
+      - id: kfm-provenance-verify
+        name: KFM provenance verify (manual) 🧬
+        entry: kfm-provenance-verify --local
+        language: system
+        pass_filenames: false
+        stages: [manual]
+
+      - id: kfm-sbom-diff
+        name: KFM SBOM drift check (manual) 📦
+        entry: kfm-sbom-diff --local
+        language: system
+        pass_filenames: false
+        stages: [manual]
+
+      - id: kfm-fallback-test
+        name: KFM fallback / hermetic sandbox (manual) 🧪🧊
+        entry: kfm-fallback-test --validate
+        language: system
+        pass_filenames: false
+        stages: [manual]
+
+      # Optional contract gate helpers (manual) — matches KFM contract-first philosophy 🗂️
+      - id: kfm-stac-gate
+        name: STAC validation gate (manual) 🗺️🧾
+        entry: bash -lc 'tools/validation/stac-check.sh'
+        language: system
+        pass_filenames: false
+        stages: [manual]
+        files: '^data/stac/.*\.json$|^schemas/stac/.*\.json$'
+
+      - id: kfm-stac-policy
+        name: STAC policy checks (manual, conftest/OPA) 🧾🛡️
+        entry: bash -lc 'conftest test --policy policy --all-namespaces'
+        language: system
+        pass_filenames: false
+        stages: [manual]
+        files: '^data/stac/.*\.json$|^policy/.*'
