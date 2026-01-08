@@ -1,386 +1,494 @@
-# 📦 data/stac — STAC Catalog (Kansas Frontier Matrix)
+# 🛰️ `data/stac/` — STAC Catalog (Kansas Frontier Matrix)
 
-[![STAC](https://img.shields.io/badge/STAC-Collections%20%26%20Items-blue)](#)
-[![Provenance](https://img.shields.io/badge/Provenance-Evidence--First-success)](#-non-negotiables-contract-first--evidence-first)
-[![Deterministic](https://img.shields.io/badge/Pipeline-Deterministic%20%26%20Reproducible-important)](#-non-negotiables-contract-first--evidence-first)
-[![Catalog Boundary](https://img.shields.io/badge/Boundary%20Artifacts-STAC%20%2B%20DCAT%20%2B%20PROV-informational)](#-how-stac-fits-in-kfm)
+[![STAC](https://img.shields.io/badge/STAC-Collections%20%26%20Items-1f6feb)](#-what-this-folder-is)
+[![Boundary](https://img.shields.io/badge/Boundary%20Artifacts-STAC%20%2B%20DCAT%20%2B%20PROV-8a8f98)](#-boundary-artifacts-publishing-gate)
+[![Pipeline](https://img.shields.io/badge/Pipeline-ETL%20%E2%86%92%20Catalogs%20%E2%86%92%20Graph%20%E2%86%92%20API%20%E2%86%92%20UI-2da44e)](#-where-stac-fits-in-the-kfm-pipeline)
+[![Governance](https://img.shields.io/badge/Governance-FAIR%20%2B%20CARE-6f42c1)](#-governance-and-safety)
+[![Deterministic](https://img.shields.io/badge/ETL-Deterministic%20%26%20Idempotent-0b7285)](#-non-negotiables-kfm-invariants)
 
-This folder is **KFM’s canonical SpatioTemporal Asset Catalog (STAC)** 🛰️—the machine-readable metadata “boundary” between **processed data outputs** and everything downstream (**graph → API → UI → Story Nodes**).
+KFM’s STAC catalog is the **canonical asset metadata boundary** between **final data products** (in `data/processed/`) and everything downstream (**Graph → API → UI → Story Nodes → Focus Mode**).
 
-If it can show up on a map 🗺️, on a timeline ⏱️, or as evidence in a narrative 🧾, it should be discoverable here.
+If an artifact can be:
+- rendered on a map 🗺️,
+- filtered on a timeline ⏱️,
+- referenced as evidence 🧾,
+
+…it should be **discoverable in STAC** (and aligned with **DCAT + PROV**).
 
 ---
 
-## 🔗 Related (neighbor) folders
+## 🚀 Quick links
 
-From `data/stac/README.md`:
+- ✅ STAC Collections → [`./collections/`](./collections/)
+- ✅ STAC Items → [`./items/`](./items/)
 
-- 📁 `../catalog/dcat/` — DCAT discovery entries (dataset-level, JSON-LD)
-- 📁 `../prov/` — provenance bundles (run + lineage)
-- 📁 `../<domain>/processed/` — where the **actual data assets** live (COGs, GeoJSON, CSV, etc.)
+Neighbor boundaries:
+- 🗂️ DCAT (dataset discovery) → [`../catalog/dcat/`](../catalog/dcat/)
+- 🧬 PROV (lineage bundles) → [`../prov/`](../prov/)
+- 📦 Processed outputs (the actual files) → [`../processed/`](../processed/)
+- 🕸️ Graph import artifacts (if used) → [`../graph/`](../graph/)
+- 🗺️ Back to data root → [`../README.md`](../README.md)
+
+---
+
+<details>
+<summary><b>🧭 Table of contents</b></summary>
+
+- [What this folder is](#-what-this-folder-is)
+- [Where STAC fits in the KFM pipeline](#-where-stac-fits-in-the-kfm-pipeline)
+- [Non-negotiables (KFM invariants)](#-non-negotiables-kfm-invariants)
+- [Folder layout](#-folder-layout)
+- [STAC responsibilities in KFM](#-stac-responsibilities-in-kfm)
+- [KFM STAC profile overlay](#-kfm-stac-profile-overlay)
+- [Collections](#-collections-datasetlayer-level)
+- [Items](#-items-assetgranule-level)
+- [Assets](#-assets-what-items-point-to)
+- [Cross-layer linkage](#-cross-layer-linkage-stac--dcat--prov--graph)
+- [Add or update a dataset](#-add-or-update-a-dataset-checklist)
+- [Validation](#-validation-and-ci-expectations)
+- [Common pitfalls](#-common-pitfalls)
+- [Governance and safety](#-governance-and-safety)
+- [Reference shelf](#-reference-shelf)
+
+</details>
+
+---
+
+## 🧾 What this folder is
+
+### ✅ `data/stac/` **IS**
+- The machine-readable registry of **what assets exist** and **how to find them**.
+- The place where KFM expresses **spatial + temporal** discovery metadata.
+- A required publishing interface: STAC is one of the **boundary artifacts** that downstream systems trust.
+
+### ❌ `data/stac/` is **NOT**
+- A storage location for the actual raster/vector/table outputs (those belong in `data/processed/`).
+- A substitute for DCAT (DCAT is the dataset discovery layer across *all* dataset types).
+- A substitute for PROV (PROV is the lineage chain for reproducibility and governance).
+
+---
+
+## 🧱 Where STAC fits in the KFM pipeline
+
+KFM’s pipeline order is **absolute** (no shortcuts):
+
+**ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**
+
+```mermaid
+flowchart LR
+  A["Raw sources<br/>data/raw/<domain>/"] --> B["ETL + normalization<br/>src/pipelines/"]
+  B --> C["Processed outputs<br/>data/processed/<domain>/"]
+  C --> S["STAC<br/>data/stac/ (Collections + Items)"]
+  S --> D["DCAT<br/>data/catalog/dcat/ (dataset discovery)"]
+  S --> P["PROV<br/>data/prov/ (lineage bundles)"]
+
+  S --> G["Graph<br/>src/graph/ (+ data/graph/)"]
+  D --> G
+  P --> G
+
+  G --> API["API boundary<br/>src/server/"]
+  API --> UI["UI<br/>web/ (React + MapLibre)"]
+  UI --> SN["Story Nodes<br/>docs/reports/story_nodes/"]
+  SN --> FM["Focus Mode<br/>provenance-linked only"]
+```
+
+> [!IMPORTANT]
+> In KFM, **nothing is “published”** until the boundary artifacts exist:
+> **STAC** (assets) + **DCAT** (discovery) + **PROV** (lineage).
+
+---
+
+## 🚧 Non-negotiables (KFM invariants)
+
+These rules are what keep the catalog trustworthy and the UI safe:
+
+1) **Pipeline ordering is inviolable**  
+   No stage consumes outputs that haven’t passed the previous stage’s formal outputs + checks.
+
+2) **Provenance-first publishing**  
+   Every dataset/evidence artifact must be registered via **STAC/DCAT** and traced via **PROV** *before* graph/UI/story use.
+
+3) **API boundary rule**  
+   The UI must **never** query Neo4j directly. All access is mediated through the governed API boundary (`src/server/`).
+
+4) **STAC Items must point to real assets**  
+   Items must reference the actual output files (in `data/processed/**`) or stable external storage/endpoints.
+
+5) **Graph references catalogs**  
+   Neo4j stores **references/IDs** to catalog entries, not bulky payloads.
+
+6) **Classification propagation**  
+   Outputs must not be less restricted than inputs (no “classification downgrade” through processing).
+
+7) **Evidence artifacts are first-class**  
+   AI/analysis outputs (rasters, OCR corpora, predictions, reports) must follow the same rules: processed storage + STAC/DCAT + PROV + API mediation.
 
 ---
 
 ## 🗂️ Folder layout
 
+KFM’s canonical STAC record locations:
+
 ```text
 data/
-└── 📁 stac/
-    ├── 📄 README.md
-    ├── 📁 collections/          # ✅ STAC Collections (dataset / layer level)
-    │   └── 📄 <collection-id>.json
-    └── 📁 items/                # ✅ STAC Items (asset / granule level)
-        └── 📁 <collection-id>/
-            └── 📄 <item-id>.json
+└── stac/
+    ├── README.md
+    ├── collections/                  # STAC Collections (dataset/layer level)
+    │   └── <collection-id>.json
+    └── items/                        # STAC Items (granule/asset level)
+        └── <collection-id>/
+            └── <item-id>.json
 ```
 
 > [!TIP]
-> Keep the catalog **boring** and **predictable**: stable IDs, stable paths, stable semantics. The UI and graph depend on it.
+> Keep **file = id** whenever possible. Stable IDs + stable paths are what make catalogs “boring” (and boring is good).
+
+### Optional compatibility enhancement (recommended if you want external STAC tooling to “just work”)
+You *may* add a root STAC Catalog (not required by KFM’s internal layout, but helpful for external validators/harvesters):
+
+- `data/stac/catalog.json` (root catalog linking to collections)
+
+If you add it, keep it deterministic and keep links relative.
 
 ---
 
-## 🧭 How STAC fits in KFM
+## 🧠 STAC responsibilities in KFM
 
-KFM’s pipeline is **ordered** and **contracted**. The catalogs are not “nice-to-have docs”—they are **required artifacts** that connect data to the graph and UI.
+STAC exists so we can answer questions like:
 
-```mermaid
-flowchart LR
-  subgraph Data
-    A["Raw Sources"] --> B["ETL + Normalization"]
-    B --> C["STAC Items + Collections"]
-    C --> D["DCAT Dataset Views"]
-    C --> E["PROV Lineage Bundles"]
-  end
-
-  C --> G["Neo4j Graph (references back to catalogs)"]
-  G --> H["API Layer (contracts + redaction)"]
-  H --> I["Map UI — React · MapLibre · (optional) Cesium"]
-  I --> J["Story Nodes (governed narratives)"]
-  J --> K["Focus Mode (provenance-linked context bundle)"]
-```
+- “What layers exist for drought risk in 1934 vs 1956?” 🌵
+- “What does this layer cover spatially and temporally?” 🧭
+- “Where are the actual files, and what format are they?” 📦
+- “What license and attribution apply to this asset?” 📜
+- “What run produced this, and what were the inputs?” 🧬
 
 ---
 
-## 🚧 Non-negotiables (contract-first + evidence-first)
+## 🧩 KFM STAC profile overlay
 
-> [!IMPORTANT]
-> **Nothing is “published” in KFM until the boundary artifacts exist:**  
-> ✅ **STAC** (assets) + ✅ **DCAT** (discovery) + ✅ **PROV** (lineage)
+KFM uses base STAC, then extends/constraints it with project profiles:
 
-### ✅ What every dataset/evidence artifact must have
-
-- **STAC Collection + Item(s)**  
-  For spatial/temporal discovery and indexing (even “mostly non-spatial” data may still carry a Collection for consistency).
-- **DCAT Dataset entry**  
-  For catalog-wide discovery (title, description, license, distributions/links).
-- **PROV bundle**  
-  For reproducibility (inputs → transforms → outputs), including run/config identifiers.
-
-### 🔁 Cross-layer linkage expectations
-
-- **STAC Items → Data assets**  
-  Items must point to the actual outputs (files or stable endpoints), with attribution + license info.
-- **DCAT → STAC / Distributions**  
-  DCAT should link to STAC entries and/or direct download resources.
-- **PROV end-to-end**  
-  PROV should capture the full chain and include a run ID / config / commit hash.
-- **Graph references catalogs (no duplication)**  
-  Neo4j should store references (STAC IDs / catalog links), not full payloads.
-
-### 🤖 Evidence artifacts (AI/analysis outputs are first-class)
-
-If you generate a raster layer, feature set, OCR corpus, model output, etc., it must be treated like any other dataset:
-
-- stored in `data/<domain>/processed/...`
-- cataloged in **STAC/DCAT**
-- traced in **PROV** with method + params + confidence metrics
-- exposed only via the API boundary (so classification/redaction is enforceable)
-
----
-
-## 🧱 Conventions (IDs, filenames, and determinism)
-
-### 🆔 IDs and filenames
-
-- Use **lower-kebab-case** for `collection.id` and `item.id`  
-  ✅ `air-quality-epa-pm25`  
-  ❌ `AirQuality_PM2.5_Final`
-- Use **file = id** whenever possible:
-  - `collections/<collection-id>.json`
-  - `items/<collection-id>/<item-id>.json`
-
-### ♻️ Deterministic item IDs
-
-Item IDs should be derivable from stable inputs, such as:
-
-- dataset/collection ID
-- time slice (date or interval)
-- area-of-interest (AOI) or tile index
-- processing level / pipeline stage
-
-Example patterns:
-
-- `<collection>__<YYYY-MM-DD>`
-- `<collection>__<YYYY-MM-DD>__<aoi-slug>`
-- `<collection>__<tile>__<YYYY-MM>__v<dataset-version>`
+- `docs/standards/KFM_STAC_PROFILE.md` *(expected home for the KFM STAC profile)*
+- `schemas/stac/` *(expected home for JSON Schemas / profile schemas)*
 
 > [!NOTE]
-> “Deterministic pipeline” here means: same inputs + same config ⇒ same outputs (including catalog IDs).
+> If you need metadata that is not covered by STAC core or a standard extension, KFM’s rule is:
+> **extend the KFM profile** (with review) rather than inventing ad-hoc fields.
+
+### Recommended KFM namespaced keys (use only what your profile permits)
+
+If your KFM STAC profile supports custom fields, prefer a single namespace (example: `kfm:`). Common needs:
+
+- `kfm:domain` — domain slug (`air-quality`, `historical`, `soils`, etc.)
+- `kfm:dcat_ref` — pointer to DCAT Dataset identifier/path
+- `kfm:prov_ref` — pointer to PROV activity/bundle identifier/path
+- `kfm:run_id` / `kfm:commit` — reproducibility hooks
+- `kfm:classification` / `kfm:sensitivity` — governance tier
+- `kfm:uncertainty` / `kfm:quality` — quality/confidence notes (especially for AI outputs)
+- `kfm:derived_from` — stable pointers to upstream dataset IDs (when applicable)
+
+> [!CAUTION]
+> Don’t treat `kfm:*` as a free-for-all. Keep it minimal and schema-governed.
 
 ---
 
-## 🧾 What goes into a KFM STAC record
+## 🧺 Collections (dataset/layer level)
 
-### ✅ Always include (core STAC expectations)
+A Collection represents a dataset/layer family (the “thing” the UI will list as a layer, with shared extent and defaults).
 
-For a **Collection**:
+### Collection must-have fields (practical checklist)
 
 - `stac_version`
 - `type: "Collection"`
 - `id`, `title`, `description`
 - `license`
 - `extent` (spatial + temporal)
-- `links` (self/root/parent + docs)
-
-For an **Item**:
-
-- `stac_version`
-- `type: "Feature"`
-- `id`
-- `geometry` + `bbox` (usually WGS84 lon/lat)
-- `properties.datetime` **or** `start_datetime` + `end_datetime`
-- `assets` (each with `href`, `type`, and optional `roles`)
-- `links` (self + collection + parent)
-
-### 🧩 Recommended STAC extensions (use what fits)
-
-Common extension families you may use (if applicable):
-
-- `proj:*` (projection + transform)
-- `raster:*` / `eo:*` (bands, nodata, dtype)
-- `file:*` (file metadata)
-- `processing:*` (processing lineage hints)
-- `version:*` (dataset/item versioning)
-
-> [!TIP]
-> Don’t invent ad-hoc fields if an extension exists—prefer standard extensions first, then KFM namespaced fields.
-
-### 🏷️ KFM namespaced fields (project-specific)
-
-KFM profiles may require/encourage project-specific metadata fields to support governance, provenance, and uncertainty. Use a `kfm:` namespace (example keys below):
-
-- `kfm:domain` — owning domain slug (e.g., `historical`, `air-quality`)
-- `kfm:source` — canonical “where did this come from?” reference
-- `kfm:dcat_ref` — pointer to the DCAT dataset entry
-- `kfm:prov_ref` — pointer to the PROV bundle (or activity ID)
-- `kfm:classification` — governance classification / redaction tier
-- `kfm:quality` / `kfm:uncertainty` — confidence metrics + caveats
-
-> [!WARNING]
-> The authoritative definition of required/allowed custom fields belongs in:
-> - `../../docs/standards/KFM_STAC_PROFILE.md`
-> - `../../schemas/stac/`
->
-> If the profile is still “placeholder” in this stage of the repo, keep `kfm:*` minimal, consistent, and documented.
-
----
-
-## 🧰 Asset guidance (what to point to)
-
-### 🗺️ Rasters (recommended)
-
-- Prefer **COGs** (`.tif`) for large rasters (fast map access, overviews).
-- For web display, optionally include:
-  - an `xyz`/tile endpoint (if hosted)
-  - a `tilejson` asset
-  - a downsampled `preview` PNG
-
-### 🧭 Vectors
-
-- GeoJSON for web-friendly assets
-- GeoPackage for “heavy” GIS assets (if used)
-- Include simplified “web” versions when needed for fast UI rendering
-
-### 🔗 HREFs
-
-- Prefer **relative paths** when assets live in-repo under `data/<domain>/processed/...`
-- Use absolute URLs only when assets are hosted externally and stable
-
----
-
-## 🧪 Adding a new dataset or layer (checklist)
-
-> [!TIP]
-> If you follow this checklist, you will almost always pass governance + CI without drama 😄
-
-### 1) Produce final outputs
-
-- [ ] Put raw data under `data/<domain>/raw/`
-- [ ] Work/intermediate outputs under `data/<domain>/work/`
-- [ ] Final outputs under `data/<domain>/processed/`
-
-### 2) Create STAC Collection
-
-- [ ] Add `data/stac/collections/<collection-id>.json`
-- [ ] Fill: `title`, `description`, `license`, `extent`, `links`, and any required extensions
-
-### 3) Create STAC Items
-
-- [ ] Add items under `data/stac/items/<collection-id>/...`
-- [ ] Ensure each Item references the actual assets (COG/GeoJSON/etc.)
-- [ ] Include `datetime` or `start/end` temporal fields
-- [ ] Add `kfm:prov_ref` / `kfm:dcat_ref` once those exist
-
-### 4) Create DCAT + PROV boundary artifacts
-
-- [ ] Add `data/catalog/dcat/<dataset>.jsonld` (or project convention)
-- [ ] Add `data/prov/<run-or-dataset>.json` (or project convention)
-
-### 5) Only then: downstream integration
-
-- [ ] Graph ingestion references STAC IDs/links (does not embed big data)
-- [ ] UI reads from the API boundary (no hard-coded “secret layers”)
-
----
-
-## ✅ Validation & CI expectations
-
-You should be able to re-run validation locally (same commands CI uses) and get the same result.
-
-### Local sanity checks (portable)
-
-```bash
-# 1) JSON validity
-python -m json.tool data/stac/collections/<collection-id>.json > /dev/null
-python -m json.tool data/stac/items/<collection-id>/<item-id>.json > /dev/null
-
-# 2) (Optional) quick grep for required keys
-grep -R "\"stac_version\"" -n data/stac/collections data/stac/items
-```
-
-### STAC schema validation (preferred)
-
-If your environment includes STAC validators (recommended in `tools/` or via `pystac`):
-
-```bash
-# Example (choose the tool your repo standardizes on):
-# pystac validate data/stac/collections/<collection-id>.json
-# stac-validator data/stac/items/<collection-id>/<item-id>.json
-```
-
-> [!NOTE]
-> KFM CI is expected to validate catalogs against project profiles/schemas and fail PRs that break invariants (missing boundary artifacts, invalid schema, broken links, etc.).
-
----
-
-## 🧩 How the UI uses STAC (practical implications)
-
-STAC isn’t just “metadata”—it drives user experience:
-
-- ✅ Layer lists (what’s available)
-- ✅ Spatial extents (zoom to layer, bounding boxes)
-- ✅ Timeline controls (what changes over time)
-- ✅ Evidence linking (items referenced from stories/graph)
-
-If the UI offers a **timeline slider**, it can dynamically swap layers or filter features by time slice—your Item `datetime` and Collection `extent.temporal` must be correct and consistent.
-
----
-
-## 🧠 Ethics, governance, and “don’t be creepy” rules
-
-KFM emphasizes governance, sovereignty, and human-centered design:
-
-- **Be explicit** about provenance and uncertainty (don’t bury caveats)
-- Use classification fields to enable **redaction** and **safe UI exposure**
-- Prefer “evidence-first” linking over “trust me” narratives
-
-> [!IMPORTANT]
-> If a layer is sensitive, the catalog should reflect that (classification, usage constraints), and **access must be mediated by the API boundary**.
-
----
-
-## 📚 Appendix: Project reference shelf (used to inform STAC practices)
+- `links` (at minimum: `self`, `root` *(if you have a root)*, and any internal docs)
+- `providers` *(recommended, and often required by profile)*
+- `stac_extensions` *(include only what you actually use)*
 
 <details>
-<summary>📚 Click to expand the full project library list (PDFs & core docs)</summary>
+<summary><strong>📄 Minimal Collection skeleton (example)</strong></summary>
 
-### 🧭 Core KFM governance & architecture
-- Kansas Frontier Matrix — Master Guide v13 (Draft) *(repo doc)*
-- Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf
-- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf
-- Scientific Method _ Research _ Master Coder Protocol Documentation.pdf
-- Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx
-
-### 🛰️ Geospatial, remote sensing, mapping, and web maps
-- Geographic Information System Basics - geographic-information-system-basics.pdf
-- making-maps-a-visual-guide-to-map-design-for-gis.pdf
-- geoprocessing-with-python.pdf
-- python-geospatial-analysis-cookbook.pdf
-- Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf
-- Google Earth Engine Applications.pdf
-- Google Maps API Succinctly - google_maps_api_succinctly.pdf
-- google-maps-javascript-api-cookbook.pdf
-- webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf
-- responsive-web-design-with-html5-and-css3.pdf
-
-### 📈 Statistics, experimental design, and uncertainty (for `kfm:quality` / `kfm:uncertainty`)
-- Understanding Statistics & Experimental Design.pdf
-- Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf
-- regression-analysis-with-python.pdf
-- Bayesian computational methods.pdf
-- graphical-data-analysis-with-r.pdf
-- Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf
-
-### 🤖 ML / AI evidence artifacts
-- deep-learning-in-python-prerequisites.pdf
-- Artificial-neural-networks-an-introduction.pdf
-- AI Foundations of Computational Agents 3rd Ed.pdf
-- applied-data-science-with-python-and-jupyter.pdf
-- Data Mining Concepts & applictions.pdf
-
-### 🧱 Engineering, architecture, compute, and reproducibility
-- clean-architectures-in-python.pdf
-- Introduction-to-Docker.pdf
-- Command Line Kung Fu_ Bash Scripting Tricks, Linux Shell Programming Tips, and Bash One-liners - Command_Line_Kung_Fu_Bash_Scripting_Tricks,_Linux_Shell_Program.pdf
-- Scalable Data Management for Future Hardware.pdf
-
-### 🧩 Systems, databases, and languages
-- PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf
-- MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf
-- Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf
-- implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf
-- MATLAB Programming for Engineers Stephen J. Chapman.pdf
-
-### 🧠 Broader theory / foundations (optional but helpful)
-- Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf
-- Spectral Geometry of Graphs.pdf
-- Generalized Topology Optimization for Structural Design.pdf
-- Principles of Biological Autonomy - book_9780262381833.pdf
-- Introduction to Digital Humanism.pdf
-- Computer Graphics using JAVA 2D & 3D.pdf
+```json
+{
+  "stac_version": "1.0.0",
+  "type": "Collection",
+  "id": "example-collection-id",
+  "title": "Example Layer Title",
+  "description": "What this dataset/layer is and why it exists.",
+  "license": "CC-BY-4.0",
+  "extent": {
+    "spatial": { "bbox": [[-102.051, 36.993, -94.588, 40.003]] },
+    "temporal": { "interval": [["1850-01-01T00:00:00Z", null]] }
+  },
+  "links": [
+    { "rel": "self", "href": "./collections/example-collection-id.json", "type": "application/json" }
+  ],
+  "stac_extensions": [],
+  "providers": [
+    { "name": "Kansas Frontier Matrix", "roles": ["processor"] }
+  ]
+}
+```
 
 </details>
 
 ---
 
-<!--
-Internal grounding references (project docs excerpts):
-- Boundary artifacts + canonical pipeline + STAC record locations (collections/items) + “required before published” concept:
-   [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU),  [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- STAC/DCAT/PROV alignment policy + cross-layer linkage expectations:
-   [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- Evidence artifact (AI outputs) must be stored/ cataloged / traced / API-mediated:
-   [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- “Contract-first” + “Deterministic pipeline” definitions:
-   [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- STAC-like JSON catalog intent (enumerate sources, CRS, resolution, temporal coverage, processing):
-   [oai_citation:5‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)
-- DVC usage for large artifacts (data-version linkage to code):
-   [oai_citation:6‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
-- Timeline controls + time-based layer filtering motivation (UI implications):
-   [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-- Digital humanism / human-centered constraints context:
-   [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-- CI/testing and deterministic outputs best practices:
-   [oai_citation:9‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
--->
+## 📦 Items (asset/granule level)
+
+An Item represents a specific time slice, tile, AOI, or artifact instance that the UI can render or query.
+
+### Item must-have fields (practical checklist)
+
+- `stac_version`
+- `type: "Feature"`
+- `id`
+- `collection` (must match the parent Collection `id`)
+- `geometry` + `bbox` (WGS84 lon/lat)
+- `properties.datetime` **or** `start_datetime` + `end_datetime`
+- `assets` (each asset with `href` + `type` + optional `roles`)
+- `links` (at minimum: `self`, `collection`, and any provenance/docs hooks)
+
+<details>
+<summary><strong>📄 Minimal Item skeleton (example)</strong></summary>
+
+```json
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "example-collection-id__1934-06",
+  "collection": "example-collection-id",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[[ -102.051, 36.993 ], [ -94.588, 36.993 ], [ -94.588, 40.003 ], [ -102.051, 40.003 ], [ -102.051, 36.993 ]]]
+  },
+  "bbox": [-102.051, 36.993, -94.588, 40.003],
+  "properties": {
+    "datetime": "1934-06-01T00:00:00Z"
+  },
+  "assets": {
+    "data": {
+      "href": "../processed/<domain>/<dataset>/<version>/raster.tif",
+      "type": "image/tiff; application=geotiff",
+      "roles": ["data"]
+    },
+    "thumbnail": {
+      "href": "../processed/<domain>/<dataset>/<version>/preview.png",
+      "type": "image/png",
+      "roles": ["thumbnail"]
+    }
+  },
+  "links": [
+    { "rel": "self", "href": "./items/example-collection-id/example-collection-id__1934-06.json", "type": "application/json" },
+    { "rel": "collection", "href": "../../collections/example-collection-id.json", "type": "application/json" }
+  ]
+}
+```
+
+</details>
+
+### Deterministic item IDs (recommended)
+
+Item IDs should be derivable from stable inputs:
+
+- Collection ID
+- Time slice (`YYYY`, `YYYY-MM`, or `YYYY-MM-DD`)
+- AOI/tile index (if applicable)
+- Dataset version/run ID (when relevant)
+
+Suggested patterns:
+
+- `<collection>__<YYYY-MM-DD>`
+- `<collection>__<YYYY-MM>__<aoi>`
+- `<collection>__<tile>__<YYYY>__v<dataset-version>`
+
+---
+
+## 🧰 Assets (what Items point to)
+
+### The golden rule
+Items must point to **real outputs** (files or stable endpoints). Prefer stable, relative links when assets live in-repo.
+
+### Recommended asset types (common in KFM)
+
+**Rasters**
+- COG GeoTIFFs: `image/tiff; application=geotiff`
+- TileJSON: `application/json`
+- Previews/thumbnails: `image/png` or `image/jpeg`
+
+**Vectors**
+- GeoJSON: `application/geo+json`
+- GeoPackage: `application/geopackage+sqlite3`
+- Parquet (tabular/geo): `application/x-parquet` *(check your profile/tooling)*
+
+**Tables**
+- CSV: `text/csv`
+- JSON: `application/json`
+
+> [!TIP]
+> If you ship both “analysis-grade” and “web-grade” assets, reflect that with `roles` (e.g., `data` vs `overview`) and clear asset titles/descriptions.
+
+### Checksums and integrity (recommended)
+
+If your profile supports it, include checksums (sha256) and/or file size metadata in assets. This improves:
+- reproducibility,
+- tamper-evidence,
+- debugging in CI.
+
+---
+
+## 🔗 Cross-layer linkage (STAC ↔ DCAT ↔ PROV ↔ Graph)
+
+KFM relies on explicit cross-references so the graph and UI never drift from evidence.
+
+### Cross-reference matrix
+
+| Artifact | Lives in | Must link to | Why it matters |
+|---|---|---|---|
+| 🛰️ STAC Collection/Items | `data/stac/**` | the **actual assets** (files/endpoints) + attribution/license | drives map discovery + indexing |
+| 🗂️ DCAT Dataset | `data/catalog/dcat/**` | STAC entry **and/or** access/download endpoint | discovery + harvestability |
+| 🧬 PROV bundle | `data/prov/**` | raw → work → processed chain + run/config identifiers | reproducibility + trust |
+| 🕸️ Graph nodes/edges | Neo4j / `src/graph/**` (+ `data/graph/**`) | STAC/DCAT/PROV identifiers | relationships without data duplication |
+
+> [!CAUTION]
+> Anything shown in UI must be served through the **API boundary** so governance rules (classification/redaction) are enforceable.
+
+---
+
+## ➕ Add or update a dataset (checklist)
+
+### 0) Confirm where the real data lives
+- [ ] Processed outputs are in `data/processed/<domain>/...` (not in `data/stac/`).
+
+### 1) Create/Update the Collection
+- [ ] `data/stac/collections/<collection-id>.json`
+- [ ] Fill: `license`, `extent`, `providers`, and any required extensions/profile fields.
+
+### 2) Create/Update Item(s)
+- [ ] `data/stac/items/<collection-id>/<item-id>.json`
+- [ ] Every item points to real assets (hrefs resolve).
+- [ ] Temporal fields are correct (`datetime` or `start/end`).
+- [ ] Geometries/bboxes are valid and match asset coverage.
+
+### 3) Add boundary siblings
+- [ ] DCAT Dataset entry exists under `data/catalog/dcat/`
+- [ ] PROV lineage bundle exists under `data/prov/`
+- [ ] If you add `kfm:dcat_ref` / `kfm:prov_ref`, make sure they resolve (stable IDs and/or stable paths).
+
+### 4) Downstream integration (only after boundary artifacts exist)
+- [ ] Graph ingest references STAC/DCAT/PROV IDs (no heavy payloads inside Neo4j).
+- [ ] API endpoints expose layers/assets with redaction + classification.
+- [ ] UI consumes only API responses.
+
+---
+
+## ✅ Validation and CI expectations
+
+KFM expects catalogs to be machine-validatable and to fail fast when contracts break.
+
+### Local sanity checks (portable)
+
+```bash
+# JSON validity
+python -m json.tool data/stac/collections/<collection-id>.json > /dev/null
+python -m json.tool data/stac/items/<collection-id>/<item-id>.json > /dev/null
+```
+
+### STAC validation (preferred)
+
+If your repo/tooling includes `pystac`:
+
+```bash
+# Validate a collection and an item
+pystac validate data/stac/collections/<collection-id>.json
+pystac validate data/stac/items/<collection-id>/<item-id>.json
+```
+
+### Catalog QA (repo-dependent)
+
+If the repo includes a catalog QA tool (often under `tools/validation/`), run it before opening a PR:
+
+```bash
+# Example (only if present in this repo):
+python tools/validation/catalog_qa/run_catalog_qa.py --fail-on-broken-links
+```
+
+> [!NOTE]
+> CI typically enforces: schema validity, broken link checks, provenance completeness, and security/governance scans.
+> If the build fails, treat it as a contract violation—not “CI being picky.”
+
+---
+
+## 🙃 Common pitfalls
+
+- **Broken asset hrefs** (item points to a file that doesn’t exist, or a hosted URL that’s unstable).
+- **Missing license or providers** (makes downstream publication legally ambiguous).
+- **Non-deterministic IDs** (IDs that change run-to-run break graph joins and UI caching).
+- **Silent time drift** (items without correct `datetime` or inconsistent temporal extents).
+- **Geometry lies** (bbox/geometry doesn’t match what the asset actually covers).
+- **Ad-hoc fields** (`foo_bar_baz` shows up in one item) — extend the profile instead.
+- **Publishing sensitive coordinates** (STAC is discoverability; treat it as potentially public).
+
+---
+
+## 🛡️ Governance and safety
+
+### Classification & sensitivity
+- If a dataset is sensitive, ensure STAC reflects that (classification fields per profile).
+- Remember: **derived outputs can still leak** sensitive information. Classification must propagate.
+
+### Sovereignty / culturally sensitive locations
+- Avoid high-precision coordinates for protected places.
+- Prefer generalized extents or withheld geometry where policy requires.
+- Make sure any access is mediated by the API boundary so redaction rules apply.
+
+### Evidence-first narrative
+- Story Nodes and Focus Mode must only reference provenance-linked evidence.
+- If you add an evidence artifact (AI output, OCR corpus, prediction layer), it must have:
+  - STAC/DCAT records,
+  - PROV lineage,
+  - and explicit uncertainty/quality notes where applicable.
+
+---
+
+## 📚 Reference shelf
+
+### Core KFM repo standards (expected canonical homes)
+- `docs/MASTER_GUIDE_v13.md` *(canonical pipeline + invariants; supersedes v12)*
+- `docs/standards/KFM_STAC_PROFILE.md`
+- `docs/standards/KFM_DCAT_PROFILE.md`
+- `docs/standards/KFM_PROV_PROFILE.md`
+- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+
+### System neighbors (where STAC connects)
+- `data/processed/` (real assets)
+- `data/catalog/dcat/` (discovery)
+- `data/prov/` (lineage)
+- `src/graph/` (+ `data/graph/` if used)
+- `src/server/` (governed API boundary)
+- `web/` (UI client)
+- `docs/reports/story_nodes/` (narratives)
+
+<details>
+<summary><strong>📚 Project library (optional deep dives)</strong></summary>
+
+These are not required to edit STAC, but they inform the broader KFM approach to:
+- geospatial asset handling,
+- validation discipline,
+- provenance/reproducibility,
+- UI/visualization constraints.
+
+- KFM system documentation and design notes (internal project library)
+- GIS fundamentals / map design references
+- Remote sensing + Earth Engine workflow references
+- Statistics/uncertainty and ML evidence references
+- Engineering/reproducibility references (data versioning, CI, containers)
+
+</details>
+
+---
+
+<p align="right"><a href="#-data-stac--stac-catalog-kansas-frontier-matrix">⬆️ Back to top</a></p>
