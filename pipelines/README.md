@@ -63,16 +63,20 @@ This “builder” model (outputs + attestations + policy gates) is an explicit 
 
 ```mermaid
 flowchart LR
-  A[🌐 Raw Sources] --> B[🧺 Ingest & Normalize]
-  B --> C[✅ Validate & Quality Gates]
-  C --> D[🗂️ STAC / DCAT Outputs]
-  C --> E[🧾 PROV Lineage]
-  D --> F[🧠 Graph Ingest (Neo4j)]
-  F --> G[🛠️ APIs]
-  G --> H[🗺️ UI + 3D/2D Map]
-  H --> I[📖 Story Nodes]
-  I --> J[🎯 Focus Mode]
+  A["Raw Sources"] --> B["Ingest & Normalize"]
+  B --> C["Validate & Quality Gates"]
+  C --> D["STAC / DCAT Outputs"]
+  C --> E["PROV Lineage"]
+  D --> F["Graph Ingest (Neo4j)"]
+  F --> G["APIs"]
+  G --> H["UI + 3D & 2D Map"]
+  H --> I["Story Nodes"]
+  I --> J["Focus Mode"]
 ```
+
+> 🧭 Legend (kept **outside** Mermaid to prevent parser issues on some renderers):  
+> 🌐 Raw Sources → 🧺 Ingest → ✅ Validate → 🗂️ STAC/DCAT → 🧾 PROV → 🧠 Graph → 🛠️ APIs → 🗺️ UI → 📖 Story Nodes → 🎯 Focus Mode
+
 
 ---
 
