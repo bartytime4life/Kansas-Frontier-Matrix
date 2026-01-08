@@ -1,6 +1,6 @@
-# 🧾 KFM REST API Contract (v1)
-
 <div align="center">
+
+# 🧾 KFM REST API Contract (v1)
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
 ![API](https://img.shields.io/badge/api-REST%20(OpenAPI)-blue)
