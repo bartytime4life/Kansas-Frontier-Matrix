@@ -1,287 +1,570 @@
+```markdown
 ---
 title: "data/processed — Final Data Products"
 path: "data/processed/README.md"
-version: "v1.0.0"
-last_updated: "2026-01-02"
+version: "v1.1.0"
+last_updated: "2026-01-08"
 status: "active"
 doc_kind: "Data Runbook"
-license: "TBD"
+license: "mixed (see per-dataset manifests)"
 
 # Protocol + contracts (KFM)
 markdown_protocol_version: "1.0"
 pipeline_contract_version: "v13"
 
 # Governance (folder-level; per-dataset may override)
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_ref: "docs/governance/SOVEREIGNTY.md"
+security_ref: "SECURITY.md"
 fair_category: "FAIR+CARE"
-care_label: "TBD"
+care_label: "mixed"
 sensitivity: "mixed"
 classification: "mixed"
 jurisdiction: "US"
 
-doc_uuid: "urn:kfm:doc:data:processed:readme:v1.0.0"
+# Integrity
+doc_uuid: "urn:kfm:doc:data:processed:readme:v1.1.0"
 commit_sha: "TBD"
 doc_integrity_checksum: "sha256:TBD"
 ---
+
+<div align="center">
 
 # 📦 `data/processed/` — Final Data Products (KFM)
 
 ![stage](https://img.shields.io/badge/data%20stage-processed-success)
 ![metadata](https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-important)
-![pipeline](https://img.shields.io/badge/pipeline-deterministic%20%26%20contract--first-informational)
+![pipeline](https://img.shields.io/badge/pipeline-deterministic%20%26%20idempotent-informational)
 ![governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-blueviolet)
+![integrity](https://img.shields.io/badge/integrity-manifests%20%2B%20checksums-purple)
+
+_This folder holds **curated, ready-to-serve outputs** produced by **config-driven pipelines** — not scratch work._ 🗺️⚙️
+
+</div>
 
 > [!IMPORTANT]
-> In KFM, “processed” means **final, stable outputs** produced by a **deterministic, idempotent, config-driven** pipeline — not scratch work. “Published” requires the metadata boundary artifacts (STAC/DCAT/PROV). [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+> In KFM, **processed** means **final** outputs that are intended to be reused, referenced, and served.
+> A dataset is only considered **published** once the **boundary artifacts** exist:
+> **STAC** + **DCAT** + **PROV** (and the dataset passes validation).
+
+> [!CAUTION]
+> **No secrets, credentials, private keys, PII, or restricted coordinates** belong in `data/processed/` (or anywhere in Git history).
+> If you suspect sensitive exposure, follow `SECURITY.md` (private reporting).
 
 ---
 
-## 🧭 Quick navigation
+## ⚡ Quick links
 
-- 📌 [What belongs here](#-what-belongs-here)
-- 🔁 [Lifecycle: raw → work → processed](#-lifecycle-raw--work--processed)
-- 🛰️ [Metadata boundary artifacts: STAC / DCAT / PROV](#️-metadata-boundary-artifacts-stac--dcat--prov)
-- 🧠 [Evidence artifacts: ML + simulation outputs](#-evidence-artifacts-ml--simulation-outputs)
-- 🧾 [Versioning & traceability](#-versioning--traceability)
-- 🧪 [Validation & CI gates](#-validation--ci-gates)
-- 🗺️ [Geospatial specifics (rasters, vectors, tiles)](#️-geospatial-specifics-rasters-vectors-tiles)
-- 🔐 [Privacy + sensitive locations](#-privacy--sensitive-locations)
-- ➕ [Add a new processed dataset](#-add-a-new-processed-dataset-checklist)
-- 📚 [Project reference shelf](#-project-reference-shelf)
+- 📥 Raw inputs (if present) → [`../raw/`](../raw/)
+- 🧪 Work / intermediate (if present) → [`../work/`](../work/)
+- 🛰️ STAC catalogs → [`../stac/collections/`](../stac/collections/) · [`../stac/items/`](../stac/items/)
+- 🗂️ DCAT discovery metadata → [`../catalog/dcat/`](../catalog/dcat/)
+- 🧬 PROV lineage bundles → [`../prov/`](../prov/)
+- 🕸️ Graph import artifacts (if used) → [`../graph/`](../graph/)
+- 🧰 Validation tooling (if present) → [`../../tools/validation/`](../../tools/validation/)
+- 🧾 External source manifests (recommended) → [`../sources/`](../sources/)
 
 ---
 
-## 📌 What belongs here
+<details>
+<summary><strong>🧭 Table of contents</strong></summary>
 
-This folder holds **final data products** that are ready to be:
+- [🎯 What belongs here](#-what-belongs-here)
+- [🧱 Folder contract](#-folder-contract)
+- [🔁 Lifecycle and canonical pipeline](#-lifecycle-and-canonical-pipeline)
+- [📁 Expected layout](#-expected-layout)
+- [📦 Publication bundle per dataset](#-publication-bundle-per-dataset)
+- [🧾 Manifests and checksums](#-manifests-and-checksums)
+- [🗺️ Format guidance (raster • vector • tables • tiles)](#️-format-guidance-raster--vector--tables--tiles)
+- [🧪 Validation and CI gates](#-validation-and-ci-gates)
+- [🧠 ML, analytics, and simulation outputs](#-ml-analytics-and-simulation-outputs)
+- [🔐 Privacy, sensitivity, and CARE](#-privacy-sensitivity-and-care)
+- [🧳 Large files and external storage](#-large-files-and-external-storage)
+- [➕ Add a new processed dataset](#-add-a-new-processed-dataset)
+- [📚 Project reference shelf](#-project-reference-shelf)
+- [🕰️ Version history](#️-version-history)
+- [✅ Definition of Done](#-definition-of-done)
 
-- queried (DB tables / Parquet / CSV),
-- mapped (COGs, tiles, GeoJSON/GeoPackage),
-- indexed into the KFM catalog/graph,
-- served through the API to the UI (with governance + redaction as needed). [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-
-✅ **Examples of “processed” artifacts**
-- Final NDVI rasters, hillshades, classified landcover, drought risk surfaces (often GeoTIFF/tiles). [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L) [oai_citation:5‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
-- Cleaned & joined tables (e.g., field health index time series, prediction outputs). [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-- “Ready-to-serve” GeoJSON exports (e.g., PostGIS → GeoJSON for web). [oai_citation:7‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp)
-
-🚫 **Not for this folder**
-- Raw downloads, unverified source dumps → put in `data/raw/…` [oai_citation:8‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- One-off scratch outputs, half-finished joins → put in `data/work/…` [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- “Mystery data” with no provenance or schema → won’t pass governance gates [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+</details>
 
 ---
 
-## 🔁 Lifecycle: raw → work → processed
+## 🎯 What belongs here
 
-KFM expects data to move through stages (domain-scoped):
+**`data/processed/` contains final data products** that are ready to be:
 
-- `data/raw/<domain>/` → ingest as-is  
-- `data/work/<domain>/` → intermediate/working products  
-- `data/processed/<domain>/` → final outputs (this folder) [oai_citation:11‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- queried (Parquet/CSV/DB exports),
+- mapped (COGs, GeoJSON/GeoPackage, tiles),
+- indexed into catalogs (STAC/DCAT) and lineage (PROV),
+- referenced by the graph and served via the API → UI.
+
+✅ Typical “processed” artifacts you’ll see in KFM:
+- 🛰️ **Raster layers**: georeferenced, web-ready rasters (often GeoTIFF/COG), plus optional tile pyramids
+- 🧩 **Vector layers**: cleaned boundaries/routes/places as GeoJSON/GeoPackage (and/or DB extracts)
+- 🗃️ **Tabular products**: curated tables (Parquet/CSV) with stable schemas
+- 📚 **Text corpora**: OCR outputs, extracted entities, structured JSON/Parquet for downstream linking
+- 🧠 **Evidence artifacts**: model outputs, derived indices, simulations (treated like any other dataset)
+
+🚫 Not for this folder:
+- raw downloads / source dumps → `data/raw/<domain>/…`
+- intermediate joins / scratch outputs → `data/work/<domain>/…`
+- “mystery files” with no manifest, no provenance, no license/terms
+
+---
+
+## 🧱 Folder contract
+
+This folder is intentionally opinionated. Every **processed dataset** should be:
+
+1. **Deterministic**: same inputs + config + code revision ⇒ same outputs (as practical).
+2. **Idempotent**: re-running does not duplicate, drift silently, or mutate history without a new version/run ID.
+3. **Traceable**: every artifact has a manifest + checksums, and links to STAC/DCAT/PROV.
+4. **Governed**: classification / sensitivity / CARE label are explicit and preserved end-to-end.
+5. **Reviewable**: structure is consistent so diffs and reviews are possible.
+
+> [!TIP]
+> If you can’t explain the lineage, it’s not “processed” — it’s just a file.
+
+---
+
+## 🔁 Lifecycle and canonical pipeline
+
+KFM’s data lifecycle is staged (domain-scoped):
+
+- `data/raw/<domain>/` → ingest as-is (or store pointers via `data/sources/`)
+- `data/work/<domain>/` → intermediate transforms / joins / scratch
+- `data/processed/<domain>/` → final outputs (this folder)
+
+At publication time, the dataset emits boundary artifacts:
 
 ```mermaid
 flowchart LR
-  RAW[📥 data/raw/<domain>\n(source as-is)] --> WORK[🧪 data/work/<domain>\n(intermediate, scratch, joins)]
-  WORK --> PROC[📦 data/processed/<domain>\n(final products)]
-  PROC --> STAC[🛰️ data/stac/\n(Items + Collections)]
-  PROC --> DCAT[🗂️ data/catalog/dcat/\n(datasets + distributions)]
-  PROC --> PROV[🧬 data/prov/\n(lineage bundles)]
-  STAC --> GRAPH[🕸️ Neo4j graph]
+  RAW["📥 data/raw/<domain>\n(as-ingested)"] --> WORK["🧪 data/work/<domain>\n(intermediate)"]
+  WORK --> PROC["📦 data/processed/<domain>\n(final products)"]
+
+  PROC --> STAC["🛰️ data/stac/\n(items + collections)"]
+  PROC --> DCAT["🗂️ data/catalog/dcat/\n(discovery datasets)"]
+  PROC --> PROV["🧬 data/prov/\n(lineage bundles)"]
+
+  STAC --> GRAPH["🕸️ Graph (references back)"]
   DCAT --> GRAPH
   PROV --> GRAPH
-  GRAPH --> API[🔌 API gateway]
-  API --> UI[🗺️ Map UI / apps]
-  UI --> STORY[📖 Story Nodes / Focus Mode]
+
+  GRAPH --> API["🔌 API boundary\n(contracts + redaction)"]
+  API --> UI["🗺️ UI / Apps\n(MapLibre/Leaflet/etc.)"]
+  UI --> STORY["📖 Story Nodes"]
+  STORY --> FOCUS["🎯 Focus Mode\n(provenance-linked only)"]
 ```
 
-This mirrors the canonical KFM flow: raw → ETL → STAC → DCAT/PROV → graph → API → UI → story content. [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
 ---
 
-## 🛰️ Metadata boundary artifacts: STAC / DCAT / PROV
+## 📁 Expected layout
 
-A processed dataset is only treated as **“published”** once it has the boundary artifacts:
-
-- **STAC**: `data/stac/collections/…` and `data/stac/items/…`  
-- **DCAT**: `data/catalog/dcat/…` dataset entry  
-- **PROV**: `data/prov/…` lineage bundle (inputs → transforms → outputs) [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-> [!NOTE]
-> The graph should generally **reference** catalog artifacts (STAC/DCAT/PROV) rather than duplicating bulky data, keeping the graph “light” and navigable. [oai_citation:14‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
----
-
-## 🧠 Evidence artifacts: ML + simulation outputs
-
-KFM explicitly treats AI/analytics outputs as **first-class evidence**. That means:
-
-- AI/model outputs are **not special-cased** — they must be stored as regular processed artifacts.  
-- They must be **cataloged** (STAC/DCAT) and **traced** (PROV).  
-- They can enter the graph, but must be **flagged** and remain **explainable + auditable**.  
-- The **API is the gatekeeper** for public delivery (redaction, aggregation, and access controls happen there). [oai_citation:15‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-This matches KFM’s broader orchestration approach where pipelines can include: NDVI processing → DB updates → model inference → completion notifications — typically orchestrated via workflow engines like Airflow (DAGs). [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-
----
-
-## 🧾 Versioning & traceability
-
-**Dataset versioning expectations (KFM):**
-- STAC Items should have **stable unique IDs** and explicit versions (e.g., `ndvi_2025-03-01_v1`).  
-- DCAT entries should include `version`, `modified`, and distribution URIs.  
-- PROV should reference the dataset version(s).  
-- Reprocessing should preserve previous versions unless policy requires removal. [oai_citation:18‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-**Contract-first means** schema/profile changes are versioned and treated as first-class, with compatibility checks and migration plans for breaking changes. [oai_citation:19‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:20‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-Helpful profile pointers (expected in repo):
-- `docs/standards/KFM_STAC_PROFILE.md`
-- `docs/standards/KFM_DCAT_PROFILE.md`
-- `docs/standards/KFM_PROV_PROFILE.md` [oai_citation:21‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
----
-
-## 🧪 Validation & CI gates
-
-KFM CI expects documentation + metadata + governance to be enforceable, including:
-
-- YAML front-matter + required sections checks  
-- Link/reference validation  
-- JSON Schema validation for STAC/DCAT/PROV (and Story Node schema where applicable)  
-- Graph integrity tests (Neo4j constraints, relationships)  
-- API contract tests (OpenAPI/GraphQL lint + endpoint behavior)  
-- Security & governance scans: secret scanning, PII scans, sensitive location checks, and classification consistency checks (prevent “downgrading” a dataset’s sensitivity through processing). [oai_citation:22‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
----
-
-## 🗺️ Geospatial specifics (rasters, vectors, tiles)
-
-### 🧱 Raster outputs (NDVI, hillshade, statewide surfaces)
-- KFM processing often produces large rasters (e.g., statewide NDVI), stored as GeoTIFF or generated into tile pyramids for efficient front-end delivery. [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-- Practical raster workflows commonly compute derived indices (like NDVI) and build overviews for performance (multi-resolution browsing). [oai_citation:24‡geoprocessing-with-python.pdf](file-service://file-NkXrdB4FwTruwhQ9Ggn53T)
-
-Earth Engine workflows reinforce two critical habits:
-1) attach **run metadata** (parameters/arguments) to the exported asset, and  
-2) set appropriate **pyramiding policy** for multi-resolution behavior. [oai_citation:25‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)
-
-### 🧩 Vector outputs (boundaries, features, overlays)
-Vector exports are often generated from PostGIS via spatial SQL and transformed into web-friendly formats like GeoJSON. Example patterns include exporting geometries as WGS84 (`4326`) GeoJSON and filtering using spatial predicates like `ST_WITHIN`. [oai_citation:26‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp) [oai_citation:27‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp)
-
-### 🧠 Raster + vector together
-Many built-environment datasets have both raster and vector components; being able to convert and reconcile them is a core skill for KFM-style mapping pipelines. [oai_citation:28‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)
-
----
-
-## 🧰 Storage outcomes & orchestration (what “processed” can mean)
-
-After processing, KFM typically stores outputs in two primary ways:
-
-1) **Relational/structured tables** (e.g., a `field_health_index` table with time series values like NDVI/rainfall/predicted yield, with indexes for performance).  
-2) **Geospatial stores** for maps/imagery (GeoTIFF files, tile services, tile pyramids). [oai_citation:29‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-
-Orchestration and compute patterns commonly used:
-- PostGIS spatial SQL for “heavy lifting” close to the data (buffers, intersections, containment).  
-- Distributed processing (Spark/Dask) when volumes are huge.  
-- Shell + command-line tooling as glue (e.g., `ogr2ogr` conversions).  
-- Workflow engines (Airflow DAGs) for dependent pipelines, retries, and logging.  
-- Incremental processing (process new increments; backfill only when needed). [oai_citation:30‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-
-> [!CAUTION]
-> If you’re using shell automation as glue, treat command construction as a security boundary: unsanitized input + shell execution can create injection risk (avoid unsafe patterns like `shell=True` with untrusted input). [oai_citation:31‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp)
-
----
-
-## 🔐 Privacy + sensitive locations
-
-Two non-negotiables for KFM outputs:
-
-1) **Sensitive locations & sovereignty**  
-   If something must be protected (sacred sites, community-protected places), redact precise coordinates or aggregate appropriately, and label handling requirements (e.g., `care_label`). [oai_citation:32‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
-
-2) **Processed outputs can still leak**  
-   Results from data mining/ML can disclose sensitive information even without access to the original dataset — so privacy protections must apply to outputs too. [oai_citation:33‡Data Mining Concepts & applictions.pdf](file-service://file-CCSRY2RwLx1w6m1RMReuBG)
-
-For sensitive outputs, consider “query auditing / inference control” approaches as part of the access layer (API/warehouse) when appropriate. [oai_citation:34‡Data Mining Concepts & applictions.pdf](file-service://file-CCSRY2RwLx1w6m1RMReuBG)
-
----
-
-## 📁 Expected layout inside `data/processed/`
-
-> [!TIP]
-> Keep the top level tidy: **domain → dataset → version/run**. Prefer stable slugs.
+> Keep the top-level tidy: **domain → dataset → version/run**.
 
 ```text
 📁 data/
 └── 📁 processed/
-    ├── 📄 README.md   👈 you are here
-    ├── 📁 <domain>/
-    │   ├── 📁 <dataset_slug>/
-    │   │   ├── 📁 <version_or_run_id>/
-    │   │   │   ├── 📄 MANIFEST.json
-    │   │   │   ├── 📄 checksums.sha256
-    │   │   │   ├── 📄 dataset.schema.json
-    │   │   │   ├── 🗺️ layer.geojson
-    │   │   │   └── 🛰️ raster.tif
-    │   │   └── 📄 README.md   (dataset card)
-    │   └── 📁 _tmp/  (ignored / optional)
-    └── 📁 _shared/   (only if truly cross-domain)
+    ├── 📄 README.md                      👈 you are here
+    └── 📁 <domain>/
+        └── 📁 <dataset_slug>/
+            ├── 📄 README.md              # dataset card (human context)
+            └── 📁 <version_or_run_id>/
+                ├── 📄 MANIFEST.json      # required
+                ├── 📄 checksums.sha256   # required
+                ├── 📄 QA_REPORT.md       # recommended
+                ├── 📄 dataset.schema.json# recommended (tabular)
+                ├── 🗺️ vectors.*          # geo outputs (GeoJSON/GPKG/etc.)
+                ├── 🛰️ rasters.*          # raster outputs (COG/GeoTIFF/etc.)
+                └── 🖼️ quicklook.*        # preview (png/jpg)
 ```
 
-A companion “domain module” runbook is typically maintained under `docs/data/<domain>/README.md` (example domains include air-quality, soils, land-treaties). [oai_citation:35‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+> [!NOTE]
+> If outputs are too large for Git:
+> store the artifacts externally and keep **pointers + checksums + manifests** here.
 
 ---
 
-## ➕ Add a new processed dataset (checklist)
+## 📦 Publication bundle per dataset
+
+A processed dataset is **ready to publish** when it has:
+
+| What | Required | Where it lives | Why it exists |
+|---|:---:|---|---|
+| Processed artifacts | ✅ | `data/processed/<domain>/<dataset>/<run>/` | Actual deliverables |
+| Manifest | ✅ | `MANIFEST.json` | Repro + governance + pointers |
+| Checksums | ✅ | `checksums.sha256` | Integrity + drift detection |
+| STAC | ✅ | `data/stac/collections/` + `data/stac/items/` | Spatial/temporal indexing + assets |
+| DCAT | ✅ | `data/catalog/dcat/` | Cross-domain discovery + harvesting |
+| PROV | ✅ | `data/prov/` | Lineage (inputs → activity → outputs) |
+| Validation outputs | ⚠️ recommended | `QA_REPORT.md` or `qa.json` | Debuggable CI + reviewer confidence |
+
+---
+
+## 🧾 Manifests and checksums
+
+### ✅ `MANIFEST.json` (required)
+
+A manifest is a compact “how to trust and reproduce this dataset” record.
+
+<details>
+<summary><strong>📄 Minimal MANIFEST shape (starter)</strong></summary>
+
+```json
+{
+  "dataset_id": "kfm.<domain>.<dataset_slug>",
+  "domain": "<domain>",
+  "dataset_slug": "<dataset_slug>",
+  "version_or_run_id": "<yyyy-mm-dd>_v1",
+  "produced_at": "2026-01-08T00:00:00Z",
+
+  "license": {
+    "spdx": "TBD",
+    "source_terms_url": "TBD"
+  },
+
+  "governance": {
+    "classification": "mixed",
+    "sensitivity": "mixed",
+    "care_label": "mixed",
+    "jurisdiction": "US"
+  },
+
+  "inputs": [
+    {
+      "source_manifest": "data/sources/<source>.json",
+      "retrieved_at": "TBD",
+      "hash_or_etag": "TBD"
+    }
+  ],
+
+  "pipeline": {
+    "name": "<pipeline_name>",
+    "commit_sha": "TBD",
+    "config_files": ["<path/to/config.yml>"],
+    "container_image": "TBD",
+    "runtime_versions": {
+      "python": "3.12",
+      "gdal": "TBD",
+      "postgres": "TBD"
+    },
+    "random_seed": "TBD"
+  },
+
+  "spatial": {
+    "crs": "EPSG:4326",
+    "bbox": [-102.05, 36.99, -94.59, 40.00],
+    "resolution": "TBD"
+  },
+
+  "temporal": {
+    "start": "TBD",
+    "end": "TBD"
+  },
+
+  "outputs": [
+    { "path": "rasters/ndvi_cog.tif", "sha256": "TBD" },
+    { "path": "vectors/places.geojson", "sha256": "TBD" }
+  ],
+
+  "catalog_links": {
+    "stac_collection_id": "TBD",
+    "stac_item_ids": ["TBD"],
+    "dcat_dataset_id": "TBD",
+    "prov_bundle_id": "TBD"
+  },
+
+  "notes": "TBD"
+}
+```
+
+</details>
+
+> [!TIP]
+> Keep `MANIFEST.json` **small and boring**. The big stuff lives in STAC/DCAT/PROV; the manifest is the “join key” glue.
+
+### ✅ `checksums.sha256` (required)
+
+A single checksum file protects against accidental drift and makes review verifiable.
+
+Example:
+
+```text
+<sha256>  rasters/ndvi_cog.tif
+<sha256>  vectors/places.geojson
+<sha256>  QA_REPORT.md
+<sha256>  MANIFEST.json
+```
+
+---
+
+## 🗺️ Format guidance (raster • vector • tables • tiles)
+
+KFM’s system design explicitly expects ingestion pipelines to normalize into standard geospatial formats, including COGs for rasters and GeoJSON/shapefiles for vectors, with tiles generated when needed for interactive use. ✅
+
+### Recommended “default formats” (practical, not dogma)
+
+| Output type | Preferred formats | Why |
+|---|---|---|
+| Raster layers | **COG GeoTIFF** (+ overviews) | Fast HTTP range reads; map-friendly; works well with tiling |
+| Vector layers | **GeoJSON** (web), **GeoPackage** (exchange), **GeoParquet** (scale) | Interop + performance |
+| Tabular products | **Parquet** (scale), **CSV** (small) | Schema stability + analytics |
+| Tiles | Vector tiles (MVT), raster tiles | UI performance, mobile/low bandwidth |
+| Previews | PNG/JPEG quicklooks | Human review; docs/UI thumbnails |
+| Text corpora | JSON/JSONL/Parquet | Search + extraction pipelines |
+| Model artifacts | metrics JSON, model cards, serialized model (if allowed) | Reproducibility + governance |
+
+> [!NOTE]
+> For Google Earth Engine exports (or similar), capture **export metadata** (parameters, bands, time period) and **pyramiding policy** as part of the run record so the same asset can be regenerated consistently.
+
+---
+
+## 🧪 Validation and CI gates
+
+### What CI should enforce for `data/processed/**`
+
+Minimum baseline (recommended):
+
+- ✅ `MANIFEST.json` exists and is valid JSON
+- ✅ `checksums.sha256` exists and matches the referenced files
+- ✅ STAC/DCAT/PROV links in the manifest resolve (or are clearly marked `TBD` on draft PRs)
+- ✅ Geospatial sanity checks:
+  - CRS declared and consistent
+  - bbox/geometry valid
+  - raster has nodata + overviews (if applicable)
+- ✅ Governance checks:
+  - license present (or a documented exception)
+  - classification/sensitivity not “downgraded” by accident
+  - no restricted coordinates leaked
+- ✅ Security checks:
+  - no secrets, tokens, credentials, private keys
+  - no plaintext DB connection strings in committed artifacts
+
+> [!TIP]
+> If your repo includes `tools/validation/catalog_qa/`, run it as an early warning system for broken links, missing required metadata, and license mismatches.
+
+### Local quick checks (examples)
+
+```bash
+# JSON parse sanity
+python -m json.tool data/processed/<domain>/<dataset>/<run>/MANIFEST.json > /dev/null
+
+# Validate checksums (example; adjust path)
+(cd data/processed/<domain>/<dataset>/<run> && sha256sum -c checksums.sha256)
+
+# Optional: validate a raster quickly (if gdalinfo exists)
+gdalinfo -stats data/processed/<domain>/<dataset>/<run>/rasters/*.tif | head
+
+# Optional: validate GeoJSON quickly
+python -c "import json; json.load(open('data/processed/<domain>/<dataset>/<run>/vectors/*.geojson'))"
+```
+
+> [!CAUTION]
+> Avoid hard-coding credentials in scripts or notebooks (even for examples). Prefer env vars and `.env` excluded via `.gitignore`.
+
+---
+
+## 🧠 ML, analytics, and simulation outputs
+
+KFM treats analysis outputs (“evidence artifacts”) as **first-class datasets**:
+
+- store outputs in `data/processed/…`
+- catalog them (STAC/DCAT)
+- trace them (PROV)
+- make them explainable (metrics, configs, seeds, limitations)
+
+### Recommended evidence bundle (add to the run folder)
+
+- `METRICS.json` (core metrics + confidence intervals if available)
+- `MODEL_CARD.md` (purpose, training data versions, limitations, intended use)
+- `FEATURES.md` (feature list + engineering notes)
+- `SPLITS.json` (train/val/test identifiers) or a deterministic split rule
+- `SEED.txt` (or manifest field) for determinism
+- `BIAS_CHECKS.md` (when outputs can affect people/communities or sensitive interpretation)
+
+### Simulation outputs (when applicable)
+
+If you generate simulations (climate surfaces, counterfactuals, or other modeled layers):
+- include a short **verification + validation** note (what was checked, what was not)
+- include **sensitivity analysis** summary (what parameters matter)
+- include uncertainty summaries (intervals, ensembles, or qualitative limits)
+
+---
+
+## 🔐 Privacy, sensitivity, and CARE
+
+### 1) Sensitive locations and sovereignty
+If something is protected (sacred sites, community-protected places, restricted infrastructure):
+- **generalize geometry** (coarse bbox, blurred points, aggregated zones),
+- label the handling requirements (`care_label`, `classification`, `sensitivity`),
+- route publication through review (data steward / governance review).
+
+### 2) Processed outputs can still leak
+Even if raw data is private, **derived outputs** (models, aggregates, mined patterns) can disclose sensitive information.
+When publishing high-risk outputs, consider:
+- redaction/aggregation at the API layer,
+- query auditing/inference controls (where applicable),
+- avoiding “too granular to be safe” exports.
 
 > [!IMPORTANT]
-> If you can’t explain the lineage, it’s not processed — it’s just a file.
-
-### ✅ Processing checklist
-- [ ] **Ingest** raw inputs into `data/raw/<domain>/…` (preserve original + record source info). [oai_citation:36‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- [ ] **Transform** into `data/work/<domain>/…` (joins, cleaning, intermediate artifacts). [oai_citation:37‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- [ ] **Finalize** into `data/processed/<domain>/…` (stable outputs + manifests). [oai_citation:38‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- [ ] **Generate boundary artifacts**:
-  - [ ] STAC Item(s) + Collection in `data/stac/…` [oai_citation:39‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-  - [ ] DCAT dataset entry in `data/catalog/dcat/…` [oai_citation:40‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-  - [ ] PROV lineage bundle in `data/prov/…` [oai_citation:41‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- [ ] **Evidence labeling** (if ML/simulation-derived): flag as evidence artifact; ensure explainability hooks + API gating/redaction rules. [oai_citation:42‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- [ ] **Validate**: schemas, links, CI checks, and security/governance scans pass (no secret leaks, no PII surprises, no classification downgrade). [oai_citation:43‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- [ ] **Version**: stable IDs + explicit dataset versioning in STAC/DCAT/PROV. [oai_citation:44‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+> Treat “privacy” as an output property, not just an input property.
 
 ---
 
-## 🧩 Notes on large files & storage
+## 🧳 Large files and external storage
 
-This repository may use strategies like DVC or external storage for large raw/processed assets, keeping pointers/manifests in Git while storing heavy binaries elsewhere. [oai_citation:45‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
+This repo may intentionally avoid committing massive binaries.
+
+Recommended pattern:
+- keep **source manifests** in `data/sources/` (URLs, licenses, retrieval date, checksums/ETags)
+- keep **processed pointers + checksums + manifests** in `data/processed/`
+- store large artifacts in object storage (or DVC, if adopted)
+
+Rule of thumb:
+> Git holds **contracts + metadata + lineage + pointers**.  
+> Object storage holds **the heavy bytes**.
+
+---
+
+## ➕ Add a new processed dataset
+
+### Checklist (fast lane)
+
+- [ ] Create/confirm a stable `dataset_id` and `dataset_slug`
+- [ ] Put raw inputs in `data/raw/<domain>/…` (or create `data/sources/<source>.json` pointers)
+- [ ] Generate intermediates in `data/work/<domain>/…`
+- [ ] Write final artifacts into `data/processed/<domain>/<dataset>/<run>/…`
+- [ ] Create `MANIFEST.json` and `checksums.sha256`
+- [ ] Emit STAC items + collection in `data/stac/…`
+- [ ] Emit DCAT dataset entry in `data/catalog/dcat/…`
+- [ ] Emit PROV bundle in `data/prov/…`
+- [ ] Run validators (catalog QA, geometry/raster sanity checks)
+- [ ] Confirm governance labels (license + sensitivity + CARE label)
+- [ ] Confirm no secrets/PII/restricted coordinates are committed
 
 ---
 
 ## 📚 Project reference shelf
 
-These project files collectively inform how we process, validate, govern, and serve data products:
+These files shaped the conventions in this runbook (architecture, metadata contracts, validation discipline, geospatial formats, modeling integrity, security, ethics).
 
-### 🧠 KFM system + governance
-- **Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation** (pipelines, storage, orchestration, ML integration) [oai_citation:46‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-- **MARKDOWN_GUIDE_v13** (contracts, stages, metadata profiles, CI gates) [oai_citation:47‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:48‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- **Comprehensive Markdown Guide** (front-matter templates, CARE labels, Definition of Done practices) [oai_citation:49‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz) [oai_citation:50‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+> Paths below assume a common convention:
+> - specs in `docs/specs/`
+> - reference PDFs in `docs/library/`
+>
+> If your repo stores them elsewhere, update links accordingly.
 
-### 🛰️ Remote sensing + GIS processing
-- **Cloud-Based Remote Sensing with Google Earth Engine** (metadata habits, pyramiding policy, raster/vector interplay) [oai_citation:51‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk) [oai_citation:52‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)
-- **geoprocessing-with-python** (raster derivations like NDVI + overviews) [oai_citation:53‡geoprocessing-with-python.pdf](file-service://file-NkXrdB4FwTruwhQ9Ggn53T)
-- **python-geospatial-analysis-cookbook** (PostGIS → GeoJSON patterns; raster tooling + cautions) [oai_citation:54‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp) [oai_citation:55‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp)
+<details>
+<summary><strong>🏗️ Core KFM specs</strong></summary>
 
-### 🔐 Privacy + output risk
-- **Data Mining Concepts & Applications** (processed outputs can still disclose sensitive info; auditing considerations) [oai_citation:56‡Data Mining Concepts & applictions.pdf](file-service://file-CCSRY2RwLx1w6m1RMReuBG)
+- `docs/specs/MARKDOWN_GUIDE_v13.md` (or `MARKDOWN_GUIDE_v13.md.gdoc`)
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
+- `docs/library/Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf`
+- `docs/library/Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`
 
-### ⚙️ Scale + performance (optional deep dives)
-- **Scalable Data Management for Future Hardware** (AQP, bootstrapping/BLB, performance tradeoffs) [oai_citation:57‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)
+</details>
+
+<details>
+<summary><strong>🌎 GIS, mapping, cartography, and UI constraints</strong></summary>
+
+- `docs/library/python-geospatial-analysis-cookbook.pdf`
+- `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `docs/library/responsive-web-design-with-html5-and-css3.pdf`
+- `docs/library/webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+- `docs/library/compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
+
+</details>
+
+<details>
+<summary><strong>🛰️ Remote sensing and Earth Engine discipline</strong></summary>
+
+- `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+
+</details>
+
+<details>
+<summary><strong>🗄️ Data systems and scale</strong></summary>
+
+- `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `docs/library/Scalable Data Management for Future Hardware.pdf`
+- `docs/library/Data Spaces.pdf`
+
+</details>
+
+<details>
+<summary><strong>📊 Statistics, experiments, modeling, and uncertainty</strong></summary>
+
+- `docs/library/Understanding Statistics & Experimental Design.pdf`
+- `docs/library/regression-analysis-with-python.pdf`
+- `docs/library/graphical-data-analysis-with-r.pdf`
+- `docs/library/think-bayes-bayesian-statistics-in-python.pdf`
+- `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `docs/library/topology-optimization-theory-methods-and-applications.pdf`
+- `docs/library/spectral-geometry-of-networks.pdf`
+
+</details>
+
+<details>
+<summary><strong>🔐 Security, privacy, and defensive thinking</strong></summary>
+
+- `docs/library/ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
+- `docs/library/Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
+- `docs/library/Data Mining Concepts & applictions.pdf`
+
+</details>
+
+<details>
+<summary><strong>⚖️ Ethics, autonomy, and law</strong></summary>
+
+- `docs/library/An_Introduction_to_Digital_Humanism.pdf`
+- `docs/library/principles_of_Biological_Autonomy.pdf`
+- `docs/library/ai_law_and_regulation_path.pdf`
+
+</details>
+
+<details>
+<summary><strong>🤖 AI quality, bias, and research practice</strong></summary>
+
+- `docs/library/BIAS_TESTING_LLMs.pdf`
+- `docs/library/bubeck2025.pdf`
+- `docs/library/Deep Learning for Coders with fastai and PyTorch.pdf` (if present)
+
+</details>
+
+<details>
+<summary><strong>📚 Engineering “toolbelt” bundles (reference-only)</strong></summary>
+
+- `docs/library/D-E programming Books.pdf`
+- `docs/library/F-H programming Books.pdf`
+- `docs/library/I-N programming Books.pdf`
+
+</details>
 
 ---
 
-## ✅ Definition of Done (for this README)
+## 🕰️ Version history
 
-- [x] Front-matter present (template-inspired; placeholders allowed) [oai_citation:58‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
-- [x] Directory layout + lifecycle described (raw → work → processed) [oai_citation:59‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- [x] Publication gate stated (STAC/DCAT/PROV) [oai_citation:60‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- [x] Governance + sovereignty considerations included (CARE label + sensitive redaction patterns) [oai_citation:61‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz) [oai_citation:62‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- [ ] Reviewed by a domain steward / data steward (recommended) [oai_citation:63‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+| Version | Date | Change |
+|---|---|---|
+| v1.0.0 | 2026-01-02 | Initial runbook scaffold |
+| v1.1.0 | 2026-01-08 | Tighten processed-vs-published contract; add manifest/checksum standards; align to STAC/DCAT/PROV + validation + CARE guidance |
+
+---
+
+## ✅ Definition of Done
+
+- [x] Front-matter present and updated
+- [x] Clear definition of “processed” vs “published”
+- [x] Canonical lifecycle and pipeline ordering documented
+- [x] Expected folder layout + publication bundle defined
+- [x] Manifest + checksum requirements included
+- [x] Validation expectations stated (local + CI)
+- [x] CARE / sensitivity guidance included
+- [ ] Links verified in-repo (fix any path drift)
+- [ ] Reviewed by a data steward / maintainer
+
+> [!TIP]
+> To fill `doc_integrity_checksum`, compute a sha256 of the final Markdown file content (tooling choice is yours).
+```
