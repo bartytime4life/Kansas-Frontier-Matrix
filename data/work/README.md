@@ -1,28 +1,3 @@
----
-title: "data/work — Workbench & Experiment Sandbox"
-path: "data/work/README.md"
-version: "v1.1.0"
-last_updated: "2026-01-08"
-status: "active"
-doc_kind: "Data Runbook"
-license: "TBD"
-
-# KFM contracts (align with repo-wide invariants)
-pipeline_contract_version: "v13"
-markdown_protocol_version: "KFM-MDP (repo default)"
-
-# Governance (folder-level; per-work-package may override)
-fair_category: "FAIR+CARE"
-care_label: "mixed"
-sensitivity: "mixed"
-classification: "mixed"
-jurisdiction: "US-KS"
-
-doc_uuid: "urn:kfm:doc:data:work:readme:v1.1.0"
-commit_sha: "TBD"
-doc_integrity_checksum: "sha256:TBD"
----
-
 # 🧰 `data/work/` — Workbench & Experiment Sandbox
 
 ![Scope](https://img.shields.io/badge/scope-data%2Fwork-blue?style=flat-square)
