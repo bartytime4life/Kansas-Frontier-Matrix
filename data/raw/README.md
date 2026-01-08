@@ -1,28 +1,3 @@
----
-title: "data/raw — Immutable Inputs"
-path: "data/raw/README.md"
-version: "v1.1.0"
-last_updated: "2026-01-08"
-status: "active"
-doc_kind: "Data Runbook"
-license: "TBD"
-
-# Protocol + contracts (KFM)
-markdown_protocol_version: "1.0"
-pipeline_contract_version: "v13"
-
-# Governance (folder-level; per-dataset may override)
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-sensitivity: "mixed"
-classification: "mixed"
-jurisdiction: "US"
-
-doc_uuid: "urn:kfm:doc:data:raw:readme:v1.1.0"
-commit_sha: "TBD"
-doc_integrity_checksum: "sha256:TBD"
----
-
 <div align="center">
 
 # 📥 `data/raw/` — Raw Data (Immutable Inputs)
