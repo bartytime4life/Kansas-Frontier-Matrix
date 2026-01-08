@@ -57,22 +57,22 @@ Key architectural implications for the API:
 > These files may be created incrementally. The README is the index + ruleset; the *contracts* are the source of truth for implementation.
 
 ~~~text
-docs/specs/api/
+📂 docs/specs/api/
 ├── 📄 README.md                    # You are here (rules, index, conventions)
 ├── 🧾 openapi.yaml                 # REST contract (canonical)
 ├── 🧬 graphql/
-│   ├── schema.graphql              # GraphQL schema (canonical)
-│   └── operations/                 # Saved queries (bounded, governed)
+│   ├── 📜 schema.graphql           # GraphQL schema (canonical)
+│   └── 🧩 operations/              # Saved queries (bounded, governed)
 ├── 🧪 examples/
-│   ├── requests/                   # Example request payloads
-│   └── responses/                  # Example responses (golden files)
+│   ├── 📤 requests/                # Example request payloads
+│   └── 📥 responses/               # Example responses (golden files)
 ├── 🧷 schemas/
-│   ├── api/                        # JSON Schemas for request/response objects
-│   ├── stac/                       # STAC profiles + extensions (kfm-*)
-│   └── telemetry/                  # Telemetry event schemas (focus-telemetry.json)
+│   ├── 🧱 api/                     # JSON Schemas for request/response objects
+│   ├── 🛰️ stac/                    # STAC profiles + extensions (kfm-*)
+│   └── 📡 telemetry/               # Telemetry event schemas (focus-telemetry.json)
 └── 🧰 tests/
-    ├── contract/                   # Contract tests (REST + GraphQL)
-    └── governance/                 # Redaction + policy gate tests
+    ├── ✅ contract/                # Contract tests (REST + GraphQL)
+    └── 🛡️ governance/              # Redaction + policy gate tests
 ~~~
 
 ---
