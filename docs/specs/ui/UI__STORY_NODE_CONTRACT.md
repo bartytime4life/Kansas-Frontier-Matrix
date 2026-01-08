@@ -1,18 +1,3 @@
----
-title: "🧩 UI Story Node Contract"
-path: "docs/specs/ui/UI__STORY_NODE_CONTRACT.md"
-version: "1.0.0"
-status: "DRAFT"
-last_updated: "2026-01-08"
-owners:
-  - "KFM UI Guild"
-  - "KFM Data/Knowledge Engineering"
-applies_to:
-  - "Map UI (MapLibre)"
-  - "3D/Hybrid UI (Cesium ↔ MapLibre)"
-  - "Focus Mode (reproducibility + telemetry)"
----
-
 <div align="center">
 
 # 🧭 UI__STORY_NODE_CONTRACT
