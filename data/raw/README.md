@@ -1,76 +1,219 @@
-# 🗃️ `data/raw/` — Raw Data (Immutable Inputs)
+---
+title: "data/raw — Immutable Inputs"
+path: "data/raw/README.md"
+version: "v1.1.0"
+last_updated: "2026-01-08"
+status: "active"
+doc_kind: "Data Runbook"
+license: "TBD"
 
-![stage](https://img.shields.io/badge/data%20stage-raw-blue)
-![policy](https://img.shields.io/badge/policy-append--only-success)
-![lineage](https://img.shields.io/badge/lineage-provenance--first-informational)
-![governance](https://img.shields.io/badge/governance-FAIR%2BCARE-purple)
+# Protocol + contracts (KFM)
+markdown_protocol_version: "1.0"
+pipeline_contract_version: "v13"
 
-Raw data is the **first boundary** of the KFM pipeline: we ingest external sources here, keep them **as raw as possible**, and only then run deterministic ETL into `data/work/` and publish outputs in `data/processed/`. 📦➡️🛠️➡️✅ [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
+# Governance (folder-level; per-dataset may override)
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "mixed"
+classification: "mixed"
+jurisdiction: "US"
 
-> 🧊 **Rule of thumb:** If you changed bytes, *it’s not raw anymore* — it belongs in `data/work/` or `data/processed/`.
+doc_uuid: "urn:kfm:doc:data:raw:readme:v1.1.0"
+commit_sha: "TBD"
+doc_integrity_checksum: "sha256:TBD"
+---
+
+<div align="center">
+
+# 📥 `data/raw/` — Raw Data (Immutable Inputs)
+
+![stage](https://img.shields.io/badge/data%20stage-raw-2563EB)
+![policy](https://img.shields.io/badge/policy-append--only-16A34A)
+![integrity](https://img.shields.io/badge/integrity-checksums%20%2B%20receipts-7C3AED)
+![provenance](https://img.shields.io/badge/provenance-source.json%20%2B%20PROV-0EA5E9)
+![governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-8B5CF6)
+![security](https://img.shields.io/badge/security-no%20secrets%20in%20git-DC2626)
+
+**Raw data is KFM’s first trust boundary.**  
+We ingest external sources here **as-received**, preserve them **immutably**, then perform deterministic ETL in `data/work/` and publish stable products in `data/processed/`. 🧾➡️🛠️➡️📦
+
+</div>
+
+> [!IMPORTANT]
+> **If you changed bytes, it’s not raw anymore.**  
+> Reprojection, cleanup, OCR, tiling, resampling, column edits, format conversion → belongs in `data/work/` or `data/processed/`.
 
 ---
 
-## 🎯 What belongs in `data/raw/`
+## 🔗 Quick links
 
-✅ **Allowed**
-- Vendor dumps, agency downloads, scans, exports, archives, sensor drops
-- API pulls (when you can persist the response payloads without semantic edits)
-- Delivered bundles in their **original format** (ZIP/TAR, GeoTIFF, CSV, JSON, PDF, etc.)
-- Lossless extraction output (unzip/untar) **without transformation** (see `extracted/` rules)
-
-❌ **Not allowed**
-- Reprojected rasters, cleaned/normalized tables, renamed columns, “fixed” geometries
-- Re-encoded/converted formats (COG conversion, Parquet conversion, OCR text, etc.)
-- Anything that is an **analysis/evidence artifact** (those are first-class datasets in `data/processed/`) [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🧭 Repo overview → `../../README.md`
+- 🧪 Intermediate artifacts → [`../work/`](../work/)
+- 📦 Final products → [`../processed/`](../processed/)
+- ✅ QA runbooks & validators → [`../qa/`](../qa/) *(create if missing)*
+- 🗂️ Discovery metadata (DCAT) → [`../catalog/`](../catalog/)
+- 🛰️ Geospatial indexing (STAC) → [`../stac/`](../stac/)
+- 🧬 Lineage bundles (PROV) → [`../prov/`](../prov/)
+- 🛡️ Vulnerability reporting → `../../SECURITY.md` *(or `../../.github/SECURITY.md`)*
 
 ---
 
-## 🗂️ Folder layout (recommended)
+<details>
+<summary><strong>📌 Table of contents</strong></summary>
 
-Raw data should be **organized by domain**, then **dataset**, then **version/date**.
+- [🧭 Where raw fits in the KFM pipeline](#pipeline)
+- [✅ What belongs here](#allowed)
+- [🚫 What does NOT belong here](#not-allowed)
+- [⭐ Raw-stage non-negotiables](#non-negotiables)
+- [🗂️ Directory layout](#layout)
+- [🧾 Raw drop contract](#drop-contract)
+- [📄 `source.json` template](#source-json)
+- [🔑 Checksums](#checksums)
+- [📦 Large files & restricted redistribution](#large-files)
+- [🗺️ Geospatial + document specifics](#geo-specifics)
+- [🔐 Security, privacy, sovereignty](#security)
+- [🧪 QA & CI expectations](#qa)
+- [🧰 Intake SOP: add a new raw drop](#sop)
+- [🙃 Common anti-patterns](#anti-patterns)
+- [📚 Project reference shelf](#reference-shelf)
+
+</details>
+
+---
+
+<a id="pipeline"></a>
+
+## 🧭 Where raw fits in the KFM pipeline
+
+**Canonical ordering (non‑negotiable):**  
+**Raw → Work/ETL → Processed → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+```mermaid
+flowchart LR
+  RAW[📥 Raw inputs<br/>data/raw/] --> WORK[🧪 Work / ETL<br/>data/work/]
+  WORK --> PROC[📦 Processed outputs<br/>data/processed/]
+  PROC --> STAC[🛰️ STAC catalogs<br/>data/stac/]
+  PROC --> DCAT[🗂️ DCAT datasets<br/>data/catalog/dcat/]
+  PROC --> PROV[🧬 PROV lineage<br/>data/prov/]
+  STAC --> GRAPH[🕸️ Graph (Neo4j)]
+  DCAT --> GRAPH
+  PROV --> GRAPH
+  GRAPH --> API[🔌 Governed API]
+  API --> UI[🗺️ Web UI]
+  UI --> STORY[🎬 Story Nodes]
+  STORY --> FOCUS[🧠 Focus Mode]
+```
+
+> [!NOTE]
+> Raw is not “less important.” It’s the foundation for **reproducibility**, **auditability**, and **tamper-evidence** across catalogs, models, and narratives.
+
+---
+
+<a id="allowed"></a>
+
+## ✅ What belongs here
+
+**Allowed raw inputs (as-received):**
+- 📦 Vendor/agency deliveries (ZIP/TAR bundles, exports, archives)
+- 🗺️ Original GIS deliveries (GeoTIFF, SHP, GPKG, CSV, JSON, KML, etc.)
+- 🧾 Documents & scans (PDFs, TIFF/JPEG/PNG masters)
+- 🛰️ Remote sensing exports / pulls where you can persist **the exported files** and/or **the original response payload**
+- 🧪 Sensor dumps / logs (when permitted) — stored “as recorded”
+
+**Also allowed (with strict rules):**
+- 📁 **Lossless extraction** into `extracted/` **only if** you also keep the original archive in `original/`
+  - unzip/untar is allowed; *editing content is not*
+
+---
+
+<a id="not-allowed"></a>
+
+## 🚫 What does NOT belong here
+
+**Not allowed in `data/raw/`:**
+- 🧼 Cleaned tables, renamed columns, changed encodings
+- 🧭 Reprojection, resampling, tiling, simplification, topology repair
+- 🧊 “Make it a COG”, “make it Parquet”, “make it GeoJSON”
+- 🧠 Analysis outputs / model outputs / simulation outputs / reports  
+  → these are first-class datasets in `data/processed/` and must ship with STAC/DCAT/PROV
+
+> [!WARNING]
+> If the only explanation for a file is “trust me,” it will fail review (and often CI).
+
+---
+
+<a id="non-negotiables"></a>
+
+## ⭐ Raw-stage non-negotiables
+
+These rules keep the pipeline deterministic and governance-safe:
+
+- 🧱 **Append-only**: never mutate an existing drop; new pull → new folder
+- 🧊 **Bytes preserved**: keep originals + sidecars; don’t “helpfully convert”
+- 🧾 **Receipts required**: every drop has `README.md`, `source.json`, `checksums.sha256`
+- 🏷️ **Stable identity**: `dataset_id` + `drop_id` become PROV keys later
+- 🛡️ **Governance up front**: license, classification, sensitivity declared at ingest time
+- 🔐 **No secrets in Git**: use `.env` + secret stores; rotate if exposed
+
+---
+
+<a id="layout"></a>
+
+## 🗂️ Directory layout
+
+Organize raw data by **domain → dataset → immutable drop**:
 
 ```text
 data/raw/
-└── <domain>/                      # e.g., land_treaties, imagery, census, hydro, documents, sensors
-    └── <dataset_slug>/            # kebab-case, stable ID
-        └── <YYYY-MM-DD_or_vX>/    # immutable drop boundary
+└── <domain>/                         # imagery, hydro, census, docs, etc.
+    └── <dataset_slug>/               # kebab-case, stable (no dates inside)
+        └── <drop_id>/                # YYYY-MM-DD | vX | YYYY-MM-DDa
             ├── 📄 README.md
             ├── 📄 source.json
-            ├── 📄 checksums.sha256
-            ├── 📁 original/       # optional: the exact upstream archive(s) or delivered bundle
-            └── 📁 extracted/      # optional: extraction output (ONLY lossless unpacking; no transforms)
+            ├── 🔑 checksums.sha256
+            ├── 📁 original/          # upstream bundle(s) exactly as received
+            ├── 📁 extracted/         # optional: lossless unpack output (no transforms)
+            └── 📁 notes/             # optional: landing pages, emails (NO secrets)
 ```
 
-### 🏷️ Naming rules (keep it boring = keep it reproducible)
-- **`<domain>/`**: short, meaningful bucket (team-agreed). Don’t overfit.
-- **`<dataset_slug>/`**: `kebab-case`, stable identifier (no dates inside the slug).
-- **`<YYYY-MM-DD_or_vX>/`**: immutable “drop boundary”
-  - Use `YYYY-MM-DD` when the source is a dated pull/delivery.
-  - Use `vX` when the upstream has explicit releases (or you’re mirroring a versioned archive).
-  - If you re-pull the same upstream date, create a new boundary: `YYYY-MM-DDb` (or bump `vX`), don’t overwrite.
+### 🏷️ Naming guidance
+
+- `<domain>`: broad, stable bucket (don’t overfit)
+- `<dataset_slug>`: stable handle (`kebab-case`)
+- `<drop_id>`:
+  - `YYYY-MM-DD` for dated pulls/deliveries
+  - `vX` for upstream versioned releases
+  - if re-pulling “the same” drop: `YYYY-MM-DDa`, `YYYY-MM-DDb` (never overwrite)
+
+> [!TIP]
+> “Boring naming” is a feature: it makes automation, QA, and provenance simpler.
 
 ---
 
-## 📄 Raw drop contract (what every drop MUST contain)
+<a id="drop-contract"></a>
 
-Each immutable drop is a **contract boundary**: a human can understand it and a machine can validate it. This matches KFM’s **contract-first** and **deterministic pipeline** expectations. [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+## 🧾 Raw drop contract
 
-| Artifact | Required | Why it exists | “Good enough” contents |
+Every raw drop is a **reviewable, machine-validatable boundary**.
+
+| Artifact | Required | Why it exists | Minimum contents |
 |---|---:|---|---|
-| 📄 `README.md` | ✅ | Human context & caveats | what it is, where it came from, what’s inside, how to reproduce |
-| 📄 `source.json` | ✅ | Machine-readable provenance | source URLs, license, retrieval method/time, classification, extents |
-| 📄 `checksums.sha256` | ✅ | Integrity & tamper-evidence | sha256 over all files in the drop (excluding itself) |
-| 📁 `original/` | ◻️ | Exact upstream bundle | ZIP/TAR/PDFs, vendor delivery, “as received” |
-| 📁 `extracted/` | ◻️ | Lossless unpack only | unzip/untar output ONLY (no reprojection, no cleaning) |
+| 📄 `README.md` | ✅ | Human context | what it is, where it came from, what’s inside, caveats |
+| 📄 `source.json` | ✅ | Machine provenance | source URLs, license, retrieval time/method, classification, extents |
+| 🔑 `checksums.sha256` | ✅ | Integrity + tamper evidence | sha256 of all files in the drop (except itself) |
+| 📁 `original/` | ◻️ | “As received” archive(s) | ZIP/TAR/PDF bundles, vendor deliveries |
+| 📁 `extracted/` | ◻️ | Lossless unpack only | unzip/untar output (no semantic changes) |
 
-> ⚠️ **Append-only policy:** never mutate an existing drop. If something changes, create a new drop boundary and document why.
+> [!CAUTION]
+> If redistribution is restricted: keep **only receipts** (README + source.json) in Git, store bytes in restricted storage, and document access.
 
 ---
 
-## 🧾 `source.json` template (recommended)
+<a id="source-json"></a>
 
-`source.json` is the “receipt” 🧾 — it should let future-you re-acquire and re-verify the same raw inputs.
+## 📄 `source.json` template
+
+`source.json` is the raw-stage **receipt** 🧾 — it should let a reviewer (or future-you) re-acquire and re-verify the same inputs.
 
 ```json
 {
@@ -86,8 +229,9 @@ Each immutable drop is a **contract boundary**: a human can understand it and a 
     "publisher": "Agency / org / vendor",
     "source_urls": ["https://…"],
     "retrieved_from": "https://…",
-    "license": "SPDX or link / statement",
-    "citation": "Preferred citation string (if provided)"
+    "license": "SPDX id or URL or text statement",
+    "citation": "Preferred citation string (if provided)",
+    "terms_notes": "Redistribution limits / constraints."
   },
 
   "retrieval": {
@@ -103,8 +247,8 @@ Each immutable drop is a **contract boundary**: a human can understand it and a 
 
   "coverage": {
     "spatial": {
-      "crs": "EPSG:4326 (if known; otherwise 'unknown')",
-      "bbox_wgs84": [-180.0, -90.0, 180.0, 90.0]
+      "crs": "EPSG:4326 | unknown",
+      "bbox_wgs84": [-102.05, 36.99, -94.59, 40.00]
     },
     "temporal": {
       "start": "YYYY-MM-DD",
@@ -113,8 +257,9 @@ Each immutable drop is a **contract boundary**: a human can understand it and a 
   },
 
   "sensitivity": {
-    "classification": "public|restricted|confidential",
-    "notes": "Anything about privacy, sovereignty, access constraints, redactions."
+    "classification": "public|internal|confidential|restricted",
+    "care_label": "TBD",
+    "notes": "Sovereignty, sensitive sites, PII risk, redaction expectations."
   },
 
   "files": [
@@ -128,26 +273,32 @@ Each immutable drop is a **contract boundary**: a human can understand it and a 
 }
 ```
 
-> 🧠 Tip: keep **README.md human**, keep **source.json machine**. Don’t hide critical licensing/sensitivity notes in prose only.
+> [!TIP]
+> Keep `README.md` **human**, keep `source.json` **machine**. Don’t hide licensing or sensitivity only in prose.
 
 ---
 
-## 🔑 `checksums.sha256` (how to generate + verify)
+<a id="checksums"></a>
+
+## 🔑 Checksums
 
 ### Generate (macOS/Linux)
+
 ```bash
-# from inside the drop directory (…/<YYYY-MM-DD_or_vX>/)
+# from inside the drop directory: .../<drop_id>/
 find . -type f \
   ! -name 'checksums.sha256' \
   -print0 | sort -z | xargs -0 sha256sum > checksums.sha256
 ```
 
 ### Verify (macOS/Linux)
+
 ```bash
 sha256sum -c checksums.sha256
 ```
 
 ### Windows (PowerShell)
+
 ```powershell
 Get-ChildItem -Recurse -File |
   Where-Object { $_.Name -ne "checksums.sha256" } |
@@ -157,190 +308,220 @@ Get-ChildItem -Recurse -File |
   } | Set-Content checksums.sha256
 ```
 
----
-
-## 📦 Large files (recommended: DVC)
-
-For big rasters / imagery / long time-series, prefer **DVC** so Git stays fast while datasets remain reproducible. The project design explicitly suggests DVC for large artifacts and reproducible data versioning. [oai_citation:4‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw) [oai_citation:5‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
-
-**Pattern**
-- Keep `source.json` + `checksums.sha256` **in Git**
-- Store heavy binaries in DVC remote (or equivalent artifact storage)
-- Treat each `<drop_id>/` as immutable even when tracked by DVC
-
-> 🧯 If the upstream license forbids redistribution: store *only* metadata + retrieval instructions in Git, and keep the data in restricted storage.
+> [!NOTE]
+> Checksums are practical tamper-evidence **and** a fast way to debug data drift.
 
 ---
 
-## 🗺️ Geospatial specifics (raw-stage rules)
+<a id="large-files"></a>
 
-### ✅ In raw
-- Keep original CRS, resolution, and encoding (“as delivered”)
-- Store upstream metadata sidecars exactly (e.g., `.xml`, `.aux`, `.tfw`)
-- Record bbox/time coverage in `source.json`
+## 📦 Large files & restricted redistribution
 
-### ❌ Not in raw
-- Reprojection, resampling, tiling, simplification, topology repair
-- “Make it a COG” conversions
-- “Cleaned” geometries or normalized attribute schemas
+Raw often includes huge rasters and long time-series.
 
-When publishing, KFM expects metadata boundary artifacts (STAC/DCAT/PROV) **before** downstream use. [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+### Recommended patterns
 
----
+- 🧳 **Small/medium files**: store directly in Git (still include checksums)
+- 🧱 **Large binaries**: consider DVC (or similar) for versioned pointers
+- 🔒 **Redistribution restricted**: keep only receipts in Git; store bytes in restricted storage
 
-## 🧬 Metadata, standards, and interoperability
-
-Good raw stewardship starts with **metadata discipline**:
-- Metadata categories commonly include: identification, distribution, data quality, spatial reference, entity/attribute information, and metadata reference info. [oai_citation:7‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
-- Interoperability is the ability of systems to exchange information and then use it (not just “send files”). [oai_citation:8‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
-
-### 📜 Copyright & licensing (common gotcha)
-A key distinction in cartography is between:
-- the **data** (facts/coordinates), and
-- the **map** as a **cartographic representation** (creative work). This affects what you can redistribute and how you cite/attribute. [oai_citation:9‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
+> [!IMPORTANT]
+> The **drop folder** is still the contract boundary even if the bytes live elsewhere.
 
 ---
 
-## 🔐 Privacy, security, sovereignty (FAIR+CARE mindset)
+<a id="geo-specifics"></a>
 
-Geospatial and historical data can carry real-world risk:
-- Digital geographic data can implicate **locational privacy** (e.g., data from phones/vehicles/sensors). Treat raw drops as potentially sensitive by default. [oai_citation:10‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
-- Security is commonly framed around protecting **confidentiality, integrity, availability**; privacy includes the right to determine/limit access to personal information. [oai_citation:11‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)
+## 🗺️ Geospatial + document specifics
 
-KFM also expects governance and sovereignty considerations to be stated explicitly (FAIR/CARE alignment). [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+### 🛰️ Raster deliveries (GeoTIFF/IMG/etc.)
+✅ Raw: keep “as delivered,” including `.aux.xml`, `.tfw`, metadata sidecars  
+❌ Not raw: COG conversion, resampling, overviews, tiling (do this in `data/work/`)
 
-### 🛡️ CI / review expectations (don’t skip)
-The repo standards include automated scanning for:
-- secrets,
-- PII/sensitive data,
-- classification downgrade issues, etc. [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+### 🧭 Vector deliveries (SHP/GPKG/GeoJSON/CSV)
+✅ Raw: keep as delivered, preserve encoding + schema  
+❌ Not raw: reprojection, geometry fixes, attribute normalization
+
+### 🧾 Documents & scans (PDF/JPEG/PNG/TIFF)
+✅ Raw: keep original masters (don’t OCR in place)  
+❌ Not raw: OCR text outputs, rotated/cleaned images, compressed previews  
+➡️ Put OCR + derivatives in `data/work/` (publish in `data/processed/` if they ship)
+
+### 🧊 3D / graphics assets (glTF / 3D Tiles / meshes)
+Treat as **untrusted inputs**:
+- store raw assets unchanged
+- validate parsers and conversion steps in `data/work/`
+- never execute embedded scripts/macros; strip or sandbox during ETL
+
+### 🛰️ API pulls (remote sensing, web services)
+If you pull via API:
+- store the **raw payload** (or exported files) if possible
+- store the **exact request parameters** (query, filters, time window)
+- store the script path + commit hash in `source.json`
+
+> [!TIP]
+> “Reproducible retrieval” is part of provenance. If a pull can’t be repeated, document why (rate limits, paid access, ephemeral tokens, etc.).
 
 ---
 
-## 🧰 Intake workflow (drop SOP)
+<a id="security"></a>
 
-### 1) Create the directory 🧱
-- Choose `<domain>/` and `<dataset_slug>/`
-- Create the immutable drop boundary folder
+## 🔐 Security, privacy, sovereignty
 
-### 2) Acquire upstream data 📥
-- Put delivered bundle(s) in `original/` (recommended)
-- If you extract, extract **losslessly** into `extracted/`
+Geospatial raw data can carry real-world risk.
 
-### 3) Document it 🧾
-- Write dataset-drop `README.md`
-- Create `source.json` (include license + sensitivity)
+### Hard rules
+- 🔐 **No secrets in Git**: tokens/keys go in `.env` + secret stores
+- 🧍 **No PII in public repos** unless explicitly governed and approved
+- 🧭 **No restricted coordinates** in public drops when locations are sensitive
+- 🏷️ **Declare classification** in `source.json` (and don’t “downgrade” later)
+
+### If in doubt
+- open a PR with only the receipts (no binaries)
+- flag the concern clearly
+- route sensitive details via private channels per `SECURITY.md`
+
+> [!WARNING]
+> “Processed outputs can still leak.” Even aggregated or derived data can reveal sensitive patterns. Raw discipline is the first step; API governance is the last.
+
+---
+
+<a id="qa"></a>
+
+## 🧪 QA & CI expectations
+
+Raw changes should be easy to validate automatically.
+
+**Minimum checks for PRs touching `data/raw/**`:**
+- [ ] Drop is append-only (no edits to existing drops)
+- [ ] `README.md`, `source.json`, `checksums.sha256` exist
+- [ ] `checksums.sha256` verifies locally
+- [ ] `source.json` includes license + classification
+- [ ] No secrets/credentials committed
+- [ ] Sensitive data is flagged and handled per governance
+
+> [!NOTE]
+> Deeper geospatial QA (CRS checks, geometry validity, bounds) usually happens in `data/work/` and `data/processed/`—but raw must still declare what it *claims* to be.
+
+---
+
+<a id="sop"></a>
+
+## 🧰 Intake SOP: add a new raw drop
+
+### 1) Create the drop boundary 🧱
+- choose `<domain>/<dataset_slug>/<drop_id>/`
+- never overwrite an existing drop
+
+### 2) Acquire upstream bytes 📥
+- place the upstream bundle in `original/`
+- optional: losslessly extract into `extracted/`
+
+### 3) Write the receipts 🧾
+- `README.md` (human: what/where/why/caveats)
+- `source.json` (machine: license, retrieval, classification, extents)
 
 ### 4) Lock integrity 🔒
-- Generate `checksums.sha256`
-- If large: DVC-track the data files (keep manifests in Git)
+- generate `checksums.sha256`
+- verify it locally
 
-### 5) Submit for review ✅
-Open a PR with:
-- What changed (new drop, new domain, license notes)
-- Any sensitivity/sovereignty flags
-- Reproduction steps (how to re-download / re-verify)
-
-> 🧪 Design reminder: the project audit calls out missing reproducibility workflows as a risk; this SOP is the antidote. 🧯 [oai_citation:14‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)
+### 5) Open a PR ✅
+Include:
+- what changed (new dataset vs new drop)
+- any licensing/sensitivity concerns
+- how to reproduce retrieval (if applicable)
 
 ---
 
-## 🧭 Where does raw data go next?
+<a id="anti-patterns"></a>
 
-KFM uses required staging:
-- `data/raw/<domain>/` → `data/work/<domain>/` → `data/processed/<domain>/` [oai_citation:15‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+## 🙃 Common anti-patterns
 
-And publication requires boundary metadata outputs:
-- STAC, DCAT, PROV (catalog + lineage) [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-```mermaid
-flowchart LR
-  A[Raw Sources<br/>data/raw/] --> B[ETL + Normalization<br/>data/work/]
-  B --> C[Published Outputs<br/>data/processed/]
-  C --> D[STAC / DCAT / PROV<br/>catalog + lineage]
-```
+- “I fixed the CSV in place” → new drop; do cleanup in `data/work/`
+- “I reprojected it so it lines up” → `data/work/` / `data/processed/`
+- “I renamed files for convenience” → keep originals; map names in docs
+- “I added a token to a download script” → use `.env`; rotate exposed tokens
+- “I posted sensitive coordinates in a public drop” → stop, remove, report privately
 
 ---
 
-## 🚫 Common anti-patterns (please don’t 🙃)
+<a id="reference-shelf"></a>
 
-- “I fixed the CSV in place” (➡️ new drop boundary instead)
-- “I reprojected it so it lines up” (➡️ do it in `data/work/` / `data/processed/`)
-- “I renamed files for convenience” (➡️ keep original names; add a mapping doc elsewhere)
-- “I added a secret token to a download script” (➡️ use `.env`, never commit secrets)
-- “I copied sensitive coordinates into a public drop” (➡️ classify + restrict + review gates)
-
----
-
-## 📚 Project reference shelf (local library)
+## 📚 Project reference shelf
 
 <details>
-<summary><b>Open the project library 📚 (reference PDFs & design docs)</b></summary>
+<summary><strong>📖 Reference library (all project files)</strong></summary>
 
-### 🧱 KFM architecture & governance
-- KFM Technical Documentation  [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
-- KFM Open-Source Geospatial Historical Mapping Hub Design  [oai_citation:18‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)  
-- KFM Master Guide v13 (repo + pipeline standards)  [oai_citation:19‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
-- KFM Design Audit (gaps & enhancements)  [oai_citation:20‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)  
-- Scientific Method / Research MCP (experiment + versioning discipline)  [oai_citation:21‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)  
+> ⚠️ Reference PDFs may have licenses different from repository code. Keep them in `docs/library/` (or outside the repo) and respect upstream terms.
 
-### 🗺️ GIS / mapping / geospatial processing
-- Making Maps (map design, metadata, copyright)  [oai_citation:22‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)  
-- Python Geospatial Analysis Cookbook  [oai_citation:23‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)  
-- Geoprocessing with Python
-- Geographic Information System Basics
-- Google Maps API Succinctly
-- Google Maps JavaScript API Cookbook
+### 🧭 Core KFM system docs
+- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
 
-### 🌍 Remote sensing / Earth Engine
-- Cloud-Based Remote Sensing with Google Earth Engine  [oai_citation:24‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)  
-- Google Earth Engine Applications
+### 🗺️ GIS, mapping, cartography, geospatial tooling
+- making-maps-a-visual-guide-to-map-design-for-gis.pdf
+- Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf  [oai_citation:1‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj)
+- python-geospatial-analysis-cookbook.pdf
+- PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf
 
-### 📊 Stats / ML (keep raw clean so analysis stays honest)
-- Data Science & Machine Learning (Math & Stats Methods)  [oai_citation:25‡Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf](file-service://file-MRNb2uGPEwpkSDsxF983PC)  
-- Statistics Done Wrong
-- Regression Analysis with Python
-- Bayesian Computational Methods
-- Understanding Statistics & Experimental Design
-- Graphical Data Analysis with R
-- Deep Learning in Python (prereqs)
-- Artificial Neural Networks (intro)
-- AI Foundations of Computational Agents (3rd ed.)
-- Data Mining: Concepts & Applications
+### 🛰️ Remote sensing workflows
+- Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf
 
-### 🧰 Engineering / systems / tooling
-- Command Line Kung Fu (shell + one-liners)
-- Introduction to Docker
-- Clean Architectures in Python  [oai_citation:26‡clean-architectures-in-python.pdf](file-service://file-6YHot4AqfpdbcrdfiYfpHM)  
-- Scalable Data Management for Future Hardware
-- PostgreSQL / MySQL / Node.js Notes for Professionals
-- Implementing Programming Languages (compilers/interpreters)
+### 🖼️ Documents, scans & file formats
+- compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf  [oai_citation:2‡compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf](file-service://file-Y6V94sFtV6sy3w63LDy9fi)
 
-### 🎨 Web / visualization / graphics (downstream of processed data)
-- Responsive Web Design with HTML5 & CSS3
-- WebGL Programming Guide
-- Computer Graphics using Java 2D & 3D
+### 📊 Statistics, experiments, inference & modeling integrity
+- Understanding Statistics & Experimental Design.pdf
+- regression-analysis-with-python.pdf
+- Regression analysis using Python - slides-linear-regression.pdf  [oai_citation:3‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR)
+- graphical-data-analysis-with-r.pdf
+- think-bayes-bayesian-statistics-in-python.pdf  [oai_citation:4‡think-bayes-bayesian-statistics-in-python.pdf](file-service://file-LXwJApPMVhRZgyqLb9eg7c)
+- Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf
+- Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf *(file name as provided)*
 
-### 🧑‍⚖️ Ethics / human-centered constraints
-- Introduction to Digital Humanism  [oai_citation:27‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
-- Principles of Biological Autonomy
+### ⚙️ Systems, scale, interoperability
+- Scalable Data Management for Future Hardware.pdf
+- Data Spaces.pdf
+- concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf  [oai_citation:5‡concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf](file-service://file-Y45SvXbmLoZL1MNmrcyqz6)
+
+### 🌐 Web UI & 3D graphics
+- responsive-web-design-with-html5-and-css3.pdf
+- webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf
+
+### 🧮 Advanced math & optimization (optional deep dives)
+- Spectral Geometry of Graphs.pdf
+- Generalized Topology Optimization for Structural Design.pdf
+
+### ❤️ Ethics, autonomy, AI law
+- Introduction to Digital Humanism.pdf
+- Principles of Biological Autonomy - book_9780262381833.pdf
+- On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf
+
+### 🛡️ Security (defensive references)
+- ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf  [oai_citation:6‡ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf](file-service://file-Q7EeqPb17SD9sV8Fb12LQX)
+- Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf  [oai_citation:7‡Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf](file-service://file-Mu6zixTqF9Lubf5QMjepRg)
+
+### 🧰 General programming shelf (bundles)
+- A programming Books.pdf
+- B-C programming Books.pdf
+- D-E programming Books.pdf
+- F-H programming Books.pdf
+- I-L programming Books.pdf
+- M-N programming Books.pdf
+- O-R programming Books.pdf
+- S-T programming Books.pdf
+- U-X programming Books.pdf
 
 </details>
 
 ---
 
-## 🧷 Footnotes (evidence anchors)
+## ✅ Definition of Done (for this README)
 
-[^pipeline]: KFM’s repo standards require raw → work → processed staging, and emphasize deterministic, contract-first data handling. [oai_citation:28‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:29‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- [x] “Raw means bytes preserved” rule is explicit
+- [x] Append-only + checksums + receipts contract defined
+- [x] Layout + naming guidance included
+- [x] Security/privacy/sovereignty guardrails included
+- [ ] Linked from `data/README.md` (recommended)
+- [ ] Reviewed by maintainers / data stewards (recommended)
 
-[^kfmraw]: KFM ingestion guidance explicitly emphasizes keeping data as raw as possible and storing raw data reliably before transformations. [oai_citation:30‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)
-
-[^catalogs]: At publication boundaries, datasets produce STAC/DCAT/PROV artifacts for discovery and provenance tracing. [oai_citation:31‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-[^dvc]: The project design + MCP guidance both support dataset versioning and using tools like DVC for large artifacts and reproducibility. [oai_citation:32‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw) [oai_citation:33‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
-
-[^privacy]: Security and privacy framing (CIA + privacy as control of personal info) aligns with digital humanism’s human-centered approach and is relevant to raw data handling. [oai_citation:34‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)
-
-[^maps]: GIS metadata categories, interoperability expectations, and copyright distinctions matter for how we store and redistribute cartographic data. [oai_citation:35‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP) [oai_citation:36‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
-
-[^scans]: KFM repo standards call for automated scanning for secrets/PII/sensitive data and classification consistency to prevent leaks and unsafe publication. [oai_citation:37‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+<p align="right"><a href="#pipeline">⬆️ Back to top</a></p>
