@@ -96,28 +96,28 @@ Everything flows in a single direction:
 
 ```mermaid
 flowchart LR
-  U[👤 Users<br/>Researchers · Educators · Public] --> UI[🗺️ Web UI<br/>React + MapLibre (+ optional Cesium)]
-  UI --> API[🧩 API Layer<br/>Catalog · Graph · Focus Mode · Search]
+  U["👤 Users<br/>Researchers · Educators · Public"] --> UI["🗺️ Web UI<br/>React + MapLibre (optional: Cesium)"]
+  UI --> API["🧩 API Layer<br/>Catalog · Graph · Focus Mode · Search"]
 
-  subgraph Sources[🌐 External Data Sources]
-    NOAA[🌪️ NOAA Storm Events / Weather]
-    NWS[⚠️ NWS Warnings Polygons]
-    FEMA[🧯 FEMA Declarations]
-    USGS[💧 USGS NWIS / Earthquakes]
-    USDA[🌱 USDA Soil Products]
-    OpenAQ[🌫️ OpenAQ Air Sensors]
-    Climate[🌡️ PRISM / ERA5 / CMIP]
-    RemoteSensing[🛰️ Remote Sensing / GEE]
-    Archives[📚 Historical Archives (text/images)]
+  subgraph Sources["🌐 External Data Sources"]
+    NOAA["🌪️ NOAA Storm Events / Weather"]
+    NWS["⚠️ NWS Warnings Polygons"]
+    FEMA["🧯 FEMA Declarations"]
+    USGS["💧 USGS NWIS / Earthquakes"]
+    USDA["🌱 USDA Soil Products"]
+    OpenAQ["🌫️ OpenAQ Air Sensors"]
+    Climate["🌡️ PRISM / ERA5 / CMIP"]
+    RemoteSensing["🛰️ Remote Sensing / GEE"]
+    Archives["📚 Historical Archives (text/images)"]
   end
 
-  Sources --> ETL[⚙️ ETL + Pipelines<br/>Deterministic · Contracted · Governed]
+  Sources --> ETL["⚙️ ETL + Pipelines<br/>Deterministic · Contracted · Governed"]
 
-  ETL --> OBJ[📦 Object Storage<br/>COG · GeoParquet · Media · 3D]
-  ETL --> STAC[🗂️ STAC Catalog<br/>Items · Collections]
-  ETL --> DCAT[🪪 DCAT Registry<br/>Dataset metadata]
-  ETL --> PROV[🧾 PROV-O Lineage<br/>JSON-LD bundles]
-  ETL --> KG[🧠 Neo4j Graph<br/>Entities · Events · Places · Time]
+  ETL --> OBJ["📦 Object Storage<br/>COG · GeoParquet · Media · 3D"]
+  ETL --> STAC["🗂️ STAC Catalog<br/>Items · Collections"]
+  ETL --> DCAT["🪪 DCAT Registry<br/>Dataset metadata"]
+  ETL --> PROV["🧾 PROV-O Lineage<br/>JSON-LD bundles"]
+  ETL --> KG["🧠 Neo4j Graph<br/>Entities · Events · Places · Time"]
 
   API --> STAC
   API --> KG
