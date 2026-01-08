@@ -333,26 +333,26 @@ Suggested folder layout (create as needed):
 
 ```text
 docs/specs/qa/
-├── README.md
-├── 🧾 suites/
-│   ├── stac-dcat-proc.md
-│   ├── graph-neo4j.md
-│   ├── geospatial-crs-tiles.md
-│   ├── ml-model-promotion.md
-│   ├── ui-visual-regression.md
-│   └── supply-chain-signing.md
-├── ✅ checklists/
-│   ├── pr-gate.md
-│   ├── dataset-ingest.md
-│   ├── model-release.md
-│   └── ui-release.md
-├── 🧩 templates/
-│   ├── qa-suite.template.md
-│   ├── qa-report.template.md
-│   └── model-card.template.md
-└── 📟 runbooks/
-    ├── incident-triage.md
-    └── rollback.md
+├── 📄 README.md
+├── 🧾 suites/                              # 🧪 QA suites (domain gates)
+│   ├── 🧾 stac-dcat-proc.md                # 🛰️ Catalog + provenance gates
+│   ├── 🧾 graph-neo4j.md                   # 🕸️ Graph integrity gates
+│   ├── 🧾 geospatial-crs-tiles.md          # 🗺️ CRS/tiling/geometry gates
+│   ├── 🧾 ml-model-promotion.md            # 🤖 Model eval + promotion gates
+│   ├── 🧾 ui-visual-regression.md          # 🖥️ UI render + snapshot gates
+│   └── 🧾 supply-chain-signing.md          # 🔐 SBOM/attest/sign/verify gates
+├── ✅ checklists/                          # 📋 “Definition of Done” lists
+│   ├── ✅ pr-gate.md                       # 🔀 PR merge criteria
+│   ├── ✅ dataset-ingest.md                # 🗃️ Dataset ingest checklist
+│   ├── ✅ model-release.md                 # 📦 Model release checklist
+│   └── ✅ ui-release.md                    # 🌐 UI release checklist
+├── 🧩 templates/                           # 🧬 Reusable QA doc templates
+│   ├── 🧩 qa-suite.template.md             # 🧪 Suite spec template
+│   ├── 🧩 qa-report.template.md            # 🧾 Evidence/report template
+│   └── 🧩 model-card.template.md           # 🪪 Model card template
+└── 📟 runbooks/                            # 🚨 Ops + incident procedures
+    ├── 📟 incident-triage.md               # 🧯 Triage + escalation
+    └── 📟 rollback.md                      # 🔙 Rollback playbook
 ```
 
 ---
