@@ -1,19 +1,3 @@
----
-title: "🧾 KFM REST API Contract"
-path: "docs/specs/api/API__REST_CONTRACT.md"
-version: "v0.1.0"
-last_updated: "2026-01-08"
-status: "Draft"
-doc_kind: "REST Contract (Human‑Readable) + Implementation Rules"
-canonical_contracts:
-  - "docs/specs/api/openapi.yaml"
-related:
-  - "docs/specs/api/README.md"
-  - "docs/specs/api/API__REST_CONTRACT.md"
-  - "docs/specs/api/API__ERROR_MODEL.md"
-license: "CC-BY-4.0"
----
-
 # 🧾 KFM REST API Contract (v1)
 
 <div align="center">
