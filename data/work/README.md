@@ -1,436 +1,469 @@
+---
+title: "data/work — Workbench & Experiment Sandbox"
+path: "data/work/README.md"
+version: "v1.1.0"
+last_updated: "2026-01-08"
+status: "active"
+doc_kind: "Data Runbook"
+license: "TBD"
+
+# KFM contracts (align with repo-wide invariants)
+pipeline_contract_version: "v13"
+markdown_protocol_version: "KFM-MDP (repo default)"
+
+# Governance (folder-level; per-work-package may override)
+fair_category: "FAIR+CARE"
+care_label: "mixed"
+sensitivity: "mixed"
+classification: "mixed"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:data:work:readme:v1.1.0"
+commit_sha: "TBD"
+doc_integrity_checksum: "sha256:TBD"
+---
+
 # 🧰 `data/work/` — Workbench & Experiment Sandbox
 
 ![Scope](https://img.shields.io/badge/scope-data%2Fwork-blue?style=flat-square)
 ![Mode](https://img.shields.io/badge/mode-WIP%20%2F%20sandbox-yellow?style=flat-square)
-![Principle](https://img.shields.io/badge/principle-reproducible-success?style=flat-square)
-![Docs](https://img.shields.io/badge/docs-documentation--first-informational?style=flat-square)
+![Reproducible](https://img.shields.io/badge/principle-reproducible-success?style=flat-square)
+![Contracts](https://img.shields.io/badge/contracts-ETL%E2%86%92CAT%E2%86%92GRAPH%E2%86%92API%E2%86%92UI-informational?style=flat-square)
+![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE-purple?style=flat-square)
 
-> If it can’t be reproduced, it doesn’t count. 🔬  
-> This folder is our **controlled chaos**: where ideas become evidence, prototypes, and artifacts — **before** they’re promoted into “canonical” datasets or production pipelines.
+> [!IMPORTANT]
+> `data/work/` is **controlled chaos** 🧪—a sandbox for experiments, prototypes, and intermediate artifacts **before** promotion into the canonical pipeline.
+>
+> ✅ If it can’t be reproduced, it doesn’t count. 🔬  
+> ✅ If it’s relied on downstream (Graph/API/UI/Story/Focus), it **must be promoted** and shipped with **STAC + DCAT + PROV**.  
+> ✅ The **API boundary** mediates access (no “sneaky” UI reads from Neo4j or file paths).
 
 ---
 
-## 🎯 What belongs in `data/work/`?
+## 📌 Quick navigation
+
+- [🎯 What belongs here](#-what-belongs-here)
+- [🧱 Canonical pipeline order](#-canonical-pipeline-order-non-negotiable)
+- [🗂️ Recommended layout](#️-recommended-layout)
+- [🧾 Work Package Standard](#-work-package-standard-wps)
+- [🧬 Reproducibility & provenance](#-reproducibility--provenance)
+- [✅ Quality checklists](#-quality-checklists-fast-but-real)
+- [🚀 Promotion rules](#-promotion-rules-work--processed--catalogs)
+- [🔐 Governance & “don’t be creepy” rules](#-governance--dont-be-creepy-rules)
+- [📚 Reference shelf](#-reference-shelf-project-library)
+
+---
+
+## 🎯 What belongs here
 
 ✅ Put **work-in-progress** artifacts here:
 
-- 🧪 Experiment runs (ML training, Bayesian inference, regression studies, simulation sweeps)
-- 🗺️ GIS/remote sensing scratch work (clipping, reprojection, NDVI derivations, tiles)
-- 📓 Notebooks + exploratory analysis (EDA) that is *narrative + traceable*
-- 🧱 Intermediate data products (staging → processed → features), **with manifests**
-- 📊 Reports and plots created from a specific run (linked to data + code)
-- 🌐 UI map prototypes (WebGL demos, Google Maps JS experiments, responsive layout tests)
+- 🧪 **Experiment runs**  
+  Regression studies, Bayesian inference, statistical EDA, model training/evaluation, drift checks
+- 🛰️ **GIS/remote sensing scratch work**  
+  Clips, reprojection trials, NDVI derivations, mosaics, tiling prototypes, pyramids/overviews tests
+- 📓 **Notebooks + narrative analysis**  
+  Exploratory notebooks that explain *what/why/how* and point to inputs + outputs
+- 🧱 **Intermediate data products**  
+  Staging outputs: normalized tables, feature engineering outputs, QA fixtures (with manifests)
+- 📊 **Run-scoped plots & mini-reports**  
+  Figures/tables that help decide whether something is ready for promotion
+- 🌐 **UI + visualization prototypes**  
+  WebGL demos, responsive layout tests, map style experiments, timeline prototypes
 
-🚫 **Do not** treat `data/work/` as a permanent source of truth:
+🚫 Do **not** treat `data/work/` as a permanent source of truth:
 
-- 🔑 Secrets, tokens, credentials (never)
-- 🧍 Personally identifying or sensitive data (unless policy explicitly permits & is documented)
-- 🧨 Unversioned “mystery files” with no provenance
-- 🏛️ Final/published datasets (promote them out after validation)
+- 🔑 **Secrets / tokens / credentials** (never, ever)
+- 🧍 **PII or sensitive coordinates** (unless explicitly allowed + classified + controlled)
+- 🧨 “Mystery files” with no manifest/provenance
+- 🏛️ Final datasets intended for others to consume (promote them out)
 
----
-
-## 🧭 The “KFM-grade” pipeline mindset
-
-Our system documentation pushes a staged pipeline philosophy (ingest → process → store → publish/serve) and emphasizes reliability patterns like **atomic file writes** and **transactional database writes**. 📦🗄️  
-Use `data/work/` to **prototype and validate** each stage before promoting.
-
-**In practice, `data/work/` is where we:**
-1. 📥 **Ingest** (pull raw inputs from sensors/APIs/files)
-2. ✅ **Validate** (schema, CRS, ranges, missingness, checksums)
-3. 🧹 **Transform** (clean, join, enrich, feature engineer, resample)
-4. 🗄️ **Store** (GeoPackage/Parquet/COG/PostGIS/etc.)
-5. 🌐 **Serve** (tiles, APIs, dashboards, map UIs)
-
-📘 Primary reference: KFM Technical Documentation  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
-🧱 Documentation style guide: MARKDOWN guide v13  [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
-🔬 Scientific rigor protocol: Master Coder / Scientific Method  [oai_citation:2‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)  
+> [!TIP]
+> **Keep raw raw.** If you changed bytes, it’s not raw anymore → it belongs in `data/work/` (intermediate) or `data/processed/` (final).
 
 ---
 
-## 🗂️ Suggested layout (flexible, but consistent)
+## 🧭 Canonical pipeline order (non-negotiable)
 
-> You can adapt the exact folders — the **non‑negotiable** is: every meaningful output is traceable to inputs + code + parameters.
+KFM stays stable by being strict about order:
+
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+`data/work/` sits **upstream** of the boundary artifacts (catalogs + provenance). It’s where we prove something can be made deterministic and governed before it becomes “real.”  
+
+```mermaid
+flowchart LR
+  RAW["📥 data/raw/<domain>\nimmutable inputs"] --> WORK["🧰 data/work/<domain>\nexperiments + prototypes"]
+  WORK --> PROC["📦 data/processed/<domain>\nfinal products"]
+  PROC --> STAC["🛰️ data/stac/\nCollections + Items"]
+  PROC --> DCAT["🗂️ data/catalog/dcat/\ndiscovery views"]
+  PROC --> PROV["🧬 data/prov/\nlineage bundles"]
+  STAC --> GRAPH["🕸️ Graph runtime (Neo4j)\nreferences IDs, not payloads"]
+  DCAT --> GRAPH
+  PROV --> GRAPH
+  GRAPH --> API["🔌 API boundary\ncontracts + redaction"]
+  API --> UI["🗺️ UI\nmap + timeline + downloads"]
+  UI --> STORY["🎬 Story Nodes\ncurated narrative"]
+  STORY --> FOCUS["🧠 Focus Mode\nprovenance-linked only"]
+```
+
+> 📌 System context & architecture notes live in the project technical documentation.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
+
+---
+
+## 🗂️ Recommended layout
+
+Keep it flexible, but consistent enough that others can navigate quickly.
 
 ```text
 📁 data/work/
-├── 📁 _templates/              # ✅ copy/paste starter templates (manifests, cards)
-├── 📁 _scratch/                # ⚠️ truly temporary throwaway (safe to delete)
-├── 📁 experiments/             # 🧪 repeatable runs (preferred home)
-│   ├── 📁 2026-01-02__ndvi__landsat8/
-│   │   ├── 📄 README.md
-│   │   ├── 📄 manifest.yaml
-│   │   ├── 📁 raw/
-│   │   ├── 📁 notebooks/
-│   │   ├── 📁 src/
-│   │   ├── 📁 processed/
-│   │   ├── 📁 features/
-│   │   ├── 📁 models/
-│   │   ├── 📁 viz/
-│   │   └── 📁 exports/
-│   └── 📁 2026-01-05__ml__yield_forecast_v01/
-├── 📁 datasets/                # 📦 curated WIP datasets (still not “released”)
-├── 📁 sims/                    # 🛰️ simulation campaigns (parameter sweeps, V&V)
-├── 📁 viz/                     # 🌐 prototypes: maps, WebGL, dashboards
-└── 📄 README.md                # 👈 you are here
+├── 📁 _templates/                     # ✅ copy/paste manifests + checklists
+├── 📁 _scratch/                       # ⚠️ throwaway (safe to delete; keep it empty in PRs)
+├── 📁 experiments/                    # 🧪 repeatable runs (preferred home)
+│   ├── 📁 2026-01-02__remote_sensing__ndvi_landsat8__v01/
+│   ├── 📁 2026-01-04__stats__soil_moisture_regression__v02/
+│   └── 📁 2026-01-10__viz__webgl_tileset_prototype__v01/
+├── 📁 datasets/                       # 📦 curated WIP datasets (not published)
+├── 📁 sims/                           # 🛰️ simulation campaigns (parameter sweeps, V&V)
+├── 📁 qa/                             # ✅ run-scoped QA outputs (optional; keep small)
+└── 📄 README.md                       # 👈 you are here
 ```
+
+> [!NOTE]
+> Keep `data/work/` PR-friendly: commit **manifests, small fixtures, plots**, and pointers—avoid dumping unbounded large binaries into Git.
 
 ---
 
 ## 🧾 Work Package Standard (WPS)
 
-Every folder under `data/work/` that you want others (or future-you) to trust should be a **Work Package**.
+A **Work Package** is any folder under `data/work/` that we expect others to run, review, or build on.
 
 ### ✅ Naming convention
 
 Use a timestamp + domain + slug:
 
-- `YYYY-MM-DD__domain__short_slug/`
-- Optional: `__v01`, `__v02` as it stabilizes
+- `YYYY-MM-DD__<domain>__<short_slug>__vNN/`
 
 Examples:
-- `2026-01-02__remote_sensing__ndvi_landsat8/`
-- `2026-01-04__stats__soil_moisture_regression_v02/`
-- `2026-01-10__viz__webgl_tileset_prototype/`
+- `2026-01-02__remote_sensing__ndvi_landsat8__v01/`
+- `2026-01-04__stats__soil_moisture_regression__v02/`
+- `2026-01-10__viz__webgl_tileset_prototype__v01/`
 
-### ✅ Required files (minimum)
+### ✅ Required files
 
-- `README.md` — **purpose + hypotheses + results + next steps**
-- `manifest.yaml` — inputs, outputs, parameters, environment, hashes
-- `raw/` — immutable raw inputs (or pointers if too large)
-- `src/` or `notebooks/` — code that produces outputs
+Every Work Package **must** contain:
 
-### 🧩 Recommended files (strongly encouraged)
+- `README.md` — purpose, scope, results, next steps
+- `manifest.yaml` — inputs, parameters, outputs, environment, hashes
+- `raw/` — immutable inputs **or pointers** (if data is too large / restricted)
+- `src/` and/or `notebooks/` — runnable code that generates outputs
 
-- `data_dictionary.md` — field meanings, units, codes
-- `schema/` — JSON schema / SQL schema / GeoPackage schema notes
-- `environment/` — `requirements.txt`, `environment.yml`, `pip-freeze.txt`, `Dockerfile`
-- `provenance.md` — “how we got here”, especially if multiple sources
+### 🔥 Strongly recommended
+
+- `environment/` — `requirements.txt`, `environment.yml`, `poetry.lock`, `package-lock.json`, etc.
+- `checksums.sha256` — integrity list for key artifacts
+- `schema/` — JSON schema / SQL schema notes / GeoPackage schema
+- `data_dictionary.md` — fields, units, codes, value ranges
+- `PROV_HINT.md` — a lightweight pointer that maps the run to intended PROV fields later
 
 ---
 
-## 🧬 Templates (copy into `_templates/`)
+## 📦 Work Package skeleton (copy/paste)
 
-### `manifest.yaml` (starter)
+```text
+📁 data/work/experiments/2026-01-04__stats__soil_moisture_regression__v02/
+├── 📄 README.md
+├── 📄 manifest.yaml
+├── 📁 raw/                  # pointers or small fixtures
+├── 📁 notebooks/             # EDA + narrative
+├── 📁 src/                   # scripts/modules
+├── 📁 work/                  # intermediate scratch (scoped to this run)
+├── 📁 outputs/               # results: tables, metrics, artifacts
+├── 📁 viz/                   # figures, maps, dashboards screenshots
+├── 📁 exports/               # OPTIONAL: candidate bundle for promotion
+└── 📄 checksums.sha256       # OPTIONAL: integrity
+```
+
+---
+
+## 🧬 Reproducibility & provenance
+
+> [!IMPORTANT]
+> **Reproducibility is a security feature.**  
+> It enables audit, rollback, and tamper detection—not just “nice science.”
+
+### ✅ Minimal reproducibility checklist
+
+- [ ] Inputs are immutable (or pinned to a version/hash)
+- [ ] Parameters are recorded (region, date range, filters, thresholds)
+- [ ] Environment is pinned (lockfiles, container tag, runtime version)
+- [ ] Randomness is controlled (seeds logged where applicable)
+- [ ] Outputs include metadata (CRS, units, nodata, schema, timestamps)
+- [ ] A tiny “rerun me” command exists (Make target, script, or notebook cell)
+
+### `manifest.yaml` starter (WPS)
 
 ```yaml
-id: 2026-01-02__remote_sensing__ndvi_landsat8
+id: 2026-01-04__stats__soil_moisture_regression__v02
 owner: "@your-handle"
-created_at: "2026-01-02"
-status: wip # wip | review | archived | promoted
+created_at: "2026-01-04"
+status: wip  # wip | review | archived | promoted
 
 goal:
-  question: "What is the NDVI trend over region X during time range Y?"
-  hypothesis: "NDVI decreases in drought weeks and rebounds after rainfall."
+  question: "How does soil moisture relate to vegetation index over time in region X?"
+  hypothesis: "Soil moisture explains part of NDVI variance with a lag."
 
 inputs:
-  - name: landsat8_scene_collection
+  - name: soil_moisture_source
+    type: table
+    pointer: "data/raw/hydro/soil_moisture/<drop_id>/ (or external URL if not mirrored)"
+    immutability: "pinned"
+    notes: "Prefer checksums + retrieval receipt."
+
+  - name: ndvi_processed_candidate
     type: raster
-    source: "external"
-    pointer: "SEE sources.md or a data catalog id"
-    notes: "Never overwrite raw. Store checksums."
+    pointer: "data/work/experiments/2026-01-02__remote_sensing__ndvi_landsat8__v01/outputs/ndvi_cog.tif"
+    immutability: "local"
+    notes: "If promoted later, this becomes a STAC asset."
 
 process:
-  pipeline: ingest->validate->transform->store->serve
   steps:
-    - validate_crs: "EPSG:xxxx"
-    - compute_index: "NDVI = (NIR - RED) / (NIR + RED)"
-    - resample: "10m"
-    - tile: "xyz"
-
+    - validate: ["schema", "ranges", "missingness", "crs"]
+    - feature_engineer: ["lag_features", "seasonality_terms"]
+    - model: ["baseline_linear_regression", "robust_regression_optional"]
+    - evaluate: ["residuals", "outliers", "uncertainty"]
 parameters:
-  region: "ROI definition or file reference"
+  region: "AOI slug or file path"
   date_range: ["YYYY-MM-DD", "YYYY-MM-DD"]
   random_seed: 1337
 
 outputs:
-  - name: ndvi_timeseries
-    path: processed/ndvi_timeseries.parquet
-  - name: ndvi_raster
-    path: processed/ndvi_cog.tif
-  - name: quicklook_plot
-    path: viz/ndvi_trend.png
+  - name: metrics
+    path: outputs/metrics.json
+  - name: model_summary
+    path: outputs/model_summary.md
+  - name: plots
+    path: viz/
 
 environment:
   runtime: "python"
   lockfiles:
     - environment/requirements.txt
-    - environment/pip-freeze.txt
+    - environment/poetry.lock
 
-validation:
-  checks:
-    - "no null geometry"
-    - "value range sanity"
-    - "reprojection verified"
+promotion_intent:
+  candidate_dataset_id: "kfm.<domain>.<theme>.<spacetime>.v1"
+  requires_catalogs: true   # STAC + DCAT + PROV
+  notes: "Promote only after QA and steward review."
 ```
-
-### `README.md` (Scientific Method friendly)
-
-```markdown
-# Work Package: <id>
-
-## 🧠 Question / Problem
-...
-
-## 📚 Background
-...
-
-## 🧪 Hypothesis
-...
-
-## 🧰 Method (Protocol)
-- Data sources:
-- Tools:
-- Steps:
-
-## 📦 Data & Provenance
-- Raw:
-- Processed:
-- Checksums:
-
-## 📊 Analysis
-...
-
-## ✅ Results
-...
-
-## 🧾 Conclusion
-...
-
-## 🔁 Next Steps
-...
-```
-
-*(Template philosophy aligns with the scientific-method + reproducibility protocol.)*  [oai_citation:3‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
 
 ---
 
-## ✅ Quality checklists (fast, practical)
+## ✅ Quality checklists (fast, but real)
 
-### 🗺️ Geospatial sanity checklist
-- [ ] CRS is explicitly stated (and consistent across layers)
-- [ ] Units make sense (meters vs degrees)
-- [ ] Geometry validity checks pass (no self-intersections)
-- [ ] Raster nodata is defined and preserved
-- [ ] Map outputs include legends, scalebars (when relevant), and clear symbology decisions
+### 🗺️ Geospatial sanity (raster/vector)
 
-Helpful refs:
-- GIS basics  [oai_citation:4‡Geographic Information System Basics - geographic-information-system-basics.pdf](file-service://file-Kjn2enYFqXQtK3J4zN2DWz)  
-- Geoprocessing with Python  [oai_citation:5‡geoprocessing-with-python.pdf](file-service://file-NkXrdB4FwTruwhQ9Ggn53T)  
-- Making Maps (design)  [oai_citation:6‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)  
-- Python Geospatial Analysis Cookbook  [oai_citation:7‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)  
+- [ ] CRS explicitly stated and consistent (no silent EPSG drift)
+- [ ] Units documented (meters vs degrees, mm vs inches, etc.)
+- [ ] Geometry validity checks pass (no self-intersections, no empty geoms)
+- [ ] Raster nodata defined and preserved
+- [ ] Outputs have overviews/pyramids when meant for interactive browsing
+- [ ] Cartography choices recorded (symbology, classification, color ramps, legends)
 
-### 📈 Statistics sanity checklist (avoid self‑inflicted wounds)
-- [ ] Are we doing **exploration** or **confirmation**? (label it)
-- [ ] Multiple comparisons accounted for (or explicitly scoped)
-- [ ] Train/validation/test leakage avoided (if predictive)
-- [ ] Effect sizes + uncertainty reported (not just “significance”)
-- [ ] Assumptions checked (residuals, heteroskedasticity, independence)
+**Helpful project refs 📚**
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `python-geospatial-analysis-cookbook.pdf`
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
 
-Helpful refs:
-- Understanding Statistics & Experimental Design  [oai_citation:8‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3)  
-- Statistics Done Wrong  [oai_citation:9‡Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf](file-service://file-LuWF23hffNAZJaZm2Gzvcd)  
-- Regression Analysis with Python  [oai_citation:10‡regression-analysis-with-python.pdf](file-service://file-NCS6ThhvajwNUm4crVVcGM)  
-- Graphical Data Analysis with R  [oai_citation:11‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L)  
+### 📈 Statistics & experimental design (don’t fool yourself)
 
-### 🤖 ML / Deep Learning sanity checklist
-- [ ] Dataset documented (biases, limitations, splits, hashes)
-- [ ] Random seeds recorded (when possible)
-- [ ] Metrics logged per run + saved to `outputs/metrics.json`
-- [ ] Model artifacts include a **Model Card** (intent, limits, evaluation)
-- [ ] Baselines included (simple model first)
+- [ ] Label the work: **exploration** vs **confirmation**
+- [ ] Check assumptions (residuals, heteroskedasticity, independence)
+- [ ] Avoid leakage (train/val/test boundaries are explicit)
+- [ ] Report effect sizes + uncertainty (not just p-values)
+- [ ] Document multiple comparisons risk (if applicable)
 
-Helpful refs:
-- Deep Learning in Python — Prerequisites  [oai_citation:12‡deep-learning-in-python-prerequisites.pdf](file-service://file-9pQhD3FNUGoYzmKrdm26cg)  
-- Artificial Neural Networks: An Introduction  [oai_citation:13‡Artificial-neural-networks-an-introduction.pdf](file-service://file-DhnuQ12UtyRb9q5u5CptWo)  
-- AI Foundations of Computational Agents  [oai_citation:14‡AI Foundations of Computational Agents 3rd Ed.pdf](file-service://file-BYuPtX8r1doBaqdetoMxC7)  
-- Data Mining Concepts & Applications  [oai_citation:15‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH)  
-- Applied Data Science with Python & Jupyter  [oai_citation:16‡applied-data-science-with-python-and-jupyter.pdf](file-service://file-2PdBHtR24Wq7MYWfG8agQo)  
+**Helpful project refs 📚**
+- `Understanding Statistics & Experimental Design.pdf`
+- `regression-analysis-with-python.pdf`
+- `Regression analysis using Python - slides-linear-regression.pdf`
+- `graphical-data-analysis-with-r.pdf`
+- `think-bayes-bayesian-statistics-in-python.pdf`
 
-### 🛰️ Simulation / modeling sanity checklist
+### 🛰️ Simulation & modeling integrity (V&V + UQ)
+
 - [ ] Inputs/initial conditions captured
-- [ ] Validation strategy described (what would falsify the model?)
-- [ ] Uncertainty quantified (at least sensitivity sweeps)
-- [ ] Results are reproducible (config + environment + seed)
-- [ ] Outputs include clear units and metadata
+- [ ] Validation plan stated (what would falsify the model?)
+- [ ] Sensitivity sweeps documented (even a minimal one)
+- [ ] Outputs include units, coordinate frames, and metadata
+- [ ] Results reproducible from config + seed + environment
 
-Helpful refs:
-- Scientific Modeling & Simulation (NASA-grade)  [oai_citation:17‡Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf](file-service://file-THLZMx2BnXCR4bvvPJsMQm)  
-- Bayesian Computational Methods (UQ)  [oai_citation:18‡Bayesian computational methods.pdf](file-service://file-6NmuxfJsrfDTxQmEi8A7jo)  
-- MATLAB Programming for Engineers  [oai_citation:19‡MATLAB Programming for Engineers Stephen J. Chapman.pdf](file-service://file-GVz6J2tWsQSJL4sFY1Niqe)  
-- Generalized Topology Optimization  [oai_citation:20‡Generalized Topology Optimization for Structural Design.pdf](file-service://file-PzydVyvSPdXWqYrXeFCNzj)  
-- Spectral Geometry of Graphs  [oai_citation:21‡Spectral Geometry of Graphs.pdf](file-service://file-DWxRbQDZGktGtiWtzAQxs8)  
+**Helpful project refs 📚**
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `Generalized Topology Optimization for Structural Design.pdf`
+- `Spectral Geometry of Graphs.pdf`
 
----
+### 🌐 Visualization prototypes (Web + WebGL)
 
-## 🌐 Serving & visualization prototypes (maps + WebGL)
+- [ ] Save screenshots + “what this proves” note
+- [ ] Keep a minimal demo entry point (`index.html` or `README.md`)
+- [ ] Consider mobile-first constraints early
+- [ ] Treat 3D assets/parsers as untrusted inputs (security boundary)
 
-When prototyping dashboards/maps:
-- Keep a `viz/` folder inside the work package
-- Save screenshots + a short “what this proves” note
-- Prefer responsive layouts early (mobile constraints reveal design problems fast)
-
-Helpful refs:
-- Responsive Web Design (HTML5/CSS3)  [oai_citation:22‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-4pQLNMB3Rk5n5vUPTqxpNa)  
-- WebGL Programming Guide  [oai_citation:23‡webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf](file-service://file-7Nd7iS68ES97NmWhPiRWTP)  
-- Computer Graphics (Java 2D/3D)  [oai_citation:24‡Computer Graphics using JAVA 2D & 3D.pdf](file-service://file-Qgv1x2d8RuqkEwVmNXFT1B)  
-- Google Maps JavaScript API Cookbook  [oai_citation:25‡google-maps-javascript-api-cookbook.pdf](file-service://file-6w897pmf6KhF1cHXFQ1zdf)  
+**Helpful project refs 📚**
+- `responsive-web-design-with-html5-and-css3.pdf`
+- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`  [oai_citation:1‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj)
 
 ---
 
-## 🗄️ Data engineering & storage notes (practical)
+## 🚀 Promotion rules (`work` → `processed` → catalogs)
 
-- Prefer **append-only** patterns for raw data
+### When do we promote?
+
+Promote when **any** of the following becomes true:
+
+- A dataset is stable enough to be reused across multiple work packages
+- A derived layer should appear in map/timeline exploration
+- A result is referenced in Story Nodes or decision-facing docs
+- We need the artifact to be audited, cited, or externally shared
+
+### Promotion “definition of done” ✅
+
+- [ ] Output moved (or re-generated) into `data/processed/<domain>/…`
+- [ ] Boundary artifacts produced: **STAC + DCAT + PROV**
+- [ ] QA checks captured (and ideally automated)
+- [ ] Sensitivity/classification reviewed (no “downgrade by accident”)
+- [ ] A thin pointer remains in `data/work/` (README linking to the canonical artifact)
+
+> [!TIP]
+> Think of `data/work/` as *rehearsal* 🎭 and `data/processed/` as *opening night* 🎟️
+
+---
+
+## 🔐 Governance & “don’t be creepy” rules
+
+KFM is evidence-first **and** human-centered. Maps and datasets can cause harm if handled carelessly.
+
+### Non-negotiables
+
+- ❌ No secrets or credentials in `data/work/`
+- ❌ No publishing precise sensitive locations without explicit review
+- ✅ Always document provenance + licensing constraints
+- ✅ Treat derived outputs as potentially sensitive (inference risk is real)
+
+### Interoperability & data sharing
+
+When your work package “wants to become real,” design it so it can be shared responsibly:
+
+- stable IDs
+- clear metadata
+- explicit terms of use
+- reproducible runs
+
+**Helpful project refs 📚**
+- `Data Spaces.pdf` (interoperability + data sharing framing)
+- `Introduction to Digital Humanism.pdf` (human-centered accountability)
+- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` (policy + legal context)
+- Defensive mindset references (do not add offensive tooling):
+  - `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
+  - `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
+
+---
+
+## 🧠 Data engineering notes (practical)
+
+- Prefer **append-only** patterns for “inputs”
 - Prefer **atomic writes** for files (write temp → rename) and **transactions** for DB
-- Document indexes/partitions when performance matters
-- Keep “big stuff” out of Git unless LFS or external storage is defined
+- Keep DB experiments explicit (schema migrations, indexes, constraints)
+- Pin dependencies and record runtime versions
 
-Helpful refs:
-- Scalable Data Management for Future Hardware  [oai_citation:26‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)  
-- PostgreSQL Notes  [oai_citation:27‡PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf](file-service://file-742sw3gADJniEdmC19JeAC)  
-- MySQL Notes  [oai_citation:28‡MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf](file-service://file-GQ5jWwmLZCFb6enxwykaRh)  
-- Node.js Notes  [oai_citation:29‡Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf](file-service://file-9qS1yEFvCBXbDdtTfpt3Ye)  
-- Clean Architectures in Python  [oai_citation:30‡clean-architectures-in-python.pdf](file-service://file-6YHot4AqfpdbcrdfiYfpHM)  
-- Implementing Programming Languages  [oai_citation:31‡implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf](file-service://file-JaNsY7yoyJTAzMJSwt9LDA)  
-- Docker (reproducible runtimes)  [oai_citation:32‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)  
+**Helpful project refs 📚**
+- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `Scalable Data Management for Future Hardware.pdf`
+- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
 
 ---
 
-## 🧠 Ethics & human context (don’t skip this)
+## 📚 Reference shelf (project library)
 
-Even “just data work” shapes outcomes. Document:
-- What the system is optimizing for
-- Who could be harmed by errors or bias
-- What is **out of scope** and why
+> [!NOTE]
+> These files are a **reading pack / influence map**. They may have licenses different from the repo’s code. Keep them in `docs/library/` (or external storage) and respect upstream terms.
 
-Helpful refs:
-- Introduction to Digital Humanism  [oai_citation:33‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
-- Principles of Biological Autonomy  [oai_citation:34‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf)  
+### 🧭 KFM system + architecture
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
 
----
+### 🛰️ Remote sensing + GIS
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `python-geospatial-analysis-cookbook.pdf`
+- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`  [oai_citation:3‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj)
+- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
 
-## 📚 Reference Shelf (all project files)
+### 🌐 Web + 3D
+- `responsive-web-design-with-html5-and-css3.pdf`
+- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
 
-> This is the project’s **local knowledge library**. Use it to justify decisions, choose methods, and keep a consistent engineering + research standard across the team.
+### 📈 Stats + inference
+- `Understanding Statistics & Experimental Design.pdf`
+- `regression-analysis-with-python.pdf`
+- `Regression analysis using Python - slides-linear-regression.pdf`
+- `graphical-data-analysis-with-r.pdf`
+- `think-bayes-bayesian-statistics-in-python.pdf`
 
-<details>
-<summary>🧭 Core system docs & protocols</summary>
+### 🧪 Simulation + optimization + graph math
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `Generalized Topology Optimization for Structural Design.pdf`
+- `Spectral Geometry of Graphs.pdf`
 
-- 📘 Kansas Frontier Matrix (KFM) — Comprehensive Technical Documentation  [oai_citation:35‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-Bro83fTiCi9UUVVno1fL6L)  
-- 🧱 MARKDOWN Guide v13 (documentation style + deterministic pipelines)  [oai_citation:36‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
-- 🔬 Scientific Method / Research / Master Coder Protocol  [oai_citation:37‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)  
+### ⚙️ Systems + scale + interoperability
+- `Scalable Data Management for Future Hardware.pdf`
+- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
+- `Data Spaces.pdf`
 
-</details>
+### ❤️ Ethics + autonomy + policy
+- `Introduction to Digital Humanism.pdf`
+- `Principles of Biological Autonomy - book_9780262381833.pdf`
+- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
 
-<details>
-<summary>📈 Statistics, experiment design, regression</summary>
-
-- 🧪 Understanding Statistics & Experimental Design  [oai_citation:38‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3)  
-- ⚠️ Statistics Done Wrong  [oai_citation:39‡Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf](file-service://file-LuWF23hffNAZJaZm2Gzvcd)  
-- 📉 Regression Analysis with Python  [oai_citation:40‡regression-analysis-with-python.pdf](file-service://file-NCS6ThhvajwNUm4crVVcGM)  
-- 📊 Graphical Data Analysis with R  [oai_citation:41‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L)  
-- 📚 Data Science & Machine Learning (Mathematical & Statistical Methods)  [oai_citation:42‡Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf](file-service://file-MRNb2uGPEwpkSDsxF983PC)  
-- 🎲 Bayesian Computational Methods  [oai_citation:43‡Bayesian computational methods.pdf](file-service://file-6NmuxfJsrfDTxQmEi8A7jo)  
-
-</details>
-
-<details>
-<summary>🤖 AI / ML / Agents</summary>
-
-- 🧠 Deep Learning in Python — Prerequisites  [oai_citation:44‡deep-learning-in-python-prerequisites.pdf](file-service://file-9pQhD3FNUGoYzmKrdm26cg)  
-- 🕸️ Artificial Neural Networks: An Introduction  [oai_citation:45‡Artificial-neural-networks-an-introduction.pdf](file-service://file-DhnuQ12UtyRb9q5u5CptWo)  
-- 🧩 AI Foundations of Computational Agents (3rd Ed.)  [oai_citation:46‡AI Foundations of Computational Agents 3rd Ed.pdf](file-service://file-BYuPtX8r1doBaqdetoMxC7)  
-- ⛏️ Data Mining Concepts & Applications  [oai_citation:47‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH)  
-- 📓 Applied Data Science with Python & Jupyter  [oai_citation:48‡applied-data-science-with-python-and-jupyter.pdf](file-service://file-2PdBHtR24Wq7MYWfG8agQo)  
-
-</details>
-
-<details>
-<summary>🛰️ Modeling, simulation, optimization, graphs</summary>
-
-- 🛰️ Scientific Modeling & Simulation (NASA-grade guide)  [oai_citation:49‡Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf](file-service://file-THLZMx2BnXCR4bvvPJsMQm)  
-- 🧮 MATLAB Programming for Engineers  [oai_citation:50‡MATLAB Programming for Engineers Stephen J. Chapman.pdf](file-service://file-GVz6J2tWsQSJL4sFY1Niqe)  
-- 🏗️ Generalized Topology Optimization for Structural Design  [oai_citation:51‡Generalized Topology Optimization for Structural Design.pdf](file-service://file-PzydVyvSPdXWqYrXeFCNzj)  
-- 🕸️ Spectral Geometry of Graphs  [oai_citation:52‡Spectral Geometry of Graphs.pdf](file-service://file-DWxRbQDZGktGtiWtzAQxs8)  
-- 🗄️ Scalable Data Management for Future Hardware  [oai_citation:53‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)  
-
-</details>
-
-<details>
-<summary>🗺️ GIS, mapping, remote sensing (Python + GEE)</summary>
-
-- 🧭 Geographic Information System Basics  [oai_citation:54‡Geographic Information System Basics - geographic-information-system-basics.pdf](file-service://file-Kjn2enYFqXQtK3J4zN2DWz)  
-- 🧰 Geoprocessing with Python  [oai_citation:55‡geoprocessing-with-python.pdf](file-service://file-NkXrdB4FwTruwhQ9Ggn53T)  
-- 🎨 Making Maps (Map design for GIS)  [oai_citation:56‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)  
-- 🐍 Python Geospatial Analysis Cookbook  [oai_citation:57‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)  
-- ☁️ Cloud‑Based Remote Sensing with Google Earth Engine  [oai_citation:58‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-CXGLTw8wpR4uKWWqjrGkyk)  
-- 🛰️ Google Earth Engine Applications  [oai_citation:59‡Google Earth Engine Applications.pdf](file-service://file-SmoZrQ3nZSAdHHNqcVzYCq)  
-
-</details>
-
-<details>
-<summary>🌐 Web, maps, graphics & visualization</summary>
-
-- 📱 Responsive Web Design (HTML5/CSS3)  [oai_citation:60‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-4pQLNMB3Rk5n5vUPTqxpNa)  
-- 🎮 WebGL Programming Guide  [oai_citation:61‡webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf](file-service://file-7Nd7iS68ES97NmWhPiRWTP)  
-- 🗺️ Google Maps JavaScript API Cookbook  [oai_citation:62‡google-maps-javascript-api-cookbook.pdf](file-service://file-6w897pmf6KhF1cHXFQ1zdf)  
-- 🧊 Computer Graphics (Java 2D/3D)  [oai_citation:63‡Computer Graphics using JAVA 2D & 3D.pdf](file-service://file-Qgv1x2d8RuqkEwVmNXFT1B)  
-
-</details>
-
-<details>
-<summary>🏗️ Architecture, languages, databases, DevOps</summary>
-
-- 🧼 Clean Architectures in Python  [oai_citation:64‡clean-architectures-in-python.pdf](file-service://file-6YHot4AqfpdbcrdfiYfpHM)  
-- 🧠 Implementing Programming Languages (Compilers/Interpreters)  [oai_citation:65‡implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf](file-service://file-JaNsY7yoyJTAzMJSwt9LDA)  
-- 🟩 Node.js Notes for Professionals  [oai_citation:66‡Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf](file-service://file-9qS1yEFvCBXbDdtTfpt3Ye)  
-- 🐘 PostgreSQL Notes for Professionals  [oai_citation:67‡PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf](file-service://file-742sw3gADJniEdmC19JeAC)  
-- 🐬 MySQL Notes for Professionals  [oai_citation:68‡MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf](file-service://file-GQ5jWwmLZCFb6enxwykaRh)  
-- 🐳 Introduction to Docker  [oai_citation:69‡Introduction-to-Docker.pdf](file-service://file-5SALje8G4GDUXHUM3P3LuU)  
-
-</details>
-
-<details>
-<summary>🧭 Ethics & systems thinking</summary>
-
-- 🌍 Introduction to Digital Humanism  [oai_citation:70‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
-- 🧬 Principles of Biological Autonomy  [oai_citation:71‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf)  
-
-</details>
-
-<details>
-<summary>⚠️ Files present but currently unreadable (replace with a clean copy)</summary>
-
-- 🥋 Command Line Kung Fu (Bash scripting tricks / one‑liners) — PDF appears corrupted in this repo copy  
-- 🗺️ Google Maps API Succinctly — PDF appears corrupted in this repo copy  
-
-</details>
+### 🧰 General programming shelf (bundles)
+- `A programming Books.pdf`
+- `B-C programming Books.pdf`
+- `D-E programming Books.pdf`
+- `F-H programming Books.pdf`
+- `I-L programming Books.pdf`
+- `M-N programming Books.pdf`
+- `O-R programming Books.pdf`
+- `S-T programming Books.pdf`
+- `U-X programming Books.pdf`
 
 ---
 
-## 🧹 Cleanup & promotion rules
+## 🧹 Cleanup & archiving rules
 
-When something becomes **useful beyond the experiment**:
+- If it becomes valuable beyond the experiment:
+  1) ✅ update `manifest.yaml`
+  2) ✅ re-run from scratch (prove reproducibility)
+  3) ✅ promote outputs to the canonical location + catalogs
+  4) ✅ leave a thin pointer README here (links + commit hash)
 
-1. ✅ Add or update `manifest.yaml` + provenance
-2. ✅ Re-run from scratch (prove it’s reproducible)
-3. ✅ Promote outputs into the repo’s “canonical” data/artifact location (team-defined)
-4. ✅ Leave behind a **thin pointer** here (README + links + commit hash)
-
-When something is **dead**:
-- Move to `archived/` or delete it.
-- Keep a tiny README explaining why it was dropped (prevents future rework).
+- If it’s dead:
+  - move to `data/work/_archive/` (optional) or delete it
+  - leave a tiny note explaining why (prevents repeat work)
 
 ---
 
-## 📎 Glossary (quick)
+## 📎 Glossary (tiny but useful)
+
 - **CRS**: Coordinate Reference System
 - **ETL**: Extract → Transform → Load
 - **NDVI**: Normalized Difference Vegetation Index
 - **UQ / V&V**: Uncertainty Quantification / Verification & Validation
 - **COG**: Cloud-Optimized GeoTIFF
-- **WMS/WFS**: Web map services (common GIS serving patterns)
+- **STAC/DCAT/PROV**: asset catalog / dataset catalog / provenance bundle
 
 ---
 
-🧠 **Rule of thumb:** if you can’t answer “where did this come from?” in 10 seconds… it doesn’t belong in `data/work/` yet.
+🧠 **Rule of thumb:** if you can’t answer “where did this come from?” in 10 seconds… it doesn’t belong in `data/work/` yet. 🌾
