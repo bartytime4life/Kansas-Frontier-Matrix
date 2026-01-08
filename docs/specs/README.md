@@ -279,10 +279,10 @@ These concepts map well onto KFM’s need for governed access to sensitive cultu
 We convert reading into governed artifacts via promotion (draft → governed story node), keeping provenance explicit:
 ```mermaid
 flowchart LR
-  A[Literature source<br/>(doi/isbn/url)] --> B[Source summary<br/>docs/research/source_summaries]
-  B --> C[Draft note<br/>docs/research/drafts/literature]
-  C --> D[Promoted governed artifact<br/>(spec or story node)]
-  D --> E[Focus Mode + UI surfaces]
+  A["Literature source\n(doi | isbn | url)"] --> B["Source summary\n/docs/research/source_summaries"]
+  B --> C["Draft note\n/docs/research/drafts/literature"]
+  C --> D["Promoted governed artifact\n(spec or story node)"]
+  D --> E["Focus Mode + UI surfaces"]
 ```
 This pattern is already present in current design notes. :contentReference[oaicite:31]{index=31}
 
