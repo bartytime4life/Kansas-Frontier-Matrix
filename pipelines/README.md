@@ -1,22 +1,3 @@
----
-title: "🧬 Pipelines — Kansas Frontier Matrix"
-path: "pipelines/README.md"
-version: "v11.2.6"
-last_updated: "2026-01-08"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.6"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
-status: "Active"
-owners:
-  - "KFM Data Platform"
-  - "KFM Pipelines Guild"
----
-
-<div align="center">
-
 # 🧬 KFM Pipelines  
 `pipelines/README.md`
 
