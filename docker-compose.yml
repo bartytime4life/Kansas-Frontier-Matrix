@@ -1,13 +1,119 @@
-# docker-compose.yml — Kansas Frontier Matrix (KFM) local stack
-# Components: Neo4j (graph), FastAPI (API), React/MapLibre (UI)
-# Optional "ops" profile: ETL runner + graph sync jobs
+# 🐳 `docker-compose.yml` — Kansas Frontier Matrix (KFM) local stack
+
+Local dev stack for the **canonical KFM pipeline order**:
+
+> **ETL → STAC/DCAT/PROV → Graph/DB → API → UI → Story Nodes → Focus Mode**
+
+✅ Design goals: **deterministic**, **catalog-first**, **policy-ready**, **CI-friendly**, and **secure-by-default** (host ports bound to `127.0.0.1`).
+
+---
+
+## 🚀 Quickstart
+
+```bash
+# 1) Configure
+cp .env.example .env   # if present
+
+# 2) Run the core stack
+docker compose up --build
+
+# 3) Optional profiles
+docker compose --profile ops up --build        # ETL + graph sync runners
+docker compose --profile obj up --build        # MinIO object store (S3-compatible)
+docker compose --profile policy up --build     # OPA policy engine
+```
+
+---
+
+## 🧩 Services (at a glance)
+
+- 🐘 **PostGIS** (`postgres`) — spatial index + queries (catalog-gated data use)
+- 🕸️ **Neo4j** (`neo4j`) — derived knowledge graph (loads from catalogs only)
+- 🧵 **Redis** (`redis`) — job queue / async orchestration backbone
+- 🛡️ **API** (`api`) — governed boundary (contracts + auth + classification + evidence)
+- 🌐 **UI** (`ui`) — Map UI (talks only to API; not on backend network)
+- 📦 **MinIO** (`minio`, optional) — S3-compatible artifact store
+- 🧾 **OPA** (`opa`, optional) — executable policy engine
+- 🧪 **Ops runners** (`etl`, `graph_sync`, optional) — thin wrappers (should call canonical modules)
+
+---
+
+## ✅ Updated Compose file
+
+> Copy/paste the YAML below into `docker-compose.yml`.
+
+```yaml
+# docker-compose.yml — Kansas Frontier Matrix (KFM) local stack 🐳🧭
 #
-# Canonical code homes (v13): src/pipelines/, src/graph/, src/server/, web/
-# Canonical data roots: data/<domain>/{raw,work,processed}, data/stac/, data/catalog/dcat/, data/prov/, data/graph/
+# Canonical pipeline (non-negotiable):
+#   ETL → STAC/DCAT/PROV → Graph/DB → API → UI → Story Nodes → Focus Mode
 #
-# Tip: Copy .env.example -> .env (if your repo has one) and override vars as needed.
+# Canonical code homes (v13 target):
+#   🧪 src/pipelines/   🕸️ src/graph/   🛡️ src/server/   🌐 web/   🧰 tools/   📓 mcp/
+#
+# Canonical data roots (v13 target):
+#   📦 data/raw/ • data/work/ • data/processed/
+#   🗂️ data/catalog/stac/ • 🏷️ data/catalog/dcat/ • 🧬 data/prov/ • 🕸️ data/graph/
+#
+# Quickstart:
+#   cp .env.example .env   # if present
+#   docker compose up --build
+#
+# Optional profiles:
+#   docker compose --profile ops up --build       # ETL + graph sync runners
+#   docker compose --profile obj up --build       # MinIO object store (S3-compatible)
+#   docker compose --profile policy up --build    # OPA policy engine
+#
+# Security posture (dev):
+#   - All host ports bind to 127.0.0.1 by default
+#   - Default passwords are dev-only; override in .env for realism
+
+name: kfm
+
+x-kfm-bind: &kfm_bind
+  - ./:/workspace
+
+x-kfm-env: &kfm_env
+  # Repo paths (mounted at /workspace)
+  KFM_REPO_ROOT: /workspace
+  KFM_DATA_ROOT: /workspace/data
+  KFM_DOCS_ROOT: /workspace/docs
+  KFM_SCHEMAS_ROOT: /workspace/schemas
+  KFM_TOOLS_ROOT: /workspace/tools
+  KFM_MCP_ROOT: /workspace/mcp
+
+  # Governed metadata roots (catalog-first)
+  KFM_STAC_ROOT: /workspace/data/catalog/stac
+  KFM_DCAT_ROOT: /workspace/data/catalog/dcat
+  KFM_PROV_ROOT: /workspace/data/prov
+  KFM_GRAPH_ROOT: /workspace/data/graph
+
+  # Environment selector (used across pipelines/tools)
+  KFM_ENV: ${KFM_ENV:-dev}
 
 services:
+  postgres:
+    image: postgis/postgis:${POSTGIS_IMAGE_TAG:-16-3.4}
+    container_name: kfm-postgres
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${PG_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-kfm}
+      POSTGRES_USER: ${POSTGRES_USER:-kfm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kfm_dev_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Optional: SQL init scripts (extensions, roles, seed refs)
+      - ./data/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    networks:
+      - kfm_backend
+
   neo4j:
     image: "neo4j:${NEO4J_IMAGE_TAG:-5}"
     container_name: kfm-neo4j
@@ -17,15 +123,21 @@ services:
       - "127.0.0.1:${NEO4J_BOLT_PORT:-7687}:7687"
     environment:
       NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:-kfm_dev_password}"
-      # Expose password for healthcheck / helper tools (do not use in production).
+      # Exposed for local healthchecks/tools only (avoid this pattern in production)
       NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
-      # Optional plugins (comment out if you don't need them):
+
+      # Optional plugins (comment out if not needed)
       NEO4J_PLUGINS: '["apoc"]'
+
+      # Laptop-friendly defaults (tune in .env)
+      NEO4J_server_memory_pagecache_size: "${NEO4J_PAGECACHE:-512M}"
+      NEO4J_server_memory_heap_initial__size: "${NEO4J_HEAP_INIT:-512M}"
+      NEO4J_server_memory_heap_max__size: "${NEO4J_HEAP_MAX:-1G}"
     volumes:
       - neo4j_data:/data
       - neo4j_logs:/logs
       - neo4j_plugins:/plugins
-      # Make graph exports available for LOAD CSV and seeding workflows:
+      # Catalog-gated graph exports (read-only)
       - ./data/graph/csv:/import:ro
       - ./data/graph/cypher:/kfm-graph-cypher:ro
     healthcheck:
@@ -36,6 +148,63 @@ services:
     networks:
       - kfm_backend
 
+  redis:
+    image: redis:${REDIS_IMAGE_TAG:-7-alpine}
+    container_name: kfm-redis
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    networks:
+      - kfm_backend
+
+  # Optional S3-compatible object store (enable if your API/workers use S3 URLs)
+  # Start with: docker compose --profile obj up --build
+  minio:
+    image: minio/minio:${MINIO_IMAGE_TAG:-latest}
+    container_name: kfm-minio
+    profiles: ["obj"]
+    restart: unless-stopped
+    command: ["server", "/data", "--console-address", ":9001"]
+    ports:
+      - "127.0.0.1:${MINIO_PORT:-9000}:9000"
+      - "127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-kfm}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-kfm_dev_password}
+    volumes:
+      - minio_data:/data
+    networks:
+      - kfm_backend
+
+  # Optional policy engine (OPA) for executable governance checks
+  # Start with: docker compose --profile policy up --build
+  opa:
+    image: openpolicyagent/opa:${OPA_IMAGE_TAG:-0.64.1}
+    container_name: kfm-opa
+    profiles: ["policy"]
+    restart: unless-stopped
+    command:
+      - "run"
+      - "--server"
+      - "--log-format=json"
+      - "--set=decision_logs.console=true"
+      - "/policies"
+    ports:
+      - "127.0.0.1:${OPA_PORT:-8181}:8181"
+    volumes:
+      # Prefer storing Rego policies under tools/validation/rego (repo-dependent)
+      - ./tools/validation/rego:/policies:ro
+    networks:
+      - kfm_backend
+
   api:
     build:
       context: .
@@ -43,26 +212,57 @@ services:
     image: kfm-api:dev
     container_name: kfm-api
     restart: unless-stopped
+    init: true
     environment:
+      <<: *kfm_env
+
+      # Runtime
+      APP_ENV: ${APP_ENV:-dev}
       FASTAPI_ENV: "${FASTAPI_ENV:-development}"
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+
+      # Data stores
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://kfm:kfm_dev_password@postgres:5432/kfm}
       NEO4J_URI: "${NEO4J_URI:-bolt://neo4j:7687}"
       NEO4J_USER: "${NEO4J_USER:-neo4j}"
       NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
-      KFM_REPO_ROOT: "/workspace"
-      KFM_DATA_ROOT: "/workspace/data"
-      KFM_DOCS_ROOT: "/workspace/docs"
-      KFM_SCHEMAS_ROOT: "/workspace/schemas"
-    volumes:
-      - ./:/workspace
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+
+      # Policy (optional)
+      POLICY_ENGINE: ${POLICY_ENGINE:-internal}        # internal|opa
+      OPA_URL: ${OPA_URL:-http://opa:8181}             # used when POLICY_ENGINE=opa
+
+      # Object store (optional; enable minio profile or point to real S3)
+      OBJECT_STORE_URL: ${OBJECT_STORE_URL:-}          # e.g., s3://kfm-dev
+      OBJECT_STORE_ENDPOINT: ${OBJECT_STORE_ENDPOINT:-http://minio:9000}
+      OBJECT_STORE_ACCESS_KEY: ${MINIO_ROOT_USER:-kfm}
+      OBJECT_STORE_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-kfm_dev_password}
+
+      # Observability (optional)
+      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-kfm-api}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+    volumes: *kfm_bind
     working_dir: /workspace
     ports:
       - "127.0.0.1:${API_PORT:-8000}:${API_CONTAINER_PORT:-8000}"
     depends_on:
+      postgres:
+        condition: service_healthy
       neo4j:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - kfm_backend
       - kfm_app
+    # Health endpoint is part of the API contract in this repo’s docs
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health').read()\" >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    security_opt:
+      - no-new-privileges:true
 
   ui:
     build:
@@ -71,63 +271,86 @@ services:
     image: kfm-ui:dev
     container_name: kfm-ui
     restart: unless-stopped
+    init: true
     environment:
-      # For Vite:
-      VITE_API_BASE_URL: "http://api:${API_CONTAINER_PORT:-8000}"
-      # For Create React App:
-      REACT_APP_API_BASE_URL: "http://api:${API_CONTAINER_PORT:-8000}"
+      # IMPORTANT: these values are compiled into browser JS.
+      # Default is host-reachable. If you change API_PORT, update these (or set via .env).
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
+      REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL:-http://localhost:8000}
     ports:
       - "127.0.0.1:${UI_PORT:-3000}:${UI_CONTAINER_PORT:-3000}"
     depends_on:
-      - api
+      api:
+        condition: service_healthy
     networks:
       - kfm_app
+    security_opt:
+      - no-new-privileges:true
 
   # ----- Optional ops containers (run with: docker compose --profile ops up ...) -----
 
+  # Thin wrapper runner for ETL jobs (prefer Make targets or a module entrypoint).
   etl:
     image: kfm-api:dev
     container_name: kfm-etl
     profiles: ["ops"]
+    restart: "no"
     environment:
+      <<: *kfm_env
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://kfm:kfm_dev_password@postgres:5432/kfm}
       NEO4J_URI: "${NEO4J_URI:-bolt://neo4j:7687}"
       NEO4J_USER: "${NEO4J_USER:-neo4j}"
       NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
-      KFM_REPO_ROOT: "/workspace"
-      KFM_DATA_ROOT: "/workspace/data"
-    volumes:
-      - ./:/workspace
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      # Choose a pipeline job id/slug that exists in your repo
+      KFM_PIPELINE_JOB: ${KFM_PIPELINE_JOB:-example/job}
+    volumes: *kfm_bind
     working_dir: /workspace
-    # NOTE: run_agent.py path/args not confirmed in provided docs — adjust to match your repo.
-    command: ["bash", "-lc", "python src/pipelines/etl/run_agent.py"]
+    command:
+      - "bash"
+      - "-lc"
+      - "make pipeline-run JOB=$KFM_PIPELINE_JOB ENV=$KFM_ENV"
     depends_on:
+      postgres:
+        condition: service_healthy
       neo4j:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - kfm_backend
+    security_opt:
+      - no-new-privileges:true
 
+  # Sync catalogs → graph (must consume catalog roots; never ad-hoc inserts).
   graph_sync:
     image: kfm-api:dev
     container_name: kfm-graph-sync
     profiles: ["ops"]
+    restart: "no"
     environment:
+      <<: *kfm_env
       NEO4J_URI: "${NEO4J_URI:-bolt://neo4j:7687}"
       NEO4J_USER: "${NEO4J_USER:-neo4j}"
       NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
-      KFM_REPO_ROOT: "/workspace"
-      KFM_DATA_ROOT: "/workspace/data"
-    volumes:
-      - ./:/workspace
+    volumes: *kfm_bind
     working_dir: /workspace
-    # NOTE: entrypoint not confirmed — replace with your graph build/sync command under src/graph/.
-    command: ["bash", "-lc", "python src/graph/sync.py"]
+    command:
+      - "bash"
+      - "-lc"
+      - "make graph-build && make graph-load"
     depends_on:
       neo4j:
         condition: service_healthy
     networks:
       - kfm_backend
+    security_opt:
+      - no-new-privileges:true
 
 volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
   neo4j_data:
   neo4j_logs:
   neo4j_plugins:
@@ -137,3 +360,4 @@ networks:
   kfm_backend:
   # App-facing network (UI <-> API)
   kfm_app:
+```
