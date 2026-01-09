@@ -246,15 +246,16 @@ KFM notebook work moves through tiers to prevent “cool demo” from becoming �
 
 ```mermaid
 flowchart LR
-  A[🧪 Notebook experiment] --> B[📦 Local artifacts<br/>_artifacts/]
-  A --> R[🧾 Run manifest<br/>_runs/]
-  A --> C[🧾 Findings + notes]
-  C --> D[🏗️ Extract core logic<br/>src/ (pipelines/services)]
-  D --> E[✅ Tests + fixtures]
-  E --> F[🔁 Pipeline/service integration]
-  F --> G[🗂️ STAC/DCAT/PROV<br/>+ validation gates]
-  G --> H[🌐 UI + Story/Focus evidence bundle]
+  A["🧪 Notebook experiment"] --> B["📦 Local artifacts\n_artifacts/"]
+  A --> R["🧾 Run manifest\n_runs/"]
+  A --> C["🧾 Findings + notes"]
+  C --> D["🏗️ Extract core logic\nsrc: pipelines & services"]
+  D --> E["✅ Tests + fixtures"]
+  E --> F["🔁 Pipeline/service integration"]
+  F --> G["🗂️ STAC/DCAT/PROV\n+ validation gates"]
+  G --> H["🌐 UI + Story/Focus\nevidence bundle"]
 ```
+
 
 🏁 Graduation checklist
 - [ ] Extract functions into `src/` (no notebook-only globals)
