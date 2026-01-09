@@ -1,16 +1,24 @@
 # 🧩 `.github/ISSUE_TEMPLATE/` — Issue Forms for Kansas Frontier Matrix (KFM)
 
 ![Issue Forms](https://img.shields.io/badge/issues-governed%20intake-2ea44f)
+![Contract-first](https://img.shields.io/badge/contracts-contract--first-1f6feb)
+![Evidence-first](https://img.shields.io/badge/evidence-evidence--first-7c3aed)
 ![Provenance First](https://img.shields.io/badge/provenance-first-purple)
 ![KFM Order](https://img.shields.io/badge/pipeline-ETL%E2%86%92Catalogs%E2%86%92Graph%E2%86%92API%E2%86%92UI%E2%86%92Story%E2%86%92Focus-blue)
 ![No Secrets](https://img.shields.io/badge/security-no%20secrets%20in%20issues-red)
 
 > **Purpose:** This directory is the **governed front door** 🚪🧭 for opening issues in **Kansas Frontier Matrix (KFM)**.  
-> Every issue should capture enough **pipeline stage**, **evidence**, **provenance/licensing**, and **sensitivity** context so maintainers can triage without breaking KFM contracts.
+> Every issue should carry enough **pipeline stage**, **contracts**, **evidence**, **provenance/licensing**, and **sensitivity** context so maintainers can triage *without guessing* and without breaking KFM invariants.
 
 > [!IMPORTANT]
 > 🔐 **Do not post secrets, credentials, private keys, PII, or restricted/sensitive coordinates in public issues.**  
 > Use the repository’s security reporting path (see **Security Policy**) for anything sensitive.
+
+> [!NOTE]
+> 🧭 **Version map (why you may see “v13” + “v11” together):**  
+> - **Master Guide v13** documents the *repo structure + pipeline invariants* (contract-first, evidence-first).  
+> - **Standards / profiles** (STAC/DCAT/PROV) currently track **v11** in many places.  
+> - **Agent W·P·E architecture** is versioned separately (ex: **v11.2.6**) and is enforced via PR governance.  
 
 ---
 
@@ -22,12 +30,20 @@
 | ✨ Feature request | Use `feature_request.yml` (Issue chooser) |
 | 🗺️ Request a data layer/source | Use `data_layer_request.yml` (Issue chooser) |
 | ❓ Ask a question | Use `question.yml` (Issue chooser) |
-| 🔐 Security policy | `../SECURITY.md` *(or `../../SECURITY.md` if policy lives at repo root)* |
+| 🧪 CI failure / gates failing | Use `ci_failure.yml` *(recommended)* |
+| 🔌 API contract change | Use `api_contract_change.yml` *(recommended)* |
+| 🕸️ Graph model / ontology change | Use `graph_model_change.yml` *(recommended)* |
+| 🎬 Story Node request | Use `story_node_request.yml` *(recommended)* |
+| ⚖️ Governance / sensitivity question | Use `governance_question.yml` *(recommended)* |
+| 🤖 Agent / automation behavior | Use `agent_ops_issue.yml` *(recommended if you run W·P·E)* |
+| 🔐 Security policy | `../../SECURITY.md` *(or `.github/SECURITY.md` if you keep it there)* |
 | 🤝 Collaboration rules + labels | `../README.md` *(the `.github/README.md` hub)* |
-| 🧠 Master work protocol (v13) | `../../docs/specs/MARKDOWN_GUIDE_v13.md` *(or equivalent canonical path)* |
+| 🧠 Master Guide (structure + invariants) | `../../docs/MASTER_GUIDE_v13.md` *(or `../../docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`)* |
+| 🤖 Agent architecture (W·P·E) | `../../docs/specs/agents/README.md` |
 | 📘 System design | `../../docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` |
-| 🧾 Templates (Story Nodes, dataset metadata, etc.) | `../../docs/templates/` |
+| 🧾 Templates (Story Nodes, API, docs) | `../../docs/templates/` |
 | 📖 Glossary | `../../docs/glossary.md` |
+| ⚖️ Governance hub | `../../docs/governance/ROOT_GOVERNANCE.md` *(or `ROOT_GOVERNANCE_CHARTER.md`)* |
 
 > [!TIP]
 > If a template link 404s, use the chooser: `https://github.com/<owner>/<repo>/issues/new/choose`
@@ -39,11 +55,13 @@
 
 - [🧾 What this folder controls](#-what-this-folder-controls)
 - [🧠 KFM intake philosophy](#-kfm-intake-philosophy)
+- [🧱 Non-negotiable invariants](#-non-negotiable-invariants)
 - [🗂️ Directory layout](#️-directory-layout)
 - [🧰 Template inventory](#-template-inventory)
 - [✅ Minimum required fields for every issue](#-minimum-required-fields-for-every-issue)
 - [🧭 Stage picker](#-stage-picker)
 - [🧾 Provenance, licensing, and data hygiene](#-provenance-licensing-and-data-hygiene)
+- [🤖 Agent & automation issues](#-agent--automation-issues)
 - [🔒 Sensitivity, sovereignty, and governance](#-sensitivity-sovereignty-and-governance)
 - [🏷️ Labels & triage conventions](#️-labels--triage-conventions)
 - [🧪 CI / contract failures](#-ci--contract-failures)
@@ -60,7 +78,7 @@
 This folder contains GitHub **Issue Forms** (`*.yml`) and optional configuration (`config.yml`) that:
 
 - ✅ **shape** what reporters are asked
-- ✅ **enforce** minimum intake fields (stage, evidence, provenance, sensitivity)
+- ✅ **enforce** minimum intake fields (stage, evidence, provenance, sensitivity, contract anchors)
 - ✅ **route** issues into the correct subsystem *without* guessing or “vibes”
 
 Think of these templates as **operational scaffolding** 🧱 — not policy.  
@@ -84,10 +102,29 @@ flowchart LR
 
 **So issue intake must:**
 - 🧭 capture a **pipeline stage guess** (don’t worry if you’re unsure)
-- 🧾 require **evidence** (repro steps, IDs, logs, screenshots, or sample data)
+- 🧾 require **evidence** (repro steps, IDs, logs, screenshots, sample data, or failing checks)
 - 🧱 require **provenance/licensing** when data is involved
 - 🔒 flag **sensitivity** early (so we don’t accidentally publish restricted info)
 - 🔌 preserve the **API boundary rule** (UI does not talk to graph DB directly)
+- 📜 anchor to **contracts** (schemas/specs) when behavior depends on them
+
+---
+
+## 🧱 Non-negotiable invariants
+
+These are the “guardrails” 🛡️ that issue forms should **help us enforce**, not bypass:
+
+- **Pipeline ordering is absolute:** `ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode`
+- **API boundary rule:** UI must **never** query the graph DB directly; all access flows through the governed API
+- **Provenance-first:** data (including derived/AI outputs) is not “real” in KFM until it has **STAC/DCAT + PROV**
+- **Deterministic, idempotent ETL:** reruns should be safe; outputs stable for same inputs/config
+- **Evidence-first narrative:** Story Nodes / Focus Mode allow **no unsourced claims**; AI output must be labeled + constrained
+- **Classification propagation:** no output can be less restricted than its inputs (unless reviewed + redacted)
+- **Validation gates:** CI enforces these invariants (schema checks, link checks, provenance completeness, security scans)
+
+> [!CAUTION]
+> If your issue requests something that violates the invariants above, please file it as a **Governance Question** ⚖️.  
+> We’ll either propose a compliant design or explicitly document an exception path (rare).
 
 ---
 
@@ -106,7 +143,8 @@ flowchart LR
    ├─ 🔌 api_contract_change.yml   # (recommended) OpenAPI/GraphQL contract changes
    ├─ 🕸️ graph_model_change.yml    # (recommended) ontology/entity/relation changes
    ├─ 🎬 story_node_request.yml    # (recommended) Story Node additions/edits
-   └─ ⚖️ governance_question.yml   # (recommended) ethics/sovereignty/sensitivity topics
+   ├─ ⚖️ governance_question.yml   # (recommended) ethics/sovereignty/sensitivity topics
+   └─ 🤖 agent_ops_issue.yml       # (recommended) W·P·E / automation behavior + ops controls
 ```
 
 > [!NOTE]
@@ -117,7 +155,7 @@ flowchart LR
 
 ## 🧰 Template inventory
 
-> **Rule:** If you don’t know which form to use, pick **Bug Report** or **Question** and include the minimum fields below. Maintainers will retag it.
+> **Rule:** If you don’t know which form to use, pick **Bug Report** or **Question** and include the minimum fields below. Maintainers will retag it. ✅
 
 | Template | Use it for | Must capture (minimum) |
 |---|---|---|
@@ -130,6 +168,7 @@ flowchart LR
 | 🕸️ `graph_model_change.yml` *(recommended)* | ontology/entity/relation changes | node/edge definitions · migration plan · impacts to API/UI/story |
 | 🎬 `story_node_request.yml` *(recommended)* | Story Node edits/additions | story ID/path · claim → evidence map · dataset/doc IDs · sensitivity |
 | ⚖️ `governance_question.yml` *(recommended)* | ethics/sovereignty/sensitivity | concern summary · data classification · who is affected · references |
+| 🤖 `agent_ops_issue.yml` *(recommended)* | W·P·E agents / automation | component (W/P/E) · idempotency key · commit seed · plan/diff paths · telemetry IDs · kill-switch state |
 
 ---
 
@@ -147,6 +186,9 @@ Regardless of template, every issue should include:
   - IDs/paths (dataset ID, STAC item, Story Node slug, API route)
 - **Pipeline stage guess** (pick one — see Stage Picker below)
 - **Affected paths** (best guess)
+- **Contract anchors (if applicable)**:
+  - schema/spec name + path (ex: `schemas/stac/**`, `schemas/telemetry/**`, `openapi.yaml`)
+  - expected validation behavior (what should pass/fail)
 - **Sensitivity note**:
   - ✅ “Public OK”
   - ⚠️ “Internal only”
@@ -160,24 +202,26 @@ Regardless of template, every issue should include:
 
 ## 🧭 Stage picker
 
-Use this to pick a pipeline stage (or pick “unknown” and we’ll triage).
+Use this to pick a pipeline stage (or pick “unknown” and we’ll triage).  
+🧠 *Cross-cutting* items (telemetry/ops/governance) are allowed—just label them.
 
 | Stage | What it covers | Typical “evidence anchors” 🔎 |
 |---|---|---|
 | 🧰 **ETL / Pipelines** | ingest, transforms, tiling, normalization | run config · input sample · expected output · logs · `src/pipelines/**` |
-| 🗂️ **Catalogs** (STAC/DCAT/PROV) | discoverability + metadata correctness | collection/item IDs · validator output · `schemas/{stac,dcat,prov}` |
+| 🗂️ **Catalogs** (STAC/DCAT/PROV) | discoverability + metadata correctness | collection/item IDs · validator output · `schemas/{stac,dcat,prov}` · `data/stac/**` · `data/catalog/dcat/**` · `data/prov/**` |
 | 🕸️ **Graph** | entities, relations, citations, timelines | node labels/IDs · relation expectations · import fixtures · `src/graph/**` |
 | 🔌 **API boundary** | contracts, authZ, redaction, query behavior | endpoint + contract ref · req/res sample · auth context · `src/server/**` |
 | 🖥️ **UI / Map viewer** | layers, time slider, rendering, UX | steps + screenshots · browser/device · network trace · `web/**` |
 | 🎬 **Story Nodes** | narrative orchestration + citations | story slug/path · claim → evidence · layer/time steps · `docs/reports/story_nodes/**` |
 | 🧠 **Focus Mode** | evidence-backed summaries | context bundle IDs · missing citations · “fact vs interpretation” errors |
 | 🧪 **CI / DevEx** | tests, builds, validations, gates | workflow name · failing step · logs · changed paths |
+| 📡 **Telemetry / Ops** *(cross-cutting)* | observability, agent events, kill-switches | `telemetry/**` · `schemas/telemetry/**` · `ops/feature_flags/**` |
 
 ---
 
 ## 🧾 Provenance, licensing, and data hygiene
 
-KFM is **provenance-first**. If your issue touches datasets, documents, scans, model outputs, or derived layers:
+KFM is **provenance-first** 🧾. If your issue touches datasets, documents, scans, model outputs, derived layers, or AI outputs:
 
 ### ✅ Required provenance fields (data-related issues)
 - **Source authority** (who produced it?)
@@ -187,8 +231,27 @@ KFM is **provenance-first**. If your issue touches datasets, documents, scans, m
 - **Temporal coverage** (year/range/event window)
 - **Processing context**
   - toolchain (GDAL/QGIS/GEE/Python/R/etc.)
-  - CRS/EPSG
+  - CRS/EPSG (web display typically **EPSG:4326**)
   - major transforms (georef, resample, simplify, reproject, mask)
+
+### 🧱 Boundary artifacts (required before “published”)
+For anything that becomes user-facing (API/UI/Story/Focus), KFM expects the following boundary artifacts:
+
+```text
+📁 data/
+├─ 📁 raw/<domain>/                  # immutable inputs
+├─ 📁 work/<domain>/                 # intermediate artifacts (rebuildable)
+├─ 📁 processed/<domain>/            # published outputs (versioned)
+├─ 📁 stac/
+│  ├─ 📁 collections/                # STAC Collections
+│  └─ 📁 items/                      # STAC Items
+├─ 📁 catalog/
+│  └─ 📁 dcat/                       # DCAT dataset views (JSON-LD)
+└─ 📁 prov/                          # PROV lineage bundles (JSON-LD)
+```
+
+> [!IMPORTANT]
+> Any **derived** (including AI-assisted) layer is a first-class dataset: it needs catalogs + provenance, not “just a file.” ✅
 
 ### 🧼 Data sharing hygiene
 - Prefer **tiny fixtures** or **redacted subsets** for reproduction
@@ -201,20 +264,27 @@ KFM is **provenance-first**. If your issue touches datasets, documents, scans, m
   - private infrastructure details
   - personally identifying info (PII)
 
-### 🗂️ “Where would this live?” (helpful for routing)
-Typical (v13 target) locations:
+---
 
-```text
-📁 data/
-├─ 📁 sources/        # manifests: URLs, licenses, access notes
-├─ 📁 raw/            # immutable raw inputs
-├─ 📁 processed/      # derived outputs (versioned)
-├─ 📁 catalog/        # DCAT rollups
-└─ 📁 provenance/     # PROV bundles per run / per asset
-```
+## 🤖 Agent & automation issues
 
-> [!IMPORTANT]
-> Any **derived** (including AI-assisted) layer is a first-class dataset: it needs catalogs + provenance, not “just a file.”
+KFM supports (or plans to support) a safe agent architecture that separates:
+
+- 👀 **Watcher (W):** observes + emits facts/alerts (no mutations)
+- 🧠 **Planner (P):** deterministic plan + diff (PR-ready artifacts only)
+- 🛠️ **Executor (E):** opens/updates PRs + attaches attestations/telemetry (never merges)
+
+### ✅ If your issue involves agents, include:
+- **Component:** `Watcher | Planner | Executor`
+- **Subject:** what the agent acted on (file/path/module)
+- **Idempotency key:** `{component}.{subject}.{window}.{commit_seed}`
+- **Commit seed:** (determinism anchor)
+- **Artifacts:** plan path, diff/patch path, evidence folder path
+- **Telemetry IDs:** relevant event IDs / timestamps (redacted if needed)
+- **Kill-switch state:** whether agents are enabled (`ops/feature_flags/agents.yml`)
+
+> [!CAUTION]
+> 🧯 If you suspect unsafe behavior (policy bypass, secrets exposure, unintended data release), **do not** post details publicly. Use Security reporting.
 
 ---
 
@@ -235,7 +305,7 @@ If an issue involves Indigenous knowledge, culturally sensitive sites, or restri
 - flag it in the issue **without** posting precise coordinates
 - prefer county-level or generalized geometry
 - reference governance docs (expected):  
-  `docs/governance/ROOT_GOVERNANCE.md` · `ETHICS.md` · `SOVEREIGNTY.md` · `REVIEW_GATES.md`
+  `docs/governance/ROOT_GOVERNANCE*.md` · `ETHICS.md` · `SOVEREIGNTY.md` · `REVIEW_GATES.md`
 
 > [!CAUTION]
 > Issue templates must not invent new policy.  
@@ -248,15 +318,16 @@ If an issue involves Indigenous knowledge, culturally sensitive sites, or restri
 KFM uses labels to route work cleanly (maintainers apply them if you don’t). 🏷️
 
 ### Suggested label taxonomy (recommended)
-- `type: bug | feature | data | question | governance | ci`
-- `stage: etl | catalogs | graph | api | ui | story | focus | ci`
-- `component: pipeline | postgis | neo4j | webgl | map | timeline | auth | docs`
+- `type: bug | feature | data | question | governance | ci | ops`
+- `stage: etl | catalogs | graph | api | ui | story | focus | ci | ops`
+- `component: pipeline | postgis | neo4j | api | webgl | map | timeline | auth | docs | telemetry | agents`
+- `agent: watcher | planner | executor`
 - `priority: p0 | p1 | p2 | p3`
 - `governance: sensitive | sovereignty | licensing | privacy`
 - `good first issue` (mentored / self-contained)
 
 > [!TIP]
-> If you know the likely label, mention it in the issue—maintainers will confirm.
+> If you know the likely labels, mention them in the issue—maintainers will confirm.
 
 ---
 
@@ -271,32 +342,35 @@ If CI fails, include:
 
 Common failure buckets in KFM:
 - 📄 markdown protocol/lint
-- 🗂️ schema validation (STAC/DCAT/PROV)
+- 🗂️ schema validation (**STAC/DCAT/PROV**, plus any **telemetry** schemas)
 - 🔗 link integrity (catalog `links[].href`)
 - 🧾 provenance required-but-missing
 - 🕸️ graph integrity checks
-- 🔌 API contract tests
+- 🔌 API contract tests (OpenAPI/GraphQL)
 - 🖥️ UI build/a11y checks
 - 🔐 security scans (deps, SAST, secrets)
+- 🧯 policy gates (governance review triggers)
 
 ---
 
 ## 🛠️ Maintainers: evolving issue forms safely
 
-Issue forms are **interfaces**. Treat changes like contract changes.
+Issue forms are **interfaces**. Treat changes like contract changes. 🔌📜
 
 ### ✅ DoD for modifying templates
 - [ ] Template changes map to a pipeline stage or governance requirement (no “random questions”)
-- [ ] Required fields cover: stage · evidence · expected vs actual · sensitivity
+- [ ] Required fields cover: stage · evidence · expected vs actual · sensitivity · contract anchors
 - [ ] Data-related templates require: source · license · retrieval date · coverage (space/time)
+- [ ] Agent-related templates require: component · idempotency key · plan/diff artifacts · telemetry IDs · kill-switch state
 - [ ] Links in `config.yml` point to real files/paths
 - [ ] Labels remain consistent with `.github/README.md` + project board routing
 - [ ] Version history below updated
 
-### Optional (high leverage)
+### Optional (high leverage) 🚀
 - Add dropdowns for `stage:` and `classification:`
 - Add a checkbox gate: “I did not include secrets/PII/restricted coordinates”
 - Add links to “how to redact” guidance (docs/security or docs/governance)
+- Add a “contract anchor” picker for schema/standard paths
 
 ---
 
@@ -308,22 +382,29 @@ These materials may carry licenses **separate** from this repo’s code.
 <details>
 <summary><strong>🧠 Why we ask for evidence + reproducibility</strong></summary>
 
-- 📈 Stats & experimental design → avoid false certainty, demand clear assumptions + diagnostics  
+- 📈 Stats & experimental design → avoid false certainty; demand assumptions + diagnostics  
 - 🧪 Scientific modeling discipline → verification/validation, sensitivity, uncertainty quantification  
 - 🗂️ Data governance → provenance, access constraints, purpose limitations  
-- 🔐 Security posture → prevent sensitive disclosure and supply-chain footguns
+- 🔐 Security posture → prevent sensitive disclosure and supply-chain footguns  
+- 🤖 Agent governance → deterministic plans, PR-only execution, telemetry + attestations  
 
 </details>
 
 <details>
 <summary><strong>📦 Reference list (project library)</strong></summary>
 
-### 🧭 Canonical KFM design docs
+### 🧭 Canonical KFM design & governance
 - `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
-- `docs/specs/MARKDOWN_GUIDE_v13.md` *(or source `.gdoc`)*
+- `docs/MASTER_GUIDE_v13.md` *(or `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`)*
+- `docs/specs/agents/README.md` *(W·P·E agent architecture)*
+- `docs/governance/ROOT_GOVERNANCE*.md` · `docs/governance/ETHICS.md` · `docs/governance/SOVEREIGNTY.md` · `docs/governance/REVIEW_GATES.md`
+
+### 🧾 Markdown & documentation craft
+- `docs/library/Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`
 
 ### 🗺️ GIS, geoprocessing, cartography
 - `docs/library/python-geospatial-analysis-cookbook.pdf`
+- `docs/library/KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf`
 - `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
 - `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
 - `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
@@ -347,7 +428,7 @@ These materials may carry licenses **separate** from this repo’s code.
 - `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
 
 ### 🧠 ML / Deep learning
-- `docs/library/Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf`
+- `docs/library/Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` *(availability may vary by repo)*
 
 ### ⚙️ Systems, scaling, interoperability
 - `docs/library/Scalable Data Management for Future Hardware.pdf`
@@ -386,6 +467,7 @@ These materials may carry licenses **separate** from this repo’s code.
 
 | Version | Date | Summary |
 |---|---|---|
+| v1.2.0 | 2026-01-09 | Align quick links + repo paths to Master Guide v13; add “non‑negotiable invariants”; add W·P·E agent/ops intake fields; expand stage picker with Telemetry/Ops; harden contract anchors + boundary artifact paths; refresh library list |
 | v1.1.0 | 2026-01-08 | Align intake to v13 repo map + stage order; normalize template names (`data_layer_request.yml`); add governance/sensitivity + label taxonomy; add maintainer DoD + reference library |
 | v1.0.x | 2025-12 | Initial scaffold (pre-v13 alignment) |
 
