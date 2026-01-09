@@ -1,69 +1,52 @@
 <!--
-📌 This README documents the *canonical* executable code boundary for KFM.
-🗓️ Last updated: 2026-01-08
+📌 This README documents the *canonical governed documentation boundary* for KFM.
+🗓️ Last updated: 2026-01-09
 -->
 
-# 🧩 `src/` — Kansas Frontier Matrix (KFM) Executable Source Code 🧭🗺️
+# 📚 `docs/` — Kansas Frontier Matrix (KFM) Governed Documentation 📜🧭
 
-![KFM](https://img.shields.io/badge/KFM-src%2F%20canonical-1f6feb)
-![README](https://img.shields.io/badge/README-v1.3.0-8957e5)
-![Order](https://img.shields.io/badge/invariant-ETL%E2%86%92Catalog%E2%86%92Graph%E2%86%92API%E2%86%92UI%E2%86%92Story%E2%86%92Focus-critical)
-![Contracts](https://img.shields.io/badge/contracts-contract--first%20%2B%20evidence--first-0aa3a3)
-![Catalogs](https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-2ea043)
-![Graph](https://img.shields.io/badge/graph-Neo4j-008cc1)
-![API](https://img.shields.io/badge/api-FastAPI%20%7C%20GraphQL-0a66c2)
-![UI](https://img.shields.io/badge/ui-React%20%7C%20MapLibre%20%7C%20Cesium-3b82f6)
+![KFM](https://img.shields.io/badge/KFM-docs%2F%20canonical-1f6feb)
+![README](https://img.shields.io/badge/README-v1.0.0-8957e5)
+![Evidence](https://img.shields.io/badge/evidence-first-STAC%20%2B%20DCAT%20%2B%20PROV-0aa3a3)
 ![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-2ea043)
-![Security](https://img.shields.io/badge/security-hostile--inputs%20%2B%20deny--by--default-red)
+![Accessibility](https://img.shields.io/badge/docs-accessible%20%2B%20scannable%20%2B%20citable-8250df)
+![Security](https://img.shields.io/badge/security-no%20secrets%20%2B%20no%20side--channels-red)
 
-> Canonical home for **auditable**, **reproducible**, **governed** KFM executable code:  
-> **🧪 ETL Pipelines → 🗂️ Catalogs (STAC/DCAT/PROV) → 🕸️ Graph (Neo4j) → 🛡️ APIs (FastAPI/GraphQL)** ✅  
-> Everything else (governed docs, data assets, UI, story content) lives outside this boundary.
+> Canonical home for KFM’s **governed documentation**:  
+> **architecture + standards + templates + runbooks + governance + story nodes** — written so that decisions are **auditable**, claims are **citable**, and change is **reviewable**.  
+> This is where KFM stays explainable as it scales. 🧠🗺️
 
 > [!IMPORTANT]
-> **KFM’s non‑negotiable order:**  
+> **KFM’s non‑negotiable order (docs must reinforce it):**  
 > **ETL → STAC/DCAT/PROV Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode**  
-> If your change breaks this ordering (even “temporarily”), it’s not mergeable. 🚫
+> If a doc encourages bypassing the ordering (even as a “temporary shortcut”), it’s wrong.
 
 ---
 
 ## 🔗 Quick links
 - 🧭 Repo overview: **[`../README.md`](../README.md)**
-- 📘 Master Guide (canonical): **[`../docs/MASTER_GUIDE_v13.md`](../docs/MASTER_GUIDE_v13.md)** *(recommended)*
-- 🧠 Glossary: **[`../docs/glossary.md`](../docs/glossary.md)** *(if present)*
+- 🧩 Executable code boundary: **[`../src/README.md`](../src/README.md)**
 - 📦 Data + metadata boundary: **[`../data/README.md`](../data/README.md)**
-- 📐 Schemas registry: **[`../schemas/`](../schemas/)** *(if present)*
-- ✅ Tests: **[`../tests/`](../tests/)** *(if present)*
-- 🧰 Tools/validators: **[`../tools/`](../tools/)** *(if present)*
-- 🛰️ API boundary (backend): **[`./server/README.md`](./server/README.md)** *(preferred)* or **[`../api/README.md`](../api/README.md)** *(legacy, if present)*
+- 📐 Schemas registry: **[`../schemas/README.md`](../schemas/README.md)** *(if present)*
+- 🧠 Methods, controls & processes: **[`../mcp/`](../mcp/)** *(if present)*
 - 🌐 Web UI boundary: **[`../web/README.md`](../web/README.md)** *(if present)*
-- 📚 Story Nodes (governed narratives): **[`../docs/reports/story_nodes/`](../docs/reports/story_nodes/)** *(preferred)* or **[`../web/story_nodes/`](../web/story_nodes/)** *(legacy, if present)*
-- 🤝 CI/CD + collaboration: **[`../.github/README.md`](../.github/README.md)** *(if present)*
-- 🧾 Governance/SOPs: **[`../mcp/`](../mcp/)** *(or `../mcp/MCP-README.md` if present)*
+- 🤝 CI/CD + templates: **[`../.github/README.md`](../.github/README.md)** *(if present)*
 
 ---
 
 ## 🧭 Quick navigation
 - [📘 Overview](#-overview)
-- [🧭 v13 alignment](#-v13-alignment-contract-first--evidence-first)
 - [🧠 Core invariants](#-core-invariants)
-- [🧷 Subsystem contracts](#-subsystem-contracts-minimum-bar)
-- [📌 Repository boundaries](#-repository-boundaries-what-goes-where)
-- [🧱 Architecture](#-architecture)
-  - [🧪 Pipelines](#-pipelines-srcpipelines)
-  - [🏷️ Catalog writers & validators](#-catalog-writers--validators-stacdcatprov)
-  - [🕸️ Graph](#-graph-srcgraph)
-  - [🛡️ Server](#-server-srcserver)
-  - [📜 Contracts](#-contracts-srcservercontracts)
-- [🗂️ Canonical paths](#️-canonical-paths-data--metadata)
-- [🗂️ Directory layout](#️-directory-layout)
-- [🔀 Legacy layout & migration notes](#-legacy-layout--migration-notes)
-- [🏁 Golden paths](#-golden-paths-most-common-workflows)
-- [🧪 Local dev norms](#-local-dev-norms)
-- [✅ Validation & CI/CD](#-validation--cicd)
-- [🔒 Security & hostile inputs](#-security--hostile-inputs)
-- [📈 Modeling & simulation discipline](#-modeling--simulation-discipline)
-- [⚙️ Scaling & data management](#️-scaling--data-management)
+- [🗂️ What goes in `docs/`](#️-what-goes-in-docs)
+- [🧱 Directory layout](#-directory-layout)
+- [🏁 Golden paths](#-golden-paths-most-common-doc-workflows)
+- [✅ Doc quality gates](#-doc-quality-gates-definition-of-done)
+- [🧾 Evidence, citations, and provenance pointers](#-evidence-citations-and-provenance-pointers)
+- [📚 Story Nodes and Focus Mode rules](#-story-nodes-and-focus-mode-rules)
+- [🔒 Security, sovereignty, and sensitive info](#-security-sovereignty-and-sensitive-info)
+- [🧪 Modeling and simulation documentation](#-modeling-and-simulation-documentation)
+- [⚙️ Scaling and data management documentation](#️-scaling-and-data-management-documentation)
+- [🎨 Visualization and UX documentation](#-visualization-and-ux-documentation)
 - [📚 Project reference library influence map](#-project-reference-library-influence-map)
 - [🕰️ Version history](#️-version-history)
 
@@ -73,519 +56,344 @@
 
 | Field | Value |
 |---|---|
-| Doc | `src/README.md` |
+| Doc | `docs/README.md` |
 | Status | Active ✅ |
-| Last updated | **2026-01-08** |
-| Audience | Contributors shipping pipelines, catalogs, graph loaders, and API services |
-| Prime directive | If it changes “spatial truth,” it must be **traceable + contractable + testable** 🧾 |
+| Last updated | **2026-01-09** |
+| Audience | Contributors writing standards, runbooks, story nodes, ADRs, and governance policies |
+| Prime directive | If it changes what people *believe* about the map/story/data, it must be **reviewable + citable + reversible** |
 
 ---
 
 ## 📘 Overview
 
 ### ✅ Purpose
-`src/` is the canonical home for KFM **executable source code** that must remain:
+`docs/` exists so KFM remains:
+- **understandable** (clear architecture + vocabulary)
+- **governable** (policy and review gates are explicit)
+- **auditable** (why a decision happened, and when)
+- **evidence-first** (claims point to cataloged evidence)
+- **humane** (transparent impacts, consent, dignity, and accountability)
 
-- 🧾 **auditable** (what changed, why, by whom)
-- 🧬 **reproducible** (same inputs + config → same outputs)
-- 🧷 **contracted** (explicit interfaces between stages)
-- 🔐 **governed** (classification propagation, redaction readiness, evidence links)
+KFM documentation structure and governance are aligned to the platform’s “evidence-first + contract-first” approach. :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1}
 
-### 🎯 What belongs in `src/`
-- 🧪 ETL/pipeline code that turns **`data/raw/** → data/work/** → data/processed/**`**
-- 🏷️ Catalog emitters & validators producing **STAC/DCAT/PROV** (the gate to graph/UI)
-- 🕸️ Graph build/load utilities **from catalog outputs** (never from ad‑hoc “mystery data”)
-- 🛡️ API boundary code (or server layer) that enforces **contracts + governance**
-
-### 🚫 What does *not* belong in `src/`
-- 📚 governed docs → `docs/`
-- 📦 data assets & metadata artifacts → `data/`
-- 🌐 UI/web client → `web/`
-- 🎬 Story Node authoring → `docs/reports/story_nodes/` *(preferred)* or `web/story_nodes/` *(legacy)*
-- 🧪 experiments → `mcp/` or `notebooks/` *(and anything “real” must graduate into `src/` + catalogs + tests)*
-
-> [!TIP]
-> If you can’t explain lineage (inputs → transforms → outputs) in one paragraph, your code probably isn’t ready to live in `src/`. 🧾
-
----
-
-## 🧭 v13 alignment: contract-first + evidence-first
-
-KFM v13 (Master Guide) makes two ideas **non‑optional** across the whole repo:
-
-- 🧷 **Contract-first**: schemas + API contracts are first‑class artifacts; implementation follows the contract.
-- 🧾 **Evidence-first**: no narrative/UI/graph usage unless the dataset is **cataloged (STAC/DCAT) + traced (PROV)**.
-
-Also: **one canonical home per subsystem** (no “shadow copies” of pipelines or contracts in random folders). ✅
+### 🚫 What `docs/` is not
+- not a dumping ground for generated artifacts (those belong under `data/` outputs)
+- not a substitute for contracts (API/graph contracts live under `src/` and `schemas/`)
+- not a place for secrets, tokens, credentials, or internal URLs 🚫
 
 ---
 
 ## 🧠 Core invariants
 
 > [!IMPORTANT]
-> KFM enforces this pipeline ordering end‑to‑end:
->
-> **ETL → STAC/DCAT/PROV Catalogs → Graph (Neo4j) → APIs → UI → Story Nodes → Focus Mode**
+> **Docs are part of the system boundary.**  
+> If a subsystem changes, docs must change **in the same PR** whenever feasible (docs are “shipped,” not “updated later”). :contentReference[oaicite:2]{index=2}
 
 ```mermaid
 flowchart LR
   A[🧪 ETL Pipelines] --> B[🗂️ STAC/DCAT/PROV Catalogs]
-  B --> C[🕸️ Graph Build/Load (Neo4j)]
-  C --> D[🛡️ APIs (contracts + redaction)]
-  D --> E[🖥️ UI (React • MapLibre • optional Cesium)]
-  E --> F[📚 Story Nodes (governed narratives)]
-  F --> G[🎯 Focus Mode (provenance-linked context)]
+  B --> C[🕸️ Graph]
+  C --> D[🛡️ APIs]
+  D --> E[🖥️ UI]
+  E --> F[📚 Story Nodes]
+  F --> G[🎯 Focus Mode]
 ```
 
-### ✅ What this means for contributors
-- ✅ **Nothing enters the graph/UI unless it has catalog records.**
-- ✅ **Graph references catalog IDs** — graph nodes/edges must point back to STAC/DCAT/PROV identifiers.
-- ✅ **UI never queries internal stores directly** — only via governed APIs.
-- ✅ **Derived products** (joins, AI/ML outputs, simulations) are treated as datasets:
-  - stored in `data/processed/**`
-  - cataloged (STAC/DCAT)
-  - traced (PROV)
-- ✅ **No privacy downgrade:** outputs cannot be less restricted than inputs without an explicit, reviewed redaction step.
-
-### 🚫 Things you must not do
-- ❌ “Quick hack” ETL outputs without catalogs/PROV
-- ❌ Manual graph inserts that bypass catalog IDs
-- ❌ Contract-breaking API changes without versioning
-- ❌ Silent projection/unit changes (CRS + units must be explicit)
+### ✅ Docs must reinforce these rules
+- ✅ **Evidence-first narrative:** no unsourced claims in story content (and no “hand-wavy” facts in architecture docs)
+- ✅ **Contract-first changes:** interfaces are updated before implementations (contracts/docs/tests lead)
+- ✅ **Sovereignty-aware behavior:** no leaking sensitive locations or restricted details via docs or screenshots
+- ✅ **One canonical home per thing:** avoid duplicate “shadow docs” that drift from reality :contentReference[oaicite:3]{index=3}
 
 ---
 
-## 🧷 Subsystem contracts (minimum bar)
+## 🗂️ What goes in `docs/`
 
-These are the “you don’t get to skip this” expectations. If you touch a subsystem, you must honor its contract.
+KFM expects `docs/` to be organized by *governed intent* (not by author preference). :contentReference[oaicite:4]{index=4} :contentReference[oaicite:5]{index=5}
 
-| Subsystem | Canonical home | Contract artifacts | Non‑negotiables ✅ |
-|---|---|---|---|
-| 🧪 Pipelines | `src/pipelines/` | job config schema; QA gates; determinism rules | idempotent, config-driven, stable IDs/hashes, outputs staged to raw→work→processed |
-| 🗂️ Catalogs | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` | STAC/DCAT/PROV profiles + JSON schemas | catalogs exist **before** graph/API/UI usage; cross-links resolve |
-| 🕸️ Graph | `src/graph/` | ontology bindings; loader contract; integrity tests | graph references catalogs; loaders idempotent; no orphan IDs |
-| 🛡️ API boundary | `src/server/` *(preferred)* / `api/` *(legacy)* | OpenAPI + GraphQL SDL; error model; auth/redaction rules | contract-first; deny-by-default; classification propagation |
-| 🌐 UI | `web/` | UI layer registry config; story playback contract | UI consumes APIs only; payload budgets; progressive loading |
-| 📚 Story Nodes | `docs/reports/story_nodes/` *(preferred)* | story template + schema | machine‑ingestible; every claim points to evidence (catalog IDs) |
-| 🎯 Focus Mode | `web/` + `src/server/` | focus context bundle contract | no unsourced narrative; provenance always visible; AI suggestions labeled |
-| ✅ Validation | `.github/` + `tests/` + `tools/` | CI gates + validators | “green CI” required; schema/link/security scans enforced |
+### ✅ Belongs here
+- 🧱 **Architecture**: designs, diagrams, ADRs, blueprints (`docs/architecture/`)
+- 📏 **Standards**: profiles + conventions (STAC/DCAT/PROV profiles, ontology rules, naming, CRS/unit rules) (`docs/standards/`)
+- 🔐 **Security**: threat models, incident response, secure ingestion guidance (`docs/security/`)
+- 🧭 **Governance**: FAIR/CARE/sovereignty policy, review gates, ethics, redaction rules (`docs/governance/`)
+- 🧰 **Templates**: universal doc template, Story Node template, ADR template (`docs/templates/`)
+- 🧑‍🔧 **Runbooks**: “how to operate / debug / recover” (`docs/runbooks/`)
+- 📰 **Reports & Story Nodes**: curated narrative content, with draft vs published separation (`docs/reports/story_nodes/`)
+- 📚 **Reference library**: PDFs/books/papers that influence decisions (`docs/library/`) :contentReference[oaicite:6]{index=6}
 
-> [!TIP]
-> If you’re unsure which contract applies: treat **catalog + provenance** as the interface, and treat everything else as an implementation detail. 🧾
-
----
-
-## 📌 Repository boundaries: what goes where?
-
-Use this when you’re unsure:
-
-| You are adding… | Put it in… | Why |
-|---|---|---|
-| ETL + transforms + QA validators | `src/pipelines/` | Deterministic outputs + catalog emission |
-| STAC/DCAT/PROV writers | `src/pipelines/` | Catalogs are the gate to graph & UI |
-| Graph build/load + ontology mapping | `src/graph/` | Graph is a derived reference index |
-| API services + policy enforcement | `src/server/` *(preferred)* / `api/` *(legacy)* | Single client boundary (auth/redaction/contracts) |
-| Contracts (OpenAPI/GraphQL) | `src/server/contracts/` | Stable integration surface |
-| Docs/runbooks/standards | `docs/` | Governed writing lives here |
-| Domain runbooks | `docs/data/<domain>/README.md` | Domain stewardship + repeatable ETL |
-| Data & metadata artifacts | `data/` | Canonical lifecycle + publication boundary |
-| Schemas/profiles | `schemas/` + `docs/standards/` | Machine validation registry + human standards |
-| UI client | `web/` | View + interaction boundary |
-| Story Nodes | `docs/reports/story_nodes/` | Governed narratives with citations |
+### 🚫 Does not belong here
+- generated dataset outputs → `data/**`
+- executable code → `src/**`
+- API contracts → `src/server/contracts/**`
+- schemas/profiles → `schemas/**` (docs can *explain*, but schemas must be machine-validated)
 
 ---
 
-## 🧱 Architecture
+## 🧱 Directory layout
 
-KFM is “clean boundaries first”: domain logic stays pure; IO and frameworks stay at the edges.
-
-```mermaid
-flowchart TB
-  subgraph Data["📦 Data & Metadata Boundary"]
-    RAW["data/raw/<domain>/**"] --> WORK["data/work/<domain>/**"] --> PROC["data/processed/<domain>/**"]
-
-    PROC --> STAC_C["data/stac/collections/**"]
-    PROC --> STAC_I["data/stac/items/**"]
-    PROC --> DCAT["data/catalog/dcat/**"]
-    PROC --> PROV["data/prov/**"]
-
-    STAC_I --> GRAPH_EXPORT["data/graph/csv/** (optional)"]
-  end
-
-  subgraph SRC["🧩 src/ (Executable Code)"]
-    PIPES["🧪 pipelines/"]
-    GRAPH["🕸️ graph/"]
-    SERVER["🛡️ server/"]
-  end
-
-  RAW --> PIPES --> WORK --> PIPES --> PROC
-  PIPES --> STAC_C
-  PIPES --> STAC_I
-  PIPES --> DCAT
-  PIPES --> PROV
-
-  STAC_C --> GRAPH
-  STAC_I --> GRAPH
-  DCAT --> GRAPH
-  PROV --> GRAPH
-
-  GRAPH --> SERVER
-  STAC_C --> SERVER
-  STAC_I --> SERVER
-  DCAT --> SERVER
-  PROV --> SERVER
-```
-
-### 🧪 Pipelines (`src/pipelines/`)
-What goes here:
-- 🔌 connectors (downloaders, scrapers, importers, exporters)
-- 🧼 transforms (CRS fixes, cleaning, normalization, georeferencing)
-- 🧾 catalog writers: STAC/DCAT/PROV
-- ✅ validation gates (schema, links, determinism, QA reports)
-- 🛰️ “heavy work” patterns that run offline (e.g., remote sensing exports, OCR, model runs)
-
-**Hard rule:** outputs are not “publishable” unless catalogs + PROV exist.
-
-### 🏷️ Catalog writers & validators (STAC/DCAT/PROV)
-Catalogs are *interfaces* downstream systems trust:
-- **STAC**: spatial/temporal + asset indexing (collections + items)
-- **DCAT**: dataset discovery + distributions (JSON‑LD)
-- **PROV**: lineage (inputs → activity → outputs) + config + run identity
-
-**Hard rule:** graph and API must reference **catalog IDs**, not local ad-hoc paths.
-
-### 🕸️ Graph (`src/graph/`)
-What goes here:
-- graph-ready artifact builders **from catalogs**
-- idempotent loaders/migrations (Neo4j)
-- validation utilities (referential integrity, ontology alignment)
-
-Graph is:
-- ✅ a relationship index + navigation accelerator  
-- ❌ not a second data warehouse
+### 🧭 Target shape (v13-aligned)
 
 > [!NOTE]
-> The KFM knowledge graph is designed to support semantic queries (e.g., Person–Event–Place links) while remaining anchored to source data and catalogs. Keep it *regeneratable*.
+> This target layout is consistent with KFM’s v13 documentation map and repo structure guidance. :contentReference[oaicite:7]{index=7} :contentReference[oaicite:8]{index=8}
 
-### 🛡️ Server (`src/server/`)
-What goes here:
-- API boundary (REST/GraphQL)
-- authn/authz + redaction + classification propagation
-- evidence bundles for Story Nodes & Focus Mode
-- telemetry at the boundary (request IDs; safe logs; audit events)
-
-**Hard rule:** clients integrate via contracts; they don’t bind to DB/graph schemas.
-
-### 📜 Contracts (`src/server/contracts/`)
-Contracts are the stable interface between KFM internals and the outside world:
-- versioned
-- reviewed
-- testable
-- explicit about error semantics and provenance pointers
+```text
+📁 docs/
+├── 📄 README.md                      # you are here ✅
+├── 📘 MASTER_GUIDE_v13.md            # canonical master guide (system map)
+├── 🧱 architecture/
+│   ├── 📄 README.md
+│   ├── 📄 ADR/                       # Architecture Decision Records
+│   └── 🗺️ diagrams/                  # mermaid / svg / drawio exports (no secrets)
+├── 📏 standards/
+│   ├── 📄 README.md
+│   ├── 🗂️ stac/                      # KFM STAC profile notes (schema lives in /schemas)
+│   ├── 🗂️ dcat/                      # KFM DCAT profile notes
+│   ├── 🗂️ prov/                      # KFM PROV profile notes
+│   └── 🕸️ ontology/                  # graph/ontology conventions + mapping rules
+├── 🔐 security/
+│   ├── 📄 README.md
+│   ├── 📄 threat-model.md
+│   └── 📄 incident-response.md
+├── 🧭 governance/
+│   ├── 📄 README.md
+│   ├── 📄 REVIEW_GATES.md            # what requires review, by whom, and why
+│   └── 📄 sovereignty-care-fair.md
+├── 🧰 templates/
+│   ├── 📄 TEMPLATE__UNIVERSAL_DOC.md
+│   ├── 📄 TEMPLATE__ADR.md
+│   └── 📄 TEMPLATE__STORY_NODE.md
+├── 🧑‍🔧 runbooks/
+│   ├── 📄 README.md
+│   ├── 📄 pipeline-ops.md
+│   ├── 📄 graph-ops.md
+│   └── 📄 api-ops.md
+├── 📰 reports/
+│   └── 📚 story_nodes/
+│       ├── 🧪 draft/
+│       ├── ✅ published/
+│       └── 🖼️ assets/                # images/maps used by story nodes (no sensitive leaks)
+├── 🗺️ data/                          # domain notes (human docs about data domains)
+│   └── <domain>/
+│       └── 📄 README.md
+└── 🗃️ 99_archive/                    # deprecated docs retained for traceability
+```
 
 > [!TIP]
-> Contract change → tests → implementation.  
-> If you can’t write a contract test, it’s not ready to ship. ✅
+> If you can’t decide where a new doc goes:  
+> **Does it define behavior?** → `standards/` or `governance/`  
+> **Does it explain structure?** → `architecture/`  
+> **Does it teach action steps?** → `runbooks/`  
+> **Is it narrative evidence?** → `reports/story_nodes/`
 
 ---
 
-## 🗂️ Canonical paths: data & metadata
+## 🏁 Golden paths (most common doc workflows)
 
-These are the “everyone agrees” locations your code must honor.
+### 1) Add a new data domain (doc + evidence alignment) ✅
+When you add a new domain, create:
+- `docs/data/<domain>/README.md` (what it is, sources, risks, known caveats)
+- links to the domain’s catalogs (STAC/DCAT/PROV pointers)
+- updates to `docs/standards/` if new conventions are introduced
 
-### 📦 Staging (required)
-- `data/raw/<domain>/...` *(ingested sources; treat as read-only once landed)*
-- `data/work/<domain>/...` *(intermediate artifacts; safe to delete/regenerate)*
-- `data/processed/<domain>/...` *(publishable artifacts; versioned outputs)*
+This aligns with the “domain integrates via ETL→catalog pattern” rule. :contentReference[oaicite:9]{index=9}
 
-### 🗂️ Publication boundary (required)
-- `data/stac/collections/` *(STAC Collections)*
-- `data/stac/items/` *(STAC Items)*
-- `data/catalog/dcat/` *(DCAT catalog outputs, JSON‑LD)*
-- `data/prov/` *(PROV bundles per run/dataset)*
+### 2) Add an ADR (Architecture Decision Record) ✅
+Use an ADR when you decide something that affects:
+- data lifecycle
+- provenance/governance
+- performance scaling
+- security posture
+- public-facing meaning (maps, metrics, interpretations)
 
-### 🕸️ Graph artifacts (optional but common)
-- `data/graph/csv/` *(Neo4j import CSV exports)*
-- `data/graph/cypher/` *(post-import scripts or constraints)*
+ADR must include: context → decision → alternatives → consequences → rollback plan.
+
+### 3) Add a standard (profiles + conventions) ✅
+Standards are **normative**. They must:
+- be explicit and testable
+- point to the machine schema (in `schemas/`)
+- define versioning rules
+- define “what breaks” and “how to migrate”
+
+### 4) Add a Story Node (governed narrative) ✅
+Story Nodes are treated like data products:
+- must be template-driven
+- must cite evidence
+- must reference graph entities via stable IDs
+- must separate fact vs interpretation :contentReference[oaicite:10]{index=10}
+
+### 5) Document a subsystem change (the “A→E” checklist) ✅
+When you change the system, docs should be updated across the relevant categories:
+
+- **(A) New pipeline job / dataset domain:** add domain docs + lineage expectations  
+- **(B) Contract change:** update contract docs + examples  
+- **(C) Graph schema / ontology change:** update ontology/standards + migrations  
+- **(D) New API endpoint/service:** contract-first docs + auth/redaction notes  
+- **(E) New UI feature/layer:** provenance/legend/source labels + CARE compliance notes :contentReference[oaicite:11]{index=11}
+
+---
+
+## ✅ Doc quality gates (Definition of Done)
 
 > [!CAUTION]
-> If you output something that affects UI/Story/Focus, it must pass through the publication boundary first (STAC/DCAT/PROV). No exceptions.
+> Docs can break trust just as fast as broken code.  
+> **Uncited claims** and **ambiguous language** are defects.
+
+### ✅ Minimum Definition of Done (for any doc PR)
+- [ ] correct folder placement (matches doc intent)
+- [ ] clear audience + scope + non-goals
+- [ ] glossary or definitions for new terms
+- [ ] evidence pointers for factual claims (catalog IDs / sources)
+- [ ] explicit assumptions (especially modeling, projections, CRS, units)
+- [ ] “safety review” note if content touches sensitive locations, identities, or sovereignty
+- [ ] no secrets, tokens, internal URLs, or exposed system internals
+- [ ] links work (relative links preferred)
+- [ ] updated “Last updated” date (and version history when relevant)
+
+### 🔍 Recommended CI checks for docs
+- markdown lint + style checks
+- link checker (relative links + anchors)
+- “no secrets” scanner
+- rendering check for mermaid diagrams
+- optional spell check (domain dictionary)
+
+Documentation-as-a-practice is emphasized in KFM’s markdown standards guidance. :contentReference[oaicite:12]{index=12} :contentReference[oaicite:13]{index=13}
 
 ---
 
-## 🗂️ Directory layout
+## 🧾 Evidence, citations, and provenance pointers
 
-### 🧭 Repo context (target v13 shape)
-```text
-📁 .github/               # 🤝 CI/CD + templates + CODEOWNERS + automation
-📁 docs/                  # 📚 governed docs (policies, standards, architecture)
-📁 data/                  # 📦 raw → work → processed + STAC/DCAT/PROV (+ graph exports)
-📁 schemas/               # 📐 machine-validated schemas (STAC/DCAT/PROV/story/ui/telemetry)
-📁 src/                   # 🧩 executable source (this folder)
-📁 tests/                 # ✅ automated tests (unit + integration + contract)
-📁 tools/                 # 🧰 validators + dev utilities
-📁 web/                   # 🌐 UI (maps + timeline + Focus Mode)
-📁 releases/              # 📦 packaged releases (manifests, SBOM, bundles)
+KFM is designed so that narrative claims and design decisions can be traced back to evidence and lineage. :contentReference[oaicite:14]{index=14}
+
+### ✅ Rule: cite with *system-native pointers*
+Prefer citing:
+1) **Catalog IDs** (STAC Item/Collection, DCAT dataset, PROV bundle)  
+2) **Graph entity IDs** (stable node IDs)  
+3) **External sources** only if they are also registered/cited via catalogs
+
+### ✅ Use footnotes for claims (preferred in Story Nodes)
+Example (pattern only):
+
+```markdown
+The 1870–1875 corridor shows increased settlement density.[^e1]
+
+[^e1]: Evidence: DCAT dataset `kfm:dcat:...`; STAC collection `kfm:stac:...`; PROV run `kfm:prov:...`
 ```
-
-### 🧩 `src/` (canonical homes)
-```text
-📁 src/
-├── 🧪 pipelines/            # ETL + catalog writers/validators (STAC/DCAT/PROV)
-├── 🕸️ graph/                # graph build/load tools (from cataloged outputs)
-└── 🛡️ server/               # API boundary (policy + services)
-    └── 📜 contracts/         # OpenAPI/GraphQL contracts (source of truth)
-```
-
-### ⭐ Recommended internal layering (clean boundaries)
-```text
-src/server/
-  domain/                    # 💠 types + invariants (no framework imports)
-  application/               # 🧠 use-cases/services (calls ports)
-  adapters/                  # 🔌 db/http/graph adapters (translation layer)
-  infrastructure/            # 🧱 framework glue (FastAPI, auth, DI, config)
-  contracts/                 # 📜 OpenAPI/GraphQL (source of truth)
-```
-
----
-
-## 🔀 Legacy layout & migration notes
-
-Some older documents and repo snapshots may use different “homes.” If you see these, treat them as **legacy**, and prefer v13 canonical locations.
-
-| Legacy | Preferred (v13) | Notes |
-|---|---|---|
-| `api/` (backend) | `src/server/` | Keep contract-first; migrate incrementally (contracts first). |
-| `web/story_nodes/` | `docs/reports/story_nodes/` | Move narrative authoring under governed docs; UI should ingest published story bundles. |
-| `data/catalog/` (mixed catalogs) | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Split by standard for validation + clarity. |
-| Ad-hoc scripts folder | `tools/` + `src/pipelines/` | Scripts that affect truth must graduate into pipelines + catalogs + tests. |
 
 > [!TIP]
-> Migration rule of thumb: **move contracts first**, then migrate implementations, then delete legacy paths. 🧹
+> If a reader can’t click from a claim → evidence → lineage, the doc is incomplete.
 
 ---
 
-## 🏁 Golden paths (most common workflows)
+## 📚 Story Nodes and Focus Mode rules
 
-### 1) Add a new pipeline job ✅
-1. 🧾 Define inputs + outputs + classification expectations (document in code + domain README)
-2. 🧪 Implement transforms (deterministic, config-driven)
-3. 📦 Write outputs to `data/processed/<domain>/...`
-4. 🏷️ Emit:
-   - STAC (Collection + Items) → `data/stac/collections/` + `data/stac/items/`
-   - DCAT dataset entry → `data/catalog/dcat/`
-   - PROV run bundle → `data/prov/`
-5. ✅ Add validators (schema + link checks + “no downgrade” checks)
-6. 🧪 Add tests (unit + fixtures + at least one end-to-end “mini run”)
-7. 📘 Add/refresh domain runbook → `docs/data/<domain>/README.md`
+Story Nodes turn narrative into a governed data source: machine-ingestible, evidence-linked, and graph-aware. :contentReference[oaicite:15]{index=15}
 
-### 2) Add a new graph relationship type ✅
-1. 🏷️ Confirm catalog IDs represent what you need (STAC/DCAT/PROV links exist)
-2. 🕸️ Update graph schema/ontology layer (Neo4j model + constraints)
-3. 🔁 Update loader to ingest references (idempotent)
-4. ✅ Validate referential integrity (no orphan IDs)
-5. 🧪 Add graph validation tests
+### ✅ Story Node requirements
+- **Provenance for every claim** (citations)
+- **Graph entity references** (stable IDs for people/places/events/docs)
+- **Fact vs interpretation** separation (especially for AI-assisted narrative)
 
-### 3) Add or change an API endpoint ✅
-1. 📜 Update contracts **first** (`src/server/contracts/`)
-2. 🧠 Add/modify use-case in `application/`
-3. 🔌 Implement adapters/repositories if needed (PostGIS/Neo4j/file-store)
-4. 🛡️ Enforce auth + redaction + classification
-5. 🧪 Add tests (contract + route + auth regression)
-6. 📈 Add telemetry (request IDs, safe logs)
+### 🎯 Focus Mode hard gates
+Focus Mode is the trust-preserving reading layer where story + map + timeline meet:
+- Only provenance-linked content can appear
+- AI content must be **opt-in** and clearly labeled
+- No sensitive location leaks (generalize/omit where required)
+- No side-channel bypass of sovereignty/classification rules :contentReference[oaicite:16]{index=16}
 
 ---
 
-## 🧪 Local dev norms
+## 🔒 Security, sovereignty, and sensitive info
 
-> Goal: **“If it runs in CI, it should run locally.”** 🐳
+Docs are a security surface. Treat them as if they could become public.
 
-### ✅ Suggested command surface *(example)*
-```bash
-# quality gates
-make lint
-make test
+### ✅ Required posture
+- 🚫 no secrets, tokens, private endpoints, internal hostnames
+- 🧭 sovereignty-aware: avoid exposing exact coordinates for sensitive sites
+- 🧯 no “how to exploit” instructions or vulnerable configuration examples
+- 🧾 do not copy raw sensitive data into docs — reference catalog IDs instead
 
-# pipelines
-make pipeline-run JOB=<job-id>
-make pipeline-validate
-
-# graph
-make graph-build
-make graph-load
-
-# server
-make serve
-```
-
-### 🧭 Reproducibility defaults
-- pin dependency versions where feasible
-- record run configs + hashes (write into PROV)
-- seed randomness for modeling/simulation paths
-- keep environments consistent (Docker recommended)
-- prefer “batchable” jobs for heavy work (workers), keep APIs responsive
+This aligns with KFM’s sovereignty + governance intent and the “no sensitive location leaks” Focus Mode rule. :contentReference[oaicite:17]{index=17} :contentReference[oaicite:18]{index=18}
 
 ---
 
-## ✅ Validation & CI/CD
+## 🧪 Modeling and simulation documentation
 
-### CI intent (minimum bar)
-- 🧹 lint + formatting
-- ✅ unit + integration tests
-- 🤝 contract tests (OpenAPI/GraphQL)
-- 🧾 schema validation (STAC/DCAT/PROV)
-- 🔗 link checks (assets exist; IDs resolve)
-- 🔐 security scans (secrets; common foot-guns; dependency checks)
-- 🧷 governance checks (classification propagation; redaction regressions)
-
-### PR self-check (before opening)
-- [ ] outputs deterministic (stable IDs + hashes)
-- [ ] outputs land correctly (`raw/` → `work/` → `processed/`)
-- [ ] STAC/DCAT/PROV emitted + validated
-- [ ] graph loads driven from catalogs (no ad-hoc inserts)
-- [ ] contract updated first (if API surface changed)
-- [ ] tests added/updated
-- [ ] classification propagates end-to-end
-
-> [!CAUTION]
-> “Green CI” is a merge requirement. If CI fails, fix the root cause — don’t ship flaky behavior. 🤖🚫
-
----
-
-## 🔒 Security & hostile inputs
-
-KFM processes “files from the world” (maps, PDFs, imagery, exports). Assume inputs are hostile by default. 🧯
-
-### ✅ Required safety posture
-- 🔐 Never commit secrets; never log secrets
-- 🧼 Validate and sanitize all untrusted inputs (files, URLs, metadata)
-- 🧯 Guard against:
-  - path traversal (uploads/extractors)
-  - SSRF (any URL fetching)
-  - decompression bombs (archives / images)
-  - parser exploitation (complex formats, PDFs, office docs)
-- 🧷 Deny-by-default classification: if unsure, treat as restricted until proven otherwise
-- 🧪 Add security regression tests for every “new surface”
-
-### “Worst-case” question to ask
-> “If someone malicious controls this input, what’s the maximum harm?”  
-If the answer is “exfiltrate data / run code / crash the system,” add guards **before** merging.
-
----
-
-## 📈 Modeling & simulation discipline
-
-KFM treats models as **decision-support**, not truth generators.
-
-### ✅ Minimum expectations for any model/simulation code in `src/`
-- define objective + assumptions explicitly
-- record parameters + seeds
+KFM treats models as decision-support, not truth generators. Documentation must:
+- state assumptions clearly
+- define objectives + constraints
 - report uncertainty (not just point estimates)
-- validate (unit tests + sanity checks) and verify (V&V mindset)
-- publish outputs as governed evidence artifacts:
-  - store in `data/processed/**`
-  - catalog (STAC/DCAT)
-  - trace (PROV)
+- record parameters + seeds
+- define verification/validation (V&V) checks
 
-### 🧪 “Evidence artifact” rule (AI/analysis outputs)
-If analysis generates new artifacts (OCR corpus, predictions, simulations), treat them as first-class datasets:
-- ✅ catalog them (STAC/DCAT)
-- ✅ trace them (PROV)
-- ✅ load into graph only with explicit provenance pointers
-- ✅ expose via APIs only (never “hard-code into UI”)
-
-### 🧪 “Model hygiene” checklist
-- [ ] train/test split recorded (or reason why not)
-- [ ] diagnostics captured (residuals, calibration, error bars)
-- [ ] sensitivity analysis for key parameters
-- [ ] artifacts versioned (plots/metrics/model cards)
-- [ ] provenance pointers included in outputs
+This modeling discipline is reinforced by the project’s modeling/simulation reference material. :contentReference[oaicite:19]{index=19} :contentReference[oaicite:20]{index=20} :contentReference[oaicite:21]{index=21}
 
 ---
 
-## ⚙️ Scaling & data management
+## ⚙️ Scaling and data management documentation
 
-The KFM stack should scale from “small demo” to “Kansas-wide spatiotemporal workloads” without architectural rewrites.
+When documenting performance/scaling behavior:
+- specify data sizes, partitions, and indexing assumptions
+- document storage formats and query patterns
+- document concurrency and operational risks (race conditions, idempotency)
+- document database conventions and migration strategy
 
-### ✅ Practical scaling rules
-- keep data formats web-friendly (COG, tiles, compact GeoJSON/TopoJSON)
-- index spatial data (PostGIS) rather than brute-force scanning
-- separate compute from serving (jobs/workers for heavy work)
-- keep metadata as the interface (catalogs are first-class)
-- design for partitioning (time slices, tiles) and locality (avoid huge monolith files)
+This is aligned with the project’s data management + Postgres references. :contentReference[oaicite:22]{index=22} :contentReference[oaicite:23]{index=23} :contentReference[oaicite:24]{index=24}
 
-> [!NOTE]
-> KFM’s architecture intentionally leaves room for future high-performance advances (e.g., adaptive query compilation, heterogeneous acceleration) *without breaking the contract boundaries*. ⚙️
+---
+
+## 🎨 Visualization and UX documentation
+
+Maps and UI are meaning-making machines. Docs should capture:
+- symbology decisions and aggregation choices (and why)
+- web performance constraints (payload budgets, progressive loading)
+- 3D/tiling/LOD considerations for dense spatial data
+- image compression rules for doc assets (avoid repo bloat)
+
+These constraints are reinforced by KFM’s visualization and web references. :contentReference[oaicite:25]{index=25} :contentReference[oaicite:26]{index=26} :contentReference[oaicite:27]{index=27} :contentReference[oaicite:28]{index=28} :contentReference[oaicite:29]{index=29}
 
 ---
 
 ## 📚 Project reference library influence map
 
 > [!NOTE]
-> These project files inform *how we design and review* `src/` code: reproducibility, governance, security, data management, modeling rigor, and visualization constraints.
+> These project files inform how we write and review KFM documentation: governance, evidence, security, modeling rigor, scaling discipline, and visualization honesty.
 
 <details>
-<summary><strong>📦 Expand: All project files → what they influence in <code>src/</code></strong></summary>
+<summary><strong>📦 Expand: Reference library → what it influences in <code>docs/</code></strong></summary>
 
-### 🧭 Canonical KFM docs (highest priority)
-| Project file | Primary lens | How it upgrades `src/` decisions |
+| Project file | Primary lens | How it upgrades `docs/` decisions |
 |---|---|---|
-| `docs/MASTER_GUIDE_v13.md` / `MARKDOWN_GUIDE_v13.md.gdoc` | 🧭 Canonical repo law | Defines contract-first + evidence-first + “one canonical home per subsystem”; sets canonical data/catalog paths and Story/Focus gates. |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` | 🧱 System blueprint | Clarifies backend/UI/DB roles (FastAPI/GraphQL, PostGIS, Neo4j) and the standards-forward architecture mindset. |
-| `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` | 🗺️ Mapping hub design | Reinforces MapLibre/Leaflet/Cesium constraints, timeline UI needs, and why heavy analysis must run offline (pipeline) then publish artifacts. |
-| `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` | ✍️ Authoring quality | Improves doc hygiene: consistent headings, admonitions, diagrams, and link discipline across repo markdown. |
-
-### 🛰️ Geospatial pipelines, cartography, and web constraints
-| Project file | Primary lens | How it upgrades `src/` decisions |
-|---|---|---|
-| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | 🛰️ RS pipelines | Informs ETL patterns for EO time-series, export workflows, and treating derived indices as publishable datasets (with provenance). |
-| `python-geospatial-analysis-cookbook.pdf` (+ KFM copy) | 🗺️ GIS engineering | Guides CRS hygiene, vector/raster IO, PostGIS integration, and “do transforms at boundaries” discipline. |
-| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | 🎨 Cartography | Reminds that symbology/aggregation choices shape meaning; pipeline outputs should be honest for downstream visualization. |
-| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | 📱 Mobile/offline | Reinforces constraints that matter upstream: simplify, tile, cache, offline/low-bandwidth friendliness. |
-| `responsive-web-design-with-html5-and-css3.pdf` | 🌐 Web constraints | Encourages web-friendly assets (sizes, payload budgets, progressive loading) and documentation that respects real devices. |
-| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 🧊 GPU/3D | Informs dense spatial data preparation (tiling/LOD) and why coordinate conventions must be explicit. |
-| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | 🖼️ Image pipelines | Helps upstream choices for thumbnails, QA screenshots, compression, and avoiding bloated artifacts. |
-
-### 🐘 Data systems, interoperability, performance
-| Project file | Primary lens | How it upgrades `src/` decisions |
-|---|---|---|
-| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | 🐘 Data store | Shapes Postgres conventions: schema discipline, indexes, migrations, role separation, import/export patterns. |
-| `Scalable Data Management for Future Hardware.pdf` | ⚙️ Performance | Encourages thinking in partitions, locality, concurrency, and metadata-driven access patterns that scale with new hardware. |
-| `Data Spaces.pdf` | 🔗 Interop & federation | Supports “catalogs as interfaces” and treating data products as discoverable, governed assets across domains. |
-
-### 🧪 Modeling, statistics, uncertainty
-| Project file | Primary lens | How it upgrades `src/` decisions |
-|---|---|---|
-| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | 🧪 V&V discipline | Brings verification/validation, sensitivity analysis, and simulation ethics into modeling code reviews. |
-| `Understanding Statistics & Experimental Design.pdf` | 📊 Rigor | Reminds about bias, confounders, experimental design, and when “pretty results” are misleading. |
-| `regression-analysis-with-python.pdf` + `Regression analysis using Python - slides-linear-regression.pdf` | 📈 Baselines | Guides baseline modeling, diagnostics, reproducible regression workflows, careful interpretation. |
-| `graphical-data-analysis-with-r.pdf` | 📉 EDA instincts | Encourages visualization-driven sanity checks and spotting artifacts early (before publishing outputs). |
-| `think-bayes-bayesian-statistics-in-python.pdf` | 🎲 Uncertainty | Encourages Bayesian thinking, posterior uncertainty reporting, and explicit priors when appropriate. |
-
-### 🕸️ Graph & optimization
-| Project file | Primary lens | How it upgrades `src/` decisions |
-|---|---|---|
-| `Spectral Geometry of Graphs.pdf` | 🕸️ Graph analytics | Supports cautious graph metrics use as “signals,” not facts; encourages validation and interpretability. |
-| `Generalized Topology Optimization for Structural Design.pdf` | 🧮 Optimization | Informs structuring optimization jobs as reproducible workflows with constraints, objectives, and audit trails. |
-
-### ⚖️ Governance, human-centered design, AI risk
-| Project file | Primary lens | How it upgrades `src/` decisions |
-|---|---|---|
-| `Introduction to Digital Humanism.pdf` | ❤️ Human-centered | Reinforces accountability, transparency, dignity, and human-in-the-loop defaults. |
-| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | ⚖️ AI governance | Encourages labeling of AI-assisted outputs, traceability, risk framing, and decision-support boundaries. |
-| `Principles of Biological Autonomy - book_9780262381833.pdf` | 🧠 Systems thinking | Encourages feedback-loop awareness, stability, resilience in pipeline + governance design. |
-
-### 🛡️ Security & concurrency
-| Project file | Primary lens | How it upgrades `src/` decisions |
-|---|---|---|
-| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | 🛡️ Security mindset | Reinforces hostile-input handling and secure coding posture (especially for parsers/pipelines). |
-| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | 🧯 Threat modeling | Informs privilege boundaries, defensive assumptions for ingest/integration code. |
-| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | 🧵 Concurrency | Reminds concurrency is hard; supports careful worker/orchestration design and avoiding race conditions. |
-
-### 🧰 General polyglot references
-| Project file | Primary lens | How it upgrades `src/` decisions |
-|---|---|---|
-| `A programming Books.pdf` → `U-X programming Books.pdf` | 🧰 Polyglot reference | General language/tooling reference; supports choosing the right tool while keeping boundaries and quality consistent. |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` :contentReference[oaicite:30]{index=30} :contentReference[oaicite:31]{index=31} | 🧭 System map | Reinforces repo separation, doc categories (architecture/specs/security/standards/library), and why docs are part of governance. |
+| `MARKDOWN_GUIDE_v13.md.gdoc` :contentReference[oaicite:32]{index=32} :contentReference[oaicite:33]{index=33} | 🧾 Doc protocol | Defines evidence-first + contract-first writing norms, Story Node/Fous Mode rules, and the v13 doc layout. |
+| `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` :contentReference[oaicite:34]{index=34} :contentReference[oaicite:35]{index=35} | ✍️ Craft | Drives Markdown standards: scannable structure, living docs, accessibility, and review-in-same-PR practice. |
+| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` :contentReference[oaicite:36]{index=36} | 🧪 V&V discipline | Improves modeling docs with V&V mindset, assumptions, validation checklists, and reproducibility language. |
+| `Understanding Statistics & Experimental Design.pdf` :contentReference[oaicite:37]{index=37} | 📊 Rigor | Strengthens claims: confounders, bias, experimental design, and uncertainty framing in reports. |
+| `regression-analysis-with-python.pdf` :contentReference[oaicite:38]{index=38} :contentReference[oaicite:39]{index=39} | 📈 Baselines | Encourages reproducible modeling writeups: diagnostics, scaling notes, and explicit assumptions. |
+| `Regression analysis using Python - slides-linear-regression.pdf` :contentReference[oaicite:40]{index=40} :contentReference[oaicite:41]{index=41} | 📈 Quick checks | Reinforces linear regression assumptions and what must be documented (residuals, leakage, feature scaling). |
+| `graphical-data-analysis-with-r.pdf` :contentReference[oaicite:42]{index=42} | 📉 EDA instincts | Encourages pre-publication sanity checks, visual diagnostics, and “show the weirdness” in reports. |
+| `think-bayes-bayesian-statistics-in-python.pdf` :contentReference[oaicite:43]{index=43} :contentReference[oaicite:44]{index=44} | 🎲 Uncertainty | Improves docs by normalizing uncertainty reporting and explicit priors in decision support narratives. |
+| `Scalable Data Management for Future Hardware.pdf` :contentReference[oaicite:45]{index=45} :contentReference[oaicite:46]{index=46} | ⚙️ Performance | Promotes documentation that captures concurrency, locality, query patterns, and compute-vs-serve separation. |
+| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` :contentReference[oaicite:47]{index=47} | 🐘 Data store | Strengthens database runbooks: schema discipline, indexing, migrations, and operational conventions. |
+| `Data Spaces.pdf` :contentReference[oaicite:48]{index=48} :contentReference[oaicite:49]{index=49} | 🔗 Interop | Reinforces docs around data governance ecosystems, interoperability, policy, and provenance as interfaces. |
+| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` :contentReference[oaicite:50]{index=50} :contentReference[oaicite:51]{index=51} | 🛰️ EO workflows | Informs RS domain docs: export/tiling expectations and treating derived indices as cataloged evidence. |
+| `python-geospatial-analysis-cookbook.pdf` :contentReference[oaicite:52]{index=52} :contentReference[oaicite:53]{index=53} | 🗺️ GIS engineering | Encourages CRS/unit hygiene, PostGIS usage patterns, and boundary-first transforms — documented explicitly. |
+| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` :contentReference[oaicite:54]{index=54} | 🎨 Cartography | Forces documentation of symbology/aggregation choices as “meaning decisions,” not mere presentation. |
+| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` :contentReference[oaicite:55]{index=55} :contentReference[oaicite:56]{index=56} | 📱 Field constraints | Drives doc guidance for offline/low-bandwidth UX requirements and upstream asset preparation. |
+| `responsive-web-design-with-html5-and-css3.pdf` :contentReference[oaicite:57]{index=57} | 🌐 Web reality | Promotes docs that respect device constraints, progressive loading, and usability/accessibility. |
+| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` :contentReference[oaicite:58]{index=58} | 🧊 3D constraints | Encourages documenting coordinate conventions, LOD/tiling, and GPU-friendly asset preparation. |
+| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` :contentReference[oaicite:59]{index=59} :contentReference[oaicite:60]{index=60} | 🖼️ Media hygiene | Improves doc asset rules: compression, thumbnails, and avoiding bloated repos. |
+| `Spectral Geometry of Graphs.pdf` :contentReference[oaicite:61]{index=61} | 🕸️ Graph thinking | Encourages careful interpretation of graph metrics in docs: “signal” vs “fact.” |
+| `Generalized Topology Optimization for Structural Design.pdf` :contentReference[oaicite:62]{index=62} | 🧮 Optimization | Improves how optimization runs are documented: objectives, constraints, reproducibility, audit trails. |
+| `Principles of Biological Autonomy - book_9780262381833.pdf` :contentReference[oaicite:63]{index=63} | 🧠 Systems | Encourages feedback-loop awareness and resilience thinking in architecture/governance docs. |
+| `Introduction to Digital Humanism.pdf` :contentReference[oaicite:64]{index=64} :contentReference[oaicite:65]{index=65} | ❤️ Human impact | Strengthens docs around transparency, labor impacts, dignity, and accountability in AI-assisted features. |
+| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` :contentReference[oaicite:66]{index=66} :contentReference[oaicite:67]{index=67} | ⚖️ AI governance | Improves labeling of AI-assisted outputs, provenance expectations, and risk framing in docs. |
+| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` :contentReference[oaicite:68]{index=68} :contentReference[oaicite:69]{index=69} | 🧯 Threat modeling | Informs security docs: defensive assumptions, privilege boundaries, incident response thinking. |
+| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` :contentReference[oaicite:70]{index=70} :contentReference[oaicite:71]{index=71} | 🛡️ Offensive awareness | Improves “hostile input” documentation and secure ingestion posture, without teaching exploitation. |
+| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` :contentReference[oaicite:72]{index=72} :contentReference[oaicite:73]{index=73} | 🧵 Concurrency | Encourages docs that warn about race conditions and define idempotent, safe operational patterns. |
+| `I-L programming Books.pdf` :contentReference[oaicite:74]{index=74} :contentReference[oaicite:75]{index=75} | 🧰 Polyglot craft | Supports maintainable docs/examples across languages while reinforcing boundaries and testability. |
+| `B-C programming Books.pdf` :contentReference[oaicite:76]{index=76} :contentReference[oaicite:77]{index=77} | 🧰 Shell literacy | Reinforces reproducible command surfaces and safe scripting conventions in runbooks. |
+| `D-E programming Books.pdf` :contentReference[oaicite:78]{index=78} :contentReference[oaicite:79]{index=79} | 🧰 Engineering basics | Supports consistent patterns for debugging, environment setup, and cross-stack documentation. |
+| `S-T programming Books.pdf` :contentReference[oaicite:80]{index=80} | 🧰 Tooling & testing | Encourages documenting tests, tools, and “how we verify” as first-class. |
 
 </details>
 
@@ -595,8 +403,5 @@ The KFM stack should scale from “small demo” to “Kansas-wide spatiotempora
 
 | Version | Date | Summary of changes | Author |
 |---:|---|---|---|
-| v1.3.0 | 2026-01-08 | Aligned `src/README.md` with Master Guide v13: added contract-first + evidence-first framing, canonical catalog paths (`data/stac/**`, `data/catalog/dcat/**`, `data/prov/**`), subsystem contract table, Story Node preferred home (`docs/reports/story_nodes/`), and legacy→v13 migration notes. | KFM Engineering |
-| v1.2.0 | 2026-01-07 | Strengthened `src/` as an executable governance boundary; added “golden paths,” hostile-input security posture, modeling/simulation discipline, scaling notes, and a full project-file influence map. | KFM Engineering |
-| v1.1.0 | 2026-01-06 | Aligned `src/` doc with contract-first + provenance-first rules; added clean-boundary layout guidance; added local dev norms; strengthened governance guardrails. | KFM Engineering |
-| v1.0.1 | 2026-01-06 | Polished structure + navigation; added contributor checklist; clarified contract-first + governance guardrails. | KFM Engineering |
-| v1.0.0 | 2025-12-31 | Initial `src/README.md` created from Master Guide v13 + KFM docs; added emoji directory layout and subsystem guide. | KFM Engineering |
+| v1.0.0 | 2026-01-09 | Created canonical `docs/README.md` defining governed documentation boundaries, directory layout, doc quality gates, evidence/citation norms, Story Node + Focus Mode rules, and reference-library influence mapping. | KFM Engineering |
+
