@@ -187,28 +187,29 @@ Every tool must behave predictably under automation.
 > If your repo differs, treat this as the target structure and document deltas in this README.
 
 ```text
-tools/
-├── README.md
-├── _lib/                      # shared helpers (logging, env validation, guardrails)
-├── ingest/                    # controlled ingest entrypoints (thin wrappers)
-├── catalogs/                  # STAC/DCAT emitters + catalog build helpers
-├── validation/                # fast QA gates (schema/link/prov/policy)
-│   ├── catalog_qa/            # catalog QA gate (PR-friendly)
-│   ├── schemas/               # JSON Schemas (STAC/DCAT/PROV + local contracts)
-│   ├── rego/                  # OPA/Conftest policies (optional)
-│   └── geo/                   # CRS/geom/raster validators
-├── id/                        # deterministic IDs, hashing, manifest tooling
-├── prov/                      # provenance helpers (PROV JSON-LD emitters)
-├── graph/                     # graph ingest helpers (must consume catalog roots)
-├── db/                        # PostGIS helpers, migrations, query packs
-├── geo/                       # GDAL/WhiteboxTools wrappers, tiling, reprojection
-├── web/                       # Map build helpers (styles, tiles packaging, assets)
-├── ml/                        # train/eval orchestration (must emit datasets + metrics refs)
-├── simulation/                # scenario runners (must record configs + seeds)
-├── security/                  # secrets scan, dependency scan, hostile-input checks
-├── attest/                    # SBOM + signing helpers (cosign/sigstore patterns)
-└── ci/                        # deterministic entrypoints used by CI
+🛠️ tools/
+├── 📘 README.md
+├── 🧰 _lib/                      # shared helpers (logging, env validation, guardrails)
+├── 🧲 ingest/                    # controlled ingest entrypoints (thin wrappers)
+├── 🏷️ catalogs/                  # STAC/DCAT emitters + catalog build helpers
+├── ✅ validation/                # fast QA gates (schema/link/prov/policy)
+│   ├── ⚡ catalog_qa/             # catalog QA gate (PR-friendly)
+│   ├── 📐 schemas/               # JSON Schemas (STAC/DCAT/PROV + local contracts)
+│   ├── 🛡️ rego/                  # OPA/Conftest policies (optional)
+│   └── 🧭 geo/                   # CRS/geom/raster validators
+├── 🆔 id/                        # deterministic IDs, hashing, manifest tooling
+├── 🧬 prov/                      # provenance helpers (PROV JSON-LD emitters)
+├── 🕸️ graph/                     # graph ingest helpers (must consume catalog roots)
+├── 🗄️ db/                        # PostGIS helpers, migrations, query packs
+├── 🗺️ geo/                       # GDAL/WhiteboxTools wrappers, tiling, reprojection
+├── 🌐 web/                       # Map build helpers (styles, tiles packaging, assets)
+├── 🤖 ml/                        # train/eval orchestration (must emit datasets + metrics refs)
+├── 🧮 simulation/                # scenario runners (must record configs + seeds)
+├── 🔐 security/                  # secrets scan, dependency scan, hostile-input checks
+├── 🔏 attest/                    # SBOM + signing helpers (cosign/sigstore patterns)
+└── 🧪 ci/                        # deterministic entrypoints used by CI
 ```
+
 
 ---
 
