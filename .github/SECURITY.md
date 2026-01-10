@@ -1,4 +1,4 @@
-# 🛡️ Kansas Frontier Matrix (KFM) — Security Policy
+# 🛡️ Kansas Frontier Matrix (KFM) — Security & Governance Policy
 
 <div align="left">
 
@@ -7,6 +7,8 @@
 ![Private Reporting](https://img.shields.io/badge/reporting-private%20channel-important)
 ![PSA](https://img.shields.io/badge/PSA-no%20issues%2FPR%20comments-red)
 ![Supply Chain](https://img.shields.io/badge/supply--chain-SBOM%20%2B%20attestations-black)
+![Policy as Code](https://img.shields.io/badge/policy-as%20code-OPA%20%2B%20Conftest-111827)
+![Kill Switch](https://img.shields.io/badge/safety-kill--switch%20%2B%20fail--closed-red)
 ![Data Integrity](https://img.shields.io/badge/data-integrity-PROV%20%2B%20checksums-purple)
 ![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-7c3aed)
 
@@ -17,14 +19,14 @@
 > Use **private vulnerability reporting** (preferred) or the alternative contact methods below.
 
 > [!NOTE]
-> KFM is a **geospatial + knowledge + modeling** system — security issues can live in **code**, **infrastructure**, **data catalogs**, **documents**, and **derived outputs** (models/Story Nodes/Focus Mode). Treat reports as potentially sensitive. 🧾🗺️
+> KFM is a **geospatial + knowledge + modeling** system — security issues can live in **code**, **infrastructure**, **catalog metadata (STAC/DCAT)**, **provenance (PROV)**, **documents**, and **derived outputs** (models / Story Nodes / Focus Mode). Treat reports as potentially sensitive. 🧾🗺️
 
 ---
 
 ## ⚡ TL;DR (reporting in 60 seconds)
 
 ✅ **Preferred (private):** Repo **Security** tab → **Report a vulnerability**  
-✅ Include: **impact**, **repro steps**, **affected component**, **commit/tag**, and (if relevant) **dataset IDs** (STAC/DCAT/PROV)
+✅ Include: **impact**, **repro steps**, **affected component**, **commit/tag**, and (if relevant) **dataset IDs** + **STAC/DCAT/PROV paths**
 
 If you suspect **active exploitation**, put **“🚨 ACTIVE EXPLOITATION SUSPECTED”** in the title and report privately ASAP.
 
@@ -38,6 +40,7 @@ If you suspect **active exploitation**, put **“🚨 ACTIVE EXPLOITATION SUSPEC
 - [🧩 Threat model (KFM-shaped)](#-threat-model-kfm-shaped)
 - [🧱 Trust boundaries](#-trust-boundaries)
 - [🔒 Data classification & sensitive location policy](#-data-classification--sensitive-location-policy)
+- [🧾 Metadata & provenance requirements](#-metadata--provenance-requirements)
 - [🤖 Agent / automation security](#-agent--automation-security)
 - [✅ Supported versions](#-supported-versions)
 - [🐛 Reporting a vulnerability](#-reporting-a-vulnerability)
@@ -61,11 +64,12 @@ If you suspect **active exploitation**, put **“🚨 ACTIVE EXPLOITATION SUSPEC
 |---|---|
 | Policy file | `SECURITY.md` *(canonical location: repo root **or** `.github/` — pick one and avoid drift)* |
 | Status | Active ✅ |
-| Last updated | **2026-01-09** |
+| Last updated | **2026-01-10** |
 | Review cycle | Quarterly 🔁 *(or after material security changes)* |
 | KFM-MDP baseline | **v11.2.6** |
-| Master Guide | **v13 (draft)** |
+| Master Guide baseline | **v13 (draft)** |
 | Governance baseline | FAIR + CARE (data + people) |
+| Default posture | **Fail-closed** for promotion-critical gates 🚦 |
 | Applies to | This repo + official releases + supported deployments |
 
 > [!TIP]
@@ -76,22 +80,23 @@ If you suspect **active exploitation**, put **“🚨 ACTIVE EXPLOITATION SUSPEC
 
 ## ⭐ Security invariants
 
-KFM’s architecture uses **non-negotiable invariants** that double as security controls (and are meant to be enforceable by CI) ✅🤖:
+KFM’s architecture uses **non-negotiable invariants** that double as security controls (and are intended to be enforced by CI) ✅🤖:
 
 1) 🧬 **Pipeline ordering is absolute**  
 **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
-Nothing bypasses earlier stages. If it’s visible, it’s cataloged and traceable. 🗂️🧾
+No stage consumes artifacts that haven’t passed the previous stage’s **formal outputs + checks**.
 
 2) 🔌 **API boundary rule**  
 The UI must **never** talk to the graph DB or raw object storage directly.  
 All access goes through governed APIs (authZ, redaction, schema contracts). 🔐
 
-3) 🧾 **Provenance-first publishing**  
-If it ships, it has:
-- STAC/DCAT metadata
-- PROV lineage
-- (Recommended) checksums / stable IDs / content digests  
-Metadata is **security-critical** (integrity + incident forensics). 🧬
+3) 🧾 **Boundary artifacts are security-critical**  
+Before any dataset/evidence is considered “published,” it must have the **boundary artifacts**:
+- 🧾 **STAC** (collections/items) for geospatial indexing
+- 🗃️ **DCAT** for discovery/distribution
+- 🧬 **PROV** for lineage (inputs → activities → outputs, with agents)
+- 🧪 **Integrity signals** *(recommended)*: checksums/digests, stable IDs, manifests  
+If it’s visible in downstream systems, it must be **cataloged + traceable**.
 
 4) ♻️ **Deterministic, idempotent ETL**  
 Same input + config ⇒ same output. Pipelines must be re-runnable safely.  
@@ -102,10 +107,17 @@ No output artifact may be **less restricted** than its inputs.
 Redaction/generalization is required to publish sensitive inputs safely. ⚖️
 
 6) 🚦 **Fail-closed validation gates**  
-If provenance is missing, catalogs are broken, links are dead, secrets leak, or sensitive content appears → **block merge/publish**. 🧯
+If provenance is missing, catalogs are broken, links are unsafe, secrets leak, or sensitive content appears → **block merge/publish**. 🧯
 
-7) 🤝 **Humans approve publishing**  
+7) 🎬 **Evidence-first narrative**  
+No unsourced narrative content is allowed in Story Nodes or Focus Mode.  
+Facts must cite evidence (cataloged sources), and AI-assisted text must be labeled and provenance-linked.
+
+8) 🤝 **Humans approve publishing**  
 Automation may open PRs, run checks, and attach evidence — but merges/promotion remain governed and reviewable. 👀✅
+
+> [!IMPORTANT]
+> In KFM, **metadata is security-critical**. A broken catalog link, missing license, or unsafe remote href can become a supply-chain issue for downstream consumers.
 
 ---
 
@@ -145,7 +157,8 @@ KFM’s threat surface includes more than code.
 - 🧾 Catalog integrity (STAC/DCAT) + provenance integrity (PROV)
 - 🗺️ Sensitive location data (protected/cultural sites, private infrastructure)
 - 📦 Published artifacts (tiles/COGs/GeoJSON/Parquet, reports, model outputs)
-- 🧠 Trust in narratives (Story Nodes/Focus Mode must be evidence-backed and labeled)
+- 🎬 Narrative trust (Story Nodes/Focus Mode must be evidence-backed and labeled)
+- 🤖 CI/CD supply chain (workflows/actions, artifact promotion, attestations)
 
 ### 👤 Likely threat actors
 - Opportunistic attackers (common web vulns, exposed secrets, misconfig)
@@ -160,6 +173,7 @@ KFM’s threat surface includes more than code.
 - Pipelines fetching remote assets without allowlists → SSRF + internal exposure
 - Publishing exact sensitive coordinates in public layers/story content
 - Weak artifact integrity controls → silent tampering, untraceable outputs
+- Agent/automation without a kill-switch → autopublish drift under incident conditions
 
 ---
 
@@ -184,7 +198,7 @@ flowchart LR
 
 > [!IMPORTANT]
 > Anything crossing a trust boundary must assume **untrusted input** until validated  
-> (files, JSON, GeoJSON, tilesets, STAC catalogs, external API responses, 3D assets). 🚧
+> (files, JSON, GeoJSON, tilesets, STAC catalogs, external API responses, PDFs, and 3D assets). 🚧
 
 ---
 
@@ -220,69 +234,103 @@ If a source is sensitive, all derivatives inherit equal-or-higher restrictions u
 > Good redaction strategies:
 > - publish at **county/region** resolution instead of points  
 > - snap to **grid cells** (H3/geohash) for public releases  
-> - publish precise layers only via controlled access (private collections / signed URLs)  
+> - publish precise layers only via controlled access (private collections / signed URLs)
+
+---
+
+## 🧾 Metadata & provenance requirements
+
+KFM treats metadata and lineage as **security controls**, not “nice-to-have docs.”
+
+### ✅ Required boundary artifacts (publish bar)
+
+Every dataset or evidence artifact that is promoted/published must have:
+
+- 🧾 **STAC Collection + Item(s)** (or the project’s canonical STAC layout)
+- 🗃️ **DCAT dataset entry** (title/description/license/keywords/distributions)
+- 🧬 **PROV lineage bundle** (inputs → activities → outputs, with agents)
+- 🔎 **Cross-layer linkage**:
+  - STAC points to the assets
+  - DCAT points to STAC and/or distributions
+  - PROV links raw → work → processed and records run/config identifiers
+  - Graph entries reference catalogs (not bulky raw data)
+
+### 📦 Evidence artifacts (AI/analysis outputs)
+
+Any analysis output or AI-generated dataset is treated as a **first-class dataset**:
+- stored like a dataset
+- cataloged like a dataset
+- traced like a dataset
+- exposed only via governed APIs (never hard-coded into the UI)
+
+> [!IMPORTANT]
+> If an AI-generated artifact could influence decisions, it must include uncertainty/limitations and remain provenance-linked.
 
 ---
 
 ## 🤖 Agent / automation security
 
-KFM uses automation to *reduce human toil*, not to bypass governance.  
-Agentic workflows (Watcher → Planner → Executor) are explicitly treated as **supply-chain sensitive**.
+Automation exists to reduce toil — **not** to bypass governance.
 
-### ✅ Non-negotiables for automation (PR-only, evidence-backed)
+### ✅ WPE model: Watcher → Planner → Executor (PR-only)
 
-- 🧯 **Kill switch exists** and is honored everywhere (CI + agents + promotion jobs)
-- 🧾 **Idempotency key** logged in every artifact and PR body
-- 🎲 **Deterministic seed + virtual clock** wired into planners and validators
-- ⚖️ **Default-deny policy gates** (OPA/Rego via Conftest)
-- 📦 **SBOM + provenance attestations** generated and attached (SLSA-ish)
-- 🧪 **Reproducibility checks** compare rebuilt hashes
+If we use agentic automation, it must follow:
+- 👀 **Watcher**: detects drift/events (broken links, missing metadata, changes)
+- 🧠 **Planner**: produces a deterministic plan (what will change and why)
+- 🛠️ **Executor**: opens a PR with the change — **never auto-merges**
+
+### ✅ Non-negotiables for automation
+
+- 🧯 **Kill switch exists and is honored** everywhere (CI + agents + promotion jobs)
+- 🔁 **Idempotency key + commit seed** recorded (replays produce identical results)
+- 🧪 **Detect → Validate → Promote** discipline:
+  - detect change robustly (checksums/ETags/events)
+  - validate with fast gates + “lane” validators
+  - promote via PR + signed/attested artifacts
+- 🧾 **Evidence artifacts attached**: plans, gate reports, provenance, attestations
 - 🔒 **Executor cannot merge** — branch protections remain the final gate
-
-> [!NOTE]
-> Automation may open/update PRs, but **humans merge** and publishing is governed.  
-> This keeps the platform auditable and prevents “autopublish drift.” 👀✅
 
 ### 🛑 Kill switch pattern (recommended)
 
-- Repo setting/secret: `KFM_KILL_SWITCH=true`
-- Optional file-based switch: `.kfm/kill-switch.yml` (fail-closed)
+Support both mechanisms:
 
-Example CI guardrail:
+- **Repo variable (preferred for visibility):** `KFM_KILL_SWITCH=true`
+- **Optional file-based switch:** `📄 .kfm/kill-switch.yml`
+
+Example pattern for publish jobs:
 
 ```yaml
-# example: reusable CI guardrails
-- name: 🛑 Kill-switch check
+# publish jobs should be skipped (or hard-failed) when kill switch is ON
+- name: 🧯 Kill-switch check
+  shell: bash
   run: |
-    if [ "${{ secrets.KFM_KILL_SWITCH }}" = "true" ]; then
-      echo "Kill-switch enabled; stopping."
-      exit 78
+    set -euo pipefail
+
+    # 1) repo variable
+    if [ "${KFM_KILL_SWITCH:-false}" = "true" ]; then
+      echo "Kill-switch enabled via repo variable. Stopping publish lane."
+      exit 1
     fi
+
+    # 2) file flag
+    if [ -f ".kfm/kill-switch.yml" ]; then
+      echo "Kill-switch file present (.kfm/kill-switch.yml). Stopping publish lane."
+      exit 1
+    fi
+  env:
+    KFM_KILL_SWITCH: ${{ vars.KFM_KILL_SWITCH }}
 ```
 
-### 🔐 Minimal permissions for PR-opening automation
+> [!TIP]
+> In PR lanes you can choose to **skip publish steps** rather than failing the whole workflow, but promotion lanes should be **fail-closed**.
 
-```yaml
-# example: agents-executor.yml permissions
-permissions:
-  contents: read
-  pull-requests: write
-  id-token: write   # OIDC/Sigstore (attestation), NOT for merges
-```
+### 🧬 DevOps provenance (recommended)
 
-### 🧾 Required artifacts for any agent-driven change
-
-Agent-driven changes should attach or reference:
-
-- `plan.yml` (what/why; deterministic inputs)
-- `diff.patch` (what changed)
-- `reports/gates.json` (which gates ran, pass/fail)
-- `prov/*.jsonld` (PROV bundle for the run)
-- `attestations/*` (SBOM + build provenance)
-- `telemetry/*.ndjson` *(recorded, not necessarily enforced during WIP)*
-
-> [!IMPORTANT]
-> If any gate fails, automation must **not** open/update a PR. Emit an event + link evidence instead. 🧯
+KFM can map GitHub PR activity into PROV-like records:
+- PR = Activity
+- commits = Entities
+- authors/reviewers/bots = Agents  
+This supports auditability and ties changes to the same provenance universe as datasets.
 
 ---
 
@@ -318,14 +366,15 @@ If GitHub private reporting is not available:
 
 - 📧 **Security email:** `security@YOUR-DOMAIN.example` *(maintainers: replace with a real monitored inbox)*  
 - 🔐 **PGP key (recommended):**
-  - File: `docs/security/pgp-public-key.asc`
+  - 📁 `docs/security/`
+    - 📄 `pgp-public-key.asc`
   - Fingerprint: `XXXX XXXX XXXX XXXX XXXX  XXXX XXXX XXXX XXXX XXXX`
 
 > [!CAUTION]
 > Avoid sending secrets in plaintext. If you must include credentials for reproduction:
 > - use short-lived test creds  
 > - label them **“TEMP FOR REPRO ONLY”**  
-> - include revocation instructions  
+> - include revocation instructions
 
 ### 🧯 Suspected active exploitation?
 
@@ -352,9 +401,9 @@ To speed up triage, include:
 
 ### 🧭 KFM-specific context that helps a lot
 - Dataset IDs (e.g., `kfm.ks.<domain>.<layer>.<time>.vN`)
-- STAC path(s): `data/catalog/stac/...` *(or legacy `data/stac/...` if that’s the repo’s canonical)*
-- DCAT path(s): `data/catalog/dcat/...`
-- PROV path(s): `data/prov/...`
+- STAC paths: `data/stac/**` *(or `data/catalog/stac/**` if that’s the repo canonical)*
+- DCAT paths: `data/catalog/dcat/**`
+- PROV paths: `data/prov/**`
 - Whether the issue leaks **exact coordinates** vs redacted/generalized outputs
 - Whether the issue could be **catalog poisoning** (unsafe `links[].href`, remote fetch behavior)
 
@@ -511,8 +560,7 @@ Security is a design constraint, not a patch. 🧱
 - Rotate anything potentially exposed
 - Treat logs as sensitive; avoid printing tokens/PII
 
-### 🧾 Catalog + provenance supply-chain security (STAC/DCAT/PROV as a control)
-KFM treats **metadata + provenance** as security-critical:
+### 🧾 Catalog + provenance supply-chain security (STAC/DCAT/PROV as control)
 - Provenance deters tampering and supports incident forensics
 - Catalog validation prevents accidental publication of restricted data
 - Checksums/versioning support reproducibility and rollback
@@ -521,10 +569,7 @@ KFM treats **metadata + provenance** as security-critical:
 - STAC entry (when applicable)
 - DCAT entry (when applicable)
 - PROV lineage record (per run)
-- (Recommended) checksums for large assets
-
-> [!IMPORTANT]
-> Any **derived/AI-generated** dataset is a first-class artifact with full provenance.
+- (Recommended) checksums/manifests for large assets
 
 ### 🛰️ External providers & live feeds (remote sensing, archives, APIs)
 - Restrict API keys/service accounts by least privilege
@@ -589,22 +634,58 @@ Security must be repeatable and boring. ✅
 
 ### 🗂️ Catalog/data integrity checks (geo-specific)
 - STAC/DCAT quick gate (required fields, license/providers/extensions)
-- Link-check critical `links[].href` in root/collections (prevent “catalog poisoning” paths)
+- Link-check critical `links[].href` in root/collections (prevents “catalog poisoning”)
 - CRS + bounds validation (Kansas bounds where applicable)
 - Provenance presence (PROV required before publish)
 - “Classification propagation” checks (prevent public publish of restricted inputs)
 
-### ⚖️ Governance gates (FAIR + CARE)
-- License checks (no “unknown license” promoted without explicit approval)
-- Sensitive location scans (deny-by-default for exact coordinates where disallowed)
-- Sovereignty tags propagate from raw → processed → catalogs → API
-- AI/narrative guardrails: **no unsourced claims** for public Story Nodes / Focus Mode outputs
+### ⚖️ Governance gates (FAIR + CARE) via **policy-as-code**
+Use **OPA/Rego** policies via **Conftest** to enforce “default deny” rules for promotion.
+
+✅ Recommended policy tool home:
+
+```text
+📁 tools/validation/policy/
+├─ 📄 README.md
+├─ 📁 rego/
+│  ├─ 📁 common/
+│  │  ├─ 📄 helpers.rego
+│  │  ├─ 📄 license_allowlist.rego
+│  │  └─ 📄 url_allowlist.rego
+│  ├─ 📁 catalogs/
+│  │  ├─ 📄 stac_required.rego
+│  │  ├─ 📄 dcat_required.rego
+│  │  ├─ 📄 prov_required.rego
+│  │  └─ 📄 link_safety.rego
+│  ├─ 📁 governance/
+│  │  ├─ 📄 classification_propagation.rego
+│  │  ├─ 📄 sensitive_locations.rego
+│  │  └─ 📄 attribution.rego
+│  ├─ 📁 supply_chain/
+│  │  ├─ 📄 workflows_least_privilege.rego
+│  │  └─ 📄 actions_pinning.rego
+│  └─ 📄 bundles.rego
+└─ 📁 tests/
+   ├─ 📄 *_test.rego
+   └─ 📁 samples/
+      ├─ 📁 good/
+      └─ 📁 bad/
+```
+
+Example Conftest call (shape only — adapt to your repo layout):
+
+```bash
+conftest test \
+  --policy tools/validation/policy/rego \
+  --all-namespaces \
+  data/ .github/workflows/ .github/actions/
+```
 
 ### 🔏 Supply-chain controls (recommended for releases; optional for PRs)
-- SBOM generation (SPDX)
-- Signed commits for promotion branches
-- Build provenance attestations (Sigstore/GitHub attestations)
+- SBOM generation (SPDX/CycloneDX)
+- Build provenance attestations (GitHub attestations / Sigstore-ish)
 - Reproducibility lane compares rebuilt hashes
+- Signed tags/releases (where feasible)
 
 > [!TIP]
 > Treat “promotion” as the safe boundary: **validate → attest → publish atomically**, rollback-ready. 🧯
@@ -619,13 +700,26 @@ KFM treats these as security incidents:
 - catalog poisoning / unsafe remote fetch behavior
 - integrity tampering of published artifacts
 - unauthorized access to DB/storage/graph
+- compromised CI runners or supply-chain breakage
 
 ### ✅ Minimum expectations (for maintainers)
-- **Containment first**: stop automation (kill switch), restrict access, unpublish or revoke credentials
-- **Preserve evidence**: keep logs, artifacts, and provenance records (don’t destroy audit trails)
-- **Correct the catalog**: remove/disable affected STAC/DCAT entries and invalidate bad links
-- **Patch & validate**: fix root cause, add regression tests, and rerun gates
-- **Document**: write a short incident note (private if needed), plus public advisory if appropriate
+
+- **Containment first**:
+  - flip kill-switch
+  - restrict access / revoke tokens
+  - disable promotions (fail-closed)
+- **Preserve evidence**:
+  - keep logs, artifacts, provenance records (don’t destroy audit trails)
+- **Correct the catalog**:
+  - remove/disable affected STAC/DCAT entries
+  - invalidate unsafe external links
+- **Patch & validate**:
+  - fix root cause
+  - add regression tests + policy rules
+  - rerun gates
+- **Document**:
+  - short incident note (private if needed)
+  - public advisory if appropriate
 
 > [!NOTE]
 > Data takedowns (sensitive coordinates, restricted archives) should follow incident handling, even if no attacker is involved.
@@ -639,45 +733,39 @@ KFM treats these as security incidents:
 
 ```text
 📦 .github/
- ├─ 🛡️ SECURITY.md                # (optional mirror) policy copy
- ├─ 🧾 dependabot.yml
- ├─ 🧑‍⚖️ CODEOWNERS
- ├─ 🧪 workflows/
- │   ├─ 🔍 codeql.yml
- │   ├─ 🧾 dependency-review.yml
- │   ├─ 🔐 secret-scanning.yml     # docs + settings + optional checks
- │   ├─ 🧷 scorecard.yml           # OpenSSF (optional)
- │   ├─ ✅ ci.yml
- │   ├─ 🔎 catalog-qa.yml          # fast gate for STAC/DCAT fields + links
- │   └─ 🎬 story-lint.yml          # citations + sensitivity gates
-
-📦 docs/
- ├─ 🔐 security/
- │   ├─ 🔑 pgp-public-key.asc
- │   ├─ 🧾 threat-model.md
- │   ├─ 📋 security-testing.md
- │   └─ 🧪 incident-response.md
- ├─ ❤️ governance/
- │   ├─ 🧭 data-classification.md
- │   ├─ 🗺️ sensitive-location-policy.md
- │   └─ ✅ review-gates.md
+ ├─ 📄 SECURITY.md                       # (optional mirror) policy copy
+ ├─ 📄 dependabot.yml
+ ├─ 📄 CODEOWNERS
+ ├─ 📁 workflows/
+ │  ├─ 📄 ci.yml
+ │  ├─ 📄 codeql.yml
+ │  ├─ 📄 catalog-qa.yml                 # STAC/DCAT quick gate + link safety
+ │  ├─ 📄 policy-gate.yml                # Conftest/OPA gate for governed surfaces
+ │  ├─ 📄 sbom.yml                        # SBOM generation (release lane)
+ │  └─ 📄 attest.yml                      # provenance/build attestations (release lane)
+ └─ 📁 actions/
+    ├─ 📁 check-kill-switch/              # fail-closed stop button helper
+    ├─ 📁 policy-gate/                    # conftest wrapper + bundles
+    ├─ 📁 catalog-qa/                     # fast STAC/DCAT checks wrapper
+    ├─ 📁 sbom/                           # SBOM helper
+    └─ 📁 attest/                         # attestation helper
 
 📦 tools/
- └─ ✅ validation/
-     ├─ catalog_qa/
-     └─ lanes/                     # CRS/bbox/schema/domain checks
+ └─ 📁 validation/
+    ├─ 📁 catalog_qa/
+    └─ 📁 policy/                         # OPA policies + tests (see tree above)
 
 📦 data/
- ├─ 📥 raw/
- ├─ 🧪 work/
- ├─ 🗄️ processed/
- ├─ 🗂️ catalog/
- │   ├─ stac/
- │   └─ dcat/
- └─ 🧬 prov/
+ ├─ 📁 raw/
+ ├─ 📁 work/
+ ├─ 📁 processed/
+ ├─ 📁 stac/                              # or 📁 data/catalog/stac/ (pick one canonical)
+ ├─ 📁 catalog/
+ │  └─ 📁 dcat/
+ └─ 📁 prov/
 
 📦 .kfm/
- └─ 🧯 kill-switch.yml             # optional file-based fail-closed switch
+ └─ 📄 kill-switch.yml                    # optional file-based fail-closed switch
 ```
 </details>
 
@@ -689,112 +777,17 @@ KFM treats these as security incidents:
 > These project files inform KFM’s defensive posture (threat modeling, governance, integrity, reproducibility).  
 > They are **not** a request for offensive tooling contributions. 🚫🧨
 
-<details>
-<summary><strong>🏗️ KFM architecture, invariants, governance</strong></summary>
-
-- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)  [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
-- `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`  [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) 
-- `docs/specs/Latest Ideas.pdf`  [oai_citation:3‡Latest Ideas.pdf](file-service://file-Hc3LgRnWy8yxM8ME9TvpPg)  [oai_citation:4‡Latest Ideas.pdf](file-service://file-Hc3LgRnWy8yxM8ME9TvpPg)
-
-</details>
-
-<details>
-<summary><strong>🔏 Supply-chain & promotion discipline (agents, attestation, policy gates)</strong></summary>
-
-- `docs/specs/Latest Ideas.pdf` (Watcher/Planner/Executor, kill switch, idempotency, SBOM, Sigstore)  [oai_citation:5‡Latest Ideas.pdf](file-service://file-Hc3LgRnWy8yxM8ME9TvpPg)  [oai_citation:6‡Latest Ideas.pdf](file-service://file-Hc3LgRnWy8yxM8ME9TvpPg)  [oai_citation:7‡Latest Ideas.pdf](file-service://file-Hc3LgRnWy8yxM8ME9TvpPg)
-
-</details>
-
-<details>
-<summary><strong>🗄️ Databases & scalable data systems</strong></summary>
-
-- `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `docs/library/Scalable Data Management for Future Hardware.pdf`  [oai_citation:8‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)
-- `docs/library/Data Spaces.pdf`
-
-</details>
-
-<details>
-<summary><strong>🌐 Web UI, visualization & graphics</strong></summary>
-
-- `docs/library/responsive-web-design-with-html5-and-css3.pdf`
-- `docs/library/webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-- `docs/library/compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`  [oai_citation:9‡compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf](file-service://file-Y6V94sFtV6sy3w63LDy9fi)
-
-</details>
-
-<details>
-<summary><strong>🌎 GIS, mapping & geoprocessing</strong></summary>
-
-- `docs/library/python-geospatial-analysis-cookbook.pdf`
-- `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`  [oai_citation:10‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj)
-
-</details>
-
-<details>
-<summary><strong>📊 Statistics, experiments & scientific computing integrity</strong></summary>
-
-- `docs/library/Understanding Statistics & Experimental Design.pdf`
-- `docs/library/regression-analysis-with-python.pdf`
-- `docs/library/Regression analysis using Python - slides-linear-regression.pdf`  [oai_citation:11‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR)
-- `docs/library/graphical-data-analysis-with-r.pdf`
-- `docs/library/think-bayes-bayesian-statistics-in-python.pdf`  [oai_citation:12‡think-bayes-bayesian-statistics-in-python.pdf](file-service://file-LXwJApPMVhRZgyqLb9eg7c)
-- `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-
-</details>
-
-<details>
-<summary><strong>❤️ Ethics, autonomy & accountability</strong></summary>
-
-- `docs/library/Introduction to Digital Humanism.pdf`
-- `docs/library/Principles of Biological Autonomy - book_9780262381833.pdf`
-- `docs/library/On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`  [oai_citation:13‡On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf](file-service://file-NtashtRjti9J1THyYXkhAv)
-
-</details>
-
-<details>
-<summary><strong>🧰 Systems & concurrency</strong></summary>
-
-- `docs/library/concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`  [oai_citation:14‡concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf](file-service://file-Y45SvXbmLoZL1MNmrcyqz6)
-
-</details>
-
-<details>
-<summary><strong>🛡️ Security references (defense only)</strong></summary>
-
-- `docs/library/ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`  [oai_citation:15‡ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf](file-service://file-Q7EeqPb17SD9sV8Fb12LQX)
-- `docs/library/Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`  [oai_citation:16‡Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf](file-service://file-Mu6zixTqF9Lubf5QMjepRg)
-
-> Used to inform defensive controls (threat modeling, incident response, testing strategy).  
-> We do **not** accept contributions that add misuse-ready exploit instructions or weaponized tooling.
-
-</details>
-
-<details>
-<summary><strong>📚 General programming shelf (bundles)</strong></summary>
-
-- `docs/library/A programming Books.pdf`
-- `docs/library/B-C programming Books.pdf`
-- `docs/library/D-E programming Books.pdf`
-- `docs/library/F-H programming Books.pdf`
-- `docs/library/I-L programming Books.pdf`
-- `docs/library/M-N programming Books.pdf`
-- `docs/library/O-R programming Books.pdf`
-- `docs/library/S-T programming Books.pdf`
-- `docs/library/U-X programming Books.pdf`
-
-</details>
-
----
+- 📄 `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
+- 📄 `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`
+- 📄 `docs/specs/Latest Ideas.pdf` *(agents, kill-switch, Detect→Validate→Promote, attestations, DevOps provenance)*
+- 📁 `docs/library/` *(defensive references + data engineering + GIS + modeling discipline)*
 
 <!--
-Maintainers’ TODOs:
+Maintainers’ TODOs (keep this short and actionable):
 - Replace security@YOUR-DOMAIN.example with a real monitored inbox.
-- Add PGP key at docs/security/pgp-public-key.asc and publish its fingerprint.
+- Add PGP key at 📁 docs/security/📄 pgp-public-key.asc and publish its fingerprint.
 - Add incident-response runbook: containment, comms, logging, recovery, postmortem.
-- Decide & document data classification rules + propagation enforcement.
-- Wire CI gates: CodeQL, dependency review, secret scanning, container scanning, STAC/DCAT/PROV validation, story-lint.
-- Add OPA/Conftest default-deny policies for promotion & sensitive location controls.
-- Add kill switch: .kfm/kill-switch.yml + CI secret KFM_KILL_SWITCH.
+- Wire CI gates: CodeQL, dependency review, secret scanning, container scanning, STAC/DCAT/PROV validation, policy-gate, story-lint.
+- Keep OPA/Conftest policies tested (good/bad samples) and deny-by-default for promotion.
+- Ensure kill switch is implemented and honored by all publish/sign workflows and agents.
 -->
