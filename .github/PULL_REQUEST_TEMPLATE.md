@@ -1,4 +1,3 @@
-<!--
 🚀 Kansas Frontier Matrix (KFM) / Kansas-Frontier-Matrix — Pull Request Template (v2)
 
 ✅ Keep this template intact.
