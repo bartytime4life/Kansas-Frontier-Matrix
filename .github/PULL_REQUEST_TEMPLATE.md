@@ -1,11 +1,21 @@
 # 🚀 Pull Request
 
+<!--
+📄 File: .github/PULL_REQUEST_TEMPLATE.md
+🗓️ Last updated: 2026-01-10
+🧭 Baseline: KFM‑MDP v11.x • Master Guide v13 (draft)
+-->
+
 > [!NOTE]
-> **Keep it reviewable:** 2–3 sentences + reproducible steps + evidence links (when claims/data/models are involved).
+> **Keep it reviewable:** 2–3 sentences + reproducible steps + evidence links for any claim-bearing change (data/models/story).
 
 > [!IMPORTANT]
-> ⛓️ **Pipeline order is absolute:** **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**  
-> If it isn’t **cataloged + provenance-linked**, it isn’t publishable in KFM.
+> ⛓️ **Pipeline order is absolute:** **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
+> If it isn’t **machine-validated + cataloged + provenance-linked**, it isn’t publishable in KFM.
+
+> [!IMPORTANT]
+> 🧾 **Contracts over vibes:** OpenAPI, STAC/DCAT/PROV schemas, graph IDs/ontology shapes, and Story Node templates are **contracts**.  
+> If a contract drifts, CI should fail before anything ships.
 
 ---
 
@@ -18,13 +28,33 @@
 
 **Why it matters (impact):**  
 
-**User-visible outcome:**  
+**User-visible outcome (if any):**  
 
 **Release note (optional, 1 line):**  
 
 ---
 
-## 🎯 Type of Change
+## 🧭 Gate snapshot (fill this in)
+
+> [!TIP]
+> “Green checks” are CI’s job. This section is for **review speed**: where should a reviewer look for evidence?
+
+| Gate / evidence | Required when… | Evidence path / link (preferred) | Notes |
+|---|---|---|---|
+| ✅ Lint + unit tests | always |  |  |
+| ✅ Typecheck | when typed surface exists |  |  |
+| 🔎 Catalog QA (STAC/DCAT quick) | touches 🗺️ `🗂️ data/**` or catalogs |  |  |
+| 🧾 Metadata validate (schema/profile) | touches catalogs/schemas |  |  |
+| 🧬 PROV present + complete | publishes/changes datasets, analyses, model outputs |  |  |
+| 🧑‍⚖️ Policy gate (OPA/Conftest) | touches governed surfaces (data/docs/story/workflows) |  |  |
+| 📦 Build info + checksums | any promoted artifact / release-ish change |  |  |
+| 🧾 SBOM | release lane / images |  |  |
+| 🖊️ Attestation | release lane / promoted artifacts |  |  |
+
+---
+
+## 🎯 Type of change
+
 - [ ] 🐛 Bug fix
 - [ ] ✨ New feature
 - [ ] 🧹 Refactor / cleanup (no behavior change)
@@ -38,56 +68,101 @@
 - [ ] 🧫 Scientific modeling / simulation / optimization change
 - [ ] 📝 Documentation / SOP / research workflow change
 - [ ] 🧰 DevOps / CI / Docker / infra change
-- [ ] 💥 Breaking change (requires coordination)
+- [ ] 💥 Breaking change (requires coordination + versioning plan)
 
 ---
 
-## 🧯 Risk & Compatibility
+## 🚦 Promotion intent (important)
 
-**Risk level:**
+**Does this PR intend to promote/publish anything?**
+- [ ] ❌ No (dev-only, internal refactor, docs-only, etc.)
+- [ ] ✅ Yes (data/catalog/model/story/release artifact promotion)
+
+If **Yes**, list the promotion surface(s):
+- [ ] 🗺️ Dataset publish (processed assets + STAC/DCAT/PROV)
+- [ ] 🕸️ Graph ingest/promote (IDs/ontology + import artifacts)
+- [ ] 🔌 API deploy boundary change (contract-first)
+- [ ] 🌐 UI deploy (viewer/build)
+- [ ] 🎬 Story Node publish (draft → published)
+- [ ] 📦 Container image publish (GHCR)
+- [ ] 🏷️ Release packaging (tagged)
+
+---
+
+## 🧯 Risk & compatibility
+
+**Risk level**
 - [ ] 🟢 Low (localized, easy rollback)
-- [ ] 🟡 Medium (touches hot paths / contracts / catalogs)
-- [ ] 🔴 High (migrations, infra, widespread behavior change)
+- [ ] 🟡 Medium (touches contracts/catalogs/hot paths)
+- [ ] 🔴 High (migrations, publish lanes, widespread behavior change)
 
 **Compatibility / migration required?**
 - [ ] No migration needed
-- [ ] Data migration needed (describe below)
-- [ ] API clients may break (describe below)
-- [ ] Feature flag / staged rollout recommended
+- [ ] 🗄️ Data migration needed (describe below)
+- [ ] 🔌 API clients may break (describe below + versioning plan)
+- [ ] 🏷️ Graph schema/ontology migration needed (describe below)
+- [ ] 🚩 Feature flag / staged rollout recommended
 
 **Feature flag (if any):** `FLAG_NAME_HERE`  
-**Rollback lever:** (revert PR / disable flag / rollback migration / redeploy previous image)  
+**Rollback lever:** (revert PR / disable flag / rollback migration / redeploy previous image / unpublish catalog)  
 
 ---
 
-## 🧩 Scope / Areas Touched (check all that apply)
-- [ ] 📂 `web/` (UI, map viewer, timeline controls, charts)
-- [ ] 📂 `api/` (API boundary, workers, contracts, policy)
-- [ ] 📂 `api/scripts/` or `scripts/` (ingestion, conversions, batch jobs)
-- [ ] 📂 `notebooks/` (EDA, prototypes, demos)
-- [ ] 📂 `mcp/` (experiments/, sops/, glossary, research protocols)
-- [ ] 📂 `docs/` (guides, datasets, model cards, architecture)
-- [ ] 🗄️ PostgreSQL/PostGIS (migrations, indexes, storage)
-- [ ] 🕸️ Neo4j / graph ingestion / graph QA
-- [ ] 🛰️ Raster/RS pipeline (GEE, COG, tiles, quicklooks)
-- [ ] 🧠 NLP/CV/ML models
-- [ ] 🐳 Docker/Compose/CI workflows
-- [ ] 🧱 Infrastructure (cloud resources, secrets, networking)
+## 🧩 Scope / pipeline stage(s) touched
+
+> [!IMPORTANT]
+> Touching upstream stages affects everything downstream. If you change ETL/catalog/graph, assume UI/story/focus impact until proven otherwise.
+
+Check all that apply:
+
+### 📥 Sources + ETL
+- [ ] 📁 `🧰 tools/` (pipelines, validators, CLI)
+- [ ] 📁 `📥 data/raw/**` (new raw inputs / snapshots)
+- [ ] 📁 `🧪 data/work/**` (intermediate outputs)
+- [ ] 📁 `🗄️ data/processed/**` (publish-ready outputs)
+
+### 🗂️ Catalogs + provenance (contracts)
+- [ ] 📁 `🧾 data/stac/**` (STAC items/collections)
+- [ ] 📁 `🗃️ data/catalog/dcat/**` (DCAT discovery layer)
+- [ ] 📁 `🧬 data/prov/**` (PROV bundles)
+- [ ] 📁 `🧩 schemas/**` (JSON Schemas / profiles)
+
+### 🕸️ Graph
+- [ ] 📁 `🕸️ graph/**` or `🧾 docs/ontology/**` (ontology/IDs/contracts)
+- [ ] 📁 `🧾 data/graph/**` (imports/exports/manifests)
+
+### 🔌 API boundary
+- [ ] 📁 `🔌 api/**` (services, workers, policies)
+- [ ] 📁 `📜 api/contracts/**` (OpenAPI/GraphQL/schema contracts)
+
+### 🌐 UI
+- [ ] 📁 `🌐 web/**` (viewer, MapLibre/WebGL, assets)
+
+### 🎬 Story + Focus
+- [ ] 📁 `🎬 docs/reports/story_nodes/**` (draft/published + assets)
+- [ ] 📁 `🧠 docs/reports/focus_mode/**` (if present)
+
+### 🤖 Control plane
+- [ ] 📁 `🤖 .github/workflows/**`
+- [ ] 📁 `🧩 .github/actions/**`
+- [ ] 📁 `🧑‍⚖️ tools/validation/policy/**` (OPA/Rego policies)
 
 ---
 
-## 🔗 Related Issues / Context
+## 🔗 Related issues / context
+
 Closes: <!-- #123 -->  
 Related: <!-- #456, discussion link, doc link -->  
 
-**Optional context links:**
-- Design doc:  
-- SOP / MCP protocol:  
-- Dataset card / model card:  
+**Optional context links**
+- 🧱 Design doc / ADR:  
+- 🧾 SOP / MCP protocol:  
+- 🗺️ Dataset card / layer registry:  
+- 🤖 Policy/gate reference:  
 
 ---
 
-## 🧠 Design & Architecture Notes
+## 🧱 Design & architecture notes (contracts + clean boundaries)
 
 **What layer(s) changed?**
 - [ ] 🧩 Domain entities / core models
@@ -96,247 +171,97 @@ Related: <!-- #456, discussion link, doc link -->
 - [ ] 🔌 Adapters (DB/web/external services)
 - [ ] 🏗️ Infrastructure (frameworks, DB, cloud, containers)
 
-**Interfaces/contracts touched (OpenAPI / JSON Schema / GeoJSON props / STAC fields):**
-- 
+**Contracts touched (list what changed)**
+- 🔌 OpenAPI / GraphQL:  
+- 🧾 STAC fields / extensions / item IDs:  
+- 🗃️ DCAT dataset/distributions:  
+- 🧬 PROV shape / run bundle expectations:  
+- 🕸️ Ontology / graph IDs / relationship shapes:  
+- 🎬 Story Node template / schema:  
 
-**Notable tradeoffs / decisions (and why):**
-- 
-
-**Reviewer focus (where to look):**
+**Reviewer focus (where to look)**
 - Key files:  
 - Non-obvious logic:  
 - Known limitations:  
 
 ---
 
-## 🧾 Governance & Evidence (required when making claims)
+## 🤖 If this PR was produced by automation / agents (fill only if applicable)
+
+> [!NOTE]
+> KFM automation follows the WPE pattern (👀 Watcher → 🧠 Planner → 🛠️ Executor).  
+> Automation may prepare PRs and evidence, but humans still own merge/publish decisions.
+
+- **Automation name:** (e.g., `kfm-sim-run`, “catalog-refresh bot”, etc.)  
+- **Idempotency key / run ID:**  
+- **Seed + virtual time (if used):**  
+- **Plan file:** `📄 plan.yml` (path)  
+- **Evidence bundle output:** (folder/path)  
+- **Kill-switch status at run time:** `on/off`  
+
+Attach or link:
+- [ ] `📄 plan.yml`
+- [ ] `📄 reports/gates.json` (or equivalent)
+- [ ] `🧬 data/prov/<run-id>.jsonld` (or equivalent)
+- [ ] `📦 build-info.json` + `🔒 checksums.sha256`
+- [ ] `📦 sbom.*` and `🖊️ attestations/*` (if release/publish)
+
+---
+
+## 🧑‍⚖️ Governance & policy gate (required when making claims or touching governed surfaces)
 
 > [!IMPORTANT]
-> Fill this section if your PR adds/changes anything that produces **claims** (datasets, analyses, model outputs, published layers, story/focus artifacts).
+> If you touch **data/catalogs/story/docs/workflows**, assume policy gates apply.  
+> Outputs cannot be **less restricted** than inputs (classification + sovereignty propagate).
 
-**Max input classification touched:** `public | internal | restricted | unknown`  
-**Output classification (must be ≥ strictest input):** `public | internal | restricted`  
+**Max input classification touched:** `public | internal | confidential | restricted | unknown`  
+**Output classification (must be ≥ strictest input):** `public | internal | confidential | restricted`  
 **Redaction mode:** `strict | balanced | off (must justify)`  
 
-**Evidence pointers (IDs/paths preferred over raw blobs):**
-| Type | ID / Path | Notes |
-|---|---|---|
-| 🛰️ STAC (items/collections) |  |  |
-| 🧾 DCAT (dataset/distributions) |  |  |
-| 🧬 PROV (run/bundle) |  |  |
-| 📄 Run manifest |  |  |
-| 🔎 Checksums / diffs |  |  |
-| ✅ QA / gate report |  |  |
+**Sensitive location handling**
+- [ ] Not applicable
+- [ ] Applicable — generalized or redacted (describe precision tier below)
 
-Checklist:
-- [ ] Provenance is recorded (inputs → activity → outputs)
-- [ ] No privacy downgrade (classification propagated)
-- [ ] License/usage constraints preserved
-- [ ] Large binaries avoided in git (use pointers/artifacts)
+**Location precision tier (if applicable):** `exact | neighborhood | county/region | grid/index | redacted`
 
----
-
-## 🧪 How to Test (repro steps)
-
-### ✅ Local (required)
-<!-- Provide exact commands + expected outcome. -->
-1.  
-2.  
-3.  
-
-### 🧰 Commands I ran
-- [ ] `make test`
-- [ ] `make lint` / `make format`
-- [ ] `pytest`
-- [ ] `npm test` / `npm run lint`
-- [ ] `docker compose up --build`
-- [ ] DB migration run + rollback verified
-- [ ] Smoke test: map loads + timeline filter works + layers render
-
-### 🧬 Repro notes (pipelines/models/simulations)
-- Inputs used (paths/IDs):  
-- Seed(s) / config(s):  
-- Output artifacts (where to find):  
-- Expected checks (what “good” looks like):  
-
----
-
-## 🖼️ Evidence (screenshots, maps, before/after)
-
-**Before:**  
-**After:**  
-
-Optional:
-- [ ] GIF / short clip (UI interactions)
-- [ ] Sample GeoJSON/STAC snippet (sanitized)
-- [ ] EXPLAIN / query plan (for hot SQL paths)
-
----
-
-## 🧾 Data Provenance & Licensing (required if data changed)
-
-**Source(s) / citation:**  
-**License / usage constraints:**  
-**Temporal coverage:**  
-**Spatial coverage:**  
-**Processing steps (tools + parameters):**  
-
-Checklist:
-- [ ] Dataset docs updated
-- [ ] Catalog metadata updated (STAC/DCAT/PROV)
-- [ ] CRS/SRID + units recorded
-- [ ] QA checks recorded
-
----
-
-## 🗄️ Database / Storage Impact (required if DB changes)
-
-- [ ] Migration included (forward + rollback)
-- [ ] PostGIS geometry validated (SRID, geometry type)
-- [ ] Indexes reviewed (spatial + time filters)
-- [ ] Hot query plan checked (EXPLAIN)
-
-**Migration commands:**
-- 
-
-**Rollback plan:**
-- 
-
-**Storage impact (rough):**
-- New data size:  
-- Index size:  
-- Expected growth rate:  
-
----
-
-## 🔐 Security, Privacy, and Human-Centered Impact
-
-- [ ] No secrets committed
-- [ ] Dependencies reviewed (new packages pinned + vetted)
-- [ ] Sensitive data handling considered (PII, location traces, private docs)
-- [ ] Input validation updated (assume hostile inputs)
-- [ ] Outputs are explainable for intended users
-- [ ] If AI involved: limitations + uncertainty communicated
-
-**Security notes / threat considerations:**
-- 
-
----
-
-## 📈 Performance & Cost Notes (if relevant)
-
-- [ ] Streaming/paging used (no giant responses)
-- [ ] Rasters/tiles optimized (COG/overviews/appropriate zooms)
-- [ ] API bounded (limits/timeouts)
-- [ ] Batch job runtime/memory noted
-
-**Benchmarks / profiling:**
-- 
-
----
-
-## 🚦 Rollout / Backout Plan
-
-- [ ] Safe to merge as-is
-- [ ] Needs feature flag
-- [ ] Needs staged rollout
-- [ ] Needs data migration window
-
-**Rollout steps:**
-1.  
-2.  
-
-**Backout steps:**
-1.  
-2.  
-
----
-
-## ✅ Final Review Checklist (required)
-
-- [ ] Scoped change (no drive-by edits)
-- [ ] Tests added/updated **or** explained why not
-- [ ] Docs/SOPs updated if behavior changed
-- [ ] Relevant commands run (see “How to Test”)
-- [ ] Clean architecture boundaries preserved
-- [ ] Edge cases considered (nulls, missing geometry, CRS, time ranges)
-- [ ] Evidence included for UI/map/data/model changes
-- [ ] Provenance + license recorded if data changed
-- [ ] Quick security sanity check done
-
----
+**Policy gate evidence**
+- Report path/link:  
+- Policies triggered (if known):  
+  - [ ] 🧾 License allowlist
+  - [ ] 🔗 URL allowlist / link safety
+  - [ ] 🧬 PROV required
+  - [ ] 🗂️ STAC/DCAT required fields
+  - [ ] 🧭 Classification propagation
+  - [ ] 🗺️ Sensitive locations
+  - [ ] 🔐 Workflows least privilege
+  - [ ] 📌 Actions pinning
 
 <details>
-<summary><strong>🧭 Clean Architecture Guardrails (fill out if you changed core logic)</strong></summary>
+<summary><strong>🧾 Policy pack location (for reference)</strong></summary>
 
-- [ ] Domain remains framework-agnostic (no DB/web/FS imports)
-- [ ] Use cases call outward via ports, not concrete adapters
-- [ ] Adapters translate external formats ↔ domain structures
-- [ ] New dependencies added only in outer layers
-- [ ] Unit tests exist at the use-case level with mocked/stubbed ports
-
-Notes:
-- 
-
-</details>
-
-<details>
-<summary><strong>🗺️ GIS / Remote Sensing Checklist (fill out if you touched geospatial/raster)</strong></summary>
-
-- [ ] CRS/SRID explicit end-to-end
-- [ ] Geometry validity checked
-- [ ] Time fields validated (timezone assumptions)
-- [ ] Raster outputs cloud-optimized when intended (COG + overviews)
-- [ ] Tiles/quicklooks verified (bounds/zooms/seams)
-- [ ] Catalog metadata updated (bbox, time range, processing, provenance)
-
-Notes:
-- 
-
-</details>
-
-<details>
-<summary><strong>🤖 AI/ML Checklist (fill out if you changed models, prompts, training, or inference)</strong></summary>
-
-- [ ] Training config captured (hyperparams, seeds, data version)
-- [ ] Train/val/test split documented; leakage avoided
-- [ ] Metrics reported (uncertainty where sensible)
-- [ ] Model card updated (`docs/model_cards/` if applicable)
-- [ ] Limitations/failure modes noted
-
-Notes:
-- 
-
-</details>
-
-<details>
-<summary><strong>🧫 Scientific Modeling / Simulation Checklist (fill out if you changed simulation/modeling)</strong></summary>
-
-- [ ] Verification checks run (units/invariants/convergence)
-- [ ] Validation vs baseline/observations (if available)
-- [ ] Assumptions documented
-- [ ] Sensitivity analysis noted (key parameters)
-- [ ] Results reproducible (inputs + configuration captured)
-
-Notes:
-- 
-
-</details>
-
-<details>
-<summary><strong>🐳 DevOps / Docker / CI Checklist (fill out if you touched infra)</strong></summary>
-
-- [ ] Images pinned where feasible; least-privilege defaults
-- [ ] Secrets injected via env/secret manager (not committed)
-- [ ] CI updated (tests/lint/caching)
-- [ ] Security scanning considered (deps/images)
-
-Notes:
-- 
-
-</details>
-
-<!--
-🔎 Grounding marker (template intent):
-KFM is interdisciplinary: maps + time + provenance + clean architecture + human-centered impact.
--->
+```text
+🛠️ tools/validation/policy/
+├─ 📄 README.md
+├─ 📁 rego/
+│  ├─ 📁 common/
+│  │  ├─ 📄 helpers.rego
+│  │  ├─ 📄 license_allowlist.rego
+│  │  └─ 📄 url_allowlist.rego
+│  ├─ 📁 catalogs/
+│  │  ├─ 📄 stac_required.rego
+│  │  ├─ 📄 dcat_required.rego
+│  │  ├─ 📄 prov_required.rego
+│  │  └─ 📄 link_safety.rego
+│  ├─ 📁 governance/
+│  │  ├─ 📄 classification_propagation.rego
+│  │  ├─ 📄 sensitive_locations.rego
+│  │  └─ 📄 attribution.rego
+│  ├─ 📁 supply_chain/
+│  │  ├─ 📄 workflows_least_privilege.rego
+│  │  └─ 📄 actions_pinning.rego
+│  └─ 📄 bundles.rego
+└─ 📁 tests/
+   ├─ 📄 *_test.rego
+   └─ 📁 samples/
+      ├─ 📁 good/
+      └─ 📁 bad/
