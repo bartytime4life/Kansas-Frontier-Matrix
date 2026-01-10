@@ -1,20 +1,23 @@
 # CODEOWNERS 🧭 Kansas Frontier Matrix (KFM)
 # -----------------------------------------------------------------------------
-# ✅ Auto-assign PR reviewers by subsystem and governance surface area.
-# ⛓️ KFM pipeline framing: ETL → Catalogs → Graph → API → UI → Story Nodes → Focus Mode
+# ✅ Auto-assign PR reviewers by subsystem + governance surface area.
+# ⛓️ Canonical pipeline framing:
+#    ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode
 #
-# GitHub precedence rules (keep this in mind):
+# GitHub precedence rules (important):
 # - Patterns are evaluated top → bottom
-# - If multiple patterns match, the *last matching* pattern takes precedence
-# - Put broad fallbacks first, then add more specific rules later
+# - If multiple patterns match, the *last matching* pattern wins
+# - Put broad fallbacks first, then add more specific overrides later
 #
-# Start simple (single maintainer). Swap @bartytime4life with org teams later:
+# Current setup: single maintainer owner.
+# Future (recommended) org teams (swap in later):
 #   @Kansas-Frontier-Matrix/core
 #   @Kansas-Frontier-Matrix/data
 #   @Kansas-Frontier-Matrix/graph
-#   @Kansas-Frontier-Matrix/api
+#   @Kansas-Frontier-Matrix/server
 #   @Kansas-Frontier-Matrix/web
 #   @Kansas-Frontier-Matrix/docs
+#   @Kansas-Frontier-Matrix/governance
 #   @Kansas-Frontier-Matrix/security
 # -----------------------------------------------------------------------------
 
@@ -24,28 +27,69 @@
 * @bartytime4life
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 🔐 Control plane: security, governance, CI/CD, repo policy
+# 🔐 Control plane: repo policy, CI/CD, supply chain, governance gates
 # ─────────────────────────────────────────────────────────────────────────────
+
+# 🤖 GitHub ops layer
 /.github/ @bartytime4life
 /.github/CODEOWNERS @bartytime4life
+/.github/README.md @bartytime4life
 /.github/workflows/ @bartytime4life
+/.github/workflows/reusables/ @bartytime4life
 /.github/actions/ @bartytime4life
 /.github/ISSUE_TEMPLATE/ @bartytime4life
+/.github/PULL_REQUEST_TEMPLATE.md @bartytime4life
 /.github/dependabot.yml @bartytime4life
+/.github/labels.yml @bartytime4life
+/.github/release-drafter.yml @bartytime4life
+/.github/FUNDING.yml @bartytime4life
 
+# 🧩 Local composite actions (treat as supply-chain sensitive)
+# (These are also covered by /.github/actions/, but listed explicitly for future team routing.)
+/.github/actions/attest/ @bartytime4life
+/.github/actions/build-info/ @bartytime4life
+/.github/actions/catalog-qa/ @bartytime4life
+/.github/actions/check-kill-switch/ @bartytime4life
+/.github/actions/docker-build/ @bartytime4life
+/.github/actions/governance-scan/ @bartytime4life
+/.github/actions/kill-switch/ @bartytime4life
+/.github/actions/metadata-validate/ @bartytime4life
+/.github/actions/policy-gate/ @bartytime4life
+/.github/actions/provenance-guard/ @bartytime4life
+/.github/actions/sbom/ @bartytime4life
+/.github/actions/setup-kfm/ @bartytime4life
+/.github/actions/setup-conftest/ @bartytime4life
+/.github/actions/story-lint/ @bartytime4life
+
+# 🛡️ Repo-wide policy docs (root)
 /SECURITY.md @bartytime4life
 /CONTRIBUTING.md @bartytime4life
 /CODE_OF_CONDUCT.md @bartytime4life
 /LICENSE @bartytime4life
 /CITATION.cff @bartytime4life
 /CHANGELOG.md @bartytime4life
+/README.md @bartytime4life
 
+# 🧯 Operational switches / governance-as-code
+/.kfm/ @bartytime4life
+/.kfm/kill-switch.yml @bartytime4life
+/policies/ @bartytime4life
+
+# 🧑‍⚖️ Policy Pack (OPA/Rego + Conftest) — governance gate rules
+/tools/validation/policy/ @bartytime4life
+/tools/validation/policy/README.md @bartytime4life
+/tools/validation/policy/rego/ @bartytime4life
+/tools/validation/policy/tests/ @bartytime4life
+
+# 🐳 Platform + environment files
 /.editorconfig @bartytime4life
 /.gitattributes @bartytime4life
 /.gitignore @bartytime4life
 /.pre-commit-config.yaml @bartytime4life
 /.env.example @bartytime4life
+/.dockerignore @bartytime4life
 /docker-compose.yml @bartytime4life
+/Dockerfile @bartytime4life
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 📚 Docs plane: architecture, specs, governance, research, narratives
@@ -56,21 +100,24 @@
 /docs/architecture/adr/ @bartytime4life
 /docs/standards/ @bartytime4life
 /docs/templates/ @bartytime4life
+/docs/library/ @bartytime4life
 
-# Governance & ethics (treat as protected)
+# 🧭 Governance & security docs (treat as protected)
 /docs/governance/ @bartytime4life
 /docs/security/ @bartytime4life
 /docs/policy/ @bartytime4life
 
-# Narratives (Story Nodes / Focus Mode artifacts)
+# 🎬 Narratives (Story Nodes / Focus Mode artifacts)
 /docs/reports/ @bartytime4life
 /docs/reports/story_nodes/ @bartytime4life
 /docs/reports/story_nodes/templates/ @bartytime4life
 /docs/reports/story_nodes/draft/ @bartytime4life
 /docs/reports/story_nodes/published/ @bartytime4life
 /docs/reports/story_nodes/**/assets/ @bartytime4life
+/docs/reports/focus_mode/ @bartytime4life
+/docs/reports/analyses/ @bartytime4life
 
-# If Story Nodes live under web/ (UI-side narratives)
+# If Story Nodes ever live under the UI tree
 /web/story_nodes/ @bartytime4life
 /web/story_nodes/**/assets/ @bartytime4life
 
@@ -78,20 +125,27 @@
 # 🗃️ Data plane: lifecycle staging, catalogs, provenance, registries
 # ─────────────────────────────────────────────────────────────────────────────
 /data/ @bartytime4life
+
+# 📥🧪🗄️ v13 canonical lifecycle staging
 /data/raw/ @bartytime4life
 /data/work/ @bartytime4life
 /data/processed/ @bartytime4life
 
-# Catalogs + provenance bundles
-/data/stac/ @bartytime4life
+# 🧾🗂️🧬 v13 canonical catalogs + provenance
 /data/catalog/ @bartytime4life
+/data/catalog/stac/ @bartytime4life
 /data/catalog/dcat/ @bartytime4life
 /data/prov/ @bartytime4life
 
-# Graph ingest/import artifacts (CSVs, node/edge exports, etc.)
+# 🧰 Legacy/alternate locations (keep until fully migrated)
+/data/stac/ @bartytime4life
+/data/dcat/ @bartytime4life
+/data/provenance/ @bartytime4life
+
+# 🕸️ Graph ingest/import artifacts (CSVs, node/edge exports, etc.)
 /data/graph/ @bartytime4life
 
-# Source registries / dataset descriptors
+# 🗺️ Source registries / dataset descriptors
 /data/sources/ @bartytime4life
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -100,29 +154,42 @@
 /schemas/ @bartytime4life
 /schemas/** @bartytime4life
 
-# API contracts may also live here (keep under tight review)
+# ─────────────────────────────────────────────────────────────────────────────
+# 🧱 Core code plane: pipelines, graph, server/API boundary, tools, tests
+# ─────────────────────────────────────────────────────────────────────────────
+
+# 🧩 v13 canonical code locations
+/src/ @bartytime4life
+/src/pipelines/ @bartytime4life
+/src/graph/ @bartytime4life
+/src/server/ @bartytime4life
+
+# 📜 API contracts (often live under server/)
+/src/server/contracts/ @bartytime4life
+/src/server/contracts/openapi.yaml @bartytime4life
+
+# 🧯 Legacy/alternate API home (keep until fully migrated)
+/api/ @bartytime4life
+/api/src/ @bartytime4life
+/api/scripts/ @bartytime4life
 /api/contracts/ @bartytime4life
 /api/src/contracts/ @bartytime4life
 /api/src/contracts/openapi.yaml @bartytime4life
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 🧱 Core code plane: API boundary, pipelines, graph, tools, tests
-# ─────────────────────────────────────────────────────────────────────────────
-
-# API boundary (FastAPI/services/policy/repositories/tasks)
-/api/ @bartytime4life
-/api/src/ @bartytime4life
-/api/scripts/ @bartytime4life
-
-# Tooling & validators (policy gates, catalog QA, geo checks)
+# ✅ Tooling & validators (catalog QA, schema validation, geo checks)
 /tools/ @bartytime4life
 /tools/validation/ @bartytime4life
+/tools/validation/catalog_qa/ @bartytime4life
+/tools/kfm-sim-run/ @bartytime4life
+/tools/kfm_sim_run/ @bartytime4life
 
-# Tests (unit/contract/integration/security)
+# 🧪 Tests (unit/contract/integration/security)
 /tests/ @bartytime4life
+/src/tests/ @bartytime4life
+/src/server/tests/ @bartytime4life
 /api/src/tests/ @bartytime4life
 
-# MCP (experiments, SOPs, research protocols, repeatability)
+# 🧪 MCP (experiments, runs, notebooks, model cards, SOPs)
 /mcp/ @bartytime4life
 /mcp/experiments/ @bartytime4life
 /mcp/runs/ @bartytime4life
@@ -130,14 +197,8 @@
 /mcp/templates/ @bartytime4life
 /mcp/notebooks/ @bartytime4life
 
-# Legacy/alternate canonical homes (if present in the repo)
-/src/ @bartytime4life
-/src/pipelines/ @bartytime4life
-/src/graph/ @bartytime4life
-/src/server/ @bartytime4life
-
 # ─────────────────────────────────────────────────────────────────────────────
-# 🗺️ UI plane: web viewer + assets + data overlays
+# 🌐 UI plane: web viewer + assets + overlays
 # ─────────────────────────────────────────────────────────────────────────────
 /web/ @bartytime4life
 /web/src/ @bartytime4life
@@ -157,8 +218,10 @@
 /Kansas-Frontier-Matrix/.github/ @bartytime4life
 /Kansas-Frontier-Matrix/docs/ @bartytime4life
 /Kansas-Frontier-Matrix/data/ @bartytime4life
+/Kansas-Frontier-Matrix/src/ @bartytime4life
 /Kansas-Frontier-Matrix/api/ @bartytime4life
 /Kansas-Frontier-Matrix/web/ @bartytime4life
 /Kansas-Frontier-Matrix/schemas/ @bartytime4life
 /Kansas-Frontier-Matrix/tools/ @bartytime4life
 /Kansas-Frontier-Matrix/mcp/ @bartytime4life
+/Kansas-Frontier-Matrix/tests/ @bartytime4life
