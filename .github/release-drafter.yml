@@ -1,156 +1,216 @@
-# 🏷️ Release Drafter Config — `.github/release-drafter.yml`
-
-- 🎯 Purpose: auto-draft KFM release notes from merged PRs using **labels + paths**, aligned to the KFM pipeline.
-- ⛓️ Pipeline framing: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
-- 🛡️ Governance posture: **evidence-first**, **deny-by-default**, and **supply-chain-aware** (especially for CI/workflows).
-
-```yaml
 # .github/release-drafter.yml
 # -----------------------------------------------------------------------------
 # Kansas Frontier Matrix (KFM) — Release Drafter
 #
-# Notes:
-# - This file must live on the default branch to be used by the Action/App.
-# - Categories are label-driven; autolabeler helps apply labels based on paths.
-# - Keep labels simple and stable (web/api/data/docs/graph/ci/security/ml/simulation/dependencies).
+# 🎯 Auto-draft release notes from merged PRs using labels + path-aware autolabeling.
+# ⛓️ Pipeline framing: ETL → Metadata (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode
+# 🛡️ Posture: evidence-first • deny-by-default for promotion • supply-chain aware
+#
+# Label strategy (recommended):
+# - 1x "type:*" label (intent)  + 1+ "area:*" labels (surface)
+# - Use "governance:*" labels when policy/sensitivity/classification is involved
+# - Keep labels stable; release notes are only as good as label hygiene
 # -----------------------------------------------------------------------------
 
+commitish: "main"
+filter-by-commitish: true
+
 # 🏷️ Release naming & tags
-name-template: 'v$RESOLVED_VERSION 🌾'
-tag-template: 'v$RESOLVED_VERSION'
-tag-prefix: 'v'
+name-template: "v$RESOLVED_VERSION 🌾"
+tag-template: "v$RESOLVED_VERSION"
+tag-prefix: "v"
 
 # 🧾 How each PR entry renders
-change-template: '- $TITLE — #$NUMBER (@$AUTHOR)'
-change-title-escapes: '\<*_&@#`' # prevents markdown surprises + disables @/# mentions
-no-changes-template: '- No user-facing changes in this release.'
+change-template: "- $TITLE — #$NUMBER (@$AUTHOR)"
+change-title-escapes: "\\<*_&@#`"
+no-changes-template: "- No user-facing changes in this release."
 
 # 🧠 Sorting (keeps diffs stable & reviewer-friendly)
-sort-by: 'title'
-sort-direction: 'ascending'
+sort-by: "merged_at"
+sort-direction: "descending"
 
 # 🚫 Exclusions (PRs with these labels will not appear in release notes)
 exclude-labels:
-  - 'skip-changelog'
-  - 'no-release-notes'
-  - 'meta'
-  - 'internal-only'
+  - "skip-changelog"
+  - "no-release-notes"
+  - "meta"
+  - "internal-only"
+  - "status:wip"
+  - "status:blocked"
+  - "do-not-merge"
 
 # 🧑‍🤝‍🧑 Don’t list bots as contributors
 exclude-contributors:
-  - 'dependabot'
-  - 'dependabot[bot]'
-  - 'github-actions'
-  - 'github-actions[bot]'
+  - "dependabot"
+  - "dependabot[bot]"
+  - "github-actions"
+  - "github-actions[bot]"
+  - "renovate"
+  - "renovate[bot]"
 
 # 🧭 Resolve the next version via labels (SemVer)
 # Highest bump found in included PRs wins.
 version-resolver:
   major:
     labels:
-      - 'breaking-change'
-      - 'semver:major'
-      - 'major'
+      - "breaking-change"
+      - "semver:major"
+      - "major"
   minor:
     labels:
-      - 'feature'
-      - 'enhancement'
-      - 'semver:minor'
-      - 'minor'
+      - "semver:minor"
+      - "minor"
+      - "type:feature"
+      - "feature"
+      - "enhancement"
   patch:
     labels:
-      - 'bug'
-      - 'fix'
-      - 'perf'
-      - 'refactor'
-      - 'docs'
-      - 'chore'
-      - 'semver:patch'
-      - 'patch'
-  default: patch
+      - "semver:patch"
+      - "patch"
+      - "type:bug"
+      - "bug"
+      - "fix"
+      - "perf"
+      - "refactor"
+      - "type:docs"
+      - "docs"
+      - "type:data"
+      - "data"
+      - "type:pipeline"
+      - "pipeline"
+      - "type:security"
+      - "security"
+      - "type:chore"
+      - "chore"
+      - "dependencies"
+      - "deps"
+  default: "patch"
 
 # 🧩 Categorize PRs into release note sections (label-driven)
-# Tip: If a PR has multiple labels, it may appear in multiple categories depending on your labeling discipline.
+# Tip: Prefer 1x "type:*" per PR to keep categories clean.
 categories:
-  - title: '💥 Breaking changes'
+  - title: "💥 Breaking changes"
     labels:
-      - 'breaking-change'
-      - 'semver:major'
-      - 'major'
+      - "breaking-change"
+      - "semver:major"
+      - "major"
 
-  - title: '🔐 Security'
+  - title: "🔐 Security & governance"
     labels:
-      - 'security'
-      - 'sec'
-      - 'vuln'
-      - 'cve'
+      - "type:security"
+      - "security"
+      - "sec"
+      - "vuln"
+      - "cve"
+      - "governance:privacy"
+      - "governance:sensitive-locations"
+      - "governance:sovereignty"
+      - "governance:license"
+      - "policy"
+      - "policy-gate"
 
-  - title: '🗃️ Data & Catalogs (STAC/DCAT/PROV)'
+  - title: "🧰 ETL & pipelines"
     labels:
-      - 'data'
-      - 'catalog'
-      - 'stac'
-      - 'dcat'
-      - 'prov'
+      - "type:pipeline"
+      - "pipeline"
+      - "etl"
+      - "ingest"
+      - "area:pipeline"
 
-  - title: '🕸️ Graph & Ontology'
+  - title: "🗃️ Data & catalogs (STAC/DCAT/PROV)"
     labels:
-      - 'graph'
-      - 'neo4j'
-      - 'ontology'
+      - "type:data"
+      - "data"
+      - "catalog"
+      - "area:catalog"
+      - "stac"
+      - "area:stac"
+      - "dcat"
+      - "area:dcat"
+      - "prov"
+      - "area:prov"
 
-  - title: '🚪 API Boundary'
+  - title: "🕸️ Graph & ontology"
     labels:
-      - 'api'
-      - 'backend'
-      - 'server'
+      - "graph"
+      - "neo4j"
+      - "ontology"
+      - "area:graph"
 
-  - title: '🗺️ Web / UI'
+  - title: "🔌 API boundary"
     labels:
-      - 'web'
-      - 'ui'
-      - 'frontend'
-      - 'map'
+      - "api"
+      - "backend"
+      - "server"
+      - "area:api"
 
-  - title: '🧪 Analysis / ML'
+  - title: "🌐 Web / UI"
     labels:
-      - 'ml'
-      - 'ai'
-      - 'analysis'
-      - 'model'
+      - "web"
+      - "ui"
+      - "frontend"
+      - "map"
+      - "webgl"
+      - "area:web"
 
-  - title: '🧮 Simulation / Modeling'
+  - title: "🎬 Story nodes & narrative"
     labels:
-      - 'simulation'
-      - 'modeling'
-      - 'sim'
+      - "type:story"
+      - "story"
+      - "narrative"
+      - "area:story"
 
-  - title: '🧰 CI / Infra / Ops'
+  - title: "🧠 Focus mode & analytics"
     labels:
-      - 'ci'
-      - 'infra'
-      - 'devops'
-      - 'docker'
+      - "focus"
+      - "focus-mode"
+      - "analysis"
+      - "ml"
+      - "ai"
+      - "model"
 
-  - title: '📚 Docs / SOPs'
+  - title: "🧫 Simulation / modeling"
     labels:
-      - 'docs'
-      - 'documentation'
-      - 'sop'
+      - "simulation"
+      - "modeling"
+      - "sim"
 
-  - title: '⬆️ Dependencies'
+  - title: "🧰 CI / infra / ops"
+    labels:
+      - "ci"
+      - "infra"
+      - "devops"
+      - "docker"
+      - "area:db"
+
+  - title: "📚 Docs / SOPs"
+    labels:
+      - "type:docs"
+      - "docs"
+      - "documentation"
+      - "sop"
+      - "area:docs"
+
+  - title: "⬆️ Dependencies"
     collapse-after: 8
     labels:
-      - 'dependencies'
-      - 'deps'
+      - "dependencies"
+      - "deps"
+
+  - title: "🧹 Chores"
+    labels:
+      - "type:chore"
+      - "chore"
+      - "build"
+      - "maintenance"
 
 # 🧾 Release body framing (KFM “evidence-first” posture)
 header: |
   ## 🌾 Kansas Frontier Matrix — Release Notes
 
-  > 🧾 Drafted from merged PRs. Evidence-first, contract-first, governance-aware.
+  > 🧾 Drafted from merged PRs (label-driven). Evidence-first • contract-first • governance-aware.
   >
-  > ⛓️ Pipeline: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+  > ⛓️ Pipeline: **ETL → Metadata (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**
 
 template: |
   ## ✅ Changes
@@ -161,73 +221,203 @@ template: |
 
 footer: |
   ## 🔎 Governance reminders
-  - Data/analysis/simulation outputs should be **cataloged** (STAC/DCAT/PROV) before publication.
-  - Prefer **pointers over payloads** for large artifacts; keep provenance links intact.
-  - If a change affects policy/redaction/classification, treat it as a **high-scrutiny** release item.
+  - Promotion-critical outputs (data, catalogs, models, stories) must be **traceable**: STAC/DCAT/PROV + checksums where appropriate.
+  - Prefer **pointers over payloads** for large artifacts; attach run evidence in CI artifacts.
+  - If a change affects policy/redaction/classification, treat it as **high-scrutiny** and ensure policy gates passed.
+
+# 🔁 Optional: linkify CVE IDs in PR titles
+replacers:
+  - search: "/CVE-(\\d{4})-(\\d+)/g"
+    replace: "[CVE-$1-$2](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2)"
 
 # 🤖 Autolabeler: apply labels automatically based on touched paths (glob matching)
 # Label must exist in the repo for automatic labeling to work.
 autolabeler:
-  - label: 'web'
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🌐 Surfaces (area:* + legacy labels)
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "area:web"
     files:
-      - 'web/**'
+      - "web/**"
+  - label: "web"
+    files:
+      - "web/**"
 
-  - label: 'api'
+  - label: "area:api"
     files:
-      - 'api/**'
+      - "api/**"
+  - label: "api"
+    files:
+      - "api/**"
 
-  - label: 'data'
+  - label: "area:graph"
     files:
-      - 'data/**'
+      - "src/graph/**"
+      - "data/graph/**"
+      - "docs/ontology/**"
+  - label: "graph"
+    files:
+      - "src/graph/**"
+      - "data/graph/**"
+      - "docs/ontology/**"
 
-  - label: 'docs'
+  - label: "area:db"
     files:
-      - 'docs/**'
-      - '**/*.md'
+      - "**/*.sql"
+      - "api/**/migrations/**"
+      - "api/**/alembic/**"
+      - "docker-compose.yml"
+  - label: "postgis"
+    files:
+      - "api/**/migrations/**"
+      - "docker-compose.yml"
 
-  - label: 'graph'
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🗃️ Data + catalogs + provenance
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "type:data"
     files:
-      - 'src/graph/**'
-      - 'data/graph/**'
+      - "data/**"
+  - label: "data"
+    files:
+      - "data/**"
 
-  - label: 'ci'
+  - label: "area:catalog"
     files:
-      - '.github/workflows/**'
-      - '.github/actions/**'
-      - 'tools/validation/**'
-      - '.pre-commit-config.yaml'
+      - "data/catalog/**"
+      - "data/stac/**"
+      - "data/**/catalog/**"
+  - label: "catalog"
+    files:
+      - "data/catalog/**"
+      - "data/stac/**"
+      - "data/**/catalog/**"
 
-  - label: 'security'
+  - label: "area:stac"
     files:
-      - 'SECURITY.md'
-      - 'docs/security/**'
-      - 'docs/governance/**'
-      - '.github/ISSUE_TEMPLATE/**'
+      - "**/collection.json"
+      - "**/catalog.json"
+      - "data/**/stac/**"
+  - label: "stac"
+    files:
+      - "**/collection.json"
+      - "**/catalog.json"
+      - "data/**/stac/**"
 
-  - label: 'ml'
+  - label: "area:dcat"
     files:
-      - 'mcp/**'
-      - 'notebooks/**'
+      - "data/**/dcat/**"
+      - "data/catalog/dcat/**"
+  - label: "dcat"
+    files:
+      - "data/**/dcat/**"
+      - "data/catalog/dcat/**"
 
-  - label: 'simulation'
+  - label: "area:prov"
     files:
-      - 'mcp/**/simulation/**'
-      - 'api/src/**/simulation/**'
-      - 'src/**/simulation/**'
+      - "data/prov/**"
+      - "data/provenance/**"
+  - label: "prov"
+    files:
+      - "data/prov/**"
+      - "data/provenance/**"
 
-  # If a PR only touches lockfiles/manifests, mark as dependencies.
-  - label: 'dependencies'
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🧰 Tooling / pipelines / automation
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "type:pipeline"
     files:
-      - '**/package-lock.json'
-      - '**/pnpm-lock.yaml'
-      - '**/yarn.lock'
-      - '**/requirements*.txt'
-      - '**/poetry.lock'
-      - '**/Pipfile.lock'
-      - '**/Cargo.lock'
-      - '**/go.mod'
-      - '**/go.sum'
-      - '**/Gemfile.lock'
-      - '**/composer.lock'
-      - '.github/dependabot.yml'
-```
+      - "tools/**"
+      - "src/pipelines/**"
+      - "api/scripts/**"
+      - "scripts/**"
+      - ".github/workflows/**"
+      - ".github/actions/**"
+  - label: "ci"
+    files:
+      - ".github/workflows/**"
+      - ".github/actions/**"
+      - ".github/dependabot.yml"
+      - ".pre-commit-config.yaml"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🎬 Narrative layer
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "type:story"
+    files:
+      - "docs/reports/story_nodes/**"
+      - "web/story_nodes/**"
+  - label: "story"
+    files:
+      - "docs/reports/story_nodes/**"
+      - "web/story_nodes/**"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 📚 Documentation
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "type:docs"
+    files:
+      - "docs/**"
+      - ".github/*.md"
+      - "README.md"
+      - "**/*.md"
+      - "**/*.mdx"
+  - label: "docs"
+    files:
+      - "docs/**"
+      - ".github/*.md"
+      - "README.md"
+
+  # Large reference PDFs are usually not release-note worthy
+  - label: "internal-only"
+    files:
+      - "docs/library/**"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🧑‍⚖️ Governance / policy gates (OPA/Conftest)
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "policy"
+    files:
+      - "tools/validation/policy/**"
+      - "policies/**"
+
+  - label: "governance:license"
+    files:
+      - "tools/validation/policy/rego/**/license_allowlist.rego"
+      - "tools/validation/policy/rego/governance/attribution.rego"
+
+  - label: "governance:sensitive-locations"
+    files:
+      - "tools/validation/policy/rego/governance/sensitive_locations.rego"
+
+  - label: "governance:sovereignty"
+    files:
+      - "tools/validation/policy/rego/governance/classification_propagation.rego"
+      - ".kfm/**"
+
+  # Supply chain policy and gates
+  - label: "supply-chain"
+    files:
+      - "tools/validation/policy/rego/supply_chain/**"
+      - ".github/workflows/sbom.yml"
+      - ".github/workflows/attest.yml"
+      - ".github/actions/sbom/**"
+      - ".github/actions/attest/**"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # ⬆️ Dependency-only changes
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "dependencies"
+    files:
+      - "**/package-lock.json"
+      - "**/pnpm-lock.yaml"
+      - "**/yarn.lock"
+      - "**/requirements*.txt"
+      - "**/poetry.lock"
+      - "**/Pipfile.lock"
+      - "**/Cargo.lock"
+      - "**/go.mod"
+      - "**/go.sum"
+      - "**/Gemfile.lock"
+      - "**/composer.lock"
+      - ".github/dependabot.yml"
