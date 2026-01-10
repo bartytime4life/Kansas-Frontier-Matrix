@@ -1,10 +1,3 @@
-# 🏷️ Release Drafter Config — `.github/release-drafter.yml`
-
-- 🎯 Purpose: auto-draft KFM release notes from merged PRs using **labels + paths**, aligned to the KFM pipeline.
-- ⛓️ Pipeline framing: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
-- 🛡️ Governance posture: **evidence-first**, **deny-by-default**, and **supply-chain-aware** (especially for CI/workflows).
-
-```yaml
 # .github/release-drafter.yml
 # -----------------------------------------------------------------------------
 # Kansas Frontier Matrix (KFM) — Release Drafter
