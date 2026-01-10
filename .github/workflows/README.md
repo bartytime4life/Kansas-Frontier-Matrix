@@ -1,36 +1,3 @@
----
-title: "🧰 `.github/workflows/` — CI/CD for Kansas Frontier Matrix (KFM)"
-path: ".github/workflows/README.md"
-version: "v0.2.0"
-last_updated: "2026-01-10"
-status: "active"
-doc_kind: "Repo Ops / CI-CD Guide"
-license: "TBD (inherit repo LICENSE)"
-
-# KFM profile / protocol alignment
-markdown_protocol_version: "KFM-MDP v11.2.6"
-master_guide_version: "v13 (draft)"
-pipeline_contract_version: "TBD"
-
-# Governance & sensitivity (FAIR + CARE)
-fair_category: "FAIR+CARE"
-care_label: "Public"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US-KS"
-
-# References (keep stable; avoid deleting fields—use TBD/n/a if unknown)
-governance_ref: "../README.md"
-security_ref: "../../SECURITY.md"
-ethics_ref: "TBD"
-glossary_ref: "TBD"
-
-# Integrity / traceability (fill during release or doc-gate)
-doc_uuid: "urn:kfm:doc:github:workflows-readme:v0.2.0"
-commit_sha: "<commit-hash>"
-doc_integrity_checksum: "sha256:<to-be-filled>"
----
-
 <a id="top"></a>
 
 # 🧰 `.github/workflows/` — CI/CD for Kansas Frontier Matrix (KFM)
