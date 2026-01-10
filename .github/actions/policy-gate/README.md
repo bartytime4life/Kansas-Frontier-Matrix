@@ -230,31 +230,33 @@ If your policy pack includes bundle selectors (e.g., `all_ci`, `promotion`, `dom
 Your action runs policies. The policies live elsewhere. This is the recommended “KFM-friendly” shape:
 
 ```text
-tools/validation/policy/
-├─ README.md
-├─ rego/
-│  ├─ common/
-│  │  ├─ helpers.rego
-│  │  ├─ license_allowlist.rego
-│  │  └─ url_allowlist.rego
-│  ├─ catalogs/
-│  │  ├─ stac_required.rego
-│  │  ├─ dcat_required.rego
-│  │  ├─ prov_required.rego
-│  │  └─ link_safety.rego
-│  ├─ governance/
-│  │  ├─ classification_propagation.rego
-│  │  ├─ sensitive_locations.rego
-│  │  └─ attribution.rego
-│  ├─ supply_chain/
-│  │  ├─ workflows_least_privilege.rego
-│  │  └─ actions_pinning.rego
-│  └─ bundles.rego
-└─ tests/
-   ├─ *_test.rego
-   └─ samples/
-      ├─ good/
-      └─ bad/
+📁 tools/
+└─ ✅📁 validation/
+   └─ 🧑‍⚖️📁 policy/
+      ├─ 📄 README.md
+      ├─ 🧠📁 rego/
+      │  ├─ 🧰📁 common/
+      │  │  ├─ 🧩 helpers.rego
+      │  │  ├─ 🧾 license_allowlist.rego
+      │  │  └─ 🔗 url_allowlist.rego
+      │  ├─ 🗂️📁 catalogs/
+      │  │  ├─ 🛰️ stac_required.rego
+      │  │  ├─ 🗃️ dcat_required.rego
+      │  │  ├─ 🧬 prov_required.rego
+      │  │  └─ 🛡️ link_safety.rego
+      │  ├─ 🧭📁 governance/
+      │  │  ├─ 🧬 classification_propagation.rego
+      │  │  ├─ 🗺️ sensitive_locations.rego
+      │  │  └─ 🏷️ attribution.rego
+      │  ├─ 🔐📁 supply_chain/
+      │  │  ├─ 🧷 workflows_least_privilege.rego
+      │  │  └─ 📌 actions_pinning.rego
+      │  └─ 📦 bundles.rego
+      └─ 🧪📁 tests/
+         ├─ 🧪 *_test.rego
+         └─ 🧫📁 samples/
+            ├─ ✅📁 good/
+            └─ ❌📁 bad/
 ```
 
 ### “What’s enforced” (typical starter set)
