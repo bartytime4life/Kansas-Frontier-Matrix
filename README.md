@@ -10,12 +10,13 @@
 <a href="#license-"><img alt="License" src="https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix" /></a>
 
 <img alt="Status" src="https://img.shields.io/badge/status-active%20development-yellow" />
+<img alt="Docs" src="https://img.shields.io/badge/docs-Master%20Guide%20v13-6f42c1" />
 <img alt="Python" src="https://img.shields.io/badge/python-3.10%2B%20%7C%20CI%3A%203.11-blue" />
 <img alt="Node" src="https://img.shields.io/badge/node-18%2B-brightgreen" />
 <img alt="Docker" src="https://img.shields.io/badge/docker-ready-blue" />
 <img alt="GIS" src="https://img.shields.io/badge/GIS-PostGIS%20%7C%20GEE%20%7C%20GeoJSON-orange" />
 <img alt="Catalogs" src="https://img.shields.io/badge/catalog-STAC%20%7C%20DCAT%20%7C%20PROV-6f42c1" />
-<img alt="Provenance" src="https://img.shields.io/badge/provenance-PROV--O%20%7C%20OpenLineage-purple" />
+<img alt="Telemetry" src="https://img.shields.io/badge/telemetry-OpenLineage%20style%20events-purple" />
 <img alt="Supply Chain" src="https://img.shields.io/badge/supply%20chain-SBOM%20%7C%20SLSA%20%7C%20Sigstore-0aa" />
 <img alt="3D" src="https://img.shields.io/badge/3D-MapLibre%20%7C%20Cesium%20%7C%203D%20Tiles-9cf" />
 <img alt="Automation" src="https://img.shields.io/badge/automation-Watcher%20%E2%86%92%20Planner%20%E2%86%92%20Executor-black" />
@@ -23,21 +24,22 @@
 </div>
 
 > [!IMPORTANT]
-> **KFM’s trust model is simple:** anything that shows up in the UI or Story Nodes must be traceable back to **cataloged sources** and **provable processing** (STAC/DCAT/PROV + checks).  
+> **KFM’s trust model is simple:** anything that shows up in the UI, Story Nodes, or Focus Mode must be traceable back to **cataloged sources** and **provable processing** (STAC/DCAT/PROV + checks).  
 > No “mystery layers.” No bypasses. No unsourced narrative. 🧾
 
 > [!NOTE]
-> **New here?** Start with these *canonical* docs (and please keep them current):  
-> - 📘 **Master Guide (v13 draft):** `docs/MASTER_GUIDE_v13.md` *(source: `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`)*  
-> - 📚 **Comprehensive technical doc:** `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`  
-> - 🤖 **Governed automation (W·P·E agents):** `docs/specs/agents/README.md` *(KFM‑MDP v11.2.6)*  
-> - 🔁 **PR-first promotion pattern:** `docs/patterns/pipelines/CHANGE_TRIGGER_QC_PROMOTE.md` *(KFM‑MDP v11.2.6)*  
-> - 🧪 **CI blueprint:** `docs/specs/ci/CI__DETECT_VALIDATE_PROMOTE.md` *(promotion lanes + attestations)*  
-> - 🧪 **MCP protocols (research + documentation discipline):** `docs/specs/Scientific Method _ Research _ Master Coder Protocol Documentation.pdf`  
-> - 🧱 **Architecture blueprints:** `docs/architecture/`  
+> **New here?** Start with these *repo-level source-of-truth* docs (keep them current):  
+> - 📘 **Master Guide (v13 draft):** `docs/MASTER_GUIDE_v13.md` *(export source: `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`)*  
+> - 🧭 **System guide + onboarding:** `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`  
+> - 🌟 **Vision + future proposals:** `docs/specs/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`  
+> - 📝 **Markdown governance & patterns:** `docs/specs/Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`  
+> - 🧪 **Research discipline (MCP):** `docs/specs/Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` *(if present)*  
+> - 🧱 **Architecture blueprints:** `docs/architecture/` *(v13 redesign / next stages / full vision)*  
+> - 🧾 **Standards & profiles:** `docs/standards/` *(STAC/DCAT/PROV profiles, ontology protocols, doc schemas)*  
 > - ⚖️ **Governance, ethics, sovereignty:** `docs/governance/`  
-> - 🤝 **Collaboration rules & labels:** `/.github/README.md`  
-> - 🔐 **Security policy:** `/.github/SECURITY.md` *(add if missing)*
+> - 📚 **Reference library index:** `docs/library/README.md` + `docs/library/MANIFEST.yml` *(add if missing)*  
+> - 🔐 **Security policy:** `SECURITY.md` or `/.github/SECURITY.md` *(add if missing)*  
+> - 📌 **Project citation:** `CITATION.cff` *(add if missing)*
 
 ---
 
@@ -51,6 +53,7 @@
 - [Modes](#modes-)
 - [Architecture at a glance](#architecture-at-a-glance-)
 - [Repository map](#repository-map-)
+- [Documentation discipline](#documentation-discipline-)
 - [Quickstart](#quickstart-)
 - [Core workflows](#core-workflows-)
 - [Data standards](#data-standards-)
@@ -90,7 +93,7 @@ KFM is a **Kansas-scale spatial workbench** that treats:
 
 ✅ **datasets** (vector/raster/tables)  
 ✅ **documents** (PDFs, scans, archives)  
-✅ **time** (timelines, time ranges, event sequences)  
+✅ **time** (timelines, ranges, event sequences)  
 ✅ **model outputs** (plots, metrics, simulations)  
 
 …as **first-class, versioned, auditable artifacts**. 🧾
@@ -100,7 +103,7 @@ KFM is a **Kansas-scale spatial workbench** that treats:
 - 🛰️ Generate remote-sensing layers (Earth Engine-style workflows) and publish them with metadata  
 - 🧾 Connect documents ↔ places ↔ time (with citations + traceability)  
 - 🎬 Publish **Story Nodes** that guide people through Kansas history in 2D + 3D  
-- 📈 Run reproducible analytics (EDA → regression → Bayesian → simulation) with stored artifacts  
+- 📈 Run reproducible analytics (EDA → regression → Bayesian → simulation) with stored evidence artifacts  
 - 🧠 Run **Focus Mode** summaries that link back to evidence, not vibes  
 - 🔁 Promote changes safely via **PR-first automation** (Watcher → Planner → Executor) without bypassing governance
 
@@ -186,6 +189,12 @@ flowchart TB
 - 🧱 **Network boundaries:** no direct writes to prod stores; PRs only  
 - 🔐 **Least privilege:** Watcher/Planner are read-only; Executor token is PR-only (no merge scope)
 
+### Detect → Validate → Promote (DVPr) 🔎✅📦
+A v13-aligned CI/CD loop (automation-friendly, human-controlled):
+- **Detect**: discover what changed (checksums/ETags/repo events)  
+- **Validate**: run lane-based checks + policy pack + doc governance  
+- **Promote**: generate signed artifacts + open a PR (never auto-merge)
+
 > [!TIP]
 > Treat automation outputs like data: catalog them, provenance them, and review them.  
 > If it can’t be audited, it doesn’t ship. 🧾
@@ -198,24 +207,25 @@ KFM ships “things” as a small set of governed artifact types:
 
 | Artifact | What it is | Where it lives (typical) | Gate(s) |
 |---|---|---|---|
-| 🧾 **Source manifest** | What we used + license + access notes | `data/sources/**` | schema + license required |
-| 🧼 **Processed data** | Ready-to-use geo/tabular assets | `data/processed/**` | geo validation + bounds |
-| 🗂️ **STAC** | spatial asset metadata | `data/stac/**` *(or legacy `data/catalog/stac/**`)* | STAC schema + links |
+| 📘 **Governed doc** | versioned documentation with front-matter + citations | `docs/**` | doc schema + required fields |
+| 🧾 **Source manifest** | what we used + license + access notes | `data/sources/**` | schema + license required |
+| 📥 **Raw input** | immutable raw inputs | `data/raw/**` | checksum + immutability rules |
+| 🧼 **Work product** | intermediate outputs (not publishable yet) | `data/work/**` | validation required before promotion |
+| 🗄️ **Processed data** | ready-to-use geo/tabular assets | `data/processed/**` | geo validation + bounds + policy gates |
+| 🗂️ **STAC** | spatial asset metadata | `data/stac/**` *(collections/items)* | STAC schema + links |
 | 🗃️ **DCAT** | dataset/distribution discovery | `data/catalog/dcat/**` | DCAT schema + links |
 | 🧬 **PROV** | lineage (inputs → transforms → outputs) | `data/prov/**` | required for promotion |
-| 🕸️ **Graph bundle** | entity/event/citation graph ingest | `data/graph/**` or `src/graph/**` | ID stability + constraints |
+| 🕸️ **Graph bundle** | entity/event/citation ingest or export | `data/graph/**` or `src/graph/**` | ID stability + constraints |
 | 📜 **API contract** | OpenAPI/GraphQL specs | `src/server/contracts/**` | contract-first review |
-| 🎬 **Story Node** | narrative + map steps + citations | `docs/reports/story_nodes/**` + `web/story_nodes/**` | citations hard gate |
+| 🎬 **Story Node** | narrative + map steps + citations | `docs/reports/story_nodes/**` + `web/story_nodes/**` | citations + governance hard gate |
 | 🧪 **Evidence artifact** | analysis output treated like data | `mcp/**` + catalogs | reproducibility + PROV |
 | 🧠 **Plan bundle** | deterministic change plan + diff + evidence | `plans/**` | schema + policy + reproducibility |
 | 🧾 **Attestations** | SBOM/SLSA/Sigstore proofs | `sbom/**` + `artifacts/**` | required for protected promotion |
-| 📡 **Telemetry events** | operations/quality events (OpenLineage-style) | `telemetry/**` | schema + retention rules |
+| 🛡️ **Policy pack** | machine-enforced governance rules (data/docs/API) | `tools/validation/policy/**` | must pass in CI |
+| 📡 **Telemetry events** | ops/quality events (OpenLineage-style) | `telemetry/**` | schema + retention rules |
 
 > [!TIP]
-> Use templates (v13) to keep artifacts consistent:
-> - `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`  
-> - `docs/templates/TEMPLATE__STORY_NODE_V3.md`  
-> - `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+> **v13 mindset:** artifacts are interfaces. If it crosses a boundary, it must be machine-checkable.
 
 ---
 
@@ -287,10 +297,7 @@ flowchart TB
 ```
 
 > [!NOTE]
-> **Graph standards (recommended):**  
-> - Historical/cultural events: CIDOC-CRM style classes (events/places/people)  
-> - Space/time semantics: GeoSPARQL + OWL-Time patterns  
-> This keeps the graph portable across projects and supports federation. 🌐
+> **Mapping stack (default):** PostGIS for vector queries, tile generation + caching for performance, MapLibre for 2D WebGL rendering, CesiumJS for optional 3D scenes. 🗺️🧊
 
 ---
 
@@ -307,20 +314,21 @@ Kansas-Frontier-Matrix/
 ├─ 📁 docs/
 │  ├─ 📁 architecture/                  # 🧱 blueprints, ADRs, diagrams
 │  ├─ 📁 governance/                    # ⚖️ FAIR/CARE, ethics, sovereignty
+│  ├─ 📁 standards/                     # 🧾 governed profiles (STAC/DCAT/PROV, ontology, doc schemas)
+│  ├─ 📁 library/                       # 📚 reference library index + manifests (PDFs may be LFS/local)
+│  ├─ 📁 data/                          # 🧭 domain runbooks (docs/data/<domain>/README.md)
 │  ├─ 📁 patterns/
-│  │  └─ 📁 pipelines/                  # 🔁 PR-first promotion patterns
+│  │  └─ 📁 pipelines/                  # 🔁 promotion patterns (Detect→Validate→Promote)
 │  ├─ 📁 templates/                     # 🧾 governed templates (docs, story nodes, API)
 │  ├─ 📁 reports/
 │  │  ├─ 📁 story_nodes/
 │  │  │  ├─ 📁 draft/                   # 📝 WIP stories
 │  │  │  └─ 📁 published/               # ✅ reviewed stories
-│  │  └─ 📁 analyses/                   # 📈 exported reports + artifacts
-│  ├─ 📁 specs/
-│  │  ├─ 📁 agents/                     # 🤖 W·P·E architecture + contracts
-│  │  ├─ 📁 ci/                         # 🧪 CI workflows + promotion gates
-│  │  └─ 📁 telemetry/                  # 📡 telemetry schema + conventions
-│  └─ 📄 glossary.md                    # 📖 shared terms (add if missing)
-├─ 📁 schemas/                          # 🧩 JSON Schemas (STAC/DCAT/PROV/story nodes/contracts/telemetry)
+│  │  └─ 📁 analyses/                   # 📈 exported reports + evidence artifacts
+│  ├─ 📄 glossary.md                    # 📖 shared terms (add if missing)
+│  ├─ 📄 MASTER_GUIDE_v13.md            # 📘 canonical rules & invariants (exported from specs)
+│  └─ 📄 README.md                      # 🧭 docs landing page (optional)
+├─ 📁 schemas/                          # 🧩 JSON Schemas (STAC/DCAT/PROV/story nodes/contracts/telemetry/docs)
 ├─ 📁 data/
 │  ├─ 📁 sources/                       # 🧾 source manifests (URLs, license, access notes)
 │  ├─ 📁 raw/                           # 📥 immutable raw inputs
@@ -341,20 +349,47 @@ Kansas-Frontier-Matrix/
 ├─ 📁 mcp/                              # 🧪 Methods & Computational Experiments (runs, model cards)
 ├─ 📁 tools/                            # 🧰 detection/validation/promotion tooling
 │  ├─ 📁 detection/                     # 🔍 change detection + deterministic planner
-│  ├─ 📁 validation/                    # ✅ lanes (STAC, CRS, links, etc.)
-│  └─ 📁 promote/                       # ✍️ signed promotion + attestations
+│  ├─ 📁 validation/                    # ✅ lanes (STAC, CRS, links, policy, docs, etc.)
+│  ├─ 📁 promote/                       # ✍️ signed promotion + attestations
+│  └─ 📁 policy/                        # 🛡️ OPA/Conftest policy packs (recommended home)
 ├─ 📁 plans/                            # 🧠 Planner outputs (plan.yml, diff.patch, evidence/)
-├─ 📁 artifacts/                         # 📦 CI artifacts (provenance, reports, previews)
+├─ 📁 artifacts/                        # 📦 CI artifacts (provenance, reports, previews)
 ├─ 📁 sbom/                             # 🧾 Software bill of materials (supply chain)
 ├─ 📁 manifests/                        # 🧾 CI + pipeline manifests (pinning + config)
 ├─ 📁 telemetry/                        # 📡 operational telemetry + audit events
+├─ 📁 releases/                         # 🏷️ release notes + snapshot manifests (optional but recommended)
 ├─ 📁 ops/
 │  └─ 📁 feature_flags/                 # 🛑 kill-switches & runtime flags
 ├─ 🧪 tests/                            # ✅ unit + integration tests
 ├─ 🐳 docker-compose.yml
 ├─ 🧾 .env.example
+├─ 🧷 .editorconfig                     # ✍️ editor rules (recommended)
+├─ 🧲 .pre-commit-config.yaml           # ✅ formatting + lint gates (recommended)
+├─ 🧾 CITATION.cff                      # 🧑‍🏫 cite the project (recommended)
+├─ 📄 CHANGELOG.md                      # 🗓️ human-readable change log (recommended)
 └─ 📘 README.md
 ```
+
+---
+
+## Documentation discipline 📝🧾
+
+KFM treats **documentation as governed infrastructure** (not “extra credit”).
+
+### Governed docs (recommended rules) ✅
+- 🧾 **YAML front-matter** for governed docs (title, version, status, license, sensitivity/care labels, doc UUID)  
+- 🔗 **Every significant claim gets evidence** (citations, dataset IDs, commit SHAs, or catalog references)  
+- 🧪 **Docs get validated in CI** (front-matter shape + link checking + Story Node citation checks)  
+- 🔁 **Docs evolve via PRs** like code (review + checks + changelog notes)
+
+### Why this matters 🌾
+- It keeps narrative aligned with the pipeline  
+- It prevents “soft drift” between docs and reality  
+- It makes Story Nodes and Focus Mode parseable + auditable
+
+> [!TIP]
+> If you add a new Story Node authoring rule, enforce it in CI with a lane.  
+> Governance isn’t a page — it’s a gate. 🛡️
 
 ---
 
@@ -376,18 +411,21 @@ docker compose up --build
 ### Option B — Local dev Python + Node 💻
 > [!TIP]
 > If this repo has per-service docs, prefer those:
-> - `src/server/README.md` or `api/README.md` (backend)
+> - `src/server/README.md` (backend)
 > - `web/README.md` (frontend)
 
 ```bash
 # Python backend
 python -m venv .venv
 source .venv/bin/activate
-pip install -r api/requirements.txt  # or src/server/requirements.txt (depending on repo layout)
+
+# pick the requirements path used by your repo layout
+pip install -r src/server/requirements.txt  # v13 recommended home
+# pip install -r api/requirements.txt        # legacy layout (if present)
 
 # Start command depends on the framework used:
-# - FastAPI: uvicorn api.app.main:app --reload
-# - Flask:   flask --app api.app run --debug
+# - FastAPI: uvicorn src.server.app.main:app --reload
+# - Flask:   flask --app src.server.app run --debug
 
 # Web frontend
 cd web
@@ -484,6 +522,12 @@ KFM stays scalable by being boring in the right places.
 - 🗂️ **Catalog:** STAC (assets) + DCAT (discovery)  
 - 🧬 **Lineage:** W3C PROV / PROV‑O bundles per run and per derived asset  
 
+### Profiles (v13) 🧾
+- `docs/standards/stac/` → KFM STAC profile + required extensions  
+- `docs/standards/dcat/` → KFM DCAT profile + distribution rules  
+- `docs/standards/prov/` → KFM PROV JSON-LD conventions  
+- `docs/standards/docs/` → governed Markdown front-matter schema *(recommended)*
+
 ### Naming (recommended) 🏷️
 Use stable, searchable IDs:
 ```text
@@ -525,7 +569,7 @@ kfm.ks.transport.railroads.1870_1910.v1
     {"step": "georeference", "tool": "gdalwarp", "date": "<YYYY-MM-DD>", "by": "<github-handle>"}
   ],
   "assets": {
-    "data": {"href": "data/processed/railroads_1870_1910.geojson", "sha256": "<checksum>"}
+    "data": {"href": "data/processed/transport/railroads_1870_1910.geojson", "sha256": "<checksum>"}
   }
 }
 ```
@@ -549,10 +593,6 @@ python3 tools/validation/catalog_qa/run_catalog_qa.py \
   --fail-on-warn
 ```
 
-**What it checks**
-- required keys present and shaped correctly  
-- top-level STAC links are reachable (HEAD/GET)
-
 ### Promotion lanes (recommended) 🛣️
 Instead of one giant validator, use **lanes** — small, focused, composable checks:
 
@@ -562,16 +602,25 @@ Instead of one giant validator, use **lanes** — small, focused, composable che
 | 🧭 `geo_crs` | CRS presence/validity + bounding sanity | prevents projection surprises |
 | 🔐 `policy_gate` | sovereignty / sensitivity rules | prevents unsafe publication |
 | ♻️ `repro_gate` | rebuild hashes match | prevents “works on my machine” |
+| 📝 `doc_governance` | YAML front-matter + links + Story Node citations | prevents narrative drift |
 
-> [!TIP]
-> Lanes make it easy to add new quality gates without building a brittle mega-script.
+### Policy Pack (recommended) 🛡️
+Treat governance rules as code:
+- **OPA/Rego** policy packs for data + docs + API contracts  
+- **Conftest** (or similar) to run policy checks in CI  
+- “Planner must refuse unsafe plan” is a **hard invariant** (automation never argues with policy)
+
+**Example policy intents**
+- no Story Node publish without citations  
+- sensitive location layers must be generalized/redacted  
+- no output may be less restricted than any input
 
 ### PR-first promotion workflow 🔁
 KFM’s direction is to prefer a workflow like:
 
 - Detect changes → build a deterministic plan  
-- Run lanes → generate evidence + provenance  
-- If all gates pass → **open a PR** with diffs + artifacts + attestations  
+- Run lanes → generate evidence + provenance + attestations  
+- If all gates pass → **open a PR** with diffs + artifacts  
 - Humans review → merge
 
 This makes automation helpful *without being autonomous*. 🤖✅
@@ -629,6 +678,13 @@ KFM expects analysis work to behave like research:
 - ✅ store outputs as evidence artifacts (catalog + PROV)  
 - ✅ iterate with clear next steps
 
+### Research-grade simulation discipline (recommended) 🧪🛰️
+For simulation-heavy work (hydrology, groundwater, fire regimes, climate proxies):
+- 🔍 **Verification**: “did we solve the equations right?” (unit tests, numerical checks)  
+- ✅ **Validation**: “did we solve the right equations?” (compare to observations)  
+- 🎯 **UQ**: quantify uncertainty (sensitivity, ranges, credible intervals)  
+- 🧾 **Assumptions registry**: assumptions become an artifact (cataloged + versioned)
+
 > [!CAUTION]
 > Analytics is vulnerable to “false certainty” without experimental design, replication discipline, and clear reporting.
 
@@ -671,7 +727,7 @@ If a dataset contains sensitive locations (e.g., culturally sensitive sites, pro
 - 🛑 automation kill-switches for agents (`ops/feature_flags/`)  
 
 > [!IMPORTANT]
-> Security references in `docs/library/` exist to improve **defensive hardening**.  
+> Reference security PDFs in `docs/library/` are used to improve **defensive hardening**.  
 > This repo does **not** accept contributions that add misuse-ready exploitation instructions.
 
 ---
@@ -704,7 +760,7 @@ We welcome contributions that improve:
 - 🎬 Story Nodes and educational walkthroughs  
 - 🧠 Focus Mode reliability and citations  
 - 📈 modeling modules and reproducibility  
-- 📚 documentation and templates  
+- 📚 documentation, standards, and templates  
 
 **Start here →** `/.github/README.md` ✅
 
@@ -717,6 +773,7 @@ We welcome contributions that improve:
 | (D) New API endpoint | new service route | OpenAPI/GraphQL contract + tests + redaction |
 | (E) New UI feature | new overlay/story UI | provenance UI + accessibility + API usage |
 | (F) Automation / CI | new lane / promotion step | plan schema + evidence + attestations + kill-switch |
+| (G) Docs/Standards | new standard / template | doc schema + CI lane + examples |
 
 > [!TIP]
 > If your PR changes anything “public-facing” (UI, Story Nodes, published data), expect governance review.  
@@ -727,15 +784,16 @@ We welcome contributions that improve:
 ## Roadmap 🛣️
 
 ### 🚀 Near-term (foundation you can build on)
-- [ ] 🧩 `schemas/` for manifests + story nodes + contracts + telemetry  
+- [ ] 🧩 `schemas/` for manifests + story nodes + contracts + telemetry + governed docs  
 - [ ] ✅ Lane-based validation wired into CI (fail-on-warn)  
-- [ ] 🧾 PROV emission standard (per pipeline run)  
+- [ ] 🧾 PROV emission standard (per pipeline run) + PR→PROV linkage experiments  
 - [ ] 🗂️ STAC + DCAT publishing templates + examples  
 - [ ] 🕸️ Graph schema + stable ID protocol (entities/events/citations)  
-- [ ] 📖 `docs/glossary.md` + `docs/sops/` (real procedures, not placeholders)  
-- [ ] 🤖 W·P·E agent scaffolding (Watcher/Planner/Executor) behind kill-switch  
+- [ ] 📖 `docs/glossary.md` + `docs/data/<domain>/README.md` runbooks  
+- [ ] 🤖 W·P·E agent scaffolding behind kill-switch  
 - [ ] 📡 OpenLineage-style telemetry schema + minimal emitters  
 - [ ] 🧾 SBOM + build provenance (SLSA/Sigstore) for promoted changes  
+- [ ] 📚 `docs/library/MANIFEST.yml` + license/attribution tracking for references  
 
 ### 🎬 Product surface (MVP that feels real)
 - [ ] 🗺️ Map + timeline MVP (layer browser + feature inspect)  
@@ -748,7 +806,7 @@ We welcome contributions that improve:
 - [ ] 🔥 Historic fire regimes + paleoclimate proxies + hydrology modeling hooks  
 - [ ] 🧾 Treaty timeline: land transfers + context linked to sources  
 - [ ] 📈 Modeling notebooks: regression / Bayesian / simulation examples with stored artifacts  
-- [ ] 🧾 Add `CITATION.cff` + DOI-ready release process for academic use  
+- [ ] 🧾 `CITATION.cff` + DOI-ready release process for academic use  
 - [ ] 🧪 “Launch on Binder/JupyterHub” for public reproducible demos  
 - [ ] 🌐 Federation: multi-region “Frontier Matrix” compatibility via shared schemas/APIs
 
@@ -760,13 +818,28 @@ We welcome contributions that improve:
 > Reference PDFs may have **different licenses** than this repo.  
 > Preferred approach: keep an **index + manifest** in-repo, store large PDFs via **LFS or local-only** paths, and always honor upstream terms.
 
+### ✅ Recommended library structure
+```text
+docs/library/
+├─ README.md            # what’s here + how to use it
+├─ MANIFEST.yml         # filename → purpose → license → source URL → notes
+└─ pdf/
+   ├─ gis/
+   ├─ remote_sensing/
+   ├─ modeling/
+   ├─ systems/
+   ├─ ethics/
+   └─ security_defense/
+```
+
 <details>
 <summary><strong>🧠 Influence map (what each reference is “for”)</strong></summary>
 
 | Subsystem | What it influences | References (examples) |
 |---|---|---|
-| 🧱 KFM system design | architecture, modules, workflows, repo structure | `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` • `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc` |
-| 🗺️ GIS + spatial ops | PostGIS patterns, geometry ops, exporting, overlays | `docs/library/python-geospatial-analysis-cookbook.pdf` • `docs/library/PostgreSQLNotesForProfessionals.pdf` |
+| 🧱 KFM system design | architecture, modules, workflows, repo structure | `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` • `docs/MASTER_GUIDE_v13.md` |
+| 📝 Doc governance | YAML front-matter, citations discipline, reviewable narrative | `docs/specs/Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` |
+| 🗺️ GIS + spatial ops | PostGIS patterns, geometry ops, exporting, overlays | `docs/library/python-geospatial-analysis-cookbook.pdf` • `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` |
 | 🛰️ Remote sensing | cloud workflows, reducers, time-series, export/publish | `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` |
 | 🎨 Cartography + map design | hierarchy, labels, legends, visual discipline | `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf` • `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` |
 | 🧊 3D + graphics | WebGL fundamentals, rendering mental models | `docs/library/webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` |
@@ -778,21 +851,21 @@ We welcome contributions that improve:
 | ⚙️ Systems + scaling | concurrency, future hardware, query compilation | `docs/library/Scalable Data Management for Future Hardware.pdf` • `docs/library/concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` |
 | 🧭 Interoperability | cross-org sharing, governance patterns | `docs/library/Data Spaces.pdf` |
 | ❤️ Ethics + accountability | human-centered governance + autonomy framing | `docs/library/Introduction to Digital Humanism.pdf` • `docs/library/Principles of Biological Autonomy - book_9780262381833.pdf` |
+| ⚖️ AI + law concepts | conceptual foundations for ML-era governance | `docs/library/On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` |
 | 🧮 Advanced math + optimization | graph theory + structural optimization primitives | `docs/library/Spectral Geometry of Graphs.pdf` • `docs/library/Generalized Topology Optimization for Structural Design.pdf` |
 | 🛡️ Security (defense) | hardening mindset + countermeasures | `docs/library/ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` • `docs/library/Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` |
-| 🧰 General programming shelf | cross-language fundamentals (offline shelf) | `docs/library/A programming Books.pdf` • `docs/library/B-C programming Books.pdf` • `docs/library/D-E programming Books.pdf` • `docs/library/F-H programming Books.pdf` • `docs/library/I-L programming Books.pdf` • `docs/library/M-N programming Books.pdf` • `docs/library/O-R programming Books.pdf` • `docs/library/S-T programming Books.pdf` • `docs/library/U-X programming Books.pdf` |
+| 🧰 General programming shelf | offline cross-language fundamentals | `docs/library/A programming Books.pdf` • `docs/library/B-C programming Books.pdf` • `docs/library/D-E programming Books.pdf` • `docs/library/F-H programming Books.pdf` • `docs/library/I-L programming Books.pdf` • `docs/library/M-N programming Books.pdf` • `docs/library/O-R programming Books.pdf` • `docs/library/S-T programming Books.pdf` • `docs/library/U-X programming Books.pdf` |
 
 </details>
 
 <details>
-<summary><strong>📦 Reference PDFs by domain (full list)</strong></summary>
+<summary><strong>📦 Project files inventory (as included in this project)</strong></summary>
 
-### 🧭 Canonical KFM docs
+### 🧭 Core project docs
 - `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`  
-- `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc` *(export to `.md` for the repo)*  
-- `docs/specs/Scientific Method _ Research _ Master Coder Protocol Documentation.pdf`  
-- `docs/specs/agents/README.md` *(W·P·E)*  
-- `docs/patterns/pipelines/CHANGE_TRIGGER_QC_PROMOTE.md`  
+- `docs/specs/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`  
+- `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc` *(export to `docs/MASTER_GUIDE_v13.md`)*  
+- `docs/specs/Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`  
 
 ### 🗺️ GIS, geoprocessing, cartography
 - `docs/library/python-geospatial-analysis-cookbook.pdf`  
@@ -815,7 +888,7 @@ We welcome contributions that improve:
 - `docs/library/graphical-data-analysis-with-r.pdf`  
 - `docs/library/think-bayes-bayesian-statistics-in-python.pdf`  
 - `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`  
-- `docs/library/Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorch.pdf` *(if present / normalize filename)*  
+- `docs/library/Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` *(rename to add `.pdf` extension)*  
 
 ### 🧪 Simulation, optimization, advanced math
 - `docs/library/Generalized Topology Optimization for Structural Design.pdf`  
