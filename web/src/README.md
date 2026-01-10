@@ -1,4 +1,4 @@
-# 🌾🗺️ `web/` — Kansas Frontier Matrix Web Viewer
+# 🌾🗺️ `web/` — Kansas Frontier Matrix Web Viewer  
 **Explore Mode · Story Mode · Focus Mode · (Optional) 3D Story Mode**
 
 <p align="left">
@@ -6,23 +6,24 @@
   <img alt="Frontend" src="https://img.shields.io/badge/frontend-React%20%7C%20MapLibre%20%7C%20Leaflet-blue" />
   <img alt="Timeline" src="https://img.shields.io/badge/timeline-spatiotemporal-purple" />
   <img alt="3D" src="https://img.shields.io/badge/3D-Cesium%20%28Story%20Nodes%29-informational" />
-  <img alt="WebGL" src="https://img.shields.io/badge/webgl-shaders%20%7C%20buffers%20%7C%20textures-9cf" />
   <img alt="Catalog" src="https://img.shields.io/badge/catalog-STAC%20%7C%20DCAT%20%7C%20PROV-6f42c1" />
-  <img alt="Pages" src="https://img.shields.io/badge/deploy-GitHub%20Pages-black" />
+  <img alt="Evidence" src="https://img.shields.io/badge/evidence-citations%20required-0aa3a3" />
+  <img alt="Deploy" src="https://img.shields.io/badge/deploy-GitHub%20Pages-black" />
   <img alt="Node" src="https://img.shields.io/badge/node-18%2B-brightgreen" />
   <img alt="License" src="https://img.shields.io/badge/license-see%20LICENSE-lightgrey" />
 </p>
 
-A browser-based **interactive map + timeline** experience for the Kansas Frontier Matrix (KFM).  
-This is where users **explore spatiotemporal layers**, **step through eras**, and **open linked evidence** (documents, runs, provenance) without breaking the governance pipeline. 🧭✨
+A browser-based **interactive map + timeline + evidence viewer** for the Kansas Frontier Matrix (KFM).  
+This is where users **explore spatiotemporal layers**, **step through eras**, **open linked documents**, and **inspect provenance** — without breaking KFM’s governance pipeline. 🧭✨
 
 > [!IMPORTANT]
-> The viewer is **contract-driven** and **catalog-first**:
-> - it renders from **catalog artifacts** (STAC/DCAT/PROV, or STAC-like UI manifests as a thin view)  
-> - it is **static-first** and deployable on GitHub Pages  
-> - the API (when present) is **progressive enhancement**, not a bypass  
->
-> **Invariant:** **data → catalogs → graph → API → UI → narrative** (no shortcutting). [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+> **KFM pipeline invariant (the UI is downstream):**  
+> **ETL → Catalogs (STAC/DCAT/PROV) → Graph/Index → API (contracts + redaction) → UI → Story Nodes → Focus Mode**[^pipeline]  
+> If the viewer ever “short-circuits” governance (e.g., raw bucket scraping, direct graph queries), it’s a regression. 🧱🚫
+
+> [!TIP]
+> **Rule of thumb:** *No story without evidence.*  
+> Story Nodes + Focus Mode must be **citation-backed** and **bounded by cataloged sources** (no free-narration).[^gates][^focus-mode]
 
 ---
 
@@ -32,10 +33,16 @@ This is where users **explore spatiotemporal layers**, **step through eras**, an
 |---|---|
 | 🏠 Back to repo root | `../README.md` |
 | 🤝 Collaboration rules | `../.github/README.md` |
-| 🔐 Security policy | `../.github/SECURITY.md` *(if present)* |
-| 📦 Data & catalog conventions | `../data/README.md` *(if present)* |
-| 🧪 CI workflows | `../.github/workflows/README.md` *(if present)* |
+| 🔐 Security policy | `../.github/SECURITY.md` *(add if missing)* |
+| 📚 Canonical KFM docs | `../docs/specs/` |
+| 📘 KFM master technical doc | `../docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` |
+| 🌟 Future proposals / roadmap ideas | `../docs/specs/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` |
+| 🧭 v13 Markdown + workflow invariants | `../docs/specs/MARKDOWN_GUIDE_v13.md.gdoc` |
+| 🎨 Static assets rules | `./assets/README.md` |
+| 🗺️ Frontend data rules | `./data/README.md` |
+| 🎬 Story Node packages (web) | `./story_nodes/` |
 | 🧾 Report an issue | `https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new/choose` |
+| 🧪 CI runs | `https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions` |
 
 ---
 
@@ -48,24 +55,25 @@ This is where users **explore spatiotemporal layers**, **step through eras**, an
 - [🧰 Viewer modes](#-viewer-modes)
 - [🚀 Quickstart](#-quickstart)
 - [⚙️ Configuration](#️-configuration)
-- [🗂️ Recommended structure](#️-recommended-structure)
-- [🗺️ Data contracts](#️-data-contracts)
+- [🗂️ Folder responsibilities](#️-folder-responsibilities)
+- [🗺️ Data contracts & schemas](#️-data-contracts--schemas)
   - [1) Layer manifest (STAC-first, UI-view friendly)](#1-layer-manifest-stac-first-ui-view-friendly)
   - [2) Timeline config](#2-timeline-config)
   - [3) Document index](#3-document-index)
   - [4) Evidence bundle (Focus Mode friendly)](#4-evidence-bundle-focus-mode-friendly)
-  - [5) Story Nodes](#5-story-nodes)
+  - [5) Story Nodes (web package)](#5-story-nodes-web-package)
   - [Validation](#validation)
-- [🧭 Cartography & map-design standards](#-cartography--map-design-standards)
-- [🌍 3D Story Mode (Cesium + MapLibre hybrid)](#-3d-story-mode-cesium--maplibre-hybrid)
-- [⚡ Performance](#-performance)
+- [🧭 Cartography & visual integrity](#-cartography--visual-integrity)
+- [🧊 3D Story Mode (Cesium + MapLibre hybrid)](#-3d-story-mode-cesium--maplibre-hybrid)
+- [⚡ Performance budgets](#-performance-budgets)
 - [♿ Accessibility](#-accessibility-non-negotiable)
 - [🛡️ Security & privacy](#️-security--privacy)
-- [🧪 Testing & validation](#-testing--validation-tv)
+- [🧪 Testing & validation](#-testing--validation)
 - [🚢 Deployment](#-deployment)
 - [✅ Roadmap](#-roadmap)
 - [📚 Project file influence map](#-project-file-influence-map)
 - [🔙 Back to root](#-back-to-root)
+- [📎 Notes & citations](#-notes--citations)
 
 </details>
 
@@ -75,68 +83,74 @@ This is where users **explore spatiotemporal layers**, **step through eras**, an
 
 What this viewer should feel like:
 
-- 🗺️ **Exploration-first:** map is primary; evidence is always one click away
-- ⏳ **Time-aware:** slider, stepping, and playback drive what’s visible
-- 🔎 **Findable:** search places / themes / eras, jump-to results
-- 🧾 **Traceable:** every layer exposes provenance + license + “how derived”
-- 🧠 **Evidence-first:** Focus Mode + Story Nodes never “free-narrate” without links to sources [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- ♿ **Accessible + responsive:** mobile layouts and keyboard-first flows are non-negotiable
-- 🧊 **Static-first deployable:** works on GitHub Pages with **no server required** (API makes it richer)
+- 🗺️ **Exploration-first:** the map is primary; evidence is always one click away  
+- ⏳ **Time-aware:** slider/stepping/playback drive what is visible (no “time is optional”)  
+- 🔎 **Findable:** search places/themes/eras, jump-to results, sensible defaults  
+- 🧾 **Traceable by default:** every layer shows provenance + license + “how derived”  
+- 🎬 **Story-ready:** Story Nodes are step-based, map/time aware, and citation-backed[^story-nodes]  
+- 🧠 **Evidence-first assistance:** Focus Mode is advisory-only and bounded by sources[^focus-mode]  
+- ♿ **Accessible + responsive:** mobile-first flows and keyboard navigation are non-negotiable  
+- 🧊 **Static-first deployable:** works on GitHub Pages without a server (API = progressive enhancement)[^gh-pages]  
+
+> [!NOTE]
+> The KFM master technical documentation explicitly frames the web UI as the “storytelling and exploration hub,” but with **provenance surfaced at every step**.[^ui-hub]
 
 ---
 
 ## 🚫 Non-goals
 
 - 🧠 Heavy analytics in-browser (big compute stays upstream / server-side / precomputed)
-- 🛰️ Storing giant raw imagery in `web/` (serve COGs/tiles from stable storage)
-- 🔓 Treating IDs as “security” (access control is enforced by API & governance, not obscurity)
+- 🛰️ Storing giant raw imagery under `web/` (serve COGs/tiles from stable storage + reference via catalogs)
+- 🔓 Treating IDs as security (real access control is enforced by governance + API policies, not obscurity)
+- 🧾 “Narrative by vibes” (Story Nodes and Focus Mode are not free-form blogging)
 
 ---
 
 ## 🧠 Where the UI fits in KFM
 
-KFM enforces a trust pipeline. The UI is **downstream** — it does not invent truth.
+KFM enforces a trust pipeline. The UI is **downstream** — it renders what upstream governance has made publishable.
 
 ```mermaid
 flowchart LR
-  DATA["🗃️ Data (raw/processed)"] --> CAT["🗂️ Catalogs<br/>(STAC/DCAT/PROV)"]
-  CAT --> GRAPH["🕸️ Graph / Index<br/>(derived)"]
-  CAT --> API["🛡️ API<br/>(governed access)"]
-  API --> UI["🌐 Web Viewer"]
-  CAT --> UI
-  UI --> NARR["🎬 Narrative (Story Nodes)<br/>Evidence-linked"]
+  DATA["🧰 ETL + Pipelines<br/>(raw → work → processed)"] --> CAT["🗂️ Catalogs<br/>(STAC/DCAT/PROV)"]
+  CAT --> GRAPH["🕸️ Graph/Index<br/>(entities • events • citations)"]
+  GRAPH --> API["🛡️ Governed API<br/>(contracts • redaction)"]
+  CAT --> UI["🌐 Web Viewer<br/>(map • timeline • evidence)"]
+  API --> UI
+  UI --> STORY["🎬 Story Nodes<br/>(governed narrative)"]
+  STORY --> FOCUS["🧠 Focus Mode<br/>(evidence-backed summaries)"]
 ```
 
 > [!IMPORTANT]
-> **Story Nodes** and **Focus Mode** are *governed narrative artifacts* — every claim or media should reference cataloged sources (no uncited interpretation). [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+> KFM v13 docs describe this ordering as a **hard invariant** and expect CI validation gates to reject uncited story content or missing provenance artifacts.[^pipeline][^gates]
 
 ### What the UI must do ✅
-- Render layers based on **catalog manifests** (STAC-first, UI-view allowed)
-- Show provenance, license, and caveats **next to the layer** (not buried)
-- Respect **sensitivity flags** (hide/lock layers, generalize/redact geometry)
-- Keep time semantics consistent across map + charts + docs
+- render layers from **catalog artifacts** (STAC-first; thin UI manifests allowed as derived “views”)
+- surface provenance/license/caveats **next to the layer** (not buried)
+- respect governance sensitivity flags (hide/lock/generalize/redact)
+- keep time semantics consistent across map + charts + docs
 
 ### What the UI must NOT do 🚫
-- Bypass governed services (graph direct, raw bucket scraping, etc.)
-- Treat uncited text as evidence
-- Ship secrets (any `VITE_*` key is public by definition)
+- bypass governed services (direct graph/DB queries, raw bucket scraping, hidden endpoints)
+- treat uncited text as evidence
+- ship secrets (frontend config is public by definition)
 
 ---
 
 ## 🧰 Viewer modes
 
-KFM can ship progressively; these modes can coexist:
+These modes can coexist and “progressively enhance” one another:
 
 | Mode | What it feels like | What it’s for |
 |---|---|---|
 | 🗺️ Explore Mode | Layers + legend + map + timeline | Browse datasets, inspect features |
-| 🎬 Story Mode | Guided steps + citations | Teaching, curated tours |
-| 🧠 Focus Mode | Evidence panel + citations | “Explain this place/layer/event” in context [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) |
-| 🧊 3D Story Mode | Smooth 2D→3D camera beats | Terrain context, corridors, uncertainty volumes |
-| 📊 Analysis Mode | Charts + downloads + uncertainty | Model outputs, reproducible artifacts |
+| 🎬 Story Mode | Guided steps + citations | Teaching, curated tours[^story-nodes] |
+| 🧠 Focus Mode | Evidence panel + citations | “Explain this place/layer/event” — advisory-only[^focus-mode] |
+| 🧊 3D Story Mode | Smooth 2D→3D camera beats | Terrain context, corridors, uncertainty volumes[^story-nodes] |
+| 📊 Analysis Mode | Charts + downloads + uncertainty | Model outputs as evidence artifacts |
 
 > [!NOTE]
-> The design intent is **hybrid**: MapLibre stays the primary 2D mental model; Cesium is activated for specific Story Nodes (mode switch), not a replacement. [oai_citation:4‡Latest Ideas.docx](file-service://file-Uv1nK1SFjjBKqha9qPW4D4)
+> The KFM technical blueprint and future proposals both emphasize a **hybrid** strategy: 2D remains primary, 3D is activated for specific Story Nodes, and Focus Mode stays provenance-first.[^story-nodes][^offline]
 
 ---
 
@@ -148,11 +162,8 @@ KFM can ship progressively; these modes can coexist:
 ### Option A — Static viewer (no build step) ✅
 ```bash
 cd web
-
-# Python
 python -m http.server 8000
-
-# Or Node
+# or:
 npx serve -l 8000
 ```
 
@@ -176,10 +187,10 @@ docker run --rm -p 8000:80 \
 
 ## ⚙️ Configuration
 
-Frontends need **public** configuration (tile endpoints, style URL, API base URL).  
-Create a local env file **without committing secrets**.
+Frontends need **public** configuration (style URL, tile endpoints, API base URL).  
+Prefer **static JSON config** for GitHub Pages friendliness.
 
-### Preferred: JSON config (static-first)
+### ✅ Preferred: JSON config (static-first)
 - ✅ `web/data/ui_config.json` — committed defaults  
 - 🚫 `web/data/ui_config.local.json` — gitignored overrides
 
@@ -188,12 +199,20 @@ Example `ui_config.json`:
 {
   "app": { "title": "Kansas Frontier Matrix", "defaultMode": "explore" },
   "map": {
+    "engine": "maplibre",
     "styleUrl": "./data/styles/kfm-style.json",
-    "tileBaseUrl": "./tiles",
-    "defaultView": { "center": [-98.0, 38.5], "zoom": 5 }
+    "tileBaseUrl": "./data/tiles",
+    "defaultView": { "center": [-98.0, 38.5], "zoom": 5, "bearing": 0, "pitch": 0 }
   },
+  "timeline": { "enabled": true, "configUrl": "./data/timeline.json" },
+  "catalog": { "manifestUrl": "./data/manifest.json" },
   "api": { "enabled": false, "baseUrl": "http://localhost:8000/api/v1" },
-  "features": { "storyNodes": true, "focusMode": true, "cesium3D": "story-only" }
+  "features": {
+    "storyNodes": true,
+    "focusMode": true,
+    "cesium3D": "story-only",
+    "offlinePacks": "dev-only"
+  }
 }
 ```
 
@@ -201,137 +220,88 @@ Example `ui_config.json`:
 ```bash
 VITE_API_BASE_URL=http://localhost:8000/api/v1
 VITE_MAP_STYLE_URL=./data/styles/kfm-style.json
-VITE_TILE_BASE_URL=./tiles
+VITE_TILE_BASE_URL=./data/tiles
 VITE_MAPTILER_KEY=YOUR_PUBLIC_KEY
 ```
 
 > [!IMPORTANT]
 > Frontend tokens are **public enough** by definition.  
-> If it’s a secret, it must **not** ship in the bundle (use server-side exchange or proxy).
+> If it’s a secret, it must **not** ship in the bundle.
 
 ---
 
-## 🗂️ Recommended structure
+## 🗂️ Folder responsibilities
 
-This layout keeps **static deploy clean** while allowing a richer app build and Story Node-driven 2D→3D transitions.
+Keep boundaries crisp. “Presentation ≠ data authority ≠ policy.”
 
-```text
-web/
-├─ 🧾 README.md
-├─ 🧾 index.html
-├─ 🎨 style.css
-├─ 🧠 app.js                       # static entry (or built entry)
-├─ 📦 package.json                 # optional (React/tooling)
-├─ ⚙️ vite.config.js               # optional (if Vite app)
-├─ 🧩 src/                         # optional (React source)
-│  ├─ 🗺️ components/
-│  │  ├─ MapView/
-│  │  ├─ Sidebar/
-│  │  ├─ Timeline/
-│  │  ├─ Legend/
-│  │  ├─ DocPanel/
-│  │  └─ EvidencePanel/            # Focus Mode UI
-│  ├─ 🧠 state/                    # shared store: time + layers + view + mode
-│  ├─ 🔌 api/                      # API clients (optional)
-│  ├─ 🧰 lib/                      # pure helpers (testable)
-│  └─ 🧪 tests/
-├─ 🎬 story_nodes/
-│  └─ kansas_from_above/           # 2D→3D demo Story Node
-│     ├─ config.json               # camera steps, fades, timings
-│     ├─ narrative.md              # human-readable story (with citations)
-│     └─ cesium_scene.js           # Cesium scene bootstrap for this node
-├─ 👁️ viewers/
-│  ├─ maplibre/                    # 2D viewer bootstrap
-│  └─ cesium/                      # 3D viewer bootstrap
-│     └─ bootstrap.js
-├─ 📚 data/
-│  ├─ 🗃️ catalog/                  # UI-view manifests, STAC views, indices
-│  ├─ ⏳ timeline.json
-│  ├─ 🧾 doc_index.json
-│  ├─ 🧾 evidence/                 # precomputed evidence bundles (optional)
-│  ├─ 🗺️ styles/                   # MapLibre style JSON + sprites/fonts
-│  ├─ 🧭 ui_config.json
-│  └─ 🧪 schemas/                  # JSON Schemas for validation (recommended)
-└─ 🖼️ assets/
-   ├─ logos/
-   ├─ icons/
-   ├─ sprites/                     # optimize formats + size
-   └─ screenshots/
-```
+| Folder | What it is | What it is **not** |
+|---|---|---|
+| 🎨 `web/assets/` | static presentation assets (icons, sprites, ramps, textures) | not a data backdoor, not secrets |
+| 🗺️ `web/data/` | small UI-facing fixtures, demo bundles, catalog pointers | not the production lake |
+| 🎬 `web/story_nodes/` | Story Node packages for the web runtime | not uncited narrative content |
+| 🧩 `web/src/` | UI logic (React, state, renderers, validators) | not a dumping ground for data blobs |
 
-This structure aligns with the “non-disruptive” Story Node demo approach (no backend required) while keeping a future-proof path to full 3D Tiles streaming. [oai_citation:5‡Latest Ideas.docx](file-service://file-Uv1nK1SFjjBKqha9qPW4D4)
+> [!TIP]
+> Read the folder contracts first:
+> - `web/assets/README.md` (licensing, sprite/glyph rules, visual integrity)  
+> - `web/data/README.md` (fixtures, offline bundles, provenance pointers)
 
 ---
 
-## 🗺️ Data contracts
+## 🗺️ Data contracts & schemas
 
-KFM is built around **traceable, reproducible, time-aware layers**.  
-The UI should prefer **STAC** records (Collections/Items/assets) and allow **thin UI manifests** as a derived view.
+KFM’s web viewer lives or dies on **contracts**:
+- contracts make reviews possible
+- contracts prevent silent drift
+- contracts enforce provenance + governance at UI boundaries[^gates]
+
+> [!NOTE]
+> KFM technical docs describe the front-end as a SPA that keeps map/timeline/UI state in sync and can integrate 2D and 3D modes with shared state.[^ui-hub]
 
 ### 1) Layer manifest (STAC-first, UI-view friendly)
 
-**Goal:** one file per layer describing:
-- how to render it (tiles, style, symbology)
-- how it behaves over time
-- what it is, where it came from, what caveats exist (provenance + license)
+The UI should prefer **STAC** (Collections/Items/assets), but may also use a thin “UI manifest” as a derived view.
 
-✅ Minimum recommended fields (UI-view):
+**Minimum recommended UI fields**
 - `id`, `title`, `description`
-- `bbox` (WGS84 lon/lat)
+- `bbox` (WGS84 lon/lat), `crs`
 - `time`: `static | range | steps`
-- `assets`: `raster_tiles | vector_tiles | geojson | pmtiles | cog`
-- `render`: opacity/minzoom/maxzoom + optional color ramp
-- `provenance`: source/ref/license/processing/uncertainty
-- `governance`: `public | internal | restricted` + redaction rules
-- `links`: pointers back to STAC/DCAT/PROV “source of truth”
+- `assets`: `vector_tiles | raster_tiles | geojson | pmtiles | cog`
+- `render`: opacity/minzoom/maxzoom + legend pointer
+- `governance`: `public | internal | restricted` + redaction notes
+- `links`: back to STAC/DCAT/PROV (source of truth)
 
 > [!TIP]
-> Prefer serving vectors as **tiles** (PBF/PMTiles) once layers grow beyond “small GeoJSON”.  
-> Use GeoJSON for small curated layers and “teaching” artifacts.
+> KFM docs recommend normalizing data for web display to **WGS84 (EPSG:4326)** and documenting reprojection in provenance.[^crs-naming]
 
 Example UI manifest:
 ```json
 {
-  "id": "air_pm25_fusion_monthly",
+  "id": "kfm.ks.air.pm25_fusion.monthly.v1",
   "title": "Kansas PM2.5 Fusion (Monthly)",
-  "description": "Fused PM2.5 surface (stations + satellite proxy). Includes uncertainty band.",
+  "description": "Fused PM2.5 surface (stations + satellite proxy). Includes uncertainty notes.",
+  "crs": "EPSG:4326",
   "bbox": [-102.05, 36.99, -94.59, 40.00],
   "time": { "type": "steps", "step": "1M", "available": ["2019-01-01","2019-02-01"] },
   "assets": {
-    "raster_tiles": {
-      "type": "xyz",
-      "url": "./tiles/air/pm25_fusion/{time}/{z}/{x}/{y}.png"
-    },
-    "legend": { "type": "ramp", "units": "µg/m³", "min": 0, "max": 35 }
+    "raster_tiles": { "type": "xyz", "url": "./data/tiles/air/pm25/{time}/{z}/{x}/{y}.png" },
+    "legend": { "type": "ramp", "units": "µg/m³", "min": 0, "max": 35, "rampId": "kfm_sequential_air_v1" }
   },
   "render": { "opacity": 0.8, "minzoom": 5, "maxzoom": 12 },
-  "provenance": {
-    "sources": ["EPA monitors", "satellite proxy"],
-    "license": "TBD",
-    "processing": ["normalize", "fuse", "tile"],
-    "uncertainty": "Expose band + notes in UI"
-  },
-  "governance": { "sensitivity": "public", "redactions": [] },
+  "governance": { "classification": "public", "redactions": [] },
   "links": {
-    "stac_collection": "../data/catalog/air/collection.json",
-    "prov_run": "../data/provenance/air/pm25_fusion/run_2019_02.json"
+    "stac_collection": "../data/stac/collections/air_pm25.json",
+    "dcat_dataset": "../data/catalog/dcat/air_pm25.jsonld",
+    "prov_run": "../data/prov/runs/air_pm25_fusion_2019_02.jsonld"
   }
 }
 ```
-
-This aligns with the design intent that *web layers should show provenance, license, caveats, and links back to STAC/PROV* (including “transparency badges” and kill-switch/rollback surfacing where applicable).
 
 ---
 
 ### 2) Timeline config
 
-**Goal:** define eras + ticks + snapping so time is predictable.
-
-Recommended fields:
-- `default_date`
-- `eras` (human navigation)
-- `ticks` (major/minor cadence)
-- `rules` (snapping by layer)
+The timeline defines eras + ticks + snapping so time is predictable.
 
 Example:
 ```json
@@ -346,16 +316,14 @@ Example:
 }
 ```
 
+> [!NOTE]
+> “Dynamic timeline & 4D mapping” is a core direction in the future proposals (timeline slider MVP + time travel on the map).[^offline]
+
 ---
 
 ### 3) Document index
 
-**Goal:** find linked docs by place, time, theme, and geometry.
-
-Recommended capabilities:
-- search by `place_name`, `tags`, `era`, `date_range`
-- geometry association (point/line/polygon) or nearest-feature linking
-- citations/excerpts that connect “feature → doc panel” experiences
+Documents become evidence when they are searchable and place/time-linked.
 
 Example:
 ```json
@@ -363,13 +331,12 @@ Example:
   "id": "doc_1847_fort_leavenworth_letter",
   "title": "Letter from Fort Leavenworth",
   "date": "1847-05-12",
-  "era": "frontier",
   "tags": ["trade", "military", "transport"],
   "places": ["Fort Leavenworth", "Kansas River"],
   "geometry": { "type": "Point", "coordinates": [-94.922, 39.368] },
   "excerpt": "…",
   "citation": "Archive Ref XYZ",
-  "assets": { "pdf": "./docs/letters/1847_fort_leavenworth.pdf" }
+  "assets": { "pdf": "./data/docs/letters/1847_fort_leavenworth.pdf" }
 }
 ```
 
@@ -380,25 +347,19 @@ Example:
 
 ### 4) Evidence bundle (Focus Mode friendly)
 
-**Goal:** a single payload the UI can show as “evidence-only” for a place/layer/time.
-
-Typical fields:
-- `claim` (what the user is seeing)
-- `supports` (citations + assets + provenance)
-- `lineage` (PROV refs)
-- `confidence/uncertainty`
+**Evidence bundles** are “Focus Mode fuel”: a single payload the UI can show as *evidence-only* for a place/layer/time.
 
 Example:
 ```json
 {
   "id": "bundle_ks_railroads_1880__bbox_-98_38",
   "time": "1880-01-01",
-  "layer_id": "ks_railroads",
+  "layer_id": "kfm.ks.transport.railroads.1870_1910.v1",
   "bbox": [-98.5, 37.8, -98.1, 38.2],
   "supports": [
     {
       "type": "citation",
-      "label": "Kansas Historical Society map sheet (1880)",
+      "label": "KHS map sheet (1880)",
       "ref": "KHS:<id>",
       "asset": "./data/processed/railroads_1880_sheet_12.tif"
     }
@@ -408,17 +369,17 @@ Example:
 ```
 
 > [!IMPORTANT]
-> Focus Mode is **evidence-backed and advisory** — no “hallucinated” narrative.  
-> Any AI assistance must be clearly labeled and constrained by provenance-linked sources. [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+> KFM defines Focus Mode as an evidence-backed assistant that **cites underlying data/docs**, avoids speculation, and stays bounded by what KFM contains.[^focus-mode]
 
 ---
 
-### 5) Story Nodes
+### 5) Story Nodes (web package)
 
-Story Nodes are governed narrative artifacts:
-- machine-ingestible, step-based, and **time/map aware**
-- can lock camera, fade layers, and (optionally) **switch engines** 2D→3D
-- every claim/media must link back to cataloged evidence [oai_citation:7‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+Story Nodes are step-based narrative artifacts that orchestrate:
+- camera moves
+- layer fades/toggles
+- time stepping
+- (optional) 2D → 3D engine switch[^story-nodes]
 
 #### Folder shape
 ```text
@@ -427,9 +388,8 @@ web/story_nodes/
    ├─ config.json         # camera steps, layer fades, timings
    ├─ narrative.md        # human-readable story (with citations)
    ├─ cesium_scene.js     # optional: node-specific 3D scene bootstrap
-   └─ assets/             # optional local images / tiles / media
+   └─ assets/             # optional local media (small + licensed)
 ```
-(Recommended in the project’s 3D demo plan.) [oai_citation:8‡Latest Ideas.docx](file-service://file-Uv1nK1SFjjBKqha9qPW4D4)
 
 #### Minimal `config.json` concept
 ```json
@@ -442,17 +402,20 @@ web/story_nodes/
       "engine": "maplibre",
       "time": "2020-01-01",
       "camera": { "center": [-98.0, 38.5], "zoom": 5, "bearing": 0, "pitch": 0 },
-      "layers": ["ks_context", "ks_counties"]
+      "layers": ["kfm_base", "kfm_counties_demo"]
     },
     {
       "engine": "cesium",
       "camera": { "flyTo": { "lon": -98.0, "lat": 38.5, "height": 250000 } },
       "effects": { "terrainExaggeration": 1.5 },
-      "layers": ["ks_elevation", "ks_corridor_overlay"]
+      "layers": ["kfm_terrain", "kfm_corridor_overlay"]
     }
   ]
 }
 ```
+
+> [!NOTE]
+> v13 guidance anticipates a stronger Story Node lifecycle: **draft → review → published**, with automated provenance/citation checks at publish time.[^story-workflow]
 
 ---
 
@@ -460,10 +423,10 @@ web/story_nodes/
 
 **Target:** a validator that runs in CI and locally.
 
-Suggested commands (pick one stack and standardize):
+Suggested commands (choose one stack and standardize):
 ```bash
 npm run validate:data
-python ../scripts/qa/validate_web_catalogs.py
+npm run validate:story-nodes
 ```
 
 Minimum checks:
@@ -473,30 +436,35 @@ Minimum checks:
 - time schemas are consistent ✅
 - links back to STAC/DCAT/PROV are not broken ✅
 
+> [!IMPORTANT]
+> v13 docs explicitly call out CI gates that fail on missing provenance, broken links, or missing citations for Story Nodes.[^gates]
+
 ---
 
-## 🧭 Cartography & map-design standards
+## 🧭 Cartography & visual integrity
 
-A geospatial viewer is only as good as its **cartographic decisions**:
+Maps persuade. Charts persuade. Legends persuade. 🎯  
+That means style changes are reviewable “truth changes,” not mere cosmetics.
 
-- ✅ Always show a clear **legend** (with units + ranges)
-- ✅ Use **visual hierarchy** (what matters should “pop”; context recedes)
-- ✅ Make map fundamentals present/consistent: **title, scale bar, north arrow, credits** (as appropriate)
-- ✅ Prefer color ramps that are interpretable and accessible (don’t rely on color alone)
-- ✅ Include attribution prominently for any basemap / tiles
+**Viewer expectations**
+- ✅ clear legend with units + ranges  
+- ✅ visual hierarchy (context recedes, subject pops)  
+- ✅ color ramps match semantics (sequential vs diverging vs categorical)  
+- ✅ uncertainty has a visual grammar (bands, hatching, opacity rules)  
+- ✅ attribution is visible when required  
 
 > [!TIP]
-> Keep style JSON diffs reviewable: avoid giant monolithic style edits; split sprites/fonts cleanly.
+> Keep style JSON diffs reviewable: avoid giant monolithic style edits; version styles and keep layer IDs stable.
 
 ---
 
-## 🌍 3D Story Mode (Cesium + MapLibre hybrid)
+## 🧊 3D Story Mode (Cesium + MapLibre hybrid)
 
-KFM’s fastest path to real 3D is **hybrid**:
+KFM’s fastest, safest path to real 3D is hybrid:
 
 - **MapLibre GL JS** = primary 2D exploration (vector layers, labels, time slider)
-- **CesiumJS** = Story Node “3D context” mode (terrain, globe, 3D Tiles)
-- **Story Nodes** orchestrate: camera locks, fades, engine switch, continuity [oai_citation:9‡Latest Ideas.docx](file-service://file-Uv1nK1SFjjBKqha9qPW4D4)
+- **CesiumJS** = Story Node “3D context mode” (terrain, globe, 3D Tiles)
+- **Story Nodes orchestrate** camera locks, fades, and engine switch[^story-nodes]
 
 ### 3D flow (engine switch)
 ```mermaid
@@ -507,115 +475,96 @@ flowchart TB
   D --> E["✅ Resume timeline + layers state"]
 ```
 
-### WebGL expectations (performance + correctness)
-MapLibre and Cesium are both WebGL-heavy. Key implications:
-
-- avoid unnecessary shader churn (switching shaders per-feature can be expensive)
-- treat fragment shading as a hotspot (fragment shader is the final stage and runs a lot)
-- prefer tiles and simplified geometries over “megageojson”
-- keep textures/sprites optimized (format and size matter)
+**3D hygiene (required)**
+- document units + axes + origin (avoid silent coordinate bugs)
+- prefer glTF/GLB for models, 3D Tiles for streaming
+- keep demo 3D assets small (no giant meshes under `web/`)
 
 ---
 
-## ⚡ Performance
+## ⚡ Performance budgets
 
-Geospatial web apps can melt laptops 🔥💻 — keep it smooth:
+Geospatial web apps can melt laptops 🔥💻 — keep it smooth.
 
 ### “Move less data” principle
-Minimize data movement:
-- tiles over raw rasters/vectors
-- filtered queries over “download everything”
-- index-friendly patterns (bbox + time windows)
+- tiles over raw rasters/vectors  
+- bbox/time-window queries over “download everything”  
+- index-friendly request patterns (bbox + time)  
 
-This aligns with broader data-system guidance that emphasizes **index acceleration** and selective processing (avoid scanning more than needed). [oai_citation:10‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)
+> [!NOTE]
+> System-scale references emphasize selectivity, indexing, and avoiding unnecessary scanning — those principles apply directly to the viewer’s data-loading strategy.[^scalable]
 
-### Practical viewer tactics
-- 🧊 Prefer **tiled raster** and **vector tiles** for large layers
-- 🧬 Simplify geometry at small zooms (build-time or server-side)
-- 🧰 Lazy-load heavy layers (toggle-load, not boot-load)
-- 🧠 Cache aggressively:
-  - long-lived caching for tiles/manifests
-  - hashed assets for builds
-- 🧵 Offload parsing to Web Workers for big GeoJSON
-- 🗜️ Compress JSON (gzip/brotli) and consider NDJSON streams
-- 🧭 Throttle + debounce feature queries at high zoom
+### Practical tactics ✅
+- 🧊 prefer vector tiles / raster tiles for large layers
+- 🧬 simplify geometry at small zooms (build-time or server-side)
+- 🧰 lazy-load heavy layers (toggle-load, not boot-load)
+- 🧠 cache aggressively (manifests, tiles, decoded GeoJSON)
+- 🧵 use Web Workers for heavy parsing/joins
+- 🗜️ compress JSON (gzip/brotli) and consider NDJSON streams for logs/events
 
-### Image + sprite optimization
-Choose image formats deliberately and keep sprites/icons small and compressed.
+**Budget heuristics**
+- demo GeoJSON layer: aim for **< 2–5 MB** uncompressed
+- thumbnail: **< 200 KB**
+- offline tile pack: **small enough to clone** (prefer tens of MB)
+
+> [!NOTE]
+> “Offline packs” are explicitly discussed as a future direction (downloadable bundles for regions with limited connectivity).[^offline]
 
 ---
 
 ## ♿ Accessibility non-negotiable
 
-- ⌨️ Keyboard navigation:
-  - sidebar focus order
-  - timeline control (←/→ step, space play/pause)
-  - escape closes dialogs/panels
-- 🏷️ ARIA labels:
-  - timeline slider
-  - layer toggles
-  - dialogs / popovers
-- 🎨 Color is not the only signal:
-  - patterns + labels + tooltips
-- 📱 Responsive layouts:
-  - map + panels stack cleanly
-  - “map is always reachable” (no trapped scroll)
-
-Responsive UI is a first-class requirement, not polish — build with breakpoints and flexible layouts from day one.
+- ⌨️ keyboard navigation (map focus, panel focus, timeline controls)
+- 🏷️ ARIA labels for sliders/toggles/dialogs
+- 🎨 color is not the only signal (patterns + labels + tooltips)
+- 📱 responsive layouts (map always reachable; no trapped scroll)
+- 🧾 captions/alt text for media used in Story Nodes
 
 ---
 
 ## 🛡️ Security & privacy
 
-KFM’s design is explicitly aligned with security + governance + privacy by design. [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Engineering Design.docx](file-service://file-Wa2tWyESBZfsNGmRH7vGHY)
+The web viewer is a **public surface area**.
 
-### Frontend safety rules
-- ✅ Treat frontend keys as public
-- 🔒 Never embed secrets in `VITE_*`
-- 🧼 Sanitize document excerpts (and never trust remote HTML)
-- 🧾 Always show provenance where decisions are made
-- 🧯 Prefer strict Content Security Policy (especially on Pages)
-- 🧊 Public repo reminder: anything in `web/` is downloadable by default
+### Frontend safety rules ✅
+- treat frontend keys as public
+- never embed secrets in build output
+- sanitize document excerpts (never trust remote HTML)
+- avoid leaking sensitive geographies (generalize, jitter, aggregate, or gate)
+- prefer strict Content Security Policy (especially on Pages)
 
-### Avoid “info leaks”
-Don’t leak versions/config in obvious places (headers, banners, verbose errors). Security references often highlight that exposed banners can reveal vendor/version info and increase attack surface.
-
-### Sensitivity handling
-If a dataset contains sensitive locations:
-- generalize precision (grid/jitter/aggregation)
-- hide or gate layers based on governance sensitivity
-- clearly mark restricted access paths
-
-The KFM design calls for controlled access and generalized display for sensitive sites (e.g., sacred sites). [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Engineering Design.docx](file-service://file-Wa2tWyESBZfsNGmRH7vGHY)
+> [!IMPORTANT]
+> The KFM blueprint explicitly frames Focus Mode and narrative features as provenance-first and bounded (no speculation, always cite evidence).[^focus-mode]
 
 ---
 
-## 🧪 Testing & validation (TV)
+## 🧪 Testing & validation
 
-“TV” here = **Testing + Verification/Validation** (for both code and evidence).
+KFM’s technical blueprint expects quality gates spanning:
+- unit tests
+- integration tests (API/DB/pipelines)
+- end-to-end tests that simulate critical user journeys[^testing]
 
-### Minimum bar
-- unit: timeline snapping + layer resolver + doc ranking
-- component: legend/layer toggles + timeline + panels
+For the web viewer specifically:
+- unit: timeline snapping + layer resolver + manifest parsing
+- component: legend/layer toggles + timeline + evidence panel
 - e2e: load layer → scrub time → inspect → open evidence
 
-### Evidence-first validation
-- broken links are a *data bug*
-- missing provenance is a *ship blocker*
-- uncertainty/caveats must render alongside model outputs
-
-Graphics and visual diagnostics aren’t decoration — they reveal structure, trends, and problems early (EDA mindset).
+> [!TIP]
+> Broken links are a **data bug**, not a UI bug. Missing provenance is a **ship blocker**.[^gates]
 
 ---
 
 ## 🚢 Deployment
 
 ### GitHub Pages (static-first)
-This folder is designed to be the **publish root**:
+This folder is designed to be the publish root:
+- keep paths relative (`./data/...`, `./assets/...`)
+- avoid absolute `/` paths unless you control the domain root
+- ensure fonts/sprites referenced by the style are reachable
 
-- Keep paths relative (`./data/...`, `./assets/...`)
-- Avoid absolute `/` paths unless you control the domain root
-- Ensure fonts/sprites referenced by your MapLibre style are reachable
+> [!NOTE]
+> If you publish via GitHub Pages with a static-site generator, front-matter rules may apply to docs pages.[^gh-pages]
 
 ### Vite base path (if React/Vite)
 ```js
@@ -630,81 +579,86 @@ export default {
 ## ✅ Roadmap
 
 ### P0 — Make the viewer real ✅
-- [ ] Finalize `web/data/catalog/*.json` schema + validator
-- [ ] Implement Timeline (ticks + play/pause) tied to layer visibility
-- [ ] Implement Layer Resolver: `static | range | steps`
-- [ ] Ship a “demo dataset” bundle for instant onboarding 📦
-- [ ] Ship Story Node demo: **“Kansas From Above”** (2D→3D→2D) [oai_citation:13‡Latest Ideas.docx](file-service://file-Uv1nK1SFjjBKqha9qPW4D4)
+- [ ] finalize `web/data/manifest.json` schema + validator
+- [ ] timeline MVP: ticks + play/pause tied to layer visibility[^offline]
+- [ ] layer resolver: `static | range | steps`
+- [ ] ship a “demo dataset” bundle for instant onboarding 📦
+- [ ] ship Story Node demo: **“Kansas From Above”** (2D→3D→2D)[^story-nodes]
 
 ### P1 — Make it useful 🧰
-- [ ] “Document mentions near view” panel (bbox + time)
-- [ ] Search: place name + tags/themes + date range
-- [ ] Robust error UI: missing tiles, slow network, stale manifests
-- [ ] Transparency badges: provenance links + kill-switch/rollback visibility in legend (where applicable)
+- [ ] “documents near view” panel (bbox + time)
+- [ ] search: place name + tags/themes + date range
+- [ ] robust error UI: missing tiles, slow network, stale manifests
+- [ ] transparency badges: provenance links + caveats visible in legend
 
-### P2 — Make it culturally and scientifically stronger ❤️🧭
-The project audit highlights missing/underused sources and narrative enrichment opportunities:
-- [ ] Oral histories + Indigenous narratives (place-linked, consent-aware) [oai_citation:14‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)
-- [ ] Historic fire regimes / prairie burn practices (timeline-linked) [oai_citation:15‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)
-- [ ] Paleoclimate proxies (tree rings/pollen cores) tied to events [oai_citation:16‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)
-- [ ] Hydrology change narratives and optional modeling outputs (clearly labeled + V&V) [oai_citation:17‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)
-- [ ] Treaty layers upgraded from polygons → interactive narratives + linked texts [oai_citation:18‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)
+### P2 — Make it stronger (science + culture) ❤️🧭
+- [ ] mobile-first polish + offline pack workflow (downloadable region bundles)[^offline]
+- [ ] simple analytical widgets (time-series charts for selected region)[^offline]
+- [ ] Focus Mode: deeper graph context + dataset/story suggestions (still advisory-only)[^offline]
 
 ---
 
 ## 📚 Project file influence map
 
-This repo is backed by a multidisciplinary library pack. These files influence **how we design the viewer**, not just what we show.
+KFM is backed by a multidisciplinary library pack. These files influence **how we design the viewer**, not just what we show.
 
-> [!NOTE]
-> Many reference files have different licenses than the repo code. Keep them in `docs/library/` and respect upstream terms.
+> [!WARNING]
+> Reference files may have different licenses than repo code. Respect upstream terms and avoid redistributing third‑party works without permission.
 
 <details>
 <summary><strong>📦 Expand: Project files → what they influence in <code>web/</code></strong></summary>
 
 ### 🧱 KFM canonical docs
-- `Kansas Frontier Matrix (KFM) – Comprehensive Engineering Design.docx` — UI governance, security/privacy, interoperability, evidence-first pipeline. [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Engineering Design.docx](file-service://file-Wa2tWyESBZfsNGmRH7vGHY)
-- `Latest Ideas.docx` — 3D Story Node demo plan (“Kansas From Above”), hybrid Cesium+MapLibre, repo shape. [oai_citation:20‡Latest Ideas.docx](file-service://file-Uv1nK1SFjjBKqha9qPW4D4)
-- `MARKDOWN_GUIDE_v13.md.gdoc` — canonical pipeline ordering + definitions for Story Nodes / Focus Mode. [oai_citation:21‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` — roadmap gaps: oral histories, paleoclimate, fire regimes, hydrology, treaty narratives. [oai_citation:22‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` — UI roles, Focus Mode posture, Story Nodes + hybrid 3D strategy, testing expectations.[^ui-hub][^focus-mode][^story-nodes][^testing]
+- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` — timeline MVP, offline packs, mini-dashboards, Focus Mode enhancements (still provenance-first).[^offline]
+- `MARKDOWN_GUIDE_v13.md.gdoc` — pipeline invariant, CI validation gates, Story Node lifecycle, catalog staging layout.[^pipeline][^gates][^story-workflow][^catalog-layout]
+- `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` — Markdown patterns for docs/Pages and contribution hygiene (checklists, references).[^gh-pages]
 
-### 🌐 Web + UI + graphics + 3D
-- `responsive-web-design-with-html5-and-css3.pdf` — mobile-first/responsive constraints and layout thinking.
-- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` — WebGL performance mindset (shader stages, fragment cost).
-- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` — image/sprite format tradeoffs and optimization awareness.
-- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` — mobile mapping context; geo-sensor networks & situated mapping concerns.
+### 🌐 Web UI + rendering + media discipline
+- `responsive-web-design-with-html5-and-css3.pdf` — mobile-first layout, breakpoints, progressive enhancement.
+- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` — WebGL performance instincts (shader cost, buffers, textures), safe rendering patterns.
+- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` — image/sprite format tradeoffs; keep assets optimized.
+- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` — mobile/offline realities; situated mapping concerns; sensitivity mindset.
 
-### 🗺️ GIS + geospatial engineering
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf` — map composition fundamentals and visual hierarchy.
-- `python-geospatial-analysis-cookbook.pdf` + `KFM-python-geospatial-analysis-cookbook.pdf` — practical GIS processing patterns, PostGIS↔GeoJSON, Leaflet visualization workflows. [oai_citation:23‡Latest Ideas.docx](file-service://file-Uv1nK1SFjjBKqha9qPW4D4)
-- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` — remote-sensing pipeline mental model; map/legend/time-series outputs integration.
+### 🗺️ GIS + cartography + remote sensing
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf` — visual hierarchy, legend integrity, “maps persuade” discipline.
+- `python-geospatial-analysis-cookbook.pdf` — practical GIS IO, CRS pitfalls, PostGIS↔GeoJSON patterns.
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` — time-series visualization patterns, indices/composites conventions, export/repro expectations.
 
-### 🗄️ Data + DB + interoperability + scaling
-- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` — query patterns, recursion/hierarchies (useful for graph-ish UI queries). [oai_citation:24‡think-bayes-bayesian-statistics-in-python.pdf](file-service://file-LXwJApPMVhRZgyqLb9eg7c)
-- `Data Spaces.pdf` — interoperability challenges, ETL, semantic layers (why catalogs matter). [oai_citation:25‡Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf](file-service://file-LuWF23hffNAZJaZm2Gzvcd)
-- `Scalable Data Management for Future Hardware.pdf` — indexing/selectivity, push-based pipelines, performance-first processing. [oai_citation:26‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)
+### 🗄️ Data systems, performance, interoperability
+- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` — query mindset (paging/filter), schema discipline, stable IDs.
+- `Scalable Data Management for Future Hardware.pdf` — selectivity, caching, pipelines, throughput mindset (why we avoid megablobs in-browser).[^scalable]
+- `Data Spaces.pdf` — pointer-over-payload philosophy; catalogs as interfaces.
 
-### 📈 Modeling + analytics + scientific discipline
-- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- `Understanding Statistics & Experimental Design.pdf`
-- `regression-analysis-with-python.pdf`
-- `Regression analysis using Python - slides-linear-regression.pdf`
-- `graphical-data-analysis-with-r.pdf` — EDA/diagnostics mindset for Analysis Mode UIs.
-- `think-bayes-bayesian-statistics-in-python.pdf`
-- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` — ML artifacts (model cards, bias awareness), surface outputs with uncertainty + citations.
+### 📈 Modeling, statistics, experiments, uncertainty (viewer honesty)
+- `Understanding Statistics & Experimental Design.pdf` — avoid misleading comparisons; surface sampling/coverage; honest legends.
+- `graphical-data-analysis-with-r.pdf` — EDA-first visuals; make distributions/outliers readable.
+- `regression-analysis-with-python.pdf` + `Regression analysis using Python - slides-linear-regression.pdf` — diagnostics-first expectations; don’t style “trendlines as truth.”
+- `think-bayes-bayesian-statistics-in-python.pdf` — credible intervals, uncertainty bands, posterior thinking in UI.
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` — V&V posture; scenario metadata; avoid untraceable simulation claims.
 
-### 🧪 Simulation + advanced math (future overlays / graph views)
-- `Generalized Topology Optimization for Structural Design.pdf` — “design domain” thinking; scenario exploration and constraints visualization. [oai_citation:27‡Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf](file-service://file-LuWF23hffNAZJaZm2Gzvcd)
-- `Spectral Geometry of Graphs.pdf` — graph Laplacian ideas that can inform network-based layers and graph UI views. [oai_citation:28‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)
+### 🤖 ML + AI governance (Focus Mode & Analysis Mode UI)
+- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` *(if present)* — model cards, evaluation artifacts, bounded claims.
+- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` — label AI outputs; accountability + auditability framing.
+- `Understanding Machine Learning: From Theory to Algorithms (2014)` — generalization mindset; don’t present model outputs without limits/assumptions (especially in Focus Mode).
 
-### 🔒 Security + governance + ethics
-- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` — don’t treat identifiers as secrets; enforce real access controls.
-- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` — threat mindset; reduce info leakage; responsible disclosure posture.
-- `Introduction to Digital Humanism.pdf` — human determination + transparency + governance for AI systems.
-- `Principles of Biological Autonomy - book_9780262381833.pdf` — autonomy/self-organization framing; keep humans accountable in the loop. [oai_citation:29‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)
-- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` — ML limitations framing (pattern finding/curve fitting) → label AI outputs carefully.
+### 🧩 Software design + change tolerance
+- `Flexible Software Design: Systems Development for Changing Requirements (2005)` — stable identifiers + change-tolerant contracts; design for evolving requirements without breaking trust.
 
-### 🧱 General programming shelf (bundles)
+### 🔒 Security + concurrency + hostile-input posture
+- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` — threat modeling posture; don’t leak info; defense-in-depth.
+- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` — hostile-input awareness; treat parsers and file formats cautiously (defensive posture only).
+- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` — bounded work; avoid unbounded parsing/processing in-browser.
+
+### 🧮 Graph/math/optimization (future overlays and graph views)
+- `Spectral Geometry of Graphs.pdf` — careful interpretation of graph metrics and network visuals.
+- `Generalized Topology Optimization for Structural Design.pdf` — scenario/constraint thinking; parameter sensitivity; show assumptions clearly.
+
+### ❤️ Ethics & human-centered governance
+- `Introduction to Digital Humanism.pdf` — transparency, dignity, human accountability in AI-assisted systems.
+- `Principles of Biological Autonomy - book_9780262381833.pdf` — systems/feedback framing; autonomy-supporting UX.
+
+### 📚 General programming shelf (bundles)
 - `A programming Books.pdf`
 - `B-C programming Books.pdf`
 - `D-E programming Books.pdf`
@@ -715,7 +669,7 @@ This repo is backed by a multidisciplinary library pack. These files influence *
 - `S-T programming Books.pdf`
 - `U-X programming Books.pdf`
 
-These bundles are used as “depth references” across UI engineering, GIS querying patterns, performance tradeoffs, and analysis toolchains (but the viewer stays contract-first and evidence-first). [oai_citation:30‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+These bundles are used as “depth references” across UI engineering, GIS querying patterns, performance tradeoffs, and analysis toolchains (but the viewer remains contract-first and evidence-first).
 
 </details>
 
@@ -723,3 +677,21 @@ These bundles are used as “depth references” across UI engineering, GIS quer
 
 ## 🔙 Back to root
 - Back to project root: `../README.md`
+
+---
+
+## 📎 Notes & citations
+
+[^pipeline]: Canonical pipeline ordering and UI position are specified in the v13 guide’s pipeline diagram and narrative description.:contentReference[oaicite:0]{index=0}  
+[^gates]: CI validation gates (e.g., Story Nodes require citations; missing provenance fails CI) are described in v13 guidance.:contentReference[oaicite:1]{index=1}  
+[^story-workflow]: Story Node lifecycle and publication checks are called out in the v13 workflow guidance.:contentReference[oaicite:2]{index=2}  
+[^catalog-layout]: Required staging layout and catalog outputs (raw/work/processed → STAC/DCAT/PROV) are described in v13 documentation.:contentReference[oaicite:3]{index=3}  
+[^focus-mode]: Focus Mode is described as an evidence-backed AI assistant that cites underlying records and avoids speculation beyond KFM content.:contentReference[oaicite:4]{index=4}  
+[^story-nodes]: Story Nodes and hybrid 2D→3D integration (Cesium + MapLibre) are described as core KFM UI features.:contentReference[oaicite:5]{index=5}  
+[^ui-hub]: The technical doc describes the front-end as the exploration/storytelling hub, surfacing provenance and integrating standard UI elements (layers/search/legends/panels).:contentReference[oaicite:6]{index=6}  
+[^testing]: Testing & QA expectations across unit/integration/E2E and CI are described in the technical documentation.:contentReference[oaicite:7]{index=7}  
+[^crs-naming]: CRS normalization guidance and dataset ID naming conventions are described in the technical documentation (EPSG:4326 for web; stable dataset IDs).:contentReference[oaicite:8]{index=8}  
+[^offline]: Future proposals include Focus Mode enhancements, analytical widgets, mobile-friendly UI, offline packs, and a timeline slider MVP.:contentReference[oaicite:9]{index=9}  
+[^gh-pages]: Markdown/GitHub Pages considerations (front-matter and doc publishing conventions) are discussed in the project’s Markdown best-practices doc.:contentReference[oaicite:10]{index=10}  
+[^scalable]: Performance mindset informed by scalable data systems reference (selectivity, pipelines, and avoiding unnecessary scanning/processing).:contentReference[oaicite:11]{index=11}  
+
