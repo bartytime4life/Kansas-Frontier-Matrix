@@ -1,1 +1,234 @@
+# 🏷️ Release Drafter Config — `.github/release-drafter.yml`
+
+- 🎯 Purpose: auto-draft KFM release notes from merged PRs using **labels + paths**, aligned to the KFM pipeline.
+- ⛓️ Pipeline framing: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+- 🛡️ Governance posture: **evidence-first**, **deny-by-default**, and **supply-chain-aware** (especially for CI/workflows).
+
+```yaml
+# .github/release-drafter.yml
+# -----------------------------------------------------------------------------
+# Kansas Frontier Matrix (KFM) — Release Drafter
+#
+# Notes:
+# - This file must live on the default branch to be used by the Action/App.
+# - Categories are label-driven; autolabeler helps apply labels based on paths.
+# - Keep labels simple and stable (web/api/data/docs/graph/ci/security/ml/simulation/dependencies).
+# -----------------------------------------------------------------------------
+
+# 🏷️ Release naming & tags
+name-template: 'v$RESOLVED_VERSION 🌾'
+tag-template: 'v$RESOLVED_VERSION'
+tag-prefix: 'v'
+
+# 🧾 How each PR entry renders
+change-template: '- $TITLE — #$NUMBER (@$AUTHOR)'
+change-title-escapes: '\<*_&@#`' # prevents markdown surprises + disables @/# mentions
+no-changes-template: '- No user-facing changes in this release.'
+
+# 🧠 Sorting (keeps diffs stable & reviewer-friendly)
+sort-by: 'title'
+sort-direction: 'ascending'
+
+# 🚫 Exclusions (PRs with these labels will not appear in release notes)
+exclude-labels:
+  - 'skip-changelog'
+  - 'no-release-notes'
+  - 'meta'
+  - 'internal-only'
+
+# 🧑‍🤝‍🧑 Don’t list bots as contributors
+exclude-contributors:
+  - 'dependabot'
+  - 'dependabot[bot]'
+  - 'github-actions'
+  - 'github-actions[bot]'
+
+# 🧭 Resolve the next version via labels (SemVer)
+# Highest bump found in included PRs wins.
+version-resolver:
+  major:
+    labels:
+      - 'breaking-change'
+      - 'semver:major'
+      - 'major'
+  minor:
+    labels:
+      - 'feature'
+      - 'enhancement'
+      - 'semver:minor'
+      - 'minor'
+  patch:
+    labels:
+      - 'bug'
+      - 'fix'
+      - 'perf'
+      - 'refactor'
+      - 'docs'
+      - 'chore'
+      - 'semver:patch'
+      - 'patch'
+  default: patch
+
+# 🧩 Categorize PRs into release note sections (label-driven)
+# Tip: If a PR has multiple labels, it may appear in multiple categories depending on your labeling discipline.
+categories:
+  - title: '💥 Breaking changes'
+    labels:
+      - 'breaking-change'
+      - 'semver:major'
+      - 'major'
+
+  - title: '🔐 Security'
+    labels:
+      - 'security'
+      - 'sec'
+      - 'vuln'
+      - 'cve'
+
+  - title: '🗃️ Data & Catalogs (STAC/DCAT/PROV)'
+    labels:
+      - 'data'
+      - 'catalog'
+      - 'stac'
+      - 'dcat'
+      - 'prov'
+
+  - title: '🕸️ Graph & Ontology'
+    labels:
+      - 'graph'
+      - 'neo4j'
+      - 'ontology'
+
+  - title: '🚪 API Boundary'
+    labels:
+      - 'api'
+      - 'backend'
+      - 'server'
+
+  - title: '🗺️ Web / UI'
+    labels:
+      - 'web'
+      - 'ui'
+      - 'frontend'
+      - 'map'
+
+  - title: '🧪 Analysis / ML'
+    labels:
+      - 'ml'
+      - 'ai'
+      - 'analysis'
+      - 'model'
+
+  - title: '🧮 Simulation / Modeling'
+    labels:
+      - 'simulation'
+      - 'modeling'
+      - 'sim'
+
+  - title: '🧰 CI / Infra / Ops'
+    labels:
+      - 'ci'
+      - 'infra'
+      - 'devops'
+      - 'docker'
+
+  - title: '📚 Docs / SOPs'
+    labels:
+      - 'docs'
+      - 'documentation'
+      - 'sop'
+
+  - title: '⬆️ Dependencies'
+    collapse-after: 8
+    labels:
+      - 'dependencies'
+      - 'deps'
+
+# 🧾 Release body framing (KFM “evidence-first” posture)
+header: |
+  ## 🌾 Kansas Frontier Matrix — Release Notes
+
+  > 🧾 Drafted from merged PRs. Evidence-first, contract-first, governance-aware.
+  >
+  > ⛓️ Pipeline: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+template: |
+  ## ✅ Changes
+  $CHANGES
+
+  ## 🧑‍🤝‍🧑 Contributors
+  $CONTRIBUTORS
+
+footer: |
+  ## 🔎 Governance reminders
+  - Data/analysis/simulation outputs should be **cataloged** (STAC/DCAT/PROV) before publication.
+  - Prefer **pointers over payloads** for large artifacts; keep provenance links intact.
+  - If a change affects policy/redaction/classification, treat it as a **high-scrutiny** release item.
+
+# 🤖 Autolabeler: apply labels automatically based on touched paths (glob matching)
+# Label must exist in the repo for automatic labeling to work.
+autolabeler:
+  - label: 'web'
+    files:
+      - 'web/**'
+
+  - label: 'api'
+    files:
+      - 'api/**'
+
+  - label: 'data'
+    files:
+      - 'data/**'
+
+  - label: 'docs'
+    files:
+      - 'docs/**'
+      - '**/*.md'
+
+  - label: 'graph'
+    files:
+      - 'src/graph/**'
+      - 'data/graph/**'
+
+  - label: 'ci'
+    files:
+      - '.github/workflows/**'
+      - '.github/actions/**'
+      - 'tools/validation/**'
+      - '.pre-commit-config.yaml'
+
+  - label: 'security'
+    files:
+      - 'SECURITY.md'
+      - 'docs/security/**'
+      - 'docs/governance/**'
+      - '.github/ISSUE_TEMPLATE/**'
+
+  - label: 'ml'
+    files:
+      - 'mcp/**'
+      - 'notebooks/**'
+
+  - label: 'simulation'
+    files:
+      - 'mcp/**/simulation/**'
+      - 'api/src/**/simulation/**'
+      - 'src/**/simulation/**'
+
+  # If a PR only touches lockfiles/manifests, mark as dependencies.
+  - label: 'dependencies'
+    files:
+      - '**/package-lock.json'
+      - '**/pnpm-lock.yaml'
+      - '**/yarn.lock'
+      - '**/requirements*.txt'
+      - '**/poetry.lock'
+      - '**/Pipfile.lock'
+      - '**/Cargo.lock'
+      - '**/go.mod'
+      - '**/go.sum'
+      - '**/Gemfile.lock'
+      - '**/composer.lock'
+      - '.github/dependabot.yml'
+```
 
