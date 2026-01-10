@@ -1,18 +1,3 @@
-<!--
-🚀 Kansas Frontier Matrix (KFM) — Pull Request Template
-
-✅ Keep this template intact.
-🧹 Delete helper comments (`<!-- ... -->`) as you fill it out.
-🧭 Prefer concrete paths, commands, IDs, and sample outputs over vague descriptions.
-
-PR title format (pick one):
-- [web] Add timeline slider snapping
-- [data] Ingest 1870s county boundaries (COG/GeoJSON)
-- [ml] Improve NER for 19th-century spelling
-- [api] Add /layers/{id} endpoint
-- [infra] Harden Docker + CI caching
--->
-
 # 🚀 Pull Request
 
 > [!NOTE]
