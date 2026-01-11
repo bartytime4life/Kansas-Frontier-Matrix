@@ -7,15 +7,41 @@
 
 ![Supply Chain](https://img.shields.io/badge/supply--chain-SBOM%20required-black)
 ![Formats](https://img.shields.io/badge/formats-SPDX%20%7C%20CycloneDX-6f42c1)
-![KFM](https://img.shields.io/badge/KFM-provenance--first-purple)
+![SLSA](https://img.shields.io/badge/provenance-SLSA-ready-0b7285)
+![Sigstore](https://img.shields.io/badge/attestation-Sigstore-1f6feb)
+![OPA](https://img.shields.io/badge/policy-OPA%20%2F%20Conftest-111827)
 ![Fail Closed](https://img.shields.io/badge/gates-fail--closed-red)
+![Least Privilege](https://img.shields.io/badge/security-least%20privilege-success)
 
-> This folder is a **repo-local composite action** used to generate **SBOM artifacts** for KFM builds and releases.  
-> In KFM, SBOMs are not “nice to have” — they’re part of the **supply-chain + provenance** story that keeps the Atlas trustworthy. ✅🧾  
->
-> **KFM order (don’t break it):** 🧰 ETL → 🗂️ Catalogs (STAC/DCAT/PROV) → 🕸️ Graph → 🔌 API → 🌐 UI → 🎬 Story Nodes → 🧠 Focus Mode
+> This folder is a **repo-local composite action** used to generate **SBOM artifacts** for KFM builds, toolchains, and (optionally) release packaging.  
+> In KFM, reproducibility is a security feature — we want to be able to point to the *exact* code + dependencies that produced an artifact. ✅🧾  
+<!-- Reproducibility + CI rigor + traceability to exact code version are treated as core trust mechanisms in “NASA-grade” workflow guidance: :contentReference[oaicite:0]{index=0} -->
+<!-- KFM explicitly calls for SBOMs (SPDX/CycloneDX), dependency pinning, and least-privilege workflows as part of supply-chain posture: :contentReference[oaicite:1]{index=1} -->
 
-<!-- Why SBOM is explicitly part of KFM supply-chain posture:contentReference[oaicite:0]{index=0} -->
+> **KFM non-negotiable ordering (don’t break it):** 🧰 ETL → 🗂️ Catalogs (STAC/DCAT/PROV) → 🕸️ Graph → 🔌 API → 🌐 UI → 🎬 Story Nodes → 🧠 Focus Mode  
+<!-- Canonical ordering & boundaries: :contentReference[oaicite:2]{index=2} -->
+
+---
+
+<details>
+  <summary><b>🧭 Table of contents</b> (click to expand)</summary>
+
+- [🧾 Action metadata](#-action-metadata)
+- [⚡ Quick links](#-quick-links)
+- [🧭 Where SBOM fits in KFM](#-where-sbom-fits-in-kfm)
+- [🧠 Why KFM has an SBOM action](#-why-kfm-has-an-sbom-action)
+- [✅ What this action produces](#-what-this-action-produces)
+- [📦 Expected artifact layout](#-expected-artifact-layout)
+- [🎛️ Inputs](#️-inputs)
+- [📤 Outputs](#-outputs)
+- [🧪 Example usage](#-example-usage)
+- [🧑‍⚖️ Policy-gate integration](#-policy-gate-integration)
+- [🔐 Security posture](#-security-posture)
+- [🧯 Failure modes](#-failure-modes)
+- [🧰 Maintainer notes](#-maintainer-notes)
+- [📚 Reference library](#-reference-library)
+
+</details>
 
 ---
 
@@ -28,7 +54,10 @@
 | 🎯 Primary job | Generate SBOM artifacts (SPDX/CycloneDX) |
 | 🧯 Philosophy | **Fail-closed** for promotion lanes |
 | 🔐 Default stance | Least privilege, no secrets required |
-| 🧬 KFM alignment | Supply-chain gate expects SBOM present |
+| 🧬 KFM alignment | Supply-chain gates expect SBOM presence + traceability |
+
+> [!NOTE]
+> `action.yml` is always the source of truth for *actual* implementation details — this README describes the **contract** we want policy + workflows to rely on.
 
 ---
 
@@ -38,107 +67,129 @@
 |---|---|
 | 🧩 Actions hub | [`../README.md`](../README.md) |
 | 🧰 Workflows hub | [`../../workflows/README.md`](../../workflows/README.md) |
+| 🧭 KFM Master Guide (v13) | [`../../../docs/MASTER_GUIDE_v13.md`](../../../docs/MASTER_GUIDE_v13.md) |
 | 🛡️ Security policy | [`../../../SECURITY.md`](../../../SECURITY.md) *(or `../../SECURITY.md` if mirrored in `.github/`)* |
-| 🧾 Policy gates (OPA/Conftest) | `📁 tools/validation/policy/` |
-| 📦 Release lane (spec) | `📄 .github/workflows/release.yml` |
-| 🖊️ Attest action (pairing) | `📁 .github/actions/attest/` |
+| 🧑‍⚖️ Policy pack (OPA/Conftest) | [`../../../tools/validation/policy/`](../../../tools/validation/policy/) |
+| 📦 Release artifacts | [`../../../releases/`](../../../releases/) |
+| 🖊️ Attest action (pairing) | [`../attest/`](../attest/) |
+| 🐳 Docker build action (common pairing) | [`../docker-build/`](../docker-build/) |
+
+<!-- Repo structure expectations (dirs + releases include “manifest, SBOM”): :contentReference[oaicite:3]{index=3} -->
+
+---
+
+## 🧭 Where SBOM fits in KFM
+
+KFM is **contract-first + provenance-first** (schemas, API contracts, and governed docs define the system boundaries).  
+That makes “what did we ship?” a first-class artifact — not an afterthought. 🧾  
+<!-- Contract-first + determinism principles: :contentReference[oaicite:4]{index=4} -->
+
+### 🧱 Architectural boundaries (relevant to SBOM)
+- **UI never queries Neo4j directly** — the API boundary is intentional.  
+<!-- API boundary invariant: :contentReference[oaicite:5]{index=5} -->
+- **Catalog outputs (STAC/DCAT/PROV) are the boundary artifacts** between ETL and Graph/API/UI.  
+<!-- Ordering + catalog boundary artifacts: :contentReference[oaicite:6]{index=6} -->
+- **Pipelines are deterministic + idempotent** (same inputs → same outputs), which requires pinned tooling and traceable deps.  
+<!-- Determinism contract: :contentReference[oaicite:7]{index=7} -->
+
+### 🧬 Release-time signing vs PR-time generation
+KFM’s baseline guidance: **official releases** can produce **signed artifacts** (including SBOMs + provenance attestations), and those steps can be done at *release time* rather than on every PR.  
+<!-- Release-time signed artifacts note: :contentReference[oaicite:8]{index=8} -->
+
+KFM’s forward direction (proposed): automated change pipelines can attach SBOMs + SLSA attestations to PRs for review.  
+<!-- Proposed PR-time SBOM + SLSA + Sigstore in agent/change pipeline: :contentReference[oaicite:9]{index=9} -->
 
 ---
 
 ## 🧠 Why KFM has an SBOM action
 
-KFM spans **web + GIS + pipelines + modeling**. That means the “what did we ship?” question is broader than app code:
+KFM spans **web + GIS + pipelines + modeling + graph systems**. The dependency surface is *bigger than app code*:
 
-- 🐍 Python dependencies (pip/poetry)
-- 🟩 Node dependencies (npm/pnpm)
+- 🐍 Python deps (pip/poetry) for ETL + validators
+- 🟩 Node deps (npm/pnpm) for `web/` (React/MapLibre, optional Cesium)
 - 🐳 Container base images + OS packages
-- 🧰 GIS tooling (GDAL/PROJ) and native libs
-- 🧪 Pipeline toolchain images pinned by **digest**
-- 📦 Release artifacts that downstream users will run
+- 🧰 GIS tooling + native libs (GDAL/PROJ; PostGIS tooling)
+- 🕸️ Graph build tooling for `src/graph/` (Neo4j import/build steps)
+- 🧪 Modeling & simulation tooling (runs/notebooks/model cards in `mcp/`)
 
-An **SBOM** is one of the easiest ways to make this auditable and reviewable, and it pairs naturally with:
-- 📦 `build-info` (who/what/when)
-- 🧾 PROV lineage (inputs → transforms → outputs)
-- 🧑‍⚖️ policy gates (default-deny promotion)
-- 🖊️ attestations (prove the SBOM matches the built thing)
+<!-- KFM directory layout covering pipelines/graph/server/web/mcp: :contentReference[oaicite:10]{index=10} -->
+<!-- Web stack mention (React/MapLibre, optional Cesium) in KFM architecture diagram: :contentReference[oaicite:11]{index=11} -->
+<!-- Geo tooling examples (PostGIS/ogr2ogr usage illustrates native/DB dependencies): :contentReference[oaicite:12]{index=12} -->
 
-<!-- KFM doc explicitly frames supply-chain & reproducibility, including SBOM generation for releases:contentReference[oaicite:1]{index=1} -->
+An SBOM makes this auditable, reviewable, and policy-testable — and it pairs naturally with:
+- 🧾 **PROV lineage** (inputs → transforms → outputs)
+- 🧑‍⚖️ **Policy gates** (default-deny promotion)
+- 🖊️ **Attestations** (prove the SBOM matches what was built)
+
+> [!TIP]
+> A good SBOM isn’t “compliance theater” — it’s how we keep the Atlas trustworthy when dependencies move.
 
 ---
 
-## ✅ What this action does
+## ✅ What this action produces
 
 ### Primary outputs (recommended)
 - 🧬 **SPDX JSON SBOM** (machine-readable)
 - 🧬 **CycloneDX JSON SBOM** (optional but useful)
 - 📝 **Human summary** (quick scan in PRs/releases)
-- 🧾 **Metadata sidecar** (what target, digest, run id, etc.)
+- 🧾 **Metadata sidecar** (target info, digest, run id, tool version, etc.)
 
 ### Targets this action can support
 - 📦 **Repo SBOM** (dependencies from the repository workspace)
-- 🐳 **Image SBOM** (SBOM for a built container image by digest)
-- 🧰 **Toolchain snapshot** (run toolchain / lane toolset)
+- 🐳 **Image SBOM** (SBOM for a built container image, ideally pinned by digest)
+- 🧰 **Toolchain snapshot** (build lane tooling, validators, GIS/native deps)
 
 > [!IMPORTANT]
-> For KFM promotion lanes, we treat “SBOM present” as a **hard requirement** (default deny).  
-> That requirement is called out explicitly in the project’s gate design. ✅🧯  
-<!-- “Supply‑chain: SBOM present …” is an explicit default-deny gate in the project’s gate concept:contentReference[oaicite:2]{index=2} -->
+> KFM promotion lanes are designed to be **fail-closed**: missing or empty SBOMs should block promotion.  
+<!-- Supply-chain security posture includes SBOM generation and pinning: :contentReference[oaicite:13]{index=13} -->
 
 ---
 
-## 🧱 Where SBOM fits in the KFM gate stack
+## 📦 Expected artifact layout
 
-```mermaid
-flowchart LR
-  A["🧰 Build / ETL / Compile"] --> B["🧬 SBOM<br/>SPDX/CycloneDX"]
-  B --> C["🧾 Policy Gate<br/>OPA/Conftest (default deny)"]
-  C -->|pass ✅| D["🖊️ Attest<br/>DSSE/Sigstore payload (optional)"]
-  D --> E["📦 Publish<br/>release / image / catalogs"]
-  C -->|fail ❌| X["🧯 Stop (fail closed)"]
-```
+KFM’s repo layout explicitly includes a release artifacts directory that carries a **manifest + SBOM**. ✅  
+<!-- Releases directory includes “manifest, SBOM”: :contentReference[oaicite:14]{index=14} -->
 
-> [!TIP]
-> SBOM first, then policy gate, then attest/publish.  
-> That ordering keeps “what we’re signing/publishing” deterministic.
-
----
-
-## 📦 Expected artifact layout (KFM-friendly)
-
-KFM’s “run artifacts” design explicitly includes an SBOM snapshot inside an `attestations/` folder:
+### 🧪 CI run artifacts (recommended)
+These paths are **policy-friendly** (stable, easy to check, and uploadable):
 
 ```text
-📁 <artifact-root>/
-├─ 📁 📄 stac/                         # 🛰️ STAC (KFM profile)
-├─ 📁 📄 dcat/                         # 📚 DCAT datasets/distributions
-├─ 📁 📄 prov/                         # 🧾 PROV JSON-LD
-├─ 📁 📄 reports/                      # 📝 summary + ✅/❌ gates
-└─ 📁 🔏 attestations/
-   ├─ 📄 provenance.dsse.json          # 🔏 DSSE/Sigstore-compatible payload
-   └─ 📄 materials.sbom.spdx.json      # 🧬 SBOM snapshot of the run toolchain
+📁 .artifacts/
+├─ 📁 sbom/
+│  ├─ 📄 repo.sbom.spdx.json
+│  ├─ 📄 repo.sbom.cdx.json
+│  ├─ 📄 image.sbom.spdx.json
+│  └─ 📄 sbom.summary.md
+└─ 📁 attestations/
+   ├─ 📄 provenance.dsse.json          # 🔏 (usually produced by attest action)
+   └─ 📄 materials.sbom.spdx.json      # 🧬 stable name for policy checks
 ```
 
-<!-- Artifact layout + SBOM filename are explicitly described in project “Latest Ideas” doc:contentReference[oaicite:3]{index=3} -->
-
 > [!NOTE]
-> This action supports that layout out-of-the-box by defaulting SBOM output into:
-> - `🔏 attestations/materials.sbom.spdx.json` *(SPDX JSON)*  
-> and optionally:
-> - `🔏 attestations/materials.sbom.cdx.json` *(CycloneDX JSON)*
+> The *stable name* (e.g., `materials.sbom.spdx.json`) is helpful because policy gates can target a single canonical path.
+
+### 🏷️ Release artifacts (repo-level contract)
+```text
+📁 releases/
+└─ 📁 <version-or-run-id>/
+   ├─ 📄 manifest.json
+   ├─ 📄 sbom.spdx.json
+   └─ 📄 provenance.dsse.json
+```
 
 ---
 
 ## 🎛️ Inputs
 
-> Inputs are strings (GitHub Actions limitation). Use `"true"` / `"false"` for booleans.
+> GitHub Actions inputs are strings — use `"true"` / `"false"` for booleans.
 
 | Input | Required | Default | Purpose |
 |---|---:|---|---|
 | `mode` | ❌ | `repo` | `repo` \| `image` \| `both` |
 | `formats` | ❌ | `spdx-json` | `spdx-json`, `cyclonedx-json`, or `spdx-json,cyclonedx-json` |
 | `output_dir` | ❌ | `.artifacts/sbom` | Where to write SBOM outputs |
-| `attestations_dir` | ❌ | `.artifacts/attestations` | Where to place KFM-style attest artifacts |
-| `image_ref` | ⚠️ | _(none)_ | Required when `mode=image` or `mode=both` (prefer digest ref) |
+| `attestations_dir` | ❌ | `.artifacts/attestations` | Where to place canonical policy-checked SBOM file(s) |
+| `image_ref` | ⚠️ | _(none)_ | Required when `mode=image` or `mode=both` *(prefer digest ref)* |
 | `tool` | ❌ | `syft` | SBOM generator backend (`syft` recommended) |
 | `upload_artifact` | ❌ | `true` | Upload generated files via `actions/upload-artifact` |
 | `artifact_name` | ❌ | `sbom-${{ github.sha }}` | Name for uploaded artifact bundle |
@@ -146,9 +197,8 @@ KFM’s “run artifacts” design explicitly includes an SBOM snapshot inside a
 | `fail_on_error` | ❌ | `true` | Always fail job if SBOM cannot be generated |
 
 > [!TIP]
-> For KFM determinism, prefer **digest-pinned** image refs:  
-> `ghcr.io/<org>/<image>@sha256:<digest>`  
-<!-- Determinism contract calls out tools containerized by digest and toolchain versions recorded:contentReference[oaicite:4]{index=4} -->
+> For determinism: prefer digest-pinned images → `ghcr.io/<org>/<image>@sha256:<digest>`  
+<!-- “Pin dependencies/tools” and “pinned container base images” are part of KFM supply-chain posture: :contentReference[oaicite:15]{index=15} -->
 
 ---
 
@@ -187,7 +237,7 @@ jobs:
           upload_artifact: "true"
 ```
 
-### 2) 🐳 Main lane: generate an image SBOM after building
+### 2) 🐳 Build lane: generate an image SBOM after building
 
 ```yaml
 jobs:
@@ -217,48 +267,46 @@ jobs:
           attestations_dir: .artifacts/attestations
 ```
 
-### 3) 🏷️ Release lane: SBOM → policy gate → attest → publish
+### 3) 🏷️ Promotion lane: SBOM → policy gate → attest → publish
 
 ```mermaid
 sequenceDiagram
-  participant B as 🐳 docker-build
+  participant D as 🐳 docker-build
   participant S as 🧬 sbom
   participant P as 🧑‍⚖️ policy-gate
   participant A as 🖊️ attest
   participant R as 🏷️ release
 
-  B->>S: build image + digest
+  D->>S: build image + digest
   S->>P: SBOM artifacts present
   P->>A: gates pass (default deny)
   A->>R: sign/attest then publish
 ```
 
+> [!NOTE]
+> KFM’s “Detect → Validate → Promote” concept also fits this ordering, and proposes signing PRs with Sigstore plus emitting OpenLineage events for auditing.  
+<!-- Detect→Validate→Promote with Sigstore signing + OpenLineage events: :contentReference[oaicite:16]{index=16} -->
+
 ---
 
-## 🧑‍⚖️ Policy-gate integration (default deny)
+## 🧑‍⚖️ Policy-gate integration
 
-KFM’s policy design explicitly treats supply-chain checks as promotion blockers:
-- ✅ SBOM present  
-- ✅ images match pinned digests  
-- ✅ signatures verified (when enabled)
+KFM’s governance direction includes a **Policy Pack** using **OPA (Rego) + Conftest** and running those rules in CI as a gate that rejects changes that violate rules.  
+<!-- Policy pack using OPA/Rego + Conftest, run in CI as gate: :contentReference[oaicite:17]{index=17} -->
 
-<!-- Explicit gate language (SBOM present, digests match, signatures verified):contentReference[oaicite:5]{index=5} -->
-
-### What this action guarantees (when configured)
+### ✅ What this action should guarantee
 - Writes SBOM(s) to known paths
-- Produces a stable file name for policy evaluation (recommended)
-- Avoids secret usage (safe to run in PR lanes)
+- Produces stable file name(s) for policy evaluation (recommended)
+- Avoids secret usage (safe in PR lanes)
 
-### What policy-gate should still enforce
-- Required file existence + non-empty content
+### ✅ What policy-gate should still enforce
+- Required SBOM file existence + non-empty content
 - Digest pinning rules (no floating tags for promotion)
-- Action pinning + least-privilege workflow permissions (supply-chain hygiene)
-- License allowlists / URL allowlists for fetched artifacts (where applicable)
+- Action pinning + least-privilege workflow permissions
+- Optional: license allowlists / forbidden package rules
 
 > [!TIP]
-> If you’re using Conftest/OPA, keep the policy test inputs as:
-> - a machine-readable `reports/gates.json`
-> - plus SBOM existence checks under `attestations/`
+> Keep policy test inputs deterministic — e.g. `reports/gates.json` + canonical SBOM path under `attestations/`.
 
 ---
 
@@ -272,76 +320,78 @@ permissions:
   contents: read
 ```
 
-No secrets are required for SBOM generation in the common case.  
-If your pipeline downloads tooling, keep it pinned and verify checksums.
+KFM explicitly emphasizes least-privilege workflows and pinned dependencies as part of supply-chain posture.  
+<!-- Least-privilege + pinning in KFM supply chain guidance: :contentReference[oaicite:18]{index=18} -->
 
-### Network considerations 🌐
-- Prefer generating SBOM from:
-  - the checked-out workspace (repo SBOM), or
-  - the locally built container image (image SBOM)
-- Avoid “download arbitrary URL passed via PR input” patterns
-- If a download is unavoidable, use:
-  - allowlists
-  - checksums
-  - provenance logging
+### Threat model notes 🧯
+- **Untrusted PR inputs**: avoid “download arbitrary URL from PR input” patterns.
+- **Self-hosted runners**: treat as high-risk; isolate credentials and deployment lanes.
+- **Signed artifacts**: verify signatures in promotion lanes when enabled.
+
+<!-- CI/CD security practices include signed artifacts + verification and runner hardening considerations: :contentReference[oaicite:19]{index=19} -->
+
+### Why we care about supply chains at all 🧩
+In complex ICT supply chains, trust is hard because many suppliers and components are integrated together (often with remote updates).  
+<!-- ICT supply chain security framing: :contentReference[oaicite:20]{index=20} -->
 
 ---
 
-## 🧯 Failure modes (and how we avoid them)
+## 🧯 Failure modes
 
 | Failure mode | Symptom | Fix |
 |---|---|---|
 | Floating container tags | SBOM differs across runs | Use `@sha256:` digests |
 | Missing lockfiles | SBOM is incomplete | Commit lockfiles or declare intent |
 | Mixed package managers | Duplicated components | Standardize per subproject |
-| “Warn-only” pipelines | Broken promotion lanes | Use `fail_on_warn=true` in main/release |
-| Artifact drift | Policy gate can’t find SBOM | Use stable output paths + names |
+| “Warn-only” pipelines | Promotion lets drift through | `fail_on_warn=true` in main/release |
+| Artifact drift | Policy gate can’t find SBOM | Stable output paths + stable names |
+| Unpinned actions | Supply-chain risk increases | Pin actions (commit SHA or trusted tags) |
+| Over-permissioned workflows | Blast radius too big | Enforce least-privilege permissions |
 
 ---
 
-## 🧰 Local development tips (maintainers)
+## 🧰 Maintainer notes
 
-If you’re evolving the action:
-- Keep output filenames stable (policy tests depend on them)
-- Write a small `.github/workflows/actions-smoke.yml` that runs:
-  - `sbom` (repo mode)
-  - `docker-build` → `sbom` (image mode)
-  - uploads `.artifacts/**`
+### 🧪 Smoke test workflow (recommended)
+Create a workflow that runs:
+- `sbom` (repo mode)
+- `docker-build` → `sbom` (image mode)
+- Uploads `.artifacts/**`
 
----
+### 📌 Keep these stable
+- Output filenames used by policy checks
+- Directory layout under `.artifacts/` and `releases/`
+- Summary format (so PR reviewers can scan quickly)
 
-## 📁 Suggested folder additions (if missing)
-
-```text
-📁 .github/
-├─ 📁 actions/
-│  ├─ 📁 🧬 sbom/
-│  │  ├─ 📄 action.yml
-│  │  └─ 📄 README.md   # 👈 you are here
-│  ├─ 📁 🖊️ attest/
-│  ├─ 📁 🐳 docker-build/
-│  └─ 📁 📦 build-info/
-└─ 📁 workflows/
-   ├─ 📄 sbom.yml        # optional: run SBOM lane by itself
-   └─ 📄 release.yml     # release lane should call sbom + attest
-```
+### 🌍 Geo-stack reminder (native deps matter)
+KFM’s GIS workflows often involve PostGIS and conversion tooling (e.g., `ogr2ogr`). Native/OS packages show up in image SBOMs — don’t ignore them.  
+<!-- Example shows ogr2ogr pushing to PostGIS (native + DB dependency surface): :contentReference[oaicite:21]{index=21} -->
 
 ---
 
-## 📚 Reference library (why this exists)
+## 📚 Reference library
 
-KFM’s stance is that **reproducibility is a security feature** and supply-chain clarity improves trust.  
-This action operationalizes that stance by generating SBOM artifacts for releases and promotion lanes.
+<details>
+  <summary><b>📖 KFM docs + library touchpoints</b> (click to expand)</summary>
 
-- 📘 `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
-- 📄 `docs/notes/Latest Ideas.pdf` (run artifacts + gates; includes SBOM snapshot path)
-- 🛡️ `SECURITY.md` (supply-chain + least privilege posture)
-- 🧑‍⚖️ `tools/validation/policy/rego/supply_chain/*` (policy checks for least-privilege + pinning)
+### 🧭 KFM core docs
+- `docs/MASTER_GUIDE_v13.md` — repo structure + canonical ordering (ETL → catalogs → graph → API → UI → story → focus)  
+  <!-- Ordering + boundaries + directory layout: :contentReference[oaicite:22]{index=22} :contentReference[oaicite:23]{index=23} -->
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` — SBOM (SPDX/CycloneDX), pinning, least privilege  
+  <!-- Supply chain section: :contentReference[oaicite:24]{index=24} -->
+- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` — Detect→Validate→Promote, Sigstore, OpenLineage, Policy Pack (OPA/Conftest), PR→PROV integration  
+  <!-- Sigstore + OpenLineage + policy pack: :contentReference[oaicite:25]{index=25} -->
 
-<!-- KFM spec explicitly mentions SBOM as part of supply-chain posture:contentReference[oaicite:6]{index=6} -->
-<!-- Latest Ideas includes SBOM path and default-deny gates:contentReference[oaicite:7]{index=7} -->
+### 🧪 Reproducibility mindset
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` — reproducibility via version control/logging/CI + traceability to exact code version  
+  <!-- Reproducibility framing: :contentReference[oaicite:26]{index=26} -->
+
+### 🔐 Governance + trust in the real world
+- `Introduction to Digital Humanism.pdf` — ICT supply chain security is a governance/trust problem (many suppliers & integrators)  
+  <!-- Supply chain security case framing: :contentReference[oaicite:27]{index=27} -->
+
+</details>
 
 ---
 
 <p align="right"><a href="#top">⬆️ Back to top</a></p>
-
