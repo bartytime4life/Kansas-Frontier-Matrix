@@ -1,8 +1,8 @@
 ---
 title: "Data Work Notes — README"
 path: "data/work/_notes/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-28"
+version: "v1.1.0"
+last_updated: "2026-01-11"
 status: "draft"
 doc_kind: "Guide"
 license: "CC-BY-4.0"
@@ -24,9 +24,9 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:data:work-notes-readme:v1.0.0"
-semantic_document_id: "kfm-data-work-notes-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:data:work-notes-readme:v1.0.0"
+doc_uuid: "urn:kfm:doc:data:work-notes-readme:v1.1.0"
+semantic_document_id: "kfm-data-work-notes-readme-v1.1.0"
+event_source_id: "ledger:kfm:doc:data:work-notes-readme:v1.1.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_transform_permissions:
@@ -41,372 +41,375 @@ ai_transform_prohibited:
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
 ---
 
-# Data Work Notes — README
+<div align="center">
+
+# 📝 Data Work Notes — `data/work/_notes/`
+
+![Scope](https://img.shields.io/badge/scope-data%2Fwork%2F_notes-1f6feb?style=flat-square)
+![Stage](https://img.shields.io/badge/stage-work%20(internal%20intermediate)-f59e0b?style=flat-square)
+![Evidence-first](https://img.shields.io/badge/principle-evidence--first-6f42c1?style=flat-square)
+![Provenance](https://img.shields.io/badge/provenance-PROV--linked-8b5cf6?style=flat-square)
+![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE-7c3aed?style=flat-square)
+![NoSecrets](https://img.shields.io/badge/security-no%20secrets%20%2F%20no%20PII-dc2626?style=flat-square)
+
+**Human-authored context** for **work-stage** artifacts: QA findings, anomalies, decisions, and “why it’s like this” notes — without creating shadow truth. 🧾🧠
+
+</div>
+
+> [!IMPORTANT]
+> `_notes/` is **evidence-adjacent**, not evidence.
+> - ✅ Notes must **point to canonical artifacts** (run manifests, PROV bundles, STAC/DCAT IDs) instead of duplicating them.  
+> - ✅ Notes must **not downgrade sensitivity** (no output can be “less restricted” than its inputs).  
+> - ❌ No secrets, tokens, credentials, private keys, or person-identifying data.  
+> - ❌ No “infer-by-description” sensitive location disclosure.  
+> These rules align with KFM’s pipeline invariants and sovereignty/classification propagation expectations.[^inv-pipeline][^inv-sovereignty]
+
+---
+
+## 🚀 Quick links
+
+- 🧰 Workbench root → [`../README.md`](../README.md)
+- 🧪 Experiments lab → [`../experiments/`](../experiments/)
+- 📦 Work datasets (curated WIP) → [`../datasets/`](../datasets/)
+- ✅ QA outputs (if used) → [`./qa/`](./qa/)
+- 🧬 PROV bundles → [`../../prov/`](../../prov/)
+- 🛰️ STAC → [`../../stac/`](../../stac/)
+- 🗂️ DCAT → [`../../catalog/dcat/`](../../catalog/dcat/)
+- 🧭 Governance roots → [`../../../docs/governance/ROOT_GOVERNANCE.md`](../../../docs/governance/ROOT_GOVERNANCE.md)
+
+> [!TIP]
+> If a note becomes critical to downstream use (Graph/API/UI/Story/Focus), **promote** it into governed docs (or Story Nodes) and keep `_notes/` as the work-stage trailhead. KFM is designed so user-facing narrative stays provenance-linked and audit-ready.[^kfm-mission][^inv-evidence-first]
+
+---
+
+<details>
+<summary><strong>📌 Table of contents</strong></summary>
+
+- [📘 Overview](#-overview)
+- [🧭 Where `_notes/` fits in the KFM pipeline](#-where-_notes-fits-in-the-kfm-pipeline)
+- [🗂️ Directory layout](#️-directory-layout)
+- [🏷️ Note taxonomy (what kinds of notes exist)](#️-note-taxonomy-what-kinds-of-notes-exist)
+- [🧾 Note file standard (front-matter + structure)](#-note-file-standard-front-matter--structure)
+- [🔗 Linking rules (no shadow truth)](#-linking-rules-no-shadow-truth)
+- [🔐 Governance, sovereignty & sensitive data rules](#-governance-sovereignty--sensitive-data-rules)
+- [🤖 AI usage boundaries](#-ai-usage-boundaries)
+- [✅ Validation & CI expectations](#-validation--ci-expectations)
+- [🧹 Retention, cleanup & archiving](#-retention-cleanup--archiving)
+- [📚 References](#-references)
+- [🕰️ Version history](#️-version-history)
+
+</details>
+
+---
 
 ## 📘 Overview
 
 ### Purpose
-
-- Define what belongs in `data/work/_notes/` and what must never land here.
-- Provide a lightweight, repeatable structure for run notes, QA findings, and human decisions made during the **work** stage of the data lifecycle.
-- Ensure notes remain **evidence-first**: they must point to canonical artifacts (STAC/DCAT/PROV) rather than becoming a parallel source of truth.
+- Provide a **single predictable place** for work-stage notes: QA findings, anomalies, decisions, “known weirdness,” and promotion checklists.
+- Keep notes **evidence-first** by linking to canonical IDs (PROV activity/entity IDs, dataset IDs, run manifests) rather than embedding canonical payloads.
+- Preserve an audit trail that supports deterministic reruns and review (especially when work artifacts later become processed/cataloged).[^deterministic][^prov-end-to-end]
 
 ### Scope
 
-| In Scope | Out of Scope |
+| In scope ✅ | Out of scope ❌ |
 |---|---|
-| Human-authored notes about intermediate artifacts in `data/work/` | Raw source snapshots (must live under `data/raw/`) |
-| QA findings, anomaly tracking, and transformation decisions | Final datasets intended for publication (must live under `data/processed/`) |
-| Pointers to PROV bundles, run manifests, dataset IDs, and catalog entries | Canonical STAC/DCAT/PROV JSON artifacts (must live under `data/stac/`, `data/catalog/dcat/`, `data/prov/`) |
-| Minimal, sanitized samples for debugging when safe | Secrets, credentials, private keys, tokens |
-| Redaction/generalization notes for later enforcement in API/UI | Any content that attempts to infer or disclose sensitive locations |
+| Work-stage decisions, QA findings, anomaly tracking | Raw source snapshots (belong in `data/raw/`) |
+| Redaction/generalization notes for later enforcement | Publishing policy text (belongs in governed governance docs) |
+| Links to manifests, PROV, and eventually STAC/DCAT | Canonical STAC/DCAT/PROV JSON artifacts (belong in their catalog dirs) |
+| Lightweight debug snippets (sanitized) | Secrets, credentials, private keys, tokens |
+| Pointers to PRs/runs/CI checks for traceability | “Shadow datasets” (data belongs in `data/work/` or `data/processed/`) |
 
 ### Audience
+- Primary: ETL + data QA maintainers working in `data/work/`
+- Secondary: catalog/graph/API maintainers who need the context behind work-stage artifacts
+- Reviewers: governance/ethics reviewers when sensitivity, sovereignty, or consent issues appear
 
-- Primary: KFM maintainers working in ETL and data QA.
-- Secondary: Catalog/graph/API maintainers who need context for why a dataset looks the way it does.
+---
 
-### Definitions
+## 🧭 Where `_notes/` fits in the KFM pipeline
 
-- Link: `docs/glossary.md`
-- Terms used in this doc:
-  - **Raw**: immutable input snapshots captured for reproducibility.
-  - **Work**: intermediate transformations and staging outputs.
-  - **Processed**: published/derived datasets suitable for cataloging and graph ingest.
-  - **Run ID**: stable identifier for a pipeline execution.
-  - **PROV bundle**: canonical lineage artifact stored under `data/prov/`.
+KFM’s pipeline ordering is non-negotiable, and publication requires boundary artifacts (STAC/DCAT/PROV) before graph/UI/narratives.[^inv-pipeline][^lifecycle-staging]
 
-### Key artifacts
+```mermaid
+flowchart LR
+  RAW["📥 data/raw/<domain>\nimmutable inputs"] --> WORK["🧰 data/work/<domain>\nintermediate outputs"]
+  WORK --> NOTES["📝 data/work/_notes/\nhuman context + QA trail"]
+  WORK --> PROC["📦 data/processed/<domain>\npublish-ready outputs"]
+  PROC --> CATS["🛰️🗂️🧬 catalogs\nSTAC + DCAT + PROV"]
+  CATS --> GRAPH["🕸️ Graph (Neo4j)\nreferences catalogs"]
+  GRAPH --> API["🔌 Governed API\ncontracts + redaction"]
+  API --> UI["🗺️ UI\nmap + timeline"]
+  UI --> STORY["🎬 Story Nodes\ncurated narrative"]
+  STORY --> FOCUS["🧠 Focus Mode\nprovenance-linked only"]
+```
 
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| This README | `data/work/_notes/README.md` | Maintainers | Folder contract and hygiene rules |
-| Work notes | `data/work/_notes/**/*.md` | Maintainers | Must reference run IDs + provenance |
-| Work-stage artifacts | `data/work/` | ETL | Intermediate outputs and staging |
-| Processed outputs | `data/processed/` | ETL | Published/derived datasets |
-| STAC catalogs | `data/stac/` | Catalog | Collections + items only |
-| DCAT records | `data/catalog/dcat/` | Catalog | Dataset/distribution metadata |
-| PROV bundles | `data/prov/` | ETL/Catalog | Activity + agent + entity lineage |
-| Pipelines | `src/pipelines/` | ETL | Code that produces artifacts |
-| Story Nodes | `docs/reports/story_nodes/` | Editors | Curated narratives, provenance-linked |
+> [!NOTE]
+> `_notes/` is a **work-stage sidecar**: it travels with work outputs, but it does not substitute for the boundary artifacts that make data publishable and safe to use downstream.[^lifecycle-staging]
 
-### Definition of done
+---
 
-- [ ] Front-matter complete and valid
-- [ ] Notes content is non-sensitive and contains no secrets or PII
-- [ ] Any claims about data changes include links to run IDs and referenced artifact IDs
-- [ ] Validation steps are listed and repeatable
-- [ ] Governance and CARE/sovereignty considerations are explicit when applicable
+## 🗂️ Directory layout
 
-## 🗂️ Directory Layout
+### Expected tree (recommended, flexible)
 
-### This document
+```text
+📁 data/work/_notes/
+├─ 📄 README.md                       👈 you are here
+├─ 📁 runs/                           🏃 run-scoped notes (by run_id)
+├─ 📁 datasets/                       🧩 dataset-scoped notes (by dataset_id)
+├─ 📁 qa/                             ✅ checks + anomalies + outcomes
+├─ 📁 decisions/                      🗳️ explicit decisions + rationale (promotions/redactions)
+├─ 📁 redaction/                      🕶️ generalization + sensitivity handling notes
+└─ 📁 _archive/                       🧹 optional: closed/stale notes (keep index pointers)
+```
 
-- `path`: `data/work/_notes/README.md`
+### File naming conventions (recommended)
 
-### Related repository paths
+- Run notes:  
+  `data/work/_notes/runs/YYYY-MM-DD__<pipeline_or_domain>__run-<run_id>.md`
 
-| Area | Path | What lives here |
+- Dataset notes:  
+  `data/work/_notes/datasets/<dataset_id>/YYYY-MM-DD__<topic>.md`
+
+- QA notes:  
+  `data/work/_notes/qa/YYYY-MM-DD__<dataset_or_run>__<check>.md`
+
+- Decision memos:  
+  `data/work/_notes/decisions/YYYY-MM-DD__<decision_slug>.md`
+
+> [!TIP]
+> Prefer **sortable, grep-friendly** names and keep the “join key” (run_id / dataset_id) in the filename. This makes review and indexing significantly easier.
+
+---
+
+## 🏷️ Note taxonomy (what kinds of notes exist)
+
+| Type 🧾 | Use it when… | Must include (minimum) |
 |---|---|---|
-| Raw inputs | `data/raw/` | Immutable input snapshots |
-| Work stage | `data/work/` | Intermediate/working outputs |
-| Processed outputs | `data/processed/` | Published/derived datasets |
-| STAC | `data/stac/` | Collections + items for assets |
-| DCAT | `data/catalog/dcat/` | Dataset/distribution metadata |
-| PROV | `data/prov/` | Provenance bundles for runs |
-| Pipelines | `src/pipelines/` | ETL + transforms |
-| Graph | `src/graph/` | Graph build + ontology bindings |
-| API boundary | `src/server/` | Contracts + endpoints + redaction |
-| UI | `web/` | React/Map clients |
-| Story Nodes | `docs/reports/story_nodes/` | Narrative layer |
+| 🏃 Run note | a pipeline run produced weird output or required a decision | `run_id`, inputs/outputs pointers, summary, validation |
+| 🧩 Dataset note | a logical dataset has quirks or caveats | `dataset_id`, known issues, access/classification notes |
+| ✅ QA note | a check was run and must be remembered | check name, pass/fail, sample evidence, next steps |
+| 🗳️ Decision memo | you chose A over B (promotion/redaction/schema) | decision, rationale, alternatives, reviewers |
+| 🕶️ Redaction memo | generalization rules or sensitivity handling | what is redacted, why, scope, enforcement point (API/UI) |
+| 🧯 Incident note | data leak risk, secrets near-miss, access anomaly | what happened, containment, follow-ups, links to PR/issues |
 
-### Expected file tree for this sub-area
+> [!CAUTION]
+> Notes are not a policy engine. They document *decisions and observations* so governance, catalogs, and APIs can enforce them correctly.[^inv-ci-gates]
 
-~~~text
-📁 data/
-├─ 📁 raw/
-├─ 📁 work/
-│  ├─ 📁 _notes/
-│  │  ├─ 📄 README.md
-│  │  ├─ 📁 runs/          # optional: run-scoped notes
-│  │  ├─ 📁 datasets/      # optional: dataset-scoped notes
-│  │  └─ 📁 qa/            # optional: QA findings and checks
-│  └─ …
-├─ 📁 processed/
-├─ 📁 stac/
-├─ 📁 catalog/
-│  └─ 📁 dcat/
-└─ 📁 prov/
-~~~
+---
 
-### File naming
+## 🧾 Note file standard (front-matter + structure)
 
-Recommended patterns for note files:
+KFM uses structured Markdown heavily; for governed docs, front-matter is expected and fields should be preserved (use `TBD`/`n/a` rather than deleting fields).[^frontmatter-template]
 
-- Run notes: `data/work/_notes/runs/YYYY-MM-DD__<pipeline>__run-<run_id>.md`
-- Dataset notes: `data/work/_notes/datasets/<dataset_id>/YYYY-MM-DD__<topic>.md`
-- QA notes: `data/work/_notes/qa/YYYY-MM-DD__<dataset_or_run>__<check>.md`
+### Minimal note template (copy/paste)
 
-If the repo already defines a canonical naming scheme elsewhere, that standard overrides these suggestions.
-
-### Suggested note template
-
-~~~markdown
+```markdown
 ---
 title: "Work note — <short topic>"
 date: "YYYY-MM-DD"
-status: "draft"
-run_id: "<run-id>"
-prov_activity_id: "<prov-activity-id>"
-inputs:
-  - "<input artifact id or path>"
-outputs:
-  - "<output artifact id or path>"
-risks:
-  - "<privacy/sensitivity risk or NONE>"
+status: "draft"  # draft | review | closed
+owners: ["@handle"]
+reviewers: ["TBD"]
+
+# Join keys (pick what applies)
+run_id: "run-<id>"               # optional
+prov_activity_id: "prov:<...>"   # optional but preferred
+dataset_ids:
+  - "kfm.<...>.vN"               # optional
+
+# Governance (fail closed)
+classification: "open"           # open | internal | confidential | restricted
+sensitivity_notes: "none"        # or short rationale
+care_label: "TBD"
 ---
 
 ## Summary
-- What happened and why.
+- What happened + why it matters.
+
+## Context
+- Inputs, assumptions, constraints.
 
 ## Observations
-- What changed or what was discovered.
+- What you saw (include small evidence snippets only).
 
-## Decisions
-- Decision, rationale, alternatives considered.
+## Decision (if any)
+- Decision + rationale + alternatives.
 
 ## Validation
-- Checks run and outcomes.
+- Checks run + outcomes (links to logs/artifacts).
 
-## Next steps
-- What is needed to move from work → processed or to close the issue.
-~~~
+## Links
+- Run manifest:
+- PROV bundle:
+- STAC/DCAT (if promoted):
+- PR / issue:
+```
 
-## 🧭 Context
+> [!TIP]
+> Treat this like a **lab notebook entry**: short, structured, and link-heavy. Markdown is explicitly used in KFM for curation logs/runbooks and evidence-first reporting.[^md-provenance-logs]
 
-### Background
+---
 
-KFM’s data lifecycle expects a staged flow from **raw → work → processed**, followed by cataloging and provenance artifacts. The `_notes` folder exists so humans can record decisions and QA context during the work stage without turning those notes into “shadow truth”.
+## 🔗 Linking rules (no shadow truth)
 
-### Assumptions
+### Always link (don’t copy)
+- ✅ **Run manifests** (your “flight recorder” for a run)
+- ✅ **PROV bundles** for lineage (raw → work → processed)[^prov-end-to-end]
+- ✅ **STAC/DCAT IDs** once something is promoted/published (so downstream can discover it)[^lifecycle-staging]
+- ✅ **Issues/PRs/commits** for review traceability (use `#123`, PR links, and commit SHAs)[^gh-autolinks]
 
-- Work-stage outputs are reproducible from raw inputs plus pipeline code/config.
-- Canonical lineage lives in PROV bundles; notes link to those IDs rather than duplicating them.
-- Catalog artifacts (STAC/DCAT) remain machine-validated and do not live in documentation directories.
+### Optional (but increasingly valuable)
+KFM proposals include stronger DevOps provenance: mapping GitHub PRs and CI executions into PROV, emitting OpenLineage events, and signing promotions (Sigstore). If you have these IDs, capture them in notes:
 
-### Constraints / invariants
+- `pr_number: 123`
+- `ci_run_url: <...>`
+- `openlineage_run_uuid: <uuid>`
+- `sigstore_attestation: <bundle_or_ref>`
 
-- Canonical ordering is preserved: **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**.
-- UI never reads the graph directly; access is via contracted APIs only.
-- Notes must not introduce sensitive location inference or disclose restricted details.
+These help later audits when a “why did this change?” question comes up.[^detect-validate-promote][^pr-to-prov]
 
-### Open questions
+---
 
-| Question | Owner | Target date |
-|---|---|---|
-| Should note files be scaffolded automatically during ETL runs | TBD | TBD |
-| Should `run_id` format be standardized repo-wide | TBD | TBD |
-| Should `_notes` be indexed into a lightweight search artifact | TBD | TBD |
+## 🔐 Governance, sovereignty & sensitive data rules
 
-### Future extensions
+KFM is built to be open and useful **without** causing harm. Its governance posture is informed by sovereignty and human-centered constraints.[^kfm-mission][^dh-sovereignty]
 
-- Auto-generate run-scoped note stubs linked to PROV activity IDs.
-- Optionally convert selected note fields into structured telemetry or run manifests.
+### Non-negotiables
+- ❌ Never store secrets (tokens, credentials, private keys) in `_notes/`.
+- ❌ Never include PII or person-identifying data here.
+- ❌ Never “triangulate” sensitive locations by description.
+- ✅ If classification is uncertain, **fail closed** (treat as more restricted until reviewed).
+- ✅ No derivative output can be less restricted than its inputs (classification must propagate end-to-end).[^inv-sovereignty]
 
-## 🗺️ Diagrams
+### Practical redaction/generalization guidance
+If a note must discuss sensitive location-related work:
+- Use **coarse geography** (county/region-level) and avoid coordinates.
+- Describe enforcement: **where** the redaction is applied (API boundary/UI rule/catalog redaction).
+- Link to the dataset’s catalog entry and the provenance run so reviewers can audit changes.
 
-### System / dataflow diagram
+> [!NOTE]
+> “Governance” includes security, privacy, quality, provenance, ethics, and sovereignty as first-class dimensions—not afterthoughts.[^dataspaces-gov]
 
-~~~mermaid
-flowchart LR
-  A[data/raw] --> B[ETL pipelines]
-  B --> C[data/work]
-  C --> N[data/work/_notes]
-  C --> D[data/processed]
-  D --> E[STAC/DCAT/PROV catalogs]
-  E --> F[Graph ingest]
-  F --> G[APIs]
-  G --> H[UI]
-  H --> I[Story Nodes]
-  I --> J[Focus Mode]
-~~~
+---
 
-### Optional: sequence diagram
+## 🤖 AI usage boundaries
 
-~~~mermaid
-sequenceDiagram
-  participant ETL as ETL Pipeline
-  participant WORK as data/work
-  participant NOTES as data/work/_notes
-  participant PROV as data/prov
+This README’s front-matter defines what AI transforms are allowed/prohibited for this content.
 
-  ETL->>WORK: write intermediate artifacts
-  ETL->>PROV: write provenance bundle (activity + entities)
-  ETL->>NOTES: add or update human note (run_id + prov_activity_id)
-~~~
+### Allowed ✅
+- Summarize, extract structure, translate, keyword indexing
 
-## 📦 Data & Metadata
+### Prohibited ❌
+- Generating new policy text
+- Inferring or reconstructing sensitive locations
 
-### Inputs
+### If AI touched the text
+- Label the section clearly (e.g., “AI-assisted summary”).
+- Keep it **evidence-linked**: claims should point to run IDs, datasets, or provenance artifacts.
+KFM requires AI-generated narrative to remain provenance-backed and clearly identified.[^inv-evidence-first]
 
-| Input | Format | Where from | Validation |
-|---|---|---|---|
-| Run context | ID strings + metadata | Pipeline execution | Must include run_id and provenance link |
-| Work artifacts | Files | `data/work/` | Basic sanity checks as appropriate |
-| Catalog/prov references | IDs | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | IDs must resolve to real artifacts |
+---
 
-### Outputs
+## ✅ Validation & CI expectations
 
-| Output | Format | Path | Contract / Schema |
-|---|---|---|---|
-| Work notes | Markdown | `data/work/_notes/**/*.md` | Human-readable; do not replace canonical artifacts |
+KFM’s CI is expected to enforce invariants with schema validation, provenance completeness checks, and security scans on pull requests.[^inv-ci-gates]
 
-### Sensitivity & redaction
+### Recommended automated checks for `_notes/`
+- 🔎 **Secrets scanning** (fail the build on detected keys)
+- 🔗 **Link/ID resolution checks** for referenced `run_id`, `prov_activity_id`, dataset IDs (best-effort)
+- 🧾 **Markdown lint** (headings, fenced code blocks, front-matter presence)
+- 🏷️ **Classification lint** (require `classification`; default to restricted if missing)
 
-- Do not include credentials, tokens, private keys, or personal information.
-- Do not include precise sensitive locations. If location discussion is required, use the same generalization level expected at the API boundary.
+### Local self-check (fast)
+```bash
+# quick grep for “oops” patterns (not sufficient, but a start)
+grep -RIn --line-number -E "AKIA|BEGIN PRIVATE KEY|xox[pbar]-|ghp_" data/work/_notes || true
+```
 
-### Quality signals
+> [!TIP]
+> Keep notes PR-friendly: small text, crisp links, and minimal attachments. If you need heavy artifacts (images, tiles, logs), store them in the run’s artifacts area and link from the note.
 
-Recommended fields to capture in notes when relevant:
+---
 
-- Record counts before/after transformation
-- Schema validation result summaries
-- Geometry validity checks and exceptions
-- Known missingness or bias notes
-- Any redaction/generalization applied or required downstream
+## 🧹 Retention, cleanup & archiving
 
-## 🌐 STAC, DCAT & PROV Alignment
+- Keep `_notes/` useful:
+  - ✅ Close notes that are resolved (status → `closed`)
+  - ✅ Add a final “Outcome” section (“promoted”, “archived”, “superseded by …”)
+  - ✅ Move stale notes to `_archive/` **only if** an index pointer remains (so history isn’t lost)
 
-### STAC
+- When a work item is promoted:
+  - ✅ Ensure outputs live in `data/processed/`
+  - ✅ Ensure boundary artifacts exist (STAC + DCAT + PROV) before graph/UI use[^lifecycle-staging]
+  - ✅ Leave a thin pointer note here linking to the canonical dataset IDs
 
-- Notes may reference STAC Collection/Item IDs.
-- Notes must not become the canonical home for STAC JSON.
+---
 
-### DCAT
+## 📚 References
 
-- Notes may reference DCAT dataset IDs/distributions.
-- Notes must not replace DCAT metadata mapping.
+### Governing / project-level docs
+- `docs/MASTER_GUIDE_v13.md` (pipeline + invariants + staging + CI gates)[^inv-pipeline][^lifecycle-staging]
+- `docs/governance/ROOT_GOVERNANCE.md` · `docs/governance/ETHICS.md` · `docs/governance/SOVEREIGNTY.md`
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` (mission, provenance-first, human-centered design)[^kfm-mission]
+- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` (Detect→Validate→Promote, OpenLineage, PR→PROV ideas)[^detect-validate-promote][^pr-to-prov]
 
-### PROV-O
+### Reference shelf (reading pack / influence map)
+<details>
+<summary><strong>📚 Library pack (selected by domain) — optional but helpful</strong></summary>
 
-- Run-scoped notes should reference:
-  - `prov:wasDerivedFrom` source IDs or artifact IDs
-  - `prov:wasGeneratedBy` activity ID
-  - Agent identity where appropriate
+- 📈 Stats & experimental rigor:  
+  `Understanding Statistics & Experimental Design.pdf` · `regression-analysis-with-python.pdf` · `graphical-data-analysis-with-r.pdf` · `think-bayes-bayesian-statistics-in-python.pdf`
 
-### Versioning
+- 🧪 Simulation & modeling discipline:  
+  `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` · `Generalized Topology Optimization for Structural Design.pdf`
 
-- If a note references a dataset version, specify it explicitly.
-- If a new version is created, link it to predecessor/successor relationships through canonical artifacts rather than through narrative alone.
+- 🛰️ GIS / remote sensing & mapping:  
+  `python-geospatial-analysis-cookbook.pdf` · `making-maps-a-visual-guide-to-map-design-for-gis.pdf` · `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` · `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
 
-## 🧱 Architecture
+- ⚙️ Systems, scale, and data interoperability:  
+  `Scalable Data Management for Future Hardware.pdf` · `Data Spaces.pdf`
 
-### Components
+- ❤️ Ethics / sovereignty / governance framing:  
+  `Introduction to Digital Humanism.pdf` · `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` · `Principles of Biological Autonomy - book_9780262381833.pdf`
 
-| Component | Responsibility | Interface |
-|---|---|---|
-| ETL | Ingest + normalize | Config + run logs |
-| Work stage | Intermediate artifacts | Files under `data/work/` |
-| Notes | Human context | Markdown under `data/work/_notes/` |
-| Catalogs | STAC/DCAT/PROV | JSON + validators |
-| Graph | Neo4j | Served via API layer |
-| APIs | Serve contracts | REST/GraphQL |
-| UI | Map + narrative | API calls |
-| Story Nodes | Curated narrative | Provenance-linked content |
-| Focus Mode | Contextual synthesis | Provenance-linked only |
+- 🧰 General programming shelf (bundles):  
+  `A programming Books.pdf` · `B-C programming Books.pdf` · `D-E programming Books.pdf` · `F-H programming Books.pdf` · `I-L programming Books.pdf` · `M-N programming Books.pdf` · `O-R programming Books.pdf` · `S-T programming Books.pdf` · `U-X programming Books.pdf`
 
-### Interfaces / contracts
+</details>
 
-| Contract | Location | Versioning rule |
-|---|---|---|
-| JSON schemas | `schemas/` | Semver + changelog |
-| API schemas | `src/server/` + docs | Contract tests required |
-| Catalog artifacts | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Stable identifiers required |
+---
 
-### Extension points checklist
-
-- [ ] Data: new domain added under `data/<domain>/...`
-- [ ] STAC: new collection + item schema validation
-- [ ] PROV: activity + agent identifiers recorded
-- [ ] Graph: new labels/relations mapped + migration plan
-- [ ] APIs: contract version bump + tests
-- [ ] UI: layer registry entry + access rules
-- [ ] Focus Mode: provenance references enforced
-- [ ] Telemetry: new signals + schema version bump
-
-## 🧠 Story Node & Focus Mode Integration
-
-### How this work surfaces in Focus Mode
-
-- By default, `_notes` do not surface directly in Focus Mode.
-- Notes can inform curation, QA, and editorial decisions, but final narrative must cite canonical datasets/documents and provenance IDs.
-
-### Provenance-linked narrative rule
-
-- Every claim that becomes user-facing must trace to a dataset, record, or asset ID that resolves through STAC/DCAT/PROV and the API boundary.
-
-### Optional structured controls
-
-~~~yaml
-focus_layers:
-  - "TBD"
-focus_time: "TBD"
-focus_center: [ -98.0000, 38.0000 ]
-~~~
-
-## 🧪 Validation & CI/CD
-
-### Validation steps
-
-- [ ] Markdown protocol checks
-- [ ] Secret and PII scanning gates
-- [ ] If notes include referenced IDs, verify they resolve to real artifacts
-- [ ] Security and sovereignty checks when notes mention sensitive content
-
-### Reproduction
-
-~~~bash
-# Example placeholders — replace with repo-specific commands
-# 1) validate schemas
-# 2) run unit/integration tests
-# 3) run doc lint
-~~~
-
-### Telemetry signals
-
-| Signal | Source | Where recorded |
-|---|---|---|
-| Notes created/updated | Maintainers | `data/work/_notes/` (git history) |
-| Run provenance | ETL | `data/prov/` |
-
-## ⚖ FAIR+CARE & Governance
-
-### Review gates
-
-- Notes that introduce or discuss sensitive sources, locations, or communities require review per governance docs.
-- If a note becomes the basis for a public Story Node, editorial review is required.
-
-### CARE / sovereignty considerations
-
-- Identify impacted communities and follow any protection, redaction, or generalization rules that apply.
-- Treat culturally sensitive content as high-risk by default and escalate for human review.
-
-### AI usage constraints
-
-- Only use AI transforms consistent with the front-matter permissions.
-- AI must not be used to infer sensitive locations or create new policy text.
-
-## 🕰️ Version History
+## 🕰️ Version history
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
+| v1.1.0 | 2026-01-11 | Tightened `_notes/` folder contract, added taxonomy + linking rules, aligned with v13 invariants (classification propagation, CI gates, provenance-first), and added DevOps provenance hooks (PR/CI lineage). | TBD |
 | v1.0.0 | 2025-12-28 | Initial README for `data/work/_notes/` | TBD |
 
 ---
 
-Footer refs:
+### Footer refs
 - Governance: `docs/governance/ROOT_GOVERNANCE.md`
 - Ethics: `docs/governance/ETHICS.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
 
+---
+
+## 📎 Source anchors (for maintainers)
+
+[^inv-pipeline]: KFM pipeline ordering + invariants (ETL → catalogs → graph → API → UI → Story → Focus).:contentReference[oaicite:0]{index=0}
+[^inv-evidence-first]: Evidence-first narrative + AI text must be clearly identified and provenance-backed.:contentReference[oaicite:1]{index=1}
+[^inv-sovereignty]: Sovereignty & classification propagation: derivatives cannot be less restricted than inputs; sensitive locations should be generalized in UI safeguards.:contentReference[oaicite:2]{index=2}
+[^inv-ci-gates]: CI gates enforce provenance completeness, schema validation, and security scans; violations fail builds.:contentReference[oaicite:3]{index=3}
+[^lifecycle-staging]: Required staging (raw→work→processed) and catalog outputs (STAC/DCAT/PROV) as boundary artifacts before downstream use.:contentReference[oaicite:4]{index=4}
+[^prov-end-to-end]: PROV end-to-end linkage expectation: raw inputs → intermediate work → processed outputs, with run/config references.:contentReference[oaicite:5]{index=5}
+[^deterministic]: Deterministic/idempotent pipeline principle (config-driven, logged, stable outputs).:contentReference[oaicite:6]{index=6}
+[^frontmatter-template]: Keep/complete front-matter fields; use `TBD`/`n/a` rather than deleting fields (doc template guidance).:contentReference[oaicite:7]{index=7}
+[^md-provenance-logs]: Markdown used for provenance logs/runbooks; evidence-first style expects citations/IDs for factual claims.:contentReference[oaicite:8]{index=8}
+[^gh-autolinks]: GitHub referencing conventions for issues/PRs/commits (`#123`, SHAs, @mentions) to maintain traceability.:contentReference[oaicite:9]{index=9}
+[^kfm-mission]: KFM mission + provenance/transparency + human-centered guardrails (Focus Mode evidence-backed, no black box).:contentReference[oaicite:10]{index=10}
+[^detect-validate-promote]: Detect→Validate→Promote workflow concept; validation lanes; Sigstore signing; OpenLineage events for auditability.:contentReference[oaicite:11]{index=11}
+[^pr-to-prov]: Mapping GitHub PR events to PROV-O JSON-LD (PR as Activity; commits as Entities; authors/reviewers as Agents).:contentReference[oaicite:12]{index=12}
+[^dh-sovereignty]: Digital humanism framing: shaping technologies with human values/needs; sovereignty in the digital age as a central concern.:contentReference[oaicite:13]{index=13}
+[^dataspaces-gov]: Data governance dimensions (ownership, sovereignty, trust, privacy, security, quality/provenance, ethics).:contentReference[oaicite:14]{index=14}
