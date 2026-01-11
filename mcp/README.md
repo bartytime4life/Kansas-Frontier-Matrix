@@ -1,24 +1,25 @@
 <!--
 📌 MCP is KFM’s canonical “methods + receipts” boundary (not a data store, not runtime code).
-🗓️ Last updated: 2026-01-09
+🗓️ Last updated: 2026-01-11
 -->
 
 # 🧪 MCP — Master Coder Protocol  
 ### *Methods, Controls & Processes* 🧾⚙️
 
-![README](https://img.shields.io/badge/README-v1.2.0-8957e5)
+![README](https://img.shields.io/badge/README-v1.3.0-8957e5)
 ![Docs-first](https://img.shields.io/badge/docs-documentation--first-blue)
 ![Reproducible](https://img.shields.io/badge/reproducible-audit--ready-success)
-![Evidence](https://img.shields.io/badge/evidence-traceable-informational)
+![Evidence](https://img.shields.io/badge/evidence-catalog--linked-informational)
+![PROV](https://img.shields.io/badge/provenance-W3C%20PROV-7b42f6)
 ![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE%20%2B%20Sovereignty-2ea043)
 ![Security](https://img.shields.io/badge/security-hostile--inputs%20%2B%20deny--by--default-red)
 ![KFM](https://img.shields.io/badge/KFM-Kansas%20Frontier%20Matrix-orange)
 
-> **TL;DR:** `mcp/` is KFM’s **lab notebook + playbook** 📓🧠  
-> It holds **experiment protocols**, **run receipts**, **SOPs**, **model cards**, and **review checklists**—so every result can be **re-run, reviewed, and trusted** ✅  
->  
-> **MCP** is also shorthand for **Methods, Controls & Processes** in some internal docs.  
-> In *this repo*, the canonical expansion remains **Master Coder Protocol** ✅ (same intent, same discipline).
+> **TL;DR:** `mcp/` is KFM’s **methods + receipts** layer 📓🧠  
+> It holds **protocols**, **run receipts**, **SOPs**, **model cards**, and **review artifacts**—so every result can be **re-run, reviewed, and trusted** ✅  
+>
+> **Naming note:** Some internal docs expand MCP as **Methods, Controls & Processes**.  
+> In *this repo*, we keep the canonical expansion **Master Coder Protocol** ✅ (same intent, same discipline).
 
 > [!IMPORTANT]
 > In this repo, **MCP = Master Coder Protocol** ✅  
@@ -29,20 +30,27 @@
 
 ## 🔗 Quick links
 - 🧭 Repo overview: **[`../README.md`](../README.md)**
+- 🧬 Pipelines boundary (contract portal): **[`../pipelines/README.md`](../pipelines/README.md)** *(if present)*
+- 🧰 Scripts boundary (automation): **[`../scripts/README.md`](../scripts/README.md)** *(if present)*
 - 🧩 Executable source boundary: **[`../src/README.md`](../src/README.md)**
 - 📦 Data + metadata boundary: **[`../data/README.md`](../data/README.md)**
-- 📚 Governed documentation boundary: **[`../docs/README.md`](../docs/README.md)** *(if present)*
-- 🤝 Collaboration & automation: **[`../.github/README.md`](../.github/README.md)** *(if present)*
+- 🧪 Notebooks boundary (lab bench): **[`../notebooks/README.md`](../notebooks/README.md)** *(if present)*
+- 🧰 Validators & tooling: **[`../tools/README.md`](../tools/README.md)** *(if present)*
+- ✅ Tests & CI gates: **[`../tests/README.md`](../tests/README.md)** *(if present)*
+- 🤝 CI/CD & policies: **[`../.github/`](../.github/)** *(workflows, security policy, automation)*
 
 ---
 
 ## ⚡ Quick Nav
 - [🧾 Doc metadata](#-doc-metadata)
 - [🧭 What MCP is](#-what-mcp-is)
+- [🧱 MCP artifacts (types, IDs, and immutability)](#-mcp-artifacts-types-ids-and-immutability)
 - [🚦 Non‑negotiables](#-non-negotiables)
 - [🏁 Quick Start](#-quick-start)
 - [🗂️ Directory layout](#️-directory-layout)
 - [🔁 The MCP workflow loop](#-the-mcp-workflow-loop)
+- [🚥 Detect → Validate → Promote](#-detect--validate--promote)
+- [🧾 Front matter + schemas (machine-readable MCP)](#-front-matter--schemas-machine-readable-mcp)
 - [✅ Definition of done](#-definition-of-done)
 - [📦 Required artifacts](#-required-artifacts)
 - [🧪 Experiment reports](#-experiment-reports)
@@ -68,9 +76,10 @@
 |---|---|
 | Doc | `mcp/README.md` |
 | Status | Active ✅ |
-| Last updated | **2026-01-09** |
+| Last updated | **2026-01-11** |
 | Audience | Contributors writing experiments, running jobs, training models, shipping evidence artifacts |
 | Prime directive | If it changes “spatial truth,” it must be **traceable + reproducible + reviewable** |
+| KFM canon | **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode** |
 
 ---
 
@@ -83,7 +92,8 @@ A **governed method layer** that turns “we tried something” into **auditable
 - 🏃 **Receipts** (what we actually ran + how)
 - 🧰 **SOPs** (repeatable procedures for risky/repeated work)
 - 🧠 **Model cards** (responsible AI/ML usage)
-- 🧾 **Review artifacts** (what was checked, by whom, and what failed)
+- 👀 **Review artifacts** (what was checked, by whom, and what failed)
+- 🧭 **Traceability** (decision ↔ evidence ↔ catalogs ↔ provenance)
 
 ### 🚫 MCP is not…
 - ❌ A data lake (that’s `data/`)
@@ -91,43 +101,69 @@ A **governed method layer** that turns “we tried something” into **auditable
 - ❌ A place for large outputs (store in `data/processed/**` + catalogs)
 - ❌ A place for “unsourced narrative” (that belongs in Story Nodes with explicit evidence links)
 
+> [!TIP]
+> MCP exists to make “results” **explainable and replayable**—not merely impressive. 🧾✅
+
+---
+
+## 🧱 MCP artifacts (types, IDs, and immutability)
+
+MCP stays reliable because artifacts are **typed**, **named**, and **treated correctly**.
+
+| Artifact | Prefix / ID pattern | Where | Immutable? | Purpose |
+|---|---|---|---:|---|
+| 🧪 Experiment protocol | `EXP-YYYY-MM-DD-<slug>` | `mcp/experiments/` | ⚠️ *Mutable while `draft`* | Pre-register intent, assumptions, and validation plan |
+| 🏃 Run receipt | `RUN-YYYY-MM-DD-<slug>/` | `mcp/runs/` | ✅ **Yes** | What was actually executed + how to reproduce |
+| 🧰 SOP | `SOP-<topic>-v<semver>` | `mcp/sops/` | ✅ *Versioned* | Repeatable procedures (risky or frequent tasks) |
+| 🧠 Model card | `MODEL-<name>-v<semver>` | `mcp/model_cards/` | ✅ *Versioned* | Intended use, limits, datasets, governance for ML/AI |
+| 👀 Review note | `REV-YYYY-MM-DD-<slug>.md` | `mcp/reviews/` *(recommended)* | ✅ **Yes** | Independent reproduction and governance sign-off |
+| 🧭 Traceability | `TRACEABILITY.md` *(or `TRACE-*.md`)* | `mcp/traceability/` | ✅ *Append-only mindset* | Decision/feature → EXP/RUN → evidence + catalogs |
+| 🧯 Incident / anomaly | `INC-YYYY-MM-DD-<slug>.md` *(optional)* | `mcp/incidents/` *(optional)* | ✅ **Yes** | When something shipped wrong: what happened + fix + new gates |
+
+> [!IMPORTANT]
+> **Run receipts are immutable.**  
+> If anything changes (inputs, params, code, environment), create a **new** run folder. ✅
+
 ---
 
 ## 🚦 Non‑negotiables
 
 These rules keep KFM **scientific**, **auditable**, and **governed**:
 
-1. **Evidence lives in `data/` — not in `mcp/`.** 📦  
+1) **Evidence lives in `data/` — not in `mcp/`.** 📦  
    - `mcp/` = methods, decisions, receipts, checklists  
    - `data/processed/...` = outputs (**and they must be cataloged**)
 
-2. **Protocol before run.** 🧾➡️🏃  
-   If results could influence product decisions, public narratives, or model outputs: write an **EXP** first.
+2) **Protocol before run (when it matters).** 🧾➡️🏃  
+   If results could influence product decisions, public narratives, pipelines, or models: write an **EXP** first.
 
-3. **No “magic results.”** 🪄🚫  
+3) **No “magic results.”** 🪄🚫  
    If you can’t reproduce it using:
    - a commit hash
    - an environment snapshot
    - a config
-   - linked inputs/outputs (catalog IDs)
+   - linked inputs/outputs (**catalog IDs**)
    …then it’s not “done.”
 
-4. **Immutable receipts.** 🧾  
+4) **Immutable receipts.** 🧾  
    Don’t edit a run receipt to “fix history.”  
-   Make a **new** run folder if anything changes.
+   Make a **new** run folder and link it.
 
-5. **Label AI involvement.** 🤖  
+5) **Label AI involvement.** 🤖  
    Any AI-assisted outputs must be labeled and provenance-linked.  
-   (Focus Mode is **advisory-only** and must stay evidence-backed.)
+   Focus Mode remains **advisory-only** and must be evidence-backed.
 
-6. **KFM pipeline order is sacred.** 🧱  
+6) **KFM pipeline order is sacred.** 🧱  
    **ETL → Catalogs (STAC/DCAT/PROV) → Graph → APIs → UI → Story Nodes → Focus Mode**
 
-7. **No privacy / sensitivity downgrade.** 🔒  
+7) **No privacy / sensitivity downgrade.** 🔒  
    Outputs cannot be less restricted than inputs without an explicit, reviewed redaction step.
 
-8. **Licensing isn’t optional.** 🧾⚖️  
+8) **Licensing isn’t optional.** 🧾⚖️  
    Every dataset / artifact must carry license + attribution requirements through catalogs and narratives.
+
+9) **Stable IDs are a correctness feature.** 🏷️  
+   IDs should be *invariant* across reruns when inputs haven’t changed—treat IDs like API contracts.
 
 > [!TIP]
 > Motto: **“If I can’t reproduce it in 30 minutes, it’s not complete.”** ⏱️✅
@@ -146,14 +182,14 @@ Add:
   - config, env snapshot, logs, metrics, and `MANIFEST.md`
 
 ### 3) Store evidence outputs in the governed data layer 📦
-Put artifacts in:
+Put evidence artifacts in:
 - `data/processed/...` ✅  
-Then catalog them:
-- **STAC/DCAT/PROV** 🗂️🧬
+Then publish metadata + lineage:
+- `data/stac/**` + `data/catalog/dcat/**` + `data/prov/**` 🗂️🧬
 
 ### 4) Link it to decisions 🧭
 Update traceability (recommended):
-- `mcp/traceability/TRACEABILITY.md` *(or equivalent)*
+- `mcp/traceability/TRACEABILITY.md`
 
 > [!IMPORTANT]
 > `mcp/` should stay **lightweight** and human-readable.  
@@ -166,19 +202,20 @@ Update traceability (recommended):
 ```text
 📁 mcp/
 ├── 📄 README.md                 # you are here 👋
-├── 📁 experiments/              # human-readable experiment reports 🧪🧾
+├── 📁 experiments/              # human-readable experiment protocols 🧪🧾
 ├── 📁 runs/                     # immutable run receipts (configs, env, logs, metrics) 🏃🧾
 ├── 📁 sops/                     # Standard Operating Procedures (repeatable tasks) 🧰
 ├── 📁 model_cards/              # model cards for any ML/AI used or trained 🧠
 ├── 📁 notebooks/                # tidy, reproducible notebooks 📓
 ├── 📁 traceability/             # decision ↔ evidence mapping 🧭 (recommended)
-├── 📁 reviews/                  # peer reproduction notes / review sign-offs 👀 (recommended)
-└── 📁 templates/                # optional local templates 🧩 (or use docs/templates/)
+├── 📁 reviews/                  # peer reproduction notes / governance sign-offs 👀 (recommended)
+├── 📁 incidents/                # post-mortems / anomaly reports 🧯 (optional)
+└── 📁 templates/                # local templates 🧩 (or use docs/templates/)
 ```
 
 > [!NOTE]
 > Repo implementations vary. If `traceability/` or `reviews/` doesn’t exist yet, consider adding them—  
-> the design docs explicitly call out traceability + modular documentation as a core MCP promise. ✅
+> design docs call out traceability + modular documentation as a core MCP promise. ✅
 
 ---
 
@@ -209,13 +246,60 @@ MCP is a practical “scientific method adapter” for software + data work:
 
 ---
 
+## 🚥 Detect → Validate → Promote
+
+A lot of KFM risk comes from “half-published” artifacts. MCP encourages a controlled publishing rhythm:
+
+1) **Detect** 🕵️  
+   Identify new inputs / changes (sources updated, new scans, schema drift, new tiles).
+
+2) **Validate** ✅  
+   Run fast gates:
+   - schema & bounds checks
+   - catalog validity
+   - link integrity
+   - governance propagation (no downgrade)
+   - security scans (secrets / sensitive patterns)
+
+3) **Promote** 🚀  
+   Only after validation:
+   - write evidence to `data/processed/**`
+   - write STAC/DCAT/PROV
+   - (optionally) export graph ingest bundles
+   - add MCP RUN receipt + traceability update
+
+> [!TIP]
+> Treat “promotion” like a release: **atomic publish or nothing.** 🧾✅
+
+---
+
+## 🧾 Front matter + schemas (machine-readable MCP)
+
+MCP documents are **human-first**, but they should also be **machine-readable** for dashboards, validation, and CI gates.
+
+### ✅ Front matter conventions (recommended)
+All MCP artifacts should start with YAML front matter (or equivalent), including:
+
+- stable ID (`EXP-...`, `RUN-...`, `SOP-...`, `MODEL-...`)
+- date
+- owner
+- status
+- tags
+- AI involvement (if applicable)
+- links to evidence (catalog IDs or paths)
+
+> [!NOTE]
+> If your repo includes MCP schemas under `schemas/mcp/`, keep MCP front matter compliant and validate in CI. ✅
+
+---
+
 ## ✅ Definition of done
 
 ### ✅ MCP “done” means: reproducible + governed
 For any EXP/RUN that influences production pipelines, APIs, UI layers, Story Nodes, or Focus Mode:
 
 - [ ] Front-matter complete + consistent (IDs, dates, owner, status)
-- [ ] Claims link to evidence inputs/outputs (catalog pointers)
+- [ ] Claims link to evidence inputs/outputs (**catalog pointers**)
 - [ ] Validation steps are listed and repeatable
 - [ ] Governance + FAIR/CARE + sovereignty considerations stated (when applicable)
 - [ ] Another contributor can reproduce results without tribal knowledge
@@ -241,7 +325,9 @@ If an experiment influences decisions, pipelines, or published results, it must 
 - 📦 **Outputs stored as evidence** → `data/processed/...`
 - 🗂️ **Catalog records** → STAC/DCAT
 - 🧬 **Lineage** → PROV pointers (inputs + outputs)
-- 👀 **Review notes** → reproducibility sign-off for L2/L3 work (recommended)
+- 👀 **Review notes** → reproduction sign-off for L2/L3 work (recommended)
+- 🔐 **Policy checks evidence** → list which gates ran (recommended)
+- 🧾 **(Optional) CI attestation** → if your repo signs artifacts / builds
 
 > [!WARNING]
 > Avoid committing large binaries to `mcp/`.  
@@ -288,6 +374,11 @@ tags: [gis, ocr, nlp, stac, dcat, prov, graph, sim, stats, web, security]
 # Hypothesis ✅/❌
 - What do we expect and why?
 
+# Variables & Controls 🎛️
+- Key variables you’re changing.
+- Controls / baselines.
+- What stays fixed.
+
 # Inputs (Evidence In) 🗃️
 - Dataset IDs + STAC/DCAT pointers.
 - Sampling rules, inclusion/exclusion, time range, bbox.
@@ -297,6 +388,11 @@ tags: [gis, ocr, nlp, stac, dcat, prov, graph, sim, stats, web, security]
 - Step-by-step procedure.
 - Parameters + configs (link to run receipt config).
 - Tools + versions (OS/GPU/driver notes if relevant).
+
+# Validation Plan ✅
+- What fails fast?
+- What warns?
+- What “sanity checks” must pass?
 
 # Run Receipt 🏃
 - Code commit: `abcdef1`
@@ -364,14 +460,16 @@ run_id: RUN-YYYY-MM-DD-<slug>
 related_experiment: EXP-YYYY-MM-DD-<slug>
 date: YYYY-MM-DD
 owner: "@github-handle"
+env: dev | staging | prod
 
 code:
   commit: abcdef1
   entrypoint: "src/pipelines/..."
   args: ["--config", "config/run.yml"]
+  dirty_worktree: false  # recommended
 
 environment:
-  docker_image: "ghcr.io/org/project:tag@sha256:..."
+  docker_image: "ghcr.io/org/project:tag@sha256:..."     # preferred
   # or:
   requirements: "env/requirements.lock.txt"
   os: "..."
@@ -383,9 +481,9 @@ randomness:
   deterministic_flags: ["..."]
 
 inputs:
-  - stac: "data/stac/items/..."
-  - dcat: "data/catalog/dcat/..."
-  - prov: "data/prov/..."
+  - catalog_ref: "stac://<collection_or_item_id>"
+  - dcat: "data/catalog/dcat/<dataset>.jsonld"
+  - prov: "data/prov/<prior-run>.jsonld"
 
 outputs:
   - path: "data/processed/<domain>/<dataset>/..."
@@ -396,7 +494,14 @@ outputs:
 validation:
   - "schema validation: pass/fail"
   - "link checks: pass/fail"
+  - "classification propagation: pass/fail"
   - "spot checks: ..."
+
+policy_checks:               # optional, recommended
+  - "secrets scan: pass/fail"
+  - "sensitive patterns scan: pass/fail"
+  - "sbom generated: yes/no"
+  - "attestation present: yes/no"
 
 notes: ""
 ---
@@ -429,7 +534,7 @@ Write an SOP whenever a task is repeated or risky: georeferencing, catalog publi
 
 ```md
 ---
-id: SOP-<topic>-v1
+id: SOP-<topic>-v1.0.0
 title: "<clear title>"
 owner: "@github-handle"
 last_updated: YYYY-MM-DD
@@ -471,6 +576,9 @@ Example PRs / runs / experiments that used this SOP.
 - `sops/catalog_qa_gate.md` ✅ (how to run CI-like catalog QA locally)
 - `sops/postgis_import_index.md` 🐘 (schemas, indexes, vacuum/analyze)
 - `sops/redaction_and_sensitive_locations.md` 🔐 (coarsen/offset rules, approvals)
+- `sops/detect_validate_promote.md` 🚥 (release discipline for evidence publishing)
+- `sops/rollback_and_prov_repair.md` 🧯 (how to revert + repair provenance safely)
+- `sops/ci_attestation_and_signing.md` 🔏 (if your repo signs builds / generates SBOMs)
 - `sops/story_node_evidence_bundle.md` 📚 (evidence pack for narratives + Focus Mode)
 
 ---
@@ -498,9 +606,13 @@ source:
   type: trained | third_party
   license: "..."
   reference: "paper/link/registry id"
+datasets:
+  - "stac://<collection_or_item_id>"
+  - "dcat://<dataset_id>"
 governance:
   sensitivity: public | restricted | confidential
   human_in_the_loop: required | recommended | optional
+  redaction_required: yes | no
 ---
 
 # Model overview 🧠
@@ -584,13 +696,13 @@ KFM must be resilient to “bad evidence” (messy scans, biased corpora, incomp
 
 When evidence is questionable, MCP requires **restraint**:
 
-1. **Data pruning** ✂️  
+1) **Data pruning** ✂️  
    Exclude known-bad inputs (or flag them as “quarantined” until fixed).
 
-2. **Inferential restraint** 🧠⬇️  
+2) **Inferential restraint** 🧠⬇️  
    Reduce the strength/scope of conclusions; report uncertainty explicitly.
 
-3. **Executional restraint** 🛑  
+3) **Executional restraint** 🛑  
    Limit downstream actions: don’t ship to UI/Story/Focus until reviewed, or serve only aggregated/redacted views.
 
 ### ✅ Minimum “bad evidence” documentation
@@ -641,6 +753,7 @@ Use the checklist that matches your work:
 - [ ] Raster outputs are COGs / tiled (with parameters)
 - [ ] Vector outputs validate (geometry validity, topology as needed)
 - [ ] Symbology/aggregation choices documented if they change interpretation 🎨
+- [ ] Catalog pointers included (STAC/DCAT) + lineage (PROV) 🗂️🧬
 
 ### 🔎 OCR / NLP
 - [ ] Input corpus + sampling documented
@@ -673,6 +786,7 @@ Use the checklist that matches your work:
 - [ ] Payload budgets considered (tiles, vector sizes, images)
 - [ ] Offline/low-bandwidth considerations documented (if relevant) 📱
 - [ ] Accessibility and audit logging expectations noted ♿️🧾
+- [ ] Focus/Story evidence bundle is explicit (no unsourced claims) 📚🧾
 
 ---
 
@@ -699,7 +813,7 @@ Use the checklist that matches your work:
 - ✅ unit tests (where applicable)
 - 🧾 schema validation (STAC/DCAT/PROV)
 - 🔗 link checks (assets exist; IDs resolve)
-- 🔐 security scans (secrets; common foot-guns)
+- 🔐 security scans (secrets; sensitive patterns; dependency risk)
 - 🧷 governance checks (classification propagation; redaction regressions)
 
 ### Periodic audits (recommended)
@@ -707,15 +821,18 @@ Use the checklist that matches your work:
 - Before release: audit “high-impact” artifacts (models, major new datasets, story bundles)
 - After incidents: add an SOP + regression checks
 
+> [!TIP]
+> A good system becomes safer over time: every incident should produce a new gate. 🧯✅
+
 ---
 
 ## 🤝 PR / review checklist
 
 When your PR includes experiments, runs, or evidence:
 
-- [ ] EXP report added/updated (`mcp/experiments/...`)
+- [ ] EXP report added/updated (`mcp/experiments/...`) *(if decision-relevant)*
 - [ ] RUN receipt folder added (`mcp/runs/...`) with `MANIFEST.md`
-- [ ] Evidence outputs stored under `data/processed/...`
+- [ ] Evidence outputs stored under `data/processed/...` (or linked object storage)
 - [ ] STAC/DCAT/PROV pointers added (IDs or paths)
 - [ ] AI involvement labeled (if applicable)
 - [ ] Reproduction steps included (1–4 steps; copy/paste runnable)
@@ -729,7 +846,6 @@ When your PR includes experiments, runs, or evidence:
 
 ## 📚 Project reference library influence map
 
-> [!NOTE]
 > These project files inform *how we design and review* MCP artifacts: reproducibility, governance, security, modeling rigor, statistical discipline, scaling, and visualization constraints.
 
 <details>
@@ -737,16 +853,17 @@ When your PR includes experiments, runs, or evidence:
 
 | Project file | Primary lens | How it upgrades MCP |
 |---|---|---|
-| `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` | 🔬 Scientific method + documentation system | Reinforces protocol-first workflow, domain modules, traceability matrices, and “living documentation” discipline. |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` | 🧭 System blueprint | Aligns MCP with KFM’s pipeline order, governance, QA gates, Story Nodes, and Focus Mode evidence rules. |
-| `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` | 🏗️ Platform design | Clarifies end-to-end architecture (ingest → catalogs → AI/analysis → UI), and why provenance must be first-class. |
-| `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` | 🧯 Reality check | Highlights where MCP must be operational (actual SOPs, glossary, model cards, experiment logs—no “paper MCP”). |
+| `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` | 🔬 Scientific method + documentation system | Reinforces protocol-first workflow, documentation standards, transparency, peer review, and modular domain protocols. |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` | 🧭 System blueprint | Aligns MCP with KFM’s governed pipeline order, onboarding resources (glossary/templates), and evidence-backed Focus discipline. |
+| `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` | 🚀 Forward-looking operations | Encourages Detect→Validate→Promote, policy-as-code gates, provenance everywhere (PROV JSON-LD), and safer automation patterns (idempotency + kill switch). |
+| `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` | 🏗️ Platform design | Clarifies end-to-end architecture (ingest → catalogs → analysis → UI) and why experiment tracking/model cards are first-class. |
+| `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` | 🧯 Reality check | Highlights where MCP must be operational (actual SOPs, glossary, checklists, review notes)—not just “paper MCP.” |
 | `MARKDOWN_GUIDE_v13.md.gdoc` | 📘 Repo-level invariants | Defines evidence-first + contract-first doctrine, Story Node/Focus constraints, and definition-of-done patterns for governed docs. |
-| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | 🧪 V&V discipline | Shapes simulation experiment logging, V&V framing, uncertainty, sensitivity analysis, and documentation rigor. |
+| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | 🧪 V&V discipline | Shapes simulation experiment logging, V&V framing, uncertainty, and sensitivity analysis discipline. |
 | `Understanding Statistics & Experimental Design.pdf` | 📊 Rigor + bias | Encourages guarding against optional stopping/publication bias and documenting assumptions + effect sizes. |
 | `regression-analysis-with-python.pdf` + `Regression analysis using Python - slides-linear-regression.pdf` | 📈 Baselines + diagnostics | Improves reproducible modeling baselines and diagnostic reporting in EXP/RUN artifacts. |
 | `think-bayes-bayesian-statistics-in-python.pdf` | 🎲 Uncertainty | Encourages explicit priors, posterior uncertainty reporting, and calibrated decisions under uncertainty. |
-| `graphical-data-analysis-with-r.pdf` | 📉 EDA instincts | Reinforces visual sanity checks and artifact detection before publishing evidence. |
+| `graphical-data-analysis-with-r.pdf` | 📉 EDA instincts | Reinforces visual sanity checks and anomaly detection before publishing evidence. |
 | `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | 🛰️ EO workflows | Informs remote sensing SOPs (export patterns, time-series handling) and treating derived indices as evidence artifacts. |
 | `python-geospatial-analysis-cookbook.pdf` | 🗺️ GIS engineering | Guides CRS hygiene, vector/raster IO, PostGIS integration, and safe geoprocessing SOPs. |
 | `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | 🎨 Cartography ethics | Reminds that visualization choices shape meaning; demands documentation of map design decisions. |
@@ -755,15 +872,13 @@ When your PR includes experiments, runs, or evidence:
 | `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 🧊 GPU/3D | Motivates explicit coordinate conventions, LOD/tiling decisions, and 3D evidence display constraints. |
 | `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | 🖼️ Image pipelines | Shapes SOPs for thumbnails, compression, and safe handling of complex formats. |
 | `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | 🐘 Data store discipline | Informs SOPs around schemas, indexing, migrations, and reproducible data loading. |
-| `Scalable Data Management for Future Hardware.pdf` | ⚙️ Performance + streaming | Encourages documenting performance experiments, concurrency assumptions, and future streaming ingestion patterns. |
-| `Data Spaces.pdf` | 🔗 Interop & federation | Supports catalog-as-interface thinking and future multi-region/federated evidence workflows. |
+| `Scalable Data Management for Future Hardware.pdf` | ⚙️ Performance + concurrency | Encourages documenting performance experiments, resource assumptions, and concurrency constraints in run receipts. |
+| `Data Spaces.pdf` | 🔗 Interop & federation | Supports catalog-as-interface thinking and future federated evidence workflows. |
 | `Spectral Geometry of Graphs.pdf` | 🕸️ Graph theory | Encourages careful interpretation of graph metrics and provenance for derived relations. |
 | `Generalized Topology Optimization for Structural Design.pdf` | 🧮 Optimization workflows | Suggests structuring optimization experiments as reproducible jobs with clear objectives/constraints. |
 | `Principles of Biological Autonomy - book_9780262381833.pdf` | 🧠 Systems thinking | Promotes feedback-loop awareness and stability thinking when documenting pipelines and governance. |
 | `Introduction to Digital Humanism.pdf` | ❤️ Human-centered ethics | Reinforces transparency, accountability, and dignity in governance + AI documentation. |
-| `On the path to AI Law’s prophecies...pdf` | ⚖️ AI governance + restraint | Informs bad-evidence handling (data pruning + inferential/executional restraint) and AI output labeling. |
-| `Gray Hat Python...pdf` + `ethical-hacking-and-countermeasures...pdf` | 🛡️ Security mindset | Guides hostile-input posture, threat modeling, and defensive review of parsers/pipelines/services. |
-| `concurrent-real-time-and-distributed-programming-in-java...pdf` | 🧵 Concurrency | Encourages careful worker/job design, race-condition awareness, and reproducible concurrency tests. |
+| Security & concurrency references (e.g., `ethical-hacking-and-countermeasures...pdf`, `Gray Hat Python...pdf`, `concurrent-real-time-and-distributed-programming-in-java...pdf`) | 🛡️ Adversarial mindset | Guides hostile-input posture, threat modeling, and defensive review of parsers/pipelines/services. |
 | Programming bundles (`A...pdf`, `B-C...pdf`, `D-E...pdf`, `F-H...pdf`, `I-L...pdf`, `M-N...pdf`, `O-R...pdf`, `S-T...pdf`, `U-X...pdf`) | 🧰 Polyglot reference | Supports language/tooling best practices while keeping KFM’s boundary invariants intact. |
 
 </details>
@@ -774,6 +889,7 @@ When your PR includes experiments, runs, or evidence:
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
+| v1.3.0 | 2026-01-11 | Tightened MCP into a typed, machine-readable “methods + receipts” layer: added artifact/ID table, Detect→Validate→Promote guidance, front matter + schema notes, expanded run manifest to include policy checks/attestation hooks, added incident/review artifact guidance, and aligned reference map with current project docs. | KFM Engineering |
 | v1.2.0 | 2026-01-09 | Upgraded MCP to align with v13 evidence-first/contract-first doctrine: added definition-of-done, reproducibility levels, traceability matrix, bad-evidence restraint protocol, expanded governance/licensing/sensitive-location guidance, and an updated reference-library influence map. | KFM Engineering |
 | v1.1.0 | 2026-01-06 | Clarified non‑negotiables + pipeline linkage; added run receipt template, PR checklist, and workflow diagram. | KFM Engineering |
 | v1.0.0 | 2025-12-31 | Initial MCP README: experiments, runs, SOPs, model cards, notebooks, safety rules. | KFM Engineering |
@@ -782,3 +898,13 @@ When your PR includes experiments, runs, or evidence:
 
 🧭 **Goal:** Make every output auditable and every method teachable.  
 🧾 **Promise:** If it’s in production, it has a paper trail. ✅
+
+<!--
+Evidence anchors (project docs consulted for this update):
+- Evidence-first + artifact definitions + Focus/Story constraints:   
+- MCP scientific-method posture + documentation standards + modular protocols:   
+- Onboarding resources (glossary/templates) and MCP terminology in KFM doc:  
+- Detect→Validate→Promote + policy-as-code + provenance/attestation ideas: :contentReference[oaicite:8]{index=8} :contentReference[oaicite:9]{index=9} 
+- Design audit “make MCP real” (SOPs/glossary/checklists): 
+- Open-source hub design: experiment tracking + model cards are first-class: :contentReference[oaicite:12]{index=12} :contentReference[oaicite:13]{index=13}
+-->
