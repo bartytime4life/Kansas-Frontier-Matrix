@@ -1,3 +1,14 @@
+---
+title: "🗂️ data/manifests/ — KFM Manifests, Contracts, & Provenance"
+path: "data/manifests/README.md"
+version: "v11.2.6"
+last_updated: "2026-01-10"
+review_cycle: "quarterly"
+governance: "FAIR+CARE · provenance-first · contract-first"
+audience: ["contributors", "data-stewards", "pipeline-authors", "reviewers"]
+license: "CC-BY-4.0"
+---
+
 # 🗂️ `data/manifests/` — KFM Manifests, Contracts, & Provenance
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
@@ -31,38 +42,38 @@ flowchart LR
 
 ---
 
-## 🧱 Folder layout (recommended)
+## 🧱 Folder layout (recommended) 🧩✨
 
 > Keep **manifests** here. Put **generated catalogs** in their own output folder (e.g. `data/catalogs/…`).  
 > If your repo currently uses `data/stac/`, `data/dcat/`, etc., treat those as **generated outputs**.
 
 ```text
-data/
-  manifests/
-    README.md                         👈 you are here 🙂
-    schemas/                          📐 JSON Schema / YAML schema docs
-      dataset.manifest.schema.json
-      pipeline.manifest.schema.json
-      model.manifest.schema.json
-      doc.manifest.schema.json
-    datasets/                         🛰️ dataset declarations (inputs + derived)
-      kfm.ks.surficial_geology.v1.manifest.yaml
-      kfm.ks.transit.gtfsrt.v1.manifest.yaml
-    pipelines/                        🧪 reproducible ETL + packaging
-      kfm.pipeline.surficial_geology.v1.manifest.yaml
-      kfm.pipeline.gtfsrt_watcher.v1.manifest.yaml
-    models/                           🧠 simulation/ML model declarations
-      kfm.model.drought_risk.v1.manifest.yaml
-    docs/                             📚 governed “reference library” docs
-      kfm.doc.nasa_simulation_guide.v1.manifest.yaml
-      kfm.doc.postgresql_notes.v1.manifest.yaml
-    policies/                         🛡️ FAIR/CARE & sensitivity rules (OPA/Rego, etc.)
-      README.md
-      fairness.rego
-      care_labels.rego
-    _generated/                       ⚙️ OPTIONAL local build artifacts (gitignored)
-      index.json
-      manifest_index.md
+📁 data/
+  └── 🗂️ manifests/
+      ├── 📄 README.md                              👈 you are here 🙂
+      ├── 📐 schemas/                               📏 JSON Schema / YAML schema docs
+      │   ├── 📄 dataset.manifest.schema.json
+      │   ├── 📄 pipeline.manifest.schema.json
+      │   ├── 📄 model.manifest.schema.json
+      │   └── 📄 doc.manifest.schema.json
+      ├── 🛰️ datasets/                              📦 dataset declarations (inputs + derived)
+      │   ├── 📄 kfm.ks.surficial_geology.v1.manifest.yaml
+      │   └── 📄 kfm.ks.transit.gtfsrt.v1.manifest.yaml
+      ├── 🧪 pipelines/                             🧰 reproducible ETL + packaging
+      │   ├── 📄 kfm.pipeline.surficial_geology.v1.manifest.yaml
+      │   └── 📄 kfm.pipeline.gtfsrt_watcher.v1.manifest.yaml
+      ├── 🧠 models/                                🧬 simulation/ML model declarations
+      │   └── 📄 kfm.model.drought_risk.v1.manifest.yaml
+      ├── 📚 docs/                                  📚 governed “reference library” docs
+      │   ├── 📄 kfm.doc.nasa_simulation_guide.v1.manifest.yaml
+      │   └── 📄 kfm.doc.postgresql_notes.v1.manifest.yaml
+      ├── 🛡️ policies/                              🧾 FAIR/CARE & sensitivity rules (OPA/Rego, etc.)
+      │   ├── 📄 README.md
+      │   ├── 📄 fairness.rego
+      │   └── 📄 care_labels.rego
+      └── 🧰 _generated/                             ⚙️ OPTIONAL local build artifacts (gitignored)
+          ├── 📄 index.json
+          └── 📄 manifest_index.md
 ```
 
 ---
@@ -323,84 +334,13 @@ Before a manifest can be merged:
 
 ---
 
-## 📚 Project files inventory (reference library + core docs)
-
-This repo’s attached books/papers/docs are treated as **governed reference inputs**.  
-If you add/remove files in the library, **also add/update** a `kind: "doc"` manifest in `data/manifests/docs/`.
-
-<details>
-<summary><strong>📦 Expand: Full inventory of current project files</strong></summary>
-
-### 🧭 Core KFM Docs
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
-- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`
-- `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf`
-- `MARKDOWN_GUIDE_v13.md.gdoc`
-- `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`
-
-### 🛰️ Geospatial / Mapping
-- `python-geospatial-analysis-cookbook.pdf`
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
-- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-
-### 🗄️ Databases / Data Systems
-- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `Scalable Data Management for Future Hardware.pdf`
-- `Data Spaces.pdf`
-
-### 📊 Stats / Data Science
-- `Understanding Statistics & Experimental Design.pdf`
-- `regression-analysis-with-python.pdf`
-- `Regression analysis using Python - slides-linear-regression.pdf`
-- `graphical-data-analysis-with-r.pdf`
-- `think-bayes-bayesian-statistics-in-python.pdf`
-
-### 🧠 ML / Theory
-- `Understanding Machine Learning: From Theory to Algorithms` (in programming books collection)
-- `Spectral Geometry of Graphs.pdf`
-- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf`
-
-### 🧪 Simulation / Modeling
-- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- `Generalized Topology Optimization for Structural Design.pdf`
-- `Principles of Biological Autonomy - book_9780262381833.pdf`
-
-### 🌍 Remote Sensing
-- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-
-### 🔐 Security (defensive use only)
-- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
-- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
-
-### 🧰 Software / Web / Engineering
-- `responsive-web-design-with-html5-and-css3.pdf`
-- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
-- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
-- `Introduction to Digital Humanism.pdf`
-
-### 📚 Programming Compendiums (multi-book packs)
-- `A programming Books.pdf`
-- `B-C programming Books.pdf`
-- `D-E programming Books.pdf`
-- `F-H programming Books.pdf`
-- `I-L programming Books.pdf`
-- `M-N programming Books.pdf`
-- `O-R programming Books.pdf`
-- `S-T programming Books.pdf`
-- `U-X programming Books.pdf`
-
-</details>
-
----
-
 ## 🧾 Next steps (quick wins) 🚀
 
-1) Add schemas under `data/manifests/schemas/`  
-2) Add one “golden path” dataset manifest + pipeline manifest  
-3) Implement `kfm.manifests.validate` + `kfm.manifests.build` (or equivalent scripts)  
-4) Have CI fail on: missing license, missing provenance, missing sensitivity tags  
-5) Auto-generate a `manifest_index.md` (nice for humans) and `index.json` (nice for machines)
+1) 📐 Add schemas under `data/manifests/schemas/`  
+2) 🛰️ Add one “golden path” dataset manifest + 🧪 pipeline manifest  
+3) 🧰 Implement `kfm.manifests.validate` + `kfm.manifests.build` (or equivalent scripts)  
+4) 🛡️ Have CI fail on: missing license, missing provenance, missing sensitivity tags  
+5) 🧾 Auto-generate a `manifest_index.md` (nice for humans) and `index.json` (nice for machines)
 
 ---
 
