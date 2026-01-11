@@ -53,12 +53,12 @@ This folder contains **pure mappers** that translate KFM domain objects into **m
 
 ```mermaid
 flowchart LR
-  etl["🔧 ETL / Pipelines"] --> cat["📚 Catalogs"]
-  cat --> graph["🕸️ Graph"]
-  graph --> api["🚀 API"]
-  api --> ui["🗺️ UI"]
-  ui --> story["🎬 Story Nodes"]
-  story --> focus["🎯 Focus Mode"]
+  N_ETL["🔧 ETL / Pipelines"] --> N_CAT["📚 Catalogs"]
+  N_CAT --> N_GRAPH["🕸️ Graph"]
+  N_GRAPH --> N_API["🚀 API"]
+  N_API --> N_UI["🗺️ UI"]
+  N_UI --> N_STORY["🎬 Story Nodes"]
+  N_STORY --> N_FOCUS["🎯 Focus Mode"]
 ```
 
 > [!NOTE]
