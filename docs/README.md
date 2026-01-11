@@ -1,27 +1,3 @@
----
-id: DOC-DOCS-README
-title: "docs/ — Kansas Frontier Matrix (KFM) Governed Documentation"
-status: active
-version: v1.1.0
-last_updated: 2026-01-11
-owners:
-  - KFM Engineering
-tags:
-  - kfm
-  - documentation
-  - governance
-  - standards
-  - runbooks
-  - story-nodes
-  - focus-mode
----
-
-<!--
-📌 This README documents the *canonical governed documentation boundary* for KFM.
-🗓️ Last updated: 2026-01-11
-✅ Note: KFM’s v13 docs discipline assumes docs are validated (front‑matter + links + schemas) and treated as shippable system artifacts.
--->
-
 # 📚 `docs/` — Kansas Frontier Matrix (KFM) Governed Documentation 📜🧭
 
 ![KFM](https://img.shields.io/badge/KFM-docs%2F%20canonical-1f6feb)
