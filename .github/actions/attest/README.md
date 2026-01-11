@@ -1,35 +1,42 @@
 <a id="top"></a>
 
-# 🖊️ `.github/actions/attest/` — Artifact Attestations for KFM (SBOM + SLSA-ish + Checksums)
+# 🖊️ `.github/actions/attest/` — Artifact Attestations for KFM (Checksums + SBOM + DSSE)
 
 [![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
 
 ![Attestations](https://img.shields.io/badge/attestations-enabled-black)
 ![SBOM](https://img.shields.io/badge/SBOM-required-purple)
-![Provenance](https://img.shields.io/badge/provenance-SLSA--ish%20%2B%20W3C%20PROV-6f42c1)
-![Least Privilege](https://img.shields.io/badge/security-least--privilege-important)
+![DSSE](https://img.shields.io/badge/DSSE-optional-informational)
+![OIDC](https://img.shields.io/badge/OIDC-id--token%3Awrite-important)
+![Fail Closed](https://img.shields.io/badge/gates-fail--closed-critical)
+![Least Privilege](https://img.shields.io/badge/security-least--privilege-black)
 
-> This action produces **cryptographically verifiable “what/why/how” evidence** for KFM artifacts: **checksums**, **SBOM**, and **build provenance attestations**.
+> **KFM `attest`** is a **repo-local composite action** that packages **verifiable evidence** for promotion-grade artifacts:
+> - 🔒 `checksums.sha256` (integrity)
+> - 🧬 SBOM(s) (software composition)
+> - 🧾 `build-info.json` (build context)
+> - 🔏 *(optional)* DSSE-style attestation payload(s) (SLSA-inspired provenance binding)
 >
-> It is designed for **promotion lanes** and the **Executor** model: attach proofs + telemetry, **never merge**, **never push to protected branches**. :contentReference[oaicite:0]{index=0}
+> It’s designed for **promotion lanes** and the **Executor model**: attach proofs + telemetry, **never merge**, **never push to protected branches**.[^executor]
+
+> [!IMPORTANT]
+> **KFM order (don’t break it):** 🧰 ETL → 🗂️ Catalogs (STAC/DCAT/PROV) → 🕸️ Graph → 🔌 API → 🌐 UI → 🎬 Story Nodes → 🧠 Focus Mode.[^md-guide]
 
 ---
 
-## 🧾 Policy metadata
+## 🧾 Action metadata
 
 | Field | Value |
 |---|---|
-| File | `.github/actions/attest/README.md` |
-| Action | `.github/actions/attest/action.yml` *(expected)* |
-| Status | Active ✅ *(spec until implemented)* |
-| Last updated | **2026-01-09** |
-| KFM-MDP baseline | **v11.2.6** |
-| Master Guide | v13 (draft) |
-| Primary purpose | Provenance + integrity for promotion/rollback |
-
-> [!NOTE]
-> KFM treats **metadata + provenance as security-critical controls** and validates them as part of CI/promotion gates. :contentReference[oaicite:1]{index=1}
+| 📄 File | `.github/actions/attest/README.md` |
+| 📁 Folder | `.github/actions/attest/` |
+| 🧩 Action type | Composite Action (`action.yml`) |
+| 🟢 Status | Active ✅ *(spec/contract until implemented)* |
+| 🗓️ Last updated | **2026-01-11** |
+| 🧱 Canon | Contract-first + evidence-first + fail-closed gates[^md-guide] |
+| 🎯 Primary purpose | Provenance + integrity for promotion/rollback |
+| 🧯 Default stance | Fail closed, no secrets in logs, least privilege |
 
 ---
 
@@ -37,11 +44,18 @@
 
 | Need | Go |
 |---|---|
-| 🧭 Repo overview | [`../../../README.md`](../../../README.md) |
-| 🤝 Collaboration hub | [`../../README.md`](../../README.md) |
-| 🧪 Workflows spec | [`../../workflows/README.md`](../../workflows/README.md) |
-| 🛡️ Security policy | [`../../../SECURITY.md`](../../../SECURITY.md) |
 | 🧩 Actions hub | [`../README.md`](../README.md) |
+| 🧬 SBOM action (pairs with attest) | [`../sbom/README.md`](../sbom/README.md) |
+| 🧪 Workflows hub | [`../../workflows/README.md`](../../workflows/README.md) |
+| 🛡️ Security policy | [`../../../SECURITY.md`](../../../SECURITY.md) |
+| 🧭 Repo overview | [`../../../README.md`](../../../README.md) |
+| 📘 KFM Master Guide (ordering + invariants) | `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`[^md-guide] |
+| 🌟 Latest proposals (Executor, kill-switch, Sigstore ideas) | `docs/notes/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`[^latest-ideas] |
+| 🧱 System spec (QA + governance + supply-chain posture) | `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`[^tech-doc] |
+
+> [!TIP]
+> If a link 404s, this README is still the **spec** for what we intend to implement.  
+> Open an issue with labels: `type:pipeline` + `area:ci` + `action:attest`.
 
 ---
 
@@ -49,15 +63,17 @@
 <summary><strong>🧭 Table of contents</strong></summary>
 
 - [🧠 What this action is](#-what-this-action-is)
+- [🚦 Where this runs in the pipeline](#-where-this-runs-in-the-pipeline)
 - [🧬 KFM invariants this action must uphold](#-kfm-invariants-this-action-must-uphold)
 - [🧾 Attestation vs PROV vs STAC/DCAT](#-attestation-vs-prov-vs-stacdcat)
-- [🚦 Where this runs in the pipeline](#-where-this-runs-in-the-pipeline)
-- [📥 Inputs](#-inputs)
+- [📦 KFM Attestation Bundle v1 (contract)](#-kfm-attestation-bundle-v1-contract)
+- [🎛️ Inputs](#️-inputs)
 - [📤 Outputs](#-outputs)
 - [🔐 Required permissions](#-required-permissions)
 - [🧪 Usage examples](#-usage-examples)
 - [✅ Verification expectations](#-verification-expectations)
 - [🧯 Failure modes & troubleshooting](#-failure-modes--troubleshooting)
+- [🧰 Maintainer implementation checklist](#-maintainer-implementation-checklist)
 - [📚 Reference library](#-reference-library)
 
 </details>
@@ -66,84 +82,176 @@
 
 ## 🧠 What this action is
 
-**`kfm/attest`** is a repo-local composite action that:
+**`kfm/attest`** creates an **attestation bundle** that answers:
 
-1) **Hashes** your chosen artifacts (checksums)  
-2) **Bundles** or **attaches**:
-   - SBOM (software bill of materials)
-   - SLSA-ish build provenance (who/what/where built it)
-   - links to KFM metadata/provenance artifacts when applicable  
-3) **Uploads** a standardized “attestation bundle” as workflow artifacts (and optionally to a release/promotion lane)
+- **What** artifacts were produced? (paths + digests)
+- **How** were they produced? (build context, toolchain, run identifiers)
+- **What else proves integrity?** (SBOM presence, checksum manifest, optional DSSE payload)
 
-It exists because KFM’s rollback and recovery posture expects **deterministic rebuilds** plus **cryptographically verifiable provenance** (so you can prove exactly what changed and restore last known-good). :contentReference[oaicite:2]{index=2}
+### ✅ What it does
+1) 🧾 **Build context capture** → emits (or copies) `build-info.json`  
+2) 🔒 **Checksum manifest** → emits `checksums.sha256` for selected artifacts  
+3) 🧬 **SBOM inclusion** → includes SBOM files *if provided* (prefer those generated by `kfm/sbom`)  
+4) 🔏 **Optional DSSE payload(s)** → produces DSSE-style JSON payload(s) for signing/verification (Sigstore keyless is the preferred direction)[^latest-ideas]
 
----
-
-## 🧬 KFM invariants this action must uphold
-
-### ✅ Invariants (enforced by design)
-
-- **Never merges; never pushes to protected branches.**  
-  Attestations may be attached to PRs/releases, but merges remain a human + branch protection decision. :contentReference[oaicite:3]{index=3}
-
-- **Deterministic & traceable.**  
-  Attestation inputs must include commit SHA/run IDs/digests so rebuilds compare cleanly. :contentReference[oaicite:4]{index=4}
-
-- **Kill-switch must be honored in automated lanes.**  
-  The broader agent framework expects a central kill-switch file at `ops/feature_flags/agents.yml`. Attestation lanes should refuse to run when the system is in “stop” mode. :contentReference[oaicite:5]{index=5}
-
-- **No “publish on fail.”**  
-  If metadata validation, policy gates, or reproducibility checks fail, **do not attest** and **do not promote**. :contentReference[oaicite:6]{index=6}
-
-> [!IMPORTANT]
-> This action assumes the upstream workflow has already run the KFM “validate → promote” gates (schema, policy, QA, reproducibility). The attestation should reflect those results, not replace them. :contentReference[oaicite:7]{index=7}
-
----
-
-## 🧾 Attestation vs PROV vs STAC/DCAT
-
-KFM uses *multiple* trust layers—each for a different purpose:
-
-- **STAC + DCAT** → discovery + dataset contract (what it is, where it is, license/providers, distribution links) :contentReference[oaicite:8]{index=8}
-- **W3C PROV** → semantic lineage (inputs → activities → outputs, agents, parameters) and is required for publishing “boundary artifacts.” :contentReference[oaicite:9]{index=9}
-- **Attestations (this action)** → cryptographic binding of *artifact digests* to *build context* (commit/run/tooling), supporting rollback, audit, and tamper resistance. :contentReference[oaicite:10]{index=10}
+### 🚫 What it does *not* do (by design)
+- ❌ It does **not** replace schema validation (STAC/DCAT/PROV)  
+- ❌ It does **not** replace policy gating (OPA/Conftest)  
+- ❌ It does **not** merge PRs, push to protected branches, or publish on failure[^executor]  
+- ❌ It does **not** make trust decisions — it packages the evidence so *other* gates/verifiers can decide
 
 > [!NOTE]
-> Every new dataset or evidence artifact must have STAC/DCAT/PROV, and CI validates against KFM profiles. This action is the **extra cryptographic wrapper** for promotion-grade trust. :contentReference[oaicite:11]{index=11}
+> KFM treats reproducibility + traceability as part of security posture (not just “nice to have”).[^tech-doc][^nasa-trace]
 
 ---
 
 ## 🚦 Where this runs in the pipeline
 
-KFM promotion is “stage → validate → publish”, fail-closed. Attestation belongs **after validation** and **before publish**.
+Attestation belongs **after validation** and **before publish**:
 
 ```mermaid
 flowchart LR
   A["🧰 Build / ETL outputs<br/>code • data • catalogs"] --> B["🔎 Validate gates<br/>schema • policy • QA • repro"]
-  B -->|pass ✅| C["🖊️ Attest<br/>SBOM • provenance • checksums"]
+  B -->|pass ✅| C["🖊️ Attest<br/>checksums • SBOM • build-info • (DSSE optional)"]
   C --> D["📦 Publish / Promote (atomic)<br/>release • catalogs • images"]
   B -->|fail ❌| X["🧯 Stop (fail-closed)<br/>no attest • no publish"]
 ```
 
-> Promotion discipline and provenance emission are explicit KFM requirements (and are treated like code in CI). :contentReference[oaicite:12]{index=12}
+> [!IMPORTANT]
+> “Attest” is not a gate — it should **reflect** gate outcomes by bundling reports/links, never bypassing them.[^md-guide]
 
 ---
 
-## 📥 Inputs
+## 🧬 KFM invariants this action must uphold
 
-> Spec contract — keep inputs **explicit** and **string-only** (GitHub Actions inputs are strings).
+### ✅ Invariants (non-negotiable)
+
+- **Executor contract: never auto-merge.**  
+  The Executor model opens/updates PRs and attaches evidence — **it does not merge**.[^executor]
+
+- **Fail-closed by default.**  
+  If a required input is missing (SBOM/provenance/checksum target), **fail** unless explicitly configured otherwise.
+
+- **Determinism & idempotency-friendly.**  
+  Outputs should be stable for the same inputs (avoid unstable timestamps / random ordering). Prefer:
+  - stable `run_uuid`
+  - explicit `idempotency_key`
+  - optional fixed clock (`KFM_VCLOCK_UTC`) for reproducible timestamps[^latest-ideas][^md-guide]
+
+- **Kill-switch must be honored.**  
+  Automated lanes must respect a **single-stop control** (kill-switch) to pause risky automation quickly.[^latest-ideas]
+
+- **Least privilege.**  
+  Minimal permissions in workflows; no “god tokens”; no secrets in logs.[^tech-doc]
+
+- **Sensitive data guardrails.**  
+  If a dataset/artifact is classified beyond public, the workflow must treat it as sensitive evidence:
+  - restrict uploads
+  - avoid public release assets
+  - redact logs/telemetry where appropriate[^data-spaces][^tech-doc]
+
+> [!CAUTION]
+> **No publish-on-fail.** If validation gates fail, do not generate “success-looking” attestations and do not promote artifacts.
+
+---
+
+## 🧾 Attestation vs PROV vs STAC/DCAT
+
+KFM uses multiple trust layers (each does a different job):
+
+- 🗂️ **STAC + DCAT** → discovery + dataset contract (what it is, where it is, license/providers, distributions)[^md-guide]  
+- 🧾 **W3C PROV** → semantic lineage (inputs → activities → outputs, agents, parameters) required for boundary artifacts[^md-guide]  
+- 🖊️ **Attestations (this action)** → cryptographic binding of artifact digests to build context (commit/run/tooling), supporting rollback + audit + tamper resistance[^latest-ideas]
+
+> [!NOTE]
+> Think of STAC/DCAT/PROV as **meaning** and **lineage**, and this action as the **integrity wrapper** that makes “what we shipped” verifiable.
+
+---
+
+## 📦 KFM Attestation Bundle v1 (contract)
+
+This section is the **contract** policy gates can rely on (paths + stable names).
+
+### ✅ Default output dir
+By default, this action writes into:
+
+- `attestations_dir: .artifacts/attestations`
+
+### 🧱 Expected layout
+
+```text
+📁 .artifacts/
+└─ 📁 🔏 attestations/
+   ├─ 📄 checksums.sha256                 # 🔒 sha256 for all asserted artifacts
+   ├─ 📄 build-info.json                  # 🧾 run + toolchain + context
+   ├─ 📄 attest-summary.md                # 📝 human summary (also to Step Summary)
+   ├─ 📄 bundle.manifest.json             # 📦 machine index for the bundle
+   ├─ 📄 materials.sbom.spdx.json         # 🧬 SPDX (prefer from kfm/sbom)
+   ├─ 📄 materials.sbom.cdx.json          # 🧬 CycloneDX (optional)
+   ├─ 📄 provenance.dsse.json             # 🔏 optional DSSE payload (sign/verify)
+   ├─ 📁 links/
+   │  ├─ 📄 prov.path.txt                 # 🧾 pointer to PROV bundle(s)
+   │  ├─ 📄 catalogs.paths.txt            # 🗂️ pointers to STAC/DCAT roots
+   │  └─ 📄 gates.paths.txt               # 🧑‍⚖️ pointers to gate reports (OPA/QA/schema)
+   └─ 📁 telemetry/
+      ├─ 📄 openlineage.events.jsonl      # 🧵 optional lineage events (if provided)
+      └─ 📄 executor.events.jsonl         # 🤖 optional agent/executor events (if provided)
+```
+
+> [!TIP]
+> Treat the bundle as **immutable evidence**. If you regenerate it, it should be comparable (same subject + same inputs → same checksums), or you’ve found a determinism break worth investigating.[^nasa-trace][^stats-replication]
+
+### 🧾 `bundle.manifest.json` (recommended shape)
+
+```json
+{
+  "kfm_bundle_version": "1",
+  "subject": "git+https://github.com/<org>/<repo>@<sha>",
+  "run": {
+    "run_id": "<GITHUB_RUN_ID>",
+    "attempt": "<GITHUB_RUN_ATTEMPT>",
+    "run_uuid": "<stable UUID>",
+    "idempotency_key": "<stable key>"
+  },
+  "paths": {
+    "checksums": "checksums.sha256",
+    "build_info": "build-info.json",
+    "sbom_spdx": "materials.sbom.spdx.json",
+    "sbom_cdx": "materials.sbom.cdx.json",
+    "dsse": "provenance.dsse.json"
+  }
+}
+```
+
+---
+
+## 🎛️ Inputs
+
+> GitHub Actions inputs are strings. Use `"true"` / `"false"` for booleans.
 
 | Input | Required | Default | Meaning |
 |---|---:|---|---|
-| `subject` | ✅ | *(none)* | What you are attesting (e.g., git subject URI, image digest, release asset path). |
-| `artifacts` | ✅ | *(none)* | Newline-separated list of paths/globs to checksum and include in the attestation bundle. |
-| `output_dir` | ❌ | `out/attest` | Where bundle files are written. |
-| `sbom_path` | ❌ | *(empty)* | If provided, include and/or attest an SBOM file. |
-| `build_provenance_path` | ❌ | *(empty)* | If provided, include and/or attest a build provenance predicate file. |
-| `prov_bundle_path` | ❌ | *(empty)* | Optional link to W3C PROV bundle (KFM often uses `data/prov/**` or legacy `data/provenance/**`). :contentReference[oaicite:13]{index=13}:contentReference[oaicite:14]{index=14} |
-| `mode` | ❌ | `bundle` | `bundle` (write outputs + upload) or `attest` (also publish attestation via configured tool). |
-| `fail_on_missing` | ❌ | `true` | Fail if any referenced file is missing. |
-| `kill_switch_path` | ❌ | `ops/feature_flags/agents.yml` | Location of kill-switch (automated lanes should check this). :contentReference[oaicite:15]{index=15} |
+| `subject` | ✅ | *(none)* | What you are attesting (git subject URI, image digest, release asset path). |
+| `artifacts` | ✅ | *(none)* | Newline-separated paths/globs to checksum + include in the bundle. |
+| `attestations_dir` | ❌ | `.artifacts/attestations` | Output directory for bundle files. |
+| `sbom_spdx_path` | ❌ | *(empty)* | SPDX JSON SBOM path (prefer output of `kfm/sbom`). |
+| `sbom_cdx_path` | ❌ | *(empty)* | CycloneDX JSON SBOM path (optional). |
+| `build_info_path` | ❌ | *(empty)* | If provided, copy into bundle; otherwise generate `build-info.json`. |
+| `prov_bundle_path` | ❌ | *(empty)* | Optional pointer to PROV bundle(s) (e.g., `data/prov/**`). |
+| `catalog_paths` | ❌ | *(empty)* | Optional newline-separated STAC/DCAT roots included into `links/`. |
+| `gate_report_paths` | ❌ | *(empty)* | Optional newline-separated report paths (OPA/Conftest, schema, QA). |
+| `openlineage_event_paths` | ❌ | *(empty)* | Optional lineage events to copy into `telemetry/`. |
+| `mode` | ❌ | `bundle` | `bundle` (write + upload) or `sign` (also generate DSSE payload). |
+| `signer` | ❌ | `none` | `none` \| `cosign` *(workflow must provide tool)* |
+| `fail_on_missing` | ❌ | `"true"` | Fail if any referenced file is missing. |
+| `kill_switch_path` | ❌ | `ops/feature_flags/agents.yml` | Kill-switch path for automated lanes.[^latest-ideas] |
+| `classification` | ❌ | `public` | `public` \| `internal` \| `confidential` \| `restricted` (drives upload behavior).[^data-spaces] |
+| `upload_artifact` | ❌ | `"true"` | Upload bundle via `actions/upload-artifact`. |
+| `artifact_name` | ❌ | `attest-${{ github.sha }}` | Artifact name for the uploaded bundle. |
+
+> [!TIP]
+> **Subject naming:** dataset and artifact identifiers should be stable and versioned.  
+> KFM’s dataset ID conventions can follow patterns like `kfm.<region>.<theme>.<year_range>.v<version>` to ensure uniqueness and traceability.[^tech-doc]
 
 ---
 
@@ -151,56 +259,45 @@ flowchart LR
 
 | Output | Meaning |
 |---|---|
-| `bundle_dir` | Output directory containing the attestation bundle. |
-| `checksums_path` | SHA-256 checksums file for referenced artifacts. |
-| `build_info_path` | A `build-info.json` (repo/sha/run/tool versions) used as predicate metadata. |
-| `attest_summary_path` | Human-readable `attest-summary.md` for PR/release notes. |
-| `bundle_sha256` | Digest of the whole bundle (for simple integrity checks). |
-
-### 📦 Expected output shape
-
-```text
-out/attest/
-├─ checksums.sha256
-├─ build-info.json
-├─ attest-summary.md
-├─ predicates/
-│  ├─ sbom.json                 # if provided
-│  └─ build-provenance.json     # if provided
-└─ links/
-   ├─ prov.path.txt             # if provided (points to PROV bundle)
-   └─ catalogs.paths.txt        # optional (STAC/DCAT paths)
-```
-
-> [!TIP]
-> The rollback runbook spec references canonical locations like:
-> - SBOM: `docs/security/sbom/kfm-sbom.json`
-> - CI manifest: `tools/validation/manifest.yml`  
-> Use stable references where possible so auditors/operators can find things quickly. :contentReference[oaicite:16]{index=16}
+| `bundle_dir` | Directory containing the attestation bundle. |
+| `checksums_path` | Path to `checksums.sha256`. |
+| `build_info_path` | Path to `build-info.json` (generated or copied). |
+| `manifest_path` | Path to `bundle.manifest.json`. |
+| `summary_path` | Path to `attest-summary.md`. |
+| `dsse_path` | Path to `provenance.dsse.json` *(if produced)*. |
+| `bundle_sha256` | Digest of the whole bundle (simple integrity check). |
 
 ---
 
 ## 🔐 Required permissions
 
-Minimum recommended job permissions:
+Minimum recommended permissions per job:
 
 ```yaml
 permissions:
   contents: read
-  id-token: write   # for OIDC/Sigstore style attestations (keyless)
 ```
 
-Key principle: OIDC tokens are for **attesting**, not for merges. The Executor model explicitly calls out `id-token: write` for Sigstore and forbids merge scope. :contentReference[oaicite:17]{index=17}
+If using keyless signing / Sigstore style attestation, add:
+
+```yaml
+permissions:
+  contents: read
+  id-token: write
+```
 
 > [!CAUTION]
-> Do **not** run attestation/publish steps on untrusted fork PRs.
-> Keep attestation/promotion on `push main`, tags, or `workflow_dispatch` + protected environments.
+> Do **not** run attestation/sign/publish on untrusted fork PRs.  
+> Keep attestation on `push main`, tags, or `workflow_dispatch` + protected environments.
+
+### 🛡️ Environment protection (recommended)
+Promotion lanes should use GitHub **Environments** with required reviewers and scoped secrets (no plaintext secrets in workflow files).[^gitops-env]
 
 ---
 
 ## 🧪 Usage examples
 
-### Example 1 — Attest a promotion bundle (catalogs + PROV + build-info)
+### Example 1 — Promotion lane: bundle checksums + SBOM + build-info
 
 ```yaml
 jobs:
@@ -208,27 +305,31 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
 
     steps:
       - uses: actions/checkout@v4
 
-      # Assume validation gates already ran here: schema/policy/qa/repro
+      # Assume validation gates already ran: schema/policy/qa/repro
 
-      - name: 🖊️ Attest promotion artifacts
+      - name: 🖊️ Attest (bundle)
         uses: ./.github/actions/attest
         with:
           subject: git+https://github.com/${{ github.repository }}@${{ github.sha }}
           artifacts: |
             data/stac/**/collection.json
-            data/catalog/dcat/**
+            data/dcat/**
             data/prov/**
-          sbom_path: docs/security/sbom/kfm-sbom.json
-          build_provenance_path: artifacts/build_provenance.json
-          mode: bundle
+            reports/gates/**/*
+          sbom_spdx_path: .artifacts/attestations/materials.sbom.spdx.json
+          build_info_path: .artifacts/build-info/build-info.json
+          gate_report_paths: |
+            .artifacts/reports/policy-report.json
+            .artifacts/reports/schema-report.json
+            .artifacts/reports/catalog-qa.json
+          upload_artifact: "true"
 ```
 
-### Example 2 — Executor lane: attach attestations to PR evidence (no merge)
+### Example 2 — Executor lane: attach evidence to PR (no merge)
 
 ```yaml
 jobs:
@@ -237,141 +338,202 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      id-token: write  # for OIDC/Sigstore, not for merges :contentReference[oaicite:18]{index=18}
+      id-token: write  # for keyless proofs (not for merges)
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: 🧪 Validate (schema/policy/qa/repro)
+      - name: 🔎 Validate (schema/policy/qa/repro)
         run: make agents-validate
 
-      - name: 🖊️ Bundle proofs + attestations
+      - name: 🖊️ Bundle proofs (never merge)
         uses: ./.github/actions/attest
         with:
           subject: git+https://github.com/${{ github.repository }}@${{ github.sha }}
           artifacts: |
-            artifacts/**/*
-            prov/executor/**/*
-            telemetry/agents/*.events.json
+            .artifacts/**/*
+            telemetry/**/*
           mode: bundle
+          upload_artifact: "true"
 
       - name: 🧷 Open/Update PR (no merge)
         run: python tools/agents/open_pr.py --plan ${{ inputs.plan_path }} --no-merge
 ```
 
-> The Executor contract expects: “opens/updates PRs and attaches attestations… never merges.” :contentReference[oaicite:19]{index=19}
+### Example 3 — Sign mode (DSSE payload generated; signing handled by workflow)
 
-### Example 3 — Release lane: attest build provenance (Sigstore keyless style)
+```yaml
+jobs:
+  attest-sign:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
-If your release lane uses keyless attestation, your workflow must request OIDC. The project’s promotion sketch explicitly references Sigstore keyless and build attestations. :contentReference[oaicite:20]{index=20}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 🖊️ Build bundle + DSSE payload
+        uses: ./.github/actions/attest
+        with:
+          subject: git+https://github.com/${{ github.repository }}@${{ github.sha }}
+          artifacts: |
+            dist/**/*
+          mode: sign
+          signer: cosign
+```
+
+> [!NOTE]
+> This action can **generate the payload** and package evidence; the workflow owns:
+> - installing/verifying signer tools
+> - choosing where to publish attestations
+> - enforcing environments + approvals
 
 ---
 
 ## ✅ Verification expectations
 
-Attestation is only useful if it can be verified:
+### Checksums (local)
+```bash
+cd .artifacts/attestations
+sha256sum -c checksums.sha256
+```
 
-- ✅ **Checksums** should match the exact artifacts referenced (no “mystery files”).  
-- ✅ **Bundle digest** should match what’s uploaded/attached to a PR/release.  
-- ✅ **Reproducibility checks** should confirm rebuild hashes match when required. :contentReference[oaicite:21]{index=21}
+### Bundle sanity
+- `bundle.manifest.json` exists and points to real files
+- SBOM exists for promotion lanes
+- `build-info.json` contains commit SHA, run ID, toolchain versions
 
-> [!NOTE]
-> KFM’s broader validation philosophy includes: schema/bounds checks, policy (OPA), and repeatable promotion discipline, with provenance emission per run. :contentReference[oaicite:22]{index=22}
+### Determinism checks
+If the same artifacts are rebuilt from the same inputs, checksum drift should be explainable (or treated as a determinism failure). NASA-grade modeling discipline explicitly expects traceability to specific code versions and controlled configuration management.[^nasa-trace]
 
 ---
 
 ## 🧯 Failure modes & troubleshooting
 
-### “OIDC token missing / cannot attest”
-- Ensure the **job** includes `permissions: id-token: write`.
-- Ensure you are running on a trusted trigger (not a fork PR).
+### “Required file missing”
+- Ensure upstream steps produced the expected artifacts (SBOM/build-info/PROV).
+- If using globs, confirm the glob expanded to at least one file.
+- For promotion lanes, do **not** disable `fail_on_missing`.
 
 ### “Attestation bundle differs across runs”
-- Treat this as a **determinism failure** unless you can explain it.
-- Check for timestamps, non-pinned dependencies, or non-deterministic ordering in generated files.
-- If relevant, emit a **reproducer artifact** (e.g., `reproduce.sh`) and keep network boundaries tight. :contentReference[oaicite:23]{index=23}
+Treat as a **signal**, not noise:
+- timestamps, file ordering, non-pinned deps, or non-deterministic builds are common culprits
+- prefer a fixed clock (`KFM_VCLOCK_UTC`) and stable run identifiers[^latest-ideas]
 
-### “We have PROV but no attestations (or vice versa)”
-- KFM expects **both** semantic lineage (PROV) and strong integrity evidence for promotion lanes. :contentReference[oaicite:24]{index=24}:contentReference[oaicite:25]{index=25}
+### “Sensitive artifacts got uploaded”
+- Ensure `classification` is set correctly.
+- Use GitHub Environments + scoped permissions.
+- Avoid uploading sensitive telemetry or raw inputs by default (link to secure storage instead).[^data-spaces][^tech-doc]
+
+### “Secrets appeared in logs”
+- Stop immediately; rotate/replace secrets.
+- Add/strengthen scanning in `governance-scan`.
+- Remember: many third-party examples hardcode passwords — treat them as *anti-patterns*.[^geo-secret]
+
+---
+
+## 🧰 Maintainer implementation checklist
+
+When implementing `action.yml` for this README, ensure:
+
+- [ ] Expands newline-separated `artifacts` globs safely and deterministically
+- [ ] Emits `checksums.sha256` and `bundle.manifest.json` with stable ordering
+- [ ] Generates `build-info.json` if not supplied (include tool versions, runner info)
+- [ ] Copies SBOM paths into stable filenames when provided (`materials.sbom.*.json`)
+- [ ] Writes a concise `attest-summary.md` + appends to `$GITHUB_STEP_SUMMARY`
+- [ ] Honors kill-switch in automated lanes (fail closed for publish lanes)[^latest-ideas]
+- [ ] Never prints secrets / never exposes secrets via action outputs
+- [ ] Respects classification (don’t upload restricted bundles to public locations)
+- [ ] Has a smoke workflow using tiny fixture artifacts (always uploads on failure)
 
 ---
 
 ## 📚 Reference library
 
-> These sources shape KFM’s “boring but trustworthy” pipeline posture: **validation gates**, **provenance-first**, **promotion discipline**, and **security-aware automation**.
-
-### Core KFM sources
-- `Latest Ideas.pdf` — promotion sketches, Sigstore keyless attestation, Executor constraints, rollback runbook. :contentReference[oaicite:26]{index=26}:contentReference[oaicite:27]{index=27}:contentReference[oaicite:28]{index=28} :contentReference[oaicite:29]{index=29}
-- `MARKDOWN_GUIDE_v13.md.gdoc` — STAC/DCAT/PROV alignment requirements; boundary + evidence artifact patterns. :contentReference[oaicite:30]{index=30}:contentReference[oaicite:31]{index=31} :contentReference[oaicite:32]{index=32}
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` — provenance emission, atomic publish discipline, CI gates. :contentReference[oaicite:33]{index=33} :contentReference[oaicite:34]{index=34}
+> ⚠️ Some reference materials may have licenses different from repo code.  
+> Keep them under `docs/library/` (or outside the repo) and respect upstream terms.
 
 <details>
-<summary><strong>📚 Full project library (context for governance + reproducibility)</strong></summary>
+<summary><strong>🧱 Canonical KFM sources (must-read)</strong></summary>
 
-> This action is part of a bigger KFM system spanning GIS, data engineering, security posture, and scientific modeling discipline.
-> Keep the library under `docs/library/` (or outside the repo) and respect upstream licenses.
+- `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc` — canonical ordering + invariants (contract-first, evidence-first)[^md-guide]
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` — QA, security posture, supply chain + governance framing[^tech-doc]
+- `docs/notes/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` — Executor model, kill-switch, Sigstore/keyless ideas[^latest-ideas]
 
-- `docs/architecture/Kansas Frontier Matrix (KFM) – Comprehensive Engineering Design.docx`
-- `docs/notes/Latest Ideas.pdf`
-- `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`
+</details>
 
-**GIS, geoprocessing, cartography**
-- `docs/library/KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf`
-- `docs/library/python-geospatial-analysis-cookbook.pdf`
-- `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+<details>
+<summary><strong>🧪 Modeling, statistics, simulation (reproducibility mindset)</strong></summary>
 
-**Remote sensing**
-- `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-
-**Web + 3D**
-- `docs/library/responsive-web-design-with-html5-and-css3.pdf`
-- `docs/library/webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-
-**Stats + experiments + modeling discipline**
-- `docs/library/Understanding Statistics & Experimental Design.pdf`
+- `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`[^nasa-trace]
+- `docs/library/Understanding Statistics & Experimental Design.pdf`[^stats-replication]
 - `docs/library/regression-analysis-with-python.pdf`
 - `docs/library/Regression analysis using Python - slides-linear-regression.pdf`
 - `docs/library/graphical-data-analysis-with-r.pdf`
 - `docs/library/think-bayes-bayesian-statistics-in-python.pdf`
-- `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-
-**Optimization + graphs + advanced math**
 - `docs/library/Generalized Topology Optimization for Structural Design.pdf`
 - `docs/library/Spectral Geometry of Graphs.pdf`
 
-**Systems + DB + concurrency**
+</details>
+
+<details>
+<summary><strong>🗺️ GIS, cartography, remote sensing (artifact reality)</strong></summary>
+
+- `docs/library/python-geospatial-analysis-cookbook.pdf`[^geo-secret]
 - `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `docs/library/Scalable Data Management for Future Hardware.pdf`
-- `docs/library/Data Spaces.pdf`
-- `docs/library/concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
-
-**Security awareness (defense only)**
-- `docs/library/ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
-- `docs/library/Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
-
-**Ethics & governance**
-- `docs/library/Introduction to Digital Humanism.pdf`
-- `docs/library/Principles of Biological Autonomy - book_9780262381833.pdf`
-- `docs/library/On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
-
-**Imaging**
+- `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
 - `docs/library/compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
 
-**Programming bundles**
-- `docs/library/A programming Books.pdf`
-- `docs/library/B-C programming Books.pdf`
-- `docs/library/D-E programming Books.pdf`
-- `docs/library/F-H programming Books.pdf`
-- `docs/library/I-L programming Books.pdf`
-- `docs/library/M-N programming Books.pdf`
-- `docs/library/O-R programming Books.pdf`
-- `docs/library/S-T programming Books.pdf`
-- `docs/library/U-X programming Books.pdf`
+</details>
+
+<details>
+<summary><strong>⚙️ Systems, scaling, concurrency (why determinism is hard)</strong></summary>
+
+- `docs/library/Scalable Data Management for Future Hardware.pdf`
+- `docs/library/Data Spaces.pdf`[^data-spaces]
+- `docs/library/concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
+- Programming shelf bundles (cross-language fundamentals):
+  - `docs/library/A programming Books.pdf`
+  - `docs/library/B-C programming Books.pdf`[^gitops-env]
+  - `docs/library/D-E programming Books.pdf`
+  - `docs/library/F-H programming Books.pdf`
+  - `docs/library/I-L programming Books.pdf`
+  - `docs/library/M-N programming Books.pdf`
+  - `docs/library/O-R programming Books.pdf`
+  - `docs/library/S-T programming Books.pdf`
+  - `docs/library/U-X programming Books.pdf`
+
+</details>
+
+<details>
+<summary><strong>🔐 Security awareness (defense only) + governance</strong></summary>
+
+- `docs/library/Introduction to Digital Humanism.pdf`
+- `docs/library/On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
+- `docs/library/Principles of Biological Autonomy - book_9780262381833.pdf`
+- Defensive-only references (do **not** treat as offensive contribution requests):
+  - `docs/library/ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
+  - `docs/library/Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
 
 </details>
 
 ---
 
-<p align="right"><a href="#top">⬆️ Back to top</a></p>
+## 🔖 Footnotes
 
+[^md-guide]: `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc` — canonical pipeline ordering + contract-first/evidence-first invariants.
+[^latest-ideas]: `docs/notes/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` — Executor constraints, kill-switch concept, Sigstore/keyless direction.
+[^executor]: See Executor contract in `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` (Executor opens/updates PRs, never auto-merges).
+[^tech-doc]: `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` — QA, least privilege, SBOM/checksum posture, auditability.
+[^nasa-trace]: `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` — reproducibility + traceability to specific code versions/commits.
+[^stats-replication]: `docs/library/Understanding Statistics & Experimental Design.pdf` — replication/reproducibility framing (“replication is the gold standard”).
+[^data-spaces]: `docs/library/Data Spaces.pdf` — data classification + access policy concepts (public/internal/confidential/restricted) that inform evidence handling.
+[^gitops-env]: `docs/library/B-C programming Books.pdf` — GitOps principles + environment-scoped secrets guidance (use protected environments and avoid plaintext secrets).
+[^geo-secret]: `docs/library/python-geospatial-analysis-cookbook.pdf` — contains examples with plaintext passwords (use as cautionary anti-pattern; scan for secrets).
+
+---
+
+<p align="right"><a href="#top">⬆️ Back to top</a></p>
