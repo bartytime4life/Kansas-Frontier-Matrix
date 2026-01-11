@@ -52,15 +52,15 @@ Adapters are the “edge” of the KFM API: they talk to the outside world (data
 
 ```mermaid
 flowchart LR
-  UI[🌐 Web UI / Story Nodes] -->|HTTP| API[🚀 FastAPI Routers]
-  API -->|calls| SVC[🧠 Services / Use-cases]
-  SVC -->|depends on| PORTS[🔌 Ports (interfaces)]
-  PORTS -->|implemented by| ADAPT[🧩 Adapters]
+  UI["🌐 Web UI / Story Nodes"] -->|HTTP| API["🚀 FastAPI Routers"]
+  API -->|calls| SVC["🧠 Services / Use-cases"]
+  SVC -->|depends on| PORTS["🔌 Ports • Interfaces"]
+  PORTS -->|implemented by| ADAPT["🧩 Adapters"]
 
-  ADAPT -->|SQL/tiles| PG[(🗺️ PostGIS)]
+  ADAPT -->|SQL / tiles| PG[(🗺️ PostGIS)]
   ADAPT -->|Cypher| N4J[(🕸️ Neo4j)]
-  ADAPT -->|compute/EO| GEE[(🛰️ Earth Engine)]
-  ADAPT -->|metadata| CAT[(📚 STAC/DCAT/PROV)]
+  ADAPT -->|compute / EO| GEE[(🛰️ Earth Engine)]
+  ADAPT -->|metadata| CAT[(📚 STAC / DCAT / PROV)]
   ADAPT -->|assets| STORE[(📦 Object Storage)]
 ```
 
