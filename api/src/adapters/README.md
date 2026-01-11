@@ -74,18 +74,20 @@ flowchart LR
 > This repository may not match this exact tree yet—use it as the **north star** for organizing adapters consistently.
 
 ```text
-api/src/adapters/
-  inbound/                     # 🛬 Inbound adapters (if used here): HTTP controllers, job runners
-  outbound/                    # 🛫 Outbound adapters: DBs, external APIs, storage
-    postgis/                   # 🗺️ PostGIS repos + SQL helpers
-    neo4j/                     # 🕸️ Graph adapter + Cypher helpers
-    gee/                       # 🛰️ Earth Engine + remote sensing IO
-    catalogs/                  # 📚 STAC/DCAT/PROV read/write/validate
-    tiles/                     # 🧱 Tile utilities (XYZ/TMS), caching
-    storage/                   # 📦 S3/MinIO/local file storage
-  mappers/                     # 🔁 DTO <-> domain transforms
-  errors.py                    # 🧯 Adapter error types (translate external failures)
-  __init__.py
+📁 api/
+  📁 src/
+    📁 adapters/
+      📂 inbound/                      🛬 Inbound adapters (optional): HTTP controllers, job runners
+      📂 outbound/                     🛫 Outbound adapters: DBs, external APIs, storage
+        📂 postgis/                    🗺️ PostGIS repos + SQL helpers
+        📂 neo4j/                      🕸️ Graph adapter + Cypher helpers
+        📂 gee/                        🛰️ Earth Engine + remote sensing IO
+        📂 catalogs/                   📚 STAC/DCAT/PROV read/write/validate
+        📂 tiles/                      🧱 Tile utilities (XYZ/TMS), caching
+        📂 storage/                    📦 S3/MinIO/local file storage
+      📂 mappers/                      🔁 DTO ↔ domain transforms
+      📄 errors.py                     🧯 Adapter error types (translate external failures)
+      📄 __init__.py                   🧬 Package init
 ```
 
 ---
