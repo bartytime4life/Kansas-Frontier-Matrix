@@ -10,7 +10,7 @@
 ![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-7c3aed)
 
 > **Purpose:** make it impossible to “ship mystery artifacts.”  
-> If something is **promoted** (data/catalog/story/model output), it must be **traceable**: inputs → transforms → outputs, with **W3C PROV** + **stable IDs** + (recommended) **checksums**.
+> If something is **promoted** (data/catalog/story/model output), it must be **traceable**: **inputs → transforms → outputs**, with **W3C PROV JSON‑LD**, **stable IDs**, and (recommended) **checksums**.
 >
 > 🧭 KFM order stays sacred: **ETL → Metadata (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
 > This action protects the **metadata boundary** and prevents downstream trust collapse. ✅🧾
@@ -27,9 +27,9 @@
 | Action file | 📄 `.github/actions/provenance-guard/action.yml` *(expected)* |
 | Docs | 📄 `.github/actions/provenance-guard/README.md` |
 | Status | ✅ Active (spec + operating guide) |
-| Last updated | **2026-01-10** |
-| Default posture | 🧯 **Fail-closed** in promotion lanes |
-| Typical lane | 🌙 nightly + 🚀 promotion (optional in PR lane) |
+| Last updated | **2026-01-11** |
+| Default posture | 🧯 **Fail‑closed** in promotion lanes |
+| Typical lane | 🌙 Nightly + 🚀 Promotion *(optional in PR lane)* |
 
 ---
 
@@ -44,7 +44,8 @@
 | 🧾 Full metadata validation | 📄 [`../metadata-validate/README.md`](../metadata-validate/README.md) |
 | 🧑‍⚖️ Policy-as-code | 📄 [`../policy-gate/README.md`](../policy-gate/README.md) |
 | 🧭 Governance scan | 📄 [`../governance-scan/README.md`](../governance-scan/README.md) |
-| 🧾 Build traceability | 📄 [`../build-info/README.md`](../build-info/README.md) |
+| 📦 Build traceability | 📄 [`../build-info/README.md`](../build-info/README.md) |
+| 🖊️ Attestations + SBOM | 📄 [`../attest/README.md`](../attest/README.md) |
 | 🛡️ Security policy | 📄 [`../../../SECURITY.md`](../../../SECURITY.md) |
 
 ---
@@ -53,9 +54,10 @@
 <summary><strong>📌 Table of contents</strong></summary>
 
 - [🎯 What this action does](#-what-this-action-does)
-- [🧠 Why provenance is a *security* control in KFM](#-why-provenance-is-a-security-control-in-kfm)
+- [🧱 Canonical directories & boundary-artifact contract](#-canonical-directories--boundary-artifact-contract)
+- [🧠 Why provenance is a <em>security</em> control in KFM](#-why-provenance-is-a-security-control-in-kfm)
 - [🧭 Where it fits in the KFM pipeline](#-where-it-fits-in-the-kfm-pipeline)
-- [🔎 What it checks](#-what-it-checks)
+- [🔎 What it checks (rule IDs)](#-what-it-checks-rule-ids)
 - [⚙️ Inputs](#️-inputs)
 - [📤 Outputs](#-outputs)
 - [📦 Output files](#-output-files)
@@ -72,38 +74,78 @@
 
 ## 🎯 What this action does
 
-`provenance-guard` is a **repo-local composite action** that enforces a simple but powerful rule:
+`provenance-guard` is a **repo‑local composite action** that enforces one simple rule:
 
 > If an artifact is promoted, it must be **auditable**.
 
 ### ✅ Key capabilities (expected)
-- 🧬 Detects “promotion-scope” artifacts (configurable paths/globs)
-- 🧾 Requires a matching **PROV** record for promoted outputs
+
+- 🧬 Detects “promotion‑scope” artifacts (configurable paths/globs)
+- 🧾 Requires a matching **PROV JSON‑LD** record for promoted outputs
 - 🔗 Checks **ID alignment** between:
-  - 🗂️ STAC Items/Collections
-  - 🗃️ DCAT datasets/distributions
-  - 🧬 PROV entities/activities
-- 🧠 Enforces “minimum provenance payload” (configurable):
+  - 🛰️ **STAC** Items/Collections
+  - 🗃️ **DCAT** datasets/distributions
+  - 🧬 **PROV** entities/activities
+- 🧠 Enforces a **minimum provenance payload** (configurable):
   - activity exists (what ran)
   - agent exists (who/what ran it)
   - inputs used (sources)
   - outputs generated (what changed)
-  - parameters + tool versions (recommended)
-- 🧷 Optional checksum enforcement (recommended for big assets)
-- 🧯 Fail-closed behavior for promotion lanes (no partial publish)
+  - parameters + tool versions *(recommended; required in strict lanes)*
+- 🧾 Optional checksum enforcement (recommended for promotion)
+- 🧯 Fail‑closed behavior for promotion lanes (no partial publish)
 
 > [!TIP]
-> Think of this as the **lineage guardrail** that keeps downstream systems honest:
-> 🕸️ graph ingest • 🔌 API • 🖥️ UI • 🎬 story nodes • 🧠 focus mode
+> Think of this as the lineage guardrail that keeps downstream systems honest:
+> 🕸️ graph ingest → 🔌 API → 🖥️ UI → 🎬 story nodes → 🧠 focus mode
+
+---
+
+## 🧱 Canonical directories & boundary-artifact contract
+
+KFM’s **Master Guide v13** expects a repo layout where **data moves through stable stages** and **boundary artifacts** (STAC/DCAT/PROV) exist before anything is treated as “fully published.” 🧭🧾
+
+### ✅ Canonical data stages (KFM-shaped)
+
+| Stage | Typical path | Meaning | Guard behavior |
+|---|---|---|---|
+| 🧪 Raw | `data/raw/**` | Ingested, untrusted, may be sensitive | 🚫 Never “promotion-scope” |
+| 🧰 Work | `data/work/**` | Intermediate/transient | 🚫 Never referenced by publish catalogs |
+| ✅ Processed | `data/processed/**` | Publish-ready artifacts | ✅ Promotion-scope (default) |
+
+### ✅ Canonical boundary artifacts (v13 contract)
+
+| Artifact layer | Canonical path (v13) | Notes |
+|---|---|---|
+| 🛰️ STAC | `data/stac/collections/**` + `data/stac/items/**` | Discovery + asset addressing |
+| 🗃️ DCAT | `data/catalog/dcat/**` | Dataset/distribution rollups |
+| 🧬 PROV | `data/prov/**` | Lineage + reproducibility record (JSON‑LD) |
+| 🎬 Story Nodes | `docs/reports/story_nodes/**` | Narrative artifacts that must be evidence-linked |
+| 🧠 MCP | `mcp/**` | “Methods & Computational Experiments” (models/experiments are governed) |
+
+### ♻️ Legacy compatibility notes (common during migration)
+
+Some older docs/pipelines use:
+- STAC under `data/catalog/**`  
+- PROV under `data/provenance/**`
+
+This action **should support both** via inputs:
+- set `prov_root` to your canonical folder, or
+- provide multiple `prov_roots` (recommended), and
+- keep the mapping deterministic (no “search the universe” guesswork).
+
+> [!IMPORTANT]
+> **Boundary artifacts are not optional.**  
+> If STAC/DCAT exists without PROV (or PROV exists without catalog linkage), promotion should stop. 🧯
 
 ---
 
 ## 🧠 Why provenance is a *security* control in KFM
 
-KFM is not just code—it’s **data + catalogs + narratives + models**.
+KFM is not just code — it’s **data + catalogs + narratives + models**.
 
 Without provenance:
-- a malicious or accidental change can slip into a catalog (supply-chain risk)
+- a malicious or accidental change can slip into a catalog (supply‑chain risk)
 - “facts” in stories become un-auditable
 - model outputs become “vibes” instead of evidence
 - incident response becomes guesswork
@@ -111,9 +153,9 @@ Without provenance:
 With provenance:
 - ✅ you can answer: *what changed, who did it, why, using what inputs & tools?*
 - ✅ you can roll back safely
-- ✅ you can prove “restricted in → not public out” behavior
+- ✅ you can prove “restricted in → not public out” behavior (with policy + classification propagation)
 
-> 🧾 In KFM, provenance is not decoration—it’s the **trust substrate**.
+> 🧾 In KFM, provenance is not decoration — it’s the **trust substrate**.
 
 ---
 
@@ -124,9 +166,11 @@ This action is intended to run **after schema validation** and **before promotio
 ```mermaid
 flowchart LR
   A["🧯 kill-switch"] --> B["🧾 metadata-validate<br/>STAC/DCAT/PROV schemas"]
-  B --> C["🧬 provenance-guard<br/>lineage + mapping + checksums"]
+  B --> C["🧬 provenance-guard<br/>lineage + mapping + (optional) checksums"]
   C --> D["🧑‍⚖️ policy-gate<br/>classification + allowlists"]
-  D --> E["🚀 publish/promote<br/>atomic + immutable"]
+  D --> E["📦 build-info<br/>checksums + receipt (recommended)"]
+  E --> F["🖊️ attest/SBOM<br/>(promotion lanes)"]
+  F --> G["🚀 publish/promote<br/>atomic + immutable refs"]
 ```
 
 > [!IMPORTANT]
@@ -135,76 +179,95 @@ flowchart LR
 
 ---
 
-## 🔎 What it checks
+## 🔎 What it checks (rule IDs)
 
-> Each check should emit a **rule ID** so CI failures are searchable and stable.
+Each check should emit a **rule ID** so failures are searchable, stable, and dashboard-friendly.
 
 ### 1) 🧬 Provenance required for promoted outputs
-**Rule examples:**
+
+**Rule examples**
 - `PROV_MISSING_FOR_OUTPUT`
 - `PROV_EMPTY_RUN`
 - `PROV_ORPHAN_OUTPUT`
 
-Checks:
-- every promoted output has a corresponding PROV file
-- PROV references include the output (stable ID or path mapping)
+**Checks**
+- every promoted output has a corresponding PROV record
+- PROV references include the output (stable ID or deterministic path mapping)
+- PROV files are parseable JSON/JSON‑LD (fail on invalid JSON)
 
 ---
 
 ### 2) 🔗 ID & reference integrity (STAC/DCAT/PROV alignment)
-**Rule examples:**
+
+**Rule examples**
 - `ID_MISMATCH_STAC_PROV`
 - `ID_MISMATCH_DCAT_STAC`
 - `BROKEN_MAPPING_OUTPUT_ASSET`
 
-Checks:
-- STAC item ID ↔ PROV entity ID mapping exists
-- DCAT distribution points to STAC or asset hrefs consistently
-- no “dangling” referenced IDs
+**Checks**
+- STAC Item/Collection ID ↔ PROV entity ID mapping exists (configurable strategy)
+- DCAT distribution points to STAC and/or the same asset hrefs consistently
+- no “dangling IDs” referenced by catalogs/provenance
+
+> [!TIP]
+> Keep your primary mapping boring: **same stable ID everywhere** whenever possible.
 
 ---
 
-### 3) 🧠 Minimum provenance payload (what ran, with what)
-**Rule examples:**
+### 3) 🧠 Minimum provenance payload (“what ran, with what”)
+
+**Rule examples**
 - `PROV_MISSING_ACTIVITY`
 - `PROV_MISSING_AGENT`
 - `PROV_MISSING_INPUTS`
+- `PROV_MISSING_OUTPUTS`
 - `PROV_MISSING_PARAMETERS` *(strict lanes)*
+- `PROV_MISSING_TOOL_VERSIONS` *(strict lanes)*
 
-Checks:
-- at least one activity exists
-- at least one agent exists
-- activity uses inputs
-- activity generates outputs
-- optional: tool versions + parameters captured (especially for ETL/model runs)
+**Checks**
+- at least one `activity` exists
+- at least one `agent` exists
+- activity `used` at least one input entity
+- activity generated at least one output entity
+- optional: parameters + tool versions captured (recommended for ETL/model runs)
 
 ---
 
-### 4) 🧾 Checksums (optional but recommended)
-**Rule examples:**
-- `CHECKSUM_MISSING`
+### 4) 🧾 Checksums (optional but strongly recommended for promotion)
+
+**Rule examples**
+- `CHECKSUM_MANIFEST_MISSING`
+- `CHECKSUM_MISSING_FOR_OUTPUT`
 - `CHECKSUM_MISMATCH`
 - `ASSET_SIZE_MISSING`
 
-Checks:
-- promoted outputs have checksums (either in STAC assets, a `checksums.sha256`, or PROV fields)
-- (optional) checksum matches local file
-- size present for large assets
+**Checks**
+- promoted outputs have checksums (one of):
+  - STAC `assets.*.checksum:*` fields *(if you adopt them)*
+  - a checksums manifest (e.g., `out/checksums.sha256` from `build-info`)
+  - PROV entity fields (e.g., `sha256`/`digest` in a profile)
+- optional: checksum matches local file
+- optional: size present for large assets
+
+> [!NOTE]
+> ✅ Checksums help detect drift and support reproducibility.  
+> 🔏 Cryptographic *attestation/signing* happens in `attest/`.
 
 ---
 
 ### 5) 🧭 Classification propagation hooks (integration-friendly)
+
 This action does **not** replace policy-as-code, but it can enforce **presence** of required hooks.
 
-**Rule examples:**
+**Rule examples**
 - `CLASSIFICATION_MISSING_TAG`
 - `CLASSIFICATION_MISSING_ON_PROV_ENTITY`
 
-Checks:
-- provenance includes a classification/sensitivity field (if profile requires it)
-- promoted artifacts include a declared sensitivity (public/internal/restricted)
+**Checks**
+- promoted artifacts declare sensitivity (e.g., `public/internal/restricted`)
+- PROV entities carry required sensitivity fields (if your profile requires it)
 
-> For the *actual* propagation logic (“no output less restricted than input”), use 🧑‍⚖️ `policy-gate`.
+> For propagation logic (“no output less restricted than input”), use 🧑‍⚖️ `policy-gate`.
 
 ---
 
@@ -216,13 +279,15 @@ Checks:
 |---|---:|---|---|
 | `mode` | ❌ | `pr` | `pr` / `nightly` / `promotion` (controls strictness) |
 | `root` | ❌ | `data/` | Root for resolving paths |
-| `promoted_paths` | ❌ | `data/processed/**,data/catalog/**,docs/reports/story_nodes/published/**,mcp/**` | Where “promotion-scope” artifacts live |
-| `prov_root` | ❌ | `data/prov/` | Where PROV records live |
+| `promoted_paths` | ❌ | `data/processed/**,data/stac/**,data/catalog/dcat/**,docs/reports/story_nodes/published/**,mcp/**` | Where “promotion-scope” artifacts live |
+| `prov_root` | ❌ | `data/prov/` | Canonical PROV root (v13); can be overridden |
+| `legacy_prov_root` | ❌ | `data/provenance/` | Optional legacy PROV root (set empty to disable) |
 | `prov_glob` | ❌ | `**/*.json*` | PROV file glob |
 | `mapping_mode` | ❌ | `id_or_path` | `id_or_path` / `id_only` / `path_only` |
-| `require_activity` | ❌ | `"true"` | Require at least one activity |
-| `require_agent` | ❌ | `"true"` | Require at least one agent |
+| `require_activity` | ❌ | `"true"` | Require ≥1 activity |
+| `require_agent` | ❌ | `"true"` | Require ≥1 agent |
 | `require_inputs` | ❌ | `"true"` | Require `used` relations |
+| `require_outputs` | ❌ | `"true"` | Require generated outputs |
 | `require_parameters` | ❌ | `"false"` | Strict lane toggle |
 | `require_tool_versions` | ❌ | `"false"` | Strict lane toggle |
 | `require_checksums` | ❌ | `"false"` | Strongly recommended for promotion |
@@ -231,6 +296,12 @@ Checks:
 | `report_dir` | ❌ | `out/provenance-guard` | Report directory |
 | `max_files` | ❌ | `5000` | Safety cap |
 | `dry_run` | ❌ | `"false"` | Report only; never fails |
+
+> [!TIP]
+> If you’re migrating folders, set:
+> - `prov_root=data/prov` ✅ and
+> - `legacy_prov_root=data/provenance` ♻️  
+> …then remove legacy once catalogs and pipelines fully converge.
 
 ---
 
@@ -263,14 +334,16 @@ Expected output layout:
 
 Report rules:
 - deterministic ordering (diffable)
-- no secrets, no sensitive coordinates printed
-- failures include rule IDs + file paths + IDs only
+- **no secrets**
+- **no sensitive coordinates**
+- failures include **rule IDs + file paths + stable IDs only**
 
 ---
 
 ## ✅ Usage patterns
 
 ### 1) 🧪 PR lane (optional, scoped)
+
 Use when PRs touch promoted paths:
 
 ```yaml
@@ -280,8 +353,10 @@ on:
   pull_request:
     paths:
       - "data/processed/**"
-      - "data/catalog/**"
+      - "data/stac/**"
+      - "data/catalog/dcat/**"
       - "data/prov/**"
+      - "data/provenance/**"
       - "mcp/**"
       - "docs/reports/story_nodes/published/**"
       - ".github/actions/provenance-guard/**"
@@ -304,6 +379,7 @@ jobs:
           mode: pr
           require_checksums: "false"
           require_parameters: "false"
+          require_tool_versions: "false"
 
       - name: 📦 Upload report
         uses: actions/upload-artifact@v4
@@ -316,7 +392,8 @@ jobs:
 ---
 
 ### 2) 🚀 Promotion lane (required, strict)
-Use right before publish:
+
+Run right before publish:
 
 ```yaml
 steps:
@@ -344,9 +421,16 @@ steps:
       fail_on_warn: "true"
 ```
 
+> [!IMPORTANT]
+> In promotion lanes, prefer coupling this with:
+> - 📦 `build-info` (receipt + checksum manifest)
+> - 🧬 `sbom` (materials inventory)
+> - 🖊️ `attest` (keyless signing where enabled)
+
 ---
 
 ### 3) 🧠 Modeling lane (MCP artifacts are first-class)
+
 If you publish experiment outputs:
 
 ```yaml
@@ -356,6 +440,7 @@ If you publish experiment outputs:
     promoted_paths: |
       mcp/**
     require_parameters: "true"
+    require_tool_versions: "true"
     require_checksums: "true"
 ```
 
@@ -366,21 +451,25 @@ If you publish experiment outputs:
 
 ## 🧪 Local developer run
 
-If your implementation lives in a repo tool (recommended), keep CI and local parity:
+If your implementation lives in a repo tool (recommended), keep CI/local parity:
 
 ```bash
 python3 tools/validation/provenance_guard/run_provenance_guard.py \
   --mode promotion \
   --root data \
-  --promoted-paths "data/processed,data/catalog,data/prov,mcp,docs/reports/story_nodes/published" \
+  --promoted-paths "data/processed,data/stac,data/catalog/dcat,mcp,docs/reports/story_nodes/published" \
   --prov-root data/prov \
+  --legacy-prov-root data/provenance \
   --require-checksums \
   --require-parameters \
   --require-tool-versions \
   --out out/provenance-guard
 ```
 
-> Keep the CLI deterministic: stable ordering, stable rule IDs, stable output shapes.
+✅ Local expectations:
+- same rule IDs as CI
+- same report shapes
+- deterministic output order
 
 ---
 
@@ -391,7 +480,7 @@ python3 tools/validation/provenance_guard/run_provenance_guard.py \
 └─ 🧩📁 actions/
    └─ 🧬📁 provenance-guard/
       ├─ 📄 action.yml
-      └─ 📄 README.md
+      └─ 📄 README.md   # 👈 you are here
 ```
 
 ---
@@ -405,18 +494,18 @@ python3 tools/validation/provenance_guard/run_provenance_guard.py \
   - the output file path, depending on `mapping_mode`
 
 ### “ID mismatch (STAC ↔ PROV)”
-- Confirm you’re using stable IDs:
-  - `kfm.ks.<domain>.<layer>.<time>.<version>`
-- Confirm the same ID appears in:
-  - STAC item/collection
-  - PROV entity `id` (or mapped field)
+- Prefer using the same **stable ID** in:
+  - STAC item/collection `id`
+  - PROV entity `id`
+  - DCAT identifiers/distributions (or a deterministic mapping field)
+- If you must map by path, keep the mapping deterministic and documented.
 
 ### “Checksum missing”
-- Generate `checksums.sha256` (recommended in promotion lanes)
-- Or include checksum fields in STAC `assets` and/or PROV entities
+- Generate `checksums.sha256` (recommended in promotion lanes via `build-info`)
+- Or include checksum fields in STAC `assets` and/or PROV entities (profile-defined)
 
 ### “Too slow in PRs”
-- Scope `promoted_paths` to just what changed
+- Scope `promoted_paths` to what changed
 - Keep strict checks (checksums/tool versions) in nightly/promotion lanes
 
 ---
@@ -428,38 +517,36 @@ python3 tools/validation/provenance_guard/run_provenance_guard.py \
 - ✅ In fork PRs, do not use secrets or publish permissions.
 - 🧯 Treat provenance failures as **merge blockers** for promoted artifacts.
 
+> [!CAUTION]
+> If your provenance or catalogs may contain sensitive-location precision, keep reports redacted:
+> - show file path + rule ID + stable ID
+> - avoid printing raw coordinate pairs
+
 ---
 
 ## 📚 Reference library
 
-> These project files shape provenance-guard’s philosophy: reproducibility, auditability, governance, and trust.
+> These project files shape `provenance-guard`’s philosophy: **reproducibility**, **auditability**, **governance**, and **trust**.
 
-<details>
-<summary><strong>📦 KFM reading pack (project files)</strong></summary>
+### 🧭 Core KFM direction
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
+- `docs/specs/MARKDOWN_GUIDE_v13.md(.gdoc)`
+- `docs/specs/Latest Ideas.(pdf|docx)`
 
-### 🧭 Canonical KFM system direction
-- 📄 `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
-- 📄 `docs/specs/MARKDOWN_GUIDE_v13.md(.gdoc)`
-- 📄 `docs/specs/Scientific Method _ Research _ Master Coder Protocol Documentation.pdf`
-- 📄 `docs/specs/Latest Ideas.pdf`
+### 🧪 Reproducibility & scientific discipline (why lineage matters)
+- `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `docs/library/Understanding Statistics & Experimental Design.pdf`
+- `docs/library/think-bayes-bayesian-statistics-in-python.pdf`
 
-### 🧪 Reproducibility, V&V, and scientific discipline
-- 📄 `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- 📄 `docs/library/Understanding Statistics & Experimental Design.pdf`
-- 📄 `docs/library/think-bayes-bayesian-statistics-in-python.pdf`
-
-### 🗺️ GIS + data integrity at scale
-- 📄 `docs/library/python-geospatial-analysis-cookbook.pdf`
-- 📄 `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- 📄 `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+### 🗺️ GIS & data integrity at scale (why IDs/CRS/bounds/links can’t drift)
+- `docs/library/python-geospatial-analysis-cookbook.pdf`
+- `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
 
 ### ❤️ Governance & classification thinking
-- 📄 `docs/library/Data Spaces.pdf`
-- 📄 `docs/library/Introduction to Digital Humanism.pdf`
-
-</details>
+- `docs/library/Data Spaces.pdf`
+- `docs/library/Introduction to Digital Humanism.pdf`
 
 ---
 
 <p align="right"><a href="#top">⬆️ Back to top</a></p>
-
