@@ -5,14 +5,19 @@
 
 [![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+
 ![OCI](https://img.shields.io/badge/OCI-images-informational)
 ![BuildKit](https://img.shields.io/badge/Docker-BuildKit-blue)
 ![GHCR](https://img.shields.io/badge/Registry-GHCR-black)
+![Provenance](https://img.shields.io/badge/provenance-digest%20%2B%20labels%20%2B%20receipt-6f42c1)
+![Supply Chain](https://img.shields.io/badge/supply--chain-SBOM%20%2B%20attestations-black)
 ![Least Privilege](https://img.shields.io/badge/security-least--privilege-111827)
 ![Fail Closed](https://img.shields.io/badge/gates-fail--closed-red)
 
-> 🧰 Repo‑local GitHub Action to build **Docker/OCI images** for KFM (API, UI, pipelines) in a **boring, repeatable, provenance‑friendly** way.  
-> 🧭 Designed to fit KFM’s non‑negotiable order: **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**.
+> 🧰 Repo‑local GitHub Action to build **Docker/OCI images** for KFM (API, UI, pipelines/toolchain) in a **boring, repeatable, provenance‑friendly** way.  
+> 🧭 Designed to fit KFM’s non‑negotiable order: **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**.  
+>
+> KFM’s CI philosophy applies to containers too: **deterministic inputs**, **declared outputs**, **provenance emission**, and **atomic promotion** (no half‑published artifacts). ✅
 
 ---
 
@@ -20,13 +25,20 @@
 
 | Field | Value |
 |---|---|
-| Action | `.github/actions/docker-build` |
-| File | `.github/actions/docker-build/README.md` |
-| Status | Spec ✅ *(implementation should match this doc)* |
-| Last updated | **2026-01-09** |
-| KFM-MDP baseline | v11.2.6 |
-| Master Guide | v13 (draft) |
-| Primary goals | Deterministic builds • minimal permissions • auditable outputs • promotion-ready |
+| Action folder | `📁 .github/actions/docker-build/` |
+| Action file | `📄 .github/actions/docker-build/action.yml` *(expected)* |
+| Docs file | `📄 .github/actions/docker-build/README.md` *(you are here)* |
+| Status | ✅ Spec (implementation should match this doc) |
+| Last updated | **2026-01-11** |
+| KFM-MDP baseline | `v11.2.6` |
+| Master Guide | `v13 (draft)` |
+| Primary goals | Deterministic builds • minimal permissions • auditable outputs • promotion-ready digests |
+
+> [!IMPORTANT]
+> A “promoted” KFM image must be:
+> - **Addressable** ✅ by digest (`image@sha256:…`)
+> - **Traceable** ✅ via build receipt (`build-info.json`) + labels
+> - **Attestable** ✅ via SBOM + provenance/signing in the release lane
 
 ---
 
@@ -34,13 +46,14 @@
 
 | Need | Go |
 |---|---|
-| 🧭 Repo overview | [`../../../README.md`](../../../README.md) |
+| 🧩 All local actions | [`../README.md`](../README.md) |
 | 🤖 Workflows hub | [`../../workflows/README.md`](../../workflows/README.md) |
-| 🤝 Collaboration rules | [`../../README.md`](../../README.md) |
 | 🛡️ Security policy | [`../../../SECURITY.md`](../../../SECURITY.md) *(or `../../SECURITY.md` if mirrored in `.github/`)* |
 | 🧯 Kill switch guard | [`../check-kill-switch/README.md`](../check-kill-switch/README.md) |
-| 🧾 Build traceability | [`../build-info/README.md`](../build-info/README.md) |
+| 🧾 Build receipt + checksums | [`../build-info/README.md`](../build-info/README.md) |
+| 🧬 SBOM generator | [`../sbom/README.md`](../sbom/README.md) |
 | 🖊️ Attestations/signing | [`../attest/README.md`](../attest/README.md) |
+| 🧑‍⚖️ Policy gate | `📁 tools/validation/policy/` *(expected)* |
 
 ---
 
@@ -53,13 +66,13 @@
 - [🔐 Permissions & threat model](#-permissions--threat-model)
 - [🧩 Inputs](#-inputs)
 - [📤 Outputs](#-outputs)
-- [📦 Output files](#-output-files)
+- [📦 Output files (KFM-friendly)](#-output-files-kfm-friendly)
 - [✅ Usage patterns](#-usage-patterns)
 - [🚦 Promotion-ready pipeline](#-promotion-ready-pipeline)
 - [🛡️ Security hardening checklist](#-security-hardening-checklist)
 - [🧯 Troubleshooting](#-troubleshooting)
 - [🧪 Local debugging](#-local-debugging)
-- [🧱 Implementation notes (for maintainers)](#-implementation-notes-for-maintainers)
+- [🧱 Implementation notes (maintainers)](#-implementation-notes-maintainers)
 
 </details>
 
@@ -67,56 +80,79 @@
 
 ## 🎯 What this action does
 
-This action standardizes container builds for KFM so that **build behavior, metadata, tags, and logs are consistent** across workflows.
+This action standardizes container builds for KFM so **build behavior, metadata, tags, and outputs are consistent** across workflows.
 
 ### ✅ Capabilities (expected)
 - 🐳 Build images using **BuildKit + buildx**
 - 🧠 Optional multi‑arch (`linux/amd64,linux/arm64`)
-- 🧷 Deterministic tagging patterns (SHA tags, optional semver tags)
-- 🏷️ OCI labels via `docker/metadata-action` (repo/sha/source/revision)
+- 🏷️ Deterministic tagging patterns (SHA tags; optional semver)
+- 🏷️ OCI label set via `docker/metadata-action` *(source, revision, repo, etc.)*
 - ♻️ Cache support (`type=gha`) to keep CI fast
-- 📤 Optional push to GHCR (gated: main/tags/dispatch + env approvals)
+- 📤 Optional push to GHCR (gated: main/tags/dispatch + protected env approvals)
 - 🧾 Emits machine‑readable build outputs (digest, tags, metadata JSON)
-- 📦 Uploads build logs/artifacts on failure (debuggability)
+- 🧯 Upload-friendly logs/outputs (especially on failure)
 
-> [!IMPORTANT]
-> KFM treats **integrity + provenance** as first-class. This action is designed to produce outputs you can attach to:  
-> `build-info.json` ✅ • `checksums.sha256` ✅ • `SBOM` ✅ • `attestations` ✅
+### 🧭 KFM-shaped intent
+Containers are not “random build artifacts.” In KFM they are part of the **governed supply chain**:
+- the **API** image defines what the UI can query (contracts + redaction rules)
+- the **ETL/toolchain** image defines what transforms ran against your data (reproducibility)
+- the **UI** image defines what is shown to users (and must not bypass API controls)
+
+> [!TIP]
+> Treat images as “boundary artifacts” for operational trust:
+> - build them consistently  
+> - publish them atomically  
+> - record their digest and attach provenance/SBOM in promotion lanes
 
 ---
 
 ## 🚫 What this action does NOT do
 
-To keep it “single purpose,” this action should **not**:
+To keep it single-purpose, `docker-build` should **not**:
 - ❌ Run full CI (lint/tests/typecheck) — do that in `ci.yml`
 - ❌ Validate STAC/DCAT/PROV — do that in `catalog-qa` + schema lanes
-- ❌ Decide governance classification — do that in policy gates / promotion logic
-- ❌ Merge PRs or publish catalogs — promotion must remain **PR-first + fail-closed**
-- ❌ Embed secrets into images — ever
+- ❌ Enforce governance/classification — do that in policy gates & approval environments
+- ❌ Merge PRs or publish catalogs — promotion remains **PR-first + fail-closed**
+- ❌ Generate SBOMs or sign artifacts — do that in `sbom/` + `attest/`
+- ❌ Bake datasets into images — ship data via catalogs/object storage, not container layers
 
-> [!TIP]
-> Think of `docker-build` as a **boring build primitive** that plugs into bigger lanes:
-> - PR lane: build-only (no push)
-> - Main lane: push (protected)
-> - Release lane: push + sign + attest + SBOM
+> [!NOTE]
+> KFM’s “bring computation to the data” principle also implies:
+> **don’t smuggle the data into the compute artifact** (the container). 📦🚫
 
 ---
 
 ## 🧭 KFM invariants this action supports
 
-KFM’s architecture requires guardrails that CI can enforce. This action supports them by design:
+KFM’s system invariants apply to containers too:
 
-1) 🚦 **Fail closed**: if build/push fails, nothing “half publishes.”  
-2) 🔐 **Least privilege**: defaults to `contents: read` and only elevates when required.  
-3) 🧾 **Provenance-friendly outputs**: digest + metadata emitted so downstream can attest and record lineage.  
-4) ♻️ **Determinism**: avoid time-based tags/labels for published artifacts (use SHA/semver).  
-5) 🧯 **Kill-switch compatibility**: intended to run *after* `check-kill-switch`.
+1) 🚦 **Fail closed**  
+If build/push fails, nothing should “half publish.” No silent continues.
+
+2) 🔐 **Least privilege**  
+Defaults to `contents: read`. Only add `packages: write` for pushes; only add `id-token: write` for keyless attest.
+
+3) 🧾 **Declared inputs/outputs (receipt-friendly)**  
+Workflows should be able to point to:
+- the exact Dockerfile/context used  
+- the resolved tags  
+- the digest file  
+- the metadata JSON  
+…and then checksum those in `build-info`.
+
+4) ♻️ **Determinism (practical)**  
+- Promotion relies on **digests**, not floating tags.  
+- Inputs are pinned wherever possible (base image digests, lockfiles).  
+- No time-based “publish tags” (avoid `nightly-<date>` for production).
+
+5) 🧯 **Kill-switch compatible**  
+This action is designed to run **after** `check-kill-switch` in mutation lanes (push/release).
 
 ---
 
 ## 🔐 Permissions & threat model
 
-CI runners are part of your supply chain. Treat build/push as security-sensitive.
+Build/push is **supply-chain-sensitive**. Treat runners + actions as part of your trusted computing base.
 
 ### ✅ Recommended workflow permissions
 
@@ -126,7 +162,7 @@ permissions:
   contents: read
 ```
 
-**Push to GHCR (main/tags only):**
+**Push to GHCR (protected lanes only):**
 ```yaml
 permissions:
   contents: read
@@ -141,22 +177,15 @@ permissions:
   id-token: write
 ```
 
-**Upload SARIF (if scanning in the same lane):**
-```yaml
-permissions:
-  contents: read
-  security-events: write
-```
-
 > [!CAUTION]
-> Avoid `pull_request_target` for build/push workflows unless you *fully* understand the risk.  
-> Never run pushes with secrets on untrusted fork PRs.
+> Never do `push: true` on untrusted fork PRs.  
+> Avoid `pull_request_target` for builds/pushes unless you *fully* isolate untrusted code and secrets.
 
 ---
 
 ## 🧩 Inputs
 
-> Composite action inputs are strings (even for booleans). Keep them explicit.
+> Composite action inputs are strings (even for booleans). Keep them explicit and validate them.
 
 | Input | Required | Default | Example | Notes |
 |---|---:|---|---|---|
@@ -166,20 +195,24 @@ permissions:
 | `push` | ❌ | `false` | `true` | Only `true` on protected lanes |
 | `registry` | ❌ | `ghcr.io` | `ghcr.io` | Registry host |
 | `image` | ✅ | *(none)* | `ghcr.io/${{ github.repository }}/kfm-api` | Full image name (no tag) |
-| `tags` | ❌ | *(auto)* | `sha-${{ github.sha }}` | Newline-separated tags supported |
+| `tags` | ❌ | *(auto)* | `sha-${{ github.sha }}` | Newline-separated tags |
 | `platforms` | ❌ | `linux/amd64` | `linux/amd64,linux/arm64` | Multi-arch builds |
 | `build_args` | ❌ | *(none)* | `API_BASE=/api` | Newline-separated `KEY=VALUE` |
 | `labels` | ❌ | *(auto)* | `org.opencontainers.image.title=KFM API` | Extra OCI labels |
-| `cache_from` | ❌ | `type=gha` | `type=gha` | Build cache source |
-| `cache_to` | ❌ | `type=gha,mode=max` | `type=gha,mode=max` | Build cache destination |
-| `provenance` | ❌ | `false` | `true` | If enabling BuildKit provenance emission |
-| `sbom` | ❌ | `false` | `true` | If enabling BuildKit SBOM emission (when supported) |
-| `metadata_json_path` | ❌ | `out/docker-metadata.json` | `out/docker-metadata.json` | Where to write metadata |
-| `digest_path` | ❌ | `out/image-digest.txt` | `out/image-digest.txt` | Where to write digest |
-| `fail_on_warning` | ❌ | `true` | `true` | If `true`, treat warnings as failures (recommended) |
+| `cache_from` | ❌ | `type=gha` | `type=gha` | Cache source |
+| `cache_to` | ❌ | `type=gha,mode=max` | `type=gha,mode=max` | Cache destination |
+| `provenance` | ❌ | `false` | `true` | BuildKit provenance emission *(when supported)* |
+| `sbom` | ❌ | `false` | `true` | BuildKit SBOM emission *(when supported; KFM still prefers `sbom/` action for gates)* |
+| `output_dir` | ❌ | `.artifacts/docker` | `.artifacts/docker` | Where to write metadata/digest/logs |
+| `metadata_json_path` | ❌ | *(derived)* | `.artifacts/docker/docker-metadata.json` | Override path if needed |
+| `digest_path` | ❌ | *(derived)* | `.artifacts/docker/image-digest.txt` | Override path if needed |
+| `build_log_path` | ❌ | *(derived)* | `.artifacts/docker/build-log.txt` | Optional build log file |
+| `idempotency_key` | ❌ | *(empty)* | `${{ github.run_id }}.${{ github.run_attempt }}` | Record-only: helps “replay produces same intent” |
+| `commit_seed` | ❌ | *(empty)* | `${{ github.sha }}` | Record-only: aligns with KFM “seeded, repeatable runs” |
+| `fail_on_warning` | ❌ | `true` | `true` | Treat “warning-y” states as failures *(implementation-defined)* |
 
-> [!NOTE]
-> If your repo uses multiple images (API/UI/pipelines), prefer **matrix builds** in the workflow, calling this action per image.
+> [!TIP]
+> If your repo produces multiple images (API/UI/pipelines), prefer matrix builds in the workflow and call this action per image.
 
 ---
 
@@ -189,32 +222,44 @@ permissions:
 |---|---|
 | `image` | Image name (no tag) |
 | `tags` | Resolved tags (newline-separated) |
-| `digest` | Pushed image digest (or local digest if build-only) |
+| `digest` | Image digest (manifest digest for multi-arch pushes when available) |
+| `image_ref` | Fully qualified reference recommended for downstream: `image@sha256:…` |
 | `metadata_json` | Path to metadata JSON file |
 | `digest_file` | Path to digest file |
+| `output_dir` | Resolved output directory |
+
+> [!IMPORTANT]
+> Downstream lanes (SBOM, policy gate, attest, deploy) should prefer `image_ref` (digest pinned) over tags.
 
 ---
 
-## 📦 Output files
+## 📦 Output files (KFM-friendly)
 
-This action should write predictable outputs for later gates (attestations, releases, deployments):
+This action should write predictable outputs for later gates (build-info, SBOM, attestations, deployments):
 
 ```text
-out/
-├─ docker-metadata.json      # tags/labels resolved by metadata action
-├─ image-digest.txt          # sha256:<...> digest
-└─ build-log.txt             # optional: build output (useful on failures)
+.artifacts/docker/
+├─ docker-metadata.json      # 🏷️ tags/labels resolved by metadata action
+├─ image-digest.txt          # 🧾 sha256:<...> digest
+├─ image-ref.txt             # 🔗 ghcr.io/org/repo/name@sha256:<...>
+└─ build-log.txt             # 🧪 optional: build output (helpful on failures)
 ```
 
 ### ✅ Recommended “build-info” integration
-Pair with `build-info` to emit a single provenance-friendly bundle:
+Pair with `build-info` to emit one traceable bundle:
 
 ```text
-out/
-├─ build-info.json           # repo/sha/run/toolchain + artifact pointers
-├─ checksums.sha256          # checksums for out/* and other promoted artifacts
-├─ docker-metadata.json
-└─ image-digest.txt
+.artifacts/
+├─ docker/
+│  ├─ docker-metadata.json
+│  ├─ image-digest.txt
+│  └─ image-ref.txt
+├─ build-info/
+│  ├─ build-info.json
+│  └─ checksums.sha256
+└─ attestations/             # produced later by sbom/attest lanes
+   ├─ materials.sbom.spdx.json
+   └─ provenance.dsse.json
 ```
 
 ---
@@ -222,7 +267,7 @@ out/
 ## ✅ Usage patterns
 
 ### 1) PR lane — build only (no push) 🧪
-Use this to prove Dockerfiles build cleanly for every PR.
+Use this to prove Dockerfiles build cleanly for every PR (no registry writes).
 
 ```yaml
 jobs:
@@ -236,6 +281,9 @@ jobs:
 
       - name: 🧯 Kill switch (fail closed)
         uses: ./.github/actions/check-kill-switch
+        with:
+          mode: fail
+          scope: docker
 
       - name: 🐳 Build (no push)
         uses: ./.github/actions/docker-build
@@ -264,6 +312,9 @@ jobs:
 
       - name: 🧯 Kill switch
         uses: ./.github/actions/check-kill-switch
+        with:
+          mode: fail
+          scope: docker
 
       - name: 🔐 Login to GHCR
         uses: docker/login-action@v3
@@ -285,12 +336,12 @@ jobs:
 ```
 
 > [!TIP]
-> Prefer `sha-<sha>` tags for deployments. Use `latest` only for convenience.
+> Prefer `sha-<sha>` for deployments. Keep `latest` as convenience only.
 
 ---
 
-### 3) Release lane — push + attest 🏷️🖊️
-Recommended pattern: build → emit build-info → attest/sign.
+### 3) Release lane — build → SBOM → policy gate → attest/sign 🏷️🧬🖊️
+Recommended order aligns with KFM’s “validate → promote” posture.
 
 ```yaml
 jobs:
@@ -306,11 +357,9 @@ jobs:
 
       - name: 🧯 Kill switch
         uses: ./.github/actions/check-kill-switch
-
-      - name: 🧾 Build info (recommended)
-        uses: ./.github/actions/build-info
         with:
-          out_dir: out
+          mode: fail
+          scope: docker
 
       - name: 🔐 Login to GHCR
         uses: docker/login-action@v3
@@ -330,19 +379,41 @@ jobs:
             ${{ github.ref_name }}      # e.g., v1.2.3
             sha-${{ github.sha }}
           platforms: linux/amd64,linux/arm64
+          output_dir: .artifacts/docker
+
+      - name: 🧬 SBOM (image)
+        uses: ./.github/actions/sbom
+        with:
+          mode: image
+          image_ref: ${{ steps.img.outputs.image_ref }}
+          formats: spdx-json,cyclonedx-json
+          output_dir: .artifacts/sbom
+          attestations_dir: .artifacts/attestations
+
+      - name: 🧾 Build info (receipt)
+        uses: ./.github/actions/build-info
+        with:
+          out_dir: .artifacts/build-info
+          artifact_globs: |
+            .artifacts/docker/**
+            .artifacts/sbom/**
+            .artifacts/attestations/**
 
       - name: 🖊️ Attest/sign (recommended)
         uses: ./.github/actions/attest
         with:
-          image: ghcr.io/${{ github.repository }}/kfm-api@${{ steps.img.outputs.digest }}
-          build_info: out/build-info.json
-          checksums: out/checksums.sha256
+          subject: ${{ steps.img.outputs.image_ref }}
+          artifacts: |
+            .artifacts/docker/**
+            .artifacts/build-info/**
+            .artifacts/attestations/**
+          mode: bundle
 ```
 
 ---
 
 ### 4) Multi-image matrix — API + UI + pipelines 🧩
-If KFM has multiple deliverables, use a matrix:
+If KFM has multiple deliverables, use a matrix build:
 
 ```yaml
 strategy:
@@ -354,15 +425,24 @@ strategy:
       - name: web
         image: ghcr.io/${{ github.repository }}/kfm-web
         dockerfile: web/Dockerfile
+      - name: etl
+        image: ghcr.io/${{ github.repository }}/kfm-etl
+        dockerfile: pipelines/Dockerfile
 
 steps:
   - uses: actions/checkout@v4
+
   - uses: ./.github/actions/check-kill-switch
+    with:
+      mode: fail
+      scope: docker
+
   - uses: docker/login-action@v3
     with:
       registry: ghcr.io
       username: ${{ github.actor }}
       password: ${{ secrets.GITHUB_TOKEN }}
+
   - uses: ./.github/actions/docker-build
     with:
       image: ${{ matrix.image }}
@@ -371,25 +451,28 @@ steps:
       tags: |
         sha-${{ github.sha }}
       platforms: linux/amd64,linux/arm64
+      output_dir: .artifacts/docker/${{ matrix.name }}
 ```
 
 ---
 
 ## 🚦 Promotion-ready pipeline
 
-KFM “shipping” is more than pushing an image. The promotion story is:
+KFM “shipping” is more than pushing an image. The recommended promotion story:
 
 ```mermaid
 flowchart LR
-  A["✅ CI gates<br/>lint • tests • security"] --> B["🔎 Data gates<br/>STAC/DCAT/PROV"]
+  A["✅ CI gates<br/>lint • tests • CodeQL"] --> B["🔎 Governance gates<br/>policy • approvals • kill-switch"]
   B --> C["🐳 Build image<br/>docker-build"]
-  C --> D["🧾 Build info<br/>checksums • metadata"]
-  D --> E["🖊️ Attest/sign<br/>OIDC keyless (recommended)"]
-  E --> F["📦 Release<br/>tags • notes • pinned digests"]
+  C --> D["🧬 SBOM<br/>image@digest"]
+  D --> E["🧾 Build receipt<br/>build-info + checksums"]
+  E --> F["🖊️ Attest/sign<br/>OIDC keyless (recommended)"]
+  F --> G["📦 Release/Promote<br/>pin digests • publish notes"]
 ```
 
 > [!IMPORTANT]
-> For KFM, a “promoted artifact” should always be: **addressable (digest), traceable (build-info), and attestable (SBOM/provenance)**.
+> For KFM, deployments and catalogs should reference **digests**, not floating tags:
+> `ghcr.io/<org>/<repo>/<image>@sha256:<digest>`
 
 ---
 
@@ -398,16 +481,19 @@ flowchart LR
 Use this before enabling `push: true`:
 
 - [ ] ✅ Build/push runs only on `push main`, tags, or `workflow_dispatch`
-- [ ] ✅ Protected environment required for prod publish (`environment: prod`)
+- [ ] ✅ Protected environments required for prod publish (`environment: prod`)
 - [ ] ✅ `permissions:` are minimal (only add `packages: write` when pushing)
-- [ ] ✅ No secrets in build args (use short-lived tokens if unavoidable)
+- [ ] ✅ Kill switch step is first in mutation jobs
+- [ ] ✅ No secrets in build args (avoid embedding tokens into layers)
 - [ ] ✅ Dockerfile uses:
   - multi-stage builds
   - non-root user where feasible
-  - pinned base images (or pinned digests for high assurance)
-- [ ] ✅ Scan in release lane (Trivy/Grype/etc.) and store results
-- [ ] ✅ Prefer digest pinning for deployments: `image@sha256:...`
-- [ ] ✅ Attest/SBOM generated for releases
+  - pinned base images (prefer `FROM …@sha256:<digest>` for high assurance)
+  - lockfiles for language deps (pip/poetry/npm/pnpm)
+- [ ] ✅ Image scanning exists in release lanes (Trivy/Grype/etc.) + stored results
+- [ ] ✅ SBOM generated and stored (SPDX/CycloneDX) for releases
+- [ ] ✅ Attestation/provenance exists for promoted artifacts (Sigstore/in-toto style)
+- [ ] ✅ Do not ship sensitive datasets inside images (ship data separately with STAC/DCAT/PROV + policy gates)
 
 ---
 
@@ -434,60 +520,66 @@ Use this before enabling `push: true`:
 - Ensure `cache-from` and `cache-to` are set, and BuildKit is used.
 - Keep Dockerfile layers stable (install deps before copying frequently-changed code).
 
-### Builds differ between runs
-- Avoid timestamps baked into files
-- Pin dependencies (pip/apt/npm)
-- Use lockfiles
-- Consider reproducible build options where feasible
+### Builds differ between runs (unexpected digest changes)
+Common causes:
+- base image drift (unpinned tag)
+- unpinned OS packages (`apt-get install` without versions)
+- non-locked Python/Node deps
+- timestamps embedded during build
+
+Fix:
+- pin base image digests
+- use lockfiles
+- record tool versions and inputs in `build-info`
+- treat unexpected digest drift as a **reproducibility incident** 🚨
 
 ---
 
 ## 🧪 Local debugging
 
-Run the exact build command locally before blaming CI:
+Run the same build command locally before blaming CI:
 
 ```bash
-# Build locally
 docker buildx build \
   -f src/server/Dockerfile \
   --platform linux/amd64 \
   -t kfm-api:dev \
   .
-
-# Inspect image
-docker image inspect kfm-api:dev
 ```
 
-If CI uses multi-arch, test at least `linux/amd64` locally first.
+If CI uses multi-arch, validate `linux/amd64` first locally.
 
 ---
 
-## 🧱 Implementation notes for maintainers
+## 🧱 Implementation notes (maintainers)
 
-> This section is guidance for whoever writes/maintains `action.yml`.
+> Guidance for whoever writes/maintains `action.yml` 🔧
 
 ### ✅ Recommended internal building blocks
-Inside a composite action, you can call trusted actions to keep implementation small:
+Inside a composite action, call trusted actions to keep implementation small:
 
+- `docker/setup-qemu-action@v3`
 - `docker/setup-buildx-action@v3`
 - `docker/metadata-action@v5`
 - `docker/build-push-action@v6`
 
-### ✅ Output discipline
-- Write digest to a file (`out/image-digest.txt`) **and** `GITHUB_OUTPUT`
-- Write resolved metadata to JSON (`out/docker-metadata.json`)
-- Upload artifacts on failure (workflows should wrap with `if: always()`)
+### ✅ Output discipline (KFM-friendly)
+- Write digest to a file (`image-digest.txt`) **and** `GITHUB_OUTPUT`
+- Write a digest-pinned `image_ref` (`image-ref.txt`) **and** output it
+- Write resolved metadata JSON (`docker-metadata.json`)
+- Optionally capture a build log file (on failure) for debugging
+- Preserve stable paths under `output_dir` so policy gates can find them
 
 ### ✅ Pinning strategy
-- PR lane: pin to major versions (acceptable)
-- Release/publish lanes: consider pinning third-party actions by commit SHA
+- PR lanes: pin third-party actions to major versions (acceptable)
+- Release/publish lanes: pin third-party actions by commit SHA for higher assurance
 
-### ✅ Do not do these things
-- ❌ Don’t echo secret env vars
+### ✅ Don’t do these things (ever)
+- ❌ Don’t echo secret env vars or tokens
 - ❌ Don’t run `push: true` on `pull_request` from forks
 - ❌ Don’t silently continue after build/push failures
+- ❌ Don’t include raw datasets in image layers
 
 ---
 
 <p align="right"><a href="#top">⬆️ Back to top</a></p>
-
