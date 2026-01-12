@@ -374,4 +374,3 @@ When adding/changing anything under `api/scripts/catalogs/`:
 - ✅ Keep outputs deterministic and review-friendly
 
 🌾 “No catalog, no publish.”
-
