@@ -1,3 +1,47 @@
+---
+title: "Raw Data — README"
+path: "data/raw/README.md"
+version: "v1.1.0"
+last_updated: "2026-01-12"
+status: "draft"
+doc_kind: "Guide"
+license: "CC-BY-4.0"
+
+markdown_protocol_version: "KFM-MDP v11.2.6"
+mcp_version: "MCP-DL v6.3"
+ontology_protocol_version: "KFM-ONTO v4.1.0"
+pipeline_contract_version: "KFM-PPC v11.0.0"
+stac_profile: "KFM-STAC v11.0.0"
+dcat_profile: "KFM-DCAT v11.0.0"
+prov_profile: "KFM-PROV v11.0.0"
+
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+review_gates_ref: "docs/governance/REVIEW_GATES.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+fair_category: "FAIR+CARE"
+care_label: "TBD"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US-KS"
+
+doc_uuid: "urn:kfm:doc:data:raw:readme:v1.1.0"
+semantic_document_id: "kfm-data-raw-readme-v1.1.0"
+event_source_id: "ledger:kfm:doc:data:raw:readme:v1.1.0"
+commit_sha: "<latest-commit-hash>"
+
+ai_transform_permissions:
+  - "summarize"
+  - "structure_extract"
+  - "translate"
+  - "keyword_index"
+ai_transform_prohibited:
+  - "generate_policy"
+  - "infer_sensitive_locations"
+
+doc_integrity_checksum: "sha256:<calculate-and-fill>"
+---
+
 <div align="center">
 
 # 📥 `data/raw/` — Raw Data (Immutable Inputs)
@@ -10,26 +54,30 @@
 ![security](https://img.shields.io/badge/security-no%20secrets%20in%20git-DC2626)
 
 **Raw data is KFM’s first trust boundary.**  
-We ingest external sources here **as-received**, preserve them **immutably**, then perform deterministic ETL in `data/work/` and publish stable products in `data/processed/`. 🧾➡️🛠️➡️📦
+We ingest external sources here **as‑received**, preserve them **immutably**, then perform deterministic ETL in `data/work/` and publish stable products in `data/processed/`. 🧾➡️🛠️➡️📦
 
 </div>
 
 > [!IMPORTANT]
 > **If you changed bytes, it’s not raw anymore.**  
-> Reprojection, cleanup, OCR, tiling, resampling, column edits, format conversion → belongs in `data/work/` or `data/processed/`.
+> Reprojection, cleanup, OCR, tiling, resampling, column edits, format conversion → belongs in `data/work/` (intermediate) or `data/processed/` (publishable).
 
 ---
 
 ## 🔗 Quick links
 
 - 🧭 Repo overview → `../../README.md`
+- 🧾 Source manifests (pointer-first intake) → [`../sources/`](../sources/) *(if present)*
 - 🧪 Intermediate artifacts → [`../work/`](../work/)
 - 📦 Final products → [`../processed/`](../processed/)
-- ✅ QA runbooks & validators → [`../qa/`](../qa/) *(create if missing)*
-- 🗂️ Discovery metadata (DCAT) → [`../catalog/`](../catalog/)
-- 🛰️ Geospatial indexing (STAC) → [`../stac/`](../stac/)
-- 🧬 Lineage bundles (PROV) → [`../prov/`](../prov/)
+- 🧪 Catalogs & lineage:
+  - 🛰️ STAC → [`../stac/`](../stac/)
+  - 🗂️ DCAT → [`../catalog/`](../catalog/) · [`../catalog/dcat/`](../catalog/dcat/)
+  - 🧬 PROV → [`../prov/`](../prov/)
+- 🧪 QA runbooks & validators → [`../../tools/validation/`](../../tools/validation/) *(recommended home)*
+- 🧰 Catalog QA tool (metadata gate) → `../../tools/validation/catalog_qa/` *(if present)*
 - 🛡️ Vulnerability reporting → `../../SECURITY.md` *(or `../../.github/SECURITY.md`)*
+- ⚖️ Governance & review gates → `../../docs/governance/ROOT_GOVERNANCE.md` · `../../docs/governance/REVIEW_GATES.md` *(if present)*
 
 ---
 
@@ -37,6 +85,7 @@ We ingest external sources here **as-received**, preserve them **immutably**, th
 <summary><strong>📌 Table of contents</strong></summary>
 
 - [🧭 Where raw fits in the KFM pipeline](#pipeline)
+- [🧾 Source manifests (`data/sources/`) — when bytes can’t live in Git](#sources)
 - [✅ What belongs here](#allowed)
 - [🚫 What does NOT belong here](#not-allowed)
 - [⭐ Raw-stage non-negotiables](#non-negotiables)
@@ -65,6 +114,7 @@ We ingest external sources here **as-received**, preserve them **immutably**, th
 
 ```mermaid
 flowchart LR
+  SOURCES[🧾 Source manifests<br/>data/sources/] --> RAW
   RAW[📥 Raw inputs<br/>data/raw/] --> WORK[🧪 Work / ETL<br/>data/work/]
   WORK --> PROC[📦 Processed outputs<br/>data/processed/]
   PROC --> STAC[🛰️ STAC catalogs<br/>data/stac/]
@@ -84,6 +134,26 @@ flowchart LR
 
 ---
 
+<a id="sources"></a>
+
+## 🧾 Source manifests (`data/sources/`) — when bytes can’t live in Git
+
+KFM supports a **pointer-first intake** pattern for cases where the raw bytes are:
+- too large for Git,
+- restricted for redistribution,
+- stored in an external object store / partner system.
+
+In that case:
+- `data/sources/` holds **machine-readable manifests** (URLs, licensing, retrieval method, access constraints, expected extents).
+- `data/raw/` holds either:
+  - the actual **as-received bytes** *(preferred when possible)*, **or**
+  - a **receipt-only drop** (README + `source.json` + checksums for the receipts/pointers) describing where the bytes live and how to retrieve them.
+
+> [!TIP]
+> Treat `data/sources/` as the “catalog of inputs” and `data/raw/` as the “evidence snapshots / receipts” that pipelines can anchor to.
+
+---
+
 <a id="allowed"></a>
 
 ## ✅ What belongs here
@@ -98,6 +168,7 @@ flowchart LR
 **Also allowed (with strict rules):**
 - 📁 **Lossless extraction** into `extracted/` **only if** you also keep the original archive in `original/`
   - unzip/untar is allowed; *editing content is not*
+- 🧾 Retrieval receipts (headers, request params, query JSON) stored as sidecars in the drop (no secrets)
 
 ---
 
@@ -110,7 +181,7 @@ flowchart LR
 - 🧭 Reprojection, resampling, tiling, simplification, topology repair
 - 🧊 “Make it a COG”, “make it Parquet”, “make it GeoJSON”
 - 🧠 Analysis outputs / model outputs / simulation outputs / reports  
-  → these are first-class datasets in `data/processed/` and must ship with STAC/DCAT/PROV
+  → these are first-class artifacts in `data/processed/` (and/or `data/reports/`) and must ship with **STAC/DCAT/PROV** if they are used downstream
 
 > [!WARNING]
 > If the only explanation for a file is “trust me,” it will fail review (and often CI).
@@ -129,6 +200,7 @@ These rules keep the pipeline deterministic and governance-safe:
 - 🏷️ **Stable identity**: `dataset_id` + `drop_id` become PROV keys later
 - 🛡️ **Governance up front**: license, classification, sensitivity declared at ingest time
 - 🔐 **No secrets in Git**: use `.env` + secret stores; rotate if exposed
+- 🚫 **No classification downgrade**: outputs must not become less restricted than inputs
 
 ---
 
@@ -139,16 +211,18 @@ These rules keep the pipeline deterministic and governance-safe:
 Organize raw data by **domain → dataset → immutable drop**:
 
 ```text
-data/raw/
-└── <domain>/                         # imagery, hydro, census, docs, etc.
-    └── <dataset_slug>/               # kebab-case, stable (no dates inside)
-        └── <drop_id>/                # YYYY-MM-DD | vX | YYYY-MM-DDa
-            ├── 📄 README.md
-            ├── 📄 source.json
-            ├── 🔑 checksums.sha256
-            ├── 📁 original/          # upstream bundle(s) exactly as received
-            ├── 📁 extracted/         # optional: lossless unpack output (no transforms)
-            └── 📁 notes/             # optional: landing pages, emails (NO secrets)
+📁 data/
+└── 📁 raw/
+    └── 📁 <domain>/                         # imagery, hydro, census, docs, etc.
+        └── 📁 <dataset_slug>/               # kebab-case, stable (no dates inside)
+            └── 📁 <drop_id>/                # YYYY-MM-DD | vX | YYYY-MM-DDa | run-YYYYMMDD-HHMMSSZ
+                ├── 📄 README.md
+                ├── 📄 source.json
+                ├── 🔑 checksums.sha256
+                ├── 📁 original/             # upstream bundle(s) exactly as received
+                ├── 📁 extracted/            # optional: lossless unpack output (no transforms)
+                ├── 📁 receipts/             # optional: request params, headers, landing-page HTML (NO secrets)
+                └── 📁 notes/                # optional: human notes (NO secrets)
 ```
 
 ### 🏷️ Naming guidance
@@ -159,6 +233,7 @@ data/raw/
   - `YYYY-MM-DD` for dated pulls/deliveries
   - `vX` for upstream versioned releases
   - if re-pulling “the same” drop: `YYYY-MM-DDa`, `YYYY-MM-DDb` (never overwrite)
+  - for pipeline-fetched drops: `run-YYYYMMDD-HHMMSSZ` *(guarantees uniqueness)*
 
 > [!TIP]
 > “Boring naming” is a feature: it makes automation, QA, and provenance simpler.
@@ -178,9 +253,10 @@ Every raw drop is a **reviewable, machine-validatable boundary**.
 | 🔑 `checksums.sha256` | ✅ | Integrity + tamper evidence | sha256 of all files in the drop (except itself) |
 | 📁 `original/` | ◻️ | “As received” archive(s) | ZIP/TAR/PDF bundles, vendor deliveries |
 | 📁 `extracted/` | ◻️ | Lossless unpack only | unzip/untar output (no semantic changes) |
+| 📁 `receipts/` | ◻️ | Deterministic retrieval proof | request JSON, query params, response headers (redacted) |
 
 > [!CAUTION]
-> If redistribution is restricted: keep **only receipts** (README + source.json) in Git, store bytes in restricted storage, and document access.
+> If redistribution is restricted: keep **only receipts** (README + `source.json` + checksums) in Git, store bytes in restricted storage, and document access clearly.
 
 ---
 
@@ -192,10 +268,13 @@ Every raw drop is a **reviewable, machine-validatable boundary**.
 
 ```json
 {
+  "receipt_version": "v1",
+
   "dataset_id": "<domain>/<dataset_slug>",
   "domain": "<domain>",
   "dataset_slug": "<dataset_slug>",
-  "drop_id": "<YYYY-MM-DD_or_vX>",
+  "drop_id": "<YYYY-MM-DD_or_vX_or_run-*>",
+  "source_manifest_ref": "data/sources/<domain>/<dataset_slug>.json",
 
   "title": "Human-friendly dataset name",
   "description": "What this drop contains (1–3 sentences).",
@@ -206,7 +285,8 @@ Every raw drop is a **reviewable, machine-validatable boundary**.
     "retrieved_from": "https://…",
     "license": "SPDX id or URL or text statement",
     "citation": "Preferred citation string (if provided)",
-    "terms_notes": "Redistribution limits / constraints."
+    "terms_notes": "Redistribution limits / constraints.",
+    "attribution_required": true
   },
 
   "retrieval": {
@@ -217,7 +297,11 @@ Every raw drop is a **reviewable, machine-validatable boundary**.
       "script_path": "tools/fetch/<something>.sh",
       "container": "docker image tag (if used)",
       "commit": "git commit hash (if applicable)"
-    }
+    },
+    "request_receipts": [
+      "receipts/request.json",
+      "receipts/response_headers.txt"
+    ]
   },
 
   "coverage": {
@@ -235,6 +319,12 @@ Every raw drop is a **reviewable, machine-validatable boundary**.
     "classification": "public|internal|confidential|restricted",
     "care_label": "TBD",
     "notes": "Sovereignty, sensitive sites, PII risk, redaction expectations."
+  },
+
+  "storage": {
+    "in_git": true,
+    "dvc_tracked": false,
+    "external_location": "s3://… or gs://… or partner system ref (if bytes not in repo)"
   },
 
   "files": [
@@ -265,6 +355,11 @@ find . -type f \
   ! -name 'checksums.sha256' \
   -print0 | sort -z | xargs -0 sha256sum > checksums.sha256
 ```
+
+> [!NOTE]
+> macOS may not ship `sha256sum` by default. If needed:
+> - use `shasum -a 256` (different output format), or
+> - install coreutils and use `gsha256sum`.
 
 ### Verify (macOS/Linux)
 
@@ -297,11 +392,11 @@ Raw often includes huge rasters and long time-series.
 ### Recommended patterns
 
 - 🧳 **Small/medium files**: store directly in Git (still include checksums)
-- 🧱 **Large binaries**: consider DVC (or similar) for versioned pointers
-- 🔒 **Redistribution restricted**: keep only receipts in Git; store bytes in restricted storage
+- 🧱 **Large binaries**: use DVC or Git LFS (repo policy-dependent) with receipts in `data/raw/`
+- 🔒 **Redistribution restricted**: keep only receipts in Git; store bytes in restricted storage; reference via `data/sources/` manifests
 
 > [!IMPORTANT]
-> The **drop folder** is still the contract boundary even if the bytes live elsewhere.
+> The **drop folder** remains the contract boundary even if bytes live elsewhere.
 
 ---
 
@@ -317,6 +412,9 @@ Raw often includes huge rasters and long time-series.
 ✅ Raw: keep as delivered, preserve encoding + schema  
 ❌ Not raw: reprojection, geometry fixes, attribute normalization
 
+> [!TIP]
+> For Shapefiles: make sure you keep the *whole set* (`.shp`, `.shx`, `.dbf`, `.prj`, and any `.cpg`, `.sbn/.sbx`, etc.). Checksums should cover all of them.
+
 ### 🧾 Documents & scans (PDF/JPEG/PNG/TIFF)
 ✅ Raw: keep original masters (don’t OCR in place)  
 ❌ Not raw: OCR text outputs, rotated/cleaned images, compressed previews  
@@ -331,8 +429,9 @@ Treat as **untrusted inputs**:
 ### 🛰️ API pulls (remote sensing, web services)
 If you pull via API:
 - store the **raw payload** (or exported files) if possible
-- store the **exact request parameters** (query, filters, time window)
+- store the **exact request parameters** (query, filters, time window) in `receipts/`
 - store the script path + commit hash in `source.json`
+- redact headers that could contain tokens
 
 > [!TIP]
 > “Reproducible retrieval” is part of provenance. If a pull can’t be repeated, document why (rate limits, paid access, ephemeral tokens, etc.).
@@ -351,10 +450,10 @@ Geospatial raw data can carry real-world risk.
 - 🧭 **No restricted coordinates** in public drops when locations are sensitive
 - 🏷️ **Declare classification** in `source.json` (and don’t “downgrade” later)
 
-### If in doubt
-- open a PR with only the receipts (no binaries)
-- flag the concern clearly
-- route sensitive details via private channels per `SECURITY.md`
+### Review gates & policy enforcement (recommended)
+If your repo includes review gates/policy packs:
+- follow `docs/governance/REVIEW_GATES.md` *(if present)*
+- ensure policy checks run in CI (secrets scan, sensitive-location linting, classification consistency)
 
 > [!WARNING]
 > “Processed outputs can still leak.” Even aggregated or derived data can reveal sensitive patterns. Raw discipline is the first step; API governance is the last.
@@ -372,8 +471,14 @@ Raw changes should be easy to validate automatically.
 - [ ] `README.md`, `source.json`, `checksums.sha256` exist
 - [ ] `checksums.sha256` verifies locally
 - [ ] `source.json` includes license + classification
-- [ ] No secrets/credentials committed
+- [ ] No secrets/credentials committed (scan)
 - [ ] Sensitive data is flagged and handled per governance
+
+**Recommended additional CI gates (fast, high-value):**
+- [ ] “No classification downgrade” checks across raw → processed → catalogs
+- [ ] Sensitive-location safeguards (no precise restricted coordinates in public metadata)
+- [ ] Link/receipt linting: `source_manifest_ref` resolves *(if used)*
+- [ ] If the PR also updates STAC/DCAT: run `tools/validation/catalog_qa/` *(if present)*
 
 > [!NOTE]
 > Deeper geospatial QA (CRS checks, geometry validity, bounds) usually happens in `data/work/` and `data/processed/`—but raw must still declare what it *claims* to be.
@@ -392,9 +497,14 @@ Raw changes should be easy to validate automatically.
 - place the upstream bundle in `original/`
 - optional: losslessly extract into `extracted/`
 
+> If bytes can’t be stored in Git:
+> - store them in approved restricted storage
+> - include receipts and pointers in `source.json`
+> - (recommended) add/update a `data/sources/` manifest
+
 ### 3) Write the receipts 🧾
 - `README.md` (human: what/where/why/caveats)
-- `source.json` (machine: license, retrieval, classification, extents)
+- `source.json` (machine: license, retrieval, classification, extents, pointers)
 
 ### 4) Lock integrity 🔒
 - generate `checksums.sha256`
@@ -425,66 +535,79 @@ Include:
 ## 📚 Project reference shelf
 
 <details>
-<summary><strong>📖 Reference library (all project files)</strong></summary>
+<summary><strong>📖 Reference library (project files)</strong></summary>
 
-> ⚠️ Reference PDFs may have licenses different from repository code. Keep them in `docs/library/` (or outside the repo) and respect upstream terms.
+> ⚠️ Reference PDFs may have licenses different from repository code.  
+> Prefer `docs/library/` for references (or keep them outside the repo) and respect upstream terms.
 
-### 🧭 Core KFM system docs
-- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
+### 🧭 Core KFM system + protocols
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
+- `docs/specs/MARKDOWN_GUIDE_v13.md` *(or equivalent; may be `.gdoc` in some repos)*
+- `docs/specs/Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`
+- `docs/specs/Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf`
+- `docs/specs/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`
 
 ### 🗺️ GIS, mapping, cartography, geospatial tooling
-- making-maps-a-visual-guide-to-map-design-for-gis.pdf
-- Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf  [oai_citation:1‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj)
-- python-geospatial-analysis-cookbook.pdf
-- PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf
+- `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `docs/library/python-geospatial-analysis-cookbook.pdf`
+- `docs/library/KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf` *(if present)*
+- `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
 
 ### 🛰️ Remote sensing workflows
-- Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf
+- `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
 
 ### 🖼️ Documents, scans & file formats
-- compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf  [oai_citation:2‡compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf](file-service://file-Y6V94sFtV6sy3w63LDy9fi)
+- `docs/library/compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
 
 ### 📊 Statistics, experiments, inference & modeling integrity
-- Understanding Statistics & Experimental Design.pdf
-- regression-analysis-with-python.pdf
-- Regression analysis using Python - slides-linear-regression.pdf  [oai_citation:3‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR)
-- graphical-data-analysis-with-r.pdf
-- think-bayes-bayesian-statistics-in-python.pdf  [oai_citation:4‡think-bayes-bayesian-statistics-in-python.pdf](file-service://file-LXwJApPMVhRZgyqLb9eg7c)
-- Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf
-- Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf *(file name as provided)*
+- `docs/library/Understanding Statistics & Experimental Design.pdf`
+- `docs/library/regression-analysis-with-python.pdf`
+- `docs/library/Regression analysis using Python - slides-linear-regression.pdf`
+- `docs/library/graphical-data-analysis-with-r.pdf`
+- `docs/library/think-bayes-bayesian-statistics-in-python.pdf`
 
-### ⚙️ Systems, scale, interoperability
-- Scalable Data Management for Future Hardware.pdf
-- Data Spaces.pdf
-- concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf  [oai_citation:5‡concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf](file-service://file-Y45SvXbmLoZL1MNmrcyqz6)
+### 🤖 ML theory & practice
+- `docs/library/Understanding Machine Learning - From Theory to Algorithms.pdf`
+- `docs/library/Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` *(if present; filename as provided)*
+
+### 🧪 Simulation + optimization + graph math
+- `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `docs/library/Spectral Geometry of Graphs.pdf`
+- `docs/library/Generalized Topology Optimization for Structural Design.pdf`
+
+### ⚙️ Systems, scale, interoperability, software design
+- `docs/library/Scalable Data Management for Future Hardware.pdf`
+- `docs/library/Data Spaces.pdf`
+- `docs/library/concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
+- `docs/library/Flexible Software Design.pdf`
 
 ### 🌐 Web UI & 3D graphics
-- responsive-web-design-with-html5-and-css3.pdf
-- webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf
-
-### 🧮 Advanced math & optimization (optional deep dives)
-- Spectral Geometry of Graphs.pdf
-- Generalized Topology Optimization for Structural Design.pdf
+- `docs/library/responsive-web-design-with-html5-and-css3.pdf`
+- `docs/library/webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
 
 ### ❤️ Ethics, autonomy, AI law
-- Introduction to Digital Humanism.pdf
-- Principles of Biological Autonomy - book_9780262381833.pdf
-- On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf
+- `docs/library/Introduction to Digital Humanism.pdf`
+- `docs/library/Principles of Biological Autonomy - book_9780262381833.pdf`
+- `docs/library/On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
 
-### 🛡️ Security (defensive references)
-- ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf  [oai_citation:6‡ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf](file-service://file-Q7EeqPb17SD9sV8Fb12LQX)
-- Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf  [oai_citation:7‡Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf](file-service://file-Mu6zixTqF9Lubf5QMjepRg)
+### 🛡️ Security (defensive references only)
+- `docs/library/ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
+- `docs/library/Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
+
+> These are used to inform **defensive controls** (threat modeling, incident response, secure coding).  
+> They are **not** a request for offensive tooling contributions.
 
 ### 🧰 General programming shelf (bundles)
-- A programming Books.pdf
-- B-C programming Books.pdf
-- D-E programming Books.pdf
-- F-H programming Books.pdf
-- I-L programming Books.pdf
-- M-N programming Books.pdf
-- O-R programming Books.pdf
-- S-T programming Books.pdf
-- U-X programming Books.pdf
+- `docs/library/A programming Books.pdf`
+- `docs/library/B-C programming Books.pdf`
+- `docs/library/D-E programming Books.pdf`
+- `docs/library/F-H programming Books.pdf`
+- `docs/library/I-L programming Books.pdf`
+- `docs/library/M-N programming Books.pdf`
+- `docs/library/O-R programming Books.pdf`
+- `docs/library/S-T programming Books.pdf`
+- `docs/library/U-X programming Books.pdf`
 
 </details>
 
@@ -494,9 +617,19 @@ Include:
 
 - [x] “Raw means bytes preserved” rule is explicit
 - [x] Append-only + checksums + receipts contract defined
+- [x] `data/sources/` manifest pattern documented (pointer-first intake)
 - [x] Layout + naming guidance included
 - [x] Security/privacy/sovereignty guardrails included
 - [ ] Linked from `data/README.md` (recommended)
 - [ ] Reviewed by maintainers / data stewards (recommended)
+
+---
+
+## 🕰️ Version history
+
+| Version | Date | Change |
+|---|---|---|
+| v1.0.0 | 2025-12-26 | Initial `data/raw/` README scaffold |
+| v1.1.0 | 2026-01-12 | Align raw intake with `data/sources/` manifests + CI/review-gate expectations; expand receipts/pointer patterns |
 
 <p align="right"><a href="#pipeline">⬆️ Back to top</a></p>
