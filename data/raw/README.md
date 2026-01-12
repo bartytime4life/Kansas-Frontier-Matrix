@@ -112,21 +112,23 @@ We ingest external sources here **as‑received**, preserve them **immutably**, 
 **Canonical ordering (non‑negotiable):**  
 **Raw → Work/ETL → Processed → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
+## 🧭 Pipeline Flow (Mermaid-safe)
+
 ```mermaid
 flowchart LR
-  SOURCES[🧾 Source manifests<br/>data/sources/] --> RAW
-  RAW[📥 Raw inputs<br/>data/raw/] --> WORK[🧪 Work / ETL<br/>data/work/]
-  WORK --> PROC[📦 Processed outputs<br/>data/processed/]
-  PROC --> STAC[🛰️ STAC catalogs<br/>data/stac/]
-  PROC --> DCAT[🗂️ DCAT datasets<br/>data/catalog/dcat/]
-  PROC --> PROV[🧬 PROV lineage<br/>data/prov/]
-  STAC --> GRAPH[🕸️ Graph (Neo4j)]
+  SOURCES["🧾 Source manifests\n(data/sources/)"] --> RAW["📥 Raw inputs\n(data/raw/)"]
+  RAW --> WORK["🧪 Work / ETL\n(data/work/)"]
+  WORK --> PROC["📦 Processed outputs\n(data/processed/)"]
+  PROC --> STAC["🛰️ STAC catalogs\n(data/stac/)"]
+  PROC --> DCAT["🗂️ DCAT datasets\n(data/catalog/dcat/)"]
+  PROC --> PROV["🧬 PROV lineage\n(data/prov/)"]
+  STAC --> GRAPH["🕸 Graph\nNeo4j runtime"]
   DCAT --> GRAPH
   PROV --> GRAPH
-  GRAPH --> API[🔌 Governed API]
-  API --> UI[🗺️ Web UI]
-  UI --> STORY[🎬 Story Nodes]
-  STORY --> FOCUS[🧠 Focus Mode]
+  GRAPH --> API["🔌 Governed API\n(src/server/)"]
+  API --> UI["🗺️ Web UI\n(web/)"]
+  UI --> STORY["🎬 Story Nodes\n(docs/reports/story_nodes/)"]
+  STORY --> FOCUS["🧠 Focus Mode\n(evidence-backed)"]
 ```
 
 > [!NOTE]
