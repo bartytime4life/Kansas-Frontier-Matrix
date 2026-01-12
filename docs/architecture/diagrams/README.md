@@ -103,16 +103,26 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  A[📥 Ingestion / ETL] --> B[🛰️ STAC Items]
-  A --> C[🗂️ DCAT Datasets]
-  A --> D[🧬 PROV Lineage]
-  B --> E[🕸️ Knowledge Graph (Neo4j)]
-  C --> E
-  D --> E
-  E --> F[🔌 API Layer (REST + GraphQL)]
-  F --> G[🗺️ UI (MapLibre / Cesium)]
-  G --> H[🎬 Story Nodes]
-  H --> I[🔎 Focus Mode (evidence-first)]
+  A["📥 Ingestion / ETL"];
+  B["🛰️ STAC Items"];
+  C["🗂️ DCAT Datasets"];
+  D["🧬 PROV Lineage"];
+  E["🕸️ Knowledge Graph (Neo4j)"];
+  F["🔌 API Layer (REST + GraphQL)"];
+  G["🗺️ UI (MapLibre / Cesium)"];
+  H["🎬 Story Nodes"];
+  I["🔎 Focus Mode (evidence-first)"];
+
+  A --> B;
+  A --> C;
+  A --> D;
+  B --> E;
+  C --> E;
+  D --> E;
+  E --> F;
+  F --> G;
+  G --> H;
+  H --> I;
 ```
 
 ---
