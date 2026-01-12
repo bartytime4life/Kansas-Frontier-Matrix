@@ -93,21 +93,20 @@ This `_lib` exists to make scripts:
 
 ```text
 api/scripts/_lib/
-  README.md
-
-  cli/                # argparse/commander wrappers, standard flags, help text
-  config/             # config loading, schema validation, env overlays
-  log/                # structured logging, run context, redaction
-  io/                 # paths, filesystem, caching, atomic writes
-  hash/               # content hashing, checksums, deterministic IDs
-  geo/                # bbox, CRS helpers, GeoJSON, raster/vector IO helpers
-  catalog/            # STAC/DCAT/PROV builders + validators
-  provenance/         # run manifests, lineage events (OpenLineage-style)
-  db/                 # Postgres/PostGIS helpers
-  graph/              # graph writes that reference catalogs (no raw data)
-  security/           # policy pack hooks, secret handling, access rules
-
-  testing/            # fixtures + helpers to keep scripts testable
+├─ 📄 README.md
+│
+├─ 🧰 cli/               # argparse/commander wrappers, standard flags, help text
+├─ ⚙️  config/            # config loading, schema validation, env overlays
+├─ 🪵 log/               # structured logging, run context, redaction
+├─ 📦 io/                # paths, filesystem, caching, atomic writes
+├─ 🔐 hash/              # content hashing, checksums, deterministic IDs
+├─ 🗺️  geo/               # bbox, CRS helpers, GeoJSON, raster/vector IO helpers
+├─ 🧾 catalog/           # STAC/DCAT/PROV builders + validators
+├─ 🧬 provenance/        # run manifests, lineage events (OpenLineage-style)
+├─ 🐘 db/                # Postgres/PostGIS helpers
+├─ 🕸️  graph/             # graph writes that reference catalogs (no raw data)
+├─ 🛡️  security/          # policy pack hooks, secret handling, access rules
+└─ 🧪 testing/           # fixtures + helpers to keep scripts testable
 ```
 
 > [!NOTE]
