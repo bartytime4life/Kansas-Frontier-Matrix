@@ -1,198 +1,372 @@
-<!-- 📍 Path: api/src/contracts/README.md -->
+# 📜 API Contracts (KFM) — `api/contracts/`
 
-# 📜 API Contracts
+![Contract-First](https://img.shields.io/badge/contract--first-✅-2ea44f)
+![Evidence-First](https://img.shields.io/badge/evidence--first-🧾-2ea44f)
+![OpenAPI](https://img.shields.io/badge/OpenAPI-3.x-1f6feb)
+![GraphQL](https://img.shields.io/badge/GraphQL-SDL-e10098)
+![JSON%20Schema](https://img.shields.io/badge/JSON%20Schema-validated-6f42c1)
+![SemVer](https://img.shields.io/badge/SemVer-versioned-24292f)
 
-![Contract-First](https://img.shields.io/badge/Contract--First-Required-2ea44f)
-![Backwards-Compatible](https://img.shields.io/badge/Backwards%20Compatible-Default-2ea44f)
-![Governed-API](https://img.shields.io/badge/Governed%20API-Redaction%20%2B%20Consistency-0969da)
-
-**This folder is the source of truth for the “public shape” of the API** — the machine-validated contracts that define what clients can send and what they can expect back. ✅
-
-> If it’s not in a contract, it’s not an API promise.  
-> If it’s in a contract, implementations must honor it (or version it).
+> **This folder is the API boundary source-of-truth** 🧠  
+> We keep **machine-validated contracts** here so the **backend**, **frontend**, and **external consumers** can evolve safely without breaking each other.
 
 ---
 
-## 📌 Contents
+## 🧭 Quick Links
 
-- [What counts as a “contract” here?](#-what-counts-as-a-contract-here)
-- [What lives here vs. what doesn’t](#-what-lives-here-vs-what-doesnt)
-- [Suggested folder layout](#-suggested-folder-layout)
-- [Compatibility & versioning rules](#-compatibility--versioning-rules)
-- [How to add/change an endpoint](#-how-to-addchange-an-endpoint)
+- [Why this exists](#-why-this-exists)
+- [What counts as a “contract”](#-what-counts-as-a-contract)
+- [Recommended folder layout](#-recommended-folder-layout)
+- [Non‑negotiable rules](#-non-negotiable-rules)
+- [Versioning & compatibility](#-versioning--compatibility)
+- [Governance & sensitive data](#-governance--sensitive-data)
+- [How to change/add contracts](#-how-to-changeadd-contracts)
 - [Validation & CI expectations](#-validation--ci-expectations)
-- [Definition of Done](#-definition-of-done)
-- [FAQ](#-faq)
+- [Contract patterns (KFM-flavored)](#-contract-patterns-kfm-flavored)
+- [📚 Project reference library](#-project-reference-library)
 
 ---
 
-## 🧾 What counts as a “contract” here?
+## 🌾 Why this exists
 
-A **contract artifact** is any *machine-validated* specification that defines an interface boundary, such as:
+KFM is designed as a **standards-based**, **platform-style** system: the UI and integrations talk to a backend that exposes **REST + GraphQL** with clear documentation (OpenAPI/Swagger + GraphQL schema).  
+This directory makes those contracts **first-class artifacts** — versioned, reviewed, and testable — so “data → API → UI” is predictable and governed.
 
-- **HTTP API contracts** (e.g., OpenAPI YAML/JSON)
-- **GraphQL schema contracts** (SDL)
-- **Reusable payload schemas** (e.g., JSON Schema for request/response bodies)
-- **Async/event contracts** for queues/streams (message topics + payload shape)
-- **Examples** that pair with the above contracts (golden payloads, fixtures)
+### The canonical pipeline boundary (mental model)
 
-This folder exists to keep the API boundary explicit, reviewable, and testable. 🔍
-
----
-
-## ✅ What lives here vs. what doesn’t
-
-| ✅ Put it here | 🚫 Don’t put it here |
-|---|---|
-| API specs (OpenAPI / GraphQL SDL) | Controller/service/business logic |
-| Request/response schema definitions | Database schema / migrations |
-| Event message schemas (queue/stream payloads) | ORM models / persistence code |
-| Contract examples & fixtures | UI data-fetch logic / direct DB access |
-| Contract-level “breaking change” notes | One-off scripts without validation |
-
-> ⚠️ **Rule of thumb:**  
-> If a *client* needs it to integrate safely, it belongs in **contracts**.  
-> If only the *server implementation* needs it, it belongs elsewhere.
-
----
-
-## 🗂️ Suggested folder layout
-
-> Your exact structure may vary — this is the recommended “clean boundary” split.
-
-```text
-📦 api/
-└─ 🧩 src/
-   └─ 📜 contracts/                               # 🧱 contract-first boundary (source of truth)
-      ├─ 📘 README.md                             # 👈 you are here
-      ├─ 🌐 http/                                 # 🛰️ REST surface contracts
-      │  ├─ 🧾 openapi.yaml                        # 🔎 canonical OpenAPI spec
-      │  └─ 🧭 paths/                              # 🧩 optional split by domain/resource
-      ├─ 🧬 graphql/                               # 🧠 GraphQL SDL (if used)
-      │  └─ 🧬 schema.graphql                      # 🧷 schema + types + operations
-      ├─ 🧱 schemas/                               # 📦 reusable payload schemas (http + events)
-      │  ├─ 🧰 common/                             # ♻️ shared primitives (paging/errors/ids)
-      │  └─ 🗺️ domain/                             # 🧬 domain shapes (feature/time-series/etc.)
-      ├─ 📣 events/                                # 🛰️ async contracts (queues/streams)
-      │  ├─ 🗞️ topics.md                           # 🧾 topic registry (optional)
-      │  └─ 📮 payloads/                           # 🧬 message schemas (versioned)
-      └─ 🧪 examples/                              # 🎯 canonical request/response payloads
-         ├─ 🌐 http/                               # 🧾 request/response examples (golden)
-         └─ 📣 events/                             # 🧾 event examples (golden)
+```mermaid
+flowchart LR
+  A[🧱 Data] --> B[🗂️ Catalogs<br/>STAC / DCAT / PROV]
+  B --> C[🕸️ Graph / Ontology]
+  C --> D[🔌 API Boundary<br/>Contracts live here]
+  D --> E[🖥️ UI / Clients]
+  E --> F[📚 Narrative / Focus Mode]
 ```
 
 ---
 
-## 🔒 Compatibility & versioning rules
+## 🧩 What counts as a contract?
 
-### ✅ Default posture: backwards-compatible
-Unless explicitly versioned, **assume clients already depend on the current contract**.
+A **contract artifact** is anything machine-validated that defines an interface. In KFM, contracts usually include:
 
-**Backwards-compatible changes (usually OK):**
-- Adding new optional fields
-- Adding new endpoints/resources
-- Widening enums carefully (when clients tolerate unknown values)
-- Marking fields as deprecated (with a runway)
+- **OpenAPI** for REST endpoints (`.yaml` / `.json`)
+- **GraphQL SDL** for graph/query operations (`.graphql`)
+- **JSON Schemas** for shared objects:
+  - request bodies
+  - response envelopes
+  - error shapes
+  - telemetry/audit events
+  - security/sensitivity annotations
+- **Examples/fixtures** used by documentation and contract tests
 
-**Breaking changes (require a version bump strategy):**
-- Removing or renaming fields
-- Changing field meaning, type, or required/optional status
-- Changing error shapes clients depend on
-- Changing pagination/sorting semantics
-- Changing auth requirements or permission semantics
-
-### 🧭 How we version
-Use whichever versioning mechanism the API surface already follows (pick one and stay consistent):
-
-- **Path versioning:** `/v1/...`, `/v2/...`
-- **Header/content negotiation:** `Accept: application/vnd.kfm.v1+json`
-- **Schema versioning:** explicit `contract_version` field in metadata (when needed)
-
-> ⚠️ If you’re about to break a contract, treat it like a governance event:  
-> document the change, version it, and protect it with contract tests.
+> 💡 If a client depends on it, it belongs here.
 
 ---
 
-## 🛠️ How to add/change an endpoint
+## 🗂️ Recommended folder layout
 
-### 1) Start with the contract (not the implementation) 🧱
-- Add/update the relevant contract artifact (OpenAPI / SDL / JSON Schema).
-- Add at least one **example payload** for request + response.
+> ✅ Keep it boring, predictable, and diff-friendly.
 
-### 2) Write a contract change note 📝
-Use the repo’s contract-change template when present:
+```text
+api/contracts/
+  README.md
 
-- `../../../docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+  openapi/                 # 📘 REST contracts (canonical OpenAPI docs)
+    kfm.openapi.v1.yaml
+    overlays/              # optional: reusable patches/extensions
 
-> This forces us to record: *what changed*, *why*, *compat impact*, and *how to validate*.
+  graphql/                 # 🧬 GraphQL contracts
+    schema.v1.graphql
+    operations/            # optional: persisted queries or examples
 
-### 3) Add/Update contract tests 🧪
-Your goal: **prove the implementation matches the contract**.
+  jsonschema/              # 🧱 Shared object schemas (language-agnostic)
+    common/
+    entities/
+    errors/
+    pagination/
+    provenance/
+    telemetry/
+    security/
 
-Common patterns:
-- Validate responses against schema in tests
-- Snapshot examples as golden files
-- Validate error envelopes and status codes
-- Ensure pagination/meta fields match the spec
+  examples/                # 🧾 Example payloads (docs + tests)
+    rest/
+    graphql/
+    events/
 
-### 4) Implement behind the contract 🧩
-Implementation should transform internal/domain data into the contract-defined shapes.
-Keep “contract DTOs” at the edges — don’t leak DB/ORM objects across the boundary.
+  tests/                   # 🧪 Contract tests + schema validation harness
+    contract/
+    fixtures/
 
-### 5) Validate locally (same checks CI runs) ✅
-Run contract validators + tests before opening a PR.
+  CHANGELOG.md             # 🗞️ Contract-level changes (not just code changes)
+  VERSION                  # 🔖 Current contract pack version (SemVer)
+```
+
+> If you are on the v13+ layout, this folder is conceptually equivalent to `src/server/contracts/`.  
+> In this repo layout, we keep it under `api/` to match the backend’s canonical home.
+
+---
+
+## 🧷 Non-negotiable rules
+
+### 1) Contract-first & evidence-first ✅
+- Contracts are not “nice docs” — they are **the interface**.
+- Public behavior must be explainable and testable from these files.
+
+### 2) Provenance-friendly by default 🧾
+If an API response is used in UI or narrative:
+- it must be **traceable back to cataloged assets/lineage** (STAC/DCAT/PROV)
+- it must **not introduce “free-floating claims”** that can’t be tied back to evidence
+
+### 3) Backwards compatibility unless versioned 🔁
+- If you break a contract, you **bump the version** and provide a **migration path**.
+- “Silent breaking changes” are forbidden.
+
+### 4) No data leakage 🚫🕵️
+- Sensitive or sovereignty-restricted layers must remain protected:
+  - redaction/generalization must be respected **in data**, **metadata**, **API**, and **UI**
+  - contracts should reflect this (e.g., “generalized coordinates”, “redacted fields”, “restricted access”)
+
+### 5) Auditable interactions 🧾🔍
+- When redaction/suppression occurs (especially in Focus Mode), contracts should support emitting audit events (telemetry schemas live here).
+
+---
+
+## 🧬 Versioning & compatibility
+
+We use **SemVer** for the contract pack.
+
+### REST (OpenAPI)
+- **Non-breaking** examples:
+  - adding a new optional field
+  - adding a new endpoint
+  - adding a new enum value *only if contract says enum is extensible*
+- **Breaking** examples:
+  - removing/renaming fields
+  - changing required/optional status
+  - narrowing accepted formats
+  - changing response shape
+
+✅ Preferred approach for breaking REST changes:
+- introduce a new versioned path (`/v2/...`) or equivalent negotiation strategy
+- keep `/v1/...` stable until sunset
+
+### GraphQL
+GraphQL prefers **additive evolution**:
+- **Non-breaking**:
+  - add new types/fields
+  - add new queries with clear pagination
+- **Breaking**:
+  - remove fields/types
+  - change field types in incompatible ways
+
+✅ Preferred GraphQL breaking approach:
+- deprecate first (with reason + replacement)
+- only remove in a major contract bump
+
+---
+
+## ⚖ Governance & sensitive data
+
+Some contract changes are **bigger than “just code”** and should trigger governance review:
+
+- new public endpoints that expose downloading/exporting of datasets
+- anything that increases inference risk (even indirect exposure)
+- new AI-driven narrative behaviors or “factual sounding” summaries
+- additions that touch culturally sensitive / sovereignty-restricted data
+
+### Practical contract-level affordances 🧰
+If an endpoint can return sensitive material, the contract should include:
+- a **classification** field (e.g., `public | restricted | redacted`)
+- a **redaction note** or **generalization level**
+- an optional **access policy hint** (don’t leak real policy logic; just expose enough for transparency)
+- ability to emit/record a telemetry signal when redaction is shown
+
+---
+
+## 🧱 How to change/add contracts
+
+> Use the repo’s API contract extension template when available:
+> `../../docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+
+### ✅ Checklist (Definition of Done)
+- [ ] Contract updated (OpenAPI / GraphQL / JSON Schemas)
+- [ ] Examples added/updated (at least one happy path + one error path)
+- [ ] Contract tests updated/added
+- [ ] Version bumped if breaking
+- [ ] `CHANGELOG.md` updated
+- [ ] Governance review noted if triggered (sensitive data / new public export / AI narrative)
+
+### Workflow (suggested)
+1. **Start with the contract** (don’t start in code).
+2. Add/update **examples**.
+3. Update the implementation to match.
+4. Add/adjust **contract tests**.
+5. Run validators locally and in CI.
 
 ---
 
 ## 🧪 Validation & CI expectations
 
-Contracts should be **machine-validated** and **repeatable**.
+A contract PR should fail fast if it breaks the world.
 
-Typical checks (adapt to whatever tooling exists in this repo):
-- OpenAPI validation (schema correctness, refs resolve)
-- Schema validation for examples (examples conform)
-- Contract drift checks (implementation responses conform)
-- Linting rules (naming, casing, required metadata)
-- Governance flags (deprecations + version bumps documented)
+### Minimum gates (suggested)
+- OpenAPI lint + validation (spec correctness)
+- GraphQL schema validation (SDL correctness)
+- JSON Schema validation + sample payload validation
+- Contract tests for key endpoints (known inputs/outputs)
+- Geospatial sanity checks for GeoJSON-like responses (valid geometry; expected CRS conventions)
 
-> 💡 If a contract changes and CI doesn’t notice, CI is incomplete.
-
----
-
-## ✅ Definition of Done
-
-**When you touch anything in `api/src/contracts/`, you’re done when:**
-
-- [ ] Contract artifact updated (OpenAPI/SDL/Schema)
-- [ ] Compatibility impact declared (**compatible** / **breaking**)
-- [ ] Breaking changes are versioned (or blocked)
-- [ ] Examples added/updated and validated against schema
-- [ ] Contract tests updated/added
-- [ ] Implementation matches contract (no drift)
-- [ ] Any redaction/classification needs are reflected at the API boundary
-- [ ] Docs/template entry completed (if applicable)
+> 💡 Data pipelines already treat schema + validity as testable “first-class quality checks”.  
+> API contracts should follow the same discipline.
 
 ---
 
-## ❓ FAQ
+## 🧰 Contract patterns (KFM-flavored)
 
-### Why are contracts treated like “first-class code”?
-Because they’re the safest integration boundary: clients, services, and UI can rely on them without peeking into implementation details.
+### 1) Standard response envelope (recommended)
+Make clients happy: predictable shape, consistent metadata, consistent provenance.
 
-### Can the UI query the graph/database directly?
-No. All client-facing data access must go through the governed API layer so we can enforce consistency, access controls, and redaction.
+```json
+{
+  "data": { "items": [] },
+  "provenance": {
+    "stac_item": "stac://.../item.json",
+    "dcat_dataset": "dcat://.../dataset.json",
+    "prov_trace": "prov://.../trace.json"
+  },
+  "warnings": [],
+  "meta": {
+    "request_id": "uuid",
+    "generated_at": "2026-01-12T00:00:00Z"
+  }
+}
+```
 
-### Do we store generated types here?
-Only if the repo explicitly chooses to version generated artifacts. Otherwise, keep **contracts** here and generate types during build/dev workflows.
+### 2) Error shape (recommended)
+Use a consistent error model (prefer RFC7807-style “problem details” + KFM extensions):
+
+```json
+{
+  "type": "https://kfm.example/errors/validation",
+  "title": "Validation failed",
+  "status": 422,
+  "detail": "One or more fields are invalid.",
+  "instance": "/v1/layers/abc",
+  "errors": [
+    { "path": "/bbox", "message": "bbox must be 4 numbers" }
+  ],
+  "request_id": "uuid"
+}
+```
+
+### 3) Geo outputs
+Common patterns:
+- GeoJSON `FeatureCollection`
+- vector tiles / tilejson
+- STAC Items/Collections for asset discovery
+
+If an endpoint returns geometry, the contract should define:
+- geometry type expectations
+- CRS expectations (and how CRS is communicated)
+- limits (max features, paging, bbox filtering)
+
+### 4) Async jobs (simulations, heavy analytics)
+When work can’t finish within a request, define job contracts:
+
+```json
+{
+  "job_id": "uuid",
+  "status": "queued",
+  "progress": { "pct": 0 },
+  "links": {
+    "self": "/v1/jobs/uuid",
+    "result": null
+  }
+}
+```
+
+### 5) Telemetry / audit events
+Keep event schemas explicit so analytics and governance can trust them.
+
+Example event names you might contract:
+- `focus_mode_redaction_notice_shown`
+- `dataset_export_requested`
+- `restricted_layer_access_denied`
 
 ---
 
-## 🔗 Related docs
+## 📚 Project reference library
 
-- 📘 System pipeline & contract-first standards: `../../../docs/MASTER_GUIDE_v13.md`
-- 🧭 Architecture & subsystem boundaries: `../../../docs/architecture/`
-- 🧩 Contract change template: `../../../docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
-- ⚖️ Governance & review gates: `../../../docs/governance/`
+These project files inform our contract conventions (reproducibility, statistics rigor, geospatial norms, governance, security, scalability, UI integration).  
+To keep this README readable, the full list is collapsed:
+
+<details>
+<summary><strong>📘 Expand: All referenced project docs/books</strong> (design inputs for contracts)</summary>
+
+### Core KFM design + roadmap
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
+- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`
+- `MARKDOWN_GUIDE_v13.md.gdoc` (Master Guide v13 draft)
+
+### Data governance, sovereignty, and data spaces
+- `Data Spaces.pdf`
+- `Introduction to Digital Humanism.pdf`
+- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
+- `Principles of Biological Autonomy - book_9780262381833.pdf`
+
+### Geospatial + mapping + cartography + remote sensing
+- `python-geospatial-analysis-cookbook.pdf`
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+
+### Modeling, simulation, statistics, and ML
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `Understanding Statistics & Experimental Design.pdf`
+- `regression-analysis-with-python.pdf`
+- `Regression analysis using Python - slides-linear-regression.pdf`
+- `graphical-data-analysis-with-r.pdf`
+- `think-bayes-bayesian-statistics-in-python.pdf`
+- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf`
+
+### Graphs + optimization + scalable systems
+- `Spectral Geometry of Graphs.pdf`
+- `Generalized Topology Optimization for Structural Design.pdf`
+- `Scalable Data Management for Future Hardware.pdf`
+
+### Backend, DB, web UI, realtime, and security references
+- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
+- `responsive-web-design-with-html5-and-css3.pdf`
+- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
+- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
+- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
+
+### “Programming Books” compendiums (broad implementation references)
+- `A programming Books.pdf`
+- `B-C programming Books.pdf`
+- `D-E programming Books.pdf`
+- `F-H programming Books.pdf`
+- `I-L programming Books.pdf`
+- `M-N programming Books.pdf`
+- `O-R programming Books.pdf`
+- `S-T programming Books.pdf`
+- `U-X programming Books.pdf`
+
+</details>
 
 ---
 
+## 🧾 Related repo paths (common)
+- `../../schemas/` — cross-platform schemas (STAC/DCAT/PROV, if present)
+- `../../docs/governance/` — governance, ethics, sovereignty
+- `../../docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` — how to extend contracts cleanly
+- `../` — backend code (FastAPI + GraphQL) that must implement these contracts
+
+---
+
+### ✅ Bottom line
+
+If it crosses the API boundary, it’s a **contract**.  
+If it’s a contract, it must be **versioned**, **validated**, and **tested**. 🌾
