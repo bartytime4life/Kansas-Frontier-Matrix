@@ -1,518 +1,423 @@
-# 🧪 Simulation Scripts (KFM) — `api/scripts/simulation`
+# 🧪 Simulation Scripts (`api/scripts/simulation/`)
 
-![Python](https://img.shields.io/badge/Python-3.x-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-API-success) ![Reproducible](https://img.shields.io/badge/Reproducible-✅-brightgreen) ![Geospatial](https://img.shields.io/badge/Geospatial-PostGIS%20%7C%20STAC%20%7C%20PROV-9cf) ![Status](https://img.shields.io/badge/KFM-Simulation%20Pipeline-ff69b4)
+![status](https://img.shields.io/badge/status-active-brightgreen)
+![reproducibility](https://img.shields.io/badge/reproducibility-deterministic%20by%20default-6f42c1)
+![metadata](https://img.shields.io/badge/metadata-STAC%20%2B%20DCAT%20%2B%20PROV-ff69b4)
+![geo](https://img.shields.io/badge/geospatial-PostGIS%20ready-2ea44f)
+![python](https://img.shields.io/badge/python-3.10%2B-blue)
 
-> [!NOTE]
-> This folder contains **simulation + analysis runners** used by the Kansas Frontier Matrix (KFM) backend and/or pipeline tooling. These scripts should behave like **scientific instruments**: config-driven, deterministic when seeded, and emitting provenance + metadata alongside results.  
-> <!-- Context: API has simulation/analysis endpoints; data folder includes raw/processed/prov with STAC/DCAT/PROV. :contentReference[oaicite:0]{index=0} -->
+> **What this folder is:** the “scenario → run → artifact” backbone for Kansas Frontier Matrix simulations.  
+> **What it produces:** versioned geospatial layers + time series + provenance/metadata bundles that the platform can render, compare, and audit.
+
+---
+
+## 🔎 Why this exists (KFM context)
+
+Kansas Frontier Matrix (KFM) includes a **Modeling & Analytics** layer (agent-based + hydrology + forecasting + scenario comparisons) and treats simulations with **NASA-grade discipline** (reproducibility, validation, documentation). This folder is where those ideas become *repeatable scripts* that generate *reviewable artifacts*. ✅  
+See:  
+- 📄 **KFM Comprehensive Technical Documentation** → modeling/analytics and simulation discipline  
+  - [`Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`](<../../../Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx>)  
+- 🌟 **Latest Ideas & Future Proposals** → deterministic simulation runner (“kfm-sim-run” concept: fixed clock, capture inputs/outputs/params, auto PRs)  
+  - [`🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`](<../../../🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx>)
 
 ---
 
 ## 🧭 Contents
 
-- [🧩 What lives here](#-what-lives-here)
-- [🗺️ Where simulations fit in the KFM pipeline](#️-where-simulations-fit-in-the-kfm-pipeline)
-- [🚀 Quick start](#-quick-start)
-- [🧱 Folder conventions](#-folder-conventions)
-- [🧾 Run outputs, metadata, and provenance](#-run-outputs-metadata-and-provenance)
-- [🧠 Simulation contract](#-simulation-contract)
-- [✅ Verification, validation, and uncertainty](#-verification-validation-and-uncertainty)
-- [🛰️ Geospatial & remote-sensing patterns](#️-geospatial--remote-sensing-patterns)
-- [⚡ Performance patterns](#-performance-patterns)
-- [🛡️ Security, governance, and ethics](#️-security-governance-and-ethics)
-- [🧩 Add a new simulation](#-add-a-new-simulation)
-- [🧰 Troubleshooting](#-troubleshooting)
-- [📚 Reference shelf](#-reference-shelf)
+- [✨ Principles](#-principles)
+- [🗂️ Folder map](#️-folder-map)
+- [⚡ Quickstart](#-quickstart)
+- [🧩 Scenario spec](#-scenario-spec)
+- [📦 Outputs](#-outputs)
+- [🧾 Reproducibility contract](#-reproducibility-contract)
+- [🧪 Verification & validation](#-verification--validation)
+- [🧱 Adding a new simulation](#-adding-a-new-simulation)
+- [🚀 Performance & scaling](#-performance--scaling)
+- [🗺️ Visualization handoff](#️-visualization-handoff)
+- [🔐 Security](#-security)
+- [📚 Project library](#-project-library)
 
 ---
 
-## 🧩 What lives here
+## ✨ Principles
 
-Think of this directory as **“the lab bench”** for KFM simulations:
+### 1) Determinism first 🔁
+If you run the same scenario with the same inputs + code revision, you should get the same outputs (or explain why not).
 
-- 🧪 **Scenario simulators** (deterministic + stochastic)
-- 📈 **Analysis jobs** (regression, Bayesian updates, calibration runs, sensitivity sweeps)
-- 🛰️ **Geo / remote-sensing jobs** (PostGIS-derived features, Earth Engine exports)
-- 🧾 **Provenance & catalog emitters** (STAC/DCAT/PROV JSON written next to outputs)
+### 2) “Artifacts over opinions” 📦
+A simulation run is only “real” if it produces:
+- Output dataset(s)
+- A run manifest (inputs, outputs, params, timestamps, git commit)
+- Provenance + metadata bundles (STAC/DCAT/PROV)
 
-These scripts are designed to be invoked by:
-- 🌐 **FastAPI endpoints** (e.g., “run a simulation and return results / run_id”), and/or
-- 🧵 **Background workers / schedulers**, and/or
-- 🧰 **CLI / developer runs** in local environments.
+### 3) PR-based publication 🧾➡️🔀
+Simulation results should be published via a Pull Request:
+- reviewers can inspect diffs
+- CI can validate schemas + metadata
+- provenance is preserved
 
-<!-- FastAPI + simulation endpoints mention: :contentReference[oaicite:2]{index=2} -->
+### 4) Data staging is non-negotiable 🧱
+Follow the KFM staging pattern:
+- `data/raw/` → untouched source inputs
+- `data/work/` → intermediates (safe to delete)
+- `data/processed/` → finalized outputs + metadata/provenance
 
----
-
-## 🗺️ Where simulations fit in the KFM pipeline
-
-KFM’s pipeline is intentionally **ordered**: raw → processed → catalogs → graph → APIs → UI → narratives. Simulations are **analysis artifacts** that should re-enter the same catalog + provenance flow (don’t “shortcut” them straight into UI).  
-<!-- Canonical pipeline ordering + extension point for analysis artifacts: :contentReference[oaicite:3]{index=3} -->
-
-```mermaid
-flowchart LR
-  A["📥 data/raw"] --> B["🧼 ETL • normalize"]
-  B --> C["📦 data/processed"]
-  C --> D["🧾 data/prov<br/>STAC • DCAT • PROV"]
-  D --> E["🕸️ Graph build<br/>Neo4j • relationships"]
-  E --> F["🛰️ APIs<br/>FastAPI • contracts"]
-  F --> G["🗺️ UI maps • 3D • stories"]
-  C --> S["🧪 Simulation scripts<br/>this folder"]
-  S --> C
-  S --> D
-```
-
-> [!TIP]
-> If your simulation generates a new “dataset” (raster/vector/table/graph), treat it as **first-class evidence**: publish it to `data/processed`, describe it in `data/prov`, and (optionally) ingest into the graph.
+(See the project staging/metadata guidance in the KFM data lifecycle docs, if present in your repo.)
 
 ---
 
-## 🚀 Quick start
+## 🗂️ Folder map
 
-### ✅ Prereqs
-
-- 🐍 Python 3.x (venv/conda ok)
-- 🗄️ Postgres + PostGIS (for geospatial simulations)
-- 🌍 Optional: Google Earth Engine credentials (for remote-sensing jobs)
-- 🐳 Optional: Docker (recommended for parity runs)
-
-### 🏁 Common run patterns
-
-> Because script entrypoints vary, every runner should support `--help` and be runnable from repo root.
-
-```bash
-# (example) list available simulations
-python -m api.scripts.simulation.run --list
-
-# (example) run a simulation from a YAML spec
-python -m api.scripts.simulation.run \
-  --spec api/scripts/simulation/specs/flood_extent.yml \
-  --seed 42 \
-  --out data/processed/simulations
-
-# (example) dry-run to validate config + I/O plan
-python -m api.scripts.simulation.run --spec ... --dry-run
-```
-
-### 🔑 Environment variables (recommended baseline)
-
-```bash
-# paths
-export KFM_DATA_DIR="data"
-export KFM_PROV_DIR="data/prov"
-
-# database (if used)
-export KFM_DB_URL="postgresql://user:pass@localhost:5432/kfm"
-
-# remote sensing (if used)
-export GOOGLE_APPLICATION_CREDENTIALS="/path/to/service-account.json"
-```
-
----
-
-## 🧱 Folder conventions
-
-Suggested internal layout (adapt as needed, but keep it consistent):
+> This is the **intended** structure. If your repo differs, keep the *roles* consistent even if filenames shift.
 
 ```text
-api/scripts/simulation/
-├─ 📄 README.md                           ✅ (you are here)
-├─ 🐍 run.py                              🚀 main dispatcher (recommended)
-├─ 🐍 run_simulation.py                   🚀 alternate dispatcher name (if preferred)
-├─ 🗂️ registry.yaml                       🧭 "simulation_name" → module entrypoint
-├─ 📂 specs/                              🧾 YAML/JSON run specifications (inputs/params/outputs)
-├─ 📂 models/                             🧠 model implementations (pure functions where possible)
-├─ 📂 adapters/                           🔌 PostGIS • Neo4j • EarthEngine • file I/O wrappers
-├─ 📂 schemas/                            📐 JSONSchema • Pydantic validation models
-├─ 📂 notebooks/                          📓 exploratory work (keep outputs out of git)
-├─ 📂 tests/                              ✅ unit • golden • regression tests
-└─ 📂 utils/                              🧰 logging • hashing • deterministic IDs
+api/
+└─ scripts/
+   └─ simulation/
+      ├─ README.md                 👈 you are here
+      ├─ scenarios/                🧾 scenario YAML/JSON (human-authored)
+      ├─ schemas/                  📐 JSON Schemas for scenario + manifest + metadata
+      ├─ models/                   🧠 adapters/wrappers around simulation engines
+      ├─ postprocess/              🧽 normalize outputs (GeoTIFF/COG, GeoJSON, parquet, etc.)
+      ├─ validators/               ✅ preflight checks + plausibility rules
+      ├─ runners/                  🏃 CLI + orchestration (deterministic runner)
+      └─ examples/                 🧪 minimal reproducible example scenarios
 ```
-
-> [!IMPORTANT]
-> Keep **domain math** in `models/` and keep **side effects** (DB/network/filesystem) in `adapters/`. This makes verification + testing dramatically easier (and makes provenance cleaner).
 
 ---
 
-## 🧾 Run outputs, metadata, and provenance
+## ⚡ Quickstart
 
-### 🆔 Run IDs
+> Because repo tooling varies (Poetry/uv/pip/conda), keep these steps aligned with your project’s standard Python workflow.
 
-Every execution produces a `run_id` (UUID or deterministic hash). A run is a **folder**:
+1) **Pick a scenario**
+- Start from `scenarios/demo.yaml` (or create one from the template below).
 
-```text
-data/processed/simulations/<simulation_name>/<run_id>/
-├─ 📂 outputs/…            📦 primary artifacts (rasters • vectors • tables • tiles)
-├─ 📄 metrics.json         📈 numeric results + KPIs (machine-friendly)
-├─ 📂 plots/…              🖼️ charts/figures for humans (PNGs/SVGs)
-├─ 📄 manifest.yaml        🧾 run manifest (inputs • params • seed • env • hashes)
-├─ 📄 stac-item.json       🛰️ STAC Item (spatial/temporal + asset links)
-├─ 📄 dcat.json            🗂️ DCAT Dataset/Distribution metadata
-└─ 📄 prov.jsonld          🧬 PROV-O lineage (JSON-LD)
-```
+2) **Run in dry-run mode first**
+- Validate config
+- Resolve inputs
+- Print intended outputs
+- No writes / no DB mutation
 
-### 📦 Required artifacts
+3) **Run for real**
+- Generate outputs into `data/processed/...`
+- Generate metadata into `data/stac/...`, `data/prov/...`
+- Write a run manifest (`run.json`)
+- Optionally generate a “graph diff patch” for Neo4j updates (apply separately)
 
-At minimum, a run should emit:
-
-- `manifest.yaml` 🧾  
-  - spec hash
-  - git commit (if available)
-  - python env / lockfile reference
-  - seed + RNG details
-  - input dataset fingerprints (checksums, versions)
-- `prov.jsonld` 🧬  
-  - **PROV** graph linking inputs → activity → outputs  
-- `stac-item.json` 🛰️ (for geospatial assets, or STAC-like items for non-geo evidence)
-- `dcat.json` 🗂️ (dataset-level catalog metadata where applicable)
-
-KFM’s documentation explicitly calls out keeping **raw / processed / provenance** separated and maintaining **STAC/DCAT/PROV bundles** for reproducibility.  
-<!-- Data folder raw/processed/prov and STAC/DCAT/PROV:  -->
-
-### 🧪 MCP experiment log (recommended)
-
-When runs represent “experiments,” also write a record under:
-
-```text
-mcp/runs/<run_id>/
-├─ hypothesis.md
-├─ spec.snapshot.yml
-├─ notes.md
-└─ results.summary.md
-```
-
-This aligns with the project’s MCP discipline around repeatability, review, and consistent research documentation.  
-<!-- MCP discipline: peer review + reproducibility guidance: :contentReference[oaicite:5]{index=5} -->
+4) **Publish via PR**
+- Commit artifacts + metadata
+- Open PR with run summary
 
 ---
 
-## 🧠 Simulation contract
+## 🧩 Scenario spec
 
-### Input spec (example)
+A scenario should be **human-readable** and **diff-friendly**.
+
+### Minimal example (YAML)
 
 ```yaml
-simulation:
-  name: flood_extent
-  version: "0.3.0"
-  description: "Estimate flood extent under scenario X"
+id: sim.kfm.demo.drought_sweep.v1
+title: "Drought severity sweep (demo)"
+description: >
+  Demonstration scenario that perturbs precipitation inputs and measures
+  downstream risk indices.
+
+clock:
+  mode: fixed
+  datetime_utc: "2026-01-01T00:00:00Z"   # fixed clock to ensure determinism
+
+seed:
+  rng: 1337                              # global seed for stochastic components
 
 inputs:
-  aoi:
-    type: geojson
-    path: data/processed/aoi/kansas_county.geojson
-  dem:
-    type: raster
-    path: data/raw/elevation/dem_cog.tif
-  hydro:
-    type: table
-    path: data/raw/hydro/streamflow.parquet
+  - name: precip_timeseries
+    kind: stac_item
+    uri: "stac://collections/precip/items/precip_ks_1980_2025"
+  - name: landcover
+    kind: file
+    uri: "data/processed/landcover/ks_landcover_2024.tif"
 
-parameters:
-  return_period_years: 100
-  roughness_n: 0.035
-  method: "monte_carlo"
-  n_samples: 1000
-
-runtime:
-  seed: 42
-  threads: 8
-  time_limit_s: 900
+model:
+  name: hydrology_proxy
+  version: "0.1.0"
+  parameters:
+    severity_scale: [0.8, 0.9, 1.0, 1.1, 1.2]
+    aggregation: "monthly"
 
 outputs:
-  write_geojson: true
-  write_cog: true
-  write_summary_table: true
+  base_dir: "data/processed/simulation/"
+  products:
+    - name: drought_risk_index
+      format: geotiff_cog
+      crs: "EPSG:4326"
+    - name: run_summary
+      format: parquet
 ```
 
-### Output contract (minimum)
+### Recommended: keep schemas close ✅
+Store JSON Schema(s) in `schemas/` and validate scenarios before any compute.
 
-A successful run should return (to API or CLI):
+---
+
+## 📦 Outputs
+
+A simulation run should output **datasets + metadata + provenance**.
+
+| Artifact | Location (recommended) | Why it matters |
+|---|---|---|
+| Primary output datasets (rasters, vectors, tables) | `data/processed/simulation/<run_id>/...` | used by the map + analytics |
+| Run manifest (`run.json`) | `data/processed/simulation/<run_id>/run.json` | reproducibility “receipt” |
+| STAC Item(s)/Collection | `data/stac/items/...` and/or `data/stac/collections/...` | geospatial catalog + discovery |
+| PROV bundle | `data/prov/<run_id>/prov.json` (or `.ttl`) | provenance graph for audit |
+| Optional graph patch | `data/processed/simulation/<run_id>/graph_patch.json` | controlled Neo4j updates |
+
+### Run manifest fields (minimum)
 
 ```json
 {
-  "run_id": "2026-01-12T...-uuid",
-  "simulation_name": "flood_extent",
-  "status": "completed",
-  "outputs": [
-    {"type": "raster", "path": "data/processed/simulations/.../flood_extent_cog.tif"},
-    {"type": "vector", "path": "data/processed/simulations/.../flood_polygon.geojson"},
-    {"type": "table",  "path": "data/processed/simulations/.../summary.parquet"}
-  ],
-  "metadata": {
-    "seed": 42,
-    "duration_s": 12.31,
-    "warnings": []
-  }
+  "run_id": "sim.kfm.demo.drought_sweep.v1__2026-01-01T00-00-00Z__abc1234",
+  "git_commit": "abc1234",
+  "clock": "2026-01-01T00:00:00Z",
+  "inputs": [{"name": "precip_timeseries", "ref": "stac://..."}],
+  "parameters": {"severity_scale": [0.8, 0.9, 1.0]},
+  "outputs": [{"name": "drought_risk_index", "path": "data/processed/..."}],
+  "checksums": {"data/processed/.../file.tif": "sha256:..."}
 }
 ```
 
-> [!TIP]
-> The *contract* (schemas) should also live in `contracts/` when results are exposed via API, to keep server/client aligned.  
-> <!-- Repo structure expects contracts and shared schemas: :contentReference[oaicite:6]{index=6} -->
+---
+
+## 🧾 Reproducibility contract
+
+> Treat this checklist as a “Definition of Done” for simulation scripts.
+
+- [ ] **Fixed clock** supported (no “now()” drifting) ⏱️  
+- [ ] **Global seed** supported (document RNG + seed) 🎲  
+- [ ] **Pin dependencies** (lockfile + container image tag if used) 📌  
+- [ ] **Record commit hash** in run manifest 🧬  
+- [ ] **Record exact input versions** (STAC IDs, file hashes, DB snapshots) 🧾  
+- [ ] **Record output hashes** (sha256) 🔐  
+- [ ] **Write STAC + PROV** alongside outputs 🧭  
+- [ ] **Dry-run mode** exists (validate without writes) 🧯  
+- [ ] **Idempotent outputs** (re-run doesn’t corrupt state) ♻️  
+- [ ] **All side effects are explicit** (no “hidden” DB writes) 🚫🕳️
 
 ---
 
-## ✅ Verification, validation, and uncertainty
+## 🧪 Verification & validation
 
-KFM simulation outputs are only as credible as their V&V. The NASA-grade modeling guidance emphasizes:
-- clear model purpose
-- verification + validation
-- uncertainty quantification (UQ)
-- sensitivity analysis and careful Monte Carlo use  
-<!-- NASA-grade modeling/simulation + VVUQ + Monte Carlo:  -->
+KFM aims for high-trust simulation: correctness checks, not just “it ran”.
 
-### ✅ Minimum V&V checklist (per simulation)
+### Levels of validation ✅
+- **Schema validation**: scenario + manifest + STAC JSON schema
+- **Unit tests**: deterministic components, converters, validators
+- **Golden tests**: tiny fixtures with fixed expected outputs
+- **Plausibility checks**: ranges, monotonicity, conservation constraints (where applicable)
+- **Sensitivity analysis**: confirm expected directional changes
+- **Calibration** (optional): fit parameters to historical data and record the method
 
-- [ ] **Unit tests** for model core (`models/`)
-- [ ] **Golden test** (small fixed dataset + seed → stable outputs)
-- [ ] **Regression test** (new changes don’t shift outputs beyond tolerance)
-- [ ] **Calibration** notes: what was tuned, against what, and why
-- [ ] **Sensitivity sweep** for at least top 3 parameters
-- [ ] **Uncertainty report**:
-  - seeds / distributions
-  - confidence intervals or posterior intervals
-  - caveats + failure modes
-
-### 📈 Statistical hygiene (don’t skip)
-
-Use standard regression + experimental design guardrails:
-- validate assumptions (residuals, heteroscedasticity, outliers)
-- avoid “optional stopping” / p-hacking patterns
-- document multiple comparisons if doing many scenario tests  
-<!-- Regression diagnostics + pitfalls:  -->
-
-### 🧠 Bayesian updates (when appropriate)
-
-Bayesian workflows can be ideal for incremental evidence updates, posterior predictive checks, and uncertainty reporting.  
-<!-- Bayesian update framing:  -->
+📚 Recommended references inside the repo:
+- NASA-grade modeling & simulation concepts:  
+  - [`Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`](<../../../Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf>)
+- Regression + diagnostics (for calibration and residual checks):  
+  - [`regression-analysis-with-python.pdf`](<../../../regression-analysis-with-python.pdf>)  
+  - [`Regression analysis using Python - slides-linear-regression.pdf`](<../../../Regression analysis using Python - slides-linear-regression.pdf>)
+- Statistics + experimental design (scenario sweeps / DOE):  
+  - [`Understanding Statistics & Experimental Design.pdf`](<../../../Understanding Statistics & Experimental Design.pdf>)
+- Bayesian updating (uncertainty & posterior inference):  
+  - [`think-bayes-bayesian-statistics-in-python.pdf`](<../../../think-bayes-bayesian-statistics-in-python.pdf>)
+- Exploratory diagnostics & visualization:  
+  - [`graphical-data-analysis-with-r.pdf`](<../../../graphical-data-analysis-with-r.pdf>)
 
 ---
 
-## 🛰️ Geospatial & remote-sensing patterns
+## 🧱 Adding a new simulation
 
-### 🗺️ PostGIS / pgRouting
+### Step-by-step 🛠️
+1) **Define the “thing you simulate”**
+- What’s the state?
+- What’s the timestep (if any)?
+- What are the inputs and outputs?
 
-When simulations depend on networks, routing, or spatial selection, prefer **PostGIS-side primitives** and export GeoJSON cleanly.
+2) **Create an adapter in `models/`**
+- wrap external engines (SWAT, Mesa, custom PDE solver, etc.)
+- isolate engine-specific quirks behind a stable interface
 
-- Use PostGIS for transforms (`ST_Transform`) and GeoJSON serialization (`ST_AsGeoJSON`)  
-- For routing, pgRouting’s Dijkstra output can be converted to GeoJSON segments  
-<!-- pgRouting + GeoJSON patterns: :contentReference[oaicite:12]{index=12} -->
-<!-- PostGIS export & feature collection assembly: :contentReference[oaicite:13]{index=13} -->
+3) **Define a scenario schema**
+- keep scenario files diff-friendly
+- validate early
 
-> [!NOTE]
-> Keep CRS handling explicit. If the output is intended for web maps, emit WGS84 (EPSG:4326) GeoJSON or tiles.
+4) **Implement post-processing**
+- normalize geospatial output formats (COG, GeoParquet, GeoJSON)
+- attach CRS + bounds + timestamps
 
-### ☁️ Earth Engine (GEE)
+5) **Emit boundary artifacts**
+- STAC item(s)/collection
+- PROV bundle
+- run manifest
 
-For remote-sensing driven simulations:
-- keep Earth Engine operations server-side as long as possible
-- avoid client-side `.getInfo()` on big collections
-- export artifacts (GeoTIFF/COG, tables) and catalog them like any other evidence  
-<!-- GEE scale/exports patterns:  -->
+6) **Add tests**
+- unit tests for adapters + converters
+- “golden run” with small fixtures
 
-### 🧩 Map design + storytelling handoff
-
-Simulation outputs should be readable, not just correct:
-- label units
-- include uncertainty overlays
-- choose symbolization intentionally (visual hierarchy matters)  
-<!-- Map design principles + GIS visualization: :contentReference[oaicite:16]{index=16} -->
-
----
-
-## ⚡ Performance patterns
-
-### 🧠 Practical defaults
-
-- 🔁 cache intermediate results (especially expensive raster ops)
-- 🧩 chunk by AOI tiles or time windows
-- 🧮 vectorize math (NumPy), avoid Python loops in hot paths
-- 🧵 parallelize at coarse level (per tile / per sample), not inside tiny loops
-- 🗄️ push heavy spatial filtering into PostGIS + indexed geometries
-  - use `EXPLAIN (ANALYZE, BUFFERS)` to understand query plans  
-  <!-- Query plan analysis:  -->
-
-### 🚀 Advanced (optional): streaming + compiled execution ideas
-
-For large, graph-heavy, or streaming workloads, modern scalable data engines emphasize:
-- push-based operator pipelines
-- morsel-driven parallelism
-- adaptive / JIT compilation to hide memory latency  
-<!-- Push-based, morsel-driven, and adaptive compilation: :contentReference[oaicite:18]{index=18}:contentReference[oaicite:19]{index=19} -->
-
-> [!TIP]
-> You don’t need to implement JIT compilers here 😄 — but you *can* adopt the principles: chunking, pipelining, and minimizing materialization.
+### Naming convention (recommended) 🏷️
+- **Scenario ID**: `sim.<domain>.<model>.<scenario>.v#`
+- **Run ID**: `<scenario_id>__<fixed_clock>__<git_short_sha>`
 
 ---
 
-## 🛡️ Security, governance, and ethics
+## 🚀 Performance & scaling
 
-### 🔐 Input safety
+Simulations become expensive fast. Prefer patterns that scale:
 
-- Treat run specs as **untrusted input** when invoked via API.
-- Validate with schemas; never `eval()` configs.
-- Restrict file access to known directories.
-- Use parameterized DB queries (avoid injection risks).  
-<!-- SQL injection risk described (without payload): :contentReference[oaicite:20]{index=20} -->
+- Chunk work by **space** (tiles) or **time** (windows)
+- Stream outputs rather than building giant in-memory arrays
+- Write intermediates to `data/work/` (delete-safe)
+- Keep “big compute” separate from “metadata writing” so retries are safe
 
-### 🧭 Governance & provenance
-
-- Every run should be traceable: *what data, what parameters, what code version, what seed*.
-- Keep outputs and catalogs aligned with the KFM evidence pipeline (STAC/DCAT/PROV).  
-<!-- Pipeline + evidence artifacts + provenance: :contentReference[oaicite:21]{index=21} -->
-
-### 🧑‍🤝‍🧑 Human-centered & legal awareness
-
-KFM simulations often influence narratives and interpretations. Keep them:
-- transparent
-- explainable
-- respectful of privacy and communities
-
-Digital Humanism and related scholarship emphasize the social context and the non-neutrality of computational systems.  
-<!-- Digital humanism context: :contentReference[oaicite:23]{index=23} -->
-<!-- AI law / conceptual framing: :contentReference[oaicite:24]{index=24} -->
-<!-- Mobile mapping & cultural/political framing:  -->
+📚 For deeper performance thinking (task pools, chunking, compilation-based execution ideas):  
+- [`Scalable Data Management for Future Hardware.pdf`](<../../../Scalable Data Management for Future Hardware.pdf>)
 
 ---
 
-## 🧩 Add a new simulation
+## 🗺️ Visualization handoff
 
-1) **Create a module**
-- `models/<name>.py` for core logic
-- `adapters/<name>_io.py` for I/O glue
+Simulation outputs should be easy for the UI layer to consume:
 
-2) **Define a spec + schema**
-- `specs/<name>.yml`
-- `schemas/<name>.schema.json` (or Pydantic model)
+- **Raster**: GeoTIFF / Cloud-Optimized GeoTIFF (COG) for time slices
+- **Vector**: GeoJSON (small) or GeoParquet (big)
+- **3D/advanced**: mesh formats or derived tilesets when needed
 
-3) **Register it**
-- add to `registry.yaml` (name → entrypoint)
-
-4) **Write tests**
-- `tests/test_<name>_unit.py`
-- `tests/test_<name>_golden.py`
-
-5) **Emit provenance + catalogs**
-- write `manifest.yaml`, `prov.jsonld`, `stac-item.json`, `dcat.json`
-
-6) **Document it**
-- add a short section below in this README (or a `docs/<name>.md`)
-
-> [!TIP]
-> If you’re feeling architecture pain, revisit modularity + plugin recommendations from the project audit docs.  
-> <!-- Modularity/plugin architecture emphasis: :contentReference[oaicite:26]{index=26} -->
+📚 UI/visualization references included in the repo:
+- WebGL fundamentals (3D rendering concepts):  
+  - [`webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`](<../../../webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf>)
+- Map design & cartographic communication:  
+  - [`making-maps-a-visual-guide-to-map-design-for-gis.pdf`](<../../../making-maps-a-visual-guide-to-map-design-for-gis.pdf>)  
+  - [`Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`](<../../../Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf>)
+- Responsive UI patterns (scenario toggles, dashboards):  
+  - [`responsive-web-design-with-html5-and-css3.pdf`](<../../../responsive-web-design-with-html5-and-css3.pdf>)
+- Image/export considerations:  
+  - [`compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`](<../../../compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf>)
 
 ---
 
-## 🧰 Troubleshooting
+## 🔐 Security
 
-**“My run produced files but nothing shows up in the UI.”**  
-✅ Ensure you created/updated:
-- STAC/DCAT entries (`data/prov/...`)
-- any required graph ingestion step (if UI relies on graph edges)
+Simulation scripts touch big data + infrastructure—treat them like production code.
 
-**“GeoJSON renders wrong / flipped.”**  
-✅ Confirm CRS:
-- store analysis in projected CRS when needed
-- export for web in EPSG:4326
+- ✅ Use environment variables for credentials (never commit secrets)
+- ✅ Validate all file paths / URIs (no arbitrary writes)
+- ✅ Avoid executing untrusted code/config
+- ✅ Log safely (no tokens/keys in logs)
+- ✅ Apply least-privilege DB roles
 
-**“Earth Engine export is slow / failing.”**  
-✅ Reduce region size, avoid client-side evaluation, export in chunks, and prefer server-side reducers.  
-<!-- GEE scaling reminders:  -->
+Security references included in the repo (use ethically; defensive mindset):
+- [`ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`](<../../../ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf>)
+- [`Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`](<../../../Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf>)
 
 ---
 
-## 📚 Reference shelf
+## 📚 Project library
 
 <details>
-<summary><b>📚 Project library used to shape this simulation README (click to expand)</b></summary>
+<summary>📖 Click to expand: all project files referenced by this simulation module</summary>
 
-### Core KFM docs 🧭
-- **Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx** — overall architecture, API + data/provenance conventions.  
-  <!-- :contentReference[oaicite:28]{index=28} -->
-- **🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx** — future modeling/simulation directions & integration ideas.  
-  <!--  -->
-- **MARKDOWN guide for GPT or humans v13.txt** — repo structure + pipeline ordering + “analysis artifacts are evidence” rule.  
-  <!-- :contentReference[oaicite:31]{index=31} -->
-- **Scientific Method _ Research _ Master Coder Protocol Documentation.pdf** — MCP experiment discipline & reproducibility habits.  
-  <!-- :contentReference[oaicite:32]{index=32} -->
-- **Kansas Frontier Matrix Design Audit – Gaps and Enhancement Opportunities.pdf** — modularity / plugin architecture / governance improvements.  
-  <!-- :contentReference[oaicite:33]{index=33} -->
-- **Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf** — STAC-like evidence catalog + geospatial publishing patterns.  
-  <!-- :contentReference[oaicite:34]{index=34} -->
+### 🧭 Core KFM docs
+- [`Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`](<../../../Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx>)
+- [`🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`](<../../../🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx>)
 
-### Modeling, simulation, and uncertainty 🧪
-- **Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf** — V&V + UQ + Monte Carlo discipline.  
-  <!--  -->
-- **Understanding Statistics & Experimental Design.pdf** — experimental design pitfalls & statistical rigor.  
-  <!--  -->
-- **regression-analysis-with-python.pdf** + **Regression analysis using Python - slides-linear-regression.pdf** — regression diagnostics and applied workflows.  
-  <!-- :contentReference[oaicite:38]{index=38} -->
-- **think-bayes-bayesian-statistics-in-python.pdf** — Bayesian updating patterns.  
-  <!--  -->
-- **graphical-data-analysis-with-r.pdf** — exploratory diagnostics mindset.  
-  <!-- (not directly cited above; used as reference for EDA conventions) -->
+### 🧪 Modeling / simulation rigor
+- [`Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`](<../../../Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf>)
 
-### Geospatial + visualization 🗺️
-- **python-geospatial-analysis-cookbook.pdf** — PostGIS/pgRouting → GeoJSON flows.  
-  <!-- :contentReference[oaicite:40]{index=40} -->
-- **PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf** — indexing + planning reference (Postgres fundamentals).  
-- **making-maps-a-visual-guide-to-map-design-for-gis.pdf** — map design principles for communication.  
-  <!-- :contentReference[oaicite:41]{index=41} -->
-- **Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf** — mobile mapping is cultural/political; consider implications.  
-  <!--  -->
-- **webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf** — 3D rendering foundations for simulation visualization.
-- **responsive-web-design-with-html5-and-css3.pdf** — responsive presentation of results.
+### 📈 Stats / ML / inference (calibration + uncertainty)
+- [`Understanding Statistics & Experimental Design.pdf`](<../../../Understanding Statistics & Experimental Design.pdf>)
+- [`regression-analysis-with-python.pdf`](<../../../regression-analysis-with-python.pdf>)
+- [`Regression analysis using Python - slides-linear-regression.pdf`](<../../../Regression analysis using Python - slides-linear-regression.pdf>)
+- [`think-bayes-bayesian-statistics-in-python.pdf`](<../../../think-bayes-bayesian-statistics-in-python.pdf>)
+- [`graphical-data-analysis-with-r.pdf`](<../../../graphical-data-analysis-with-r.pdf>)
 
-### Remote sensing ☁️🛰️
-- **Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf** — scalable remote sensing workflows.  
-  <!--  -->
+### 🌍 Geospatial + remote sensing
+- [`python-geospatial-analysis-cookbook.pdf`](<../../../python-geospatial-analysis-cookbook.pdf>)
+- [`PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`](<../../../PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf>)
+- [`Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`](<../../../Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf>)
 
-### Data engineering & interoperability 🧱
-- **Scalable Data Management for Future Hardware.pdf** — pipelining, chunking, adaptive compilation concepts.  
-  <!-- :contentReference[oaicite:44]{index=44} -->
-- **Data Spaces.pdf** — interoperability + federation mental model for cross-org data sharing.  
-  <!-- :contentReference[oaicite:45]{index=45} -->
+### 🗺️ Cartography / visualization / UI
+- [`making-maps-a-visual-guide-to-map-design-for-gis.pdf`](<../../../making-maps-a-visual-guide-to-map-design-for-gis.pdf>)
+- [`Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`](<../../../Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf>)
+- [`webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`](<../../../webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf>)
+- [`responsive-web-design-with-html5-and-css3.pdf`](<../../../responsive-web-design-with-html5-and-css3.pdf>)
+- [`compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`](<../../../compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf>)
 
-### Ethics, governance, and security 🛡️
-- **Introduction to Digital Humanism.pdf** — human-centered computing context.  
-  <!-- :contentReference[oaicite:46]{index=46} -->
-- **On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf** — legal framing around ML.  
-  <!-- :contentReference[oaicite:47]{index=47} -->
-- **ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf** + **Gray Hat Python (2009).pdf** — security awareness references (defense-focused).
-- **S-T programming Books.pdf** — example security pitfalls (SQL injection awareness).  
-  <!-- :contentReference[oaicite:48]{index=48} -->
+### 🧠 Systems theory / autonomy / human-centered + governance
+- [`Principles of Biological Autonomy - book_9780262381833.pdf`](<../../../Principles of Biological Autonomy - book_9780262381833.pdf>)
+- [`Introduction to Digital Humanism.pdf`](<../../../Introduction to Digital Humanism.pdf>)
+- [`On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`](<../../../On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf>)
+- [`Data Spaces.pdf`](<../../../Data Spaces.pdf>)
 
-### Advanced/adjacent theory 🧠
-- **Spectral Geometry of Graphs.pdf** — graph Laplacians & spectral methods (useful for network simulations).  
-  <!-- :contentReference[oaicite:49]{index=49} -->
-- **Generalized Topology Optimization for Structural Design.pdf** — optimization patterns for structural simulations.  
-  <!-- :contentReference[oaicite:50]{index=50} -->
-- **Principles of Biological Autonomy - book_9780262381833.pdf** — autonomy and systems thinking backdrop.
-- **compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf** — practical image/raster format tradeoffs.
+### 🏗️ Optimization / graphs / advanced math (optional simulation modules)
+- [`Generalized Topology Optimization for Structural Design.pdf`](<../../../Generalized Topology Optimization for Structural Design.pdf>)
+- [`Spectral Geometry of Graphs.pdf`](<../../../Spectral Geometry of Graphs.pdf>)
 
-### Programming reference bundles 📦
-- **A programming Books.pdf**
-- **B-C programming Books.pdf**  
-  <!-- :contentReference[oaicite:51]{index=51} -->
-- **D-E programming Books.pdf**
-- **F-H programming Books.pdf**  
-  <!-- :contentReference[oaicite:52]{index=52} -->
-- **I-L programming Books.pdf**
-- **M-N programming Books.pdf**
-- **O-R programming Books.pdf**  
-  <!-- :contentReference[oaicite:53]{index=53} -->
-- **S-T programming Books.pdf**  
-  <!-- :contentReference[oaicite:54]{index=54} -->
-- **U-X programming Books.pdf**
-- **Deep Learning for Coders with fastai and PyTorch** — ML implementation reference (note: file access may vary in tooling).
+### ⚙️ Concurrency / distributed systems (engineering reference)
+- [`concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`](<../../../concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf>)
+- [`Scalable Data Management for Future Hardware.pdf`](<../../../Scalable Data Management for Future Hardware.pdf>)
+
+### 🔐 Security references (defensive use only)
+- [`ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`](<../../../ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf>)
+- [`Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`](<../../../Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf>)
+
+### 📦 Programming reference compilations (handy when implementing adapters/runners)
+- [`A programming Books.pdf`](<../../../A programming Books.pdf>)
+- [`B-C programming Books.pdf`](<../../../B-C programming Books.pdf>)
+- [`D-E programming Books.pdf`](<../../../D-E programming Books.pdf>)
+- [`F-H programming Books.pdf`](<../../../F-H programming Books.pdf>)
+- [`I-L programming Books.pdf`](<../../../I-L programming Books.pdf>)
+- [`M-N programming Books.pdf`](<../../../M-N programming Books.pdf>)
+- [`O-R programming Books.pdf`](<../../../O-R programming Books.pdf>)
+- [`S-T programming Books.pdf`](<../../../S-T programming Books.pdf>)
+- [`U-X programming Books.pdf`](<../../../U-X programming Books.pdf>)
+
+### 🧠 Deep learning (note)
+- [`Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf`](<../../../Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf>)
 
 </details>
 
 ---
 
-### ✅ One-line principle (print this on the lab wall 🧷)
+## ✅ Suggested PR template (for publishing simulation outputs)
 
-> **A simulation that can’t be reproduced, validated, and explained is not an artifact — it’s an anecdote.**
+```markdown
+## Simulation run
+- Scenario ID:
+- Run ID:
+- Git commit:
+- Fixed clock:
+- Seed:
 
+## Inputs
+- [ ] STAC item IDs / dataset versions listed in manifest
+
+## Outputs
+- [ ] Output datasets written to data/processed/...
+- [ ] STAC item(s) created/updated
+- [ ] PROV bundle created/updated
+- [ ] Run manifest attached
+
+## Validation
+- [ ] Schema validation passed
+- [ ] Golden tests / smoke tests passed
+- [ ] Plausibility checks passed
+
+## Notes
+- Assumptions:
+- Known limitations:
+- Next runs to consider:
+```
+
+---
+
+### 🧷 TL;DR
+If it’s a simulation, it should be **scenario-driven**, **deterministic**, **artifact-backed**, and **auditable**. 🧪📦🧾
 
