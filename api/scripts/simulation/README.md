@@ -51,13 +51,13 @@ KFM’s pipeline is intentionally **ordered**: raw → processed → catalogs �
 
 ```mermaid
 flowchart LR
-  A[📥 data/raw] --> B[🧼 ETL / normalize]
-  B --> C[📦 data/processed]
-  C --> D[🧾 data/prov<br/>STAC/DCAT/PROV]
-  D --> E[🕸️ Graph build<br/>(Neo4j/relationships)]
-  E --> F[🛰️ APIs<br/>(FastAPI / contracts)]
-  F --> G[🗺️ UI Maps / 3D / Stories]
-  C --> S[🧪 Simulation scripts<br/>this folder]
+  A["📥 data/raw"] --> B["🧼 ETL • normalize"]
+  B --> C["📦 data/processed"]
+  C --> D["🧾 data/prov<br/>STAC • DCAT • PROV"]
+  D --> E["🕸️ Graph build<br/>Neo4j • relationships"]
+  E --> F["🛰️ APIs<br/>FastAPI • contracts"]
+  F --> G["🗺️ UI maps • 3D • stories"]
+  C --> S["🧪 Simulation scripts<br/>this folder"]
   S --> C
   S --> D
 ```
