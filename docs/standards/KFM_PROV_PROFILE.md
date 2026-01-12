@@ -137,12 +137,12 @@ KFM follows a strict promotion rulebook (**KFM‑MDP**) with **no shortcuts**:
 
 ```mermaid
 flowchart LR
-  A[🧾 sources manifest] --> B[📥 raw ingest]
-  B --> C[🗄️ processed normalize]
-  C --> D[✅ validate]
-  D --> E[🛰️ catalog publish (STAC/DCAT)]
-  E --> F[🧬 provenance publish (PROV)]
-  F --> G[🕸️ graph register]
+  A["sources manifest"] --> B["raw ingest"];
+  B --> C["processed normalize"];
+  C --> D["validate"];
+  D --> E["catalog publish STAC DCAT"];
+  E --> F["provenance publish PROV"];
+  F --> G["graph register"];
 ```
 
 ### ✅ Provenance responsibilities per stage
