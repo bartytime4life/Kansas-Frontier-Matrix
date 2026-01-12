@@ -49,15 +49,16 @@ In KFM, “optimization” is **not** just “find the best number.” It’s:
 
 ## 🧬 Optimization lifecycle
 
+
 ```mermaid
 flowchart LR
-  A[Inputs\n(datasets + bounds + constraints)] --> B[Plan\n(objective + metrics + budget)]
-  B --> C[Search\n(grid / random / bayes / gradient / evo)]
-  C --> D[Evaluate\n(simulation / query / pipeline / UI perf)]
-  D --> E[Artifacts\nmetrics + plots + prov + stac]
-  E --> F{Policy + QA Gate}
-  F -- pass ✅ --> G[Publish\nPR / catalog entry / worker job]
-  F -- fail ❌ --> H[Quarantine\nreport + no publish]
+  A["Inputs<br/>(datasets, bounds, constraints)"] --> B["Plan<br/>(objective, metrics, budget)"]
+  B --> C["Search<br/>(grid / random / bayes / gradient / evo)"]
+  C --> D["Evaluate<br/>(simulation / query / pipeline / UI perf)"]
+  D --> E["Artifacts<br/>(metrics, plots, prov, stac)"]
+  E --> F{"Policy + QA Gate"}
+  F -->|pass| G["Publish<br/>(PR / catalog entry / worker job)"]
+  F -->|fail| H["Quarantine<br/>(report + no publish)"]
 ```
 
 ---
@@ -69,19 +70,19 @@ flowchart LR
 Recommended structure (adjust to what already exists in the repo):
 
 ```text
-api/scripts/optimization/
-├─ README.md                      👈 you are here
-├─ _shared/                        ♻️ common helpers
-│  ├─ config.py                    (load/validate config)
-│  ├─ provenance.py                (PROV emission helpers)
-│  ├─ artifacts.py                 (standard output layout)
-│  ├─ metrics.py                   (common metrics + schemas)
-│  └─ io.py                        (dataset fetch, caching, hashing)
-├─ model_calibration/              🧪 tune scientific models
-├─ pipeline_tuning/                🏗️ optimize ETL knobs
-├─ db_query_tuning/                🗄️ PostGIS/Neo4j tuning runs
-├─ map_delivery_tuning/            🗺️ tiling + compression + LOD
-└─ reports/                        📈 plots + summaries
+📂 api/scripts/optimization/
+├─ 📄 README.md                         👈 you are here
+├─ 📂 _shared/                          ♻️ common helpers
+│  ├─ 🐍 config.py                      🔧 load/validate config
+│  ├─ 🧾 provenance.py                  🧬 PROV emission helpers
+│  ├─ 📦 artifacts.py                   🗃️ standard output layout
+│  ├─ 📈 metrics.py                     🧮 common metrics + schemas
+│  └─ 🧰 io.py                          💾 dataset fetch, caching, hashing
+├─ 📂 model_calibration/                🧪 tune scientific models
+├─ 📂 pipeline_tuning/                  🏗️ optimize ETL knobs
+├─ 📂 db_query_tuning/                  🗄️ PostGIS/Neo4j tuning runs
+├─ 📂 map_delivery_tuning/              🗺️ tiling + compression + LOD
+└─ 📂 reports/                          📈 plots + summaries
 ```
 
 ### ✅ Script invariants (non-negotiable)
@@ -180,24 +181,23 @@ Every run should create a **single, self-contained run folder** with:
 Recommended layout:
 
 ```text
-data/work/optimization_runs/<run_id>/
-├─ config.resolved.yaml
-├─ metrics.json
-├─ trials.csv
-├─ best.json
-├─ summary.md
-├─ prov.jsonld
-├─ stac_item.json                 (if producing a dataset artifact)
-├─ dcat_dataset.json              (if publishing to catalog)
-├─ plots/
-│  ├─ convergence.png
-│  ├─ pareto.png
-│  └─ residuals.png
-└─ logs/
-   ├─ run.log
-   └─ otel_trace.json             (optional export)
+📂 data/work/optimization_runs/<run_id>/
+├─ ⚙️ config.resolved.yaml              🧾 resolved run config (exact params)
+├─ 📈 metrics.json                      🧮 metrics bundle (schema-stable)
+├─ 🧪 trials.csv                        🧫 all trials (don’t hide failures)
+├─ 🏆 best.json                          🥇 best params + score snapshot
+├─ 📝 summary.md                        📌 human summary (what/why/results)
+├─ 🧬 prov.jsonld                        🔗 provenance / lineage record
+├─ 🛰️ stac_item.json                     🧾 (if producing a dataset artifact)
+├─ 🧾 dcat_dataset.json                  📚 (if publishing to catalog)
+├─ 📂 plots/                             📊 visuals
+│  ├─ 📉 convergence.png                 ⏱️ score over trials
+│  ├─ 🧩 pareto.png                       🎯 multi-objective frontier
+│  └─ 📈 residuals.png                   🧪 error diagnostics
+└─ 📂 logs/                              🧾 run logs
+   ├─ 📜 run.log                          🧠 console + debug trace
+   └─ 🧵 otel_trace.json                  📡 (optional) OpenTelemetry export
 ```
-
 > **Golden rule 🥇:** If someone can’t reproduce your “best params” from your artifacts, it doesn’t count.
 
 ---
