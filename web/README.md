@@ -16,10 +16,11 @@
   <img alt="Promotion" src="https://img.shields.io/badge/promotion-KFM--MDP%20(staging%E2%86%92validation%E2%86%92publish)-8b5cf6" />
   <img alt="Governance" src="https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-2ea043" />
   <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-blue" />
-  <img alt="Node" src="https://img.shields.io/badge/node-18%2B-brightgreen" />
+  <img alt="Node" src="https://img.shields.io/badge/node-20%2B-brightgreen" />
   <img alt="Docker" src="https://img.shields.io/badge/docker-ready-blue" />
   <img alt="Spatial DB" src="https://img.shields.io/badge/spatial-PostGIS%20%7C%20Neo4j-orange" />
   <img alt="Metadata" src="https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-purple" />
+  <img alt="APIs" src="https://img.shields.io/badge/APIs-OpenAPI%20%7C%20STAC%20API%20(optional)-0ea5e9" />
   <img alt="Maps" src="https://img.shields.io/badge/maps-MapLibre%20%7C%20Cesium%20%7C%203D%20Tiles-teal" />
   <img alt="Packaging" src="https://img.shields.io/badge/packaging-COG%20%7C%20GeoParquet%20%7C%20PMTiles-0ea5e9" />
   <img alt="Automation" src="https://img.shields.io/badge/automation-Watcher%E2%86%92Planner%E2%86%92Executor-black" />
@@ -63,6 +64,8 @@
 - [KFM invariants](#kfm-invariants-non-negotiables-)
 - [Canonical pipeline](#canonical-pipeline-the-only-allowed-order-)
 - [KFM-MDP](#kfm-mdp-managed-data-promotion-no-shortcuts-)
+- [Data products](#data-products-kfm-dpt-and-evidence-bundles-)
+- [Domain coverage](#domain-coverage-what-we-map-and-model-)
 - [Architecture at a glance](#architecture-at-a-glance-)
 - [Repository map](#repository-map-target-shape-)
 - [Quickstart](#quickstart-)
@@ -76,6 +79,7 @@
 - [Contributing](#contributing-)
 - [Roadmap](#roadmap-)
 - [Project reference library](#project-reference-library-all-project-files-)
+- [Glossary](#glossary-)
 - [License](#license-)
 - [Acknowledgements](#acknowledgements-)
 
@@ -126,6 +130,11 @@ It’s designed to:
 - 🧠 power a controlled assistant (“Focus Mode”) that stays **grounded in evidence**  
 
 🎯 **Goal:** Make Kansas-scale spatial truth **searchable**, **mappable**, **auditable**, and **modelable** — from archival scans to satellite-derived datasets.
+
+### What KFM is *not* 🚫
+- 🕵️‍♂️ **Not** a surveillance tool (privacy rules propagate; no “privacy downgrade”).  
+- 🎭 **Not** a vibes engine (claims must bind to evidence).  
+- 🧺 **Not** a dumping ground (ingest requires catalogs + provenance + validation).  
 
 ---
 
@@ -192,11 +201,107 @@ flowchart TB
 ```
 
 ### What “publishable” means ✅
-A dataset is **publishable** only when it has:
+A dataset (or evidence artifact) is **publishable** only when it has:
 - 🗂️ STAC + DCAT records (discovery + spatial/temporal indexing)  
 - 🧬 PROV lineage (raw → work → processed, with tools/params)  
 - 🔐 policy labels (classification/sensitivity) that **propagate**  
 - ✅ validation evidence (checksums, schema validation, geo sanity)  
+
+### Repair, rollback, and “oops” handling 🧯
+KFM treats data like code: mistakes happen — but **repairs must be traceable**.
+- ♻️ **Rollback** is a first-class operation (restore last-good version + keep an audit trail)  
+- 🧾 **Data repairs** should produce a new version with clear PROV lineage (“why” + “how”)  
+- 🪪 **Stable IDs** must never be silently reused or reassigned (stable identifiers are sacred)  
+
+---
+
+<a id="data-products-kfm-dpt-and-evidence-bundles-"></a>
+
+## Data products (KFM-DPT) and evidence bundles 📦🧾
+
+KFM ships *products*, not loose files. Each product is an **evidence bundle**:  
+**asset(s) + metadata + lineage + policy labels + checksums**.
+
+### Standard product types ✅
+
+| Product type | Preferred format(s) | Typical use | Required bundles |
+|---|---|---|---|
+| 🧊 Raster layer | **COG** (GeoTIFF) | imagery, indices, gridded models | STAC item + PROV + policy + hashes |
+| 🧱 Vector analytics | **GeoParquet** | analysis, joins, ML features | STAC item + DCAT distribution + PROV |
+| 🗺️ Vector tiles | **PMTiles** | fast map rendering | STAC item + distribution + provenance |
+| 🧾 Documents | PDF, images (PNG/JPEG) | archival evidence, reports | STAC item + citations + provenance |
+| 🧪 Experiment output | plots, tables, notebooks | reproducible results | STAC item + run receipt + model card |
+| 🎬 Story Node | Markdown/YAML + assets | governed narrative | sources.yml + catalog refs + policy |
+
+> [!TIP]
+> A “layer” isn’t real in KFM until it’s **cataloged** and **provable**. 🧾✅
+
+### Evidence bundle minimums (copy/paste checklist) 🧷
+- [ ] stable dataset + version slug (`<domain>.<topic>.<version>`)  
+- [ ] STAC (collection + item)  
+- [ ] DCAT dataset/distributions (when appropriate)  
+- [ ] PROV bundle (JSON-LD recommended)  
+- [ ] checksums for every asset (sha256 recommended)  
+- [ ] license + attribution captured in manifests  
+- [ ] policy label set + propagated  
+
+---
+
+<a id="domain-coverage-what-we-map-and-model-"></a>
+
+## Domain coverage (what we map and model) 🌍
+
+KFM is intentionally broad — but always **evidence-grounded** and **auditable**.
+
+<details>
+<summary><strong>🕰️ Historical data & archives</strong></summary>
+
+- 🗺️ historical maps & surveys (georeferenced + time-aware)  
+- 🧾 archival documents, newspapers, letters, policies (citable)  
+- 📷 historic photographs + imagery (place/time linked)  
+- 📅 chronologies + key events (timeline-driven navigation)  
+
+</details>
+
+<details>
+<summary><strong>🏛️ Societal dimensions (people, land, infrastructure)</strong></summary>
+
+- 🧑‍🤝‍🧑 population & demographic change  
+- 🧾 land ownership/use + administrative boundaries  
+- 🚆 infrastructure networks (rails, roads, dams, utilities)  
+- 📊 social & economic indicators (context layers + analysis inputs)  
+
+</details>
+
+<details>
+<summary><strong>🌳🌊 Environmental systems (water, air, hazards, weather)</strong></summary>
+
+- 🌊 watersheds, streams, aquifers, water quality/availability  
+- 🌬️ atmospheric/climate observations and derived products  
+- 🌪️ hazards (tornado tracks, floods, drought, fire) + narratives  
+- 🐾 ecological data (habitat, biodiversity proxies)  
+- ⛅ observed + modeled climate layers (explicitly labeled as “model”)  
+
+</details>
+
+<details>
+<summary><strong>🌾 Agriculture & farming models</strong></summary>
+
+- 🌱 crop + land use history (time series, change detection)  
+- 🧑‍🌾 soils/agronomy, irrigation + water use, farm economics  
+- 🧪 scenario models (yield, sustainability, economics) with uncertainty  
+- 🛰️ precision-ag integration (remote sensing + ground truth)  
+
+</details>
+
+<details>
+<summary><strong>📅 Key events & timeline</strong></summary>
+
+- 🕰️ historic events (settlement, policy, infrastructure, disasters)  
+- 🗞️ contemporary events (carefully governed, evidence-backed)  
+- 🔗 events link to layers + documents + citations (no orphan events)  
+
+</details>
 
 ---
 
@@ -213,45 +318,50 @@ flowchart TB
     B["🛰️ EO / remote sensing"]
     C["📚 PDFs, notes, archives"]
     D["📊 Tables & vectors"]
+    E["📡 Sensors / feeds (optional)<br/>GTFS-RT · IoT · weather"]
   end
 
   subgraph Pipelines["🧰 ETL pipelines (deterministic)"]
-    E["🧼 Normalize + validate"]
-    F["🧭 Geo ops: georef · reproj · tile"]
-    G["🗂️ Emit STAC/DCAT + 🧬 PROV"]
+    F["🧼 Normalize + validate"]
+    G["🧭 Geo ops: georef · reproj · tile"]
+    H["🧾 Doc ops: extract · index · link"]
+    I["🧪 Modeling ops: run · verify · package"]
+    J["🗂️ Emit STAC/DCAT + 🧬 PROV + hashes"]
   end
 
   subgraph Stores["🗄️ Stores"]
-    H["🪣 Object assets<br/>COG · GeoParquet · PMTiles · PDFs"]
-    I["🗃️ Postgres/PostGIS<br/>spatial query + index"]
-    J["🕸️ Graph store<br/>Neo4j optional"]
-    K["🔎 Search index<br/>text/embeddings optional"]
+    K["🪣 Object assets<br/>COG · GeoParquet · PMTiles · PDFs"]
+    L["🗃️ Postgres/PostGIS<br/>spatial query + index"]
+    M["🕸️ Graph store<br/>Neo4j optional"]
+    N["🔎 Search index<br/>text/embeddings optional"]
+    O["📈 Telemetry store<br/>runs · costs · energy (optional)"]
   end
 
   subgraph Boundary["🚪 Governed boundary"]
-    L["📜 Contracted APIs<br/>OpenAPI · GraphQL (optional)"]
-    M["🛡️ Policy engine<br/>OPA-style gates (recommended)"]
+    P["📜 Contracted APIs<br/>OpenAPI · STAC API (optional)"]
+    Q["🛡️ Policy engine<br/>OPA-style gates (recommended)"]
   end
 
   subgraph UX["🌐 Delivery"]
-    N["🗺️ Web UI (MapLibre)"]
-    O["🕰️ Timeline + catalog browser"]
-    P["🧊 3D mode (Cesium + 3D Tiles)"]
-    Q["🎬 Story Nodes"]
-    R["🧠 Focus Mode"]
+    R["🗺️ Web UI (MapLibre)"]
+    S["🕰️ Timeline + catalog browser"]
+    T["🧊 3D mode (Cesium + 3D Tiles)"]
+    U["🎬 Story Nodes"]
+    V["🧠 Focus Mode"]
   end
 
   Sources --> Pipelines --> Stores
-  Stores --> L
-  M --> L
-  L --> N --> O --> Q --> R
-  N --> P
+  Stores --> P
+  Q --> P
+  P --> R --> S --> U --> V
+  R --> T
 ```
 
 ### UX notes (design intent) 🎛️
 - 🗺️ **MapLibre GL JS** is the default 2D engine (offline-friendly with self-hosted tiles)  
 - 🧊 **CesiumJS** is an **optional** 3D mode for stories/layers where terrain and volume matter (3D Tiles)  
 - 🕰️ **Timeline** is first-class: layers can declare time ranges and respond to a time slider (filtering and/or layer swaps)  
+- 🧾 **Provenance overlays** are a feature, not a footnote (users should always see “what am I looking at?”)  
 
 ---
 
@@ -294,6 +404,8 @@ Kansas-Frontier-Matrix/
 │  ├─ 📁 graph/                          🕸️ ontology + ingest + constraints
 │  └─ 📁 server/                         🚪 APIs and services (policy + contracts)
 ├─ 📁 web/                               🌐 UI boundary (MapLibre · Cesium · story layers)
+│  ├─ 📁 viewers/                        🗺️ map viewers + UI controls (MapLibre)
+│  └─ 📁 story_nodes/                    🎬 story node assets + configs (optional mirror)
 ├─ 📁 tools/                             🛠️ validators · catalog QA · prov helpers
 ├─ 📁 scripts/                           🧰 safe-by-default CLI wrappers
 ├─ 📁 mcp/                               🧪 experiments and run receipts (“evidence artifacts”)
@@ -303,6 +415,10 @@ Kansas-Frontier-Matrix/
 ├─ 🧾 .env.example
 └─ 📄 README.md
 ```
+
+> [!TIP]
+> If you currently have a top-level `pipelines/` folder instead of `src/pipelines/`, that’s fine — **just keep the boundary explicit**.  
+> v13 aims to converge on a single “executable boundary” pattern to reduce drift. 🧭✅
 
 ---
 
@@ -388,10 +504,13 @@ Story Nodes are **machine-ingestible** narrative artifacts that can:
 - 🧊 orchestrate 2D → 3D transitions (MapLibre ↔ Cesium)
 
 **Hard gates**
-- ✅ every claim has evidence pointers
-- ✅ fact vs interpretation is explicit
-- ✅ sensitive-location rules honored (mask/jitter/generalize)
-- ✅ references resolve to cataloged sources
+- ✅ every claim has evidence pointers  
+- ✅ fact vs interpretation is explicit  
+- ✅ sensitive-location rules honored (mask/jitter/generalize)  
+- ✅ references resolve to cataloged sources  
+
+> [!TIP]
+> **Authoring tools are on the roadmap:** the goal is to let domain experts write Story Nodes without needing to be coders. 🧑‍🏫🧾
 
 ### 3) Add an evidence artifact (analysis/model output) 🧪
 Treat analysis output like **data with lineage**, not “screenshots in a PR”:
@@ -400,10 +519,16 @@ Treat analysis output like **data with lineage**, not “screenshots in a PR”:
 - link into stories only after registration
 
 ### 4) Add an API endpoint/service 🚪
-- define contract (OpenAPI/GraphQL) before implementation
-- tests + versioning strategy (avoid breaking changes)
-- redaction policy if data is sensitive
-- UI uses the API (no “direct graph” shortcuts)
+- define contract (OpenAPI/GraphQL) before implementation  
+- tests + versioning strategy (avoid breaking changes)  
+- redaction policy if data is sensitive  
+- UI uses the API (no “direct graph” shortcuts)  
+
+### 5) Ingest documents in bulk 🧾📚 (planned workflow)
+KFM is built to support **bulk document & knowledge ingestion** as a first-class pipeline:
+- batch PDFs/scans → extract text (and OCR when needed)
+- entity linking (places, people, dates) → graph edges + citations
+- publish as evidence bundles (STAC/DCAT/PROV) so stories can cite them
 
 ---
 
@@ -411,7 +536,7 @@ Treat analysis output like **data with lineage**, not “screenshots in a PR”:
 
 ## Quality gates & CI ✅🧪
 
-KFM gates are designed to stop **silent drift**: missing licenses, broken links, schema mismatches, or uncataloged artifacts.
+KFM gates are designed to stop **silent drift**: missing licenses, broken links, schema mismatches, uncataloged artifacts, or unreviewed policy downgrades.
 
 ### ✅ Fast catalog QA gate (PR-friendly)
 A lightweight validator should run on PRs that touch `data/**`.
@@ -421,6 +546,7 @@ A lightweight validator should run on PRs that touch `data/**`.
 - `providers` exists and is non-empty  
 - `stac_extensions` exists (warn if empty; fail if missing)  
 - top-level `links[].href` respond (HEAD/GET)  
+- checksums present for assets (recommended; fail once enforced)  
 
 Suggested local run (example):
 ```bash
@@ -438,6 +564,18 @@ python3 tools/validation/catalog_qa/run_catalog_qa.py \
 - 🗂️ metadata checks (STAC/DCAT/PROV)
 - 🔐 security scans (secrets, deps, container baseline)
 - 📎 artifacts on failure (logs, diffs, previews)
+
+### 🧾 Policy Pack (recommended) 🛡️
+Treat policy like code:
+- policy checks run on PRs (classification propagation, redaction expectations, license allow/deny rules)
+- violations fail CI with actionable error messages
+
+### 📈 Telemetry & energy/cost awareness (optional, roadmap) ⚡
+KFM can optionally track:
+- pipeline runtimes + resource usage
+- build/system energy proxies (where feasible)
+- dataset “cost receipts” alongside PROV  
+…so scaling decisions stay grounded, not guessed. 🌱
 
 > [!IMPORTANT]
 > “Green CI” is a merge requirement. Fix the root cause — don’t ship flaky behavior. 🤖🚫
@@ -489,9 +627,12 @@ Recommended shape:
 ```
 
 ### 🧊 3D Story Nodes (MapLibre → Cesium)
-- Default is 2D (clarity wins)
-- Story Nodes may “switch engines” for terrain/volumes/3D Tiles
-- 3D is governed like everything else: cataloged assets + provenance
+- Default is 2D (clarity wins)  
+- Story Nodes may “switch engines” for terrain/volumes/3D Tiles  
+- 3D is governed like everything else: cataloged assets + provenance  
+
+> [!NOTE]
+> A showcase Story Node (“Kansas From Above”) is a recommended milestone: it proves 2D→3D transitions, provenance overlays, and time-aware storytelling in one place. 🧊🌾
 
 ### 🧠 Focus Mode = evidence-grounded assistant (advisory, not autonomous)
 Focus Mode:
@@ -526,12 +667,11 @@ flowchart TB
   MERGE --> PIPE["🚦 Canonical pipeline<br/>(ETL → catalogs → graph → API → UI)"]
 ```
 
-### Minimal runtime invariants 🧯
-- 🔑 **Idempotency keys** (safe replays)
-- 🌱 **Deterministic commit seeds** (same inputs → same outputs)
-- 🛑 **Kill-switch** config (single flag disables agent actions)
-- 🔐 **Least privilege** (Watcher/Planner read-only; Executor PR-only scope)
-- 🧾 **Attestations** attached to automated PRs (SBOM/SLSA/Sigstore pattern)
+### Provenance-first agent output 🧾
+Automated PRs should include:
+- a **run receipt** (inputs, hashes, parameters, versions)
+- a **PROV bundle** (what changed and why)
+- **artifacts** (validation report, previews, diffs)
 
 ### Detect → Validate → Promote (CI mindset) 🛣️
 - detect changes (ETags/hashes/events)
@@ -549,10 +689,15 @@ KFM is a public-knowledge project — but **not all spatial data should be publi
 
 ### Sensitive location policy 🧭
 If a dataset contains sensitive locations (culturally sensitive sites, protected resources, PII):
-- generalize precision (mask/jitter/grid)
-- restrict access where required
-- publish redacted derivatives (never downgrade privacy)
-- ensure classification propagates to outputs
+- 🧊 generalize precision (mask/jitter/grid)
+- 🔐 restrict access where required
+- 🧾 publish redacted derivatives (never downgrade privacy)
+- 🏷️ ensure classification propagates to outputs
+
+Practical controls KFM expects:
+- 🧭 **Location generalization** defaults for sensitive categories  
+- 🏷️ **Tagging** and policy labels on every dataset/story node  
+- 🔑 **Access control** support as the project evolves beyond “public only”  
 
 ### Policy enforcement (recommended pattern) 🧾
 KFM is designed to support **global + local policy** checks (think OPA-style rules):
@@ -586,6 +731,7 @@ KFM is built to scale from “a few layers” into **Kansas-scale** multi-modal 
 - 🗺️ MapLibre for 2D, Cesium for 3D Tiles when needed
 - 🕰️ Timeline-first UX (time filters instead of “duplicate layers per year” when possible)
 - ♻️ immutable, versioned artifacts (processed outputs + catalogs + lineage)
+- 🧠 deterministic models/sims: record seeds, params, and environments
 
 ---
 
@@ -594,10 +740,10 @@ KFM is built to scale from “a few layers” into **Kansas-scale** multi-modal 
 ## Contributing 🤝
 
 We welcome contributions that improve:
-- 🧾 provenance, ingest tooling, validation
-- 🗺️ mapping UX (layers, timeline, search, performance)
-- 📈 modeling modules + reproducibility
-- 📚 documentation + tutorials + examples
+- 🧾 provenance, ingest tooling, validation  
+- 🗺️ mapping UX (layers, timeline, search, performance)  
+- 📈 modeling modules + reproducibility  
+- 📚 documentation + tutorials + examples  
 
 Start here → `./.github/README.md` ✅
 
@@ -615,27 +761,37 @@ Start here → `./.github/README.md` ✅
 
 ## Roadmap 🛣️
 
-### 🧱 Phase 1 — foundations (contracts + governance)
-- [ ] 🗂️ Directory alignment + docs index (`docs/README.md`)
-- [ ] 📐 Contract-first schemas for STAC/DCAT/PROV/Story Nodes/evidence bundles/telemetry
-- [ ] ✅ Catalog QA quick gate in CI (`tools/validation/catalog_qa/`)
-- [ ] 🧾 Standards & templates (`docs/standards/`, `docs/templates/`)
-- [ ] 🧾 Add `CITATION.cff` + DOI-ready release process *(nice-to-have)*
+> [!NOTE]
+> This roadmap merges the **v13 target shape** with the **latest proposals** doc.  
+> Everything below must still obey: **ETL → Catalogs → Graph → APIs → UI → Story → Focus** 🧱
 
-### 🗺️ Phase 2 — UI + catalog MVP
-- [ ] 🗺️ Map + timeline MVP (layer browser, search, feature inspect)
-- [ ] 🧭 Catalog browser (STAC + DCAT) + provenance view (PROV overlays)
-- [ ] 🔎 Search + retrieval (docs + datasets)
+### ✅ Near-term priorities (next milestones)
+- [ ] 📐 **Dataset schema & validators** (metadata treated like code)
+- [ ] ✅ **CI: Catalog QA gate** (PR-friendly + fail-fast)
+- [ ] 🧾 **Document & knowledge ingestion** (bulk PDFs/scans → searchable → graph-linked)
+- [ ] 🛰️ **Remote sensing pipeline templates** (repeatable job → artifacts → catalogs)
+- [ ] 🗺️ **Map + timeline MVP** (layer browser, time slider, inspect, provenance overlay)
+- [ ] 🎬 **Story Node authoring workflow** (draft → review → publish)
+- [ ] 🧊 **3D demo: “Kansas From Above”** (2D→3D transition + governed assets)
+- [ ] 📈 **Modeling examples** (notebooks + run receipts + model cards in `mcp/`)
+- [ ] 🔐 **Auth + roles** (optional, for controlled collaboration and restricted datasets)
+- [ ] 📦 **Versioned releases + changelog** (repeatability for research + deployments)
 
-### 🛰️ Phase 3 — pipelines + evidence products
-- [ ] 🛰️ Remote sensing pipeline templates (job → artifacts → catalogs)
-- [ ] 📦 “Dual-format” example layer (GeoParquet + PMTiles + STAC/DCAT + hashes)
-- [ ] 📈 Modeling modules + model cards under `mcp/`
+### 🧪 Mid-term expansions
+- [ ] 👀 **Provenance-first automation agents** (W·P·E with attestations)
+- [ ] 🧬 **GitHub PR → PROV graph integration** (PR metadata becomes lineage)
+- [ ] 🛡️ **Policy Pack** (classification + license gates + redaction rules)
+- [ ] 📡 **Live layers** (sensors/feeds with strict versioning and policy)
+- [ ] 📊 **Analytical dashboards** (chart views tied to cataloged data + offline exports)
 
-### 🎬 Phase 4 — storytelling + Focus Mode
-- [ ] 🎬 Story Node workflow (draft → review → publish)
-- [ ] 🧠 Focus Mode: citations + tool-use + safe redaction
-- [ ] 📡 Optional live layers (watcher-ingested telemetry, replayable timelines)
+### 🌍 Longer-term ideas (big swings)
+- [ ] 📱 **Mobile + offline** (packaged field-ready subsets)
+- [ ] 🧊 **AR experiences** (governed overlays; evidence-first)
+- [ ] 🧠 **AI-assisted data generation** (assistive drafts only; human approval required)
+- [ ] ⚙️ **Scalability & performance** (tiling services, caching, compute-to-data patterns)
+- [ ] 🧩 **New domains** (health, energy, education, etc — if evidence + governance fit)
+- [ ] 🔗 **Federation / multi-region** (portable “Matrix System” pattern beyond Kansas)
+- [ ] 🧭 **SOPs + glossary maturity** (shared vocabulary reduces drift)
 
 ---
 
@@ -732,6 +888,8 @@ Start here → `./.github/README.md` ✅
 <details>
 <summary><strong>📚 General programming shelves (bundles)</strong></summary>
 
+> These are “multi-book bundle PDFs.” Consider adding an index file later: `docs/library/programming_bundles/INDEX.md` 🧭
+
 - 📚 `docs/library/A programming Books.pdf`  
 - 📚 `docs/library/B-C programming Books.pdf`  
 - 📚 `docs/library/D-E programming Books.pdf`  
@@ -744,6 +902,19 @@ Start here → `./.github/README.md` ✅
 - 📚 *(optional)* `docs/library/Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorch.pdf` *(normalize filename if present)*
 
 </details>
+
+---
+
+<a id="glossary"></a>
+
+## Glossary 📚
+
+- **Evidence bundle:** a packaged artifact (data/doc/model) with **STAC/DCAT + PROV + checksums + policy labels**.  
+- **KFM‑MDP:** Managed Data Promotion: **staging → validation → publish** (no skipping).  
+- **Story Node:** a governed narrative unit that binds **claims → evidence pointers → view state**.  
+- **Focus Mode:** evidence-grounded assistant UI that **cites sources** and refuses speculation.  
+- **Catalog gate:** rule that nothing reaches graph/API/UI until it’s **cataloged + provable**.  
+- **Lane gate:** a validation lane (license, geo sanity, policy, schema, provenance).  
 
 ---
 
