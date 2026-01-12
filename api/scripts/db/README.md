@@ -63,42 +63,42 @@ Recommended guardrails:
 > This is the **recommended** structure for this directory (adjust to match what exists in the repo).
 
 ```text
-api/scripts/db/
-├── README.md                      # 👈 you are here
-├── docker/                         # 🐳 local containers (optional)
-│   └── compose.db.yml
-├── postgres/
-│   ├── 00_extensions.sql           # 🧩 postgis, pgcrypto, pg_stat_statements...
-│   ├── 01_roles.sql                # 👥 least-privilege roles
-│   ├── 02_schemas.sql              # 🏗️ catalog / geodata / audit / app
-│   ├── 03_tables.sql               # 🧱 core tables
-│   ├── 04_indexes.sql              # ⚡ spatial + btree + gin
-│   ├── 05_views.sql                # 👓 read models
-│   ├── 06_functions.sql            # 🧠 helpers, triggers, utilities
-│   └── seeds/
-│       ├── 00_reference.sql
-│       └── 10_demo_data.sql
-├── migrations/                     # 🔁 alembic/flyway/sql-based migrations
-│   └── ...                         # (tool-specific)
-├── neo4j/
-│   ├── 00_constraints.cypher       # 🔒 uniqueness constraints
-│   ├── 10_import_nodes.cypher
-│   ├── 20_import_edges.cypher
-│   └── 99_post_import.cypher
-├── qa/
-│   ├── 00_smoke.sql                # ✅ quick health checks
-│   ├── 10_geometry_validity.sql    # 🧭 ST_IsValid checks
-│   ├── 20_catalog_links.sql        # 🔗 STAC/DCAT/PROV referential checks
-│   └── validate_catalogs.py        # 🧾 JSON-schema-ish checks
-└── tools/
-    ├── db_up.sh                    # ▶️ start local DBs
-    ├── db_down.sh                  # ⏹️ stop local DBs
-    ├── db_reset.sh                 # 💥 drop + recreate (guarded)
-    ├── db_migrate.sh               # 🔁 apply migrations
-    ├── db_seed.sh                  # 🌱 seed reference data
-    ├── db_load_geodata.sh          # 🗺️ import processed layers
-    ├── db_backup.sh                # 💾 pg_dump
-    └── db_restore.sh               # ♻️ restore
+📂 api/scripts/db/
+├── 📄 README.md                         # 👈 you are here
+├── 📂 docker/                           # 🐳 local containers (optional)
+│   └── 📄 compose.db.yml
+├── 📂 postgres/                         # 🐘 Postgres/PostGIS SQL
+│   ├── 📄 00_extensions.sql             # 🧩 postgis, pgcrypto, pg_stat_statements...
+│   ├── 📄 01_roles.sql                  # 👥 least-privilege roles
+│   ├── 📄 02_schemas.sql                # 🏗️ catalog / geodata / audit / app
+│   ├── 📄 03_tables.sql                 # 🧱 core tables
+│   ├── 📄 04_indexes.sql                # ⚡ spatial + btree + gin
+│   ├── 📄 05_views.sql                  # 👓 read models
+│   ├── 📄 06_functions.sql              # 🧠 helpers, triggers, utilities
+│   └── 📂 seeds/                        # 🌱 deterministic seeds
+│       ├── 📄 00_reference.sql
+│       └── 📄 10_demo_data.sql
+├── 📂 migrations/                       # 🔁 alembic/flyway/sql-based migrations
+│   └── 📄 ...                           # (tool-specific)
+├── 📂 neo4j/                            # 🕸️ graph constraints/imports (optional)
+│   ├── 📄 00_constraints.cypher         # 🔒 uniqueness constraints
+│   ├── 📄 10_import_nodes.cypher
+│   ├── 📄 20_import_edges.cypher
+│   └── 📄 99_post_import.cypher
+├── 📂 qa/                               # 🧪 validation + smoke checks
+│   ├── 📄 00_smoke.sql                  # ✅ quick health checks
+│   ├── 📄 10_geometry_validity.sql      # 🧭 ST_IsValid checks
+│   ├── 📄 20_catalog_links.sql          # 🔗 STAC/DCAT/PROV referential checks
+│   └── 📄 validate_catalogs.py          # 🧾 metadata sanity checks (no secrets)
+└── 📂 tools/                            # 🛠️ CLI wrappers / runbooks
+    ├── 📄 db_up.sh                      # ▶️ start local DBs
+    ├── 📄 db_down.sh                    # ⏹️ stop local DBs
+    ├── 📄 db_reset.sh                   # 💥 drop + recreate (guarded)
+    ├── 📄 db_migrate.sh                 # 🔁 apply migrations
+    ├── 📄 db_seed.sh                    # 🌱 seed reference data
+    ├── 📄 db_load_geodata.sh            # 🗺️ import processed layers
+    ├── 📄 db_backup.sh                  # 💾 pg_dump
+    └── 📄 db_restore.sh                 # ♻️ restore
 ```
 
 ---
