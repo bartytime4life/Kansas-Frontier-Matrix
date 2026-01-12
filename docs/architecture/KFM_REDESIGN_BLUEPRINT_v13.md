@@ -166,15 +166,15 @@ Future proposals include federation with neighboring “Frontier Matrix” insta
 
 ```mermaid
 flowchart LR
-  A[Ingestion & ETL] --> B[Catalog: STAC/DCAT/PROV]
-  B --> C[Knowledge Graph]
-  B --> D[Analytic Store]
-  C --> E[API: REST + GraphQL]
-  D --> E
-  E --> F[UI: Map Explorer]
-  F --> G[Story Nodes]
-  G --> H[Focus Mode (Evidence)]
-  E --> I[Exports: Federation Packs]
+  A[Ingestion & ETL] --> B[Catalog: STAC/DCAT/PROV];
+  B --> C[Knowledge Graph];
+  B --> D[Analytic Store];
+  C --> E[API: REST + GraphQL];
+  D --> E;
+  E --> F[UI: Map Explorer];
+  F --> G[Story Nodes];
+  G --> H["Focus Mode (Evidence)"];
+  E --> I[Exports: Federation Packs];
 ```
 
 > [!TIP]
