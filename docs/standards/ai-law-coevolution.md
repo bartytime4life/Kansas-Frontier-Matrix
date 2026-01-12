@@ -2,29 +2,29 @@
 title: "⚖️ Kansas Frontier Matrix — AI + Law Co-Evolution Standard (Diamond⁹ Ω / Crown∞Ω Ultimate Certified)"
 path: "docs/standards/ai-law-coevolution.md"
 
-version: "v11.2.2"
-last_updated: "2025-11-27"
+version: "v11.2.3"
+last_updated: "2026-01-12"
 release_stage: "Stable / Governed"
 lifecycle: "Long-Term Support (LTS)"
 review_cycle: "Annual · FAIR+CARE Council · Governance Chamber"
 content_stability: "stable"
-backward_compatibility: "v11.0.0 → v11.2.2 guaranteed"
+backward_compatibility: "v11.0.0 → v11.2.3 guaranteed"
 
 commit_sha: "<latest-commit-hash>"
 previous_version_hash: "<previous-sha256>"
-signature_ref: "releases/v11.2.2/signature.sig"
-attestation_ref: "releases/v11.2.2/slsa-attestation.json"
+signature_ref: "releases/v11.2.3/signature.sig"
+attestation_ref: "releases/v11.2.3/slsa-attestation.json"
 
-sbom_ref: "releases/v11.2.2/sbom.spdx.json"
-manifest_ref: "releases/v11.2.2/manifest.zip"
-telemetry_ref: "releases/v11.2.2/governance-telemetry.json"
-telemetry_schema: "schemas/telemetry/ai-law-coevolution-v11.2.2.json"
+sbom_ref: "releases/v11.2.3/sbom.spdx.json"
+manifest_ref: "releases/v11.2.3/manifest.zip"
+telemetry_ref: "releases/v11.2.3/governance-telemetry.json"
+telemetry_schema: "schemas/telemetry/ai-law-coevolution-v11.2.3.json"
 energy_schema: "schemas/telemetry/energy-v2.json"
 carbon_schema: "schemas/telemetry/carbon-v2.json"
 
-governance_ref: "governance/ROOT-GOVERNANCE.md"
-ethics_ref: "faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "sovereignty/INDIGENOUS-DATA-PROTECTION.md"
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
 
 license: "CC-BY 4.0"
 mcp_version: "MCP-DL v6.3"
@@ -33,7 +33,8 @@ ontology_protocol_version: "KFM-OP v11"
 pipeline_contract_version: "KFM-PDC v11"
 stac_profile: "KFM-STAC v11"
 dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
+prov_profile: "KFM-PROV v11 (PROV-O Core + KFM Legal Lineage Extensions)"
+openlineage_profile: "OpenLineage events (governance + pipeline lineage)"
 
 status: "Active / Enforced"
 doc_kind: "Standard"
@@ -53,9 +54,6 @@ fair_category: "F1-A1-I1-R1"
 care_label: "Collective Benefit · Authority to Control · Responsibility · Ethics"
 risk_category: "Governance · Legal Interoperability · AI Safety"
 
-prov_profile: "PROV-O Core + KFM Legal Lineage Extensions"
-openlineage_profile: "N/A — conceptual standard; informs lineage architecture"
-
 ontology_alignment:
   cidoc: "E29 Design or Procedure"
   schema_org: "Legislation"
@@ -70,12 +68,12 @@ metadata_profiles:
   - "STAC 1.0.0"
   - "PROV-O"
 
-json_schema_ref: "schemas/json/ai-law-coevolution-v11.2.2.schema.json"
-shape_schema_ref: "schemas/shacl/ai-law-coevolution-v11.2.2-shape.ttl"
+json_schema_ref: "schemas/json/ai-law-coevolution-v11.2.3.schema.json"
+shape_schema_ref: "schemas/shacl/ai-law-coevolution-v11.2.3-shape.ttl"
 
-doc_uuid: "urn:kfm:doc:standards:ai-law-coevolution:v11.2.2"
+doc_uuid: "urn:kfm:doc:standards:ai-law-coevolution:v11.2.3"
 semantic_document_id: "kfm-standard-ai-law-coevolution"
-event_source_id: "ledger:kfm:doc:standards:ai-law-coevolution:v11.2.2"
+event_source_id: "ledger:kfm:doc:standards:ai-law-coevolution:v11.2.3"
 immutability_status: "version-pinned"
 doc_integrity_checksum: "<sha256>"
 
@@ -169,341 +167,515 @@ deprecated_fields:
 
 <div align="center">
 
-# ⚖️ **Kansas Frontier Matrix — AI + Law Co-Evolution Standard (v11.2.2)**  
+# ⚖️ **Kansas Frontier Matrix — AI + Law Co-Evolution Standard (v11.2.3)**  
 `docs/standards/ai-law-coevolution.md`
 
 **Purpose**  
 Define a shared, adaptive, ethically governed framework that enables **humans and AI systems to co-evolve legal, ethical, and operational norms**—supporting coexistence, safety, dignity, sovereignty, and long-term thriving.
 
-> This standard does **not** create real-world legal advice or binding law.  
-> It defines how the Kansas Frontier Matrix (KFM) models, observes, and governs  
-> the interaction between AI systems and legal/ethical frameworks.
+> This standard does **not** provide legal advice, create binding obligations, or interpret law as a court/attorney would.  
+> It defines how KFM **models**, **observes**, and **governs** interactions between AI systems and legal/ethical frameworks.
 
-[![Governance · MCP-DL v6.3](https://img.shields.io/badge/Governance-MCP--DL_v6.3-blue)]() ·
-[![KFM-MDP v11.2.4](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.4-purple)]() ·
+[![Standard](https://img.shields.io/badge/Standard-AI%2BLaw_Co--Evolution-blue)]() ·
+[![Version](https://img.shields.io/badge/version-v11.2.3-informational)]() ·
+[![Stage](https://img.shields.io/badge/Stage-Stable%20%2F%20Governed-success)]() ·
+[![Lifecycle](https://img.shields.io/badge/Lifecycle-LTS-2ea44f)]() ·
+[![License](https://img.shields.io/badge/License-CC--BY_4.0-lightgrey)]() ·
+[![Governance](https://img.shields.io/badge/Governance-MCP--DL_v6.3-blue)]() ·
+[![Markdown](https://img.shields.io/badge/Markdown-KFM--MDP_v11.2.4-purple)]() ·
 [![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-Guided-gold)]() ·
+[![Provenance](https://img.shields.io/badge/Lineage-PROV%2FO_OpenLineage-informational)]() ·
 [![AI Safety](https://img.shields.io/badge/AI_Safety-Cooperative-green)]()
 
 </div>
+
+> [!IMPORTANT]
+> **Human authority is the only authority.**  
+> AI may analyze, summarize, and propose *options*—but **only humans ratify** governance outcomes.
+
+> [!NOTE]
+> **Normative keywords** in this standard are interpreted as follows:  
+> **MUST / MUST NOT** (required), **SHOULD / SHOULD NOT** (strongly recommended), **MAY** (optional).
+
+> [!TIP]
+> If you’re about to add a new policy, exemption, or “AI decides…” clause: **stop** ✋  
+> Convert it into a **proposal + evidence + review record**, then route it through governance CI.
 
 ---
 
 ## 📘 Overview
 
-### 1. Intent
+### 1) Intent (what this standard does)
 
-This standard establishes the **core architecture, principles, and processes** by which humans and AI systems jointly:
+This standard defines how KFM systems (humans + software + AI assistants) jointly:
 
-- Analyze existing rules and policies,  
-- Detect conflicts and gaps,  
-- Propose non-binding options for human review, and  
-- Track the **evolution** of legal and governance norms over time.
+- Model legal/ethical rules as **versioned, discoverable, testable artifacts** 📜
+- Detect conflicts, gaps, and potential harms (including sovereignty impacts) 🧭
+- Propose *non-binding* governance options (with evidence + lineage) 🔍
+- Track “law as living infrastructure” over time via **telemetry + provenance** 📈
 
 The goal is a **governable socio-technical ecosystem** that remains:
 
-- **Adaptive** — able to update rules as contexts change.  
-- **Observable** — grounded in telemetry and documented impacts.  
-- **Ethical** — constrained by FAIR+CARE and sovereignty policies.  
-- **Human-led** — final normative decisions always rest with humans.
+- **Adaptive** — rules evolve with context, without silent breaks 🔁  
+- **Observable** — changes are measurable (before/after impacts) 📊  
+- **Ethical** — constrained by FAIR+CARE + sovereignty policies 🛡️  
+- **Human-led** — final normative judgment always rests with humans 👥  
 
-### 2. Scope
+### 2) Scope (where it applies)
 
-This standard applies when KFM systems are used to:
+Applies when KFM systems are used to:
 
-- Support **policy analysis** and scenario exploration.  
-- Provide **non-binding assistance** with compliance checks or risk flags.  
-- Link **legal or governance documents** to datasets, pipelines, or Story Nodes.  
-- Surface **impacts on communities, environments, or rights** through Focus Mode.  
+- Support **policy analysis**, scenario exploration, or risk flagging 🧪  
+- Link governance documents to **datasets, pipelines, contracts, or Story Nodes** 🔗  
+- Present governance-related narratives or summaries in **Focus Mode** 🧠  
+- Drive policy-as-code enforcement (e.g., access gates, redaction rules) 🔐  
 
-It does **not** authorize AI to:
+Does **not** authorize AI to:
 
-- Draft binding laws or contracts,  
-- Interpret real-world law as an attorney or court, or  
-- Create enforceable obligations without explicit human action.
+- Draft binding laws/contracts, interpret real-world law as counsel, or issue rulings ⚠️  
+- Create enforceable obligations without explicit human approval ✅  
+- Override sovereignty constraints, classification rules, or access control 🚫  
 
-### 3. Audience
+### 3) Who this is for
 
-- Governance & FAIR+CARE councils  
-- Legal and policy analysts  
-- AI and systems architects  
-- Indigenous and community sovereignty stewards  
-- Sustainability and risk officers  
+- FAIR+CARE Council & Governance Chamber 🏛️  
+- Legal/policy analysts (human) ⚖️  
+- Platform & data engineers 🧰  
+- Community/Indigenous sovereignty stewards 🪶  
+- Sustainability & risk officers 🌿  
+
+### 4) What “compliant” looks like ✅
+
+A compliant implementation MUST produce:
+
+- **A proposal trail** (who proposed what, when, why) 🧾  
+- **Evidence links** (datasets, contracts, tests, citations) 🔍  
+- **Provenance** (PROV/OpenLineage) that distinguishes human vs AI contributions 🧬  
+- **Governance telemetry** (what changed, what was reviewed, what gates fired) 📈  
+- **A ratification record** (who approved + under what policy) 🗳️  
+
+<details>
+<summary><strong>🧩 Minimal implementation checklist (copy/paste into PRs)</strong></summary>
+
+- [ ] Proposal labeled **NON-BINDING** + includes alternatives
+- [ ] Evidence attached (tests, documents, dataset references, citations)
+- [ ] Provenance captured (authors, timestamps, toolchain, AI involvement)
+- [ ] Sovereignty + classification propagation verified
+- [ ] Governance CI passes (schema + lint + checks + signatures/attestations)
+- [ ] Telemetry emitted (governance + energy + carbon where applicable)
+- [ ] Human ratification recorded (review link + decision record)
+
+</details>
 
 ---
 
 ## 🗂️ Directory Layout
 
+> [!NOTE]
+> Repo layouts evolve. This layout is the **governance-critical minimum**—adjust paths if the repository changes, but keep the *artifact intent* intact.
+
 ~~~text
 📂 KansasFrontierMatrix/
-└── 📂 docs/
-    ├── 📂 standards/
-    │   ├── 📄 ai-law-coevolution.md          # ⚖ AI + Law Co-Evolution Standard (this file)
-    │   ├── 📄 faircare.md                    # ⚖ FAIR+CARE Data Governance Framework
-    │   ├── 📄 licensing.md                   # 📜 Licensing & IP Standards
-    │   ├── 📄 telemetry_standards.md         # 📈 Telemetry Super-Standard
-    │   ├── 📄 ui_accessibility.md            # ♿ UI Accessibility Super-Standard
-    │   └── 📂 governance/
-    │       ├── 📄 README.md                  # 🏛 Governance & Ethical Oversight Index
-    │       └── 📄 ROOT-GOVERNANCE.md         # 🏛 Root Governance Charter
-    ├── 📂 faircare/                          # FAIR+CARE guides and patterns
-    ├── 📂 sovereignty/                       # Indigenous & cultural data protection policies
-    ├── 📂 architecture/                      # System + legal/AI architecture
-    └── 📄 glossary.md                        # Shared terminology (legal, AI, governance)
+├── 📂 api/                               # 🌐 FastAPI + GraphQL surfaces (contracts-first)
+│   └── 📂 contracts/                     # 🧾 OpenAPI/GraphQL + contract-shaped schemas
+│       ├── 📂 changelog/                 # 📜 Contract changelog (externally observable changes)
+│       └── 📂 schemas/
+│           ├── 📂 dcat/                  # 🧭 Discovery feeds (DCAT profile)
+│           └── 📂 telemetry/             # 📈 Governance / energy / carbon telemetry schemas
+├── 📂 data/
+│   ├── 📂 catalog/
+│   │   ├── 📂 dcat/                      # 🧭 DCAT catalogs/feeds (machine discoverability)
+│   │   └── 📂 stac/                      # 🛰️ STAC items/collections (spatiotemporal metadata)
+│   └── 📂 prov/                          # 🔗 Provenance bundles (PROV-O / lineage exports)
+├── 📂 schemas/
+│   ├── 📂 json/                          # ✅ JSON Schemas (docs + payload validation)
+│   └── 📂 shacl/                         # 🧩 SHACL shapes (graph/ontology validation)
+├── 📂 docs/
+│   ├── 📂 standards/
+│   │   ├── 📄 ai-law-coevolution.md       # ⚖ (this file)
+│   │   └── 📄 README.md                  # 📚 Standards index
+│   ├── 📂 governance/
+│   │   ├── 📄 ROOT_GOVERNANCE.md          # 🏛 Root governance charter
+│   │   ├── 📄 ETHICS.md                   # 🌱 Ethics + safety commitments
+│   │   └── 📄 SOVEREIGNTY.md              # 🛡️ Sovereignty + redaction/generalization rules
+│   ├── 📂 templates/
+│   │   └── 📄 TEMPLATE__STORY_NODE_V3.md   # 🧠 Story Node template (evidence + provenance)
+│   └── 📄 MARKDOWN_GUIDE_v13.md           # ✍️ KFM authoring + evidence-first rules
+├── 📂 pipelines/                          # 🧪 Data pipelines (deterministic, reproducible)
+├── 📂 releases/
+│   └── 📂 v11.2.3/                        # 🔏 Signed releases (SBOM + SLSA + telemetry)
+│       ├── 📄 sbom.spdx.json
+│       ├── 📄 slsa-attestation.json
+│       └── 📄 governance-telemetry.json
+└── 📄 README.md                            # 🏁 Project root overview
 ~~~
 
-**Author rules**
+### Author rules 🧑‍💻
 
-- Any document that claims to use or extend this standard MUST live under `docs/standards/` or a clearly marked governance subfolder.  
-- Legal- or policy-adjacent analyses MUST:
-  - Reference this standard, `faircare.md`, and `governance/ROOT-GOVERNANCE.md`.  
-  - Declare they are **non-binding** and **not legal advice**.  
+- Any document that **claims conformance** to this standard MUST:
+  - Live under `docs/standards/` **or** `docs/governance/`, and  
+  - Declare it is **non-binding** and **not legal advice**.
+- Any change that affects public behavior MUST:
+  - Be reflected in **contracts/changelog** (if client-observable), and  
+  - Include migration notes if it impacts consumers.
 
 ---
 
 ## 🧭 Context
 
-KFM treats **governance itself as data**:
+### 1) KFM perspective: governance is “data + lineage”
 
-- Laws, policies, standards, and charters are modeled as **versioned entities** with:
-  - Temporal validity (`owl:time` intervals),  
-  - Provenance (`prov:Plan`, `prov:Activity`, `prov:Agent`),  
-  - DCAT/STAC descriptors for discoverability,  
-  - FAIR+CARE and sovereignty metadata.
+KFM treats governance artifacts (laws, policies, standards, charters) as **versioned entities** that can be:
 
-In this context:
+- Verified (schemas/tests),  
+- Cataloged (DCAT),  
+- Linked to spatiotemporal datasets (STAC), and  
+- Traced through time (PROV/OpenLineage).  
 
-- **Humans** supply values, legitimacy, and final judgment.  
-- **AI systems** provide:
-  - Cross-document comparison,  
-  - Flagging of inconsistencies,  
-  - Scenario analysis and forecasting,  
-  - Summaries and impact visualizations.
+This enables questions like:
 
-The system is designed so that:
+- “Which governance rules were in effect when dataset X was ingested?”  
+- “What policy change preceded this impact spike?”  
+- “Was this narrative derived from evidence or interpretation?”
 
-- AI recommendations are **always advisory**,  
-- Provenance clearly separates **human decisions** from **AI assistance**,  
-- Sovereignty and CARE policies cannot be overridden by AI transforms.
+### 2) Why AI + law requires extra guardrails
+
+In legal/policy contexts, AI can be helpful for scale (comparison, search, summarization).  
+But it can also create *illusory authority* (hallucinated rules, overconfident claims).
+
+So KFM treats AI as:
+
+- An **analytical partner**, not an authority ✅  
+- A **proposal generator**, not a ratifier ✅  
+- A **telemetry producer**, not a policy-maker ✅  
+
+### 3) Digital humanism anchor 🧑‍🤝‍🧑
+
+KFM’s co-evolution model aligns with digital humanism: technology is human-shaped and must serve human values (rights, dignity, accountability, privacy), rather than displacing them.
+
+### 4) Federation readiness 🌐
+
+KFM anticipates multi-hub federation (“other state matrices”).  
+Co-evolution only works at federation scale if we have shared trust primitives:
+
+- Clear usage rights (digital sovereignty)  
+- Provenance + verification (veracity)  
+- Standardized security profiles and auditability  
+- Interoperable metadata + vocabularies
 
 ---
 
 ## 🗺️ Diagrams
 
-### 1. Law as a Multi-Layer Governance Stack
+### 1) Law as a multi-layer governance stack 🧱
 
 ```mermaid
 flowchart TD
-    A["Technical Constraints (sandboxing, ACLs, rate limits)"] --> B["Protocol & API Rules (contracts, usage, logs)"]
+    A["Technical Constraints (sandboxing, ACLs, rate limits)"] --> B["Protocol & API Rules (contracts, logs, schema validation)"]
     B --> C["Institutional Law (charters, statutes, policies)"]
-    C --> D["Cultural Norms & Values (ethics, customs, community norms)"]
+    C --> D["Cultural Norms & Values (ethics, customs, community protocols)"]
 ```
 
-### 2. Co-Evolution Feedback Loop
+### 2) Co-evolution feedback loop 🔁
 
 ```mermaid
 flowchart LR
     H["Human Experience (impacts, harms, benefits)"] --> O["Observability & Telemetry"]
-    O --> A["AI Analysis & Forecasting (non-binding)"]
-    A --> P["Policy & Design Proposals (options only)"]
+    O --> A["AI Analysis (non-binding)"]
+    A --> P["Policy/Design Proposals (options only)"]
     P --> R["Human Deliberation & Ratification"]
-    R --> I["Implementation & Enforcement (pipelines, docs, standards)"]
+    R --> I["Implementation & Enforcement (pipelines, docs, contracts)"]
     I --> H
+```
+
+### 3) Governance-safe change workflow (Detect → Validate → Promote) ✅
+
+```mermaid
+flowchart LR
+    D["Detect\n(diff, risk flags, policy triggers)"] --> V["Validate\n(tests, schema, governance checks)"]
+    V --> P["Promote\n(sign + release + catalog + telemetry)"]
+    P --> M["Monitor\n(impact + energy/carbon + incidents)"]
+    M --> D
+```
+
+### 4) Watcher–Planner–Executor pattern (W–P–E) 🧠🤖
+
+```mermaid
+flowchart TD
+    W["Watcher\n(detect drift, conflicts, missing policy)"] --> PL["Planner\n(propose options + evidence map)"]
+    PL --> EX["Executor\n(creates PR, runs checks, drafts migration notes)"]
+    EX --> H["Human reviewers\n(ratify or reject)"]
 ```
 
 ---
 
 ## 🧱 Architecture & Law Stack
 
-### 1. Foundational Principles
+### 1) Foundational principles 🌱
 
 KFM AI + Law co-evolution is anchored in:
 
-- **Human agency** — humans retain ultimate decision-making authority.  
-- **Non-harm** — prioritize safety, dignity, and well-being.  
-- **Sovereignty** — respect Indigenous and community rights and self-determination.  
-- **Transparency** — explainable governance changes and visible rationale.  
-- **Reproducibility** — clear provenance and testable procedures.  
-- **Ecological responsibility** — track energy, carbon, and environmental impacts.  
+- **Human agency** — humans retain ultimate normative authority 👥  
+- **Non-harm** — prioritize safety, dignity, and well-being 🛡️  
+- **Sovereignty** — respect Indigenous/community rights & protocols 🪶  
+- **Transparency** — rationale and evidence must be visible 🔎  
+- **Reproducibility** — procedures are testable and repeatable 🧪  
+- **Ecological responsibility** — track energy/carbon impacts 🌿  
 
-### 2. The Four-Layer Law Stack (KFM View)
+### 2) The four-layer law stack (KFM view) 🧱
 
 1. **Technical Constraints**  
-   - Sandboxing, access control, throttling, model scopes.  
-   - Implemented in pipelines (`src/pipelines`), APIs (`src/api`), and infrastructure.  
-
+   Sandboxing, access control, throttling, model scopes, data minimization.  
 2. **Protocol & API Rules**  
-   - Contracts, allowed data flows, logging requirements.  
-   - Modeled as data contracts, API schemas, and CI policies.  
-
+   OpenAPI/GraphQL contracts, schema validation, logging, error semantics.  
 3. **Institutional Law & Governance**  
-   - Root charters, governing councils, policies and standards.  
-   - Represented by documents under `docs/standards/` and `docs/standards/governance/`.  
-
+   Charters, policies, standards; explicit versioning + ratification records.  
 4. **Cultural Norms & Values**  
-   - Professional ethics, Indigenous protocols, social taboos, customs.  
-   - Captured in FAIR+CARE, sovereignty docs, and community agreements.
+   Ethics, Indigenous protocols, community agreements, professional standards.
 
-AI may assist at all layers but may **not** rewrite any layer unilaterally.
+> [!IMPORTANT]
+> AI may assist at all layers but may **not** rewrite any layer unilaterally.
 
-### 3. Human–AI Role Split
+### 3) Non‑negotiable invariants (anti-chaos rules) 🧭
 
-**Humans (Governance Council, communities, maintainers):**
+The following are “do-not-break” expectations for co-evolution work:
 
-- Set values and long-term goals.  
-- Ratify or reject proposals.  
-- Interpret law and social meaning.  
-- Own accountability for decisions.
+- **Evidence-first**: no unsourced narrative; distinguish fact vs interpretation 🧾  
+- **Provenance-first**: record who/what generated claims, including AI involvement 🔗  
+- **Contracts-first**: external behavior is defined at contract boundaries 🧾  
+- **Deterministic pipelines** where feasible: same inputs → same outputs 🧪  
+- **Classification propagation**: outputs cannot be less restricted than inputs 🛡️  
+- **Stable identifiers** for governance artifacts (no “floating IDs”) 🧷  
 
-**AI Systems (within KFM constraints):**
+### 4) Human–AI role split 🤝
 
-- Aggregate and summarize complex document sets.  
-- Flag contradictions and missing coverage.  
-- Suggest non-binding scenarios (“if policy A and dataset B, possible impacts are…”).  
-- Help generate draft explanatory materials for humans to revise.
+**Humans (councils, communities, maintainers):**
+
+- Set values and long-term goals  
+- Ratify or reject proposals  
+- Interpret law/social meaning  
+- Own accountability for decisions
+
+**AI systems (inside KFM constraints):**
+
+- Summarize & compare large document sets  
+- Flag contradictions and missing coverage  
+- Suggest *non-binding* scenarios and options  
+- Draft explanatory materials for humans to edit
 
 All AI outputs related to law/governance MUST:
 
-- Be labeled as **non-binding**.  
-- Include clear provenance and references.  
-- Avoid any claim of legal authority.
+- Be labeled **NON-BINDING**  
+- Include provenance + references  
+- Avoid claims of legal authority
+
+### 5) Threat model (minimum) 🧨
+
+Common failure modes and required mitigations:
+
+| Threat | Example | Minimum mitigation |
+|---|---|---|
+| Hallucinated authority | “Kansas law requires X” (fabricated) | Non-binding labels + citations + human ratification |
+| Governance override | AI “auto-merges” policy | CI gates + restricted permissions + human approvals |
+| Data leakage | Sensitive locations in summaries | Redaction/generalization rules + classification propagation |
+| Prompt injection | Malicious text in docs triggers unsafe output | Sanitization + policy pack enforcement + review |
+| Supply chain compromise | Tampered deps/artifacts | SBOM + attestations + signed releases |
 
 ---
 
 ## 🧠 Story Node & Focus Mode Integration
 
-### 1. Governance Events as Story Nodes
+### 1) Governance events as Story Nodes 🧠
 
-Key co-evolution events become **Story Nodes**:
+Key co-evolution moments SHOULD be captured as Story Nodes:
 
-- Adoption of a new standard (e.g., FAIR+CARE v11).  
-- Significant changes to sovereignty or CARE handling.  
-- Major incident analyses and remediation decisions.  
-- Shifts in law stack assumptions (e.g., new data minimization policies).
+- Adoption of a new standard (e.g., ethics/sovereignty updates)  
+- Policy changes affecting access control or redaction  
+- Incident analyses and remediation decisions  
+- Shifts in law-stack assumptions (e.g., new minimization rules)
 
-Each such Story Node SHOULD:
+Each Story Node SHOULD include:
 
-- Reference the relevant standards (this file, `faircare.md`, governance charter).  
-- Provide a temporal and (if appropriate) spatial context.  
-- Link to telemetry showing observed impacts before/after the change.  
+- Links to the relevant standards (this file + governance docs) 🔗  
+- Temporal context (effective interval) 🕰️  
+- Impact telemetry (before/after) 📈  
+- Evidence references (datasets, tests, reports) 🧾  
 
-### 2. Focus Mode Behavior (Restricted)
+### 2) Focus Mode behavior (restricted) 🧠🔒
 
-When Focus Mode is scoped to this document or related governance content, it MAY:
+When Focus Mode is scoped to governance content, it MAY:
 
-- Provide **summaries** of sections.  
-- Highlight **key principles, roles, and layers**.  
-- Surface **links** to impacted datasets, pipelines, or dashboard views.  
+- Provide summaries of sections  
+- Highlight key principles, roles, layers  
+- Surface links to impacted datasets/pipelines/contracts
 
 It MUST NOT:
 
-- Offer **legal interpretations** or advice.  
-- Claim that AI-generated text is binding or authoritative policy.  
-- Rewrite normative requirements defined by this standard.  
+- Offer legal interpretation or advice  
+- Claim AI text is binding or authoritative  
+- Rewrite normative requirements  
+- Create new obligations without human approval
 
-These restrictions are enforced via:
+**UI/UX contract (Focus Mode):**
 
-- `ai_transform_permissions` and `ai_transform_prohibited` in the front-matter.  
-- CI checks that reject disallowed transform tags or patterns.
+- Clearly marked as *assistive* and *non-authoritative*  
+- Shows classification + redaction notices when applicable  
+- Presents evidence links and provenance when making claims
+
+### 3) Transform enforcement & telemetry 📈
+
+- Allowed transforms MUST match `transform_registry.allowed`.  
+- Forbidden transforms MUST fail CI.  
+- Governance telemetry MUST record:
+  - which transforms ran,
+  - whether a redaction notice was shown,
+  - and any sovereignty gate triggers.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-Governance-aware CI pipelines MUST validate:
+### 1) Governance-aware CI pipeline goals 🎯
+
+Governance CI MUST validate:
 
 - **Structure & metadata**  
-  - YAML front-matter compliance with `ai-law-coevolution-v11.2.2.schema.json`.  
-  - Markdown structure compliance with KFM-MDP v11.2.4.
-
+  - YAML front-matter compliance with the JSON schema  
+  - Markdown compliance with KFM-MDP rules  
 - **Provenance continuity**  
-  - `provenance_chain` and `event_source_id` consistency.  
-  - Presence of signatures, attestations, SBOM and manifest references.
-
+  - Stable IDs, event source IDs, release refs, lineage hooks  
 - **Ethics & sovereignty**  
-  - FAIR+CARE alignment (via `faircare-validate.yml`).  
-  - Sovereignty policy references for any Indigenous or culturally-sensitive content.
-
+  - Correct governance refs (ETHICS / SOVEREIGNTY)  
+  - Classification propagation checks  
 - **Transform boundaries**  
-  - Check for forbidden AI transform tags.  
-  - Ensure docs do not claim AI-generated text as legal authority.
-
+  - Reject prohibited transform tags/patterns  
 - **Accessibility**  
-  - WCAG 2.1 AA+ structural checks for headings, landmarks, contrast (where applicable).
+  - WCAG structure checks for headings/landmarks  
 
-Violations MUST:
+### 2) Detect → Validate → Promote pipeline ✅
 
-- Fail the `governance-check` and block merges.  
-- Emit telemetry into `releases/v11.2.2/governance-telemetry.json`.  
-- Add entries to the governance ledger with remediation notes.
+A compliant governance pipeline SHOULD implement:
+
+1. **Detect**  
+   - Diff + risk categorization (including sovereignty triggers)  
+2. **Validate**  
+   - Schema checks + contract tests + security checks  
+3. **Promote**  
+   - Sign release + emit attestations + publish catalogs + emit telemetry  
+4. **Monitor**  
+   - Impact + incident flags + energy/carbon telemetry
+
+### 3) Supply chain integrity 🔏
+
+For governed releases, include:
+
+- SBOM (SPDX)  
+- SLSA attestation  
+- Signature reference  
+- Reproducible build metadata where feasible
+
+### 4) Evidence credibility (modeling mindset) 🧪
+
+When AI is used for forecasting, risk scoring, or scenario simulation:
+
+- Treat results as **models**, not truth  
+- Prefer verifiable methods + uncertainty reporting  
+- Require documentation of assumptions, limitations, and validation status
+
+> [!WARNING]
+> If an AI output would change enforcement behavior (access, redaction, publication),  
+> it is automatically **GOV-REVIEW REQUIRED**.
 
 ---
 
 ## 📦 Data & Metadata
 
-Under this standard, **legal and governance artifacts** are treated as first-class data:
+### 1) Governance artifacts as first-class data 🗂️
 
-For each rule, standard, or charter:
+Every governed artifact (standard/policy/charter) SHOULD be represented with:
 
-- **PROV-O lineage**  
-  - `prov:wasGeneratedBy` — governance activity (e.g., council meeting).  
-  - `prov:wasAttributedTo` — council, board, or organization.  
-  - `prov:generatedAtTime` — effective date/time.
+- **Stable ID** (urn/URI)  
+- **Version** (SemVer or equivalent)  
+- **Effective interval** (OWL-Time)  
+- **Provenance** (PROV-O)  
+- **Catalog metadata** (DCAT)  
+- **Links to impacted datasets** (often via STAC references)
 
-- **Temporal validity** (OWL-Time)  
-  - `time:hasBeginning` / `time:hasEnd` (or open-ended).  
-  - Used to answer “what was the applicable framework on date X?”
+### 2) Minimal metadata field set (recommended) ✅
 
-- **Catalog metadata** (DCAT/STAC)  
-  - So governance documents can be discovered like datasets.  
+| Field | Purpose |
+|---|---|
+| `doc_uuid` | stable identifier (never reused) |
+| `version` | contract for readers/tools |
+| `event_source_id` | ties into governance ledger |
+| `telemetry_ref` | audit trail of checks + gates |
+| `signature_ref` / `attestation_ref` | integrity + trust |
+| `governance_ref` / `ethics_ref` / `sovereignty_policy` | controlling constraints |
 
-- **Sovereignty/CARE flags**  
-  - To indicate when rules are themselves constrained by community agreements.
+### 3) Mapping to open standards 🌐
 
-This modeling allows KFM to:
-
-- Trace which **governance version** was in effect when a dataset was ingested or a model was trained.  
-- Understand legal/ethical context when interpreting historical system behavior.  
+- **DCAT** for discovery and distribution of governance artifacts  
+- **STAC** for linking spatiotemporal datasets to governance scope  
+- **PROV/OpenLineage** for lifecycle traceability and accountability
 
 ---
 
 ## ⚖ FAIR+CARE & Sovereignty
 
+### 1) Binding constraints (cannot be overridden) 🛡️
+
 This standard is downstream of and constrained by:
 
-- **FAIR+CARE Framework** (`faircare.md`).  
-- **Root Governance Charter** (`governance/ROOT-GOVERNANCE.md`).  
-- **Indigenous Data Protection Policy** (`sovereignty/INDIGENOUS-DATA-PROTECTION.md`).  
+- `docs/governance/ROOT_GOVERNANCE.md` 🏛️  
+- `docs/governance/ETHICS.md` 🌱  
+- `docs/governance/SOVEREIGNTY.md` 🪶  
 
-Key implications:
+### 2) Classification propagation rule 🔒
 
-- AI may assist with **reasoning about law**, but law remains grounded in **human and community authority**.  
-- Co-evolution must **not** weaken or bypass sovereignty or CARE constraints.  
-- Any proposed change that could materially impact Indigenous or marginalized communities requires:
-  - Explicit CARE review,  
-  - Community consultation as defined in sovereignty policies, and  
-  - Governance ledger records documenting that process.
+- Outputs MUST NOT be less restricted than inputs.  
+- If sovereignty flags apply, redaction/generalization rules MUST be enforced before publication.
+
+### 3) GOV-REVIEW REQUIRED triggers ✅
+
+Tag proposals with **`GOV-REVIEW REQUIRED`** when they include:
+
+- A new public endpoint, feed, or download capability  
+- Increased spatial/temporal resolution (risk of sensitive location exposure)  
+- Changes to redaction/generalization behavior  
+- Reclassification (private → public) or weaker access control  
+- AI-generated narrative treated as factual without evidence hooks
+
+### 4) Indigenous rights flag 🪶
+
+When `indigenous_rights_flag: true`:
+
+- CARE review is required  
+- Community consultation must occur as defined by sovereignty policy  
+- Rationale and outcomes must be recorded in the governance ledger
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date       | Author                 | Summary                                                                                  |
-|--------:|------------|------------------------|------------------------------------------------------------------------------------------|
-| v11.2.2 | 2025-11-27 | KFM Governance Council | Formalized AI + Law Co-Evolution Standard under KFM-MDP v11.2.4; added transform limits, telemetry hooks, and explicit FAIR+CARE/sovereignty alignment. |
-| v11.0.0 | 2025-11-20 | KFM Core Team          | Initial articulation of AI + law co-evolution principles and four-layer law stack; informal, non-normative notes. |
+| Version | Date       | Author / Owner              | Summary |
+|--------:|------------|-----------------------------|---------|
+| v11.2.3 | 2026-01-12 | KFM Governance Council       | Strengthened governance-safe workflow (Detect→Validate→Promote), W–P–E framing, federation readiness, and CI guardrails. No breaking changes to v11.2.x. |
+| v11.2.2 | 2025-11-27 | KFM Governance Council       | Formalized AI + Law Co-Evolution Standard under KFM-MDP v11.2.4; added transform limits, telemetry hooks, and explicit FAIR+CARE/sovereignty alignment. |
+| v11.0.0 | 2025-11-20 | KFM Core Team                | Initial articulation of AI + law co-evolution principles and four-layer law stack; informal, non-normative notes. |
 
 ---
 
 <div align="center">
 
-⚖️ **Kansas Frontier Matrix — AI + Law Co-Evolution Standard (v11.2.2)**  
+⚖️ **Kansas Frontier Matrix — AI + Law Co-Evolution Standard (v11.2.3)**  
 Scientific Insight × FAIR+CARE Ethics × Sustainable Intelligence  
 
-© 2025 Kansas Frontier Matrix — CC-BY 4.0  
+© 2026 Kansas Frontier Matrix — CC-BY 4.0  
 Master Coder Protocol v6.3 · FAIR+CARE Guided · Diamond⁹ Ω / Crown∞Ω Ultimate Certified  
 
 [⬅ Back to Standards Index](README.md) ·  
-[🏛 Root Governance Charter](governance/ROOT-GOVERNANCE.md) ·  
-[⚖ FAIR+CARE Framework](faircare.md)
+[🏛 Root Governance Charter](../governance/ROOT_GOVERNANCE.md) ·  
+[🌱 Ethics Standard](../governance/ETHICS.md) ·  
+[🪶 Sovereignty Policy](../governance/SOVEREIGNTY.md)
 
 </div>
