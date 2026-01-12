@@ -58,40 +58,40 @@ If a contract changes, it’s a **compatibility event** that must be versioned, 
 > This is a **recommended** structure. If files already exist, keep them — and map them into the categories below.
 
 ```text
-api/src/contracts/
-├─ README.md  ✅ (you are here)
+📁 api/src/contracts/
+├─ 📄 README.md  ✅ (you are here)
 │
-├─ _shared/                 # 🔩 cross-cutting primitives
-│  ├─ ids.*                 # stable IDs, namespaces
-│  ├─ time.*                # ISO-8601, intervals, timelines
-│  ├─ units.*               # units + quantities (where applicable)
-│  ├─ errors.*              # KfmError + error codes
-│  ├─ pagination.*          # cursors / paging envelopes
-│  └─ links.*               # link objects, HATEOAS-ish patterns
+├─ 📁 _shared/                 # 🔩 cross-cutting primitives
+│  ├─ 📄 🆔 ids.*               # stable IDs, namespaces
+│  ├─ 📄 🕒 time.*              # ISO-8601, intervals, timelines
+│  ├─ 📄 📏 units.*             # units + quantities (where applicable)
+│  ├─ 📄 🧯 errors.*            # KfmError + error codes
+│  ├─ 📄 📑 pagination.*        # cursors / paging envelopes
+│  └─ 📄 🔗 links.*             # link objects, HATEOAS-ish patterns
 │
-├─ geo/                     # 🌎 space + map delivery
-│  ├─ geojson.*             # Feature, FeatureCollection, Geometry
-│  ├─ bbox.*                # bbox conventions + validation
-│  ├─ tiles.*               # MVT/PMTiles metadata + endpoints
-│  └─ tilejson.*            # TileJSON-like metadata (if used)
+├─ 📁 geo/                      # 🌎 space + map delivery
+│  ├─ 📄 🗺️ geojson.*           # Feature, FeatureCollection, Geometry
+│  ├─ 📄 📦 bbox.*              # bbox conventions + validation
+│  ├─ 📄 🧩 tiles.*             # MVT/PMTiles metadata + endpoints
+│  └─ 📄 🧾 tilejson.*          # TileJSON-like metadata (if used)
 │
-├─ catalog/                 # 🧾 interoperability contracts
-│  ├─ stac.*                # STAC Item/Collection (KFM extensions)
-│  ├─ dcat.*                # DCAT Dataset JSON-LD (KFM profile)
-│  └─ prov.*                # PROV JSON-LD bundles
+├─ 📁 catalog/                  # 🧾 interoperability contracts
+│  ├─ 📄 🛰️ stac.*              # STAC Item/Collection (KFM extensions)
+│  ├─ 📄 🗂️ dcat.*              # DCAT Dataset JSON-LD (KFM profile)
+│  └─ 📄 🧬 prov.*              # PROV JSON-LD bundles
 │
-├─ graph/                   # 🧠 knowledge graph interfaces
-│  ├─ schema.graphql        # GraphQL schema (or schema fragments)
-│  └─ types.*               # shared types used by resolvers
+├─ 📁 graph/                    # 🧠 knowledge graph interfaces
+│  ├─ 📄 🧬 schema.graphql       # GraphQL schema (or schema fragments)
+│  └─ 📄 🏷️ types.*             # shared types used by resolvers
 │
-├─ analytics/               # 🧪 modeling & statistics outputs
-│  ├─ model_run.*           # run manifests, parameters, artifacts
-│  ├─ regression.*          # coefficients, metrics, diagnostics
-│  └─ timeseries.*          # series, aggregation windows, gaps
+├─ 📁 analytics/                # 🧪 modeling & statistics outputs
+│  ├─ 📄 🏁 model_run.*          # run manifests, parameters, artifacts
+│  ├─ 📄 📈 regression.*         # coefficients, metrics, diagnostics
+│  └─ 📄 ⏱️ timeseries.*         # series, aggregation windows, gaps
 │
-└─ focus/                   # 🔎 evidence-backed Q&A payloads
-   ├─ query.*               # request contract
-   └─ response.*            # answer + citations/evidence bundle
+└─ 📁 focus/                    # 🔎 evidence-backed Q&A payloads
+   ├─ 📄 ❓ query.*              # request contract
+   └─ 📄 🧾 response.*           # answer + citations/evidence bundle
 ```
 
 ---
