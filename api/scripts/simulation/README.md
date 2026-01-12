@@ -116,16 +116,17 @@ Suggested internal layout (adapt as needed, but keep it consistent):
 
 ```text
 api/scripts/simulation/
-├─ README.md  ✅ (you are here)
-├─ run.py / run_simulation.py      # main dispatcher (recommended)
-├─ registry.yaml                   # "simulation_name" → module entrypoint
-├─ specs/                          # YAML/JSON run specifications (inputs/params/outputs)
-├─ models/                         # model implementations (pure functions where possible)
-├─ adapters/                       # PostGIS / Neo4j / EarthEngine / file IO wrappers
-├─ schemas/                        # JSONSchema / Pydantic models for validation
-├─ notebooks/                      # exploratory work (keep outputs out of git)
-├─ tests/                          # unit + golden + regression tests
-└─ utils/                          # logging, hashing, id generation, etc
+├─ 📄 README.md                           ✅ (you are here)
+├─ 🐍 run.py                              🚀 main dispatcher (recommended)
+├─ 🐍 run_simulation.py                   🚀 alternate dispatcher name (if preferred)
+├─ 🗂️ registry.yaml                       🧭 "simulation_name" → module entrypoint
+├─ 📂 specs/                              🧾 YAML/JSON run specifications (inputs/params/outputs)
+├─ 📂 models/                             🧠 model implementations (pure functions where possible)
+├─ 📂 adapters/                           🔌 PostGIS • Neo4j • EarthEngine • file I/O wrappers
+├─ 📂 schemas/                            📐 JSONSchema • Pydantic validation models
+├─ 📂 notebooks/                          📓 exploratory work (keep outputs out of git)
+├─ 📂 tests/                              ✅ unit • golden • regression tests
+└─ 📂 utils/                              🧰 logging • hashing • deterministic IDs
 ```
 
 > [!IMPORTANT]
