@@ -142,13 +142,13 @@ Every execution produces a `run_id` (UUID or deterministic hash). A run is a **f
 
 ```text
 data/processed/simulations/<simulation_name>/<run_id>/
-├─ outputs/...
-├─ metrics.json
-├─ plots/...
-├─ manifest.yaml
-├─ stac-item.json
-├─ dcat.json
-└─ prov.jsonld
+├─ 📂 outputs/…            📦 primary artifacts (rasters • vectors • tables • tiles)
+├─ 📄 metrics.json         📈 numeric results + KPIs (machine-friendly)
+├─ 📂 plots/…              🖼️ charts/figures for humans (PNGs/SVGs)
+├─ 📄 manifest.yaml        🧾 run manifest (inputs • params • seed • env • hashes)
+├─ 📄 stac-item.json       🛰️ STAC Item (spatial/temporal + asset links)
+├─ 📄 dcat.json            🗂️ DCAT Dataset/Distribution metadata
+└─ 📄 prov.jsonld          🧬 PROV-O lineage (JSON-LD)
 ```
 
 ### 📦 Required artifacts
