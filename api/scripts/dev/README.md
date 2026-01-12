@@ -265,20 +265,20 @@ If your migrations rely on extensions, ensure they’re created during bootstrap
 > This is the recommended structure as the dev toolkit grows.
 
 ```text
-api/scripts/dev/
-├─ README.md
-├─ doctor.sh
-├─ up.sh
-├─ down.sh
-├─ reset.sh
-├─ bootstrap.sh
-├─ migrate.sh
-├─ seed_minimal.py
-├─ ingest_sample.py
-├─ validate_catalogs.py
-├─ export_graph.py
-├─ import_graph.py
-└─ smoke_test.sh
+📂 api/scripts/dev/
+├─ 📄 README.md
+├─ 🩺🐚 doctor.sh
+├─ 🧱⬆️🐚 up.sh
+├─ 🧱⬇️🐚 down.sh
+├─ 🧨♻️🐚 reset.sh
+├─ 🚀🧱🐚 bootstrap.sh
+├─ 🧬⬆️🐚 migrate.sh
+├─ 🌱🐍 seed_minimal.py
+├─ 📥🧪🐍 ingest_sample.py
+├─ ✅🧾🐍 validate_catalogs.py
+├─ 📤🕸️🐍 export_graph.py
+├─ 📥🕸️🐍 import_graph.py
+└─ 🧪✅🐚 smoke_test.sh
 ```
 
 ---
