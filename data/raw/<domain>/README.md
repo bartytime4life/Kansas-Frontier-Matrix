@@ -140,11 +140,21 @@ flowchart LR
 To keep raw discoverable (without becoming a second catalog), this domain should maintain:
 
 ```text
-data/raw/<domain>/
-├─ README.md                          👈 you are here
-├─ datasets_index.md                  ⭐ human-friendly list (recommended)
-├─ datasets_registry.csv              ⭐ machine-friendly index (recommended)
-└─ <dataset_slug>/...                 📦 actual raw drops
+📁 data/
+└─ 📁 raw/
+   └─ 📁 <domain>/
+      ├─ 📄 README.md                          👈 you are here
+      ├─ 📄 datasets_index.md                  ⭐ human-friendly list (recommended)
+      ├─ 📄 datasets_registry.csv              🤖 machine-friendly index (recommended)
+      └─ 📁 <dataset_slug>/                    📦 actual raw drops
+         └─ 📁 <drop_id>/                      🧱 immutable intake boundary (append-only)
+            ├─ 📄 README.md                    🧾 human receipt
+            ├─ 📄 source.json                  🧾 machine receipt
+            ├─ 🔑 checksums.sha256             🔒 integrity
+            ├─ 📁 original/                    📦 as-received bytes
+            ├─ 📁 extracted/                   🧩 lossless unpack only (optional)
+            ├─ 📁 receipts/                    🧾 request/response proofs (redacted)
+            └─ 📁 notes/                       📝 intake notes (NO secrets)
 ```
 
 ### `datasets_index.md` (suggested columns)
@@ -171,16 +181,18 @@ dataset_slug,publisher,license,classification,update_cadence,last_drop_id,notes
 Organize raw inputs by **dataset → immutable drop**:
 
 ```text
-data/raw/<domain>/
-└── <dataset_slug>/
-    └── <drop_id>/
-        ├── README.md
-        ├── source.json
-        ├── checksums.sha256
-        ├── original/                 # as received (preferred)
-        ├── extracted/                # optional lossless unpack only
-        ├── receipts/                 # optional request/response metadata (redacted)
-        └── notes/                    # optional human notes (no secrets)
+📁 data/
+└── 📁 raw/
+    └── 📁 <domain>/
+        └── 📁 <dataset_slug>/
+            └── 📁 <drop_id>/
+                ├── 📄 README.md                  🧾 human receipt / context
+                ├── 📄 source.json                🧾 machine receipt / provenance
+                ├── 🔑 checksums.sha256           🔒 integrity (sha256)
+                ├── 📁 original/                  📦 as received (preferred)
+                ├── 📁 extracted/                 🧩 lossless unpack only (optional)
+                ├── 📁 receipts/                  🧾 request/response metadata (redacted)
+                └── 📁 notes/                     📝 human notes (NO secrets)
 ```
 
 ### Naming rules (practical)
