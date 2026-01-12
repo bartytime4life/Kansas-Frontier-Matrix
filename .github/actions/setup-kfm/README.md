@@ -1,4 +1,3 @@
-````md
 <a id="top"></a>
 
 # 🧰🧩 `setup-kfm` — Standard CI Bootstrap for Kansas Frontier Matrix (Python + Node + GIS)
