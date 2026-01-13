@@ -1,6 +1,6 @@
 <!--
 📌 This README defines the *canonical pipeline boundary* for KFM (Kansas Frontier Matrix) / Kansas‑Matrix‑System.
-🗓️ Last updated: 2026-01-11
+🗓️ Last updated: 2026-01-13
 🔁 Review cycle: 90 days (or anytime pipeline order / catalogs / policy changes)
 -->
 
@@ -21,6 +21,7 @@ The operational spine of **Kansas Frontier Matrix (KFM)**. 🧠🗺️🧾
 ![Graph](https://img.shields.io/badge/graph-Neo4j-00c853)
 ![API Boundary](https://img.shields.io/badge/UI%20access-API%20only%20(no%20graph%20direct)-ff6b6b)
 ![Security](https://img.shields.io/badge/security-hostile--inputs%20%2B%20deny--by--default-red)
+![Supply Chain](https://img.shields.io/badge/supply%20chain-SBOM%20%7C%20SLSA%20%7C%20signing-111827)
 ![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-2ea043)
 
 </div>
@@ -38,6 +39,7 @@ The operational spine of **Kansas Frontier Matrix (KFM)**. 🧠🗺️🧾
 ## 🔗 Quick links (start here) 🧭
 - 🏠 Repo overview: `../README.md`
 - 🧩 Executable boundary: `../src/README.md` *(if present)*
+- 🚪 API boundary (governed trust edge): `../api/README.md` *(if present)*
 - 📦 Data + metadata boundary: `../data/README.md` *(required reading)*
 - 🧪 Tests & QA gates: `../tests/README.md`
 - 🧰 Governed toolchain surface: `../tools/README.md`
@@ -60,9 +62,12 @@ The operational spine of **Kansas Frontier Matrix (KFM)**. 🧠🗺️🧾
 - [🚦 Non‑negotiables](#-non-negotiables)
 - [🧠 What a “pipeline” means in KFM](#-what-a-pipeline-means-in-kfm)
 - [🧱 The canonical ordering](#-the-canonical-ordering)
+- [🧠 Pipelines as “compilers”](#-pipelines-as-compilers)
 - [🧩 Pipeline taxonomy](#-pipeline-taxonomy)
 - [📦 Data & metadata lifecycle](#-data--metadata-lifecycle)
+- [🚀 Promotion workflow](#-promotion-workflow)
 - [📁 Where things live](#-where-things-live)
+- [🧾 Standard artifacts](#-standard-artifacts)
 - [📜 KFM Pipeline Definition Contract](#-kfm-pipeline-definition-contract)
 - [⚙️ Running pipelines](#️-running-pipelines)
 - [✅ Quality gates](#-quality-gates)
@@ -75,6 +80,7 @@ The operational spine of **Kansas Frontier Matrix (KFM)**. 🧠🗺️🧾
 - [📚 Project reference library influence map](#-project-reference-library-influence-map)
 - [🧾 Metadata](#-metadata)
 - [🕰️ Version history](#️-version-history)
+- [📎 Evidence anchors](#-evidence-anchors)
 
 </details>
 
@@ -86,10 +92,11 @@ The operational spine of **Kansas Frontier Matrix (KFM)**. 🧠🗺️🧾
 |---|---|
 | Doc | `pipelines/README.md` |
 | Status | Active ✅ |
-| Last updated | **2026-01-11** |
+| Last updated | **2026-01-13** |
 | Review cycle | 90 days 🔁 |
 | Audience | Contributors implementing ETL jobs, validators, catalog writers, graph exports/ingest bridges |
 | Prime directive | **No catalog → no graph → no API → no UI.** Catalogs are the interface. |
+| System mission fit | Make Kansas spatial truth **searchable, mappable, auditable, modelable** (provenance-first; AI is advisory) 🧠🧾 |
 
 ---
 
@@ -116,6 +123,10 @@ The operational spine of **Kansas Frontier Matrix (KFM)**. 🧠🗺️🧾
 
 6) **Governed ordering is sacred** 🧱  
    **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+7) **Stable identifiers (no semantic IDs)** 🧷  
+   IDs must be **information-free** and invariant over time (don’t encode meaning that will drift). Prefer UUID/ULID + metadata.  
+   *If it “needs renaming,” it wasn’t a stable ID.* 🧠
 
 > [!TIP]
 > If your pipeline can’t produce a clean paper trail (inputs → transforms → outputs → catalogs → lineage), it’s not ready to merge. ✅🧾
@@ -155,6 +166,25 @@ flowchart LR
 
 ---
 
+## 🧠 Pipelines as “compilers”
+
+A helpful mental model: **pipelines behave like compilers** — inputs go through phases, and each phase has gates.  
+This keeps the system honest: “build steps” are explicit, testable, and replayable. 🧱
+
+| Compiler concept 🧩 | Pipeline analogue 🧬 | What we enforce ✅ |
+|---|---|---|
+| Lexing/parsing | ingest + schema parse | reject malformed inputs early |
+| Type checking | semantic validation | CRS, geometry validity, ranges, licensing |
+| IR transforms | normalization | canonical encodings + stable sort order |
+| Codegen | artifacts + catalogs | COG/Parquet + STAC/DCAT + PROV receipts |
+| Optimization | scaling tactics | tiling, partitioning, caching, indexing |
+| Error reporting | receipts & logs | actionable failures + correlation IDs |
+
+> [!NOTE]
+> A pipeline that “kind of works” but can’t explain itself is a governance bug, not a feature. 🧾
+
+---
+
 ## 🧩 Pipeline taxonomy
 
 Not all pipelines look the same. KFM supports a few **governed shapes**:
@@ -165,8 +195,11 @@ Not all pipelines look the same. KFM supports a few **governed shapes**:
 | 🔁 **Refresh (scheduled)** | Regular updates (daily/weekly/monthly) | Must be idempotent; versioned outputs; diffs are inspectable |
 | 👀 **Watcher (near‑real‑time)** | Polling/streaming feeds (e.g., GTFS‑RT) | Each window produces catalogable “units” + receipts; no mystery updates |
 | 🔌 **Adapter (import bridge)** | Bring in external exports (partner datasets, agency drops) | Must validate schema/license/classification before promotion |
-| 🧪 **Analysis/Model** | Derived indicators, regression outputs, simulation runs | Record params/seeds; treat results as evidence artifacts |
-| 📄 **Document ingest** | PDFs/scans → extracted text/entities | Must store raw doc + derived text; provenance + redaction rules required |
+| 🧪 **Analysis/Model** | Derived indicators, regression outputs, Bayesian inference, simulation runs | Record params/seeds; output uncertainty + diagnostics as artifacts |
+| 🧮 **Optimization** | Multi-constraint optimization runs (optional) | Record objective/constraints; deterministic run IDs; replay rules |
+| 🧱 **Graph build/export** | Build bounded graph exports from catalogs | Graph edges must reference catalog IDs + provenance |
+| 📄 **Document ingest** | PDFs/scans → extracted text/entities | Store raw + derived; provenance + redaction rules required |
+| 🧊 **3D/volumetric** | 3D meshes, point clouds, volumes, 3D tiles | Coordinate conventions + LOD/tiling + validation gates |
 
 > [!NOTE]
 > Watchers are still bound by ordering: **they produce cataloged outputs first**, then (optionally) graph/API consumption follows.
@@ -193,6 +226,36 @@ KFM uses a required staging lifecycle so everyone can tell “what stage is this
 
 ---
 
+## 🚀 Promotion workflow
+
+A pipeline output is either **not yet trustworthy**, or **published as governed evidence**.
+
+### ✅ Promotion states (recommended)
+
+| State | Location | Who can use it? | Required artifacts |
+|---|---|---|---|
+| 🟡 `candidate` | `data/work/**` | pipeline devs only | none (but logs helpful) |
+| 🟠 `staged` | `data/processed/**` | reviewers + QA | checksums + basic gates |
+| 🟢 `published` | `data/processed/**` + catalogs | everyone downstream | **STAC + DCAT + PROV + manifest** |
+
+### 🔁 Promotion rules (fail closed 🔒)
+- **No publish without license + classification.**
+- **No publish without PROV lineage** (inputs + run config + output IDs).
+- **No publish without STAC/DCAT** for anything user-visible.
+- **No publish if classification would downgrade** (unless audited redaction step exists).
+
+```mermaid
+flowchart TB
+  C["🟡 candidate\n(data/work)"] -->|gates pass| S["🟠 staged\n(data/processed)"]
+  S -->|catalog+prov emitted| P["🟢 published\n(STAC/DCAT/PROV)"]
+  S -->|gates fail| F["🛑 fail closed\n(receipt + fixes)"]
+```
+
+> [!TIP]
+> Think “**atomic publish**”: write new outputs to a run-scoped directory → validate → promote/swap pointer → emit catalogs → declare published. ✅
+
+---
+
 ## 📁 Where things live
 
 ### 🧭 Repo context (target shape)
@@ -202,6 +265,7 @@ KFM uses a required staging lifecycle so everyone can tell “what stage is this
 │  ├── 📁 pipelines/          # 🧪 ETL jobs + catalog writers + validators
 │  ├── 📁 graph/              # 🕸️ graph construction + queries (from catalogs)
 │  └── 📁 server/             # 🛡️ APIs (contracts + redaction enforcement)
+📁 api/                       # 🚪 API boundary docs/contracts (if separated)
 📁 data/                      # 📦 raw → work → processed + STAC/DCAT/PROV
 📁 schemas/                   # 📐 JSON Schemas (contracts)
 📁 docs/                      # 📘 governed documentation (templates, standards, governance)
@@ -225,7 +289,7 @@ KFM uses a required staging lifecycle so everyone can tell “what stage is this
         ├── schemas/                   # domain schemas (if needed)
         ├── validators/                # QA gates (schema, bounds, link checks, etc.)
         ├── tests/                     # mini-run tests + fixtures
-        └── _shared/                   # optional submodules (keep DRY; prefer src/pipelines/_shared)
+        └── _shared/                   # optional submodules (prefer src/pipelines/_shared)
 ```
 
 ### 📘 Domain module docs (recommended)
@@ -252,6 +316,38 @@ A domain should document its pipelines + governance posture here:
 
 ---
 
+## 🧾 Standard artifacts
+
+KFM evidence is **pointer-over-payload** whenever possible: catalogs + IDs + signed URLs/paths (instead of dumping giant blobs into API/UI). 🔗🗂️
+
+### ✅ Minimum publishable artifact set (KFM standard)
+For any dataset intended for search/map/story/focus:
+
+1) **Evidence artifacts** in `data/processed/**`
+   - preferred geo formats: **COG**, **GeoParquet**, **PMTiles** *(as needed)*
+   - optional: thumbnails/quicklooks (small, cacheable)
+
+2) **Catalog artifacts**
+   - **STAC** items/collections that reference the evidence assets
+   - **DCAT** dataset + distributions for discovery
+
+3) **Lineage artifacts**
+   - **PROV** bundle: inputs → activities → outputs
+   - includes run identity, config hash, git SHA *(where available)*
+
+4) **Integrity artifacts**
+   - checksums manifest (sha256 preferred)
+   - optional: inventory (file sizes + media types)
+
+5) **Safety artifacts (when shipping containers/releases)**
+   - SBOM (software bill of materials)
+   - signed images/artifacts + attestations *(SLSA-like posture)*
+
+> [!NOTE]
+> Quicklooks are UX helpers. The authoritative truth is the evidence artifact + catalog metadata. 🗂️✅
+
+---
+
 ## 📜 KFM Pipeline Definition Contract
 
 KFM pipelines are contract-first. A pipeline should have a machine-readable contract file (recommended name: `pipeline.yml`) that explains **what it reads, what it writes, and what it guarantees**.
@@ -265,8 +361,11 @@ KFM pipelines are contract-first. A pipeline should have a machine-readable cont
 - `provenance` (how run_id/config hash is captured)
 - `gates` (schema/bounds/link/license/classification checks)
 - `determinism` (stable sorting, seed strategy, idempotency key)
+- `classification` + `license` rules (deny-by-default on unknowns)
 - `network` posture (deny-by-default; allowlist & logging if enabled)
 - `resources` (optional: memory/CPU hints; chunking strategy)
+- `retention` (optional: how long intermediate artifacts persist)
+- `privacy` posture (optional: PII checks; redaction/generalization rules)
 
 ### 🧩 Example `pipeline.yml` (starter template)
 ```yaml
@@ -283,6 +382,7 @@ inputs:
     paths:
       - "data/raw/elevation/3dep/**"
     license: "public-domain-or-provider-license"
+    classification: "public"
     notes: "Record exact source + version in PROV."
 
 outputs:
@@ -292,6 +392,8 @@ outputs:
       paths:
         - "data/processed/hydrology/watersheds/**"
       formats: ["COG", "GeoParquet", "GeoJSON (small only)"]
+      classification: "public"
+      license: "CC-BY-4.0"
 
 catalogs:
   stac_root: "data/stac"
@@ -333,6 +435,10 @@ network:
   allow_with_flag: "--allow-network"
   ssrf_protection: true
   log_urls_and_checksums: true
+
+retention:
+  work_dir_ttl_days: 14
+  keep_failed_runs: true
 ```
 
 > [!IMPORTANT]
@@ -365,8 +471,8 @@ make graph-ingest
 
 ### 🐍 Direct execution (module style)
 ```bash
-python -m src.pipelines.hydrology.watersheds.run --env dev --config config/dev.yml --run-id "RUN-2026-01-11-demo"
-python -m src.pipelines.hazards.refresh.run --env dev --since "2026-01-01T00:00:00Z" --run-id "RUN-2026-01-11-hazards"
+python -m src.pipelines.hydrology.watersheds.run --env dev --config config/dev.yml --run-id "RUN-2026-01-13-demo"
+python -m src.pipelines.hazards.refresh.run --env dev --since "2026-01-01T00:00:00Z" --run-id "RUN-2026-01-13-hazards"
 ```
 
 ### 🧱 Expected flags (strongly recommended)
@@ -377,6 +483,8 @@ python -m src.pipelines.hazards.refresh.run --env dev --since "2026-01-01T00:00:
 - `--dry-run` default OR “no writes unless `--apply`”
 - `--apply` for state mutation
 - `--allow-network` for any remote fetching (deny-by-default)
+- `--telemetry-root <path>` *(optional but recommended)*
+- `--log-level {DEBUG|INFO|WARNING|ERROR}` *(optional)*
 
 ### 🧱 Typical environment variables
 | Variable | Purpose |
@@ -405,7 +513,7 @@ A pipeline is “done” only when these pass (prefer “fail closed” 🔒):
 ### Ring 0 — Structure 🧱
 - JSON/YAML parses
 - schema validation for outputs + catalogs
-- required files exist (pipeline.yml, configs, outputs present)
+- required files exist (`pipeline.yml`, configs, outputs present)
 
 ### Ring 1 — Integrity 🧷
 - checksums/manifests recorded
@@ -421,9 +529,17 @@ A pipeline is “done” only when these pass (prefer “fail closed” 🔒):
 ### Ring 3 — Governance & safety 🔐🛡️
 - license required before publish
 - classification/sensitivity propagation (no downgrade)
-- redaction/generalization audited
+- redaction/generalization audited (when required)
 - hostile input guards (archives, rasters, PDFs, GeoJSON, etc.)
 - secrets/sensitive patterns not leaked to logs
+
+### Ring 4 — Modeling credibility (when doing inference/simulation) 🧪📊
+If a pipeline produces analytical/model outputs, it must emit *diagnostics artifacts*:
+- EDA/QC summaries (missingness, distribution checks)
+- regression diagnostics (residual checks, assumptions, baselines)
+- Bayesian outputs (priors, posterior summaries, credible intervals)
+- simulation V&V posture (verification/validation notes, sensitivity metadata)
+- uncertainty is first-class (intervals, confidence/credible bounds, caveats)
 
 ### 🧰 Catalog QA tooling (standard)
 KFM uses a **Catalog QA gate** in CI/pre-release:
@@ -447,10 +563,11 @@ KFM is evidence-first: pipelines should emit “receipts” that let someone rep
 ### ⭐ Recommended: MCP run receipt (when used for decisions or publish)
 - `mcp/runs/<RUN-ID>/MANIFEST.md` (human narrative of “what happened”)
 - links to the relevant catalogs + outputs + gates
+- any redactions/generalizations applied + rationale
 
 > [!NOTE]
 > Telemetry should help answer: **what ran, what changed, what gates passed, what was withheld/redacted, and why**.  
-> Example event concept: `focus_mode_redaction_notice_shown` when sensitive data is withheld/generalized in downstream experiences.
+> Example downstream event concept: `focus_mode_redaction_notice_shown` when sensitive data is withheld/generalized in Focus Mode.
 
 ---
 
@@ -461,6 +578,10 @@ KFM is FAIR + CARE + sovereignty-aware by design 🪶
 ### 🪪 Classification propagation (deny-by-default)
 - Outputs cannot be **less restricted** than inputs unless an explicit redaction/generalization step exists and is reviewed.
 - If classification cannot be determined, default to **restricted**.
+
+### 🧷 Stable IDs (information-free)
+- Don’t embed meaning (names, years, sequence, geography) into identifiers.
+- Treat IDs as stable pointers; store meaning in metadata where it can evolve safely.
 
 ### ✂️ Redaction/generalization is multi-layer
 If redaction is required, it must be applied consistently:
@@ -487,6 +608,12 @@ Pipelines ingest “files from the world.” Assume inputs are hostile by defaul
 - parameterize SQL (never string-concat untrusted values)
 - **never log secrets**; never print sensitive raw content
 
+### 🐚 Shell scripting standards (when using Bash wrappers)
+- default to strict mode: `set -euo pipefail`
+- quote variables *always*
+- never `eval` user-controlled inputs
+- prefer explicit allowlists for arguments and file patterns
+
 ### 🌐 Network posture
 - default: **no network**
 - if a pipeline fetches remote inputs:
@@ -509,6 +636,7 @@ KFM scales by staying **metadata-driven** and **chunk-friendly**:
 - 🔁 replay safety (idempotency keys + deterministic ordering)
 - ♻️ avoid reprocessing unchanged inputs (checksums + manifests)
 - 🗄️ push heavy spatial ops into PostGIS when safe (joins, intersects, buffers)
+- ⚖️ acknowledge workload mix (real-time vs batch; read-heavy vs write-heavy) and isolate where needed
 - 🛰️ compute-to-data for imagery-heavy domains
 
 > [!TIP]
@@ -551,6 +679,16 @@ Match an archetype before inventing a new one 🧩
 **Pattern:** store raw doc → extract text (and optional entities) → catalog as evidence with provenance + redaction rules  
 **Key gates:** hostile PDF handling, PII policy checks, attribution/license capture.
 
+### 7) 🧮 Simulation + optimization runs (job-style)
+**Use when:** scenario runs matter for decision support  
+**Pattern:** parameterized run → outputs + uncertainty + diagnostics → STAC/DCAT + PROV run bundle  
+**Key gates:** V&V posture, sensitivity metadata, deterministic seeds, reproducible configs.
+
+### 8) 🧊 3D GIS / volumetric artifacts (optional advanced)
+**Use when:** 3D trenches, volumes, meshes, point clouds, LOD needs  
+**Pattern:** ingest → validate CRS/scale → generate LOD/tiles → catalog assets + provenance  
+**Key gates:** coordinate sanity, metadata completeness, LOD budgets.
+
 > [!TIP]
 > “Value-added” derived layers (summaries, clustering, indices) are still **evidence artifacts**: store in `data/processed/**` + STAC/DCAT + PROV. ✅🗂️🧬
 
@@ -591,39 +729,48 @@ If this run is used to justify decisions or publish evidence:
 
 ## 📚 Project reference library influence map
 
-These library files shape pipeline design + review standards: determinism, validation, scaling, governance, security posture, and map readiness. 🧠🧾
+These library files shape pipeline design + review standards: determinism, validation, scaling, governance, security posture, map readiness, and human-centered constraints. 🧠🧾
 
 <details>
 <summary><strong>📦 Expand: Project files → what they influence in pipelines</strong></summary>
 
 | Project file | Primary lens | Pipeline-level impact |
 |---|---|---|
-| `MARKDOWN_GUIDE_v13.md.gdoc` | 🧱 Repo canon | Canonical ordering, subsystem boundaries, evidence-first narrative, API boundary rule, and v13 directory + standards expectations. |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` | 🧭 System blueprint | End-to-end architecture intent; how evidence supports maps, analysis, APIs, and decision support UX. |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi) | 🧭 System blueprint | Mission (“searchable, mappable, auditable, modelable”), provenance-first posture, clean architecture boundaries, AI-as-advisory framing. |
+| `Data Spaces.pdf` | 🔗 Interop | Catalogs as interfaces; pointer-over-payload; federation patterns; trust signals and rights awareness. |
+| `Scalable Data Management for Future Hardware.pdf` | ⚙️ Performance | Chunking/locality, concurrency-safe execution, pipeline breakers, future-proof execution models. |
+| `Database Performance at Scale.pdf`  [oai_citation:1‡Database Performance at Scale.pdf](file-service://file-36z8qyiVJRtrSs6QG7Epen) | 🗄️ DB reality | Workload mix awareness (real-time vs batch), indexing/partitioning posture, safe throughput planning, avoiding surprise spikes. |
+| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | 🐘 Data store | Transactional safety, migrations, indexing, staging→swap publish patterns for reproducible ingest. |
+| `python-geospatial-analysis-cookbook.pdf` | 🗺️ GIS engineering | CRS hygiene, spatial predicates, PostGIS-friendly patterns, safe transforms at boundaries. |
+| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | 🎨 Cartography | “Map honesty” constraints: classification/aggregation choices are meaning; pipelines should emit metadata needed for truthful symbology. |
+| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | 📱 Offline/mobile | Tiling, caching, progressive loading constraints; sensitivity awareness for location data. |
+| `responsive-web-design-with-html5-and-css3.pdf` | 🌐 Frontend constraints | Artifact budgets, progressive loading, responsive slices; avoids shipping blob payloads. |
+| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 🧊 3D/GPU | Coordinate conventions; LOD/tiling needs; GPU-friendly asset prep and validation. |
+| `Archaeological 3D GIS_26_01_12_17_53_09.pdf`  [oai_citation:2‡Archaeological 3D GIS_26_01_12_17_53_09.pdf](file-service://file-6DRx5ELzDPBso9Y5Qcbqm2) | 🧊 3D evidence | 3D models/volumes as first-class evidence; validates coordinate/scale; supports 3D GIS + interpretive vs realistic model distinctions. |
+| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | 🖼️ Imagery | Compression/thumbnail strategy; cacheable quicklooks; avoid bloated repos/artifacts. |
 | `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | 🛰️ RS workflows | Export discipline; record AOI/time/method; derived products as first-class datasets with provenance. |
-| `python-geospatial-analysis-cookbook.pdf` | 🗺️ GIS engineering | Practical geospatial IO patterns; PostGIS-centric operations; safer spatial joins/filters; web mapping friendly outputs. |
-| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | 🎨 Cartography | “Map honesty” constraints: classification/aggregation choices, legends, and style implications should be audited. |
-| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | 📱 Offline/mobile | Payload budgets, tiling, caching, and progressive loading constraints upstream of UI. |
-| `responsive-web-design-with-html5-and-css3.pdf` | 🌐 Frontend constraints | Pipeline artifacts should respect responsive payload budgets and progressive loading needs. |
-| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 🧊 3D/GPU | Coordinate conventions; LOD/tiling needs; GPU-friendly asset preparation and validation. |
-| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | 🖼️ Imagery | Compression/thumbnail strategy; preventing bloated repos; QA artifact conventions. |
-| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | 🐘 Data store | Transactional safety, migrations, indexing, staging→swap patterns for reproducible ingest. |
-| `Scalable Data Management for Future Hardware.pdf` | ⚙️ Performance | Chunking, locality, concurrency-safe execution; pipeline breakers; future streaming/parallel models. |
-| `Data Spaces.pdf` | 🔗 Interop | Catalogs as interfaces; rights/access awareness; monitoring mindset for data platforms. |
-| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | 🧪 V&V discipline | Verification/validation patterns; scientific reproducibility posture; run receipts + parameter capture. |
-| `Understanding Statistics & Experimental Design.pdf` | 📊 Rigor | Bias/confounding awareness; acceptance gates that prevent misleading “derived truths.” |
-| `regression-analysis-with-python.pdf` | 📈 Diagnostics | Baselines + residual checks as pipeline quality gates for modeled artifacts. |
-| `Regression analysis using Python - slides-linear-regression.pdf` | 📈 Quick ref | Reminders for assumptions, diagnostics, and evaluation discipline. |
-| `graphical-data-analysis-with-r.pdf` | 📉 EDA instincts | QC plots as pipeline artifacts (small, linked, and deterministic). |
-| `think-bayes-bayesian-statistics-in-python.pdf` | 🎲 Uncertainty | Uncertainty as a first-class output (intervals/posteriors) for decision support. |
-| `Spectral Geometry of Graphs.pdf` | 🕸️ Graph analytics | Caution: graph-derived metrics are signals; validate integrity & meaning; don’t overclaim. |
-| `Generalized Topology Optimization for Structural Design.pdf` | 🧮 Optimization | Optimization runs must record objectives/constraints; determinism and replay rules matter. |
-| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | 🧯 Threat modeling | Defensive posture for networked ingestion; SSRF, logging, privilege boundaries. |
-| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | 🛡️ Security mindset | Hostile-input awareness for parsers/extractors; hardening glue code and tooling. |
-| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | 🧵 Concurrency | Deterministic concurrency patterns; avoid races; safe orchestration for scheduled/real-time pipelines. |
-| `Introduction to Digital Humanism.pdf` | ❤️ Human-centered | Transparency + accountability defaults; explainability and community trust. |
-| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | ⚖️ AI governance | Label AI involvement; provenance + risk framing for decision-support outputs. |
-| `A programming Books.pdf` … `U-X programming Books.pdf` | 🧰 Polyglot shelf | Broad implementation reference; pick tooling without breaking contracts/boundaries. |
+| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | 🧪 V&V discipline | Verification/validation patterns; scientific reproducibility; parameter capture; uncertainty and sensitivity metadata. |
+| `Understanding Statistics & Experimental Design.pdf` | 📊 Rigor | Bias/confounding awareness; gates that prevent misleading derived “truth”; experimental framing for evaluations. |
+| `graphical-data-analysis-with-r.pdf` | 📉 EDA instincts | QC plots as pipeline artifacts (small, linked, deterministic); sanity-first visuals. |
+| `regression-analysis-with-python.pdf` | 📈 Diagnostics | Regression quality gates: residuals, assumptions, baseline comparisons, interpretability constraints. |
+| `Regression analysis using Python - slides-linear-regression.pdf` | 📈 Quick ref | Standard result shapes + metrics conventions; consistent diagnostics outputs for UI. |
+| `think-bayes-bayesian-statistics-in-python.pdf` | 🎲 Uncertainty | Priors/posteriors, credible intervals, uncertainty-first pipeline outputs. |
+| `Understanding Machine Learning-From Theory to Algorithms.pdf`  [oai_citation:3‡U-X programming Books.pdf](file-service://file-3hYtSGHtHmb6wyTtavym6M) | 🧠 ML theory | Generalization mindset; avoid leakage; evaluation discipline; treat ML outputs as bounded signals. |
+| `Basics of Linear Algebra for Machine Learning` *(in bundle)*  [oai_citation:4‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ) | 🧮 Math hygiene | Linear algebra foundations for regression/PCA/SVD artifacts; supports deterministic numeric checks and sanity. |
+| `Deep Learning for Coders with fastai and PyTorch ...` | 🤖 Practical ML | Baseline-first, evaluation artifacts, model cards; keep heavy training in workers/jobs not in API thread. |
+| `Generalized Topology Optimization for Structural Design.pdf` | 🧮 Optimization | Record objective/constraints; deterministic run IDs; package outputs as governed artifacts. |
+| `Spectral Geometry of Graphs.pdf` | 🕸️ Graph analytics | Graph-derived metrics are signals; keep queries bounded; validate meaning + integrity; avoid overclaiming. |
+| `Flexible Software Design: Systems Development for Changing Requirements.pdf`  [oai_citation:5‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY) | 🧱 Flexibility | “Imperfect knowledge” posture; stable, information-free identifiers; designing for change without breaking contracts. |
+| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | 🧯 Threat modeling | Defensive posture for networked ingestion; segmentation, least privilege, monitoring. |
+| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | 🛡️ Security mindset | Hostile-input awareness for parsers/extractors; reduce attack surface; validate aggressively. |
+| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | 🧵 Concurrency | Backpressure, bounded queues, predictable scheduling; avoid “thread explosion”. |
+| `Implementing Programming Languages. An Introduction to Compilers and Interpreters.pdf`  [oai_citation:6‡I-L programming Books.pdf](file-service://file-T9sYu87k1GPNNKMLddx41a) | 🧩 Phase discipline | Thinking in phases (parse→validate→transform→emit); inspires pipeline DSL/contract rigor. |
+| `Bash Notes for Professionals.pdf`  [oai_citation:7‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ) | 🐚 Tooling | Safer shell scripting (quoting, pipes, env discipline) for wrappers/CI. |
+| `MATLAB Notes for Professionals.pdf`  [oai_citation:8‡M-N programming Books.pdf](file-service://file-EYCp5md89QY2cy5PCYS18e) | 🧮 Modeling glue | Optional MATLAB-based modeling pipelines (containerized; deterministic IO; receipts required). |
+| `Introduction to Digital Humanism.pdf` | ❤️ Human-centered | Transparency + accountability defaults; explanation hooks; avoid automation harm. |
+| `Principles of Biological Autonomy - book_9780262381833.pdf` | 🧠 Systems thinking | Keep humans in control; stable feedback loops; avoid opaque “autopilot”. |
+| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | ⚖️ AI governance | Label AI involvement; provenance + risk framing; avoid “AI says so” authority. |
+| `A programming Books.pdf` … `U-X programming Books.pdf` | 🧰 Polyglot shelf | Broad implementation reference; supports adapters and tooling without breaking contracts/boundaries. |
 
 </details>
 
@@ -634,8 +781,8 @@ These library files shape pipeline design + review standards: determinism, valid
 ```yaml
 title: "KFM Pipelines — canonical pipeline boundary"
 path: "pipelines/README.md"
-version: "v1.4.0"
-last_updated: "2026-01-11"
+version: "v1.5.0"
+last_updated: "2026-01-13"
 review_cycle: "90 days"
 prime_directive: "No catalog → no graph → no API → no UI"
 pipeline_order: "ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode"
@@ -643,8 +790,10 @@ principles:
   - "contract-first"
   - "evidence-first"
   - "determinism-by-default"
+  - "stable-identifiers (information-free)"
   - "deny-by-default security"
   - "FAIR+CARE + sovereignty-aware"
+  - "modeling credibility (V&V + uncertainty artifacts)"
 ```
 
 ---
@@ -653,8 +802,24 @@ principles:
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
+| v1.5.0 | 2026-01-13 | Tightened “pipelines as compilers” phase model; formalized promotion workflow (candidate→staged→published); added standard artifact set incl. integrity + supply-chain notes; expanded credibility gates for inference/simulation; updated influence map (DB performance, flexibility, ML theory, 3D GIS, tooling). | KFM Engineering |
 | v1.4.0 | 2026-01-11 | Aligned pipeline README with Master Guide v13 invariants (API boundary, evidence-first narrative); added pipeline taxonomy + PDC contract template; expanded receipts/telemetry; added watcher/document-ingest archetypes; clarified docs paths for domains/pipelines/story nodes. | KFM Engineering |
 | v1.3.0 | 2026-01-09 | Strengthened pipeline contract essentials (declared IO, PROV, schema/bounds, atomic publish); expanded governance, security, scaling, and archetype guidance. | KFM Engineering |
+
+---
+
+## 📎 Evidence anchors
+
+> These are the project files directly referenced while updating this README (click-through where supported).
+
+- `Implementing Programming Languages. An Introduction to Compilers and Interpreters.pdf`  [oai_citation:9‡I-L programming Books.pdf](file-service://file-T9sYu87k1GPNNKMLddx41a)  
+- `MATLAB Notes for Professionals.pdf`  [oai_citation:10‡M-N programming Books.pdf](file-service://file-EYCp5md89QY2cy5PCYS18e)  
+- `Bash Notes for Professionals.pdf`  [oai_citation:11‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ)  
+- `Understanding Machine Learning: From Theory to Algorithms.pdf`  [oai_citation:12‡U-X programming Books.pdf](file-service://file-3hYtSGHtHmb6wyTtavym6M)  
+- `Flexible Software Design: Systems Development for Changing Requirements.pdf`  [oai_citation:13‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY)  
+- `Database Performance at Scale.pdf`  [oai_citation:14‡Database Performance at Scale.pdf](file-service://file-36z8qyiVJRtrSs6QG7Epen)  
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
+- `Archaeological 3D GIS_26_01_12_17_53_09.pdf`  [oai_citation:16‡Archaeological 3D GIS_26_01_12_17_53_09.pdf](file-service://file-6DRx5ELzDPBso9Y5Qcbqm2)  
 
 ---
 
@@ -664,10 +829,3 @@ principles:
 🧬 FAIR+CARE · 🪶 Sovereignty-aware · 🛡️ Policy-gated builds · 🧾 Evidence-first
 
 </div>
-
-<!--
-📎 Evidence anchors (project docs used to update this README)
-- Master Guide v13 invariants (ordering, API boundary, evidence-first narrative, determinism): :contentReference[oaicite:0]{index=0} :contentReference[oaicite:1]{index=1} :contentReference[oaicite:2]{index=2}
-- KFM system blueprint + decision-support framing: :contentReference[oaicite:3]{index=3}
-- Future pipeline extensions (watchers, document ingest, OpenLineage/attestation concepts): 
--->
