@@ -1,8 +1,9 @@
 <!--
 📌 tools/ is the repo’s *governed toolchain surface* for building + validating KFM artifacts.
-🗓️ Last updated: 2026-01-11
+🗓️ Last updated: 2026-01-13
 🔁 Review cycle: 90 days (or anytime pipeline order / catalogs / policy changes)
 🧭 Alignment: Master Guide v13 (contract-first + evidence-first + one canonical home per subsystem)
+🧪 Scientific posture: Verification + Validation + Uncertainty Quantification (V&V&UQ) for anything “model-y”
 -->
 
 <div align="center">
@@ -16,6 +17,7 @@
 ![Node](https://img.shields.io/badge/Node-18%2B-informational)
 ![Docker](https://img.shields.io/badge/Docker-optional%20%28dev%2FCI%29-informational)
 ![License](https://img.shields.io/badge/license-MIT-success)
+
 ![Contract-first](https://img.shields.io/badge/contract--first-schemas%20%2B%20API-blue)
 ![Evidence-first](https://img.shields.io/badge/evidence--first-catalogs%20%2B%20PROV-blueviolet)
 ![Catalog-first](https://img.shields.io/badge/catalog--first-STAC%20%7C%20DCAT%20%7C%20PROV-blue)
@@ -23,9 +25,15 @@
 ![Fail Closed](https://img.shields.io/badge/quality%20gates-fail%20closed-red)
 ![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE%20%2B%20Sovereignty-2ea043)
 
+![STAC](https://img.shields.io/badge/STAC-catalogs-1f6feb)
+![DCAT](https://img.shields.io/badge/DCAT-discovery-8250df)
+![PROV](https://img.shields.io/badge/PROV-lineage-8250df)
+![SBOM](https://img.shields.io/badge/SBOM-SPDX%20%7C%20CycloneDX-2ea043)
+![Sigstore](https://img.shields.io/badge/attestations-sigstore%20%2F%20cosign-8b5cf6)
+
 </div>
 
-> **TL;DR:** `tools/` holds the **command surface** for building, validating, and packaging KFM artifacts **without bypassing governance**.  
+> **TL;DR:** `tools/` is the **governed command surface** for building, validating, and packaging KFM artifacts **without bypassing governance**.  
 > Tools are **CI-safe** by design: deterministic defaults, clear contracts, fast QA gates, and provenance emission.
 
 > [!IMPORTANT]
@@ -45,14 +53,18 @@
 - [🧾 Contracts & schemas](#contracts-and-schemas)
 - [📦 Data staging + catalog locations](#data-staging)
 - [🧱 Tool contract](#tool-contract)
+- [🎲 Determinism & reproducibility levels](#determinism)
+- [🧪 Artifact QA matrix](#qa-matrix)
 - [📁 Expected folder layout](#expected-layout)
 - [🔁 Common workflows](#common-workflows)
 - [✅ Validation & QA gates](#validation-gates)
 - [🔏 Provenance, SBOM, attestations, releases](#provenance-sbom-attestations)
 - [🗺️ Geo & mapping utilities](#geo-mapping)
 - [🛰️ Remote sensing utilities](#remote-sensing)
+- [🧊 Imaging & compression utilities](#imaging-compression)
+- [🧱 3D / WebGL / scene utilities](#3d-visualization)
 - [🧠 Graph & DB utilities](#graph-db)
-- [🌐 Web/UI build utilities](#web-ui)
+- [📊 Statistical evidence utilities](#stats-evidence)
 - [🧪 Modeling/ML/simulation utilities](#modeling-ml-simulation)
 - [🔐 Security posture](#security-posture)
 - [⚡ Performance & scaling notes](#performance-scaling)
@@ -116,6 +128,12 @@ No “published-looking” output without boundary artifacts:
 ### ✅ Deterministic by default 🎲🚫
 Given the same inputs + config + seed, tools must produce the same outputs (ordering included).
 
+### ✅ Human-centered + sovereignty-aware 🌾🧑‍🤝‍🧑
+Tools are not just “code runners” — they shape **decision artifacts**:
+- respect consent, agency, and auditability
+- treat policy & classification as **data**, enforced by gates
+- default to *least surprise* and *least privilege*
+
 ---
 
 <a id="non-negotiable-ordering"></a>
@@ -153,6 +171,7 @@ flowchart LR
 - **Graph/DB loaders** that **ingest from catalogs** (not ad-hoc inserts)
 - **Release packaging** (SBOM generation, signatures, attestations)
 - **CI entrypoints** (non-interactive, stable exit codes)
+- **Scientific integrity harnesses** (V&V, UQ smoke checks, regression tests)
 
 🚫 Not a good fit:
 - Long-lived services (APIs, daemons) → runtime/app folders
@@ -194,11 +213,24 @@ flowchart LR
 ### ✅ What counts as a “contract artifact”
 - JSON Schema (STAC/DCAT/PROV, Story Nodes, UI configs, telemetry)
 - API boundary contracts (OpenAPI, GraphQL SDL, typed request/response)
-- Any machine-validated interface that downstream depends on
+- Tool manifests (if adopted) describing inputs/outputs, gates, and network posture
+- **Data contract metadata** describing dataset schema, units, provenance hooks, and sensitivity
 
 ### ✅ Where tools should look
 - `schemas/` → JSON schemas (STAC/DCAT/PROV/storynodes/ui/telemetry)
 - `docs/standards/` → KFM profiles and governance rules (STAC/DCAT/PROV profiles, markdown protocol, repo structure standard)
+
+### 🧾 Data contract metadata (dataset-level) 📦
+For any dataset that will become evidence, require a dataset metadata file that includes:
+- schema/fields + units
+- coordinate reference system expectations (where applicable)
+- license + attribution
+- sensitivity/classification tags
+- expected spatial/temporal bounds (where applicable)
+- pointers to where STAC/DCAT/PROV will be emitted
+
+> [!TIP]
+> Treat the metadata file like a **build contract**: producers must satisfy it; tools validate it; consumers trust it.
 
 ### 🚫 Avoid schema drift
 If you need a new field:
@@ -212,17 +244,28 @@ If you need a new field:
 <a id="data-staging"></a>
 ## 📦 Data staging + catalog locations
 
-KFM data work is staged and traceable:
+KFM data work is staged and traceable, with **one canonical home per dataset**.
 
-1) 📥 `data/raw/<domain>/...` — raw inputs (as-received)  
-2) 🧱 `data/work/<domain>/...` — intermediates (scratch / temp / staging)  
-3) ✅ `data/processed/<domain>/...` — publishable evidence artifacts  
+### ✅ Canonical staging pattern (v13)
+```text
+data/
+├── stac/
+│   ├── collections/
+│   └── items/
+├── catalog/
+│   └── dcat/
+├── prov/
+├── <domain>/
+│   ├── raw/        # as-received
+│   ├── work/       # intermediates / scratch
+│   └── processed/  # publishable evidence artifacts
+└── sources/        # optional but recommended: retrieval manifests, checksums, licenses
+```
 
-Optional but recommended:
-- 🧾 `data/sources/` — source manifests (URLs, licenses, checksums, retrieval notes)
+> [!NOTE]
+> If your repo still uses `data/raw/<domain>/...` style paths, treat that as **legacy** and document the mapping in `data/README.md`.
 
-Catalog + lineage outputs are first-class boundary artifacts:
-
+### Boundary artifacts (required before “publish-looking” outputs)
 - 🗂️ `data/stac/collections/` — STAC Collections  
 - 🗂️ `data/stac/items/` — STAC Items  
 - 🏷️ `data/catalog/dcat/` — DCAT datasets/distributions (JSON-LD)  
@@ -247,13 +290,16 @@ Every tool must behave predictably under automation.
 - `--apply` (only when the tool mutates state)
 - `--env {dev|staging|prod}` when environment matters
 - `--run-id <id>` (or read `KFM_RUN_ID`) for provenance correlation
+- `--seed <int>` (or read `KFM_SEED`) for deterministic randomness
 - `--contracts <path>` optional override (defaults to `schemas/`)
-- Structured logging (human-readable + optional JSONL via `--log-json`)
+- `--log-json` (emit JSONL logs, one record per line)
+- `--report <path>` (write a machine-readable summary artifact, even on failure)
 
 ### ✅ Exit codes (recommended standard)
 - `0` success
 - `2` CLI usage error
 - `3` validation/QA failure (schema invalid, missing required fields, link check fails)
+- `4` policy failure (license missing, classification downgrade, prohibited field)
 - `>=10` runtime failure (I/O, network, DB, unhandled exceptions)
 
 ### 🔐 Network posture
@@ -263,12 +309,56 @@ Every tool must behave predictably under automation.
   - block private IP ranges by default (SSRF defense)
   - log source URLs + checksums of downloaded artifacts
 
+### 🧾 Provenance emission (minimum viable)
+If a tool produces or promotes evidence artifacts, it must emit a PROV bundle containing:
+- run_id, timestamps, tool name/version
+- code identity (git SHA) + config hash
+- inputs used (IDs + checksums where feasible)
+- outputs generated (paths + checksums)
+- pointers back to STAC/DCAT records
+
 ### 🤖 AI-assisted behavior (allowed, but gated)
 If a tool uses AI to suggest metadata / mappings:
 - default mode must be **suggest-only** (no mutation)
 - require `--apply` to write anything
 - log model/version/config where permissible
 - treat outputs as **draft** until validated + reviewed
+- preserve user agency (human-in-the-loop by design)
+
+---
+
+<a id="determinism"></a>
+## 🎲 Determinism & reproducibility levels
+
+Not everything needs full hermetic builds — but everything needs **auditability**.
+
+### 🧩 Repro levels (recommended)
+| Level | Name | Promise | Typical use |
+|---:|---|---|---|
+| R0 | Deterministic | Same inputs+config+seed ⇒ same outputs | most tools |
+| R1 | Provenance-complete | Deterministic + complete PROV + catalog pointers | publishable evidence |
+| R2 | Rebuildable | R1 + pinned deps + machine spec captured | critical releases |
+| R3 | Hermetic | R2 + no network + fully captured environment | highest assurance |
+
+> [!TIP]
+> If you don’t know which level you need, default to **R1** for anything that touches `processed/`.
+
+---
+
+<a id="qa-matrix"></a>
+## 🧪 Artifact QA matrix
+
+Use this matrix to decide which validators must run **before promotion** ✅
+
+| Artifact type | Minimum checks | Extra checks (recommended) |
+|---|---|---|
+| 📄 JSON/JSON-LD (STAC/DCAT/PROV) | schema + required fields + link resolution | URI normalization + SPDX license lint |
+| 🧭 Vector (GeoParquet / FlatGeobuf / GeoJSON) | schema + CRS + geometry validity | topology rules + simplification policy + attribution propagation |
+| 🛰️ Raster (COG / GeoTIFF / NetCDF) | COG layout + CRS + bounds + nodata | overview completeness + histogram sanity + tiling alignment |
+| 🗄️ Tabular (Parquet/CSV) | schema + types + missingness report | drift checks + range checks + sampling provenance |
+| 🧠 ML artifacts (metrics/models) | metrics schema + dataset refs + seeds | calibration checks + fairness slices + uncertainty |
+| 🧮 Simulation outputs | config+seed captured + deterministic rerun | V&V smoke tests + UQ summary + sensitivity |
+| 🧊 3D assets (3D Tiles / glTF) | manifest + attribution + bounding volume | LOD validation + GPU budget checks + compression checks |
 
 ---
 
@@ -288,16 +378,21 @@ If a tool uses AI to suggest metadata / mappings:
 │   ├── ⚡ catalog_qa/             # catalog QA gate (PR-friendly)
 │   ├── 🛡️ policy/                # license/classification/no-downgrade rules (OPA/Conftest optional)
 │   ├── 🧭 geo/                   # CRS/geom/raster validators
+│   ├── 📊 stats/                 # statistical QA (drift, residuals, effect sizes)
 │   └── 🔐 security/              # hostile-input checks (zip bombs, traversal, SSRF guards)
 ├── 🆔 id/                        # deterministic IDs, hashing, manifest tooling
 ├── 🧬 prov/                      # provenance helpers (PROV JSON-LD emitters)
+├── 🧩 dsl/                       # optional: schema/profile/policy DSL compilers (contract-first)
 ├── 🕸️ graph/                     # graph ingest helpers (must consume catalog roots)
 ├── 🗄️ db/                        # PostGIS helpers, migrations, query packs
 ├── 🗺️ geo/                       # GDAL wrappers, tiling, reprojection, COG utilities
+├── 🛰️ rs/                        # remote sensing helpers (GEE export, masking, compositing)
+├── 🧊 3d/                        # 3D Tiles / glTF tooling, mesh + point cloud validation
 ├── 🌐 web/                       # Map build helpers (styles, tiles packaging, assets)
 ├── 🤖 ml/                        # train/eval orchestration (must emit datasets + metrics refs)
 ├── 🧮 simulation/                # scenario runners (must record configs + seeds)
 ├── 🔏 attest/                    # SBOM + signing helpers (cosign/sigstore patterns)
+├── ⚡ perf/                      # profiling harnesses + performance budgets
 └── 🧪 ci/                        # deterministic entrypoints used by CI
 ```
 
@@ -318,17 +413,19 @@ If a tool uses AI to suggest metadata / mappings:
 | 🚚 Promote/publish | `tools/catalogs/promote...` | atomic move + updated catalogs |
 | 🕸️ Load graph/DB | `tools/graph/...` / `tools/db/...` | ingest report |
 | 🌐 Build UI assets | `tools/web/...` | tiles/styles/manifests |
+| 🧊 Build 3D bundles | `tools/3d/...` | 3D tiles + manifest |
+| 📊 Statistical QA | `tools/validation/stats/...` | drift/residuals/effect-size reports |
 | 🔏 Release bundle | `tools/attest/...` | SBOM + attestation in `releases/` |
 
 ---
 
 ### A) Build a dataset (stage → validate → catalog → promote) ✅
 
-1) Ingest → `data/raw/...`  
-2) Transform → `data/work/...`  
+1) Ingest → `data/<domain>/raw/...`  
+2) Transform → `data/<domain>/work/...`  
 3) Validate (schema/CRS/geometry/license/bounds)  
 4) Emit STAC/DCAT/PROV  
-5) Promote to `data/processed/...`  
+5) Promote to `data/<domain>/processed/...`  
 6) (Optional) Ingest into graph/DB from catalogs  
 7) Write MCP run receipt if it affects decisions or production  
 
@@ -349,7 +446,7 @@ python tools/catalogs/promote.py --help
 ```
 
 > [!TIP]
-> If it changes `data/processed/`, it should also change **STAC/DCAT/PROV** and have a run receipt.
+> If it changes `processed/`, it should also change **STAC/DCAT/PROV** and have a run receipt.
 
 ---
 
@@ -369,7 +466,7 @@ python tools/validation/catalog_qa/run_catalog_qa.py --root data/stac
 ### C) Evidence artifacts (analysis / AI / simulation outputs) 🧾🤖
 
 KFM treats analysis outputs as first-class datasets:
-- store under `data/processed/<domain>/...`
+- store under `data/<domain>/processed/...`
 - create STAC/DCAT entries
 - emit PROV capturing inputs + parameters + seeds + uncertainty/metrics
 - do not expose directly in UI; go through API boundary
@@ -424,6 +521,7 @@ For UI consumption, tools should prefer:
 python tools/geo/build_cog.py --help
 python tools/geo/build_tiles.py --help
 python tools/web/lint_style.py --help
+python tools/3d/package_3dtiles.py --help
 ```
 
 ---
@@ -433,23 +531,29 @@ python tools/web/lint_style.py --help
 
 Think in rings (each ring blocks promotion if it fails):
 
-### Ring 0: Structure
+### Ring 0: Structure 🧱
 - JSON parses
 - schema validation (STAC/DCAT/PROV + extensions)
 - required files exist
 
-### Ring 1: Integrity
+### Ring 1: Integrity 🔗
 - checksums/manifest inventory
 - deterministic IDs present where required
 - atomic publish (no half-state)
 
-### Ring 2: Semantics
+### Ring 2: Semantics 🧠
 - CRS correctness + axis order
 - geometry validity (and any allowed repair policy)
 - raster sanity (nodata, resolution, alignment)
 - time/bounds sanity (e.g., Kansas bounds, plausible ranges)
 
-### Ring 3: Governance & safety
+### Ring 3: Statistical & scientific sanity 🧪📊
+- drift checks (schema + distributions)
+- regression diagnostics (residuals, heteroscedasticity, multicollinearity flags)
+- uncertainty summaries (where applicable)
+- “smell tests” for simulation outputs (conservation checks / stability checks)
+
+### Ring 4: Governance & safety 🔐
 - license required before publish
 - classification propagation (no downgrade)
 - sensitive fields redaction rules
@@ -478,11 +582,11 @@ Minimal PROV JSON-LD example shape:
 {
   "@context": ["https://www.w3.org/ns/prov.jsonld"],
   "type": "prov:Activity",
-  "prov:startedAtTime": "2026-01-09T00:00:00Z",
-  "prov:endedAtTime": "2026-01-09T00:05:00Z",
+  "prov:startedAtTime": "2026-01-13T00:00:00Z",
+  "prov:endedAtTime": "2026-01-13T00:05:00Z",
   "prov:used": ["<input_id_or_href>"],
   "prov:generated": ["<output_id_or_href>"],
-  "kfm:run_id": "RUN-2026-01-09-example",
+  "kfm:run_id": "RUN-2026-01-13-example",
   "kfm:checksums": { "<output_id_or_href>": "sha256:..." },
   "kfm:code": { "git_sha": "<abcdef1>" },
   "kfm:tool": { "name": "tools/catalogs/promote.py", "version": "<git_sha_or_semver>" }
@@ -499,7 +603,7 @@ For release bundles or promoted artifacts:
 Recommended structure:
 ```text
 releases/
-└── 2026-01-11_v0.3.0/
+└── 2026-01-13_v0.4.0/
     ├── sbom.spdx.json
     ├── attestations/
     ├── manifests/
@@ -530,6 +634,7 @@ When emitting UI-facing assets:
 - legend entries match data classes
 - color ramps don’t imply false precision
 - scale-dependent styling is tested (common zooms)
+- mobile readability (labels, tap targets, contrast)
 
 ---
 
@@ -538,13 +643,47 @@ When emitting UI-facing assets:
 
 Remote sensing tooling should prefer **derived products + provenance** over raw archive dumps:
 - record AOI (bbox/geometry) + time window
-- record compositing + masking logic
+- record compositing + masking logic (cloud/shadow, water, snow, etc.)
 - record resolution/CRS
 - export as COGs (and/or cloud-optimized NetCDF where relevant)
 - emit STAC Items per logical unit (scene, tile, station-day, etc.)
 
 > [!TIP]
 > Don’t let EO pipelines become “mystery rasters.” If you can’t trace how it was made, it’s not shippable.
+
+---
+
+<a id="imaging-compression"></a>
+## 🧊 Imaging & compression utilities
+
+Images are evidence too — and compression choices change meaning 🧾
+
+Recommended tool behaviors:
+- detect format + bit depth + alpha channels
+- warn when a lossy conversion could change interpretation (e.g., subtle gradients)
+- emit a small report: chosen format, compression parameters, and rationale
+
+Practical format hints (rule-of-thumb):
+- **JPEG** → photographs / continuous tone, lossy
+- **PNG** → screenshots / line art / sharp edges, lossless, supports alpha
+- **GIF** → limited palette, simple animations (avoid for scientific rasters)
+- **BMP/XBM** → legacy / rarely suitable in modern pipelines
+
+---
+
+<a id="3d-visualization"></a>
+## 🧱 3D / WebGL / scene utilities
+
+When we ship 3D, we ship **performance budgets + provenance** 🧊⚡
+
+Tools in `tools/3d/` should support:
+- validating glTF / 3D Tiles manifests
+- generating LOD pyramids (and verifying completeness)
+- embedding attribution + license + provenance pointers in manifests
+- sanity-checking GPU budgets (triangle count, texture size, draw calls) for target devices
+
+> [!NOTE]
+> Archaeology and historical reconstruction workflows often require **explicit uncertainty labeling** in 3D (e.g., “measured” vs “inferred”). Treat uncertainty as metadata, not a footnote.
 
 ---
 
@@ -559,21 +698,38 @@ Graph ingest should be downstream of catalogs:
   - “no orphan entities”
   - “stable pagination order for query surfaces”
 
-### PostGIS 🗄️
+Optional (but powerful) graph tooling:
+- spectral summaries (e.g., connectivity checks, component counts)
+- stable graph IDs derived from catalog IDs (never from DB internal IDs)
+
+### PostGIS / PostgreSQL 🗄️
 - prefer database-side spatial ops when safe (joins, buffers, within, intersects)
 - use staging tables + transactional swaps (load → validate → swap)
+- avoid foot-guns in shared query packs:
+  - prefer explicit column lists over `SELECT *`
+  - validate query plans for large tables (indices, bounds, partitions)
 
 ---
 
-<a id="web-ui"></a>
-## 🌐 Web/UI build utilities
+<a id="stats-evidence"></a>
+## 📊 Statistical evidence utilities
 
-Tools in `tools/web/` should help produce:
-- tile packages (and validate pyramid completeness)
-- style JSON linting (MapLibre)
-- small deterministic thumbnails for previews
-- asset manifests with attribution and license propagation
-- optional 3D Tiles packaging (Cesium) for 3D experiences
+KFM treats statistics as **evidence engineering**, not “extra math” 📈🧾
+
+Tools should help prevent common failure modes:
+- silent p-hacking / multiple comparisons
+- “significant but tiny” effects presented without context
+- regression assumptions ignored (heteroscedasticity, multicollinearity, non-linearity)
+- underpowered or non-replicable experimental setups
+
+Recommended outputs:
+- effect sizes + uncertainty (CI/credible intervals), not just p-values
+- residual diagnostics (plots + stats)
+- drift reports (training vs current distribution)
+- declared priors (for Bayesian tools) + sensitivity summaries
+
+> [!TIP]
+> If a statistical result is used to justify a decision or an operational rule, it belongs in `mcp/` as a run receipt (with links to catalogs + provenance).
 
 ---
 
@@ -585,6 +741,12 @@ Modeling tools must behave like scientific instruments 🧪🔬:
 - emit evaluation artifacts (metrics + plots where relevant)
 - record dataset IDs used (STAC/DCAT pointers)
 - write run receipts for significant results (MCP alignment)
+- support verification/validation hooks (golden tests, invariants, sanity checks)
+
+Simulation-specific expectations (V&V & UQ mindset):
+- verification: “did we solve the equations right?”
+- validation: “are we solving the right equations for this phenomenon?”
+- uncertainty: quantify sensitivity to inputs, parameters, and model form
 
 > [!CAUTION]
 > If a tool uses AI-assisted generation, label it and record the model/version/config where permissible.
@@ -607,6 +769,10 @@ Recommended CI hooks:
 - dependency vulnerability scan
 - container scan for tool images (when used)
 
+> [!IMPORTANT]
+> Security references in the library are for **defensive posture and awareness** only.  
+> Tools must never provide “offense automation” — the goal is resilience, not exploitation.
+
 ---
 
 <a id="performance-scaling"></a>
@@ -616,7 +782,13 @@ When tools grow:
 - chunk work (tiles/partitions/morsels) for parallelism
 - introduce “pipeline breakers” at materialization boundaries
 - keep caches explicit and provenance-aware
+- profile first, then optimize (measure before guessing)
 - prefer near-data execution for large scans (where architecture supports it)
+
+Database performance reminders:
+- stable query shapes + stable sort orders are part of determinism
+- indexing strategy must be documented (and reproducible)
+- treat query plans as artifacts for critical pipelines (store summaries in reports)
 
 > The rule: speed is good — **but correctness and provenance come first**.
 
@@ -674,7 +846,16 @@ gates:
   - "stac_schema"
   - "link_check"
   - "license_required"
+  - "prov_required_for_publish"
 ```
+
+### 🪜 Promotion ladder (how scripts become tools)
+1) prototype in `sandbox/` or local notebook  
+2) extract core logic into `src/`  
+3) add a thin `tools/` CLI wrapper  
+4) add validators + provenance emission  
+5) add CI target + docs + examples  
+6) promote to “governed surface” ✅
 
 ---
 
@@ -685,8 +866,8 @@ These files inform how tools are designed (determinism, validation, governance, 
 Keep this list updated when the library changes.
 
 ### 📘 Canonical KFM guides (repo structure, contracts, governance)
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
 - `MARKDOWN_GUIDE_v13.md.gdoc` *(Master Guide v13 draft)*
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
 - `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`
 - `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` *(docs style patterns)*
 
@@ -695,17 +876,19 @@ Keep this list updated when the library changes.
 - `Understanding Statistics & Experimental Design.pdf`
 - `think-bayes-bayesian-statistics-in-python.pdf`
 - `graphical-data-analysis-with-r.pdf`
+- `regression-analysis-with-python.pdf`
+- `Regression analysis using Python - slides-linear-regression.pdf`
 - `Generalized Topology Optimization for Structural Design.pdf`
 
-### 🧠 ML & learning theory
-- `Understanding Machine Learning_ From Theory to Algorithms.pdf`
-- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf`
-
-### 🗺️ Geospatial, cartography, remote sensing
+### 🗺️ Geospatial, cartography, mobile mapping, 3D GIS
 - `python-geospatial-analysis-cookbook.pdf`
+- `KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf`
 - `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
 - `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
 - `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `Archaeological 3D GIS_26_01_12_17_53_09.pdf`
+
+### 🛰️ Remote sensing & imagery engineering
 - `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
 - `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
 
@@ -713,12 +896,19 @@ Keep this list updated when the library changes.
 - `Spectral Geometry of Graphs.pdf`
 - `Data Spaces.pdf`
 - `Scalable Data Management for Future Hardware.pdf`
+- `Database Performance at Scale.pdf`
 
 ### 🌐 UI / Web / 3D
 - `responsive-web-design-with-html5-and-css3.pdf`
 - `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
 
-### 🔐 Security, governance, society
+### 🧩 Languages, tooling, and polyglot ops
+- `Implementing Programming Languages_ An Introduction to Compilers and Interpreters.pdf`
+- `MATLAB Notes for Professionals.pdf`
+- `Objective-C Notes for Professionals.pdf`
+- `Bash Notes for Professionals.pdf`
+
+### 🔐 Security, governance, society (defensive posture)
 - `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` *(defensive posture only)*
 - `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` *(defensive awareness only)*
 - `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
@@ -745,8 +935,8 @@ Keep this list updated when the library changes.
 ```yaml
 title: "tools/ — Kansas Frontier Matrix Toolchain"
 path: "tools/README.md"
-version: "v0.3.0"
-last_updated: "2026-01-11"
+version: "v0.4.0"
+last_updated: "2026-01-13"
 review_cycle: "90 days"
 governance: "FAIR + CARE aligned; sovereignty-aware"
 pipeline_order: "ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → UI → Story Nodes → Focus Mode"
@@ -759,6 +949,7 @@ pipeline_order: "ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → UI
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
+| v0.4.0 | 2026-01-13 | Expanded `tools/` README using project reference library: added determinism levels, artifact QA matrix, stats evidence tooling, 3D/WebGL guidance, remote sensing + compression notes, federation framing (data spaces), and a clearer promotion ladder; updated reference library and canonical `data/<domain>/{raw,work,processed}` staging. | KFM Engineering |
 | v0.3.0 | 2026-01-11 | Aligned `tools/` README with Master Guide v13: contract-first + evidence-first; clarified canonical paths (`schemas/`, `src/*`, `web/`, `releases/`); added contracts section + federation readiness notes. | KFM Engineering |
 | v0.2.0 | 2026-01-09 | Aligned `tools/` with repo-wide boundaries (src/scripts/mcp), added tool contract + data staging rules + QA rings + security posture + richer folder map. | KFM Engineering |
 | v0.1.0 | 2026-01-08 | Initial toolbox README draft. | KFM Engineering |
