@@ -1,6 +1,6 @@
 <!--
 📌 `data/` is KFM’s canonical evidence + metadata boundary.
-🗓️ Last updated: 2026-01-11
+🗓️ Last updated: 2026-01-13
 🔐 Reminder: “Published” in KFM means cataloged + provenance-linked + validated (not just “a file exists”).
 -->
 
@@ -13,6 +13,8 @@
   <img alt="DCAT" src="https://img.shields.io/badge/DCAT-JSON--LD-845ef7" />
   <img alt="PROV" src="https://img.shields.io/badge/PROV-lineage%20bundles-845ef7" />
   <img alt="Integrity" src="https://img.shields.io/badge/integrity-sha256%20%2B%20manifests-6e7781" />
+  <img alt="GeoParquet" src="https://img.shields.io/badge/GeoParquet-columnar%20vectors-845ef7" />
+  <img alt="COG" src="https://img.shields.io/badge/COG-cloud%20optimized%20GeoTIFF-845ef7" />
   <img alt="Governance" src="https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-2ea043" />
   <img alt="Security" src="https://img.shields.io/badge/security-hostile--inputs%20%2B%20deny--by--default-critical" />
 </p>
@@ -25,6 +27,8 @@
 **🧬 Pipelines boundary (ordering + contract):** `../pipelines/README.md`  
 **🧩 Executable boundary:** `../src/README.md`  
 **🧪 MCP methods + receipts:** `../mcp/README.md`  
+**📜 Schemas & contracts:** `../schemas/README.md` *(if present)*  
+**🧱 Standards & profiles:** `../docs/standards/README.md` *(if present)*  
 **🧰 Validators & tooling:** `../tools/README.md` *(if present)*  
 **🌐 Web UI boundary:** `../web/README.md` *(if present)*
 
@@ -36,16 +40,17 @@
 - [🧠 KFM pipeline snapshot](#-kfm-pipeline-snapshot)
 - [🚦 Non‑negotiables](#-nonnegotiables)
 - [✅ What “published” means in KFM](#-what-published-means-in-kfm)
-- [🗂️ Canonical directory layout](#️-canonical-directory-layout)
+- [🗂️ Canonical directory layout](#-canonical-directory-layout)
 - [🔁 Data lifecycle](#-data-lifecycle)
-- [🏷️ Metadata boundary artifacts](#️-metadata-boundary-artifacts)
+- [🏷️ Metadata boundary artifacts](#-metadata-boundary-artifacts)
+- [📜 Schemas & contracts](#-schemas--contracts)
 - [🧷 IDs, versioning, naming, hashing](#-ids-versioning-naming-hashing)
 - [📐 Formats & performance rules](#-formats--performance-rules)
 - [🧪 Validation & CI gates](#-validation--ci-gates)
 - [➕ Adding a new dataset / domain](#-adding-a-new-dataset--domain)
 - [🧬 Releases, snapshots, and attestations](#-releases-snapshots-and-attestations)
 - [📚 Project file influence map](#-project-file-influence-map)
-- [🕰️ Version history](#️-version-history)
+- [🕰️ Version history](#-version-history)
 
 ---
 
@@ -55,7 +60,7 @@
 |---|---|
 | Doc | `data/README.md` |
 | Status | Active ✅ |
-| Last updated | **2026-01-11** |
+| Last updated | **2026-01-13** |
 | Audience | pipeline authors · catalog writers · validators · reviewers · UI/API integrators |
 | Prime directive | **No catalog → no graph → no API → no UI.** Catalogs are the interface. |
 | Canonical ordering | **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story → Focus** |
@@ -69,9 +74,9 @@
 > Raw files alone are *never* “published” in KFM.
 
 ### ✅ Minimum bar (per dataset)
-- [ ] Place sources under `data/<domain>/raw/...` *(read-only mindset; reprocessing baseline)*
-- [ ] Generate intermediates under `data/<domain>/work/...` *(ok to delete/regenerate)*
-- [ ] Produce publishable outputs under `data/<domain>/processed/...`
+- [ ] Place sources under `data/raw/<domain>/...` *(read-only mindset; reprocessing baseline)*
+- [ ] Generate intermediates under `data/work/<domain>/...` *(ok to delete/regenerate)*
+- [ ] Produce publishable outputs under `data/processed/<domain>/...`
 - [ ] Write boundary artifacts:
   - [ ] **STAC Collection** → `data/stac/collections/kfm.ks.<domain>.<dataset>.v<major>.json`
   - [ ] **STAC Item(s)** → `data/stac/items/kfm.ks.<domain>.<dataset>.<yyyymmdd>.<variant>.v<major>.json`
@@ -103,9 +108,9 @@ flowchart LR
     C --> E["🧬 PROV Lineage Bundles"]
   end
 
-  C --> G["🕸️ Graph (references back to catalogs)"]
+  C --> G["🕸️ Neo4j Graph (references back to catalogs)"]
   G --> H["🛡️ API Layer (contracts + authZ + redaction)"]
-  H --> I["🗺️ Map UI — React · MapLibre · (optional) 3D/WebGL"]
+  H --> I["🗺️ Map UI — React · MapLibre · (optional) Cesium/WebGL"]
   I --> J["📚 Story Nodes (governed narratives)"]
   J --> K["🎯 Focus Mode (provenance-linked context bundle)"]
 ```
@@ -117,11 +122,13 @@ flowchart LR
 - ⛓️ **Pipeline ordering is absolute:** `ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story → Focus`.
 - 🧾 **Catalogs are required interfaces:** downstream layers must use **catalog IDs**, not ad‑hoc paths.
 - 🔁 **Deterministic + idempotent ETL:** config-driven; stable IDs; stable ordering; replay-safe paths.
-- 🧷 **Integrity is mandatory:** hashes + manifests for publishable artifacts (at least processed outputs).
+- 🧷 **Stable identifiers beat clever identifiers:** avoid “unstable IDs” that change when *meaning* changes (IDs are names, not facts).  
+- 🔒 **Integrity is mandatory:** hashes + manifests for publishable artifacts (at least processed outputs).
 - 🔐 **Classification & sovereignty propagate:** outputs cannot be *less restricted* than any input without an explicit, reviewed redaction/generalization step.
 - 🛡️ **Hostile inputs:** treat GeoJSON/CSV/PDF/raster/metadata-from-the-internet as attack surfaces → validate + bound + sanitize.
 - 🚪 **API boundary rule:** UI never reaches into internal stores directly; it consumes governed API outputs.
 - 🧊 **Keep git healthy:** commit metadata + small QA; store heavy assets via stable pointers when needed.
+- 🧯 **No placeholders in “published” docs:** if this README references a path, schema, or contract, it must either exist or be clearly labeled *(if present)*.
 
 > [!TIP]
 > **FAIR** makes data *findable/accessible/interoperable/reusable*.  
@@ -135,11 +142,11 @@ flowchart LR
 KFM uses explicit **stages** and **contracts** (so we don’t ship “mystery layers”).
 
 ### 🧊 Stages (data state)
-- **Raw** → `data/<domain>/raw/**`  
+- **Raw** → `data/raw/<domain>/**`  
   Source snapshot; minimally transformed; reprocessing anchor.
-- **Work** → `data/<domain>/work/**`  
+- **Work** → `data/work/<domain>/**`  
   Intermediate artifacts; not stable; may be deleted/regenerated.
-- **Processed** → `data/<domain>/processed/**`  
+- **Processed** → `data/processed/<domain>/**`  
   Final evidence outputs meant to be served/used downstream.
 - **Published** ✅  
   Processed outputs that have:
@@ -161,42 +168,47 @@ KFM uses explicit **stages** and **contracts** (so we don’t ship “mystery la
 ## 🗂️ Canonical directory layout
 
 > [!IMPORTANT]
-> v13 canonical shape is **domain-first**: `data/<domain>/{raw,work,processed}`.  
-> If older layouts exist (top-level `data/raw`, `data/work`, `data/processed`), treat them as legacy and migrate forward when touching the domain.
+> v13 canonical shape is **stage-first**: `data/{raw,work,processed}/<domain>/...`  
+> This keeps lifecycle boundaries explicit and makes governance + validation easier to automate.
 
 ### ✅ Canonical layout (target shape)
 ```text
 data/
-  <domain>/                         # e.g. "hydrology/", "historical/", "hazards/"
-    raw/                            # raw source inputs (read-only mindset)
-    work/                           # intermediate transforms (ok to delete)
-    processed/                      # publishable evidence artifacts
-    mappings/                       # OPTIONAL: dataset → STAC/DCAT/PROV mapping notes
-    README.md                       # OPTIONAL: domain runbook (scope, sources, cadence)
+  raw/                              # ✅ Required: raw source inputs (read-only mindset)
+    <domain>/                       # e.g. "hydrology/", "historical/", "hazards/"
+      <source>/                     # e.g. "usgs/", "kansas_gis/", "local_scans/"
 
-  stac/                             # ✅ Required: STAC catalogs
-    catalog.json                    # recommended STAC root entrypoint
+  work/                             # recommended: intermediate transforms (ok to delete)
+    <domain>/
+      <dataset>/
+
+  processed/                         # ✅ Required: publishable evidence artifacts
+    <domain>/
+      <dataset>/
+
+  stac/                              # ✅ Required: STAC catalogs
+    catalog.json                     # recommended STAC root entrypoint
     collections/
     items/
 
   catalog/
-    dcat/                           # ✅ Required: DCAT JSON-LD dataset entries
+    dcat/                            # ✅ Required: DCAT JSON-LD dataset entries
 
-  prov/                             # ✅ Required: PROV lineage bundles
+  prov/                              # ✅ Required: PROV lineage bundles
 
-  manifests/                        # recommended: dataset manifests/contracts + dictionaries
-  qa/                               # recommended: QA receipts (quicklooks, bbox checks, reports)
+  manifests/                         # recommended: dataset manifests/contracts + dictionaries
+  qa/                                # recommended: QA receipts (quicklooks, bbox checks, reports)
 
-  graph/                            # OPTIONAL: graph import/export artifacts (reference index only)
+  graph/                             # OPTIONAL: graph import/export artifacts (reference index only)
     csv/
     cypher/
 
-  README.md                         # you are here
+  README.md                          # you are here
 ```
 
 > [!NOTE]
-> If your repo currently uses `data/raw/<domain>/...` at the top level, keep it working —  
-> but new domains should default to the canonical `data/<domain>/{raw,work,processed}` shape.
+> If older layouts exist (e.g., `data/<domain>/{raw,work,processed}`), keep them working —  
+> but new work should default to **stage-first** unless the domain runbook says otherwise.
 
 ---
 
@@ -215,6 +227,10 @@ Cleaning, joins, georeferencing, derived layers, modeling, simulation outputs.
 - Prefer “compute close to data” when appropriate (e.g., PostGIS + spatial indices).
 - Use partitioning/chunking as archives grow (tiles, counties, time windows).
 - Keep transforms explicit and repeatable (scripts/configs captured in PROV).
+- If outputs come from **analysis/modeling/simulation/optimization**, publish with:
+  - model/run parameters (PROV),
+  - validation/verification status (QA),
+  - uncertainty notes where relevant (QA / manifest).
 
 ### 3) Indexing & discovery 🗂️
 - STAC Items + Collections describe **assets** and their spatiotemporal coverage.
@@ -240,7 +256,7 @@ Cleaning, joins, georeferencing, derived layers, modeling, simulation outputs.
 - **PROV lineage bundle** capturing inputs → activities → outputs with configs/params and run identifiers.
 
 ### 🔗 Cross-layer linkage expectations (do not break)
-- STAC Items must link to stable assets (usually under `data/<domain>/processed/**`, or object-store URLs).
+- STAC Items must link to stable assets (usually under `data/processed/<domain>/**`, or object-store URLs).
 - DCAT must link to distributions (STAC collection, API endpoint, and/or direct downloads).
 - PROV must link raw → work → processed and record run/config identifiers.
 - Graph stores references to catalog IDs (avoid storing bulky payloads in the graph).
@@ -251,6 +267,31 @@ Cleaning, joins, georeferencing, derived layers, modeling, simulation outputs.
 
 > [!CAUTION]
 > Public repo = public download. Treat “easy to copy” formats (GeoJSON/CSV) as disclosure boundaries.
+
+---
+
+## 📜 Schemas & contracts
+
+Schemas and contracts are how we keep KFM automatable and reviewable.
+
+### ✅ Where contracts live (typical)
+- **JSON Schemas / profiles** (machine-readable): `schemas/` *(if present)*
+- **Standard profiles / policy docs** (human-readable): `docs/standards/` *(if present)*
+  - e.g., STAC profile, DCAT profile, PROV bundle conventions, threat model, governance rules
+- **Dataset manifests** (release-friendly): `data/manifests/`
+  - dataset ID, versions, distributions, checksums, classification, QA links
+
+### 📎 Contract minimums (per dataset)
+- Field schema (columns/types), geometry types, CRS, units
+- Spatial/temporal bounds and resolution
+- License + attribution terms (and restrictions)
+- Classification/handling labels
+- Distribution formats + “how to load it” notes
+- Validation outputs + known limitations
+
+> [!NOTE]
+> If you can’t validate it, you can’t safely automate it.  
+> If you can’t automate it, you can’t safely scale it.
 
 ---
 
@@ -268,7 +309,12 @@ Use **versioned** dataset IDs (major versions) to avoid “quiet semantic drift�
   Example: `kfm.ks.hydrology.watersheds.20260101.county.v1`
 
 - **Run ID:** stable, audit-friendly  
-  Example: `etl_20260111_134455_a1b2c3d`
+  Example: `etl_20260113_134455_a1b2c3d`
+
+### 🧠 ID design rule (don’t regret later)
+- IDs should be **unique, stable, and boring**.
+- Avoid encoding mutable meaning inside IDs (names are allowed; “facts” are not).
+- If meaning changes, bump the **major version**.
 
 > [!NOTE]
 > Versioning rule of thumb: **don’t change IDs without changing meaning**, and **don’t change meaning without changing IDs**.  
@@ -301,6 +347,7 @@ KFM is map-first and time-aware. Formats must support streaming, indexing, and h
 | Use case | Recommended format | Why |
 |---|---|---|
 | Small inspectable overlays | GeoJSON | debuggable; works everywhere |
+| Analytics-friendly exchange | **(Geo)Parquet** | columnar; fast scans/filters |
 | Medium/large boundaries | TopoJSON | smaller wire size |
 | Dense/large features | Vector tiles (PMTiles/MBTiles) | pan/zoom performance |
 | Authority edits / storage | PostGIS | constraints + indices + query power |
@@ -309,11 +356,13 @@ KFM is map-first and time-aware. Formats must support streaming, indexing, and h
 - stable feature IDs (`kfm_id` or equivalent)
 - geometry validity checks + CRS explicit
 - simplification/topology documented for UI-facing layers
+- schema documented (manifest + DCAT) for analytics formats (GeoParquet)
 
 ### 🛰️ Raster
 | Use case | Recommended format | Why |
 |---|---|---|
 | Web streaming | **COG** (Cloud Optimized GeoTIFF) | range requests; pyramids |
+| Analysis stacks | Zarr / NetCDF *(when appropriate)* | chunked reads; large time-series |
 | Quicklook | PNG/JPEG (small) | QA + previews |
 | Time-series stacks | chunked/partitioned storage | scalability + partial reads |
 
@@ -322,12 +371,25 @@ KFM is map-first and time-aware. Formats must support streaming, indexing, and h
 - nodata defined, units documented
 - QA “looks-right” screenshot at known zoom + bbox
 
+### 🧊 3D & “beyond 2D” evidence
+KFM may store 3D evidence (structures, excavations, terrain-derived meshes) **as governed datasets**:
+- keep raw scans/models in `data/raw/<domain>/...`
+- publish view-optimized assets under `data/processed/<domain>/...` (e.g., glTF/3D Tiles)
+- catalog them in STAC as assets with clear CRS/vertical datum + QA previews
+
 ### 📦 Big data posture (keep git healthy)
 - Git stores **metadata + small samples + QA**, not the entire state of the world.
 - Heavy assets may live in object storage or release artifacts as long as:
   - STAC/DCAT pointers are stable,
   - hashes exist,
-  - licensing allows distribution.
+  - licensing allows distribution,
+  - access controls match classification rules.
+
+### ⚡ Performance posture (what scales, what breaks)
+- Partition by what users filter on (space/time/admin boundaries).
+- Prefer streaming-friendly formats (COG, PMTiles) for UI.
+- Prefer columnar formats (GeoParquet) for analytics.
+- Don’t let “one big file” become the pipeline’s bottleneck: chunk early, index often.
 
 ---
 
@@ -336,14 +398,19 @@ KFM is map-first and time-aware. Formats must support streaming, indexing, and h
 KFM expects automated validation and governance checks to prevent regressions and sensitive leaks.
 
 ### ✅ Typical gates
-- STAC/DCAT/PROV schema validation
+- STAC/DCAT/PROV schema validation *(against KFM profiles/schemas)*
 - Link checks:
-  - STAC assets exist
+  - STAC assets exist (or are reachable pointers)
   - DCAT distributions resolve
   - PROV locations present and coherent
 - Classification-consistency checks (no downgrades without redaction approval)
 - Secret scanning + sensitive data scanning
 - “Looks-right” QA checks for map layers (bbox, zoom, quicklook)
+- **Fail-fast publish gates (common policy):**
+  - missing PROV bundle → ❌
+  - broken STAC asset link → ❌
+  - missing license/attribution terms → ❌
+  - secrets / sensitive leak hit → ❌
 
 ### 🧰 Starter local checks (example)
 ```bash
@@ -369,17 +436,16 @@ python tools/validation/scan_sensitive.py data
 Follow the domain expansion pattern and keep domains isolated.
 
 ### ✅ Checklist
-- [ ] Create domain folder: `data/<new-domain>/`
-- [ ] Create stage folders:
-  - [ ] `data/<new-domain>/raw/`
-  - [ ] `data/<new-domain>/work/`
-  - [ ] `data/<new-domain>/processed/`
-- [ ] Add (optional) domain runbook: `data/<new-domain>/README.md`
+- [ ] Create domain staging folders:
+  - [ ] `data/raw/<new-domain>/`
+  - [ ] `data/work/<new-domain>/`
+  - [ ] `data/processed/<new-domain>/`
 - [ ] Add ETL config (idempotent, logged, hashable)
 - [ ] Produce boundary artifacts:
   - [ ] STAC Collection + Item(s)
   - [ ] DCAT JSON‑LD entry
   - [ ] PROV run bundle
+- [ ] Add (recommended) dataset manifest: `data/manifests/kfm.ks.<domain>.<dataset>.v<major>.yml`
 - [ ] Validate schemas + links in CI
 - [ ] (Optional) Sync references into graph (after catalogs exist)
 - [ ] Expose via governed API (redaction/classification)
@@ -389,10 +455,10 @@ Follow the domain expansion pattern and keep domains isolated.
 <summary><strong>🧱 Dataset skeleton (copy/paste)</strong></summary>
 
 ```text
-# Evidence lifecycle (domain-first)
-data/<domain>/raw/<source>/
-data/<domain>/work/<dataset>/
-data/<domain>/processed/<dataset>/
+# Evidence lifecycle (stage-first)
+data/raw/<domain>/<source>/
+data/work/<domain>/<dataset>/
+data/processed/<domain>/<dataset>/
 
 # Catalog boundary artifacts (versioned dataset IDs)
 data/stac/collections/kfm.ks.<domain>.<dataset>.v1.json
@@ -404,7 +470,6 @@ data/prov/etl_<yyyymmdd>_<hhmmss>_<shortgitsha>.jsonld
 # QA + manifests (recommended)
 data/qa/<domain>/<dataset>__<yyyymmdd>__qa.md
 data/manifests/kfm.ks.<domain>.<dataset>.v1.yml
-data/<domain>/mappings/<dataset>.md
 ```
 </details>
 
@@ -428,30 +493,32 @@ When evidence artifacts graduate beyond “working data” into distribution:
 
 ## 📚 Project file influence map
 
-> ✅ This README follows the repo’s documentation-first, evidence-first conventions and the v13 layout doctrine.  
+> ✅ This README follows the repo’s documentation-first, evidence-first conventions and the v13 ordering doctrine.  
 > Below is a “why it exists” index: each project file influences at least one `data/` convention.
 
 <details>
-<summary><strong>📦 Expand: Influence map (all project files)</strong></summary>
+<summary><strong>📦 Expand: Influence map (project files)</strong></summary>
 
 | Project file | How it shapes `data/` (policy, formats, metadata, QA) |
 |---|---|
-| `MARKDOWN_GUIDE_v13.md.gdoc` | Canonical v13 repo/data layout; “catalog boundary artifacts as interfaces”; versioning expectations; review-gates posture. |
-| `KFM_MARKDOWN_WORK_PROTOCOL.md` | Documentation discipline + “no placeholders” + consistent sectioning for repo boundary READMEs. |
+| `MARKDOWN_GUIDE_v13.md.gdoc` | Canonical ordering doctrine (ETL→Catalogs→Graph→API→UI→Story→Focus), strict staging boundaries, and “catalogs as interfaces.” |
+| `KFM_MARKDOWN_WORK_PROTOCOL.md` *(if present)* | Documentation discipline: no placeholders, consistent structure, and operationally-real instructions. |
 | `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` | Markdown conventions for durable docs (callouts, tables, structure). |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` | Defines evidence/citation posture, data-layer responsibilities, and metadata-first governance expectations. |
-| `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` | End-to-end architecture rationale: ingest → catalogs → graph/API/UI; why catalog IDs must be stable. |
-| `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` | Forces operational clarity: real SOPs, real validation gates, real “definition of published.” |
-| `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` | “Protocol + receipt” mindset applied to datasets (run IDs, manifests, reproducibility). |
-| `Foundational Templates and Glossary for Scientific Method _ Research _ Master Coder Protocol.pdf` | Template discipline that carries into dataset manifests, QA receipts, and provenance notes. |
-| `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` | Transparency/provenance-first product thinking; supply-chain integrity signals; “trust signals” are part of shipping. |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` | Core architecture + governance posture; data standards expectations (GeoJSON/GeoParquet/COG), catalog and provenance responsibilities. |
+| `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` *(if present)* | End-to-end architecture rationale: ingest → catalogs → graph/API/UI; why catalog IDs must be stable. |
+| `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` | Forces operational clarity: real SOPs, real validation gates, real definition of “published.” |
+| `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` *(if present)* | “Protocol + receipt” mindset applied to datasets (run IDs, manifests, reproducibility). |
+| `Foundational Templates and Glossary for Scientific Method _ Research _ Master Coder Protocol.pdf` *(if present)* | Template discipline for dataset manifests, QA receipts, and provenance notes. |
+| `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` *(if present)* | Transparency/provenance-first product thinking; supply-chain integrity signals; “trust signals” are part of shipping. |
 | `Data Spaces.pdf` | Metadata-as-interface mindset: pointer-over-payload, stable IDs, and federation-friendly catalogs. |
-| `Scalable Data Management for Future Hardware.pdf` | Partitioning, caching, chunking, and “pipeline breakers” for scale; keep git lean but auditable. |
-| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | PostGIS posture: indexing, migrations, schema discipline, safe import/export. |
+| `Database Performance at Scale.pdf` | Performance realism: indexing strategy, workload-aware storage choices, and operational constraints that shape data packaging. |
+| `Scalable Data Management for Future Hardware.pdf` | Partitioning/chunking, pipeline-breakers, near-data processing mindset: scale without losing auditability. |
+| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | PostGIS posture: indexing, schema discipline, safe import/export, migrations. |
 | `python-geospatial-analysis-cookbook.pdf` | CRS hygiene, vector/raster IO discipline, safe transformations at boundaries. |
 | `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | Remote sensing export discipline; time-series outputs; derived indices treated as governed evidence. |
 | `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | “Map honesty”: symbology/aggregation choices change meaning → require QA receipts and documented choices. |
 | `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | Mobile/offline constraints and location sensitivity awareness → tiling + payload budgets + cautious disclosure. |
+| `Archaeological 3D GIS_26_01_12_17_53_09.pdf` | 3D GIS evidence handling: 3D assets are datasets (provenance, QA previews, and safe distribution). |
 | `responsive-web-design-with-html5-and-css3.pdf` | Practical payload/latency constraints that shape data packaging (tiles, previews, progressive loading). |
 | `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | GPU/3D constraints: coordinate conventions, LOD/tiling, graceful degradation expectations. |
 | `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | Quicklook and preview optimization rules to avoid repo bloat while supporting QA. |
@@ -470,10 +537,7 @@ When evidence artifacts graduate beyond “working data” into distribution:
 | `Generalized Topology Optimization for Structural Design.pdf` | Optimization outputs as governed datasets: objective/constraints + parameter sweeps captured in PROV. |
 | `Spectral Geometry of Graphs.pdf` | Graph analytics caution: treat graph metrics as signals; don’t hide “truth” only inside graph math. |
 | `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` | ML artifacts as governed data: model cards, reproducibility, separation of training evidence vs serving outputs. |
-| `Patterns, Algorithms, and Fractals_ A Cross-Disciplinary Technical Reference.pdf` | Cross-discipline patterns: encourages consistent representation choices and careful abstraction boundaries. |
-| `Understanding Machine Learning: From Theory to Algorithms.pdf` :contentReference[oaicite:0]{index=0} | ML theory discipline: motivates dataset splits, leakage avoidance, and “claims must match evidence + assumptions.” |
-| `Flexible Software Design_ Systems Development for Computational Science in Fortran.pdf` :contentReference[oaicite:1]{index=1} | Computational-science software discipline: deterministic workflows, long-lived code/data interfaces, reproducible runs. |
-| Programming bundles (`A programming Books.pdf`, `B-C programming Books.pdf`, `D-E programming Books.pdf`, `F-H programming Books.pdf`, `I-L programming Books.pdf`, `M-N programming Books.pdf`, `O-R programming Books.pdf`, `S-T programming Books.pdf`, `U-X programming Books.pdf`) | Broad engineering reference stack: reinforces maintainability, testing, security hygiene, and cross-stack interoperability. |
+| Programming bundles (`A programming Books.pdf`, `B-C programming Books.pdf`, `D-E programming Books.pdf`, `F-H programming Books.pdf`, `I-L programming Books.pdf`, `M-N programming Books.pdf`, `O-R programming Books.pdf`, `S-T programming Books.pdf`, `U-X programming Books.pdf`) | Broad engineering reference stack: maintainability, testing, security hygiene, cross-stack interoperability. |
 
 </details>
 
@@ -483,15 +547,17 @@ When evidence artifacts graduate beyond “working data” into distribution:
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
-| v1.3.0 | 2026-01-11 | Aligned `data/` to v13 **domain-first** layout guidance; clarified “published means cataloged”; standardized versioned dataset IDs (`.v<major>`); tightened boundary artifact expectations and validation gates; refreshed influence map and links. | KFM Engineering |
-| v1.2.0 | 2026-01-06 | Prior iteration: staged lifecycle, STAC/DCAT/PROV boundary artifacts, initial influence map. | KFM Engineering |
+| v1.3.1 | 2026-01-13 | Corrected canonical `data/` layout to v13 **stage-first** staging (`data/{raw,work,processed}/<domain>`); added **Schemas & contracts** section; expanded formats guidance (GeoParquet + 3D evidence); strengthened CI “fail-fast” publish gates; refreshed influence map with performance + 3D GIS sources; fixed quick-nav anchors. | KFM Engineering |
+| v1.3.0 | 2026-01-11 | Prior iteration: lifecycle stages, STAC/DCAT/PROV boundary artifacts, dataset ID conventions, validation gates, influence map. | KFM Engineering |
 
 ---
 
 <!--
-Evidence anchors used to update this README:
-- v13 data layout + STAC/DCAT/PROV alignment + linkage expectations: , 
-- v13 versioning expectations: 
-- KFM technical doc references to data directories and metadata boundary artifacts (incl. legacy `data/provenance` wording): 
-- KFM “latest ideas” emphasizes transparency/provenance and supply-chain integrity signals: 
+Evidence anchors used to update this README (project files referenced):
+- v13 ordering doctrine + staging posture + CI/publish gates: MARKDOWN_GUIDE_v13.md.gdoc
+- KFM architecture + data standards expectations (GeoJSON / GeoParquet / COG) + governance posture: Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf
+- Validation gates + operational clarity (“definition of published”): Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf
+- Stable identifiers / avoiding unstable identifiers: Flexible Software Design (in programming bundle)
+- Performance + scaling posture: Database Performance at Scale.pdf; Scalable Data Management for Future Hardware.pdf
+- Geospatial + 3D evidence handling: python-geospatial-analysis-cookbook.pdf; Archaeological 3D GIS_26_01_12_17_53_09.pdf
 -->
