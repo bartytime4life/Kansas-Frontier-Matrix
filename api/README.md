@@ -1,6 +1,6 @@
 <!--
 📌 This README defines the governed backend boundary for KFM.
-🗓️ Last updated: 2026-01-09
+🗓️ Last updated: 2026-01-13
 -->
 
 # 🚪 KFM API 🛰️🗺️  
@@ -10,6 +10,7 @@ _Backend + integration boundary for the Kansas Frontier Matrix (KFM) platform_
   <img alt="Status" src="https://img.shields.io/badge/status-WIP-orange" />
   <img alt="API" src="https://img.shields.io/badge/API-v1-blue" />
   <img alt="OpenAPI" src="https://img.shields.io/badge/OpenAPI-contract--first-brightgreen" />
+  <img alt="Evidence Gate" src="https://img.shields.io/badge/evidence-STAC%20%7C%20DCAT%20%7C%20PROV-845ef7" />
   <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-3776AB" />
   <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-ready-009688" />
   <img alt="Docker" src="https://img.shields.io/badge/docker-recommended-2496ED" />
@@ -17,8 +18,7 @@ _Backend + integration boundary for the Kansas Frontier Matrix (KFM) platform_
   <img alt="Graph" src="https://img.shields.io/badge/graph-Neo4j%20optional-0b7285" />
   <img alt="Jobs" src="https://img.shields.io/badge/jobs-workers%20%2B%20queue-purple" />
   <img alt="Auth" src="https://img.shields.io/badge/auth-JWT%20Bearer-yellow" />
-  <img alt="Catalog" src="https://img.shields.io/badge/catalog-STAC%20%7C%20DCAT%20%7C%20PROV-845ef7" />
-  <img alt="Governance" src="https://img.shields.io/badge/governance-FAIR%2BCARE%20%2B%20Sovereignty-2ea043" />
+  <img alt="Governance" src="https://img.shields.io/badge/governance-FAIR%2BCARE%2B%20Sovereignty-2ea043" />
   <img alt="OTel" src="https://img.shields.io/badge/observability-OpenTelemetry-7c3aed" />
   <img alt="Supply Chain" src="https://img.shields.io/badge/supply%20chain-SBOM%20%7C%20SLSA%20%7C%20Cosign-111827" />
   <img alt="Policy" src="https://img.shields.io/badge/policy-OPA%20%7C%20Conftest-0b7285" />
@@ -28,6 +28,10 @@ _Backend + integration boundary for the Kansas Frontier Matrix (KFM) platform_
 > **KFM invariant (non‑negotiable):**  
 > **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**  
 > This API is the **governed trust boundary**: it must not serve “mystery data” that isn’t **cataloged**, **provenance‑linked**, and **policy‑checked**. ✅🧾
+
+> [!IMPORTANT]
+> **Focus Mode hard gate (non‑negotiable):**  
+> Focus Mode must display **only provenance‑linked content**. Any AI contribution must be **opt‑in**, **clearly labeled**, and **bounded by evidence** (no side‑channel leaks). 🧠🔒
 
 ---
 
@@ -40,10 +44,14 @@ _Backend + integration boundary for the Kansas Frontier Matrix (KFM) platform_
 - 🗂️ STAC root: `/api/v1/catalog/stac`
 - 🏷️ DCAT datasets: `/api/v1/catalog/dcat` *(implementation-specific)*
 - 🧬 PROV run lineage: `/api/v1/prov/runs/{run_id}`
+- 🧾 Evidence bundle (Story/Focus): `/api/v1/evidence/bundle/{bundle_id}`
+- 🧠 Focus Mode context bundle (target): `/api/v1/focus/context` *(policy-gated)*
+- 🧩 Data-contract validation (target): `/api/v1/contracts/datasets/validate` *(policy-gated)*
 - 📡 Job stream (WS/SSE): `/ws/jobs/{job_id}` *(if enabled)*
 
 Repo navigation:
 - 🧭 Project overview: `../README.md`
+- 🧠 Master guide (canonical ordering): `../docs/MARKDOWN_GUIDE_v13.md.gdoc` *(or equivalent)*
 - 🧩 Executable boundary: `../src/README.md`
 - 📦 Data + metadata boundary: `../data/README.md`
 - 🧰 Toolchain boundary: `../tools/README.md`
@@ -58,27 +66,35 @@ Repo navigation:
 |---|---|
 | Doc | `api/README.md` |
 | Status | WIP 🚧 (contract-first) |
-| Last updated | **2026-01-09** |
+| Last updated | **2026-01-13** |
 | Prime directive | **Serve only governed evidence** (IDs + catalogs + provenance) |
 | Default stance | deny-by-default 🔒, hostile-input aware 🧯, audit-ready 🧾 |
 | Canonical order | **ETL → STAC/DCAT/PROV → Graph → API → UI → Story → Focus** |
+| Upstream governance | `docs/MARKDOWN_GUIDE_v13*` (repo-level contracts + invariants) |
 
 ---
 
 ## 🧭 Table of contents
+- [🧠 Master guide alignment](#-master-guide-alignment)
+- [📖 Glossary](#-glossary)
 - [⭐ API north stars](#-api-north-stars)
 - [✨ What this API is responsible for](#-what-this-api-is-responsible-for)
 - [🚫 Non-goals](#-non-goals)
 - [🧱 Architecture snapshot](#-architecture-snapshot)
+- [📦 Data lifecycle](#-data-lifecycle)
 - [📁 Repository layout](#-repository-layout-target-shape)
 - [📜 Contracts and schemas](#-contracts-and-schemas-source-of-truth)
+- [🧾 Data contracts](#-data-contracts-metadata-json)
 - [🚀 Quick start](#-quick-start)
 - [⚙️ Configuration](#️-configuration)
 - [🔐 Authentication and authorization](#-authentication-and-authorization)
 - [🏷️ Governance, classification, and evidence](#️-governance-classification-and-evidence)
+- [🧠 Story Nodes and Focus Mode](#-story-nodes-and-focus-mode)
+- [🧭 Graph governance](#-graph-governance)
 - [📏 API conventions](#-api-conventions)
 - [🗺️ Geospatial conventions](#️-geospatial-conventions)
 - [🗂️ Catalog and provenance rules](#️-catalog-and-provenance-rules)
+- [🌐 Federation and data spaces](#-federation-and-data-spaces)
 - [🧩 Endpoint map](#-endpoint-map-target)
 - [🧪 Example flows](#-example-flows)
 - [🧵 Async jobs and workers](#-async-jobs-and-workers)
@@ -94,6 +110,35 @@ Repo navigation:
 
 ---
 
+## 🧠 Master guide alignment
+
+This README is **not** the top-level authority. It inherits from the repo’s **Master Guide** (v13 or later) which defines:
+
+- 🧭 the **canonical ordering** across subsystems (data → catalogs → graph → API → UI → narrative)
+- 🧩 **contract artifacts** as first-class outputs (OpenAPI, JSON Schema, GraphQL SDL, UI configs)
+- 🧾 **evidence artifacts** as first-class datasets (registered in STAC/DCAT with PROV lineage)
+- 🏷️ sovereignty + governance rules (CARE/FAIR, classification propagation, no sensitive leaks)
+- 🧪 minimum CI gates (schema validation, contract diffs, redaction tests)
+
+> [!TIP]
+> If you’re unsure “where a change belongs,” consult the Master Guide first. This API README only governs the **backend boundary**.
+
+---
+
+## 📖 Glossary
+
+| Term | Meaning (KFM boundary meaning) |
+|---|---|
+| `dataset_id` | Stable identifier for a dataset definition (domain + name + version) |
+| `layer_id` | Stable identifier for a spatial asset layer (vector/raster) |
+| `run_id` | Stable identifier for a provenance-tracked run (ETL/analysis/sim) |
+| `job_id` | Ephemeral execution handle for async work (maps to `run_id` when published) |
+| `bundle_id` | Evidence bundle ID (what Story/Focus consumes) |
+| `graph_id` | Stable entity ID in the knowledge graph (person/place/event/doc/etc.) |
+| “published” | Means **cataloged + provenance-linked** (not “a file exists somewhere”) |
+
+---
+
 ## ⭐ API north stars
 
 KFM’s backend exists to support **truthful, reproducible, human‑centered** decision support — not vibes, not persuasion. 🧠🧾
@@ -102,8 +147,10 @@ KFM’s backend exists to support **truthful, reproducible, human‑centered** d
 - 🧩 **Contract-first:** OpenAPI is the shipping interface; breaking changes require versioning.
 - 🏷️ **Catalog-gated:** if it isn’t cataloged and lineage-linked, it isn’t “real” in KFM.
 - 🔐 **Governance always-on:** classification, licensing, redaction, and “no privacy downgrade” rules are enforced.
+- 🧠 **Focus Mode hard gate:** no unsourced content can appear in Focus Mode (AI is opt-in, labeled, bounded).
+- 🧭 **Glossary consistency:** graph terms must be canonical (no duplicate nodes with drifting names).
 - 🎲 **Reproducible by default:** jobs store parameters + versions + run receipts; results are never “magic.”
-- 🤖 **AI is advisory:** AI-assisted outputs are labeled, bounded, and evidence-backed (uncertainty is first-class).
+- 🤖 **AI is advisory:** AI outputs are labeled, bounded, and evidence-backed (uncertainty is first-class).
 - ❤️ **Human autonomy:** provide explanation hooks, audit trails, and safe defaults that prevent automation complacency.
 
 ---
@@ -117,7 +164,7 @@ This service provides a **stable, versioned, secure** integration surface for th
 - 🗺️ **Geospatial query boundary**  
   policy-aware spatial search, filtering, overlays, and tile-friendly outputs
 - 🏷️ **Catalog and evidence serving**  
-  STAC/DCAT discovery endpoints + provenance views (PROV) + evidence bundles for Story/Focus
+  STAC/DCAT discovery endpoints + PROV lineage views + evidence bundles for Story/Focus
 - 🧵 **Job orchestration**  
   start/monitor/cancel long-running work (ETL refresh, remote sensing exports, analytics, simulation, optimization)
 - 🛰️ **Remote sensing integrations**  
@@ -125,7 +172,9 @@ This service provides a **stable, versioned, secure** integration surface for th
 - 📊 **Analytics / inference orchestration**  
   regression/EDA/Bayesian analysis as reproducible jobs (with diagnostics + uncertainty artifacts)
 - 🧪 **Simulation and optimization orchestration**  
-  long-running scenario runs with V&V posture, sensitivity metadata, and traceable outputs
+  scenario runs with V&V posture, sensitivity metadata, and traceable outputs
+- 🧩 **Contract + data-contract enforcement (target)**  
+  validate OpenAPI + schemas + dataset metadata contracts as gates to “publish”
 - 🔒 **Auth + policy enforcement**  
   classification propagation, licensing constraints, redaction, and audit logging
 - 📦 **Governed exports**  
@@ -139,6 +188,7 @@ This service provides a **stable, versioned, secure** integration surface for th
 - ❌ Running “forever streams” inside the API process (use brokers/workers; keep API stateless)
 - ❌ Serving uncataloged outputs (“just return this file”) unless it’s **cataloged + governed**
 - ❌ Turning routes into business logic (policy belongs in application/domain)
+- ❌ Being a generic chatbot (Focus Mode content must remain evidence-bounded)
 - ❌ Treating previews as truth (quicklooks are UX helpers, not authoritative rasters)
 
 ---
@@ -167,19 +217,47 @@ flowchart LR
 
   API -->|"SQL"| DB["🗄️ Postgres + PostGIS"]
   API -->|"graph queries"| GRAPH["🕸️ Graph store\nNeo4j optional"]
-  API -->|"enqueue"| Q["🧵 Queue or broker"]
+  API -->|"enqueue"| Q["🧵 Queue / broker"]
   Q --> W["👷 Workers"]
 
-  W -->|"read/write"| OBJ["📦 Object store"]
+  W -->|"read/write"| OBJ["📦 Object store\nCOGs · GeoParquet · artifacts"]
   W -->|"export tasks"| GEE["🛰️ Google Earth Engine"]
   W -->|"pull"| EXTAPI["🌦️ External data APIs"]
 
-  W -->|"emit"| CATALOG["🏷️ STAC/DCAT/PROV\nartifacts"]
+  W -->|"emit"| CATALOG["🏷️ STAC/DCAT/PROV\nboundary artifacts"]
   CATALOG -->|"serve IDs + links"| API
+
+  GRAPH -->|"references back to catalogs"| CATALOG
 ```
 
 > [!NOTE]
 > **Catalogs are the gate.** Workers/pipelines emit STAC/DCAT/PROV so downstream (graph/UI/Focus) can trust what it sees. 🗂️✅
+
+---
+
+## 📦 Data lifecycle
+
+KFM treats data staging + metadata emission as part of correctness. ✅
+
+### Required staging (repo-level convention)
+```text
+📦 data/
+├─ 🧱 raw/<domain>/                 # raw sources (immutable)
+├─ 🧪 work/<domain>/                # intermediate artifacts
+├─ ✅ processed/<domain>/           # publish candidates (stable)
+├─ 🗂️ stac/
+│  ├─ collections/                  # STAC Collection records
+│  └─ items/                        # STAC Item records
+├─ 🏷️ catalog/dcat/                 # DCAT dataset/distribution records (JSON-LD)
+└─ 🧬 prov/                         # PROV lineage bundles
+```
+
+### The “publish” rule 🏷️🚫
+A dataset (or analysis/simulation output) is **not published** until:
+1) stable artifact exists (DB/object store), **and**  
+2) STAC/DCAT/PROV boundary artifacts exist, **and**  
+3) policy checks pass (classification/license/redaction), **and**  
+4) graph references (if applicable) resolve to canonical entities.
 
 ---
 
@@ -195,8 +273,11 @@ flowchart LR
 ├─ 🐳 docker-compose.yml             # optional (local dev)
 ├─ 📜 contracts/
 │  ├─ 🧩 openapi.yaml                # ✅ source of truth (recommended)
-│  ├─ 🧬 schemas/                    # JSON Schemas: STAC/DCAT/PROV/Evidence
+│  ├─ 🧬 schemas/                    # JSON Schemas: STAC/DCAT/PROV/Evidence/Data-Contract
 │  └─ 🧪 examples/                   # request/response fixtures for contract tests
+├─ 🛡️ policy/                        # OPA/Rego bundles, conftest, redaction rules (optional)
+├─ 🗄️ migrations/                    # Alembic migrations (if used)
+├─ 📚 docs/                          # API runbooks, ADRs, security notes (if present)
 ├─ 🧩 src/
 │  └─ 🧠 kfm_api/
 │     ├─ 🚀 main.py                  # FastAPI entrypoint
@@ -224,6 +305,7 @@ Recommended posture:
   - 🏷️ DCAT datasets + distributions
   - 🧬 PROV run bundles (JSON‑LD)
   - 📚 Evidence bundles (Story Nodes + Focus Mode)
+  - 🧾 Dataset “data contracts” (metadata JSON) *(see next section)*
 
 ### ✅ Contract QA gates (recommended)
 - ✅ OpenAPI diff checks (breaking changes require version bump)
@@ -234,6 +316,69 @@ Recommended posture:
 
 > [!TIP]
 > If we can’t test the contract, it’s not ready to ship. 🧪🧾
+
+---
+
+## 🧾 Data contracts (metadata JSON)
+
+KFM treats a dataset’s metadata contract as a **machine-checkable entry ticket** to the catalogs. 🎟️🗂️
+
+### Why this exists
+- prevents “mystery layers” (no source/license/processing context)
+- enables **automatic DCAT/STAC/PROV emission**
+- supports governance (classification + license gating)
+- makes derived evidence reproducible (inputs/params/versions captured)
+
+### Suggested `dataset.contract.json` shape (target)
+```json
+{
+  "dataset_id": "kfm.<domain>.<dataset>.v1",
+  "title": "Human-readable title",
+  "description": "What this is and what it is not",
+  "source": {
+    "name": "Provider / archive / agency",
+    "uri": "https://example.org/source",
+    "retrieved_at": "2026-01-01"
+  },
+  "license": {
+    "spdx": "CC-BY-4.0",
+    "attribution": "Required attribution text"
+  },
+  "classification": "public",
+  "spatial": {
+    "crs": "EPSG:4326",
+    "bbox": [-102.05, 36.99, -94.58, 40.00]
+  },
+  "temporal": {
+    "start": "1930-01-01",
+    "end": "1940-12-31"
+  },
+  "schema": {
+    "kind": "vector|raster|tabular",
+    "fields": [
+      {"name": "county_name", "type": "string"},
+      {"name": "value", "type": "float"}
+    ]
+  },
+  "processing": {
+    "pipeline": "kfm.etl.<name>",
+    "version": "2026.01",
+    "inputs": ["kfm.<domain>.<input>.v1"],
+    "parameters": {}
+  },
+  "outputs": {
+    "stac_collection_id": "kfm.stac.collection.<id>",
+    "dcat_dataset_id": "kfm.dcat.<id>",
+    "prov_template": "kfm.prov.template.<id>"
+  }
+}
+```
+
+### API enforcement (target)
+- ✅ validate contract JSON via schema
+- ✅ block “unknown license” if configured
+- ✅ require classification label
+- ✅ require STAC/DCAT/PROV pointers at publish time (or enforce generation)
 
 ---
 
@@ -309,6 +454,16 @@ Create a `.env` file (or supply env vars via your orchestrator). 🔐
 | `ALLOW_EXPORTS` | `true` | export gating |
 | `MAX_UPLOAD_MB` | `250` | ingestion safety |
 | `BLOCK_UNKNOWN_LICENSE` | `true` | avoid accidental publishing |
+| `REDACT_PRECISE_LOCATIONS` | `true` | sovereignty: reduce leak risk |
+| `GRAPH_GLOSSARY_REQUIRED` | `true` | enforce canonical nodes |
+
+### Remote sensing (Earth Engine) (optional)
+| Variable | Example | Why |
+|---|---|---|
+| `GEE_PROJECT` | `my-ee-project` | task routing |
+| `GEE_MAX_CONCURRENT_EXPORTS` | `3` | quota/backpressure |
+| `GEE_TASK_POLL_SECONDS` | `30` | safe polling |
+| `GEE_EXPORT_BUCKET` | `kfm-artifacts` | export destination |
 
 ### Observability (recommended)
 - `OTEL_SERVICE_NAME=kfm-api`
@@ -337,6 +492,7 @@ Create a `.env` file (or supply env vars via your orchestrator). 🔐
   - license constraints
   - org ownership / sharing rules
   - feature gates for exports/publish
+  - “no sensitive location leaks” rules for Story/Focus rendering
 
 **Rules**
 - AuthZ decisions belong in **application/use-case layer** (not route handlers).
@@ -354,7 +510,8 @@ KFM treats provenance and classification as part of “correctness.” ✅🧾
   - stable IDs (`dataset_id`, `layer_id`, `run_id`)
   - classification label
   - license/attribution (or explicitly unknown + blocked)
-  - provenance pointer (STAC/DCAT/PROV)
+  - provenance pointers (STAC/DCAT/PROV)
+- Every user-visible claim in Story/Focus is traceable to cataloged evidence.
 
 ### 🔒 Sensitivity propagation (non-negotiable)
 Outputs **cannot** become less restricted than inputs unless a documented redaction step exists and is auditable.
@@ -388,6 +545,44 @@ Wherever possible, results should include a compact evidence pointer:
   }
 }
 ```
+
+---
+
+## 🧠 Story Nodes and Focus Mode
+
+Story Nodes + Focus Mode are where KFM becomes a **governed, interactive storybook** 📖🗺️ — but they must remain trust-preserving.
+
+### Story Nodes (governed narrative artifacts)
+A valid Story Node should:
+- 🧾 include citations for every factual claim (to cataloged sources)
+- 🧩 reference graph entities with stable `graph_id`s (people/places/events/docs)
+- 🧠 clearly distinguish **fact vs interpretation** (especially if AI-assisted)
+- 🏷️ inherit classification rules (no narrative can “downgrade” sensitivity)
+
+### Focus Mode (interactive, provenance-linked experience)
+Focus Mode must:
+- ✅ display only provenance-linked content (hard gate)
+- 🧠 treat AI as opt-in + labeled + evidence-bounded (no default freeform)
+- 🔒 prevent sensitive location leaks (generalize/blur/omit when required)
+- 🧾 allow click-through: everything should resolve back to evidence pointers
+
+---
+
+## 🧭 Graph governance
+
+The graph is the **semantic spine** of KFM. It powers:
+- 🔎 semantic search (entities + relationships)
+- 🧠 Focus Mode context traversal (bounded queries, evidence pointers)
+- ✅ consistency checks (referential integrity between graph ↔ catalogs)
+
+### Canonical glossary (target)
+To avoid drift:
+- maintain canonical nodes for key terms/events (single source of truth)
+- reconcile duplicates (domain steward review)
+- attach authority IDs where possible (Wikidata/LoC/etc.)
+
+> [!TIP]
+> Graph endpoints must be **bounded**. No unbounded traversals from public routes. 🧱
 
 ---
 
@@ -426,6 +621,11 @@ For create/trigger endpoints:
 - Accept `X-Request-Id` (or generate if absent)
 - Return it in responses and error payloads
 
+### Async pattern (recommended)
+- `202 Accepted` for long work
+- return `job_id` immediately
+- later results resolve to stable `run_id` + catalog pointers
+
 ### Error shape (recommended)
 ```json
 {
@@ -453,8 +653,13 @@ For create/trigger endpoints:
 - `simplify=<meters>` (derived outputs; never mutate sources)
 - `precision=<int>` (optional float rounding control)
 
+### Output correctness rules ✅
+- store geometries with explicit SRIDs
+- transform at boundaries (DB storage may differ; output must be explicit)
+- if clients send geometry without CRS metadata, treat it as `EPSG:4326` **only if policy says so** (and document it)
+
 > [!TIP]
-> Store geometries with explicit SRIDs and perform transforms at boundaries. CRS ambiguity is a correctness bug. 🧭
+> CRS ambiguity is a correctness bug. 🧭
 
 ---
 
@@ -463,7 +668,7 @@ For create/trigger endpoints:
 > [!IMPORTANT]
 > **Publishing rule:** If a dataset/result isn’t **cataloged + provenance-linked**, it isn’t “published” in KFM. 🗂️🚫
 
-### Required artifacts (KFM standard)
+### Required boundary artifacts (KFM standard)
 For anything user-visible or reusable:
 - 🗺️ **STAC** (Collections + Items) for spatial assets/layers
 - 🏷️ **DCAT** dataset entries for discovery & distribution
@@ -472,12 +677,27 @@ For anything user-visible or reusable:
 ### API responsibilities
 - API can **trigger** ETL/jobs, but workers/pipelines must:
   - write outputs to stable storage (object store / DB)
-  - emit STAC/DCAT/PROV artifacts
+  - emit STAC/DCAT/PROV boundary artifacts
   - return stable IDs/links (not temp paths)
 - API serves:
   - catalog discovery endpoints (STAC/DCAT)
   - provenance views (PROV)
   - evidence bundles (Story Nodes + Focus Mode)
+
+---
+
+## 🌐 Federation and data spaces
+
+KFM is designed to become a **blueprint** for other regions (“Frontier Matrices”). 🌾🧭
+
+Target posture:
+- prefer standards (STAC/DCAT/PROV) to enable interop
+- expose trust signals (license, provenance, classification, uncertainty)
+- enable cross-hub queries via catalogs + common ontology mappings
+- keep sovereignty rules enforceable across federation boundaries
+
+> [!NOTE]
+> Federation does **not** mean “free-for-all.” Governance + policy is still always-on. 🔒
 
 ---
 
@@ -490,8 +710,16 @@ For anything user-visible or reusable:
 |---:|---|:---:|---|
 | GET | `/api/v1/health` | ❌ | Liveness/readiness |
 | GET | `/api/v1/meta/version` | ❌ | API + schema versions |
+| GET | `/api/v1/meta/citation` | ❌ | How to cite KFM + dataset releases *(target)* |
 | POST | `/api/v1/auth/login` | ❌ | Issue JWT |
 | GET | `/api/v1/auth/me` | ✅ | Current user + roles |
+
+### 📜 Contracts & validation (target)
+| Method | Path | Auth | What it does |
+|---:|---|:---:|---|
+| GET | `/api/v1/contracts/openapi` | ❌ | Serve the canonical OpenAPI artifact |
+| POST | `/api/v1/contracts/datasets/validate` | ✅ | Validate `dataset.contract.json` |
+| GET | `/api/v1/contracts/schemas/{name}` | ❌ | Fetch JSON Schema by name |
 
 ### 🗺️ Geospatial query
 | Method | Path | Auth | What it does |
@@ -527,6 +755,7 @@ For anything user-visible or reusable:
 | Method | Path | Auth | What it does |
 |---:|---|:---:|---|
 | GET | `/api/v1/graph/search?q=...` | ✅ | Entity search |
+| GET | `/api/v1/graph/glossary?q=...` | ✅ | Canonical term lookup *(target)* |
 | GET | `/api/v1/graph/path?from=...&to=...` | ✅ | Explainable path with evidence pointers |
 | GET | `/api/v1/graph/subgraph/{id}` | ✅ | Bounded subgraph export (policy-gated) |
 
@@ -544,6 +773,8 @@ For anything user-visible or reusable:
 |---:|---|:---:|---|
 | GET | `/api/v1/evidence/bundle/{bundle_id}` | ✅ | Evidence-only payload (citations + asset pointers) |
 | POST | `/api/v1/story_nodes/publish` | ✅ | Publish story node referencing evidence |
+| GET | `/api/v1/story_nodes/{story_id}` | ✅/❌ | Fetch story node (policy-gated) *(target)* |
+| GET | `/api/v1/focus/context` | ✅ | Focus Mode context bundle (policy-gated) *(target)* |
 
 ### 🗺️ Tiles & map delivery (optional)
 | Method | Path | Auth | What it does |
@@ -596,7 +827,16 @@ Response (example):
 }
 ```
 
-### 2) Start a simulation 🧮
+### 2) Validate a dataset data-contract 🧾✅ *(target)*
+```bash
+curl -X POST \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d @dataset.contract.json \
+  "http://localhost:8000/api/v1/contracts/datasets/validate"
+```
+
+### 3) Start a simulation 🧮
 ```bash
 curl -X POST \
   -H "Authorization: Bearer $TOKEN" \
@@ -617,11 +857,16 @@ Response (example):
 { "job_id": "sim_01HZZY8VQ7...", "status": "queued" }
 ```
 
-### 3) Publish results (catalog-gated) 🏷️
-1) worker finishes run → writes artifacts  
-2) worker emits STAC/DCAT/PROV  
-3) API exposes stable `run_id` + catalog IDs  
-4) UI can now render and cite results
+### 4) Focus Mode context bundle 🧠🗂️ *(target)*
+```bash
+curl -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8000/api/v1/focus/context?bbox=-100.0,37.0,-99.0,38.0&time=1935"
+```
+
+Expected response posture (example):
+- evidence-only pointers (STAC/DCAT/PROV + graph IDs)
+- policy-gated redaction of sensitive coords
+- AI fields absent unless explicitly requested/opt-in
 
 ---
 
@@ -648,6 +893,7 @@ Use jobs when:
 ### Governance expectations
 - Job outputs are never served “raw” from temp storage.
 - Results become stable only after catalog + provenance exist.
+- If a job fails: return a structured failure receipt (what step, what inputs, what error class).
 
 ---
 
@@ -679,12 +925,17 @@ Message shape (example):
 KFM is a “big data, small interface” system. The API must enforce boundaries. 🧱
 
 ### ✅ Core tactics
+- 🎯 Define SLOs: latency + throughput (separately for reads vs writes)
 - 🧊 Cache where safe: ETags, `Cache-Control` for immutable artifacts, tile caching
 - 📦 Stream big payloads: range requests, signed URLs for large binaries
 - 🗺️ Prefer tiles over blobs: don’t ship 50MB GeoJSON to browsers
 - 🧵 Bound concurrency: worker pools, backpressure, timeouts, queue limits
 - 🧾 Index aggressively: PostGIS indexes, bbox prefilters, partitions where needed
 - 🧪 Detect drift: perf regression tests for hot endpoints
+- 🧮 Allow *explicit* approximate modes for exploration *(optional)*:
+  - only when labeled `approx=true`
+  - always include error bounds / confidence metadata
+  - never allow approximate results to be “published evidence” without confirmation
 
 ### 📱 Mobile/offline realism (when needed)
 - provide offline tileset packaging endpoints (policy-gated)
@@ -698,10 +949,12 @@ KFM is a “big data, small interface” system. The API must enforce boundaries
 - 🔒 Keep DB/brokers on private network segments; expose only HTTPS at the edge
 - 🧯 Rate-limit auth; lockouts; strong password hashing (bcrypt/argon2)
 - 🧪 Validate ingestion: allowlists, size limits, file signatures; protect against SSRF
-- 🧊 Protect parsers: archives/images/PDFs are hostile-input surfaces
+- 🧊 Protect parsers: archives/images/PDFs are hostile-input surfaces (zip bombs, malformed files)
 - 🧾 Audit logs for “write” actions (upload, publish, redaction, delete)
 - 🔐 Secrets via env/secret managers (never commit tokens)
 - 🔏 Supply chain: SBOM generation + signed images + provenance attestations
+- 🧷 Minimize info leakage: avoid exposing vendor/version banners and debug headers
+- 🧭 Sensitive location safety: never let Story/Focus become a policy bypass
 
 > [!CAUTION]
 > “Public repo” implies “public download.” Never commit sensitive exports into version control.
@@ -723,8 +976,10 @@ Recommended baseline:
 
 A feature is “done” when:
 - ✅ Contract updated first (OpenAPI + schemas) and diff checks pass
-- ✅ AuthZ + classification rules enforced (no data downgrade)
+- ✅ Data-contract validation rules updated (if dataset/metadata impacted)
+- ✅ AuthZ + classification rules enforced (no data downgrade; no sensitive leaks)
 - ✅ Evidence pointers included (STAC/DCAT/PROV + IDs)
+- ✅ Story/Focus requirements met (citations + graph IDs + fact vs interpretation)
 - ✅ Tests added (unit + integration as needed)
 - ✅ Observability: logs include request id + run id/job id when applicable
 - ✅ Performance bounded (pagination, limits, timeouts; no unbounded graph traversals)
@@ -736,7 +991,10 @@ A feature is “done” when:
 ## 🗺️ Roadmap
 
 - [ ] Lock OpenAPI v1 as source-of-truth + CI diff gates
-- [ ] JSON Schemas for STAC/DCAT/PROV/Evidence + validation gates
+- [ ] JSON Schemas for STAC/DCAT/PROV/Evidence/Data-Contract + validation gates
+- [ ] Data-contract validation endpoint + publish-time enforcement
+- [ ] Focus Mode context bundle endpoint (policy-gated, provenance-only)
+- [ ] Graph glossary + canonical ID enforcement + reconciliation tooling
 - [ ] JWT auth middleware + org/role/classification guards
 - [ ] PostGIS-backed geo endpoints (bbox, intersects, search)
 - [ ] Queue + worker for simulation + heavy analytics
@@ -744,16 +1002,19 @@ A feature is “done” when:
 - [ ] Evidence bundles for Story Nodes + Focus (citation-first payloads)
 - [ ] Tiles + quicklook endpoints (policy-gated)
 - [ ] Rate limits + audit logs + security scans + signed artifacts
+- [ ] Federation-ready catalog release snapshots + citation-friendly “frozen” releases
 
 ---
 
 ## 🤝 Contributing
 
 - 🧠 Keep business rules in **domain/application**, not in FastAPI routes
+- 🧩 New endpoint? Update **OpenAPI first**, then implement; add contract tests + redaction rules
 - 🧪 Add tests for every use-case and route (happy path + auth + edge cases)
 - 🧩 Prefer small PRs with explicit intent
 - 🧾 Document governance-relevant decisions as ADRs in `docs/adr/` *(if present)*
 - 🏷️ If you touch data outputs: ensure STAC/DCAT/PROV artifacts are emitted + validated
+- 🧠 If you touch Story/Focus: ensure citations + graph IDs + sensitivity rules are enforced
 
 ---
 
@@ -766,31 +1027,35 @@ A feature is “done” when:
 
 | Project file | API impact (why it matters here) |
 |---|---|
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` | Defines platform ordering and “catalog gate” mindset; clarifies boundaries (ETL vs API vs UI), evidence flow (Story/Focus), and governance-first expectations. |
-| `Data Spaces.pdf` | Encourages pointer-over-payload and interoperability: APIs should prefer IDs/links + catalogs, support federation patterns, and expose trust signals. |
-| `Scalable Data Management for Future Hardware.pdf` | Pushes bounded, locality-aware access: avoid unbounded reads, use partitions/indexes, stream results, and design for concurrency/backpressure. |
-| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | Reinforces Postgres/PostGIS discipline: indexing, pagination, migrations, safe exports, and predictable query shapes. |
-| `python-geospatial-analysis-cookbook.pdf` | CRS hygiene, spatial predicates, PostGIS-friendly patterns, and “transform at boundaries” discipline for geo endpoints. |
-| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | Map-serving truth posture: avoid misleading defaults; legends/ramps/aggregation choices are “meaning,” so endpoints must return metadata + context. |
-| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | Mobile/offline constraints: tile packaging, bandwidth budgets, caching posture, and sensitivity awareness for location data. |
-| `responsive-web-design-with-html5-and-css3.pdf` | “Web reality” constraints: payload budgets, responsive assets, progressive loading; API should support efficient slices (tiles, filters, pagination). |
-| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 3D delivery implications: coordinate sanity, asset/tiles delivery patterns, and avoiding unsafe loaders; stable conventions for rendering layers. |
+| `MARKDOWN_GUIDE_v13.md.gdoc` | Canonical ordering + contract/evidence artifacts; Story/Focus hard gates; minimum CI expectations; CARE-aligned UI/data rules. |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` | Defines platform ordering; clarifies Story Nodes + Focus Mode behavior; graph-first context; catalog gate mindset; provenance-first expectations. |
+| `Data Spaces.pdf` | Interop + sovereignty mindset: pointer-over-payload, federation, trust signals, privacy-aware analytics, and standardization pressure. |
+| `Scalable Data Management for Future Hardware.pdf` | Bounded, locality-aware access: avoid unbounded reads; use chunking; exploit concurrency; consider approximate/progressive results for exploratory queries. |
+| `Database Performance at Scale.pdf` | Performance discipline: define latency/throughput north stars; separate read/write paths; plan for backpressure and predictable query shapes. |
+| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | Postgres/PostGIS discipline: indexes, migrations, predictable pagination, safe exports, and explainable query plans. |
+| `python-geospatial-analysis-cookbook.pdf` | CRS hygiene, PostGIS-friendly patterns, and “transform at boundaries” discipline for geo endpoints. |
+| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | Map-serving truth posture: legends/ramps/aggregation choices are “meaning,” so API must return metadata + context (not just pixels). |
+| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | Mobile/offline constraints and location sensitivity: bandwidth budgets, caching posture, and privacy risks around location data. |
+| `responsive-web-design-with-html5-and-css3.pdf` | “Web reality” constraints: payload budgets, progressive loading; API should support efficient slices (tiles, filters, pagination). |
+| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 3D delivery implications: stable coordinate conventions, bounded asset delivery patterns, and safe loaders for rendering layers. |
+| `Archaeological 3D GIS_26_01_12_17_53_09.pdf` | 3D GIS posture: 3D context products must remain provenance-linked and export-gated; avoid conflating visualization with truth. |
 | `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | Quicklooks/thumbnails correctness: choose formats intentionally, keep previews small/cacheable, and avoid quality regressions. |
-| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | Remote sensing orchestration patterns: export tracking, time-series products, parameter capture (AOI/time/method), and catalog-first derived products. |
-| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | Simulation credibility: verification/validation posture, sensitivity metadata, reproducibility, and refusing overclaiming; expose uncertainty artifacts. |
+| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | Remote sensing orchestration patterns: export tracking, time-series products, parameter capture (AOI/time/method), scaling constraints and quotas. |
+| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | Simulation credibility: V&V posture, sensitivity metadata, reproducibility, and refusing overclaiming; expose uncertainty artifacts. |
 | `Understanding Statistics & Experimental Design.pdf` | Prevents “API says so = truth”: require context, assumptions, and proper comparisons; enforce diagnostics for inference endpoints. |
 | `graphical-data-analysis-with-r.pdf` | Encourages EDA sanity outputs: distribution/diagnostic artifacts as part of analysis job results. |
 | `regression-analysis-with-python.pdf` | Regression endpoints should return diagnostics (residuals, assumptions) and discourage misinterpretation. |
-| `Regression analysis using Python - slides-linear-regression.pdf` | Quick, standardized regression result shapes and metrics conventions for UI consumption. |
-| `think-bayes-bayesian-statistics-in-python.pdf` | Bayesian job outputs: priors, posterior summaries, credible intervals, and uncertainty as a first-class response artifact. |
+| `Regression analysis using Python - slides-linear-regression.pdf` | Standard regression result shapes and metric conventions for UI consumption. |
+| `think-bayes-bayesian-statistics-in-python.pdf` | Bayesian outputs: priors, posterior summaries, credible intervals, and uncertainty as first-class artifacts. |
 | `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` | ML posture: baseline-first, evaluation artifacts, model cards; keep training out of API process and use workers/jobs. |
-| `Generalized Topology Optimization for Structural Design.pdf` | Optimization jobs: record objective/constraints, deterministic run IDs, and package outputs as governed artifacts. |
-| `Spectral Geometry of Graphs.pdf` | Graph endpoints: treat metrics as evidence signals; keep queries bounded; expose explainable, auditable graph analytics. |
-| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | Defensive security posture: threat modeling, segmentation, least privilege, safe network assumptions. |
-| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | Hostile-input mindset for parsers and ingestion surfaces; reduce attack surface; validate aggressively. |
-| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | Concurrency discipline: backpressure, bounded queues, predictable scheduling, and avoiding “thread explosion” patterns. |
+| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | AI governance posture: transparency, accountability, and careful framing of inductive predictions vs “truth.” |
 | `Introduction to Digital Humanism.pdf` | Human-centered governance: transparency, accountability, dignity, and avoiding automation harm; explanation hooks matter. |
 | `Principles of Biological Autonomy - book_9780262381833.pdf` | Systems/feedback thinking: keep humans in control; design stable loops and avoid opaque “autopilot” endpoints. |
+| `Generalized Topology Optimization for Structural Design.pdf` | Optimization jobs: record objective/constraints, deterministic run IDs, and package outputs as governed artifacts. |
+| `Spectral Geometry of Graphs.pdf` | Graph endpoints: treat metrics as evidence signals; keep queries bounded; expose explainable, auditable graph analytics. |
+| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | Defensive security posture: threat modeling, segmentation, least privilege, and safe network assumptions. |
+| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | Hostile-input mindset for parsers and ingestion surfaces; reduce attack surface; validate aggressively. |
+| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | Concurrency discipline: backpressure, bounded work, predictable scheduling, and avoiding “thread explosion” patterns. |
 | `A programming Books.pdf` | Polyglot reference shelf for future adapters/clients/tooling; supports maintainability across stacks. |
 | `B-C programming Books.pdf` | Polyglot reference shelf (B–C). |
 | `D-E programming Books.pdf` | Polyglot reference shelf (D–E). |
@@ -809,6 +1074,7 @@ A feature is “done” when:
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
+| v1.2.0 | 2026-01-13 | Aligned API boundary with Master Guide v13: added data lifecycle, dataset data-contracts, Story/Focus hard gates, graph glossary posture, federation/data-space notes, and expanded endpoint map/DoD. | KFM Engineering |
 | v1.1.0 | 2026-01-09 | Upgraded API README to be catalog-gated + contract-first; added clean architecture snapshot, emoji repo layout, definition-of-done, and full reference-library influence map. | KFM Engineering |
 | v1.0.0 | 2026-01-07 | Initial API boundary README (WIP): invariants, endpoints, contracts-first posture, governance stance. | KFM Engineering |
 
