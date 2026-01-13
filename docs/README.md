@@ -1,8 +1,8 @@
 ---
 title: "📚 `docs/` — Kansas Frontier Matrix (KFM) Governed Documentation 📜🧭"
 path: "docs/README.md"
-version: "v1.2.0"
-last_updated: "2026-01-12"
+version: "v1.3.0"
+last_updated: "2026-01-13"
 status: "active"
 doc_kind: "Directory README"
 license: "CC-BY-4.0"
@@ -30,6 +30,7 @@ review_cycle: "quarterly"
 # Canonical references (expected)
 canonical_master_guide: "docs/MASTER_GUIDE_v13.md"
 canonical_glossary: "docs/glossary.md"
+canonical_library_index: "docs/library/README.md"
 ---
 
 <a id="top"></a>
@@ -38,18 +39,24 @@ canonical_glossary: "docs/glossary.md"
 
 ![KFM](https://img.shields.io/badge/KFM-docs%2F%20canonical-1f6feb)
 ![KFM-MDP](https://img.shields.io/badge/KFM--MDP-v11.2.6-8957e5)
+![Version](https://img.shields.io/badge/version-v1.3.0-8957e5)
+![Updated](https://img.shields.io/badge/updated-2026--01--13-2ea043)
 ![Evidence](https://img.shields.io/badge/evidence--first-STAC%20%2B%20DCAT%20%2B%20PROV-0aa3a3)
 ![Contract-first](https://img.shields.io/badge/contract--first-schemas%20%2B%20API%20contracts-0aa3a3)
 ![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-2ea043)
 ![Accessibility](https://img.shields.io/badge/docs-accessible%20%2B%20scannable%20%2B%20citable-8250df)
+![License](https://img.shields.io/badge/license-CC--BY--4.0-blue)
 ![Security](https://img.shields.io/badge/security-no%20secrets%20%2B%20no%20side--channels-red)
 
 > Canonical home for KFM’s **governed documentation**:  
 > **architecture + standards + templates + runbooks + governance + story nodes** — written so decisions are **auditable**, claims are **citable**, and change is **reviewable**.  
-> This is where KFM stays explainable as it scales. 🧠🗺️  
+> This is where KFM stays explainable as it scales. 🧠🗺️
 >
-> System blueprint context (project master doc):  [oai_citation:0‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx](file-service://file-QrXwct2pX9kFpqgjtBiijR)  
-> Repo gap audit / completeness lens:  [oai_citation:1‡Audit of the Kansas Frontier Matrix (KFM) Repository.pdf](file-service://file-1RwSrWXaDb5fnJ5gZX5kS3)
+> 📌 Start with:  
+> - **System map** → `docs/MASTER_GUIDE_v13.md` *(canonical architecture + repo shape)*  
+> - **Governance posture** → `docs/governance/ROOT_GOVERNANCE.md` *(review triggers + authority)*  
+> - **Library index** → `docs/library/README.md` *(license-aware reference map; pointers > payload)*  
+> - **Reality checks / audits** → keep under `docs/reports/` *(or `docs/architecture/ADR/` if it becomes a decision)*
 
 > [!IMPORTANT]
 > **KFM’s non-negotiable order (docs must reinforce it):**  
@@ -60,14 +67,21 @@ canonical_glossary: "docs/glossary.md"
 
 ## 🔗 Quick links
 - 🧭 Repo overview: **[`../README.md`](../README.md)**
+- 📘 Master system map: **[`./MASTER_GUIDE_v13.md`](./MASTER_GUIDE_v13.md)** *(if present)*
+- 📖 Canonical glossary: **[`./glossary.md`](./glossary.md)** *(if present)*
+- 🏛️ Governance charter: **[`./governance/ROOT_GOVERNANCE.md`](./governance/ROOT_GOVERNANCE.md)**
+- 📚 Library index (license-aware): **[`./library/README.md`](./library/README.md)** *(if present)*
 - 📦 Data + metadata boundary: **[`../data/README.md`](../data/README.md)**
 - 🧪 MCP (methods + receipts): **[`../mcp/README.md`](../mcp/README.md)** *(if present)*
-- 🧩 Executable code boundary: **[`../src/README.md`](../src/README.md)** *(if present)*
-- 🧾 Pipelines boundary: **[`../src/pipelines/README.md`](../src/pipelines/README.md)** *(if present)*
+- 📐 Schemas registry: **[`../schemas/README.md`](../schemas/README.md)** *(if present)*
+- 🧩 Pipelines boundary: **[`../src/pipelines/README.md`](../src/pipelines/README.md)** *(if present)*
+- 🕸️ Graph build boundary: **[`../src/graph/README.md`](../src/graph/README.md)** *(if present)*
+- 🛡️ API boundary: **[`../src/server/README.md`](../src/server/README.md)** *(if present)*
+- 🌐 Web UI boundary: **[`../web/README.md`](../web/README.md)** *(if present)*
 - 🧪 Tests boundary: **[`../tests/README.md`](../tests/README.md)** *(if present)*
 - 📓 Notebooks boundary: **[`../notebooks/README.md`](../notebooks/README.md)** *(if present)*
-- 📐 Schemas registry: **[`../schemas/README.md`](../schemas/README.md)** *(if present)*
-- 🌐 Web UI boundary: **[`../web/README.md`](../web/README.md)** *(if present)*
+- 🧰 Tools boundary: **[`../tools/README.md`](../tools/README.md)** *(if present)*
+- 🧾 Releases boundary: **[`../releases/README.md`](../releases/README.md)** *(if present)*
 - 🤝 CI/CD + templates: **[`../.github/README.md`](../.github/README.md)** *(if present)*
 
 ---
@@ -76,6 +90,7 @@ canonical_glossary: "docs/glossary.md"
 - [📘 Overview](#-overview)
 - [🧾 Doc metadata](#-doc-metadata)
 - [🧠 Core invariants](#-core-invariants)
+- [🧫 Data lifecycle and artifact locations](#-data-lifecycle-and-artifact-locations)
 - [📖 Glossary](#-glossary-kfm-terms-used-in-docs)
 - [🗂️ What goes in `docs/`](#️-what-goes-in-docs)
 - [🧱 Directory layout](#-directory-layout)
@@ -84,10 +99,13 @@ canonical_glossary: "docs/glossary.md"
 - [🧾 Evidence, citations, and provenance pointers](#-evidence-citations-and-provenance-pointers)
 - [📚 Story Nodes and Focus Mode rules](#-story-nodes-and-focus-mode-rules)
 - [🔒 Security, sovereignty, and sensitive info](#-security-sovereignty-and-sensitive-info)
-- [🧪 Modeling and simulation documentation](#-modeling-and-simulation-documentation)
+- [🧪 Modeling, simulation, and inference documentation](#-modeling-simulation-and-inference-documentation)
+- [🤖 Machine learning and AI documentation](#-machine-learning-and-ai-documentation)
 - [⚙️ Scaling and data management documentation](#️-scaling-and-data-management-documentation)
+- [🕸️ Graph and ontology documentation](#️-graph-and-ontology-documentation)
 - [🎨 Visualization and UX documentation](#-visualization-and-ux-documentation)
 - [📚 Project reference library influence map](#-project-reference-library-influence-map)
+- [📚 Library intake policy](#-library-intake-policy-license-aware)
 - [🕰️ Version history](#️-version-history)
 
 ---
@@ -98,10 +116,11 @@ canonical_glossary: "docs/glossary.md"
 |---|---|
 | Doc | `docs/README.md` |
 | Status | Active ✅ |
-| Last updated | **2026-01-12** |
-| Audience | Contributors writing standards, runbooks, story nodes, ADRs, and governance policies |
+| Version | **v1.3.0** |
+| Last updated | **2026-01-13** |
+| Audience | Contributors writing standards, runbooks, Story Nodes, ADRs, and governance policies |
 | Prime directive | If it changes what people *believe* about the map/story/data, it must be **reviewable + citable + reversible** |
-| Repo posture | **Evidence-first** + **Contract-first** + **Sovereignty-aware** |
+| Repo posture | **Evidence-first** + **Contract-first** + **Sovereignty-aware** + **License-aware** |
 
 > [!NOTE]
 > The YAML front-matter is authoritative for protocol versions and governance posture.  
@@ -117,8 +136,10 @@ canonical_glossary: "docs/glossary.md"
 - **governable** (policy and review gates are explicit)
 - **auditable** (why a decision happened, and when)
 - **evidence-first** (claims point to cataloged evidence)
-- **humane** (transparent impacts, consent, dignity, and accountability)  [oai_citation:2‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)
-- **change-friendly** (structured docs that evolve with requirements instead of becoming fossilized)  [oai_citation:3‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY)
+- **contract-first** (schemas + API contracts define reality; docs explain it)
+- **humane** (transparent impacts, consent, dignity, and accountability) ❤️
+- **change-friendly** (structured docs that evolve with requirements instead of fossilizing) 🔁
+- **license-aware** (meaning + metadata must respect legal/ethical constraints) 🪪
 
 ### 🚫 What `docs/` is not
 - not a dumping ground for generated outputs *(those belong under `data/**` and catalogs)*
@@ -150,20 +171,49 @@ flowchart LR
 - ✅ **Evidence-first narrative:** no unsourced claims in Story Nodes or Focus Mode.
 - ✅ **Contract-first changes:** schemas and API contracts are first-class; docs must link to them and respect versioning.
 - ✅ **One canonical home per thing:** avoid duplicate “shadow docs”; archive deprecated docs instead of copy/pasting.
+- ✅ **API boundary is real:** UI **must not** talk directly to the graph/DB; it goes through governed APIs only. 🛡️
+- ✅ **Monotonic governance:** derived outputs **cannot** be *less* restricted than inputs (classification, consent, license, or sensitivity).
+- ✅ **Stable identifiers:** avoid “meaningful IDs” that break when naming shifts; use stable IDs and versioned mapping layers.
 - ✅ **Sovereignty-aware behavior:** docs must not leak sensitive locations (including via screenshots, tiles, or “helpful examples”).
-- ✅ **Deny-by-default mindset:** treat user-provided files and internet metadata as hostile inputs; recommend validation, not trust-by-assumption.  [oai_citation:4‡Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf](file-service://file-Mu6zixTqF9Lubf5QMjepRg)  [oai_citation:5‡compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf](file-service://file-Y6V94sFtV6sy3w63LDy9fi)
+- ✅ **Deny-by-default mindset:** treat user-provided files and internet metadata as hostile inputs; recommend validation, not trust-by-assumption. 🧯
 
 ### ✅ Minimum validation intent (KFM-MDP v11.2.6 baseline)
 
 KFM’s documentation posture assumes (or aspires to) automated validation gates such as:
 
 - **Markdown protocol checks** (YAML front-matter + required sections)
-- **Link/reference validation** (no broken internal links or unresolved citations)
+- **Link/reference validation** (no broken internal links or unresolved anchors)
 - **Schema validation** for structured artifacts referenced by docs (STAC/DCAT/PROV, Story Node metadata)
 - **Security/governance scans** (secrets, PII, sensitive location leakage, classification downgrades)
+- **License/attribution checks** where docs reference external works or derived artifacts
 
 > [!NOTE]
 > If CI isn’t fully wired yet, treat these as *required local checks* for doc changes that influence decisions or public meaning.
+
+---
+
+## 🧫 Data lifecycle and artifact locations
+
+KFM’s docs are “pointer-first”: we document **where artifacts live** and **how to prove lineage**, not how to smuggle payloads into markdown.
+
+### 🧪 Canonical data lifecycle (recommended)
+```text
+📁 data/
+├── 📁 raw/                      # raw inputs (immutable; checksummed; access controlled)
+├── 📁 work/                     # scratch/temporary intermediates (rebuildable)
+├── 📁 processed/                # validated outputs used by the system
+│
+├── 📁 stac/                     # STAC catalogs (items/collections)
+├── 📁 catalog/
+│   └── 📁 dcat/                 # DCAT datasets/distributions (interoperability)
+└── 📁 prov/                     # PROV bundles (lineage, derivations, agents, activities)
+```
+
+### ✅ Doc rule
+If a doc references an artifact that could influence decisions (model output, derived raster, OCR corpus, metric, map tile, extracted entities):
+- **Do not embed it** in `docs/`
+- **Do point to it** via STAC/DCAT/PROV identifiers + stable paths
+- **Do state** assumptions (CRS, units, thresholds, filters, time range)
 
 ---
 
@@ -183,6 +233,9 @@ A governed narrative unit that is machine-ingestible and evidence-linked. It ref
 
 **Focus Mode**  
 The trust-preserving reading context where users experience story + map + timeline together. Focus Mode hard-gates provenance and sensitivity: *no new narrative without sources; no data without provenance; no sensitive location leaks.*
+
+**Reference Pack**  
+The project’s *license-aware* reading shelf (books/papers/audits) used to shape standards and review decisions. The pack is indexed under `docs/library/` but should **not** be blindly mirrored into git.
 
 ---
 
@@ -215,7 +268,8 @@ KFM expects `docs/` to be organized by **governed intent** (not by author prefer
 ### 🧭 Expected shape (KFM-style)
 
 > [!NOTE]
-> Not all repos have every file yet. This is the **target** structure that the doc protocol assumes.
+> Not all repos have every file yet. This is the **target** structure that the doc protocol assumes.  
+> For the *full repo* target shape, see `docs/MASTER_GUIDE_v13.md` (if present).
 
 ```text
 📁 docs/
@@ -273,7 +327,8 @@ KFM expects `docs/` to be organized by **governed intent** (not by author prefer
 │
 ├── 📚 library/
 │   ├── 📄 README.md                       # license-aware index only (preferred)
-│   └── 📄 influence-map.md                # “why this book/paper matters” links
+│   ├── 📄 influence-map.md                # “why this book/paper matters” crosswalk
+│   └── 📁 bib/                            # optional: citation files (BibTeX, CSL JSON, etc.)
 │
 └── 🗃️ 99_archive/                         # deprecated docs retained for traceability
 ```
@@ -297,6 +352,10 @@ When you add a new domain, create:
 - updates to `docs/standards/` **only** if the domain introduces new conventions
 
 **Rule:** the domain becomes “real” only after `data/processed/**` + catalogs + provenance exist.
+
+> [!TIP]
+> If a domain touches oral histories, Indigenous narratives, or community-contributed knowledge:  
+> **treat governance as a feature** (consent, attribution, scope-of-use, redaction rules).
 
 ### 2) Add an ADR (Architecture Decision Record) ✅
 Use an ADR when you decide something that affects:
@@ -329,6 +388,13 @@ If you add or change an endpoint:
 - document authZ/redaction/classification behavior
 - update tests and release notes where applicable
 
+### 6) Add a new reference (license-aware) ✅
+When a book/paper/audit meaningfully influences KFM decisions:
+- add an index entry under `docs/library/`
+- record **license posture** (✅ commit-safe / ⚠️ verify / 🚫 do not commit)
+- record **what it influences** (which docs/standards/runbooks it upgrades)
+- store **pointers** (publisher link / DOI / legal acquisition path), not pirate copies
+
 ---
 
 ## ✅ Doc quality gates (Definition of Done)
@@ -345,9 +411,19 @@ If you add or change an endpoint:
 - [ ] evidence pointers for factual claims (prefer STAC/DCAT/PROV and stable IDs)
 - [ ] explicit assumptions (especially modeling, projections, CRS, units)
 - [ ] “safety review” note if content touches sensitive locations, identities, or sovereignty
+- [ ] license/attribution notes where the doc relies on external works or derived artifacts
 - [ ] no secrets, tokens, internal URLs, or exposed system internals
 - [ ] links work (relative links preferred)
 - [ ] updated `last_updated` + version history entry when meaning changes
+
+### 🧾 Recommended metadata extras (optional but powerful)
+If your doc defines behavior or makes claims that must survive time:
+```yaml
+doc_uuid: "uuid-v4-here"
+commit_ref: "git-sha-here"
+checksum: "sha256:..."
+reviewed_by: ["@handle1", "@handle2"]
+```
 
 ### 🔍 Recommended automation checks for docs
 - markdown lint + style checks (headings, lists, code fences)
@@ -356,6 +432,7 @@ If you add or change an endpoint:
 - mermaid render check (where used)
 - “no secrets / no PII” scanners
 - optional spell check (domain dictionary)
+- optional license scanner for bundled references/artifacts
 
 ---
 
@@ -365,7 +442,7 @@ If you add or change an endpoint:
 Prefer citing:
 1. **Catalog artifacts** (STAC Item/Collection, DCAT dataset, PROV bundle)
 2. **Graph entity IDs** (stable node IDs)
-3. **External sources** only if they are also referenced in catalogs or the project library index
+3. **External sources** only if they are also indexed in `docs/library/` (and ideally referenced in catalogs)
 
 ### ✅ Footnotes pattern (recommended)
 ```markdown
@@ -373,6 +450,11 @@ The 1870–1875 corridor shows increased settlement density.[^e1]
 
 [^e1]: Evidence: DCAT `kfm.ks.historical.settlement_density`; STAC `kfm.ks.historical.settlement_density`; PROV `kfm.prov.etl_1875_...`
 ```
+
+### 🧾 Repository-level citation hygiene (recommended)
+- Add `CITATION.cff` at repo root for project citation
+- Prefer stable identifiers (DOI/ARK) for published data releases
+- Never “cite the screenshot” — cite the catalog item that the screenshot renders
 
 > [!TIP]
 > If a reader can’t click from a claim → evidence → lineage, the doc is incomplete.
@@ -391,7 +473,7 @@ Story Nodes turn narrative into a governed data product: machine-ingestible, evi
 
 ### 🎯 Focus Mode hard gates (trust preservation)
 - Only provenance-linked content can appear
-- AI content must be **opt-in**, clearly labeled, and paired with uncertainty/confidence  [oai_citation:6‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR)  [oai_citation:7‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)
+- AI content must be **opt-in**, clearly labeled, and paired with uncertainty/confidence
 - No sensitive location leaks (generalize/omit where required)
 - No side-channel bypass of sovereignty/classification rules
 
@@ -410,23 +492,50 @@ Docs are a security surface. Treat them as if they could become public.
 - 🧯 no “how to exploit” instructions or vulnerable configuration examples
 - 🧾 do not paste raw sensitive data into docs — reference catalog IDs instead
 - 🧊 use screenshots carefully: they can leak coordinates, filenames, user accounts, or private tiles
+- 🧬 **no governance downgrades:** derived outputs cannot reduce restrictions
 
 > [!NOTE]
-> Security mindset references (defensive orientation only):  [oai_citation:8‡Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf](file-service://file-Mu6zixTqF9Lubf5QMjepRg)  [oai_citation:9‡compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf](file-service://file-Y6V94sFtV6sy3w63LDy9fi)  [oai_citation:10‡ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf](file-service://file-Q7EeqPb17SD9sV8Fb12LQX)
+> Keep security references in a **defensive posture**: threat modeling, hardening, secure ingestion, and safe ops — not exploitation.
 
 ---
 
-## 🧪 Modeling and simulation documentation
+## 🧪 Modeling, simulation, and inference documentation
 
 KFM treats models as decision-support, not truth generators. Documentation must:
 - state assumptions clearly
 - define objectives + constraints
 - report uncertainty (not just point estimates)
-- record parameters + seeds
+- record parameters + seeds + software versions
 - define verification/validation (V&V) checks
 - document bias risks and failure modes when models touch human narratives
+- describe interpretability boundaries (“what this model cannot tell you”)
 
-Reference lenses for rigor + V&V discipline:  [oai_citation:11‡Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf](file-service://file-LuWF23hffNAZJaZm2Gzvcd)  [oai_citation:12‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3)  [oai_citation:13‡ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf](file-service://file-Q7EeqPb17SD9sV8Fb12LQX)  [oai_citation:14‡regression-analysis-with-python.pdf](file-service://file-NCS6ThhvajwNUm4crVVcGM)  [oai_citation:15‡think-bayes-bayesian-statistics-in-python.pdf](file-service://file-LXwJApPMVhRZgyqLb9eg7c)
+### 🧮 Optimization runs (special case)
+For optimization-heavy work (e.g., topology optimization / routing / allocation):
+- define objective functions and constraints explicitly
+- include feasibility checks and convergence criteria
+- capture solver settings (tolerances, step sizes, termination)
+- ensure provenance includes input datasets + parameter files + run IDs
+
+---
+
+## 🤖 Machine learning and AI documentation
+
+If ML/AI is used anywhere in KFM (classification, extraction, summarization, ranking, or narrative assist), docs must treat it as **evidence-producing software** with governance requirements.
+
+### ✅ Minimum ML/AI documentation requirements
+- **Data provenance** (training + evaluation sets) and scope-of-use constraints
+- **Labeling & consent** posture (what is allowed to be inferred vs not inferred)
+- **Evaluation** (metrics, baselines, error analysis, uncertainty)
+- **Failure modes** (bias, confounders, leakage, distribution shift)
+- **Reproducibility** (model version, code commit, seeds, environment)
+- **Output governance**: AI-assisted outputs must be labeled, attributable, and provenance-linked
+
+### 🚫 ML/AI anti-patterns (do not document as “acceptable”)
+- “We’ll add provenance later”
+- “Temporary unlogged manual edits”
+- “Auto-generated story nodes without citations”
+- “Model outputs that bypass classification/sovereignty rules”
 
 ---
 
@@ -437,86 +546,136 @@ When documenting performance/scaling behavior:
 - document storage formats and query patterns
 - document concurrency and operational risks (race conditions, idempotency)
 - document database conventions and migration strategy
+- capture workload characterization (read/write mix, latency budgets, hot paths)
 
-Reference lenses for data systems + scaling:  [oai_citation:16‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)  [oai_citation:17‡PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf](file-service://file-742sw3gADJniEdmC19JeAC)  [oai_citation:18‡Data Spaces.pdf](file-service://file-7UnZyJ7eCK1egnsyuYJaFq)  [oai_citation:19‡concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf](file-service://file-Y45SvXbmLoZL1MNmrcyqz6)
+### ✅ High-value runbook topics (recommended)
+- PostGIS indexing conventions (GiST/SP-GiST), VACUUM/ANALYZE cadence
+- ETL idempotency + retry strategy
+- graph rebuild strategy (incremental vs full rebuild)
+- API caching strategy and invalidation policy
+- telemetry/audit events (especially for redaction + Focus Mode)
+
+---
+
+## 🕸️ Graph and ontology documentation
+
+The graph is KFM’s “meaning layer,” but it is **not the source of truth** — catalogs + provenance are.
+
+### ✅ Graph documentation requirements
+- ontology versioning rules (and how to migrate)
+- stable ID strategy (no “meaningful IDs” baked into node keys)
+- mapping rules: catalog IDs → graph nodes/edges (deterministic, testable)
+- graph metrics are *interpretive tools*, not facts (document what is signal vs story)
+
+### 🧭 Ontology governance
+Ontology changes should trigger:
+- an ADR (why, alternatives, consequences)
+- a migration plan
+- downstream impact notes (API/UI/story nodes)
 
 ---
 
 ## 🎨 Visualization and UX documentation
 
 Maps and UI are meaning-making machines. Docs should capture:
-- symbology decisions and aggregation choices (and why)  [oai_citation:20‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)
-- web performance constraints (payload budgets, progressive loading)  [oai_citation:21‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-Heg28TVM2nReDYTQ7nPhAK)
+- symbology decisions and aggregation choices (and why) 🎨
+- web performance constraints (payload budgets, progressive loading) 🌐
 - tiling/LOD considerations for dense spatial data
-- image compression rules for doc assets (avoid repo bloat; keep renders readable)  [oai_citation:22‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj)
-- 3D coordinate conventions + GPU constraints when relevant  [oai_citation:23‡webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf](file-service://file-7quELMw4FrspPczB9Y3BTp)
-- mobile/field realities and “mapping beyond the map” concerns  [oai_citation:24‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
+- image compression rules for doc assets (avoid repo bloat; keep renders readable) 🖼️
+- 3D coordinate conventions + GPU constraints when relevant 🧊
+- mobile/field realities and “mapping beyond the map” concerns 📱
+- UI→API boundary rules (no direct graph/DB access)
+
+### 🧊 3D + time-enabled content (extra cautions)
+- document vertical datum assumptions (if any)
+- document time semantics (instant vs interval, timezone, calendar)
+- document simplification/decimation steps (what details were removed)
 
 ---
 
 ## 📚 Project reference library influence map
 
 > [!NOTE]
-> These project files influence how we write and review KFM documentation: governance, evidence, security, modeling rigor, scaling discipline, visualization honesty, and human-centered practice.
+> These project files influence how we write and review KFM documentation: governance, evidence, security, modeling rigor, scaling discipline, visualization honesty, and human-centered practice.  
+> The goal here is **traceable influence**, not “book dumping.” 📚🧭
 
 <details>
 <summary><strong>📦 Expand: Reference library → what it influences in <code>docs/</code></strong></summary>
 
-### 🧭 Core KFM system + documentation protocols
-| Project file | Primary lens | How it upgrades `docs/` decisions |
+### 🧭 Core KFM system, audits, and documentation governance
+| Reference file (project pack) | Primary lens | How it upgrades `docs/` decisions |
 |---|---|---|
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`  [oai_citation:25‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx](file-service://file-QrXwct2pX9kFpqgjtBiijR) | 🧭 System blueprint | Reinforces repo boundaries, pipeline ordering, governance posture, Story Nodes + Focus Mode constraints. |
-| `Audit of the Kansas Frontier Matrix (KFM) Repository.pdf`  [oai_citation:26‡Audit of the Kansas Frontier Matrix (KFM) Repository.pdf](file-service://file-1RwSrWXaDb5fnJ5gZX5kS3) | 🧯 Reality check | Forces explicit “what exists vs what’s aspirational,” prioritizes missing runbooks/templates/gates. |
-| `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`  [oai_citation:27‡D-E programming Books.pdf](file-service://file-6Lmmw9aqHnfP2mo9cSrNeg) | 🧪 Roadmap notes | Encourages clear draft-vs-canonical separation; capture ideas without letting them masquerade as standards. |
-| `Flexible Software Design: Systems Development for Changing Requirements.pdf`  [oai_citation:28‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY) | 🔁 Change-resilience | Encourages modular, versioned, migration-aware docs (avoid brittle “one-off” rules). |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` | 🧭 System blueprint | Reinforces repo boundaries, pipeline ordering, evidence-first posture, and Focus Mode trust gates. |
+| `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` | 🧯 Reality check | Forces explicit “what exists vs what’s aspirational,” highlights missing runbooks/standards, and tracks design gaps. |
+| `MARKDOWN_GUIDE_v13.md.gdoc` | 🧾 Doc protocol | Aligns directory layout, invariants (API boundary, monotonic governance), and doc gating expectations. |
+| `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` | ✍️ Authoring craft | Improves readability, consistency, front-matter hygiene, and scannability. |
 
 ### 🛰️ Geospatial, EO/RS, cartography, and web mapping
-| Project file | Primary lens | How it upgrades `docs/` decisions |
+| Reference file (project pack) | Primary lens | How it upgrades `docs/` decisions |
 |---|---|---|
-| `python-geospatial-analysis-cookbook.pdf`  [oai_citation:29‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu) | 🗺️ GIS engineering | Promotes CRS/unit hygiene, IO discipline, PostGIS patterns, and testable geoprocessing conventions. |
-| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`  [oai_citation:30‡On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf](file-service://file-NtashtRjti9J1THyYXkhAv) | 🛰️ EO workflows | Informs RS domain docs: exports, time-series, derived raster governance, and cloud-scale constraints. |
-| `making-maps-a-visual-guide-to-map-design-for-gis.pdf`  [oai_citation:31‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP) | 🎨 Cartography ethics | Forces documentation of symbology/aggregation as “meaning decisions,” not just styling. |
-| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`  [oai_citation:32‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS) | 📱 Field constraints | Drives doc guidance for offline/low-bandwidth UX constraints and upstream asset preparation. |
-| `responsive-web-design-with-html5-and-css3.pdf`  [oai_citation:33‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-Heg28TVM2nReDYTQ7nPhAK) | 🌐 Web reality | Encourages realistic device constraints, progressive loading, and accessible UI documentation. |
-| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`  [oai_citation:34‡webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf](file-service://file-7quELMw4FrspPczB9Y3BTp) | 🧊 3D constraints | Promotes documenting coordinate conventions, LOD/tiling rules, and GPU-friendly asset prep. |
-| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`  [oai_citation:35‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj) | 🖼️ Media hygiene | Sets expectations for doc assets: compression, thumbnails, and avoiding repo bloat. |
+| `python-geospatial-analysis-cookbook.pdf` | 🗺️ GIS engineering | Promotes CRS/unit hygiene, PostGIS patterns, geoprocessing conventions, and testable workflows. |
+| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | 🛰️ EO workflows | Informs RS domain docs: exports, time-series, derived raster governance, and cloud-scale constraints. |
+| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | 🎨 Cartography ethics | Forces documentation of symbology/aggregation as meaning decisions, not “just styling.” |
+| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | 📱 Field constraints | Drives doc guidance for offline/low-bandwidth UX constraints and upstream asset preparation. |
+| `Archaeological 3D GIS_26_01_12_17_53_09.pdf` | 🧊 3D GIS practice | Encourages careful documentation of 3D interpretation, uncertainty, and representation choices. |
 
-### 📊 Statistics, modeling, simulation, and inference hygiene
-| Project file | Primary lens | How it upgrades `docs/` decisions |
+### 🌐 UI engineering + 3D rendering + asset hygiene
+| Reference file (project pack) | Primary lens | How it upgrades `docs/` decisions |
 |---|---|---|
-| `Understanding Statistics & Experimental Design.pdf`  [oai_citation:36‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3) | 📊 Rigor | Strengthens claims: confounders, bias, experimental design, and uncertainty framing. |
-| `graphical-data-analysis-with-r.pdf`  [oai_citation:37‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L) | 📉 EDA instincts | Encourages pre-publication sanity checks, diagnostics, and surfacing anomalies. |
-| `regression-analysis-with-python.pdf`  [oai_citation:38‡regression-analysis-with-python.pdf](file-service://file-NCS6ThhvajwNUm4crVVcGM) | 📈 Baselines | Normalizes reproducible modeling writeups: diagnostics, leakage checks, assumptions. |
-| `Regression analysis using Python - slides-linear-regression.pdf`  [oai_citation:39‡concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf](file-service://file-Y45SvXbmLoZL1MNmrcyqz6) | 📈 Quick checks | Reinforces what must be documented for regressions (residuals, scaling, assumptions). |
-| `think-bayes-bayesian-statistics-in-python.pdf`  [oai_citation:40‡ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf](file-service://file-Q7EeqPb17SD9sV8Fb12LQX) | 🎲 Uncertainty | Promotes explicit priors, posterior uncertainty reporting, and calibrated decisions. |
-| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`  [oai_citation:41‡Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf](file-service://file-LuWF23hffNAZJaZm2Gzvcd) | 🧪 V&V discipline | Elevates simulation docs with verification/validation, sensitivity analysis, and UQ expectations. |
-| `Generalized Topology Optimization for Structural Design.pdf`  [oai_citation:42‡Generalized Topology Optimization for Structural Design.pdf](file-service://file-PzydVyvSPdXWqYrXeFCNzj) | 🧮 Optimization | Improves optimization run documentation: objectives, constraints, reproducibility, audit trails. |
-| `Spectral Geometry of Graphs.pdf`  [oai_citation:43‡Spectral Geometry of Graphs.pdf](file-service://file-DWxRbQDZGktGtiWtzAQxs8) | 🕸️ Graph thinking | Encourages careful interpretation of graph metrics (signal vs fact) and provenance expectations. |
+| `responsive-web-design-with-html5-and-css3.pdf` | 🌐 Web reality | Encourages realistic device constraints, progressive loading, and accessible UI documentation. |
+| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 🧊 3D constraints | Promotes documenting coordinate conventions, LOD rules, and GPU-friendly asset preparation. |
+| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | 🖼️ Media hygiene | Sets expectations for doc assets: compression, thumbnails, and avoiding repo bloat. |
 
-### 🗄️ Data systems, scaling, and interoperability
-| Project file | Primary lens | How it upgrades `docs/` decisions |
+### 📊 Statistics, modeling, simulation, optimization, and graph analytics
+| Reference file (project pack) | Primary lens | How it upgrades `docs/` decisions |
 |---|---|---|
-| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`  [oai_citation:44‡PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf](file-service://file-742sw3gADJniEdmC19JeAC) | 🐘 Store discipline | Strengthens DB runbooks: schema discipline, indexing, migrations, operational conventions. |
-| `Scalable Data Management for Future Hardware.pdf`  [oai_citation:45‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE) | ⚙️ Performance | Promotes docs that capture partitions/locality, concurrency assumptions, and scaling risks. |
-| `Data Spaces.pdf`  [oai_citation:46‡Data Spaces.pdf](file-service://file-7UnZyJ7eCK1egnsyuYJaFq) | 🔗 Interop | Reinforces metadata-as-interface mindset: stable IDs, provenance, pointer-over-payload discipline. |
+| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | 🧪 V&V discipline | Elevates simulation docs with verification/validation, sensitivity analysis, and UQ expectations. |
+| `Understanding Statistics & Experimental Design.pdf` | 📊 Rigor | Strengthens claims: confounders, bias, experimental design, and uncertainty framing. |
+| `graphical-data-analysis-with-r.pdf` | 📉 EDA instincts | Encourages pre-publication sanity checks, diagnostics, and surfacing anomalies. |
+| `regression-analysis-with-python.pdf` | 📈 Baselines | Normalizes reproducible modeling writeups: diagnostics, leakage checks, assumptions. |
+| `Regression analysis using Python - slides-linear-regression.pdf` | 🧪 Quick checks | Reinforces what must be documented for regressions (residuals, scaling, assumptions). |
+| `think-bayes-bayesian-statistics-in-python.pdf` | 🎲 Uncertainty | Promotes explicit priors, posterior uncertainty reporting, and calibrated decisions. |
+| `Generalized Topology Optimization for Structural Design.pdf` | 🧮 Optimization | Improves optimization run documentation: objectives, constraints, reproducibility, audit trails. |
+| `Spectral Geometry of Graphs.pdf` | 🕸️ Graph thinking | Encourages careful interpretation of graph metrics (signal vs story) and provenance expectations. |
 
-### 🤖 AI governance + human-centered practice + security mindset
-| Project file | Primary lens | How it upgrades `docs/` decisions |
+### 🗄️ Data systems, scaling, interoperability, and concurrency
+| Reference file (project pack) | Primary lens | How it upgrades `docs/` decisions |
 |---|---|---|
-| `Introduction to Digital Humanism.pdf`  [oai_citation:47‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ) | ❤️ Human impact | Improves transparency/accountability language and keeps humans in control of meaning-making. |
-| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`  [oai_citation:48‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR) | ⚖️ Restraint | Strengthens labeling of AI-assisted outputs, provenance expectations, and restraint under uncertainty. |
-| `Principles of Biological Autonomy - book_9780262381833.pdf`  [oai_citation:49‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf) | 🧠 Systems | Encourages feedback-loop awareness and resilience thinking in governance/architecture docs. |
-| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`  [oai_citation:50‡Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf](file-service://file-Mu6zixTqF9Lubf5QMjepRg) | 🧯 Defense | Improves defensive documentation: least privilege, incident thinking, safe operational posture. |
-| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`  [oai_citation:51‡compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf](file-service://file-Y6V94sFtV6sy3w63LDy9fi) | 🛡️ Hostile inputs | Reinforces secure-ingestion posture and parser skepticism (without teaching exploitation). |
+| `Database Performance at Scale.pdf` | ⚙️ Practical performance | Encourages workload characterization, index/partition discipline, and measurement-driven tuning docs. |
+| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | 🐘 Store discipline | Strengthens DB runbooks: schema discipline, indexing, migrations, operational conventions. |
+| `Scalable Data Management for Future Hardware.pdf` | 🧵 Future scaling | Promotes docs that capture locality, heterogeneous execution assumptions, and scaling risks. |
+| `Data Spaces.pdf` | 🔗 Interop mindset | Reinforces metadata-as-interface thinking: stable IDs, provenance, pointer-over-payload discipline. |
+| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | 🧵 Concurrency | Encourages docs that warn about race conditions and enforce idempotent operational patterns. |
 
-### 📚 Programming reference shelves (craft support across the stack)
-| Project file | Lens | How it upgrades `docs/` decisions |
+### 🔐 Security mindset (defensive orientation)
+| Reference file (project pack) | Primary lens | How it upgrades `docs/` decisions |
 |---|---|---|
-| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`  [oai_citation:52‡think-bayes-bayesian-statistics-in-python.pdf](file-service://file-LXwJApPMVhRZgyqLb9eg7c) | 🧵 Concurrency | Encourages docs that warn about race conditions and enforce idempotent operational patterns. |
-| `Implementing Programming Languages.pdf`  [oai_citation:53‡I-L programming Books.pdf](file-service://file-T9sYu87k1GPNNKMLddx41a) | 🧩 Tooling literacy | Helps write precise parser/DSL specs and avoid “hand-wavy” language about compilers. |
-| `Objective-C Notes for Professionals.pdf`  [oai_citation:54‡O-R programming Books.pdf](file-service://file-M6zCNBGmJbot7A2aaUUy9M) | 🧰 Breadth | Supports documentation for platform-specific edge cases and tooling. |
-| `Bash Notes for Professionals.pdf`  [oai_citation:55‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ) | 🧰 Ops craft | Encourages safe scripting patterns in runbooks (quoting, exits, pipelines). |
-| `MATLAB Notes for Professionals.pdf`  [oai_citation:56‡M-N programming Books.pdf](file-service://file-EYCp5md89QY2cy5PCYS18e) | 🧮 Numerics | Useful for legacy workflows and validating numerical expectations in docs. |
+| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | 🧯 Defense | Improves threat modeling language, least privilege posture, incident thinking. |
+| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | 🛡️ Hostile inputs | Reinforces secure-ingestion posture and parser skepticism (without teaching exploitation). |
+
+### ❤️ Human-centered practice + AI governance + autonomy
+| Reference file (project pack) | Primary lens | How it upgrades `docs/` decisions |
+|---|---|---|
+| `Introduction to Digital Humanism.pdf` | ❤️ Human impact | Improves transparency/accountability language and keeps humans in control of meaning-making. |
+| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | ⚖️ Restraint | Strengthens labeling of AI-assisted outputs, provenance expectations, and restraint under uncertainty. |
+| `Principles of Biological Autonomy - book_9780262381833.pdf` | 🧠 Systems | Encourages feedback-loop awareness and resilience thinking in governance/architecture docs. |
+
+### 📚 Programming reference shelves (multi-book packs)
+> [!NOTE]
+> The “Programming Books” PDFs are **compilations** (multiple books/chapters per file).  
+> Treat them as a **reference shelf**, and index meaningful items under `docs/library/` rather than copying chunks into standards.
+
+| Reference file (project pack) | What it supports in KFM docs |
+|---|---|
+| `A programming Books.pdf` | General programming craft references across stack |
+| `B-C programming Books.pdf` | Ops + scripting (incl. Bash), fundamentals, early ML math primers |
+| `D-E programming Books.pdf` | Data engineering references and tooling breadth |
+| `F-H programming Books.pdf` | Flexibility/change-resilience, ML theory references, platform docs |
+| `I-L programming Books.pdf` | Language implementation and platform references |
+| `M-N programming Books.pdf` | Numerical workflows (incl. MATLAB) and mid-stack tooling |
+| `O-R programming Books.pdf` | Platform breadth (incl. Objective-C), runtime/tooling references |
+| `S-T programming Books.pdf` | SQL/querying references and general stack breadth |
+| `U-X programming Books.pdf` | Remaining toolchain/platform references across stack |
 
 </details>
 
@@ -532,7 +691,20 @@ Maps and UI are meaning-making machines. Docs should capture:
 > - what it influences in KFM (standards/runbooks/architecture)
 > - where the team can obtain it legally
 
-Recommended pattern:
+### 🪪 Recommended license posture tags
+| Tag | Meaning | Repo action |
+|---|---|---|
+| ✅ Commit-safe | clearly redistributable (e.g., CC BY / CC0) | OK to store under `docs/library/` if desired |
+| ⚠️ Verify | unclear or limited license | index only until confirmed |
+| 🚫 Do not commit | personal use / restricted redistribution | index only; do not add PDF to git |
+
+> [!NOTE]
+> Examples from the current pack:
+> - `Database Performance at Scale.pdf` → ✅ CC BY 4.0  
+> - `Archaeological 3D GIS_26_01_12_17_53_09.pdf` → ⚠️ CC BY-NC-ND 4.0 (check repo’s distribution intent)  
+> - Some compiled “Programming Books” content may include **non-redistributable** materials → treat as 🚫 unless confirmed.
+
+### ✅ Recommended library structure
 - `docs/library/README.md` → “what we rely on + why”
 - `docs/library/influence-map.md` → crosswalk from references → KFM docs
 - `docs/library/bib/refs.bib` *(optional)* → BibTeX for citations
@@ -543,6 +715,7 @@ Recommended pattern:
 
 | Version | Date       | Summary of changes | Author |
 | ------: | ---------- | ------------------ | ------ |
+|  v1.3.0 | 2026-01-13 | Aligned `docs/README.md` with v13 repo/layout guidance (data lifecycle staging + API boundary invariant); expanded governance invariants (monotonic restrictions, license-aware posture); added ML/AI + graph/ontology documentation sections; rebuilt influence map to include **all current project reference pack files**; added license posture tags and improved library intake policy. | KFM Engineering |
 |  v1.2.0 | 2026-01-12 | Aligned with **KFM-MDP v11.2.6** front-matter; fixed mermaid fence; clarified library intake policy (license-aware); tightened DoD language; added explicit citations to project reference pack. | KFM Engineering |
 |  v1.1.0 | 2026-01-11 | Added YAML front-matter; aligned directory layout + templates to v13 doc protocol; clarified catalog/contract/evidence terms; strengthened Focus Mode hard gates; expanded influence map to include known reference files. | KFM Engineering |
 |  v1.0.0 | 2026-01-09 | Created canonical `docs/README.md` defining governed documentation boundaries, directory layout, doc quality gates, evidence/citation norms, Story Node + Focus Mode rules, and reference-library influence mapping. | KFM Engineering |
