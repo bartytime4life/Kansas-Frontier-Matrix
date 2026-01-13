@@ -1,9 +1,12 @@
 ---
 title: "🧪 Tests — Kansas Frontier Matrix (KFM) / Kansas‑Matrix‑System"
 path: "tests/README.md"
-version: "v1.2.0"
-last_updated: "2026-01-11"
+version: "v1.3.0"
+last_updated: "2026-01-13"
 review_cycle: "90 days"
+status: "active"
+doc_kind: "Directory README"
+license: "CC-BY-4.0"
 owners:
   - "KFM Engineering"
 tags:
@@ -11,19 +14,23 @@ tags:
   - ci
   - determinism
   - contracts
+  - catalogs
   - stac
   - dcat
   - prov
   - geo
+  - eo
   - graph
   - api
   - ui
+  - performance
   - governance
+  - security
 ---
 
 <!--
 📌 This README defines the repo-wide testing & verification surface for KFM / Kansas‑Matrix‑System.
-🗓️ Last updated: 2026-01-11
+🗓️ Last updated: 2026-01-13
 🔁 Review cycle: 90 days (or anytime pipeline order / catalogs / policy pack / CI lanes change)
 -->
 
@@ -35,6 +42,7 @@ tags:
 Determinism • Contracts • Governance • Evidence receipts • “Fail closed” gates ✅🔒
 
 ![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2ea44f?logo=githubactions&logoColor=white)
+![CodeQL](https://img.shields.io/badge/Security-CodeQL-0b7285?logo=github&logoColor=white)
 ![Pytest](https://img.shields.io/badge/Python-pytest-blue?logo=python&logoColor=white)
 ![Node](https://img.shields.io/badge/Node.js-tests-brightgreen?logo=node.js&logoColor=white)
 ![Playwright](https://img.shields.io/badge/E2E-Playwright-0b7285?logo=playwright&logoColor=white)
@@ -67,19 +75,24 @@ Determinism • Contracts • Governance • Evidence receipts • “Fail close
 - [🚀 Quickstart](#-quickstart)
 - [🧩 KFM test matrix](#-kfm-test-matrix-subsystems--what-to-assert)
 - [🧠 Core invariant: governed ordering](#-core-invariant-governed-ordering)
+- [🧱 Architecture boundary tests](#-architecture-boundary-tests-clean-architecture)
 - [🔺 Test pyramid](#-test-pyramid-how-we-keep-velocity--confidence)
 - [🏷️ Test categories & markers](#️-test-categories--markers-suggested)
 - [🧰 Tool & CLI contract tests](#-tool--cli-contract-tests)
 - [📄 Docs, Story Nodes, & Focus Mode validation](#-docs-story-nodes--focus-mode-validation)
 - [🧾 Contract & metadata tests](#-contract--metadata-tests)
+- [🧷 Stable IDs & versioning tests](#-stable-ids--versioning-tests-dont-break-links)
+- [📜 License, citation, & redistribution tests](#-license-citation--redistribution-tests)
 - [✅ Data validation gates](#-data-validation-gates-fail-fast)
 - [🗺️ Geospatial tests](#️-geospatial-tests-gis-correctness)
 - [🛰️ Remote sensing tests](#️-remote-sensing-tests-earth-engine--imagery)
+- [🧊 3D / WebGL / 3D GIS tests](#-3d--webgl--3d-gis-tests)
 - [🧠 Scientific & simulation validation](#-scientific--simulation-validation)
 - [📊 ML / stats tests](#-ml--stats-tests-dont-fool-yourself)
 - [🕸️ Graph tests](#️-graph-tests-neo4j--algorithms)
 - [🛡️ API tests](#️-api-tests-fastapi--graphql)
 - [🌐 Web / frontend tests](#-web--frontend-test-guidance)
+- [📈 Performance & capacity tests](#-performance--capacity-tests-latency-throughput-cost)
 - [🔐 Security, governance, & ethics tests](#-security-governance--ethics-tests-defensive)
 - [🧾 Test artifacts & receipts](#-test-artifacts--receipts)
 - [🗂️ Suggested folder layout](#️-suggested-folder-layout)
@@ -98,15 +111,19 @@ Determinism • Contracts • Governance • Evidence receipts • “Fail close
 > Paths are relative to `tests/`. If your repo differs, treat these as the **target map** and document any deltas.
 
 - 🧭 Repo overview: `../README.md`
-- 🧱 Master Guide (v13): `../docs/MASTER_GUIDE_v13.md`
-- 🧩 Executable boundary (architecture): `../src/README.md` *(if present)*
-- 🧰 Governed toolchain surface (validators + packaging): `../tools/README.md`
+- 📚 Docs boundary (canonical): `../docs/README.md`
+- 🧱 Master Guide (v13): `../docs/MASTER_GUIDE_v13.md` *(if present)*
 - 📦 Data lifecycle + governance: `../data/README.md`
-- 🧬 Schemas (contracts for STAC/DCAT/PROV/Story/UI): `../schemas/`
-- 📓 MCP (experiments + run receipts + model cards): `../mcp/`
-- 🛡️ API contracts (OpenAPI/GraphQL): `../src/server/contracts/`
+- 🧬 Schemas registry: `../schemas/` *(STAC/DCAT/PROV/Story/UI contracts)*
+- 📓 MCP (methods + receipts + model cards): `../mcp/`
+- 🧰 Tools/validators (governed command surface): `../tools/README.md` *(if present)*
+- 🛡️ API boundary:
+  - `../api/` *(if present — many KFM layouts put FastAPI here)*
+  - `../src/server/` *(if present — some layouts put API here)*
+- 🛡️ API contracts (OpenAPI/GraphQL): `../src/server/contracts/` *(if present)*
 - 📚 Story Nodes (draft/published): `../docs/reports/story_nodes/`
 - 🌐 Web UI boundary: `../web/` *(if present)*
+- 🤝 CI/CD + policy pack: `../.github/` *(workflows, templates, CodeQL, SECURITY.md)*
 
 ---
 
@@ -124,7 +141,7 @@ These are KFM’s “must not regress” invariants. If any of these become fals
    **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
 4) **API boundary rule:** UI must never query Neo4j/DB directly 🔐  
-   - Everything user-facing must flow through `src/server/` for redaction + policy enforcement.
+   - Everything user-facing must flow through the API boundary for redaction + policy enforcement.
 
 5) **Determinism by default:** reruns should match unless inputs/configs change 🔁  
    - Stochastic code must be seeded and tested by **properties** (not exact values).
@@ -136,6 +153,12 @@ These are KFM’s “must not regress” invariants. If any of these become fals
    - Record/replay, mock adapters, or cached fixtures only.
 
 8) **Evidence over vibes:** failures must produce inspectable artifacts (logs, diffs, screenshots) 📎
+
+9) **Metadata must compile:** unsourced/ad‑hoc “mystery layers” are not allowed 🧬🚫  
+   - If a dataset has no license/provenance/extent, it’s not publishable.
+
+10) **Privacy by test:** location-aware UX must be opt‑in and minimization‑first 📍🫥  
+   - If the UI can expose a sensitive location (even indirectly), tests must flag it.
 
 > [!TIP]
 > If your PR changes **spatial truth** or **what users can infer**, it must be **traceable + testable** 🧾✅
@@ -194,8 +217,14 @@ pytest -q -m validation
 # Graph slice
 pytest -q -m graph
 
+# Performance/capacity (usually scheduled)
+pytest -q -m perf
+
 # Defensive security checks
 pytest -q -m security
+
+# Governance/policy pack
+pytest -q -m governance
 ```
 </details>
 
@@ -217,6 +246,7 @@ KFM is layered (clean boundaries). Tests should **pin the seams** 🔩:
 | 📚 Story Nodes | citations resolve; narrative ordering consistent; no unsourced claims | docs ✅ + contracts 🧾 | markdown/link validators, schema checks |
 | 🎯 Focus Mode (AI) | provenance-linked outputs; safe refusals; uncertainty honesty; no sensitive leakage | eval ✅ + contract-like 🧾 | golden prompts, retrieval tests |
 | 🔐 Governance | licenses, access constraints, “no downgrade” classification | gates ✅ + integration 🔌 | OPA/Conftest policies, CI checks |
+| 📈 Performance | latency/throughput/cost regressions are visible & explainable | perf ⏱️ + scheduled ✅ | pytest-benchmark, k6, Locust, DB EXPLAIN |
 
 ---
 
@@ -248,6 +278,26 @@ flowchart LR
 
 ---
 
+## 🧱 Architecture boundary tests (clean architecture)
+
+KFM’s modular structure only stays maintainable if boundaries are enforced 🧱✨
+
+### ✅ What to test
+- **Dependency direction rules** (e.g., domain → service → adapters; never reverse)
+- **No cross-layer shortcuts** (UI never imports DB drivers; pipelines don’t import UI)
+- **API boundary is the redaction/policy choke‑point** (everything public flows through it)
+- **“Independently testable components” stays true** (isolated unit tests remain possible)
+
+### 🔧 Suggested patterns
+- 🧭 *Import-lints* that fail if forbidden imports appear (Python)  
+- 🧱 *Module boundary tests* (TS/JS) so UI doesn’t reach server internals  
+- 🔌 *Contract-only integration tests* so adapters can be swapped without rewriting logic  
+
+> [!TIP]
+> Boundary tests are cheap insurance. They prevent “just this once” coupling that becomes permanent. 🧯
+
+---
+
 ## 🔺 Test pyramid (how we keep velocity + confidence)
 
 Most tests should be cheap and deterministic, then fewer (higher‑value) integration + E2E:
@@ -273,12 +323,13 @@ markers =
   integration: hits db/services/filesystem
   e2e: end-to-end journeys (rare for python)
   slow: long-running tests (non-gating)
-  perf: benchmarks (nightly)
+  perf: benchmarks/capacity (usually scheduled)
   contracts: schemas + catalogs + API contract validation
   docs: markdown/front-matter/story-node validation
   validation: scientific/V&V tests (tolerance-based)
   geo: GIS correctness checks
   eo: earth-observation / remote-sensing checks
+  webgl: WebGL context + render sanity checks
   graph: graph (Neo4j + algorithms) checks
   api: API behavior checks (beyond schema)
   security: defensive security checks (no offensive testing)
@@ -313,7 +364,7 @@ KFM’s **governed toolchain** (`tools/`) is part of the contract surface. Tools
 
 > [!TIP]
 > If you implement core logic inside `tools/`, that’s a smell.  
-> Put logic in `src/` and keep `tools/` as a predictable CLI + validator layer 🛠️
+> Put logic in `src/` (or `api/src/`) and keep `tools/` as a predictable CLI + validator layer 🛠️
 
 ---
 
@@ -339,6 +390,7 @@ KFM treats documentation + narrative as governed artifacts (not “freeform note
 - AI‑generated text is **clearly labeled** (and includes model/version where permissible)
 - refusal behavior works when evidence is missing
 - uncertainty is surfaced (intervals, confidence notes, or “unknown”)
+- AI stays **advisory**: it cannot take autonomous actions or bypass policy gates
 
 > [!CAUTION]
 > If a Story Node (or Focus Mode) could expose sensitive locations or culturally sensitive information:  
@@ -354,6 +406,7 @@ KFM is **contract‑first** and **catalog‑first**. Tests must protect:
 - 🏷️ DCAT (distributions point to real assets/endpoints)
 - 🧬 PROV (inputs → activities → outputs; run IDs/configs recorded)
 - 🧬 Cross‑layer linkage (Graph references catalogs; UI references API; Story references catalogs)
+- 🧾 “Metadata like code”: validation is a compile step, not a best-effort lint
 
 ### ✅ What to validate
 - JSON parses + schema passes
@@ -361,6 +414,7 @@ KFM is **contract‑first** and **catalog‑first**. Tests must protect:
 - provenance completeness (raw → work → processed trace exists)
 - stable IDs/hashes present where required
 - time metadata makes sense (windows applied; plausible ranges)
+- **required governance fields** present (license, sensitivity/classification, access constraints)
 
 ### Example checks (starter)
 ```bash
@@ -374,6 +428,47 @@ pytest -q -m contracts
 > [!NOTE]
 > Dataset PRs should run a **Catalog QA gate** (schema + links + license) before merge.  
 > If metadata is incomplete (e.g., missing license, broken href), CI must fail. 🚫✅
+
+---
+
+## 🧷 Stable IDs & versioning tests (don’t break links)
+
+Stable IDs are how KFM stays citable, reversible, and auditable 🧷🧾
+
+### ✅ What to test
+- IDs remain stable across refactors and non-semantic changes
+- IDs do not depend on display names alone (renames must not create new identities)
+- merges/dedup don’t silently rewrite public identifiers (requires migration record)
+- “published” artifacts remain fetchable by prior IDs (redirect or alias map)
+
+### 🔧 Suggested patterns
+- **Golden ID fixtures**: small fixture catalogs with “expected IDs” that must not change
+- **Migration tests**: schema bumps must include a migration + tests for backward compatibility (where required)
+- **Round-trip tests**: catalog → graph → API → UI uses the same stable identifiers everywhere
+
+> [!TIP]
+> If an ID changes, you owe the repo an ADR + migration note + rollback plan. 🧾🔁
+
+---
+
+## 📜 License, citation, & redistribution tests
+
+Licensing is not paperwork — it’s a publish gate 📜✅
+
+### ✅ What to test (gating)
+- every dataset/distribution has a **license** field before publish
+- license terms are not contradictory across catalog layers (STAC/DCAT vs local metadata)
+- restricted/non-commercial datasets trigger UI warnings (and/or access controls)
+- attribution/citation generation works (e.g., story export includes sources list)
+- presence of `CITATION.cff` for the software release (recommended)
+
+### 🔧 Suggested patterns
+- `test_license_required_before_publish()` — fail if missing/unknown license
+- `test_noncommercial_blocks_public_download()` — ensure policy is enforced
+- `test_story_export_includes_attributions()` — evidence pointers flow through
+
+> [!IMPORTANT]
+> If a license is unclear, treat it as **restricted** until governance resolves it. 🧯
 
 ---
 
@@ -414,6 +509,7 @@ Geospatial pipelines fail in predictable ways—test them explicitly:
 - 🌍 CRS sanity: EPSG correctness; meters vs degrees; axis order
 - 🧱 topology: geometry validity; self‑intersections per policy
 - 🧩 overlay correctness: clip/intersect/union behaviors
+- 🧭 buffer correctness: distance units + projection correctness
 - 🧊 raster alignment: resolution, nodata handling, resampling method
 - 📦 format IO: GeoJSON/GeoPackage/GeoParquet/COG round-trips
 - 🧭 coordinate range checks: latitude/longitude in valid ranges
@@ -443,6 +539,27 @@ Truthiness checks that catch many bugs:
 > [!CAUTION]
 > Unit tests should not call live services.  
 > Prefer recorded fixtures, mock adapters, or small cached exports. ✅
+
+---
+
+## 🧊 3D / WebGL / 3D GIS tests
+
+KFM supports meaning-making beyond flat maps: 3D scenes, meshes, archaeology-grade reconstructions 🧊🗺️
+
+### ✅ What to test
+- **WebGL context sanity** (creates reliably; fails gracefully; debug mode not shipped to prod)
+- **Coordinate conventions** (ECEF vs local ENU vs EPSG; axis order; units)
+- **LOD/tiling rules** (no “infinite detail” payloads; progressive loading works)
+- **Georeferenced mesh validation** (mesh ↔ site CRS ↔ metadata alignment)
+- **Visual regressions** (symbology + overlays + 3D render snapshots)
+
+### 🔧 Suggested patterns
+- screenshot diffs at canonical zoom/tilt angles
+- tiny deterministic scenes in fixtures (`tests/fixtures/3d/`)
+- tolerance-based image diffs (antialiasing-aware) rather than pixel-perfect
+
+> [!TIP]
+> 3D can leak sensitive locations faster than 2D. Treat 3D fixtures as high-risk and keep them coarse + safe. 🫥🔒
 
 ---
 
@@ -481,6 +598,9 @@ Data science code needs tests beyond “it runs”:
 - calibration curve
 - drift dashboards (if applicable)
 
+> [!NOTE]
+> ML tests should also protect **meaning**: avoid reporting a metric without context, uncertainty, and known failure modes. 🧠🧾
+
 ---
 
 ## 🕸️ Graph tests (Neo4j + algorithms)
@@ -492,11 +612,13 @@ Test categories:
 - 🔒 constraints: uniqueness, required properties, relationship rules
 - 🧭 query invariants: deterministic pagination; stable ordering; filters correct
 - 🧠 algorithm sanity: tiny deterministic graphs for spectral/routing invariants
+- 🧷 canonical nodes: glossary terms/entities resolve consistently (no duplicate “almost-same” nodes)
 
 Example assertions:
 - “Graph contains only entities referenced by STAC/DCAT/PROV”
 - “Every published dataset node links to a PROV Activity with run_id + config hash”
 - “No unbounded traversals in query layer (guardrails enforced)”
+- “Spectral metrics (where used) stay within known bounds on toy graphs” 🧠⚡
 
 ---
 
@@ -509,6 +631,7 @@ What to test:
 - 🧭 Pagination determinism: stable ordering, cursor correctness
 - 🌍 Geo correctness: GeoJSON validity; bbox correctness; CRS behavior
 - 🌐 CORS headers correct (UI shouldn’t need workarounds)
+- 🧾 “Fail closed” for missing provenance/license: endpoints should not serve ungoverned data
 
 ---
 
@@ -539,6 +662,38 @@ Maps can regress visually while “logic tests” pass. Use screenshot diffs for
 - dark/light contrast
 - WebGL rendering regressions (tolerance-based diffs)
 
+> [!CAUTION]
+> Mobile experiences can unintentionally enable tracking.  
+> If you render live location or device IDs, add tests for opt‑in + minimization + clear user controls. 📍🫥
+
+---
+
+## 📈 Performance & capacity tests (latency, throughput, cost)
+
+Performance tests are how we keep KFM usable as it scales 📈⚙️
+
+### ✅ What to measure (min set)
+- **Latency distributions** (p50/p95/p99), not just averages
+- **Throughput** under realistic concurrency
+- **Error rates** under load (including timeouts)
+- **Resource cost** (CPU/RAM/IO) per request / per pipeline run
+- **DB query stability** (query plans don’t regress silently)
+
+### 🧪 What to test (examples)
+- API list endpoints: stable pagination under load
+- graph queries: bounded traversals with sane timeouts
+- tile/layer loading: payload budgets respected (no “megatile” surprises)
+- ETL steps: runtime bounds on representative fixtures
+- DB: migration impacts + index effectiveness (EXPLAIN plan snapshots)
+
+### 🕛 Where these run
+- PRs: **tiny perf smoke** (fast + deterministic)
+- Nightly: full benchmarks + trend checks (alert on regressions)
+- Release: publish-grade load profile (documented + repeatable)
+
+> [!TIP]
+> Treat performance like correctness: if it regresses, you need a reason, a measurement, and a rollback path. 🧾🔁
+
 ---
 
 ## 🔐 Security, governance, & ethics tests (defensive)
@@ -552,6 +707,7 @@ KFM’s security stance is defensive: prevent leaks, enforce policy, keep audit 
 - 🐳 container scanning (base image CVEs flagged)
 - 🧾 FAIR/CARE gates (required metadata present; access constraints honored)
 - 🧬 auditability (publish actions produce receipts: who/what/when)
+- 🖼️ media hygiene: image metadata stripping; decoder safety checks for hostile inputs
 
 ### 🧑‍⚖️ Governance review triggers (manual review beyond CI)
 Some changes should automatically require human review:
@@ -600,17 +756,19 @@ Adapt as needed, but keep intent obvious:
 │  ├─ 🧷 fixtures/                      # tiny, deterministic test data only
 │  │  ├─ 🗺️ geo/                        # small vectors/rasters (safe + tiny)
 │  │  ├─ 🛰️ eo/                         # tiny EO chips / QA bit samples
+│  │  ├─ 🧊 3d/                         # tiny meshes/scenes (coarse + safe)
 │  │  ├─ 🖼️ media/                      # tiny images + metadata
 │  │  ├─ 🧬 ml/                         # toy datasets / tiny model artifacts
 │  │  ├─ 🧾 catalogs/                   # STAC/DCAT/PROV fixtures
 │  │  └─ 📘 FIXTURES.md                 # fixture rules + provenance notes
 │  ├─ 📄 docs/                          # markdown/front-matter/story-node checks
+│  ├─ 🧱 architecture/                  # boundary tests (imports/dep rules)
 │  ├─ 🧰 tools_contract/                # CLI contract tests for tools/
 │  ├─ 🐍 python/
 │  │  ├─ 🧩 unit/
 │  │  ├─ 🔌 integration/
 │  │  ├─ ✅ validation/                 # scientific V&V (tolerance-based)
-│  │  ├─ ⏱️ perf/                       # benchmarks (nightly / non-gating)
+│  │  ├─ ⏱️ perf/                       # benchmarks (scheduled)
 │  │  ├─ 🔐 security/                   # defensive security checks
 │  │  └─ 🧱 conftest.py
 │  ├─ 🌐 web/
@@ -649,12 +807,13 @@ CI should mirror KFM’s “build → validate → publish” discipline and kee
 3) 🧪 unit tests
 4) 🧾 docs protocol checks (front‑matter + link validation)
 5) 🧾 schema validation (STAC/DCAT/PROV + story/node schemas)
-6) ✅ data validation gates (CRS + geometry + raster sanity)
+6) ✅ data validation gates (CRS + geometry + raster sanity + license required)
 7) 🔌 integration tests (ephemeral DB/services via Compose)
 8) 🕸️ graph integrity tests (constraints + rebuild invariants)
 9) 🛡️ API contract tests (OpenAPI/GraphQL + deterministic pagination)
 10) 🔐 security & governance scans (secrets + PII + sensitive location + classification “no downgrade”)
-11) 📈 coverage thresholds (target, not a religion)
+11) 🧑‍⚖️ CodeQL/static analysis lane (recommended)
+12) 📈 coverage thresholds (target, not a religion)
 
 ### 🕛 Nightly / scheduled checks (recommended)
 Keep PR CI fast; push expensive checks to nightly:
@@ -674,11 +833,13 @@ Keep PR CI fast; push expensive checks to nightly:
 
 - [ ] Unit tests added/updated
 - [ ] Integration tests added (if behavior crosses boundaries)
+- [ ] Boundary tests updated (if you touched architecture seams)
 - [ ] Determinism confirmed (seeds + stable outputs) if ML/sim
 - [ ] Tools/CLI contract checks updated (if adding/modifying tools/)
 - [ ] Docs/story checks updated (front‑matter, links, story templates) if docs changed
 - [ ] Contracts updated + verified (OpenAPI/GraphQL) if API changed
 - [ ] Catalog/metadata tests updated (STAC/DCAT/PROV) if outputs changed
+- [ ] Stable IDs preserved (or migration + ADR added) if identifiers changed
 - [ ] Data validation gates updated (schema/CRS/geometry) if ETL changed
 - [ ] License + governance checks pass (block publish if missing license)
 - [ ] Sensitive location / “no downgrade” checks pass (or governance review requested)
@@ -710,15 +871,16 @@ docker compose up -d --build
 
 ## 📚 Reference pointers (library index)
 
-These repo library files inform KFM’s test posture (V&V, stats rigor, GIS correctness, visualization stability, data governance, security hardening). 🧠🧾
+These repo library files inform KFM’s test posture (V&V, stats rigor, GIS correctness, visualization stability, data governance, scaling, security hardening). 🧠🧾
 
 <details>
 <summary>🏛️ System design, contracts, governance, and “how KFM is supposed to work”</summary>
 
-- `docs/MASTER_GUIDE_v13.md` *(contract-first + evidence-first + canonical layout)*
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
-- `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf`
-- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` *(policy pack + CI promotion lanes)*
+- `docs/README.md` *(governed documentation posture)*
+- `docs/MASTER_GUIDE_v13.md` *(canonical system + contract-first map, if present)*
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` *(architecture + standards + QA direction)*
+- `Audit of the Kansas Frontier Matrix (KFM) Repository.pdf` *(gap lens, if present)*
+- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` *(roadmap + lanes, if present)*
 
 </details>
 
@@ -728,6 +890,7 @@ These repo library files inform KFM’s test posture (V&V, stats rigor, GIS corr
 - `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
 - `Understanding Statistics & Experimental Design.pdf`
 - `think-bayes-bayesian-statistics-in-python.pdf`
+- `Generalized Topology Optimization for Structural Design.pdf` *(optimization run reproducibility + sensitivity mindset)*
 
 </details>
 
@@ -737,6 +900,7 @@ These repo library files inform KFM’s test posture (V&V, stats rigor, GIS corr
 - `regression-analysis-with-python.pdf`
 - `Regression analysis using Python - slides-linear-regression.pdf`
 - `graphical-data-analysis-with-r.pdf`
+- `Understanding Machine Learning: From Theory to Algorithms.pdf` *(generalization + sample complexity mindset, if present)*
 
 </details>
 
@@ -748,6 +912,7 @@ These repo library files inform KFM’s test posture (V&V, stats rigor, GIS corr
 - `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
 - `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
 - `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
+- `Archaeological 3D GIS_26_01_12_17_53_09.pdf` *(3D acquisition + validation routines)*
 
 </details>
 
@@ -755,6 +920,7 @@ These repo library files inform KFM’s test posture (V&V, stats rigor, GIS corr
 <summary>🗄️ Data management, interoperability, and scale</summary>
 
 - `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `Database Performance at Scale.pdf`
 - `Scalable Data Management for Future Hardware.pdf`
 - `Data Spaces.pdf`
 - `Spectral Geometry of Graphs.pdf`
@@ -802,6 +968,7 @@ These repo library files inform KFM’s test posture (V&V, stats rigor, GIS corr
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
+| v1.3.0 | 2026-01-13 | Added architecture boundary tests, stable ID/versioning lane, explicit license/citation gates, 3D/WebGL/3D‑GIS testing guidance, and performance/capacity test lane. Updated quick links and CI gates to include CodeQL/static analysis lane. | KFM Engineering |
 | v1.2.0 | 2026-01-11 | Aligned tests with Master Guide v13: contract-first + catalog-first gates, docs/story-node validation lane, governance trigger guidance, and tool/CLI contract testing. Removed internal placeholder evidence anchors. | KFM Engineering |
 | v1.1.0 | 2026-01-09 | Tightened “catalog-first” & data QA gates; added receipts/artifacts section; clarified defensive security stance; aligned CI gates with KFM engineering/testing guidance. | KFM Engineering |
 | v1.0.0 | 2026-01-07 | Initial repo-wide testing README: pyramid, markers, subsystem matrix, validation + governance posture. | KFM Engineering |
