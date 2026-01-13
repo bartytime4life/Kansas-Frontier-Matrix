@@ -1,8 +1,13 @@
+<!-- According to a document from 2026-01-13 -->
+
 # 🧩 `.github/ISSUE_TEMPLATE/` — Issue Forms for Kansas Frontier Matrix (KFM)
 
 ![Issue Forms](https://img.shields.io/badge/issues-governed%20intake-2ea44f)
 ![Contract-first](https://img.shields.io/badge/contracts-contract--first-1f6feb)
 ![Evidence-first](https://img.shields.io/badge/evidence-evidence--first-7c3aed)
+![FAIR+CARE](https://img.shields.io/badge/governance-FAIR%2BCARE-ff69b4)
+![Deterministic ETL](https://img.shields.io/badge/pipelines-deterministic%20%26%20idempotent-0ea5e9)
+![Closed Layers Default](https://img.shields.io/badge/architecture-closed%20layers%20default-111827)
 ![Provenance First](https://img.shields.io/badge/provenance-first-purple)
 ![KFM Order](https://img.shields.io/badge/pipeline-ETL%E2%86%92Catalogs%E2%86%92Graph%E2%86%92API%E2%86%92UI%E2%86%92Story%E2%86%92Focus-blue)
 ![No Secrets](https://img.shields.io/badge/security-no%20secrets%20in%20issues-red)
@@ -18,7 +23,7 @@
 > 🧭 **Version map (why you may see “v13” + “v11” together):**  
 > - **Master Guide v13** documents the *repo structure + pipeline invariants* (contract-first, evidence-first).  
 > - **Standards / profiles** (STAC/DCAT/PROV) currently track **v11** in many places.  
-> - **Agent W·P·E architecture** is versioned separately (ex: **v11.2.6**) and is enforced via PR governance.  
+> - **Agent W·P·E architecture** is versioned separately and enforced via PR governance.
 
 ---
 
@@ -34,19 +39,49 @@
 | 🔌 API contract change | Use `api_contract_change.yml` *(recommended)* |
 | 🕸️ Graph model / ontology change | Use `graph_model_change.yml` *(recommended)* |
 | 🎬 Story Node request | Use `story_node_request.yml` *(recommended)* |
+| ⚡ Performance regression | Use `bug_report.yml` *(label `type: perf`)* |
 | ⚖️ Governance / sensitivity question | Use `governance_question.yml` *(recommended)* |
 | 🤖 Agent / automation behavior | Use `agent_ops_issue.yml` *(recommended if you run W·P·E)* |
 | 🔐 Security policy | `../../SECURITY.md` *(or `.github/SECURITY.md` if you keep it there)* |
 | 🤝 Collaboration rules + labels | `../README.md` *(the `.github/README.md` hub)* |
 | 🧠 Master Guide (structure + invariants) | `../../docs/MASTER_GUIDE_v13.md` *(or `../../docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`)* |
+| 📐 Architecture blueprints | `../../docs/architecture/` *(ex: `KFM_REDESIGN_BLUEPRINT_v13.md`)* |
+| 📦 Standards (profiles) | `../../docs/standards/` *(KFM_STAC/DCAT/PROV profiles + Markdown work protocol)* |
 | 🤖 Agent architecture (W·P·E) | `../../docs/specs/agents/README.md` |
-| 📘 System design | `../../docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` |
-| 🧾 Templates (Story Nodes, API, docs) | `../../docs/templates/` |
+| 📘 System design | `../../docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.{pdf,docx}` |
+| 🧾 Templates (Story Nodes, API, docs) | `../../docs/templates/` *(ex: `TEMPLATE__STORY_NODE_V3.md`)* |
 | 📖 Glossary | `../../docs/glossary.md` |
 | ⚖️ Governance hub | `../../docs/governance/ROOT_GOVERNANCE.md` *(or `ROOT_GOVERNANCE_CHARTER.md`)* |
 
 > [!TIP]
 > If a template link 404s, use the chooser: `https://github.com/<owner>/<repo>/issues/new/choose`
+
+---
+
+## 🧭 Choosing the right issue form
+
+If you’re unsure, pick **🐛 Bug Report** or **❓ Question** — maintainers will route it. ✅
+
+```mermaid
+flowchart TD
+  A["Start 🧭"] --> B{Is something broken?}
+  B -->|Yes| BUG["🐛 Bug report"]
+  B -->|No| C{Is this a new capability?}
+  C -->|Yes| FEAT["✨ Feature request"]
+  C -->|No| D{Is this about data acquisition / a new layer?}
+  D -->|Yes| DATA["🗺️ Data layer request"]
+  D -->|No| E{Is CI failing / gates red?}
+  E -->|Yes| CI["🧪 CI failure"]
+  E -->|No| F{Is this a contract/schema change?}
+  F -->|API contract| API["🔌 API contract change"]
+  F -->|Graph/ontology| GRAPH["🕸️ Graph model change"]
+  F -->|Story format| STORY["🎬 Story Node request"]
+  F -->|No| G{Is this governance/sensitivity?}
+  G -->|Yes| GOV["⚖️ Governance question"]
+  G -->|No| H{Is this agent behavior/automation?}
+  H -->|Yes| AGENT["🤖 Agent ops issue"]
+  H -->|No| Q["❓ Question"]
+```
 
 ---
 
@@ -61,6 +96,7 @@
 - [✅ Minimum required fields for every issue](#-minimum-required-fields-for-every-issue)
 - [🧭 Stage picker](#-stage-picker)
 - [🧾 Provenance, licensing, and data hygiene](#-provenance-licensing-and-data-hygiene)
+- [⚡ Performance & scalability issues](#-performance--scalability-issues)
 - [🤖 Agent & automation issues](#-agent--automation-issues)
 - [🔒 Sensitivity, sovereignty, and governance](#-sensitivity-sovereignty-and-governance)
 - [🏷️ Labels & triage conventions](#️-labels--triage-conventions)
@@ -95,7 +131,7 @@ flowchart LR
   ETL["🧰 ETL / Pipelines"] --> CAT["🗂️ Catalogs<br/>(STAC • DCAT • PROV)"]
   CAT --> GRAPH["🕸️ Graph<br/>(entities • events • citations)"]
   GRAPH --> API["🔌 Governed API<br/>(contracts + redaction)"]
-  API --> UI["🖥️ UI<br/>(map • timeline • downloads)"]
+  API --> UI["🖥️ UI<br/>(map • timeline • downloads • 3D optional)"]
   UI --> STORY["🎬 Story Nodes<br/>(machine-ingestible narrative)"]
   STORY --> FOCUS["🧠 Focus Mode<br/>(evidence-backed summaries)"]
 ```
@@ -108,6 +144,10 @@ flowchart LR
 - 🔌 preserve the **API boundary rule** (UI does not talk to graph DB directly)
 - 📜 anchor to **contracts** (schemas/specs) when behavior depends on them
 
+> [!NOTE]
+> 🧱 **Architectural intent:** KFM is built with **layer isolation** in mind.  
+> Layers exist to keep changes contained and enforce governance boundaries — “bypassing a layer” is an exception path, not the default. 🛡️
+
 ---
 
 ## 🧱 Non-negotiable invariants
@@ -115,10 +155,13 @@ flowchart LR
 These are the “guardrails” 🛡️ that issue forms should **help us enforce**, not bypass:
 
 - **Pipeline ordering is absolute:** `ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode`
+- **Closed layers (default):** requests should not “skip” layers without an explicit, documented exception path
 - **API boundary rule:** UI must **never** query the graph DB directly; all access flows through the governed API
+- **One fact, one place:** each subsystem has a **canonical home** (avoid duplicate folders + shadow implementations)
 - **Provenance-first:** data (including derived/AI outputs) is not “real” in KFM until it has **STAC/DCAT + PROV**
 - **Deterministic, idempotent ETL:** reruns should be safe; outputs stable for same inputs/config
 - **Evidence-first narrative:** Story Nodes / Focus Mode allow **no unsourced claims**; AI output must be labeled + constrained
+- **Stable identifiers:** prefer IDs that don’t encode meaning (so names/labels can evolve without breaking references)
 - **Classification propagation:** no output can be less restricted than its inputs (unless reviewed + redacted)
 - **Validation gates:** CI enforces these invariants (schema checks, link checks, provenance completeness, security scans)
 
@@ -135,7 +178,7 @@ These are the “guardrails” 🛡️ that issue forms should **help us enforce
 └─ 📁 ISSUE_TEMPLATE/
    ├─ 📘 README.md                 # you are here 👋
    ├─ ⚙️ config.yml                # optional: issue chooser links, disable blank issues
-   ├─ 🐛 bug_report.yml            # bugs across stack
+   ├─ 🐛 bug_report.yml            # bugs across stack (incl. perf regressions)
    ├─ ✨ feature_request.yml       # new features / enhancements
    ├─ 🗺️ data_layer_request.yml    # new dataset/layer/source request
    ├─ ❓ question.yml              # general questions / clarification
@@ -159,7 +202,7 @@ These are the “guardrails” 🛡️ that issue forms should **help us enforce
 
 | Template | Use it for | Must capture (minimum) |
 |---|---|---|
-| 🐛 `bug_report.yml` | something is broken | stage guess · expected vs actual · repro · evidence/logs · affected paths/IDs |
+| 🐛 `bug_report.yml` | something is broken *(incl. perf)* | stage guess · expected vs actual · repro · evidence/logs · affected paths/IDs |
 | ✨ `feature_request.yml` | new capability | stage(s) · user story · acceptance criteria · contracts affected · risks |
 | 🗺️ `data_layer_request.yml` | add a dataset/layer/source | source + license + retrieval date · coverage (space/time) · sensitivity · intended domain |
 | ❓ `question.yml` | “how do I…?” / clarification | goal · context · stage guess · links/paths/IDs · what you tried |
@@ -194,6 +237,15 @@ Regardless of template, every issue should include:
   - ⚠️ “Internal only”
   - 🔐 “Confidential/Restricted — do not publish details here”
 
+### 🧪 Reproducibility pack (highly recommended)
+If your issue involves **analysis, models, ETL, or anything scientific**, include as many of these as you can:
+
+- **Environment**: OS + versions (Python/Node), container image tag (if used), GPU/browser for UI/WebGL
+- **Inputs**: IDs + checksums or stable URLs
+- **Parameters**: config file path(s) + key parameters
+- **Seeds**: random seed(s) + deterministic flags (if applicable)
+- **Expected outputs**: expected file counts, key metrics, and where outputs should land (paths/IDs)
+
 > [!TIP]
 > If your issue involves **data**, add:
 > **source** · **license/terms** · **retrieval date** · **space/time coverage** · **processing context**.
@@ -207,11 +259,11 @@ Use this to pick a pipeline stage (or pick “unknown” and we’ll triage).
 
 | Stage | What it covers | Typical “evidence anchors” 🔎 |
 |---|---|---|
-| 🧰 **ETL / Pipelines** | ingest, transforms, tiling, normalization | run config · input sample · expected output · logs · `src/pipelines/**` |
-| 🗂️ **Catalogs** (STAC/DCAT/PROV) | discoverability + metadata correctness | collection/item IDs · validator output · `schemas/{stac,dcat,prov}` · `data/stac/**` · `data/catalog/dcat/**` · `data/prov/**` |
+| 🧰 **ETL / Pipelines** | ingest, transforms, tiling, normalization | run config · input sample · expected output · logs · `src/pipelines/**` · `data/raw/**` → `data/work/**` → `data/processed/**` |
+| 🗂️ **Catalogs** (STAC/DCAT/PROV) | discoverability + metadata correctness | collection/item IDs · validator output · `docs/standards/**` · `schemas/**` · `data/stac/**` · `data/catalog/dcat/**` · `data/prov/**` |
 | 🕸️ **Graph** | entities, relations, citations, timelines | node labels/IDs · relation expectations · import fixtures · `src/graph/**` |
 | 🔌 **API boundary** | contracts, authZ, redaction, query behavior | endpoint + contract ref · req/res sample · auth context · `src/server/**` |
-| 🖥️ **UI / Map viewer** | layers, time slider, rendering, UX | steps + screenshots · browser/device · network trace · `web/**` |
+| 🖥️ **UI / Map viewer** | layers, time slider, rendering, UX | steps + screenshots · browser/device/GPU · network trace · `web/**` |
 | 🎬 **Story Nodes** | narrative orchestration + citations | story slug/path · claim → evidence · layer/time steps · `docs/reports/story_nodes/**` |
 | 🧠 **Focus Mode** | evidence-backed summaries | context bundle IDs · missing citations · “fact vs interpretation” errors |
 | 🧪 **CI / DevEx** | tests, builds, validations, gates | workflow name · failing step · logs · changed paths |
@@ -266,6 +318,29 @@ For anything that becomes user-facing (API/UI/Story/Focus), KFM expects the foll
 
 ---
 
+## ⚡ Performance & scalability issues
+
+Performance regressions are real bugs 🐛⚡ — but they require different evidence.
+
+### ✅ Include these (whenever possible)
+- **Baseline vs current** (before/after) with timestamps and versions
+- **Workload context**:
+  - read/write mix, batch vs real-time, dataset size, item size
+- **Metrics**:
+  - p50/p95/p99 latency, throughput, memory, CPU, GPU, query time
+- **Scope**:
+  - which endpoint/layer/dataset/graph query regressed
+- **Artifacts**:
+  - DB: `EXPLAIN (ANALYZE, BUFFERS)` *(redacted)* + index details
+  - API: sample request + response size + auth context
+  - UI: browser + GPU + WebGL errors + network waterfall
+
+### 🧯 When perf intersects governance
+Sometimes slowness is actually a *gate doing its job* (validation, redaction, sovereignty controls).  
+Call this out explicitly so triage doesn’t “optimize away” safety.
+
+---
+
 ## 🤖 Agent & automation issues
 
 KFM supports (or plans to support) a safe agent architecture that separates:
@@ -282,6 +357,7 @@ KFM supports (or plans to support) a safe agent architecture that separates:
 - **Artifacts:** plan path, diff/patch path, evidence folder path
 - **Telemetry IDs:** relevant event IDs / timestamps (redacted if needed)
 - **Kill-switch state:** whether agents are enabled (`ops/feature_flags/agents.yml`)
+- **Schedule/trigger:** cron/event trigger if this was scheduled ingestion
 
 > [!CAUTION]
 > 🧯 If you suspect unsafe behavior (policy bypass, secrets exposure, unintended data release), **do not** post details publicly. Use Security reporting.
@@ -318,7 +394,7 @@ If an issue involves Indigenous knowledge, culturally sensitive sites, or restri
 KFM uses labels to route work cleanly (maintainers apply them if you don’t). 🏷️
 
 ### Suggested label taxonomy (recommended)
-- `type: bug | feature | data | question | governance | ci | ops`
+- `type: bug | feature | data | question | governance | ci | ops | perf`
 - `stage: etl | catalogs | graph | api | ui | story | focus | ci | ops`
 - `component: pipeline | postgis | neo4j | api | webgl | map | timeline | auth | docs | telemetry | agents`
 - `agent: watcher | planner | executor`
@@ -345,7 +421,7 @@ Common failure buckets in KFM:
 - 🗂️ schema validation (**STAC/DCAT/PROV**, plus any **telemetry** schemas)
 - 🔗 link integrity (catalog `links[].href`)
 - 🧾 provenance required-but-missing
-- 🕸️ graph integrity checks
+- 🕸️ graph integrity checks / ontology rules
 - 🔌 API contract tests (OpenAPI/GraphQL)
 - 🖥️ UI build/a11y checks
 - 🔐 security scans (deps, SAST, secrets)
@@ -371,6 +447,7 @@ Issue forms are **interfaces**. Treat changes like contract changes. 🔌📜
 - Add a checkbox gate: “I did not include secrets/PII/restricted coordinates”
 - Add links to “how to redact” guidance (docs/security or docs/governance)
 - Add a “contract anchor” picker for schema/standard paths
+- Add a “performance regression” hint block to `bug_report.yml`
 
 ---
 
@@ -387,6 +464,7 @@ These materials may carry licenses **separate** from this repo’s code.
 - 🗂️ Data governance → provenance, access constraints, purpose limitations  
 - 🔐 Security posture → prevent sensitive disclosure and supply-chain footguns  
 - 🤖 Agent governance → deterministic plans, PR-only execution, telemetry + attestations  
+- ⚡ Performance engineering → workload context, baseline comparisons, explain plans  
 
 </details>
 
@@ -394,20 +472,21 @@ These materials may carry licenses **separate** from this repo’s code.
 <summary><strong>📦 Reference list (project library)</strong></summary>
 
 ### 🧭 Canonical KFM design & governance
-- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
 - `docs/MASTER_GUIDE_v13.md` *(or `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc`)*
-- `docs/specs/agents/README.md` *(W·P·E agent architecture)*
+- `docs/architecture/` *(blueprints, ADRs, long-term vision)*
+- `docs/templates/` *(universal doc, story node, API contract extension)*
 - `docs/governance/ROOT_GOVERNANCE*.md` · `docs/governance/ETHICS.md` · `docs/governance/SOVEREIGNTY.md` · `docs/governance/REVIEW_GATES.md`
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.{pdf,docx}`
 
 ### 🧾 Markdown & documentation craft
 - `docs/library/Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`
 
-### 🗺️ GIS, geoprocessing, cartography
+### 🗺️ GIS, geoprocessing, cartography & 3D
 - `docs/library/python-geospatial-analysis-cookbook.pdf`
-- `docs/library/KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf`
 - `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
 - `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
 - `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `docs/library/Archaeological 3D GIS_26_01_12_17_53_09.pdf`
 - `docs/library/compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
 
 ### 🛰️ Remote sensing & Earth Engine
@@ -430,7 +509,8 @@ These materials may carry licenses **separate** from this repo’s code.
 ### 🧠 ML / Deep learning
 - `docs/library/Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` *(availability may vary by repo)*
 
-### ⚙️ Systems, scaling, interoperability
+### ⚙️ Systems, scaling, performance, interoperability
+- `docs/library/Database Performance at Scale.pdf`
 - `docs/library/Scalable Data Management for Future Hardware.pdf`
 - `docs/library/concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
 - `docs/library/Data Spaces.pdf`
@@ -467,6 +547,7 @@ These materials may carry licenses **separate** from this repo’s code.
 
 | Version | Date | Summary |
 |---|---|---|
+| v1.3.0 | 2026-01-13 | Align README language to Master Guide v13 invariants (canonical homes, closed layers default, FAIR+CARE); add “Choosing the right form” decision tree; add dedicated perf/scalability guidance; expand reproducibility pack; refresh quick links to standards/templates/architecture; add missing library items (Database Performance at Scale, Archaeological 3D GIS) |
 | v1.2.0 | 2026-01-09 | Align quick links + repo paths to Master Guide v13; add “non‑negotiable invariants”; add W·P·E agent/ops intake fields; expand stage picker with Telemetry/Ops; harden contract anchors + boundary artifact paths; refresh library list |
 | v1.1.0 | 2026-01-08 | Align intake to v13 repo map + stage order; normalize template names (`data_layer_request.yml`); add governance/sensitivity + label taxonomy; add maintainer DoD + reference library |
 | v1.0.x | 2025-12 | Initial scaffold (pre-v13 alignment) |
