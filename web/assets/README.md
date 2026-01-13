@@ -1,3 +1,8 @@
+<!--
+🎨 `web/assets/` is KFM’s canonical **static presentation asset** boundary (browser-facing).
+🗓️ Last updated: 2026-01-13
+-->
+
 # 🎨 KFM Web Assets — `web/assets/`
 
 [![Assets](https://img.shields.io/badge/web-assets-111827?logo=files&logoColor=white)](#-kfm-web-assets--webassets)
@@ -6,34 +11,34 @@
 [![UX](https://img.shields.io/badge/ux-responsive%20%7C%20mobile%20%7C%20a11y-ff922b)](#-accessibility--responsiveness)
 [![Policy](https://img.shields.io/badge/policy-no%20secrets%20%7C%20licensed%20%7C%20honest%20visuals-red)](#-non-negotiables)
 [![Integrity](https://img.shields.io/badge/integrity-hashes%20%7C%20deterministic%20builds-7048e8)](#-build--caching-rules)
+[![Docs](https://img.shields.io/badge/README-v1.1.0-8957e5)](#️-version-history)
 
 > 🧭 **Purpose:** `web/assets/` is the **static, versioned, front-end-facing** asset library for Kansas Frontier Matrix (KFM).  
-> It feeds the UI’s **maps, charts, Story Nodes, and 3D views** while staying consistent with KFM’s governed boundaries: **assets are presentation**, not data authority, not policy, not secrets. 🧱🛡️  
-> **Rule of thumb:** if it can change what a viewer *believes* about a place, a time range, or a claim… treat it like evidence infrastructure (**review + provenance + licensing + integrity**).
-
----
-
-## 🧠 TL;DR (the 7 rules that keep this folder healthy)
-
-1) 🔒 **No secrets / no internal URLs** — everything here is public.  
-2) 🧾 **Licensing is mandatory** — every third‑party asset must be recorded in `ATTRIBUTION.md`.  
-3) ⚡ **Performance budgets** — optimize images, fonts, textures; lazy-load heavy 3D.  
-4) 🎯 **Visual truthfulness** — legends/palettes/patterns must not imply false certainty.  
-5) 🧩 **No business logic** — if it needs `if/else`, it belongs in `web/src/`, not assets.  
-6) 🧷 **Stable IDs + versioned styles** — style layer IDs are UI state keys; version directories.  
-7) 🧾 **Deterministic builds + hashes** — same inputs → same outputs; ship a manifest for critical assets.
+> It feeds the UI’s **maps, charts, Story Nodes, and 3D views** while respecting KFM’s governed boundaries: **assets are presentation**, not data authority, not policy, not secrets. 🧱🛡️  
+>
+> ✅ **Rule of thumb:** if an asset can change what a viewer *believes* about a place, a time range, uncertainty, or a claim… treat it like **truth-adjacent infrastructure**: review it, version it, and document it. 🧾🗺️
 
 ---
 
 ## 🔗 Quick links
+- 🧪 Methods & receipts (how we document changes that affect meaning): `mcp/README.md` 🧾
+- 📦 Evidence data boundary: `data/README.md` (STAC/DCAT/PROV live here) 🗂️🧬
+- 🧩 Executable UI code boundary: `web/src/` (logic lives here, not in assets) 🧠
+- 🤝 CI & security policy: `.github/` (workflows, scanning, policy-as-code) 🛡️
 
-- [🧱 Non-negotiables](#-non-negotiables)
+---
+
+## ⚡ Quick Nav
+- [🧾 Doc metadata](#-doc-metadata)
+- [🧠 TL;DR rules](#-tldr-the-8-rules-that-keep-this-folder-healthy)
 - [⚠️ Scope & boundaries](#️-scope--boundaries-what-belongs-here)
-- [🧨 Asset risk tiers (review depth)](#-asset-risk-tiers-review-depth)
+- [🧨 Asset risk tiers](#-asset-risk-tiers-review-depth)
 - [🧭 Canonical pipeline alignment](#-canonical-pipeline-alignment-assets-cannot-leapfrog-governance)
+- [🔁 Asset lifecycle](#-asset-lifecycle-detect--validate--promote)
 - [🗂️ Recommended structure](#️-recommended-structure)
 - [🏷️ Naming + versioning](#️-naming--versioning-stability-over-cleverness)
-- [📏 Size budgets (practical defaults)](#-size-budgets-practical-defaults)
+- [📏 Size + complexity budgets](#-size--complexity-budgets-practical-defaults)
+- [🧾 Asset manifest](#-asset-manifest-recommended-machine-readable-integrity--provenance)
 - [🖼️ Images & icons](#-images--icons-responsive-by-default)
 - [🎨 Chart themes & visual integrity](#-chart-themes--visual-integrity-palettes-patterns-tokens)
 - [🗺️ Map assets](#-map-assets-styles-sprites-glyphs--ramps)
@@ -44,6 +49,36 @@
 - [🧾 Attribution & licensing](#-attribution--licensing-required)
 - [✅ PR checklist](#-pr-checklist-assets)
 - [📚 Sources & influence map](#-sources--influence-map-uses-every-project-file)
+- [🕰️ Version history](#️-version-history)
+
+---
+
+## 🧾 Doc metadata
+
+| Field | Value |
+|---|---|
+| Doc | `web/assets/README.md` |
+| Status | Active ✅ |
+| Last updated | **2026-01-13** |
+| Audience | Frontend contributors, cartography/3D contributors, reviewers, Story Node authors |
+| Prime directive | If it changes “visual truth,” it must be **reviewable + attributable + reproducible** |
+| KFM canon | **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode** |
+
+---
+
+## 🧠 TL;DR (the 8 rules that keep this folder healthy)
+
+1) 🔒 **No secrets / no internal URLs** — everything here is browser-exposed.  
+2) 🧾 **Licensing is mandatory** — every third‑party asset must be recorded in `ATTRIBUTION.md`.  
+3) ⚡ **Performance budgets** — optimize images/fonts/textures; lazy-load heavy 3D.  
+4) 🎯 **Visual truthfulness** — palettes/legends/patterns must not imply false certainty.  
+5) 🧩 **No business logic** — if it needs `if/else`, it belongs in `web/src/`, not assets.  
+6) 🧷 **Stable IDs + versioned styles** — style layer IDs are UI state keys; version directories.  
+7) 🧾 **Deterministic builds + hashes** — same inputs → same outputs; ship a manifest for critical assets.  
+8) 🧪 **Semantic changes require evidence** — Tier 2/3 changes should include screenshots + review notes (and sometimes an MCP receipt). 📸🧾
+
+> [!IMPORTANT]
+> If you can’t explain **what changed**, **why**, and **how it affects interpretation**, the asset change isn’t ready to merge. ✅
 
 ---
 
@@ -53,76 +88,13 @@ Assets are **rendering inputs** for the UI. Keep the boundary crisp:
 
 | ✅ Belongs in `web/assets/` | 🚫 Does *not* belong here | Why |
 |---|---|---|
-| Icons (SVG), UI illustrations, screenshots (optimized) | Raw datasets, GeoJSON/COGs/Parquet, “data dumps” | Data must go through catalogs + governed APIs |
+| Icons (SVG), UI illustrations, screenshots (optimized) | Raw datasets (GeoJSON/COGs/Parquet), “data dumps” | Data must go through catalogs + governed APIs |
 | Map style JSON, sprites, glyphs, fill patterns | Private tile URLs, tokenized endpoints, internal services | Browser-exposed = leaked |
-| Palettes/tokens/patterns for uncertainty | Business logic, rules engines, policy decisions | Logic belongs in `web/src/` and `docs/governance/` |
-| Small demo assets (dev-only) | Large binary archives (multi‑GB), mystery packs | Reviewability + repo health |
+| Palettes/tokens/patterns for uncertainty | Business logic, rules engines, policy decisions | Logic belongs in `web/src/` and governance docs |
+| Small demo assets (dev-only) | Large archives (multi‑GB), mystery packs | Reviewability + repo health |
 
 > [!IMPORTANT]
-> **Pointer-over-payload:** If an asset would be huge, ship a **small preview** + **a pointer** (and governance/attribution), not a giant blob. 📌
-
----
-
-## 🧱 Non-negotiables
-
-### 🔒 1) No secrets. Ever.
-Assets ship to the browser. Treat everything here as **world-readable**.
-
-✅ OK  
-- images, icons, licensed fonts, shader files, map style JSON, tiny demo media (non-sensitive)
-
-🚫 NOT OK  
-- API keys/tokens, credentials, private dataset URLs, internal endpoints/domains, unredacted sensitive exports
-
-> [!CAUTION]
-> **Map style JSON is a classic leak vector** (embedded URLs, query strings, tokens). Treat style JSON as **security-reviewed**.
-
----
-
-### 🧾 2) Licensing + attribution are mandatory
-If we ship third-party assets:
-- we must track **source + license + what changed**
-- we must be able to remove/replace assets cleanly
-
-See [Attribution & licensing](#-attribution--licensing-required).
-
----
-
-### ⚡ 3) Optimize by default (performance is part of UX)
-The UI must remain responsive on laptops **and** mobile devices:
-
-- responsive images (`srcset` / `sizes` / `<picture>`)
-- lazy-load large/rare assets (3D, heavy textures, demo videos)
-- avoid accidental multi‑MB icons/fonts
-- keep “first paint” assets minimal
-
----
-
-### 🎯 4) Visual choices are part of “truth”
-Cartography and charts are arguments — not decoration. 🗺️📊  
-Assets (ramps, legends, icons, badges) must avoid implying certainty that doesn’t exist.
-
-- sequential vs diverging ramps must match semantics  
-- “warning” colors should mean something (don’t overuse)  
-- uncertainty must have a **visual grammar** (bands, hatching, opacity rules)  
-- **don’t hide** caveats in tiny footnotes if the asset can communicate them directly
-
----
-
-### 🧩 5) Assets support clean boundaries (don’t bury logic here)
-Assets are **data for rendering** (styles, textures, icons).  
-They are not governance logic, backend contracts, or data processing rules.
-
-> [!TIP]
-> If you’re writing conditionals or decision logic, you’re in `web/src/`, not `web/assets/`.
-
----
-
-### 🧾 6) Integrity is a feature (hashes + determinism)
-Critical assets should be:
-- content-hashed in build output (bundler)
-- tracked with sha256 in a manifest (recommended)
-- generated deterministically when built (sprites, legends, glyph packs)
+> **Pointer-over-payload:** If it’s huge, ship a **small preview** + a **governed pointer** (and attribution), not a giant blob. 📌
 
 ---
 
@@ -134,11 +106,11 @@ Not all assets are equal. This tiering keeps reviews focused and honest:
 |---|---|---|---|
 | 🟩 Tier 0 — Low | simple images, non-semantic UI pics | low | size check + attribution if third-party |
 | 🟨 Tier 1 — Meaningful UI | icons, badges, palettes, patterns | medium | a11y check + visual semantics review + attribution |
-| 🟧 Tier 2 — Map semantics | MapLibre style JSON, legends/ramps, glyphs | high | host allowlist + stable IDs + legend correctness + attribution |
-| 🟥 Tier 3 — Executable-ish | shaders, 3D models/textures, sprite build scripts | highest | security review + deterministic build + complexity budgets + attribution |
+| 🟧 Tier 2 — Map semantics | MapLibre style JSON, legends/ramps, glyphs | high | host allowlist + stable IDs + legend correctness + attribution + visual regression evidence |
+| 🟥 Tier 3 — Executable-ish | shaders, 3D models/textures, sprite/glyph build scripts | highest | security review + deterministic build + complexity budgets + attribution + (recommended) MCP receipt |
 
 > [!NOTE]
-> Tier 2–3 changes should usually trigger **visual QA** (screenshots / Story Node playback / map regression checks).
+> Tier 2–3 changes should usually trigger **visual QA** (screenshots / Story Node playback / map regression checks). 📸
 
 ---
 
@@ -166,6 +138,29 @@ flowchart LR
 
 > [!IMPORTANT]
 > Assets can **explain** and **visualize** governed outputs — they cannot replace governance.
+
+---
+
+## 🔁 Asset lifecycle (Detect → Validate → Promote)
+
+For assets that affect meaning (Tier 1–3), treat changes like mini-releases:
+
+1) **Detect** 🕵️  
+   - What changed? (new icon set, style JSON update, new shader, new ramp)
+
+2) **Validate** ✅  
+   - size budgets, format checks, allowlist checks  
+   - `ATTRIBUTION.md` updated (if third-party)  
+   - deterministic outputs (if generated: sprites, glyphs, texture compression)  
+   - sanity: “does this mislead?” (legend/palette semantics, uncertainty grammar)
+
+3) **Promote** 🚀  
+   - merge only after review + (for Tier 2/3) screenshot evidence  
+   - ensure versioned paths for semantic assets (styles/ramps)  
+   - update manifest hashes for critical assets
+
+> [!TIP]
+> If a palette/ramp/style change could alter a Story Node claim, consider documenting it as an MCP experiment (`mcp/experiments/…`) and shipping a small run receipt (`mcp/runs/…`) with screenshot evidence. 🧪🧾
 
 ---
 
@@ -198,12 +193,12 @@ flowchart LR
     ├── 🧪 samples/                  # tiny sample assets for dev/test only
     ├── 🧾 ATTRIBUTION.md            # REQUIRED: every third‑party asset tracked here
     ├── 🧾 LICENSES/                 # OPTIONAL: vendored license texts, if needed
-    ├── 🧾 manifest.assets.json      # RECOMMENDED: path → sha256 → licenseRef → owner
-    └── 📘 README.md                 # you are here
+    ├── 🧾 manifest.assets.json      # RECOMMENDED: path → sha256 → licenseRef → tier → owner
+    └── 📘 README.md                 # you are here 👋
 ```
 
 > [!TIP]
-> If you introduce a breaking move (path changes), update `web/src/` imports and add a short note in the PR description (“why moved, how to migrate”).
+> If you introduce a breaking move (path changes), update `web/src/` imports and add a short note in the PR description (“why moved, how to migrate”). 🧭
 
 ---
 
@@ -222,29 +217,79 @@ Examples:
 ### ✅ Versioning rules
 - Map styles MUST be versioned by directory: `maps/styles/v1/…`, `maps/styles/v2/…`  
 - Layer IDs inside style JSON should be treated as **public API keys** (UI state depends on them)  
-- Palettes/ramps should carry versions if they affect interpretation: `palettes/ndvi_v1.json`
+- Palettes/ramps should carry versions if they affect interpretation: `palettes/ndvi_v1.json`  
+- 3D assets should be versioned if geometry/units/origin changes: `3d/models/<id>/v1/...`
 
 > [!IMPORTANT]
-> **Breaking change rule:** if a style JSON layer ID is renamed, treat it like a breaking API change (migration + review + Story Node regression).
+> **Breaking change rule:** if a style JSON layer ID is renamed, verify + document:
+> - UI state migration (saved views, permalinks, Story Nodes)  
+> - legend/semantics correctness  
+> - screenshot diffs (before/after)  
+> Treat it like a breaking API change. 🚨
 
 ---
 
-## 📏 Size budgets (practical defaults)
+## 📏 Size + complexity budgets (practical defaults)
 
-Budgets keep performance predictable and reviews sane. Adjust as needed, but keep *some* hard rails:
+Budgets keep performance predictable and reviews sane. Adjust as needed, but keep *some* rails:
 
 | Asset type | Budget target | Notes |
 |---|---:|---|
 | SVG icons | ≤ 10 KB each | run SVGO; no embedded rasters |
-| PNG legends | ≤ 150 KB | text should be readable; avoid blur |
-| JPEG photos | ≤ 300 KB typical | prefer AVIF/WebP with fallback when supported |
+| PNG legends | ≤ 150 KB | text readable; avoid blur |
+| JPEG photos | ≤ 300 KB typical | prefer AVIF/WebP with fallback |
 | Fonts (WOFF2) | ≤ 200–400 KB per family | subset if needed; licenses matter |
 | Shader chunks | small + composable | treat like code; avoid giant monolith shaders |
 | glTF/GLB model (per model) | ≤ 1–5 MB typical | use LOD; avoid “museum grade” meshes |
-| KTX2 textures | sized to UX | don’t ship 4K textures for small UI elements |
+| Textures (KTX2) | sized to UX | don’t ship 4K textures for tiny UI elements |
+| 3D Tiles pointers | tiny | tilesets belong in governed storage; pointer here |
+
+### 🧊 3D-specific complexity rails (recommended)
+- **Vertex count**: define a per-model target and enforce it (LOD tiers)  
+- **Texture resolution**: match screen usage; cap where possible  
+- **Draw calls**: keep low for mobile GPUs  
+- **Shader complexity**: keep readable; no dynamic injection patterns
 
 > [!NOTE]
-> For Story Nodes and demos, prefer **progressive disclosure**: small preview first, heavy assets only when the user enters that mode.
+> For Story Nodes and demos: prefer **progressive disclosure** (small preview first, heavy assets only when user enters that mode). 📱
+
+---
+
+## 🧾 Asset manifest (recommended): machine-readable integrity + provenance
+
+Add a machine-readable manifest for Tier 1–3 assets:
+
+- `web/assets/manifest.assets.json`
+- **purpose:** integrity checks, provenance auditing (“what changed?”), deterministic diffs
+
+### ✅ Recommended manifest fields
+```json
+{
+  "version": "1.0",
+  "generated_at": "2026-01-13",
+  "entries": [
+    {
+      "path": "maps/styles/v2/base.json",
+      "sha256": "…",
+      "tier": "T2",
+      "owner": "@kfm-maintainers",
+      "licenseRef": "INTERNAL",
+      "source": {
+        "type": "internal | third_party | ai_generated",
+        "origin": "link or internal note",
+        "changes": "what we modified"
+      },
+      "semantics": {
+        "affects_truth": true,
+        "notes": "Base map style for Explore Mode; sources must be allowlisted."
+      }
+    }
+  ]
+}
+```
+
+> [!TIP]
+> When an asset is **generated**, store the “recipe” (script/config/tool versions) alongside it, and make the output deterministic. 🧾✅
 
 ---
 
@@ -256,27 +301,28 @@ Budgets keep performance predictable and reviews sane. Adjust as needed, but kee
 - **JPEG** → photos and heavy imagery (smaller, lossy)
 - **WebP/AVIF** → modern photo formats (with JPEG/PNG fallback)
 
-> [!TIP]
-> If an image includes a lot of text: consider whether this should be actual HTML instead. Text-in-image is rarely accessible.
-
 ### 🧼 Hygiene rules
 - strip unnecessary metadata (EXIF) where feasible  
 - avoid “mystery assets” — use descriptive names  
-- prefer **source-of-truth design files** outside `web/assets/` (or referenced) and commit only exported build-ready assets
+- prefer **source-of-truth design files** outside `web/assets/` (or referenced) and commit only exported build-ready assets  
+- if an image includes lots of text, consider whether it should be real HTML (text-in-image is rarely accessible)
 
 ### 🧯 SVG hardening checklist (important)
-SVGs can be an injection surface if you treat them like HTML.
+SVGs can be an injection surface if treated like HTML.
 
 - ✅ keep SVGs **static** (no scripts, no event handlers)
-- ✅ avoid external references
+- ✅ avoid external references (`xlink:href` to remote)
 - ✅ run SVGO (deterministic settings)
-- ✅ if rendering inline, sanitize or use a safe SVG pipeline
+- ✅ if rendering inline, sanitize via a safe SVG pipeline
+
+> [!CAUTION]
+> “It’s just an icon” is how SVG vulnerabilities happen. Treat SVGs like untrusted markup. 🛡️
 
 ---
 
 ## 🎨 Chart themes & visual integrity (palettes, patterns, tokens)
 
-Charts and maps share a core requirement: **don’t mislead**.
+Charts and maps share a core requirement: **don’t mislead**. 📊🗺️
 
 ### ✅ What belongs in `assets/charts/`
 - color palettes (JSON)  
@@ -285,12 +331,12 @@ Charts and maps share a core requirement: **don’t mislead**.
 - default typography tokens (font stacks and sizes)
 
 ### 🎚️ Palette rules (maps + charts)
-- **sequential** palettes → magnitude-only metrics (NDVI level, density)
+- **sequential** palettes → magnitude-only metrics (e.g., density, NDVI level)
 - **diverging** palettes → signed deltas (anomaly vs baseline)
 - **categorical** palettes → classes (land cover types)
 
 > [!IMPORTANT]
-> Every palette should ship with a short README or metadata entry describing:
+> Every palette should ship with metadata (README or JSON fields):
 > - intended use ✅  
 > - accessibility notes (contrast, colorblind considerations) ♿  
 > - “don’t use this for ___” warnings when appropriate 🚫
@@ -301,6 +347,11 @@ Patterns help when opacity/color alone is ambiguous:
 - dots/noise → “insufficient coverage”
 - dashed outlines → “estimated boundaries”
 - crosshatch → “mixed sources / unresolved conflict”
+
+### 🧠 Statistics-aware visuals (defaults that prevent bad inference)
+- avoid implying causality with styling (e.g., “trendline = truth”)  
+- prefer showing uncertainty (intervals/bands) when the underlying data is uncertain  
+- do not hide caveats in tiny legends if the asset can encode uncertainty directly
 
 ---
 
@@ -323,7 +374,17 @@ Keep map styles:
 
 > [!CAUTION]
 > Styles can change meaning. A ramp tweak can turn “uncertain” into “confident.”  
-> Treat legend and ramp changes as semantic changes (Tier 2 review).
+> Treat legend and ramp changes as semantic changes (Tier 2 review). 🚦
+
+### 🧾 “Style-as-DSL” discipline (recommended)
+Map style JSON is effectively a DSL. Treat it like config **with invariants**:
+- validate schema (style spec)  
+- validate host allowlist (sources/tiles/glyphs/sprites)  
+- validate stable IDs (no accidental renames)  
+- validate meaning changes (legend/ramp diff review)
+
+> [!TIP]
+> If you’re doing string hacks on style JSON, consider adding a typed loader/validator in `web/src/` and treat styles as **parsed inputs**, not “just strings”. 🧠🧾
 
 ### 🧷 Sprites & glyphs (self-hosting)
 If you self-host sprites/glyphs:
@@ -341,7 +402,7 @@ Legend design affects interpretation:
 
 ## 🧊 3D assets (models, textures, shaders, tiles)
 
-3D is powerful and expensive. Ship only what the UX can defend.
+3D is powerful and expensive. Ship only what the UX can defend. 🧊🗺️
 
 ### ✅ Preferred formats
 - models: **glTF/GLB**
@@ -363,8 +424,26 @@ Every 3D asset set must document:
 - axis orientation (right/left-handed assumptions)
 - CRS relationship (if georeferenced)
 
-> [!TIP]
-> If you can’t explain how the model aligns with Kansas coordinates, it’s not ready for Story/3D modes.
+**Recommended: add a per-model metadata file**
+`web/assets/3d/models/<id>/ASSET.yml`
+```yaml
+id: kfm_model_<id>_v1
+units: meters
+up_axis: Z
+handedness: right
+origin:
+  description: "Local origin at county centroid; georeferenced via EPSG:4326"
+crs: EPSG:4326
+type: measured | reconstructed | interpretive
+evidence_refs:
+  - "stac://..."
+  - "prov://..."
+licenseRef: INTERNAL | CC-BY-4.0 | ...
+notes: "Interpretive reconstruction; do not treat as surveyed geometry."
+```
+
+> [!IMPORTANT]
+> 3D can look authoritative even when it’s interpretive. If it’s reconstructed, label it clearly in metadata and UI. 🧾
 
 ### ✨ Shaders are code
 Treat shaders like code assets:
@@ -390,7 +469,7 @@ Mobile mapping is real-world constrained:
 - touch targets → icons must remain legible at small sizes
 
 > [!NOTE]
-> If an asset makes sense only on a 27” monitor, it’s not production-ready for KFM.
+> If an asset makes sense only on a 27” monitor, it’s not production-ready for KFM. 📱✅
 
 ---
 
@@ -421,30 +500,7 @@ Prefer:
 - bundler content-hashed filenames for most images/fonts
 - versioned directories for map styles and shared ramps (`maps/styles/v1/…`)
 
-### 🧾 Asset manifest (recommended)
-Add a machine-readable manifest for critical assets:
-
-- `assets/manifest.assets.json`
-- includes: `path → sha256 → licenseRef → owner → tier → notes`
-
-This enables:
-- integrity checks
-- provenance auditing (“what changed?”)
-- deterministic diffs
-
-Example entry:
-```json
-{
-  "path": "maps/styles/v2/base.json",
-  "sha256": "…",
-  "licenseRef": "INTERNAL",
-  "tier": "T2",
-  "owner": "@kfm-maintainers",
-  "notes": "Base map style for Explore Mode; sources must be allowlisted."
-}
-```
-
-### ⚙️ Deterministic builds (required for generated assets)
+### 🧾 Deterministic builds (required for generated assets)
 Sprite packing, legend generation, glyph builds, texture compression:
 - same inputs → same outputs
 - pinned tool versions
@@ -452,7 +508,7 @@ Sprite packing, legend generation, glyph builds, texture compression:
 - commit the recipe (script/config), not just the output
 
 > [!TIP]
-> If you had to “click export” manually, write down the exact settings (or automate it).
+> If you had to “click export” manually, write down the exact settings (or automate it). 🧾🤖
 
 ---
 
@@ -483,12 +539,14 @@ Every third-party asset must be tracked in `web/assets/ATTRIBUTION.md` with:
 - [ ] File sizes are reasonable (and compressed)
 - [ ] Third-party assets recorded in `ATTRIBUTION.md`
 - [ ] Paths remain stable (or `web/src/` imports updated)
+- [ ] Tier assessed (T0/T1/T2/T3) + reviewer knows what to check
 
 ### 🗺️ If map semantics changed (Tier 2)
 - [ ] Style JSON is versioned (`styles/vN/…`)
 - [ ] Layer IDs remain stable (or migration notes included)
-- [ ] Legends/ramps match the intended semantics (no misleading ramps)
+- [ ] Legends/ramps match intended semantics (no misleading ramps)
 - [ ] Tile sources are allowlisted and governed (no private endpoints)
+- [ ] Screenshot diffs added (before/after) 📸
 
 ### 🧊 If 3D/shader assets changed (Tier 3)
 - [ ] 3D assets documented (units, axes, origin, CRS relationship)
@@ -514,91 +572,104 @@ Every third-party asset must be tracked in `web/assets/ATTRIBUTION.md` with:
 ### 🧭 Core KFM vision, documentation discipline, and UX expectations
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` | Defines UI expectations (layer list/search/timeline/Story Nodes/3D), governance boundaries, and why presentation must remain auditable and not bypass provenance. |
-| `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` | Pushes “demo-first but governed”: Story/3D direction, supply-chain hygiene expectations, and why asset changes should remain PR-reviewable and evidence-backed. |
-| `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc` *(repo source doc)* | Markdown discipline for docs: use callouts, checklists, stable anchors, and “no story without evidence” framing applied to asset docs and attribution pages. |
-| `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` | Reinforces “living atlas” goals: assets must support map + timeline + Story Nodes without becoming a data backdoor. |
-| `docs/specs/Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` | Treat asset changes as experiments when they affect interpretation: document hypothesis (“this ramp improves interpretability”), evidence (screenshots), and limitations. |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi) | Defines KFM’s governed pipeline, licensing posture, and why presentation must remain auditable and cannot bypass provenance. |
+| `mcp/README.md` *(repo doc)* | Treats “semantic” asset changes (palettes, ramps, legends, 3D interpretations) as reviewable work with receipts when needed. |
+| `MARKDOWN_GUIDE_v13.md.gdoc` *(repo source doc)*  [oai_citation:1‡Generalized Topology Optimization for Structural Design.pdf](file-service://file-PzydVyvSPdXWqYrXeFCNzj) | Docs formatting discipline: callouts, checklists, stable anchors, and “no story without evidence” framing applied to asset docs + attribution pages. |
 
 ### 🗺️ Cartography, mobile mapping, imagery formats
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | Cartographic clarity: hierarchy, legends, and “maps persuade” → ramps and symbols require semantic review. |
-| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | Mobile realities: bandwidth + small screen constraints → size budgets + progressive loading + legible icons. |
-| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | Format choice as engineering: JPEG vs PNG tradeoffs → performance and clarity rules for screenshots/legends. |
+| `making-maps-a-visual-guide-to-map-design-for-gis.pdf`  [oai_citation:2‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP) | Cartographic clarity: hierarchy, legends, and “maps persuade” → ramps and symbols require semantic review. |
+| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`  | Mobile realities: bandwidth + small screens → size budgets + progressive loading + legible icons. |
+| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`  [oai_citation:3‡compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf](file-service://file-Y6V94sFtV6sy3w63LDy9fi) | Format choice as engineering: JPEG vs PNG tradeoffs → performance and clarity rules for screenshots/legends. |
+
+> [!NOTE]
+> If the mobile mapping citation marker above doesn’t resolve in your environment, link it via repo docs or replace with the local file reference used in your workspace.
 
 ### 🛰️ Remote sensing + time-aware visualization
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | EO visualization patterns: indices/composites/change detection → ramp specs, time-aware legend conventions, and “don’t oversell certainty” defaults. |
+| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`  [oai_citation:4‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP) | EO visualization patterns: indices/composites/change detection → ramp specs, time-aware legends, and “don’t oversell certainty” defaults. |
 
 ### 🌐 Web UI and rendering constraints
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `responsive-web-design-with-html5-and-css3.pdf` | Responsive images and accessibility: `srcset`, mobile-first constraints, and why text-in-images is a last resort. |
-| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | WebGL mental models: coordinate sanity, GPU constraints, shader discipline, and cautious model loading. |
+| `responsive-web-design-with-html5-and-css3.pdf`  [oai_citation:5‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE) | Responsive images + mobile-first constraints: `srcset`, `sizes`, and why text-in-images is a last resort. |
+| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`  [oai_citation:6‡Spectral Geometry of Graphs.pdf](file-service://file-DWxRbQDZGktGtiWtzAQxs8) | WebGL mental models: coordinate sanity, GPU constraints, shader discipline, cautious model loading. |
 
 ### 📈 Stats, EDA, regression, Bayesian uncertainty → honest visuals
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `Understanding Statistics & Experimental Design.pdf` | Avoid misleading visuals; uncertainty must be visible; chart themes should not imply causality by styling alone. |
-| `graphical-data-analysis-with-r.pdf` | EDA-first culture: readable defaults, distribution-friendly palettes, and QC-friendly visualization choices. |
-| `regression-analysis-with-python.pdf` | Regression diagnostics mindset: residuals, assumptions → chart token defaults that support diagnostics (not just trendlines). |
-| `Regression analysis using Python - slides-linear-regression.pdf` | Quick-reference for regression visuals: consistent coefficient/fit-summary icons and report-ready styles. |
-| `think-bayes-bayesian-statistics-in-python.pdf` | Credible intervals/posterior uncertainty: bands, intervals, and uncertainty patterns as first-class assets. |
+| `Understanding Statistics & Experimental Design.pdf`  [oai_citation:7‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3) | Avoid misleading visuals; uncertainty must be visible; chart themes should not imply causality by styling alone. |
+| `graphical-data-analysis-with-r.pdf`  [oai_citation:8‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L) | EDA-first culture: readable defaults, outlier-friendly diagnostics, and QC-minded visual choices. |
+| `regression-analysis-with-python.pdf`  [oai_citation:9‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR) | Diagnostic instincts: residual patterns and assumptions → chart token defaults that support diagnostics (not just “trendlines”). |
+| `Regression analysis using Python - slides-linear-regression.pdf`  [oai_citation:10‡regression-analysis-with-python.pdf](file-service://file-NCS6ThhvajwNUm4crVVcGM) | Quick reference for consistent regression visuals and report-friendly styling. |
+| `think-bayes-bayesian-statistics-in-python.pdf`  [oai_citation:11‡think-bayes-bayesian-statistics-in-python.pdf](file-service://file-LXwJApPMVhRZgyqLb9eg7c) | Credible intervals/posterior uncertainty → bands and uncertainty patterns as first-class assets. |
 
 ### 🧪 Simulation, optimization, and graph foundations
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | V&V mindset: “credibility badges”, assumptions visible, and uncertainty overlays (don’t over-claim). |
-| `Generalized Topology Optimization for Structural Design.pdf` | Mesh/constraints sensitivity: 3D assets need metadata + decimation/LOD discipline. |
-| `Spectral Geometry of Graphs.pdf` | Graph visualization direction: node/edge styling assets should be interpretable and not “mystical”. |
+| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`  [oai_citation:12‡S-T programming Books.pdf](file-service://file-NT32tqqzGW9RvfcNZmMH1K) | V&V mindset: “credibility badges”, assumptions visible, uncertainty overlays (don’t over-claim). |
+| `Generalized Topology Optimization for Structural Design.pdf`  [oai_citation:13‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf) | Mesh/constraints sensitivity → 3D assets need metadata + decimation/LOD discipline. |
+| `Spectral Geometry of Graphs.pdf`  [oai_citation:14‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY) | Graph visualization: node/edge styling must be interpretable (avoid “mystical” aesthetics that imply false structure). |
+| `Archaeological 3D GIS_26_01_12_17_53_09.pdf`  [oai_citation:15‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj) | 3D reconstructions can be interpretive; require labeling + provenance references for “reconstructed vs measured”. |
 
 ### 🗄️ Data systems, caching, interoperability
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `Scalable Data Management for Future Hardware.pdf` | Caching and determinism: hashed assets, cache windows, and why “reuse computed results” maps to CDN-friendly assets. |
-| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | Naming discipline + stable identifiers → style IDs and asset naming conventions should be stable and predictable. |
-| `Data Spaces.pdf` | Pointer-over-payload: prefer referenced/governed stores for large content; keep `web/assets/` lean and auditable. |
+| `Database Performance at Scale.pdf`  [oai_citation:16‡Database Performance at Scale.pdf](file-service://file-36z8qyiVJRtrSs6QG7Epen) | Cache + latency discipline: hashed assets, predictable payload sizes, and treating performance as a first-class constraint. |
+| `Scalable Data Management for Future Hardware.pdf`  [oai_citation:17‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ) | Determinism + resource awareness: document assumptions, avoid nondeterministic builds, keep artifacts CDN-friendly. |
+| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`  [oai_citation:18‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf) | Naming discipline + stable identifiers → style IDs and asset naming conventions should be stable and predictable. |
+| `Data Spaces.pdf`  [oai_citation:19‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf) | Pointer-over-payload and federation mindset: keep `web/assets/` lean; reference governed stores for large tiles/models. |
 
-### ❤️ Human systems, law, autonomy, and governance symbolism
+### 🧑‍⚖️ Human systems, law, autonomy, and governance symbolism
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `Introduction to Digital Humanism.pdf` | Avoid manipulative assets/dark patterns; prioritize transparency and user agency in UI visuals. |
-| `Principles of Biological Autonomy - book_9780262381833.pdf` | Autonomy + feedback: visuals should make “controls and consequences” understandable; avoid false control cues. |
-| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | AI labeling: icons/badges for “AI-assisted,” provenance affordances, and accountability symbolism in Story/Focus UI. |
+| `Introduction to Digital Humanism.pdf`  [oai_citation:20‡webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf](file-service://file-7quELMw4FrspPczB9Y3BTp) | Avoid manipulative visuals/dark patterns; prioritize transparency and user agency in UI assets. |
+| `Principles of Biological Autonomy - book_9780262381833.pdf`  [oai_citation:21‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf) | Feedback + autonomy: visuals should make “controls and consequences” understandable; avoid false control cues. |
+| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`  [oai_citation:22‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3) | Accountability symbolism: AI labeling icons/badges, provenance affordances, and “don’t hide automation” UX. |
 
-### 🔐 Security mindset (defensive posture only)
+### 🔐 Security mindset + hostile inputs (defensive posture only)
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | Threat modeling: assets are an attack surface; scanning/allowlists and “no secrets in browser” posture. |
-| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | Defensive paranoia around parsers/loaders: don’t blindly trust SVG/OBJ; sanitize and validate. |
+| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`  [oai_citation:23‡Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf](file-service://file-Mu6zixTqF9Lubf5QMjepRg) | Threat modeling: assets are an attack surface; scanning/allowlists and “no secrets in browser” posture. |
+| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`  [oai_citation:24‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ) | Defensive paranoia about parsers/loaders: don’t blindly trust SVG/OBJ; sanitize and validate. |
 
-### 🧵 Concurrency and determinism
+### 🧵 Concurrency + determinism
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | Deterministic pipelines + bounded work: avoid nondeterministic sprite packing; enforce complexity budgets. |
+| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`  [oai_citation:25‡concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf](file-service://file-Y45SvXbmLoZL1MNmrcyqz6) | Deterministic pipelines + bounded work: avoid nondeterministic sprite packing; enforce complexity budgets. |
 
 ### 🤖 ML practice and model ethics (UI implications)
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` | UI around ML must emphasize evaluation/limitations: model-card visuals, uncertainty assets, and “don’t ship weights in web/assets” default. |
+| `Understanding Machine Learning: From Theory to Algorithms.pdf`  [oai_citation:26‡I-L programming Books.pdf](file-service://file-T9sYu87k1GPNNKMLddx41a) | Generalization + uncertainty: UI assets should not imply “model outputs = facts”; prefer calibrated uncertainty cues. |
+| `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorch.pdf` | UI around ML must emphasize evaluation/limitations: model-card visuals, uncertainty assets, and “don’t ship weights in web/assets” default. |
 
-### 📚 Programming shelves (multi-book bundles)
+### 🧰 Engineering + tooling shelves (multi-book bundles)
 | Project file | How it influences `web/assets/` |
 |---|---|
-| `A programming Books.pdf` | General engineering shelf: scripting hygiene, build discipline, and reviewable changes. |
-| `B-C programming Books.pdf` | General engineering shelf: compile-time thinking, determinism, and performance instincts. |
-| `D-E programming Books.pdf` | General engineering shelf: tooling literacy for contributors. |
-| `F-H programming Books.pdf` | General engineering shelf: data structures/math foundations that inform visualization sanity. |
-| `I-L programming Books.pdf` | General engineering shelf: systems + ML foundations informing honest UI for analytics. |
-| `M-N programming Books.pdf` | General engineering shelf: ops and platform literacy affecting asset build pipelines. |
-| `O-R programming Books.pdf` | General engineering shelf: scripting + safe handling patterns; caution against embedding secrets in examples. |
-| `S-T programming Books.pdf` | General engineering shelf: security hygiene mindset (defensive posture) and safe-by-default web patterns. |
-| `U-X programming Books.pdf` | General engineering shelf: ecosystem references for maintainers. |
+| `A programming Books.pdf`  [oai_citation:27‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-4pQLNMB3Rk5n5vUPTqxpNa) | Broad engineering reference: build discipline + reviewable changes. |
+| `B-C programming Books.pdf`  [oai_citation:28‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ) | Broad engineering reference: safe scripting, defensive parsing patterns, determinism (e.g., Bash/CLI hygiene). |
+| `D-E programming Books.pdf` | Broad engineering reference: contributor tooling literacy + build ergonomics. |
+| `F-H programming Books.pdf`  [oai_citation:29‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR) | Broad engineering reference: systems/performance instincts that inform asset budgets and caching. |
+| `I-L programming Books.pdf`  [oai_citation:30‡I-L programming Books.pdf](file-service://file-T9sYu87k1GPNNKMLddx41a) | Broad engineering reference: DSL/parsing and clean interfaces → treat style JSON/shaders as languages with validators. |
+| `M-N programming Books.pdf` | Broad engineering reference: ops/platform literacy affecting asset build pipelines. |
+| `O-R programming Books.pdf`  [oai_citation:31‡O-R programming Books.pdf](file-service://file-M6zCNBGmJbot7A2aaUUy9M) | Broad engineering reference: scripting + safe handling; caution against embedding secrets in examples. |
+| `S-T programming Books.pdf`  [oai_citation:32‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP) | Broad engineering reference: security hygiene mindset (defensive posture) and safe-by-default web patterns. |
+| `U-X programming Books.pdf` | Broad engineering reference: ecosystem references for maintainers. |
 
 </details>
 
 ---
 
-✨ **New contributor path:** start by adding a tiny SVG icon ➜ run SVGO ➜ update `ATTRIBUTION.md` ➜ wire into `web/src/components/` ➜ keep the diff small and auditable. ✅
+## 🕰️ Version history
+
+| Version | Date | Summary | Author |
+|---:|---|---|---|
+| v1.1.0 | 2026-01-13 | Added asset lifecycle (Detect→Validate→Promote), clarified “semantic assets” expectations, expanded manifest fields + 3D metadata template, and updated influence map to include all project references (including DSL/validation + performance scaling + 3D interpretive labeling). | KFM Web / Data Engineering |
+| v1.0.0 | 2026-01-11 | Initial `web/assets/` boundary README: scope, non-negotiables, tiering, budgets, map/3D guidance, licensing, PR checklist, influence map. | KFM Web |
+
+---
+
+✨ **New contributor path:** add a tiny SVG icon ➜ run SVGO ➜ update `ATTRIBUTION.md` ➜ wire into `web/src/components/` ➜ keep the diff small and auditable. ✅
