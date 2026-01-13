@@ -8,8 +8,11 @@
 
 ![Composite Actions](https://img.shields.io/badge/actions-composite%20actions-informational)
 ![Reusable Workflows](https://img.shields.io/badge/actions-reusable%20workflows-informational)
+![KFM v13](https://img.shields.io/badge/KFM-v13%20contract-6f42c1)
 ![Contract First](https://img.shields.io/badge/docs-contract--first-2ea44f)
 ![Evidence First](https://img.shields.io/badge/docs-evidence--first-0aa)
+![VVUQ](https://img.shields.io/badge/science-V%26V%20%2B%20UQ-blue)
+![FAIR%20%2B%20CARE](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-ff69b4)
 ![Provenance](https://img.shields.io/badge/provenance-STAC%20%7C%20DCAT%20%7C%20PROV-6f42c1)
 ![OpenLineage](https://img.shields.io/badge/lineage-OpenLineage-8a2be2)
 ![Supply Chain](https://img.shields.io/badge/supply--chain-SBOM%20%2B%20attestations-black)
@@ -17,8 +20,8 @@
 
 > 🧰 This folder contains **repo-local GitHub Actions** (primarily **composite actions**) used by KFM workflows to keep CI/CD **boring, consistent, governed, and auditable**.
 >
-> 🧭 **KFM pipeline order (don’t break it):**  
-> **ETL → Metadata (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode** ✅🧾
+> 🧭 **KFM canonical order (do not break):**  
+> **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode** ✅🧾
 
 > [!IMPORTANT]
 > **Composite actions are infrastructure.** Treat them like production code:
@@ -26,6 +29,8 @@
 > - deterministic & idempotent outputs ♻️
 > - contract-first validation 🧾 (schemas + profiles)
 > - provenance-first artifacts 🔎 (PROV + checksums + lineage)
+> - evidence-first narrative 📚 (citations required)
+> - sovereignty + classification propagation 🛂 (no downgrades without review)
 > - default-deny promotion 🚦 (fail-closed gates)
 > - PR-mediated automation only 🧯 (no “agent writes to main”)
 
@@ -37,10 +42,12 @@
 |---|---|
 | File | `.github/actions/README.md` |
 | Status | Active ✅ *(spec + operating guide)* |
-| Last updated | **2026-01-11** |
+| Last updated | **2026-01-13** |
 | Canonical workflow docs | `.github/workflows/README.md` |
 | Canonical security policy | `SECURITY.md` (repo root) or `.github/SECURITY.md` (mirror) |
 | Canonical repository structure | `docs/MASTER_GUIDE_v13.md` *(v13 contract)* |
+| Canonical docs protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` *(markdown protocol + DoD)* |
+| Library index | `docs/library/MANIFEST.yml` *(recommended; prevents “lost PDFs” drift)* |
 | KFM “north star” | trust first (provenance + integrity), then speed (caching + parallel lanes) |
 
 ---
@@ -54,7 +61,8 @@
 | 🤝 GitHub ops hub | [`../README.md`](../README.md) |
 | 🛡️ Security policy | [`../../SECURITY.md`](../../SECURITY.md) *(or* [`../SECURITY.md`](../SECURITY.md)*)* |
 | 🧱 Master guide (repo contract) | `../../docs/MASTER_GUIDE_v13.md` *(expected path)* |
-| 🧾 Standards & profiles | `../../docs/standards/` *(expected: STAC/DCAT/PROV + markdown protocol)* |
+| 🧾 Standards & profiles | `../../docs/standards/` *(STAC/DCAT/PROV + markdown protocol)* |
+| 🗃️ Library manifest | `../../docs/library/MANIFEST.yml` *(recommended)* |
 | 🧑‍⚖️ Policy gates (OPA/Conftest) | `../../tools/validation/policy/` *(expected)* |
 | 🧬 SBOM action | [`./sbom/README.md`](./sbom/README.md) |
 | 🖊️ Attest action | [`./attest/README.md`](./attest/README.md) *(expected)* |
@@ -68,35 +76,43 @@
 <details>
 <summary><strong>📌 Table of contents</strong></summary>
 
-- [🧭 Why <code>.github/actions/</code> exists](#-why-githubactions-exists)
-- [🧱 Where actions fit (actions vs workflows vs tools)](#-where-actions-fit-actions-vs-workflows-vs-tools)
-- [🧬 Detect → Validate → Promote (the lane pattern)](#-detect--validate--promote-the-lane-pattern)
-- [🧭 KFM invariants (actions must not break)](#-kfm-invariants-actions-must-not-break)
-- [🗺️ Repo structure alignment (v13 map)](#️-repo-structure-alignment-v13-map)
-- [🔐 Threat model & trust boundaries (actions edition)](#-threat-model--trust-boundaries-actions-edition)
-- [🗂️ Action catalog (recommended set)](#️-action-catalog-recommended-set)
-- [✅ Action contract (inputs, outputs, artifacts)](#-action-contract-inputs-outputs-artifacts)
-- [🎛️ Kill switch & safe defaults](#-kill-switch--safe-defaults)
-- [🧾 Provenance, checksums, lineage, and signing](#-provenance-checksums-lineage-and-signing)
-- [🧪 Testing local actions](#-testing-local-actions)
-- [🧷 Templates (copy/paste)](#-templates-copypaste)
-- [🧑‍⚖️ Review checklist](#️-review-checklist)
-- [📚 Project reference library](#-project-reference-library)
+- [🧭 Why <code>.github/actions/</code> exists](#why)
+- [🧱 Where actions fit (actions vs workflows vs tools)](#where)
+- [🧬 Detect → Validate → Promote (the lane pattern)](#lane-pattern)
+- [🧭 KFM invariants (actions must not break)](#invariants)
+- [🏗️ Layer boundaries & isolation (closed layers ≈ safer change)](#layers)
+- [🗺️ Repo structure alignment (v13 map)](#repo-map)
+- [🧪 Scientific rigor (VVUQ + experiment protocols)](#vvuq)
+- [🔐 Threat model & trust boundaries (actions edition)](#threat-model)
+- [🛂 Data classification & access control (Data Spaces mindset)](#classification)
+- [🧪 Minimum CI gates (v13 “hard rails”)](#ci-gates)
+- [🗂️ Action catalog (recommended set)](#action-catalog)
+- [✅ Action contract (inputs, outputs, artifacts)](#action-contract)
+- [🎛️ Kill switch & safe defaults](#kill-switch)
+- [🧾 Provenance, checksums, lineage, and signing](#provenance)
+- [🧪 Testing local actions](#testing)
+- [🧷 Templates (copy/paste)](#templates)
+- [🧑‍⚖️ Review checklist](#review-checklist)
+- [📚 Project reference library](#reference-library)
 
 </details>
 
 ---
 
+<a id="why"></a>
+
 ## 🧭 Why `.github/actions/` exists
 
-KFM workflows cover **code + data + metadata + graph semantics + story/model artifacts**. The same sequences repeat everywhere:
+KFM workflows cover **code + data + metadata + graph semantics + narrative artifacts**. The same sequences repeat everywhere:
 
 - setup Python + Node (sometimes GIS deps like GDAL/PROJ)
 - run lint/tests and emit artifacts
+- validate governed **Markdown protocol** (front-matter + DoD)
 - validate **STAC/DCAT/PROV** (metadata is a contract)
 - enforce governed publishing (stage → validate → promote)
 - capture run provenance (inputs → transforms → outputs)
 - produce supply-chain evidence (SBOM + attestations)
+- enforce classification propagation (no “public outputs” from restricted inputs)
 
 **Composite actions standardize those sequences once** and reuse them across many workflows without YAML drift.
 
@@ -107,6 +123,8 @@ KFM workflows cover **code + data + metadata + graph semantics + story/model art
 > - ✅ **Tool/CLI (in `tools/` or `src/`)** = repeatable *domain logic* (ETL transforms, catalog QA, provenance emission)
 
 ---
+
+<a id="where"></a>
 
 ## 🧱 Where actions fit (actions vs workflows vs tools)
 
@@ -126,9 +144,11 @@ flowchart LR
 
 ---
 
+<a id="lane-pattern"></a>
+
 ## 🧬 Detect → Validate → Promote (the lane pattern)
 
-KFM treats pipelines like scientific instrumentation: **observe → record → verify → publish**.
+KFM treats pipelines like scientific instrumentation: **observe → record → verify → publish** 🔬🧾
 
 ```mermaid
 sequenceDiagram
@@ -150,6 +170,7 @@ sequenceDiagram
   - SBOM present 🧬
   - provenance present 🧾
   - checksums present 🔒
+  - classification checks pass 🛂
   - policy gate pass ✅
 
 > [!CAUTION]
@@ -158,32 +179,73 @@ sequenceDiagram
 
 ---
 
+<a id="invariants"></a>
+
 ## 🧭 KFM invariants (actions must not break)
 
 These are enforceable guardrails. If an action violates one, CI should fail loudly.
 
 1) 🧬 **Pipeline order is absolute**  
-**ETL → Metadata (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
-Actions must not create shortcuts that bypass required stages or validations.
+**ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
+No stage may leapfrog prior stage contracts or outputs.
 
 2) 🧾 **Contract-first**  
 Schemas, catalogs, API contracts, and graph shapes are first-class artifacts.  
 If a contract drifts, CI fails **before** merge.
 
-3) 🧠 **Evidence-first narrative & advisory-only Focus Mode**  
-Story nodes and Focus Mode outputs must be **evidence-backed** (citations / references).  
-Focus Mode is guidance, not autonomy. 🧠🧷
+3) 📚 **Evidence-first narrative (Story Nodes + Focus Mode)**  
+- Story Nodes must cite evidence for every claim (cataloged sources or cataloged externals).  
+- Story Nodes must link key entities to stable graph IDs.  
+- Story Nodes must distinguish **fact vs interpretation** (especially if AI-assisted).  
+- Focus Mode is a **hard gate**: only provenance-linked content is allowed; AI is opt-in + labeled.
 
-4) ♻️ **Deterministic & idempotent**  
+4) 🧠 **Human agency + safe AI**  
+Focus Mode is **advisory-only** (no autonomous actions; no auto-publish; no secret side effects). 🧯
+
+5) ♻️ **Deterministic & idempotent**  
 Same inputs + pinned toolchain + seed → same outputs. Actions must not introduce mystery state.
 
-5) 🚦 **Default-deny promotion**  
-Promotion lanes must be **fail-closed** for missing SBOM/provenance/checksums, broken links, or policy violations.
+6) 🚦 **Default-deny promotion**  
+Promotion lanes must fail closed for missing SBOM/provenance/checksums, broken links, or policy violations.
 
-6) 🔌 **API boundary rule**  
-Don’t introduce workflows/actions that make the UI query graph DB directly. UI consumes **APIs** only.
+7) 🔌 **API boundary rule**  
+UI consumes APIs only. No UI bypass of governed access control (e.g., no direct graph DB queries).
+
+8) 🛂 **Sovereignty + classification propagation**  
+No output artifact can be less restricted than its inputs unless an approved redaction/de-identification step is recorded and reviewed.
 
 ---
+
+<a id="layers"></a>
+
+## 🏗️ Layer boundaries & isolation (closed layers ≈ safer change)
+
+KFM v13 is intentionally “layered” to isolate change and prevent trust boundary bypass:
+
+- **UI** should never bypass the **API** layer.
+- **Domain logic** should never hardcode storage or network calls.
+- **Metadata and provenance** are not “nice to have”; they are contractual gates.
+
+### Closed layers rule of thumb 🔒
+Treat core subsystems as *closed layers* unless explicitly documented otherwise:
+
+- UI → API → storage/graph  
+- Story/Focus → (reads) API/catalogs/graph only  
+- ETL → catalogs/prov → (then) graph ingest
+
+> [!NOTE]
+> Closed layers aren’t about speed—they’re about **governance + testability + auditability**.  
+> Where you do need “open layers” (e.g., shared services), document *why* and lock them behind contracts.
+
+### Anti-pattern to watch: “architecture sinkhole” 🕳️
+If your workflow becomes “just pass things through” layers with no value, you’re adding friction without governance. Prefer:
+- fewer, well-defined actions
+- explicit artifacts at each stage (reports + manifests)
+- fail-fast checks early in PR lanes
+
+---
+
+<a id="repo-map"></a>
 
 ## 🗺️ Repo structure alignment (v13 map)
 
@@ -194,40 +256,85 @@ This is the **expected** KFM “v13” shape that actions/workflows should assum
 ```text
 📁 data/
 └── 📁 <domain>/
-    ├── 📁 raw/              # read-only inputs
-    ├── 📁 work/             # intermediate
-    ├── 📁 processed/        # final outputs
-    ├── 📁 mappings/         # dataset ↔ STAC/DCAT/PROV mapping notes (optional)
-    └── 📄 README.md         # domain runbook
+    ├── 📁 raw/                 # read-only inputs
+    ├── 📁 work/                # intermediate
+    ├── 📁 processed/           # final outputs (derived artifacts live here too)
+    ├── 📁 mappings/            # dataset ↔ STAC/DCAT/PROV mapping notes (optional)
+    └── 📄 README.md            # domain runbook
+
+📁 data/catalog/
+├── 📁 stac/                    # published STAC catalogs
+└── 📁 dcat/                    # published DCAT records
+
+📁 data/prov/                   # published PROV bundles (JSON-LD)
 
 📁 docs/
 ├── 📄 MASTER_GUIDE_v13.md
-├── 📁 standards/            # markdown protocol + repo structure + profiles
+├── 📁 standards/               # markdown protocol + profiles
+│   ├── 📄 KFM_MARKDOWN_WORK_PROTOCOL.md
 │   ├── 📄 KFM_STAC_PROFILE.md
 │   ├── 📄 KFM_DCAT_PROFILE.md
 │   └── 📄 KFM_PROV_PROFILE.md
-├── 📁 templates/            # universal docs + story nodes + API contract extensions
-└── 📁 reports/              # published validation & story outputs (optional)
+├── 📁 templates/               # universal docs + story nodes + API contract extensions
+├── 📁 architecture/            # blueprints, ADRs, vision docs
+├── 📁 governance/              # ethics, sovereignty, review triggers
+├── 📁 library/                 # reference PDFs (or pointers)
+│   └── 📄 MANIFEST.yml         # index: title/license/source/location
+└── 📁 reports/                 # published validation & story outputs (optional)
 
-📁 schemas/                  # machine-readable schemas used by validation actions
+📁 schemas/                     # machine-readable schemas used by validation actions
 ├── 📁 stac/
 ├── 📁 dcat/
 ├── 📁 prov/
 └── 📁 storynodes/
 
 📁 src/
-├── 📁 pipelines/            # ETL + transforms
-├── 📁 graph/                # graph build + reasoning
-└── 📁 server/               # API
+├── 📁 pipelines/               # ETL + transforms
+├── 📁 graph/                   # graph build + ontology bindings + migrations + constraints
+└── 📁 server/                  # API + contracts
+    └── 📁 contracts/           # OpenAPI/GraphQL contracts + schemas
 
-📁 web/                      # UI
-📁 tools/                    # validation, policy, QA, release tooling
-📁 releases/                 # packaged releases (output of protected lanes)
+📁 web/                         # UI (React/MapLibre/Cesium/WebGL)
+📁 tools/                       # validation, policy, QA, release tooling
+📁 releases/                    # packaged releases (output of protected lanes)
+📁 mcp/                         # Methods & Computational Experiments (runs, notebooks, model cards)
 
 📄 CITATION.cff  📄 SECURITY.md  📄 CHANGELOG.md  📄 CONTRIBUTING.md
 ```
 
+> [!TIP]
+> Add `docs/library/MANIFEST.yml` early. If references aren’t indexed, they drift—or worse, get silently removed.
+
 ---
+
+<a id="vvuq"></a>
+
+## 🧪 Scientific rigor (VVUQ + experiment protocols)
+
+KFM doesn’t just “ship software.” It ships **evidence** and **derived analysis artifacts**. That means we adopt a scientific V&V mindset:
+
+### Required mindset 🔬
+- **Verification**: “Did we build the pipeline right?” (correctness, tests, schema validation)
+- **Validation**: “Did we build the right pipeline?” (domain sanity checks, known baselines)
+- **Uncertainty Quantification**: “How sure are we?” (confidence/intervals, sensitivity analysis)
+- **Reproducibility**: pinned toolchains, deterministic runs, stable seeds, recorded parameters
+
+### What actions should enforce ✅
+- Every model/analysis run emits:
+  - `run_uuid` + `build-info.json`
+  - inputs manifest (paths + hashes)
+  - outputs manifest (paths + hashes)
+  - parameter + seed record (so we can replay)
+  - uncertainty/confidence metadata where applicable
+  - PROV activity bundle linking inputs → activities → outputs
+
+> [!IMPORTANT]
+> If an analysis artifact appears in the UI, it must move through the **same pipeline** as “regular data”:  
+> stored in `data/processed/**`, cataloged in STAC/DCAT, traced in PROV, and exposed via governed APIs.
+
+---
+
+<a id="threat-model"></a>
 
 ## 🔐 Threat model & trust boundaries (actions edition)
 
@@ -236,10 +343,11 @@ Composite actions run on runners and can touch secrets, artifacts, and publish l
 ### 🧨 Common risks we design around
 - **Supply chain:** unpinned third-party actions; unsafe `curl | bash`
 - **Secrets exposure:** printing env vars; leaking tokens in logs/artifacts
-- **Catalog poisoning:** malicious/malformed STAC/DCAT fields or links triggering unsafe fetches
+- **Catalog poisoning:** malformed STAC/DCAT fields or links triggering unsafe fetches
 - **Artifact tampering:** publishing without checksums/provenance or without atomic staging
 - **Untrusted PR execution:** forks running code that tries to exfiltrate secrets
 - **Classification leakage:** “public” workflows accidentally processing restricted artifacts
+- **AI side-channel leaks:** Focus Mode exposing sensitive locations or implying unsourced claims
 
 > [!CAUTION]
 > Default stance: treat **everything from a PR** as untrusted input until validated (JSON/GeoJSON, STAC catalogs, tilesets, PDFs, 3D assets, etc.).
@@ -249,8 +357,81 @@ Composite actions run on runners and can touch secrets, artifacts, and publish l
 - No “download arbitrary URL from PR input.”
 - Promotion lanes require explicit environment protection.
 - Prefer **digest-pinned** images and **commit-SHA pinned** actions.
+- AI output must be **opt-in + labeled + provenance-backed**.
 
 ---
+
+<a id="classification"></a>
+
+## 🛂 Data classification & access control (Data Spaces mindset)
+
+KFM assumes data governance is not optional. Even “open” datasets can contain:
+- sensitive locations (endangered species, sacred sites)
+- personal data (names, addresses)
+- restricted Indigenous knowledge (CARE-aligned governance)
+- licensing constraints
+
+### Classification propagation rule 🧷
+**Outputs inherit the strictest classification of their inputs** unless:
+- an approved redaction/de-identification step exists **and**
+- the step is recorded in PROV **and**
+- policy gates approve promotion.
+
+### What actions should do 🛡️
+- Refuse to promote artifacts missing classification tags.
+- Block “downgrades” unless an approved transform is detected.
+- Ensure UI-facing artifacts are redacted/generalized where required.
+- Ensure Story Nodes cite evidence and do not become a bypass channel.
+
+> [!TIP]
+> Treat classification as a *first-class field* in reports, provenance, and catalogs—not as a human convention.
+
+---
+
+<a id="ci-gates"></a>
+
+## 🧪 Minimum CI gates (v13 “hard rails”)
+
+These gates are the “trust backbone” of KFM. Most are implemented as local composite actions calling repo tools.
+
+### ✅ Gate set (recommended baseline)
+1) 🧾 **Markdown protocol & front-matter validation**  
+   - YAML front-matter present + valid  
+   - required sections present (template compliance)  
+   - Definition-of-Done items satisfied
+
+2) 🔗 **Link/reference validation**  
+   - internal links resolve  
+   - citations/reference tags resolve  
+   - no broken doc/story links
+
+3) 📦 **JSON Schema validation**  
+   - STAC/DCAT/PROV validate against KFM profiles  
+   - Story Node metadata validates against story schema (where applicable)
+
+4) 🧠 **Graph integrity tests**  
+   - constraints hold (unique IDs, required properties)  
+   - ontology changes require migrations + version notes  
+   - fixture graph loads and passes checks
+
+5) 🔌 **API contract tests**  
+   - OpenAPI + GraphQL schema linted  
+   - contract tests run with known inputs/outputs  
+   - redaction rules tested for sensitive outputs
+
+6) 🛡️ **Security + governance scans**  
+   - secret scanning  
+   - PII/sensitive data scan  
+   - sensitive location checks (sovereignty tags)  
+   - classification consistency checks (no downgrades)
+
+> [!IMPORTANT]
+> “If it’s not validated in CI, it’s not real.”  
+> Any lane that *publishes* must run the full gate set **fail-closed**.
+
+---
+
+<a id="action-catalog"></a>
 
 ## 🗂️ Action catalog (recommended set)
 
@@ -264,6 +445,7 @@ Composite actions run on runners and can touch secrets, artifacts, and publish l
 | `toolchain-pin` | Verify pinned tool versions / lockfiles / digests | all lanes |
 | `kill-switch` | global “stop button” for risky publish paths | publish/release |
 | `build-info` | emit `build-info.json` + tool versions + checksums | integration/release |
+| `link-check` | fail on broken internal links & missing references | docs/story lanes |
 
 ### ✅ Validation & governance actions
 | Action | Purpose | Typical workflows |
@@ -272,10 +454,18 @@ Composite actions run on runners and can touch secrets, artifacts, and publish l
 | `catalog-qa` | fast STAC/DCAT gate + link checks (PR lane) | `catalog-qa.yml` |
 | `metadata-validate` | schema/profile validation: STAC/DCAT/PROV | nightly/full lanes |
 | `graph-integrity` | validate graph schema + invariants (shape checks) | graph lanes |
-| `api-contract-test` | validate API contracts + schema diffs | server lanes |
+| `api-contract-test` | validate OpenAPI/GraphQL contracts + schema diffs | server lanes |
 | `governance-scan` | secrets/PII/sensitive-location checks (configurable) | PR lanes + nightly |
+| `classification-gate` | block classification downgrades + enforce tags | promotion lanes |
 | `policy-gate` | OPA/Conftest (default deny) | promotion lanes |
-| `provenance-guard` | require PROV + classification propagation | promotion lanes |
+| `provenance-guard` | require PROV completeness + classification propagation | promotion lanes |
+
+### 🧪 Scientific & analysis actions (VVUQ-ready)
+| Action | Purpose | Typical workflows |
+|---|---|---|
+| `experiment-protocol` | emit run protocol (params + seeds + assumptions) | modeling lanes |
+| `vv uq-report` | verification/validation + uncertainty summaries | modeling lanes |
+| `stats-sanity` | regression/EDA baselines, drift checks, charts bundle | analysis lanes |
 
 ### 🧬 Supply-chain & publishing actions
 | Action | Purpose | Typical workflows |
@@ -301,6 +491,8 @@ Composite actions run on runners and can touch secrets, artifacts, and publish l
 
 ---
 
+<a id="action-contract"></a>
+
 ## ✅ Action contract (inputs, outputs, artifacts)
 
 ### ✅ Inputs (strings only)
@@ -312,6 +504,7 @@ Recommended common inputs across KFM actions:
 - `out_dir` → default `.artifacts/out/<action>`
 - `summary_to_step` → `"true"` (append to `$GITHUB_STEP_SUMMARY`)
 - `run_uuid` → optional override (otherwise generated)
+- `classification` → optional override (`public|internal|restricted|...`) **only if validated**
 
 ### ✅ Outputs (standard keys)
 Recommended output keys across actions:
@@ -321,6 +514,7 @@ Recommended output keys across actions:
 - `artifact_dir` → directory containing outputs
 - `run_uuid` → stable UUID for run correlation
 - `inputs_manifest` / `outputs_manifest` → (optional) JSON lists of paths + sha256
+- `classification` → resolved classification after checks (never “downgrade” silently)
 
 ### 📦 Artifact layout (default expectation)
 We keep **ephemeral** outputs under `.artifacts/` (gitignored), and publish only from protected lanes:
@@ -345,6 +539,8 @@ We keep **ephemeral** outputs under `.artifacts/` (gitignored), and publish only
 
 ---
 
+<a id="kill-switch"></a>
+
 ## 🎛️ Kill switch & safe defaults
 
 KFM automation is designed to be powerful **without being autonomous**.
@@ -361,6 +557,8 @@ Recommended signal sources:
 > The W-P-E model is designed with a **single, global kill switch** to stop automation quickly.
 
 ---
+
+<a id="provenance"></a>
 
 ## 🧾 Provenance, checksums, lineage, and signing
 
@@ -384,6 +582,8 @@ We use:
 
 ---
 
+<a id="testing"></a>
+
 ## 🧪 Testing local actions
 
 ### ✅ Minimum expectation
@@ -391,16 +591,23 @@ Every local action should include:
 - `README.md` describing purpose, inputs, outputs, examples
 - smoke workflow: `.github/workflows/actions-smoke.yml`
 - fixture inputs (tiny STAC, tiny DCAT, tiny PROV, tiny policy pack)
+- fixture geospatial assets if relevant (tiny raster/vector, tiny tile set)
 - artifact upload on failure (logs + reports)
 
 ### 🧪 Suggested smoke workflow coverage
 - run `setup-kfm`
 - run `markdown-protocol` on templates
+- run `link-check` on docs + story fixtures
 - run `catalog-qa` on fixture catalogs
+- run `graph-integrity` on fixture graph dataset
+- run `api-contract-test` on mock/fixture API
 - run `policy-gate` on known allow/deny cases
+- run `classification-gate` on known downgrade scenarios
 - run `build-info` and upload `.artifacts/**`
 
 ---
+
+<a id="templates"></a>
 
 ## 🧷 Templates (copy/paste)
 
@@ -418,6 +625,10 @@ inputs:
     default: ".artifacts/out/<name>"
   fail_on_warn:
     description: "Fail if warnings are present"
+    required: false
+    default: "true"
+  summary_to_step:
+    description: "Append summary.md to GitHub step summary"
     required: false
     default: "true"
 
@@ -451,7 +662,9 @@ runs:
         mkdir -p "$OUT"
         echo '{"ok": true, "warnings": []}' > "$OUT/report.json"
         echo "✅ <name> ok" > "$OUT/summary.md"
-        cat "$OUT/summary.md" >> "$GITHUB_STEP_SUMMARY"
+        if [ "${{ inputs.summary_to_step }}" = "true" ]; then
+          cat "$OUT/summary.md" >> "$GITHUB_STEP_SUMMARY"
+        fi
 
     - name: 📦 Set outputs
       id: meta
@@ -547,18 +760,43 @@ jobs:
     "node": "20.11.0"
   },
   "inputs": [
-    {"path": "data/raw/foo.tif", "sha256": "<...>"}
+    {"path": "data/raw/foo.tif", "sha256": "<...>", "classification": "public"}
   ],
   "outputs": [
-    {"path": "data/processed/foo.cog.tif", "sha256": "<...>"},
-    {"path": "data/stac/foo/collection.json", "sha256": "<...>"}
+    {"path": "data/processed/foo.cog.tif", "sha256": "<...>", "classification": "public"},
+    {"path": "data/catalog/stac/foo/collection.json", "sha256": "<...>", "classification": "public"}
   ]
 }
 ```
 
 </details>
 
+<details>
+<summary><strong>📚 <code>docs/library/MANIFEST.yml</code> — library index (spec)</strong></summary>
+
+```yaml
+# docs/library/MANIFEST.yml
+# Purpose: prevent drift and keep provenance/licensing discoverable for all reference materials.
+
+version: 1
+entries:
+  - id: nasa-modeling-simulation-guide
+    title: "Scientific Modeling and Simulation: A Comprehensive NASA-Grade Guide"
+    file: "docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf"
+    license: "Check upstream terms"
+    notes: "Used for V&V/UQ mindset and reproducibility expectations."
+  - id: making-maps
+    title: "Making Maps: A Visual Guide to Map Design for GIS"
+    file: "docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf"
+    license: "Check upstream terms"
+    notes: "Cartography QA + UI map conventions."
+```
+
+</details>
+
 ---
+
+<a id="review-checklist"></a>
 
 ## 🧑‍⚖️ Review checklist
 
@@ -566,17 +804,23 @@ Use this checklist for **new actions** and major changes:
 
 - [ ] Deterministic & idempotent (no hidden mutable state)
 - [ ] Inputs validated (string booleans handled explicitly)
-- [ ] Outputs standardized (`ok`, `report_path`, `run_uuid`, etc.)
+- [ ] Outputs standardized (`ok`, `report_path`, `run_uuid`, `classification`, etc.)
 - [ ] No secrets printed or passed via outputs
 - [ ] Minimal permissions documented; workflows must set least privilege
-- [ ] Produces a JSON report + Step Summary
-- [ ] If touching `data/**`: supports STAC/DCAT/PROV and classification propagation gates
+- [ ] Produces a JSON report + Step Summary (human readable)
+- [ ] Link checks included if the action touches docs/story content
+- [ ] Schema validation included if the action touches STAC/DCAT/PROV/story metadata
+- [ ] Graph integrity tests included if the action touches ontology/graph ingest
+- [ ] API contract tests included if the action touches OpenAPI/GraphQL contracts
+- [ ] Classification propagation enforced if the action touches `data/**`
 - [ ] If producing published artifacts: emits checksums + provenance + SBOM expectations
 - [ ] If publishing: runs only in protected lanes (main/tags/dispatch + environments)
 - [ ] Smoke workflow exists; logs/artifacts uploaded on failure
 - [ ] Local README exists next to the action
 
 ---
+
+<a id="reference-library"></a>
 
 ## 📚 Project reference library
 
@@ -586,16 +830,24 @@ Use this checklist for **new actions** and major changes:
 <details>
 <summary><strong>🧱 Canonical KFM specs (must-read)</strong></summary>
 
-- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
-- `docs/specs/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
 - `docs/MASTER_GUIDE_v13.md` *(expected; repo structure + pipeline contract)*
-- `docs/standards/*` *(expected; STAC/DCAT/PROV profiles + markdown protocol)*
-- `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` *(docs governance & formatting patterns)*
+- `docs/standards/*` *(STAC/DCAT/PROV profiles + markdown protocol)*
+- `MARKDOWN_GUIDE_v13.md.gdoc` *(v13 guide scaffold + invariants + CI gates; source of truth for authoring + contracts)*
 
 </details>
 
 <details>
-<summary><strong>🔐 Governance, sovereignty, and human-centered constraints</strong></summary>
+<summary><strong>🧠 Story Nodes + Focus Mode governance</strong></summary>
+
+- `docs/templates/TEMPLATE__STORY_NODE_V3.md` *(expected; citations + entity IDs + fact vs interpretation)*
+- `docs/reports/story_nodes/` *(expected; draft vs published story nodes)*
+- `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` *(expected; DoD + front-matter rules)*
+
+</details>
+
+<details>
+<summary><strong>🛂 Governance, sovereignty, and human-centered constraints</strong></summary>
 
 - `SECURITY.md` (this repo)
 - `docs/library/Data Spaces.pdf` *(policy enforcement & classification concepts)*
@@ -613,6 +865,7 @@ Use this checklist for **new actions** and major changes:
 - `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
 - `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
 - `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `docs/library/Archaeological 3D GIS_26_01_12_17_53_09.pdf`
 - `docs/library/compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
 
 </details>
@@ -640,8 +893,9 @@ Use this checklist for **new actions** and major changes:
 </details>
 
 <details>
-<summary><strong>⚙️ Systems, scaling, concurrency (why lanes + caches matter)</strong></summary>
+<summary><strong>⚙️ Systems, scaling, performance (why lanes + caches matter)</strong></summary>
 
+- `docs/library/Database Performance at Scale.pdf`
 - `docs/library/Scalable Data Management for Future Hardware.pdf`
 - `docs/library/concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
 
@@ -676,6 +930,51 @@ Use this checklist for **new actions** and major changes:
 <summary><strong>🤖 ML / AI (optional)</strong></summary>
 
 - `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` *(library reference; may not be indexed in all tooling)*
+
+</details>
+
+<details>
+<summary><strong>📦 Full project file index (current library payload)</strong></summary>
+
+> Put these in `docs/library/` (or store externally and reference them via the manifest).
+
+- `Archaeological 3D GIS_26_01_12_17_53_09.pdf`
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `Data Spaces.pdf`
+- `Database Performance at Scale.pdf`
+- `Generalized Topology Optimization for Structural Design.pdf`
+- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
+- `Introduction to Digital Humanism.pdf`
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
+- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
+- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `Principles of Biological Autonomy - book_9780262381833.pdf`
+- `Regression analysis using Python - slides-linear-regression.pdf`
+- `Scalable Data Management for Future Hardware.pdf`
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `Spectral Geometry of Graphs.pdf`
+- `Understanding Statistics & Experimental Design.pdf`
+- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
+- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
+- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
+- `graphical-data-analysis-with-r.pdf`
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `python-geospatial-analysis-cookbook.pdf`
+- `regression-analysis-with-python.pdf`
+- `responsive-web-design-with-html5-and-css3.pdf`
+- `think-bayes-bayesian-statistics-in-python.pdf`
+- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+- `A programming Books.pdf`
+- `B-C programming Books.pdf`
+- `D-E programming Books.pdf`
+- `F-H programming Books.pdf`
+- `I-L programming Books.pdf`
+- `M-N programming Books.pdf`
+- `O-R programming Books.pdf`
+- `S-T programming Books.pdf`
+- `U-X programming Books.pdf`
+- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf`
 
 </details>
 
