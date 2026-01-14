@@ -117,11 +117,11 @@ KFM’s “trust chain” is a pipeline — the UI is downstream of governance.
 
 ```mermaid
 flowchart LR
-  A[ETL / Pipelines] --> B[STAC + DCAT + PROV Catalogs]
-  B --> C[Knowledge Graph (Neo4j)]
-  C --> D[Contracted APIs]
-  D --> E[Web UI (Map + Catalog + Story)]
-  E --> F[Story Nodes + Focus Mode]
+  A["ETL / Pipelines"] --> B["STAC + DCAT + PROV Catalogs"]
+  B --> C["Knowledge Graph (Neo4j)"]
+  C --> D["Contracted APIs"]
+  D --> E["Web UI (Map + Catalog + Story)"]
+  E --> F["Story Nodes + Focus Mode"]
 ```
 
 ### 🧾 UI rule of thumb
