@@ -48,10 +48,10 @@ KFM is guided by digital humanism: transparency, accountability, and careful int
 
 ```mermaid
 flowchart LR
-  A[Data Ingest & Pipelines] --> B[Catalog + Contracts]
-  B --> C[API Layer]
-  C --> D[Web UI: React + MapLibre (+ optional Cesium)]
-  D --> E[Users]
+  A["Data Ingest & Pipelines"] --> B["Catalog + Contracts"]
+  B --> C["API Layer"]
+  C --> D["Web UI: React + MapLibre (+ optional Cesium)"]
+  D --> E["Users"]
 ```
 
 - **Frontend does not talk directly to DB/pipelines**—it consumes API endpoints and renders state.  [oai_citation:14‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
