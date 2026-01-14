@@ -1,3 +1,20 @@
+---
+title: "KFM Chart Specs"
+path: "web/assets/charts/specs/README.md"
+doc_kind: "Contract Artifact"
+status: "draft"
+version: "1.0.0"
+last_updated: "2026-01-14"
+owners:
+  - "KFM Web"
+  - "KFM Data"
+tags:
+  - "charts"
+  - "specs"
+  - "provenance-first"
+  - "contract-first"
+---
+
 # 📈 KFM Chart Specs (`web/assets/charts/specs`)
 
 ![Spec](https://img.shields.io/badge/spec-KFM%20ChartSpec-2ea44f)
