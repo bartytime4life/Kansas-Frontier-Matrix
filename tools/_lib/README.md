@@ -92,13 +92,13 @@ KFM’s pipeline is **ordered and gated**. `_lib` exists to make that enforceabl
 
 ```mermaid
 flowchart LR
-  A[Raw Sources] --> B[ETL + Normalization]
-  B --> C[STAC Items + Collections]
+  A[Raw Sources] --> B[ETL and Normalization]
+  B --> C[STAC Items and Collections]
   C --> D[DCAT Dataset Views]
   C --> E[PROV Lineage Bundles]
   C --> G[Graph references catalogs]
-  G --> H[API Layer (contracts + redaction)]
-  H --> I[Map UI / 3D]
+  G --> H[API Layer - contracts and redaction]
+  H --> I[Map UI and 3D]
   I --> J[Story Nodes]
   J --> K[Focus Mode]
 ```
