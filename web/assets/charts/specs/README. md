@@ -1,1 +1,418 @@
+---
+title: "KFM Chart Specs"
+path: "web/assets/charts/specs/README.md"
+doc_kind: "Contract Artifact"
+status: "draft"
+version: "1.0.0"
+last_updated: "2026-01-14"
+owners:
+  - "KFM Web"
+  - "KFM Data"
+tags:
+  - "charts"
+  - "specs"
+  - "provenance-first"
+  - "contract-first"
+---
 
+# 📈 KFM Chart Specs (`web/assets/charts/specs`)
+
+![Spec](https://img.shields.io/badge/spec-KFM%20ChartSpec-2ea44f)
+![Contract-first](https://img.shields.io/badge/contract--first-✓-2ea44f)
+![Provenance-first](https://img.shields.io/badge/provenance--first-✓-2ea44f)
+![Status](https://img.shields.io/badge/status-draft-orange)
+![UI](https://img.shields.io/badge/web-React%20%2B%20TypeScript-blue)
+![Render](https://img.shields.io/badge/render-MapLibre%20%2F%20WebGL-blueviolet)
+
+> [!IMPORTANT]
+> **This folder is the single source of truth for chart configuration contracts** (aka “chart specs”) used by the KFM web UI. These specs are **declarative**, **versioned**, **schema-validated**, and **provenance-linked** so every rendered chart is auditable and reproducible.  
+> (This aligns with KFM’s contract-first + evidence/provenance-first governance.)[^kfm-master]
+
+---
+
+## 🧠 What “Chart Specs” mean in KFM
+
+A **Chart Spec** is a **declarative JSON contract** describing:
+
+- ✅ what data a chart uses (via **catalog references**, not “mystery data”)
+- ✅ how data is transformed (deterministic, repeatable, logged)
+- ✅ how it’s rendered (encodings, axes, layers, interactions)
+- ✅ how it links to the map/timeline (cross-filtering & context)
+- ✅ how it exposes evidence (citations + provenance pointers)
+
+This approach ensures the UI stays “honest”:
+- the **chart is not the source of truth** → the **data catalogs are**
+- the **spec is the UI contract** → schema-validation prevents drift
+- every insight is anchored in an **evidence artifact** when derived by a model/analysis[^evidence-artifacts]
+
+---
+
+## 🗂️ Directory layout
+
+```text
+📦 web/
+└── 🎛️ assets/
+    └── 📈 charts/
+        └── 🧾 specs/
+            ├── README.md ✅ (you are here)
+            ├── 🧩 schema/
+            │   ├── kfm.chartSpec.schema.json
+            │   └── kfm.chartTheme.schema.json
+            ├── 🧪 examples/
+            │   ├── climate/
+            │   │   └── annual_precip_ks.chart.json
+            │   ├── hazards/
+            │   │   └── tornado_tracks_by_decade.chart.json
+            │   ├── infrastructure/
+            │   │   └── rail_growth_timeseries.chart.json
+            │   └── graph/
+            │       └── knowledge_graph_degree_distribution.chart.json
+            └── 🧱 themes/
+                └── kfm.default.theme.json
+```
+
+> [!NOTE]
+> Folder names above are **recommended** if not already present in the repo. If the project uses a different structure, keep the **core contract fields** and **validation gates** intact.
+
+---
+
+## 🧭 Non‑negotiables (KFM invariants)
+
+These are “break-glass-only” rules that keep the platform trustworthy and scalable:
+
+### 1) Contract-first
+- Every chart spec **MUST** validate against `kfm.chartSpec.schema.json`.
+- Any breaking change **MUST** bump `spec_version` major (SemVer).
+- The schema is a first-class artifact: build from contracts, not from UI accidents.[^kfm-master]
+
+### 2) Provenance-first + Evidence-first
+- Every chart spec **MUST** reference upstream **STAC/DCAT/PROV** artifacts (or domain equivalents).
+- If the chart visualizes *derived* results (model output, aggregated indices, OCR output, etc.), that output **MUST** be an **evidence artifact** that is processed, cataloged, and traced like any other dataset.[^evidence-artifacts]
+
+### 3) Canonical pipeline ordering
+Data and metadata flow in a fixed order: **Raw → ETL → STAC/DCAT/PROV → Graph → API → UI → Narrative/Focus**.[^pipeline-order]
+
+### 4) UI is governed by the data layer
+- Chart specs **MUST NOT** embed ad-hoc SQL, hidden constants, or private endpoints.
+- Chart specs **SHOULD** only reference data through stable API contracts and catalog IDs (STAC/DCAT/PROV).[^^]
+
+---
+
+## 🧱 KFM ChartSpec format
+
+### Required top-level fields (minimum viable spec)
+
+| Field | Type | Meaning |
+|------|------|---------|
+| `spec_version` | `string` | SemVer for the **chart spec contract** (not the dataset). |
+| `id` | `string` | Unique stable identifier (recommend URN format). |
+| `title` | `string` | Human-friendly title (UI header). |
+| `description` | `string` | What this chart shows + how to interpret it safely. |
+| `kind` | `string` | Chart type (`timeseries`, `bar`, `scatter`, `histogram`, `map-linked`, etc.). |
+| `data` | `object` | Data source references + transformation plan. |
+| `encoding` | `object` | Visual encodings (x/y/color/size/layers). |
+| `provenance` | `object` | Links to STAC/DCAT/PROV + citations policy. |
+| `ui` | `object` | Interaction & layout rules (map/timeline linking, tooltips). |
+| `a11y` | `object` | Accessibility metadata (alt text, table view, keyboard). |
+
+### Recommended ID format
+- `urn:kfm:chart:<domain>:<chart_name>:v<major>`
+- Example: `urn:kfm:chart:climate:annual_precipitation:v1`
+
+---
+
+## 🧩 Example ChartSpec (timeseries)
+
+```json
+{
+  "spec_version": "1.0.0",
+  "id": "urn:kfm:chart:climate:annual_precipitation:v1",
+  "title": "Annual precipitation — Kansas",
+  "description": "Annual precipitation totals for Kansas. Use this for long-term climate context; do not infer causality without supporting evidence.",
+  "kind": "timeseries",
+  "data": {
+    "source_refs": {
+      "stac_collection": "urn:kfm:stac:collection:climate:noaa_precip",
+      "dcat_dataset": "urn:kfm:dcat:dataset:climate:noaa_precip",
+      "prov_bundle": "urn:kfm:prov:bundle:climate:noaa_precip:annual_agg"
+    },
+    "endpoint": "/api/v1/climate/precip/annual",
+    "params": { "region_id": "KS" },
+    "transform": [
+      { "op": "filter", "field": "region_id", "eq": "KS" },
+      { "op": "groupby", "keys": ["year"], "aggregates": [{ "field": "precip_mm", "fn": "sum", "as": "precip_mm" }] }
+    ]
+  },
+  "encoding": {
+    "x": { "field": "year", "type": "temporal" },
+    "y": { "field": "precip_mm", "type": "quantitative", "unit": "mm" }
+  },
+  "provenance": {
+    "citations_required": true,
+    "caption_template": "Source: {dcat_dataset}. Processing lineage: {prov_bundle}."
+  },
+  "ui": {
+    "panel": "side",
+    "interactions": {
+      "zoom": true,
+      "brush_to_filter_map": false,
+      "time_sync": true
+    },
+    "tooltip": { "mode": "nearest", "fields": ["year", "precip_mm"] }
+  },
+  "a11y": {
+    "alt": "Line chart showing annual precipitation totals for Kansas by year.",
+    "table_view": true
+  }
+}
+```
+
+> [!TIP]
+> KFM’s UI supports map/timeline-driven exploration (time sliders, layer toggles, and linked panels). Specs should make linking explicit rather than implicit.[^kfm-ui]
+
+---
+
+## 🧩 Chart kinds & when to use them
+
+<details>
+<summary><strong>📊 Common chart kinds (click to expand)</strong></summary>
+
+### Core analytics
+- **Timeseries** (trend + seasonality + regime shifts)
+- **Bar / grouped bar** (category comparisons)
+- **Stacked area** (composition over time; use carefully)
+- **Scatter / bubble** (relationships; add uncertainty + density for big n)
+- **Histogram / density** (distribution)
+- **Box / violin** (distribution + outliers)
+
+### Model & simulation
+- **Residuals plot** (model diagnostics)
+- **Prediction vs observed** (clearly separate series; show uncertainty)
+- **Calibration / reliability** (when outputs are probabilistic)
+- **Sensitivity / tornado chart** (model sensitivity; not to confuse with tornado events)
+
+### Geospatial-linked
+- **Map-linked timeseries** (region selection drives chart)
+- **Brushed histogram** (brush filters map points/layers)
+- **Choropleth legend + distribution** (map + distribution panel)
+
+### Remote sensing
+- **Spectral reflectance / band charts**
+- **Index time series** (e.g., NDVI/EVI per AOI)
+- **Change detection timeline** (before/after deltas)
+
+### Graph/knowledge network
+- **Degree distribution**
+- **Centrality histogram**
+- **Community size bar chart**
+
+</details>
+
+---
+
+## 🗺️ Map + Timeline linkage patterns
+
+KFM’s interface is designed around **interactive mapping + time navigation** (layer toggles + time slider + optional 3D views).[^kfm-ui][^kfm-design]
+
+### Supported linkage behaviors
+
+| Pattern | What it does | Typical use |
+|---|---|---|
+| **Selection → Chart** | Click map feature → chart updates | County/region climate trends, infrastructure growth |
+| **Chart brush → Map filter** | Brush chart range → filters map layer | “show tornado tracks between 1950–1970” |
+| **Time sync** | Timeline slider updates chart window | “watch change over eras” |
+| **Map hover → Tooltip** | Hover region updates tooltip | Quick stats preview |
+
+> [!IMPORTANT]
+> If a chart is derived from analysis (e.g., simulated layer, OCR corpus, predicted surface), it must be treated as an **evidence artifact** that is stored/catologed/traced, then exposed via API—not hard-coded into the UI.[^evidence-artifacts]
+
+---
+
+## 🎨 Visual + UX rules (don’t mislead people)
+
+### Chart truthfulness checklist ✅
+- **Axes** must be labeled with units.
+- **Time axis** must state timezone and aggregation level when relevant.
+- **Color** must never be the only carrier of meaning (use shape/labels too).
+- **Uncertainty** should be shown when available (CI/credible bands, error bars, or “uncertainty unavailable” label).
+- **Missing data** must be visible (gaps, not silently interpolated).
+- **Smoothing** must be disclosed (method + window).
+- **Zero baselines**: required for bars; not always required for lines (but explain).
+
+These principles align with best practice in exploratory/graphical data analysis and experimental design.[^stats-eda]
+
+---
+
+## 🧮 Statistics & modeling guidance embedded in specs
+
+KFM charts are often used to support scientific + historical interpretation. Specs should explicitly encode statistical guardrails:
+
+### When showing trends / regressions
+- Prefer showing **data + model** together (observed markers + fitted line).
+- Include **confidence/credible intervals** when possible.
+- Provide a **residual view** for model diagnostics where relevant.
+
+### When comparing groups
+- Declare the **aggregation function** (mean/median/sum).
+- Provide **n** (sample size) for each group.
+- If the data is observational, avoid causal language in titles/captions.
+
+Bayesian outputs should present credible intervals and calibration context.[^bayes]
+
+---
+
+## ⚡ Performance & scalability rules
+
+Charts are only useful if they load quickly and remain interactive.
+
+### Rendering guidelines
+- Use **WebGL-backed plotting** for high point counts where possible (especially for map-adjacent visuals). KFM’s mapping stack relies on WebGL rendering.[^kfm-ui]
+- For large datasets, specs should declare a **downsampling / LOD policy**:
+  - max points
+  - sampling method (e.g., LTTB, binning, aggregation)
+  - windowing strategy for streaming
+
+### Data retrieval guidelines
+- Prefer **server-side aggregation** for heavy transforms.
+- Large scale query workloads benefit from **precomputation + sampling + error estimation** strategies; specs should allow declaring approximate aggregates and associated uncertainty.[^aqp]
+
+### Streaming / real-time
+If a chart is fed by a stream:
+- declare window semantics (tumbling/sliding/session)
+- define update cadence
+- ensure UI indicates “live” vs “historical snapshot”
+
+(Real-time & distributed constraints apply at the pipeline and API layer; UI must reflect them, not hide them.)[^streaming]
+
+---
+
+## 🔐 Security & privacy checklist
+
+Chart specs are *data-to-UI contracts*—they can also be an attack surface if misused.
+
+- **Never** allow arbitrary HTML in labels/tooltips (sanitize in renderer).
+- **Never** embed secrets/tokens in specs (assets are client-shipped).
+- Use **strict allowlists** for `endpoint` and `params`.
+- Follow cookie/session scoping best practices (avoid cross-subdomain leakage and related pitfalls).[^cookies]
+- Respect dataset sensitivity classifications and redaction policies at the API layer (UI must not bypass governance).[^evidence-artifacts]
+
+---
+
+## ♿ Accessibility requirements (a11y)
+
+Every chart spec **MUST** include:
+
+- `a11y.alt` — a concise, meaningful description
+- `a11y.table_view` — provide tabular fallback (or explicitly justify `false`)
+- keyboard navigability requirements:
+  - focus states
+  - tooltip access
+  - zoom/brush alternatives (buttons + inputs)
+
+---
+
+## ✅ Definition of Done for a new/updated chart spec
+
+- [ ] Spec validates against `kfm.chartSpec.schema.json`
+- [ ] `spec_version` follows SemVer rules (breaking change → major bump)
+- [ ] Data sources referenced via STAC/DCAT/PROV IDs (or domain equivalents)
+- [ ] Derived outputs registered as evidence artifacts (when applicable)
+- [ ] Captions include citations or explicit “no citations available” flag
+- [ ] A11y fields present + verified
+- [ ] Performance policy declared (max points + sampling)
+- [ ] Screenshot or visual regression reference captured (if your pipeline supports it)
+
+This mirrors KFM doc “definition of done” expectations: front-matter validity, claim-to-source linkage, repeatable validation steps, and explicit governance considerations.[^kfm-master-dod]
+
+---
+
+## 🧪 Suggested validation commands (repo-dependent)
+
+```bash
+# Schema validate all specs (example)
+npm run charts:validate
+
+# Optional: render smoke tests (example)
+npm run charts:smoke
+
+# Optional: visual regression (example)
+npm run charts:vr
+```
+
+> [!NOTE]
+> If these scripts don’t exist yet, this README is intentionally defining the contract for what we *want* CI to enforce.
+
+---
+
+## 📚 Project file shelf (everything this README is built from)
+
+> This section is intentionally explicit to keep KFM “auditable by design.” 🧾
+
+| Project file | How it influences chart specs |
+|---|---|
+| **Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf**  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi) | Product requirements: web stack, mapping + timeline behavior, citation expectations, licensing emphasis.[^kfm-ui] |
+| **Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf**  [oai_citation:1‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H) | System architecture: ingest → catalogs → AI → interactive UI; GeoTIFF/GeoJSON/COG norms; map/timeline UI framing.[^kfm-design] |
+| **MARKDOWN_GUIDE_v13.md.gdoc**  [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) | Canonical governance: contract-first, deterministic pipeline, evidence artifacts, pipeline ordering, DoD.[^kfm-master] |
+| **Comprehensive Markdown Guide for Beautiful Structured Documents (v1.1).docx**  [oai_citation:3‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA) | Documentation conventions: structured, template-driven, consistent authoring in-repo. |
+| **Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf**  [oai_citation:4‡Generalized Topology Optimization for Structural Design.pdf](file-service://file-PzydVyvSPdXWqYrXeFCNzj) | Simulation outputs + uncertainty discipline; guides “model charts must show assumptions & uncertainty.” |
+| **Regression analysis with python.pdf**  [oai_citation:5‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu) | Regression plots, diagnostics, safe interpretation patterns. |
+| **Regression analysis using Python - slides-linear-regression.pdf**  [oai_citation:6‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR) | Practical modeling workflow; reinforces observed vs modeled separation. |
+| **Understanding Statistics & Experimental Design.pdf**  [oai_citation:7‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L) | Experimental design & statistical validity; informs “don’t mislead” rules.[^stats-eda] |
+| **graphical-data-analysis-with-r.pdf**  [oai_citation:8‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu) | EDA patterns; informs distribution & outlier visualization guidance.[^stats-eda] |
+| **think-bayes-bayesian-statistics-in-python.pdf**  [oai_citation:9‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR) | Bayesian credible intervals & probabilistic reporting expectations.[^bayes] |
+| **Database Performance at Scale.pdf**  [oai_citation:10‡Generalized Topology Optimization for Structural Design.pdf](file-service://file-PzydVyvSPdXWqYrXeFCNzj) | Fast APIs for charts: indexing, caching, query planning & performance budgets. |
+| **Scalable Data Management for Future Hardware.pdf**  [oai_citation:11‡compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf](file-service://file-Y6V94sFtV6sy3w63LDy9fi) | Streaming & heterogeneous hardware considerations; guides real-time chart policies.[^streaming] |
+| **Data Spaces.pdf**  [oai_citation:12‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3) | Cross-domain data integration; informs multi-source chart provenance strategies. |
+| **Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf**  [oai_citation:13‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE) | Remote sensing chart patterns and UI interaction norms (expandable chart panels).[^gee-ui] |
+| **making-maps-a-visual-guide-to-map-design-for-gis.pdf**  [oai_citation:14‡Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf](file-service://file-Mu6zixTqF9Lubf5QMjepRg) | Cartographic design rules for map-linked charts (legends, scales, symbology). |
+| **Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf**  [oai_citation:15‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY) | Mobile-first + situated mapping context; informs responsive behavior for chart/map combos. |
+| **Archaeological 3D GIS_26_01_12_17_53_09.pdf**  [oai_citation:16‡I-L programming Books.pdf](file-service://file-T9sYu87k1GPNNKMLddx41a) | 3D GIS visualization patterns; informs 3D-linked chart specs (cross-sections, volumes). |
+| **python-geospatial-analysis-cookbook.pdf**  [oai_citation:17‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu) | Geospatial analysis & PostGIS workflows that feed map-linked chart data. |
+| **PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf**  [oai_citation:18‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-Heg28TVM2nReDYTQ7nPhAK) | Database fundamentals for chart query patterns and safe parameterization. |
+| **responsive-web-design-with-html5-and-css3.pdf**  [oai_citation:19‡Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf](file-service://file-Mu6zixTqF9Lubf5QMjepRg) | Responsive layout guidance for charts across devices. |
+| **webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf**  [oai_citation:20‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-Heg28TVM2nReDYTQ7nPhAK) | WebGL rendering strategies for large-scale interactive visuals. |
+| **compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf**  [oai_citation:21‡O-R programming Books.pdf](file-service://file-M6zCNBGmJbot7A2aaUUy9M) | Export formats for chart thumbnails and downloadable renders. |
+| **Generalized Topology Optimization for Structural Design.pdf**  [oai_citation:22‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3) | Optimization visualization patterns (convergence curves, constraint plots). |
+| **Spectral Geometry of Graphs.pdf**  [oai_citation:23‡Generalized Topology Optimization for Structural Design.pdf](file-service://file-PzydVyvSPdXWqYrXeFCNzj) | Graph analytics visualizations (degree distributions, spectral properties). |
+| **Principles of Biological Autonomy - book_9780262381833.pdf**  [oai_citation:24‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR) | Systems thinking: keep humans in control; avoid “black box” UI behavior. |
+| **Introduction to Digital Humanism.pdf**  [oai_citation:25‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE) | Human-centered transparency and trust requirements for AI-linked charts.[^humanism] |
+| **On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf**  [oai_citation:26‡S-T programming Books.pdf](file-service://file-NT32tqqzGW9RvfcNZmMH1K) | Governance mindset: explainability, compliance, and responsible deployment constraints. |
+| **ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf**  [oai_citation:27‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE) | Defensive security framing for web exposure (threat modeling, mitigation mindset). |
+| **Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf**  [oai_citation:28‡S-T programming Books.pdf](file-service://file-NT32tqqzGW9RvfcNZmMH1K) | Security awareness reference (defensive posture only; no offensive use in specs). |
+| **concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf**  [oai_citation:29‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR) | Real-time/distributed concerns informing streaming chart update semantics. |
+| **F-H programming Books.pdf**  [oai_citation:30‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY) | General algorithm + data processing references supporting chart pipelines. |
+| **I-L programming Books.pdf**  [oai_citation:31‡I-L programming Books.pdf](file-service://file-T9sYu87k1GPNNKMLddx41a) | Language + DSL thinking; informs “specs are a DSL” approach. |
+| **B-C programming Books.pdf**  [oai_citation:32‡O-R programming Books.pdf](file-service://file-M6zCNBGmJbot7A2aaUUy9M) | General programming references for performance + correctness. |
+| **O-R programming Books.pdf**  [oai_citation:33‡O-R programming Books.pdf](file-service://file-M6zCNBGmJbot7A2aaUUy9M) | Geospatial/PostGIS workflow examples supporting map-linked chart data. |
+| **S-T programming Books.pdf**  [oai_citation:34‡S-T programming Books.pdf](file-service://file-NT32tqqzGW9RvfcNZmMH1K) | General security/crypto awareness + systems references. |
+| **A programming Books.pdf** | 📌 Present in project files, but may not be indexed in this workspace. Still treated as a reference bundle. |
+| **D-E programming Books.pdf** | 📌 Present in project files, but may not be indexed in this workspace. Still treated as a reference bundle. |
+| **M-N programming Books.pdf** | 📌 Present in project files, but may not be indexed in this workspace. Still treated as a reference bundle. |
+| **U-X programming Books.pdf** | 📌 Present in project files, but may not be indexed in this workspace. Still treated as a reference bundle. |
+| **Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf** | 📌 Present but flagged as not accessible in tooling; still relevant for ML chart patterns (loss curves, confusion matrices). |
+
+---
+
+## 🧾 Footnotes (grounding citations)
+
+[^kfm-master]: Master Guide concepts (contract-first, deterministic pipeline) are explicitly defined in the KFM markdown governance guide.  [oai_citation:35‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+[^kfm-master-dod]: Master Guide “definition of done” expectations (front-matter validity, claim linkage, repeatable validation, governance) are enumerated in the same guide.  [oai_citation:36‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+[^pipeline-order]: Canonical pipeline ordering diagram (Data → catalogs → graph → API → UI → story/focus).  [oai_citation:37‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+[^evidence-artifacts]: Evidence artifacts must be stored, cataloged (STAC/DCAT), traced (PROV), and exposed via governed APIs (not hard-coded into UI).  [oai_citation:38‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+[^kfm-ui]: KFM UI stack + mapping/timeline + charts/citations expectations are described in the technical documentation.  [oai_citation:39‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+[^kfm-design]: KFM architecture emphasizes ingest → processing → STAC-like cataloging → interactive map/timeline UI with web mapping libraries.  [oai_citation:40‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
+[^gee-ui]: GEE remote sensing workflows include chart UI behaviors and chart option conventions (titles/axes/legend + expand behavior).  [oai_citation:41‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-JVv3nbvtonX1HcpeERi9kV)
+[^aqp]: Approximate query processing patterns (sampling + aggregate precomputation + error estimation) inform large-scale chart performance strategies.  [oai_citation:42‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)
+[^streaming]: Scalable/real-time processing constraints (stream processing semantics + compilation approaches) motivate explicit windowing/update semantics for streaming charts.  [oai_citation:43‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)
+[^cookies]: Cookie scoping and related web security pitfalls motivate strict session boundary controls for client-shipped assets.  [oai_citation:44‡S-T programming Books.pdf](file-service://file-NT32tqqzGW9RvfcNZmMH1K)
+[^humanism]: Human-centered transparency/trust framing motivates explicit labeling of AI-derived visuals and uncertainty.  [oai_citation:45‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)
+
+<!--
+Legacy file citation markers mentioned elsewhere in this workspace (kept for cross-compat):
+-  [oai_citation:46‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ)
+-  [oai_citation:47‡U-X programming Books.pdf](file-service://file-3hYtSGHtHmb6wyTtavym6M)
+-  [oai_citation:48‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY)
+-  [oai_citation:49‡Database Performance at Scale.pdf](file-service://file-36z8qyiVJRtrSs6QG7Epen)
+-  [oai_citation:50‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+-  [oai_citation:51‡Archaeological 3D GIS_26_01_12_17_53_09.pdf](file-service://file-6DRx5ELzDPBso9Y5Qcbqm2)
+-->
