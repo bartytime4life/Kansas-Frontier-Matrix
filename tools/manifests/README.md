@@ -56,28 +56,28 @@ Think of a manifest as:
 Recommended structure (adjust to your repo conventions):
 
 ```text
-🧰 tools/
-  📦 manifests/
-    📄 README.md  ← you are here
-    📁 registry/          # registry/index files that power search & UI
-      └─ registry.yaml
-    📁 schemas/           # JSON Schema for validation (base + kinds)
-      ├─ base.schema.json
-      ├─ dataset.schema.json
-      ├─ layer.schema.json
-      ├─ pipeline.schema.json
-      ├─ model.schema.json
-      ├─ service.schema.json
-      └─ ui.schema.json
-    📁 templates/         # copy/paste starters
-      ├─ dataset.manifest.yaml
-      ├─ pipeline.manifest.yaml
-      └─ model.manifest.yaml
-    📁 examples/          # real manifests used by the project
-    📁 scripts/           # lint/index/graph tools (optional, but recommended)
-      ├─ manifest_lint.py
-      ├─ manifest_index.py
-      └─ manifest_graph.py
+tools/ 🧰
+└─ 📦 manifests/                  # governed manifests for datasets/models/pipelines/UI
+   ├─ 📁 registry/                # registry/index files that power search & UI
+   │  └─ 🗂️ registry.yaml         # canonical registry index
+   ├─ 📐 schemas/                 # JSON Schema for validation (base + kinds)
+   │  ├─ 📄 base.schema.json
+   │  ├─ 📄 dataset.schema.json
+   │  ├─ 📄 layer.schema.json
+   │  ├─ 📄 pipeline.schema.json
+   │  ├─ 📄 model.schema.json
+   │  ├─ 📄 service.schema.json
+   │  └─ 📄 ui.schema.json
+   ├─ 🧩 templates/               # copy/paste starters
+   │  ├─ 🧾 dataset.manifest.yaml
+   │  ├─ 🧾 pipeline.manifest.yaml
+   │  └─ 🧾 model.manifest.yaml
+   ├─ 🧪 examples/                # real manifests used by the project
+   ├─ 🛠️ scripts/                 # lint/index/graph tools (optional, recommended)
+   │  ├─ ✅ manifest_lint.py       # validate + fail-fast checks
+   │  ├─ 🗂️ manifest_index.py      # build/update registry index
+   │  └─ 🕸️ manifest_graph.py      # emit graph-ready views
+   └─ 📘 README.md                # you are here
 ```
 
 > [!TIP]
