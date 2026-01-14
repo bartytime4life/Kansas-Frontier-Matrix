@@ -464,20 +464,20 @@ cargo new crates/<your-crate-name> --bin
 
 ```text
 tools/rs/ 🦀
-├─ Cargo.toml                    # 🧰 workspace manifest
-├─ rust-toolchain.toml           # 🧷 pinned toolchain (recommended)
-├─ crates/                       # 📦 Rust crates live here
-│  ├─ kfm-cli/                   # 🧭 unified CLI (optional)
-│  ├─ kfm-prov/                  # 🧾 run records + manifests + hashing + IDs
-│  ├─ kfm-catalog/               # 🗂️ STAC/DCAT helpers + metadata validation
-│  ├─ kfm-geo/                   # 🌍 vector/raster utilities + conversions
-│  ├─ kfm-tiles/                 # 🧱 PMTiles/MBTiles/COG/tiling helpers
-│  ├─ kfm-stream/                # 🌊 sensor/event ingestion + windowing
-│  ├─ kfm-graph/                 # 🕸️ graph analytics helpers (optional)
-│  └─ kfm-sim/                   # 🧪 simulation + VVUQ helpers (optional)
-├─ fixtures/                     # 🧪 small test datasets (never huge)
-├─ schemas/                      # 📐 JSON schemas / contracts (optional, recommended)
-└─ README.md                     # 📘 you are here
+├─ 🧰 Cargo.toml                    # workspace manifest
+├─ 🧷 rust-toolchain.toml           # pinned toolchain (recommended)
+├─ 📦 crates/                       # Rust crates live here
+│  ├─ 🧭 kfm-cli/                   # unified CLI (optional)
+│  ├─ 🧾 kfm-prov/                  # run records + manifests + hashing + IDs
+│  ├─ 🗂️ kfm-catalog/               # STAC/DCAT helpers + metadata validation
+│  ├─ 🌍 kfm-geo/                   # vector/raster utilities + conversions
+│  ├─ 🧱 kfm-tiles/                 # PMTiles/MBTiles/COG/tiling helpers
+│  ├─ 🌊 kfm-stream/                # sensor/event ingestion + windowing
+│  ├─ 🕸️ kfm-graph/                 # graph analytics helpers (optional)
+│  └─ 🧪 kfm-sim/                   # simulation + VVUQ helpers (optional)
+├─ 🧪 fixtures/                     # small test datasets (never huge)
+├─ 📐 schemas/                      # JSON schemas / contracts (optional, recommended)
+└─ 📘 README.md                     # you are here
 ```
 
 ---
