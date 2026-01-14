@@ -40,14 +40,14 @@ KFM treats **data + metadata + provenance** as first-class citizens.
 
 ```mermaid
 flowchart LR
-  A[📦 Raw Sources] --> B[🧪 ETL + Normalization]
-  B --> C[🧾 Catalogs<br/>STAC + DCAT + PROV]
-  C --> P[🐘 Postgres/PostGIS<br/>indexes + spatial query]
-  C --> G[🕸️ Neo4j Graph<br/>relationships + refs]
-  P --> API[🔌 Governed API<br/>contracts + redaction]
+  A["📦 Raw Sources"] --> B["🧪 ETL + Normalization"]
+  B --> C["🧾 Catalogs<br/>STAC + DCAT + PROV"]
+  C --> P["🐘 Postgres/PostGIS<br/>indexes + spatial query"]
+  C --> G["🕸️ Neo4j Graph<br/>relationships + refs"]
+  P --> API["🔌 Governed API<br/>contracts + redaction"]
   G --> API
-  API --> UI[🗺️ Map UI<br/>React · MapLibre · (optional) Cesium]
-  UI --> N[🧠 Story Nodes / Focus Mode<br/>provenance-linked narrative]
+  API --> UI["🗺️ Map UI<br/>React · MapLibre · Cesium (optional)"]
+  UI --> N["🧠 Story Nodes / Focus Mode<br/>provenance-linked narrative"]
 ```
 
 ---
