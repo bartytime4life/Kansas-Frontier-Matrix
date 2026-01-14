@@ -233,12 +233,12 @@ Before committing a new/updated preview:
 
 ```mermaid
 flowchart LR
-  A[🧪 Seeded synthetic data] --> B[📦 Chart component / renderer]
-  B --> C[🖥️ Headless render]
-  C --> D[📸 Screenshot / export]
-  D --> E[🧼 Optimize (webp/png)]
-  E --> F[🧾 Manifest + provenance]
-  F --> G[✅ Commit + review]
+  A["🧪 Seeded synthetic data"] --> B["📦 Chart component / renderer"]
+  B --> C["🖥️ Headless render"]
+  C --> D["📸 Screenshot / export"]
+  D --> E["🧼 Optimize (webp/png)"]
+  E --> F["🧾 Manifest + provenance"]
+  F --> G["✅ Commit + review"]
 ```
 
 ---
