@@ -1,510 +1,414 @@
-# 🧪 Validation Toolkit
+# 🧪🗄️ DB Validation Toolkit
 
-![stage](https://img.shields.io/badge/stage-active-success)
-![quality-gate](https://img.shields.io/badge/quality-gate_required-critical)
-![policy](https://img.shields.io/badge/policy-OPA%20%2B%20Conftest-6f42c1)
-![stac](https://img.shields.io/badge/metadata-STAC-informational)
-![geo](https://img.shields.io/badge/geospatial-PostGIS%20%7C%20GDAL-orange)
-![stats](https://img.shields.io/badge/validation-stats%20%7C%20ML-blue)
-![security](https://img.shields.io/badge/security-defensive%20checks-important)
+![DB](https://img.shields.io/badge/DB-PostgreSQL%20%2B%20PostGIS-blue)
+![Scope](https://img.shields.io/badge/scope-schema%20%7C%20data%20%7C%20security%20%7C%20performance-purple)
+![CI](https://img.shields.io/badge/CI-quality%20gate-critical)
+![Output](https://img.shields.io/badge/reports-json%20%7C%20junit%20%7C%20markdown-informational)
 
-> ✅ **If it ships, it validates.**  
-> This folder defines the *quality gates* for Kansas Frontier Matrix (KFM) data, catalogs, models, simulations, databases, and UI outputs.
+> **Path:** `tools/validation/db/`  
+> Contract-first, provenance-first **database** quality gates for Kansas Frontier Matrix (KFM). ✅
 
 ---
 
-## 📌 What this folder is for
+## 🧭 TL;DR
 
-`tools/validation/` exists to make the KFM ecosystem **provably reliable**:
+- **Run DB checks** before merging, releasing, or ingesting new datasets.
+- Catch issues early: **schema drift**, **broken constraints**, **invalid geometries**, **missing provenance**, **unsafe privileges**, **perf regressions**.
+- Produce CI-friendly reports (JSON/JUnit/Markdown) with consistent **exit codes**.
 
-- 🧾 **Traceability**: every produced asset can be traced back to inputs + pipeline version + policy decisions.
-- 🧪 **Scientific rigor**: verification & validation (V&V), uncertainty thinking, reproducibility.
-- 🌎 **Geospatial correctness**: CRS, bbox/extent, topology, raster/vector integrity.
-- 🧠 **Model accountability**: regression/ML evaluation, drift detection, explainability artifacts.
-- 🛡️ **Security posture**: defensive scanning and safe-by-default checks.
-- 🧭 **Governance**: licensing, provenance, FAIR/CARE-aligned publishing, ethical constraints.
+> [!NOTE]
+> This folder focuses on **database-layer** validation. It complements higher-level validation (catalog/manifest checks, API contract checks, etc.).
 
 ---
 
-## 🧭 Table of contents
+## 🧩 Where this fits in the KFM pipeline
 
-- [⚡ Quickstart](#-quickstart)
-- [🧱 Validation layers](#-validation-layers)
-- [🗂️ Directory map](#-directory-map)
-- [🛰️ STAC and catalog QA](#-stac-and-catalog-qa)
-- [🌍 Geospatial validation](#-geospatial-validation)
-- [📈 Statistics and ML validation](#-statistics-and-ml-validation)
-- [🧮 Modeling and simulation V&V](#-modeling-and-simulation-vv)
-- [🗃️ Data engineering and database validation](#-data-engineering-and-database-validation)
-- [🖥️ Web UI and 3D visualization validation](#-web-ui-and-3d-visualization-validation)
-- [🔐 Security validation](#-security-validation)
-- [📜 Governance and ethics checks](#-governance-and-ethics-checks)
-- [🧩 Adding a new validator](#-adding-a-new-validator)
-- [📦 Artifacts and reporting](#-artifacts-and-reporting)
-- [🗺️ Reference library used by this folder](#-reference-library-used-by-this-folder)
+KFM is designed around **contract-first** + **provenance-first** delivery. DB validation is one of the “hard stops” that prevents silent data drift from reaching the UI, analytics, or narratives.
+
+```mermaid
+flowchart LR
+  A[📥 Raw Sources] --> B[🧰 Ingest / ETL]
+  B --> C[(🗄️ Postgres/PostGIS)]
+  C --> D[🧪 tools/validation/db]
+  D -->|pass ✅| E[📡 API / Services]
+  D -->|fail ❌| F[🧯 Block CI / Release]
+  E --> G[🗺️ UI / WebGL / Maps]
+  E --> H[📊 Analytics / Models]
+```
 
 ---
 
-## ⚡ Quickstart
+## ✅ What gets validated
 
-Run validations from the **repo root**.
+### 1) 🧱 Schema & Migration Integrity
+- Required extensions installed (e.g., PostGIS)
+- Expected schemas/tables/views exist
+- Column types match contracts (no accidental `text` vs `uuid` drift)
+- Primary keys / foreign keys present and enforceable
+- “No surprise” DDL changes (detected via schema snapshot)
 
-### Option A: Make targets
+### 2) 🔗 Relational Integrity
+- PK uniqueness (no duplicate IDs)
+- FK referential integrity (no orphan rows)
+- `NOT NULL` expectations honored
+- Domain constraints (enumerations, ranges, regex rules)
+- Deduplication rules (canonical uniqueness constraints)
+
+### 3) 🧬 Provenance & Metadata Completeness
+- Every “published” record is traceable to a **source** and an **ingest run**
+- Required lineage fields populated (`source_id`, `ingested_at`, `license`, etc.)
+- Dataset/collection identifiers are stable and present
+- Optional governance fields present where applicable (classification, consent, retention)
+
+### 4) 🌍 Geospatial Validity (PostGIS)
+- Geometry validity (e.g., `ST_IsValid`)
+- Consistent SRID / coordinate reference system expectations
+- Bounding boxes inside expected world/region envelopes
+- Topology checks for specific layers (no self-intersections, overlaps, etc.)
+- Raster policy enforcement: **store footprints + metadata** instead of stuffing huge rasters into DB
+
+### 5) 🛡️ Security & Access Controls
+- Least privilege for application roles
+- No accidental `PUBLIC` grants on sensitive schemas
+- Default privileges sane for new tables
+- Optional: RLS policies enabled where required
+- Sensitive columns labeled/guarded (depending on KFM governance tier)
+
+### 6) ⚡ Performance & Operational Guardrails
+- Missing index detection for critical access paths
+- Table/index bloat warnings (threshold-based)
+- Query plan sanity checks for “golden queries”
+- Backup/restore smoke tests (where safe to run)
+- Replication/connection pool sanity (if applicable in environment)
+
+---
+
+## 🚀 Quickstart
+
+> [!TIP]
+> In CI, run **core + security + geospatial** at minimum. Add **performance** checks on nightly / release branches.
+
+### 0) Set your DB connection
 
 ```bash
-make validate
-make validate-stac
-make validate-geo
-make validate-stats
-make validate-ml
+export DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DBNAME"
+# Optional:
+export DB_SCHEMA="public"
+export KFM_ENV="dev"   # dev|ci|staging|prod
+```
+
+### 1) Run the validator
+
+Pick the runner style that matches your repo wiring:
+
+#### Option A — Python module runner (recommended pattern)
+```bash
+python -m tools.validation.db validate \
+  --packs core,geospatial,security \
+  --format pretty
+```
+
+#### Option B — Make target wrapper (if present)
+```bash
 make validate-db
-make validate-web
-make validate-security
 ```
 
-### Option B: Python module entrypoint
-
+#### Option C — Docker Compose (if your services run in containers)
 ```bash
-python -m tools.validation all
-python -m tools.validation stac ./data/catalog
-python -m tools.validation geo  ./data/derived
+docker compose run --rm api \
+  python -m tools.validation.db validate --packs core,geospatial
 ```
-
-### Option C: CI lanes only
-
-```bash
-# run only checks that are mandatory for merge
-python -m tools.validation ci
-```
-
-> 🧠 **Design rule:** every validator must run locally *and* in CI with identical semantics.
 
 ---
 
-## 🧱 Validation layers
+## ⚙️ Configuration
 
-KFM validation is deliberately **layered** so failures are fast, actionable, and auditable:
+### Environment variables
 
-1. 🧹 **Lint & Type**  
-   Formatting, static analysis, typing, doc lint.
-2. 📐 **Schema**  
-   JSON Schema, STAC JSON Schema, DCAT/metadata schema, telemetry schema.
-3. 🧩 **Policy as code**  
-   OPA/Conftest rules (what we *allow* to ship).
-4. 🛰️ **Catalog integrity**  
-   STAC relationships, links, collections, paging, provenance chains.
-5. 🌍 **Geospatial integrity**  
-   CRS, extents, topology, raster metadata, no silent reprojection.
-6. 📈 **Stats & Drift**  
-   sanity checks, distributions, regression diagnostics, anomaly detection.
-7. 🧠 **ML evaluation**  
-   baselines, cross-validation, calibration, fairness flags, reproducibility.
-8. 🧮 **Modeling & simulation V&V**  
-   numerical checks, conservation checks, UQ, sensitivity.
-9. 🗃️ **DB & performance**  
-   constraints, migrations, query plans, scalability smoke tests.
-10. 🖥️ **UI & viz**  
-   accessibility, responsive behavior, WebGL stability, visual regression.
-11. 🔐 **Security**  
-   dependency scanning, secrets, SBOM, config hardening checks.
-12. 📜 **Governance**  
-   licenses, provenance, human-centered constraints, publish readiness.
+| Variable | Purpose | Example |
+|---|---|---|
+| `DATABASE_URL` | Connection string | `postgresql://...` |
+| `DB_SCHEMA` | Target schema(s) | `public` |
+| `KFM_ENV` | Enables env-specific thresholds | `ci` |
+| `VALIDATION_PACKS` | Default packs if CLI omits | `core,security` |
+| `VALIDATION_STRICT` | Treat warnings as failures | `1` |
+
+### Profiles & thresholds
+
+Recommended: store profiles in `tools/validation/db/config/`:
+
+- `dev.yml` → relaxed thresholds, verbose output
+- `ci.yml` → strict correctness checks, minimal logs
+- `staging.yml` → adds backup/restore + perf smoke tests
+- `prod.yml` → read-only checks unless explicitly allowed
 
 ---
 
-## 🗂️ Directory map
+## 📦 Check packs
 
-> 🧩 This is the recommended layout. Adjust to match the repo, but keep the *conceptual lanes*.
+| Pack | Purpose | Typical severity |
+|---|---|---|
+| `core` | schema + constraints + invariants | ❌ blocker/error |
+| `geospatial` | PostGIS validity + SRID + topology | ❌ blocker/error |
+| `provenance` | lineage + metadata completeness | ❌ error / ⚠️ warn |
+| `security` | grants + roles + default privileges | ❌ blocker/error |
+| `performance` | index coverage + regression heuristics | ⚠️ warn / ❌ error (release) |
+| `simulation` | reproducibility + run metadata + UQ fields | ⚠️ warn / ❌ error (publish) |
+| `stats` | distribution sanity + drift + missingness | ⚠️ warn |
+
+> [!IMPORTANT]
+> Packs are meant to be composable: start small, add domain checks as datasets mature.
+
+---
+
+## 📁 Folder layout (expected)
 
 ```text
-🧰 tools/validation/
-├─ 📄 README.md                         👈 you are here
-├─ 🧾 manifest.yml                      🧾 single source of truth for validators
-├─ 🏃 runners/
-│  ├─ 🏁 run_all.py                     🏁 orchestrator (local + CI)
-│  ├─ 🛣️ run_lane.py                    🛣️ run one lane by name
-│  └─ 📦 report.py                      📦 unify outputs into artifacts
-├─ 🛰️ stac/
-│  ├─ 🛰️ catalog_qa.py                  🛰️ fast STAC static checks
-│  ├─ 📐 jsonschema_validate.py         📐 schema-based validation
-│  └─ 🧪 fixtures/                      🧪 minimal reproducible catalogs
-├─ 🧩 policy/
-│  ├─ 🧩 stac_provenance.rego           🧩 required fields, provenance rules
-│  ├─ ⚙️ faircare.rego                  ⚙️ sensitive-layer governance
-│  └─ 📘 conftest.md                    📘 how to run policy gates
-├─ 🌍 geo/
-│  ├─ 🧭 check_crs.py                   🧭 CRS & axis sanity checks
-│  ├─ 📦 check_bbox.py                  📦 bbox/extent correctness
-│  ├─ 🧱 check_geometries.py            🧱 topology/validity checks
-│  └─ 🗺️ check_rasters.py               🗺️ raster metadata + nodata + tiling
-├─ 📈 stats/
-│  ├─ 📈 drift_checks.py                📈 distribution + drift
-│  ├─ 📉 regression_diagnostics.py      📉 residuals, leverage, outliers
-│  └─ 📊 eda_report.R                   📊 optional R-based visual EDA report
-├─ 🤖 ml/
-│  ├─ 🧠 eval_baselines.py              🧠 metrics + baselines
-│  ├─ 🎯 calibration.py                 🎯 calibration + uncertainty
-│  └─ 🪪 model_card_check.py            🪪 model card completeness gate
-├─ 🧮 sim/
-│  ├─ 🧮 invariants.py                  🧮 conservation / invariants
-│  ├─ 📐 convergence.py                 📐 grid/time-step convergence
-│  └─ 🌫️ uq.py                          🌫️ uncertainty quantification helpers
-├─ 🗃️ db/
-│  ├─ 🗃️ constraints.sql                🗃️ constraints & invariants
-│  ├─ 🌎 postgis_checks.sql             🌎 geometry validity & SRID checks
-│  └─ ⚡ explain_guard.py               ⚡ query plan smoke tests
-├─ 🖥️ web/
-│  ├─ 💡 lighthouse_ci/                 💡 performance + accessibility
-│  ├─ 🖼️ visual_regression/             🖼️ map layer snapshots
-│  └─ 🎮 webgl_smoke/                   🎮 context + capability checks
-├─ 🔐 security/
-│  ├─ 🔎 secrets_scan.yml               🔎 secrets policy
-│  ├─ 📦 sbom_check.py                  📦 SBOM presence & diffs
-│  └─ 🧷 dependency_audit.py            🧷 dependency health checks
-└─ 📦 artifacts/
-   └─ 📌 .gitkeep                        📦 CI writes reports here
+tools/validation/db/
+├── 📘 README.md
+├── 🧠 runner/                 # orchestration (python/ts/etc.)
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── engine.py
+│   └── reporters/
+├── ✅ checks/
+│   ├── core/
+│   ├── geospatial/
+│   ├── provenance/
+│   ├── security/
+│   ├── performance/
+│   ├── simulation/
+│   └── stats/
+├── 🧾 sql/                    # raw SQL checks (optional)
+├── ⚙️ config/                 # profiles, thresholds, allowlists
+└── 🧪 fixtures/               # tiny seed DBs / snapshots for tests
 ```
+
+> If your repo uses a different layout, keep the **concepts** the same:
+> checks are modular, declarative where possible, and CI-friendly.
 
 ---
 
-## 🛰️ STAC and catalog QA
+## 🧾 Output format
 
-KFM treats the catalog as a **product**: if the catalog lies, the UI lies.
-
-### ✅ What we validate for STAC
-
-- **Schema correctness**: STAC version alignment, item/collection/catalog schema validity.
-- **Extensions**: required STAC extensions present (e.g., projection when we publish geospatial assets).
-- **Provenance**: explicit “derived from” relationships and version tagging.
-- **Links**: hrefs resolve, rel types are correct, no circular loops unless explicitly allowed.
-- **Providers & license**: publishing posture is explicit.
-
-### Example required fields pattern
-
+### JSON (machine-friendly)
+Example record:
 ```json
 {
-  "stac_version": "1.0.0",
-  "stac_extensions": [
-    "https://stac-extensions.github.io/projection/v2.0.0/schema.json"
-  ],
-  "properties": {
-    "kfm:mdp_version": "v11.2.6",
-    "proj:epsg": 4326
-  },
-  "providers": [
-    { "name": "Kansas Frontier Matrix", "roles": ["processor"] }
-  ],
-  "license": "CC-BY 4.0",
-  "links": [
-    {
-      "rel": "derived_from",
-      "href": "stac://raw/source_asset_01",
-      "type": "application/json",
-      "title": "Provenance chain"
-    }
-  ]
+  "id": "geospatial.geom_valid",
+  "pack": "geospatial",
+  "severity": "error",
+  "status": "fail",
+  "summary": "Found 12 invalid geometries in public.parcels",
+  "evidence": {
+    "table": "public.parcels",
+    "invalid_count": 12,
+    "sample_ids": ["..."]
+  }
 }
 ```
 
-### Policy gate with OPA and Conftest
+### JUnit (CI-friendly)
+- Each check becomes a testcase.
+- Any `error`/`blocker` failure fails the suite.
 
-Use policy as code to enforce **non-negotiables**:
+### Markdown (human-friendly)
+- Great for PR comments and audit trails.
 
-```bash
-conftest test ./data/catalog \
-  --policy tools/validation/policy \
-  --namespace kfm
+---
+
+## 🚦 Exit codes & CI behavior
+
+| Code | Meaning |
+|---:|---|
+| `0` | All checks passed (or only allowed warnings) ✅ |
+| `1` | At least one check failed ❌ |
+| `2` | Misconfiguration / cannot connect to DB 🧯 |
+
+Recommended gating rule:
+- `blocker` + `error` → **fail CI**
+- `warn` → fail only under `--strict` or in release workflows
+
+---
+
+## ➕ Adding a new DB check
+
+### ✅ Design rules
+- **Deterministic:** same DB state ⇒ same result
+- **Fast by default:** avoid full scans unless behind a flag
+- **Actionable output:** include table/column and sample IDs
+- **Safe:** prefer read-only queries; guard any write tests behind `--allow-writes`
+
+### Suggested check contract (declarative)
+Create a file like:
+- `checks/geospatial/geom_valid.yml`
+- `sql/geospatial/geom_valid.sql`
+
+`geom_valid.yml`:
+```yaml
+id: geospatial.geom_valid
+pack: geospatial
+severity: error
+description: "All geometries must be ST_IsValid()"
+sql: sql/geospatial/geom_valid.sql
+expect:
+  fail_if_rows_gt: 0
 ```
 
-> 🧩 Policies should be small, composable, and written like contracts.
-
-### `catalog_qa.py` fast checks
-
-This lane is your “lint for STAC”:
-
-- Missing required keys (`stac_version`, `stac_extensions`, `providers`, `license`)
-- Broken `href` targets
-- Provenance gaps (`derived_from` absent where expected)
-- Version mismatches (`kfm:mdp_version`)
-- Duplicate IDs, orphan items, invalid rels
-
----
-
-## 🌍 Geospatial validation
-
-Geospatial validation is split into **format**, **geometry**, and **meaning**:
-
-### ✅ Format and metadata
-
-- Raster:
-  - CRS defined and consistent
-  - nodata present and sane
-  - tiling and overviews for web delivery when required
-- Vector:
-  - valid geometries (no self-intersections, no NaNs)
-  - SRID set and consistent
-  - attributes schema stable
-
-### ✅ Spatial integrity
-
-- bbox matches geometry/raster extent
-- no accidental axis flips
-- reprojection performed deliberately (and recorded)
-- tolerances documented (meters vs degrees)
-
-### ✅ Cartographic integrity
-
-Map design and legend correctness are treated as validation targets:
-
-- legend keys exist for every layer class
-- ramps are consistent across versions
-- accessibility constraints (contrast, colorblind safety) are checked in UI snapshot tests
-
----
-
-## 📈 Statistics and ML validation
-
-### Statistical sanity checks
-
-- distribution checks (range, missingness, spikes)
-- drift detection between releases
-- outlier audit trails (why a point is extreme)
-
-### Regression diagnostics
-
-- residual behavior checks
-- leverage & influence
-- multicollinearity flags
-- train/test leakage detectors
-
-### Bayesian checks
-
-- posterior predictive checks
-- calibration diagnostics
-- uncertainty reporting requirements (when the UI shows “confidence”)
-
-### Deep learning checks
-
-- learning curve artifacts
-- overfitting detection gates
-- reproducibility checks (seeds, deterministic ops when feasible)
-
----
-
-## 🧮 Modeling and simulation V&V
-
-We follow a NASA-grade mindset:
-
-- ✅ **Code verification**: “did we implement the equations right?”
-- ✅ **Solution verification**: “did we solve the equations accurately?”
-- ✅ **Validation**: “does the model match reality for the intended use?”
-- 🌫️ **Uncertainty quantification**: “how wrong might we be, and why?”
-
-Suggested checks:
-
-- invariants and conservation laws
-- mesh/time-step convergence
-- sensitivity analysis
-- benchmark problems (known analytic/empirical references)
-
----
-
-## 🗃️ Data engineering and database validation
-
-### PostgreSQL and PostGIS
-
-- constraints are enforced (NOT NULL, FK, CHECK)
-- geometry validity enforced in DB
-- SRID constraints checked in SQL
-- migration safety checks (no destructive changes without flags)
-
-### Scalability and performance
-
-- benchmark queries (representative workloads)
-- plan regressions (EXPLAIN guardrails)
-- streaming and incremental workloads where relevant
-
-### Data spaces mindset
-
-When data is federated, validation must travel with it:
-
-- interoperability checks (contracts, schemas, semantics)
-- trust checks (provenance, policy compliance)
-- governance checks (usage controls, licensing posture)
-
----
-
-## 🖥️ Web UI and 3D visualization validation
-
-### Responsive and accessibility
-
-- responsive breakpoints don’t break map usability
-- keyboard navigation works
-- ARIA labels exist for core controls
-- map legends are readable and consistent
-
-### WebGL stability
-
-- context creation smoke tests
-- capability detection
-- crash regression tests on shader changes
-- performance budgets for critical scenes
-
-### Visual regression testing
-
-This is *mandatory* for map-heavy products:
-
-- layer snapshots pinned per release
-- legend snapshots pinned per release
-- tolerance-based image diffs
-- “semantic diffs” for vector symbology when possible
-
----
-
-## 🔐 Security validation
-
-Defensive checks only ✅
-
-- secrets scanning (keys, tokens, credentials)
-- dependency audits (known vulnerable versions)
-- SBOM required for release artifacts
-- config sanity checks (CORS, CSP, headers)
-
-> 🛡️ **Important:** we do not ship offensive security tooling in this folder.  
-> Use security references for defensive hardening and awareness.
-
----
-
-## 📜 Governance and ethics checks
-
-These checks exist because KFM is **not** just a codebase—it’s a public-facing research tool.
-
-- license presence and correctness
-- provenance chain completeness
-- “sensitive layer” publishing rules
-- FAIR/CARE-aligned posture (especially for hydrology and culturally sensitive content)
-- AI governance checks (model cards, dataset cards, limitations, non-alert disclaimers)
-
----
-
-## 🧩 Adding a new validator
-
-A validator is considered “KFM-grade” when it has:
-
-- ✅ deterministic behavior
-- ✅ clear input contract (what it consumes)
-- ✅ explicit output artifacts (what evidence it produces)
-- ✅ an exit code contract (pass/fail/warn)
-- ✅ a CI lane mapping (where it runs)
-
-### Checklist
-
-- [ ] Add your validator under the appropriate lane folder  
-- [ ] Register it in `tools/validation/manifest.yml`  
-- [ ] Ensure it writes artifacts under `tools/validation/artifacts/<validator-name>/`  
-- [ ] Provide at least one fixture in `fixtures/`  
-- [ ] Add it to CI lane runner  
-- [ ] Document it in this README (one paragraph + example run)
-
----
-
-## 📦 Artifacts and reporting
-
-All validators should emit:
-
-- `report.json` (machine-readable)
-- `report.md` (human-readable summary)
-- `junit.xml` (CI-friendly)
-- optional: plots, snapshots, diffs, notebook exports
-
-Recommended folder pattern:
-
-```text
-tools/validation/artifacts/
-└─ <lane>/
-   └─ <check>/
-      ├─ report.json
-      ├─ report.md
-      ├─ junit.xml
-      └─ extras/
+`geom_valid.sql`:
+```sql
+SELECT id
+FROM public.parcels
+WHERE geom IS NOT NULL
+  AND NOT ST_IsValid(geom)
+LIMIT 50;
 ```
 
----
-
-## 🗺️ Reference library used by this folder
-
-This validation suite is intentionally grounded in the project’s internal reference library 📚  
-These files inform *how we define correctness* across science, geospatial, UI, security, and governance.
-
-### Core KFM documents
-
-- `Kansas Frontier Matrix (KFM) – Comprehensive Engineering Design.docx` 🏗️
-- `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` 🗺️
-- `Latest Ideas.docx` 💡
-- `Other Ideas.docx` 🧾
-
-### Modeling, simulation, and math
-
-- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` 🚀
-- `Generalized Topology Optimization for Structural Design.pdf` 🧱
-- `Spectral Geometry of Graphs.pdf` 🧠
-
-### Statistics, experiment design, and ML
-
-- `Understanding Statistics & Experimental Design.pdf` 🧪
-- `regression-analysis-with-python.pdf` 📉
-- `Regression analysis using Python - slides-linear-regression.pdf` 🎓
-- `think-bayes-bayesian-statistics-in-python.pdf` 🎲
-- `graphical-data-analysis-with-r.pdf` 📊
-- `Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` 🤖
-
-### Geospatial, cartography, and remote sensing
-
-- `python-geospatial-analysis-cookbook.pdf` 🌎
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf` 🎨
-- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` 📱
-- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` 🛰️
-
-### Data management and databases
-
-- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` 🗃️
-- `Scalable Data Management for Future Hardware.pdf` ⚡
-- `Data Spaces.pdf` 🧩
-
-### Web, visualization, and media formats
-
-- `responsive-web-design-with-html5-and-css3.pdf` 🧱
-- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` 🎮
-- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` 🖼️
-
-### Concurrency, distributed systems, and software practice
-
-- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` 🧵
-- `A programming Books.pdf` 🧰
-- `B-C programming Books.pdf` 🧰
-- `D-E programming Books.pdf` 🧰
-- `F-H programming Books.pdf` 🧰
-- `I-L programming Books.pdf` 🧰
-- `M-N programming Books.pdf` 🧰
-- `O-R programming Books.pdf` 🧰
-- `S-T programming Books.pdf` 🧰
-- `U-X programming Books.pdf` 🧰
-
-### Governance, law, and human-centered constraints
-
-- `Introduction to Digital Humanism.pdf` 🤝
-- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` ⚖️
-- `Principles of Biological Autonomy - book_9780262381833.pdf` 🧬
-
-### Security references
-
-- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` 🛡️
-- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` ⚠️ *(defensive awareness only)*
+> [!TIP]
+> Store “why this check exists” right next to the check (short + direct). Future you will thank you. 🙏
 
 ---
 
-<div align="center">
+## 🌍 PostGIS validation patterns (grab bag)
 
-**KFM Validation Toolkit** · 🧪 Evidence-driven · 🛰️ Catalog-first · 🌎 Geo-correct · 🔐 Defensive  
-</div>
+Use these patterns to build checks:
 
+- Validity: `ST_IsValid(geom)`
+- SRID: `ST_SRID(geom) = 4326` (or your canonical SRID)
+- Intersections / containment: `ST_Intersects`, `ST_Within`
+- Reprojection: `ST_Transform`
+- Buffers: `ST_Buffer` (use carefully; it can be expensive)
+
+---
+
+## 🔐 Security validation patterns (PostgreSQL)
+
+Common checks:
+- Ensure `PUBLIC` doesn’t have broad privileges on schemas/tables.
+- Ensure default privileges are explicit.
+- Ensure app role has only what it needs.
+
+---
+
+## 🧪 Simulation & model-result validation (optional but recommended)
+
+If the DB stores simulation/model outputs:
+- Every run should be traceable to:
+  - code version / commit hash
+  - input dataset versions
+  - parameter set ID
+  - random seed(s) if stochastic
+- Store **uncertainty quantification (UQ)** fields where relevant (CI for “publishable” runs).
+- Validate required run metadata before results become “published”.
+
+---
+
+## 🧯 Troubleshooting
+
+<details>
+<summary>🔌 “Cannot connect to database”</summary>
+
+- Confirm `DATABASE_URL` is set and reachable.
+- Confirm SSL requirements (if any).
+- Confirm network access from CI runner / container.
+
+</details>
+
+<details>
+<summary>🧩 “PostGIS functions missing”</summary>
+
+- Ensure PostGIS extension is installed in the target DB:
+  - `CREATE EXTENSION postgis;` (admin only)
+- Ensure your validation user can `SELECT` from `geometry_columns` / `spatial_ref_sys` if needed.
+
+</details>
+
+<details>
+<summary>🐢 “Checks are slow”</summary>
+
+- Move expensive checks into the `performance` pack.
+- Add sampling / `LIMIT` and evidence queries.
+- Add indexes (and validate their existence to prevent regressions).
+
+</details>
+
+---
+
+## 📚 Project reference library (why these checks exist)
+
+<details>
+<summary>📖 Show project files that inform DB validation</summary>
+
+### 🧠 Core architecture & documentation
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
+- `MARKDOWN_GUIDE_v13.md.gdoc`
+
+### 🗄️ Databases & performance
+- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
+- `Database Performance at Scale.pdf`
+- `Scalable Data Management for Future Hardware.pdf`
+- `Data Spaces.pdf`
+
+### 🌍 Geospatial, GIS, cartography, remote sensing
+- `python-geospatial-analysis-cookbook.pdf`
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `Archaeological 3D GIS_26_01_12_17_53_09.pdf`
+
+### 🧪 Modeling, simulation, statistics, ML
+- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
+- `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf`
+- `Understanding Statistics & Experimental Design.pdf`
+- `regression-analysis-with-python.pdf`
+- `Regression analysis using Python - slides-linear-regression.pdf`
+- `think-bayes-bayesian-statistics-in-python.pdf`
+- `graphical-data-analysis-with-r.pdf`
+- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` *(library reference)*
+
+### 🕸️ Graphs & optimization
+- `Spectral Geometry of Graphs.pdf`
+- `Generalized Topology Optimization for Structural Design.pdf`
+
+### 🔐 Security mindset (defensive use)
+- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
+- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
+
+### 🧑‍⚖️ Governance, law, human factors
+- `Introduction to Digital Humanism.pdf`
+- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
+- `Principles of Biological Autonomy - book_9780262381833.pdf`
+
+### 🧰 Build & UI references (supporting ecosystem)
+- `responsive-web-design-with-html5-and-css3.pdf`
+- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
+
+### 📦 Programming compendiums (general reference shelf)
+- `A programming Books.pdf`
+- `B-C programming Books.pdf`
+- `D-E programming Books.pdf`
+- `F-H programming Books.pdf`
+- `I-L programming Books.pdf`
+- `M-N programming Books.pdf`
+- `O-R programming Books.pdf`
+- `S-T programming Books.pdf`
+- `U-X programming Books.pdf`
+
+</details>
+
+---
+
+## ✅ Definition of Done (for DB validation work)
+
+A DB validation change is “done” when:
+- [ ] New checks have clear IDs, severity, and pack ownership
+- [ ] Checks are deterministic + safe by default
+- [ ] CI runs them (or they’re explicitly gated behind a profile)
+- [ ] Failures include actionable evidence (table, column, sample IDs)
+- [ ] Docs updated (this README + check-local docs if needed)
+
+---
+
+⬅️ Back: `../README.md` (tools/validation)  
+🏠 Repo root: `../../../README.md`
