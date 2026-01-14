@@ -85,28 +85,28 @@ docs/standards/
 > This is the “shape” we target. Adjust filenames as tooling lands.
 
 ```text
-tools/prov/
-├─ README.md                       ✅ you are here
-├─ schemas/                        🧬 JSON Schemas for KFM PROV/STAC/DCAT extensions
-│  ├─ kfm_prov_profile.schema.json
-│  └─ kfm_contract.schema.json
-├─ cli/                            🖥️  developer-facing entrypoints
-│  └─ prov.py
-├─ core/                           🧱 provenance primitives (IDs, hashing, bundles)
-│  ├─ ids.py
-│  ├─ hashing.py
-│  └─ bundle.py
-├─ emit/                           🧾 emitters (PROV JSON-LD, STAC/DCAT cross-links)
-│  ├─ emit_prov_jsonld.py
-│  ├─ link_stac_dcat_prov.py
-│  └─ emit_attribution_report.py
-├─ validate/                       🧪 validators (schemas, hashes, link integrity)
-│  ├─ validate_contracts.py
-│  ├─ validate_prov.py
-│  └─ validate_crosslinks.py
-└─ examples/                       📦 minimal examples + golden files for CI tests
-   ├─ prov_bundle_example.jsonld
-   └─ dataset_contract_example.json
+🧾 tools/prov/
+├─ 📄 README.md                          ✅ you are here
+├─ 🧬 schemas/                           📐 JSON Schemas for KFM PROV/STAC/DCAT extensions
+│  ├─ 🧾 kfm_prov_profile.schema.json
+│  └─ 🧾 kfm_contract.schema.json
+├─ 🖥️ cli/                               ⌨️ Developer-facing entrypoints
+│  └─ 🐍 prov.py
+├─ 🧱 core/                              🧩 Provenance primitives (IDs, hashing, bundles)
+│  ├─ 🆔 ids.py
+│  ├─ 🔐 hashing.py
+│  └─ 📦 bundle.py
+├─ 🧾 emit/                              🪄 Emitters (PROV JSON-LD, STAC/DCAT cross-links)
+│  ├─ 🧾 emit_prov_jsonld.py
+│  ├─ 🔗 link_stac_dcat_prov.py
+│  └─ 🧾 emit_attribution_report.py
+├─ 🧪 validate/                          ✅ Validators (schemas, hashes, link integrity)
+│  ├─ 📜 validate_contracts.py
+│  ├─ 🧬 validate_prov.py
+│  └─ 🔎 validate_crosslinks.py
+└─ 📦 examples/                          🧷 Minimal examples + golden files for CI tests
+   ├─ 🧾 prov_bundle_example.jsonld
+   └─ 🧾 dataset_contract_example.json
 ```
 
 ---
