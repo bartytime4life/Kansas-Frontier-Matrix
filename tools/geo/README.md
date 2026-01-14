@@ -76,42 +76,35 @@ flowchart LR
 > If the folder already exists with different filenames, keep the *roles* — rename later.
 
 ```text
-tools/geo/
-  README.md
-
-  📦 core/
-    crs.py                # CRS normalization + transform helpers
-    extent.py             # bbox / polygon extents, temporal extents
-    units.py              # meters/feet conversions, safe distance ops
-
-  🧭 vector/
-    validate.py           # ST_IsValid patterns, fixups, QA reports
-    ops.py                # dissolve, clip, simplify, overlay
-    tiles.py              # vector tile prep (simplify-by-zoom, etc.)
-
-  🛰️ raster/
-    cog.py                # GeoTIFF -> COG, overviews, compression presets
-    stats.py              # zonal stats, histograms, QA summaries
-    tiles.py              # raster tiling / MBTiles helpers
-
-  🗃️ db/
-    postgis.py            # connect, schema mgmt, load/export recipes
-    sql/                  # versioned SQL snippets (safe, parameterized)
-
-  🗂️ catalog/
-    contract.py           # dataset contract model
-    stac.py               # STAC item/collection builder helpers
-    prov.py               # provenance manifests (inputs/steps/outputs)
-    qa.py                 # catalog_qa runner helpers
-
-  🌍 remote_sensing/
-    gee.py                # Earth Engine adapter + export patterns
-    indices.py            # NDVI/NDWI/etc calculators (where appropriate)
-
-  🧪 tests/
-    test_crs.py
-    test_validate.py
-    test_stac.py
+tools/geo/ 🌍
+├─ 📦 core/                       # CRS + extents + units
+│  ├─ 🧭 crs.py                   # CRS normalization + transform helpers
+│  ├─ 📍 extent.py                # bbox / polygon extents, temporal extents
+│  └─ 📏 units.py                 # meters/feet conversions, safe distance ops
+├─ 🧭 vector/                     # vector QA + ops + tiling
+│  ├─ ✅ validate.py              # ST_IsValid patterns, fixups, QA reports
+│  ├─ 🧰 ops.py                   # dissolve, clip, simplify, overlay
+│  └─ 🧱 tiles.py                 # vector tile prep (simplify-by-zoom, etc.)
+├─ 🛰️ raster/                     # COG + stats + tiling
+│  ├─ 🗜️ cog.py                   # GeoTIFF -> COG, overviews, compression presets
+│  ├─ 📊 stats.py                 # zonal stats, histograms, QA summaries
+│  └─ 🧱 tiles.py                 # raster tiling / MBTiles helpers
+├─ 🗃️ db/                         # PostGIS integration + SQL snippets
+│  ├─ 🐘 postgis.py               # connect, schema mgmt, load/export recipes
+│  └─ 🧾 sql/                     # versioned SQL snippets (safe, parameterized)
+├─ 🗂️ catalog/                    # dataset contracts + STAC/PROV helpers + QA
+│  ├─ 🧾 contract.py              # dataset contract model
+│  ├─ 🛰️ stac.py                  # STAC item/collection builder helpers
+│  ├─ 🧬 prov.py                  # provenance manifests (inputs/steps/outputs)
+│  └─ ✅ qa.py                    # catalog_qa runner helpers
+├─ 🌍 remote_sensing/             # Earth Engine adapters + index calculators
+│  ├─ 🛰️ gee.py                   # Earth Engine adapter + export patterns
+│  └─ 📈 indices.py               # NDVI/NDWI/etc calculators (where appropriate)
+├─ 🧪 tests/                      # unit tests (fast, deterministic)
+│  ├─ 🧪 test_crs.py
+│  ├─ 🧪 test_validate.py
+│  └─ 🧪 test_stac.py
+└─ 📘 README.md                   # you are here
 ```
 
 ---
