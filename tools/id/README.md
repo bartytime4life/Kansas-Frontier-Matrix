@@ -312,14 +312,14 @@ Store provenance as explicit, inspectable metadata:
 ## 🗂️ Suggested folder layout
 
 ```text
-🧰 tools/
-  🆔 id/
-    README.md
-    src/
-      ts/        # frontend + node usage
-      py/        # pipelines + backend usage
-    tests/
-    fixtures/
+tools/ 🧰
+└─ 🆔 id/                         # identity + IDs toolkit
+   ├─ 📦 src/                     # source implementations
+   │  ├─ 🟦 ts/                   # frontend + node usage
+   │  └─ 🐍 py/                   # pipelines + backend usage
+   ├─ ✅ tests/                   # unit/integration tests
+   ├─ 🧪 fixtures/                # test data + golden outputs
+   └─ 📘 README.md                # you are here
 ```
 
 ---
