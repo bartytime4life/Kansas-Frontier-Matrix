@@ -95,27 +95,28 @@ flowchart LR
 
 ```text
 tools/graph/ 🕸️
-├─ README.md 📘 (you are here)
-├─ pyproject.toml 🧰 / requirements.txt 🧰
-├─ kfm_graph/ 🐍
-│  ├─ __init__.py 🧩
-│  ├─ config.py 🔧 env + settings
-│  ├─ contracts/ 🧾 contract parsing + validation
-│  ├─ extract/ 🧲 entity extraction (docs, tables, GIS)
-│  ├─ resolve/ 🧠 entity resolution + dedupe
-│  ├─ model/ 🧩 labels, rel types, property schemas
-│  ├─ load/ 🚚 Neo4j upserts + batching
-│  ├─ provenance/ 🧬 PROV graph + lineage utilities
-│  ├─ export/ 📤 GraphML/CSV/JSON/GeoJSON exports
-│  └─ analytics/ 📈 centrality, communities, spectral tools
-├─ queries/ 🗃️
-│  ├─ cypher/ 🟩 saved Cypher queries
-│  └─ graphql/ 🟪 saved GraphQL examples
-└─ scripts/ 🛠️
-   ├─ build_graph.py 🏗️ end-to-end build
-   ├─ validate_contracts.py ✅ fail-fast checks
-   ├─ backfill_provenance.py 🧾 ensure lineage completeness
-   └─ export_views.py 📤 API-ready exports
+├─ 🧰 pyproject.toml               # Python packaging + tool config
+├─ 🧰 requirements.txt             # pinned deps (optional; CI/dev)
+├─ 🐍 kfm_graph/                   # graph build toolkit (Python package)
+│  ├─ 🧩 __init__.py               # package init
+│  ├─ 🔧 config.py                 # env + settings
+│  ├─ 🧾 contracts/                # contract parsing + validation
+│  ├─ 🧲 extract/                  # entity extraction (docs, tables, GIS)
+│  ├─ 🧠 resolve/                  # entity resolution + dedupe
+│  ├─ 🧩 model/                    # labels, rel types, property schemas
+│  ├─ 🚚 load/                     # Neo4j upserts + batching
+│  ├─ 🧬 provenance/               # PROV graph + lineage utilities
+│  ├─ 📤 export/                   # GraphML/CSV/JSON/GeoJSON exports
+│  └─ 📈 analytics/                # centrality, communities, spectral tools
+├─ 🗃️ queries/                     # saved query artifacts
+│  ├─ 🟩 cypher/                   # saved Cypher queries
+│  └─ 🟪 graphql/                  # saved GraphQL examples
+├─ 🛠️ scripts/                     # developer + ops scripts
+│  ├─ 🏗️ build_graph.py            # end-to-end build
+│  ├─ ✅ validate_contracts.py     # fail-fast checks
+│  ├─ 🧾 backfill_provenance.py    # ensure lineage completeness
+│  └─ 📤 export_views.py           # API-ready exports
+└─ 📘 README.md                    # you are here
 ```
 
 ---
