@@ -67,7 +67,7 @@ KFM is **provenance-first** and **governed** end-to-end. Even UI helpers must no
 
 ```mermaid
 flowchart LR
-  A[ETL] --> B[Catalogs<br/>(STAC/DCAT/PROV)]
+  A[ETL] --> B["Catalogs<br>(STAC/DCAT/PROV)"]
   B --> C[Graph]
   C --> D[API]
   D --> E[UI]
