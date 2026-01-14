@@ -33,14 +33,13 @@ This README is a **design + usage spec** (🚧). It’s meant to guide implement
 ## 🧭 Folder layout
 
 ```text
-tools/
-  dsl/
-    README.md            👈 you are here
-    spec/                📜 grammar + semantics + builtin catalog/graph contracts
-    examples/            🧪 sample .kfm scripts (pipelines, queries, story nodes)
-    src/                 🧠 lexer/parser → AST → planner → runtime
-    adapters/            🔌 postgis | neo4j | stac | dcat | prov | ee | filesystem | http
-    tests/               ✅ golden tests (parse/plan), property tests, fixtures
+tools/dsl/ 🧩
+├─ 📜 spec/                     # grammar + semantics + builtin catalog/graph contracts
+├─ 🧪 examples/                 # sample .kfm scripts (pipelines, queries, story nodes)
+├─ 🧠 src/                      # lexer/parser → AST → planner → runtime
+├─ 🔌 adapters/                 # postgis | neo4j | stac | dcat | prov | ee | filesystem | http
+├─ ✅ tests/                    # golden tests (parse/plan), property tests, fixtures
+└─ 📘 README.md                 # you are here
 ```
 
 > [!NOTE]
