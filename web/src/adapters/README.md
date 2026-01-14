@@ -39,10 +39,10 @@
 
 ```mermaid
 flowchart TB
-  UI[🖥️ UI Layer<br/>components, routes, views] --> UC[🧠 Use-cases / Services<br/>business workflows]
-  UC -->|calls| PORTS[🔌 Ports (interfaces)]
-  PORTS -->|implemented by| ADAPTERS[🧰 Adapters (this folder)]
-  ADAPTERS --> EXT[🌍 Outside world<br/>HTTP APIs • Storage • Map engine • Workers • Auth]
+  UI["🖥️ UI Layer<br/>components • routes • views"] --> UC["🧠 Use-cases / Services<br/>business workflows"];
+  UC -- calls --> PORTS["🔌 Ports (interfaces)"];
+  PORTS -- implemented by --> ADAPTERS["🧰 Adapters (this folder)"];
+  ADAPTERS --> EXT["🌍 Outside world<br/>HTTP APIs • Storage • Map engine • Workers • Auth"];
 ```
 
 ---
