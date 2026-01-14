@@ -29,36 +29,53 @@ The goal is: **fast, portable, attributable, geospatially correct** 3D.
 
 > Keep it boring. Boring scales. 😌
 
+# 🧊 `web/assets/3d/` Asset Library Layout
+
+![Assets](https://img.shields.io/badge/assets-3D%20library-0b7285)
+![Format](https://img.shields.io/badge/format-GLB%20%2B%20WebP-5f3dc4)
+![Metadata](https://img.shields.io/badge/metadata-meta.json%20required-2f9e44)
+
+## 🧭 Emoji Legend
+- 📁 Folder
+- 📄 Markdown / docs
+- 🧩 JSON
+- 🧊 3D model (`.glb`)
+- 🖼️ Image / texture (`.webp`)
+- 🗺️ 3D Tiles manifest (`tileset.json`)
+- 🧱 Tile payloads (`tiles/...`)
+
+## 🌲 Folder Tree (with emojis)
+
 ```text
-web/assets/3d/
-├─ README.md
-├─ _registry.json                # optional: generated index for UI pickers / lazy-loading
+📁 web/assets/3d/
+├─ 📄 README.md
+├─ 🧩 _registry.json                # optional: generated index for UI pickers / lazy-loading
 │
-├─ landmarks/                    # iconic places, “wow” moments
-│  └─ monument-rocks__kfm_0001/
-│     ├─ model.glb
-│     ├─ thumbnail.webp
-│     ├─ meta.json               # required
-│     └─ textures/
-│        ├─ basecolor.webp
-│        ├─ normal.webp
-│        └─ orm.webp
+├─ 📁 landmarks/                    # iconic places, “wow” moments
+│  └─ 📁 monument-rocks__kfm_0001/
+│     ├─ 🧊 model.glb
+│     ├─ 🖼️ thumbnail.webp
+│     ├─ 🧩 meta.json               # required
+│     └─ 📁 textures/
+│        ├─ 🖼️ basecolor.webp
+│        ├─ 🖼️ normal.webp
+│        └─ 🖼️ orm.webp
 │
-├─ archaeology/                  # site models, trench surfaces, artifacts
-│  └─ sample-trench__kfm_0101/
-│     ├─ model.glb
-│     ├─ meta.json
-│     └─ sources.md              # optional (great for human-readable context)
+├─ 📁 archaeology/                  # site models, trench surfaces, artifacts
+│  └─ 📁 sample-trench__kfm_0101/
+│     ├─ 🧊 model.glb
+│     ├─ 🧩 meta.json
+│     └─ 📄 sources.md              # optional (great for human-readable context)
 │
-├─ terrain/                      # large-scale elevation / surfaces
-│  └─ kansas-dem__kfm_1001/
-│     ├─ tileset.json            # if 3D Tiles
-│     ├─ meta.json
-│     └─ tiles/...
+├─ 📁 terrain/                      # large-scale elevation / surfaces
+│  └─ 📁 kansas-dem__kfm_1001/
+│     ├─ 🗺️ tileset.json            # if 3D Tiles
+│     ├─ 🧩 meta.json
+│     └─ 🧱 tiles/...
 │
-└─ shared/                       # reusable materials, LUTs, env maps
-   ├─ env/
-   └─ materials/
+└─ 📁 shared/                       # reusable materials, LUTs, env maps
+   ├─ 📁 env/
+   └─ 📁 materials/
 ```
 
 **Rule of thumb:** One asset = one folder = **everything needed to render it** (plus metadata).
