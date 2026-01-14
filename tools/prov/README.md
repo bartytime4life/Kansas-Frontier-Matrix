@@ -431,14 +431,14 @@ Before a PR is mergeable:
 
 ```mermaid
 flowchart LR
-  A[ETL / Pipelines] --> B[Catalogs<br/>(STAC + DCAT + PROV)]
-  B --> C[Knowledge Graph]
-  C --> D[API Layer]
-  D --> E[UI]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode]
-  B -. provenance gate .-> C
-  B -. evidence gate .-> F
+  A["ETL / Pipelines"] --> B["Catalogs\n(STAC + DCAT + PROV)"]
+  B --> C["Knowledge Graph"]
+  C --> D["API Layer"]
+  D --> E["UI"]
+  E --> F["Story Nodes"]
+  F --> G["Focus Mode"]
+  B -. "provenance gate" .-> C
+  B -. "evidence gate" .-> F
 ```
 
 ---
