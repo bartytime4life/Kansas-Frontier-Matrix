@@ -1,8 +1,8 @@
 ---
 title: "🧩 Story Nodes — `web/story_nodes/`"
 path: "web/story_nodes/README.md"
-version: "v1.3.0"
-last_updated: "2026-01-13"
+version: "v1.4.0"
+last_updated: "2026-01-14"
 status: "active"
 doc_kind: "Directory README"
 review_cycle: "90 days"
@@ -22,6 +22,10 @@ tags:
   - api
   - maplibre
   - cesium
+  - tiles
+  - registry
+  - telemetry
+  - performance
   - security
   - accessibility
 
@@ -37,6 +41,9 @@ canonical_story_template: "docs/templates/TEMPLATE__STORY_NODE_V3.md"
 canonical_master_guide: "docs/MASTER_GUIDE_v13.md"
 tests_playbook: "tests/README.md"
 schemas_registry: "schemas/"
+tiles_contract: "web/data/tiles/README.md"
+layers_contract: "web/data/layers/README.md"
+catalogs_contract: "web/data/catalog/README.md"
 ---
 
 <a id="top"></a>
@@ -47,14 +54,14 @@ schemas_registry: "schemas/"
 
 <p align="left">
   <img alt="KFM" src="https://img.shields.io/badge/KFM-system-1f6feb" />
+  <img alt="StoryNode" src="https://img.shields.io/badge/schema-KFM--STORYNODE%20v3-845ef7" />
+  <img alt="Registry" src="https://img.shields.io/badge/registry-KFM--STORYREG%20v1-0b7285" />
   <img alt="Pipeline" src="https://img.shields.io/badge/pipeline-ETL→Catalogs→Graph→API→UI→Story%20Nodes→Focus%20Mode-2ea043" />
   <img alt="Trust" src="https://img.shields.io/badge/trust-evidence--first-f59f00" />
-  <img alt="Contracts" src="https://img.shields.io/badge/contracts-schema--validated-845ef7" />
-  <img alt="Focus Mode" src="https://img.shields.io/badge/ux-Focus%20Mode-9cf" />
-  <img alt="2D/3D" src="https://img.shields.io/badge/2D%2F3D-MapLibre%20%7C%20Cesium-0b7285" />
   <img alt="Static" src="https://img.shields.io/badge/deploy-static--first%20(GitHub%20Pages%20friendly)-111827" />
+  <img alt="2D/3D" src="https://img.shields.io/badge/2D%2F3D-MapLibre%20%7C%20Cesium-0b7285" />
   <img alt="Security" src="https://img.shields.io/badge/security-sanitize%20markdown%20%7C%20no%20secrets-d6336c" />
-  <img alt="Governance" src="https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-f76707" />
+  <img alt="A11y" src="https://img.shields.io/badge/a11y-alt%20text%20%7C%20keyboard%20%7C%20reduced%20motion-2b8a3e" />
 </p>
 
 > [!IMPORTANT]
@@ -74,6 +81,9 @@ schemas_registry: "schemas/"
 | 🌾 Web viewer overview | `../README.md` |
 | 🎨 Shared UI assets rules | `../assets/README.md` |
 | 🗺️ Frontend data assets rules | `../data/README.md` |
+| 🧱 Layers contract (what a “layer id” means) | `../data/layers/README.md` *(expected)* |
+| 🧩 Tiles contract (tile sets, TileJSON/PMTiles, provenance) | `../data/tiles/README.md` *(expected)* |
+| 🗂️ Catalogs contract (STAC/DCAT/PROV runtime pointers) | `../data/catalog/README.md` *(expected)* |
 | 📖 Canonical story authoring home (governed) | `../../docs/reports/story_nodes/` *(draft → review → published)* |
 | 🧩 Story Node authoring template | `../../docs/templates/TEMPLATE__STORY_NODE_V3.md` |
 | 🧾 Master Guide / pipeline rules | `../../docs/MASTER_GUIDE_v13.md` *(or `MARKDOWN_GUIDE_v13.md.gdoc` if present)* |
@@ -93,21 +103,28 @@ schemas_registry: "schemas/"
 <summary><strong>📚 Table of contents</strong> (click to expand)</summary>
 
 - [Why this folder exists](#why-this-folder-exists)
+- [At a glance](#at-a-glance)
 - [Two-layer model: Authoring vs Runtime](#two-layer-model-authoring-vs-runtime)
 - [Non-negotiables](#non-negotiables)
 - [What is a Story Node](#what-is-a-story-node)
+- [Story Node types](#story-node-types)
 - [Focus Mode contract](#focus-mode-contract)
+- [Integration points](#integration-points)
 - [Recommended folder layout](#recommended-folder-layout)
+- [Registry & discovery indexes](#registry--discovery-indexes)
 - [Runtime formats](#runtime-formats)
 - [Story Node anatomy](#story-node-anatomy)
 - [Evidence model](#evidence-model)
 - [Versioning & reproducibility](#versioning--reproducibility)
 - [Overlays, media & visual integrity](#overlays-media--visual-integrity)
-- [3D Story Nodes (Cesium/WebGL)](#3d-story-nodes-cesiumwebgl)
+- [Performance budgets & caching](#performance-budgets--caching)
+- [3D Story Nodes](#3d-story-nodes)
 - [Runtime loading pipeline](#runtime-loading-pipeline)
 - [Validation & CI gates](#validation--ci-gates)
 - [Security & safety notes](#security--safety-notes)
+- [Accessibility & inclusive design](#accessibility--inclusive-design)
 - [PR checklist](#pr-checklist)
+- [Troubleshooting](#troubleshooting)
 - [Project library influence map](#project-library-influence-map)
 - [Glossary](#glossary)
 
@@ -129,6 +146,26 @@ Story Nodes are **meaning-bearing artifacts** in KFM: they can change what users
 - ✅ **governed** (FAIR+CARE + sovereignty/classification handling)
 
 If Story Nodes become “just markdown,” KFM loses auditability. This folder prevents that drift. 🧭🧱
+
+---
+
+## At a glance
+
+### ✅ The happy path (author → publish → run)
+
+1) ✍️ **Author (canonical)** under `docs/reports/story_nodes/<slug>/`  
+2) 🧾 **Attach evidence pointers** (STAC/DCAT/PROV + licenses + classification)  
+3) 🎞️ **Bind UI state** in `steps.json` (map/timeline/3D; diffable + testable)  
+4) 📦 **Package runtime node** under `web/story_nodes/nodes/<slug>/`  
+5) 🗂️ **Register** it in `web/story_nodes/registry/storyNodes.index.json`  
+6) ✅ **CI validates** schema + manifest + link resolution + safety gates  
+7) 🌐 **Focus Mode loads** `id@version` → locks evidence → renders story + map + timeline
+
+### 🚫 The three fastest ways to get a PR blocked
+
+- ❌ “Just add a paragraph” (no evidence pointers / no provenance)
+- ❌ “Quick hotfix in UI” (governance or redaction fixed *downstream*)
+- ❌ “Ship a big asset” (no manifest / no checksums / breaks budgets)
 
 ---
 
@@ -181,6 +218,12 @@ These are the rails that keep Story Nodes defensible ✅
    - asset inventory + checksums
    - provenance bundle references (STAC/DCAT/PROV)
 
+6) **Layer + tile integrity (no “mystery layers”)** 🧱🗺️  
+   If a step deck turns on a layer, that layer must have:
+   - a stable `layer_id` (defined in `web/data/layers/…`)
+   - a tile/source definition (defined in `web/data/tiles/…`)
+   - provenance + license + classification metadata (catalog pointers)
+
 ---
 
 ## What is a Story Node
@@ -205,6 +248,24 @@ Story Nodes should explicitly separate:
 
 ---
 
+## Story Node types
+
+Story Nodes aren’t one shape; the contract supports multiple “node styles” 🎛️
+
+| Type | When to use | Required runtime artifacts |
+|---|---|---|
+| 📄 **Narrative-only** | Short reads, minimal map interaction | `story.md` (+ evidence keys) |
+| 🎞️ **Step-deck** | Guided tours, classroom mode, “watch me” playback | `story.md` + `steps.json` |
+| 🗺️ **Map-first** | Layer comparison, before/after, time slider | `steps.json` + strong layer metadata |
+| 🧊 **3D node** | Terrain/volumes/structures where 3D helps comprehension | 3D bindings + 2D fallback plan |
+| 🧪 **Model-backed** | Simulations/ML outputs (must be honest about uncertainty) | Methods + assumptions + provenance + uncertainty grammar |
+
+> [!NOTE]
+> “Model-backed” nodes MUST surface assumptions, verification/validation notes, and uncertainty.  
+> (Treat models as evidence artifacts, not magic.) 🧪📉
+
+---
+
 ## Focus Mode contract
 
 Focus Mode is the “reading cockpit” 🚀  
@@ -216,16 +277,47 @@ Story on one side; map/timeline/evidence on the other — with strict hard gates
 - show provenance for layers, overlays, and model outputs
 - honor sensitivity rules (generalize/omit, warn, block, or require elevated access)
 - label **AI-assisted content** clearly (and keep it opt-in)
+- keep “what you see” reproducible (`id@version`, pinned evidence, pinned layers)
 
 ### 🚫 What Focus Mode must never do
 - display content without a source pointer (hard gate)
 - bypass classification/redaction rules
 - auto-generate narrative by default (no surprise AI summaries)
-- reveal sensitive coordinates via side-channels (screenshots, legends, tooltips, tiles)
+- reveal sensitive coordinates via side-channels (tooltips, legends, tiles, screenshots, EXIF)
 
 > [!IMPORTANT]
 > **AI contributions must be opt-in + transparent.**  
 > If AI-generated text exists, it must be user-triggered, clearly labeled, and bounded by evidence pointers. ✅🧾🤖
+
+---
+
+## Integration points
+
+Story Nodes sit at the very end of the pipeline, but they *touch everything* ✅
+
+```mermaid
+flowchart TB
+  A["🧰 ETL jobs<br/>build datasets"] --> B["🗂️ Catalogs<br/>STAC / DCAT / PROV"]
+  B --> C["🕸️ Graph<br/>entities & relationships"]
+  C --> D["🔌 APIs<br/>contracted access"]
+  D --> E["🧭 UI Layer<br/>MapLibre / Cesium"]
+  E --> F["🧩 Story Nodes<br/>story.md + steps.json"]
+  F --> G["🎛️ Focus Mode<br/>story + map + timeline + evidence"]
+
+  subgraph DataSurface["🗺️ Data Surface (frontend)"]
+    L["🧱 Layers<br/>web/data/layers"] --> T["🧩 Tiles/Sources<br/>web/data/tiles"]
+    T --> E
+  end
+
+  B --> L
+```
+
+### 🔩 What this means in practice
+
+- Step decks reference **layer IDs**, not raw tile URLs.  
+- Layer definitions reference **tile/source IDs**, not arbitrary endpoints.  
+- Tile/source definitions reference **catalog evidence**, not “trust me.”  
+- Focus Mode renders **only what can be evidenced + governed**.
 
 ---
 
@@ -243,41 +335,79 @@ web/story_nodes/
 │  ├─ 🧾 story_node.v3.schema.json      # front matter + bindings + governance
 │  ├─ 🧾 step_deck.v1.schema.json       # step-based story mode bindings
 │  ├─ 🧾 focus_bundle.v1.schema.json    # optional: resolved “Focus Bundle”
-│  └─ 🧾 overlay.v1.schema.json         # overlay metadata + checksums
+│  └─ 🧾 manifest.v1.schema.json        # assets inventory: sha256/bytes/license/alt_text
 ├─ 🧰 loaders/                         # fetch + parse + validate + sanitize
 │  ├─ ⛏️ fetchStoryNode.ts
 │  ├─ ✅ validateStoryNode.ts
 │  ├─ 🧼 sanitizeMarkdown.ts
 │  ├─ 🔗 resolveEvidenceLinks.ts
+│  ├─ 🧭 resolveLayerIds.ts             # binds steps → layers → tiles
 │  └─ 🧯 applyRedaction.ts
 ├─ 🧩 types/                           # shared TS types
 │  ├─ 🧾 storyNode.ts
 │  ├─ 🧠 focusMode.ts
 │  ├─ 🗺️ overlays.ts
 │  └─ 🎞️ stepDeck.ts
-├─ 🧱 renderers/                        # UI components (if colocated)
-│  ├─ 📖 StoryNodeRenderer.tsx
-│  ├─ 🎞️ StepDeckPlayer.tsx
-│  ├─ 🧭 MapBindings.tsx
-│  └─ 🧾 EvidencePanel.tsx
 ├─ 🧪 __tests__/                        # schema + snapshot + safety tests
 │  ├─ ✅ storyNode.schema.test.ts
 │  ├─ ✅ storyNode.sanitize.test.ts
 │  ├─ ✅ stepDeck.schema.test.ts
+│  ├─ ✅ manifest.integrity.test.ts
 │  └─ 🖼️ storyNode.render.test.tsx
 └─ 📁 nodes/                            # the story node packages (published)
    ├─ 📁 kansas_from_above/             # example node
    │  ├─ 🧾 story.md                    # markdown with YAML front matter
    │  ├─ 🎞️ steps.json                 # step deck: map/timeline/camera bindings
-   │  ├─ 🧾 evidence.json               # optional: precomputed Focus Bundle pointers
    │  ├─ 📦 manifest.json               # inventory: bytes + sha256 + licenses + alt_text
+   │  ├─ 🧾 evidence.json               # optional: resolved Focus Bundle pointers
    │  └─ 🖼️ assets/                     # local images/media/overlays (small!)
    └─ 📁 <slug>/...
 ```
 
 > [!NOTE]
 > Shared, reusable UI assets should live in `web/assets/`.  
-> `web/story_nodes/**/assets` should be **story-owned**, **small**, and **manifested** (checksums + licenses). ✅
+> `web/story_nodes/**/assets` should be **story-owned**, **small**, and **manifested** (checksums + licenses + alt_text). ✅
+
+---
+
+## Registry & discovery indexes
+
+Story Nodes are discoverable via a **registry index** (static-first) 🗂️
+
+### ✅ `registry/storyNodes.index.json` (expected shape)
+
+Recommended fields (minimum viable):
+
+- `id`, `version`, `status`
+- `title`, `summary`
+- `tags[]`
+- `thumb` (safe, small thumbnail)
+- `entry` (relative path to `nodes/<slug>/story.md`)
+- `time_range` (optional)
+- `spatial.bbox` (optional)
+- `requires` (optional flags: auth, heavy3d, sensitive)
+
+Example entry:
+
+```json
+{
+  "id": "ks.story.railroads.expansion",
+  "version": "1.2.0",
+  "status": "published",
+  "title": "The Expansion of Railroads in Kansas (1860–1890)",
+  "summary": "A step-based walkthrough of railroad expansion layers with primary-map citations.",
+  "tags": ["kansas", "railroads", "history", "infrastructure"],
+  "entry": "nodes/kansas_railroads_1860_1890/story.md",
+  "thumb": "nodes/kansas_railroads_1860_1890/assets/thumb.webp",
+  "time_range": {"start": "1860-01-01", "end": "1890-12-31"},
+  "spatial": {"bbox": [-102.05, 36.99, -94.59, 40.00]},
+  "requires": {"auth": false, "heavy3d": false, "sensitive": false}
+}
+```
+
+> [!TIP]
+> Keep the registry tiny and cacheable.  
+> It should be safe to fetch on every app boot. ⚡
 
 ---
 
@@ -292,13 +422,20 @@ KFM supports *two complementary runtime surfaces*:
 ### 2) 🎞️ `steps.json` — the step deck (machine-friendly UI bindings)
 A step deck drives “story mode” playback:
 - map camera state (center/zoom/bearing/pitch)
-- layers on/off
+- layers on/off (by **layer_id**)
 - timeline position/window
 - optional 3D scene state
 - optional highlight/annotation cues
 
 > [!TIP]
 > Keep “UI bindings” out of prose. Put bindings in `steps.json` so they’re schema-validated, diffable, and testable. 🧾✅
+
+### 3) 📦 `manifest.json` — asset inventory (integrity + licensing)
+Story assets are truth-bearing artifacts. The manifest makes them auditable:
+- `sha256`, `bytes`
+- `license`, `attribution`
+- `alt_text` ✅
+- `source` pointers (STAC/DCAT/PROV or cataloged external)
 
 ---
 
@@ -320,6 +457,7 @@ Recommended minimum fields:
 - `entities[]` *(graph IDs)*
 - `evidence[]` *(STAC/DCAT/PROV pointers; license + classification)*
 - `governance` *(classification + sensitivity + redaction hints)*
+- `ui` *(optional: focus layout hints, reading_time, thumb)*
 - `build` *(optional: tool versions; deterministic rebuild hints)*
 
 Example (template-ish):
@@ -356,6 +494,9 @@ governance:
   classification: open
   redaction:
     required: false
+ui:
+  reading_time_minutes: 8
+  thumb: "./assets/thumb.webp"
 build:
   generated_by: "kfm-storynode-builder"
   toolchain:
@@ -368,11 +509,11 @@ build:
 
 Use a structure that supports audit + rendering:
 
-- `## Claims` *(facts + citations)*
-- `## Interpretation / hypothesis` *(clearly labeled)*
-- `## Methods` *(how evidence artifacts were produced)*
-- `## Uncertainty & limits` *(what you don’t know / what could be wrong)*
-- `## Changelog` *(what changed since last version)*
+- `## Claims` note: **facts only** + citations
+- `## Interpretation / hypothesis` clearly labeled (never presented as fact)
+- `## Methods` (how evidence artifacts were produced)
+- `## Uncertainty & limits` (what you don’t know / what could be wrong)
+- `## Changelog` (what changed since last version)
 
 #### Recommended citation pattern ✅
 
@@ -409,6 +550,10 @@ For fast, deterministic loads, Story Nodes *may* ship (or reference) a resolved 
 - license/attribution text blocks
 
 This makes the “story view” reproducible even if upstream systems evolve.
+
+> [!TIP]
+> If evidence is “big” (tiles, rasters, meshes), ship pointers, not payloads.  
+> That’s the whole point of catalogs + data spaces. 🗂️➡️🔗
 
 ---
 
@@ -474,7 +619,33 @@ Avoid implying certainty:
 
 ---
 
-## 3D Story Nodes (Cesium/WebGL)
+## Performance budgets & caching
+
+Static-first doesn’t mean “slow-first” ⚡  
+These are recommended *defaults* (tune per deployment), but CI should enforce *some* budgets.
+
+| Artifact | Recommended budget | Why |
+|---|---:|---|
+| `story.md` | ≤ 150 KB (raw) | fast parse/render; good diffs |
+| `steps.json` | ≤ 200 KB | avoid giant state blobs |
+| `manifest.json` | ≤ 100 KB | keep audit fast |
+| Single image (`.webp/.png`) | ≤ 300 KB | mobile-friendly |
+| Total `assets/` per node | ≤ 3–10 MB | repo health + load time |
+| Steps per deck | ≤ 60–120 | UX + authoring sanity |
+| Network round trips to first render | ≤ 2 | static-first UX |
+
+### ✅ Caching guidance
+- registry indexes: cache aggressively (immutable if versioned)
+- node packages: cache by `id@version` path
+- evidence pointers: cache *metadata*, not necessarily payloads
+- tiles: cache per tile strategy (see `web/data/tiles/README.md`)
+
+> [!NOTE]
+> If you blow budgets for a legitimate reason (e.g., 3D), set `requires.heavy3d=true` and provide a fallback. 🧊📱
+
+---
+
+## 3D Story Nodes
 
 3D increases interpretability *and* risk: coordinate mistakes, misleading realism, performance cliffs 🧊🗺️
 
@@ -503,9 +674,10 @@ flowchart LR
   B --> C["✅ Validate schemas<br/>(front matter + step deck + manifests)"]
   C --> D["🧼 Sanitize markdown<br/>(no raw HTML)"]
   D --> E["🔗 Resolve evidence links<br/>(STAC/DCAT/PROV via API or local pointers)"]
-  E --> F["🛡️ Apply redaction/classification<br/>(no sensitive leaks)"]
-  F --> G["🗺️ Render Focus Mode<br/>story + map + timeline + evidence"]
-  G --> H["📈 Telemetry<br/>version lock · redaction · citation clicks"]
+  E --> F["🧭 Resolve layers<br/>(layer_id → tile/source → catalog)"]
+  F --> G["🛡️ Apply redaction/classification<br/>(no sensitive leaks)"]
+  G --> H["🗺️ Render Focus Mode<br/>story + map + timeline + evidence"]
+  H --> I["📈 Telemetry<br/>version lock · redaction · citation clicks"]
 ```
 
 > [!IMPORTANT]
@@ -519,11 +691,12 @@ flowchart LR
 Treat Story Nodes like shipping code ✅
 
 ### Minimum checks (recommended)
+
 **Content + safety**
 - markdown lint / formatting
 - block secrets/tokens and internal endpoints
 - sanitize/escape checks (XSS prevention)
-- external link policy (safe rel; no auto-embeds)
+- external link policy (safe `rel`, no auto-embeds)
 
 **Evidence + governance**
 - every factual claim has a citation (or is explicitly labeled interpretation)
@@ -531,6 +704,12 @@ Treat Story Nodes like shipping code ✅
 - license present and consistent with usage
 - classification propagation check (no downgrade)
 - sensitive location checks (generalize/omit as required)
+
+**Layer + tile integrity**
+- every referenced `layer_id` exists and is valid
+- every referenced tile/source is declared (TileJSON/PMTiles/etc.)
+- tile sources include provenance + license + classification metadata
+- no “raw endpoint drift” (step decks should not embed URLs)
 
 **Reproducibility**
 - required front matter fields present
@@ -562,9 +741,29 @@ Story Nodes are a high-leverage surface. Assume hostile inputs 🔥
 - 📦 **Manifests + checksums** for shipped assets
 - 🧯 **CSP** (Content Security Policy) strongly recommended in production
 - 🧊 **No “hidden metadata leaks”**: screenshots, EXIF, filenames, debug logs can leak identities/locations
+- 🧱 **No secrets in stories**: tokens, internal hosts, private endpoints = block
 
 > [!IMPORTANT]
 > Security posture here is defensive: hardening, verification, leak prevention. 🛡️✅
+
+---
+
+## Accessibility & inclusive design
+
+Evidence-first is also people-first ❤️
+
+### ✅ Required (non-negotiable)
+- `alt_text` (manifest + inline images)
+- keyboard navigation for Focus Mode controls
+- visible focus rings (don’t remove)
+- reduced motion support (step deck playback must respect it)
+- no “color-only” encoding for uncertainty/state
+
+### ✅ Recommended
+- captions/transcripts for any audio/video
+- avoid wall-of-text; use headings + short paragraphs
+- provide “text-only” reading mode (no map required)
+- ensure citations are discoverable on mobile 📱
 
 ---
 
@@ -588,12 +787,35 @@ Story Nodes are a high-leverage surface. Assume hostile inputs 🔥
 - [ ] Sensitive locations generalized/hidden (no coordinate side-channels)
 - [ ] Licensing/attribution recorded for redistributed media
 
+### 🗺️ Layers & tiles
+- [ ] All referenced `layer_id`s exist and are documented
+- [ ] All tile/source IDs resolve via `web/data/tiles`
+- [ ] Tile sources have provenance pointers + license + classification metadata
+- [ ] No raw tile URLs embedded in `steps.json`
+
 ### 🕰️ Reproducibility
 - [ ] Node has `id` + `version`
 - [ ] `steps.json` present + schema-valid (if step-based)
 - [ ] Assets declared in `manifest.json` (sha256 + bytes)
 - [ ] Registry updated (published nodes only)
 - [ ] Changelog/diff summary included when updating a published node
+
+---
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| ❌ “Schema validation failed” | missing front matter fields / wrong types | run `storynodes:validate`, fix YAML/JSON |
+| ❌ “Evidence key unresolved” | `[^key]` not in front matter evidence list | add evidence entry or correct key |
+| ❌ “Manifest mismatch” | asset changed but sha256/bytes not updated | regenerate manifest (or re-export asset) |
+| 🗺️ Layer doesn’t toggle | `layer_id` typo or missing layer registry entry | fix `layer_id` + add to `web/data/layers` |
+| 🧊 3D node crashes mobile | too heavy assets / no fallback | add LOD, mark heavy3d, provide 2D fallback |
+| 🔒 Sensitive leak flagged | coordinates/tiles expose restricted info | apply redaction upstream + enforce zoom gates |
+
+> [!TIP]
+> When debugging: always start from **`id@version` → evidence pointers → layer ids → tile/source ids**.  
+> If any link in that chain is missing, the story isn’t defensible. 🧱✅
 
 ---
 
@@ -604,35 +826,37 @@ Story Nodes are a high-leverage surface. Assume hostile inputs 🔥
 > ⚠️ Many references have different licenses than the repo code — **do not copy/paste** from them into public docs unless permitted.
 
 <details>
-<summary><strong>📦 Expand: All project files → what they influence in Story Nodes</strong></summary>
+<summary><strong>📦 Expand: Project files → what they influence in Story Nodes</strong></summary>
 
 ### 🧭 Core KFM system + narrative architecture
 | Project file | Primary lens | Story Node impact |
 |---|---|---|
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi) | 🧭 System vision | Story Nodes as step-based narrative engine (map camera + layers + text), Focus Mode as evidence-backed assistant, and “no mystery layers” trust posture. |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` | 🧭 System vision | Story Nodes as a governed narrative engine (Focus Mode, evidence-first, no mystery layers). |
 | `MARKDOWN_GUIDE_v13.md.gdoc` | 🧾 Repo invariants | Canonical pipeline ordering + “one canonical home per subsystem”; Story Nodes treated as governed artifacts. |
-| `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` | ✍️ Markdown hygiene | Footnotes, readable diffs, scannable structure, and static-site friendliness (front matter awareness). |
-| `Flexible Software Design: Systems Development for Changing Requirements.pdf`  [oai_citation:1‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY) | 🔁 Flexibility + stable IDs | Reinforces stable identifiers + change-resilient structures → applied to Story Node IDs, evidence keys, and schema evolution. |
+| `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` | ✍️ Markdown hygiene | Footnotes, readable diffs, scannable structure, static-first friendliness. |
+| `Implementing Programming Languages: An Introduction to Compilers and Interpreters.pdf` | 🧩 DSL mindset | Helps treat schemas + step decks as a tiny “language” with parsing, validation, and safe evaluation. |
 
 ### 🗺️ Cartography, mobile mapping, and UI truthfulness
 | Project file | Primary lens | Story Node impact |
 |---|---|---|
-| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | 🎨 Cartographic integrity | Treat symbology/aggregation as meaning decisions; require legends + uncertainty grammar in stories. |
-| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | 📱 Field constraints | Story UX that works offline/low-bandwidth; avoid location sensitivity leaks; mobile-first narrative. |
-| `responsive-web-design-with-html5-and-css3.pdf` | 🌐 Responsive UI | Focus Mode layout patterns; accessible navigation; media handling; progressive disclosure. |
-| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | 🖼️ Media hygiene | Performance-aware formats + compression norms; avoid repo bloat; ensure readable thumbnails. |
+| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | 🎨 Cartographic integrity | Symbology/aggregation are meaning decisions → require legends + uncertainty grammar. |
+| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | 📱 Field constraints | Offline/low-bandwidth UX; avoid location sensitivity leaks; mobile-first narrative. |
+| `responsive-web-design-with-html5-and-css3.pdf` | 🌐 Responsive UI | Focus Mode layout patterns; accessible navigation; progressive disclosure. |
+| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | 🖼️ Media hygiene | Performance-aware formats + compression norms; avoid repo bloat; thumbnails that load fast. |
 
 ### 🧊 3D GIS, WebGL, and spatial realism risk
 | Project file | Primary lens | Story Node impact |
 |---|---|---|
-| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 🧊 GPU constraints | 3D loading discipline, safe shaders, performance budgets, asset LOD conventions for story scenes. |
-| `Archaeological 3D GIS_26_01_12_17_53_09.pdf`  [oai_citation:2‡Archaeological 3D GIS_26_01_12_17_53_09.pdf](file-service://file-6DRx5ELzDPBso9Y5Qcbqm2) | 🏛️ 3D knowledge production | Distinguish interpretive vs realistic models; document reconstruction assumptions; use 3D responsibly in narratives. |
+| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 🧊 GPU constraints | 3D loading discipline, safe shader posture, performance budgets for story scenes. |
+| `Archaeological 3D GIS_26_01_12_17_53_09.pdf` | 🏛️ 3D knowledge production | Distinguish interpretive vs realistic models; document reconstruction assumptions. |
+| `Spectral Geometry of Graphs.pdf` | 🕸️ Graph meaning | Graph metrics require careful interpretation; avoid turning metrics into “facts” without context/evidence. |
 
 ### 🛰️ Remote sensing & geospatial processing
 | Project file | Primary lens | Story Node impact |
 |---|---|---|
-| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | 🛰️ EO workflows | Time-series/composites/indices must be reproducible and metadata-clean; exports become evidence artifacts. |
+| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | 🛰️ EO workflows | Time-series/composites/indices must be reproducible; exports become evidence artifacts. |
 | `python-geospatial-analysis-cookbook.pdf` | 🗺️ GIS engineering | CRS/unit hygiene, geometry validity, PostGIS patterns, stable export conventions used by story overlays. |
+| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | 🐘 Store discipline | Stable identifiers, query discipline, and “don’t ship DB blobs to browser” mindset. |
 
 ### 📊 Statistics, modeling, simulation, and uncertainty honesty
 | Project file | Primary lens | Story Node impact |
@@ -642,19 +866,16 @@ Story Nodes are a high-leverage surface. Assume hostile inputs 🔥
 | `graphical-data-analysis-with-r.pdf` | 📉 EDA instincts | Encourage diagnostics (distributions/outliers) before publishing story claims. |
 | `regression-analysis-with-python.pdf` | 📈 Model hygiene | Diagnostics-first presentation; avoid over-claiming; document assumptions & residual checks. |
 | `Regression analysis using Python - slides-linear-regression.pdf` | 📈 Quick checks | Lightweight guardrails: assumptions, scaling, residual sanity. |
-| `think-bayes-bayesian-statistics-in-python.pdf` | 🎲 Uncertainty | Credible intervals + posterior uncertainty as first-class visual/narrative elements. |
+| `think-bayes-bayesian-statistics-in-python.pdf` | 🎲 Uncertainty | Credible intervals + posterior uncertainty as first-class story elements. |
 | `Generalized Topology Optimization for Structural Design.pdf` | 🧮 Optimization narratives | Objectives/constraints + parameter sensitivity must be explicit for reproducibility. |
-| `Understanding Machine Learning: From Theory to Algorithms.pdf`  [oai_citation:3‡U-X programming Books.pdf](file-service://file-3hYtSGHtHmb6wyTtavym6M) | 🤖 ML theory & limits | Helps define what can/can’t be inferred; encourages restraint in ML-backed story claims. |
 | `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` | 🤖 Practical ML | Model cards + evaluation awareness; keep ML claims bounded; surface dataset shift cautions. |
 
 ### 🗄️ Data management, performance, and interop
 | Project file | Primary lens | Story Node impact |
 |---|---|---|
-| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | 🐘 Store discipline | Stable identifiers, query discipline, and “don’t ship DB blobs to browser” mindset. |
-| `Database Performance at Scale.pdf`  [oai_citation:4‡Database Performance at Scale.pdf](file-service://file-36z8qyiVJRtrSs6QG7Epen) | ⚙️ Performance realism | Evidence for performance budgets, caching discipline, and diagnosing latency regressions in story UX. |
-| `Scalable Data Management for Future Hardware.pdf` | ⚙️ Future performance | Reinforces minimizing data movement + bounding client work; favors compiled/optimized query patterns. |
-| `Data Spaces.pdf` | 🔗 Pointer-over-payload | Evidence references as interfaces; interoperability by catalogs; avoid embedding large payloads in stories. |
-| `Spectral Geometry of Graphs.pdf` | 🕸️ Graph meaning | Graph claims require careful interpretation; avoid turning metrics into “facts” without context/evidence. |
+| `Database Performance at Scale.pdf` | ⚙️ Performance realism | Performance budgets, caching discipline, diagnosing latency regressions in story UX. |
+| `Scalable Data Management for Future Hardware.pdf` | ⚙️ Data movement | Reinforces minimizing data movement + bounding client work; favors efficient access patterns. |
+| `Data Spaces.pdf` | 🔗 Pointer-over-payload | Evidence references as interfaces; interoperability by catalogs; avoid embedding big payloads in stories. |
 
 ### 🛡️ Security, governance, autonomy, and responsible AI
 | Project file | Primary lens | Story Node impact |
@@ -663,23 +884,21 @@ Story Nodes are a high-leverage surface. Assume hostile inputs 🔥
 | `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | 🛡️ Hostile inputs | Parser hardening mindset (defensive only); don’t trust markup/media blindly. |
 | `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | ⚖️ Accountability | Label AI outputs; avoid presenting pattern-finding as certainty; traceability expectations. |
 | `Introduction to Digital Humanism.pdf` | ❤️ Human impact | Transparency, autonomy, and non-manipulative storytelling; keep humans in control of meaning. |
-| `Principles of Biological Autonomy - book_9780262381833.pdf` | 🧠 Systems thinking | Feedback loops & stability thinking applied to governance, UX, and moderation of narrative influence. |
-| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | 🧵 Determinism | Bounded work + predictable workloads; avoid nondeterministic asset builds/rendering. |
+| `Principles of Biological Autonomy - book_9780262381833.pdf` | 🧠 Systems thinking | Feedback loops & stability thinking applied to governance, UX, and narrative influence. |
+| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | 🧵 Determinism | Bounded work + predictable workloads; avoid nondeterministic builds/rendering. |
 
 ### 📚 Programming reference shelves (craft support across the stack)
 | Project file | Lens | Story Node impact |
 |---|---|---|
-| `Bash Notes for Professionals.pdf`  [oai_citation:5‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ) | 🧰 Ops craft | Safe scripting for build/validate/publish flows (quoting, exit codes, idempotency). |
-| `MATLAB Notes for Professionals.pdf`  [oai_citation:6‡M-N programming Books.pdf](file-service://file-EYCp5md89QY2cy5PCYS18e) | 🧮 Numerics & legacy | Supports validating numerical expectations and legacy analysis workflows feeding evidence artifacts. |
-| `A programming Books.pdf` | 📚 Breadth | Contributor shelf (general reference pack). |
-| `B-C programming Books.pdf` | 📚 Breadth | Contributor shelf (general reference pack). |
-| `D-E programming Books.pdf` | 📚 Breadth | Contributor shelf (general reference pack). |
-| `F-H programming Books.pdf` | 📚 Breadth | Contributor shelf (general reference pack). |
-| `I-L programming Books.pdf` | 📚 Breadth | Contributor shelf (general reference pack). |
-| `M-N programming Books.pdf` | 📚 Breadth | Contributor shelf (general reference pack). |
-| `O-R programming Books.pdf` | 📚 Breadth | Contributor shelf (general reference pack). |
-| `S-T programming Books.pdf` | 📚 Breadth | Contributor shelf (general reference pack). |
-| `U-X programming Books.pdf` | 📚 Breadth | Contributor shelf (general reference pack). |
+| `A programming Books.pdf` | 📚 Breadth | Contributor shelf for “A*” tech (treat as reference, not source-of-truth). |
+| `B-C programming Books.pdf` | 📚 Breadth | Contributor shelf for “B–C” tech; includes scripting + tooling patterns. |
+| `D-E programming Books.pdf` | 📚 Breadth | Contributor shelf for “D–E” tech (data pipelines, devops, etc.). |
+| `F-H programming Books.pdf` | 📚 Breadth | Contributor shelf for “F–H” tech; includes web + platform patterns. |
+| `I-L programming Books.pdf` | 📚 Breadth | Contributor shelf for “I–L” tech (infra, languages, tooling). |
+| `M-N programming Books.pdf` | 📚 Breadth | Contributor shelf for “M–N” tech; supports numerics + workflows. |
+| `O-R programming Books.pdf` | 📚 Breadth | Contributor shelf for “O–R” tech; supports UI + runtime patterns. |
+| `S-T programming Books.pdf` | 📚 Breadth | Contributor shelf for “S–T” tech; supports services + testing. |
+| `U-X programming Books.pdf` | 📚 Breadth | Contributor shelf for “U–X” tech; supports ML + advanced topics. |
 
 </details>
 
