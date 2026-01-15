@@ -95,18 +95,18 @@ npm run e2e:open
 Suggested structure (adapt to actual repo conventions):
 
 ```
-📁 web/
-  📁 src/
-    📁 tests/
-      📄 README.md                  # you are here ✅
-      📁 fixtures/                  # small, governed test data (GeoJSON, STAC, DCAT, PROV, story nodes)
-      📁 mocks/                     # MSW handlers, API stubs, module mocks
-      📁 helpers/                   # render helpers, test utils, custom matchers
-      📁 setup/                     # test runner setup (dom, polyfills, matchers)
-      📁 snapshots/                 # snapshot artifacts (if used)
-      📄 *.test.ts                  # unit tests
-      📄 *.test.tsx                 # component tests
-      📄 *.integration.test.ts(x)   # integration tests
+web/
+└─ 📁 src/
+   └─ 🧪 tests/
+      ├─ ✅📄 README.md                  # you are here 📌
+      ├─ 🧩 fixtures/                   # small, governed test data (GeoJSON, STAC, DCAT, PROV, story nodes)
+      ├─ 🎭 mocks/                      # MSW handlers, API stubs, module mocks
+      ├─ 🧰 helpers/                    # render helpers, test utils, custom matchers
+      ├─ ⚙️ setup/                      # test runner setup (dom, polyfills, matchers)
+      ├─ 🖼️ snapshots/                  # snapshot artifacts (if used)
+      ├─ 🧪📄 *.test.ts                  # unit tests
+      ├─ 🧪📄 *.test.tsx                 # component tests
+      └─ 🔗🧪📄 *.integration.test.ts(x)  # integration tests
 ```
 
 **Rules of thumb 🧠**
