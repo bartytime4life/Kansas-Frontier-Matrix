@@ -24,20 +24,20 @@ This directory keeps the project honest by making license review **explicit**, *
 
 ```text
 web/
-  data/
-    licenses/
-      README.md ✅
-      registry.json            # 👈 recommended: machine-readable license manifest
-      texts/                   # 📄 vendor canonical license texts (optional but helpful)
-        MIT.txt
-        CC-BY-4.0.txt
-        CC-BY-SA-3.0.txt
-        CC-BY-SA-4.0.txt
-        CC-BY-NC-4.0.txt
-        CC-BY-NC-ND-4.0.txt
-      templates/
-        ATTRIBUTION.template.md
-        DERIVATION.template.md
+└─ 📦 data/
+   └─ 🪪 licenses/
+      ├─ ✅📄 README.md
+      ├─ 🧾🗃️ registry.json              # 👈 recommended: machine-readable license manifest
+      ├─ 📄 texts/                       # 📄 vendor canonical license texts (optional but helpful)
+      │  ├─ 📜 MIT.txt
+      │  ├─ 🧾 CC-BY-4.0.txt
+      │  ├─ 🧾 CC-BY-SA-3.0.txt
+      │  ├─ 🧾 CC-BY-SA-4.0.txt
+      │  ├─ 🧾 CC-BY-NC-4.0.txt
+      │  └─ 🧾 CC-BY-NC-ND-4.0.txt
+      └─ 🧩 templates/
+         ├─ 🧾✍️ ATTRIBUTION.template.md
+         └─ 🧾🧬 DERIVATION.template.md
 ```
 
 > [!TIP]
