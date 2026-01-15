@@ -93,23 +93,23 @@ flowchart LR
 > The exact tree may evolve, but the *seams* should stay stable: **contracts → data access → domain → rendering adapters → UI consumption**.
 
 ```text
-📁 web/
-  📁 src/
-    📁 core/
-      📁 api/               # 🔌 Typed API client + request builders
-      📁 contracts/         # 🧾 Generated/derived TS types + validators
-      📁 domain/            # 🧠 Domain models (dataset, layer, event, place…)
-      📁 provenance/        # 🧬 Citation + lineage helpers (PROV-aware)
-      📁 graph/             # 🕸️ Graph entity refs + query shape adapters
-      📁 layers/            # 🗺️ Layer registry, styling, legends, time-binding
-      📁 map/               # 🧭 Map state + viewport math + interaction model
-      📁 renderers/         # 🎮 MapLibre/Cesium adapters (UI-agnostic)
-      📁 focus/             # 🧠 Focus Mode context bundle + gating logic
-      📁 analytics/         # 📈 UI-safe metrics events (no sensitive leakage)
-      📁 security/          # 🔒 redaction helpers, safe URL builders, guards
-      📁 utils/             # 🧰 pure helpers (date/time, ids, memoization)
-      📄 index.ts           # 🧩 public exports (keep tight!)
-      📄 README.md          # 📘 you are here
+web/
+└─ 📁 src/
+   └─ 🧠 core/
+      ├─ 🔌 api/               # 🔌 Typed API client + request builders
+      ├─ 🧾 contracts/         # 🧾 Generated/derived TS types + validators
+      ├─ 🧠 domain/            # 🧠 Domain models (dataset, layer, event, place…)
+      ├─ 🧬 provenance/        # 🧬 Citation + lineage helpers (PROV-aware)
+      ├─ 🕸️ graph/             # 🕸️ Graph entity refs + query shape adapters
+      ├─ 🗺️ layers/            # 🗺️ Layer registry, styling, legends, time-binding
+      ├─ 🧭 map/               # 🧭 Map state + viewport math + interaction model
+      ├─ 🎮 renderers/         # 🎮 MapLibre/Cesium adapters (UI-agnostic)
+      ├─ 🧠 focus/             # 🧠 Focus Mode context bundle + gating logic
+      ├─ 📈 analytics/         # 📈 UI-safe metrics events (no sensitive leakage)
+      ├─ 🔒 security/          # 🔒 redaction helpers, safe URL builders, guards
+      ├─ 🧰 utils/             # 🧰 pure helpers (date/time, ids, memoization)
+      ├─ 🧩📄 index.ts          # 🧩 public exports (keep tight!)
+      └─ 📘 README.md           # 📘 you are here 📌
 ```
 
 ---
