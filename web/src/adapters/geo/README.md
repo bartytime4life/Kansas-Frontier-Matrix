@@ -128,21 +128,21 @@ Map interactivity is dramatically simpler when features/layers have stable ident
 
 ```text
 web/src/adapters/geo/
-├─ README.md
-├─ index.ts                 # barrel exports
-├─ types.ts                 # LngLat, Bbox, CRS, Provenance types
-├─ normalize.ts             # normalizeLngLat, normalizeGeoJSON, normalizeBbox
-├─ validate.ts              # runtime guards (safe parse)
-├─ crs.ts                   # wgs84<->webMercator (+ helpers)
-├─ bbox.ts                  # bboxOf, padBbox, bboxToParams
-├─ tiles.ts                 # lngLatToTileXYZ, tileXYZToBbox
-├─ ogc.ts                   # WMS/WFS param builders (safe URL building)
-├─ provenance.ts            # attach/merge/assert provenance
-└─ __tests__/
-   ├─ crs.test.ts
-   ├─ bbox.test.ts
-   ├─ tiles.test.ts
-   └─ provenance.test.ts
+├─ 📄 README.md
+├─ 🧩📄 index.ts                 # barrel exports
+├─ 🧾📄 types.ts                 # LngLat, Bbox, CRS, Provenance types
+├─ 🧼📄 normalize.ts             # normalizeLngLat, normalizeGeoJSON, normalizeBbox
+├─ 🛡️📄 validate.ts              # runtime guards (safe parse)
+├─ 🌐📐 crs.ts                   # wgs84<->webMercator (+ helpers)
+├─ 📦📐 bbox.ts                  # bboxOf, padBbox, bboxToParams
+├─ 🧱🗺️ tiles.ts                 # lngLatToTileXYZ, tileXYZToBbox
+├─ 🧭🧾 ogc.ts                   # WMS/WFS param builders (safe URL building)
+├─ 🧬📄 provenance.ts            # attach/merge/assert provenance
+└─ 🧪 __tests__/
+   ├─ 🧪 crs.test.ts
+   ├─ 🧪 bbox.test.ts
+   ├─ 🧪 tiles.test.ts
+   └─ 🧪 provenance.test.ts
 ```
 
 ---
