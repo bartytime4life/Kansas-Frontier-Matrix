@@ -52,11 +52,11 @@ Think of it as:
 
 ```mermaid
 flowchart LR
-  A[📚 Catalog / Data Contracts\nSTAC • DCAT • PROV] --> B[🧾 LayerSpec\n(serializable)]
-  B --> C[🧠 LayerRuntime\n(state + cache)]
-  C --> D[🔌 Renderer Adapter\nMapLibre / Deck / WebGL]
-  D --> E[🖱️ UX\nLegend • Popup • Details • Time]
-  E --> F[🤖 Focus Mode Context\n(citable explanations)]
+  A["Catalog / Data Contracts<br/>STAC / DCAT / PROV"] --> B["LayerSpec<br/>(serializable)"]
+  B --> C["LayerRuntime<br/>(state + cache)"]
+  C --> D["Renderer Adapter<br/>MapLibre / Deck / WebGL"]
+  D --> E["UX<br/>Legend / Popup / Details / Time"]
+  E --> F["Focus Mode Context<br/>(citable explanations)"]
 ```
 
 ---
