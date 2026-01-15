@@ -30,24 +30,24 @@ This folder should remain **framework‑agnostic** and **UI‑library‑agnostic
 Typical contents (illustrative):
 
 ```text
-📁 web/
-  📁 src/
-    📁 core/
-      📁 analytics/
-        📄 README.md ✅ (you are here)
-        📄 index.ts
-        📄 client.ts            # AnalyticsClient interface + default impl
-        📄 events.ts            # Event taxonomy + types
-        📄 context.ts           # Context enrichment (route/map/session)
-        📄 redact.ts            # Privacy filters + sensitivity policy
-        📄 queue.ts             # Buffering + batching + backpressure
-        📁 sinks/
-          📄 consoleSink.ts
-          📄 memorySink.ts
-          📄 httpSink.ts        # optional (adapter)
-        📁 __tests__/
-          📄 redact.test.ts
-          📄 events.test.ts
+web/
+└─ 📁 src/
+   └─ 🧠 core/
+      └─ 📈 analytics/
+         ├─ ✅📄 README.md               # you are here 📌
+         ├─ 🧩📄 index.ts
+         ├─ 📡📄 client.ts               # AnalyticsClient interface + default impl
+         ├─ 🧾📄 events.ts               # Event taxonomy + types
+         ├─ 🧠📄 context.ts              # Context enrichment (route/map/session)
+         ├─ 🔒🧹📄 redact.ts              # Privacy filters + sensitivity policy
+         ├─ 📥📦📄 queue.ts               # Buffering + batching + backpressure
+         ├─ 🧰 sinks/
+         │  ├─ 🖥️📄 consoleSink.ts
+         │  ├─ 🧠📄 memorySink.ts
+         │  └─ 🌐📄 httpSink.ts          # optional (adapter)
+         └─ 🧪 __tests__/
+            ├─ 🧪📄 redact.test.ts
+            └─ 🧪📄 events.test.ts
 ```
 
 > If the real folder structure differs, keep the **conceptual separation** even if filenames change.
