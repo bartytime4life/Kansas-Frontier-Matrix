@@ -52,22 +52,22 @@ Recommended pattern (adjust if your app uses a different registry loader):
 
 ```text
 web/
-  data/
-    layers/
-      README.md  👈 you are here 📌
-      layers.index.json      🧾 (optional) fast registry for startup
-      groups.json            🗂️ (optional) layer group definitions
-      schemas/               📐 (optional) JSON Schemas for validation
-      base/                  🧱 basemaps & references
-        osm-basemap/
-          osm-basemap.layer.json  🗺️
-          osm-basemap.style.json  🎨
-          osm-basemap.legend.md   📄
-          osm-basemap.thumb.webp  🖼️
-      overlays/              🧩 overlays & thematic layers
-      historical/            🕰️ time-heavy historical sources
-      analysis/              🧪 derived/model layers (predictions, indices)
-      experimental/          🧫 WIP layers (not default-visible)
+└─ 📦 data/
+   └─ 🗺️ layers/
+      ├─ 📄 README.md  👈 you are here 📌
+      ├─ 🧾⚡ layers.index.json            # 🧾 (optional) fast registry for startup
+      ├─ 🗂️ groups.json                   # 🗂️ (optional) layer group definitions
+      ├─ 📐 schemas/                      # 📐 (optional) JSON Schemas for validation
+      ├─ 🧱 base/                         # 🧱 basemaps & references
+      │  └─ 🗺️ osm-basemap/
+      │     ├─ 🗺️🧾 osm-basemap.layer.json
+      │     ├─ 🎨🧾 osm-basemap.style.json
+      │     ├─ 📄 osm-basemap.legend.md
+      │     └─ 🖼️ osm-basemap.thumb.webp
+      ├─ 🧩 overlays/                     # 🧩 overlays & thematic layers
+      ├─ 🕰️ historical/                   # 🕰️ time-heavy historical sources
+      ├─ 🧪 analysis/                     # 🧪 derived/model layers (predictions, indices)
+      └─ 🧫 experimental/                 # 🧫 WIP layers (not default-visible)
 ```
 
 > [!TIP]
