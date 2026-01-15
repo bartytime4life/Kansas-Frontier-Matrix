@@ -85,9 +85,9 @@ A good “KFM-ish” pattern is:
 
 ```mermaid
 flowchart LR
-  A[📦 Dataset (files/tiles/API)] --> B[🗃️ Catalog (metadata + lineage)]
-  B --> C[🗺️ Layer Definition (UI contract)]
-  C --> D[🧭 Map UI (toggle, style, time)]
+  A["📦 Dataset - files / tiles / API"] --> B["🗃️ Catalog - metadata + lineage"];
+  B --> C["🗺️ Layer Definition - UI contract"];
+  C --> D["🧭 Map UI - toggle, style, time"];
 ```
 
 ---
