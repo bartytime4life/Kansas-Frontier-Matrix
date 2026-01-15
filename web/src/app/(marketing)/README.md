@@ -56,22 +56,25 @@ So `app/(marketing)/about/page.tsx` typically becomes `/about`.
 
 ```text
 web/src/app/(marketing)/
-├─ README.md                 👈 you are here
-├─ layout.tsx                🧱 marketing shell (header/footer)
-├─ page.tsx                  🏠 landing
-├─ about/
-│  └─ page.tsx               📖 mission, story, audiences
-├─ docs/
-│  ├─ page.tsx               📚 docs-lite index
-│  └─ standards/page.tsx     🧩 STAC / DCAT / PROV-O overview (plain-language)
-├─ glossary/
-│  └─ page.tsx               🧠 shared vocabulary (reduces confusion)
-├─ (legal)/
-│  ├─ privacy/page.tsx       🔐 privacy policy
-│  └─ terms/page.tsx         🧾 terms
-├─ (content)/
-│  └─ ...                    ✍️ MDX/markdown-backed pages (optional)
-└─ opengraph-image.tsx       🖼️ social previews (optional)
+├─ 📄 README.md                 👈 you are here 📌
+├─ 🧱 layout.tsx                # 🧱 marketing shell (header/footer)
+├─ 🏠 page.tsx                  # 🏠 landing
+├─ 📖 about/
+│  └─ 📖 page.tsx               # 📖 mission, story, audiences
+├─ 📚 docs/
+│  ├─ 📚 page.tsx               # 📚 docs-lite index
+│  └─ 🧩 standards/
+│     └─ 🧩 page.tsx            # 🧩 STAC / DCAT / PROV-O overview (plain-language)
+├─ 🧠 glossary/
+│  └─ 🧠 page.tsx               # 🧠 shared vocabulary (reduces confusion)
+├─ ⚖️ (legal)/
+│  ├─ 🔐 privacy/
+│  │  └─ 🔐 page.tsx            # 🔐 privacy policy
+│  └─ 🧾 terms/
+│     └─ 🧾 page.tsx            # 🧾 terms
+├─ ✍️ (content)/
+│  └─ ✍️ ...                    # ✍️ MDX/markdown-backed pages (optional)
+└─ 🖼️ opengraph-image.tsx       # 🖼️ social previews (optional)
 ```
 
 ---
