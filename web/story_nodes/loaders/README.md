@@ -121,15 +121,15 @@ Story content is governed under the repository’s docs structure (draft vs publ
 
 ```text
 web/story_nodes/
-  📄 index.json                  # list of available stories (optional)
-  📁 published/
-    📁 <story_slug>/
-      📝 story.md                # Markdown narrative (citations + entity refs)
-      🧭 story.json              # step config (map/time/layers)
-      📄 manifest.json           # optional: explicit asset + metadata manifest
-      🖼️ assets/
-        🖼️ hero.jpg
-        🖼️ photo_01.png
+├─ 🧾📄 index.json                  # list of available stories (optional)
+├─ 📁 published/
+│  └─ 🏷️📁 <story_slug>/
+│     ├─ 📝 story.md                # Markdown narrative (citations + entity refs)
+│     ├─ 🧭🧾 story.json             # step config (map/time/layers)
+│     ├─ 📄🧾 manifest.json          # optional: explicit asset + metadata manifest
+│     └─ 🖼️ assets/
+│        ├─ 🖼️ hero.jpg
+│        └─ 🖼️ photo_01.png
 ```
 
 ---
