@@ -1,403 +1,480 @@
-# Adapters 🔌
+# 🗺️ Map Adapter (`web/src/adapters/map`)
 
-![Layer](https://img.shields.io/badge/layer-adapters-6D28D9)
-![Pattern](https://img.shields.io/badge/pattern-ports%20%26%20adapters-0EA5E9)
-![Rule](https://img.shields.io/badge/provenance-first-10B981)
-![Rule](https://img.shields.io/badge/side--effects-live--here-F59E0B)
+![Status](https://img.shields.io/badge/status-draft-informational)
+![Architecture](https://img.shields.io/badge/architecture-ports%20%26%20adapters-blue)
+![UI](https://img.shields.io/badge/ui-React%20SPA-success)
+![2D](https://img.shields.io/badge/2D-MapLibre%20GL%20JS-0aa)
+![3D](https://img.shields.io/badge/3D-CesiumJS%20(optional)-7b2)
+![Governance](https://img.shields.io/badge/KFM-contract--first%20%2B%20provenance--first-critical)
 
-> **Adapters = the translation + boundary layer** between KFM Web and the outside world (APIs, browser storage, map engines, WebGL, workers, auth, etc).  
-> If it touches the network, the browser, a vendor SDK, or a file format… it belongs here. 🧱
-
----
-
-## Quick map 🧭
-
-| Term | Meaning | Where it lives |
-|---|---|---|
-| **Port** | An interface describing *what* the app needs (capability) | `src/**/ports` (or your project’s equivalent “core” location) |
-| **Adapter** | A concrete implementation describing *how* we do it (HTTP, IndexedDB, Map engine, etc.) | `web/src/adapters/**` ✅ |
-| **Composition root** | The one place where we wire ports → adapters | `src/app/bootstrap` / `src/main` / `src/di` (varies) |
+> [!IMPORTANT]
+> This folder is the **engine boundary** for KFM’s interactive map UI.  
+> The map adapter exists so the rest of the web app never “talks MapLibre/Cesium directly” and we can keep governance (provenance, redaction, auditability) consistent across 2D + 3D.
 
 ---
 
-## Non‑negotiables ✅
+## 🧭 TL;DR
 
-> 🧠 These are “architecture guardrails.” If you break them, it becomes harder to audit, swap tech, preserve provenance, or keep user agency intact.
-
-1. **All side effects live in adapters.**  
-   No `fetch()`, `localStorage`, `WebGL`, `navigator.geolocation`, SDK calls, etc. outside this folder.
-2. **UI does not bypass governed boundaries.**  
-   The UI should never “reach around” to raw stores/graphs directly; use the API layer and its contracts.
-3. **Provenance is first‑class.**  
-   Anything that can appear in the UI as “truth” should be able to carry *where it came from* (dataset IDs, citations, timestamps, pipeline run IDs).
-4. **Human agency stays on top.**  
-   Adapters must not create “autonomous” actions or silent side effects that change user-visible state without an explicit user flow (especially around AI-assisted features).
+- ✅ Normalize map engines (MapLibre 2D / Cesium 3D) behind one stable interface.
+- ✅ Render only **API-served, contract-governed** layers (no hidden files, no direct DB calls).
+- ✅ Every visible layer/feature must be **inspectable** (source + license + provenance).
+- ✅ Timeline/time-filtered layers must respond consistently to the UI timeline slider.
+- ✅ Keep UX accessible, secure, and fast (tiles > giant GeoJSON).
 
 ---
 
-## Architecture at a glance 🏗️
+## 📌 Contents
+
+- [Why an Adapter?](#-why-an-adapter)
+- [Non‑negotiables](#-nonnegotiables)
+- [Folder Layout](#-folder-layout)
+- [Architecture](#-architecture)
+- [Public Contract](#-public-contract)
+- [Layer + Provenance Model](#-layer--provenance-model)
+- [Timeline Integration](#-timeline-integration)
+- [2D vs 3D Engines](#-2d-vs-3d-engines)
+- [Performance](#-performance)
+- [Accessibility](#-accessibility)
+- [Security + Governance](#-security--governance)
+- [Testing](#-testing)
+- [Contributing](#-contributing)
+- [Appendix: Project Reference Library](#-appendix-project-reference-library)
+
+---
+
+## 🧩 Why an Adapter?
+
+KFM is built around a strict pipeline (data → catalogs → graph → API → UI → story). The UI is **not** allowed to bypass governance or introduce “mystery layers”.
+
+So instead of letting every React component call MapLibre/Cesium APIs directly, we keep a single boundary:
+
+- 🔒 **Governance**: provenance + redaction rules are enforced consistently.
+- 🔁 **Swapability**: engines evolve; the UI contract should not.
+- 🧪 **Testability**: we can unit test layer normalization + event mapping without running a full map engine.
+- 🧠 **Clarity**: map logic lives in one place, not spread across components.
+
+---
+
+## 🧱 Non‑negotiables
+
+> [!NOTE]
+> If you change behavior here, treat it like a “platform boundary change”, not a styling tweak.
+
+### ✅ Contract-first + provenance-first
+
+- A layer is only “real” if it is represented by **contracted metadata** (STAC/DCAT/PROV aligned) and is served through the API.
+- The adapter must support an **Inspect** UX: users can always see the “map behind the map” (origin + license + method lineage).
+
+### ✅ No hidden data / no direct DB
+
+- The map adapter **must not** ship data files as “convenient shortcuts” (GeoJSON in the repo, random TIFFs, etc.).
+- The adapter **must not** query databases (Postgres/Neo4j/etc.). It only consumes API responses.
+
+### ✅ No data leakage
+
+- Respect any redaction/classification rules returned by the API.
+- Avoid “zoom-level bypasses” that could reveal sensitive detail.
+
+### ✅ Timeline correctness
+
+- Layers with temporal semantics must respond to the timeline slider (filter, animate, or restyle deterministically).
+
+---
+
+## 🗂️ Folder Layout
+
+> This is the intended shape. If implementation differs, update this README and/or refactor toward this layout.
+
+```text
+📦 web/
+ └─ 🧩 src/
+    └─ 🔌 adapters/
+       └─ 🗺️ map/
+          ├─ README.md ⭐
+          ├─ index.ts
+          ├─ types.ts
+          ├─ createMapAdapter.ts
+          ├─ engines/
+          │  ├─ maplibre/   🧭 2D implementation
+          │  └─ cesium/     🌍 3D implementation (optional)
+          └─ __tests__/     🧪 contract + normalization tests
+```
+
+---
+
+## 🧠 Architecture
 
 ```mermaid
-flowchart TB
-  UI["🖥️ UI Layer<br/>components • routes • views"] --> UC["🧠 Use-cases / Services<br/>business workflows"];
-  UC -- calls --> PORTS["🔌 Ports (interfaces)"];
-  PORTS -- implemented by --> ADAPTERS["🧰 Adapters (this folder)"];
-  ADAPTERS --> EXT["🌍 Outside world<br/>HTTP APIs • Storage • Map engine • Workers • Auth"];
+flowchart LR
+  UI["🧑‍💻 React UI (components + state)"] -->|LayerRegistry + API responses| A["🔌 Map Adapter (this folder)"]
+  A -->|engine commands| M["🧭 MapLibre Engine (2D)"]
+  A -->|engine commands| C["🌍 Cesium Engine (3D optional)"]
+
+  UI <-->|normalized events| A
+  A -->|inspect payload| UI
 ```
 
----
+### Boundary rule 📏
+The adapter is responsible for translating:
 
-## Folder layout 📁
-
-> This is the *intended* shape. If the repo differs today, keep the *ideas* and update the tree as you refactor.
-
-```txt
-web/src/
-└─ 🧩 adapters/
-   ├─ 🌐 api/            # HTTP/WS clients, DTO ↔ domain mapping, retries
-   ├─ 💾 storage/        # localStorage / IndexedDB / Cache API
-   ├─ 🌍 geo/            # GeoJSON, tiles, bbox, reprojection, geometry helpers
-   ├─ 🗺️ map/            # map engine bridge (MapLibre / Cesium / deck.gl / etc.)
-   ├─ 🧵 workers/        # Web Workers: heavy transforms, parsing, indexing
-   ├─ 📡 telemetry/      # logging, metrics, traces, error reporting
-   ├─ 🔐 auth/           # OAuth/OpenID, session tokens, role checks (client-side)
-   └─ 📦 index.ts        # adapter factories + exports
-```
+- **Domain/UI intents** → engine calls (add layer, set view state, set time, etc.)
+- **Engine events** → normalized UI events (click, hover, box select, etc.)
+- **Engine feature identity** → stable KFM feature identity (for citations + Focus Mode)
 
 ---
 
-## What belongs in adapters ✅
+## 🧾 Public Contract
 
-### 1) IO + side effects
-- HTTP calls, WebSockets, SSE
-- Browser APIs (storage, permissions, geolocation, clipboard)
-- Worker initialization + message protocols
-- File parsing (GeoJSON, CSV, shapefile/GeoPackage adapters if present)
-- Image/tile loading & decoding (COGs/tilesets if applicable)
+> [!TIP]
+> Keep the public surface area small. Prefer capability flags over exposing engine internals.
 
-### 2) Vendor boundaries (anti‑corruption layer) 🧼
-Adapters are where we **translate**:
-- Vendor SDK objects → app types
-- API DTOs → domain/UI models
-- Browser exceptions → app error types
-- Vendor auth/session semantics → app auth semantics
-
-### 3) Performance tactics (as an implementation detail) ⚡
-Caching, batching, retry/backoff, deduplication, compression—**as long as it stays invisible to the core** and respects correctness.
-
----
-
-## What does NOT belong here 🚫
-
-- Business rules (policy, decisions, “what should happen”)
-- Domain invariants (validation that defines truth)
-- UI components (except thin wrappers around external widgets)
-- Long chains of transformations (push heavy transforms into workers and keep the adapter thin)
-
----
-
-## The “Provenance Envelope” pattern 📦🧾
-
-KFM’s core promise is provenance-first: users must be able to inspect *what a layer is*, *where it came from*, and *how it was produced*. Adapters are where external data first enters the Web app, so they’re the first place provenance can be attached.
-
-### Recommended shape
-Use a wrapper that travels with any “truthy” payload:
+### Minimal TypeScript interface (spec)
 
 ```ts
-export type EvidenceRef =
-  | { kind: "dataset"; id: string; label?: string; url?: string; license?: string }
-  | { kind: "document"; id: string; label?: string; url?: string }
-  | { kind: "api"; id: string; label?: string; url?: string };
+export type MapEngine = "maplibre" | "cesium";
 
-export type Provenance = {
-  retrievedAt: string;        // ISO timestamp
-  refs: EvidenceRef[];        // citations / dataset ids / doc ids
-  pipelineRunId?: string;     // if available from API
-  notes?: string[];           // optional processing notes
+export type ViewState = {
+  center: [lng: number, lat: number];
+  zoom: number;
+  bearing?: number; // degrees
+  pitch?: number;   // degrees (0-85 typical)
 };
 
-export type Provenanced<T> = {
-  value: T;
-  provenance: Provenance;
+export type TimeState = {
+  // KFM should treat time as a first-class dimension (nullable if "timeless")
+  currentISO?: string;   // e.g. "1875-01-01"
+  rangeISO?: [string, string];
+  mode?: "scrub" | "animate";
 };
-```
 
-### Adapter rule
-> ✅ **Any adapter that returns data used in maps, narratives, “facts”, or AI summaries should return `Provenanced<T>`** (or something equivalent).
+export type ProvenanceRef = {
+  stacItemId?: string;
+  stacCollectionId?: string;
+  dcatDatasetId?: string;
+  provBundleId?: string;
 
----
+  // human-facing attribution
+  title?: string;
+  license?: string;
+  attribution?: string;
+};
 
-## Error model 🎯
+export type LayerSpec = {
+  id: string;                 // stable ID (no random UUID per session)
+  title: string;              // for UI layer panel
+  kind: "vector" | "raster" | "terrain" | "3dtiles" | "annotation";
 
-Adapters should “normalize chaos” into predictable error shapes.
-
-### Suggested discriminated union
-```ts
-export type AppError =
-  | { kind: "NetworkError"; message: string; retryAfterMs?: number }
-  | { kind: "AuthError"; message: string; status?: number }
-  | { kind: "NotFound"; message: string }
-  | { kind: "RateLimited"; message: string; retryAfterMs?: number }
-  | { kind: "ValidationError"; message: string; details?: unknown }
-  | { kind: "Unknown"; message: string; cause?: unknown };
-
-export type Result<T> =
-  | { ok: true; value: T }
-  | { ok: false; error: AppError };
-```
-
-### Adapter rule
-- **Never leak raw vendor exceptions** out of an adapter.
-- Prefer `Result<T>` or typed errors over throwing.
-
----
-
-## API client adapters 🌐
-
-### Responsibilities
-- Construct requests (headers, auth, correlation IDs)
-- Runtime validate responses (don’t trust the network!)
-- Convert DTO → app types
-- Attach provenance (dataset ids, sources, timestamps)
-- Enforce API boundary rules (no “secret” endpoints)
-
-### Minimal example
-```ts
-export interface CatalogPort {
-  searchLayers(params: { bbox?: [number, number, number, number]; q?: string }): Promise<Result<Provenanced<unknown>>>;
-}
-
-export function createCatalogApiAdapter(deps: {
-  baseUrl: string;
-  fetchImpl?: typeof fetch;
-  getAuthToken?: () => string | null;
-}): CatalogPort {
-  const fetchImpl = deps.fetchImpl ?? fetch;
-
-  return {
-    async searchLayers(params) {
-      try {
-        const url = new URL("/api/catalog/search", deps.baseUrl);
-        if (params.q) url.searchParams.set("q", params.q);
-        if (params.bbox) url.searchParams.set("bbox", params.bbox.join(","));
-
-        const token = deps.getAuthToken?.();
-        const res = await fetchImpl(url.toString(), {
-          headers: {
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            "Accept": "application/json",
-          },
-        });
-
-        if (res.status === 401 || res.status === 403) {
-          return { ok: false, error: { kind: "AuthError", message: "Not authorized", status: res.status } };
-        }
-        if (!res.ok) {
-          return { ok: false, error: { kind: "NetworkError", message: `HTTP ${res.status}` } };
-        }
-
-        const json = await res.json();
-
-        // TODO: runtime validation here (zod/io-ts/etc)
-        return {
-          ok: true,
-          value: {
-            value: json,
-            provenance: {
-              retrievedAt: new Date().toISOString(),
-              refs: [{ kind: "api", id: "catalog.search", url: url.toString() }],
-            },
-          },
-        };
-      } catch (cause) {
-        return { ok: false, error: { kind: "Unknown", message: "Request failed", cause } };
-      }
-    },
+  source: {
+    type: "tiles" | "geojson" | "stac-asset" | "api";
+    url: string;              // API endpoint or tile template
+    format?: "mvt" | "png" | "jpg" | "geojson" | "cog" | "3dtiles";
   };
+
+  paint?: Record<string, unknown>; // engine-agnostic style-ish blob
+  layout?: Record<string, unknown>;
+
+  opacity?: number;           // 0..1
+  visible?: boolean;
+  zIndex?: number;
+
+  time?: {
+    startISO?: string;
+    endISO?: string;
+    field?: string;           // feature property for time filtering (if applicable)
+  };
+
+  provenance: ProvenanceRef;  // required for anything visible
+};
+
+export type MapFeatureRef = {
+  layerId: string;
+  featureId: string;          // stable within layer
+  properties?: Record<string, unknown>;
+  geometryHint?: "point" | "line" | "polygon" | "raster-pixel" | "3d";
+  provenance?: ProvenanceRef; // may be inherited from layer
+};
+
+export type MapEvent =
+  | { type: "ready" }
+  | { type: "moveEnd"; view: ViewState }
+  | { type: "hover"; feature?: MapFeatureRef; screen: { x: number; y: number } }
+  | { type: "click"; feature?: MapFeatureRef; screen: { x: number; y: number } }
+  | { type: "error"; message: string; details?: unknown };
+
+export interface MapAdapter {
+  readonly engine: MapEngine;
+
+  mount(container: HTMLElement): void;
+  destroy(): void;
+
+  setView(view: ViewState): void;
+  getView(): ViewState;
+
+  setTime(time: TimeState): void;
+
+  addLayer(layer: LayerSpec): void;
+  updateLayer(layer: LayerSpec): void;
+  removeLayer(layerId: string): void;
+
+  setLayerVisibility(layerId: string, visible: boolean): void;
+  setLayerOpacity(layerId: string, opacity: number): void;
+
+  /** For “map behind the map” inspector panels */
+  inspectLayer(layerId: string): ProvenanceRef | undefined;
+
+  /** Subscribe to normalized events */
+  on(cb: (evt: MapEvent) => void): () => void;
+}
+```
+
+> [!IMPORTANT]
+> This interface is intentionally “boring”: **no engine objects** should leak out (no `maplibre.Map`, no Cesium `Viewer`).
+
+---
+
+## 🧬 Layer + Provenance Model
+
+KFM’s UI must be able to answer, at any time:
+
+- What is this layer?
+- Where did it come from?
+- What license governs it?
+- What processing produced it?
+- If it’s AI-generated or derived: what inputs + parameters created it?
+
+### “Inspectable layer” UX contract 🔍
+
+When a layer is visible, the adapter must provide enough metadata to populate:
+
+- **Title + Source org**
+- **License**
+- **STAC/DCAT/PROV IDs** (or URLs) for traceability
+- **Temporal extent** (if applicable)
+- **A note if derived/AI-generated** (if flagged by API)
+
+### Example `LayerSpec` (API → adapter)
+
+```json
+{
+  "id": "kfm.historical_boundaries.counties_1870",
+  "title": "Kansas County Boundaries (1870)",
+  "kind": "vector",
+  "source": {
+    "type": "tiles",
+    "url": "/api/tiles/kfm.historical_boundaries.counties/{z}/{x}/{y}.mvt",
+    "format": "mvt"
+  },
+  "opacity": 0.85,
+  "visible": true,
+  "time": {
+    "startISO": "1870-01-01",
+    "endISO": "1870-12-31",
+    "field": "valid_on"
+  },
+  "provenance": {
+    "title": "County boundaries (1870)",
+    "attribution": "Kansas Historical Society (digitized)",
+    "license": "CC BY 4.0",
+    "stacCollectionId": "kfm-historical-boundaries",
+    "stacItemId": "kfm-historical-boundaries-counties-1870",
+    "dcatDatasetId": "kfm:dcat:historical-boundaries",
+    "provBundleId": "kfm:prov:boundaries:counties:digitization:v3"
+  }
 }
 ```
 
 ---
 
-## Storage adapters 💾
+## ⏳ Timeline Integration
 
-### Use cases
-- User preferences (map basemaps, UI state)
-- Offline/edge caching of recent queries (careful!)
-- Session persistence
-- Precomputed indexes (for faster spatial search)
+Timeline is a first-class UI control. The adapter should:
 
-### Rules of thumb
-- Treat storage like an unreliable database: **quota can fail**
-- Version your stored data (`schemaVersion`)
-- Provide migration paths + fallbacks
-- Never store sensitive data unencrypted (and prefer not storing at all)
+1. Accept `setTime({ currentISO })`.
+2. Apply a deterministic filtering strategy per layer:
+   - **Tile layers**: include time in the tile request (preferred) or use server-side filtering.
+   - **GeoJSON layers**: filter client-side only if small + already governed (never “load everything”).
+   - **Raster time-series**: swap the asset URL based on time (COG/imagery sequences).
+3. Report back `moveEnd` events with view state, so timeline-driven stories can record “map actions”.
 
----
-
-## Geospatial adapters 🗺️
-
-### What they do
-- Convert between formats: GeoJSON ↔ internal feature types
-- Normalize CRS / coordinate order rules (lon/lat vs lat/lon)
-- Prepare bbox + tiling requests
-- Support spatial predicates at the API boundary (intersects/contains/within)
-
-### “Thin” vs “heavy”
-- ✅ Thin transforms (bbox normalization, property mapping) can stay in adapters
-- 🧠 Heavy transforms (topology fixes, simplification, reprojection at scale) should go to **workers** or the backend
+> [!TIP]
+> Keep all time logic explicit. A layer should declare whether it is time-aware and how.
 
 ---
 
-## Map engine adapters 🧭🧱
+## 🧭 2D vs 3D Engines
 
-Map engines are vendor-heavy (APIs, lifecycle rules, performance tricks). Wrap them so the rest of the app depends on **your** interface, not theirs.
+### 🧭 MapLibre (2D default)
 
-### Recommended approach
-Define a small “MapPort” that represents what the app needs:
+Best for:
+- Vector tile basemaps + overlays
+- Smooth interaction at typical web map scale
+- Fast layer toggling, styling, and hover/click inspect
 
-```ts
-export interface MapPort {
-  setView(view: { center: [number, number]; zoom: number }): void;
-  addLayer(layer: { id: string; type: string; source: unknown }): void;
-  removeLayer(id: string): void;
-  on(event: "click" | "moveend", handler: (e: unknown) => void): () => void;
-}
-```
+Recommended layer forms:
+- `mvt` vector tiles for large feature sets
+- raster tiles (`png`/`jpg`) for imagery overlays
+- **small** GeoJSON for annotations or debugging only
 
-Then implement it with the chosen engine in `adapters/map/*`.
+### 🌍 Cesium (3D optional)
 
----
+Best for:
+- Terrain + vertical context (topography, cross-sections)
+- 3D Tiles (point clouds, buildings, volumetric datasets)
+- Story-driven “2D → 3D” transitions
 
-## Worker adapters 🧵
-
-If you parse big files, build spatial indexes, simplify geometry, generate vector tiles, or run client-side analytics:
-- Do it in a **Worker**
-- Wrap the worker protocol in an adapter so the rest of the app sees a normal async API
-
-### Pattern
-```ts
-export interface GeometryOpsPort {
-  simplifyGeoJson(input: unknown, opts: { tolerance: number }): Promise<Result<unknown>>;
-}
-```
+**Key rule:** keep shared state synchronized
+- `ViewState` should map cleanly between 2D and 3D (center/zoom ↔ camera position).
+- Switching modes should preserve layer visibility intent (some layers may be engine-specific).
 
 ---
 
-## AI / “Focus Mode” boundary 🧠🛡️
+## 🚀 Performance
 
-Adapters that feed data to AI features must be extra strict:
-- **Never** pass unsourced claims as facts
-- Always preserve citations / references
-- Make “unknown / not in data” a valid outcome
-- Ensure the UI can label AI output clearly (origin + evidence)
+### Prefer “streamable” representations
+- ✅ vector tiles (MVT) over giant GeoJSON
+- ✅ server-side generalization over client-side crunching
+- ✅ time-windowed requests for timeline scrubbing
 
-> 🧯 If the adapter can’t attach evidence, it should downgrade the output to “unverified” (or refuse).
+### Avoid common map performance traps 🧨
+- Rendering 50k+ GeoJSON features client-side
+- Re-adding layers on every React render
+- Doing expensive filtering in the main thread
+- Sending unbounded queries from UI (should be API-governed)
 
----
-
-## Naming & code style ✍️
-
-### Conventions
-- `FooPort` = interface
-- `createFooAdapter(...)` = factory (easier DI)
-- `fooAdapter.ts` / `foo.port.ts` (pick one style and stay consistent)
-- Keep adapter public surface small; hide vendor types in implementation
-
-### Imports
-- ✅ Adapters may import from core (ports, types, utilities)
-- 🚫 Core must not import from adapters
+### Raster formats (practical defaults)
+- 🖼️ **JPEG**: aerial/satellite imagery (smaller)
+- 🧾 **PNG**: linework/labels/transparent overlays
+- 🧱 **COG**: if the API/tiler serves Cloud-Optimized GeoTIFF assets (use server-side tiling)
 
 ---
 
-## Testing strategy 🧪
+## ♿ Accessibility
 
-### 1) Mock adapters for unit tests
-Provide a simple in-memory or deterministic adapter for ports.
+Map UIs are tricky—this adapter must make it easier, not harder:
 
-### 2) Contract tests
-Write a shared test suite that runs against:
-- the mock adapter
-- the real adapter (optionally behind a test server)
-
-### 3) “No side-effects” tests
-Your use-cases should be testable without real network/storage by swapping adapters.
+- Keyboard support for:
+  - layer panel toggles
+  - focusable “selected feature” list
+- Respect `prefers-reduced-motion` for animated camera moves
+- Provide an alternate “list view” path: selected features can be navigated without precision pointer actions
+- Tooltip content must be screen-reader safe (no raw HTML from data)
 
 ---
 
-## PR checklist ✅
+## 🔐 Security + Governance
 
-- [ ] No direct `fetch()` / browser API calls outside `web/src/adapters`
-- [ ] New adapter implements a **port** (interface contract) and keeps vendor APIs internal
-- [ ] Response decoding/validation exists (runtime validation or strict guards)
-- [ ] Provenance is attached where data can become user-facing truth
-- [ ] Errors are mapped to app error types (no raw throws leaking out)
-- [ ] Basic tests exist (mock + contract test where appropriate)
-- [ ] Telemetry hooks added for failures/latency (if applicable)
+### 🛡️ Treat all layer content as untrusted input
+Even “trusted datasets” can contain user-controlled fields.
 
----
+- Never inject feature properties into `innerHTML`.
+- Sanitize popup/tooltip content.
+- Avoid dynamic code execution patterns (no `eval`, no string-built style expressions from user content).
 
-## “When should I create a new adapter?” 🤔
+### 🧾 Redaction & classification
+- If the API says a dataset/layer is redacted beyond certain zoom/time extents, the adapter must enforce it.
+- If a layer becomes invalid at a given time/zoom, it should:
+  - auto-hide **and**
+  - expose a user-facing reason (e.g. “restricted at this scale”).
 
-Create a new adapter when:
-- You need to integrate a new external system (API, SDK, storage)
-- You want to swap a vendor without touching business logic
-- You need a clear boundary for provenance, auditing, or security controls
-- You’re adding a new file format or data ingestion path
-
-Don’t create one when:
-- It’s just a pure transformation (put it in shared utils)
-- It’s business logic (put it in services/use-cases)
-- It’s rendering/UI behavior (put it in UI layer)
+### 🔑 Tokens & secrets
+- No secrets in the web bundle.
+- If map tiles require auth, use API-mediated token exchange or short-lived tokens.
 
 ---
 
-## Appendix: Adapter templates 🧩
+## 🧪 Testing
+
+### What we can unit test ✅
+- LayerSpec → engine normalization (style mapping, defaults, capability flags)
+- Event normalization (MapLibre/Cesium → `MapEvent`)
+- Time filtering decisions (per layer kind)
+- Provenance enforcement (“cannot add visible layer without provenance”)
+
+### What should be integration tested 🧩
+- Layer toggling + opacity control
+- Timeline scrubbing across time-aware layers
+- 2D/3D mode switch preserves intent
+- Inspector panel always has provenance fields
+
+---
+
+## 🤝 Contributing
+
+### Add a new layer type
+Checklist ✅
+- [ ] Define/extend `LayerSpec.kind` and required `source.format`
+- [ ] Implement normalization for MapLibre and/or Cesium
+- [ ] Ensure `inspectLayer()` returns a complete provenance payload
+- [ ] Make timeline behavior explicit (even if “not time-aware”)
+- [ ] Add tests for normalization + failure modes
+- [ ] Update this README
+
+### Add a new engine implementation
+Checklist 🧰
+- [ ] Implement the `MapAdapter` interface with **no engine leaks**
+- [ ] Map events into normalized `MapEvent`
+- [ ] Implement a capability map (what kinds/formats are supported)
+- [ ] Provide a graceful “unsupported layer” behavior (warn + no crash)
+- [ ] Add smoke tests (mount → add layer → click → destroy)
+
+---
+
+## 📚 Appendix: Project Reference Library
 
 <details>
-<summary><strong>🧰 Template: adapter skeleton</strong></summary>
+<summary>📖 How the project library informs this adapter (click to expand)</summary>
 
-```ts
-export interface ExamplePort {
-  doThing(input: { id: string }): Promise<Result<Provenanced<unknown>>>;
-}
+**KFM platform & governance**
+- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation (UI map/timeline, MapLibre + Cesium, provenance-first expectations)
+- MARKDOWN_GUIDE_v13 (canonical subsystem homes; UI constraints; contract-first + evidence-first pipeline)
 
-export function createExampleAdapter(deps: {
-  // dependency injection here
-}): ExamplePort {
-  return {
-    async doThing(input) {
-      // 1) validate input (optional)
-      // 2) perform side effect (fetch/storage/worker)
-      // 3) validate output
-      // 4) attach provenance
-      // 5) map errors
-      return {
-        ok: true,
-        value: {
-          value: {},
-          provenance: {
-            retrievedAt: new Date().toISOString(),
-            refs: [{ kind: "api", id: "example.doThing" }],
-          },
-        },
-      };
-    },
-  };
-}
-```
+**Cartography & UX**
+- Making Maps: A Visual Guide to Map Design for GIS (legend, symbology, visual hierarchy)
+- Mobile Mapping: Space, Cartography and the Digital (mobile interaction constraints; map-as-interface)
+- Responsive Web Design with HTML5 and CSS3 (responsive layout decisions for map + panels)
+
+**WebGL / 3D**
+- WebGL Programming Guide (rendering constraints; GPU budgeting)
+- Archaeological 3D GIS (3D layers, terrain/mesh interpretation patterns)
+
+**Data formats & performance**
+- Compressed Image File Formats (PNG/JPEG tradeoffs; artifacts)
+- Database Performance at Scale (latency budgets, caching mindset)
+- Scalable Data Management for Future Hardware (streaming + caching principles; query reuse patterns)
+- PostgreSQL Notes for Professionals (spatial + query awareness—**server-side only**)
+
+**Geospatial analysis (server-side inspiration)**
+- Python Geospatial Analysis Cookbook (GeoJSON, PostGIS workflows—feeds the API, not the UI)
+- Cloud-Based Remote Sensing with Google Earth Engine (imagery/time-series layer expectations)
+
+**Modeling, uncertainty, and “evidence artifacts”**
+- Scientific Modeling & Simulation (reproducibility mindset)
+- Understanding Statistics & Experimental Design (communicating uncertainty)
+- Think Bayes (uncertainty as first-class metadata)
+- Regression Analysis (communicating model assumptions; avoiding misleading visuals)
+
+**Security**
+- Ethical Hacking & Countermeasures / Gray Hat Python (threat modeling mindset; input handling hygiene)
+
+**Systems + theory (long-term)**
+- Data Spaces (federation and governed access patterns)
+- Spectral Geometry of Graphs (graph-based overlays + interpretation)
+- Principles of Biological Autonomy / Digital Humanism / AI Law foundations (human-centered governance framing)
 
 </details>
 
-<details>
-<summary><strong>🧾 Template: provenance refs</strong></summary>
+---
 
-```ts
-const refs = [
-  { kind: "dataset", id: "urn:kfm:dataset:...", label: "USGS ...", url: "..." },
-  { kind: "document", id: "urn:kfm:doc:...", label: "Story Node ...", url: "..." },
-  { kind: "api", id: "catalog.search", url: "https://..." },
-] as const;
-```
+## ✅ Definition of Done (for changes in this folder)
 
-</details>
+- [ ] Public interface remains engine-agnostic
+- [ ] Provenance is enforced for visible layers
+- [ ] Timeline interactions are deterministic
+- [ ] No direct data files added to `web/`
+- [ ] No direct DB calls added
+- [ ] Security review: popups/tooltips safe; no HTML injection
+- [ ] Accessibility review: keyboard + reduced motion
+- [ ] Unit tests updated/added
+- [ ] README updated if behavior changes
+
+---
