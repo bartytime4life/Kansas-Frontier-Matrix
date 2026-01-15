@@ -53,13 +53,13 @@ KFM is designed around **pipeline → processed data → catalog metadata → AP
 
 ```mermaid
 flowchart LR
-  A[Source Data / Manifests] --> B[Pipeline (deterministic)]
-  B --> C[data/processed/*]
-  B --> D[data/catalog/* (STAC/DCAT)]
-  B --> E[data/prov/* (PROV lineage)]
-  D --> F[API / UI]
-  T[web/assets/maps/thumbnails/*] --> F
-  D -. "links to thumbnail asset" .-> T
+  A["Source Data / Manifests"] --> B["Pipeline - deterministic"];
+  B --> C["data/processed/*"];
+  B --> D["data/catalog/* - STAC/DCAT"];
+  B --> E["data/prov/* - PROV lineage"];
+  D --> F["API / UI"];
+  T["web/assets/maps/thumbnails/*"] --> F;
+  D -.->|"links to thumbnail asset"| T;
 ```
 
 Key implications:
