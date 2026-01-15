@@ -53,15 +53,15 @@ flowchart TB
 
 ```txt
 web/src/
-  adapters/
-    api/            # HTTP/WS clients, DTO ↔ domain mapping, retries
-    storage/        # localStorage / IndexedDB / Cache API
-    geo/            # GeoJSON, tiles, bbox, reprojection, geometry helpers
-    map/            # map engine bridge (MapLibre / Cesium / deck.gl / etc.)
-    workers/        # Web Workers: heavy transforms, parsing, indexing
-    telemetry/      # logging, metrics, traces, error reporting
-    auth/           # OAuth/OpenID, session tokens, role checks (client-side)
-    index.ts        # adapter factories + exports
+└─ 🧩 adapters/
+   ├─ 🌐 api/            # HTTP/WS clients, DTO ↔ domain mapping, retries
+   ├─ 💾 storage/        # localStorage / IndexedDB / Cache API
+   ├─ 🌍 geo/            # GeoJSON, tiles, bbox, reprojection, geometry helpers
+   ├─ 🗺️ map/            # map engine bridge (MapLibre / Cesium / deck.gl / etc.)
+   ├─ 🧵 workers/        # Web Workers: heavy transforms, parsing, indexing
+   ├─ 📡 telemetry/      # logging, metrics, traces, error reporting
+   ├─ 🔐 auth/           # OAuth/OpenID, session tokens, role checks (client-side)
+   └─ 📦 index.ts        # adapter factories + exports
 ```
 
 ---
