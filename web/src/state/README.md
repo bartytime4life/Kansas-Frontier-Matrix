@@ -136,14 +136,14 @@ Ephemeral: form drafts, hover highlights, temporary UI toggles that don’t affe
 
 ```mermaid
 flowchart LR
-  ETL[🛠️ ETL jobs] --> CATS[🗂️ STAC/DCAT/PROV catalogs]
-  CATS --> GRAPH[🧠 Knowledge Graph]
-  GRAPH --> API[🔌 Governed APIs]
-  API --> CACHE[📦 Client Fetch/Cache]
-  CACHE --> STATE[🧠 UI State (this folder)]
-  STATE --> UI[🖥️ React + MapLibre/Cesium]
-  UI --> STORY[🎬 Story Nodes]
-  UI --> FOCUS[🧠 Focus Mode]
+  ETL["🛠️ ETL jobs"] --> CATS["🗂️ Catalogs - STAC DCAT PROV"]
+  CATS --> GRAPH["🧠 Knowledge graph"]
+  GRAPH --> API["🔌 Governed APIs"]
+  API --> CACHE["📦 Client fetch cache"]
+  CACHE --> STATE["🧠 UI state - this folder"]
+  STATE --> UI["🖥️ React UI + Map engines"]
+  UI --> STORY["🎬 Story Nodes"]
+  UI --> FOCUS["🧠 Focus Mode"]
   STORY --> STATE
   FOCUS --> STATE
 ```
