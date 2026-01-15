@@ -39,37 +39,37 @@ This folder is the **single source of truth** for how KFM’s web experience *lo
 
 ```text
 web/data/styles/
-├─ README.md                     👈 you are here
-├─ index.json                    🧩 style registry (optional but recommended)
+├─ 📄 README.md                     👈 you are here 📌
+├─ 🧩🧾 index.json                   # 🧩 style registry (optional but recommended)
 │
-├─ tokens/                       🎛️ design tokens (shared)
-│  ├─ colors.json
-│  ├─ typography.json
-│  ├─ spacing.json
-│  └─ ramps/                      🌈 data color ramps
+├─ 🎛️ tokens/                       # 🎛️ design tokens (shared)
+│  ├─ 🎨🧾 colors.json
+│  ├─ 🔤🧾 typography.json
+│  ├─ 📏🧾 spacing.json
+│  └─ 🌈 ramps/                      # 🌈 data color ramps
 │
-├─ map/                          🗺️ map styling
-│  ├─ base/                       🧱 full MapLibre/Mapbox styles
-│  │  ├─ kfm.base.light.json
-│  │  └─ kfm.base.dark.json
-│  ├─ layers/                     🧵 style fragments per dataset/layer
-│  │  ├─ <dataset_id>.layer.json
-│  │  └─ <dataset_id>.legend.json
-│  └─ sprites/                    🧃 sprite sheets
-│     ├─ kfm.sprite.png
-│     └─ kfm.sprite.json
+├─ 🗺️ map/                          # 🗺️ map styling
+│  ├─ 🧱 base/                       # 🧱 full MapLibre/Mapbox styles
+│  │  ├─ 🌞🎨🧾 kfm.base.light.json
+│  │  └─ 🌙🎨🧾 kfm.base.dark.json
+│  ├─ 🧵 layers/                     # 🧵 style fragments per dataset/layer
+│  │  ├─ 🆔🗺️🧾 <dataset_id>.layer.json
+│  │  └─ 🆔📜🧾 <dataset_id>.legend.json
+│  └─ 🧃 sprites/                    # 🧃 sprite sheets
+│     ├─ 🖼️ kfm.sprite.png
+│     └─ 🧾 kfm.sprite.json
 │
-├─ icons/                        🧷 svg icons (UI + map markers)
-│  └─ svg/
+├─ 🧷 icons/                         # 🧷 svg icons (UI + map markers)
+│  └─ 🧷 svg/
 │
-├─ charts/                       📊 chart themes (vega/echarts/etc)
-│  ├─ theme.light.json
-│  └─ theme.dark.json
+├─ 📊 charts/                        # 📊 chart themes (vega/echarts/etc)
+│  ├─ 🌞📊🧾 theme.light.json
+│  └─ 🌙📊🧾 theme.dark.json
 │
-└─ schemas/                      🧪 JSONSchema validation
-   ├─ style.index.schema.json
-   ├─ layer.style.schema.json
-   └─ legend.schema.json
+└─ 🧪📐 schemas/                      # 🧪 JSONSchema validation
+   ├─ 📐🧾 style.index.schema.json
+   ├─ 📐🧾 layer.style.schema.json
+   └─ 📐🧾 legend.schema.json
 ```
 
 > [!TIP]
