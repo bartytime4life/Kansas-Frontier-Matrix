@@ -86,25 +86,25 @@ A dashboard mode is specifically contemplated for **auto-updating** “new event
 ```mermaid
 flowchart LR
   subgraph Upstream["Upstream (governed)"]
-    A[ETL] --> B[STAC/DCAT/PROV catalogs]
-    B --> C[Neo4j graph]
+    A["ETL"] --> B["STAC/DCAT/PROV catalogs"];
+    B --> C["Neo4j graph"];
   end
 
   subgraph Boundary["Boundary (contract-first)"]
-    D[API Layer\nREST + GraphQL\nredaction + access control]
+    D["API Layer<br/>REST + GraphQL<br/>redaction + access control"];
   end
 
   subgraph UI["Web UI (React)"]
-    E[Dashboard\n(web/src/features/dashboard)]
-    F[Map UI\nMapLibre / optional Cesium]
-    G[Story Nodes + Focus Mode]
+    E["Dashboard<br/>web/src/features/dashboard"];
+    F["Map UI<br/>MapLibre / optional Cesium"];
+    G["Story Nodes + Focus Mode"];
   end
 
-  B --> D
-  C --> D
-  D --> E
-  D --> F
-  D --> G
+  B --> D;
+  C --> D;
+  D --> E;
+  D --> F;
+  D --> G;
 ```
 
 Key: **Dashboard must consume API contracts**, never graph directly.:contentReference[oaicite:12]{index=12}
