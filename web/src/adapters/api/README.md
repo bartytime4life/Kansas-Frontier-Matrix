@@ -39,15 +39,19 @@ This means:
 
 ```mermaid
 flowchart LR
-  UI[🧑‍💻 React UI] --> AD[🔌 API Adapters<br/>web/src/adapters/api]
-  AD -->|HTTP| API[🛡️ API boundary<br/>src/server]
-  API --> S[🧠 Service layer]
-  S --> D[📦 Domain]
-  API --> CAT[🧾 STAC/DCAT/PROV catalogs]
-  API --> G[🧩 Graph (Neo4j)]
-  API --> DS[(🗄️ Data stores)]
-  API --> AD
-  AD --> UI
+  UI["🧑‍💻 React UI"] --> AD["🔌 API Adapters<br/>web/src/adapters/api"];
+  AD -->|HTTP| API["🛡️ API Boundary<br/>src/server"];
+
+  API --> S["🧠 Service Layer"];
+  S --> D["📦 Domain"];
+
+  API --> CAT["🧾 Catalogs<br/>STAC / DCAT / PROV"];
+  API --> G["🧩 Graph<br/>Neo4j"];
+  API --> DS["🗄️ Data Stores"];
+
+  %% Optional return/cycle edges (allowed)
+  API --> AD;
+  AD --> UI;
 ```
 
 ---
