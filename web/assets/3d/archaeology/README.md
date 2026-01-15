@@ -52,41 +52,41 @@ Non-goals (store elsewhere):
 
 ```text
 web/assets/3d/archaeology/
-├── README.md
-├── index.json                      # (optional) generated registry for the web app
-├── schemas/
-│   ├── kfm-3d-asset.schema.json    # JSON Schema for validation
-│   └── kfm-provenance.schema.json
-├── sites/
-│   └── <site_slug>/
-│       ├── manifest.json           # what the viewer loads (models, LODs, thumbnails)
-│       ├── metadata.yaml           # human-friendly metadata (mirrors manifest fields)
-│       ├── provenance.yaml         # capture + processing chain (tooling, params, checksums)
-│       ├── citations.bib           # academic citations (optional but encouraged)
-│       ├── thumbs/
-│       │   ├── hero.webp
-│       │   └── card.webp
-│       ├── models/
-│       │   ├── lod0.glb            # highest detail web-safe
-│       │   ├── lod1.glb
-│       │   └── lod2.glb
-│       ├── textures/
-│       │   ├── albedo.ktx2
-│       │   ├── normal.ktx2
-│       │   └── orm.ktx2            # occlusion/roughness/metallic packed
-│       ├── georef/
-│       │   ├── crs.wkt             # CRS as WKT (authoritative)
-│       │   ├── transform.json      # local→world transform (incl. units + axis)
-│       │   └── bounds.geojson      # footprint / bbox in map CRS
-│       └── analysis/
-│           ├── volumes/
-│           │   ├── volume_report.json
-│           │   └── volume_mesh.glb
-│           └── visibility/
-│               ├── viewshed.geojson
-│               └── visibility_notes.md
-└── artifacts/
-    └── <artifact_slug>/            # same structure as sites/, smaller scale
+├── 📄 README.md
+├── 🧾🗂️ index.json                       # (optional) generated registry for the web app
+├── 📐 schemas/
+│   ├── 📐🧾 kfm-3d-asset.schema.json     # JSON Schema for validation
+│   └── 📐🧾 kfm-provenance.schema.json
+├── 🏛️ sites/
+│   └── 🏷️ <site_slug>/
+│       ├── 🧾🧭 manifest.json            # what the viewer loads (models, LODs, thumbnails)
+│       ├── 🏷️📄 metadata.yaml            # human-friendly metadata (mirrors manifest fields)
+│       ├── 🧬📄 provenance.yaml          # capture + processing chain (tooling, params, checksums)
+│       ├── 📚 citations.bib              # academic citations (optional but encouraged)
+│       ├── 🖼️ thumbs/
+│       │   ├── 🌟🖼️ hero.webp
+│       │   └── 🪪🖼️ card.webp
+│       ├── 🧊 models/
+│       │   ├── 🧊🧱 lod0.glb             # highest detail web-safe
+│       │   ├── 🧊🧱 lod1.glb
+│       │   └── 🧊🧱 lod2.glb
+│       ├── 🧵 textures/
+│       │   ├── 🎨🧵 albedo.ktx2
+│       │   ├── 🧭🧵 normal.ktx2
+│       │   └── 🧲🧵 orm.ktx2             # occlusion/roughness/metallic packed
+│       ├── 🌍 georef/
+│       │   ├── 🧭📄 crs.wkt              # CRS as WKT (authoritative)
+│       │   ├── 🧾📐 transform.json       # local→world transform (incl. units + axis)
+│       │   └── 🗺️📦 bounds.geojson       # footprint / bbox in map CRS
+│       └── 🧪 analysis/
+│           ├── 📦 volumes/
+│           │   ├── 📊🧾 volume_report.json
+│           │   └── 🧊🕸️ volume_mesh.glb
+│           └── 👁️ visibility/
+│               ├── 👁️🗺️ viewshed.geojson
+│               └── 📝👁️ visibility_notes.md
+└── 🧰 artifacts/
+    └── 🏷️ <artifact_slug>/            # same structure as sites/, smaller scale
 ```
 
 ### 🏷 Suggested slugs (stable + boring = good)
