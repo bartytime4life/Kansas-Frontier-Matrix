@@ -44,19 +44,19 @@ This folder implements an **Adapter**: it translates UI intents into a consisten
 > This README documents the *contract* and *expected patterns*. Your actual filenames may differ.
 
 ```text
-📁 web/
-  📁 src/
-    📁 adapters/
-      📁 telemetry/
-        📄 README.md          👈 you are here
-        📄 index.ts           (public exports)
-        📄 types.ts           (event + context types)
-        📁 sinks/
-          📄 noop.ts          (tests / disabled)
-          📄 console.ts       (local dev)
-          📄 http.ts          (production ingestion)
-        📁 __tests__/
-          📄 telemetry.test.ts
+web/
+└─ 📁 src/
+   └─ 🧩 adapters/
+      └─ 📡 telemetry/
+         ├─ 📄 README.md          👈 you are here 📌
+         ├─ 🧩📄 index.ts          # (public exports)
+         ├─ 🧾📄 types.ts          # (event + context types)
+         ├─ 🧰 sinks/
+         │  ├─ 🚫📄 noop.ts        # (tests / disabled)
+         │  ├─ 🖥️📄 console.ts     # (local dev)
+         │  └─ 🌐📄 http.ts        # (production ingestion)
+         └─ 🧪 __tests__/
+            └─ 🧪📄 telemetry.test.ts
 ```
 
 ---
