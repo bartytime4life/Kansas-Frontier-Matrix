@@ -51,35 +51,35 @@ Maps are **generalizations**. Design choices depend on **scale** and what users 
 
 ```text
 web/data/tiles/
-  README.md
-
-  tilesets.json                # ✅ single index the app can read (catalog of tilesets)
-
-  📁 vector/
-    📁 ks-roads/
-      tilejson.json
-      metadata.json
-      preview.png              # optional
-      {z}/{x}/{y}.pbf          # MVT (pbf), usually gzip/brotli in hosting layer
-
-  🗺️ raster/
-    📁 historic-topo-1890/
-      tilejson.json
-      metadata.json
-      {z}/{x}/{y}.webp         # or .png
-
-  📦 packages/
-    ks-landcover_v20260114.pmtiles
-    ks-hillshade_v20260114.mbtiles
-
-  🎨 sprites/                  # optional: MapLibre sprite sheets
-    sprite.json
-    sprite.png
-    sprite@2x.json
-    sprite@2x.png
-
-  🔤 fonts/                    # optional: MapLibre glyphs
-    {fontstack}/{range}.pbf
+├─ 📄 README.md
+│
+├─ ✅🧾 tilesets.json                 # ✅ single index the app can read (catalog of tilesets)
+│
+├─ 📁🧭 vector/
+│  └─ 🛣️ ks-roads/
+│     ├─ 🧾 tilejson.json
+│     ├─ 🧾 metadata.json
+│     ├─ 🖼️ preview.png              # optional
+│     └─ 🧱📦 {z}/{x}/{y}.pbf          # MVT (pbf), usually gzip/brotli in hosting layer
+│
+├─ 🗺️🧱 raster/
+│  └─ 🕰️🗺️ historic-topo-1890/
+│     ├─ 🧾 tilejson.json
+│     ├─ 🧾 metadata.json
+│     └─ 🖼️🧱 {z}/{x}/{y}.webp         # or .png
+│
+├─ 📦 packages/
+│  ├─ 🧰🗺️ ks-landcover_v20260114.pmtiles
+│  └─ 🗃️🗺️ ks-hillshade_v20260114.mbtiles
+│
+├─ 🎨 sprites/                       # optional: MapLibre sprite sheets
+│  ├─ 🧾 sprite.json
+│  ├─ 🖼️ sprite.png
+│  ├─ 🧾 sprite@2x.json
+│  └─ 🖼️ sprite@2x.png
+│
+└─ 🔤 fonts/                         # optional: MapLibre glyphs
+   └─ 🔤📦 {fontstack}/{range}.pbf
 ```
 
 **Why an index file?**  
