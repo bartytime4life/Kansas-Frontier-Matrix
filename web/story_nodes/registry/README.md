@@ -88,14 +88,14 @@ flowchart LR
 > Your repo may vary — this layout is the **intended shape** for a governed UI registry.
 
 ```text
-📁 web/
-  📁 story_nodes/
-    📁 registry/
-      📄 README.md                      ← you are here
-      📄 story-node-registry.json        ← curated entries
-      📄 story-node-registry.schema.json ← contract-first schema
-      📄 index.ts                       ← exports + loader helpers
-      📄 validate.ts                    ← optional CLI validator
+web/
+└─ 📁 story_nodes/
+   └─ 🗂️ registry/
+      ├─ 📄 README.md                          # ← you are here 📌
+      ├─ 🗂️🧾 story-node-registry.json         # ← curated entries
+      ├─ 📐🧾 story-node-registry.schema.json  # ← contract-first schema
+      ├─ 🧩📄 index.ts                         # ← exports + loader helpers
+      └─ 🛡️📄 validate.ts                      # ← optional CLI validator
 ```
 
 ---
