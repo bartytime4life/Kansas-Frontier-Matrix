@@ -47,27 +47,26 @@ This directory contains **web-ready** 3D artifacts that the UI can load quickly:
 
 ## 🗂️ Recommended folder layout
 
-```text
 web/data/models_3d/
-├─ README.md
-├─ index.json                       # (optional) UI-friendly registry of published assets
-├─ assets/
-│  └─ <asset_id>/
-│     ├─ v0001/
-│     │  ├─ model.glb               # primary web model (preferred)
-│     │  ├─ preview.jpg             # thumbnail / cover image
-│     │  ├─ asset.json              # REQUIRED metadata contract
-│     │  └─ textures/               # if not embedded in GLB
-│     └─ v0002/
-│        └─ ...
-└─ tilesets/
-   └─ <asset_id>/
-      ├─ v0001/
-      │  ├─ tileset.json            # REQUIRED for 3D Tiles
-      │  ├─ *.b3dm / *.pnts / ...   # tile payloads
-      │  └─ asset.json              # REQUIRED metadata contract (same schema)
-      └─ v0002/
-         └─ ...
+├─ 📄 README.md
+├─ 🧾🗂️ index.json                      # (optional) UI-friendly registry of published assets
+├─ 🧰 assets/
+│  └─ 🆔 <asset_id>/
+│     ├─ 🏷️ v0001/
+│     │  ├─ 🧊 model.glb                # primary web model (preferred)
+│     │  ├─ 🖼️ preview.jpg              # thumbnail / cover image
+│     │  ├─ 📜🧾 asset.json             # REQUIRED metadata contract
+│     │  └─ 🧵 textures/                # if not embedded in GLB
+│     └─ 🏷️ v0002/
+│        └─ …
+└─ 🧱 tilesets/
+   └─ 🆔 <asset_id>/
+      ├─ 🏷️ v0001/
+      │  ├─ 🧱🧾 tileset.json            # REQUIRED for 3D Tiles
+      │  ├─ 🧊📦 *.b3dm / *.pnts / …     # tile payloads
+      │  └─ 📜🧾 asset.json              # REQUIRED metadata contract (same schema)
+      └─ 🏷️ v0002/
+         └─ …
 ```
 
 > [!NOTE]
