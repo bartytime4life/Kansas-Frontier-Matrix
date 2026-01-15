@@ -96,23 +96,23 @@ Manifests are data — treat them as untrusted input. Validate and sanitize ever
 A recommended shape (you can evolve it, but keep it tidy and discoverable):
 
 ```text
-🌐 web/
-  🧩 assets/
-    📈 charts/
-      🧾 manifests/
-        README.md
-        📐 schema/
-          chart-manifest.schema.json
-        🧪 examples/
-          timeseries.line.v1.json
-          geo.choropleth.v1.json
-        🧭 domains/
-          🌾 agriculture/
-            crop_yield_by_county.v1.json
-          🌧️ climate/
-            precip_monthly_by_county.v1.json
-          🏛️ history/
-            treaty_signings_over_time.v1.json
+web/
+└─ 🌐🧩 assets/
+   └─ 📈 charts/
+      └─ 🧾 manifests/
+         ├─ 📄 README.md
+         ├─ 📐 schema/
+         │  └─ 📐🧾 chart-manifest.schema.json
+         ├─ 🧪 examples/
+         │  ├─ 📈🧪 timeseries.line.v1.json
+         │  └─ 🗺️📊🧪 geo.choropleth.v1.json
+         └─ 🧭 domains/
+            ├─ 🌾 agriculture/
+            │  └─ 🌾📊 crop_yield_by_county.v1.json
+            ├─ 🌧️ climate/
+            │  └─ 🌧️📊 precip_monthly_by_county.v1.json
+            └─ 🏛️ history/
+               └─ 🏛️📈 treaty_signings_over_time.v1.json
 ```
 
 > ✅ Tip: keep manifests small and composable. If you need “logic,” reference a pipeline artifact — don’t embed code blobs.
