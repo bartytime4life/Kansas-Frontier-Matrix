@@ -109,19 +109,19 @@ Coverage reporting is a standard Jest capability and is commonly used in TypeScr
 ## 🧱 Directory layout (suggested)
 
 ```text
-📁 web/
-  📁 story_nodes/
-    📁 __tests__/
-      📄 README.md                ← you are here
-      📁 fixtures/
-        📁 story_md/              ← small markdown fixtures
-        📁 story_cfg/             ← small JSON config fixtures
-        📁 graph_fixture/         ← tiny graph dataset (only what tests need)
-      📄 storynode.schema.test.ts
-      📄 storynode.links.test.ts
-      📄 storynode.entities.test.ts
-      📄 storyplayer.integration.test.ts
-      📁 __snapshots__/           ← only if snapshot testing is justified
+web/
+└─ 📁 story_nodes/
+   └─ 🧪 __tests__/
+      ├─ 📄 README.md                     # ← you are here 📌
+      ├─ 🧩 fixtures/
+      │  ├─ 📝 story_md/                  # ← small markdown fixtures
+      │  ├─ 🧾 story_cfg/                 # ← small JSON config fixtures
+      │  └─ 🕸️ graph_fixture/             # ← tiny graph dataset (only what tests need)
+      ├─ 🧪📄 storynode.schema.test.ts
+      ├─ 🔗🧪📄 storynode.links.test.ts
+      ├─ 🧬🧪📄 storynode.entities.test.ts
+      ├─ 🔁🧪📄 storyplayer.integration.test.ts
+      └─ 🖼️ __snapshots__/                # ← only if snapshot testing is justified
 ```
 
 ✅ Keep fixtures *small, local, deterministic* (no network, no huge raster assets).
