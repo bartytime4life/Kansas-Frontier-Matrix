@@ -52,12 +52,13 @@ This directory is an **adapter layer**: it implements a **Storage Port** used by
 
 ```mermaid
 flowchart LR
-  UI[🧩 UI / State / Features] -->|depends on| Port[🔌 Storage Port]
-  Port --> MEM[🧠 Memory Adapter]
-  Port --> LS[🗝️ localStorage Adapter]
-  Port --> IDB[🗃️ IndexedDB Adapter]
-  Port --> REM[🌐 Remote/HTTP Adapter]
-  Port --> HYB[🧬 Hybrid Adapter (tiered)]
+  UI["🧩 UI / State / Features"] -->|depends on| Port["🔌 Storage Port"]
+
+  Port --> MEM["🧠 Memory Adapter"]
+  Port --> LS["🗝️ localStorage Adapter"]
+  Port --> IDB["🗃️ IndexedDB Adapter"]
+  Port --> REM["🌐 Remote / HTTP Adapter"]
+  Port --> HYB["🧬 Hybrid Adapter - tiered"]
 ```
 
 ---
