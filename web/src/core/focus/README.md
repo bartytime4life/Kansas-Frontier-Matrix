@@ -103,13 +103,13 @@ A UI‑friendly pointer to evidence:
 
 ```mermaid
 flowchart LR
-  A[Map + Timeline] --> B[User selects an area/time/entity]
-  B --> C[FocusContextBundle builder]
-  C --> D[Governed API: /api/focus (REST/GraphQL/WebSocket)]
-  D --> E[Answer + Evidence + Safety metadata]
-  E --> F[Focus Panel UI]
-  F --> G[Citations & Evidence Drawer]
-  F --> H[Story Node Renderer]
+  A["Map + Timeline"] --> B["User selects an area / time / entity"];
+  B --> C["FocusContextBundle builder"];
+  C --> D["Governed API<br/>/api/focus<br/>REST / GraphQL / WebSocket"];
+  D --> E["Answer + Evidence + Safety metadata"];
+  E --> F["Focus Panel UI"];
+  F --> G["Citations + Evidence Drawer"];
+  F --> H["Story Node Renderer"];
 ```
 
 ---
