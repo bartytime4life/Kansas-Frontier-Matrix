@@ -65,12 +65,12 @@ This folder implements an **Adapter**: it translates UI intents into a consisten
 
 ```mermaid
 flowchart LR
-  UI[🧭 UI Components] -->|track()| A[📡 Telemetry Adapter]
-  A --> Q[(🗃️ Queue / Batch)]
-  Q -->|flush| S{{🚚 Sink}}
-  S -->|ingest| API[🌐 Telemetry Endpoint]
-  API --> Store[(📦 Audit/Observability Store)]
-  Store --> Dash[📊 Dashboards & Governance Views]
+  UI["🧭 UI Components"] --> A["📡 Telemetry Adapter (track)"];
+  A --> Q["🗃️ Queue / Batch"];
+  Q --> S["🚚 Sink (flush)"];
+  S --> API["🌐 Telemetry Endpoint (ingest)"];
+  API --> Store["📦 Audit / Observability Store"];
+  Store --> Dash["📊 Dashboards & Governance Views"];
 ```
 
 ---
