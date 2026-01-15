@@ -51,18 +51,18 @@ Typical contents (recommended layout):
 
 ```text
 web/assets/charts/specs/
-├─ README.md
-├─ schemas/                       # ✅ JSON Schema + shared enums
-│  ├─ kfm.chart-spec.v1.schema.json
-│  └─ kfm.chart-palette.schema.json
-├─ palettes/                      # 🎨 Color tokens (semantic, accessible)
-│  └─ kfm.palettes.v1.json
-├─ examples/                      # 🧪 Known-good specs used by tests/docs
-│  ├─ timeseries.weather_station.v1.json
-│  ├─ histogram.elevation.v1.json
-│  └─ scatter.ndvi_vs_precip.v1.json
-└─ catalog/                        # 🗂️ Optional: registry/index of available charts
-   └─ chart-spec.index.v1.json
+├─ 📄 README.md
+├─ ✅🧩 schemas/                       # ✅ JSON Schema + shared enums
+│  ├─ 📐🧾 kfm.chart-spec.v1.schema.json
+│  └─ 🎨🧾 kfm.chart-palette.schema.json
+├─ 🎨 palettes/                      # 🎨 Color tokens (semantic, accessible)
+│  └─ 🎨🧾 kfm.palettes.v1.json
+├─ 🧪 examples/                      # 🧪 Known-good specs used by tests/docs
+│  ├─ 🌦️📈 timeseries.weather_station.v1.json
+│  ├─ 🏔️📊 histogram.elevation.v1.json
+│  └─ 🌿☔️🔵 scatter.ndvi_vs_precip.v1.json
+└─ 🗂️ catalog/                       # 🗂️ Optional: registry/index of available charts
+   └─ 🧾 chart-spec.index.v1.json
 ```
 
 > [!NOTE]
