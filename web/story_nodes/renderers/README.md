@@ -67,34 +67,34 @@ Renderers in this directory should:
 
 ```text
 web/
-└─ story_nodes/
-   └─ renderers/
-      ├─ README.md
-      ├─ index.ts
-      ├─ types.ts
-      ├─ registry.ts
-      ├─ context/
-      │  ├─ RendererContext.ts
-      │  └─ hooks.ts
-      ├─ blocks/
-      │  ├─ Markdown.renderer.tsx
-      │  ├─ MapStep.renderer.tsx
-      │  ├─ Media.renderer.tsx
-      │  ├─ Chart.renderer.tsx
-      │  ├─ Table.renderer.tsx
-      │  ├─ Timeline.renderer.tsx
-      │  ├─ GraphEntity.renderer.tsx
-      │  └─ UnknownBlock.renderer.tsx
-      ├─ safety/
-      │  ├─ sanitizeMarkdown.ts
-      │  ├─ safeExternalLink.tsx
-      │  └─ redaction.ts
-      └─ __tests__/
-         ├─ registry.test.ts
-         ├─ renderSmoke.test.tsx
-         └─ fixtures/
-            ├─ minimal.story.md
-            └─ mixed-blocks.story.md
+└─ 📁 story_nodes/
+   └─ 🎭 renderers/
+      ├─ 📄 README.md
+      ├─ 🧩📄 index.ts
+      ├─ 🧾📄 types.ts
+      ├─ 🗂️📄 registry.ts
+      ├─ 🧠 context/
+      │  ├─ 🧠📄 RendererContext.ts
+      │  └─ 🪝📄 hooks.ts
+      ├─ 🧱 blocks/
+      │  ├─ 📝🎭 Markdown.renderer.tsx
+      │  ├─ 🗺️🎭 MapStep.renderer.tsx
+      │  ├─ 🎞️🎭 Media.renderer.tsx
+      │  ├─ 📊🎭 Chart.renderer.tsx
+      │  ├─ 📋🎭 Table.renderer.tsx
+      │  ├─ 🕰️🎭 Timeline.renderer.tsx
+      │  ├─ 🕸️🎭 GraphEntity.renderer.tsx
+      │  └─ ❓🎭 UnknownBlock.renderer.tsx
+      ├─ 🛡️ safety/
+      │  ├─ 🧼📝📄 sanitizeMarkdown.ts
+      │  ├─ 🔗🛡️ safeExternalLink.tsx
+      │  └─ 🔒🧹📄 redaction.ts
+      └─ 🧪 __tests__/
+         ├─ 🧪📄 registry.test.ts
+         ├─ 🧪🔥📄 renderSmoke.test.tsx
+         └─ 🧩 fixtures/
+            ├─ 🧪📝 minimal.story.md
+            └─ 🧪🧱📝 mixed-blocks.story.md
 ```
 
 ---
