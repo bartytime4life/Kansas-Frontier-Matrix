@@ -109,17 +109,17 @@ Feature clicks yield a **HitResult** that includes:
 
 ```mermaid
 flowchart LR
-  UI[🖥️ Viewer UI (React)] -->|commands| MC[🧠 MapController]
+  UI["Viewer UI (React)"] -->|commands| MC["MapController"]
   UI <-->|events| MC
 
-  MC --> TC[⏳ TimeController]
-  MC --> LR[📚 LayerRegistry]
-  MC --> EV[🧾 Evidence / Provenance Model]
+  MC --> TC["TimeController"]
+  MC --> LR["LayerRegistry"]
+  MC --> EV["Evidence & Provenance Model"]
 
-  MC --> AD[🔌 MapAdapter]
-  AD --> ENG[🗺️ Map Engine<br/>MapLibre / Leaflet / Cesium]
+  MC --> AD["MapAdapter"]
+  AD --> ENG["Map Engine\nMapLibre / Leaflet / Cesium"]
 
-  LR --> API[🔌 API Client]
+  LR --> API["API Client"]
   EV --> API
 ```
 
