@@ -105,40 +105,40 @@ flowchart LR
 
 ```text
 web/src/features/analysis/
-  📄 README.md
-
-  🧠 registry/
-    analysisOps.ts            # list of operations + UI metadata
-    renderers.ts              # per-op result renderers (map/chart/table)
-
-  🔌 api/
-    analysisClient.ts         # typed client calls
-    analysisQueries.ts        # query keys, caching helpers
-    contracts.ts              # runtime validators (zod/io-ts) mapped to schemas
-
-  🧩 components/
-    AnalysisPanel/
-    AnalysisBuilder/
-    AnalysisRunButton/
-    AnalysisResults/
-    ProvenanceDrawer/
-    EvidenceList/
-    ExportStoryNodeButton/
-
-  🪝 hooks/
-    useRunAnalysis.ts
-    useAnalysisJob.ts         # poll/stream status updates
-    useAnalysisCache.ts       # local cache for results + artifacts
-
-  🧰 utils/
-    geometry.ts               # sanitize, simplify, bbox helpers
-    units.ts                  # km²/mi², °F/°C, etc.
-    stats.ts                  # tiny client-side helpers (only for small data)
-
-  🧪 __tests__/
-    contracts.test.ts
-    registry.test.ts
-    renderers.test.ts
+├─ 📄 README.md
+│
+├─ 🧠 registry/
+│  ├─ 🧠🧾 analysisOps.ts            # list of operations + UI metadata
+│  └─ 🎛️🧾 renderers.ts              # per-op result renderers (map/chart/table)
+│
+├─ 🔌 api/
+│  ├─ 🔌🧾 analysisClient.ts         # typed client calls
+│  ├─ 🔎🧾 analysisQueries.ts        # query keys, caching helpers
+│  └─ 📐🛡️ contracts.ts              # runtime validators (zod/io-ts) mapped to schemas
+│
+├─ 🧩 components/
+│  ├─ 🧩 AnalysisPanel/
+│  ├─ 🧩 AnalysisBuilder/
+│  ├─ 🧩 AnalysisRunButton/
+│  ├─ 🧩 AnalysisResults/
+│  ├─ 🧬 ProvenanceDrawer/
+│  ├─ 🧾 EvidenceList/
+│  └─ 📤 ExportStoryNodeButton/
+│
+├─ 🪝 hooks/
+│  ├─ 🪝 useRunAnalysis.ts
+│  ├─ 📡🪝 useAnalysisJob.ts         # poll/stream status updates
+│  └─ 💾🪝 useAnalysisCache.ts       # local cache for results + artifacts
+│
+├─ 🧰 utils/
+│  ├─ 📐 geometry.ts                 # sanitize, simplify, bbox helpers
+│  ├─ 📏 units.ts                    # km²/mi², °F/°C, etc.
+│  └─ 📊 stats.ts                    # tiny client-side helpers (only for small data)
+│
+└─ 🧪 __tests__/
+   ├─ 🧪 contracts.test.ts
+   ├─ 🧪 registry.test.ts
+   └─ 🧪 renderers.test.ts
 ```
 
 ---
