@@ -33,22 +33,22 @@ Recommended structure (feel free to extend, but don’t scatter categories):
 
 ```text
 web/assets/media/audio/
-├─ ui/                # 🖱️ Short UI sounds
-│  └─ <asset-slug>/
-│     ├─ <asset-slug>.mp3
-│     ├─ <asset-slug>.ogg
-│     └─ <asset-slug>.meta.json
-├─ narration/         # 🎙️ Spoken clips used in stories
-│  └─ <asset-slug>/
-│     ├─ <asset-slug>.mp3
-│     ├─ <asset-slug>.ogg
-│     ├─ <asset-slug>.vtt            # ♿ captions (preferred)
-│     ├─ <asset-slug>.transcript.md  # 📝 human-friendly transcript
-│     └─ <asset-slug>.meta.json
-├─ ambience/          # 🌾 Subtle loops (wind, prairie, town)
-├─ music/             # 🎼 Optional, keep very small + loopable
-└─ _manifests/        # 🧾 Optional: index/registry files used by the app
-   └─ audio.index.json
+├─ 🖱️ ui/                         # 🖱️ Short UI sounds
+│  └─ 🏷️ <asset-slug>/
+│     ├─ 🔊🎵 <asset-slug>.mp3
+│     ├─ 🔊🎵 <asset-slug>.ogg
+│     └─ 🧾 <asset-slug>.meta.json
+├─ 🎙️ narration/                  # 🎙️ Spoken clips used in stories
+│  └─ 🏷️ <asset-slug>/
+│     ├─ 🔊🎙️ <asset-slug>.mp3
+│     ├─ 🔊🎙️ <asset-slug>.ogg
+│     ├─ ♿🧾 <asset-slug>.vtt            # ♿ captions (preferred)
+│     ├─ 📝 <asset-slug>.transcript.md    # 📝 human-friendly transcript
+│     └─ 🧾 <asset-slug>.meta.json
+├─ 🌾 ambience/                    # 🌾 Subtle loops (wind, prairie, town)
+├─ 🎼 music/                       # 🎼 Optional, keep very small + loopable
+└─ 🧾 _manifests/                  # 🧾 Optional: index/registry files used by the app
+   └─ 🧾 audio.index.json
 ```
 
 ---
