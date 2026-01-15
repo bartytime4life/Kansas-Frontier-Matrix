@@ -87,14 +87,14 @@ We treat analytics as a **core port** with pluggable **adapters/sinks**.
 
 ```mermaid
 flowchart LR
-  UI[🧩 UI Components] -->|track()| AC[📦 AnalyticsClient]
-  AC --> ENR[🧠 Context Enricher]
-  ENR --> POL[🛡️ Redaction + Sensitivity Policy]
-  POL --> SMP[🎯 Sampling + Rate Limits]
-  SMP --> Q[📬 Queue / Batch]
-  Q --> CS[🖥️ Console Sink]
-  Q --> MS[🧪 Memory Sink (tests)]
-  Q --> HS[🌐 HTTP Sink (optional)]
+  UI["UI Components / Hooks"] -->|"track(name, props)"| AC["AnalyticsClient"]
+  AC --> ENR["Context Enricher"]
+  ENR --> POL["Redaction & Sensitivity Policy"]
+  POL --> SMP["Sampling & Rate Limits"]
+  SMP --> Q["Queue / Batch"]
+  Q --> CS["Console Sink (dev)"]
+  Q --> MS["Memory Sink (tests)"]
+  Q --> HS["HTTP Sink (prod/optional)"]
 ```
 
 **Rule:** `core/analytics` defines **interfaces + policy + data contracts**, while sinks handle IO.
