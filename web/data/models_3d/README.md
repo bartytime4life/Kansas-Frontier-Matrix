@@ -47,6 +47,7 @@ This directory contains **web-ready** 3D artifacts that the UI can load quickly:
 
 ## 🗂️ Recommended folder layout
 
+```
 web/data/models_3d/
 ├─ 📄 README.md
 ├─ 🧾🗂️ index.json                      # (optional) UI-friendly registry of published assets
