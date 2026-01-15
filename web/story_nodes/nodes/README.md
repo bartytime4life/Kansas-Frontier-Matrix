@@ -59,21 +59,21 @@ So, in practice:
 > Your local tree may vary — this is the “north star” layout for maintainability.
 
 ```text
-📁 web/
-  📁 story_nodes/
-    📁 nodes/                  👈 you are here
-      📄 README.md
-      📄 registry.ts           # type → component mapping
-      📄 types.ts              # TS types for node payloads + props
-      📁 base/
-        📄 BaseNodeFrame.tsx   # shared layout (title, evidence toggle, etc.)
-        📄 EvidencePanel.tsx   # citations + provenance UI hook
-      📁 markdown/
-      📁 map/
-      📁 media/
-      📁 chart/
-      📁 graph/
-      📁 embed/
+web/
+└─ 📁 story_nodes/
+   └─ 📦 nodes/                      # 👈 you are here 📌
+      ├─ 📄 README.md
+      ├─ 🧩📄 registry.ts             # type → component mapping
+      ├─ 🧾📄 types.ts                # TS types for node payloads + props
+      ├─ 🧱 base/
+      │  ├─ 🧱🖼️📄 BaseNodeFrame.tsx   # shared layout (title, evidence toggle, etc.)
+      │  └─ 🧾🧬📄 EvidencePanel.tsx    # citations + provenance UI hook
+      ├─ 📝 markdown/
+      ├─ 🗺️ map/
+      ├─ 🎞️ media/
+      ├─ 📊 chart/
+      ├─ 🕸️ graph/
+      └─ 🔗 embed/
 ```
 
 ---
