@@ -63,13 +63,21 @@ Also: performance matters. KFM’s LOD approach explicitly extends to 3D terrain
 
 ```mermaid
 flowchart LR
-  A[🗺️ Source DEM (COG/GeoTIFF)] --> B[⚙️ Processing & QA]
-  B --> C[🧱 Terrain Tiles<br/>(quantized-mesh or 3D Tiles)]
-  C --> D[📄 Dataset Manifest JSON<br/>(validated)]
-  D --> E[🌐 React App + CesiumJS Viewer]
-  D --> F[✅ CI Schema Validation]
-  B --> G[🧾 Provenance + License + Attribution]
-  G --> D
+  A["Source DEM - COG GeoTIFF"];
+  B["Processing + QA"];
+  C["Terrain Tiles - quantized-mesh or 3D Tiles"];
+  D["Dataset Manifest JSON - validated"];
+  E["React App + CesiumJS Viewer"];
+  F["CI Schema Validation"];
+  G["Provenance + License + Attribution"];
+
+  A --> B;
+  B --> C;
+  C --> D;
+  D --> E;
+  D --> F;
+  B --> G;
+  G --> D;
 ```
 
 ---
