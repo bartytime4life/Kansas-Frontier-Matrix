@@ -47,26 +47,26 @@ KFM’s frontend is designed for browser-based access using standard web technol
 > Keep models discoverable, self-contained, and “diff-friendly”. One model = one folder.
 
 ```text
-📁 web/
-  📁 assets/
-    📁 media/
-      📁 models-3d/
-        📄 README.md
-        📄 models.index.json              (optional manifest for UI)
-        📁 landmarks/
-          📁 monument_rocks/
-            🧊 monument_rocks.glb
-            🧾 monument_rocks.meta.json
-            🖼️ monument_rocks.thumb.webp
-        📁 artifacts/
-          📁 buffalo_skull_demo/
-            🧊 buffalo_skull_demo.glb
-            🧾 buffalo_skull_demo.meta.json
-            🖼️ buffalo_skull_demo.thumb.webp
-        📁 ui/
-          📁 compass_marker/
-            🧊 compass_marker.glb
-            🧾 compass_marker.meta.json
+web/
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 🧊 models-3d/
+         ├─ 📄 README.md
+         ├─ 🧾🗂️ models.index.json              # (optional manifest for UI)
+         ├─ 🏔️ landmarks/
+         │  └─ 🪨 monument_rocks/
+         │     ├─ 🧊 monument_rocks.glb
+         │     ├─ 🧾 monument_rocks.meta.json
+         │     └─ 🖼️ monument_rocks.thumb.webp
+         ├─ 🏺 artifacts/
+         │  └─ 🦴 buffalo_skull_demo/
+         │     ├─ 🧊 buffalo_skull_demo.glb
+         │     ├─ 🧾 buffalo_skull_demo.meta.json
+         │     └─ 🖼️ buffalo_skull_demo.thumb.webp
+         └─ 🧭 ui/
+            └─ 🧭 compass_marker/
+               ├─ 🧊 compass_marker.glb
+               └─ 🧾 compass_marker.meta.json
 ```
 
 ---
