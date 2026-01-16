@@ -76,19 +76,19 @@ body {
 
 ```text
 web/
-└─ assets/
-   └─ fonts/
-      └─ noto-sans/
-         ├─ README.md
-         ├─ OFL.txt                      # License text (required)
-         ├─ noto-sans.meta.json          # Provenance + “asset contract” (recommended)
-         ├─ noto-sans.css                # @font-face rules (recommended)
-         ├─ NotoSans-VariableFont_wdth,wght.woff2
-         ├─ NotoSans-Italic-VariableFont_wdth,wght.woff2
-         └─ subsets/                     # Optional: generated unicode-range subsets
-            ├─ NotoSans-Latin.woff2
-            ├─ NotoSans-LatinExt.woff2
-            └─ ...
+└─ 📁 assets/
+   └─ 🔤 fonts/
+      └─ 🔤 noto-sans/
+         ├─ 📄 README.md
+         ├─ ⚖️📄 OFL.txt                          # License text (required)
+         ├─ 🧾🧬 noto-sans.meta.json               # Provenance + “asset contract” (recommended)
+         ├─ 🎨📄 noto-sans.css                     # @font-face rules (recommended)
+         ├─ 🔤📦 NotoSans-VariableFont_wdth,wght.woff2
+         ├─ 🔤📦 NotoSans-Italic-VariableFont_wdth,wght.woff2
+         └─ 🧩 subsets/                           # Optional: generated unicode-range subsets
+            ├─ 🔤📦 NotoSans-Latin.woff2
+            ├─ 🔤📦 NotoSans-LatinExt.woff2
+            └─ ➕ …
 ```
 
 If you choose to store `.ttf` sources for builds, keep them **clearly separated**:
