@@ -37,25 +37,25 @@ Typically you’ll have:
 > Your repo may vary — this is the intended shape for “spec + catalog” workflows.
 
 ```text
-📁 web/
-  📁 assets/
-    📁 charts/
-      📁 specs/
-        📁 catalog/
-          📄 README.md   👈 you are here
-          📄 index.json  👈 the catalog entrypoint (recommended)
-          📁 domains/    👈 optional grouping by subject area
-            📁 climate/
-            📁 land/
-            📁 people/
-          📁 thumbs/     👈 optional preview assets
-            🖼️ weather.station.timeseries.svg
-        📁 schemas/      👈 recommended: JSON Schemas (validation)
-          📄 chart-spec.schema.json
-          📄 chart-catalog.schema.json
-        📁 library/      👈 optional: reusable spec fragments
-          📄 axes.time.json
-          📄 format.usd.json
+web/
+└─ 📁 assets/
+   └─ 📈 charts/
+      └─ 🧪📐 specs/
+         ├─ 🗂️ catalog/
+         │  ├─ 📄 README.md                 # 👈 you are here 📌
+         │  ├─ 🧾🗂️ index.json               # 👈 the catalog entrypoint (recommended)
+         │  ├─ 🧭 domains/                  # 👈 optional grouping by subject area
+         │  │  ├─ 🌧️ climate/
+         │  │  ├─ 🌿 land/
+         │  │  └─ 👥 people/
+         │  └─ 🖼️ thumbs/                   # 👈 optional preview assets
+         │     └─ 🖼️ weather.station.timeseries.svg
+         ├─ 📐 schemas/                     # 👈 recommended: JSON Schemas (validation)
+         │  ├─ 📐🧾 chart-spec.schema.json
+         │  └─ 📐🧾 chart-catalog.schema.json
+         └─ 📚 library/                     # 👈 optional: reusable spec fragments
+            ├─ 🧭📈 axes.time.json
+            └─ 💵🧾 format.usd.json
 ```
 
 ---
