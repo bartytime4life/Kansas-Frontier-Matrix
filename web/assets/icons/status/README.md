@@ -9,14 +9,14 @@ Small, consistent, **semantic** status glyphs used across the Kansas Frontier Ma
 ## 📦 Folder
 
 ```text
-📁 web/
-  📁 assets/
-    📁 icons/
-      📁 status/
-        📄 README.md   ✅ you are here
-        🧩 *.svg       status icons (recommended)
-        🧱 defs.svg    optional sprite sheet for <use> (recommended for caching)
-        🖼️ *.png       optional raster fallbacks (MapLibre/Cesium/etc.)
+web/
+└─ 📁 assets/
+   └─ 🧷 icons/
+      └─ 🚦 status/
+         ├─ ✅📄 README.md   # you are here 📌
+         ├─ 🧷🧩 *.svg       # status icons (recommended)
+         ├─ 🧱🧷 defs.svg    # optional sprite sheet for <use> (recommended for caching)
+         └─ 🖼️🧷 *.png       # optional raster fallbacks (MapLibre/Cesium/etc.)
 ```
 
 > [!NOTE]
