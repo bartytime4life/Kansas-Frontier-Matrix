@@ -64,24 +64,24 @@ Think of `_shared/` as the **sample kit**:
 You may see variations, but this is the recommended layout:
 
 ```
-♻️ web/assets/samples/_shared/
-├── 📄 README.md                # this file
+web/assets/samples/_shared/
+├── ♻️📄 README.md                 # this file
 ├── 🎨 css/
-│   ├── sample-base.css         # shared layout + resets for samples
-│   ├── sample-panels.css       # sidebar/panel styling
-│   └── sample-timeline.css     # timeline slider styling
+│   ├── 🎨📄 sample-base.css        # shared layout + resets for samples
+│   ├── 🎨📄 sample-panels.css      # sidebar/panel styling
+│   └── 🎨📄 sample-timeline.css    # timeline slider styling
 ├── 🧠 js/
-│   ├── map.bootstrap.js        # minimal “create map” helper
-│   ├── layer-panel.js          # toggle layers + opacity
-│   ├── timeline.js             # bind year/date → layer state
-│   └── url-state.js            # sync UI ↔ query params
+│   ├── 🧠📄 map.bootstrap.js       # minimal “create map” helper
+│   ├── 🧠📄 layer-panel.js         # toggle layers + opacity
+│   ├── 🧠📄 timeline.js            # bind year/date → layer state
+│   └── 🔗🧠📄 url-state.js         # sync UI ↔ query params
 ├── 🧩 data/
-│   ├── fixtures/               # tiny demo datasets (NOT authoritative)
-│   ├── configs/                # layer lists, demo timelines
-│   └── schemas/                # optional: sample JSON schema snippets
+│   ├── 🧪 fixtures/                # tiny demo datasets (NOT authoritative)
+│   ├── ⚙️ configs/                 # layer lists, demo timelines
+│   └── 📐 schemas/                 # optional: sample JSON schema snippets
 └── 🖼️ img/
-    ├── icons/
-    └── placeholders/
+    ├── 🧷 icons/
+    └── 🧰 placeholders/
 ```
 
 ---
