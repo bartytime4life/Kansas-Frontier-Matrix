@@ -43,19 +43,19 @@ This directory holds **theme definitions** for chart rendering:
 > 📌 This is the *recommended* layout. Keep themes small & composable.
 
 ```text
-📁 web/
-  📁 assets/
-    📁 charts/
-      📁 tokens/
-        📁 themes/
-          📄 README.md ✅ (you are here)
-          📄 _schema.chart-theme.json        # optional: JSON Schema validation
-          📄 _template.theme.json            # starting point for new themes
-          📄 base.theme.json                 # shared baseline tokens
-          📄 kfm-light.theme.json            # default light theme
-          📄 kfm-dark.theme.json             # default dark theme
-          📄 kfm-high-contrast.theme.json    # accessibility-first theme
-          📁 experiments/                    # WIP themes (do not ship by default)
+web/
+└─ 📁 assets/
+   └─ 📈 charts/
+      └─ 🎛️ tokens/
+         └─ 🎨 themes/
+            ├─ ✅📄 README.md                      # you are here 📌
+            ├─ 📐🧾 _schema.chart-theme.json       # optional: JSON Schema validation
+            ├─ 🧩🧾 _template.theme.json           # starting point for new themes
+            ├─ 🧱🎨🧾 base.theme.json               # shared baseline tokens
+            ├─ 🌞🎨🧾 kfm-light.theme.json          # default light theme
+            ├─ 🌙🎨🧾 kfm-dark.theme.json           # default dark theme
+            ├─ ♿🎨🧾 kfm-high-contrast.theme.json   # accessibility-first theme
+            └─ 🧪 experiments/                     # WIP themes (do not ship by default)
 ```
 
 ---
