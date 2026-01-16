@@ -55,16 +55,16 @@ This folder is optimized for **reuse**, **performance**, and **traceability** �
 
 ```text
 web/
-└─ assets/
-   └─ 3d/
-      └─ shared/
-         └─ textures/
-            ├─ 📁 materials/        # tiling PBR materials (stone, soil, brick, etc.)
-            ├─ 📁 decals/           # stamps, labels, surface marks
-            ├─ 📁 terrain/          # small drape textures (demo-scale, not statewide)
-            ├─ 📁 ui/               # pins, sprites, markers used in 3D scenes
-            ├─ 📁 atlases/          # packed atlases (spritesheets / decals)
-            ├─ 📁 _source/          # OPTIONAL: only if repo strategy allows (otherwise DVC/LFS)
+└─ 📁 assets/
+   └─ 🧊 3d/
+      └─ 🧰 shared/
+         └─ 🎨 textures/
+            ├─ 🧱 materials/        # tiling PBR materials (stone, soil, brick, etc.)
+            ├─ 🏷️ decals/           # stamps, labels, surface marks
+            ├─ 🏞️ terrain/          # small drape textures (demo-scale, not statewide)
+            ├─ 🧭 ui/               # pins, sprites, markers used in 3D scenes
+            ├─ 🧩 atlases/          # packed atlases (spritesheets / decals)
+            ├─ 🧪 _source/          # OPTIONAL: only if repo strategy allows (otherwise DVC/LFS)
             └─ 📄 README.md
 ```
 
