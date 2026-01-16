@@ -49,15 +49,15 @@
 > If these subfolders don’t exist yet, create them as needed. Keep names **kebab-case** and stable.
 
 ```text
-📁 web/
-  📁 assets/
-    📁 charts/
-      📝 README.md
-      📁 manifests/       # chart metadata + provenance pointers (yaml/json)
-      📁 specs/           # declarative specs (vega/vega-lite/etc.)
-      📁 previews/        # small previews for catalog/story/docs
-      📁 exports/         # “final” static outputs used in UI
-      📁 tokens/          # chart design tokens (scales, spacing, typography)
+web/
+└─ 📁 assets/
+   └─ 📈 charts/
+      ├─ 📝 README.md
+      ├─ 🧾 manifests/       # chart metadata + provenance pointers (yaml/json)
+      ├─ 🧪📐 specs/          # declarative specs (vega/vega-lite/etc.)
+      ├─ 🖼️ previews/        # small previews for catalog/story/docs
+      ├─ 📦 exports/         # “final” static outputs used in UI
+      └─ 🎛️ tokens/          # chart design tokens (scales, spacing, typography)
 ```
 
 ---
