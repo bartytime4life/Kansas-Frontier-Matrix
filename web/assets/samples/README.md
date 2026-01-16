@@ -55,19 +55,19 @@ If a layer is meant to appear as “evidence” in the UI, it should be publishe
 > If the repo already has a different structure, keep it — but try to align to the conventions below for consistency.
 
 ```text
-📁 web/assets/samples/
+web/assets/samples/
 ├── 📄 README.md
-├── 📄 samples.catalog.json              # 👈 registry the UI can load
-├── 📁 _shared/
-│   ├── 📁 thumbnails/                   # common previews (webp/png)
-│   ├── 📁 licenses/                     # reusable license texts
-│   └── 📁 schemas/                      # optional JSON schemas for samples
-├── 📁 vector/                           # geojson/topojson/pmtiles pointers
-├── 📁 raster/                           # small png/webp + worldfiles if needed
-├── 📁 tiles/                            # tiny demo tilesets or pointers
-├── 📁 3d/                               # glb / 3d-tiles demo assets
-├── 📁 analytics/                        # chart JSON, regression fixtures, etc.
-└── 📁 ui/                               # icons, placeholder images, mock panels
+├── 🧾🗂️ samples.catalog.json              # 👈 registry the UI can load
+├── 🧩 _shared/
+│   ├── 🖼️ thumbnails/                     # common previews (webp/png)
+│   ├── ⚖️ licenses/                       # reusable license texts
+│   └── 📐 schemas/                        # optional JSON schemas for samples
+├── 🧭 vector/                             # geojson/topojson/pmtiles pointers
+├── 🗺️ raster/                             # small png/webp + worldfiles if needed
+├── 🧱 tiles/                              # tiny demo tilesets or pointers
+├── 🧊 3d/                                 # glb / 3d-tiles demo assets
+├── 📈 analytics/                          # chart JSON, regression fixtures, etc.
+└── 🧰 ui/                                 # icons, placeholder images, mock panels
 ```
 
 ---
