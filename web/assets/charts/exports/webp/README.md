@@ -42,13 +42,13 @@ That means every WebP in this folder must have:
 
 ```text
 web/
-└─ assets/
-   └─ charts/
-      └─ exports/
-         └─ webp/          👈 you are here
-            ├─ README.md
-            ├─ <chart>.webp
-            └─ <chart>.webp.json   (required sidecar)
+└─ 📁 assets/
+   └─ 📈 charts/
+      └─ 📦 exports/
+         └─ 🖼️ webp/          👈 you are here 📌
+            ├─ 📄 README.md
+            ├─ 🖼️ <chart>.webp
+            └─ 🧾 <chart>.webp.json   # (required sidecar)
 ```
 
 ---
