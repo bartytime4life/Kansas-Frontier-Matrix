@@ -50,21 +50,21 @@ Map icons must support these flows by being:
 > If this folder is currently “flat” (just a pile of SVGs), this is the target structure as we formalize the pipeline.
 
 ```text
-📁 web/assets/icons/map/
+web/assets/icons/map/
 ├─ 📄 README.md
-├─ 📁 svg/                # editable source icons (preferred)
-│  ├─ poi-school.svg
-│  ├─ poi-hospital.svg
-│  ├─ hazard-flood.svg
-│  └─ ...
-├─ 📁 sprite/             # build outputs (generated; do not hand-edit)
-│  ├─ kfm-map-sprite@1x.png
-│  ├─ kfm-map-sprite@2x.png
-│  └─ kfm-map-sprite.json
-└─ 📁 meta/               # icon provenance + license + tags
-   ├─ poi-school.meta.json
-   ├─ poi-hospital.meta.json
-   └─ ...
+├─ 🎨 svg/                # editable source icons (preferred)
+│  ├─ 🎨🧷 poi-school.svg
+│  ├─ 🎨🧷 poi-hospital.svg
+│  ├─ 🎨🧷 hazard-flood.svg
+│  └─ ➕ …
+├─ 🤖 sprite/             # build outputs (generated; do not hand-edit)
+│  ├─ 🖼️🧷 kfm-map-sprite@1x.png
+│  ├─ 🖼️✨🧷 kfm-map-sprite@2x.png
+│  └─ 🧾🧷 kfm-map-sprite.json
+└─ 🧾 meta/               # icon provenance + license + tags
+   ├─ 🧾 poi-school.meta.json
+   ├─ 🧾 poi-hospital.meta.json
+   └─ ➕ …
 ```
 
 ---
