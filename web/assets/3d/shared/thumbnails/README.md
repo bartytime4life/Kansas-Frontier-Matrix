@@ -24,15 +24,15 @@ This folder contains **static image thumbnails** (not models) that represent 3D 
 ## 🗂️ Folder layout
 
 ```text
-📁 web/
-  📁 assets/
-    📁 3d/
-      📁 shared/
-        📁 thumbnails/
-          📄 README.md
-          🖼️ <asset-id>.webp
-          🖼️ <asset-id>.png            (optional fallback)
-          🖼️ <asset-id>@2x.webp        (optional retina)
+web/
+└─ 📁 assets/
+   └─ 🧊 3d/
+      └─ 🧰 shared/
+         └─ 🖼️ thumbnails/
+            ├─ 📄 README.md
+            ├─ 🖼️ <asset-id>.webp
+            ├─ 🖼️ <asset-id>.png            # (optional fallback)
+            └─ 🖼️✨ <asset-id>@2x.webp       # (optional retina)
 ```
 
 ---
