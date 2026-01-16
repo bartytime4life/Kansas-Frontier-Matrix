@@ -1,337 +1,276 @@
-# 🗺️ Map Adapter (`web/src/adapters/map`)
+# 🗺️ Map Engines (Adapter Layer)
 
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Layer](https://img.shields.io/badge/layer-web%20UI-blue)
-![Pattern](https://img.shields.io/badge/pattern-adapter%20%2F%20port--adapter-7a3df0)
-![Map](https://img.shields.io/badge/map-MapLibre%20%7C%20Leaflet%20%7C%20Cesium-0aa)
+![Architecture](https://img.shields.io/badge/architecture-ports%20%26%20adapters-6f42c1)
+![UI](https://img.shields.io/badge/ui-web%2F-0ea5e9)
+![Map](https://img.shields.io/badge/engines-MapLibre%20%7C%20Leaflet%20%7C%20Cesium-22c55e)
 
-> A **thin, testable wrapper** around our mapping engine (primarily **MapLibre GL JS**) that exposes a **stable map API** to the rest of the React app — including **timeline / time-slice** behavior for historical eras. 🧭
+📍 **Location:** `web/src/adapters/map/engines/`
 
----
+This folder houses **pluggable map rendering engines** for the KFM web viewer. Each engine implements the same **engine contract** so the rest of the UI can remain **map-library-agnostic** 🔌🧠.
 
-## ✨ Why this folder exists
-
-KFM’s map UI is designed to be *modular* and *swappable* (MapLibre today, potentially Leaflet/Cesium later). This adapter layer keeps map-engine details from spreading across components and lets us:
-
-- ✅ Swap map engines without rewriting the UI
-- ✅ Keep business/UI logic independent of MapLibre/Leaflet APIs
-- ✅ Centralize time-enabled layer rules (slider/playback) ⏳
-- ✅ Create mocks for unit tests (no WebGL in CI) 🧪
-- ✅ Enforce KFM “API boundary” thinking (map renders what API provides; it does not become a data client) 🔒
+> [!NOTE]
+> We treat the map library (MapLibre / Leaflet / Cesium / etc.) as an *infrastructure detail*.
+> The UI speaks to a stable **port** (`MapEngine`) and swaps **adapters** (engines) as needed.
 
 ---
 
-## 🧠 What this adapter is responsible for
+## ✨ Why “Engines”?
 
-**In scope** ✅
-
-- 🗺️ Map lifecycle: mount/unmount, resize, style load, cleanup
-- 🎛️ Camera control: fit bounds, flyTo, set center/zoom/bearing/pitch
-- 🧱 Layer/source orchestration: add/remove/update/visibility/opacity
-- 🧩 Interaction plumbing: click/hover/select, feature query helpers
-- ⏱️ Temporal controls: time cursor + time-slice layer toggling/filtering
-- 🧾 Layer metadata hooks (provenance badge, license/source tooltip, etc.)
-
-**Out of scope** ❌
-
-- 🚫 Fetching business data (Neo4j, raw STAC crawling, etc.)
-- 🚫 Deciding *what* layers should exist (that’s app state / API contracts)
-- 🚫 Domain inference (“this county is relevant…”) — belongs upstream
-- 🚫 Hardcoding datasets or bypassing governed endpoints
+KFM aims to keep core UI behavior stable while allowing the underlying renderer to evolve:
+- ✅ Swap MapLibre ↔ Leaflet without rewriting the UI
+- ✅ Add Cesium later for 3D / terrain without redesigning the app
+- ✅ Test map behaviors in CI without requiring WebGL
+- ✅ Enforce **dataset provenance + attribution** so we never ship “mystery layers” 🧾
 
 ---
 
-## 🗂️ Expected folder layout (recommended)
-
-> This is the “shape” we aim for. The exact filenames may differ — keep the idea: **one contract**, **one engine implementation**, **one test mock**.
+## 🧱 Recommended Folder Layout
 
 ```text
-📁 web/
-  📁 src/
-    📁 adapters/
-      📁 map/
-        📄 README.md
-        📄 index.ts                # public exports
-        📄 types.ts                # shared types / contracts
-        📄 MapPort.ts              # the stable interface the app uses
-        📁 engines/
-          📁 maplibre/
-            📄 MapLibreAdapter.ts
-            📄 maplibreHelpers.ts
-          📁 leaflet/              # optional (if/when used)
-            📄 LeafletAdapter.ts
-          📁 cesium/               # future (if/when used)
-            📄 CesiumAdapter.ts
-        📁 __mocks__/
-          📄 MockMapAdapter.ts
-        📁 __tests__/
-          📄 map.port.test.ts
+📦 web/
+ └─ 📂 src/
+    └─ 📂 adapters/
+       └─ 📂 map/
+          └─ 📂 engines/
+             ├─ 📂 maplibre/        # High-perf vector tiles + raster tiles (default direction)
+             ├─ 📂 leaflet/         # Lightweight 2D overlays + GeoJSON (fallback / simple mode)
+             ├─ 📂 cesium/          # 3D globe + terrain + 3D tiles (future expansion)
+             ├─ 📂 null/            # Headless test engine (no DOM/WebGL)
+             ├─ 📄 types.ts         # MapEngine contract + shared types
+             ├─ 📄 registry.ts      # Engine registry / factory
+             └─ 📄 index.ts         # Public exports
 ```
+
+> [!TIP]
+> If your engine needs helpers (converters, style mappers, layer factories), keep them inside the engine folder
+> so the “blast radius” stays contained 💥➡️🧊.
 
 ---
 
-## 🧩 How it fits in the KFM web UI
+## 🧭 Architectural View (Ports & Adapters)
 
 ```mermaid
 flowchart LR
-  UI[🧑‍💻 React components] -->|calls| Port[🧩 MapPort (stable contract)]
-  Port --> Adapter[🗺️ Map Adapter (this folder)]
-  Adapter --> Engine1[🧠 MapLibre GL JS]
-  Adapter --> Engine2[🧠 Leaflet (optional)]
-  Adapter --> Engine3[🌍 Cesium (future)]
-  UI -->|loads layer configs + data via| API[(🔒 Governed API)]
+  UI[🖥️ UI Components] --> Port[🔌 Map Port / Engine API]
+  Port --> ML[🧩 MapLibre Engine]
+  Port --> LF[🧩 Leaflet Engine]
+  Port --> CS[🧩 Cesium Engine]
+  Port --> NL[🧪 Null Engine]
+
+  API[🌐 Backend API] --> Port
+  Port -->|layer URLs + manifests| UI
 ```
 
-**Rule of thumb:** If a React component imports `maplibre-gl` directly, we’re probably bypassing the adapter and should refactor. 🧯
+### 🎯 What lives *outside* this folder
+- Map UI components (controls, panels, timeline) 🧩
+- Layer registry / layer catalog integration 🗂️
+- API client + governance (redaction, permissions) 🛡️
+
+### 🎯 What lives *inside* this folder
+- Map library binding + lifecycle (mount/destroy) 🏗️
+- Translating `LayerSpec` → library-specific layer/source objects 🧬
+- Normalizing events (click/hover/move/selection) 🎛️
+- Enforcing attribution + provenance display hooks 🧾
 
 ---
 
-## 🚀 Quick start (React)
+## 📜 Engine Contract (TypeScript)
 
-> Pseudocode illustrating the intended usage pattern.
-
-```ts
-import { createMapAdapter } from "@/adapters/map";
-
-export function MapView() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const map = createMapAdapter({ engine: "maplibre" });
-
-    let handle: Awaited<ReturnType<typeof map.mount>> | null = null;
-
-    (async () => {
-      handle = await map.mount(ref.current!, {
-        styleUrl: "/styles/kfm-base.json",
-        center: [-98.5, 38.5],
-        zoom: 6,
-      });
-
-      // Example: register layers from app state (already vetted by API)
-      handle.addLayer({
-        id: "usgs_topo_1894",
-        kind: "raster",
-        source: {
-          type: "raster-tiles",
-          tiles: ["/tiles/usgs/topo/1894/{z}/{x}/{y}.png"],
-        },
-        temporal: { start: "1894-01-01", end: "1894-12-31" },
-        opacity: 0.85,
-      });
-
-      // Hook UI time slider to adapter
-      handle.setTimeCursor("1894-06-01");
-    })();
-
-    return () => {
-      handle?.destroy();
-    };
-  }, []);
-
-  return <div ref={ref} className="MapCanvas" />;
-}
-```
-
----
-
-## 🧾 The contract: `MapPort` (stable API)
-
-### Design goals 🎯
-- **Small** surface area: only what the UI needs
-- **Typed** and engine-agnostic
-- **Deterministic** behaviors (e.g., layer id collisions, ordering rules)
-- **Mockable** (tests should not need WebGL)
-
-### Suggested minimal interface (example)
+> [!IMPORTANT]
+> The contract must stay stable. Additive changes are OK. Breaking changes should be versioned
+> or paired with migration + conformance tests ✅.
 
 ```ts
-export type TimeCursor = string; // ISO date (preferred) or "YYYY"
+export type EngineId = "maplibre" | "leaflet" | "cesium" | "null";
 
-export interface MapInitOptions {
-  styleUrl: string;
-  center: [number, number]; // [lng, lat]
+export type MapCoord = { lon: number; lat: number };
+export type MapView = {
+  center: MapCoord;
   zoom: number;
   bearing?: number;
   pitch?: number;
-}
+};
 
-export interface MapHandle {
-  // lifecycle
-  destroy(): void;
-  resize(): void;
+export type TimeInstant = string; // ISO8601
+export type TimeRange = { start: string; end: string }; // ISO8601
 
-  // camera
-  fitBounds(bounds: [[number, number], [number, number]], opts?: { padding?: number }): void;
-  flyTo(view: { center?: [number, number]; zoom?: number; bearing?: number; pitch?: number }, opts?: { durationMs?: number }): void;
+export type LayerKind =
+  | "geojson"
+  | "vector-tile"
+  | "raster-tile"
+  | "image-overlay"
+  | "terrain"
+  | "3d-tiles";
 
-  // time
-  setTimeCursor(t: TimeCursor): void;
-  getTimeCursor(): TimeCursor;
+export type LayerProvenance = {
+  title: string;              // Human readable name
+  source: string;             // Who produced it
+  license: string;            // License identifier or URL
+  attribution: string;        // What we render in attribution UI
+  stac?: string;              // STAC item/collection id or URL
+  dcat?: string;              // DCAT dataset id or URL
+  prov?: string;              // PROV bundle id or URL
+  notes?: string;             // Optional disclaimers (derived/AI-generated, uncertainty, etc.)
+};
 
-  // layers
-  addLayer(layer: MapLayerSpec): void;
-  updateLayer(id: string, patch: Partial<MapLayerSpec>): void;
-  removeLayer(id: string): void;
-  setLayerVisibility(id: string, visible: boolean): void;
-
-  // interaction
-  on(evt: MapEventName, fn: (e: MapEvent) => void): () => void;
-  queryFeatures(opts: QueryFeaturesOptions): MapFeature[];
-}
-
-export type MapLayerSpec =
-  | RasterLayerSpec
-  | VectorLayerSpec
-  | GeoJsonLayerSpec;
-
-export interface TemporalWindow {
-  start: string; // ISO date
-  end: string;   // ISO date
-}
-
-export interface BaseLayerSpec {
+export type LayerSpec = {
   id: string;
-  title?: string;
-  opacity?: number;
-  visible?: boolean;
+  kind: LayerKind;
+  label?: string;
 
-  // 🧠 KFM-friendly metadata
-  provenance?: {
-    source?: string;
-    license?: string;
-    attribution?: string;
-    datasetId?: string; // stable ID from API/contracts
+  // Source info (URLs should come from the API layer / server manifests)
+  source: {
+    url: string;
+    sublayers?: string[];
+    headers?: Record<string, string>;
   };
 
-  // ⏳ Time-aware layers
-  temporal?: TemporalWindow;
+  // Visual + interaction
+  visible?: boolean;
+  opacity?: number;
+  minZoom?: number;
+  maxZoom?: number;
+  interactive?: boolean;
+
+  // Time filtering (for timeline slider)
+  time?: TimeInstant | TimeRange;
+
+  // 🧾 Provenance is required: no mystery layers
+  provenance: LayerProvenance;
+};
+
+export type EngineEvent =
+  | { type: "ready" }
+  | { type: "move"; view: MapView }
+  | { type: "click"; lonLat: MapCoord; layerHits?: Array<{ layerId: string; featureId?: string }> }
+  | { type: "error"; error: unknown };
+
+export type Unsubscribe = () => void;
+
+export interface MapEngine {
+  readonly id: EngineId;
+
+  /** Mount into a container (engine owns the container’s contents). */
+  mount(container: HTMLElement, initialView?: Partial<MapView>): Promise<void>;
+
+  /** Tear down listeners, WebGL contexts, and internal caches. */
+  destroy(): Promise<void>;
+
+  /** View controls */
+  setView(view: Partial<MapView>): void;
+  getView(): MapView;
+
+  /** Layer controls */
+  addLayer(layer: LayerSpec): Promise<void>;
+  removeLayer(layerId: string): Promise<void>;
+  setLayerVisibility(layerId: string, visible: boolean): void;
+  setLayerOpacity(layerId: string, opacity: number): void;
+
+  /** Optional time hook (timeline slider). Engines that don’t support time can no-op. */
+  setTime?(t: TimeInstant | TimeRange): void;
+
+  /** Event stream */
+  on(handler: (event: EngineEvent) => void): Unsubscribe;
 }
 ```
 
-> ⚠️ This README intentionally shows a **suggested contract**. The actual exported contract in this repo should be treated as the source of truth.
+---
+
+## 🧾 Provenance & “No Mystery Layers”
+
+KFM’s UI is expected to only display layers that are **provenance-linked**.
+
+**What the engine must do:**
+- ✅ Require `LayerSpec.provenance` for every layer
+- ✅ Surface `provenance.attribution` in the map’s attribution UI (or a dedicated “Credits” panel)
+- ✅ Provide a way for the UI to open “Layer Details” (metadata links like STAC/DCAT/PROV)
+- ✅ Never silently add ad-hoc layers (debug layers should be visibly labeled as such) 🚧
+
+> [!WARNING]
+> If an engine cannot render attribution (or a dataset lacks provenance),
+> the engine should **fail loudly** or mark the layer as **unpublishable** in production.
 
 ---
 
-## ⏳ Timeline support: “time-slice” layers
+## ⏳ Time Slider Support (Historical Map Playback)
 
-KFM’s UI is meant to **move through historical eras** with a slider (or play button) that changes which layers are visible, and/or filters features within layers.
+Many KFM experiences are time-indexed (e.g., “slide through years”).
+Engines should treat time as a first-class capability where possible.
 
-### Two common strategies
+**Two common approaches:**
+1. **Layer switching by time** (toggle visibility among multiple time-sliced layers)
+2. **Filter by time** (apply a style/filter expression per-feature when supported)
 
-1) **Toggle whole layers** (best for raster tiles per year/era) 🧱  
-   - Each layer has `temporal.start/end`
-   - When `setTimeCursor()` changes, the adapter:
-     - sets visibility on layers whose temporal window contains the cursor
-     - optionally fades between adjacent layers (nice UX ✨)
-
-2) **Filter features** (best for vector layers with feature timestamps) 🎚️  
-   - Single layer with a timestamp property (e.g., `year`, `date`)
-   - Adapter applies engine-native filters (MapLibre expressions / Leaflet plugin filters)
-
-### Recommended behavior contract ✅
-- If a layer has `temporal`, it participates in time filtering.
-- If a layer is explicitly `visible: false`, time logic must not override it.
-- Time filtering must be deterministic:
-  - “inclusive start/end”
-  - stable ordering rules when multiple layers match
+> [!TIP]
+> Prefer “filter by time” for vector tiles when the renderer supports it, and “layer switching”
+> for raster overlays or simpler engines.
 
 ---
 
-## 🧱 Supported sources & formats (pragmatic)
+## 🧰 Engine Capability Matrix
 
-This adapter should be able to render the most common KFM delivery formats:
+| Capability 🧩 | MapLibre | Leaflet | Cesium |
+|---|:---:|:---:|:---:|
+| Vector tiles (`vector-tile`) | ✅ | ⚠️ (plugins / limited) | ⚠️ (not primary) |
+| Raster tiles (`raster-tile`) | ✅ | ✅ | ✅ |
+| GeoJSON (`geojson`) | ✅ | ✅ | ✅ |
+| Image overlay (`image-overlay`) | ✅ | ✅ (strong) | ✅ |
+| Timeline UI hooks (`setTime`) | ✅ (strong) | ✅ (via plugins) | ✅ (time-dynamic) |
+| Terrain (`terrain`) | ⚠️ (limited / depends) | ❌ | ✅ (strong) |
+| 3D tiles (`3d-tiles`) | ❌ | ❌ | ✅ (strong) |
+| High-perf “many layers” | ✅ | ⚠️ | ✅ |
+| Best for “simple overlays” | ⚠️ | ✅ | ⚠️ |
 
-- 🧊 **Vector tiles** (preferred for scale)  
-- 🟧 **Raster tile layers** (historical scans, hillshade, overlays)
-- 🟩 **GeoJSON** (small-to-medium feature sets; debugging; prototypes)
-- 🧾 **COGs** (Cloud-Optimized GeoTIFF)  
-  - typically served via tile endpoints
-  - (optional) client-side loading only when same-origin and performance-safe
-
----
-
-## 🖱️ Events & interaction model
-
-### Must-have events
-- `click` → feature inspect + “show linked docs” panel 📚
-- `hover` → highlight + quick tooltip 🪄
-- `moveend` → persist map view / update viewport queries 🧭
-
-### Recommended event payload
-- geographic coordinates (lng/lat)
-- screen pixel coordinates
-- matched features + layer ids
-- optional “picked” feature id for stable selection state
+Legend: ✅ native / strong · ⚠️ possible but constrained · ❌ not supported
 
 ---
 
-## 🧪 Testing & mocks
+## 🧪 Testing Strategy
 
-### Unit tests (fast) ⚡
-- Use `MockMapAdapter` that implements `MapPort` without WebGL
-- Validate:
-  - layer state transitions (add/update/remove)
-  - time cursor behavior (which layers become visible)
-  - event subscription/unsubscription logic
+### ✅ Contract Conformance Tests
+Every engine should pass the same “engine conformance suite”:
+- Mount/destroy lifecycle
+- Add/remove layers
+- Visibility/opacity toggles
+- Move/click event normalization
+- Attribution + provenance enforcement
 
-### Integration tests (slower) 🧪🧱
-- Run a real engine (MapLibre) in a browser runner (Playwright/Cypress)
-- Smoke tests:
-  - map mounts
-  - one raster layer renders
-  - time slider toggles expected layers
-  - click returns a feature
-
----
-
-## ⚡ Performance notes & footguns
-
-- 🧊 Prefer **vector tiles** for large datasets; GeoJSON can kill FPS fast.
-- 🧱 Don’t spam `addLayer/removeLayer` every render — diff and patch.
-- 🎛️ Debounce camera-driven queries (`move` vs `moveend`).
-- 🧼 Always `destroy()` on unmount to avoid WebGL context leaks.
-- 🧯 Keep engine objects behind the adapter; never expose raw `maplibre.Map`.
+### 🧊 Null Engine
+A `null/` engine enables:
+- Fast unit tests without WebGL
+- SSR-safe rendering (if needed)
+- “UI-only” development mode
 
 ---
 
-## 🤝 Contributing rules (for this folder)
+## 🧯 Common Pitfalls (and fixes)
 
-### ✅ Do
-- Add capability by **extending the contract first** (contract-first mindset 📜)
-- Keep adapter code *thin* — coordinate transformations are ok; domain logic is not
-- Update mocks + tests alongside changes 🧪
-- Document new layer kinds and time behaviors in this README 📝
-
-### ❌ Don’t
-- Import MapLibre/Leaflet directly in UI components (unless explicitly approved)
-- Make network calls to core data systems from the adapter (use API layer)
-- Add “just one quick dataset” hardcoded in map code (it will rot)
+- **WebGL context lost** (MapLibre): ensure `destroy()` removes canvas + listeners; handle re-mounts cleanly.
+- **CORS on tiles**: prefer serving through KFM API / proxy or ensure correct headers.
+- **Memory spikes**: avoid re-adding sources repeatedly; update in place when possible.
+- **Inconsistent click hits**: normalize feature hit results to `{ layerId, featureId }`.
 
 ---
 
-## 🔗 Useful repo links (expected)
+## 🧩 Adding a New Engine (Checklist)
 
-> These are referenced by KFM’s documentation standards and are typically the canonical places to learn “the rules of the road.”
-
-- 📘 `docs/MASTER_GUIDE_v13.md` (pipeline + invariants)
-- 🧱 `docs/architecture/` (overall system architecture)
-- ⚖️ `docs/governance/` (ethics, sovereignty, review gates)
-- 🧾 `schemas/` (contracts for UI/config/telemetry as they mature)
-
----
-
-## ✅ Checklist (when you change map behavior)
-
-- [ ] Updated the `MapPort` contract (or verified no contract change needed)
-- [ ] Updated `MockMapAdapter` to match
-- [ ] Added/updated tests for new behaviors
-- [ ] Documented the change here (especially time filtering rules)
-- [ ] Verified no direct engine imports leaked into UI components
-- [ ] Confirmed data still flows through governed APIs (no shortcuts 🔒)
+- [ ] Create `web/src/adapters/map/engines/<engineId>/`
+- [ ] Implement `MapEngine`
+- [ ] Add factory + registration in `registry.ts`
+- [ ] Add conformance tests + a tiny demo page/story
+- [ ] Ensure attribution is visible for every rendered dataset 🧾
+- [ ] Ensure engine only uses server-provided URLs/manifests (no bypass) 🛡️
 
 ---
 
-> 🧭 If you’re unsure whether something belongs here: **if it’s engine-specific → adapter; if it’s domain/story-specific → upstream**.
+## 🔗 Related Concepts (Inside KFM)
+
+- Clean architecture / ports-and-adapters pattern 🏗️
+- Provenance-first datasets (STAC/DCAT/PROV alignment) 🧾
+- Frontend governance: no data leakage, respect redaction rules 🛡️
+
+---
+
+## 🧠 Philosophy (One-liner)
+
+> **Swap the engine, keep the story.** 🗺️📚
