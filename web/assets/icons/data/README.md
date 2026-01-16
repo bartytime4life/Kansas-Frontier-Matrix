@@ -33,12 +33,12 @@ They power UI surfaces like:
 ## 📍 You are here
 
 ```text
-📁 web/
-  📁 assets/
-    📁 icons/
-      📁 data/
-        📄 README.md   👈 this file
-        🎨 *.svg       👈 dataset-type icons (base + optional badges)
+web/
+└─ 📁 assets/
+   └─ 🧷 icons/
+      └─ 🗂️ data/
+         ├─ 📄 README.md   👈 this file 📌
+         └─ 🎨🧷 *.svg      # 👈 dataset-type icons (base + optional badges)
 ```
 
 > [!NOTE]
