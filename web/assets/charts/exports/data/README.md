@@ -44,17 +44,17 @@ Typical use-cases:
 
 ```text
 web/assets/charts/exports/data/
-├─ 📌 index.json                         # Optional: registry of available exports (generated)
-├─ 📁 population_county_1860_2020/
-│  ├─ data.json                          # The chart payload (series/points)
-│  ├─ meta.json                          # Human + machine-readable metadata (data contract)
-│  ├─ prov.json                          # Provenance/lineage reference
-│  └─ schema.json                        # Optional: JSON Schema or schema reference wrapper
-├─ 📁 precipitation_station_daily/
-│  ├─ data.json
-│  ├─ meta.json
-│  └─ prov.json
-└─ README.md
+├─ 📌🧾 index.json                         # Optional: registry of available exports (generated)
+├─ 👥📈 population_county_1860_2020/
+│  ├─ 📊🧾 data.json                       # The chart payload (series/points)
+│  ├─ 🧾🏷️ meta.json                       # Human + machine-readable metadata (data contract)
+│  ├─ 🧬🧾 prov.json                       # Provenance/lineage reference
+│  └─ 📐🧾 schema.json                     # Optional: JSON Schema or schema reference wrapper
+├─ 🌧️📈 precipitation_station_daily/
+│  ├─ 📊🧾 data.json
+│  ├─ 🧾🏷️ meta.json
+│  └─ 🧬🧾 prov.json
+└─ 📄 README.md
 ```
 
 ---
