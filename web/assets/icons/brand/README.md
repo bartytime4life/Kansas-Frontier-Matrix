@@ -59,23 +59,24 @@ This folder is for **identity assets** (logo/wordmark/lockups/favicons), not gen
 
 ```text
 web/ 🌐
-└─ assets/ 🧰
-   └─ icons/ 🧩
-      └─ brand/ 🧭
-         ├─ README.md 📘 (this file)
-         ├─ kfm-mark.svg 🟩
-         ├─ kfm-wordmark.svg 🅺
-         ├─ kfm-lockup-horizontal.svg ↔️
-         ├─ kfm-lockup-stacked.svg ↕️
-         ├─ kfm-mark-mono.svg ⚪️
-         ├─ favicon.svg ⭐
-         ├─ favicon-32.png 🟦
-         ├─ favicon-16.png 🟦
-         ├─ apple-touch-icon.png 🍎
-         ├─ safari-pinned-tab.svg 🧷
-         └─ _meta/ 🧾
-            ├─ kfm-mark.meta.json
-            ├─ kfm-wordmark.meta.json
+└─ 🧰 assets/
+   └─ 🧩 icons/
+      └─ 🧭 brand/
+         ├─ 📘 README.md                    # (this file) 📌
+         ├─ 🟩🧷 kfm-mark.svg
+         ├─ 🅺🧷 kfm-wordmark.svg
+         ├─ ↔️🧷 kfm-lockup-horizontal.svg
+         ├─ ↕️🧷 kfm-lockup-stacked.svg
+         ├─ ⚪️🧷 kfm-mark-mono.svg
+         ├─ ⭐🧷 favicon.svg
+         ├─ 🟦🖼️ favicon-32.png
+         ├─ 🟦🖼️ favicon-16.png
+         ├─ 🍎🖼️ apple-touch-icon.png
+         ├─ 🧷🧩 safari-pinned-tab.svg
+         └─ 🧾 _meta/
+            ├─ 🧾 kfm-mark.meta.json
+            ├─ 🧾 kfm-wordmark.meta.json
+            └─ ➕ …
             └─ ...
 ```
 
