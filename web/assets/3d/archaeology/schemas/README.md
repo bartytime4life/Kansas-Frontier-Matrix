@@ -27,14 +27,14 @@ Schemas are the bridge between *pipelines → API → UI*, helping us keep data 
 ## 🗂️ Where it sits in the repo
 
 ```text
-🗂️ web/
-  🗂️ assets/
-    🗂️ 3d/
-      🗂️ archaeology/
-        🗂️ schemas/
-          📄 README.md          👈 you are here
-          📄 *.schema.json      ✅ schema contracts
-          📄 examples/          🧪 (recommended) passing/failing fixtures
+web/
+└─ 🗂️ assets/
+   └─ 🧊 3d/
+      └─ 🏛️ archaeology/
+         └─ 📐 schemas/
+            ├─ 📄 README.md          👈 you are here 📌
+            ├─ ✅📐🧾 *.schema.json   # ✅ schema contracts
+            └─ 🧪 examples/          # 🧪 (recommended) passing/failing fixtures
 ```
 
 > 💡 If you don’t see an `examples/` folder yet, adding it is a quick win for CI + onboarding.
