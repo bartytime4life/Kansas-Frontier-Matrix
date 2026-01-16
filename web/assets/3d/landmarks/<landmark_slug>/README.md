@@ -66,19 +66,19 @@ Provide a **fast, web-friendly 3D representation** of `<Landmark Name>` for the 
 
 ```text
 web/assets/3d/landmarks/<landmark_slug>/
-├─ README.md                     📘 this file
-├─ model.glb                     🧊 primary runtime model (recommended)
-├─ preview.webp                  🖼️ lightweight preview (UI cards)
-├─ preview.jpg                   🖼️ fallback preview
-├─ manifest.json                 🧾 optional: loader-friendly manifest (recommended)
-├─ metadata.json                 🏷️ optional: human-friendly metadata (recommended)
-├─ attribution.md                🧾 required if any upstream attribution is needed
-├─ licenses/                     ⚖️ optional: license texts or notices
-│  └─ LICENSES.md
-└─ textures/                     🎨 optional: if external textures (avoid if GLB embeds)
-   ├─ albedo.webp
-   ├─ normal.webp
-   └─ orm.webp
+├─ 📘📄 README.md                     # 📘 this file
+├─ 🧊 model.glb                       # 🧊 primary runtime model (recommended)
+├─ 🖼️ preview.webp                    # 🖼️ lightweight preview (UI cards)
+├─ 🖼️ preview.jpg                     # 🖼️ fallback preview
+├─ 🧾🧭 manifest.json                  # 🧾 optional: loader-friendly manifest (recommended)
+├─ 🏷️🧾 metadata.json                  # 🏷️ optional: human-friendly metadata (recommended)
+├─ 🧾📝 attribution.md                 # 🧾 required if any upstream attribution is needed
+├─ ⚖️ licenses/                       # ⚖️ optional: license texts or notices
+│  └─ ⚖️📄 LICENSES.md
+└─ 🎨 textures/                       # 🎨 optional: if external textures (avoid if GLB embeds)
+   ├─ 🎨🧵 albedo.webp
+   ├─ 🧭🧵 normal.webp
+   └─ 🧲🧵 orm.webp
 ```
 
 > ✅ **Rule of thumb:** if the UI can’t load it deterministically from this folder, it doesn’t belong here.
