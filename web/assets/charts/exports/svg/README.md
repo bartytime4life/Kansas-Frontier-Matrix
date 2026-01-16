@@ -29,13 +29,13 @@ This directory exists so we can keep a set of **pre-rendered SVGs** that are:
 
 ```text
 web/
-└─ assets/
-   └─ charts/
-      └─ exports/
-         └─ svg/
-            ├─ README.md
-            ├─ <chart_id>.svg
-            └─ <chart_id>.meta.json
+└─ 📁 assets/
+   └─ 📈 charts/
+      └─ 📦 exports/
+         └─ 🖼️ svg/
+            ├─ 📄 README.md
+            ├─ 🖼️ <chart_id>.svg
+            └─ 🧾 <chart_id>.meta.json
 ```
 
 > **Rule:** Every `*.svg` **must** have a matching `*.meta.json` sidecar. 🧾✅
