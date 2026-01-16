@@ -60,21 +60,21 @@ Recommended structure:
 
 ```text
 web/assets/fonts/
-├── README.md
-├── fonts.manifest.json              (optional, recommended)
-├── inter/                           (example)
-│   ├── Inter-roman.var.woff2
-│   ├── Inter-italic.var.woff2
-│   ├── LICENSE.txt
-│   ├── SOURCE.md
-│   └── font.metadata.json
-├── noto-sans/                       (example)
-│   ├── NotoSans-latin-400.woff2
-│   ├── NotoSans-latin-700.woff2
-│   ├── LICENSE.txt
-│   ├── SOURCE.md
-│   └── font.metadata.json
-└── ...more families...
+├── 📄 README.md
+├── 🧾🗂️ fonts.manifest.json              # (optional, recommended)
+├── 🔤 inter/                             # (example)
+│   ├── 🔤📦 Inter-roman.var.woff2
+│   ├── 🔤📦 Inter-italic.var.woff2
+│   ├── ⚖️📄 LICENSE.txt
+│   ├── 🧾📄 SOURCE.md
+│   └── 🏷️🧾 font.metadata.json
+├── 🔤 noto-sans/                         # (example)
+│   ├── 🔤📦 NotoSans-latin-400.woff2
+│   ├── 🔤📦 NotoSans-latin-700.woff2
+│   ├── ⚖️📄 LICENSE.txt
+│   ├── 🧾📄 SOURCE.md
+│   └── 🏷️🧾 font.metadata.json
+└── ➕ …more families…
 ```
 
 **Naming conventions**
