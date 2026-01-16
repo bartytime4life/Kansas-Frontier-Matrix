@@ -43,15 +43,15 @@ This folder should contain (exact filenames may vary by implementation, but **th
 
 ```text
 web/ 🌐
-└─ assets/
-   └─ icons/
-      ├─ _source/ 🎨             # human-edited SVG sources (single source of truth)
-      ├─ _generated/ 🤖          # build output (this folder)
-      │  ├─ README.md
-      │  ├─ manifest.json
-      │  ├─ sprite.svg
-      │  └─ ...
-      └─ _licenses/ 📜           # optional: third-party license files & attributions
+└─ 📁 assets/
+   └─ 🧷 icons/
+      ├─ 🎨 _source/             # human-edited SVG sources (single source of truth)
+      ├─ 🤖 _generated/          # build output (this folder)
+      │  ├─ 📄 README.md
+      │  ├─ 🧾 manifest.json
+      │  ├─ 🧷🖼️ sprite.svg
+      │  └─ ➕ …
+      └─ 📜 _licenses/           # optional: third-party license files & attributions
 ```
 
 ---
